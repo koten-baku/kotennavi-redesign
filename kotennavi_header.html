@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>個展なび — 共通ヘッダー コンポーネント</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Noto+Sans+JP:wght@300;400;500;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════
+   TOKENS
+══════════════════════════════════ */
+:root {
+  --sw: 120px;
+  --hh: 50px;
+  --ink: #231815;
+  --paper: #f0f4f8;
+  --warm: #f7f9fb;
+  --accent: #005da7;
+  --muted: #7a8a99;
+  --border: #d0dae4;
+  --lr: #c0392b;
+  --lp: #8a6a00;
+
+  /* コンテンツmax幅 */
+  --w-article: 720px;   /* 記事・テキスト */
+  --w-detail:  1080px;  /* Creator / Exhibition（2カラム） */
+  --w-index:   1080px;  /* 一覧・検索 */
+
+  /* 現在ページのコンテンツ幅（JSで切替） */
+  --w-page: var(--w-detail);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--warm);font-family:'Noto Sans JP',sans-serif;font-weight:300;color:var(--ink);min-height:100vh}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer}
+
+/* ══════════════════════════════════
+   DEMO BAR
+══════════════════════════════════ */
+.dbar{
+  position:fixed;top:0;left:0;right:0;z-index:9999;
+  background:#111;color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  gap:4px;padding:0 10px;height:34px;
+  font-size:.62rem;letter-spacing:.04em;flex-wrap:wrap;
+}
+.dbar-sep{opacity:.25;margin:0 4px}
+.dbtn{
+  font-size:.61rem;padding:2px 9px;
+  border:1px solid rgba(255,255,255,.18);background:none;
+  color:rgba(255,255,255,.45);cursor:pointer;border-radius:2px;
+  transition:all .15s;font-family:inherit;white-space:nowrap;
+}
+.dbtn.on,.dbtn:hover{background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.4)}
+
+/* ══════════════════════════════════
+   LAYOUT SHELL
+══════════════════════════════════ */
+.shell{padding-top:34px}
+.content-wrap{
+  margin-left:var(--sw);
+  display:flex;
+  flex-direction:column;
+  align-items:center;  /* ヘッダー・コンテンツを中央揃え */
+}
+
+/* ── sidebar stub ── */
+.sidebar-stub{
+  width:var(--sw);position:fixed;top:34px;left:0;bottom:0;
+  background:#fff;border-right:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--border);font-size:.6rem;letter-spacing:.08em;
+  writing-mode:vertical-rl;z-index:200;
+}
+
+/* ══════════════════════════════════
+   ktn-header
+══════════════════════════════════ */
+.ktn-header{
+  position:sticky;
+  top:34px; /* 本番環境では0 */
+  z-index:100;
+  background:#fff;
+  border-bottom:1px solid var(--border);
+  width:100%;           /* content-wrap幅いっぱい */
+}
+.ktn-header__inner{
+  /* コンテンツ幅に合わせ（ページ種別でJS切替）、入りきらない場合ラップ */
+  max-width:var(--w-page);
+  margin:0 auto;        /* ヘッダー内コンテンツを中央寄せ */
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:8px;
+  padding:0 24px;
+  min-height:var(--hh);
+  /* ラップ時のpadding */
+  padding-top:8px;
+  padding-bottom:8px;
+}
+
+/* ── パンくず ── */
+.ktn-bc{
+  display:flex;align-items:center;flex-wrap:wrap;
+  gap:1px;flex:1;min-width:0;
+}
+.ktn-bc__link{
+  font-size:.71rem;color:var(--muted);
+  padding:3px 5px;border-radius:2px;
+  transition:color .15s,background .15s;
+  white-space:nowrap;
+}
+.ktn-bc__link:hover{color:var(--accent);background:var(--paper)}
+.ktn-bc__sep{
+  color:var(--border);font-size:.62rem;
+  margin:0 1px;flex-shrink:0;user-select:none;
+}
+.ktn-bc__current{
+  font-size:.73rem;font-weight:500;
+  color:var(--ink);letter-spacing:.02em;
+  font-family:'Shippori Mincho',serif;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  max-width:min(280px, 40vw);
+  padding:3px 5px;
+}
+/* LIAISON / LIAISON+ バッジ */
+.ktn-bc__badge{
+  font-family:'Montserrat',sans-serif;
+  font-size:.42rem;letter-spacing:.1em;font-weight:600;
+  padding:1px 5px;border-radius:2px;margin-left:5px;
+  vertical-align:middle;flex-shrink:0;
+}
+.ktn-bc__badge--l{background:rgba(0,93,167,.1);color:var(--accent)}
+.ktn-bc__badge--lp{background:rgba(138,106,0,.12);color:var(--lp)}
+
+/* ── アクションエリア ── */
+.ktn-hdr-actions{
+  display:flex;align-items:center;gap:3px;flex-shrink:0;flex-wrap:wrap;
+}
+
+/* アイコンボタン */
+.ktn-hib{
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  padding:4px 7px;border:none;background:none;
+  cursor:pointer;border-radius:3px;
+  transition:background .15s;color:var(--ink);
+}
+.ktn-hib:hover{background:var(--paper)}
+.ktn-hib svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8}
+.ktn-hib__lbl{font-size:.46rem;color:var(--muted);white-space:nowrap}
+.ktn-hib.is-active svg{stroke:#e0341e;fill:#e0341e}
+.ktn-hib.is-active .ktn-hib__lbl{color:#e0341e}
+
+/* セパレーター */
+.ktn-hdr-sep{width:1px;height:24px;background:var(--border);margin:0 2px;flex-shrink:0}
+
+/* オーナーボタン */
+.ktn-hdr-owbtn{
+  display:flex;align-items:center;gap:5px;
+  padding:5px 12px;font-size:.7rem;letter-spacing:.04em;
+  border:1px solid var(--border);background:#fff;border-radius:3px;
+  cursor:pointer;transition:all .15s;color:var(--ink);white-space:nowrap;
+}
+.ktn-hdr-owbtn:hover{border-color:var(--accent);color:var(--accent);background:#edf3f9}
+.ktn-hdr-owbtn svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:1.8;flex-shrink:0}
+
+/* ドロップダウン */
+.ktn-ddw{position:relative}
+.ktn-ddbtn{
+  display:flex;align-items:center;gap:5px;
+  padding:5px 12px;font-size:.7rem;letter-spacing:.04em;
+  border:1px solid var(--border);background:#fff;border-radius:3px;
+  cursor:pointer;transition:all .15s;color:var(--ink);white-space:nowrap;
+}
+.ktn-ddbtn:hover,.ktn-ddbtn.open{border-color:var(--accent);color:var(--accent);background:#edf3f9}
+.ktn-ddbtn .chv{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2;flex-shrink:0;transition:transform .18s}
+.ktn-ddbtn.open .chv{transform:rotate(180deg)}
+
+.ktn-ddmenu{
+  display:none;position:absolute;top:calc(100% + 5px);right:0;
+  background:#fff;border:1px solid var(--border);border-radius:4px;
+  box-shadow:0 8px 28px rgba(0,0,0,.11);
+  min-width:165px;z-index:600;overflow:hidden;
+}
+.ktn-ddmenu.open{display:block}
+
+.ktn-ddi{
+  display:flex;align-items:center;gap:8px;
+  padding:9px 15px;font-size:.72rem;letter-spacing:.02em;
+  color:var(--ink);cursor:pointer;
+  transition:background .12s;
+  border:none;background:none;width:100%;text-align:left;white-space:nowrap;
+}
+.ktn-ddi:hover{background:var(--paper)}
+.ktn-ddi svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:1.8;color:var(--muted);flex-shrink:0}
+.ktn-ddi.danger{color:var(--lr)}
+.ktn-ddi.danger svg{color:var(--lr)}
+.ktn-ddi--note{flex-direction:column;align-items:flex-start;gap:2px;padding-bottom:10px}
+.ktn-ddi--note .note-head{display:flex;align-items:center;gap:8px}
+.ktn-ddi--note .note-sub{font-size:.58rem;color:var(--accent);padding-left:21px;letter-spacing:.02em}
+.ktn-dd-sep{height:1px;background:var(--border);margin:3px 0}
+
+/* ══════════════════════════════════
+   ktn-tagbar（ヘッダー下のタグナビ）
+══════════════════════════════════ */
+.ktn-tagbar {
+  width: 100%;
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+}
+.ktn-tagbar__inner {
+  max-width: var(--w-page);
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  height: 34px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.ktn-tagbar__inner::-webkit-scrollbar { display: none; }
+
+/* ラベル */
+.ktn-tagbar__label {
+  font-size: .55rem;
+  letter-spacing: .1em;
+  color: var(--muted);
+  white-space: nowrap;
+  margin-right: 10px;
+  flex-shrink: 0;
+  padding: 2px 0;
+}
+
+/* タグ */
+.ktn-tagbar__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: .66rem;
+  letter-spacing: .03em;
+  color: var(--muted);
+  background: none;
+  border: none;
+  padding: 4px 9px;
+  border-radius: 2px;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: color .15s, background .15s;
+  text-decoration: none;
+}
+.ktn-tagbar__tag:hover {
+  color: var(--accent);
+  background: var(--paper);
+}
+.ktn-tagbar__tag.is-active {
+  color: var(--accent);
+  font-weight: 500;
+}
+.ktn-tagbar__tag svg {
+  width: 11px; height: 11px;
+  stroke: currentColor; fill: none; stroke-width: 1.8;
+  flex-shrink: 0;
+}
+
+/* セパレーター */
+.ktn-tagbar__sep {
+  width: 1px; height: 14px;
+  background: var(--border);
+  flex-shrink: 0;
+  margin: 0 4px;
+}
+
+/* 特集タグ（アクセントカラー） */
+.ktn-tagbar__tag--feature {
+  color: var(--accent);
+}
+.ktn-tagbar__tag--feature:hover {
+  background: #edf3f9;
+}
+
+/* LIAISON タグ */
+.ktn-tagbar__tag--liaison {
+  color: var(--lr);
+}
+.ktn-tagbar__tag--liaison:hover {
+  background: rgba(192,57,43,.07);
+}
+
+/* ══════════════════════════════════
+   DEMO CONTENT
+══════════════════════════════════ */
+.demo-body{
+  width:100%;
+  max-width:var(--w-page);
+  margin:0 auto;
+  padding:28px 24px 60px;
+}
+.demo-card{
+  background:#fff;border:1px solid var(--border);border-radius:4px;
+  padding:20px 24px;font-size:.78rem;line-height:2;color:var(--muted);
+}
+.demo-card strong{color:var(--ink);font-weight:500}
+
+/* ══════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════ */
+@media(max-width:860px){
+  .content-wrap{margin-left:0;align-items:stretch}
+  .sidebar-stub{display:none}
+  .ktn-header{top:34px}
+  .ktn-header__inner{padding:0 14px;padding-top:8px;padding-bottom:8px}
+  .ktn-bc__current{max-width:150px}
+  .ktn-tagbar__inner{padding:0 14px}
+  .ktn-tagbar__label{display:none}
+}
+@media(max-width:540px){
+  .ktn-hib__lbl{display:none}
+  .ktn-hdr-owbtn span{display:none}
+  .ktn-bc__current{max-width:110px}
+}
+</style>
+</head>
+<body class="shell">
+
+<!-- トースト -->
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- DEMO BAR -->
+<div class="dbar">
+  <span class="dbar-sep" style="opacity:.4">ロール:</span>
+  <button class="dbtn on" onclick="setR('guest',this)">ゲスト</button>
+  <button class="dbtn" onclick="setR('login',this)">ログイン</button>
+  <button class="dbtn" onclick="setR('creator',this)">クリエイター</button>
+  <button class="dbtn" onclick="setR('gallery',this)">ギャラリー</button>
+  <button class="dbtn" onclick="setR('admin',this)">管理者</button>
+  <span class="dbar-sep">|</span>
+  <span class="dbar-sep" style="opacity:.4">P2:</span>
+  <button class="dbtn on" onclick="setP('p2-3',this)">展覧会詳細</button>
+  <button class="dbtn" onclick="setP('p2',this)">一覧</button>
+  <button class="dbtn" onclick="setP('p2-5',this)">LIAISON作品</button>
+  <button class="dbtn" onclick="setP('p2-11',this)">編集</button>
+  <button class="dbtn" onclick="setP('p2-12',this)">インサイト</button>
+  <button class="dbtn" onclick="setP('p2-13',this)">広告</button>
+  <span class="dbar-sep">|</span>
+  <span class="dbar-sep" style="opacity:.4">P3:</span>
+  <button class="dbtn" onclick="setP('p3',this)">クリエイター</button>
+  <button class="dbtn" onclick="setP('p3-11',this)">編集</button>
+  <button class="dbtn" onclick="setP('p3-13',this)">ウォッチャー</button>
+  <button class="dbtn" onclick="setP('p3-14',this)">Portfolio</button>
+  <button class="dbtn" onclick="setP('p3-15',this)">LIAISONコンソール</button>
+  <button class="dbtn" onclick="setP('p3-16',this)">取引デスク</button>
+  <button class="dbtn" onclick="setP('p3-17',this)">販売代金</button>
+  <span class="dbar-sep">|</span>
+  <span class="dbar-sep" style="opacity:.4">P4:</span>
+  <button class="dbtn" onclick="setP('p4',this)">ギャラリー</button>
+  <button class="dbtn" onclick="setP('p4-11',this)">編集</button>
+  <button class="dbtn" onclick="setP('p4-12',this)">インサート</button>
+  <button class="dbtn" onclick="setP('p4-13',this)">ウォッチャー</button>
+  <span class="dbar-sep">|</span>
+  <span class="dbar-sep" style="opacity:.4">P5:</span>
+  <button class="dbtn" onclick="setP('p5',this)">myページ</button>
+  <button class="dbtn" onclick="setP('p5-3',this)">興味あり</button>
+  <button class="dbtn" onclick="setP('p5-4',this)">保存検索</button>
+  <button class="dbtn" onclick="setP('p5-11',this)">プロフィール編集</button>
+  <button class="dbtn" onclick="setP('p5-12',this)">パスワード</button>
+  <button class="dbtn" onclick="setP('p5-13',this)">通知設定</button>
+  <button class="dbtn" onclick="setP('p5-14',this)">購入DB</button>
+  <button class="dbtn" onclick="setP('p5-15',this)">取引WS</button>
+  <button class="dbtn" onclick="setP('p5-16',this)">支払</button>
+  <span class="dbar-sep">|</span>
+  <span class="dbar-sep" style="opacity:.4">P6/7/8/9:</span>
+  <button class="dbtn" onclick="setP('p6',this)">作品</button>
+  <button class="dbtn" onclick="setP('p6-1',this)">LIAISON作品</button>
+  <button class="dbtn" onclick="setP('p6-2',this)">LIAISON+作品</button>
+  <button class="dbtn" onclick="setP('p6-11',this)">作品編集</button>
+  <button class="dbtn" onclick="setP('p6-12',this)">インサイト</button>
+  <button class="dbtn" onclick="setP('p6-13',this)">問合せ</button>
+  <button class="dbtn" onclick="setP('p6-14',this)">問合せ回答</button>
+  <button class="dbtn" onclick="setP('p7',this)">記事</button>
+  <button class="dbtn" onclick="setP('p7-11',this)">記事編集</button>
+  <button class="dbtn" onclick="setP('p8',this)">レビュー</button>
+  <button class="dbtn" onclick="setP('p8-11',this)">レビュー編集</button>
+  <button class="dbtn" onclick="setP('p9',this)">ニュース</button>
+  <button class="dbtn" onclick="setP('p9-11',this)">ニュース編集</button>
+  <span class="dbar-sep">|</span>
+  <span class="dbar-sep" style="opacity:.4">P10:</span>
+  <button class="dbtn" onclick="setP('p10-5',this)">特集</button>
+  <button class="dbtn" onclick="setP('p10-6',this)">特集-作品</button>
+  <button class="dbtn" onclick="setP('p10-7',this)">特集-クリエイター</button>
+  <button class="dbtn" onclick="setP('p10-8',this)">特集-ギャラリー</button>
+  <span class="dbar-sep">|</span>
+  <span class="dbar-sep" style="opacity:.4">P60:</span>
+  <button class="dbtn" onclick="setP('p60-1',this)">ガイド</button>
+  <button class="dbtn" onclick="setP('p60-5',this)">FAQ</button>
+  <button class="dbtn" onclick="setP('p60-9',this)">個展なびとは</button>
+  <button class="dbtn" onclick="setP('p60-10',this)">利用規約</button>
+  <button class="dbtn" onclick="setP('p60-11',this)">プライバシー</button>
+  <span class="dbar-sep">|</span>
+  <span class="dbar-sep" style="opacity:.4">P70:</span>
+  <button class="dbtn" onclick="setP('p70-1',this)">LIAISONとは</button>
+  <button class="dbtn" onclick="setP('p70-2',this)">出品ガイド</button>
+  <button class="dbtn" onclick="setP('p70-4',this)">購入の流れ</button>
+  <span class="dbar-sep">|</span>
+  <span class="dbar-sep" style="opacity:.4">P90:</span>
+  <button class="dbtn" onclick="setP('p90-1',this)">管理者TOP</button>
+  <button class="dbtn" onclick="setP('p90-4',this)">展覧会新規</button>
+  <button class="dbtn" onclick="setP('p90-10',this)">ダッシュボード</button>
+  <button class="dbtn" onclick="setP('p90-11',this)">LIAISON+申込管理</button>
+  <button class="dbtn" onclick="setP('p90-13',this)">取引デスク</button>
+  <button class="dbtn" onclick="setP('p90-14',this)">販売代金</button>
+</div>
+
+<!-- sidebar stub -->
+<div class="sidebar-stub">SIDEBAR</div>
+
+<!-- ═══════ HEADER ═══════ -->
+<div class="content-wrap">
+  <header class="ktn-header" id="ktnHeader">
+    <div class="ktn-header__inner">
+      <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+      <div class="ktn-hdr-actions" id="ktnActs"></div>
+    </div>
+  </header>
+
+  <!-- ── TAGBAR ── -->
+  <!--
+    表示制御:
+    - 全ページで表示してもよいが、検索・一覧系ページに特に有効
+    - Drupal側でページ種別に応じて表示/非表示を制御する
+    - JS: renderTagbar() を呼ぶことでページ別タグを差し替え可
+  -->
+  <div class="ktn-tagbar" id="ktnTagbar">
+    <div class="ktn-tagbar__inner" id="ktnTagbarInner">
+      <!-- ▼ JS で差し替え or サーバー側テンプレートで出力 -->
+    </div>
+  </div>
+
+  <div class="demo-body">
+    <div class="demo-card" id="demoCard">
+      デモバーでロール・ページを切替えて確認してください。
+    </div>
+</div>
+
+<script>
+/* ══════════════════════════════════
+   SVG ライブラリ
+══════════════════════════════════ */
+const I = {
+  heart:  `<svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`,
+  share:  `<svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>`,
+  edit:   `<svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>`,
+  plus:   `<svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>`,
+  trash:  `<svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>`,
+  chart:  `<svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>`,
+  grid:   `<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>`,
+  file:   `<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>`,
+  warn:   `<svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>`,
+  fix:    `<svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`,
+  info:   `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r=".5" fill="currentColor" stroke="none"/></svg>`,
+  watch:  `<svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`,
+  sales:  `<svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>`,
+  desk:   `<svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>`,
+  frame:  `<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="1"/><rect x="6" y="6" width="12" height="12" rx=".5"/><line x1="3" y1="3" x2="6" y2="6"/><line x1="21" y1="3" x2="18" y2="6"/><line x1="3" y1="21" x2="6" y2="18"/><line x1="21" y1="21" x2="18" y2="18"/></svg>`,
+  user:   `<svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`,
+  key:    `<svg viewBox="0 0 24 24"><circle cx="7.5" cy="15.5" r="5.5"/><path d="M21 2l-9.6 9.6M15.5 7.5l3 3"/></svg>`,
+  bell:   `<svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>`,
+  send:   `<svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>`,
+  clone:  `<svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M10 4v4M14 4v4M2 8h20"/></svg>`,
+  star:   `<svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`,
+  shop:   `<svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>`,
+  chev:   `<polyline points="6 9 12 15 18 9"/>`,
+};
+
+/* icon helper — svgにstroke等をラップ */
+function ic(k){
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="13" height="13">${I[k]?.replace(/<svg[^>]*>/,'').replace('</svg>','') ?? ''}</svg>`;
+}
+function ic16(k){
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="16" height="16">${I[k]?.replace(/<svg[^>]*>/,'').replace('</svg>','') ?? ''}</svg>`;
+}
+
+/* ══════════════════════════════════
+   ページ定義
+══════════════════════════════════ */
+const PAGES = {
+  // P2
+  'p2':    {n:'展覧会一覧',      bc:[['Top','/'],['展覧会',null]]},
+  'p2-3':  {n:'展覧会詳細',      bc:[['Top','/'],['展覧会','/p2'],['あなたが知らないオノマトペ — 田中透 個展',null]]},
+  'p2-5':  {n:'LIAISON作品一覧', bc:[['Top','/'],['展覧会','/p2'],['あなたが知らないオノマトペ','/p2-3'],['LIAISON作品一覧',null,'l']]},
+  'p2-11': {n:'展覧会 編集',     bc:[['Top','/'],['展覧会','/p2'],['あなたが知らないオノマトペ','/p2-3'],['編集',null]]},
+  'p2-12': {n:'展覧会 インサイト',bc:[['Top','/'],['展覧会','/p2'],['あなたが知らないオノマトペ','/p2-3'],['インサイト',null]]},
+  'p2-13': {n:'展覧会 広告作成', bc:[['Top','/'],['展覧会','/p2'],['あなたが知らないオノマトペ','/p2-3'],['広告作成',null]]},
+  // P3
+  'p3':    {n:'クリエイター',     bc:[['Top','/'],['クリエイター','/p3-list'],['田中 透',null]]},
+  'p3-11': {n:'クリエイター編集', bc:[['Top','/'],['田中 透','/p3'],['プロフィール編集',null]]},
+  'p3-13': {n:'ウォッチャー管理', bc:[['Top','/'],['田中 透','/p3'],['ウォッチャー管理',null]]},
+  'p3-14': {n:'ポートフォリオ管理',bc:[['Top','/'],['田中 透','/p3'],['ポートフォリオ管理',null,'l']]},
+  'p3-15': {n:'LIAISONコンソール',bc:[['Top','/'],['田中 透','/p3'],['LIAISONコンソール',null,'lp']]},
+  'p3-16': {n:'取引デスク',       bc:[['Top','/'],['田中 透','/p3'],['取引デスク',null,'lp']]},
+  'p3-17': {n:'販売代金管理',     bc:[['Top','/'],['田中 透','/p3'],['販売代金管理',null,'lp']]},
+  // P4
+  'p4':    {n:'ギャラリー',       bc:[['Top','/'],['ギャラリー','/p4-list'],['Gallery SOIL 渋谷',null]]},
+  'p4-11': {n:'ギャラリー編集',   bc:[['Top','/'],['Gallery SOIL 渋谷','/p4'],['プロフィール編集',null]]},
+  'p4-12': {n:'インサート',       bc:[['Top','/'],['Gallery SOIL 渋谷','/p4'],['インサート',null]]},
+  'p4-13': {n:'ウォッチャー管理', bc:[['Top','/'],['Gallery SOIL 渋谷','/p4'],['ウォッチャー管理',null]]},
+  // P5
+  'p5':    {n:'myページ',        bc:[['Top','/'],['myページ',null]]},
+  'p5-3':  {n:'興味あり!リスト', bc:[['Top','/'],['myページ','/p5'],['興味あり!リスト',null]]},
+  'p5-4':  {n:'保存した検索条件',bc:[['Top','/'],['myページ','/p5'],['保存した検索条件',null]]},
+  'p5-11': {n:'プロフィール編集', bc:[['Top','/'],['myページ','/p5'],['プロフィール編集',null]]},
+  'p5-12': {n:'パスワード管理',   bc:[['Top','/'],['myページ','/p5'],['パスワード管理',null]]},
+  'p5-13': {n:'メール通知管理',   bc:[['Top','/'],['myページ','/p5'],['メール通知管理',null]]},
+  'p5-14': {n:'購入ダッシュボード',bc:[['Top','/'],['myページ','/p5'],['購入ダッシュボード',null,'lp']]},
+  'p5-15': {n:'取引ワークスペース',bc:[['Top','/'],['myページ','/p5'],['取引ワークスペース',null,'lp']]},
+  'p5-16': {n:'取引WS-支払',     bc:[['Top','/'],['myページ','/p5'],['取引ワークスペース','/p5-15'],['支払',null,'lp']]},
+  // P6
+  'p6':    {n:'作品詳細',         bc:[['Top','/'],['作品','/p6-list'],['春の記憶 #3',null]]},
+  'p6-1':  {n:'LIAISON作品',      bc:[['Top','/'],['作品','/p6-list'],['春の記憶 #3',null,'l']]},
+  'p6-2':  {n:'LIAISON+作品',     bc:[['Top','/'],['作品','/p6-list'],['春の記憶 #3',null,'lp']]},
+  'p6-11': {n:'作品編集',         bc:[['Top','/'],['春の記憶 #3','/p6'],['編集',null]]},
+  'p6-12': {n:'作品インサイト',   bc:[['Top','/'],['春の記憶 #3','/p6'],['インサイト',null]]},
+  'p6-13': {n:'作品 問合せ',      bc:[['Top','/'],['春の記憶 #3','/p6'],['問合せ',null,'l']]},
+  'p6-14': {n:'問合せ回答',       bc:[['Top','/'],['春の記憶 #3','/p6'],['問合せへの回答',null,'l']]},
+  // P7
+  'p7':    {n:'記事',             bc:[['Top','/'],['記事','/p7-list'],['オノマトペと絵画のあいだで',null]]},
+  'p7-11': {n:'記事編集',         bc:[['Top','/'],['オノマトペと絵画のあいだで','/p7'],['編集',null]]},
+  // P8
+  'p8':    {n:'レビュー',         bc:[['Top','/'],['レビュー','/p8-list'],['あなたが知らないオノマトペ レビュー',null]]},
+  'p8-11': {n:'レビュー編集',     bc:[['Top','/'],['レビュー','/p8-list'],['編集',null]]},
+  // P9
+  'p9':    {n:'ニュース',         bc:[['Top','/'],['ニュース','/p9-list'],['個展なびが新機能を発表',null]]},
+  'p9-11': {n:'ニュース編集',     bc:[['Top','/'],['ニュース','/p9-list'],['編集',null]]},
+  // P10
+  'p10-5': {n:'特集 展覧会',      bc:[['Top','/'],['特集','/feature'],['九州の展覧会',null]]},
+  'p10-6': {n:'特集 作品',        bc:[['Top','/'],['特集','/feature'],['注目の作品',null]]},
+  'p10-7': {n:'特集 クリエイター',bc:[['Top','/'],['特集','/feature'],['今月注目のクリエイター',null]]},
+  'p10-8': {n:'特集 ギャラリー',  bc:[['Top','/'],['特集','/feature'],['東京のギャラリー',null]]},
+  // P60
+  'p60-1': {n:'ご利用ガイド',     bc:[['Top','/'],['ガイド','/p60-1']]},
+  'p60-5': {n:'よくある質問',     bc:[['Top','/'],['ガイド','/p60-1'],['よくある質問',null]]},
+  'p60-9': {n:'個展なびとは',     bc:[['Top','/'],['個展なびとは',null]]},
+  'p60-10':{n:'利用規約',         bc:[['Top','/'],['利用規約',null]]},
+  'p60-11':{n:'プライバシーポリシー',bc:[['Top','/'],['プライバシーポリシー',null]]},
+  // P70
+  'p70-1': {n:'LIAISONとは',      bc:[['Top','/'],['LIAISONとは',null,'l']]},
+  'p70-2': {n:'作品出品ガイド',   bc:[['Top','/'],['LIAISON','/p70-1'],['作品出品ガイド',null,'l']]},
+  'p70-4': {n:'作品購入の流れ',   bc:[['Top','/'],['LIAISON','/p70-1'],['作品購入までの流れ',null,'lp']]},
+  // P90
+  'p90-1': {n:'管理者メニュー',   bc:[['Top','/'],['管理者メニュー',null]]},
+  'p90-4': {n:'展覧会新規',       bc:[['Top','/'],['管理者','/p90-1'],['展覧会新規',null]]},
+  'p90-10':{n:'ダッシュボード',   bc:[['Top','/'],['管理者','/p90-1'],['ダッシュボード',null]]},
+  'p90-11':{n:'LIAISON+申込管理', bc:[['Top','/'],['管理者','/p90-1'],['LIAISON+申込管理',null,'lp']]},
+  'p90-13':{n:'取引デスク',       bc:[['Top','/'],['管理者','/p90-1'],['取引デスク',null,'lp']]},
+  'p90-14':{n:'販売代金管理',     bc:[['Top','/'],['管理者','/p90-1'],['販売代金管理',null,'lp']]},
+};
+
+/* ══════════════════════════════════
+   ヘルパー — HTML生成
+══════════════════════════════════ */
+function hib(iconK, label, id=''){
+  const idAttr = id ? ' id="' + id + '"' : '';
+  return '<button class="ktn-hib"' + idAttr + '>' + ic16(iconK) + '<span class="ktn-hib__lbl">' + label + '</span></button>';
+}
+function sep(){ return `<div class="ktn-hdr-sep"></div>`; }
+
+/* ── シェアボタン生成（モーダルを開くだけ） ── */
+function shareBtn(){
+  return `<button class="ktn-hib" onclick="doShare()" aria-label="シェア">
+      ${ic16('share')}<span class="ktn-hib__lbl">シェア</span>
+    </button>
+  </div>`;
+}
+function owbtn(iconK, label){
+  return `<button class="ktn-hdr-owbtn">${ic(iconK)}<span>${label}</span></button>`;
+}
+let ddSeq=0;
+function dd(label, items){
+  const id='dd'+(++ddSeq);
+  return `<div class="ktn-ddw"><button class="ktn-ddbtn" onclick="toggleDD('${id}',this)">${label}<svg class="chv" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${I.chev}</svg></button><div class="ktn-ddmenu" id="${id}">${items}</div></div>`;
+}
+function ddi(iconK, label, danger=false){
+  return `<button class="ktn-ddi${danger?' danger':''}">${ic(iconK)}${label}</button>`;
+}
+function ddinote(iconK, label, note){
+  return `<button class="ktn-ddi ktn-ddi--note"><span class="note-head">${ic(iconK)}<span>${label}</span></span><span class="note-sub">${note}</span></button>`;
+}
+function ddSep(){ return `<div class="ktn-dd-sep"></div>`; }
+
+/* ══════════════════════════════════
+   アクション定義（ページグループ × ロール）
+══════════════════════════════════ */
+function getActions(page, role){
+  ddSeq=0; // IDリセット（レンダリングごと）
+
+  /* ── P2-3 展覧会詳細 ── */
+  if(['p2-3','p2-5'].includes(page)){
+    const cmn = hib('heart','興味あり')+ shareBtn()+ sep();
+    if(role==='guest'||role==='login')
+      return cmn + dd('その他',
+        ddi('fix','修正を依頼する') + ddSep() + ddi('warn','問題を報告する',true));
+    if(role==='creator')
+      return cmn + owbtn('edit','編集') + dd('オーナーメニュー',
+        ddi('edit','編集') + ddi('file','記事の追加') + ddSep() +
+        ddinote('grid','LIAISON連携','LIAISON（会場連動オンライン展示/販売）とは →') + ddSep() +
+        ddi('chart','インサイト') + ddi('info','ガイド') + ddSep() +
+        ddi('trash','削除',true));
+    if(role==='gallery')
+      return cmn + owbtn('edit','編集') + dd('オーナーメニュー',
+        ddi('edit','編集') + ddi('file','記事の追加') + ddSep() +
+        ddi('info','ガイド') + ddSep() + ddi('trash','削除',true));
+    if(role==='admin')
+      return cmn + owbtn('edit','編集') +
+        dd('オーナーメニュー',
+          ddi('edit','編集') + ddi('file','記事の追加') + ddSep() +
+          ddi('grid','LIAISON連携') + ddi('chart','インサイト') + ddSep() +
+          ddi('trash','削除',true)) +
+        dd('管理者',
+          ddi('edit','編集') + ddi('send','SNS投稿') + ddi('file','校正データ生成') + ddSep() +
+          ddi('clone','clone') + ddi('plus','新規展覧会') + ddi('user','新規クリエイター') + ddSep() +
+          ddi('info','コンテンツ詳細情報') + ddSep() + ddi('trash','削除',true));
+  }
+
+  /* ── P2 一覧系 ── */
+  if(page==='p2')
+    return role==='admin'
+      ? dd('管理者', ddi('plus','新規展覧会') + ddi('send','SNS投稿') + ddSep() + ddi('chart','ダッシュボード'))
+      : '';
+
+  /* ── P2-11 展覧会編集 ── */
+  if(page==='p2-11'){
+    if(role==='creator'||role==='gallery') return owbtn('info','ガイド');
+    if(role==='admin') return owbtn('info','ガイド') + sep() + dd('管理者', ddi('info','コンテンツ詳細情報'));
+    return '';
+  }
+
+  /* ── P2-12 インサイト / P2-13 広告 ── */
+  if(['p2-12','p2-13'].includes(page)){
+    if(role==='creator'||role==='gallery') return owbtn('info','ガイド');
+    if(role==='admin') return owbtn('info','ガイド') + sep() + dd('管理者', ddi('info','詳細情報'));
+    return '';
+  }
+
+  /* ── P3 クリエイタートップ＋サブ ── */
+  if(page==='p3'){
+    const cmn = hib('watch','ウォッチ') + shareBtn() + sep();
+    if(role==='guest'||role==='login')
+      return cmn + dd('その他', ddi('warn','問題を報告する',true));
+    if(role==='creator')
+      return cmn + owbtn('edit','編集') + dd('オーナーメニュー',
+        ddi('edit','プロフィール編集') + ddSep() +
+        ddi('watch','ウォッチャー管理') + ddi('frame','ポートフォリオ管理') + ddSep() +
+        ddi('grid','LIAISONコンソール') + ddi('desk','取引デスク') + ddi('sales','販売代金管理'));
+    if(role==='admin')
+      return cmn + owbtn('edit','編集') + dd('管理者',
+        ddi('edit','編集') + ddSep() +
+        ddi('watch','ウォッチャー管理') + ddi('chart','インサイト') + ddSep() + ddi('trash','削除',true));
+    return cmn;
+  }
+
+  /* ── P3 管理ページ群（owner/admin限定） ── */
+  if(['p3-11','p3-13','p3-14','p3-15','p3-16','p3-17'].includes(page)){
+    if(role==='creator') return owbtn('info','ガイド');
+    if(role==='admin') return owbtn('info','ガイド') + sep() + dd('管理者', ddi('chart','統計') + ddi('sales','精算'));
+    return '';
+  }
+
+  /* ── P4 ギャラリートップ＋サブ ── */
+  if(page==='p4'){
+    const cmn = hib('watch','ウォッチ') + shareBtn() + sep();
+    if(role==='guest'||role==='login')
+      return cmn + dd('その他', ddi('warn','問題を報告する',true));
+    if(role==='gallery')
+      return cmn + owbtn('edit','編集') + dd('オーナーメニュー',
+        ddi('edit','プロフィール編集') + ddSep() + ddi('watch','ウォッチャー管理'));
+    if(role==='admin')
+      return cmn + owbtn('edit','編集') + dd('管理者',
+        ddi('edit','編集') + ddSep() + ddi('watch','ウォッチャー管理') + ddSep() + ddi('trash','削除',true));
+    return cmn;
+  }
+
+  if(['p4-11','p4-12','p4-13'].includes(page)){
+    if(role==='gallery') return owbtn('info','ガイド');
+    if(role==='admin') return owbtn('info','ガイド') + sep() + dd('管理者', ddi('chart','統計'));
+    return '';
+  }
+
+  /* ── P5 myページ＋サブ ── */
+  if(page==='p5'){
+    if(role==='guest') return '';
+    const cmn = shareBtn() + sep();
+    if(role==='login'||role==='creator'||role==='gallery')
+      return cmn + dd('設定',
+        ddi('edit','プロフィール編集') + ddi('key','パスワード') + ddi('bell','メール通知設定') + ddSep() + ddi('trash','退会',true));
+    if(role==='admin')
+      return cmn + dd('管理者',
+        ddi('edit','編集') + ddSep() + ddi('user','なりすましログイン') + ddSep() + ddi('trash','強制退会',true));
+    return '';
+  }
+
+  if(['p5-3','p5-4','p5-11','p5-12','p5-13','p5-14','p5-15','p5-16'].includes(page)){
+    if(role==='admin') return dd('管理者', ddi('user','代理操作') + ddi('info','詳細情報'));
+    return '';
+  }
+
+  /* ── P6 作品 ── */
+  if(['p6','p6-1','p6-2'].includes(page)){
+    const cmn = hib('heart','興味あり') + shareBtn() + sep();
+    if(role==='guest'||role==='login')
+      return cmn + dd('その他', ddi('warn','問題を報告する',true));
+    if(role==='creator')
+      return cmn + owbtn('edit','編集') + dd('オーナーメニュー',
+        ddi('edit','作品編集') + ddSep() + ddi('chart','インサイト') + ddSep() + ddi('trash','削除',true));
+    if(role==='admin')
+      return cmn + owbtn('edit','編集') + dd('管理者',
+        ddi('edit','編集') + ddSep() + ddi('chart','インサイト') + ddSep() + ddi('trash','削除',true));
+    return cmn;
+  }
+
+  if(['p6-11','p6-12','p6-13','p6-14'].includes(page)){
+    if(role==='creator') return owbtn('info','ガイド');
+    if(role==='admin') return owbtn('info','ガイド') + sep() + dd('管理者', ddi('chart','統計'));
+    return '';
+  }
+
+  /* ── P7 記事 ── */
+  if(page==='p7'){
+    const cmn = shareBtn() + sep();
+    if(role==='guest'||role==='login')
+      return cmn + dd('その他', ddi('warn','問題を報告する',true));
+    if(role==='creator'||role==='gallery')
+      return cmn + owbtn('edit','編集') + dd('オーナーメニュー',
+        ddi('edit','編集') + ddSep() + ddi('trash','削除',true));
+    if(role==='admin')
+      return cmn + owbtn('edit','編集') + dd('管理者',
+        ddi('edit','編集') + ddSep() + ddi('trash','削除',true));
+    return cmn;
+  }
+
+  if(page==='p7-11'){
+    if(role==='creator'||role==='gallery') return owbtn('info','ガイド');
+    if(role==='admin') return owbtn('info','ガイド') + sep() + dd('管理者', ddi('info','詳細'));
+    return '';
+  }
+
+  /* ── P8 レビュー ── */
+  if(page==='p8'){
+    const cmn = shareBtn() + sep();
+    if(role==='guest'||role==='login')
+      return cmn + dd('その他', ddi('warn','問題を報告する',true));
+    if(role==='admin')
+      return cmn + dd('管理者', ddi('edit','編集') + ddSep() + ddi('trash','削除',true));
+    return cmn;
+  }
+
+  if(page==='p8-11'){
+    if(role==='admin') return dd('管理者', ddi('edit','編集') + ddSep() + ddi('trash','削除',true));
+    return '';
+  }
+
+  /* ── P9 ニュース ── */
+  if(page==='p9'){
+    const cmn = shareBtn() + sep();
+    if(role==='admin')
+      return cmn + dd('管理者', ddi('edit','編集') + ddSep() + ddi('trash','削除',true));
+    return cmn;
+  }
+
+  if(page==='p9-11'){
+    if(role==='admin') return dd('管理者', ddi('edit','編集') + ddSep() + ddi('trash','削除',true));
+    return '';
+  }
+
+  /* ── P10 特集 ── */
+  if(['p10-5','p10-6','p10-7','p10-8'].includes(page)){
+    if(role==='admin') return dd('管理者', ddi('edit','編集') + ddi('plus','新規特集'));
+    return '';
+  }
+
+  /* ── P60 ガイド・法的ページ ── */
+  if(['p60-1','p60-5','p60-9','p60-10','p60-11'].includes(page)){
+    if(role==='admin') return dd('管理者', ddi('edit','編集'));
+    return '';
+  }
+
+  /* ── P70 LIAISONガイド ── */
+  if(['p70-1','p70-2','p70-4'].includes(page)){
+    if(role==='admin') return dd('管理者', ddi('edit','編集'));
+    return '';
+  }
+
+  /* ── P90 管理者 ── */
+  if(page==='p90-1'){
+    if(role==='admin') return dd('管理者メニュー',
+      ddi('plus','新規展覧会') + ddi('user','新規ユーザー') + ddi('edit','新規クリエイター') + ddSep() +
+      ddi('chart','ダッシュボード'));
+    return '';
+  }
+
+  if(['p90-4','p90-10','p90-11','p90-13','p90-14'].includes(page)){
+    if(role==='admin') return owbtn('info','ガイド');
+    return '';
+  }
+
+  return '';
+}
+
+/* ══════════════════════════════════
+   パンくず生成
+══════════════════════════════════ */
+function renderBc(page){
+  const p = PAGES[page];
+  if(!p) return '';
+  return p.bc.map((c,i)=>{
+    const isLast = i===p.bc.length-1;
+    const badge = c[2]==='l'
+      ? `<span class="ktn-bc__badge ktn-bc__badge--l">LIAISON</span>`
+      : c[2]==='lp'
+      ? `<span class="ktn-bc__badge ktn-bc__badge--lp">LIAISON+</span>`
+      : '';
+    const sep = i>0 ? `<span class="ktn-bc__sep">›</span>` : '';
+    if(isLast||!c[1])
+      return `${sep}<span class="ktn-bc__current">${c[0]}${badge}</span>`;
+    return `${sep}<a href="${c[1]}" class="ktn-bc__link">${c[0]}</a>`;
+  }).join('');
+}
+
+/* ══════════════════════════════════
+   タグバー定義
+   各ページで表示するタグのリスト。
+   { label, href, icon?, mod? }
+   mod: 'feature' | 'liaison' | undefined
+══════════════════════════════════ */
+const TAGBAR_DEFS = {
+  /* P1 ホーム */
+  'p1': [
+    { label: '展覧会を探す',     href: '/p2' },
+    { label: '今週末開催',       href: '/p2?filter=weekend', icon: 'calendar' },
+    { label: '近くの展覧会',     href: '/p2?filter=near',    icon: 'pin' },
+    { sep: true },
+    { label: '特集一覧',         href: '/feature',           mod: 'feature' },
+    { label: '九州の展覧会',     href: '/feature/kyushu',    mod: 'feature' },
+    { label: '今月注目',         href: '/feature/monthly',   mod: 'feature' },
+    { sep: true },
+    { label: 'LIAISON作品を見る',href: '/p2?liaison=1',      mod: 'liaison', icon: 'liaison' },
+  ],
+  /* P2 展覧会一覧 */
+  'p2': [
+    { label: 'すべて',           href: '/p2',                active: true },
+    { label: '今日・明日開催',   href: '/p2?filter=today',   icon: 'calendar' },
+    { label: '今週末',           href: '/p2?filter=weekend' },
+    { label: '近くで開催',       href: '/p2?filter=near',    icon: 'pin' },
+    { sep: true },
+    { label: '写真',             href: '/p2?genre=photo' },
+    { label: '日本画',           href: '/p2?genre=nihonga' },
+    { label: '油彩',             href: '/p2?genre=oil' },
+    { label: '版画',             href: '/p2?genre=print' },
+    { label: '立体・彫刻',       href: '/p2?genre=sculpture' },
+    { sep: true },
+    { label: 'LIAISON+あり',     href: '/p2?liaison=1',      mod: 'liaison' },
+  ],
+  /* P2-3 展覧会詳細 */
+  'p2-3': [
+    { label: '展覧会詳細',       href: '#',                  active: true },
+    { label: '作品一覧',         href: '#artworks' },
+    { label: 'クリエイター',     href: '#creator' },
+    { label: 'ギャラリー情報',   href: '#gallery' },
+    { sep: true },
+    { label: 'LIAISON作品',      href: '/p2-5',              mod: 'liaison' },
+  ],
+  /* P3 クリエイター */
+  'p3': [
+    { label: 'プロフィール',     href: '#',                  active: true },
+    { label: '開催中の展覧会',   href: '#current' },
+    { label: '作品',             href: '#works' },
+    { label: '記事',             href: '#articles' },
+  ],
+  /* P6 作品詳細 */
+  'p6': [
+    { label: '作品詳細',         href: '#',                  active: true },
+    { label: '同シリーズ',       href: '#series' },
+    { label: 'このクリエイターの他の作品', href: '#creator-works' },
+  ],
+  /* P10 特集 */
+  'p10-5': [
+    { label: '展覧会特集',       href: '/p10-5',             mod: 'feature', active: true },
+    { label: '作品特集',         href: '/p10-6',             mod: 'feature' },
+    { label: 'クリエイター特集', href: '/p10-7',             mod: 'feature' },
+    { label: 'ギャラリー特集',   href: '/p10-8',             mod: 'feature' },
+  ],
+  'p10-6': [
+    { label: '展覧会特集',       href: '/p10-5',             mod: 'feature' },
+    { label: '作品特集',         href: '/p10-6',             mod: 'feature', active: true },
+    { label: 'クリエイター特集', href: '/p10-7',             mod: 'feature' },
+    { label: 'ギャラリー特集',   href: '/p10-8',             mod: 'feature' },
+  ],
+  'p10-7': [
+    { label: '展覧会特集',       href: '/p10-5',             mod: 'feature' },
+    { label: '作品特集',         href: '/p10-6',             mod: 'feature' },
+    { label: 'クリエイター特集', href: '/p10-7',             mod: 'feature', active: true },
+    { label: 'ギャラリー特集',   href: '/p10-8',             mod: 'feature' },
+  ],
+  'p10-8': [
+    { label: '展覧会特集',       href: '/p10-5',             mod: 'feature' },
+    { label: '作品特集',         href: '/p10-6',             mod: 'feature' },
+    { label: 'クリエイター特集', href: '/p10-7',             mod: 'feature' },
+    { label: 'ギャラリー特集',   href: '/p10-8',             mod: 'feature', active: true },
+  ],
+};
+
+/* タグバー用SVGアイコン（ミニ） */
+const TB_ICONS = {
+  calendar: `<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`,
+  pin:      `<svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>`,
+  liaison:  `<svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>`,
+};
+
+function renderTagbar(page) {
+  const el = document.getElementById('ktnTagbarInner');
+  const defs = TAGBAR_DEFS[page];
+  if (!defs || defs.length === 0) {
+    /* 定義なし → デフォルトの汎用タグ */
+    el.innerHTML = `
+      <span class="ktn-tagbar__label">タグ</span>
+      <a href="/p2" class="ktn-tagbar__tag">展覧会</a>
+      <a href="/p2?genre=photo" class="ktn-tagbar__tag">写真</a>
+      <a href="/p2?genre=oil" class="ktn-tagbar__tag">油彩</a>
+      <a href="/p2?genre=print" class="ktn-tagbar__tag">版画</a>
+      <a href="/feature" class="ktn-tagbar__tag ktn-tagbar__tag--feature">特集</a>
+    `;
+    return;
+  }
+  el.innerHTML = defs.map(t => {
+    if (t.sep) return `<span class="ktn-tagbar__sep"></span>`;
+    const mod   = t.mod   ? ` ktn-tagbar__tag--${t.mod}` : '';
+    const actv  = t.active ? ' is-active' : '';
+    const ico   = t.icon && TB_ICONS[t.icon] ? TB_ICONS[t.icon] : '';
+    return `<a href="${t.href}" class="ktn-tagbar__tag${mod}${actv}">${ico}${t.label}</a>`;
+  }).join('');
+}
+
+/* ══════════════════════════════════
+   状態・レンダリング
+══════════════════════════════════ */
+let curRole='guest', curPage='p2-3';
+
+/* ページ→コンテンツ幅タイプ */
+const PAGE_WIDTH = {
+  article: ['p7','p7-11','p8','p8-11','p9','p9-11',
+            'p60-1','p60-5','p60-9','p60-10','p60-11',
+            'p70-1','p70-2','p70-4',
+            'p2-11','p2-12','p2-13',
+            'p3-11','p3-13','p3-14','p3-15','p3-16','p3-17',
+            'p4-11','p4-12','p4-13',
+            'p5-11','p5-12','p5-13','p5-14','p5-15','p5-16',
+            'p6-11','p6-12','p6-13','p6-14',
+            'p90-4','p90-10','p90-11','p90-13','p90-14'],
+  index:   ['p2','p10-5','p10-6','p10-7','p10-8','p90-1'],
+  // それ以外はdetail（デフォルト）
+};
+
+function getWidthVar(page){
+  if(PAGE_WIDTH.article.includes(page)) return 'var(--w-article)';
+  if(PAGE_WIDTH.index.includes(page))   return 'var(--w-index)';
+  return 'var(--w-detail)';
+}
+
+function render(){
+  // コンテンツ幅をCSS変数で切替え
+  document.documentElement.style.setProperty('--w-page', getWidthVar(curPage));
+  document.getElementById('ktnBc').innerHTML = renderBc(curPage);
+  document.getElementById('ktnActs').innerHTML = getActions(curPage, curRole);
+  renderTagbar(curPage);
+  const p = PAGES[curPage]||{n:curPage};
+  const wLabel = PAGE_WIDTH.article.includes(curPage) ? '--w-article (720px)'
+    : PAGE_WIDTH.index.includes(curPage) ? '--w-index (1080px)'
+    : '--w-detail (1080px)';
+  document.getElementById('demoCard').innerHTML =
+    '<strong>' + p.n + ' / ' + curRole + '</strong> &nbsp;｜&nbsp; コンテンツ幅: <code>' + wLabel + '</code><br>' +
+    'パンくず・アクションボタンがロールとページに応じて切り替わります。';
+}
+
+/* ロール / ページ切替 */
+function setR(v,btn){
+  curRole=v;
+  document.querySelectorAll('.dbar [onclick^="setR"]').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  render();
+}
+function setP(v,btn){
+  curPage=v;
+  document.querySelectorAll('.dbar [onclick^="setP"]').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  render();
+}
+
+/* ドロップダウン */
+/* ══════════════════════════════════
+   シェア機能
+══════════════════════════════════ */
+function doShare(){
+  const url   = location.href;
+  const title = document.title || '個展なび';
+  if(navigator.share){
+    navigator.share({title, url}).catch(()=>{});
+  } else {
+    navigator.clipboard.writeText(url)
+      .then(()=> showToast('URLをコピーしました'))
+      .catch(()=>{
+        /* clipboard API 非対応フォールバック */
+        const ta = document.createElement('textarea');
+        ta.value = url;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        showToast('URLをコピーしました');
+      });
+  }
+}
+
+function closeAllPanels(){
+  document.querySelectorAll('.ktn-ddmenu').forEach(el=>el.classList.remove('open'));
+  document.querySelectorAll('.ktn-ddbtn').forEach(el=>el.classList.remove('open'));
+}
+
+function toggleDD(id,btn){
+  const m=document.getElementById(id);
+  if(!m) return;
+  const was=m.classList.contains('open');
+  document.querySelectorAll('.ktn-ddmenu').forEach(el=>el.classList.remove('open'));
+  document.querySelectorAll('.ktn-ddbtn').forEach(el=>el.classList.remove('open'));
+  if(!was){ m.classList.add('open'); btn.classList.add('open'); }
+}
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.ktn-ddw')){
+    closeAllPanels();
+  }
+});
+
+
+render();
+</script>
+</body>
+</html>

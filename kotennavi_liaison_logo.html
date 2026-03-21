@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>個展なび — LIAISON Logo 完成版</title>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@400;600&family=Montserrat:wght@400;500;600;700&family=Noto+Sans+JP:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Sans JP',sans-serif;background:#f0f3f7;min-height:100vh;padding:48px 24px;display:flex;flex-direction:column;align-items:center;gap:40px}
+
+/*
+  ══ SVGロゴ共通仕様 ══════════════════════════
+  LIAISON    viewBox="0 0 480 240"
+  LIAISON+   viewBox="0 0 480 240"  (+分を右に拡張)
+
+  アーチライン: M 20 208 Q 240 32 460 208  (深いカーブ、視認性)
+  文字パス:    M 80 186 Q 240 90 400 186   (cy=90、適切な弧長338px)
+  文字: Bodoni Moda / fs=58 / ls=8 / fw=600
+
+  Now on View: Montserrat / fs=17 / fw=500 / ls=4
+               y=228 (アーチライン直下中央)
+
+  LIAISON+ の「+」:
+    Bodoni Moda / fs=68 / 独立配置 x=530 y=165
+    ダーク: #f0d070 / ライト: #b8880a
+  ═══════════════════════════════════════════ */
+
+/* サイズ定義 */
+.logo-xl svg { width: 200px; height: 100px; }
+.logo-m  svg { width: 120px; height:  60px; }
+.logo-s  svg { width:  72px; height:  36px; }
+.logo-xs svg { width:  48px; height:  24px; }
+
+/* ── デモUI ── */
+.demo-page{width:100%;max-width:1020px;display:flex;flex-direction:column;gap:36px}
+.demo-section{background:#fff;border-radius:12px;padding:28px 28px 26px;border:1px solid #e4e8ee}
+.demo-section-ttl{font-family:'Montserrat',sans-serif;font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;color:#bbb;margin-bottom:24px;padding-bottom:12px;border-bottom:1px solid #f0f0f0}
+
+.logo-grid{display:flex;flex-wrap:wrap;gap:28px 36px;align-items:flex-end}
+.logo-item{display:flex;flex-direction:column;align-items:center;gap:10px}
+.logo-lbl{font-family:'Montserrat',sans-serif;font-size:.43rem;letter-spacing:.12em;text-transform:uppercase;color:#ccc;text-align:center;line-height:1.5}
+
+.dark-bg{background:#1a2535;border-radius:8px;padding:18px 22px;display:inline-flex}
+.row-ttl{
+  font-family:'Montserrat',sans-serif;font-size:.46rem;letter-spacing:.16em;text-transform:uppercase;
+  color:#bbb;width:100%;padding-top:20px;margin-top:4px;border-top:1px solid #f2f2f2;
+}
+.row-ttl:first-child{border-top:none;padding-top:0;margin-top:0}
+
+/* コード */
+.code-block{background:#1a2535;border-radius:8px;padding:16px 18px;font-family:'Courier New',monospace;font-size:.61rem;line-height:1.75;color:#a8c8f0;overflow-x:auto;white-space:pre}
+.copy-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:6px;border:1px solid #d8e2ec;background:none;font-family:'Montserrat',sans-serif;font-size:.55rem;letter-spacing:.08em;color:#8899aa;cursor:pointer;transition:all .15s;margin-top:12px}
+.copy-btn:hover{border-color:#3a90e0;color:#3a90e0}
+
+/* グラデ定義（CSS変数で管理） */
+:root{
+  --arch-line:  M 20 208 Q 240 32 460 208;
+  --text-path:  M 80 186 Q 240 90 400 186;
+  --arch-line-plus: M 20 208 Q 250 32 480 208;
+  --text-path-plus: M 80 186 Q 250 90 420 186;
+}
+</style>
+</head>
+<body>
+<div class="demo-page">
+
+<!-- ══════════════════════════════════
+     SECTION 1: LIAISON
+     ══════════════════════════════════ -->
+<div class="demo-section">
+  <div class="demo-section-ttl">LIAISON — Light / Dark × 4サイズ</div>
+  <div class="logo-grid">
+
+    <div class="row-ttl">Light background</div>
+
+    <!-- XL Light -->
+    <div class="logo-item">
+      <div class="logo-xl">
+        <svg viewBox="0 0 480 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="g-li-li-xl-lt-t" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="#ffffff"/>
+              <stop offset="55%"  stop-color="#005da7"/>
+              <stop offset="100%" stop-color="#003f80"/>
+            </linearGradient>
+            <path id="li-xl-lt-t" d="M 80 184 Q 240 56 400 184"/></defs>
+          <path d="M 20 200 Q 240 33 460 200" stroke="url(#g-li-li-xl-lt-t)" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#g-li-li-xl-lt-t)">
+            <textPath href="#li-xl-lt-t" startOffset="50%" text-anchor="middle">LIAISON</textPath>
+          </text>
+          <text x="240" y="220" font-family="'Montserrat',sans-serif" font-size="26" font-weight="800" letter-spacing="2" fill="#005da7" text-anchor="middle">Now on View</text>
+        </svg>
+      </div>
+      <span class="logo-lbl">XL</span>
+    </div>
+
+    <!-- M Light -->
+    <div class="logo-item">
+      <div class="logo-m">
+        <svg viewBox="0 0 480 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="g-li-li-m-lt-t" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="#ffffff"/>
+              <stop offset="55%"  stop-color="#005da7"/>
+              <stop offset="100%" stop-color="#003f80"/>
+            </linearGradient>
+            <path id="li-m-lt-t" d="M 80 184 Q 240 56 400 184"/></defs>
+          <path d="M 20 200 Q 240 33 460 200" stroke="url(#g-li-li-m-lt-t)" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#g-li-li-m-lt-t)">
+            <textPath href="#li-m-lt-t" startOffset="50%" text-anchor="middle">LIAISON</textPath>
+          </text>
+          <text x="240" y="220" font-family="'Montserrat',sans-serif" font-size="26" font-weight="800" letter-spacing="2" fill="#005da7" text-anchor="middle">Now on View</text>
+        </svg>
+      </div>
+      <span class="logo-lbl">M</span>
+    </div>
+
+    <!-- S Light -->
+    <div class="logo-item">
+      <div class="logo-s">
+        <svg viewBox="0 0 480 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="g-li-li-s-lt-t" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="#ffffff"/>
+              <stop offset="55%"  stop-color="#005da7"/>
+              <stop offset="100%" stop-color="#003f80"/>
+            </linearGradient>
+            <path id="li-s-lt-t" d="M 80 184 Q 240 56 400 184"/></defs>
+          <path d="M 20 200 Q 240 33 460 200" stroke="url(#g-li-li-s-lt-t)" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#g-li-li-s-lt-t)">
+            <textPath href="#li-s-lt-t" startOffset="50%" text-anchor="middle">LIAISON</textPath>
+          </text>
+          <text x="240" y="220" font-family="'Montserrat',sans-serif" font-size="26" font-weight="800" letter-spacing="2" fill="#005da7" text-anchor="middle">Now on View</text>
+        </svg>
+      </div>
+      <span class="logo-lbl">S</span>
+    </div>
+
+    <!-- XS Light 確認用 -->
+    <div class="logo-item">
+      <div class="logo-xs">
+        <svg viewBox="0 0 480 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="g-li-li-xs-lt-t" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="#ffffff"/>
+              <stop offset="55%"  stop-color="#005da7"/>
+              <stop offset="100%" stop-color="#003f80"/>
+            </linearGradient>
+            <path id="li-xs-lt-t" d="M 80 184 Q 240 56 400 184"/></defs>
+          <path d="M 20 200 Q 240 33 460 200" stroke="url(#g-li-li-xs-lt-t)" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#g-li-li-xs-lt-t)">
+            <textPath href="#li-xs-lt-t" startOffset="50%" text-anchor="middle">LIAISON</textPath>
+          </text>
+          <text x="240" y="220" font-family="'Montserrat',sans-serif" font-size="26" font-weight="800" letter-spacing="2" fill="#005da7" text-anchor="middle">Now on View</text>
+        </svg>
+      </div>
+      <span class="logo-lbl">XS (確認)</span>
+    </div>
+
+    <div class="row-ttl">Dark background</div>
+
+    <!-- XL Dark -->
+    <div class="logo-item">
+      <div class="dark-bg">
+        <div class="logo-xl">
+          <svg viewBox="0 0 480 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs><linearGradient id="g-li-li-xl-dk-t" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="#d0e8ff"/>
+              <stop offset="55%"  stop-color="#005da7"/>
+              <stop offset="100%" stop-color="#0090e0"/>
+            </linearGradient>
+            <path id="li-xl-dk-t" d="M 80 184 Q 240 56 400 184"/></defs>
+            <path d="M 20 200 Q 240 33 460 200" stroke="url(#g-li-li-xl-dk-t)" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#g-li-li-xl-dk-t)">
+              <textPath href="#li-xl-dk-t" startOffset="50%" text-anchor="middle">LIAISON</textPath>
+            </text>
+            <text x="240" y="220" font-family="'Montserrat',sans-serif" font-size="26" font-weight="800" letter-spacing="2" fill="#005da7" text-anchor="middle">Now on View</text>
+          </svg>
+        </div>
+      </div>
+      <span class="logo-lbl">XL Dark</span>
+    </div>
+
+    <!-- M Dark -->
+    <div class="logo-item">
+      <div class="dark-bg">
+        <div class="logo-m">
+          <svg viewBox="0 0 480 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs><linearGradient id="g-li-li-m-dk-t" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="#d0e8ff"/>
+              <stop offset="55%"  stop-color="#005da7"/>
+              <stop offset="100%" stop-color="#0090e0"/>
+            </linearGradient>
+            <path id="li-m-dk-t" d="M 80 184 Q 240 56 400 184"/></defs>
+            <path d="M 20 200 Q 240 33 460 200" stroke="url(#g-li-li-m-dk-t)" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#g-li-li-m-dk-t)">
+              <textPath href="#li-m-dk-t" startOffset="50%" text-anchor="middle">LIAISON</textPath>
+            </text>
+            <text x="240" y="220" font-family="'Montserrat',sans-serif" font-size="26" font-weight="800" letter-spacing="2" fill="#005da7" text-anchor="middle">Now on View</text>
+          </svg>
+        </div>
+      </div>
+      <span class="logo-lbl">M Dark</span>
+    </div>
+
+    <!-- S Dark -->
+    <div class="logo-item">
+      <div class="dark-bg">
+        <div class="logo-s">
+          <svg viewBox="0 0 480 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs><linearGradient id="g-li-li-s-dk-t" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="#d0e8ff"/>
+              <stop offset="55%"  stop-color="#005da7"/>
+              <stop offset="100%" stop-color="#0090e0"/>
+            </linearGradient>
+            <path id="li-s-dk-t" d="M 80 184 Q 240 56 400 184"/></defs>
+            <path d="M 20 200 Q 240 33 460 200" stroke="url(#g-li-li-s-dk-t)" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#g-li-li-s-dk-t)">
+              <textPath href="#li-s-dk-t" startOffset="50%" text-anchor="middle">LIAISON</textPath>
+            </text>
+            <text x="240" y="220" font-family="'Montserrat',sans-serif" font-size="26" font-weight="800" letter-spacing="2" fill="#005da7" text-anchor="middle">Now on View</text>
+          </svg>
+        </div>
+      </div>
+      <span class="logo-lbl">S Dark</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     SECTION 2: LIAISON+
+     「+」: Bodoni Moda fs=68、アーチ右端に独立
+     ゴールドグラデーション
+     ══════════════════════════════════ -->
+<div class="demo-section">
+  <div class="demo-section-ttl">LIAISON+ — Light / Dark × 4サイズ</div>
+  <div class="logo-grid">
+
+    <div class="row-ttl">Light background</div>
+
+    <!-- XL Light -->
+    <div class="logo-item">
+      <div class="logo-xl">
+        <svg viewBox="0 0 480 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <path id="lp-xl-lt-t" d="M 80 184 Q 240 56 400 184"/>
+            <linearGradient id="g-lp-xl-lt" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="#6a4010"/>
+              <stop offset="30%"  stop-color="#a87020"/>
+              <stop offset="58%"  stop-color="#d4a428"/>
+              <stop offset="100%" stop-color="#6a4010"/>
+            </linearGradient>
+          </defs>
+          <!-- アーチライン -->
+          <path d="M 20 200 Q 240 33 460 200" stroke="url(#g-lp-xl-lt)" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <!-- LIAISON 文字 -->
+          <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#g-lp-xl-lt)">
+            <textPath href="#lp-xl-lt-t" startOffset="50%" text-anchor="middle">LIAISON</textPath>
+          </text>
+          <!-- + 独立配置 — 右端・大きく -->
+          <!-- + 丸バッジ: アーチ右端に乗せる -->
+          <circle cx="432" cy="183" r="22" fill="#b87c10"/>
+          <text x="432" y="183" font-family="'Bodoni Moda',serif" font-size="42" font-weight="900"
+            fill="#fff8e8" text-anchor="middle" dominant-baseline="central">+</text>
+          <!-- サブテキスト -->
+          <text x="240" y="220" font-family="'Montserrat',sans-serif" font-size="17" font-weight="600"
+            letter-spacing="3" fill="#8a6018" text-anchor="middle">Now on View + Shop</text>
+        </svg>
+      </div>
+      <span class="logo-lbl">XL</span>
+    </div>
+
+    <!-- M Light -->
+    <div class="logo-item">
+      <div class="logo-m">
+        <svg viewBox="0 0 480 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <path id="lp-m-lt-t" d="M 80 184 Q 240 56 400 184"/>
+            <linearGradient id="g-lp-m-lt" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="#6a4010"/>
+              <stop offset="30%"  stop-color="#a87020"/>
+              <stop offset="58%"  stop-color="#d4a428"/>
+              <stop offset="100%" stop-color="#6a4010"/>
+            </linearGradient>
+          </defs>
+          <path d="M 20 200 Q 240 33 460 200" stroke="url(#g-lp-m-lt)" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#g-lp-m-lt)">
+            <textPath href="#lp-m-lt-t" startOffset="50%" text-anchor="middle">LIAISON</textPath>
+          </text>
+          <!-- + 丸バッジ: アーチ右端に乗せる -->
+          <circle cx="432" cy="183" r="22" fill="#b87c10"/>
+          <text x="432" y="183" font-family="'Bodoni Moda',serif" font-size="42" font-weight="900"
+            fill="#fff8e8" text-anchor="middle" dominant-baseline="central">+</text>
+          <text x="240" y="220" font-family="'Montserrat',sans-serif" font-size="17" font-weight="600"
+            letter-spacing="3" fill="#8a6018" text-anchor="middle">Now on View + Shop</text>
+        </svg>
+      </div>
+      <span class="logo-lbl">M</span>
+    </div>
+
+    <!-- S Light -->
+    <div class="logo-item">
+      <div class="logo-s">
+        <svg viewBox="0 0 480 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <path id="lp-s-lt-t" d="M 80 184 Q 240 56 400 184"/>
+            <linearGradient id="g-lp-s-lt" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="#6a4010"/>
+              <stop offset="50%"  stop-color="#d4a428"/>
+              <stop offset="100%" stop-color="#6a4010"/>
+            </linearGradient>
+          </defs>
+          <path d="M 20 200 Q 240 33 460 200" stroke="url(#g-lp-s-lt)" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#g-lp-s-lt)">
+            <textPath href="#lp-s-lt-t" startOffset="50%" text-anchor="middle">LIAISON</textPath>
+          </text>
+          <!-- + 丸バッジ: アーチ右端に乗せる -->
+          <circle cx="432" cy="183" r="22" fill="#b87c10"/>
+          <text x="432" y="183" font-family="'Bodoni Moda',serif" font-size="42" font-weight="900"
+            fill="#fff8e8" text-anchor="middle" dominant-baseline="central">+</text>
+          <text x="240" y="220" font-family="'Montserrat',sans-serif" font-size="17" font-weight="600"
+            letter-spacing="3" fill="#8a6018" text-anchor="middle">Now on View + Shop</text>
+        </svg>
+      </div>
+      <span class="logo-lbl">S</span>
+    </div>
+
+    <!-- XS Light 確認用 -->
+    <div class="logo-item">
+      <div class="logo-xs">
+        <svg viewBox="0 0 480 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <path id="lp-xs-lt-t" d="M 80 184 Q 240 56 400 184"/>
+            <linearGradient id="g-lp-xs-lt" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="#6a4010"/>
+              <stop offset="50%"  stop-color="#d4a428"/>
+              <stop offset="100%" stop-color="#6a4010"/>
+            </linearGradient>
+          </defs>
+          <path d="M 20 200 Q 240 33 460 200" stroke="url(#g-lp-xs-lt)" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#g-lp-xs-lt)">
+            <textPath href="#lp-xs-lt-t" startOffset="50%" text-anchor="middle">LIAISON</textPath>
+          </text>
+          <!-- + 丸バッジ: アーチ右端に乗せる -->
+          <circle cx="432" cy="183" r="22" fill="#b87c10"/>
+          <text x="432" y="183" font-family="'Bodoni Moda',serif" font-size="42" font-weight="900"
+            fill="#fff8e8" text-anchor="middle" dominant-baseline="central">+</text>
+          <text x="240" y="220" font-family="'Montserrat',sans-serif" font-size="17" font-weight="600"
+            letter-spacing="3" fill="#8a6018" text-anchor="middle">Now on View + Shop</text>
+        </svg>
+      </div>
+      <span class="logo-lbl">XS (確認)</span>
+    </div>
+
+    <div class="row-ttl">Dark background</div>
+
+    <!-- XL Dark -->
+    <div class="logo-item">
+      <div class="dark-bg">
+        <div class="logo-xl">
+          <svg viewBox="0 0 480 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <path id="lp-xl-dk-t" d="M 80 184 Q 240 56 400 184"/>
+              <linearGradient id="g-lp-xl-dk" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
+                <stop offset="0%"   stop-color="#c09028"/>
+                <stop offset="50%"  stop-color="#f0d068"/>
+                <stop offset="100%" stop-color="#c09028"/>
+              </linearGradient>
+            </defs>
+            <path d="M 20 200 Q 240 33 460 200" stroke="url(#g-lp-xl-dk)" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#g-lp-xl-dk)">
+              <textPath href="#lp-xl-dk-t" startOffset="50%" text-anchor="middle">LIAISON</textPath>
+            </text>
+            <!-- + 丸バッジ: アーチ右端に乗せる -->
+            <circle cx="432" cy="183" r="22" fill="#b87c10"/>
+          <text x="432" y="183" font-family="'Bodoni Moda',serif" font-size="42" font-weight="900"
+            fill="#fff8e8" text-anchor="middle" dominant-baseline="central">+</text>
+            <text x="240" y="220" font-family="'Montserrat',sans-serif" font-size="17" font-weight="600"
+              letter-spacing="3" fill="rgba(240,208,104,.68)" text-anchor="middle">Now on View + Shop</text>
+          </svg>
+        </div>
+      </div>
+      <span class="logo-lbl">XL Dark</span>
+    </div>
+
+    <!-- M Dark -->
+    <div class="logo-item">
+      <div class="dark-bg">
+        <div class="logo-m">
+          <svg viewBox="0 0 480 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <path id="lp-m-dk-t" d="M 80 184 Q 240 56 400 184"/>
+              <linearGradient id="g-lp-m-dk" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
+                <stop offset="0%"   stop-color="#c09028"/>
+                <stop offset="50%"  stop-color="#f0d068"/>
+                <stop offset="100%" stop-color="#c09028"/>
+              </linearGradient>
+            </defs>
+            <path d="M 20 200 Q 240 33 460 200" stroke="url(#g-lp-m-dk)" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#g-lp-m-dk)">
+              <textPath href="#lp-m-dk-t" startOffset="50%" text-anchor="middle">LIAISON</textPath>
+            </text>
+            <!-- + 丸バッジ: アーチ右端に乗せる -->
+            <circle cx="432" cy="183" r="22" fill="#b87c10"/>
+          <text x="432" y="183" font-family="'Bodoni Moda',serif" font-size="42" font-weight="900"
+            fill="#fff8e8" text-anchor="middle" dominant-baseline="central">+</text>
+            <text x="240" y="220" font-family="'Montserrat',sans-serif" font-size="17" font-weight="600"
+              letter-spacing="3" fill="rgba(240,208,104,.68)" text-anchor="middle">Now on View + Shop</text>
+          </svg>
+        </div>
+      </div>
+      <span class="logo-lbl">M Dark</span>
+    </div>
+
+    <!-- S Dark -->
+    <div class="logo-item">
+      <div class="dark-bg">
+        <div class="logo-s">
+          <svg viewBox="0 0 480 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <path id="lp-s-dk-t" d="M 80 184 Q 240 56 400 184"/>
+              <linearGradient id="g-lp-s-dk" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
+                <stop offset="0%"   stop-color="#c09028"/>
+                <stop offset="50%"  stop-color="#f0d068"/>
+                <stop offset="100%" stop-color="#c09028"/>
+              </linearGradient>
+            </defs>
+            <path d="M 20 200 Q 240 33 460 200" stroke="url(#g-lp-s-dk)" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#g-lp-s-dk)">
+              <textPath href="#lp-s-dk-t" startOffset="50%" text-anchor="middle">LIAISON</textPath>
+            </text>
+            <!-- + 丸バッジ: アーチ右端に乗せる -->
+            <circle cx="432" cy="183" r="22" fill="#b87c10"/>
+          <text x="432" y="183" font-family="'Bodoni Moda',serif" font-size="42" font-weight="900"
+            fill="#fff8e8" text-anchor="middle" dominant-baseline="central">+</text>
+            <text x="240" y="220" font-family="'Montserrat',sans-serif" font-size="17" font-weight="600"
+              letter-spacing="3" fill="rgba(240,208,104,.68)" text-anchor="middle">Now on View + Shop</text>
+          </svg>
+        </div>
+      </div>
+      <span class="logo-lbl">S Dark</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     SECTION 3: 並べて比較
+     ══════════════════════════════════ -->
+<div class="demo-section">
+  <div class="demo-section-ttl">LIAISON vs LIAISON+ — 並べて比較</div>
+  <div style="display:flex;flex-direction:column;gap:32px">
+
+    <!-- Light XL 並べて -->
+    <div>
+      <div class="row-ttl" style="border-top:none;padding-top:0;margin-top:0">Light — XL</div>
+      <div style="display:flex;gap:48px;align-items:flex-end;flex-wrap:wrap;margin-top:16px">
+        <div class="logo-item">
+          <div class="logo-xl">
+            <svg viewBox="0 0 480 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs><linearGradient id="g-li-cmp1-li" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="#ffffff"/>
+              <stop offset="55%"  stop-color="#005da7"/>
+              <stop offset="100%" stop-color="#003f80"/>
+            </linearGradient>
+            <path id="cmp1-li" d="M 80 184 Q 240 56 400 184"/></defs>
+              <path d="M 20 200 Q 240 33 460 200" stroke="url(#g-li-cmp1-li)" stroke-width="4" fill="none" stroke-linecap="round"/>
+              <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#g-li-cmp1-li)">
+                <textPath href="#cmp1-li" startOffset="50%" text-anchor="middle">LIAISON</textPath>
+              </text>
+              <text x="240" y="220" font-family="'Montserrat',sans-serif" font-size="26" font-weight="800" letter-spacing="2" fill="#005da7" text-anchor="middle">Now on View</text>
+            </svg>
+          </div>
+          <span class="logo-lbl">LIAISON</span>
+        </div>
+        <div class="logo-item">
+          <div class="logo-xl">
+            <svg viewBox="0 0 480 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <path id="cmp1-lp" d="M 80 184 Q 240 56 400 184"/>
+                <linearGradient id="g-cmp1-lp" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#6a4010"/><stop offset="50%" stop-color="#d4a428"/><stop offset="100%" stop-color="#6a4010"/>
+                </linearGradient>
+              </defs>
+              <path d="M 20 200 Q 240 33 460 200" stroke="url(#g-cmp1-lp)" stroke-width="4" fill="none" stroke-linecap="round"/>
+              <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#g-cmp1-lp)">
+                <textPath href="#cmp1-lp" startOffset="50%" text-anchor="middle">LIAISON</textPath>
+              </text>
+              <circle cx="432" cy="183" r="22" fill="#b87c10"/><text x="432" y="183" font-family="'Bodoni Moda',serif" font-size="42" font-weight="900" fill="#fff8e8" text-anchor="middle" dominant-baseline="central">+</text>
+              <text x="240" y="220" font-family="'Montserrat',sans-serif" font-size="26" font-weight="800" letter-spacing="1" fill="#8a6018" text-anchor="middle">Now on View + Shop</text>
+            </svg>
+          </div>
+          <span class="logo-lbl">LIAISON+</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dark XL 並べて -->
+    <div>
+      <div class="row-ttl">Dark — XL</div>
+      <div style="display:flex;gap:32px;align-items:flex-end;flex-wrap:wrap;margin-top:16px">
+        <div class="logo-item">
+          <div class="dark-bg">
+            <div class="logo-xl">
+              <svg viewBox="0 0 480 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs><linearGradient id="g-li-cmp2-li" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="#d0e8ff"/>
+              <stop offset="55%"  stop-color="#005da7"/>
+              <stop offset="100%" stop-color="#0090e0"/>
+            </linearGradient>
+            <path id="cmp2-li" d="M 80 184 Q 240 56 400 184"/></defs>
+                <path d="M 20 200 Q 240 33 460 200" stroke="url(#g-li-cmp2-li)" stroke-width="4" fill="none" stroke-linecap="round"/>
+                <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#g-li-cmp2-li)">
+                  <textPath href="#cmp2-li" startOffset="50%" text-anchor="middle">LIAISON</textPath>
+                </text>
+                <text x="240" y="220" font-family="'Montserrat',sans-serif" font-size="26" font-weight="800" letter-spacing="2" fill="#005da7" text-anchor="middle">Now on View</text>
+              </svg>
+            </div>
+          </div>
+          <span class="logo-lbl">LIAISON Dark</span>
+        </div>
+        <div class="logo-item">
+          <div class="dark-bg">
+            <div class="logo-xl">
+              <svg viewBox="0 0 480 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <path id="cmp2-lp" d="M 80 184 Q 240 56 400 184"/>
+                  <linearGradient id="g-cmp2-lp" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="#c09028"/><stop offset="50%" stop-color="#f0d068"/><stop offset="100%" stop-color="#c09028"/>
+                  </linearGradient>
+                </defs>
+                <path d="M 20 200 Q 240 33 460 200" stroke="url(#g-cmp2-lp)" stroke-width="4" fill="none" stroke-linecap="round"/>
+                <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#g-cmp2-lp)">
+                  <textPath href="#cmp2-lp" startOffset="50%" text-anchor="middle">LIAISON</textPath>
+                </text>
+                <circle cx="432" cy="183" r="22" fill="#b87c10"/><text x="432" y="183" font-family="'Bodoni Moda',serif" font-size="42" font-weight="900" fill="#fff8e8" text-anchor="middle" dominant-baseline="central">+</text>
+                <text x="240" y="220" font-family="'Montserrat',sans-serif" font-size="26" font-weight="800" letter-spacing="1" fill="rgba(240,208,104,.88)" text-anchor="middle">Now on View + Shop</text>
+              </svg>
+            </div>
+          </div>
+          <span class="logo-lbl">LIAISON+ Dark</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- S サイズ 4つ並べて -->
+    <div>
+      <div class="row-ttl">S サイズ — 視認性確認</div>
+      <div style="display:flex;gap:20px;align-items:flex-end;flex-wrap:wrap;margin-top:16px">
+        <div class="logo-item">
+          <div class="logo-s">
+            <svg viewBox="0 0 480 240" fill="none"><defs><linearGradient id="g-li-sc-li-s" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="#ffffff"/>
+              <stop offset="55%"  stop-color="#005da7"/>
+              <stop offset="100%" stop-color="#003f80"/>
+            </linearGradient>
+            <path id="sc-li-s" d="M 80 184 Q 240 56 400 184"/></defs><path d="M 20 200 Q 240 33 460 200" stroke="url(#g-li-sc-li-s)" stroke-width="4" fill="none" stroke-linecap="round"/><text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#g-li-sc-li-s)"><textPath href="#sc-li-s" startOffset="50%" text-anchor="middle">LIAISON</textPath></text><text x="240" y="220" font-family="'Montserrat',sans-serif" font-size="26" font-weight="800" letter-spacing="2" fill="#005da7" text-anchor="middle">Now on View</text></svg>
+          </div>
+          <span class="logo-lbl">LIAISON Light</span>
+        </div>
+        <div class="logo-item">
+          <div class="logo-s">
+            <svg viewBox="0 0 480 240" fill="none"><defs><path id="sc-lp-s" d="M 80 184 Q 240 56 400 184"/><linearGradient id="g-sc-lp" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#6a4010"/><stop offset="50%" stop-color="#d4a428"/><stop offset="100%" stop-color="#6a4010"/></linearGradient></defs><path d="M 20 200 Q 240 33 460 200" stroke="url(#g-sc-lp)" stroke-width="4" fill="none" stroke-linecap="round"/><text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#g-sc-lp)"><textPath href="#sc-lp-s" startOffset="50%" text-anchor="middle">LIAISON</textPath></text><circle cx="432" cy="183" r="22" fill="#b87c10"/><text x="432" y="183" font-family="'Bodoni Moda',serif" font-size="42" font-weight="900" fill="#fff8e8" text-anchor="middle" dominant-baseline="central">+</text><text x="240" y="220" font-family="'Montserrat',sans-serif" font-size="26" font-weight="800" letter-spacing="1" fill="#8a6018" text-anchor="middle">Now on View + Shop</text></svg>
+          </div>
+          <span class="logo-lbl">LIAISON+ Light</span>
+        </div>
+        <div class="logo-item">
+          <div class="dark-bg">
+            <div class="logo-s">
+              <svg viewBox="0 0 480 240" fill="none"><defs><linearGradient id="g-li-sc-li-s-dk" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="#d0e8ff"/>
+              <stop offset="55%"  stop-color="#005da7"/>
+              <stop offset="100%" stop-color="#0090e0"/>
+            </linearGradient>
+            <path id="sc-li-s-dk" d="M 80 184 Q 240 56 400 184"/></defs><path d="M 20 200 Q 240 33 460 200" stroke="url(#g-li-sc-li-s-dk)" stroke-width="4" fill="none" stroke-linecap="round"/><text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#g-li-sc-li-s-dk)"><textPath href="#sc-li-s-dk" startOffset="50%" text-anchor="middle">LIAISON</textPath></text><text x="240" y="220" font-family="'Montserrat',sans-serif" font-size="26" font-weight="800" letter-spacing="2" fill="#005da7" text-anchor="middle">Now on View</text></svg>
+            </div>
+          </div>
+          <span class="logo-lbl">LIAISON Dark</span>
+        </div>
+        <div class="logo-item">
+          <div class="dark-bg">
+            <div class="logo-s">
+              <svg viewBox="0 0 480 240" fill="none"><defs><path id="sc-lp-s-dk" d="M 80 184 Q 240 56 400 184"/><linearGradient id="g-sc-lp-dk" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#c09028"/><stop offset="50%" stop-color="#f0d068"/><stop offset="100%" stop-color="#c09028"/></linearGradient></defs><path d="M 20 200 Q 240 33 460 200" stroke="url(#g-sc-lp-dk)" stroke-width="4" fill="none" stroke-linecap="round"/><text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#g-sc-lp-dk)"><textPath href="#sc-lp-s-dk" startOffset="50%" text-anchor="middle">LIAISON</textPath></text><circle cx="432" cy="183" r="22" fill="#b87c10"/><text x="432" y="183" font-family="'Bodoni Moda',serif" font-size="42" font-weight="900" fill="#fff8e8" text-anchor="middle" dominant-baseline="central">+</text><text x="240" y="220" font-family="'Montserrat',sans-serif" font-size="26" font-weight="800" letter-spacing="1" fill="rgba(240,208,104,.88)" text-anchor="middle">Now on View + Shop</text></svg>
+            </div>
+          </div>
+          <span class="logo-lbl">LIAISON+ Dark</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ SVG仕様メモ ══ -->
+<div class="demo-section">
+  <div class="demo-section-ttl">SVG仕様メモ — ナレッジ用コピー</div>
+  <div class="code-block" id="cssCode">/* ══ 個展なび LIAISON ロゴ SVG仕様 (v4 確定) ══════════
+
+【LIAISON】  viewBox="0 0 480 240"
+  アーチライン : d="M 20 200 Q 240 33 460 200"  stroke-width="4"  stroke-linecap="round"
+  文字パス     : d="M 80 184 Q 240 56 400 184"
+  文字         : Bodoni Moda / font-size="58" / font-weight="600" / letter-spacing="8"
+  Now on View  : Montserrat / font-size="17" / font-weight="500" / letter-spacing="4"
+                 x="240" y="220" text-anchor="middle"
+
+  ライト : stroke="#2c3e50"  fill="#2c3e50"  sub-fill="#005da7"
+  ダーク  : stroke="#ffffff"  fill="#ffffff"  sub-fill="#005da7"
+
+【LIAISON+】 viewBox="0 0 480 240"  ← 幅+80px（「+」を右端に独立配置）
+  アーチライン : d="M 20 200 Q 240 33 460 200"  (LIAISONと同じ)
+  文字パス     : d="M 80 184 Q 240 56 400 184"  (LIAISONと同じ)
+  文字         : Bodoni Moda / font-size="58" / font-weight="600" / letter-spacing="8"
+  「+」丸バッジ : circle cx="432" cy="183" r="17" (ゴールド丸) + text font-size="22" fill逆転
+  Now on View + Shop : Montserrat / font-size="17" / font-weight="600" / letter-spacing="3"
+                       x="240" y="220" text-anchor="middle"
+
+  グラデーション（ライト）
+    gradientUnits="userSpaceOnUse" x1="0" x2="480"
+    #6a4010 → #a87020 → #d4a428 → #6a4010
+    「+」 fill="#b87c10"  sub-fill="#8a6018"
+
+  グラデーション（ダーク）
+    #c09028 → #f0d068 → #c09028
+    「+」 fill="#f0d068"  sub-fill="rgba(240,208,104,.68)"
+
+【CSSサイズ定義】
+  .logo-xl svg { width: 200px; height: 100px; }  ← セクションヘッダー
+  .logo-m  svg { width: 120px; height:  60px; }  ← カード・リスト
+  .logo-s  svg { width:  72px; height:  36px; }  ← コンパクト
+*/</div>
+  <button class="copy-btn" onclick="copyCss(this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+    仕様メモをコピー
+  </button>
+</div>
+
+</div>
+<script>
+function copyCss(btn){
+  const text=document.getElementById('cssCode').innerText;
+  navigator.clipboard.writeText(text).then(()=>{
+    const orig=btn.innerHTML;
+    btn.textContent='✓ コピーしました';btn.style.color='#1a7f3c';btn.style.borderColor='#1a7f3c';
+    setTimeout(()=>{btn.innerHTML=orig;btn.style.color='';btn.style.borderColor=''},2000);
+  });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>記事・レビュー・ニュースカード v4 — 個展なび</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Noto+Sans+JP:wght@300;400;500;700&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#231815;--warm:#f7f9fb;
+  --accent:#005da7;
+  --muted:#7a8a99;--border:#d0dae4;--tag-bg:#e8edf2;
+  --fs:'Shippori Mincho',serif;
+  --fn:'Noto Sans JP',sans-serif;
+  --fm:'Montserrat',sans-serif;
+  --on:#3a90e0;
+  /* 種別カラー変数 */
+  --col-article:#2e7a4e;
+  --col-review:#b86a10;
+  --col-news:#c0392b;
+}
+body{font-family:var(--fn);background:var(--warm);color:var(--ink);font-weight:300;padding:48px 24px 100px}
+a{text-decoration:none;color:inherit}
+.demo-wrap{max-width:1180px;margin:0 auto}
+h1{font-family:var(--fs);font-size:1.4rem;font-weight:600;margin-bottom:4px}
+.demo-meta{font-size:.72rem;color:var(--muted);margin-bottom:32px;line-height:1.8}
+.demo-section{margin-bottom:72px}
+.demo-label{font-family:var(--fm);font-size:.58rem;font-weight:600;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;border-bottom:1px solid var(--border);padding-bottom:10px;margin-bottom:20px}
+.masonry{columns:4 220px;column-gap:14px}
+.masonry-item{break-inside:avoid;margin-bottom:14px}
+.list-col{display:flex;flex-direction:column;gap:6px;max-width:680px}
+
+
+/* ══════════════════════════════════════════
+   バッジ類（v3準拠）
+   ══════════════════════════════════════════ */
+.cb{display:inline-flex;align-items:center;gap:4px;font-family:var(--fm);font-size:.48rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;border-radius:3px;white-space:nowrap;flex-shrink:0;line-height:1;}
+.cb-person{padding:3px 7px;border:1px solid currentColor;background:none;}
+.cb-creator{color:#7a7d6e;border-color:#a8aa9a;background:rgba(168,170,154,.1)}
+.cb-gallery{color:#9a7c54;border-color:#c4a882;background:rgba(196,168,130,.1)}
+.cb-user   {color:#b8608c;border-color:#e8a0c8;background:rgba(232,160,200,.1)}
+.cb-content{padding:3px 8px 3px 7px;border-radius:0 3px 3px 0;border-left:2.5px solid currentColor;}
+.cb-exhibition{color:#005da7;background:rgba(0,93,167,.08);  border-left-color:#005da7}
+.cb-article   {color:var(--col-article);background:rgba(46,122,78,.08); border-left-color:var(--col-article)}
+.cb-artwork   {color:#7c3aab;background:rgba(124,58,171,.08);border-left-color:#7c3aab}
+.cb-review    {color:var(--col-review);background:rgba(184,106,16,.08);border-left-color:var(--col-review)}
+.cb-news      {color:var(--col-news);background:rgba(192,57,43,.08); border-left-color:var(--col-news)}
+.at{display:inline-flex;align-items:center;font-family:var(--fm);font-size:.44rem;font-weight:600;letter-spacing:.1em;padding:2px 7px;border-radius:2px;white-space:nowrap;flex-shrink:0;line-height:1;}
+.at-a{color:#2a6898;background:rgba(42,104,152,.1)}
+.at-b{color:#2a7a50;background:rgba(42,122,80,.1)}
+.at-c{color:#7a4a98;background:rgba(122,74,152,.1)}
+.at-d{color:#a06020;background:rgba(160,96,32,.1)}
+.at-e{color:#606060;background:rgba(96,96,96,.1)}
+.nb{display:inline-flex;align-items:center;gap:3px;font-family:var(--fm);font-size:.44rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:2px 7px;border-radius:2px;white-space:nowrap;flex-shrink:0;line-height:1;color:#fff;background:#e8462a;}
+.nb::before{content:'';width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.8);flex-shrink:0;animation:nb-pulse 1.6s ease-in-out infinite;}
+@keyframes nb-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.5)}}
+
+/* ── 興味ボタン・カウンター ── */
+.itn-btn{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;border:1.5px solid rgba(0,0,0,.18);background:#fff;cursor:pointer;outline:none;flex-shrink:0;position:relative;-webkit-tap-highlight-color:transparent;transition:border-color .16s,background .16s,transform .16s;}
+.itn-btn svg{width:14px;height:14px;flex-shrink:0;transition:transform .18s cubic-bezier(.34,1.4,.64,1)}
+.itn-btn:hover{border-color:rgba(0,0,0,.32);background:#fafafa}
+.itn-btn.on{border-color:var(--on);background:rgba(58,144,224,.08)}
+.itn-btn.on svg{transform:scale(1.1)}
+.itn-btn.on:hover{background:rgba(58,144,224,.14)}
+.itn-btn:active{transform:scale(.9)}
+.itn-btn.sm{width:24px;height:24px}
+.itn-btn.sm svg{width:12px;height:12px}
+.itn-btn .tip{position:absolute;left:50%;bottom:calc(100% + 8px);transform:translateX(-50%) translateY(4px);white-space:nowrap;font-family:var(--fm);font-size:.5rem;letter-spacing:.07em;padding:4px 9px;pointer-events:none;opacity:0;transition:opacity .15s,transform .15s;z-index:100;background:#1e2d3d;color:rgba(255,255,255,.88);box-shadow:0 2px 10px rgba(0,0,0,.22);border-radius:3px;}
+.itn-btn .tip::after{content:'';position:absolute;left:50%;top:100%;transform:translateX(-50%);border:5px solid transparent;border-top-color:#1e2d3d;}
+.itn-btn:hover .tip{opacity:1;transform:translateX(-50%) translateY(0)}
+.itn-count{display:inline-flex;align-items:center;gap:3px;font-family:var(--fm);font-size:.58rem;font-weight:500;color:var(--muted);letter-spacing:.04em;}
+.itn-count svg{width:12px;height:12px;flex-shrink:0}
+.itn-count.sm{font-size:.54rem}
+.itn-count.sm svg{width:11px;height:11px}
+
+/* ── 投稿者 / 展覧会リンク ── */
+.byline-author{display:inline-flex;align-items:center;gap:4px;min-width:0;flex-shrink:1;overflow:hidden;}
+.byline-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer;transition:color .15s;}
+.byline-name:hover{color:var(--accent);text-decoration:underline;text-underline-offset:2px;}
+.exh-link{display:inline-flex;align-items:center;gap:3px;margin-bottom:7px;max-width:100%;font-size:.62rem;color:var(--accent);letter-spacing:.02em;line-height:1.4;cursor:pointer;transition:opacity .15s;}
+.exh-link:hover{opacity:.72}
+.exh-link__title{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;flex-shrink:1;}
+.exh-link__arrow{font-size:.6rem;flex-shrink:0;opacity:.65;font-family:var(--fm);}
+
+/* チェックイン */
+.rc__checkin-date{display:inline-flex;align-items:center;gap:3px;font-family:var(--fm);font-size:.54rem;letter-spacing:.05em;color:#2060a8;}
+.rc__checkin-date svg{width:10px;height:10px;flex-shrink:0}
+
+
+/* ══════════════════════════════════════════════════════════
+   マソンリーカード共通 .mc
+   ── 画像あり: 角丸 + 下ボーダーで種別色
+   ── 画像なし: 左ボーダーで種別色 + 角丸なし(左辺)
+   ══════════════════════════════════════════════════════════ */
+.mc{
+  display:block;background:#fff;
+  border:1px solid var(--border);border-radius:8px;
+  overflow:hidden;cursor:pointer;color:inherit;
+  transition:transform .2s ease,box-shadow .2s ease;
+}
+.mc:hover{transform:translateY(-3px);box-shadow:0 10px 32px rgba(0,0,0,.1)}
+
+/* 画像エリア */
+.mc__img{width:100%;overflow:hidden;aspect-ratio:16/9;background:var(--tag-bg);}
+.mc__img img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none;transition:transform .3s}
+.mc:hover .mc__img img{transform:scale(1.03)}
+.mc__img-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:var(--fs);font-size:1.1rem;font-weight:600;color:rgba(255,255,255,.22);letter-spacing:.06em;}
+
+/* ボディ */
+.mc__body{padding:12px 14px 0}
+.mc__badge-row{display:flex;align-items:center;gap:5px;margin-bottom:8px;flex-wrap:wrap}
+/* review: badge-row内チェックイン日 右寄せ */
+.mc__badge-row--review{justify-content:space-between}
+.mc__badge-row--review .rc__checkin-date{margin-left:auto}
+.mc__title{font-family:var(--fs);font-weight:600;font-size:.9rem;line-height:1.5;letter-spacing:.03em;margin-bottom:5px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
+.mc__lead{font-size:.65rem;color:var(--muted);line-height:1.7;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;margin-bottom:9px;letter-spacing:.02em;}
+.mc__byline{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:.6rem;color:var(--muted);letter-spacing:.02em;padding-bottom:10px;row-gap:3px;}
+.mc__byline-sep{opacity:.4;flex-shrink:0}
+.mc__date{flex-shrink:0;font-family:var(--fm);font-size:.55rem;letter-spacing:.05em}
+
+/* フッター（マソンリー画像あり用） */
+.mc__foot{display:flex;align-items:center;gap:8px;padding:7px 14px 10px;border-top:1px solid rgba(0,0,0,.05);}
+.mc__foot .itn-btn{margin-left:auto}
+
+/* ──────────────────────────────
+   マソンリー 画像あり: 下ボーダー種別カラー
+   .mc--img-article / review / news
+   ────────────────────────────── */
+.mc--img-article{border-bottom:3px solid var(--col-article)}
+.mc--img-review {border-bottom:3px solid var(--col-review)}
+.mc--img-news   {border-bottom:3px solid var(--col-news)}
+
+/* ──────────────────────────────
+   マソンリー 画像なし: 左ボーダー種別カラー
+   角丸は右辺のみ
+   .mc--noimg-article / review / news
+   ────────────────────────────── */
+.mc--noimg{
+  border-bottom-width:3px;
+}
+.mc--noimg-article{border-bottom-color:var(--col-article)}
+.mc--noimg-review {border-bottom-color:var(--col-review)}
+.mc--noimg-news   {border-bottom-color:var(--col-news)}
+/* 画像なしはfooterなし、byline内にカウンター+ボタン統合 */
+.mc--noimg .mc__foot{display:none}
+.mc--noimg .mc__byline{
+  border-top:1px solid rgba(0,0,0,.05);
+  padding-top:7px;margin-top:auto;
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   水平リストカード共通 .lc（list card）
+   ── 画像なし(基本): 左ボーダー + テキストのみ (案C)
+   ── 画像あり:       左ボーダー + 左カラーブロック (案B)
+   ══════════════════════════════════════════════════════════ */
+.lc{
+  display:flex;flex-direction:row;align-items:stretch;
+  background:#fff;border:1px solid var(--border);
+  border-radius:8px;
+  border-bottom:3px solid transparent;
+  overflow:hidden;cursor:pointer;color:inherit;
+  transition:box-shadow .18s,transform .18s;
+}
+.lc:hover{box-shadow:0 5px 22px rgba(0,0,0,.09);transform:translateY(-1px)}
+
+/* 種別カラーライン（下ボーダー） */
+.lc--article{border-bottom-color:var(--col-article)}
+.lc--review {border-bottom-color:var(--col-review)}
+.lc--news   {border-bottom-color:var(--col-news)}
+
+/* ── ボディ（テキスト部） ── */
+.lc__body{padding:10px 14px 0;flex:1;min-width:0;display:flex;flex-direction:column;}
+.lc__badge-row{display:flex;align-items:center;gap:5px;margin-bottom:7px;flex-wrap:wrap}
+.lc__badge-row--review{justify-content:space-between}
+.lc__badge-row--review .rc__checkin-date{margin-left:auto}
+.lc__title{font-family:var(--fs);font-weight:600;font-size:.84rem;line-height:1.5;letter-spacing:.03em;margin-bottom:4px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
+.lc__lead{font-size:.62rem;color:var(--muted);line-height:1.7;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;margin-bottom:6px;letter-spacing:.02em;}
+.lc__byline{
+  display:flex;align-items:center;gap:6px;flex-wrap:wrap;
+  font-size:.6rem;color:var(--muted);letter-spacing:.02em;
+  border-top:1px solid rgba(0,0,0,.05);
+  padding:6px 0 9px;margin-top:auto;row-gap:3px;
+}
+.lc__byline-sep{opacity:.4;flex-shrink:0}
+.lc__date{flex-shrink:0;font-family:var(--fm);font-size:.55rem;letter-spacing:.05em}
+
+/* ── 画像ありのカラーブロック（左に配置）── */
+.lc__thumb{
+  width:80px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;position:relative;
+}
+/* 種別カラーのグラデーションブロック */
+.lc__thumb--article{background:linear-gradient(160deg,rgba(46,122,78,.14) 0%,rgba(46,122,78,.05) 100%)}
+.lc__thumb--review {background:linear-gradient(160deg,rgba(184,106,16,.14) 0%,rgba(184,106,16,.05) 100%)}
+.lc__thumb--news   {background:linear-gradient(160deg,rgba(192,57,43,.14) 0%,rgba(192,57,43,.05) 100%)}
+/* 実写真のとき */
+.lc__thumb--photo{background:var(--tag-bg)}
+.lc__thumb--photo img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s}
+.lc:hover .lc__thumb--photo img{transform:scale(1.04)}
+/* ブロック内の背景ラベル文字 */
+.lc__thumb-label{
+  font-family:var(--fm);font-size:.44rem;font-weight:700;
+  letter-spacing:.2em;text-transform:uppercase;
+  writing-mode:vertical-rl;
+  opacity:.2;
+}
+.lc__thumb--article .lc__thumb-label{color:var(--col-article)}
+.lc__thumb--review  .lc__thumb-label{color:var(--col-review)}
+.lc__thumb--news    .lc__thumb-label{color:var(--col-news)}
+/* 画像なし: thumbなし */
+.lc--noimg .lc__body{padding-left:14px}
+
+
+/* ══ デモ用カラー ══ */
+.ph-1{background:linear-gradient(145deg,#8a9aaa,#506070)}
+.ph-2{background:linear-gradient(145deg,#aa9a8a,#705040)}
+.ph-3{background:linear-gradient(145deg,#8aaa9a,#407060)}
+.ph-4{background:linear-gradient(145deg,#aa8a9a,#704060)}
+.ph-5{background:linear-gradient(145deg,#9a8aaa,#504070)}
+.ph-6{background:linear-gradient(145deg,#9aaa8a,#507040)}
+.ph-n1{background:linear-gradient(145deg,#7a8a9a,#3a5060)}
+.ph-n2{background:linear-gradient(145deg,#9a7a8a,#603050)}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute;overflow:hidden">
+  <defs>
+    <symbol id="icon-interest-off" viewBox="0 0 16 16">
+      <path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".35" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="icon-interest-on" viewBox="0 0 16 16">
+      <path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="icon-checkin" viewBox="0 0 16 16">
+      <circle cx="10" cy="5" r="4" fill="currentColor"/>
+      <circle cx="5" cy="11" r="2.4" fill="currentColor"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="demo-wrap">
+  <h1>記事・レビュー・ニュースカード v4</h1>
+  <p class="demo-meta">
+    v4変更点: マソンリー = 画像あり→下ボーダー種別色 / 画像なし→左ボーダー種別色（案A混在）<br>
+    水平リスト = 画像なし→左ボーダー＋テキストのみ（案C） / 画像あり→左ボーダー＋左カラーブロック（案B）
+  </p>
+
+
+  <!-- ════════════════════════════════════════
+       1. 記事カード — マソンリー
+          画像あり → 下ボーダー
+          画像なし → 左ボーダー・角丸右のみ
+       ════════════════════════════════════════ -->
+  <div class="demo-section">
+    <div class="demo-label">1. 記事カード .mc — マソンリー（画像あり:下ボーダー / 画像なし:左ボーダー 混在）</div>
+    <div class="masonry">
+
+      <!-- 画像あり / レポート / creator / 展覧会リンクあり -->
+      <div class="masonry-item">
+        <a class="mc mc--img-article" href="#">
+          <div class="mc__img ph-1 mc__img-ph"></div>
+          <div class="mc__body">
+            <div class="mc__badge-row">
+              <span class="nb">new</span>
+              <span class="cb cb-content cb-article">article</span>
+              <span class="at at-a">レポート</span>
+            </div>
+            <div class="mc__title">名古屋の新世代クリエイターたち — 春の展示レポート</div>
+            <div class="mc__lead">今年の春、名古屋市内の複数のギャラリーを巡りながら感じた変化について書き記しました。</div>
+            <span class="exh-link" onclick="event.preventDefault();event.stopPropagation();location.href='#exh1'">
+              <span class="exh-link__title">春のグループ展 2026 — 名古屋</span>
+              <span class="exh-link__arrow">→</span>
+            </span>
+            <div class="mc__byline">
+              <span class="byline-author">
+                <span class="cb cb-person cb-creator">creator</span>
+                <span class="byline-name" onclick="event.preventDefault();event.stopPropagation();location.href='#u1'">小野 友美</span>
+              </span>
+              <span class="mc__byline-sep">/</span>
+              <span class="mc__date">2026.02.18</span>
+            </div>
+          </div>
+          <div class="mc__foot">
+            <span class="itn-count"><svg><use href="#icon-interest-off"/></svg>84</span>
+            <button class="itn-btn on" onclick="this.classList.toggle('on');event.preventDefault()">
+              <svg><use href="#icon-interest-on"/></svg>
+              <span class="tip">興味ある！ — 解除する</span>
+            </button>
+          </div>
+        </a>
+      </div>
+
+      <!-- 画像なし / ワークショップ / gallery -->
+      <div class="masonry-item">
+        <a class="mc mc--noimg mc--noimg-article" href="#">
+          <div class="mc__body">
+            <div class="mc__badge-row">
+              <span class="cb cb-content cb-article">article</span>
+              <span class="at at-b">ワークショップ</span>
+            </div>
+            <div class="mc__title">版画ワークショップ開催のお知らせ — 初心者歓迎</div>
+            <div class="mc__lead">銅版画の基礎から丁寧に学べるワークショップを開催します。少人数制でサポートします。</div>
+            <div class="mc__byline">
+              <span class="byline-author">
+                <span class="cb cb-person cb-gallery">gallery</span>
+                <span class="byline-name" onclick="event.preventDefault();event.stopPropagation();location.href='#u2'">田中 礼子</span>
+              </span>
+              <span class="mc__byline-sep">/</span>
+              <span class="mc__date">2026.03.01</span>
+              <span class="itn-count sm" style="margin-left:auto"><svg><use href="#icon-interest-off"/></svg>31</span>
+              <button class="itn-btn sm" onclick="this.classList.toggle('on');event.preventDefault()">
+                <svg><use href="#icon-interest-off"/></svg>
+                <span class="tip">興味ある！に追加する</span>
+              </button>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- 画像あり / 制作ノート / creator / 展覧会リンクあり -->
+      <div class="masonry-item">
+        <a class="mc mc--img-article" href="#">
+          <div class="mc__img ph-3 mc__img-ph"></div>
+          <div class="mc__body">
+            <div class="mc__badge-row">
+              <span class="nb">new</span>
+              <span class="cb cb-content cb-article">article</span>
+              <span class="at at-c">制作ノート</span>
+            </div>
+            <div class="mc__title">土の声を聞く — 陶作品ができるまで</div>
+            <div class="mc__lead">今回の個展に向けた制作過程を記録しました。土との対話、成形、焼成の流れを振り返ります。</div>
+            <span class="exh-link" onclick="event.preventDefault();event.stopPropagation();location.href='#exh2'">
+              <span class="exh-link__title">土の記憶 — 陶作品展</span>
+              <span class="exh-link__arrow">→</span>
+            </span>
+            <div class="mc__byline">
+              <span class="byline-author">
+                <span class="cb cb-person cb-creator">creator</span>
+                <span class="byline-name" onclick="event.preventDefault();event.stopPropagation();location.href='#u3'">村上 玲子</span>
+              </span>
+              <span class="mc__byline-sep">/</span>
+              <span class="mc__date">2026.02.25</span>
+            </div>
+          </div>
+          <div class="mc__foot">
+            <span class="itn-count"><svg><use href="#icon-interest-off"/></svg>52</span>
+            <button class="itn-btn on" onclick="this.classList.toggle('on');event.preventDefault()">
+              <svg><use href="#icon-interest-on"/></svg>
+              <span class="tip">興味ある！ — 解除する</span>
+            </button>
+          </div>
+        </a>
+      </div>
+
+      <!-- 画像なし / 参加者募集 / creator -->
+      <div class="masonry-item">
+        <a class="mc mc--noimg mc--noimg-article" href="#">
+          <div class="mc__body">
+            <div class="mc__badge-row">
+              <span class="cb cb-content cb-article">article</span>
+              <span class="at at-d">参加者募集</span>
+            </div>
+            <div class="mc__title">4月期 水彩スケッチ教室 参加者募集</div>
+            <div class="mc__lead">月2回の少人数スケッチ教室の参加者を募集します。屋内外でのスケッチを中心に学びます。</div>
+            <div class="mc__byline">
+              <span class="byline-author">
+                <span class="cb cb-person cb-creator">creator</span>
+                <span class="byline-name" onclick="event.preventDefault();event.stopPropagation();location.href='#u4'">高橋 一朗</span>
+              </span>
+              <span class="mc__byline-sep">/</span>
+              <span class="mc__date">2026.03.05</span>
+              <span class="itn-count sm" style="margin-left:auto"><svg><use href="#icon-interest-off"/></svg>18</span>
+              <button class="itn-btn sm" onclick="this.classList.toggle('on');event.preventDefault()">
+                <svg><use href="#icon-interest-off"/></svg>
+                <span class="tip">興味ある！に追加する</span>
+              </button>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- 画像なし / レンタルギャラリー / gallery -->
+      <div class="masonry-item">
+        <a class="mc mc--noimg mc--noimg-article" href="#">
+          <div class="mc__body">
+            <div class="mc__badge-row">
+              <span class="cb cb-content cb-article">article</span>
+              <span class="at at-e">レンタルギャラリー</span>
+            </div>
+            <div class="mc__title">レンタルスペースのご案内 — 2026年4月より新料金</div>
+            <div class="mc__lead">当ギャラリーのレンタルスペースの料金体系を4月より改定いたします。1日・週単位でご利用可能です。</div>
+            <div class="mc__byline">
+              <span class="byline-author">
+                <span class="cb cb-person cb-gallery">gallery</span>
+                <span class="byline-name" onclick="event.preventDefault();event.stopPropagation();location.href='#u5'">GALLERY IDF</span>
+              </span>
+              <span class="mc__byline-sep">/</span>
+              <span class="mc__date">2026.03.10</span>
+              <span class="itn-count sm" style="margin-left:auto"><svg><use href="#icon-interest-off"/></svg>9</span>
+              <button class="itn-btn sm" onclick="this.classList.toggle('on');event.preventDefault()">
+                <svg><use href="#icon-interest-off"/></svg>
+                <span class="tip">興味ある！に追加する</span>
+              </button>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- 画像あり / お知らせ / gallery -->
+      <div class="masonry-item">
+        <a class="mc mc--img-article" href="#">
+          <div class="mc__img ph-6 mc__img-ph"></div>
+          <div class="mc__body">
+            <div class="mc__badge-row">
+              <span class="nb">new</span>
+              <span class="cb cb-content cb-article">article</span>
+              <span class="at at-a">お知らせ</span>
+            </div>
+            <div class="mc__title">休廊のお知らせ — 3月15日〜17日</div>
+            <div class="mc__lead">設営作業のため休廊いたします。ご不便をおかけして申し訳ございません。</div>
+            <div class="mc__byline">
+              <span class="byline-author">
+                <span class="cb cb-person cb-gallery">gallery</span>
+                <span class="byline-name" onclick="event.preventDefault();event.stopPropagation();location.href='#u6'">VOID+ Contemporary</span>
+              </span>
+              <span class="mc__byline-sep">/</span>
+              <span class="mc__date">2026.03.08</span>
+            </div>
+          </div>
+          <div class="mc__foot">
+            <span class="itn-count"><svg><use href="#icon-interest-off"/></svg>7</span>
+            <button class="itn-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+              <svg><use href="#icon-interest-off"/></svg>
+              <span class="tip">興味ある！に追加する</span>
+            </button>
+          </div>
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ════════════════════════════════════════
+       2. 記事カード — 水平リスト
+          画像なし → 左ボーダー + テキストのみ（案C）
+          画像あり → 左ボーダー + 左カラーブロック（案B）
+       ════════════════════════════════════════ -->
+  <div class="demo-section">
+    <div class="demo-label">2. 記事カード .lc — 水平リスト（画像なし:テキスト型 / 画像あり:カラーブロック）</div>
+    <div class="list-col">
+
+      <!-- 画像なし / creator / 展覧会リンクなし -->
+      <a class="lc lc--noimg lc--article" href="#">
+        <div class="lc__body">
+          <div class="lc__badge-row">
+            <span class="nb">new</span>
+            <span class="cb cb-content cb-article">article</span>
+            <span class="at at-a">レポート</span>
+          </div>
+          <div class="lc__title">名古屋の新世代クリエイターたち — 春の展示レポート</div>
+          <div class="lc__lead">名古屋市内のギャラリーを巡りながら感じた変化について書き記しました。</div>
+          <div class="lc__byline">
+            <span class="byline-author">
+              <span class="cb cb-person cb-creator">creator</span>
+              <span class="byline-name" onclick="event.preventDefault();event.stopPropagation();location.href='#u1'">小野 友美</span>
+            </span>
+            <span class="lc__byline-sep">/</span>
+            <span class="lc__date">2026.02.18</span>
+            <span class="itn-count sm" style="margin-left:auto"><svg><use href="#icon-interest-off"/></svg>84</span>
+            <button class="itn-btn sm on" onclick="this.classList.toggle('on');event.preventDefault()">
+              <svg><use href="#icon-interest-on"/></svg>
+              <span class="tip">興味ある！ — 解除する</span>
+            </button>
+          </div>
+        </div>
+      </a>
+
+      <!-- 画像あり / gallery / 展覧会リンクあり -->
+      <a class="lc lc--article" href="#">
+        <div class="lc__thumb lc__thumb--article">
+          <span class="lc__thumb-label">article</span>
+        </div>
+        <div class="lc__body">
+          <div class="lc__badge-row">
+            <span class="cb cb-content cb-article">article</span>
+            <span class="at at-c">制作ノート</span>
+          </div>
+          <div class="lc__title">土の声を聞く — 陶作品ができるまで</div>
+          <div class="lc__lead">土との対話、成形、焼成の流れを写真とともに振り返ります。</div>
+          <span class="exh-link" onclick="event.preventDefault();event.stopPropagation();location.href='#exh2'">
+            <span class="exh-link__title">土の記憶 — 陶作品展</span>
+            <span class="exh-link__arrow">→</span>
+          </span>
+          <div class="lc__byline">
+            <span class="byline-author">
+              <span class="cb cb-person cb-creator">creator</span>
+              <span class="byline-name" onclick="event.preventDefault();event.stopPropagation();location.href='#u3'">村上 玲子</span>
+            </span>
+            <span class="lc__byline-sep">/</span>
+            <span class="lc__date">2026.02.25</span>
+            <span class="itn-count sm" style="margin-left:auto"><svg><use href="#icon-interest-off"/></svg>52</span>
+            <button class="itn-btn sm on" onclick="this.classList.toggle('on');event.preventDefault()">
+              <svg><use href="#icon-interest-on"/></svg>
+              <span class="tip">興味ある！ — 解除する</span>
+            </button>
+          </div>
+        </div>
+      </a>
+
+      <!-- 画像なし / gallery -->
+      <a class="lc lc--noimg lc--article" href="#">
+        <div class="lc__body">
+          <div class="lc__badge-row">
+            <span class="cb cb-content cb-article">article</span>
+            <span class="at at-b">ワークショップ</span>
+          </div>
+          <div class="lc__title">版画ワークショップ開催のお知らせ — 初心者歓迎</div>
+          <div class="lc__lead">銅版画の基礎から丁寧に学べるワークショップを開催します。少人数制でサポートします。</div>
+          <div class="lc__byline">
+            <span class="byline-author">
+              <span class="cb cb-person cb-gallery">gallery</span>
+              <span class="byline-name" onclick="event.preventDefault();event.stopPropagation();location.href='#u2'">田中 礼子</span>
+            </span>
+            <span class="lc__byline-sep">/</span>
+            <span class="lc__date">2026.03.01</span>
+            <span class="itn-count sm" style="margin-left:auto"><svg><use href="#icon-interest-off"/></svg>31</span>
+            <button class="itn-btn sm" onclick="this.classList.toggle('on');event.preventDefault()">
+              <svg><use href="#icon-interest-off"/></svg>
+              <span class="tip">興味ある！に追加する</span>
+            </button>
+          </div>
+        </div>
+      </a>
+
+      <!-- 画像あり（実写真）/ creator -->
+      <a class="lc lc--article" href="#">
+        <div class="lc__thumb lc__thumb--photo ph-4"></div>
+        <div class="lc__body">
+          <div class="lc__badge-row">
+            <span class="cb cb-content cb-article">article</span>
+            <span class="at at-d">参加者募集</span>
+          </div>
+          <div class="lc__title">4月期 水彩スケッチ教室 参加者募集</div>
+          <div class="lc__lead">月2回の少人数スケッチ教室の参加者を募集します。</div>
+          <div class="lc__byline">
+            <span class="byline-author">
+              <span class="cb cb-person cb-creator">creator</span>
+              <span class="byline-name" onclick="event.preventDefault();event.stopPropagation();location.href='#u4'">高橋 一朗</span>
+            </span>
+            <span class="lc__byline-sep">/</span>
+            <span class="lc__date">2026.03.05</span>
+            <span class="itn-count sm" style="margin-left:auto"><svg><use href="#icon-interest-off"/></svg>18</span>
+            <button class="itn-btn sm" onclick="this.classList.toggle('on');event.preventDefault()">
+              <svg><use href="#icon-interest-off"/></svg>
+              <span class="tip">興味ある！に追加する</span>
+            </button>
+          </div>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+
+  <!-- ════════════════════════════════════════
+       3. レビューカード — マソンリー
+       ════════════════════════════════════════ -->
+  <div class="demo-section">
+    <div class="demo-label">3. レビューカード .mc — マソンリー（画像あり:下ボーダー / 画像なし:左ボーダー）</div>
+    <div class="masonry">
+
+      <!-- 画像あり -->
+      <div class="masonry-item">
+        <a class="mc mc--img-review" href="#">
+          <div class="mc__img ph-1 mc__img-ph"></div>
+          <div class="mc__body">
+            <div class="mc__badge-row mc__badge-row--review">
+              <span class="cb cb-content cb-review">review</span>
+              <span class="rc__checkin-date"><svg><use href="#icon-checkin" color="#2060a8"/></svg>2026.03.02</span>
+            </div>
+            <div class="mc__title">根の記憶、光の痕跡 — 静寂の中に宿る生命の記録</div>
+            <span class="exh-link" onclick="event.preventDefault();event.stopPropagation();location.href='#exh1'">
+              <span class="exh-link__title">根の記憶、光の痕跡</span>
+              <span class="exh-link__arrow">→</span>
+            </span>
+            <div class="mc__byline">
+              <span class="byline-author">
+                <span class="cb cb-person cb-user">user</span>
+                <span class="byline-name" onclick="event.preventDefault();event.stopPropagation();location.href='#u1'">yamada_taro</span>
+              </span>
+              <span class="mc__byline-sep">/</span>
+              <span class="mc__date">2026.03.04</span>
+            </div>
+          </div>
+          <div class="mc__foot">
+            <span class="itn-count"><svg><use href="#icon-interest-off"/></svg>23</span>
+            <button class="itn-btn on" onclick="this.classList.toggle('on');event.preventDefault()">
+              <svg><use href="#icon-interest-on"/></svg>
+              <span class="tip">興味ある！ — 解除する</span>
+            </button>
+          </div>
+        </a>
+      </div>
+
+      <!-- 画像なし -->
+      <div class="masonry-item">
+        <a class="mc mc--noimg mc--noimg-review" href="#">
+          <div class="mc__body">
+            <div class="mc__badge-row mc__badge-row--review">
+              <span class="cb cb-content cb-review">review</span>
+              <span class="rc__checkin-date"><svg><use href="#icon-checkin" color="#2060a8"/></svg>2026.02.20</span>
+            </div>
+            <div class="mc__title">版画と布の交差点 — 素材の詩学</div>
+            <span class="exh-link" onclick="event.preventDefault();event.stopPropagation();location.href='#exh2'">
+              <span class="exh-link__title">織と刷りの境界線 — 版画・テキスタイル作品展</span>
+              <span class="exh-link__arrow">→</span>
+            </span>
+            <div class="mc__byline">
+              <span class="byline-author">
+                <span class="cb cb-person cb-user">user</span>
+                <span class="byline-name" onclick="event.preventDefault();event.stopPropagation();location.href='#u2'">sato_art_fan</span>
+              </span>
+              <span class="mc__byline-sep">/</span>
+              <span class="mc__date">2026.02.22</span>
+              <span class="itn-count sm" style="margin-left:auto"><svg><use href="#icon-interest-off"/></svg>11</span>
+              <button class="itn-btn sm" onclick="this.classList.toggle('on');event.preventDefault()">
+                <svg><use href="#icon-interest-off"/></svg>
+                <span class="tip">興味ある！に追加する</span>
+              </button>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- 画像なし -->
+      <div class="masonry-item">
+        <a class="mc mc--noimg mc--noimg-review" href="#">
+          <div class="mc__body">
+            <div class="mc__badge-row mc__badge-row--review">
+              <span class="cb cb-content cb-review">review</span>
+              <span class="rc__checkin-date"><svg><use href="#icon-checkin" color="#2060a8"/></svg>2026.02.15</span>
+            </div>
+            <div class="mc__title">土の温度、手の記憶 — 村上玲子 陶展を見て</div>
+            <span class="exh-link" onclick="event.preventDefault();event.stopPropagation();location.href='#exh3'">
+              <span class="exh-link__title">土の記憶 — 陶作品展</span>
+              <span class="exh-link__arrow">→</span>
+            </span>
+            <div class="mc__byline">
+              <span class="byline-author">
+                <span class="cb cb-person cb-user">user</span>
+                <span class="byline-name" onclick="event.preventDefault();event.stopPropagation();location.href='#u3'">ito_gallery_walker</span>
+              </span>
+              <span class="mc__byline-sep">/</span>
+              <span class="mc__date">2026.02.17</span>
+              <span class="itn-count sm" style="margin-left:auto"><svg><use href="#icon-interest-off"/></svg>8</span>
+              <button class="itn-btn sm on" onclick="this.classList.toggle('on');event.preventDefault()">
+                <svg><use href="#icon-interest-on"/></svg>
+                <span class="tip">興味ある！ — 解除する</span>
+              </button>
+            </div>
+          </div>
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ════════════════════════════════════════
+       4. レビューカード — 水平リスト
+       ════════════════════════════════════════ -->
+  <div class="demo-section">
+    <div class="demo-label">4. レビューカード .lc — 水平リスト（画像なし:テキスト型 / 画像あり:カラーブロック）</div>
+    <div class="list-col">
+
+      <!-- 画像あり -->
+      <a class="lc lc--review" href="#">
+        <div class="lc__thumb lc__thumb--review">
+          <span class="lc__thumb-label">review</span>
+        </div>
+        <div class="lc__body">
+          <div class="lc__badge-row lc__badge-row--review">
+            <span class="cb cb-content cb-review">review</span>
+            <span class="rc__checkin-date"><svg><use href="#icon-checkin" color="#2060a8"/></svg>2026.03.02</span>
+          </div>
+          <div class="lc__title">根の記憶、光の痕跡 — 静寂の中に宿る生命の記録</div>
+          <span class="exh-link" onclick="event.preventDefault();event.stopPropagation();location.href='#exh1'">
+            <span class="exh-link__title">根の記憶、光の痕跡</span>
+            <span class="exh-link__arrow">→</span>
+          </span>
+          <div class="lc__byline">
+            <span class="byline-author">
+              <span class="cb cb-person cb-user">user</span>
+              <span class="byline-name" onclick="event.preventDefault();event.stopPropagation();location.href='#u1'">yamada_taro</span>
+            </span>
+            <span class="lc__byline-sep">/</span>
+            <span class="lc__date">2026.03.04</span>
+            <span class="itn-count sm" style="margin-left:auto"><svg><use href="#icon-interest-off"/></svg>23</span>
+            <button class="itn-btn sm on" onclick="this.classList.toggle('on');event.preventDefault()">
+              <svg><use href="#icon-interest-on"/></svg>
+              <span class="tip">興味ある！ — 解除する</span>
+            </button>
+          </div>
+        </div>
+      </a>
+
+      <!-- 画像なし -->
+      <a class="lc lc--noimg lc--review" href="#">
+        <div class="lc__body">
+          <div class="lc__badge-row lc__badge-row--review">
+            <span class="cb cb-content cb-review">review</span>
+            <span class="rc__checkin-date"><svg><use href="#icon-checkin" color="#2060a8"/></svg>2026.02.20</span>
+          </div>
+          <div class="lc__title">版画と布の交差点 — 素材の詩学</div>
+          <span class="exh-link" onclick="event.preventDefault();event.stopPropagation();location.href='#exh2'">
+            <span class="exh-link__title">織と刷りの境界線 — 版画・テキスタイル作品展</span>
+            <span class="exh-link__arrow">→</span>
+          </span>
+          <div class="lc__byline">
+            <span class="byline-author">
+              <span class="cb cb-person cb-user">user</span>
+              <span class="byline-name" onclick="event.preventDefault();event.stopPropagation();location.href='#u2'">sato_art_fan</span>
+            </span>
+            <span class="lc__byline-sep">/</span>
+            <span class="lc__date">2026.02.22</span>
+            <span class="itn-count sm" style="margin-left:auto"><svg><use href="#icon-interest-off"/></svg>11</span>
+            <button class="itn-btn sm" onclick="this.classList.toggle('on');event.preventDefault()">
+              <svg><use href="#icon-interest-off"/></svg>
+              <span class="tip">興味ある！に追加する</span>
+            </button>
+          </div>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+
+  <!-- ════════════════════════════════════════
+       5. ニュースカード — マソンリー
+       ════════════════════════════════════════ -->
+  <div class="demo-section">
+    <div class="demo-label">5. ニュースカード .mc — マソンリー</div>
+    <div class="masonry">
+
+      <div class="masonry-item">
+        <a class="mc mc--img-news" href="#">
+          <div class="mc__img ph-n1 mc__img-ph"></div>
+          <div class="mc__body">
+            <div class="mc__badge-row">
+              <span class="nb">new</span>
+              <span class="cb cb-content cb-news">news</span>
+            </div>
+            <div class="mc__title">個展なびが「LIAISON」のパートナーギャラリー募集を開始</div>
+            <div class="mc__byline"><span class="mc__date">2026.02.20</span></div>
+          </div>
+          <div class="mc__foot" style="padding-top:0;border-top:none"></div>
+        </a>
+      </div>
+
+      <div class="masonry-item">
+        <a class="mc mc--noimg mc--noimg-news" href="#">
+          <div class="mc__body">
+            <div class="mc__badge-row">
+              <span class="cb cb-content cb-news">news</span>
+            </div>
+            <div class="mc__title">サービスメンテナンスのお知らせ — 3月20日 深夜2:00〜4:00</div>
+            <div class="mc__byline"><span class="mc__date">2026.03.12</span></div>
+          </div>
+        </a>
+      </div>
+
+      <div class="masonry-item">
+        <a class="mc mc--img-news" href="#">
+          <div class="mc__img ph-n2 mc__img-ph"></div>
+          <div class="mc__body">
+            <div class="mc__badge-row">
+              <span class="nb">new</span>
+              <span class="cb cb-content cb-news">news</span>
+            </div>
+            <div class="mc__title">個展なび × 美術手帖 コラボ企画スタート</div>
+            <div class="mc__byline"><span class="mc__date">2026.03.01</span></div>
+          </div>
+          <div class="mc__foot" style="padding-top:0;border-top:none"></div>
+        </a>
+      </div>
+
+      <div class="masonry-item">
+        <a class="mc mc--noimg mc--noimg-news" href="#">
+          <div class="mc__body">
+            <div class="mc__badge-row">
+              <span class="cb cb-content cb-news">news</span>
+            </div>
+            <div class="mc__title">LIAISON プラス出品機能の一部仕様を変更しました — 詳細は利用規約をご確認ください</div>
+            <div class="mc__byline"><span class="mc__date">2026.02.28</span></div>
+          </div>
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ════════════════════════════════════════
+       6. ニュースカード — 水平リスト
+       ════════════════════════════════════════ -->
+  <div class="demo-section">
+    <div class="demo-label">6. ニュースカード .lc — 水平リスト（画像なし:テキスト型 / 画像あり:カラーブロック）</div>
+    <div class="list-col">
+
+      <a class="lc lc--news" href="#">
+        <div class="lc__thumb lc__thumb--news">
+          <span class="lc__thumb-label">news</span>
+        </div>
+        <div class="lc__body">
+          <div class="lc__badge-row">
+            <span class="nb">new</span>
+            <span class="cb cb-content cb-news">news</span>
+          </div>
+          <div class="lc__title">個展なびが「LIAISON」のパートナーギャラリー募集を開始</div>
+          <div class="lc__byline"><span class="lc__date">2026.02.20</span></div>
+        </div>
+      </a>
+
+      <a class="lc lc--noimg lc--news" href="#">
+        <div class="lc__body">
+          <div class="lc__badge-row">
+            <span class="cb cb-content cb-news">news</span>
+          </div>
+          <div class="lc__title">サービスメンテナンスのお知らせ — 3月20日 深夜2:00〜4:00</div>
+          <div class="lc__byline"><span class="lc__date">2026.03.12</span></div>
+        </div>
+      </a>
+
+      <a class="lc lc--news" href="#">
+        <div class="lc__thumb lc__thumb--photo ph-n2"></div>
+        <div class="lc__body">
+          <div class="lc__badge-row">
+            <span class="nb">new</span>
+            <span class="cb cb-content cb-news">news</span>
+          </div>
+          <div class="lc__title">個展なび × 美術手帖 コラボ企画スタート</div>
+          <div class="lc__byline"><span class="lc__date">2026.03.01</span></div>
+        </div>
+      </a>
+
+      <a class="lc lc--noimg lc--news" href="#">
+        <div class="lc__body">
+          <div class="lc__badge-row">
+            <span class="cb cb-content cb-news">news</span>
+          </div>
+          <div class="lc__title">LIAISON プラス出品機能の一部仕様を変更しました</div>
+          <div class="lc__byline"><span class="lc__date">2026.02.28</span></div>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

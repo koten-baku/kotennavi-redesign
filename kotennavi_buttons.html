@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>個展なび — Action Buttons v4</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500&family=Noto+Sans+JP:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Sans JP',sans-serif;min-height:100vh;background:#2c3e50;display:flex;flex-direction:column;align-items:center;gap:32px;padding:48px 20px}
+
+.section-ttl{font-family:'Montserrat',sans-serif;font-size:.52rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.25)}
+
+.view-bar{display:flex;gap:6px}
+.view-btn{padding:4px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.2);background:none;color:rgba(255,255,255,.45);font-size:.63rem;cursor:pointer;font-family:'Montserrat',sans-serif;transition:all .15s}
+.view-btn.active{background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.4)}
+
+/* ── デモ用ステートバー ── */
+.state-bar{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:30px;padding:5px 8px 5px 14px}
+.state-lbl{font-family:'Montserrat',sans-serif;font-size:.52rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-right:4px}
+.state-btn{padding:4px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.15);background:none;color:rgba(255,255,255,.4);font-size:.63rem;cursor:pointer;font-family:'Montserrat',sans-serif;transition:all .15s;display:flex;align-items:center;gap:5px}
+.state-btn.active{background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.4)}
+.state-dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
+.state-btn.active.s-login .state-dot{background:#4ade80}
+.state-btn.active.s-guest .state-dot{background:#fb923c}
+
+.panels-wrap{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+.panel{border-radius:14px;padding:32px 36px;display:flex;flex-direction:column;gap:22px;align-items:flex-start;min-width:320px}
+.panel-dark{background:#1a2535;border:1px solid rgba(255,255,255,.08)}
+.panel-light{background:#ffffff;border:1px solid #e0e4ea;box-shadow:0 2px 16px rgba(0,0,0,.08)}
+
+.panel-eyebrow{font-family:'Montserrat',sans-serif;font-size:.52rem;letter-spacing:.2em;text-transform:uppercase}
+.panel-dark .panel-eyebrow{color:rgba(255,255,255,.22)}
+.panel-light .panel-eyebrow{color:#bbb}
+
+.btn-row{display:flex;gap:10px;align-items:center}
+.btn-row-label{font-family:'Montserrat',sans-serif;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;min-width:54px}
+.panel-dark .btn-row-label{color:rgba(255,255,255,.2)}
+.panel-light .btn-row-label{color:#ccc}
+
+/* ══════════════════════════════
+   PILL BUTTON
+══════════════════════════════ */
+.ktn-btn{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:7px 16px;border-radius:100px;border:1.5px solid;
+  background:none;
+  font-family:'Montserrat',sans-serif;font-size:.72rem;font-weight:400;letter-spacing:.03em;
+  cursor:pointer;outline:none;-webkit-tap-highlight-color:transparent;
+  transition:background .16s,border-color .16s,color .16s;
+  position:relative;
+}
+.ktn-btn:active{transform:scale(.96)}
+.ktn-btn svg{width:15px;height:15px;flex-shrink:0;transition:transform .18s cubic-bezier(.34,1.4,.64,1)}
+.ktn-btn.on svg{transform:scale(1.08)}
+
+/* DARK OFF */
+.panel-dark .ktn-btn{color:rgba(255,255,255,.52);border-color:rgba(255,255,255,.18)}
+.panel-dark .ktn-btn:hover{color:rgba(255,255,255,.78);border-color:rgba(255,255,255,.32);background:rgba(255,255,255,.04)}
+/* DARK ON */
+.panel-dark .ktn-btn.on{color:#4da3f5;border-color:#4da3f5;background:rgba(77,163,245,.1)}
+.panel-dark .ktn-btn.on:hover{background:rgba(77,163,245,.18)}
+
+/* LIGHT OFF */
+.panel-light .ktn-btn{color:rgba(0,0,0,.48);border-color:rgba(0,0,0,.2);background:#fff}
+.panel-light .ktn-btn:hover{color:rgba(0,0,0,.72);border-color:rgba(0,0,0,.34);background:#fafafa}
+/* LIGHT ON */
+.panel-light .ktn-btn.on{color:#2d82d4;border-color:#3a90e0;background:rgba(58,144,224,.08)}
+.panel-light .ktn-btn.on:hover{background:rgba(58,144,224,.14)}
+
+/* ══════════════════════════════
+   ICON-ONLY ROUND BUTTON
+══════════════════════════════ */
+.ktn-icon-btn{
+  width:38px;height:38px;border-radius:50%;border:1.5px solid;
+  background:none;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;outline:none;-webkit-tap-highlight-color:transparent;
+  transition:background .16s,border-color .16s;flex-shrink:0;
+  position:relative;
+}
+.ktn-icon-btn:active{transform:scale(.92)}
+.ktn-icon-btn svg{width:18px;height:18px;flex-shrink:0;transition:transform .18s cubic-bezier(.34,1.4,.64,1)}
+.ktn-icon-btn.on svg{transform:scale(1.08)}
+
+/* DARK icon OFF */
+.panel-dark .ktn-icon-btn{border-color:rgba(255,255,255,.18);background:rgba(255,255,255,.04)}
+.panel-dark .ktn-icon-btn:hover{border-color:rgba(255,255,255,.35);background:rgba(255,255,255,.09)}
+/* DARK icon ON */
+.panel-dark .ktn-icon-btn.on{border-color:#4da3f5;background:rgba(77,163,245,.12)}
+.panel-dark .ktn-icon-btn.on:hover{background:rgba(77,163,245,.22)}
+
+/* LIGHT icon OFF */
+.panel-light .ktn-icon-btn{border-color:rgba(0,0,0,.18);background:#fff}
+.panel-light .ktn-icon-btn:hover{border-color:rgba(0,0,0,.3);background:#f5f5f5}
+/* LIGHT icon ON */
+.panel-light .ktn-icon-btn.on{border-color:#3a90e0;background:rgba(58,144,224,.08)}
+.panel-light .ktn-icon-btn.on:hover{background:rgba(58,144,224,.16)}
+
+/* ══════════════════════════════
+   HOVER TOOLTIP
+   - pill: ボタン上部中央
+   - icon: ボタン下部中央
+══════════════════════════════ */
+.ktn-btn .tip,
+.ktn-icon-btn .tip{
+  position:absolute;
+  left:50%;transform:translateX(-50%) translateY(4px);
+  white-space:nowrap;
+  font-family:'Montserrat',sans-serif;font-size:.52rem;letter-spacing:.07em;
+  padding:4px 9px;border-radius:5px;
+  pointer-events:none;
+  opacity:0;transition:opacity .15s,transform .15s;
+  z-index:100;
+}
+/* pill: 上に出す */
+.ktn-btn .tip{
+  bottom:calc(100% + 7px);
+  transform:translateX(-50%) translateY(4px);
+}
+/* icon: 下に出す */
+.ktn-icon-btn .tip{
+  top:calc(100% + 7px);
+  transform:translateX(-50%) translateY(-4px);
+}
+/* 矢印 */
+.ktn-btn .tip::after{
+  content:'';position:absolute;left:50%;transform:translateX(-50%);
+  top:100%;border:4px solid transparent;
+}
+.ktn-icon-btn .tip::after{
+  content:'';position:absolute;left:50%;transform:translateX(-50%));
+  bottom:100%;border:4px solid transparent;
+}
+
+/* hover時に表示 */
+.ktn-btn:hover .tip,
+.ktn-icon-btn:hover .tip{
+  opacity:1;
+}
+.ktn-btn:hover .tip{transform:translateX(-50%) translateY(0)}
+.ktn-icon-btn:hover .tip{transform:translateX(-50%) translateY(0)}
+
+/* dark パネル内のtooltip */
+.panel-dark .ktn-btn .tip,
+.panel-dark .ktn-icon-btn .tip{
+  background:rgba(240,246,255,.93);color:#1a2535;
+  box-shadow:0 2px 10px rgba(0,0,0,.35);
+}
+.panel-dark .ktn-btn .tip::after{border-top-color:rgba(240,246,255,.93)}
+.panel-dark .ktn-icon-btn .tip::after{border-bottom-color:rgba(240,246,255,.93)}
+
+/* light パネル内のtooltip */
+.panel-light .ktn-btn .tip,
+.panel-light .ktn-icon-btn .tip{
+  background:#1e2d3d;color:rgba(255,255,255,.88);
+  box-shadow:0 2px 10px rgba(0,0,0,.22);
+}
+.panel-light .ktn-btn .tip::after{border-top-color:#1e2d3d}
+.panel-light .ktn-icon-btn .tip::after{border-bottom-color:#1e2d3d}
+
+/* ── ゲスト状態ではボタンを半透明にしてカーソルをpointerのまま ── */
+body.guest .ktn-btn,
+body.guest .ktn-icon-btn{
+  opacity:.6;
+}
+/* ゲスト時のtooltip: 「ログインが必要です」 */
+body.guest .ktn-btn .tip,
+body.guest .ktn-icon-btn .tip{
+  /* ゲスト用のtipはJS側でセット、見た目はorange-tint */
+}
+body.guest .panel-dark .ktn-btn .tip,
+body.guest .panel-dark .ktn-icon-btn .tip{
+  background:rgba(255,237,213,.95);color:#7c2d12;
+}
+body.guest .panel-dark .ktn-btn .tip::after{border-top-color:rgba(255,237,213,.95)}
+body.guest .panel-dark .ktn-icon-btn .tip::after{border-bottom-color:rgba(255,237,213,.95)}
+body.guest .panel-light .ktn-btn .tip,
+body.guest .panel-light .ktn-icon-btn .tip{
+  background:#431407;color:rgba(255,237,213,.92);
+}
+body.guest .panel-light .ktn-btn .tip::after{border-top-color:#431407}
+body.guest .panel-light .ktn-icon-btn .tip::after{border-bottom-color:#431407}
+
+/* ══════════════════════════════
+   AUTH MODAL（ゲスト用）
+══════════════════════════════ */
+.auth-overlay{
+  position:fixed;inset:0;background:rgba(15,22,35,.72);
+  display:flex;align-items:center;justify-content:center;
+  z-index:1000;opacity:0;pointer-events:none;
+  transition:opacity .22s;
+  backdrop-filter:blur(3px);
+}
+.auth-overlay.open{opacity:1;pointer-events:all}
+
+.auth-modal{
+  background:#fff;border-radius:18px;
+  width:min(400px,90vw);
+  padding:0;overflow:hidden;
+  box-shadow:0 24px 60px rgba(0,0,0,.3);
+  transform:translateY(16px) scale(.97);
+  transition:transform .25s cubic-bezier(.34,1.3,.64,1);
+}
+.auth-overlay.open .auth-modal{transform:translateY(0) scale(1)}
+
+.auth-top{
+  padding:32px 32px 24px;
+  background:linear-gradient(135deg,#005da7 0%,#1a6fc4 60%,#3a90e0 100%);
+  text-align:center;position:relative;
+}
+.auth-close{
+  position:absolute;top:14px;right:14px;
+  width:28px;height:28px;border-radius:50%;
+  background:rgba(255,255,255,.15);border:none;
+  color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:background .15s;
+}
+.auth-close:hover{background:rgba(255,255,255,.28)}
+.auth-close svg{width:13px;height:13px}
+
+.auth-icon{
+  width:52px;height:52px;border-radius:50%;
+  background:rgba(255,255,255,.18);border:2px solid rgba(255,255,255,.35);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 14px;
+}
+.auth-icon svg{width:24px;height:24px;color:#fff}
+.auth-ttl{font-family:'Montserrat',sans-serif;font-size:.95rem;font-weight:500;color:#fff;letter-spacing:.04em;margin-bottom:6px}
+.auth-sub{font-size:.72rem;color:rgba(255,255,255,.7);line-height:1.65}
+
+/* アクション名バッジ */
+.auth-action-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  margin:10px auto 0;
+  background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);
+  border-radius:20px;padding:4px 12px;
+  font-family:'Montserrat',sans-serif;font-size:.62rem;color:rgba(255,255,255,.9);letter-spacing:.06em;
+}
+.auth-action-badge svg{width:12px;height:12px}
+
+.auth-body{padding:24px 28px 28px}
+.auth-btns{display:flex;flex-direction:column;gap:10px}
+
+.auth-btn-primary{
+  width:100%;padding:13px;border-radius:10px;
+  background:linear-gradient(135deg,#005da7,#3a90e0);
+  border:none;color:#fff;
+  font-family:'Montserrat',sans-serif;font-size:.78rem;font-weight:500;letter-spacing:.06em;
+  cursor:pointer;transition:opacity .15s,transform .12s;
+}
+.auth-btn-primary:hover{opacity:.9}
+.auth-btn-primary:active{transform:scale(.98)}
+
+.auth-btn-secondary{
+  width:100%;padding:13px;border-radius:10px;
+  background:none;border:1.5px solid #d8e2ec;
+  color:#3d4a5c;
+  font-family:'Montserrat',sans-serif;font-size:.78rem;font-weight:400;letter-spacing:.06em;
+  cursor:pointer;transition:border-color .15s,background .15s;
+}
+.auth-btn-secondary:hover{border-color:#3a90e0;background:#f0f6fd}
+
+.auth-divider{
+  display:flex;align-items:center;gap:10px;
+  font-size:.6rem;font-family:'Montserrat',sans-serif;
+  color:#bbb;letter-spacing:.08em;margin:2px 0;
+}
+.auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:#eee}
+
+.auth-note{text-align:center;font-size:.64rem;color:#bbb;margin-top:14px;line-height:1.7}
+.auth-note a{color:#3a90e0;text-decoration:none}
+.auth-note a:hover{text-decoration:underline}
+
+/* ══ EXPORT ══ */
+.export-wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;width:100%;max-width:700px}
+.export-card{background:#fff;border:1px solid #e4e8ee;border-radius:10px;padding:18px 14px;text-align:center}
+.export-lbl{font-family:'Montserrat',sans-serif;font-size:.52rem;letter-spacing:.12em;text-transform:uppercase;color:#bbb;margin-bottom:12px}
+.export-icons{display:flex;justify-content:center;gap:14px;margin-bottom:12px;align-items:center}
+.export-icons svg{width:20px;height:20px}
+.exp-div{width:1px;height:20px;background:#eee}
+.copy-btn{display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border:1px solid #dde2ea;border-radius:6px;font-size:.58rem;font-family:'Montserrat',sans-serif;color:#8899aa;cursor:pointer;background:none;transition:all .15s}
+.copy-btn:hover{border-color:#3a90e0;color:#3a90e0}
+
+/* ── Watch icon inner circle (dark) ──
+   fill:none で大円の色が透けて「くり抜き」効果 */
+.wi-dark { fill: none; }
+.panel-dark .wi-dark { fill: #1a2535; }
+</style>
+</head>
+<body>
+
+<!-- ── コントロールバー ── -->
+<div style="display:flex;flex-direction:column;align-items:center;gap:10px">
+  <div class="view-bar">
+    <button class="view-btn active" onclick="showBoth(this)">両方</button>
+    <button class="view-btn" onclick="showOne('dark',this)">ダーク</button>
+    <button class="view-btn" onclick="showOne('light',this)">ライト</button>
+  </div>
+  <div class="state-bar">
+    <span class="state-lbl">State</span>
+    <button class="state-btn s-login active" onclick="setLoginState(this)">
+      <span class="state-dot"></span>ログイン中
+    </button>
+    <button class="state-btn s-guest" onclick="setGuestState(this)">
+      <span class="state-dot"></span>ゲスト（未ログイン）
+    </button>
+  </div>
+</div>
+
+<!--
+  ══ アイコン仕様 ══════════════════════════════════
+  WATCH   大円 OFF=薄グレー / ON=青  小円=背景色（くり抜き）
+  INTEREST  OFF=薄グレーハート / ON=青ハート
+  CHECK IN  大円(右上)+小円(左下) OFF=薄グレー / ON=青
+  ══════════════════════════════════════════════
+-->
+
+<!-- ════ PILL BUTTONS ════ -->
+<div class="section-ttl">Pill buttons</div>
+<div class="panels-wrap">
+
+  <!-- DARK -->
+  <div class="panel panel-dark" id="pill-dark">
+    <div class="panel-eyebrow">Dark</div>
+
+    <div class="btn-row">
+      <span class="btn-row-label">watch</span>
+      <button class="ktn-btn" onclick="handleAction(this,'watch')" data-off="watch" data-on="watching" data-action="watch">
+        <svg viewBox="0 0 16 16" fill="none">
+          <circle cx="8" cy="8" r="7" fill="#7a8a99" opacity=".45"/>
+          <circle class="wi-dark" cx="8" cy="8" r="2.6"/>
+        </svg>
+        watch
+        <span class="tip">ウォッチする</span>
+      </button>
+      <button class="ktn-btn on" onclick="handleAction(this,'watch')" data-off="watch" data-on="watching" data-action="watch">
+        <svg viewBox="0 0 16 16" fill="none">
+          <circle cx="8" cy="8" r="7" fill="#4da3f5"/>
+          <circle class="wi-dark" cx="8" cy="8" r="2.6"/>
+        </svg>
+        watching
+        <span class="tip">ウォッチ中 — 解除する</span>
+      </button>
+    </div>
+
+    <div class="btn-row">
+      <span class="btn-row-label">interest</span>
+      <button class="ktn-btn" onclick="handleAction(this,'interest')" data-off="interest!" data-on="interested!" data-action="interest">
+        <svg viewBox="0 0 16 16" fill="none">
+          <path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"
+            fill="#7a8a99" fill-opacity=".45" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6" stroke-linejoin="round"/>
+        </svg>
+        interest!
+        <span class="tip">興味ある！に追加する</span>
+      </button>
+      <button class="ktn-btn on" onclick="handleAction(this,'interest')" data-off="interest!" data-on="interested!" data-action="interest">
+        <svg viewBox="0 0 16 16" fill="none">
+          <path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"
+            fill="#4da3f5" stroke="#4da3f5" stroke-width=".6" stroke-linejoin="round"/>
+        </svg>
+        interested!
+        <span class="tip">興味ある！ — 解除する</span>
+      </button>
+    </div>
+
+    <div class="btn-row">
+      <span class="btn-row-label">check in</span>
+      <button class="ktn-btn" onclick="handleAction(this,'checkin')" data-off="check in" data-on="checked in" data-action="checkin">
+        <svg viewBox="0 0 16 16" fill="none">
+          <circle cx="10" cy="5"  r="4"   fill="#7a8a99" opacity=".45"/>
+          <circle cx="5"  cy="11" r="2.4" fill="#7a8a99" opacity=".45"/>
+        </svg>
+        check in
+        <span class="tip">訪問済みにする</span>
+      </button>
+      <button class="ktn-btn on" onclick="handleAction(this,'checkin')" data-off="check in" data-on="checked in" data-action="checkin">
+        <svg viewBox="0 0 16 16" fill="none">
+          <circle cx="10" cy="5"  r="4"   fill="#4da3f5"/>
+          <circle cx="5"  cy="11" r="2.4" fill="#4da3f5"/>
+        </svg>
+        checked in
+        <span class="tip">訪問済み — 解除する</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- LIGHT -->
+  <div class="panel panel-light" id="pill-light">
+    <div class="panel-eyebrow">Light</div>
+
+    <div class="btn-row">
+      <span class="btn-row-label">watch</span>
+      <button class="ktn-btn" onclick="handleAction(this,'watch')" data-off="watch" data-on="watching" data-action="watch">
+        <svg viewBox="0 0 16 16" fill="none">
+          <circle cx="8" cy="8" r="7" fill="#7a8a99" opacity=".3"/>
+          <circle cx="8" cy="8" r="2.6" fill="#ffffff"/>
+        </svg>
+        watch
+        <span class="tip">この展覧会をウォッチする</span>
+      </button>
+      <button class="ktn-btn on" onclick="handleAction(this,'watch')" data-off="watch" data-on="watching" data-action="watch">
+        <svg viewBox="0 0 16 16" fill="none">
+          <circle cx="8" cy="8" r="7" fill="#3a90e0"/>
+          <circle cx="8" cy="8" r="2.6" fill="#ffffff"/>
+        </svg>
+        watching
+        <span class="tip">ウォッチを解除する</span>
+      </button>
+    </div>
+
+    <div class="btn-row">
+      <span class="btn-row-label">interest</span>
+      <button class="ktn-btn" onclick="handleAction(this,'interest')" data-off="interest!" data-on="interested!" data-action="interest">
+        <svg viewBox="0 0 16 16" fill="none">
+          <path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"
+            fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/>
+        </svg>
+        interest!
+        <span class="tip">興味ある！に追加する</span>
+      </button>
+      <button class="ktn-btn on" onclick="handleAction(this,'interest')" data-off="interest!" data-on="interested!" data-action="interest">
+        <svg viewBox="0 0 16 16" fill="none">
+          <path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"
+            fill="#3a90e0" stroke="#3a90e0" stroke-width=".6" stroke-linejoin="round"/>
+        </svg>
+        interested!
+        <span class="tip">興味ある！ — 解除する</span>
+      </button>
+    </div>
+
+    <div class="btn-row">
+      <span class="btn-row-label">check in</span>
+      <button class="ktn-btn" onclick="handleAction(this,'checkin')" data-off="check in" data-on="checked in" data-action="checkin">
+        <svg viewBox="0 0 16 16" fill="none">
+          <circle cx="10" cy="5"  r="4"   fill="#7a8a99" opacity=".3"/>
+          <circle cx="5"  cy="11" r="2.4" fill="#7a8a99" opacity=".3"/>
+        </svg>
+        check in
+        <span class="tip">訪問済みにする</span>
+      </button>
+      <button class="ktn-btn on" onclick="handleAction(this,'checkin')" data-off="check in" data-on="checked in" data-action="checkin">
+        <svg viewBox="0 0 16 16" fill="none">
+          <circle cx="10" cy="5"  r="4"   fill="#3a90e0"/>
+          <circle cx="5"  cy="11" r="2.4" fill="#3a90e0"/>
+        </svg>
+        checked in
+        <span class="tip">訪問済み — 解除する</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ════ ICON-ONLY ROUND BUTTONS ════ -->
+<div class="section-ttl">Icon-only — 丸ボタン</div>
+<div class="panels-wrap">
+
+  <!-- DARK -->
+  <div class="panel panel-dark" id="icon-dark">
+    <div class="panel-eyebrow">Dark</div>
+
+    <div class="btn-row">
+      <span class="btn-row-label">watch</span>
+      <button class="ktn-icon-btn" onclick="handleAction(this,'watch')" data-action="watch">
+        <svg viewBox="0 0 16 16" fill="none">
+          <circle cx="8" cy="8" r="7" fill="#7a8a99" opacity=".45"/>
+          <circle class="wi-dark" cx="8" cy="8" r="2.6"/>
+        </svg>
+        <span class="tip">ウォッチする</span>
+      </button>
+      <button class="ktn-icon-btn on" onclick="handleAction(this,'watch')" data-action="watch">
+        <svg viewBox="0 0 16 16" fill="none">
+          <circle cx="8" cy="8" r="7" fill="#4da3f5"/>
+          <circle class="wi-dark" cx="8" cy="8" r="2.6"/>
+        </svg>
+        <span class="tip">ウォッチ中 — 解除する</span>
+      </button>
+    </div>
+
+    <div class="btn-row">
+      <span class="btn-row-label">interest</span>
+      <button class="ktn-icon-btn" onclick="handleAction(this,'interest')" data-action="interest">
+        <svg viewBox="0 0 16 16" fill="none">
+          <path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"
+            fill="#7a8a99" fill-opacity=".45" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6" stroke-linejoin="round"/>
+        </svg>
+        <span class="tip">興味ある！に追加する</span>
+      </button>
+      <button class="ktn-icon-btn on" onclick="handleAction(this,'interest')" data-action="interest">
+        <svg viewBox="0 0 16 16" fill="none">
+          <path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"
+            fill="#4da3f5" stroke="#4da3f5" stroke-width=".6" stroke-linejoin="round"/>
+        </svg>
+        <span class="tip">興味ある！ — 解除する</span>
+      </button>
+    </div>
+
+    <div class="btn-row">
+      <span class="btn-row-label">check in</span>
+      <button class="ktn-icon-btn" onclick="handleAction(this,'checkin')" data-action="checkin">
+        <svg viewBox="0 0 16 16" fill="none">
+          <circle cx="10" cy="5"  r="4"   fill="#7a8a99" opacity=".45"/>
+          <circle cx="5"  cy="11" r="2.4" fill="#7a8a99" opacity=".45"/>
+        </svg>
+        <span class="tip">訪問済みにする</span>
+      </button>
+      <button class="ktn-icon-btn on" onclick="handleAction(this,'checkin')" data-action="checkin">
+        <svg viewBox="0 0 16 16" fill="none">
+          <circle cx="10" cy="5"  r="4"   fill="#4da3f5"/>
+          <circle cx="5"  cy="11" r="2.4" fill="#4da3f5"/>
+        </svg>
+        <span class="tip">訪問済み — 解除する</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- LIGHT -->
+  <div class="panel panel-light" id="icon-light">
+    <div class="panel-eyebrow">Light</div>
+
+    <div class="btn-row">
+      <span class="btn-row-label">watch</span>
+      <button class="ktn-icon-btn" onclick="handleAction(this,'watch')" data-action="watch">
+        <svg viewBox="0 0 16 16" fill="none">
+          <circle cx="8" cy="8" r="7" fill="#7a8a99" opacity=".3"/>
+          <circle cx="8" cy="8" r="2.6" fill="#ffffff"/>
+        </svg>
+        <span class="tip">ウォッチする</span>
+      </button>
+      <button class="ktn-icon-btn on" onclick="handleAction(this,'watch')" data-action="watch">
+        <svg viewBox="0 0 16 16" fill="none">
+          <circle cx="8" cy="8" r="7" fill="#3a90e0"/>
+          <circle cx="8" cy="8" r="2.6" fill="#ffffff"/>
+        </svg>
+        <span class="tip">ウォッチ中 — 解除する</span>
+      </button>
+    </div>
+
+    <div class="btn-row">
+      <span class="btn-row-label">interest</span>
+      <button class="ktn-icon-btn" onclick="handleAction(this,'interest')" data-action="interest">
+        <svg viewBox="0 0 16 16" fill="none">
+          <path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"
+            fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/>
+        </svg>
+        <span class="tip">興味ある！に追加する</span>
+      </button>
+      <button class="ktn-icon-btn on" onclick="handleAction(this,'interest')" data-action="interest">
+        <svg viewBox="0 0 16 16" fill="none">
+          <path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"
+            fill="#3a90e0" stroke="#3a90e0" stroke-width=".6" stroke-linejoin="round"/>
+        </svg>
+        <span class="tip">興味ある！ — 解除する</span>
+      </button>
+    </div>
+
+    <div class="btn-row">
+      <span class="btn-row-label">check in</span>
+      <button class="ktn-icon-btn" onclick="handleAction(this,'checkin')" data-action="checkin">
+        <svg viewBox="0 0 16 16" fill="none">
+          <circle cx="10" cy="5"  r="4"   fill="#7a8a99" opacity=".3"/>
+          <circle cx="5"  cy="11" r="2.4" fill="#7a8a99" opacity=".3"/>
+        </svg>
+        <span class="tip">訪問済みにする</span>
+      </button>
+      <button class="ktn-icon-btn on" onclick="handleAction(this,'checkin')" data-action="checkin">
+        <svg viewBox="0 0 16 16" fill="none">
+          <circle cx="10" cy="5"  r="4"   fill="#3a90e0"/>
+          <circle cx="5"  cy="11" r="2.4" fill="#3a90e0"/>
+        </svg>
+        <span class="tip">訪問済み — 解除する</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ════ SVG EXPORT ════ -->
+<div class="export-wrap">
+  <div class="export-card">
+    <div class="export-lbl">watch / watching</div>
+    <div class="export-icons">
+      <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" fill="#7a8a99" opacity=".4"/><circle cx="8" cy="8" r="2.6" fill="#fff"/></svg>
+      <div class="exp-div"></div>
+      <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" fill="#3a90e0"/><circle cx="8" cy="8" r="2.6" fill="#fff"/></svg>
+    </div>
+    <button class="copy-btn" onclick="doCopy(SVG_WATCH,this)">SVGをコピー（両状態）</button>
+  </div>
+  <div class="export-card">
+    <div class="export-lbl">interest! / interested!</div>
+    <div class="export-icons">
+      <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6" stroke-linejoin="round"/></svg>
+      <div class="exp-div"></div>
+      <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6" stroke-linejoin="round"/></svg>
+    </div>
+    <button class="copy-btn" onclick="doCopy(SVG_INTEREST,this)">SVGをコピー（両状態）</button>
+  </div>
+  <div class="export-card">
+    <div class="export-lbl">check in / checked in</div>
+    <div class="export-icons">
+      <svg viewBox="0 0 16 16" fill="none"><circle cx="10" cy="5" r="4" fill="#7a8a99" opacity=".4"/><circle cx="5" cy="11" r="2.4" fill="#7a8a99" opacity=".4"/></svg>
+      <div class="exp-div"></div>
+      <svg viewBox="0 0 16 16" fill="none"><circle cx="10" cy="5" r="4" fill="#3a90e0"/><circle cx="5" cy="11" r="2.4" fill="#3a90e0"/></svg>
+    </div>
+    <button class="copy-btn" onclick="doCopy(SVG_CHECKIN,this)">SVGをコピー（両状態）</button>
+  </div>
+</div>
+
+<!-- ════ AUTH MODAL ════ -->
+<div class="auth-overlay" id="authModal" onclick="closeAuthModal(event)">
+  <div class="auth-modal">
+    <div class="auth-top">
+      <button class="auth-close" onclick="closeAuthModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <div class="auth-icon" id="authModalIcon">
+        <!-- アクションに応じてアイコンをJSで差し替え -->
+        <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" fill="#fff" opacity=".9"/><circle cx="8" cy="8" r="2.6" fill="#3a90e0"/></svg>
+      </div>
+      <div class="auth-ttl">ログインが必要です</div>
+      <div class="auth-sub">ユーザー登録すると、ウォッチ・興味ある！・チェックインなどの<br>My機能がすべて使えるようになります</div>
+      <div class="auth-action-badge" id="authActionBadge">
+        <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" fill="rgba(255,255,255,.3)"/><circle cx="8" cy="8" r="2.6" fill="#fff"/></svg>
+        watch
+      </div>
+    </div>
+    <div class="auth-body">
+      <div class="auth-btns">
+        <button class="auth-btn-primary" onclick="closeAuthModal()">
+          ログイン
+        </button>
+        <div class="auth-divider">または</div>
+        <button class="auth-btn-secondary" onclick="closeAuthModal()">
+          新規ユーザー登録（無料）
+        </button>
+      </div>
+      <div class="auth-note">
+        登録は無料です。<a href="#">利用規約</a>・<a href="#">プライバシーポリシー</a>に同意のうえご利用ください。
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ── ログイン状態管理 ── */
+let isLoggedIn = true;
+
+function setLoginState(btn){
+  isLoggedIn = true;
+  document.body.classList.remove('guest');
+  document.querySelectorAll('.state-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  // ゲスト用tooltipを元に戻す
+  updateTooltips();
+}
+
+function setGuestState(btn){
+  isLoggedIn = false;
+  document.body.classList.add('guest');
+  document.querySelectorAll('.state-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  // ゲスト用tooltipに切り替え
+  updateTooltips();
+}
+
+// アクションラベル定義
+const ACTION_LABELS = {
+  watch:    { off:'ウォッチする',       on:'ウォッチ中 — 解除する',    iconOff:'ウォッチする',       iconOn:'ウォッチ中 — 解除する',    guest:'ウォッチにはログインが必要です' },
+  interest: { off:'興味ある！に追加する', on:'興味ある！ — 解除する',    iconOff:'興味ある！に追加する', iconOn:'興味ある！ — 解除する',    guest:'この機能にはログインが必要です' },
+  checkin:  { off:'訪問済みにする',      on:'訪問済み — 解除する',      iconOff:'訪問済みにする',      iconOn:'訪問済み — 解除する',      guest:'この機能にはログインが必要です' },
+};
+
+// アクション表示名（モーダル用）
+const ACTION_NAMES = {
+  watch:    'watch',
+  interest: 'interest!',
+  checkin:  'check in',
+};
+
+// アクションアイコン（モーダル用）
+const ACTION_ICONS = {
+  watch:    `<svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" fill="#fff" opacity=".9"/><circle cx="8" cy="8" r="2.6" fill="#3a90e0"/></svg>`,
+  interest: `<svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#fff" stroke="#fff" stroke-width=".6"/></svg>`,
+  checkin:  `<svg viewBox="0 0 16 16" fill="none"><circle cx="10" cy="5" r="4" fill="#fff" opacity=".9"/><circle cx="5" cy="11" r="2.4" fill="#fff" opacity=".75"/></svg>`,
+};
+
+function updateTooltips(){
+  document.querySelectorAll('[data-action]').forEach(btn => {
+    const action = btn.dataset.action;
+    const tip = btn.querySelector('.tip');
+    if(!tip || !action || !ACTION_LABELS[action]) return;
+
+    if(!isLoggedIn){
+      tip.textContent = ACTION_LABELS[action].guest;
+      return;
+    }
+
+    // ログイン時: ON/OFFとpill/iconで分岐
+    const isOn = btn.classList.contains('on');
+    const isPill = btn.classList.contains('ktn-btn');
+    if(isPill){
+      tip.textContent = isOn ? ACTION_LABELS[action].on : ACTION_LABELS[action].off;
+    } else {
+      tip.textContent = isOn ? ACTION_LABELS[action].iconOn : ACTION_LABELS[action].iconOff;
+    }
+  });
+}
+
+/* ── ボタンアクション ── */
+function handleAction(btn, action){
+  if(!isLoggedIn){
+    // ゲスト → モーダル表示
+    showAuthModal(action);
+    return;
+  }
+  // ログイン済み → トグル
+  togglePair(btn);
+  // tooltip更新
+  const row = btn.closest('.btn-row');
+  row.querySelectorAll('[data-action]').forEach(b => {
+    const tip = b.querySelector('.tip');
+    if(!tip || !ACTION_LABELS[action]) return;
+    const isOn = b.classList.contains('on');
+    const isPill = b.classList.contains('ktn-btn');
+    if(isPill){
+      tip.textContent = isOn ? ACTION_LABELS[action].on : ACTION_LABELS[action].off;
+    } else {
+      tip.textContent = isOn ? ACTION_LABELS[action].iconOn : ACTION_LABELS[action].iconOff;
+    }
+  });
+}
+
+/* ── ペアトグル ── */
+function togglePair(btn){
+  const row = btn.closest('.btn-row');
+  const btns = [...row.querySelectorAll('.ktn-btn, .ktn-icon-btn')];
+  if(btns.length !== 2) return;
+  const [offBtn, onBtn] = btns;
+  const goOn = btn === offBtn;
+  offBtn.classList.toggle('on', !goOn);
+  onBtn.classList.toggle('on', goOn);
+  // テキスト更新（pillのみ）
+  [offBtn, onBtn].forEach(b => {
+    const tn = [...b.childNodes].find(n=>n.nodeType===3&&n.textContent.trim());
+    if(!tn) return;
+    const isNowOn = b.classList.contains('on');
+    const off = b.dataset.off, on = b.dataset.on;
+    if(off && on) tn.textContent = ' '+(isNowOn ? on : off);
+  });
+}
+
+/* ── Auth Modal ── */
+function showAuthModal(action){
+  const modal = document.getElementById('authModal');
+  const badge = document.getElementById('authActionBadge');
+  const icon  = document.getElementById('authModalIcon');
+  badge.innerHTML = (ACTION_ICONS[action]||'') + ' ' + (ACTION_NAMES[action]||action);
+  icon.innerHTML  = ACTION_ICONS[action] || '';
+  modal.classList.add('open');
+}
+function closeAuthModal(e){
+  if(e && e.target !== document.getElementById('authModal')) return;
+  document.getElementById('authModal').classList.remove('open');
+}
+// ESCキーで閉じる
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') document.getElementById('authModal').classList.remove('open'); });
+
+/* ── View toggle ── */
+function showBoth(b){
+  setActive(b);
+  ['pill-dark','pill-light','icon-dark','icon-light'].forEach(id=>document.getElementById(id).style.display='');
+}
+function showOne(theme,b){
+  setActive(b);
+  ['pill-dark','pill-light','icon-dark','icon-light'].forEach(id=>{
+    document.getElementById(id).style.display = id.endsWith(theme)?'':'none';
+  });
+}
+function setActive(b){ document.querySelectorAll('.view-btn').forEach(x=>x.classList.remove('active')); b.classList.add('active') }
+
+/* ── SVG export ── */
+const SVG_WATCH=`<!-- watch (OFF) -->\n<svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">\n  <circle cx="8" cy="8" r="7" fill="#7a8a99" opacity=".4"/>\n  <circle cx="8" cy="8" r="2.6" fill="[BACKGROUND_COLOR]"/>\n</svg>\n\n<!-- watching (ON) -->\n<svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">\n  <circle cx="8" cy="8" r="7" fill="#3a90e0"/>\n  <circle cx="8" cy="8" r="2.6" fill="[BACKGROUND_COLOR]"/>\n</svg>`;
+const SVG_INTEREST=`<!-- interest (OFF) -->\n<svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">\n  <path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"\n    fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6" stroke-linejoin="round"/>\n</svg>\n\n<!-- interested (ON) -->\n<svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">\n  <path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"\n    fill="#3a90e0" stroke="#3a90e0" stroke-width=".6" stroke-linejoin="round"/>\n</svg>`;
+const SVG_CHECKIN=`<!-- check in (OFF) -->\n<svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">\n  <circle cx="10" cy="5"  r="4"   fill="#7a8a99" opacity=".4"/>\n  <circle cx="5"  cy="11" r="2.4" fill="#7a8a99" opacity=".4"/>\n</svg>\n\n<!-- checked in (ON) -->\n<svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">\n  <circle cx="10" cy="5"  r="4"   fill="#3a90e0"/>\n  <circle cx="5"  cy="11" r="2.4" fill="#3a90e0"/>\n</svg>`;
+
+function doCopy(t,btn){
+  navigator.clipboard.writeText(t).then(()=>{
+    const orig=btn.textContent; btn.textContent='✓ コピーしました'; btn.style.color='#1a7f3c';
+    setTimeout(()=>{btn.textContent=orig;btn.style.color=''},2000);
+  });
+}
+
+// 初期化
+updateTooltips();
+</script>
+</body>
+</html>

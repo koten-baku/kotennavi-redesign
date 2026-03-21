@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>個展なび — LIAISON Badges v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@600&family=Montserrat:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Sans JP',sans-serif;background:#e8ecf2;padding:40px 24px;display:flex;flex-direction:column;align-items:center;gap:28px}
+.page{width:100%;max-width:900px;display:flex;flex-direction:column;gap:22px}
+
+/* ════════════════════════════════════════════════
+   LIAISON BADGE — ロゴベース版
+
+   ロゴSVGをそのまま内包し、CSSサイズで制御。
+   白背景＋影でカード・人物どちらの背景にも対応。
+
+   横長 (pill):
+     LIAISON   : viewBox 480×240  → w:88 h:44px  (pill内)
+     LIAISON+  : viewBox 480×240  → w:96 h:44px  (pill内)
+     サブテキスト込み
+
+   丸 (circle):
+     viewBox を アーチ中央にクロップ → 文字のみ表示
+     LIAISON   : viewBox "55 10 370 190"
+     LIAISON+  : viewBox "40 10 400 190"
+   ════════════════════════════════════════════════ */
+
+/* ── 横長バッジ ── */
+.lb-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border-radius: 4px;
+  padding: 3px 7px;
+  box-shadow: 0 1px 6px rgba(0,0,0,.14), 0 0 0 1px rgba(0,0,0,.06);
+  flex-shrink: 0;
+  cursor: default;
+  transition: box-shadow .18s;
+}
+.lb-pill:hover {
+  box-shadow: 0 3px 12px rgba(0,0,0,.18), 0 0 0 1px rgba(0,0,0,.08);
+}
+.lb-pill svg { display: block; }
+
+/* LIAISON+ はゴールドの極薄border */
+.lb-pill.plus {
+  box-shadow: 0 1px 6px rgba(0,0,0,.14), 0 0 0 1.5px rgba(184,124,16,.3);
+}
+
+/* ── 丸バッジ ── */
+.lb-circle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 6px rgba(0,0,0,.18), 0 0 0 1px rgba(0,0,0,.07);
+  overflow: hidden;
+  flex-shrink: 0;
+  cursor: default;
+  transition: box-shadow .18s, transform .15s;
+}
+.lb-circle:hover { transform: scale(1.08); }
+.lb-circle.plus {
+  box-shadow: 0 1px 6px rgba(0,0,0,.16), 0 0 0 1.5px rgba(184,124,16,.35);
+}
+.lb-circle.sz-lg { width: 44px; height: 44px; }
+.lb-circle.sz-md { width: 34px; height: 34px; }
+.lb-circle.sz-sm { width: 26px; height: 26px; }
+.lb-circle svg   { display: block; }
+
+/* ── デモUI ── */
+.section { background:#fff; border-radius:12px; border:1px solid #e0e5ec; overflow:hidden; }
+.section-head { padding:14px 20px 12px; border-bottom:1px solid #f0f2f5; display:flex; align-items:baseline; gap:10px; }
+.section-num  { font-family:'Montserrat',sans-serif; font-size:.5rem; letter-spacing:.18em; font-weight:700; color:#bbb; }
+.section-name { font-size:.8rem; font-weight:500; color:#2a3340; }
+.section-desc { font-size:.62rem; color:#aab; margin-left:auto; }
+.section-body { padding:22px 22px 20px; }
+.sub  { font-family:'Montserrat',sans-serif; font-size:.44rem; letter-spacing:.14em; text-transform:uppercase; color:#ccc; margin-bottom:12px; }
+.sub + .sub, .sep + .sub { margin-top:18px; }
+.row  { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:10px; }
+.rlbl { font-family:'Montserrat',sans-serif; font-size:.44rem; letter-spacing:.08em; color:#ccc; min-width:80px; }
+.sep  { height:1px; background:#f2f4f7; margin:18px 0; }
+.dark-strip { background:#1a2535; border-radius:8px; padding:14px 16px; display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-top:10px; }
+.dlbl { font-family:'Montserrat',sans-serif; font-size:.42rem; color:rgba(255,255,255,.28); }
+
+/* ── カードモック ── */
+.sb { display:inline-flex; align-items:center; gap:4px; font-family:'Montserrat',sans-serif; font-size:.5rem; font-weight:600; letter-spacing:.06em; padding:3px 8px; border-radius:20px; white-space:nowrap; line-height:1; }
+.sb-live { color:#fff; background:#1a8a4a; }
+.pulse { width:5px; height:5px; border-radius:50%; background:rgba(255,255,255,.9); animation:pl 1.8s ease-in-out infinite; }
+@keyframes pl{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+.sb-soon { color:#1a5fa8; background:rgba(26,95,168,.1); border:1px solid rgba(26,95,168,.35); }
+
+.card-grid  { display:flex; gap:10px; flex-wrap:wrap; }
+.mini-card  { width:158px; background:#fff; border:1px solid #e0e5ec; border-radius:8px; overflow:hidden; }
+.mini-thumb { height:90px; position:relative; }
+.mini-thumb::after { content:''; position:absolute; inset:0; background:linear-gradient(to bottom,transparent 35%,rgba(0,0,0,.22)); }
+.tr { position:absolute; top:7px; right:7px; z-index:2; }
+.tl { position:absolute; top:7px; left:7px;  z-index:2; }
+.mini-body  { padding:8px 10px 11px; }
+.mini-title { font-size:.68rem; color:#2a3340; line-height:1.4; }
+.mini-meta  { font-size:.55rem; color:#aab; margin-top:2px; }
+.t1{background:linear-gradient(135deg,#c8d8e8,#a0b8cc)}
+.t2{background:linear-gradient(135deg,#d8c8e8,#b8a0cc)}
+.t3{background:linear-gradient(135deg,#c8e8d8,#a0ccb8)}
+.t4{background:linear-gradient(135deg,#e8dac8,#ccbaa0)}
+
+.person-grid { display:flex; flex-direction:column; gap:8px; }
+.person-card { background:#fff; border:1px solid #e0e5ec; border-radius:8px; padding:12px; display:flex; align-items:center; gap:10px; }
+.av { width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Montserrat',sans-serif; font-size:.82rem; font-weight:700; color:#fff; flex-shrink:0; }
+.av1{background:#c4a882}.av2{background:#a8aa9a}.av3{background:#9ab0c4}
+.pinfo { flex:1; }
+.pname { font-size:.75rem; color:#2a3340; margin-bottom:3px; }
+.pmeta { font-size:.58rem; color:#aab; }
+.pbadges { display:flex; gap:5px; align-items:center; flex-wrap:wrap; margin-bottom:5px; }
+
+/* ── 横長タイプ: ロゴ + サブテキスト右横並び ── */
+.lb-pill-wide {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #fff;
+  border-radius: 4px;
+  padding: 3px 8px 3px 6px;
+  box-shadow: 0 1px 6px rgba(0,0,0,.14), 0 0 0 1px rgba(0,0,0,.06);
+  flex-shrink: 0;
+  cursor: default;
+  transition: box-shadow .18s;
+}
+.lb-pill-wide:hover {
+  box-shadow: 0 3px 12px rgba(0,0,0,.18), 0 0 0 1px rgba(0,0,0,.08);
+}
+.lb-pill-wide svg { display: block; flex-shrink: 0; }
+.lb-pill-wide .pw-sub {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: .52rem;
+  letter-spacing: .06em;
+  white-space: nowrap;
+  line-height: 1;
+}
+.lb-pill-wide.plus {
+  box-shadow: 0 1px 6px rgba(0,0,0,.14), 0 0 0 1.5px rgba(184,124,16,.3);
+}
+
+/* ── LIAISONインジケーターバッジ ── */
+/* 開催中バッジ(.sb-live)と同じ角丸長方形スタイル           */
+/* 先頭に点滅ドット + "LIAISON" / "LIAISON+" テキスト       */
+.lb-dot {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: .5rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  padding: 3px 8px 3px 6px;
+  border-radius: 20px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  line-height: 1;
+  cursor: default;
+}
+/* LIAISON: ブルー（サイトカラー） */
+.lb-dot.li {
+  color: #fff;
+  background: #005da7;
+}
+/* LIAISON+: ゴールド */
+.lb-dot.li-plus {
+  color: #fff;
+  background: #b87c10;
+}
+/* 点滅ドット */
+.lb-dot-inner {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.9);
+  flex-shrink: 0;
+  animation: lb-pulse 1.8s ease-in-out infinite;
+}
+@keyframes lb-pulse {
+  0%, 100% { opacity: 1;   transform: scale(1);   }
+  50%       { opacity: .35; transform: scale(.65); }
+}
+
+/* 横長 Mサイズ: 外枠を小さく、文字は元サイズ */
+.lb-pill.sm {
+  padding: 0px 5px;
+  overflow: hidden;
+  height: 18px;
+  align-items: center;
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ════════════════════════════════════
+     A. 横長タイプ
+     ════════════════════════════════════ -->
+<div class="section">
+  <div class="section-head">
+    <span class="section-num">A</span>
+    <span class="section-name">横長タイプ (Pill)</span>
+    <span class="section-desc">白背景 / サブテキスト込み</span>
+  </div>
+  <div class="section-body">
+
+    <div class="sub">LIAISON</div>
+
+    <!-- L サイズ -->
+    <div class="row">
+      <span class="rlbl">L</span>
+      <span class="lb-pill">
+        <svg width="33" height="14" viewBox="0 -1 480 202" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <path id="ba-li-l" d="M 80 184 Q 240 56 400 184"/>
+            <linearGradient id="gb-li-l" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="#ffffff"/>
+              <stop offset="55%"  stop-color="#005da7"/>
+              <stop offset="100%" stop-color="#003f80"/>
+            </linearGradient>
+          </defs>
+          <path d="M 20 200 Q 240 33 460 200" stroke="url(#gb-li-l)" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#gb-li-l)">
+            <textPath href="#ba-li-l" startOffset="50%" text-anchor="middle">LIAISON</textPath>
+          </text>
+        </svg>
+      </span>
+      <!-- 開催中と高さ比較 -->
+      <span class="sb sb-live"><span class="pulse"></span>開催中</span>
+    </div>
+
+    <!-- M サイズ -->
+    <div class="row">
+      <span class="rlbl">M</span>
+      <span class="lb-pill sm">
+        <svg width="25" height="11" viewBox="0 -1 480 202" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <path id="ba-li-m" d="M 80 184 Q 240 56 400 184"/>
+            <linearGradient id="gb-li-m" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="#ffffff"/>
+              <stop offset="55%"  stop-color="#005da7"/>
+              <stop offset="100%" stop-color="#003f80"/>
+            </linearGradient>
+          </defs>
+          <path d="M 20 200 Q 240 33 460 200" stroke="url(#gb-li-m)" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#gb-li-m)">
+            <textPath href="#ba-li-m" startOffset="50%" text-anchor="middle">LIAISON</textPath>
+          </text>
+        </svg>
+      </span>
+    </div>
+
+    <div class="sep"></div>
+    <div class="sub">LIAISON+</div>
+
+    <!-- L サイズ -->
+    <div class="row">
+      <span class="rlbl">L</span>
+      <span class="lb-pill plus">
+        <svg width="38" height="14" viewBox="0 -1 480 211" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <path id="ba-lp-l" d="M 80 184 Q 240 56 400 184"/>
+            <linearGradient id="gb-lp-l" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="#6a4010"/>
+              <stop offset="30%"  stop-color="#a87020"/>
+              <stop offset="58%"  stop-color="#d4a428"/>
+              <stop offset="100%" stop-color="#6a4010"/>
+            </linearGradient>
+          </defs>
+          <path d="M 20 200 Q 240 33 460 200" stroke="url(#gb-lp-l)" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#gb-lp-l)">
+            <textPath href="#ba-lp-l" startOffset="50%" text-anchor="middle">LIAISON</textPath>
+          </text>
+          <circle cx="432" cy="183" r="22" fill="#b87c10"/>
+          <text x="432" y="183" font-family="'Bodoni Moda',serif" font-size="42" font-weight="900" fill="#fff8e8" text-anchor="middle" dominant-baseline="central">+</text>
+        </svg>
+      </span>
+      <span class="sb sb-live"><span class="pulse"></span>開催中</span>
+    </div>
+
+    <!-- M サイズ -->
+    <div class="row">
+      <span class="rlbl">M</span>
+      <span class="lb-pill plus sm">
+        <svg width="29" height="11" viewBox="0 -1 480 211" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <path id="ba-lp-m" d="M 80 184 Q 240 56 400 184"/>
+            <linearGradient id="gb-lp-m" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="#6a4010"/>
+              <stop offset="30%"  stop-color="#a87020"/>
+              <stop offset="58%"  stop-color="#d4a428"/>
+              <stop offset="100%" stop-color="#6a4010"/>
+            </linearGradient>
+          </defs>
+          <path d="M 20 200 Q 240 33 460 200" stroke="url(#gb-lp-m)" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#gb-lp-m)">
+            <textPath href="#ba-lp-m" startOffset="50%" text-anchor="middle">LIAISON</textPath>
+          </text>
+          <circle cx="432" cy="183" r="22" fill="#b87c10"/>
+          <text x="432" y="183" font-family="'Bodoni Moda',serif" font-size="42" font-weight="900" fill="#fff8e8" text-anchor="middle" dominant-baseline="central">+</text>
+        </svg>
+      </span>
+    </div>
+
+    <div class="sep"></div>
+    <div class="sub">ダーク背景での見え方</div>
+    <div class="dark-strip">
+      <span class="lb-pill">
+        <svg width="33" height="14" viewBox="0 -1 480 202" fill="none">
+          <defs>
+            <path id="ba-li-dk" d="M 80 184 Q 240 56 400 184"/>
+            <linearGradient id="gb-li-dk" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="#ffffff"/>
+              <stop offset="55%"  stop-color="#005da7"/>
+              <stop offset="100%" stop-color="#003f80"/>
+            </linearGradient>
+          </defs>
+          <path d="M 20 200 Q 240 33 460 200" stroke="url(#gb-li-dk)" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#gb-li-dk)"><textPath href="#ba-li-dk" startOffset="50%" text-anchor="middle">LIAISON</textPath></text>
+        </svg>
+      </span>
+      <span class="lb-pill plus">
+        <svg width="38" height="14" viewBox="0 -1 480 211" fill="none">
+          <defs>
+            <path id="ba-lp-dk" d="M 80 184 Q 240 56 400 184"/>
+            <linearGradient id="gb-lp-dk" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="#6a4010"/>
+              <stop offset="30%"  stop-color="#a87020"/>
+              <stop offset="58%"  stop-color="#d4a428"/>
+              <stop offset="100%" stop-color="#6a4010"/>
+            </linearGradient>
+          </defs>
+          <path d="M 20 200 Q 240 33 460 200" stroke="url(#gb-lp-dk)" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#gb-lp-dk)"><textPath href="#ba-lp-dk" startOffset="50%" text-anchor="middle">LIAISON</textPath></text>
+          <circle cx="432" cy="183" r="22" fill="#b87c10"/>
+          <text x="432" y="183" font-family="'Bodoni Moda',serif" font-size="42" font-weight="900" fill="#fff8e8" text-anchor="middle" dominant-baseline="central">+</text>
+        </svg>
+      </span>
+      <span class="dlbl">ダーク背景</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     B. 丸バッジ
+     ════════════════════════════════════ -->
+<div class="section">
+  <div class="section-head">
+    <span class="section-num">B</span>
+    <span class="section-name">丸バッジタイプ (Circle)</span>
+    <span class="section-desc">アーチ中央をクロップ表示</span>
+  </div>
+  <div class="section-body">
+    <div class="sub">LIAISON / LIAISON+ — 3サイズ</div>
+
+    <div class="row" style="align-items:flex-end;gap:20px">
+
+      <!-- LIAISON 3サイズ -->
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+        <span class="lb-circle sz-lg">
+          <svg width="40" height="34" viewBox="55 10 370 190" fill="none">
+            <defs>
+              <path id="bc-li-lg" d="M 80 184 Q 240 56 400 184"/>
+              <linearGradient id="gc-li-lg" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
+                <stop offset="0%"   stop-color="#ffffff"/>
+                <stop offset="55%"  stop-color="#005da7"/>
+                <stop offset="100%" stop-color="#003f80"/>
+              </linearGradient>
+            </defs>
+            <path d="M 20 200 Q 240 33 460 200" stroke="url(#gc-li-lg)" stroke-width="5" fill="none" stroke-linecap="round"/>
+            <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#gc-li-lg)">
+              <textPath href="#bc-li-lg" startOffset="50%" text-anchor="middle">LIAISON</textPath>
+            </text>
+          </svg>
+        </span>
+        <span style="font-family:'Montserrat',sans-serif;font-size:.4rem;color:#ccc">44px</span>
+      </div>
+
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+        <span class="lb-circle sz-md">
+          <svg width="30" height="26" viewBox="55 10 370 190" fill="none">
+            <defs>
+              <path id="bc-li-md" d="M 80 184 Q 240 56 400 184"/>
+              <linearGradient id="gc-li-md" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
+                <stop offset="0%"   stop-color="#ffffff"/>
+                <stop offset="55%"  stop-color="#005da7"/>
+                <stop offset="100%" stop-color="#003f80"/>
+              </linearGradient>
+            </defs>
+            <path d="M 20 200 Q 240 33 460 200" stroke="url(#gc-li-md)" stroke-width="5" fill="none" stroke-linecap="round"/>
+            <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#gc-li-md)">
+              <textPath href="#bc-li-md" startOffset="50%" text-anchor="middle">LIAISON</textPath>
+            </text>
+          </svg>
+        </span>
+        <span style="font-family:'Montserrat',sans-serif;font-size:.4rem;color:#ccc">34px</span>
+      </div>
+
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+        <span class="lb-circle sz-sm">
+          <svg width="22" height="19" viewBox="55 10 370 190" fill="none">
+            <defs>
+              <path id="bc-li-sm" d="M 80 184 Q 240 56 400 184"/>
+              <linearGradient id="gc-li-sm" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
+                <stop offset="0%"   stop-color="#ffffff"/>
+                <stop offset="55%"  stop-color="#005da7"/>
+                <stop offset="100%" stop-color="#003f80"/>
+              </linearGradient>
+            </defs>
+            <path d="M 20 200 Q 240 33 460 200" stroke="url(#gc-li-sm)" stroke-width="5" fill="none" stroke-linecap="round"/>
+            <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#gc-li-sm)">
+              <textPath href="#bc-li-sm" startOffset="50%" text-anchor="middle">LIAISON</textPath>
+            </text>
+          </svg>
+        </span>
+        <span style="font-family:'Montserrat',sans-serif;font-size:.4rem;color:#ccc">26px</span>
+      </div>
+
+      <div style="width:1px;height:50px;background:#f0f0f0"></div>
+
+      <!-- LIAISON+ 3サイズ -->
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+        <span class="lb-circle sz-lg plus">
+          <svg width="44" height="34" viewBox="40 10 400 190" fill="none">
+            <defs>
+              <path id="bc-lp-lg" d="M 80 184 Q 240 56 400 184"/>
+              <linearGradient id="gc-lp-lg" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
+                <stop offset="0%"   stop-color="#6a4010"/>
+                <stop offset="58%"  stop-color="#d4a428"/>
+                <stop offset="100%" stop-color="#6a4010"/>
+              </linearGradient>
+            </defs>
+            <path d="M 20 200 Q 240 33 460 200" stroke="url(#gc-lp-lg)" stroke-width="5" fill="none" stroke-linecap="round"/>
+            <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#gc-lp-lg)">
+              <textPath href="#bc-lp-lg" startOffset="50%" text-anchor="middle">LIAISON</textPath>
+            </text>
+            <circle cx="432" cy="183" r="22" fill="#b87c10"/>
+            <text x="432" y="183" font-family="'Bodoni Moda',serif" font-size="42" font-weight="900" fill="#fff8e8" text-anchor="middle" dominant-baseline="central">+</text>
+          </svg>
+        </span>
+        <span style="font-family:'Montserrat',sans-serif;font-size:.4rem;color:#ccc">44px +</span>
+      </div>
+
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+        <span class="lb-circle sz-md plus">
+          <svg width="34" height="26" viewBox="40 10 400 190" fill="none">
+            <defs>
+              <path id="bc-lp-md" d="M 80 184 Q 240 56 400 184"/>
+              <linearGradient id="gc-lp-md" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
+                <stop offset="0%"   stop-color="#6a4010"/>
+                <stop offset="58%"  stop-color="#d4a428"/>
+                <stop offset="100%" stop-color="#6a4010"/>
+              </linearGradient>
+            </defs>
+            <path d="M 20 200 Q 240 33 460 200" stroke="url(#gc-lp-md)" stroke-width="5" fill="none" stroke-linecap="round"/>
+            <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#gc-lp-md)">
+              <textPath href="#bc-lp-md" startOffset="50%" text-anchor="middle">LIAISON</textPath>
+            </text>
+            <circle cx="432" cy="183" r="22" fill="#b87c10"/>
+            <text x="432" y="183" font-family="'Bodoni Moda',serif" font-size="42" font-weight="900" fill="#fff8e8" text-anchor="middle" dominant-baseline="central">+</text>
+          </svg>
+        </span>
+        <span style="font-family:'Montserrat',sans-serif;font-size:.4rem;color:#ccc">34px +</span>
+      </div>
+
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+        <span class="lb-circle sz-sm plus">
+          <svg width="26" height="19" viewBox="40 10 400 190" fill="none">
+            <defs>
+              <path id="bc-lp-sm" d="M 80 184 Q 240 56 400 184"/>
+              <linearGradient id="gc-lp-sm" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
+                <stop offset="0%"   stop-color="#6a4010"/>
+                <stop offset="58%"  stop-color="#d4a428"/>
+                <stop offset="100%" stop-color="#6a4010"/>
+              </linearGradient>
+            </defs>
+            <path d="M 20 200 Q 240 33 460 200" stroke="url(#gc-lp-sm)" stroke-width="5" fill="none" stroke-linecap="round"/>
+            <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#gc-lp-sm)">
+              <textPath href="#bc-lp-sm" startOffset="50%" text-anchor="middle">LIAISON</textPath>
+            </text>
+            <circle cx="432" cy="183" r="22" fill="#b87c10"/>
+            <text x="432" y="183" font-family="'Bodoni Moda',serif" font-size="42" font-weight="900" fill="#fff8e8" text-anchor="middle" dominant-baseline="central">+</text>
+          </svg>
+        </span>
+        <span style="font-family:'Montserrat',sans-serif;font-size:.4rem;color:#ccc">26px +</span>
+      </div>
+
+    </div>
+
+    <div class="sep"></div>
+    <div class="sub">ダーク背景</div>
+    <div class="dark-strip">
+      <span class="lb-circle sz-lg"><svg width="40" height="34" viewBox="55 10 370 190" fill="none"><defs><path id="bc-li-lg-dk" d="M 80 184 Q 240 56 400 184"/><linearGradient id="gc-li-lg-dk" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#d0e8ff"/><stop offset="55%" stop-color="#005da7"/><stop offset="100%" stop-color="#0090e0"/></linearGradient></defs><path d="M 20 200 Q 240 33 460 200" stroke="url(#gc-li-lg-dk)" stroke-width="5" fill="none" stroke-linecap="round"/><text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#gc-li-lg-dk)"><textPath href="#bc-li-lg-dk" startOffset="50%" text-anchor="middle">LIAISON</textPath></text></svg></span>
+      <span class="lb-circle sz-md"><svg width="30" height="26" viewBox="55 10 370 190" fill="none"><defs><path id="bc-li-md-dk" d="M 80 184 Q 240 56 400 184"/><linearGradient id="gc-li-md-dk" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#d0e8ff"/><stop offset="55%" stop-color="#005da7"/><stop offset="100%" stop-color="#0090e0"/></linearGradient></defs><path d="M 20 200 Q 240 33 460 200" stroke="url(#gc-li-md-dk)" stroke-width="5" fill="none" stroke-linecap="round"/><text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#gc-li-md-dk)"><textPath href="#bc-li-md-dk" startOffset="50%" text-anchor="middle">LIAISON</textPath></text></svg></span>
+      <span class="lb-circle sz-lg plus"><svg width="44" height="34" viewBox="40 10 400 190" fill="none"><defs><path id="bc-lp-lg-dk" d="M 80 184 Q 240 56 400 184"/><linearGradient id="gc-lp-lg-dk" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#c09028"/><stop offset="50%" stop-color="#f0d068"/><stop offset="100%" stop-color="#c09028"/></linearGradient></defs><path d="M 20 200 Q 240 33 460 200" stroke="url(#gc-lp-lg-dk)" stroke-width="5" fill="none" stroke-linecap="round"/><text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#gc-lp-lg-dk)"><textPath href="#bc-lp-lg-dk" startOffset="50%" text-anchor="middle">LIAISON</textPath></text><circle cx="432" cy="183" r="22" fill="#b87c10"/><text x="432" y="183" font-family="'Bodoni Moda',serif" font-size="42" font-weight="900" fill="#fff8e8" text-anchor="middle" dominant-baseline="central">+</text></svg></span>
+      <span class="lb-circle sz-md plus"><svg width="34" height="26" viewBox="40 10 400 190" fill="none"><defs><path id="bc-lp-md-dk" d="M 80 184 Q 240 56 400 184"/><linearGradient id="gc-lp-md-dk" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#c09028"/><stop offset="50%" stop-color="#f0d068"/><stop offset="100%" stop-color="#c09028"/></linearGradient></defs><path d="M 20 200 Q 240 33 460 200" stroke="url(#gc-lp-md-dk)" stroke-width="5" fill="none" stroke-linecap="round"/><text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#gc-lp-md-dk)"><textPath href="#bc-lp-md-dk" startOffset="50%" text-anchor="middle">LIAISON</textPath></text><circle cx="432" cy="183" r="22" fill="#b87c10"/><text x="432" y="183" font-family="'Bodoni Moda',serif" font-size="42" font-weight="900" fill="#fff8e8" text-anchor="middle" dominant-baseline="central">+</text></svg></span>
+      <span class="dlbl">ダーク背景</span>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════
+     D. 追加パターン
+     1. 横長: ロゴ + サブテキスト右横並び
+     2. 点滅ドットバッジ
+     ════════════════════════════════════ -->
+<div class="section">
+  <div class="section-head">
+    <span class="section-num">D</span>
+    <span class="section-name">追加パターン</span>
+  </div>
+  <div class="section-body">
+
+    <div class="sub">D-1. 横長: ロゴ + サブテキスト 右横並び</div>
+
+    <!-- LIAISON -->
+    <div class="row">
+      <span class="rlbl">LIAISON L</span>
+      <span class="lb-pill-wide">
+        <svg width="33" height="14" viewBox="0 -1 480 202" fill="none">
+          <defs>
+            <path id="pw-li-l" d="M 80 184 Q 240 56 400 184"/>
+            <linearGradient id="gw-li-l" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="#ffffff"/>
+              <stop offset="55%"  stop-color="#005da7"/>
+              <stop offset="100%" stop-color="#003f80"/>
+            </linearGradient>
+          </defs>
+          <path d="M 20 200 Q 240 33 460 200" stroke="url(#gw-li-l)" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#gw-li-l)">
+            <textPath href="#pw-li-l" startOffset="50%" text-anchor="middle">LIAISON</textPath>
+          </text>
+        </svg>
+        <span class="pw-sub" style="color:#005da7">Now on View</span>
+      </span>
+      <span class="sb sb-live"><span class="pulse"></span>開催中</span>
+    </div>
+
+    <!-- LIAISON+ -->
+    <div class="row">
+      <span class="rlbl">LIAISON+ L</span>
+      <span class="lb-pill-wide plus">
+        <svg width="38" height="14" viewBox="0 -1 480 211" fill="none">
+          <defs>
+            <path id="pw-lp-l" d="M 80 184 Q 240 56 400 184"/>
+            <linearGradient id="gw-lp-l" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="#6a4010"/>
+              <stop offset="30%"  stop-color="#a87020"/>
+              <stop offset="58%"  stop-color="#d4a428"/>
+              <stop offset="100%" stop-color="#6a4010"/>
+            </linearGradient>
+          </defs>
+          <path d="M 20 200 Q 240 33 460 200" stroke="url(#gw-lp-l)" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#gw-lp-l)">
+            <textPath href="#pw-lp-l" startOffset="50%" text-anchor="middle">LIAISON</textPath>
+          </text>
+          <circle cx="432" cy="183" r="22" fill="#b87c10"/>
+          <text x="432" y="183" font-family="'Bodoni Moda',serif" font-size="42" font-weight="900" fill="#fff8e8" text-anchor="middle" dominant-baseline="central">+</text>
+        </svg>
+        <span class="pw-sub" style="color:#8a6018">Now on View + Shop</span>
+      </span>
+      <span class="sb sb-live"><span class="pulse"></span>開催中</span>
+    </div>
+
+    <div class="sep"></div>
+
+    <div class="sub">D-2. LIAISONインジケーターバッジ — カードサムネイル左上</div>
+
+    <div class="row" style="gap:16px;align-items:center">
+      <span class="rlbl">LIAISON</span>
+      <span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>
+      <span class="rlbl" style="margin-left:8px">LIAISON+</span>
+      <span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span>
+      <span style="font-family:'Montserrat',sans-serif;font-size:.42rem;color:#ccc">← 先頭ドット点滅</span>
+    </div>
+
+    <div class="sep"></div>
+
+    <!-- カードへの配置プレビュー（D-1とD-2） -->
+    <div class="sub">配置プレビュー</div>
+    <div class="card-grid">
+
+      <!-- D-1: サムネイル右上に横長ワイドバッジ -->
+      <div class="mini-card">
+        <div class="mini-thumb t1">
+          <div class="tr">
+            <span class="lb-pill-wide" style="padding:2px 6px 2px 5px;gap:5px">
+              <svg width="26" height="11" viewBox="0 -1 480 202" fill="none">
+                <defs>
+                  <path id="pw-cv1" d="M 80 184 Q 240 56 400 184"/>
+                  <linearGradient id="gw-cv1" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%"   stop-color="#ffffff"/>
+                    <stop offset="55%"  stop-color="#005da7"/>
+                    <stop offset="100%" stop-color="#003f80"/>
+                  </linearGradient>
+                </defs>
+                <path d="M 20 200 Q 240 33 460 200" stroke="url(#gw-cv1)" stroke-width="4" fill="none" stroke-linecap="round"/>
+                <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#gw-cv1)">
+                  <textPath href="#pw-cv1" startOffset="50%" text-anchor="middle">LIAISON</textPath>
+                </text>
+              </svg>
+              <span class="pw-sub" style="color:#005da7;font-size:.44rem">Now on View</span>
+            </span>
+          </div>
+        </div>
+        <div class="mini-body"><div class="mini-title">根の記憶、光の痕跡</div><div class="mini-meta">〜 2026.03.28</div></div>
+      </div>
+
+      <!-- D-1: LIAISON+ 右上 -->
+      <div class="mini-card">
+        <div class="mini-thumb t2">
+          <div class="tr">
+            <span class="lb-pill-wide plus" style="padding:2px 6px 2px 5px;gap:5px">
+              <svg width="30" height="11" viewBox="0 -1 480 211" fill="none">
+                <defs>
+                  <path id="pw-cv2" d="M 80 184 Q 240 56 400 184"/>
+                  <linearGradient id="gw-cv2" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%"   stop-color="#6a4010"/>
+                    <stop offset="58%"  stop-color="#d4a428"/>
+                    <stop offset="100%" stop-color="#6a4010"/>
+                  </linearGradient>
+                </defs>
+                <path d="M 20 200 Q 240 33 460 200" stroke="url(#gw-cv2)" stroke-width="4" fill="none" stroke-linecap="round"/>
+                <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#gw-cv2)">
+                  <textPath href="#pw-cv2" startOffset="50%" text-anchor="middle">LIAISON</textPath>
+                </text>
+                <circle cx="432" cy="183" r="22" fill="#b87c10"/>
+                <text x="432" y="183" font-family="'Bodoni Moda',serif" font-size="42" font-weight="900" fill="#fff8e8" text-anchor="middle" dominant-baseline="central">+</text>
+              </svg>
+              <span class="pw-sub" style="color:#8a6018;font-size:.44rem">Now on View + Shop</span>
+            </span>
+          </div>
+        </div>
+        <div class="mini-body"><div class="mini-title">光と影の対話</div><div class="mini-meta">〜 2026.03.15</div></div>
+      </div>
+
+      <!-- D-2: 点滅ドット 左上 (LIAISON) -->
+      <div class="mini-card">
+        <div class="mini-thumb t3">
+          <div class="tl"><span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span></div>
+        </div>
+        <div class="mini-body"><div class="mini-title">記憶の地層 — 写真展</div><div class="mini-meta">2026.03.10〜</div></div>
+      </div>
+
+      <!-- D-2: 点滅ドット 左上 (LIAISON+) -->
+      <div class="mini-card">
+        <div class="mini-thumb t4">
+          <div class="tl"><span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span></div>
+        </div>
+        <div class="mini-body"><div class="mini-title">春の彩り — 日本画展</div><div class="mini-meta">〜 2026.03.20</div></div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     C. カード配置プレビュー
+     ════════════════════════════════════ -->
+<div class="section">
+  <div class="section-head">
+    <span class="section-num">C</span>
+    <span class="section-name">カード配置プレビュー</span>
+  </div>
+  <div class="section-body">
+
+    <div class="sub">展覧会カード — 丸バッジ（右上）+ ステータス（左上）</div>
+    <div class="card-grid">
+
+      <div class="mini-card">
+        <div class="mini-thumb t1">
+          <div class="tl"><span class="sb sb-live"><span class="pulse"></span>開催中</span></div>
+          <div class="tr"><span class="lb-circle sz-md plus"><svg width="34" height="26" viewBox="40 10 400 190" fill="none"><defs><path id="cv1" d="M 80 184 Q 240 56 400 184"/><linearGradient id="gcv1" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#6a4010"/><stop offset="58%" stop-color="#d4a428"/><stop offset="100%" stop-color="#6a4010"/></linearGradient></defs><path d="M 20 200 Q 240 33 460 200" stroke="url(#gcv1)" stroke-width="5" fill="none" stroke-linecap="round"/><text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#gcv1)"><textPath href="#cv1" startOffset="50%" text-anchor="middle">LIAISON</textPath></text><circle cx="432" cy="183" r="22" fill="#b87c10"/><text x="432" y="183" font-family="'Bodoni Moda',serif" font-size="42" font-weight="900" fill="#fff8e8" text-anchor="middle" dominant-baseline="central">+</text></svg></span></div>
+        </div>
+        <div class="mini-body"><div class="mini-title">根の記憶、光の痕跡</div><div class="mini-meta">〜 2026.03.28</div></div>
+      </div>
+
+      <div class="mini-card">
+        <div class="mini-thumb t2">
+          <div class="tl"><span class="sb sb-live"><span class="pulse"></span>開催中</span></div>
+          <div class="tr"><span class="lb-circle sz-md"><svg width="30" height="26" viewBox="55 10 370 190" fill="none"><defs><path id="cv2" d="M 80 184 Q 240 56 400 184"/><linearGradient id="gcv2" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ffffff"/><stop offset="55%" stop-color="#005da7"/><stop offset="100%" stop-color="#003f80"/></linearGradient></defs><path d="M 20 200 Q 240 33 460 200" stroke="url(#gcv2)" stroke-width="5" fill="none" stroke-linecap="round"/><text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#gcv2)"><textPath href="#cv2" startOffset="50%" text-anchor="middle">LIAISON</textPath></text></svg></span></div>
+        </div>
+        <div class="mini-body"><div class="mini-title">光と影の対話</div><div class="mini-meta">〜 2026.03.15</div></div>
+      </div>
+
+      <div class="mini-card">
+        <div class="mini-thumb t3">
+          <div class="tl"><span class="sb sb-soon">もうすぐ開催</span></div>
+          <div class="tr"><span class="lb-circle sz-md plus"><svg width="34" height="26" viewBox="40 10 400 190" fill="none"><defs><path id="cv3" d="M 80 184 Q 240 56 400 184"/><linearGradient id="gcv3" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#6a4010"/><stop offset="58%" stop-color="#d4a428"/><stop offset="100%" stop-color="#6a4010"/></linearGradient></defs><path d="M 20 200 Q 240 33 460 200" stroke="url(#gcv3)" stroke-width="5" fill="none" stroke-linecap="round"/><text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#gcv3)"><textPath href="#cv3" startOffset="50%" text-anchor="middle">LIAISON</textPath></text><circle cx="432" cy="183" r="22" fill="#b87c10"/><text x="432" y="183" font-family="'Bodoni Moda',serif" font-size="42" font-weight="900" fill="#fff8e8" text-anchor="middle" dominant-baseline="central">+</text></svg></span></div>
+        </div>
+        <div class="mini-body"><div class="mini-title">記憶の地層 — 写真展</div><div class="mini-meta">2026.03.10〜</div></div>
+      </div>
+
+      <div class="mini-card">
+        <div class="mini-thumb t4">
+          <div class="tr"><span class="lb-circle sz-md"><svg width="30" height="26" viewBox="55 10 370 190" fill="none"><defs><path id="cv4" d="M 80 184 Q 240 56 400 184"/><linearGradient id="gcv4" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ffffff"/><stop offset="55%" stop-color="#005da7"/><stop offset="100%" stop-color="#003f80"/></linearGradient></defs><path d="M 20 200 Q 240 33 460 200" stroke="url(#gcv4)" stroke-width="5" fill="none" stroke-linecap="round"/><text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#gcv4)"><textPath href="#cv4" startOffset="50%" text-anchor="middle">LIAISON</textPath></text></svg></span></div>
+        </div>
+        <div class="mini-body"><div class="mini-title">春の彩り — 日本画展</div><div class="mini-meta">〜 2026.03.20</div></div>
+      </div>
+
+    </div>
+
+    <div class="sep"></div>
+
+    <div class="sub">クリエイター / ギャラリーカード — 横長バッジ</div>
+    <div class="person-grid">
+
+      <div class="person-card">
+        <div class="av av1">G</div>
+        <div class="pinfo">
+          <div class="pbadges">
+            <span class="sb sb-live"><span class="pulse"></span>開催中</span>
+            <span class="lb-pill plus">
+              <svg width="38" height="14" viewBox="0 -1 480 211" fill="none"><defs><path id="pc1" d="M 80 184 Q 240 56 400 184"/><linearGradient id="gpc1" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#6a4010"/><stop offset="30%" stop-color="#a87020"/><stop offset="58%" stop-color="#d4a428"/><stop offset="100%" stop-color="#6a4010"/></linearGradient></defs><path d="M 20 200 Q 240 33 460 200" stroke="url(#gpc1)" stroke-width="4" fill="none" stroke-linecap="round"/><text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#gpc1)"><textPath href="#pc1" startOffset="50%" text-anchor="middle">LIAISON</textPath></text><circle cx="432" cy="183" r="22" fill="#b87c10"/><text x="432" y="183" font-family="'Bodoni Moda',serif" font-size="42" font-weight="900" fill="#fff8e8" text-anchor="middle" dominant-baseline="central">+</text></svg>
+            </span>
+          </div>
+          <div class="pname">GALLERY IDF</div>
+          <div class="pmeta">名古屋市中区 / 現代美術</div>
+        </div>
+      </div>
+
+      <div class="person-card">
+        <div class="av av2">小</div>
+        <div class="pinfo">
+          <div class="pbadges">
+            <span class="sb sb-live"><span class="pulse"></span>開催中</span>
+            <span class="lb-pill">
+              <svg width="33" height="14" viewBox="0 -1 480 202" fill="none"><defs><path id="pc2" d="M 80 184 Q 240 56 400 184"/><linearGradient id="gpc2" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ffffff"/><stop offset="55%" stop-color="#005da7"/><stop offset="100%" stop-color="#003f80"/></linearGradient></defs><path d="M 20 200 Q 240 33 460 200" stroke="url(#gpc2)" stroke-width="4" fill="none" stroke-linecap="round"/><text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#gpc2)"><textPath href="#pc2" startOffset="50%" text-anchor="middle">LIAISON</textPath></text></svg>
+            </span>
+          </div>
+          <div class="pname">小野 友美</div>
+          <div class="pmeta">愛知・名古屋 / 油彩</div>
+        </div>
+      </div>
+
+      <div class="person-card">
+        <div class="av av3">村</div>
+        <div class="pinfo">
+          <div class="pbadges">
+            <span class="sb sb-soon">もうすぐ開催</span>
+            <span class="lb-pill plus">
+              <svg width="38" height="14" viewBox="0 -1 480 211" fill="none"><defs><path id="pc3" d="M 80 184 Q 240 56 400 184"/><linearGradient id="gpc3" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#6a4010"/><stop offset="30%" stop-color="#a87020"/><stop offset="58%" stop-color="#d4a428"/><stop offset="100%" stop-color="#6a4010"/></linearGradient></defs><path d="M 20 200 Q 240 33 460 200" stroke="url(#gpc3)" stroke-width="4" fill="none" stroke-linecap="round"/><text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#gpc3)"><textPath href="#pc3" startOffset="50%" text-anchor="middle">LIAISON</textPath></text><circle cx="432" cy="183" r="22" fill="#b87c10"/><text x="432" y="183" font-family="'Bodoni Moda',serif" font-size="42" font-weight="900" fill="#fff8e8" text-anchor="middle" dominant-baseline="central">+</text></svg>
+            </span>
+          </div>
+          <div class="pname">村上 玲子</div>
+          <div class="pmeta">東京・渋谷 / 版画</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+</div>
+</body>
+</html>
