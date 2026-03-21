@@ -4450,7 +4450,7 @@ line-clamp:2;}
 @media (max-width: 860px) {
   .p2-1-wrap { padding: 0 14px 80px; }
   .p2-1-layout { grid-template-columns: 1fr; }
-  .p2-1-side { order: -1; }
+  .p2-1-side { order: 1; }
   .p2-1-status-card { display: none; }
 }
 @media (max-width: 520px) {
@@ -5485,8 +5485,8 @@ line-clamp:2;}
 
 /* レスポンシブ */
 @media (max-width: 860px) {
-  .p2-1-cal-row__gcal { display: none; }
-  .p2-1-cal-row { gap: 0; padding: 0 14px; }
+  .p2-1-cal-row { gap: 0; padding: 0 14px; flex-wrap: wrap; }
   .p2-1-cal-row__date { width: 52px; }
   .p2-1-cal-row__status { width: 90px; }
+  .p2-1-cal-row__gcal { display: inline-flex; padding-bottom: 8px; }
 }
