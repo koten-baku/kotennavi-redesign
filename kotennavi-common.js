@@ -912,3 +912,98 @@ KTN.init = function (opts) {
     _runPage();
   }
 };
+
+
+/* ══════════════════════════════════
+   チェックイン・レビュー モーダル
+══════════════════════════════════ */
+function openCheckinModal() {
+  var role = (window.ktnState && window.ktnState.role) || 'guest';
+  var isLoggedIn = (role !== 'guest');
+
+  var existing = document.getElementById('ktnCheckinModal');
+  if (existing) existing.remove();
+
+  var html;
+  if (!isLoggedIn) {
+    /* ── 未ログイン：ログイン促進 ── */
+    html =
+      '<div class="ktn-modal-overlay" id="ktnCheckinModal" onclick="if(event.target===this)closeCheckinModal()">' +
+        '<div class="ktn-modal">' +
+          '<button class="ktn-modal__close" onclick="closeCheckinModal()" aria-label="閉じる">\u00d7</button>' +
+          '<div class="ktn-modal__inner">' +
+            '<div class="ktn-modal__icon">' +
+              '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="44" height="44"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>' +
+            '</div>' +
+            '<div class="ktn-modal__title">ログインが必要です</div>' +
+            '<div class="ktn-modal__desc">ウォッチ・興味ある！・チェックインなどの<br>My機能が使えるようになります</div>' +
+            '<div class="ktn-modal__btn-col">' +
+              '<a href="/login" class="ktn-btn ktn-btn--primary">ログイン</a>' +
+              '<a href="/register" class="ktn-btn">新規ユーザー登録（無料）</a>' +
+            '</div>' +
+            '<div class="ktn-modal__note">登録は無料です。<a href="/terms">利用規約</a>・<a href="/privacy">プライバシーポリシー</a>に<br>同意のうえご利用ください。</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+  } else {
+    /* ── ログイン済み：チェックイン＋レビューフォーム ── */
+    var now = new Date();
+    var defaultDate = now.getFullYear() + '-' +
+      String(now.getMonth() + 1).padStart(2, '0') + '-' +
+      String(now.getDate()).padStart(2, '0');
+    html =
+      '<div class="ktn-modal-overlay" id="ktnCheckinModal" onclick="if(event.target===this)closeCheckinModal()">' +
+        '<div class="ktn-modal">' +
+          '<button class="ktn-modal__close" onclick="closeCheckinModal()" aria-label="閉じる">\u00d7</button>' +
+          '<div class="ktn-modal__inner">' +
+            '<div class="ktn-modal__title">チェックイン＆レビューを書く</div>' +
+            '<div class="ktn-modal__form-row">' +
+              '<div class="ktn-modal__label">チェックイン日時</div>' +
+              '<input type="date" class="ktn-modal__input" id="ktnCiDate" value="' + defaultDate + '">' +
+            '</div>' +
+            '<div class="ktn-modal__form-row">' +
+              '<div class="ktn-modal__label">評価</div>' +
+              '<div class="ktn-modal__stars" id="ktnStars">' +
+                '<span class="ktn-modal__star" data-v="1" onclick="ktnSetStar(1)">\u2605</span>' +
+                '<span class="ktn-modal__star" data-v="2" onclick="ktnSetStar(2)">\u2605</span>' +
+                '<span class="ktn-modal__star" data-v="3" onclick="ktnSetStar(3)">\u2605</span>' +
+                '<span class="ktn-modal__star" data-v="4" onclick="ktnSetStar(4)">\u2605</span>' +
+                '<span class="ktn-modal__star" data-v="5" onclick="ktnSetStar(5)">\u2605</span>' +
+              '</div>' +
+            '</div>' +
+            '<div class="ktn-modal__form-row">' +
+              '<div class="ktn-modal__label">レビュー</div>' +
+              '<textarea class="ktn-modal__textarea" id="ktnReviewText" placeholder="\u611f\u60f3\u3092\u304a\u66f8\u304d\u304f\u3060\u3055\u3044\u2026"></textarea>' +
+            '</div>' +
+            '<div class="ktn-modal__form-row">' +
+              '<button class="ktn-modal__photo-btn" type="button">' +
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="14" height="14"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>' +
+                '\u5199\u771f\u3092\u6dfb\u4ed8\u3059\u308b' +
+              '</button>' +
+            '</div>' +
+            '<button class="ktn-btn ktn-btn--primary ktn-modal__submit" onclick="ktnSubmitCheckin()">' +
+              '\u6295\u7a3f\u3059\u308b' +
+            '</button>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+  }
+
+  document.body.insertAdjacentHTML('beforeend', html);
+}
+
+function closeCheckinModal() {
+  var m = document.getElementById('ktnCheckinModal');
+  if (m) m.remove();
+}
+
+function ktnSetStar(v) {
+  document.querySelectorAll('.ktn-modal__star').forEach(function(s) {
+    s.classList.toggle('on', parseInt(s.dataset.v) <= v);
+  });
+}
+
+function ktnSubmitCheckin() {
+  showToast('\u6295\u7a3f\u3057\u307e\u3057\u305f\uff01');
+  closeCheckinModal();
+}

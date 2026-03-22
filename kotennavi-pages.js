@@ -179,12 +179,12 @@ KTN.pages['p2'] = function () {
     var RV = [
       {
         ini: 'A', name: 'A.K.', av: 'linear-gradient(135deg,#f0d8c8,#c8987a)', tc: 'rgba(255,255,255,.9)',
-        date: '2026.02.20', stars: 5, ci: true,
+        date: '2026.02.20', stars: 5, ci: true, checkinDate: '2026.02.20',
         body: 'ふわふわとドキドキの作品が特に印象的でした。言葉が視覚に変換される感覚が新鮮でした。ポストカードも嬉しかったです。'
       },
       {
         ini: 'M', name: 'mari_t', av: 'linear-gradient(135deg,#d8e8c8,#98b878)', tc: 'rgba(255,255,255,.9)',
-        date: '2026.02.19', stars: 5, ci: true,
+        date: '2026.02.19', stars: 5, ci: true, checkinDate: '2026.02.19',
         body: '作家さんのトークも聴けてとても良かったです。色使いがとても独特で、何度でも来たいと思いました。'
       },
       {
@@ -193,18 +193,19 @@ KTN.pages['p2'] = function () {
         body: '特に「ざわざわ（夜）」は長い時間立ち止まって見入ってしまいました。会期中にまた行きたいと思っています。'
       },
     ];
+    var CI_ICON = '<svg viewBox="0 0 16 16" width="9" height="9" style="display:inline-block;vertical-align:middle"><circle cx="10" cy="5" r="4" fill="currentColor"/><circle cx="5" cy="11" r="2.4" fill="currentColor"/></svg>';
     list.innerHTML = RV.map(function (r) {
       var stars = '';
       for (var i = 0; i < 5; i++)
         stars += '<span class="rv-star"' + (i >= r.stars ? ' style="opacity:.18"' : '') + '>★</span>';
       var ci = r.ci
-        ? '<span class="ci-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="10" height="10"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>check in</span>'
+        ? '\u00a0\u25cf\u00a0<span class="rv-checkin-date">' + CI_ICON + '\u00a0' + r.checkinDate + '</span>'
         : '';
       return '<div class="review-item">' +
         '<div class="rv-hd">' +
         '<div class="rv-av" style="background:' + r.av + ';color:' + r.tc + '">' + r.ini + '</div>' +
-        '<div>' +
-        '<div class="rv-name">' + r.name + ci + '</div>' +
+        '<div style="flex:1;min-width:0">' +
+        '<div class="rv-name"><span class="cb cb-user">user</span>\u00a0' + r.name + ci + '</div>' +
         '<div class="rv-stars">' + stars + '</div>' +
         '</div>' +
         '<div class="rv-date">' + r.date + '</div>' +
