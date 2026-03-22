@@ -644,3 +644,140 @@ KTN.pages['p2-4'] = function () {
     });
   });
 };
+
+
+/* ────────────────────────────────────────────────────
+   P2-5  LIAISON作品一覧
+──────────────────────────────────────────────────── */
+KTN.pages['p2-5'] = function () {
+
+  /* ── 作品データ ── */
+  var WORKS = [
+    /* 田中 透 */
+    { creator:'tanaka', name:'田中 透', title:'ふわふわ',           year:'2026', spec:'油彩・キャンバス / 45.5×38.0 cm', status:'sale',    plus:true,  bg:'linear-gradient(155deg,#f0e8d0,#d4b896)', tc:'rgba(0,0,0,.28)',       interest:22 },
+    { creator:'tanaka', name:'田中 透', title:'ドキドキ #3',         year:'2026', spec:'油彩・キャンバス / 53.0×45.5 cm', status:'sale',    plus:true,  bg:'linear-gradient(155deg,#f0d0d0,#c88080)', tc:'rgba(255,255,255,.6)', interest:18 },
+    { creator:'tanaka', name:'田中 透', title:'ざわざわ（夜）', year:'2025', spec:'油彩・キャンバス / 72.7×60.6 cm', status:'nsale',   plus:false, bg:'linear-gradient(155deg,#3d3530,#1f1a18)', tc:'rgba(255,255,255,.55)', interest:31 },
+    { creator:'tanaka', name:'田中 透', title:'シュワシュワ',       year:'2025', spec:'油彩・キャンバス / 38.0×45.5 cm', status:'sale',    plus:true,  bg:'linear-gradient(155deg,#d0e8f0,#7ab4cc)', tc:'rgba(0,0,0,.28)',       interest:14 },
+    { creator:'tanaka', name:'田中 透', title:'オノマトペの庭', year:'2026', spec:'ミクストメディア / 60.6×50.0 cm',  status:'sold',    plus:true,  bg:'linear-gradient(155deg,#b8d8cc,#6a9e8a)', tc:'rgba(255,255,255,.6)', interest:41 },
+    { creator:'tanaka', name:'田中 透', title:'言葉の断片 I',    year:'2024', spec:'油彩・麻布 / 53.0×45.5 cm',                status:'nsale',   plus:false, bg:'linear-gradient(155deg,#d8c8e8,#a888cc)', tc:'rgba(255,255,255,.6)', interest:9  },
+    { creator:'tanaka', name:'田中 透', title:'言葉の断片 II',   year:'2024', spec:'油彩・麻布 / 45.5×38.0 cm',                status:'inquiry', plus:false, bg:'linear-gradient(155deg,#c8d8e8,#7898b8)', tc:'rgba(255,255,255,.6)', interest:7  },
+    /* 山田 葵 */
+    { creator:'yamada', name:'山田 葵', title:'記憶の断層 #1',  year:'2025', spec:'写真・ジクレープリント / A2', status:'sale',  plus:true,  bg:'linear-gradient(155deg,#d0c8e0,#8878b4)', tc:'rgba(255,255,255,.6)', interest:16 },
+    { creator:'yamada', name:'山田 葵', title:'記憶の断層 #2',  year:'2025', spec:'写真・ジクレープリント / A2', status:'sale',  plus:true,  bg:'linear-gradient(155deg,#c8d8e8,#7898b8)', tc:'rgba(255,255,255,.6)', interest:12 },
+    { creator:'yamada', name:'山田 葵', title:'光の解像度',     year:'2026', spec:'写真・ミクストメディア / 60×80 cm', status:'nsale', plus:false, bg:'linear-gradient(155deg,#e8d8c8,#c8a888)', tc:'rgba(0,0,0,.28)', interest:8 },
+    /* 佐藤 一朗 */
+    { creator:'sato',   name:'佐藤 一朗', title:'白樺の記憶',   year:'2025', spec:'木彫・彩色 / H24×W18×D12 cm', status:'sale',  plus:true,  bg:'linear-gradient(155deg,#e0e8d0,#a0b888)', tc:'rgba(0,0,0,.28)', interest:11 },
+    { creator:'sato',   name:'佐藤 一朗', title:'沈黙する形 #3', year:'2024', spec:'木版画 / 38.0×45.5 cm',                    status:'nsale', plus:false, bg:'linear-gradient(155deg,#d8c8b8,#a89878)', tc:'rgba(0,0,0,.28)', interest:5 },
+  ];
+
+  var STATUS_BADGE = {
+    sale:    '<span class="aws aws-sale">販売中</span>',
+    sold:    '<span class="aws aws-sold">SOLD</span>',
+    nsale:   '<span class="aws aws-nsale">非売品</span>',
+    inquiry: '<span class="aws aws-inquiry">要問合せ</span>',
+  };
+
+  function renderWork(w) {
+    var lbClass = w.plus ? 'li-plus' : 'li';
+    var lbText  = w.plus ? 'LIAISON+' : 'LIAISON';
+    var awClass = w.plus ? 'aw aw--plus' : 'aw';
+    var badge   = STATUS_BADGE[w.status] || '';
+    return '<a class="' + awClass + '" href="#" data-creator="' + w.creator + '">' +
+      '<div class="aw__img">' +
+        '<div class="aw__lb"><span class="lb-dot ' + lbClass + '"><span class="lb-dot-inner"></span>' + lbText + '</span></div>' +
+        '<div class="aw__img-ph" style="background:' + w.bg + ';color:' + w.tc + '">' + w.title + '</div>' +
+      '</div>' +
+      '<div class="aw__body">' +
+        '<div class="aw__badge-row">' +
+          '<span class="cb cb-content cb-artwork">artwork</span>' +
+          badge +
+          '<span class="aw__counter"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>' + w.interest + '</span>' +
+          '<button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()" aria-label="興味ある！">' +
+            '<svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>' +
+          '</button>' +
+        '</div>' +
+        '<div class="aw__title-row"><div class="aw__title">' + w.title + '</div></div>' +
+        '<div class="aw__creator">' + w.name + '</div>' +
+        '<div class="aw__spec">' + w.year + ' / ' + w.spec + '</div>' +
+      '</div>' +
+    '</a>';
+  }
+
+  /* 作品グリッド描画 */
+  var grid = document.getElementById('p25Grid');
+  if (grid) {
+    grid.innerHTML = WORKS.map(renderWork).join('');
+  }
+
+  /* フィルター */
+  var filterBtns = document.querySelectorAll('#p25Filter .p2-5-filter__btn');
+  filterBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      filterBtns.forEach(function (b) { b.classList.remove('is-active'); });
+      this.classList.add('is-active');
+      var f = this.dataset.filter;
+      var cards = grid ? grid.querySelectorAll('.aw') : [];
+      var shown = 0;
+      cards.forEach(function (c) {
+        var show = (f === 'all' || c.dataset.creator === f);
+        c.hidden = !show;
+        if (show) shown++;
+      });
+      var count = document.getElementById('p25WorksCount');
+      if (count) count.textContent = '全' + shown + '点';
+    });
+  });
+
+  /* ── 出品作家プロフィール ── */
+  var CREATORS = [
+    {
+      ini: '透', av: 'av-c1',
+      name: '田中 透', en: 'Toru Tanaka',
+      genre: '油彩・現代美術',
+      bio: '1985年東京生まれ。武蔵野美術大学油絵学科卒業後、ニューヨークのアートスタジオに在籍。「言語と感覚の境界」をテーマに刻下。2024年よりLIAISON認定クリエイター。',
+      thumbs: ['linear-gradient(155deg,#f0e8d0,#d4b896)', 'linear-gradient(155deg,#f0d0d0,#c88080)', 'linear-gradient(155deg,#b8d8cc,#6a9e8a)'],
+      url: 'kotennavi-p3.html'
+    },
+    {
+      ini: '葵', av: 'av-c3',
+      name: '山田 葵', en: 'Aoi Yamada',
+      genre: '写真・ミクストメディア',
+      bio: '1990年大阪生まれ。東京苸術大学美術学部卒。人間の記憶と時間を写真とコラージュで表現。グループ展中心に活動。本展初参加。',
+      thumbs: ['linear-gradient(155deg,#d0c8e0,#8878b4)', 'linear-gradient(155deg,#c8d8e8,#7898b8)', 'linear-gradient(155deg,#e8d8c8,#c8a888)'],
+      url: '#'
+    },
+    {
+      ini: '一', av: 'av-c2',
+      name: '佐藤 一朗', en: 'Ichiro Sato',
+      genre: '木彫・版画',
+      bio: '1978年長野生まれ。木を素材に生命と沈黙を彫刻で問いかける。版画との二領域で制作を続ける。',
+      thumbs: ['linear-gradient(155deg,#e0e8d0,#a0b888)', 'linear-gradient(155deg,#d8c8b8,#a89878)', 'linear-gradient(155deg,#e8e0d0,#c0b090)'],
+      url: '#'
+    }
+  ];
+
+  var creatorGrid = document.getElementById('p25CreatorGrid');
+  if (creatorGrid) {
+    creatorGrid.innerHTML = CREATORS.map(function (c) {
+      var thumbs = c.thumbs.map(function (bg) {
+        return '<div class="p2-5-creator-card__thumb" style="background:' + bg + '"></div>';
+      }).join('');
+      return '<div class="p2-5-creator-card">' +
+        '<div class="p2-5-creator-card__top">' +
+          '<div class="p2-5-creator-card__avatar ' + c.av + '">' + c.ini + '</div>' +
+          '<div>' +
+            '<div class="p2-5-creator-card__name">' + c.name + '</div>' +
+            '<div class="p2-5-creator-card__en">' + c.en + '</div>' +
+            '<span class="p2-5-creator-card__genre">' + c.genre + '</span>' +
+          '</div>' +
+        '</div>' +
+        '<div class="p2-5-creator-card__bio">' + c.bio + '</div>' +
+        '<div class="p2-5-creator-card__thumbs">' + thumbs + '</div>' +
+        '<a href="' + c.url + '" class="p2-5-creator-card__link" onclick="event.stopPropagation()">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="12" height="12"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' +
+          'クリエイターページへ' +
+        '</a>' +
+      '</div>';
+    }).join('');
+  }
+};
