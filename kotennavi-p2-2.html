@@ -16,6 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Noto+Sans+JP:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./kotennavi-common.css">
+  <link rel="stylesheet" href="./kotennavi-components.css">
 </head>
 <body>
 
@@ -41,7 +42,6 @@
       <div class="ktn-hdr-actions" id="ktnActs"></div>
     </div>
   </header>
-
   <div class="ktn-tagbar" id="ktnTagbar">
     <div class="ktn-tagbar__inner" id="ktnTagbarInner"></div>
   </div>
@@ -123,8 +123,67 @@
         <!-- 左：地図＆アクセス -->
         <div class="p2-2-main">
 
+          <!-- 会場情報 -->
+          <section class="p2-2-section">
+            <div class="p2-2-section__head">
+              <div class="p2-2-section__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+              </div>
+              <h2 class="p2-2-section__title">会場情報 <span class="p2-2-section__en">Venue</span></h2>
+            </div>
+            <dl class="p2-2-info-dl">
+              <dt>会場名</dt>
+              <dd>
+                <span style="display:inline-flex;align-items:center;gap:8px;">
+                  <strong>Gallery SOIL 渋谷</strong>
+                  <button class="ktn-btn" onclick="handleAction(this,'watch')" data-off="watch" data-on="watching" data-action="watch">
+                    <svg viewBox="0 0 16 16" fill="none">
+                      <circle cx="8" cy="8" r="7" fill="#7a8a99" opacity=".3"/>
+                      <circle cx="8" cy="8" r="2.6" fill="#ffffff"/>
+                    </svg>
+                    watch
+                    <span class="tip">ウォッチする</span>
+                  </button>
+                </span>
+              </dd>
+              <dt>住所</dt>
+              <dd>
+                <address>〒150-0041 東京都渋谷区神南1-12-14 2F</address>
+              </dd>
+              <dt>電話</dt>
+              <dd><a href="tel:0312345678">03-1234-5678</a></dd>
+              <dt>メール</dt>
+              <dd><a href="mailto:info@gallery-soil.jp">info@gallery-soil.jp</a></dd>
+            </dl>
+            <div class="p2-2-social-row">
+              <a href="https://gallery-soil.jp" target="_blank" rel="noopener" class="p2-2-social-icon" aria-label="公式サイト">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              </a>
+              <a href="https://instagram.com/gallery_soil_shibuya" target="_blank" rel="noopener" class="p2-2-social-icon" aria-label="Instagram">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+              </a>
+              <a href="https://x.com/gallery_soil" target="_blank" rel="noopener" class="p2-2-social-icon" aria-label="X (旧Twitter)">
+                <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+              </a>
+            </div>
+            <div class="p2-2-info-items">
+              <div class="p2-2-info-item">
+                <div class="p2-2-info-item__title">入場料</div>
+                <div class="p2-2-info-item__text">無料</div>
+              </div>
+              <div class="p2-2-info-item">
+                <div class="p2-2-info-item__title">Wi-Fi</div>
+                <div class="p2-2-info-item__text">館内無料Wi-Fi完備</div>
+              </div>
+              <div class="p2-2-info-item">
+                <div class="p2-2-info-item__title">バリアフリー対応</div>
+                <div class="p2-2-info-item__text">車椅子対応・多目的トイレあり</div>
+              </div>
+            </div>
+          </section>
+
           <!-- 地図 -->
-          <section class="p2-2-section" style="margin-bottom:14px">
+          <section class="p2-2-section">
             <div class="p2-2-map" id="p2Map">
               <div class="p2-2-map__ph">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -151,54 +210,6 @@
             </div>
           </section>
 
-          <!-- 基本情報 -->
-          <section class="p2-2-section">
-            <div class="p2-2-section__head">
-              <div class="p2-2-section__icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
-              </div>
-              <h2 class="p2-2-section__title">会場情報 <span class="p2-2-section__en">Venue</span></h2>
-            </div>
-            <dl class="p2-2-info-dl">
-              <dt>会場名</dt>
-              <dd><strong>Gallery SOIL 渋谷</strong></dd>
-              <dt>住所</dt>
-              <dd>
-                <address>〒150-0041 東京都渋谷区神南1-12-14 2F</address>
-              </dd>
-              <dt>電話</dt>
-              <dd><a href="tel:0312345678">03-1234-5678</a></dd>
-              <dt>メール</dt>
-              <dd><a href="mailto:info@gallery-soil.jp">info@gallery-soil.jp</a></dd>
-              <dt>Web</dt>
-              <dd><a href="https://gallery-soil.jp" target="_blank" rel="noopener">gallery-soil.jp</a></dd>
-              <dt>SNS</dt>
-              <dd>@gallery_soil_shibuya</dd>
-            </dl>
-            <div class="p2-2-facilities">
-              <span class="p2-2-facility p2-2-facility--fee">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                入場無料
-              </span>
-              <span class="p2-2-facility p2-2-facility--ok">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
-                Wi-Fi
-              </span>
-              <span class="p2-2-facility p2-2-facility--ok">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
-                バリアフリー対応
-              </span>
-              <span class="p2-2-facility p2-2-facility--ok">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-                多目的トイレ
-              </span>
-              <span class="p2-2-facility p2-2-facility--ng">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-                駐車場なし
-              </span>
-            </div>
-          </section>
-
           <!-- アクセス経路 -->
           <section class="p2-2-section">
             <div class="p2-2-section__head">
@@ -207,42 +218,17 @@
               </div>
               <h2 class="p2-2-section__title">アクセス <span class="p2-2-section__en">Access</span></h2>
             </div>
-            <div class="p2-2-access-list">
-              <div class="p2-2-access-item">
-                <div class="p2-2-access-item__icon p2-2-access-item__icon--train">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="2" width="16" height="20" rx="2"/><circle cx="9" cy="17" r="1"/><circle cx="15" cy="17" r="1"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="7" x2="20" y2="7"/></svg>
-                </div>
-                <div class="p2-2-access-item__body">
-                  <div class="p2-2-access-item__line">JR 山手線・埼京線・湘南新宿ライン「渋谷駅」</div>
-                  <div class="p2-2-access-item__detail">ハチ公口 または 西口より徒歩 <strong>7分</strong>。スクランブル交差点を渡り、NHK方向へ。</div>
-                </div>
-              </div>
-              <div class="p2-2-access-item">
-                <div class="p2-2-access-item__icon p2-2-access-item__icon--train">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="2" width="16" height="20" rx="2"/><circle cx="9" cy="17" r="1"/><circle cx="15" cy="17" r="1"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="7" x2="20" y2="7"/></svg>
-                </div>
-                <div class="p2-2-access-item__body">
-                  <div class="p2-2-access-item__line">東京メトロ 銀座線・半蔵門線・副都心線「渋谷駅」</div>
-                  <div class="p2-2-access-item__detail">B3出口より徒歩 <strong>5分</strong>。</div>
-                </div>
-              </div>
-              <div class="p2-2-access-item">
-                <div class="p2-2-access-item__icon p2-2-access-item__icon--bus">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 2H8a2 2 0 0 0-2 2v16l4-2 2 2 2-2 4 2V4a2 2 0 0 0-2-2z"/></svg>
-                </div>
-                <div class="p2-2-access-item__body">
-                  <div class="p2-2-access-item__line">都営バス「神南一丁目」バス停</div>
-                  <div class="p2-2-access-item__detail">バス停より徒歩 <strong>1分</strong>。</div>
-                </div>
-              </div>
-              <div class="p2-2-access-item">
-                <div class="p2-2-access-item__icon p2-2-access-item__icon--car">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2h-3"/><circle cx="9" cy="17" r="2"/><circle cx="19" cy="17" r="2"/></svg>
-                </div>
-                <div class="p2-2-access-item__body">
-                  <div class="p2-2-access-item__line">お車でお越しの方</div>
-                  <div class="p2-2-access-item__detail">専用駐車場はございません。近隣のコインパーキングをご利用ください（徒歩2〜3分圏内に複数あり）。</div>
-                </div>
+            <div class="p2-2-access-text">
+              <p class="p2-2-access-p">
+                JR 山手線・埼京線・湘南新宿ライン「渋谷駅」ハチ公口 または 西口より徒歩 <strong>7分</strong><br>
+                東京メトロ 銀座線・半蔵門線・副都心線「渋谷駅」B3出口より徒歩 <strong>5分</strong><br>
+                都営バス「神南一丁目」バス停より徒歩 <strong>1分</strong>
+              </p>
+            </div>
+            <div class="p2-2-info-items">
+              <div class="p2-2-info-item">
+                <div class="p2-2-info-item__title">駐車場</div>
+                <div class="p2-2-info-item__text">専用駐車場なし。近隣にコインパーキングあり（徒歩2〜3分）</div>
               </div>
             </div>
           </section>
@@ -266,7 +252,7 @@
               <div class="p2-2-nearby-item">
                 <div class="p2-2-nearby-item__cat" style="background:rgba(46,125,50,.1);color:#2e7d32">飲</div>
                 <div class="p2-2-nearby-item__body">
-                  <div class="p2-2-nearby-item__name">Café Shibuya Hill</div>
+                  <div class="p2-2-nearby-item__name">Café Shibuya Hill <span class="p2-2-nearby-pr">PR</span></div>
                   <div class="p2-2-nearby-item__dist">徒歩 約3分 · ランチ・カフェ利用可</div>
                 </div>
               </div>
@@ -292,30 +278,51 @@
         <!-- 右サイド -->
         <aside class="p2-2-side">
 
-          <!-- 近くの展覧会 -->
-          <div class="p2-sub-nearby" id="p2SubNearby">
-            <div class="p2-sub-nearby__head">
-              <span class="p2-sub-nearby__title">近くの展覧会</span>
-              <a href="kotennavi-p2.html?filter=near" class="p2-sub-nearby__more">すべて →</a>
-            </div>
-            <!-- JS で生成 -->
-          </div>
-
-          <!-- 住所コピー -->
-          <div class="p2-2-map-card">
-            <div class="p2-2-map-card__head">Gallery SOIL 渋谷</div>
-            <div class="p2-2-map-card__body">
-              <div class="p2-2-map-card__addr">
-                <address>
-                  〒150-0041<br>
-                  東京都渋谷区神南1-12-14 2F
-                </address>
+          <!-- アクションウィジェット -->
+          <div class="p2-side-card p2-action-widget">
+            <div class="p2-action-widget__counts">
+              <div class="p2-action-widget__count">
+                <div class="p2-action-widget__num" id="p2IntNum">41</div>
+                <div class="p2-action-widget__lbl">interest!</div>
               </div>
-              <a href="https://maps.google.com/?q=東京都渋谷区神南1-12-14" target="_blank" rel="noopener"
-                 class="p2-2-map-link" style="width:100%;justify-content:center">
+              <div class="p2-action-widget__count-sep"></div>
+              <div class="p2-action-widget__count">
+                <div class="p2-action-widget__num" id="p2CiNum">9</div>
+                <div class="p2-action-widget__lbl">check in</div>
+              </div>
+            </div>
+            <div class="p2-action-widget__divider"></div>
+            <div class="p2-action-widget__btn-row">
+              <button class="p2-action-widget__btn p2-action-widget__btn--interest" id="p2InterestBtn" aria-pressed="false">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                interest!
+              </button>
+              <button class="p2-action-widget__btn p2-action-widget__btn--checkin" id="p2CheckinBtn" aria-pressed="false">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                Google Map で開く
+                check in
+              </button>
+            </div>
+            <div class="p2-action-widget__sub">
+              <button class="p2-action-widget__sub-btn" onclick="doShare()" title="シェア">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+              </button>
+              <a href="kotennavi-p2-14.html" class="p2-action-widget__sub-btn" title="修正依頼">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
               </a>
+            </div>
+            <div class="p2-action-widget__qr">
+              <div class="p2-action-widget__qr-icon">
+                <svg width="30" height="30" viewBox="0 0 44 44" fill="none">
+                  <rect x="2"  y="2"  width="16" height="16" rx="2" fill="#231815" opacity=".18"/>
+                  <rect x="26" y="2"  width="16" height="16" rx="2" fill="#231815" opacity=".18"/>
+                  <rect x="2"  y="26" width="16" height="16" rx="2" fill="#231815" opacity=".18"/>
+                  <rect x="26" y="26" width="6"  height="6"  fill="#231815" opacity=".22"/>
+                  <rect x="34" y="26" width="6"  height="6"  fill="#231815" opacity=".22"/>
+                  <rect x="26" y="34" width="6"  height="6"  fill="#231815" opacity=".22"/>
+                  <rect x="34" y="34" width="6"  height="6"  fill="#231815" opacity=".22"/>
+                </svg>
+              </div>
+              <div class="p2-action-widget__qr-text">会場でスキャン →<br><a href="#">kotennavi.jp/ex/12345</a></div>
             </div>
           </div>
 
@@ -336,8 +343,8 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
               </div>
               <div class="p2-2-side-link__body">
-                <div class="p2-2-side-link__title">展覧会詳細</div>
-                <div class="p2-2-side-link__sub">入場・撮影・FAQ</div>
+                <div class="p2-2-side-link__title">展覧会詳細・入場案内</div>
+                <div class="p2-2-side-link__sub">入場料・撮影可否・問い合わせ</div>
               </div>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="9 18 15 12 9 6"/></svg>
             </a>
@@ -353,6 +360,38 @@
             </a>
           </div>
 
+          <!-- 近くの展覧会 -->
+          <div class="p2-sub-nearby" id="p2SubNearby">
+            <div class="p2-sub-nearby__head">
+              <span class="p2-sub-nearby__title">近くの展覧会</span>
+              <a href="kotennavi-p2.html?filter=near" class="p2-sub-nearby__more">すべて →</a>
+            </div>
+            <a href="kotennavi-p2.html" class="p2-sub-near-item">
+              <div class="p2-sub-near-item__poster" style="background:linear-gradient(155deg,#e0d8c8,#b4a88a);color:rgba(0,0,0,.28)">線と余</div>
+              <div class="p2-sub-near-item__body">
+                <div class="p2-sub-near-item__name">線と余白の詩学</div>
+                <div class="p2-sub-near-item__venue">渋谷アートラボ</div>
+              </div>
+              <span class="p2-sub-near-item__badge">開催中</span>
+            </a>
+            <a href="kotennavi-p2.html" class="p2-sub-near-item">
+              <div class="p2-sub-near-item__poster" style="background:linear-gradient(155deg,#c8d0e0,#8898b8);color:rgba(255,255,255,.6)"><div class="p2-sub-near-item__ldot"></div>光の破</div>
+              <div class="p2-sub-near-item__body">
+                <div class="p2-sub-near-item__name">光の破片</div>
+                <div class="p2-sub-near-item__venue">GALLERY X</div>
+              </div>
+              <span class="p2-sub-near-item__badge">開催中</span>
+            </a>
+            <a href="kotennavi-p2.html" class="p2-sub-near-item">
+              <div class="p2-sub-near-item__poster" style="background:linear-gradient(155deg,#d0c8e0,#8878b4);color:rgba(255,255,255,.6)">うつろ</div>
+              <div class="p2-sub-near-item__body">
+                <div class="p2-sub-near-item__name">うつろい</div>
+                <div class="p2-sub-near-item__venue">東京都現代美術館</div>
+              </div>
+              <span class="p2-sub-near-item__badge">開催中</span>
+            </a>
+          </div>
+
         </aside>
 
       </div><!-- /p2-2-layout -->
@@ -360,14 +399,14 @@
           <!-- タグリンク -->
           <div class="p2-sub-tags">
             <div class="p2-sub-tags__label">タグ · Tags</div>
-            <ul class="ktn-tags" aria-label="タグ">
-              <li><a class="ktn-tag" href="/p10?tag=絵画">絵画</a></li>
-              <li><a class="ktn-tag" href="/p10?tag=現代美術">現代美術</a></li>
-              <li><a class="ktn-tag" href="/p10?tag=油彩">油彩</a></li>
-              <li><a class="ktn-tag" href="/p10?tag=オノマトペ">オノマトペ</a></li>
-              <li><a class="ktn-tag" href="/p10?area=tokyo">東京</a></li>
-              <li><a class="ktn-tag" href="/p10?area=shibuya">渋谷</a></li>
-              <li><a class="ktn-tag" href="/p10?tag=個展">個展</a></li>
+            <ul class="p2-1-tag-pills" aria-label="タグ">
+              <li><a class="p2-1-tag-pill" href="/p10?tag=絵画">絵画</a></li>
+              <li><a class="p2-1-tag-pill" href="/p10?tag=現代美術">現代美術</a></li>
+              <li><a class="p2-1-tag-pill" href="/p10?tag=油彩">油彩</a></li>
+              <li><a class="p2-1-tag-pill" href="/p10?tag=オノマトペ">オノマトペ</a></li>
+              <li><a class="p2-1-tag-pill" href="/p10?area=tokyo">東京</a></li>
+              <li><a class="p2-1-tag-pill" href="/p10?area=shibuya">渋谷</a></li>
+              <li><a class="p2-1-tag-pill" href="/p10?tag=個展">個展</a></li>
             </ul>
           </div>
 
@@ -425,30 +464,7 @@
 <script src="./kotennavi-common.js"></script>
 <script src="./kotennavi-pages.js"></script>
 <script>
-/* ── 近くの展覧会ミニリスト ── */
-(function() {
-  var list = document.getElementById('p2SubNearby');
-  if (!list) return;
-  var NEARBY = [
-    { title:'線と余白の詩学',  venue:'渋谷アートラボ',   bg:'linear-gradient(155deg,#e0d8c8,#b4a88a)', tc:'rgba(0,0,0,.28)',      liaison:false },
-    { title:'光の破片',        venue:'GALLERY X',         bg:'linear-gradient(155deg,#c8d0e0,#8898b8)', tc:'rgba(255,255,255,.6)', liaison:true  },
-    { title:'うつろい',        venue:'東京都現代美術館',  bg:'linear-gradient(155deg,#d0c8e0,#8878b4)', tc:'rgba(255,255,255,.6)', liaison:false },
-    { title:'春の景色展',      venue:'代官山ヒルサイドF', bg:'linear-gradient(155deg,#f0e0d0,#c8a888)', tc:'rgba(0,0,0,.28)',      liaison:false },
-  ];
-  list.innerHTML = list.innerHTML + NEARBY.map(function(e) {
-    return '<a href="kotennavi-p2.html" class="p2-sub-near-item">' +
-      '<div class="p2-sub-near-item__poster" style="background:' + e.bg + ';color:' + e.tc + '">' +
-        (e.liaison ? '<div class="p2-sub-near-item__ldot"></div>' : '') +
-        e.title.slice(0, 4) +
-      '</div>' +
-      '<div class="p2-sub-near-item__body">' +
-        '<div class="p2-sub-near-item__name">' + e.title + '</div>' +
-        '<div class="p2-sub-near-item__venue">' + e.venue + '</div>' +
-      '</div>' +
-      '<span class="p2-sub-near-item__badge">開催中</span>' +
-    '</a>';
-  }).join('');
-})();
+KTN.init({ page: 'p2-2', role: 'guest' });
 
 /* ── 末尾おすすめ展覧会グリッド ── */
 (function() {
@@ -472,7 +488,7 @@
       '</div>' +
       '<div class="p2-ec__body">' +
         '<div class="p2-ec__tr"><span class="p2-ec__tag">絵画</span>' +
-          '<button class="p2-ec__bm" onclick="event.preventDefault();this.classList.toggle('is-active')" aria-label="ブックマーク">' +
+          '<button class="p2-ec__bm" onclick="event.preventDefault();this.classList.toggle(\'is-active\')" aria-label="ブックマーク">' +
             '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>' +
           '</button></div>' +
         '<div class="p2-ec__name">' + e.title + '</div>' +
@@ -485,7 +501,6 @@
     '</a>';
   }).join('');
 })();
-KTN.init({ page: 'p2-2', role: 'guest' });
 </script>
 </body>
 </html>

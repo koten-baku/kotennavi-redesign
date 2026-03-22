@@ -5,76 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>個展なび — Exhibition Status Badges</title>
 <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@600&family=Montserrat:wght@400;500;600;700&family=Noto+Sans+JP:wght@300;400&display=swap" rel="stylesheet">
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Noto Sans JP',sans-serif;background:#f0f3f7;min-height:100vh;padding:48px 24px;display:flex;flex-direction:column;align-items:center;gap:40px}
 
-/* ════════════════════════════════════════
-   ステータスバッジ（pill型）
-   ════════════════════════════════════════ */
-.sb{
-  display:inline-flex;align-items:center;gap:5px;
-  font-family:'Montserrat',sans-serif;
-  font-size:.52rem;font-weight:600;letter-spacing:.08em;
-  padding:4px 10px;border-radius:20px;
-  white-space:nowrap;flex-shrink:0;line-height:1;
-}
-.sb-live{color:#fff;background:#1a8a4a;box-shadow:0 1px 6px rgba(26,138,74,.35)}
-.sb-live .pulse{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.9);flex-shrink:0;animation:pulse-live 1.8s ease-in-out infinite}
-@keyframes pulse-live{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
-.sb-upcoming{color:#3a6ea8;background:rgba(58,110,168,.1);border:1px solid rgba(58,110,168,.3)}
-.sb-soon{color:#1a5fa8;background:rgba(26,95,168,.12);border:1px solid rgba(26,95,168,.4);box-shadow:0 1px 4px rgba(26,95,168,.15)}
-.sb-ending{color:#fff;background:linear-gradient(135deg,#d4820a,#e09420);box-shadow:0 1px 6px rgba(212,130,10,.4)}
-.sb-ending .ending-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.85);flex-shrink:0;animation:pulse-ending 1.2s ease-in-out infinite}
-@keyframes pulse-ending{0%,100%{opacity:1}50%{opacity:.3}}
-
-/* ダーク */
-.dark .sb-live{background:#1a9a52;box-shadow:0 1px 8px rgba(26,154,82,.4)}
-.dark .sb-upcoming{color:#80b4f0;background:rgba(128,180,240,.1);border-color:rgba(128,180,240,.3)}
-.dark .sb-soon{color:#60a0f0;background:rgba(96,160,240,.12);border-color:rgba(96,160,240,.4)}
-.dark .sb-ending{background:linear-gradient(135deg,#c47808,#d68a10);box-shadow:0 1px 8px rgba(196,120,8,.45)}
-
-/* ════════════════════════════════════════
-   デモUI
-   ════════════════════════════════════════ */
-.demo-page{width:100%;max-width:920px;display:flex;flex-direction:column;gap:32px}
-.demo-section{background:#fff;border-radius:12px;padding:28px 28px 24px;border:1px solid #e4e8ee}
-.demo-section-ttl{font-family:'Montserrat',sans-serif;font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;color:#bbb;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid #f0f0f0}
-.badge-grid{display:flex;flex-direction:column;gap:16px}
-.badge-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
-.badge-name{font-family:'Montserrat',sans-serif;font-size:.5rem;letter-spacing:.08em;color:#ccc;min-width:110px;line-height:1.6}
-.badge-variants{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.badge-desc{font-size:.64rem;color:#bbb}
-.group-label{font-family:'Montserrat',sans-serif;font-size:.46rem;letter-spacing:.18em;text-transform:uppercase;color:#ddd;display:flex;align-items:center;gap:10px}
-.group-label::after{content:'';flex:1;height:1px;background:#f0f0f0}
-
-.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:12px}
-.mock-card{background:#fff;border:1px solid #e8edf2;border-radius:8px;overflow:hidden;transition:box-shadow .15s,transform .15s;cursor:default}
-.mock-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.1);transform:translateY(-2px)}
-.mock-thumb{height:112px;position:relative;overflow:hidden}
-.mock-thumb::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(0,0,0,.2))}
-.t1{background:linear-gradient(135deg,#c8d8e8,#a0b8cc)}.t2{background:linear-gradient(135deg,#d8c8e8,#b8a0cc)}.t3{background:linear-gradient(135deg,#c8e8d8,#a0ccb8)}.t4{background:linear-gradient(135deg,#e8d8c8,#ccb8a0)}.t5{background:linear-gradient(135deg,#e8c8d8,#cca0b8)}.t6{background:linear-gradient(135deg,#c8d0e8,#a0aac8)}
-.thumb-tl{position:absolute;top:8px;left:8px;z-index:1}
-.thumb-tr{position:absolute;top:8px;right:8px;z-index:1}
-.mock-body{padding:10px 12px 13px}
-.mock-title{font-size:.75rem;color:#2a3340;line-height:1.4;margin-bottom:3px}
-.mock-meta{font-size:.6rem;color:#aab}
-.mock-card.dark{background:#1a2535;border-color:rgba(255,255,255,.08)}
-.mock-card.dark .mock-title{color:rgba(255,255,255,.88)}
-.mock-card.dark .mock-meta{color:rgba(255,255,255,.3)}
-
-.person-card{background:#fff;border:1px solid #e8edf2;border-radius:8px;padding:14px;display:flex;align-items:center;gap:12px;transition:box-shadow .15s;cursor:default}
-.person-card:hover{box-shadow:0 2px 12px rgba(0,0,0,.08)}
-.person-avatar{width:44px;height:44px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Montserrat',sans-serif;font-size:.9rem;font-weight:600;color:#fff}
-.av-c{background:#a8aa9a}.av-g{background:#c4a882}
-.person-info{flex:1;min-width:0}
-.person-badges{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:5px;align-items:center}
-.person-name{font-size:.78rem;color:#2a3340}.person-meta{font-size:.6rem;color:#aab;margin-top:2px}
-
-.code-block{background:#1a2535;border-radius:8px;padding:16px 18px;font-family:'Courier New',monospace;font-size:.61rem;line-height:1.75;color:#a8c8f0;overflow-x:auto;white-space:pre}
-.copy-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:6px;border:1px solid #d8e2ec;background:none;font-family:'Montserrat',sans-serif;font-size:.55rem;letter-spacing:.08em;color:#8899aa;cursor:pointer;transition:all .15s;margin-top:12px}
-.copy-btn:hover{border-color:#3a90e0;color:#3a90e0}
-</style>
+  <link rel="stylesheet" href="./kotennavi-common.css">
+  <link rel="stylesheet" href="./kotennavi-components.css">
 </head>
 <body>
 <div class="demo-page">

@@ -5,62 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>個展なび — LIAISON Logo 完成版</title>
 <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@400;600&family=Montserrat:wght@400;500;600;700&family=Noto+Sans+JP:wght@300;400&display=swap" rel="stylesheet">
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Noto Sans JP',sans-serif;background:#f0f3f7;min-height:100vh;padding:48px 24px;display:flex;flex-direction:column;align-items:center;gap:40px}
 
-/*
-  ══ SVGロゴ共通仕様 ══════════════════════════
-  LIAISON    viewBox="0 0 480 240"
-  LIAISON+   viewBox="0 0 480 240"  (+分を右に拡張)
-
-  アーチライン: M 20 208 Q 240 32 460 208  (深いカーブ、視認性)
-  文字パス:    M 80 186 Q 240 90 400 186   (cy=90、適切な弧長338px)
-  文字: Bodoni Moda / fs=58 / ls=8 / fw=600
-
-  Now on View: Montserrat / fs=17 / fw=500 / ls=4
-               y=228 (アーチライン直下中央)
-
-  LIAISON+ の「+」:
-    Bodoni Moda / fs=68 / 独立配置 x=530 y=165
-    ダーク: #f0d070 / ライト: #b8880a
-  ═══════════════════════════════════════════ */
-
-/* サイズ定義 */
-.logo-xl svg { width: 200px; height: 100px; }
-.logo-m  svg { width: 120px; height:  60px; }
-.logo-s  svg { width:  72px; height:  36px; }
-.logo-xs svg { width:  48px; height:  24px; }
-
-/* ── デモUI ── */
-.demo-page{width:100%;max-width:1020px;display:flex;flex-direction:column;gap:36px}
-.demo-section{background:#fff;border-radius:12px;padding:28px 28px 26px;border:1px solid #e4e8ee}
-.demo-section-ttl{font-family:'Montserrat',sans-serif;font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;color:#bbb;margin-bottom:24px;padding-bottom:12px;border-bottom:1px solid #f0f0f0}
-
-.logo-grid{display:flex;flex-wrap:wrap;gap:28px 36px;align-items:flex-end}
-.logo-item{display:flex;flex-direction:column;align-items:center;gap:10px}
-.logo-lbl{font-family:'Montserrat',sans-serif;font-size:.43rem;letter-spacing:.12em;text-transform:uppercase;color:#ccc;text-align:center;line-height:1.5}
-
-.dark-bg{background:#1a2535;border-radius:8px;padding:18px 22px;display:inline-flex}
-.row-ttl{
-  font-family:'Montserrat',sans-serif;font-size:.46rem;letter-spacing:.16em;text-transform:uppercase;
-  color:#bbb;width:100%;padding-top:20px;margin-top:4px;border-top:1px solid #f2f2f2;
-}
-.row-ttl:first-child{border-top:none;padding-top:0;margin-top:0}
-
-/* コード */
-.code-block{background:#1a2535;border-radius:8px;padding:16px 18px;font-family:'Courier New',monospace;font-size:.61rem;line-height:1.75;color:#a8c8f0;overflow-x:auto;white-space:pre}
-.copy-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:6px;border:1px solid #d8e2ec;background:none;font-family:'Montserrat',sans-serif;font-size:.55rem;letter-spacing:.08em;color:#8899aa;cursor:pointer;transition:all .15s;margin-top:12px}
-.copy-btn:hover{border-color:#3a90e0;color:#3a90e0}
-
-/* グラデ定義（CSS変数で管理） */
-:root{
-  --arch-line:  M 20 208 Q 240 32 460 208;
-  --text-path:  M 80 186 Q 240 90 400 186;
-  --arch-line-plus: M 20 208 Q 250 32 480 208;
-  --text-path-plus: M 80 186 Q 250 90 420 186;
-}
-</style>
+  <link rel="stylesheet" href="./kotennavi-common.css">
+  <link rel="stylesheet" href="./kotennavi-components.css">
 </head>
 <body>
 <div class="demo-page">
@@ -589,59 +536,6 @@ body{font-family:'Noto Sans JP',sans-serif;background:#f0f3f7;min-height:100vh;p
   </div>
 </div>
 
-<!-- ══ SVG仕様メモ ══ -->
-<div class="demo-section">
-  <div class="demo-section-ttl">SVG仕様メモ — ナレッジ用コピー</div>
-  <div class="code-block" id="cssCode">/* ══ 個展なび LIAISON ロゴ SVG仕様 (v4 確定) ══════════
-
-【LIAISON】  viewBox="0 0 480 240"
-  アーチライン : d="M 20 200 Q 240 33 460 200"  stroke-width="4"  stroke-linecap="round"
-  文字パス     : d="M 80 184 Q 240 56 400 184"
-  文字         : Bodoni Moda / font-size="58" / font-weight="600" / letter-spacing="8"
-  Now on View  : Montserrat / font-size="17" / font-weight="500" / letter-spacing="4"
-                 x="240" y="220" text-anchor="middle"
-
-  ライト : stroke="#2c3e50"  fill="#2c3e50"  sub-fill="#005da7"
-  ダーク  : stroke="#ffffff"  fill="#ffffff"  sub-fill="#005da7"
-
-【LIAISON+】 viewBox="0 0 480 240"  ← 幅+80px（「+」を右端に独立配置）
-  アーチライン : d="M 20 200 Q 240 33 460 200"  (LIAISONと同じ)
-  文字パス     : d="M 80 184 Q 240 56 400 184"  (LIAISONと同じ)
-  文字         : Bodoni Moda / font-size="58" / font-weight="600" / letter-spacing="8"
-  「+」丸バッジ : circle cx="432" cy="183" r="17" (ゴールド丸) + text font-size="22" fill逆転
-  Now on View + Shop : Montserrat / font-size="17" / font-weight="600" / letter-spacing="3"
-                       x="240" y="220" text-anchor="middle"
-
-  グラデーション（ライト）
-    gradientUnits="userSpaceOnUse" x1="0" x2="480"
-    #6a4010 → #a87020 → #d4a428 → #6a4010
-    「+」 fill="#b87c10"  sub-fill="#8a6018"
-
-  グラデーション（ダーク）
-    #c09028 → #f0d068 → #c09028
-    「+」 fill="#f0d068"  sub-fill="rgba(240,208,104,.68)"
-
-【CSSサイズ定義】
-  .logo-xl svg { width: 200px; height: 100px; }  ← セクションヘッダー
-  .logo-m  svg { width: 120px; height:  60px; }  ← カード・リスト
-  .logo-s  svg { width:  72px; height:  36px; }  ← コンパクト
-*/</div>
-  <button class="copy-btn" onclick="copyCss(this)">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-    仕様メモをコピー
-  </button>
 </div>
-
-</div>
-<script>
-function copyCss(btn){
-  const text=document.getElementById('cssCode').innerText;
-  navigator.clipboard.writeText(text).then(()=>{
-    const orig=btn.innerHTML;
-    btn.textContent='✓ コピーしました';btn.style.color='#1a7f3c';btn.style.borderColor='#1a7f3c';
-    setTimeout(()=>{btn.innerHTML=orig;btn.style.color='';btn.style.borderColor=''},2000);
-  });
-}
-</script>
 </body>
 </html>

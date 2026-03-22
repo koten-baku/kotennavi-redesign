@@ -16,6 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Noto+Sans+JP:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./kotennavi-common.css">
+  <link rel="stylesheet" href="./kotennavi-components.css">
 </head>
 <body>
 <div class="ktn-toast" id="ktnToast"></div>
@@ -202,6 +203,54 @@
 
         <!-- ⑥ 右サイド（日数カード削除・サブナビリンク→近くの展覧会の順） -->
         <aside class="p2-1-side">
+
+          <!-- アクションウィジェット -->
+          <div class="p2-side-card p2-action-widget">
+            <div class="p2-action-widget__counts">
+              <div class="p2-action-widget__count">
+                <div class="p2-action-widget__num" id="p2IntNum">41</div>
+                <div class="p2-action-widget__lbl">interest!</div>
+              </div>
+              <div class="p2-action-widget__count-sep"></div>
+              <div class="p2-action-widget__count">
+                <div class="p2-action-widget__num" id="p2CiNum">9</div>
+                <div class="p2-action-widget__lbl">check in</div>
+              </div>
+            </div>
+            <div class="p2-action-widget__divider"></div>
+            <div class="p2-action-widget__btn-row">
+              <button class="p2-action-widget__btn p2-action-widget__btn--interest" id="p2InterestBtn" aria-pressed="false">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                interest!
+              </button>
+              <button class="p2-action-widget__btn p2-action-widget__btn--checkin" id="p2CheckinBtn" aria-pressed="false">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                check in
+              </button>
+            </div>
+            <div class="p2-action-widget__sub">
+              <button class="p2-action-widget__sub-btn" onclick="doShare()" title="シェア">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+              </button>
+              <a href="kotennavi-p2-14.html" class="p2-action-widget__sub-btn" title="修正依頼">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              </a>
+            </div>
+            <div class="p2-action-widget__qr">
+              <div class="p2-action-widget__qr-icon">
+                <svg width="30" height="30" viewBox="0 0 44 44" fill="none">
+                  <rect x="2"  y="2"  width="16" height="16" rx="2" fill="#231815" opacity=".18"/>
+                  <rect x="26" y="2"  width="16" height="16" rx="2" fill="#231815" opacity=".18"/>
+                  <rect x="2"  y="26" width="16" height="16" rx="2" fill="#231815" opacity=".18"/>
+                  <rect x="26" y="26" width="6"  height="6"  fill="#231815" opacity=".22"/>
+                  <rect x="34" y="26" width="6"  height="6"  fill="#231815" opacity=".22"/>
+                  <rect x="26" y="34" width="6"  height="6"  fill="#231815" opacity=".22"/>
+                  <rect x="34" y="34" width="6"  height="6"  fill="#231815" opacity=".22"/>
+                </svg>
+              </div>
+              <div class="p2-action-widget__qr-text">会場でスキャン →<br><a href="#">kotennavi.jp/ex/12345</a></div>
+            </div>
+          </div>
 
           <!-- 関連ページ導線 -->
           <div class="p2-1-nav-links">

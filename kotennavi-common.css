@@ -38,6 +38,7 @@ button{cursor:pointer;font-family:inherit}
 :root {
   --sw: 120px;
   --hh: 50px;
+  --dh: 34px; /* デモバーの高さ（本番では0） */
   --ink: #231815;
   --paper: #f0f4f8;
   --warm: #f7f9fb;
@@ -133,7 +134,7 @@ button{font-family:inherit;cursor:pointer}
 ══════════════════════════════════ */
 .ktn-header{
   position:sticky;
-  top:34px; /* 本番環境では0 */
+  top:var(--dh, 0); /* 本番環境では0 */
   z-index:100;
   background:#fff;
   border-bottom:1px solid var(--border);
@@ -355,7 +356,7 @@ button{font-family:inherit;cursor:pointer}
 @media(max-width:860px){
   .content-wrap{margin-left:0;align-items:stretch}
   .sidebar-stub{display:none}
-  .ktn-header{top:34px}
+  .ktn-header{top:var(--dh, 0)}
   .ktn-header__inner{padding:0 14px;padding-top:8px;padding-bottom:8px}
   .ktn-bc__current{max-width:150px}
   .ktn-tagbar__inner{padding:0 14px}
@@ -3723,7 +3724,7 @@ line-clamp:2;}
 .p2-title-band__sub{font-family:'DM Serif Display',serif;font-style:italic;font-size:.82rem;color:var(--muted);letter-spacing:.05em;opacity:0;animation:p2FadeUp .5s .2s ease forwards}
 
 /* ── サブナビ（全幅タブバー・タイトルバンド幅に揃える） ── */
-.p2-subnav-wrap{position:sticky;top:calc(var(--dh,32px) + var(--hh,50px));z-index:95;background:transparent}
+.p2-subnav-wrap{position:static;z-index:95;background:transparent}
 .p2-subnav-bar{max-width:var(--w-page);margin:0 auto;background:#fff;border-bottom:2px solid var(--border);overflow-x:auto;scrollbar-width:none}
 .p2-subnav-bar::-webkit-scrollbar{display:none}
 .p2-subnav{display:flex;align-items:stretch;height:50px;padding:0 24px;margin:0}
@@ -4467,7 +4468,7 @@ line-clamp:2;}
    prefix: .p2-2-
 ════════════════════════════════════════════════════ */
 
-.p2-2-wrap { padding: 0 24px 80px; }
+.p2-2-wrap { padding: 20px 24px 80px; }
 
 /* ── ページヘッダー ── */
 .p2-2-page-head {
@@ -4567,6 +4568,27 @@ line-clamp:2;}
 .p2-2-facility--ok  { color: #2e7d32; border-color: rgba(46,125,50,.3); background: rgba(46,125,50,.05); }
 .p2-2-facility--ng  { color: var(--muted); }
 .p2-2-facility--fee { color: var(--accent); border-color: rgba(0,93,167,.25); background: rgba(0,93,167,.04); }
+/* バッジ＋説明テキスト */
+.p2-2-facility-item { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; }
+.p2-2-facility__note {
+  font-size: .58rem; color: var(--muted); line-height: 1.5;
+  padding-left: 4px; max-width: 24ch;
+  word-break: break-word; overflow-wrap: break-word; white-space: normal;
+}
+
+/* ── SNS・リンクアイコン（アイコンのみ横並び） ── */
+.p2-2-social-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 18px 12px; border-top: 1px solid var(--border);
+}
+.p2-2-social-icon {
+  display: flex; align-items: center; justify-content: center;
+  width: 30px; height: 30px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--paper);
+  color: var(--ink); text-decoration: none; transition: all .15s; flex-shrink: 0;
+}
+.p2-2-social-icon svg { width: 13px; height: 13px; display: block; }
+.p2-2-social-icon:hover { border-color: var(--accent); color: var(--accent); background: rgba(0,93,167,.04); }
 
 /* ── アクセス経路 ── */
 .p2-2-access-list { padding: 10px 18px 14px; display: flex; flex-direction: column; gap: 9px; }
@@ -4603,6 +4625,27 @@ line-clamp:2;}
 .p2-2-nearby-item__body { flex: 1; min-width: 0; }
 .p2-2-nearby-item__name { font-size: .76rem; font-weight: 500; }
 .p2-2-nearby-item__dist { font-size: .6rem; color: var(--muted); margin-top: 1px; }
+.p2-2-nearby-pr {
+  display: inline-block; font-size: .48rem; font-weight: 600; letter-spacing: .06em;
+  padding: 1px 5px; border-radius: 2px; border: 1px solid var(--muted);
+  color: var(--muted); vertical-align: middle; margin-left: 5px;
+}
+
+/* ── 会場情報・アクセス アイテム形式 ── */
+.p2-2-info-items { padding: 0 18px 2px; }
+.p2-2-info-item {
+  display: flex; align-items: baseline; gap: 12px;
+  padding: 9px 0; border-bottom: 1px solid var(--border);
+}
+.p2-2-info-item:last-child { border-bottom: none; padding-bottom: 12px; }
+.p2-2-info-item__title {
+  flex-shrink: 0; width: 110px; font-size: .72rem; font-weight: 600; color: var(--muted);
+}
+.p2-2-info-item__text { font-size: .78rem; line-height: 1.7; flex: 1; }
+
+/* ── アクセステキストブロック ── */
+.p2-2-access-text { padding: 14px 18px 10px; }
+.p2-2-access-p { font-size: .78rem; line-height: 2.1; color: var(--ink); }
 
 /* ── サイドカード ── */
 .p2-2-map-card {
@@ -4636,8 +4679,9 @@ line-clamp:2;}
 .p2-2-side-link__sub { font-size: .6rem; color: var(--muted); margin-top: 1px; }
 
 @media (max-width: 860px) {
-  .p2-2-wrap { padding: 0 14px 80px; }
+  .p2-2-wrap { padding: 20px 14px 80px; }
   .p2-2-layout { grid-template-columns: 1fr; }
+  .p2-2-side { order: 1; }
   .p2-2-map { aspect-ratio: 4/3; }
 }
 
