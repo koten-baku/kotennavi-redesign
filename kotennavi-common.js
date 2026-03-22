@@ -1007,3 +1007,50 @@ function ktnSubmitCheckin() {
   showToast('\u6295\u7a3f\u3057\u307e\u3057\u305f\uff01');
   closeCheckinModal();
 }
+
+/* ── 出展者リスト切替（3件以下：プロフィール形式 / 4件以上：.cc--h グリッド） ── */
+function initP2CreatorList(creators) {
+  var container = document.getElementById('p2CreatorList');
+  if (!container) return;
+  if (creators.length <= 3) return; /* 3件以下：プロフィール形式を維持 */
+  /* 4件以上：cc--h グリッドに切替 */
+  container.innerHTML =
+    '<div class="p2-creator-grid">' +
+    creators.map(function(c) {
+      return '<a class="cc cc--h" href="' + (c.url || '#') + '">' +
+        '<div class="cc__top">' +
+          '<div class="cc__avatar ' + c.av + '"><div class="cc__avatar-ph">' + c.ini + '</div></div>' +
+        '</div>' +
+        '<div class="cc__main">' +
+          '<div class="cc__info">' +
+            '<div class="cc__badge-row"><span class="cb cb-person cb-creator">creator</span></div>' +
+            '<div class="cc__name">' + c.name + '</div>' +
+            '<div class="cc__genre">' + c.genre + '</div>' +
+          '</div>' +
+          '<div class="cc__hfoot">' +
+            '<span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>' + c.exh + '</span>' +
+            '<span class="sep"></span>' +
+            '<span class="pc-count pc-count--watch"><svg width="11" height="11"><use href="#icon-watch" color="#7a8a99"/></svg>' + c.watch + '</span>' +
+            '<button class="ktn-btn" onclick="this.classList.toggle(\'on\');event.preventDefault()">' +
+              '<svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>' +
+              'watch<span class="tip">\u30a6\u30a9\u30c3\u30c1\u3059\u308b</span>' +
+            '</button>' +
+          '</div>' +
+        '</div>' +
+      '</a>';
+    }).join('') +
+    '</div>';
+}
+
+/* ── 出展者表示切替（デモバー用） ── */
+function setCreatorView(n, btn) {
+  document.querySelectorAll('.dbtn-creator').forEach(function(b) { b.classList.remove('on'); });
+  if (btn) btn.classList.add('on');
+  var container = document.getElementById('p2CreatorList');
+  if (!container) return;
+  if (n === 1) {
+    container.innerHTML = window.P2_CREATOR_PROFILE_HTML || '';
+  } else {
+    initP2CreatorList(window.P2_CREATORS_ALL || []);
+  }
+}

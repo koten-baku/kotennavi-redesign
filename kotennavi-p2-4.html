@@ -22,6 +22,19 @@
 
 <div class="ktn-toast" id="ktnToast"></div>
 
+<!-- SVGシンボル（cc--h グリッドカード用） -->
+<svg width="0" height="0" style="position:absolute;overflow:hidden">
+  <defs>
+    <symbol id="icon-exh" viewBox="40 47 54 54">
+      <path d="M80.09 102.05c-1.22-.8,-2.57-2.87,-3.34-4.33c-1.79-3.41,-2.34-6.3,-1.81-9.5c0.36-2.17,1.35-4.42,2.97-6.8c1.02-1.49,3.59-4.45,5.02-5.77c0.52-.47,0.96-.89,0.98-.93c0.02-.04,-0.44-.53,-1.02-1.09c-3.3-3.2,-4.91-7.08,-4.49-10.89c0.23-2.08,1.14-4.37,2.43-6.12c2.66-3.62,7.04-5.87,11.46-5.87c3.21,0,5.94,0.98,8.47,3.02c3.49,2.82,5.27,7.18,4.73,11.4c-0.39,3.03,-1.86,5.7,-4.28,7.86c-0.71,0.63,-0.71,0.63,0.08,1.38c4.89,4.63,7.76,9.14,8.38,13.21c0.35,2.28,0.04,4.57,-0.92,6.59c-1.32,2.77,-3.87,5,-7.09,6.24c-1.96,0.75,-3.52,1,-6.1,1c-3.14,0,-5.2,-0.47,-7.7,-1.78c-1.0-.52,-1.89,-1.06,-2.76,-1.63z" fill="currentColor"/>
+    </symbol>
+    <symbol id="icon-watch" viewBox="0 0 16 16">
+      <circle cx="8" cy="8" r="7" fill="currentColor"/>
+      <circle cx="8" cy="8" r="2.6" fill="white"/>
+    </symbol>
+  </defs>
+</svg>
+
 <div class="dbar" id="dbar">
   <span class="dbar-sep">ロール：</span>
   <button class="dbtn on" onclick="setR('guest',this)">ゲスト</button>
@@ -29,6 +42,9 @@
   <button class="dbtn" onclick="setR('user+creator',this)">creator本人</button>
   <button class="dbtn" onclick="setR('user+gallery',this)">gallery本人</button>
   <button class="dbtn" onclick="setR('admin',this)">管理者</button>
+  <span class="dbar-sep" style="margin-left:8px">出展者：</span>
+  <button class="dbtn dbtn-creator on" id="dbtnCreator1" onclick="setCreatorView(1,this)">1人</button>
+  <button class="dbtn dbtn-creator" id="dbtnCreator4" onclick="setCreatorView(4,this)">4人</button>
 </div>
 
 <div class="dev-ph dev-ph--sidebar"></div>
@@ -122,9 +138,10 @@
       <div class="p2-4-layout">
 
         <!-- 左：出展者カードリスト -->
-        <div class="p2-4-main">
+        <div class="p2-4-main" style="margin-top:20px">
 
-          <div class="p2-4-creator-list">
+          <!-- 出展者データが4人以上の場合はグリッド形式に自動切替（JSで制御） -->
+          <div class="p2-4-creator-list" id="p2CreatorList">
 
             <!-- ── 出展者カード：田中 透 ── -->
             <article class="p2-4-creator-card">
@@ -198,10 +215,6 @@
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                   クリエイターページへ
                 </a>
-                <a href="kotennavi-p3-1.html" class="p2-4-creator-card__profile-link">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
-                  展覧会アーカイブ
-                </a>
               </div>
 
             </article>
@@ -214,63 +227,128 @@
         <!-- 右サイド -->
         <aside class="p2-4-side">
 
+          <!-- アクションウィジェット -->
+          <div class="p2-side-card p2-action-widget">
+            <div class="p2-action-widget__counts">
+              <div class="p2-action-widget__count">
+                <div class="p2-action-widget__num" id="p2IntNum">41</div>
+                <div class="p2-action-widget__lbl">interest!</div>
+              </div>
+              <div class="p2-action-widget__count-sep"></div>
+              <div class="p2-action-widget__count">
+                <div class="p2-action-widget__num" id="p2CiNum">9</div>
+                <div class="p2-action-widget__lbl">check in</div>
+              </div>
+            </div>
+            <div class="p2-action-widget__divider"></div>
+            <div class="p2-action-widget__btn-row">
+              <button class="p2-action-widget__btn p2-action-widget__btn--interest" id="p2InterestBtn" aria-pressed="false">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                interest!
+              </button>
+              <button class="p2-action-widget__btn p2-action-widget__btn--checkin" id="p2CheckinBtn" aria-pressed="false" onclick="openCheckinModal()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                check in
+              </button>
+            </div>
+            <div class="p2-action-widget__sub">
+              <button class="p2-action-widget__sub-btn" onclick="doShare()" title="シェア">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+              </button>
+              <a href="kotennavi-p2-14.html" class="p2-action-widget__sub-btn" title="修正依頼">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              </a>
+            </div>
+            <div class="p2-action-widget__qr">
+              <div class="p2-action-widget__qr-icon">
+                <svg width="30" height="30" viewBox="0 0 44 44" fill="none">
+                  <rect x="2"  y="2"  width="16" height="16" rx="2" fill="#231815" opacity=".18"/>
+                  <rect x="26" y="2"  width="16" height="16" rx="2" fill="#231815" opacity=".18"/>
+                  <rect x="2"  y="26" width="16" height="16" rx="2" fill="#231815" opacity=".18"/>
+                  <rect x="26" y="26" width="6"  height="6"  fill="#231815" opacity=".22"/>
+                  <rect x="34" y="26" width="6"  height="6"  fill="#231815" opacity=".22"/>
+                  <rect x="26" y="34" width="6"  height="6"  fill="#231815" opacity=".22"/>
+                  <rect x="34" y="34" width="6"  height="6"  fill="#231815" opacity=".22"/>
+                </svg>
+              </div>
+              <div class="p2-action-widget__qr-text">会場でスキャン →<br><a href="#">kotennavi.jp/ex/12345</a></div>
+            </div>
+          </div>
+
+          <!-- 関連ページ導線 -->
+          <div class="p2-2-side-links">
+            <a href="kotennavi-p2-1.html" class="p2-2-side-link">
+              <div class="p2-2-side-link__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              </div>
+              <div class="p2-2-side-link__body">
+                <div class="p2-2-side-link__title">スケジュール</div>
+                <div class="p2-2-side-link__sub">開廊時間・在廊日程</div>
+              </div>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="9 18 15 12 9 6"/></svg>
+            </a>
+            <a href="kotennavi-p2-2.html" class="p2-2-side-link">
+              <div class="p2-2-side-link__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              </div>
+              <div class="p2-2-side-link__body">
+                <div class="p2-2-side-link__title">開催場所・アクセス</div>
+                <div class="p2-2-side-link__sub">Gallery SOIL 渋谷</div>
+              </div>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="9 18 15 12 9 6"/></svg>
+            </a>
+            <a href="kotennavi-p2-3.html" class="p2-2-side-link">
+              <div class="p2-2-side-link__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              </div>
+              <div class="p2-2-side-link__body">
+                <div class="p2-2-side-link__title">詳細</div>
+                <div class="p2-2-side-link__sub">記事・イベント・クレジット</div>
+              </div>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="9 18 15 12 9 6"/></svg>
+            </a>
+            <a href="kotennavi-p2-5.html" class="p2-2-side-link">
+              <div class="p2-2-side-link__icon" style="color:var(--lr)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+              </div>
+              <div class="p2-2-side-link__body">
+                <div class="p2-2-side-link__title">LIAISON 作品一覧</div>
+                <div class="p2-2-side-link__sub">展示8点・販売5点</div>
+              </div>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="9 18 15 12 9 6"/></svg>
+            </a>
+          </div>
+
           <!-- 近くの展覧会 -->
           <div class="p2-sub-nearby" id="p2SubNearby">
             <div class="p2-sub-nearby__head">
               <span class="p2-sub-nearby__title">近くの展覧会</span>
               <a href="kotennavi-p2.html?filter=near" class="p2-sub-nearby__more">すべて →</a>
             </div>
-            <!-- JS で生成 -->
-          </div>
-
-          <!-- LIAISON 作品一覧 CTA -->
-          <div class="p2-4-liaison-cta">
-            <div class="p2-4-liaison-cta__logo">
-              <svg viewBox="0 0 420 220" fill="none">
-                <path d="M 30 180 Q 210 30, 390 180" stroke="#fff" stroke-width="4.5" fill="none" stroke-linecap="round"/>
-                <defs><path id="p4LbA" d="M 70 165 Q 210 45, 350 165"/></defs>
-                <text font-family="'Cinzel',serif" font-size="40" font-weight="700" letter-spacing="7" fill="#fff"><textPath href="#p4LbA" startOffset="50%" text-anchor="middle">LIAISON</textPath></text>
-                <text x="210" y="206" font-family="'Montserrat',sans-serif" font-size="10" font-weight="600" letter-spacing="4" fill="#e74c3c" text-anchor="middle">Now on View</text>
-              </svg>
-            </div>
-            <div class="p2-4-liaison-cta__text">
-              <strong>会場連動オンライン展示</strong>
-              本展出展作品をオンラインでご覧いただけます。<br>
-              展示8点・販売5点・完売2点。
-            </div>
-            <a href="kotennavi-p2-5.html" class="p2-4-liaison-cta__btn">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-              作品一覧を見る
-            </a>
-          </div>
-
-          <!-- 展覧会概要カード -->
-          <div class="p2-4-side-card">
-            <div class="p2-4-side-card__head">展覧会情報</div>
-            <div class="p2-4-side-card__body">
-              <dl style="display:grid;grid-template-columns:auto 1fr;gap:5px 12px">
-                <dt style="font-size:.57rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);line-height:1.9">会場</dt>
-                <dd style="font-size:.76rem;line-height:1.7"><a href="kotennavi-p2-2.html" style="color:var(--accent)">Gallery SOIL 渋谷</a></dd>
-                <dt style="font-size:.57rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);line-height:1.9">会期</dt>
-                <dd style="font-size:.76rem;line-height:1.7">
-                  <time datetime="2026-02-18">2026.02.18</time>
-                  <span style="opacity:.4;margin:0 4px">–</span>
-                  <time datetime="2026-03-05">03.05</time>
-                </dd>
-                <dt style="font-size:.57rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);line-height:1.9">開廊</dt>
-                <dd style="font-size:.76rem;line-height:1.7">11:00–19:00（木〜日）</dd>
-              </dl>
-              <div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap">
-                <a href="kotennavi-p2.html" style="display:inline-flex;align-items:center;gap:4px;font-size:.65rem;color:var(--accent);border:1px solid var(--accent);padding:4px 11px;border-radius:20px;text-decoration:none;transition:all .15s">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="11" height="11"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
-                  展覧会概要
-                </a>
-                <a href="kotennavi-p2-3.html" style="display:inline-flex;align-items:center;gap:4px;font-size:.65rem;color:var(--muted);border:1px solid var(--border);padding:4px 11px;border-radius:20px;text-decoration:none;transition:all .15s">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="11" height="11"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                  入場案内
-                </a>
+            <a href="kotennavi-p2.html" class="p2-sub-near-item">
+              <div class="p2-sub-near-item__poster" style="background:linear-gradient(155deg,#e0d8c8,#b4a88a);color:rgba(0,0,0,.28)">線と余</div>
+              <div class="p2-sub-near-item__body">
+                <div class="p2-sub-near-item__name">線と余白の詩学</div>
+                <div class="p2-sub-near-item__venue">渋谷アートラボ</div>
               </div>
-            </div>
+              <span class="p2-sub-near-item__badge">開催中</span>
+            </a>
+            <a href="kotennavi-p2.html" class="p2-sub-near-item">
+              <div class="p2-sub-near-item__poster" style="background:linear-gradient(155deg,#c8d0e0,#8898b8);color:rgba(255,255,255,.6)"><div class="p2-sub-near-item__ldot"></div>光の破</div>
+              <div class="p2-sub-near-item__body">
+                <div class="p2-sub-near-item__name">光の破片</div>
+                <div class="p2-sub-near-item__venue">GALLERY X</div>
+              </div>
+              <span class="p2-sub-near-item__badge">開催中</span>
+            </a>
+            <a href="kotennavi-p2.html" class="p2-sub-near-item">
+              <div class="p2-sub-near-item__poster" style="background:linear-gradient(155deg,#d0c8e0,#8878b4);color:rgba(255,255,255,.6)">うつろ</div>
+              <div class="p2-sub-near-item__body">
+                <div class="p2-sub-near-item__name">うつろい</div>
+                <div class="p2-sub-near-item__venue">東京都現代美術館</div>
+              </div>
+              <span class="p2-sub-near-item__badge">開催中</span>
+            </a>
           </div>
 
         </aside>
@@ -280,14 +358,14 @@
           <!-- タグリンク -->
           <div class="p2-sub-tags">
             <div class="p2-sub-tags__label">タグ · Tags</div>
-            <ul class="ktn-tags" aria-label="タグ">
-              <li><a class="ktn-tag" href="/p10?tag=絵画">絵画</a></li>
-              <li><a class="ktn-tag" href="/p10?tag=現代美術">現代美術</a></li>
-              <li><a class="ktn-tag" href="/p10?tag=油彩">油彩</a></li>
-              <li><a class="ktn-tag" href="/p10?tag=オノマトペ">オノマトペ</a></li>
-              <li><a class="ktn-tag" href="/p10?area=tokyo">東京</a></li>
-              <li><a class="ktn-tag" href="/p10?area=shibuya">渋谷</a></li>
-              <li><a class="ktn-tag" href="/p10?tag=個展">個展</a></li>
+            <ul class="p2-1-tag-pills" aria-label="タグ">
+              <li><a class="p2-1-tag-pill" href="/p10?tag=絵画">絵画</a></li>
+              <li><a class="p2-1-tag-pill" href="/p10?tag=現代美術">現代美術</a></li>
+              <li><a class="p2-1-tag-pill" href="/p10?tag=油彩">油彩</a></li>
+              <li><a class="p2-1-tag-pill" href="/p10?tag=オノマトペ">オノマトペ</a></li>
+              <li><a class="p2-1-tag-pill" href="/p10?area=tokyo">東京</a></li>
+              <li><a class="p2-1-tag-pill" href="/p10?area=shibuya">渋谷</a></li>
+              <li><a class="p2-1-tag-pill" href="/p10?tag=個展">個展</a></li>
             </ul>
           </div>
 
@@ -360,31 +438,6 @@
   }).join('');
 })();
 
-/* ── 近くの展覧会ミニリスト ── */
-(function() {
-  var list = document.getElementById('p2SubNearby');
-  if (!list) return;
-  var NEARBY = [
-    { title:'線と余白の詩学',  venue:'渋谷アートラボ',   bg:'linear-gradient(155deg,#e0d8c8,#b4a88a)', tc:'rgba(0,0,0,.28)',      liaison:false },
-    { title:'光の破片',        venue:'GALLERY X',         bg:'linear-gradient(155deg,#c8d0e0,#8898b8)', tc:'rgba(255,255,255,.6)', liaison:true  },
-    { title:'うつろい',        venue:'東京都現代美術館',  bg:'linear-gradient(155deg,#d0c8e0,#8878b4)', tc:'rgba(255,255,255,.6)', liaison:false },
-    { title:'春の景色展',      venue:'代官山ヒルサイドF', bg:'linear-gradient(155deg,#f0e0d0,#c8a888)', tc:'rgba(0,0,0,.28)',      liaison:false },
-  ];
-  list.innerHTML = list.innerHTML + NEARBY.map(function(e) {
-    return '<a href="kotennavi-p2.html" class="p2-sub-near-item">' +
-      '<div class="p2-sub-near-item__poster" style="background:' + e.bg + ';color:' + e.tc + '">' +
-        (e.liaison ? '<div class="p2-sub-near-item__ldot"></div>' : '') +
-        e.title.slice(0, 4) +
-      '</div>' +
-      '<div class="p2-sub-near-item__body">' +
-        '<div class="p2-sub-near-item__name">' + e.title + '</div>' +
-        '<div class="p2-sub-near-item__venue">' + e.venue + '</div>' +
-      '</div>' +
-      '<span class="p2-sub-near-item__badge">開催中</span>' +
-    '</a>';
-  }).join('');
-})();
-
 /* ── 末尾おすすめ展覧会グリッド ── */
 (function() {
   var grid = document.getElementById('p2SubRecGrid');
@@ -402,24 +455,40 @@
         '<span class="p2-ec__poster-txt">' + e.title + '</span>' +
         '<div class="p2-ec__poster-bar"><div class="p2-ec__drow">' +
           '<span class="p2-ec__dy">2026.</span><span class="p2-ec__dmd">' + e.s + '</span>' +
-          '<span class="p2-ec__dsep">–</span><span class="p2-ec__dmd">' + e.e + '</span>' +
-        '</div><div class="p2-ec__dmeta"><span class="p2-ec__dbadge p2-ec__dbadge--open">開催中</span></div></div>' +
+          '<span class="p2-ec__dsep">\u2013</span><span class="p2-ec__dmd">' + e.e + '</span>' +
+        '</div><div class="p2-ec__dmeta"><span class="p2-ec__dbadge p2-ec__dbadge--open">\u958b\u50ac\u4e2d</span></div></div>' +
       '</div>' +
       '<div class="p2-ec__body">' +
-        '<div class="p2-ec__tr"><span class="p2-ec__tag">絵画</span>' +
-          '<button class="p2-ec__bm" onclick="event.preventDefault();this.classList.toggle('is-active')" aria-label="ブックマーク">' +
+        '<div class="p2-ec__tr"><span class="p2-ec__tag">\u7d75\u753b</span>' +
+          '<button class="p2-ec__bm" onclick="event.preventDefault();this.classList.toggle(\'is-active\')" aria-label="\u30d6\u30c3\u30af\u30de\u30fc\u30af">' +
             '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>' +
           '</button></div>' +
         '<div class="p2-ec__name">' + e.title + '</div>' +
         '<div class="p2-ec__venue">' + e.venue + '</div>' +
         '<div class="p2-ec__foot">' +
-          '<span class="p2-ec__cnt">❤ ' + e.int + '</span>' +
-          '<span class="p2-ec__cnt">📍 ' + e.ci + '</span>' +
+          '<span class="p2-ec__cnt">\u2764 ' + e.int + '</span>' +
+          '<span class="p2-ec__cnt">\ud83d\udccd ' + e.ci + '</span>' +
         '</div>' +
       '</div>' +
     '</a>';
   }).join('');
 })();
+
+/* ── 出展者リスト（3件以下：プロフィール形式 / 4件以上：グリッド形式） ── */
+/* 4人以上の場合はグリッド形式に自動切替 */
+
+/* デモ用：4人全員のデータ（dbarの「4人」ボタンで切替確認用） */
+window.P2_CREATORS_ALL = [
+  { ini:'\u900f', name:'\u7530\u4e2d \u900f',     genre:'\u6cb9\u5f69\u30fb\u73fe\u4ee3\u7f8e\u8853\u30fb\u30df\u30af\u30b9\u30c8\u30e1\u30c7\u30a3\u30a2', av:'av-c1', exh:12, watch:247, url:'kotennavi-p3.html' },
+  { ini:'\u8475', name:'\u5c71\u7530 \u8475',     genre:'\u5199\u771f\u30fb\u30df\u30af\u30b9\u30c8\u30e1\u30c7\u30a3\u30a2',                                  av:'av-c3', exh:18, watch:89,  url:'#' },
+  { ini:'\u73b2', name:'\u6751\u4e0a \u73b2\u5b50', genre:'\u9676\u82b8\u30fb\u7acb\u4f53\u9020\u5f62',                                                      av:'av-c5', exh:5,  watch:67,  url:'#' },
+  { ini:'\u4e00', name:'\u9ad8\u6a4b \u4e00\u6717', genre:'\u6728\u5f6b\u30fb\u30a4\u30e9\u30b9\u30c8\u30ec\u30fc\u30b7\u30e7\u30f3',                          av:'av-c2', exh:3,  watch:52,  url:'#' },
+];
+
+/* プロフィール形式のHTMLをキャプチャしてから initP2CreatorList を呼ぶ */
+window.P2_CREATOR_PROFILE_HTML = document.getElementById('p2CreatorList').innerHTML;
+initP2CreatorList([]); /* 1人＝プロフィール形式を維持（何もしない） */
+
 KTN.init({ page: 'p2-4', role: 'guest' });
 </script>
 </body>
