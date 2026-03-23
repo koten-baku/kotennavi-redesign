@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python _p25_css_append.py)",
+      "Bash(python3 \"D:/user/baku/claude-code/kotennavi-redesign/_p25_css_append.py\")",
+      "Bash(py \"D:/user/baku/claude-code/kotennavi-redesign/_p25_css_append.py\")",
+      "Read(//usr/**)",
+      "Read(//usr/local/**)",
+      "Bash(node:*)",
+      "Bash(cd:*)"
+    ]
+  }
+}
