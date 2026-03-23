@@ -678,27 +678,29 @@ KTN.pages['p2-5'] = function () {
   };
 
   function renderWork(w) {
-    var lbClass = w.plus ? 'li-plus' : 'li';
-    var lbText  = w.plus ? 'LIAISON+' : 'LIAISON';
-    var awClass = w.plus ? 'aw aw--plus' : 'aw';
-    var badge   = STATUS_BADGE[w.status] || '';
-    return '<a class="' + awClass + '" href="#" data-creator="' + w.creator + '">' +
-      '<div class="aw__img">' +
-        '<div class="aw__lb"><span class="lb-dot ' + lbClass + '"><span class="lb-dot-inner"></span>' + lbText + '</span></div>' +
-        '<div class="aw__img-ph" style="background:' + w.bg + ';color:' + w.tc + '">' + w.title + '</div>' +
+    var lbClass  = w.plus ? 'li-plus' : 'li';
+    var lbText   = w.plus ? 'LIAISON+' : 'LIAISON';
+    var cardClass = 'p25c' + (w.status === 'sold' ? ' p25c--sold' : '');
+    var ribbon    = w.status === 'sold' ? '<div class="p25c__sold-ribbon">SOLD</div>' : '';
+    var badgeMap  = {
+      sale:    '<span class="p25c__badge p25c__badge--sale">販売中</span>',
+      sold:    '',
+      nsale:   '<span class="p25c__badge p25c__badge--nsale">非売品</span>',
+      inquiry: '<span class="p25c__badge p25c__badge--reserved">予約済</span>',
+    };
+    var badge = badgeMap[w.status] || '';
+    return '<a class="' + cardClass + '" href="#" data-creator="' + w.creator + '">' +
+      '<div class="p25c__img">' +
+        '<div class="p25c__img-bg" style="background:' + w.bg + '"></div>' +
+        '<span class="p25c__lb lb-dot ' + lbClass + '"><span class="lb-dot-inner"></span>' + lbText + '</span>' +
+        '<div class="p25c__img-title" style="color:' + w.tc + '">' + w.title + '</div>' +
+        ribbon +
       '</div>' +
-      '<div class="aw__body">' +
-        '<div class="aw__badge-row">' +
-          '<span class="cb cb-content cb-artwork">artwork</span>' +
-          badge +
-          '<span class="aw__counter"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>' + w.interest + '</span>' +
-          '<button class="ktn-icon-btn" onclick="this.classList.toggle(\'on\');event.preventDefault()" aria-label="\u8208\u5473\u3042\u308b\uff01">' +
-            '<svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>' +
-          '</button>' +
-        '</div>' +
-        '<div class="aw__title-row"><div class="aw__title">' + w.title + '</div></div>' +
-        '<div class="aw__creator">' + w.name + '</div>' +
-        '<div class="aw__spec">' + w.year + ' / ' + w.spec + '</div>' +
+      '<div class="p25c__body">' +
+        '<div class="p25c__creator">' + w.name + '</div>' +
+        '<div class="p25c__title">' + w.title + '</div>' +
+        '<div class="p25c__spec">' + w.year + ' / ' + w.spec + '</div>' +
+        '<div class="p25c__footer">' + badge + '</div>' +
       '</div>' +
     '</a>';
   }
@@ -716,7 +718,7 @@ KTN.pages['p2-5'] = function () {
       filterBtns.forEach(function (b) { b.classList.remove('is-active'); });
       this.classList.add('is-active');
       var f = this.dataset.filter;
-      var cards = grid ? grid.querySelectorAll('.aw') : [];
+      var cards = grid ? grid.querySelectorAll('.p25c') : [];
       var shown = 0;
       cards.forEach(function (c) {
         var show = (f === 'all' || c.dataset.creator === f);
