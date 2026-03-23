@@ -730,52 +730,38 @@ KTN.pages['p2-5'] = function () {
 
   /* ── 出品作家プロフィール ── */
   var CREATORS = [
-    {
-      ini: '透', av: 'av-c1',
-      name: '田中 透', en: 'Toru Tanaka',
-      genre: '油彩・現代美術',
-      bio: '1985年東京生まれ。武蔵野美術大学油絵学科卒業後、ニューヨークのアートスタジオに在籍。「言語と感覚の境界」をテーマに刻下。2024年よりLIAISON認定クリエイター。',
-      thumbs: ['linear-gradient(155deg,#f0e8d0,#d4b896)', 'linear-gradient(155deg,#f0d0d0,#c88080)', 'linear-gradient(155deg,#b8d8cc,#6a9e8a)'],
-      url: 'kotennavi-p3.html'
-    },
-    {
-      ini: '葵', av: 'av-c3',
-      name: '山田 葵', en: 'Aoi Yamada',
-      genre: '写真・ミクストメディア',
-      bio: '1990年大阪生まれ。東京苸術大学美術学部卒。人間の記憶と時間を写真とコラージュで表現。グループ展中心に活動。本展初参加。',
-      thumbs: ['linear-gradient(155deg,#d0c8e0,#8878b4)', 'linear-gradient(155deg,#c8d8e8,#7898b8)', 'linear-gradient(155deg,#e8d8c8,#c8a888)'],
-      url: '#'
-    },
-    {
-      ini: '一', av: 'av-c2',
-      name: '佐藤 一朗', en: 'Ichiro Sato',
-      genre: '木彫・版画',
-      bio: '1978年長野生まれ。木を素材に生命と沈黙を彫刻で問いかける。版画との二領域で制作を続ける。',
-      thumbs: ['linear-gradient(155deg,#e0e8d0,#a0b888)', 'linear-gradient(155deg,#d8c8b8,#a89878)', 'linear-gradient(155deg,#e8e0d0,#c0b090)'],
-      url: '#'
-    }
+    { ini: '透', av: 'av-c1', name: '田中 透', genre: '油彩・現代美術', exhCount: 12, watchCount: 248, url: 'kotennavi-p3.html' },
+    { ini: '葵', av: 'av-c3', name: '山田 葵', genre: '写真・ミクストメディア', exhCount: 3, watchCount: 97, url: '#' },
+    { ini: '一', av: 'av-c2', name: '佐藤 一朗', genre: '木彫・版画', exhCount: 5, watchCount: 61, url: '#' }
   ];
 
   var creatorGrid = document.getElementById('p25CreatorGrid');
   if (creatorGrid) {
     creatorGrid.innerHTML = CREATORS.map(function (c) {
-      var thumbs = c.thumbs.map(function (bg) {
-        return '<div class="p2-5-creator-card__thumb" style="background:' + bg + '"></div>';
-      }).join('');
-      return '<div class="p2-5-creator-card">' +
-        '<div class="p2-5-creator-card__top">' +
-          '<div class="p2-5-creator-card__avatar ' + c.av + '">' + c.ini + '</div>' +
-          '<div>' +
-            '<div class="p2-5-creator-card__name">' + c.name + '</div>' +
-            '<div class="p2-5-creator-card__en">' + c.en + '</div>' +
-            '<span class="p2-5-creator-card__genre">' + c.genre + '</span>' +
+      return '<div class="masonry-item">' +
+        '<a class="cc" href="' + c.url + '">' +
+          '<div class="cc__top">' +
+            '<div class="cc__avatar ' + c.av + '"><div class="cc__avatar-ph">' + c.ini + '</div></div>' +
+            '<div class="cc__badge-row">' +
+              '<span class="cb cb-creator">creator</span>' +
+              '<span class="sb">開催中/開催予定</span>' +
+            '</div>' +
+            '<div class="cc__name">' + c.name + '</div>' +
+            '<div class="cc__genre">' + c.genre + '</div>' +
+            '<div class="cc__watch">' +
+              '<button class="ktn-btn" onclick="this.classList.toggle(\'on\');event.preventDefault()">' +
+                '<svg width="14" height="14"><use href="#icon-watch" color="#7a8a99"/></svg>' +
+                'watch<span class="tip">ウォッチする</span>' +
+              '</button>' +
+            '</div>' +
           '</div>' +
-        '</div>' +
-        '<div class="p2-5-creator-card__bio">' + c.bio + '</div>' +
-        '<div class="p2-5-creator-card__thumbs">' + thumbs + '</div>' +
-        '<a href="' + c.url + '" class="p2-5-creator-card__link" onclick="event.stopPropagation()">' +
-          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="12" height="12"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' +
-          'クリエイターページへ' +
+          '<div class="cc__foot">' +
+            '<div class="pc-counts">' +
+              '<span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>' + c.exhCount + '</span>' +
+              '<span class="sep"></span>' +
+              '<span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>' + c.watchCount + '</span>' +
+            '</div>' +
+          '</div>' +
         '</a>' +
       '</div>';
     }).join('');

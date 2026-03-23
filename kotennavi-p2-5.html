@@ -33,6 +33,19 @@
 
 <div class="dev-ph dev-ph--sidebar"></div>
 
+<!-- SVGシンボル定義 -->
+<svg width="0" height="0" style="position:absolute;overflow:hidden">
+  <defs>
+    <symbol id="icon-exh" viewBox="40 47 54 54">
+      <path d="M80.09 102.05c-1.22-.8,-2.57-2.87,-3.34-4.33c-2.48-5.91,-4.85-14.23,-13.31-20.15c-1.9-1.23,-2.03-2,-1.94-2.48c.11-.83,.82-1.52,2.3-1.3c11.09,1.95,15.22,3.96,21.07,7.61c7.85,5.36,9.57,10.76,9.65,14.09c.15,2.3,-.18,5.11,-2.61,6.56Z" fill="currentColor"/>
+    </symbol>
+    <symbol id="icon-watch" viewBox="0 0 16 16">
+      <circle cx="8" cy="8" r="7" fill="currentColor"/>
+      <circle cx="8" cy="8" r="2.6" fill="white"/>
+    </symbol>
+  </defs>
+</svg>
+
 <div class="shell">
 <div class="content-wrap" id="contentWrap">
 
@@ -118,54 +131,27 @@
 
     <div class="ktn-content p2-5-wrap">
 
-      <!-- ① ヒーロー -->
-      <section class="p2-5-hero">
-        <div class="p2-5-hero__inner">
-          <div class="p2-5-hero__sub-label">会場連動 オンライン展示</div>
-          <div class="p2-5-hero__logo">
-            <svg viewBox="0 0 480 240" fill="none" xmlns="http://www.w3.org/2000/svg" width="260" height="130">
-              <defs>
-                <linearGradient id="g-li-p25-hero" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%"   stop-color="#ffffff"/>
-                  <stop offset="55%"  stop-color="#005da7"/>
-                  <stop offset="100%" stop-color="#003f80"/>
-                </linearGradient>
-                <path id="li-p25-hero-t" d="M 80 184 Q 240 56 400 184"/>
-              </defs>
-              <path d="M 20 200 Q 240 33 460 200" stroke="url(#g-li-p25-hero)" stroke-width="4" fill="none" stroke-linecap="round"/>
-              <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#g-li-p25-hero)">
-                <textPath href="#li-p25-hero-t" startOffset="50%" text-anchor="middle">LIAISON</textPath>
-              </text>
-              <text x="240" y="220" font-family="'Montserrat',sans-serif" font-size="26" font-weight="800" letter-spacing="2" fill="#005da7" text-anchor="middle">Now on View</text>
-            </svg>
-          </div>
-          <h2 class="p2-5-hero__title">あなたが知らないオノマトペ</h2>
-          <div class="p2-5-hero__en">The Onomatopoeia You Don't Know</div>
-          <div class="p2-5-hero__meta">
-            <div class="p2-5-hero__meta-item">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="13" height="13"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-              2026.02.18 — 03.05
-            </div>
-            <div class="p2-5-hero__meta-item">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="13" height="13"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-              Gallery SOIL 渋谷
-            </div>
-            <div class="p2-5-hero__meta-item">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="13" height="13"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-              出品12点
-            </div>
-          </div>
-          <div class="p2-5-hero__online">
-            <span class="p2-5-hero__online-dot"></span>
-            ONLINE NOW
-          </div>
-        </div>
-      </section>
-
-      <!-- ② ABOUT LIAISON -->
+      <!-- ① ABOUT LIAISON -->
       <section class="p2-5-about">
         <div class="p2-5-about__inner">
           <div class="p2-5-about__left">
+            <div class="p2-5-about__logo">
+              <svg viewBox="0 0 480 240" fill="none" xmlns="http://www.w3.org/2000/svg" width="180" height="90">
+                <defs>
+                  <linearGradient id="g-li-p25-about" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%"  stop-color="#ffffff"/>
+                    <stop offset="55%" stop-color="#005da7"/>
+                    <stop offset="100%" stop-color="#003f80"/>
+                  </linearGradient>
+                  <path id="li-p25-about-t" d="M 80 184 Q 240 56 400 184"/>
+                </defs>
+                <path d="M 20 200 Q 240 33 460 200" stroke="url(#g-li-p25-about)" stroke-width="4" fill="none" stroke-linecap="round"/>
+                <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#g-li-p25-about)">
+                  <textPath href="#li-p25-about-t" startOffset="50%" text-anchor="middle">LIAISON</textPath>
+                </text>
+                <text x="240" y="220" font-family="'Montserrat',sans-serif" font-size="26" font-weight="800" letter-spacing="2" fill="#005da7" text-anchor="middle">Now on View</text>
+              </svg>
+            </div>
             <div class="p2-5-about__ttl-sub">ABOUT LIAISON</div>
             <h3 class="p2-5-about__ttl">会場の展覧会と連動した<br>オンライン展示</h3>
             <p class="p2-5-about__body">
@@ -212,7 +198,7 @@
           <div class="p2-5-works__head">
             <span class="p2-5-works__title">WORKS</span>
             <span class="p2-5-works__sep">/</span>
-            <span class="p2-5-works__title-ja">出品作品</span>
+            <span class="p2-5-works__title-ja">展示作品</span>
             <span class="p2-5-works__count" id="p25WorksCount">全12点</span>
           </div>
           <div class="p2-5-filter" id="p25Filter">
@@ -233,7 +219,7 @@
             <span class="p2-5-works__sep">/</span>
             <span class="p2-5-works__title-ja">出品作家プロフィール</span>
           </div>
-          <div class="p2-5-creator-grid" id="p25CreatorGrid"><!-- JS生成 --></div>
+          <div class="masonry" id="p25CreatorGrid"><!-- JS生成 --></div>
         </div>
       </section>
 
