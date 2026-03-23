@@ -692,7 +692,7 @@ KTN.pages['p2-5'] = function () {
           '<span class="cb cb-content cb-artwork">artwork</span>' +
           badge +
           '<span class="aw__counter"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>' + w.interest + '</span>' +
-          '<button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()" aria-label="興味ある！">' +
+          '<button class="ktn-icon-btn" onclick="this.classList.toggle(\'on\');event.preventDefault()" aria-label="\u8208\u5473\u3042\u308b\uff01">' +
             '<svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>' +
           '</button>' +
         '</div>' +
