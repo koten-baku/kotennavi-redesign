@@ -6021,36 +6021,3 @@ line-clamp:2;}
 @media (max-width: 860px) {
   .p2-5-about__inner { grid-template-columns: 1fr; gap: 28px; }
 }
-
-/* ════════════════════════════════════════
-   P2-5 LIAISON作品一覧（ライト版）固有スタイル
-════════════════════════════════════════ */
-.p25-filter { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 22px; }
-.p25-filter__btn {
-  font-family: var(--fm); font-size: .6rem; letter-spacing: .08em;
-  padding: 5px 16px; border-radius: 20px;
-  border: 1px solid var(--border); background: #fff; color: var(--muted);
-  cursor: pointer; transition: all .15s;
-}
-.p25-filter__btn:hover { border-color: var(--accent); color: var(--accent); }
-.p25-filter__btn.is-active { background: var(--accent); color: #fff; border-color: var(--accent); }
-/* 右カラム：出品者ラベル */
-.p25-side-creator__head {
-  font-size: .65rem; font-weight: 700; letter-spacing: .12em;
-  text-transform: uppercase; color: var(--muted); margin-bottom: 10px;
-}
-/* 右カラム：サブページナビ */
-.p2-side-subnav { display: flex; flex-direction: column; gap: 2px; }
-.p2-side-subnav__title {
-  font-size: .65rem; font-weight: 700; letter-spacing: .1em;
-  color: var(--muted); margin-bottom: 8px;
-}
-.p2-side-subnav__item {
-  display: flex; align-items: center; gap: 8px;
-  padding: 9px 10px; border-radius: 8px;
-  font-size: .8rem; color: var(--ink); text-decoration: none;
-  transition: background .15s;
-}
-.p2-side-subnav__item:hover { background: var(--warm); }
-.p2-side-subnav__item.is-active { background: var(--warm); font-weight: 600; color: var(--accent); }
-.p2-side-subnav__chev { margin-left: auto; color: var(--muted); flex-shrink: 0; }

@@ -687,7 +687,7 @@ KTN.pages['p2-5'] = function () {
       inquiry: '<span class="p25c__badge p25c__badge--reserved">\u4e88\u7d04\u6e08</span>',
     };
     var badge = badgeMap[w.status] || '';
-    return '<a class="' + cardClass + ' p25-artwork-card" href="#" data-creator="' + w.creator + '" data-artist="' + w.creator + '">' +
+    return '<a class="' + cardClass + '" href="#" data-creator="' + w.creator + '">' +
       '<div class="p25c__img">' +
         '<div class="p25c__img-bg" style="background:' + w.bg + '"></div>' +
         '<div class="p25c__img-title" style="color:' + w.tc + '">' + w.title + '</div>' +
@@ -708,68 +708,24 @@ KTN.pages['p2-5'] = function () {
     grid.innerHTML = WORKS.map(renderWork).join('');
   }
 
-  /* 作家別フィルター */
-  document.querySelectorAll('.p25-filter__btn').forEach(function (btn) {
+  /* フィルター */
+  var filterBtns = document.querySelectorAll('#p25Filter .p2-5-filter__btn');
+  filterBtns.forEach(function (btn) {
     btn.addEventListener('click', function () {
-      document.querySelectorAll('.p25-filter__btn').forEach(function (b) { b.classList.remove('is-active'); });
+      filterBtns.forEach(function (b) { b.classList.remove('is-active'); });
       this.classList.add('is-active');
       var f = this.dataset.filter;
-      document.querySelectorAll('.p25-artwork-card').forEach(function (card) {
-        card.style.display = (f === 'all' || card.dataset.artist === f) ? '' : 'none';
+      var cards = grid ? grid.querySelectorAll('.p25c') : [];
+      var shown = 0;
+      cards.forEach(function (c) {
+        var show = (f === 'all' || c.dataset.creator === f);
+        c.hidden = !show;
+        if (show) shown++;
       });
+      var count = document.getElementById('p25WorksCount');
+      if (count) count.textContent = '全' + shown + '点';
     });
   });
-
-  /* p25近くの展覧会 */
-  (function () {
-    var list = document.getElementById('p25NearbyList');
-    if (!list || !window.P2_NEARBY) return;
-    list.innerHTML = window.P2_NEARBY.slice(0, 4).map(function (e) {
-      return '<a href="kotennavi-p2.html" class="p2-side-ec">' +
-        '<div class="p2-side-ec__poster" style="background:' + e.bg + ';color:' + e.tc + '">' +
-        (e.liaison ? '<div class="p2-side-ec__ldot"></div>' : '') +
-        e.title.slice(0, 4) +
-        '</div>' +
-        '<div class="p2-side-ec__body">' +
-        '<div class="p2-side-ec__name">' + e.title + '</div>' +
-        '<div class="p2-side-ec__venue">' + e.venue + '</div>' +
-        '<div><span class="p2-side-ec__badge">開催中</span></div>' +
-        '</div>' +
-        '</a>';
-    }).join('');
-  })();
-
-  /* p25おすすめの展覧会 */
-  (function () {
-    var grid = document.getElementById('p25RecGrid');
-    if (!grid || !window.P2_REC) return;
-    grid.innerHTML = window.P2_REC.map(function (e, i) {
-      return '<a href="kotennavi-p2.html" class="p2-ec" style="animation-delay:' + (i * 60) + 'ms">' +
-        (e.liaison ? '<span class="p2-ec__ldot"></span>' : '') +
-        '<div class="p2-ec__poster" style="background:' + e.bg + ';color:' + e.tc + '">' +
-        '<span class="p2-ec__poster-txt">' + e.title + '</span>' +
-        '<div class="p2-ec__poster-bar"><div class="p2-ec__drow">' +
-        '<span class="p2-ec__dy">2026.</span><span class="p2-ec__dmd">' + (e.s || '') + '</span>' +
-        '<span class="p2-ec__dsep">–</span><span class="p2-ec__dmd">' + (e.e || '') + '</span>' +
-        '</div><div class="p2-ec__dmeta"><span class="p2-ec__dbadge ' +
-        (e.open ? 'p2-ec__dbadge--open' : 'p2-ec__dbadge--cl') + '">' +
-        (e.open ? '開催中' : '終了') + '</span></div></div>' +
-        '</div>' +
-        '<div class="p2-ec__body">' +
-        '<div class="p2-ec__tr"><span class="p2-ec__tag">絵画</span>' +
-        '<button class="p2-ec__bm" onclick="event.preventDefault();this.classList.toggle('is-active')" aria-label="ブックマーク">' +
-        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>' +
-        '</button></div>' +
-        '<div class="p2-ec__name">' + e.title + '</div>' +
-        '<div class="p2-ec__venue">' + e.venue + '</div>' +
-        '<div class="p2-ec__foot">' +
-        '<span class="p2-ec__cnt">❤ ' + (e.int || 0) + '</span>' +
-        '<span class="p2-ec__cnt">📍 ' + (e.ci || 0) + '</span>' +
-        '</div>' +
-        '</div>' +
-        '</a>';
-    }).join('');
-  })();
 
   /* ── 出品者 (出品者リスト cc--h) ── */
   var EXHIBITORS = [
