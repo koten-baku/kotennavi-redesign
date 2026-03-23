@@ -678,21 +678,18 @@ KTN.pages['p2-5'] = function () {
   };
 
   function renderWork(w) {
-    var lbClass  = w.plus ? 'li-plus' : 'li';
-    var lbText   = w.plus ? 'LIAISON+' : 'LIAISON';
     var cardClass = 'p25c' + (w.status === 'sold' ? ' p25c--sold' : '');
     var ribbon    = w.status === 'sold' ? '<div class="p25c__sold-ribbon">SOLD</div>' : '';
     var badgeMap  = {
-      sale:    '<span class="p25c__badge p25c__badge--sale">販売中</span>',
+      sale:    '<span class="p25c__badge p25c__badge--sale">\u8ca9\u58f2\u4e2d</span>',
       sold:    '',
-      nsale:   '<span class="p25c__badge p25c__badge--nsale">非売品</span>',
-      inquiry: '<span class="p25c__badge p25c__badge--reserved">予約済</span>',
+      nsale:   '<span class="p25c__badge p25c__badge--nsale">\u975e\u58f2\u54c1</span>',
+      inquiry: '<span class="p25c__badge p25c__badge--reserved">\u4e88\u7d04\u6e08</span>',
     };
     var badge = badgeMap[w.status] || '';
     return '<a class="' + cardClass + '" href="#" data-creator="' + w.creator + '">' +
       '<div class="p25c__img">' +
         '<div class="p25c__img-bg" style="background:' + w.bg + '"></div>' +
-        '<span class="p25c__lb lb-dot ' + lbClass + '"><span class="lb-dot-inner"></span>' + lbText + '</span>' +
         '<div class="p25c__img-title" style="color:' + w.tc + '">' + w.title + '</div>' +
         ribbon +
       '</div>' +
