@@ -728,42 +728,76 @@ KTN.pages['p2-5'] = function () {
     });
   });
 
-  /* ── 出品作家プロフィール ── */
-  var CREATORS = [
+  /* ── 出品者 (出品者リスト cc--h) ── */
+  var EXHIBITORS = [
     { ini: '透', av: 'av-c1', name: '田中 透', genre: '油彩・現代美術', exhCount: 12, watchCount: 248, url: 'kotennavi-p3.html' },
     { ini: '葵', av: 'av-c3', name: '山田 葵', genre: '写真・ミクストメディア', exhCount: 3, watchCount: 97, url: '#' },
     { ini: '一', av: 'av-c2', name: '佐藤 一朗', genre: '木彫・版画', exhCount: 5, watchCount: 61, url: '#' }
   ];
 
-  var creatorGrid = document.getElementById('p25CreatorGrid');
-  if (creatorGrid) {
-    creatorGrid.innerHTML = CREATORS.map(function (c) {
-      return '<div class="masonry-item">' +
-        '<a class="cc" href="' + c.url + '">' +
-          '<div class="cc__top">' +
-            '<div class="cc__avatar ' + c.av + '"><div class="cc__avatar-ph">' + c.ini + '</div></div>' +
+  var creatorList = document.getElementById('p25CreatorList');
+  if (creatorList) {
+    creatorList.innerHTML = EXHIBITORS.map(function (c) {
+      return '<a class="cc cc--h" href="' + c.url + '">' +
+        '<div class="cc__top">' +
+          '<div class="cc__avatar ' + c.av + '"><div class="cc__avatar-ph" style="font-size:.9rem">' + c.ini + '</div></div>' +
+        '</div>' +
+        '<div class="cc__main">' +
+          '<div class="cc__info">' +
             '<div class="cc__badge-row">' +
               '<span class="cb cb-creator">creator</span>' +
-              '<span class="sb">開催中/開催予定</span>' +
+              '<span class="sb sb-sm">開催中/開催予定</span>' +
             '</div>' +
             '<div class="cc__name">' + c.name + '</div>' +
             '<div class="cc__genre">' + c.genre + '</div>' +
-            '<div class="cc__watch">' +
-              '<button class="ktn-btn" onclick="this.classList.toggle(\'on\');event.preventDefault()">' +
-                '<svg width="14" height="14"><use href="#icon-watch" color="#7a8a99"/></svg>' +
-                'watch<span class="tip">ウォッチする</span>' +
-              '</button>' +
-            '</div>' +
           '</div>' +
-          '<div class="cc__foot">' +
-            '<div class="pc-counts">' +
-              '<span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>' + c.exhCount + '</span>' +
-              '<span class="sep"></span>' +
-              '<span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>' + c.watchCount + '</span>' +
-            '</div>' +
+          '<div class="cc__hfoot">' +
+            '<span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>' + c.exhCount + '</span>' +
+            '<span class="sep"></span>' +
+            '<span class="pc-count pc-count--watch"><svg width="11" height="11"><use href="#icon-watch" color="#7a8a99"/></svg>' + c.watchCount + '</span>' +
+            '<button class="ktn-btn" onclick="this.classList.toggle(\'on\');event.preventDefault()">' +
+              '<svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>' +
+              'watch<span class="tip">ウォッチする</span>' +
+            '</button>' +
           '</div>' +
-        '</a>' +
-      '</div>';
+        '</div>' +
+      '</a>';
+    }).join('');
+  }
+
+  /* ── 出品作家プロフィール (プロフィールカード cc masonry) ── */
+  var PROFILE = [
+    { ini: '透', av: 'av-c1', name: '田中 透', genre: '油彩・現代美術', exhCount: 12, watchCount: 248, url: 'kotennavi-p3.html' }
+  ];
+
+  var creatorGrid = document.getElementById('p25CreatorGrid');
+  if (creatorGrid) {
+    creatorGrid.innerHTML = PROFILE.map(function (c) {
+      return '<a class="cc" href="' + c.url + '">' +
+        '<div class="cc__top">' +
+          '<div class="cc__avatar ' + c.av + '"><div class="cc__avatar-ph">' + c.ini + '</div></div>' +
+          '<div class="cc__badge-row">' +
+            '<span class="cb cb-creator">creator</span>' +
+            '<span class="sb">開催中/開催予定</span>' +
+          '</div>' +
+          '<div class="cc__name">' + c.name + '</div>' +
+          '<div class="cc__genre">' + c.genre + '</div>' +
+          '<div class="cc__watch">' +
+            '<button class="ktn-btn" onclick="this.classList.toggle(\'on\');event.preventDefault()">' +
+              '<svg width="14" height="14"><use href="#icon-watch" color="#7a8a99"/></svg>' +
+              'watch<span class="tip">ウォッチする</span>' +
+            '</button>' +
+          '</div>' +
+        '</div>' +
+        '<div class="cc__foot">' +
+          '<div class="pc-counts">' +
+            '<span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>' + c.exhCount + '</span>' +
+            '<span class="sep"></span>' +
+            '<span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>' + c.watchCount + '</span>' +
+          '</div>' +
+          '<div class="cc__page-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="11" height="11"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>クリエイターページへ</div>' +
+        '</div>' +
+      '</a>';
     }).join('');
   }
 };
