@@ -6021,3 +6021,66 @@ line-clamp:2;}
 @media (max-width: 860px) {
   .p2-5-about__inner { grid-template-columns: 1fr; gap: 28px; }
 }
+
+
+/* ════════════════════════════════
+   p2-5 レイアウト
+════════════════════════════════ */
+.p25-layout {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  grid-template-rows: auto;
+  gap: 0 24px;
+  align-items: start;
+  padding-top: 20px;
+}
+
+/* メイン列：左カラム */
+.p25-main-col {
+  grid-column: 1;
+  min-width: 0;
+  margin-bottom: 20px;
+}
+
+/* サイド列：右カラム */
+.p25-side-top,
+.p25-side-mid,
+.p25-side-btm {
+  grid-column: 2;
+  min-width: 0;
+  margin-bottom: 12px;
+}
+
+/* ── レスポンシブ：900px以下で1カラム ── */
+@media (max-width: 900px) {
+  .p25-layout {
+    grid-template-columns: 1fr;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .p25-main-col,
+  .p25-side-top,
+  .p25-side-mid,
+  .p25-side-btm {
+    grid-column: 1;
+  }
+}
+@media (max-width: 480px) {
+  .p25-layout {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+}
+
+/* ── p2-5 フィルター ── */
+.p25-filter { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 22px; }
+.p25-filter__btn {
+  padding: 5px 14px; font-size: .72rem; font-family: var(--fs); font-weight: 500;
+  border: 1px solid var(--border); border-radius: 14px;
+  background: #fff; color: var(--muted); cursor: pointer; transition: all .15s;
+}
+.p25-filter__btn:hover { border-color: #c8a96e; color: #c8a96e; }
+.p25-filter__btn.is-active { background: #c8a96e; color: #fff; border-color: #c8a96e; }
+.p2-2-side-link.is-active { background: var(--warm); font-weight: 600; color: var(--accent); z-index: 1; position: relative; }
+.p2-2-side-link.is-active .p2-2-side-link__icon { background: rgba(var(--accent-rgb, 26,93,130),.08); }
+.p25-side-top .cc { width: 100%; box-sizing: border-box; }

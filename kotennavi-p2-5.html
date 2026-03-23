@@ -201,62 +201,213 @@
             <span class="p2-5-works__title-ja">展示作品</span>
             <span class="p2-5-works__count" id="p25WorksCount">全12点</span>
           </div>
-          <div class="p2-5-filter" id="p25Filter">
-            <button class="p2-5-filter__btn is-active" data-filter="all">すべて（12）</button>
-            <button class="p2-5-filter__btn" data-filter="tanaka">田中 透（7）</button>
-            <button class="p2-5-filter__btn" data-filter="yamada">山田 葵（3）</button>
-            <button class="p2-5-filter__btn" data-filter="sato">佐藤 一郎（2）</button>
+          <div class="p25-filter" id="p25Filter">
+            <button class="p25-filter__btn is-active" data-filter="all">すべて</button>
+            <button class="p25-filter__btn" data-filter="forsale">販売中</button>
+            <button class="p25-filter__btn" data-filter="sold">SOLD</button>
           </div>
           <div class="p2-5-grid" id="p25Grid"><!-- JS生成 --></div>
         </div>
       </section>
 
-      <!-- ④ 出品者・出品作家プロフィール -->
-      <section class="p2-5-creators">
-        <div class="p2-5-creators__inner">
+      <!-- 2カラムレイアウト -->
+      <div class="p25-layout">
 
-          <!-- 出品者リスト (cc--h) -->
-          <div class="p2-5-creators__head">
-            <span class="p2-5-works__title">EXHIBITORS</span>
-            <span class="p2-5-works__sep">/</span>
-            <span class="p2-5-works__title-ja">出品者</span>
-          </div>
-          <div class="list-col" id="p25CreatorList"><!-- JS生成 --></div>
-
-          <!-- 出品作家プロフィール (cc masonry) -->
-          <div class="p2-5-creators__sub-head">
-            <span class="p2-5-works__title">CREATORS</span>
-            <span class="p2-5-works__sep">/</span>
-            <span class="p2-5-works__title-ja">出品作家プロフィール</span>
-          </div>
-          <div class="p2-5-creator-profile-grid" id="p25CreatorGrid"><!-- JS生成 --></div>
-
-        </div>
-      </section>
-
-      <!-- ⑤ 展覧会リンクカード -->
-      <div class="p2-5-exh-link">
-        <div class="p2-5-exh-link__inner">
-          <div class="p2-5-exh-link__label">この展覧会について</div>
-          <a href="kotennavi-p2.html" class="p2-5-exh-card">
-            <div class="p2-5-exh-card__poster" style="background:linear-gradient(145deg,#3d4530,#1f2418);color:rgba(255,255,255,.6)">
-              あな<br>たが
-            </div>
-            <div class="p2-5-exh-card__body">
-              <div class="p2-5-exh-card__meta">
-                <span class="sb sb-open">開催中</span>
-                <span class="lb lb-liaison">LIAISON</span>
+        <!-- 1. 出品作家プロフィール（メイン列） -->
+        <div class="p25-main-col">
+          <div class="p2-ic is-open">
+            <div class="p2-ic__head">
+              <div class="p2-ic__head-l">
+                <div class="p2-ic__head-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                  </svg>
+                </div>
+                <span class="p2-ic__head-title">出品作家プロフィール<span class="p2-ic__head-en">Creators</span></span>
               </div>
-              <div class="p2-5-exh-card__title">あなたが知らないオノマトペ</div>
-              <div class="p2-5-exh-card__venue">Gallery SOIL 渋谷</div>
-              <div class="p2-5-exh-card__date">2026.02.18 — 03.05</div>
             </div>
-            <div class="p2-5-exh-card__arrow">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="9 18 15 12 9 6"/></svg>
+            <div class="p2-ic__body">
+
+              <!-- クリエイタープロフィールカード -->
+              <article class="p2-4-creator-card">
+                <div class="p2-4-creator-card__head">
+                  <div class="p2-4-creator-card__avatar" style="background:linear-gradient(145deg,#8aaa6a,#4a7a2a);color:rgba(255,255,255,.85)">透</div>
+                  <div class="p2-4-creator-card__info">
+                    <div class="p2-4-creator-card__badges">
+                      <span class="cb cb-person cb-creator">creator</span>
+                      <span class="sb sb-open">開催中</span>
+                      <span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>
+                    </div>
+                    <div class="p2-4-creator-card__name">田中 透</div>
+                    <div class="p2-4-creator-card__name-en">Toru Tanaka</div>
+                    <div class="p2-4-creator-card__genre">油彩・現代美術・ミクストメディア</div>
+                    <div class="pc-counts">
+                      <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>12</span>
+                      <span class="sep"></span>
+                      <span class="pc-count pc-count--watch"><svg width="11" height="11"><use href="#icon-watch" color="#7a8a99"/></svg>247</span>
+                    </div>
+                  </div>
+                  <div class="p2-4-creator-card__action">
+                    <button class="ktn-btn" onclick="this.classList.toggle('on');event.preventDefault()" data-off="watch" data-on="watching" data-action="watch">
+                      <svg viewBox="0 0 16 16" fill="none">
+                        <circle cx="8" cy="8" r="7" fill="#7a8a99" opacity=".45"/>
+                        <circle class="wi-dark" cx="8" cy="8" r="2.6"/>
+                      </svg>
+                      watch
+                      <span class="tip">ウォッチする</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="p2-4-creator-card__bio">
+                  <p>1985年東京生まれ。武蔵野美術大学油絵学科卒業後、ニューヨークのアートスタジオに在籍。帰国後、「言語と感覚の境界」をテーマにした絵画作品を発表し続ける。</p>
+                  <p style="margin-top:8px">日本語特有の音象徴語（オノマトペ）が持つ音の質感を、色彩と筆跡によって視覚化する独自の手法を確立。国内外の展覧会に多数参加。2024年より LIAISON 認定クリエイター。</p>
+                </div>
+                <div class="p2-4-creator-card__links">
+                  <a href="kotennavi-p3.html" class="p2-4-creator-card__profile-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    クリエイターページへ
+                  </a>
+                </div>
+              </article>
+
+            </div><!-- /p2-ic__body -->
+          </div><!-- /p2-ic CREATORS -->
+        </div><!-- /p25-main-col -->
+
+        <!-- 2. 出品者（サイド列） -->
+        <div class="p25-side-top">
+          <div class="p2-ic is-open">
+            <div class="p2-ic__head">
+              <div class="p2-ic__head-l">
+                <div class="p2-ic__head-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                  </svg>
+                </div>
+                <span class="p2-ic__head-title">出品者<span class="p2-ic__head-en">Exhibitors</span></span>
+              </div>
             </div>
-          </a>
-        </div>
-      </div>
+            <div class="p2-ic__body">
+
+              <!-- クリエイター水平カード -->
+              <a class="cc cc--h" href="kotennavi-p3.html">
+                <div class="cc__top">
+                  <div class="cc__avatar av-c1"><div class="cc__avatar-ph" style="font-size:.9rem">透</div></div>
+                </div>
+                <div class="cc__main">
+                  <div class="cc__info">
+                    <div class="cc__badge-row">
+                      <span class="cb cb-creator">creator</span>
+                      <span class="sb sb-sm">開催中/開催予定</span>
+                    </div>
+                    <div class="cc__name">田中 透</div>
+                    <div class="cc__genre">油彩・現代美術</div>
+                  </div>
+                  <div class="cc__hfoot">
+                    <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>12</span>
+                    <span class="sep"></span>
+                    <span class="pc-count pc-count--watch"><svg width="11" height="11"><use href="#icon-watch" color="#7a8a99"/></svg>248</span>
+                    <button class="ktn-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                      <svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>
+                      watch<span class="tip">ウォッチする</span>
+                    </button>
+                  </div>
+                </div>
+              </a>
+
+            </div><!-- /p2-ic__body -->
+          </div><!-- /p2-ic EXHIBITORS -->
+        </div><!-- /p25-side-top -->
+
+        <!-- 3. タグ（メイン列） -->
+        <div class="p25-main-col">
+          <div class="p2-sub-tags">
+            <div class="p2-sub-tags__label">タグ · Tags</div>
+            <ul class="p2-1-tag-pills" aria-label="タグ">
+              <li><a class="p2-1-tag-pill" href="/p10?tag=絵画">絵画</a></li>
+              <li><a class="p2-1-tag-pill" href="/p10?tag=現代美術">現代美術</a></li>
+              <li><a class="p2-1-tag-pill" href="/p10?tag=オノマトペ">オノマトペ</a></li>
+              <li><a class="p2-1-tag-pill" href="/p10?tag=言語">言語</a></li>
+              <li><a class="p2-1-tag-pill" href="/p10?area=shibuya">渋谷</a></li>
+            </ul>
+          </div>
+        </div><!-- /p25-main-col -->
+
+        <!-- 4. サブメニューリンク（サイド列） -->
+        <div class="p25-side-mid">
+          <div class="p2-2-side-links">
+            <a href="kotennavi-p2.html" class="p2-2-side-link">
+              <div class="p2-2-side-link__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y1="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+              </div>
+              <div class="p2-2-side-link__body"><div class="p2-2-side-link__title">概要</div></div>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="9 18 15 12 9 6"/></svg>
+            </a>
+            <a href="kotennavi-p2-1.html" class="p2-2-side-link">
+              <div class="p2-2-side-link__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              </div>
+              <div class="p2-2-side-link__body"><div class="p2-2-side-link__title">スケジュール</div></div>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="9 18 15 12 9 6"/></svg>
+            </a>
+            <a href="kotennavi-p2-2.html" class="p2-2-side-link">
+              <div class="p2-2-side-link__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              </div>
+              <div class="p2-2-side-link__body"><div class="p2-2-side-link__title">開催場所・アクセス</div></div>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="9 18 15 12 9 6"/></svg>
+            </a>
+            <a href="kotennavi-p2-3.html" class="p2-2-side-link">
+              <div class="p2-2-side-link__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              </div>
+              <div class="p2-2-side-link__body"><div class="p2-2-side-link__title">詳細</div></div>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="9 18 15 12 9 6"/></svg>
+            </a>
+            <a href="kotennavi-p2-4.html" class="p2-2-side-link">
+              <div class="p2-2-side-link__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              </div>
+              <div class="p2-2-side-link__body"><div class="p2-2-side-link__title">出展者</div></div>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="9 18 15 12 9 6"/></svg>
+            </a>
+            <a href="kotennavi-p2-5.html" class="p2-2-side-link is-active">
+              <div class="p2-2-side-link__icon" style="color:var(--lr)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+              </div>
+              <div class="p2-2-side-link__body"><div class="p2-2-side-link__title">LIAISON 作品一覧</div></div>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="9 18 15 12 9 6"/></svg>
+            </a>
+          </div>
+        </div><!-- /p25-side-mid -->
+
+        <!-- 5. おすすめの展覧会（メイン列） -->
+        <div class="p25-main-col">
+          <section class="p2-sub-rec" aria-label="おすすめの展覧会">
+            <div class="p2-sub-rec__head">
+              <h2 class="p2-sub-rec__title">おすすめの展覧会<span class="p2-sub-rec__title-en">Recommended</span></h2>
+              <a href="kotennavi-p2.html" class="p2-sub-rec__more">すべて見る →</a>
+            </div>
+            <div class="p2-sub-rec__grid" id="p25RecGrid"><!-- JS生成 --></div>
+          </section>
+        </div><!-- /p25-main-col -->
+
+        <!-- 6. 近くの展覧会（サイド列） -->
+        <div class="p25-side-btm">
+          <div class="p2-sub-nearby">
+            <div class="p2-sub-nearby__head">
+              <span class="p2-sub-nearby__title">近くの展覧会</span>
+              <a href="kotennavi-p2.html?filter=near" class="p2-sub-nearby__more">すべて →</a>
+            </div>
+            <div id="p25NearbyList"><!-- JS生成 --></div>
+          </div>
+        </div><!-- /p25-side-btm -->
+
+      </div><!-- /p25-layout -->
 
     </div><!-- /ktn-content -->
   </main>

@@ -687,7 +687,9 @@ KTN.pages['p2-5'] = function () {
       inquiry: '<span class="p25c__badge p25c__badge--reserved">\u4e88\u7d04\u6e08</span>',
     };
     var badge = badgeMap[w.status] || '';
-    return '<a class="' + cardClass + '" href="#" data-creator="' + w.creator + '">' +
+    var statusMap = { sale: 'forsale', inquiry: 'forsale', nsale: 'nsale', sold: 'sold' };
+    var dataStatus = statusMap[w.status] || 'nsale';
+    return '<a class="' + cardClass + '" href="#" data-creator="' + w.creator + '" data-status="' + dataStatus + '">' +
       '<div class="p25c__img">' +
         '<div class="p25c__img-bg" style="background:' + w.bg + '"></div>' +
         '<div class="p25c__img-title" style="color:' + w.tc + '">' + w.title + '</div>' +
@@ -708,95 +710,97 @@ KTN.pages['p2-5'] = function () {
     grid.innerHTML = WORKS.map(renderWork).join('');
   }
 
-  /* フィルター */
-  var filterBtns = document.querySelectorAll('#p25Filter .p2-5-filter__btn');
-  filterBtns.forEach(function (btn) {
+  /* watch ボタン テキスト切り替え */
+  document.querySelectorAll('[data-action="watch"]').forEach(function (btn) {
     btn.addEventListener('click', function () {
-      filterBtns.forEach(function (b) { b.classList.remove('is-active'); });
-      this.classList.add('is-active');
-      var f = this.dataset.filter;
-      var cards = grid ? grid.querySelectorAll('.p25c') : [];
-      var shown = 0;
-      cards.forEach(function (c) {
-        var show = (f === 'all' || c.dataset.creator === f);
-        c.hidden = !show;
-        if (show) shown++;
+      var on = this.classList.contains('on');
+      var txt = on ? this.dataset.on : this.dataset.off;
+      var tip = on ? '\u30a6\u30a9\u30c3\u30c1\u4e2d \u2014 \u89e3\u9664\u3059\u308b' : '\u30a6\u30a9\u30c3\u30c1\u3059\u308b';
+      // SVG は先頭子要素のまま保持して text ノードのみ更新
+      var nodes = Array.from(this.childNodes);
+      nodes.forEach(function (n) {
+        if (n.nodeType === 3) { n.textContent = ' ' + txt + ' '; }
+        if (n.nodeName === 'SPAN' && n.classList.contains('tip')) { n.textContent = tip; }
       });
-      var count = document.getElementById('p25WorksCount');
-      if (count) count.textContent = '全' + shown + '点';
     });
   });
 
-  /* ── 出品者 (出品者リスト cc--h) ── */
-  var EXHIBITORS = [
-    { ini: '透', av: 'av-c1', name: '田中 透', genre: '油彩・現代美術', exhCount: 12, watchCount: 248, url: 'kotennavi-p3.html' },
-    { ini: '葵', av: 'av-c3', name: '山田 葵', genre: '写真・ミクストメディア', exhCount: 3, watchCount: 97, url: '#' },
-    { ini: '一', av: 'av-c2', name: '佐藤 一朗', genre: '木彫・版画', exhCount: 5, watchCount: 61, url: '#' }
-  ];
+  /* フィルター（販売状態別） */
+  (function () {
+    document.querySelectorAll('.p25-filter__btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('.p25-filter__btn').forEach(function (b) { b.classList.remove('is-active'); });
+        this.classList.add('is-active');
+        var f = this.dataset.filter;
+        var cards = grid ? grid.querySelectorAll('.p25c') : [];
+        var shown = 0;
+        cards.forEach(function (c) {
+          var show = (f === 'all' || c.dataset.status === f);
+          c.hidden = !show;
+          if (show) shown++;
+        });
+        var count = document.getElementById('p25WorksCount');
+        if (count) count.textContent = '全' + shown + '点';
+      });
+    });
+  })();
 
-  var creatorList = document.getElementById('p25CreatorList');
-  if (creatorList) {
-    creatorList.innerHTML = EXHIBITORS.map(function (c) {
-      return '<a class="cc cc--h" href="' + c.url + '">' +
-        '<div class="cc__top">' +
-          '<div class="cc__avatar ' + c.av + '"><div class="cc__avatar-ph" style="font-size:.9rem">' + c.ini + '</div></div>' +
+  /* ── 近くの展覧会 ── */
+  (function () {
+    var list = document.getElementById('p25NearbyList');
+    if (!list) return;
+    var NEARBY = [
+      { title: '線と余白の詩学', venue: '渋谷アートラボ', bg: 'linear-gradient(155deg,#e0d8c8,#b4a88a)', tc: 'rgba(0,0,0,.28)', liaison: false },
+      { title: '光の破片', venue: 'GALLERY X', bg: 'linear-gradient(155deg,#c8d0e0,#8898b8)', tc: 'rgba(255,255,255,.6)', liaison: true },
+      { title: 'うつろい', venue: '東京都現代美術館', bg: 'linear-gradient(155deg,#d0c8e0,#8878b4)', tc: 'rgba(255,255,255,.6)', liaison: false },
+    ];
+    list.innerHTML = NEARBY.map(function (e) {
+      return '<a href="kotennavi-p2.html" class="p2-sub-near-item">' +
+        '<div class="p2-sub-near-item__poster" style="background:' + e.bg + ';color:' + e.tc + '">' +
+        (e.liaison ? '<div class="p2-sub-near-item__ldot"></div>' : '') +
+        e.title.slice(0, 4) +
         '</div>' +
-        '<div class="cc__main">' +
-          '<div class="cc__info">' +
-            '<div class="cc__badge-row">' +
-              '<span class="cb cb-creator">creator</span>' +
-              '<span class="sb sb-sm">開催中/開催予定</span>' +
-            '</div>' +
-            '<div class="cc__name">' + c.name + '</div>' +
-            '<div class="cc__genre">' + c.genre + '</div>' +
-          '</div>' +
-          '<div class="cc__hfoot">' +
-            '<span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>' + c.exhCount + '</span>' +
-            '<span class="sep"></span>' +
-            '<span class="pc-count pc-count--watch"><svg width="11" height="11"><use href="#icon-watch" color="#7a8a99"/></svg>' + c.watchCount + '</span>' +
-            '<button class="ktn-btn" onclick="this.classList.toggle(\'on\');event.preventDefault()">' +
-              '<svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>' +
-              'watch<span class="tip">ウォッチする</span>' +
-            '</button>' +
-          '</div>' +
+        '<div class="p2-sub-near-item__body">' +
+        '<div class="p2-sub-near-item__name">' + e.title + '</div>' +
+        '<div class="p2-sub-near-item__venue">' + e.venue + '</div>' +
         '</div>' +
-      '</a>';
+        '<span class="p2-sub-near-item__badge">開催中</span>' +
+        '</a>';
     }).join('');
-  }
+  })();
 
-  /* ── 出品作家プロフィール (プロフィールカード cc masonry) ── */
-  var PROFILE = [
-    { ini: '透', av: 'av-c1', name: '田中 透', genre: '油彩・現代美術', exhCount: 12, watchCount: 248, url: 'kotennavi-p3.html' }
-  ];
-
-  var creatorGrid = document.getElementById('p25CreatorGrid');
-  if (creatorGrid) {
-    creatorGrid.innerHTML = PROFILE.map(function (c) {
-      return '<a class="cc" href="' + c.url + '">' +
-        '<div class="cc__top">' +
-          '<div class="cc__avatar ' + c.av + '"><div class="cc__avatar-ph">' + c.ini + '</div></div>' +
-          '<div class="cc__badge-row">' +
-            '<span class="cb cb-creator">creator</span>' +
-            '<span class="sb">開催中/開催予定</span>' +
-          '</div>' +
-          '<div class="cc__name">' + c.name + '</div>' +
-          '<div class="cc__genre">' + c.genre + '</div>' +
-          '<div class="cc__watch">' +
-            '<button class="ktn-btn" onclick="this.classList.toggle(\'on\');event.preventDefault()">' +
-              '<svg width="14" height="14"><use href="#icon-watch" color="#7a8a99"/></svg>' +
-              'watch<span class="tip">ウォッチする</span>' +
-            '</button>' +
-          '</div>' +
+  /* ── おすすめの展覧会 ── */
+  (function () {
+    var g = document.getElementById('p25RecGrid');
+    if (!g) return;
+    var DATA = [
+      { title: '春の景色展', venue: '代官山ヒルサイドF', bg: 'linear-gradient(155deg,#f0e0d0,#c8a888)', tc: 'rgba(0,0,0,.28)', s: '02.20', e: '03.10', liaison: false, int: 21, ci: 4 },
+      { title: '現代彫刻の冒険', venue: '神楽坂BOOK・ART', bg: 'linear-gradient(155deg,#e8d0d8,#b88898)', tc: 'rgba(255,255,255,.6)', s: '02.17', e: '03.07', liaison: true, int: 19, ci: 3 },
+      { title: 'ポストカード展', venue: '吉祥寺 M&G', bg: 'linear-gradient(155deg,#d0e8e0,#88b8a8)', tc: 'rgba(0,0,0,.28)', s: '02.22', e: '03.12', liaison: false, int: 38, ci: 7 },
+    ];
+    g.innerHTML = DATA.map(function (e, i) {
+      return '<a href="kotennavi-p2.html" class="p2-ec" style="animation-delay:' + (i * 60) + 'ms">' +
+        (e.liaison ? '<span class="p2-ec__ldot"></span>' : '') +
+        '<div class="p2-ec__poster" style="background:' + e.bg + ';color:' + e.tc + '">' +
+        '<span class="p2-ec__poster-txt">' + e.title + '</span>' +
+        '<div class="p2-ec__poster-bar"><div class="p2-ec__drow">' +
+        '<span class="p2-ec__dy">2026.</span><span class="p2-ec__dmd">' + e.s + '</span>' +
+        '<span class="p2-ec__dsep">–</span><span class="p2-ec__dmd">' + e.e + '</span>' +
+        '</div><div class="p2-ec__dmeta"><span class="p2-ec__dbadge p2-ec__dbadge--open">開催中</span></div></div>' +
         '</div>' +
-        '<div class="cc__foot">' +
-          '<div class="pc-counts">' +
-            '<span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>' + c.exhCount + '</span>' +
-            '<span class="sep"></span>' +
-            '<span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>' + c.watchCount + '</span>' +
-          '</div>' +
-          '<div class="cc__page-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="11" height="11"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>クリエイターページへ</div>' +
+        '<div class="p2-ec__body">' +
+        '<div class="p2-ec__tr"><span class="p2-ec__tag">絵画</span>' +
+        '<button class="p2-ec__bm" onclick="event.preventDefault();this.classList.toggle(\'is-active\')" aria-label="ブックマーク">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>' +
+        '</button></div>' +
+        '<div class="p2-ec__name">' + e.title + '</div>' +
+        '<div class="p2-ec__venue">' + e.venue + '</div>' +
+        '<div class="p2-ec__foot">' +
+        '<span class="p2-ec__cnt">❤ ' + e.int + '</span>' +
+        '<span class="p2-ec__cnt">📍 ' + e.ci + '</span>' +
         '</div>' +
-      '</a>';
+        '</div>' +
+        '</a>';
     }).join('');
-  }
+  })();
 };

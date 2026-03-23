@@ -7,7 +7,10 @@
       "Read(//usr/**)",
       "Read(//usr/local/**)",
       "Bash(node:*)",
-      "Bash(cd:*)"
+      "Bash(cd:*)",
+      "Bash(ls D:/user/baku/claude-code/kotennavi-redesign/kotennavi_cards_person*)",
+      "Bash(ls D:/user/baku/claude-code/kotennavi-redesign/*person*)",
+      "Bash(ls D:/user/baku/claude-code/kotennavi-redesign/*cards*)"
     ]
   }
 }
