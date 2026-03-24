@@ -239,28 +239,26 @@ KTN.pages['p2'] = function () {
     function buildExCards(data, gridId) {
       var grid = document.getElementById(gridId);
       if (!grid || !data) return;
-      grid.innerHTML = data.map(function (e, i) {
-        return '<a href="kotennavi-p2.html" class="p2-ec" style="animation-delay:' + (i * 60) + 'ms">' +
-          (e.liaison ? '<span class="p2-ec__ldot"></span>' : '') +
-          '<div class="p2-ec__poster" style="background:' + e.bg + ';color:' + e.tc + '">' +
-          '<span class="p2-ec__poster-txt">' + e.title + '</span>' +
-          '<div class="p2-ec__poster-bar"><div class="p2-ec__drow">' +
-          '<span class="p2-ec__dy">2026.</span><span class="p2-ec__dmd">' + (e.s || '') + '</span>' +
-          '<span class="p2-ec__dsep">–</span><span class="p2-ec__dmd">' + (e.e || '') + '</span>' +
-          '</div><div class="p2-ec__dmeta"><span class="p2-ec__dbadge ' +
-          (e.open ? 'p2-ec__dbadge--open' : 'p2-ec__dbadge--cl') + '">' +
-          (e.open ? '開催中' : '終了') + '</span></div></div>' +
+      grid.innerHTML = data.map(function (e) {
+        var li = e.liaison ? '<span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>' : '';
+        return '<a href="kotennavi-p2.html" class="ec ec--h">' +
+          '<div class="ec__poster" style="background:' + e.bg + ';color:' + e.tc + '">' +
+          '<div class="ec__poster-label">' + e.title + '</div>' +
+          '<div class="ec__poster-img ec__poster-img--empty" style="background:' + e.bg + '"></div>' +
           '</div>' +
-          '<div class="p2-ec__body">' +
-          '<div class="p2-ec__tr"><span class="p2-ec__tag">絵画</span>' +
-          '<button class="p2-ec__bm" onclick="event.preventDefault();this.classList.toggle(\'is-active\')" aria-label="ブックマーク">' +
-          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>' +
-          '</button></div>' +
-          '<div class="p2-ec__name">' + e.title + '</div>' +
-          '<div class="p2-ec__venue">' + e.venue + '</div>' +
-          '<div class="p2-ec__foot">' +
-          '<span class="p2-ec__cnt">❤ ' + (e.int || 0) + '</span>' +
-          '<span class="p2-ec__cnt">📍 ' + (e.ci || 0) + '</span>' +
+          '<div class="ec__main">' +
+          '<div class="ec__datebar">' +
+          '<div class="ec__datebar-dates"><span class="year">2026.</span><strong>' + (e.s || '') + '</strong><span class="sep">—</span><strong>' + (e.e || '') + '</strong></div>' +
+          '<div class="ec__datebar-meta"><span class="ec__remain-lt ec__remain-lt--live">開催中</span></div>' +
+          '</div>' +
+          '<div class="ec__body">' +
+          '<div class="ec__badge-row"><span class="cb cb-content cb-exhibition">exhibition</span><span class="sb sb-live"><span class="pulse"></span>開催中</span>' + li + '</div>' +
+          '<div class="ec__title">' + e.title + '</div>' +
+          '<div class="ec__venue">' + e.venue + '</div>' +
+          '</div>' +
+          '<div class="ec__foot">' +
+          '<span class="ec-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="12" height="12"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>' + (e.int || 0) + '</span>' +
+          '<span class="ec-action"><svg viewBox="0 0 16 16" fill="none" width="12" height="12"><circle cx="8" cy="8" r="7" fill="#7a8a99" opacity=".4"/><circle cx="8" cy="8" r="2.6" fill="white"/></svg>' + (e.ci || 0) + '</span>' +
           '</div>' +
           '</div>' +
           '</a>';
@@ -528,27 +526,27 @@ KTN.pages['p2-1'] = function () {
       { title: 'ポストカード展', venue: '吉祥寺 M&G', bg: 'linear-gradient(155deg,#d0e8e0,#88b8a8)', tc: 'rgba(0,0,0,.28)', s: '02.22', e: '03.12', liaison: false, int: 38, ci: 7 },
       { title: 'デジタルとアナログのあいだ', venue: '3331 Arts Chiyoda', bg: 'linear-gradient(155deg,#d8e8d0,#88b878)', tc: 'rgba(0,0,0,.28)', s: '02.15', e: '03.20', liaison: true, int: 14, ci: 2 },
     ];
-    grid.innerHTML = DATA.map(function (e, i) {
+    grid.innerHTML = DATA.map(function (e) {
+      var li = e.liaison ? '<span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>' : '';
       return (
-        '<a href="kotennavi-p2.html" class="p2-ec" style="animation-delay:' + (i * 60) + 'ms">' +
-        (e.liaison ? '<span class="p2-ec__ldot"></span>' : '') +
-        '<div class="p2-ec__poster" style="background:' + e.bg + ';color:' + e.tc + '">' +
-        '<span class="p2-ec__poster-txt">' + e.title + '</span>' +
-        '<div class="p2-ec__poster-bar"><div class="p2-ec__drow">' +
-        '<span class="p2-ec__dy">2026.</span><span class="p2-ec__dmd">' + e.s + '</span>' +
-        '<span class="p2-ec__dsep">–</span><span class="p2-ec__dmd">' + e.e + '</span>' +
-        '</div><div class="p2-ec__dmeta"><span class="p2-ec__dbadge p2-ec__dbadge--open">開催中</span></div></div>' +
+        '<a href="kotennavi-p2.html" class="ec ec--h">' +
+        '<div class="ec__poster" style="background:' + e.bg + ';color:' + e.tc + '">' +
+        '<div class="ec__poster-label">' + e.title + '</div>' +
+        '<div class="ec__poster-img ec__poster-img--empty" style="background:' + e.bg + '"></div>' +
         '</div>' +
-        '<div class="p2-ec__body">' +
-        '<div class="p2-ec__tr"><span class="p2-ec__tag">絵画</span>' +
-        '<button class="p2-ec__bm" onclick="event.preventDefault();this.classList.toggle(\'is-active\')" aria-label="ブックマーク">' +
-        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>' +
-        '</button></div>' +
-        '<div class="p2-ec__name">' + e.title + '</div>' +
-        '<div class="p2-ec__venue">' + e.venue + '</div>' +
-        '<div class="p2-ec__foot">' +
-        '<span class="p2-ec__cnt">❤ ' + e.int + '</span>' +
-        '<span class="p2-ec__cnt">📍 ' + e.ci + '</span>' +
+        '<div class="ec__main">' +
+        '<div class="ec__datebar">' +
+        '<div class="ec__datebar-dates"><span class="year">2026.</span><strong>' + e.s + '</strong><span class="sep">—</span><strong>' + e.e + '</strong></div>' +
+        '<div class="ec__datebar-meta"><span class="ec__remain-lt ec__remain-lt--live">開催中</span></div>' +
+        '</div>' +
+        '<div class="ec__body">' +
+        '<div class="ec__badge-row"><span class="cb cb-content cb-exhibition">exhibition</span><span class="sb sb-live"><span class="pulse"></span>開催中</span>' + li + '</div>' +
+        '<div class="ec__title">' + e.title + '</div>' +
+        '<div class="ec__venue">' + e.venue + '</div>' +
+        '</div>' +
+        '<div class="ec__foot">' +
+        '<span class="ec-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="12" height="12"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>' + e.int + '</span>' +
+        '<span class="ec-action"><svg viewBox="0 0 16 16" fill="none" width="12" height="12"><circle cx="8" cy="8" r="7" fill="#7a8a99" opacity=".4"/><circle cx="8" cy="8" r="2.6" fill="white"/></svg>' + e.ci + '</span>' +
         '</div>' +
         '</div>' +
         '</a>'
@@ -778,26 +776,26 @@ KTN.pages['p2-5'] = function () {
       { title: '現代彫刻の冒険', venue: '神楽坂BOOK・ART', bg: 'linear-gradient(155deg,#e8d0d8,#b88898)', tc: 'rgba(255,255,255,.6)', s: '02.17', e: '03.07', liaison: true, int: 19, ci: 3 },
       { title: 'ポストカード展', venue: '吉祥寺 M&G', bg: 'linear-gradient(155deg,#d0e8e0,#88b8a8)', tc: 'rgba(0,0,0,.28)', s: '02.22', e: '03.12', liaison: false, int: 38, ci: 7 },
     ];
-    g.innerHTML = DATA.map(function (e, i) {
-      return '<a href="kotennavi-p2.html" class="p2-ec" style="animation-delay:' + (i * 60) + 'ms">' +
-        (e.liaison ? '<span class="p2-ec__ldot"></span>' : '') +
-        '<div class="p2-ec__poster" style="background:' + e.bg + ';color:' + e.tc + '">' +
-        '<span class="p2-ec__poster-txt">' + e.title + '</span>' +
-        '<div class="p2-ec__poster-bar"><div class="p2-ec__drow">' +
-        '<span class="p2-ec__dy">2026.</span><span class="p2-ec__dmd">' + e.s + '</span>' +
-        '<span class="p2-ec__dsep">–</span><span class="p2-ec__dmd">' + e.e + '</span>' +
-        '</div><div class="p2-ec__dmeta"><span class="p2-ec__dbadge p2-ec__dbadge--open">開催中</span></div></div>' +
+    g.innerHTML = DATA.map(function (e) {
+      var li = e.liaison ? '<span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>' : '';
+      return '<a href="kotennavi-p2.html" class="ec ec--h">' +
+        '<div class="ec__poster" style="background:' + e.bg + ';color:' + e.tc + '">' +
+        '<div class="ec__poster-label">' + e.title + '</div>' +
+        '<div class="ec__poster-img ec__poster-img--empty" style="background:' + e.bg + '"></div>' +
         '</div>' +
-        '<div class="p2-ec__body">' +
-        '<div class="p2-ec__tr"><span class="p2-ec__tag">絵画</span>' +
-        '<button class="p2-ec__bm" onclick="event.preventDefault();this.classList.toggle(\'is-active\')" aria-label="ブックマーク">' +
-        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>' +
-        '</button></div>' +
-        '<div class="p2-ec__name">' + e.title + '</div>' +
-        '<div class="p2-ec__venue">' + e.venue + '</div>' +
-        '<div class="p2-ec__foot">' +
-        '<span class="p2-ec__cnt">❤ ' + e.int + '</span>' +
-        '<span class="p2-ec__cnt">📍 ' + e.ci + '</span>' +
+        '<div class="ec__main">' +
+        '<div class="ec__datebar">' +
+        '<div class="ec__datebar-dates"><span class="year">2026.</span><strong>' + e.s + '</strong><span class="sep">—</span><strong>' + e.e + '</strong></div>' +
+        '<div class="ec__datebar-meta"><span class="ec__remain-lt ec__remain-lt--live">開催中</span></div>' +
+        '</div>' +
+        '<div class="ec__body">' +
+        '<div class="ec__badge-row"><span class="cb cb-content cb-exhibition">exhibition</span><span class="sb sb-live"><span class="pulse"></span>開催中</span>' + li + '</div>' +
+        '<div class="ec__title">' + e.title + '</div>' +
+        '<div class="ec__venue">' + e.venue + '</div>' +
+        '</div>' +
+        '<div class="ec__foot">' +
+        '<span class="ec-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="12" height="12"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>' + e.int + '</span>' +
+        '<span class="ec-action"><svg viewBox="0 0 16 16" fill="none" width="12" height="12"><circle cx="8" cy="8" r="7" fill="#7a8a99" opacity=".4"/><circle cx="8" cy="8" r="2.6" fill="white"/></svg>' + e.ci + '</span>' +
         '</div>' +
         '</div>' +
         '</a>';

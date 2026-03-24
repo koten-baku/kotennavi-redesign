@@ -6084,3 +6084,40 @@ line-clamp:2;}
 .p2-2-side-link.is-active { background: var(--warm); font-weight: 600; color: var(--accent); z-index: 1; position: relative; }
 .p2-2-side-link.is-active .p2-2-side-link__icon { background: rgba(var(--accent-rgb, 26,93,130),.08); }
 .p25-side-top .cc { width: 100%; box-sizing: border-box; }
+
+/* ─── 修正4: ec-list ─── */
+.ec-list { display: flex; flex-direction: column; gap: 8px; }
+
+/* ─── 修正5: タイトルバンド残り日数 ─── */
+.p2-title-band__remain { font-size: .72rem; color: var(--muted); }
+
+/* ─── 修正6: p2-side-links ─── */
+.p2-side-links .p2-ic__body { padding: 0; }
+.p2-side-links__body { display: flex; flex-direction: column; }
+.p2-side-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--bdr);
+  color: var(--fg);
+  text-decoration: none;
+  font-size: .82rem;
+  transition: background .15s;
+}
+.p2-side-link:last-child { border-bottom: none; }
+.p2-side-link:hover { background: var(--bg2); }
+.p2-side-link.is-active { font-weight: 600; background: var(--bg2); }
+.p2-side-link__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+.p2-side-link.is-active .p2-side-link__icon { color: var(--fg); }
+.p2-side-link__label { flex: 1; }
+.p2-side-link--liaison .p2-side-link__label { color: var(--lr); font-weight: 500; }
+.p2-side-link--liaison.is-active .p2-side-link__label { color: var(--lr); }
