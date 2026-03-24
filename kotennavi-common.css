@@ -1103,7 +1103,7 @@ line-clamp:2;}
 .mock-title-row{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;margin-bottom:3px}
 
 /* ── ダークカードプレビュー ── */
-.mock-card.dark{background:#1a2535;border-color:rgba(255,255,255,.08)}
+.mock-card.dark{background:#2e4255;border-color:rgba(255,255,255,.08)}
 .mock-card.dark .mock-title{color:rgba(255,255,255,.88)}
 .mock-card.dark .mock-meta{color:rgba(255,255,255,.3)}
 /* ダーク用バッジカラー */
@@ -1192,7 +1192,7 @@ line-clamp:2;}
 .mock-body{padding:10px 12px 13px}
 .mock-title{font-size:.75rem;color:#2a3340;line-height:1.4;margin-bottom:3px}
 .mock-meta{font-size:.6rem;color:#aab}
-.mock-card.dark{background:#1a2535;border-color:rgba(255,255,255,.08)}
+.mock-card.dark{background:#2e4255;border-color:rgba(255,255,255,.08)}
 .mock-card.dark .mock-title{color:rgba(255,255,255,.88)}
 .mock-card.dark .mock-meta{color:rgba(255,255,255,.3)}
 
@@ -1288,7 +1288,7 @@ line-clamp:2;}
 .row  { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:10px; }
 .rlbl { font-family:'Montserrat',sans-serif; font-size:.44rem; letter-spacing:.08em; color:#ccc; min-width:80px; }
 .sep  { height:1px; background:#f2f4f7; margin:18px 0; }
-.dark-strip { background:#1a2535; border-radius:8px; padding:14px 16px; display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-top:10px; }
+.dark-strip { background:#2e4255; border-radius:8px; padding:14px 16px; display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-top:10px; }
 .dlbl { font-family:'Montserrat',sans-serif; font-size:.42rem; color:rgba(255,255,255,.28); }
 
 /* ── カードモック ── */
@@ -1663,7 +1663,7 @@ body.guest .panel-light .ktn-icon-btn .tip::after{border-bottom-color:#431407}
   white-space:nowrap;font-family:var(--fm);font-size:.5rem;letter-spacing:.07em;
   padding:4px 9px;pointer-events:none;opacity:0;
   transition:opacity .15s,transform .15s;z-index:100;
-  background:#1e2d3d;color:rgba(255,255,255,.88);box-shadow:0 2px 10px rgba(0,0,0,.22);
+  background:#3e5670;color:rgba(255,255,255,.88);box-shadow:0 2px 10px rgba(0,0,0,.22);
 }
 .ktn-icon-btn:hover .tip{opacity:1;transform:translateX(-50%) translateY(0)}
 
@@ -1926,7 +1926,7 @@ line-clamp:2;}
 
 /* コンテナ: ダーク背景パネル */
 .ec-mini-panel{
-  background:#1a2535;
+  background:#2e4255;
   border-radius:10px;
   padding:18px 18px 22px;
   max-width:540px;
@@ -2067,7 +2067,7 @@ line-clamp:2;}
   white-space:nowrap;font-family:var(--fm);font-size:.5rem;letter-spacing:.07em;
   padding:4px 9px;pointer-events:none;opacity:0;
   transition:opacity .15s,transform .15s;z-index:100;
-  background:#1e2d3d;color:rgba(255,255,255,.88);box-shadow:0 2px 10px rgba(0,0,0,.22);
+  background:#3e5670;color:rgba(255,255,255,.88);box-shadow:0 2px 10px rgba(0,0,0,.22);
 }
 .ktn-icon-btn:hover .tip{opacity:1;transform:translateX(-50%) translateY(0)}
 
@@ -2323,13 +2323,13 @@ line-clamp:2;}
   white-space:nowrap;font-size:.5rem;letter-spacing:.07em;
   padding:4px 9px;pointer-events:none;opacity:0;
   transition:opacity .15s,transform .15s;z-index:100;
-  background:#1e2d3d;color:rgba(255,255,255,.88);
+  background:#3e5670;color:rgba(255,255,255,.88);
   box-shadow:0 2px 10px rgba(0,0,0,.22);border-radius:3px;
 }
 .ktn-btn .tip::after{
   content:'';position:absolute;left:50%;top:100%;
   transform:translateX(-50%);
-  border:5px solid transparent;border-top-color:#1e2d3d;
+  border:5px solid transparent;border-top-color:#3e5670;
 }
 .ktn-btn:hover .tip{opacity:1;transform:translateX(-50%) translateY(0)}
 
@@ -2687,13 +2687,13 @@ line-clamp:2;}
   white-space:nowrap;font-family:var(--fm);font-size:.5rem;letter-spacing:.07em;
   padding:4px 9px;pointer-events:none;opacity:0;
   transition:opacity .15s,transform .15s;z-index:100;
-  background:#1e2d3d;color:rgba(255,255,255,.88);
+  background:#3e5670;color:rgba(255,255,255,.88);
   box-shadow:0 2px 10px rgba(0,0,0,.22);border-radius:3px;
 }
 .itn-btn .tip::after{
   content:'';position:absolute;left:50%;top:100%;
   transform:translateX(-50%);
-  border:5px solid transparent;border-top-color:#1e2d3d;
+  border:5px solid transparent;border-top-color:#3e5670;
 }
 .itn-btn:hover .tip{opacity:1;transform:translateX(-50%) translateY(0)}
 
@@ -5930,7 +5930,14 @@ line-clamp:2;}
   margin-bottom: 4px;
 }
 .p25c__spec { font-size: .6rem; color: var(--muted); line-height: 1.65; margin-bottom: 8px; }
-.p25c__footer { display: flex; justify-content: flex-end; }
+.p25c__footer { display: flex; align-items: center; justify-content: space-between; }
+.p25c__footer-l { display: flex; align-items: center; gap: 5px; }
+.p25c__applicants {
+  font-family: var(--fn);
+  font-size: .55rem;
+  color: #b45309;
+  white-space: nowrap;
+}
 .p25c__badge {
   font-family: var(--fm);
   font-size: .57rem;
@@ -6131,3 +6138,432 @@ line-clamp:2;}
 /* ─── 修正3: masonry ─── */
 .masonry { columns: 4 260px; column-gap: 16px; }
 .masonry-item { break-inside: avoid; margin-bottom: 16px; }
+
+/* ─── p25-venue-note ─── */
+.p25-venue-note{display:flex;gap:10px;align-items:flex-start;background:rgba(0,93,167,.04);border:1px solid rgba(0,93,167,.15);border-radius:6px;padding:14px 16px;margin-top:20px}
+.p25-venue-note__icon{font-size:1rem;flex-shrink:0;margin-top:1px}
+.p25-venue-note__title{font-size:.78rem;font-weight:600;letter-spacing:.03em;margin-bottom:5px;color:var(--ink)}
+.p25-venue-note__text{font-size:.74rem;line-height:1.8;color:var(--muted)}
+.p251-dark .p25-venue-note{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.12)}
+.p251-dark .p25-venue-note__title{color:rgba(255,255,255,.85)}
+.p251-dark .p25-venue-note__text{color:rgba(255,255,255,.45)}
+
+/* ── p2-5-1 ダーク化 追加 ── */
+.p251-dark { background: #344a5e; color: rgba(255,255,255,.82); }
+.p251-dark .ktn-main { background: #344a5e; }
+.p251-dark .ktn-content { background: #344a5e; }
+
+/* セクション背景 */
+.p251-dark .p25-about-section { background: rgba(255,255,255,.04); border-color: rgba(255,255,255,.08); }
+.p251-dark .p25-works-section { background: transparent; }
+
+/* 作品カード */
+.p251-dark .p25-card { background: rgba(255,255,255,.05); border-color: rgba(255,255,255,.08); }
+.p251-dark .p25-card__info { background: rgba(20,30,45,.9); }
+.p251-dark .p25-card__title { color: rgba(255,255,255,.85); }
+.p251-dark .p25-card__spec { color: rgba(255,255,255,.4); }
+.p251-dark .p25-card__artist { color: rgba(255,255,255,.55); }
+
+/* フィルターボタン */
+.p251-dark .p25-filter__btn { border-color: rgba(255,255,255,.2); color: rgba(255,255,255,.5); background: transparent; }
+.p251-dark .p25-filter__btn:hover { border-color: rgba(255,255,255,.4); color: rgba(255,255,255,.8); }
+.p251-dark .p25-filter__btn.is-active { background: #c8a96e; border-color: #c8a96e; color: #fff; }
+
+/* プロフィールカード・p2-ic ボックス */
+.p251-dark .p2-ic { background: rgba(255,255,255,.04); border-color: rgba(255,255,255,.08); }
+.p251-dark .p2-ic__head { border-bottom-color: rgba(255,255,255,.06); }
+.p251-dark .p2-ic__head-title { color: rgba(255,255,255,.82); }
+.p251-dark .p2-ic__head-en { color: rgba(255,255,255,.3); }
+.p251-dark .p2-ic__body { color: rgba(255,255,255,.72); }
+
+/* クリエイターカード .cc--h */
+.p251-dark .cc--h { background: rgba(255,255,255,.04); border-color: rgba(255,255,255,.08); }
+.p251-dark .cc__name { color: rgba(255,255,255,.85); }
+.p251-dark .cc__genre { color: rgba(255,255,255,.45); }
+.p251-dark .pc-count { color: rgba(255,255,255,.45); }
+
+/* サブメニューリンク */
+.p251-dark .p2-side-link { border-bottom-color: rgba(255,255,255,.06); color: rgba(255,255,255,.65); }
+.p251-dark .p2-side-link:hover { background: rgba(255,255,255,.04); color: rgba(255,255,255,.9); }
+.p251-dark .p2-side-link.is-active { color: #c8a96e; border-left-color: #c8a96e; }
+.p251-dark .p2-side-link__desc { color: rgba(255,255,255,.3); }
+.p251-dark .p2-side-link.is-active .p2-side-link__desc { color: rgba(200,169,110,.6); }
+
+/* 近くの展覧会 */
+.p251-dark .p2-side-nearby__title { color: rgba(255,255,255,.72); }
+.p251-dark .p2-side-ec { border-bottom-color: rgba(255,255,255,.06); color: rgba(255,255,255,.72); }
+.p251-dark .p2-side-ec__name { color: rgba(255,255,255,.82); }
+.p251-dark .p2-side-ec__venue { color: rgba(255,255,255,.4); }
+
+/* タグ */
+.p251-dark .p2-related__en { color: rgba(255,255,255,.3); }
+.p251-dark .ktn-section__title { color: rgba(255,255,255,.82); }
+
+/* 経歴テキスト */
+.p251-dark p { color: rgba(255,255,255,.65); }
+
+/* セクションタイトルラベル */
+.p251-dark .p2-sec-label { color: rgba(255,255,255,.35); }
+
+/* おすすめ展覧会セクション */
+.p251-dark .p2-related { color: rgba(255,255,255,.72); }
+
+/* ─── p25c 価格・申込中バッジ ─── */
+.p25c__price{font-family:var(--fm);font-size:.82rem;font-weight:700;color:var(--ink);letter-spacing:.02em;line-height:1;margin-left:auto}
+.p25c__price-currency{font-size:.62rem;font-weight:500;margin-right:1px;opacity:.7}
+.p25c__price-tax{font-size:.52rem;font-weight:400;margin-left:2px;opacity:.55}
+.p251-dark .p25c__price{color:rgba(255,255,255,.88)}
+.p25c__badge--pending{background:rgba(234,179,8,.15);color:#b45309}
+
+/* ── p251-dark タイトルバンド・サブナビ ── */
+.p251-dark .p2-title-band { background: #3d5166; border-color: rgba(255,255,255,.08); }
+.p251-dark .p2-title-band__title { color: rgba(255,255,255,.9); }
+.p251-dark .p2-title-band__sub { color: rgba(255,255,255,.45); }
+.p251-dark .p2-title-band__facts dt { color: rgba(255,255,255,.35); }
+.p251-dark .p2-title-band__facts dd { color: rgba(255,255,255,.75); }
+.p251-dark .p2-title-band__facts a { color: #7ab4e0; }
+.p251-dark .p2-title-band__posted { color: rgba(255,255,255,.4); }
+.p251-dark .p2-title-band__posted a { color: rgba(255,255,255,.6); }
+.p251-dark .p2-subnav-bar { background: #344a5e; border-bottom-color: rgba(255,255,255,.08); }
+.p251-dark .p2-subnav__item { color: rgba(255,255,255,.45); }
+.p251-dark .p2-subnav__item:hover { color: rgba(255,255,255,.82); background: rgba(255,255,255,.04); }
+.p251-dark .p2-subnav__item.is-active { color: #c8a96e; border-bottom-color: #c8a96e; }
+
+/* ── p251-dark ABOUTセクション ── */
+.p251-dark .p25-about { background: transparent; }
+.p251-dark .p25-about-label { color: rgba(255,255,255,.3); }
+.p251-dark .p25-about h2,
+.p251-dark .p25-about h3 { color: rgba(255,255,255,.88); }
+.p251-dark .p25-about-body { background: transparent; border-color: rgba(255,255,255,.08); }
+.p251-dark .p25-feature__title { color: rgba(255,255,255,.82); }
+.p251-dark .p25-feature__text { color: rgba(255,255,255,.5); }
+.p251-dark .p25-feature__icon { color: rgba(255,255,255,.3); }
+
+/* ── p251-dark 作品セクション ── */
+.p251-dark .p25-works { background: transparent; }
+.p251-dark .p25-works-head { color: rgba(255,255,255,.82); }
+.p251-dark .p25-works-count { color: rgba(255,255,255,.35); }
+
+/* ── p251-dark shell・レイアウト ── */
+.p251-dark .shell { background: #344a5e; }
+.p251-dark .ktn-content { background: transparent; }
+.p251-dark .p2-layout-wrap { background: transparent; }
+.p251-dark .p25-fullwidth { background: transparent; }
+.p251-dark .ktn-ad-band { background: #2e4255; border-top-color: rgba(255,255,255,.06); }
+
+/* ════════════════════════════════
+   p2-5-1 ダーク版 確定CSS（実クラス名対応）
+════════════════════════════════ */
+
+/* ページ全体背景 */
+.p251-dark,
+.p251-dark .shell,
+.p251-dark .content-wrap,
+.p251-dark .ktn-main,
+.p251-dark .ktn-content,
+.p251-dark .p2-5-wrap,
+.p251-dark .p25-layout,
+.p251-dark .p25-main-col,
+.p251-dark .p25-side-col,
+.p251-dark .p25-side-top,
+.p251-dark .p25-side-mid,
+.p251-dark .p25-side-btm,
+.p251-dark .p25-fullwidth { background: #344a5e !important; }
+
+/* タイトルバンド */
+.p251-dark .p2-title-band { background: #3d5166; border-bottom-color: rgba(255,255,255,.08); }
+.p251-dark .p2-title-band__title--sub { color: rgba(255,255,255,.9); }
+.p251-dark .p2-title-band__sub { color: rgba(255,255,255,.4); }
+.p251-dark .p2-title-band__facts dt { color: rgba(255,255,255,.3); }
+.p251-dark .p2-title-band__facts dd { color: rgba(255,255,255,.72); }
+.p251-dark .p2-title-band__facts a { color: #7ab4e0; }
+.p251-dark .p2-title-band__posted { color: rgba(255,255,255,.38); }
+.p251-dark .p2-title-band__posted a { color: rgba(255,255,255,.55); }
+
+/* サブナビ */
+.p251-dark .p2-subnav-wrap { background: #344a5e; }
+.p251-dark .p2-subnav-bar { background: #344a5e; border-bottom-color: rgba(255,255,255,.08); }
+.p251-dark .p2-subnav__item { color: rgba(255,255,255,.42); }
+.p251-dark .p2-subnav__item:hover { color: rgba(255,255,255,.8); background: rgba(255,255,255,.04); }
+.p251-dark .p2-subnav__item.is-active { color: #c8a96e; border-bottom-color: #c8a96e; background: transparent; }
+
+/* ABOUTセクション */
+.p251-dark .p2-5-about { background: #3d5166; border-bottom-color: rgba(255,255,255,.08); }
+.p251-dark .p2-5-about__ttl-sub { color: #c8a96e; font-size: .58rem; font-weight: 700; letter-spacing: .2em; }
+.p251-dark .p2-5-about__ttl { color: rgba(255,255,255,.88); }
+.p251-dark .p2-5-about__body { color: rgba(255,255,255,.65); }
+.p251-dark .p2-5-about__feature-ttl { color: rgba(255,255,255,.82); }
+.p251-dark .p2-5-about__feature-body { color: rgba(255,255,255,.5); }
+.p251-dark .p2-5-about__feature-icon { color: rgba(255,255,255,.3); }
+
+/* 作品セクション */
+.p251-dark .p2-5-works { background: #2c3e50; border-bottom-color: rgba(255,255,255,.08); }
+.p251-dark .p2-5-works__title { color: rgba(255,255,255,.82); }
+.p251-dark .p2-5-works__title-ja { color: rgba(255,255,255,.55); }
+.p251-dark .p2-5-works__sep { color: rgba(255,255,255,.25); }
+.p251-dark .p2-5-works__count { color: rgba(255,255,255,.35); }
+.p251-dark .p2-5-grid { background: transparent; }
+
+/* 作品カード p25c */
+.p251-dark .p25c { background: #3e5670 !important; border-color: rgba(255,255,255,.07) !important; }
+.p251-dark .p25c__body { background: #3e5670 !important; }
+.p251-dark .p25c__creator { color: rgba(255,255,255,.45) !important; }
+.p251-dark .p25c__title { color: rgba(255,255,255,.85) !important; }
+.p251-dark .p25c__spec { color: rgba(255,255,255,.38) !important; }
+.p251-dark .p25c__price { color: #c8a96e !important; }
+
+/* フィルターボタン */
+.p251-dark .p25-filter__btn { border-color: rgba(255,255,255,.18); color: rgba(255,255,255,.45); background: transparent; }
+.p251-dark .p25-filter__btn:hover { border-color: rgba(255,255,255,.4); color: rgba(255,255,255,.8); }
+.p251-dark .p25-filter__btn.is-active { background: #c8a96e; border-color: #c8a96e; color: #fff; }
+
+/* p2-ic ボックス */
+.p251-dark .p2-ic { background: #3e5670 !important; border-color: rgba(255,255,255,.08) !important; }
+.p251-dark .p2-ic__head { border-bottom-color: rgba(255,255,255,.07); }
+.p251-dark .p2-ic__head-title { color: rgba(255,255,255,.8); }
+.p251-dark .p2-ic__head-en { color: rgba(255,255,255,.28); }
+.p251-dark .p2-ic__body { color: rgba(255,255,255,.65); }
+
+/* クリエイターカード cc--h */
+.p251-dark .cc--h { background: #3e5670 !important; border-color: rgba(255,255,255,.07) !important; }
+.p251-dark .cc__name { color: rgba(255,255,255,.82) !important; }
+.p251-dark .cc__genre { color: rgba(255,255,255,.42) !important; }
+.p251-dark .pc-count { color: rgba(255,255,255,.42) !important; }
+
+/* サブメニューリンク */
+.p251-dark .p2-side-link { border-bottom-color: rgba(255,255,255,.06); color: rgba(255,255,255,.6); }
+.p251-dark .p2-side-link:hover { background: rgba(255,255,255,.04); color: rgba(255,255,255,.85); }
+.p251-dark .p2-side-link.is-active { color: #c8a96e; border-left-color: #c8a96e; }
+.p251-dark .p2-side-link__desc { color: rgba(255,255,255,.28); }
+.p251-dark .p2-side-link.is-active .p2-side-link__desc { color: rgba(200,169,110,.55); }
+
+/* おすすめ展覧会 */
+.p251-dark .ktn-section__title { color: rgba(255,255,255,.8); }
+.p251-dark .ktn-section__more { color: #c8a96e; }
+.p251-dark .p2-sub-rec__title { color: rgba(255,255,255,.8); }
+.p251-dark .p2-sub-rec__more { color: #c8a96e; }
+.p251-dark .p2-sub-tags__label { color: rgba(255,255,255,.35); }
+.p251-dark .ktn-ad-band { background: #2e4255; border-top-color: rgba(255,255,255,.06); }
+
+/* ── p251-dark ヘッダー・パンくず ── */
+.p251-dark .ktn-header { background: #344a5e; border-bottom-color: rgba(255,255,255,.08); }
+.p251-dark .ktn-bc__link { color: rgba(255,255,255,.55); }
+.p251-dark .ktn-bc__link:hover { color: rgba(255,255,255,.88); background: rgba(255,255,255,.06); }
+.p251-dark .ktn-bc__sep { color: rgba(255,255,255,.25); }
+.p251-dark .ktn-bc__current { color: rgba(255,255,255,.82); }
+
+/* ── p251-dark #3d5166 背景グループ ── */
+.p251-dark .p2-subnav { background: #3d5166; }
+.p251-dark .p2-4-creator-card { background: #3d5166; border-color: rgba(255,255,255,.08); }
+.p251-dark .p2-sub-nearby { background: #3d5166; }
+.p251-dark .p2-1-tag-pill { background: #3d5166; border-color: rgba(255,255,255,.12); color: rgba(255,255,255,.72); }
+.p251-dark .p2-1-tag-pill:hover { background: #4a6278; color: rgba(255,255,255,.92); }
+
+/* ── p251-dark 区切り線・ボーダー調整 ── */
+.p251-dark .p2-title-band { border-bottom-color: rgba(255,255,255,.1); }
+.p251-dark .p2-title-band__inner { border-bottom-color: rgba(255,255,255,.1); }
+
+/* ── p251-dark フィーチャーアイコン（ゴールド） ── */
+.p251-dark .p2-5-about__feature-icon {
+  background: rgba(200,169,110,.15);
+  color: #c8a96e;
+}
+.p251-dark .p2-5-about__feature-icon svg {
+  color: #c8a96e;
+  stroke: #c8a96e;
+}
+
+/* p2-5-1 ライン色強制上書き */
+.p251-dark .p2-title-band,
+.p251-dark .p2-title-band__inner,
+.p251-dark .p2-title-band__facts {
+  border-bottom: 1px solid rgba(255,255,255,.1) !important;
+  border-color: rgba(255,255,255,.1) !important;
+}
+/* タイトルバンド内の横線 */
+.p251-dark hr,
+.p251-dark .p2-title-band hr {
+  border-color: rgba(255,255,255,.1) !important;
+  opacity: 1;
+}
+
+/* サブナビバー下線・アクティブ下線 確定 */
+.p251-dark .p2-subnav-wrap {
+  border-bottom: none !important;
+}
+.p251-dark .p2-subnav-bar {
+  border-bottom: 3px solid rgba(255,255,255,.22) !important;
+  overflow: hidden;
+}
+.p251-dark .p2-subnav__item {
+  margin-bottom: -2px;
+  border-bottom: 3px solid transparent;
+}
+.p251-dark .p2-subnav__item.is-active,
+.p251-dark .p2-subnav__item--liaison.is-active {
+  border-bottom: 3px solid #c8a96e !important;
+  margin-bottom: -2px;
+}
+
+/* ══ p251-dark 各セクション統一スタイル ══ */
+
+/* セクション背景 #3d5166 */
+.p251-dark .p25-main-col,
+.p251-dark .p25-side-top,
+.p251-dark .p25-side-mid,
+.p251-dark .p25-side-btm,
+.p251-dark .p2-sub-rec,
+.p251-dark .p2-sub-tags { background: #3d5166 !important; }
+
+/* コンテンツブロック */
+.p251-dark .p2-sub-nearby { background: #3e5670 !important; border-color: rgba(255,255,255,.08) !important; }
+.p251-dark .p2-4-creator-card { background: transparent !important; border-color: rgba(255,255,255,.08) !important; }
+
+/* 区切り線 */
+.p251-dark .p2-ic__head { border-bottom-color: rgba(255,255,255,.08) !important; }
+.p251-dark .p2-4-creator-card__bio { border-top-color: rgba(255,255,255,.08); }
+.p251-dark .p2-sub-nearby__head { border-bottom-color: rgba(255,255,255,.08); }
+.p251-dark .p2-sub-rec__head { border-bottom-color: rgba(255,255,255,.08); }
+
+/* セクションヘッドアイコン（ゴールド） */
+.p251-dark .p2-ic__head-icon {
+  background: rgba(200,169,110,.15);
+  color: #c8a96e;
+}
+.p251-dark .p2-ic__head-icon svg { stroke: #c8a96e; }
+
+/* サブメニューリンク項目アイコン（ゴールド） */
+.p251-dark .p2-side-link__icon { color: #c8a96e; }
+.p251-dark .p2-side-link__icon svg { stroke: #c8a96e; }
+
+/* クリエイターカードリンク */
+.p251-dark .p2-4-creator-card__profile-link { color: #c8a96e; border-color: rgba(200,169,110,.25); }
+.p251-dark .p2-4-creator-card__profile-link svg { stroke: #c8a96e; }
+.p251-dark .p2-4-creator-card__name { color: rgba(255,255,255,.85); }
+.p251-dark .p2-4-creator-card__name-en { color: rgba(255,255,255,.4); }
+.p251-dark .p2-4-creator-card__genre { color: rgba(255,255,255,.5); }
+
+/* 近くの展覧会 */
+.p251-dark .p2-sub-nearby__title { color: rgba(255,255,255,.72); }
+.p251-dark .p2-sub-nearby__more { color: #c8a96e; }
+
+/* おすすめ展覧会 */
+.p251-dark .p2-sub-rec__title { color: rgba(255,255,255,.82); }
+.p251-dark .p2-sub-rec__title-en { color: rgba(255,255,255,.28); }
+.p251-dark .p2-sub-rec__more { color: #c8a96e; }
+
+/* タグ・おすすめ展覧会：セクション背景なし */
+.p251-dark .p2-sub-rec,
+.p251-dark .p2-sub-tags { background: transparent !important; }
+
+/* 作家プロフィール・出品者・近くの展覧会のhover色をサブメニューに統一 */
+.p251-dark .p2-4-creator-card:hover,
+.p251-dark .p2-4-creator-card__profile-link:hover,
+.p251-dark .cc--h:hover,
+.p251-dark .p2-sub-near-item:hover { background: rgba(255,255,255,.04) !important; }
+
+/* hover色 #45586c に統一 */
+.p251-dark .p2-side-link:hover,
+.p251-dark .p2-4-creator-card:hover,
+.p251-dark .p2-4-creator-card__profile-link:hover,
+.p251-dark .cc--h:hover,
+.p251-dark .p2-sub-near-item:hover { background: #45586c !important; }
+
+/* カードhoverを元の移動+影に戻す */
+.p251-dark .p2-4-creator-card:hover,
+.p251-dark .cc--h:hover { background: revert !important; }
+
+/* セクションタイトルhover #45586c */
+.p251-dark .p25-main-col .p2-ic__head:hover,
+.p251-dark .p25-side-top .p2-ic__head:hover { background: #45586c; cursor: pointer; }
+
+/* 作家プロフィールカードのhoverをcc--hと同じ移動+影に */
+.p251-dark .p2-4-creator-card { transition: transform .2s, box-shadow .2s; }
+.p251-dark .p2-4-creator-card:hover { background: revert !important; transform: translateY(-3px); box-shadow: 0 10px 32px rgba(0,0,0,.2); }
+
+/* 近くの展覧会: カード色・フォント・下線 */
+.p251-dark .p2-sub-near-item { color: rgba(255,255,255,.55); border-bottom-color: rgba(255,255,255,.08); }
+.p251-dark .p2-sub-near-item__name { font-family: var(--fn); color: rgba(255,255,255,.82) !important; }
+
+/* p2-5-1 ダーク: バッジコントラスト調整 */
+.p251-dark .p25c__badge--sale    { background: rgba(74,222,128,.14); color: #86efac; }
+.p251-dark .p25c__badge--nsale   { background: rgba(255,255,255,.09); color: rgba(255,255,255,.44); }
+.p251-dark .p25c__badge--pending { background: rgba(200,169,110,.2);  color: #c8a96e; }
+.p251-dark .p25c__applicants     { color: #c8a96e; }
+
+/* ════════════════════════════════
+   p2-5-1 ご購入についてセクション
+════════════════════════════════ */
+.p251-purchase {
+  background: #3d5166;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  padding: 48px 0 40px;
+}
+.p251-purchase__inner {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+.p251-purchase__label {
+  font-family: var(--fm);
+  font-size: .58rem;
+  font-weight: 700;
+  letter-spacing: .2em;
+  color: #c8a96e;
+  margin-bottom: 10px;
+}
+.p251-purchase__title {
+  font-family: var(--fs);
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: rgba(255,255,255,.85);
+  margin-bottom: 32px;
+  letter-spacing: .05em;
+}
+.p251-purchase__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.p251-purchase__card {
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 8px;
+  padding: 24px 22px;
+}
+.p251-purchase__icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: rgba(200,169,110,.15);
+  color: #c8a96e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  flex-shrink: 0;
+}
+.p251-purchase__icon svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+  stroke: #c8a96e;
+}
+.p251-purchase__card-title {
+  font-size: .88rem;
+  font-weight: 600;
+  color: rgba(255,255,255,.82);
+  margin-bottom: 8px;
+  letter-spacing: .03em;
+}
+.p251-purchase__card-text {
+  font-size: .76rem;
+  line-height: 1.85;
+  color: rgba(255,255,255,.48);
+}
+
+@media (max-width: 600px) {
+  .p251-purchase__grid {
+    grid-template-columns: 1fr;
+  }
+}

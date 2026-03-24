@@ -507,7 +507,7 @@ KTN.pages['p2-1'] = function () {
         '<div class="p2-sub-near-item__name">' + e.title + '</div>' +
         '<div class="p2-sub-near-item__venue">' + e.venue + '</div>' +
         '</div>' +
-        '<span class="p2-sub-near-item__badge">開催中</span>' +
+        '<span class="sb sb-live"><span class="pulse"></span>開催中</span>' +
         '</a>'
       );
     }).join('');
@@ -754,7 +754,7 @@ KTN.pages['p2-5'] = function () {
         '<div class="p2-sub-near-item__name">' + e.title + '</div>' +
         '<div class="p2-sub-near-item__venue">' + e.venue + '</div>' +
         '</div>' +
-        '<span class="p2-sub-near-item__badge">開催中</span>' +
+        '<span class="sb sb-live"><span class="pulse"></span>開催中</span>' +
         '</a>';
     }).join('');
   })();
@@ -767,6 +767,7 @@ KTN.pages['p2-5'] = function () {
       { title: '春の景色展', venue: '代官山ヒルサイドF', bg: 'linear-gradient(155deg,#f0e0d0,#c8a888)', tc: 'rgba(0,0,0,.28)', s: '02.20', e: '03.10', liaison: false, int: 21, ci: 4 },
       { title: '現代彫刻の冒険', venue: '神楽坂BOOK・ART', bg: 'linear-gradient(155deg,#e8d0d8,#b88898)', tc: 'rgba(255,255,255,.6)', s: '02.17', e: '03.07', liaison: true, int: 19, ci: 3 },
       { title: 'ポストカード展', venue: '吉祥寺 M&G', bg: 'linear-gradient(155deg,#d0e8e0,#88b8a8)', tc: 'rgba(0,0,0,.28)', s: '02.22', e: '03.12', liaison: false, int: 38, ci: 7 },
+      { title: '絵画の余白 — 山本純子展', venue: '恵比寿 SPACE NONA', bg: 'linear-gradient(155deg,#e0d8f0,#9880c8)', tc: 'rgba(255,255,255,.6)', s: '02.25', e: '03.08', liaison: false, int: 14, ci: 2 },
     ];
     g.innerHTML = DATA.map(function (e) {
       var li = e.liaison ? '<span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>' : '';
@@ -785,6 +786,176 @@ KTN.pages['p2-5'] = function () {
         '<div class="ec__foot">' +
         '<span class="ec-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="12" height="12"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>' + e.int + '</span>' +
         '<span class="ec-action"><svg viewBox="0 0 16 16" fill="none" width="12" height="12"><circle cx="10" cy="5" r="4" fill="#7a8a99" fill-opacity=".5"/><circle cx="5" cy="11" r="2.4" fill="#7a8a99" fill-opacity=".5"/></svg>' + e.ci + '</span>' +
+        '</div>' +
+        '</a></div>';
+    }).join('');
+  })();
+};
+
+/* ────────────────────────────────────────────────────
+   P2-5-1  LIAISON+ 作品一覧
+──────────────────────────────────────────────────── */
+KTN.pages['p2-5-1'] = function () {
+
+  /* ── 作品データ（価格付き・pending2件追加） ── */
+  var WORKS = [
+    /* 田中 透 */
+    { creator:'tanaka', name:'田中 透', title:'ふわふわ',           year:'2026', spec:'油彩・キャンバス / 45.5×38.0 cm',      status:'sale',    price:88000,  plus:true,  bg:'linear-gradient(155deg,#f0e8d0,#d4b896)', tc:'rgba(0,0,0,.28)',        interest:22 },
+    { creator:'tanaka', name:'田中 透', title:'ドキドキ #3',         year:'2026', spec:'油彩・キャンバス / 53.0×45.5 cm',      status:'sale',    price:110000, plus:true,  bg:'linear-gradient(155deg,#f0d0d0,#c88080)', tc:'rgba(255,255,255,.6)',  interest:18 },
+    { creator:'tanaka', name:'田中 透', title:'ざわざわ（夜）',      year:'2025', spec:'油彩・キャンバス / 72.7×60.6 cm',      status:'nsale',   price:null,   plus:false, bg:'linear-gradient(155deg,#3d3530,#1f1a18)', tc:'rgba(255,255,255,.55)', interest:31 },
+    { creator:'tanaka', name:'田中 透', title:'シュワシュワ',        year:'2025', spec:'油彩・キャンバス / 38.0×45.5 cm',      status:'sale',    price:75000,  plus:true,  bg:'linear-gradient(155deg,#d0e8f0,#7ab4cc)', tc:'rgba(0,0,0,.28)',        interest:14 },
+    { creator:'tanaka', name:'田中 透', title:'オノマトペの庭',      year:'2026', spec:'ミクストメディア / 60.6×50.0 cm',      status:'sold',    price:null,   plus:true,  bg:'linear-gradient(155deg,#b8d8cc,#6a9e8a)', tc:'rgba(255,255,255,.6)',  interest:41 },
+    { creator:'tanaka', name:'田中 透', title:'言葉の断片 I',        year:'2024', spec:'油彩・麻布 / 53.0×45.5 cm',           status:'nsale',   price:null,   plus:false, bg:'linear-gradient(155deg,#d8c8e8,#a888cc)', tc:'rgba(255,255,255,.6)',  interest:9  },
+    { creator:'tanaka', name:'田中 透', title:'言葉の断片 II',       year:'2024', spec:'油彩・麻布 / 45.5×38.0 cm',           status:'pending', price:180000, plus:false, bg:'linear-gradient(155deg,#c8d8e8,#7898b8)', tc:'rgba(255,255,255,.6)',  interest:7,  applicants:2 },
+    { creator:'tanaka', name:'田中 透', title:'音の気配',            year:'2026', spec:'油彩・キャンバス / 45.5×38.0 cm',      status:'pending', price:95000,  plus:true,  bg:'linear-gradient(155deg,#e8d8c0,#c4a870)', tc:'rgba(0,0,0,.3)',         interest:15, applicants:3 },
+    /* 山田 葵 */
+    { creator:'yamada', name:'山田 葵', title:'記憶の断層 #1',       year:'2025', spec:'写真・ジクレープリント / A2',           status:'sale',    price:55000,  plus:true,  bg:'linear-gradient(155deg,#d0c8e0,#8878b4)', tc:'rgba(255,255,255,.6)',  interest:16 },
+    { creator:'yamada', name:'山田 葵', title:'記憶の断層 #2',       year:'2025', spec:'写真・ジクレープリント / A2',           status:'sale',    price:55000,  plus:true,  bg:'linear-gradient(155deg,#c8d8e8,#7898b8)', tc:'rgba(255,255,255,.6)',  interest:12 },
+    { creator:'yamada', name:'山田 葵', title:'光の解像度',          year:'2026', spec:'写真・ミクストメディア / 60×80 cm',    status:'nsale',   price:null,   plus:false, bg:'linear-gradient(155deg,#e8d8c8,#c8a888)', tc:'rgba(0,0,0,.28)',        interest:8  },
+    { creator:'yamada', name:'山田 葵', title:'朝の残響',            year:'2026', spec:'写真・ジクレープリント / A1',           status:'pending', price:68000,  plus:true,  bg:'linear-gradient(155deg,#d8e8d0,#88b880)', tc:'rgba(0,0,0,.28)',        interest:10, applicants:1 },
+    /* 佐藤 一朗 */
+    { creator:'sato',   name:'佐藤 一朗', title:'白樺の記憶',        year:'2025', spec:'木彫・彩色 / H24×W18×D12 cm',         status:'sale',    price:128000, plus:true,  bg:'linear-gradient(155deg,#e0e8d0,#a0b888)', tc:'rgba(0,0,0,.28)',        interest:11 },
+    { creator:'sato',   name:'佐藤 一朗', title:'沈黙する形 #3',     year:'2024', spec:'木版画 / 38.0×45.5 cm',               status:'nsale',   price:null,   plus:false, bg:'linear-gradient(155deg,#d8c8b8,#a89878)', tc:'rgba(0,0,0,.28)',        interest:5  },
+  ];
+
+  function renderWork(w) {
+    var cardClass = 'p25c' + (w.status === 'sold' ? ' p25c--sold' : '');
+    var ribbon    = w.status === 'sold' ? '<div class="p25c__sold-ribbon">SOLD</div>' : '';
+    var badgeMap  = {
+      sale:    '<span class="p25c__badge p25c__badge--sale">\u8ca9\u58f2\u4e2d</span>',
+      sold:    '',
+      nsale:   '<span class="p25c__badge p25c__badge--nsale">\u975e\u58f2\u54c1</span>',
+      pending: '<span class="p25c__badge p25c__badge--pending">\u7533\u8fbc\u4e2d</span>',
+    };
+    var badge = badgeMap[w.status] || '';
+    var statusMap = { sale: 'forsale', pending: 'pending', nsale: 'nsale', sold: 'sold' };
+    var dataStatus = statusMap[w.status] || 'nsale';
+    var priceHtml = w.price
+      ? '<div class="p25c__price"><span class="p25c__price-currency">&yen;</span>' + w.price.toLocaleString() + '<span class="p25c__price-tax">\uff08\u7a0e\u8fbc\uff09</span></div>'
+      : '';
+    var applicantsHtml = (w.status === 'pending' && w.applicants)
+      ? '<span class="p25c__applicants">' + w.applicants + '\u4eba\u304c\u7533\u8fbc\u4e2d</span>'
+      : '';
+    return '<a class="' + cardClass + '" href="#" data-creator="' + w.creator + '" data-status="' + dataStatus + '">' +
+      '<div class="p25c__img">' +
+        '<div class="p25c__img-bg" style="background:' + w.bg + '"></div>' +
+        '<div class="p25c__img-title" style="color:' + w.tc + '">' + w.title + '</div>' +
+        ribbon +
+      '</div>' +
+      '<div class="p25c__body">' +
+        '<div class="p25c__creator">' + w.name + '</div>' +
+        '<div class="p25c__title">' + w.title + '</div>' +
+        '<div class="p25c__spec">' + w.year + ' / ' + w.spec + '</div>' +
+        '<div class="p25c__footer">' +
+          '<div class="p25c__footer-l">' + badge + applicantsHtml + '</div>' +
+          priceHtml +
+        '</div>' +
+      '</div>' +
+    '</a>';
+  }
+
+  /* 作品グリッド描画 */
+  var grid = document.getElementById('p25Grid');
+  if (grid) {
+    grid.innerHTML = WORKS.map(renderWork).join('');
+  }
+
+  /* watch ボタン テキスト切り替え */
+  document.querySelectorAll('[data-action="watch"]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var on = this.classList.contains('on');
+      var txt = on ? this.dataset.on : this.dataset.off;
+      var tip = on ? '\u30a6\u30a9\u30c3\u30c1\u4e2d \u2014 \u89e3\u9664\u3059\u308b' : '\u30a6\u30a9\u30c3\u30c1\u3059\u308b';
+      var nodes = Array.from(this.childNodes);
+      nodes.forEach(function (n) {
+        if (n.nodeType === 3) { n.textContent = ' ' + txt + ' '; }
+        if (n.nodeName === 'SPAN' && n.classList.contains('tip')) { n.textContent = tip; }
+      });
+    });
+  });
+
+  /* フィルター（販売状態別） */
+  (function () {
+    document.querySelectorAll('.p25-filter__btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('.p25-filter__btn').forEach(function (b) { b.classList.remove('is-active'); });
+        this.classList.add('is-active');
+        var f = this.dataset.filter;
+        var cards = grid ? grid.querySelectorAll('.p25c') : [];
+        var shown = 0;
+        cards.forEach(function (c) {
+          var show = (f === 'all' || c.dataset.status === f);
+          c.hidden = !show;
+          if (show) shown++;
+        });
+        var count = document.getElementById('p25WorksCount');
+        if (count) count.textContent = '\u5168' + shown + '\u70b9';
+      });
+    });
+  })();
+
+  /* ── 近くの展覧会 ── */
+  (function () {
+    var list = document.getElementById('p25NearbyList');
+    if (!list) return;
+    var NEARBY = [
+      { title: '線と余白の詩学', venue: '渋谷アートラボ', bg: 'linear-gradient(155deg,#e0d8c8,#b4a88a)', tc: 'rgba(0,0,0,.28)', liaison: false },
+      { title: '光の破片', venue: 'GALLERY X', bg: 'linear-gradient(155deg,#c8d0e0,#8898b8)', tc: 'rgba(255,255,255,.6)', liaison: true },
+      { title: 'うつろい', venue: '東京都現代美術館', bg: 'linear-gradient(155deg,#d0c8e0,#8878b4)', tc: 'rgba(255,255,255,.6)', liaison: false },
+    ];
+    list.innerHTML = NEARBY.map(function (e) {
+      return '<a href="kotennavi-p2.html" class="p2-sub-near-item">' +
+        '<div class="p2-sub-near-item__poster" style="background:' + e.bg + ';color:' + e.tc + '">' +
+        (e.liaison ? '<div class="p2-sub-near-item__ldot"></div>' : '') +
+        e.title.slice(0, 4) +
+        '</div>' +
+        '<div class="p2-sub-near-item__body">' +
+        '<div class="p2-sub-near-item__title">' + e.title + '</div>' +
+        '<div class="p2-sub-near-item__venue">' + e.venue + '</div>' +
+        '</div>' +
+        '<span class="sb sb-live"><span class="pulse"></span>\u958b\u50ac\u4e2d</span>' +
+        '</a>';
+    }).join('');
+  })();
+
+  /* ── おすすめの展覧会 ── */
+  (function () {
+    var g = document.getElementById('p25RecGrid');
+    if (!g) return;
+    var DATA = [
+      { title: '春の景色展', venue: '代官山ヒルサイドF', bg: 'linear-gradient(155deg,#f0e0d0,#c8a888)', tc: 'rgba(0,0,0,.28)', s: '02.20', e: '03.10', liaison: false, int: 21, ci: 4 },
+      { title: '現代彫刻の冒険', venue: '神楽坂BOOK・ART', bg: 'linear-gradient(155deg,#e8d0d8,#b88898)', tc: 'rgba(255,255,255,.6)', s: '02.17', e: '03.07', liaison: true, int: 19, ci: 3 },
+      { title: 'ポストカード展', venue: '吉祥寺 M&G', bg: 'linear-gradient(155deg,#d0e8e0,#88b8a8)', tc: 'rgba(0,0,0,.28)', s: '02.22', e: '03.12', liaison: false, int: 38, ci: 7 },
+      { title: '絵画の余白 — 山本純子展', venue: '恵比寿 SPACE NONA', bg: 'linear-gradient(155deg,#e0d8f0,#9880c8)', tc: 'rgba(255,255,255,.6)', s: '02.25', e: '03.08', liaison: false, int: 14, ci: 2 },
+    ];
+    g.innerHTML = DATA.map(function (e) {
+      var li = e.liaison ? '<span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>' : '';
+      return '<div class="masonry-item"><a href="kotennavi-p2.html" class="ec">' +
+        '<div class="ec__poster" style="background:' + e.bg + '">' +
+        '<div class="ec__poster-inner" style="min-height:160px">' +
+        '<span class="ec__poster-text" style="color:' + e.tc + '">' + e.title.slice(0, 4) + '</span>' +
+        '</div>' +
+        '<div class="ec__poster-overlay">' +
+        '<div class="ec__poster-dates">' +
+        '<span class="year">2026.</span><strong>' + e.s + '</strong>' +
+        '<span class="sep">\u2014</span>' +
+        '<strong>' + e.e + '</strong>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '<div class="ec__body">' +
+        '<div class="ec__badge-row"><span class="cb cb-content cb-exhibition">exhibition</span><span class="sb sb-live"><span class="pulse"></span>\u958b\u50ac\u4e2d</span>' + li +
+        '<button class="ktn-icon-btn" onclick="this.classList.toggle(\'on\')" data-action="interest">' +
+        '<svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".45" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6" stroke-linejoin="round"/></svg>' +
+        '<span class="tip">\u5174\u5473\u3042\u308b\uff01\u306b\u8ffd\u52a0\u3059\u308b</span>' +
+        '</button>' +
+        '</div>' +
+        '<div class="ec__title">' + e.title + '</div>' +
+        '<div class="ec__venue">' + e.venue + '</div>' +
+        '</div>' +
+        '<div class="ec__foot">' +
+        '<span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".45" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>' + e.int + '</span>' +
+        '<span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><circle cx="10" cy="5" r="4" fill="#7a8a99" opacity=".45"/><circle cx="5" cy="11" r="2.4" fill="#7a8a99" opacity=".45"/></svg>' + e.ci + '</span>' +
         '</div>' +
         '</a></div>';
     }).join('');

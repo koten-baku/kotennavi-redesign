@@ -10,7 +10,8 @@
       "Bash(cd:*)",
       "Bash(ls D:/user/baku/claude-code/kotennavi-redesign/kotennavi_cards_person*)",
       "Bash(ls D:/user/baku/claude-code/kotennavi-redesign/*person*)",
-      "Bash(ls D:/user/baku/claude-code/kotennavi-redesign/*cards*)"
+      "Bash(ls D:/user/baku/claude-code/kotennavi-redesign/*cards*)",
+      "Bash(\"D:/user/baku/claude-code/kotennavi-redesign/kotennavi-common.css\":*)"
     ]
   }
 }
