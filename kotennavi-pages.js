@@ -241,16 +241,13 @@ KTN.pages['p2'] = function () {
       if (!grid || !data) return;
       grid.innerHTML = data.map(function (e) {
         var li = e.liaison ? '<span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>' : '';
-        return '<a href="kotennavi-p2.html" class="ec ec--h">' +
-          '<div class="ec__poster" style="background:' + e.bg + ';color:' + e.tc + '">' +
-          '<div class="ec__poster-label">' + e.title + '</div>' +
-          '<div class="ec__poster-img ec__poster-img--empty" style="background:' + e.bg + '"></div>' +
-          '</div>' +
-          '<div class="ec__main">' +
-          '<div class="ec__datebar">' +
-          '<div class="ec__datebar-dates"><span class="year">2026.</span><strong>' + (e.s || '') + '</strong><span class="sep">—</span><strong>' + (e.e || '') + '</strong></div>' +
-          '<div class="ec__datebar-meta"><span class="ec__remain-lt ec__remain-lt--live">開催中</span></div>' +
-          '</div>' +
+        return '<div class="masonry-item"><a href="kotennavi-p2.html" class="ec">' +
+          '<div class="ec__poster">' +
+          '<div class="ec__poster-inner" style="background:' + e.bg + ';color:' + e.tc + '">' +
+          '<div class="ec__poster-overlay">' +
+          '<div class="ec__poster-dates"><span class="year">2026.</span><strong>' + (e.s || '') + '</strong><span class="sep">—</span><strong>' + (e.e || '') + '</strong></div>' +
+          '<div class="ec__poster-meta"><span class="ec__remain-lt ec__remain-lt--live">開催中</span></div>' +
+          '</div></div></div>' +
           '<div class="ec__body">' +
           '<div class="ec__badge-row"><span class="cb cb-content cb-exhibition">exhibition</span><span class="sb sb-live"><span class="pulse"></span>開催中</span>' + li + '</div>' +
           '<div class="ec__title">' + e.title + '</div>' +
@@ -258,10 +255,9 @@ KTN.pages['p2'] = function () {
           '</div>' +
           '<div class="ec__foot">' +
           '<span class="ec-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="12" height="12"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>' + (e.int || 0) + '</span>' +
-          '<span class="ec-action"><svg viewBox="0 0 16 16" fill="none" width="12" height="12"><circle cx="8" cy="8" r="7" fill="#7a8a99" opacity=".4"/><circle cx="8" cy="8" r="2.6" fill="white"/></svg>' + (e.ci || 0) + '</span>' +
+          '<span class="ec-action"><svg viewBox="0 0 16 16" fill="none" width="12" height="12"><circle cx="10" cy="5" r="4" fill="#7a8a99" fill-opacity=".5"/><circle cx="5" cy="11" r="2.4" fill="#7a8a99" fill-opacity=".5"/></svg>' + (e.ci || 0) + '</span>' +
           '</div>' +
-          '</div>' +
-          '</a>';
+          '</a></div>';
       }).join('');
     }
     buildExCards(window.P2_REC, 'p2RecGrid');
@@ -529,16 +525,13 @@ KTN.pages['p2-1'] = function () {
     grid.innerHTML = DATA.map(function (e) {
       var li = e.liaison ? '<span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>' : '';
       return (
-        '<a href="kotennavi-p2.html" class="ec ec--h">' +
-        '<div class="ec__poster" style="background:' + e.bg + ';color:' + e.tc + '">' +
-        '<div class="ec__poster-label">' + e.title + '</div>' +
-        '<div class="ec__poster-img ec__poster-img--empty" style="background:' + e.bg + '"></div>' +
-        '</div>' +
-        '<div class="ec__main">' +
-        '<div class="ec__datebar">' +
-        '<div class="ec__datebar-dates"><span class="year">2026.</span><strong>' + e.s + '</strong><span class="sep">—</span><strong>' + e.e + '</strong></div>' +
-        '<div class="ec__datebar-meta"><span class="ec__remain-lt ec__remain-lt--live">開催中</span></div>' +
-        '</div>' +
+        '<div class="masonry-item"><a href="kotennavi-p2.html" class="ec">' +
+        '<div class="ec__poster">' +
+        '<div class="ec__poster-inner" style="background:' + e.bg + ';color:' + e.tc + '">' +
+        '<div class="ec__poster-overlay">' +
+        '<div class="ec__poster-dates"><span class="year">2026.</span><strong>' + e.s + '</strong><span class="sep">—</span><strong>' + e.e + '</strong></div>' +
+        '<div class="ec__poster-meta"><span class="ec__remain-lt ec__remain-lt--live">開催中</span></div>' +
+        '</div></div></div>' +
         '<div class="ec__body">' +
         '<div class="ec__badge-row"><span class="cb cb-content cb-exhibition">exhibition</span><span class="sb sb-live"><span class="pulse"></span>開催中</span>' + li + '</div>' +
         '<div class="ec__title">' + e.title + '</div>' +
@@ -546,10 +539,9 @@ KTN.pages['p2-1'] = function () {
         '</div>' +
         '<div class="ec__foot">' +
         '<span class="ec-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="12" height="12"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>' + e.int + '</span>' +
-        '<span class="ec-action"><svg viewBox="0 0 16 16" fill="none" width="12" height="12"><circle cx="8" cy="8" r="7" fill="#7a8a99" opacity=".4"/><circle cx="8" cy="8" r="2.6" fill="white"/></svg>' + e.ci + '</span>' +
+        '<span class="ec-action"><svg viewBox="0 0 16 16" fill="none" width="12" height="12"><circle cx="10" cy="5" r="4" fill="#7a8a99" fill-opacity=".5"/><circle cx="5" cy="11" r="2.4" fill="#7a8a99" fill-opacity=".5"/></svg>' + e.ci + '</span>' +
         '</div>' +
-        '</div>' +
-        '</a>'
+        '</a></div>'
       );
     }).join('');
   })();
@@ -778,16 +770,13 @@ KTN.pages['p2-5'] = function () {
     ];
     g.innerHTML = DATA.map(function (e) {
       var li = e.liaison ? '<span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>' : '';
-      return '<a href="kotennavi-p2.html" class="ec ec--h">' +
-        '<div class="ec__poster" style="background:' + e.bg + ';color:' + e.tc + '">' +
-        '<div class="ec__poster-label">' + e.title + '</div>' +
-        '<div class="ec__poster-img ec__poster-img--empty" style="background:' + e.bg + '"></div>' +
-        '</div>' +
-        '<div class="ec__main">' +
-        '<div class="ec__datebar">' +
-        '<div class="ec__datebar-dates"><span class="year">2026.</span><strong>' + e.s + '</strong><span class="sep">—</span><strong>' + e.e + '</strong></div>' +
-        '<div class="ec__datebar-meta"><span class="ec__remain-lt ec__remain-lt--live">開催中</span></div>' +
-        '</div>' +
+      return '<div class="masonry-item"><a href="kotennavi-p2.html" class="ec">' +
+        '<div class="ec__poster">' +
+        '<div class="ec__poster-inner" style="background:' + e.bg + ';color:' + e.tc + '">' +
+        '<div class="ec__poster-overlay">' +
+        '<div class="ec__poster-dates"><span class="year">2026.</span><strong>' + e.s + '</strong><span class="sep">—</span><strong>' + e.e + '</strong></div>' +
+        '<div class="ec__poster-meta"><span class="ec__remain-lt ec__remain-lt--live">開催中</span></div>' +
+        '</div></div></div>' +
         '<div class="ec__body">' +
         '<div class="ec__badge-row"><span class="cb cb-content cb-exhibition">exhibition</span><span class="sb sb-live"><span class="pulse"></span>開催中</span>' + li + '</div>' +
         '<div class="ec__title">' + e.title + '</div>' +
@@ -795,10 +784,9 @@ KTN.pages['p2-5'] = function () {
         '</div>' +
         '<div class="ec__foot">' +
         '<span class="ec-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="12" height="12"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>' + e.int + '</span>' +
-        '<span class="ec-action"><svg viewBox="0 0 16 16" fill="none" width="12" height="12"><circle cx="8" cy="8" r="7" fill="#7a8a99" opacity=".4"/><circle cx="8" cy="8" r="2.6" fill="white"/></svg>' + e.ci + '</span>' +
+        '<span class="ec-action"><svg viewBox="0 0 16 16" fill="none" width="12" height="12"><circle cx="10" cy="5" r="4" fill="#7a8a99" fill-opacity=".5"/><circle cx="5" cy="11" r="2.4" fill="#7a8a99" fill-opacity=".5"/></svg>' + e.ci + '</span>' +
         '</div>' +
-        '</div>' +
-        '</a>';
+        '</a></div>';
     }).join('');
   })();
 };

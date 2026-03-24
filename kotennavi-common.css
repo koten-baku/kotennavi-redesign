@@ -3139,12 +3139,10 @@ line-clamp:2;}
 }
 .p2-subnav__icon svg{width:14px;height:14px;display:block}
 /* LIAISON タブ */
-.p2-subnav__item--liaison{color:rgba(192,57,43,.5)}
-.p2-subnav__item--liaison:hover{color:var(--lr)}
-.p2-subnav__item--liaison.is-active{color:var(--lr);border-bottom-color:var(--lr)}
-.p2-subnav__liaison-logo{display:inline-flex;align-items:center;opacity:.55;transition:opacity .15s}
-.p2-subnav__item--liaison:hover .p2-subnav__liaison-logo,
-.p2-subnav__item--liaison.is-active .p2-subnav__liaison-logo{opacity:1}
+.p2-subnav__item--liaison{color:var(--muted)}
+.p2-subnav__item--liaison:hover{color:var(--ink);background:var(--paper)}
+.p2-subnav__item--liaison.is-active{color:var(--accent);border-bottom-color:var(--accent)}
+.p2-subnav__liaison-logo{display:inline-flex;align-items:center;transition:opacity .15s}
 
 /* ─────────────────────────────────────────
    ヒーロースライダー .p2-hero
@@ -3749,11 +3747,10 @@ line-clamp:2;}
 .p2-subnav__item.is-active .p2-subnav__icon,.p2-subnav__item:hover .p2-subnav__icon{opacity:1}
 .p2-subnav__icon svg{width:15px;height:15px;display:block}
 .p2-subnav__label{display:block}
-.p2-subnav__item--liaison{color:rgba(192,57,43,.55)}
-.p2-subnav__item--liaison:hover{color:var(--lr);background:#fff5f5}
-.p2-subnav__item--liaison.is-active{color:var(--lr);border-bottom-color:var(--lr);background:#fff5f5}
-.p2-subnav__liaison-mark{display:inline-flex;align-items:center;opacity:.7;transition:opacity .15s;color:inherit}
-.p2-subnav__item--liaison:hover .p2-subnav__liaison-mark,.p2-subnav__item--liaison.is-active .p2-subnav__liaison-mark{opacity:1}
+.p2-subnav__item--liaison{color:var(--muted)}
+.p2-subnav__item--liaison:hover{color:var(--ink);background:var(--paper)}
+.p2-subnav__item--liaison.is-active{color:var(--accent);border-bottom-color:var(--accent)}
+.p2-subnav__liaison-mark{display:inline-flex;align-items:center;transition:opacity .15s;color:inherit}
 
 /* ── 2カラムレイアウト ── */
 .p2-layout-wrap{padding-top:0 !important}
@@ -6035,21 +6032,24 @@ line-clamp:2;}
   padding-top: 20px;
 }
 
-/* メイン列：左カラム */
+/* 左カラム */
 .p25-main-col {
   grid-column: 1;
   min-width: 0;
-  margin-bottom: 20px;
 }
 
-/* サイド列：右カラム */
-.p25-side-top,
-.p25-side-mid,
-.p25-side-btm {
+/* 右カラムラッパー */
+.p25-side-col {
   grid-column: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-self: start;
   min-width: 0;
-  margin-bottom: 12px;
 }
+
+/* p25-fullwidth: タグ・おすすめ全幅セクション */
+.p25-fullwidth { padding: 0 20px; }
 
 /* ── レスポンシブ：900px以下で1カラム ── */
 @media (max-width: 900px) {
@@ -6058,18 +6058,19 @@ line-clamp:2;}
     padding-left: 16px;
     padding-right: 16px;
   }
-  .p25-main-col,
-  .p25-side-top,
-  .p25-side-mid,
-  .p25-side-btm {
+  .p25-main-col { grid-column: 1; }
+  .p25-side-col {
     grid-column: 1;
+    width: 100%;
   }
+  .p25-fullwidth { padding: 0 16px; }
 }
 @media (max-width: 480px) {
   .p25-layout {
     padding-left: 14px;
     padding-right: 14px;
   }
+  .p25-fullwidth { padding: 0 14px; }
 }
 
 /* ── p2-5 フィルター ── */
@@ -6106,8 +6107,8 @@ line-clamp:2;}
   transition: background .15s;
 }
 .p2-side-link:last-child { border-bottom: none; }
-.p2-side-link:hover { background: var(--bg2); }
-.p2-side-link.is-active { font-weight: 600; background: var(--bg2); }
+.p2-side-link:hover { background: var(--paper); color: var(--ink); }
+.p2-side-link.is-active { background: transparent; color: var(--accent); font-weight: 500; border-left: 3px solid var(--accent); padding-left: 11px; }
 .p2-side-link__icon {
   display: flex;
   align-items: center;
@@ -6118,6 +6119,15 @@ line-clamp:2;}
   flex-shrink: 0;
 }
 .p2-side-link.is-active .p2-side-link__icon { color: var(--fg); }
-.p2-side-link__label { flex: 1; }
-.p2-side-link--liaison .p2-side-link__label { color: var(--lr); font-weight: 500; }
-.p2-side-link--liaison.is-active .p2-side-link__label { color: var(--lr); }
+.p2-side-link__text { flex: 1; display: flex; flex-direction: column; gap: 1px; }
+.p2-side-link__label { font-size: .8rem; line-height: 1.4; }
+.p2-side-link__desc { font-size: .62rem; color: var(--muted); font-weight: 400; }
+.p2-side-link.is-active .p2-side-link__desc { color: rgba(0,93,167,.6); }
+.p2-side-link--liaison .p2-side-link__label { font-weight: 500; }
+.p2-side-link--liaison:hover { background: var(--paper); color: var(--ink); }
+.p2-side-link--liaison.is-active { background: transparent; color: var(--accent); border-left-color: var(--accent); }
+.p2-side-link--liaison.is-active .p2-side-link__desc { color: rgba(0,93,167,.6); }
+
+/* ─── 修正3: masonry ─── */
+.masonry { columns: 4 260px; column-gap: 16px; }
+.masonry-item { break-inside: avoid; margin-bottom: 16px; }
