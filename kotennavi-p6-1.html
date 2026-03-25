@@ -76,21 +76,22 @@
 
           <!-- ステータス -->
           <div class="wh-status-row">
+            <span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>
             <div class="wh-badge" id="workStatus"></div>
           </div>
 
           <!-- 仕様テーブル（JS描画） -->
           <div class="wh-specs" id="specsTable"></div>
 
-          <!-- 価格 -->
-          <div class="wh-price-block">
+          <!-- 価格（非表示） -->
+          <div class="wh-price-block" style="display:none">
             <div class="wh-price-lbl">Price</div>
             <div class="wh-price" id="workPrice"></div>
             <div class="wh-price-sub" id="priceSub"></div>
           </div>
 
-          <!-- ガイドリンク -->
-          <div class="wh-guide-links">
+          <!-- ガイドリンク（非表示） -->
+          <div class="wh-guide-links" style="display:none">
             <button class="wh-guide-btn" onclick="alert('購入までの流れページへ')">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 3"/></svg>
               購入までの流れ
@@ -108,14 +109,26 @@
           <!-- アクションボタン（JS描画） -->
           <div class="wh-actions" id="actionArea"></div>
 
-          <!-- 展覧会リンク -->
-          <a href="./exhibition_detail_v6.html" class="wh-venue-link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-            <div class="wh-venue-link-body">
-              <div class="wh-venue-link-ttl">あなたが知らないオノマトペ — 田中透 個展</div>
-              <div class="wh-venue-link-sub">Gallery SOIL 渋谷 · 2026.03.01 – 03.05 · 会場展示も同時開催中</div>
+          <!-- 展覧会リンクカード -->
+          <a class="p2-side-ec" href="kotennavi-p2.html">
+            <div class="p2-side-ec__poster"
+                 style="background:linear-gradient(155deg,#b8d8cc,#6a9e8a)">
+              <span style="font-family:'Shippori Mincho',serif;font-size:.55rem;
+                           font-weight:700;writing-mode:vertical-rl;color:rgba(255,255,255,.7)">
+                オノマトペ
+              </span>
             </div>
-            <svg class="wh-venue-arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="9 18 15 12 9 6"/></svg>
+            <div class="p2-side-ec__body">
+              <div class="p2-side-ec__name">あなたが知らないオノマトペ — 田中 透 個展</div>
+              <div class="p2-side-ec__venue">Gallery SOIL 渋谷</div>
+              <div style="font-size:.6rem;color:var(--muted);margin-top:2px">
+                2026.03.01 — 03.05・会場展示も同時開催中
+              </div>
+            </div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                 width="14" height="14" style="flex-shrink:0;color:var(--muted)">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
           </a>
         </div>
       </div>
@@ -179,7 +192,7 @@
             すべて見る<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
           </a>
         </div>
-        <div class="rel-grid" id="relGrid"></div>
+        <div class="masonry" id="relGrid"></div>
       </div>
     </section>
 
@@ -307,6 +320,17 @@
     </div>
 
   </main>
+
+  <!-- おすすめの展覧会 -->
+  <section class="p2-related">
+    <div class="ktn-section__head">
+      <h2 class="ktn-section__title">おすすめの展覧会
+        <span class="p2-related__en">Recommended</span>
+      </h2>
+      <a href="#" class="ktn-section__more">すべて見る →</a>
+    </div>
+    <div class="masonry" id="p6RecGrid"></div>
+  </section>
 
   <div class="ktn-ad-band" id="ktnAdBand">
     <div class="ktn-ad-band__inner">

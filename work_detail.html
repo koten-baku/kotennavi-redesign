@@ -1,0 +1,1538 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="pageTitle">LIAISON works | 個展なび</title>
+<meta id="metaDesc" name="description" content="">
+<meta id="ogTitle" property="og:title" content="">
+<meta id="ogDesc" property="og:description" content="">
+<meta property="og:type" content="article">
+<meta id="ogUrl" property="og:url" content="">
+<meta property="og:image" content="https://kotennavi.jp/images/ogp/liaison_works.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=DM+Serif+Display:ital@0;1&family=Noto+Sans+JP:wght@300;400;500;700&family=Cinzel:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ─── TOKENS ─── */
+:root{
+  --sw:88px;
+  --ink:#231815;--paper:#f0f4f8;--warm:#f7f9fb;
+  --accent:#005da7;--muted:#7a8a99;--border:#d0dae4;
+  --lr:#c0392b;--ld:#2c3e50;
+  --lbg:#2c3e50;--lbg2:#344a5e;--lbg3:#3d5166;
+  --lgold:#c9a96e;--lgold2:#e8cc99;
+  --ltext:rgba(255,255,255,.92);--lmuted:rgba(255,255,255,.5);
+  --lborder:rgba(255,255,255,.1);--lborder2:rgba(201,169,110,.3);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--warm);font-family:'Noto Sans JP',sans-serif;font-weight:300;color:var(--ink);display:flex;min-height:100vh}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer}
+
+/* ─── DEMO BAR ─── */
+.dbar{position:fixed;top:0;left:0;right:0;z-index:9999;background:#111;color:#fff;display:flex;align-items:center;justify-content:center;gap:4px;padding:0 12px;height:32px;font-size:.63rem;flex-wrap:nowrap;overflow-x:auto}
+.dbar-sep{width:1px;height:16px;background:rgba(255,255,255,.2);margin:0 4px;flex-shrink:0}
+.dbar span{opacity:.4;margin-right:2px;flex-shrink:0}
+.dbtn{font-size:.63rem;padding:2px 8px;border:1px solid rgba(255,255,255,.2);background:none;color:rgba(255,255,255,.5);cursor:pointer;border-radius:2px;transition:all .15s;font-family:inherit;white-space:nowrap;flex-shrink:0}
+.dbtn.active,.dbtn:hover{background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.45)}
+
+/* ─── SIDEBAR ─── */
+.sidebar{width:var(--sw);position:fixed;top:32px;left:0;bottom:0;background:#fff;border-right:1px solid var(--border);display:flex;flex-direction:column;align-items:center;padding:20px 0 14px;z-index:200;overflow-y:auto}
+.nav-item{display:flex;flex-direction:column;align-items:center;width:100%;padding:9px 6px;text-decoration:none;color:var(--ink);transition:background .15s;position:relative;border:none;background:none;font-family:inherit;cursor:pointer}
+.nav-item:hover{background:#f5f3ef}
+.nav-icon{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--border);background:#faf8f5;display:flex;align-items:center;justify-content:center;margin-bottom:4px;flex-shrink:0}
+.nav-icon svg{width:16px;height:16px}
+.nav-label{font-size:.56rem;color:var(--muted);text-align:center;line-height:1.35}
+.ndot{position:absolute;top:8px;left:55%;width:7px;height:7px;background:var(--accent);border-radius:50%;border:1.5px solid #fff}
+.sb-div{width:68%;height:1px;background:var(--border);margin:5px 0;flex-shrink:0}
+.role-thumb{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:4px;overflow:hidden;flex-shrink:0}
+.role-label{font-size:.58rem;text-align:center;line-height:1.3;font-weight:500;padding:0 3px}
+.sb-foot{margin-top:auto;font-size:.5rem;color:#c0bbb5;text-align:center;line-height:1.8;padding:0 5px}
+
+/* ─── MAIN ─── */
+.main{margin-left:var(--sw);margin-top:32px;flex:1;min-width:0}
+
+/* ─── TOPBAR ─── */
+.topbar{background:#fff;border-bottom:1px solid var(--border);padding:0 16px 0 24px;height:50px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:32px;z-index:100;gap:8px}
+.topbar-l{display:flex;align-items:center;gap:8px;min-width:0;flex:1}
+.topbar-ttl{font-family:'Shippori Mincho',serif;font-size:.83rem;font-weight:600;letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbar-r{display:flex;align-items:center;gap:4px;flex-shrink:0}
+.tb-sep{width:1px;height:26px;background:var(--border);margin:0 2px;flex-shrink:0}
+.tib{display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px 8px;border:none;background:none;cursor:pointer;border-radius:3px;transition:background .15s;color:var(--ink)}
+.tib:hover{background:var(--paper)}
+.tib svg{width:16px;height:16px}
+.tib-l{font-size:.48rem;color:var(--muted);white-space:nowrap}
+
+/* ── オーナー／管理者ボタン ── */
+.tb-edit-btn{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border:1px solid var(--border);border-radius:3px;background:none;font-size:.68rem;color:var(--ink);cursor:pointer;transition:all .15s;white-space:nowrap}
+.tb-edit-btn:hover{border-color:var(--accent);color:var(--accent)}
+.tb-edit-btn svg{width:12px;height:12px}
+
+/* ── ドロップダウンメニュー共通 ── */
+.tb-menu-wrap{position:relative;display:inline-block}
+.tb-menu-btn{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border:1px solid var(--border);border-radius:3px;background:none;font-size:.68rem;color:var(--ink);cursor:pointer;transition:all .15s;white-space:nowrap}
+.tb-menu-btn:hover,.tb-menu-btn.open{background:var(--paper);border-color:var(--muted)}
+.tb-menu-btn svg{width:10px;height:10px;transition:transform .15s}
+.tb-menu-btn.open svg{transform:rotate(180deg)}
+.tb-menu-btn.owner-btn{border-color:rgba(184,102,42,.4);color:#b8662a}
+.tb-menu-btn.owner-btn:hover,.tb-menu-btn.owner-btn.open{background:rgba(184,102,42,.06);border-color:#b8662a}
+.tb-menu-btn.admin-btn{border-color:rgba(142,68,173,.4);color:#8e44ad}
+.tb-menu-btn.admin-btn:hover,.tb-menu-btn.admin-btn.open{background:rgba(142,68,173,.06);border-color:#8e44ad}
+.tb-menu-btn.other-btn{color:var(--muted)}
+
+.tb-dropdown{display:none;position:absolute;top:calc(100% + 4px);right:0;background:#fff;border:1px solid var(--border);border-radius:4px;box-shadow:0 4px 16px rgba(0,0,0,.1);min-width:140px;z-index:300;overflow:hidden}
+.tb-dropdown.open{display:block;animation:ddIn .12s ease-out}
+@keyframes ddIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+.tb-dd-item{display:flex;align-items:center;gap:8px;padding:9px 14px;font-size:.72rem;color:var(--ink);cursor:pointer;transition:background .12s;border:none;background:none;width:100%;text-align:left;font-family:inherit}
+.tb-dd-item:hover{background:#f5f3ef}
+.tb-dd-item svg{width:13px;height:13px;color:var(--muted);flex-shrink:0}
+.tb-dd-item.danger{color:#c0392b}
+.tb-dd-item.danger:hover{background:#fff5f5}
+.tb-dd-item.danger svg{color:#c0392b}
+.tb-dd-div{height:1px;background:var(--border);margin:3px 0}
+
+/* ─── BREADCRUMB ─── */
+.breadcrumb{background:#fff;border-bottom:1px solid var(--border);padding:0 24px;height:37px;display:flex;align-items:center;gap:6px;font-size:.63rem;color:var(--muted);overflow-x:auto;scrollbar-width:none}
+.breadcrumb a{color:var(--accent)}
+.bc-sep{color:var(--border)}
+.bc-cur{color:var(--ink);font-weight:500;white-space:nowrap}
+.bc-liaison{display:inline-flex;align-items:center;gap:5px;color:var(--lr)}
+
+/* ─── WORK HERO ─── */
+.work-hero{background:var(--lbg);position:relative;overflow:hidden}
+.wh-arc{position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--lgold),transparent)}
+.wh-inner{max-width:960px;margin:0 auto;padding:44px 24px;display:grid;grid-template-columns:1fr 400px;gap:44px;align-items:start}
+
+/* ─ 左: 作品ビジュアル ─ */
+.wh-img-main{width:100%;aspect-ratio:3/4;border-radius:6px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;margin-bottom:10px}
+.wh-img-bg{position:absolute;inset:0}
+.wh-img-label{position:relative;font-family:'Shippori Mincho',serif;font-size:.75rem;font-weight:700;writing-mode:vertical-rl;letter-spacing:.12em;color:rgba(255,255,255,.55)}
+.wh-img-corner{position:absolute;bottom:12px;right:12px;font-family:'Montserrat',sans-serif;font-size:.52rem;letter-spacing:.1em;color:rgba(255,255,255,.35);line-height:1.6;text-align:right}
+.wh-thumbs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.wh-thumb{width:52px;height:68px;border-radius:3px;flex-shrink:0;cursor:pointer;opacity:.5;border:1.5px solid transparent;transition:opacity .15s,border-color .15s;display:flex;align-items:center;justify-content:center;font-family:'Shippori Mincho',serif;font-size:.44rem;font-weight:700;writing-mode:vertical-rl;letter-spacing:.05em;color:rgba(255,255,255,.5)}
+.wh-thumb:hover{opacity:.78}
+.wh-thumb.active{opacity:1;border-color:var(--lgold)}
+
+/* ─ 右: 作品情報 ─ */
+.wh-eyebrow{font-family:'Montserrat',sans-serif;font-size:.55rem;letter-spacing:.22em;text-transform:uppercase;color:var(--lmuted);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.wh-liaison-dot{width:5px;height:5px;border-radius:50%;background:var(--lr);flex-shrink:0}
+.wh-title{font-family:'Shippori Mincho',serif;font-size:1.5rem;font-weight:600;color:var(--ltext);line-height:1.35;letter-spacing:.04em;margin-bottom:4px}
+.wh-title-kagi{font-size:1.05rem;opacity:.7}
+.wh-title-en{font-family:'DM Serif Display',serif;font-style:italic;font-size:.88rem;color:var(--lmuted);letter-spacing:.06em;margin-bottom:16px}
+
+/* ステータス行 */
+.wh-status-row{display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.wh-badge{font-family:'Montserrat',sans-serif;font-size:.56rem;letter-spacing:.1em;padding:3px 10px;border-radius:20px;white-space:nowrap}
+.wh-badge.available{border:1px solid rgba(39,174,96,.4);color:#5dbe84;background:rgba(39,174,96,.08)}
+.wh-badge.sold{border:1px solid rgba(192,57,43,.4);color:#e07070;background:rgba(192,57,43,.07)}
+.wh-badge.nfs{border:1px solid var(--lborder);color:var(--lmuted);background:rgba(255,255,255,.03)}
+
+/* 販売点数 */
+.wh-qty{font-size:.68rem;color:var(--lmuted);display:flex;align-items:center;gap:6px}
+.wh-qty strong{color:var(--ltext);font-weight:500}
+.wh-edition{font-size:.6rem;color:rgba(201,169,110,.7);border:1px solid rgba(201,169,110,.25);padding:1px 7px;border-radius:10px;font-family:'Montserrat',sans-serif;letter-spacing:.05em}
+
+/* 仕様テーブル */
+.wh-specs{border-top:1px solid var(--lborder);border-bottom:1px solid var(--lborder);margin-bottom:18px}
+.wh-spec{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--lborder)}
+.wh-spec:last-child{border-bottom:none}
+.wh-spec-lbl{font-family:'Montserrat',sans-serif;font-size:.53rem;letter-spacing:.08em;text-transform:uppercase;color:var(--lmuted);min-width:76px;padding-top:2px;flex-shrink:0}
+.wh-spec-val{font-size:.78rem;color:var(--ltext);line-height:1.6;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.wh-anon-badge{display:inline-flex;align-items:center;gap:4px;font-family:'Montserrat',sans-serif;font-size:.5rem;letter-spacing:.08em;padding:1px 7px;border-radius:2px;background:rgba(45,122,94,.15);color:#7abca0;border:1px solid rgba(45,122,94,.3);white-space:nowrap}
+.wh-anon-badge svg{width:9px;height:9px}
+
+/* 価格ブロック */
+.wh-price-block{margin-bottom:18px}
+.wh-price-lbl{font-family:'Montserrat',sans-serif;font-size:.53rem;letter-spacing:.1em;text-transform:uppercase;color:var(--lmuted);margin-bottom:5px}
+.wh-price{font-family:'Montserrat',sans-serif;font-size:1.55rem;color:var(--lgold);letter-spacing:.02em;line-height:1}
+.wh-price small{font-size:.6rem;color:var(--lmuted);margin-left:5px;letter-spacing:.06em;font-family:'Noto Sans JP',sans-serif}
+.wh-price-sub{font-size:.65rem;color:var(--lmuted);margin-top:5px;line-height:1.7}
+.wh-price-sub em{color:rgba(201,169,110,.7);font-style:normal}
+
+/* ガイドリンクボタン群 */
+.wh-guide-links{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.wh-guide-btn{display:inline-flex;align-items:center;gap:5px;padding:6px 11px;border:1px solid var(--lborder);border-radius:3px;background:rgba(255,255,255,.04);color:var(--lmuted);font-size:.62rem;letter-spacing:.03em;cursor:pointer;transition:all .15s;font-family:inherit;white-space:nowrap}
+.wh-guide-btn:hover{border-color:var(--lborder2);color:var(--lgold)}
+.wh-guide-btn svg{width:11px;height:11px;flex-shrink:0}
+
+/* アクションボタン群 */
+.wh-actions{display:flex;flex-direction:column;gap:7px;margin-bottom:16px}
+
+/* 購入申込ボタン（メイン） */
+.btn-apply{display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;border-radius:4px;background:var(--lgold);color:var(--ld);font-family:'Shippori Mincho',serif;font-size:.9rem;letter-spacing:.08em;font-weight:600;border:none;cursor:pointer;transition:opacity .15s;position:relative}
+.btn-apply:hover{opacity:.88}
+.btn-apply:disabled{background:rgba(201,169,110,.25);color:rgba(44,62,80,.5);cursor:not-allowed;opacity:1}
+.btn-apply svg{width:16px;height:16px;flex-shrink:0}
+.btn-apply-count{position:absolute;right:14px;font-size:.58rem;font-family:'Montserrat',sans-serif;font-weight:400;letter-spacing:.05em;background:rgba(44,62,80,.2);padding:2px 8px;border-radius:10px}
+
+/* 申込済みバッジ */
+.btn-applied{display:flex;align-items:center;justify-content:center;gap:8px;padding:13px 14px;border-radius:4px;background:rgba(201,169,110,.07);border:1px solid rgba(201,169,110,.3);color:var(--lgold);font-family:'Shippori Mincho',serif;font-size:.82rem;letter-spacing:.06em;cursor:not-allowed}
+.btn-applied svg{width:14px;height:14px;flex-shrink:0}
+.btn-applied-num{font-family:'Montserrat',sans-serif;font-size:.72rem;letter-spacing:.04em;opacity:.8}
+
+/* 売約済みバー */
+.wh-sold-bar{display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;border-radius:4px;background:rgba(192,57,43,.1);border:1px solid rgba(192,57,43,.3);color:#e07070;font-family:'Shippori Mincho',serif;font-size:.85rem;letter-spacing:.08em}
+.wh-sold-bar svg{width:15px;height:15px;flex-shrink:0}
+
+/* ダッシュボードボタン */
+.btn-dashboard{display:flex;align-items:center;justify-content:center;gap:7px;padding:10px;border-radius:4px;background:rgba(0,93,167,.12);border:1px solid rgba(0,93,167,.35);color:#5a9fd4;font-size:.76rem;letter-spacing:.05em;cursor:pointer;transition:all .15s;font-family:inherit}
+.btn-dashboard:hover{background:rgba(0,93,167,.2);border-color:rgba(0,93,167,.55)}
+.btn-dashboard svg{width:13px;height:13px;flex-shrink:0}
+
+/* 問い合わせボタン（サブ） */
+.btn-contact{display:flex;align-items:center;justify-content:center;gap:7px;padding:11px;border-radius:4px;background:rgba(255,255,255,.04);border:1px solid var(--lborder);color:var(--lmuted);font-size:.76rem;letter-spacing:.05em;cursor:pointer;transition:all .15s;font-family:inherit}
+.btn-contact:hover{border-color:var(--lborder2);color:var(--ltext)}
+.btn-contact svg{width:13px;height:13px;flex-shrink:0}
+
+/* 興味あり + シェア */
+.wh-fav-row{display:flex;gap:7px}
+.btn-fav{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:9px;border-radius:4px;border:1px solid var(--lborder);background:none;color:var(--lmuted);font-size:.7rem;letter-spacing:.04em;cursor:pointer;transition:all .15s}
+.btn-fav:hover{border-color:var(--lr);color:#e07070}
+.btn-fav.active{border-color:var(--lr);color:#e07070;background:rgba(192,57,43,.07)}
+.btn-fav svg{width:13px;height:13px;flex-shrink:0}
+.btn-share-sm{display:flex;align-items:center;justify-content:center;gap:6px;padding:9px 14px;border-radius:4px;border:1px solid var(--lborder);background:none;color:var(--lmuted);font-size:.7rem;cursor:pointer;transition:all .15s;white-space:nowrap}
+.btn-share-sm:hover{border-color:var(--lborder2);color:var(--lgold)}
+.btn-share-sm svg{width:13px;height:13px}
+
+/* 展覧会リンク */
+.wh-venue-link{display:flex;align-items:center;gap:10px;padding:11px 14px;background:rgba(255,255,255,.04);border:1px solid var(--lborder);border-radius:4px;margin-top:4px;font-size:.7rem;color:var(--lmuted);transition:border-color .15s}
+.wh-venue-link:hover{border-color:var(--lborder2)}
+.wh-venue-link svg{width:12px;height:12px;color:var(--lgold);flex-shrink:0}
+.wh-venue-link-body{flex:1;min-width:0}
+.wh-venue-link-ttl{font-size:.72rem;color:var(--ltext);margin-bottom:1px}
+.wh-venue-link-sub{font-size:.61rem;color:var(--lmuted)}
+.wh-venue-arr{color:var(--lgold);flex-shrink:0}
+
+/* ─── DESCRIPTION SECTION ─── */
+.work-desc-section{background:var(--lbg2);border-top:1px solid var(--lborder);padding:44px 24px}
+.wd-inner{max-width:960px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+.wd-eyebrow{font-family:'Montserrat',sans-serif;font-size:.56rem;letter-spacing:.22em;text-transform:uppercase;color:var(--lgold);margin-bottom:12px}
+.wd-ttl{font-family:'Shippori Mincho',serif;font-size:1rem;font-weight:600;color:var(--ltext);margin-bottom:14px;line-height:1.5}
+.wd-body{font-size:.75rem;color:var(--lmuted);line-height:1.95}
+.wd-body p+p{margin-top:12px}
+/* 右カラム（制作ノート＋追加フィールドを縦に並べる） */
+#descRightCol{display:flex;flex-direction:column;gap:12px}
+.wd-note{background:var(--lbg3);border:1px solid var(--lborder);border-radius:6px;padding:20px 22px}
+.wd-note-lbl{font-family:'Montserrat',sans-serif;font-size:.54rem;letter-spacing:.18em;text-transform:uppercase;color:var(--lgold);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.wd-note-lbl::before{content:'';width:20px;height:1px;background:var(--lgold);opacity:.5}
+.wd-note-body{font-size:.72rem;color:var(--lmuted);line-height:1.9;font-style:italic}
+.wd-note-sig{font-family:'DM Serif Display',serif;font-style:italic;font-size:.77rem;color:rgba(201,169,110,.7);margin-top:14px;text-align:right}
+.wd-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:18px}
+.wd-tag{font-size:.57rem;padding:2px 9px;border:1px solid var(--lborder);border-radius:10px;color:var(--lmuted)}
+
+/* ─── CREATOR SECTION ─── */
+.work-creator-section{background:var(--lbg);border-top:1px solid var(--lborder);padding:44px 24px}
+.wc-inner{max-width:960px;margin:0 auto}
+.wcs-eyebrow{font-family:'Montserrat',sans-serif;font-size:.56rem;letter-spacing:.22em;text-transform:uppercase;color:var(--lgold);margin-bottom:20px}
+.wcs-row{display:flex;align-items:flex-start;gap:16px;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--lborder)}
+.wcs-avatar{width:64px;height:64px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Shippori Mincho',serif;font-size:1.3rem;font-weight:600;border:2px solid rgba(201,169,110,.25);background:linear-gradient(135deg,#b8d8cc,#6a9e8a)}
+.wcs-info{flex:1;min-width:0}
+.wcs-name{font-family:'Shippori Mincho',serif;font-size:1rem;font-weight:600;color:var(--ltext);margin-bottom:2px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.wcs-liaison-badge{font-family:'Montserrat',sans-serif;font-size:.5rem;letter-spacing:.08em;color:#c0392b;border:1px solid rgba(192,57,43,.35);padding:1px 6px;border-radius:2px}
+.wcs-name-en{font-family:'DM Serif Display',serif;font-style:italic;font-size:.78rem;color:var(--lmuted);margin-bottom:6px}
+.wcs-genre{display:flex;flex-wrap:wrap;gap:5px}
+.wcs-gtag{font-size:.56rem;padding:2px 8px;border-radius:10px;border:1px solid var(--lborder);color:var(--lmuted)}
+.wcs-follow{flex-shrink:0;display:inline-flex;align-items:center;gap:5px;font-size:.66rem;letter-spacing:.06em;padding:7px 14px;border:1px solid var(--lborder2);border-radius:20px;background:none;color:var(--lgold);cursor:pointer;transition:all .15s;font-family:inherit}
+.wcs-follow:hover{background:rgba(201,169,110,.1)}
+.wcs-follow.following{background:rgba(201,169,110,.15);border-color:var(--lgold)}
+.wcs-bio{font-size:.73rem;color:var(--lmuted);line-height:1.8;margin-bottom:12px}
+.wcs-stats{display:flex;gap:22px;margin-bottom:16px}
+.wcs-stat{font-size:.66rem;color:var(--lmuted)}
+.wcs-stat span{font-family:'Montserrat',sans-serif;font-size:.9rem;color:var(--lgold);margin-right:3px}
+.btn-creator-page{display:inline-flex;align-items:center;gap:6px;padding:7px 16px;border:1px solid var(--lborder2);border-radius:3px;background:rgba(201,169,110,.05);color:var(--lgold);font-size:.68rem;letter-spacing:.07em;cursor:pointer;transition:background .15s;font-family:inherit}
+.btn-creator-page:hover{background:rgba(201,169,110,.12)}
+.btn-creator-page svg{width:12px;height:12px}
+
+/* ─── RELATED WORKS ─── */
+.related-section{background:var(--lbg2);border-top:1px solid var(--lborder);padding:36px 24px}
+.rel-inner{max-width:960px;margin:0 auto}
+.rel-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:18px}
+.rel-eyebrow{font-family:'Montserrat',sans-serif;font-size:.54rem;letter-spacing:.2em;text-transform:uppercase;color:var(--lgold);margin-bottom:4px}
+.rel-ttl{font-family:'DM Serif Display',serif;font-style:italic;font-size:1.05rem;color:var(--ltext)}
+.rel-more{font-size:.64rem;color:var(--lmuted);display:flex;align-items:center;gap:4px;transition:color .15s}
+.rel-more:hover{color:var(--lgold)}
+.rel-more svg{width:11px;height:11px}
+/* サムネイルサイズ（小さめ・5〜6列）*/
+.rel-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.rel-card{display:block;background:var(--lbg3);border:1px solid var(--lborder);border-radius:3px;overflow:hidden;transition:border-color .2s,transform .15s;cursor:pointer}
+.rel-card:hover{border-color:var(--lborder2);transform:translateY(-2px)}
+.rel-card-img{aspect-ratio:3/4;position:relative;overflow:hidden}
+.rel-card-bg{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:'Shippori Mincho',serif;font-size:.42rem;font-weight:700;writing-mode:vertical-rl;letter-spacing:.06em;color:rgba(255,255,255,.4);transition:transform .3s}
+.rel-card:hover .rel-card-bg{transform:scale(1.06)}
+.rel-card-sold-ribbon{position:absolute;top:6px;right:-12px;background:rgba(192,57,43,.85);color:#fff;font-size:.38rem;letter-spacing:.07em;font-family:'Montserrat',sans-serif;padding:2px 16px;transform:rotate(45deg)}
+.rel-card-fav{position:absolute;top:4px;left:4px;width:20px;height:20px;border-radius:50%;background:rgba(20,20,20,.55);backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .15s;z-index:2}
+.rel-card-fav:hover{background:rgba(192,57,43,.6)}
+.rel-card-fav.active{background:#c0392b;border-color:#c0392b}
+.rel-card-fav svg{width:9px;height:9px;stroke:rgba(255,255,255,.7);fill:none;pointer-events:none}
+.rel-card-fav.active svg{stroke:#fff;fill:#fff}
+.rel-card-body{padding:5px 6px 7px}
+.rel-card-title{font-family:'Shippori Mincho',serif;font-size:.62rem;font-weight:600;color:var(--ltext);margin-bottom:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rel-card-medium{font-size:.48rem;color:var(--lmuted);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rel-card-footer{display:flex;align-items:center;justify-content:space-between;gap:3px}
+.rel-card-price{font-family:'Montserrat',sans-serif;font-size:.6rem;color:var(--lgold)}
+.rel-card-status{font-size:.42rem;letter-spacing:.05em;padding:1px 5px;border-radius:6px;font-family:'Montserrat',sans-serif;white-space:nowrap}
+.rel-card-status.available{border:1px solid rgba(39,174,96,.35);color:#5dbe84;background:rgba(39,174,96,.08)}
+.rel-card-status.sold{border:1px solid rgba(192,57,43,.35);color:#e07070;background:rgba(192,57,43,.08)}
+.rel-card-status.reserved{border:1px solid rgba(201,169,110,.35);color:var(--lgold);background:rgba(201,169,110,.08)}
+
+/* ─── BUYER COMMENTS ─── */
+.comments-section{background:var(--lbg);border-top:1px solid var(--lborder);padding:44px 24px}
+.cmt-inner{max-width:960px;margin:0 auto}
+.cmt-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:10px}
+.cmt-eyebrow{font-family:'Montserrat',sans-serif;font-size:.54rem;letter-spacing:.2em;text-transform:uppercase;color:var(--lgold);margin-bottom:4px}
+.cmt-ttl{font-family:'DM Serif Display',serif;font-style:italic;font-size:1.1rem;color:var(--ltext)}
+.cmt-summary{display:flex;align-items:center;gap:14px}
+.cmt-avg{font-family:'Montserrat',sans-serif;font-size:2rem;font-weight:600;color:var(--lgold);line-height:1}
+.cmt-avg-stars{display:flex;gap:2px;margin-bottom:3px}
+.cmt-avg-count{font-size:.62rem;color:var(--lmuted)}
+/* コメントカード */
+.cmt-card{background:var(--lbg2);border:1px solid var(--lborder);border-radius:6px;padding:18px 20px;margin-bottom:10px}
+.cmt-card-header{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px}
+.cmt-avatar{width:34px;height:34px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Shippori Mincho',serif;font-size:.75rem;font-weight:600;border:1px solid var(--lborder)}
+.cmt-user{flex:1;min-width:0}
+.cmt-user-row{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:2px}
+.cmt-user-name{font-size:.74rem;color:var(--ltext);font-weight:500}
+.cmt-user-date{font-size:.6rem;color:var(--lmuted)}
+.cmt-verified{font-family:'Montserrat',sans-serif;font-size:.48rem;letter-spacing:.07em;padding:1px 6px;border-radius:8px;background:rgba(39,174,96,.09);border:1px solid rgba(39,174,96,.3);color:#5dbe84;white-space:nowrap}
+.cmt-stars{display:flex;gap:2px;margin-bottom:6px}
+.cmt-star{font-size:.85rem;line-height:1}
+.cmt-body{font-size:.76rem;color:var(--lmuted);line-height:1.85}
+/* 空状態 */
+.cmt-empty{text-align:center;padding:36px 0;border:1px dashed var(--lborder);border-radius:6px}
+.cmt-empty-icon{font-size:1.6rem;margin-bottom:8px;opacity:.3}
+.cmt-empty-txt{font-size:.72rem;color:var(--lmuted);line-height:1.8}
+/* 投稿フォーム */
+.cmt-post-box{background:var(--lbg2);border:1px solid var(--lborder2);border-radius:6px;padding:20px 22px;margin-top:20px}
+.cmt-post-lbl{font-family:'Montserrat',sans-serif;font-size:.54rem;letter-spacing:.15em;text-transform:uppercase;color:var(--lgold);margin-bottom:14px}
+/* 星入力 */
+.cmt-star-input{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.cmt-star-input-lbl{font-size:.66rem;color:var(--lmuted);white-space:nowrap}
+.cmt-star-row{display:flex;gap:4px}
+.cmt-star-btn{font-size:1.5rem;cursor:pointer;background:none;border:none;color:rgba(201,169,110,.25);transition:color .1s,transform .1s;line-height:1;padding:0 2px}
+.cmt-star-btn:hover,.cmt-star-btn.lit{color:var(--lgold)}
+.cmt-star-btn:hover{transform:scale(1.15)}
+.cmt-star-selected-lbl{font-size:.62rem;color:var(--lgold);min-width:40px}
+.cmt-textarea{width:100%;padding:10px 12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:4px;color:var(--ltext);font-size:.76rem;font-family:'Noto Sans JP',sans-serif;outline:none;resize:vertical;min-height:80px;transition:border-color .15s}
+.cmt-textarea:focus{border-color:rgba(201,169,110,.4)}
+.cmt-post-footer{display:flex;align-items:center;justify-content:space-between;margin-top:10px;gap:12px;flex-wrap:wrap}
+.cmt-anon-label{display:flex;align-items:center;gap:6px;font-size:.66rem;color:var(--lmuted);cursor:pointer}
+.cmt-anon-label input{accent-color:var(--lgold)}
+.cmt-submit{padding:8px 20px;border-radius:4px;background:rgba(201,169,110,.15);border:1px solid var(--lborder2);color:var(--lgold);font-size:.72rem;letter-spacing:.06em;cursor:pointer;transition:background .15s;font-family:inherit}
+.cmt-submit:hover{background:rgba(201,169,110,.25)}
+/* ログイン促進 */
+.cmt-login-prompt{text-align:center;padding:20px;background:rgba(255,255,255,.03);border:1px dashed var(--lborder);border-radius:6px;margin-top:16px}
+.cmt-login-prompt p{font-size:.72rem;color:var(--lmuted);margin-bottom:10px}
+.cmt-login-link{display:inline-flex;align-items:center;gap:6px;padding:7px 16px;border:1px solid var(--lborder2);border-radius:20px;color:var(--lgold);font-size:.7rem;cursor:pointer;transition:background .15s;background:none;font-family:inherit}
+.cmt-login-link:hover{background:rgba(201,169,110,.1)}
+
+/* ─── SHARE SECTION ─── */
+.share-section{background:var(--lbg);border-top:1px solid var(--lborder);padding:32px 24px}
+.share-inner{max-width:960px;margin:0 auto;display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+.share-lbl{font-family:'Montserrat',sans-serif;font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--lmuted);white-space:nowrap}
+.share-btns{display:flex;gap:7px;flex-wrap:wrap}
+.share-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border:1px solid var(--lborder);border-radius:4px;background:none;color:var(--lmuted);font-size:.68rem;letter-spacing:.03em;cursor:pointer;transition:all .15s;font-family:inherit}
+.share-btn:hover{border-color:var(--lborder2);color:var(--lgold)}
+.share-btn svg{width:13px;height:13px;flex-shrink:0}
+
+/* ─── SELLER (posted-by) ─── */
+.seller-section{background:var(--lbg2);border-top:1px solid var(--lborder);padding:26px 24px}
+.seller-inner{max-width:960px;margin:0 auto}
+.pb-lbl{font-family:'Montserrat',sans-serif;font-size:.53rem;letter-spacing:.2em;text-transform:uppercase;color:var(--lmuted);margin-bottom:11px}
+.pb-row{display:flex;align-items:center;gap:12px}
+.pb-avatar{width:42px;height:42px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Shippori Mincho',serif;font-weight:800;font-size:.88rem;border:1.5px solid rgba(201,169,110,.2)}
+.pb-meta{flex:1;min-width:0}
+.pb-name{font-family:'Shippori Mincho',serif;font-size:.84rem;font-weight:600;color:var(--ltext);margin-bottom:3px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.pb-name-sub{font-weight:300;font-size:.7rem;color:var(--lmuted)}
+.pb-type-badge{font-family:'Montserrat',sans-serif;font-size:.51rem;letter-spacing:.08em;text-transform:lowercase;padding:1px 6px;border-radius:2px}
+.pb-type-badge.gallery{background:rgba(45,122,94,.15);color:#7abca0;border:1px solid rgba(45,122,94,.3)}
+.pb-type-badge.creator{background:rgba(184,102,42,.15);color:#d4a070;border:1px solid rgba(184,102,42,.3)}
+.pb-counts{display:flex;gap:12px;margin-bottom:3px}
+.pb-cnt{font-size:.61rem;color:var(--lmuted)}
+.pb-cnt span{color:var(--ltext);font-weight:500;margin-right:2px}
+.pb-liaison{display:inline-flex;align-items:center;font-size:.53rem;letter-spacing:.06em;color:#c0392b;border:1px solid rgba(192,57,43,.3);padding:1px 6px;border-radius:2px;margin-top:2px}
+.pb-follow{flex-shrink:0;display:inline-flex;align-items:center;gap:5px;font-size:.65rem;letter-spacing:.06em;padding:6px 13px;border:1px solid var(--lborder2);border-radius:20px;background:none;color:var(--lgold);cursor:pointer;transition:all .15s;font-family:inherit;white-space:nowrap}
+.pb-follow:hover{background:rgba(201,169,110,.1)}
+.pb-follow.following{background:rgba(201,169,110,.15);border-color:var(--lgold)}
+
+/* ─── BACK TO WORKS ─── */
+.back-section{background:var(--lbg);border-top:1px solid var(--lborder);padding:32px 24px;text-align:center}
+.back-ttl{font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--lmuted);font-family:'Montserrat',sans-serif;margin-bottom:12px}
+.back-ex-card{display:inline-flex;align-items:center;gap:14px;background:var(--lbg2);border:1px solid var(--lborder);border-radius:6px;padding:12px 20px;transition:border-color .2s}
+.back-ex-card:hover{border-color:var(--lborder2)}
+.back-ex-poster{width:28px;height:38px;border-radius:2px;background:linear-gradient(155deg,#b8d8cc,#6a9e8a);flex-shrink:0}
+.back-ex-ttl{font-family:'Shippori Mincho',serif;font-size:.86rem;color:var(--ltext);margin-bottom:2px;text-align:left}
+.back-ex-meta{font-size:.61rem;color:var(--lmuted);text-align:left}
+.back-ex-arrow{color:var(--lgold);flex-shrink:0;margin-left:4px}
+
+/* ─── FOOTER ─── */
+footer{background:var(--ld);color:rgba(255,255,255,.7);padding:40px 24px 28px}
+.ft-inner{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:32px;max-width:960px;margin:0 auto 28px}
+.ft-brand{font-family:'Shippori Mincho',serif;font-weight:800;font-size:1.05rem;color:#fff;margin-bottom:6px}
+.ft-tag{font-size:.67rem;line-height:1.7;opacity:.55}
+.ft-ct{font-size:.64rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:10px}
+.ft-links{list-style:none;display:flex;flex-direction:column;gap:6px}
+.ft-links a{font-size:.7rem;opacity:.65}
+.ft-bot{max-width:960px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;padding-top:18px;border-top:1px solid rgba(255,255,255,.1)}
+.ft-copy{font-size:.6rem;opacity:.35}
+.ft-sns{display:flex;gap:14px;font-size:.65rem;opacity:.5}
+
+/* ─── BOTTOM NAV ─── */
+.btmnav{display:none;position:fixed;bottom:0;left:0;right:0;background:rgba(44,62,80,.96);backdrop-filter:blur(10px);border-top:1px solid var(--lborder);z-index:200;padding-bottom:env(safe-area-inset-bottom)}
+.bni-inner{display:flex;align-items:center;justify-content:space-around;height:58px;padding:0 4px}
+.bni{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 10px;text-decoration:none;color:var(--lmuted);border:none;background:none;font-family:inherit;cursor:pointer;border-radius:6px;transition:color .15s;min-width:44px}
+.bni:hover{color:var(--lgold)}
+.bni-iw{width:34px;height:34px;display:flex;align-items:center;justify-content:center;border-radius:8px}
+.bni:hover .bni-iw{background:rgba(201,169,110,.08)}
+.bni-l{font-size:.47rem;letter-spacing:.03em;line-height:1.3;text-align:center;white-space:nowrap}
+.bni-div{width:1px;height:30px;background:var(--lborder)}
+.bni-login{width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,.06);border:1.5px solid var(--lborder);display:flex;align-items:center;justify-content:center}
+.bni-role{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden}
+
+/* ─── ログインモーダル ─── */
+.lm-overlay{display:none;position:fixed;inset:0;z-index:9100;background:rgba(0,0,0,.72);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:20px}
+.lm-overlay.open{display:flex}
+.lm-box{background:#1c1c1e;border:1px solid rgba(201,169,110,.2);border-radius:12px;padding:34px 26px 24px;max-width:340px;width:100%;text-align:center;animation:lmIn .2s ease-out}
+@keyframes lmIn{from{opacity:0;transform:translateY(12px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+.lm-icon{width:52px;height:52px;border-radius:50%;background:rgba(192,57,43,.13);border:1px solid rgba(192,57,43,.35);display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+.lm-icon svg{width:24px;height:24px;stroke:#c0392b;fill:none}
+.lm-ttl{font-family:'Shippori Mincho',serif;font-size:.95rem;font-weight:600;color:#e8e0d4;margin-bottom:8px}
+.lm-body{font-size:.71rem;color:#8a9aa8;line-height:1.8;margin-bottom:20px}
+.lm-btns{display:flex;flex-direction:column;gap:7px}
+.lm-btn-login{display:flex;align-items:center;justify-content:center;gap:8px;padding:12px;border-radius:4px;background:#005da7;color:#fff;font-family:'Shippori Mincho',serif;font-size:.8rem;letter-spacing:.06em;border:none;cursor:pointer;transition:opacity .15s}
+.lm-btn-login:hover{opacity:.85}
+.lm-btn-login svg{width:13px;height:13px;stroke:#fff;fill:none}
+.lm-btn-reg{display:flex;align-items:center;justify-content:center;gap:8px;padding:12px;border-radius:4px;background:rgba(255,255,255,.05);border:1px solid rgba(201,169,110,.25);color:#c9a96e;font-family:'Shippori Mincho',serif;font-size:.8rem;letter-spacing:.06em;cursor:pointer;transition:background .15s}
+.lm-btn-reg:hover{background:rgba(201,169,110,.1)}
+.lm-cancel{margin-top:6px;font-size:.66rem;color:#5a6a78;background:none;border:none;cursor:pointer;letter-spacing:.04em;transition:color .15s}
+.lm-cancel:hover{color:#8a9aa8}
+
+/* ─── 申込モーダル ─── */
+.am-overlay{display:none;position:fixed;inset:0;z-index:9100;background:rgba(0,0,0,.72);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:20px}
+.am-overlay.open{display:flex}
+.am-box{background:#1c1c1e;border:1px solid rgba(201,169,110,.2);border-radius:12px;padding:30px 26px 24px;max-width:400px;width:100%;animation:lmIn .2s ease-out;max-height:90vh;overflow-y:auto}
+.am-ttl{font-family:'Shippori Mincho',serif;font-size:1rem;font-weight:600;color:#e8e0d4;margin-bottom:4px}
+.am-sub{font-size:.68rem;color:#8a9aa8;margin-bottom:20px;line-height:1.6}
+.am-field{margin-bottom:14px}
+.am-lbl{display:block;font-size:.62rem;color:rgba(201,169,110,.8);margin-bottom:5px;letter-spacing:.06em}
+.am-lbl em{font-style:normal;color:#8a9aa8;font-size:.57rem;margin-left:4px}
+.am-input{width:100%;padding:10px 12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:4px;color:#e8e0d4;font-size:.78rem;font-family:'Noto Sans JP',sans-serif;outline:none;transition:border-color .15s}
+.am-input:focus{border-color:rgba(201,169,110,.4)}
+.am-textarea{width:100%;padding:10px 12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:4px;color:#e8e0d4;font-size:.76rem;font-family:'Noto Sans JP',sans-serif;outline:none;resize:vertical;min-height:72px;transition:border-color .15s}
+.am-textarea:focus{border-color:rgba(201,169,110,.4)}
+.am-agree{display:flex;gap:8px;align-items:flex-start;padding:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:4px;cursor:pointer;margin-bottom:18px}
+.am-agree input{margin-top:2px;flex-shrink:0;accent-color:var(--lgold)}
+.am-agree-txt{font-size:.68rem;color:#8a9aa8;line-height:1.65}
+.am-agree-txt a{color:rgba(201,169,110,.8);text-decoration:underline}
+.am-submit{width:100%;padding:13px;border-radius:4px;background:var(--lgold);color:var(--ld);font-family:'Shippori Mincho',serif;font-size:.88rem;letter-spacing:.08em;font-weight:600;border:none;cursor:pointer;transition:opacity .15s;margin-bottom:8px}
+.am-submit:hover{opacity:.88}
+.am-cancel{width:100%;padding:9px;border-radius:4px;background:none;border:none;color:#5a6a78;font-size:.67rem;cursor:pointer;transition:color .15s;font-family:inherit}
+.am-cancel:hover{color:#8a9aa8}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:860px){
+  .btmnav{display:block}.sidebar{display:none}.main{margin-left:0;margin-bottom:72px}
+  .wh-inner{grid-template-columns:1fr;gap:28px}
+  .wd-inner{grid-template-columns:1fr;gap:28px}
+  .rel-grid{grid-template-columns:repeat(4,1fr)}
+  .ft-inner{grid-template-columns:1fr 1fr}
+}
+@media(max-width:520px){
+  .rel-grid{grid-template-columns:repeat(3,1fr);gap:4px}
+  .breadcrumb,.topbar{padding-left:12px;padding-right:12px}
+  .wh-inner,.work-desc-section,.work-creator-section,.related-section,.share-section,.seller-section,.back-section{padding-left:14px;padding-right:14px}
+  .ft-inner{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- DEMO BAR -->
+<div class="dbar">
+  <span>ロール：</span>
+  <button class="dbtn active" onclick="setRole('guest',this)">ゲスト</button>
+  <button class="dbtn" onclick="setRole('user',this)">ユーザー</button>
+  <button class="dbtn" onclick="setRole('ownerCreator',this)">creator</button>
+  <button class="dbtn" onclick="setRole('ownerGallery',this)">gallery</button>
+  <button class="dbtn" onclick="setRole('admin',this)">admin</button>
+  <div class="dbar-sep"></div>
+  <span>フェーズ：</span>
+  <button class="dbtn active" onclick="setPhase('open',this)">LIAISON期間中</button>
+  <button class="dbtn" onclick="setPhase('sold',this)">売約済み</button>
+  <div class="dbar-sep"></div>
+  <span>申込：</span>
+  <button class="dbtn active" onclick="setApply('none',this)">未申込</button>
+  <button class="dbtn" onclick="setApply('applied',this)">申込済み</button>
+  <div class="dbar-sep"></div>
+  <span>作品：</span>
+  <button class="dbtn active" onclick="switchWork(1,this)">id=1 庭</button>
+  <button class="dbtn" onclick="switchWork(2,this)">id=2 ふわふわ</button>
+  <button class="dbtn" onclick="switchWork(3,this)">id=3 ドキドキ</button>
+  <button class="dbtn" onclick="switchWork(4,this)">id=4 ざわざわ</button>
+</div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <a href="./index.html" style="display:block;padding:8px 0 12px;border-bottom:1px solid #ccd8e6;width:100%;text-align:center;margin-bottom:4px">
+    <img src="./images/kotennavi-logo5-1.svg" alt="個展なび" style="width:64px;height:64px;display:block;margin:0 auto 3px">
+  </a>
+  <a href="#" class="nav-item"><div class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg></div><span class="nav-label">検索</span></a>
+  <a href="#" class="nav-item"><div class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r=".5" fill="#666" stroke="#666" stroke-width="1.5"/></svg></div><span class="nav-label">ご利用ガイド</span></a>
+  <a href="#" class="nav-item" style="position:relative"><div class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.8"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div><span class="ndot"></span><span class="nav-label">お知らせ</span></a>
+  <a href="liaison_works_single.html" class="nav-item" style="border-top:1px solid var(--border);margin-top:4px;padding-top:12px">
+    <div class="nav-icon" style="width:50px;height:50px;border-radius:8px;border-color:#c0392b30;background:#fff8f8;padding:4px 6px">
+      <svg viewBox="0 0 420 180" fill="none" style="width:100%;height:auto"><path d="M 20 155 Q 210 20, 400 155" stroke="#c0392b" stroke-width="6" fill="none" stroke-linecap="round"/><defs><path id="sbA" d="M 55 142 Q 210 35, 365 142"/></defs><text font-family="'Cinzel',serif" font-size="58" font-weight="700" fill="#2c3e50"><textPath href="#sbA" startOffset="50%" text-anchor="middle">LIAISON</textPath></text></svg>
+    </div>
+    <span class="nav-label" style="color:#c0392b;font-weight:600">LIAISON</span>
+  </a>
+  <div class="sb-div"></div>
+  <div id="roleNav" style="width:100%;display:flex;flex-direction:column;align-items:center"></div>
+  <div class="sb-foot"><a href="#">Facebook</a><br><a href="#">X</a><br><br>©2010 kotennavi<br>Co., Ltd.</div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-l">
+      <a href="./liaison_works_single.html" style="color:var(--muted);display:flex;align-items:center;gap:4px;font-size:.7rem;flex-shrink:0">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="15 18 9 12 15 6"/></svg>
+        作品一覧
+      </a>
+      <div class="tb-sep"></div>
+      <svg viewBox="0 0 420 180" fill="none" width="44" height="19" style="flex-shrink:0">
+        <path d="M 20 155 Q 210 20, 400 155" stroke="#c0392b" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <defs><path id="tpA" d="M 55 142 Q 210 35, 365 142"/></defs>
+        <text font-family="'Cinzel',serif" font-size="58" font-weight="700" fill="#2c3e50"><textPath href="#tpA" startOffset="50%" text-anchor="middle">LIAISON</textPath></text>
+      </svg>
+      <span style="font-size:.6rem;color:var(--muted);letter-spacing:.1em;flex-shrink:0">works</span>
+      <div class="tb-sep"></div>
+      <span class="topbar-ttl" id="topbarTitle">《オノマトペの庭》田中 透</span>
+    </div>
+    <div class="topbar-r" id="topbarR">
+      <!-- JS で renderTopbarR() が書き込む -->
+    </div>
+  </div>
+
+  <!-- BREADCRUMB -->
+  <div class="breadcrumb">
+    <a href="#">個展なび</a><span class="bc-sep"> › </span>
+    <a href="#">東京</a><span class="bc-sep"> › </span>
+    <a href="#">渋谷</a><span class="bc-sep"> › </span>
+    <a href="#">あなたが知らないオノマトペ</a><span class="bc-sep"> › </span>
+    <span class="bc-liaison">
+      <svg viewBox="0 0 420 180" fill="none" width="32" height="13"><path d="M 20 155 Q 210 20, 400 155" stroke="#c0392b" stroke-width="9" fill="none" stroke-linecap="round"/><defs><path id="bcA" d="M 55 142 Q 210 35, 365 142"/></defs><text font-family="'Cinzel',serif" font-size="58" font-weight="700" fill="#2c3e50"><textPath href="#bcA" startOffset="50%" text-anchor="middle">LIAISON</textPath></text></svg>
+      works
+    </span><span class="bc-sep"> › </span>
+    <span class="bc-cur" id="bcWork">《オノマトペの庭》</span>
+  </div>
+
+  <!-- ① WORK HERO -->
+  <section class="work-hero">
+    <div class="wh-arc"></div>
+    <div class="wh-inner">
+
+      <!-- 左: ビジュアル -->
+      <div>
+        <div class="wh-img-main" id="mainImg">
+          <div class="wh-img-bg" id="mainImgBg"></div>
+          <div class="wh-img-label" id="mainImgLabel"></div>
+          <div class="wh-img-corner" id="mainImgCorner"></div>
+        </div>
+        <div class="wh-thumbs" id="thumbRow"></div>
+      </div>
+
+      <!-- 右: 作品情報 -->
+      <div class="wh-info">
+        <div class="wh-eyebrow">
+          <div class="wh-liaison-dot"></div>
+          LIAISON works — 作品詳細
+        </div>
+        <h1 class="wh-title" id="workTitle"></h1>
+        <div class="wh-title-en" id="workTitleEn"></div>
+
+        <!-- ステータス -->
+        <div class="wh-status-row">
+          <div class="wh-badge" id="workStatus"></div>
+        </div>
+
+        <!-- 仕様テーブル（JS描画） -->
+        <div class="wh-specs" id="specsTable"></div>
+
+        <!-- 価格 -->
+        <div class="wh-price-block">
+          <div class="wh-price-lbl">Price</div>
+          <div class="wh-price" id="workPrice"></div>
+          <div class="wh-price-sub" id="priceSub"></div>
+        </div>
+
+        <!-- ガイドリンク -->
+        <div class="wh-guide-links">
+          <button class="wh-guide-btn" onclick="alert('購入までの流れページへ')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 3"/></svg>
+            購入までの流れ
+          </button>
+          <button class="wh-guide-btn" onclick="alert('発送・送料についてページへ')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            発送・送料について
+          </button>
+          <button class="wh-guide-btn" onclick="alert('特定商取引法に基づく表示ページへ')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            特定商取引法
+          </button>
+        </div>
+
+        <!-- アクションボタン（JS描画） -->
+        <div class="wh-actions" id="actionArea"></div>
+
+        <!-- 展覧会リンク -->
+        <a href="./exhibition_detail_v6.html" class="wh-venue-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          <div class="wh-venue-link-body">
+            <div class="wh-venue-link-ttl">あなたが知らないオノマトペ — 田中透 個展</div>
+            <div class="wh-venue-link-sub">Gallery SOIL 渋谷 · 2026.03.01 – 03.05 · 会場展示も同時開催中</div>
+          </div>
+          <svg class="wh-venue-arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ② DESCRIPTION -->
+  <section class="work-desc-section">
+    <div class="wd-inner">
+      <div>
+        <div class="wd-eyebrow">About this Work</div>
+        <h2 class="wd-ttl" id="descTitle"></h2>
+        <div class="wd-body" id="descBody"></div>
+        <div class="wd-tags" id="descTags"></div>
+      </div>
+      <!-- 右カラム：制作ノート＋追加フィールド（JS描画） -->
+      <div id="descRightCol"></div>
+    </div>
+  </section>
+
+  <!-- ③ CREATOR -->
+  <section class="work-creator-section">
+    <div class="wc-inner">
+      <div class="wcs-eyebrow">Creator</div>
+      <div class="wcs-row">
+        <div class="wcs-avatar" style="color:rgba(255,255,255,.85)">透</div>
+        <div class="wcs-info">
+          <div class="wcs-name">
+            田中 透
+            <span class="wcs-liaison-badge">✓ LIAISON</span>
+          </div>
+          <div class="wcs-name-en">Toru Tanaka</div>
+          <div class="wcs-genre">
+            <span class="wcs-gtag">絵画</span><span class="wcs-gtag">現代美術</span><span class="wcs-gtag">抽象</span>
+          </div>
+        </div>
+        <button class="wcs-follow" id="creatorFollowBtn" onclick="toggleFollow(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>フォロー
+        </button>
+      </div>
+      <div class="wcs-bio">東京藝術大学大学院修了。日常の感覚をオノマトペに変換し絵画化する独自手法が国内外で注目を集める。2024年より「音のかたち」シリーズを展開中。</div>
+      <div class="wcs-stats">
+        <div class="wcs-stat"><span>892</span>フォロワー</div>
+        <div class="wcs-stat"><span>24</span>作品</div>
+        <div class="wcs-stat"><span>8</span>個展</div>
+      </div>
+      <button class="btn-creator-page" onclick="alert('田中透 クリエイターページへ')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>クリエイターページを見る
+      </button>
+    </div>
+  </section>
+
+  <!-- ④ RELATED WORKS（同展覧会の他の作品） -->
+  <section class="related-section">
+    <div class="rel-inner">
+      <div class="rel-header">
+        <div>
+          <div class="rel-eyebrow">Same Exhibition</div>
+          <div class="rel-ttl">同じ展覧会の作品</div>
+        </div>
+        <a href="./liaison_works_single.html" class="rel-more">
+          すべて見る<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+      </div>
+      <div class="rel-grid" id="relGrid"></div>
+    </div>
+  </section>
+
+  <!-- ⑤ COMMENTS & RATINGS -->
+  <section class="comments-section">
+    <div class="cmt-inner">
+      <div class="cmt-header">
+        <div>
+          <div class="cmt-eyebrow">Comments & Ratings</div>
+          <div class="cmt-ttl">コメント・評価</div>
+        </div>
+        <div class="cmt-summary" id="cmtSummary"></div>
+      </div>
+      <div id="commentsList"></div>
+      <!-- 投稿エリア（ログイン済みユーザーに表示） -->
+      <div id="commentPostArea"></div>
+    </div>
+  </section>
+
+  <!-- ⑥ SHARE -->
+  <section class="share-section">
+    <div class="share-inner">
+      <div class="share-lbl">Share</div>
+      <div class="share-btns">
+        <button class="share-btn" onclick="alert('X(Twitter)でシェア')">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>X (Twitter)
+        </button>
+        <button class="share-btn" onclick="alert('Facebookでシェア')">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>Facebook
+        </button>
+        <button class="share-btn" onclick="alert('LINEでシェア')">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 5.92 2 10.76c0 3.4 2.18 6.38 5.44 7.98-.22.8-.79 2.88-.9 3.32-.14.54.2.54.4.4.16-.1 2.52-1.66 3.54-2.34.68.1 1.38.14 2.1.14 5.52 0 10-3.92 10-8.76S17.52 2 12 2z"/></svg>LINE
+        </button>
+        <button class="share-btn" onclick="copyLink()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>リンクをコピー
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ⑦ SELLER (posted-by) -->
+  <section class="seller-section">
+    <div class="seller-inner">
+      <div class="pb-lbl">posted by</div>
+      <div class="pb-row">
+        <div class="pb-avatar" style="background:linear-gradient(135deg,#2a3a2e,#3d5c44);color:rgba(201,169,110,.9)">S</div>
+        <div class="pb-meta">
+          <div class="pb-name">
+            <span class="pb-type-badge gallery">gallery</span>
+            Gallery SOIL 渋谷<span class="pb-name-sub"> ｜ Gallery SOIL Shibuya</span>
+          </div>
+          <div class="pb-counts">
+            <span class="pb-cnt"><span>143</span>フォロワー</span>
+            <span class="pb-cnt"><span>12</span>展覧会</span>
+          </div>
+          <div class="pb-liaison">✓ LIAISON 認証済</div>
+        </div>
+        <button class="pb-follow" id="sellerFollowBtn" onclick="toggleSellerFollow(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>フォロー
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ⑧ BACK TO WORKS -->
+  <section class="back-section">
+    <div class="back-ttl">Other Works</div>
+    <a href="./liaison_works_single.html" class="back-ex-card">
+      <div class="back-ex-poster"></div>
+      <div>
+        <div class="back-ex-ttl">LIAISON works 一覧へ戻る</div>
+        <div class="back-ex-meta">あなたが知らないオノマトペ — 田中透 個展</div>
+      </div>
+      <svg class="back-ex-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><polyline points="9 18 15 12 9 6"/></svg>
+    </a>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="ft-inner">
+      <div><div class="ft-brand">個展なび</div><div class="ft-tag">アート作家と観客をつなぐ<br>展覧会情報プラットフォーム</div></div>
+      <div><p class="ft-ct">展覧会</p><ul class="ft-links"><li><a href="#">最新の展覧会</a></li><li><a href="#">地域から探す</a></li><li><a href="#">LIAISON</a></li></ul></div>
+      <div><p class="ft-ct">ご利用について</p><ul class="ft-links"><li><a href="#">ご利用ガイド</a></li><li><a href="#">展覧会を掲載する</a></li><li><a href="#">myページ</a></li></ul></div>
+      <div><p class="ft-ct">企業情報</p><ul class="ft-links"><li><a href="#">会社概要</a></li><li><a href="#">お問い合わせ</a></li><li><a href="#">特定商取引法に基づく表示</a></li></ul></div>
+    </div>
+    <div class="ft-bot"><span class="ft-copy">©2010 kotennavi Co., Ltd. All rights reserved.</span><div class="ft-sns"><a href="#">Facebook</a><a href="#">X (Twitter)</a></div></div>
+  </footer>
+
+</main>
+
+<!-- BOTTOM NAV -->
+<nav class="btmnav"><div class="bni-inner" id="bnInner"></div></nav>
+
+<!-- ログインモーダル -->
+<div class="lm-overlay" id="loginModal">
+  <div class="lm-box">
+    <div class="lm-icon"><svg viewBox="0 0 24 24" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+    <div class="lm-ttl">ログインが必要です</div>
+    <div class="lm-body">この機能はログインユーザー限定です。<br>個展なびに登録・ログインしてください。</div>
+    <div class="lm-btns">
+      <button class="lm-btn-login" onclick="alert('ログインページへ')">
+        <svg viewBox="0 0 24 24" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>ログイン
+      </button>
+      <button class="lm-btn-reg" onclick="alert('ユーザー登録ページへ')">
+        <svg viewBox="0 0 24 24" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>新規ユーザー登録（無料）
+      </button>
+      <button class="lm-cancel" onclick="closeModal('loginModal')">キャンセル</button>
+    </div>
+  </div>
+</div>
+
+<!-- 購入申込モーダル -->
+<div class="am-overlay" id="applyModal">
+  <div class="am-box">
+    <div class="am-ttl" id="amTitle">購入申込</div>
+    <div class="am-sub">申込後、会期終了後に出品者から購入可否と合計金額をご連絡します。申込番号を発行します。</div>
+    <div class="am-field">
+      <label class="am-lbl">お名前 <em>（出品者への通知のみに使用します）</em></label>
+      <input class="am-input" id="amName" type="text" placeholder="例：山田 太郎">
+    </div>
+    <div class="am-field">
+      <label class="am-lbl">受取地の郵便番号 <em>（送料計算に使用します）</em></label>
+      <input class="am-input" id="amZip" type="text" placeholder="例：150-0001" maxlength="8">
+    </div>
+    <div class="am-field">
+      <label class="am-lbl">申込理由・コメント <em>（任意）</em></label>
+      <textarea class="am-textarea" placeholder="この作品に興味を持った理由など（任意）"></textarea>
+    </div>
+    <label class="am-agree">
+      <input type="checkbox" id="amAgreeCheck">
+      <div class="am-agree-txt">
+        <a href="#" onclick="return false">購入までの流れ</a>・<a href="#" onclick="return false">発送・送料について</a>を確認し、以下に同意します。<br>
+        ・会場売約時は申込がキャンセルになること<br>
+        ・申込後もキャンセル可能であること<br>
+        ・申込順に購入可否が案内されること
+      </div>
+    </label>
+    <button class="am-submit" onclick="submitApply()">申込を確定する</button>
+    <button class="am-cancel" onclick="closeModal('applyModal')">キャンセル</button>
+  </div>
+</div>
+
+<script>
+/* ════════════════════════════════════════
+   ALL WORKS DATA
+════════════════════════════════════════ */
+const ALL_WORKS = [
+  {
+    id:1, title:'オノマトペの庭', titleEn:'Onomatopoeia Garden',
+    creator:'田中 透', creatorEn:'Toru Tanaka',
+    year:2026, medium:'キャンバスに油彩', size:'116.7×91.0cm',
+    weight:'約3.2kg（額装込み）', framing:'木製フローティングフレーム（白木）',
+    price:580000, qty:1, edition:null, status:'available',
+    shipping:{ timing:'展覧会終了後（2026年3月下旬以降）', method:'ヤマト宅急便', anonymous:false },
+    bg:'linear-gradient(155deg,#b8d8cc,#6a9e8a)',
+    thumbs:[
+      {bg:'linear-gradient(155deg,#b8d8cc,#6a9e8a)', label:'全体'},
+      {bg:'linear-gradient(135deg,#9cc4b8,#5a8e7a)', label:'詳細①'},
+      {bg:'linear-gradient(155deg,#d0e8e0,#8abba8)', label:'詳細②'},
+      {bg:'linear-gradient(165deg,#c4d8d0,#7aaa98)', label:'展示'},
+    ],
+    desc:[
+      '「ふわふわ」「ざわざわ」「きらきら」——日本語に豊富なオノマトペは、感覚の輪郭をことばで捉える独特の試みだ。田中透はその音響的なイメージを視覚的な形に変換することをライフワークとしており、本作はその集大成的な位置づけとなる大型作品である。',
+      '画面中央に広がる緑がかった空間は、複数の「やわらかい音」が重なり合う「庭」を表している。F30号というスケールは、鑑賞者が作品の前に立ったとき、その場の空気ごと体験できるよう意図されている。',
+    ],
+    note:'「庭」という言葉を頭に浮かべたとき、まず耳に届いたのは「しんと静まり返った空気感」と「葉が揺れる微かな音」だった。その二つの感覚が混ざり合う瞬間を、画面の上で再現しようと試みた。',
+    tags:['絵画','油彩','現代美術','抽象','オノマトペ','F30号','2026年制作'],
+    extras:[
+      { lbl:'作品のケアについて',
+        body:'油彩作品のため、直射日光・高温多湿の環境を避けて保管ください。額装ガラスは紫外線カットタイプを推奨します。表面の汚れは乾いた柔らかい布で軽く拭き取るのみとし、洗剤・溶剤の使用は避けてください。' },
+      { lbl:'展示・設置について',
+        body:'フローティングフレーム仕様のため、壁から数センチ浮いた形で設置されます。取付金具・ワイヤー付属。壁の耐荷重をご確認のうえ設置をお願いします。設置方法についてご不明な点はお気軽にお問い合わせください。' },
+    ],
+  },
+  {
+    id:2, title:'ふわふわ', titleEn:'Fuwafuwa',
+    creator:'田中 透', creatorEn:'Toru Tanaka',
+    year:2026, medium:'キャンバスに油彩', size:'72.7×60.6cm',
+    weight:null, framing:null,
+    price:320000, qty:1, edition:null, status:'reserved',
+    shipping:{ timing:'展覧会終了後（2026年3月下旬以降）', method:'ヤマト宅急便', anonymous:true },
+    bg:'linear-gradient(155deg,#f0e8d0,#d4b896)',
+    thumbs:[
+      {bg:'linear-gradient(155deg,#f0e8d0,#d4b896)', label:'全体'},
+      {bg:'linear-gradient(145deg,#e0d4b8,#c4a47a)', label:'詳細①'},
+      {bg:'linear-gradient(165deg,#f5eedd,#ddc49a)', label:'詳細②'},
+    ],
+    desc:[
+      '「ふわふわ」という音が持つ浮遊感・軽さ・曖昧さを、半透明の絵の具層を幾重にも重ねることで表現した作品。',
+    ],
+    note:'「ふわふわ」と口に出したとき、舌の動きが生み出す柔らかさを、そのまま絵の具に置き換えたかった。',
+    tags:['絵画','油彩','現代美術','抽象','F20号','2026年制作'],
+    extras:[
+      { lbl:'作品のケアについて',
+        body:'油彩・キャンバス作品です。直射日光と湿気を避け、温度変化の少ない環境での保管をお願いします。' },
+    ],
+  },
+  {
+    id:3, title:'ドキドキ #3', titleEn:'Dokidoki #3',
+    creator:'田中 透', creatorEn:'Toru Tanaka',
+    year:2025, medium:'和紙に混合技法', size:'91.0×72.7cm',
+    weight:'約2.8kg', framing:null,
+    price:420000, qty:3, edition:'Ed. 3/10', status:'available',
+    shipping:{ timing:'展覧会終了後（2026年3月下旬以降）', method:'ヤマト宅急便', anonymous:false },
+    bg:'linear-gradient(155deg,#f0d0d0,#c88080)',
+    thumbs:[
+      {bg:'linear-gradient(155deg,#f0d0d0,#c88080)', label:'全体'},
+      {bg:'linear-gradient(145deg,#e0b8b8,#b86868)', label:'詳細①'},
+    ],
+    desc:[
+      '「ドキドキ」シリーズ第3作。鼓動の不規則なリズムを、和紙の繊維の絡まり方と複数の画材の干渉として表現している。',
+    ],
+    note:'和紙は、音を吸収する。アクリルを垂らすと弾き、墨は滲み、水彩は和紙の繊維に沿って走る。',
+    tags:['絵画','混合技法','和紙','エディション','F25号','2025年制作'],
+    extras:[],
+  },
+  {
+    id:4, title:'ざわざわ（夜）', titleEn:'Zawazawa (Night)',
+    creator:'田中 透', creatorEn:'Toru Tanaka',
+    year:2026, medium:'キャンバスにアクリル', size:'130.3×89.4cm',
+    weight:'約5.1kg（額装込み）', framing:'黒塗りスチールフレーム',
+    price:680000, qty:1, edition:null, status:'sold',
+    shipping:{ timing:null, method:null, anonymous:false },
+    bg:'linear-gradient(155deg,#3d3530,#1f1a18)',
+    thumbs:[
+      {bg:'linear-gradient(155deg,#3d3530,#1f1a18)', label:'全体'},
+      {bg:'linear-gradient(145deg,#2a2420,#120e0c)', label:'詳細①'},
+    ],
+    desc:[
+      '展覧会最大の作品。「ざわざわ」という音が夜の文脈で持つ意味——不安、期待、複数の気配——を暗褐色から黒へと沈んでいくトーンで描いた。',
+    ],
+    note:'深夜、窓の外から聞こえる「ざわざわ」は、葉の音か、人の気配か、自分の内側の音か——判別できない感覚がある。',
+    tags:['絵画','アクリル','現代美術','F50号相当','2026年制作','SOLD'],
+    extras:[],
+  },
+];
+
+const SL={available:'販売中',sold:'売約済み',reserved:'予約済',nfs:'販売なし'};
+const SC={available:'available',sold:'sold',reserved:'reserved',nfs:'nfs'};
+function fmt(p){return p?'¥'+p.toLocaleString():'—'}
+
+/* ── URL パラメータ → 作品特定 ── */
+const urlId = parseInt(new URLSearchParams(location.search).get('id')) || 1;
+const WORK   = Object.assign({}, ALL_WORKS.find(w=>w.id===urlId) || ALL_WORKS[0]);
+const RELATED = ALL_WORKS.filter(w=>w.id!==WORK.id);
+
+/* ── STATE ── */
+let _currentRole  = 'guest';
+let _workPhase    = 'open';   // 'open' | 'sold'
+let _applyState   = 'none';   // 'none' | 'applied'
+let _applyCount   = 3;        // デモ用：申込人数
+let mainFaved     = false;
+const relFavSet   = new Set();
+
+function isLoggedIn(){ return RD[_currentRole]?.loggedIn === true; }
+function isOwner(){    return ['ownerCreator','ownerGallery'].includes(_currentRole); }
+function isAdmin(){    return _currentRole === 'admin'; }
+
+/* ═══════════════════════════════════════
+   PAGE INIT
+═══════════════════════════════════════ */
+function initPage(){
+  const w = WORK;
+  /* meta / OGP */
+  const ttl = `《${w.title}》${w.creator} — LIAISON works | 個展なび`;
+  document.getElementById('pageTitle').textContent = ttl;
+  document.getElementById('metaDesc').setAttribute('content', `${w.creator}《${w.title}》${w.year}年、${w.medium}。LIAISON works にて${SL[w.status]}。`);
+  document.getElementById('ogTitle').setAttribute('content', `《${w.title}》${w.creator} — LIAISON works`);
+  document.getElementById('ogDesc').setAttribute('content', `${w.year}年、${w.medium}、${w.size}。${fmt(w.price)}（税込）`);
+  document.getElementById('ogUrl').setAttribute('content', `https://kotennavi.jp/liaison/works/${w.id}`);
+  document.title = ttl;
+
+  /* topbar */
+  document.getElementById('topbarTitle').textContent = `《${w.title}》${w.creator}`;
+  document.getElementById('bcWork').textContent = `《${w.title}》`;
+
+  /* 作品タイトル */
+  document.getElementById('workTitle').innerHTML =
+    `<span class="wh-title-kagi">《</span>${w.title}<span class="wh-title-kagi">》</span>`;
+  document.getElementById('workTitleEn').textContent = w.titleEn;
+
+  /* メイン画像 */
+  document.getElementById('mainImgBg').style.background = w.thumbs[0].bg;
+  document.getElementById('mainImgLabel').textContent = w.thumbs[0].label;
+  document.getElementById('mainImgCorner').textContent = `${w.medium}\n${w.size}`;
+
+  /* サムネイル */
+  document.getElementById('thumbRow').innerHTML = w.thumbs.map((t,i)=>`
+    <div class="wh-thumb${i===0?' active':''}"
+         style="background:${t.bg}"
+         onclick="switchImg(this,'${t.bg}','${t.label}')">${t.label}</div>`).join('');
+
+  /* 仕様テーブル */
+  renderSpecs(w);
+
+  /* 価格 */
+  document.getElementById('workPrice').innerHTML = w.price
+    ? `${fmt(w.price)}<small>税込</small>`
+    : `<span style="font-size:1rem;color:var(--lmuted)">販売なし</span>`;
+  document.getElementById('priceSub').innerHTML = w.price
+    ? `<em>＋ 送料・梱包費は会期終了後に別途ご案内します</em>`
+    : '';
+
+  /* Description */
+  document.getElementById('descTitle').textContent = `《${w.title}》について`;
+  document.getElementById('descBody').innerHTML = w.desc.map(p=>`<p>${p}</p>`).join('');
+  document.getElementById('descTags').innerHTML = w.tags.map(t=>`<span class="wd-tag">${t}</span>`).join('');
+
+  /* 右カラム：制作ノート + extras（値があるものだけ） */
+  const rightBlocks = [];
+  if(w.note){
+    rightBlocks.push(`
+      <div class="wd-note">
+        <div class="wd-note-lbl">制作ノート</div>
+        <div class="wd-note-body">${w.note}</div>
+        <div class="wd-note-sig">— ${w.creator} / ${w.creatorEn}, ${w.year}</div>
+      </div>`);
+  }
+  (w.extras || []).forEach(ex => {
+    rightBlocks.push(`
+      <div class="wd-note">
+        <div class="wd-note-lbl">${ex.lbl}</div>
+        <div class="wd-note-body" style="font-style:normal;font-size:.74rem">${ex.body}</div>
+      </div>`);
+  });
+  document.getElementById('descRightCol').innerHTML = rightBlocks.join('');
+}
+
+/* ── 仕様テーブル描画 ── */
+function renderSpecs(w){
+  const isSold = _workPhase==='sold' || w.status==='sold';
+
+  /* ステータスバッジ */
+  const statusBadge = document.getElementById('workStatus');
+  statusBadge.className = `wh-badge ${isSold?'sold':SC[w.status]||'available'}`;
+  statusBadge.textContent = isSold?'売約済み':SL[w.status]||SL.available;
+
+  /* 販売点数セル（仕様テーブル内に入れるため文字列で生成） */
+  let qtyVal = null;
+  if(!isSold){
+    const edStr = w.edition
+      ? `<span class="wh-edition">${w.edition}</span>`
+      : '';
+    qtyVal = `${w.qty}点 ${edStr}`;
+  }
+
+  /* 仕様行（作家のみ必須、他は値があれば表示） */
+  const rows = [
+    { lbl:'作家',       val:`${w.creator}（${w.creatorEn}）`, always:true },
+    { lbl:'制作年',     val: w.year ? `${w.year}年` : null },
+    { lbl:'素材・技法', val: w.medium },
+    { lbl:'サイズ',     val: w.size },
+    { lbl:'重さ',       val: w.weight },
+    { lbl:'額装',       val: w.framing },
+    { lbl:'作品点数/エディション', val: qtyVal },
+    { lbl:'作品状態',   val: '新品・未展示' },
+    { lbl:'付属品',     val: '真作証明書・作家サイン入り' },
+    { lbl:'配送時期',   val: w.shipping?.timing || null },
+    { lbl:'配送方法',   val: renderShipping(w.shipping) },
+  ];
+
+  document.getElementById('specsTable').innerHTML = rows
+    .filter(r => r.always || (r.val && r.val.trim() !== ''))
+    .map(r=>`
+      <div class="wh-spec">
+        <div class="wh-spec-lbl">${r.lbl}</div>
+        <div class="wh-spec-val">${r.val}</div>
+      </div>`).join('');
+}
+
+function renderShipping(s){
+  if(!s || !s.method) return null;
+  const anonBadge = s.anonymous
+    ? `<span class="wh-anon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><line x1="1" y1="1" x2="23" y2="23"/></svg>匿名配送</span>`
+    : '';
+  return `${s.method}${anonBadge}`;
+}
+
+/* ── アクションエリア描画（フェーズ・ロール・申込状態によって変わる） ── */
+function renderActionArea(){
+  const area = document.getElementById('actionArea');
+  const isSold = _workPhase==='sold' || WORK.status==='sold';
+
+  if(isSold){
+    area.innerHTML = `
+      <div class="wh-sold-bar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+        この作品は売約済みです
+      </div>
+      ${favShareRow()}`;
+    return;
+  }
+
+  /* LIAISON期間中 */
+  let applyBtn = '';
+  if(!isLoggedIn()){
+    /* ゲスト：ログインへ誘導 */
+    applyBtn = `
+      <button class="btn-apply" onclick="openModal('loginModal')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        購入申込をする
+        ${_applyCount>0?`<span class="btn-apply-count">${_applyCount}人が申込中</span>`:''}
+      </button>`;
+  } else if(_applyState==='applied'){
+    /* 本人（申込済み） */
+    applyBtn = `
+      <div class="btn-applied">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        申込済み
+        <span class="btn-applied-num">申込番号：#0042</span>
+      </div>
+      <button class="btn-dashboard" onclick="alert('購入申込ダッシュボードへ')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        申込ダッシュボードへ
+      </button>`;
+  } else {
+    /* ログイン済み・未申込 */
+    applyBtn = `
+      <button class="btn-apply" onclick="openApplyModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        購入申込をする
+        ${_applyCount>0?`<span class="btn-apply-count">${_applyCount}人が申込中</span>`:''}
+      </button>`;
+  }
+
+  area.innerHTML = `
+    ${applyBtn}
+    <button class="btn-contact" onclick="alert('問い合わせフォームへ')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      問い合わせする
+    </button>
+    ${favShareRow()}`;
+}
+
+function favShareRow(){
+  return `
+    <div class="wh-fav-row">
+      <button class="btn-fav${mainFaved?' active':''}" id="mainFavBtn" onclick="toggleMainFav()">
+        <svg viewBox="0 0 24 24" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="${mainFaved?'currentColor':'none'}" stroke="currentColor"/></svg>
+        ${mainFaved?'興味あり！登録済み':'興味あり！'}
+      </button>
+      <button class="btn-share-sm" onclick="shareWork()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        シェア
+      </button>
+    </div>`;
+}
+
+/* ── Topbar 右端メニュー ── */
+function renderTopbarR(){
+  const r = document.getElementById('topbarR');
+  const shareBtn = `
+    <button class="tib" onclick="shareWork()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+      <span class="tib-l">シェア</span>
+    </button>`;
+
+  if(isOwner()){
+    r.innerHTML = `
+      ${shareBtn}
+      <div class="tb-sep"></div>
+      <button class="tb-edit-btn" onclick="alert('編集ページへ')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>編集
+      </button>
+      <div class="tb-menu-wrap">
+        <button class="tb-menu-btn owner-btn" id="ownerMenuBtn" onclick="toggleDropdown('ownerMenu','ownerMenuBtn')">
+          オーナーメニュー
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="tb-dropdown" id="ownerMenu">
+          ${ownerMenuItems()}
+        </div>
+      </div>`;
+  } else if(isAdmin()){
+    r.innerHTML = `
+      ${shareBtn}
+      <div class="tb-sep"></div>
+      <button class="tb-edit-btn" onclick="alert('編集ページへ')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>編集
+      </button>
+      <div class="tb-menu-wrap">
+        <button class="tb-menu-btn admin-btn" id="adminMenuBtn" onclick="toggleDropdown('adminMenu','adminMenuBtn')">
+          管理者メニュー
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="tb-dropdown" id="adminMenu">
+          ${ownerMenuItems()}
+        </div>
+      </div>`;
+  } else {
+    /* ゲスト・一般ユーザー */
+    r.innerHTML = `
+      ${shareBtn}
+      <div class="tb-sep"></div>
+      <div class="tb-menu-wrap">
+        <button class="tb-menu-btn other-btn" id="otherMenuBtn" onclick="toggleDropdown('otherMenu','otherMenuBtn')">
+          その他メニュー
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="tb-dropdown" id="otherMenu">
+          <button class="tb-dd-item danger" onclick="alert('報告フォームへ');closeAllDropdowns()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>報告する
+          </button>
+        </div>
+      </div>`;
+  }
+}
+
+function ownerMenuItems(){
+  return `
+    <button class="tb-dd-item" onclick="alert('編集へ');closeAllDropdowns()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>編集
+    </button>
+    <button class="tb-dd-item" onclick="alert('複製（clone）');closeAllDropdowns()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>複製（clone）
+    </button>
+    <button class="tb-dd-item" onclick="alert('インサイトへ');closeAllDropdowns()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>インサイト
+    </button>
+    <div class="tb-dd-div"></div>
+    <button class="tb-dd-item danger" onclick="alert('削除確認へ');closeAllDropdowns()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>削除
+    </button>`;
+}
+
+/* ── ドロップダウン制御 ── */
+function toggleDropdown(menuId, btnId){
+  const menu = document.getElementById(menuId);
+  const btn  = document.getElementById(btnId);
+  const isOpen = menu.classList.contains('open');
+  closeAllDropdowns();
+  if(!isOpen){ menu.classList.add('open'); btn.classList.add('open'); }
+}
+function closeAllDropdowns(){
+  document.querySelectorAll('.tb-dropdown').forEach(m=>m.classList.remove('open'));
+  document.querySelectorAll('.tb-menu-btn').forEach(b=>b.classList.remove('open'));
+}
+document.addEventListener('click', e=>{
+  if(!e.target.closest('.tb-menu-wrap')) closeAllDropdowns();
+});
+
+/* ── サムネイル切り替え ── */
+function switchImg(thumb, bg, label){
+  document.querySelectorAll('.wh-thumb').forEach(t=>t.classList.remove('active'));
+  thumb.classList.add('active');
+  document.getElementById('mainImgBg').style.background = bg;
+  document.getElementById('mainImgLabel').textContent = label;
+}
+
+/* ── 興味あり！ ── */
+function toggleMainFav(){
+  if(!isLoggedIn()){ openModal('loginModal'); return; }
+  mainFaved = !mainFaved;
+  renderActionArea();
+  renderBottomNav(_currentRole);
+}
+
+/* ── 関連作品 ── */
+function renderRelated(){
+  document.getElementById('relGrid').innerHTML = RELATED.map(w=>`
+    <a href="work_detail.html?id=${w.id}" class="rel-card">
+      <div class="rel-card-img">
+        <div class="rel-card-bg" style="background:${w.bg}">${w.title}</div>
+        ${w.status==='sold'?'<div class="rel-card-sold-ribbon">SOLD</div>':''}
+        <button class="rel-card-fav${relFavSet.has(w.id)?' active':''}"
+                onclick="toggleRelFav(event,${w.id})" title="興味あり！">
+          <svg viewBox="0 0 24 24" stroke-width="2" fill="${relFavSet.has(w.id)?'currentColor':'none'}">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" stroke="currentColor"/>
+          </svg>
+        </button>
+      </div>
+      <div class="rel-card-body">
+        <div class="rel-card-title">《${w.title}》</div>
+        <div class="rel-card-medium">${w.year}年 / ${w.medium}</div>
+        <div class="rel-card-footer">
+          <div class="rel-card-price">${fmt(w.price)}</div>
+          <div class="rel-card-status ${SC[w.status]||'available'}">${SL[w.status]||''}</div>
+        </div>
+      </div>
+    </a>`).join('');
+}
+
+function toggleRelFav(e, id){
+  e.preventDefault(); e.stopPropagation();
+  if(!isLoggedIn()){ openModal('loginModal'); return; }
+  const btn = e.currentTarget;
+  const svg = btn.querySelector('svg');
+  if(relFavSet.has(id)){ relFavSet.delete(id); btn.classList.remove('active'); svg.setAttribute('fill','none'); }
+  else { relFavSet.add(id); btn.classList.add('active'); svg.setAttribute('fill','currentColor');
+    btn.animate([{transform:'scale(1)'},{transform:'scale(1.35)'},{transform:'scale(.88)'},{transform:'scale(1)'}],{duration:280,easing:'ease-out'}); }
+}
+
+/* ── フォロー ── */
+function toggleFollow(btn){
+  btn.classList.toggle('following');
+  btn.innerHTML = btn.classList.contains('following')
+    ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><polyline points="20 6 9 17 4 12"/></svg>フォロー中'
+    : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>フォロー';
+}
+function toggleSellerFollow(btn){
+  btn.classList.toggle('following');
+  btn.innerHTML = btn.classList.contains('following')
+    ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><polyline points="20 6 9 17 4 12"/></svg>フォロー中'
+    : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>フォロー';
+}
+
+/* ── 申込モーダル ── */
+function openApplyModal(){
+  document.getElementById('amTitle').textContent = `《${WORK.title}》購入申込`;
+  openModal('applyModal');
+}
+function submitApply(){
+  if(!document.getElementById('amAgreeCheck').checked){ alert('注意事項への同意が必要です'); return; }
+  closeModal('applyModal');
+  _applyState = 'applied';
+  _applyCount = _applyCount + 1;
+  renderActionArea();
+  alert('申込を受け付けました。\n申込番号：#0042\n購入可否は会期終了後にご連絡します。');
+}
+
+/* ── モーダル共通 ── */
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+document.addEventListener('click', e=>{
+  ['loginModal','applyModal'].forEach(id=>{
+    if(e.target===document.getElementById(id)) closeModal(id);
+  });
+});
+
+/* ── シェア ── */
+function shareWork(){
+  if(navigator.share) navigator.share({title:document.title, url:location.href});
+  else copyLink();
+}
+function copyLink(){
+  navigator.clipboard.writeText(location.href).then(()=>alert('URLをコピーしました'));
+}
+
+/* ── ROLE SYSTEM ── */
+const RD={
+  guest:{label:'ログイン',color:'#7a8a99',bg:'#e8ecf0',icon:'<svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.8" width="22" height="22"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>',loggedIn:false},
+  user:{label:'MY PAGE',color:'#005da7',bg:'#ddeeff',icon:'<svg viewBox="0 0 24 24" fill="none" stroke="#005da7" stroke-width="1.8" width="22" height="22"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',loggedIn:true},
+  ownerCreator:{label:'creator',color:'#b8662a',bg:'linear-gradient(135deg,#f0e0cc,#d4a87a)',icon:'<svg viewBox="0 0 24 24" fill="none" stroke="#b8662a" stroke-width="1.8" width="22" height="22"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>',loggedIn:true},
+  ownerGallery:{label:'gallery',color:'#2d7a5e',bg:'linear-gradient(135deg,#c8e8d8,#7ab89a)',icon:'<svg viewBox="0 0 24 24" fill="none" stroke="#2d7a5e" stroke-width="1.8" width="22" height="22"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg>',loggedIn:true},
+  admin:{label:'ADMIN',color:'#8e44ad',bg:'linear-gradient(135deg,#e8d0f0,#b87ad4)',icon:'<svg viewBox="0 0 24 24" fill="none" stroke="#8e44ad" stroke-width="1.8" width="22" height="22"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',loggedIn:true}
+};
+function renderRoleNav(role){
+  const nav=document.getElementById('roleNav'); if(!nav)return;
+  const r=RD[role];
+  nav.innerHTML=r.loggedIn
+    ?`<button class="nav-item"><div class="role-thumb" style="background:${r.bg};border:2px solid ${r.color}40">${r.icon}</div><span class="role-label" style="color:${r.color}">${r.label}</span></button>`
+    :`<button class="nav-item"><div class="nav-icon">${r.icon}</div><span class="nav-label">ログイン/<br>登録</span></button>`;
+}
+function renderBottomNav(role){
+  const inner=document.getElementById('bnInner'); if(!inner)return;
+  const r=RD[role];
+  const loginOrRole=r.loggedIn
+    ?`<div class="bni-div"></div><a href="#" class="bni"><div class="bni-role" style="background:${r.bg};border:2px solid ${r.color}40">${r.icon.replace('width="22" height="22"','width="18" height="18"')}</div><span class="bni-l" style="color:${r.color}">${r.label}</span></a>`
+    :`<div class="bni-div"></div><a href="#" class="bni"><div class="bni-login"><svg viewBox="0 0 24 24" fill="none" stroke="rgba(201,169,110,.6)" stroke-width="1.8" width="18" height="18"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg></div><span class="bni-l">ログイン/<br>登録</span></a>`;
+  inner.innerHTML=`
+    <a href="./liaison_works_single.html" class="bni"><div class="bni-iw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><polyline points="15 18 9 12 15 6"/></svg></div><span class="bni-l">作品一覧</span></a>
+    <button class="bni" onclick="toggleMainFav()"><div class="bni-iw"><svg viewBox="0 0 24 24" fill="${mainFaved?'#e07070':'none'}" stroke="${mainFaved?'#e07070':'currentColor'}" stroke-width="1.8" width="20" height="20"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div><span class="bni-l">興味あり！</span></button>
+    <button class="bni" onclick="shareWork()"><div class="bni-iw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></div><span class="bni-l">シェア</span></button>
+    ${loginOrRole}`;
+}
+
+/* ── コメント・評価 ── */
+const DEMO_COMMENTS = {
+  1:[
+    { user:'Y.M', bg:'linear-gradient(135deg,#b8d8cc,#6a9e8a)', date:'2026.03.28',
+      anon:false, purchased:true, stars:5,
+      body:'展覧会で実物を見て一目惚れし、申込みました。自宅に届いて改めて向き合うと、光の当たり方によって全く違う表情を見せてくれます。大切にしていきます。' },
+    { user:'T.K', bg:'linear-gradient(135deg,#d0d8f0,#8899cc)', date:'2026.03.15',
+      anon:false, purchased:false, stars:4,
+      body:'会場で拝見しました。緑の色が穏やかで、ずっと見ていられる作品です。次回作も楽しみにしています。' },
+  ],
+  2:[], 3:[], 4:[],
+};
+let _localComments = {};
+let _selectedStars = 0;
+
+const STAR_LABELS = ['','よくない','まあまあ','ふつう','よい','とてもよい'];
+
+function starsHtml(n, size=''){
+  return Array.from({length:5},(_,i)=>
+    `<span class="cmt-star" style="${size?'font-size:'+size:''}">` +
+    (i < n ? '★' : '☆') + `</span>`
+  ).join('');
+}
+
+function calcAvg(comments){
+  if(!comments.length) return null;
+  const rated = comments.filter(c=>c.stars>0);
+  if(!rated.length) return null;
+  return (rated.reduce((s,c)=>s+c.stars,0)/rated.length).toFixed(1);
+}
+
+function renderComments(){
+  const w = WORK;
+  const allComments = [...(DEMO_COMMENTS[w.id]||[]), ...(_localComments[w.id]||[])];
+
+  /* 平均スター */
+  const avg = calcAvg(allComments);
+  const summaryEl = document.getElementById('cmtSummary');
+  if(avg && allComments.length){
+    summaryEl.innerHTML = `
+      <div style="text-align:right">
+        <div class="cmt-avg-stars">${starsHtml(Math.round(avg),'1rem')}</div>
+        <div style="display:flex;align-items:baseline;gap:6px">
+          <span class="cmt-avg">${avg}</span>
+          <span class="cmt-avg-count">/ 5（${allComments.length}件）</span>
+        </div>
+      </div>`;
+  } else {
+    summaryEl.innerHTML = `<span style="font-size:.66rem;color:var(--lmuted)">まだ評価がありません</span>`;
+  }
+
+  /* コメント一覧 */
+  const listEl = document.getElementById('commentsList');
+  if(!allComments.length){
+    listEl.innerHTML = `
+      <div class="cmt-empty">
+        <div class="cmt-empty-icon">💬</div>
+        <div class="cmt-empty-txt">まだコメント・評価はありません。<br>ログインして最初の評価を投稿しましょう。</div>
+      </div>`;
+  } else {
+    listEl.innerHTML = allComments.map(c=>`
+      <div class="cmt-card">
+        <div class="cmt-card-header">
+          <div class="cmt-avatar" style="background:${c.bg||'var(--lbg3)'}">
+            ${c.anon ? '匿' : c.user.slice(0,1)}
+          </div>
+          <div class="cmt-user">
+            <div class="cmt-user-row">
+              <span class="cmt-user-name">${c.anon?'匿名ユーザー':c.user}</span>
+              ${c.purchased?'<span class="cmt-verified">✓ 購入者</span>':''}
+              <span class="cmt-user-date">${c.date}</span>
+            </div>
+            <div class="cmt-stars">${starsHtml(c.stars)}</div>
+          </div>
+        </div>
+        <div class="cmt-body">${c.body}</div>
+      </div>`).join('');
+  }
+
+  /* 投稿エリア */
+  const postEl = document.getElementById('commentPostArea');
+  if(!isLoggedIn()){
+    postEl.innerHTML = `
+      <div class="cmt-login-prompt">
+        <p>コメント・評価を投稿するにはログインが必要です</p>
+        <button class="cmt-login-link" onclick="openModal('loginModal')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+          ログインして評価する
+        </button>
+      </div>`;
+    _selectedStars = 0;
+    return;
+  }
+  /* ログイン済み → 投稿フォーム */
+  postEl.innerHTML = `
+    <div class="cmt-post-box">
+      <div class="cmt-post-lbl">評価・コメントを投稿する</div>
+      <div class="cmt-star-input">
+        <span class="cmt-star-input-lbl">評価：</span>
+        <div class="cmt-star-row" id="starInputRow">
+          ${[1,2,3,4,5].map(n=>`<button class="cmt-star-btn" data-star="${n}" onclick="selectStar(${n})">★</button>`).join('')}
+        </div>
+        <span class="cmt-star-selected-lbl" id="starLabel">${_selectedStars?STAR_LABELS[_selectedStars]:''}</span>
+      </div>
+      <textarea class="cmt-textarea" id="cmtInput" placeholder="この作品への感想をお書きください…"></textarea>
+      <div class="cmt-post-footer">
+        <label class="cmt-anon-label">
+          <input type="checkbox" id="cmtAnon"> 匿名で投稿する
+        </label>
+        <button class="cmt-submit" onclick="submitComment()">投稿する</button>
+      </div>
+    </div>`;
+  /* 現在の選択を復元 */
+  updateStarUI(_selectedStars);
+}
+
+function selectStar(n){
+  _selectedStars = n;
+  updateStarUI(n);
+}
+
+function updateStarUI(n){
+  const row = document.getElementById('starInputRow');
+  const lbl = document.getElementById('starLabel');
+  if(!row) return;
+  row.querySelectorAll('.cmt-star-btn').forEach(btn=>{
+    const s = parseInt(btn.dataset.star);
+    btn.classList.toggle('lit', s <= n);
+  });
+  if(lbl) lbl.textContent = n ? STAR_LABELS[n] : '';
+}
+
+function submitComment(){
+  const txt = (document.getElementById('cmtInput')?.value||'').trim();
+  if(!_selectedStars){ alert('星評価を選んでください'); return; }
+  if(!txt){ alert('コメントを入力してください'); return; }
+  const anon = document.getElementById('cmtAnon')?.checked||false;
+  const id = WORK.id;
+  if(!_localComments[id]) _localComments[id] = [];
+  _localComments[id].push({
+    user:'あなた',
+    bg:'linear-gradient(135deg,#ddeeff,#88aadd)',
+    date: new Date().toLocaleDateString('ja-JP',{year:'numeric',month:'2-digit',day:'2-digit'}).replace(/\//g,'.'),
+    anon, purchased: _applyState==='applied', stars: _selectedStars, body: txt,
+  });
+  _selectedStars = 0;
+  renderComments();
+}
+
+/* ── 作品切り替え（デモ用） ── */
+let _currentWorkId = WORK.id;
+function switchWork(id, btn){
+  _currentWorkId = id;
+  const w = ALL_WORKS.find(w=>w.id===id);
+  if(!w) return;
+  // WORK を差し替え（グローバル再バインド）
+  Object.assign(WORK, w);
+  // RELATED 更新
+  RELATED.length = 0;
+  ALL_WORKS.filter(x=>x.id!==id).forEach(x=>RELATED.push(x));
+
+  document.querySelectorAll('.dbtn[data-group="work"]').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active'); btn.dataset.group='work';
+
+  initPage();
+  renderSpecs(w);
+  renderActionArea();
+  renderRelated();
+  renderComments();
+}
+
+/* ── デモバー操作 ── */
+function setRole(role,btn){
+  _currentRole=role;
+  document.querySelectorAll('.dbtn[data-group="role"]').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active'); btn.dataset.group='role';
+  renderRoleNav(role); renderBottomNav(role); renderTopbarR(); renderActionArea(); renderComments();
+}
+function setPhase(phase,btn){
+  _workPhase=phase;
+  document.querySelectorAll('.dbtn').forEach(b=>{if(b.dataset.group==='phase')b.classList.remove('active')});
+  btn.classList.add('active'); btn.dataset.group='phase';
+  renderSpecs(WORK); renderActionArea();
+}
+function setApply(state,btn){
+  _applyState=state;
+  document.querySelectorAll('.dbtn').forEach(b=>{if(b.dataset.group==='apply')b.classList.remove('active')});
+  btn.classList.add('active'); btn.dataset.group='apply';
+  renderActionArea();
+}
+
+/* ── デモボタンにグループ設定 ── */
+document.querySelectorAll('.dbtn').forEach((btn)=>{
+  const txt = btn.textContent;
+  if(['ゲスト','ユーザー','creator','gallery','admin'].some(r=>txt.includes(r))) btn.dataset.group='role';
+  else if(['LIAISON期間中','売約済み'].some(r=>txt.includes(r))) btn.dataset.group='phase';
+  else if(['未申込','申込済み'].some(r=>txt.includes(r))) btn.dataset.group='apply';
+  else if(['id='].some(r=>txt.includes(r))) btn.dataset.group='work';
+});
+
+/* ── INIT ── */
+initPage();
+renderActionArea();
+renderRelated();
+renderComments();
+renderRoleNav('guest');
+renderBottomNav('guest');
+renderTopbarR();
+</script>
+</body>
+</html>

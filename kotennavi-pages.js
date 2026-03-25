@@ -1055,11 +1055,27 @@ var _p6DemoComments = {
   2:[], 3:[], 4:[],
 };
 
+/* おすすめ展覧会サンプルデータ */
+var _p6RecWorks = [
+  { id:'r1', title:'静けさの輪郭', titleEn:'Contours of Silence',
+    creator:'佐藤 葵', venue:'Gallery amu 表参道',
+    dates:'2026.04.05 — 04.19', status:'open',
+    bg:'linear-gradient(155deg,#d0c8e8,#8878b0)' },
+  { id:'r2', title:'余白と重力', titleEn:'Margins and Gravity',
+    creator:'中村 海', venue:'VACANT 原宿',
+    dates:'2026.03.28 — 04.06', status:'open',
+    bg:'linear-gradient(155deg,#c8d8e8,#7898b0)' },
+  { id:'r3', title:'音のかたち IV', titleEn:'Shape of Sound IV',
+    creator:'田中 透', venue:'LVDB gallery 代官山',
+    dates:'2026.04.12 — 04.26', status:'upcoming',
+    bg:'linear-gradient(155deg,#e8d8c8,#b09878)' },
+];
+
 /* ── P6 共通ロジック（renderActionArea は opts で差し替え） ── */
 function _p6Init(opts) {
   var ALL_WORKS = _p6Works;
-  var SL = {available:'販売中', sold:'売約済み', reserved:'予約済', nfs:'販売なし'};
-  var SC = {available:'available', sold:'sold', reserved:'reserved', nfs:'nfs'};
+  var SL = {available:'販売中', sold:'売約済み', reserved:'予約済', nfs:'販売なし', not_for_sale:'販売なし', inquiry:'要問合せ'};
+  var SC = {available:'available', sold:'sold', reserved:'reserved', nfs:'nfs', not_for_sale:'nfs', inquiry:'inquiry'};
   function fmt(p) { return p ? '¥' + p.toLocaleString() : '—'; }
 
   var urlId = parseInt(new URLSearchParams(location.search).get('id')) || 1;
@@ -1130,6 +1146,7 @@ function _p6Init(opts) {
     });
     el = document.getElementById('descRightCol');
     if (el) el.innerHTML = blocks.join('');
+    if (opts.initExtra) opts.initExtra(WORK);
   }
 
   function renderSpecs(w) {
@@ -1156,6 +1173,9 @@ function _p6Init(opts) {
       { lbl:'配送時期',   val: w.shipping ? w.shipping.timing : null },
       { lbl:'配送方法',   val: renderShipping(w.shipping) },
     ];
+    if (opts.hideSpecRows) {
+      rows = rows.filter(function(r) { return opts.hideSpecRows.indexOf(r.lbl) === -1; });
+    }
     var el = document.getElementById('specsTable');
     if (el) el.innerHTML = rows
       .filter(function(r) { return r.always || (r.val && String(r.val).trim() !== ''); })
@@ -1174,14 +1194,27 @@ function _p6Init(opts) {
   }
 
   function favShareRow() {
+    var on = mainFaved;
     return '<div class="wh-fav-row">' +
-      '<button class="btn-fav' + (mainFaved ? ' active' : '') + '" id="mainFavBtn" onclick="toggleMainFav()">' +
-      '<svg viewBox="0 0 24 24" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="' + (mainFaved ? 'currentColor' : 'none') + '" stroke="currentColor"/></svg>' +
-      (mainFaved ? '興味あり！登録済み' : '興味あり！') +
+      '<button class="ktn-btn' + (on ? ' on' : '') + '" onclick="toggleInterest(this)" data-action="interest">' +
+      '<svg viewBox="0 0 16 16" fill="none">' +
+      '<path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"' +
+      (on
+        ? ' fill="#4da3f5" stroke="#4da3f5" stroke-width=".6" stroke-linejoin="round"'
+        : ' fill="#7a8a99" fill-opacity=".45" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6" stroke-linejoin="round"') +
+      '/></svg>' +
+      (on ? '興味あり！済' : '興味あり！') +
+      '<span class="tip">' + (on ? '興味ある！— 解除する' : '興味ある！に追加する') + '</span>' +
       '</button>' +
       '<button class="btn-share-sm" onclick="shareWork()">' +
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>' +
       'シェア</button></div>';
+  }
+
+  function toggleInterest() {
+    if (KTN.role === 'guest') { openModal('loginModal'); return; }
+    mainFaved = !mainFaved;
+    renderActionArea();
   }
 
   function renderActionArea() {
@@ -1204,10 +1237,11 @@ function _p6Init(opts) {
   }
 
   function renderRelated() {
+    if (opts.renderRelated) { opts.renderRelated(RELATED); return; }
     var el = document.getElementById('relGrid');
     if (!el) return;
     el.innerHTML = RELATED.map(function(w) {
-      return '<a href="' + opts.relLink + '?id=' + w.id + '" class="rel-card">' +
+      return '<div class="masonry-item"><a href="' + opts.relLink + '?id=' + w.id + '" class="rel-card">' +
         '<div class="rel-card-img">' +
         '<div class="rel-card-bg" style="background:' + w.bg + '">' + w.title + '</div>' +
         (w.status === 'sold' ? '<div class="rel-card-sold-ribbon">SOLD</div>' : '') +
@@ -1220,7 +1254,7 @@ function _p6Init(opts) {
         '<div class="rel-card-footer">' +
         '<div class="rel-card-price">' + fmt(w.price) + '</div>' +
         '<div class="rel-card-status ' + (SC[w.status] || 'available') + '">' + (SL[w.status] || '') + '</div>' +
-        '</div></div></a>';
+        '</div></div></a></div>';
     }).join('');
   }
 
@@ -1310,34 +1344,42 @@ function _p6Init(opts) {
           '<span class="cmt-user-name">' + (c.anon ? '匿名ユーザー' : c.user) + '</span>' +
           (c.purchased ? '<span class="cmt-verified">✓ 購入者</span>' : '') +
           '<span class="cmt-user-date">' + c.date + '</span></div>' +
-          '<div class="cmt-stars">' + starsHtml(c.stars) + '</div></div></div>' +
+          (opts.noRating ? '' : '<div class="cmt-stars">' + starsHtml(c.stars) + '</div>') +
+          '</div></div>' +
           '<div class="cmt-body">' + c.body + '</div></div>';
       }).join('')
       : '<div class="cmt-empty"><div class="cmt-empty-icon">💬</div>' +
-        '<div class="cmt-empty-txt">まだコメント・評価はありません。<br>ログインして最初の評価を投稿しましょう。</div></div>';
+        '<div class="cmt-empty-txt">まだコメントはありません。<br>ログインして最初のコメントを投稿しましょう。</div></div>';
     }
     el = document.getElementById('commentPostArea');
     if (el) {
       if (!isLoggedIn()) {
-        el.innerHTML = '<div class="cmt-login-prompt"><p>コメント・評価を投稿するにはログインが必要です</p>' +
+        el.innerHTML = '<div class="cmt-login-prompt"><p>コメントを投稿するにはログインが必要です</p>' +
           '<button class="cmt-login-link" onclick="openModal(\'loginModal\')">' +
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>' +
-          'ログインして評価する</button></div>';
+          'ログインしてコメントする</button></div>';
         _selectedStars = 0;
         return;
       }
-      el.innerHTML = '<div class="cmt-post-box"><div class="cmt-post-lbl">評価・コメントを投稿する</div>' +
-        '<div class="cmt-star-input"><span class="cmt-star-input-lbl">評価：</span>' +
-        '<div class="cmt-star-row" id="starInputRow">' +
-        [1,2,3,4,5].map(function(n) {
-          return '<button class="cmt-star-btn" data-star="' + n + '" onclick="selectStar(' + n + ')">★</button>';
-        }).join('') +
-        '</div><span class="cmt-star-selected-lbl" id="starLabel">' +
-        (_selectedStars ? STAR_LABELS[_selectedStars] : '') + '</span></div>' +
-        '<textarea class="cmt-textarea" id="cmtInput" placeholder="この作品への感想をお書きください…"></textarea>' +
-        '<div class="cmt-post-footer"><label class="cmt-anon-label"><input type="checkbox" id="cmtAnon"> 匿名で投稿する</label>' +
-        '<button class="cmt-submit" onclick="submitComment()">投稿する</button></div></div>';
-      updateStarUI(_selectedStars);
+      if (opts.noRating) {
+        el.innerHTML = '<div class="cmt-post-box"><div class="cmt-post-lbl">コメントを投稿する</div>' +
+          '<textarea class="cmt-textarea" id="cmtInput" placeholder="この作品への感想をお書きください…"></textarea>' +
+          '<div class="cmt-post-footer"><label class="cmt-anon-label"><input type="checkbox" id="cmtAnon"> 匿名で投稿する</label>' +
+          '<button class="cmt-submit" onclick="submitComment()">投稿する</button></div></div>';
+      } else {
+        el.innerHTML = '<div class="cmt-post-box"><div class="cmt-post-lbl">評価・コメントを投稿する</div>' +
+          '<div class="cmt-star-input"><span class="cmt-star-input-lbl">評価：</span>' +
+          '<div class="cmt-star-row" id="starInputRow">' +
+          [1,2,3,4,5].map(function(n) {
+            return '<button class="cmt-star-btn" data-star="' + n + '" onclick="selectStar(' + n + ')">★</button>';
+          }).join('') +
+          '</div><span class="cmt-star-selected-lbl" id="starLabel">' +
+          (_selectedStars ? STAR_LABELS[_selectedStars] : '') + '</span></div>' +
+          '<textarea class="cmt-textarea" id="cmtInput" placeholder="この作品への感想をお書きください…"></textarea>' +
+          '<div class="cmt-post-footer"><label class="cmt-anon-label"><input type="checkbox" id="cmtAnon"> 匿名で投稿する</label>' +
+          '<button class="cmt-submit" onclick="submitComment()">投稿する</button></div></div>';
+        updateStarUI(_selectedStars);
+      }
     }
   }
 
@@ -1354,7 +1396,7 @@ function _p6Init(opts) {
   function submitComment() {
     var inp = document.getElementById('cmtInput');
     var txt = inp ? inp.value.trim() : '';
-    if (!_selectedStars) { alert('星評価を選んでください'); return; }
+    if (!opts.noRating && !_selectedStars) { alert('星評価を選んでください'); return; }
     if (!txt) { alert('コメントを入力してください'); return; }
     var anon = document.getElementById('cmtAnon') ? document.getElementById('cmtAnon').checked : false;
     var id = WORK.id;
@@ -1383,10 +1425,36 @@ function _p6Init(opts) {
     renderComments();
   }
 
+  function renderHeaderActs() {
+    var el = document.getElementById('ktnActs');
+    if (!el) return;
+    ddSeq = 0;
+    var shareH = '<button class="ktn-hib" onclick="shareWork()" aria-label="シェア">' +
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>' +
+      '<span class="ktn-hib__lbl">シェア</span></button>';
+    var html = shareH;
+    if (isOwner()) {
+      html += sep() + owbtn('edit', '編集') + dd('オーナーメニュー',
+        ddi('edit', '作品を編集する') + ddSep() +
+        ddi('chart', 'インサイト') + ddSep() +
+        ddi('trash', '削除', true));
+    } else if (isAdmin()) {
+      html += sep() + owbtn('edit', '編集') + dd('オーナーメニュー',
+        ddi('edit', '作品を編集する') + ddSep() +
+        ddi('chart', 'インサイト') + ddSep() +
+        ddi('trash', '削除', true)) +
+        dd('管理者',
+          ddi('info', 'コンテンツ詳細情報') + ddSep() +
+          ddi('trash', '削除', true));
+    }
+    el.innerHTML = html;
+  }
+
   function setR(role, btn) {
     KTN.role = role;
     dbtnGroup('setR');
     btn.classList.add('on');
+    renderHeaderActs();
     renderActionArea();
     renderComments();
   }
@@ -1407,12 +1475,14 @@ function _p6Init(opts) {
   }
 
   /* グローバル公開 */
+  window.renderHeaderActs   = renderHeaderActs;
   window.setR               = setR;
   window.setPhase           = setPhase;
   window.setApply           = setApply;
   window.switchWork         = switchWork;
   window.switchImg          = switchImg;
   window.toggleMainFav      = toggleMainFav;
+  window.toggleInterest     = toggleInterest;
   window.toggleFollow       = toggleFollow;
   window.toggleSellerFollow = toggleFollow;
   window.openApplyModal     = openApplyModal;
@@ -1425,10 +1495,38 @@ function _p6Init(opts) {
   window.submitComment      = submitComment;
   window.toggleRelFav       = toggleRelFav;
 
+  function renderRecGrid() {
+    var P6_REC = [
+      { title: '\u300a\u9759\u3051\u3055\u306e\u8f2a\u90ed\u300b', creator: '\u4f50\u85e4 \u8475',
+        bg: 'linear-gradient(160deg,#c8c0e0,#9080b8)', spec: '2025 / \u30a2\u30af\u30ea\u30eb\u30fb\u30ad\u30e3\u30f3\u30d0\u30b9' },
+      { title: '\u300a\u4f59\u767d\u3068\u91cd\u529b\u300b', creator: '\u4e2d\u6751 \u6d77',
+        bg: 'linear-gradient(160deg,#b0c8d8,#7898b0)', spec: '2026 / \u6cb9\u5f69\u30fb\u9ebb\u5e03' },
+      { title: '\u300a\u97f3\u306e\u304b\u305f\u3061 IV\u300b', creator: '\u7530\u4e2d \u900f',
+        bg: 'linear-gradient(160deg,#d8c8a8,#b0a080)', spec: '2025 / \u6df7\u5408\u6280\u6cd5\u30fb\u548c\u7d19' },
+      { title: '\u300a\u5149\u306e\u65ad\u7247 #2\u300b', creator: '\u5c71\u7530 \u8475',
+        bg: 'linear-gradient(160deg,#c8d8c0,#90b080)', spec: '2026 / \u5199\u771f\u30fb\u30b8\u30af\u30ec\u30fc\u30d7\u30ea\u30f3\u30c8' },
+    ];
+    var el = document.getElementById('p6RecGrid');
+    if (!el) return;
+    el.innerHTML = P6_REC.map(function(w) {
+      return '<div class="masonry-item">' +
+        '<a class="aw aw--portfolio" href="#">' +
+        '<div class="aw__img"><div class="aw__img-ph" style="background:' + w.bg + ';min-height:180px"></div></div>' +
+        '<div class="aw__body">' +
+        '<div class="aw__badge-row"><span class="cb cb-content cb-artwork">artwork</span></div>' +
+        '<div class="aw__title-row"><div class="aw__title">' + w.title + '</div></div>' +
+        '<div class="aw__creator">' + w.creator + '</div>' +
+        '<div class="aw__spec">' + w.spec + '</div>' +
+        '</div></a></div>';
+    }).join('');
+  }
+
   /* 初期描画 */
   initPage();
+  renderHeaderActs();
   renderActionArea();
   renderRelated();
+  renderRecGrid();
   renderComments();
 }
 
@@ -1438,16 +1536,117 @@ function _p6Init(opts) {
 KTN.pages['p6'] = function() {
   _p6Init({
     relLink: 'kotennavi-p6.html',
-    renderActionArea: function(WORK, _workPhase, _applyState, _applyCount, isLoggedIn, favShareRow) {
-      var area = document.getElementById('actionArea');
-      if (!area) return;
-      area.innerHTML =
-        '<button class="btn-contact" onclick="alert(\'問い合わせフォームへ\')">' +
-        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>' +
-        '作家に問い合わせる</button>' +
-        favShareRow();
+    noRating: true,
+    hideSpecRows: ['額装','作品点数/エディション','作品状態','付属品','配送時期','配送方法'],
+    renderRelated: function() {
+      var MORE_BY = [
+        { title: '\u300a\u3075\u308f\u3075\u308f\u300b',     bg: 'linear-gradient(155deg,#f0e8d0,#d4b896)', href: '#' },
+        { title: '\u300a\u30c9\u30ad\u30c9\u30ad #3\u300b',  bg: 'linear-gradient(155deg,#f0d0d0,#c88080)', href: '#' },
+        { title: '\u300a\u3056\u308f\u3056\u308f\uff08\u591c\uff09\u300b', bg: 'linear-gradient(155deg,#3d3530,#1f1a18)', href: '#' },
+        { title: '\u300a\u30b7\u30e5\u30ef\u30b7\u30e5\u30ef\u300b', bg: 'linear-gradient(155deg,#d0e8f0,#7ab4cc)', href: '#' },
+      ];
+      var grid = document.getElementById('p6MoreByGrid');
+      if (grid) {
+        grid.innerHTML = MORE_BY.map(function(w) {
+          return '<a class="p6-more-by__item" href="' + w.href + '">' +
+            '<div class="p6-more-by__thumb" style="background:' + w.bg + '"></div>' +
+            '<div class="p6-more-by__title">' + w.title + '</div>' +
+            '</a>';
+        }).join('');
+      }
     },
+    initExtra: function(w) {
+      var el;
+      /* メイン画像 */
+      el = document.getElementById('p6MainImg');
+      if (el && w.thumbs && w.thumbs[0]) el.style.background = w.thumbs[0].bg;
+      /* キャプション */
+      el = document.getElementById('p6Caption');
+      if (el && w.thumbs && w.thumbs[0]) el.textContent = w.thumbs[0].label;
+      /* タイトル */
+      el = document.getElementById('p6Title');
+      if (el) el.textContent = '\u300a' + w.title + '\u300b';
+      el = document.getElementById('p6TitleEn');
+      if (el) el.textContent = w.titleEn;
+      /* 仕様 dl（2カラム用） */
+      var edition = w.edition
+        ? (w.qty + '\u70b9 / ' + w.edition)
+        : '1\u70b9\uff08\u30a8\u30c7\u30a3\u30b7\u30e7\u30f3\u306a\u3057\uff09';
+      var specs = [
+        { lbl:'\u4f5c\u5bb6',         val: w.creator + '\uff08' + w.creatorEn + '\uff09', always: true },
+        { lbl:'\u5236\u4f5c\u5e74',   val: w.year ? w.year + '\u5e74' : null },
+        { lbl:'\u7d20\u6750\u30fb\u6280\u6cd5', val: w.medium },
+        { lbl:'\u30b5\u30a4\u30ba',   val: w.size },
+        { lbl:'\u91cd\u3055',         val: w.weight },
+        { lbl:'\u30a8\u30c7\u30a3\u30b7\u30e7\u30f3', val: edition, always: true },
+      ];
+      el = document.getElementById('p6Specs');
+      if (el) el.innerHTML = specs
+        .filter(function(r) { return r.always || r.val; })
+        .map(function(r) { return '<dt>' + r.lbl + '</dt><dd>' + r.val + '</dd>'; })
+        .join('');
+      /* サムネイル */
+      el = document.getElementById('p6Thumbs');
+      if (el && w.thumbs) {
+        el.innerHTML = w.thumbs.map(function(t, i) {
+          return '<div class="p6-hero__thumb' + (i === 0 ? ' is-active' : '') + '"' +
+            ' style="background:' + t.bg + '"' +
+            ' onclick="switchImg(this,\'' + t.bg.replace(/'/g, "\\'") + '\',\'' + t.label + '\')"></div>';
+        }).join('');
+      }
+      /* 作品タイトル（ABOUT THIS WORK セクション） */
+      el = document.getElementById('p6AboutTitle');
+      if (el) el.textContent = '\u300a' + w.title + '\u300b';
+      /* 関連記事 */
+      el = document.getElementById('p6Articles');
+      if (el) {
+        var articles = [
+          {
+            date: '2026.03.05',
+            title: '\u300e' + w.title + '\u300f\u5236\u4f5c\u306b\u3064\u3044\u3066 \u2014\u2014 \u97f3\u306e\u304b\u305f\u3061\u3092\u63a2\u3057\u3066',
+            excerpt: w.creator + '\u304c\u8a9e\u308b\u3001\u97f3\u3092\u7d75\u753b\u306b\u5909\u63db\u3059\u308b\u30d7\u30ed\u30bb\u30b9\u3068\u306f\u3002\u5236\u4f5c\u73fe\u5834\u306b\u5bc6\u7740\u3057\u3001\u305d\u306e\u601d\u60f3\u3068\u6280\u6cd5\u306b\u8feb\u3063\u305f\u3002',
+            href: 'kotennavi-p7.html',
+          },
+          {
+            date: '2025.11.20',
+            title: w.creator + '\u30a4\u30f3\u30bf\u30d3\u30e5\u30fc\uff1a\u8a00\u8a9e\u3068\u7d75\u753b\u306e\u3042\u3044\u3060\u3067',
+            excerpt: '\u300c\u8a00\u8449\u306f\u97f3\u3067\u3042\u308a\u3001\u8272\u3067\u3042\u308a\u3001\u89e6\u611f\u3067\u3082\u3042\u308b\u300d\u2014\u2014\u72ec\u81ea\u306e\u8868\u73fe\u3092\u8ffd\u3044\u7d9a\u3051\u308b\u30a2\u30fc\u30c6\u30a3\u30b9\u30c8\u306e\u54f2\u5b66\u306b\u8feb\u308b\u3002',
+            href: 'kotennavi-p7.html',
+          },
+          {
+            date: '2026.03.10',
+            title: '\u5c55\u8a55\uff1a' + w.title + '\u300c' + w.creator + '\u300d',
+            excerpt: '\u8a00\u8a9e\u3068\u611f\u899a\u306e\u5883\u754c\u3092\u554f\u3044\u7d9a\u3051\u308b' + w.creator + '\u306e\u65b0\u4f5c\u7fa4\u3002Gallery\u3067\u306e\u500b\u5c55\u3092\u632f\u308a\u8fd4\u308b\u3002',
+            href: 'kotennavi-p7.html',
+          },
+        ];
+        el.innerHTML = articles.map(function(a) {
+          return '<a class="p6-article-item" href="' + a.href + '">' +
+            '<div class="p6-article__meta-row">' +
+            '<span class="cb cb-content cb-article">article</span>' +
+            '<span class="p6-article__date">' + a.date + '</span>' +
+            '</div>' +
+            '<div class="p6-article__title">' + a.title + '</div>' +
+            '<div class="p6-article__excerpt">' + a.excerpt + '</div>' +
+            '</a>';
+        }).join('');
+      }
+    },
+    renderActionArea: function() {},
   });
+  window.toggleInterest = function(btn) {
+    if (KTN.role === 'guest') { openModal('loginModal'); return; }
+    btn.classList.toggle('is-active');
+  };
+  window.doShare = function() { shareWork(); };
+  window.switchImg = function(thumb, bg, label) {
+    document.querySelectorAll('.p6-hero__thumb').forEach(function(t) { t.classList.remove('is-active'); });
+    thumb.classList.add('is-active');
+    var el = document.getElementById('p6MainImg');
+    if (el) el.style.background = bg;
+    el = document.getElementById('p6Caption');
+    if (el) el.textContent = label;
+  };
 };
 
 /* ────────────────────────────────────────────────────
@@ -1459,67 +1658,147 @@ KTN.pages['p6-1'] = function() {
     renderActionArea: function(WORK, _workPhase, _applyState, _applyCount, isLoggedIn, favShareRow) {
       var area = document.getElementById('actionArea');
       if (!area) return;
-      var isSold = _workPhase === 'sold' || WORK.status === 'sold';
-      if (isSold) {
-        area.innerHTML =
-          '<div class="wh-sold-bar">' +
-          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>' +
-          'この作品は売約済みです</div>' + favShareRow();
-        return;
+      // 非売品のときのみステータスバッジを表示
+      var badge = document.getElementById('workStatus');
+      if (badge) {
+        var isNfs = WORK.status === 'nfs' || WORK.status === 'not_for_sale';
+        badge.style.display = isNfs ? '' : 'none';
       }
-      var applyBtn = '';
-      if (!isLoggedIn()) {
-        applyBtn = '<button class="btn-apply" onclick="openModal(\'loginModal\')">' +
-          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>' +
-          '購入申込をする' +
-          (_applyCount > 0 ? '<span class="btn-apply-count">' + _applyCount + '人が申込中</span>' : '') +
-          '</button>';
-      } else if (_applyState === 'applied') {
-        applyBtn =
-          '<div class="btn-applied"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>' +
-          '申込済み<span class="btn-applied-num">申込番号：#0042</span></div>' +
-          '<button class="btn-dashboard" onclick="alert(\'購入申込ダッシュボードへ\')">' +
-          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>' +
-          '申込ダッシュボードへ</button>';
-      } else {
-        applyBtn = '<button class="btn-apply" onclick="openApplyModal()">' +
-          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>' +
-          '購入申込をする' +
-          (_applyCount > 0 ? '<span class="btn-apply-count">' + _applyCount + '人が申込中</span>' : '') +
-          '</button>';
-      }
-      area.innerHTML = applyBtn +
+      area.innerHTML =
         '<button class="btn-contact" onclick="alert(\'問い合わせフォームへ\')">' +
         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>' +
-        '問い合わせする</button>' + favShareRow();
+        '作家に問い合わせる</button>' +
+        favShareRow();
     },
   });
 };
 
 /* ────────────────────────────────────────────────────
-   P6-2 作品詳細（LIAISON 展示のみ版）
+   P6-2 作品詳細（LIAISON+ 販売版）
 ──────────────────────────────────────────────────── */
 KTN.pages['p6-2'] = function() {
   _p6Init({
     relLink: 'kotennavi-p6-2.html',
+    renderRelated: function(related) {
+      var el = document.getElementById('relGrid');
+      if (!el) return;
+      var p6StatusToP25 = { available:'sale', reserved:'pending', sold:'sold', nfs:'nsale', not_for_sale:'nsale', inquiry:'nsale' };
+      var badgeMap = {
+        sale:    '<span class="p25c__badge p25c__badge--sale">販売中</span>',
+        sold:    '',
+        nsale:   '<span class="p25c__badge p25c__badge--nsale">非売品</span>',
+        pending: '<span class="p25c__badge p25c__badge--pending">申込中</span>',
+      };
+      el.innerHTML = related.map(function(w) {
+        var p25st = p6StatusToP25[w.status] || 'nsale';
+        var cardClass = 'p25c' + (p25st === 'sold' ? ' p25c--sold' : '');
+        var ribbon = p25st === 'sold' ? '<div class="p25c__sold-ribbon">SOLD</div>' : '';
+        var badge  = badgeMap[p25st] || '';
+        var priceHtml = w.price
+          ? '<div class="p25c__price"><span class="p25c__price-currency">&yen;</span>' + w.price.toLocaleString() + '<span class="p25c__price-tax">（税込）</span></div>'
+          : '';
+        return '<div class="masonry-item">' +
+          '<a class="' + cardClass + '" href="kotennavi-p6-2.html?id=' + w.id + '">' +
+          '<div class="p25c__img">' +
+          '<div class="p25c__img-bg" style="background:' + w.bg + '"></div>' +
+          '<div class="p25c__img-title">《' + w.title + '》</div>' +
+          ribbon +
+          '</div>' +
+          '<div class="p25c__body">' +
+          '<div class="p25c__creator">' + w.creator + '</div>' +
+          '<div class="p25c__title">' + w.title + '</div>' +
+          '<div class="p25c__spec">' + w.year + ' / ' + w.medium + '</div>' +
+          '<div class="p25c__footer">' +
+          '<div class="p25c__footer-l">' + badge + '</div>' +
+          priceHtml +
+          '</div>' +
+          '</div>' +
+          '</a></div>';
+      }).join('');
+    },
     renderActionArea: function(WORK, _workPhase, _applyState, _applyCount, isLoggedIn, favShareRow) {
       var area = document.getElementById('actionArea');
       if (!area) return;
-      var isSold = _workPhase === 'sold' || WORK.status === 'sold';
-      if (isSold) {
+      var status = (_workPhase === 'sold') ? 'sold' : WORK.status;
+      var priceBlock = document.getElementById('priceBlock');
+      var workPrice  = document.getElementById('workPrice');
+      var priceSub   = document.getElementById('priceSub');
+      var badge      = document.getElementById('workStatus');
+
+      /* 価格ブロック表示制御 */
+      var showPrice = (status === 'available' || status === 'reserved' || status === 'sold');
+      if (priceBlock) priceBlock.style.display = showPrice ? '' : 'none';
+
+      /* 価格テキスト（sold時は打ち消し線） */
+      if (workPrice) {
+        if (status === 'sold') {
+          workPrice.innerHTML = WORK.price
+            ? '<s>¥' + WORK.price.toLocaleString() + '<small>税込</small></s>'
+            : '';
+          if (priceSub) priceSub.innerHTML = '';
+        } else {
+          workPrice.innerHTML = WORK.price
+            ? '¥' + WORK.price.toLocaleString() + '<small>税込</small>'
+            : '<span style="font-size:1rem;color:var(--lmuted)">販売なし</span>';
+          if (priceSub) priceSub.innerHTML = WORK.price
+            ? '<em>＋ 送料・梱包費は会期終了後に別途ご案内します</em>' : '';
+        }
+      }
+
+      /* ステータスバッジ表示制御 */
+      if (badge) {
+        var showBadge = (status === 'sold' || status === 'reserved' ||
+          status === 'nfs' || status === 'not_for_sale');
+        badge.style.display = showBadge ? '' : 'none';
+      }
+
+      /* CTA per ステータス */
+      if (status === 'available') {
+        if (!isLoggedIn()) {
+          area.innerHTML =
+            '<button class="btn-apply" onclick="openModal(\'loginModal\')">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>' +
+            '購入申込をする' +
+            (_applyCount > 0 ? '<span class="btn-apply-count">' + _applyCount + '人が申込中</span>' : '') +
+            '</button>' + favShareRow();
+        } else if (_applyState === 'applied') {
+          area.innerHTML =
+            '<div class="btn-applied"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>' +
+            '申込済み<span class="btn-applied-num">申込番号：#0042</span></div>' +
+            '<button class="btn-dashboard" onclick="alert(\'購入申込ダッシュボードへ\')">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>' +
+            '申込ダッシュボードへ</button>' + favShareRow();
+        } else {
+          area.innerHTML =
+            '<button class="btn-apply" onclick="openApplyModal()">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>' +
+            '購入申込をする' +
+            (_applyCount > 0 ? '<span class="btn-apply-count">' + _applyCount + '人が申込中</span>' : '') +
+            '</button>' + favShareRow();
+        }
+      } else if (status === 'reserved') {
+        area.innerHTML =
+          '<div class="wh-reserved-notice">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>' +
+          '現在他の方が申込中です。キャンセルの際にご案内します。</div>' +
+          '<button class="btn-apply btn-apply--sub" onclick="openApplyModal()">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>' +
+          'キャンセル待ちで申込む</button>' + favShareRow();
+      } else if (status === 'sold') {
         area.innerHTML =
           '<div class="wh-sold-bar">' +
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>' +
           'この作品は売約済みです</div>' + favShareRow();
-        return;
+      } else if (status === 'nfs' || status === 'not_for_sale') {
+        area.innerHTML = favShareRow();
+      } else if (status === 'inquiry') {
+        area.innerHTML =
+          '<button class="btn-contact" onclick="alert(\'問い合わせフォームへ\')">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>' +
+          '作家に問い合わせる</button>' + favShareRow();
+      } else {
+        area.innerHTML = favShareRow();
       }
-      area.innerHTML =
-        '<div class="wh-venue-notice">' +
-        '<div class="wh-venue-notice-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>' +
-        '<div class="wh-venue-notice-body">' +
-        '<div class="wh-venue-notice-ttl">会場にてご覧いただけます</div>' +
-        '<div class="wh-venue-notice-sub">本作品はオンライン販売を行っておりません。ご購入・お問い合わせは会場スタッフまでお声がけください。</div>' +
-        '</div></div>' + favShareRow();
     },
   });
 };
