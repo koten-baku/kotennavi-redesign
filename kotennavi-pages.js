@@ -961,3 +961,565 @@ KTN.pages['p2-5-1'] = function () {
     }).join('');
   })();
 };
+
+/* ────────────────────────────────────────────────────
+   P6 共通データ（全3バリアント共用）
+──────────────────────────────────────────────────── */
+var _p6Works = [
+  { id:1, title:'オノマトペの庭', titleEn:'Onomatopoeia Garden',
+    creator:'田中 透', creatorEn:'Toru Tanaka',
+    year:2026, medium:'キャンバスに油彩', size:'116.7×91.0cm',
+    weight:'約3.2kg（額装込み）', framing:'木製フローティングフレーム（白木）',
+    price:580000, qty:1, edition:null, status:'available',
+    shipping:{ timing:'展覧会終了後（2026年3月下旬以降）', method:'ヤマト宅急便', anonymous:false },
+    bg:'linear-gradient(155deg,#b8d8cc,#6a9e8a)',
+    thumbs:[
+      {bg:'linear-gradient(155deg,#b8d8cc,#6a9e8a)', label:'全体'},
+      {bg:'linear-gradient(135deg,#9cc4b8,#5a8e7a)', label:'詳細①'},
+      {bg:'linear-gradient(155deg,#d0e8e0,#8abba8)', label:'詳細②'},
+      {bg:'linear-gradient(165deg,#c4d8d0,#7aaa98)', label:'展示'},
+    ],
+    desc:[
+      '「ふわふわ」「ざわざわ」「きらきら」——日本語に豊富なオノマトペは、感覚の輪郭をことばで捉える独特の試みだ。田中透はその音響的なイメージを視覚的な形に変換することをライフワークとしており、本作はその集大成的な位置づけとなる大型作品である。',
+      '画面中央に広がる緑がかった空間は、複数の「やわらかい音」が重なり合う「庭」を表している。F30号というスケールは、鑑賞者が作品の前に立ったとき、その場の空気ごと体験できるよう意図されている。',
+    ],
+    note:'「庭」という言葉を頭に浮かべたとき、まず耳に届いたのは「しんと静まり返った空気感」と「葉が揺れる微かな音」だった。その二つの感覚が混ざり合う瞬間を、画面の上で再現しようと試みた。',
+    tags:['絵画','油彩','現代美術','抽象','オノマトペ','F30号','2026年制作'],
+    extras:[
+      { lbl:'作品のケアについて', body:'油彩作品のため、直射日光・高温多湿の環境を避けて保管ください。額装ガラスは紫外線カットタイプを推奨します。表面の汚れは乾いた柔らかい布で軽く拭き取るのみとし、洗剤・溶剤の使用は避けてください。' },
+      { lbl:'展示・設置について', body:'フローティングフレーム仕様のため、壁から数センチ浮いた形で設置されます。取付金具・ワイヤー付属。壁の耐荷重をご確認のうえ設置をお願いします。設置方法についてご不明な点はお気軽にお問い合わせください。' },
+    ],
+  },
+  { id:2, title:'ふわふわ', titleEn:'Fuwafuwa',
+    creator:'田中 透', creatorEn:'Toru Tanaka',
+    year:2026, medium:'キャンバスに油彩', size:'72.7×60.6cm',
+    weight:null, framing:null,
+    price:320000, qty:1, edition:null, status:'reserved',
+    shipping:{ timing:'展覧会終了後（2026年3月下旬以降）', method:'ヤマト宅急便', anonymous:true },
+    bg:'linear-gradient(155deg,#f0e8d0,#d4b896)',
+    thumbs:[
+      {bg:'linear-gradient(155deg,#f0e8d0,#d4b896)', label:'全体'},
+      {bg:'linear-gradient(145deg,#e0d4b8,#c4a47a)', label:'詳細①'},
+      {bg:'linear-gradient(165deg,#f5eedd,#ddc49a)', label:'詳細②'},
+    ],
+    desc:['「ふわふわ」という音が持つ浮遊感・軽さ・曖昧さを、半透明の絵の具層を幾重にも重ねることで表現した作品。'],
+    note:'「ふわふわ」と口に出したとき、舌の動きが生み出す柔らかさを、そのまま絵の具に置き換えたかった。',
+    tags:['絵画','油彩','現代美術','抽象','F20号','2026年制作'],
+    extras:[
+      { lbl:'作品のケアについて', body:'油彩・キャンバス作品です。直射日光と湿気を避け、温度変化の少ない環境での保管をお願いします。' },
+    ],
+  },
+  { id:3, title:'ドキドキ #3', titleEn:'Dokidoki #3',
+    creator:'田中 透', creatorEn:'Toru Tanaka',
+    year:2025, medium:'和紙に混合技法', size:'91.0×72.7cm',
+    weight:'約2.8kg', framing:null,
+    price:420000, qty:3, edition:'Ed. 3/10', status:'available',
+    shipping:{ timing:'展覧会終了後（2026年3月下旬以降）', method:'ヤマト宅急便', anonymous:false },
+    bg:'linear-gradient(155deg,#f0d0d0,#c88080)',
+    thumbs:[
+      {bg:'linear-gradient(155deg,#f0d0d0,#c88080)', label:'全体'},
+      {bg:'linear-gradient(145deg,#e0b8b8,#b86868)', label:'詳細①'},
+    ],
+    desc:['「ドキドキ」シリーズ第3作。鼓動の不規則なリズムを、和紙の繊維の絡まり方と複数の画材の干渉として表現している。'],
+    note:'和紙は、音を吸収する。アクリルを垂らすと弾き、墨は滲み、水彩は和紙の繊維に沿って走る。',
+    tags:['絵画','混合技法','和紙','エディション','F25号','2025年制作'],
+    extras:[],
+  },
+  { id:4, title:'ざわざわ（夜）', titleEn:'Zawazawa (Night)',
+    creator:'田中 透', creatorEn:'Toru Tanaka',
+    year:2026, medium:'キャンバスにアクリル', size:'130.3×89.4cm',
+    weight:'約5.1kg（額装込み）', framing:'黒塗りスチールフレーム',
+    price:680000, qty:1, edition:null, status:'sold',
+    shipping:{ timing:null, method:null, anonymous:false },
+    bg:'linear-gradient(155deg,#3d3530,#1f1a18)',
+    thumbs:[
+      {bg:'linear-gradient(155deg,#3d3530,#1f1a18)', label:'全体'},
+      {bg:'linear-gradient(145deg,#2a2420,#120e0c)', label:'詳細①'},
+    ],
+    desc:['展覧会最大の作品。「ざわざわ」という音が夜の文脈で持つ意味——不安、期待、複数の気配——を暗褐色から黒へと沈んでいくトーンで描いた。'],
+    note:'深夜、窓の外から聞こえる「ざわざわ」は、葉の音か、人の気配か、自分の内側の音か——判別できない感覚がある。',
+    tags:['絵画','アクリル','現代美術','F50号相当','2026年制作','SOLD'],
+    extras:[],
+  },
+];
+
+var _p6DemoComments = {
+  1:[
+    { user:'Y.M', bg:'linear-gradient(135deg,#b8d8cc,#6a9e8a)', date:'2026.03.28',
+      anon:false, purchased:true, stars:5,
+      body:'展覧会で実物を見て一目惚れし、申込みました。自宅に届いて改めて向き合うと、光の当たり方によって全く違う表情を見せてくれます。大切にしていきます。' },
+    { user:'T.K', bg:'linear-gradient(135deg,#d0d8f0,#8899cc)', date:'2026.03.15',
+      anon:false, purchased:false, stars:4,
+      body:'会場で拝見しました。緑の色が穏やかで、ずっと見ていられる作品です。次回作も楽しみにしています。' },
+  ],
+  2:[], 3:[], 4:[],
+};
+
+/* ── P6 共通ロジック（renderActionArea は opts で差し替え） ── */
+function _p6Init(opts) {
+  var ALL_WORKS = _p6Works;
+  var SL = {available:'販売中', sold:'売約済み', reserved:'予約済', nfs:'販売なし'};
+  var SC = {available:'available', sold:'sold', reserved:'reserved', nfs:'nfs'};
+  function fmt(p) { return p ? '¥' + p.toLocaleString() : '—'; }
+
+  var urlId = parseInt(new URLSearchParams(location.search).get('id')) || 1;
+  var WORK = Object.assign({}, ALL_WORKS.find(function(w){ return w.id === urlId; }) || ALL_WORKS[0]);
+  var RELATED = ALL_WORKS.filter(function(w){ return w.id !== WORK.id; });
+
+  var _workPhase  = 'open';
+  var _applyState = 'none';
+  var _applyCount = 3;
+  var mainFaved   = false;
+  var relFavSet   = new Set();
+  var _localComments = {};
+  var _selectedStars = 0;
+
+  function isLoggedIn() { return KTN.role !== 'guest'; }
+  function isOwner()    { return KTN.role === 'user+creator'; }
+  function isAdmin()    { return KTN.role === 'admin'; }
+
+  function dbtnGroup(fn) {
+    document.querySelectorAll('.dbar .dbtn').forEach(function(b) {
+      var oc = b.getAttribute('onclick') || '';
+      if (oc.indexOf(fn + '(') === 0) b.classList.remove('on');
+    });
+  }
+
+  function initPage() {
+    var w = WORK;
+    document.title = '《' + w.title + '》' + w.creator + ' | 個展なび';
+    var el;
+    el = document.getElementById('workTitle');
+    if (el) el.innerHTML = '<span class="wh-title-kagi">《</span>' + w.title + '<span class="wh-title-kagi">》</span>';
+    el = document.getElementById('workTitleEn');
+    if (el) el.textContent = w.titleEn;
+    el = document.getElementById('mainImgBg');
+    if (el) el.style.background = w.thumbs[0].bg;
+    el = document.getElementById('mainImgLabel');
+    if (el) el.textContent = w.thumbs[0].label;
+    el = document.getElementById('mainImgCorner');
+    if (el) el.textContent = w.medium + '\n' + w.size;
+    el = document.getElementById('thumbRow');
+    if (el) el.innerHTML = w.thumbs.map(function(t, i) {
+      return '<div class="wh-thumb' + (i === 0 ? ' active' : '') + '"' +
+        ' style="background:' + t.bg + '"' +
+        ' onclick="switchImg(this,\'' + t.bg.replace(/'/g, "\\'") + '\',\'' + t.label + '\')">' + t.label + '</div>';
+    }).join('');
+    renderSpecs(w);
+    el = document.getElementById('workPrice');
+    if (el) el.innerHTML = w.price
+      ? fmt(w.price) + '<small>税込</small>'
+      : '<span style="font-size:1rem;color:var(--lmuted)">販売なし</span>';
+    el = document.getElementById('priceSub');
+    if (el) el.innerHTML = w.price ? '<em>＋ 送料・梱包費は会期終了後に別途ご案内します</em>' : '';
+    el = document.getElementById('descTitle');
+    if (el) el.textContent = '《' + w.title + '》について';
+    el = document.getElementById('descBody');
+    if (el) el.innerHTML = w.desc.map(function(p) { return '<p>' + p + '</p>'; }).join('');
+    el = document.getElementById('descTags');
+    if (el) el.innerHTML = w.tags.map(function(t) { return '<span class="wd-tag">' + t + '</span>'; }).join('');
+    var blocks = [];
+    if (w.note) {
+      blocks.push('<div class="wd-note"><div class="wd-note-lbl">制作ノート</div>' +
+        '<div class="wd-note-body">' + w.note + '</div>' +
+        '<div class="wd-note-sig">— ' + w.creator + ' / ' + w.creatorEn + ', ' + w.year + '</div></div>');
+    }
+    (w.extras || []).forEach(function(ex) {
+      blocks.push('<div class="wd-note"><div class="wd-note-lbl">' + ex.lbl + '</div>' +
+        '<div class="wd-note-body" style="font-style:normal;font-size:.74rem">' + ex.body + '</div></div>');
+    });
+    el = document.getElementById('descRightCol');
+    if (el) el.innerHTML = blocks.join('');
+  }
+
+  function renderSpecs(w) {
+    var isSold = _workPhase === 'sold' || w.status === 'sold';
+    var badge = document.getElementById('workStatus');
+    if (badge) {
+      badge.className = 'wh-badge ' + (isSold ? 'sold' : (SC[w.status] || 'available'));
+      badge.textContent = isSold ? '売約済み' : (SL[w.status] || SL.available);
+    }
+    var qtyVal = null;
+    if (!isSold) {
+      qtyVal = w.qty + '点 ' + (w.edition ? '<span class="wh-edition">' + w.edition + '</span>' : '');
+    }
+    var rows = [
+      { lbl:'作家',       val: w.creator + '（' + w.creatorEn + '）', always:true },
+      { lbl:'制作年',     val: w.year ? w.year + '年' : null },
+      { lbl:'素材・技法', val: w.medium },
+      { lbl:'サイズ',     val: w.size },
+      { lbl:'重さ',       val: w.weight },
+      { lbl:'額装',       val: w.framing },
+      { lbl:'作品点数/エディション', val: qtyVal },
+      { lbl:'作品状態',   val: '新品・未展示' },
+      { lbl:'付属品',     val: '真作証明書・作家サイン入り' },
+      { lbl:'配送時期',   val: w.shipping ? w.shipping.timing : null },
+      { lbl:'配送方法',   val: renderShipping(w.shipping) },
+    ];
+    var el = document.getElementById('specsTable');
+    if (el) el.innerHTML = rows
+      .filter(function(r) { return r.always || (r.val && String(r.val).trim() !== ''); })
+      .map(function(r) {
+        return '<div class="wh-spec"><div class="wh-spec-lbl">' + r.lbl +
+          '</div><div class="wh-spec-val">' + r.val + '</div></div>';
+      }).join('');
+  }
+
+  function renderShipping(s) {
+    if (!s || !s.method) return null;
+    var anon = s.anonymous
+      ? '<span class="wh-anon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><line x1="1" y1="1" x2="23" y2="23"/></svg>匿名配送</span>'
+      : '';
+    return s.method + anon;
+  }
+
+  function favShareRow() {
+    return '<div class="wh-fav-row">' +
+      '<button class="btn-fav' + (mainFaved ? ' active' : '') + '" id="mainFavBtn" onclick="toggleMainFav()">' +
+      '<svg viewBox="0 0 24 24" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="' + (mainFaved ? 'currentColor' : 'none') + '" stroke="currentColor"/></svg>' +
+      (mainFaved ? '興味あり！登録済み' : '興味あり！') +
+      '</button>' +
+      '<button class="btn-share-sm" onclick="shareWork()">' +
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>' +
+      'シェア</button></div>';
+  }
+
+  function renderActionArea() {
+    opts.renderActionArea(WORK, _workPhase, _applyState, _applyCount, isLoggedIn, favShareRow);
+  }
+
+  function switchImg(thumb, bg, label) {
+    document.querySelectorAll('.wh-thumb').forEach(function(t) { t.classList.remove('active'); });
+    thumb.classList.add('active');
+    var el = document.getElementById('mainImgBg');
+    if (el) el.style.background = bg;
+    el = document.getElementById('mainImgLabel');
+    if (el) el.textContent = label;
+  }
+
+  function toggleMainFav() {
+    if (!isLoggedIn()) { openModal('loginModal'); return; }
+    mainFaved = !mainFaved;
+    renderActionArea();
+  }
+
+  function renderRelated() {
+    var el = document.getElementById('relGrid');
+    if (!el) return;
+    el.innerHTML = RELATED.map(function(w) {
+      return '<a href="' + opts.relLink + '?id=' + w.id + '" class="rel-card">' +
+        '<div class="rel-card-img">' +
+        '<div class="rel-card-bg" style="background:' + w.bg + '">' + w.title + '</div>' +
+        (w.status === 'sold' ? '<div class="rel-card-sold-ribbon">SOLD</div>' : '') +
+        '<button class="rel-card-fav' + (relFavSet.has(w.id) ? ' active' : '') + '" onclick="toggleRelFav(event,' + w.id + ')" title="興味あり！">' +
+        '<svg viewBox="0 0 24 24" stroke-width="2" fill="' + (relFavSet.has(w.id) ? 'currentColor' : 'none') + '"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" stroke="currentColor"/></svg>' +
+        '</button></div>' +
+        '<div class="rel-card-body">' +
+        '<div class="rel-card-title">《' + w.title + '》</div>' +
+        '<div class="rel-card-medium">' + w.year + '年 / ' + w.medium + '</div>' +
+        '<div class="rel-card-footer">' +
+        '<div class="rel-card-price">' + fmt(w.price) + '</div>' +
+        '<div class="rel-card-status ' + (SC[w.status] || 'available') + '">' + (SL[w.status] || '') + '</div>' +
+        '</div></div></a>';
+    }).join('');
+  }
+
+  function toggleRelFav(e, id) {
+    e.preventDefault(); e.stopPropagation();
+    if (!isLoggedIn()) { openModal('loginModal'); return; }
+    var btn = e.currentTarget;
+    var svg = btn.querySelector('svg');
+    if (relFavSet.has(id)) {
+      relFavSet.delete(id); btn.classList.remove('active'); svg.setAttribute('fill', 'none');
+    } else {
+      relFavSet.add(id); btn.classList.add('active'); svg.setAttribute('fill', 'currentColor');
+      btn.animate([{transform:'scale(1)'},{transform:'scale(1.35)'},{transform:'scale(.88)'},{transform:'scale(1)'}], {duration:280,easing:'ease-out'});
+    }
+  }
+
+  function toggleFollow(btn) {
+    btn.classList.toggle('following');
+    btn.innerHTML = btn.classList.contains('following')
+      ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><polyline points="20 6 9 17 4 12"/></svg>フォロー中'
+      : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>フォロー';
+  }
+
+  function openApplyModal() {
+    var el = document.getElementById('amTitle');
+    if (el) el.textContent = '《' + WORK.title + '》購入申込';
+    openModal('applyModal');
+  }
+
+  function submitApply() {
+    if (!document.getElementById('amAgreeCheck').checked) { alert('注意事項への同意が必要です'); return; }
+    closeModal('applyModal');
+    _applyState = 'applied';
+    _applyCount = _applyCount + 1;
+    renderActionArea();
+    alert('申込を受け付けました。\n申込番号：#0042\n購入可否は会期終了後にご連絡します。');
+  }
+
+  function openModal(id) { var el = document.getElementById(id); if (el) el.classList.add('open'); }
+  function closeModal(id) { var el = document.getElementById(id); if (el) el.classList.remove('open'); }
+  document.addEventListener('click', function(e) {
+    ['loginModal','applyModal'].forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el && e.target === el) closeModal(id);
+    });
+  });
+
+  function shareWork() {
+    if (navigator.share) navigator.share({title: document.title, url: location.href});
+    else copyLink();
+  }
+  function copyLink() {
+    navigator.clipboard.writeText(location.href).then(function() { alert('URLをコピーしました'); });
+  }
+
+  var STAR_LABELS = ['','よくない','まあまあ','ふつう','よい','とてもよい'];
+  function starsHtml(n, size) {
+    return Array.from({length:5}, function(_, i) {
+      return '<span class="cmt-star"' + (size ? ' style="font-size:' + size + '"' : '') + '>' +
+        (i < n ? '★' : '☆') + '</span>';
+    }).join('');
+  }
+  function calcAvg(list) {
+    var rated = list.filter(function(c) { return c.stars > 0; });
+    return rated.length ? (rated.reduce(function(s,c) { return s + c.stars; }, 0) / rated.length).toFixed(1) : null;
+  }
+
+  function renderComments() {
+    var all = (_p6DemoComments[WORK.id] || []).concat(_localComments[WORK.id] || []);
+    var avg = calcAvg(all);
+    var el;
+    el = document.getElementById('cmtSummary');
+    if (el) {
+      el.innerHTML = avg
+        ? '<div style="text-align:right"><div class="cmt-avg-stars">' + starsHtml(Math.round(avg), '1rem') + '</div>' +
+          '<div style="display:flex;align-items:baseline;gap:6px"><span class="cmt-avg">' + avg +
+          '</span><span class="cmt-avg-count">/ 5（' + all.length + '件）</span></div></div>'
+        : '<span style="font-size:.66rem;color:var(--lmuted)">まだ評価がありません</span>';
+    }
+    el = document.getElementById('commentsList');
+    if (el) {
+      el.innerHTML = all.length ? all.map(function(c) {
+        return '<div class="cmt-card"><div class="cmt-card-header">' +
+          '<div class="cmt-avatar" style="background:' + (c.bg || 'var(--lbg3)') + '">' +
+          (c.anon ? '匿' : c.user.slice(0,1)) + '</div>' +
+          '<div class="cmt-user"><div class="cmt-user-row">' +
+          '<span class="cmt-user-name">' + (c.anon ? '匿名ユーザー' : c.user) + '</span>' +
+          (c.purchased ? '<span class="cmt-verified">✓ 購入者</span>' : '') +
+          '<span class="cmt-user-date">' + c.date + '</span></div>' +
+          '<div class="cmt-stars">' + starsHtml(c.stars) + '</div></div></div>' +
+          '<div class="cmt-body">' + c.body + '</div></div>';
+      }).join('')
+      : '<div class="cmt-empty"><div class="cmt-empty-icon">💬</div>' +
+        '<div class="cmt-empty-txt">まだコメント・評価はありません。<br>ログインして最初の評価を投稿しましょう。</div></div>';
+    }
+    el = document.getElementById('commentPostArea');
+    if (el) {
+      if (!isLoggedIn()) {
+        el.innerHTML = '<div class="cmt-login-prompt"><p>コメント・評価を投稿するにはログインが必要です</p>' +
+          '<button class="cmt-login-link" onclick="openModal(\'loginModal\')">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>' +
+          'ログインして評価する</button></div>';
+        _selectedStars = 0;
+        return;
+      }
+      el.innerHTML = '<div class="cmt-post-box"><div class="cmt-post-lbl">評価・コメントを投稿する</div>' +
+        '<div class="cmt-star-input"><span class="cmt-star-input-lbl">評価：</span>' +
+        '<div class="cmt-star-row" id="starInputRow">' +
+        [1,2,3,4,5].map(function(n) {
+          return '<button class="cmt-star-btn" data-star="' + n + '" onclick="selectStar(' + n + ')">★</button>';
+        }).join('') +
+        '</div><span class="cmt-star-selected-lbl" id="starLabel">' +
+        (_selectedStars ? STAR_LABELS[_selectedStars] : '') + '</span></div>' +
+        '<textarea class="cmt-textarea" id="cmtInput" placeholder="この作品への感想をお書きください…"></textarea>' +
+        '<div class="cmt-post-footer"><label class="cmt-anon-label"><input type="checkbox" id="cmtAnon"> 匿名で投稿する</label>' +
+        '<button class="cmt-submit" onclick="submitComment()">投稿する</button></div></div>';
+      updateStarUI(_selectedStars);
+    }
+  }
+
+  function selectStar(n) { _selectedStars = n; updateStarUI(n); }
+  function updateStarUI(n) {
+    var row = document.getElementById('starInputRow');
+    var lbl = document.getElementById('starLabel');
+    if (!row) return;
+    row.querySelectorAll('.cmt-star-btn').forEach(function(btn) {
+      btn.classList.toggle('lit', parseInt(btn.dataset.star) <= n);
+    });
+    if (lbl) lbl.textContent = n ? STAR_LABELS[n] : '';
+  }
+  function submitComment() {
+    var inp = document.getElementById('cmtInput');
+    var txt = inp ? inp.value.trim() : '';
+    if (!_selectedStars) { alert('星評価を選んでください'); return; }
+    if (!txt) { alert('コメントを入力してください'); return; }
+    var anon = document.getElementById('cmtAnon') ? document.getElementById('cmtAnon').checked : false;
+    var id = WORK.id;
+    if (!_localComments[id]) _localComments[id] = [];
+    _localComments[id].push({
+      user:'あなた', bg:'linear-gradient(135deg,#ddeeff,#88aadd)',
+      date: new Date().toLocaleDateString('ja-JP',{year:'numeric',month:'2-digit',day:'2-digit'}).replace(/\//g,'.'),
+      anon: anon, purchased: _applyState === 'applied', stars: _selectedStars, body: txt,
+    });
+    _selectedStars = 0;
+    renderComments();
+  }
+
+  function switchWork(id, btn) {
+    var w = ALL_WORKS.find(function(x) { return x.id === id; });
+    if (!w) return;
+    Object.assign(WORK, w);
+    RELATED.length = 0;
+    ALL_WORKS.filter(function(x) { return x.id !== id; }).forEach(function(x) { RELATED.push(x); });
+    dbtnGroup('switchWork');
+    btn.classList.add('on');
+    initPage();
+    renderSpecs(w);
+    renderActionArea();
+    renderRelated();
+    renderComments();
+  }
+
+  function setR(role, btn) {
+    KTN.role = role;
+    dbtnGroup('setR');
+    btn.classList.add('on');
+    renderActionArea();
+    renderComments();
+  }
+
+  function setPhase(phase, btn) {
+    _workPhase = phase;
+    dbtnGroup('setPhase');
+    btn.classList.add('on');
+    renderSpecs(WORK);
+    renderActionArea();
+  }
+
+  function setApply(state, btn) {
+    _applyState = state;
+    dbtnGroup('setApply');
+    btn.classList.add('on');
+    renderActionArea();
+  }
+
+  /* グローバル公開 */
+  window.setR               = setR;
+  window.setPhase           = setPhase;
+  window.setApply           = setApply;
+  window.switchWork         = switchWork;
+  window.switchImg          = switchImg;
+  window.toggleMainFav      = toggleMainFav;
+  window.toggleFollow       = toggleFollow;
+  window.toggleSellerFollow = toggleFollow;
+  window.openApplyModal     = openApplyModal;
+  window.submitApply        = submitApply;
+  window.openModal          = openModal;
+  window.closeModal         = closeModal;
+  window.shareWork          = shareWork;
+  window.copyLink           = copyLink;
+  window.selectStar         = selectStar;
+  window.submitComment      = submitComment;
+  window.toggleRelFav       = toggleRelFav;
+
+  /* 初期描画 */
+  initPage();
+  renderActionArea();
+  renderRelated();
+  renderComments();
+}
+
+/* ────────────────────────────────────────────────────
+   P6 作品詳細（通常版）
+──────────────────────────────────────────────────── */
+KTN.pages['p6'] = function() {
+  _p6Init({
+    relLink: 'kotennavi-p6.html',
+    renderActionArea: function(WORK, _workPhase, _applyState, _applyCount, isLoggedIn, favShareRow) {
+      var area = document.getElementById('actionArea');
+      if (!area) return;
+      area.innerHTML =
+        '<button class="btn-contact" onclick="alert(\'問い合わせフォームへ\')">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>' +
+        '作家に問い合わせる</button>' +
+        favShareRow();
+    },
+  });
+};
+
+/* ────────────────────────────────────────────────────
+   P6-1 作品詳細（LIAISON 購入申込版）
+──────────────────────────────────────────────────── */
+KTN.pages['p6-1'] = function() {
+  _p6Init({
+    relLink: 'kotennavi-p6-1.html',
+    renderActionArea: function(WORK, _workPhase, _applyState, _applyCount, isLoggedIn, favShareRow) {
+      var area = document.getElementById('actionArea');
+      if (!area) return;
+      var isSold = _workPhase === 'sold' || WORK.status === 'sold';
+      if (isSold) {
+        area.innerHTML =
+          '<div class="wh-sold-bar">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>' +
+          'この作品は売約済みです</div>' + favShareRow();
+        return;
+      }
+      var applyBtn = '';
+      if (!isLoggedIn()) {
+        applyBtn = '<button class="btn-apply" onclick="openModal(\'loginModal\')">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>' +
+          '購入申込をする' +
+          (_applyCount > 0 ? '<span class="btn-apply-count">' + _applyCount + '人が申込中</span>' : '') +
+          '</button>';
+      } else if (_applyState === 'applied') {
+        applyBtn =
+          '<div class="btn-applied"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>' +
+          '申込済み<span class="btn-applied-num">申込番号：#0042</span></div>' +
+          '<button class="btn-dashboard" onclick="alert(\'購入申込ダッシュボードへ\')">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>' +
+          '申込ダッシュボードへ</button>';
+      } else {
+        applyBtn = '<button class="btn-apply" onclick="openApplyModal()">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>' +
+          '購入申込をする' +
+          (_applyCount > 0 ? '<span class="btn-apply-count">' + _applyCount + '人が申込中</span>' : '') +
+          '</button>';
+      }
+      area.innerHTML = applyBtn +
+        '<button class="btn-contact" onclick="alert(\'問い合わせフォームへ\')">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>' +
+        '問い合わせする</button>' + favShareRow();
+    },
+  });
+};
+
+/* ────────────────────────────────────────────────────
+   P6-2 作品詳細（LIAISON 展示のみ版）
+──────────────────────────────────────────────────── */
+KTN.pages['p6-2'] = function() {
+  _p6Init({
+    relLink: 'kotennavi-p6-2.html',
+    renderActionArea: function(WORK, _workPhase, _applyState, _applyCount, isLoggedIn, favShareRow) {
+      var area = document.getElementById('actionArea');
+      if (!area) return;
+      var isSold = _workPhase === 'sold' || WORK.status === 'sold';
+      if (isSold) {
+        area.innerHTML =
+          '<div class="wh-sold-bar">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>' +
+          'この作品は売約済みです</div>' + favShareRow();
+        return;
+      }
+      area.innerHTML =
+        '<div class="wh-venue-notice">' +
+        '<div class="wh-venue-notice-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>' +
+        '<div class="wh-venue-notice-body">' +
+        '<div class="wh-venue-notice-ttl">会場にてご覧いただけます</div>' +
+        '<div class="wh-venue-notice-sub">本作品はオンライン販売を行っておりません。ご購入・お問い合わせは会場スタッフまでお声がけください。</div>' +
+        '</div></div>' + favShareRow();
+    },
+  });
+};

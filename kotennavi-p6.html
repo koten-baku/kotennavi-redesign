@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>【作品タイトル】— 田中 透 | 個展なび</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Noto+Sans+JP:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<body>
+
+<div class="dbar">
+  <span class="dbar-sep">ロール：</span>
+  <button class="dbtn on" onclick="setR('guest',this)">ゲスト</button>
+  <button class="dbtn" onclick="setR('user',this)">ユーザー</button>
+  <button class="dbtn" onclick="setR('user+creator',this)">creator本人</button>
+  <button class="dbtn" onclick="setR('admin',this)">管理者</button>
+  <span class="dbar-sep" style="width:1px;height:16px;background:rgba(255,255,255,.2);margin:0 4px;flex-shrink:0;display:inline-block"></span>
+  <span>作品：</span>
+  <button class="dbtn on" onclick="switchWork(1,this)">id=1 庭</button>
+  <button class="dbtn" onclick="switchWork(2,this)">id=2 ふわふわ</button>
+  <button class="dbtn" onclick="switchWork(3,this)">id=3 ドキドキ</button>
+  <button class="dbtn" onclick="switchWork(4,this)">id=4 ざわざわ</button>
+</div>
+
+<div class="dev-ph dev-ph--sidebar"></div>
+
+<div class="shell">
+<div class="content-wrap" id="contentWrap">
+
+  <header class="ktn-header" id="ktnHeader">
+    <div class="ktn-header__inner">
+      <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+      <div class="ktn-hdr-actions" id="ktnActs"></div>
+    </div>
+  </header>
+
+  <div class="ktn-tagbar" id="ktnTagbar">
+    <div class="ktn-tagbar__inner" id="ktnTagbarInner"></div>
+  </div>
+
+  <main class="ktn-main" id="ktnMain">
+
+    <!-- ① WORK HERO -->
+    <section class="work-hero">
+      <div class="wh-arc"></div>
+      <div class="wh-inner">
+
+        <!-- 左: ビジュアル -->
+        <div>
+          <div class="wh-img-main" id="mainImg">
+            <div class="wh-img-bg" id="mainImgBg"></div>
+            <div class="wh-img-label" id="mainImgLabel"></div>
+            <div class="wh-img-corner" id="mainImgCorner"></div>
+          </div>
+          <div class="wh-thumbs" id="thumbRow"></div>
+        </div>
+
+        <!-- 右: 作品情報 -->
+        <div class="wh-info">
+          <div class="wh-eyebrow">
+            作品詳細
+          </div>
+          <h1 class="wh-title" id="workTitle"></h1>
+          <div class="wh-title-en" id="workTitleEn"></div>
+
+          <!-- ステータス -->
+          <div class="wh-status-row">
+            <div class="wh-badge" id="workStatus"></div>
+          </div>
+
+          <!-- 仕様テーブル（JS描画） -->
+          <div class="wh-specs" id="specsTable"></div>
+
+          <!-- 価格 -->
+          <div class="wh-price-block" style="display:none">
+            <div class="wh-price-lbl">Price</div>
+            <div class="wh-price" id="workPrice"></div>
+            <div class="wh-price-sub" id="priceSub"></div>
+          </div>
+
+          <!-- ガイドリンク -->
+          <div class="wh-guide-links">
+            <button class="wh-guide-btn" onclick="alert('購入までの流れページへ')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 3"/></svg>
+              購入までの流れ
+            </button>
+            <button class="wh-guide-btn" onclick="alert('発送・送料についてページへ')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+              発送・送料について
+            </button>
+            <button class="wh-guide-btn" onclick="alert('特定商取引法に基づく表示ページへ')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              特定商取引法
+            </button>
+          </div>
+
+          <!-- アクションボタン（JS描画） -->
+          <div class="wh-actions" id="actionArea"></div>
+
+          <!-- 展覧会リンクなし（通常版） -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ② DESCRIPTION -->
+    <section class="work-desc-section">
+      <div class="wd-inner">
+        <div>
+          <div class="wd-eyebrow">About this Work</div>
+          <h2 class="wd-ttl" id="descTitle"></h2>
+          <div class="wd-body" id="descBody"></div>
+          <div class="wd-tags" id="descTags"></div>
+        </div>
+        <!-- 右カラム：制作ノート＋追加フィールド（JS描画） -->
+        <div id="descRightCol"></div>
+      </div>
+    </section>
+
+    <!-- ③ CREATOR -->
+    <section class="work-creator-section">
+      <div class="wc-inner">
+        <div class="wcs-eyebrow">Creator</div>
+        <div class="wcs-row">
+          <div class="wcs-avatar" style="color:rgba(255,255,255,.85)">透</div>
+          <div class="wcs-info">
+            <div class="wcs-name">
+              田中 透
+            </div>
+            <div class="wcs-name-en">Toru Tanaka</div>
+            <div class="wcs-genre">
+              <span class="wcs-gtag">絵画</span><span class="wcs-gtag">現代美術</span><span class="wcs-gtag">抽象</span>
+            </div>
+          </div>
+          <button class="wcs-follow" id="creatorFollowBtn" onclick="toggleFollow(this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>フォロー
+          </button>
+        </div>
+        <div class="wcs-bio">東京藝術大学大学院修了。日常の感覚をオノマトペに変換し絵画化する独自手法が国内外で注目を集める。2024年より「音のかたち」シリーズを展開中。</div>
+        <div class="wcs-stats">
+          <div class="wcs-stat"><span>892</span>フォロワー</div>
+          <div class="wcs-stat"><span>24</span>作品</div>
+          <div class="wcs-stat"><span>8</span>個展</div>
+        </div>
+        <button class="btn-creator-page" onclick="alert('田中透 クリエイターページへ')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>クリエイターページを見る
+        </button>
+      </div>
+    </section>
+
+    <!-- ④ RELATED WORKS（同クリエイターの作品） -->
+    <section class="related-section">
+      <div class="rel-inner">
+        <div class="rel-header">
+          <div>
+            <div class="rel-eyebrow">Same Creator</div>
+            <div class="rel-ttl">同クリエイターの作品</div>
+          </div>
+          <a href="./liaison_works_single.html" class="rel-more">
+            すべて見る<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          </a>
+        </div>
+        <div class="rel-grid" id="relGrid"></div>
+      </div>
+    </section>
+
+    <!-- ⑤ COMMENTS & RATINGS -->
+    <section class="comments-section">
+      <div class="cmt-inner">
+        <div class="cmt-header">
+          <div>
+            <div class="cmt-eyebrow">Comments & Ratings</div>
+            <div class="cmt-ttl">コメント・評価</div>
+          </div>
+          <div class="cmt-summary" id="cmtSummary"></div>
+        </div>
+        <div id="commentsList"></div>
+        <!-- 投稿エリア（ログイン済みユーザーに表示） -->
+        <div id="commentPostArea"></div>
+      </div>
+    </section>
+
+    <!-- ⑥ SHARE -->
+    <section class="share-section">
+      <div class="share-inner">
+        <div class="share-lbl">Share</div>
+        <div class="share-btns">
+          <button class="share-btn" onclick="alert('X(Twitter)でシェア')">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>X (Twitter)
+          </button>
+          <button class="share-btn" onclick="alert('Facebookでシェア')">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>Facebook
+          </button>
+          <button class="share-btn" onclick="alert('LINEでシェア')">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 5.92 2 10.76c0 3.4 2.18 6.38 5.44 7.98-.22.8-.79 2.88-.9 3.32-.14.54.2.54.4.4.16-.1 2.52-1.66 3.54-2.34.68.1 1.38.14 2.1.14 5.52 0 10-3.92 10-8.76S17.52 2 12 2z"/></svg>LINE
+          </button>
+          <button class="share-btn" onclick="copyLink()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>リンクをコピー
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ⑦ SELLER (posted-by) — 通常版では非表示 -->
+    <div style="display:none">
+    <section class="seller-section">
+      <div class="seller-inner">
+        <div class="pb-lbl">posted by</div>
+        <div class="pb-row">
+          <div class="pb-avatar" style="background:linear-gradient(135deg,#2a3a2e,#3d5c44);color:rgba(201,169,110,.9)">S</div>
+          <div class="pb-meta">
+            <div class="pb-name">
+              <span class="pb-type-badge gallery">gallery</span>
+              Gallery SOIL 渋谷<span class="pb-name-sub"> ｜ Gallery SOIL Shibuya</span>
+            </div>
+            <div class="pb-counts">
+              <span class="pb-cnt"><span>143</span>フォロワー</span>
+              <span class="pb-cnt"><span>12</span>展覧会</span>
+            </div>
+            <div class="pb-liaison">✓ LIAISON 認証済</div>
+          </div>
+          <button class="pb-follow" id="sellerFollowBtn" onclick="toggleSellerFollow(this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>フォロー
+          </button>
+        </div>
+      </div>
+    </section>
+    </div>
+
+    <!-- ⑧ BACK TO WORKS -->
+    <section class="back-section">
+      <div class="back-ttl">Other Works</div>
+      <a href="javascript:history.back()" class="back-ex-card">
+        <div class="back-ex-poster"></div>
+        <div>
+          <div class="back-ex-ttl">作品一覧へ戻る</div>
+          <div class="back-ex-meta">田中 透 の作品一覧</div>
+        </div>
+        <svg class="back-ex-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><polyline points="9 18 15 12 9 6"/></svg>
+      </a>
+    </section>
+
+    <!-- ログインモーダル -->
+    <div class="lm-overlay" id="loginModal">
+      <div class="lm-box">
+        <div class="lm-icon"><svg viewBox="0 0 24 24" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+        <div class="lm-ttl">ログインが必要です</div>
+        <div class="lm-body">この機能はログインユーザー限定です。<br>個展なびに登録・ログインしてください。</div>
+        <div class="lm-btns">
+          <button class="lm-btn-login" onclick="alert('ログインページへ')">
+            <svg viewBox="0 0 24 24" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>ログイン
+          </button>
+          <button class="lm-btn-reg" onclick="alert('ユーザー登録ページへ')">
+            <svg viewBox="0 0 24 24" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>新規ユーザー登録（無料）
+          </button>
+          <button class="lm-cancel" onclick="closeModal('loginModal')">キャンセル</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 購入申込モーダル -->
+    <div class="am-overlay" id="applyModal">
+      <div class="am-box">
+        <div class="am-ttl" id="amTitle">購入申込</div>
+        <div class="am-sub">申込後、会期終了後に出品者から購入可否と合計金額をご連絡します。申込番号を発行します。</div>
+        <div class="am-field">
+          <label class="am-lbl">お名前 <em>（出品者への通知のみに使用します）</em></label>
+          <input class="am-input" id="amName" type="text" placeholder="例：山田 太郎">
+        </div>
+        <div class="am-field">
+          <label class="am-lbl">受取地の郵便番号 <em>（送料計算に使用します）</em></label>
+          <input class="am-input" id="amZip" type="text" placeholder="例：150-0001" maxlength="8">
+        </div>
+        <div class="am-field">
+          <label class="am-lbl">申込理由・コメント <em>（任意）</em></label>
+          <textarea class="am-textarea" placeholder="この作品に興味を持った理由など（任意）"></textarea>
+        </div>
+        <label class="am-agree">
+          <input type="checkbox" id="amAgreeCheck">
+          <div class="am-agree-txt">
+            <a href="#" onclick="return false">購入までの流れ</a>・<a href="#" onclick="return false">発送・送料について</a>を確認し、以下に同意します。<br>
+            ・会場売約時は申込がキャンセルになること<br>
+            ・申込後もキャンセル可能であること<br>
+            ・申込順に購入可否が案内されること
+          </div>
+        </label>
+        <button class="am-submit" onclick="submitApply()">申込を確定する</button>
+        <button class="am-cancel" onclick="closeModal('applyModal')">キャンセル</button>
+      </div>
+    </div>
+
+  </main>
+
+  <div class="ktn-ad-band" id="ktnAdBand">
+    <div class="ktn-ad-band__inner">
+      <div class="ktn-ad-band__slot">広告エリア（728×90 / レスポンシブ）</div>
+    </div>
+  </div>
+  <div class="dev-ph dev-ph--footer"></div>
+
+</div>
+</div>
+
+<nav class="ktn-bottom-nav" id="ktnBottomNav">
+  <div class="ktn-bottom-nav__inner" id="ktnBottomNavInner"></div>
+</nav>
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+  KTN.init({ page: 'p6', role: 'guest' });
+</script>
+</body>
+</html>
