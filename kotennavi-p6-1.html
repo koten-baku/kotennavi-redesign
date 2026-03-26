@@ -3,12 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>【作品タイトル】— 田中 透 | 個展なび</title>
+  <title>オノマトペの庭 — LIAISON | 田中 透 | 個展なび</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Noto+Sans+JP:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./kotennavi-common.css">
 </head>
-<body class="p6-dark">
+<body class="p6-1-page">
+
+<svg width="0" height="0" style="position:absolute;overflow:hidden">
+  <defs>
+    <symbol id="icon-exh" viewBox="40 47 54 54">
+      <path d="M80.09 102.05c-1.22-.8,-2.57-2.87,-3.34-4.33c-2.48-5.91,-4.85-14.23,-13.31-20.15c-1.9-1.23,-2.03-2,-1.94-2.48c.11-.83,.82-1.52,2.3-1.3c11.09,1.95,15.22,3.96,21.07,7.61c7.85,5.36,9.57,10.76,9.65,14.09c.15,2.3,-.18,5.11,-2.61,6.56Z" fill="currentColor"/>
+    </symbol>
+    <symbol id="icon-watch" viewBox="0 0 16 16">
+      <circle cx="8" cy="8" r="7" fill="currentColor"/>
+      <circle cx="8" cy="8" r="2.6" fill="white"/>
+    </symbol>
+  </defs>
+</svg>
 
 <div class="dbar">
   <span class="dbar-sep">ロール：</span>
@@ -16,14 +28,6 @@
   <button class="dbtn" onclick="setR('user',this)">ユーザー</button>
   <button class="dbtn" onclick="setR('user+creator',this)">creator本人</button>
   <button class="dbtn" onclick="setR('admin',this)">管理者</button>
-  <span class="dbar-sep" style="width:1px;height:16px;background:rgba(255,255,255,.2);margin:0 4px;flex-shrink:0;display:inline-block"></span>
-  <span>フェーズ：</span>
-  <button class="dbtn on" onclick="setPhase('open',this)">LIAISON期間中</button>
-  <button class="dbtn" onclick="setPhase('sold',this)">売約済み</button>
-  <span class="dbar-sep" style="width:1px;height:16px;background:rgba(255,255,255,.2);margin:0 4px;flex-shrink:0;display:inline-block"></span>
-  <span>申込：</span>
-  <button class="dbtn on" onclick="setApply('none',this)">未申込</button>
-  <button class="dbtn" onclick="setApply('applied',this)">申込済み</button>
   <span class="dbar-sep" style="width:1px;height:16px;background:rgba(255,255,255,.2);margin:0 4px;flex-shrink:0;display:inline-block"></span>
   <span>作品：</span>
   <button class="dbtn on" onclick="switchWork(1,this)">id=1 庭</button>
@@ -50,224 +54,456 @@
 
   <main class="ktn-main" id="ktnMain">
 
-    <!-- ① WORK HERO -->
-    <section class="work-hero">
-      <div class="wh-arc"></div>
-      <div class="wh-inner">
+    <!-- ① WORK HERO C案 -->
+    <div class="ktn-content" style="padding-bottom:0">
+      <div class="p6-hero">
 
-        <!-- 左: ビジュアル -->
-        <div>
-          <div class="wh-img-main" id="mainImg">
-            <div class="wh-img-bg" id="mainImgBg"></div>
-            <div class="wh-img-label" id="mainImgLabel"></div>
-            <div class="wh-img-corner" id="mainImgCorner"></div>
+        <!-- 画像ステージ -->
+        <div class="p6-hero__stage">
+          <div class="p6-hero__main-img" id="p6MainImg"
+               style="background:linear-gradient(155deg,#b8d8cc,#6a9e8a)">
+            <span class="p6-hero__img-label">全体</span>
           </div>
-          <div class="wh-thumbs" id="thumbRow"></div>
+          <div class="p6-hero__thumbs" id="p6Thumbs"></div>
+          <!-- キャプション：サムネイル直下 -->
+          <div class="p6-hero__caption" id="p6Caption">全体</div>
         </div>
 
-        <!-- 右: 作品情報 -->
-        <div class="wh-info">
-          <div class="wh-eyebrow">
-            <div class="wh-liaison-dot"></div>
-            LIAISON works — 作品詳細
-          </div>
-          <h1 class="wh-title" id="workTitle"></h1>
-          <div class="wh-title-en" id="workTitleEn"></div>
-
-          <!-- ステータス -->
-          <div class="wh-status-row">
+        <!-- タイトル・仕様 -->
+        <div class="p6-hero__meta">
+          <div class="p6-hero__badge-row" id="p6BadgeRow">
+            <span class="p6-hero__section-label">作品詳細</span>
             <span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>
-            <div class="wh-badge" id="workStatus"></div>
+          </div>
+          <h1 class="p6-hero__title" id="p6Title">《オノマトペの庭》</h1>
+          <p class="p6-hero__title-en" id="p6TitleEn">Onomatopoeia Garden</p>
+          <dl class="p6-hero__specs" id="p6Specs">
+            <dt>作家</dt><dd id="p6Creator">田中 透（Toru Tanaka）</dd>
+            <dt>制作年</dt><dd id="p6Year">2026年</dd>
+            <dt>素材・技法</dt><dd id="p6Medium">キャンバスに油彩</dd>
+            <dt>サイズ</dt><dd id="p6Size">116.7×91.0cm</dd>
+            <dt>重さ</dt><dd id="p6Weight">約3.2kg（額装込み）</dd>
+            <dt>エディション</dt><dd id="p6Edition">1点（エディションなし）</dd>
+            <dt>額装</dt><dd id="p6Framing">木製フローティングフレーム（白木）</dd>
+            <dt>作品点数</dt><dd id="p6Qty">1点</dd>
+            <dt>作品状態</dt><dd id="p6Condition">新品・未展示</dd>
+            <dt>付属品</dt><dd id="p6Extras">真作証明書・作家サイン入り</dd>
+          </dl>
+        </div>
+
+      </div>
+
+      <!-- LIAISON セクション -->
+      <div class="p6-liaison p6-liaison--li-light">
+        <div class="p6-liaison__inner">
+
+          <div class="p6-liaison__head">
+            <span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>
+            <span class="p6-liaison__status-badge p6-liaison__status-badge--nonsale">非売品</span>
+            <span class="p6-liaison__exh-link">
+              <a href="kotennavi-p2-5.html">あなたが知らないオノマトペ</a> の展示作品
+            </span>
           </div>
 
-          <!-- 仕様テーブル（JS描画） -->
-          <div class="wh-specs" id="specsTable"></div>
-
-          <!-- 価格（非表示） -->
-          <div class="wh-price-block" style="display:none">
-            <div class="wh-price-lbl">Price</div>
-            <div class="wh-price" id="workPrice"></div>
-            <div class="wh-price-sub" id="priceSub"></div>
-          </div>
-
-          <!-- ガイドリンク（非表示） -->
-          <div class="wh-guide-links" style="display:none">
-            <button class="wh-guide-btn" onclick="alert('購入までの流れページへ')">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 3"/></svg>
-              購入までの流れ
-            </button>
-            <button class="wh-guide-btn" onclick="alert('発送・送料についてページへ')">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-              発送・送料について
-            </button>
-            <button class="wh-guide-btn" onclick="alert('特定商取引法に基づく表示ページへ')">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-              特定商取引法
-            </button>
-          </div>
-
-          <!-- アクションボタン（JS描画） -->
-          <div class="wh-actions" id="actionArea"></div>
-
-          <!-- 展覧会リンクカード -->
-          <a class="p2-side-ec" href="kotennavi-p2.html">
-            <div class="p2-side-ec__poster"
-                 style="background:linear-gradient(155deg,#b8d8cc,#6a9e8a)">
-              <span style="font-family:'Shippori Mincho',serif;font-size:.55rem;
-                           font-weight:700;writing-mode:vertical-rl;color:rgba(255,255,255,.7)">
-                オノマトペ
-              </span>
+          <div class="p6-liaison__banner-row">
+            <!-- LIAISONロゴ -->
+            <div class="p6-liaison__logo-box">
+              <svg viewBox="0 0 480 180" fill="none" width="88" height="33" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="g-li-p61" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="rgba(0,93,167,.3)"/>
+                    <stop offset="55%" stop-color="#005da7"/>
+                    <stop offset="100%" stop-color="#2080e0"/>
+                  </linearGradient>
+                  <path id="t-li-p61" d="M 80 150 Q 240 30 400 150"/>
+                </defs>
+                <path d="M 20 165 Q 240 10 460 165"
+                      stroke="url(#g-li-p61)" stroke-width="5" fill="none" stroke-linecap="round"/>
+                <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600"
+                      letter-spacing="8" fill="url(#g-li-p61)">
+                  <textPath href="#t-li-p61" startOffset="50%" text-anchor="middle">LIAISON</textPath>
+                </text>
+              </svg>
+              <div class="p6-liaison__logo-sub p6-liaison__logo-sub--li">Now on View</div>
             </div>
-            <div class="p2-side-ec__body">
-              <div class="p2-side-ec__name">あなたが知らないオノマトペ — 田中 透 個展</div>
-              <div class="p2-side-ec__venue">Gallery SOIL 渋谷</div>
-              <div style="font-size:.6rem;color:var(--muted);margin-top:2px">
-                2026.03.01 — 03.05・会場展示も同時開催中
+
+            <!-- 展覧会カード -->
+            <a class="p6-liaison__exh-card" href="kotennavi-p2.html">
+              <div class="p6-liaison__exh-poster"
+                   style="background:linear-gradient(155deg,#b8d8cc,#6a9e8a)">
+                <div class="p6-liaison__exh-ldot"></div>
+              </div>
+              <div class="p6-liaison__exh-body">
+                <div class="p6-liaison__exh-name">あなたが知らないオノマトペ</div>
+                <div class="p6-liaison__exh-venue">Gallery SOIL 渋谷 · 2026.02.18 — 03.05 · 開催中</div>
+              </div>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                   width="14" height="14" style="flex-shrink:0;color:#d0dae4">
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
+            </a>
+
+            <!-- 問い合わせボタン -->
+            <a href="kotennavi-p6-13.html" class="p6-liaison__btn-inq-light">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                   width="13" height="13">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                <polyline points="22,6 12,13 2,6"/>
+              </svg>
+              お問い合わせ
+            </a>
+          </div>
+
+          <div class="p6-liaison__notice-light">
+            本作品はオンライン販売を行っておりません。ご購入・お問い合わせは会場またはクリエイターへご連絡ください。
+          </div>
+
+        </div>
+      </div>
+    </div><!-- /.ktn-content (hero + liaison) -->
+
+    <!-- ② 2カラムレイアウト -->
+    <div class="ktn-content">
+      <div class="p6-layout" id="p6Layout">
+
+        <!-- 左カラム：メインコンテンツ -->
+        <div class="p6-col-main">
+
+          <!-- この作品について -->
+          <div id="p6ColAbout">
+            <section class="work-desc-section">
+              <div class="p6-work-about__head">
+                <span class="p6-work-about__label">この作品について — ABOUT THIS WORK</span>
+                <div class="p6-work-about__line"></div>
+              </div>
+              <h2 class="p6-work-about__title" id="p6AboutTitle">《オノマトペの庭》</h2>
+              <div class="wd-body" id="descBody"></div>
+              <div class="p6-articles" id="p6Articles"></div>
+              <div class="wd-tags" id="descTags"></div>
+            </section>
+          </div>
+
+          <!-- クリエイター -->
+          <div id="p6ColCreator">
+            <div class="p2-ic is-open">
+              <div class="p2-ic__head">
+                <div class="p2-ic__head-l">
+                  <div class="p2-ic__head-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                      <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                  </div>
+                  <span class="p2-ic__head-title">クリエイター<span class="p2-ic__head-en">Creator</span></span>
+                </div>
+              </div>
+              <div class="p2-ic__body">
+                <article class="p2-4-creator-card">
+                  <div class="p2-4-creator-card__head">
+                    <div class="p2-4-creator-card__avatar av-c1" style="color:rgba(255,255,255,.85)">透</div>
+                    <div class="p2-4-creator-card__info">
+                      <div class="p2-4-creator-card__badges">
+                        <span class="cb cb-person cb-creator">creator</span>
+                        <span class="sb">開催中/開催予定</span>
+                      </div>
+                      <div class="p2-4-creator-card__name">田中 透</div>
+                      <div class="p2-4-creator-card__name-en">Toru Tanaka</div>
+                      <div class="p2-4-creator-card__genre">油彩・現代美術・ミクストメディア</div>
+                      <div class="pc-counts">
+                        <span class="pc-count pc-count--exh">
+                          <span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>12
+                        </span>
+                        <span class="sep"></span>
+                        <span class="pc-count pc-count--watch">
+                          <svg width="11" height="11"><use href="#icon-watch" color="#7a8a99"/></svg>247
+                        </span>
+                      </div>
+                    </div>
+                    <div class="p2-4-creator-card__action">
+                      <button class="ktn-btn" id="p6WatchBtn"
+                              onclick="this.classList.toggle('on');event.preventDefault()"
+                              data-off="watch" data-on="watching" data-action="watch">
+                        <svg viewBox="0 0 16 16" fill="none">
+                          <circle cx="8" cy="8" r="7" fill="#7a8a99" opacity=".45"/>
+                          <circle class="wi-dark" cx="8" cy="8" r="2.6"/>
+                        </svg>
+                        watch
+                      </button>
+                    </div>
+                  </div>
+                  <div class="p2-4-creator-card__bio">
+                    <p>1985年東京生まれ。武蔵野美術大学油絵学科卒業後、ニューヨークのアートスタジオに在籍。帰国後、「言語と感覚の境界」をテーマにした絵画作品を発表し続ける。</p>
+                    <p style="margin-top:8px">日本語特有の音象徴語（オノマトペ）が持つ音の質感を、色彩と筆跡によって視覚化する独自の手法を確立。国内外の展覧会に多数参加。2024年より LIAISON 認定クリエイター。</p>
+                  </div>
+                  <div class="p2-4-creator-card__links">
+                    <a href="kotennavi-p3.html" class="p2-4-creator-card__profile-link">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="12" height="12">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                      </svg>
+                      クリエイターページへ
+                    </a>
+                  </div>
+                </article>
               </div>
             </div>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                 width="14" height="14" style="flex-shrink:0;color:var(--muted)">
-              <polyline points="9 18 15 12 9 6"/>
-            </svg>
-          </a>
-        </div>
-      </div>
-    </section>
+          </div>
 
-    <!-- ② DESCRIPTION -->
-    <section class="work-desc-section">
-      <div class="wd-inner">
-        <div>
-          <div class="wd-eyebrow">About this Work</div>
-          <h2 class="wd-ttl" id="descTitle"></h2>
-          <div class="wd-body" id="descBody"></div>
-          <div class="wd-tags" id="descTags"></div>
-        </div>
-        <!-- 右カラム：制作ノート＋追加フィールド（JS描画） -->
-        <div id="descRightCol"></div>
-      </div>
-    </section>
-
-    <!-- ③ CREATOR -->
-    <section class="work-creator-section">
-      <div class="wc-inner">
-        <div class="wcs-eyebrow">Creator</div>
-        <div class="wcs-row">
-          <div class="wcs-avatar" style="color:rgba(255,255,255,.85)">透</div>
-          <div class="wcs-info">
-            <div class="wcs-name">
-              田中 透
-              <span class="wcs-liaison-badge">✓ LIAISON</span>
-            </div>
-            <div class="wcs-name-en">Toru Tanaka</div>
-            <div class="wcs-genre">
-              <span class="wcs-gtag">絵画</span><span class="wcs-gtag">現代美術</span><span class="wcs-gtag">抽象</span>
+          <!-- More by -->
+          <div id="p6ColMoreBy">
+            <div class="p6-more-by">
+              <div class="p6-more-by__banner">
+                <span class="p6-more-by__banner-label">More by</span>
+                <span class="p6-more-by__banner-name">田中 透</span>
+                <a href="kotennavi-p3-3.html" class="p6-more-by__banner-more">すべて見る →</a>
+              </div>
+              <div class="p6-more-by__grid" id="p6MoreByGrid"></div>
             </div>
           </div>
-          <button class="wcs-follow" id="creatorFollowBtn" onclick="toggleFollow(this)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>フォロー
-          </button>
-        </div>
-        <div class="wcs-bio">東京藝術大学大学院修了。日常の感覚をオノマトペに変換し絵画化する独自手法が国内外で注目を集める。2024年より「音のかたち」シリーズを展開中。</div>
-        <div class="wcs-stats">
-          <div class="wcs-stat"><span>892</span>フォロワー</div>
-          <div class="wcs-stat"><span>24</span>作品</div>
-          <div class="wcs-stat"><span>8</span>個展</div>
-        </div>
-        <button class="btn-creator-page" onclick="alert('田中透 クリエイターページへ')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>クリエイターページを見る
-        </button>
-      </div>
-    </section>
 
-    <!-- ④ RELATED WORKS（同展覧会の他の作品） -->
-    <section class="related-section">
-      <div class="rel-inner">
-        <div class="rel-header">
-          <div>
-            <div class="rel-eyebrow">Same Exhibition</div>
-            <div class="rel-ttl">同じ展覧会の作品</div>
+          <!-- コメント -->
+          <div id="p6ColComment">
+            <section class="comments-section">
+              <div class="cmt-inner">
+                <div class="cmt-header">
+                  <div>
+                    <div class="cmt-eyebrow">Comments</div>
+                    <div class="cmt-ttl">コメント</div>
+                  </div>
+                </div>
+                <div id="commentsList"></div>
+                <div id="commentPostArea"></div>
+              </div>
+            </section>
           </div>
-          <a href="./liaison_works_single.html" class="rel-more">
-            すべて見る<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-          </a>
-        </div>
-        <div class="masonry" id="relGrid"></div>
-      </div>
-    </section>
 
-    <!-- ⑤ COMMENTS & RATINGS -->
-    <section class="comments-section">
-      <div class="cmt-inner">
-        <div class="cmt-header">
-          <div>
-            <div class="cmt-eyebrow">Comments & Ratings</div>
-            <div class="cmt-ttl">コメント・評価</div>
-          </div>
-          <div class="cmt-summary" id="cmtSummary"></div>
-        </div>
-        <div id="commentsList"></div>
-        <!-- 投稿エリア（ログイン済みユーザーに表示） -->
-        <div id="commentPostArea"></div>
-      </div>
-    </section>
+        </div><!-- /.p6-col-main -->
 
-    <!-- ⑥ SHARE -->
-    <section class="share-section">
-      <div class="share-inner">
-        <div class="share-lbl">Share</div>
-        <div class="share-btns">
-          <button class="share-btn" onclick="alert('X(Twitter)でシェア')">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>X (Twitter)
-          </button>
-          <button class="share-btn" onclick="alert('Facebookでシェア')">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>Facebook
-          </button>
-          <button class="share-btn" onclick="alert('LINEでシェア')">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 5.92 2 10.76c0 3.4 2.18 6.38 5.44 7.98-.22.8-.79 2.88-.9 3.32-.14.54.2.54.4.4.16-.1 2.52-1.66 3.54-2.34.68.1 1.38.14 2.1.14 5.52 0 10-3.92 10-8.76S17.52 2 12 2z"/></svg>LINE
-          </button>
-          <button class="share-btn" onclick="copyLink()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>リンクをコピー
-          </button>
-        </div>
-      </div>
-    </section>
+        <!-- 右カラム -->
+        <div class="p6-col-side">
+          <div class="p6-side-inner">
 
-    <!-- ⑦ SELLER (posted-by) -->
-    <section class="seller-section">
-      <div class="seller-inner">
-        <div class="pb-lbl">posted by</div>
-        <div class="pb-row">
-          <div class="pb-avatar" style="background:linear-gradient(135deg,#2a3a2e,#3d5c44);color:rgba(201,169,110,.9)">S</div>
-          <div class="pb-meta">
-            <div class="pb-name">
-              <span class="pb-type-badge gallery">gallery</span>
-              Gallery SOIL 渋谷<span class="pb-name-sub"> ｜ Gallery SOIL Shibuya</span>
+            <!-- CTA -->
+            <div class="p2-side-card p2-action-widget" id="p6ActionWidget">
+              <div class="p2-action-widget__counts">
+                <div class="p2-action-widget__count">
+                  <div class="p2-action-widget__num" id="p6IntNum">41</div>
+                  <div class="p2-action-widget__lbl">interest!</div>
+                </div>
+                <div class="p2-action-widget__count-sep"></div>
+                <div class="p2-action-widget__count">
+                  <div class="p2-action-widget__num" id="p6CommentNum">14</div>
+                  <div class="p2-action-widget__lbl">comments</div>
+                </div>
+              </div>
+              <div class="p2-action-widget__divider"></div>
+              <div class="p2-action-widget__btn-row">
+                <button class="p2-action-widget__btn p2-action-widget__btn--interest"
+                        id="p6InterestBtn" onclick="toggleInterest(this)">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                  </svg>
+                  interest!
+                </button>
+              </div>
+              <div class="p2-action-widget__sub">
+                <button class="p2-action-widget__sub-btn" onclick="doShare()" title="シェア">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/>
+                    <circle cx="18" cy="19" r="3"/>
+                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                  </svg>
+                </button>
+                <a href="kotennavi-p6-13.html" class="p2-action-widget__sub-btn" title="修正依頼">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                  </svg>
+                </a>
+              </div>
             </div>
-            <div class="pb-counts">
-              <span class="pb-cnt"><span>143</span>フォロワー</span>
-              <span class="pb-cnt"><span>12</span>展覧会</span>
-            </div>
-            <div class="pb-liaison">✓ LIAISON 認証済</div>
-          </div>
-          <button class="pb-follow" id="sellerFollowBtn" onclick="toggleSellerFollow(this)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>フォロー
-          </button>
-        </div>
-      </div>
-    </section>
 
-    <!-- ⑧ BACK TO WORKS -->
-    <section class="back-section">
-      <div class="back-ttl">Other Works</div>
-      <a href="./liaison_works_single.html" class="back-ex-card">
-        <div class="back-ex-poster"></div>
-        <div>
-          <div class="back-ex-ttl">LIAISON works 一覧へ戻る</div>
-          <div class="back-ex-meta">あなたが知らないオノマトペ — 田中透 個展</div>
+            <!-- posted by -->
+            <div class="p2-side-card p2-side-posted" id="p6PostedCard">
+              <div class="p2-side-posted__label">posted by</div>
+              <div class="p2-side-posted__dates">掲載：2026.02.18 / 最終更新：2026.03.01</div>
+              <div class="p2-side-posted__row">
+                <div class="p2-side-posted__avatar"
+                     style="background:linear-gradient(135deg,#b8d8cc,#6a9e8a);color:rgba(255,255,255,.85)">透</div>
+                <div class="p2-side-posted__meta">
+                  <div class="p2-side-posted__name">
+                    <span class="cb cb-person cb-creator">creator</span>
+                    toru_tanaka
+                  </div>
+                  <div class="p2-side-posted__sub">田中 透 · 油彩・現代美術</div>
+                  <div class="p2-side-posted__counts">
+                    <span><strong>24</strong> 作品</span>
+                    <span><strong>892</strong> フォロワー</span>
+                  </div>
+                </div>
+              </div>
+              <button class="ktn-btn ktn-btn--follow p2-side-posted__follow" id="p6FollowBtn"
+                      onclick="toggleFollow(this)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                     width="11" height="11">
+                  <line x1="12" y1="5" x2="12" y2="19"/>
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>フォロー
+              </button>
+            </div>
+
+            <!-- お問い合わせ -->
+            <div class="p2-side-card p2-side-inq" id="p6InqCard">
+              <div class="p2-side-inq__label">作品に関するお問い合わせ</div>
+              <div class="p2-side-inq__name">田中 透</div>
+              <div class="p2-side-inq__email">
+                <a href="kotennavi-p6-13.html">問い合わせフォームへ</a>
+              </div>
+              <a href="kotennavi-p6-13.html" class="ktn-btn ktn-btn--ghost p2-side-inq__btn">
+                お問い合わせ
+              </a>
+            </div>
+
+            <!-- サブメニュー -->
+            <div class="p2-ic is-open p2-side-links">
+              <div class="p2-ic__head">
+                <div class="p2-ic__head-l">
+                  <div class="p2-ic__head-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                      <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                  </div>
+                  <span class="p2-ic__head-title">田中 透<span class="p2-ic__head-en">Creator</span></span>
+                </div>
+              </div>
+              <div class="p2-ic__body p2-side-links__body">
+                <a href="kotennavi-p3.html" class="p2-side-link">
+                  <span class="p2-side-link__icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                      <polyline points="9 22 9 12 15 12 15 22"/>
+                    </svg>
+                  </span>
+                  <span class="p2-side-link__text">
+                    <span class="p2-side-link__label">クリエイターページ</span>
+                    <span class="p2-side-link__desc">プロフィール・活動情報</span>
+                  </span>
+                  <svg class="p2-side-link__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                </a>
+                <a href="kotennavi-p3-1.html" class="p2-side-link">
+                  <span class="p2-side-link__icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                      <rect x="3" y="4" width="18" height="18" rx="2"/>
+                      <line x1="16" y1="2" x2="16" y2="6"/>
+                      <line x1="8" y1="2" x2="8" y2="6"/>
+                      <line x1="3" y1="10" x2="21" y2="10"/>
+                    </svg>
+                  </span>
+                  <span class="p2-side-link__text">
+                    <span class="p2-side-link__label">展覧会アーカイブ</span>
+                    <span class="p2-side-link__desc">過去・現在の展覧会一覧</span>
+                  </span>
+                  <svg class="p2-side-link__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                </a>
+                <a href="kotennavi-p3-3.html" class="p2-side-link is-active">
+                  <span class="p2-side-link__icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                      <rect x="3" y="3" width="18" height="18" rx="2"/>
+                      <circle cx="8.5" cy="8.5" r="1.5"/>
+                      <path d="M21 15l-5-5L5 21"/>
+                    </svg>
+                  </span>
+                  <span class="p2-side-link__text">
+                    <span class="p2-side-link__label">作品一覧</span>
+                    <span class="p2-side-link__desc">24点を公開中</span>
+                  </span>
+                  <svg class="p2-side-link__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                </a>
+                <a href="kotennavi-p3-2.html" class="p2-side-link">
+                  <span class="p2-side-link__icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                      <polyline points="14 2 14 8 20 8"/>
+                      <line x1="16" y1="13" x2="8" y2="13"/>
+                      <line x1="16" y1="17" x2="8" y2="17"/>
+                    </svg>
+                  </span>
+                  <span class="p2-side-link__text">
+                    <span class="p2-side-link__label">記事一覧</span>
+                    <span class="p2-side-link__desc">インタビュー・レポート</span>
+                  </span>
+                  <svg class="p2-side-link__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                </a>
+              </div>
+            </div>
+
+            <!-- 開催中展覧会 -->
+            <div class="p2-side-card p2-side-nearby" id="p6ColExh">
+              <div class="p2-side-nearby__head">
+                <span class="p2-side-nearby__title">田中透の展覧会</span>
+                <a href="kotennavi-p3-1.html" class="p2-side-nearby__more">すべて見る</a>
+              </div>
+              <a class="p2-side-ec" href="kotennavi-p2.html">
+                <div class="p2-side-ec__poster"
+                     style="background:linear-gradient(155deg,#b8d8cc,#6a9e8a)">
+                  <span style="font-family:'Shippori Mincho',serif;font-size:.55rem;
+                               font-weight:700;writing-mode:vertical-rl;color:rgba(255,255,255,.7)">
+                    オノマトペ
+                  </span>
+                </div>
+                <div class="p2-side-ec__body">
+                  <div class="p2-side-ec__name">あなたが知らないオノマトペ — 田中 透 個展</div>
+                  <div class="p2-side-ec__venue">Gallery SOIL 渋谷</div>
+                  <div style="font-size:.6rem;color:var(--muted);margin-top:2px">
+                    2026.03.01 — 03.05・開催中
+                  </div>
+                </div>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                     width="14" height="14" style="flex-shrink:0;color:var(--muted)">
+                  <polyline points="9 18 15 12 9 6"/>
+                </svg>
+              </a>
+              <a class="p2-side-ec" href="kotennavi-p2.html">
+                <div class="p2-side-ec__poster"
+                     style="background:linear-gradient(155deg,#e8d8c8,#b09878)">
+                  <span style="font-family:'Shippori Mincho',serif;font-size:.55rem;
+                               font-weight:700;writing-mode:vertical-rl;color:rgba(255,255,255,.7)">
+                    音のかたち
+                  </span>
+                </div>
+                <div class="p2-side-ec__body">
+                  <div class="p2-side-ec__name">音のかたち IV — 田中 透 新作展</div>
+                  <div class="p2-side-ec__venue">LVDB gallery 代官山</div>
+                  <div style="font-size:.6rem;color:var(--muted);margin-top:2px">
+                    2026.04.12 — 04.26・開催予定
+                  </div>
+                </div>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                     width="14" height="14" style="flex-shrink:0;color:var(--muted)">
+                  <polyline points="9 18 15 12 9 6"/>
+                </svg>
+              </a>
+            </div>
+
+          </div><!-- /.p6-side-inner -->
+        </div><!-- /.p6-col-side -->
+
+      </div><!-- /.p6-layout -->
+    </div><!-- /.ktn-content -->
+
+    <!-- おすすめの作品（全幅） -->
+    <section class="p2-related p6-rec-section">
+      <div class="ktn-content">
+        <div class="ktn-section__head">
+          <h2 class="ktn-section__title">おすすめの作品
+            <span class="p2-related__en">Recommended</span>
+          </h2>
+          <a href="#" class="ktn-section__more">すべて見る →</a>
         </div>
-        <svg class="back-ex-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><polyline points="9 18 15 12 9 6"/></svg>
-      </a>
+        <div class="masonry" id="p6RecGrid"></div>
+      </div>
     </section>
 
     <!-- ログインモーダル -->
@@ -288,49 +524,7 @@
       </div>
     </div>
 
-    <!-- 購入申込モーダル -->
-    <div class="am-overlay" id="applyModal">
-      <div class="am-box">
-        <div class="am-ttl" id="amTitle">購入申込</div>
-        <div class="am-sub">申込後、会期終了後に出品者から購入可否と合計金額をご連絡します。申込番号を発行します。</div>
-        <div class="am-field">
-          <label class="am-lbl">お名前 <em>（出品者への通知のみに使用します）</em></label>
-          <input class="am-input" id="amName" type="text" placeholder="例：山田 太郎">
-        </div>
-        <div class="am-field">
-          <label class="am-lbl">受取地の郵便番号 <em>（送料計算に使用します）</em></label>
-          <input class="am-input" id="amZip" type="text" placeholder="例：150-0001" maxlength="8">
-        </div>
-        <div class="am-field">
-          <label class="am-lbl">申込理由・コメント <em>（任意）</em></label>
-          <textarea class="am-textarea" placeholder="この作品に興味を持った理由など（任意）"></textarea>
-        </div>
-        <label class="am-agree">
-          <input type="checkbox" id="amAgreeCheck">
-          <div class="am-agree-txt">
-            <a href="#" onclick="return false">購入までの流れ</a>・<a href="#" onclick="return false">発送・送料について</a>を確認し、以下に同意します。<br>
-            ・会場売約時は申込がキャンセルになること<br>
-            ・申込後もキャンセル可能であること<br>
-            ・申込順に購入可否が案内されること
-          </div>
-        </label>
-        <button class="am-submit" onclick="submitApply()">申込を確定する</button>
-        <button class="am-cancel" onclick="closeModal('applyModal')">キャンセル</button>
-      </div>
-    </div>
-
   </main>
-
-  <!-- おすすめの展覧会 -->
-  <section class="p2-related">
-    <div class="ktn-section__head">
-      <h2 class="ktn-section__title">おすすめの展覧会
-        <span class="p2-related__en">Recommended</span>
-      </h2>
-      <a href="#" class="ktn-section__more">すべて見る →</a>
-    </div>
-    <div class="masonry" id="p6RecGrid"></div>
-  </section>
 
   <div class="ktn-ad-band" id="ktnAdBand">
     <div class="ktn-ad-band__inner">

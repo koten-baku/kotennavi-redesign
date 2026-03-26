@@ -1650,155 +1650,61 @@ KTN.pages['p6'] = function() {
 };
 
 /* ────────────────────────────────────────────────────
-   P6-1 作品詳細（LIAISON 購入申込版）
+   P6-1 作品詳細（LIAISON 非売品版）
 ──────────────────────────────────────────────────── */
 KTN.pages['p6-1'] = function() {
-  _p6Init({
-    relLink: 'kotennavi-p6-1.html',
-    renderActionArea: function(WORK, _workPhase, _applyState, _applyCount, isLoggedIn, favShareRow) {
-      var area = document.getElementById('actionArea');
-      if (!area) return;
-      // 非売品のときのみステータスバッジを表示
-      var badge = document.getElementById('workStatus');
-      if (badge) {
-        var isNfs = WORK.status === 'nfs' || WORK.status === 'not_for_sale';
-        badge.style.display = isNfs ? '' : 'none';
-      }
-      area.innerHTML =
-        '<button class="btn-contact" onclick="alert(\'問い合わせフォームへ\')">' +
-        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>' +
-        '作家に問い合わせる</button>' +
-        favShareRow();
-    },
-  });
+  /* p6 共通描画処理を呼び出す（ABOUT・コメント・More by・各種ウィジェット） */
+  if (typeof KTN.pages['p6'] === 'function') KTN.pages['p6']();
+
+  /* p6-1 固有：スライドデータ上書き */
+  var SLIDES = [
+    { bg:'linear-gradient(155deg,#b8d8cc,#6a9e8a)', label:'全体',
+      caption:'全体 — キャンバスに油彩 116.7×91.0cm' },
+    { bg:'linear-gradient(135deg,#9cc4b8,#5a8e7a)', label:'詳細①',
+      caption:'詳細① — 中央部分のテクスチャー' },
+    { bg:'linear-gradient(155deg,#d0e8e0,#8abba8)', label:'詳細②',
+      caption:'詳細② — 左上の筆致' },
+    { bg:'linear-gradient(165deg,#c4d8d0,#7aaa98)', label:'展示',
+      caption:'展示 — Gallery SOIL 渋谷 展示風景' },
+  ];
+
+  /* メイン画像初期化 */
+  var mainImg = document.getElementById('p6MainImg');
+  var captionEl = document.getElementById('p6Caption');
+  if (mainImg && SLIDES.length) {
+    mainImg.style.background = SLIDES[0].bg;
+    if (captionEl) captionEl.textContent = SLIDES[0].caption;
+  }
+
+  /* サムネイル生成 */
+  var thumbsEl = document.getElementById('p6Thumbs');
+  if (thumbsEl) {
+    thumbsEl.innerHTML = SLIDES.map(function(s, i) {
+      return '<div class="p6-hero__thumb' + (i===0?' is-active':'') + '"'
+        + ' style="background:' + s.bg + '"'
+        + ' onclick="p6SwitchImg(this,\'' + s.bg + '\',\'' + s.caption + '\')">'
+        + '</div>';
+    }).join('');
+  }
+
+  /* 画像切り替え関数 */
+  window.p6SwitchImg = function(thumb, bg, caption) {
+    document.querySelectorAll('.p6-hero__thumb').forEach(function(t) {
+      t.classList.remove('is-active');
+    });
+    thumb.classList.add('is-active');
+    var mainImg = document.getElementById('p6MainImg');
+    if (mainImg) mainImg.style.background = bg;
+    var captionEl = document.getElementById('p6Caption');
+    if (captionEl) captionEl.textContent = caption;
+  };
+
 };
 
 /* ────────────────────────────────────────────────────
    P6-2 作品詳細（LIAISON+ 販売版）
 ──────────────────────────────────────────────────── */
 KTN.pages['p6-2'] = function() {
-  _p6Init({
-    relLink: 'kotennavi-p6-2.html',
-    renderRelated: function(related) {
-      var el = document.getElementById('relGrid');
-      if (!el) return;
-      var p6StatusToP25 = { available:'sale', reserved:'pending', sold:'sold', nfs:'nsale', not_for_sale:'nsale', inquiry:'nsale' };
-      var badgeMap = {
-        sale:    '<span class="p25c__badge p25c__badge--sale">販売中</span>',
-        sold:    '',
-        nsale:   '<span class="p25c__badge p25c__badge--nsale">非売品</span>',
-        pending: '<span class="p25c__badge p25c__badge--pending">申込中</span>',
-      };
-      el.innerHTML = related.map(function(w) {
-        var p25st = p6StatusToP25[w.status] || 'nsale';
-        var cardClass = 'p25c' + (p25st === 'sold' ? ' p25c--sold' : '');
-        var ribbon = p25st === 'sold' ? '<div class="p25c__sold-ribbon">SOLD</div>' : '';
-        var badge  = badgeMap[p25st] || '';
-        var priceHtml = w.price
-          ? '<div class="p25c__price"><span class="p25c__price-currency">&yen;</span>' + w.price.toLocaleString() + '<span class="p25c__price-tax">（税込）</span></div>'
-          : '';
-        return '<div class="masonry-item">' +
-          '<a class="' + cardClass + '" href="kotennavi-p6-2.html?id=' + w.id + '">' +
-          '<div class="p25c__img">' +
-          '<div class="p25c__img-bg" style="background:' + w.bg + '"></div>' +
-          '<div class="p25c__img-title">《' + w.title + '》</div>' +
-          ribbon +
-          '</div>' +
-          '<div class="p25c__body">' +
-          '<div class="p25c__creator">' + w.creator + '</div>' +
-          '<div class="p25c__title">' + w.title + '</div>' +
-          '<div class="p25c__spec">' + w.year + ' / ' + w.medium + '</div>' +
-          '<div class="p25c__footer">' +
-          '<div class="p25c__footer-l">' + badge + '</div>' +
-          priceHtml +
-          '</div>' +
-          '</div>' +
-          '</a></div>';
-      }).join('');
-    },
-    renderActionArea: function(WORK, _workPhase, _applyState, _applyCount, isLoggedIn, favShareRow) {
-      var area = document.getElementById('actionArea');
-      if (!area) return;
-      var status = (_workPhase === 'sold') ? 'sold' : WORK.status;
-      var priceBlock = document.getElementById('priceBlock');
-      var workPrice  = document.getElementById('workPrice');
-      var priceSub   = document.getElementById('priceSub');
-      var badge      = document.getElementById('workStatus');
-
-      /* 価格ブロック表示制御 */
-      var showPrice = (status === 'available' || status === 'reserved' || status === 'sold');
-      if (priceBlock) priceBlock.style.display = showPrice ? '' : 'none';
-
-      /* 価格テキスト（sold時は打ち消し線） */
-      if (workPrice) {
-        if (status === 'sold') {
-          workPrice.innerHTML = WORK.price
-            ? '<s>¥' + WORK.price.toLocaleString() + '<small>税込</small></s>'
-            : '';
-          if (priceSub) priceSub.innerHTML = '';
-        } else {
-          workPrice.innerHTML = WORK.price
-            ? '¥' + WORK.price.toLocaleString() + '<small>税込</small>'
-            : '<span style="font-size:1rem;color:var(--lmuted)">販売なし</span>';
-          if (priceSub) priceSub.innerHTML = WORK.price
-            ? '<em>＋ 送料・梱包費は会期終了後に別途ご案内します</em>' : '';
-        }
-      }
-
-      /* ステータスバッジ表示制御 */
-      if (badge) {
-        var showBadge = (status === 'sold' || status === 'reserved' ||
-          status === 'nfs' || status === 'not_for_sale');
-        badge.style.display = showBadge ? '' : 'none';
-      }
-
-      /* CTA per ステータス */
-      if (status === 'available') {
-        if (!isLoggedIn()) {
-          area.innerHTML =
-            '<button class="btn-apply" onclick="openModal(\'loginModal\')">' +
-            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>' +
-            '購入申込をする' +
-            (_applyCount > 0 ? '<span class="btn-apply-count">' + _applyCount + '人が申込中</span>' : '') +
-            '</button>' + favShareRow();
-        } else if (_applyState === 'applied') {
-          area.innerHTML =
-            '<div class="btn-applied"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>' +
-            '申込済み<span class="btn-applied-num">申込番号：#0042</span></div>' +
-            '<button class="btn-dashboard" onclick="alert(\'購入申込ダッシュボードへ\')">' +
-            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>' +
-            '申込ダッシュボードへ</button>' + favShareRow();
-        } else {
-          area.innerHTML =
-            '<button class="btn-apply" onclick="openApplyModal()">' +
-            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>' +
-            '購入申込をする' +
-            (_applyCount > 0 ? '<span class="btn-apply-count">' + _applyCount + '人が申込中</span>' : '') +
-            '</button>' + favShareRow();
-        }
-      } else if (status === 'reserved') {
-        area.innerHTML =
-          '<div class="wh-reserved-notice">' +
-          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>' +
-          '現在他の方が申込中です。キャンセルの際にご案内します。</div>' +
-          '<button class="btn-apply btn-apply--sub" onclick="openApplyModal()">' +
-          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>' +
-          'キャンセル待ちで申込む</button>' + favShareRow();
-      } else if (status === 'sold') {
-        area.innerHTML =
-          '<div class="wh-sold-bar">' +
-          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>' +
-          'この作品は売約済みです</div>' + favShareRow();
-      } else if (status === 'nfs' || status === 'not_for_sale') {
-        area.innerHTML = favShareRow();
-      } else if (status === 'inquiry') {
-        area.innerHTML =
-          '<button class="btn-contact" onclick="alert(\'問い合わせフォームへ\')">' +
-          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>' +
-          '作家に問い合わせる</button>' + favShareRow();
-      } else {
-        area.innerHTML = favShareRow();
-      }
-    },
-  });
+  /* p6 共通描画処理を呼び出す（ABOUT・コメント・More by・各種ウィジェット・モーダル関数） */
+  if (typeof KTN.pages['p6'] === 'function') KTN.pages['p6']();
 };
