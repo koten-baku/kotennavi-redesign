@@ -2994,6 +2994,7 @@ line-clamp:2;}
   flex:1;
   min-width:0;
   padding-bottom:80px;
+  overflow-x:clip;
 }
 
 /* ── コンテンツ幅制御ラッパー ── */
@@ -6354,12 +6355,12 @@ line-clamp:2;}
 .p251-dark .p2-sub-tags__label { color: rgba(255,255,255,.35); }
 .p251-dark .ktn-ad-band { background: #2e4255; border-top-color: rgba(255,255,255,.06); }
 
-/* ── p251-dark ヘッダー・パンくず ── */
-.p251-dark .ktn-header { background: #344a5e; border-bottom-color: rgba(255,255,255,.08); }
-.p251-dark .ktn-bc__link { color: rgba(255,255,255,.55); }
-.p251-dark .ktn-bc__link:hover { color: rgba(255,255,255,.88); background: rgba(255,255,255,.06); }
-.p251-dark .ktn-bc__sep { color: rgba(255,255,255,.25); }
-.p251-dark .ktn-bc__current { color: rgba(255,255,255,.82); }
+/* ── p251-dark ヘッダー・パンくず（p2-5 ライトと同配色） ── */
+.p251-dark .ktn-header { background: #fff; border-bottom-color: var(--border); }
+.p251-dark .ktn-bc__link { color: var(--muted); }
+.p251-dark .ktn-bc__link:hover { color: var(--accent); background: var(--paper); }
+.p251-dark .ktn-bc__sep { color: var(--border); }
+.p251-dark .ktn-bc__current { color: var(--ink); }
 
 /* ── p251-dark #3d5166 背景グループ ── */
 .p251-dark .p2-subnav { background: #3d5166; }
@@ -7165,7 +7166,7 @@ body.p6-dark.p6-plus{
 /* ════════════════════════════════
    p6-1 / p6-2 LIAISONセクション
 ════════════════════════════════ */
-.p6-liaison{border-radius:4px;overflow:hidden;margin-bottom:20px;box-sizing:border-box;width:100%;max-width:100%;contain:layout}
+.p6-liaison{border-radius:4px;overflow:hidden;margin-bottom:20px;box-sizing:border-box;width:100%;max-width:100%}
 .p6-liaison--li{background:linear-gradient(135deg,#2c3e50 0%,#3d5166 100%)}
 .p6-liaison--lp{background:linear-gradient(135deg,#1e2d3d 0%,#2c3e50 100%)}
 .p6-liaison__inner{padding:20px 24px;display:flex;flex-direction:column;gap:14px;box-sizing:border-box;width:100%;min-width:0}
@@ -7182,9 +7183,9 @@ body.p6-dark.p6-plus{
 /* バナー */
 .p6-liaison__banner{display:flex;align-items:stretch;border:1px solid rgba(255,255,255,.1);border-radius:4px;overflow:hidden;background:rgba(0,0,0,.15);min-width:0;width:100%}
 .p6-liaison__banner--lp{border-color:rgba(200,169,110,.15);background:rgba(0,0,0,.2)}
-.p6-liaison__banner-logo{width:130px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px 16px;border-right:1px solid rgba(255,255,255,.08)}
+.p6-liaison__banner-logo{width:140px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px 16px;border-right:1px solid rgba(255,255,255,.08);box-sizing:border-box}
 .p6-liaison__banner--lp .p6-liaison__banner-logo{border-right-color:rgba(200,169,110,.1)}
-.p6-liaison__banner-sub{font-family:var(--fm);font-size:.55rem;font-weight:600;letter-spacing:.1em;margin-top:4px}
+.p6-liaison__banner-sub{font-family:var(--fm);font-size:.55rem;font-weight:600;letter-spacing:.1em;margin-top:4px;white-space:nowrap}
 .p6-liaison__banner-sub--li{color:rgba(77,163,245,.65)}
 .p6-liaison__banner-sub--lp{color:rgba(200,169,110,.55)}
 .p6-liaison__banner-body{flex:1;padding:14px 16px;display:flex;flex-direction:column;justify-content:center;gap:3px;min-width:0;overflow:hidden}
@@ -7297,11 +7298,16 @@ body.p6-dark.p6-plus{
 .p6-dark .wcd-comment-form{background:#1a2a3a;border-color:rgba(255,255,255,.08)}
 .p6-dark .wcd-comment-form textarea{background:#152030;border-color:rgba(255,255,255,.1);color:rgba(255,255,255,.75)}
 .p6-dark .p2-action-widget{background:#1e2d3d;border-color:rgba(255,255,255,.08)}
-.p6-dark .p2-action-widget__num{color:rgba(255,255,255,.88)}
+.p6-dark .p2-action-widget__num{color:rgba(255,255,255,.55)}
 .p6-dark .p2-action-widget__lbl{color:rgba(255,255,255,.35)}
 .p6-dark .p2-action-widget__divider{background:rgba(255,255,255,.08)}
-.p6-dark .p2-action-widget__btn--interest{border-color:rgba(255,255,255,.15);color:rgba(255,255,255,.72)}
-.p6-dark .p2-action-widget__sub-btn{border-color:rgba(255,255,255,.12);color:rgba(255,255,255,.5)}
+.p6-dark .p2-action-widget__btn{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.15);color:rgba(255,255,255,.72)}
+.p6-dark .p2-action-widget__btn:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.25);color:rgba(255,255,255,.88)}
+.p6-dark .p2-action-widget__btn--interest{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.15);color:rgba(255,255,255,.72)}
+.p6-dark .p2-action-widget__btn--interest:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.25);color:rgba(255,255,255,.88)}
+.p6-dark .p2-action-widget__btn--interest.is-active{background:#c0392b;border-color:#c0392b;color:#fff}
+.p6-dark .p2-action-widget__sub-btn{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.12);color:rgba(255,255,255,.5)}
+.p6-dark .p2-action-widget__sub-btn:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.22);color:rgba(255,255,255,.75)}
 .p6-dark .p2-side-posted{background:#1e2d3d;border-color:rgba(255,255,255,.08)}
 .p6-dark .p2-side-posted__label{color:rgba(255,255,255,.3)}
 .p6-dark .p2-side-posted__dates{color:rgba(255,255,255,.3)}
@@ -7329,19 +7335,19 @@ body.p6-dark.p6-plus{
 /* ── p6-liaison はみ出し修正（既存定義に統合済み） ── */
 
 /* ── p6-2 LIAISONセクション ダーク版 ── */
-.p6-liaison--lp{background:linear-gradient(135deg,#1e2d3d 0%,#2c3e50 100%);border-radius:4px;overflow:hidden;margin-bottom:20px;box-sizing:border-box;width:100%;max-width:100%}
+.p6-liaison--lp{background:linear-gradient(135deg,#1e2d3d 0%,#2c3e50 100%);border-radius:4px;overflow:hidden;margin-bottom:20px;box-sizing:border-box;width:100%;max-width:100%;border-left:3px solid #c8a96e}
 .p6-liaison--lp .p6-liaison__inner{padding:20px 24px;display:flex;flex-direction:column;gap:14px;box-sizing:border-box;width:100%;min-width:0}
 .p6-liaison--lp .p6-liaison__head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .p6-liaison--lp .p6-liaison__exh-link{font-size:.74rem;color:rgba(255,255,255,.4)}
 .p6-liaison--lp .p6-liaison__exh-link a{color:rgba(120,180,224,.85);text-decoration:none}
 .p6-liaison--lp .p6-liaison__divider{height:1px;background:rgba(255,255,255,.08)}
 .p6-liaison--lp .p6-liaison__banner{display:flex;align-items:stretch;border:1px solid rgba(200,169,110,.15);border-radius:4px;overflow:hidden;background:rgba(0,0,0,.2);width:100%;min-width:0;box-sizing:border-box}
-.p6-liaison--lp .p6-liaison__banner-logo{width:130px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px 16px;border-right:1px solid rgba(200,169,110,.1)}
+.p6-liaison--lp .p6-liaison__banner-logo{width:140px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px 16px;border-right:1px solid rgba(200,169,110,.1);box-sizing:border-box}
 .p6-liaison--lp .p6-liaison__banner-body{flex:1;min-width:0;padding:14px 16px;display:flex;flex-direction:column;justify-content:center;gap:3px;overflow:hidden}
 .p6-liaison--lp .p6-liaison__banner-ttl{font-size:.82rem;font-weight:600;color:rgba(255,255,255,.85);letter-spacing:.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .p6-liaison--lp .p6-liaison__banner-venue{font-size:.7rem;color:rgba(255,255,255,.4)}
 .p6-liaison--lp .p6-liaison__banner-dates{font-size:.68rem;color:rgba(255,255,255,.3)}
-.p6-liaison--lp .p6-liaison__bottom{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start;width:100%;box-sizing:border-box}
+.p6-liaison--lp .p6-liaison__bottom{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start;width:100%;box-sizing:border-box;padding:0 20px}
 .p6-liaison--lp .p6-liaison__left{display:flex;flex-direction:column;gap:6px;min-width:0}
 .p6-liaison--lp .p6-liaison__right{display:flex;flex-direction:column;gap:8px;min-width:0}
 .p6-liaison--lp .p6-liaison__price-label{font-family:var(--fm);font-size:.52rem;font-weight:700;letter-spacing:.14em;color:rgba(255,255,255,.3);text-transform:uppercase}
@@ -7356,11 +7362,11 @@ body.p6-dark.p6-plus{
 .p6-liaison--lp .p6-liaison__link-row{display:flex;gap:6px;flex-wrap:wrap}
 .p6-liaison--lp .p6-liaison__link-btn{display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border:1px solid rgba(255,255,255,.12);border-radius:3px;font-size:.6rem;color:rgba(255,255,255,.38);text-decoration:none;transition:color .15s;white-space:nowrap}
 .p6-liaison--lp .p6-liaison__link-btn:hover{color:rgba(255,255,255,.65)}
-.p6-liaison--lp .p6-liaison__btn-apply{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:13px 18px;border-radius:4px;font-size:.82rem;font-weight:700;background:#c8a96e;color:#1a2535;border:none;cursor:pointer;width:100%;letter-spacing:.04em;box-sizing:border-box;transition:background .15s}
+.p6-liaison--lp .p6-liaison__btn-apply{display:flex;align-items:center;justify-content:center;gap:8px;padding:17px 18px;border-radius:4px;font-size:.82rem;font-weight:700;background:#c8a96e;color:#1a2535;border:none;cursor:pointer;width:100%;letter-spacing:.04em;box-sizing:border-box;transition:background .15s;position:relative}
 .p6-liaison--lp .p6-liaison__btn-apply:hover{background:#d4b87c}
 .p6-liaison--lp .p6-liaison__btn-apply-inner{display:flex;align-items:center;gap:7px}
-.p6-liaison--lp .p6-liaison__btn-apply-queue{font-size:.58rem;font-weight:400;color:rgba(26,37,53,.65);background:rgba(26,37,53,.15);padding:2px 8px;border-radius:10px;white-space:nowrap}
-.p6-liaison--lp .p6-liaison__btn-inq2{display:flex;align-items:center;justify-content:center;gap:7px;padding:11px 16px;border-radius:4px;font-size:.74rem;font-weight:500;background:transparent;color:rgba(255,255,255,.65);border:1px solid rgba(255,255,255,.2);cursor:pointer;text-decoration:none;width:100%;box-sizing:border-box;transition:background .15s}
+.p6-liaison--lp .p6-liaison__btn-apply-queue{font-size:.58rem;font-weight:400;color:rgba(26,37,53,.65);background:rgba(26,37,53,.15);padding:2px 8px;border-radius:10px;white-space:nowrap;position:absolute;right:18px}
+.p6-liaison--lp .p6-liaison__btn-inq2{display:flex;align-items:center;justify-content:center;gap:7px;padding:15px 16px;border-radius:4px;font-size:.74rem;font-weight:500;background:transparent;color:rgba(255,255,255,.65);border:1px solid rgba(255,255,255,.2);cursor:pointer;text-decoration:none;width:100%;box-sizing:border-box;transition:background .15s}
 .p6-liaison--lp .p6-liaison__btn-inq2:hover{background:rgba(255,255,255,.05)}
 @media(max-width:680px){
   .p6-liaison--lp .p6-liaison__bottom{grid-template-columns:1fr}
@@ -7387,16 +7393,18 @@ body.p6-dark.p6-plus{
 .p6-dark .ktn-btn.on{background:rgba(77,163,245,.18);border-color:rgba(77,163,245,.35);color:#4da3f5}
 
 /* ── p2-4-creator-card（クリエイターカード）── */
+.p6-dark .p2-4-creator-card{background:#1a2a3a;border-color:rgba(255,255,255,.1)}
+.p6-dark .p2-4-creator-card:hover{background:#1e3045;box-shadow:0 6px 20px rgba(0,0,0,.3)}
 .p6-dark .p2-4-creator-card__head{border-bottom-color:rgba(255,255,255,.08)}
-.p6-dark .p2-4-creator-card__avatar{border-color:rgba(255,255,255,.1)}
-.p6-dark .p2-4-creator-card__name{color:rgba(255,255,255,.88)}
-.p6-dark .p2-4-creator-card__name-en{color:rgba(255,255,255,.4)}
-.p6-dark .p2-4-creator-card__genre{color:rgba(255,255,255,.45)}
-.p6-dark .p2-4-creator-card__bio{color:rgba(255,255,255,.6);border-top-color:rgba(255,255,255,.08)}
-.p6-dark .p2-4-creator-card__bio p{color:rgba(255,255,255,.6)}
+.p6-dark .p2-4-creator-card__avatar{border-color:rgba(255,255,255,.12)}
+.p6-dark .p2-4-creator-card__name{color:rgba(255,255,255,.82)}
+.p6-dark .p2-4-creator-card__name-en{color:rgba(255,255,255,.38)}
+.p6-dark .p2-4-creator-card__genre{color:rgba(255,255,255,.42)}
+.p6-dark .p2-4-creator-card__bio{color:rgba(255,255,255,.55);border-top-color:rgba(255,255,255,.08)}
+.p6-dark .p2-4-creator-card__bio p{color:rgba(255,255,255,.55)}
 .p6-dark .p2-4-creator-card__links{border-top-color:rgba(255,255,255,.08)}
-.p6-dark .p2-4-creator-card__profile-link{color:rgba(120,180,224,.8)}
-.p6-dark .p2-4-creator-card__profile-link:hover{color:rgba(120,180,224,1)}
+.p6-dark .p2-4-creator-card__profile-link{color:rgba(100,170,224,.75);border-color:rgba(100,170,224,.2)}
+.p6-dark .p2-4-creator-card__profile-link:hover{background:rgba(100,170,224,.15);color:rgba(120,185,235,.9)}
 
 /* ── pc-counts（作品数・watchカウント） ── */
 .p6-dark .pc-count{color:rgba(255,255,255,.45)}

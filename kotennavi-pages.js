@@ -970,7 +970,7 @@ var _p6Works = [
     creator:'田中 透', creatorEn:'Toru Tanaka',
     year:2026, medium:'キャンバスに油彩', size:'116.7×91.0cm',
     weight:'約3.2kg（額装込み）', framing:'木製フローティングフレーム（白木）',
-    price:580000, qty:1, edition:null, status:'available',
+    price:580000, qty:1, edition:null, condition:'新品・未展示', accessories:'真作証明書・作家サイン入り', status:'available',
     shipping:{ timing:'展覧会終了後（2026年3月下旬以降）', method:'ヤマト宅急便', anonymous:false },
     bg:'linear-gradient(155deg,#b8d8cc,#6a9e8a)',
     thumbs:[
@@ -1579,6 +1579,10 @@ KTN.pages['p6'] = function() {
         { lbl:'\u30b5\u30a4\u30ba',   val: w.size },
         { lbl:'\u91cd\u3055',         val: w.weight },
         { lbl:'\u30a8\u30c7\u30a3\u30b7\u30e7\u30f3', val: edition, always: true },
+        { lbl:'\u984d\u88c5',         val: w.framing },
+        { lbl:'\u4f5c\u54c1\u70b9\u6570/\u30a8\u30c7\u30a3\u30b7\u30e7\u30f3', val: w.qty ? w.qty + '\u70b9' : null },
+        { lbl:'\u4f5c\u54c1\u72b6\u614b', val: w.condition },
+        { lbl:'\u4ed8\u5c5e\u54c1',   val: w.accessories },
       ];
       el = document.getElementById('p6Specs');
       if (el) el.innerHTML = specs
