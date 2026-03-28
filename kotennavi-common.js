@@ -198,13 +198,13 @@ function renderSidebar() {
     `;
     if (noticeDot) noticeDot.style.display = 'none';
   } else {
-    noticeDot.style.display = 'block';
+    if (noticeDot) noticeDot.style.display = 'block';
     const roles = ['user'];
     if (curRole === 'user+creator') roles.push('creator');
     else if (curRole === 'user+gallery') roles.push('gallery');
     else if (curRole === 'admin') roles.push('admin');
 
-    roleNav.innerHTML = roles.map(r => {
+    if (roleNav) roleNav.innerHTML = roles.map(r => {
       const rd = KTN_ROLES[r];
       return `
         <a href="${rd.url}" class="ktn-sidebar__item" data-page="${rd.page}" onclick="handleNav(event,'${rd.page}','${rd.url}')">
@@ -445,7 +445,7 @@ const PAGES = {
   'p2-5': { n: '展覧会-リエゾン作品一覧', w: '--w-index', bc: [['Top', '/'], ['展覧会', '/p2'], ['あなたが知らないオノマトペ', '/p2-3'], ['LIAISON作品一覧', null, 'l']] },
   'p2-5-1': { n: '展覧会-リエゾンプラス作品一覧', w: '--w-index', bc: [['Top', '/'], ['展覧会', '/p2'], ['あなたが知らないオノマトペ', '/p2-3'], ['LIAISON+ 作品一覧', null, 'lp']] },
   'p2-11': { n: '展覧会-新規/編集/クローン', w: '--w-article', bc: [['Top', '/'], ['展覧会', '/p2'], ['あなたが知らないオノマトペ', '/p2-3'], ['新規/編集/クローン', null]] },
-  'p2-12': { n: '展覧会-インサイト', w: '--w-article', bc: [['Top', '/'], ['展覧会', '/p2'], ['あなたが知らないオノマトペ', '/p2-3'], ['インサイト', null]] },
+  'p2-12': { n: 'LIAISON 作品管理', w: '--w-article', bc: [['Top', '/'], ['展覧会', '/p2'], ['あなたが知らないオノマトペ', '/p2-3'], ['LIAISON 作品管理', null]] },
   'p2-13': { n: '展覧会-広告作成', w: '--w-article', bc: [['Top', '/'], ['展覧会', '/p2'], ['あなたが知らないオノマトペ', '/p2-3'], ['広告作成', null]] },
   'p2-14': { n: '展覧会-修正依頼', w: '--w-article', bc: [['Top', '/'], ['展覧会', '/p2'], ['あなたが知らないオノマトペ', '/p2-3'], ['修正依頼', null]] },
   'p2-15': { n: '展覧会-報告', w: '--w-article', bc: [['Top', '/'], ['展覧会', '/p2'], ['あなたが知らないオノマトペ', '/p2-3'], ['報告', null]] },
@@ -615,7 +615,7 @@ function getActions(page, role) {
     if (role === 'creator')
       return cmn + owbtn('edit', '編集') + dd('オーナーメニュー',
         ddi('edit', '編集') + ddi('file', '記事の追加') + ddSep() +
-        ddinote('grid', 'LIAISON連携', 'LIAISON（会場連動オンライン展示/販売）とは →') + ddSep() +
+        ddinote('grid', 'LIAISON作品管理', 'LIAISON（会場連動オンライン展示/販売）とは →') + ddSep() +
         ddi('chart', 'インサイト') + ddi('info', 'ガイド') + ddSep() +
         ddi('trash', '削除', true));
     if (role === 'gallery')
@@ -626,7 +626,7 @@ function getActions(page, role) {
       return cmn + owbtn('edit', '編集') +
         dd('オーナーメニュー',
           ddi('edit', '編集') + ddi('file', '記事の追加') + ddSep() +
-          ddi('grid', 'LIAISON連携') + ddi('chart', 'インサイト') + ddSep() +
+          ddi('grid', 'LIAISON作品管理') + ddi('chart', 'インサイト') + ddSep() +
           ddi('trash', '削除', true)) +
         dd('管理者',
           ddi('edit', '編集') + ddi('send', 'SNS投稿') + ddi('file', '校正データ生成') + ddSep() +

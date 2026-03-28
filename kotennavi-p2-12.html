@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LIAISON 作品管理 — あなたが知らないオノマトペ・田中透 | 個展なび</title>
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Noto+Sans+JP:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.3/Sortable.min.js" defer></script>
+</head>
+<body>
+<div class="ktn-toast" id="ktnToast"></div>
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ロール：</span>
+  <button class="dbtn" onclick="setR('guest',this)">ゲスト</button>
+  <button class="dbtn" onclick="setR('login',this)">ログイン</button>
+  <button class="dbtn on" onclick="setR('user+creator',this)">creator本人</button>
+  <button class="dbtn" onclick="setR('user+gallery',this)">gallery本人</button>
+  <button class="dbtn" onclick="setR('admin',this)">管理者</button>
+</div>
+<div class="shell">
+<div class="content-wrap" id="contentWrap">
+
+  <header class="ktn-header" id="ktnHeader">
+    <div class="ktn-header__inner">
+      <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+      <div class="ktn-hdr-actions" id="ktnActs"></div>
+    </div>
+  </header>
+  <div class="ktn-tagbar" id="ktnTagbar">
+    <div class="ktn-tagbar__inner" id="ktnTagbarInner"></div>
+  </div>
+
+  <main class="ktn-main" id="ktnMain">
+    <div class="ktn-content ktn-content--article">
+
+      <!-- 1. 展覧会コンパクトバナー -->
+      <a href="kotennavi-p2.html" class="p2-12-banner">
+        <div class="p2-12-banner__thumb" style="background:linear-gradient(135deg,#b8d8cc,#6a9e8a)"></div>
+        <div class="p2-12-banner__body">
+          <div class="p2-12-banner__badges">
+            <span class="sb sb-live"><span class="pulse"></span>開催中</span>
+            <span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>
+          </div>
+          <div class="p2-12-banner__title">あなたが知らないオノマトペ</div>
+          <div class="p2-12-banner__meta">
+            <span>Gallery SOIL 渋谷</span>
+            <span class="p2-12-banner__sep">·</span>
+            <span>2026.02.18 — 03.05</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- 2+3. LIAISON 展示設定（統合セクション） -->
+      <section class="p2-12-liaison-section">
+
+        <!-- セクションヘッダー -->
+        <div class="p2-12-liaison-section__head">
+          <h2 class="p2-12-liaison-section__title">LIAISON 展示設定</h2>
+          <p class="p2-12-liaison-section__desc">この展覧会に連動したオンライン作品展示の設定を行います。展示した作品は展覧会ページの LIAISON タブで公開されます。</p>
+        </div>
+
+        <!-- LIAISON+ プロモーション（横長バナー） -->
+        <div class="p2-12-lp-promo-wrap">
+        <div class="p2-12-lp-promo">
+          <div class="p2-12-lp-promo__logo">
+            <svg viewBox="0 0 480 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <path id="p212-lp-s-t" d="M 80 184 Q 240 56 400 184"/>
+                <linearGradient id="g-p212-lp-s" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%"   stop-color="#6a4010"/>
+                  <stop offset="30%"  stop-color="#a87020"/>
+                  <stop offset="58%"  stop-color="#d4a428"/>
+                  <stop offset="100%" stop-color="#6a4010"/>
+                </linearGradient>
+              </defs>
+              <path d="M 20 200 Q 240 33 460 200" stroke="url(#g-p212-lp-s)" stroke-width="4" fill="none" stroke-linecap="round"/>
+              <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#g-p212-lp-s)">
+                <textPath href="#p212-lp-s-t" startOffset="50%" text-anchor="middle">LIAISON</textPath>
+              </text>
+              <circle cx="432" cy="183" r="22" fill="#b87c10"/>
+              <text x="432" y="183" font-family="'Bodoni Moda',serif" font-size="42" font-weight="900" fill="#fff8e8" text-anchor="middle" dominant-baseline="central">+</text>
+              <text x="240" y="220" font-family="'Montserrat',sans-serif" font-size="17" font-weight="600" letter-spacing="3" fill="#8a6018" text-anchor="middle">Now on View + Shop</text>
+            </svg>
+          </div>
+          <div class="p2-12-lp-promo__body">
+            <span class="p2-12-lp-promo__catch">展示 + オンライン販売を同時に</span>
+          </div>
+          <a href="#" class="p2-12-lp-promo__apply">LIAISON+ についてもっと知る</a>
+        </div>
+        </div><!-- /.p2-12-lp-promo-wrap -->
+
+        <!-- 展示作品リスト -->
+        <div class="p2-12-works-block">
+          <div class="p2-12-section-head">
+            <h3 class="p2-12-section-head__title">展示作品</h3>
+            <span class="p2-12-count" id="p212Count">3</span>
+            <span class="p2-12-section-head__note">ドラッグで並び順を変更できます</span>
+          </div>
+          <p class="p2-12-works-hint">販売状態は会場の状況に合わせて随時更新してください。不明な場合は「要問合せ」に設定することを推奨します。</p>
+          <ul class="p2-12-work-list" id="p212WorkList" aria-label="展示作品リスト"></ul>
+        </div>
+
+        <!-- 作品を追加ボタン + 追加パネル（一体化） -->
+        <div class="p2-12-add-area">
+          <button class="p2-12-add-btn is-open" id="p212AddBtn" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+            作品を追加
+          </button>
+          <div class="p2-12-add-panel" id="p212AddPanel">
+            <div class="p2-12-add-panel__head">
+              <span class="p2-12-add-panel__head-title">作品を選んで追加</span>
+              <button class="p2-12-add-panel__close" id="p212CloseBtn" type="button">✕ 閉じる</button>
+            </div>
+            <div class="p2-12-add-panel__new">
+              <a href="#" class="p2-12-new-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                新規作品を作成
+              </a>
+            </div>
+            <div class="p2-12-add-panel__or">または既存の作品から選ぶ</div>
+            <div class="p2-12-candidate-grid" id="p212CandidateGrid"></div>
+          </div>
+        </div>
+
+      </section>
+
+    </div><!-- /.ktn-content -->
+  </main>
+
+</div><!-- /.content-wrap -->
+</div><!-- /.shell -->
+
+<nav class="ktn-bottom-nav" id="ktnBottomNav"><div class="ktn-bottom-nav__inner" id="ktnBottomNavInner"></div></nav>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Top","item":"https://koten-navi.com/"},{"@type":"ListItem","position":2,"name":"展覧会","item":"https://koten-navi.com/p2"},{"@type":"ListItem","position":3,"name":"あなたが知らないオノマトペ","item":"https://koten-navi.com/p2"},{"@type":"ListItem","position":4,"name":"LIAISON 作品管理"}]}</script>
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+KTN.init({ page: 'p2-12', role: 'user+creator' });
+</script>
+</body>
+</html>

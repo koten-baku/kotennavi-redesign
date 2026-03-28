@@ -1712,3 +1712,156 @@ KTN.pages['p6-2'] = function() {
   /* p6 共通描画処理を呼び出す（ABOUT・コメント・More by・各種ウィジェット・モーダル関数） */
   if (typeof KTN.pages['p6'] === 'function') KTN.pages['p6']();
 };
+
+/* ══════════════════════════════════════════════════════
+   p2-12  LIAISON 作品管理
+══════════════════════════════════════════════════════ */
+KTN.pages['p2-12'] = function() {
+
+  /* ── 販売状態マスタ ── */
+  var STATUS = [
+    { value:'inquiry',  label:'要問合せ' },
+    { value:'sale',     label:'販売中' },
+    { value:'applying', label:'申込中' },
+    { value:'sold',     label:'売約済' },
+    { value:'nonsale',  label:'非売品' },
+  ];
+
+  /* ── サンプルデータ ── */
+  var INITIAL = [
+    { id:'w1', title:'《オノマトペの庭》', year:'2026年', medium:'キャンバスに油彩', size:'116.7×91.0cm', bg:'linear-gradient(155deg,#b8d8cc,#6a9e8a)', status:'inquiry' },
+    { id:'w2', title:'《ふわふわ》',       year:'2025年', medium:'キャンバスに油彩', size:'72.7×60.6cm',  bg:'linear-gradient(155deg,#f0e8d0,#d4b896)', status:'sale' },
+    { id:'w3', title:'《ざわざわ（夜）》',  year:'2025年', medium:'アクリル・パネル', size:'53.0×45.5cm',  bg:'linear-gradient(155deg,#3d3530,#1f1a18)', status:'nonsale' },
+  ];
+  var EXTRA = [
+    { id:'w4', title:'《ドキドキ #3》',   year:'2025年', bg:'linear-gradient(155deg,#f0d0d0,#c88080)', status:'inquiry' },
+    { id:'w5', title:'《シュワシュワ》',   year:'2024年', bg:'linear-gradient(155deg,#d0e8f0,#7ab4cc)', status:'inquiry' },
+    { id:'w6', title:'《言葉の断片 I》',  year:'2024年', bg:'linear-gradient(155deg,#d8c8e8,#a888cc)', status:'inquiry' },
+    { id:'w7', title:'《言葉の断片 II》', year:'2024年', bg:'linear-gradient(155deg,#c8d8e8,#7898b8)', status:'inquiry' },
+    { id:'w8', title:'《ふわふわ No.2》', year:'2024年', bg:'linear-gradient(155deg,#e0d8c8,#b4a88a)', status:'inquiry' },
+  ];
+  var ALL = INITIAL.concat(EXTRA);
+
+  /* ── 状態 ── */
+  var displayedIds = INITIAL.map(function(w){ return w.id; });
+
+  /* ── DOM ── */
+  var listEl   = document.getElementById('p212WorkList');
+  var countEl  = document.getElementById('p212Count');
+  var addBtn   = document.getElementById('p212AddBtn');
+  var addPanel = document.getElementById('p212AddPanel');
+  var closeBtn = document.getElementById('p212CloseBtn');
+  var candGrid = document.getElementById('p212CandidateGrid');
+  if (!listEl || !countEl || !addBtn || !addPanel || !closeBtn || !candGrid) return;
+
+  /* ── ユーティリティ ── */
+  function updateCount() { countEl.textContent = displayedIds.length; }
+
+  function statusOpts(cur) {
+    return STATUS.map(function(s){
+      return '<option value="'+s.value+'"'+(s.value===cur?' selected':'')+'>'+s.label+'</option>';
+    }).join('');
+  }
+
+  var HANDLE_SVG = '<svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14">'
+    + '<circle cx="7" cy="5" r="1.5"/><circle cx="13" cy="5" r="1.5"/>'
+    + '<circle cx="7" cy="10" r="1.5"/><circle cx="13" cy="10" r="1.5"/>'
+    + '<circle cx="7" cy="15" r="1.5"/><circle cx="13" cy="15" r="1.5"/>'
+    + '</svg>';
+
+  /* ── 作品カード生成 ── */
+  function makeCard(w) {
+    var li = document.createElement('li');
+    li.className = 'p2-12-work-card';
+    li.dataset.id = w.id;
+    var meta = [w.year, w.medium, w.size].filter(Boolean).join('　');
+    li.innerHTML =
+      '<div class="p2-12-work-card__handle" title="ドラッグで並び替え">'+HANDLE_SVG+'</div>'+
+      '<div class="p2-12-work-card__thumb" style="background:'+w.bg+'"></div>'+
+      '<div class="p2-12-work-card__body">'+
+        '<div class="p2-12-work-card__title">'+w.title+'</div>'+
+        '<div class="p2-12-work-card__meta">'+meta+'</div>'+
+      '</div>'+
+      '<div class="p2-12-work-card__controls">'+
+        '<select class="p2-12-status-sel" aria-label="販売状態">'+statusOpts(w.status)+'</select>'+
+        '<button class="p2-12-remove-btn" type="button" data-id="'+w.id+'">取り外す</button>'+
+      '</div>';
+    li.querySelector('.p2-12-remove-btn').addEventListener('click', handleRemove);
+    return li;
+  }
+
+  /* ── 取り外し ── */
+  function handleRemove(e) {
+    var id = e.currentTarget.dataset.id;
+    var idx = displayedIds.indexOf(id);
+    if (idx !== -1) displayedIds.splice(idx, 1);
+    var card = e.currentTarget.closest('.p2-12-work-card');
+    if (card) card.remove();
+    var cc = candGrid.querySelector('[data-id="'+id+'"]');
+    if (cc) cc.classList.remove('is-added');
+    updateCount();
+  }
+
+  /* ── 候補グリッド描画 ── */
+  function renderCandGrid() {
+    candGrid.innerHTML = '';
+    ALL.forEach(function(w) {
+      var added = displayedIds.indexOf(w.id) !== -1;
+      var div = document.createElement('div');
+      div.className = 'p2-12-candidate-card'+(added?' is-added':'');
+      div.dataset.id = w.id;
+      div.innerHTML =
+        '<div class="p2-12-candidate-card__thumb" style="background:'+w.bg+'"></div>'+
+        '<div class="p2-12-candidate-card__info">'+
+          '<div class="p2-12-candidate-card__title">'+w.title+'</div>'+
+          '<div class="p2-12-candidate-card__year">'+(w.year||'')+'</div>'+
+          '<div class="p2-12-candidate-card__added">追加済み</div>'+
+        '</div>';
+      div.addEventListener('click', function() {
+        if (div.classList.contains('is-added')) return;
+        displayedIds.push(w.id);
+        listEl.appendChild(makeCard(w));
+        div.classList.add('is-added');
+        updateCount();
+      });
+      candGrid.appendChild(div);
+    });
+  }
+
+  /* ── パネル開閉 ── */
+  function openPanel() {
+    addPanel.hidden = false;
+    addBtn.classList.add('is-open');
+    renderCandGrid();
+  }
+  function closePanel() {
+    addPanel.hidden = true;
+    addBtn.classList.remove('is-open');
+  }
+
+  /* ── 初期描画 ── */
+  INITIAL.forEach(function(w){ listEl.appendChild(makeCard(w)); });
+  updateCount();
+
+  /* ── SortableJS ── */
+  if (window.Sortable) {
+    Sortable.create(listEl, {
+      handle: '.p2-12-work-card__handle',
+      animation: 150,
+      ghostClass: 'sortable-ghost',
+      chosenClass: 'sortable-chosen',
+      onEnd: function() {
+        displayedIds = [];
+        listEl.querySelectorAll('.p2-12-work-card').forEach(function(c){ displayedIds.push(c.dataset.id); });
+      },
+    });
+  }
+
+  /* ── イベント ── */
+  addBtn.addEventListener('click', openPanel);
+  closeBtn.addEventListener('click', closePanel);
+
+  /* ── 初期状態：パネルを開いた状態で表示 ── */
+  openPanel();
+
+};

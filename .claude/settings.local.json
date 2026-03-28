@@ -17,7 +17,9 @@
       "Bash(command -v python)",
       "Bash(/c/Users/b/AppData/Local/Microsoft/WindowsApps/python3 --version)",
       "Bash(git add:*)",
-      "Bash(\"D:\\\\user\\\\baku\\\\claude-code\\\\kotennavi-redesign\\\\kotennavi-common.css\":*)"
+      "Bash(\"D:\\\\user\\\\baku\\\\claude-code\\\\kotennavi-redesign\\\\kotennavi-common.css\":*)",
+      "Bash(python:*)",
+      "Bash(where python:*)"
     ]
   }
 }
