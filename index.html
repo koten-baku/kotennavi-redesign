@@ -1,0 +1,2288 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>個展なび — 展覧会を探す・発信する</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=DM+Serif+Display:ital@0;1&family=Noto+Sans+JP:wght@300;400;500;700&family=Cinzel:wght@400;600;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/*
+ * 個展なび — スタイルシート
+ * style.css
+ *
+ * 構成:
+ *   DESIGN TOKENS      カラー変数・サイズ変数
+ *   DEMO BAR           開発用ロール切替バー（本番削除可）
+ *   SIDEBAR            左サイドバー
+ *   MAIN CONTENT       メインエリア
+ *   HERO               ヒーロービジュアル
+ *   SITE INTRO BAND    サイト説明帯
+ *   TICKER             新着ティッカー
+ *   FEATURE STRIP      3カラム機能説明
+ *   TABS / PILLS       タブ・カテゴリーピル
+ *   MASONRY GRID       展覧会カードグリッド
+ *   CARD               展覧会カード（日付バー・ブックマーク・アクション数）
+ *   LOAD MORE          もっと見るボタン
+ *   BOTTOM NAV         スマホ/タブレット用ボトムナビ
+ *   FOOTER             フッター
+ *   ANIMATIONS         アニメーション
+ *   RESPONSIVE         レスポンシブ
+ */
+
+/* ─────────────────────────────────────
+   DESIGN TOKENS
+───────────────────────────────────── */
+:root {
+  --sidebar-w: 120px;
+  --ink: #231815;
+  --paper: #f0f4f8;
+  --warm-white: #f7f9fb;
+  --accent: #005da7;
+  --accent2: #003d70;
+  --muted: #7a8a99;
+  --border: #d0dae4;
+  --tag-bg: #e0e8f0;
+
+  --color-user:    #005da7;
+  --color-creator: #b8662a;
+  --color-gallery: #2d7a5e;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--warm-white);
+  font-family: 'Noto Sans JP', sans-serif;
+  font-weight: 300;
+  color: var(--ink);
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ─────────────────────────────────────
+   DEMO BAR
+───────────────────────────────────── */
+.demo-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 9999;
+  background: #111;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 7px 16px;
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  flex-wrap: wrap;
+  height: 34px;
+}
+.demo-bar span { opacity: 0.45; margin-right: 4px; }
+.demo-btn {
+  font-size: 0.67rem;
+  padding: 3px 11px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: none;
+  color: rgba(255,255,255,0.55);
+  cursor: pointer;
+  border-radius: 2px;
+  font-family: 'Noto Sans JP', sans-serif;
+  transition: all 0.15s;
+}
+.demo-btn.active, .demo-btn:hover {
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  border-color: rgba(255,255,255,0.45);
+}
+
+/* ─────────────────────────────────────
+   SIDEBAR
+───────────────────────────────────── */
+.sidebar {
+  width: var(--sidebar-w);
+  position: fixed;
+  top: 34px; left: 0; bottom: 0;
+  background: #fff;
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 0 16px;
+  z-index: 200;
+  overflow-y: auto;
+}
+
+/* logo mark */
+.sidebar-logo {
+  font-family: 'Shippori Mincho', serif;
+  font-weight: 800;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  color: var(--ink);
+  text-decoration: none;
+  text-align: center;
+  line-height: 1.3;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #ccd8e6;
+  width: 100%;
+  padding: 8px 0 14px;
+}
+.sidebar-logo small {
+  display: block;
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.6rem;
+  color: var(--muted);
+  letter-spacing: 0.12em;
+  margin-top: 3px;
+}
+
+/* nav items */
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 10px 8px;
+  text-decoration: none;
+  color: var(--ink);
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: 'Noto Sans JP', sans-serif;
+  transition: background 0.15s;
+  position: relative;
+}
+.nav-item:hover { background: #f5f3ef; }
+
+.nav-icon {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border);
+  background: #faf8f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 5px;
+  transition: border-color 0.15s;
+  flex-shrink: 0;
+}
+.nav-item:hover .nav-icon { border-color: #bbb; }
+.nav-icon svg { width: 17px; height: 17px; }
+
+.nav-label {
+  font-size: 0.6rem;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* notice dot */
+.notice-dot {
+  position: absolute;
+  top: 8px; left: 50%;
+  margin-left: 8px;
+  width: 7px; height: 7px;
+  background: var(--accent);
+  border-radius: 50%;
+  border: 1.5px solid #fff;
+}
+
+.sidebar-divider {
+  width: 75%;
+  height: 1px;
+  background: var(--border);
+  margin: 8px 0;
+  flex-shrink: 0;
+}
+
+/* ── ROLE THUMBNAILS ── */
+.role-thumb {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 5px;
+  overflow: hidden;
+  flex-shrink: 0;
+  position: relative;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.nav-item:hover .role-thumb {
+  transform: scale(1.06);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+}
+
+/* サムネイル画像（設定済みの場合） */
+.role-thumb img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+/* 未設定時のフォールバック（ロールカラー） */
+.role-thumb-fallback {
+  width: 100%; height: 100%;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+}
+.role-thumb-fallback svg { width: 24px; height: 24px; }
+
+/* role label color accent line */
+.role-label {
+  font-size: 0.6rem;
+  letter-spacing: 0.02em;
+  text-align: center;
+  line-height: 1.35;
+  font-weight: 500;
+  padding: 0 4px;
+}
+
+/* sidebar footer */
+.sidebar-footer {
+  margin-top: auto;
+  font-size: 0.55rem;
+  color: #c0bbb5;
+  text-align: center;
+  line-height: 1.8;
+  padding: 0 8px;
+  flex-shrink: 0;
+}
+.sidebar-footer a { color: #c0bbb5; text-decoration: none; }
+
+/* ─────────────────────────────────────
+   MAIN CONTENT
+───────────────────────────────────── */
+.main {
+  margin-left: var(--sidebar-w);
+  margin-top: 34px;
+  flex: 1;
+  min-width: 0;
+}
+
+/* ─────────────────────────────────────
+   HERO
+───────────────────────────────────── */
+.hero {
+  height: 52vh;
+  min-height: 320px;
+  max-height: 480px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  overflow: hidden;
+}
+
+.hero-img-side {
+  position: relative;
+  overflow: hidden;
+}
+.hero-img-placeholder {
+  width: 100%; height: 100%;
+  background: linear-gradient(135deg, #c2b8ae 0%, #8a7e73 45%, #5c5249 100%);
+  display: flex; align-items: center; justify-content: center;
+}
+.hero-img-placeholder svg { opacity: 0.18; width: 100px; }
+.hero-pickup-label {
+  position: absolute;
+  top: 28px; left: 28px;
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--accent);
+  padding: 4px 10px;
+  opacity: 0;
+  animation: fadeSlideUp 0.5s 0.7s ease forwards;
+}
+
+.hero-text-side {
+  background: var(--accent2);
+  color: var(--paper);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 32px 44px;
+  position: relative;
+}
+.hero-eyebrow {
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 16px;
+  opacity: 0;
+  animation: fadeSlideUp 0.5s 0.4s ease forwards;
+}
+.hero-title {
+  font-family: 'Shippori Mincho', serif;
+  font-weight: 800;
+  font-size: clamp(1.3rem, 2.2vw, 2rem);
+  line-height: 1.45;
+  letter-spacing: 0.02em;
+  margin-bottom: 16px;
+  opacity: 0;
+  animation: fadeSlideUp 0.5s 0.5s ease forwards;
+}
+.hero-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 20px;
+  opacity: 0;
+  animation: fadeSlideUp 0.5s 0.6s ease forwards;
+}
+.hero-venue {
+  font-size: 0.78rem;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+}
+.hero-venue em { color: var(--paper); font-style: normal; }
+.hero-dates {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1rem;
+  color: #a89888;
+  letter-spacing: 0.04em;
+}
+.hero-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--paper);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255,255,255,0.25);
+  padding-bottom: 5px;
+  width: fit-content;
+  opacity: 0;
+  animation: fadeSlideUp 0.5s 0.75s ease forwards;
+  transition: gap 0.2s, border-color 0.2s;
+}
+.hero-cta:hover { gap: 16px; border-color: rgba(255,255,255,0.7); }
+.hero-dots {
+  position: absolute;
+  bottom: 28px; right: 52px;
+  display: flex; gap: 7px;
+  opacity: 0;
+  animation: fadeIn 0.5s 1s ease forwards;
+}
+.hero-dots span {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.22);
+  display: block;
+}
+.hero-dots span.active { background: rgba(255,255,255,0.8); }
+
+/* ─────────────────────────────────────
+   SITE INTRO BAND
+───────────────────────────────────── */
+.intro-band {
+  background: var(--paper);
+  border-bottom: 1px solid var(--border);
+  padding: 18px 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+.intro-copy {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.intro-copy strong {
+  font-family: 'Shippori Mincho', serif;
+  font-weight: 800;
+  font-size: 1rem;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+}
+.intro-copy span {
+  font-size: 0.75rem;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+  line-height: 1.7;
+}
+.intro-actions {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.intro-btn {
+  font-family: 'Shippori Mincho', serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  padding: 7px 18px;
+  border: 1px solid var(--border);
+  background: none;
+  color: var(--ink);
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: background 0.18s, border-color 0.18s;
+  white-space: nowrap;
+}
+.intro-btn:hover { background: var(--tag-bg); border-color: #bbb; }
+.intro-btn.primary {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+.intro-btn.primary:hover { opacity: 0.75; }
+
+/* ─────────────────────────────────────
+   TICKER
+───────────────────────────────────── */
+.ticker-wrap {
+  background: var(--accent);
+  color: #fff;
+  overflow: hidden;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.ticker-badge {
+  flex-shrink: 0;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 0 16px;
+  background: rgba(0,0,0,0.18);
+  height: 100%;
+  display: flex; align-items: center;
+}
+.ticker-track {
+  display: flex;
+  animation: ticker 28s linear infinite;
+  white-space: nowrap;
+}
+.ticker-item {
+  font-family: 'Shippori Mincho', serif;
+  font-size: 0.76rem;
+  letter-spacing: 0.04em;
+  padding: 0 36px;
+}
+.ticker-item::before {
+  content: '◆';
+  margin-right: 10px;
+  font-size: 0.45rem;
+  vertical-align: middle;
+  opacity: 0.7;
+}
+
+/* ─────────────────────────────────────
+   CONTAINER
+───────────────────────────────────── */
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 36px;
+}
+
+/* ─────────────────────────────────────
+   SECTION HEADER
+───────────────────────────────────── */
+.section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 28px 0 20px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 24px;
+}
+.section-title {
+  font-family: 'Shippori Mincho', serif;
+  font-weight: 800;
+  font-size: 1.25rem;
+  letter-spacing: 0.05em;
+}
+.section-title-en {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin-left: 12px;
+}
+.section-more {
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.section-more:hover { color: var(--ink); }
+
+/* ─────────────────────────────────────
+   FEATURE STRIP
+───────────────────────────────────── */
+.feature-strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin: 24px 0;
+}
+.feature-cell {
+  background: var(--warm-white);
+  padding: 28px 24px;
+  text-decoration: none;
+  color: var(--ink);
+  transition: background 0.18s;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.feature-cell:hover { background: var(--paper); }
+.feature-num {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2rem;
+  color: var(--border);
+  line-height: 1;
+}
+.feature-label {
+  font-family: 'Shippori Mincho', serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+}
+.feature-desc {
+  font-size: 0.73rem;
+  color: var(--muted);
+  line-height: 1.75;
+  letter-spacing: 0.03em;
+}
+
+/* ─────────────────────────────────────
+   TABS & CATEGORY PILLS
+───────────────────────────────────── */
+.tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 28px;
+}
+.tab {
+  font-family: 'Shippori Mincho', serif;
+  font-size: 0.84rem;
+  letter-spacing: 0.04em;
+  padding: 10px 24px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  cursor: pointer;
+  color: var(--muted);
+  transition: color 0.18s, border-color 0.18s;
+}
+.tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+.tab:hover  { color: var(--ink); }
+
+.category-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 36px;
+}
+.pill {
+  font-family: 'Shippori Mincho', serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  padding: 6px 16px;
+  border: 1px solid var(--border);
+  background: none;
+  cursor: pointer;
+  color: var(--ink);
+  transition: background 0.18s, border-color 0.18s, color 0.18s;
+}
+.pill:hover, .pill.active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+/* ─────────────────────────────────────
+   MASONRY GRID
+───────────────────────────────────── */
+.masonry {
+  columns: 4 220px;
+  column-gap: 16px;
+}
+.card {
+  break-inside: avoid;
+  margin-bottom: 16px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  display: block;
+  text-decoration: none;
+  color: var(--ink);
+  cursor: pointer;
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+  opacity: 0;
+  animation: fadeSlideUp 0.45s ease forwards;
+  position: relative;
+}
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 32px rgba(0,0,0,0.1);
+}
+
+/* ── ポスター画像エリア ── */
+.poster {
+  width: 100%;
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.poster-text {
+  font-family: 'Shippori Mincho', serif;
+  font-weight: 800;
+  color: rgba(255,255,255,0.92);
+  font-size: clamp(1rem, 3vw, 2rem);
+  line-height: 1.3;
+  padding: 20px;
+  text-align: center;
+  writing-mode: vertical-rl;
+  letter-spacing: 0.1em;
+}
+
+/* ── 会期オーバーレイバー（ポスター下端） ── */
+.card-date-bar {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: rgba(0,0,0,0.62);
+  backdrop-filter: blur(2px);
+  padding: 6px 10px 5px;
+}
+.card-date-main {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  line-height: 1;
+  margin-bottom: 2px;
+  flex-wrap: wrap;
+}
+.card-date-y {
+  font-family: 'DM Serif Display', serif;
+  font-size: 0.65rem;
+  color: rgba(255,255,255,0.65);
+  letter-spacing: 0.04em;
+}
+.card-date-md {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.1rem;
+  color: #fff;
+  letter-spacing: 0.02em;
+  font-weight: 400;
+}
+.card-date-dow {
+  font-size: 0.6rem;
+  color: rgba(255,255,255,0.6);
+  text-transform: lowercase;
+  letter-spacing: 0.04em;
+}
+.card-date-sep {
+  font-size: 0.65rem;
+  color: rgba(255,255,255,0.45);
+  padding: 0 2px;
+}
+.card-date-meta {
+  font-size: 0.6rem;
+  color: rgba(255,255,255,0.65);
+  letter-spacing: 0.03em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.card-date-meta .sep { opacity: 0.4; }
+
+/* 残り日数バッジ */
+.card-days-badge {
+  display: inline-block;
+  font-size: 0.58rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  padding: 1px 6px;
+  border-radius: 2px;
+  white-space: nowrap;
+}
+.badge-ongoing  { background: rgba(0,93,167,0.85); color: #fff; }
+.badge-soon     { background: rgba(180,100,20,0.85); color: #fff; }
+.badge-closed   { background: rgba(100,100,100,0.75); color: #fff; }
+
+/* ── カード本文 ── */
+.card-body {
+  padding: 11px 13px 13px;
+}
+
+/* exhibitionタグ行 */
+.card-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 7px;
+}
+.card-tag {
+  display: inline-block;
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  padding: 2px 6px;
+  border-radius: 2px;
+  text-transform: lowercase;
+}
+
+/* 興味ありボタン */
+.card-bookmark {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: none;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: border-color 0.15s, background 0.15s;
+  color: var(--muted);
+  padding: 0;
+}
+.card-bookmark:hover { border-color: var(--accent); color: var(--accent); background: #edf3f9; }
+.card-bookmark.active { border-color: var(--accent); background: var(--accent); color: #fff; }
+.card-bookmark svg { width: 13px; height: 13px; }
+
+.card-name {
+  font-family: 'Shippori Mincho', serif;
+  font-weight: 600;
+  font-size: 0.84rem;
+  line-height: 1.55;
+  letter-spacing: 0.03em;
+  margin-bottom: 5px;
+  /* 2行で切り詰め */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.card-venue {
+  font-size: 0.67rem;
+  color: var(--muted);
+  letter-spacing: 0.03em;
+  margin-bottom: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── アクションフッター（興味あり数・チェックイン数） ── */
+.card-footer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-top: 1px solid var(--border);
+  padding-top: 8px;
+  margin-top: 2px;
+}
+.card-action-count {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.65rem;
+  color: var(--muted);
+}
+.card-action-count svg { width: 12px; height: 12px; opacity: 0.6; }
+
+/* ─────────────────────────────────────
+   LOAD MORE
+───────────────────────────────────── */
+.load-more-wrap {
+  text-align: center;
+  padding: 40px 0 72px;
+}
+.btn-more {
+  font-family: 'Shippori Mincho', serif;
+  font-size: 0.82rem;
+  letter-spacing: 0.14em;
+  padding: 13px 44px;
+  border: 1px solid var(--ink);
+  background: none;
+  color: var(--ink);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.btn-more:hover { background: var(--accent); color: #fff; }
+
+/* ─────────────────────────────────────
+   FOOTER
+───────────────────────────────────── */
+footer {
+  background: #002d54;
+  color: var(--paper);
+  padding: 52px 36px 32px;
+}
+.footer-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 40px;
+}
+.footer-brand {
+  font-family: 'Shippori Mincho', serif;
+  font-weight: 800;
+  font-size: 1.1rem;
+  letter-spacing: 0.05em;
+  margin-bottom: 12px;
+}
+.footer-tagline {
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.38);
+  line-height: 1.9;
+  letter-spacing: 0.05em;
+}
+.footer-col-title {
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+  margin-bottom: 14px;
+}
+.footer-links { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+.footer-links a {
+  font-family: 'Shippori Mincho', serif;
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.58);
+  text-decoration: none;
+  letter-spacing: 0.03em;
+  transition: color 0.18s;
+}
+.footer-links a:hover { color: var(--paper); }
+.footer-bottom {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid rgba(255,255,255,0.09);
+  padding-top: 20px;
+}
+.footer-copy { font-size: 0.65rem; color: rgba(255,255,255,0.28); letter-spacing: 0.08em; }
+.footer-sns { display: flex; gap: 14px; }
+.footer-sns a { font-size: 0.7rem; color: rgba(255,255,255,0.35); text-decoration: none; transition: color 0.18s; letter-spacing: 0.08em; }
+.footer-sns a:hover { color: rgba(255,255,255,0.7); }
+
+/* ─────────────────────────────────────
+   LIAISON
+───────────────────────────────────── */
+
+/* ── カードバッジ ── */
+.card-liaison-badge {
+  position: absolute;
+  top: 10px; right: 10px;
+  z-index: 10;
+  background: rgba(255,255,255,0.97);
+  border-radius: 4px;
+  padding: 3px 7px 3px 5px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+  pointer-events: none;
+  /* poster は position:relative なのでここは absolute で正確に乗る */
+}
+.card-liaison-badge .liaison-mini-svg {
+  width: 44px;
+  height: 23px;
+  flex-shrink: 0;
+}
+.card-liaison-badge .liaison-now-label {
+  font-family: 'Montserrat', 'DM Serif Display', sans-serif;
+  font-size: 0.5rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: #c0392b;
+  text-transform: none;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* ── LIAISONセクション（展覧会一覧の上） ── */
+.liaison-section {
+  margin: 0 0 32px;
+  border: 1.5px solid #c0392b;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #fff;
+  position: relative;
+}
+
+.liaison-section-head {
+  background: linear-gradient(135deg, #2c3e50 0%, #3d5166 100%);
+  padding: 18px 28px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.liaison-section-logo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+}
+
+.liaison-section-logo svg {
+  width: 140px;
+  height: 74px;
+}
+
+.liaison-section-desc {
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.65);
+  letter-spacing: 0.04em;
+  line-height: 1.7;
+  flex: 1;
+}
+
+.liaison-section-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Shippori Mincho', serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  color: #fff;
+  text-decoration: none;
+  border: 1px solid rgba(255,255,255,0.4);
+  padding: 7px 16px;
+  flex-shrink: 0;
+  transition: background 0.2s, border-color 0.2s;
+  white-space: nowrap;
+}
+.liaison-section-cta:hover {
+  background: rgba(255,255,255,0.12);
+  border-color: rgba(255,255,255,0.75);
+}
+
+.liaison-scroll-row {
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 0;
+}
+.liaison-scroll-row::-webkit-scrollbar { display: none; }
+
+.liaison-mini-card {
+  flex-shrink: 0;
+  width: 160px;
+  border-right: 1px solid #eee;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  transition: background 0.15s;
+  display: block;
+}
+.liaison-mini-card:last-child { border-right: none; }
+.liaison-mini-card:hover { background: #fafafa; }
+
+.liaison-mini-poster {
+  height: 110px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+}
+.liaison-mini-poster-text {
+  font-family: 'Shippori Mincho', serif;
+  font-weight: 800;
+  font-size: 1rem;
+  writing-mode: vertical-rl;
+  letter-spacing: 0.1em;
+  opacity: 0.9;
+}
+.liaison-online-dot {
+  position: absolute;
+  top: 7px; left: 7px;
+  width: 7px; height: 7px;
+  background: #c0392b;
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px rgba(192,57,43,0.25);
+  animation: liaison-pulse 2s ease-in-out infinite;
+}
+@keyframes liaison-pulse {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(192,57,43,0.25); }
+  50% { box-shadow: 0 0 0 6px rgba(192,57,43,0.08); }
+}
+
+.liaison-mini-body {
+  padding: 8px 10px 10px;
+}
+.liaison-mini-title {
+  font-family: 'Shippori Mincho', serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1.45;
+  letter-spacing: 0.02em;
+  margin-bottom: 4px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.liaison-mini-venue {
+  font-size: 0.6rem;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.liaison-mini-tag {
+  display: inline-block;
+  margin-top: 5px;
+  font-size: 0.52rem;
+  letter-spacing: 0.1em;
+  color: #c0392b;
+  border: 1px solid #c0392b;
+  padding: 1px 5px;
+  border-radius: 2px;
+}
+
+/* ── フローティングボタン ── */
+.liaison-fab {
+  position: fixed;
+  bottom: 32px; right: 28px;
+  z-index: 500;
+  background: linear-gradient(135deg, #2c3e50 0%, #3d5166 100%);
+  border-radius: 50px;
+  padding: 10px 18px 10px 14px;
+  display: none; /* デフォルト非表示 — スマホ/タブレットのみ表示 */
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  box-shadow: 0 6px 24px rgba(44,62,80,0.35);
+  text-decoration: none;
+  color: #fff;
+  border: none;
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+  opacity: 0;
+  animation: fadeSlideUp 0.5s 1.2s ease forwards;
+}
+.liaison-fab:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 12px 32px rgba(44,62,80,0.45);
+}
+.liaison-fab svg.fab-logo {
+  width: 70px;
+  height: 37px;
+  flex-shrink: 0;
+}
+.liaison-fab-label {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.liaison-fab-label span:first-child {
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.55);
+  text-transform: uppercase;
+}
+.liaison-fab-label strong {
+  font-family: 'Shippori Mincho', serif;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+}
+
+/* スマホ/タブレット時のみFABを表示 */
+@media (max-width: 860px) {
+  .liaison-fab {
+    display: flex;
+    bottom: calc(72px + env(safe-area-inset-bottom, 0px) + 12px);
+  }
+  .liaison-section-head {
+    flex-wrap: wrap;
+    padding: 14px 16px 12px;
+  }
+  .liaison-section-logo svg { width: 100px; height: 53px; }
+  .liaison-section-desc { display: none; }
+  .liaison-mini-card { width: 140px; }
+}
+
+/* ── サイドバー LIAISON ナビ ── */
+.nav-item.liaison-nav {
+  border-top: 1px solid var(--border);
+  margin-top: 4px;
+  padding-top: 12px;
+}
+.nav-item.liaison-nav .nav-icon {
+  border-color: #c0392b30;
+  background: #fff8f8;
+  width: 46px;
+  height: 46px;
+}
+.nav-item.liaison-nav:hover .nav-icon {
+  border-color: #c0392b80;
+  background: #fff0f0;
+}
+
+/* ─────────────────────────────────────
+   ANIMATIONS
+───────────────────────────────────── */
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* ─────────────────────────────────────
+   BOTTOM NAV (スマホ・タブレット)
+───────────────────────────────────── */
+.bottom-nav {
+  display: none;
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 300;
+  background: #fff;
+  border-top: 2px solid var(--border);
+  /* iOSのホームインジケーター分を確保 */
+  padding-bottom: env(safe-area-inset-bottom, 8px);
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.07);
+}
+.bottom-nav-inner {
+  display: flex;
+  height: 64px;          /* 60px → 64px に拡大 */
+  align-items: stretch;
+}
+
+/* 各タップターゲット: 最小44px幅 × 64px高さ を確保 */
+.bottom-nav-item {
+  flex: 1;
+  min-width: 44px;       /* タッチターゲット最小幅 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;              /* アイコンとラベルの間隔を広げ */
+  text-decoration: none;
+  color: var(--muted);
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: 'Noto Sans JP', sans-serif;
+  transition: background 0.15s, color 0.15s;
+  position: relative;
+  padding: 8px 4px 6px;  /* 上下にパディングを追加 */
+  -webkit-tap-highlight-color: transparent;
+}
+.bottom-nav-item:active { background: #edf3f9; }
+.bottom-nav-item:hover,
+.bottom-nav-item.active { color: var(--accent); }
+
+/* アイコンをラップするエリア — 視認性向上のため背景丸を追加 */
+.bottom-nav-icon-wrap {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+.bottom-nav-item:hover .bottom-nav-icon-wrap,
+.bottom-nav-item.active .bottom-nav-icon-wrap {
+  background: #e0ecf6;
+}
+.bottom-nav-item svg { width: 24px; height: 24px; }  /* 20px → 24px */
+
+.bottom-nav-label {
+  font-size: 0.62rem;    /* 0.55rem → 0.62rem */
+  letter-spacing: 0.01em;
+  text-align: center;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+/* ロールサムネイル in bottom-nav */
+.bottom-role-thumb {
+  width: 36px; height: 36px;  /* 26px → 36px */
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: box-shadow 0.15s;
+}
+.bottom-nav-item:hover .bottom-role-thumb,
+.bottom-nav-item.active .bottom-role-thumb {
+  box-shadow: 0 0 0 2px var(--accent);
+}
+.bottom-role-thumb .role-thumb-fallback {
+  width: 100%; height: 100%;
+  border-radius: 10px;
+}
+.bottom-role-thumb .role-thumb-fallback svg { width: 18px; height: 18px; }  /* 14px → 18px */
+
+/* 未ログイン時のログインボタン in bottom-nav */
+.bottom-login-btn {
+  width: 36px; height: 36px;  /* 30px → 36px */
+  border-radius: 10px;
+  background: var(--tag-bg);
+  display: flex; align-items: center; justify-content: center;
+  border: 1.5px solid var(--border);
+  transition: background 0.15s, border-color 0.15s;
+}
+.bottom-nav-item:hover .bottom-login-btn,
+.bottom-nav-item.active .bottom-login-btn {
+  background: #e0ecf6;
+  border-color: var(--accent);
+}
+.bottom-login-btn svg { width: 20px; height: 20px; }  /* 16px → 20px */
+
+/* 通知ドット */
+.bottom-notice-dot {
+  position: absolute;
+  top: 6px;
+  right: calc(50% - 20px);
+  width: 8px; height: 8px;   /* 6px → 8px */
+  background: var(--accent);
+  border-radius: 50%;
+  border: 2px solid #fff;
+}
+
+/* 区切り線（縦） */
+.bottom-nav-divider {
+  width: 1px;
+  background: var(--border);
+  margin: 12px 0;
+  flex-shrink: 0;
+}
+
+/* ─────────────────────────────────────
+   RESPONSIVE
+───────────────────────────────────── */
+@media (max-width: 860px) {
+  .sidebar { display: none; }
+  .main { margin-left: 0; margin-bottom: 72px; }  /* 64px + safe area 余裕 */
+  .bottom-nav { display: flex; flex-direction: column; height: auto; }
+  .hero { grid-template-columns: 1fr; }
+  .hero-img-side { height: 40vw; min-height: 200px; }
+  .masonry { columns: 2 160px; }
+  .feature-strip { grid-template-columns: 1fr; }
+  .footer-inner { grid-template-columns: 1fr 1fr; }
+  .intro-band { flex-direction: column; gap: 12px; padding: 14px 20px; }
+  .intro-actions { flex-wrap: wrap; }
+}
+@media (max-width: 540px) {
+  .container { padding: 0 14px; }
+  .masonry { columns: 2 140px; }
+  .footer-inner { grid-template-columns: 1fr; }
+  .hero-text-side { padding: 20px 20px 28px; }
+  .hero-title { font-size: 1.2rem; }
+}
+@media (max-width: 360px) {
+  .masonry { columns: 1; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- DEMO BAR -->
+<div class="demo-bar">
+  <span>ロール切替：</span>
+  <button class="demo-btn active" onclick="setRole('guest', this)">未ログイン</button>
+  <button class="demo-btn" onclick="setRole('user', this)">ユーザー</button>
+  <button class="demo-btn" onclick="setRole('user+creator', this)">ユーザー ＋ クリエイター</button>
+  <button class="demo-btn" onclick="setRole('user+gallery', this)">ユーザー ＋ ギャラリー</button>
+</div>
+
+<!-- ═══════════════════════════════════
+     SIDEBAR
+════════════════════════════════════ -->
+<aside class="sidebar" id="sidebar">
+
+  <a href="#" class="sidebar-logo" style="border-bottom:none;padding-bottom:12px;">
+    <img src="./images/kotennavi-logo5-1.svg" alt="個展なび" style="width:72px;height:72px;display:block;margin:0 auto 4px;">
+  </a>
+
+  <!-- 検索 -->
+  <a href="#" class="nav-item">
+    <div class="nav-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.8">
+        <circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/>
+      </svg>
+    </div>
+    <span class="nav-label">検索</span>
+  </a>
+
+  <!-- ご利用ガイド -->
+  <a href="#" class="nav-item">
+    <div class="nav-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.8">
+        <circle cx="12" cy="12" r="9"/>
+        <line x1="12" y1="8" x2="12" y2="12"/>
+        <circle cx="12" cy="16" r="0.5" fill="#666" stroke="#666" stroke-width="1.5"/>
+      </svg>
+    </div>
+    <span class="nav-label">ご利用ガイド</span>
+  </a>
+
+  <!-- お知らせ -->
+  <a href="#" class="nav-item" style="position:relative" id="navNotice">
+    <div class="nav-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.8">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      </svg>
+    </div>
+    <span class="notice-dot" id="noticeDot"></span>
+    <span class="nav-label">お知らせ</span>
+  </a>
+
+  <!-- LIAISON ナビ -->
+  <a href="#" class="nav-item liaison-nav" onclick="event.preventDefault();document.getElementById('liaisonSection')?.scrollIntoView({behavior:'smooth'})">
+    <div class="nav-icon" style="width:52px;height:52px;border-radius:8px;border-color:#c0392b30;background:#fff8f8;flex-direction:column;gap:1px;padding:4px 6px;">
+      <svg viewBox="0 0 420 180" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+        <path d="M 20 155 Q 210 20, 400 155" stroke="#c0392b" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <defs>
+          <path id="liaisonArchSidebar" d="M 55 142 Q 210 35, 365 142"/>
+        </defs>
+        <text font-family="'Cinzel','serif'" font-size="58" font-weight="700" letter-spacing="4" fill="#2c3e50">
+          <textPath href="#liaisonArchSidebar" startOffset="50%" text-anchor="middle">LIAISON</textPath>
+        </text>
+      </svg>
+    </div>
+    <span class="nav-label" style="color:#c0392b;font-weight:500">Now on View</span>
+  </a>
+
+  <div class="sidebar-divider" id="sidebarDivider"></div>
+
+  <!-- ロール別サムネイル（JS注入） -->
+  <div id="roleNav" style="width:100%;display:flex;flex-direction:column;align-items:center"></div>
+
+  <div class="sidebar-footer">
+    <a href="#">Facebook</a><br>
+    <a href="#">X</a><br><br>
+    ©2010 kotennavi<br>Co., Ltd.
+  </div>
+</aside>
+
+<!-- ═══════════════════════════════════
+     MAIN
+════════════════════════════════════ -->
+<main class="main">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-img-side">
+      <div class="hero-img-placeholder">
+        <svg viewBox="0 0 120 120" fill="none">
+          <rect x="20" y="20" width="80" height="80" stroke="white" stroke-width="1.5"/>
+          <circle cx="60" cy="60" r="22" stroke="white" stroke-width="1.5"/>
+          <line x1="60" y1="20" x2="60" y2="100" stroke="white" stroke-width="1" stroke-dasharray="4 4"/>
+          <line x1="20" y1="60" x2="100" y2="60" stroke="white" stroke-width="1" stroke-dasharray="4 4"/>
+        </svg>
+      </div>
+      <span class="hero-pickup-label">PICK UP</span>
+    </div>
+    <div class="hero-text-side">
+      <p class="hero-eyebrow">Exhibition · 茨城</p>
+      <h1 class="hero-title">飯川雄大<br>大事なことは<br>何かを見つけたとき</h1>
+      <div class="hero-meta">
+        <p class="hero-venue">水戸芸術館 <em>現代美術ギャラリー</em></p>
+        <p class="hero-dates">2026.02.28 — 05.06</p>
+      </div>
+      <a href="./kotennavi-p2.html" class="hero-cta">
+        詳細を見る
+        <svg width="14" height="9" viewBox="0 0 14 9" fill="none">
+          <path d="M0 4.5h12M8.5 1l3.5 3.5-3.5 3.5" stroke="currentColor" stroke-width="1.2"/>
+        </svg>
+      </a>
+      <div class="hero-dots">
+        <span class="active"></span><span></span><span></span><span></span><span></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- TICKER -->
+  <div class="ticker-wrap">
+    <div class="ticker-badge">NEW</div>
+    <div style="overflow:hidden;flex:1">
+      <div class="ticker-track">
+        <span class="ticker-item">飯川雄大 個展 — 水戸芸術館</span>
+        <span class="ticker-item">六十五周年記念 書道部展 — 岡山大学</span>
+        <span class="ticker-item">5つの版表現 — 2026.2.26 Thu.</span>
+        <span class="ticker-item">The Artcomplex Center of Tokyo ACT4</span>
+        <span class="ticker-item">書道 旨道展 — 岡山県立美術館</span>
+        <span class="ticker-item">飯川雄大 個展 — 水戸芸術館</span>
+        <span class="ticker-item">六十五周年記念 書道部展 — 岡山大学</span>
+        <span class="ticker-item">5つの版表現 — 2026.2.26 Thu.</span>
+        <span class="ticker-item">The Artcomplex Center of Tokyo ACT4</span>
+        <span class="ticker-item">書道 旨道展 — 岡山県立美術館</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SITE INTRO BAND -->
+  <div class="intro-band" id="introBand">
+    <div class="intro-copy">
+      <strong>個展なびとは？</strong>
+      <span>全国の個展・グループ展・展覧会を探せる、無料の展覧会情報サービスです。<br>作家・ギャラリーとして展覧会を発信することもできます。</span>
+    </div>
+    <div class="intro-actions" id="introActions">
+      <!-- JSで注入 -->
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="container">
+
+    <!-- FEATURE STRIP -->
+    <div class="feature-strip" id="featureStrip">
+      <!-- JSで注入 -->
+    </div>
+
+    <!-- LIAISON SECTION -->
+    <div class="liaison-section" id="liaisonSection">
+      <div class="liaison-section-head">
+        <div class="liaison-section-logo">
+          <svg viewBox="0 0 420 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M 30 180 Q 210 30, 390 180" stroke="#ffffff" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+            <defs>
+              <path id="liaisonArchMain" d="M 70 165 Q 210 45, 350 165"/>
+            </defs>
+            <text font-family="'Cinzel', 'DM Serif Display', serif" font-size="40" font-weight="700" letter-spacing="7" fill="#ffffff">
+              <textPath href="#liaisonArchMain" startOffset="50%" text-anchor="middle">LIAISON</textPath>
+            </text>
+            <text x="210" y="206" font-family="'Montserrat', 'Noto Sans JP', sans-serif" font-size="10" font-weight="600" letter-spacing="4" fill="#e74c3c" text-anchor="middle">Now on View</text>
+          </svg>
+        </div>
+        <p class="liaison-section-desc">オンラインで作品が見られる展覧会。<br>実会場の展示作品をそのままネットで鑑賞・購入できます。</p>
+        <a href="#" class="liaison-section-cta">
+          すべて見る
+          <svg width="12" height="8" viewBox="0 0 14 9" fill="none"><path d="M0 4.5h12M8.5 1l3.5 3.5-3.5 3.5" stroke="currentColor" stroke-width="1.2"/></svg>
+        </a>
+      </div>
+      <div class="liaison-scroll-row" id="liaisonScrollRow">
+        <!-- JSで生成 -->
+      </div>
+    </div>
+
+    <!-- SECTION HEADER -->
+    <div class="section-head">
+      <div>
+        <span class="section-title">最新の展覧会</span>
+        <span class="section-title-en">Latest Exhibitions</span>
+      </div>
+      <a href="#" class="section-more">すべて見る →</a>
+    </div>
+
+    <!-- CATEGORY PILLS -->
+    <div class="category-row">
+      <button class="pill active" onclick="filterPill(this)">すべて</button>
+      <button class="pill" onclick="filterPill(this)">絵画</button>
+      <button class="pill" onclick="filterPill(this)">写真</button>
+      <button class="pill" onclick="filterPill(this)">彫刻</button>
+      <button class="pill" onclick="filterPill(this)">版画</button>
+      <button class="pill" onclick="filterPill(this)">書道</button>
+      <button class="pill" onclick="filterPill(this)">現代美術</button>
+      <button class="pill" onclick="filterPill(this)">イラスト</button>
+      <button class="pill" onclick="filterPill(this)">工芸</button>
+      <button class="pill" onclick="filterPill(this)">グループ展</button>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs" id="tabBar">
+      <!-- JSで注入 -->
+    </div>
+
+    <!-- MASONRY -->
+    <div class="masonry" id="cardGrid">
+      <!-- JSで生成 -->
+    </div>
+
+    <div class="load-more-wrap">
+      <button class="btn-more">もっと見る</button>
+    </div>
+  </div><!-- /container -->
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div>
+        <div class="footer-brand"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIGlkPSJf44Os44Kk44Ok44O8XzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgdmlld0JveD0iMCAwIDM2Mi40MyA4NS4wNCI+PGRlZnM+PHN0eWxlPi5jbHMtMXtmaWxsOiMyMzE4MTU7fS5jbHMtMntmaWxsOiMwMDVkYTc7fTwvc3R5bGU+PC9kZWZzPjxwYXRoIGNsYXNzPSJjbHMtMiIgZD0iTTAsMHY4NC44MnM2Ni41NywwLDY2LjU3LDBjLTEuMDEtLjY2LTIuMTQtMi4zOS0yLjc3LTMuNi0yLjA2LTQuOTEtNC4wMy0xMS44My0xMS4wNi0xNi43NS0xLjU4LTEuMDItMS42OS0xLjY3LTEuNjEtMi4wNi4wOS0uNjkuNjgtMS4yNiwxLjkxLTEuMDgsOS4yMiwxLjYyLDEyLjY1LDMuMjksMTcuNTEsNi4zMiw2LjUzLDQuNDYsNy45NSw4Ljk0LDguMDIsMTEuNzEuMTMsMS45Mi0uMTUsNC4yNS0yLjE3LDUuNDVoOC40M1YwSDBaIi8+PHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMTA3LjM4LDcwLjhoMi4yM3Y4LjgxbDMuNDMtMy42OWgyLjg2bC0zLjgyLDQuMDQsNC4wNiw0Ljg2aC0yLjk1bC0zLjU0LTQuNTRoLS4wNHY0LjU0aC0yLjIzdi0xNC4wMloiLz48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0xMjIuNDcsNzUuNjljMi42OSwwLDQuODQsMS44Nyw0Ljg0LDQuNjdzLTIuMTUsNC42Ny00Ljg0LDQuNjctNC44NC0xLjg3LTQuODQtNC42NywyLjE1LTQuNjcsNC44NC00LjY3Wk0xMjIuNDcsODMuMDRjMS42MywwLDIuNjEtMS4yOCwyLjYxLTIuNjdzLS45OC0yLjY3LTIuNjEtMi42Ny0yLjYxLDEuMjgtMi42MSwyLjY3Ljk4LDIuNjcsMi42MSwyLjY3WiIvPjxwYXRoIGNsYXNzPSJjbHMtMSIgZD0iTTEyOS4zNyw3Ny44MXYtMS44OWgxLjg0di0yLjU4aDIuMjN2Mi41OGgyLjQ1djEuODloLTIuNDV2My45YzAsLjg5LjI2LDEuNDUsMS4yNCwxLjQ1LjM5LDAsLjkzLS4wNywxLjIxLS4yOHYxLjg3Yy0uNDYuMjItMS4yNC4zLTEuNzYuMy0yLjM1LDAtMi45MS0xLjA2LTIuOTEtMy4xNXYtNC4wOGgtMS44NFoiLz48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0xNDAuNTUsODEuMTVjLjE1LDEuMzIsMS4xNSwyLjExLDIuMzksMi4xMSwxLjExLDAsMS44NC0uNTIsMi4zOS0xLjJsMS42LDEuMmMtMS4wNCwxLjI4LTIuMzYsMS43OC0zLjc2LDEuNzgtMi42OSwwLTQuODQtMS44Ny00Ljg0LTQuNjdzMi4xNS00LjY3LDQuODQtNC42N2MyLjQ4LDAsNC4xNywxLjc0LDQuMTcsNC44NHYuNjFoLTYuNzlaTTE0NS4xMSw3OS40OGMtLjAyLTEuMy0uODctMi4xMS0yLjI2LTIuMTEtMS4zMiwwLTIuMTMuODMtMi4zLDIuMTFoNC41NloiLz48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0xNDkuOTcsNzUuOTJoMi4xMXYxLjQzaC4wNGMuNDEtLjg5LDEuMjQtMS42NSwyLjczLTEuNjUsMi4zOSwwLDMuMjUsMS42OSwzLjI1LDMuNXY1LjYyaC0yLjIzdi00LjUxYzAtLjk4LS4wNy0yLjYyLTEuNjMtMi42Mi0xLjQ3LDAtMi4wNCwxLjA4LTIuMDQsMi4yNnY0Ljg2aC0yLjIzdi04LjlaIi8+PHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMTY2LjY5LDgxLjJoLTQuNTh2LTEuODloNC41OHYxLjg5WiIvPjxwYXRoIGNsYXNzPSJjbHMtMSIgZD0iTTE3MC43Miw3NS45MmgyLjExdjEuNDNoLjA0Yy40MS0uODksMS4yNC0xLjY1LDIuNzMtMS42NSwyLjM5LDAsMy4yNSwxLjY5LDMuMjUsMy41djUuNjJoLTIuMjN2LTQuNTFjMC0uOTgtLjA3LTIuNjItMS42My0yLjYyLTEuNDcsMC0yLjA0LDEuMDgtMi4wNCwyLjI2djQuODZoLTIuMjN2LTguOVoiLz48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0xODcuNzYsODMuNTloLS4wNmMtLjYzLDEtMS42NywxLjQ1LTIuODYsMS40NS0xLjY1LDAtMy4yNS0uOTEtMy4yNS0yLjY3LDAtMi44OSwzLjM4LTMuMSw1LjYtMy4xaC41NnYtLjI0YzAtMS4wOS0uODUtMS42Ny0yLjA0LTEuNjctLjkzLDAtMS43OC4zNy0yLjM3LjkzbC0xLjE3LTEuMTdjLjk4LTEsMi4zNy0xLjQzLDMuNzgtMS40MywzLjgsMCwzLjgsMi43NCwzLjgsNC4wMXY1LjEyaC0ydi0xLjIyWk0xODcuNjMsODAuODNoLS40NmMtMS4yMiwwLTMuMzQuMDktMy4zNCwxLjM3LDAsLjgyLjgzLDEuMTcsMS41NiwxLjE3LDEuNTIsMCwyLjI0LS44LDIuMjQtMi4wNHYtLjVaIi8+PHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMTkxLjY5LDc1LjkyaDIuNDNsMi4zNyw2LjIzaC4wNGwyLjM5LTYuMjNoMi4yOGwtMy41LDguOWgtMi4zN2wtMy42My04LjlaIi8+PHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMjA0LjcxLDcxLjU2Yy44MiwwLDEuNDUuNTgsMS40NSwxLjM0cy0uNjMsMS4zNC0xLjQ1LDEuMzQtMS40MS0uNjMtMS40MS0xLjM0LjU5LTEuMzQsMS40MS0xLjM0Wk0yMDMuNjEsNzUuOTJoMi4yM3Y4LjloLTIuMjN2LTguOVoiLz48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0yMTEuOTIsODIuMDdjLjgsMCwxLjQ4LjYxLDEuNDgsMS40MXMtLjY3LDEuNDUtMS40OCwxLjQ1LTEuNDgtLjYxLTEuNDgtMS40MS42Ny0xLjQ1LDEuNDgtMS40NVoiLz48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0yMjMuODIsNzguNTljLS41Mi0uNTQtMS4wOS0uODktMS42OS0uODktMS42MywwLTIuNjEsMS4yOC0yLjYxLDIuNjdzLjk4LDIuNjcsMi42MSwyLjY3Yy42OSwwLDEuMzItLjMsMS43Mi0uODNsMS40OCwxLjZjLS45MS45MS0yLjQzLDEuMjQtMy4yMSwxLjI0LTIuNjksMC00Ljg0LTEuODctNC44NC00LjY3czIuMTUtNC42Nyw0Ljg0LTQuNjdjMS4xMywwLDIuMzcuNDEsMy4yMywxLjM1bC0xLjU0LDEuNTRaIi8+PHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMjMyLjM3LDc1LjY5YzIuNjksMCw0Ljg0LDEuODcsNC44NCw0LjY3cy0yLjE1LDQuNjctNC44NCw0LjY3LTQuODQtMS44Ny00Ljg0LTQuNjcsMi4xNS00LjY3LDQuODQtNC42N1pNMjMyLjM3LDgzLjA0YzEuNjMsMCwyLjYxLTEuMjgsMi42MS0yLjY3cy0uOTgtMi42Ny0yLjYxLTIuNjctMi42MSwxLjI4LTIuNjEsMi42Ny45OCwyLjY3LDIuNjEsMi42N1oiLz48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0yMzkuODEsNzUuOTJoMi4xMXYxLjM5aC4wNGMuMzktLjgzLDEuMjQtMS42MSwyLjczLTEuNjEsMS4zNywwLDIuMzIuNTQsMi43OCwxLjY1LjY1LTEuMTMsMS42LTEuNjUsMi45My0xLjY1LDIuMzcsMCwzLjIxLDEuNjksMy4yMSwzLjgydjUuM2gtMi4yM3YtNS4wNGMwLTEuMTEtLjMzLTIuMDgtMS42NS0yLjA4LTEuMzksMC0xLjkxLDEuMTUtMS45MSwyLjN2NC44MmgtMi4yM3YtNS4zYzAtMS4wOS0uNDUtMS44Mi0xLjUyLTEuODItMS40NywwLTIuMDQsMS4wOC0yLjA0LDIuMjZ2NC44NmgtMi4yM3YtOC45WiIvPjxwYXRoIGNsYXNzPSJjbHMtMSIgZD0iTTExNC44NC43Yy0xLjMxLS4zOS0yLjY5LjM2LTMuMDgsMS42Ny0uMDMuMS0zLjEzLDEwLjQ2LTExLjk2LDMwLjg3LS41NCwxLjI1LjAzLDIuNzEsMS4yOSwzLjI1LjMyLjE0LjY1LjIuOTguMi45NiwwLDEuODctLjU2LDIuMjctMS40OSwxLjIxLTIuNzksMi4zMS01LjM5LDMuMzEtNy44LS4yMywyLjg3LS40Miw1LjU1LS40Miw2Ljk1djI0LjE3YzAsMS4zNywxLjExLDIuNDgsMi40OCwyLjQ4czIuNDgtMS4xMSwyLjQ4LTIuNDhWMTYuMDRjMy4wMy03Ljk0LDQuMjQtMTIsNC4zMi0xMi4yNi4zOS0xLjMxLS4zNi0yLjY5LTEuNjctMy4wOFoiLz48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0xNDYuODQsMTguNjRoLTUuNDFzMC00LjY5LDAtNC42OWMwLTEuMzctMS4xMS0yLjQ4LTIuNDgtMi40OHMtMi40NywxLjExLTIuNDcsMi40OHY0LjY5aC01LjQxYy0xLjM3LDAtMi40OCwxLjExLTIuNDgsMi40OHMxLjExLDIuNDgsMi40OCwyLjQ4aDUuNDFzMCw5LjA0LDAsOS4wNGgtLjIzYy0zLjc5LDAtNi44NywzLjA4LTYuODcsNi44N3Y0LjUyYzAsMy43OSwzLjA4LDYuODcsNi44Nyw2Ljg3aDUuNjZjMy42NSwwLDYuNjItMi45Nyw2LjYyLTYuNjJ2LTQuNzdjMC0zLjc5LTMuMDgtNi44Ny02Ljg3LTYuODdoLS4yM3YtOS4wNGg1LjQxYzEuMzcsMCwyLjQ4LTEuMTEsMi40OC0yLjQ4cy0xLjExLTIuNDgtMi40OC0yLjQ4Wk0xNDMuNTgsMzkuNXY0Ljc3YzAsLjkxLS43NywxLjY3LTEuNjcsMS42N2gtNS42NmMtMS4wNiwwLTEuOTItLjg2LTEuOTItMS45MnYtNC41MmMwLTEuMDYuODYtMS45MiwxLjkyLTEuOTJoNS40MWMxLjA2LDAsMS45Mi44NiwxLjkyLDEuOTJaIi8+PHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMTUwLjMxLDEuNDloLTIyLjcxYy01LjIsMC05LjQ0LDQuMjMtOS40NCw5LjQ0djQwLjQ4YzAsNS4yLDQuMjMsOS40NCw5LjQ0LDkuNDRoMjIuNzFjNS4yLDAsOS40NC00LjIzLDkuNDQtOS40NFYxMC45MmMwLTUuMi00LjIzLTkuNDQtOS40NC05LjQ0Wk0xNTQuOCw1MS40MWMwLDIuNDctMi4wMSw0LjQ5LTQuNDksNC40OWgtMjIuNzFjLTIuNDcsMC00LjQ5LTIuMDEtNC40OS00LjQ5VjEwLjkyYzAtMi40NywyLjAxLTQuNDksNC40OS00LjQ5aDIyLjcxYzIuNDcsMCw0LjQ5LDIuMDEsNC40OSw0LjQ5djQwLjQ4WiIvPjxwYXRoIGNsYXNzPSJjbHMtMSIgZD0iTTM1MC4wMiw3LjA1YzEuNzcsMCwzLjIzLTEuNDUsMy4yMy0zLjIzcy0xLjQ1LTMuMjMtMy4yMy0zLjIzLTMuMjMsMS40NS0zLjIzLDMuMjMsMS40NSwzLjIzLDMuMjMsMy4yM1oiLz48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0zNTkuMiw3LjA1YzEuNzcsMCwzLjIzLTEuNDUsMy4yMy0zLjIzcy0xLjQ1LTMuMjMtMy4yMy0zLjIzLTMuMjMsMS40NS0zLjIzLDMuMjMsMS40NSwzLjIzLDMuMjMsMy4yM1oiLz48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0yNjUuNTMsMTUuNjdjMS41MiwwLDIuNzUtMS4yMywyLjc1LTIuNzVzLTEuMjMtMi43NS0yLjc1LTIuNzVoLTEwLjg0Yy42LTMuNDguOTQtNS43NS45OS02LjA2LjIyLTEuNS0uODItMi45LTIuMzItMy4xMi0xLjUxLS4yMy0yLjkuODItMy4xMiwyLjMyLS4wMS4wOC0uNDEsMi43NS0xLjE0LDYuODZoLTguNWMtMS41MiwwLTIuNzUsMS4yMy0yLjc1LDIuNzVzMS4yMywyLjc1LDIuNzUsMi43NWg3LjQ4Yy0xLjcsOC44MS00LjM0LDIwLjY0LTcuNjQsMjkuNjMtLjUyLDEuNDIuMjEsMywxLjYzLDMuNTMuMzEuMTEuNjMuMTcuOTUuMTcsMS4xMiwwLDIuMTctLjY5LDIuNTgtMS44LDMuNTktOS43OCw2LjM2LTIyLjQ1LDguMDgtMzEuNTJoMTEuODRaIi8+PHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMjkxLjQyLDQwLjAyaC03LjQ1di0xNi45N2MwLTEuNTItMS4yMy0yLjc1LTIuNzUtMi43NXMtMi43NSwxLjIzLTIuNzUsMi43NXYxNi45N2gtNy42NWMtNS44NCwwLTEwLjU5LDQuNzUtMTAuNTksMTAuNTl2LjE4YzAsNS44NCw0Ljc1LDEwLjU5LDEwLjU5LDEwLjU5aDIuNTVjNS41MSwwLDEwLjA1LTQuMjQsMTAuNTQtOS42My4wMy0uMTYuMDUtNi4yNC4wNS02LjI0aDcuNDVjMS41MiwwLDIuNzUtMS4yMywyLjc1LTIuNzVzLTEuMjMtMi43NS0yLjc1LTIuNzVaTTI3OC40OCw1MC43OWMwLDIuODEtMi4yOSw1LjEtNS4xLDUuMWgtMi41NWMtMi44MSwwLTUuMS0yLjI5LTUuMS01LjF2LS4xOGMwLTIuODEsMi4yOS01LjEsNS4xLTUuMWg3LjY1djUuMjdaIi8+PHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMjk1LjcxLDEzLjI3bC0xMy42NS03LjkzYy0xLjMxLS43Ni0yLjk5LS4zMi0zLjc2LDEtLjc2LDEuMzEtLjMyLDIuOTksMSwzLjc2bDEzLjY1LDcuOTNjLjQzLjI1LjkxLjM3LDEuMzguMzcuOTUsMCwxLjg3LS40OSwyLjM4LTEuMzcuNzYtMS4zMS4zMi0yLjk5LTEtMy43NloiLz48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0zNTkuMjUsMTEuMDRoLTE5Ljk5Yy0uNTEsMC0uODYuNTItLjY2Ljk5bDEuOTcsNC43MmMzLjY0LDguNjcsNy43NiwxOC41MSw3LjU1LDI0LjM0LS4zMyw5LjIxLTguMzMsMTQuNzEtMTUuODYsMTQuNzEtOC4yNSwwLTE1LjUxLTYuNzUtMTUuODctMTQuNzQtLjMyLTcuMjcsMi45OS0xNC43MSw2LjQ5LTIyLjU5LDEuNDYtMy4yOSwyLjk3LTYuNjgsNC4yMS0xMC4wOWwuOTktMi43MmMuMTctLjQ3LS4xOC0uOTYtLjY3LS45NmgtMjEuODZjLTEuNTcsMC0yLjgzLDEuMzEtMi43NCwyLjg5LjA4LDEuNDksMS40MSwyLjYsMi45LDIuNmgxNC4yNWMuMjYsMCwuNDMuMjYuMzMuNS0uNzgsMS44Ni0xLjYxLDMuNzItMi40Miw1LjU1LTMuNjEsOC4xMS03LjM0LDE2LjUtNi45NiwyNS4wNi40OCwxMC44MywxMC4yNiwxOS45OSwyMS4zNiwxOS45OXMyMC45NS04Ljc5LDIxLjM2LTIwLjAxYy4yMy02LjQ2LTMuMjYtMTUuMzgtNi45Ni0yNC4yNS0uMS0uMjQuMDctLjUuMzMtLjVoMTIuNDNjMS41NywwLDIuODMtMS4zMSwyLjc0LTIuODktLjA4LTEuNDktMS40MS0yLjYtMi45LTIuNloiLz48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0yMTkuODksMTIuNjhoLTM4LjNjLTEuNDEsMC0yLjU1LDEuMTgtMi40NywyLjYxLjA3LDEuMzQsMS4yNywyLjM0LDIuNjEsMi4zNGgzOC42MmMzLjU1LDAsNi40Mi0yLjg3LDYuNDItNi40MnYtMy4yOWMwLTMuNTUtMi44Ny02LjQyLTYuNDItNi40MmgtNDIuMzJjLTMuMzMsMC02LjA0LDIuNy02LjA0LDYuMDR2MjEuNTVjLjEyLDYuMDksMCwyMi44LTEuOTIsMjguOTgtLjM5LDEuMjcuMTUsMi43LDEuMzgsMy4xOS4zMS4xMi42Mi4xOC45My4xOCwxLjA0LDAsMi4wMi0uNjcsMi4zNS0xLjcxLDIuNjEtOC4wOCwyLjIyLTI5LjgxLDIuMi0zMC42OVY5LjA0YzAtMS40MiwxLjE2LTIuNTksMi41OS0yLjU5aDQwLjM2YzEuMTcsMCwyLjEzLjk2LDIuMTMsMi4xM3YxLjk4YzAsMS4xNy0uOTYsMi4xMy0yLjEzLDIuMTNaIi8+PHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMjI1Ljk3LDM1LjZoLTkuNzZ2LTYuOTZoNi43OWMxLjM3LDAsMi40Ny0xLjExLDIuNDctMi40OHMtMS4xMS0yLjQ4LTIuNDctMi40OGgtNi43OXYtMi4xOWMwLTEuMzctMS4xMS0yLjQ4LTIuNDgtMi40OHMtMi40OCwxLjExLTIuNDgsMi40OHYyLjE5aC0xNC41NnYtMi4xOWMwLTEuMzctMS4xMS0yLjQ4LTIuNDgtMi40OHMtMi40OCwxLjExLTIuNDgsMi40OHYyLjE5aC03LjU4Yy0xLjM3LDAtMi40OCwxLjExLTIuNDgsMi40OHMxLjExLDIuNDgsMi40OCwyLjQ4aDcuNTh2Ni45NmgtOS43NmMtMS4zNywwLTIuNDgsMS4xMS0yLjQ4LDIuNDhzMS4xMSwyLjQ4LDIuNDgsMi40OGgzLjg2djEzLjA5YzAsMS4yLS4wOCwzLjM1LDEuNjcsNS4yOC43OS44NywyLjIzLDEuOSw0LjY0LDEuOWg1LjRjMS4zNywwLDIuNDgtMS4xMSwyLjQ4LTIuNDhzLTEuMTEtMi40OC0yLjQ4LTIuNDhoLTQuNzljLS43NCwwLTEuOTgtLjctMS45OC0yLjk1di0xMi4zN2g4LjY1bDE1LjQsMTguMTdjMS4xNCwxLjMsMi41NiwyLjEsNS42NCwyLjFoNC4xMmMxLjM0LDAsMi41NC0xLDIuNjEtMi4zNC4wNy0xLjQzLTEuMDYtMi42MS0yLjQ3LTIuNjFoLTQuMDdjLTEuNjksMC0yLjExLS42OS0zLjEtMS42OGwtMTEuNjItMTMuNjRoMjAuMDNjMS4zNywwLDIuNDgtMS4xMSwyLjQ4LTIuNDhzLTEuMTEtMi40OC0yLjQ4LTIuNDhaTTE5Ni42OSwyOC42NGgxNC41NnY2Ljk2aC0xNC41NnYtNi45NloiLz48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0yMjIuNjEsNDMuNTJzLTIuMDUsMS4wMi01LjY0LDIuNjRjLTEuMjUuNTctMS44LDIuMDMtMS4yMywzLjI4LjUsMS4xMSwxLjcyLDEuNjcsMi44NiwxLjM4LjE0LS4wNC4yOC0uMDguNDItLjE1LDMuNzEtMS42OSw1Ljc3LTIuNzEsNS44NS0yLjc1LDEuMjEtLjYzLDEuNjktMi4xMiwxLjA3LTMuMzMtLjYzLTEuMjItMi4xMi0xLjY5LTMuMzMtMS4wN1oiLz48L3N2Zz4=" alt="個展なび" style="height:32px;width:auto;filter:brightness(0) invert(1);opacity:0.9;"></div>
+        <p class="footer-tagline">展覧会を探すなら、個展なび。<br>展覧会を発信するなら、個展なび。</p>
+      </div>
+      <div>
+        <p class="footer-col-title">展覧会</p>
+        <ul class="footer-links">
+          <li><a href="#">最新の展覧会</a></li>
+          <li><a href="#">地域から探す</a></li>
+          <li><a href="#">ジャンルから探す</a></li>
+          <li><a href="#">今週開催中</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer-col-title">ご利用について</p>
+        <ul class="footer-links">
+          <li><a href="#">ご利用ガイド</a></li>
+          <li><a href="#">展覧会を掲載する</a></li>
+          <li><a href="#">myページ</a></li>
+          <li><a href="#">お知らせ</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer-col-title">企業情報</p>
+        <ul class="footer-links">
+          <li><a href="#">会社概要</a></li>
+          <li><a href="#">お問い合わせ</a></li>
+          <li><a href="#">プライバシーポリシー</a></li>
+          <li><a href="#">利用規約</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">©2010 kotennavi Co., Ltd. All rights reserved.</span>
+      <div class="footer-sns">
+        <a href="#">Facebook</a>
+        <a href="#">X (Twitter)</a>
+      </div>
+    </div>
+  </footer>
+
+</main><!-- /main -->
+
+<!-- ═══════════════════════════════════
+     BOTTOM NAV (スマホ・タブレット)
+════════════════════════════════════ -->
+<nav class="bottom-nav" id="bottomNav">
+  <div class="bottom-nav-inner" id="bottomNavInner">
+    <!-- JSで注入 -->
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════ -->
+<!-- LIAISON FLOATING BUTTON -->
+<a href="#" class="liaison-fab" onclick="event.preventDefault();document.getElementById('liaisonSection').scrollIntoView({behavior:'smooth'})">
+  <svg class="fab-logo" viewBox="0 0 420 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M 30 180 Q 210 30, 390 180" stroke="#ffffff" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+    <defs>
+      <path id="liaisonArchFab" d="M 70 165 Q 210 45, 350 165"/>
+    </defs>
+    <text font-family="'Cinzel','serif'" font-size="40" font-weight="700" letter-spacing="7" fill="#ffffff">
+      <textPath href="#liaisonArchFab" startOffset="50%" text-anchor="middle">LIAISON</textPath>
+    </text>
+    <text x="210" y="206" font-family="'Montserrat','sans-serif'" font-size="10" font-weight="600" letter-spacing="4" fill="#e74c3c" text-anchor="middle">Now on View</text>
+  </svg>
+  <div class="liaison-fab-label">
+    <span>Now on View</span>
+    <strong>会場連動オンライン展示</strong>
+  </div>
+</a>
+
+<script>
+/**
+ * 個展なび — メインスクリプト
+ * main.js
+ *
+ * 構成:
+ *   ROLES              ロール定義（user / creator / gallery）
+ *   FEATURE CONTENT    フィーチャーストリップのHTML定義
+ *   STATE              現在のロール状態
+ *   renderAll()        全描画をまとめて呼び出す
+ *   renderSidebar()    サイドバーのロールサムネイル描画
+ *   renderIntroBand()  サイト説明帯のCTA描画
+ *   renderFeatureStrip() フィーチャーストリップ描画
+ *   renderTabBar()     特集タブ描画（ランダムピックアップ）
+ *   renderBottomNav()  ボトムナビ描画（スマホ/タブレット）
+ *   EXHIBITIONS        展覧会データ定義
+ *   buildCard()        展覧会カードHTML生成
+ *   renderCards()      カードグリッド描画
+ *   toggleBookmark()   興味あり!トグル
+ *   switchTab()        タブ切り替え
+ *   filterPill()       カテゴリーピル切り替え
+ *   setRole()          デモ用ロール切り替え
+ */
+
+/* ─── Role definitions ─── */
+const ROLES = {
+  user: {
+    label: 'myページ',
+    color: '#4a7fa5',
+    url: '/mypage',
+    thumb: null,
+    thumbBg: '#4a7fa5',
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.7" width="22" height="22">
+             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+             <circle cx="12" cy="7" r="4"/>
+           </svg>`,
+    iconSm: `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" width="14" height="14">
+               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+               <circle cx="12" cy="7" r="4"/>
+             </svg>`,
+  },
+  creator: {
+    label: 'myクリエイター',
+    color: '#b8662a',
+    url: '/mycreator',
+    thumb: null,
+    thumbBg: '#b8662a',
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.7" width="22" height="22">
+             <path d="M12 20h9"/>
+             <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+           </svg>`,
+    iconSm: `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" width="14" height="14">
+               <path d="M12 20h9"/>
+               <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+             </svg>`,
+  },
+  gallery: {
+    label: 'myギャラリー',
+    color: '#2d7a5e',
+    url: '/mygallery',
+    thumb: null,
+    thumbBg: '#2d7a5e',
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.7" width="22" height="22">
+             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+             <polyline points="9 22 9 12 15 12 15 22"/>
+           </svg>`,
+    iconSm: `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" width="14" height="14">
+               <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+               <polyline points="9 22 9 12 15 12 15 22"/>
+             </svg>`,
+  },
+};
+
+/* feature strip content per login state */
+const FEATURE_GUEST = `
+  <a href="#" class="feature-cell">
+    <div class="feature-num">01</div>
+    <div class="feature-label">展覧会を探す</div>
+    <div class="feature-desc">エリア・ジャンル・日程で絞り込んで、行きたい展覧会を見つけよう。</div>
+  </a>
+  <a href="#" class="feature-cell">
+    <div class="feature-num">02</div>
+    <div class="feature-label">展覧会を登録・発信する</div>
+    <div class="feature-desc">ギャラリーや作家として、自分の展覧会を無料で掲載・告知できます。</div>
+  </a>
+  <a href="#" class="feature-cell">
+    <div class="feature-num">03</div>
+    <div class="feature-label">myリストで管理する</div>
+    <div class="feature-desc">気になる展覧会をブックマークして見逃し防止。会員登録は無料。</div>
+  </a>
+`;
+const FEATURE_LOGGEDIN = `
+  <a href="#" class="feature-cell">
+    <div class="feature-num">01</div>
+    <div class="feature-label">展覧会を探す</div>
+    <div class="feature-desc">エリア・ジャンル・日程で絞り込んで、行きたい展覧会を見つけよう。</div>
+  </a>
+  <a href="#" class="feature-cell">
+    <div class="feature-num">02</div>
+    <div class="feature-label">展覧会を登録・発信する</div>
+    <div class="feature-desc">ギャラリーや作家として、自分の展覧会を無料で掲載・告知できます。</div>
+  </a>
+  <a href="#" class="feature-cell">
+    <div class="feature-num">03</div>
+    <div class="feature-label">近くの展覧会を探す</div>
+    <div class="feature-desc">現在地や都道府県から、今すぐ行ける近くの展覧会を見つけよう。</div>
+  </a>
+`;
+
+let currentRole = 'guest'; // 'guest' | 'user' | 'user+creator' | 'user+gallery'
+
+function setRole(combo, btn) {
+  document.querySelectorAll('.demo-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentRole = combo;
+  renderAll();
+}
+
+function isLoggedIn() { return currentRole !== 'guest'; }
+
+function getRoleKeys() {
+  if (currentRole === 'user')           return ['user'];
+  if (currentRole === 'user+creator')   return ['user', 'creator'];
+  if (currentRole === 'user+gallery')   return ['user', 'gallery'];
+  return [];
+}
+
+function renderAll() {
+  renderSidebar();
+  renderIntroBand();
+  renderFeatureStrip();
+  renderTabBar();
+  renderBottomNav();
+  renderCards();
+}
+
+/* ── サイドバー ── */
+function renderSidebar() {
+  const nav = document.getElementById('roleNav');
+  const divider = document.getElementById('sidebarDivider');
+  nav.innerHTML = '';
+
+  if (!isLoggedIn()) {
+    // 未ログイン: dividerとroleNavを非表示
+    divider.style.display = 'none';
+    return;
+  }
+
+  divider.style.display = '';
+  getRoleKeys().forEach(rkey => {
+    const r = ROLES[rkey];
+    const item = document.createElement('a');
+    item.href = r.url;
+    item.className = 'nav-item';
+    item.title = r.label + 'へ';
+    item.onclick = (e) => { e.preventDefault(); alert(`「${r.label}」ページへ遷移します`); };
+
+    const thumbHTML = r.thumb
+      ? `<img src="${r.thumb}" alt="${r.label}">`
+      : `<div class="role-thumb-fallback" style="background:${r.thumbBg}">${r.icon}</div>`;
+
+    item.innerHTML = `
+      <div class="role-thumb" style="border:2.5px solid ${r.color}20">
+        ${thumbHTML}
+      </div>
+      <span class="role-label" style="color:${r.color}">${r.label}</span>
+    `;
+    item.addEventListener('mouseenter', () => {
+      item.querySelector('.role-thumb').style.boxShadow = `0 0 0 3px ${r.color}30`;
+    });
+    item.addEventListener('mouseleave', () => {
+      item.querySelector('.role-thumb').style.boxShadow = '';
+    });
+    nav.appendChild(item);
+  });
+}
+
+/* ── イントロバンド ── */
+function renderIntroBand() {
+  const actions = document.getElementById('introActions');
+  if (isLoggedIn()) {
+    // ログイン済み: introActionsは空（02フィーチャーセルと重複するため非表示）
+    actions.innerHTML = '';
+    // intro-bandをコンパクトに
+    const band = document.getElementById('introBand');
+    if (band) band.style.paddingTop = '12px';
+  } else {
+    // 未ログイン: ログイン＋登録ボタン
+    actions.innerHTML = `
+      <a href="#" class="intro-btn">ログイン</a>
+      <a href="#" class="intro-btn primary">無料でユーザー登録</a>
+    `;
+  }
+}
+
+/* ── フィーチャーストリップ ── */
+function renderFeatureStrip() {
+  const strip = document.getElementById('featureStrip');
+  strip.innerHTML = isLoggedIn() ? FEATURE_LOGGEDIN : FEATURE_GUEST;
+}
+
+/* ── ボトムナビ（スマホ・タブレット） ── */
+function renderBottomNav() {
+  const inner = document.getElementById('bottomNavInner');
+
+  // 共通ナビアイテム
+  const commonItems = `
+    <a href="#" class="bottom-nav-item">
+      <div class="bottom-nav-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/>
+        </svg>
+      </div>
+      <span class="bottom-nav-label">検索</span>
+    </a>
+    <a href="#" class="bottom-nav-item">
+      <div class="bottom-nav-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <circle cx="12" cy="12" r="9"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <circle cx="12" cy="16" r="0.5" fill="currentColor" stroke="currentColor" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <span class="bottom-nav-label">ガイド</span>
+    </a>
+    <a href="#" class="bottom-nav-item" style="position:relative">
+      <div class="bottom-nav-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+        </svg>
+      </div>
+      <span class="bottom-notice-dot"></span>
+      <span class="bottom-nav-label">お知らせ</span>
+    </a>
+  `;
+
+  if (!isLoggedIn()) {
+    // 未ログイン: 右端にログインボタン
+    inner.innerHTML = `
+      ${commonItems}
+      <div class="bottom-nav-divider"></div>
+      <a href="#" class="bottom-nav-item" onclick="event.preventDefault();alert('ログイン/ユーザー登録ページへ遷移します')">
+        <div class="bottom-login-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.8">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+            <polyline points="10 17 15 12 10 7"/>
+            <line x1="15" y1="12" x2="3" y2="12"/>
+          </svg>
+        </div>
+        <span class="bottom-nav-label">ログイン/<br>登録</span>
+      </a>
+    `;
+  } else {
+    // ログイン済み: ロールサムネイル
+    const roleItems = getRoleKeys().map(rkey => {
+      const r = ROLES[rkey];
+      const thumbHTML = r.thumb
+        ? `<img src="${r.thumb}" alt="${r.label}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`
+        : `<div class="role-thumb-fallback" style="background:${r.thumbBg}">${r.iconSm}</div>`;
+      return `
+        <div class="bottom-nav-divider"></div>
+        <a href="${r.url}" class="bottom-nav-item"
+           onclick="event.preventDefault();alert('「${r.label}」ページへ遷移します')"
+           title="${r.label}">
+          <div class="bottom-role-thumb" style="border:2px solid ${r.color}40">
+            ${thumbHTML}
+          </div>
+          <span class="bottom-nav-label" style="color:${r.color}">${r.label.replace('my', 'my\n')}</span>
+        </a>
+      `;
+    }).join('');
+
+    inner.innerHTML = commonItems + roleItems;
+  }
+}
+
+/* ── 特集タブ定義（ランダムピックアップ） ── */
+const SPECIAL_TABS = [
+  { label: '今週のおすすめ',       emoji: '✦' },
+  { label: '福岡で行くべき展覧会',  emoji: '📍' },
+  { label: '話題の書道展',          emoji: '🖌' },
+  { label: 'この週末に行きたい',    emoji: '📅' },
+  { label: '東京・現代美術',        emoji: '🎨' },
+  { label: '版画の世界',            emoji: '🖨' },
+  { label: '写真展セレクション',    emoji: '📷' },
+  { label: '近くで開催中',          emoji: '📍' },
+  { label: '無料で楽しめる展示',    emoji: '🎫' },
+  { label: '今月注目の個展',        emoji: '⭐' },
+];
+
+function pickSpecialTabs(n=2) {
+  const shuffled = [...SPECIAL_TABS].sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, n);
+}
+
+function renderTabBar() {
+  const bar = document.getElementById('tabBar');
+  if (!bar) return;
+  const specials = pickSpecialTabs(2);
+  const tabs = [
+    { label: '最新情報', id: 'latest' },
+    { label: 'myリスト', id: 'mylist', loginOnly: true },
+    ...specials.map((s,i) => ({ label: s.emoji + ' ' + s.label, id: 'special'+i, special: true })),
+  ];
+  bar.innerHTML = tabs
+    .filter(t => !t.loginOnly || isLoggedIn())
+    .map((t, i) => {
+      const cls = i === 0 ? 'tab active' : 'tab';
+      const style = t.special ? 'font-size:0.78rem;' : '';
+      return `<button class="${cls}" style="${style}" onclick="switchTab(this)">${t.label}</button>`;
+    }).join('');
+}
+
+function switchTab(el) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+function filterPill(el) {
+  document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+}
+
+
+/* ─────────────────────────────────────
+   展覧会データ & カード生成
+───────────────────────────────────── */
+const TODAY = new Date('2026-02-21');
+
+const EXHIBITIONS = [
+  {
+    id: 1,
+    title: '令和八年度 旨道展',
+    venue: '岡山県立美術館 3階・4室',
+    pref: '岡山',
+    genre: '書道',
+    start: '2026-02-17',
+    end:   '2026-02-23',
+    time:  '10:00-17:00',
+    dist:  '642.1km',
+    poster: { bg: 'linear-gradient(155deg,#8b3a2a,#5c1e10)', h: 200, text: '旨道展', tc: 'rgba(255,255,255,0.92)' },
+    interested: 12, checkin: 3,
+  },
+  {
+    id: 2,
+    title: '岡山大学書道部 六十五周年記念展',
+    venue: '岡山大学 津島キャンパス',
+    pref: '岡山',
+    genre: '書道',
+    start: '2026-02-20',
+    end:   '2026-02-22',
+    time:  '11:00-18:00',
+    dist:  '638.4km',
+    poster: { bg: 'linear-gradient(155deg,#c8402a,#8b1e12)', h: 270, text: '六十五周年記念', tc: 'rgba(255,255,255,0.92)' },
+    interested: 5, checkin: 1,
+  },
+  {
+    id: 3,
+    title: '器と静物 — 現代陶芸の試み',
+    venue: 'The Artcomplex Center of Tokyo',
+    pref: '東京',
+    genre: '工芸',
+    start: '2026-02-24',
+    end:   '2026-03-01',
+    time:  '12:00-19:00',
+    dist:  '1,089.2km',
+    poster: { bg: 'linear-gradient(155deg,#d8d2ca,#b0a898)', h: 180, text: '陶芸展', tc: 'rgba(0,0,0,0.38)' },
+    interested: 28, checkin: 7,
+  },
+  {
+    id: 4,
+    title: 'あなたが知らないオノマトペ',
+    venue: 'Gallery SOIL 渋谷',
+    pref: '東京',
+    genre: '現代美術',
+    start: '2026-02-18',
+    end:   '2026-03-05',
+    time:  '11:00-19:00',
+    dist:  '1,092.5km',
+    poster: { bg: 'linear-gradient(155deg,#b8d8cc,#6a9e8a)', h: 240, text: 'オノマトペ', tc: 'rgba(0,0,0,0.5)' },
+    interested: 41, checkin: 9,
+  },
+  {
+    id: 5,
+    title: '5つの版表現 Five printing expressions',
+    venue: '東京 版画ギャラリー',
+    pref: '東京',
+    genre: '版画',
+    start: '2026-02-26',
+    end:   '2026-03-03',
+    time:  '10:00-18:00',
+    dist:  '1,085.7km',
+    poster: { bg: 'linear-gradient(155deg,#2c3e50,#1a252f)', h: 310, text: '版表現', tc: 'rgba(255,255,255,0.88)' },
+    interested: 17, checkin: 2,
+  },
+  {
+    id: 6,
+    title: '青の世界 — 藍と版の対話',
+    venue: '銀座 アートスペース',
+    pref: '東京',
+    genre: '版画',
+    start: '2026-02-20',
+    end:   '2026-02-28',
+    time:  '11:00-18:30',
+    dist:  '1,091.0km',
+    poster: { bg: 'linear-gradient(155deg,#3a6a7a,#1e4050)', h: 195, text: '藍染版画', tc: 'rgba(255,255,255,0.88)' },
+    interested: 9, checkin: 4,
+  },
+  {
+    id: 7,
+    title: '春の水彩グループ展 2026',
+    venue: '上野 アートスペース',
+    pref: '東京',
+    genre: '絵画',
+    start: '2026-03-01',
+    end:   '2026-03-10',
+    time:  '10:00-17:00',
+    dist:  '1,088.3km',
+    poster: { bg: 'linear-gradient(155deg,#ede0cc,#c8aa80)', h: 225, text: '水彩展', tc: 'rgba(0,0,0,0.38)' },
+    interested: 33, checkin: 0,
+  },
+  {
+    id: 8,
+    title: '光と影 — モノクロームの情景',
+    venue: '恵比寿 写真スペース',
+    pref: '東京',
+    genre: '写真',
+    start: '2026-02-22',
+    end:   '2026-03-08',
+    time:  '12:00-20:00',
+    dist:  '1,090.1km',
+    poster: { bg: 'linear-gradient(155deg,#3d3530,#1f1a18)', h: 190, text: '写真展', tc: 'rgba(255,255,255,0.85)' },
+    interested: 56, checkin: 12,
+  },
+];
+
+/* ── 日付ユーティリティ ── */
+function parseDateStr(s) {
+  const [y, m, d] = s.split('-').map(Number);
+  return new Date(y, m - 1, d);
+}
+const DOWS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+function formatMD(d) {
+  const mm = String(d.getMonth()+1).padStart(2,'0');
+  const dd = String(d.getDate()).padStart(2,'0');
+  return mm + '.' + dd;
+}
+function diffDays(a, b) {
+  return Math.round((b - a) / 86400000);
+}
+
+/* ── カードHTML生成 ── */
+function buildDaysBadge(startDate, endDate) {
+  const s = parseDateStr(startDate);
+  const e = parseDateStr(endDate);
+  const daysToStart = diffDays(TODAY, s);
+  const daysToEnd   = diffDays(TODAY, e);
+
+  if (daysToStart > 0) {
+    return `<span class="card-days-badge badge-soon">${daysToStart}日後に開催</span>`;
+  } else if (daysToEnd >= 0) {
+    if (daysToEnd === 0) return `<span class="card-days-badge badge-closed">本日最終日</span>`;
+    return `<span class="card-days-badge badge-ongoing">残り${daysToEnd}日</span>`;
+  } else {
+    return `<span class="card-days-badge badge-closed">終了</span>`;
+  }
+}
+
+function buildDateBar(ex) {
+  const s = parseDateStr(ex.start);
+  const e = parseDateStr(ex.end);
+  const sy = s.getFullYear(); const ey = e.getFullYear();
+  const badge = buildDaysBadge(ex.start, ex.end);
+  return `
+    <div class="card-date-bar">
+      <div class="card-date-main">
+        <span class="card-date-y">${sy}.</span>
+        <span class="card-date-md">${formatMD(s)}</span>
+        <span class="card-date-dow">${DOWS[s.getDay()]}</span>
+        <span class="card-date-sep">—</span>
+        <span class="card-date-y">${ey !== sy ? ey+'.' : ''}</span>
+        <span class="card-date-md">${formatMD(e)}</span>
+        <span class="card-date-dow">${DOWS[e.getDay()]}</span>
+        ${badge}
+      </div>
+      <div class="card-date-meta">
+        <span>${ex.time}</span>
+        <span class="sep">|</span>
+        <span>${ex.dist}</span>
+      </div>
+    </div>`;
+}
+
+const bookmarked = new Set();
+
+function toggleBookmark(e, id) {
+  e.preventDefault();
+  e.stopPropagation();
+  const btn = e.currentTarget;
+  if (bookmarked.has(id)) {
+    bookmarked.delete(id);
+    btn.classList.remove('active');
+    btn.title = '興味あり!';
+    const countEl = document.getElementById('interested-' + id);
+    if (countEl) countEl.textContent = parseInt(countEl.textContent) - 1;
+  } else {
+    bookmarked.add(id);
+    btn.classList.add('active');
+    btn.title = '興味あり! (登録済み)';
+    const countEl = document.getElementById('interested-' + id);
+    if (countEl) countEl.textContent = parseInt(countEl.textContent) + 1;
+    /* ぴょんアニメ */
+    btn.animate([
+      {transform:'scale(1)'},{transform:'scale(1.35)'},{transform:'scale(0.9)'},{transform:'scale(1)'}
+    ], { duration: 300, easing: 'ease-out' });
+  }
+}
+
+function buildCard(ex, delay) {
+  const isBookmarked = bookmarked.has(ex.id) ? 'active' : '';
+  return `
+    <a href="./kotennavi-p2.html" class="card" style="animation-delay:${delay}s">
+      <div class="poster" style="height:${ex.poster.h}px;background:${ex.poster.bg}">
+        <div class="poster-text" style="color:${ex.poster.tc}">${ex.poster.text}</div>
+        ${buildDateBar(ex)}
+      </div>
+      <div class="card-body">
+        <div class="card-top-row">
+          <span class="card-tag">exhibition</span>
+          <button class="card-bookmark ${isBookmarked}" title="興味あり!"
+                  onclick="toggleBookmark(event, ${ex.id})">
+            <svg viewBox="0 0 24 24" fill="${isBookmarked ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+          </button>
+        </div>
+        <p class="card-name">${ex.title}</p>
+        <p class="card-venue">${ex.pref} | ${ex.venue}</p>
+        <div class="card-footer">
+          <span class="card-action-count">
+            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+            <span id="interested-${ex.id}">${ex.interested}</span>
+          </span>
+          <span class="card-action-count">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+            <span>${ex.checkin}</span>
+          </span>
+        </div>
+      </div>
+    </a>`;
+}
+
+function renderCards() {
+  const grid = document.getElementById('cardGrid');
+  if (!grid) return;
+  grid.innerHTML = EXHIBITIONS.map((ex, i) => buildCard(ex, 0.04 + i * 0.05)).join('');
+}
+
+/* ─────────────────────────────────────
+   LIAISON データ & レンダリング
+───────────────────────────────────── */
+
+const LIAISON_SVG_MINI = `<svg viewBox="0 0 420 220" fill="none" xmlns="http://www.w3.org/2000/svg" class="liaison-mini-svg">
+  <path d="M 30 180 Q 210 30, 390 180" stroke="#2c3e50" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+  <defs><path id="liaisonArchMini" d="M 70 165 Q 210 45, 350 165"/></defs>
+  <text font-family="'Cinzel','serif'" font-size="40" font-weight="700" letter-spacing="7" fill="#2c3e50">
+    <textPath href="#liaisonArchMini" startOffset="50%" text-anchor="middle">LIAISON</textPath>
+  </text>
+</svg>`;
+
+// LIAISON表示フラグを展覧会に付与（一部）
+const LIAISON_IDS = new Set([3, 4, 7, 8]); // これらの展覧会にLIAISONバッジを付ける
+
+const LIAISON_EXHIBITIONS = [
+  {
+    id: 101, title: '器と静物 — 現代陶芸の試み', venue: '東京 / ACT',
+    genre: '工芸', forSale: false,
+    poster: { bg: 'linear-gradient(155deg,#d8d2ca,#b0a898)', tc: 'rgba(0,0,0,0.38)', text: '陶芸' },
+  },
+  {
+    id: 102, title: 'あなたが知らないオノマトペ', venue: '東京 / Gallery SOIL',
+    genre: '現代美術', forSale: true,
+    poster: { bg: 'linear-gradient(155deg,#b8d8cc,#6a9e8a)', tc: 'rgba(0,0,0,0.5)', text: '現代美術' },
+  },
+  {
+    id: 103, title: '光と影 — モノクロームの情景', venue: '東京 / 恵比寿',
+    genre: '写真', forSale: true,
+    poster: { bg: 'linear-gradient(155deg,#3d3530,#1f1a18)', tc: 'rgba(255,255,255,0.85)', text: '写真' },
+  },
+  {
+    id: 104, title: '春の水彩グループ展 2026', venue: '東京 / 上野',
+    genre: '絵画', forSale: false,
+    poster: { bg: 'linear-gradient(155deg,#ede0cc,#c8aa80)', tc: 'rgba(0,0,0,0.38)', text: '水彩' },
+  },
+  {
+    id: 105, title: '静寂と余白 — 白の詩', venue: '京都 / ギャラリー桜',
+    genre: '現代美術', forSale: true,
+    poster: { bg: 'linear-gradient(155deg,#e8e8e8,#c4c4c4)', tc: 'rgba(0,0,0,0.35)', text: '余白' },
+  },
+  {
+    id: 106, title: '深夜の版画 — 都市の断片', venue: '大阪 / nano gallery',
+    genre: '版画', forSale: true,
+    poster: { bg: 'linear-gradient(155deg,#1a1a2e,#0f3460)', tc: 'rgba(255,255,255,0.88)', text: '版画' },
+  },
+];
+
+function buildLiaisonMiniCard(ex) {
+  const saleTag = ex.forSale ? `<span class="liaison-mini-tag">For Sale</span>` : '';
+  return `
+    <a href="#" class="liaison-mini-card" onclick="return false">
+      <div class="liaison-mini-poster" style="background:${ex.poster.bg}">
+        <div class="liaison-online-dot"></div>
+        <span class="liaison-mini-poster-text" style="color:${ex.poster.tc}">${ex.poster.text}</span>
+      </div>
+      <div class="liaison-mini-body">
+        <p class="liaison-mini-title">${ex.title}</p>
+        <p class="liaison-mini-venue">${ex.venue}</p>
+        ${saleTag}
+      </div>
+    </a>`;
+}
+
+function renderLiaisonSection() {
+  const row = document.getElementById('liaisonScrollRow');
+  if (!row) return;
+  row.innerHTML = LIAISON_EXHIBITIONS.map(ex => buildLiaisonMiniCard(ex)).join('');
+}
+
+/* ── カードにLIAISONバッジを付与（buildCard拡張） ── */
+const _origBuildCard = buildCard;
+window._buildCardWithLiaison = function(ex, delay) {
+  let html = _origBuildCard(ex, delay);
+  if (LIAISON_IDS.has(ex.id)) {
+    // poster div の閉じタグ直前にバッジを挿入（poster内のabsolute配置）
+    const badgeHTML = `<div class="card-liaison-badge">${LIAISON_SVG_MINI}<span class="liaison-now-label">Now on View</span></div>`;
+    // card-date-barの前に挿入（ポスター内）
+    html = html.replace('<div class="card-date-bar">', badgeHTML + '<div class="card-date-bar">');
+  }
+  return html;
+};
+
+/* ── ボトムナビにLIAISONを追加（renderAll後に呼ぶ独立関数） ── */
+function injectLiaisonBottomNav() {
+  const inner = document.getElementById('bottomNavInner');
+  if (!inner) return;
+  // 既に挿入済みならスキップ
+  if (inner.querySelector('.liaison-bottom-item')) return;
+  const liaisonItem = `
+    <a href="#" class="bottom-nav-item liaison-bottom-item"
+       onclick="event.preventDefault();document.getElementById('liaisonSection')?.scrollIntoView({behavior:'smooth'})"
+       style="flex:1.2">
+      <div class="bottom-nav-icon-wrap" style="background:#fff8f8;width:44px;border-radius:8px;">
+        <svg viewBox="0 0 420 220" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:38px;height:20px">
+          <path d="M 30 180 Q 210 30, 390 180" stroke="#c0392b" stroke-width="5" fill="none" stroke-linecap="round"/>
+          <defs><path id="liaisonArchBottom" d="M 70 165 Q 210 45, 350 165"/></defs>
+          <text font-family="'Cinzel','serif'" font-size="40" font-weight="700" letter-spacing="7" fill="#2c3e50">
+            <textPath href="#liaisonArchBottom" startOffset="50%" text-anchor="middle">LIAISON</textPath>
+          </text>
+        </svg>
+      </div>
+      <span class="bottom-nav-label" style="color:#c0392b;font-weight:500">Now on View</span>
+    </a>
+  `;
+  inner.insertAdjacentHTML('afterbegin', liaisonItem);
+}
+
+/* Init */
+renderAll();
+injectLiaisonBottomNav();
+renderLiaisonSection();
+
+// カードをLIAISONバッジ付きで再描画
+(function patchCards() {
+  const grid = document.getElementById('cardGrid');
+  if (!grid) return;
+  grid.innerHTML = EXHIBITIONS.map((ex, i) => window._buildCardWithLiaison(ex, 0.04 + i * 0.05)).join('');
+})();
+
+
+</script>
+</body>
+</html>

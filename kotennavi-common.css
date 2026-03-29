@@ -3396,7 +3396,7 @@ line-clamp:2;}
   border:1.5px solid var(--lr);margin:0 0 14px;
 }
 .p2-liaison-banner__inner{
-  background:linear-gradient(135deg,#2c3e50 0%,#3d5166 100%);
+  background:#344a5e;
   padding:18px 22px;display:flex;align-items:center;gap:18px;
 }
 .p2-liaison-banner__logo{flex-shrink:0}
@@ -5833,6 +5833,11 @@ line-clamp:2;}
 .p2-5-about__feature-ttl { font-family: var(--fs); font-size: .8rem; font-weight: 700; margin-bottom: 3px; }
 .p2-5-about__feature-body { font-size: .66rem; color: var(--muted); line-height: 1.75; }
 
+/* ── 展示説明文 ── */
+.p25-exhibit-desc{padding:0 0 14px}
+.p25-exhibit-desc__text{font-size:.84rem;color:var(--muted);line-height:1.8;margin:0;padding:0 var(--gutter,24px)}
+.p251-dark .p25-exhibit-desc__text{color:rgba(255,255,255,.55)}
+
 /* ── ③ 出品作品 ── */
 .p2-5-works {
   background: var(--warm);
@@ -7463,7 +7468,15 @@ body.p6-dark.p6-plus{
 .p2-12-lp-promo__apply{display:inline-flex;align-items:center;gap:4px;padding:6px 12px;background:#c8a96e;color:#1a2535;border-radius:4px;font-size:.7rem;font-weight:700;text-decoration:none;white-space:nowrap;flex-shrink:0;transition:background .15s}
 .p2-12-lp-promo__apply:hover{background:#d4b87c}
 
-/* ── 3. 展示作品リスト ── */
+/* ── 3. 作品全体説明文 ── */
+.p2-12-desc-block{padding:14px 16px;border-bottom:1px solid var(--border)}
+.p2-12-desc-block__label{display:block;font-size:.76rem;font-weight:700;color:var(--ink);margin-bottom:4px}
+.p2-12-desc-block__hint{font-size:.68rem;color:var(--muted);line-height:1.5;margin:0 0 8px}
+.p2-12-desc-block__textarea{width:100%;padding:9px 11px;border:1px solid var(--border);border-radius:5px;font-size:.8rem;line-height:1.65;color:var(--ink);background:#fff;resize:vertical;font-family:inherit;transition:border-color .15s;box-sizing:border-box}
+.p2-12-desc-block__textarea:focus{outline:none;border-color:var(--accent)}
+.p2-12-desc-block__footer{display:flex;align-items:center;justify-content:space-between;margin-top:6px}
+.p2-12-desc-block__count{font-size:.68rem;color:var(--muted)}
+/* ── 4. 展示作品リスト ── */
 .p2-12-lp-promo-wrap{border-bottom:1px solid var(--border);padding:0 16px 12px}
 .p2-12-works-block{padding:14px 16px 12px;border-bottom:1px solid var(--border)}
 .p2-12-works-hint{font-size:.68rem;color:var(--muted);line-height:1.6;margin:0 0 12px;padding:6px 10px;background:#f8f9fa;border-radius:4px;border-left:2px solid var(--border)}
@@ -7484,8 +7497,9 @@ body.p6-dark.p6-plus{
 .p2-12-work-card__controls{display:flex;align-items:center;gap:6px;flex-shrink:0}
 .p2-12-status-sel{font-size:.72rem;padding:5px 6px;border:1px solid var(--border);border-radius:4px;background:#fff;color:var(--ink);cursor:pointer}
 .p2-12-status-sel:focus{outline:2px solid var(--accent);outline-offset:1px}
-.p2-12-remove-btn{font-size:.68rem;color:var(--muted);border:1px solid var(--border);border-radius:4px;padding:5px 9px;background:none;cursor:pointer;white-space:nowrap;transition:color .15s,border-color .15s}
+.p2-12-remove-btn{display:inline-flex;align-items:center;gap:4px;font-size:.68rem;color:var(--muted);border:1px solid var(--border);border-radius:4px;padding:5px 9px;background:none;cursor:pointer;white-space:nowrap;transition:color .15s,border-color .15s}
 .p2-12-remove-btn:hover{color:#c0392b;border-color:rgba(192,57,43,.35)}
+.p2-12-remove-btn__icon{display:none;flex-shrink:0}
 
 /* ── 4. 作品追加エリア（カード内） ── */
 .p2-12-add-area{padding:12px 16px 14px}
@@ -7524,5 +7538,89 @@ body.p6-dark.p6-plus{
 @media(max-width:400px){
   .p2-12-work-card__thumb{width:32px;height:32px}
   .p2-12-work-card__controls{gap:4px}
-  .p2-12-remove-btn{display:none}
+  .p2-12-remove-btn{padding:5px 6px}
+  .p2-12-remove-btn__text{display:none}
+  .p2-12-remove-btn__icon{display:block}
+}
+
+/* =====================================================
+   p2-12-1: LIAISON+ 展示・販売設定
+   ===================================================== */
+
+/* ── LIAISON+ アクティブバッジ ── */
+.p2-121-active-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;background:linear-gradient(90deg,#c8a030,#e8c850,#c8a030);color:#fff8e8;border-radius:10px;font-size:.66rem;font-weight:700;letter-spacing:.04em;flex-shrink:0}
+.p2-121-active-badge__icon{font-size:.7rem}
+
+/* ── セクションヘッダー（LIAISON+仕様） ── */
+.p2-121-section-head{padding:12px 16px;background:linear-gradient(135deg,#fdf8ee,#f5e8c0);border-bottom:1px solid #e0c870}
+.p2-121-section-head__row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.p2-121-section-head__title{font-size:.88rem;font-weight:700;color:var(--ink);margin:0}
+.p2-121-section-head__desc{font-size:.72rem;color:var(--muted);line-height:1.6;margin:0}
+
+/* ── 販売期間設定ブロック ── */
+.p2-121-period-block{padding:16px 16px 14px;border-bottom:1px solid var(--border)}
+.p2-121-period-hint{font-size:.7rem;color:var(--muted);line-height:1.55;margin:0 0 14px}
+
+/* ── ラジオ選択肢 ── */
+.p2-121-period-opts{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.p2-121-period-opt{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid var(--border);border-radius:7px;cursor:pointer;transition:border-color .15s,background .15s;user-select:none}
+.p2-121-period-opt:hover{border-color:var(--accent);background:#f5f8fb}
+.p2-121-period-opt input[type=radio]{position:absolute;opacity:0;width:0;height:0}
+.p2-121-period-opt__mark{width:16px;height:16px;border-radius:50%;border:2px solid var(--border);background:#fff;flex-shrink:0;transition:border-color .15s;position:relative}
+.p2-121-period-opt__mark::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);width:7px;height:7px;border-radius:50%;background:var(--accent);transition:transform .15s}
+.p2-121-period-opt:has(input:checked){border-color:var(--accent);background:#f0f6ff}
+.p2-121-period-opt:has(input:checked) .p2-121-period-opt__mark{border-color:var(--accent)}
+.p2-121-period-opt:has(input:checked) .p2-121-period-opt__mark::after{transform:translate(-50%,-50%) scale(1)}
+.p2-121-period-opt__body{flex:1;min-width:0;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.p2-121-period-opt__label{font-size:.8rem;font-weight:600;color:var(--ink);display:flex;align-items:center;gap:6px}
+.p2-121-period-opt__tag{display:inline-flex;padding:1px 6px;background:linear-gradient(90deg,#c8a030,#e8c850);color:#fff8e8;border-radius:3px;font-size:.6rem;font-weight:700;letter-spacing:.03em}
+.p2-121-period-opt__range{font-size:.72rem;color:var(--muted);font-feature-settings:"tnum";flex-shrink:0}
+.p2-121-period-opt:has(input:checked) .p2-121-period-opt__range{color:var(--accent);font-weight:600}
+
+/* ── カスタム日付ピッカー ── */
+.p2-121-custom-picker{margin:0 0 4px;padding:14px 14px 12px;background:#f8f9fa;border:1px solid var(--border);border-radius:6px;animation:p2121FadeIn .18s ease}
+@keyframes p2121FadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+.p2-121-custom-picker[hidden]{display:none}
+.p2-121-custom-picker__row{display:flex;align-items:flex-end;gap:10px}
+.p2-121-custom-picker__field{display:flex;flex-direction:column;gap:4px;flex:1}
+.p2-121-custom-picker__label{font-size:.68rem;font-weight:600;color:var(--muted)}
+.p2-121-custom-picker__input{padding:7px 10px;border:1.5px solid var(--border);border-radius:5px;font-size:.8rem;color:var(--ink);background:#fff;font-family:inherit;transition:border-color .15s;width:100%;box-sizing:border-box}
+.p2-121-custom-picker__input:focus{outline:none;border-color:var(--accent)}
+.p2-121-custom-picker__sep{font-size:.9rem;color:var(--muted);padding-bottom:8px;flex-shrink:0}
+.p2-121-custom-picker__note{margin:8px 0 0;font-size:.65rem;color:var(--muted);line-height:1.5}
+
+/* ── 保存フッター ── */
+.p2-121-period-footer{display:flex;justify-content:flex-end;margin-top:12px}
+
+/* ── 発送・梱包ブロック ── */
+.p2-121-ship-block{padding:16px 16px 14px;border-bottom:1px solid var(--border)}
+.p2-121-ship-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 16px;margin-bottom:12px}
+.p2-121-ship-field{display:flex;flex-direction:column;gap:5px}
+.p2-121-ship-field--wide{grid-column:1/-1}
+.p2-121-ship-field__label{font-size:.74rem;font-weight:600;color:var(--ink);display:flex;align-items:center;gap:6px}
+.p2-121-ship-field__select{padding:7px 10px;border:1.5px solid var(--border);border-radius:5px;font-size:.8rem;color:var(--ink);background:#fff;font-family:inherit;cursor:pointer;transition:border-color .15s}
+.p2-121-ship-field__select:focus{outline:none;border-color:var(--accent)}
+.p2-121-optional{display:inline-flex;padding:1px 6px;background:#e8edf2;color:var(--muted);border-radius:3px;font-size:.62rem;font-weight:600}
+.p2-121-yen-wrap{display:flex;align-items:center;gap:6px}
+.p2-121-yen-wrap__sign{font-size:.84rem;font-weight:700;color:var(--muted);flex-shrink:0}
+.p2-121-yen-wrap__input{width:110px;padding:7px 10px;border:1.5px solid var(--border);border-radius:5px;font-size:.8rem;color:var(--ink);background:#fff;text-align:right;font-family:inherit;transition:border-color .15s}
+.p2-121-yen-wrap__input:focus{outline:none;border-color:var(--accent)}
+.p2-121-yen-wrap__hint{font-size:.68rem;color:var(--muted);line-height:1.4}
+.p2-121-ship-footer{display:flex;justify-content:flex-end}
+
+/* ── 作品カード 価格入力 ── */
+.p2-121-price-wrap{display:flex;align-items:center;gap:3px;flex-shrink:0}
+.p2-121-price-wrap__sign{font-size:.76rem;font-weight:700;color:var(--muted)}
+.p2-121-price-wrap__input{width:80px;padding:5px 6px;border:1px solid var(--border);border-radius:4px;font-size:.76rem;color:var(--ink);text-align:right;font-family:inherit;background:#fff;transition:border-color .15s}
+.p2-121-price-wrap__input:focus{outline:none;border-color:var(--accent)}
+.p2-121-price-wrap__tax{font-size:.63rem;color:var(--muted);white-space:nowrap}
+
+@media(max-width:540px){
+  .p2-121-period-opt__body{flex-direction:column;align-items:flex-start;gap:2px}
+  .p2-121-custom-picker__row{flex-direction:column;gap:8px}
+  .p2-121-custom-picker__sep{display:none}
+  .p2-121-ship-grid{grid-template-columns:1fr}
+  .p2-121-ship-field--wide{grid-column:1}
+  .p2-121-yen-wrap__hint{display:none}
+  .p2-121-price-wrap__tax{display:none}
 }

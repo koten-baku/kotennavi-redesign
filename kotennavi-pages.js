@@ -679,7 +679,7 @@ KTN.pages['p2-5'] = function () {
     var badge = badgeMap[w.status] || '';
     var statusMap = { sale: 'forsale', inquiry: 'forsale', nsale: 'nsale', sold: 'sold' };
     var dataStatus = statusMap[w.status] || 'nsale';
-    return '<a class="' + cardClass + '" href="#" data-creator="' + w.creator + '" data-status="' + dataStatus + '">' +
+    return '<a class="' + cardClass + '" href="./kotennavi-p6-1.html" data-creator="' + w.creator + '" data-status="' + dataStatus + '">' +
       '<div class="p25c__img">' +
         '<div class="p25c__img-bg" style="background:' + w.bg + '"></div>' +
         '<div class="p25c__img-title" style="color:' + w.tc + '">' + w.title + '</div>' +
@@ -1784,7 +1784,10 @@ KTN.pages['p2-12'] = function() {
       '</div>'+
       '<div class="p2-12-work-card__controls">'+
         '<select class="p2-12-status-sel" aria-label="販売状態">'+statusOpts(w.status)+'</select>'+
-        '<button class="p2-12-remove-btn" type="button" data-id="'+w.id+'">取り外す</button>'+
+        '<button class="p2-12-remove-btn" type="button" data-id="'+w.id+'" aria-label="取り外す">'+
+          '<svg class="p2-12-remove-btn__icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13" aria-hidden="true"><line x1="3" y1="3" x2="13" y2="13"/><line x1="13" y1="3" x2="3" y2="13"/></svg>'+
+          '<span class="p2-12-remove-btn__text">取り外す</span>'+
+        '</button>'+
       '</div>';
     li.querySelector('.p2-12-remove-btn').addEventListener('click', handleRemove);
     return li;
@@ -1861,7 +1864,275 @@ KTN.pages['p2-12'] = function() {
   addBtn.addEventListener('click', openPanel);
   closeBtn.addEventListener('click', closePanel);
 
+  /* ── 説明文 文字数カウンター ── */
+  var descTA = document.getElementById('p212ExhibitDesc');
+  var descCount = document.getElementById('p212DescCount');
+  if (descTA && descCount) {
+    var MAX = 200;
+    function updateDescCount() {
+      var len = descTA.value.length;
+      descCount.textContent = len + ' / ' + MAX;
+      descCount.style.color = len > MAX ? '#c0392b' : '';
+    }
+    descTA.addEventListener('input', updateDescCount);
+  }
+
   /* ── 初期状態：パネルを開いた状態で表示 ── */
+  openPanel();
+
+};
+
+/* =====================================================
+   p2-12-1: LIAISON+ 展示・販売設定
+   ===================================================== */
+KTN.pages['p2-121'] = function() {
+
+  /* ── 展覧会会期定数 ── */
+  var EXH_START = '2026-02-18';
+  var EXH_END   = '2026-03-05';
+  var EXH_MAX   = '2026-03-19'; // 会期終了 + 2週間
+
+  function fmtDate(iso) {
+    // '2026-03-19' → '2026.03.19'
+    return iso.replace(/-/g, '.');
+  }
+  function fmtRange(s, e) { return fmtDate(s) + ' — ' + fmtDate(e); }
+
+  /* ── 販売期間設定 ── */
+  var radios      = document.querySelectorAll('input[name="p2121Period"]');
+  var customPicker = document.getElementById('p2121CustomPicker');
+  var dateStart   = document.getElementById('p2121DateStart');
+  var dateEnd     = document.getElementById('p2121DateEnd');
+  var customPreview = document.getElementById('p2121CustomPreview');
+  var periodSave  = document.getElementById('p2121PeriodSave');
+
+  function getCheckedValue() {
+    for (var i = 0; i < radios.length; i++) {
+      if (radios[i].checked) return radios[i].value;
+    }
+    return null;
+  }
+
+  function updateCustomPreview() {
+    if (!dateStart || !dateEnd || !customPreview) return;
+    var s = dateStart.value, e = dateEnd.value;
+    if (s && e && s <= e) {
+      customPreview.textContent = fmtRange(s, e);
+    } else {
+      customPreview.textContent = '日程を選択';
+    }
+  }
+
+  function onRadioChange() {
+    var val = getCheckedValue();
+    if (customPicker) customPicker.hidden = (val !== 'custom');
+    if (val === 'custom') updateCustomPreview();
+  }
+
+  if (radios.length) {
+    for (var i = 0; i < radios.length; i++) {
+      radios[i].addEventListener('change', onRadioChange);
+    }
+    onRadioChange();
+  }
+
+  if (dateStart) {
+    dateStart.addEventListener('change', function() {
+      // 終了日の min を開始日以降に制限
+      if (dateEnd) {
+        dateEnd.min = dateStart.value;
+        if (dateEnd.value < dateStart.value) dateEnd.value = dateStart.value;
+      }
+      updateCustomPreview();
+    });
+  }
+  if (dateEnd) {
+    dateEnd.addEventListener('change', updateCustomPreview);
+  }
+
+  if (periodSave) {
+    periodSave.addEventListener('click', function() {
+      var val = getCheckedValue();
+      var label = val === 'same'   ? '展覧会会期と同じ期間で設定しました' :
+                  val === 'plus2w' ? '会期終了後2週間まで設定しました' :
+                  '販売期間を保存しました';
+      if (window.KTN && KTN.toast) KTN.toast(label);
+    });
+  }
+
+  /* ── 発送・梱包 保存 ── */
+  var shipSave = document.getElementById('p2121ShipSave');
+  if (shipSave) {
+    shipSave.addEventListener('click', function() {
+      if (window.KTN && KTN.toast) KTN.toast('発送・梱包情報を保存しました');
+    });
+  }
+
+  /* ── 以下：作品リスト（p2-12 と同一ロジック） ── */
+  var STATUS = [
+    { value:'inquiry',  label:'要問合せ' },
+    { value:'sale',     label:'販売中' },
+    { value:'applying', label:'申込中' },
+    { value:'sold',     label:'売約済' },
+    { value:'nonsale',  label:'非売品' },
+  ];
+
+  var INITIAL = [
+    { id:'w1', title:'《オノマトペの庭》', year:'2026年', medium:'キャンバスに油彩', size:'116.7×91.0cm', bg:'linear-gradient(155deg,#b8d8cc,#6a9e8a)', status:'inquiry' },
+    { id:'w2', title:'《ふわふわ》',       year:'2025年', medium:'キャンバスに油彩', size:'72.7×60.6cm',  bg:'linear-gradient(155deg,#f0e8d0,#d4b896)', status:'sale' },
+    { id:'w3', title:'《ざわざわ（夜）》',  year:'2025年', medium:'アクリル・パネル', size:'53.0×45.5cm',  bg:'linear-gradient(155deg,#3d3530,#1f1a18)', status:'nonsale' },
+  ];
+  var EXTRA = [
+    { id:'w4', title:'《ドキドキ #3》',   year:'2025年', bg:'linear-gradient(155deg,#f0d0d0,#c88080)', status:'inquiry' },
+    { id:'w5', title:'《シュワシュワ》',   year:'2024年', bg:'linear-gradient(155deg,#d0e8f0,#7ab4cc)', status:'inquiry' },
+    { id:'w6', title:'《言葉の断片 I》',  year:'2024年', bg:'linear-gradient(155deg,#d8c8e8,#a888cc)', status:'inquiry' },
+    { id:'w7', title:'《言葉の断片 II》', year:'2024年', bg:'linear-gradient(155deg,#c8d8e8,#7898b8)', status:'inquiry' },
+    { id:'w8', title:'《ふわふわ No.2》', year:'2024年', bg:'linear-gradient(155deg,#e0d8c8,#b4a88a)', status:'inquiry' },
+  ];
+  var ALL = INITIAL.concat(EXTRA);
+  var displayedIds = INITIAL.map(function(w){ return w.id; });
+
+  var listEl   = document.getElementById('p212WorkList');
+  var countEl  = document.getElementById('p212Count');
+  var addBtn   = document.getElementById('p212AddBtn');
+  var addPanel = document.getElementById('p212AddPanel');
+  var closeBtn = document.getElementById('p212CloseBtn');
+  var candGrid = document.getElementById('p212CandidateGrid');
+  if (!listEl || !countEl || !addBtn || !addPanel || !closeBtn || !candGrid) return;
+
+  function updateCount() { countEl.textContent = displayedIds.length; }
+
+  function statusOpts(cur) {
+    return STATUS.map(function(s){
+      return '<option value="'+s.value+'"'+(s.value===cur?' selected':'')+'>'+s.label+'</option>';
+    }).join('');
+  }
+
+  var HANDLE_SVG = '<svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14">'
+    + '<circle cx="7" cy="5" r="1.5"/><circle cx="13" cy="5" r="1.5"/>'
+    + '<circle cx="7" cy="10" r="1.5"/><circle cx="13" cy="10" r="1.5"/>'
+    + '<circle cx="7" cy="15" r="1.5"/><circle cx="13" cy="15" r="1.5"/>'
+    + '</svg>';
+
+  function makeCard(w) {
+    var li = document.createElement('li');
+    li.className = 'p2-12-work-card';
+    li.dataset.id = w.id;
+    var meta = [w.year, w.medium, w.size].filter(Boolean).join('　');
+    li.innerHTML =
+      '<div class="p2-12-work-card__handle" title="ドラッグで並び替え">'+HANDLE_SVG+'</div>'+
+      '<div class="p2-12-work-card__thumb" style="background:'+w.bg+'"></div>'+
+      '<div class="p2-12-work-card__body">'+
+        '<div class="p2-12-work-card__title">'+w.title+'</div>'+
+        '<div class="p2-12-work-card__meta">'+meta+'</div>'+
+      '</div>'+
+      '<div class="p2-12-work-card__controls">'+
+        '<div class="p2-121-price-wrap">'+
+          '<span class="p2-121-price-wrap__sign">¥</span>'+
+          '<input class="p2-121-price-wrap__input" type="number" min="0" step="1000"'+
+            ' placeholder="価格" aria-label="価格（税込）" value="'+(w.price||'')+'">'+
+          '<span class="p2-121-price-wrap__tax">税込</span>'+
+        '</div>'+
+        '<select class="p2-12-status-sel" aria-label="販売状態">'+statusOpts(w.status)+'</select>'+
+        '<button class="p2-12-remove-btn" type="button" data-id="'+w.id+'" aria-label="取り外す">'+
+          '<svg class="p2-12-remove-btn__icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13" aria-hidden="true"><line x1="3" y1="3" x2="13" y2="13"/><line x1="13" y1="3" x2="3" y2="13"/></svg>'+
+          '<span class="p2-12-remove-btn__text">取り外す</span>'+
+        '</button>'+
+      '</div>';
+    li.querySelector('.p2-12-remove-btn').addEventListener('click', handleRemove);
+
+    /* 非売品のとき価格入力を無効化 */
+    var priceInput = li.querySelector('.p2-121-price-wrap__input');
+    var statusSel  = li.querySelector('.p2-12-status-sel');
+    function syncPrice() {
+      var isNonsale = statusSel.value === 'nonsale';
+      priceInput.disabled = isNonsale;
+      priceInput.closest('.p2-121-price-wrap').classList.toggle('is-disabled', isNonsale);
+      if (isNonsale) priceInput.value = '';
+    }
+    statusSel.addEventListener('change', syncPrice);
+    syncPrice();
+
+    return li;
+  }
+
+  function handleRemove(e) {
+    var id = e.currentTarget.dataset.id;
+    var idx = displayedIds.indexOf(id);
+    if (idx !== -1) displayedIds.splice(idx, 1);
+    var card = e.currentTarget.closest('.p2-12-work-card');
+    if (card) card.remove();
+    var cc = candGrid.querySelector('[data-id="'+id+'"]');
+    if (cc) cc.classList.remove('is-added');
+    updateCount();
+  }
+
+  function renderCandGrid() {
+    candGrid.innerHTML = '';
+    ALL.forEach(function(w) {
+      var added = displayedIds.indexOf(w.id) !== -1;
+      var div = document.createElement('div');
+      div.className = 'p2-12-candidate-card'+(added?' is-added':'');
+      div.dataset.id = w.id;
+      div.innerHTML =
+        '<div class="p2-12-candidate-card__thumb" style="background:'+w.bg+'"></div>'+
+        '<div class="p2-12-candidate-card__info">'+
+          '<div class="p2-12-candidate-card__title">'+w.title+'</div>'+
+          '<div class="p2-12-candidate-card__year">'+(w.year||'')+'</div>'+
+          '<div class="p2-12-candidate-card__added">追加済み</div>'+
+        '</div>';
+      div.addEventListener('click', function() {
+        if (div.classList.contains('is-added')) return;
+        displayedIds.push(w.id);
+        listEl.appendChild(makeCard(w));
+        div.classList.add('is-added');
+        updateCount();
+      });
+      candGrid.appendChild(div);
+    });
+  }
+
+  function openPanel() {
+    addPanel.hidden = false;
+    addBtn.classList.add('is-open');
+    renderCandGrid();
+  }
+  function closePanel() {
+    addPanel.hidden = true;
+    addBtn.classList.remove('is-open');
+  }
+
+  INITIAL.forEach(function(w){ listEl.appendChild(makeCard(w)); });
+  updateCount();
+
+  if (window.Sortable) {
+    Sortable.create(listEl, {
+      handle: '.p2-12-work-card__handle',
+      animation: 150,
+      ghostClass: 'sortable-ghost',
+      chosenClass: 'sortable-chosen',
+      onEnd: function() {
+        displayedIds = [];
+        listEl.querySelectorAll('.p2-12-work-card').forEach(function(c){ displayedIds.push(c.dataset.id); });
+      },
+    });
+  }
+
+  addBtn.addEventListener('click', openPanel);
+  closeBtn.addEventListener('click', closePanel);
+
+  var descTA = document.getElementById('p212ExhibitDesc');
+  var descCount = document.getElementById('p212DescCount');
+  if (descTA && descCount) {
+    var MAX = 200;
+    function updateDescCount() {
+      var len = descTA.value.length;
+      descCount.textContent = len + ' / ' + MAX;
+      descCount.style.color = len > MAX ? '#c0392b' : '';
+    }
+    descTA.addEventListener('input', updateDescCount);
+  }
+
   openPanel();
 
 };
