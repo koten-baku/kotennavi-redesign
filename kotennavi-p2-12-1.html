@@ -36,6 +36,12 @@
   <main class="ktn-main" id="ktnMain">
     <div class="ktn-content ktn-content--article">
 
+      <!-- ページタイトル -->
+      <div class="ktn-edit-head">
+        <h1 class="ktn-edit-head__title">LIAISON+ 展示・販売設定</h1>
+        <p class="ktn-edit-head__desc">展示作品のオンライン販売設定を行います。作品と販売情報は展覧会ページの LIAISON タブで公開されます。</p>
+      </div>
+
       <!-- 1. 展覧会コンパクトバナー -->
       <a href="kotennavi-p2.html" class="p2-12-banner">
         <div class="p2-12-banner__thumb" style="background:linear-gradient(135deg,#b8d8cc,#6a9e8a)"></div>
@@ -55,15 +61,6 @@
 
       <!-- 2. LIAISON+ 展示・販売設定（統合セクション） -->
       <section class="p2-12-liaison-section">
-
-        <!-- セクションヘッダー（LIAISON+仕様） -->
-        <div class="p2-121-section-head">
-          <div class="p2-121-section-head__row">
-            <h2 class="p2-121-section-head__title">LIAISON+ 展示・販売設定</h2>
-            <span class="p2-121-active-badge"><span class="p2-121-active-badge__icon">✦</span>利用中</span>
-          </div>
-          <p class="p2-121-section-head__desc">展示作品のオンライン販売設定を行います。作品と販売情報は展覧会ページの LIAISON タブで公開されます。</p>
-        </div>
 
         <!-- 販売期間設定ブロック -->
         <div class="p2-121-period-block">
@@ -124,9 +121,6 @@
             <p class="p2-121-custom-picker__note">設定できる範囲：2026.02.18 — 03.19（会期終了後2週間まで）</p>
           </div>
 
-          <div class="p2-121-period-footer">
-            <button class="ktn-btn ktn-btn--sm" type="button" id="p2121PeriodSave">保存</button>
-          </div>
         </div>
 
         <!-- 発送・梱包設定ブロック -->
@@ -180,9 +174,6 @@
             </div>
           </div>
 
-          <div class="p2-121-ship-footer">
-            <button class="ktn-btn ktn-btn--sm" type="button" id="p2121ShipSave">保存</button>
-          </div>
         </div>
 
         <!-- 作品全体の説明文 -->
@@ -192,7 +183,6 @@
           <textarea class="p2-12-desc-block__textarea" id="p212ExhibitDesc" rows="4" placeholder="例：今回の展示では、日常の中に潜むオノマトペをテーマに、田中透が新作 3 点を含む全 8 点を展示します。"></textarea>
           <div class="p2-12-desc-block__footer">
             <span class="p2-12-desc-block__count" id="p212DescCount">0 / 200</span>
-            <button class="p2-12-desc-block__save ktn-btn ktn-btn--sm" type="button">保存</button>
           </div>
         </div>
 
@@ -227,6 +217,12 @@
             <div class="p2-12-add-panel__or">または既存の作品から選ぶ</div>
             <div class="p2-12-candidate-grid" id="p212CandidateGrid"></div>
           </div>
+        </div>
+
+        <!-- フォームアクション -->
+        <div class="p2-12-form-actions">
+          <button class="p2-12-form-actions__cancel" type="button" onclick="history.back()">キャンセル</button>
+          <button class="p2-12-form-actions__save" type="button" id="p212SaveAll">保存する</button>
         </div>
 
       </section>
