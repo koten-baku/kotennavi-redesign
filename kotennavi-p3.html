@@ -83,11 +83,21 @@
 
     <!-- A. ヘッドエリア -->
     <div class="p3-head">
-      <div class="p3-head__avatar" style="background:linear-gradient(135deg,#7ab4cc,#4a8099)">T</div>
-      <div class="p3-head__role">creator</div>
-      <h1 class="p3-head__name">田中 透</h1>
-      <div class="p3-head__en">TANAKA TORU</div>
-      <p class="p3-head__bio">言葉と感覚の境界を絵画で探求する画家。オノマトペをテーマにした連作で知られる。</p>
+      <div class="p3-head__inner">
+        <!-- 画像カラム（hasImage=false時はJSで非表示） -->
+        <div class="p3-head__img-col">
+          <div class="p3-head__avatar" style="background:linear-gradient(135deg,#7ab4cc,#4a8099);display:flex;align-items:center;justify-content:center;font-size:3rem;font-weight:700;color:#fff">T</div>
+        </div>
+        <!-- テキストカラム -->
+        <div class="p3-head__text-col">
+          <div class="p3-head__badge"><span class="cb cb-person cb-creator">creator</span></div>
+          <h1 class="p3-head__name">田中 透</h1>
+          <div class="p3-head__en">TANAKA TORU</div>
+          <div class="p3-head__genre">絵画・現代美術 · 東京</div>
+          <p class="p3-head__bio">言葉と感覚の境界を絵画で探求する画家。オノマトペをテーマにした連作で知られる。音が見えて、絵が聞こえる──そんな体験を届けたい。</p>
+        </div>
+      </div>
+      <!-- カウンター・ウォッチ（両パターン共通・中央揃え） -->
       <div class="p3-head__counts">
         <div class="p3-head__count">
           <span class="p3-head__count-num">12</span>
@@ -118,7 +128,7 @@
     <nav class="p3-tabnav" id="p3Tabnav" aria-label="クリエイターページ内ナビ">
       <div class="p3-tabnav__inner">
         <button class="p3-tabnav__item" data-target="p3-sec-exhibitions">開催中の展覧会</button>
-        <button class="p3-tabnav__item" data-target="p3-sec-archive">展覧会アーカイブ</button>
+        <button class="p3-tabnav__item" data-target="p3-sec-archive">展覧会</button>
         <button class="p3-tabnav__item" data-target="p3-sec-works">作品</button>
         <button class="p3-tabnav__item" data-target="p3-sec-articles">記事</button>
         <button class="p3-tabnav__item" data-target="p3-sec-profile">プロフィール</button>
@@ -613,6 +623,7 @@
 <script src="./kotennavi-pages.js"></script>
 <script>
   window.P3_DATA = {
+    hasImage: true,
     watchers: [
       { name:'山田花子', avatar:'linear-gradient(135deg,#e8b4a0,#c89080)' },
       { name:'佐藤二郎', avatar:'linear-gradient(135deg,#a0b4e8,#7090c0)' },

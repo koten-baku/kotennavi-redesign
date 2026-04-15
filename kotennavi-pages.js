@@ -2143,6 +2143,18 @@ KTN.pages['p2-121'] = function() {
 KTN.pages['p3'] = function () {
   var d = window.P3_DATA || {};
 
+  // 0. ヒーローエリア 画像あり/なし切り替え
+  var head = document.querySelector('.p3-head');
+  if (head) {
+    if (d.hasImage) {
+      head.classList.add('p3-head--has-image');
+    } else {
+      head.classList.add('p3-head--no-image');
+      var imgCol = head.querySelector('.p3-head__img-col');
+      if (imgCol) imgCol.style.display = 'none';
+    }
+  }
+
   // 1. watchボタン トグル（ヘッド＋サイドの2箇所連動）
   var watchBtns = document.querySelectorAll('[data-action="watch-p3"]');
   watchBtns.forEach(function(btn){
