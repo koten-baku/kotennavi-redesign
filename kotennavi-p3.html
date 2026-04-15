@@ -64,6 +64,9 @@
   <button class="dbtn" onclick="setR('user+creator',this)">creator本人</button>
   <button class="dbtn" onclick="setR('user+gallery',this)">gallery本人</button>
   <button class="dbtn" onclick="setR('admin',this)">管理者</button>
+  <span class="dbar-sep">プロフ画像：</span>
+  <button class="dbtn on" id="dbarImgOn"  onclick="setImg(true,this)">あり</button>
+  <button class="dbtn"    id="dbarImgOff" onclick="setImg(false,this)">なし</button>
 </div>
 
 <div class="shell">
@@ -646,6 +649,24 @@
     ]
   };
   KTN.init({ page: 'p3', role: 'guest' });
+
+  function setImg(hasImage, btn) {
+    // ボタン状態
+    document.getElementById('dbarImgOn').classList.toggle('on', hasImage);
+    document.getElementById('dbarImgOff').classList.toggle('on', !hasImage);
+    // クラス付け替え
+    var head = document.querySelector('.p3-head');
+    if (!head) return;
+    head.classList.remove('p3-head--has-image', 'p3-head--no-image');
+    var imgCol = head.querySelector('.p3-head__img-col');
+    if (hasImage) {
+      head.classList.add('p3-head--has-image');
+      if (imgCol) imgCol.style.display = '';
+    } else {
+      head.classList.add('p3-head--no-image');
+      if (imgCol) imgCol.style.display = 'none';
+    }
+  }
 </script>
 </body>
 </html>
