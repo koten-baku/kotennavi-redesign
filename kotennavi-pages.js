@@ -2136,3 +2136,165 @@ KTN.pages['p2-121'] = function() {
   openPanel();
 
 };
+
+/* ────────────────────────────────────────────────────
+   P3 クリエイタートップ
+──────────────────────────────────────────────────── */
+KTN.pages['p3'] = function () {
+  var d = window.P3_DATA || {};
+
+  // 1. watchボタン トグル（ヘッド＋サイドの2箇所連動）
+  var watchBtns = document.querySelectorAll('[data-action="watch-p3"]');
+  watchBtns.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var isOn = btn.classList.contains('on');
+      watchBtns.forEach(function(b){
+        b.classList.toggle('on', !isOn);
+        b.querySelector('.tip') && (b.querySelector('.tip').textContent = isOn ? 'ウォッチする' : 'ウォッチ解除');
+      });
+      KTN.toast(isOn ? 'ウォッチを解除しました' : '田中 透をウォッチしました');
+    });
+  });
+
+  // 2. ウォッチャーモーダル
+  var modal = document.getElementById('p3WatcherModal');
+  var watcherList = document.getElementById('p3WatcherList');
+  if (modal && watcherList && d.watchers) {
+    watcherList.innerHTML = d.watchers.map(function(w){
+      return '<div class="p3-watcher-item">'
+        +'<div class="p3-watcher-item__avatar" style="background:'+w.avatar+'">'+w.name.charAt(0)+'</div>'
+        +'<div class="p3-watcher-item__name">'+w.name+'</div></div>';
+    }).join('');
+    document.querySelectorAll('[data-action="open-watchers"]').forEach(function(el){
+      el.addEventListener('click', function(e){
+        e.preventDefault();
+        modal.classList.add('is-open');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+    function closeWatcherModal(){
+      modal.classList.remove('is-open');
+      document.body.style.overflow = '';
+    }
+    var closeBtn = document.getElementById('p3WatcherModalClose');
+    closeBtn && closeBtn.addEventListener('click', closeWatcherModal);
+    modal.querySelector('.p3-watcher-modal__overlay').addEventListener('click', closeWatcherModal);
+    document.addEventListener('keydown', function(e){ if(e.key==='Escape'){ closeWatcherModal(); closeGallery(); } });
+  }
+
+  // 3. 写真ライトボックス
+  var galleryModal = document.getElementById('p3GalleryModal');
+  var galleryModalBg = document.getElementById('p3GalleryModalBg');
+  var galleryModalCaption = document.getElementById('p3GalleryModalCaption');
+  function openGallery(bg, label){
+    if (!galleryModal) return;
+    if (galleryModalBg) galleryModalBg.style.cssText = 'position:absolute;inset:0;background:'+bg+';border-radius:4px';
+    if (galleryModalCaption) galleryModalCaption.textContent = label;
+    galleryModal.removeAttribute('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeGallery(){
+    if (!galleryModal) return;
+    galleryModal.setAttribute('hidden','');
+    document.body.style.overflow = '';
+  }
+  if (galleryModal) {
+    document.getElementById('p3GalleryModalClose').addEventListener('click', closeGallery);
+    galleryModalBg && galleryModalBg.addEventListener('click', closeGallery);
+  }
+
+  // 4. アコーディオン（height アニメーション）
+  document.querySelectorAll('.p3-accordion__head').forEach(function(btn){
+    var accordion = btn.closest('.p3-accordion');
+    var body = accordion && accordion.querySelector('.p3-accordion__body');
+    if (!body) return;
+    btn.addEventListener('click', function(){
+      var isOpen = accordion.classList.contains('is-open');
+      if (isOpen) {
+        body.style.height = body.scrollHeight + 'px';
+        requestAnimationFrame(function(){
+          requestAnimationFrame(function(){ body.style.height = '0'; });
+        });
+        accordion.classList.remove('is-open');
+      } else {
+        accordion.classList.add('is-open');
+        body.style.height = body.scrollHeight + 'px';
+        body.addEventListener('transitionend', function onEnd(){
+          body.style.height = 'auto';
+          body.removeEventListener('transitionend', onEnd);
+        });
+      }
+    });
+  });
+
+  // 5. LIAISONカード表示制御（creator / admin ロールのみ）
+  var liaisonCard = document.getElementById('p3SideLiaison');
+  if (liaisonCard) {
+    function updateLiaison(){
+      var cls = document.body.className || '';
+      liaisonCard.classList.toggle('is-visible', cls.indexOf('creator') !== -1 || cls.indexOf('admin') !== -1);
+    }
+    updateLiaison();
+    document.querySelectorAll('.dbtn').forEach(function(btn){
+      btn.addEventListener('click', function(){ setTimeout(updateLiaison, 50); });
+    });
+  }
+
+  // 6. 作品グリッド生成（LIAISON優先ソート・.aw カード）
+  var worksGrid = document.getElementById('p3WorksGrid');
+  if (worksGrid && d.works) {
+    var sorted = d.works.slice().sort(function(a,b){ return (b.liaison?1:0)-(a.liaison?1:0); });
+    worksGrid.innerHTML = sorted.map(function(w){
+      return '<a class="aw" href="#">'
+        +'<div class="aw__img">'
+        +(w.liaison ? '<div class="aw__lb"><span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span></div>' : '')
+        +'<div class="aw__img-ph t-portrait" style="background:'+w.bg+'"></div>'
+        +'</div>'
+        +'<div class="aw__body">'
+        +'<div class="aw__title-row"><div class="aw__title">'+w.title+'</div></div>'
+        +'<div class="aw__spec">'+w.year+' / '+w.material+'</div>'
+        +'</div></a>';
+    }).join('');
+  }
+
+  // 7. 写真グリッド生成（.p3-photos__item）
+  var photosGrid = document.getElementById('p3PhotosGrid');
+  if (photosGrid && d.photos) {
+    photosGrid.innerHTML = d.photos.map(function(p){
+      return '<div class="p3-photos__item" style="background:'+p.bg+'" data-bg="'+p.bg+'" data-label="'+p.label+'">'
+        +'<span class="p3-photos__label">'+p.label+'</span></div>';
+    }).join('');
+    photosGrid.querySelectorAll('.p3-photos__item').forEach(function(item){
+      item.addEventListener('click', function(){
+        openGallery(item.dataset.bg, item.dataset.label);
+      });
+    });
+  }
+
+  // 8. タブナビ IntersectionObserver
+  var tabnav = document.getElementById('p3Tabnav');
+  if (tabnav && 'IntersectionObserver' in window) {
+    var tabBtns = tabnav.querySelectorAll('.p3-tabnav__item');
+    var sections = document.querySelectorAll('.p3-layout__main > section[id]');
+    var hh = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--hh') || '56', 10);
+    var obs = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (!entry.isIntersecting) return;
+        var id = entry.target.id;
+        tabBtns.forEach(function(btn){
+          btn.classList.toggle('is-active', btn.dataset.target === id);
+        });
+      });
+    }, { rootMargin: '-' + (hh + 60) + 'px 0px -60% 0px', threshold: 0 });
+    sections.forEach(function(sec){ obs.observe(sec); });
+
+    tabBtns.forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var target = document.getElementById(btn.dataset.target);
+        if (!target) return;
+        var top = target.getBoundingClientRect().top + scrollY - hh - 60;
+        window.scrollTo({ top: top, behavior: 'smooth' });
+      });
+    });
+  }
+};
