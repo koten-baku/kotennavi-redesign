@@ -2143,28 +2143,34 @@ KTN.pages['p2-121'] = function() {
 KTN.pages['p3'] = function () {
   var d = window.P3_DATA || {};
 
-  // 0. ヒーローエリア 画像あり/なし切り替え
-  var head = document.querySelector('.p3-head');
-  if (head) {
-    if (d.hasImage) {
-      head.classList.add('p3-head--has-image');
-    } else {
-      head.classList.add('p3-head--no-image');
-      var imgCol = head.querySelector('.p3-head__img-col');
-      if (imgCol) imgCol.style.display = 'none';
-    }
-  }
+  // 0. ヒーロー初期設定
+  // 画像あり/なし
+  if (typeof applyHeadImageMode === 'function') applyHeadImageMode(d.hasImage !== false);
+  // 展示中バッジ
+  var activeBadge = document.getElementById('p3HeadActiveBadge');
+  if (activeBadge && d.hasActiveExhibition) activeBadge.removeAttribute('hidden');
 
-  // 1. watchボタン トグル（ヘッド＋サイドの2箇所連動）
+  // 1. watchボタン トグル（ヒーロー .p3-head__watch-btn ＋ サイド .p3-action-watch-btn 連動）
   var watchBtns = document.querySelectorAll('[data-action="watch-p3"]');
   watchBtns.forEach(function(btn){
     btn.addEventListener('click', function(){
-      var isOn = btn.classList.contains('on');
+      var isActive = btn.classList.contains('is-active') || btn.classList.contains('on');
       watchBtns.forEach(function(b){
-        b.classList.toggle('on', !isOn);
-        b.querySelector('.tip') && (b.querySelector('.tip').textContent = isOn ? 'ウォッチする' : 'ウォッチ解除');
+        var toOn = !isActive;
+        // ヒーローwatchボタン: is-active + ラベル
+        if (b.classList.contains('p3-head__watch-btn')) {
+          b.classList.toggle('is-active', toOn);
+          var lbl = b.querySelector('.p3-head__watch-btn-lbl');
+          if (lbl) lbl.textContent = toOn ? 'ウォッチ中' : 'ウォッチ';
+        }
+        // サイドwatchボタン: on クラス
+        if (b.classList.contains('p3-action-watch-btn')) {
+          b.classList.toggle('on', toOn);
+          var tip = b.querySelector('.tip');
+          if (tip) tip.textContent = toOn ? 'ウォッチ解除' : 'ウォッチする';
+        }
       });
-      KTN.toast(isOn ? 'ウォッチを解除しました' : '田中 透をウォッチしました');
+      KTN.toast(isActive ? 'ウォッチを解除しました' : '田中 透をウォッチしました');
     });
   });
 

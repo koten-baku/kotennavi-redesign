@@ -7667,49 +7667,64 @@ body.p6-dark.p6-plus{
    P3 クリエイタートップ
 ════════════════════════════════════════ */
 
-/* ── A. ヘッドエリア ── */
-.p3-head{background:#fff;border-bottom:1px solid var(--border);padding:40px 0 0}
-.p3-head__inner{max-width:var(--w-page,1120px);margin:0 auto;padding:0 24px 32px}
+/* ── A. ヒーロー上段（ダーク背景） ── */
+.p3-head{background:#1e2a35;padding:40px 0 32px}
+.p3-head__inner{max-width:var(--w-page,1120px);margin:0 auto;padding:0 24px;display:flex;align-items:flex-end;gap:0}
 
-/* 画像あり：2カラム */
-.p3-head--has-image .p3-head__inner{display:grid;grid-template-columns:180px 1fr;gap:32px;align-items:start}
-.p3-head--has-image .p3-head__text-col{text-align:left}
+/* PC: top-rowをdisplay:contentsでフラット展開 */
+.p3-head__top-row{display:contents}
 
-/* 画像なし：中央揃え */
-.p3-head--no-image .p3-head__inner{text-align:center}
-.p3-head--no-image .p3-head__text-col{display:flex;flex-direction:column;align-items:center}
-.p3-head--no-image .p3-head__bio{max-width:520px;margin-left:auto;margin-right:auto}
+.p3-head__left{flex-shrink:0}
 
-/* アバター */
-.p3-head__avatar{width:180px;height:180px;border-radius:8px;overflow:hidden;flex-shrink:0}
+.p3-head__avatar{width:220px;height:220px;border-radius:4px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-weight:700;font-size:3rem;color:#fff}
 
-/* バッジ */
-.p3-head__badge{margin-bottom:10px}
+.p3-head__center{flex:1;padding-left:28px;padding-bottom:4px}
 
-/* 氏名 */
-.p3-head__name{font-family:var(--fs);font-size:clamp(2rem,4vw,2.8rem);font-weight:800;letter-spacing:.04em;line-height:1.15;margin:0 0 4px}
+/* 画像なし: left非表示・center中央 */
+.p3-head--no-image .p3-head__left{display:none}
+.p3-head--no-image .p3-head__center{padding-left:0;text-align:center;display:flex;flex-direction:column;align-items:center}
 
-/* 英語名 */
-.p3-head__en{font-family:var(--fm);font-size:.78rem;letter-spacing:.18em;color:var(--muted);margin-bottom:8px}
+.p3-head__badge-row{display:flex;align-items:center;gap:8px;margin-bottom:12px}
 
-/* ジャンル・居住地 */
-.p3-head__genre{font-size:.75rem;color:var(--muted);letter-spacing:.06em;margin-bottom:16px}
+/* CREATORバッジ: ダーク背景用上書き */
+.p3-head .cb-creator{color:rgba(255,255,255,.75);border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.1)}
 
-/* 自己紹介文 */
-.p3-head__bio{font-size:.88rem;line-height:1.95;color:#3d4d5c;letter-spacing:.04em;margin:0}
+.p3-head__name{font-family:var(--fs);font-size:clamp(2.2rem,4.5vw,3.2rem);font-weight:800;color:#fff;letter-spacing:.04em;line-height:1.1;margin:0 0 4px}
 
-/* カウンター（両パターン共通・中央揃え） */
-.p3-head__counts{display:flex;align-items:center;justify-content:center;gap:0;margin-top:28px;padding:24px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
-.p3-head__count{display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 24px;border-right:1px solid var(--border);background:none;cursor:default}
-.p3-head__count:last-of-type{border-right:none}
-.p3-head__count-num{font-family:var(--fm);font-size:1.15rem;font-weight:600;display:block;color:var(--ink);line-height:1}
-.p3-head__count-lbl{font-size:.6rem;color:var(--muted);display:block;margin-top:3px;letter-spacing:.06em}
-.p3-head__count--watch{cursor:pointer;border:none;border-right:1px solid var(--border);font-family:inherit;padding:0 24px;transition:background .12s}
-.p3-head__count--watch:hover{background:#f5f7fa}
-.p3-head__count--watch .p3-head__count-num{color:var(--accent)}
+.p3-head__en{font-family:var(--fm);font-size:.8rem;letter-spacing:.2em;color:rgba(255,255,255,.5);margin:0}
 
-/* ウォッチボタン */
-.p3-head__watch-wrap{text-align:center;padding:20px 24px}
+/* 右: カウンター縦積み＋watchボタン */
+.p3-head__right{flex-shrink:0;text-align:right;padding-left:32px;padding-bottom:4px;display:flex;flex-direction:column;align-items:flex-end}
+
+.p3-head__counts--vertical{display:flex;flex-direction:column;gap:14px;align-items:flex-end}
+
+.p3-head__count-v{display:flex;flex-direction:column;align-items:flex-end;background:none;border:none;cursor:default;padding:0;font-family:inherit}
+
+.p3-head__count-v-num{font-family:var(--fm);font-size:2rem;font-weight:700;color:#fff;line-height:1;display:block}
+
+.p3-head__count-v-lbl{font-size:.54rem;letter-spacing:.14em;color:rgba(255,255,255,.45);text-transform:uppercase;margin-top:3px;display:block}
+
+button.p3-head__count-v{cursor:pointer}
+button.p3-head__count-v .p3-head__count-v-num{color:rgba(255,255,255,.85);text-decoration:underline;text-underline-offset:3px}
+button.p3-head__count-v:hover .p3-head__count-v-num{color:#fff}
+
+.p3-head__watch-btn{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);color:#fff;border-radius:40px;padding:8px 20px;font-size:.78rem;font-family:var(--fm);letter-spacing:.08em;cursor:pointer;margin-top:20px;transition:background .2s,border-color .2s}
+.p3-head__watch-btn:hover{background:rgba(255,255,255,.22)}
+.p3-head__watch-btn.is-active{background:var(--accent);border-color:var(--accent)}
+
+/* ── A2. ヒーロー下段（自己紹介・白背景） ── */
+.p3-head-bio{background:#fff;border-bottom:1px solid var(--border);padding:20px 0}
+.p3-head-bio__inner{max-width:var(--w-page,1120px);margin:0 auto;padding:0 24px}
+.p3-head-bio__meta{font-size:.72rem;color:var(--muted);letter-spacing:.06em;margin:0 0 8px}
+.p3-head-bio__text{max-width:640px;font-size:.9rem;line-height:2;letter-spacing:.04em;color:#3d4d5c;margin:0}
+
+/* 画像あり時: テキスト左位置を画像幅に揃える */
+.p3-head--has-image .p3-head-bio__meta,
+.p3-head--has-image .p3-head-bio__text{padding-left:248px}
+
+/* 画像なし時: 中央揃え */
+.p3-head--no-image .p3-head-bio__meta,
+.p3-head--no-image .p3-head-bio__text{margin:0 auto;text-align:center;padding-left:0}
 
 /* ── B. タブナビ ── */
 .p3-tabnav{position:sticky;top:var(--hh,56px);background:#fff;border-bottom:1px solid var(--border);z-index:100}
@@ -7846,6 +7861,25 @@ body.p6-dark.p6-plus{
 
 /* ── SP対応 ── */
 @media(max-width:860px){
+  /* ヒーロー */
+  .p3-head{padding:24px 0 20px}
+  .p3-head__inner{flex-direction:column;align-items:stretch;gap:16px}
+  .p3-head__top-row{display:flex;align-items:center;gap:16px}
+  .p3-head__avatar{width:80px;height:80px;border-radius:50%;font-size:1.8rem;flex-shrink:0}
+  .p3-head__center{padding-left:0;padding-bottom:0;text-align:left;display:flex;flex-direction:column;align-items:flex-start}
+  .p3-head--no-image .p3-head__center{align-items:center;text-align:center}
+  .p3-head__badge-row{margin-bottom:6px}
+  .p3-head__name{font-size:clamp(1.5rem,5vw,2rem);margin:4px 0 2px}
+  .p3-head__right{flex-direction:row;align-items:center;justify-content:space-between;padding-left:0;text-align:left}
+  .p3-head__counts--vertical{flex-direction:row;gap:20px;align-items:baseline}
+  .p3-head__count-v{flex-direction:row;align-items:baseline;gap:5px}
+  .p3-head__count-v-num{font-size:1.1rem}
+  .p3-head__count-v-lbl{margin-top:0}
+  .p3-head__watch-btn{margin-top:0;padding:7px 16px;font-size:.72rem}
+  /* 自己紹介 */
+  .p3-head--has-image .p3-head-bio__meta,
+  .p3-head--has-image .p3-head-bio__text{padding-left:0;text-align:left;margin:0}
+  /* レイアウト */
   .p3-layout{grid-template-columns:1fr}
   .p3-layout__side{display:none}
   .p3-works-grid{grid-template-columns:repeat(3,1fr)}
@@ -7853,15 +7887,7 @@ body.p6-dark.p6-plus{
   .p3-dealer-grid{grid-template-columns:1fr 1fr}
   .p3-photos{grid-template-columns:repeat(4,1fr)}
 }
-@media(max-width:680px){
-  .p3-head--has-image .p3-head__inner{grid-template-columns:1fr}
-  .p3-head__avatar{width:120px;height:120px;margin:0 auto}
-  .p3-head--has-image .p3-head__text-col{text-align:center;align-items:center;display:flex;flex-direction:column}
-  .p3-head__count{padding:0 14px}
-  .p3-head__count-num{font-size:.95rem}
-}
 @media(max-width:540px){
-  .p3-head__counts{flex-wrap:wrap}
   .p3-works-grid{grid-template-columns:repeat(2,1fr)}
   .p3-photos{grid-template-columns:repeat(3,1fr)}
 }
