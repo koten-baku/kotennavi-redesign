@@ -2144,33 +2144,21 @@ KTN.pages['p3'] = function () {
   var d = window.P3_DATA || {};
 
   // 0. ヒーロー初期設定
-  // 画像あり/なし
   if (typeof applyHeadImageMode === 'function') applyHeadImageMode(d.hasImage !== false);
-  // 展示中バッジ
   var activeBadge = document.getElementById('p3HeadActiveBadge');
   if (activeBadge && d.hasActiveExhibition) activeBadge.removeAttribute('hidden');
 
-  // 1. watchボタン トグル（ヒーロー .p3-head__watch-btn ＋ サイド .p3-action-watch-btn 連動）
+  // 1. watchボタン トグル（ヒーロー + サイド 連動・ktn-btn / on クラス）
   var watchBtns = document.querySelectorAll('[data-action="watch-p3"]');
   watchBtns.forEach(function(btn){
     btn.addEventListener('click', function(){
-      var isActive = btn.classList.contains('is-active') || btn.classList.contains('on');
+      var isOn = btn.classList.contains('on');
       watchBtns.forEach(function(b){
-        var toOn = !isActive;
-        // ヒーローwatchボタン: is-active + ラベル
-        if (b.classList.contains('p3-head__watch-btn')) {
-          b.classList.toggle('is-active', toOn);
-          var lbl = b.querySelector('.p3-head__watch-btn-lbl');
-          if (lbl) lbl.textContent = toOn ? 'ウォッチ中' : 'ウォッチ';
-        }
-        // サイドwatchボタン: on クラス
-        if (b.classList.contains('p3-action-watch-btn')) {
-          b.classList.toggle('on', toOn);
-          var tip = b.querySelector('.tip');
-          if (tip) tip.textContent = toOn ? 'ウォッチ解除' : 'ウォッチする';
-        }
+        b.classList.toggle('on', !isOn);
+        var tip = b.querySelector('.tip');
+        if (tip) tip.textContent = isOn ? 'ウォッチする' : 'ウォッチ解除';
       });
-      KTN.toast(isActive ? 'ウォッチを解除しました' : '田中 透をウォッチしました');
+      KTN.toast(isOn ? 'ウォッチを解除しました' : '田中 透をウォッチしました');
     });
   });
 

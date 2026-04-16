@@ -84,49 +84,46 @@
 
   <main class="ktn-main" id="ktnMain">
 
-    <!-- A. ヒーロー上段（ダーク背景） -->
+    <!-- A. ヒーローエリア -->
     <div class="p3-head">
       <div class="p3-head__inner">
-        <div class="p3-head__top-row">
-          <!-- 左: プロフ画像（hasImage=false時はJSで非表示） -->
-          <div class="p3-head__left">
-            <div class="p3-head__avatar" style="background:linear-gradient(135deg,#7ab4cc,#4a8099)">T</div>
-          </div>
-          <!-- 中央: バッジ・氏名・英語名 -->
-          <div class="p3-head__center">
-            <div class="p3-head__badge-row">
-              <span class="cb cb-person cb-creator">CREATOR</span>
-              <span class="sb sb-live" id="p3HeadActiveBadge" hidden><span class="pulse"></span>展示中</span>
-            </div>
-            <h1 class="p3-head__name">田中 透</h1>
-            <p class="p3-head__en">TANAKA TORU</p>
-          </div>
+        <!-- 左: プロフ画像（hasImage=false時はJSで非表示） -->
+        <div class="p3-head__left">
+          <div class="p3-head__avatar" style="background:linear-gradient(135deg,#7ab4cc,#4a8099)">T</div>
         </div>
-        <!-- 右: カウンター縦積み＋watchボタン -->
-        <div class="p3-head__right">
-          <div class="p3-head__counts--vertical">
-            <div class="p3-head__count-v">
-              <span class="p3-head__count-v-num">12</span>
-              <span class="p3-head__count-v-lbl">展覧会</span>
+        <!-- 右: 情報エリア -->
+        <div class="p3-head__body">
+          <div class="p3-head__badge-row">
+            <span class="cb cb-person cb-creator">CREATOR</span>
+            <span class="sb sb-live" id="p3HeadActiveBadge" hidden><span class="pulse"></span>展示中</span>
+          </div>
+          <h1 class="p3-head__name">田中 透</h1>
+          <p class="p3-head__en">TANAKA TORU</p>
+          <div class="p3-head__counts">
+            <div class="p3-head__count">
+              <span class="p3-head__count-num">12</span>
+              <span class="p3-head__count-lbl">展覧会</span>
             </div>
-            <button class="p3-head__count-v" data-action="open-watchers" aria-label="ウォッチャーリストを開く">
-              <span class="p3-head__count-v-num">34</span>
-              <span class="p3-head__count-v-lbl">WATCHERS</span>
+            <div class="p3-head__count-sep"></div>
+            <button class="p3-head__count" data-action="open-watchers" aria-label="ウォッチャーを見る">
+              <span class="p3-head__count-num">34</span>
+              <span class="p3-head__count-lbl">ウォッチャー</span>
             </button>
-            <div class="p3-head__count-v">
-              <span class="p3-head__count-v-num">28</span>
-              <span class="p3-head__count-v-lbl">WORKS</span>
+            <div class="p3-head__count-sep"></div>
+            <div class="p3-head__count">
+              <span class="p3-head__count-num">28</span>
+              <span class="p3-head__count-lbl">作品</span>
             </div>
           </div>
-          <button class="p3-head__watch-btn" data-action="watch-p3">
+          <button class="ktn-btn p3-head__watch-btn" data-action="watch-p3">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="14" height="14"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-            <span class="p3-head__watch-btn-lbl">ウォッチ</span>
+            ウォッチ<span class="tip">ウォッチする</span>
           </button>
         </div>
       </div>
     </div>
 
-    <!-- A2. ヒーロー下段（白背景・自己紹介） -->
+    <!-- A2. 自己紹介 -->
     <div class="p3-head-bio">
       <div class="p3-head-bio__inner">
         <p class="p3-head-bio__meta">絵画・現代美術 · 東京</p>
