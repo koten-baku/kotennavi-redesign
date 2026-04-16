@@ -2210,23 +2210,10 @@ KTN.pages['p3'] = function () {
   }
 
   // 2b. 自己紹介 条件分岐 + 2段階展開
+  // フォント読み込み完了後に scrollHeight を計測（未ロード時の誤判定を防ぐ）
   var bioToggle = document.getElementById('p3HeadBioToggle');
   var bioText   = document.getElementById('p3HeadBioText');
   var bioLink   = document.getElementById('p3HeadBioProfileLink');
-  if (bioText && bioToggle && bioLink) {
-    if (bioText.scrollHeight <= bioText.clientHeight) {
-      // clampが効いていない（短いテキスト）→ toggle不要・リンクを直接表示
-      bioToggle.style.display = 'none';
-      bioLink.classList.add('is-visible');
-    } else {
-      // clamp効いている → toggleクリックで展開
-      bioToggle.addEventListener('click', function(){
-        bioText.classList.add('is-expanded');
-        bioToggle.style.display = 'none';
-        bioLink.classList.add('is-visible');
-      });
-    }
-  }
   if (bioLink) {
     bioLink.addEventListener('click', function(e){
       e.preventDefault();
@@ -2239,6 +2226,21 @@ KTN.pages['p3'] = function () {
       });
     });
   }
+  document.fonts.ready.then(function(){
+    if (!bioText || !bioToggle || !bioLink) return;
+    if (bioText.scrollHeight <= bioText.clientHeight) {
+      // clampが効いていない（短いテキスト）→ toggle不要・リンクを直接表示
+      bioToggle.style.display = 'none';
+      bioLink.classList.add('is-visible');
+    } else {
+      // clamp効いている → toggleクリックで展開
+      bioToggle.addEventListener('click', function(){
+        bioText.classList.add('is-expanded');
+        bioToggle.style.display = 'none';
+        bioLink.classList.add('is-visible');
+      });
+    }
+  });
 
   // 3. 写真ライトボックス
   var galleryModal = document.getElementById('p3GalleryModal');
