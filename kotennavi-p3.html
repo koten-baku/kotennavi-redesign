@@ -103,19 +103,20 @@
             <p class="p3-head__en">TANAKA TORU</p>
             <p class="p3-head__genre">絵画・現代美術 · 東京</p>
           </div>
-          <!-- アクション -->
-          <div class="p3-head__action">
-            <button class="ktn-btn" data-action="watch-p3">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="14" height="14"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-              ウォッチ<span class="tip">ウォッチする</span>
-            </button>
-            <button class="p3-head__watcher-count" data-action="open-watchers" aria-label="ウォッチャーリストを開く">ウォッチャー 34人</button>
-          </div>
         </div>
         <!-- 自己紹介 -->
         <div class="p3-head__bio">
           <p class="p3-head__bio-text" id="p3HeadBioText">言葉と感覚の境界を絵画で探求する画家。オノマトペをテーマにした連作で知られる。音が見えて、絵が聞こえる──そんな体験を届けたい。</p>
-          <button class="p3-head__bio-more" id="p3HeadBioMore" type="button">もっと見る →</button>
+          <button class="p3-head__bio-toggle" id="p3HeadBioToggle" type="button">もっと見る <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="6 9 12 15 18 9"/></svg></button>
+          <a class="p3-head__bio-profile-link" id="p3HeadBioProfileLink" href="#p3-sec-profile">プロフィール詳細 →</a>
+        </div>
+        <!-- アクション（ウォッチ + ウォッチャー数） -->
+        <div class="p3-head__action">
+          <button class="ktn-btn" data-action="watch-p3">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="14" height="14"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            ウォッチ<span class="tip">ウォッチする</span>
+          </button>
+          <button class="p3-head__watcher-count" data-action="open-watchers" aria-label="ウォッチャーリストを開く">ウォッチャー 34人</button>
         </div>
       </div>
     </div>

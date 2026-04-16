@@ -7675,24 +7675,31 @@ body.p6-dark.p6-plus{
 .p3-head__avatar-wrap{flex-shrink:0}
 .p3-head__avatar{width:80px;height:80px;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-weight:700;font-size:1.8rem;color:#fff}
 .p3-head__info{flex:1;min-width:0}
-.p3-head__action{flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end}
+.p3-head__action{display:flex;align-items:center;gap:12px;margin-top:14px;padding-left:100px}
 
-/* 画像なし: avatar非表示・bioのオフセット解除 */
+/* 画像なし: avatar非表示・bioとactionのオフセット解除 */
 .p3-head--no-image .p3-head__avatar-wrap{display:none}
 .p3-head--no-image .p3-head__bio{padding-left:0}
+.p3-head--no-image .p3-head__action{padding-left:0}
 
 .p3-head__badge-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
 .p3-head__name{font-family:var(--fs);font-size:2rem;font-weight:800;color:var(--ink);letter-spacing:.02em;line-height:1.1;margin:0 0 2px}
 .p3-head__en{font-family:var(--fm);font-size:.7rem;letter-spacing:.18em;color:var(--muted);margin:0 0 6px}
 .p3-head__genre{font-size:.7rem;color:var(--muted);margin:0}
 
-.p3-head__watcher-count{background:none;border:none;cursor:pointer;font-family:inherit;font-size:.7rem;color:var(--muted);margin-top:6px;padding:0;white-space:nowrap}
+.p3-head__watcher-count{background:none;border:none;cursor:pointer;font-family:inherit;font-size:.7rem;color:var(--muted);padding:0;white-space:nowrap}
 .p3-head__watcher-count:hover{color:var(--accent);text-decoration:underline}
 
 /* 自己紹介: 画像あり時は画像幅(80px)+gap(20px)分オフセット */
 .p3-head__bio{margin-top:14px;padding-left:100px}
 .p3-head__bio-text{font-size:.85rem;line-height:1.85;color:#3d4d5c;max-width:540px;margin:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.p3-head__bio-more{background:none;border:none;cursor:pointer;font-size:.78rem;color:var(--accent);font-family:inherit;margin-top:4px;padding:0;display:block}
+.p3-head__bio-text.is-expanded{display:block;-webkit-line-clamp:unset;overflow:visible}
+.p3-head__bio-toggle{background:none;border:none;cursor:pointer;font-size:.78rem;color:var(--accent);font-family:inherit;margin-top:4px;padding:0;display:inline-flex;align-items:center;gap:3px}
+.p3-head__bio-toggle svg{transition:transform .2s}
+.p3-head__bio-toggle.is-expanded svg{transform:rotate(180deg)}
+.p3-head__bio-profile-link{display:none;font-size:.78rem;color:var(--accent);margin-top:4px;text-decoration:none}
+.p3-head__bio-profile-link:hover{text-decoration:underline}
+.p3-head__bio-profile-link.is-visible{display:inline}
 
 /* ── B. タブナビ ── */
 .p3-tabnav{position:sticky;top:var(--hh,56px);background:#fff;border-bottom:1px solid var(--border);z-index:100}
@@ -7843,11 +7850,10 @@ body.p6-dark.p6-plus{
   .p3-head__top{flex-wrap:wrap}
   .p3-head__avatar{width:56px;height:56px;font-size:1.2rem}
   .p3-head__name{font-size:1.5rem}
-  /* SP: action を全幅横並び（ウォッチャー数:左・watchボタン:右） */
-  .p3-head__action{width:100%;flex-direction:row-reverse;justify-content:space-between;align-items:center;margin-top:12px}
-  .p3-head__watcher-count{margin-top:0}
   /* SP: 自己紹介のオフセット解除 */
   .p3-head__bio{padding-left:0;width:100%}
+  /* SP: action を全幅・左寄せ */
+  .p3-head__action{padding-left:0;width:100%;justify-content:flex-start}
 }
 @media(max-width:540px){
   .p3-works-grid{grid-template-columns:repeat(2,1fr)}
