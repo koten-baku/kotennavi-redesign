@@ -87,40 +87,35 @@
     <!-- A. ヒーローエリア -->
     <div class="p3-head">
       <div class="p3-head__inner">
-        <!-- 左: プロフ画像（hasImage=false時はJSで非表示） -->
-        <div class="p3-head__left">
-          <div class="p3-head__avatar" style="background:linear-gradient(135deg,#7ab4cc,#4a8099)">T</div>
-        </div>
-        <!-- 右: 情報エリア -->
-        <div class="p3-head__right">
-          <div class="p3-head__badge-row">
-            <span class="cb cb-person cb-creator">CREATOR</span>
-            <span class="sb sb-live" id="p3HeadActiveBadge" hidden><span class="pulse"></span>展示中</span>
+        <!-- 上段: 画像 + 情報 + アクション -->
+        <div class="p3-head__top">
+          <!-- 画像（hasImage=false時はJSで非表示） -->
+          <div class="p3-head__avatar-wrap">
+            <div class="p3-head__avatar" style="background:linear-gradient(135deg,#7ab4cc,#4a8099)">T</div>
           </div>
-          <h1 class="p3-head__name">田中 透</h1>
-          <p class="p3-head__en">TANAKA TORU</p>
-          <p class="p3-head__genre">絵画・現代美術 · 東京</p>
-          <p class="p3-head__bio">言葉と感覚の境界を絵画で探求する画家。オノマトペをテーマにした連作で知られる。音が見えて、絵が聞こえる──そんな体験を届けたい。</p>
-          <div class="p3-head__counts">
-            <div class="p3-head__count">
-              <span class="p3-head__count-num">12</span>
-              <span class="p3-head__count-lbl">展覧会</span>
+          <!-- 情報 -->
+          <div class="p3-head__info">
+            <div class="p3-head__badge-row">
+              <span class="cb cb-person cb-creator">CREATOR</span>
+              <span class="sb sb-live" id="p3HeadActiveBadge" hidden><span class="pulse"></span>展示中</span>
             </div>
-            <div class="p3-head__count-sep"></div>
-            <button class="p3-head__count" data-action="open-watchers" aria-label="ウォッチャーを見る">
-              <span class="p3-head__count-num">34</span>
-              <span class="p3-head__count-lbl">ウォッチャー</span>
+            <h1 class="p3-head__name">田中 透</h1>
+            <p class="p3-head__en">TANAKA TORU</p>
+            <p class="p3-head__genre">絵画・現代美術 · 東京</p>
+          </div>
+          <!-- アクション -->
+          <div class="p3-head__action">
+            <button class="ktn-btn" data-action="watch-p3">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="14" height="14"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              ウォッチ<span class="tip">ウォッチする</span>
             </button>
-            <div class="p3-head__count-sep"></div>
-            <div class="p3-head__count">
-              <span class="p3-head__count-num">28</span>
-              <span class="p3-head__count-lbl">作品</span>
-            </div>
+            <button class="p3-head__watcher-count" data-action="open-watchers" aria-label="ウォッチャーリストを開く">ウォッチャー 34人</button>
           </div>
-          <button class="ktn-btn p3-head__watch-btn" data-action="watch-p3">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="14" height="14"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-            ウォッチ<span class="tip">ウォッチする</span>
-          </button>
+        </div>
+        <!-- 自己紹介 -->
+        <div class="p3-head__bio">
+          <p class="p3-head__bio-text" id="p3HeadBioText">言葉と感覚の境界を絵画で探求する画家。オノマトペをテーマにした連作で知られる。音が見えて、絵が聞こえる──そんな体験を届けたい。</p>
+          <button class="p3-head__bio-more" id="p3HeadBioMore" type="button">もっと見る →</button>
         </div>
       </div>
     </div>
@@ -661,8 +656,8 @@
     if (!head) return;
     head.classList.remove('p3-head--has-image', 'p3-head--no-image');
     head.classList.add(hasImage ? 'p3-head--has-image' : 'p3-head--no-image');
-    var left = head.querySelector('.p3-head__left');
-    if (left) left.style.display = hasImage ? '' : 'none';
+    var wrap = head.querySelector('.p3-head__avatar-wrap');
+    if (wrap) wrap.style.display = hasImage ? '' : 'none';
   }
 </script>
 </body>

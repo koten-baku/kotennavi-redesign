@@ -2188,6 +2188,21 @@ KTN.pages['p3'] = function () {
     document.addEventListener('keydown', function(e){ if(e.key==='Escape'){ closeWatcherModal(); closeGallery(); } });
   }
 
+  // 2b. 自己紹介「もっと見る」→ プロフィールセクションへスムーススクロール
+  var bioMore = document.getElementById('p3HeadBioMore');
+  if (bioMore) {
+    bioMore.addEventListener('click', function(){
+      var target = document.getElementById('p3-sec-profile');
+      if (!target) return;
+      var hh = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--hh') || '56', 10);
+      window.scrollTo({ top: target.getBoundingClientRect().top + scrollY - hh - 60, behavior: 'smooth' });
+      // タブを「プロフィール」に切り替え
+      document.querySelectorAll('.p3-tabnav__item').forEach(function(btn){
+        btn.classList.toggle('is-active', btn.dataset.target === 'p3-sec-profile');
+      });
+    });
+  }
+
   // 3. 写真ライトボックス
   var galleryModal = document.getElementById('p3GalleryModal');
   var galleryModalBg = document.getElementById('p3GalleryModalBg');
