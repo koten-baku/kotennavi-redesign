@@ -656,7 +656,7 @@ function getActions(page, role) {
 
   /* ── P3 クリエイタートップ＋サブ ── */
   if (page === 'p3') {
-    const cmn = hib('watch', 'ウォッチ') + shareBtn() + sep();
+    const cmn = hib('watch', 'ウォッチ', 'ktnP3WatchHib') + shareBtn() + sep();
     if (role === 'guest' || role === 'login')
       return cmn + dd('その他', ddi('warn', '問題を報告する', true));
     if (role === 'creator')

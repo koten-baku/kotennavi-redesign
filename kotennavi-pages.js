@@ -2148,15 +2148,36 @@ KTN.pages['p3'] = function () {
   var activeBadge = document.getElementById('p3HeadActiveBadge');
   if (activeBadge && d.hasActiveExhibition) activeBadge.removeAttribute('hidden');
 
-  // 1. watchボタン トグル（ヒーロー + サイド 連動・ktn-btn / on クラス）
-  var watchBtns = document.querySelectorAll('[data-action="watch-p3"]');
+  // 0b. tagbar（ジャンル・地域タグ）
+  (function(){
+    var inner = document.getElementById('ktnTagbarInner');
+    if (!inner) return;
+    [{label:'絵画'},{label:'現代美術'},{sep:true},{label:'東京'},{sep:true},{label:'個展なびを知る'}
+    ].forEach(function(t){
+      var el;
+      if (t.sep){ el=document.createElement('span'); el.className='p2-tsep'; el.textContent='|'; }
+      else{
+        el=document.createElement('button'); el.className='p2-tpill'; el.textContent=t.label;
+        el.addEventListener('click',function(){
+          inner.querySelectorAll('.p2-tpill').forEach(function(b){b.classList.remove('is-active');});
+          this.classList.add('is-active');
+        });
+      }
+      inner.appendChild(el);
+    });
+  })();
+
+  // 1. watchボタン トグル（ヒーロー + サイド + ヘッダーHIB 連動）
+  var watchBtns = document.querySelectorAll('[data-action="watch"], #ktnP3WatchHib');
   watchBtns.forEach(function(btn){
     btn.addEventListener('click', function(){
       var isOn = btn.classList.contains('on');
       watchBtns.forEach(function(b){
         b.classList.toggle('on', !isOn);
+        var lbl = b.querySelector('.ktn-btn__lbl');
+        if (lbl) lbl.textContent = !isOn ? (b.dataset.on||'watching') : (b.dataset.off||'watch');
         var tip = b.querySelector('.tip');
-        if (tip) tip.textContent = isOn ? 'ウォッチする' : 'ウォッチ解除';
+        if (tip) tip.textContent = !isOn ? 'ウォッチ中 — 解除する' : 'ウォッチする';
       });
       KTN.toast(isOn ? 'ウォッチを解除しました' : '田中 透をウォッチしました');
     });
@@ -2188,17 +2209,23 @@ KTN.pages['p3'] = function () {
     document.addEventListener('keydown', function(e){ if(e.key==='Escape'){ closeWatcherModal(); closeGallery(); } });
   }
 
-  // 2b. 自己紹介 2段階展開（もっと見る → プロフィール詳細リンク）
+  // 2b. 自己紹介 条件分岐 + 2段階展開
   var bioToggle = document.getElementById('p3HeadBioToggle');
   var bioText   = document.getElementById('p3HeadBioText');
   var bioLink   = document.getElementById('p3HeadBioProfileLink');
-  if (bioToggle && bioText) {
-    bioToggle.addEventListener('click', function(){
-      bioText.classList.add('is-expanded');
-      bioToggle.classList.add('is-expanded');
+  if (bioText && bioToggle && bioLink) {
+    if (bioText.scrollHeight <= bioText.clientHeight) {
+      // clampが効いていない（短いテキスト）→ toggle不要・リンクを直接表示
       bioToggle.style.display = 'none';
-      if (bioLink) bioLink.classList.add('is-visible');
-    });
+      bioLink.classList.add('is-visible');
+    } else {
+      // clamp効いている → toggleクリックで展開
+      bioToggle.addEventListener('click', function(){
+        bioText.classList.add('is-expanded');
+        bioToggle.style.display = 'none';
+        bioLink.classList.add('is-visible');
+      });
+    }
   }
   if (bioLink) {
     bioLink.addEventListener('click', function(e){

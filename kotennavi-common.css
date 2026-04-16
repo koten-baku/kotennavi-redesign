@@ -206,6 +206,8 @@ button{font-family:inherit;cursor:pointer}
 .ktn-hib__lbl{font-size:.46rem;color:var(--muted);white-space:nowrap}
 .ktn-hib.is-active svg{stroke:#e0341e;fill:#e0341e}
 .ktn-hib.is-active .ktn-hib__lbl{color:#e0341e}
+.ktn-hib.on svg{stroke:#2d82d4}
+.ktn-hib.on .ktn-hib__lbl{color:#2d82d4}
 
 /* セパレーター */
 .ktn-hdr-sep{width:1px;height:24px;background:var(--border);margin:0 2px;flex-shrink:0}
@@ -7676,6 +7678,13 @@ body.p6-dark.p6-plus{
 .p3-head__avatar{width:80px;height:80px;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-weight:700;font-size:1.8rem;color:#fff}
 .p3-head__info{flex:1;min-width:0}
 .p3-head__action{display:flex;align-items:center;gap:12px;margin-top:14px;padding-left:100px}
+
+/* ライトパネル用ウォッチボタン */
+.p3-head .ktn-btn{color:rgba(0,0,0,.48);border-color:rgba(0,0,0,.2);background:#fff}
+.p3-head .ktn-btn:hover{color:rgba(0,0,0,.72);border-color:rgba(0,0,0,.34);background:#fafafa}
+.p3-head .ktn-btn.on{color:#2d82d4;border-color:#3a90e0;background:rgba(58,144,224,.08)}
+.p3-head .ktn-btn .wi-dark{fill:#fff}
+.p3-head .ktn-btn.on svg circle:first-child{fill:#4da3f5;opacity:1}
 
 /* 画像なし: avatar非表示・bioとactionのオフセット解除 */
 .p3-head--no-image .p3-head__avatar-wrap{display:none}
