@@ -92,13 +92,15 @@
           <div class="p3-head__avatar" style="background:linear-gradient(135deg,#7ab4cc,#4a8099)">T</div>
         </div>
         <!-- 右: 情報エリア -->
-        <div class="p3-head__body">
+        <div class="p3-head__right">
           <div class="p3-head__badge-row">
             <span class="cb cb-person cb-creator">CREATOR</span>
             <span class="sb sb-live" id="p3HeadActiveBadge" hidden><span class="pulse"></span>展示中</span>
           </div>
           <h1 class="p3-head__name">田中 透</h1>
           <p class="p3-head__en">TANAKA TORU</p>
+          <p class="p3-head__genre">絵画・現代美術 · 東京</p>
+          <p class="p3-head__bio">言葉と感覚の境界を絵画で探求する画家。オノマトペをテーマにした連作で知られる。音が見えて、絵が聞こえる──そんな体験を届けたい。</p>
           <div class="p3-head__counts">
             <div class="p3-head__count">
               <span class="p3-head__count-num">12</span>
@@ -120,14 +122,6 @@
             ウォッチ<span class="tip">ウォッチする</span>
           </button>
         </div>
-      </div>
-    </div>
-
-    <!-- A2. 自己紹介 -->
-    <div class="p3-head-bio">
-      <div class="p3-head-bio__inner">
-        <p class="p3-head-bio__meta">絵画・現代美術 · 東京</p>
-        <p class="p3-head-bio__text">言葉と感覚の境界を絵画で探求する画家。オノマトペをテーマにした連作で知られる。音が見えて、絵が聞こえる──そんな体験を届けたい。</p>
       </div>
     </div>
 
@@ -664,14 +658,9 @@
 
   function applyHeadImageMode(hasImage) {
     var head = document.querySelector('.p3-head');
-    var bio  = document.querySelector('.p3-head-bio');
     if (!head) return;
     head.classList.remove('p3-head--has-image', 'p3-head--no-image');
     head.classList.add(hasImage ? 'p3-head--has-image' : 'p3-head--no-image');
-    if (bio) {
-      bio.classList.remove('p3-head--has-image', 'p3-head--no-image');
-      bio.classList.add(hasImage ? 'p3-head--has-image' : 'p3-head--no-image');
-    }
     var left = head.querySelector('.p3-head__left');
     if (left) left.style.display = hasImage ? '' : 'none';
   }

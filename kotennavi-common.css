@@ -7669,43 +7669,32 @@ body.p6-dark.p6-plus{
 
 /* ── A. ヒーローエリア ── */
 .p3-head{background:#fff;border-bottom:1px solid var(--border)}
-.p3-head__inner{max-width:var(--w-page,1120px);margin:0 auto;padding:32px 24px;display:flex;align-items:flex-start;gap:24px}
+.p3-head__inner{max-width:var(--w-page,1120px);margin:0 auto;padding:28px 24px;display:flex;gap:24px;align-items:flex-start}
 .p3-head__left{flex-shrink:0}
-.p3-head__avatar{width:180px;height:180px;border-radius:4px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-weight:700;font-size:2.5rem;color:#fff}
-.p3-head__body{flex:1;min-width:0}
+.p3-head__avatar{width:120px;height:120px;border-radius:4px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-weight:700;font-size:2rem;color:#fff}
+.p3-head__right{flex:1;min-width:0}
 
-/* 画像なし: left非表示・body中央 */
+/* 画像なし */
 .p3-head--no-image .p3-head__left{display:none}
-.p3-head--no-image .p3-head__body{display:flex;flex-direction:column;align-items:center;text-align:center}
+.p3-head--no-image .p3-head__right{display:flex;flex-direction:column;align-items:center;text-align:center}
+.p3-head--no-image .p3-head__bio{margin-left:auto;margin-right:auto}
 .p3-head--no-image .p3-head__counts{justify-content:center}
 
-.p3-head__badge-row{display:flex;align-items:center;gap:8px;margin-bottom:12px}
-.p3-head__name{font-family:var(--fs);font-size:2.4rem;font-weight:800;color:var(--ink);letter-spacing:.02em;line-height:1.1;margin:0 0 4px}
-.p3-head__en{font-family:var(--fm);font-size:.75rem;letter-spacing:.2em;color:var(--muted);margin:0 0 20px}
+.p3-head__badge-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.p3-head__name{font-family:var(--fs);font-size:2rem;font-weight:800;color:var(--ink);letter-spacing:.02em;line-height:1.1;margin:0 0 2px}
+.p3-head__en{font-family:var(--fm);font-size:.72rem;letter-spacing:.18em;color:var(--muted);margin:0 0 12px}
+.p3-head__genre{font-size:.72rem;color:var(--muted);margin:0 0 8px}
+.p3-head__bio{font-size:.85rem;line-height:1.85;color:#3d4d5c;max-width:520px;margin:0 0 16px}
 
 /* カウンター横並び */
-.p3-head__counts{display:flex;align-items:center;margin-bottom:16px}
+.p3-head__counts{display:flex;align-items:center;margin-bottom:14px}
 .p3-head__count{display:flex;flex-direction:column;align-items:flex-start;background:none;border:none;cursor:default;font-family:inherit;padding:0}
-.p3-head__count-sep{width:1px;height:32px;background:var(--border);margin:0 16px;flex-shrink:0}
+.p3-head__count-sep{width:1px;height:28px;background:var(--border);margin:0 14px;flex-shrink:0}
 .p3-head__count-num{font-family:var(--fm);font-size:1rem;font-weight:600;color:var(--ink);line-height:1;display:block}
 .p3-head__count-lbl{font-size:.6rem;color:var(--muted);display:block;margin-top:3px}
 button.p3-head__count{cursor:pointer}
 button.p3-head__count .p3-head__count-num{color:var(--accent)}
 button.p3-head__count:hover .p3-head__count-num{text-decoration:underline}
-
-/* ── A2. 自己紹介 ── */
-.p3-head-bio{background:#fff;border-bottom:1px solid var(--border);padding:16px 24px}
-.p3-head-bio__inner{max-width:var(--w-page,1120px);margin:0 auto}
-.p3-head-bio__meta{font-size:.72rem;color:var(--muted);letter-spacing:.06em;margin:0 0 6px}
-.p3-head-bio__text{max-width:560px;font-size:.88rem;line-height:1.9;color:#3d4d5c;margin:0}
-
-/* 画像あり: 左位置を画像幅（180px）+ gap（24px）に揃える */
-.p3-head--has-image .p3-head-bio__meta,
-.p3-head--has-image .p3-head-bio__text{padding-left:204px}
-
-/* 画像なし: 中央揃え */
-.p3-head--no-image .p3-head-bio__meta,
-.p3-head--no-image .p3-head-bio__text{margin:0 auto;text-align:center;padding-left:0}
 
 /* ── B. タブナビ ── */
 .p3-tabnav{position:sticky;top:var(--hh,56px);background:#fff;border-bottom:1px solid var(--border);z-index:100}
@@ -7843,13 +7832,13 @@ button.p3-head__count:hover .p3-head__count-num{text-decoration:underline}
 /* ── SP対応（860px以下） ── */
 @media(max-width:860px){
   /* ヒーロー */
-  .p3-head__inner{padding:20px 16px;gap:12px}
-  .p3-head__avatar{width:60px;height:60px;border-radius:50%;font-size:1.4rem}
-  .p3-head__name{font-size:1.5rem}
-  .p3-head__en{margin-bottom:14px}
-  /* 自己紹介: padding-leftを解除・左揃え */
-  .p3-head--has-image .p3-head-bio__meta,
-  .p3-head--has-image .p3-head-bio__text{padding-left:0}
+  .p3-head__inner{padding:20px 16px;gap:12px;flex-wrap:wrap}
+  .p3-head__avatar{width:56px;height:56px;border-radius:50%;font-size:1.2rem}
+  .p3-head__right{flex:1}
+  .p3-head__name{font-size:1.4rem}
+  .p3-head__en{margin-bottom:8px}
+  .p3-head__genre{margin-bottom:6px}
+  .p3-head__bio{font-size:.82rem;margin-bottom:12px}
   /* レイアウト */
   .p3-layout{grid-template-columns:1fr}
   .p3-layout__side{display:none}
