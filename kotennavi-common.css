@@ -1040,10 +1040,10 @@ line-clamp:2;}
   background:none;
 }
 
-/* creator — 深みのある藍 */
-.cb-creator{color:#7a7d6e;border-color:#a8aa9a;background:rgba(168,170,154,.1)}
-/* gallery — エレガントなワインレッド */
-.cb-gallery{color:#9a7c54;border-color:#c4a882;background:rgba(196,168,130,.1)}
+/* creator — モスグリーン */
+.cb-creator{color:#6b7c5e;border-color:#96aa88;background:rgba(107,124,94,.1)}
+/* gallery — モーブ */
+.cb-gallery{color:#7b6d8d;border-color:#aa98be;background:rgba(123,109,141,.1)}
 /* user — ニュートラルグリーン */
 .cb-user{color:#b8608c;border-color:#e8a0c8;background:rgba(232,160,200,.1)}
 
@@ -2946,8 +2946,8 @@ line-clamp:2;}
 
 /* ── 人・組織バッジ .cb-person（badges_content準拠） ── */
 .cb-person{padding:3px 7px;border:1px solid currentColor;background:none}
-.cb-creator{color:#7a7d6e;border-color:#a8aa9a;background:rgba(168,170,154,.1)}
-.cb-gallery{color:#9a7c54;border-color:#c4a882;background:rgba(196,168,130,.1)}
+.cb-creator{color:#6b7c5e;border-color:#96aa88;background:rgba(107,124,94,.1)}
+.cb-gallery{color:#7b6d8d;border-color:#aa98be;background:rgba(123,109,141,.1)}
 .cb-user   {color:#b8608c;border-color:#e8a0c8;background:rgba(232,160,200,.1)}
 
 /* ── 著者スパン内バッジ配置 ── */
