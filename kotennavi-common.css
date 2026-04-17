@@ -7820,7 +7820,11 @@ body.p6-dark.p6-plus{
 /* R-1. アクションウィジェット */
 .p3-action-watch-count{display:block;width:100%;text-align:center;font-size:.8rem;color:var(--accent);background:none;border:none;cursor:pointer;font-family:inherit;padding:4px 0 10px}
 .p3-action-watch-count:hover{text-decoration:underline}
-.p3-action-watch-btn{width:100%;justify-content:center;padding:10px 16px;margin-bottom:10px}
+.p3-action-watch-btn{width:100%;justify-content:center;padding:10px 16px;margin-bottom:10px;color:rgba(0,0,0,.48);border-color:rgba(0,0,0,.2);background:#fff}
+.p3-action-watch-btn:hover{color:rgba(0,0,0,.72);border-color:rgba(0,0,0,.34);background:#fafafa}
+.p3-action-watch-btn.on{color:#2d82d4;border-color:#3a90e0;background:rgba(58,144,224,.08)}
+.p3-action-watch-btn .wi-dark{fill:#fff}
+.p3-action-watch-btn.on svg circle:first-child{fill:#4da3f5;opacity:1}
 
 /* R-2. クリエイター情報 */
 .p3-side-dl{display:grid;grid-template-columns:auto 1fr;gap:2px 12px;font-size:.78rem}

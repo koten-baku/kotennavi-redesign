@@ -337,7 +337,7 @@ const TAGBAR_DEFS = {
   'p3': [
     { label: 'プロフィール', href: '#', active: true },
     { label: '開催中の展覧会', href: '#current' },
-    { label: '展覧会アーカイブ', href: '#archive' },
+    { label: '展覧会', href: '#archive' },
     { label: '作品', href: '#works' },
     { label: '記事', href: '#articles' },
   ],
