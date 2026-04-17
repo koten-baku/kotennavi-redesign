@@ -90,8 +90,8 @@
 }
 /* 人・組織型 */
 .cb-person { padding: 3px 7px; border: 1px solid currentColor; background: none; }
-.cb-creator { color: #7a7d6e; border-color: #a8aa9a; background: rgba(168,170,154,.1); }
-.cb-gallery { color: #9a7c54; border-color: #c4a882; background: rgba(196,168,130,.1); }
+.cb-creator { color: #6b7c5e; border-color: #96aa88; background: rgba(107,124,94,.1); }
+.cb-gallery { color: #7b6d8d; border-color: #aa98be; background: rgba(123,109,141,.1); }
 .cb-user    { color: #b8608c; border-color: #e8a0c8; background: rgba(232,160,200,.1); }
 /* コンテンツ型 */
 .cb-content { padding: 3px 8px 3px 7px; border-radius: 0 3px 3px 0; border-left: 2.5px solid currentColor; }
