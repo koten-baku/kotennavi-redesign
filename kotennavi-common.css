@@ -7711,7 +7711,7 @@ body.p6-dark.p6-plus{
 .p3-head__bio-profile-link.is-visible{display:inline}
 
 /* ── B. タブナビ ── */
-.p3-tabnav{position:sticky;top:var(--hh,56px);background:#fff;border-bottom:1px solid var(--border);z-index:100}
+.p3-tabnav{position:sticky;top:calc(var(--dh,0px) + var(--hh,50px));background:#fff;border-bottom:1px solid var(--border);z-index:90}
 .p3-tabnav__inner{display:flex;overflow-x:auto;max-width:var(--w-entity);margin:0 auto;padding:0 16px;scrollbar-width:none;align-items:center}
 .p3-tabnav__inner::-webkit-scrollbar{display:none}
 .p3-tabnav__name{font-family:var(--fs);font-size:.85rem;font-weight:600;color:var(--ink);letter-spacing:.04em;padding-right:16px;border-right:1px solid var(--border);margin-right:8px;white-space:nowrap;flex-shrink:0;align-self:center}
@@ -7732,6 +7732,7 @@ body.p6-dark.p6-plus{
 .p3-page .ktn-section__more{color:var(--page-accent)}
 .p3-page .p3-head__bio-profile-link{color:var(--page-accent)}
 .p3-page .p3-head__bio-toggle{color:var(--page-accent)}
+.p3-page .p3-tabnav__name{color:var(--page-accent)}
 
 /* ── 2カラムレイアウト ── */
 .p3-layout-wrap{max-width:var(--w-entity)}
