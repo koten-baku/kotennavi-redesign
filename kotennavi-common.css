@@ -7711,7 +7711,7 @@ body.p6-dark.p6-plus{
 .p3-head__bio-profile-link.is-visible{display:inline}
 
 /* ── B. タブナビ ── */
-.p3-tabnav{position:sticky;top:calc(var(--dh,0px) + var(--hh,50px));background:#fff;border-top:1px solid var(--border);border-bottom:1px solid var(--border);z-index:90}
+.p3-tabnav{position:sticky;top:calc(var(--dh,0px) + var(--hh,50px));background:#fff;border-top:1px solid var(--border);border-bottom:2px solid var(--border);z-index:90}
 .p3-tabnav__inner{display:flex;overflow-x:auto;max-width:var(--w-entity);margin:0 auto;padding:0;scrollbar-width:none;align-items:center}
 .p3-tabnav__inner::-webkit-scrollbar{display:none}
 .p3-tabnav__name{font-family:var(--fs);font-size:.85rem;font-weight:600;color:var(--ink);letter-spacing:.04em;padding:0 16px;border-right:1px solid var(--border);white-space:nowrap;flex-shrink:0;align-self:stretch;display:flex;align-items:center}
