@@ -2357,4 +2357,13 @@ KTN.pages['p3'] = function () {
       });
     });
   }
+
+  // 9. ヒーロースクロールアウト → ヘッダー is-scrolled
+  var p3Head = document.querySelector('.p3-head');
+  var ktnHeader = document.getElementById('ktnHeader');
+  if (p3Head && ktnHeader && 'IntersectionObserver' in window) {
+    new IntersectionObserver(function(entries){
+      ktnHeader.classList.toggle('is-scrolled', !entries[0].isIntersecting);
+    }, { threshold: 0 }).observe(p3Head);
+  }
 };
