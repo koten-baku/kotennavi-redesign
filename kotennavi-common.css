@@ -7718,6 +7718,9 @@ body.p6-dark.p6-plus{
 .p3-tabnav__item{background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;font-family:inherit;font-size:.8rem;color:var(--muted);padding:12px 16px;white-space:nowrap;transition:color .15s,border-color .15s}
 .p3-tabnav__item:hover{color:var(--ink)}
 .p3-tabnav__item.is-active{color:var(--accent);border-bottom-color:var(--accent)}
+.p3-tabnav__new{display:none;margin-left:5px;font-size:.44rem;vertical-align:middle}
+.p3-tabnav__new.is-visible{display:inline-flex}
+.nb .pulse{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.9);flex-shrink:0;animation:pulse-live 1.8s ease-in-out infinite}
 
 /* ── ヒーロースクロールアウト時 ── */
 .ktn-bc__current{transition:font-weight .2s,color .2s}

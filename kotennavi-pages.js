@@ -2173,6 +2173,15 @@ KTN.pages['p3'] = function () {
     });
   })();
 
+  // 0c. タブナビ NEW バッジ表示制御
+  if (d.newBadges) {
+    Object.keys(d.newBadges).forEach(function(key){
+      if (!d.newBadges[key]) return;
+      var badge = document.querySelector('.p3-tabnav__new[data-new="' + key + '"]');
+      if (badge) badge.classList.add('is-visible');
+    });
+  }
+
   // 1. watchボタン トグル（ヒーロー + サイド + ヘッダーHIB 連動）
   var watchBtns = document.querySelectorAll('[data-action="watch"], #ktnP3WatchHib');
   watchBtns.forEach(function(btn){

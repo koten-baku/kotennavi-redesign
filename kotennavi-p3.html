@@ -128,10 +128,9 @@
     <nav class="p3-tabnav" id="p3Tabnav" aria-label="クリエイターページ内ナビ">
       <div class="p3-tabnav__inner">
         <span class="p3-tabnav__name">田中 透</span>
-        <button class="p3-tabnav__item" data-target="p3-sec-exhibitions">開催中の展覧会</button>
-        <button class="p3-tabnav__item" data-target="p3-sec-archive">展覧会</button>
-        <button class="p3-tabnav__item" data-target="p3-sec-works">作品</button>
-        <button class="p3-tabnav__item" data-target="p3-sec-articles">記事</button>
+        <button class="p3-tabnav__item" data-target="p3-sec-exhibitions" data-tab="exhibitions">展覧会<span class="nb p3-tabnav__new" data-new="exhibitions"><span class="pulse"></span>new</span></button>
+        <button class="p3-tabnav__item" data-target="p3-sec-works" data-tab="works">作品<span class="nb p3-tabnav__new" data-new="works"><span class="pulse"></span>new</span></button>
+        <button class="p3-tabnav__item" data-target="p3-sec-articles" data-tab="articles">記事<span class="nb p3-tabnav__new" data-new="articles"><span class="pulse"></span>new</span></button>
         <button class="p3-tabnav__item" data-target="p3-sec-profile">プロフィール</button>
       </div>
     </nav>
@@ -643,6 +642,7 @@
       { bg:'linear-gradient(155deg,#d0d8f0,#8090c8)', label:'作品ざわざわ' },
       { bg:'linear-gradient(155deg,#e8d0f0,#a880c8)', label:'グループ展' },
     ],
+    newBadges: { exhibitions: true, works: false, articles: true },
     works: [
       { title:'《ふわふわ》',       year:'2026', material:'油彩',    bg:'linear-gradient(135deg,#c8e8d8,#8ab8a0)', liaison:true  },
       { title:'《ドキドキ #3》',    year:'2025', material:'混合技法', bg:'linear-gradient(135deg,#e8c8c8,#c89898)', liaison:true  },
