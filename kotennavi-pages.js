@@ -310,6 +310,38 @@ KTN.pages['p2'] = function () {
     if (el) el.classList.toggle('is-open');
   };
 
+  /* ── ヒーロースクロールアウト → ヘッダー is-scrolled ── */
+  (function () {
+    var hero = document.getElementById('p2Hero');
+    var header = document.getElementById('ktnHeader');
+    if (hero && header && 'IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries) {
+        header.classList.toggle('is-scrolled', !entries[0].isIntersecting);
+      }, { threshold: 0 }).observe(hero);
+    }
+  })();
+
+  /* ── サブナビ IntersectionObserver（セクション → アクティブ連動） ── */
+  (function () {
+    var subnav = document.getElementById('p2Subnav');
+    if (!subnav || !('IntersectionObserver' in window)) return;
+    var items = subnav.querySelectorAll('[data-target]');
+    if (!items.length) return;
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        var id = entry.target.id;
+        items.forEach(function (a) {
+          a.classList.toggle('is-active', a.dataset.target === id);
+        });
+      });
+    }, { rootMargin: '-30% 0px -70% 0px' });
+    items.forEach(function (a) {
+      var sec = document.getElementById(a.dataset.target);
+      if (sec) obs.observe(sec);
+    });
+  })();
+
 };
 
 /* ────────────────────────────────────────────────────
