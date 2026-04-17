@@ -1041,9 +1041,9 @@ line-clamp:2;}
 }
 
 /* creator — モスグリーン */
-.cb-creator{color:#6b7c5e;border-color:#96aa88;background:rgba(107,124,94,.1)}
+.cb-creator{color:#2a5f7a;border-color:#5a8fa8;background:rgba(42,95,122,.1)}
 /* gallery — モーブ */
-.cb-gallery{color:#7b6d8d;border-color:#aa98be;background:rgba(123,109,141,.1)}
+.cb-gallery{color:#8b5e3c;border-color:#b8895e;background:rgba(139,94,60,.1)}
 /* user — ニュートラルグリーン */
 .cb-user{color:#b8608c;border-color:#e8a0c8;background:rgba(232,160,200,.1)}
 
@@ -2946,8 +2946,8 @@ line-clamp:2;}
 
 /* ── 人・組織バッジ .cb-person（badges_content準拠） ── */
 .cb-person{padding:3px 7px;border:1px solid currentColor;background:none}
-.cb-creator{color:#6b7c5e;border-color:#96aa88;background:rgba(107,124,94,.1)}
-.cb-gallery{color:#7b6d8d;border-color:#aa98be;background:rgba(123,109,141,.1)}
+.cb-creator{color:#2a5f7a;border-color:#5a8fa8;background:rgba(42,95,122,.1)}
+.cb-gallery{color:#8b5e3c;border-color:#b8895e;background:rgba(139,94,60,.1)}
 .cb-user   {color:#b8608c;border-color:#e8a0c8;background:rgba(232,160,200,.1)}
 
 /* ── 著者スパン内バッジ配置 ── */

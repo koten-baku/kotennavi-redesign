@@ -2145,9 +2145,9 @@ KTN.pages['p3'] = function () {
 
   // 0. ページスコープ（クラス + アクセントカラー変数）
   document.body.classList.add('p3-page');
-  document.body.style.setProperty('--page-accent',        '#6b7c5e');
-  document.body.style.setProperty('--page-accent-bg',     'rgba(107,124,94,.1)');
-  document.body.style.setProperty('--page-accent-border', '#96aa88');
+  document.body.style.setProperty('--page-accent',        '#2a5f7a');
+  document.body.style.setProperty('--page-accent-bg',     'rgba(42,95,122,.1)');
+  document.body.style.setProperty('--page-accent-border', '#5a8fa8');
 
   // 0b. ヒーロー初期設定
   if (typeof applyHeadImageMode === 'function') applyHeadImageMode(d.hasImage !== false);
