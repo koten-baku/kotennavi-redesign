@@ -2143,7 +2143,13 @@ KTN.pages['p2-121'] = function() {
 KTN.pages['p3'] = function () {
   var d = window.P3_DATA || {};
 
-  // 0. ヒーロー初期設定
+  // 0. ページスコープ（クラス + アクセントカラー変数）
+  document.body.classList.add('p3-page');
+  document.body.style.setProperty('--page-accent',        '#7a7d6e');
+  document.body.style.setProperty('--page-accent-bg',     'rgba(168,170,154,.1)');
+  document.body.style.setProperty('--page-accent-border', '#a8aa9a');
+
+  // 0b. ヒーロー初期設定
   if (typeof applyHeadImageMode === 'function') applyHeadImageMode(d.hasImage !== false);
   var activeBadge = document.getElementById('p3HeadActiveBadge');
   if (activeBadge && d.hasActiveExhibition) activeBadge.removeAttribute('hidden');
