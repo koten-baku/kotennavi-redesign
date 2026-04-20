@@ -171,6 +171,58 @@
   </div>
 </div>
 
+<!-- ════ CTA WATCH BUTTON ════ -->
+<div class="section-ttl">CTA watch button — p3サイドバー</div>
+<div class="panels-wrap">
+
+  <!-- 通常（2カラム・サイドバー内） -->
+  <div class="panel panel-light" style="min-width:280px;max-width:320px;gap:16px">
+    <div class="panel-eyebrow">通常 — 2カラム（max-width 240px）</div>
+    <div style="width:100%;display:flex;flex-direction:column;align-items:center;gap:8px">
+      <button class="ktn-btn p3-action-watch-btn" data-off="watch" data-on="watching" data-action="watch" onclick="handleAction(this,'watch')">
+        <svg viewBox="0 0 16 16" fill="none" width="15" height="15">
+          <circle cx="8" cy="8" r="7" fill="#7a8a99" opacity=".45"/>
+          <circle class="wi-dark" cx="8" cy="8" r="2.6"/>
+        </svg>
+        <span class="ktn-btn__lbl">watch</span>
+        <span class="tip">ウォッチする</span>
+      </button>
+      <button class="ktn-btn p3-action-watch-btn on" data-off="watch" data-on="watching" data-action="watch" onclick="handleAction(this,'watch')">
+        <svg viewBox="0 0 16 16" fill="none" width="15" height="15">
+          <circle cx="8" cy="8" r="7" fill="#4da3f5"/>
+          <circle class="wi-dark" cx="8" cy="8" r="2.6"/>
+        </svg>
+        <span class="ktn-btn__lbl">watching</span>
+        <span class="tip">ウォッチ中 — 解除する</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- 1カラム（レスポンシブ・max-width 300px） -->
+  <div class="panel panel-light" style="min-width:320px;max-width:400px;gap:16px">
+    <div class="panel-eyebrow">1カラム — レスポンシブ（max-width 300px / h:44px）</div>
+    <div style="width:100%;display:flex;flex-direction:column;align-items:center;gap:8px">
+      <button class="ktn-btn p3-action-watch-btn" style="max-width:300px;padding:13px 20px;font-size:.72rem" data-off="watch" data-on="watching" data-action="watch" onclick="handleAction(this,'watch')">
+        <svg viewBox="0 0 16 16" fill="none" width="17" height="17">
+          <circle cx="8" cy="8" r="7" fill="#7a8a99" opacity=".45"/>
+          <circle class="wi-dark" cx="8" cy="8" r="2.6"/>
+        </svg>
+        <span class="ktn-btn__lbl">watch</span>
+        <span class="tip">ウォッチする</span>
+      </button>
+      <button class="ktn-btn p3-action-watch-btn on" style="max-width:300px;padding:13px 20px;font-size:.72rem" data-off="watch" data-on="watching" data-action="watch" onclick="handleAction(this,'watch')">
+        <svg viewBox="0 0 16 16" fill="none" width="17" height="17">
+          <circle cx="8" cy="8" r="7" fill="#4da3f5"/>
+          <circle class="wi-dark" cx="8" cy="8" r="2.6"/>
+        </svg>
+        <span class="ktn-btn__lbl">watching</span>
+        <span class="tip">ウォッチ中 — 解除する</span>
+      </button>
+    </div>
+  </div>
+
+</div>
+
 <!-- ════ ICON-ONLY ROUND BUTTONS ════ -->
 <div class="section-ttl">Icon-only — 丸ボタン</div>
 <div class="panels-wrap">

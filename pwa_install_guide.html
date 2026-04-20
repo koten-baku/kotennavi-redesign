@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>個展なび｜アプリのインストール方法</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ios-blue: #007AFF;
+    --android-green: #34A853;
+    --bg: #0A0A0F;
+    --surface: #13131A;
+    --surface2: #1C1C28;
+    --border: rgba(255,255,255,0.08);
+    --text: #F0F0F5;
+    --muted: #8888AA;
+    --accent: #6C63FF;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans JP', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Background grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(108,99,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(108,99,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+
+  .container {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 56px;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(108,99,255,0.15);
+    border: 1px solid rgba(108,99,255,0.3);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-size: 12px;
+    color: #A89FFF;
+    letter-spacing: 0.08em;
+    font-family: 'DM Mono', monospace;
+    margin-bottom: 20px;
+  }
+
+  .header h1 {
+    font-size: clamp(28px, 5vw, 40px);
+    font-weight: 900;
+    line-height: 1.25;
+    margin-bottom: 12px;
+    letter-spacing: -0.02em;
+  }
+
+  .header p {
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  /* Tab switcher */
+  .tab-switcher {
+    display: flex;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 6px;
+    margin-bottom: 32px;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+
+  .tab-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: transparent;
+    color: var(--muted);
+  }
+
+  .tab-btn.active-ios {
+    background: linear-gradient(135deg, #007AFF, #5AC8FA);
+    color: white;
+    box-shadow: 0 4px 20px rgba(0,122,255,0.4);
+  }
+
+  .tab-btn.active-android {
+    background: linear-gradient(135deg, #34A853, #4CAF50);
+    color: white;
+    box-shadow: 0 4px 20px rgba(52,168,83,0.4);
+  }
+
+  /* Content panels */
+  .panel { display: none; }
+  .panel.active { display: block; animation: fadeUp 0.4s ease both; }
+
+  /* Step cards */
+  .section-title {
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    padding-left: 4px;
+  }
+
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+
+  .step {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    transition: border-color 0.2s, transform 0.2s;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  .step:hover {
+    border-color: rgba(255,255,255,0.16);
+    transform: translateX(4px);
+  }
+
+  .step-number {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+
+  .ios .step-number {
+    background: rgba(0,122,255,0.15);
+    color: #5AC8FA;
+    border: 1px solid rgba(0,122,255,0.3);
+  }
+
+  .android .step-number {
+    background: rgba(52,168,83,0.15);
+    color: #6FCF97;
+    border: 1px solid rgba(52,168,83,0.3);
+  }
+
+  .step-content h3 {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    line-height: 1.4;
+  }
+
+  .step-content p {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .step-content .highlight {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 2px 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--text);
+    white-space: nowrap;
+  }
+
+  /* Visual mock icons */
+  .icon-illustration {
+    font-size: 24px;
+    line-height: 1;
+  }
+
+  /* Alert / Note boxes */
+  .note {
+    border-radius: 14px;
+    padding: 16px 20px;
+    font-size: 13px;
+    line-height: 1.7;
+    display: flex;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+
+  .note-ios {
+    background: rgba(0,122,255,0.08);
+    border: 1px solid rgba(0,122,255,0.2);
+    color: #A8D4FF;
+  }
+
+  .note-android {
+    background: rgba(52,168,83,0.08);
+    border: 1px solid rgba(52,168,83,0.2);
+    color: #A8E6C0;
+  }
+
+  .note-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+
+  /* Phone mockup */
+  .phone-demo {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 32px;
+  }
+
+  .phone-demo-title {
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .mock-screen {
+    background: #1A1A2E;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .mock-status-bar {
+    background: rgba(0,0,0,0.4);
+    padding: 8px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    color: rgba(255,255,255,0.6);
+  }
+
+  .mock-browser-bar {
+    background: rgba(0,0,0,0.3);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .mock-url {
+    flex: 1;
+    background: rgba(255,255,255,0.08);
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-family: 'DM Mono', monospace;
+    color: rgba(255,255,255,0.5);
+  }
+
+  .mock-share-btn {
+    width: 32px;
+    height: 32px;
+    background: rgba(0,122,255,0.2);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  .mock-sheet {
+    background: #1C1C2E;
+    padding: 16px;
+  }
+
+  .mock-sheet-handle {
+    width: 36px;
+    height: 4px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 2px;
+    margin: 0 auto 16px;
+  }
+
+  .mock-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 13px;
+  }
+
+  .mock-menu-item.highlighted {
+    background: rgba(0,122,255,0.15);
+    border: 1px solid rgba(0,122,255,0.3);
+  }
+
+  .mock-menu-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .mock-menu-icon.blue { background: rgba(0,122,255,0.2); }
+  .mock-menu-icon.gray { background: rgba(255,255,255,0.08); }
+
+  /* Divider */
+  .section-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 32px 0;
+  }
+
+  /* Notification section */
+  .notif-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin-bottom: 8px;
+  }
+
+  .notif-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--accent), #9C8FFF);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .notif-body { flex: 1; }
+  .notif-body strong { font-size: 14px; display: block; margin-bottom: 2px; }
+  .notif-body span { font-size: 12px; color: var(--muted); }
+
+  .notif-btns {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .notif-btn {
+    flex: 1;
+    padding: 8px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+  }
+
+  .notif-btn.allow {
+    background: rgba(0,122,255,0.2);
+    color: #5AC8FA;
+    border: 1px solid rgba(0,122,255,0.3);
+  }
+
+  .notif-btn.deny {
+    background: rgba(255,255,255,0.05);
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .steps .step:nth-child(1) { animation-delay: 0.05s; }
+  .steps .step:nth-child(2) { animation-delay: 0.10s; }
+  .steps .step:nth-child(3) { animation-delay: 0.15s; }
+  .steps .step:nth-child(4) { animation-delay: 0.20s; }
+  .steps .step:nth-child(5) { animation-delay: 0.25s; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-badge">🎨 個展なび — INSTALL GUIDE</div>
+    <h1>個展なびをホーム画面に<br>追加しましょう</h1>
+    <p>アイコンからすぐに全国の展覧会情報をチェック。<br>お使いのスマホを選んでください。</p>
+  </div>
+
+  <!-- Tab Switcher -->
+  <div class="tab-switcher">
+    <button class="tab-btn active-ios" onclick="switchTab('ios', this)">
+      <span>🍎</span> iPhone（iOS）
+    </button>
+    <button class="tab-btn" onclick="switchTab('android', this)">
+      <span>🤖</span> Android
+    </button>
+  </div>
+
+  <!-- iOS Panel -->
+  <div class="panel ios active" id="panel-ios">
+
+    <div class="note note-ios">
+      <span class="note-icon">⚠️</span>
+      <div><strong>Safariをお使いください</strong><br>
+      ChromeなどのブラウザではPWAのインストールができません。iPhoneに最初から入っている <strong>Safari</strong> でアクセスしてください。</div>
+    </div>
+
+    <!-- Step 1: インストール -->
+    <div class="section-title">STEP 01 — ホーム画面に追加</div>
+    <div class="steps ios">
+      <div class="step">
+        <div class="step-number">01</div>
+        <div class="step-content">
+          <h3>SafariでサイトのURLを開く</h3>
+          <p>iPhoneのホーム画面にある <span class="highlight">🧭 Safari</span> を起動し、<span class="highlight">koten-navi.com</span> を開きます。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-number">02</div>
+        <div class="step-content">
+          <h3>共有ボタンをタップ</h3>
+          <p>画面下部のツールバーにある <span class="highlight">□↑ 共有ボタン</span> をタップします。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-number">03</div>
+        <div class="step-content">
+          <h3>「ホーム画面に追加」を選ぶ</h3>
+          <p>下からスライドしてきたメニューをスクロールして <span class="highlight">＋ ホーム画面に追加</span> をタップします。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-number">04</div>
+        <div class="step-content">
+          <h3>「追加」で完了</h3>
+          <p>アプリ名を確認して右上の <span class="highlight">追加</span> をタップ。ホーム画面にアイコンが表示されます。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Visual mockup -->
+    <div class="phone-demo">
+      <div class="phone-demo-title">🖼️ SAFARI の画面イメージ</div>
+      <div class="mock-screen">
+        <div class="mock-status-bar">
+          <span>9:41</span><span>▪▪▪ 🔋</span>
+        </div>
+        <div class="mock-browser-bar">
+          <div class="mock-url">https://koten-navi.com</div>
+          <div class="mock-share-btn">↑□</div>
+        </div>
+        <div class="mock-sheet">
+          <div class="mock-sheet-handle"></div>
+          <div class="mock-menu-item">
+            <div class="mock-menu-icon gray">📋</div>
+            <span>コピー</span>
+          </div>
+          <div class="mock-menu-item highlighted">
+            <div class="mock-menu-icon blue">＋</div>
+            <div>
+              <div style="font-weight:700;font-size:14px;">ホーム画面に追加</div>
+              <div style="font-size:11px;color:#8888AA;">← ここをタップ！</div>
+            </div>
+          </div>
+          <div class="mock-menu-item">
+            <div class="mock-menu-icon gray">🔖</div>
+            <span>ブックマークを追加</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- Step 2: 通知 -->
+    <div class="section-title">STEP 02 — 通知をオンにする（iOS 16.4以降）</div>
+    <div class="steps ios">
+      <div class="step">
+        <div class="step-number">01</div>
+        <div class="step-content">
+          <h3>ホーム画面のアイコンから起動</h3>
+          <p>必ず <strong>ホーム画面のアイコン</strong> からアプリを開いてください。Safariから直接開いても通知の設定ができません。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-number">02</div>
+        <div class="step-content">
+          <h3>通知の許可ダイアログが表示される</h3>
+          <p>アプリが通知の許可を求めるダイアログを表示します。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-number">03</div>
+        <div class="step-content">
+          <h3>「許可」をタップ</h3>
+          <p><span class="highlight">許可</span> をタップすると、プッシュ通知が届くようになります。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="notif-card">
+      <div class="notif-icon">🔔</div>
+      <div class="notif-body">
+        <strong>「個展なび」から通知の許可をリクエスト</strong>
+        <span>通知を受け取りますか？</span>
+        <div class="notif-btns">
+          <div class="notif-btn allow">許可</div>
+          <div class="notif-btn deny">許可しない</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="note note-ios" style="margin-top:16px;">
+      <span class="note-icon">ℹ️</span>
+      <div>通知機能は <strong>iOS 16.4以降</strong> が必要です。それより古いiOSでは通知を受け取ることができません。</div>
+    </div>
+
+  </div>
+
+  <!-- Android Panel -->
+  <div class="panel android" id="panel-android">
+
+    <div class="note note-android">
+      <span class="note-icon">✅</span>
+      <div><strong>Chromeでそのまま開くだけでOK</strong><br>
+      Androidは手順がスムーズです。Chromeが自動でインストールを案内してくれることもあります。</div>
+    </div>
+
+    <!-- 方法A -->
+    <div class="section-title">方法 A — 自動バナーからインストール</div>
+    <div class="steps android">
+      <div class="step">
+        <div class="step-number">01</div>
+        <div class="step-content">
+          <h3>ChromeでサイトURLを開く</h3>
+          <p>Androidの <span class="highlight">🌐 Chrome</span> で <span class="highlight">koten-navi.com</span> を開きます。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-number">02</div>
+        <div class="step-content">
+          <h3>画面下のバナーが出たらタップ</h3>
+          <p>PWAの条件を満たしていると、画面下部に <span class="highlight">ホーム画面に追加</span> バナーが自動で表示されます。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-number">03</div>
+        <div class="step-content">
+          <h3>「追加」でインストール完了</h3>
+          <p>確認ダイアログで <span class="highlight">追加</span> をタップするとホーム画面にアイコンが追加されます。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- 方法B -->
+    <div class="section-title">方法 B — メニューから手動でインストール</div>
+    <div class="steps android">
+      <div class="step">
+        <div class="step-number">01</div>
+        <div class="step-content">
+          <h3>右上の「⋮」メニューをタップ</h3>
+          <p>Chromeの右上にある <span class="highlight">⋮ 三点メニュー</span> をタップします。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-number">02</div>
+        <div class="step-content">
+          <h3>「アプリをインストール」を選ぶ</h3>
+          <p>メニューから <span class="highlight">📲 アプリをインストール</span>（または「ホーム画面に追加」）をタップします。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-number">03</div>
+        <div class="step-content">
+          <h3>「インストール」で完了</h3>
+          <p>確認ダイアログで <span class="highlight">インストール</span> をタップします。ホーム画面にアイコンが追加されます。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- 通知 -->
+    <div class="section-title">STEP 02 — 通知をオンにする</div>
+    <div class="steps android">
+      <div class="step">
+        <div class="step-number">01</div>
+        <div class="step-content">
+          <h3>通知の許可ダイアログが表示される</h3>
+          <p>Androidはインストールしなくても通知の許可が可能です。サイトが許可を求めるダイアログを表示します。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-number">02</div>
+        <div class="step-content">
+          <h3>「許可」をタップ</h3>
+          <p><span class="highlight">許可</span> をタップすると、プッシュ通知が届くようになります。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="notif-card">
+      <div class="notif-icon">🔔</div>
+      <div class="notif-body">
+        <strong>koten-navi.com が通知の送信を求めています</strong>
+        <span>このサイトからの通知を許可しますか？</span>
+        <div class="notif-btns">
+          <div class="notif-btn allow" style="background:rgba(52,168,83,0.2);color:#6FCF97;border-color:rgba(52,168,83,0.3);">許可</div>
+          <div class="notif-btn deny">ブロック</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  function switchTab(os, btn) {
+    document.querySelectorAll('.tab-btn').forEach(b => {
+      b.classList.remove('active-ios', 'active-android');
+    });
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+
+    if (os === 'ios') {
+      btn.classList.add('active-ios');
+    } else {
+      btn.classList.add('active-android');
+    }
+    document.getElementById('panel-' + os).classList.add('active');
+  }
+
+  // Auto-detect OS
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  const isAndroid = /Android/.test(navigator.userAgent);
+  if (isAndroid) {
+    const androidBtn = document.querySelectorAll('.tab-btn')[1];
+    switchTab('android', androidBtn);
+  }
+</script>
+</body>
+</html>
