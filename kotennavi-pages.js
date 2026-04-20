@@ -2310,6 +2310,94 @@ KTN.pages['p3'] = function () {
     galleryModalBg && galleryModalBg.addEventListener('click', closeGallery);
   }
 
+  // 3b. プロフィール画像ギャラリー
+  (function(){
+    var layout    = document.getElementById('p3ProfBioLayout');
+    var mainEl    = document.getElementById('p3ProfMediaMain');
+    var captionEl = document.getElementById('p3ProfMediaCaption');
+    var thumbsEl  = document.getElementById('p3ProfMediaThumbs');
+    var imgs      = (d.profile && d.profile.images) ? d.profile.images : [];
+    var count     = imgs.length;
+
+    if (layout) layout.dataset.imgCount = count;
+    if (!mainEl || count === 0) return;
+
+    function showImage(img) {
+      mainEl.style.background = img.bg;
+      mainEl.dataset.caption  = img.caption;
+      if (captionEl) captionEl.textContent = img.caption;
+    }
+
+    // 初期表示
+    showImage(imgs[0]);
+    mainEl.addEventListener('click', function(){
+      openGallery(mainEl.style.background, mainEl.dataset.caption || '');
+    });
+
+    // サムネイル生成（2枚以上）
+    if (thumbsEl && count >= 2) {
+      imgs.forEach(function(img, i){
+        var t = document.createElement('div');
+        t.className = 'p3-prof-media-thumb' + (i === 0 ? ' is-active' : '');
+        t.style.background = img.bg;
+        t.addEventListener('click', function(){
+          showImage(img);
+          thumbsEl.querySelectorAll('.p3-prof-media-thumb').forEach(function(el){
+            el.classList.remove('is-active');
+          });
+          t.classList.add('is-active');
+        });
+        thumbsEl.appendChild(t);
+      });
+    }
+  })();
+
+  // 3c. 略歴の折りたたみ（画像エリア高さを超える場合）
+  (function(){
+    var bioEl    = document.getElementById('p3ProfBio');
+    var mediaEl  = document.getElementById('p3ProfMedia');
+    var layout   = document.getElementById('p3ProfBioLayout');
+    var toggleEl = document.getElementById('p3ProfBioToggle');
+    if (!bioEl || !mediaEl || !toggleEl) return;
+
+    var expanded = false;
+
+    function applyClamp() {
+      var isCol = window.getComputedStyle(layout).flexDirection === 'column';
+      if (isCol || mediaEl.offsetHeight === 0) {
+        bioEl.style.maxHeight = '';
+        toggleEl.classList.remove('is-visible');
+        return;
+      }
+      var mediaH = mediaEl.offsetHeight;
+      if (!expanded && bioEl.scrollHeight > mediaH + 2) {
+        bioEl.style.maxHeight = mediaH + 'px';
+        toggleEl.classList.add('is-visible');
+        toggleEl.textContent = 'もっと見る';
+      } else if (!expanded) {
+        bioEl.style.maxHeight = '';
+        toggleEl.classList.remove('is-visible');
+      }
+    }
+
+    toggleEl.addEventListener('click', function() {
+      expanded = !expanded;
+      if (expanded) {
+        bioEl.style.maxHeight = bioEl.scrollHeight + 'px';
+        toggleEl.textContent = '閉じる';
+      } else {
+        bioEl.style.maxHeight = mediaEl.offsetHeight + 'px';
+        toggleEl.textContent = 'もっと見る';
+      }
+    });
+
+    applyClamp();
+    window.addEventListener('resize', function() {
+      expanded = false;
+      applyClamp();
+    });
+  })();
+
   // 4. アコーディオン（height アニメーション）
   document.querySelectorAll('.p3-accordion__head').forEach(function(btn){
     var accordion = btn.closest('.p3-accordion');
@@ -2347,22 +2435,215 @@ KTN.pages['p3'] = function () {
     });
   }
 
-  // 6. 作品グリッド生成（LIAISON優先ソート・.aw カード）
-  var worksGrid = document.getElementById('p3WorksGrid');
-  if (worksGrid && d.works) {
-    var sorted = d.works.slice().sort(function(a,b){ return (b.liaison?1:0)-(a.liaison?1:0); });
-    worksGrid.innerHTML = sorted.map(function(w){
-      return '<a class="aw" href="#">'
-        +'<div class="aw__img">'
-        +(w.liaison ? '<div class="aw__lb"><span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span></div>' : '')
-        +'<div class="aw__img-ph t-portrait" style="background:'+w.bg+'"></div>'
-        +'</div>'
-        +'<div class="aw__body">'
-        +'<div class="aw__title-row"><div class="aw__title">'+w.title+'</div></div>'
-        +'<div class="aw__spec">'+w.year+' / '+w.material+'</div>'
-        +'</div></a>';
+  // 5b. サイドバー 記事ウィジェット
+  var sideArticlesCard = document.getElementById('p3-sec-articles');
+  var sideArticlesList = document.getElementById('p3SideArticlesList');
+  if (sideArticlesCard && sideArticlesList) {
+    if (d.articles && d.articles.length) {
+      sideArticlesList.innerHTML = d.articles.slice(0, 3).map(function(a){
+        var thumb = a.hasImg
+          ? '<div class="lc__thumb lc__thumb--article"><span class="lc__thumb-label">article</span></div>'
+          : '';
+        return '<a class="lc lc--article' + (a.hasImg ? '' : ' lc--noimg') + '" href="#">'
+          + thumb
+          + '<div class="lc__body">'
+          + '<div class="lc__badge-row">'
+          + (a.isNew ? '<span class="nb">new</span>' : '')
+          + '<span class="cb cb-content cb-article">article</span>'
+          + '</div>'
+          + '<div class="lc__title">' + a.title + '</div>'
+          + '<div class="lc__byline"><span class="lc__date">' + a.date + '</span></div>'
+          + '</div></a>';
+      }).join('');
+      sideArticlesCard.classList.add('is-visible');
+    }
+  }
+
+  // 5c. サイドバー 開催中展覧会ウィジェット（マソンリーカード型）
+  var sideExhibitionCard = document.getElementById('p3SideExhibitionCard');
+  var sideExhibitionEl   = document.getElementById('p3SideExhibition');
+  if (sideExhibitionCard && sideExhibitionEl && d.hasActiveExhibition && d.activeExhibition) {
+    var ex = d.activeExhibition;
+    var liaStripHtml = ex.isLiaison
+      ? '<div class="ec__liaison-strip">'
+        + '<div class="ec__liaison-strip-info">'
+        + '<span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>'
+        + '<span class="ec__liaison-subtext">オンライン作品展示中</span>'
+        + '</div></div>'
+      : '';
+    sideExhibitionEl.innerHTML = '<a class="ec" href="#">'
+      + '<div class="ec__poster" style="background:linear-gradient(135deg,#8ab8c0,#5a8890)">'
+      + '<div class="ec__poster-noimg"></div>'
+      + '<div class="ec__poster-overlay">'
+      + '<div class="ec__poster-dates"><strong>' + ex.dateRange + '</strong></div>'
+      + '</div></div>'
+      + '<div class="ec__body">'
+      + '<div class="ec__badge-row"><span class="cb cb-content cb-exhibition">exhibition</span></div>'
+      + '<div class="ec__title">' + ex.title + '</div>'
+      + '<div class="ec__venue">' + ex.venue + '</div>'
+      + '</div>'
+      + liaStripHtml
+      + '</a>';
+    sideExhibitionCard.classList.add('is-visible');
+  }
+
+  // 5d. リンクボタン生成（p3-prof-links）
+  var profLinks = document.getElementById('p3ProfLinks');
+  if (profLinks && d.profile && d.profile.links && d.profile.links.length) {
+    var globeSvg = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1 4-10z"/></svg>';
+    var bagSvg   = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>';
+    var pkgSvg   = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>';
+    var linkSvg  = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>';
+    // SimpleIcons slugs（存在するもの）
+    var siSlug = {
+      behance:'behance', artstation:'artstation',
+      instagram:'instagram', x:'x', twitter:'x', facebook:'facebook',
+      threads:'threads', bluesky:'bluesky', pinterest:'pinterest',
+      tiktok:'tiktok', youtube:'youtube',
+      note:'note', substack:'substack',
+      etsy:'etsy', shopify:'shopify',
+      pixiv:'pixiv', linktree:'linktree', litlink:'litlink'
+    };
+    // lucide SVGで代替するもの
+    var svgFallback = { hp:globeSvg, base:bagSvg, minne:bagSvg, creema:bagSvg, stores:bagSvg, iichi:bagSvg, booth:pkgSvg };
+    function getLinkIcon(type) {
+      if (svgFallback[type]) return svgFallback[type];
+      if (!siSlug[type])     return linkSvg;
+      return '<img src="https://cdn.simpleicons.org/' + siSlug[type] + '" width="16" height="16" alt="' + type + '">';
+    }
+    profLinks.innerHTML = d.profile.links.map(function(lk){
+      return '<a href="' + lk.url + '" class="p3-prof-link-btn" target="_blank" rel="noopener noreferrer" title="' + lk.label + '">'
+        + getLinkIcon(lk.type) + '</a>';
     }).join('');
   }
+
+  // 6. アーカイブ件数
+  var archiveCount = document.getElementById('p3ArchiveCount');
+  if (archiveCount && d.archiveCount) archiveCount.textContent = d.archiveCount;
+
+  // 6b. 作品グリッド生成
+  var statusBadgeMap = {
+    sale:     '<span class="aws aws-sale">販売中</span>',
+    nsale:    '<span class="aws aws-nsale">非売品</span>',
+    inquiry:  '<span class="aws aws-inquiry">要問合せ</span>',
+    applying: '<span class="aws aws-applying">申込中</span>',
+    sold:     '<span class="aws aws-sold">売却済</span>'
+  };
+  var worksTotalImgSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="20" height="20">'
+    +'<rect x="3" y="3" width="18" height="18" rx="2"/>'
+    +'<circle cx="8.5" cy="8.5" r="1.5"/>'
+    +'<polyline points="21 15 16 10 5 21"/>'
+    +'</svg>';
+
+  function renderP3Works(d) {
+    var worksGrid = document.getElementById('p3WorksGrid');
+    var worksSection = document.getElementById('p3-sec-works');
+    if (!worksGrid) return;
+
+    // 前回挿入した全作品リンクを削除
+    var prevLink = document.getElementById('p3WorksTotalLink');
+    if (prevLink) prevLink.remove();
+
+    // セクション・タブの状態リセット
+    if (worksSection) worksSection.style.display = '';
+    var worksTab = document.querySelector('.p3-tabnav__item[data-target="p3-sec-works"]');
+    if (worksTab) worksTab.classList.remove('disabled');
+
+    var liaisons = (d.exhibitions || []).filter(function(ex){ return ex.isLiaison || ex.isLiaisonPlus; });
+    liaisons.sort(function(a, b){
+      var aScore = (a.isLiaisonPlus ? 0 : 2) + (a.status === 'live' ? 0 : 1);
+      var bScore = (b.isLiaisonPlus ? 0 : 2) + (b.status === 'live' ? 0 : 1);
+      return aScore - bScore;
+    });
+
+    var hasWorks = d.works && d.works.length;
+    var hasLiaison = liaisons.length > 0;
+
+    if (!hasWorks && !hasLiaison) {
+      if (worksSection) worksSection.style.display = 'none';
+      if (worksTab) worksTab.classList.add('disabled');
+
+    } else if (!hasLiaison) {
+      // パターン1: 通常グリッド表示
+      worksGrid.className = 'p3-works-masonry';
+      var sorted = d.works.slice().sort(function(a,b){ return (b.isLiaison?1:0)-(a.isLiaison?1:0); });
+      worksGrid.innerHTML = sorted.slice(0, 4).map(function(w){
+        return '<a class="aw aw--portfolio masonry-item" href="#">'
+          +'<div class="aw__img">'
+          +'<div class="aw__img-ph t-portrait" style="background:'+w.bg+'"></div>'
+          +'</div>'
+          +'<div class="aw__body">'
+          +'<div class="aw__badge-row"></div>'
+          +'<div class="aw__title-row"><div class="aw__title">'+w.title+'</div></div>'
+          +'<div class="aw__spec">'+w.year+' / '+w.medium+'</div>'
+          +'</div></a>';
+      }).join('');
+
+    } else {
+      // パターン2・3: LIAISONバンド表示
+      worksGrid.className = '';
+      worksGrid.innerHTML = liaisons.map(function(ex){
+        var isPlus   = ex.isLiaisonPlus;
+        var bandCls  = 'p3-works-liaison-band' + (isPlus ? ' p3-works-liaison-band--plus' : '');
+        var dotCls   = isPlus ? 'lb-dot li-plus' : 'lb-dot li';
+        var dotLabel = isPlus ? 'LIAISON+' : 'LIAISON';
+        var venueHtml = ex.venue ? '<span class="p3-works-liaison-band__venue">'+ex.venue+'</span>' : '';
+        var metaText  = ex.remain || '';
+        var titleHtml = ex.url
+          ? '<a class="p3-works-liaison-band__title" href="'+ex.url+'">'+ex.title+'</a>'
+          : '<span class="p3-works-liaison-band__title">'+ex.title+'</span>';
+
+        var cards = (ex.works || []).slice(0, 4).map(function(w){
+          var cardCls = 'aw' + (isPlus ? ' aw--plus' : '');
+          if (w.status === 'sold')  cardCls += ' aw--sold';
+          if (w.status === 'nsale') cardCls += ' aw--nsale';
+          var soldRibbon = (isPlus && w.status === 'sold')
+            ? '<div class="aw__sold-ribbon"><div class="aw__sold-ribbon-inner">SOLD OUT</div></div>' : '';
+          var statusBadge = statusBadgeMap[w.status] || '';
+          var footHtml = (isPlus && w.price)
+            ? '<div class="aw__foot"><div class="aw__price">'+w.price+'</div></div>' : '';
+          return '<a class="'+cardCls+'" href="#">'
+            +'<div class="aw__img">'
+            +'<div class="aw__lb"><span class="'+dotCls+'"><span class="lb-dot-inner"></span>'+dotLabel+'</span></div>'
+            +soldRibbon
+            +'<div class="aw__img-ph t-portrait" style="background:'+w.bg+'"></div>'
+            +'</div>'
+            +'<div class="aw__body">'
+            +'<div class="aw__title-row"><div class="aw__title">'+w.title+'</div></div>'
+            +(statusBadge ? '<div class="aw__status">'+statusBadge+'</div>' : '')
+            +'</div>'
+            +footHtml
+            +'</a>';
+        }).join('');
+
+        return '<div class="'+bandCls+'">'
+          +'<div class="p3-works-liaison-band__head">'
+          +'<span class="'+dotCls+'"><span class="lb-dot-inner"></span>'+dotLabel+'</span>'
+          +titleHtml
+          +venueHtml
+          +'<span class="p3-works-liaison-band__meta">'+metaText+'</span>'
+          +'</div>'
+          +'<div class="p3-works-liaison-band__cards">'+cards+'</div>'
+          +'</div>';
+      }).join('');
+
+      // 全作品リンク
+      if (d.worksTotal) {
+        worksGrid.insertAdjacentHTML('afterend',
+          '<a id="p3WorksTotalLink" href="kotennavi-p3-3.html" class="p3-archive-link" style="margin-top:8px">'
+          +worksTotalImgSvg
+          +'<span>全作品 <strong>'+d.worksTotal+'</strong> 件を見る</span>'
+          +'<span class="p3-archive-link__arr">→</span>'
+          +'</a>'
+        );
+      }
+    }
+  }
+
+  renderP3Works(d);
+  window.renderP3Works = renderP3Works;
+
+  // 6c. 記事リスト生成（※メイン記事セクションは削除済み・サイドバーのみ）
 
   // 7. 写真グリッド生成（.p3-photos__item）
   var photosGrid = document.getElementById('p3PhotosGrid');
@@ -2382,7 +2663,7 @@ KTN.pages['p3'] = function () {
   var tabnav = document.getElementById('p3Tabnav');
   if (tabnav && 'IntersectionObserver' in window) {
     var tabBtns = tabnav.querySelectorAll('.p3-tabnav__item');
-    var sections = document.querySelectorAll('.p3-layout__main > section[id]');
+    var sections = document.querySelectorAll('.p3-main > section[id]');
     var hh = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--hh') || '56', 10);
     var obs = new IntersectionObserver(function(entries){
       entries.forEach(function(entry){

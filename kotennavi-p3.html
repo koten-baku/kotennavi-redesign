@@ -67,6 +67,9 @@
   <span class="dbar-sep">プロフ画像：</span>
   <button class="dbtn on" id="dbarImgOn"  onclick="setImg(true,this)">あり</button>
   <button class="dbtn"    id="dbarImgOff" onclick="setImg(false,this)">なし</button>
+  <span class="dbar-sep">作品：</span>
+  <button class="dbtn on" id="dbarWorksLiaison"  onclick="setWorksMode('liaison',this)">LIAISONあり</button>
+  <button class="dbtn"    id="dbarWorksNormal"   onclick="setWorksMode('normal',this)">通常作品</button>
 </div>
 
 <div class="shell">
@@ -135,303 +138,294 @@
       </div>
     </nav>
 
-    <!-- C. メインコンテンツ（2カラムレイアウト） -->
-    <div class="ktn-content p3-layout-wrap">
-      <div class="p3-layout">
+    <!-- メインコンテンツ -->
+    <div class="p3-main">
 
-        <!-- ── 左カラム ── -->
-        <div class="p3-layout__main">
+      <!-- C. 展覧会 -->
+      <section id="p3-sec-exhibitions" class="p3-box">
+        <div class="p3-sec-label">EXHIBITION — 展覧会
+          <a class="p3-sec-more" href="kotennavi-p3-1.html">すべての展覧会 →</a>
+        </div>
 
-          <!-- C-1. 開催中・これから開催の展覧会 -->
-          <section id="p3-sec-exhibitions">
-            <div class="p3-section-label">EXHIBITION — 展覧会
-              <a class="p3-section-label__more" href="kotennavi-p3-1.html">すべての展覧会 →</a>
-            </div>
-
-            <p class="p3-exh-sublabel"><span class="sb sb-live"><span class="pulse"></span>開催中</span></p>
-            <div class="ktn-grid ktn-grid--2col p3-exh-grid">
-              <div class="masonry-item">
-                <a class="ec" href="kotennavi-p2.html">
-                  <div class="ec__poster" style="background:linear-gradient(155deg,#b8d8cc,#6a9e8a)">
-                    <div style="position:absolute;top:9px;left:9px;z-index:2"><span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span></div>
-                    <div class="ec__poster-inner" style="min-height:160px">
-                      <span class="ec__poster-text">オノ<br>マト<br>ペ</span>
-                    </div>
-                    <div class="ec__poster-overlay">
-                      <div class="ec__poster-dates">
-                        <span class="year">2026.</span><strong>02.18</strong><span class="dow">wed</span>
-                        <span class="sep">—</span>
-                        <strong>03.05</strong><span class="dow">thu</span>
-                      </div>
-                      <div class="ec__poster-meta">
-                        <span class="ec__remain ec__remain--live">残り12日</span>
-                        <span class="meta-sep">|</span>
-                        <span>11:00-19:00</span>
-                      </div>
-                    </div>
+        <div class="p3-exhibitions-grid">
+          <div class="p3-exh-item">
+            <div class="p3-exh-item__label"><span class="sb sb-live"><span class="pulse"></span>開催中</span></div>
+            <a class="ec" href="kotennavi-p2.html">
+              <div class="ec__poster" style="background:linear-gradient(155deg,#b8d8cc,#6a9e8a)">
+                <div class="ec__poster-noimg" style="min-height:160px"></div>
+                <div class="ec__poster-overlay">
+                  <div class="ec__poster-dates">
+                    <span class="year">2026.</span><strong>02.18</strong><span class="dow">wed</span>
+                    <span class="sep">—</span>
+                    <strong>03.05</strong><span class="dow">thu</span>
                   </div>
-                  <div class="ec__body">
-                    <div class="ec__badge-row">
-                      <span class="cb cb-content cb-exhibition">exhibition</span>
-                      <span class="sb sb-open">開催中</span>
-                      <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
-                        <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>
-                        <span class="tip">興味ある！に追加する</span>
-                      </button>
-                    </div>
-                    <div class="ec__title">あなたが知らないオノマトペ</div>
-                    <div class="ec__venue">東京<span class="ec__venue-sep">|</span>Gallery SOIL 渋谷</div>
+                  <div class="ec__poster-meta">
+                    <span class="ec__remain ec__remain--live">残り12日</span>
+                    <span class="meta-sep">|</span>
+                    <span>11:00-19:00</span>
                   </div>
-                  <div class="ec__foot">
-                    <span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>42</span>
-                    <span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><circle cx="10" cy="5" r="4" fill="#7a8a99" fill-opacity=".5"/><circle cx="5" cy="11" r="2.4" fill="#7a8a99" fill-opacity=".5"/></svg>8</span>
-                  </div>
-                </a>
+                </div>
               </div>
-            </div>
-
-            <p class="p3-exh-sublabel" style="margin-top:16px"><span class="sb sb-soon">これから開催</span></p>
-            <div class="ktn-grid ktn-grid--2col p3-exh-grid">
-              <div class="masonry-item">
-                <a class="ec" href="#">
-                  <div class="ec__poster" style="background:linear-gradient(155deg,#e8d8c0,#c0a880)">
-                    <div class="ec__poster-inner" style="min-height:140px">
-                      <span class="ec__poster-text" style="color:rgba(255,255,255,.8);font-size:1.4rem">仲<br>間<br>展</span>
-                    </div>
-                    <div class="ec__poster-overlay">
-                      <div class="ec__poster-dates">
-                        <span class="year">2026.</span><strong>05.10</strong><span class="dow">sun</span>
-                        <span class="sep">—</span>
-                        <strong>05.16</strong><span class="dow">sat</span>
-                      </div>
-                      <div class="ec__poster-meta">
-                        <span class="ec__remain ec__remain--soon">26日後に開催</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="ec__body">
-                    <div class="ec__badge-row">
-                      <span class="cb cb-content cb-exhibition">exhibition</span>
-                      <span class="sb sb-soon">もうすぐ開催</span>
-                      <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
-                        <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>
-                        <span class="tip">興味ある！に追加する</span>
-                      </button>
-                    </div>
-                    <div class="ec__title">浜田澄子との仲間たち展</div>
-                    <div class="ec__venue">神奈川<span class="ec__venue-sep">|</span>art Truth</div>
-                  </div>
-                  <div class="ec__foot">
-                    <span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>15</span>
-                    <span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><circle cx="10" cy="5" r="4" fill="#7a8a99" fill-opacity=".5"/><circle cx="5" cy="11" r="2.4" fill="#7a8a99" fill-opacity=".5"/></svg>2</span>
-                  </div>
-                </a>
+              <div class="ec__body">
+                <div class="ec__badge-row">
+                  <span class="cb cb-content cb-exhibition">exhibition</span>
+                  <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                    <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>
+                    <span class="tip">興味ある！に追加する</span>
+                  </button>
+                </div>
+                <div class="ec__title">あなたが知らないオノマトペ</div>
+                <div class="ec__venue">東京<span class="ec__venue-sep">|</span>Gallery SOIL 渋谷</div>
               </div>
-            </div>
-          </section>
-
-          <!-- C-1b. 展覧会アーカイブ -->
-          <section id="p3-sec-archive">
-            <div class="p3-section-label">ARCHIVE — 展覧会アーカイブ
-              <a class="p3-section-label__more" href="kotennavi-p3-1.html">すべてのアーカイブ →</a>
-            </div>
-            <a href="kotennavi-p3-1.html" class="p3-archive-link">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="20" height="20"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-              <span>過去 <strong>10</strong> 件の展覧会アーカイブを掲載中</span>
-              <span class="p3-archive-link__arr">→</span>
+              <div class="ec__foot">
+                <span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>42</span>
+                <span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><circle cx="10" cy="5" r="4" fill="#7a8a99" fill-opacity=".5"/><circle cx="5" cy="11" r="2.4" fill="#7a8a99" fill-opacity=".5"/></svg>8</span>
+              </div>
+              <div class="ec__liaison-strip">
+                <div class="ec__liaison-strip-info">
+                  <span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>
+                  <span class="ec__liaison-subtext">オンライン作品展示中</span>
+                </div>
+                <div class="ec__liaison-thumbs">
+                  <div class="ec__liaison-thumb" style="background:linear-gradient(135deg,#b8d8cc,#6a9e8a)"></div>
+                  <div class="ec__liaison-thumb" style="background:linear-gradient(135deg,#d4e8d4,#8ab89a)"></div>
+                  <div class="ec__liaison-thumb" style="background:linear-gradient(135deg,#c8e0d4,#78a888)"></div>
+                </div>
+              </div>
             </a>
-          </section>
-
-          <!-- C-2. 作品 -->
-          <section id="p3-sec-works">
-            <div class="p3-section-label">WORKS — 作品
-              <a class="p3-section-label__more" href="kotennavi-p3-3.html">作品一覧 →</a>
-            </div>
-            <div class="ktn-grid p3-works-grid" id="p3WorksGrid"><!-- JS生成 --></div>
-          </section>
-
-          <!-- C-3. 記事 -->
-          <section id="p3-sec-articles">
-            <div class="p3-section-label">ARTICLES — 記事
-              <a class="p3-section-label__more" href="kotennavi-p3-2.html">記事一覧 →</a>
-            </div>
-            <div class="ktn-list">
-
-              <!-- 画像あり -->
-              <a class="lc lc--article" href="#">
-                <div class="lc__thumb lc__thumb--article" style="background:linear-gradient(135deg,#b8d8cc,#6a9e8a)">
-                  <span class="lc__thumb-label">article</span>
-                </div>
-                <div class="lc__body">
-                  <div class="lc__badge-row">
-                    <span class="cb cb-content cb-article">article</span>
+          </div>
+          <div class="p3-exh-item">
+            <div class="p3-exh-item__label"><span class="sb sb-live"><span class="pulse"></span>開催中</span></div>
+            <a class="ec" href="#">
+              <div class="ec__poster" style="background:linear-gradient(155deg,#c8d8e8,#7a9ab8)">
+                <div class="ec__poster-noimg" style="min-height:160px"></div>
+                <div class="ec__poster-overlay">
+                  <div class="ec__poster-dates">
+                    <span class="year">2026.</span><strong>03.01</strong><span class="dow">sun</span>
+                    <span class="sep">—</span>
+                    <strong>03.20</strong><span class="dow">fri</span>
                   </div>
-                  <div class="lc__title">オノマトペと絵画のあいだ</div>
-                  <div class="lc__lead">音が視覚に変換されるとき、何が起きているのか。田中透の制作プロセスを追った。</div>
-                  <div class="lc__byline">
-                    <span class="byline-author">
-                      <span class="cb cb-person cb-creator">creator</span>
-                      <span class="byline-name">田中 透</span>
-                    </span>
-                    <span class="lc__byline-sep">/</span>
-                    <span class="lc__date">2026.01.15</span>
+                  <div class="ec__poster-meta">
+                    <span class="ec__remain ec__remain--live">残り27日</span>
+                    <span class="meta-sep">|</span>
+                    <span>12:00-18:00</span>
                   </div>
                 </div>
-              </a>
-
-              <!-- 画像なし -->
-              <a class="lc lc--noimg lc--article" href="#">
-                <div class="lc__body">
-                  <div class="lc__badge-row">
-                    <span class="cb cb-content cb-article">article</span>
+              </div>
+              <div class="ec__body">
+                <div class="ec__badge-row">
+                  <span class="cb cb-content cb-exhibition">exhibition</span>
+                  <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                    <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>
+                    <span class="tip">興味ある！に追加する</span>
+                  </button>
+                </div>
+                <div class="ec__title">静寂のオノマトペ</div>
+                <div class="ec__venue">東京<span class="ec__venue-sep">|</span>Art Space HIKARI</div>
+              </div>
+              <div class="ec__foot">
+                <span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>28</span>
+                <span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><circle cx="10" cy="5" r="4" fill="#7a8a99" fill-opacity=".5"/><circle cx="5" cy="11" r="2.4" fill="#7a8a99" fill-opacity=".5"/></svg>5</span>
+              </div>
+              <div class="ec__liaison-strip">
+                <div class="ec__liaison-strip-info">
+                  <span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>
+                  <span class="ec__liaison-subtext">オンライン作品展示中</span>
+                </div>
+                <div class="ec__liaison-thumbs">
+                  <div class="ec__liaison-thumb" style="background:linear-gradient(135deg,#b8cce0,#6a88b0)"></div>
+                  <div class="ec__liaison-thumb" style="background:linear-gradient(135deg,#c8d8e8,#8aaac8)"></div>
+                  <div class="ec__liaison-thumb" style="background:linear-gradient(135deg,#a8c0d8,#5a80a8)"></div>
+                </div>
+              </div>
+            </a>
+          </div>
+          <div class="p3-exh-item">
+            <div class="p3-exh-item__label"><span class="sb sb-soon">これから開催</span></div>
+            <a class="ec" href="#">
+              <div class="ec__poster" style="background:linear-gradient(155deg,#e8d8c0,#c0a880)">
+                <div class="ec__poster-noimg" style="min-height:140px"></div>
+                <div class="ec__poster-overlay">
+                  <div class="ec__poster-dates">
+                    <span class="year">2026.</span><strong>05.10</strong><span class="dow">sun</span>
+                    <span class="sep">—</span>
+                    <strong>05.16</strong><span class="dow">sat</span>
                   </div>
-                  <div class="lc__title">音から生まれる色の話</div>
-                  <div class="lc__lead">「ドキドキ」は赤か、それとも橙か。言葉の色彩的な響きについての考察。</div>
-                  <div class="lc__byline">
-                    <span class="byline-author">
-                      <span class="cb cb-person cb-creator">creator</span>
-                      <span class="byline-name">田中 透</span>
-                    </span>
-                    <span class="lc__byline-sep">/</span>
-                    <span class="lc__date">2025.08.20</span>
+                  <div class="ec__poster-meta">
+                    <span class="ec__remain ec__remain--soon">26日後に開催</span>
                   </div>
                 </div>
-              </a>
+              </div>
+              <div class="ec__body">
+                <div class="ec__badge-row">
+                  <span class="cb cb-content cb-exhibition">exhibition</span>
+                  <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                    <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>
+                    <span class="tip">興味ある！に追加する</span>
+                  </button>
+                </div>
+                <div class="ec__title">浜田澄子との仲間たち展</div>
+                <div class="ec__venue">神奈川<span class="ec__venue-sep">|</span>art Truth</div>
+              </div>
+              <div class="ec__foot">
+                <span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>15</span>
+                <span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><circle cx="10" cy="5" r="4" fill="#7a8a99" fill-opacity=".5"/><circle cx="5" cy="11" r="2.4" fill="#7a8a99" fill-opacity=".5"/></svg>2</span>
+              </div>
+            </a>
+          </div>
+          <div class="p3-exh-item">
+            <div class="p3-exh-item__label"><span class="sb sb-soon">これから開催</span></div>
+            <a class="ec" href="#">
+              <div class="ec__poster" style="background:linear-gradient(155deg,#e8cce0,#c08aaa)">
+                <div class="ec__poster-noimg" style="min-height:140px"></div>
+                <div class="ec__poster-overlay">
+                  <div class="ec__poster-dates">
+                    <span class="year">2026.</span><strong>06.01</strong><span class="dow">mon</span>
+                    <span class="sep">—</span>
+                    <strong>06.14</strong><span class="dow">sun</span>
+                  </div>
+                  <div class="ec__poster-meta">
+                    <span class="ec__remain ec__remain--soon">48日後に開催</span>
+                  </div>
+                </div>
+              </div>
+              <div class="ec__body">
+                <div class="ec__badge-row">
+                  <span class="cb cb-content cb-exhibition">exhibition</span>
+                  <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                    <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>
+                    <span class="tip">興味ある！に追加する</span>
+                  </button>
+                </div>
+                <div class="ec__title">春の声 — グループ展</div>
+                <div class="ec__venue">大阪<span class="ec__venue-sep">|</span>Art Space KITO</div>
+              </div>
+              <div class="ec__foot">
+                <span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>9</span>
+                <span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><circle cx="10" cy="5" r="4" fill="#7a8a99" fill-opacity=".5"/><circle cx="5" cy="11" r="2.4" fill="#7a8a99" fill-opacity=".5"/></svg>1</span>
+              </div>
+              <div class="ec__liaison-strip ec__liaison-strip--plus">
+                <div class="ec__liaison-strip-info">
+                  <span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span>
+                  <span class="ec__liaison-subtext">オンライン作品展示・販売中</span>
+                </div>
+                <div class="ec__liaison-thumbs">
+                  <div class="ec__liaison-thumb" style="background:linear-gradient(135deg,#e8cce0,#c08aaa)"></div>
+                  <div class="ec__liaison-thumb" style="background:linear-gradient(135deg,#d4b8cc,#a07898)"></div>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
 
+        <!-- アーカイブリンク -->
+        <a href="kotennavi-p3-1.html" class="p3-archive-link">
+          <span class="exh-icon"><svg width="20" height="20"><use href="#icon-exh"/></svg></span>
+          <span>過去 <strong id="p3ArchiveCount">10</strong> 件の展覧会アーカイブを掲載中</span>
+          <span class="p3-archive-link__arr">→</span>
+        </a>
+      </section>
+
+      <!-- D. 作品 -->
+      <section id="p3-sec-works" class="p3-box">
+        <div class="p3-sec-label">WORKS — 作品
+          <a class="p3-sec-more" href="kotennavi-p3-3.html">作品一覧 →</a>
+        </div>
+        <div class="p3-works-masonry" id="p3WorksGrid"><!-- JS生成 --></div>
+      </section>
+
+      <!-- F. プロフィール（2カラム） -->
+      <section id="p3-sec-profile">
+        <div class="p3-prof-layout">
+
+          <!-- 左カラム -->
+          <div class="p3-prof-main p3-box">
+
+            <div class="p3-sec-label">CREATOR INFORMATION</div>
+
+            <h2 class="p3-prof-name">田中 透</h2>
+            <div class="p3-prof-name-en">Toru Tanaka</div>
+
+            <div class="p3-prof-bio-layout" id="p3ProfBioLayout">
+              <div class="p3-prof-media" id="p3ProfMedia">
+                <div class="p3-prof-media-main" id="p3ProfMediaMain"></div>
+                <div class="p3-prof-media-caption" id="p3ProfMediaCaption"></div>
+                <div class="p3-prof-media-thumbs" id="p3ProfMediaThumbs"></div>
+              </div>
+              <div class="p3-prof-bio-wrap">
+                <p class="p3-prof-bio" id="p3ProfBio">1986年東京都生まれ。2010年東京藝術大学美術学部油画科卒業、2012年同大学院美術研究科修了。言葉と感覚の境界を絵画で探求する画家。オノマトペをテーマにした連作が代表作。音が見えて、絵が聞こえる——そんな体験を届けたいという思いで制作を続けている。2022年東京アートアワード奨励賞受賞。国内外のギャラリーで精力的に活動中。</p>
+                <button class="p3-prof-bio-toggle" id="p3ProfBioToggle">もっと見る</button>
+              </div>
+              <div class="p3-prof-bio-overflow"></div>
             </div>
-          </section>
 
-          <!-- C-4. プロフィール詳細 -->
-          <section id="p3-sec-profile">
-            <div class="p3-section-label">ABOUT — 自己紹介・略歴</div>
-            <div class="p3-about">
-              <p class="p3-about__text">1986年東京都生まれ。2010年東京藝術大学美術学部油画科卒業、2012年同大学院美術研究科修了。言葉と感覚の境界を絵画で探求する画家。オノマトペをテーマにした連作が代表作。音が見えて、絵が聞こえる──そんな体験を届けたいという思いで制作を続けている。2022年東京アートアワード奨励賞受賞。国内外のギャラリーで精力的に活動中。</p>
-              <dl class="p3-about__dl">
-                <dt>生まれ</dt><dd>1986年 / 東京都</dd>
-                <dt>学歴</dt><dd>2010年 東京藝術大学美術学部油画科 卒業</dd>
-                <dt></dt><dd>2012年 同大学院美術研究科 修了</dd>
-                <dt>受賞</dt><dd>2022年 東京アートアワード 奨励賞</dd>
-                <dt>居住地</dt><dd>東京都</dd>
-              </dl>
-              <div class="p3-photos" id="p3PhotosGrid"><!-- JS生成 --></div>
+            <!-- ジャンル -->
+            <div class="p3-prof-section">
+              <div class="p3-prof-section-label">ジャンル</div>
+              <div class="p3-prof-section-value">絵画・現代美術</div>
             </div>
-          </section>
 
-          <!-- C-5. リンク・詳細情報 -->
-          <section id="p3-sec-links">
-            <div class="p3-section-label">LINKS & INFO</div>
-            <div class="p3-links-info-grid">
+            <!-- 作品ブランド -->
+            <div class="p3-prof-section">
+              <div class="p3-prof-section-label">作品ブランド</div>
+              <div class="p3-prof-section-value">おとかたち</div>
+            </div>
 
-              <!-- 左: リンク集 -->
-              <ul class="p3-links">
-                <li>
-                  <a href="https://tanaka-toru.com" class="p3-links__item" target="_blank" rel="noopener noreferrer">
-                    <svg class="p3-links__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                    <span class="p3-links__name">HP</span>
-                    <span class="p3-links__url">tanaka-toru.com</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="https://instagram.com/tanaka_toru_art" class="p3-links__item" target="_blank" rel="noopener noreferrer">
-                    <svg class="p3-links__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
-                    <span class="p3-links__name">Instagram</span>
-                    <span class="p3-links__url">@tanaka_toru_art</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="https://x.com/tanaka_toru" class="p3-links__item" target="_blank" rel="noopener noreferrer">
-                    <svg class="p3-links__icon" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                    <span class="p3-links__name">X</span>
-                    <span class="p3-links__url">@tanaka_toru</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="https://tanaka-toru.base.shop" class="p3-links__item" target="_blank" rel="noopener noreferrer">
-                    <svg class="p3-links__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-                    <span class="p3-links__name">ショップ</span>
-                    <span class="p3-links__url">tanaka-toru.base.shop</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="https://note.com/tanaka_toru" class="p3-links__item" target="_blank" rel="noopener noreferrer">
-                    <svg class="p3-links__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="3"/><line x1="7" y1="9" x2="17" y2="9"/><line x1="7" y1="13" x2="17" y2="13"/><line x1="7" y1="17" x2="13" y2="17"/></svg>
-                    <span class="p3-links__name">note</span>
-                    <span class="p3-links__url">note.com/tanaka_toru</span>
-                  </a>
-                </li>
+            <!-- 取扱ギャラリー・店舗 -->
+            <div class="p3-prof-section">
+              <div class="p3-prof-section-label">取扱ギャラリー・店舗</div>
+              <ul class="p3-prof-venues">
+                <li>Gallery SOIL 渋谷（東京）</li>
+                <li>Art Space KITO（大阪）</li>
               </ul>
+            </div>
 
-              <!-- 右: アコーディオン + 取扱ギャラリー -->
-              <div class="p3-links-info-right">
-
-                <div class="p3-accordion">
-                  <button class="p3-accordion__head" type="button">
-                    <span class="p3-accordion__title">作品ブランド — Brand</span>
-                    <svg class="p3-accordion__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-                  </button>
-                  <div class="p3-accordion__body">
-                    <div class="p3-accordion__body-inner">
-                      <strong>おとかたち</strong><br>
-                      音と形をテーマにしたオリジナルグッズ・版画シリーズ。オノマトペを視覚化した小作品・ポストカード・グッズなどを展開中。
-                    </div>
-                  </div>
+            <!-- アトリエ -->
+            <div class="p3-prof-section">
+              <div class="p3-prof-section-label">アトリエ</div>
+              <div class="p3-prof-atelier">
+                <div class="p3-prof-atelier-name">アトリエ 音ノ間</div>
+                <div class="p3-prof-atelier-desc">制作・展示・ワークショップを行う複合アトリエ</div>
+                <div class="p3-prof-atelier-row">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  東京都杉並区高円寺南3-XX-XX
                 </div>
-
-                <div class="p3-accordion">
-                  <button class="p3-accordion__head" type="button">
-                    <span class="p3-accordion__title">アトリエ — Atelier</span>
-                    <svg class="p3-accordion__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-                  </button>
-                  <div class="p3-accordion__body">
-                    <div class="p3-accordion__body-inner">
-                      〒154-0001 東京都世田谷区<br>
-                      訪問：要予約 / TEL：03-0000-0000
-                    </div>
-                  </div>
+                <div class="p3-prof-atelier-row">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6.16 6.16l.91-.91a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                  03-XXXX-XXXX
                 </div>
+              </div>
+            </div>
 
-                <div class="p3-dealer-grid">
-                  <div class="p3-dealer-card">
-                    <div class="p3-dealer-card__avatar" style="background:linear-gradient(135deg,#6a9e8a,#4a7a6a)">S</div>
-                    <div class="p3-dealer-card__name">Gallery SOIL 渋谷</div>
-                    <div class="p3-dealer-card__city">東京</div>
-                    <button class="ktn-btn" onclick="this.classList.toggle('on');event.preventDefault()">
-                      <svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>
-                      watch<span class="tip">ウォッチする</span>
-                    </button>
-                  </div>
-                  <div class="p3-dealer-card">
-                    <div class="p3-dealer-card__avatar" style="background:linear-gradient(135deg,#9e8a6a,#7a6a4a)">K</div>
-                    <div class="p3-dealer-card__name">Art Space KITO</div>
-                    <div class="p3-dealer-card__city">大阪</div>
-                    <button class="ktn-btn" onclick="this.classList.toggle('on');event.preventDefault()">
-                      <svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>
-                      watch<span class="tip">ウォッチする</span>
-                    </button>
-                  </div>
-                </div>
+            <!-- リンク（アイコンのみ） -->
+            <div class="p3-prof-section">
+              <div class="p3-prof-section-label">Link</div>
+            </div>
+            <div class="p3-prof-links" id="p3ProfLinks"></div>
 
-              </div><!-- /p3-links-info-right -->
-            </div><!-- /p3-links-info-grid -->
-          </section>
+            <!-- 掲載日・最終更新 -->
+            <div class="p3-prof-dates">
+              <span><span class="p3-prof-dates__label">掲載日</span>2024.06.01</span>
+              <span><span class="p3-prof-dates__label">最終更新</span>2026.03.15</span>
+            </div>
 
-        </div><!-- /p3-layout__main -->
+          </div><!-- /p3-prof-main -->
 
-        <!-- ── 右カラム ── -->
-        <div class="p3-layout__side">
+          <!-- 右カラム -->
+          <div class="p3-prof-side">
 
-          <!-- R-1. アクションウィジェット -->
-          <div class="p3-side-card">
-            <button class="p3-action-watch-count" data-action="open-watchers">ウォッチャー 34人</button>
-            <button class="ktn-btn p3-action-watch-btn" data-off="watch" data-on="watching" data-action="watch">
+          <!-- R-1. CTAウィジェット -->
+          <div class="p3-side-card p3-box p3-side-cta">
+            <button class="p3-side-cta__count" data-action="open-watchers">ウォッチャー 34人</button>
+            <button class="ktn-btn p3-action-watch-btn" id="p3WatchSide" data-off="watch" data-on="watching" data-action="watch">
               <svg viewBox="0 0 16 16" fill="none" width="15" height="15">
                 <circle cx="8" cy="8" r="7" fill="#7a8a99" opacity=".45"/>
                 <circle class="wi-dark" cx="8" cy="8" r="2.6"/>
               </svg>
               <span class="ktn-btn__lbl">watch</span><span class="tip">ウォッチする</span>
             </button>
-            <hr class="p3-side-card__sep">
-            <div class="p3-side-card__sub">
+            <div class="p3-side-cta__sep"></div>
+            <div class="p3-side-cta__sub">
               <button class="p3-side-card__sub-btn" type="button" onclick="doShare()">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="14" height="14"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
                 シェア
@@ -440,57 +434,23 @@
             </div>
           </div>
 
-          <!-- R-2. クリエイター情報 -->
-          <div class="p3-side-card">
-            <div class="p3-side-card__title">クリエイター情報</div>
-            <dl class="p3-side-dl">
-              <dt>掲載日</dt><dd>2023.04.01</dd>
-              <dt>最終更新</dt><dd>2026.01.15</dd>
-              <dt>ジャンル</dt><dd>絵画・現代美術</dd>
-              <dt>居住地</dt><dd>東京都</dd>
-              <dt>ブランド</dt><dd>おとかたち</dd>
-            </dl>
+          <!-- R-2. 開催中の展覧会 -->
+          <div class="p3-side-card p3-box p3-side-exhibition" id="p3SideExhibitionCard">
+            <div class="p3-sec-label">EXHIBITION — 開催中</div>
+            <div id="p3SideExhibition"></div>
           </div>
 
-          <!-- R-3. リンク -->
-          <div class="p3-side-card">
-            <div class="p3-side-card__title">リンク</div>
-            <ul class="p3-side-links">
-              <li>
-                <a href="https://tanaka-toru.com" target="_blank" rel="noopener noreferrer">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                  HP
-                </a>
-              </li>
-              <li>
-                <a href="https://instagram.com/tanaka_toru_art" target="_blank" rel="noopener noreferrer">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
-                  Instagram
-                </a>
-              </li>
-              <li>
-                <a href="https://x.com/tanaka_toru" target="_blank" rel="noopener noreferrer">
-                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                  X
-                </a>
-              </li>
-              <li>
-                <a href="https://tanaka-toru.base.shop" target="_blank" rel="noopener noreferrer">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-                  ショップ
-                </a>
-              </li>
-              <li>
-                <a href="https://note.com/tanaka_toru" target="_blank" rel="noopener noreferrer">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="3"/><line x1="7" y1="9" x2="17" y2="9"/><line x1="7" y1="13" x2="17" y2="13"/><line x1="7" y1="17" x2="13" y2="17"/></svg>
-                  note
-                </a>
-              </li>
-            </ul>
+          <!-- R-3. 記事 -->
+          <div id="p3-sec-articles" class="p3-side-card p3-box p3-side-articles">
+            <div class="p3-sec-label">
+              ARTICLES — 記事
+              <a href="kotennavi-p3-2.html" class="p3-sec-more">記事一覧 →</a>
+            </div>
+            <div id="p3SideArticlesList"></div>
           </div>
 
           <!-- R-4. LIAISONカード（creator/adminのみ表示） -->
-          <div class="p3-side-card p3-side-liaison" id="p3SideLiaison">
+          <div class="p3-side-card p3-box p3-side-liaison" id="p3SideLiaison">
             <div class="p3-side-liaison__badge">
               <span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>
             </div>
@@ -498,27 +458,32 @@
             <a href="kotennavi-p3-3.html" class="p3-side-liaison__link">LIAISON作品を見る →</a>
           </div>
 
-        </div><!-- /p3-layout__side -->
+          </div><!-- /p3-prof-side -->
 
-      </div><!-- /p3-layout -->
-    </div><!-- /ktn-content p3-layout-wrap -->
+        </div><!-- /p3-prof-layout -->
+      </section>
 
-    <!-- D. おすすめのクリエイター -->
-    <div class="p3-related">
-      <div class="p3-related__inner">
-        <div class="p2-about__label" style="margin-bottom:20px">RECOMMENDED — おすすめのクリエイター</div>
-        <div class="ktn-grid ktn-grid--4col">
+    </div><!-- /p3-main -->
+
+    <!-- G. おすすめのクリエイター -->
+    <div class="p3-recommended">
+      <div class="p3-recommended__inner">
+        <div class="p3-sec-label">RECOMMENDED — おすすめのクリエイター</div>
+        <div class="p3-recommended__grid">
           <div class="masonry-item">
             <a class="cc" href="kotennavi-p3.html">
               <div class="cc__top">
-                <div class="cc__avatar" style="background:linear-gradient(135deg,#e8d0c8,#c0908a)"><div class="cc__avatar-ph">小</div></div>
-                <div class="cc__badge-row"><span class="cb cb-creator">creator</span><span class="sb">開催中/開催予定</span></div>
+                <div class="cc__avatar av-c1"><div class="cc__avatar-ph">小</div></div>
+                <div class="cc__badge-row">
+                  <span class="cb cb-creator">creator</span>
+                  <span class="sb">開催中/開催予定</span>
+                </div>
                 <div class="cc__name">小野 友美</div>
                 <div class="cc__genre">油彩・ドローイング</div>
                 <div class="cc__watch">
-                  <button class="ktn-btn" onclick="this.classList.toggle('on');event.preventDefault()">
-                    <svg width="14" height="14"><use href="#icon-watch" color="#7a8a99"/></svg>
-                    watch<span class="tip">ウォッチする</span>
+                  <button class="ktn-btn on" onclick="this.classList.toggle('on');event.preventDefault()">
+                    <svg width="14" height="14"><use href="#icon-watch" color="#3a90e0"/></svg>
+                    watching<span class="tip">ウォッチを解除する</span>
                   </button>
                 </div>
               </div>
@@ -534,8 +499,10 @@
           <div class="masonry-item">
             <a class="cc" href="kotennavi-p3.html">
               <div class="cc__top">
-                <div class="cc__avatar" style="background:linear-gradient(135deg,#d0e0d0,#8aaa8a)"><div class="cc__avatar-ph">佐</div></div>
-                <div class="cc__badge-row"><span class="cb cb-creator">creator</span></div>
+                <div class="cc__avatar av-c2"><div class="cc__avatar-ph">佐</div></div>
+                <div class="cc__badge-row">
+                  <span class="cb cb-creator">creator</span>
+                </div>
                 <div class="cc__name">佐藤 一朗</div>
                 <div class="cc__genre">彫刻・木工</div>
                 <div class="cc__watch">
@@ -557,8 +524,11 @@
           <div class="masonry-item">
             <a class="cc" href="kotennavi-p3.html">
               <div class="cc__top">
-                <div class="cc__avatar" style="background:linear-gradient(135deg,#c8d0e8,#8898c8)"><div class="cc__avatar-ph">山</div></div>
-                <div class="cc__badge-row"><span class="cb cb-creator">creator</span><span class="sb">開催中/開催予定</span></div>
+                <div class="cc__avatar av-c3"><div class="cc__avatar-ph">山</div></div>
+                <div class="cc__badge-row">
+                  <span class="cb cb-creator">creator</span>
+                  <span class="sb">開催中/開催予定</span>
+                </div>
                 <div class="cc__name">山田 葵</div>
                 <div class="cc__genre">写真・ミクストメディア</div>
                 <div class="cc__watch">
@@ -580,8 +550,10 @@
           <div class="masonry-item">
             <a class="cc" href="kotennavi-p3.html">
               <div class="cc__top">
-                <div class="cc__avatar" style="background:linear-gradient(135deg,#e8d8e8,#c0a0c0)"><div class="cc__avatar-ph">林</div></div>
-                <div class="cc__badge-row"><span class="cb cb-creator">creator</span></div>
+                <div class="cc__avatar av-c4"><div class="cc__avatar-ph">林</div></div>
+                <div class="cc__badge-row">
+                  <span class="cb cb-creator">creator</span>
+                </div>
                 <div class="cc__name">林 美咲</div>
                 <div class="cc__genre">版画・イラスト</div>
                 <div class="cc__watch">
@@ -601,8 +573,9 @@
             </a>
           </div>
         </div>
-      </div>
-    </div>
+        </div><!-- /p3-recommended__grid -->
+      </div><!-- /p3-recommended__inner -->
+    </div><!-- /p3-recommended -->
 
   </main>
 
@@ -628,12 +601,82 @@
   window.P3_DATA = {
     hasImage: true,
     hasActiveExhibition: true,
+    profile: {
+      images: [
+        { src:'', bg:'linear-gradient(135deg,#7ab8a0,#4a8870)', caption:'アトリエにて' },
+        { src:'', bg:'linear-gradient(135deg,#c8b87a,#9a8a4a)', caption:'個展会場' },
+        { src:'', bg:'linear-gradient(135deg,#c89098,#9a6070)', caption:'制作中' },
+        { src:'', bg:'linear-gradient(135deg,#9898c8,#6868a0)', caption:'作品ざわざわ' },
+        { src:'', bg:'linear-gradient(135deg,#b098c8,#8068a0)', caption:'グループ展' }
+      ],
+      links: [
+        { type:'hp',         url:'#', label:'HP' },
+        { type:'behance',    url:'#', label:'Behance' },
+        { type:'artstation', url:'#', label:'ArtStation' },
+        { type:'instagram',  url:'#', label:'Instagram' },
+        { type:'x',          url:'#', label:'X' },
+        { type:'facebook',   url:'#', label:'Facebook' },
+        { type:'threads',    url:'#', label:'Threads' },
+        { type:'bluesky',    url:'#', label:'Bluesky' },
+        { type:'pinterest',  url:'#', label:'Pinterest' },
+        { type:'tiktok',     url:'#', label:'TikTok' },
+        { type:'youtube',    url:'#', label:'YouTube' },
+        { type:'note',       url:'#', label:'note' },
+        { type:'substack',   url:'#', label:'Substack' },
+        { type:'base',       url:'#', label:'BASE' },
+        { type:'minne',      url:'#', label:'minne' },
+        { type:'creema',     url:'#', label:'creema' },
+        { type:'stores',     url:'#', label:'STORES' },
+        { type:'etsy',       url:'#', label:'Etsy' },
+        { type:'shopify',    url:'#', label:'Shopify' },
+        { type:'booth',      url:'#', label:'BOOTH' },
+        { type:'pixiv',      url:'#', label:'pixiv' },
+        { type:'iichi',      url:'#', label:'iichi' },
+        { type:'linktree',   url:'#', label:'Linktree' },
+        { type:'litlink',    url:'#', label:'lit.link' }
+      ]
+    },
+    activeExhibition: {
+      title:'色と音のあいだ',
+      venue:'銀座Gallery Koten',
+      dateRange:'2026.04.15 – 04.27',
+      isLiaison: true
+    },
     watchers: [
       { name:'山田花子', avatar:'linear-gradient(135deg,#e8b4a0,#c89080)' },
       { name:'佐藤二郎', avatar:'linear-gradient(135deg,#a0b4e8,#7090c0)' },
       { name:'鈴木三郎', avatar:'linear-gradient(135deg,#b4e8a0,#80c090)' },
       { name:'田村四郎', avatar:'linear-gradient(135deg,#e8e0a0,#c0b880)' },
       { name:'中村五郎', avatar:'linear-gradient(135deg,#d4a0e8,#a870c0)' },
+      { name:'木村六子', avatar:'linear-gradient(135deg,#a0e8d4,#60b090)' },
+      { name:'林 七海', avatar:'linear-gradient(135deg,#e8a0c8,#c070a0)' },
+      { name:'清水八郎', avatar:'linear-gradient(135deg,#c8a0e8,#9868c0)' },
+      { name:'松本九美', avatar:'linear-gradient(135deg,#e8d0a0,#c0a060)' },
+      { name:'井上十子', avatar:'linear-gradient(135deg,#a0c8e8,#6098c0)' },
+      { name:'渡辺一朗', avatar:'linear-gradient(135deg,#e8a0a0,#c07070)' },
+      { name:'伊藤葵',   avatar:'linear-gradient(135deg,#a0e8a8,#60b068)' },
+      { name:'小林蓮',   avatar:'linear-gradient(135deg,#d0c8e8,#9890c0)' },
+      { name:'加藤麻衣', avatar:'linear-gradient(135deg,#e8c8a0,#c09870)' },
+      { name:'吉田陽子', avatar:'linear-gradient(135deg,#a8d0e8,#6098b8)' },
+      { name:'田中悠人', avatar:'linear-gradient(135deg,#e8a8c0,#c07898)' },
+      { name:'佐々木凛', avatar:'linear-gradient(135deg,#b0e8c8,#78b898)' },
+      { name:'山口晴香', avatar:'linear-gradient(135deg,#e0b8e8,#b080c0)' },
+      { name:'斎藤隆',   avatar:'linear-gradient(135deg,#e8d8a0,#c0b070)' },
+      { name:'松田奈々', avatar:'linear-gradient(135deg,#a0d8e8,#6098b0)' },
+      { name:'藤田光',   avatar:'linear-gradient(135deg,#e8b0b0,#c07878)' },
+      { name:'岡田春菜', avatar:'linear-gradient(135deg,#b8e8a0,#88c070)' },
+      { name:'西村美咲', avatar:'linear-gradient(135deg,#d8a0e8,#a868c0)' },
+      { name:'高橋大輝', avatar:'linear-gradient(135deg,#e8c0a0,#c09068)' },
+      { name:'中島葉月', avatar:'linear-gradient(135deg,#a0e8d8,#60b0a0)' },
+      { name:'坂本颯太', avatar:'linear-gradient(135deg,#e8a0b8,#c07088)' },
+      { name:'遠藤理奈', avatar:'linear-gradient(135deg,#c0d8e8,#88a8c8)' },
+      { name:'石川雄大', avatar:'linear-gradient(135deg,#e8e0b0,#c0b880)' },
+      { name:'野田彩花', avatar:'linear-gradient(135deg,#b0c8e8,#7898c0)' },
+      { name:'原田一樹', avatar:'linear-gradient(135deg,#e8b8a0,#c08870)' },
+      { name:'村田詩織', avatar:'linear-gradient(135deg,#a8e8b8,#78c088)' },
+      { name:'橋本大地', avatar:'linear-gradient(135deg,#d0a8e8,#a078c0)' },
+      { name:'長谷川莉子', avatar:'linear-gradient(135deg,#e8d0b0,#c0a880)' },
+      { name:'上田朋美', avatar:'linear-gradient(135deg,#a0c0e8,#6890c0)' },
     ],
     photos: [
       { bg:'linear-gradient(155deg,#b8d8cc,#6a9e8a)', label:'アトリエにて' },
@@ -643,11 +686,74 @@
       { bg:'linear-gradient(155deg,#e8d0f0,#a880c8)', label:'グループ展' },
     ],
     newBadges: { exhibitions: true, works: false, articles: true },
+    archiveCount: 10,
     works: [
-      { title:'《ふわふわ》',       year:'2026', material:'油彩',    bg:'linear-gradient(135deg,#c8e8d8,#8ab8a0)', liaison:true  },
-      { title:'《ドキドキ #3》',    year:'2025', material:'混合技法', bg:'linear-gradient(135deg,#e8c8c8,#c89898)', liaison:true  },
-      { title:'《ざわざわ（夜）》',  year:'2026', material:'アクリル', bg:'linear-gradient(135deg,#2a3a5a,#4a5a7a)', liaison:false },
-      { title:'《シュワシュワ》',    year:'2025', material:'油彩',    bg:'linear-gradient(135deg,#c8d8e8,#9ab8d0)', liaison:false },
+      { id:'w1', title:'《ふわふわ》',      year:'2026', medium:'油彩',    isNew:true,  isLiaison:true,  bg:'linear-gradient(135deg,#c8e8d8,#8ab8a0)' },
+      { id:'w2', title:'《ドキドキ #3》',   year:'2025', medium:'混合技法', isNew:false, isLiaison:true,  bg:'linear-gradient(135deg,#e8c8c8,#c89898)' },
+      { id:'w3', title:'《ざわざわ（夜）》', year:'2026', medium:'アクリル', isNew:true,  isLiaison:false, bg:'linear-gradient(135deg,#2a3a5a,#4a5a7a)' },
+      { id:'w4', title:'《シュワシュワ》',   year:'2025', medium:'油彩',    isNew:false, isLiaison:false, bg:'linear-gradient(135deg,#c8d8e8,#9ab8d0)' },
+    ],
+    exhibitions: [
+      {
+        id:'ex1', title:'あなたが知らないオノマトペ', venue:'Gallery SOIL 渋谷',
+        url:'kotennavi-p2.html',
+        status:'live', remain:'残り12日',
+        isLiaison:false, isLiaisonPlus:true,
+        works:[
+          { id:'w1', title:'《ふわふわ》',      status:'sale',     bg:'linear-gradient(135deg,#b8d8cc,#6a9e8a)', price:'¥120,000', isNew:true  },
+          { id:'w2', title:'《ドキドキ #3》',   status:'applying', bg:'linear-gradient(135deg,#d4b8c8,#9a6a88)', price:'¥85,000',  isNew:false },
+          { id:'w3', title:'《ざわざわ（夜）》', status:'sold',     bg:'linear-gradient(135deg,#2a3548,#1a2535)', price:'¥98,000',  isNew:true  }
+        ]
+      },
+      {
+        id:'ex3', title:'静寂のオノマトペ', venue:'Art Space HIKARI',
+        url:'kotennavi-p2.html',
+        status:'live', remain:'残り27日',
+        isLiaison:false, isLiaisonPlus:true,
+        works:[
+          { id:'w6', title:'《しんしん》',   status:'sale',    bg:'linear-gradient(135deg,#c8d8e8,#7a9ab8)', price:'¥68,000',  isNew:true  },
+          { id:'w7', title:'《ぽつぽつ》',   status:'inquiry', bg:'linear-gradient(135deg,#e8d8c0,#b8a070)', price:'¥145,000', isNew:false },
+          { id:'w8', title:'《しずか》',     status:'sale',    bg:'linear-gradient(135deg,#d0e0d0,#809880)', price:'¥52,000',  isNew:false },
+          { id:'w9', title:'《もやもや》',   status:'sold',    bg:'linear-gradient(135deg,#3a3040,#1a1828)', price:'¥110,000', isNew:false }
+        ]
+      },
+      {
+        id:'ex4', title:'春の声 — グループ展', venue:'Art Space KITO',
+        url:'kotennavi-p2.html',
+        status:'upcoming', remain:'48日後に開催',
+        isLiaison:false, isLiaisonPlus:true,
+        works:[
+          { id:'w10', title:'《うきうき》', status:'sale',     bg:'linear-gradient(135deg,#e8c0d8,#b07898)', price:'¥78,000', isNew:true  },
+          { id:'w11', title:'《わくわく》', status:'applying', bg:'linear-gradient(135deg,#c0d8c8,#78a088)', price:'¥92,000', isNew:true  }
+        ]
+      },
+      {
+        id:'ex2', title:'浜田澄子との仲間たち展', venue:'art Truth',
+        url:'kotennavi-p2.html',
+        status:'upcoming', remain:'26日後に開催',
+        isLiaison:true, isLiaisonPlus:false,
+        works:[
+          { id:'w4', title:'《シュワシュワ》', status:'sale',    bg:'linear-gradient(135deg,#b8c8d8,#6a7a9a)' },
+          { id:'w5', title:'《ふわり》',       status:'inquiry', bg:'linear-gradient(135deg,#d8d0b8,#9a8a6a)' }
+        ]
+      },
+      {
+        id:'ex5', title:'色と音のあいだ', venue:'銀座Gallery Koten',
+        url:'kotennavi-p2.html',
+        status:'live', remain:'残り7日',
+        isLiaison:true, isLiaisonPlus:false,
+        works:[
+          { id:'w12', title:'《ざわざわ（朝）》', status:'sale',  bg:'linear-gradient(135deg,#d8e8c0,#90a870)' },
+          { id:'w13', title:'《ころころ》',       status:'nsale', bg:'linear-gradient(135deg,#e0c8d8,#a08098)' },
+          { id:'w14', title:'《きらきら》',       status:'sold',  bg:'linear-gradient(135deg,#e8e0b0,#b0a860)' }
+        ]
+      }
+    ],
+    worksTotal: 18,
+    articles: [
+      { id:'a1', title:'オノマトペと絵画のあいだ', date:'2026.01.15', isNew:true,  hasImg:true  },
+      { id:'a2', title:'音から生まれる色の話',     date:'2025.08.20', isNew:false, hasImg:false },
+      { id:'a3', title:'絵の具の混ぜ方と感情の話', date:'2025.04.10', isNew:false, hasImg:true  },
     ]
   };
   KTN.init({ page: 'p3', role: 'guest' });
@@ -657,6 +763,14 @@
     document.getElementById('dbarImgOff').classList.toggle('on', !hasImage);
     window.P3_DATA.hasImage = hasImage;
     applyHeadImageMode(hasImage);
+  }
+
+  function setWorksMode(mode, btn) {
+    document.getElementById('dbarWorksLiaison').classList.toggle('on', mode === 'liaison');
+    document.getElementById('dbarWorksNormal').classList.toggle('on', mode === 'normal');
+    var data = Object.assign({}, window.P3_DATA);
+    if (mode === 'normal') data.exhibitions = [];
+    window.renderP3Works(data);
   }
 
   function applyHeadImageMode(hasImage) {
