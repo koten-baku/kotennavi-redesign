@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>リエゾンプラスの手数料について | LIAISON | 個展なび</title>
+  <meta name="description" content="個展なびLIAISON+の販売手数料について。作品価格帯別の手数料率、Stripe決済手数料の仕組み、クリエイター・ギャラリーの手取り額シミュレーターをご確認いただけます。">
+  <link rel="canonical" href="https://koten-navi.com/p70-7">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="リエゾンプラスの手数料について | 個展なび">
+  <meta property="og:description" content="LIAISON+の手数料体系・シミュレーターをご確認いただけます。">
+  <meta property="og:site_name" content="個展なび">
+  <meta name="twitter:card" content="summary">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Noto+Sans+JP:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+
+  <style>
+    /* ══════════════════════════════════════════════
+       P70-7 リエゾンプラス手数料ページ固有スタイル
+       namespace: .p707-
+    ══════════════════════════════════════════════ */
+
+    /* ── ページアクセントカラー（LIAISON+ ゴールド） ── */
+    .p707-page {
+      --page-accent:        #8a6a00;
+      --page-accent-light:  #b87c10;
+      --page-accent-bg:     rgba(184,124,16,.07);
+      --page-accent-border: rgba(184,124,16,.3);
+      --lp-gold:            #b87c10;
+      --lp-gold-bg:         rgba(184,124,16,.08);
+      --lp-gold-border:     rgba(184,124,16,.28);
+    }
+
+    /* ── ヒーローバンド ── */
+    .p707-hero {
+      background: linear-gradient(135deg, #1a2a3a 0%, #2e3f52 60%, #1e3248 100%);
+      padding: 40px 24px 36px;
+      position: relative;
+      overflow: hidden;
+    }
+    .p707-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 80% at 80% 40%, rgba(184,124,16,.12) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 60% at 10% 80%, rgba(0,93,167,.15) 0%, transparent 55%);
+      pointer-events: none;
+    }
+    .p707-hero__inner {
+      max-width: var(--w-article);
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    .p707-hero__badge-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .p707-hero__title {
+      font-family: 'Shippori Mincho', serif;
+      font-size: clamp(1.25rem, 4vw, 1.7rem);
+      font-weight: 600;
+      color: #fff;
+      line-height: 1.35;
+      margin-bottom: 10px;
+    }
+    .p707-hero__sub {
+      font-size: .82rem;
+      color: rgba(255,255,255,.58);
+      line-height: 1.7;
+      max-width: 480px;
+    }
+    /* LIAISON+ バッジ（ゴールド） */
+    .lb-dot-lp-hero {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: .5rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      padding: 3px 9px 3px 7px;
+      border-radius: 20px;
+      background: #b87c10;
+      color: #fff;
+      white-space: nowrap;
+    }
+    .lb-dot-lp-hero .dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.85);
+    }
+
+    /* ── セクション共通 ── */
+    .p707-section {
+      padding: 32px 24px;
+    }
+    .p707-section__inner {
+      max-width: var(--w-article);
+      margin: 0 auto;
+    }
+    .p707-section + .p707-section {
+      border-top: 1px solid var(--border);
+    }
+    .p707-section-title {
+      font-family: 'Shippori Mincho', serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .p707-section-title::before {
+      content: '';
+      display: inline-block;
+      width: 3px;
+      height: 1em;
+      background: var(--lp-gold, #b87c10);
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    .p707-section-lead {
+      font-size: .84rem;
+      color: var(--muted);
+      line-height: 1.75;
+      margin-bottom: 20px;
+    }
+
+    /* ── 手数料テーブル ── */
+    .p707-fee-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .84rem;
+      margin-bottom: 12px;
+    }
+    .p707-fee-table thead tr {
+      background: var(--lp-gold-bg, rgba(184,124,16,.07));
+      border-bottom: 2px solid var(--lp-gold-border, rgba(184,124,16,.28));
+    }
+    .p707-fee-table th {
+      padding: 10px 16px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: .62rem;
+      font-weight: 600;
+      letter-spacing: .07em;
+      color: var(--lp-gold, #b87c10);
+      text-align: left;
+      white-space: nowrap;
+    }
+    .p707-fee-table th:not(:first-child) {
+      text-align: right;
+    }
+    .p707-fee-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      color: var(--ink);
+      vertical-align: middle;
+    }
+    .p707-fee-table td:not(:first-child) {
+      text-align: right;
+    }
+    .p707-fee-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+    .p707-fee-table tbody tr:hover {
+      background: var(--lp-gold-bg);
+    }
+    .p707-fee-rate {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--lp-gold, #b87c10);
+    }
+    .p707-fee-stripe {
+      font-size: .72rem;
+      color: var(--muted);
+    }
+    .p707-fee-net {
+      font-size: .8rem;
+      font-weight: 500;
+      color: var(--ink);
+    }
+    /* 価格帯ラベル */
+    .p707-price-range {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .p707-price-range__label {
+      font-weight: 500;
+      color: var(--ink);
+    }
+    .p707-price-range__note {
+      font-size: .68rem;
+      color: var(--muted);
+    }
+    /* フューチャーバッジ */
+    .p707-future-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: .5rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      padding: 2px 7px;
+      border-radius: 3px;
+      background: rgba(0,93,167,.08);
+      color: #005da7;
+      border: 1px solid rgba(0,93,167,.2);
+      white-space: nowrap;
+    }
+    /* テーブルラッパー（スクロール対応） */
+    .p707-table-wrap {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      overflow-x: auto;
+    }
+
+    /* ── フェーズロードマップ ── */
+    .p707-phases {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .p707-phase {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      background: #fff;
+    }
+    .p707-phase--current {
+      border-color: var(--lp-gold-border, rgba(184,124,16,.3));
+      box-shadow: 0 0 0 1px var(--lp-gold-border, rgba(184,124,16,.18));
+    }
+    .p707-phase__head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      background: var(--paper);
+      border-bottom: 1px solid var(--border);
+    }
+    .p707-phase--current .p707-phase__head {
+      background: var(--lp-gold-bg);
+      border-bottom-color: var(--lp-gold-border);
+    }
+    .p707-phase__num {
+      font-family: 'Montserrat', sans-serif;
+      font-size: .56rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    .p707-phase--current .p707-phase__num {
+      color: var(--lp-gold, #b87c10);
+    }
+    .p707-phase__name {
+      font-size: .88rem;
+      font-weight: 600;
+      color: var(--ink);
+      flex: 1;
+    }
+    .p707-phase__status {
+      font-family: 'Montserrat', sans-serif;
+      font-size: .5rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      padding: 2px 8px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+    .p707-phase--current .p707-phase__status {
+      background: var(--lp-gold, #b87c10);
+      color: #fff;
+    }
+    .p707-phase:not(.p707-phase--current) .p707-phase__status {
+      background: rgba(0,0,0,.06);
+      color: var(--muted);
+    }
+    .p707-phase__body {
+      padding: 14px 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+    .p707-phase__tiers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      flex: 1;
+    }
+    .p707-tier {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--warm);
+      min-width: 180px;
+    }
+    .p707-phase--current .p707-tier {
+      border-color: var(--lp-gold-border);
+      background: #fffcf5;
+    }
+    .p707-tier__range {
+      font-size: .76rem;
+      color: var(--ink);
+      font-weight: 400;
+      line-height: 1.3;
+    }
+    .p707-tier__rate {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--lp-gold, #b87c10);
+      margin-left: auto;
+      white-space: nowrap;
+    }
+    .p707-phase:not(.p707-phase--current) .p707-tier__rate {
+      color: var(--muted);
+    }
+    .p707-phase__note {
+      font-size: .75rem;
+      color: var(--muted);
+      line-height: 1.6;
+      width: 100%;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+      margin-top: 4px;
+    }
+
+    /* ── インフォボックス ── */
+    .p707-info-box {
+      display: flex;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 8px;
+      font-size: .82rem;
+      line-height: 1.65;
+      margin-bottom: 20px;
+    }
+    .p707-info-box--gold {
+      background: var(--lp-gold-bg);
+      border: 1px solid var(--lp-gold-border);
+      color: var(--ink);
+    }
+    .p707-info-box--blue {
+      background: rgba(0,93,167,.06);
+      border: 1px solid rgba(0,93,167,.2);
+      color: var(--ink);
+    }
+    .p707-info-box--neutral {
+      background: var(--paper);
+      border: 1px solid var(--border);
+      color: var(--ink);
+    }
+    .p707-info-box__icon {
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      margin-top: 1px;
+      color: var(--lp-gold, #b87c10);
+    }
+    .p707-info-box--blue .p707-info-box__icon { color: #005da7; }
+    .p707-info-box--neutral .p707-info-box__icon { color: var(--muted); }
+
+    /* ── シミュレーター ── */
+    .p707-sim {
+      background: #fff;
+      border: 1px solid var(--lp-gold-border, rgba(184,124,16,.28));
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .p707-sim__head {
+      padding: 14px 20px 12px;
+      background: var(--lp-gold-bg);
+      border-bottom: 1px solid var(--lp-gold-border);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .p707-sim__head-title {
+      font-size: .9rem;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .p707-sim__head-badge {
+      font-family: 'Montserrat', sans-serif;
+      font-size: .46rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      padding: 2px 7px;
+      border-radius: 3px;
+      background: var(--lp-gold, #b87c10);
+      color: #fff;
+      margin-left: auto;
+    }
+    .p707-sim__body {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    /* 入力エリア */
+    .p707-sim__input-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .p707-sim__input-label {
+      font-size: .8rem;
+      color: var(--muted);
+      white-space: nowrap;
+      min-width: 70px;
+    }
+    .p707-sim__input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex: 1;
+      min-width: 200px;
+    }
+    .p707-sim__yen {
+      font-family: 'Montserrat', sans-serif;
+      font-size: .88rem;
+      color: var(--muted);
+      flex-shrink: 0;
+    }
+    .p707-sim__input {
+      flex: 1;
+      height: 38px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0 10px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: .9rem;
+      color: var(--ink);
+      background: var(--warm);
+      transition: border-color .15s;
+      min-width: 0;
+    }
+    .p707-sim__input:focus {
+      outline: none;
+      border-color: var(--lp-gold, #b87c10);
+      background: #fff;
+    }
+    .p707-sim__quick {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .p707-sim__quick-btn {
+      padding: 5px 12px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: none;
+      font-size: .72rem;
+      color: var(--muted);
+      cursor: pointer;
+      font-family: 'Montserrat', sans-serif;
+      transition: all .13s;
+    }
+    .p707-sim__quick-btn:hover,
+    .p707-sim__quick-btn.is-active {
+      border-color: var(--lp-gold, #b87c10);
+      color: var(--lp-gold, #b87c10);
+      background: var(--lp-gold-bg);
+    }
+    /* 結果エリア */
+    .p707-sim__result {
+      background: var(--paper);
+      border-radius: 8px;
+      padding: 16px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0;
+    }
+    .p707-sim__result-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 0 12px;
+      border-right: 1px solid var(--border);
+      text-align: center;
+    }
+    .p707-sim__result-item:first-child { padding-left: 0; }
+    .p707-sim__result-item:last-child { border-right: none; padding-right: 0; }
+    .p707-sim__result-label {
+      font-size: .64rem;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    .p707-sim__result-value {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--ink);
+      white-space: nowrap;
+    }
+    .p707-sim__result-value--main {
+      color: #1a7a3e;
+      font-size: 1.3rem;
+    }
+    .p707-sim__result-value--minus {
+      color: #c0392b;
+    }
+    .p707-sim__result-sub {
+      font-size: .62rem;
+      color: var(--muted);
+    }
+    /* 適用レートバッジ */
+    .p707-sim__rate-badge {
+      font-size: .76rem;
+      color: var(--muted);
+    }
+    .p707-sim__rate-badge strong {
+      font-family: 'Montserrat', sans-serif;
+      font-size: .9rem;
+      font-weight: 700;
+      color: var(--lp-gold, #b87c10);
+    }
+
+    /* ── FAQ アコーディオン ── */
+    .p707-faq {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      background: #fff;
+    }
+    .p707-faq-item {
+      border-bottom: 1px solid var(--border);
+    }
+    .p707-faq-item:last-child { border-bottom: none; }
+    .p707-faq__q {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 16px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      width: 100%;
+      text-align: left;
+      font-family: inherit;
+      transition: background .12s;
+    }
+    .p707-faq__q:hover { background: var(--paper); }
+    .p707-faq__q-inner {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .p707-faq__q-mark {
+      font-family: 'Montserrat', sans-serif;
+      font-size: .72rem;
+      font-weight: 700;
+      color: var(--lp-gold, #b87c10);
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .p707-faq__q-text {
+      font-size: .85rem;
+      font-weight: 500;
+      color: var(--ink);
+      line-height: 1.5;
+    }
+    .p707-faq__chev {
+      width: 16px; height: 16px;
+      flex-shrink: 0;
+      color: var(--muted);
+      transition: transform .22s;
+      margin-top: 2px;
+    }
+    .p707-faq-item.is-open .p707-faq__chev { transform: rotate(180deg); }
+    .p707-faq__a {
+      height: 0;
+      overflow: hidden;
+      transition: height .25s ease;
+    }
+    .p707-faq__a-inner {
+      padding: 0 16px 16px 38px;
+      font-size: .82rem;
+      line-height: 1.75;
+      color: var(--muted);
+    }
+    .p707-faq__a-inner a {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+
+    /* ── CTAエリア ── */
+    .p707-cta {
+      background: linear-gradient(135deg, #1a2a3a 0%, #2c3e50 100%);
+      padding: 36px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .p707-cta::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 50% 60% at 70% 50%, rgba(184,124,16,.14) 0%, transparent 60%);
+    }
+    .p707-cta__inner {
+      max-width: var(--w-article);
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 20px;
+      justify-content: space-between;
+    }
+    .p707-cta__text {}
+    .p707-cta__title {
+      font-family: 'Shippori Mincho', serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+    .p707-cta__sub {
+      font-size: .78rem;
+      color: rgba(255,255,255,.5);
+      line-height: 1.6;
+    }
+    .p707-cta__btn-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .p707-cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-size: .82rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all .15s;
+      white-space: nowrap;
+      font-family: inherit;
+    }
+    .p707-cta-btn--primary {
+      background: #b87c10;
+      color: #fff;
+      border: 1px solid transparent;
+    }
+    .p707-cta-btn--primary:hover {
+      background: #9e6c0e;
+    }
+    .p707-cta-btn--ghost {
+      background: none;
+      color: rgba(255,255,255,.7);
+      border: 1px solid rgba(255,255,255,.22);
+    }
+    .p707-cta-btn--ghost:hover {
+      color: #fff;
+      border-color: rgba(255,255,255,.5);
+    }
+
+    /* ── ポイントカード群 ── */
+    .p707-points {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .p707-point-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .p707-point-card__icon {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      background: var(--lp-gold-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--lp-gold, #b87c10);
+    }
+    .p707-point-card__title {
+      font-size: .84rem;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .p707-point-card__desc {
+      font-size: .76rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    /* ── レスポンシブ調整 ── */
+    @media (max-width: 600px) {
+      .p707-hero { padding: 28px 16px 24px; }
+      .p707-section { padding: 24px 16px; }
+      .p707-sim__result {
+        grid-template-columns: 1fr;
+      }
+      .p707-sim__result-item {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        padding: 8px 0;
+        text-align: left;
+      }
+      .p707-sim__result-item:last-child { border-bottom: none; }
+      .p707-cta { padding: 28px 16px; }
+      .p707-tier { min-width: 140px; }
+    }
+
+    /* ── ページ内アンカーナビ ── */
+    .p707-page-nav {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .p707-page-nav::-webkit-scrollbar { display: none; }
+    .p707-page-nav__inner {
+      max-width: var(--w-article);
+      margin: 0 auto;
+      display: flex;
+      gap: 0;
+    }
+    .p707-page-nav__item {
+      display: inline-flex;
+      align-items: center;
+      padding: 11px 14px;
+      font-size: .75rem;
+      color: var(--muted);
+      text-decoration: none;
+      white-space: nowrap;
+      border-bottom: 2px solid transparent;
+      transition: color .12s, border-color .12s;
+    }
+    .p707-page-nav__item:hover {
+      color: var(--ink);
+      border-bottom-color: var(--border);
+    }
+  </style>
+</head>
+<body class="p707-page">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ロール：</span>
+  <button class="dbtn on" onclick="setR('guest',this)">ゲスト</button>
+  <button class="dbtn" onclick="setR('login',this)">ログイン</button>
+  <button class="dbtn" onclick="setR('user+creator',this)">creator</button>
+  <button class="dbtn" onclick="setR('user+gallery',this)">gallery</button>
+  <button class="dbtn" onclick="setR('admin',this)">管理者</button>
+</div>
+
+<div class="dev-ph dev-ph--sidebar"></div>
+
+<div class="shell">
+<div class="content-wrap" id="contentWrap">
+
+  <header class="ktn-header" id="ktnHeader">
+    <div class="ktn-header__inner">
+      <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+      <div class="ktn-hdr-actions" id="ktnActs"></div>
+    </div>
+  </header>
+
+  <div class="ktn-tagbar" id="ktnTagbar">
+    <div class="ktn-tagbar__inner" id="ktnTagbarInner"></div>
+  </div>
+
+  <main class="ktn-main" id="ktnMain">
+
+    <!-- ① ヒーローバンド -->
+    <div class="p707-hero">
+      <div class="p707-hero__inner">
+        <div class="p707-hero__badge-row">
+          <span class="lb-dot-lp-hero"><span class="dot"></span>LIAISON+</span>
+        </div>
+        <h1 class="p707-hero__title">リエゾンプラスの<br>手数料について</h1>
+        <p class="p707-hero__sub">作品販売で発生する手数料の仕組みをわかりやすく説明します。<br>手取り額シミュレーターもご利用ください。</p>
+      </div>
+    </div>
+
+    <!-- ② ページ内ナビ -->
+    <nav class="p707-page-nav" aria-label="このページのセクション">
+      <div class="p707-page-nav__inner">
+        <a href="#fee-structure" class="p707-page-nav__item">手数料体系</a>
+        <a href="#roadmap"       class="p707-page-nav__item">フェーズロードマップ</a>
+        <a href="#stripe"        class="p707-page-nav__item">Stripeについて</a>
+        <a href="#simulator"     class="p707-page-nav__item">手取り額シミュレーター</a>
+        <a href="#faq"           class="p707-page-nav__item">よくある質問</a>
+      </div>
+    </nav>
+
+    <!-- ③ 手数料体系 -->
+    <section class="p707-section" id="fee-structure">
+      <div class="p707-section__inner">
+        <h2 class="p707-section-title">手数料体系</h2>
+        <p class="p707-section-lead">
+          リエゾンプラスの手数料は、作品の販売価格に応じた2段階のスライディングスケール型です。クリエイター・ギャラリーともに同一の料率が適用されます。
+        </p>
+
+        <div class="p707-table-wrap">
+          <table class="p707-fee-table">
+            <thead>
+              <tr>
+                <th>販売価格</th>
+                <th>手数料率</th>
+                <th>うちStripe手数料</th>
+                <th>実質マージン</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div class="p707-price-range">
+                    <span class="p707-price-range__label">〜 29,999円</span>
+                    <span class="p707-price-range__note">低〜中価格帯</span>
+                  </div>
+                </td>
+                <td><span class="p707-fee-rate">10%</span></td>
+                <td><span class="p707-fee-stripe">約 3.6%</span></td>
+                <td><span class="p707-fee-net">約 6.4%</span></td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="p707-price-range">
+                    <span class="p707-price-range__label">30,000円〜</span>
+                    <span class="p707-price-range__note">高価格帯</span>
+                  </div>
+                </td>
+                <td><span class="p707-fee-rate">8%</span></td>
+                <td><span class="p707-fee-stripe">約 3.6%</span></td>
+                <td><span class="p707-fee-net">約 4.4%</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p style="font-size:.72rem;color:var(--muted);margin-top:8px;line-height:1.6;">
+          ※ Stripe手数料は国内発行カード3.6%、海外発行カード3.9%（税抜）。表中は目安として国内カード3.6%を使用しています。<br>
+          ※ 手数料はすべて税込販売価格に対して計算されます。
+        </p>
+
+        <!-- ポイント3点 -->
+        <div class="p707-points" style="margin-top:24px;">
+          <div class="p707-point-card">
+            <div class="p707-point-card__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="17" height="17">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </div>
+            <div class="p707-point-card__title">クリエイター・ギャラリー同一</div>
+            <div class="p707-point-card__desc">どちらのユーザーも同じ料率が適用されます。価格帯別のスライド型で、自然に差異が生まれます。</div>
+          </div>
+          <div class="p707-point-card">
+            <div class="p707-point-card__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="17" height="17">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+              </svg>
+            </div>
+            <div class="p707-point-card__title">シンプルな2段階</div>
+            <div class="p707-point-card__desc">30,000円の境界線のみ。申込時に複雑な計算は不要で、掲載前に手取りがひと目でわかります。</div>
+          </div>
+          <div class="p707-point-card">
+            <div class="p707-point-card__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="17" height="17">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              </svg>
+            </div>
+            <div class="p707-point-card__title">Stripe安全決済</div>
+            <div class="p707-point-card__desc">国際標準の決済代行サービス「Stripe」を採用。クリエイター・購入者双方の取引を安全に保護します。</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ④ フェーズロードマップ -->
+    <section class="p707-section" id="roadmap" style="background:var(--paper)">
+      <div class="p707-section__inner">
+        <h2 class="p707-section-title">フェーズロードマップ</h2>
+        <p class="p707-section-lead">
+          サービスの成長に合わせて、手数料体系を段階的に拡充していく予定です。<br>変更は「手数料を下げる」方向のみで行われるため、既存ユーザーの皆様に不利になる変更はありません。
+        </p>
+
+        <div class="p707-phases">
+          <!-- Phase 1 現行 -->
+          <div class="p707-phase p707-phase--current">
+            <div class="p707-phase__head">
+              <span class="p707-phase__num">PHASE 1</span>
+              <span class="p707-phase__name">ローンチ〜サービス定着期</span>
+              <span class="p707-phase__status">現在</span>
+            </div>
+            <div class="p707-phase__body">
+              <div class="p707-phase__tiers">
+                <div class="p707-tier">
+                  <div>
+                    <div style="font-size:.62rem;color:var(--muted);margin-bottom:2px;">〜 29,999円</div>
+                    <div class="p707-tier__range">低〜中価格帯</div>
+                  </div>
+                  <div class="p707-tier__rate">10%</div>
+                </div>
+                <div class="p707-tier">
+                  <div>
+                    <div style="font-size:.62rem;color:var(--muted);margin-bottom:2px;">30,000円〜</div>
+                    <div class="p707-tier__range">高価格帯</div>
+                  </div>
+                  <div class="p707-tier__rate">8%</div>
+                </div>
+              </div>
+              <div class="p707-phase__note">
+                クリエイター・ギャラリー共通。シンプルな2段階で試しやすい構成です。
+              </div>
+            </div>
+          </div>
+
+          <!-- Phase 2 予定 -->
+          <div class="p707-phase">
+            <div class="p707-phase__head">
+              <span class="p707-phase__num">PHASE 2</span>
+              <span class="p707-phase__name">高額作品プロモーション導入期</span>
+              <span class="p707-phase__status">予定</span>
+            </div>
+            <div class="p707-phase__body">
+              <div class="p707-phase__tiers">
+                <div class="p707-tier">
+                  <div>
+                    <div style="font-size:.62rem;color:var(--muted);margin-bottom:2px;">〜 29,999円</div>
+                    <div class="p707-tier__range">低〜中価格帯</div>
+                  </div>
+                  <div class="p707-tier__rate" style="color:var(--muted)">10%</div>
+                </div>
+                <div class="p707-tier">
+                  <div>
+                    <div style="font-size:.62rem;color:var(--muted);margin-bottom:2px;">30,000〜99,999円</div>
+                    <div class="p707-tier__range">中〜高価格帯</div>
+                  </div>
+                  <div class="p707-tier__rate" style="color:var(--muted)">8%</div>
+                </div>
+                <div class="p707-tier">
+                  <div>
+                    <div style="font-size:.62rem;color:var(--muted);margin-bottom:2px;">100,000円〜</div>
+                    <div class="p707-tier__range">高額作品帯</div>
+                  </div>
+                  <div class="p707-tier__rate" style="color:var(--muted)">6%</div>
+                </div>
+              </div>
+              <div class="p707-phase__note">
+                <span class="p707-future-badge">予告のみ・現在未適用</span>　高額作品の出品を促進するキャンペーンとして、10万円以上の帯に6%の優遇レートを導入予定。詳細はお知らせにてご案内します。
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="p707-info-box p707-info-box--blue">
+          <svg class="p707-info-box__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <circle cx="12" cy="16" r=".5" fill="currentColor" stroke="none"/>
+          </svg>
+          <div>
+            手数料の変更は常に「下げる方向」のみです。ローンチ後に手数料が上がることはありません。サービスの成長とともに、クリエイターの皆様に還元していく方針です。
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ⑤ Stripeについて -->
+    <section class="p707-section" id="stripe">
+      <div class="p707-section__inner">
+        <h2 class="p707-section-title">Stripe決済手数料について</h2>
+        <p class="p707-section-lead">
+          個展なびでは、国際標準の決済代行サービス「Stripe」を利用しています。リエゾンプラス手数料にはStripeの決済手数料が含まれています。
+        </p>
+
+        <div class="p707-info-box p707-info-box--neutral" style="margin-bottom:16px;">
+          <svg class="p707-info-box__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+            <line x1="1" y1="10" x2="23" y2="10"/>
+          </svg>
+          <div>
+            <strong style="font-size:.84rem;color:var(--ink);display:block;margin-bottom:4px;">決済フロー</strong>
+            購入者がクレジットカードで決済 → Stripeが受領（手数料控除）→ 個展なびが残額を受領（リエゾンプラス手数料控除）→ <strong>クリエイターに振込</strong>
+          </div>
+        </div>
+
+        <div class="p707-table-wrap">
+          <table class="p707-fee-table">
+            <thead>
+              <tr>
+                <th>カード種別</th>
+                <th>Stripe手数料（税抜）</th>
+                <th>備考</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>国内発行カード</td>
+                <td style="text-align:right;font-family:'Montserrat',sans-serif;font-weight:600;color:var(--ink)">3.6%</td>
+                <td style="font-size:.75rem;color:var(--muted)">Visa / Mastercard / JCB など</td>
+              </tr>
+              <tr>
+                <td>海外発行カード</td>
+                <td style="text-align:right;font-family:'Montserrat',sans-serif;font-weight:600;color:var(--ink)">3.9%</td>
+                <td style="font-size:.75rem;color:var(--muted)">外国人購入者・海外在住の場合</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="p707-info-box p707-info-box--gold" style="margin-top:16px;">
+          <svg class="p707-info-box__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+          <div>
+            クリエイターはStripeのアカウント取得や手続きは不要です。個展なびが代行して管理します。振込はリエゾンプラス手数料控除後の金額を、月次でご指定の口座へ送金します（振込手数料は個展なびが負担）。
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ⑥ 手取り額シミュレーター -->
+    <section class="p707-section" id="simulator" style="background:var(--paper)">
+      <div class="p707-section__inner">
+        <h2 class="p707-section-title">手取り額シミュレーター</h2>
+        <p class="p707-section-lead">
+          作品の販売価格を入力すると、手取り額の目安を確認できます。
+        </p>
+
+        <div class="p707-sim">
+          <div class="p707-sim__head">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="16" height="16" style="color:var(--lp-gold)">
+              <rect x="2" y="3" width="20" height="14" rx="2"/>
+              <line x1="8" y1="21" x2="16" y2="21"/>
+              <line x1="12" y1="17" x2="12" y2="21"/>
+            </svg>
+            <span class="p707-sim__head-title">手取り額シミュレーター</span>
+            <span class="p707-sim__head-badge">LIAISON+</span>
+          </div>
+          <div class="p707-sim__body">
+            <!-- 入力 -->
+            <div class="p707-sim__input-row">
+              <label class="p707-sim__input-label" for="simPrice">販売価格</label>
+              <div class="p707-sim__input-wrap">
+                <span class="p707-sim__yen">¥</span>
+                <input
+                  type="number"
+                  id="simPrice"
+                  class="p707-sim__input"
+                  placeholder="例: 25000"
+                  min="0"
+                  step="1000"
+                  oninput="calcSim(this.value)"
+                >
+              </div>
+            </div>
+            <!-- クイックボタン -->
+            <div>
+              <div style="font-size:.68rem;color:var(--muted);margin-bottom:6px;">よく使われる価格</div>
+              <div class="p707-sim__quick" id="simQuickBtns">
+                <button class="p707-sim__quick-btn" onclick="setSimPrice(5000,this)">¥5,000</button>
+                <button class="p707-sim__quick-btn" onclick="setSimPrice(10000,this)">¥10,000</button>
+                <button class="p707-sim__quick-btn" onclick="setSimPrice(20000,this)">¥20,000</button>
+                <button class="p707-sim__quick-btn" onclick="setSimPrice(30000,this)">¥30,000</button>
+                <button class="p707-sim__quick-btn" onclick="setSimPrice(50000,this)">¥50,000</button>
+                <button class="p707-sim__quick-btn" onclick="setSimPrice(100000,this)">¥100,000</button>
+              </div>
+            </div>
+            <!-- 適用レート表示 -->
+            <div class="p707-sim__rate-badge" id="simRateBadge" style="display:none">
+              適用レート：<strong id="simRateVal">—</strong>（<span id="simTierLabel">—</span>）
+            </div>
+            <!-- 結果 -->
+            <div class="p707-sim__result" id="simResult" style="display:none">
+              <div class="p707-sim__result-item">
+                <span class="p707-sim__result-label">販売価格</span>
+                <span class="p707-sim__result-value" id="simPriceOut">—</span>
+              </div>
+              <div class="p707-sim__result-item">
+                <span class="p707-sim__result-label">手数料合計</span>
+                <span class="p707-sim__result-value p707-sim__result-value--minus" id="simFeeOut">—</span>
+                <span class="p707-sim__result-sub" id="simFeeBreakdown">—</span>
+              </div>
+              <div class="p707-sim__result-item">
+                <span class="p707-sim__result-label">あなたの手取り</span>
+                <span class="p707-sim__result-value p707-sim__result-value--main" id="simNetOut">—</span>
+                <span class="p707-sim__result-sub" id="simNetPct">—</span>
+              </div>
+            </div>
+            <p style="font-size:.68rem;color:var(--muted);line-height:1.6;margin-top:-4px;">
+              ※ 国内発行カード（Stripe手数料3.6%）で計算しています。実際の金額は端数処理・カード種別により異なる場合があります。
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ⑦ FAQ -->
+    <section class="p707-section" id="faq">
+      <div class="p707-section__inner">
+        <h2 class="p707-section-title">よくある質問</h2>
+        <p class="p707-section-lead">手数料に関するよくある疑問にお答えします。</p>
+
+        <div class="p707-faq" id="p707Faq">
+
+          <div class="p707-faq-item">
+            <button class="p707-faq__q" onclick="toggleFaq(this)" aria-expanded="false">
+              <div class="p707-faq__q-inner">
+                <span class="p707-faq__q-mark">Q</span>
+                <span class="p707-faq__q-text">手数料はいつ引かれますか？</span>
+              </div>
+              <svg class="p707-faq__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="p707-faq__a">
+              <div class="p707-faq__a-inner">
+                購入が確定したタイミングで自動的に計算されます。振込時に手数料を差し引いた金額をご指定の口座へ送金します。クリエイターが別途手数料を納付する手続きは不要です。
+              </div>
+            </div>
+          </div>
+
+          <div class="p707-faq-item">
+            <button class="p707-faq__q" onclick="toggleFaq(this)" aria-expanded="false">
+              <div class="p707-faq__q-inner">
+                <span class="p707-faq__q-mark">Q</span>
+                <span class="p707-faq__q-text">クリエイターとギャラリーで手数料は違いますか？</span>
+              </div>
+              <svg class="p707-faq__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="p707-faq__a">
+              <div class="p707-faq__a-inner">
+                いいえ、クリエイター・ギャラリーともに同一の手数料率が適用されます。価格帯による2段階のみで、ユーザー種別による差異はありません。
+              </div>
+            </div>
+          </div>
+
+          <div class="p707-faq-item">
+            <button class="p707-faq__q" onclick="toggleFaq(this)" aria-expanded="false">
+              <div class="p707-faq__q-inner">
+                <span class="p707-faq__q-mark">Q</span>
+                <span class="p707-faq__q-text">送料はどうなりますか？</span>
+              </div>
+              <svg class="p707-faq__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="p707-faq__a">
+              <div class="p707-faq__a-inner">
+                送料は販売価格とは別に、購入者が負担します。手数料は送料を除いた作品の販売価格のみに適用されます。詳細は<a href="/p70-4">送料・配送について</a>をご確認ください。
+              </div>
+            </div>
+          </div>
+
+          <div class="p707-faq-item">
+            <button class="p707-faq__q" onclick="toggleFaq(this)" aria-expanded="false">
+              <div class="p707-faq__q-inner">
+                <span class="p707-faq__q-mark">Q</span>
+                <span class="p707-faq__q-text">作品がキャンセルになった場合、手数料はかかりますか？</span>
+              </div>
+              <svg class="p707-faq__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="p707-faq__a">
+              <div class="p707-faq__a-inner">
+                購入申込中（キュー待ち）の状態でキャンセルになった場合、決済は行われていないため手数料は一切発生しません。手数料が発生するのは購入が確定した（決済が完了した）タイミングのみです。
+              </div>
+            </div>
+          </div>
+
+          <div class="p707-faq-item">
+            <button class="p707-faq__q" onclick="toggleFaq(this)" aria-expanded="false">
+              <div class="p707-faq__q-inner">
+                <span class="p707-faq__q-mark">Q</span>
+                <span class="p707-faq__q-text">minne・Creemaと手数料はどう違いますか？</span>
+              </div>
+              <svg class="p707-faq__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="p707-faq__a">
+              <div class="p707-faq__a-inner">
+                minne・Creemaはいずれも一律10%です。リエゾンプラスは30,000円以上の作品では8%となり、高価格帯ほど有利な構造です。また、リエゾンプラスは実スペースの展覧会と連動した「機会ロス補完」に特化したサービスのため、独自の会場優先型販売フローを採用しています。
+              </div>
+            </div>
+          </div>
+
+          <div class="p707-faq-item">
+            <button class="p707-faq__q" onclick="toggleFaq(this)" aria-expanded="false">
+              <div class="p707-faq__q-inner">
+                <span class="p707-faq__q-mark">Q</span>
+                <span class="p707-faq__q-text">振込のタイミングと最低振込金額を教えてください。</span>
+              </div>
+              <svg class="p707-faq__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="p707-faq__a">
+              <div class="p707-faq__a-inner">
+                振込は月次（翌月末払い）を予定しています。最低振込金額・振込スケジュールの詳細はサービス開始時にご案内します。振込手数料は個展なびが負担します。
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ⑧ CTA -->
+    <div class="p707-cta">
+      <div class="p707-cta__inner">
+        <div class="p707-cta__text">
+          <div class="p707-cta__title">リエゾンプラスで作品を販売してみませんか？</div>
+          <div class="p707-cta__sub">展覧会の会期後も、遠方のコレクターへ届けるチャンスを広げましょう。</div>
+        </div>
+        <div class="p707-cta__btn-group">
+          <a href="/p11-4" class="p707-cta-btn p707-cta-btn--primary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            リエゾンプラスに申し込む
+          </a>
+          <a href="/p70-2" class="p707-cta-btn p707-cta-btn--ghost">
+            作品販売ガイドを見る →
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </main><!-- /ktn-main -->
+
+</div><!-- /content-wrap -->
+</div><!-- /shell -->
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+/* ── ページ初期化 ── */
+window.ktnState = { page: 'p70-7', role: 'guest' };
+KTN.init({ page: 'p70-7', role: 'guest' });
+
+/* ══ シミュレーター ══ */
+function calcSim(val) {
+  var price = parseInt(val, 10);
+  var result  = document.getElementById('simResult');
+  var rateBadge = document.getElementById('simRateBadge');
+  if (!price || price <= 0 || isNaN(price)) {
+    result.style.display = 'none';
+    rateBadge.style.display = 'none';
+    return;
+  }
+
+  /* 手数料率決定 */
+  var rate = price < 30000 ? 0.10 : 0.08;
+  var tierLabel = price < 30000 ? '〜29,999円 帯' : '30,000円〜 帯';
+  var rateLabel = price < 30000 ? '10%' : '8%';
+
+  var stripeRate = 0.036; /* 国内カード目安 */
+  var ktnFee    = Math.round(price * rate);
+  var stripeFee = Math.round(price * stripeRate);
+  var totalFee  = ktnFee; /* Stripe手数料はktnFeeに内包 */
+  var net       = price - ktnFee;
+  var netPct    = ((net / price) * 100).toFixed(1);
+
+  /* 表示更新 */
+  document.getElementById('simRateVal').textContent    = rateLabel;
+  document.getElementById('simTierLabel').textContent  = tierLabel;
+  rateBadge.style.display = 'block';
+
+  document.getElementById('simPriceOut').textContent   = '¥' + price.toLocaleString();
+  document.getElementById('simFeeOut').textContent     = '−¥' + totalFee.toLocaleString();
+  document.getElementById('simFeeBreakdown').textContent =
+    'リエゾン手数料 ' + rateLabel + '（Stripe' + (stripeRate*100) + '%含む）';
+  document.getElementById('simNetOut').textContent     = '¥' + net.toLocaleString();
+  document.getElementById('simNetPct').textContent     = '手取り率 ' + netPct + '%';
+  result.style.display = 'grid';
+}
+
+function setSimPrice(val, btn) {
+  document.getElementById('simPrice').value = val;
+  document.querySelectorAll('.p707-sim__quick-btn').forEach(function(b){ b.classList.remove('is-active'); });
+  btn.classList.add('is-active');
+  calcSim(val);
+}
+
+/* ══ FAQ アコーディオン ══ */
+function toggleFaq(btn) {
+  var item = btn.closest('.p707-faq-item');
+  var body = item.querySelector('.p707-faq__a');
+  var isOpen = item.classList.contains('is-open');
+
+  /* 全閉じ */
+  document.querySelectorAll('.p707-faq-item.is-open').forEach(function(el) {
+    el.classList.remove('is-open');
+    el.querySelector('.p707-faq__a').style.height = '0';
+    el.querySelector('.p707-faq__q').setAttribute('aria-expanded', 'false');
+  });
+
+  if (!isOpen) {
+    item.classList.add('is-open');
+    btn.setAttribute('aria-expanded', 'true');
+    var inner = body.querySelector('.p707-faq__a-inner');
+    body.style.height = inner.offsetHeight + 'px';
+    /* heightアニメ後に auto に */
+    body.addEventListener('transitionend', function onEnd() {
+      if (item.classList.contains('is-open')) body.style.height = 'auto';
+      body.removeEventListener('transitionend', onEnd);
+    });
+  }
+}
+
+/* ── スムーススクロール ── */
+document.querySelectorAll('.p707-page-nav__item[href^="#"]').forEach(function(a) {
+  a.addEventListener('click', function(e) {
+    e.preventDefault();
+    var target = document.querySelector(a.getAttribute('href'));
+    if (!target) return;
+    var headerH = 84; /* dbar + header */
+    var navH    = 42; /* page-nav高さ */
+    var top = target.getBoundingClientRect().top + window.scrollY - headerH - navH;
+    window.scrollTo({ top: top, behavior: 'smooth' });
+  });
+});
+</script>
+</body>
+</html>

@@ -17,8 +17,8 @@
 
 ## 画面最大幅
 - `--w-article`: 720px　　記事・テキスト・編集フォーム系
-- `--w-detail`: 1080px　　コンテンツ下層（2カラム）
-- `--w-entity`: 1080px　　コンテンツトップ（1件のエンティティの表紙ページ。下位ページを持つことがある）
+- `--w-detail`: 760px　　コンテンツ下層（1カラム）
+- `--w-entity`: 1080px　　コンテンツトップ（2カラム）（1件のエンティティの表紙ページ。下位ページを持つことがある）
 - `--w-index`: 1080px　　一覧・検索（複数コンテンツを並べるページ）
 
 ---
@@ -36,10 +36,10 @@
 | ID | ページ名 | L/L+ | guest | login | user+ | creator | gallery | admin | max-width | html-file |
 |---|---|---|---|---|---|---|---|---|---|---|
 | P2 | 展覧会概要 |  | R | R | R | R | R | R | --w-entity | kotennavi-p2.html |
-| P2-1 | 展覧会-スケジュール |  | R | R | R | R | R | R | --w-detail | kotennavi-p2-1.html |
-| P2-2 | 展覧会-開催場所 |  | R | R | R | R | R | R | --w-detail | kotennavi-p2-2.html |
+| P2-1 | 展覧会-スケジュール |  | R | R | R | R | R | R | --w-entity | kotennavi-p2-1.html |
+| P2-2 | 展覧会-開催場所 |  | R | R | R | R | R | R | --w-entity | kotennavi-p2-2.html |
 | P2-3 | 展覧会-詳細(関連イベント・在廊・などその他情報) |  | R | R | R | R | R | R | --w-detail | kotennavi-p2-3.html |
-| P2-4 | 展覧会-出展者 |  | R | R | R | R | R | R | --w-detail | kotennavi-p2-4.html |
+| P2-4 | 展覧会-出展者 |  | R | R | R | R | R | R | --w-entity| kotennavi-p2-4.html |
 | P2-5 | 展覧会-リエゾン作品一覧 | L | R | R | R | R | R | R | --w-index | kotennavi-p2-5.html |
 | P2-5-1 | 展覧会-リエゾンプラス作品一覧 | L+ | R | R | R | R | R | R | --w-index | kotennavi-p2-5-1.html |
 | P2-11 | 展覧会-新規/編集/クローン |  |  |  |  | W | W | W | --w-article | # |
@@ -60,7 +60,7 @@
 | P3 | クリエイター |  | R | R | R | R | R | R | --w-entity | kotennavi-p3.html |
 | P3-1 | クリエイター-展覧会アーカイブ |  | R | R | R | R | R | R | --w-detail | # |
 | P3-2 | クリエイター-記事一覧 |  | R | R | R | R | R | R | --w-detail | # |
-| P3-3 | クリエイター-作品一覧 |  | R | R | R | R | R | R | --w-detail | # |
+| P3-3 | クリエイター-作品一覧 |  | R | R | R | R | R | R | --w-entity| # |
 | P3-11 | クリエイター-編集 |  |  |  |  | W |  | W | --w-article | # |
 | P3-12 | クリエイター-インサイト |  |  |  |  | R |  | R | --w-article | # |
 | P3-13 | クリエイター-ウオッチャー管理 |  |  |  |  | R/W |  | R/W | --w-article | # |
@@ -81,6 +81,10 @@
 | P4-11 | ギャラリー-編集 |  |  |  |  |  | W | W | --w-article | # |
 | P4-12 | ギャラリー-インサイト |  |  |  |  |  | R | R | --w-article | # |
 | P4-13 | ギャラリー-ウオッチャー管理 |  |  |  |  |  | R/W | R/W | --w-article | # |
+| P4-14 | ギャラリー-インベントリー管理 |  |  |  |  |  | R/W | R/W | --w-article | # |
+| P4-15 | ギャラリー-リエゾンコンソール | L+ |  |  |  | R/W |  | R/W | --w-detail | # |
+| P4-16 | ギャラリー-取引デスク | L+ |  |  |  | R/W |  | R/W | --w-detail | # |
+| P4-17 | ギャラリー販売代金管理 | L+ |  |  |  | R/W |  | R/W | --w-detail | # |
 
 ---
 
@@ -159,7 +163,7 @@
 | P11-1 | ユーザー新規登録 |  | W |  |  |  |  |  | --w-article | # |
 | P11-2 | クリエイター機能申込 |  |  | W |  |  |  |  | --w-article | # |
 | P11-3 | ギャラリー機能申込 |  |  | W |  |  |  |  | --w-article | # |
-| P11-4 | リエゾンプラス機能申込 |  |  |  |  | W |  |  | --w-article | # |
+| P11-4 | リエゾンプラス機能申込 |  |  |  |  | W | W |  | --w-article | # |
 | P11-11 | ログイン-パスワードを忘れた方 |  | W |  |  |  |  |  | --w-article | # |
 | P11-12 | ログインパスワード再設定 |  | W |  |  |  |  |  | --w-article | # |
 | P11-21 | ユーザー新規登録-アカウント仮登録完了 |  | R |  |  |  |  |  | --w-article | # |

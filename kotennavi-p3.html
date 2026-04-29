@@ -130,11 +130,11 @@
     <!-- B. タブナビ -->
     <nav class="p3-tabnav" id="p3Tabnav" aria-label="クリエイターページ内ナビ">
       <div class="p3-tabnav__inner">
-        <span class="p3-tabnav__name">田中 透</span>
+        <span class="p3-tabnav__name"><span class="p3-tabnav__name-text">田中 透</span></span>
         <button class="p3-tabnav__item" data-target="p3-sec-exhibitions" data-tab="exhibitions"><span class="p3-tabnav__label">展覧会<span class="p3-tabnav__new" data-new="exhibitions">new</span></span></button>
         <button class="p3-tabnav__item" data-target="p3-sec-works" data-tab="works"><span class="p3-tabnav__label">作品<span class="p3-tabnav__new" data-new="works">new</span></span></button>
         <button class="p3-tabnav__item" data-target="p3-sec-articles" data-tab="articles"><span class="p3-tabnav__label">記事<span class="p3-tabnav__new" data-new="articles">new</span></span></button>
-        <button class="p3-tabnav__item" data-target="p3-sec-profile">プロフィール</button>
+        <button class="p3-tabnav__item" data-target="p3-sec-profile">クリエイター情報</button>
       </div>
     </nav>
 
@@ -341,7 +341,7 @@
           <!-- 左カラム -->
           <div class="p3-prof-main p3-box">
 
-            <div class="p3-sec-label">CREATOR INFORMATION</div>
+            <div class="p3-sec-label">クリエイター情報</div>
 
             <h2 class="p3-prof-name">田中 透</h2>
             <div class="p3-prof-name-en">Toru Tanaka</div>
@@ -468,112 +468,131 @@
     <!-- G. おすすめのクリエイター -->
     <div class="p3-recommended">
       <div class="p3-recommended__inner">
-        <div class="p3-sec-label">RECOMMENDED — おすすめのクリエイター</div>
-        <div class="p3-recommended__grid">
-          <div class="masonry-item">
-            <a class="cc" href="kotennavi-p3.html">
-              <div class="cc__top">
-                <div class="cc__avatar av-c1"><div class="cc__avatar-ph">小</div></div>
-                <div class="cc__badge-row">
-                  <span class="cb cb-creator">creator</span>
-                  <span class="sb">開催中/開催予定</span>
-                </div>
-                <div class="cc__name">小野 友美</div>
-                <div class="cc__genre">油彩・ドローイング</div>
-                <div class="cc__watch">
-                  <button class="ktn-btn on" onclick="this.classList.toggle('on');event.preventDefault()">
-                    <svg width="14" height="14"><use href="#icon-watch" color="#3a90e0"/></svg>
-                    watching<span class="tip">ウォッチを解除する</span>
-                  </button>
-                </div>
-              </div>
-              <div class="cc__foot">
-                <div class="pc-counts">
-                  <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>8</span>
-                  <span class="sep"></span>
-                  <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>124</span>
-                </div>
-              </div>
-            </a>
-          </div>
-          <div class="masonry-item">
-            <a class="cc" href="kotennavi-p3.html">
-              <div class="cc__top">
-                <div class="cc__avatar av-c2"><div class="cc__avatar-ph">佐</div></div>
-                <div class="cc__badge-row">
-                  <span class="cb cb-creator">creator</span>
-                </div>
-                <div class="cc__name">佐藤 一朗</div>
-                <div class="cc__genre">彫刻・木工</div>
-                <div class="cc__watch">
-                  <button class="ktn-btn" onclick="this.classList.toggle('on');event.preventDefault()">
-                    <svg width="14" height="14"><use href="#icon-watch" color="#7a8a99"/></svg>
-                    watch<span class="tip">ウォッチする</span>
-                  </button>
-                </div>
-              </div>
-              <div class="cc__foot">
-                <div class="pc-counts">
-                  <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>5</span>
-                  <span class="sep"></span>
-                  <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>67</span>
-                </div>
-              </div>
-            </a>
-          </div>
-          <div class="masonry-item">
-            <a class="cc" href="kotennavi-p3.html">
-              <div class="cc__top">
-                <div class="cc__avatar av-c3"><div class="cc__avatar-ph">山</div></div>
-                <div class="cc__badge-row">
-                  <span class="cb cb-creator">creator</span>
-                  <span class="sb">開催中/開催予定</span>
-                </div>
-                <div class="cc__name">山田 葵</div>
-                <div class="cc__genre">写真・ミクストメディア</div>
-                <div class="cc__watch">
-                  <button class="ktn-btn" onclick="this.classList.toggle('on');event.preventDefault()">
-                    <svg width="14" height="14"><use href="#icon-watch" color="#7a8a99"/></svg>
-                    watch<span class="tip">ウォッチする</span>
-                  </button>
-                </div>
-              </div>
-              <div class="cc__foot">
-                <div class="pc-counts">
-                  <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>6</span>
-                  <span class="sep"></span>
-                  <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>88</span>
-                </div>
-              </div>
-            </a>
-          </div>
-          <div class="masonry-item">
-            <a class="cc" href="kotennavi-p3.html">
-              <div class="cc__top">
-                <div class="cc__avatar av-c4"><div class="cc__avatar-ph">林</div></div>
-                <div class="cc__badge-row">
-                  <span class="cb cb-creator">creator</span>
-                </div>
-                <div class="cc__name">林 美咲</div>
-                <div class="cc__genre">版画・イラスト</div>
-                <div class="cc__watch">
-                  <button class="ktn-btn" onclick="this.classList.toggle('on');event.preventDefault()">
-                    <svg width="14" height="14"><use href="#icon-watch" color="#7a8a99"/></svg>
-                    watch<span class="tip">ウォッチする</span>
-                  </button>
-                </div>
-              </div>
-              <div class="cc__foot">
-                <div class="pc-counts">
-                  <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>3</span>
-                  <span class="sep"></span>
-                  <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>45</span>
-                </div>
-              </div>
-            </a>
-          </div>
+
+        <!-- タグ -->
+        <div class="p2-sub-tags">
+          <div class="p2-sub-tags__label">タグ · Tags</div>
+          <ul class="p2-1-tag-pills" aria-label="タグ">
+            <li><a class="p2-1-tag-pill" href="#">絵画</a></li>
+            <li><a class="p2-1-tag-pill" href="#">現代美術</a></li>
+            <li><a class="p2-1-tag-pill" href="#">オノマトペ</a></li>
+            <li><a class="p2-1-tag-pill" href="#">東京</a></li>
+            <li><a class="p2-1-tag-pill" href="#">個展なび</a></li>
+          </ul>
         </div>
-        </div><!-- /p3-recommended__grid -->
+
+        <!-- おすすめのクリエイター -->
+        <section class="p2-related">
+          <div class="ktn-section__head">
+            <h2 class="ktn-section__title">おすすめのクリエイター<span class="p2-related__en">Recommended</span></h2>
+            <a href="#" class="ktn-section__more">もっと見る →</a>
+          </div>
+          <div class="masonry">
+            <div class="masonry-item">
+              <a class="cc" href="kotennavi-p3.html">
+                <div class="cc__top">
+                  <div class="cc__avatar av-c1"><div class="cc__avatar-ph">小</div></div>
+                  <div class="cc__badge-row">
+                    <span class="cb cb-creator">creator</span>
+                    <span class="sb">開催中/開催予定</span>
+                  </div>
+                  <div class="cc__name">小野 友美</div>
+                  <div class="cc__genre">油彩・ドローイング</div>
+                  <div class="cc__watch">
+                    <button class="ktn-btn on" onclick="this.classList.toggle('on');event.preventDefault()">
+                      <svg width="14" height="14"><use href="#icon-watch" color="#3a90e0"/></svg>
+                      watching<span class="tip">ウォッチを解除する</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="cc__foot">
+                  <div class="pc-counts">
+                    <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>8</span>
+                    <span class="sep"></span>
+                    <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>124</span>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="masonry-item">
+              <a class="cc" href="kotennavi-p3.html">
+                <div class="cc__top">
+                  <div class="cc__avatar av-c2"><div class="cc__avatar-ph">佐</div></div>
+                  <div class="cc__badge-row">
+                    <span class="cb cb-creator">creator</span>
+                  </div>
+                  <div class="cc__name">佐藤 一朗</div>
+                  <div class="cc__genre">彫刻・木工</div>
+                  <div class="cc__watch">
+                    <button class="ktn-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                      <svg width="14" height="14"><use href="#icon-watch" color="#7a8a99"/></svg>
+                      watch<span class="tip">ウォッチする</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="cc__foot">
+                  <div class="pc-counts">
+                    <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>5</span>
+                    <span class="sep"></span>
+                    <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>67</span>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="masonry-item">
+              <a class="cc" href="kotennavi-p3.html">
+                <div class="cc__top">
+                  <div class="cc__avatar av-c3"><div class="cc__avatar-ph">山</div></div>
+                  <div class="cc__badge-row">
+                    <span class="cb cb-creator">creator</span>
+                    <span class="sb">開催中/開催予定</span>
+                  </div>
+                  <div class="cc__name">山田 葵</div>
+                  <div class="cc__genre">写真・ミクストメディア</div>
+                  <div class="cc__watch">
+                    <button class="ktn-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                      <svg width="14" height="14"><use href="#icon-watch" color="#7a8a99"/></svg>
+                      watch<span class="tip">ウォッチする</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="cc__foot">
+                  <div class="pc-counts">
+                    <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>6</span>
+                    <span class="sep"></span>
+                    <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>88</span>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="masonry-item">
+              <a class="cc" href="kotennavi-p3.html">
+                <div class="cc__top">
+                  <div class="cc__avatar av-c4"><div class="cc__avatar-ph">林</div></div>
+                  <div class="cc__badge-row">
+                    <span class="cb cb-creator">creator</span>
+                  </div>
+                  <div class="cc__name">林 美咲</div>
+                  <div class="cc__genre">版画・イラスト</div>
+                  <div class="cc__watch">
+                    <button class="ktn-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                      <svg width="14" height="14"><use href="#icon-watch" color="#7a8a99"/></svg>
+                      watch<span class="tip">ウォッチする</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="cc__foot">
+                  <div class="pc-counts">
+                    <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>3</span>
+                    <span class="sep"></span>
+                    <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>45</span>
+                  </div>
+                </div>
+              </a>
+            </div>
+          </div><!-- /masonry -->
+        </section><!-- /p2-related -->
+
       </div><!-- /p3-recommended__inner -->
     </div><!-- /p3-recommended -->
 

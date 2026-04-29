@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gallery SOIL 渋谷 — 現代美術・絵画 | 個展なび</title>
+  <meta name="description" content="Gallery SOIL 渋谷のギャラリーページ。現代美術・絵画を中心に展覧会を開催するギャラリー。展覧会情報・記事を掲載中。">
+  <link rel="canonical" href="https://koten-navi.com/gallery/soil-shibuya">
+  <meta property="og:type" content="profile">
+  <meta property="og:title" content="Gallery SOIL 渋谷 — 現代美術・絵画 | 個展なび">
+  <meta property="og:description" content="Gallery SOIL 渋谷のギャラリーページ。現代美術・絵画を中心に展覧会を開催するギャラリー。">
+  <meta property="og:image" content="https://koten-navi.com/images/gallery/soil-shibuya-ogp.jpg">
+  <meta property="og:url" content="https://koten-navi.com/gallery/soil-shibuya">
+  <meta property="og:site_name" content="個展なび">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Noto+Sans+JP:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+  <link rel="stylesheet" href="./kotennavi-components.css">
+</head>
+<body>
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- ウォッチャーモーダル（body直下） -->
+<div class="p4-watcher-modal" id="p4WatcherModal">
+  <div class="p4-watcher-modal__overlay"></div>
+  <div class="p4-watcher-modal__inner">
+    <div class="p4-watcher-modal__head">
+      <div class="p4-watcher-modal__title">ウォッチャー 58人</div>
+      <button class="p4-watcher-modal__close" id="p4WatcherModalClose" aria-label="閉じる">✕</button>
+    </div>
+    <div class="p4-watcher-list" id="p4WatcherList"></div>
+  </div>
+</div>
+
+<!-- ライトボックス -->
+<div class="p4-gallery__modal" id="p4GalleryModal" hidden>
+  <div class="p4-gallery__modal-bg" id="p4GalleryModalBg"></div>
+  <div class="p4-gallery__modal-inner">
+    <button class="p4-gallery__modal-close" id="p4GalleryModalClose" aria-label="閉じる">✕</button>
+    <div class="p4-gallery__modal-caption" id="p4GalleryModalCaption"></div>
+  </div>
+</div>
+
+<!-- SVGシンボル -->
+<svg width="0" height="0" style="position:absolute;overflow:hidden">
+  <defs>
+    <symbol id="icon-exh" viewBox="40 47 54 54">
+      <path d="M80.09 102.05c-1.22-.8,-2.57-2.87,-3.34-4.33c-2.48-5.91,-4.85-14.23,-13.31-20.15c-1.9-1.23,-2.03-2,-1.94-2.48c.11-.83,.82-1.52,2.3-1.3c11.09,1.95,15.22,3.96,21.07,7.61c7.85,5.36,9.57,10.76,9.65,14.09c.15,2.3,-.18,5.11,-2.61,6.56Z" fill="currentColor"/>
+    </symbol>
+    <symbol id="icon-watch" viewBox="0 0 16 16">
+      <circle cx="8" cy="8" r="7" fill="currentColor"/>
+      <circle cx="8" cy="8" r="2.6" fill="white"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- デモバー -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ロール：</span>
+  <button class="dbtn on" onclick="setR('guest',this)">ゲスト</button>
+  <button class="dbtn" onclick="setR('login',this)">ログイン</button>
+  <button class="dbtn" onclick="setR('user+gallery',this)">gallery本人</button>
+  <button class="dbtn" onclick="setR('admin',this)">管理者</button>
+</div>
+
+<div class="shell">
+<div class="content-wrap" id="contentWrap">
+
+  <header class="ktn-header" id="ktnHeader">
+    <div class="ktn-header__inner">
+      <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+      <div class="ktn-hdr-actions" id="ktnActs"></div>
+    </div>
+  </header>
+  <div class="ktn-tagbar" id="ktnTagbar">
+    <div class="ktn-tagbar__inner" id="ktnTagbarInner"></div>
+  </div>
+
+  <main class="ktn-main" id="ktnMain">
+
+    <!-- A. ヒーローエリア -->
+    <div class="p4-head">
+      <div class="p4-head__inner">
+        <!-- 上段: 画像 + 情報 -->
+        <div class="p4-head__top">
+          <div class="p4-head__avatar-wrap">
+            <div class="p4-head__avatar" style="background:linear-gradient(135deg,#c8a880,#8b5e3c)">G</div>
+          </div>
+          <div class="p4-head__info">
+            <div class="p4-head__badge-row">
+              <span class="cb cb-person cb-gallery">GALLERY</span>
+              <span class="sb sb-live" id="p4HeadActiveBadge" hidden><span class="pulse"></span>展示中</span>
+            </div>
+            <h1 class="p4-head__name">Gallery SOIL 渋谷</h1>
+            <p class="p4-head__en">GALLERY SOIL SHIBUYA</p>
+            <p class="p4-head__genre">現代美術・絵画 · 渋谷区、東京</p>
+          </div>
+        </div>
+        <!-- 自己紹介 -->
+        <div class="p4-head__bio">
+          <p class="p4-head__bio-text" id="p4HeadBioText">渋谷区松濤に位置する現代美術ギャラリー。国内外の若手・中堅アーティストによる個展・グループ展を年間15本開催。絵画を中心に写真・立体・インスタレーションまで幅広く扱う。</p>
+          <button class="p4-head__bio-toggle" id="p4HeadBioToggle" type="button">もっと見る <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="6 9 12 15 18 9"/></svg></button>
+          <a class="p4-head__bio-profile-link" id="p4HeadBioProfileLink" href="#p4-sec-profile">プロフィール詳細 →</a>
+        </div>
+        <!-- アクション -->
+        <div class="p4-head__action">
+          <button class="ktn-btn" data-off="watch" data-on="watching" data-action="watch">
+            <svg viewBox="0 0 16 16" fill="none" width="15" height="15">
+              <circle cx="8" cy="8" r="7" fill="#7a8a99" opacity=".45"/>
+              <circle class="wi-dark" cx="8" cy="8" r="2.6"/>
+            </svg>
+            <span class="ktn-btn__lbl">watch</span><span class="tip">ウォッチする</span>
+          </button>
+          <button class="p4-head__watcher-count" data-action="open-watchers" aria-label="ウォッチャーリストを開く">ウォッチャー 58人</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- B. タブナビ -->
+    <nav class="p4-tabnav" id="p4Tabnav" aria-label="ギャラリーページ内ナビ">
+      <div class="p4-tabnav__inner">
+        <span class="p4-tabnav__name"><span class="p4-tabnav__name-text">Gallery SOIL 渋谷</span></span>
+        <button class="p4-tabnav__item" data-target="p4-sec-exhibitions" data-tab="exhibitions"><span class="p4-tabnav__label">展覧会<span class="p4-tabnav__new" data-new="exhibitions">new</span></span></button>
+        <button class="p4-tabnav__item" data-target="p4-sec-articles" data-tab="articles"><span class="p4-tabnav__label">記事<span class="p4-tabnav__new" data-new="articles">new</span></span></button>
+        <button class="p4-tabnav__item" data-target="p4-sec-profile">ギャラリー情報</button>
+      </div>
+    </nav>
+
+    <!-- メインコンテンツ -->
+    <div class="p4-main">
+
+      <!-- C. 展覧会 -->
+      <section id="p4-sec-exhibitions" class="p4-box">
+        <div class="p4-sec-label">EXHIBITION — 展覧会
+          <a class="p4-sec-more" href="kotennavi-p4-1.html">すべての展覧会 →</a>
+        </div>
+
+        <div class="p4-exhibitions-grid">
+          <div class="p4-exh-item">
+            <div class="p4-exh-item__label"><span class="sb sb-live"><span class="pulse"></span>開催中</span></div>
+            <a class="ec" href="kotennavi-p2.html">
+              <div class="ec__poster" style="background:linear-gradient(155deg,#b8d8cc,#6a9e8a)">
+                <div class="ec__poster-noimg" style="min-height:160px"></div>
+                <div class="ec__poster-overlay">
+                  <div class="ec__poster-dates">
+                    <span class="year">2026.</span><strong>02.18</strong><span class="dow">wed</span>
+                    <span class="sep">—</span>
+                    <strong>03.05</strong><span class="dow">thu</span>
+                  </div>
+                  <div class="ec__poster-meta">
+                    <span class="ec__remain ec__remain--live">残り12日</span>
+                    <span class="meta-sep">|</span>
+                    <span>11:00-19:00</span>
+                  </div>
+                </div>
+              </div>
+              <div class="ec__body">
+                <div class="ec__badge-row">
+                  <span class="cb cb-content cb-exhibition">exhibition</span>
+                  <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                    <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>
+                    <span class="tip">興味ある！に追加する</span>
+                  </button>
+                </div>
+                <div class="ec__title">あなたが知らないオノマトペ</div>
+                <div class="ec__venue">東京<span class="ec__venue-sep">|</span>Gallery SOIL 渋谷</div>
+              </div>
+              <div class="ec__foot">
+                <span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>42</span>
+                <span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><circle cx="10" cy="5" r="4" fill="#7a8a99" fill-opacity=".5"/><circle cx="5" cy="11" r="2.4" fill="#7a8a99" fill-opacity=".5"/></svg>8</span>
+              </div>
+              <div class="ec__liaison-strip">
+                <div class="ec__liaison-strip-info">
+                  <span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>
+                  <span class="ec__liaison-subtext">オンライン作品展示中</span>
+                </div>
+                <div class="ec__liaison-thumbs">
+                  <div class="ec__liaison-thumb" style="background:linear-gradient(135deg,#b8d8cc,#6a9e8a)"></div>
+                  <div class="ec__liaison-thumb" style="background:linear-gradient(135deg,#d4e8d4,#8ab89a)"></div>
+                  <div class="ec__liaison-thumb" style="background:linear-gradient(135deg,#c8e0d4,#78a888)"></div>
+                </div>
+              </div>
+            </a>
+          </div>
+          <div class="p4-exh-item">
+            <div class="p4-exh-item__label"><span class="sb sb-live"><span class="pulse"></span>開催中</span></div>
+            <a class="ec" href="#">
+              <div class="ec__poster" style="background:linear-gradient(155deg,#c8d8e8,#7a9ab8)">
+                <div class="ec__poster-noimg" style="min-height:160px"></div>
+                <div class="ec__poster-overlay">
+                  <div class="ec__poster-dates">
+                    <span class="year">2026.</span><strong>03.01</strong><span class="dow">sun</span>
+                    <span class="sep">—</span>
+                    <strong>03.20</strong><span class="dow">fri</span>
+                  </div>
+                  <div class="ec__poster-meta">
+                    <span class="ec__remain ec__remain--live">残り27日</span>
+                    <span class="meta-sep">|</span>
+                    <span>12:00-18:00</span>
+                  </div>
+                </div>
+              </div>
+              <div class="ec__body">
+                <div class="ec__badge-row">
+                  <span class="cb cb-content cb-exhibition">exhibition</span>
+                  <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                    <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>
+                    <span class="tip">興味ある！に追加する</span>
+                  </button>
+                </div>
+                <div class="ec__title">静寂のオノマトペ — 田中 透</div>
+                <div class="ec__venue">東京<span class="ec__venue-sep">|</span>Gallery SOIL 渋谷</div>
+              </div>
+              <div class="ec__foot">
+                <span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>28</span>
+                <span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><circle cx="10" cy="5" r="4" fill="#7a8a99" fill-opacity=".5"/><circle cx="5" cy="11" r="2.4" fill="#7a8a99" fill-opacity=".5"/></svg>5</span>
+              </div>
+            </a>
+          </div>
+          <div class="p4-exh-item">
+            <div class="p4-exh-item__label"><span class="sb sb-soon">これから開催</span></div>
+            <a class="ec" href="#">
+              <div class="ec__poster" style="background:linear-gradient(155deg,#e8d8c0,#c0a880)">
+                <div class="ec__poster-noimg" style="min-height:140px"></div>
+                <div class="ec__poster-overlay">
+                  <div class="ec__poster-dates">
+                    <span class="year">2026.</span><strong>05.10</strong><span class="dow">sun</span>
+                    <span class="sep">—</span>
+                    <strong>05.16</strong><span class="dow">sat</span>
+                  </div>
+                  <div class="ec__poster-meta">
+                    <span class="ec__remain ec__remain--soon">26日後に開催</span>
+                  </div>
+                </div>
+              </div>
+              <div class="ec__body">
+                <div class="ec__badge-row">
+                  <span class="cb cb-content cb-exhibition">exhibition</span>
+                  <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                    <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>
+                    <span class="tip">興味ある！に追加する</span>
+                  </button>
+                </div>
+                <div class="ec__title">浜田澄子との仲間たち展</div>
+                <div class="ec__venue">東京<span class="ec__venue-sep">|</span>Gallery SOIL 渋谷</div>
+              </div>
+              <div class="ec__foot">
+                <span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>15</span>
+                <span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><circle cx="10" cy="5" r="4" fill="#7a8a99" fill-opacity=".5"/><circle cx="5" cy="11" r="2.4" fill="#7a8a99" fill-opacity=".5"/></svg>2</span>
+              </div>
+            </a>
+          </div>
+          <div class="p4-exh-item">
+            <div class="p4-exh-item__label"><span class="sb sb-soon">これから開催</span></div>
+            <a class="ec" href="#">
+              <div class="ec__poster" style="background:linear-gradient(155deg,#e8cce0,#c08aaa)">
+                <div class="ec__poster-noimg" style="min-height:140px"></div>
+                <div class="ec__poster-overlay">
+                  <div class="ec__poster-dates">
+                    <span class="year">2026.</span><strong>06.01</strong><span class="dow">mon</span>
+                    <span class="sep">—</span>
+                    <strong>06.14</strong><span class="dow">sun</span>
+                  </div>
+                  <div class="ec__poster-meta">
+                    <span class="ec__remain ec__remain--soon">48日後に開催</span>
+                  </div>
+                </div>
+              </div>
+              <div class="ec__body">
+                <div class="ec__badge-row">
+                  <span class="cb cb-content cb-exhibition">exhibition</span>
+                  <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                    <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>
+                    <span class="tip">興味ある！に追加する</span>
+                  </button>
+                </div>
+                <div class="ec__title">春の声 — グループ展</div>
+                <div class="ec__venue">東京<span class="ec__venue-sep">|</span>Gallery SOIL 渋谷</div>
+              </div>
+              <div class="ec__foot">
+                <span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>9</span>
+                <span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><circle cx="10" cy="5" r="4" fill="#7a8a99" fill-opacity=".5"/><circle cx="5" cy="11" r="2.4" fill="#7a8a99" fill-opacity=".5"/></svg>1</span>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- アーカイブリンク -->
+        <a href="kotennavi-p4-1.html" class="p4-archive-link">
+          <span class="exh-icon"><svg width="20" height="20"><use href="#icon-exh"/></svg></span>
+          <span>過去 <strong id="p4ArchiveCount">15</strong> 件の展覧会アーカイブを掲載中</span>
+          <span class="p4-archive-link__arr">→</span>
+        </a>
+      </section>
+
+      <!-- F. プロフィール（2カラム） -->
+      <section id="p4-sec-profile">
+        <div class="p4-prof-layout">
+
+          <!-- 左カラム -->
+          <div class="p4-prof-main p4-box">
+
+            <div class="p4-sec-label">ギャラリー情報</div>
+
+            <h2 class="p4-prof-name">Gallery SOIL 渋谷</h2>
+            <div class="p4-prof-name-en">Gallery SOIL Shibuya</div>
+
+            <div class="p4-prof-bio-layout" id="p4ProfBioLayout">
+              <div class="p4-prof-media" id="p4ProfMedia">
+                <div class="p4-prof-media-main" id="p4ProfMediaMain"></div>
+                <div class="p4-prof-media-caption" id="p4ProfMediaCaption"></div>
+                <div class="p4-prof-media-thumbs" id="p4ProfMediaThumbs"></div>
+              </div>
+              <div class="p4-prof-bio-wrap">
+                <p class="p4-prof-bio" id="p4ProfBio">渋谷区松濤に位置する現代美術ギャラリー。2015年の開廊以来、国内外の若手・中堅アーティストによる個展・グループ展を年間15本開催。絵画を中心に写真・立体・インスタレーションまで幅広く扱い、アーティストと社会をつなぐプラットフォームとして機能する。定期的なアーティスト・トークや鑑賞ワークショップも開催。2022年より個展なびのLIAISONプログラムに参加。</p>
+                <button class="p4-prof-bio-toggle" id="p4ProfBioToggle">もっと見る</button>
+              </div>
+              <div class="p4-prof-bio-overflow"></div>
+            </div>
+
+            <!-- 取扱ジャンル -->
+            <div class="p4-prof-section">
+              <div class="p4-prof-section-label">取扱ジャンル</div>
+              <div class="p4-prof-section-value">現代美術・絵画・写真・インスタレーション</div>
+            </div>
+
+            <!-- ギャラリー情報 -->
+            <div class="p4-prof-section">
+              <div class="p4-prof-section-label">ギャラリー情報</div>
+              <div class="p4-prof-atelier">
+                <div class="p4-prof-atelier-name">Gallery SOIL 渋谷</div>
+                <div class="p4-prof-atelier-desc">現代美術・絵画を中心とした複合ギャラリー</div>
+                <div class="p4-prof-atelier-row">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                  ギャラリー
+                </div>
+                <div class="p4-prof-atelier-row">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  東京都渋谷区松濤1-XX-XX
+                </div>
+                <div class="p4-prof-atelier-row">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6.16 6.16l.91-.91a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                  <a href="tel:03XXXXXXXX" class="p4-prof-tel-link">03-XXXX-XXXX</a>
+                </div>
+                <div class="p4-prof-atelier-row">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                  <a href="mailto:info@soilgallery.jp" class="p4-prof-mail-link">info@soilgallery.jp</a>
+                </div>
+                <div class="p4-prof-atelier-row">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  火〜土 11:00〜19:00（日月定休）
+                </div>
+              </div>
+            </div>
+
+            <!-- 地図・アクセス -->
+            <div class="p4-prof-section">
+              <div class="p4-prof-section-label">地図・アクセス</div>
+              <div class="p4-prof-map">
+                <div class="p4-prof-map-thumb">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" opacity=".35"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  <span>東京都渋谷区松濤1-XX-XX</span>
+                </div>
+                <div class="p4-prof-map-links">
+                  <a href="https://www.google.com/maps/search/?api=1&query=東京都渋谷区松濤1" class="p4-prof-map-btn" target="_blank" rel="noopener noreferrer">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    Google マップ
+                  </a>
+                  <a href="https://www.google.com/maps/dir/?api=1&destination=東京都渋谷区松濤1" class="p4-prof-map-btn" target="_blank" rel="noopener noreferrer">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                    経路を調べる
+                  </a>
+                </div>
+                <div class="p4-prof-map-distance" id="p4MapDistance">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  <span class="p4-prof-map-distance__label">現在地から</span>
+                  <span class="p4-prof-map-distance__val" id="p4MapDistanceVal">取得中…</span>
+                </div>
+                <div class="p4-prof-access">
+                  <div class="p4-prof-access-row">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+                    京王井の頭線 渋谷駅 徒歩12分
+                  </div>
+                  <div class="p4-prof-access-row">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+                    東急東横線 渋谷駅 徒歩15分
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 利用案内 -->
+            <div class="p4-prof-section">
+              <div class="p4-prof-section-label">利用案内</div>
+              <div class="p4-prof-facility">
+
+                <div class="p4-prof-facility-item">
+                  <div class="p4-prof-facility-head">
+                    <span class="p4-prof-facility-badge p4-prof-facility-badge--on">無料</span>
+                    <span class="p4-prof-facility-name">入場料</span>
+                  </div>
+                  <p class="p4-prof-facility-desc">入場無料。一部企画展は有料となる場合あり。</p>
+                </div>
+
+                <div class="p4-prof-facility-item">
+                  <div class="p4-prof-facility-head">
+                    <span class="p4-prof-facility-badge p4-prof-facility-badge--off">なし</span>
+                    <span class="p4-prof-facility-name">駐車場</span>
+                  </div>
+                  <p class="p4-prof-facility-desc">専用駐車場なし。近隣にコインパーキングあり。</p>
+                </div>
+
+                <div class="p4-prof-facility-item">
+                  <div class="p4-prof-facility-head">
+                    <span class="p4-prof-facility-badge p4-prof-facility-badge--on">対応</span>
+                    <span class="p4-prof-facility-name">バリアフリー</span>
+                  </div>
+                  <p class="p4-prof-facility-desc">段差なし・エレベーター完備。車椅子でのご来場が可能です。</p>
+                </div>
+
+                <div class="p4-prof-facility-item">
+                  <div class="p4-prof-facility-head">
+                    <span class="p4-prof-facility-badge p4-prof-facility-badge--on">可</span>
+                    <span class="p4-prof-facility-name">クレカ・電子マネー</span>
+                  </div>
+                  <p class="p4-prof-facility-desc">各種クレジットカード・PayPay・交通系IC対応。</p>
+                </div>
+
+                <div class="p4-prof-facility-item">
+                  <div class="p4-prof-facility-head">
+                    <span class="p4-prof-facility-badge p4-prof-facility-badge--on">可</span>
+                    <span class="p4-prof-facility-name">レンタル</span>
+                  </div>
+                  <p class="p4-prof-facility-desc">スペースレンタル可。展示・撮影・イベントなど用途問わず相談可。</p>
+                  <div class="p4-prof-facility-rental">
+                    <span class="p4-prof-facility-rental-item">60㎡</span>
+                    <span class="p4-prof-facility-rental-sep">·</span>
+                    <span class="p4-prof-facility-rental-item">150,000円（税込）/週</span>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- リンク（アイコンのみ） -->
+            <div class="p4-prof-section">
+              <div class="p4-prof-section-label">Link</div>
+            </div>
+            <div class="p4-prof-links" id="p4ProfLinks"></div>
+
+            <!-- 掲載日・最終更新 -->
+            <div class="p4-prof-dates">
+              <span><span class="p4-prof-dates__label">掲載日</span>2023.10.15</span>
+              <span><span class="p4-prof-dates__label">最終更新</span>2026.03.20</span>
+            </div>
+
+          </div><!-- /p4-prof-main -->
+
+          <!-- 右カラム -->
+          <div class="p4-prof-side">
+
+            <!-- R-1. CTAウィジェット -->
+            <div class="p4-side-card p4-box p4-side-cta">
+              <button class="p4-side-cta__count" data-action="open-watchers">ウォッチャー 58人</button>
+              <button class="ktn-btn p4-action-watch-btn" id="p4WatchSide" data-off="watch" data-on="watching" data-action="watch">
+                <svg viewBox="0 0 16 16" fill="none" width="15" height="15">
+                  <circle cx="8" cy="8" r="7" fill="#7a8a99" opacity=".45"/>
+                  <circle class="wi-dark" cx="8" cy="8" r="2.6"/>
+                </svg>
+                <span class="ktn-btn__lbl">watch</span><span class="tip">ウォッチする</span>
+              </button>
+              <div class="p4-side-cta__sep"></div>
+              <div class="p4-side-cta__sub">
+                <button class="p4-side-card__sub-btn" type="button" onclick="doShare()">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="14" height="14"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                  シェア
+                </button>
+                <a href="#" class="p4-side-card__sub-btn">問題を報告する</a>
+              </div>
+            </div>
+
+            <!-- R-2. 開催中の展覧会 -->
+            <div class="p4-side-card p4-box p4-side-exhibition" id="p4SideExhibitionCard">
+              <div class="p4-sec-label">EXHIBITION — 開催中</div>
+              <div id="p4SideExhibition"></div>
+            </div>
+
+            <!-- R-3. 記事 -->
+            <div id="p4SideArticlesCard" class="p4-side-card p4-box p4-side-articles">
+              <div class="p4-sec-label">ARTICLES — 記事<a href="kotennavi-p4-2.html" class="p4-sec-more">記事一覧 →</a></div>
+              <div id="p4SideArticlesList"></div>
+            </div>
+
+          </div><!-- /p4-prof-side -->
+
+        </div><!-- /p4-prof-layout -->
+      </section>
+
+    </div><!-- /p4-main -->
+
+    <!-- G. おすすめのギャラリー -->
+    <div class="p4-recommended">
+      <div class="p4-recommended__inner">
+
+        <!-- タグ -->
+        <div class="p2-sub-tags">
+          <div class="p2-sub-tags__label">タグ · Tags</div>
+          <ul class="p2-1-tag-pills" aria-label="タグ">
+            <li><a class="p2-1-tag-pill" href="#">現代美術</a></li>
+            <li><a class="p2-1-tag-pill" href="#">絵画</a></li>
+            <li><a class="p2-1-tag-pill" href="#">渋谷</a></li>
+            <li><a class="p2-1-tag-pill" href="#">東京</a></li>
+            <li><a class="p2-1-tag-pill" href="#">個展なび</a></li>
+          </ul>
+        </div>
+
+        <!-- おすすめのギャラリー -->
+        <section class="p2-related">
+          <div class="ktn-section__head">
+            <h2 class="ktn-section__title">おすすめのギャラリー<span class="p2-related__en">Recommended</span></h2>
+            <a href="#" class="ktn-section__more">もっと見る →</a>
+          </div>
+          <div class="masonry">
+            <div class="masonry-item">
+              <a class="cc" href="#">
+                <div class="cc__top">
+                  <div class="cc__avatar av-g1" style="background:linear-gradient(135deg,#c8b090,#9a7858);border-radius:4px"><div class="cc__avatar-ph">土</div></div>
+                  <div class="cc__badge-row">
+                    <span class="cb cb-gallery">gallery</span>
+                    <span class="sb">開催中/開催予定</span>
+                  </div>
+                  <div class="cc__name">Gallery 土 渋谷</div>
+                  <div class="cc__genre">現代美術・絵画</div>
+                  <div class="cc__watch">
+                    <button class="ktn-btn on" onclick="this.classList.toggle('on');event.preventDefault()">
+                      <svg width="14" height="14"><use href="#icon-watch" color="#3a90e0"/></svg>
+                      watching<span class="tip">ウォッチを解除する</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="cc__foot">
+                  <div class="pc-counts">
+                    <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>12</span>
+                    <span class="sep"></span>
+                    <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>87</span>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="masonry-item">
+              <a class="cc" href="#">
+                <div class="cc__top">
+                  <div class="cc__avatar av-g2" style="background:linear-gradient(135deg,#c8c0a0,#9a9068);border-radius:4px"><div class="cc__avatar-ph">光</div></div>
+                  <div class="cc__badge-row">
+                    <span class="cb cb-gallery">gallery</span>
+                  </div>
+                  <div class="cc__name">Art Space 光 銀座</div>
+                  <div class="cc__genre">絵画・写真</div>
+                  <div class="cc__watch">
+                    <button class="ktn-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                      <svg width="14" height="14"><use href="#icon-watch" color="#7a8a99"/></svg>
+                      watch<span class="tip">ウォッチする</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="cc__foot">
+                  <div class="pc-counts">
+                    <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>8</span>
+                    <span class="sep"></span>
+                    <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>54</span>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="masonry-item">
+              <a class="cc" href="#">
+                <div class="cc__top">
+                  <div class="cc__avatar av-g3" style="background:linear-gradient(135deg,#8aac90,#5a7860);border-radius:4px"><div class="cc__avatar-ph">森</div></div>
+                  <div class="cc__badge-row">
+                    <span class="cb cb-gallery">gallery</span>
+                    <span class="sb">開催中/開催予定</span>
+                  </div>
+                  <div class="cc__name">Gallery 森 代官山</div>
+                  <div class="cc__genre">インスタレーション・現代美術</div>
+                  <div class="cc__watch">
+                    <button class="ktn-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                      <svg width="14" height="14"><use href="#icon-watch" color="#7a8a99"/></svg>
+                      watch<span class="tip">ウォッチする</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="cc__foot">
+                  <div class="pc-counts">
+                    <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>6</span>
+                    <span class="sep"></span>
+                    <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>41</span>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="masonry-item">
+              <a class="cc" href="#">
+                <div class="cc__top">
+                  <div class="cc__avatar av-g4" style="background:linear-gradient(135deg,#c0b8b0,#9090888);border-radius:4px"><div class="cc__avatar-ph">W</div></div>
+                  <div class="cc__badge-row">
+                    <span class="cb cb-gallery">gallery</span>
+                  </div>
+                  <div class="cc__name">White Box 表参道</div>
+                  <div class="cc__genre">ミクストメディア・版画</div>
+                  <div class="cc__watch">
+                    <button class="ktn-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                      <svg width="14" height="14"><use href="#icon-watch" color="#7a8a99"/></svg>
+                      watch<span class="tip">ウォッチする</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="cc__foot">
+                  <div class="pc-counts">
+                    <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>5</span>
+                    <span class="sep"></span>
+                    <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>33</span>
+                  </div>
+                </div>
+              </a>
+            </div>
+          </div><!-- /masonry -->
+        </section><!-- /p2-related -->
+
+      </div><!-- /p4-recommended__inner -->
+    </div><!-- /p4-recommended -->
+
+  </main>
+
+  <div class="ktn-ad-band" id="ktnAdBand">
+    <div class="ktn-ad-band__inner">
+      <div class="ktn-ad-band__slot">広告エリア（728×90 / レスポンシブ）</div>
+    </div>
+  </div>
+  <div class="dev-ph dev-ph--footer"></div>
+
+</div><!-- /content-wrap -->
+</div><!-- /shell -->
+
+<nav class="ktn-bottom-nav" id="ktnBottomNav">
+  <div class="ktn-bottom-nav__inner" id="ktnBottomNavInner"></div>
+</nav>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Top","item":"https://koten-navi.com/"},{"@type":"ListItem","position":2,"name":"Gallery SOIL 渋谷","item":"https://koten-navi.com/gallery/soil-shibuya"}]}</script>
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+  window.P4_DATA = {
+    hasImage: true,
+    hasActiveExhibition: true,
+    profile: {
+      images: [
+        { src:'', bg:'linear-gradient(135deg,#c8b090,#9a7858)', caption:'ギャラリー内部' },
+        { src:'', bg:'linear-gradient(135deg,#d0c8b8,#a89878)', caption:'展示風景' },
+        { src:'', bg:'linear-gradient(135deg,#b0c8c0,#7a9890)', caption:'個展「オノマトペ」会場' },
+        { src:'', bg:'linear-gradient(135deg,#c0c0c8,#8888a0)', caption:'グループ展 2025' },
+        { src:'', bg:'linear-gradient(135deg,#d8c8b0,#b0a080)', caption:'ギャラリーエントランス' }
+      ],
+      links: [
+        { type:'hp',        url:'#', label:'Website' },
+        { type:'instagram', url:'#', label:'Instagram' },
+        { type:'x',         url:'#', label:'X' },
+        { type:'facebook',  url:'#', label:'Facebook' },
+        { type:'threads',   url:'#', label:'Threads' },
+        { type:'bluesky',   url:'#', label:'Bluesky' },
+        { type:'pinterest', url:'#', label:'Pinterest' },
+        { type:'tiktok',    url:'#', label:'TikTok' },
+        { type:'youtube',   url:'#', label:'YouTube' },
+        { type:'note',      url:'#', label:'note' },
+        { type:'substack',  url:'#', label:'Substack' },
+        { type:'behance',   url:'#', label:'Behance' },
+        { type:'artstation',url:'#', label:'ArtStation' },
+        { type:'pixiv',     url:'#', label:'pixiv' },
+        { type:'linktree',  url:'#', label:'Linktree' },
+        { type:'litlink',   url:'#', label:'lit.link' },
+        { type:'etsy',      url:'#', label:'Etsy' },
+        { type:'shopify',   url:'#', label:'Shopify' },
+        { type:'base',      url:'#', label:'BASE' },
+        { type:'minne',     url:'#', label:'minne' },
+        { type:'creema',    url:'#', label:'Creema' },
+        { type:'stores',    url:'#', label:'STORES' },
+        { type:'iichi',     url:'#', label:'iichi' },
+        { type:'booth',     url:'#', label:'BOOTH' }
+      ]
+    },
+    activeExhibition: {
+      title: 'あなたが知らないオノマトペ',
+      venue: 'Gallery SOIL 渋谷',
+      dateRange: '2026.02.18 – 03.05',
+      isLiaison: true
+    },
+    watchers: [
+      { name:'山田花子',   avatar:'linear-gradient(135deg,#e8b4a0,#c89080)' },
+      { name:'佐藤二郎',   avatar:'linear-gradient(135deg,#a0b4e8,#7090c0)' },
+      { name:'鈴木三郎',   avatar:'linear-gradient(135deg,#b4e8a0,#80c090)' },
+      { name:'田村四郎',   avatar:'linear-gradient(135deg,#e8e0a0,#c0b880)' },
+      { name:'中村五郎',   avatar:'linear-gradient(135deg,#d4a0e8,#a870c0)' },
+      { name:'木村六子',   avatar:'linear-gradient(135deg,#a0e8d4,#60b090)' },
+      { name:'林 七海',    avatar:'linear-gradient(135deg,#e8a0c8,#c070a0)' },
+      { name:'清水八郎',   avatar:'linear-gradient(135deg,#c8a0e8,#9868c0)' },
+      { name:'松本九美',   avatar:'linear-gradient(135deg,#e8d0a0,#c0a060)' },
+      { name:'井上十子',   avatar:'linear-gradient(135deg,#a0c8e8,#6098c0)' },
+      { name:'渡辺一朗',   avatar:'linear-gradient(135deg,#e8a0a0,#c07070)' },
+      { name:'伊藤葵',     avatar:'linear-gradient(135deg,#a0e8a8,#60b068)' },
+      { name:'小林蓮',     avatar:'linear-gradient(135deg,#d0c8e8,#9890c0)' },
+      { name:'加藤麻衣',   avatar:'linear-gradient(135deg,#e8c8a0,#c09870)' },
+      { name:'吉田陽子',   avatar:'linear-gradient(135deg,#a8d0e8,#6098b8)' },
+      { name:'田中悠人',   avatar:'linear-gradient(135deg,#e8a8c0,#c07898)' },
+      { name:'佐々木凛',   avatar:'linear-gradient(135deg,#b0e8c8,#78b898)' },
+      { name:'山口晴香',   avatar:'linear-gradient(135deg,#e0b8e8,#b080c0)' },
+      { name:'斎藤隆',     avatar:'linear-gradient(135deg,#e8d8a0,#c0b070)' },
+      { name:'松田奈々',   avatar:'linear-gradient(135deg,#a0d8e8,#6098b0)' }
+    ],
+    archiveCount: 15,
+    newBadges: { exhibitions: true, articles: true },
+    articles: [
+      { id:'a1', title:'ギャラリーが語る「素材と空間」— SOIL NOTES vol.3', date:'2026.02.10', isNew:true, hasImg:true },
+      { id:'a2', title:'田中 透×Gallery SOIL 渋谷 制作インタビュー「音が見えて、絵が聞こえる」', date:'2025.12.05', isNew:false, hasImg:false },
+      { id:'a3', title:'渋谷で巡るアートスポット5選', date:'2025.09.20', isNew:false, hasImg:true }
+    ]
+  };
+  KTN.init({ page: 'p4', role: 'guest' });
+</script>
+</body>
+</html>

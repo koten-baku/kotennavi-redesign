@@ -2695,3 +2695,1201 @@ KTN.pages['p3'] = function () {
     }, { threshold: 0 }).observe(p3Head);
   }
 };
+
+/* ────────────────────────────────────────────────────
+   P3-1 展覧会一覧
+──────────────────────────────────────────────────── */
+KTN.pages['p3-1'] = function () {
+  var d = window.P3_DATA || {};
+
+  // 0. ページスコープ・アクセントカラー
+  document.body.classList.add('p3-page', 'p3-1-page');
+  document.body.style.setProperty('--page-accent',        '#2a5f7a');
+  document.body.style.setProperty('--page-accent-bg',     'rgba(42,95,122,.1)');
+  document.body.style.setProperty('--page-accent-border', '#5a8fa8');
+
+  // 0b. ヒーロー初期設定
+  if (typeof applyHeadImageMode === 'function') applyHeadImageMode(d.hasImage !== false);
+  var activeBadge = document.getElementById('p3HeadActiveBadge');
+  if (activeBadge && d.hasActiveExhibition) activeBadge.removeAttribute('hidden');
+
+  // 0c. tagbar
+  (function(){
+    var inner = document.getElementById('ktnTagbarInner');
+    if (!inner) return;
+    [{label:'絵画'},{label:'現代美術'},{sep:true},{label:'東京'},{sep:true},{label:'個展なびを知る'}
+    ].forEach(function(t){
+      var el;
+      if (t.sep){ el=document.createElement('span'); el.className='p2-tsep'; el.textContent='|'; }
+      else{
+        el=document.createElement('button'); el.className='p2-tpill'; el.textContent=t.label;
+        el.addEventListener('click',function(){
+          inner.querySelectorAll('.p2-tpill').forEach(function(b){b.classList.remove('is-active');});
+          this.classList.add('is-active');
+        });
+      }
+      inner.appendChild(el);
+    });
+  })();
+
+  // 1. タブナビ: 展覧会をアクティブ・他タブは各サブページへ
+  document.querySelectorAll('.p3-tabnav__item').forEach(function(btn){
+    if (btn.dataset.tab === 'exhibitions') {
+      btn.classList.add('is-active');
+    } else {
+      btn.addEventListener('click', function(){
+        if (btn.dataset.tab === 'articles') {
+          window.location.href = 'kotennavi-p3-2.html';
+        } else if (btn.dataset.tab === 'works') {
+          window.location.href = 'kotennavi-p3-3.html';
+        } else if (btn.dataset.target) {
+          window.location.href = 'kotennavi-p3.html#' + btn.dataset.target;
+        }
+      });
+    }
+  });
+
+  // 2. watchボタン トグル
+  var watchBtns = document.querySelectorAll('[data-action="watch"]');
+  watchBtns.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var isOn = btn.classList.contains('on');
+      watchBtns.forEach(function(b){
+        b.classList.toggle('on', !isOn);
+        var lbl = b.querySelector('.ktn-btn__lbl');
+        if (lbl) lbl.textContent = !isOn ? (b.dataset.on||'watching') : (b.dataset.off||'watch');
+        var tip = b.querySelector('.tip');
+        if (tip) tip.textContent = !isOn ? 'ウォッチ中 — 解除する' : 'ウォッチする';
+      });
+      KTN.toast(isOn ? 'ウォッチを解除しました' : '田中 透をウォッチしました');
+    });
+  });
+
+  // 3. ウォッチャーモーダル
+  var modal = document.getElementById('p3WatcherModal');
+  var watcherList = document.getElementById('p3WatcherList');
+  if (modal && watcherList && d.watchers) {
+    watcherList.innerHTML = d.watchers.map(function(w){
+      return '<div class="p3-watcher-item">'
+        +'<div class="p3-watcher-item__avatar" style="background:'+w.avatar+'">'+w.name.charAt(0)+'</div>'
+        +'<div class="p3-watcher-item__name">'+w.name+'</div></div>';
+    }).join('');
+    document.querySelectorAll('[data-action="open-watchers"]').forEach(function(el){
+      el.addEventListener('click', function(e){
+        e.preventDefault();
+        modal.classList.add('is-open');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+    function closeWatcherModal(){
+      modal.classList.remove('is-open');
+      document.body.style.overflow = '';
+    }
+    var closeBtn = document.getElementById('p3WatcherModalClose');
+    closeBtn && closeBtn.addEventListener('click', closeWatcherModal);
+    modal.querySelector('.p3-watcher-modal__overlay').addEventListener('click', closeWatcherModal);
+    document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeWatcherModal(); });
+  }
+
+  // 3b. 自己紹介 2段階展開
+  document.fonts.ready.then(function(){
+    var bioToggle = document.getElementById('p3HeadBioToggle');
+    var bioText   = document.getElementById('p3HeadBioText');
+    var bioLink   = document.getElementById('p3HeadBioProfileLink');
+    if (!bioText || !bioToggle || !bioLink) return;
+    if (bioText.scrollHeight <= bioText.clientHeight) {
+      bioToggle.style.display = 'none';
+      bioLink.classList.add('is-visible');
+    } else {
+      bioToggle.addEventListener('click', function(){
+        bioText.classList.add('is-expanded');
+        bioToggle.style.display = 'none';
+        bioLink.classList.add('is-visible');
+      });
+    }
+  });
+
+  // 4. フィルター絞り込み
+  (function(){
+    var selects = document.querySelectorAll('.p3-1-filter__select');
+    var filterCountEl = document.getElementById('p3FilterCount');
+    var emptyEl = document.getElementById('p3FilterEmpty');
+
+    function filterExhibitions() {
+      var year = document.getElementById('p3FilterYear') ? document.getElementById('p3FilterYear').value : '';
+      var pref = document.getElementById('p3FilterPref') ? document.getElementById('p3FilterPref').value : '';
+      var type = document.getElementById('p3FilterType') ? document.getElementById('p3FilterType').value : '';
+      var hasFilter = !!(year || pref || type);
+      var totalVisible = 0;
+
+      document.querySelectorAll('.p3-1-group').forEach(function(group) {
+        var groupVisible = 0;
+
+        // 各カードを評価
+        group.querySelectorAll('.ec--h').forEach(function(card) {
+          var match = (!year || card.dataset.year === year)
+                   && (!pref  || card.dataset.pref  === pref)
+                   && (!type  || card.dataset.type  === type);
+          if (match) {
+            card.removeAttribute('hidden');
+            groupVisible++;
+          } else {
+            card.setAttribute('hidden', '');
+          }
+        });
+
+        // 年グループ（過去）：表示カードが0なら非表示
+        group.querySelectorAll('.p3-1-year-group').forEach(function(yg) {
+          var ygVisible = 0;
+          yg.querySelectorAll('.ec--h').forEach(function(c) {
+            if (!c.hasAttribute('hidden')) ygVisible++;
+          });
+          if (ygVisible === 0) {
+            yg.setAttribute('hidden', '');
+          } else {
+            yg.removeAttribute('hidden');
+          }
+        });
+
+        // グループ件数を更新
+        var countEl = group.querySelector('.p3-1-group-count');
+        if (countEl) countEl.textContent = groupVisible + '件';
+
+        // グループ全体を表示/非表示
+        if (groupVisible === 0) {
+          group.setAttribute('hidden', '');
+        } else {
+          group.removeAttribute('hidden');
+          totalVisible += groupVisible;
+        }
+      });
+
+      // フィルター件数表示
+      if (filterCountEl) {
+        if (hasFilter) {
+          filterCountEl.textContent = totalVisible + '件を表示中';
+          filterCountEl.removeAttribute('hidden');
+        } else {
+          filterCountEl.setAttribute('hidden', '');
+        }
+      }
+
+      // 空の状態
+      if (emptyEl) {
+        if (totalVisible === 0) {
+          emptyEl.classList.add('is-visible');
+        } else {
+          emptyEl.classList.remove('is-visible');
+        }
+      }
+    }
+
+    selects.forEach(function(sel) {
+      sel.addEventListener('change', filterExhibitions);
+    });
+  })();
+};
+
+/* ════════════════════════════════════════
+   p3-2  記事一覧ページ
+════════════════════════════════════════ */
+KTN.pages['p3-2'] = function () {
+  var d = window.P3_DATA || {};
+
+  // 0. ページスコープ・アクセントカラー
+  document.body.classList.add('p3-page', 'p3-2-page');
+  document.body.style.setProperty('--page-accent',        '#2a5f7a');
+  document.body.style.setProperty('--page-accent-bg',     'rgba(42,95,122,.1)');
+  document.body.style.setProperty('--page-accent-border', '#5a8fa8');
+
+  // 0b. ヒーロー初期設定（アクティブバッジ）
+  var activeBadge = document.getElementById('p3HeadActiveBadge');
+  if (activeBadge && d.hasActiveExhibition) activeBadge.removeAttribute('hidden');
+
+  // 0c. tagbar
+  (function(){
+    var inner = document.getElementById('ktnTagbarInner');
+    if (!inner) return;
+    [{label:'絵画'},{label:'現代美術'},{sep:true},{label:'東京'},{sep:true},{label:'個展なびを知る'}
+    ].forEach(function(t){
+      var el;
+      if (t.sep){ el=document.createElement('span'); el.className='p2-tsep'; el.textContent='|'; }
+      else{
+        el=document.createElement('button'); el.className='p2-tpill'; el.textContent=t.label;
+        el.addEventListener('click',function(){
+          inner.querySelectorAll('.p2-tpill').forEach(function(b){b.classList.remove('is-active');});
+          this.classList.add('is-active');
+        });
+      }
+      inner.appendChild(el);
+    });
+  })();
+
+  // 1. タブナビ: 記事をアクティブ・他タブは各サブページへ
+  document.querySelectorAll('.p3-tabnav__item').forEach(function(btn){
+    if (btn.dataset.tab === 'articles') {
+      btn.classList.add('is-active');
+    } else {
+      btn.addEventListener('click', function(){
+        if (btn.dataset.tab === 'exhibitions') {
+          window.location.href = 'kotennavi-p3-1.html';
+        } else if (btn.dataset.tab === 'works') {
+          window.location.href = 'kotennavi-p3-3.html';
+        } else if (btn.dataset.target) {
+          window.location.href = 'kotennavi-p3.html#' + btn.dataset.target;
+        }
+      });
+    }
+  });
+
+  // 2. watchボタン トグル
+  var watchBtns = document.querySelectorAll('[data-action="watch"]');
+  watchBtns.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var isOn = btn.classList.contains('on');
+      watchBtns.forEach(function(b){
+        b.classList.toggle('on', !isOn);
+        var lbl = b.querySelector('.ktn-btn__lbl');
+        if (lbl) lbl.textContent = !isOn ? (b.dataset.on||'watching') : (b.dataset.off||'watch');
+        var tip = b.querySelector('.tip');
+        if (tip) tip.textContent = !isOn ? 'ウォッチ中 — 解除する' : 'ウォッチする';
+      });
+      KTN.toast(isOn ? 'ウォッチを解除しました' : '田中 透をウォッチしました');
+    });
+  });
+
+  // 3. ウォッチャーモーダル
+  var modal = document.getElementById('p3WatcherModal');
+  var watcherList = document.getElementById('p3WatcherList');
+  if (modal && watcherList && d.watchers) {
+    watcherList.innerHTML = d.watchers.map(function(w){
+      return '<div class="p3-watcher-item">'
+        +'<div class="p3-watcher-item__avatar" style="background:'+w.avatar+'">'+w.name.charAt(0)+'</div>'
+        +'<div class="p3-watcher-item__name">'+w.name+'</div></div>';
+    }).join('');
+    document.querySelectorAll('[data-action="open-watchers"]').forEach(function(el){
+      el.addEventListener('click', function(e){
+        e.preventDefault();
+        modal.classList.add('is-open');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+    function closeWatcherModal(){
+      modal.classList.remove('is-open');
+      document.body.style.overflow = '';
+    }
+    var closeBtn = document.getElementById('p3WatcherModalClose');
+    closeBtn && closeBtn.addEventListener('click', closeWatcherModal);
+    modal.querySelector('.p3-watcher-modal__overlay').addEventListener('click', closeWatcherModal);
+    document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeWatcherModal(); });
+  }
+
+  // 3b. 自己紹介 2段階展開
+  document.fonts.ready.then(function(){
+    var bioToggle = document.getElementById('p3HeadBioToggle');
+    var bioText   = document.getElementById('p3HeadBioText');
+    var bioLink   = document.getElementById('p3HeadBioProfileLink');
+    if (!bioText || !bioToggle || !bioLink) return;
+    if (bioText.scrollHeight <= bioText.clientHeight) {
+      bioToggle.style.display = 'none';
+      bioLink.classList.add('is-visible');
+    } else {
+      bioToggle.addEventListener('click', function(){
+        bioText.classList.add('is-expanded');
+        bioToggle.style.display = 'none';
+        bioLink.classList.add('is-visible');
+      });
+    }
+  });
+
+  // 4. 記事フィルター絞り込み
+  (function(){
+    var selects = document.querySelectorAll('.p3-2-filter__select');
+    var filterCountEl = document.getElementById('p3FilterCount');
+    var emptyEl = document.getElementById('p3FilterEmpty');
+
+    function filterArticles() {
+      var dest     = document.getElementById('p3FilterDest')     ? document.getElementById('p3FilterDest').value     : '';
+      var category = document.getElementById('p3FilterCategory') ? document.getElementById('p3FilterCategory').value : '';
+      var year     = document.getElementById('p3FilterYear')     ? document.getElementById('p3FilterYear').value     : '';
+      var hasFilter = !!(dest || category || year);
+      var totalVisible = 0;
+
+      document.querySelectorAll('.p3-2-year-group').forEach(function(yg){
+        var ygVisible = 0;
+        yg.querySelectorAll('.lc').forEach(function(card){
+          var match = (!dest     || card.dataset.dest     === dest)
+                   && (!category || card.dataset.category === category)
+                   && (!year     || card.dataset.year     === year);
+          if (match) {
+            card.removeAttribute('hidden');
+            ygVisible++;
+          } else {
+            card.setAttribute('hidden', '');
+          }
+        });
+        var countEl = yg.querySelector('.p3-2-year-count');
+        if (countEl) countEl.textContent = ygVisible + '件';
+        if (ygVisible === 0) yg.setAttribute('hidden', '');
+        else { yg.removeAttribute('hidden'); totalVisible += ygVisible; }
+      });
+
+      if (filterCountEl) {
+        if (hasFilter) {
+          filterCountEl.textContent = totalVisible + '件を表示中';
+          filterCountEl.removeAttribute('hidden');
+        } else {
+          filterCountEl.setAttribute('hidden', '');
+        }
+      }
+      if (emptyEl) emptyEl.classList.toggle('is-visible', totalVisible === 0);
+    }
+
+    selects.forEach(function(sel){ sel.addEventListener('change', filterArticles); });
+  })();
+};
+
+/* ════════════════════════════════════════
+   p3-3  作品一覧ページ
+════════════════════════════════════════ */
+KTN.pages['p3-3'] = function () {
+  var d = window.P3_DATA || {};
+
+  // 0. ページスコープ・アクセントカラー
+  document.body.classList.add('p3-page');
+  document.body.style.setProperty('--page-accent',        '#2a5f7a');
+  document.body.style.setProperty('--page-accent-bg',     'rgba(42,95,122,.1)');
+  document.body.style.setProperty('--page-accent-border', '#5a8fa8');
+
+  // 0b. ヒーローアクティブバッジ
+  var activeBadge = document.getElementById('p3HeadActiveBadge');
+  if (activeBadge && d.hasActiveExhibition) activeBadge.removeAttribute('hidden');
+
+  // 0c. tagbar
+  (function(){
+    var inner = document.getElementById('ktnTagbarInner');
+    if (!inner) return;
+    [{label:'絵画'},{label:'現代美術'},{sep:true},{label:'東京'},{sep:true},{label:'個展なびを知る'}
+    ].forEach(function(t){
+      var el;
+      if (t.sep){ el=document.createElement('span'); el.className='p2-tsep'; el.textContent='|'; }
+      else{
+        el=document.createElement('button'); el.className='p2-tpill'; el.textContent=t.label;
+        el.addEventListener('click',function(){
+          inner.querySelectorAll('.p2-tpill').forEach(function(b){b.classList.remove('is-active');});
+          this.classList.add('is-active');
+        });
+      }
+      inner.appendChild(el);
+    });
+  })();
+
+  // 1. タブナビ: 作品をアクティブ・他タブは各サブページへ
+  document.querySelectorAll('.p3-tabnav__item').forEach(function(btn){
+    if (btn.dataset.tab === 'works') {
+      btn.classList.add('is-active');
+    } else {
+      btn.addEventListener('click', function(){
+        if (btn.dataset.tab === 'exhibitions') {
+          window.location.href = 'kotennavi-p3-1.html';
+        } else if (btn.dataset.tab === 'articles') {
+          window.location.href = 'kotennavi-p3-2.html';
+        } else if (btn.dataset.target) {
+          window.location.href = 'kotennavi-p3.html#' + btn.dataset.target;
+        }
+      });
+    }
+  });
+
+  // 2. watchボタン トグル
+  var watchBtns = document.querySelectorAll('[data-action="watch"]');
+  watchBtns.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var isOn = btn.classList.contains('on');
+      watchBtns.forEach(function(b){
+        b.classList.toggle('on', !isOn);
+        var lbl = b.querySelector('.ktn-btn__lbl');
+        if (lbl) lbl.textContent = !isOn ? (b.dataset.on||'watching') : (b.dataset.off||'watch');
+        var tip = b.querySelector('.tip');
+        if (tip) tip.textContent = !isOn ? 'ウォッチ中 — 解除する' : 'ウォッチする';
+      });
+      KTN.toast(isOn ? 'ウォッチを解除しました' : '田中 透をウォッチしました');
+    });
+  });
+
+  // 3. ウォッチャーモーダル
+  var modal = document.getElementById('p3WatcherModal');
+  var watcherList = document.getElementById('p3WatcherList');
+  if (modal && watcherList && d.watchers) {
+    watcherList.innerHTML = d.watchers.map(function(w){
+      return '<div class="p3-watcher-item">'
+        +'<div class="p3-watcher-item__avatar" style="background:'+w.avatar+'">'+w.name.charAt(0)+'</div>'
+        +'<div class="p3-watcher-item__name">'+w.name+'</div></div>';
+    }).join('');
+    document.querySelectorAll('[data-action="open-watchers"]').forEach(function(el){
+      el.addEventListener('click', function(e){
+        e.preventDefault();
+        modal.classList.add('is-open');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+    function closeWatcherModal(){
+      modal.classList.remove('is-open');
+      document.body.style.overflow = '';
+    }
+    var closeBtn = document.getElementById('p3WatcherModalClose');
+    closeBtn && closeBtn.addEventListener('click', closeWatcherModal);
+    modal.querySelector('.p3-watcher-modal__overlay').addEventListener('click', closeWatcherModal);
+    document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeWatcherModal(); });
+  }
+
+  // 4. 自己紹介 2段階展開
+  document.fonts.ready.then(function(){
+    var bioToggle = document.getElementById('p3HeadBioToggle');
+    var bioText   = document.getElementById('p3HeadBioText');
+    var bioLink   = document.getElementById('p3HeadBioProfileLink');
+    if (!bioText || !bioToggle || !bioLink) return;
+    if (bioText.scrollHeight <= bioText.clientHeight) {
+      bioToggle.style.display = 'none';
+      bioLink.classList.add('is-visible');
+    } else {
+      bioToggle.addEventListener('click', function(){
+        bioText.classList.add('is-expanded');
+        bioToggle.style.display = 'none';
+        bioLink.classList.add('is-visible');
+      });
+    }
+  });
+
+  // 5. 作品フィルター絞り込み
+  (function(){
+    var selects = document.querySelectorAll('.p3-3-filter__select');
+    var filterCountEl = document.getElementById('p3FilterCount');
+    var emptyEl = document.getElementById('p3FilterEmpty');
+
+    function filterWorks() {
+      var liaison = document.getElementById('p3FilterLiaison') ? document.getElementById('p3FilterLiaison').value : '';
+      var status  = document.getElementById('p3FilterStatus')  ? document.getElementById('p3FilterStatus').value  : '';
+      var genre   = document.getElementById('p3FilterGenre')   ? document.getElementById('p3FilterGenre').value   : '';
+      var year    = document.getElementById('p3FilterYear')    ? document.getElementById('p3FilterYear').value    : '';
+      var hasFilter = !!(liaison || status || genre || year);
+      var totalVisible = 0;
+
+      document.querySelectorAll('.p3-3-grid .aw').forEach(function(card){
+        var match = (!liaison || card.dataset.liaison === liaison)
+                 && (!status  || card.dataset.status  === status)
+                 && (!genre   || card.dataset.genre   === genre)
+                 && (!year    || card.dataset.year    === year);
+        if (match) {
+          card.removeAttribute('hidden');
+          totalVisible++;
+        } else {
+          card.setAttribute('hidden', '');
+        }
+      });
+
+      if (filterCountEl) {
+        if (hasFilter) {
+          filterCountEl.textContent = totalVisible + '件を表示中';
+          filterCountEl.removeAttribute('hidden');
+        } else {
+          filterCountEl.setAttribute('hidden', '');
+        }
+      }
+      if (emptyEl) emptyEl.classList.toggle('is-visible', totalVisible === 0);
+    }
+
+    selects.forEach(function(sel){ sel.addEventListener('change', filterWorks); });
+  })();
+};
+
+/* ────────────────────────────────────────────────────
+   P4 ギャラリートップ
+──────────────────────────────────────────────────── */
+KTN.pages['p4'] = function () {
+  var d = window.P4_DATA || {};
+
+  // 0. ページスコープ（クラス + アクセントカラー変数）
+  document.body.classList.add('p4-page');
+  document.body.style.setProperty('--page-accent',        '#8b5e3c');
+  document.body.style.setProperty('--page-accent-bg',     'rgba(139,94,60,.1)');
+  document.body.style.setProperty('--page-accent-border', '#b07840');
+
+  // 0b. ヒーロー初期設定
+  var activeBadge = document.getElementById('p4HeadActiveBadge');
+  if (activeBadge && d.hasActiveExhibition) activeBadge.removeAttribute('hidden');
+
+  // 0c. tagbar
+  (function(){
+    var inner = document.getElementById('ktnTagbarInner');
+    if (!inner) return;
+    [{label:'現代美術'},{label:'絵画'},{sep:true},{label:'渋谷'},{label:'東京'},{sep:true},{label:'個展なびを知る'}
+    ].forEach(function(t){
+      var el;
+      if (t.sep){ el=document.createElement('span'); el.className='p2-tsep'; el.textContent='|'; }
+      else{
+        el=document.createElement('button'); el.className='p2-tpill'; el.textContent=t.label;
+        el.addEventListener('click',function(){
+          inner.querySelectorAll('.p2-tpill').forEach(function(b){b.classList.remove('is-active');});
+          this.classList.add('is-active');
+        });
+      }
+      inner.appendChild(el);
+    });
+  })();
+
+  // 0d. タブナビ NEW バッジ表示制御
+  if (d.newBadges) {
+    Object.keys(d.newBadges).forEach(function(key){
+      if (!d.newBadges[key]) return;
+      var badge = document.querySelector('.p4-tabnav__new[data-new="' + key + '"]');
+      if (badge) badge.classList.add('is-visible');
+    });
+  }
+
+  // 1. watchボタン トグル
+  var watchBtns = document.querySelectorAll('[data-action="watch"]');
+  watchBtns.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var isOn = btn.classList.contains('on');
+      watchBtns.forEach(function(b){
+        b.classList.toggle('on', !isOn);
+        var lbl = b.querySelector('.ktn-btn__lbl');
+        if (lbl) lbl.textContent = !isOn ? (b.dataset.on||'watching') : (b.dataset.off||'watch');
+        var tip = b.querySelector('.tip');
+        if (tip) tip.textContent = !isOn ? 'ウォッチ中 — 解除する' : 'ウォッチする';
+      });
+      KTN.toast(isOn ? 'ウォッチを解除しました' : 'Gallery SOIL 渋谷をウォッチしました');
+    });
+  });
+
+  // 2. ウォッチャーモーダル
+  var modal = document.getElementById('p4WatcherModal');
+  var watcherList = document.getElementById('p4WatcherList');
+  if (modal && watcherList && d.watchers) {
+    watcherList.innerHTML = d.watchers.map(function(w){
+      return '<div class="p4-watcher-item">'
+        +'<div class="p4-watcher-item__avatar" style="background:'+w.avatar+'">'+w.name.charAt(0)+'</div>'
+        +'<div class="p4-watcher-item__name">'+w.name+'</div></div>';
+    }).join('');
+    document.querySelectorAll('[data-action="open-watchers"]').forEach(function(el){
+      el.addEventListener('click', function(e){
+        e.preventDefault();
+        modal.classList.add('is-open');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+    function closeWatcherModal(){
+      modal.classList.remove('is-open');
+      document.body.style.overflow = '';
+    }
+    var closeBtn = document.getElementById('p4WatcherModalClose');
+    closeBtn && closeBtn.addEventListener('click', closeWatcherModal);
+    modal.querySelector('.p4-watcher-modal__overlay').addEventListener('click', closeWatcherModal);
+    document.addEventListener('keydown', function(e){ if(e.key==='Escape'){ closeWatcherModal(); closeGallery(); } });
+  }
+
+  // 2b. 自己紹介 条件分岐 + 展開
+  var bioToggle = document.getElementById('p4HeadBioToggle');
+  var bioText   = document.getElementById('p4HeadBioText');
+  var bioLink   = document.getElementById('p4HeadBioProfileLink');
+  if (bioLink) {
+    bioLink.addEventListener('click', function(e){
+      e.preventDefault();
+      var target = document.getElementById('p4-sec-profile');
+      if (!target) return;
+      var hh = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--hh') || '56', 10);
+      window.scrollTo({ top: target.getBoundingClientRect().top + scrollY - hh - 60, behavior: 'smooth' });
+      document.querySelectorAll('.p4-tabnav__item').forEach(function(btn){
+        btn.classList.toggle('is-active', btn.dataset.target === 'p4-sec-profile');
+      });
+    });
+  }
+  document.fonts.ready.then(function(){
+    if (!bioText || !bioToggle || !bioLink) return;
+    if (bioText.scrollHeight <= bioText.clientHeight) {
+      bioToggle.style.display = 'none';
+      bioLink.classList.add('is-visible');
+    } else {
+      bioToggle.addEventListener('click', function(){
+        bioText.classList.add('is-expanded');
+        bioToggle.style.display = 'none';
+        bioLink.classList.add('is-visible');
+      });
+    }
+  });
+
+  // 3. 写真ライトボックス
+  var galleryModal       = document.getElementById('p4GalleryModal');
+  var galleryModalBg     = document.getElementById('p4GalleryModalBg');
+  var galleryModalCaption = document.getElementById('p4GalleryModalCaption');
+  function openGallery(bg, label){
+    if (!galleryModal) return;
+    if (galleryModalBg) galleryModalBg.style.cssText = 'position:absolute;inset:0;background:'+bg+';border-radius:4px';
+    if (galleryModalCaption) galleryModalCaption.textContent = label;
+    galleryModal.removeAttribute('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeGallery(){
+    if (!galleryModal) return;
+    galleryModal.setAttribute('hidden','');
+    document.body.style.overflow = '';
+  }
+  if (galleryModal) {
+    document.getElementById('p4GalleryModalClose').addEventListener('click', closeGallery);
+    galleryModalBg && galleryModalBg.addEventListener('click', closeGallery);
+  }
+
+  // 3b. プロフィール画像ギャラリー
+  (function(){
+    var layout    = document.getElementById('p4ProfBioLayout');
+    var mainEl    = document.getElementById('p4ProfMediaMain');
+    var captionEl = document.getElementById('p4ProfMediaCaption');
+    var thumbsEl  = document.getElementById('p4ProfMediaThumbs');
+    var imgs      = (d.profile && d.profile.images) ? d.profile.images : [];
+    var count     = imgs.length;
+    if (layout) layout.dataset.imgCount = count;
+    if (!mainEl || count === 0) return;
+    function showImage(img) {
+      mainEl.style.background = img.bg;
+      mainEl.dataset.caption  = img.caption;
+      if (captionEl) captionEl.textContent = img.caption;
+    }
+    showImage(imgs[0]);
+    mainEl.addEventListener('click', function(){
+      openGallery(mainEl.style.background, mainEl.dataset.caption || '');
+    });
+    if (thumbsEl && count >= 2) {
+      imgs.forEach(function(img, i){
+        var t = document.createElement('div');
+        t.className = 'p4-prof-media-thumb' + (i === 0 ? ' is-active' : '');
+        t.style.background = img.bg;
+        t.addEventListener('click', function(){
+          showImage(img);
+          thumbsEl.querySelectorAll('.p4-prof-media-thumb').forEach(function(el){
+            el.classList.remove('is-active');
+          });
+          t.classList.add('is-active');
+        });
+        thumbsEl.appendChild(t);
+      });
+    }
+  })();
+
+  // 3c. 略歴の折りたたみ
+  (function(){
+    var bioEl    = document.getElementById('p4ProfBio');
+    var mediaEl  = document.getElementById('p4ProfMedia');
+    var layout   = document.getElementById('p4ProfBioLayout');
+    var toggleEl = document.getElementById('p4ProfBioToggle');
+    if (!bioEl || !mediaEl || !toggleEl) return;
+    var expanded = false;
+    function applyClamp() {
+      var isCol = window.getComputedStyle(layout).flexDirection === 'column';
+      if (isCol || mediaEl.offsetHeight === 0) {
+        bioEl.style.maxHeight = '';
+        toggleEl.classList.remove('is-visible');
+        return;
+      }
+      var mediaH = mediaEl.offsetHeight;
+      if (!expanded && bioEl.scrollHeight > mediaH + 2) {
+        bioEl.style.maxHeight = mediaH + 'px';
+        toggleEl.classList.add('is-visible');
+        toggleEl.textContent = 'もっと見る';
+      } else if (!expanded) {
+        bioEl.style.maxHeight = '';
+        toggleEl.classList.remove('is-visible');
+      }
+    }
+    toggleEl.addEventListener('click', function() {
+      expanded = !expanded;
+      if (expanded) {
+        bioEl.style.maxHeight = bioEl.scrollHeight + 'px';
+        toggleEl.textContent = '閉じる';
+      } else {
+        bioEl.style.maxHeight = mediaEl.offsetHeight + 'px';
+        toggleEl.textContent = 'もっと見る';
+      }
+    });
+    applyClamp();
+    window.addEventListener('resize', function() { expanded = false; applyClamp(); });
+  })();
+
+  // 4. サイドバー 開催中展覧会ウィジェット
+  var sideExhibitionCard = document.getElementById('p4SideExhibitionCard');
+  var sideExhibitionEl   = document.getElementById('p4SideExhibition');
+  if (sideExhibitionCard && sideExhibitionEl && d.hasActiveExhibition && d.activeExhibition) {
+    var ex = d.activeExhibition;
+    var liaStripHtml = ex.isLiaison
+      ? '<div class="ec__liaison-strip">'
+        + '<div class="ec__liaison-strip-info">'
+        + '<span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>'
+        + '<span class="ec__liaison-subtext">オンライン作品展示中</span>'
+        + '</div></div>'
+      : '';
+    sideExhibitionEl.innerHTML = '<a class="ec" href="#">'
+      + '<div class="ec__poster" style="background:linear-gradient(135deg,#c8a880,#8b5e3c)">'
+      + '<div class="ec__poster-noimg"></div>'
+      + '<div class="ec__poster-overlay">'
+      + '<div class="ec__poster-dates"><strong>' + ex.dateRange + '</strong></div>'
+      + '</div></div>'
+      + '<div class="ec__body">'
+      + '<div class="ec__badge-row"><span class="cb cb-content cb-exhibition">exhibition</span></div>'
+      + '<div class="ec__title">' + ex.title + '</div>'
+      + '<div class="ec__venue">' + ex.venue + '</div>'
+      + '</div>'
+      + liaStripHtml
+      + '</a>';
+    sideExhibitionCard.classList.add('is-visible');
+  }
+
+  // 4c. サイドバー 記事ウィジェット
+  var sideArticlesCard = document.getElementById('p4SideArticlesCard');
+  var sideArticlesList = document.getElementById('p4SideArticlesList');
+  if (sideArticlesCard && sideArticlesList && d.articles && d.articles.length) {
+    sideArticlesList.innerHTML = d.articles.slice(0, 3).map(function(a) {
+      var thumb = a.hasImg
+        ? '<div class="lc__thumb lc__thumb--article"><span class="lc__thumb-label">article</span></div>'
+        : '';
+      return '<a class="lc lc--article' + (a.hasImg ? '' : ' lc--noimg') + '" href="#">'
+        + thumb + '<div class="lc__body">'
+        + '<div class="lc__badge-row">'
+        + (a.isNew ? '<span class="nb">new</span>' : '')
+        + '<span class="cb cb-content cb-article">article</span>'
+        + '</div>'
+        + '<div class="lc__title">' + a.title + '</div>'
+        + '<div class="lc__byline"><span class="lc__date">' + a.date + '</span></div>'
+        + '</div></a>';
+    }).join('');
+    sideArticlesCard.classList.add('is-visible');
+  }
+
+  // 5. リンクボタン生成（p4-prof-links）
+  var profLinks = document.getElementById('p4ProfLinks');
+  if (profLinks && d.profile && d.profile.links && d.profile.links.length) {
+    var globeSvg = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1 4-10z"/></svg>';
+    var bagSvg   = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>';
+    var pkgSvg   = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>';
+    var linkSvg  = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>';
+    var siSlug = {
+      behance:'behance', artstation:'artstation',
+      instagram:'instagram', x:'x', twitter:'x', facebook:'facebook',
+      threads:'threads', bluesky:'bluesky', pinterest:'pinterest',
+      tiktok:'tiktok', youtube:'youtube',
+      note:'note', substack:'substack',
+      etsy:'etsy', shopify:'shopify',
+      pixiv:'pixiv', linktree:'linktree', litlink:'litlink'
+    };
+    var svgFallback = { hp:globeSvg, base:bagSvg, minne:bagSvg, creema:bagSvg, stores:bagSvg, iichi:bagSvg, booth:pkgSvg };
+    function getLinkIcon(type) {
+      if (svgFallback[type]) return svgFallback[type];
+      if (!siSlug[type])     return linkSvg;
+      return '<img src="https://cdn.simpleicons.org/' + siSlug[type] + '" width="16" height="16" alt="' + type + '">';
+    }
+    profLinks.innerHTML = d.profile.links.map(function(lk){
+      return '<a href="' + lk.url + '" class="p4-prof-link-btn" target="_blank" rel="noopener noreferrer" title="' + lk.label + '">'
+        + getLinkIcon(lk.type) + '</a>';
+    }).join('');
+  }
+
+  // 5b. 現在地からの距離
+  var distVal = document.getElementById('p4MapDistanceVal');
+  var distWrap = document.getElementById('p4MapDistance');
+  if (distVal && navigator.geolocation) {
+    // Gallery SOIL 渋谷の仮座標（実装時は実座標に差し替え）
+    var galleryLat = 35.6627, galleryLng = 139.6999;
+    navigator.geolocation.getCurrentPosition(function(pos) {
+      var lat = pos.coords.latitude, lng = pos.coords.longitude;
+      var R = 6371, dLat = (galleryLat - lat) * Math.PI / 180, dLng = (galleryLng - lng) * Math.PI / 180;
+      var a = Math.sin(dLat/2)*Math.sin(dLat/2) + Math.cos(lat*Math.PI/180)*Math.cos(galleryLat*Math.PI/180)*Math.sin(dLng/2)*Math.sin(dLng/2);
+      var dist = R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      distVal.textContent = dist < 1 ? Math.round(dist * 1000) + 'm' : dist.toFixed(1) + 'km';
+    }, function() {
+      if (distWrap) distWrap.style.display = 'none';
+    });
+  } else if (distWrap) {
+    distWrap.style.display = 'none';
+  }
+
+  // 6. アーカイブ件数
+  var archiveCount = document.getElementById('p4ArchiveCount');
+  if (archiveCount && d.archiveCount) archiveCount.textContent = d.archiveCount;
+
+  // 7. タブナビ IntersectionObserver
+  var tabnav = document.getElementById('p4Tabnav');
+  if (tabnav && 'IntersectionObserver' in window) {
+    var tabBtns  = tabnav.querySelectorAll('.p4-tabnav__item');
+    var sections = document.querySelectorAll('.p4-main > section[id]');
+    var hh = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--hh') || '56', 10);
+    var obs = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (!entry.isIntersecting) return;
+        var id = entry.target.id;
+        tabBtns.forEach(function(btn){
+          btn.classList.toggle('is-active', btn.dataset.target === id);
+        });
+      });
+    }, { rootMargin: '-' + (hh + 60) + 'px 0px -60% 0px', threshold: 0 });
+    sections.forEach(function(sec){ obs.observe(sec); });
+    tabBtns.forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var target = document.getElementById(btn.dataset.target);
+        if (!target) return;
+        var top = target.getBoundingClientRect().top + scrollY - hh - 60;
+        window.scrollTo({ top: top, behavior: 'smooth' });
+      });
+    });
+  }
+
+  // 8. ヒーロースクロールアウト → ヘッダー is-scrolled
+  var p4Head = document.querySelector('.p4-head');
+  var ktnHeader = document.getElementById('ktnHeader');
+  if (p4Head && ktnHeader && 'IntersectionObserver' in window) {
+    new IntersectionObserver(function(entries){
+      ktnHeader.classList.toggle('is-scrolled', !entries[0].isIntersecting);
+    }, { threshold: 0 }).observe(p4Head);
+  }
+};
+
+/* ════════════════════════════════════════
+   P4-1 ギャラリー 展覧会アーカイブ
+════════════════════════════════════════ */
+KTN.pages['p4-1'] = function () {
+  var d = window.P4_DATA || {};
+
+  // 0. ページスコープ・アクセントカラー
+  document.body.classList.add('p4-page', 'p4-1-page');
+  document.body.style.setProperty('--page-accent',        '#8b5e3c');
+  document.body.style.setProperty('--page-accent-bg',     'rgba(139,94,60,.1)');
+  document.body.style.setProperty('--page-accent-border', '#b07840');
+
+  // 0b. ヒーロー初期設定
+  if (typeof applyHeadImageMode === 'function') applyHeadImageMode(d.hasImage !== false);
+  var activeBadge = document.getElementById('p4HeadActiveBadge');
+  if (activeBadge && d.hasActiveExhibition) activeBadge.removeAttribute('hidden');
+
+  // 0c. tagbar
+  (function(){
+    var inner = document.getElementById('ktnTagbarInner');
+    if (!inner) return;
+    [{label:'現代美術'},{label:'絵画'},{sep:true},{label:'渋谷'},{label:'東京'},{sep:true},{label:'個展なびを知る'}
+    ].forEach(function(t){
+      var el;
+      if (t.sep){ el=document.createElement('span'); el.className='p2-tsep'; el.textContent='|'; }
+      else{
+        el=document.createElement('button'); el.className='p2-tpill'; el.textContent=t.label;
+        el.addEventListener('click',function(){
+          inner.querySelectorAll('.p2-tpill').forEach(function(b){b.classList.remove('is-active');});
+          this.classList.add('is-active');
+        });
+      }
+      inner.appendChild(el);
+    });
+  })();
+
+  // 1. タブナビ: 展覧会をアクティブ・他タブは各サブページへ
+  document.querySelectorAll('.p3-tabnav__item').forEach(function(btn){
+    if (btn.dataset.tab === 'exhibitions') {
+      btn.classList.add('is-active');
+    } else {
+      btn.addEventListener('click', function(){
+        if (btn.dataset.tab === 'articles') {
+          window.location.href = 'kotennavi-p4-2.html';
+        } else if (btn.dataset.target) {
+          window.location.href = 'kotennavi-p4.html#' + btn.dataset.target;
+        }
+      });
+    }
+  });
+
+  // 2. watchボタン トグル
+  var watchBtns = document.querySelectorAll('[data-action="watch"]');
+  watchBtns.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var isOn = btn.classList.contains('on');
+      watchBtns.forEach(function(b){
+        b.classList.toggle('on', !isOn);
+        var lbl = b.querySelector('.ktn-btn__lbl');
+        if (lbl) lbl.textContent = !isOn ? (b.dataset.on||'watching') : (b.dataset.off||'watch');
+        var tip = b.querySelector('.tip');
+        if (tip) tip.textContent = !isOn ? 'ウォッチ中 — 解除する' : 'ウォッチする';
+      });
+      KTN.toast(isOn ? 'ウォッチを解除しました' : 'Gallery SOIL 渋谷をウォッチしました');
+    });
+  });
+
+  // 3. ウォッチャーモーダル
+  var modal = document.getElementById('p4WatcherModal');
+  var watcherList = document.getElementById('p4WatcherList');
+  if (modal && watcherList && d.watchers) {
+    watcherList.innerHTML = d.watchers.map(function(w){
+      return '<div class="p3-watcher-item">'
+        +'<div class="p3-watcher-item__avatar" style="background:'+w.avatar+'">'+w.name.charAt(0)+'</div>'
+        +'<div class="p3-watcher-item__name">'+w.name+'</div></div>';
+    }).join('');
+    document.querySelectorAll('[data-action="open-watchers"]').forEach(function(el){
+      el.addEventListener('click', function(e){
+        e.preventDefault();
+        modal.classList.add('is-open');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+    function closeWatcherModal(){
+      modal.classList.remove('is-open');
+      document.body.style.overflow = '';
+    }
+    var closeBtn = document.getElementById('p4WatcherModalClose');
+    closeBtn && closeBtn.addEventListener('click', closeWatcherModal);
+    modal.querySelector('.p3-watcher-modal__overlay').addEventListener('click', closeWatcherModal);
+    document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeWatcherModal(); });
+  }
+
+  // 3b. 自己紹介 2段階展開
+  document.fonts.ready.then(function(){
+    var bioToggle = document.getElementById('p4HeadBioToggle');
+    var bioText   = document.getElementById('p4HeadBioText');
+    var bioLink   = document.getElementById('p4HeadBioProfileLink');
+    if (!bioText || !bioToggle || !bioLink) return;
+    if (bioText.scrollHeight <= bioText.clientHeight) {
+      bioToggle.style.display = 'none';
+      bioLink.classList.add('is-visible');
+    } else {
+      bioToggle.addEventListener('click', function(){
+        bioText.classList.add('is-expanded');
+        bioToggle.style.display = 'none';
+        bioLink.classList.add('is-visible');
+      });
+    }
+  });
+
+  // 4. フィルター絞り込み
+  (function(){
+    var selects = document.querySelectorAll('.p3-1-filter__select');
+    var filterCountEl = document.getElementById('p4FilterCount');
+    var emptyEl = document.getElementById('p4FilterEmpty');
+
+    function filterExhibitions() {
+      var year = document.getElementById('p4FilterYear') ? document.getElementById('p4FilterYear').value : '';
+      var pref = document.getElementById('p4FilterPref') ? document.getElementById('p4FilterPref').value : '';
+      var type = document.getElementById('p4FilterType') ? document.getElementById('p4FilterType').value : '';
+      var hasFilter = !!(year || pref || type);
+      var totalVisible = 0;
+
+      document.querySelectorAll('.p3-1-group').forEach(function(group) {
+        var groupVisible = 0;
+
+        group.querySelectorAll('.ec--h').forEach(function(card) {
+          var match = (!year || card.dataset.year === year)
+                   && (!pref  || card.dataset.pref  === pref)
+                   && (!type  || card.dataset.type  === type);
+          if (match) {
+            card.removeAttribute('hidden');
+            groupVisible++;
+          } else {
+            card.setAttribute('hidden', '');
+          }
+        });
+
+        group.querySelectorAll('.p3-1-year-group').forEach(function(yg) {
+          var ygVisible = 0;
+          yg.querySelectorAll('.ec--h').forEach(function(c) {
+            if (!c.hasAttribute('hidden')) ygVisible++;
+          });
+          if (ygVisible === 0) {
+            yg.setAttribute('hidden', '');
+          } else {
+            yg.removeAttribute('hidden');
+          }
+        });
+
+        var countEl = group.querySelector('.p3-1-group-count');
+        if (countEl) countEl.textContent = groupVisible + '件';
+
+        if (groupVisible === 0) {
+          group.setAttribute('hidden', '');
+        } else {
+          group.removeAttribute('hidden');
+          totalVisible += groupVisible;
+        }
+      });
+
+      if (filterCountEl) {
+        if (hasFilter) {
+          filterCountEl.textContent = totalVisible + '件を表示中';
+          filterCountEl.removeAttribute('hidden');
+        } else {
+          filterCountEl.setAttribute('hidden', '');
+        }
+      }
+
+      if (emptyEl) {
+        if (totalVisible === 0) {
+          emptyEl.classList.add('is-visible');
+        } else {
+          emptyEl.classList.remove('is-visible');
+        }
+      }
+    }
+
+    selects.forEach(function(sel) {
+      sel.addEventListener('change', filterExhibitions);
+    });
+  })();
+};
+
+/* ════════════════════════════════════════
+   P4-2 ギャラリー 記事一覧
+════════════════════════════════════════ */
+KTN.pages['p4-2'] = function () {
+  var d = window.P4_DATA || {};
+
+  // 0. ページスコープ・アクセントカラー
+  document.body.classList.add('p4-page', 'p4-2-page');
+  document.body.style.setProperty('--page-accent',        '#8b5e3c');
+  document.body.style.setProperty('--page-accent-bg',     'rgba(139,94,60,.1)');
+  document.body.style.setProperty('--page-accent-border', '#b07840');
+
+  // 0b. ヒーロー初期設定（アクティブバッジ）
+  var activeBadge = document.getElementById('p4HeadActiveBadge');
+  if (activeBadge && d.hasActiveExhibition) activeBadge.removeAttribute('hidden');
+
+  // 0c. tagbar
+  (function(){
+    var inner = document.getElementById('ktnTagbarInner');
+    if (!inner) return;
+    [{label:'現代美術'},{label:'絵画'},{sep:true},{label:'渋谷'},{label:'東京'},{sep:true},{label:'個展なびを知る'}
+    ].forEach(function(t){
+      var el;
+      if (t.sep){ el=document.createElement('span'); el.className='p2-tsep'; el.textContent='|'; }
+      else{
+        el=document.createElement('button'); el.className='p2-tpill'; el.textContent=t.label;
+        el.addEventListener('click',function(){
+          inner.querySelectorAll('.p2-tpill').forEach(function(b){b.classList.remove('is-active');});
+          this.classList.add('is-active');
+        });
+      }
+      inner.appendChild(el);
+    });
+  })();
+
+  // 1. タブナビ: 記事をアクティブ・他タブは各サブページへ
+  document.querySelectorAll('.p3-tabnav__item').forEach(function(btn){
+    if (btn.dataset.tab === 'articles') {
+      btn.classList.add('is-active');
+    } else {
+      btn.addEventListener('click', function(){
+        if (btn.dataset.tab === 'exhibitions') {
+          window.location.href = 'kotennavi-p4-1.html';
+        } else if (btn.dataset.target) {
+          window.location.href = 'kotennavi-p4.html#' + btn.dataset.target;
+        }
+      });
+    }
+  });
+
+  // 2. watchボタン トグル
+  var watchBtns = document.querySelectorAll('[data-action="watch"]');
+  watchBtns.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var isOn = btn.classList.contains('on');
+      watchBtns.forEach(function(b){
+        b.classList.toggle('on', !isOn);
+        var lbl = b.querySelector('.ktn-btn__lbl');
+        if (lbl) lbl.textContent = !isOn ? (b.dataset.on||'watching') : (b.dataset.off||'watch');
+        var tip = b.querySelector('.tip');
+        if (tip) tip.textContent = !isOn ? 'ウォッチ中 — 解除する' : 'ウォッチする';
+      });
+      KTN.toast(isOn ? 'ウォッチを解除しました' : 'Gallery SOIL 渋谷をウォッチしました');
+    });
+  });
+
+  // 3. ウォッチャーモーダル
+  var modal = document.getElementById('p4WatcherModal');
+  var watcherList = document.getElementById('p4WatcherList');
+  if (modal && watcherList && d.watchers) {
+    watcherList.innerHTML = d.watchers.map(function(w){
+      return '<div class="p3-watcher-item">'
+        +'<div class="p3-watcher-item__avatar" style="background:'+w.avatar+'">'+w.name.charAt(0)+'</div>'
+        +'<div class="p3-watcher-item__name">'+w.name+'</div></div>';
+    }).join('');
+    document.querySelectorAll('[data-action="open-watchers"]').forEach(function(el){
+      el.addEventListener('click', function(e){
+        e.preventDefault();
+        modal.classList.add('is-open');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+    function closeWatcherModal(){
+      modal.classList.remove('is-open');
+      document.body.style.overflow = '';
+    }
+    var closeBtn = document.getElementById('p4WatcherModalClose');
+    closeBtn && closeBtn.addEventListener('click', closeWatcherModal);
+    modal.querySelector('.p3-watcher-modal__overlay').addEventListener('click', closeWatcherModal);
+    document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeWatcherModal(); });
+  }
+
+  // 3b. 自己紹介 2段階展開
+  document.fonts.ready.then(function(){
+    var bioToggle = document.getElementById('p4HeadBioToggle');
+    var bioText   = document.getElementById('p4HeadBioText');
+    var bioLink   = document.getElementById('p4HeadBioProfileLink');
+    if (!bioText || !bioToggle || !bioLink) return;
+    if (bioText.scrollHeight <= bioText.clientHeight) {
+      bioToggle.style.display = 'none';
+      bioLink.classList.add('is-visible');
+    } else {
+      bioToggle.addEventListener('click', function(){
+        bioText.classList.add('is-expanded');
+        bioToggle.style.display = 'none';
+        bioLink.classList.add('is-visible');
+      });
+    }
+  });
+
+  // 4. 記事フィルター絞り込み
+  (function(){
+    var selects = document.querySelectorAll('.p3-2-filter__select');
+    var filterCountEl = document.getElementById('p4FilterCount');
+    var emptyEl = document.getElementById('p4FilterEmpty');
+
+    function filterArticles() {
+      var dest     = document.getElementById('p4FilterDest')     ? document.getElementById('p4FilterDest').value     : '';
+      var category = document.getElementById('p4FilterCategory') ? document.getElementById('p4FilterCategory').value : '';
+      var year     = document.getElementById('p4FilterYear')     ? document.getElementById('p4FilterYear').value     : '';
+      var hasFilter = !!(dest || category || year);
+      var totalVisible = 0;
+
+      document.querySelectorAll('.p3-2-year-group').forEach(function(yg){
+        var ygVisible = 0;
+        yg.querySelectorAll('.lc').forEach(function(card){
+          var match = (!dest     || card.dataset.dest     === dest)
+                   && (!category || card.dataset.category === category)
+                   && (!year     || card.dataset.year     === year);
+          if (match) {
+            card.removeAttribute('hidden');
+            ygVisible++;
+          } else {
+            card.setAttribute('hidden', '');
+          }
+        });
+        var countEl = yg.querySelector('.p3-2-year-count');
+        if (countEl) countEl.textContent = ygVisible + '件';
+        if (ygVisible === 0) yg.setAttribute('hidden', '');
+        else { yg.removeAttribute('hidden'); totalVisible += ygVisible; }
+      });
+
+      if (filterCountEl) {
+        if (hasFilter) {
+          filterCountEl.textContent = totalVisible + '件を表示中';
+          filterCountEl.removeAttribute('hidden');
+        } else {
+          filterCountEl.setAttribute('hidden', '');
+        }
+      }
+      if (emptyEl) emptyEl.classList.toggle('is-visible', totalVisible === 0);
+    }
+
+    selects.forEach(function(sel){ sel.addEventListener('change', filterArticles); });
+  })();
+};

@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>展覧会アーカイブ — Gallery SOIL 渋谷 | 個展なび</title>
+  <meta name="description" content="Gallery SOIL 渋谷の展覧会アーカイブ。過去から現在までの全展覧会を掲載。">
+  <link rel="canonical" href="https://koten-navi.com/gallery/gallery-soil-shibuya/exhibitions">
+  <meta property="og:type" content="profile">
+  <meta property="og:title" content="展覧会アーカイブ — Gallery SOIL 渋谷 | 個展なび">
+  <meta property="og:url" content="https://koten-navi.com/gallery/gallery-soil-shibuya/exhibitions">
+  <meta property="og:site_name" content="個展なび">
+  <meta name="twitter:card" content="summary">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Noto+Sans+JP:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+  <link rel="stylesheet" href="./kotennavi-components.css">
+</head>
+<body>
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- ウォッチャーモーダル -->
+<div class="p3-watcher-modal" id="p4WatcherModal">
+  <div class="p3-watcher-modal__overlay"></div>
+  <div class="p3-watcher-modal__inner">
+    <div class="p3-watcher-modal__head">
+      <div class="p3-watcher-modal__title">ウォッチャー 58人</div>
+      <button class="p3-watcher-modal__close" id="p4WatcherModalClose" aria-label="閉じる">✕</button>
+    </div>
+    <div class="p3-watcher-list" id="p4WatcherList"></div>
+  </div>
+</div>
+
+<!-- SVGシンボル -->
+<svg width="0" height="0" style="position:absolute;overflow:hidden">
+  <defs>
+    <symbol id="icon-exh" viewBox="40 47 54 54">
+      <path d="M80.09 102.05c-1.22-.8,-2.57-2.87,-3.34-4.33c-2.48-5.91,-4.85-14.23,-13.31-20.15c-1.9-1.23,-2.03-2,-1.94-2.48c.11-.83,.82-1.52,2.3-1.3c11.09,1.95,15.22,3.96,21.07,7.61c7.85,5.36,9.57,10.76,9.65,14.09c.15,2.3,-.18,5.11,-2.61,6.56Z" fill="currentColor"/>
+    </symbol>
+    <symbol id="icon-watch" viewBox="0 0 16 16">
+      <circle cx="8" cy="8" r="7" fill="currentColor"/>
+      <circle cx="8" cy="8" r="2.6" fill="white"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- デモバー -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ロール：</span>
+  <button class="dbtn on" onclick="setR('guest',this)">ゲスト</button>
+  <button class="dbtn" onclick="setR('login',this)">ログイン</button>
+  <button class="dbtn" onclick="setR('user+gallery',this)">gallery本人</button>
+  <button class="dbtn" onclick="setR('admin',this)">管理者</button>
+</div>
+
+<div class="shell">
+<div class="content-wrap" id="contentWrap">
+
+  <header class="ktn-header" id="ktnHeader">
+    <div class="ktn-header__inner">
+      <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+      <div class="ktn-hdr-actions" id="ktnActs"></div>
+    </div>
+  </header>
+  <div class="ktn-tagbar" id="ktnTagbar">
+    <div class="ktn-tagbar__inner" id="ktnTagbarInner"></div>
+  </div>
+
+  <main class="ktn-main" id="ktnMain">
+
+    <!-- A. ヒーローエリア（コンパクト版） -->
+    <div class="p3-head p3-head--compact">
+      <div class="p3-head__inner">
+        <div class="p3-head__top">
+          <a class="p3-head__avatar-wrap" href="kotennavi-p4.html">
+            <div class="p3-head__avatar" style="background:linear-gradient(135deg,#c8a888,#8b5e3c);border-radius:4px">SOIL</div>
+          </a>
+          <div class="p3-head__info">
+            <div class="p3-head__badge-row">
+              <span class="cb cb-person cb-gallery">GALLERY</span>
+              <span class="sb sb-live" id="p4HeadActiveBadge" hidden><span class="pulse"></span>展示中</span>
+            </div>
+            <h1 class="p3-head__name"><a href="kotennavi-p4.html">Gallery SOIL 渋谷</a></h1>
+            <p class="p3-head__en">GALLERY SOIL SHIBUYA</p>
+            <p class="p3-head__genre">絵画・現代美術 · 東京・渋谷</p>
+          </div>
+        </div>
+        <div class="p3-head__bio">
+          <p class="p3-head__bio-text" id="p4HeadBioText">渋谷区神南に位置する現代美術ギャラリー。絵画・版画・立体を中心に国内外の作家を紹介。作家との対話を大切にした展示空間を追求している。</p>
+          <button class="p3-head__bio-toggle" id="p4HeadBioToggle" type="button">もっと見る <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="6 9 12 15 18 9"/></svg></button>
+          <a class="p3-head__bio-profile-link" id="p4HeadBioProfileLink" href="kotennavi-p4.html#p4-sec-profile">プロフィール詳細 →</a>
+        </div>
+        <div class="p3-head__action">
+          <button class="ktn-btn" data-off="watch" data-on="watching" data-action="watch">
+            <svg viewBox="0 0 16 16" fill="none" width="15" height="15">
+              <circle cx="8" cy="8" r="7" fill="#7a8a99" opacity=".45"/>
+              <circle class="wi-dark" cx="8" cy="8" r="2.6"/>
+            </svg>
+            <span class="ktn-btn__lbl">watch</span><span class="tip">ウォッチする</span>
+          </button>
+          <button class="p3-head__watcher-count" data-action="open-watchers" aria-label="ウォッチャーリストを開く">ウォッチャー 58人</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- B. タブナビ -->
+    <nav class="p3-tabnav" id="p3Tabnav" aria-label="ギャラリーページ内ナビ">
+      <div class="p3-tabnav__inner">
+        <a class="p3-tabnav__name" href="kotennavi-p4.html">Gallery SOIL 渋谷</a>
+        <button class="p3-tabnav__item" data-target="p4-sec-exhibitions" data-tab="exhibitions"><span class="p3-tabnav__label">展覧会</span></button>
+        <button class="p3-tabnav__item" data-target="p4-sec-articles" data-tab="articles"><span class="p3-tabnav__label">記事</span></button>
+        <button class="p3-tabnav__item" data-target="p4-sec-profile">ギャラリー情報</button>
+      </div>
+    </nav>
+
+    <!-- メインコンテンツ -->
+    <div class="ktn-content">
+      <div class="p3-1-main">
+
+        <!-- セクションヘッド -->
+        <div class="p3-1-head">
+          <span>EXHIBITION — 展覧会</span>
+          <span class="p3-1-total" id="p4TotalCount">全 15 件</span>
+        </div>
+
+        <!-- フィルターバー -->
+        <div class="p3-1-filter">
+          <select class="p3-1-filter__select" data-filter="year" id="p4FilterYear">
+            <option value="">すべての年</option>
+            <option value="2026">2026</option>
+            <option value="2025">2025</option>
+            <option value="2024">2024</option>
+            <option value="2023">2023</option>
+          </select>
+          <select class="p3-1-filter__select" data-filter="pref" id="p4FilterPref">
+            <option value="">すべての地域</option>
+            <option value="東京">東京</option>
+            <option value="神奈川">神奈川</option>
+            <option value="大阪">大阪</option>
+          </select>
+          <select class="p3-1-filter__select" data-filter="type" id="p4FilterType">
+            <option value="">個展・グループ展すべて</option>
+            <option value="solo">個展</option>
+            <option value="group">グループ展</option>
+          </select>
+          <span class="p3-1-filter__count" id="p4FilterCount" hidden></span>
+        </div>
+
+        <!-- ─── グループ1: 開催中 ─── -->
+        <div class="p3-1-group" data-group="live">
+          <div class="p3-1-group-label">
+            <span class="sb sb-live"><span class="pulse"></span>開催中</span>
+            <span class="p3-1-group-count">3件</span>
+          </div>
+          <div class="p3-1-card-list">
+
+            <!-- 開催中1: あなたが知らないオノマトペ — LIAISON+ -->
+            <a class="ec ec--h" href="kotennavi-p2.html"
+               data-year="2026" data-pref="東京" data-type="solo">
+              <div class="ec--h-row">
+                <div class="ec__poster-col">
+                  <div class="ec__poster" style="background:linear-gradient(160deg,#b8d8cc,#6a9e8a)"></div>
+                </div>
+                <div class="ec__main">
+                  <div class="ec__datebar">
+                    <div class="ec__datebar-dates">
+                      <span class="year">2026.</span><strong>02.18</strong><span class="dow">wed</span>
+                      <span class="sep">—</span>
+                      <strong>03.05</strong><span class="dow">thu</span>
+                    </div>
+                    <div class="ec__datebar-meta">
+                      <span class="ec__remain-lt ec__remain-lt--live">残り12日</span>
+                      <span class="meta-sep">|</span>
+                      <span>11:00-19:00</span>
+                    </div>
+                  </div>
+                  <div class="ec__body">
+                    <div class="ec__badge-row">
+                      <span class="cb cb-content cb-exhibition">exhibition</span>
+                      <div class="ec-actions-group">
+                        <span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>42</span>
+                        <span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><circle cx="10" cy="5" r="4" fill="#7a8a99" fill-opacity=".5"/><circle cx="5" cy="11" r="2.4" fill="#7a8a99" fill-opacity=".5"/></svg>8</span>
+                        <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                          <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>
+                          <span class="tip">興味ある！に追加する</span>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="ec__title">あなたが知らないオノマトペ — 田中透 個展</div>
+                    <div class="ec__venue">東京<span class="ec__venue-sep">|</span>Gallery SOIL 渋谷</div>
+                  </div>
+                </div>
+              </div>
+              <div class="ec__liaison-strip--h ec__liaison-strip--h-plus">
+                <div class="ec__liaison-strip-info">
+                  <span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span>
+                  <span class="ec__liaison-subtext">オンライン作品展示・販売中</span>
+                </div>
+                <div class="ec__liaison-thumbs">
+                  <div class="ec__liaison-thumb" style="background:linear-gradient(135deg,#b8d8cc,#6a9e8a)"></div>
+                  <div class="ec__liaison-thumb" style="background:linear-gradient(135deg,#d4b8c8,#9a6a88)"></div>
+                  <div class="ec__liaison-thumb" style="background:linear-gradient(135deg,#2a3548,#1a2535)"></div>
+                </div>
+              </div>
+            </a>
+
+            <!-- 開催中2: 言葉と色彩 グループ展 -->
+            <a class="ec ec--h" href="#"
+               data-year="2026" data-pref="東京" data-type="group">
+              <div class="ec--h-row">
+                <div class="ec__poster-col">
+                  <div class="ec__poster" style="background:linear-gradient(160deg,#d0c8b8,#a09880)"></div>
+                </div>
+                <div class="ec__main">
+                  <div class="ec__datebar">
+                    <div class="ec__datebar-dates">
+                      <span class="year">2026.</span><strong>02.24</strong><span class="dow">tue</span>
+                      <span class="sep">—</span>
+                      <strong>03.08</strong><span class="dow">sun</span>
+                    </div>
+                    <div class="ec__datebar-meta">
+                      <span class="ec__remain-lt ec__remain-lt--live">残り18日</span>
+                      <span class="meta-sep">|</span>
+                      <span>12:00-19:00</span>
+                    </div>
+                  </div>
+                  <div class="ec__body">
+                    <div class="ec__badge-row">
+                      <span class="cb cb-content cb-exhibition">exhibition</span>
+                      <div class="ec-actions-group">
+                        <span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>18</span>
+                        <span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><circle cx="10" cy="5" r="4" fill="#7a8a99" fill-opacity=".5"/><circle cx="5" cy="11" r="2.4" fill="#7a8a99" fill-opacity=".5"/></svg>3</span>
+                        <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                          <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>
+                          <span class="tip">興味ある！に追加する</span>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="ec__title">言葉と色彩 グループ展</div>
+                    <div class="ec__venue">東京<span class="ec__venue-sep">|</span>Gallery SOIL 渋谷</div>
+                  </div>
+                </div>
+              </div>
+            </a>
+
+            <!-- 開催中3: 音のかたち 版画展 — LIAISON -->
+            <a class="ec ec--h" href="#"
+               data-year="2026" data-pref="東京" data-type="group">
+              <div class="ec--h-row">
+                <div class="ec__poster-col">
+                  <div class="ec__poster" style="background:linear-gradient(160deg,#1a2535,#0d1520)"></div>
+                </div>
+                <div class="ec__main">
+                  <div class="ec__datebar">
+                    <div class="ec__datebar-dates">
+                      <span class="year">2026.</span><strong>03.01</strong><span class="dow">sun</span>
+                      <span class="sep">—</span>
+                      <strong>03.15</strong><span class="dow">sun</span>
+                    </div>
+                    <div class="ec__datebar-meta">
+                      <span class="ec__remain-lt ec__remain-lt--live">残り23日</span>
+                      <span class="meta-sep">|</span>
+                      <span>10:00-18:00</span>
+                    </div>
+                  </div>
+                  <div class="ec__body">
+                    <div class="ec__badge-row">
+                      <span class="cb cb-content cb-exhibition">exhibition</span>
+                      <div class="ec-actions-group">
+                        <span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>27</span>
+                        <span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><circle cx="10" cy="5" r="4" fill="#7a8a99" fill-opacity=".5"/><circle cx="5" cy="11" r="2.4" fill="#7a8a99" fill-opacity=".5"/></svg>5</span>
+                        <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                          <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>
+                          <span class="tip">興味ある！に追加する</span>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="ec__title">音のかたち 版画展</div>
+                    <div class="ec__venue">東京<span class="ec__venue-sep">|</span>Gallery SOIL 渋谷</div>
+                  </div>
+                </div>
+              </div>
+              <div class="ec__liaison-strip--h">
+                <div class="ec__liaison-strip-info">
+                  <span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>
+                  <span class="ec__liaison-subtext">オンライン作品展示中</span>
+                </div>
+                <div class="ec__liaison-thumbs">
+                  <div class="ec__liaison-thumb" style="background:linear-gradient(135deg,#b8c8d8,#6a7a9a)"></div>
+                  <div class="ec__liaison-thumb" style="background:linear-gradient(135deg,#d8d0b8,#9a8a6a)"></div>
+                  <div class="ec__liaison-thumb" style="background:linear-gradient(135deg,#c8d8c8,#7a9a7a)"></div>
+                </div>
+              </div>
+            </a>
+
+          </div><!-- /p3-1-card-list -->
+        </div><!-- /グループ1 -->
+
+        <!-- ─── グループ2: これから開催 ─── -->
+        <div class="p3-1-group" data-group="upcoming">
+          <div class="p3-1-group-label">
+            <span class="sb sb-soon">これから開催</span>
+            <span class="p3-1-group-count">2件</span>
+          </div>
+          <div class="p3-1-card-list">
+
+            <!-- これから1: 声と線 — 新作展 -->
+            <a class="ec ec--h" href="#"
+               data-year="2026" data-pref="東京" data-type="solo">
+              <div class="ec--h-row">
+                <div class="ec__poster-col">
+                  <div class="ec__poster" style="background:linear-gradient(160deg,#c8d8b8,#88a878)"></div>
+                </div>
+                <div class="ec__main">
+                  <div class="ec__datebar">
+                    <div class="ec__datebar-dates">
+                      <span class="year">2026.</span><strong>03.20</strong><span class="dow">fri</span>
+                      <span class="sep">—</span>
+                      <strong>03.31</strong><span class="dow">tue</span>
+                    </div>
+                    <div class="ec__datebar-meta">
+                      <span class="ec__remain-lt ec__remain-lt--soon">27日後に開催</span>
+                    </div>
+                  </div>
+                  <div class="ec__body">
+                    <div class="ec__badge-row">
+                      <span class="cb cb-content cb-exhibition">exhibition</span>
+                      <div class="ec-actions-group">
+                        <span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>9</span>
+                        <span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><circle cx="10" cy="5" r="4" fill="#7a8a99" fill-opacity=".5"/><circle cx="5" cy="11" r="2.4" fill="#7a8a99" fill-opacity=".5"/></svg>1</span>
+                        <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                          <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>
+                          <span class="tip">興味ある！に追加する</span>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="ec__title">声と線 — 新作展</div>
+                    <div class="ec__venue">東京<span class="ec__venue-sep">|</span>Gallery SOIL 渋谷</div>
+                  </div>
+                </div>
+              </div>
+            </a>
+
+            <!-- これから2: 春の絵画展 2026 -->
+            <a class="ec ec--h" href="#"
+               data-year="2026" data-pref="東京" data-type="group">
+              <div class="ec--h-row">
+                <div class="ec__poster-col">
+                  <div class="ec__poster" style="background:linear-gradient(160deg,#e8d8b8,#c0b080)"></div>
+                </div>
+                <div class="ec__main">
+                  <div class="ec__datebar">
+                    <div class="ec__datebar-dates">
+                      <span class="year">2026.</span><strong>04.05</strong><span class="dow">sun</span>
+                      <span class="sep">—</span>
+                      <strong>04.20</strong><span class="dow">mon</span>
+                    </div>
+                    <div class="ec__datebar-meta">
+                      <span class="ec__remain-lt ec__remain-lt--soon">43日後に開催</span>
+                    </div>
+                  </div>
+                  <div class="ec__body">
+                    <div class="ec__badge-row">
+                      <span class="cb cb-content cb-exhibition">exhibition</span>
+                      <div class="ec-actions-group">
+                        <span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>6</span>
+                        <span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><circle cx="10" cy="5" r="4" fill="#7a8a99" fill-opacity=".5"/><circle cx="5" cy="11" r="2.4" fill="#7a8a99" fill-opacity=".5"/></svg>0</span>
+                        <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                          <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>
+                          <span class="tip">興味ある！に追加する</span>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="ec__title">春の絵画展 2026</div>
+                    <div class="ec__venue">東京<span class="ec__venue-sep">|</span>Gallery SOIL 渋谷</div>
+                  </div>
+                </div>
+              </div>
+            </a>
+
+          </div><!-- /p3-1-card-list -->
+        </div><!-- /グループ2 -->
+
+        <!-- ─── グループ3: 過去の展覧会 ─── -->
+        <div class="p3-1-group" data-group="past">
+          <div class="p3-1-group-label">
+            <span style="color:var(--muted);font-weight:600;font-size:.78rem">過去の展覧会</span>
+            <span class="p3-1-group-count">10件</span>
+          </div>
+
+          <!-- 2025年 -->
+          <details class="p3-1-year-group" open>
+            <summary>2025年<span style="font-weight:400;margin-left:4px;font-size:.75rem">4件</span></summary>
+            <div class="p3-1-card-list">
+
+              <!-- 過去1 -->
+              <a class="ec ec--h ec--h--past" href="#"
+                 data-year="2025" data-pref="東京" data-type="solo">
+                <div class="ec--h-row">
+                  <div class="ec__poster-col">
+                    <div class="ec__poster" style="background:linear-gradient(160deg,#8ab8c0,#5a8890)"></div>
+                  </div>
+                  <div class="ec__main">
+                    <div class="ec__datebar">
+                      <div class="ec__datebar-dates">
+                        <span class="year">2025.</span><strong>11.10</strong><span class="dow">mon</span>
+                        <span class="sep">—</span>
+                        <strong>11.20</strong><span class="dow">thu</span>
+                      </div>
+                      <div class="ec__datebar-meta">
+                        <span class="ec__remain-lt ec__remain-lt--ended">終了</span>
+                      </div>
+                    </div>
+                    <div class="ec__body">
+                      <div class="ec__badge-row">
+                        <span class="cb cb-content cb-exhibition">exhibition</span>
+                        <div class="ec-actions-group">
+                          <span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>24</span>
+                          <span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><circle cx="10" cy="5" r="4" fill="#7a8a99" fill-opacity=".5"/><circle cx="5" cy="11" r="2.4" fill="#7a8a99" fill-opacity=".5"/></svg>6</span>
+                          <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                            <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>
+                            <span class="tip">興味ある！に追加する</span>
+                          </button>
+                        </div>
+                      </div>
+                      <div class="ec__title">色と音のあいだ 個展</div>
+                      <div class="ec__venue">東京<span class="ec__venue-sep">|</span>Gallery SOIL 渋谷</div>
+                    </div>
+                  </div>
+                </div>
+              </a>
+
+              <!-- 過去2 -->
+              <a class="ec ec--h ec--h--past" href="#"
+                 data-year="2025" data-pref="東京" data-type="group">
+                <div class="ec--h-row">
+                  <div class="ec__poster-col">
+                    <div class="ec__poster" style="background:linear-gradient(160deg,#c8d8e8,#7a9ab8)"></div>
+                  </div>
+                  <div class="ec__main">
+                    <div class="ec__datebar">
+                      <div class="ec__datebar-dates">
+                        <span class="year">2025.</span><strong>09.05</strong><span class="dow">fri</span>
+                        <span class="sep">—</span>
+                        <strong>09.15</strong><span class="dow">mon</span>
+                      </div>
+                      <div class="ec__datebar-meta">
+                        <span class="ec__remain-lt ec__remain-lt--ended">終了</span>
+                      </div>
+                    </div>
+                    <div class="ec__body">
+                      <div class="ec__badge-row">
+                        <span class="cb cb-content cb-exhibition">exhibition</span>
+                        <div class="ec-actions-group">
+                          <span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>24</span>
+                          <span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><circle cx="10" cy="5" r="4" fill="#7a8a99" fill-opacity=".5"/><circle cx="5" cy="11" r="2.4" fill="#7a8a99" fill-opacity=".5"/></svg>6</span>
+                          <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                            <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>
+                            <span class="tip">興味ある！に追加する</span>
+                          </button>
+                        </div>
+                      </div>
+                      <div class="ec__title">秋のグループ展 2025</div>
+                      <div class="ec__venue">東京<span class="ec__venue-sep">|</span>Gallery SOIL 渋谷</div>
+                    </div>
+                  </div>
+                </div>
+              </a>
+
+              <!-- 過去3 -->
+              <a class="ec ec--h ec--h--past" href="#"
+                 data-year="2025" data-pref="東京" data-type="solo">
+                <div class="ec--h-row">
+                  <div class="ec__poster-col">
+                    <div class="ec__poster" style="background:linear-gradient(160deg,#d8c8b8,#a89878)"></div>
+                  </div>
+                  <div class="ec__main">
+                    <div class="ec__datebar">
+                      <div class="ec__datebar-dates">
+                        <span class="year">2025.</span><strong>06.01</strong><span class="dow">sun</span>
+                        <span class="sep">—</span>
+                        <strong>06.10</strong><span class="dow">tue</span>
+                      </div>
+                      <div class="ec__datebar-meta">
+                        <span class="ec__remain-lt ec__remain-lt--ended">終了</span>
+                      </div>
+                    </div>
+                    <div class="ec__body">
+                      <div class="ec__badge-row">
+                        <span class="cb cb-content cb-exhibition">exhibition</span>
+                        <div class="ec-actions-group">
+                          <span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>24</span>
+                          <span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><circle cx="10" cy="5" r="4" fill="#7a8a99" fill-opacity=".5"/><circle cx="5" cy="11" r="2.4" fill="#7a8a99" fill-opacity=".5"/></svg>6</span>
+                          <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                            <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>
+                            <span class="tip">興味ある！に追加する</span>
+                          </button>
+                        </div>
+                      </div>
+                      <div class="ec__title">線と余白</div>
+                      <div class="ec__venue">東京<span class="ec__venue-sep">|</span>Gallery SOIL 渋谷</div>
+                    </div>
+                  </div>
+                </div>
+              </a>
+
+              <!-- 過去4 -->
+              <a class="ec ec--h ec--h--past" href="#"
+                 data-year="2025" data-pref="東京" data-type="group">
+                <div class="ec--h-row">
+                  <div class="ec__poster-col">
+                    <div class="ec__poster" style="background:linear-gradient(160deg,#e8c8b0,#c09870)"></div>
+                  </div>
+                  <div class="ec__main">
+                    <div class="ec__datebar">
+                      <div class="ec__datebar-dates">
+                        <span class="year">2025.</span><strong>03.08</strong><span class="dow">sat</span>
+                        <span class="sep">—</span>
+                        <strong>03.22</strong><span class="dow">sat</span>
+                      </div>
+                      <div class="ec__datebar-meta">
+                        <span class="ec__remain-lt ec__remain-lt--ended">終了</span>
+                      </div>
+                    </div>
+                    <div class="ec__body">
+                      <div class="ec__badge-row">
+                        <span class="cb cb-content cb-exhibition">exhibition</span>
+                        <div class="ec-actions-group">
+                          <span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>24</span>
+                          <span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><circle cx="10" cy="5" r="4" fill="#7a8a99" fill-opacity=".5"/><circle cx="5" cy="11" r="2.4" fill="#7a8a99" fill-opacity=".5"/></svg>6</span>
+                          <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                            <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>
+                            <span class="tip">興味ある！に追加する</span>
+                          </button>
+                        </div>
+                      </div>
+                      <div class="ec__title">春のグループ展 2025</div>
+                      <div class="ec__venue">東京<span class="ec__venue-sep">|</span>Gallery SOIL 渋谷</div>
+                    </div>
+                  </div>
+                </div>
+              </a>
+
+            </div><!-- /p3-1-card-list -->
+          </details><!-- /2025年 -->
+
+          <!-- 2024年 -->
+          <details class="p3-1-year-group">
+            <summary>2024年<span style="font-weight:400;margin-left:4px;font-size:.75rem">4件</span></summary>
+            <div class="p3-1-card-list">
+
+              <!-- 過去5 -->
+              <a class="ec ec--h ec--h--past" href="#"
+                 data-year="2024" data-pref="東京" data-type="solo">
+                <div class="ec--h-row">
+                  <div class="ec__poster-col">
+                    <div class="ec__poster" style="background:linear-gradient(160deg,#e8c8d8,#b87898)"></div>
+                  </div>
+                  <div class="ec__main">
+                    <div class="ec__datebar">
+                      <div class="ec__datebar-dates">
+                        <span class="year">2024.</span><strong>10.12</strong><span class="dow">sat</span>
+                        <span class="sep">—</span>
+                        <strong>10.27</strong><span class="dow">sun</span>
+                      </div>
+                      <div class="ec__datebar-meta">
+                        <span class="ec__remain-lt ec__remain-lt--ended">終了</span>
+                      </div>
+                    </div>
+                    <div class="ec__body">
+                      <div class="ec__badge-row">
+                        <span class="cb cb-content cb-exhibition">exhibition</span>
+                        <div class="ec-actions-group">
+                          <span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>24</span>
+                          <span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><circle cx="10" cy="5" r="4" fill="#7a8a99" fill-opacity=".5"/><circle cx="5" cy="11" r="2.4" fill="#7a8a99" fill-opacity=".5"/></svg>6</span>
+                          <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                            <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>
+                            <span class="tip">興味ある！に追加する</span>
+                          </button>
+                        </div>
+                      </div>
+                      <div class="ec__title">ざわざわ — 田中透 新作展</div>
+                      <div class="ec__venue">東京<span class="ec__venue-sep">|</span>Gallery SOIL 渋谷</div>
+                    </div>
+                  </div>
+                </div>
+              </a>
+
+              <!-- 過去6 -->
+              <a class="ec ec--h ec--h--past" href="#"
+                 data-year="2024" data-pref="東京" data-type="group">
+                <div class="ec--h-row">
+                  <div class="ec__poster-col">
+                    <div class="ec__poster" style="background:linear-gradient(160deg,#c8d8c8,#7a9a7a)"></div>
+                  </div>
+                  <div class="ec__main">
+                    <div class="ec__datebar">
+                      <div class="ec__datebar-dates">
+                        <span class="year">2024.</span><strong>07.06</strong><span class="dow">sat</span>
+                        <span class="sep">—</span>
+                        <strong>07.21</strong><span class="dow">sun</span>
+                      </div>
+                      <div class="ec__datebar-meta">
+                        <span class="ec__remain-lt ec__remain-lt--ended">終了</span>
+                      </div>
+                    </div>
+                    <div class="ec__body">
+                      <div class="ec__badge-row">
+                        <span class="cb cb-content cb-exhibition">exhibition</span>
+                        <div class="ec-actions-group">
+                          <span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>24</span>
+                          <span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><circle cx="10" cy="5" r="4" fill="#7a8a99" fill-opacity=".5"/><circle cx="5" cy="11" r="2.4" fill="#7a8a99" fill-opacity=".5"/></svg>6</span>
+                          <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                            <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>
+                            <span class="tip">興味ある！に追加する</span>
+                          </button>
+                        </div>
+                      </div>
+                      <div class="ec__title">夏の絵画展 2024</div>
+                      <div class="ec__venue">東京<span class="ec__venue-sep">|</span>Gallery SOIL 渋谷</div>
+                    </div>
+                  </div>
+                </div>
+              </a>
+
+              <!-- 過去7 -->
+              <a class="ec ec--h ec--h--past" href="#"
+                 data-year="2024" data-pref="東京" data-type="solo">
+                <div class="ec--h-row">
+                  <div class="ec__poster-col">
+                    <div class="ec__poster" style="background:linear-gradient(160deg,#d0c8e8,#9088b8)"></div>
+                  </div>
+                  <div class="ec__main">
+                    <div class="ec__datebar">
+                      <div class="ec__datebar-dates">
+                        <span class="year">2024.</span><strong>04.13</strong><span class="dow">sat</span>
+                        <span class="sep">—</span>
+                        <strong>04.28</strong><span class="dow">sun</span>
+                      </div>
+                      <div class="ec__datebar-meta">
+                        <span class="ec__remain-lt ec__remain-lt--ended">終了</span>
+                      </div>
+                    </div>
+                    <div class="ec__body">
+                      <div class="ec__badge-row">
+                        <span class="cb cb-content cb-exhibition">exhibition</span>
+                        <div class="ec-actions-group">
+                          <span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>24</span>
+                          <span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><circle cx="10" cy="5" r="4" fill="#7a8a99" fill-opacity=".5"/><circle cx="5" cy="11" r="2.4" fill="#7a8a99" fill-opacity=".5"/></svg>6</span>
+                          <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                            <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>
+                            <span class="tip">興味ある！に追加する</span>
+                          </button>
+                        </div>
+                      </div>
+                      <div class="ec__title">ふわふわ — 春の新作</div>
+                      <div class="ec__venue">東京<span class="ec__venue-sep">|</span>Gallery SOIL 渋谷</div>
+                    </div>
+                  </div>
+                </div>
+              </a>
+
+              <!-- 過去8 -->
+              <a class="ec ec--h ec--h--past" href="#"
+                 data-year="2024" data-pref="東京" data-type="group">
+                <div class="ec--h-row">
+                  <div class="ec__poster-col">
+                    <div class="ec__poster" style="background:linear-gradient(160deg,#e8d8a0,#b8a860)"></div>
+                  </div>
+                  <div class="ec__main">
+                    <div class="ec__datebar">
+                      <div class="ec__datebar-dates">
+                        <span class="year">2024.</span><strong>01.20</strong><span class="dow">sat</span>
+                        <span class="sep">—</span>
+                        <strong>02.04</strong><span class="dow">sun</span>
+                      </div>
+                      <div class="ec__datebar-meta">
+                        <span class="ec__remain-lt ec__remain-lt--ended">終了</span>
+                      </div>
+                    </div>
+                    <div class="ec__body">
+                      <div class="ec__badge-row">
+                        <span class="cb cb-content cb-exhibition">exhibition</span>
+                        <div class="ec-actions-group">
+                          <span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>24</span>
+                          <span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><circle cx="10" cy="5" r="4" fill="#7a8a99" fill-opacity=".5"/><circle cx="5" cy="11" r="2.4" fill="#7a8a99" fill-opacity=".5"/></svg>6</span>
+                          <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                            <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>
+                            <span class="tip">興味ある！に追加する</span>
+                          </button>
+                        </div>
+                      </div>
+                      <div class="ec__title">冬のグループ展 2024</div>
+                      <div class="ec__venue">東京<span class="ec__venue-sep">|</span>Gallery SOIL 渋谷</div>
+                    </div>
+                  </div>
+                </div>
+              </a>
+
+            </div><!-- /p3-1-card-list -->
+          </details><!-- /2024年 -->
+
+          <!-- 2023年 -->
+          <details class="p3-1-year-group">
+            <summary>2023年<span style="font-weight:400;margin-left:4px;font-size:.75rem">2件</span></summary>
+            <div class="p3-1-card-list">
+
+              <!-- 過去9 -->
+              <a class="ec ec--h ec--h--past" href="#"
+                 data-year="2023" data-pref="東京" data-type="solo">
+                <div class="ec--h-row">
+                  <div class="ec__poster-col">
+                    <div class="ec__poster" style="background:linear-gradient(160deg,#b8c8e8,#7888c0)"></div>
+                  </div>
+                  <div class="ec__main">
+                    <div class="ec__datebar">
+                      <div class="ec__datebar-dates">
+                        <span class="year">2023.</span><strong>10.07</strong><span class="dow">sat</span>
+                        <span class="sep">—</span>
+                        <strong>10.22</strong><span class="dow">sun</span>
+                      </div>
+                      <div class="ec__datebar-meta">
+                        <span class="ec__remain-lt ec__remain-lt--ended">終了</span>
+                      </div>
+                    </div>
+                    <div class="ec__body">
+                      <div class="ec__badge-row">
+                        <span class="cb cb-content cb-exhibition">exhibition</span>
+                        <div class="ec-actions-group">
+                          <span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>24</span>
+                          <span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><circle cx="10" cy="5" r="4" fill="#7a8a99" fill-opacity=".5"/><circle cx="5" cy="11" r="2.4" fill="#7a8a99" fill-opacity=".5"/></svg>6</span>
+                          <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                            <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>
+                            <span class="tip">興味ある！に追加する</span>
+                          </button>
+                        </div>
+                      </div>
+                      <div class="ec__title">秋の個展 2023</div>
+                      <div class="ec__venue">東京<span class="ec__venue-sep">|</span>Gallery SOIL 渋谷</div>
+                    </div>
+                  </div>
+                </div>
+              </a>
+
+              <!-- 過去10 -->
+              <a class="ec ec--h ec--h--past" href="#"
+                 data-year="2023" data-pref="東京" data-type="group">
+                <div class="ec--h-row">
+                  <div class="ec__poster-col">
+                    <div class="ec__poster" style="background:linear-gradient(160deg,#e0d0b8,#b8a888)"></div>
+                  </div>
+                  <div class="ec__main">
+                    <div class="ec__datebar">
+                      <div class="ec__datebar-dates">
+                        <span class="year">2023.</span><strong>04.15</strong><span class="dow">sat</span>
+                        <span class="sep">—</span>
+                        <strong>04.30</strong><span class="dow">sun</span>
+                      </div>
+                      <div class="ec__datebar-meta">
+                        <span class="ec__remain-lt ec__remain-lt--ended">終了</span>
+                      </div>
+                    </div>
+                    <div class="ec__body">
+                      <div class="ec__badge-row">
+                        <span class="cb cb-content cb-exhibition">exhibition</span>
+                        <div class="ec-actions-group">
+                          <span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>24</span>
+                          <span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><circle cx="10" cy="5" r="4" fill="#7a8a99" fill-opacity=".5"/><circle cx="5" cy="11" r="2.4" fill="#7a8a99" fill-opacity=".5"/></svg>6</span>
+                          <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                            <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".4" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>
+                            <span class="tip">興味ある！に追加する</span>
+                          </button>
+                        </div>
+                      </div>
+                      <div class="ec__title">春のグループ展 2023</div>
+                      <div class="ec__venue">東京<span class="ec__venue-sep">|</span>Gallery SOIL 渋谷</div>
+                    </div>
+                  </div>
+                </div>
+              </a>
+
+            </div><!-- /p3-1-card-list -->
+          </details><!-- /2023年 -->
+
+        </div><!-- /グループ3 -->
+
+        <!-- 空の状態 -->
+        <div class="p3-1-empty" id="p4FilterEmpty">該当する展覧会がありません</div>
+
+      </div><!-- /p3-1-main -->
+    </div><!-- /ktn-content -->
+
+    <!-- おすすめのギャラリー -->
+    <div class="p3-recommended">
+      <div class="p3-recommended__inner">
+
+        <!-- タグ -->
+        <div class="p2-sub-tags">
+          <div class="p2-sub-tags__label">タグ · Tags</div>
+          <ul class="p2-1-tag-pills" aria-label="タグ">
+            <li><a class="p2-1-tag-pill" href="#">絵画</a></li>
+            <li><a class="p2-1-tag-pill" href="#">現代美術</a></li>
+            <li><a class="p2-1-tag-pill" href="#">渋谷</a></li>
+            <li><a class="p2-1-tag-pill" href="#">東京</a></li>
+            <li><a class="p2-1-tag-pill" href="#">個展なびを知る</a></li>
+          </ul>
+        </div>
+
+        <!-- おすすめのギャラリー -->
+        <section class="p2-related">
+          <div class="ktn-section__head">
+            <h2 class="ktn-section__title">おすすめのギャラリー<span class="p2-related__en">Recommended</span></h2>
+            <a href="#" class="ktn-section__more">もっと見る →</a>
+          </div>
+          <div class="masonry">
+            <div class="masonry-item">
+              <a class="cc" href="#">
+                <div class="cc__top">
+                  <div class="cc__avatar" style="background:linear-gradient(135deg,#c8b8a0,#9a8068);border-radius:4px"><div class="cc__avatar-ph">G</div></div>
+                  <div class="cc__badge-row">
+                    <span class="cb cb-gallery">gallery</span>
+                    <span class="sb">開催中/開催予定</span>
+                  </div>
+                  <div class="cc__name">Galerie Colline 青山</div>
+                  <div class="cc__genre">現代美術・写真</div>
+                  <div class="cc__watch">
+                    <button class="ktn-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                      <svg width="14" height="14"><use href="#icon-watch" color="#7a8a99"/></svg>
+                      watch<span class="tip">ウォッチする</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="cc__foot">
+                  <div class="pc-counts">
+                    <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>24</span>
+                    <span class="sep"></span>
+                    <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>87</span>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="masonry-item">
+              <a class="cc" href="#">
+                <div class="cc__top">
+                  <div class="cc__avatar" style="background:linear-gradient(135deg,#a8c0b0,#7090808);border-radius:4px"><div class="cc__avatar-ph">G</div></div>
+                  <div class="cc__badge-row">
+                    <span class="cb cb-gallery">gallery</span>
+                  </div>
+                  <div class="cc__name">銀座 Gallery Koten</div>
+                  <div class="cc__genre">日本画・版画</div>
+                  <div class="cc__watch">
+                    <button class="ktn-btn on" onclick="this.classList.toggle('on');event.preventDefault()">
+                      <svg width="14" height="14"><use href="#icon-watch" color="#3a90e0"/></svg>
+                      watching<span class="tip">ウォッチを解除する</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="cc__foot">
+                  <div class="pc-counts">
+                    <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>18</span>
+                    <span class="sep"></span>
+                    <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>63</span>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="masonry-item">
+              <a class="cc" href="#">
+                <div class="cc__top">
+                  <div class="cc__avatar" style="background:linear-gradient(135deg,#b8c8d8,#8090a8);border-radius:4px"><div class="cc__avatar-ph">G</div></div>
+                  <div class="cc__badge-row">
+                    <span class="cb cb-gallery">gallery</span>
+                    <span class="sb">開催中/開催予定</span>
+                  </div>
+                  <div class="cc__name">Art Space HIKARI</div>
+                  <div class="cc__genre">現代美術・立体</div>
+                  <div class="cc__watch">
+                    <button class="ktn-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                      <svg width="14" height="14"><use href="#icon-watch" color="#7a8a99"/></svg>
+                      watch<span class="tip">ウォッチする</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="cc__foot">
+                  <div class="pc-counts">
+                    <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>11</span>
+                    <span class="sep"></span>
+                    <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>42</span>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="masonry-item">
+              <a class="cc" href="#">
+                <div class="cc__top">
+                  <div class="cc__avatar" style="background:linear-gradient(135deg,#d0b8c8,#a08098);border-radius:4px"><div class="cc__avatar-ph">G</div></div>
+                  <div class="cc__badge-row">
+                    <span class="cb cb-gallery">gallery</span>
+                  </div>
+                  <div class="cc__name">東京版画ギャラリー</div>
+                  <div class="cc__genre">版画・ドローイング</div>
+                  <div class="cc__watch">
+                    <button class="ktn-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                      <svg width="14" height="14"><use href="#icon-watch" color="#7a8a99"/></svg>
+                      watch<span class="tip">ウォッチする</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="cc__foot">
+                  <div class="pc-counts">
+                    <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>9</span>
+                    <span class="sep"></span>
+                    <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>31</span>
+                  </div>
+                </div>
+              </a>
+            </div>
+          </div><!-- /masonry -->
+        </section><!-- /p2-related -->
+
+      </div><!-- /p3-recommended__inner -->
+    </div><!-- /p3-recommended -->
+
+  </main>
+
+  <div class="ktn-ad-band" id="ktnAdBand">
+    <div class="ktn-ad-band__inner">
+      <div class="ktn-ad-band__slot">広告エリア（728×90 / レスポンシブ）</div>
+    </div>
+  </div>
+  <div class="dev-ph dev-ph--footer"></div>
+
+</div><!-- /content-wrap -->
+</div><!-- /shell -->
+
+<nav class="ktn-bottom-nav" id="ktnBottomNav">
+  <div class="ktn-bottom-nav__inner" id="ktnBottomNavInner"></div>
+</nav>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"個展なび","item":"https://koten-navi.com/"},{"@type":"ListItem","position":2,"name":"Gallery SOIL 渋谷","item":"https://koten-navi.com/gallery/gallery-soil-shibuya"},{"@type":"ListItem","position":3,"name":"展覧会アーカイブ","item":"https://koten-navi.com/gallery/gallery-soil-shibuya/exhibitions"}]}</script>
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+  window.P4_DATA = {
+    hasImage: true,
+    hasActiveExhibition: true,
+    watchers: [
+      { name:'山田花子', avatar:'linear-gradient(135deg,#e8b4a0,#c89080)' },
+      { name:'佐藤二郎', avatar:'linear-gradient(135deg,#a0b4e8,#7090c0)' },
+      { name:'鈴木三郎', avatar:'linear-gradient(135deg,#b4e8a0,#80c090)' },
+      { name:'田村四郎', avatar:'linear-gradient(135deg,#e8e0a0,#c0b880)' },
+      { name:'中村五郎', avatar:'linear-gradient(135deg,#d4a0e8,#a870c0)' },
+      { name:'木村六子', avatar:'linear-gradient(135deg,#a0e8d4,#60b090)' },
+      { name:'林 七海',  avatar:'linear-gradient(135deg,#e8a0c8,#c070a0)' },
+      { name:'清水八郎', avatar:'linear-gradient(135deg,#c8a0e8,#9868c0)' },
+      { name:'松本九美', avatar:'linear-gradient(135deg,#e8d0a0,#c0a060)' },
+      { name:'井上十子', avatar:'linear-gradient(135deg,#a0c8e8,#6098c0)' },
+      { name:'渡辺一朗', avatar:'linear-gradient(135deg,#e8a0a0,#c07070)' },
+      { name:'伊藤葵',   avatar:'linear-gradient(135deg,#a0e8a8,#60b068)' },
+      { name:'小林蓮',   avatar:'linear-gradient(135deg,#d0c8e8,#9890c0)' },
+      { name:'加藤麻衣', avatar:'linear-gradient(135deg,#e8c8a0,#c09870)' },
+      { name:'吉田陽子', avatar:'linear-gradient(135deg,#a8d0e8,#6098b8)' },
+      { name:'田中悠人', avatar:'linear-gradient(135deg,#e8a8c0,#c07898)' },
+      { name:'佐々木凛', avatar:'linear-gradient(135deg,#b0e8c8,#78b898)' },
+      { name:'山口晴香', avatar:'linear-gradient(135deg,#e0b8e8,#b080c0)' },
+      { name:'斎藤隆',   avatar:'linear-gradient(135deg,#e8d8a0,#c0b070)' },
+      { name:'松田奈々', avatar:'linear-gradient(135deg,#a0d8e8,#6098b0)' }
+    ]
+  };
+  KTN.init({ page: 'p4-1', role: 'guest' });
+</script>
+</body>
+</html>
