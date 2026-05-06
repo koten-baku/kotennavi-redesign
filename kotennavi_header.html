@@ -46,6 +46,9 @@
   <button class="dbtn" onclick="setP('p4-11',this)">編集</button>
   <button class="dbtn" onclick="setP('p4-12',this)">インサート</button>
   <button class="dbtn" onclick="setP('p4-13',this)">ウォッチャー</button>
+  <button class="dbtn" onclick="setP('p4-14',this)">LIAISONコンソール</button>
+  <button class="dbtn" onclick="setP('p4-15',this)">取引デスク</button>
+  <button class="dbtn" onclick="setP('p4-16',this)">販売代金</button>
   <span class="dbar-sep">|</span>
   <span class="dbar-sep" style="opacity:.4">P5:</span>
   <button class="dbtn" onclick="setP('p5',this)">myページ</button>
@@ -192,7 +195,10 @@ const PAGES = {
   'p4':    {n:'ギャラリー',       bc:[['Top','/'],['ギャラリー','/p4-list'],['Gallery SOIL 渋谷',null]]},
   'p4-11': {n:'ギャラリー編集',   bc:[['Top','/'],['Gallery SOIL 渋谷','/p4'],['プロフィール編集',null]]},
   'p4-12': {n:'インサート',       bc:[['Top','/'],['Gallery SOIL 渋谷','/p4'],['インサート',null]]},
-  'p4-13': {n:'ウォッチャー管理', bc:[['Top','/'],['Gallery SOIL 渋谷','/p4'],['ウォッチャー管理',null]]},
+  'p4-13': {n:'ウォッチャー管理',    bc:[['Top','/'],['Gallery SOIL 渋谷','/p4'],['ウォッチャー管理',null]]},
+  'p4-14': {n:'LIAISONコンソール',   bc:[['Top','/'],['Gallery SOIL 渋谷','/p4'],['LIAISONコンソール',null,'lp']]},
+  'p4-15': {n:'取引デスク',          bc:[['Top','/'],['Gallery SOIL 渋谷','/p4'],['取引デスク',null,'lp']]},
+  'p4-16': {n:'販売代金管理',        bc:[['Top','/'],['Gallery SOIL 渋谷','/p4'],['販売代金管理',null,'lp']]},
   // P5
   'p5':    {n:'myページ',        bc:[['Top','/'],['myページ',null]]},
   'p5-3':  {n:'興味あり!リスト', bc:[['Top','/'],['myページ','/p5'],['興味あり!リスト',null]]},
@@ -297,7 +303,9 @@ function getActions(page, role){
     if(role==='gallery')
       return cmn + owbtn('edit','編集') + dd('オーナーメニュー',
         ddi('edit','編集') + ddi('file','記事の追加') + ddSep() +
-        ddi('info','ガイド') + ddSep() + ddi('trash','削除',true));
+        ddinote('grid','LIAISON作品管理','LIAISON（会場連動オンライン展示/販売）とは →') + ddSep() +
+        ddi('chart','インサイト') + ddi('info','ガイド') + ddSep() +
+        ddi('trash','削除',true));
     if(role==='admin')
       return cmn + owbtn('edit','編集') +
         dd('オーナーメニュー',
@@ -361,14 +369,16 @@ function getActions(page, role){
       return cmn + dd('その他', ddi('warn','問題を報告する',true));
     if(role==='gallery')
       return cmn + owbtn('edit','編集') + dd('オーナーメニュー',
-        ddi('edit','プロフィール編集') + ddSep() + ddi('watch','ウォッチャー管理'));
+        ddi('edit','プロフィール編集') + ddSep() +
+        ddi('watch','ウォッチャー管理') + ddSep() +
+        ddi('grid','LIAISONコンソール') + ddi('desk','取引デスク') + ddi('sales','販売代金管理'));
     if(role==='admin')
       return cmn + owbtn('edit','編集') + dd('管理者',
         ddi('edit','編集') + ddSep() + ddi('watch','ウォッチャー管理') + ddSep() + ddi('trash','削除',true));
     return cmn;
   }
 
-  if(['p4-11','p4-12','p4-13'].includes(page)){
+  if(['p4-11','p4-12','p4-13','p4-14','p4-15','p4-16'].includes(page)){
     if(role==='gallery') return owbtn('info','ガイド');
     if(role==='admin') return owbtn('info','ガイド') + sep() + dd('管理者', ddi('chart','統計'));
     return '';
@@ -640,7 +650,7 @@ const PAGE_WIDTH = {
             'p70-1','p70-2','p70-4',
             'p2-11','p2-12','p2-13',
             'p3-11','p3-13','p3-14','p3-15','p3-16','p3-17',
-            'p4-11','p4-12','p4-13',
+            'p4-11','p4-12','p4-13','p4-16',
             'p5-11','p5-12','p5-13','p5-14','p5-15','p5-16',
             'p6-11','p6-12','p6-13','p6-14',
             'p90-4','p90-10','p90-11','p90-13','p90-14'],

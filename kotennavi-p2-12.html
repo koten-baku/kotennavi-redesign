@@ -19,6 +19,10 @@
   <button class="dbtn on" onclick="setR('user+creator',this)">creator本人</button>
   <button class="dbtn" onclick="setR('user+gallery',this)">gallery本人</button>
   <button class="dbtn" onclick="setR('admin',this)">管理者</button>
+  <span class="dbar-sep">|</span>
+  <span class="dbar-sep" style="opacity:.5">LIAISON+：</span>
+  <button class="dbtn on" onclick="p212liaisonPlusApplied=false;[...this.parentNode.querySelectorAll('.dbtn-lp')].forEach(b=>b.classList.remove('on'));this.classList.add('on')">未申請</button>
+  <button class="dbtn dbtn-lp" onclick="p212liaisonPlusApplied=true;[...this.parentNode.querySelectorAll('.dbtn-lp')].forEach(b=>b.classList.remove('on'));this.classList.add('on')">申請済み</button>
 </div>
 <div class="shell">
 <div class="content-wrap" id="contentWrap">
@@ -59,35 +63,65 @@
         </div>
       </a>
 
-      <!-- LIAISON+ プロモーション（独立バナー） -->
-      <div class="p2-12-lp-promo-wrap">
-        <div class="p2-12-lp-promo">
-          <div class="p2-12-lp-promo__logo">
-            <svg viewBox="0 0 480 240" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <path id="p212-lp-s-t" d="M 80 184 Q 240 56 400 184"/>
-                <linearGradient id="g-p212-lp-s" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%"   stop-color="#6a4010"/>
-                  <stop offset="30%"  stop-color="#a87020"/>
-                  <stop offset="58%"  stop-color="#d4a428"/>
-                  <stop offset="100%" stop-color="#6a4010"/>
-                </linearGradient>
-              </defs>
-              <path d="M 20 200 Q 240 33 460 200" stroke="url(#g-p212-lp-s)" stroke-width="4" fill="none" stroke-linecap="round"/>
-              <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#g-p212-lp-s)">
-                <textPath href="#p212-lp-s-t" startOffset="50%" text-anchor="middle">LIAISON</textPath>
-              </text>
-              <circle cx="432" cy="183" r="22" fill="#b87c10"/>
-              <text x="432" y="183" font-family="'Bodoni Moda',serif" font-size="42" font-weight="900" fill="#fff8e8" text-anchor="middle" dominant-baseline="central">+</text>
-              <text x="240" y="220" font-family="'Montserrat',sans-serif" font-size="17" font-weight="600" letter-spacing="3" fill="#8a6018" text-anchor="middle">Now on View + Shop</text>
-            </svg>
-          </div>
-          <div class="p2-12-lp-promo__body">
-            <span class="p2-12-lp-promo__catch">展示 + オンライン販売を同時に</span>
-          </div>
-          <a href="#" class="p2-12-lp-promo__apply">LIAISON+ についてもっと知る<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13" style="margin-left:5px;vertical-align:middle"><line x1="3" y1="8" x2="13" y2="8"/><polyline points="9,4 13,8 9,12"/></svg></a>
+      <!-- モード切替バー -->
+      <div class="p2-12-mode-bar">
+        <div class="p2-12-mode-bar__current">
+          <span class="p2-12-mode-bar__label">現在のモード：</span>
+          <span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>
         </div>
-      </div><!-- /.p2-12-lp-promo-wrap -->
+        <div class="p2-12-mode-bar__actions">
+          <button class="p2-12-mode-switch" onclick="p212OpenModal('switch')">LIAISON+ に切り替える</button>
+          <button class="p2-12-mode-none" onclick="p212OpenModal('none')">LIAISON作品展示しない</button>
+        </div>
+      </div>
+
+      <!-- LIAISON+ 切替確認モーダル（申請済みユーザー向け） -->
+      <div id="p212-modal-switch-ok" class="p2-12-modal" hidden>
+        <div class="p2-12-modal__bg" onclick="p212CloseModal('switch-ok')"></div>
+        <div class="p2-12-modal__box">
+          <h3 class="p2-12-modal__title">LIAISON+ に切り替えますか？</h3>
+          <ul class="p2-12-modal__notes">
+            <li>LIAISON+ では価格設定と販売期間の設定が必要になります。</li>
+            <li>切り替え後は LIAISON+ 作品管理ページに移動します。</li>
+          </ul>
+          <div class="p2-12-modal__foot">
+            <button class="p2-12-modal__cancel" onclick="p212CloseModal('switch-ok')">キャンセル</button>
+            <button class="p2-12-modal__ok" onclick="location.href='kotennavi-p2-12-1.html'">切り替える</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- LIAISON+ 切替案内モーダル（未申請ユーザー向け） -->
+      <div id="p212-modal-switch-ng" class="p2-12-modal" hidden>
+        <div class="p2-12-modal__bg" onclick="p212CloseModal('switch-ng')"></div>
+        <div class="p2-12-modal__box">
+          <h3 class="p2-12-modal__title">LIAISON+ のご利用には申込が必要です</h3>
+          <ul class="p2-12-modal__notes">
+            <li>LIAISON+ は申込・承認済みのクリエイター/ギャラリーのみご利用いただけます。</li>
+            <li>申込ページから申請してください。審査後にご利用いただけます。</li>
+          </ul>
+          <div class="p2-12-modal__foot">
+            <button class="p2-12-modal__cancel" onclick="p212CloseModal('switch-ng')">キャンセル</button>
+            <button class="p2-12-modal__ok" onclick="location.href='kotennavi-p11-4.html'">LIAISON+ を申し込む</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 使用しない 切替確認モーダル -->
+      <div id="p212-modal-none" class="p2-12-modal" hidden>
+        <div class="p2-12-modal__bg" onclick="p212CloseModal('none')"></div>
+        <div class="p2-12-modal__box">
+          <h3 class="p2-12-modal__title">LIAISON を解除しますか？</h3>
+          <ul class="p2-12-modal__notes">
+            <li>LIAISON の設定と登録作品がすべて削除されます。</li>
+            <li>展覧会の編集ページで「使用しない」を選択して保存します。</li>
+          </ul>
+          <div class="p2-12-modal__foot">
+            <button class="p2-12-modal__cancel" onclick="p212CloseModal('none')">キャンセル</button>
+            <button class="p2-12-modal__ok danger" onclick="location.href='kotennavi-p2-11.html'">編集ページへ</button>
+          </div>
+        </div>
+      </div>
 
       <!-- 展示設定セクション -->
       <section class="p2-12-liaison-section">
@@ -157,6 +191,17 @@
 <script src="./kotennavi-pages.js"></script>
 <script>
 KTN.init({ page: 'p2-12', role: 'user+creator' });
+// デモ用: true=LIAISON+申請済み / false=未申請
+var p212liaisonPlusApplied = false;
+function p212OpenModal(type) {
+  var id = type === 'switch'
+    ? 'p212-modal-switch-' + (p212liaisonPlusApplied ? 'ok' : 'ng')
+    : 'p212-modal-' + type;
+  document.getElementById(id).hidden = false;
+}
+function p212CloseModal(type) {
+  document.getElementById('p212-modal-' + type).hidden = true;
+}
 </script>
 </body>
 </html>

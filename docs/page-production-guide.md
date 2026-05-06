@@ -575,6 +575,11 @@ KTN.pages = {
 | P4-11 | 編集 | `--w-article` | なし | gallery / admin |
 | P4-12 | インサイト | `--w-article` | なし | gallery / admin |
 | P4-13 | ウォッチャー管理 | `--w-article` | なし | gallery / admin |
+| P4-13 | ウォッチャー管理 | `--w-article` | なし | gallery / admin |
+| P4-14 | LIAISONコンソール | `--w-detail` | なし | gallery / admin（LIAISON+） |
+| P4-15 | 取引デスク | `--w-detail` | なし | gallery / admin（LIAISON+） |
+| P4-16 | 販売代金管理 | `--w-article` | なし | gallery / admin（LIAISON+） |
+| P4-17 | ギャラリー-インベントリー管理 | `--w-article` | なし | gallery / admin（LIAISON+） |
 
 ### P5 ユーザー（myページ）
 | ID | ページ名 | 幅 | アクセス |

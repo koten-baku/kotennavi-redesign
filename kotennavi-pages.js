@@ -189,7 +189,7 @@ KTN.pages['p2'] = function () {
       },
       {
         ini: 'S', name: 'sato.hide', av: 'linear-gradient(135deg,#c8d8e8,#7898b8)', tc: 'rgba(255,255,255,.9)',
-        date: '2026.02.18', stars: 4, ci: false,
+        date: '2026.02.18', stars: 4, ci: true, checkinDate: '2026.02.18',
         body: '特に「ざわざわ（夜）」は長い時間立ち止まって見入ってしまいました。会期中にまた行きたいと思っています。'
       },
     ];
@@ -201,7 +201,7 @@ KTN.pages['p2'] = function () {
       var ci = r.ci
         ? '\u00a0\u25cf\u00a0<span class="rv-checkin-date">' + CI_ICON + '\u00a0' + r.checkinDate + '</span>'
         : '';
-      return '<div class="review-item">' +
+      return '<a class="review-item" href="kotennavi-p8.html">' +
         '<div class="rv-hd">' +
         '<div class="rv-av" style="background:' + r.av + ';color:' + r.tc + '">' + r.ini + '</div>' +
         '<div style="flex:1;min-width:0">' +
@@ -211,7 +211,7 @@ KTN.pages['p2'] = function () {
         '<div class="rv-date">' + r.date + '</div>' +
         '</div>' +
         '<div class="rv-body">' + r.body + '</div>' +
-        '</div>';
+        '</a>';
     }).join('');
   })();
 
@@ -3892,4 +3892,761 @@ KTN.pages['p4-2'] = function () {
 
     selects.forEach(function(sel){ sel.addEventListener('change', filterArticles); });
   })();
+};
+
+/* =========================================================
+   P5 ユーザー – 展覧会カレンダー
+   ========================================================= */
+KTN.pages['p5'] = function () {
+    document.body.classList.add('p5-page');
+    document.body.style.setProperty('--page-accent', '#b8608c');
+    document.body.style.setProperty('--page-accent-bg', 'rgba(184,96,140,.1)');
+    document.body.style.setProperty('--page-accent-border', '#c97aaa');
+
+    // ── 定数・状態 ────────────────────────────────────────────────────────────
+    var TODAY         = new Date(2026, 3, 29);
+    var curRole       = 'user+';
+    var rangeStart    = null;   // 日付選択開始（Date）
+    var rangeEnd      = null;   // 日付選択終了（Date）
+    var activeFilters = new Set(['all']);
+    var excludeCheckin = false;
+    var viewYear      = TODAY.getFullYear();
+    var viewMonth     = TODAY.getMonth();  // 0-indexed
+    var monthFilter   = { active: false, start: null, end: null };
+
+    // 展覧会データ（カレンダードット計算用）
+    var EXH_DATA = [
+      { type: 'interest', start: new Date(2026,3,5),  end: new Date(2026,3,20) },
+      { type: 'creator',  start: new Date(2026,3,12), end: new Date(2026,3,27) },
+      { type: 'gallery',  start: new Date(2026,3,1),  end: new Date(2026,3,30) },
+      { type: 'interest', start: new Date(2026,3,20), end: new Date(2026,4,10) },
+      { type: 'checkin',  start: new Date(2026,3,8),  end: new Date(2026,3,14) }
+    ];
+    var DOT_PRIORITY = ['interest','creator','gallery','checkin'];
+    var CAL_MONTHS   = ['January','February','March','April','May','June',
+                        'July','August','September','October','November','December'];
+
+    // ── ヘルパー ──────────────────────────────────────────────────────────────
+    function sameDay(a, b) {
+      return a.getFullYear() === b.getFullYear() &&
+             a.getMonth()    === b.getMonth()    &&
+             a.getDate()     === b.getDate();
+    }
+    function parseDate(str) {
+      var p = str.split('-');
+      return new Date(+p[0], +p[1] - 1, +p[2]);
+    }
+    function fmt(d) { return (d.getMonth() + 1) + '月' + d.getDate() + '日'; }
+    function fmtMonth(y, m) { return y + '年' + (m + 1) + '月'; }
+
+    function isCurrentMonth() {
+      return viewYear === TODAY.getFullYear() && viewMonth === TODAY.getMonth();
+    }
+    function getDotsForDate(d) {
+      var types = {};
+      EXH_DATA.forEach(function (e) {
+        if (d >= e.start && d <= e.end) types[e.type] = true;
+      });
+      return DOT_PRIORITY.filter(function (t) { return types[t]; });
+    }
+
+    // ── 月フィルター更新 ──────────────────────────────────────────────────────
+    function updateMonthFilter() {
+      if (isCurrentMonth()) {
+        monthFilter.active = false;
+        monthFilter.start  = null;
+        monthFilter.end    = null;
+      } else {
+        monthFilter.active = true;
+        monthFilter.start  = new Date(viewYear, viewMonth, 1);
+        monthFilter.end    = new Date(viewYear, viewMonth + 1, 0);
+      }
+    }
+
+    // ── カレンダー描画 ────────────────────────────────────────────────────────
+    function renderCalendar() {
+      var grid    = document.getElementById('p5CalGrid');
+      var monthEl = document.getElementById('p5CalMonth');
+      if (!grid || !monthEl) return;
+
+      monthEl.textContent = CAL_MONTHS[viewMonth] + ' ' + viewYear;
+
+      var firstDow    = new Date(viewYear, viewMonth, 1).getDay();
+      var daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+      var totalCells  = Math.ceil((firstDow + daysInMonth) / 7) * 7;
+
+      var html = '';
+      for (var i = 0; i < totalCells; i++) {
+        var cellDate = new Date(viewYear, viewMonth, 1 + (i - firstDow));
+        var isOther  = cellDate.getMonth() !== viewMonth;
+        var isToday  = sameDay(cellDate, TODAY);
+        var mm  = cellDate.getMonth() + 1;
+        var dd  = cellDate.getDate();
+        var dateStr = cellDate.getFullYear() + '-' +
+                      (mm < 10 ? '0' + mm : mm) + '-' +
+                      (dd < 10 ? '0' + dd : dd);
+
+        var cls = 'p5-cal-day';
+        if (isOther) cls += ' is-other';
+        if (isToday) cls += ' is-today';
+
+        var countHtml = '';
+        if (!isOther) {
+          var count = getDotsForDate(cellDate).length;
+          if (count > 0) {
+            cls += ' has-event';
+            countHtml = '<span class="p5-cal-day__count">' + count + '</span>';
+          }
+        }
+
+        html += '<button class="' + cls + '" data-date="' + dateStr + '">' +
+                '<span class="p5-cal-day__num">' + dd + '</span>' +
+                countHtml +
+                '</button>';
+      }
+      grid.innerHTML = html;
+      updateCalendarSelection();
+    }
+
+    // ── updateCalendarSelection ───────────────────────────────────────────────
+    function updateCalendarSelection() {
+      document.querySelectorAll('.p5-cal-day').forEach(function (cell) {
+        cell.classList.remove('is-selected', 'in-range', 'is-range-start', 'is-range-end');
+      });
+      if (!rangeStart) return;
+      var effEnd = rangeEnd || rangeStart;
+      document.querySelectorAll('.p5-cal-day').forEach(function (cell) {
+        if (!cell.dataset.date) return;
+        var cd = parseDate(cell.dataset.date);
+        if (sameDay(cd, rangeStart) && sameDay(cd, effEnd)) {
+          cell.classList.add('is-selected', 'is-range-start', 'is-range-end');
+        } else if (sameDay(cd, rangeStart)) {
+          cell.classList.add('is-range-start');
+        } else if (sameDay(cd, effEnd)) {
+          cell.classList.add('is-range-end');
+        } else if (cd > rangeStart && cd < effEnd) {
+          cell.classList.add('in-range');
+        }
+      });
+    }
+
+    // ── updateExhTitle ────────────────────────────────────────────────────────
+    function updateExhTitle() {
+      var titleEl = document.getElementById('p5ExhTitle');
+      var countEl = document.getElementById('p5ExhCount');
+      var list    = document.getElementById('p5ExhList');
+      if (!list) return;
+
+      var n = 0;
+      list.querySelectorAll('.p5-exh-card').forEach(function (c) {
+        if (!c.classList.contains('is-hidden')) n++;
+      });
+      if (countEl) countEl.textContent = n + '件';
+
+      if (titleEl) {
+        var label;
+        if (rangeStart) {
+          if (!rangeEnd) {
+            label = fmt(rangeStart) + 'の展覧会';
+          } else {
+            var sameM = rangeStart.getMonth()    === rangeEnd.getMonth() &&
+                        rangeStart.getFullYear() === rangeEnd.getFullYear();
+            label = sameM
+              ? fmt(rangeStart) + '〜' + rangeEnd.getDate() + '日の展覧会'
+              : fmt(rangeStart) + '〜' + fmt(rangeEnd) + 'の展覧会';
+          }
+        } else if (monthFilter.active) {
+          label = fmtMonth(viewYear, viewMonth) + 'の展覧会';
+        } else {
+          label = fmtMonth(TODAY.getFullYear(), TODAY.getMonth()) + 'の展覧会';
+        }
+        titleEl.textContent = label;
+      }
+    }
+
+    // ── updateDateFilterBar（カレンダー内選択インジケーター） ─────────────────
+    function updateDateFilterBar() {
+      var bar    = document.getElementById('p5CalSelectionBar');
+      var textEl = document.getElementById('p5CalSelectionText');
+      if (!bar) return;
+
+      if (!rangeStart) {
+        bar.style.display = 'none';
+        return;
+      }
+
+      var label;
+      if (!rangeEnd) {
+        label = fmt(rangeStart);
+      } else {
+        var sameM = rangeStart.getMonth()    === rangeEnd.getMonth() &&
+                    rangeStart.getFullYear() === rangeEnd.getFullYear();
+        label = sameM
+          ? fmt(rangeStart) + '〜' + rangeEnd.getDate() + '日'
+          : fmt(rangeStart) + '〜' + fmt(rangeEnd);
+      }
+
+      bar.style.display = 'flex';
+      if (textEl) textEl.textContent = label;
+    }
+
+    // ── applyAllFilters ───────────────────────────────────────────────────────
+    function applyAllFilters() {
+      var list = document.getElementById('p5ExhList');
+      if (!list) return;
+
+      // 有効な日付範囲（明示的日付選択 > 月フィルター）
+      var effStart = rangeStart || (monthFilter.active ? monthFilter.start : null);
+      var effEnd   = (rangeStart ? (rangeEnd || rangeStart) : null) ||
+                     (monthFilter.active ? monthFilter.end : null);
+
+      list.querySelectorAll('.p5-exh-card').forEach(function (card) {
+        var type   = card.dataset.type || '';
+        var typeOk = activeFilters.has('all') ? true : activeFilters.has(type);
+        if (excludeCheckin && type === 'checkin') typeOk = false;
+
+        var dateOk = true;
+        if (effStart && card.dataset.start && card.dataset.end) {
+          var cs = parseDate(card.dataset.start);
+          var ce = parseDate(card.dataset.end);
+          dateOk = (cs <= effEnd && ce >= effStart);
+        }
+
+        if (typeOk && dateOk) card.classList.remove('is-hidden');
+        else                   card.classList.add('is-hidden');
+      });
+      updateExhTitle();
+      updateDateFilterBar();
+    }
+
+    // ── 1. ロール制御 ─────────────────────────────────────────────────────────
+    (function () {
+      var isPriv = (curRole === 'user+' || curRole === 'admin');
+      if (!isPriv) {
+        var fb = document.getElementById('p5FilterBar');
+        if (fb) fb.style.display = 'none';
+        var sl = document.getElementById('p5SideLinks');
+        if (sl) sl.style.display = 'none';
+        var eb = document.querySelector('.p5-head__edit-btn');
+        if (eb) eb.style.display = 'none';
+        document.querySelectorAll('.p5-exh-card__btn-interest, .p5-exh-card__btn-checkin').forEach(function (b) {
+          b.style.display = 'none';
+        });
+      }
+    }());
+
+    // ── 2. 残日数の動的生成 ──────────────────────────────────────────────────
+    (function () {
+      document.querySelectorAll('.p5-exh-card').forEach(function (card) {
+        var endStr   = card.dataset.end   || '';
+        var startStr = card.dataset.start || '';
+        if (!endStr) return;
+        var endDate   = parseDate(endStr);
+        var startDate = parseDate(startStr);
+        var row2 = card.querySelector('.p5-exh-card__row2');
+        if (!row2) return;
+        var span = document.createElement('span');
+        if (startDate > TODAY) {
+          var diffStart = Math.ceil((startDate - TODAY) / 86400000);
+          span.className   = 'p5-exh-card__remain p5-exh-card__remain--soon';
+          span.textContent = diffStart + '日後開始';
+        } else {
+          var diff = Math.ceil((endDate - TODAY) / 86400000);
+          if (diff < 0) return;
+          if (diff === 0) {
+            span.className   = 'p5-exh-card__remain p5-exh-card__remain--urgent';
+            span.textContent = '本日最終日';
+          } else if (diff <= 7) {
+            span.className   = 'p5-exh-card__remain p5-exh-card__remain--urgent';
+            span.textContent = '残' + diff + '日';
+          } else {
+            span.className   = 'p5-exh-card__remain';
+            span.textContent = '残' + diff + '日';
+          }
+        }
+        row2.appendChild(span);
+      });
+    }());
+
+    // ── 3. フィルターボタン ───────────────────────────────────────────────────
+    (function () {
+      var btns = document.querySelectorAll('.p5-filter-btn');
+      function resetToAll() {
+        activeFilters = new Set(['all']);
+        btns.forEach(function (b) { b.classList.toggle('is-active', b.dataset.filter === 'all'); });
+      }
+      btns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var f = btn.dataset.filter;
+          if (f === 'all') {
+            resetToAll();
+          } else {
+            activeFilters.delete('all');
+            document.querySelector('.p5-filter-btn[data-filter="all"]').classList.remove('is-active');
+            if (activeFilters.has(f)) { activeFilters.delete(f); btn.classList.remove('is-active'); }
+            else                      { activeFilters.add(f);    btn.classList.add('is-active'); }
+            if (activeFilters.size === 0) resetToAll();
+          }
+          applyAllFilters();
+        });
+      });
+      var cbCI = document.getElementById('p5FilterCheckin');
+      if (cbCI) cbCI.addEventListener('change', function () {
+        excludeCheckin = this.checked;
+        applyAllFilters();
+      });
+    }());
+
+    // ── 4. 日付選択（月跨り対応） ─────────────────────────────────────────────
+    (function () {
+      var grid = document.getElementById('p5CalGrid');
+      if (!grid) return;
+      grid.addEventListener('click', function (e) {
+        var cell = e.target.closest('.p5-cal-day');
+        if (!cell || cell.classList.contains('is-other') || !cell.dataset.date) return;
+        var clicked = parseDate(cell.dataset.date);
+        if (!rangeStart) {
+          rangeStart = clicked; rangeEnd = null;
+        } else if (!rangeEnd) {
+          if (sameDay(clicked, rangeStart)) { rangeStart = null; rangeEnd = null; }
+          else if (clicked > rangeStart)    { rangeEnd = clicked; }
+          else                              { rangeStart = clicked; }
+        } else {
+          rangeStart = clicked; rangeEnd = null;
+        }
+        updateCalendarSelection();
+        applyAllFilters();
+      });
+    }());
+
+    // ── 5. クリアボタン ───────────────────────────────────────────────────────
+    (function () {
+      var clearBtn = document.getElementById('p5DateFilterClear');
+      if (!clearBtn) return;
+      clearBtn.addEventListener('click', function () {
+        rangeStart = null; rangeEnd = null;
+        viewYear  = TODAY.getFullYear();
+        viewMonth = TODAY.getMonth();
+        monthFilter.active = false; monthFilter.start = null; monthFilter.end = null;
+        renderCalendar();
+        applyAllFilters();
+      });
+    }());
+
+    // ── 6. 解除ボタン ─────────────────────────────────────────────────────────
+    (function () {
+      document.addEventListener('click', function (e) {
+        var btn = e.target.closest('.p5-exh-card__btn-interest, .p5-exh-card__btn-checkin');
+        if (!btn) return;
+        var card = btn.closest('.p5-exh-card');
+        if (card) { card.classList.add('is-hidden'); updateExhTitle(); }
+      });
+    }());
+
+    // ── 8. 月ナビ ─────────────────────────────────────────────────────────────
+    (function () {
+      var prev = document.getElementById('p5CalPrev');
+      var next = document.getElementById('p5CalNext');
+      if (prev) prev.addEventListener('click', function () {
+        viewMonth--;
+        if (viewMonth < 0) { viewMonth = 11; viewYear--; }
+        updateMonthFilter();
+        renderCalendar();
+        applyAllFilters();
+      });
+      if (next) next.addEventListener('click', function () {
+        viewMonth++;
+        if (viewMonth > 11) { viewMonth = 0; viewYear++; }
+        updateMonthFilter();
+        renderCalendar();
+        applyAllFilters();
+      });
+    }());
+
+    // ── タブナビ ──────────────────────────────────────────────────────────────
+    (function () {
+      var items = document.querySelectorAll('.p5-tabnav__item[href^="#"]');
+      items.forEach(function (item) {
+        item.addEventListener('click', function (e) {
+          e.preventDefault();
+          items.forEach(function (i) { i.classList.remove('is-active'); });
+          item.classList.add('is-active');
+        });
+      });
+    }());
+
+    // ── 自己紹介折り畳み ──────────────────────────────────────────────────────
+    (function () {
+      var bioText   = document.getElementById('p5HeadBioText');
+      var bioToggle = document.getElementById('p5HeadBioToggle');
+      if (!bioText || !bioToggle) return;
+      bioToggle.addEventListener('click', function () {
+        var expanded = bioText.classList.toggle('is-expanded');
+        bioToggle.classList.toggle('is-expanded', expanded);
+        bioToggle.querySelector('span') && (bioToggle.querySelector('span').textContent = expanded ? '閉じる' : 'もっと見る');
+      });
+    }());
+
+    // 初期描画
+    renderCalendar();
+    updateExhTitle();
+};
+
+/* =========================================================
+   P5-1 ユーザー – ウォッチリスト
+   ========================================================= */
+KTN.pages['p5-1'] = function () {
+    document.body.classList.add('p5-page', 'p5-1-page');
+    document.body.style.setProperty('--page-accent', '#b8608c');
+    document.body.style.setProperty('--page-accent-bg', 'rgba(184,96,140,.1)');
+    document.body.style.setProperty('--page-accent-border', '#c97aaa');
+
+    // ── 初期順序を保持 ────────────────────────────────────────────────────────
+    var allContainer = document.querySelector('.p5-1-section[data-section="all"] .list-col');
+    var crContainer  = document.querySelector('.p5-1-section[data-section="creator"] .list-col');
+    var glContainer  = document.querySelector('.p5-1-section[data-section="gallery"] .list-col');
+    var allOriginal = allContainer ? Array.from(allContainer.children) : [];
+    var crOriginal  = crContainer  ? Array.from(crContainer.children)  : [];
+    var glOriginal  = glContainer  ? Array.from(glContainer.children)  : [];
+
+    // ── ソート ────────────────────────────────────────────────────────────────
+    function getName(el) {
+        var n = el.querySelector('.cc__name, .gc__name');
+        return n ? n.textContent.trim() : '';
+    }
+    function getExh(el) {
+        var n = el.querySelector('.pc-count--exh');
+        return n ? parseInt(n.textContent) || 0 : 0;
+    }
+    function getWatch(el) {
+        var n = el.querySelector('.pc-count--watch');
+        return n ? parseInt(n.textContent) || 0 : 0;
+    }
+    function applySort(val) {
+        [[allContainer, allOriginal], [crContainer, crOriginal], [glContainer, glOriginal]].forEach(function (pair) {
+            var container = pair[0], original = pair[1];
+            if (!container) return;
+            var cards = (val === 'date') ? original.slice() : Array.from(container.children).sort(function (a, b) {
+                if (val === 'name')  return getName(a).localeCompare(getName(b), 'ja');
+                if (val === 'exh')   return getExh(b) - getExh(a);
+                if (val === 'watch') return getWatch(b) - getWatch(a);
+                return 0;
+            });
+            cards.forEach(function (c) { container.appendChild(c); });
+        });
+    }
+
+    // ── ロール別制御 ──────────────────────────────────────────────────────────
+    function applyRole() {
+        var role = window.curRole || 'guest';
+        var canWatch = (role === 'login' || role === 'user+');
+        document.querySelectorAll('.cc__hfoot .ktn-btn, .gc__hfoot .ktn-btn').forEach(function (el) {
+            el.style.display = canWatch ? '' : 'none';
+        });
+    }
+
+    // ── 軸①: タイプタブ ──────────────────────────────────────────────────────
+    (function () {
+        var tabs   = document.querySelectorAll('#p51TypeTabs .p5-type-tab');
+        var secAll = document.querySelector('.p5-1-section[data-section="all"]');
+        var secCr  = document.querySelector('.p5-1-section[data-section="creator"]');
+        var secGl  = document.querySelector('.p5-1-section[data-section="gallery"]');
+        tabs.forEach(function (tab) {
+            tab.addEventListener('click', function () {
+                tabs.forEach(function (t) { t.classList.remove('is-active'); });
+                tab.classList.add('is-active');
+                var t = tab.dataset.type;
+                if (secAll) secAll.style.display = (t === 'all')     ? '' : 'none';
+                if (secCr)  secCr.style.display  = (t === 'creator') ? '' : 'none';
+                if (secGl)  secGl.style.display  = (t === 'gallery') ? '' : 'none';
+            });
+        });
+    }());
+
+    // ── 軸②: 開催中・開催予定フィルター（チェックボックス） ─────────────────
+    (function () {
+        var chk = document.getElementById('p51ActiveCheck');
+        if (!chk) return;
+        chk.addEventListener('change', function () {
+            var activeOnly = this.checked;
+            document.querySelectorAll('.cc.cc--h, .gc.gc--h').forEach(function (card) {
+                card.style.display = (!activeOnly || card.querySelector('.sb-sm')) ? '' : 'none';
+            });
+        });
+    }());
+
+    // ── ソートセレクト ────────────────────────────────────────────────────────
+    var sortEl = document.getElementById('p51Sort');
+    if (sortEl) sortEl.addEventListener('change', function () { applySort(this.value); });
+
+    window.ktnRender = function () { applyRole(); };
+    applyRole();
+};
+
+/* =========================================================
+   P5-2 ユーザー – チェックイン記録
+   ========================================================= */
+KTN.pages['p5-2'] = function () {
+    document.body.classList.add('p5-page', 'p5-2-page');
+    document.body.style.setProperty('--page-accent', '#b8608c');
+    document.body.style.setProperty('--page-accent-bg', 'rgba(184,96,140,.1)');
+    document.body.style.setProperty('--page-accent-border', '#c97aaa');
+
+    // ── ロール別制御 ──────────────────────────────────────────────────────────
+    function applyRole() {
+        var role = window.curRole || 'guest';
+        var isGuest  = (role === 'guest');
+        var isOwner  = (role === 'user+');
+        var canFilter = (role === 'user+' || role === 'admin');
+
+        document.querySelectorAll('.p5-owner-only').forEach(function (el) {
+            el.style.display = isGuest ? 'none' : '';
+        });
+        var fb = document.getElementById('p52FilterBar');
+        if (fb) fb.style.display = canFilter ? '' : 'none';
+        document.querySelectorAll('.p5-2-remove-btn').forEach(function (el) {
+            el.style.display = isOwner ? '' : 'none';
+        });
+    }
+
+    // ── 年フィルターボタン ────────────────────────────────────────────────────
+    (function () {
+        var btns   = document.querySelectorAll('#p52FilterBar .p5-filter-btn');
+        var groups = document.querySelectorAll('.p5-2-year-group');
+        btns.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                btns.forEach(function (b) { b.classList.remove('is-active'); });
+                btn.classList.add('is-active');
+                var f = btn.dataset.filter;
+                groups.forEach(function (g) {
+                    g.style.display = (f === 'all' || g.dataset.year === f) ? '' : 'none';
+                });
+            });
+        });
+    }());
+
+    // ── ソート ────────────────────────────────────────────────────────────────
+    var sortEl = document.getElementById('p52Sort');
+    if (sortEl) {
+        var yearGroups = Array.from(document.querySelectorAll('.p5-2-year-group'));
+        var origOrders = yearGroups.map(function (g) {
+            var c = g.querySelector('.p5-2-year-group__cards');
+            return c ? Array.from(c.children) : [];
+        });
+        function getText(card, sel) {
+            var el = card.querySelector(sel);
+            return el ? el.textContent.trim() : '';
+        }
+        sortEl.addEventListener('change', function () {
+            var val = this.value;
+            yearGroups.forEach(function (group, i) {
+                var container = group.querySelector('.p5-2-year-group__cards');
+                if (!container) return;
+                var cards;
+                if (val === 'new') {
+                    cards = origOrders[i].slice();
+                } else if (val === 'old') {
+                    cards = origOrders[i].slice().reverse();
+                } else if (val === 'title') {
+                    cards = Array.from(container.children).sort(function (a, b) {
+                        return getText(a, '.ec__title').localeCompare(getText(b, '.ec__title'), 'ja');
+                    });
+                } else if (val === 'venue') {
+                    cards = Array.from(container.children).sort(function (a, b) {
+                        return getText(a, '.ec__venue').localeCompare(getText(b, '.ec__venue'), 'ja');
+                    });
+                }
+                cards.forEach(function (c) { container.appendChild(c); });
+            });
+        });
+    }
+
+    // ── 記録除外ボタン ────────────────────────────────────────────────────────
+    document.querySelectorAll('.p5-2-remove-btn').forEach(function (btn) {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var card = btn.closest('.ec');
+            if (card) card.classList.add('is-hidden');
+            var group = btn.closest('.p5-2-year-group');
+            if (group) {
+                var visible = group.querySelectorAll('.ec:not(.is-hidden)').length;
+                var countEl = group.querySelector('.p5-2-year-group__count');
+                if (countEl) countEl.textContent = '（' + visible + '件）';
+            }
+        });
+    });
+
+    window.ktnRender = function () { applyRole(); };
+    applyRole();
+};
+
+/* =========================================================
+   P5-3 ユーザー – 興味あり！リスト
+   ========================================================= */
+KTN.pages['p5-3'] = function () {
+    document.body.classList.add('p5-page', 'p5-3-page');
+    document.body.style.setProperty('--page-accent', '#b8608c');
+    document.body.style.setProperty('--page-accent-bg', 'rgba(184,96,140,.1)');
+    document.body.style.setProperty('--page-accent-border', '#c97aaa');
+
+    // ── ロール別制御 ──────────────────────────────────────────────────────────
+    function applyRole() {
+        var role = window.curRole || 'guest';
+        var isGuest   = (role === 'guest');
+        var isOwner   = (role === 'user+');
+        var canFilter = (role === 'user+' || role === 'admin');
+
+        document.querySelectorAll('.p5-owner-only').forEach(function (el) {
+            el.style.display = isGuest ? 'none' : '';
+        });
+        var typeTabs = document.getElementById('p53TypeTabs');
+        if (typeTabs) typeTabs.style.display = canFilter ? '' : 'none';
+        var exhBox = document.getElementById('p53ExhBox');
+        if (exhBox && !canFilter) exhBox.style.display = 'none';
+        document.querySelectorAll('#p53ExhBox .ktn-icon-btn, #p53AwBox .ktn-icon-btn').forEach(function (el) {
+            el.style.display = isOwner ? '' : 'none';
+        });
+    }
+
+    // ── 展覧会パネル表示制御 ──────────────────────────────────────────────────
+    var exhPanes = document.querySelectorAll('.p5-3-pane[data-pane="live"],.p5-3-pane[data-pane="upcoming"],.p5-3-pane[data-pane="ended"]');
+    var exhBox   = document.getElementById('p53ExhBox');
+    var awBox    = document.getElementById('p53AwBox');
+    var acBox    = document.getElementById('p53AcBox');
+
+    function applyStatusFilter() {
+        var active = document.querySelector('#p53Row2Exh .p5-filter-btn.is-active');
+        var status = active ? active.dataset.status : 'all';
+        exhPanes.forEach(function (p) {
+            p.style.display = (status === 'all' || p.dataset.pane === status) ? 'flex' : 'none';
+        });
+    }
+
+    function applyArticleCatFilter() {
+        var active = document.querySelector('#p53AcBox .p5-filter-btn.is-active');
+        var val = active ? active.dataset.accat : 'all';
+        document.querySelectorAll('#p53AcBox .p5-3-ac').forEach(function (item) {
+            item.style.display = (val === 'all' || item.dataset.accat === val) ? '' : 'none';
+        });
+    }
+
+    function applyLiaisonFilter() {
+        var active = document.querySelector('#p53Row2Aw .p5-filter-btn.is-active');
+        var val = active ? active.dataset.liaison : 'all';
+        document.querySelectorAll('#p53AwBox .masonry-item').forEach(function (item) {
+            var isPortfolio = !!item.querySelector('.aw--portfolio');
+            var show = val === 'all'
+                || (val === 'portfolio' && isPortfolio)
+                || (!isPortfolio && item.querySelector('.lb-dot.' + val));
+            item.style.display = show ? '' : 'none';
+        });
+    }
+
+    // ── 軸①: タイプタブ ──────────────────────────────────────────────────────
+    (function () {
+        var tabs = document.querySelectorAll('#p53TypeTabs .p5-type-tab');
+        tabs.forEach(function (tab) {
+            tab.addEventListener('click', function () {
+                tabs.forEach(function (t) { t.classList.remove('is-active'); });
+                tab.classList.add('is-active');
+                if (tab.dataset.type === 'exh') {
+                    if (exhBox) exhBox.style.display = '';
+                    if (awBox)  awBox.style.display  = 'none';
+                    if (acBox)  acBox.style.display  = 'none';
+                    applyStatusFilter();
+                } else if (tab.dataset.type === 'artwork') {
+                    if (exhBox) exhBox.style.display = 'none';
+                    if (awBox)  awBox.style.display  = '';
+                    if (acBox)  acBox.style.display  = 'none';
+                    applyLiaisonFilter();
+                } else if (tab.dataset.type === 'article') {
+                    if (exhBox) exhBox.style.display = 'none';
+                    if (awBox)  awBox.style.display  = 'none';
+                    if (acBox)  acBox.style.display  = '';
+                    applyArticleCatFilter();
+                }
+            });
+        });
+    }());
+
+    // ── 軸②: 開催状況フィルター（展覧会ボックスヘッド） ──────────────────────
+    (function () {
+        var btns = document.querySelectorAll('#p53Row2Exh .p5-filter-btn');
+        btns.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                btns.forEach(function (b) { b.classList.remove('is-active'); });
+                btn.classList.add('is-active');
+                applyStatusFilter();
+            });
+        });
+    }());
+
+    // ── 軸②: リエゾン種別フィルター（作品ボックスヘッド） ────────────────────
+    (function () {
+        var btns = document.querySelectorAll('#p53Row2Aw .p5-filter-btn');
+        btns.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                btns.forEach(function (b) { b.classList.remove('is-active'); });
+                btn.classList.add('is-active');
+                applyLiaisonFilter();
+            });
+        });
+    }());
+
+    // ── ソート ────────────────────────────────────────────────────────────────
+    var sortEl = document.getElementById('p53Sort');
+    if (sortEl) sortEl.addEventListener('change', function () { console.log('p5-3 exh sort:', this.value); });
+    var sortAwEl = document.getElementById('p53SortAw');
+    if (sortAwEl) sortAwEl.addEventListener('change', function () { console.log('p5-3 aw sort:', this.value); });
+    var sortAcEl = document.getElementById('p53SortAc');
+    if (sortAcEl) sortAcEl.addEventListener('change', function () { console.log('p5-3 ac sort:', this.value); });
+
+    // ── 軸②: カテゴリフィルター（記事ボックスヘッド） ─────────────────────────
+    (function () {
+        var btns = document.querySelectorAll('#p53AcBox .p5-filter-btn');
+        btns.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                btns.forEach(function (b) { b.classList.remove('is-active'); });
+                btn.classList.add('is-active');
+                applyArticleCatFilter();
+            });
+        });
+    }());
+
+    // ── 興味あり解除ボタン（記事） ────────────────────────────────────────────
+    document.querySelectorAll('#p53AcBox .ktn-icon-btn').forEach(function (btn) {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var card = btn.closest('.p5-3-ac');
+            if (card) card.style.display = 'none';
+        });
+    });
+
+    // ── 興味あり解除ボタン（展覧会） ──────────────────────────────────────────
+    document.querySelectorAll('#p53ExhBox .ktn-icon-btn').forEach(function (btn) {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var card = btn.closest('.ec');
+            if (card) card.classList.add('is-hidden');
+        });
+    });
+
+    // ── 興味あり解除ボタン（作品） ────────────────────────────────────────────
+    document.querySelectorAll('#p53AwBox .ktn-icon-btn').forEach(function (btn) {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var item = btn.closest('.masonry-item');
+            if (item) item.style.display = 'none';
+        });
+    });
+
+    // 初期状態: 展覧会パネルをすべて表示
+    applyStatusFilter();
+
+    window.ktnRender = function () { applyRole(); };
+    applyRole();
 };

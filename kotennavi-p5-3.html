@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>興味あり！リスト — 山田 花子 | 個展なび</title>
+  <meta name="description" content="山田 花子の興味あり！リスト。気になる展覧会を一覧表示します。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Noto+Sans+JP:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+  <link rel="stylesheet" href="./kotennavi-components.css">
+</head>
+<body class="p5-page p5-3-page">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- SVGシンボル -->
+<svg width="0" height="0" style="position:absolute;overflow:hidden">
+  <defs>
+    <symbol id="icon-exh" viewBox="40 47 54 54">
+      <path d="M80.09 102.05c-1.22-.8,-2.57-2.87,-3.34-4.33c-2.48-5.91,-4.85-14.23,-13.31-20.15c-1.9-1.23,-2.03-2,-1.94-2.48c.11-.83,.82-1.52,2.3-1.3c11.09,1.95,15.22,3.96,21.07,7.61c7.85,5.36,9.57,10.76,9.65,14.09c.15,2.3,-.18,5.11,-2.61,6.56Z" fill="currentColor"/>
+    </symbol>
+    <symbol id="icon-watch" viewBox="0 0 16 16">
+      <circle cx="8" cy="8" r="7" fill="currentColor"/>
+      <circle cx="8" cy="8" r="2.6" fill="white"/>
+    </symbol>
+    <symbol id="icon-interest-off" viewBox="0 0 16 16">
+      <path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="currentColor"/>
+    </symbol>
+    <symbol id="icon-interest-on" viewBox="0 0 16 16">
+      <path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6" stroke-linejoin="round"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- デモバー -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ロール：</span>
+  <button class="dbtn" onclick="setR('guest',this)">ゲスト</button>
+  <button class="dbtn" onclick="setR('login',this)">ログイン</button>
+  <button class="dbtn on" onclick="setR('user+',this)">user+</button>
+  <button class="dbtn" onclick="setR('admin',this)">管理者</button>
+</div>
+
+<div class="shell">
+<div class="content-wrap" id="contentWrap">
+
+  <header class="ktn-header" id="ktnHeader">
+    <div class="ktn-header__inner">
+      <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+      <div class="ktn-hdr-actions" id="ktnActs"></div>
+    </div>
+  </header>
+
+  <main class="ktn-main" id="ktnMain">
+
+    <!-- A. ヒーロー（コンパクト版） -->
+    <div class="p5-head p5-head--compact">
+      <div class="p5-head__inner">
+        <div class="p5-head__top">
+          <a href="kotennavi-p5.html">
+            <div class="p5-head__avatar" style="background:linear-gradient(135deg,#f0c0d8,#c87aaa)">花</div>
+          </a>
+          <div class="p5-head__info">
+            <div class="p5-head__badge-row">
+              <span class="cb cb-person cb-user">user</span>
+            </div>
+            <h1 class="p5-head__name"><a href="kotennavi-p5.html" style="color:inherit;text-decoration:none">山田 花子</a></h1>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- B. タブナビ -->
+    <nav class="p5-tabnav" id="p5Tabnav" aria-label="マイページ内ナビ">
+      <div class="p5-tabnav__inner">
+        <span class="p5-tabnav__name"><span class="p5-tabnav__name-text">山田 花子</span></span>
+        <a class="p5-tabnav__item" href="kotennavi-p5.html">カレンダー</a>
+        <a class="p5-tabnav__item" href="kotennavi-p5-1.html">ウォッチ</a>
+        <a class="p5-tabnav__item" href="kotennavi-p5-2.html">チェックイン</a>
+        <a class="p5-tabnav__item is-active" href="#">興味あり！</a>
+      </div>
+    </nav>
+
+    <!-- C. メインコンテンツ -->
+    <div class="p5-3-wrap">
+
+      <!-- 軸①: タイプタブ -->
+      <div class="p5-type-tabs" id="p53TypeTabs">
+        <button class="p5-type-tab is-active" data-type="exh">展覧会<span class="p5-list-tab__count">10</span></button>
+        <button class="p5-type-tab" data-type="artwork">作品<span class="p5-list-tab__count">9</span></button>
+        <button class="p5-type-tab" data-type="article">記事<span class="p5-list-tab__count">4</span></button>
+      </div>
+
+      <!-- 展覧会ボックス -->
+      <div class="p5-cbox" id="p53ExhBox">
+        <!-- 軸②: 開催状況フィルター（ボックスヘッド） -->
+        <div class="p5-cbox__head" id="p53Row2Exh">
+          <div class="p5-cbox__chips">
+            <button class="p5-filter-btn is-active" data-status="all">すべて</button>
+            <button class="p5-filter-btn" data-status="live">開催中</button>
+            <button class="p5-filter-btn" data-status="upcoming">これから開催</button>
+            <button class="p5-filter-btn" data-status="ended">終了済み</button>
+          </div>
+          <select class="p5-sort" id="p53Sort">
+            <option value="new">追加日順（新しい順）</option>
+            <option value="old">追加日順（古い順）</option>
+            <option value="end">会期終了日順</option>
+            <option value="title">展覧会名順</option>
+            <option value="interest">興味あり数順</option>
+            <option value="checkin">チェックイン数順</option>
+          </select>
+        </div>
+        <div class="p5-cbox__body">
+
+      <!-- live パネル -->
+      <div class="p5-3-pane" data-pane="live">
+
+        <!-- カード1 -->
+        <a class="ec ec--h p5-exh-card" href="#">
+          <div class="ec--h-row">
+            <div class="ec__poster-col">
+              <div class="ec__poster" style="background:linear-gradient(160deg,#7a3a60,#4a1a40)"></div>
+            </div>
+            <div class="ec__main">
+              <div class="ec__datebar">
+                <div class="ec__datebar-dates">
+                  <span class="year">2026.</span><strong>04.20</strong><span class="dow">mon</span>
+                  <span class="sep">—</span>
+                  <strong>05.10</strong><span class="dow">sun</span>
+                </div>
+                <div class="ec__datebar-meta">
+                  <span class="ec__remain-lt ec__remain-lt--live">残り7日</span>
+                </div>
+              </div>
+              <div class="ec__body">
+                <div class="ec__badge-row">
+                  <span class="cb cb-content cb-exhibition">exhibition</span>
+                  <span class="sb sb-live"><span class="pulse"></span>開催中</span>
+                  <div class="ec-actions-group">
+                    <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>41</span>
+                    <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="10" cy="5" r="4"/><circle cx="5" cy="11" r="2.4"/></svg>9</span>
+                    <button class="ktn-icon-btn on" onclick="this.classList.toggle('on');event.preventDefault();event.stopPropagation()">
+                      <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6"/></svg>
+                      <span class="tip">興味ある！ — 解除する</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="ec__title">「あなたが知らないオノマトペ」</div>
+                <div class="ec__venue">渋谷<span class="ec__venue-sep">|</span>Gallery SOIL 渋谷</div>
+                <div class="p5-exh-card__reason-row p5-owner-only">
+                  <span class="p5-3-interest-date">2026.04.21</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <!-- カード2 -->
+        <a class="ec ec--h p5-exh-card" href="#">
+          <div class="ec--h-row">
+            <div class="ec__poster-col">
+              <div class="ec__poster" style="background:linear-gradient(160deg,#6a3890,#4a1870)"></div>
+            </div>
+            <div class="ec__main">
+              <div class="ec__datebar">
+                <div class="ec__datebar-dates">
+                  <span class="year">2026.</span><strong>04.25</strong><span class="dow">sat</span>
+                  <span class="sep">—</span>
+                  <strong>05.18</strong><span class="dow">mon</span>
+                </div>
+                <div class="ec__datebar-meta">
+                  <span class="ec__remain-lt ec__remain-lt--live">残り15日</span>
+                </div>
+              </div>
+              <div class="ec__body">
+                <div class="ec__badge-row">
+                  <span class="cb cb-content cb-exhibition">exhibition</span>
+                  <span class="sb sb-live"><span class="pulse"></span>開催中</span>
+                  <div class="ec-actions-group">
+                    <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>28</span>
+                    <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="10" cy="5" r="4"/><circle cx="5" cy="11" r="2.4"/></svg>4</span>
+                    <button class="ktn-icon-btn on" onclick="this.classList.toggle('on');event.preventDefault();event.stopPropagation()">
+                      <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6"/></svg>
+                      <span class="tip">興味ある！ — 解除する</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="ec__title">「光の旅路 — 伊藤慶子 個展」</div>
+                <div class="ec__venue">渋谷<span class="ec__venue-sep">|</span>Gallery SOIL 渋谷</div>
+                <div class="p5-exh-card__reason-row p5-owner-only">
+                  <span class="p5-3-interest-date">2026.04.26</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </a>
+
+      </div><!-- /live pane -->
+
+      <!-- upcoming パネル -->
+      <div class="p5-3-pane" data-pane="upcoming">
+
+        <!-- カード1 -->
+        <a class="ec ec--h p5-exh-card" href="#">
+          <div class="ec--h-row">
+            <div class="ec__poster-col">
+              <div class="ec__poster" style="background:linear-gradient(160deg,#2a5f7a,#1a3f5a)"></div>
+            </div>
+            <div class="ec__main">
+              <div class="ec__datebar">
+                <div class="ec__datebar-dates">
+                  <span class="year">2026.</span><strong>05.08</strong><span class="dow">fri</span>
+                  <span class="sep">—</span>
+                  <strong>05.25</strong><span class="dow">mon</span>
+                </div>
+                <div class="ec__datebar-meta">
+                  <span class="ec__remain-lt">5日後開始</span>
+                </div>
+              </div>
+              <div class="ec__body">
+                <div class="ec__badge-row">
+                  <span class="cb cb-content cb-exhibition">exhibition</span>
+                  <span class="sb sb-upcoming">開催予定</span>
+                  <div class="ec-actions-group">
+                    <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>18</span>
+                    <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="10" cy="5" r="4"/><circle cx="5" cy="11" r="2.4"/></svg>2</span>
+                    <button class="ktn-icon-btn on" onclick="this.classList.toggle('on');event.preventDefault();event.stopPropagation()">
+                      <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6"/></svg>
+                      <span class="tip">興味ある！ — 解除する</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="ec__title">「橋本明 × 山本美咲 二人展」</div>
+                <div class="ec__venue">中央区<span class="ec__venue-sep">|</span>Art Space 光 銀座</div>
+                <div class="p5-exh-card__reason-row p5-owner-only">
+                  <span class="p5-3-interest-date">2026.04.20</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <!-- カード2 -->
+        <a class="ec ec--h p5-exh-card" href="#">
+          <div class="ec--h-row">
+            <div class="ec__poster-col">
+              <div class="ec__poster" style="background:linear-gradient(160deg,#3a604a,#1a4030)"></div>
+            </div>
+            <div class="ec__main">
+              <div class="ec__datebar">
+                <div class="ec__datebar-dates">
+                  <span class="year">2026.</span><strong>05.15</strong><span class="dow">fri</span>
+                  <span class="sep">—</span>
+                  <strong>05.30</strong><span class="dow">sat</span>
+                </div>
+                <div class="ec__datebar-meta">
+                  <span class="ec__remain-lt">12日後開始</span>
+                </div>
+              </div>
+              <div class="ec__body">
+                <div class="ec__badge-row">
+                  <span class="cb cb-content cb-exhibition">exhibition</span>
+                  <span class="sb sb-upcoming">開催予定</span>
+                  <div class="ec-actions-group">
+                    <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>9</span>
+                    <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="10" cy="5" r="4"/><circle cx="5" cy="11" r="2.4"/></svg>1</span>
+                    <button class="ktn-icon-btn on" onclick="this.classList.toggle('on');event.preventDefault();event.stopPropagation()">
+                      <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6"/></svg>
+                      <span class="tip">興味ある！ — 解除する</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="ec__title">「版画の地平線 — 白根哲 個展」</div>
+                <div class="ec__venue">代官山<span class="ec__venue-sep">|</span>Gallery 森 代官山</div>
+                <div class="p5-exh-card__reason-row p5-owner-only">
+                  <span class="p5-3-interest-date">2026.04.18</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <!-- カード3 -->
+        <a class="ec ec--h p5-exh-card" href="#">
+          <div class="ec--h-row">
+            <div class="ec__poster-col">
+              <div class="ec__poster" style="background:linear-gradient(160deg,#5a3a7a,#3a1a5a)"></div>
+            </div>
+            <div class="ec__main">
+              <div class="ec__datebar">
+                <div class="ec__datebar-dates">
+                  <span class="year">2026.</span><strong>05.22</strong><span class="dow">fri</span>
+                  <span class="sep">—</span>
+                  <strong>06.07</strong><span class="dow">sun</span>
+                </div>
+                <div class="ec__datebar-meta">
+                  <span class="ec__remain-lt">19日後開始</span>
+                </div>
+              </div>
+              <div class="ec__body">
+                <div class="ec__badge-row">
+                  <span class="cb cb-content cb-exhibition">exhibition</span>
+                  <span class="sb sb-upcoming">開催予定</span>
+                  <div class="ec-actions-group">
+                    <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>6</span>
+                    <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="10" cy="5" r="4"/><circle cx="5" cy="11" r="2.4"/></svg>0</span>
+                    <button class="ktn-icon-btn on" onclick="this.classList.toggle('on');event.preventDefault();event.stopPropagation()">
+                      <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6"/></svg>
+                      <span class="tip">興味ある！ — 解除する</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="ec__title">「記憶の断層 — 中村幸代 個展」</div>
+                <div class="ec__venue">表参道<span class="ec__venue-sep">|</span>White Box 表参道</div>
+                <div class="p5-exh-card__reason-row p5-owner-only">
+                  <span class="p5-3-interest-date">2026.04.10</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </a>
+
+      </div><!-- /upcoming pane -->
+
+      <!-- ended パネル -->
+      <div class="p5-3-pane" data-pane="ended">
+
+        <!-- カード1 -->
+        <a class="ec ec--h p5-exh-card" href="#">
+          <div class="ec--h-row">
+            <div class="ec__poster-col">
+              <div class="ec__poster" style="background:linear-gradient(160deg,#8b5e3c,#5a3c1e)"></div>
+            </div>
+            <div class="ec__main">
+              <div class="ec__datebar">
+                <div class="ec__datebar-dates">
+                  <span class="year">2026.</span><strong>04.01</strong><span class="dow">wed</span>
+                  <span class="sep">—</span>
+                  <strong>04.20</strong><span class="dow">mon</span>
+                </div>
+              </div>
+              <div class="ec__body">
+                <div class="ec__badge-row">
+                  <span class="cb cb-content cb-exhibition">exhibition</span>
+                  <div class="ec-actions-group">
+                    <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>19</span>
+                    <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="10" cy="5" r="4"/><circle cx="5" cy="11" r="2.4"/></svg>3</span>
+                    <button class="ktn-icon-btn on" onclick="this.classList.toggle('on');event.preventDefault();event.stopPropagation()">
+                      <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6"/></svg>
+                      <span class="tip">興味ある！ — 解除する</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="ec__title">「春の気配 — 鈴木一郎 個展」</div>
+                <div class="ec__venue">中央区<span class="ec__venue-sep">|</span>Art Space 光 銀座</div>
+                <div class="p5-exh-card__reason-row p5-owner-only">
+                  <span class="p5-3-interest-date">2026.03.25</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <!-- カード2 -->
+        <a class="ec ec--h p5-exh-card" href="#">
+          <div class="ec--h-row">
+            <div class="ec__poster-col">
+              <div class="ec__poster" style="background:linear-gradient(160deg,#4a5a6a,#2a3a4a)"></div>
+            </div>
+            <div class="ec__main">
+              <div class="ec__datebar">
+                <div class="ec__datebar-dates">
+                  <span class="year">2026.</span><strong>03.10</strong><span class="dow">tue</span>
+                  <span class="sep">—</span>
+                  <strong>03.30</strong><span class="dow">mon</span>
+                </div>
+              </div>
+              <div class="ec__body">
+                <div class="ec__badge-row">
+                  <span class="cb cb-content cb-exhibition">exhibition</span>
+                  <div class="ec-actions-group">
+                    <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>14</span>
+                    <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="10" cy="5" r="4"/><circle cx="5" cy="11" r="2.4"/></svg>2</span>
+                    <button class="ktn-icon-btn on" onclick="this.classList.toggle('on');event.preventDefault();event.stopPropagation()">
+                      <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6"/></svg>
+                      <span class="tip">興味ある！ — 解除する</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="ec__title">「光の痕跡 — 高橋一朗 個展」</div>
+                <div class="ec__venue">渋谷<span class="ec__venue-sep">|</span>Gallery SOIL 渋谷</div>
+                <div class="p5-exh-card__reason-row p5-owner-only">
+                  <span class="p5-3-interest-date">2026.03.05</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <!-- カード3 -->
+        <a class="ec ec--h p5-exh-card" href="#">
+          <div class="ec--h-row">
+            <div class="ec__poster-col">
+              <div class="ec__poster" style="background:linear-gradient(160deg,#5a4a2a,#3a2a10)"></div>
+            </div>
+            <div class="ec__main">
+              <div class="ec__datebar">
+                <div class="ec__datebar-dates">
+                  <span class="year">2026.</span><strong>02.20</strong><span class="dow">fri</span>
+                  <span class="sep">—</span>
+                  <strong>03.08</strong><span class="dow">sun</span>
+                </div>
+              </div>
+              <div class="ec__body">
+                <div class="ec__badge-row">
+                  <span class="cb cb-content cb-exhibition">exhibition</span>
+                  <div class="ec-actions-group">
+                    <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>7</span>
+                    <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="10" cy="5" r="4"/><circle cx="5" cy="11" r="2.4"/></svg>1</span>
+                    <button class="ktn-icon-btn on" onclick="this.classList.toggle('on');event.preventDefault();event.stopPropagation()">
+                      <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6"/></svg>
+                      <span class="tip">興味ある！ — 解除する</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="ec__title">「土の詩 — 村上玲子 陶芸展」</div>
+                <div class="ec__venue">代官山<span class="ec__venue-sep">|</span>Gallery 森 代官山</div>
+                <div class="p5-exh-card__reason-row p5-owner-only">
+                  <span class="p5-3-interest-date">2026.02.15</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <!-- カード4 -->
+        <a class="ec ec--h p5-exh-card" href="#">
+          <div class="ec--h-row">
+            <div class="ec__poster-col">
+              <div class="ec__poster" style="background:linear-gradient(160deg,#2a5a3a,#1a3a20)"></div>
+            </div>
+            <div class="ec__main">
+              <div class="ec__datebar">
+                <div class="ec__datebar-dates">
+                  <span class="year">2026.</span><strong>01.15</strong><span class="dow">thu</span>
+                  <span class="sep">—</span>
+                  <strong>02.08</strong><span class="dow">sun</span>
+                </div>
+              </div>
+              <div class="ec__body">
+                <div class="ec__badge-row">
+                  <span class="cb cb-content cb-exhibition">exhibition</span>
+                  <div class="ec-actions-group">
+                    <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>22</span>
+                    <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="10" cy="5" r="4"/><circle cx="5" cy="11" r="2.4"/></svg>5</span>
+                    <button class="ktn-icon-btn on" onclick="this.classList.toggle('on');event.preventDefault();event.stopPropagation()">
+                      <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6"/></svg>
+                      <span class="tip">興味ある！ — 解除する</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="ec__title">「冬の情景 — 田中透 グループ展」</div>
+                <div class="ec__venue">目黒<span class="ec__venue-sep">|</span>White Box 中目黒</div>
+                <div class="p5-exh-card__reason-row p5-owner-only">
+                  <span class="p5-3-interest-date">2026.01.10</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <!-- カード5 -->
+        <a class="ec ec--h p5-exh-card" href="#">
+          <div class="ec--h-row">
+            <div class="ec__poster-col">
+              <div class="ec__poster" style="background:linear-gradient(160deg,#6a6a40,#4a4a20)"></div>
+            </div>
+            <div class="ec__main">
+              <div class="ec__datebar">
+                <div class="ec__datebar-dates">
+                  <span class="year">2025.</span><strong>12.05</strong><span class="dow">fri</span>
+                  <span class="sep">—</span>
+                  <strong>12.25</strong><span class="dow">thu</span>
+                </div>
+              </div>
+              <div class="ec__body">
+                <div class="ec__badge-row">
+                  <span class="cb cb-content cb-exhibition">exhibition</span>
+                  <div class="ec-actions-group">
+                    <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>33</span>
+                    <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="10" cy="5" r="4"/><circle cx="5" cy="11" r="2.4"/></svg>8</span>
+                    <button class="ktn-icon-btn on" onclick="this.classList.toggle('on');event.preventDefault();event.stopPropagation()">
+                      <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6"/></svg>
+                      <span class="tip">興味ある！ — 解除する</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="ec__title">「年の瀬の素描 グループ展」</div>
+                <div class="ec__venue">渋谷<span class="ec__venue-sep">|</span>Gallery SOIL 渋谷</div>
+                <div class="p5-exh-card__reason-row p5-owner-only">
+                  <span class="p5-3-interest-date">2025.11.28</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </a>
+
+      </div><!-- /ended pane -->
+
+        </div><!-- /p5-cbox__body -->
+      </div><!-- /p53ExhBox -->
+
+      <!-- 作品ボックス（初期非表示） -->
+      <div class="p5-cbox" id="p53AwBox" style="display:none">
+        <!-- 軸②: リエゾン種別フィルター（ボックスヘッド） -->
+        <div class="p5-cbox__head" id="p53Row2Aw">
+          <div class="p5-cbox__chips">
+            <button class="p5-filter-btn is-active" data-liaison="all">すべて</button>
+            <button class="p5-filter-btn" data-liaison="li">リエゾン</button>
+            <button class="p5-filter-btn" data-liaison="li-plus">リエゾン+</button>
+            <button class="p5-filter-btn" data-liaison="portfolio">ポートフォリオ</button>
+          </div>
+          <select class="p5-sort" id="p53SortAw">
+            <option value="new">追加日順（新しい順）</option>
+            <option value="old">追加日順（古い順）</option>
+            <option value="year">制作年順</option>
+            <option value="title">作品名順</option>
+            <option value="creator">クリエイター名順</option>
+          </select>
+        </div>
+        <div class="p5-cbox__body">
+      <div class="p5-3-pane" data-pane="artwork">
+        <div class="masonry" style="padding:16px">
+
+          <!-- リエゾン 1 -->
+          <div class="masonry-item">
+            <a class="aw" href="#">
+              <div class="aw__img">
+                <div class="aw__lb"><span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span></div>
+                <div class="aw__img-ph t-portrait"></div>
+              </div>
+              <div class="aw__body">
+                <div class="aw__badge-row">
+                  <span class="cb cb-content cb-artwork">artwork</span>
+                  <span class="aws aws-sale">販売中</span>
+                </div>
+                <div class="aw__title-row"><div class="aw__title">葉脈の記譜 #4</div></div>
+                <div class="aw__creator">小野 友美</div>
+                <div class="aw__spec">2025 / 鉛筆・紙 / 42.0 × 29.7 cm</div>
+                <div class="aw__action-row">
+                  <span class="aw__counter"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>12</span>
+                  <button class="ktn-icon-btn on" onclick="this.classList.toggle('on');event.preventDefault()"><svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6"/></svg><span class="tip">興味ある！ — 解除する</span></button>
+                </div>
+                <div class="p5-3-interest-date p5-owner-only">2026.04.18</div>
+              </div>
+            </a>
+          </div>
+
+          <!-- リエゾン+ 1 -->
+          <div class="masonry-item">
+            <a class="aw aw--plus" href="#">
+              <div class="aw__img">
+                <div class="aw__lb"><span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span></div>
+                <div class="aw__img-ph t-square"></div>
+              </div>
+              <div class="aw__body">
+                <div class="aw__badge-row">
+                  <span class="cb cb-content cb-artwork">artwork</span>
+                  <span class="aws aws-applying">申込中</span>
+                </div>
+                <div class="aw__title-row"><div class="aw__title">青の断片 — 連作より</div></div>
+                <div class="aw__creator">田中 礼子</div>
+                <div class="aw__spec">2024 / アクリル・キャンバス / 53.0 × 45.5 cm</div>
+                <div class="aw__action-row">
+                  <span class="aw__counter"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>17</span>
+                  <button class="ktn-icon-btn on" onclick="this.classList.toggle('on');event.preventDefault()"><svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6"/></svg><span class="tip">興味ある！ — 解除する</span></button>
+                </div>
+                <div class="p5-3-interest-date p5-owner-only">2026.04.12</div>
+              </div>
+              <div class="aw__foot">
+                <div>
+                  <div class="aw__price"><span class="currency">¥</span>68,000<span class="tax">税込</span></div>
+                  <div class="aw__queue">3人が申込中（追加申込可）</div>
+                </div>
+                <button class="aw__apply-btn" onclick="event.preventDefault()"><svg viewBox="0 0 14 14" fill="none" width="11" height="11"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>購入申込</button>
+              </div>
+            </a>
+          </div>
+
+          <!-- リエゾン 2 -->
+          <div class="masonry-item">
+            <a class="aw aw--nsale" href="#">
+              <div class="aw__img">
+                <div class="aw__lb"><span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span></div>
+                <div class="aw__img-ph t-warm"></div>
+              </div>
+              <div class="aw__body">
+                <div class="aw__badge-row">
+                  <span class="cb cb-content cb-artwork">artwork</span>
+                  <span class="aws aws-nsale">非売品</span>
+                </div>
+                <div class="aw__title-row"><div class="aw__title">白磁花器「春曙」</div></div>
+                <div class="aw__creator">村上 玲子</div>
+                <div class="aw__spec">2025 / 陶磁器 / H 28.0 × φ 14.0 cm</div>
+                <div class="aw__action-row">
+                  <span class="aw__counter"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>8</span>
+                  <button class="ktn-icon-btn on" onclick="this.classList.toggle('on');event.preventDefault()"><svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6"/></svg><span class="tip">興味ある！ — 解除する</span></button>
+                </div>
+                <div class="p5-3-interest-date p5-owner-only">2026.03.30</div>
+              </div>
+            </a>
+          </div>
+
+          <!-- リエゾン+ 2 -->
+          <div class="masonry-item">
+            <a class="aw aw--plus" href="#">
+              <div class="aw__img">
+                <div class="aw__lb"><span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span></div>
+                <div class="aw__img-ph t-light"></div>
+              </div>
+              <div class="aw__body">
+                <div class="aw__badge-row">
+                  <span class="cb cb-content cb-artwork">artwork</span>
+                  <span class="aws aws-inquiry">要問合せ</span>
+                </div>
+                <div class="aw__title-row"><div class="aw__title">春を待つ窓辺</div></div>
+                <div class="aw__creator">高橋 一朗</div>
+                <div class="aw__spec">2024 / 水彩・紙 / 24.2 × 33.3 cm</div>
+                <div class="aw__action-row">
+                  <span class="aw__counter"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>6</span>
+                  <button class="ktn-icon-btn on" onclick="this.classList.toggle('on');event.preventDefault()"><svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6"/></svg><span class="tip">興味ある！ — 解除する</span></button>
+                </div>
+                <div class="p5-3-interest-date p5-owner-only">2026.03.15</div>
+              </div>
+              <div class="aw__foot">
+                <div class="aw__price"><span class="currency">¥</span>45,000<span class="tax">税込</span></div>
+                <button class="aw__inquiry-btn" onclick="event.preventDefault()"><svg viewBox="0 0 14 14" fill="none" width="11" height="11"><path d="M7 2a4 4 0 0 1 .3 8H7v1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="7" cy="12.5" r=".8" fill="currentColor"/></svg>問い合わせる</button>
+              </div>
+            </a>
+          </div>
+
+          <!-- リエゾン 3 -->
+          <div class="masonry-item">
+            <a class="aw" href="#">
+              <div class="aw__img">
+                <div class="aw__lb"><span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span></div>
+                <div class="aw__img-ph t-cool"></div>
+              </div>
+              <div class="aw__body">
+                <div class="aw__badge-row">
+                  <span class="cb cb-content cb-artwork">artwork</span>
+                </div>
+                <div class="aw__title-row"><div class="aw__title">海の記憶 — 連作 #2</div></div>
+                <div class="aw__creator">田中 礼子</div>
+                <div class="aw__spec">2024 / 油彩・麻布 / 72.7 × 60.6 cm</div>
+                <div class="aw__action-row">
+                  <span class="aw__counter"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>4</span>
+                  <button class="ktn-icon-btn on" onclick="this.classList.toggle('on');event.preventDefault()"><svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6"/></svg><span class="tip">興味ある！ — 解除する</span></button>
+                </div>
+                <div class="p5-3-interest-date p5-owner-only">2026.02.28</div>
+              </div>
+            </a>
+          </div>
+
+          <!-- リエゾン+ 3 -->
+          <div class="masonry-item">
+            <a class="aw aw--plus aw--sold" href="#">
+              <div class="aw__img">
+                <div class="aw__lb"><span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span></div>
+                <div class="aw__img-ph t-portrait"></div>
+                <div class="aw__sold-ribbon"><div class="aw__sold-ribbon-inner">SOLD OUT</div></div>
+              </div>
+              <div class="aw__body">
+                <div class="aw__badge-row">
+                  <span class="cb cb-content cb-artwork">artwork</span>
+                  <span class="aws aws-sold">売却済</span>
+                </div>
+                <div class="aw__title-row"><div class="aw__title">根の記憶、光の痕跡</div></div>
+                <div class="aw__creator">小野 友美</div>
+                <div class="aw__spec">2025 / 油彩・キャンバス / 100.0 × 80.0 cm</div>
+                <div class="aw__action-row">
+                  <span class="aw__counter"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>31</span>
+                  <button class="ktn-icon-btn on" onclick="this.classList.toggle('on');event.preventDefault()"><svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6"/></svg><span class="tip">興味ある！ — 解除する</span></button>
+                </div>
+                <div class="p5-3-interest-date p5-owner-only">2026.02.10</div>
+              </div>
+              <div class="aw__foot">
+                <div class="aw__price"><span class="currency">¥</span>280,000<span class="tax">税込</span></div>
+              </div>
+            </a>
+          </div>
+
+          <!-- ポートフォリオ 1 -->
+          <div class="masonry-item">
+            <a class="aw aw--portfolio" href="#" data-liaison="portfolio">
+              <div class="aw__img">
+                <div class="aw__img-ph t-portrait"></div>
+              </div>
+              <div class="aw__body">
+                <div class="aw__badge-row">
+                  <span class="cb cb-content cb-artwork">artwork</span>
+                </div>
+                <div class="aw__title-row"><div class="aw__title">夜の輪郭 #3</div></div>
+                <div class="aw__creator">田中 透</div>
+                <div class="aw__spec">2025 / 油彩・キャンバス / 53.0 × 45.5 cm</div>
+                <div class="aw__action-row">
+                  <span class="aw__counter"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>7</span>
+                  <button class="ktn-icon-btn on" onclick="this.classList.toggle('on');event.preventDefault()"><svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6"/></svg><span class="tip">興味ある！ — 解除する</span></button>
+                </div>
+                <div class="p5-3-interest-date p5-owner-only">2026.04.15</div>
+              </div>
+            </a>
+          </div>
+
+          <!-- ポートフォリオ 2 -->
+          <div class="masonry-item">
+            <a class="aw aw--portfolio" href="#" data-liaison="portfolio">
+              <div class="aw__img">
+                <div class="aw__img-ph t-land"></div>
+              </div>
+              <div class="aw__body">
+                <div class="aw__badge-row">
+                  <span class="cb cb-content cb-artwork">artwork</span>
+                </div>
+                <div class="aw__title-row"><div class="aw__title">春霞、遠い山</div></div>
+                <div class="aw__creator">伊藤 慶子</div>
+                <div class="aw__spec">2024 / 日本画・和紙 / 60.6 × 91.0 cm</div>
+                <div class="aw__action-row">
+                  <span class="aw__counter"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>3</span>
+                  <button class="ktn-icon-btn on" onclick="this.classList.toggle('on');event.preventDefault()"><svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6"/></svg><span class="tip">興味ある！ — 解除する</span></button>
+                </div>
+                <div class="p5-3-interest-date p5-owner-only">2026.03.22</div>
+              </div>
+            </a>
+          </div>
+
+          <!-- ポートフォリオ 3 -->
+          <div class="masonry-item">
+            <a class="aw aw--portfolio" href="#" data-liaison="portfolio">
+              <div class="aw__img">
+                <div class="aw__img-ph t-square"></div>
+              </div>
+              <div class="aw__body">
+                <div class="aw__badge-row">
+                  <span class="cb cb-content cb-artwork">artwork</span>
+                </div>
+                <div class="aw__title-row"><div class="aw__title">記憶の欠片 VII</div></div>
+                <div class="aw__creator">小野 友美</div>
+                <div class="aw__spec">2026 / 鉛筆・紙 / 29.7 × 42.0 cm</div>
+                <div class="aw__action-row">
+                  <span class="aw__counter"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>11</span>
+                  <button class="ktn-icon-btn on" onclick="this.classList.toggle('on');event.preventDefault()"><svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6"/></svg><span class="tip">興味ある！ — 解除する</span></button>
+                </div>
+                <div class="p5-3-interest-date p5-owner-only">2026.02.08</div>
+              </div>
+            </a>
+          </div>
+
+        </div><!-- /masonry -->
+      </div><!-- /artwork pane -->
+        </div><!-- /p5-cbox__body -->
+      </div><!-- /p53AwBox -->
+
+      <!-- 記事ボックス（初期非表示） -->
+      <div class="p5-cbox" id="p53AcBox" style="display:none">
+        <div class="p5-cbox__head">
+          <div class="p5-cbox__chips">
+            <button class="p5-filter-btn is-active" data-accat="all">すべて</button>
+            <button class="p5-filter-btn" data-accat="interview">インタビュー</button>
+            <button class="p5-filter-btn" data-accat="report">レポート</button>
+            <button class="p5-filter-btn" data-accat="column">コラム</button>
+            <button class="p5-filter-btn" data-accat="news">ニュース</button>
+          </div>
+          <select class="p5-sort" id="p53SortAc">
+            <option value="new">追加日順（新しい順）</option>
+            <option value="old">追加日順（古い順）</option>
+            <option value="pub">公開日順</option>
+            <option value="title">記事タイトル順</option>
+            <option value="author">投稿者名順</option>
+          </select>
+        </div>
+        <div class="p5-cbox__body">
+
+          <!-- 記事1 インタビュー -->
+          <a class="p5-3-ac" href="#" data-accat="interview">
+            <div class="p5-3-ac__thumb" style="background:linear-gradient(140deg,#2a5f7a,#1a3f5a)"></div>
+            <div class="p5-3-ac__body">
+              <div class="p5-3-ac__meta">
+                <span class="cb cb-content">article</span>
+                <span class="p5-3-ac__cat">インタビュー</span>
+                <span class="itn-count sm" style="margin-left:auto"><svg><use href="#icon-interest-off"/></svg>47</span>
+                <button class="itn-btn sm on" onclick="this.classList.toggle('on');event.preventDefault()"><svg><use href="#icon-interest-on"/></svg><span class="tip">興味ある！ — 解除する</span></button>
+              </div>
+              <div class="p5-3-ac__title">田中透が語る余白の美学 — 光と影を描き続ける理由</div>
+              <div class="p5-3-ac__source">個展なび編集部 · 2026.03.10</div>
+              <div class="p5-exh-card__reason-row p5-owner-only">
+                <span class="p5-3-interest-date">2026.04.12</span>
+              </div>
+            </div>
+          </a>
+
+          <!-- 記事2 レポート -->
+          <a class="p5-3-ac" href="#" data-accat="report">
+            <div class="p5-3-ac__thumb" style="background:linear-gradient(140deg,#7a3a60,#4a1a40)"></div>
+            <div class="p5-3-ac__body">
+              <div class="p5-3-ac__meta">
+                <span class="cb cb-content">article</span>
+                <span class="p5-3-ac__cat">レポート</span>
+                <span class="itn-count sm" style="margin-left:auto"><svg><use href="#icon-interest-off"/></svg>23</span>
+                <button class="itn-btn sm" onclick="this.classList.toggle('on');event.preventDefault()"><svg><use href="#icon-interest-off"/></svg><span class="tip">興味ある！に追加する</span></button>
+              </div>
+              <div class="p5-3-ac__title">Gallery SOIL 春季グループ展 — 5作家5色のひらき</div>
+              <div class="p5-3-ac__source">個展なび編集部 · 2026.04.08</div>
+              <div class="p5-exh-card__reason-row p5-owner-only">
+                <span class="p5-3-interest-date">2026.04.10</span>
+              </div>
+            </div>
+          </a>
+
+          <!-- 記事3 コラム -->
+          <a class="p5-3-ac" href="#" data-accat="column">
+            <div class="p5-3-ac__thumb" style="background:linear-gradient(140deg,#6a4a2a,#4a2a10)"></div>
+            <div class="p5-3-ac__body">
+              <div class="p5-3-ac__meta">
+                <span class="cb cb-content">article</span>
+                <span class="p5-3-ac__cat">コラム</span>
+                <span class="itn-count sm" style="margin-left:auto"><svg><use href="#icon-interest-off"/></svg>61</span>
+                <button class="itn-btn sm on" onclick="this.classList.toggle('on');event.preventDefault()"><svg><use href="#icon-interest-on"/></svg><span class="tip">興味ある！ — 解除する</span></button>
+              </div>
+              <div class="p5-3-ac__title">小規模ギャラリーをより深く楽しむために — 見方と心得</div>
+              <div class="p5-3-ac__source">個展なびコラム · 2026.02.20</div>
+              <div class="p5-exh-card__reason-row p5-owner-only">
+                <span class="p5-3-interest-date">2026.03.01</span>
+              </div>
+            </div>
+          </a>
+
+          <!-- 記事4 ニュース -->
+          <a class="p5-3-ac" href="#" data-accat="news">
+            <div class="p5-3-ac__thumb" style="background:linear-gradient(140deg,#3a6a4a,#1a4a2a)"></div>
+            <div class="p5-3-ac__body">
+              <div class="p5-3-ac__meta">
+                <span class="cb cb-content">article</span>
+                <span class="p5-3-ac__cat">ニュース</span>
+                <span class="itn-count sm" style="margin-left:auto"><svg><use href="#icon-interest-off"/></svg>15</span>
+                <button class="itn-btn sm" onclick="this.classList.toggle('on');event.preventDefault()"><svg><use href="#icon-interest-off"/></svg><span class="tip">興味ある！に追加する</span></button>
+              </div>
+              <div class="p5-3-ac__title">チェックイン&amp;レビュー機能が大幅アップデート — 新機能のご案内</div>
+              <div class="p5-3-ac__source">個展なびニュース · 2026.04.01</div>
+              <div class="p5-exh-card__reason-row p5-owner-only">
+                <span class="p5-3-interest-date">2026.04.05</span>
+              </div>
+            </div>
+          </a>
+
+        </div><!-- /p5-cbox__body -->
+      </div><!-- /p53AcBox -->
+
+    </div><!-- /p5-3-wrap -->
+
+    <!-- G. おすすめの展覧会 -->
+    <div class="p5-recommended">
+      <div class="p5-recommended__inner">
+        <section class="p2-related">
+          <div class="ktn-section__head">
+            <h2 class="ktn-section__title">おすすめの展覧会<span class="p2-related__en">Recommended</span></h2>
+            <a href="#" class="ktn-section__more">もっと見る →</a>
+          </div>
+          <div class="p5-rec-grid">
+            <!-- 展覧会カード① -->
+            <a class="ec" href="#">
+              <div class="ec__poster" style="background:linear-gradient(160deg,#7a3a60,#4a1a40)">
+                <div class="ec__poster-noimg" style="min-height:160px"></div>
+                <div class="ec__poster-overlay">
+                  <div class="ec__poster-dates">
+                    <span class="year">2026.</span><strong>04.18</strong><span class="dow">sat</span>
+                    <span class="sep">—</span>
+                    <strong>05.02</strong><span class="dow">sat</span>
+                  </div>
+                  <div class="ec__poster-meta">
+                    <span class="ec__remain ec__remain--live">開催中</span>
+                    <span class="meta-sep">|</span>
+                    <span>11:00-19:00</span>
+                  </div>
+                </div>
+              </div>
+              <div class="ec__body">
+                <div class="ec__badge-row">
+                  <span class="cb cb-content cb-exhibition">exhibition</span>
+                  <span class="sb sb-live"><span class="ending-dot"></span>開催中</span>
+                </div>
+                <div class="ec__title">鈴木花実「モノクロームの詩」</div>
+                <div class="ec__venue">渋谷<span class="ec__venue-sep">|</span>Art Space 光 銀座</div>
+              </div>
+              <div class="ec__foot">
+                <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>34</span>
+                <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="10" cy="5" r="4"/><circle cx="5" cy="11" r="2.4"/></svg>2</span>
+                <button class="ktn-icon-btn on" onclick="this.classList.toggle('on');event.preventDefault()">
+                  <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>
+                  <span class="tip">興味ある！から削除する</span>
+                </button>
+              </div>
+            </a>
+            <!-- 展覧会カード② -->
+            <a class="ec" href="#">
+              <div class="ec__poster" style="background:linear-gradient(160deg,#2a5f7a,#1a3f5a)">
+                <div class="ec__poster-noimg" style="min-height:160px"></div>
+                <div class="ec__poster-overlay">
+                  <div class="ec__poster-dates">
+                    <span class="year">2026.</span><strong>05.09</strong><span class="dow">sat</span>
+                    <span class="sep">—</span>
+                    <strong>05.23</strong><span class="dow">sat</span>
+                  </div>
+                  <div class="ec__poster-meta">
+                    <span class="ec__remain ec__remain--soon">10日後</span>
+                    <span class="meta-sep">|</span>
+                    <span>10:00-18:00</span>
+                  </div>
+                </div>
+              </div>
+              <div class="ec__body">
+                <div class="ec__badge-row">
+                  <span class="cb cb-content cb-exhibition">exhibition</span>
+                  <span class="sb sb-soon">もうすぐ開催</span>
+                </div>
+                <div class="ec__title">田中 透「光の航跡」</div>
+                <div class="ec__venue">目黒<span class="ec__venue-sep">|</span>Gallery 森 代官山</div>
+              </div>
+              <div class="ec__foot">
+                <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>21</span>
+                <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="10" cy="5" r="4"/><circle cx="5" cy="11" r="2.4"/></svg>1</span>
+                <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                  <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>
+                  <span class="tip">興味ある！に追加する</span>
+                </button>
+              </div>
+            </a>
+            <!-- 展覧会カード③ -->
+            <a class="ec" href="#">
+              <div class="ec__poster" style="background:linear-gradient(160deg,#8b5e3c,#5a3c1e)">
+                <div class="ec__poster-noimg" style="min-height:160px"></div>
+                <div class="ec__poster-overlay">
+                  <div class="ec__poster-dates">
+                    <span class="year">2026.</span><strong>04.24</strong><span class="dow">fri</span>
+                    <span class="sep">—</span>
+                    <strong>05.10</strong><span class="dow">sun</span>
+                  </div>
+                  <div class="ec__poster-meta">
+                    <span class="ec__remain ec__remain--live">開催中</span>
+                    <span class="meta-sep">|</span>
+                    <span>11:00-19:00</span>
+                  </div>
+                </div>
+              </div>
+              <div class="ec__body">
+                <div class="ec__badge-row">
+                  <span class="cb cb-content cb-exhibition">exhibition</span>
+                  <span class="sb sb-live"><span class="ending-dot"></span>開催中</span>
+                </div>
+                <div class="ec__title">Gallery SOIL 渋谷「春の群像展」</div>
+                <div class="ec__venue">渋谷<span class="ec__venue-sep">|</span>Gallery SOIL 渋谷</div>
+              </div>
+              <div class="ec__foot">
+                <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>58</span>
+                <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="10" cy="5" r="4"/><circle cx="5" cy="11" r="2.4"/></svg>4</span>
+                <button class="ktn-icon-btn on" onclick="this.classList.toggle('on');event.preventDefault()">
+                  <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>
+                  <span class="tip">興味ある！から削除する</span>
+                </button>
+              </div>
+            </a>
+            <!-- 展覧会カード④ -->
+            <a class="ec" href="#">
+              <div class="ec__poster" style="background:linear-gradient(160deg,#4a6878,#2a4858)">
+                <div class="ec__poster-noimg" style="min-height:160px"></div>
+                <div class="ec__poster-overlay">
+                  <div class="ec__poster-dates">
+                    <span class="year">2026.</span><strong>05.15</strong><span class="dow">fri</span>
+                    <span class="sep">—</span>
+                    <strong>05.31</strong><span class="dow">sun</span>
+                  </div>
+                  <div class="ec__poster-meta">
+                    <span class="ec__remain ec__remain--soon">16日後</span>
+                    <span class="meta-sep">|</span>
+                    <span>10:00-18:00</span>
+                  </div>
+                </div>
+              </div>
+              <div class="ec__body">
+                <div class="ec__badge-row">
+                  <span class="cb cb-content cb-exhibition">exhibition</span>
+                  <span class="sb sb-soon">もうすぐ開催</span>
+                </div>
+                <div class="ec__title">伊藤慶子「静物と時間」</div>
+                <div class="ec__venue">中央区<span class="ec__venue-sep">|</span>White Box 表参道</div>
+              </div>
+              <div class="ec__foot">
+                <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>15</span>
+                <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="10" cy="5" r="4"/><circle cx="5" cy="11" r="2.4"/></svg>1</span>
+                <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                  <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>
+                  <span class="tip">興味ある！に追加する</span>
+                </button>
+              </div>
+            </a>
+          </div><!-- /p5-rec-grid -->
+        </section>
+      </div><!-- /p5-recommended__inner -->
+    </div><!-- /p5-recommended -->
+
+  </main><!-- /ktn-main -->
+
+  <footer class="ktn-footer" id="ktnFooter"></footer>
+
+</div><!-- /content-wrap -->
+</div><!-- /shell -->
+
+<nav class="ktn-bottom-nav" id="ktnBottomNav">
+  <div class="ktn-bottom-nav__inner" id="ktnBottomNavInner"></div>
+</nav>
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+  KTN.init({ page: 'p5-3', role: 'user+' });
+</script>
+</body>
+</html>

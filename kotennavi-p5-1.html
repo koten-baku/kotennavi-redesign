@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ウォッチリスト — 山田 花子 | 個展なび</title>
+  <meta name="description" content="山田 花子のウォッチリスト。ウォッチ中のクリエイター・ギャラリーを一覧表示します。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Noto+Sans+JP:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+  <link rel="stylesheet" href="./kotennavi-components.css">
+</head>
+<body class="p5-page p5-1-page">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- SVGシンボル -->
+<svg width="0" height="0" style="position:absolute;overflow:hidden">
+  <defs>
+    <symbol id="icon-exh" viewBox="40 47 54 54">
+      <path d="M80.09 102.05c-1.22-.8,-2.57-2.87,-3.34-4.33c-2.48-5.91,-4.85-14.23,-13.31-20.15c-1.9-1.23,-2.03-2,-1.94-2.48c.11-.83,.82-1.52,2.3-1.3c11.09,1.95,15.22,3.96,21.07,7.61c7.85,5.36,9.57,10.76,9.65,14.09c.15,2.3,-.18,5.11,-2.61,6.56Z" fill="currentColor"/>
+    </symbol>
+    <symbol id="icon-watch" viewBox="0 0 16 16">
+      <circle cx="8" cy="8" r="7" fill="currentColor"/>
+      <circle cx="8" cy="8" r="2.6" fill="white"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- デモバー -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ロール：</span>
+  <button class="dbtn" onclick="setR('guest',this)">ゲスト</button>
+  <button class="dbtn" onclick="setR('login',this)">ログイン</button>
+  <button class="dbtn on" onclick="setR('user+',this)">user+</button>
+  <button class="dbtn" onclick="setR('admin',this)">管理者</button>
+</div>
+
+<div class="shell">
+<div class="content-wrap" id="contentWrap">
+
+  <header class="ktn-header" id="ktnHeader">
+    <div class="ktn-header__inner">
+      <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+      <div class="ktn-hdr-actions" id="ktnActs"></div>
+    </div>
+  </header>
+
+  <main class="ktn-main" id="ktnMain">
+
+    <!-- A. ヒーロー（コンパクト版） -->
+    <div class="p5-head p5-head--compact">
+      <div class="p5-head__inner">
+        <div class="p5-head__top">
+          <a href="kotennavi-p5.html">
+            <div class="p5-head__avatar" style="background:linear-gradient(135deg,#f0c0d8,#c87aaa)">花</div>
+          </a>
+          <div class="p5-head__info">
+            <div class="p5-head__badge-row">
+              <span class="cb cb-person cb-user">user</span>
+            </div>
+            <h1 class="p5-head__name"><a href="kotennavi-p5.html" style="color:inherit;text-decoration:none">山田 花子</a></h1>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- B. タブナビ -->
+    <nav class="p5-tabnav" id="p5Tabnav" aria-label="マイページ内ナビ">
+      <div class="p5-tabnav__inner">
+        <span class="p5-tabnav__name"><span class="p5-tabnav__name-text">山田 花子</span></span>
+        <a class="p5-tabnav__item" href="kotennavi-p5.html">カレンダー</a>
+        <a class="p5-tabnav__item is-active" href="#">ウォッチ</a>
+        <a class="p5-tabnav__item" href="kotennavi-p5-2.html">チェックイン</a>
+        <a class="p5-tabnav__item" href="kotennavi-p5-3.html">興味あり！</a>
+      </div>
+    </nav>
+
+    <!-- C. メインコンテンツ -->
+    <div class="ktn-content ktn-content--detail">
+
+      <!-- 軸①: タイプタブ -->
+      <div class="p5-type-tabs" id="p51TypeTabs">
+        <button class="p5-type-tab is-active" data-type="all">すべて<span class="p5-list-tab__count">17</span></button>
+        <button class="p5-type-tab" data-type="creator">クリエイター<span class="p5-list-tab__count">12</span></button>
+        <button class="p5-type-tab" data-type="gallery">ギャラリー<span class="p5-list-tab__count">5</span></button>
+      </div>
+
+      <!-- コンテンツボックス -->
+      <div class="p5-cbox">
+        <!-- 軸②: フィルター（ボックスヘッド） -->
+        <div class="p5-cbox__head" id="p51FilterBar">
+          <select class="p5-sort" id="p51Sort" style="margin-left:auto">
+            <option value="date">ウォッチ日順（新しい順）</option>
+            <option value="name">名前順</option>
+            <option value="exh">展覧会数順</option>
+            <option value="watch">ウォッチ数順</option>
+          </select>
+        </div>
+        <div class="p5-cbox__opt">
+          <label class="p5-filter-checkin-label">
+            <input type="checkbox" id="p51ActiveCheck">
+            開催中・開催予定あり
+          </label>
+        </div>
+        <div class="p5-cbox__body">
+
+      <!-- C-1. すべてセクション（ウォッチ日順・混在） -->
+      <div class="p5-1-section" data-section="all">
+        <div class="list-col">
+
+          <!-- 1. 田中 透 (creator / 2026-04-20) -->
+          <a class="cc cc--h" href="#" data-watchdate="2026-04-20">
+            <div class="cc__top">
+              <div class="cc__avatar av-c2"><div class="cc__avatar-ph" style="font-size:.9rem">田</div></div>
+            </div>
+            <div class="cc__main">
+              <div class="cc__info">
+                <div class="cc__badge-row">
+                  <span class="cb cb-creator">creator</span>
+                  <span class="sb sb-sm">開催中/開催予定</span>
+                </div>
+                <div class="cc__name">田中 透</div>
+                <div class="cc__genre">油彩・版画 · 東京</div>
+                
+              </div>
+              <div class="cc__hfoot">
+                <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>8</span>
+                <span class="sep"></span>
+                <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>142</span>
+                <button class="ktn-btn on" onclick="this.classList.toggle('on');event.preventDefault()">
+                  <svg width="12" height="12"><use href="#icon-watch" color="#3a90e0"/></svg>
+                  watching<span class="tip">ウォッチを解除する</span>
+                </button>
+              </div>
+              <div class="p5-1-watch-date">2026.04.20</div>
+            </div>
+          </a>
+
+          <!-- 2. Gallery SOIL 渋谷 (gallery / 2026-04-18) -->
+          <a class="gc gc--h" href="#" data-watchdate="2026-04-18">
+            <div class="gc__top">
+              <div class="gc__avatar av-g1"><div class="gc__avatar-ph" style="font-size:.7rem">GS</div></div>
+            </div>
+            <div class="gc__main">
+              <div class="gc__info">
+                <div class="gc__badge-row">
+                  <span class="cb cb-gallery">gallery</span>
+                  <span class="sb sb-sm">開催中/開催予定</span>
+                </div>
+                <div class="gc__name">Gallery SOIL 渋谷</div>
+                <div class="gc__location">東京・渋谷</div>
+                <div class="gc__hours">
+                  <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.4"/><path d="M8 5v3.5l2.5 1.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+                  火〜日 12:00–19:00 / 月曜定休
+                </div>
+                
+              </div>
+              <div class="gc__hfoot">
+                <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>42</span>
+                <span class="sep"></span>
+                <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>312</span>
+                <button class="ktn-btn on" onclick="this.classList.toggle('on');event.preventDefault()">
+                  <svg width="12" height="12"><use href="#icon-watch" color="#3a90e0"/></svg>
+                  watching<span class="tip">ウォッチを解除する</span>
+                </button>
+              </div>
+              <div class="p5-1-watch-date">2026.04.18</div>
+            </div>
+          </a>
+
+          <!-- 3. 山本 美咲 (creator / 2026-04-15) -->
+          <a class="cc cc--h" href="#" data-watchdate="2026-04-15">
+            <div class="cc__top">
+              <div class="cc__avatar av-c3"><div class="cc__avatar-ph" style="font-size:.9rem">山</div></div>
+            </div>
+            <div class="cc__main">
+              <div class="cc__info">
+                <div class="cc__badge-row">
+                  <span class="cb cb-creator">creator</span>
+                  <span class="sb sb-sm">開催中/開催予定</span>
+                </div>
+                <div class="cc__name">山本 美咲</div>
+                <div class="cc__genre">水彩・素描 · 神奈川</div>
+                
+              </div>
+              <div class="cc__hfoot">
+                <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>5</span>
+                <span class="sep"></span>
+                <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>98</span>
+                <button class="ktn-btn on" onclick="this.classList.toggle('on');event.preventDefault()">
+                  <svg width="12" height="12"><use href="#icon-watch" color="#3a90e0"/></svg>
+                  watching<span class="tip">ウォッチを解除する</span>
+                </button>
+              </div>
+              <div class="p5-1-watch-date">2026.04.15</div>
+            </div>
+          </a>
+
+          <!-- 4. 小野 友美 (creator / 2026-04-12) -->
+          <a class="cc cc--h" href="#" data-watchdate="2026-04-12">
+            <div class="cc__top">
+              <div class="cc__avatar av-c1"><div class="cc__avatar-ph" style="font-size:.9rem">小</div></div>
+            </div>
+            <div class="cc__main">
+              <div class="cc__info">
+                <div class="cc__badge-row">
+                  <span class="cb cb-creator">creator</span>
+                  <span class="sb sb-sm">開催中/開催予定</span>
+                </div>
+                <div class="cc__name">小野 友美</div>
+                <div class="cc__genre">油彩・ドローイング · 東京</div>
+                
+              </div>
+              <div class="cc__hfoot">
+                <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>12</span>
+                <span class="sep"></span>
+                <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>248</span>
+                <button class="ktn-btn on" onclick="this.classList.toggle('on');event.preventDefault()">
+                  <svg width="12" height="12"><use href="#icon-watch" color="#3a90e0"/></svg>
+                  watching<span class="tip">ウォッチを解除する</span>
+                </button>
+              </div>
+              <div class="p5-1-watch-date">2026.04.12</div>
+            </div>
+          </a>
+
+          <!-- 5. Gallery 森 代官山 (gallery / 2026-04-10) -->
+          <a class="gc gc--h" href="#" data-watchdate="2026-04-10">
+            <div class="gc__top">
+              <div class="gc__avatar av-g4"><div class="gc__avatar-ph" style="font-size:.7rem">GM</div></div>
+            </div>
+            <div class="gc__main">
+              <div class="gc__info">
+                <div class="gc__badge-row">
+                  <span class="cb cb-gallery">gallery</span>
+                  <span class="sb sb-sm">開催中/開催予定</span>
+                </div>
+                <div class="gc__name">Gallery 森 代官山</div>
+                <div class="gc__location">東京・代官山</div>
+                <div class="gc__hours">
+                  <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.4"/><path d="M8 5v3.5l2.5 1.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+                  水〜月 12:00–19:00 / 火曜定休
+                </div>
+                
+              </div>
+              <div class="gc__hfoot">
+                <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>15</span>
+                <span class="sep"></span>
+                <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>204</span>
+                <button class="ktn-btn on" onclick="this.classList.toggle('on');event.preventDefault()">
+                  <svg width="12" height="12"><use href="#icon-watch" color="#3a90e0"/></svg>
+                  watching<span class="tip">ウォッチを解除する</span>
+                </button>
+              </div>
+              <div class="p5-1-watch-date">2026.04.10</div>
+            </div>
+          </a>
+
+          <!-- 6. 田中 礼子 (creator / 2026-04-08) -->
+          <a class="cc cc--h" href="#" data-watchdate="2026-04-08">
+            <div class="cc__top">
+              <div class="cc__avatar av-c2"><div class="cc__avatar-ph" style="font-size:.9rem">礼</div></div>
+            </div>
+            <div class="cc__main">
+              <div class="cc__info">
+                <div class="cc__badge-row">
+                  <span class="cb cb-creator">creator</span>
+                  <span class="sb sb-sm">開催中/開催予定</span>
+                </div>
+                <div class="cc__name">田中 礼子</div>
+                <div class="cc__genre">版画・テキスタイル · 大阪</div>
+                
+              </div>
+              <div class="cc__hfoot">
+                <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>8</span>
+                <span class="sep"></span>
+                <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>134</span>
+                <button class="ktn-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                  <svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>
+                  watch<span class="tip">ウォッチする</span>
+                </button>
+              </div>
+              <div class="p5-1-watch-date">2026.04.08</div>
+            </div>
+          </a>
+
+          <!-- 7. 高橋 一朗 (creator / 2026-04-05) -->
+          <a class="cc cc--h" href="#" data-watchdate="2026-04-05">
+            <div class="cc__top">
+              <div class="cc__avatar av-c4"><div class="cc__avatar-ph" style="font-size:.9rem">高</div></div>
+            </div>
+            <div class="cc__main">
+              <div class="cc__info">
+                <div class="cc__badge-row">
+                  <span class="cb cb-creator">creator</span>
+                  <span class="sb sb-sm">開催中/開催予定</span>
+                </div>
+                <div class="cc__name">高橋 一朗</div>
+                <div class="cc__genre">水彩・イラストレーション · 東京</div>
+                
+              </div>
+              <div class="cc__hfoot">
+                <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>3</span>
+                <span class="sep"></span>
+                <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>52</span>
+                <button class="ktn-btn on" onclick="this.classList.toggle('on');event.preventDefault()">
+                  <svg width="12" height="12"><use href="#icon-watch" color="#3a90e0"/></svg>
+                  watching<span class="tip">ウォッチを解除する</span>
+                </button>
+              </div>
+              <div class="p5-1-watch-date">2026.04.05</div>
+            </div>
+          </a>
+
+          <!-- 8. 伊藤 慶子 (creator / 2026-03-28) -->
+          <a class="cc cc--h" href="#" data-watchdate="2026-03-28">
+            <div class="cc__top">
+              <div class="cc__avatar av-c1"><div class="cc__avatar-ph" style="font-size:.9rem">伊</div></div>
+            </div>
+            <div class="cc__main">
+              <div class="cc__info">
+                <div class="cc__badge-row">
+                  <span class="cb cb-creator">creator</span>
+                  <span class="sb sb-sm">開催中/開催予定</span>
+                </div>
+                <div class="cc__name">伊藤 慶子</div>
+                <div class="cc__genre">日本画・墨 · 東京</div>
+                
+              </div>
+              <div class="cc__hfoot">
+                <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>6</span>
+                <span class="sep"></span>
+                <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>142</span>
+                <button class="ktn-btn on" onclick="this.classList.toggle('on');event.preventDefault()">
+                  <svg width="12" height="12"><use href="#icon-watch" color="#3a90e0"/></svg>
+                  watching<span class="tip">ウォッチを解除する</span>
+                </button>
+              </div>
+              <div class="p5-1-watch-date">2026.03.28</div>
+            </div>
+          </a>
+
+          <!-- 9. 橋本 明 (creator / 2026-03-20) -->
+          <a class="cc cc--h" href="#" data-watchdate="2026-03-20">
+            <div class="cc__top">
+              <div class="cc__avatar av-c2"><div class="cc__avatar-ph" style="font-size:.9rem">橋</div></div>
+            </div>
+            <div class="cc__main">
+              <div class="cc__info">
+                <div class="cc__badge-row">
+                  <span class="cb cb-creator">creator</span>
+                  <span class="sb sb-sm">開催中/開催予定</span>
+                </div>
+                <div class="cc__name">橋本 明</div>
+                <div class="cc__genre">彫刻・インスタレーション · 東京</div>
+                
+              </div>
+              <div class="cc__hfoot">
+                <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>4</span>
+                <span class="sep"></span>
+                <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>98</span>
+                <button class="ktn-btn on" onclick="this.classList.toggle('on');event.preventDefault()">
+                  <svg width="12" height="12"><use href="#icon-watch" color="#3a90e0"/></svg>
+                  watching<span class="tip">ウォッチを解除する</span>
+                </button>
+              </div>
+              <div class="p5-1-watch-date">2026.03.20</div>
+            </div>
+          </a>
+
+          <!-- 10. Art Space 光 銀座 (gallery / 2026-03-15) -->
+          <a class="gc gc--h" href="#" data-watchdate="2026-03-15">
+            <div class="gc__top">
+              <div class="gc__avatar av-g2"><div class="gc__avatar-ph" style="font-size:.7rem">AS</div></div>
+            </div>
+            <div class="gc__main">
+              <div class="gc__info">
+                <div class="gc__badge-row">
+                  <span class="cb cb-gallery">gallery</span>
+                </div>
+                <div class="gc__name">Art Space 光 銀座</div>
+                <div class="gc__location">東京・銀座</div>
+                <div class="gc__hours">
+                  <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.4"/><path d="M8 5v3.5l2.5 1.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+                  火〜日 11:00–19:00 / 月曜定休
+                </div>
+                
+              </div>
+              <div class="gc__hfoot">
+                <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>28</span>
+                <span class="sep"></span>
+                <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>178</span>
+                <button class="ktn-btn on" onclick="this.classList.toggle('on');event.preventDefault()">
+                  <svg width="12" height="12"><use href="#icon-watch" color="#3a90e0"/></svg>
+                  watching<span class="tip">ウォッチを解除する</span>
+                </button>
+              </div>
+              <div class="p5-1-watch-date">2026.03.15</div>
+            </div>
+          </a>
+
+          <!-- 11. 鈴木 一郎 (creator / 2026-03-10) -->
+          <a class="cc cc--h" href="#" data-watchdate="2026-03-10">
+            <div class="cc__top">
+              <div class="cc__avatar av-c5"><div class="cc__avatar-ph" style="font-size:.9rem">鈴</div></div>
+            </div>
+            <div class="cc__main">
+              <div class="cc__info">
+                <div class="cc__badge-row">
+                  <span class="cb cb-creator">creator</span>
+                </div>
+                <div class="cc__name">鈴木 一郎</div>
+                <div class="cc__genre">陶芸 · 東京</div>
+                
+              </div>
+              <div class="cc__hfoot">
+                <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>3</span>
+                <span class="sep"></span>
+                <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>56</span>
+                <button class="ktn-btn on" onclick="this.classList.toggle('on');event.preventDefault()">
+                  <svg width="12" height="12"><use href="#icon-watch" color="#3a90e0"/></svg>
+                  watching<span class="tip">ウォッチを解除する</span>
+                </button>
+              </div>
+              <div class="p5-1-watch-date">2026.03.10</div>
+            </div>
+          </a>
+
+          <!-- 12. KUWA Art Space (gallery / 2026-03-05) -->
+          <a class="gc gc--h" href="#" data-watchdate="2026-03-05">
+            <div class="gc__top">
+              <div class="gc__avatar av-g1"><div class="gc__avatar-ph" style="font-size:.62rem">KAS</div></div>
+            </div>
+            <div class="gc__main">
+              <div class="gc__info">
+                <div class="gc__badge-row">
+                  <span class="cb cb-gallery">gallery</span>
+                  <span class="sb sb-sm">開催中/開催予定</span>
+                </div>
+                <div class="gc__name">KUWA Art Space</div>
+                <div class="gc__location">東京・杉並</div>
+                <div class="gc__hours">
+                  <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.4"/><path d="M8 5v3.5l2.5 1.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+                  木〜日 11:00–18:00 / 月〜水定休
+                </div>
+                
+              </div>
+              <div class="gc__hfoot">
+                <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>8</span>
+                <span class="sep"></span>
+                <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>45</span>
+                <button class="ktn-btn on" onclick="this.classList.toggle('on');event.preventDefault()">
+                  <svg width="12" height="12"><use href="#icon-watch" color="#3a90e0"/></svg>
+                  watching<span class="tip">ウォッチを解除する</span>
+                </button>
+              </div>
+              <div class="p5-1-watch-date">2026.03.05</div>
+            </div>
+          </a>
+
+          <!-- 13. 村上 玲子 (creator / 2026-02-28) -->
+          <a class="cc cc--h" href="#" data-watchdate="2026-02-28">
+            <div class="cc__top">
+              <div class="cc__avatar av-c3"><div class="cc__avatar-ph" style="font-size:.9rem">村</div></div>
+            </div>
+            <div class="cc__main">
+              <div class="cc__info">
+                <div class="cc__badge-row">
+                  <span class="cb cb-creator">creator</span>
+                </div>
+                <div class="cc__name">村上 玲子</div>
+                <div class="cc__genre">陶芸・立体造形 · 京都</div>
+                
+              </div>
+              <div class="cc__hfoot">
+                <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>5</span>
+                <span class="sep"></span>
+                <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>87</span>
+                <button class="ktn-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                  <svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>
+                  watch<span class="tip">ウォッチする</span>
+                </button>
+              </div>
+              <div class="p5-1-watch-date">2026.02.28</div>
+            </div>
+          </a>
+
+          <!-- 14. White Box 上野 (gallery / 2026-02-20) -->
+          <a class="gc gc--h" href="#" data-watchdate="2026-02-20">
+            <div class="gc__top">
+              <div class="gc__avatar av-g3"><div class="gc__avatar-ph" style="font-size:.7rem">WB</div></div>
+            </div>
+            <div class="gc__main">
+              <div class="gc__info">
+                <div class="gc__badge-row">
+                  <span class="cb cb-gallery">gallery</span>
+                </div>
+                <div class="gc__name">White Box 上野</div>
+                <div class="gc__location">東京・上野</div>
+                <div class="gc__hours--empty">営業時間はお問合わせください</div>
+                
+              </div>
+              <div class="gc__hfoot">
+                <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>22</span>
+                <span class="sep"></span>
+                <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>156</span>
+                <button class="ktn-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                  <svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>
+                  watch<span class="tip">ウォッチする</span>
+                </button>
+              </div>
+              <div class="p5-1-watch-date">2026.02.20</div>
+            </div>
+          </a>
+
+          <!-- 15. 松本 健太 (creator / 2026-02-15) -->
+          <a class="cc cc--h" href="#" data-watchdate="2026-02-15">
+            <div class="cc__top">
+              <div class="cc__avatar av-c5"><div class="cc__avatar-ph" style="font-size:.9rem">松</div></div>
+            </div>
+            <div class="cc__main">
+              <div class="cc__info">
+                <div class="cc__badge-row">
+                  <span class="cb cb-creator">creator</span>
+                </div>
+                <div class="cc__name">松本 健太</div>
+                <div class="cc__genre">写真・映像 · 神奈川</div>
+                
+              </div>
+              <div class="cc__hfoot">
+                <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>1</span>
+                <span class="sep"></span>
+                <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>19</span>
+                <button class="ktn-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                  <svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>
+                  watch<span class="tip">ウォッチする</span>
+                </button>
+              </div>
+              <div class="p5-1-watch-date">2026.02.15</div>
+            </div>
+          </a>
+
+          <!-- 16. 中村 幸代 (creator / 2026-02-10) -->
+          <a class="cc cc--h" href="#" data-watchdate="2026-02-10">
+            <div class="cc__top">
+              <div class="cc__avatar av-c3"><div class="cc__avatar-ph" style="font-size:.9rem">中</div></div>
+            </div>
+            <div class="cc__main">
+              <div class="cc__info">
+                <div class="cc__badge-row">
+                  <span class="cb cb-creator">creator</span>
+                </div>
+                <div class="cc__name">中村 幸代</div>
+                <div class="cc__genre">テキスタイル・染色 · 兵庫</div>
+                
+              </div>
+              <div class="cc__hfoot">
+                <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>7</span>
+                <span class="sep"></span>
+                <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>87</span>
+                <button class="ktn-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                  <svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>
+                  watch<span class="tip">ウォッチする</span>
+                </button>
+              </div>
+              <div class="p5-1-watch-date">2026.02.10</div>
+            </div>
+          </a>
+
+          <!-- 17. 渡辺 光 (creator / 2026-01-20) -->
+          <a class="cc cc--h" href="#" data-watchdate="2026-01-20">
+            <div class="cc__top">
+              <div class="cc__avatar av-c4"><div class="cc__avatar-ph" style="font-size:.9rem">渡</div></div>
+            </div>
+            <div class="cc__main">
+              <div class="cc__info">
+                <div class="cc__badge-row">
+                  <span class="cb cb-creator">creator</span>
+                </div>
+                <div class="cc__name">渡辺 光</div>
+                <div class="cc__genre">デジタル・映像 · 東京</div>
+                
+              </div>
+              <div class="cc__hfoot">
+                <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>2</span>
+                <span class="sep"></span>
+                <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>34</span>
+                <button class="ktn-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                  <svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>
+                  watch<span class="tip">ウォッチする</span>
+                </button>
+              </div>
+              <div class="p5-1-watch-date">2026.01.20</div>
+            </div>
+          </a>
+
+        </div><!-- /list-col all -->
+      </div><!-- /p5-1-section all -->
+
+      <!-- C-2. クリエイターセクション -->
+      <div class="p5-1-section" data-section="creator" style="display:none">
+        <div class="p5-1-sec-label">CREATORS — ウォッチ中クリエイター<span class="p5-1-sec-count">12</span></div>
+        <div class="list-col">
+
+          <!-- 1. 田中 透 - ON / 開催中 -->
+          <a class="cc cc--h" href="#" data-watchdate="2026-04-20">
+            <div class="cc__top">
+              <div class="cc__avatar av-c2"><div class="cc__avatar-ph" style="font-size:.9rem">田</div></div>
+            </div>
+            <div class="cc__main">
+              <div class="cc__info">
+                <div class="cc__badge-row">
+                  <span class="cb cb-creator">creator</span>
+                  <span class="sb sb-sm">開催中/開催予定</span>
+                </div>
+                <div class="cc__name">田中 透</div>
+                <div class="cc__genre">油彩・版画 · 東京</div>
+                
+              </div>
+              <div class="cc__hfoot">
+                <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>8</span>
+                <span class="sep"></span>
+                <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>142</span>
+                <button class="ktn-btn on" onclick="this.classList.toggle('on');event.preventDefault()">
+                  <svg width="12" height="12"><use href="#icon-watch" color="#3a90e0"/></svg>
+                  watching<span class="tip">ウォッチを解除する</span>
+                </button>
+              </div>
+              <div class="p5-1-watch-date">2026.04.20</div>
+            </div>
+          </a>
+
+          <!-- 2. 山本 美咲 - ON / 開催中 -->
+          <a class="cc cc--h" href="#" data-watchdate="2026-04-15">
+            <div class="cc__top">
+              <div class="cc__avatar av-c3"><div class="cc__avatar-ph" style="font-size:.9rem">山</div></div>
+            </div>
+            <div class="cc__main">
+              <div class="cc__info">
+                <div class="cc__badge-row">
+                  <span class="cb cb-creator">creator</span>
+                  <span class="sb sb-sm">開催中/開催予定</span>
+                </div>
+                <div class="cc__name">山本 美咲</div>
+                <div class="cc__genre">水彩・素描 · 神奈川</div>
+                
+              </div>
+              <div class="cc__hfoot">
+                <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>5</span>
+                <span class="sep"></span>
+                <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>98</span>
+                <button class="ktn-btn on" onclick="this.classList.toggle('on');event.preventDefault()">
+                  <svg width="12" height="12"><use href="#icon-watch" color="#3a90e0"/></svg>
+                  watching<span class="tip">ウォッチを解除する</span>
+                </button>
+              </div>
+              <div class="p5-1-watch-date">2026.04.15</div>
+            </div>
+          </a>
+
+          <!-- 3. 鈴木 一郎 - ON / 展覧会なし -->
+          <a class="cc cc--h" href="#" data-watchdate="2026-03-10">
+            <div class="cc__top">
+              <div class="cc__avatar av-c5"><div class="cc__avatar-ph" style="font-size:.9rem">鈴</div></div>
+            </div>
+            <div class="cc__main">
+              <div class="cc__info">
+                <div class="cc__badge-row">
+                  <span class="cb cb-creator">creator</span>
+                </div>
+                <div class="cc__name">鈴木 一郎</div>
+                <div class="cc__genre">陶芸 · 東京</div>
+                
+              </div>
+              <div class="cc__hfoot">
+                <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>3</span>
+                <span class="sep"></span>
+                <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>56</span>
+                <button class="ktn-btn on" onclick="this.classList.toggle('on');event.preventDefault()">
+                  <svg width="12" height="12"><use href="#icon-watch" color="#3a90e0"/></svg>
+                  watching<span class="tip">ウォッチを解除する</span>
+                </button>
+              </div>
+              <div class="p5-1-watch-date">2026.03.10</div>
+            </div>
+          </a>
+
+          <!-- 4. 小野 友美 - ON / 開催中 -->
+          <a class="cc cc--h" href="#" data-watchdate="2026-04-12">
+            <div class="cc__top">
+              <div class="cc__avatar av-c1"><div class="cc__avatar-ph" style="font-size:.9rem">小</div></div>
+            </div>
+            <div class="cc__main">
+              <div class="cc__info">
+                <div class="cc__badge-row">
+                  <span class="cb cb-creator">creator</span>
+                  <span class="sb sb-sm">開催中/開催予定</span>
+                </div>
+                <div class="cc__name">小野 友美</div>
+                <div class="cc__genre">油彩・ドローイング · 東京</div>
+                
+              </div>
+              <div class="cc__hfoot">
+                <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>12</span>
+                <span class="sep"></span>
+                <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>248</span>
+                <button class="ktn-btn on" onclick="this.classList.toggle('on');event.preventDefault()">
+                  <svg width="12" height="12"><use href="#icon-watch" color="#3a90e0"/></svg>
+                  watching<span class="tip">ウォッチを解除する</span>
+                </button>
+              </div>
+              <div class="p5-1-watch-date">2026.04.12</div>
+            </div>
+          </a>
+
+          <!-- 5. 田中 礼子 - OFF / 開催中 -->
+          <a class="cc cc--h" href="#" data-watchdate="2026-04-08">
+            <div class="cc__top">
+              <div class="cc__avatar av-c2"><div class="cc__avatar-ph" style="font-size:.9rem">礼</div></div>
+            </div>
+            <div class="cc__main">
+              <div class="cc__info">
+                <div class="cc__badge-row">
+                  <span class="cb cb-creator">creator</span>
+                  <span class="sb sb-sm">開催中/開催予定</span>
+                </div>
+                <div class="cc__name">田中 礼子</div>
+                <div class="cc__genre">版画・テキスタイル · 大阪</div>
+                
+              </div>
+              <div class="cc__hfoot">
+                <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>8</span>
+                <span class="sep"></span>
+                <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>134</span>
+                <button class="ktn-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                  <svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>
+                  watch<span class="tip">ウォッチする</span>
+                </button>
+              </div>
+              <div class="p5-1-watch-date">2026.04.08</div>
+            </div>
+          </a>
+
+          <!-- 6. 村上 玲子 - OFF / 展覧会なし -->
+          <a class="cc cc--h" href="#" data-watchdate="2026-02-28">
+            <div class="cc__top">
+              <div class="cc__avatar av-c3"><div class="cc__avatar-ph" style="font-size:.9rem">村</div></div>
+            </div>
+            <div class="cc__main">
+              <div class="cc__info">
+                <div class="cc__badge-row">
+                  <span class="cb cb-creator">creator</span>
+                </div>
+                <div class="cc__name">村上 玲子</div>
+                <div class="cc__genre">陶芸・立体造形 · 京都</div>
+                
+              </div>
+              <div class="cc__hfoot">
+                <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>5</span>
+                <span class="sep"></span>
+                <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>87</span>
+                <button class="ktn-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                  <svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>
+                  watch<span class="tip">ウォッチする</span>
+                </button>
+              </div>
+              <div class="p5-1-watch-date">2026.02.28</div>
+            </div>
+          </a>
+
+          <!-- 7. 高橋 一朗 - ON / 開催中 -->
+          <a class="cc cc--h" href="#" data-watchdate="2026-04-05">
+            <div class="cc__top">
+              <div class="cc__avatar av-c4"><div class="cc__avatar-ph" style="font-size:.9rem">高</div></div>
+            </div>
+            <div class="cc__main">
+              <div class="cc__info">
+                <div class="cc__badge-row">
+                  <span class="cb cb-creator">creator</span>
+                  <span class="sb sb-sm">開催中/開催予定</span>
+                </div>
+                <div class="cc__name">高橋 一朗</div>
+                <div class="cc__genre">水彩・イラストレーション · 東京</div>
+                
+              </div>
+              <div class="cc__hfoot">
+                <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>3</span>
+                <span class="sep"></span>
+                <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>52</span>
+                <button class="ktn-btn on" onclick="this.classList.toggle('on');event.preventDefault()">
+                  <svg width="12" height="12"><use href="#icon-watch" color="#3a90e0"/></svg>
+                  watching<span class="tip">ウォッチを解除する</span>
+                </button>
+              </div>
+              <div class="p5-1-watch-date">2026.04.05</div>
+            </div>
+          </a>
+
+          <!-- 8. 松本 健太 - OFF / 展覧会なし -->
+          <a class="cc cc--h" href="#" data-watchdate="2026-02-15">
+            <div class="cc__top">
+              <div class="cc__avatar av-c5"><div class="cc__avatar-ph" style="font-size:.9rem">松</div></div>
+            </div>
+            <div class="cc__main">
+              <div class="cc__info">
+                <div class="cc__badge-row">
+                  <span class="cb cb-creator">creator</span>
+                </div>
+                <div class="cc__name">松本 健太</div>
+                <div class="cc__genre">写真・映像 · 神奈川</div>
+                
+              </div>
+              <div class="cc__hfoot">
+                <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>1</span>
+                <span class="sep"></span>
+                <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>19</span>
+                <button class="ktn-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                  <svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>
+                  watch<span class="tip">ウォッチする</span>
+                </button>
+              </div>
+              <div class="p5-1-watch-date">2026.02.15</div>
+            </div>
+          </a>
+
+          <!-- 9. 伊藤 慶子 - ON / 開催中 -->
+          <a class="cc cc--h" href="#" data-watchdate="2026-03-28">
+            <div class="cc__top">
+              <div class="cc__avatar av-c1"><div class="cc__avatar-ph" style="font-size:.9rem">伊</div></div>
+            </div>
+            <div class="cc__main">
+              <div class="cc__info">
+                <div class="cc__badge-row">
+                  <span class="cb cb-creator">creator</span>
+                  <span class="sb sb-sm">開催中/開催予定</span>
+                </div>
+                <div class="cc__name">伊藤 慶子</div>
+                <div class="cc__genre">日本画・墨 · 東京</div>
+                
+              </div>
+              <div class="cc__hfoot">
+                <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>6</span>
+                <span class="sep"></span>
+                <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>142</span>
+                <button class="ktn-btn on" onclick="this.classList.toggle('on');event.preventDefault()">
+                  <svg width="12" height="12"><use href="#icon-watch" color="#3a90e0"/></svg>
+                  watching<span class="tip">ウォッチを解除する</span>
+                </button>
+              </div>
+              <div class="p5-1-watch-date">2026.03.28</div>
+            </div>
+          </a>
+
+          <!-- 10. 橋本 明 - ON / 開催予定 -->
+          <a class="cc cc--h" href="#" data-watchdate="2026-03-20">
+            <div class="cc__top">
+              <div class="cc__avatar av-c2"><div class="cc__avatar-ph" style="font-size:.9rem">橋</div></div>
+            </div>
+            <div class="cc__main">
+              <div class="cc__info">
+                <div class="cc__badge-row">
+                  <span class="cb cb-creator">creator</span>
+                  <span class="sb sb-sm">開催中/開催予定</span>
+                </div>
+                <div class="cc__name">橋本 明</div>
+                <div class="cc__genre">彫刻・インスタレーション · 東京</div>
+                
+              </div>
+              <div class="cc__hfoot">
+                <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>4</span>
+                <span class="sep"></span>
+                <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>98</span>
+                <button class="ktn-btn on" onclick="this.classList.toggle('on');event.preventDefault()">
+                  <svg width="12" height="12"><use href="#icon-watch" color="#3a90e0"/></svg>
+                  watching<span class="tip">ウォッチを解除する</span>
+                </button>
+              </div>
+              <div class="p5-1-watch-date">2026.03.20</div>
+            </div>
+          </a>
+
+          <!-- 11. 中村 幸代 - OFF / 展覧会なし -->
+          <a class="cc cc--h" href="#" data-watchdate="2026-02-10">
+            <div class="cc__top">
+              <div class="cc__avatar av-c3"><div class="cc__avatar-ph" style="font-size:.9rem">中</div></div>
+            </div>
+            <div class="cc__main">
+              <div class="cc__info">
+                <div class="cc__badge-row">
+                  <span class="cb cb-creator">creator</span>
+                </div>
+                <div class="cc__name">中村 幸代</div>
+                <div class="cc__genre">テキスタイル・染色 · 兵庫</div>
+                
+              </div>
+              <div class="cc__hfoot">
+                <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>7</span>
+                <span class="sep"></span>
+                <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>87</span>
+                <button class="ktn-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                  <svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>
+                  watch<span class="tip">ウォッチする</span>
+                </button>
+              </div>
+              <div class="p5-1-watch-date">2026.02.10</div>
+            </div>
+          </a>
+
+          <!-- 12. 渡辺 光 - OFF / 展覧会なし -->
+          <a class="cc cc--h" href="#" data-watchdate="2026-01-20">
+            <div class="cc__top">
+              <div class="cc__avatar av-c4"><div class="cc__avatar-ph" style="font-size:.9rem">渡</div></div>
+            </div>
+            <div class="cc__main">
+              <div class="cc__info">
+                <div class="cc__badge-row">
+                  <span class="cb cb-creator">creator</span>
+                </div>
+                <div class="cc__name">渡辺 光</div>
+                <div class="cc__genre">デジタル・映像 · 東京</div>
+                
+              </div>
+              <div class="cc__hfoot">
+                <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>2</span>
+                <span class="sep"></span>
+                <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>34</span>
+                <button class="ktn-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                  <svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>
+                  watch<span class="tip">ウォッチする</span>
+                </button>
+              </div>
+              <div class="p5-1-watch-date">2026.01.20</div>
+            </div>
+          </a>
+
+        </div><!-- /list-col creators -->
+      </div><!-- /p5-1-section creator -->
+
+      <!-- C-3. ギャラリーセクション -->
+      <div class="p5-1-section" data-section="gallery" style="display:none">
+        <div class="p5-1-sec-label">GALLERIES — ウォッチ中ギャラリー<span class="p5-1-sec-count">5</span></div>
+        <div class="list-col">
+
+          <!-- 1. Gallery SOIL 渋谷 - ON / 開催中 -->
+          <a class="gc gc--h" href="#" data-watchdate="2026-04-18">
+            <div class="gc__top">
+              <div class="gc__avatar av-g1"><div class="gc__avatar-ph" style="font-size:.7rem">GS</div></div>
+            </div>
+            <div class="gc__main">
+              <div class="gc__info">
+                <div class="gc__badge-row">
+                  <span class="cb cb-gallery">gallery</span>
+                  <span class="sb sb-sm">開催中/開催予定</span>
+                </div>
+                <div class="gc__name">Gallery SOIL 渋谷</div>
+                <div class="gc__location">東京・渋谷</div>
+                <div class="gc__hours">
+                  <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.4"/><path d="M8 5v3.5l2.5 1.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+                  火〜日 12:00–19:00 / 月曜定休
+                </div>
+                
+              </div>
+              <div class="gc__hfoot">
+                <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>42</span>
+                <span class="sep"></span>
+                <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>312</span>
+                <button class="ktn-btn on" onclick="this.classList.toggle('on');event.preventDefault()">
+                  <svg width="12" height="12"><use href="#icon-watch" color="#3a90e0"/></svg>
+                  watching<span class="tip">ウォッチを解除する</span>
+                </button>
+              </div>
+              <div class="p5-1-watch-date">2026.04.18</div>
+            </div>
+          </a>
+
+          <!-- 2. Art Space 光 銀座 - ON / 展覧会なし -->
+          <a class="gc gc--h" href="#" data-watchdate="2026-03-15">
+            <div class="gc__top">
+              <div class="gc__avatar av-g2"><div class="gc__avatar-ph" style="font-size:.7rem">AS</div></div>
+            </div>
+            <div class="gc__main">
+              <div class="gc__info">
+                <div class="gc__badge-row">
+                  <span class="cb cb-gallery">gallery</span>
+                </div>
+                <div class="gc__name">Art Space 光 銀座</div>
+                <div class="gc__location">東京・銀座</div>
+                <div class="gc__hours">
+                  <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.4"/><path d="M8 5v3.5l2.5 1.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+                  火〜日 11:00–19:00 / 月曜定休
+                </div>
+                
+              </div>
+              <div class="gc__hfoot">
+                <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>28</span>
+                <span class="sep"></span>
+                <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>178</span>
+                <button class="ktn-btn on" onclick="this.classList.toggle('on');event.preventDefault()">
+                  <svg width="12" height="12"><use href="#icon-watch" color="#3a90e0"/></svg>
+                  watching<span class="tip">ウォッチを解除する</span>
+                </button>
+              </div>
+              <div class="p5-1-watch-date">2026.03.15</div>
+            </div>
+          </a>
+
+          <!-- 3. Gallery 森 代官山 - ON / 開催中 -->
+          <a class="gc gc--h" href="#" data-watchdate="2026-04-10">
+            <div class="gc__top">
+              <div class="gc__avatar av-g4"><div class="gc__avatar-ph" style="font-size:.7rem">GM</div></div>
+            </div>
+            <div class="gc__main">
+              <div class="gc__info">
+                <div class="gc__badge-row">
+                  <span class="cb cb-gallery">gallery</span>
+                  <span class="sb sb-sm">開催中/開催予定</span>
+                </div>
+                <div class="gc__name">Gallery 森 代官山</div>
+                <div class="gc__location">東京・代官山</div>
+                <div class="gc__hours">
+                  <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.4"/><path d="M8 5v3.5l2.5 1.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+                  水〜月 12:00–19:00 / 火曜定休
+                </div>
+                
+              </div>
+              <div class="gc__hfoot">
+                <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>15</span>
+                <span class="sep"></span>
+                <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>204</span>
+                <button class="ktn-btn on" onclick="this.classList.toggle('on');event.preventDefault()">
+                  <svg width="12" height="12"><use href="#icon-watch" color="#3a90e0"/></svg>
+                  watching<span class="tip">ウォッチを解除する</span>
+                </button>
+              </div>
+              <div class="p5-1-watch-date">2026.04.10</div>
+            </div>
+          </a>
+
+          <!-- 4. White Box 上野 - OFF / 展覧会なし -->
+          <a class="gc gc--h" href="#" data-watchdate="2026-02-20">
+            <div class="gc__top">
+              <div class="gc__avatar av-g3"><div class="gc__avatar-ph" style="font-size:.7rem">WB</div></div>
+            </div>
+            <div class="gc__main">
+              <div class="gc__info">
+                <div class="gc__badge-row">
+                  <span class="cb cb-gallery">gallery</span>
+                </div>
+                <div class="gc__name">White Box 上野</div>
+                <div class="gc__location">東京・上野</div>
+                <div class="gc__hours--empty">営業時間はお問合わせください</div>
+                
+              </div>
+              <div class="gc__hfoot">
+                <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>22</span>
+                <span class="sep"></span>
+                <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>156</span>
+                <button class="ktn-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                  <svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>
+                  watch<span class="tip">ウォッチする</span>
+                </button>
+              </div>
+              <div class="p5-1-watch-date">2026.02.20</div>
+            </div>
+          </a>
+
+          <!-- 5. KUWA Art Space - ON / 開催中 -->
+          <a class="gc gc--h" href="#" data-watchdate="2026-03-05">
+            <div class="gc__top">
+              <div class="gc__avatar av-g1"><div class="gc__avatar-ph" style="font-size:.62rem">KAS</div></div>
+            </div>
+            <div class="gc__main">
+              <div class="gc__info">
+                <div class="gc__badge-row">
+                  <span class="cb cb-gallery">gallery</span>
+                  <span class="sb sb-sm">開催中/開催予定</span>
+                </div>
+                <div class="gc__name">KUWA Art Space</div>
+                <div class="gc__location">東京・杉並</div>
+                <div class="gc__hours">
+                  <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.4"/><path d="M8 5v3.5l2.5 1.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+                  木〜日 11:00–18:00 / 月〜水定休
+                </div>
+                
+              </div>
+              <div class="gc__hfoot">
+                <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>8</span>
+                <span class="sep"></span>
+                <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>45</span>
+                <button class="ktn-btn on" onclick="this.classList.toggle('on');event.preventDefault()">
+                  <svg width="12" height="12"><use href="#icon-watch" color="#3a90e0"/></svg>
+                  watching<span class="tip">ウォッチを解除する</span>
+                </button>
+              </div>
+              <div class="p5-1-watch-date">2026.03.05</div>
+            </div>
+          </a>
+
+        </div><!-- /list-col galleries -->
+      </div><!-- /p5-1-section gallery -->
+
+        </div><!-- /p5-cbox__body -->
+      </div><!-- /p5-cbox -->
+
+    </div><!-- /ktn-content -->
+
+    <!-- G. おすすめの展覧会 -->
+    <div class="p5-recommended">
+      <div class="p5-recommended__inner">
+        <section class="p2-related">
+          <div class="ktn-section__head">
+            <h2 class="ktn-section__title">おすすめの展覧会<span class="p2-related__en">Recommended</span></h2>
+            <a href="#" class="ktn-section__more">もっと見る →</a>
+          </div>
+          <div class="p5-rec-grid">
+            <!-- 展覧会カード① -->
+            <a class="ec" href="#">
+              <div class="ec__poster" style="background:linear-gradient(160deg,#7a3a60,#4a1a40)">
+                <div class="ec__poster-noimg" style="min-height:160px"></div>
+                <div class="ec__poster-overlay">
+                  <div class="ec__poster-dates">
+                    <span class="year">2026.</span><strong>04.18</strong><span class="dow">sat</span>
+                    <span class="sep">—</span>
+                    <strong>05.02</strong><span class="dow">sat</span>
+                  </div>
+                  <div class="ec__poster-meta">
+                    <span class="ec__remain ec__remain--live">開催中</span>
+                    <span class="meta-sep">|</span>
+                    <span>11:00-19:00</span>
+                  </div>
+                </div>
+              </div>
+              <div class="ec__body">
+                <div class="ec__badge-row">
+                  <span class="cb cb-content cb-exhibition">exhibition</span>
+                  <span class="sb sb-live"><span class="ending-dot"></span>開催中</span>
+                </div>
+                <div class="ec__title">鈴木花実「モノクロームの詩」</div>
+                <div class="ec__venue">渋谷<span class="ec__venue-sep">|</span>Art Space 光 銀座</div>
+              </div>
+              <div class="ec__foot">
+                <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>34</span>
+                <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="10" cy="5" r="4"/><circle cx="5" cy="11" r="2.4"/></svg>2</span>
+                <button class="ktn-icon-btn on" onclick="this.classList.toggle('on');event.preventDefault()">
+                  <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>
+                  <span class="tip">興味ある！から削除する</span>
+                </button>
+              </div>
+            </a>
+            <!-- 展覧会カード② -->
+            <a class="ec" href="#">
+              <div class="ec__poster" style="background:linear-gradient(160deg,#2a5f7a,#1a3f5a)">
+                <div class="ec__poster-noimg" style="min-height:160px"></div>
+                <div class="ec__poster-overlay">
+                  <div class="ec__poster-dates">
+                    <span class="year">2026.</span><strong>05.09</strong><span class="dow">sat</span>
+                    <span class="sep">—</span>
+                    <strong>05.23</strong><span class="dow">sat</span>
+                  </div>
+                  <div class="ec__poster-meta">
+                    <span class="ec__remain ec__remain--soon">10日後</span>
+                    <span class="meta-sep">|</span>
+                    <span>10:00-18:00</span>
+                  </div>
+                </div>
+              </div>
+              <div class="ec__body">
+                <div class="ec__badge-row">
+                  <span class="cb cb-content cb-exhibition">exhibition</span>
+                  <span class="sb sb-soon">もうすぐ開催</span>
+                </div>
+                <div class="ec__title">田中 透「光の航跡」</div>
+                <div class="ec__venue">目黒<span class="ec__venue-sep">|</span>Gallery 森 代官山</div>
+              </div>
+              <div class="ec__foot">
+                <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>21</span>
+                <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="10" cy="5" r="4"/><circle cx="5" cy="11" r="2.4"/></svg>1</span>
+                <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                  <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>
+                  <span class="tip">興味ある！に追加する</span>
+                </button>
+              </div>
+            </a>
+            <!-- 展覧会カード③ -->
+            <a class="ec" href="#">
+              <div class="ec__poster" style="background:linear-gradient(160deg,#8b5e3c,#5a3c1e)">
+                <div class="ec__poster-noimg" style="min-height:160px"></div>
+                <div class="ec__poster-overlay">
+                  <div class="ec__poster-dates">
+                    <span class="year">2026.</span><strong>04.24</strong><span class="dow">fri</span>
+                    <span class="sep">—</span>
+                    <strong>05.10</strong><span class="dow">sun</span>
+                  </div>
+                  <div class="ec__poster-meta">
+                    <span class="ec__remain ec__remain--live">開催中</span>
+                    <span class="meta-sep">|</span>
+                    <span>11:00-19:00</span>
+                  </div>
+                </div>
+              </div>
+              <div class="ec__body">
+                <div class="ec__badge-row">
+                  <span class="cb cb-content cb-exhibition">exhibition</span>
+                  <span class="sb sb-live"><span class="ending-dot"></span>開催中</span>
+                </div>
+                <div class="ec__title">Gallery SOIL 渋谷「春の群像展」</div>
+                <div class="ec__venue">渋谷<span class="ec__venue-sep">|</span>Gallery SOIL 渋谷</div>
+              </div>
+              <div class="ec__foot">
+                <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>58</span>
+                <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="10" cy="5" r="4"/><circle cx="5" cy="11" r="2.4"/></svg>4</span>
+                <button class="ktn-icon-btn on" onclick="this.classList.toggle('on');event.preventDefault()">
+                  <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>
+                  <span class="tip">興味ある！から削除する</span>
+                </button>
+              </div>
+            </a>
+            <!-- 展覧会カード④ -->
+            <a class="ec" href="#">
+              <div class="ec__poster" style="background:linear-gradient(160deg,#4a6878,#2a4858)">
+                <div class="ec__poster-noimg" style="min-height:160px"></div>
+                <div class="ec__poster-overlay">
+                  <div class="ec__poster-dates">
+                    <span class="year">2026.</span><strong>05.15</strong><span class="dow">fri</span>
+                    <span class="sep">—</span>
+                    <strong>05.31</strong><span class="dow">sun</span>
+                  </div>
+                  <div class="ec__poster-meta">
+                    <span class="ec__remain ec__remain--soon">16日後</span>
+                    <span class="meta-sep">|</span>
+                    <span>10:00-18:00</span>
+                  </div>
+                </div>
+              </div>
+              <div class="ec__body">
+                <div class="ec__badge-row">
+                  <span class="cb cb-content cb-exhibition">exhibition</span>
+                  <span class="sb sb-soon">もうすぐ開催</span>
+                </div>
+                <div class="ec__title">伊藤慶子「静物と時間」</div>
+                <div class="ec__venue">中央区<span class="ec__venue-sep">|</span>White Box 表参道</div>
+              </div>
+              <div class="ec__foot">
+                <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>15</span>
+                <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="10" cy="5" r="4"/><circle cx="5" cy="11" r="2.4"/></svg>1</span>
+                <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                  <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>
+                  <span class="tip">興味ある！に追加する</span>
+                </button>
+              </div>
+            </a>
+          </div><!-- /p5-rec-grid -->
+        </section>
+      </div><!-- /p5-recommended__inner -->
+    </div><!-- /p5-recommended -->
+
+  </main><!-- /ktn-main -->
+
+  <footer class="ktn-footer" id="ktnFooter"></footer>
+
+</div><!-- /content-wrap -->
+</div><!-- /shell -->
+
+<nav class="ktn-bottom-nav" id="ktnBottomNav">
+  <div class="ktn-bottom-nav__inner" id="ktnBottomNavInner"></div>
+</nav>
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+  KTN.init({ page: 'p5-1', role: 'user+' });
+</script>
+</body>
+</html>

@@ -59,6 +59,51 @@
         </div>
       </a>
 
+      <!-- モード切替バー -->
+      <div class="p2-12-mode-bar">
+        <div class="p2-12-mode-bar__current">
+          <span class="p2-12-mode-bar__label">現在のモード：</span>
+          <span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span>
+        </div>
+        <div class="p2-12-mode-bar__actions">
+          <button class="p2-12-mode-switch" onclick="p2121OpenModal('switch')">LIAISON に切り替える</button>
+          <button class="p2-12-mode-none" onclick="p2121OpenModal('none')">LIAISON作品展示しない</button>
+        </div>
+      </div>
+
+      <!-- LIAISON 切替確認モーダル -->
+      <div id="p2121-modal-switch" class="p2-12-modal" hidden>
+        <div class="p2-12-modal__bg" onclick="p2121CloseModal('switch')"></div>
+        <div class="p2-12-modal__box">
+          <h3 class="p2-12-modal__title">LIAISON に切り替えますか？</h3>
+          <div class="p2-12-modal__warn">⚠️ LIAISON+ の設定（価格・販売期間）と購入申込・キューのデータがすべて失われます。この操作は取り消せません。</div>
+          <ul class="p2-12-modal__notes">
+            <li>「申込中」「売却済」の作品がある場合は切り替えできません。</li>
+            <li>切り替え後は LIAISON 作品管理ページに移動します。</li>
+          </ul>
+          <div class="p2-12-modal__foot">
+            <button class="p2-12-modal__cancel" onclick="p2121CloseModal('switch')">キャンセル</button>
+            <button class="p2-12-modal__ok danger" onclick="location.href='kotennavi-p2-12.html'">切り替える</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 使用しない 切替確認モーダル -->
+      <div id="p2121-modal-none" class="p2-12-modal" hidden>
+        <div class="p2-12-modal__bg" onclick="p2121CloseModal('none')"></div>
+        <div class="p2-12-modal__box">
+          <h3 class="p2-12-modal__title">LIAISON+ を解除しますか？</h3>
+          <div class="p2-12-modal__warn">⚠️ LIAISON+ の設定（価格・販売期間）と購入申込・キューのデータがすべて失われます。この操作は取り消せません。</div>
+          <ul class="p2-12-modal__notes">
+            <li>展覧会の編集ページで「使用しない」を選択して保存します。</li>
+          </ul>
+          <div class="p2-12-modal__foot">
+            <button class="p2-12-modal__cancel" onclick="p2121CloseModal('none')">キャンセル</button>
+            <button class="p2-12-modal__ok danger" onclick="location.href='kotennavi-p2-11.html'">編集ページへ</button>
+          </div>
+        </div>
+      </div>
+
       <!-- 2. LIAISON+ 展示・販売設定（統合セクション） -->
       <section class="p2-12-liaison-section">
 
@@ -241,6 +286,12 @@
 <script src="./kotennavi-pages.js"></script>
 <script>
 KTN.init({ page: 'p2-121', role: 'user+creator' });
+function p2121OpenModal(type) {
+  document.getElementById('p2121-modal-' + type).hidden = false;
+}
+function p2121CloseModal(type) {
+  document.getElementById('p2121-modal-' + type).hidden = true;
+}
 </script>
 </body>
 </html>

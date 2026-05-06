@@ -467,8 +467,13 @@ const PAGES = {
   'p4-11': { n: 'ギャラリー-編集', w: '--w-article', bc: [['Top', '/'], ['Gallery SOIL 渋谷', '/p4'], ['編集', null]] },
   'p4-12': { n: 'ギャラリー-インサート', w: '--w-article', bc: [['Top', '/'], ['Gallery SOIL 渋谷', '/p4'], ['インサート', null]] },
   'p4-13': { n: 'ギャラリー-ウオッチャー管理', w: '--w-article', bc: [['Top', '/'], ['Gallery SOIL 渋谷', '/p4'], ['ウオッチャー管理', null]] },
+    'p4-13': { n: 'ギャラリー-ウオッチャー管理', w: '--w-article', bc: [['Top', '/'], ['Gallery SOIL 渋谷', '/p4'], ['ウオッチャー管理', null]] },
+  'p4-14': { n: 'ギャラリー-リエゾンコンソール', w: '--w-detail', bc: [['Top', '/'], ['Gallery SOIL 渋谷', '/p4'], ['リエゾンコンソール', null, 'lp']] },
+  'p4-15': { n: 'ギャラリー-取引デスク', w: '--w-detail', bc: [['Top', '/'], ['Gallery SOIL 渋谷', '/p4'], ['取引デスク', null, 'lp']] },
+  'p4-16': { n: 'ギャラリー-販売代金管理', w: '--w-article', bc: [['Top', '/'], ['Gallery SOIL 渋谷', '/p4'], ['販売代金管理', null, 'lp']] },
+  'p4-17': { n: 'ギャラリー-インベントリー管理', w: '--w-article', bc: [['Top', '/'], ['Gallery SOIL 渋谷', '/p4'], ['販売代金管理', null, 'lp']] },
   // P5 ユーザー
-  'p5': { n: 'ユーザー-展覧会カレンダー', w: '--w-entity', bc: [['Top', '/'], ['myページ', null]] },
+  'p5': { n: 'ユーザー-展覧会カレンダー', w: '--w-entity', bc: [['Top', '/'], ['山田花子 myページ', null]] },
   'p5-1': { n: 'ユーザー-ウオッチリスト', w: '--w-detail', bc: [['Top', '/'], ['myページ', '/p5'], ['ウオッチリスト', null]] },
   'p5-2': { n: 'ユーザー-チェックイン記録', w: '--w-detail', bc: [['Top', '/'], ['myページ', '/p5'], ['チェックイン記録', null]] },
   'p5-3': { n: 'ユーザー-興味あり!リスト', w: '--w-detail', bc: [['Top', '/'], ['myページ', '/p5'], ['興味あり!リスト', null]] },
@@ -620,7 +625,9 @@ function getActions(page, role) {
     if (role === 'gallery')
       return cmn + owbtn('edit', '編集') + dd('オーナーメニュー',
         ddi('edit', '編集') + ddi('file', '記事の追加') + ddSep() +
-        ddi('info', 'ガイド') + ddSep() + ddi('trash', '削除', true));
+        ddinote('grid', 'LIAISON作品管理', 'LIAISON（会場連動オンライン展示/販売）とは →') + ddSep() +
+        ddi('chart', 'インサイト') + ddi('info', 'ガイド') + ddSep() +
+        ddi('trash', '削除', true));
     if (role === 'admin')
       return cmn + owbtn('edit', '編集') +
         dd('オーナーメニュー',
@@ -684,7 +691,10 @@ function getActions(page, role) {
       return cmn + dd('その他', ddi('warn', '問題を報告する', true));
     if (role === 'gallery')
       return cmn + owbtn('edit', '編集') + dd('オーナーメニュー',
-        ddi('edit', 'プロフィール編集') + ddSep() + ddi('watch', 'ウォッチャー管理'));
+        ddi('edit', 'プロフィール編集') + ddSep() +
+        ddi('watch', 'ウォッチャー管理') + ddSep() +
+        ddi('grid', 'LIAISONコンソール') + ddi('desk', '取引デスク') + ddi('sales', '販売代金管理') + ddSep() +
+        ddi('chart', 'インサイト'));
     if (role === 'admin')
       return cmn + owbtn('edit', '編集') + dd('管理者',
         ddi('edit', '編集') + ddSep() + ddi('watch', 'ウォッチャー管理') + ddSep() + ddi('trash', '削除', true));

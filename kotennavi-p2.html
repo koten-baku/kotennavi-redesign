@@ -960,7 +960,7 @@
         var ci = r.ci
           ? '\u00a0\u25cf\u00a0<span class="rv-checkin-date">' + CI_ICON + '\u00a0' + r.checkinDate + '</span>'
           : '';
-        return '<div class="review-item">' +
+        return '<a class="review-item" href="kotennavi-p8.html">' +
           '<div class="rv-hd">' +
           '<div class="rv-av" style="background:' + r.av + ';color:' + r.tc + '">' + r.ini + '</div>' +
           '<div style="flex:1;min-width:0">' +
@@ -970,7 +970,8 @@
           '<div class="rv-date">' + r.date + '</div>' +
           '</div>' +
           '<div class="rv-body">' + r.body + '</div>' +
-          '</div>';
+          '<div class="rv-more">詳細を見る<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 4l4 4-4 4"/></svg></div>' +
+          '</a>';
       }).join('');
     });
   </script>
