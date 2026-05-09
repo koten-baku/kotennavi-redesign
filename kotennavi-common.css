@@ -2232,6 +2232,7 @@ line-clamp:2;}
 
 /* キュー人数 */
 .aw__queue{font-family:var(--fm);font-size:.54rem;color:var(--aws-applying);letter-spacing:.03em}
+.aw__queue-inline{font-family:var(--fm);font-size:.54rem;color:var(--aws-applying);letter-spacing:.03em;white-space:nowrap}
 
 /* ポートフォリオ: 販売状態バッジ非表示 */
 .aw--portfolio .aws{display:none}

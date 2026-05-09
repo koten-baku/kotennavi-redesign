@@ -838,13 +838,13 @@ KTN.pages['p2-5-1'] = function () {
     { creator:'tanaka', name:'田中 透', title:'シュワシュワ',        year:'2025', spec:'油彩・キャンバス / 38.0×45.5 cm',      status:'sale',    price:75000,  plus:true,  bg:'linear-gradient(155deg,#d0e8f0,#7ab4cc)', tc:'rgba(0,0,0,.28)',        interest:14 },
     { creator:'tanaka', name:'田中 透', title:'オノマトペの庭',      year:'2026', spec:'ミクストメディア / 60.6×50.0 cm',      status:'sold',    price:null,   plus:true,  bg:'linear-gradient(155deg,#b8d8cc,#6a9e8a)', tc:'rgba(255,255,255,.6)',  interest:41 },
     { creator:'tanaka', name:'田中 透', title:'言葉の断片 I',        year:'2024', spec:'油彩・麻布 / 53.0×45.5 cm',           status:'nsale',   price:null,   plus:false, bg:'linear-gradient(155deg,#d8c8e8,#a888cc)', tc:'rgba(255,255,255,.6)',  interest:9  },
-    { creator:'tanaka', name:'田中 透', title:'言葉の断片 II',       year:'2024', spec:'油彩・麻布 / 45.5×38.0 cm',           status:'pending', price:180000, plus:false, bg:'linear-gradient(155deg,#c8d8e8,#7898b8)', tc:'rgba(255,255,255,.6)',  interest:7,  applicants:2 },
-    { creator:'tanaka', name:'田中 透', title:'音の気配',            year:'2026', spec:'油彩・キャンバス / 45.5×38.0 cm',      status:'pending', price:95000,  plus:true,  bg:'linear-gradient(155deg,#e8d8c0,#c4a870)', tc:'rgba(0,0,0,.3)',         interest:15, applicants:3 },
+    { creator:'tanaka', name:'田中 透', title:'言葉の断片 II',       year:'2024', spec:'油彩・麻布 / 45.5×38.0 cm',           status:'sale',    price:180000, plus:false, bg:'linear-gradient(155deg,#c8d8e8,#7898b8)', tc:'rgba(255,255,255,.6)',  interest:7,  applicants:2 },
+    { creator:'tanaka', name:'田中 透', title:'音の気配',            year:'2026', spec:'油彩・キャンバス / 45.5×38.0 cm',      status:'sale',    price:95000,  plus:true,  bg:'linear-gradient(155deg,#e8d8c0,#c4a870)', tc:'rgba(0,0,0,.3)',         interest:15, applicants:3 },
     /* 山田 葵 */
     { creator:'yamada', name:'山田 葵', title:'記憶の断層 #1',       year:'2025', spec:'写真・ジクレープリント / A2',           status:'sale',    price:55000,  plus:true,  bg:'linear-gradient(155deg,#d0c8e0,#8878b4)', tc:'rgba(255,255,255,.6)',  interest:16 },
     { creator:'yamada', name:'山田 葵', title:'記憶の断層 #2',       year:'2025', spec:'写真・ジクレープリント / A2',           status:'sale',    price:55000,  plus:true,  bg:'linear-gradient(155deg,#c8d8e8,#7898b8)', tc:'rgba(255,255,255,.6)',  interest:12 },
     { creator:'yamada', name:'山田 葵', title:'光の解像度',          year:'2026', spec:'写真・ミクストメディア / 60×80 cm',    status:'nsale',   price:null,   plus:false, bg:'linear-gradient(155deg,#e8d8c8,#c8a888)', tc:'rgba(0,0,0,.28)',        interest:8  },
-    { creator:'yamada', name:'山田 葵', title:'朝の残響',            year:'2026', spec:'写真・ジクレープリント / A1',           status:'pending', price:68000,  plus:true,  bg:'linear-gradient(155deg,#d8e8d0,#88b880)', tc:'rgba(0,0,0,.28)',        interest:10, applicants:1 },
+    { creator:'yamada', name:'山田 葵', title:'朝の残響',            year:'2026', spec:'写真・ジクレープリント / A1',           status:'sale',    price:68000,  plus:true,  bg:'linear-gradient(155deg,#d8e8d0,#88b880)', tc:'rgba(0,0,0,.28)',        interest:10, applicants:1 },
     /* 佐藤 一朗 */
     { creator:'sato',   name:'佐藤 一朗', title:'白樺の記憶',        year:'2025', spec:'木彫・彩色 / H24×W18×D12 cm',         status:'sale',    price:128000, plus:true,  bg:'linear-gradient(155deg,#e0e8d0,#a0b888)', tc:'rgba(0,0,0,.28)',        interest:11 },
     { creator:'sato',   name:'佐藤 一朗', title:'沈黙する形 #3',     year:'2024', spec:'木版画 / 38.0×45.5 cm',               status:'nsale',   price:null,   plus:false, bg:'linear-gradient(155deg,#d8c8b8,#a89878)', tc:'rgba(0,0,0,.28)',        interest:5  },
@@ -854,18 +854,17 @@ KTN.pages['p2-5-1'] = function () {
     var cardClass = 'p25c' + (w.status === 'sold' ? ' p25c--sold' : '');
     var ribbon    = w.status === 'sold' ? '<div class="p25c__sold-ribbon">SOLD</div>' : '';
     var badgeMap  = {
-      sale:    '<span class="p25c__badge p25c__badge--sale">\u8ca9\u58f2\u4e2d</span>',
-      sold:    '',
-      nsale:   '<span class="p25c__badge p25c__badge--nsale">\u975e\u58f2\u54c1</span>',
-      pending: '<span class="p25c__badge p25c__badge--pending">\u7533\u8fbc\u4e2d</span>',
+      sale:  '<span class="p25c__badge p25c__badge--sale">\u8ca9\u58f2\u4e2d</span>',
+      sold:  '',
+      nsale: '<span class="p25c__badge p25c__badge--nsale">\u975e\u58f2\u54c1</span>',
     };
     var badge = badgeMap[w.status] || '';
-    var statusMap = { sale: 'forsale', pending: 'pending', nsale: 'nsale', sold: 'sold' };
+    var statusMap = { sale: 'forsale', nsale: 'nsale', sold: 'sold' };
     var dataStatus = statusMap[w.status] || 'nsale';
     var priceHtml = w.price
       ? '<div class="p25c__price"><span class="p25c__price-currency">&yen;</span>' + w.price.toLocaleString() + '<span class="p25c__price-tax">\uff08\u7a0e\u8fbc\uff09</span></div>'
       : '';
-    var applicantsHtml = (w.status === 'pending' && w.applicants)
+    var applicantsHtml = (w.status === 'sale' && w.applicants)
       ? '<span class="p25c__applicants">' + w.applicants + '\u4eba\u304c\u7533\u8fbc\u4e2d</span>'
       : '';
     return '<a class="' + cardClass + '" href="#" data-creator="' + w.creator + '" data-status="' + dataStatus + '">' +
@@ -2523,11 +2522,10 @@ KTN.pages['p3'] = function () {
 
   // 6b. 作品グリッド生成
   var statusBadgeMap = {
-    sale:     '<span class="aws aws-sale">販売中</span>',
-    nsale:    '<span class="aws aws-nsale">非売品</span>',
-    inquiry:  '<span class="aws aws-inquiry">要問合せ</span>',
-    applying: '<span class="aws aws-applying">申込中</span>',
-    sold:     '<span class="aws aws-sold">売却済</span>'
+    sale:    '<span class="aws aws-sale">販売中</span>',
+    nsale:   '<span class="aws aws-nsale">非売品</span>',
+    inquiry: '<span class="aws aws-inquiry">要問合せ</span>',
+    sold:    '<span class="aws aws-sold">売却済</span>'
   };
   var worksTotalImgSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="20" height="20">'
     +'<rect x="3" y="3" width="18" height="18" rx="2"/>'
@@ -2599,7 +2597,8 @@ KTN.pages['p3'] = function () {
           if (w.status === 'nsale') cardCls += ' aw--nsale';
           var soldRibbon = (isPlus && w.status === 'sold')
             ? '<div class="aw__sold-ribbon"><div class="aw__sold-ribbon-inner">SOLD OUT</div></div>' : '';
-          var statusBadge = statusBadgeMap[w.status] || '';
+          var statusBadge = (statusBadgeMap[w.status] || '')
+            + (w.queue ? '<span class="aw__queue-inline">'+w.queue+'\u4eba\u304c\u7533\u8fbc\u4e2d</span>' : '');
           var footHtml = (isPlus && w.price)
             ? '<div class="aw__foot"><div class="aw__price">'+w.price+'</div></div>' : '';
           return '<a class="'+cardCls+'" href="#">'
