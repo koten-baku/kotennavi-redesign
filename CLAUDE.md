@@ -23,12 +23,13 @@
 
 ## ファイル構成
 ```
-kotennavi-common.css    共通CSS（大容量・全ページ完成後リファクタリング予定）
-kotennavi-common.js     共通JS
-kotennavi-pages.js      ページ別JS
-kotennavi-*.html        各ページ
-docs/                   仕様・設計ドキュメント
-docs/progress.md        進捗状況（★こまめに更新）
+kotennavi-common.css      共通CSS（全スタイルの単一ソース・大容量・全ページ完成後リファクタリング予定）
+kotennavi-components.css  コンポーネントデモ用CSS（※下記注意事項を参照）
+kotennavi-common.js       共通JS
+kotennavi-pages.js        ページ別JS
+kotennavi-*.html          各ページ
+progress.md               進捗状況（★こまめに更新・このファイルのみを正として使う）
+docs/                     仕様・設計ドキュメント
 ```
 
 ---
@@ -42,6 +43,23 @@ docs/progress.md        進捗状況（★こまめに更新）
 - ページ固有CSSは `.p{ID}-` プレフィックスで common.css に追記
 - flexのみで構成・複雑なgridやdisplay:contentsは使わない
 - HTML内にCSSコードブロックを含めない
+
+---
+
+## kotennavi-components.css について
+- 制作初期（2026年3月）にコンポーネントデモ用HTMLファイル（`kotennavi_cards_*.html`・`kotennavi_buttons.html` 等）から抽出・統合したスタンドアロン用CSS
+- **本番ページ（`kotennavi-p*.html`）では使用しない**
+- デモファイルの動作確認のみを目的として残している
+- `common.css` の後にロードされるため、重複ルールがあると意図せず上書きする危険がある
+- **新規CSSルールは必ず `common.css` にのみ追記すること**
+- 全ページ完成後のリファクタリング時に `common.css` へ統合または廃止予定
+
+---
+
+## 進捗管理ルール
+- **進捗の正ファイルは `progress.md` のみ**
+- ページ完了時・作業開始時・状態変化時は必ず `progress.md` を更新する
+- この CLAUDE.md 内の進捗セクションは参照しない（古い可能性あり）
 
 ---
 
@@ -77,7 +95,8 @@ docs/progress.md        進捗状況（★こまめに更新）
 | 料金 | 無料 | 展示無料・販売手数料あり |
 
 - 販売フロー：会場優先型（会期中は会場優先→会期終了後に申込順で購入プロセス）
-- 作品の販売状態（5種類）：販売中 / 申込中 / 売却済 / 要問合せ / 非売品
+- 作品の販売状態（5種類）：販売中 / 商談中 / 売約済 / 要問合せ / 非売品
+- LIAISON+で申込者がいる場合：「販売中」バッジ＋「xx人が申込中」（`.aw__applicants`）をバッジ行に表示
 
 ---
 
@@ -123,8 +142,8 @@ docs/progress.md        進捗状況（★こまめに更新）
 - タブナビ：P3/P4と同一のHTML構造を流用・対象タブをアクティブ
 - レイアウト：1カラム（右サイドカラムなし）・`--w-detail`
 
-### P3（クリエイタートップ）
-- ヒーロー（`.p3-head`）：白背景・`border: 1px solid var(--border)`・`border-radius: 4px`
+### P3（クリエイタートップ）確定仕様
+- ヒーロー（`.p3-head`）：白背景・`max-width: --w-entity`・`border: 1px solid var(--border)`・`border-radius: 4px`
 - タブナビ（`.p3-tabnav`）：`sticky`・`top: calc(34px + 50px)`・`z-index: 90`
 - タブ構成：[クリエイター名] | 展覧会 作品 記事 クリエイター情報
 - 各セクション：`.p3-box`（`background: #fff`・`border: 1px solid var(--border)`・`border-radius: 4px`・`padding: 24px`）
@@ -173,7 +192,7 @@ docs/progress.md        進捗状況（★こまめに更新）
 - `.aw__creator` は非表示
 - data属性：`data-liaison` / `data-status` / `data-genre` / `data-year`
 
-### P4（ギャラリートップ）
+### P4（ギャラリートップ）確定仕様
 - タブ構成：[ギャラリー名] | 展覧会 記事 ギャラリー情報
 - 右カラム（`.p4-prof-side`）：CTAウィジェット→開催中展覧会→記事（最新3件）
 
@@ -201,12 +220,7 @@ docs/progress.md        進捗状況（★こまめに更新）
 
 ---
 
-## 進捗状況
-**→ docs/progress.md を参照**
-
----
-
 ## 参照ドキュメント
-- `docs/progress.md`：進捗状況（★こまめに更新）
-- `docs/06_リエゾン_サービス仕様書.md`：リエゾンサービス詳細仕様
-- `docs/sitemap.md`：サイトマップ・権限設計
+- `docs/` フォルダ内を参照
+- リエゾンサービス仕様書（06_リエゾン_サービス仕様書.md）
+- サイトマップ（sitemap.md）

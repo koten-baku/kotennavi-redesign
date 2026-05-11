@@ -78,7 +78,7 @@
           <h3 class="p2-12-modal__title">LIAISON に切り替えますか？</h3>
           <div class="p2-12-modal__warn">⚠️ LIAISON+ の設定（価格・販売期間）と購入申込・キューのデータがすべて失われます。この操作は取り消せません。</div>
           <ul class="p2-12-modal__notes">
-            <li>「申込中」「売却済」の作品がある場合は切り替えできません。</li>
+            <li>「商談中」「売約済」の作品がある場合は切り替えできません。</li>
             <li>切り替え後は LIAISON 作品管理ページに移動します。</li>
           </ul>
           <div class="p2-12-modal__foot">
@@ -104,6 +104,15 @@
         </div>
       </div>
 
+      <!-- 販売期間中通知（販売期間開始後に表示） -->
+      <div class="p2-121-sale-notice" id="p2121SaleNotice" hidden>
+        <div class="p2-121-sale-notice__body">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg>
+          <span>販売期間中です（2026.02.18 — 03.19）。申込対応・会場売約済操作はコンソールから行ってください。</span>
+        </div>
+        <a class="p2-121-sale-notice__link" href="kotennavi-p3-15.html">LIAISON+コンソール →</a>
+      </div>
+
       <!-- 2. LIAISON+ 展示・販売設定（統合セクション） -->
       <section class="p2-12-liaison-section">
 
@@ -112,7 +121,7 @@
           <div class="p2-12-section-head">
             <h3 class="p2-12-section-head__title">販売期間</h3>
           </div>
-          <p class="p2-121-period-hint">作品のオンライン販売を受け付ける期間を設定します。期間終了後は自動的に購入受付が停止されます。</p>
+          <p class="p2-121-period-hint">作品のオンライン販売を受け付ける期間を設定します。期間終了後は自動的に購入受付が停止されます。<br>この設定は販売期間開始後、変更できなくなります。</p>
 
           <div class="p2-121-period-opts" role="radiogroup" aria-label="販売期間の選択">
 
@@ -173,6 +182,7 @@
           <div class="p2-12-section-head">
             <h3 class="p2-12-section-head__title">発送・梱包</h3>
           </div>
+          <p class="p2-121-period-hint">購入者の作品購入の参考にするため作品の発送に関する情報を設定します。<br>この設定は販売期間開始後、変更できなくなります。</p>
 
           <div class="p2-121-ship-grid">
             <!-- 発送地 -->
@@ -195,17 +205,29 @@
             <!-- 発送予定日 -->
             <div class="p2-121-ship-field">
               <label class="p2-121-ship-field__label" for="p2121ShipDate">発送予定日</label>
-              <select class="p2-121-ship-field__select" id="p2121ShipDate">
+              <div style="display:flex;align-items:center;gap:6px">
+                <input class="p2-121-ship-field__select" type="date" id="p2121ShipDate"
+                  min="2026-03-05">
+                <span style="white-space:nowrap;font-size:.88rem;color:var(--text-sub)">以降</span>
+              </div>
+              <p class="p2-121-custom-picker__note" style="margin-top:4px">作品の発送が可能になる日付を選択してください</p>
+            </div>
+
+            <!-- 配送方法 -->
+            <div class="p2-121-ship-field">
+              <label class="p2-121-ship-field__label" for="p2121ShipMethod">配送方法</label>
+              <select class="p2-121-ship-field__select" id="p2121ShipMethod">
                 <option value="">選択してください</option>
-                <option value="during">会期中（随時）</option>
-                <option value="1w">会期終了後1週間以内（〜03.12）</option>
-                <option value="2w">会期終了後2週間以内（〜03.19）</option>
-                <option value="4w" selected>会期終了後4週間以内（〜04.02）</option>
+                <option value="yamato">ヤマト運輸</option>
+                <option value="sagawa">佐川急便</option>
+                <option value="post">日本郵便</option>
+                <option value="other">その他</option>
               </select>
+              <p class="p2-121-custom-picker__note" style="margin-top:auto">発送時に変更がある場合、購入申込者に事前にお知らせください。</p>
             </div>
 
             <!-- 梱包費（任意） -->
-            <div class="p2-121-ship-field p2-121-ship-field--wide">
+            <div class="p2-121-ship-field">
               <label class="p2-121-ship-field__label" for="p2121PackFee">
                 梱包費
                 <span class="p2-121-optional">任意</span>
@@ -214,8 +236,9 @@
                 <span class="p2-121-yen-wrap__sign">¥</span>
                 <input class="p2-121-yen-wrap__input" type="number" id="p2121PackFee"
                   min="0" step="100" placeholder="例：1000">
-                <span class="p2-121-yen-wrap__hint">参考として購入者に表示されます</span>
+                <span style="white-space:nowrap;font-size:.8rem;color:var(--muted)">税込</span>
               </div>
+              <p class="p2-121-yen-wrap__hint" style="margin-top:auto">参考として購入者に表示されます</p>
             </div>
           </div>
 
@@ -239,6 +262,7 @@
             <span class="p2-12-section-head__note">ドラッグで並び順を変更できます</span>
           </div>
           <p class="p2-12-works-hint">販売状態は会場の状況に合わせて随時更新してください。不明な場合は「要問合せ」に設定することを推奨します。</p>
+          <p class="p2-12-works-hint">購入申込者が1人以上の場合、作品に関する操作は「コンソールで操作」をクリックして移動した「リエゾン+コンソール」ページから操作してください。</p>
           <ul class="p2-12-work-list" id="p212WorkList" aria-label="展示作品リスト"></ul>
         </div>
 

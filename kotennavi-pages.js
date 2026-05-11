@@ -688,15 +688,16 @@ KTN.pages['p2-5'] = function () {
     { creator:'yamada', name:'山田 葵', title:'記憶の断層 #2',  year:'2025', spec:'写真・ジクレープリント / A2', status:'sale',  plus:true,  bg:'linear-gradient(155deg,#c8d8e8,#7898b8)', tc:'rgba(255,255,255,.6)', interest:12 },
     { creator:'yamada', name:'山田 葵', title:'光の解像度',     year:'2026', spec:'写真・ミクストメディア / 60×80 cm', status:'nsale', plus:false, bg:'linear-gradient(155deg,#e8d8c8,#c8a888)', tc:'rgba(0,0,0,.28)', interest:8 },
     /* 佐藤 一朗 */
-    { creator:'sato',   name:'佐藤 一朗', title:'白樺の記憶',   year:'2025', spec:'木彫・彩色 / H24×W18×D12 cm', status:'sale',  plus:true,  bg:'linear-gradient(155deg,#e0e8d0,#a0b888)', tc:'rgba(0,0,0,.28)', interest:11 },
+    { creator:'sato',   name:'佐藤 一朗', title:'白樺の記憶',   year:'2025', spec:'木彫・彩色 / H24×W18×D12 cm', status:'negot', plus:true,  bg:'linear-gradient(155deg,#e0e8d0,#a0b888)', tc:'rgba(0,0,0,.28)', interest:11 },
     { creator:'sato',   name:'佐藤 一朗', title:'沈黙する形 #3', year:'2024', spec:'木版画 / 38.0×45.5 cm',                    status:'nsale', plus:false, bg:'linear-gradient(155deg,#d8c8b8,#a89878)', tc:'rgba(0,0,0,.28)', interest:5 },
   ];
 
   var STATUS_BADGE = {
     sale:    '<span class="aws aws-sale">販売中</span>',
+    negot:   '<span class="aws aws-negot">商談中</span>',
+    inquiry: '<span class="aws aws-inquiry">要問合せ</span>',
     sold:    '<span class="aws aws-sold">SOLD</span>',
     nsale:   '<span class="aws aws-nsale">非売品</span>',
-    inquiry: '<span class="aws aws-inquiry">要問合せ</span>',
   };
 
   function renderWork(w) {
@@ -704,12 +705,13 @@ KTN.pages['p2-5'] = function () {
     var ribbon    = w.status === 'sold' ? '<div class="p25c__sold-ribbon">SOLD</div>' : '';
     var badgeMap  = {
       sale:    '<span class="p25c__badge p25c__badge--sale">\u8ca9\u58f2\u4e2d</span>',
-      sold:    '',
+      negot:   '<span class="p25c__badge p25c__badge--negot">\u5546\u8ac7\u4e2d</span>',
+      inquiry: '<span class="p25c__badge p25c__badge--inquiry">\u8981\u554f\u5408\u305b</span>',
+      sold:    '<span class="p25c__badge p25c__badge--sold">\u58f2\u7d04\u6e08</span>',
       nsale:   '<span class="p25c__badge p25c__badge--nsale">\u975e\u58f2\u54c1</span>',
-      inquiry: '<span class="p25c__badge p25c__badge--reserved">\u4e88\u7d04\u6e08</span>',
     };
     var badge = badgeMap[w.status] || '';
-    var statusMap = { sale: 'forsale', inquiry: 'forsale', nsale: 'nsale', sold: 'sold' };
+    var statusMap = { sale: 'forsale', negot: 'forsale', inquiry: 'forsale', nsale: 'nsale', sold: 'sold' };
     var dataStatus = statusMap[w.status] || 'nsale';
     return '<a class="' + cardClass + '" href="./kotennavi-p6-1.html" data-creator="' + w.creator + '" data-status="' + dataStatus + '">' +
       '<div class="p25c__img">' +
@@ -848,18 +850,22 @@ KTN.pages['p2-5-1'] = function () {
     /* 佐藤 一朗 */
     { creator:'sato',   name:'佐藤 一朗', title:'白樺の記憶',        year:'2025', spec:'木彫・彩色 / H24×W18×D12 cm',         status:'sale',    price:128000, plus:true,  bg:'linear-gradient(155deg,#e0e8d0,#a0b888)', tc:'rgba(0,0,0,.28)',        interest:11 },
     { creator:'sato',   name:'佐藤 一朗', title:'沈黙する形 #3',     year:'2024', spec:'木版画 / 38.0×45.5 cm',               status:'nsale',   price:null,   plus:false, bg:'linear-gradient(155deg,#d8c8b8,#a89878)', tc:'rgba(0,0,0,.28)',        interest:5  },
+    { creator:'sato',   name:'佐藤 一朗', title:'刻まれた光 #2',     year:'2025', spec:'木彫・彩色 / H18×W15×D10 cm',         status:'negot',   price:98000,  plus:true,  bg:'linear-gradient(155deg,#e8dcc8,#c0a878)', tc:'rgba(0,0,0,.28)',        interest:9  },
+    { creator:'sato',   name:'佐藤 一朗', title:'問いの形',          year:'2024', spec:'ブロンズ / H30×W12×D12 cm',           status:'inquiry', price:null,   plus:false, bg:'linear-gradient(155deg,#d8e0e8,#98a8b8)', tc:'rgba(0,0,0,.28)',        interest:4  },
   ];
 
   function renderWork(w) {
     var cardClass = 'p25c' + (w.status === 'sold' ? ' p25c--sold' : '');
     var ribbon    = w.status === 'sold' ? '<div class="p25c__sold-ribbon">SOLD</div>' : '';
     var badgeMap  = {
-      sale:  '<span class="p25c__badge p25c__badge--sale">\u8ca9\u58f2\u4e2d</span>',
-      sold:  '',
-      nsale: '<span class="p25c__badge p25c__badge--nsale">\u975e\u58f2\u54c1</span>',
+      sale:    '<span class="p25c__badge p25c__badge--sale">\u8ca9\u58f2\u4e2d</span>',
+      negot:   '<span class="p25c__badge p25c__badge--negot">\u5546\u8ac7\u4e2d</span>',
+      inquiry: '<span class="p25c__badge p25c__badge--inquiry">\u8981\u554f\u5408\u305b</span>',
+      sold:    '<span class="p25c__badge p25c__badge--sold">\u58f2\u7d04\u6e08</span>',
+      nsale:   '<span class="p25c__badge p25c__badge--nsale">\u975e\u58f2\u54c1</span>',
     };
     var badge = badgeMap[w.status] || '';
-    var statusMap = { sale: 'forsale', nsale: 'nsale', sold: 'sold' };
+    var statusMap = { sale: 'forsale', negot: 'forsale', inquiry: 'forsale', nsale: 'nsale', sold: 'sold' };
     var dataStatus = statusMap[w.status] || 'nsale';
     var priceHtml = w.price
       ? '<div class="p25c__price"><span class="p25c__price-currency">&yen;</span>' + w.price.toLocaleString() + '<span class="p25c__price-tax">\uff08\u7a0e\u8fbc\uff09</span></div>'
@@ -1076,12 +1082,20 @@ var _p6Works = [
 
 var _p6DemoComments = {
   1:[
-    { user:'Y.M', bg:'linear-gradient(135deg,#b8d8cc,#6a9e8a)', date:'2026.03.28',
-      anon:false, purchased:true, stars:5,
-      body:'展覧会で実物を見て一目惚れし、申込みました。自宅に届いて改めて向き合うと、光の当たり方によって全く違う表情を見せてくれます。大切にしていきます。' },
-    { user:'T.K', bg:'linear-gradient(135deg,#d0d8f0,#8899cc)', date:'2026.03.15',
-      anon:false, purchased:false, stars:4,
+    { user:'R.S', type:'inquiry', bg:'linear-gradient(135deg,#f0d8e0,#c89aac)', date:'2026.02.20',
+      body:'会場に実物を見に行きたいのですが、在廊予定はありますか？' },
+    { user:'田中 透', type:'reply', isCreator:true, bg:'linear-gradient(135deg,#2a5f7a,#1a3f5a)', date:'2026.02.21',
+      body:'2月25日（土）は終日在廊予定です。ぜひお越しいただければ嬉しいです。' },
+    { user:'A.T', type:'inquiry', bg:'linear-gradient(135deg,#f0e0c0,#c8a070)', date:'2026.02.25',
+      body:'この作品は額装なしでご提供いただくことはできますか？' },
+    { user:'田中 透', type:'reply', isCreator:true, bg:'linear-gradient(135deg,#2a5f7a,#1a3f5a)', date:'2026.02.26',
+      body:'申し訳ありませんが、今回は木製フローティングフレーム込みでのご提供となっております。' },
+    { user:'T.K', type:'comment', bg:'linear-gradient(135deg,#d0d8f0,#8899cc)', date:'2026.03.15',
+      purchased:false, stars:4,
       body:'会場で拝見しました。緑の色が穏やかで、ずっと見ていられる作品です。次回作も楽しみにしています。' },
+    { user:'Y.M', type:'comment', bg:'linear-gradient(135deg,#b8d8cc,#6a9e8a)', date:'2026.03.28',
+      purchased:true, stars:5,
+      body:'展覧会で実物を見て一目惚れし、申込みました。自宅に届いて改めて向き合うと、光の当たり方によって全く違う表情を見せてくれます。大切にしていきます。' },
   ],
   2:[], 3:[], 4:[],
 };
@@ -1120,6 +1134,9 @@ function _p6Init(opts) {
   var relFavSet   = new Set();
   var _localComments = {};
   var _selectedStars = 0;
+  var _postType = 'comment';
+  var _deletedCids = {};
+  var _cidCounter = 0;
 
   function isLoggedIn() { return KTN.role !== 'guest'; }
   function isOwner()    { return KTN.role === 'user+creator'; }
@@ -1354,63 +1371,88 @@ function _p6Init(opts) {
   }
 
   function renderComments() {
-    var all = (_p6DemoComments[WORK.id] || []).concat(_localComments[WORK.id] || []);
-    var avg = calcAvg(all);
+    var SHOW = 3;
+    var raw = (_p6DemoComments[WORK.id] || []).concat(_localComments[WORK.id] || []);
+    raw.forEach(function(c) { if (c._cid === undefined) c._cid = _cidCounter++; });
+    var all = raw.filter(function(c) { return !_deletedCids[c._cid]; });
+    var sorted = all.slice().reverse();
     var el;
-    el = document.getElementById('cmtSummary');
-    if (el) {
-      el.innerHTML = avg
-        ? '<div style="text-align:right"><div class="cmt-avg-stars">' + starsHtml(Math.round(avg), '1rem') + '</div>' +
-          '<div style="display:flex;align-items:baseline;gap:6px"><span class="cmt-avg">' + avg +
-          '</span><span class="cmt-avg-count">/ 5（' + all.length + '件）</span></div></div>'
-        : '<span style="font-size:.66rem;color:var(--lmuted)">まだ評価がありません</span>';
-    }
+
     el = document.getElementById('commentsList');
     if (el) {
-      el.innerHTML = all.length ? all.map(function(c) {
-        return '<div class="cmt-card"><div class="cmt-card-header">' +
-          '<div class="cmt-avatar" style="background:' + (c.bg || 'var(--lbg3)') + '">' +
-          (c.anon ? '匿' : c.user.slice(0,1)) + '</div>' +
-          '<div class="cmt-user"><div class="cmt-user-row">' +
-          '<span class="cmt-user-name">' + (c.anon ? '匿名ユーザー' : c.user) + '</span>' +
-          (c.purchased ? '<span class="cmt-verified">✓ 購入者</span>' : '') +
-          '<span class="cmt-user-date">' + c.date + '</span></div>' +
-          (opts.noRating ? '' : '<div class="cmt-stars">' + starsHtml(c.stars) + '</div>') +
-          '</div></div>' +
-          '<div class="cmt-body">' + c.body + '</div></div>';
-      }).join('')
-      : '<div class="cmt-empty"><div class="cmt-empty-icon">💬</div>' +
-        '<div class="cmt-empty-txt">まだコメントはありません。<br>ログインして最初のコメントを投稿しましょう。</div></div>';
+      if (!all.length) {
+        el.innerHTML = '<div class="cmt-empty"><div class="cmt-empty-icon">💬</div>' +
+          '<div class="cmt-empty-txt">まだコメント・お問い合わせはありません。<br>ログインして最初のコメントを投稿しましょう。</div></div>';
+      } else {
+        var cardHtml = function(c) {
+          var isInq   = c.type === 'inquiry';
+          var isReply = !!(c.isCreator || c.type === 'reply');
+          var cardCls = isInq ? ' cmt-card--inquiry' : isReply ? ' cmt-card--reply' : '';
+          var badge   = isInq
+            ? '<span class="cmt-type-badge cmt-type-badge--inquiry">お問い合わせ</span>'
+            : isReply
+              ? '<span class="cmt-type-badge cmt-type-badge--reply">出品者の回答</span>'
+              : '';
+          return '<div class="cmt-card' + cardCls + '">' +
+            '<div class="cmt-card-header">' +
+            '<div class="cmt-avatar" style="background:' + (c.bg || 'var(--lbg3)') + '">' + c.user.slice(0,1) + '</div>' +
+            '<div class="cmt-user"><div class="cmt-user-row">' +
+            badge +
+            '<span class="cmt-user-name">' + c.user + '</span>' +
+            (c.purchased ? '<span class="cmt-verified">✓ 購入者</span>' : '') +
+            '<span class="cmt-user-date">' + c.date + '</span>' +
+            ((isOwner() || isAdmin()) ? '<button class="cmt-delete-btn" onclick="deleteCmt(' + c._cid + ')" title="削除">✕</button>' : '') +
+            '</div>' +
+            (opts.noRating || isInq || isReply ? '' : '<div class="cmt-stars">' + starsHtml(c.stars) + '</div>') +
+            '</div></div>' +
+            '<div class="cmt-body">' + c.body + '</div></div>';
+        };
+        var visible = sorted.slice(0, SHOW);
+        var older   = sorted.slice(SHOW);
+        var html = visible.map(cardHtml).join('');
+        if (older.length) {
+          html += '<button class="cmt-more-btn" id="cmtMoreBtn" onclick="toggleCmtOlder()">' +
+            '過去のコメントを見る（' + older.length + '件）</button>' +
+            '<div class="cmt-older" id="cmtOlder" hidden>' + older.map(cardHtml).join('') + '</div>';
+        }
+        el.innerHTML = html;
+      }
     }
+
     el = document.getElementById('commentPostArea');
     if (el) {
       if (!isLoggedIn()) {
-        el.innerHTML = '<div class="cmt-login-prompt"><p>コメントを投稿するにはログインが必要です</p>' +
+        el.innerHTML = '<div class="cmt-login-prompt"><p>コメント・お問い合わせの投稿にはログインが必要です</p>' +
           '<button class="cmt-login-link" onclick="openModal(\'loginModal\')">' +
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>' +
-          'ログインしてコメントする</button></div>';
+          'ログインする</button></div>';
         _selectedStars = 0;
         return;
       }
-      if (opts.noRating) {
-        el.innerHTML = '<div class="cmt-post-box"><div class="cmt-post-lbl">コメントを投稿する</div>' +
-          '<textarea class="cmt-textarea" id="cmtInput" placeholder="この作品への感想をお書きください…"></textarea>' +
-          '<div class="cmt-post-footer"><label class="cmt-anon-label"><input type="checkbox" id="cmtAnon"> 匿名で投稿する</label>' +
-          '<button class="cmt-submit" onclick="submitComment()">投稿する</button></div></div>';
-      } else {
-        el.innerHTML = '<div class="cmt-post-box"><div class="cmt-post-lbl">評価・コメントを投稿する</div>' +
-          '<div class="cmt-star-input"><span class="cmt-star-input-lbl">評価：</span>' +
+      var isInqTab = _postType === 'inquiry';
+      var tabsHtml = '<div class="cmt-post-tabs">' +
+        '<button class="cmt-post-tab' + (!isInqTab ? ' is-active' : '') + '" onclick="selectCmtType(\'comment\',this)">コメント</button>' +
+        '<button class="cmt-post-tab' + (isInqTab ? ' is-active' : '') + '" onclick="selectCmtType(\'inquiry\',this)">お問い合わせ</button>' +
+        '</div>';
+      var starHtml = '';
+      if (!opts.noRating && !isInqTab) {
+        starHtml = '<div class="cmt-star-input"><span class="cmt-star-input-lbl">評価：</span>' +
           '<div class="cmt-star-row" id="starInputRow">' +
           [1,2,3,4,5].map(function(n) {
             return '<button class="cmt-star-btn" data-star="' + n + '" onclick="selectStar(' + n + ')">★</button>';
           }).join('') +
           '</div><span class="cmt-star-selected-lbl" id="starLabel">' +
-          (_selectedStars ? STAR_LABELS[_selectedStars] : '') + '</span></div>' +
-          '<textarea class="cmt-textarea" id="cmtInput" placeholder="この作品への感想をお書きください…"></textarea>' +
-          '<div class="cmt-post-footer"><label class="cmt-anon-label"><input type="checkbox" id="cmtAnon"> 匿名で投稿する</label>' +
-          '<button class="cmt-submit" onclick="submitComment()">投稿する</button></div></div>';
-        updateStarUI(_selectedStars);
+          (_selectedStars ? STAR_LABELS[_selectedStars] : '') + '</span></div>';
       }
+      var placeholder = isInqTab
+        ? '作品についての質問や問い合わせ内容を入力してください。出品者に通知されます。'
+        : 'この作品への感想をお書きください…';
+      el.innerHTML = '<div class="cmt-post-box">' + tabsHtml + starHtml +
+        '<textarea class="cmt-textarea" id="cmtInput" placeholder="' + placeholder + '"></textarea>' +
+        '<div class="cmt-post-footer">' +
+        '<button class="cmt-submit" onclick="submitComment()">' + (isInqTab ? '送る' : '投稿する') + '</button>' +
+        '</div></div>';
+      if (!opts.noRating && !isInqTab) updateStarUI(_selectedStars);
     }
   }
 
@@ -1427,15 +1469,16 @@ function _p6Init(opts) {
   function submitComment() {
     var inp = document.getElementById('cmtInput');
     var txt = inp ? inp.value.trim() : '';
-    if (!opts.noRating && !_selectedStars) { alert('星評価を選んでください'); return; }
-    if (!txt) { alert('コメントを入力してください'); return; }
-    var anon = document.getElementById('cmtAnon') ? document.getElementById('cmtAnon').checked : false;
+    var isInq = _postType === 'inquiry';
+    if (!opts.noRating && !isInq && !_selectedStars) { alert('星評価を選んでください'); return; }
+    if (!txt) { alert(isInq ? '内容を入力してください' : 'コメントを入力してください'); return; }
     var id = WORK.id;
     if (!_localComments[id]) _localComments[id] = [];
     _localComments[id].push({
       user:'あなた', bg:'linear-gradient(135deg,#ddeeff,#88aadd)',
       date: new Date().toLocaleDateString('ja-JP',{year:'numeric',month:'2-digit',day:'2-digit'}).replace(/\//g,'.'),
-      anon: anon, purchased: _applyState === 'applied', stars: _selectedStars, body: txt,
+      type: isInq ? 'inquiry' : 'comment',
+      purchased: _applyState === 'applied', stars: _selectedStars, body: txt,
     });
     _selectedStars = 0;
     renderComments();
@@ -1524,6 +1567,25 @@ function _p6Init(opts) {
   window.copyLink           = copyLink;
   window.selectStar         = selectStar;
   window.submitComment      = submitComment;
+  window.toggleCmtOlder     = function() {
+    var btn = document.getElementById('cmtMoreBtn');
+    var older = document.getElementById('cmtOlder');
+    if (!btn || !older) return;
+    var opening = older.hidden;
+    older.hidden = !opening;
+    btn.textContent = opening
+      ? '折りたたむ ▲'
+      : '過去のコメントを見る（' + older.querySelectorAll('.cmt-card').length + '件）';
+  };
+  window.selectCmtType      = function(type) {
+    _postType = type;
+    renderComments();
+  };
+  window.deleteCmt          = function(cid) {
+    if (!confirm('このコメントを削除しますか？')) return;
+    _deletedCids[cid] = true;
+    renderComments();
+  };
   window.toggleRelFav       = toggleRelFav;
 
   function renderRecGrid() {
@@ -1753,7 +1815,7 @@ KTN.pages['p2-12'] = function() {
   var STATUS = [
     { value:'inquiry',  label:'要問合せ' },
     { value:'sale',     label:'販売中' },
-    { value:'applying', label:'申込中' },
+    { value:'negot',    label:'商談中' },
     { value:'sold',     label:'売約済' },
     { value:'nonsale',  label:'非売品' },
   ];
@@ -2003,15 +2065,23 @@ KTN.pages['p2-121'] = function() {
   var STATUS = [
     { value:'inquiry',  label:'要問合せ' },
     { value:'sale',     label:'販売中' },
-    { value:'applying', label:'申込中' },
+    { value:'negot',    label:'商談中' },
     { value:'sold',     label:'売約済' },
     { value:'nonsale',  label:'非売品' },
   ];
 
+  /* 販売期間開始済みフラグ（デモ：開始済み） */
+  var SALE_ACTIVE = true;
+
   var INITIAL = [
-    { id:'w1', title:'《オノマトペの庭》', year:'2026年', medium:'キャンバスに油彩', size:'116.7×91.0cm', bg:'linear-gradient(155deg,#b8d8cc,#6a9e8a)', status:'inquiry' },
-    { id:'w2', title:'《ふわふわ》',       year:'2025年', medium:'キャンバスに油彩', size:'72.7×60.6cm',  bg:'linear-gradient(155deg,#f0e8d0,#d4b896)', status:'sale' },
+    /* locked:true = 販売中・申込者あり → 状態・価格ロック */
+    { id:'w1', title:'《オノマトペの庭》', year:'2026年', medium:'キャンバスに油彩', size:'116.7×91.0cm', bg:'linear-gradient(155deg,#b8d8cc,#6a9e8a)', status:'sale', price:480000, locked:true, applyCount:2 },
+    { id:'w2', title:'《ふわふわ》',       year:'2025年', medium:'キャンバスに油彩', size:'72.7×60.6cm',  bg:'linear-gradient(155deg,#f0e8d0,#d4b896)', status:'sale',    price:220000 },
     { id:'w3', title:'《ざわざわ（夜）》',  year:'2025年', medium:'アクリル・パネル', size:'53.0×45.5cm',  bg:'linear-gradient(155deg,#3d3530,#1f1a18)', status:'nonsale' },
+    /* soldOnline:true = オンライン取引完了 → 状態・価格ロック */
+    { id:'w9', title:'《言葉の重力 No.3》', year:'2024年', medium:'油彩', size:'72.7×60.6cm', bg:'linear-gradient(135deg,#c8a87a,#8b6040)', status:'sold', price:120000, soldOnline:true },
+    /* priceLocked:true = 会場売約済 → 状態選択可・価格ロック */
+    { id:'w10', title:'《ざわざわ No.2》', year:'2024年', medium:'アクリル・パネル', size:'45.5×38.0cm', bg:'linear-gradient(155deg,#c8c0d8,#8880a8)', status:'sold', price:85000, priceLocked:true },
   ];
   var EXTRA = [
     { id:'w4', title:'《ドキドキ #3》',   year:'2025年', bg:'linear-gradient(155deg,#f0d0d0,#c88080)', status:'inquiry' },
@@ -2050,6 +2120,50 @@ KTN.pages['p2-121'] = function() {
     li.className = 'p2-12-work-card';
     li.dataset.id = w.id;
     var meta = [w.year, w.medium, w.size].filter(Boolean).join('　');
+
+    var isLocked = w.locked || w.soldOnline;
+    var isPriceLocked = isLocked || !!w.priceLocked;
+
+    /* 価格エリア */
+    var priceHtml;
+    if (isPriceLocked) {
+      priceHtml =
+        '<div class="p2-121-price-wrap is-locked">'+
+          '<span class="p2-121-price-wrap__sign">¥</span>'+
+          '<input class="p2-121-price-wrap__input" type="number" value="'+(w.price||'')+'" disabled>'+
+          '<span class="p2-121-price-wrap__tax">税込</span>'+
+        '</div>';
+    } else {
+      priceHtml =
+        '<div class="p2-121-price-wrap">'+
+          '<span class="p2-121-price-wrap__sign">¥</span>'+
+          '<input class="p2-121-price-wrap__input" type="number" min="0" step="1000"'+
+            ' placeholder="価格" aria-label="価格（税込）" value="'+(w.price||'')+'">'+
+          '<span class="p2-121-price-wrap__tax">税込</span>'+
+        '</div>';
+    }
+
+    /* 販売状態エリア */
+    var statusHtml;
+    if (w.locked) {
+      /* 販売中（申込者あり）：ロック＋コンソールリンク */
+      statusHtml =
+        '<div class="p2-121-lock-info">'+
+          '<span class="p2-121-lock-badge">販売中</span>'+
+          '<span class="p2-121-lock-note"><strong class="p2-121-lock-note__num">'+w.applyCount+'</strong>件申込中</span>'+
+          '<a class="p2-121-console-link" href="kotennavi-p3-15.html">コンソールで操作 →</a>'+
+        '</div>';
+    } else if (w.soldOnline) {
+      /* 売約済（オンライン取引完了）：ロック */
+      statusHtml =
+        '<div class="p2-121-lock-info">'+
+          '<span class="p2-121-lock-badge p2-121-lock-badge--sold">売約済</span>'+
+          '<span class="p2-121-lock-note">取引完了</span>'+
+        '</div>';
+    } else {
+      statusHtml = '<select class="p2-12-status-sel" aria-label="販売状態">'+statusOpts(w.status)+'</select>';
+    }
+
     li.innerHTML =
       '<div class="p2-12-work-card__handle" title="ドラッグで並び替え">'+HANDLE_SVG+'</div>'+
       '<div class="p2-12-work-card__thumb" style="background:'+w.bg+'"></div>'+
@@ -2058,31 +2172,33 @@ KTN.pages['p2-121'] = function() {
         '<div class="p2-12-work-card__meta">'+meta+'</div>'+
       '</div>'+
       '<div class="p2-12-work-card__controls">'+
-        '<div class="p2-121-price-wrap">'+
-          '<span class="p2-121-price-wrap__sign">¥</span>'+
-          '<input class="p2-121-price-wrap__input" type="number" min="0" step="1000"'+
-            ' placeholder="価格" aria-label="価格（税込）" value="'+(w.price||'')+'">'+
-          '<span class="p2-121-price-wrap__tax">税込</span>'+
-        '</div>'+
-        '<select class="p2-12-status-sel" aria-label="販売状態">'+statusOpts(w.status)+'</select>'+
-        '<button class="p2-12-remove-btn" type="button" data-id="'+w.id+'" aria-label="取り外す">'+
-          '<svg class="p2-12-remove-btn__icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13" aria-hidden="true"><line x1="3" y1="3" x2="13" y2="13"/><line x1="13" y1="3" x2="3" y2="13"/></svg>'+
-          '<span class="p2-12-remove-btn__text">取り外す</span>'+
-        '</button>'+
+        priceHtml+
+        statusHtml+
+        (!isLocked ?
+          '<button class="p2-12-remove-btn" type="button" data-id="'+w.id+'" aria-label="取り外す">'+
+            '<svg class="p2-12-remove-btn__icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13" aria-hidden="true"><line x1="3" y1="3" x2="13" y2="13"/><line x1="13" y1="3" x2="3" y2="13"/></svg>'+
+            '<span class="p2-12-remove-btn__text">取り外す</span>'+
+          '</button>'
+        : '') +
       '</div>';
-    li.querySelector('.p2-12-remove-btn').addEventListener('click', handleRemove);
 
-    /* 非売品のとき価格入力を無効化 */
-    var priceInput = li.querySelector('.p2-121-price-wrap__input');
-    var statusSel  = li.querySelector('.p2-12-status-sel');
-    function syncPrice() {
-      var isNonsale = statusSel.value === 'nonsale';
-      priceInput.disabled = isNonsale;
-      priceInput.closest('.p2-121-price-wrap').classList.toggle('is-disabled', isNonsale);
-      if (isNonsale) priceInput.value = '';
+    if (!isLocked) {
+      li.querySelector('.p2-12-remove-btn').addEventListener('click', handleRemove);
+
+      if (!w.priceLocked) {
+        /* 非売品のとき価格入力を無効化 */
+        var priceInput = li.querySelector('.p2-121-price-wrap__input');
+        var statusSel  = li.querySelector('.p2-12-status-sel');
+        function syncPrice() {
+          var isNonsale = statusSel.value === 'nonsale';
+          priceInput.disabled = isNonsale;
+          priceInput.closest('.p2-121-price-wrap').classList.toggle('is-disabled', isNonsale);
+          if (isNonsale) priceInput.value = '';
+        }
+        statusSel.addEventListener('change', syncPrice);
+        syncPrice();
+      }
     }
-    statusSel.addEventListener('change', syncPrice);
-    syncPrice();
 
     return li;
   }
@@ -2131,6 +2247,12 @@ KTN.pages['p2-121'] = function() {
   function closePanel() {
     addPanel.hidden = true;
     addBtn.classList.remove('is-open');
+  }
+
+  /* 販売期間開始済みの場合 → p3-15リンクを表示 */
+  if (SALE_ACTIVE) {
+    var saleNotice = document.getElementById('p2121SaleNotice');
+    if (saleNotice) saleNotice.hidden = false;
   }
 
   INITIAL.forEach(function(w){ listEl.appendChild(makeCard(w)); });
@@ -4648,4 +4770,137 @@ KTN.pages['p5-3'] = function () {
 
     window.ktnRender = function () { applyRole(); };
     applyRole();
+};
+
+/* ════════════════════════════════════════════════════
+   P3-15  LIAISON+コンソール
+════════════════════════════════════════════════════ */
+KTN.pages['p3-15'] = function () {
+
+  // 0. ページスコープ・アクセントカラー
+  document.body.classList.add('p3-page');
+  document.body.style.setProperty('--page-accent',        '#2a5f7a');
+  document.body.style.setProperty('--page-accent-bg',     'rgba(42,95,122,.1)');
+  document.body.style.setProperty('--page-accent-border', '#5a8fa8');
+
+  var d = window.P3_DATA || {};
+  if (typeof applyHeadImageMode === 'function') applyHeadImageMode(d.hasImage !== false);
+  var activeBadge = document.getElementById('p3HeadActiveBadge');
+  if (activeBadge && d.hasActiveExhibition) activeBadge.removeAttribute('hidden');
+
+  // 1. タブナビ：クリックで各サブページへ
+  document.querySelectorAll('.p3-tabnav__item').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      if (btn.dataset.tab === 'exhibitions') {
+        window.location.href = 'kotennavi-p3-1.html';
+      } else if (btn.dataset.tab === 'works') {
+        window.location.href = 'kotennavi-p3-3.html';
+      } else if (btn.dataset.tab === 'articles') {
+        window.location.href = 'kotennavi-p3-2.html';
+      } else if (btn.dataset.target) {
+        window.location.href = 'kotennavi-p3.html#' + btn.dataset.target;
+      }
+    });
+  });
+
+  // 2. 管理ドロワー
+  var drawer = document.getElementById('p315Drawer');
+  var mgmtBtn = document.getElementById('p315MgmtBtn');
+  var drawerClose = document.getElementById('p315DrawerClose');
+  var drawerOverlay = document.getElementById('p315DrawerOverlay');
+  function openDrawer() { if (drawer) drawer.classList.add('is-open'); }
+  function closeDrawer() { if (drawer) drawer.classList.remove('is-open'); }
+  if (mgmtBtn) mgmtBtn.addEventListener('click', openDrawer);
+  if (drawerClose) drawerClose.addEventListener('click', closeDrawer);
+  if (drawerOverlay) drawerOverlay.addEventListener('click', closeDrawer);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeDrawer(); });
+
+  // 3. スクロール連動スタイル
+  var header = document.getElementById('ktnHeader');
+  var hero = document.querySelector('.p3-head');
+  if (header && hero) {
+    var observer = new IntersectionObserver(function (entries) {
+      header.classList.toggle('is-scrolled', !entries[0].isIntersecting);
+    }, { threshold: 0, rootMargin: '-50px 0px 0px 0px' });
+    observer.observe(hero);
+  }
+
+  // 4. インデックスピルのスクロール
+  document.querySelectorAll('.p315-index-row').forEach(function (row) {
+    row.addEventListener('click', function () {
+      var el = document.getElementById(row.dataset.target);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  // 5. 会場売約済モーダル
+  var venueModal = document.getElementById('p315VenueModal');
+  var venueModalBg = document.getElementById('p315VenueModalBg');
+  var venueModalCancel = document.getElementById('p315VenueModalCancel');
+  var venueModalOk = document.getElementById('p315VenueModalOk');
+  var venueModalBody = document.getElementById('p315VenueModalBody');
+  var _venueCard = null;
+
+  document.querySelectorAll('.p315-venue-btn:not(:disabled)').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      _venueCard = btn.closest('.p315-work-card');
+      var workName = btn.dataset.work || '作品';
+      var count = parseInt(btn.dataset.count || '0', 10);
+      if (venueModalBody) {
+        venueModalBody.innerHTML = '「' + workName + '」を「売約済」に変更します。<br>' +
+          (count > 0 ? '申込中の ' + count + '名 全員にキャンセル通知（メール）が送信されます。<br>' : '') +
+          'この操作は取り消せません。';
+      }
+      if (venueModal) venueModal.hidden = false;
+    });
+  });
+  function closeVenueModal() { if (venueModal) venueModal.hidden = true; }
+  if (venueModalCancel) venueModalCancel.addEventListener('click', closeVenueModal);
+  if (venueModalBg) venueModalBg.addEventListener('click', closeVenueModal);
+  if (venueModalOk) {
+    venueModalOk.addEventListener('click', function () {
+      closeVenueModal();
+      if (_venueCard) {
+        var statusEl = _venueCard.querySelector('.p315-work-card__status');
+        if (statusEl) statusEl.innerHTML = '<span class="aws aws-sold">売約済</span>';
+        var actionsEl = _venueCard.querySelector('.p315-work-card__actions');
+        if (actionsEl) actionsEl.style.display = 'none';
+      }
+      KTN.toast('会場売約済に変更しました。申込者にキャンセル通知を送信しました');
+    });
+  }
+
+  // 6. 掲載取り下げモーダル
+  var takedownModal = document.getElementById('p315TakedownModal');
+  var takedownModalBg = document.getElementById('p315TakedownModalBg');
+  var takedownModalCancel = document.getElementById('p315TakedownModalCancel');
+  var takedownModalOk = document.getElementById('p315TakedownModalOk');
+  var takedownModalBody = document.getElementById('p315TakedownModalBody');
+  var _takedownCard = null;
+
+  document.querySelectorAll('.p315-takedown-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      _takedownCard = btn.closest('.p315-work-card');
+      var workName = btn.dataset.work || '作品';
+      var count = parseInt(btn.dataset.count || '0', 10);
+      if (takedownModalBody) {
+        takedownModalBody.innerHTML = '「' + workName + '」の掲載を取り下げます。<br>' +
+          (count > 0 ? '申込中の ' + count + '名 全員にキャンセル通知（メール）が送信されます。<br>' : '') +
+          'この操作は取り消せません。';
+      }
+      if (takedownModal) takedownModal.hidden = false;
+    });
+  });
+  function closeTakedownModal() { if (takedownModal) takedownModal.hidden = true; }
+  if (takedownModalCancel) takedownModalCancel.addEventListener('click', closeTakedownModal);
+  if (takedownModalBg) takedownModalBg.addEventListener('click', closeTakedownModal);
+  if (takedownModalOk) {
+    takedownModalOk.addEventListener('click', function () {
+      closeTakedownModal();
+      if (_takedownCard) _takedownCard.style.display = 'none';
+      KTN.toast('掲載を取り下げました');
+    });
+  }
+
+  window.ktnRender = function () {};
 };

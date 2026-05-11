@@ -16,8 +16,78 @@
   <p class="demo-meta">
     カード種別: リエゾン / リエゾンプラス / ポートフォリオ（クリエイターページ）× マソンリー・水平リスト・ミニ<br>
     interest ON色: <code>#3a90e0</code>（buttons-4 ライト準拠）/ カウンター同色 / 点滅ドットバッジ（.lb-dot）<br>
-    ノーマーク = バッジ非表示 / 制作年をタイトル横に / 申込者ありでもボタンは「＋購入申込」固定 / 水平リストのキュー人数はバッジ行に組み込み
+    販売中はLIAISON+のみ申込者数をバッジ行に表示 / 商談中は申込不可 / 非売品・売約済はバッジのみ
   </p>
+
+  <!-- ────────────────────────────────────────
+       0. 販売状態バッジ一覧
+       ──────────────────────────────────────── -->
+  <div class="demo-section">
+    <div class="demo-label">販売状態バッジ .aws — 5種</div>
+    <p class="demo-note">販売中は最も重要な状態。ライト・ダーク背景それぞれで確認。</p>
+
+    <p style="font-family:var(--fm);font-size:.5rem;letter-spacing:.1em;color:var(--muted);margin-bottom:10px">ライト背景</p>
+    <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:24px">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+        <span class="aws aws-sale">販売中</span>
+        <code style="font-size:.45rem;color:var(--muted)">.aws-sale</code>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="aws aws-sale">販売中</span>
+          <span class="aw__applicants">3人が申込中</span>
+        </div>
+        <code style="font-size:.45rem;color:var(--muted)">.aws-sale + .aw__applicants（LIAISON+）</code>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+        <span class="aws aws-negot">商談中</span>
+        <code style="font-size:.45rem;color:var(--muted)">.aws-negot</code>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+        <span class="aws aws-sold">売約済</span>
+        <code style="font-size:.45rem;color:var(--muted)">.aws-sold</code>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+        <span class="aws aws-inquiry">要問合せ</span>
+        <code style="font-size:.45rem;color:var(--muted)">.aws-inquiry</code>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+        <span class="aws aws-nsale">非売品</span>
+        <code style="font-size:.45rem;color:var(--muted)">.aws-nsale</code>
+      </div>
+    </div>
+
+    <p style="font-family:var(--fm);font-size:.5rem;letter-spacing:.1em;color:var(--muted);margin-bottom:10px">ダーク背景</p>
+    <div class="p251-dark" style="border-radius:8px;padding:20px 24px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+        <span class="aws aws-sale">販売中</span>
+        <code style="font-size:.45rem;color:rgba(255,255,255,.42)">.aws-sale</code>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="aws aws-sale">販売中</span>
+          <span class="aw__applicants">3人が申込中</span>
+        </div>
+        <code style="font-size:.45rem;color:rgba(255,255,255,.42)">LIAISON+ 申込者あり</code>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+        <span class="aws aws-negot">商談中</span>
+        <code style="font-size:.45rem;color:rgba(255,255,255,.42)">.aws-negot</code>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+        <span class="aws aws-sold">売約済</span>
+        <code style="font-size:.45rem;color:rgba(255,255,255,.42)">.aws-sold</code>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+        <span class="aws aws-inquiry">要問合せ</span>
+        <code style="font-size:.45rem;color:rgba(255,255,255,.42)">.aws-inquiry</code>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+        <span class="aws aws-nsale">非売品</span>
+        <code style="font-size:.45rem;color:rgba(255,255,255,.42)">.aws-nsale</code>
+      </div>
+    </div>
+  </div>
 
 
   <!-- ════════════════════════════════════════
@@ -161,10 +231,10 @@
        ════════════════════════════════════════ -->
   <div class="demo-section">
     <div class="demo-label">② .aw.aw--plus — リエゾンプラス マソンリー</div>
-    <p class="demo-note">価格・申込ボタン表示。売却済はSOLD OUTリボン。申込中もボタンは「＋購入申込」固定。</p>
+    <p class="demo-note">価格・申込ボタン表示。販売中は申込者数をバッジ行に表示。売約済はSOLD OUTリボン。商談中は申込不可。</p>
     <div class="masonry">
 
-      <!-- 販売中（申込者3人いても「＋購入申込」固定） -->
+      <!-- 販売中（申込者3人）→ バッジ行に申込者数表示 -->
       <div class="masonry-item">
         <a class="aw aw--plus" href="#">
           <div class="aw__img">
@@ -175,6 +245,7 @@
             <div class="aw__badge-row">
               <span class="cb cb-content cb-artwork">artwork</span>
               <span class="aws aws-sale">販売中</span>
+              <span class="aw__applicants">3人が申込中</span>
             </div>
 
             <div class="aw__title-row">
@@ -202,7 +273,7 @@
         </a>
       </div>
 
-      <!-- 申込中（3人）→ ボタンは「＋購入申込」固定 -->
+      <!-- 商談中（申込不可） -->
       <div class="masonry-item">
         <a class="aw aw--plus" href="#">
           <div class="aw__img">
@@ -212,7 +283,7 @@
           <div class="aw__body">
             <div class="aw__badge-row">
               <span class="cb cb-content cb-artwork">artwork</span>
-              <span class="aws aws-applying">申込中</span>
+              <span class="aws aws-negot">商談中</span>
             </div>
 
             <div class="aw__title-row">
@@ -231,14 +302,7 @@
             </div>
           </div>
           <div class="aw__foot">
-            <div>
-              <div class="aw__price"><span class="currency">¥</span>68,000<span class="tax">税込</span></div>
-              <div class="aw__queue">3人が申込中（追加申込可）</div>
-            </div>
-            <button class="aw__apply-btn" onclick="event.preventDefault()">
-              <svg viewBox="0 0 14 14" fill="none" width="11" height="11"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-              購入申込
-            </button>
+            <div class="aw__price"><span class="currency">¥</span>68,000<span class="tax">税込</span></div>
           </div>
         </a>
       </div>
@@ -490,7 +554,7 @@
     <p style="font-family:var(--fm);font-size:.52rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px">リエゾンプラス</p>
     <div class="list-col" style="margin-bottom:32px">
 
-      <!-- 申込中（3人）→ キュー人数は価格横 -->
+      <!-- 商談中（申込不可） -->
       <a class="aw aw--h aw--plus" href="#">
         <div class="aw__img">
           <div class="aw__img-ph t-square" style="height:100%;min-height:88px"></div>
@@ -499,7 +563,7 @@
           <div class="aw__body">
             <div class="aw__badge-row">
               <span class="cb cb-content cb-artwork">artwork</span>
-              <span class="aws aws-applying">申込中</span>
+              <span class="aws aws-negot">商談中</span>
             </div>
 
             <div class="aw__title-row">
@@ -516,14 +580,7 @@
             </div>
           </div>
           <div class="aw__foot">
-            <div class="aw__price-row">
-              <div class="aw__price"><span class="currency">¥</span>68,000<span class="tax">税込</span></div>
-              <span class="aw__queue-inline">3人が申込中</span>
-            </div>
-            <button class="aw__apply-btn" onclick="event.preventDefault()">
-              <svg viewBox="0 0 14 14" fill="none" width="10" height="10"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-              購入申込
-            </button>
+            <div class="aw__price"><span class="currency">¥</span>68,000<span class="tax">税込</span></div>
           </div>
         </div>
       </a>
@@ -722,10 +779,10 @@
               <div class="aw__mini-thumb"><div style="width:52px;height:52px;background:linear-gradient(135deg,#204060,#102030)"></div></div>
               <div class="aw__mini-body">
                 <div class="aw__mini-title-row"><div class="aw__mini-title">青の断片 — 連作より</div></div>
-                <div class="aw__mini-meta">2024 / アクリル / 53 × 45 cm · 3人申込中</div>
+                <div class="aw__mini-meta">2024 / アクリル / 53 × 45 cm</div>
               </div>
               <div class="aw__mini-right">
-                <span class="aws aws-applying" style="font-size:.44rem;padding:2px 7px;border-width:1px">申込中</span>
+                <span class="aws aws-negot" style="font-size:.44rem;padding:2px 7px">商談中</span>
                 <div class="aw__mini-price"><span class="currency">¥</span>68,000</div>
               </div>
             </a>
@@ -831,10 +888,10 @@
               <div class="aw__mini-thumb"><div style="width:52px;height:52px;background:linear-gradient(135deg,#204060,#102030)"></div></div>
               <div class="aw__mini-body">
                 <div class="aw__mini-title-row"><div class="aw__mini-title">青の断片 — 連作より</div></div>
-                <div class="aw__mini-meta">2024 / アクリル / 53 × 45 cm · 3人申込中</div>
+                <div class="aw__mini-meta">2024 / アクリル / 53 × 45 cm</div>
               </div>
               <div class="aw__mini-right">
-                <span class="aws aws-applying" style="font-size:.44rem;padding:2px 7px;border-width:1px">申込中</span>
+                <span class="aws aws-negot" style="font-size:.44rem;padding:2px 7px">商談中</span>
                 <div class="aw__mini-price"><span class="currency">¥</span>68,000</div>
               </div>
             </a>
