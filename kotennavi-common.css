@@ -23,6 +23,8 @@
 ══════════════════════════════════════════════════════════ */
 
 
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap');
+
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    1. リセット・ベース
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
@@ -62,6 +64,8 @@ button{cursor:pointer;font-family:inherit}
   --fs: 'Shippori Mincho', serif;      /* 和文明朝（日本語見出し） */
   --fn: 'Noto Sans JP', sans-serif;    /* 和文ゴシック（本文） */
   --fm: 'Montserrat', sans-serif;      /* 欧文サンセリフ（英数ラベル） */
+  --font-en-name:  'Cormorant Garamond', serif; /* 欧文 固有名詞（人名・会場名・展覧会名・作品名） */
+  --font-en-label: 'Cinzel', serif;            /* 欧文 ページ・セクションラベル（LIAISON+ CONSOLE 等） */
 
   --on: #3a90e0;   /* interest / watch ON色 */
   --interest-on: #3a90e0;
@@ -1123,9 +1127,9 @@ line-clamp:2;}
 .mock-card.dark .cb-gallery{color:#ddc8a8;border-color:#ddc8a8;background:rgba(221,200,168,.1)}
 .mock-card.dark .cb-user{color:#f0b8d8;border-color:#f0b8d8;background:rgba(240,184,216,.1)}
 .mock-card.dark .cb-exhibition{color:#4da3f5;background:rgba(77,163,245,.1);border-left-color:#4da3f5}
-.mock-card.dark .cb-article{color:#80b4f0;background:rgba(128,180,240,.1);border-left-color:#80b4f0}
+.mock-card.dark .cb-article{color:#58c888;background:rgba(88,200,136,.1);border-left-color:#58c888}
 .mock-card.dark .cb-artwork{color:#b090f0;background:rgba(176,144,240,.1);border-left-color:#b090f0}
-.mock-card.dark .cb-review{color:#50c8c8;background:rgba(80,200,200,.1);border-left-color:#50c8c8}
+.mock-card.dark .cb-review{color:#f0a840;background:rgba(240,168,64,.1);border-left-color:#f0a840}
 .mock-card.dark .cb-news{color:#f07070;background:rgba(240,112,112,.1);border-left-color:#f07070}
 
 .preview-label{
@@ -1156,6 +1160,58 @@ line-clamp:2;}
 
 /* ── セパレーター ── */
 
+
+/* ── バッジ一覧デモ UI ── */
+.badge-grid{display:flex;flex-direction:column}
+.badge-row{display:flex;align-items:center;gap:14px;padding:6px 0;border-bottom:1px solid #f0f0f0}
+.badge-row:last-child{border-bottom:none}
+.badge-name{font-family:'Montserrat',sans-serif;font-size:.52rem;letter-spacing:.1em;color:#bbb;min-width:80px;flex-shrink:0}
+.badge-variants{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.badge-desc{font-size:.58rem;color:#bbb}
+
+/* ── CSS出力ブロック / コピーUI ── */
+.code-block{font-family:'Courier New',monospace;font-size:.62rem;line-height:1.9;background:#f6f8fa;border:1px solid #e4e8ed;border-radius:6px;padding:16px 18px;white-space:pre-wrap;margin-bottom:12px;color:#334;overflow-x:auto}
+.copy-all-btn{display:inline-flex;align-items:center;gap:6px;font-family:'Montserrat',sans-serif;font-size:.5rem;letter-spacing:.12em;padding:5px 14px;border-radius:4px;border:1px solid #ccc;background:#fff;cursor:pointer;transition:all .2s}
+.copy-all-btn:hover{background:#f4f4f4}
+
+/* ── ダークモードトグル（デモファイル共通） ── */
+.dm-toggle-wrap{position:fixed;top:10px;right:14px;z-index:9999}
+.dm-toggle-btn{font-family:'Montserrat',sans-serif;font-size:.52rem;letter-spacing:.1em;padding:5px 14px;border-radius:20px;border:1px solid #ccc;background:#fff;cursor:pointer;transition:all .2s;white-space:nowrap}
+.dm-toggle-btn:hover{background:#f4f4f4}
+
+/* ════════════════════════════════════════════════════
+   body.dark-mode — デモUI ページ全体ダークモード
+   ════════════════════════════════════════════════════ */
+body.dark-mode{background:#0e1820;color:rgba(255,255,255,.82)}
+body.dark-mode .demo-section-ttl{color:rgba(255,255,255,.18);border-bottom-color:rgba(255,255,255,.06)}
+body.dark-mode .group-label{color:rgba(255,255,255,.22)}
+body.dark-mode .group-label::after{background:rgba(255,255,255,.07)}
+body.dark-mode .badge-row{border-bottom-color:rgba(255,255,255,.05)}
+body.dark-mode .badge-name{color:rgba(255,255,255,.3)}
+body.dark-mode .badge-desc{color:rgba(255,255,255,.25)}
+body.dark-mode .mock-card:not(.dark){background:#1e2e42;border-color:rgba(255,255,255,.08)}
+body.dark-mode .mock-card:not(.dark) .mock-title{color:rgba(255,255,255,.88)}
+body.dark-mode .mock-card:not(.dark) .mock-meta{color:rgba(255,255,255,.3)}
+body.dark-mode .code-block{background:#111b27;color:rgba(255,255,255,.58);border-color:rgba(255,255,255,.07)}
+body.dark-mode .copy-all-btn{background:transparent;border-color:rgba(255,255,255,.2);color:rgba(255,255,255,.5)}
+body.dark-mode .copy-all-btn:hover{border-color:rgba(255,255,255,.4);color:rgba(255,255,255,.8)}
+body.dark-mode .dm-toggle-btn{background:#1e2e42;border-color:rgba(255,255,255,.2);color:rgba(255,255,255,.7)}
+body.dark-mode .dm-toggle-btn:hover{background:#26384f}
+body.dark-mode .exh-icon{background:#1e2e42}
+/* cb-* コンテンツタイプバッジ（ライト時のアイデンティティカラーを保ちつつ明度UP） */
+body.dark-mode .cb-creator{color:#7ab8d4;border-color:#7ab8d4;background:rgba(122,184,212,.12)}
+body.dark-mode .cb-gallery{color:#d4a070;border-color:#d4a070;background:rgba(212,160,112,.12)}
+body.dark-mode .cb-user{color:#e890c0;border-color:#e890c0;background:rgba(232,144,192,.12)}
+body.dark-mode .cb-exhibition{color:#5ab0ff;background:rgba(90,176,255,.1);border-left-color:#5ab0ff}
+body.dark-mode .cb-article{color:#58c888;background:rgba(88,200,136,.1);border-left-color:#58c888}
+body.dark-mode .cb-artwork{color:#c080f0;background:rgba(192,128,240,.1);border-left-color:#c080f0}
+body.dark-mode .cb-review{color:#f0a840;background:rgba(240,168,64,.1);border-left-color:#f0a840}
+body.dark-mode .cb-news{color:#f07070;background:rgba(240,112,112,.1);border-left-color:#f07070}
+/* sb-* ステータスバッジ */
+body.dark-mode .sb-live{background:#1a9a52;box-shadow:0 1px 8px rgba(26,154,82,.4)}
+body.dark-mode .sb-upcoming{color:#80b4f0;background:rgba(128,180,240,.1);border-color:rgba(128,180,240,.3)}
+body.dark-mode .sb-soon{color:#60a0f0;background:rgba(96,160,240,.12);border-color:rgba(96,160,240,.4)}
+body.dark-mode .sb-ending{background:linear-gradient(135deg,#c47808,#d68a10);box-shadow:0 1px 8px rgba(196,120,8,.45)}
 
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -1541,6 +1597,29 @@ body.guest .panel-light .ktn-icon-btn .tip{
 }
 body.guest .panel-light .ktn-btn .tip::after{border-top-color:#431407}
 body.guest .panel-light .ktn-icon-btn .tip::after{border-bottom-color:#431407}
+
+/* ══════════════════════════════
+   ACTION BUTTON（ページ遷移型・共通）
+══════════════════════════════ */
+/* ページ遷移を伴う文脈的アクションに使う小型アウトラインボタン。
+   .ktn-btn（ピル型・watch/follow）とは別系統。
+   レイアウト固有のプロパティ（margin-left:auto等）はページ側クラスで付与する。 */
+.ktn-action-btn{
+  font-family:'Montserrat',sans-serif;font-size:.75rem;font-weight:600;letter-spacing:.02em;
+  text-decoration:none;
+  display:inline-flex;align-items:center;gap:4px;
+  padding:4px 12px;border-radius:4px;
+  border:1px solid var(--border);background:none;color:var(--ink);
+  white-space:nowrap;cursor:pointer;flex-shrink:0;
+  transition:background .12s,border-color .12s,color .12s;
+}
+.ktn-action-btn:hover{background:var(--paper)}
+/* 出品者アクション必要（在庫確認・発送など） */
+.ktn-action-btn--alert{border-color:rgba(180,60,20,.45);background:rgba(180,60,20,.07);color:#b43c14}
+.ktn-action-btn--alert:hover{background:rgba(180,60,20,.14)}
+/* カラー帯の中（帯の文字色を継承） */
+.ktn-action-btn--ghost{border-color:currentColor;background:rgba(255,255,255,.5);color:inherit}
+.ktn-action-btn--ghost:hover{background:rgba(255,255,255,.85)}
 
 /* ══════════════════════════════
    AUTH MODAL（ゲスト用）
@@ -3846,7 +3925,7 @@ line-clamp:2;}
 .p2-title-band__posted{font-size:.56rem;color:var(--muted);display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin-left:auto}
 .p2-title-band__posted a{color:var(--accent)}
 .p2-title-band__title{font-family:var(--fs);font-weight:800;font-size:clamp(1.5rem,3.5vw,2.2rem);line-height:1.3;letter-spacing:.04em;margin-bottom:4px;opacity:0;animation:p2FadeUp .5s .1s ease forwards}
-.p2-title-band__sub{font-family:'DM Serif Display',serif;font-style:italic;font-size:.82rem;color:var(--muted);letter-spacing:.05em;opacity:0;animation:p2FadeUp .5s .2s ease forwards}
+.p2-title-band__sub{font-family:var(--font-en-name);font-style:italic;font-size:.82rem;font-weight:500;color:var(--muted);letter-spacing:.05em;opacity:0;animation:p2FadeUp .5s .2s ease forwards}
 
 /* ── サブナビ（全幅タブバー・タイトルバンド幅に揃える） ── */
 .p2-subnav-wrap{position:sticky;top:calc(var(--dh,0px) + var(--hh,50px));z-index:90;background:transparent}
@@ -6384,6 +6463,16 @@ line-clamp:2;}
 .p251-dark .p2-title-band__facts a { color: #7ab4e0; }
 .p251-dark .p2-title-band__posted { color: rgba(255,255,255,.62); }
 .p251-dark .p2-title-band__posted a { color: rgba(255,255,255,.75); }
+/* タイトルバンド内バッジ（ダーク背景 #3d5166 に対して可読性確保） */
+.p251-dark .cb-creator{color:#7ab8d4;border-color:#7ab8d4;background:rgba(122,184,212,.12)}
+.p251-dark .cb-gallery{color:#d4a070;border-color:#d4a070;background:rgba(212,160,112,.12)}
+.p251-dark .cb-user{color:#e890c0;border-color:#e890c0;background:rgba(232,144,192,.12)}
+.p251-dark .cb-exhibition{color:#5ab0ff;background:rgba(90,176,255,.12);border-left-color:#5ab0ff}
+.p251-dark .cb-article{color:#58c888;background:rgba(88,200,136,.1);border-left-color:#58c888}
+.p251-dark .cb-artwork{color:#c080f0;background:rgba(192,128,240,.1);border-left-color:#c080f0}
+.p251-dark .cb-review{color:#f0a840;background:rgba(240,168,64,.1);border-left-color:#f0a840}
+.p251-dark .cb-news{color:#f07070;background:rgba(240,112,112,.1);border-left-color:#f07070}
+.p251-dark .p2-title-band__remain{color:rgba(255,255,255,.55)}
 
 /* サブナビ */
 .p251-dark .p2-subnav-wrap { background: #344a5e; }
@@ -7266,7 +7355,7 @@ body.p6-dark.p6-plus{
 .p6-hero__badge-row{margin-bottom:4px}
 .p6-hero__section-label{font-family:var(--fm);font-size:.52rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 .p6-hero__title{font-family:var(--fs);font-size:1.5rem;font-weight:600;letter-spacing:.04em;margin:6px 0 2px}
-.p6-hero__title-en{font-family:'DM Serif Display',serif;font-style:italic;font-size:.85rem;color:var(--muted);margin-bottom:14px}
+.p6-hero__title-en{font-family:var(--font-en-name);font-style:italic;font-size:.85rem;font-weight:500;color:var(--muted);margin-bottom:14px}
 .p6-hero__specs{display:grid;grid-template-columns:repeat(2,auto 1fr);gap:5px 24px;margin:0}
 .p6-hero__specs dt{font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);line-height:1.9;white-space:nowrap}
 .p6-hero__specs dd{font-size:.82rem;line-height:1.9;color:var(--ink);margin:0}
@@ -7869,7 +7958,7 @@ body.p6-dark.p6-plus{
 
 .p3-head__badge-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
 .p3-head__name{font-family:var(--fs);font-size:2rem;font-weight:800;color:var(--ink);letter-spacing:.02em;line-height:1.1;margin:0 0 2px}
-.p3-head__en{font-family:var(--fm);font-size:.7rem;letter-spacing:.18em;color:var(--muted);margin:0 0 6px}
+.p3-head__en{font-family:var(--font-en-name);font-style:italic;font-size:.85rem;font-weight:500;letter-spacing:.06em;color:var(--muted);margin:0 0 6px}
 .p3-head__genre{font-size:.7rem;color:var(--muted);margin:0}
 
 .p3-head__watcher-count{background:none;border:none;cursor:pointer;font-family:inherit;font-size:.7rem;color:var(--muted);padding:0;white-space:nowrap}
@@ -8435,7 +8524,7 @@ body.p3-2-page .p3-recommended .masonry-item{margin-bottom:0}
 
 .p4-head__badge-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
 .p4-head__name{font-family:var(--fs);font-size:2rem;font-weight:800;color:var(--ink);letter-spacing:.02em;line-height:1.1;margin:0 0 2px}
-.p4-head__en{font-family:var(--fm);font-size:.7rem;letter-spacing:.18em;color:var(--muted);margin:0 0 6px}
+.p4-head__en{font-family:var(--font-en-name);font-style:italic;font-size:.85rem;font-weight:500;letter-spacing:.06em;color:var(--muted);margin:0 0 6px}
 .p4-head__genre{font-size:.7rem;color:var(--muted);margin:0}
 .p4-head__watcher-count{background:none;border:none;cursor:pointer;font-family:inherit;font-size:.7rem;color:var(--muted);padding:0;white-space:nowrap}
 .p4-head__watcher-count:hover{color:var(--accent);text-decoration:underline}
@@ -9045,6 +9134,120 @@ body.p5-3-page .p5-3-pane .masonry{columns:3 200px;column-gap:14px}
 @media(max-width:540px){body.p5-3-page .p5-3-pane .masonry{columns:2}}
 
 /* ════════════════════════════════════════════════════
+   P5-14  ユーザー購入履歴
+   prefix: .p514-
+════════════════════════════════════════════════════ */
+body.p5-14-page .p5-head{max-width:760px}
+body.p5-14-page .p5-tabnav{max-width:760px}
+.p514-wrap{max-width:800px;margin:0 auto;padding:24px 20px 80px;display:flex;flex-direction:column;gap:20px}
+
+/* ── ページタイトル ── */
+.p514-page-head{padding-bottom:16px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:3px}
+.p514-page-head__title{font-family:var(--font-ja-serif);font-size:1.35rem;font-weight:600;color:var(--ink)}
+.p514-page-head__en{font-size:.48rem;letter-spacing:.25em;color:var(--muted)}
+.p514-page-head__desc{font-size:.68rem;color:var(--muted);margin-top:4px;line-height:1.7}
+
+/* ── 要対応バナー ── */
+.p514-banner{display:flex;align-items:center;gap:12px;padding:12px 16px;background:rgba(180,60,20,.07);border:1px solid rgba(180,60,20,.28);border-radius:5px}
+.p514-banner[hidden]{display:none}
+.p514-banner__badge{width:20px;height:20px;border-radius:50%;background:#b43c14;color:#fff;font-family:'Montserrat',sans-serif;font-size:.6rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.p514-banner__body{flex:1;min-width:0}
+.p514-banner__title{font-size:.72rem;font-weight:600;color:#7a1800}
+.p514-banner__desc{font-size:.63rem;color:#8b2800;margin-top:2px}
+
+/* ── タブ ── */
+.p514-tabs{display:flex;border-bottom:2px solid var(--border)}
+.p514-tabs[hidden]{display:none}
+.p514-tab{display:inline-flex;align-items:center;gap:6px;font-family:inherit;font-size:.8rem;font-weight:400;padding:9px 16px;border:none;background:none;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-2px;transition:color .15s;white-space:nowrap}
+.p514-tab.is-active{color:var(--page-accent,#b8608c);border-bottom-color:var(--page-accent,#b8608c);font-weight:600}
+.p514-tab:hover:not(.is-active){color:var(--ink)}
+.p514-tab__count{font-size:.68rem;background:var(--bg);color:var(--muted);border-radius:10px;padding:1px 7px;font-weight:400;margin-left:2px}
+.p514-tab.is-active .p514-tab__count{background:var(--page-accent-bg,rgba(184,96,140,.1));color:var(--page-accent,#b8608c);font-weight:500}
+
+/* ── タブペイン ── */
+.p514-pane{display:none;flex-direction:column;gap:12px}
+.p514-pane.is-active{display:flex}
+.p514-pane[hidden]{display:none!important}
+
+/* ── 作品カード ── */
+.p514-aw{background:#fff;border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.p514-aw__row{display:flex;align-items:flex-start;gap:14px;padding:14px 16px}
+.p514-aw__thumb-wrap{display:block;flex-shrink:0;border-radius:3px;overflow:hidden}
+.p514-aw__thumb{width:68px;height:68px;border-radius:3px;display:block}
+.p514-aw__main{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.p514-aw__badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1px}
+.p514-aw__title-link{font-size:.78rem;font-weight:600;color:var(--ink);text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block}
+.p514-aw__title-link:hover{text-decoration:underline;color:var(--accent,#2a7fa8)}
+.p514-aw__creator{font-size:.63rem;color:var(--muted)}
+.p514-aw__exh{display:flex;align-items:center;gap:5px;overflow:hidden}
+.p514-aw__exh-name{font-size:.6rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+a.p514-aw__exh-name{text-decoration:none}
+a.p514-aw__exh-name:hover{text-decoration:underline;color:var(--accent,#2a7fa8)}
+.p514-aw__price{font-family:'Montserrat',sans-serif;font-size:.72rem;font-weight:600;color:var(--ink);margin-top:2px}
+
+/* ── 状態帯（カード下部） ── */
+.p514-aw__strip{display:flex;align-items:center;gap:8px;padding:8px 16px;border-top:1px solid;font-size:.63rem;flex-wrap:wrap}
+.p514-aw__strip-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;background:currentColor;opacity:.85}
+.p514-aw__strip-label{font-weight:600;letter-spacing:.03em;white-space:nowrap}
+.p514-aw__strip-note{color:inherit;opacity:.7;font-size:.58rem;white-space:nowrap}
+.p514-aw__strip-queue{font-family:'Montserrat',sans-serif;font-size:.5rem;font-weight:700;background:rgba(255,255,255,.6);border:1px solid currentColor;border-radius:10px;padding:1px 8px;opacity:.9;white-space:nowrap}
+.p514-aw__strip-actions{margin-left:auto;display:flex;align-items:center;gap:6px;flex-shrink:0}
+/* 視覚スタイルは ktn-action-btn--ghost に移管。クラス名は HTML の識別子として残す */
+.p514-aw__strip-link{}
+.p514-collect-btn{}
+.p514-published-badge{font-size:.56rem;font-weight:500;background:rgba(26,138,74,.14);color:#1a5a2a;border-radius:10px;padding:1px 8px;border:1px solid rgba(26,138,74,.3);white-space:nowrap}
+.p514-unpublish-btn{font-size:.56rem;color:var(--muted);text-decoration:underline;cursor:pointer;background:none;border:none;font-family:inherit;padding:0;transition:color .12s}
+.p514-unpublish-btn:hover{color:var(--ink)}
+/* 帯カラー — 要アクション（payment・receipt）は p3-15/p4-15 と統一のアラート赤 */
+.p514-aw__strip--payment,.p514-aw__strip--receipt{background:rgba(180,60,20,.07);border-top-color:rgba(180,60,20,.28);color:#b43c14}
+.p514-aw__strip--applied {background:rgba(26,95,168,.05);border-top-color:rgba(26,95,168,.14);color:#1a4870}
+.p514-aw__strip--done    {background:rgba(26,138,74,.05);border-top-color:rgba(26,138,74,.14);color:#1a5a2a}
+.p514-aw__strip--cancelled{background:var(--paper);border-top-color:var(--border);color:var(--muted)}
+/* 完了・キャンセルカードは本文を薄く */
+.p514-pane--history .p514-aw__row{opacity:.68}
+/* 要アクション帯のstrip-linkはアラート赤 */
+/* 要アクション帯：ghost ボタンを --alert 相当に上書き */
+.p514-aw__strip--payment .ktn-action-btn--ghost,
+.p514-aw__strip--receipt .ktn-action-btn--ghost{border-color:rgba(180,60,20,.45);background:rgba(180,60,20,.07)}
+.p514-aw__strip--payment .ktn-action-btn--ghost:hover,
+.p514-aw__strip--receipt .ktn-action-btn--ghost:hover{background:rgba(180,60,20,.14)}
+/* 申込中帯のstrip-linkは通常色（帯の青から独立） */
+.p514-aw__strip--applied .p514-aw__strip-link{border-color:var(--border);background:rgba(255,255,255,.7);color:var(--ink)}
+.p514-aw__strip--applied .p514-aw__strip-link:hover{background:#fff}
+
+/* ── コレクションモーダル ── */
+.p514-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.48);z-index:900;display:flex;align-items:center;justify-content:center;padding:20px}
+.p514-modal-overlay[hidden]{display:none}
+.p514-modal{background:#fff;border-radius:6px;width:100%;max-width:400px;box-shadow:0 8px 40px rgba(0,0,0,.18);overflow:hidden}
+.p514-modal__head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border)}
+.p514-modal__title{font-size:.88rem;font-weight:600;color:var(--ink)}
+.p514-modal__close{background:none;border:none;cursor:pointer;color:var(--muted);font-size:1rem;padding:2px 6px;border-radius:3px;transition:color .12s;line-height:1}
+.p514-modal__close:hover{color:var(--ink)}
+.p514-modal__body{padding:20px}
+.p514-modal__thumb{width:100%;height:140px;border-radius:4px;margin-bottom:14px}
+.p514-modal__artwork-name{font-size:.78rem;font-weight:600;color:var(--ink)}
+.p514-modal__desc{font-size:.7rem;color:var(--muted);line-height:1.75;margin-top:8px}
+.p514-modal__foot{display:flex;gap:10px;padding:0 20px 20px;justify-content:flex-end}
+.p514-modal__btn{display:inline-flex;align-items:center;justify-content:center;padding:9px 20px;border-radius:4px;font-size:.75rem;font-weight:600;cursor:pointer;border:1px solid var(--border);background:none;font-family:inherit;transition:background .12s,opacity .12s}
+.p514-modal__btn--primary{background:var(--page-accent,#b8608c);border-color:var(--page-accent,#b8608c);color:#fff}
+.p514-modal__btn--primary:hover{opacity:.88}
+.p514-modal__btn--secondary:hover{background:var(--paper)}
+
+/* ── 空状態 ── */
+.p514-empty{padding:40px 20px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
+.p514-empty[hidden]{display:none}
+.p514-empty__icon{opacity:.22}
+.p514-empty__text{font-size:.7rem;color:var(--muted)}
+.p514-empty__link{font-size:.7rem;color:var(--page-accent,#b8608c);text-decoration:none}
+.p514-empty__link:hover{text-decoration:underline}
+
+@media(max-width:540px){
+  .p514-aw__row{flex-wrap:wrap}
+  .p514-aw__strip{flex-wrap:wrap;row-gap:6px}
+  .p514-aw__strip-actions{margin-left:0;width:100%;justify-content:flex-start}
+}
+
+/* ════════════════════════════════════════════════════
    P3-15  LIAISON+コンソール
    prefix: .p315- / .p3-mgmt-
 ════════════════════════════════════════════════════ */
@@ -9080,9 +9283,12 @@ body.p3-15-page .p3-tabnav{max-width:760px}
 
 /* ── D-1 ページタイトル ── */
 .p315-page-head{display:flex;flex-direction:column;gap:0}
-.p315-page-head__eyebrow{display:flex;align-items:center;gap:8px;margin-bottom:4px}
-.p315-page-head__label{font-size:.65rem;letter-spacing:.2em;color:var(--page-accent,#2a5f7a);font-family:'Montserrat',sans-serif;font-weight:500}
-.p315-page-head__title{font-size:1.5rem;font-weight:700;color:var(--ink);margin:0 0 6px;line-height:1.2}
+.p315-page-head__title{font-size:1.5rem;font-weight:700;color:var(--ink);margin:0 0 2px;line-height:1.2}
+/* 英語サブタイトル — 固有名詞（クリエイター名・ギャラリー名・展覧会名・作品名） */
+.ktn-en-sub{font-family:var(--font-en-name);font-style:italic;font-size:.88rem;font-weight:500;letter-spacing:.05em;color:var(--muted);line-height:1.3}
+/* 英語サブタイトル — ページ・セクションラベル（LIAISON+ CONSOLE 等） */
+.ktn-en-label{font-family:var(--font-en-label);font-size:.68rem;font-weight:400;letter-spacing:.18em;color:var(--muted);line-height:1.4}
+.p315-page-head__en{font-family:var(--font-en-label);font-size:.68rem;font-weight:400;letter-spacing:.18em;color:var(--muted);margin:0 0 10px}
 .p315-page-head__desc{font-size:.83rem;color:var(--muted);line-height:1.7;margin:0}
 
 /* ── D-2 売上サマリーカウンター ── */
@@ -9141,20 +9347,12 @@ body.p3-15-page .p3-tabnav{max-width:760px}
 .p315-exh-head__link{font-size:.78rem;color:var(--accent);text-decoration:none}
 .p315-exh-head__link:hover{text-decoration:underline}
 
-/* スケジュールバー */
-.p315-schedule{padding:12px 20px;display:flex;flex-direction:column;gap:8px}
-.p315-schedule__row{display:flex;align-items:center;gap:10px}
-.p315-schedule__label{font-size:.72rem;color:var(--muted);width:72px;flex-shrink:0}
-.p315-schedule__bar-wrap{flex:1;min-width:60px}
-.p315-schedule__bar{width:100%;height:6px;border-radius:3px;background:var(--border);overflow:hidden}
-.p315-schedule__bar--exh{background:rgba(100,110,120,.15)}
-.p315-schedule__bar--sale{background:rgba(184,124,16,.15)}
-.p315-schedule__fill{height:100%}
-.p315-schedule__bar--exh .p315-schedule__fill{background:#7a8a99}
-.p315-schedule__bar--sale .p315-schedule__fill{background:#b87c10}
-.p315-schedule__dates{font-size:.72rem;color:var(--muted);white-space:nowrap;flex-shrink:0;font-family:'Montserrat',sans-serif}
-.p315-schedule__note{font-size:.65rem;color:var(--muted);margin-left:3px}
-.p315-schedule__remain{font-size:.72rem;color:var(--ink);white-space:nowrap;flex-shrink:0;text-align:right}
+/* スケジュール（テキスト行） */
+.p315-schedule{padding:10px 20px;display:flex;flex-direction:column;gap:4px}
+.p315-schedule__row{display:flex;align-items:center;gap:10px;font-size:.72rem;color:var(--muted)}
+.p315-schedule__label{width:72px;flex-shrink:0}
+.p315-schedule__dates{white-space:nowrap;flex-shrink:0;font-family:'Montserrat',sans-serif}
+.p315-schedule__remain{color:var(--ink);white-space:nowrap;flex-shrink:0}
 .p315-schedule__status-text{font-size:.65rem;font-weight:600;white-space:nowrap;flex-shrink:0}
 .p315-schedule__status-text--live{color:#16a34a}
 .p315-schedule__status-text--soon{color:var(--muted)}
@@ -9174,8 +9372,17 @@ body.p3-15-page .p3-tabnav{max-width:760px}
 .p315-work-card--alert{background:#fff}
 .p315-work-card--nsale{opacity:.7}
 .p315-work-card__alert-bar{display:flex;align-items:center;gap:8px;padding:8px 20px;background:rgba(180,60,20,.08);font-size:.78rem;color:#b43c14}
-.p315-work-card__alert-link{margin-left:auto;color:#b43c14;font-weight:600;text-decoration:none;white-space:nowrap}
-.p315-work-card__alert-link:hover{text-decoration:underline}
+/* 視覚スタイルは ktn-action-btn--alert に移管 */
+.p315-work-card__alert-link{margin-left:auto}
+/* ── 取引状況概況バー（展覧会ヘッダー内・1展覧会につき1本） ── */
+.p315-txn-status{display:flex;flex-wrap:wrap;align-items:center;gap:5px 14px;padding:8px 20px;background:var(--paper);border-top:1px solid var(--border);font-size:.7rem}
+.p315-txn-status__item{display:inline-flex;align-items:center;gap:5px}
+.p315-txn-status__dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.p315-txn-status__sep{color:var(--border);font-size:.8rem}
+.p315-txn-status__item--action{color:#7a1800;font-weight:600}
+.p315-txn-status__item--action .p315-txn-status__dot{background:#b43c14}
+.p315-txn-status__item--user{color:#1a4a88}
+.p315-txn-status__item--user .p315-txn-status__dot{background:#1a4a88;opacity:.8}
 .p315-work-card__main{display:flex;align-items:center;gap:12px;padding:14px 20px}
 .p315-work-card__thumb{width:52px;height:52px;border-radius:3px;flex-shrink:0}
 .p315-work-card__body{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
@@ -9207,12 +9414,22 @@ body.p3-15-page .p3-tabnav{max-width:760px}
 .p315-apply-row__num{font-size:.72rem;color:var(--muted);width:24px;flex-shrink:0}
 .p315-apply-row__date{color:var(--muted);font-size:.78rem;flex-shrink:0}
 .p315-apply-row__status{font-size:.72rem;padding:2px 8px;border-radius:10px}
-.p315-apply-row__link{margin-left:auto;font-size:.78rem;color:var(--page-accent,#2a5f7a);text-decoration:none;white-space:nowrap}
-.p315-apply-row__link:hover{text-decoration:underline}
+/* 視覚スタイルは ktn-action-btn に移管 */
+.p315-apply-row__link{margin-left:auto}
+/* 要アクション行（発送待ち・在庫確認回答待ち）のみアラート赤 */
+.p315-apply-row:has(.p315-apply-status--ship) .ktn-action-btn,
+.p315-apply-row:has(.p315-apply-status--stock) .ktn-action-btn,
+.p315-apply-row:has(.p315-apply-status--finish) .ktn-action-btn{border-color:rgba(180,60,20,.45);background:rgba(180,60,20,.07);color:#b43c14}
+.p315-apply-row:has(.p315-apply-status--ship) .ktn-action-btn:hover,
+.p315-apply-row:has(.p315-apply-status--stock) .ktn-action-btn:hover,
+.p315-apply-row:has(.p315-apply-status--finish) .ktn-action-btn:hover{background:rgba(180,60,20,.14)}
 .p315-apply-status--stock{color:#7a5000;background:rgba(184,124,16,.1)}
-.p315-apply-status--pay{color:#7a5000;background:rgba(184,124,16,.1)}
-.p315-apply-status--ship{color:#b43c14;background:rgba(180,60,20,.08)}
-.p315-apply-status--recv{color:#444;background:rgba(100,100,100,.1)}
+.p315-apply-status--ship{color:#7a5000;background:rgba(184,124,16,.1)}
+/* ユーザーアクション（購入者が行動すべき状態） */
+.p315-apply-status--pay{color:#1a4a88;background:rgba(26,95,168,.1)}
+.p315-apply-status--recv{color:#1a4a88;background:rgba(26,95,168,.1)}
+/* 出品者アクション：取引完了確認（ステップ6） */
+.p315-apply-status--finish{color:#7a5000;background:rgba(184,124,16,.1)}
 .p315-apply-status--done{color:#006030;background:rgba(0,150,80,.1)}
 .p315-apply-status--cancel{color:var(--muted);background:var(--paper);text-decoration:line-through}
 .p315-apply-status--wait{color:var(--muted);background:var(--paper)}
@@ -9260,12 +9477,7 @@ body.p3-15-page .p3-tabnav{max-width:760px}
 @media(max-width:640px){
   .p315-summary{padding:12px 16px}
   .p315-summary__num,.p315-summary__amount{font-size:1.1rem}
-  .p315-schedule__row{flex-wrap:wrap;gap:2px 6px}
-  .p315-schedule__bar-wrap{flex:1 0 100%}
-  .p315-schedule__bar{height:8px}
-  .p315-schedule__dates{font-size:.68rem}
-  .p315-schedule__remain{font-size:.68rem}
-  .p315-schedule__status-text{font-size:.68rem}
+  .p315-schedule__row{font-size:.68rem}
   .p315-work-card__main{flex-wrap:wrap}
   .p315-work-card__actions{width:100%}
   .p315-apply-summary{padding-left:20px}
@@ -9288,3 +9500,9 @@ body.p3-15-page .p3-tabnav{max-width:760px}
 .p315-faq-item__a{padding:13px 20px 15px;font-size:.83rem;line-height:1.8;color:var(--ink);background:var(--paper)}
 .p315-faq-item__a p+p{margin-top:6px}
 .p315-faq-item__a strong{color:var(--ink)}
+
+/* ── P4-15 LIAISON+コンソール（ギャラリー版）── */
+body.p4-15-page{--page-accent:#8b5e3c}
+body.p4-15-page .p3-head{max-width:760px}
+body.p4-15-page .p3-tabnav{max-width:760px}
+.p315-work-card__artist{font-size:.72rem;font-weight:600;color:var(--ink);margin-bottom:1px}

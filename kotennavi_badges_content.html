@@ -31,6 +31,10 @@
   </defs>
 </svg>
 
+<div class="dm-toggle-wrap">
+  <button class="dm-toggle-btn" id="dmToggle">☾ Dark</button>
+</div>
+
 <div class="demo-page">
 
   <!-- ══ 1. バッジ一覧 ══ -->
@@ -455,6 +459,11 @@ const CSS_RAW = `.cb {
   </defs>
 </svg>
 */`;
+
+document.getElementById('dmToggle').addEventListener('click', function() {
+  const on = document.body.classList.toggle('dark-mode');
+  this.textContent = on ? '☀ Light' : '☾ Dark';
+});
 
 function copyCss(){
   const btn = event.target.closest('button');

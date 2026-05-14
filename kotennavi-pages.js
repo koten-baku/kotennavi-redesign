@@ -4772,6 +4772,27 @@ KTN.pages['p5-3'] = function () {
     applyRole();
 };
 
+/* =========================================================
+   P5-14 ユーザー – 購入履歴
+   ========================================================= */
+KTN.pages['p5-14'] = function () {
+    document.body.classList.add('p5-page', 'p5-14-page');
+    document.body.style.setProperty('--page-accent', '#b8608c');
+    document.body.style.setProperty('--page-accent-bg', 'rgba(184,96,140,.1)');
+    document.body.style.setProperty('--page-accent-border', '#c97aaa');
+
+    // ── ロール別制御 ──────────────────────────────────────────────────────────
+    function applyRole() {
+        var role = window.curRole || 'guest';
+        var canView = (role === 'user+' || role === 'admin');
+        var wrap = document.querySelector('.p514-wrap');
+        if (wrap) wrap.style.display = canView ? '' : 'none';
+    }
+
+    window.ktnRender = function () { applyRole(); };
+    applyRole();
+};
+
 /* ════════════════════════════════════════════════════
    P3-15  LIAISON+コンソール
 ════════════════════════════════════════════════════ */
@@ -4876,6 +4897,135 @@ KTN.pages['p3-15'] = function () {
   var takedownModalCancel = document.getElementById('p315TakedownModalCancel');
   var takedownModalOk = document.getElementById('p315TakedownModalOk');
   var takedownModalBody = document.getElementById('p315TakedownModalBody');
+  var _takedownCard = null;
+
+  document.querySelectorAll('.p315-takedown-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      _takedownCard = btn.closest('.p315-work-card');
+      var workName = btn.dataset.work || '作品';
+      var count = parseInt(btn.dataset.count || '0', 10);
+      if (takedownModalBody) {
+        takedownModalBody.innerHTML = '「' + workName + '」の掲載を取り下げます。<br>' +
+          (count > 0 ? '申込中の ' + count + '名 全員にキャンセル通知（メール）が送信されます。<br>' : '') +
+          'この操作は取り消せません。';
+      }
+      if (takedownModal) takedownModal.hidden = false;
+    });
+  });
+  function closeTakedownModal() { if (takedownModal) takedownModal.hidden = true; }
+  if (takedownModalCancel) takedownModalCancel.addEventListener('click', closeTakedownModal);
+  if (takedownModalBg) takedownModalBg.addEventListener('click', closeTakedownModal);
+  if (takedownModalOk) {
+    takedownModalOk.addEventListener('click', function () {
+      closeTakedownModal();
+      if (_takedownCard) _takedownCard.style.display = 'none';
+      KTN.toast('掲載を取り下げました');
+    });
+  }
+
+  window.ktnRender = function () {};
+};
+
+/* ════════════════════════════════════════════════════
+   P4-15  LIAISON+コンソール（ギャラリー版）
+════════════════════════════════════════════════════ */
+KTN.pages['p4-15'] = function () {
+
+  // 0. ページスコープ・アクセントカラー
+  document.body.classList.add('p4-page');
+  document.body.style.setProperty('--page-accent',        '#8b5e3c');
+  document.body.style.setProperty('--page-accent-bg',     'rgba(139,94,60,.1)');
+  document.body.style.setProperty('--page-accent-border', '#b07840');
+
+  var d = window.P4_DATA || {};
+  if (typeof applyHeadImageMode === 'function') applyHeadImageMode(d.hasImage !== false);
+
+  // 1. タブナビ：クリックで各サブページへ
+  document.querySelectorAll('.p3-tabnav__item').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      if (btn.dataset.tab === 'exhibitions') {
+        window.location.href = 'kotennavi-p4-1.html';
+      } else if (btn.dataset.tab === 'articles') {
+        window.location.href = 'kotennavi-p4-2.html';
+      } else if (btn.dataset.target) {
+        window.location.href = 'kotennavi-p4.html#' + btn.dataset.target;
+      }
+    });
+  });
+
+  // 2. 管理ドロワー
+  var drawer = document.getElementById('p415Drawer');
+  var mgmtBtn = document.getElementById('p415MgmtBtn');
+  var drawerClose = document.getElementById('p415DrawerClose');
+  var drawerOverlay = document.getElementById('p415DrawerOverlay');
+  function openDrawer() { if (drawer) drawer.classList.add('is-open'); }
+  function closeDrawer() { if (drawer) drawer.classList.remove('is-open'); }
+  if (mgmtBtn) mgmtBtn.addEventListener('click', openDrawer);
+  if (drawerClose) drawerClose.addEventListener('click', closeDrawer);
+  if (drawerOverlay) drawerOverlay.addEventListener('click', closeDrawer);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeDrawer(); });
+
+  // 3. スクロール連動スタイル
+  var header = document.getElementById('ktnHeader');
+  var hero = document.querySelector('.p3-head');
+  if (header && hero) {
+    var observer = new IntersectionObserver(function (entries) {
+      header.classList.toggle('is-scrolled', !entries[0].isIntersecting);
+    }, { threshold: 0, rootMargin: '-50px 0px 0px 0px' });
+    observer.observe(hero);
+  }
+
+  // 4. インデックスピルのスクロール
+  document.querySelectorAll('.p315-index-row').forEach(function (row) {
+    row.addEventListener('click', function () {
+      var el = document.getElementById(row.dataset.target);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  // 5. 会場売約済モーダル
+  var venueModal = document.getElementById('p415VenueModal');
+  var venueModalBg = document.getElementById('p415VenueModalBg');
+  var venueModalCancel = document.getElementById('p415VenueModalCancel');
+  var venueModalOk = document.getElementById('p415VenueModalOk');
+  var venueModalBody = document.getElementById('p415VenueModalBody');
+  var _venueCard = null;
+
+  document.querySelectorAll('.p315-venue-btn:not(:disabled)').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      _venueCard = btn.closest('.p315-work-card');
+      var workName = btn.dataset.work || '作品';
+      var count = parseInt(btn.dataset.count || '0', 10);
+      if (venueModalBody) {
+        venueModalBody.innerHTML = '「' + workName + '」を「売約済」に変更します。<br>' +
+          (count > 0 ? '申込中の ' + count + '名 全員にキャンセル通知（メール）が送信されます。<br>' : '') +
+          'この操作は取り消せません。';
+      }
+      if (venueModal) venueModal.hidden = false;
+    });
+  });
+  function closeVenueModal() { if (venueModal) venueModal.hidden = true; }
+  if (venueModalCancel) venueModalCancel.addEventListener('click', closeVenueModal);
+  if (venueModalBg) venueModalBg.addEventListener('click', closeVenueModal);
+  if (venueModalOk) {
+    venueModalOk.addEventListener('click', function () {
+      closeVenueModal();
+      if (_venueCard) {
+        var statusEl = _venueCard.querySelector('.p315-work-card__status');
+        if (statusEl) statusEl.innerHTML = '<span class="aws aws-sold">売約済</span>';
+        var actionsEl = _venueCard.querySelector('.p315-work-card__actions');
+        if (actionsEl) actionsEl.style.display = 'none';
+      }
+      KTN.toast('会場売約済に変更しました。申込者にキャンセル通知を送信しました');
+    });
+  }
+
+  // 6. 掲載取り下げモーダル
+  var takedownModal = document.getElementById('p415TakedownModal');
+  var takedownModalBg = document.getElementById('p415TakedownModalBg');
+  var takedownModalCancel = document.getElementById('p415TakedownModalCancel');
+  var takedownModalOk = document.getElementById('p415TakedownModalOk');
+  var takedownModalBody = document.getElementById('p415TakedownModalBody');
   var _takedownCard = null;
 
   document.querySelectorAll('.p315-takedown-btn').forEach(function (btn) {

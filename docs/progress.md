@@ -1,11 +1,9 @@
 # 進捗状況
 
-最終更新：2026-05-09
+最終更新：2026-05-12
 
 ## 現在の作業
-**次：LIAISON+ 販売関連ページ制作（P5-14〜16）**
-
-> P3-15 LIAISONコンソール 完了
+**次：P5-15 取引ワークスペース制作**
 
 ---
 
@@ -37,6 +35,8 @@
 | kotennavi-p5-2.html | P5-2 チェックイン記録 |
 | kotennavi-p5-3.html | P5-3 興味あり！リスト |
 | kotennavi-p3-15.html | P3-15 LIAISONコンソール（creator管理） |
+| kotennavi-p4-15.html | P4-15 LIAISONコンソール（gallery管理） |
+| kotennavi-p5-14.html | P5-14 購入履歴（user管理） |
 
 ---
 
@@ -45,7 +45,6 @@
 ### 次の制作：LIAISON+ 販売関連
 | ID | ページ | 幅 | アクセス | 備考 |
 |---|---|---|---|---|
-| P5-14 | 購入ダッシュボード | --w-article | user+/admin | 購入申込済み作品の管理 |
 | P5-15 | 取引ワークスペース | --w-detail | user+/admin | 会期終了後の購入プロセス |
 | P5-16 | 取引ワークスペース-支払 | --w-detail | user+/admin | 決済フロー |
 
@@ -72,6 +71,8 @@
 
 | 日付 | 内容 |
 |---|---|
+| 2026-05-11 | p4-15 LIAISON+コンソール（ギャラリー版）新規制作・p315-work-card__artistクラス追加・body.p4-15-page CSS追加・KTN.pages['p4-15']追加 |
+| 2026-05-11 | p3-15 UI大幅改修：スケジュール行レイアウト再構成・申込内訳84pxインデント・バッジp2-121-lock-info統一・展覧会ヘッダー整理（会期明記・リンク整理）・Q&Aセクション（8項目）追加・ボタン横並び・スマホスケジュールバー改善 |
 | 2026-05-09 | p3-15 LIAISONコンソール新規作成（p3-mgmt-drawer・p315-*CSS・KTN.pages['p3-15']追加） |
 | 2026-05-09 | 「申込中」販売状態廃止→「販売中 xx人が申込中」表示に統一（p2-5-1/p3/p3-3・pages.js・common.css） |
 | 2026-05-06 | p5系全ページ制作・カードSVG fill="currentColor"統一・itn-btn/itn-count追加・p5-cbox__opt追加 |

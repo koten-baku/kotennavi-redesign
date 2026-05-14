@@ -10,6 +10,10 @@
   <link rel="stylesheet" href="./kotennavi-components.css">
 </head>
 <body>
+<div class="dm-toggle-wrap">
+  <button class="dm-toggle-btn" id="dmToggle">☾ Dark</button>
+</div>
+
 <div class="page">
 
 <!-- ════════════════════════════════════
@@ -575,5 +579,12 @@
 </div>
 
 </div>
+
+<script>
+document.getElementById('dmToggle').addEventListener('click', function() {
+  const on = document.body.classList.toggle('dark-mode');
+  this.textContent = on ? '☀ Light' : '☾ Dark';
+});
+</script>
 </body>
 </html>

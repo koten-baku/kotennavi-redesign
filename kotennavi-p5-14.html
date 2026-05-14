@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>購入履歴 — 山田 花子 | 個展なび</title>
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Noto+Sans+JP:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+  <link rel="stylesheet" href="./kotennavi-components.css">
+</head>
+<body class="p5-page p5-14-page">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- 管理ドロワー -->
+<div class="p3-mgmt-drawer" id="p514Drawer">
+  <div class="p3-mgmt-drawer__overlay" id="p514DrawerOverlay"></div>
+  <div class="p3-mgmt-drawer__panel">
+    <div class="p3-mgmt-drawer__head">
+      <div class="p3-mgmt-drawer__title">管理メニュー</div>
+      <button class="p3-mgmt-drawer__close" id="p514DrawerClose" aria-label="閉じる">✕</button>
+    </div>
+    <nav class="p3-mgmt-drawer__nav">
+      <a class="p3-mgmt-nav-item" href="kotennavi-p5.html">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><circle cx="8" cy="5" r="3"/><path d="M2 13.5c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>
+        マイページ
+      </a>
+      <div class="p3-mgmt-drawer__sep"></div>
+      <a class="p3-mgmt-nav-item" href="#">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><path d="M8 2a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"/><path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6"/><line x1="13" y1="9" x2="15" y2="9" stroke-width="1.2"/><line x1="14" y1="8" x2="14" y2="10" stroke-width="1.2"/></svg>
+        プロフィール編集
+      </a>
+      <a class="p3-mgmt-nav-item" href="#">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><rect x="3" y="7" width="10" height="8" rx="1"/><path d="M5 7V5a3 3 0 0 1 6 0v2"/></svg>
+        パスワード変更
+      </a>
+      <a class="p3-mgmt-nav-item" href="#">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><path d="M8 2a5 5 0 0 1 5 5v2l1.5 2.5H1.5L3 9V7a5 5 0 0 1 5-5z"/><path d="M6.5 13a1.5 1.5 0 0 0 3 0"/></svg>
+        通知設定
+      </a>
+      <div class="p3-mgmt-drawer__sep"></div>
+      <a class="p3-mgmt-nav-item p3-mgmt-nav-item--active" href="kotennavi-p5-14.html">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><rect x="2" y="3" width="12" height="10" rx="1"/><line x1="5" y1="7" x2="11" y2="7"/><line x1="5" y1="10" x2="8" y2="10"/></svg>
+        購入履歴
+      </a>
+    </nav>
+  </div>
+</div>
+
+<!-- SVGシンボル -->
+<svg width="0" height="0" style="position:absolute;overflow:hidden">
+  <defs>
+    <symbol id="icon-exh" viewBox="40 47 54 54">
+      <path d="M80.09 102.05c-1.22-.8,-2.57-2.87,-3.34-4.33c-2.48-5.91,-4.85-14.23,-13.31-20.15c-1.9-1.23,-2.03-2,-1.94-2.48c.11-.83,.82-1.52,2.3-1.3c11.09,1.95,15.22,3.96,21.07,7.61c7.85,5.36,9.57,10.76,9.65,14.09c.15,2.3,-.18,5.11,-2.61,6.56Z" fill="currentColor"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- デモバー -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ロール：</span>
+  <button class="dbtn" onclick="setR('guest',this)">ゲスト</button>
+  <button class="dbtn" onclick="setR('login',this)">ログイン</button>
+  <button class="dbtn on" onclick="setR('user+',this)">user+</button>
+  <button class="dbtn" onclick="setR('admin',this)">管理者</button>
+  <span class="dbar-sep">状態：</span>
+  <button class="dbtn on" id="dbarHasData" onclick="setHasData(true,this)">データあり</button>
+  <button class="dbtn" id="dbarEmpty" onclick="setHasData(false,this)">空状態</button>
+</div>
+
+<div class="shell">
+<div class="content-wrap" id="contentWrap">
+
+  <header class="ktn-header" id="ktnHeader">
+    <div class="ktn-header__inner">
+      <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+      <div class="ktn-hdr-actions" id="ktnActs"></div>
+    </div>
+  </header>
+
+  <main class="ktn-main" id="ktnMain">
+
+    <!-- A. ヒーロー（コンパクト版） -->
+    <div class="p5-head p5-head--compact">
+      <div class="p5-head__inner">
+        <div class="p5-head__top">
+          <a href="kotennavi-p5.html">
+            <div class="p5-head__avatar" style="background:linear-gradient(135deg,#f0c0d8,#c87aaa)">花</div>
+          </a>
+          <div class="p5-head__info">
+            <div class="p5-head__badge-row">
+              <span class="cb cb-person cb-user">user</span>
+            </div>
+            <h1 class="p5-head__name"><a href="kotennavi-p5.html" style="color:inherit;text-decoration:none">山田 花子</a></h1>
+          </div>
+          <button class="p3-mgmt-btn" id="p514MgmtBtn" aria-label="管理メニューを開く">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="16" height="16"><circle cx="10" cy="10" r="2"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2M5.05 5.05l1.41 1.41M13.54 13.54l1.41 1.41M5.05 14.95l1.41-1.41M13.54 6.46l1.41-1.41"/></svg>
+            管理
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- B. タブナビ（アクティブなし・管理ページ） -->
+    <nav class="p5-tabnav" id="p5Tabnav" aria-label="マイページ内ナビ">
+      <div class="p5-tabnav__inner">
+        <span class="p5-tabnav__name"><span class="p5-tabnav__name-text">山田 花子</span></span>
+        <a class="p5-tabnav__item" href="kotennavi-p5.html">カレンダー</a>
+        <a class="p5-tabnav__item" href="kotennavi-p5-1.html">ウォッチ</a>
+        <a class="p5-tabnav__item" href="kotennavi-p5-2.html">チェックイン</a>
+        <a class="p5-tabnav__item" href="kotennavi-p5-3.html">興味あり！</a>
+      </div>
+    </nav>
+
+    <!-- C. メインコンテンツ -->
+    <div class="ktn-content">
+      <div class="p514-wrap">
+
+        <!-- C-1. ページタイトル -->
+        <div class="p514-page-head">
+          <h2 class="p514-page-head__title">購入履歴</h2>
+          <p class="p514-page-head__en ktn-en-label">PURCHASE HISTORY</p>
+          <p class="p514-page-head__desc">LIAISON+ で申込・購入した作品の一覧です。取引中のものは取引ワークスペースへ移動して対応してください。</p>
+        </div>
+
+        <!-- C-2. 要対応バナー -->
+        <div class="p514-banner" id="p514ActionBanner">
+          <div class="p514-banner__badge">!</div>
+          <div class="p514-banner__body">
+            <div class="p514-banner__title">2件の取引でアクションが必要です</div>
+            <div class="p514-banner__desc">支払待ち 1件・受取確認待ち 1件 — それぞれ取引ワークスペースで対応してください。</div>
+          </div>
+        </div>
+
+        <!-- C-3. タブ -->
+        <div class="p514-tabs" id="p514Tabs">
+          <button class="p514-tab is-active" data-tab="p514PaneActive">
+            取引中<span class="p514-tab__count">3</span>
+          </button>
+          <button class="p514-tab" data-tab="p514PaneHistory">
+            取引完了<span class="p514-tab__count">3</span>
+          </button>
+        </div>
+
+        <!-- C-4. タブペイン: 取引中 -->
+        <div class="p514-pane p514-pane--active is-active" id="p514PaneActive">
+
+          <!-- 取引中 1: 支払待ち（要アクション） -->
+          <div class="p514-aw">
+            <div class="p514-aw__row">
+              <a class="p514-aw__thumb-wrap" href="kotennavi-p6-2.html">
+                <div class="p514-aw__thumb" style="background:linear-gradient(135deg,#b0c8d8,#6a92a8)"></div>
+              </a>
+              <div class="p514-aw__main">
+                <div class="p514-aw__badges">
+                  <span class="cb cb-content cb-artwork">artwork</span>
+                </div>
+                <a class="p514-aw__title-link" href="kotennavi-p6-2.html">光の痕跡 No.7</a>
+                <div class="p514-aw__creator">田中 透</div>
+                <div class="p514-aw__exh">
+                  <span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span>
+                  <a class="p514-aw__exh-name" href="kotennavi-p2.html">あなたが知らないオノマトペ — 田中透 個展</a>
+                </div>
+                <div class="p514-aw__price">¥65,000</div>
+              </div>
+            </div>
+            <div class="p514-aw__strip p514-aw__strip--payment">
+              <span class="p514-aw__strip-dot"></span>
+              <span class="p514-aw__strip-label">支払待ち</span>
+              <span class="p514-aw__strip-note">取引期限 2026.03.22</span>
+              <div class="p514-aw__strip-actions">
+                <a class="p514-aw__strip-link ktn-action-btn ktn-action-btn--ghost" href="kotennavi-p5-15.html">
+                  取引ワークスペースへ
+                  <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" width="8" height="8"><line x1="2" y1="5" x2="8" y2="5"/><polyline points="5 2 8 5 5 8"/></svg>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- 取引中 2: 受取確認待ち（要アクション） -->
+          <div class="p514-aw">
+            <div class="p514-aw__row">
+              <a class="p514-aw__thumb-wrap" href="kotennavi-p6-2.html">
+                <div class="p514-aw__thumb" style="background:linear-gradient(135deg,#c8b090,#907050)"></div>
+              </a>
+              <div class="p514-aw__main">
+                <div class="p514-aw__badges">
+                  <span class="cb cb-content cb-artwork">artwork</span>
+                </div>
+                <a class="p514-aw__title-link" href="kotennavi-p6-2.html">声なき波紋</a>
+                <div class="p514-aw__creator">鈴木 一郎</div>
+                <div class="p514-aw__exh">
+                  <span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span>
+                  <a class="p514-aw__exh-name" href="kotennavi-p2.html">声と線 — 新作展</a>
+                </div>
+                <div class="p514-aw__price">¥42,000</div>
+              </div>
+            </div>
+            <div class="p514-aw__strip p514-aw__strip--receipt">
+              <span class="p514-aw__strip-dot"></span>
+              <span class="p514-aw__strip-label">受取確認待ち</span>
+              <span class="p514-aw__strip-note">発送済 — 受取後に確認ボタンを押してください</span>
+              <div class="p514-aw__strip-actions">
+                <a class="p514-aw__strip-link ktn-action-btn ktn-action-btn--ghost" href="kotennavi-p5-15.html">
+                  取引ワークスペースへ
+                  <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" width="8" height="8"><line x1="2" y1="5" x2="8" y2="5"/><polyline points="5 2 8 5 5 8"/></svg>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- 申込中: キュー待ち -->
+          <div class="p514-aw">
+            <div class="p514-aw__row">
+              <a class="p514-aw__thumb-wrap" href="kotennavi-p6-2.html">
+                <div class="p514-aw__thumb" style="background:linear-gradient(135deg,#d0c8b0,#a09070)"></div>
+              </a>
+              <div class="p514-aw__main">
+                <div class="p514-aw__badges">
+                  <span class="cb cb-content cb-artwork">artwork</span>
+                </div>
+                <a class="p514-aw__title-link" href="kotennavi-p6-2.html">夕暮れの記憶</a>
+                <div class="p514-aw__creator">山本 美咲</div>
+                <div class="p514-aw__exh">
+                  <span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span>
+                  <a class="p514-aw__exh-name" href="kotennavi-p2.html">季節の彩り展</a>
+                </div>
+                <div class="p514-aw__price">¥38,000</div>
+              </div>
+            </div>
+            <div class="p514-aw__strip p514-aw__strip--applied">
+              <span class="p514-aw__strip-dot"></span>
+              <span class="p514-aw__strip-label">申込中</span>
+              <span class="p514-aw__strip-queue">5人中の3番目</span>
+              <span class="p514-aw__strip-note">申込 2026.04.10</span>
+              <div class="p514-aw__strip-actions">
+                <a class="p514-aw__strip-link ktn-action-btn ktn-action-btn--ghost" href="kotennavi-p5-15.html">
+                  取引ワークスペースへ
+                  <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" width="8" height="8"><line x1="2" y1="5" x2="8" y2="5"/><polyline points="5 2 8 5 5 8"/></svg>
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- C-5. タブペイン: 取引完了 -->
+        <div class="p514-pane p514-pane--history" id="p514PaneHistory">
+
+          <!-- 完了 1: myコレクション未公開 -->
+          <div class="p514-aw">
+            <div class="p514-aw__row">
+              <a class="p514-aw__thumb-wrap" href="kotennavi-p6-2.html">
+                <div class="p514-aw__thumb" style="background:linear-gradient(135deg,#b8d0b0,#7a9870)"></div>
+              </a>
+              <div class="p514-aw__main">
+                <div class="p514-aw__badges">
+                  <span class="cb cb-content cb-artwork">artwork</span>
+                </div>
+                <a class="p514-aw__title-link" href="kotennavi-p6-2.html">春の庭</a>
+                <div class="p514-aw__creator">田中 透</div>
+                <div class="p514-aw__exh">
+                  <span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span>
+                  <a class="p514-aw__exh-name" href="kotennavi-p2.html">光と影 — 田中透 個展 2025秋</a>
+                </div>
+                <div class="p514-aw__price">¥28,000</div>
+              </div>
+            </div>
+            <div class="p514-aw__strip p514-aw__strip--done">
+              <span class="p514-aw__strip-dot"></span>
+              <span class="p514-aw__strip-label">取引完了</span>
+              <span class="p514-aw__strip-note">2026.02.20</span>
+              <div class="p514-aw__strip-actions">
+                <a class="p514-aw__strip-link ktn-action-btn ktn-action-btn--ghost" href="kotennavi-p5-15.html">
+                  取引詳細
+                  <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" width="8" height="8"><line x1="2" y1="5" x2="8" y2="5"/><polyline points="5 2 8 5 5 8"/></svg>
+                </a>
+                <button class="p514-collect-btn ktn-action-btn ktn-action-btn--ghost" data-name="春の庭" data-bg="linear-gradient(135deg,#b8d0b0,#7a9870)">
+                  <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" width="10" height="10"><polygon points="6,1 7.5,4.5 11,4.8 8.5,7 9.3,10.5 6,8.5 2.7,10.5 3.5,7 1,4.8 4.5,4.5"/></svg>
+                  myコレクションへ
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 完了 2: myコレクション公開中 -->
+          <div class="p514-aw">
+            <div class="p514-aw__row">
+              <a class="p514-aw__thumb-wrap" href="kotennavi-p6-2.html">
+                <div class="p514-aw__thumb" style="background:linear-gradient(135deg,#c8c0d8,#8878a8)"></div>
+              </a>
+              <div class="p514-aw__main">
+                <div class="p514-aw__badges">
+                  <span class="cb cb-content cb-artwork">artwork</span>
+                </div>
+                <a class="p514-aw__title-link" href="kotennavi-p6-2.html">記憶の断片 II</a>
+                <div class="p514-aw__creator">加藤 真理</div>
+                <div class="p514-aw__exh">
+                  <span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span>
+                  <a class="p514-aw__exh-name" href="kotennavi-p2.html">記憶と忘却</a>
+                </div>
+                <div class="p514-aw__price">¥55,000</div>
+              </div>
+            </div>
+            <div class="p514-aw__strip p514-aw__strip--done">
+              <span class="p514-aw__strip-dot"></span>
+              <span class="p514-aw__strip-label">取引完了</span>
+              <span class="p514-aw__strip-note">2025.11.15</span>
+              <span class="p514-published-badge">公開中</span>
+              <div class="p514-aw__strip-actions">
+                <a class="p514-aw__strip-link ktn-action-btn ktn-action-btn--ghost" href="kotennavi-p5-15.html">
+                  取引詳細
+                  <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" width="8" height="8"><line x1="2" y1="5" x2="8" y2="5"/><polyline points="5 2 8 5 5 8"/></svg>
+                </a>
+                <button class="p514-unpublish-btn">公開キャンセル</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- キャンセル済 -->
+          <div class="p514-aw">
+            <div class="p514-aw__row">
+              <a class="p514-aw__thumb-wrap" href="kotennavi-p6-2.html">
+                <div class="p514-aw__thumb" style="background:linear-gradient(135deg,#d0d0c8,#989888)"></div>
+              </a>
+              <div class="p514-aw__main">
+                <div class="p514-aw__badges">
+                  <span class="cb cb-content cb-artwork">artwork</span>
+                </div>
+                <a class="p514-aw__title-link" href="kotennavi-p6-2.html">波の上の朝</a>
+                <div class="p514-aw__creator">小野 友美</div>
+                <div class="p514-aw__exh">
+                  <span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span>
+                  <a class="p514-aw__exh-name" href="kotennavi-p2.html">晩夏の光</a>
+                </div>
+                <div class="p514-aw__price">¥32,000</div>
+              </div>
+            </div>
+            <div class="p514-aw__strip p514-aw__strip--cancelled">
+              <span class="p514-aw__strip-dot"></span>
+              <span class="p514-aw__strip-label">キャンセル済</span>
+              <span class="p514-aw__strip-note">会場売約済 · 2026.01.08</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 空状態（データなし時） -->
+        <div class="p514-empty" id="p514Empty" hidden>
+          <svg class="p514-empty__icon" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.4" width="40" height="40">
+            <rect x="8" y="6" width="24" height="28" rx="2"/>
+            <line x1="14" y1="14" x2="26" y2="14"/>
+            <line x1="14" y1="20" x2="26" y2="20"/>
+            <line x1="14" y1="26" x2="20" y2="26"/>
+          </svg>
+          <p class="p514-empty__text">申込・購入した作品はまだありません。</p>
+          <a class="p514-empty__link" href="kotennavi-p2-5-1.html">LIAISON+対応展覧会を探す →</a>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+</div>
+</div>
+
+<!-- コレクションモーダル -->
+<div class="p514-modal-overlay" id="p514CollectModal" hidden>
+  <div class="p514-modal">
+    <div class="p514-modal__head">
+      <span class="p514-modal__title">myコレクションルームで公開</span>
+      <button class="p514-modal__close" id="p514ModalClose">✕</button>
+    </div>
+    <div class="p514-modal__body">
+      <div class="p514-modal__thumb" id="p514ModalThumb"></div>
+      <div class="p514-modal__artwork-name" id="p514ModalName"></div>
+      <p class="p514-modal__desc">この作品をmyコレクションルームに公開すると、あなたのプロフィールページに作品が表示されます。公開後はいつでも非公開にできます。</p>
+    </div>
+    <div class="p514-modal__foot">
+      <button class="p514-modal__btn p514-modal__btn--secondary" id="p514ModalCancel">キャンセル</button>
+      <button class="p514-modal__btn p514-modal__btn--primary" id="p514ModalPublish">公開する</button>
+    </div>
+  </div>
+</div>
+
+<script src="kotennavi-common.js"></script>
+<script src="kotennavi-pages.js"></script>
+<script>
+KTN.init({ page: 'p5-14', role: 'user+' });
+(function () {
+  // 管理ドロワー
+  var drawer  = document.getElementById('p514Drawer');
+  var mgmtBtn = document.getElementById('p514MgmtBtn');
+  var dClose  = document.getElementById('p514DrawerClose');
+  var dOver   = document.getElementById('p514DrawerOverlay');
+  function openDrawer()  { if (drawer) drawer.classList.add('is-open'); }
+  function closeDrawer() { if (drawer) drawer.classList.remove('is-open'); }
+  if (mgmtBtn) mgmtBtn.addEventListener('click', openDrawer);
+  if (dClose)  dClose.addEventListener('click', closeDrawer);
+  if (dOver)   dOver.addEventListener('click', closeDrawer);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeDrawer(); });
+
+  // タブ切替
+  var tabs   = document.querySelectorAll('.p514-tab');
+  var panes  = document.querySelectorAll('.p514-pane');
+  var banner = document.getElementById('p514ActionBanner');
+  tabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      tabs.forEach(function (t) { t.classList.remove('is-active'); });
+      panes.forEach(function (p) { p.classList.remove('is-active'); });
+      tab.classList.add('is-active');
+      var target = document.getElementById(tab.dataset.tab);
+      if (target) target.classList.add('is-active');
+      if (banner) banner.hidden = (tab.dataset.tab !== 'p514PaneActive');
+    });
+  });
+
+  // コレクションモーダル
+  var modal       = document.getElementById('p514CollectModal');
+  var modalClose  = document.getElementById('p514ModalClose');
+  var modalCancel = document.getElementById('p514ModalCancel');
+  var modalPublish= document.getElementById('p514ModalPublish');
+  var modalThumb  = document.getElementById('p514ModalThumb');
+  var modalName   = document.getElementById('p514ModalName');
+
+  function openModal(name, bg) {
+    if (modalName)  modalName.textContent  = name || '';
+    if (modalThumb) modalThumb.style.background = bg || '';
+    if (modal) modal.hidden = false;
+  }
+  function closeModal() { if (modal) modal.hidden = true; }
+
+  document.querySelectorAll('.p514-collect-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      openModal(btn.dataset.name, btn.dataset.bg);
+    });
+  });
+  if (modalClose)  modalClose.addEventListener('click', closeModal);
+  if (modalCancel) modalCancel.addEventListener('click', closeModal);
+  if (modal) modal.addEventListener('click', function (e) {
+    if (e.target === modal) closeModal();
+  });
+  if (modalPublish) modalPublish.addEventListener('click', function () {
+    location.href = 'kotennavi-p5-4.html';
+  });
+
+  // 公開キャンセル
+  document.querySelectorAll('.p514-unpublish-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var strip = btn.closest('.p514-aw__strip');
+      var badge = strip ? strip.querySelector('.p514-published-badge') : null;
+      if (badge) badge.remove();
+      var actions = btn.closest('.p514-aw__strip-actions');
+      var name = btn.closest('.p514-aw').querySelector('.p514-aw__title-link').textContent;
+      var bg   = btn.closest('.p514-aw').querySelector('.p514-aw__thumb').style.background;
+      btn.remove();
+      var collectBtn = document.createElement('button');
+      collectBtn.className = 'p514-collect-btn ktn-action-btn ktn-action-btn--ghost';
+      collectBtn.dataset.name = name;
+      collectBtn.dataset.bg   = bg;
+      collectBtn.innerHTML = '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" width="10" height="10"><polygon points="6,1 7.5,4.5 11,4.8 8.5,7 9.3,10.5 6,8.5 2.7,10.5 3.5,7 1,4.8 4.5,4.5"/></svg> myコレクションへ';
+      collectBtn.addEventListener('click', function () { openModal(name, bg); });
+      if (actions) actions.appendChild(collectBtn);
+    });
+  });
+}());
+
+// デモ: データあり/空状態切替
+function setHasData(hasData) {
+  document.getElementById('dbarHasData').classList.toggle('on',  hasData);
+  document.getElementById('dbarEmpty').classList.toggle('on', !hasData);
+  var tabsEl   = document.getElementById('p514Tabs');
+  var banner   = document.getElementById('p514ActionBanner');
+  var empty    = document.getElementById('p514Empty');
+  if (tabsEl) tabsEl.hidden = !hasData;
+  if (empty)  empty.hidden  =  hasData;
+  document.querySelectorAll('.p514-pane').forEach(function (p) {
+    p.hidden = !hasData;
+    if (hasData) p.removeAttribute('hidden');
+  });
+  if (banner) {
+    var activeTab = document.querySelector('.p514-tab.is-active');
+    banner.hidden = !hasData || (activeTab && activeTab.dataset.tab !== 'p514PaneActive');
+  }
+  // データありに戻したらis-activeペインを再表示
+  if (hasData) {
+    var activePane = document.querySelector('.p514-tab.is-active');
+    if (activePane) {
+      var target = document.getElementById(activePane.dataset.tab);
+      if (target) target.classList.add('is-active');
+    }
+  }
+}
+</script>
+</body>
+</html>
