@@ -172,7 +172,7 @@ button{font-family:inherit;cursor:pointer}
 /* ── パンくず ── */
 .ktn-bc{
   display:flex;align-items:center;flex-wrap:wrap;
-  gap:1px;flex:1;min-width:0;
+  gap:1px;flex:1 1 160px;min-width:0;
 }
 .ktn-bc__link{
   font-size:.71rem;color:var(--muted);
@@ -205,7 +205,7 @@ button{font-family:inherit;cursor:pointer}
 
 /* ── アクションエリア ── */
 .ktn-hdr-actions{
-  display:flex;align-items:center;gap:3px;flex-shrink:0;flex-wrap:wrap;
+  display:flex;align-items:center;gap:3px;flex-shrink:0;flex-wrap:wrap;margin-left:auto;
 }
 
 /* アイコンボタン */
@@ -279,12 +279,33 @@ button{font-family:inherit;cursor:pointer}
   width: 100%;
   background: #fff;
   border-bottom: 1px solid var(--border);
-  overflow: hidden;
+  display: flex;
+  align-items: stretch;
 }
+.ktn-tagbar__arr {
+  flex-shrink: 0;
+  width: 28px;
+  border: none;
+  background: #fff;
+  cursor: pointer;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  padding: 0;
+  transition: color .15s, background .15s;
+}
+.ktn-tagbar__arr:hover { color: var(--accent); background: var(--paper); }
+.ktn-tagbar__arr--l { border-right: 1px solid var(--border); }
+.ktn-tagbar__arr--r { border-left: 1px solid var(--border); }
+.ktn-tagbar__arr.is-hidden { visibility: hidden; pointer-events: none; }
 .ktn-tagbar__inner {
+  flex: 1;
+  min-width: 0;
   max-width: var(--w-page);
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 16px;
   display: flex;
   align-items: center;
   gap: 0;
@@ -375,13 +396,19 @@ button{font-family:inherit;cursor:pointer}
   .ktn-header{top:var(--dh, 0)}
   .ktn-header__inner{padding:0 14px;padding-top:8px;padding-bottom:8px}
   .ktn-bc__current{max-width:150px}
-  .ktn-tagbar__inner{padding:0 14px}
+  .ktn-tagbar__inner{padding:0 10px}
   .ktn-tagbar__label{display:none}
 }
 @media(max-width:540px){
   .ktn-hib__lbl{display:none}
   .ktn-hdr-owbtn span{display:none}
-  .ktn-bc__current{max-width:110px}
+  .ktn-bc__current{flex:1;min-width:0;max-width:none}
+  /* パンくず先祖リンクを省略（親+現在のみ表示）*/
+  .ktn-bc__link--anc{display:none}
+  .ktn-bc__link--anc + .ktn-bc__sep{display:none}
+  .ktn-bc:has(.ktn-bc__link--anc)::before{content:'…';font-size:.62rem;color:var(--border);padding:0 4px}
+  /* パンくず行を全幅確保→アクションを2行目へ */
+  .ktn-bc{flex:0 0 100%}
 }
 
 
@@ -9388,7 +9415,7 @@ body.p3-15-page .p3-tabnav{max-width:760px}
 .p315-work-card__main{display:flex;align-items:center;gap:12px;padding:14px 20px}
 .p315-work-card__thumb{width:52px;height:52px;border-radius:3px;flex-shrink:0}
 .p315-work-card__body{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
-.p315-work-card__title{font-size:.9rem;font-weight:600;color:var(--ink)}
+.p315-work-card__title{font-size:.9rem;font-weight:600;color:var(--ink);display:flex;align-items:center;gap:6px}
 .p315-work-card__spec{font-size:.72rem;color:var(--muted)}
 .p315-work-card__price{font-size:.85rem;color:var(--ink);font-family:'Montserrat',sans-serif}
 .p315-work-card__status{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0}

@@ -116,16 +116,10 @@
   </header>
 
   <!-- ── TAGBAR ── -->
-  <!--
-    表示制御:
-    - 全ページで表示してもよいが、検索・一覧系ページに特に有効
-    - Drupal側でページ種別に応じて表示/非表示を制御する
-    - JS: renderTagbar() を呼ぶことでページ別タグを差し替え可
-  -->
   <div class="ktn-tagbar" id="ktnTagbar">
-    <div class="ktn-tagbar__inner" id="ktnTagbarInner">
-      <!-- ▼ JS で差し替え or サーバー側テンプレートで出力 -->
-    </div>
+    <button class="ktn-tagbar__arr ktn-tagbar__arr--l" id="ktnTagbarL" aria-label="前へ">‹</button>
+    <div class="ktn-tagbar__inner" id="ktnTagbarInner"></div>
+    <button class="ktn-tagbar__arr ktn-tagbar__arr--r" id="ktnTagbarR" aria-label="次へ">›</button>
   </div>
 
   <div class="demo-body">
@@ -510,17 +504,18 @@ function getActions(page, role){
 function renderBc(page){
   const p = PAGES[page];
   if(!p) return '';
-  return p.bc.map((c,i)=>{
-    const isLast = i===p.bc.length-1;
+  const items = p.bc;
+  return items.map((c,i)=>{
+    const isLast = i===items.length-1;
     const badge = c[2]==='l'
       ? `<span class="ktn-bc__badge ktn-bc__badge--l">LIAISON</span>`
       : c[2]==='lp'
       ? `<span class="ktn-bc__badge ktn-bc__badge--lp">LIAISON+</span>`
       : '';
-    const sep = i>0 ? `<span class="ktn-bc__sep">›</span>` : '';
     if(isLast||!c[1])
-      return `${sep}<span class="ktn-bc__current">${c[0]}${badge}</span>`;
-    return `${sep}<a href="${c[1]}" class="ktn-bc__link">${c[0]}</a>`;
+      return `<span class="ktn-bc__current">${c[0]}${badge}</span>`;
+    const ancClass = i < items.length-2 ? ' ktn-bc__link--anc' : '';
+    return `<a href="${c[1]}" class="ktn-bc__link${ancClass}">${c[0]}</a><span class="ktn-bc__sep">›</span>`;
   }).join('');
 }
 
@@ -561,24 +556,34 @@ const TAGBAR_DEFS = {
   /* P2-3 展覧会詳細 */
   'p2-3': [
     { label: '展覧会詳細',       href: '#',                  active: true },
-    { label: '作品一覧',         href: '#artworks' },
+    { label: '出展作品',         href: '#artworks' },
     { label: 'クリエイター',     href: '#creator' },
     { label: 'ギャラリー情報',   href: '#gallery' },
+    { label: 'レビュー',         href: '#reviews' },
+    { label: 'アクセス',         href: '#access' },
     { sep: true },
     { label: 'LIAISON作品',      href: '/p2-5',              mod: 'liaison' },
+    { label: 'LIAISON+作品',     href: '/p2-5-1',            mod: 'liaison' },
   ],
   /* P3 クリエイター */
   'p3': [
     { label: 'プロフィール',     href: '#',                  active: true },
-    { label: '開催中の展覧会',   href: '#current' },
+    { label: '展覧会',           href: '#exhibitions' },
     { label: '作品',             href: '#works' },
     { label: '記事',             href: '#articles' },
+    { label: 'クリエイター情報', href: '#info' },
+    { sep: true },
+    { label: 'LIAISON作品',      href: '#liaison',           mod: 'liaison' },
+    { label: 'LIAISON+作品',     href: '#liaisonplus',       mod: 'liaison' },
   ],
   /* P6 作品詳細 */
   'p6': [
     { label: '作品詳細',         href: '#',                  active: true },
     { label: '同シリーズ',       href: '#series' },
     { label: 'このクリエイターの他の作品', href: '#creator-works' },
+    { label: 'この展覧会の作品', href: '#exhibition-works' },
+    { sep: true },
+    { label: '問い合わせ',       href: '#inquiry' },
   ],
   /* P10 特集 */
   'p10-5': [
@@ -621,11 +626,18 @@ function renderTagbar(page) {
     /* 定義なし → デフォルトの汎用タグ */
     el.innerHTML = `
       <span class="ktn-tagbar__label">タグ</span>
-      <a href="/p2" class="ktn-tagbar__tag">展覧会</a>
+      <a href="/p2" class="ktn-tagbar__tag is-active">すべて</a>
       <a href="/p2?genre=photo" class="ktn-tagbar__tag">写真</a>
       <a href="/p2?genre=oil" class="ktn-tagbar__tag">油彩</a>
       <a href="/p2?genre=print" class="ktn-tagbar__tag">版画</a>
+      <a href="/p2?genre=nihonga" class="ktn-tagbar__tag">日本画</a>
+      <a href="/p2?genre=sculpture" class="ktn-tagbar__tag">立体・彫刻</a>
+      <a href="/p2?genre=watercolor" class="ktn-tagbar__tag">水彩・パステル</a>
+      <span class="ktn-tagbar__sep"></span>
       <a href="/feature" class="ktn-tagbar__tag ktn-tagbar__tag--feature">特集</a>
+      <a href="/feature/monthly" class="ktn-tagbar__tag ktn-tagbar__tag--feature">今月注目</a>
+      <span class="ktn-tagbar__sep"></span>
+      <a href="/p2?liaison=1" class="ktn-tagbar__tag ktn-tagbar__tag--liaison">LIAISON+あり</a>
     `;
     return;
   }
@@ -670,6 +682,7 @@ function render(){
   document.getElementById('ktnBc').innerHTML = renderBc(curPage);
   document.getElementById('ktnActs').innerHTML = getActions(curPage, curRole);
   renderTagbar(curPage);
+  initTagbarArrows();
   const p = PAGES[curPage]||{n:curPage};
   const wLabel = PAGE_WIDTH.article.includes(curPage) ? '--w-article (720px)'
     : PAGE_WIDTH.index.includes(curPage) ? '--w-index (1080px)'
@@ -737,6 +750,21 @@ document.addEventListener('click',e=>{
   }
 });
 
+function initTagbarArrows(){
+  const inner = document.getElementById('ktnTagbarInner');
+  const lBtn  = document.getElementById('ktnTagbarL');
+  const rBtn  = document.getElementById('ktnTagbarR');
+  if(!inner || !lBtn || !rBtn) return;
+  function update(){
+    const max = inner.scrollWidth - inner.clientWidth;
+    lBtn.classList.toggle('is-hidden', inner.scrollLeft <= 0);
+    rBtn.classList.toggle('is-hidden', max <= 0 || inner.scrollLeft >= max - 1);
+  }
+  inner.addEventListener('scroll', update, {passive:true});
+  lBtn.onclick = () => inner.scrollBy({left:-160, behavior:'smooth'});
+  rBtn.onclick = () => inner.scrollBy({left: 160, behavior:'smooth'});
+  requestAnimationFrame(update);
+}
 
 render();
 </script>
