@@ -7,8 +7,7 @@
   <meta name="description" content="山田 花子の興味あり！リスト。気になる展覧会を一覧表示します。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Noto+Sans+JP:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./kotennavi-common.css">
-  <link rel="stylesheet" href="./kotennavi-components.css">
+  <link rel="stylesheet" href="./kotennavi-common.css?v=3">
 </head>
 <body class="p5-page p5-3-page">
 
@@ -74,7 +73,7 @@
     <!-- B. タブナビ -->
     <nav class="p5-tabnav" id="p5Tabnav" aria-label="マイページ内ナビ">
       <div class="p5-tabnav__inner">
-        <span class="p5-tabnav__name"><span class="p5-tabnav__name-text">山田 花子</span></span>
+        <a class="p5-tabnav__name" href="kotennavi-p5.html"><span class="p5-tabnav__name-text">山田 花子</span></a>
         <a class="p5-tabnav__item" href="kotennavi-p5.html">カレンダー</a>
         <a class="p5-tabnav__item" href="kotennavi-p5-1.html">ウォッチ</a>
         <a class="p5-tabnav__item" href="kotennavi-p5-2.html">チェックイン</a>
@@ -567,7 +566,7 @@
               <div class="aw__body">
                 <div class="aw__badge-row">
                   <span class="cb cb-content cb-artwork">artwork</span>
-                  <span class="aws aws-applying">申込中</span>
+                  <span class="aws aws-sale">販売中</span>
                 </div>
                 <div class="aw__title-row"><div class="aw__title">青の断片 — 連作より</div></div>
                 <div class="aw__creator">田中 礼子</div>
@@ -583,7 +582,7 @@
                   <div class="aw__price"><span class="currency">¥</span>68,000<span class="tax">税込</span></div>
                   <div class="aw__queue">3人が申込中（追加申込可）</div>
                 </div>
-                <button class="aw__apply-btn" onclick="event.preventDefault()"><svg viewBox="0 0 14 14" fill="none" width="11" height="11"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>購入申込</button>
+                <button class="aw__apply-btn ktn-action-btn p5-owner-only" onclick="event.preventDefault();event.stopPropagation();location.href='kotennavi-p5-15.html'">申込済 — 取引ワークスペースへ</button>
               </div>
             </a>
           </div>
@@ -635,7 +634,6 @@
               </div>
               <div class="aw__foot">
                 <div class="aw__price"><span class="currency">¥</span>45,000<span class="tax">税込</span></div>
-                <button class="aw__inquiry-btn" onclick="event.preventDefault()"><svg viewBox="0 0 14 14" fill="none" width="11" height="11"><path d="M7 2a4 4 0 0 1 .3 8H7v1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="7" cy="12.5" r=".8" fill="currentColor"/></svg>問い合わせる</button>
               </div>
             </a>
           </div>

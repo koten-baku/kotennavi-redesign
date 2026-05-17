@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="./kotennavi-common.css">
   <link rel="stylesheet" href="./kotennavi-components.css">
 </head>
-<body>
+<body class="p3-page p3-3-page">
 
 <div class="ktn-toast" id="ktnToast"></div>
 
@@ -112,10 +112,10 @@
     <nav class="p3-tabnav" id="p3Tabnav" aria-label="クリエイターページ内ナビ">
       <div class="p3-tabnav__inner">
         <a class="p3-tabnav__name" href="kotennavi-p3.html">田中 透</a>
-        <button class="p3-tabnav__item" data-target="p3-sec-exhibitions" data-tab="exhibitions"><span class="p3-tabnav__label">展覧会</span></button>
-        <button class="p3-tabnav__item" data-target="p3-sec-works" data-tab="works"><span class="p3-tabnav__label">作品</span></button>
-        <button class="p3-tabnav__item" data-target="p3-sec-articles" data-tab="articles"><span class="p3-tabnav__label">記事</span></button>
-        <button class="p3-tabnav__item" data-target="p3-sec-profile">クリエイター情報</button>
+        <a class="p3-tabnav__item" href="kotennavi-p3-1.html"><span class="p3-tabnav__label">展覧会</span></a>
+        <a class="p3-tabnav__item is-active" href="kotennavi-p3-3.html"><span class="p3-tabnav__label">作品</span></a>
+        <a class="p3-tabnav__item" href="kotennavi-p3-2.html"><span class="p3-tabnav__label">記事</span></a>
+        <a class="p3-tabnav__item" href="kotennavi-p3.html#p3-sec-profile">クリエイター情報</a>
       </div>
     </nav>
 
@@ -167,24 +167,23 @@
           <!-- ① ふわふわ / LIAISON+ / 油彩 / 販売中 / 2026 -->
           <a class="aw aw--plus" href="#"
              data-liaison="liaison-plus" data-status="sale" data-genre="oil" data-year="2026">
-            <div class="aw__img aw__img-ph" style="background:linear-gradient(160deg,#e8d0b8,#c8a880);min-height:200px">
-              <div class="aw__lb">
-                <span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span>
+            <div class="aw__img">
+              <div class="aw__lb"><span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span></div>
+              <div class="aw__img-ph" style="background:linear-gradient(160deg,#e8d0b8,#c8a880);min-height:200px">
+                <div class="aw__img-ph-text">ふわふわ</div>
               </div>
-              <div class="aw__img-ph-text">ふわふわ</div>
             </div>
             <div class="aw__body">
               <div class="aw__badge-row">
+                <span class="cb cb-content cb-artwork">artwork</span>
                 <span class="aws aws-sale">販売中</span>
-                <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
-                  <svg viewBox="0 0 16 16" fill="none"><use href="#icon-interest-off"/></svg>
-                  <span class="tip">興味ある！に追加する</span>
-                </button>
               </div>
-              <div class="aw__title-row">
-                <div class="aw__title">《ふわふわ》</div>
-              </div>
+              <div class="aw__title-row"><div class="aw__title">《ふわふわ》</div></div>
               <div class="aw__spec">油彩 · 2026</div>
+              <div class="aw__action-row">
+                <span class="aw__counter"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>9</span>
+                <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()"><svg viewBox="0 0 16 16" fill="none"><use href="#icon-interest-off"/></svg><span class="tip">興味ある！に追加する</span></button>
+              </div>
             </div>
             <div class="aw__foot">
               <div class="aw__price"><span class="currency">¥</span>148,000<span class="tax">税込</span></div>
@@ -194,52 +193,50 @@
           <!-- ② ドキドキ #3 / LIAISON+ / 混合技法 / 販売中(3人申込中) / 2025 -->
           <a class="aw aw--plus" href="#"
              data-liaison="liaison-plus" data-status="sale" data-genre="mixed" data-year="2025">
-            <div class="aw__img aw__img-ph" style="background:linear-gradient(160deg,#2a3548,#1a2535);min-height:180px">
-              <div class="aw__lb">
-                <span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span>
+            <div class="aw__img">
+              <div class="aw__lb"><span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span></div>
+              <div class="aw__img-ph" style="background:linear-gradient(160deg,#2a3548,#1a2535);min-height:180px">
+                <div class="aw__img-ph-text">ドキドキ #3</div>
               </div>
-              <div class="aw__img-ph-text">ドキドキ #3</div>
             </div>
             <div class="aw__body">
               <div class="aw__badge-row">
-                <span class="aws aws-sale">販売中</span><span class="aw__queue-inline">3人が申込中</span>
-                <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
-                  <svg viewBox="0 0 16 16" fill="none"><use href="#icon-interest-off"/></svg>
-                  <span class="tip">興味ある！に追加する</span>
-                </button>
+                <span class="cb cb-content cb-artwork">artwork</span>
+                <span class="aws aws-sale">販売中</span>
               </div>
-              <div class="aw__title-row">
-                <div class="aw__title">《ドキドキ #3》</div>
-              </div>
+              <div class="aw__title-row"><div class="aw__title">《ドキドキ #3》</div></div>
               <div class="aw__spec">混合技法 · 2025</div>
+              <div class="aw__action-row">
+                <span class="aw__counter"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>24</span>
+                <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()"><svg viewBox="0 0 16 16" fill="none"><use href="#icon-interest-off"/></svg><span class="tip">興味ある！に追加する</span></button>
+              </div>
             </div>
             <div class="aw__foot">
               <div class="aw__price"><span class="currency">¥</span>98,000<span class="tax">税込</span></div>
-              <button class="aw__apply-btn" onclick="event.preventDefault()">申込む</button>
+              <div class="aw__queue">3人が申込中（追加申込可）</div>
             </div>
           </a>
 
           <!-- ③ しんしん / LIAISON+ / アクリル / 販売中 / 2026 -->
           <a class="aw aw--plus" href="#"
              data-liaison="liaison-plus" data-status="sale" data-genre="acrylic" data-year="2026">
-            <div class="aw__img aw__img-ph" style="background:linear-gradient(160deg,#b8d8e8,#6a9ab8);min-height:220px">
-              <div class="aw__lb">
-                <span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span>
+            <div class="aw__img">
+              <div class="aw__lb"><span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span></div>
+              <div class="aw__img-ph" style="background:linear-gradient(160deg,#b8d8e8,#6a9ab8);min-height:220px">
+                <div class="aw__img-ph-text">しんしん</div>
               </div>
-              <div class="aw__img-ph-text">しんしん</div>
             </div>
             <div class="aw__body">
               <div class="aw__badge-row">
+                <span class="cb cb-content cb-artwork">artwork</span>
                 <span class="aws aws-sale">販売中</span>
-                <button class="ktn-icon-btn on" onclick="this.classList.toggle('on');event.preventDefault()">
-                  <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6"/></svg>
-                  <span class="tip">興味ある！ — 解除する</span>
-                </button>
               </div>
-              <div class="aw__title-row">
-                <div class="aw__title">《しんしん》</div>
-              </div>
+              <div class="aw__title-row"><div class="aw__title">《しんしん》</div></div>
               <div class="aw__spec">アクリル · 2026</div>
+              <div class="aw__action-row">
+                <span class="aw__counter"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>16</span>
+                <button class="ktn-icon-btn on" onclick="this.classList.toggle('on');event.preventDefault()"><svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6"/></svg><span class="tip">興味ある！ — 解除する</span></button>
+              </div>
             </div>
             <div class="aw__foot">
               <div class="aw__price"><span class="currency">¥</span>220,000<span class="tax">税込</span></div>
@@ -249,24 +246,23 @@
           <!-- ④ うきうき / LIAISON+ / 油彩 / 販売中 / 2026 -->
           <a class="aw aw--plus" href="#"
              data-liaison="liaison-plus" data-status="sale" data-genre="oil" data-year="2026">
-            <div class="aw__img aw__img-ph" style="background:linear-gradient(160deg,#d8c8a0,#b8a070);min-height:190px">
-              <div class="aw__lb">
-                <span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span>
+            <div class="aw__img">
+              <div class="aw__lb"><span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span></div>
+              <div class="aw__img-ph" style="background:linear-gradient(160deg,#d8c8a0,#b8a070);min-height:190px">
+                <div class="aw__img-ph-text">うきうき</div>
               </div>
-              <div class="aw__img-ph-text">うきうき</div>
             </div>
             <div class="aw__body">
               <div class="aw__badge-row">
+                <span class="cb cb-content cb-artwork">artwork</span>
                 <span class="aws aws-sale">販売中</span>
-                <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
-                  <svg viewBox="0 0 16 16" fill="none"><use href="#icon-interest-off"/></svg>
-                  <span class="tip">興味ある！に追加する</span>
-                </button>
               </div>
-              <div class="aw__title-row">
-                <div class="aw__title">《うきうき》</div>
-              </div>
+              <div class="aw__title-row"><div class="aw__title">《うきうき》</div></div>
               <div class="aw__spec">油彩 · 2026</div>
+              <div class="aw__action-row">
+                <span class="aw__counter"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>11</span>
+                <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()"><svg viewBox="0 0 16 16" fill="none"><use href="#icon-interest-off"/></svg><span class="tip">興味ある！に追加する</span></button>
+              </div>
             </div>
             <div class="aw__foot">
               <div class="aw__price"><span class="currency">¥</span>185,000<span class="tax">税込</span></div>
@@ -276,310 +272,320 @@
           <!-- ⑤ わくわく / LIAISON+ / 混合技法 / 販売中(1人申込中) / 2026 -->
           <a class="aw aw--plus" href="#"
              data-liaison="liaison-plus" data-status="sale" data-genre="mixed" data-year="2026">
-            <div class="aw__img aw__img-ph" style="background:linear-gradient(160deg,#d0b8d8,#9878a8);min-height:210px">
-              <div class="aw__lb">
-                <span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span>
+            <div class="aw__img">
+              <div class="aw__lb"><span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span></div>
+              <div class="aw__img-ph" style="background:linear-gradient(160deg,#d0b8d8,#9878a8);min-height:210px">
+                <div class="aw__img-ph-text">わくわく</div>
               </div>
-              <div class="aw__img-ph-text">わくわく</div>
             </div>
             <div class="aw__body">
               <div class="aw__badge-row">
-                <span class="aws aws-sale">販売中</span><span class="aw__queue-inline">1人が申込中</span>
-                <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
-                  <svg viewBox="0 0 16 16" fill="none"><use href="#icon-interest-off"/></svg>
-                  <span class="tip">興味ある！に追加する</span>
-                </button>
+                <span class="cb cb-content cb-artwork">artwork</span>
+                <span class="aws aws-sale">販売中</span>
               </div>
-              <div class="aw__title-row">
-                <div class="aw__title">《わくわく》</div>
-              </div>
+              <div class="aw__title-row"><div class="aw__title">《わくわく》</div></div>
               <div class="aw__spec">混合技法 · 2026</div>
+              <div class="aw__action-row">
+                <span class="aw__counter"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>19</span>
+                <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()"><svg viewBox="0 0 16 16" fill="none"><use href="#icon-interest-off"/></svg><span class="tip">興味ある！に追加する</span></button>
+              </div>
             </div>
             <div class="aw__foot">
               <div class="aw__price"><span class="currency">¥</span>112,000<span class="tax">税込</span></div>
-              <button class="aw__apply-btn" onclick="event.preventDefault()">申込む</button>
+              <div class="aw__queue">1人が申込中（追加申込可）</div>
             </div>
           </a>
 
           <!-- ⑥ シュワシュワ / LIAISON / 油彩 / 販売中 / 2025 -->
           <a class="aw" href="#"
              data-liaison="liaison" data-status="sale" data-genre="oil" data-year="2025">
-            <div class="aw__img aw__img-ph" style="background:linear-gradient(160deg,#b8d8c8,#6a9e88);min-height:195px">
-              <div class="aw__lb">
-                <span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>
+            <div class="aw__img">
+              <div class="aw__lb"><span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span></div>
+              <div class="aw__img-ph" style="background:linear-gradient(160deg,#b8d8c8,#6a9e88);min-height:195px">
+                <div class="aw__img-ph-text">シュワシュワ</div>
               </div>
-              <div class="aw__img-ph-text">シュワシュワ</div>
             </div>
             <div class="aw__body">
               <div class="aw__badge-row">
+                <span class="cb cb-content cb-artwork">artwork</span>
                 <span class="aws aws-sale">販売中</span>
-                <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
-                  <svg viewBox="0 0 16 16" fill="none"><use href="#icon-interest-off"/></svg>
-                  <span class="tip">興味ある！に追加する</span>
-                </button>
               </div>
-              <div class="aw__title-row">
-                <div class="aw__title">《シュワシュワ》</div>
-              </div>
+              <div class="aw__title-row"><div class="aw__title">《シュワシュワ》</div></div>
               <div class="aw__spec">油彩 · 2025</div>
+              <div class="aw__action-row">
+                <span class="aw__counter"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>8</span>
+                <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()"><svg viewBox="0 0 16 16" fill="none"><use href="#icon-interest-off"/></svg><span class="tip">興味ある！に追加する</span></button>
+              </div>
             </div>
           </a>
 
           <!-- ⑦ ふわり / LIAISON / ドローイング / 要問合せ / 2025 -->
           <a class="aw" href="#"
              data-liaison="liaison" data-status="inquiry" data-genre="drawing" data-year="2025">
-            <div class="aw__img aw__img-ph" style="background:linear-gradient(160deg,#e8e0d0,#c8b8a0);min-height:230px">
-              <div class="aw__lb">
-                <span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>
+            <div class="aw__img">
+              <div class="aw__lb"><span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span></div>
+              <div class="aw__img-ph" style="background:linear-gradient(160deg,#e8e0d0,#c8b8a0);min-height:230px">
+                <div class="aw__img-ph-text">ふわり</div>
               </div>
-              <div class="aw__img-ph-text">ふわり</div>
             </div>
             <div class="aw__body">
               <div class="aw__badge-row">
+                <span class="cb cb-content cb-artwork">artwork</span>
                 <span class="aws aws-inquiry">要問合せ</span>
-                <button class="ktn-icon-btn on" onclick="this.classList.toggle('on');event.preventDefault()">
-                  <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6"/></svg>
-                  <span class="tip">興味ある！ — 解除する</span>
-                </button>
               </div>
-              <div class="aw__title-row">
-                <div class="aw__title">《ふわり》</div>
-              </div>
+              <div class="aw__title-row"><div class="aw__title">《ふわり》</div></div>
               <div class="aw__spec">ドローイング · 2025</div>
+              <div class="aw__action-row">
+                <span class="aw__counter"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>14</span>
+                <button class="ktn-icon-btn on" onclick="this.classList.toggle('on');event.preventDefault()"><svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6"/></svg><span class="tip">興味ある！ — 解除する</span></button>
+              </div>
             </div>
           </a>
 
           <!-- ⑧ ざわざわ（朝） / LIAISON / アクリル / 販売中 / 2026 -->
           <a class="aw" href="#"
              data-liaison="liaison" data-status="sale" data-genre="acrylic" data-year="2026">
-            <div class="aw__img aw__img-ph" style="background:linear-gradient(160deg,#f0e8d0,#d8c898);min-height:185px">
-              <div class="aw__lb">
-                <span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>
+            <div class="aw__img">
+              <div class="aw__lb"><span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span></div>
+              <div class="aw__img-ph" style="background:linear-gradient(160deg,#f0e8d0,#d8c898);min-height:185px">
+                <div class="aw__img-ph-text">ざわざわ（朝）</div>
               </div>
-              <div class="aw__img-ph-text">ざわざわ（朝）</div>
             </div>
             <div class="aw__body">
               <div class="aw__badge-row">
+                <span class="cb cb-content cb-artwork">artwork</span>
                 <span class="aws aws-sale">販売中</span>
-                <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
-                  <svg viewBox="0 0 16 16" fill="none"><use href="#icon-interest-off"/></svg>
-                  <span class="tip">興味ある！に追加する</span>
-                </button>
               </div>
-              <div class="aw__title-row">
-                <div class="aw__title">《ざわざわ（朝）》</div>
-              </div>
+              <div class="aw__title-row"><div class="aw__title">《ざわざわ（朝）》</div></div>
               <div class="aw__spec">アクリル · 2026</div>
+              <div class="aw__action-row">
+                <span class="aw__counter"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>7</span>
+                <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()"><svg viewBox="0 0 16 16" fill="none"><use href="#icon-interest-off"/></svg><span class="tip">興味ある！に追加する</span></button>
+              </div>
             </div>
           </a>
 
           <!-- ⑨ ころころ / LIAISON / 版画 / 非売品 / 2025 -->
           <a class="aw aw--nsale" href="#"
              data-liaison="liaison" data-status="nsale" data-genre="print" data-year="2025">
-            <div class="aw__img aw__img-ph" style="background:linear-gradient(160deg,#1a2838,#0d1828);min-height:205px">
-              <div class="aw__lb">
-                <span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>
+            <div class="aw__img">
+              <div class="aw__lb"><span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span></div>
+              <div class="aw__img-ph" style="background:linear-gradient(160deg,#1a2838,#0d1828);min-height:205px">
+                <div class="aw__img-ph-text">ころころ</div>
               </div>
-              <div class="aw__img-ph-text">ころころ</div>
             </div>
             <div class="aw__body">
               <div class="aw__badge-row">
+                <span class="cb cb-content cb-artwork">artwork</span>
                 <span class="aws aws-nsale">非売品</span>
-                <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
-                  <svg viewBox="0 0 16 16" fill="none"><use href="#icon-interest-off"/></svg>
-                  <span class="tip">興味ある！に追加する</span>
-                </button>
               </div>
-              <div class="aw__title-row">
-                <div class="aw__title">《ころころ》</div>
-              </div>
+              <div class="aw__title-row"><div class="aw__title">《ころころ》</div></div>
               <div class="aw__spec">版画 · 2025</div>
+              <div class="aw__action-row">
+                <span class="aw__counter"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>12</span>
+                <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()"><svg viewBox="0 0 16 16" fill="none"><use href="#icon-interest-off"/></svg><span class="tip">興味ある！に追加する</span></button>
+              </div>
             </div>
           </a>
 
           <!-- ⑩ ざわざわ（夜） / 通常 / アクリル / 販売中 / 2026 -->
           <a class="aw" href="#"
              data-liaison="normal" data-status="sale" data-genre="acrylic" data-year="2026">
-            <div class="aw__img aw__img-ph" style="background:linear-gradient(160deg,#1a1a2a,#0a0a18);min-height:215px">
-              <div class="aw__img-ph-text">ざわざわ（夜）</div>
+            <div class="aw__img">
+              <div class="aw__img-ph" style="background:linear-gradient(160deg,#1a1a2a,#0a0a18);min-height:215px">
+                <div class="aw__img-ph-text">ざわざわ（夜）</div>
+              </div>
             </div>
             <div class="aw__body">
               <div class="aw__badge-row">
+                <span class="cb cb-content cb-artwork">artwork</span>
                 <span class="aws aws-sale">販売中</span>
-                <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
-                  <svg viewBox="0 0 16 16" fill="none"><use href="#icon-interest-off"/></svg>
-                  <span class="tip">興味ある！に追加する</span>
-                </button>
               </div>
-              <div class="aw__title-row">
-                <div class="aw__title">《ざわざわ（夜）》</div>
-              </div>
+              <div class="aw__title-row"><div class="aw__title">《ざわざわ（夜）》</div></div>
               <div class="aw__spec">アクリル · 2026</div>
+              <div class="aw__action-row">
+                <span class="aw__counter"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>5</span>
+                <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()"><svg viewBox="0 0 16 16" fill="none"><use href="#icon-interest-off"/></svg><span class="tip">興味ある！に追加する</span></button>
+              </div>
             </div>
           </a>
 
           <!-- ⑪ もやもや / 通常 / 混合技法 / 売却済 / 2025 -->
           <a class="aw aw--sold" href="#"
              data-liaison="normal" data-status="sold" data-genre="mixed" data-year="2025">
-            <div class="aw__img aw__img-ph" style="background:linear-gradient(160deg,#c0b8d0,#8880a0);min-height:190px">
-              <div class="aw__sold-ribbon">
-                <div class="aw__sold-ribbon-inner">SOLD</div>
+            <div class="aw__img">
+              <div class="aw__img-ph" style="background:linear-gradient(160deg,#c0b8d0,#8880a0);min-height:190px">
+                <div class="aw__img-ph-text">もやもや</div>
               </div>
-              <div class="aw__img-ph-text">もやもや</div>
+              <div class="aw__sold-ribbon"><div class="aw__sold-ribbon-inner">SOLD</div></div>
             </div>
             <div class="aw__body">
               <div class="aw__badge-row">
+                <span class="cb cb-content cb-artwork">artwork</span>
                 <span class="aws aws-sold">売却済</span>
               </div>
-              <div class="aw__title-row">
-                <div class="aw__title">《もやもや》</div>
-              </div>
+              <div class="aw__title-row"><div class="aw__title">《もやもや》</div></div>
               <div class="aw__spec">混合技法 · 2025</div>
+              <div class="aw__action-row">
+                <span class="aw__counter"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>6</span>
+                <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()"><svg viewBox="0 0 16 16" fill="none"><use href="#icon-interest-off"/></svg><span class="tip">興味ある！に追加する</span></button>
+              </div>
             </div>
           </a>
 
           <!-- ⑫ きらきら / 通常 / 油彩 / 売却済 / 2025 -->
           <a class="aw aw--sold" href="#"
              data-liaison="normal" data-status="sold" data-genre="oil" data-year="2025">
-            <div class="aw__img aw__img-ph" style="background:linear-gradient(160deg,#e8e0a8,#c8b870);min-height:170px">
-              <div class="aw__sold-ribbon">
-                <div class="aw__sold-ribbon-inner">SOLD</div>
+            <div class="aw__img">
+              <div class="aw__img-ph" style="background:linear-gradient(160deg,#e8e0a8,#c8b870);min-height:170px">
+                <div class="aw__img-ph-text">きらきら</div>
               </div>
-              <div class="aw__img-ph-text">きらきら</div>
+              <div class="aw__sold-ribbon"><div class="aw__sold-ribbon-inner">SOLD</div></div>
             </div>
             <div class="aw__body">
               <div class="aw__badge-row">
+                <span class="cb cb-content cb-artwork">artwork</span>
                 <span class="aws aws-sold">売却済</span>
               </div>
-              <div class="aw__title-row">
-                <div class="aw__title">《きらきら》</div>
-              </div>
+              <div class="aw__title-row"><div class="aw__title">《きらきら》</div></div>
               <div class="aw__spec">油彩 · 2025</div>
+              <div class="aw__action-row">
+                <span class="aw__counter"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>21</span>
+                <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()"><svg viewBox="0 0 16 16" fill="none"><use href="#icon-interest-off"/></svg><span class="tip">興味ある！に追加する</span></button>
+              </div>
             </div>
           </a>
 
           <!-- ⑬ ぽつぽつ / 通常 / ドローイング / 非売品 / 2024 -->
           <a class="aw aw--nsale" href="#"
              data-liaison="normal" data-status="nsale" data-genre="drawing" data-year="2024">
-            <div class="aw__img aw__img-ph" style="background:linear-gradient(160deg,#e0e8d8,#b8c8a8);min-height:200px">
-              <div class="aw__img-ph-text">ぽつぽつ</div>
+            <div class="aw__img">
+              <div class="aw__img-ph" style="background:linear-gradient(160deg,#e0e8d8,#b8c8a8);min-height:200px">
+                <div class="aw__img-ph-text">ぽつぽつ</div>
+              </div>
             </div>
             <div class="aw__body">
               <div class="aw__badge-row">
+                <span class="cb cb-content cb-artwork">artwork</span>
                 <span class="aws aws-nsale">非売品</span>
-                <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
-                  <svg viewBox="0 0 16 16" fill="none"><use href="#icon-interest-off"/></svg>
-                  <span class="tip">興味ある！に追加する</span>
-                </button>
               </div>
-              <div class="aw__title-row">
-                <div class="aw__title">《ぽつぽつ》</div>
-              </div>
+              <div class="aw__title-row"><div class="aw__title">《ぽつぽつ》</div></div>
               <div class="aw__spec">ドローイング · 2024</div>
+              <div class="aw__action-row">
+                <span class="aw__counter"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>3</span>
+                <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()"><svg viewBox="0 0 16 16" fill="none"><use href="#icon-interest-off"/></svg><span class="tip">興味ある！に追加する</span></button>
+              </div>
             </div>
           </a>
 
           <!-- ⑭ しずか / 通常 / 版画 / 販売中 / 2026 -->
           <a class="aw" href="#"
              data-liaison="normal" data-status="sale" data-genre="print" data-year="2026">
-            <div class="aw__img aw__img-ph" style="background:linear-gradient(160deg,#d8e8e0,#98b8b0);min-height:225px">
-              <div class="aw__img-ph-text">しずか</div>
+            <div class="aw__img">
+              <div class="aw__img-ph" style="background:linear-gradient(160deg,#d8e8e0,#98b8b0);min-height:225px">
+                <div class="aw__img-ph-text">しずか</div>
+              </div>
             </div>
             <div class="aw__body">
               <div class="aw__badge-row">
+                <span class="cb cb-content cb-artwork">artwork</span>
                 <span class="aws aws-sale">販売中</span>
-                <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
-                  <svg viewBox="0 0 16 16" fill="none"><use href="#icon-interest-off"/></svg>
-                  <span class="tip">興味ある！に追加する</span>
-                </button>
               </div>
-              <div class="aw__title-row">
-                <div class="aw__title">《しずか》</div>
-              </div>
+              <div class="aw__title-row"><div class="aw__title">《しずか》</div></div>
               <div class="aw__spec">版画 · 2026</div>
+              <div class="aw__action-row">
+                <span class="aw__counter"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>10</span>
+                <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()"><svg viewBox="0 0 16 16" fill="none"><use href="#icon-interest-off"/></svg><span class="tip">興味ある！に追加する</span></button>
+              </div>
             </div>
           </a>
 
           <!-- ⑮ ぼんやり / 通常 / 油彩 / 売却済 / 2024 -->
           <a class="aw aw--sold" href="#"
              data-liaison="normal" data-status="sold" data-genre="oil" data-year="2024">
-            <div class="aw__img aw__img-ph" style="background:linear-gradient(160deg,#e8d8c8,#c0a888);min-height:185px">
-              <div class="aw__sold-ribbon">
-                <div class="aw__sold-ribbon-inner">SOLD</div>
+            <div class="aw__img">
+              <div class="aw__img-ph" style="background:linear-gradient(160deg,#e8d8c8,#c0a888);min-height:185px">
+                <div class="aw__img-ph-text">ぼんやり</div>
               </div>
-              <div class="aw__img-ph-text">ぼんやり</div>
+              <div class="aw__sold-ribbon"><div class="aw__sold-ribbon-inner">SOLD</div></div>
             </div>
             <div class="aw__body">
               <div class="aw__badge-row">
+                <span class="cb cb-content cb-artwork">artwork</span>
                 <span class="aws aws-sold">売却済</span>
               </div>
-              <div class="aw__title-row">
-                <div class="aw__title">《ぼんやり》</div>
-              </div>
+              <div class="aw__title-row"><div class="aw__title">《ぼんやり》</div></div>
               <div class="aw__spec">油彩 · 2024</div>
+              <div class="aw__action-row">
+                <span class="aw__counter"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>17</span>
+                <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()"><svg viewBox="0 0 16 16" fill="none"><use href="#icon-interest-off"/></svg><span class="tip">興味ある！に追加する</span></button>
+              </div>
             </div>
           </a>
 
           <!-- ⑯ にじむ / 通常 / アクリル / 非売品 / 2024 -->
           <a class="aw aw--nsale" href="#"
              data-liaison="normal" data-status="nsale" data-genre="acrylic" data-year="2024">
-            <div class="aw__img aw__img-ph" style="background:linear-gradient(160deg,#b8c8e0,#7888a8);min-height:210px">
-              <div class="aw__img-ph-text">にじむ</div>
+            <div class="aw__img">
+              <div class="aw__img-ph" style="background:linear-gradient(160deg,#b8c8e0,#7888a8);min-height:210px">
+                <div class="aw__img-ph-text">にじむ</div>
+              </div>
             </div>
             <div class="aw__body">
               <div class="aw__badge-row">
+                <span class="cb cb-content cb-artwork">artwork</span>
                 <span class="aws aws-nsale">非売品</span>
-                <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
-                  <svg viewBox="0 0 16 16" fill="none"><use href="#icon-interest-off"/></svg>
-                  <span class="tip">興味ある！に追加する</span>
-                </button>
               </div>
-              <div class="aw__title-row">
-                <div class="aw__title">《にじむ》</div>
-              </div>
+              <div class="aw__title-row"><div class="aw__title">《にじむ》</div></div>
               <div class="aw__spec">アクリル · 2024</div>
+              <div class="aw__action-row">
+                <span class="aw__counter"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>4</span>
+                <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()"><svg viewBox="0 0 16 16" fill="none"><use href="#icon-interest-off"/></svg><span class="tip">興味ある！に追加する</span></button>
+              </div>
             </div>
           </a>
 
           <!-- ⑰ ざわり / 通常 / 混合技法 / 販売中 / 2025 -->
           <a class="aw" href="#"
              data-liaison="normal" data-status="sale" data-genre="mixed" data-year="2025">
-            <div class="aw__img aw__img-ph" style="background:linear-gradient(160deg,#d0c8b8,#a89878);min-height:195px">
-              <div class="aw__img-ph-text">ざわり</div>
+            <div class="aw__img">
+              <div class="aw__img-ph" style="background:linear-gradient(160deg,#d0c8b8,#a89878);min-height:195px">
+                <div class="aw__img-ph-text">ざわり</div>
+              </div>
             </div>
             <div class="aw__body">
               <div class="aw__badge-row">
+                <span class="cb cb-content cb-artwork">artwork</span>
                 <span class="aws aws-sale">販売中</span>
-                <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
-                  <svg viewBox="0 0 16 16" fill="none"><use href="#icon-interest-off"/></svg>
-                  <span class="tip">興味ある！に追加する</span>
-                </button>
               </div>
-              <div class="aw__title-row">
-                <div class="aw__title">《ざわり》</div>
-              </div>
+              <div class="aw__title-row"><div class="aw__title">《ざわり》</div></div>
               <div class="aw__spec">混合技法 · 2025</div>
+              <div class="aw__action-row">
+                <span class="aw__counter"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>8</span>
+                <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()"><svg viewBox="0 0 16 16" fill="none"><use href="#icon-interest-off"/></svg><span class="tip">興味ある！に追加する</span></button>
+              </div>
             </div>
           </a>
 
           <!-- ⑱ ゆらゆら / 通常 / 版画 / 非売品 / 2025 -->
           <a class="aw aw--nsale" href="#"
              data-liaison="normal" data-status="nsale" data-genre="print" data-year="2025">
-            <div class="aw__img aw__img-ph" style="background:linear-gradient(160deg,#c8d8c8,#88a888);min-height:180px">
-              <div class="aw__img-ph-text">ゆらゆら</div>
+            <div class="aw__img">
+              <div class="aw__img-ph" style="background:linear-gradient(160deg,#c8d8c8,#88a888);min-height:180px">
+                <div class="aw__img-ph-text">ゆらゆら</div>
+              </div>
             </div>
             <div class="aw__body">
               <div class="aw__badge-row">
+                <span class="cb cb-content cb-artwork">artwork</span>
                 <span class="aws aws-nsale">非売品</span>
-                <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
-                  <svg viewBox="0 0 16 16" fill="none"><use href="#icon-interest-off"/></svg>
-                  <span class="tip">興味ある！に追加する</span>
-                </button>
               </div>
-              <div class="aw__title-row">
-                <div class="aw__title">《ゆらゆら》</div>
-              </div>
+              <div class="aw__title-row"><div class="aw__title">《ゆらゆら》</div></div>
               <div class="aw__spec">版画 · 2025</div>
+              <div class="aw__action-row">
+                <span class="aw__counter"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>2</span>
+                <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()"><svg viewBox="0 0 16 16" fill="none"><use href="#icon-interest-off"/></svg><span class="tip">興味ある！に追加する</span></button>
+              </div>
             </div>
           </a>
 

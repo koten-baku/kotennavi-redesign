@@ -113,6 +113,21 @@ docs/                     仕様・設計ドキュメント
 
 ---
 
+## ユーザー種別アバター形状・枠色（全ページ共通）
+人物カード（`.cc` / `.gc` / `.uc`）のアバターに適用する形状と枠色。アクセントラインは「コンテンツ種別」のサインとして予約済みのため、ユーザー種別の識別には形状＋outline枠線を使う。
+
+| 種別 | クラス | 形状 | `border-radius` | outline色 |
+|---|---|---|---|---|
+| USER | `.uc__avatar` | 円形 | `50%` | ピンク `rgba(184,96,140,.45)` |
+| CREATOR | `.cc__avatar` | 角丸中 | `12px` | インクブルー `rgba(42,95,122,.45)` |
+| GALLERY | `.gc__avatar` | 角丸小 | `4px` | コッパーブラウン `rgba(139,94,60,.45)` |
+
+- 実装：`border: 2px solid #fff`（白セパレーター）＋ `outline: 2px solid <color>; outline-offset: 2px`
+- `outline` を使う理由：親カードの `overflow:hidden` にクリップされない
+- バッジカラーと同色系（透明度45%）で統一
+
+---
+
 ## アクセントカラー（ページ別CSS変数）
 | ページ | クラス | `--page-accent` |
 |---|---|---|
@@ -151,9 +166,9 @@ docs/                     仕様・設計ドキュメント
 
 ---
 
-### 全ページ共通：ページ遷移アクションボタン
+### 全ページ共通：ページ遷移アクションボタン（`.ktn-action-btn`）
 
-ページ遷移を伴う文脈的アクションに使う小型アウトラインボタン。ピル型の `.ktn-btn`（watch/follow 等）とは別系統。
+ページ遷移を伴う文脈的アクションに使う小型アウトラインボタン。ピル型の `.ktn-btn`（watch/follow 等）・操作系の `.ktn-op-btn` とは別系統。
 
 **基本クラス：`.ktn-action-btn`**（Montserrat 600・0.75rem・`border-radius: 4px`・`padding: 4px 12px`）
 
@@ -161,7 +176,9 @@ docs/                     仕様・設計ドキュメント
 |---|---|---|
 | （なし） | 通常ナビゲーション（取引デスクへ・販売代金管理へ など） | グレー枠 `var(--border)`・`var(--ink)` |
 | `--alert` | 出品者アクション必要（在庫確認・発送 など） | アラート赤 `#b43c14` |
-| `--ghost` | カラー帯の中（帯の文字色を `currentColor` で継承） | 半透明白背景・`currentColor` 枠 |
+| `--ghost` | **カラー帯の中のみ**（帯の文字色を `currentColor` で継承） | 半透明白背景・`currentColor` 枠 |
+
+- `--ghost` は `.p514-aw__strip` などの有色帯の中でのみ使用する。白背景・`var(--paper)` 背景の上では枠線が ink 色になり意図しない見た目になる。
 
 **HTML の書き方：**
 - ページ固有クラス（レイアウト専用）と共通クラスを併記する
@@ -171,6 +188,55 @@ docs/                     仕様・設計ドキュメント
 **状態の動的切替：**
 - 要アクション行は `:has()` で自動的にアラート赤に切り替わる（HTML クラスの変更不要）
   - 例：`.p315-apply-row:has(.p315-apply-status--stock) .ktn-action-btn`
+
+---
+
+### 全ページ共通：操作ボタン（`.ktn-op-btn`）
+
+モーダル確認・大型CTA・管理コンソール操作に使う共通ボタン。ナビ系の `.ktn-action-btn` とは別系統。
+
+**基本クラス：`.ktn-op-btn`**（`font-family:inherit`・0.78rem・`border-radius: 4px`・`padding: 9px 20px`）
+
+| モディファイア | 用途 | 通常 | ホバー |
+|---|---|---|---|
+| （なし） | キャンセル・閉じる（モーダルのセカンダリ） | グレー枠・`var(--ink)` | `background:var(--paper)` |
+| `--primary` | 主アクション（申込確定・支払い・受取確認など） | solid `var(--page-accent,#1a4a88)` | `opacity:.88` |
+| `--danger` | 確定的な破壊操作（取引キャンセルなど） | solid 赤 `#b43c14` | `opacity:.88` |
+| `--caution` | 慎重さを要す操作（会場売約済など） | amber tint、hover で赤に変化 | 赤枠・赤文字 |
+| `--danger-outline` | ソフトな破壊操作トリガー（出品取消・申込キャンセルなど） | グレー枠・`var(--muted)` | 赤枠・赤文字 |
+
+**サイズモディファイア：**
+
+| モディファイア | padding | font-size | 用途 |
+|---|---|---|---|
+| （なし） | `9px 20px` | `0.78rem` | モーダルボタン・完了後アクション |
+| `--lg` | `13px 24px` | `0.88rem` | 支払い・受取確認などの大型CTA |
+| `--sm` | `6px 12px` | `0.75rem` | 管理コンソール・カード内の小型ボタン |
+
+**`--primary` の色はページコンテキストに追従：**
+- `--page-accent` 設定ページ（P3: `#2a5f7a` / P4: `#8b5e3c`）はその色
+- P5・未設定ページ：フォールバック `#1a4a88`（ブルー）
+
+**`--caution` の disabled 状態：**
+- HTML に `disabled` 属性を付けるだけで `opacity:.4; cursor:not-allowed` が自動適用される
+
+**HTML の書き方：**
+- ページ固有クラスと共通クラスを併記する。JS で querySelectorAll するボタンはページ固有クラスを保持し、視覚スタイルは `ktn-op-btn` で担う
+- 例：`class="p315-venue-btn ktn-op-btn ktn-op-btn--caution ktn-op-btn--sm"`
+
+**モーダル内ボタン配置パターン：**
+```html
+<!-- 通常確認 -->
+<div class="p---modal__foot">
+  <button class="ktn-op-btn">キャンセル</button>
+  <button class="ktn-op-btn ktn-op-btn--primary">確定する</button>
+</div>
+<!-- 破壊的操作 -->
+<div class="p---modal__foot">
+  <button class="ktn-op-btn">戻る</button>
+  <button class="ktn-op-btn ktn-op-btn--danger">削除する</button>
+</div>
+```
 
 ### 全ページ共通：英語サブタイトルのフォント使い分け
 

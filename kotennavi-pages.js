@@ -1744,6 +1744,22 @@ KTN.pages['p6'] = function() {
     el = document.getElementById('p6Caption');
     if (el) el.textContent = label;
   };
+
+  // 作品IDコピーボタン
+  document.querySelectorAll('.p6-specs-id__copy').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var row = btn.closest('.p6-specs-id');
+      var val = row ? row.querySelector('.p6-specs-id__value') : null;
+      if (!val) return;
+      var text = val.textContent.trim();
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(function() {
+          btn.textContent = '✓';
+          setTimeout(function() { btn.textContent = '⎘'; }, 1500);
+        });
+      }
+    });
+  });
 };
 
 /* ────────────────────────────────────────────────────
@@ -4789,6 +4805,25 @@ KTN.pages['p5-14'] = function () {
         if (wrap) wrap.style.display = canView ? '' : 'none';
     }
 
+    window.ktnRender = function () { applyRole(); };
+    applyRole();
+};
+
+/* =========================================================
+   P5-15 ユーザー – 取引ワークスペース
+   ========================================================= */
+KTN.pages['p5-15'] = function () {
+    document.body.classList.add('p5-page', 'p5-15-page');
+    document.body.style.setProperty('--page-accent', '#b8608c');
+    document.body.style.setProperty('--page-accent-bg', 'rgba(184,96,140,.1)');
+    document.body.style.setProperty('--page-accent-border', '#c97aaa');
+
+    function applyRole() {
+        var role = window.curRole || 'guest';
+        var canView = (role === 'user+' || role === 'admin');
+        var wrap = document.querySelector('.p515-wrap');
+        if (wrap) wrap.style.display = canView ? '' : 'none';
+    }
     window.ktnRender = function () { applyRole(); };
     applyRole();
 };
