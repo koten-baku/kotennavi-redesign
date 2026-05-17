@@ -470,7 +470,7 @@ const PAGES = {
     'p4-13': { n: 'ギャラリー-ウオッチャー管理', w: '--w-article', bc: [['Top', '/'], ['Gallery SOIL 渋谷', '/p4'], ['ウオッチャー管理', null]] },
   'p4-14': { n: 'ギャラリー-リエゾンコンソール', w: '--w-detail', bc: [['Top', '/'], ['Gallery SOIL 渋谷', '/p4'], ['リエゾンコンソール', null, 'lp']] },
   'p4-15': { n: 'ギャラリー-リエゾンコンソール', w: '--w-detail', bc: [['Top', '/'], ['Gallery SOIL 渋谷', '/p4'], ['リエゾン+コンソール', null]] },
-  'p4-16': { n: 'ギャラリー-販売代金管理', w: '--w-article', bc: [['Top', '/'], ['Gallery SOIL 渋谷', '/p4'], ['販売代金管理', null, 'lp']] },
+  'p4-16': { n: 'ギャラリー-取引デスク', w: '--w-detail', bc: [['Top', '/'], ['Gallery SOIL 渋谷', '/p4'], ['取引デスク', null, 'lp']] },
   'p4-17': { n: 'ギャラリー-インベントリー管理', w: '--w-article', bc: [['Top', '/'], ['Gallery SOIL 渋谷', '/p4'], ['販売代金管理', null, 'lp']] },
   // P5 ユーザー
   'p5': { n: 'ユーザー-展覧会カレンダー', w: '--w-entity', bc: [['Top', '/'], ['山田花子 myページ', null]] },

@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>取引デスク — 光の痕跡 No.7 | 個展なび</title>
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Noto+Sans+JP:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+  <link rel="stylesheet" href="./kotennavi-components.css">
+</head>
+<body class="p3-page p3-16-page">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- 取引確認モーダル -->
+<div class="p515-modal-overlay" id="p316ConfirmModal" hidden>
+  <div class="p515-modal">
+    <div class="p515-modal__head">
+      <span class="p515-modal__title">この送料で取引を確定しますか？</span>
+      <button class="p515-modal__close" id="p316ConfirmModalClose">✕</button>
+    </div>
+    <div class="p515-modal__body">
+      <p class="p515-modal__desc">以下の内容で購入者に支払いを案内します。</p>
+      <div style="margin-top:10px;font-size:.82rem;color:var(--ink);line-height:1.8">
+        <div>送料：¥1,500（ヤマト宅急便）</div>
+        <div>梱包費：¥500</div>
+        <div style="font-weight:700;margin-top:4px;border-top:1px solid var(--border);padding-top:6px">合計：¥67,000</div>
+        <div style="margin-top:4px;font-size:.72rem;color:var(--muted)">支払期限：2026年5月22日（金）</div>
+      </div>
+      <p class="p515-modal__warn" style="margin-top:10px">確定後は送料を変更できません。</p>
+    </div>
+    <div class="p515-modal__foot">
+      <button class="p515-modal__btn ktn-op-btn" id="p316ConfirmModalBack">戻る</button>
+      <button class="p515-modal__btn ktn-op-btn ktn-op-btn--primary" id="p316ConfirmModalOk">確定する</button>
+    </div>
+  </div>
+</div>
+
+<!-- 申込拒否モーダル -->
+<div class="p515-modal-overlay" id="p316DeclineModal" hidden>
+  <div class="p515-modal">
+    <div class="p515-modal__head">
+      <span class="p515-modal__title">この申込を断りますか？</span>
+      <button class="p515-modal__close" id="p316DeclineModalClose">✕</button>
+    </div>
+    <div class="p515-modal__body">
+      <p class="p515-modal__desc">「光の痕跡 No.7」への山田 花子さんの申込を断ります。購入者には申込がキャンセルされた旨が通知されます。</p>
+      <p class="p515-modal__warn">正当な理由のないキャンセルはクリエイター評価に影響する場合があります。</p>
+    </div>
+    <div class="p515-modal__foot">
+      <button class="p515-modal__btn ktn-op-btn" id="p316DeclineModalBack">戻る</button>
+      <button class="p515-modal__btn ktn-op-btn ktn-op-btn--danger" id="p316DeclineModalOk">申込を断る</button>
+    </div>
+  </div>
+</div>
+
+<!-- 発送完了モーダル -->
+<div class="p515-modal-overlay" id="p316ShipModal" hidden>
+  <div class="p515-modal">
+    <div class="p515-modal__head">
+      <span class="p515-modal__title">発送完了を報告しますか？</span>
+      <button class="p515-modal__close" id="p316ShipModalClose">✕</button>
+    </div>
+    <div class="p515-modal__body">
+      <p class="p515-modal__desc">以下の追跡番号で発送完了を購入者に通知します。</p>
+      <div style="margin-top:10px;font-size:.88rem;color:var(--ink);line-height:1.8">
+        <div>追跡番号：<strong id="p316ModalTrackingNum" style="font-family:'Montserrat',sans-serif">1234-5678-9012</strong></div>
+        <div style="font-size:.72rem;color:var(--muted)">ヤマト宅急便</div>
+      </div>
+    </div>
+    <div class="p515-modal__foot">
+      <button class="p515-modal__btn ktn-op-btn" id="p316ShipModalBack">戻る</button>
+      <button class="p515-modal__btn ktn-op-btn ktn-op-btn--primary" id="p316ShipModalOk">発送完了を報告する</button>
+    </div>
+  </div>
+</div>
+
+<!-- 取引完了確認モーダル -->
+<div class="p515-modal-overlay" id="p316DoneModal" hidden>
+  <div class="p515-modal">
+    <div class="p515-modal__head">
+      <span class="p515-modal__title">取引完了を確認しますか？</span>
+      <button class="p515-modal__close" id="p316DoneModalClose">✕</button>
+    </div>
+    <div class="p515-modal__body">
+      <p class="p515-modal__desc">取引完了を確認すると、代金 ¥67,000 が確定されます。この操作は取り消せません。</p>
+      <p class="p515-modal__warn">購入者への一言メッセージも同時に送信されます。</p>
+    </div>
+    <div class="p515-modal__foot">
+      <button class="p515-modal__btn ktn-op-btn" id="p316DoneModalBack">もう一度確認する</button>
+      <button class="p515-modal__btn ktn-op-btn ktn-op-btn--primary" id="p316DoneModalOk">完了を確認する</button>
+    </div>
+  </div>
+</div>
+
+<!-- 管理ドロワー -->
+<div class="p3-mgmt-drawer" id="p316Drawer">
+  <div class="p3-mgmt-drawer__overlay" id="p316DrawerOverlay"></div>
+  <div class="p3-mgmt-drawer__panel">
+    <div class="p3-mgmt-drawer__head">
+      <div class="p3-mgmt-drawer__title">管理メニュー</div>
+      <button class="p3-mgmt-drawer__close" id="p316DrawerClose" aria-label="閉じる">✕</button>
+    </div>
+    <nav class="p3-mgmt-drawer__nav">
+      <a class="p3-mgmt-nav-item" href="kotennavi-p3.html">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><circle cx="8" cy="5" r="3"/><path d="M2 13.5c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>
+        クリエイターページ
+      </a>
+      <div class="p3-mgmt-drawer__sep"></div>
+      <a class="p3-mgmt-nav-item p3-mgmt-nav-item--active" href="kotennavi-p3-15.html">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><rect x="2" y="3" width="12" height="10" rx="1"/><line x1="5" y1="7" x2="11" y2="7"/><line x1="5" y1="10" x2="8" y2="10"/></svg>
+        LIAISONコンソール
+      </a>
+      <a class="p3-mgmt-nav-item" href="#">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><path d="M2 12h12M4 12V6l4-4 4 4v6M6 12V9h4v3"/></svg>
+        出品管理
+      </a>
+    </nav>
+  </div>
+</div>
+
+<!-- SVGシンボル -->
+<svg width="0" height="0" style="position:absolute;overflow:hidden">
+  <defs>
+    <symbol id="icon-exh" viewBox="40 47 54 54">
+      <path d="M80.09 102.05c-1.22-.8,-2.57-2.87,-3.34-4.33c-2.48-5.91,-4.85-14.23,-13.31-20.15c-1.9-1.23,-2.03-2,-1.94-2.48c.11-.83,.82-1.52,2.3-1.3c11.09,1.95,15.22,3.96,21.07,7.61c7.85,5.36,9.57,10.76,9.65,14.09c.15,2.3,-.18,5.11,-2.61,6.56Z" fill="currentColor"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- デモバー -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ロール：</span>
+  <button class="dbtn" onclick="setR('guest',this)">ゲスト</button>
+  <button class="dbtn" onclick="setR('login',this)">ログイン</button>
+  <button class="dbtn on" onclick="setR('creator',this)">creator</button>
+  <button class="dbtn" onclick="setR('admin',this)">管理者</button>
+  <span class="dbar-sep">状態：</span>
+  <button class="dbtn on" id="dbarNew" onclick="setDemoState('new')">申込確認待ち</button>
+  <button class="dbtn" id="dbarConfirmed" onclick="setDemoState('confirmed')">支払待ち</button>
+  <button class="dbtn" id="dbarPaid" onclick="setDemoState('paid')">発送待ち</button>
+  <button class="dbtn" id="dbarShipped" onclick="setDemoState('shipped')">受取確認待ち</button>
+  <button class="dbtn" id="dbarConfirming" onclick="setDemoState('confirming')">完了確認待ち</button>
+  <button class="dbtn" id="dbarDone" onclick="setDemoState('done')">取引完了</button>
+  <button class="dbtn" id="dbarCancelled" onclick="setDemoState('cancelled')">キャンセル済</button>
+</div>
+
+<div class="shell">
+<div class="content-wrap" id="contentWrap">
+
+  <header class="ktn-header" id="ktnHeader">
+    <div class="ktn-header__inner">
+      <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+      <div class="ktn-hdr-actions" id="ktnActs"></div>
+    </div>
+  </header>
+
+  <main class="ktn-main" id="ktnMain">
+
+    <!-- A. ヒーロー（コンパクト） -->
+    <div class="p3-head p3-head--compact">
+      <div class="p3-head__inner">
+        <div class="p3-head__top">
+          <a class="p3-head__avatar-wrap" href="kotennavi-p3.html">
+            <div class="p3-head__avatar cc__avatar" style="background:linear-gradient(135deg,#b0c8e8,#5a82a8)">透</div>
+          </a>
+          <div class="p3-head__info">
+            <div class="p3-head__badge-row">
+              <span class="cb cb-person cb-creator">creator</span>
+            </div>
+            <h1 class="p3-head__name"><a href="kotennavi-p3.html" style="color:inherit;text-decoration:none">田中 透</a></h1>
+            <div class="p3-head__en ktn-en-sub">Toru Tanaka</div>
+          </div>
+          <button class="p3-mgmt-btn" id="p316MgmtBtn" aria-label="管理メニューを開く">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="16" height="16"><circle cx="10" cy="10" r="2"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2M5.05 5.05l1.41 1.41M13.54 13.54l1.41 1.41M5.05 14.95l1.41-1.41M13.54 6.46l1.41-1.41"/></svg>
+            管理
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- B. タブナビ -->
+    <nav class="p3-tabnav" id="p3Tabnav" aria-label="クリエイターページ内ナビ">
+      <div class="p3-tabnav__inner">
+        <a class="p3-tabnav__name" href="kotennavi-p3.html"><span class="p3-tabnav__name-text">田中 透</span></a>
+        <a class="p3-tabnav__item" href="kotennavi-p3.html">展覧会</a>
+        <a class="p3-tabnav__item" href="kotennavi-p3.html">作品</a>
+        <a class="p3-tabnav__item" href="kotennavi-p3-2.html">記事</a>
+        <a class="p3-tabnav__item" href="kotennavi-p3.html">クリエイター情報</a>
+      </div>
+    </nav>
+
+    <!-- C. メインコンテンツ -->
+    <div class="ktn-content">
+      <div class="p316-wrap" id="p316Wrap">
+
+        <!-- C-1. ページヘッド -->
+        <div class="p515-page-head">
+          <div class="p515-page-head__back">
+            <a href="kotennavi-p3-15.html">← LIAISONコンソール</a>
+          </div>
+          <h2 class="p515-page-head__title">取引デスク</h2>
+          <p class="ktn-en-label" style="margin:0">TRANSACTION DESK</p>
+          <div class="p515-page-head__txn">
+            <span class="p515-page-head__txn-label">取引番号</span>
+            <span class="p515-page-head__txn-id">TXN-20260510-1847</span>
+          </div>
+        </div>
+
+        <!-- C-2. 購入作品 + 購入者 -->
+        <div class="p515-purchase-box">
+          <div class="p515-purchase-art">
+            <div class="p515-purchase-box__head">販売作品<span class="p515-purchase-box__head-en">Artwork</span></div>
+            <div class="p515-purchase-art__body">
+              <a class="p515-purchase-art__img-wrap" href="kotennavi-p6-2.html">
+                <div class="p515-purchase-art__img" style="background:linear-gradient(135deg,#b0c8d8,#6a92a8)"></div>
+              </a>
+              <div class="p515-purchase-art__info">
+                <div class="p515-purchase-art__badges">
+                  <span class="cb cb-content cb-artwork">artwork</span>
+                  <span class="ktn-aw-id">AW-C42-1847</span>
+                  <span class="aws aws-sale">販売中</span>
+                </div>
+                <a class="p515-purchase-art__title" href="kotennavi-p6-2.html">光の痕跡 No.7</a>
+                <div class="p515-purchase-art__exh">
+                  <a href="kotennavi-p2.html">あなたが知らないオノマトペ — 田中透 個展</a>
+                </div>
+                <div class="p515-purchase-art__price">¥65,000</div>
+              </div>
+            </div>
+          </div>
+          <div class="p515-purchase-div"></div>
+          <div class="p316-purchase-buyer">
+            <div class="p515-purchase-box__head">購入者<span class="p515-purchase-box__head-en">Buyer</span></div>
+            <a class="p316-purchase-buyer__card" href="#">
+              <div class="p316-purchase-buyer__avatar">花</div>
+              <div class="p316-purchase-buyer__info">
+                <div><span class="cb cb-person cb-user">user</span></div>
+                <div class="p316-purchase-buyer__name">山田 花子</div>
+              </div>
+            </a>
+            <div class="p316-purchase-buyer__date">申込 2026.05.10</div>
+          </div>
+        </div>
+
+        <!-- C-3. ステッププログレス -->
+        <div class="p515-steps">
+          <div class="p515-steps__label">取引の流れ<span class="p515-steps__label-en">Transaction Progress</span></div>
+          <div class="p515-steps__track">
+            <div class="p316-step" id="p316Step1">
+              <div class="p316-step__node">1</div>
+              <div class="p316-step__label">申込受付</div>
+            </div>
+            <div class="p515-steps__conn" id="p316Conn1"></div>
+            <div class="p316-step" id="p316Step2">
+              <div class="p316-step__node">2</div>
+              <div class="p316-step__label">取引確認</div>
+            </div>
+            <div class="p515-steps__conn" id="p316Conn2"></div>
+            <div class="p316-step" id="p316Step3">
+              <div class="p316-step__node">3</div>
+              <div class="p316-step__label">支払</div>
+            </div>
+            <div class="p515-steps__conn" id="p316Conn3"></div>
+            <div class="p316-step" id="p316Step4">
+              <div class="p316-step__node">4</div>
+              <div class="p316-step__label">発送</div>
+            </div>
+            <div class="p515-steps__conn" id="p316Conn4"></div>
+            <div class="p316-step" id="p316Step5">
+              <div class="p316-step__node">5</div>
+              <div class="p316-step__label">受取確認</div>
+            </div>
+            <div class="p515-steps__conn" id="p316Conn5"></div>
+            <div class="p316-step" id="p316Step6">
+              <div class="p316-step__node">6</div>
+              <div class="p316-step__label">完了確認</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- C-4a. 状態: 申込確認待ち（デフォルト） -->
+        <div class="p515-status" id="p316StatusNew">
+          <div class="p515-status__head">
+            <span class="p515-status__badge p316-status__badge--new">申込確認待ち</span>
+            <span class="p515-status__deadline">申込 2026.05.10</span>
+          </div>
+          <div class="p515-status__body">
+            <p class="p515-status__desc">「光の痕跡 No.7」への購入申込が届きました。申込内容を確認し、送料を設定して取引を開始してください。</p>
+
+            <!-- 申込内容 -->
+            <div class="p316-apply-info">
+              <div class="p316-apply-info__title">申込内容</div>
+              <div class="p316-apply-info__row">
+                <span class="p316-apply-info__label">購入者</span><span>山田 花子（ヤマダ ハナコ）</span>
+              </div>
+              <div class="p316-apply-info__row">
+                <span class="p316-apply-info__label">申込日時</span><span>2026.05.10 14:32</span>
+              </div>
+              <div class="p316-apply-info__row">
+                <span class="p316-apply-info__label">郵便番号</span><span>〒150-0001（東京都）</span>
+              </div>
+              <div class="p316-apply-info__row">
+                <span class="p316-apply-info__label">申込順</span><span>1番目（全2人申込中）</span>
+              </div>
+              <div class="p316-apply-info__row p316-apply-info__row--comment">
+                <span class="p316-apply-info__label">申込コメント</span>
+                <div class="p316-apply-info__comment">2026年の個展の展示作品がとても印象的でした。ぜひ手元に置きたいと思い申し込みました。</div>
+              </div>
+            </div>
+
+            <!-- 送料設定フォーム -->
+            <div class="p316-ship-form">
+              <div class="p316-ship-form__title">送料・梱包費の設定</div>
+              <p class="p316-ship-form__note">発送業者と送料を入力してください。梱包費 ¥500 は固定です。確定後は変更できません。</p>
+              <div class="p316-ship-form__fields">
+                <div class="p316-ship-form__row">
+                  <div class="p316-ship-form__field">
+                    <label class="p316-ship-form__label">発送業者</label>
+                    <input class="p316-ship-form__input" type="text" value="ヤマト宅急便" placeholder="発送業者名">
+                  </div>
+                  <div class="p316-ship-form__field">
+                    <label class="p316-ship-form__label">送料（円）</label>
+                    <input class="p316-ship-form__input" id="p316ShipFeeInput" type="number" value="1500" min="0" step="100">
+                  </div>
+                </div>
+                <div class="p316-ship-form__row">
+                  <div class="p316-ship-form__field">
+                    <label class="p316-ship-form__label">梱包費</label>
+                    <input class="p316-ship-form__input p316-ship-form__input--readonly" type="text" value="¥500（固定）" readonly>
+                  </div>
+                  <div class="p316-ship-form__field">
+                    <label class="p316-ship-form__label">支払期限</label>
+                    <input class="p316-ship-form__input" type="date" value="2026-05-22">
+                  </div>
+                </div>
+              </div>
+              <div class="p316-ship-total">合計（購入者の支払い額）：¥65,000 ＋ ¥1,500 ＋ ¥500 ＝ <strong>¥67,000</strong></div>
+            </div>
+
+            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:4px">
+              <button class="ktn-op-btn ktn-op-btn--danger-outline" id="p316DeclineBtn">申込を断る</button>
+              <button class="ktn-op-btn ktn-op-btn--primary ktn-op-btn--lg" id="p316ConfirmBtn" style="flex:1;min-width:200px">
+                送料を確定して取引を開始する
+                <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" width="8" height="8"><line x1="2" y1="5" x2="8" y2="5"/><polyline points="5 2 8 5 5 8"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- C-4b. 状態: 支払待ち -->
+        <div class="p515-status" id="p316StatusConfirmed" hidden>
+          <div class="p515-status__head">
+            <span class="p515-status__badge p316-status__badge--confirmed">支払待ち</span>
+            <span class="p515-status__deadline">確認 2026.05.12</span>
+          </div>
+          <div class="p515-status__body">
+            <p class="p515-status__desc">取引を確認しました。購入者が支払いを完了するまでお待ちください。支払期限を過ぎると申込は自動的にキャンセルされます。</p>
+            <div class="p515-ship-confirm">
+              <div class="p515-ship-confirm__title">確定した取引内容</div>
+              <div class="p515-ship-confirm__row"><span class="p515-ship-confirm__label">作品代金</span><span>¥65,000</span></div>
+              <div class="p515-ship-confirm__row"><span class="p515-ship-confirm__label">送料</span><span>¥1,500（ヤマト宅急便）</span></div>
+              <div class="p515-ship-confirm__row"><span class="p515-ship-confirm__label">梱包費</span><span>¥500</span></div>
+              <div class="p515-ship-confirm__row p515-ship-confirm__row--total"><span class="p515-ship-confirm__label">合計</span><span>¥67,000</span></div>
+            </div>
+            <div class="p515-deadline-banner">
+              <span class="p515-deadline-banner__label">支払期限</span>
+              <span class="p515-deadline-banner__date">2026年5月22日（金）23:59</span>
+              <span class="p515-deadline-banner__note">期限を過ぎると申込は自動的にキャンセルされます</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- C-4c. 状態: 発送待ち -->
+        <div class="p515-status" id="p316StatusPaid" hidden>
+          <div class="p515-status__head">
+            <span class="p515-status__badge p316-status__badge--paid">発送待ち</span>
+            <span class="p515-status__deadline">支払 2026.05.16</span>
+          </div>
+          <div class="p515-status__body">
+            <p class="p515-status__desc">購入者の支払いが完了しました。以下の配送先に作品を発送してください。発送後、追跡番号を入力して発送完了を報告してください。</p>
+
+            <!-- 配送先 -->
+            <div class="p316-ship-addr">
+              <div class="p316-ship-addr__title">配送先情報</div>
+              <div class="p316-ship-addr__row"><span class="p316-ship-addr__label">受取人</span><span>山田 花子（ヤマダ ハナコ）</span></div>
+              <div class="p316-ship-addr__row"><span class="p316-ship-addr__label">住所</span><span>〒150-0001 東京都渋谷区神宮前1-1-1</span></div>
+              <div class="p316-ship-addr__row"><span class="p316-ship-addr__label">電話番号</span><span>090-1234-5678</span></div>
+              <div class="p316-ship-addr__row"><span class="p316-ship-addr__label">受取方法</span><span>対面受取</span></div>
+              <div class="p316-ship-addr__row"><span class="p316-ship-addr__label">受取希望日時</span><span>2026年5月21日（木）14〜16時</span></div>
+            </div>
+
+            <!-- 追跡番号フォーム -->
+            <div class="p316-tracking-form">
+              <div class="p316-tracking-form__field">
+                <label class="p316-tracking-form__label">追跡番号</label>
+                <input class="p316-tracking-form__input" id="p316TrackingInput" type="text" placeholder="追跡番号を入力">
+              </div>
+              <div class="p316-tracking-form__field">
+                <label class="p316-tracking-form__label">発送業者</label>
+                <input class="p316-tracking-form__input" type="text" value="ヤマト宅急便" readonly style="background:var(--paper);color:var(--muted);cursor:default">
+              </div>
+            </div>
+
+            <button class="ktn-op-btn ktn-op-btn--primary ktn-op-btn--lg" id="p316ShipBtn" style="width:100%">
+              発送完了を報告する
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" width="10" height="10"><polyline points="2,6 5,9 10,3"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- C-4d. 状態: 受取確認待ち -->
+        <div class="p515-status" id="p316StatusShipped" hidden>
+          <div class="p515-status__head">
+            <span class="p515-status__badge p316-status__badge--shipped">受取確認待ち</span>
+            <span class="p515-status__deadline">発送 2026.05.18</span>
+          </div>
+          <div class="p515-status__body">
+            <p class="p515-status__desc">発送しました。購入者が作品を受け取り、受取確認を完了するまでお待ちください。</p>
+            <div class="p515-ship-confirm">
+              <div class="p515-ship-confirm__title">発送情報</div>
+              <div class="p515-ship-confirm__row"><span class="p515-ship-confirm__label">追跡番号</span><span style="font-family:'Montserrat',sans-serif;font-weight:500">1234-5678-9012</span></div>
+              <div class="p515-ship-confirm__row"><span class="p515-ship-confirm__label">発送業者</span><span>ヤマト宅急便</span></div>
+              <div class="p515-ship-confirm__row" style="border-bottom:none"><span class="p515-ship-confirm__label">発送日</span><span>2026年5月18日（月）</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- C-4e. 状態: 完了確認待ち -->
+        <div class="p515-status" id="p316StatusConfirming" hidden>
+          <div class="p515-status__head">
+            <span class="p515-status__badge p316-status__badge--confirming">完了確認待ち</span>
+            <span class="p515-status__deadline">受取確認 2026.05.21</span>
+          </div>
+          <div class="p515-status__body">
+            <p class="p515-status__desc">購入者が受取を確認しました。内容を確認の上、取引完了を確認してください。確認後、代金 ¥67,000 が確定されます。</p>
+
+            <!-- 購入者の評価 -->
+            <div class="p316-review-display">
+              <div class="p316-review-display__title">購入者からの評価</div>
+              <div class="p316-review-display__stars">★★★★★</div>
+              <p class="p316-review-display__text">素晴らしい作品でした。丁寧な梱包に感謝します。大切に飾らせていただきます。</p>
+            </div>
+
+            <!-- 購入者へのメッセージ -->
+            <div class="p316-complete-msg">
+              <label class="p316-complete-msg__label">購入者へのメッセージ（任意）</label>
+              <textarea class="p316-complete-msg__input" id="p316CompleteMsg" placeholder="一言メッセージを入力...">この度はご購入いただきありがとうございました。作品を大切にしていただけると幸いです。またいつかお会いできることを楽しみにしています。</textarea>
+            </div>
+
+            <button class="ktn-op-btn ktn-op-btn--primary ktn-op-btn--lg" id="p316DoneBtn" style="width:100%">
+              取引完了を確認する
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" width="10" height="10"><polyline points="2,6 5,9 10,3"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- C-4f. 状態: 取引完了 -->
+        <div class="p515-status" id="p316StatusDone" hidden>
+          <div class="p515-status__head">
+            <span class="p515-status__badge p316-status__badge--done">取引完了</span>
+            <span class="p515-status__deadline">2026.05.22</span>
+          </div>
+          <div class="p515-status__body">
+            <div class="p316-done">
+              <svg class="p316-done__icon" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" width="40" height="40"><circle cx="20" cy="20" r="17"/><polyline points="12,20 17,25 28,14"/></svg>
+              <h3 class="p316-done__title">取引が完了しました</h3>
+              <div class="p316-done__amount">¥67,000 確定</div>
+              <p class="p316-done__desc">「光の痕跡 No.7」の取引が正常に完了しました。代金は手数料を差し引いた後、登録の口座に振り込まれます。</p>
+              <div class="p316-done__actions">
+                <a class="ktn-op-btn ktn-op-btn--primary" href="kotennavi-p3-15.html">
+                  <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" width="10" height="10"><line x1="7" y1="2" x2="2" y2="2"/><polyline points="5 5 2 2 5 -1"/><rect x="4" y="4" width="7" height="7" rx="1"/></svg>
+                  LIAISONコンソールへ
+                </a>
+                <button class="ktn-op-btn">
+                  <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" width="10" height="10"><rect x="2" y="2" width="8" height="9" rx="1"/><line x1="4" y1="5" x2="8" y2="5"/><line x1="4" y1="7.5" x2="6.5" y2="7.5"/></svg>
+                  取引明細を確認
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- C-4g. 状態: キャンセル済 -->
+        <div class="p515-status" id="p316StatusCancelled" hidden>
+          <div class="p515-status__head">
+            <span class="p515-status__badge p316-status__badge--cancelled">キャンセル済</span>
+            <span class="p515-status__deadline">キャンセル 2026.05.14</span>
+          </div>
+          <div class="p515-status__body">
+            <div class="p316-cancelled">
+              <p class="p316-cancelled__msg">この取引はキャンセルされました。</p>
+              <p class="p316-cancelled__msg" style="font-size:.78rem;color:var(--muted)">次の申込者（2番目）への取引確認に進むことができます。</p>
+              <a class="ktn-op-btn ktn-op-btn--primary" href="kotennavi-p3-15.html">
+                <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" width="8" height="8"><line x1="8" y1="5" x2="2" y2="5"/><polyline points="5 2 2 5 5 8"/></svg>
+                LIAISONコンソールへ戻る
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- C-5. 取引ログ: 申込確認待ち -->
+        <div class="p515-log" id="p316LogNew">
+          <div class="p515-log__title">取引ログ<span class="p515-log__title-en">Transaction Log</span></div>
+          <div class="p515-log-item">
+            <div class="p515-log-item__dot-col"><div class="p515-log-item__dot p515-log-item__dot--user"></div></div>
+            <div class="p515-log-item__body">
+              <div class="p515-log-item__text">購入申込受付</div>
+              <div class="p515-log-item__note">申込順 1番目 / 全2人申込中</div>
+              <div class="p515-log-apply">
+                <div class="p515-log-apply__row"><span class="p515-log-apply__label">購入者</span><span>山田 花子</span></div>
+                <div class="p515-log-apply__row"><span class="p515-log-apply__label">郵便番号</span><span>〒150-0001（東京都）</span></div>
+              </div>
+              <div class="p515-log-item__date">2026.05.10 14:32</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- C-5. 取引ログ: 支払待ち -->
+        <div class="p515-log" id="p316LogConfirmed" hidden>
+          <div class="p515-log__title">取引ログ<span class="p515-log__title-en">Transaction Log</span></div>
+          <div class="p515-log-item">
+            <div class="p515-log-item__dot-col"><div class="p515-log-item__dot p515-log-item__dot--ok"></div></div>
+            <div class="p515-log-item__body">
+              <div class="p515-log-item__text">取引確認・送料確定</div>
+              <div class="p515-log-item__note">送料 ¥1,500（ヤマト宅急便）梱包費 ¥500 — 支払期限 2026.05.22</div>
+              <div class="p515-log-item__date">2026.05.12 10:15</div>
+            </div>
+          </div>
+          <div class="p515-log-item">
+            <div class="p515-log-item__dot-col"><div class="p515-log-item__dot p515-log-item__dot--user"></div></div>
+            <div class="p515-log-item__body">
+              <div class="p515-log-item__text">購入申込受付</div>
+              <div class="p515-log-item__note">申込順 1番目 / 全2人申込中</div>
+              <div class="p515-log-apply">
+                <div class="p515-log-apply__row"><span class="p515-log-apply__label">購入者</span><span>山田 花子</span></div>
+                <div class="p515-log-apply__row"><span class="p515-log-apply__label">郵便番号</span><span>〒150-0001（東京都）</span></div>
+              </div>
+              <div class="p515-log-item__date">2026.05.10 14:32</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- C-5. 取引ログ: 発送待ち -->
+        <div class="p515-log" id="p316LogPaid" hidden>
+          <div class="p515-log__title">取引ログ<span class="p515-log__title-en">Transaction Log</span></div>
+          <div class="p515-log-item">
+            <div class="p515-log-item__dot-col"><div class="p515-log-item__dot p515-log-item__dot--user"></div></div>
+            <div class="p515-log-item__body">
+              <div class="p515-log-item__text">購入者 支払い完了</div>
+              <div class="p515-log-item__note">¥67,000（Stripe・クレジットカード）</div>
+              <div class="p515-log-item__date">2026.05.16 11:08</div>
+            </div>
+          </div>
+          <div class="p515-log-item">
+            <div class="p515-log-item__dot-col"><div class="p515-log-item__dot p515-log-item__dot--ok"></div></div>
+            <div class="p515-log-item__body">
+              <div class="p515-log-item__text">取引確認・送料確定</div>
+              <div class="p515-log-item__note">送料 ¥1,500（ヤマト宅急便）梱包費 ¥500</div>
+              <div class="p515-log-item__date">2026.05.12 10:15</div>
+            </div>
+          </div>
+          <div class="p515-log-item">
+            <div class="p515-log-item__dot-col"><div class="p515-log-item__dot p515-log-item__dot--user"></div></div>
+            <div class="p515-log-item__body">
+              <div class="p515-log-item__text">購入申込受付</div>
+              <div class="p515-log-item__note">申込順 1番目 / 全2人申込中</div>
+              <div class="p515-log-apply">
+                <div class="p515-log-apply__row"><span class="p515-log-apply__label">購入者</span><span>山田 花子</span></div>
+                <div class="p515-log-apply__row"><span class="p515-log-apply__label">郵便番号</span><span>〒150-0001（東京都）</span></div>
+              </div>
+              <div class="p515-log-item__date">2026.05.10 14:32</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- C-5. 取引ログ: 受取確認待ち -->
+        <div class="p515-log" id="p316LogShipped" hidden>
+          <div class="p515-log__title">取引ログ<span class="p515-log__title-en">Transaction Log</span></div>
+          <div class="p515-log-item">
+            <div class="p515-log-item__dot-col"><div class="p515-log-item__dot p515-log-item__dot--ok"></div></div>
+            <div class="p515-log-item__body">
+              <div class="p515-log-item__text">発送完了</div>
+              <div class="p515-log-item__note">追跡番号：1234-5678-9012（ヤマト宅急便）</div>
+              <div class="p515-log-item__date">2026.05.18 15:30</div>
+            </div>
+          </div>
+          <div class="p515-log-item">
+            <div class="p515-log-item__dot-col"><div class="p515-log-item__dot p515-log-item__dot--user"></div></div>
+            <div class="p515-log-item__body">
+              <div class="p515-log-item__text">購入者 支払い完了</div>
+              <div class="p515-log-item__note">¥67,000（Stripe・クレジットカード）</div>
+              <div class="p515-log-item__date">2026.05.16 11:08</div>
+            </div>
+          </div>
+          <div class="p515-log-item">
+            <div class="p515-log-item__dot-col"><div class="p515-log-item__dot p515-log-item__dot--ok"></div></div>
+            <div class="p515-log-item__body">
+              <div class="p515-log-item__text">取引確認・送料確定</div>
+              <div class="p515-log-item__note">送料 ¥1,500（ヤマト宅急便）梱包費 ¥500</div>
+              <div class="p515-log-item__date">2026.05.12 10:15</div>
+            </div>
+          </div>
+          <div class="p515-log-item">
+            <div class="p515-log-item__dot-col"><div class="p515-log-item__dot p515-log-item__dot--user"></div></div>
+            <div class="p515-log-item__body">
+              <div class="p515-log-item__text">購入申込受付</div>
+              <div class="p515-log-item__note">申込順 1番目 / 全2人申込中</div>
+              <div class="p515-log-apply">
+                <div class="p515-log-apply__row"><span class="p515-log-apply__label">購入者</span><span>山田 花子</span></div>
+                <div class="p515-log-apply__row"><span class="p515-log-apply__label">郵便番号</span><span>〒150-0001（東京都）</span></div>
+              </div>
+              <div class="p515-log-item__date">2026.05.10 14:32</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- C-5. 取引ログ: 完了確認待ち -->
+        <div class="p515-log" id="p316LogConfirming" hidden>
+          <div class="p515-log__title">取引ログ<span class="p515-log__title-en">Transaction Log</span></div>
+          <div class="p515-log-item">
+            <div class="p515-log-item__dot-col"><div class="p515-log-item__dot p515-log-item__dot--user"></div></div>
+            <div class="p515-log-item__body">
+              <div class="p515-log-item__text">購入者 受取確認 · 評価入力</div>
+              <div class="p515-log-item__note">評価：★★★★★「素晴らしい作品でした。丁寧な梱包に感謝します。」</div>
+              <div class="p515-log-item__date">2026.05.21 18:47</div>
+            </div>
+          </div>
+          <div class="p515-log-item">
+            <div class="p515-log-item__dot-col"><div class="p515-log-item__dot p515-log-item__dot--ok"></div></div>
+            <div class="p515-log-item__body">
+              <div class="p515-log-item__text">発送完了</div>
+              <div class="p515-log-item__note">追跡番号：1234-5678-9012（ヤマト宅急便）</div>
+              <div class="p515-log-item__date">2026.05.18 15:30</div>
+            </div>
+          </div>
+          <div class="p515-log-item">
+            <div class="p515-log-item__dot-col"><div class="p515-log-item__dot p515-log-item__dot--user"></div></div>
+            <div class="p515-log-item__body">
+              <div class="p515-log-item__text">購入者 支払い完了</div>
+              <div class="p515-log-item__note">¥67,000（Stripe・クレジットカード）</div>
+              <div class="p515-log-item__date">2026.05.16 11:08</div>
+            </div>
+          </div>
+          <div class="p515-log-item">
+            <div class="p515-log-item__dot-col"><div class="p515-log-item__dot p515-log-item__dot--ok"></div></div>
+            <div class="p515-log-item__body">
+              <div class="p515-log-item__text">取引確認・送料確定</div>
+              <div class="p515-log-item__note">送料 ¥1,500（ヤマト宅急便）梱包費 ¥500</div>
+              <div class="p515-log-item__date">2026.05.12 10:15</div>
+            </div>
+          </div>
+          <div class="p515-log-item">
+            <div class="p515-log-item__dot-col"><div class="p515-log-item__dot p515-log-item__dot--user"></div></div>
+            <div class="p515-log-item__body">
+              <div class="p515-log-item__text">購入申込受付</div>
+              <div class="p515-log-item__note">申込順 1番目 / 全2人申込中</div>
+              <div class="p515-log-apply">
+                <div class="p515-log-apply__row"><span class="p515-log-apply__label">購入者</span><span>山田 花子</span></div>
+                <div class="p515-log-apply__row"><span class="p515-log-apply__label">郵便番号</span><span>〒150-0001（東京都）</span></div>
+              </div>
+              <div class="p515-log-item__date">2026.05.10 14:32</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- C-5. 取引ログ: 取引完了 -->
+        <div class="p515-log" id="p316LogDone" hidden>
+          <div class="p515-log__title">取引ログ<span class="p515-log__title-en">Transaction Log</span></div>
+          <div class="p515-log-item">
+            <div class="p515-log-item__dot-col"><div class="p515-log-item__dot p515-log-item__dot--ok"></div></div>
+            <div class="p515-log-item__body">
+              <div class="p515-log-item__text">取引完了確認（出品者）</div>
+              <div class="p515-log-apply p515-log-apply--msg">
+                <div class="p515-log-apply__row"><span>この度はご購入いただきありがとうございました。作品を大切にしていただけると幸いです。またいつかお会いできることを楽しみにしています。</span></div>
+              </div>
+              <div class="p515-log-item__date">2026.05.22 09:14</div>
+            </div>
+          </div>
+          <div class="p515-log-item">
+            <div class="p515-log-item__dot-col"><div class="p515-log-item__dot p515-log-item__dot--user"></div></div>
+            <div class="p515-log-item__body">
+              <div class="p515-log-item__text">購入者 受取確認 · 評価入力</div>
+              <div class="p515-log-item__note">評価：★★★★★「素晴らしい作品でした。丁寧な梱包に感謝します。」</div>
+              <div class="p515-log-item__date">2026.05.21 18:47</div>
+            </div>
+          </div>
+          <div class="p515-log-item">
+            <div class="p515-log-item__dot-col"><div class="p515-log-item__dot p515-log-item__dot--ok"></div></div>
+            <div class="p515-log-item__body">
+              <div class="p515-log-item__text">発送完了</div>
+              <div class="p515-log-item__note">追跡番号：1234-5678-9012（ヤマト宅急便）</div>
+              <div class="p515-log-item__date">2026.05.18 15:30</div>
+            </div>
+          </div>
+          <div class="p515-log-item">
+            <div class="p515-log-item__dot-col"><div class="p515-log-item__dot p515-log-item__dot--user"></div></div>
+            <div class="p515-log-item__body">
+              <div class="p515-log-item__text">購入者 支払い完了</div>
+              <div class="p515-log-item__note">¥67,000（Stripe・クレジットカード）</div>
+              <div class="p515-log-item__date">2026.05.16 11:08</div>
+            </div>
+          </div>
+          <div class="p515-log-item">
+            <div class="p515-log-item__dot-col"><div class="p515-log-item__dot p515-log-item__dot--ok"></div></div>
+            <div class="p515-log-item__body">
+              <div class="p515-log-item__text">取引確認・送料確定</div>
+              <div class="p515-log-item__note">送料 ¥1,500（ヤマト宅急便）梱包費 ¥500</div>
+              <div class="p515-log-item__date">2026.05.12 10:15</div>
+            </div>
+          </div>
+          <div class="p515-log-item">
+            <div class="p515-log-item__dot-col"><div class="p515-log-item__dot p515-log-item__dot--user"></div></div>
+            <div class="p515-log-item__body">
+              <div class="p515-log-item__text">購入申込受付</div>
+              <div class="p515-log-item__note">申込順 1番目 / 全2人申込中</div>
+              <div class="p515-log-apply">
+                <div class="p515-log-apply__row"><span class="p515-log-apply__label">購入者</span><span>山田 花子</span></div>
+                <div class="p515-log-apply__row"><span class="p515-log-apply__label">郵便番号</span><span>〒150-0001（東京都）</span></div>
+              </div>
+              <div class="p515-log-item__date">2026.05.10 14:32</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- C-5. 取引ログ: キャンセル済 -->
+        <div class="p515-log" id="p316LogCancelled" hidden>
+          <div class="p515-log__title">取引ログ<span class="p515-log__title-en">Transaction Log</span></div>
+          <div class="p515-log-item">
+            <div class="p515-log-item__dot-col"><div class="p515-log-item__dot p515-log-item__dot--sys"></div></div>
+            <div class="p515-log-item__body">
+              <div class="p515-log-item__text">申込キャンセル</div>
+              <div class="p515-log-item__date">2026.05.14 16:22</div>
+            </div>
+          </div>
+          <div class="p515-log-item">
+            <div class="p515-log-item__dot-col"><div class="p515-log-item__dot p515-log-item__dot--user"></div></div>
+            <div class="p515-log-item__body">
+              <div class="p515-log-item__text">購入申込受付</div>
+              <div class="p515-log-item__note">申込順 1番目 / 全2人申込中</div>
+              <div class="p515-log-apply">
+                <div class="p515-log-apply__row"><span class="p515-log-apply__label">購入者</span><span>山田 花子</span></div>
+                <div class="p515-log-apply__row"><span class="p515-log-apply__label">郵便番号</span><span>〒150-0001（東京都）</span></div>
+              </div>
+              <div class="p515-log-item__date">2026.05.10 14:32</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- C-6. 取引コメント -->
+        <div class="p515-comments" id="p316Comments">
+          <div class="p515-comments__head">
+            <span class="p515-comments__title">取引コメント</span>
+            <span class="p515-comments__expire">取引終了後1週間で消去</span>
+          </div>
+          <div class="p515-comments__list">
+            <div class="p515-comment">
+              <div class="p515-comment__avatar p515-comment__avatar--creator">透</div>
+              <div class="p515-comment__body">
+                <div class="p515-comment__meta">
+                  <span class="p515-comment__name">田中 透</span>
+                  <span class="p515-comment__role">出品者</span>
+                  <span class="p515-comment__date">2026.05.14 10:20</span>
+                </div>
+                <p class="p515-comment__text">作品を丁寧に梱包いたします。発送まで今しばらくお待ちください。ご不明な点があればいつでもご連絡ください。</p>
+              </div>
+            </div>
+            <div class="p515-comment">
+              <div class="p515-comment__avatar p515-comment__avatar--user">花</div>
+              <div class="p515-comment__body">
+                <div class="p515-comment__meta">
+                  <span class="p515-comment__name">山田 花子</span>
+                  <span class="p515-comment__role p515-comment__role--buyer">購入者</span>
+                  <span class="p515-comment__date">2026.05.13 22:15</span>
+                </div>
+                <p class="p515-comment__text">支払いを完了しました。よろしくお願いいたします。</p>
+              </div>
+            </div>
+            <div class="p515-comment">
+              <div class="p515-comment__avatar p515-comment__avatar--user">花</div>
+              <div class="p515-comment__body">
+                <div class="p515-comment__meta">
+                  <span class="p515-comment__name">山田 花子</span>
+                  <span class="p515-comment__role p515-comment__role--buyer">購入申込コメント</span>
+                  <span class="p515-comment__date">2026.05.10 14:32</span>
+                </div>
+                <p class="p515-comment__text">2026年の個展の展示作品がとても印象的でした。ぜひ手元に置きたいと思い申し込みました。</p>
+              </div>
+            </div>
+          </div>
+          <div class="p515-comments__form">
+            <textarea class="p515-comments__input" placeholder="メッセージを入力..." rows="2"></textarea>
+            <button class="p515-comments__send ktn-op-btn ktn-op-btn--primary ktn-op-btn--sm" type="button">送信</button>
+          </div>
+        </div>
+
+        <!-- C-FAQ. よくある質問 -->
+        <section class="p315-faq">
+          <div class="p315-faq__head">よくある質問</div>
+
+          <details class="p315-faq-item">
+            <summary class="p315-faq-item__q">
+              <span class="p315-faq-item__q-mark">Q</span>
+              申込が来たら最初に何をすればいいですか？
+            </summary>
+            <div class="p315-faq-item__a">
+              <p>申込内容（購入者・郵便番号・申込コメント）を確認の上、送料と発送業者を設定してください。送料を確定すると購入者に支払い案内が送られます。会場で作品が先に売れていた場合は「申込を断る」で対応してください。</p>
+            </div>
+          </details>
+
+          <details class="p315-faq-item">
+            <summary class="p315-faq-item__q">
+              <span class="p315-faq-item__q-mark">Q</span>
+              申込を断ることはできますか？
+            </summary>
+            <div class="p315-faq-item__a">
+              <p>「取引確認待ち」状態であれば断ることができます。ただし、正当な理由のないキャンセルはクリエイター評価に影響する可能性があります。会場売約済・在庫なし等の正当な理由がある場合はその旨を取引コメントに記入することをお勧めします。</p>
+            </div>
+          </details>
+
+          <details class="p315-faq-item">
+            <summary class="p315-faq-item__q">
+              <span class="p315-faq-item__q-mark">Q</span>
+              送料の設定の仕方は？
+            </summary>
+            <div class="p315-faq-item__a">
+              <p>購入者の郵便番号（都道府県）を参考に、実際の発送コストを入力してください。梱包費 ¥500 は固定で自動加算されます。確定後は変更できませんので、慎重に入力してください。</p>
+            </div>
+          </details>
+
+          <details class="p315-faq-item">
+            <summary class="p315-faq-item__q">
+              <span class="p315-faq-item__q-mark">Q</span>
+              支払期限はいつに設定すればいいですか？
+            </summary>
+            <div class="p315-faq-item__a">
+              <p>取引確認から7〜14日程度が目安です。短すぎると購入者が対応できない場合があります。期限を過ぎると申込は自動キャンセルされ、次の申込者に移ります。</p>
+            </div>
+          </details>
+
+          <details class="p315-faq-item">
+            <summary class="p315-faq-item__q">
+              <span class="p315-faq-item__q-mark">Q</span>
+              購入者の支払いを確認したらすぐに発送できますか？
+            </summary>
+            <div class="p315-faq-item__a">
+              <p>支払い完了の通知が届いたら発送できます。このページの「配送先情報」に表示された住所へ発送し、追跡番号を入力して「発送完了を報告する」ボタンを押してください。購入者に発送通知が届きます。</p>
+            </div>
+          </details>
+
+          <details class="p315-faq-item">
+            <summary class="p315-faq-item__q">
+              <span class="p315-faq-item__q-mark">Q</span>
+              発送後、購入者が受取確認をしない場合は？
+            </summary>
+            <div class="p315-faq-item__a">
+              <p>受取確認がない場合は、取引コメントから購入者へ連絡してください。一定期間後に自動完了となる場合があります。問題が解決しない場合は個展なびサポートへお問い合わせください。</p>
+            </div>
+          </details>
+
+          <details class="p315-faq-item">
+            <summary class="p315-faq-item__q">
+              <span class="p315-faq-item__q-mark">Q</span>
+              取引完了後、代金はいつ振り込まれますか？
+            </summary>
+            <div class="p315-faq-item__a">
+              <p>取引完了確認の翌月末（または翌々月末）に、手数料を差し引いた金額が登録口座に振り込まれます。振込スケジュールと手数料の詳細は販売代金管理ページでご確認ください。</p>
+            </div>
+          </details>
+
+          <details class="p315-faq-item">
+            <summary class="p315-faq-item__q">
+              <span class="p315-faq-item__q-mark">Q</span>
+              受け取った作品に問題があると購入者から連絡があった場合は？
+            </summary>
+            <div class="p315-faq-item__a">
+              <p>まず取引コメントで状況を確認し、誠実に対応してください。破損等の問題がある場合は個展なびサポートへご連絡ください。取引コメントのやり取りを保存しておくことをお勧めします。</p>
+            </div>
+          </details>
+
+        </section>
+
+      </div>
+    </div>
+
+  </main>
+</div>
+</div>
+
+<script src="kotennavi-common.js"></script>
+<script src="kotennavi-pages.js"></script>
+<script>
+KTN.init({ page: 'p3-16', role: 'creator' });
+
+(function () {
+
+  /* ── デモ状態管理 ── */
+  var STEP_CFG = {
+    new:        [null, 'done',   'seller', 'future', 'future', 'future', 'future'],
+    confirmed:  [null, 'done',   'done',   'buyer',  'future', 'future', 'future'],
+    paid:       [null, 'done',   'done',   'done',   'seller', 'future', 'future'],
+    shipped:    [null, 'done',   'done',   'done',   'done',   'buyer',  'future'],
+    confirming: [null, 'done',   'done',   'done',   'done',   'done',   'seller'],
+    done:       [null, 'done',   'done',   'done',   'done',   'done',   'done'],
+    cancelled:  [null, 'future', 'future', 'future', 'future', 'future', 'future']
+  };
+  var STATUS_IDS = [
+    'p316StatusNew', 'p316StatusConfirmed', 'p316StatusPaid',
+    'p316StatusShipped', 'p316StatusConfirming', 'p316StatusDone', 'p316StatusCancelled'
+  ];
+  var LOG_IDS = [
+    'p316LogNew', 'p316LogConfirmed', 'p316LogPaid',
+    'p316LogShipped', 'p316LogConfirming', 'p316LogDone', 'p316LogCancelled'
+  ];
+  var STATE_IDX = { new: 0, confirmed: 1, paid: 2, shipped: 3, confirming: 4, done: 5, cancelled: 6 };
+  var DBAR_IDS  = {
+    new: 'dbarNew', confirmed: 'dbarConfirmed', paid: 'dbarPaid',
+    shipped: 'dbarShipped', confirming: 'dbarConfirming', done: 'dbarDone', cancelled: 'dbarCancelled'
+  };
+
+  function updateSteps(key) {
+    var cfg = STEP_CFG[key] || STEP_CFG.done;
+    for (var i = 1; i <= 6; i++) {
+      var cls  = cfg[i];
+      var step = document.getElementById('p316Step' + i);
+      if (!step) continue;
+      step.className = 'p316-step p316-step--' + cls;
+      var node = step.querySelector('.p316-step__node');
+      if (node) node.textContent = cls === 'done' ? '✓' : i;
+      if (i < 6) {
+        var conn = document.getElementById('p316Conn' + i);
+        if (conn) conn.className = 'p515-steps__conn' + (cls === 'done' ? ' p515-steps__conn--done' : '');
+      }
+    }
+  }
+
+  window.setDemoState = function (key) {
+    var idx = STATE_IDX[key];
+    STATUS_IDS.forEach(function (id, i) {
+      var el = document.getElementById(id);
+      if (el) el.hidden = (i !== idx);
+    });
+    LOG_IDS.forEach(function (id, i) {
+      var el = document.getElementById(id);
+      if (el) el.hidden = (i !== idx);
+    });
+    var comments = document.getElementById('p316Comments');
+    if (comments) comments.hidden = (key === 'cancelled');
+    updateSteps(key);
+    Object.keys(DBAR_IDS).forEach(function (k) {
+      var btn = document.getElementById(DBAR_IDS[k]);
+      if (btn) btn.classList.toggle('on', k === key);
+    });
+  };
+
+  setDemoState('new');
+
+  /* ── 管理ドロワー ── */
+  var drawer  = document.getElementById('p316Drawer');
+  var mgmtBtn = document.getElementById('p316MgmtBtn');
+  var dClose  = document.getElementById('p316DrawerClose');
+  var dOver   = document.getElementById('p316DrawerOverlay');
+  function openDrawer()  { if (drawer) drawer.classList.add('is-open'); }
+  function closeDrawer() { if (drawer) drawer.classList.remove('is-open'); }
+  if (mgmtBtn) mgmtBtn.addEventListener('click', openDrawer);
+  if (dClose)  dClose.addEventListener('click', closeDrawer);
+  if (dOver)   dOver.addEventListener('click', closeDrawer);
+
+  /* ── 取引確認モーダル ── */
+  var confirmModal     = document.getElementById('p316ConfirmModal');
+  var confirmBtn       = document.getElementById('p316ConfirmBtn');
+  var confirmModalClose= document.getElementById('p316ConfirmModalClose');
+  var confirmModalBack = document.getElementById('p316ConfirmModalBack');
+  var confirmModalOk   = document.getElementById('p316ConfirmModalOk');
+  function openConfirmModal()  { if (confirmModal) confirmModal.hidden = false; }
+  function closeConfirmModal() { if (confirmModal) confirmModal.hidden = true; }
+  if (confirmBtn)        confirmBtn.addEventListener('click', openConfirmModal);
+  if (confirmModalClose) confirmModalClose.addEventListener('click', closeConfirmModal);
+  if (confirmModalBack)  confirmModalBack.addEventListener('click', closeConfirmModal);
+  if (confirmModal)      confirmModal.addEventListener('click', function (e) { if (e.target === confirmModal) closeConfirmModal(); });
+  if (confirmModalOk)    confirmModalOk.addEventListener('click', function () {
+    closeConfirmModal();
+    setDemoState('confirmed');
+    if (typeof KTN !== 'undefined' && KTN.toast) KTN.toast('送料を確定しました。購入者に支払い案内を送信しました');
+  });
+
+  /* ── 申込拒否モーダル ── */
+  var declineModal     = document.getElementById('p316DeclineModal');
+  var declineBtn       = document.getElementById('p316DeclineBtn');
+  var declineModalClose= document.getElementById('p316DeclineModalClose');
+  var declineModalBack = document.getElementById('p316DeclineModalBack');
+  var declineModalOk   = document.getElementById('p316DeclineModalOk');
+  function openDeclineModal()  { if (declineModal) declineModal.hidden = false; }
+  function closeDeclineModal() { if (declineModal) declineModal.hidden = true; }
+  if (declineBtn)        declineBtn.addEventListener('click', openDeclineModal);
+  if (declineModalClose) declineModalClose.addEventListener('click', closeDeclineModal);
+  if (declineModalBack)  declineModalBack.addEventListener('click', closeDeclineModal);
+  if (declineModal)      declineModal.addEventListener('click', function (e) { if (e.target === declineModal) closeDeclineModal(); });
+  if (declineModalOk)    declineModalOk.addEventListener('click', function () {
+    closeDeclineModal();
+    setDemoState('cancelled');
+    if (typeof KTN !== 'undefined' && KTN.toast) KTN.toast('申込を断りました');
+  });
+
+  /* ── 発送完了モーダル ── */
+  var shipModal     = document.getElementById('p316ShipModal');
+  var shipBtn       = document.getElementById('p316ShipBtn');
+  var shipModalClose= document.getElementById('p316ShipModalClose');
+  var shipModalBack = document.getElementById('p316ShipModalBack');
+  var shipModalOk   = document.getElementById('p316ShipModalOk');
+  function openShipModal() {
+    var trackingInput = document.getElementById('p316TrackingInput');
+    var numEl = document.getElementById('p316ModalTrackingNum');
+    if (numEl && trackingInput) numEl.textContent = trackingInput.value || '（未入力）';
+    if (shipModal) shipModal.hidden = false;
+  }
+  function closeShipModal() { if (shipModal) shipModal.hidden = true; }
+  if (shipBtn)       shipBtn.addEventListener('click', openShipModal);
+  if (shipModalClose)shipModalClose.addEventListener('click', closeShipModal);
+  if (shipModalBack) shipModalBack.addEventListener('click', closeShipModal);
+  if (shipModal)     shipModal.addEventListener('click', function (e) { if (e.target === shipModal) closeShipModal(); });
+  if (shipModalOk)   shipModalOk.addEventListener('click', function () {
+    closeShipModal();
+    setDemoState('shipped');
+    if (typeof KTN !== 'undefined' && KTN.toast) KTN.toast('発送完了を報告しました。購入者に通知しました');
+  });
+
+  /* ── 取引完了確認モーダル ── */
+  var doneModal     = document.getElementById('p316DoneModal');
+  var doneBtn       = document.getElementById('p316DoneBtn');
+  var doneModalClose= document.getElementById('p316DoneModalClose');
+  var doneModalBack = document.getElementById('p316DoneModalBack');
+  var doneModalOk   = document.getElementById('p316DoneModalOk');
+  function openDoneModal()  { if (doneModal) doneModal.hidden = false; }
+  function closeDoneModal() { if (doneModal) doneModal.hidden = true; }
+  if (doneBtn)       doneBtn.addEventListener('click', openDoneModal);
+  if (doneModalClose)doneModalClose.addEventListener('click', closeDoneModal);
+  if (doneModalBack) doneModalBack.addEventListener('click', closeDoneModal);
+  if (doneModal)     doneModal.addEventListener('click', function (e) { if (e.target === doneModal) closeDoneModal(); });
+  if (doneModalOk)   doneModalOk.addEventListener('click', function () {
+    closeDoneModal();
+    setDemoState('done');
+    if (typeof KTN !== 'undefined' && KTN.toast) KTN.toast('取引完了を確認しました。代金が確定されました');
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+      closeDrawer(); closeConfirmModal(); closeDeclineModal(); closeShipModal(); closeDoneModal();
+    }
+  });
+
+}());
+</script>
+</body>
+</html>

@@ -5089,3 +5089,63 @@ KTN.pages['p4-15'] = function () {
 
   window.ktnRender = function () {};
 };
+
+/* ════════════════════════════════════════════════════
+   P3-16  取引デスク（creator）
+════════════════════════════════════════════════════ */
+KTN.pages['p3-16'] = function () {
+
+  document.body.classList.add('p3-page');
+  document.body.style.setProperty('--page-accent',        '#2a5f7a');
+  document.body.style.setProperty('--page-accent-bg',     'rgba(42,95,122,.1)');
+  document.body.style.setProperty('--page-accent-border', '#5a8fa8');
+
+  var d = window.P3_DATA || {};
+  if (typeof applyHeadImageMode === 'function') applyHeadImageMode(d.hasImage !== false);
+  var activeBadge = document.getElementById('p3HeadActiveBadge');
+  if (activeBadge && d.hasActiveExhibition) activeBadge.removeAttribute('hidden');
+
+  document.querySelectorAll('.p3-tabnav__item').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      if (btn.dataset.tab === 'exhibitions') {
+        window.location.href = 'kotennavi-p3-1.html';
+      } else if (btn.dataset.tab === 'works') {
+        window.location.href = 'kotennavi-p3-3.html';
+      } else if (btn.dataset.tab === 'articles') {
+        window.location.href = 'kotennavi-p3-2.html';
+      } else if (btn.dataset.target) {
+        window.location.href = 'kotennavi-p3.html#' + btn.dataset.target;
+      }
+    });
+  });
+
+  window.ktnRender = function () {};
+};
+
+/* ════════════════════════════════════════════════════
+   P4-16  取引デスク（gallery）
+════════════════════════════════════════════════════ */
+KTN.pages['p4-16'] = function () {
+
+  document.body.classList.add('p4-page');
+  document.body.style.setProperty('--page-accent',        '#8b5e3c');
+  document.body.style.setProperty('--page-accent-bg',     'rgba(139,94,60,.1)');
+  document.body.style.setProperty('--page-accent-border', '#b07a50');
+
+  var d = window.P4_DATA || {};
+  if (typeof applyHeadImageMode === 'function') applyHeadImageMode(d.hasImage !== false);
+
+  document.querySelectorAll('.p3-tabnav__item').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      if (btn.dataset.tab === 'exhibitions') {
+        window.location.href = 'kotennavi-p4-1.html';
+      } else if (btn.dataset.tab === 'articles') {
+        window.location.href = 'kotennavi-p4-2.html';
+      } else if (btn.dataset.target) {
+        window.location.href = 'kotennavi-p4.html#' + btn.dataset.target;
+      }
+    });
+  });
+
+  window.ktnRender = function () {};
+};

@@ -9908,3 +9908,92 @@ body.p4-15-page{--page-accent:#8b5e3c}
 body.p4-15-page .p3-head{max-width:760px}
 body.p4-15-page .p3-tabnav{max-width:760px}
 .p315-work-card__artist{font-size:.72rem;font-weight:600;color:var(--ink);margin-bottom:1px}
+
+/* ════════════════════════════════════════════════════
+   P3-16  取引デスク（creator）
+   prefix: .p316-
+════════════════════════════════════════════════════ */
+/* ── ステッププログレス ── */
+.p316-step{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;position:relative}
+.p316-step__node{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Montserrat',sans-serif;font-size:.68rem;font-weight:700;transition:background .2s,color .2s;border:2px solid var(--border);background:var(--paper);color:var(--muted)}
+.p316-step__label{font-size:.55rem;color:var(--muted);text-align:center;line-height:1.3;white-space:nowrap}
+.p316-step--done .p316-step__node{background:#3a9867;border-color:#3a9867;color:#fff}
+.p316-step--done .p316-step__label{color:var(--ink)}
+.p316-step--seller .p316-step__node{background:var(--page-accent,#2a5f7a);border-color:var(--page-accent,#2a5f7a);color:#fff}
+.p316-step--seller .p316-step__label{color:var(--page-accent,#2a5f7a);font-weight:600}
+.p316-step--buyer .p316-step__node{background:rgba(26,74,136,.1);border-color:rgba(26,74,136,.25);color:#1a4a88}
+.p316-step--buyer .p316-step__label{color:#1a4a88}
+/* ── 購入者パネル ── */
+.p316-purchase-buyer{flex-shrink:0;width:244px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.p316-purchase-buyer__card{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);padding:6px 0;transition:opacity .12s}
+.p316-purchase-buyer__card:hover{opacity:.7}
+.p316-purchase-buyer__avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.9rem;font-weight:700;color:#fff;background:linear-gradient(135deg,#f0c0d8,#c87aaa);flex-shrink:0;border:2px solid #fff;outline:2px solid rgba(184,96,140,.45);outline-offset:2px}
+.p316-purchase-buyer__info{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.p316-purchase-buyer__name{font-size:.82rem;font-weight:600;color:var(--ink)}
+.p316-purchase-buyer__date{font-size:.68rem;color:var(--muted)}
+/* ── ステータスバッジ色 ── */
+.p316-status__badge--new{background:rgba(26,74,136,.1);color:#1a3a7a}
+.p316-status__badge--confirmed{background:rgba(26,74,136,.08);color:#1a3a7a}
+.p316-status__badge--paid{background:rgba(26,74,136,.18);color:#0a2a6a}
+.p316-status__badge--shipped{background:rgba(42,95,122,.1);color:#2a5f7a}
+.p316-status__badge--confirming{background:rgba(184,124,16,.12);color:#7a5500}
+.p316-status__badge--done{background:rgba(58,152,103,.1);color:#1a5a38}
+.p316-status__badge--cancelled{background:rgba(0,0,0,.06);color:var(--muted)}
+/* ── 申込内容 ── */
+.p316-apply-info{background:var(--paper);border-radius:6px;padding:14px 16px;display:flex;flex-direction:column;gap:0}
+.p316-apply-info__title{font-size:.75rem;font-weight:600;color:var(--ink);margin:0 0 10px;padding-bottom:7px;border-bottom:1px solid var(--border)}
+.p316-apply-info__row{display:flex;align-items:baseline;gap:10px;padding:5px 0;border-bottom:1px solid rgba(0,0,0,.05);font-size:.88rem}
+.p316-apply-info__label{font-size:.72rem;color:var(--muted);width:76px;flex-shrink:0;line-height:1.5}
+.p316-apply-info__row--comment{flex-direction:column;gap:4px;border-bottom:none}
+.p316-apply-info__comment{font-size:.82rem;color:var(--ink);line-height:1.65;padding:8px 10px;background:#fff;border-radius:3px;border:1px solid var(--border);margin-top:2px}
+/* ── 送料設定フォーム ── */
+.p316-ship-form{background:var(--paper);border-radius:6px;padding:14px 16px}
+.p316-ship-form__title{font-size:.75rem;font-weight:600;color:var(--ink);margin:0 0 6px}
+.p316-ship-form__note{font-size:.78rem;color:#4a5a6a;line-height:1.65;margin:0 0 12px}
+.p316-ship-form__fields{display:flex;flex-direction:column;gap:8px}
+.p316-ship-form__row{display:flex;gap:12px}
+.p316-ship-form__row .p316-ship-form__field{flex:1;min-width:0}
+.p316-ship-form__field{display:flex;flex-direction:column;gap:3px}
+.p316-ship-form__label{font-size:.68rem;color:var(--muted)}
+.p316-ship-form__input{width:100%;padding:7px 10px;border:1px solid var(--border);border-radius:3px;font-size:.82rem;font-family:inherit;background:#fff;box-sizing:border-box}
+.p316-ship-form__input:focus{outline:none;border-color:var(--page-accent,#2a5f7a)}
+.p316-ship-form__input--readonly{background:var(--paper);color:var(--muted);cursor:default}
+.p316-ship-total{font-size:.82rem;color:var(--ink);padding:10px 0 0;border-top:1px solid var(--border);margin-top:10px}
+/* ── 配送先住所（発送待ち） ── */
+.p316-ship-addr{background:rgba(26,74,136,.04);border:1px solid rgba(26,74,136,.18);border-radius:6px;padding:14px 18px;display:flex;flex-direction:column;gap:0}
+.p316-ship-addr__title{font-size:.78rem;font-weight:600;color:#1a3a7a;margin:0 0 10px;padding-bottom:7px;border-bottom:1px solid rgba(26,74,136,.15)}
+.p316-ship-addr__row{display:flex;align-items:baseline;gap:10px;padding:5px 0;border-bottom:1px solid rgba(26,74,136,.06);font-size:.9rem}
+.p316-ship-addr__label{font-size:.72rem;color:#3a5a7a;width:76px;flex-shrink:0;line-height:1.5}
+.p316-ship-addr__row:last-child{border-bottom:none}
+/* ── 追跡番号フォーム ── */
+.p316-tracking-form{display:flex;flex-direction:column;gap:8px}
+.p316-tracking-form__field{display:flex;flex-direction:column;gap:3px}
+.p316-tracking-form__label{font-size:.68rem;color:var(--muted)}
+.p316-tracking-form__input{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:3px;font-size:.9rem;font-family:'Montserrat',sans-serif;font-weight:500;letter-spacing:.05em;background:#fff;box-sizing:border-box}
+.p316-tracking-form__input:focus{outline:none;border-color:var(--page-accent,#2a5f7a)}
+/* ── 購入者評価表示 ── */
+.p316-review-display{background:var(--paper);border-radius:6px;padding:14px 16px}
+.p316-review-display__title{font-size:.75rem;font-weight:600;color:var(--ink);margin:0 0 8px}
+.p316-review-display__stars{color:#e8a020;font-size:1.1rem;letter-spacing:.05em;margin-bottom:6px}
+.p316-review-display__text{font-size:.82rem;color:var(--ink);line-height:1.65;margin:0}
+/* ── 取引完了確認メッセージ入力 ── */
+.p316-complete-msg{display:flex;flex-direction:column;gap:4px}
+.p316-complete-msg__label{font-size:.68rem;color:var(--muted)}
+.p316-complete-msg__input{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:3px;font-size:.82rem;font-family:inherit;resize:vertical;min-height:72px;box-sizing:border-box}
+.p316-complete-msg__input:focus{outline:none;border-color:var(--page-accent,#2a5f7a)}
+/* ── 取引完了 ── */
+.p316-done{display:flex;flex-direction:column;align-items:center;gap:10px;padding:8px 0 16px;text-align:center}
+.p316-done__icon{color:#3a9867}
+.p316-done__title{font-size:1.05rem;font-weight:700;color:var(--ink);margin:0}
+.p316-done__amount{font-family:'Montserrat',sans-serif;font-size:1.25rem;font-weight:700;color:var(--page-accent,#2a5f7a)}
+.p316-done__desc{font-size:.82rem;color:var(--ink);line-height:1.75;margin:0 0 8px}
+.p316-done__actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+/* ── キャンセル済 ── */
+.p316-cancelled{display:flex;flex-direction:column;align-items:center;gap:12px;padding:8px 0}
+.p316-cancelled__msg{font-size:.88rem;color:var(--ink);line-height:1.75;margin:0;text-align:center}
+@media(max-width:600px){
+  .p316-purchase-buyer{width:auto}
+  .p316-ship-form__row{flex-direction:column}
+  .p316-step__label{font-size:.46rem;max-width:30px}
+  .p316-step__node{width:18px;height:18px;font-size:.5rem}
+}
