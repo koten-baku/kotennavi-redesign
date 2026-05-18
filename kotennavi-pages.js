@@ -5156,3 +5156,34 @@ KTN.pages['p4-16'] = function () {
 KTN.pages['p2-11'] = function () {
   window.ktnRender = function () {};
 };
+
+/* ════════════════════════════════════════════════════
+   P4-18  ギャラリー 取扱作家管理
+════════════════════════════════════════════════════ */
+KTN.pages['p4-18'] = function () {
+  document.body.classList.add('p4-page');
+  document.body.style.setProperty('--page-accent',        '#8b5e3c');
+  document.body.style.setProperty('--page-accent-bg',     'rgba(139,94,60,.1)');
+  document.body.style.setProperty('--page-accent-border', '#b07a50');
+
+  document.querySelectorAll('.p3-tabnav__item').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      if (btn.dataset.tab === 'exhibitions') {
+        window.location.href = 'kotennavi-p4-1.html';
+      } else if (btn.dataset.tab === 'articles') {
+        window.location.href = 'kotennavi-p4-2.html';
+      } else if (btn.dataset.target) {
+        window.location.href = 'kotennavi-p4.html#' + btn.dataset.target;
+      }
+    });
+  });
+
+  window.ktnRender = function () {};
+};
+
+/* ════════════════════════════════════════════════════
+   P11-4  リエゾンプラス機能申込
+════════════════════════════════════════════════════ */
+KTN.pages['p11-4'] = function () {
+  window.ktnRender = function () {};
+};

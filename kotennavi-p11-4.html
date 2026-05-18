@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>リエゾンプラス機能申込 | 個展なび</title>
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Noto+Sans+JP:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<body>
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- デモバー -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ロール：</span>
+  <button class="dbtn" onclick="setR('guest',this)">ゲスト</button>
+  <button class="dbtn on" onclick="setR('creator',this)">creator</button>
+  <button class="dbtn" onclick="setR('gallery',this)">gallery</button>
+  <span class="dbar-sep">状態：</span>
+  <button class="dbtn on" id="dbarForm" onclick="setDemoMode('form')">申込フォーム</button>
+  <button class="dbtn" id="dbarPending" onclick="setDemoMode('pending')">審査中</button>
+  <button class="dbtn" id="dbarApproved" onclick="setDemoMode('approved')">承認済</button>
+</div>
+
+<div class="shell">
+<div class="content-wrap" id="contentWrap">
+
+  <header class="ktn-header" id="ktnHeader">
+    <div class="ktn-header__inner">
+      <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+      <div class="ktn-hdr-actions" id="ktnActs"></div>
+    </div>
+  </header>
+
+  <main class="ktn-main" id="ktnMain">
+    <div class="ktn-content ktn-content--article">
+      <div class="p114-wrap">
+
+        <!-- 審査中バナー（審査中デモ） -->
+        <div class="p114-status-notice p114-status-notice--pending" id="p114PendingBanner" hidden>
+          <div class="p114-status-notice__icon">⏳</div>
+          <div class="p114-status-notice__title">現在審査中です</div>
+          <p class="p114-status-notice__desc">申込を受け付けました。審査には通常3〜5営業日かかります。結果はメールでご連絡します。</p>
+        </div>
+
+        <!-- 承認済バナー（承認済デモ） -->
+        <div class="p114-status-notice" id="p114ApprovedBanner" hidden style="border-color:rgba(42,120,60,.3);background:rgba(42,120,60,.04)">
+          <div class="p114-status-notice__icon">✅</div>
+          <div class="p114-status-notice__title">LIAISON+ 機能が有効です</div>
+          <p class="p114-status-notice__desc">LIAISON+ 機能が承認されています。展覧会の作品管理ページからLIAISON+を設定して出品を開始できます。</p>
+        </div>
+
+        <!-- サービス説明バナー -->
+        <div class="p114-service-banner" id="p114ServiceBanner">
+          <div class="p114-service-banner__badge">LIAISON+</div>
+          <h1 class="p114-service-banner__title">リエゾンプラス機能申込</h1>
+          <p class="p114-service-banner__desc">
+            リエゾンプラス（LIAISON+）は、実スペースの展覧会と連動したオンライン作品販売サービスです。<br>
+            会期中に申込を受け付け、販売期間中に順番で購入プロセスを進めます。
+          </p>
+          <div class="p114-service-banner__fee">
+            <span>展示掲載：<strong>無料</strong></span>
+            <span style="color:var(--border)">|</span>
+            <span>販売手数料：<strong>15%</strong>（振込手数料込）</span>
+          </div>
+        </div>
+
+        <!-- ロール通知（creator） -->
+        <div class="p114-role-notice" id="p114RoleNoticeCreator">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r=".5" fill="currentColor" stroke="none"/></svg>
+          <span><strong>クリエイターとして申込</strong>します。ご自身の作品をLIAISON+ 展覧会で販売できるようになります。</span>
+        </div>
+
+        <!-- ロール通知（gallery） -->
+        <div class="p114-role-notice p114-role-notice--gallery" id="p114RoleNoticeGallery" hidden>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r=".5" fill="currentColor" stroke="none"/></svg>
+          <span><strong>ギャラリーとして申込</strong>します。取扱作家の作品をギャラリー開催展覧会でLIAISON+ 販売できるようになります。</span>
+        </div>
+
+        <!-- ━━ クリエイター専用セクション ━━ -->
+        <div class="p114-creator-section" id="p114CreatorSection">
+
+          <!-- C-1. クリエイター確認事項 -->
+          <div class="p114-section-head">
+            <span class="p114-section-head__badge p114-section-head__badge--creator">CREATOR</span>
+            <span class="p114-section-head__title">クリエイターとしての確認事項</span>
+          </div>
+
+          <div class="p211-block">
+            <div class="p211-block__head">
+              <div class="p211-block__title">販売する作品について <span class="p211-block__title-en">About Your Works</span></div>
+            </div>
+            <div class="p211-block__body">
+
+              <div class="p211-field">
+                <label class="p211-label">販売予定作品の価格帯（目安） <span class="p211-req">*</span></label>
+                <select class="p211-select">
+                  <option value="">選択してください</option>
+                  <option>〜 ¥10,000</option>
+                  <option>¥10,000 〜 ¥50,000</option>
+                  <option>¥50,000 〜 ¥100,000</option>
+                  <option>¥100,000 〜 ¥300,000</option>
+                  <option>¥300,000 〜 ¥500,000</option>
+                  <option>¥500,000 〜</option>
+                  <option>未定 / 作品によって異なる</option>
+                </select>
+                <p class="p211-help">参考情報として使用します。実際の価格は作品ごとに設定できます。</p>
+              </div>
+
+              <div class="p211-field">
+                <label class="p211-label">LIAISON+を利用したい理由・目的（任意）</label>
+                <textarea class="p211-textarea" rows="3" placeholder="例：オンラインで購入希望者を把握したい、会場での接客に加えてオンライン販売もしたい など"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="p211-block">
+            <div class="p211-block__head">
+              <div class="p211-block__title">承諾事項 <span class="p211-req">*</span></div>
+            </div>
+            <div class="p211-block__body">
+              <div class="p114-checklist">
+                <label class="p114-checklist__item">
+                  <input type="checkbox" name="creator-agree" id="ca1">
+                  <span>販売価格・梱包費・送料は出品者が設定・負担し、購入確定後に変更しないことを理解しました</span>
+                </label>
+                <label class="p114-checklist__item">
+                  <input type="checkbox" name="creator-agree" id="ca2">
+                  <span>会場での販売が優先され、会場で売れた場合は「会場売約済」として処理されることを理解しました</span>
+                </label>
+                <label class="p114-checklist__item">
+                  <input type="checkbox" name="creator-agree" id="ca3">
+                  <span>購入確定後のキャンセルには原則として応じられないことを理解しました（やむを得ない場合はサポートへ連絡）</span>
+                </label>
+                <label class="p114-checklist__item">
+                  <input type="checkbox" name="creator-agree" id="ca4">
+                  <span>特定商取引法に基づく表示（氏名・住所・電話番号）の掲載に同意します</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <!-- /クリエイター専用セクション -->
+
+        <!-- ━━ ギャラリー専用セクション ━━ -->
+        <div class="p114-gallery-section" id="p114GallerySection">
+
+          <!-- G-1. ギャラリー確認事項 -->
+          <div class="p114-section-head">
+            <span class="p114-section-head__badge p114-section-head__badge--gallery">GALLERY</span>
+            <span class="p114-section-head__title">ギャラリーとしての確認事項</span>
+          </div>
+
+          <div class="p211-block">
+            <div class="p211-block__head">
+              <div class="p211-block__title">取扱作家との関係 <span class="p211-block__title-en">About Your Artists</span></div>
+            </div>
+            <div class="p211-block__body">
+
+              <div class="p211-field">
+                <label class="p211-label">LIAISON+を利用予定の展覧会規模（年間）</label>
+                <select class="p211-select">
+                  <option value="">選択してください</option>
+                  <option>1〜2回</option>
+                  <option>3〜5回</option>
+                  <option>6〜10回</option>
+                  <option>10回以上</option>
+                  <option>未定</option>
+                </select>
+              </div>
+
+              <div class="p211-field">
+                <label class="p211-label">LIAISON+を利用したい理由・目的（任意）</label>
+                <textarea class="p211-textarea" rows="3" placeholder="例：来場できない遠方のコレクターに対応したい、オンライン販売で展示の価値を高めたい など"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="p211-block">
+            <div class="p211-block__head">
+              <div class="p211-block__title">承諾事項 <span class="p211-req">*</span></div>
+            </div>
+            <div class="p211-block__body">
+              <div class="p114-checklist">
+                <label class="p114-checklist__item">
+                  <input type="checkbox" name="gallery-agree" id="ga1">
+                  <span>取扱作家がLIAISON+ 機能申込を完了していることを確認してから出品設定を行うことを理解しました</span>
+                </label>
+                <label class="p114-checklist__item">
+                  <input type="checkbox" name="gallery-agree" id="ga2">
+                  <span>ギャラリーが取扱作家管理ページで作家を登録・管理する責任があることを理解しました</span>
+                </label>
+                <label class="p114-checklist__item">
+                  <input type="checkbox" name="gallery-agree" id="ga3">
+                  <span>売上の振込はクリエイターの登録口座への直接振込（または指定の方法）で行われることを理解しました</span>
+                </label>
+                <label class="p114-checklist__item">
+                  <input type="checkbox" name="gallery-agree" id="ga4">
+                  <span>特定商取引法に基づく表示（事業者名・住所・電話番号）の掲載に同意します</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <!-- /ギャラリー専用セクション -->
+
+        <!-- ━━ 共通：振込先口座 ━━ -->
+        <div class="p114-section-head">
+          <span class="p114-section-head__title">振込先口座情報</span>
+        </div>
+
+        <div class="p211-block">
+          <div class="p211-block__head">
+            <div class="p211-block__title">振込先口座 <span class="p211-block__title-en">Bank Account</span></div>
+          </div>
+          <div class="p211-block__body">
+
+            <p class="p211-help" style="margin-bottom:16px">
+              LIAISON+ での売上は登録された口座に振り込まれます（月末締め・翌月末払い）。本人名義の口座をご登録ください。口座情報は申込後もマイページから変更できます。
+            </p>
+
+            <div class="p114-bank-row">
+              <div class="p211-field">
+                <label class="p211-label">金融機関名 <span class="p211-req">*</span></label>
+                <input class="p211-input" type="text" placeholder="○○銀行">
+              </div>
+              <div class="p211-field">
+                <label class="p211-label">支店名 <span class="p211-req">*</span></label>
+                <input class="p211-input" type="text" placeholder="渋谷支店">
+              </div>
+            </div>
+
+            <div class="p114-bank-row" style="margin-top:12px">
+              <div class="p211-field">
+                <label class="p211-label">口座種別 <span class="p211-req">*</span></label>
+                <select class="p211-select">
+                  <option value="">選択してください</option>
+                  <option>普通</option>
+                  <option>当座</option>
+                </select>
+              </div>
+              <div class="p211-field">
+                <label class="p211-label">口座番号 <span class="p211-req">*</span></label>
+                <input class="p211-input" type="text" placeholder="1234567" inputmode="numeric" maxlength="8">
+              </div>
+            </div>
+
+            <div class="p211-field" style="margin-top:12px">
+              <label class="p211-label">口座名義（カタカナ） <span class="p211-req">*</span></label>
+              <input class="p211-input" type="text" placeholder="タナカ トオル" id="p114BankName">
+              <p class="p211-help">金融機関の登録名義と完全に一致するカタカナ氏名を入力してください。半角カタカナ・全角カタカナどちらでも可。</p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ━━ 共通：利用規約 ━━ -->
+        <div class="p114-section-head">
+          <span class="p114-section-head__title">利用規約</span>
+        </div>
+
+        <div class="p211-block">
+          <div class="p211-block__head">
+            <div class="p211-block__title">LIAISON+利用規約 <span class="p211-req">*</span></div>
+          </div>
+          <div class="p211-block__body">
+            <div class="p114-terms-box">
+              <h4>LIAISON+ 利用規約（抜粋）</h4>
+              <p>第1条（目的）<br>
+              本規約は、個展なびが提供するLIAISON+サービス（以下「本サービス」）の利用に関する条件を定めるものです。</p>
+              <p>第2条（サービス内容）<br>
+              本サービスは、実スペースの展覧会と連動したオンライン作品販売機能を提供します。出品者は本サービスを通じて申込の受付・購入プロセスの管理ができます。</p>
+              <p>第3条（手数料）<br>
+              本サービスの販売手数料は売上金額（送料・梱包費を除く）の15%（税込）とします。振込手数料は本手数料に含まれます。</p>
+              <p>第4条（特定商取引法に基づく表示）<br>
+              本サービスを通じて販売を行う場合、出品者は特定商取引法に基づく表示（氏名または屋号・住所・電話番号・メールアドレス）を個展なびプロフィールに掲載することに同意するものとします。</p>
+              <p>第5条（会場優先販売）<br>
+              本サービスの販売は実スペースでの展覧会開催と連動します。展覧会会場での販売が優先されます。会場で売れた作品は「会場売約済」として処理されます。</p>
+              <p>第6条（禁止事項）<br>
+              出品者は以下の行為を行ってはなりません：虚偽の商品説明、購入確定後の一方的なキャンセル、第三者への権利の帰属する作品の無断出品など。</p>
+              <p>第7条（免責事項）<br>
+              個展なびは、本サービスを通じた取引の成立、作品の品質、配送トラブル等について責任を負いません。ただし、サービスの適切な運営については誠実に対応します。</p>
+              <p>付則：本規約は2026年4月1日より施行します。</p>
+            </div>
+
+            <label class="p114-terms-agree" id="p114TermsLabel">
+              <input type="checkbox" id="p114TermsCheck" onchange="p114UpdateSubmit()">
+              <span>LIAISON+利用規約を読み、内容に同意します</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- ━━ 送信ボタン ━━ -->
+        <div class="p114-submit-wrap" id="p114SubmitWrap">
+          <button class="p114-submit-btn" id="p114SubmitBtn" disabled onclick="p114Submit()">
+            LIAISON+ 機能を申込する
+          </button>
+          <p class="p114-submit-note">
+            申込後、通常3〜5営業日以内に審査結果をメールでお知らせします。<br>
+            審査に通過すると LIAISON+ 機能が有効になります。
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </main>
+</div>
+</div>
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+window.ktnState = { page: 'p11-4', role: 'creator' };
+
+var p114CurrentMode = 'form';
+
+function setR(r, btn) {
+  curRole = r;
+  document.querySelectorAll('.dbtn').forEach(function(b) { b.classList.remove('on'); });
+  if (btn) btn.classList.add('on');
+
+  var isGallery = (r === 'gallery');
+  if (isGallery) {
+    document.body.classList.add('p114-role-gallery');
+  } else {
+    document.body.classList.remove('p114-role-gallery');
+  }
+  document.getElementById('p114RoleNoticeCreator').hidden = isGallery;
+  document.getElementById('p114RoleNoticeGallery').hidden = !isGallery;
+
+  if (typeof window.ktnRender === 'function') ktnRender();
+}
+
+function setDemoMode(mode) {
+  p114CurrentMode = mode;
+  var isForm = (mode === 'form');
+  var isPending = (mode === 'pending');
+  var isApproved = (mode === 'approved');
+
+  document.getElementById('p114PendingBanner').hidden = !isPending;
+  document.getElementById('p114ApprovedBanner').hidden = !isApproved;
+  document.getElementById('p114ServiceBanner').hidden = isApproved;
+  document.getElementById('p114SubmitWrap').hidden = !isForm;
+
+  ['p114CreatorSection', 'p114GallerySection'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.style.opacity = isForm ? '' : '0.5';
+  });
+
+  ['dbarForm','dbarPending','dbarApproved'].forEach(function(id) {
+    document.getElementById(id).classList.remove('on');
+  });
+  document.getElementById('dbar' + mode.charAt(0).toUpperCase() + mode.slice(1)).classList.add('on');
+}
+
+function p114UpdateSubmit() {
+  var checked = document.getElementById('p114TermsCheck').checked;
+  document.getElementById('p114SubmitBtn').disabled = !checked;
+}
+
+function p114Submit() {
+  setDemoMode('pending');
+  if (typeof showToast === 'function') showToast('申込を受け付けました。審査結果をメールでご連絡します。');
+}
+
+if (typeof KTN !== 'undefined' && KTN.pages && KTN.pages['p11-4']) KTN.pages['p11-4']();
+</script>
+</body>
+</html>

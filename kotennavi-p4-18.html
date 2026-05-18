@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>取扱作家管理 — Gallery SOIL 渋谷 | 個展なび</title>
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Noto+Sans+JP:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<body class="p4-18-page p4-page">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- 取扱解除モーダル -->
+<div class="p315-modal" id="p418RemoveModal" hidden>
+  <div class="p315-modal__bg" id="p418RemoveModalBg"></div>
+  <div class="p315-modal__box">
+    <h3 class="p315-modal__title">取扱作家を外す</h3>
+    <p class="p315-modal__body" id="p418RemoveModalBody">
+      田中 透 をギャラリーの取扱作家リストから外します。<br>
+      現在進行中のLIAISON+取引には影響しません。
+    </p>
+    <div class="p315-modal__foot">
+      <button class="ktn-op-btn" type="button" id="p418RemoveCancel">キャンセル</button>
+      <button class="ktn-op-btn ktn-op-btn--danger" type="button" id="p418RemoveOk">外す</button>
+    </div>
+  </div>
+</div>
+
+<!-- 管理ドロワー -->
+<div class="p3-mgmt-drawer" id="p418Drawer">
+  <div class="p3-mgmt-drawer__overlay" id="p418DrawerOverlay"></div>
+  <div class="p3-mgmt-drawer__panel">
+    <div class="p3-mgmt-drawer__head">
+      <div class="p3-mgmt-drawer__title">管理メニュー</div>
+      <button class="p3-mgmt-drawer__close" id="p418DrawerClose" aria-label="閉じる">✕</button>
+    </div>
+    <nav class="p3-mgmt-drawer__nav">
+      <a class="p3-mgmt-nav-item" href="kotennavi-p4.html">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><rect x="2" y="2" width="12" height="9" rx="1"/><path d="M5 14h6M8 11v3"/></svg>
+        ギャラリーページ
+      </a>
+      <a class="p3-mgmt-nav-item" href="#">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><rect x="2" y="2" width="12" height="12" rx="1"/><path d="M5 8h6M5 11h4"/></svg>
+        展覧会を管理
+      </a>
+      <a class="p3-mgmt-nav-item" href="kotennavi-p4-15.html">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><rect x="2" y="2" width="5.5" height="5.5" rx="1"/><rect x="8.5" y="2" width="5.5" height="5.5" rx="1"/><rect x="2" y="8.5" width="5.5" height="5.5" rx="1"/><rect x="8.5" y="8.5" width="5.5" height="5.5" rx="1"/></svg>
+        LIAISON+コンソール
+      </a>
+      <a class="p3-mgmt-nav-item p3-mgmt-nav-item--active" href="kotennavi-p4-18.html">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><circle cx="5" cy="5" r="3"/><circle cx="11" cy="5" r="3"/><path d="M1 14c0-2.2 1.8-4 4-4M9 14c0-2.2 1.8-4 4-4"/></svg>
+        取扱作家管理
+      </a>
+      <div class="p3-mgmt-drawer__sep"></div>
+      <a class="p3-mgmt-nav-item" href="#">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><circle cx="8" cy="5" r="3"/><path d="M2 13.5c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>
+        アカウント設定
+      </a>
+    </nav>
+  </div>
+</div>
+
+<!-- SVGシンボル -->
+<svg width="0" height="0" style="position:absolute;overflow:hidden">
+  <defs>
+    <symbol id="icon-exh" viewBox="40 47 54 54">
+      <path d="M80.09 102.05c-1.22-.8,-2.57-2.87,-3.34-4.33c-2.48-5.91,-4.85-14.23,-13.31-20.15c-1.9-1.23,-2.03-2,-1.94-2.48c.11-.83,.82-1.52,2.3-1.3c11.09,1.95,15.22,3.96,21.07,7.61c7.85,5.36,9.57,10.76,9.65,14.09c.15,2.3,-.18,5.11,-2.61,6.56Z" fill="currentColor"/>
+    </symbol>
+    <symbol id="icon-watch" viewBox="0 0 16 16">
+      <circle cx="8" cy="8" r="7" fill="currentColor"/>
+      <circle cx="8" cy="8" r="2.6" fill="white"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- デモバー -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ロール：</span>
+  <button class="dbtn" onclick="setR('guest',this)">ゲスト</button>
+  <button class="dbtn" onclick="setR('login',this)">ログイン</button>
+  <button class="dbtn on" onclick="setR('user+gallery',this)">gallery本人</button>
+  <button class="dbtn" onclick="setR('admin',this)">管理者</button>
+</div>
+
+<div class="shell">
+<div class="content-wrap" id="contentWrap">
+
+  <header class="ktn-header" id="ktnHeader">
+    <div class="ktn-header__inner">
+      <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+      <div class="ktn-hdr-actions" id="ktnActs"></div>
+    </div>
+  </header>
+  <div class="ktn-tagbar" id="ktnTagbar">
+    <div class="ktn-tagbar__inner" id="ktnTagbarInner"></div>
+  </div>
+
+  <main class="ktn-main" id="ktnMain">
+
+    <!-- A. ギャラリーヒーロー（コンパクト版） -->
+    <div class="p3-head p3-head--compact">
+      <div class="p3-head__inner">
+        <div class="p3-head__top">
+          <a class="p3-head__avatar-wrap" href="kotennavi-p4.html">
+            <div class="p3-head__avatar" style="background:linear-gradient(135deg,#c8a888,#8b5e3c);border-radius:4px">SOIL</div>
+          </a>
+          <div class="p3-head__info">
+            <div class="p3-head__badge-row">
+              <span class="cb cb-person cb-gallery">GALLERY</span>
+            </div>
+            <h1 class="p3-head__name"><a href="kotennavi-p4.html">Gallery SOIL 渋谷</a></h1>
+            <p class="p3-head__en">GALLERY SOIL SHIBUYA</p>
+            <p class="p3-head__genre">絵画・現代美術 · 東京・渋谷</p>
+          </div>
+          <button class="p3-mgmt-btn" id="p418MgmtBtn" aria-label="管理メニューを開く">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="16" height="16"><circle cx="10" cy="10" r="2"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2M5.05 5.05l1.41 1.41M13.54 13.54l1.41 1.41M5.05 14.95l1.41-1.41M13.54 6.46l1.41-1.41"/></svg>
+            管理
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- B. タブナビ -->
+    <nav class="p3-tabnav" id="p3Tabnav" aria-label="ギャラリーページ内ナビ">
+      <div class="p3-tabnav__inner">
+        <a class="p3-tabnav__name" href="kotennavi-p4.html"><span class="p3-tabnav__name-text">Gallery SOIL 渋谷</span></a>
+        <button class="p3-tabnav__item" data-tab="exhibitions"><span class="p3-tabnav__label">展覧会</span></button>
+        <button class="p3-tabnav__item" data-tab="articles"><span class="p3-tabnav__label">記事</span></button>
+        <button class="p3-tabnav__item" data-target="p4-sec-profile"><span class="p3-tabnav__label">ギャラリー情報</span></button>
+      </div>
+    </nav>
+
+    <!-- D. メインコンテンツ -->
+    <div class="ktn-content">
+      <div class="p418-wrap">
+
+        <!-- D-1. ページヘッド -->
+        <div class="p418-page-head">
+          <div class="p418-page-head__title-row">
+            <div>
+              <h2 class="p418-page-head__title">取扱作家管理</h2>
+              <p class="p418-page-head__en ktn-en-label">MANAGED ARTISTS</p>
+            </div>
+            <button class="p418-add-btn" id="p418AddBtn" onclick="document.getElementById('p418InviteSection').scrollIntoView({behavior:'smooth'})">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" width="13" height="13"><circle cx="7" cy="6" r="3.5"/><path d="M1 14c0-3.3 2.7-5.5 6-5.5M12 10v5M9.5 12.5h5"/></svg>
+              クリエイターを追加
+            </button>
+          </div>
+          <p class="p418-page-head__desc">
+            ギャラリーに関連するクリエイターを管理します。LIAISON / LIAISON+ 展覧会で作品を出品するクリエイターはこのリストに登録されている必要があります。クリエイターへの招待、または作家からの申請への承認・却下ができます。
+          </p>
+        </div>
+
+        <!-- D-2. サマリー -->
+        <div class="p418-summary">
+          <div class="p418-summary__item">
+            <span class="p418-summary__num">8</span>
+            <span class="p418-summary__label">取扱作家数</span>
+          </div>
+          <div class="p418-summary__sep"></div>
+          <div class="p418-summary__item">
+            <span class="p418-summary__num">5</span>
+            <span class="p418-summary__label">LIAISON+ 承認済</span>
+          </div>
+          <div class="p418-summary__sep"></div>
+          <div class="p418-summary__item">
+            <span class="p418-summary__num">3</span>
+            <span class="p418-summary__label">LIAISON 承認済</span>
+          </div>
+          <div class="p418-summary__sep"></div>
+          <div class="p418-summary__item">
+            <span class="p418-summary__num">1</span>
+            <span class="p418-summary__label">申請中・招待中</span>
+          </div>
+        </div>
+
+        <!-- D-3. 取扱作家一覧 -->
+        <div class="p418-list">
+          <div class="p418-list__head">
+            <span class="p418-list__title">取扱作家一覧</span>
+            <span class="p418-list__count">8名</span>
+          </div>
+
+          <!-- 作家1: LIAISON+ & LIAISON 承認済 -->
+          <div class="p418-row">
+            <div class="p418-row__avatar" style="background:linear-gradient(135deg,#a8c8e0,#5a8ab0)"></div>
+            <div class="p418-row__info">
+              <div class="p418-row__name">田中 透</div>
+              <div class="p418-row__meta">
+                <span>現代美術・絵画</span>
+                <span class="p418-row__liaison p418-row__liaison--lp">LIAISON+</span>
+                <span class="p418-row__liaison p418-row__liaison--l">LIAISON</span>
+              </div>
+            </div>
+            <div class="p418-row__actions">
+              <a class="ktn-action-btn" href="kotennavi-p4-15.html">コンソール →</a>
+              <button class="p418-row__del" type="button" onclick="document.getElementById('p418RemoveModal').removeAttribute('hidden')">外す</button>
+            </div>
+          </div>
+
+          <!-- 作家2: LIAISON+ 承認済 -->
+          <div class="p418-row">
+            <div class="p418-row__avatar" style="background:linear-gradient(135deg,#c8d8b0,#688048)"></div>
+            <div class="p418-row__info">
+              <div class="p418-row__name">松本 りさ</div>
+              <div class="p418-row__meta">
+                <span>版画・イラスト</span>
+                <span class="p418-row__liaison p418-row__liaison--lp">LIAISON+</span>
+              </div>
+            </div>
+            <div class="p418-row__actions">
+              <a class="ktn-action-btn" href="#">コンソール →</a>
+              <button class="p418-row__del" type="button" onclick="document.getElementById('p418RemoveModal').removeAttribute('hidden')">外す</button>
+            </div>
+          </div>
+
+          <!-- 作家3: LIAISON+ & LIAISON 承認済 -->
+          <div class="p418-row">
+            <div class="p418-row__avatar" style="background:linear-gradient(135deg,#d8c8e8,#8870a8)"></div>
+            <div class="p418-row__info">
+              <div class="p418-row__name">水野 幸子</div>
+              <div class="p418-row__meta">
+                <span>テキスタイル・染色</span>
+                <span class="p418-row__liaison p418-row__liaison--lp">LIAISON+</span>
+                <span class="p418-row__liaison p418-row__liaison--l">LIAISON</span>
+              </div>
+            </div>
+            <div class="p418-row__actions">
+              <a class="ktn-action-btn" href="#">コンソール →</a>
+              <button class="p418-row__del" type="button" onclick="document.getElementById('p418RemoveModal').removeAttribute('hidden')">外す</button>
+            </div>
+          </div>
+
+          <!-- 作家4: LIAISON のみ -->
+          <div class="p418-row">
+            <div class="p418-row__avatar" style="background:linear-gradient(135deg,#e0c8d0,#a87890)"></div>
+            <div class="p418-row__info">
+              <div class="p418-row__name">小林 奈津子</div>
+              <div class="p418-row__meta">
+                <span>写真・映像</span>
+                <span class="p418-row__liaison p418-row__liaison--l">LIAISON</span>
+              </div>
+            </div>
+            <div class="p418-row__actions">
+              <button class="p418-row__del" type="button" onclick="document.getElementById('p418RemoveModal').removeAttribute('hidden')">外す</button>
+            </div>
+          </div>
+
+          <!-- 作家5: LIAISON+ 申込済（審査中） -->
+          <div class="p418-row">
+            <div class="p418-row__avatar" style="background:linear-gradient(135deg,#e8d8b0,#a89050)"></div>
+            <div class="p418-row__info">
+              <div class="p418-row__name">森田 健一</div>
+              <div class="p418-row__meta">
+                <span>油彩・パステル</span>
+                <span class="p418-row__liaison p418-row__liaison--l">LIAISON</span>
+                <span class="p418-row__status p418-row__status--pending">LIAISON+ 審査中</span>
+              </div>
+            </div>
+            <div class="p418-row__actions">
+              <button class="p418-row__del" type="button" onclick="document.getElementById('p418RemoveModal').removeAttribute('hidden')">外す</button>
+            </div>
+          </div>
+
+          <!-- 作家6〜8: LIAISON未設定 -->
+          <div class="p418-row">
+            <div class="p418-row__avatar" style="background:linear-gradient(135deg,#d8d0c0,#908070)"></div>
+            <div class="p418-row__info">
+              <div class="p418-row__name">鈴木 博</div>
+              <div class="p418-row__meta">
+                <span>彫刻・立体</span>
+                <span class="p418-row__status">LIAISON未設定</span>
+              </div>
+            </div>
+            <div class="p418-row__actions">
+              <button class="p418-row__del" type="button" onclick="document.getElementById('p418RemoveModal').removeAttribute('hidden')">外す</button>
+            </div>
+          </div>
+
+          <div class="p418-row">
+            <div class="p418-row__avatar" style="background:linear-gradient(135deg,#c8e8e0,#508880)"></div>
+            <div class="p418-row__info">
+              <div class="p418-row__name">上田 マリ</div>
+              <div class="p418-row__meta">
+                <span>抽象画・ミクストメディア</span>
+                <span class="p418-row__status">LIAISON未設定</span>
+              </div>
+            </div>
+            <div class="p418-row__actions">
+              <button class="p418-row__del" type="button" onclick="document.getElementById('p418RemoveModal').removeAttribute('hidden')">外す</button>
+            </div>
+          </div>
+
+          <div class="p418-row">
+            <div class="p418-row__avatar" style="background:linear-gradient(135deg,#d0d8e8,#6878a8)"></div>
+            <div class="p418-row__info">
+              <div class="p418-row__name">加藤 誠二</div>
+              <div class="p418-row__meta">
+                <span>水彩・デッサン</span>
+                <span class="p418-row__status">LIAISON未設定</span>
+              </div>
+            </div>
+            <div class="p418-row__actions">
+              <button class="p418-row__del" type="button" onclick="document.getElementById('p418RemoveModal').removeAttribute('hidden')">外す</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- D-4. 申請中・招待中 -->
+        <div class="p418-list">
+          <div class="p418-list__head">
+            <span class="p418-list__title">申請中・招待中</span>
+            <span class="p418-list__count">1件</span>
+          </div>
+
+          <!-- クリエイターからの取扱申請 -->
+          <div class="p418-row">
+            <div class="p418-row__avatar" style="background:linear-gradient(135deg,#e8e0d0,#b0a090)"></div>
+            <div class="p418-row__info">
+              <div class="p418-row__name">中村 あおい</div>
+              <div class="p418-row__meta">
+                <span>陶芸・工芸</span>
+                <span class="p418-row__status p418-row__status--pending">取扱申請中</span>
+                <span>2026.05.10 申請</span>
+              </div>
+            </div>
+            <div class="p418-row__actions">
+              <button class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--primary" type="button">承認</button>
+              <button class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline" type="button">却下</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- D-5. クリエイター招待フォーム -->
+        <div class="p418-invite" id="p418InviteSection">
+          <div class="p418-invite__head">
+            <span class="p418-list__title">クリエイターを招待</span>
+          </div>
+          <div class="p418-invite-form">
+            <div class="p418-invite-form__field">
+              <label class="p418-invite-form__label">ユーザー名またはメールアドレス</label>
+              <input class="p418-invite-form__input" type="text" placeholder="@username または email@example.com" id="p418InviteInput">
+            </div>
+            <button class="p418-invite-form__submit" type="button" onclick="p418SendInvite()">招待を送る</button>
+          </div>
+          <p class="p418-invite-hint">個展なびに登録済みのクリエイターにはユーザー名で招待できます。未登録の方にはメールアドレスで招待状を送ることができます。クリエイターが承認するとリストに追加されます。</p>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+</div>
+</div>
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+window.ktnState = { page: 'p4-18', role: 'user+gallery' };
+
+function setR(r, btn) {
+  curRole = r;
+  if (typeof window.ktnRender === 'function') ktnRender();
+  document.querySelectorAll('.dbtn').forEach(function(b) { b.classList.remove('on'); });
+  if (btn) btn.classList.add('on');
+}
+
+/* モーダル制御 */
+document.getElementById('p418RemoveModalBg').addEventListener('click', function() {
+  document.getElementById('p418RemoveModal').setAttribute('hidden', '');
+});
+document.getElementById('p418RemoveCancel').addEventListener('click', function() {
+  document.getElementById('p418RemoveModal').setAttribute('hidden', '');
+});
+document.getElementById('p418RemoveOk').addEventListener('click', function() {
+  document.getElementById('p418RemoveModal').setAttribute('hidden', '');
+  if (typeof showToast === 'function') showToast('取扱作家リストから外しました');
+});
+
+/* ドロワー制御 */
+document.getElementById('p418MgmtBtn').addEventListener('click', function() {
+  document.getElementById('p418Drawer').classList.add('open');
+});
+document.getElementById('p418DrawerOverlay').addEventListener('click', function() {
+  document.getElementById('p418Drawer').classList.remove('open');
+});
+document.getElementById('p418DrawerClose').addEventListener('click', function() {
+  document.getElementById('p418Drawer').classList.remove('open');
+});
+
+function p418SendInvite() {
+  var val = document.getElementById('p418InviteInput').value.trim();
+  if (!val) return;
+  if (typeof showToast === 'function') showToast('招待を送りました：' + val);
+  document.getElementById('p418InviteInput').value = '';
+}
+
+if (typeof KTN !== 'undefined' && KTN.pages && KTN.pages['p4-18']) KTN.pages['p4-18']();
+</script>
+</body>
+</html>
