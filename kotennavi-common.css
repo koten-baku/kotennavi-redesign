@@ -9998,6 +9998,61 @@ body.p4-15-page .p3-tabnav{max-width:760px}
   .p316-step__node{width:18px;height:18px;font-size:.5rem}
 }
 
+/* ── p316 追加CSS（ターン識別・callout・送料テーブル等） ── */
+/* 自分のターン / 相手待ち */
+.p515-status--my-turn{border-left:3px solid #c87a30}
+.p515-status--my-turn .p515-status__head{background:rgba(200,122,48,.07);border-color:rgba(200,122,48,.2)}
+.p515-status--waiting .p515-status__head{background:rgba(26,74,136,.05);border-color:rgba(26,74,136,.18)}
+.p316-turn-label{display:inline-flex;align-items:center;gap:4px;font-size:.68rem;font-family:var(--font-ui);font-weight:600;padding:2px 9px;border-radius:10px;margin-left:auto;flex-shrink:0;white-space:nowrap}
+.p316-turn-label--mine{background:rgba(200,122,48,.15);color:#b06010}
+.p316-turn-label--waiting{background:rgba(26,74,136,.1);color:#1a4a88}
+/* LIAISON+コンソール動線 callout */
+.p316-callout{background:rgba(42,95,122,.05);border:1px solid rgba(42,95,122,.22);border-radius:4px;padding:10px 14px;font-size:.78rem;color:var(--muted);line-height:1.6;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.p316-callout__link{color:var(--page-accent,#2a5f7a);font-weight:600;text-decoration:none;white-space:nowrap;font-size:.75rem}
+.p316-callout__link:hover{text-decoration:underline}
+/* 発送業者 select + 送料確認ボタン */
+.p316-carrier-wrap{display:flex;align-items:flex-end;gap:8px}
+.p316-carrier-wrap .p316-ship-form__field{flex:1;min-width:0}
+.p316-ship-form__select{width:100%;padding:7px 10px;border:1px solid var(--border);border-radius:3px;font-size:.82rem;font-family:inherit;background:#fff;box-sizing:border-box;cursor:pointer}
+.p316-ship-form__select:focus{outline:none;border-color:var(--page-accent,#2a5f7a)}
+.p316-rate-btn{height:32px;padding:0 10px;background:#fff;border:1px solid var(--border);border-radius:3px;font-size:.72rem;font-family:var(--font-ui);color:var(--muted);cursor:pointer;white-space:nowrap;flex-shrink:0;display:flex;align-items:center;gap:4px}
+.p316-rate-btn:hover{border-color:var(--page-accent,#2a5f7a);color:var(--page-accent,#2a5f7a)}
+.p316-carrier-other-wrap{margin-top:6px}
+/* 梱包費・送料合計ブレイクダウン */
+.p316-ship-total-box{margin-top:12px;border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.p316-ship-total-row{display:flex;justify-content:space-between;align-items:baseline;padding:7px 14px;font-size:.82rem;border-bottom:1px solid var(--paper)}
+.p316-ship-total-row--total{background:var(--paper);font-weight:700;padding:10px 14px;border-bottom:none}
+.p316-ship-total-label{color:var(--muted)}
+.p316-ship-total-amount{font-family:'Montserrat',sans-serif;font-weight:600}
+.p316-ship-total-row--total .p316-ship-total-amount{font-size:1.08rem;color:var(--page-accent,#2a5f7a)}
+/* 支払期限ヘルプ */
+.p316-ship-form__help{display:block;font-size:.68rem;color:var(--muted);margin-top:3px;line-height:1.5}
+/* 支払待ち: 中立デッドライン表示 */
+.p316-deadline-neutral{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--paper);border:1px solid var(--border);border-radius:4px;margin-top:12px;font-size:.82rem;flex-wrap:wrap}
+.p316-deadline-neutral__label{font-size:.72rem;color:var(--muted)}
+.p316-deadline-neutral__date{font-family:'Montserrat',sans-serif;font-weight:600;color:var(--ink)}
+.p316-deadline-neutral__note{font-size:.7rem;color:var(--muted)}
+/* 拒否理由・キャンセル申請 */
+.p316-decline-reason-label{display:block;font-size:.75rem;font-weight:600;color:var(--ink);margin-top:12px;margin-bottom:4px}
+.p316-decline-reason{width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--border);border-radius:3px;font-family:inherit;font-size:.82rem;color:var(--ink);resize:vertical;min-height:68px}
+.p316-decline-reason:focus{outline:none;border-color:var(--page-accent,#2a5f7a)}
+.p316-cancel-request-wrap{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.p316-cancel-request-note{flex:1;min-width:180px;font-size:.72rem;color:var(--muted);line-height:1.5}
+/* 送料テーブルモーダル */
+.p316-rate-table{width:100%;border-collapse:collapse;font-size:.78rem;margin-top:8px}
+.p316-rate-table th{text-align:left;padding:6px 10px;font-size:.68rem;color:var(--muted);border-bottom:1px solid var(--border);font-weight:600}
+.p316-rate-table td{padding:7px 10px;border-bottom:1px solid var(--paper);color:var(--ink)}
+.p316-rate-table tr:last-child td{border-bottom:none}
+.p316-rate-table__price{font-family:'Montserrat',sans-serif;font-weight:500;text-align:right}
+.p316-rate-note{font-size:.7rem;color:var(--muted);margin-top:8px;line-height:1.5}
+/* 受取希望日時（受取確認待ち） */
+.p316-ship-pref-row{margin-top:10px;padding:10px 14px;background:rgba(42,95,122,.04);border:1px solid rgba(42,95,122,.18);border-radius:4px;font-size:.82rem;display:flex;gap:10px;align-items:baseline}
+.p316-ship-pref-label{font-size:.72rem;color:#3a5a7a;width:80px;flex-shrink:0}
+@media(max-width:600px){
+  .p316-carrier-wrap{flex-wrap:wrap}
+  .p316-rate-btn{width:100%}
+}
+
 /* ══════════════════════════════════════════════════════
    P2-11  展覧会 新規/編集/クローン
    prefix: .p211-
