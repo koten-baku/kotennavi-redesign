@@ -9997,3 +9997,137 @@ body.p4-15-page .p3-tabnav{max-width:760px}
   .p316-step__label{font-size:.46rem;max-width:30px}
   .p316-step__node{width:18px;height:18px;font-size:.5rem}
 }
+
+/* ══════════════════════════════════════════════════════
+   P2-11  展覧会 新規/編集/クローン
+   prefix: .p211-
+══════════════════════════════════════════════════════ */
+/* ── モードバナー（クローン元通知） ── */
+.p211-mode-banner{background:rgba(184,124,16,.08);border:1px solid rgba(184,124,16,.3);border-radius:6px;padding:10px 14px;display:flex;align-items:flex-start;gap:10px;font-size:.82rem;color:var(--ink);line-height:1.55}
+.p211-mode-banner__icon{font-size:.9rem;flex-shrink:0;margin-top:1px}
+.p211-mode-banner__text strong{color:#7a5500}
+
+/* ── 展覧会バナー（編集時・クローン時のリンク） ── */
+.p211-exh-banner{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--border);border-radius:6px;padding:10px 14px;text-decoration:none;color:var(--ink);margin-bottom:4px;transition:background .12s}
+.p211-exh-banner:hover{background:var(--paper)}
+.p211-exh-banner__thumb{width:52px;height:40px;border-radius:4px;flex-shrink:0;background:linear-gradient(135deg,#e8d0b8,#c8a880)}
+.p211-exh-banner__body{flex:1;min-width:0}
+.p211-exh-banner__title{font-size:.88rem;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.p211-exh-banner__meta{font-size:.72rem;color:var(--muted);margin-top:2px}
+.p211-exh-banner__arr{color:var(--muted);flex-shrink:0;font-size:.75rem}
+
+/* ── セクションブロック ── */
+.p211-block{background:#fff;border:1px solid var(--border);border-radius:6px;margin-bottom:16px;overflow:hidden}
+.p211-block__head{padding:14px 18px 0;border-bottom:1px solid var(--border);margin-bottom:0}
+.p211-block__title{font-size:.82rem;font-weight:700;color:var(--ink);margin:0 0 12px;display:flex;align-items:center;gap:8px}
+.p211-block__title-en{font-family:'Montserrat',sans-serif;font-size:.6em;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.p211-block__body{padding:16px 18px}
+.p211-block__body--tight{padding:12px 18px}
+
+/* ── フィールド ── */
+.p211-field{display:flex;flex-direction:column;gap:5px;margin-bottom:16px}
+.p211-field:last-child{margin-bottom:0}
+.p211-label{font-size:.72rem;font-weight:600;color:var(--ink);display:flex;align-items:center;gap:4px}
+.p211-req{color:#c0392b;font-size:.8em;font-weight:700}
+.p211-input{width:100%;padding:8px 11px;border:1px solid var(--border);border-radius:4px;font-size:.88rem;font-family:inherit;color:var(--ink);background:#fff;box-sizing:border-box;transition:border-color .12s}
+.p211-input:focus{outline:none;border-color:#2a7fa8}
+.p211-input--sm{font-size:.82rem;padding:6px 10px}
+.p211-textarea{width:100%;padding:9px 11px;border:1px solid var(--border);border-radius:4px;font-size:.88rem;font-family:inherit;color:var(--ink);background:#fff;box-sizing:border-box;resize:vertical;min-height:88px;transition:border-color .12s;line-height:1.65}
+.p211-textarea:focus{outline:none;border-color:#2a7fa8}
+.p211-textarea--tall{min-height:140px}
+.p211-select{width:100%;padding:8px 32px 8px 11px;border:1px solid var(--border);border-radius:4px;font-size:.88rem;font-family:inherit;color:var(--ink);background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6' fill='none' stroke='%235c6b79' stroke-width='1.5'%3E%3Cpolyline points='1 1 5 5 9 1'/%3E%3C/svg%3E") no-repeat right 11px center/10px;-webkit-appearance:none;appearance:none;box-sizing:border-box;cursor:pointer;transition:border-color .12s}
+.p211-select:focus{outline:none;border-color:#2a7fa8}
+.p211-help{font-size:.72rem;color:var(--muted);line-height:1.6;margin:0}
+.p211-row{display:flex;gap:12px}
+.p211-row .p211-field{flex:1;min-width:0;margin-bottom:0}
+
+/* ── ピル選択（ジャンル・タイプ） ── */
+.p211-pill-group{display:flex;flex-wrap:wrap;gap:6px}
+.p211-pill{display:inline-flex;align-items:center;padding:5px 12px;border:1.5px solid var(--border);border-radius:20px;font-size:.78rem;color:var(--muted);cursor:pointer;user-select:none;transition:all .12s;background:#fff}
+.p211-pill:hover{border-color:#2a7fa8;color:#2a7fa8}
+.p211-pill.is-active{border-color:#2a7fa8;background:#eef5fa;color:#2a7fa8;font-weight:600}
+.p211-pill input{position:absolute;opacity:0;width:0;height:0;pointer-events:none}
+
+/* ── タグ入力 ── */
+.p211-tag-area{display:flex;flex-wrap:wrap;gap:6px;padding:8px 10px;border:1px solid var(--border);border-radius:4px;background:#fff;min-height:44px;cursor:text;transition:border-color .12s}
+.p211-tag-area:focus-within{border-color:#2a7fa8}
+.p211-tag{display:inline-flex;align-items:center;gap:4px;background:#eef5fa;border:1px solid #c4dcee;border-radius:3px;padding:2px 8px 2px 10px;font-size:.75rem;color:#1a4a6a;white-space:nowrap}
+.p211-tag__del{background:none;border:none;padding:0;cursor:pointer;color:#2a7fa8;font-size:.9em;line-height:1;display:flex;align-items:center}
+.p211-tag__del:hover{color:#c0392b}
+.p211-tag-input{border:none;outline:none;font-size:.82rem;font-family:inherit;color:var(--ink);background:transparent;min-width:80px;flex:1}
+.p211-tag-hint{font-size:.68rem;color:var(--muted);padding:0 2px;align-self:center}
+
+/* ── 画像エリア ── */
+.p211-img-uploaded{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--paper);border-radius:4px;margin-bottom:8px}
+.p211-img-uploaded__thumb{width:52px;height:40px;border-radius:3px;object-fit:cover;flex-shrink:0;background:linear-gradient(135deg,#e8d0b8,#c8a880)}
+.p211-img-uploaded__name{font-size:.78rem;color:var(--ink);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.p211-img-uploaded__del{background:none;border:none;cursor:pointer;color:var(--muted);font-size:.9rem;padding:4px;border-radius:3px;transition:color .12s}
+.p211-img-uploaded__del:hover{color:#c0392b}
+.p211-img-drop{border:2px dashed var(--border);border-radius:6px;padding:20px;text-align:center;color:var(--muted);font-size:.78rem;cursor:pointer;transition:border-color .12s;background:#fff}
+.p211-img-drop:hover,.p211-img-drop.is-over{border-color:#2a7fa8;background:#eef5fa;color:#2a7fa8}
+.p211-img-drop__btn{display:inline-block;padding:6px 14px;border:1.5px solid var(--border);border-radius:4px;background:#fff;font-size:.78rem;font-family:inherit;color:var(--ink);cursor:pointer;transition:all .12s;margin-bottom:6px}
+.p211-img-drop__btn:hover{border-color:#2a7fa8;color:#2a7fa8}
+.p211-img-count{font-size:.68rem;color:var(--muted);margin-top:4px}
+
+/* ── 日時ペア ── */
+.p211-datetime-pair{display:flex;align-items:center;gap:10px}
+.p211-datetime-pair__sep{font-size:.82rem;color:var(--muted);flex-shrink:0}
+.p211-datetime-pair input{flex:1;padding:8px 10px;border:1px solid var(--border);border-radius:4px;font-size:.82rem;font-family:'Montserrat',sans-serif;color:var(--ink);background:#fff;box-sizing:border-box;transition:border-color .12s}
+.p211-datetime-pair input:focus{outline:none;border-color:#2a7fa8}
+
+/* ── サブページリンク ── */
+.p211-sub-link{display:flex;align-items:center;gap:8px;padding:11px 14px;background:var(--paper);border:1px solid var(--border);border-radius:4px;text-decoration:none;color:var(--ink);font-size:.82rem;font-weight:500;transition:background .12s}
+.p211-sub-link:hover{background:#eef5fa;border-color:#c4dcee}
+.p211-sub-link__icon{flex-shrink:0;color:var(--muted)}
+.p211-sub-link__label{flex:1}
+.p211-sub-link__arr{color:var(--muted);font-size:.75rem;margin-left:auto}
+.p211-sub-links{display:flex;flex-direction:column;gap:8px}
+
+/* ── 会場利用案内 ── */
+.p211-facility-item{border-bottom:1px solid var(--border);padding:12px 0}
+.p211-facility-item:first-child{padding-top:0}
+.p211-facility-item:last-child{border-bottom:none;padding-bottom:0}
+.p211-facility-row{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.p211-facility-row__label{font-size:.75rem;font-weight:600;color:var(--ink);width:100px;flex-shrink:0}
+.p211-facility-row__ctrl{flex:1;min-width:160px}
+.p211-facility-detail{margin-top:8px;padding-left:114px}
+.p211-facility-price{display:flex;align-items:center;gap:8px;margin-top:8px;padding-left:114px;font-size:.78rem;color:var(--muted)}
+.p211-facility-price input{width:100px;padding:5px 8px;border:1px solid var(--border);border-radius:4px;font-size:.82rem;font-family:'Montserrat',sans-serif;text-align:right;background:#fff;color:var(--ink)}
+.p211-facility-price input:focus{outline:none;border-color:#2a7fa8}
+
+/* ── LIAISON設定 ── */
+.p211-liaison-opt{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+.p211-liaison-opt:last-child{border-bottom:none;padding-bottom:0}
+.p211-liaison-opt__check{width:18px;height:18px;margin-top:2px;flex-shrink:0;cursor:pointer;accent-color:#2a7fa8}
+.p211-liaison-opt__body{flex:1}
+.p211-liaison-opt__title{font-size:.82rem;font-weight:600;color:var(--ink);margin:0 0 2px}
+.p211-liaison-opt__desc{font-size:.72rem;color:var(--muted);line-height:1.55;margin:0 0 6px}
+.p211-liaison-opt__link{display:inline-flex;align-items:center;gap:4px;font-size:.72rem;color:#2a7fa8;text-decoration:none}
+.p211-liaison-opt__link:hover{text-decoration:underline}
+.p211-liaison-opt.is-checked .p211-liaison-opt__link{display:inline-flex}
+
+/* ── 公開設定 ── */
+.p211-publish-opt{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer}
+.p211-publish-opt:last-child{border-bottom:none}
+.p211-publish-opt input[type=radio]{margin-top:3px;accent-color:#2a7fa8;flex-shrink:0}
+.p211-publish-opt__body{flex:1}
+.p211-publish-opt__title{font-size:.85rem;font-weight:600;color:var(--ink)}
+.p211-publish-opt__desc{font-size:.72rem;color:var(--muted);line-height:1.55;margin-top:2px}
+.p211-publish-datetime{margin-top:8px;padding-left:22px;display:flex;align-items:center;gap:10px}
+.p211-publish-datetime input{padding:7px 10px;border:1px solid var(--border);border-radius:4px;font-size:.82rem;font-family:inherit;color:var(--ink);background:#fff;transition:border-color .12s}
+.p211-publish-datetime input:focus{outline:none;border-color:#2a7fa8}
+
+/* ── 送信バー ── */
+.p211-submit-bar{position:sticky;bottom:0;background:#fff;border-top:1px solid var(--border);padding:12px 20px;display:flex;align-items:center;gap:12px;z-index:50;box-shadow:0 -2px 8px rgba(0,0,0,.06)}
+.p211-submit-bar__cancel{background:none;border:1.5px solid var(--border);border-radius:4px;padding:9px 18px;font-size:.82rem;font-family:inherit;color:var(--muted);cursor:pointer;transition:all .12s}
+.p211-submit-bar__cancel:hover{border-color:var(--ink);color:var(--ink)}
+.p211-submit-bar__submit{background:#2a7fa8;border:none;border-radius:4px;padding:9px 24px;font-size:.85rem;font-family:inherit;color:#fff;font-weight:600;cursor:pointer;transition:all .12s}
+.p211-submit-bar__submit:hover{background:#1a6f98}
+.p211-submit-bar__note{font-size:.72rem;color:var(--muted);margin-left:auto}
+@media(max-width:540px){
+  .p211-row{flex-direction:column}
+  .p211-facility-row__label{width:auto}
+  .p211-facility-detail,.p211-facility-price{padding-left:0}
+  .p211-datetime-pair{flex-wrap:wrap}
+  .p211-submit-bar__note{display:none}
+}
