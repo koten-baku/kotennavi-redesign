@@ -247,10 +247,14 @@
         </div>
 
         <!-- C-4a. 状態: 購入確定待ち -->
-        <div class="p515-status" id="p515StatusApplied" hidden>
+        <div class="p515-status p515-status--waiting" id="p515StatusApplied" hidden>
           <div class="p515-status__head">
             <span class="p515-status__badge p515-status__badge--queue">購入確定待ち</span>
             <span class="p515-status__deadline">申込 2026.05.10</span>
+            <span class="p316-turn-label p316-turn-label--waiting">
+              <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" width="9" height="9"><circle cx="5" cy="5" r="4"/><polyline points="5,2.5 5,5 7,6"/></svg>
+              出品者の確認待ち
+            </span>
           </div>
           <div class="p515-status__body">
             <p class="p515-status__desc">購入申込が受け付けられました。出品者が申込順に取引確認を行っています。しばらくお待ちください。</p>
@@ -269,9 +273,13 @@
         </div>
 
         <!-- C-4b. 状態: 支払待ち（デフォルト） -->
-        <div class="p515-status" id="p515StatusPayment">
+        <div class="p515-status p515-status--my-turn" id="p515StatusPayment">
           <div class="p515-status__head">
             <span class="p515-status__badge p515-status__badge--buyer">支払待ち</span>
+            <span class="p316-turn-label p316-turn-label--mine">
+              <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8" width="9" height="9"><polyline points="2,5 4,7 8,3"/></svg>
+              あなたの操作が必要
+            </span>
           </div>
           <div class="p515-status__body">
             <p class="p515-status__desc">購入の順番が確定し、出品者から送料・梱包費の情報が届きました。配送先情報を入力してお支払いへお進みください。<strong>支払期限までにお支払いがない場合、申込はキャンセルされます。</strong></p>
@@ -381,10 +389,14 @@
         </div>
 
         <!-- C-4b-paid. 状態: 支払済・発送待ち -->
-        <div class="p515-status" id="p515StatusPaid" hidden>
+        <div class="p515-status p515-status--waiting" id="p515StatusPaid" hidden>
           <div class="p515-status__head">
             <span class="p515-status__badge p515-status__badge--paid">支払完了</span>
             <span class="p515-status__deadline">支払 2026.05.16</span>
+            <span class="p316-turn-label p316-turn-label--waiting">
+              <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" width="9" height="9"><circle cx="5" cy="5" r="4"/><polyline points="5,2.5 5,5 7,6"/></svg>
+              出品者の発送待ち
+            </span>
           </div>
           <div class="p515-status__body">
             <div class="p515-paid-success">
@@ -410,10 +422,14 @@
         </div>
 
         <!-- C-4c. 状態: 受取確認待ち -->
-        <div class="p515-status" id="p515StatusReceipt" hidden>
+        <div class="p515-status p515-status--my-turn" id="p515StatusReceipt" hidden>
           <div class="p515-status__head">
             <span class="p515-status__badge p515-status__badge--buyer">受取確認待ち</span>
             <span class="p515-status__deadline">発送日 2026.05.18</span>
+            <span class="p316-turn-label p316-turn-label--mine">
+              <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8" width="9" height="9"><polyline points="2,5 4,7 8,3"/></svg>
+              あなたの操作が必要
+            </span>
           </div>
           <div class="p515-status__body">
             <p class="p515-status__desc">出品者が作品を発送しました。お手元に届きましたら、受取評価を入力の上、受け取りを確認してください。</p>
@@ -445,10 +461,14 @@
         </div>
 
         <!-- C-4d. 状態: 完了確認待ち（受取確認済・出品者待ち） -->
-        <div class="p515-status" id="p515StatusConfirming" hidden>
+        <div class="p515-status p515-status--waiting" id="p515StatusConfirming" hidden>
           <div class="p515-status__head">
             <span class="p515-status__badge p515-status__badge--confirming">完了確認待ち</span>
             <span class="p515-status__deadline">受取確認 2026.05.21</span>
+            <span class="p316-turn-label p316-turn-label--waiting">
+              <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" width="9" height="9"><circle cx="5" cy="5" r="4"/><polyline points="5,2.5 5,5 7,6"/></svg>
+              出品者の完了確認待ち
+            </span>
           </div>
           <div class="p515-status__body">
             <div class="p515-confirming">
