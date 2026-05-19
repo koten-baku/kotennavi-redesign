@@ -9968,7 +9968,7 @@ body.p4-15-page .p3-tabnav{max-width:760px}
 /* ── 追跡番号フォーム ── */
 .p316-tracking-form{display:flex;flex-direction:column;gap:8px}
 .p316-tracking-form__field{display:flex;flex-direction:column;gap:3px}
-.p316-tracking-form__label{font-size:.68rem;color:var(--muted)}
+.p316-tracking-form__label{font-size:.72rem;color:var(--ink);font-weight:500}
 .p316-tracking-form__input{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:3px;font-size:.9rem;font-family:'Montserrat',sans-serif;font-weight:500;letter-spacing:.05em;background:#fff;box-sizing:border-box}
 .p316-tracking-form__input:focus{outline:none;border-color:var(--page-accent,#2a5f7a)}
 /* ── 購入者評価表示 ── */
@@ -10016,7 +10016,7 @@ body.p3-16-page .p3-tabnav{max-width:760px}
 .p316-callout__link{color:#b84010;font-weight:700;text-decoration:none;white-space:nowrap;font-size:.75rem}
 .p316-callout__link:hover{text-decoration:underline}
 /* 個人情報保護法表示 */
-.p316-privacy-note{font-size:.68rem;color:var(--muted);line-height:1.5;padding:6px 10px;background:var(--paper);border-radius:3px;margin-top:6px}
+.p316-privacy-note{font-size:.76rem;color:#3a4d5c;line-height:1.6;padding:8px 12px 8px 14px;background:rgba(0,0,0,.025);border-left:3px solid rgba(0,0,0,.15);border-radius:0 3px 3px 0;margin-top:8px}
 /* 支払期限フィールド幅 */
 .p316-ship-form__field--date{max-width:200px}
 /* 発送業者 select + 送料確認ボタン */
@@ -10035,7 +10035,7 @@ body.p3-16-page .p3-tabnav{max-width:760px}
 .p316-ship-total-amount{font-family:'Montserrat',sans-serif;font-weight:600}
 .p316-ship-total-row--total .p316-ship-total-amount{font-size:1.08rem;color:var(--page-accent,#2a5f7a)}
 /* 支払期限ヘルプ */
-.p316-ship-form__help{display:block;font-size:.68rem;color:var(--muted);margin-top:3px;line-height:1.5}
+.p316-ship-form__help{display:block;font-size:.72rem;color:#4a5a6a;margin-top:3px;line-height:1.5}
 /* 支払待ち: 中立デッドライン表示 */
 .p316-deadline-neutral{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--paper);border:1px solid var(--border);border-radius:4px;margin-top:12px;font-size:.82rem;flex-wrap:wrap}
 .p316-deadline-neutral__label{font-size:.72rem;color:var(--muted)}
@@ -10046,7 +10046,7 @@ body.p3-16-page .p3-tabnav{max-width:760px}
 .p316-decline-reason{width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--border);border-radius:3px;font-family:inherit;font-size:.82rem;color:var(--ink);resize:vertical;min-height:68px}
 .p316-decline-reason:focus{outline:none;border-color:var(--page-accent,#2a5f7a)}
 .p316-cancel-request-wrap{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.p316-cancel-request-note{flex:1;min-width:180px;font-size:.72rem;color:var(--muted);line-height:1.5}
+.p316-cancel-request-note{flex:1;min-width:180px;font-size:.78rem;color:var(--ink);line-height:1.5}
 /* 送料テーブルモーダル */
 .p316-rate-table{width:100%;border-collapse:collapse;font-size:.78rem;margin-top:8px}
 .p316-rate-table th{text-align:left;padding:6px 10px;font-size:.68rem;color:var(--muted);border-bottom:1px solid var(--border);font-weight:600}
@@ -10316,3 +10316,28 @@ body.p114-role-gallery .p114-gallery-section{display:block}
   .p114-service-banner{padding:16px}
   .p114-submit-btn{width:100%}
 }
+
+/* ─────────────────────────────────────────
+   P3-16 追加定義（ラウンド3）
+───────────────────────────────────────── */
+/* 発送地＋配送先ルート表示 */
+.p316-ship-route{display:flex;align-items:center;gap:8px;padding:9px 14px;background:var(--paper);border:1px solid var(--border);border-radius:4px;margin-bottom:10px;flex-wrap:wrap}
+.p316-ship-route__from,.p316-ship-route__to{display:flex;align-items:baseline;gap:5px;flex:1;min-width:140px}
+.p316-ship-route__label{font-size:.65rem;color:var(--muted);white-space:nowrap;flex-shrink:0}
+.p316-ship-route__value{font-size:.82rem;color:var(--ink);font-weight:500}
+.p316-ship-route__edit{font-size:.7rem;color:var(--page-accent,#2a5f7a);text-decoration:none;margin-left:4px;flex-shrink:0}
+.p316-ship-route__edit:hover{text-decoration:underline}
+.p316-ship-route__arrow{color:var(--muted);font-size:1.1rem;flex-shrink:0;align-self:center;line-height:1}
+
+/* 追跡番号＋リンクのラッパー */
+.p316-tracking-num-wrap{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.p316-tracking-num-wrap .p316-tracking-form__input{flex:1;min-width:140px}
+
+/* 追跡情報リンクボタン */
+.p316-tracking-link-btn{display:inline-flex;align-items:center;gap:4px;padding:6px 12px;border:1px solid var(--border);border-radius:3px;font-size:.72rem;color:var(--page-accent,#2a5f7a);background:#fff;cursor:pointer;transition:all .12s;text-decoration:none;white-space:nowrap;flex-shrink:0;font-family:inherit}
+.p316-tracking-link-btn:hover{border-color:var(--page-accent,#2a5f7a);background:rgba(42,95,122,.05)}
+.p316-tracking-link-btn svg{width:10px;height:10px}
+
+/* 送料テーブル：業者ヘッド */
+.p316-rate-carrier-head{font-size:.8rem;font-weight:600;color:var(--ink);padding:0 0 8px;margin-bottom:4px;border-bottom:1px solid var(--border)}
+.p316-rate-note{font-size:.72rem;color:#4a5a6a;margin-top:10px;line-height:1.6}

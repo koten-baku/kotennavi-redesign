@@ -101,32 +101,77 @@
 <div class="p515-modal-overlay" id="p316RateModal" hidden>
   <div class="p515-modal">
     <div class="p515-modal__head">
-      <span class="p515-modal__title">発送業者別 送料の目安</span>
+      <span class="p515-modal__title" id="p316RateModalTitle">送料の目安</span>
       <button class="p515-modal__close" id="p316RateModalClose">✕</button>
     </div>
     <div class="p515-modal__body">
-      <table class="p316-rate-table">
-        <thead>
-          <tr>
-            <th>業者</th>
-            <th>サイズ目安</th>
-            <th class="p316-rate-table__price">料金（目安）</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>ヤマト宅急便</td><td>60サイズ（〜2kg）</td><td class="p316-rate-table__price">¥770〜</td></tr>
-          <tr><td>ヤマト宅急便</td><td>100サイズ（〜10kg）</td><td class="p316-rate-table__price">¥1,210〜</td></tr>
-          <tr><td>ヤマト宅急便</td><td>160サイズ（〜25kg）</td><td class="p316-rate-table__price">¥2,030〜</td></tr>
-          <tr><td>ヤマト らくらく家財</td><td>S（〜A0判サイズ）</td><td class="p316-rate-table__price">¥2,750〜</td></tr>
-          <tr><td>ヤマト らくらく家財</td><td>M（〜150cm幅）</td><td class="p316-rate-table__price">¥4,950〜</td></tr>
-          <tr><td>佐川急便</td><td>60サイズ</td><td class="p316-rate-table__price">¥660〜</td></tr>
-          <tr><td>佐川急便</td><td>100サイズ</td><td class="p316-rate-table__price">¥990〜</td></tr>
-          <tr><td>日本郵便 ゆうパック</td><td>60サイズ</td><td class="p316-rate-table__price">¥810〜</td></tr>
-          <tr><td>日本郵便 ゆうパック</td><td>100サイズ</td><td class="p316-rate-table__price">¥1,200〜</td></tr>
-        </tbody>
-      </table>
-      <p class="p316-rate-note">※ 上記は参考値（税込）です。最新の料金は各社ウェブサイトでご確認ください。出品者様の独自契約・割引が適用される場合は実際の料金が異なります。</p>
-      <p class="p316-rate-note" style="margin-top:6px">配送先：東京都（〒150-0001）。料金はサイズ・重量・梱包後の実寸で変動します。</p>
+
+      <!-- ヤマト宅急便 -->
+      <div id="p316RateSectionYamato" hidden>
+        <div class="p316-rate-carrier-head">ヤマト宅急便</div>
+        <table class="p316-rate-table">
+          <thead><tr><th>サイズ目安</th><th class="p316-rate-table__price">料金（目安・税込）</th></tr></thead>
+          <tbody>
+            <tr><td>60サイズ（〜2kg）</td><td class="p316-rate-table__price">¥770〜</td></tr>
+            <tr><td>80サイズ（〜5kg）</td><td class="p316-rate-table__price">¥990〜</td></tr>
+            <tr><td>100サイズ（〜10kg）</td><td class="p316-rate-table__price">¥1,210〜</td></tr>
+            <tr><td>120サイズ（〜15kg）</td><td class="p316-rate-table__price">¥1,650〜</td></tr>
+            <tr><td>160サイズ（〜25kg）</td><td class="p316-rate-table__price">¥2,030〜</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ヤマト らくらく家財宅急便 -->
+      <div id="p316RateSectionYamatoLarge" hidden>
+        <div class="p316-rate-carrier-head">ヤマト らくらく家財宅急便</div>
+        <table class="p316-rate-table">
+          <thead><tr><th>サイズ目安</th><th class="p316-rate-table__price">料金（目安・税込）</th></tr></thead>
+          <tbody>
+            <tr><td>S（〜A0判・額装に最適）</td><td class="p316-rate-table__price">¥2,750〜</td></tr>
+            <tr><td>M（〜150cm幅）</td><td class="p316-rate-table__price">¥4,950〜</td></tr>
+            <tr><td>L（〜200cm幅）</td><td class="p316-rate-table__price">¥7,700〜</td></tr>
+            <tr><td>LL（〜250cm幅）</td><td class="p316-rate-table__price">¥11,000〜</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 佐川急便 -->
+      <div id="p316RateSectionSagawa" hidden>
+        <div class="p316-rate-carrier-head">佐川急便</div>
+        <table class="p316-rate-table">
+          <thead><tr><th>サイズ目安</th><th class="p316-rate-table__price">料金（目安・税込）</th></tr></thead>
+          <tbody>
+            <tr><td>60サイズ</td><td class="p316-rate-table__price">¥660〜</td></tr>
+            <tr><td>80サイズ</td><td class="p316-rate-table__price">¥770〜</td></tr>
+            <tr><td>100サイズ</td><td class="p316-rate-table__price">¥990〜</td></tr>
+            <tr><td>120サイズ</td><td class="p316-rate-table__price">¥1,320〜</td></tr>
+            <tr><td>140サイズ</td><td class="p316-rate-table__price">¥1,650〜</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 日本郵便（ゆうパック） -->
+      <div id="p316RateSectionYuPack" hidden>
+        <div class="p316-rate-carrier-head">日本郵便（ゆうパック）</div>
+        <table class="p316-rate-table">
+          <thead><tr><th>サイズ目安</th><th class="p316-rate-table__price">料金（目安・税込）</th></tr></thead>
+          <tbody>
+            <tr><td>60サイズ</td><td class="p316-rate-table__price">¥810〜</td></tr>
+            <tr><td>80サイズ</td><td class="p316-rate-table__price">¥1,030〜</td></tr>
+            <tr><td>100サイズ</td><td class="p316-rate-table__price">¥1,200〜</td></tr>
+            <tr><td>120サイズ</td><td class="p316-rate-table__price">¥1,450〜</td></tr>
+            <tr><td>160サイズ</td><td class="p316-rate-table__price">¥1,800〜</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- その他 -->
+      <div id="p316RateSectionOther" hidden>
+        <p style="font-size:.85rem;color:var(--muted);padding:12px 0;line-height:1.6">「その他」の発送業者の送料テーブルはありません。各業者のウェブサイトで最新の料金をご確認ください。</p>
+      </div>
+
+      <p class="p316-rate-note">※ 上記は参考値です。最新の料金・詳細条件は各社公式サイトでご確認ください。出品者固有の契約・割引がある場合は実際の料金が異なります。</p>
+      <p class="p316-rate-note" style="margin-top:4px">発送地：東京都渋谷区 → 配送先：東京都渋谷区（同一都道府県）。他都道府県への発送は料金が異なります。</p>
     </div>
     <div class="p515-modal__foot">
       <button class="p515-modal__btn ktn-op-btn" id="p316RateModalClose2">閉じる</button>
@@ -355,8 +400,8 @@
 
             <!-- LIAISON+コンソール動線 -->
             <div class="p316-callout">
-              <span>会場で作品が売れた場合・販売できない状態の場合は、作品の販売状態を変更してからこの申込を断ってください。</span>
-              <a class="p316-callout__link" href="kotennavi-p3-15.html">LIAISON+コンソールで状態を変更 →</a>
+              <span>会場で作品が売れた場合は、<strong>LIAISON+コンソールの「会場売約済」</strong>を使ってください。申込者全員にシステムが自動でキャンセル通知を送り、作品が「売約済」に変更されます。このページで個別に断る必要はありません。</span>
+              <a class="p316-callout__link" href="kotennavi-p3-15.html">LIAISON+コンソールへ →</a>
             </div>
 
             <!-- 申込内容 -->
@@ -379,12 +424,24 @@
                 <div class="p316-apply-info__comment">2026年の個展の展示作品がとても印象的でした。ぜひ手元に置きたいと思い申し込みました。</div>
               </div>
             </div>
-            <p class="p316-privacy-note">※ 購入者の個人情報は個人情報保護法に基づき取り扱います。本取引の目的以外には使用しないでください。</p>
 
             <!-- 送料設定フォーム -->
             <div class="p316-ship-form">
               <div class="p316-ship-form__title">送料・梱包費の設定</div>
-              <p class="p316-ship-form__note">発送業者と送料を設定してください。確定後は変更できません。購入者の配送先：東京都（〒150-0001）</p>
+              <!-- 発送地→配送先ルート -->
+              <div class="p316-ship-route">
+                <div class="p316-ship-route__from">
+                  <span class="p316-ship-route__label">発送地（あなた）</span>
+                  <span class="p316-ship-route__value">東京都渋谷区（〒150-0044）</span>
+                  <a class="p316-ship-route__edit" href="#">変更</a>
+                </div>
+                <span class="p316-ship-route__arrow">→</span>
+                <div class="p316-ship-route__to">
+                  <span class="p316-ship-route__label">配送先（購入者）</span>
+                  <span class="p316-ship-route__value">東京都渋谷区（〒150-0001）</span>
+                </div>
+              </div>
+              <p class="p316-ship-form__note">発送業者と送料を設定してください。確定後は変更できません。</p>
               <div class="p316-ship-form__fields">
                 <div class="p316-ship-form__row">
                   <div class="p316-carrier-wrap">
@@ -424,7 +481,7 @@
                   <div class="p316-ship-form__field p316-ship-form__field--date">
                     <label class="p316-ship-form__label">支払期限</label>
                     <input class="p316-ship-form__input" id="p316DeadlineInput" type="date">
-                    <span class="p316-ship-form__help">目安：7〜14日程度。期限を過ぎると自動キャンセルされます。</span>
+                    <span class="p316-ship-form__help">目安：3〜7日程度。期限を過ぎると自動キャンセルされます。</span>
                   </div>
                 </div>
               </div>
@@ -510,6 +567,7 @@
               <div class="p316-ship-addr__row"><span class="p316-ship-addr__label">受取希望日</span><span>2026年5月21日（木）</span></div>
               <div class="p316-ship-addr__row"><span class="p316-ship-addr__label">希望時間帯</span><span>14〜16時</span></div>
             </div>
+            <p class="p316-privacy-note">個人情報保護法に基づき、上記の住所・電話番号・氏名は本取引の発送目的のみに使用し、第三者への提供や目的外利用を行わないでください。</p>
 
             <!-- 追跡番号フォーム -->
             <div class="p316-tracking-form">
@@ -529,7 +587,13 @@
               </div>
               <div class="p316-tracking-form__field">
                 <label class="p316-tracking-form__label">追跡番号</label>
-                <input class="p316-tracking-form__input" id="p316TrackingInput" type="text" placeholder="追跡番号を入力">
+                <div class="p316-tracking-num-wrap">
+                  <input class="p316-tracking-form__input" id="p316TrackingInput" type="text" placeholder="追跡番号を入力">
+                  <a class="p316-tracking-link-btn" id="p316TrackingLinkForm" href="#" target="_blank" hidden>
+                    <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" width="10" height="10"><path d="M5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V8M8 1h3v3M11 1l-5 5"/></svg>
+                    追跡を確認
+                  </a>
+                </div>
               </div>
             </div>
 
@@ -561,7 +625,16 @@
             <div class="p515-ship-confirm">
               <div class="p515-ship-confirm__title">発送情報</div>
               <div class="p515-ship-confirm__row"><span class="p515-ship-confirm__label">発送業者</span><span>ヤマト宅急便</span></div>
-              <div class="p515-ship-confirm__row"><span class="p515-ship-confirm__label">追跡番号</span><span style="font-family:'Montserrat',sans-serif;font-weight:500">1234-5678-9012</span></div>
+              <div class="p515-ship-confirm__row">
+                <span class="p515-ship-confirm__label">追跡番号</span>
+                <span style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                  <span style="font-family:'Montserrat',sans-serif;font-weight:500">1234-5678-9012</span>
+                  <a class="p316-tracking-link-btn" href="https://jizen.kuronekoyamato.co.jp/jizen/servlet/crjizen?col=1&number=1234567890120" target="_blank" rel="noopener">
+                    <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" width="10" height="10"><path d="M5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V8M8 1h3v3M11 1l-5 5"/></svg>
+                    追跡情報
+                  </a>
+                </span>
+              </div>
               <div class="p515-ship-confirm__row" style="border-bottom:none"><span class="p515-ship-confirm__label">発送日</span><span>2026年5月18日（月）</span></div>
             </div>
             <div class="p316-ship-pref-row">
@@ -1270,17 +1343,68 @@ KTN.init({ page: 'p3-16', role: 'creator' });
     if (typeof KTN !== 'undefined' && KTN.toast) KTN.toast('取引完了を確認しました。代金が確定されました');
   });
 
-  /* ── 送料テーブルモーダル ── */
+  /* ── 送料テーブルモーダル（業者別） ── */
+  var RATE_SECTIONS = {
+    'ヤマト宅急便':             'p316RateSectionYamato',
+    'ヤマト らくらく家財宅急便': 'p316RateSectionYamatoLarge',
+    '佐川急便':                 'p316RateSectionSagawa',
+    '日本郵便（ゆうパック）':   'p316RateSectionYuPack',
+    'その他':                   'p316RateSectionOther'
+  };
   var rateModal       = document.getElementById('p316RateModal');
   var rateBtn         = document.getElementById('p316RateBtn');
   var rateModalClose  = document.getElementById('p316RateModalClose');
   var rateModalClose2 = document.getElementById('p316RateModalClose2');
-  function openRateModal()  { if (rateModal) rateModal.hidden = false; }
+  function openRateModal() {
+    var carrier = (document.getElementById('p316CarrierSelect') || {}).value || 'ヤマト宅急便';
+    Object.keys(RATE_SECTIONS).forEach(function (k) {
+      var el = document.getElementById(RATE_SECTIONS[k]);
+      if (el) el.hidden = true;
+    });
+    var sectionId = RATE_SECTIONS[carrier] || 'p316RateSectionYamato';
+    var sectionEl = document.getElementById(sectionId);
+    if (sectionEl) sectionEl.hidden = false;
+    var titleEl = document.getElementById('p316RateModalTitle');
+    if (titleEl) titleEl.textContent = carrier + ' — 送料の目安';
+    if (rateModal) rateModal.hidden = false;
+  }
   function closeRateModal() { if (rateModal) rateModal.hidden = true; }
   if (rateBtn)         rateBtn.addEventListener('click', openRateModal);
   if (rateModalClose)  rateModalClose.addEventListener('click', closeRateModal);
   if (rateModalClose2) rateModalClose2.addEventListener('click', closeRateModal);
   if (rateModal)       rateModal.addEventListener('click', function (e) { if (e.target === rateModal) closeRateModal(); });
+
+  /* ── 追跡URLヘルパー ── */
+  function getTrackingUrl(carrier, num) {
+    var n = (num || '').replace(/[^0-9]/g, '');
+    if (!n) return null;
+    if (/ヤマト/.test(carrier) && !/らくらく/.test(carrier)) {
+      return 'https://jizen.kuronekoyamato.co.jp/jizen/servlet/crjizen?col=1&number=' + n;
+    }
+    if (/佐川/.test(carrier)) {
+      return 'https://k2k.sagawa-exp.co.jp/p/web/okurijosearch.do?okurijoNo=' + n;
+    }
+    if (/郵便|ゆうパック/.test(carrier)) {
+      return 'https://trackings.post.japanpost.jp/services/srv/search/?requestNo1=' + n;
+    }
+    return null;
+  }
+
+  /* 追跡番号入力時にリンクボタンを更新 */
+  var trackingInput = document.getElementById('p316TrackingInput');
+  var trackingLinkForm = document.getElementById('p316TrackingLinkForm');
+  if (trackingInput && trackingLinkForm) {
+    trackingInput.addEventListener('input', function () {
+      var carrier = (document.getElementById('p316TrackingCarrierSelect') || {}).value || '';
+      var url = getTrackingUrl(carrier, trackingInput.value);
+      if (url) {
+        trackingLinkForm.href = url;
+        trackingLinkForm.hidden = false;
+      } else {
+        trackingLinkForm.hidden = true;
+      }
+    });
+  }
 
   /* ── キャンセル申請モーダル ── */
   var cancelReqModal      = document.getElementById('p316CancelReqModal');
