@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>【作品タイトル】— 田中 透 | 個展なび</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Noto+Sans+JP:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./kotennavi-common.css">
 </head>
 <body>
@@ -104,13 +104,12 @@
           <div id="p6ColAbout">
             <section class="work-desc-section">
               <div class="p6-work-about__head">
-                <span class="p6-work-about__label">この作品について — ABOUT THIS WORK</span>
+                <span class="p6-work-about__label">この作品について — <span class="ktn-sec-en">About this work</span></span>
                 <div class="p6-work-about__line"></div>
               </div>
               <h2 class="p6-work-about__title" id="p6AboutTitle">《オノマトペの庭》</h2>
               <div class="wd-body" id="descBody"></div>
               <div class="p6-articles" id="p6Articles"></div>
-              <div class="wd-tags" id="descTags"></div>
             </section>
           </div>
 
@@ -125,7 +124,7 @@
                       <circle cx="12" cy="7" r="4"/>
                     </svg>
                   </div>
-                  <span class="p2-ic__head-title">クリエイター<span class="p2-ic__head-en">Creator</span></span>
+                  <span class="p2-ic__head-title">クリエイター<span class="ktn-sec-en">Creator</span></span>
                 </div>
               </div>
               <div class="p2-ic__body">
@@ -240,32 +239,10 @@
             </div>
 
             <!-- posted by -->
-            <div class="p2-side-card p2-side-posted" id="p6PostedCard">
+            <div class="p2-side-card p2-side-posted">
               <div class="p2-side-posted__label">posted by</div>
               <div class="p2-side-posted__dates">掲載：2026.02.18 / 最終更新：2026.03.01</div>
-              <div class="p2-side-posted__row">
-                <div class="p2-side-posted__avatar"
-                     style="background:linear-gradient(135deg,#b8d8cc,#6a9e8a);color:rgba(255,255,255,.85)">透</div>
-                <div class="p2-side-posted__meta">
-                  <div class="p2-side-posted__name">
-                    <span class="cb cb-person cb-creator">creator</span>
-                    toru_tanaka
-                  </div>
-                  <div class="p2-side-posted__sub">田中 透 · 油彩・現代美術</div>
-                  <div class="p2-side-posted__counts">
-                    <span><strong>24</strong> 作品</span>
-                    <span><strong>892</strong> フォロワー</span>
-                  </div>
-                </div>
-              </div>
-              <button class="ktn-btn ktn-btn--follow p2-side-posted__follow" id="p6FollowBtn"
-                      onclick="toggleFollow(this)">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                     width="11" height="11">
-                  <line x1="12" y1="5" x2="12" y2="19"/>
-                  <line x1="5" y1="12" x2="19" y2="12"/>
-                </svg>フォロー
-              </button>
+              <div id="p6PostedByCard"></div>
             </div>
 
             <!-- お問い合わせ -->
@@ -290,7 +267,7 @@
                       <circle cx="12" cy="7" r="4"/>
                     </svg>
                   </div>
-                  <span class="p2-ic__head-title">田中 透<span class="p2-ic__head-en">Creator</span></span>
+                  <span class="p2-ic__head-title">田中 透<span class="ktn-sec-en">Creator</span></span>
                 </div>
               </div>
               <div class="p2-ic__body p2-side-links__body">
@@ -363,7 +340,7 @@
               <a class="p2-side-ec" href="kotennavi-p2.html">
                 <div class="p2-side-ec__poster"
                      style="background:linear-gradient(155deg,#b8d8cc,#6a9e8a)">
-                  <span style="font-family:'Shippori Mincho',serif;font-size:.55rem;
+                  <span style="font-family:var(--fs);font-size:.55rem;
                                font-weight:700;writing-mode:vertical-rl;color:rgba(255,255,255,.7)">
                     オノマトペ
                   </span>
@@ -383,7 +360,7 @@
               <a class="p2-side-ec" href="kotennavi-p2.html">
                 <div class="p2-side-ec__poster"
                      style="background:linear-gradient(155deg,#e8d8c8,#b09878)">
-                  <span style="font-family:'Shippori Mincho',serif;font-size:.55rem;
+                  <span style="font-family:var(--fs);font-size:.55rem;
                                font-weight:700;writing-mode:vertical-rl;color:rgba(255,255,255,.7)">
                     音のかたち
                   </span>
@@ -408,17 +385,18 @@
       </div><!-- /.p6-layout -->
     </div><!-- /.ktn-content -->
 
-    <!-- おすすめの作品（全幅） -->
-    <section class="p2-related p6-rec-section">
-      <div class="ktn-content">
-        <div class="ktn-section__head">
-          <h2 class="ktn-section__title">おすすめの作品
-            <span class="p2-related__en">Recommended</span>
-          </h2>
-          <a href="#" class="ktn-section__more">すべて見る →</a>
-        </div>
-        <div class="masonry" id="p6RecGrid"></div>
+    <!-- タグ -->
+    <section class="p6-sub-tags">
+      <div class="wd-tags" id="descTags"></div>
+    </section>
+
+    <!-- おすすめの作品 -->
+    <section class="p6-rec-section">
+      <div class="ktn-section__head">
+        <h2 class="ktn-section__title">おすすめの作品 — <span class="ktn-sec-en">Recommended</span></h2>
+        <a href="#" class="ktn-section__more">すべて見る →</a>
       </div>
+      <div class="masonry" id="p6RecGrid"></div>
     </section>
 
     <!-- ログインモーダル -->
@@ -489,6 +467,12 @@
 <script src="./kotennavi-common.js"></script>
 <script src="./kotennavi-pages.js"></script>
 <script>
+  window.P2_POSTED_BY = {
+    type: 'creator', href: 'kotennavi-p3.html',
+    avStyle: 'linear-gradient(135deg,#b8d8cc,#6a9e8a)', ini: '透', iniStyle: '1rem',
+    name: '田中 透', genre: '油彩・現代美術',
+    watchId: 'p6WatchBtn', watchOn: false, status: 'live', panel: true
+  };
   KTN.init({ page: 'p6', role: 'guest' });
 </script>
 </body>

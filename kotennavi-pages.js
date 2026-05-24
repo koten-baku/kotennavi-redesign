@@ -7,6 +7,121 @@ window.KTN = window.KTN || {};
 KTN.pages = KTN.pages || {};
 
 /* ────────────────────────────────────────────────────
+   共通カードビルダー
+──────────────────────────────────────────────────── */
+
+/* 人物水平カード（.cc.cc--h / .gc.gc--h） */
+function buildPersonCard(d) {
+  var ns = d.type === 'creator' ? 'cc' : 'gc';
+  var label = d.type === 'creator' ? 'creator' : 'gallery';
+  var cbCls = 'cb cb-person cb-' + label;
+  var statusBadge = (!d.panel && (d.status === 'live' || d.status === 'upcoming'))
+    ? '<span class="sb">開催中/開催予定</span>' : '';
+  var av = d.avClass
+    ? '<div class="' + ns + '__avatar ' + d.avClass + '"><div class="' + ns + '__avatar-ph" style="font-size:' + (d.iniStyle || '1rem') + '">' + d.ini + '</div></div>'
+    : '<div class="' + ns + '__avatar" style="background:' + d.avStyle + ';color:rgba(255,255,255,.85)"><div class="' + ns + '__avatar-ph" style="font-size:' + (d.iniStyle || '1rem') + '">' + d.ini + '</div></div>';
+  var info = d.type === 'creator'
+    ? '<div class="cc__name">' + d.name + '</div>' + (d.genre ? '<div class="cc__genre">' + d.genre + '</div>' : '')
+    : '<div class="gc__name">' + d.name + '</div>'
+      + (d.location ? '<div class="gc__location">' + d.location + '</div>' : '')
+      + (d.hours ? '<div class="gc__hours"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.4"/><path d="M8 5v3.5l2.5 1.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>' + d.hours + '</div>' : '');
+  var wId = d.watchId ? ' id="' + d.watchId + '"' : '';
+  var wOn = d.watchOn ? ' on' : '';
+  var btn = '<button class="ktn-btn' + wOn + '"' + wId + ' onclick="this.classList.toggle(\'on\');event.preventDefault()">'
+    + '<svg width="12" height="12"><use href="#icon-watch" color="#7a8a99" /></svg>'
+    + ' watch<span class="tip">ウォッチする</span></button>';
+  var panelCls = d.panel ? ' ' + ns + '--panel' : '';
+  return '<a class="' + ns + ' ' + ns + '--h' + panelCls + '" href="' + d.href + '">'
+    + '<div class="' + ns + '__top">' + av + '</div>'
+    + '<div class="' + ns + '__main"><div class="' + ns + '__info">'
+    + '<div class="' + ns + '__badge-row"><span class="' + cbCls + '">' + label + '</span>' + statusBadge + '</div>'
+    + info + '</div>'
+    + '<div class="' + ns + '__hfoot">'
+    + (d.panel ? '' :
+        '<span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>' + (d.exh || 0) + '</span>'
+      + '<span class="sep"></span>'
+      + '<span class="pc-count pc-count--watch"><svg width="11" height="11"><use href="#icon-watch" color="#7a8a99"/></svg>' + (d.watch || 0) + '</span>')
+    + btn + '</div></div></a>';
+}
+
+/* サイド展覧会カード（.p2-side-ec） */
+function buildSideEcCard(e) {
+  var pref = e.pref ? e.pref + ' · ' : '';
+  var period = e.s && e.e ? '<div class="p2-side-ec__period">2026. ' + e.s + ' — ' + e.e + '</div>' : '';
+  var liCls = e.liaison === 'li-plus' ? 'li-plus' : 'li';
+  var liLabel = e.liaison === 'li-plus' ? 'LIAISON+' : 'LIAISON';
+  var liaisonBadge = e.liaison ? '<span class="lb-dot ' + liCls + '"><span class="lb-dot-inner"></span>' + liLabel + '</span>' : '';
+  var intBtn = '<button class="ktn-icon-btn" onclick="this.classList.toggle(\'on\');event.preventDefault()">'
+    + '<svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>'
+    + '<span class="tip">興味ある！に追加する</span></button>';
+  return '<a href="kotennavi-p2.html" class="p2-side-ec">'
+    + '<div class="p2-side-ec__poster" style="background:' + e.bg + '"></div>'
+    + '<div class="p2-side-ec__body">'
+    + '<div class="p2-side-ec__badge-row"><span class="cb cb-content cb-exhibition">exhibition</span>' + liaisonBadge + '</div>'
+    + '<div class="p2-side-ec__name">' + e.title + '</div>'
+    + '<div class="p2-side-ec__venue">' + pref + e.venue + '</div>'
+    + period + '</div>'
+    + intBtn
+    + '</a>';
+}
+
+/* グリッド展覧会カード（.masonry-item .ec） — cards_exhibition.html マソンリー完全準拠 */
+function buildGridEcCard(e) {
+  /* ポスターメタ（残り日数 | 営業時間 | 距離） */
+  var remainCls = e.status === 'soon' ? 'ec__remain--soon' : e.status === 'closed' ? 'ec__remain--closed' : 'ec__remain--live';
+  var metaParts = [];
+  if (e.remain) metaParts.push('<span class="ec__remain ' + remainCls + '">' + e.remain + '</span>');
+  if (e.hours && e.status !== 'closed') metaParts.push('<span class="meta-sep">|</span><span>' + e.hours + '</span>');
+  if (e.dist)  metaParts.push('<span class="meta-sep">|</span><span>' + e.dist + '</span>');
+  var metaHtml = metaParts.length ? '<div class="ec__poster-meta">' + metaParts.join('') + '</div>' : '';
+
+  /* ステータスバッジ（ec__body） */
+  var sbHtml = '';
+  if (e.status === 'live')         sbHtml = '<span class="sb sb-live"><span class="pulse"></span>開催中</span>';
+  else if (e.status === 'soon')    sbHtml = '<span class="sb sb-soon">もうすぐ開催</span>';
+  else if (e.status === 'ending')  sbHtml = '<span class="sb sb-ending"><span class="ending-dot"></span>もうすぐ終了</span>';
+
+  /* LIAISONストリップ＋展示作品サムネイル */
+  var liaisonHtml = '';
+  if (e.liaison) {
+    var liCls   = e.liaison === 'li-plus' ? 'li-plus' : 'li';
+    var liLabel = e.liaison === 'li-plus' ? 'LIAISON+' : 'LIAISON';
+    var liSub   = e.liaison === 'li-plus' ? 'オンライン作品展示・販売中' : 'オンライン作品展示中';
+    var thumbsHtml = (e.thumbs && e.thumbs.length)
+      ? '<div class="ec__liaison-thumbs">' + e.thumbs.map(function(t){ return '<div class="ec__liaison-thumb" style="background:' + t + '"></div>'; }).join('') + '</div>'
+      : '';
+    liaisonHtml = '<div class="ec__liaison-strip' + (e.liaison === 'li-plus' ? ' ec__liaison-strip--plus' : '') + '">'
+      + '<div class="ec__liaison-strip-info"><span class="lb-dot ' + liCls + '"><span class="lb-dot-inner"></span>' + liLabel + '</span>'
+      + '<span class="ec__liaison-subtext">' + liSub + '</span></div>'
+      + thumbsHtml + '</div>';
+  }
+
+  var intBtn = '<button class="ktn-icon-btn" onclick="this.classList.toggle(\'on\');event.preventDefault()">'
+    + '<svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>'
+    + '<span class="tip">興味ある！に追加する</span></button>';
+
+  return '<div class="masonry-item"><a href="kotennavi-p2.html" class="ec">'
+    + '<div class="ec__poster" style="background:' + e.bg + '">'
+    + '<div class="ec__poster-noimg" style="min-height:' + (e.imgH || 190) + 'px"></div>'
+    + '<div class="ec__poster-overlay">'
+    + '<div class="ec__poster-dates"><span class="year">2026.</span><strong>' + (e.s || '') + '</strong><span class="sep">—</span><strong>' + (e.e || '') + '</strong></div>'
+    + metaHtml
+    + '</div></div>'
+    + '<div class="ec__body">'
+    + '<div class="ec__badge-row"><span class="cb cb-content cb-exhibition">exhibition</span>' + sbHtml + '</div>'
+    + '<div class="ec__title">' + e.title + '</div>'
+    + '<div class="ec__venue">' + e.venue + '</div>'
+    + '</div>'
+    + '<div class="ec__foot">'
+    + '<span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>' + (e.int || 0) + '</span>'
+    + '<span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="10" cy="5" r="4"/><circle cx="5" cy="11" r="2.4"/></svg>' + (e.ci || 0) + '</span>'
+    + intBtn
+    + '</div>'
+    + liaisonHtml
+    + '</a></div>';
+}
+
+/* ────────────────────────────────────────────────────
    P2 展覧会概要
 ──────────────────────────────────────────────────── */
 KTN.pages['p2'] = function () {
@@ -192,9 +307,15 @@ KTN.pages['p2'] = function () {
         date: '2026.02.18', stars: 4, ci: true, checkinDate: '2026.02.18',
         body: '特に「ざわざわ（夜）」は長い時間立ち止まって見入ってしまいました。会期中にまた行きたいと思っています。'
       },
+      {
+        ini: 'Y', name: 'yuki88', av: 'linear-gradient(135deg,#e8d8f0,#b888c8)', tc: 'rgba(255,255,255,.9)',
+        date: '2026.02.17', stars: 5, ci: false, checkinDate: '',
+        body: '初めて個展を見に行ったのですが、とても丁寧な展示で感動しました。「言葉の断片」シリーズが特に好みでした。'
+      },
     ];
     var CI_ICON = '<svg viewBox="0 0 16 16" width="9" height="9" style="display:inline-block;vertical-align:middle"><circle cx="10" cy="5" r="4" fill="currentColor"/><circle cx="5" cy="11" r="2.4" fill="currentColor"/></svg>';
-    list.innerHTML = RV.map(function (r) {
+    var LIMIT = 3;
+    function buildRvItem(r) {
       var stars = '';
       for (var i = 0; i < 5; i++)
         stars += '<span class="rv-star"' + (i >= r.stars ? ' style="opacity:.18"' : '') + '>★</span>';
@@ -212,55 +333,43 @@ KTN.pages['p2'] = function () {
         '</div>' +
         '<div class="rv-body">' + r.body + '</div>' +
         '</a>';
-    }).join('');
+    }
+    var html = RV.slice(0, LIMIT).map(buildRvItem).join('');
+    var extra = RV.slice(LIMIT);
+    if (extra.length) {
+      html += '<div class="p2-rv-more" id="p2RvMore">' + extra.map(buildRvItem).join('') + '</div>';
+      html += '<button class="p2-rv-toggle" id="p2RvToggle" type="button">残り' + extra.length + '件を見る</button>';
+    }
+    list.innerHTML = html;
+    if (extra.length) {
+      document.getElementById('p2RvToggle').addEventListener('click', function () {
+        var moreEl = document.getElementById('p2RvMore');
+        var open = moreEl.style.display === 'block';
+        moreEl.style.display = open ? '' : 'block';
+        this.textContent = open ? '残り' + extra.length + '件を見る' : '閉じる';
+      });
+    }
+  })();
+
+  /* ++ posted by card ++ */
+  (function () {
+    var el = document.getElementById('p2PostedByCard');
+    if (!el || !window.P2_POSTED_BY) return;
+    el.innerHTML = buildPersonCard(window.P2_POSTED_BY);
   })();
 
   /* ── 近くの展覧会（サイド） ── */
   (function () {
     var list = document.getElementById('p2NearbyList');
     if (!list || !window.P2_NEARBY) return;
-    list.innerHTML = window.P2_NEARBY.slice(0, 4).map(function (e) {
-      return '<a href="kotennavi-p2.html" class="p2-side-ec">' +
-        '<div class="p2-side-ec__poster" style="background:' + e.bg + ';color:' + e.tc + '">' +
-        (e.liaison ? '<div class="p2-side-ec__ldot"></div>' : '') +
-        e.title.slice(0, 4) +
-        '</div>' +
-        '<div class="p2-side-ec__body">' +
-        '<div class="p2-side-ec__name">' + e.title + '</div>' +
-        '<div class="p2-side-ec__venue">' + e.venue + '</div>' +
-        '<div><span class="p2-side-ec__badge">開催中</span></div>' +
-        '</div>' +
-        '</a>';
-    }).join('');
+    list.innerHTML = window.P2_NEARBY.slice(0, 4).map(buildSideEcCard).join('');
   })();
 
-  /* ── おすすめの展覧会グリッド ── */
+  /* ++ recommended exhibitions ++ */
   (function () {
-    function buildExCards(data, gridId) {
-      var grid = document.getElementById(gridId);
-      if (!grid || !data) return;
-      grid.innerHTML = data.map(function (e) {
-        var li = e.liaison ? '<span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>' : '';
-        return '<div class="masonry-item"><a href="kotennavi-p2.html" class="ec">' +
-          '<div class="ec__poster">' +
-          '<div class="ec__poster-inner" style="background:' + e.bg + ';color:' + e.tc + '">' +
-          '<div class="ec__poster-overlay">' +
-          '<div class="ec__poster-dates"><span class="year">2026.</span><strong>' + (e.s || '') + '</strong><span class="sep">—</span><strong>' + (e.e || '') + '</strong></div>' +
-          '<div class="ec__poster-meta"><span class="ec__remain-lt ec__remain-lt--live">開催中</span></div>' +
-          '</div></div></div>' +
-          '<div class="ec__body">' +
-          '<div class="ec__badge-row"><span class="cb cb-content cb-exhibition">exhibition</span><span class="sb sb-live"><span class="pulse"></span>開催中</span>' + li + '</div>' +
-          '<div class="ec__title">' + e.title + '</div>' +
-          '<div class="ec__venue">' + e.venue + '</div>' +
-          '</div>' +
-          '<div class="ec__foot">' +
-          '<span class="ec-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="12" height="12"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>' + (e.int || 0) + '</span>' +
-          '<span class="ec-action"><svg viewBox="0 0 16 16" fill="none" width="12" height="12"><circle cx="10" cy="5" r="4" fill="#7a8a99" fill-opacity=".5"/><circle cx="5" cy="11" r="2.4" fill="#7a8a99" fill-opacity=".5"/></svg>' + (e.ci || 0) + '</span>' +
-          '</div>' +
-          '</a></div>';
-      }).join('');
-    }
-    buildExCards(window.P2_REC, 'p2RecGrid');
+    var grid = document.getElementById('p2RecGrid');
+    if (!grid || !window.P2_REC) return;
+    grid.innerHTML = window.P2_REC.map(buildGridEcCard).join('');
   })();
 
   /* ── interest! トグル ── */
@@ -344,10 +453,59 @@ KTN.pages['p2'] = function () {
 
 };
 
+/* p2-1〜4 共通おすすめグリッドデータ */
+var P2_SUB_REC_DATA = [
+  {
+    title: '春の景色展',
+    venue: '東京<span class="ec__venue-sep">|</span>代官山ヒルサイドF',
+    bg: 'linear-gradient(155deg,#f0e0d0,#c8a888)',
+    s: '02.20', e: '03.10', imgH: 180,
+    status: 'live', remain: '開催中', hours: '11:00-19:00', dist: '2.3km',
+    liaison: false, int: 21, ci: 4,
+  },
+  {
+    title: '現代彫刻の冒険',
+    venue: '東京<span class="ec__venue-sep">|</span>神楽坂BOOK・ART',
+    bg: 'linear-gradient(155deg,#e8d0d8,#b88898)',
+    s: '02.17', e: '03.07', imgH: 200,
+    status: 'live', remain: '残り5日', hours: '12:00-19:00', dist: '4.1km',
+    liaison: true, int: 19, ci: 3,
+    thumbs: ['linear-gradient(135deg,#d4c0cc,#9a7a88)', 'linear-gradient(135deg,#c8b8d4,#8878a8)', 'linear-gradient(135deg,#d4c8b8,#9a8870)'],
+  },
+  {
+    title: 'ポストカード展',
+    venue: '東京<span class="ec__venue-sep">|</span>吉祥寺 M&G',
+    bg: 'linear-gradient(155deg,#d0e8e0,#88b8a8)',
+    s: '02.22', e: '03.12', imgH: 165,
+    status: 'live', remain: '開催中', hours: '12:00-20:00', dist: '8.7km',
+    liaison: false, int: 38, ci: 7,
+  },
+  {
+    title: 'デジタルとアナログのあいだ',
+    venue: '東京<span class="ec__venue-sep">|</span>3331 Arts Chiyoda',
+    bg: 'linear-gradient(155deg,#d8e8d0,#88b878)',
+    s: '02.15', e: '03.20', imgH: 190,
+    status: 'live', remain: '開催中', hours: '11:00-19:00', dist: '5.4km',
+    liaison: 'li-plus', int: 14, ci: 2,
+    thumbs: ['linear-gradient(135deg,#c8d8b8,#78a858)', 'linear-gradient(135deg,#d8e8c8,#98b878)', 'linear-gradient(135deg,#c0d0b8,#808878)'],
+  },
+];
+function renderP2SubRecGrid() {
+  var grid = document.getElementById('p2SubRecGrid'); if (!grid) return;
+  grid.innerHTML = P2_SUB_REC_DATA.map(buildGridEcCard).join('');
+}
+
 /* ────────────────────────────────────────────────────
    P2-1 スケジュール
 ──────────────────────────────────────────────────── */
 KTN.pages['p2-1'] = function () {
+
+  /* ++ posted by card ++ */
+  (function () {
+    var el = document.getElementById('p2PostedByCard');
+    if (!el || !window.P2_POSTED_BY) return;
+    el.innerHTML = buildPersonCard(window.P2_POSTED_BY);
+  })();
 
   /* ── データ定義 ── */
   /* デモ用固定日付。本番は new Date() に差替え */
@@ -546,37 +704,7 @@ KTN.pages['p2-1'] = function () {
   })();
 
   /* ── 末尾おすすめグリッド ── */
-  (function () {
-    var grid = document.getElementById('p2SubRecGrid'); if (!grid) return;
-    var DATA = [
-      { title: '春の景色展', venue: '代官山ヒルサイドF', bg: 'linear-gradient(155deg,#f0e0d0,#c8a888)', tc: 'rgba(0,0,0,.28)', s: '02.20', e: '03.10', liaison: false, int: 21, ci: 4 },
-      { title: '現代彫刻の冒険', venue: '神楽坂BOOK・ART', bg: 'linear-gradient(155deg,#e8d0d8,#b88898)', tc: 'rgba(255,255,255,.6)', s: '02.17', e: '03.07', liaison: true, int: 19, ci: 3 },
-      { title: 'ポストカード展', venue: '吉祥寺 M&G', bg: 'linear-gradient(155deg,#d0e8e0,#88b8a8)', tc: 'rgba(0,0,0,.28)', s: '02.22', e: '03.12', liaison: false, int: 38, ci: 7 },
-      { title: 'デジタルとアナログのあいだ', venue: '3331 Arts Chiyoda', bg: 'linear-gradient(155deg,#d8e8d0,#88b878)', tc: 'rgba(0,0,0,.28)', s: '02.15', e: '03.20', liaison: true, int: 14, ci: 2 },
-    ];
-    grid.innerHTML = DATA.map(function (e) {
-      var li = e.liaison ? '<span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>' : '';
-      return (
-        '<div class="masonry-item"><a href="kotennavi-p2.html" class="ec">' +
-        '<div class="ec__poster">' +
-        '<div class="ec__poster-inner" style="background:' + e.bg + ';color:' + e.tc + '">' +
-        '<div class="ec__poster-overlay">' +
-        '<div class="ec__poster-dates"><span class="year">2026.</span><strong>' + e.s + '</strong><span class="sep">—</span><strong>' + e.e + '</strong></div>' +
-        '<div class="ec__poster-meta"><span class="ec__remain-lt ec__remain-lt--live">開催中</span></div>' +
-        '</div></div></div>' +
-        '<div class="ec__body">' +
-        '<div class="ec__badge-row"><span class="cb cb-content cb-exhibition">exhibition</span><span class="sb sb-live"><span class="pulse"></span>開催中</span>' + li + '</div>' +
-        '<div class="ec__title">' + e.title + '</div>' +
-        '<div class="ec__venue">' + e.venue + '</div>' +
-        '</div>' +
-        '<div class="ec__foot">' +
-        '<span class="ec-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="12" height="12"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>' + e.int + '</span>' +
-        '<span class="ec-action"><svg viewBox="0 0 16 16" fill="none" width="12" height="12"><circle cx="10" cy="5" r="4" fill="#7a8a99" fill-opacity=".5"/><circle cx="5" cy="11" r="2.4" fill="#7a8a99" fill-opacity=".5"/></svg>' + e.ci + '</span>' +
-        '</div>' +
-        '</a></div>'
-      );
-    }).join('');
-  })();
+  renderP2SubRecGrid();
 
 };
 
@@ -594,12 +722,21 @@ KTN.pages['p2-2'] = function () {
       obs.disconnect();
     });
   }, { threshold: 0.1 }).observe(mapEl);
+  /* ++ posted by card ++ */
+  (function () {
+    var el = document.getElementById('p2PostedByCard');
+    if (!el || !window.P2_POSTED_BY) return;
+    el.innerHTML = buildPersonCard(window.P2_POSTED_BY);
+  })();
+  renderP2SubRecGrid();
 };
 
 /* ────────────────────────────────────────────────────
    P2-3 詳細 / P2-4 出展者
 ──────────────────────────────────────────────────── */
-KTN.pages['p2-3'] = function () { };
+KTN.pages['p2-3'] = function () {
+  renderP2SubRecGrid();
+};
 KTN.pages['p2-4'] = function () {
   document.querySelectorAll('.p2-4-creator__watch button').forEach(function (btn) {
     btn.addEventListener('click', function (e) {
@@ -608,6 +745,7 @@ KTN.pages['p2-4'] = function () {
       this.classList.toggle('ktn-btn--ghost', !isOn);
     });
   });
+  renderP2SubRecGrid();
 };
 
 /* ────────────────────────────────────────────────────
@@ -649,22 +787,24 @@ KTN.pages['p2-3'] = function () {
       if (cNum) cNum.textContent = cBase + (cinOn ? 1 : 0);
     });
   }
+  /* ++ posted by card ++ */
+  (function () {
+    var el = document.getElementById('p2PostedByCard');
+    if (!el || !window.P2_POSTED_BY) return;
+    el.innerHTML = buildPersonCard(window.P2_POSTED_BY);
+  })();
 };
 
 /* ────────────────────────────────────────────────────
    P2-4  出展者（既存定義を拡張）
 ──────────────────────────────────────────────────── */
 KTN.pages['p2-4'] = function () {
-  /* watch ボタン */
-  document.querySelectorAll('.p2-4-creator-card__watch').forEach(function (btn) {
-    btn.addEventListener('click', function (e) {
-      e.preventDefault(); e.stopPropagation();
-      var on = this.classList.toggle('is-active');
-      this.innerHTML = on
-        ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="13" height="13"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>watching'
-        : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="13" height="13"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>watch';
-    });
-  });
+  /* ++ posted by card ++ */
+  (function () {
+    var el = document.getElementById('p2PostedByCard');
+    if (!el || !window.P2_POSTED_BY) return;
+    el.innerHTML = buildPersonCard(window.P2_POSTED_BY);
+  })();
 };
 
 
@@ -792,8 +932,14 @@ KTN.pages['p2-5'] = function () {
         '</a>';
     }).join('');
   })();
+  /* ++ posted by card ++ */
+  (function () {
+    var el = document.getElementById('p2PostedByCard');
+    if (!el || !window.P2_POSTED_BY) return;
+    el.innerHTML = buildPersonCard(window.P2_POSTED_BY);
+  })();
 
-  /* ── おすすめの展覧会 ── */
+  /* ++ recommended exhibitions ++ */
   (function () {
     var g = document.getElementById('p25RecGrid');
     if (!g) return;
@@ -801,28 +947,9 @@ KTN.pages['p2-5'] = function () {
       { title: '春の景色展', venue: '代官山ヒルサイドF', bg: 'linear-gradient(155deg,#f0e0d0,#c8a888)', tc: 'rgba(0,0,0,.28)', s: '02.20', e: '03.10', liaison: false, int: 21, ci: 4 },
       { title: '現代彫刻の冒険', venue: '神楽坂BOOK・ART', bg: 'linear-gradient(155deg,#e8d0d8,#b88898)', tc: 'rgba(255,255,255,.6)', s: '02.17', e: '03.07', liaison: true, int: 19, ci: 3 },
       { title: 'ポストカード展', venue: '吉祥寺 M&G', bg: 'linear-gradient(155deg,#d0e8e0,#88b8a8)', tc: 'rgba(0,0,0,.28)', s: '02.22', e: '03.12', liaison: false, int: 38, ci: 7 },
-      { title: '絵画の余白 — 山本純子展', venue: '恵比寿 SPACE NONA', bg: 'linear-gradient(155deg,#e0d8f0,#9880c8)', tc: 'rgba(255,255,255,.6)', s: '02.25', e: '03.08', liaison: false, int: 14, ci: 2 },
+      { title: '絵画の余白', venue: '恵比寿 SPACE NONA', bg: 'linear-gradient(155deg,#e0d8f0,#9880c8)', tc: 'rgba(255,255,255,.6)', s: '02.25', e: '03.08', liaison: false, int: 14, ci: 2 },
     ];
-    g.innerHTML = DATA.map(function (e) {
-      var li = e.liaison ? '<span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>' : '';
-      return '<div class="masonry-item"><a href="kotennavi-p2.html" class="ec">' +
-        '<div class="ec__poster">' +
-        '<div class="ec__poster-inner" style="background:' + e.bg + ';color:' + e.tc + '">' +
-        '<div class="ec__poster-overlay">' +
-        '<div class="ec__poster-dates"><span class="year">2026.</span><strong>' + e.s + '</strong><span class="sep">—</span><strong>' + e.e + '</strong></div>' +
-        '<div class="ec__poster-meta"><span class="ec__remain-lt ec__remain-lt--live">開催中</span></div>' +
-        '</div></div></div>' +
-        '<div class="ec__body">' +
-        '<div class="ec__badge-row"><span class="cb cb-content cb-exhibition">exhibition</span><span class="sb sb-live"><span class="pulse"></span>開催中</span>' + li + '</div>' +
-        '<div class="ec__title">' + e.title + '</div>' +
-        '<div class="ec__venue">' + e.venue + '</div>' +
-        '</div>' +
-        '<div class="ec__foot">' +
-        '<span class="ec-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="12" height="12"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>' + e.int + '</span>' +
-        '<span class="ec-action"><svg viewBox="0 0 16 16" fill="none" width="12" height="12"><circle cx="10" cy="5" r="4" fill="#7a8a99" fill-opacity=".5"/><circle cx="5" cy="11" r="2.4" fill="#7a8a99" fill-opacity=".5"/></svg>' + e.ci + '</span>' +
-        '</div>' +
-        '</a></div>';
-    }).join('');
+    g.innerHTML = DATA.map(buildGridEcCard).join('');
   })();
 };
 
@@ -873,6 +1000,13 @@ KTN.pages['p2-5-1'] = function () {
     var applicantsHtml = (w.status === 'sale' && w.applicants)
       ? '<span class="p25c__applicants">' + w.applicants + '\u4eba\u304c\u7533\u8fbc\u4e2d</span>'
       : '';
+    var consoleHtml = (w.status === 'sale' && w.applicants)
+      ? '<div class="p25c__console-wrap">'
+        + '<button class="p25c__console-btn ktn-action-btn ktn-action-btn--alert-dark"'
+        + ' onclick="event.stopPropagation();event.preventDefault();p251GotoConsole()">'
+        + '\u53d6\u5f15\u30c7\u30b9\u30af\u3078 \u2192</button>'
+        + '</div>'
+      : '';
     return '<a class="' + cardClass + '" href="#" data-creator="' + w.creator + '" data-status="' + dataStatus + '">' +
       '<div class="p25c__img">' +
         '<div class="p25c__img-bg" style="background:' + w.bg + '"></div>' +
@@ -887,6 +1021,7 @@ KTN.pages['p2-5-1'] = function () {
           '<div class="p25c__footer-l">' + badge + applicantsHtml + '</div>' +
           priceHtml +
         '</div>' +
+        consoleHtml +
       '</div>' +
     '</a>';
   }
@@ -930,6 +1065,22 @@ KTN.pages['p2-5-1'] = function () {
       });
     });
   })();
+  /* ── creator/gallery本人: コンソールボタン表示制御 ── */
+  window.p251GotoConsole = function () {
+    var r = window.ktnState && window.ktnState.role;
+    if (r === 'user+creator') window.location.href = 'kotennavi-p3-16.html';
+    else if (r === 'user+gallery') window.location.href = 'kotennavi-p4-16.html';
+  };
+
+  function applyOwner251() {
+    var r = window.ktnState && window.ktnState.role;
+    var isOwner = (r === 'user+creator' || r === 'user+gallery');
+    document.querySelectorAll('.p25c__console-wrap').forEach(function (el) {
+      el.style.display = isOwner ? 'flex' : 'none';
+    });
+  }
+  applyOwner251();
+  window.ktnRender = function () { applyOwner251(); };
 
   /* ── 近くの展覧会 ── */
   (function () {
@@ -955,7 +1106,14 @@ KTN.pages['p2-5-1'] = function () {
     }).join('');
   })();
 
-  /* ── おすすめの展覧会 ── */
+  /* ++ posted by card ++ */
+  (function () {
+    var el = document.getElementById('p2PostedByCard');
+    if (!el || !window.P2_POSTED_BY) return;
+    el.innerHTML = buildPersonCard(window.P2_POSTED_BY);
+  })();
+
+  /* ++ recommended exhibitions ++ */
   (function () {
     var g = document.getElementById('p25RecGrid');
     if (!g) return;
@@ -963,39 +1121,9 @@ KTN.pages['p2-5-1'] = function () {
       { title: '春の景色展', venue: '代官山ヒルサイドF', bg: 'linear-gradient(155deg,#f0e0d0,#c8a888)', tc: 'rgba(0,0,0,.28)', s: '02.20', e: '03.10', liaison: false, int: 21, ci: 4 },
       { title: '現代彫刻の冒険', venue: '神楽坂BOOK・ART', bg: 'linear-gradient(155deg,#e8d0d8,#b88898)', tc: 'rgba(255,255,255,.6)', s: '02.17', e: '03.07', liaison: true, int: 19, ci: 3 },
       { title: 'ポストカード展', venue: '吉祥寺 M&G', bg: 'linear-gradient(155deg,#d0e8e0,#88b8a8)', tc: 'rgba(0,0,0,.28)', s: '02.22', e: '03.12', liaison: false, int: 38, ci: 7 },
-      { title: '絵画の余白 — 山本純子展', venue: '恵比寿 SPACE NONA', bg: 'linear-gradient(155deg,#e0d8f0,#9880c8)', tc: 'rgba(255,255,255,.6)', s: '02.25', e: '03.08', liaison: false, int: 14, ci: 2 },
+      { title: '絵画の余白', venue: '恵比寿 SPACE NONA', bg: 'linear-gradient(155deg,#e0d8f0,#9880c8)', tc: 'rgba(255,255,255,.6)', s: '02.25', e: '03.08', liaison: false, int: 14, ci: 2 },
     ];
-    g.innerHTML = DATA.map(function (e) {
-      var li = e.liaison ? '<span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>' : '';
-      return '<div class="masonry-item"><a href="kotennavi-p2.html" class="ec">' +
-        '<div class="ec__poster" style="background:' + e.bg + '">' +
-        '<div class="ec__poster-inner" style="min-height:160px">' +
-        '<span class="ec__poster-text" style="color:' + e.tc + '">' + e.title.slice(0, 4) + '</span>' +
-        '</div>' +
-        '<div class="ec__poster-overlay">' +
-        '<div class="ec__poster-dates">' +
-        '<span class="year">2026.</span><strong>' + e.s + '</strong>' +
-        '<span class="sep">\u2014</span>' +
-        '<strong>' + e.e + '</strong>' +
-        '</div>' +
-        '</div>' +
-        '</div>' +
-        '<div class="ec__body">' +
-        '<div class="ec__badge-row"><span class="cb cb-content cb-exhibition">exhibition</span><span class="sb sb-live"><span class="pulse"></span>\u958b\u50ac\u4e2d</span>' + li +
-        '<button class="ktn-icon-btn" onclick="this.classList.toggle(\'on\')" data-action="interest">' +
-        '<svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".45" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6" stroke-linejoin="round"/></svg>' +
-        '<span class="tip">\u5174\u5473\u3042\u308b\uff01\u306b\u8ffd\u52a0\u3059\u308b</span>' +
-        '</button>' +
-        '</div>' +
-        '<div class="ec__title">' + e.title + '</div>' +
-        '<div class="ec__venue">' + e.venue + '</div>' +
-        '</div>' +
-        '<div class="ec__foot">' +
-        '<span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".45" stroke="#7a8a99" stroke-opacity=".3" stroke-width=".6"/></svg>' + e.int + '</span>' +
-        '<span class="ec-action"><svg viewBox="0 0 16 16" fill="none"><circle cx="10" cy="5" r="4" fill="#7a8a99" opacity=".45"/><circle cx="5" cy="11" r="2.4" fill="#7a8a99" opacity=".45"/></svg>' + e.ci + '</span>' +
-        '</div>' +
-        '</a></div>';
-    }).join('');
+    g.innerHTML = DATA.map(buildGridEcCard).join('');
   })();
 };
 
@@ -1760,6 +1888,13 @@ KTN.pages['p6'] = function() {
       }
     });
   });
+
+  /* ++ posted by card ++ */
+  (function () {
+    var el = document.getElementById('p6PostedByCard');
+    if (!el || !window.P2_POSTED_BY) return;
+    el.innerHTML = buildPersonCard(window.P2_POSTED_BY);
+  })();
 };
 
 /* ────────────────────────────────────────────────────
@@ -1820,6 +1955,24 @@ KTN.pages['p6-1'] = function() {
 KTN.pages['p6-2'] = function() {
   /* p6 共通描画処理を呼び出す（ABOUT・コメント・More by・各種ウィジェット・モーダル関数） */
   if (typeof KTN.pages['p6'] === 'function') KTN.pages['p6']();
+
+  /* オーナー（creator本人）: 申込ボタン → 取引デスクボタンに切替 */
+  var applyBtn = document.getElementById('p62ApplyBtn');
+  var deskBtn  = document.getElementById('p62DeskBtn');
+
+  function applyOwnerP62() {
+    var isOwner = (KTN.role === 'user+creator');
+    if (applyBtn) applyBtn.style.display = isOwner ? 'none' : '';
+    if (deskBtn)  deskBtn.style.display  = isOwner ? '' : 'none';
+  }
+  applyOwnerP62();
+
+  /* p6 は window.setR を独自定義するため ktnRender 経由では呼ばれない → setR をラップ */
+  var _prevSetR = window.setR;
+  window.setR = function(role, btn) {
+    if (typeof _prevSetR === 'function') _prevSetR(role, btn);
+    applyOwnerP62();
+  };
 };
 
 /* ══════════════════════════════════════════════════════
@@ -3338,6 +3491,16 @@ KTN.pages['p3-3'] = function () {
 
     selects.forEach(function(sel){ sel.addEventListener('change', filterWorks); });
   })();
+
+  // 6. creator本人: 申込中カードにコンソールボタン表示
+  function applyOwner() {
+    var isOwner = (window.ktnState && window.ktnState.role === 'user+creator');
+    document.querySelectorAll('.p33-console-wrap').forEach(function(el) {
+      el.style.display = isOwner ? 'flex' : 'none';
+    });
+  }
+  applyOwner();
+  window.ktnRender = function () { applyOwner(); };
 };
 
 /* ────────────────────────────────────────────────────
@@ -5154,7 +5317,14 @@ KTN.pages['p4-16'] = function () {
    P2-11  展覧会 新規投稿・編集・クローン
 ════════════════════════════════════════════════════ */
 KTN.pages['p2-11'] = function () {
-  window.ktnRender = function () {};
+  function syncMgmtBar() {
+    const r = window.ktnState && window.ktnState.role || 'gallery';
+    document.body.classList.remove('p3-page', 'p4-page', 'p5-page');
+    if (r === 'creator')      document.body.classList.add('p3-page');
+    else if (r === 'gallery') document.body.classList.add('p4-page');
+  }
+  syncMgmtBar();
+  window.ktnRender = function () { syncMgmtBar(); };
 };
 
 /* ════════════════════════════════════════════════════
@@ -5182,8 +5352,40 @@ KTN.pages['p4-18'] = function () {
 };
 
 /* ════════════════════════════════════════════════════
+   P5-11/12/13  アカウント管理
+════════════════════════════════════════════════════ */
+(function () {
+  function p5AcctPage(pageId) {
+    return function () {
+      document.body.classList.add('p5-page', pageId + '-page');
+      document.body.style.setProperty('--page-accent',        '#b8608c');
+      document.body.style.setProperty('--page-accent-bg',     'rgba(184,96,140,.1)');
+      document.body.style.setProperty('--page-accent-border', '#c97aaa');
+      function applyRole() {
+        var role = window.curRole || 'guest';
+        var canView = (role === 'user+' || role === 'admin');
+        var wrap = document.querySelector('.' + pageId.replace('-','') + '-wrap');
+        if (wrap) wrap.style.display = canView ? '' : 'none';
+      }
+      window.ktnRender = function () { applyRole(); };
+      applyRole();
+    };
+  }
+  KTN.pages['p5-11'] = p5AcctPage('p5-11');
+  KTN.pages['p5-12'] = p5AcctPage('p5-12');
+  KTN.pages['p5-13'] = p5AcctPage('p5-13');
+}());
+
+/* ════════════════════════════════════════════════════
    P11-4  リエゾンプラス機能申込
 ════════════════════════════════════════════════════ */
 KTN.pages['p11-4'] = function () {
-  window.ktnRender = function () {};
+  function syncMgmtBar() {
+    const r = window.ktnState && window.ktnState.role || 'gallery';
+    document.body.classList.remove('p3-page', 'p4-page', 'p5-page');
+    if (r === 'creator')      document.body.classList.add('p3-page');
+    else if (r === 'gallery') document.body.classList.add('p4-page');
+  }
+  syncMgmtBar();
+  window.ktnRender = function () { syncMgmtBar(); };
 };

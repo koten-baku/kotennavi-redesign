@@ -1,0 +1,1050 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>個展なび — Typography & Text System</title>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@400;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=DM+Serif+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Shippori+Mincho:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./kotennavi-common.css">
+<style>
+/* ── デモ用リセット・レイアウト ── */
+body { padding-top: 34px; }
+
+.ty-wrap {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 24px 80px;
+}
+.ty-page-title {
+  text-align: center;
+  padding: 36px 0 8px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: .9rem;
+  font-weight: 600;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.ty-page-sub {
+  text-align: center;
+  padding: 0 0 36px;
+  font-size: .75rem;
+  color: var(--muted);
+}
+
+/* ── セクション ── */
+.ty-section {
+  margin-bottom: 52px;
+}
+.ty-section-ttl {
+  font-family: 'Montserrat', sans-serif;
+  font-size: .62rem;
+  font-weight: 600;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 8px;
+  margin-bottom: 20px;
+}
+.ty-note {
+  font-size: .75rem;
+  color: var(--muted);
+  background: #e8edf2;
+  border-left: 3px solid var(--border);
+  padding: 8px 12px;
+  border-radius: 2px;
+  margin-bottom: 16px;
+}
+.ty-note code {
+  font-size: .75rem;
+  background: rgba(0,0,0,.06);
+  padding: 1px 5px;
+  border-radius: 2px;
+}
+
+/* ── 行レイアウト ── */
+.ty-row {
+  display: flex;
+  align-items: baseline;
+  gap: 20px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f0f4f8;
+  flex-wrap: wrap;
+}
+.ty-row:last-child { border-bottom: none; }
+.ty-row-meta {
+  min-width: 200px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.ty-row-name {
+  font-family: 'Montserrat', sans-serif;
+  font-size: .62rem;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: .06em;
+}
+.ty-row-spec {
+  font-family: 'Montserrat', sans-serif;
+  font-size: .62rem;
+  color: #9aa8b4;
+}
+.ty-row-sample { flex: 1; }
+
+/* ── カラーチップグリッド ── */
+.ty-colors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.ty-color-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-width: 80px;
+}
+.ty-color-swatch {
+  width: 56px;
+  height: 40px;
+  border-radius: 4px;
+  border: 1px solid rgba(0,0,0,.1);
+}
+.ty-color-name {
+  font-family: 'Montserrat', sans-serif;
+  font-size: .62rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-align: center;
+}
+.ty-color-val {
+  font-family: 'Montserrat', sans-serif;
+  font-size: .62rem;
+  color: #9aa8b4;
+  text-align: center;
+}
+
+/* ── フォントサンプルカード ── */
+.ty-font-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.ty-font-card {
+  flex: 1;
+  min-width: 200px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px;
+}
+.ty-font-card-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: .62rem;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+.ty-font-card-var {
+  font-family: 'Montserrat', sans-serif;
+  font-size: .62rem;
+  color: #9aa8b4;
+  margin-bottom: 8px;
+}
+
+/* ── サイズスケールバー ── */
+.ty-scale-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 6px 0;
+  border-bottom: 1px solid #f0f4f8;
+}
+.ty-scale-row:last-child { border-bottom: none; }
+.ty-scale-size {
+  font-family: 'Montserrat', sans-serif;
+  font-size: .62rem;
+  color: var(--muted);
+  min-width: 52px;
+  flex-shrink: 0;
+}
+.ty-scale-px {
+  font-family: 'Montserrat', sans-serif;
+  font-size: .62rem;
+  color: #9aa8b4;
+  min-width: 36px;
+  flex-shrink: 0;
+}
+.ty-scale-use {
+  font-family: 'Montserrat', sans-serif;
+  font-size: .62rem;
+  color: #9aa8b4;
+  min-width: 180px;
+  flex-shrink: 0;
+}
+
+/* ── 背景パネル ── */
+.ty-panel {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 20px 24px;
+  margin-bottom: 12px;
+}
+.ty-panel-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: .62rem;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.ty-panel-paper {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 20px 24px;
+  margin-bottom: 12px;
+}
+.ty-panel-mgmt {
+  background: #eae6e0;
+  border: 1px solid #ccc8c0;
+  border-radius: 6px;
+  padding: 20px 24px;
+  margin-bottom: 12px;
+}
+
+/* ── バッジ表示 ── */
+.ty-badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 0;
+}
+
+/* ── 共通dbar (common.cssから継承) ── */
+</style>
+</head>
+<body>
+
+<!-- デモバー -->
+<div class="dbar">
+  <span class="dbar-sep">ロール：</span>
+  <button class="dbtn on" data-role="none" onclick="setRole(this)">(なし)</button>
+  <button class="dbtn" data-role="creator" onclick="setRole(this)">Creator</button>
+  <button class="dbtn" data-role="gallery" onclick="setRole(this)">Gallery</button>
+  <button class="dbtn" data-role="user" onclick="setRole(this)">User</button>
+  <span class="dbar-sep">ページ種別：</span>
+  <button class="dbtn on" data-type="display" onclick="setPageType(this)">表示系</button>
+  <button class="dbtn" data-type="mgmt" onclick="setPageType(this)">管理系</button>
+</div>
+
+<div class="ty-wrap">
+<div class="ty-page-title">Typography & Text System</div>
+<div class="ty-page-sub">フォント・色・サイズ・テキストクラスの定義一覧</div>
+
+<!-- ════════ 1. カラー変数 ════════ -->
+<div class="ty-section">
+  <div class="ty-section-ttl">1. カラー変数（:root）</div>
+
+  <div style="margin-bottom:16px">
+    <div style="font-family:'Montserrat',sans-serif;font-size:.62rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-bottom:10px">テキスト・背景・ボーダー</div>
+    <div class="ty-colors">
+      <div class="ty-color-chip">
+        <div class="ty-color-swatch" style="background:#231815"></div>
+        <div class="ty-color-name">--ink</div>
+        <div class="ty-color-val">#231815</div>
+      </div>
+      <div class="ty-color-chip">
+        <div class="ty-color-swatch" style="background:#3d4f5e"></div>
+        <div class="ty-color-name">--muted</div>
+        <div class="ty-color-val">#3d4f5e</div>
+      </div>
+      <div class="ty-color-chip">
+        <div class="ty-color-swatch" style="background:#f0f4f8"></div>
+        <div class="ty-color-name">--paper</div>
+        <div class="ty-color-val">#f0f4f8</div>
+      </div>
+      <div class="ty-color-chip">
+        <div class="ty-color-swatch" style="background:#f7f9fb"></div>
+        <div class="ty-color-name">--warm</div>
+        <div class="ty-color-val">#f7f9fb</div>
+      </div>
+      <div class="ty-color-chip">
+        <div class="ty-color-swatch" style="background:#d0dae4"></div>
+        <div class="ty-color-name">--border</div>
+        <div class="ty-color-val">#d0dae4</div>
+      </div>
+      <div class="ty-color-chip">
+        <div class="ty-color-swatch" style="background:#eae6e0"></div>
+        <div class="ty-color-name">mgmt-bg</div>
+        <div class="ty-color-val">#eae6e0</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-bottom:16px">
+    <div style="font-family:'Montserrat',sans-serif;font-size:.62rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-bottom:10px">アクセント・リンク・状態</div>
+    <div class="ty-colors">
+      <div class="ty-color-chip">
+        <div class="ty-color-swatch" style="background:#005da7"></div>
+        <div class="ty-color-name">--accent</div>
+        <div class="ty-color-val">#005da7</div>
+      </div>
+      <div class="ty-color-chip">
+        <div class="ty-color-swatch" style="background:#3a90e0"></div>
+        <div class="ty-color-name">--on</div>
+        <div class="ty-color-val">#3a90e0</div>
+      </div>
+      <div class="ty-color-chip">
+        <div class="ty-color-swatch" style="background:#c0392b"></div>
+        <div class="ty-color-name">--lr / --danger</div>
+        <div class="ty-color-val">#c0392b</div>
+      </div>
+      <div class="ty-color-chip">
+        <div class="ty-color-swatch" style="background:#8a6a00"></div>
+        <div class="ty-color-name">--lp</div>
+        <div class="ty-color-val">#8a6a00</div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div style="font-family:'Montserrat',sans-serif;font-size:.62rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-bottom:10px">ロールカラー・ページアクセント</div>
+    <div class="ty-colors">
+      <div class="ty-color-chip">
+        <div class="ty-color-swatch" style="background:#2a5f7a"></div>
+        <div class="ty-color-name">Creator</div>
+        <div class="ty-color-val">#2a5f7a</div>
+      </div>
+      <div class="ty-color-chip">
+        <div class="ty-color-swatch" style="background:#8b5e3c"></div>
+        <div class="ty-color-name">Gallery</div>
+        <div class="ty-color-val">#8b5e3c</div>
+      </div>
+      <div class="ty-color-chip">
+        <div class="ty-color-swatch" style="background:#b8608c"></div>
+        <div class="ty-color-name">User</div>
+        <div class="ty-color-val">#b8608c</div>
+      </div>
+      <div class="ty-color-chip">
+        <div class="ty-color-swatch" style="background:#1a4a88"></div>
+        <div class="ty-color-name">Primary btn</div>
+        <div class="ty-color-val">#1a4a88</div>
+      </div>
+      <div class="ty-color-chip">
+        <div class="ty-color-swatch" style="background:#b43c14"></div>
+        <div class="ty-color-name">Danger</div>
+        <div class="ty-color-val">#b43c14</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:16px">
+    <div style="font-family:'Montserrat',sans-serif;font-size:.62rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-bottom:10px">ダークテーマ（--dk-* / LIAISON・LIAISON+）</div>
+    <div class="ty-colors">
+      <div class="ty-color-chip">
+        <div class="ty-color-swatch" style="background:#151e2c;border-color:rgba(255,255,255,.12)"></div>
+        <div class="ty-color-name">--dk-bg</div>
+        <div class="ty-color-val">#151e2c</div>
+      </div>
+      <div class="ty-color-chip">
+        <div class="ty-color-swatch" style="background:#1e2d3d;border-color:rgba(255,255,255,.12)"></div>
+        <div class="ty-color-name">--dk-bg2</div>
+        <div class="ty-color-val">#1e2d3d</div>
+      </div>
+      <div class="ty-color-chip">
+        <div class="ty-color-swatch" style="background:#344a5e;border-color:rgba(255,255,255,.12)"></div>
+        <div class="ty-color-name">--dk-bg (LIAISON+)</div>
+        <div class="ty-color-val">#344a5e</div>
+      </div>
+      <div class="ty-color-chip">
+        <div class="ty-color-swatch" style="background:#c9a96e"></div>
+        <div class="ty-color-name">--dk-gold</div>
+        <div class="ty-color-val">#c9a96e</div>
+      </div>
+      <div class="ty-color-chip">
+        <div class="ty-color-swatch" style="background:rgba(255,255,255,.85);border-color:#ccc"></div>
+        <div class="ty-color-name">--dk-text</div>
+        <div class="ty-color-val">rgba(255,255,255,.85)</div>
+      </div>
+      <div class="ty-color-chip">
+        <div class="ty-color-swatch" style="background:rgba(255,255,255,.62);border-color:#ccc"></div>
+        <div class="ty-color-name">--dk-sub</div>
+        <div class="ty-color-val">rgba(255,255,255,.62)</div>
+      </div>
+      <div class="ty-color-chip">
+        <div class="ty-color-swatch" style="background:rgba(255,255,255,.38);border-color:#ccc"></div>
+        <div class="ty-color-name">--dk-meta</div>
+        <div class="ty-color-val">rgba(255,255,255,.38)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ 2. フォントファミリー ════════ -->
+<div class="ty-section">
+  <div class="ty-section-ttl">2. フォントファミリー（--fb / --fs / --fn / --fm / --font-en-*）</div>
+
+  <div class="ty-font-cards">
+
+    <div class="ty-font-card">
+      <div class="ty-font-card-label">日本語 UI・管理系</div>
+      <div class="ty-font-card-var">--fn / Zen Kaku Gothic New</div>
+      <div style="font-family:'Zen Kaku Gothic New',sans-serif;font-weight:400;font-size:.9rem;margin-bottom:4px">Regular 400 — UIテキスト・ラベル・メタ情報</div>
+      <div style="font-family:'Zen Kaku Gothic New',sans-serif;font-weight:500;font-size:.9rem;margin-bottom:4px">Medium 500 — 強調・見出し補助</div>
+      <div style="font-family:'Zen Kaku Gothic New',sans-serif;font-weight:700;font-size:.9rem">Bold 700 — 管理系見出し</div>
+    </div>
+
+    <div class="ty-font-card">
+      <div class="ty-font-card-label">日本語 コンテンツ・読み物</div>
+      <div class="ty-font-card-var">--fs / Shippori Mincho</div>
+      <div style="font-family:'Shippori Mincho',serif;font-weight:400;font-size:.9rem;margin-bottom:4px">Regular 400 — <strong style="color:#2a5f7a">表示系本文・略歴・説明文</strong></div>
+      <div style="font-family:'Shippori Mincho',serif;font-weight:500;font-size:1rem;margin-bottom:4px">Medium 500 — セクション見出し・ページタイトル</div>
+      <div style="font-family:'Shippori Mincho',serif;font-weight:600;font-size:1rem;margin-bottom:4px">SemiBold 600 — 作品タイトル・人名</div>
+      <div style="font-family:'Shippori Mincho',serif;font-weight:700;font-size:1rem">Bold 700 — メインタイトル</div>
+    </div>
+
+    <div class="ty-font-card">
+      <div class="ty-font-card-label">英数字 ラベル・数値</div>
+      <div class="ty-font-card-var">--fm / Montserrat</div>
+      <div style="font-family:'Montserrat',sans-serif;font-weight:400;font-size:.9rem;margin-bottom:4px">Regular 400 — 数値・日付</div>
+      <div style="font-family:'Montserrat',sans-serif;font-weight:500;font-size:.9rem;margin-bottom:4px">Medium 500 — ナビ・タブ</div>
+      <div style="font-family:'Montserrat',sans-serif;font-weight:600;font-size:.9rem;margin-bottom:4px">SemiBold 600 — ラベル・バッジ</div>
+      <div style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:.9rem">Bold 700 — 強調数値</div>
+    </div>
+
+    <div class="ty-font-card">
+      <div class="ty-font-card-label">英語 固有名詞</div>
+      <div class="ty-font-card-var">--font-en-name / .ktn-en-sub</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1rem;margin-bottom:4px">Regular — 英語名</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:400;font-size:1rem;margin-bottom:4px">Italic — クリエイター英名</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;font-size:1rem">Medium Italic — 展覧会・作品英名</div>
+    </div>
+
+    <div class="ty-font-card">
+      <div class="ty-font-card-label">英語 ページラベル</div>
+      <div class="ty-font-card-var">--font-en-label / .ktn-en-label</div>
+      <div style="font-family:'Cinzel',serif;font-weight:400;font-size:.82rem;margin-bottom:4px">Regular 400 — ARCHIVE</div>
+      <div style="font-family:'Cinzel',serif;font-weight:600;font-size:.82rem">SemiBold 600 — LIAISON+ CONSOLE</div>
+    </div>
+
+    <div class="ty-font-card">
+      <div class="ty-font-card-label">英語 セクション見出しインライン</div>
+      <div class="ty-font-card-var">.ktn-sec-en / DM Serif Display italic</div>
+      <div style="font-size:.75rem;color:var(--muted);margin-bottom:8px">セクション見出しタイトルの日本語直後にインラインで添えるサブテキスト。em-dash（—）で区切る。</div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div style="font-family:var(--fs);font-weight:600;font-size:.9rem;color:var(--ink)">この展覧会について — <span style="font-family:'DM Serif Display',serif;font-style:italic;font-size:.75rem;color:var(--muted);font-weight:400">About this exhibition</span></div>
+        <div style="font-family:var(--fs);font-weight:600;font-size:.9rem;color:var(--ink)">近くの展覧会 — <span style="font-family:'DM Serif Display',serif;font-style:italic;font-size:.75rem;color:var(--muted);font-weight:400">Nearby</span></div>
+        <div style="font-family:var(--fs);font-weight:600;font-size:.9rem;color:var(--ink)">おすすめの記事 — <span style="font-family:'DM Serif Display',serif;font-style:italic;font-size:.75rem;color:var(--muted);font-weight:400">Articles</span></div>
+      </div>
+    </div>
+
+    <div class="ty-font-card">
+      <div class="ty-font-card-label">英語 装飾見出し</div>
+      <div class="ty-font-card-var">--fb / Bodoni Moda</div>
+      <div style="font-family:'Bodoni Moda',serif;font-weight:400;font-size:1rem;margin-bottom:4px">Regular — タイトル装飾</div>
+      <div style="font-family:'Bodoni Moda',serif;font-style:italic;font-weight:400;font-size:1rem;margin-bottom:4px">Italic — サイト名・ブランド</div>
+      <div style="font-family:'Bodoni Moda',serif;font-weight:700;font-size:1rem">Bold — 強調タイトル</div>
+    </div>
+
+  </div>
+
+  <!-- 使い分けルール -->
+  <div style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap">
+    <div style="flex:1;min-width:260px;background:#fff;border:1px solid var(--border);border-radius:6px;padding:16px 18px">
+      <div style="font-family:'Montserrat',sans-serif;font-size:.62rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#2a5f7a;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid #2a5f7a">--fs Shippori Mincho の使いどころ</div>
+      <div style="font-size:.75rem;line-height:1.8;color:var(--ink)">
+        <div style="margin-bottom:6px"><strong>タイトル・見出し・人名</strong>（全ページ共通）<br>
+          <span style="color:var(--muted);font-size:.7rem">作品名・展覧会名・クリエイター名・セクション見出し</span></div>
+        <div><strong>表示系ページの読ませる文章</strong><br>
+          <span style="color:var(--muted);font-size:.7rem">.p2-about__body / .wd-body / .p3-prof-bio / .p4-prof-bio<br>.p3-head__bio-text / .p6-article__excerpt / .ac__lead<br>.p2-benefit__body / .p2-1-sched-item__desc</span></div>
+      </div>
+    </div>
+    <div style="flex:1;min-width:260px;background:#fff;border:1px solid var(--border);border-radius:6px;padding:16px 18px">
+      <div style="font-family:'Montserrat',sans-serif;font-size:.62rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid var(--border)">--fn Zen Kaku Gothic New の使いどころ</div>
+      <div style="font-size:.75rem;line-height:1.8;color:var(--ink)">
+        <div style="margin-bottom:6px"><strong>UI・操作・メタ情報</strong>（全ページ共通）<br>
+          <span style="color:var(--muted);font-size:.7rem">ナビ・タブ・バッジ・ラベル・日付・件数・注意書き</span></div>
+        <div><strong>管理系ページ全般</strong><br>
+          <span style="color:var(--muted);font-size:.7rem">p2-12・p3-15〜16・p4-15〜16・p4-18・p5-11〜15 など<br>フォーム・入力欄・操作説明・ヘルプテキスト</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ 3. 文字サイズスケール ════════ -->
+<div class="ty-section">
+  <div class="ty-section-ttl">3. 文字サイズスケール（16px基準）</div>
+  <div class="ty-note">実際のページで使われているサイズの一覧。<code>rem</code> 値で統一。</div>
+
+  <div class="ty-panel">
+    <div class="ty-panel-label">サイズスケール</div>
+
+    <div class="ty-scale-row">
+      <div class="ty-scale-size">.42rem〜.57rem</div>
+      <div class="ty-scale-px">≈7〜9px</div>
+      <div class="ty-scale-use">バッジ内ラベル（CREATOR/GALLERY/USER）・p3/p4セクションアクセントラベル（WORKS等）・タグバー補助</div>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <span style="font-size:.42rem;font-family:'Montserrat',sans-serif;font-weight:600;letter-spacing:.15em;color:var(--ink)">CREATOR</span>
+        <span style="font-size:.55rem;font-family:'Montserrat',sans-serif;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:#2a5f7a">WORKS</span>
+        <span style="font-size:.57rem;font-family:'Montserrat',sans-serif;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)">EXHIBITIONS</span>
+      </div>
+    </div>
+    <div class="ty-scale-row">
+      <div class="ty-scale-size">.62rem</div>
+      <div class="ty-scale-px">≈9.9px</div>
+      <div class="ty-scale-use">カードメタ（会場・日時・ジャンル・作品ID）・コンポーネント補足ラベル・バッジ説明文</div>
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+        <span style="font-size:.62rem;color:var(--muted)">2026.05.21</span>
+        <span style="font-size:.62rem;font-family:'Montserrat',sans-serif;color:var(--muted)">AW-20260001</span>
+        <span style="font-size:.62rem;color:var(--muted)">東京都渋谷区</span>
+      </div>
+    </div>
+    <div class="ty-scale-row">
+      <div class="ty-scale-size">.75rem</div>
+      <div class="ty-scale-px">≈12px</div>
+      <div class="ty-scale-use">パンくず・タグ・サブナビ・ktn-en-label・ページ遷移ボタン（ktn-action-btn）・操作ボタン（ktn-op-btn）</div>
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+        <span style="font-size:.75rem;color:var(--muted)">個展なび › 田中 透 › LIAISONコンソール</span>
+        <span style="font-size:.75rem;font-family:'Cinzel',serif;color:var(--muted)">LIAISON+ CONSOLE</span>
+        <span style="font-size:.75rem;font-family:'Montserrat',sans-serif;font-weight:600;color:var(--ink)">取引デスクへ →</span>
+        <span style="font-size:.75rem;color:var(--ink)">確定する</span>
+        <span style="font-size:.75rem;color:#b43c14">削除する</span>
+      </div>
+    </div>
+    <div class="ty-scale-row">
+      <div class="ty-scale-size">.82rem</div>
+      <div class="ty-scale-px">≈13.1px</div>
+      <div class="ty-scale-use">カード内テキスト・FAQ本文・コメント・レビュー本文・補助見出し（名前・タイトル小）</div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <span style="font-size:.82rem;color:var(--ink)">Gallery SOIL 渋谷</span>
+        <span style="font-size:.82rem;color:var(--muted)">在庫確認後、購入確定のご連絡を差し上げます。</span>
+      </div>
+    </div>
+    <div class="ty-scale-row">
+      <div class="ty-scale-size">.9rem</div>
+      <div class="ty-scale-px">≈14.4px</div>
+      <div class="ty-scale-use">メイン本文・略歴・展覧会説明文・フォーム入力・ページ説明文</div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <div style="font-size:.9rem;font-weight:400;color:var(--ink);line-height:1.8">油彩を中心に、光と影の対話をテーマにした作品を制作しています。</div>
+        <div style="font-size:.9rem;color:var(--muted)">このページでは出品作品の在庫管理と申込状況を確認できます。</div>
+      </div>
+    </div>
+    <div class="ty-scale-row">
+      <div class="ty-scale-size">1rem</div>
+      <div class="ty-scale-px">16px</div>
+      <div class="ty-scale-use">セクションタイトル（ktn-section__title）・モーダルタイトル・クリエイター名・ギャラリー名・展覧会カードタイトル</div>
+      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+        <span style="font-size:1rem;font-family:'Shippori Mincho',serif;font-weight:600;color:var(--ink)">展示中の作品</span>
+        <span style="font-size:1rem;font-family:'Shippori Mincho',serif;font-weight:700;color:var(--ink)">受取確認</span>
+        <span style="font-size:1rem;font-family:'Shippori Mincho',serif;font-weight:600;color:var(--ink)">田中 透</span>
+        <span style="font-size:1rem;font-family:'Shippori Mincho',serif;font-weight:600;color:var(--ink)">Gallery SOIL</span>
+      </div>
+    </div>
+    <div class="ty-scale-row">
+      <div class="ty-scale-size">1.3rem</div>
+      <div class="ty-scale-px">≈20.8px</div>
+      <div class="ty-scale-use">コンパクトヒーロー名前（P3/P4下層）・管理ページ見出し（ktn-edit-head__title）</div>
+      <div style="display:flex;align-items:baseline;gap:20px">
+        <span style="font-size:1.3rem;font-family:'Shippori Mincho',serif;font-weight:600;color:var(--ink)">田中 透</span>
+        <span style="font-size:1.3rem;font-weight:700;color:var(--ink)">プロフィール編集</span>
+      </div>
+    </div>
+    <div class="ty-scale-row">
+      <div class="ty-scale-size">1.5rem</div>
+      <div class="ty-scale-px">24px</div>
+      <div class="ty-scale-use">P3/P4フルヒーロー名前・作品タイトル（p6）・展覧会タイトル</div>
+      <div style="font-size:1.5rem;font-family:'Shippori Mincho',serif;font-weight:600;color:var(--ink)">霧の朝</div>
+    </div>
+    <div class="ty-scale-row">
+      <div class="ty-scale-size">1.8rem</div>
+      <div class="ty-scale-px">≈28.8px</div>
+      <div class="ty-scale-use">大型ヒーロー見出し・トップページ等の主役テキスト</div>
+      <div style="font-size:1.8rem;font-family:'Shippori Mincho',serif;font-weight:600;color:var(--ink)">田中 透</div>
+    </div>
+    <div class="ty-scale-row">
+      <div class="ty-scale-size">2.4rem</div>
+      <div class="ty-scale-px">≈38.4px</div>
+      <div class="ty-scale-use">最大ディスプレイ（P1トップ等）</div>
+      <div style="font-size:2.4rem;font-family:'Shippori Mincho',serif;font-weight:700;color:var(--ink)">個展なび</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════ 4. テキストスタイル — 使用例 ════════ -->
+<div class="ty-section">
+  <div class="ty-section-ttl">4. テキストスタイル — 背景別の見え方</div>
+
+  <!-- 白背景 -->
+  <div class="ty-panel">
+    <div class="ty-panel-label">白背景（#fff）— カード・モーダル内</div>
+
+    <div class="ty-row">
+      <div class="ty-row-meta">
+        <div class="ty-row-name">ページ見出し</div>
+        <div class="ty-row-spec">Shippori Mincho 700 / 1.3rem</div>
+      </div>
+      <div class="ty-row-sample" style="font-size:1.3rem;font-family:'Shippori Mincho',serif;font-weight:700;color:var(--ink)">プロフィール編集</div>
+    </div>
+
+    <div class="ty-row">
+      <div class="ty-row-meta">
+        <div class="ty-row-name">セクションタイトル</div>
+        <div class="ty-row-spec">Shippori Mincho 600 / 1rem</div>
+      </div>
+      <div class="ty-row-sample" style="font-size:1rem;font-family:'Shippori Mincho',serif;font-weight:600;color:var(--ink)">展示中の作品</div>
+    </div>
+
+    <div class="ty-row">
+      <div class="ty-row-meta">
+        <div class="ty-row-name">読み物本文（--rt-*）</div>
+        <div class="ty-row-spec">Shippori Mincho 400 / .9rem / lh1.9 / ls.04em<br><span style="color:#2a5f7a">.p2-about__body / .wd-body / .p3-prof-bio 等</span></div>
+      </div>
+      <div class="ty-row-sample" style="font-family:'Shippori Mincho',serif;font-size:.9rem;font-weight:400;color:var(--ink);line-height:1.9;letter-spacing:.04em">展覧会の説明や作品について、あるいはクリエイターの略歴など、読ませることを目的とした本文テキストが入ります。行間は1.9、字間は.04emを基準とします。</div>
+    </div>
+
+    <div class="ty-row">
+      <div class="ty-row-meta">
+        <div class="ty-row-name">プレビュー抜粋（--rt-pre-*）</div>
+        <div class="ty-row-spec">Shippori Mincho 400 / .82rem / lh1.9 / ls.04em<br><span style="color:#2a5f7a">.ac__lead / .p6-article__excerpt</span></div>
+      </div>
+      <div class="ty-row-sample" style="font-family:'Shippori Mincho',serif;font-size:.82rem;font-weight:400;color:var(--muted);line-height:1.9;letter-spacing:.04em">カードや一覧ページで表示される短い抜粋テキスト。行数制限（-webkit-line-clamp）により折り返し数を制限し、全文は詳細ページで表示します。</div>
+    </div>
+
+    <div class="ty-row">
+      <div class="ty-row-meta">
+        <div class="ty-row-name">ページ説明文（UI）</div>
+        <div class="ty-row-spec">Zen Kaku Gothic New 400 / .9rem / muted</div>
+      </div>
+      <div class="ty-row-sample" style="font-size:.9rem;font-weight:400;color:var(--muted)">このページでは出品作品の在庫管理と申込状況を確認できます。</div>
+    </div>
+
+    <div class="ty-row">
+      <div class="ty-row-meta">
+        <div class="ty-row-name">ヘルプ・注釈テキスト</div>
+        <div class="ty-row-spec">Zen Kaku Gothic New / .82rem / muted</div>
+      </div>
+      <div class="ty-row-sample" style="font-size:.82rem;color:var(--muted);line-height:1.7">※ 変更後は審査があります。承認まで数日かかる場合があります。<br>※ 一度設定した内容は次の展覧会からの適用となります。</div>
+    </div>
+
+    <div class="ty-row">
+      <div class="ty-row-meta">
+        <div class="ty-row-name">エラーテキスト</div>
+        <div class="ty-row-spec">.75rem / #b43c14</div>
+      </div>
+      <div class="ty-row-sample" style="font-size:.75rem;color:#b43c14">このフィールドは必須です。</div>
+    </div>
+
+    <div class="ty-row">
+      <div class="ty-row-meta">
+        <div class="ty-row-name">フォームラベル</div>
+        <div class="ty-row-spec">Zen Kaku Gothic New 500 / .75rem</div>
+      </div>
+      <div class="ty-row-sample">
+        <div style="font-size:.75rem;font-weight:500;color:var(--ink);margin-bottom:4px">ユーザーID <span style="font-size:.75rem;color:#b43c14;font-weight:400">必須</span></div>
+        <div style="font-size:.75rem;color:var(--muted);margin-top:2px">半角英数字・アンダースコアのみ使用可</div>
+      </div>
+    </div>
+
+    <div class="ty-row">
+      <div class="ty-row-meta">
+        <div class="ty-row-name">英語サブテキスト（固有名詞）</div>
+        <div class="ty-row-spec">.ktn-en-sub / Cormorant Garamond italic</div>
+      </div>
+      <div class="ty-row-sample">
+        <span class="ktn-en-sub">Toru Tanaka</span>
+      </div>
+    </div>
+
+    <div class="ty-row">
+      <div class="ty-row-meta">
+        <div class="ty-row-name">英語ページラベル</div>
+        <div class="ty-row-spec">.ktn-en-label / Cinzel 400</div>
+      </div>
+      <div class="ty-row-sample">
+        <span class="ktn-en-label">LIAISON+ CONSOLE</span>
+        &emsp;
+        <span class="ktn-en-label">EXHIBITION ARCHIVE</span>
+      </div>
+    </div>
+
+    <div class="ty-row">
+      <div class="ty-row-meta">
+        <div class="ty-row-name">数値・日付</div>
+        <div class="ty-row-spec">Montserrat / 各サイズ</div>
+      </div>
+      <div class="ty-row-sample" style="font-family:'Montserrat',sans-serif;font-size:.9rem;color:var(--ink)">
+        2026.05.21 &emsp; ¥48,000 &emsp; <span style="font-weight:700;font-size:1rem">3</span><span style="font-size:.75rem;color:var(--muted)"> 件申込中</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- --paper 背景 -->
+  <div class="ty-panel-paper">
+    <div class="ty-panel-label" style="border-bottom-color:#c0ccd8">--paper 背景（#f0f4f8）— 表示系ページ</div>
+
+    <div class="ty-row" style="border-bottom-color:#d8e4ee">
+      <div class="ty-row-meta"><div class="ty-row-name">本文・見出し</div></div>
+      <div class="ty-row-sample">
+        <div style="font-size:1rem;font-family:'Shippori Mincho',serif;font-weight:600;color:var(--ink);margin-bottom:4px">セクション見出し</div>
+        <div style="font-size:.9rem;font-weight:400;color:var(--ink)">本文テキスト。背景色が変わっても文字色は変わらない。</div>
+      </div>
+    </div>
+    <div class="ty-row" style="border-bottom:none">
+      <div class="ty-row-meta"><div class="ty-row-name">muted / 補足</div></div>
+      <div class="ty-row-sample" style="font-size:.82rem;color:var(--muted)">補足・説明・ラベルのmuted色</div>
+    </div>
+  </div>
+
+  <!-- mgmt-page 背景 -->
+  <div class="ty-panel-mgmt">
+    <div class="ty-panel-label" style="border-bottom-color:#ccc8c0">管理ページ背景（#eae6e0）— 管理・編集ページ</div>
+
+    <div class="ty-row" style="border-bottom-color:#ccc8c0">
+      <div class="ty-row-meta"><div class="ty-row-name">本文・見出し</div></div>
+      <div class="ty-row-sample">
+        <div style="font-size:1rem;font-family:'Shippori Mincho',serif;font-weight:600;color:var(--ink);margin-bottom:4px">メール通知設定</div>
+        <div style="font-size:.9rem;font-weight:400;color:var(--ink)">通知のオン・オフを設定できます。</div>
+      </div>
+    </div>
+    <div class="ty-row" style="border-bottom:none">
+      <div class="ty-row-meta"><div class="ty-row-name">ヘルプテキスト</div></div>
+      <div class="ty-row-sample" style="font-size:.82rem;color:var(--muted)">※ 重要なお知らせはオフにできません</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ════════ 5. 共通テキストクラス ════════ -->
+<div class="ty-section">
+  <div class="ty-section-ttl">5. 共通テキストクラス</div>
+
+  <div class="ty-panel">
+    <div class="ty-panel-label">ktn-section__title / ktn-edit-head</div>
+
+    <div class="ty-row">
+      <div class="ty-row-meta">
+        <div class="ty-row-name">.ktn-section__title</div>
+        <div class="ty-row-spec">Shippori Mincho 600 / 1rem</div>
+      </div>
+      <div class="ty-row-sample"><span class="ktn-section__title">展示中の作品</span></div>
+    </div>
+
+    <div class="ty-row">
+      <div class="ty-row-meta">
+        <div class="ty-row-name">.ktn-edit-head__title</div>
+        <div class="ty-row-spec">700 / 1.3rem</div>
+      </div>
+      <div class="ty-row-sample">
+        <div class="ktn-edit-head__title">プロフィール編集</div>
+      </div>
+    </div>
+
+    <div class="ty-row">
+      <div class="ty-row-meta">
+        <div class="ty-row-name">.ktn-edit-head__desc</div>
+        <div class="ty-row-spec">.82rem / muted</div>
+      </div>
+      <div class="ty-row-sample">
+        <div class="ktn-edit-head__desc">公開プロフィールの基本情報を編集します。</div>
+      </div>
+    </div>
+
+    <div class="ty-row">
+      <div class="ty-row-meta">
+        <div class="ty-row-name">.ktn-en-sub</div>
+        <div class="ty-row-spec">Cormorant Garamond italic / .9rem</div>
+      </div>
+      <div class="ty-row-sample">
+        <span class="ktn-en-sub">Toru Tanaka</span>
+        &emsp;
+        <span class="ktn-en-sub">Gallery SOIL</span>
+      </div>
+    </div>
+
+    <div class="ty-row">
+      <div class="ty-row-meta">
+        <div class="ty-row-name">.ktn-en-label</div>
+        <div class="ty-row-spec">Cinzel 400 / .75rem</div>
+      </div>
+      <div class="ty-row-sample" style="display:flex;flex-direction:column;gap:6px">
+        <span class="ktn-en-label">LIAISON+ CONSOLE</span>
+        <span class="ktn-en-label">EXHIBITION ARCHIVE</span>
+        <span class="ktn-en-label">ARTIST MANAGEMENT</span>
+      </div>
+    </div>
+
+    <div class="ty-row">
+      <div class="ty-row-meta">
+        <div class="ty-row-name">.ktn-sec-en</div>
+        <div class="ty-row-spec">DM Serif Display italic / .75rem / muted<br><span style="color:#2a5f7a">セクション見出しインライン — 全ページ共通</span></div>
+      </div>
+      <div class="ty-row-sample" style="display:flex;flex-direction:column;gap:6px">
+        <span style="font-family:var(--fs);font-weight:600;font-size:.9rem;color:var(--ink)">この展覧会について — <span class="ktn-sec-en">About this exhibition</span></span>
+        <span style="font-family:var(--fs);font-weight:600;font-size:.9rem;color:var(--ink)">近くの展覧会 — <span class="ktn-sec-en">Nearby</span></span>
+        <div style="margin-top:4px;font-size:.75rem;color:var(--muted)">書き方：<code style="font-size:.75rem;background:rgba(0,0,0,.06);padding:1px 5px;border-radius:2px">日本語 — &lt;span class="ktn-sec-en"&gt;English&lt;/span&gt;</code></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- コンテンツバッジ -->
+  <div class="ty-panel" style="margin-top:12px">
+    <div class="ty-panel-label">コンテンツタイプバッジ（.cb-*）</div>
+
+    <div class="ty-badge-row">
+      <span class="cb-exhibition">展覧会</span>
+      <span class="cb-article">記事</span>
+      <span class="cb-artwork">作品</span>
+      <span class="cb-review">レビュー</span>
+      <span class="cb-news">お知らせ</span>
+    </div>
+    <div style="font-size:.75rem;color:var(--muted);margin-top:8px">.cb-exhibition / .cb-article / .cb-artwork / .cb-review / .cb-news</div>
+
+  </div>
+
+  <!-- モーダル内テキスト -->
+  <div class="ty-panel" style="margin-top:12px">
+    <div class="ty-panel-label">.ktn-modal テキスト</div>
+
+    <div class="ty-row">
+      <div class="ty-row-meta">
+        <div class="ty-row-name">.ktn-modal__title</div>
+        <div class="ty-row-spec">Shippori Mincho 700 / 1rem</div>
+      </div>
+      <div class="ty-row-sample"><div class="ktn-modal__title">在庫確認完了</div></div>
+    </div>
+
+    <div class="ty-row">
+      <div class="ty-row-meta">
+        <div class="ty-row-name">.ktn-modal__label</div>
+        <div class="ty-row-spec">600 / .64rem / muted</div>
+      </div>
+      <div class="ty-row-sample"><div class="ktn-modal__label">配送先住所</div></div>
+    </div>
+
+    <div class="ty-row">
+      <div class="ty-row-meta">
+        <div class="ty-row-name">.ktn-modal__desc</div>
+        <div class="ty-row-spec">.82rem / muted</div>
+      </div>
+      <div class="ty-row-sample"><div class="ktn-modal__desc">購入者への通知が送信されます。この操作は取り消せません。</div></div>
+    </div>
+
+    <div class="ty-row">
+      <div class="ty-row-meta">
+        <div class="ty-row-name">.ktn-modal__note</div>
+        <div class="ty-row-spec">.82rem / muted</div>
+      </div>
+      <div class="ty-row-sample"><div class="ktn-modal__note">※ 個人情報の取り扱いには十分ご注意ください</div></div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ════════ 6. 未定義／課題 ════════ -->
+<div class="ty-section">
+  <div class="ty-section-ttl">6. 未定義／要確認</div>
+  <div class="ty-note">
+    以下はページ固有CSSまたはインラインスタイルで実装されており、共通定義がないもの。
+    横断的に使われる場合は共通クラス化を検討。
+  </div>
+
+  <div class="ty-panel">
+    <div class="ty-panel-label">現状ページ固有のみ</div>
+
+    <div class="ty-row">
+      <div class="ty-row-meta">
+        <div class="ty-row-name">フォームインプット内テキスト</div>
+        <div class="ty-row-spec">.82rem / inherit — .p211-field__input</div>
+      </div>
+      <div class="ty-row-sample" style="font-size:.82rem;color:var(--ink)">入力フィールドのテキスト（p211系）</div>
+    </div>
+
+    <div class="ty-row">
+      <div class="ty-row-meta">
+        <div class="ty-row-name">セクションラベル（p3/p4）</div>
+        <div class="ty-row-spec">.p3-sec-label / .57rem / Montserrat / accent色</div>
+      </div>
+      <div class="ty-row-sample" style="font-size:.57rem;font-family:'Montserrat',sans-serif;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:#2a5f7a">WORKS</div>
+    </div>
+
+    <div class="ty-row">
+      <div class="ty-row-meta">
+        <div class="ty-row-name">作品ID表示</div>
+        <div class="ty-row-spec">.ktn-aw-id / Montserrat / .62rem / muted</div>
+      </div>
+      <div class="ty-row-sample" style="font-family:'Montserrat',sans-serif;font-size:.62rem;color:var(--muted)">AW-20260001</div>
+    </div>
+
+    <div class="ty-row">
+      <div class="ty-row-meta">
+        <div class="ty-row-name">取引ログテキスト</div>
+        <div class="ty-row-spec">.75rem / muted — p316/p516系</div>
+      </div>
+      <div class="ty-row-sample" style="font-size:.75rem;color:var(--muted)">2026-05-20 14:32 — 購入申込を受け付けました</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════ 7. ダークテーマ文字色 ════════ -->
+<div class="ty-section">
+  <div class="ty-section-ttl">7. ダークテーマ文字色（--dk-text / --dk-sub / --dk-meta）</div>
+  <div class="ty-note">
+    <code>body.p6-dark</code>（p6-1 LIAISON・p6-2 LIAISON+）と <code>body.p251-dark</code>（p2-5-1 LIAISON+一覧）で共有する変数体系。
+    <code>--lmuted</code> は旧 .38 から <code>--dk-sub</code>（.62）にエイリアスされ改善済み。
+  </div>
+
+  <!-- LIAISON深ネイビー -->
+  <div style="background:#151e2c;border-radius:6px;padding:20px 24px;margin-bottom:12px">
+    <div style="font-family:'Montserrat',sans-serif;font-size:.62rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.07)">LIAISON — #151e2c（--dk-bg）</div>
+
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;align-items:baseline;gap:16px">
+        <div style="font-family:'Montserrat',sans-serif;font-size:.62rem;color:rgba(255,255,255,.3);min-width:80px;flex-shrink:0">--dk-text .85</div>
+        <div style="font-size:.9rem;color:rgba(255,255,255,.85)">《オノマトペの庭》 — 作品タイトル・仕様値・本文テキスト</div>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:16px">
+        <div style="font-family:'Montserrat',sans-serif;font-size:.62rem;color:rgba(255,255,255,.3);min-width:80px;flex-shrink:0">--dk-sub .62</div>
+        <div style="font-size:.9rem;color:rgba(255,255,255,.62)">キャンバスに油彩 — 補助テキスト・ラベル・発送情報・リンクボタン・spec dt</div>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:16px">
+        <div style="font-family:'Montserrat',sans-serif;font-size:.62rem;color:rgba(255,255,255,.3);min-width:80px;flex-shrink:0">--dk-meta .38</div>
+        <div style="font-size:.9rem;color:rgba(255,255,255,.38)">2026.02.18 — 03.05 · 開催中 — 装飾的な日付・セクションラベル・英語サブタイトル</div>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:16px">
+        <div style="font-family:'Montserrat',sans-serif;font-size:.62rem;color:rgba(255,255,255,.3);min-width:80px;flex-shrink:0">--dk-gold</div>
+        <div style="font-size:.9rem;color:#c9a96e">¥580,000 — 価格・アクセント・active状態</div>
+      </div>
+    </div>
+
+    <!-- 実際のUI例 -->
+    <div style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.07)">
+      <div style="font-family:'Montserrat',sans-serif;font-size:.62rem;color:rgba(255,255,255,.3);margin-bottom:10px;letter-spacing:.08em">実際のUI例</div>
+      <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start">
+        <!-- 発送情報 -->
+        <div style="display:flex;flex-direction:column;gap:4px;min-width:180px">
+          <div style="font-family:'Montserrat',sans-serif;font-size:.52rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.38)">PRICE</div>
+          <div style="font-family:'Montserrat',sans-serif;font-size:1.5rem;font-weight:700;color:#c9a96e">¥580,000</div>
+          <div style="font-size:.62rem;color:rgba(255,255,255,.62)">+ 送料・梱包費は会期終了後に別途ご案内します</div>
+          <div style="margin-top:6px;padding-top:8px;border-top:1px solid rgba(255,255,255,.07);display:flex;flex-direction:column;gap:3px">
+            <div style="display:grid;grid-template-columns:auto 1fr;gap:0 10px">
+              <span style="font-size:.62rem;color:rgba(255,255,255,.62);letter-spacing:.06em;white-space:nowrap">発送時期</span>
+              <span style="font-size:.75rem;color:rgba(255,255,255,.85)">展覧会終了後（2026年3月下旬以降）</span>
+            </div>
+            <div style="display:grid;grid-template-columns:auto 1fr;gap:0 10px">
+              <span style="font-size:.62rem;color:rgba(255,255,255,.62);letter-spacing:.06em;white-space:nowrap">配送方法</span>
+              <span style="font-size:.75rem;color:rgba(255,255,255,.85)">ヤマト宅急便（匿名配送対応）</span>
+            </div>
+          </div>
+        </div>
+        <!-- Spec -->
+        <div style="display:flex;flex-direction:column;gap:2px">
+          <div style="font-size:.62rem;color:rgba(255,255,255,.38);letter-spacing:.06em;text-transform:uppercase">ABOUT THIS WORK</div>
+          <div style="font-size:1.5rem;font-family:'Shippori Mincho',serif;font-weight:600;color:rgba(255,255,255,.9);margin:4px 0 2px">《オノマトペの庭》</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.9rem;color:rgba(255,255,255,.38)">Onomatopoeia Garden</div>
+          <div style="margin-top:8px;font-size:.9rem;color:rgba(255,255,255,.85);line-height:1.8;max-width:260px">
+            日本語のオノマトペが持つ音の質感を、色彩と筆跡によって視覚化した作品。
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LIAISON+ 明るめネイビー -->
+  <div style="background:#344a5e;border-radius:6px;padding:20px 24px;margin-bottom:12px">
+    <div style="font-family:'Montserrat',sans-serif;font-size:.62rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.07)">LIAISON+ — #344a5e（--dk-bg / p251-dark・p6-plus）</div>
+
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;align-items:baseline;gap:16px">
+        <div style="font-family:'Montserrat',sans-serif;font-size:.62rem;color:rgba(255,255,255,.3);min-width:80px;flex-shrink:0">--dk-text .85</div>
+        <div style="font-size:.9rem;color:rgba(255,255,255,.85)">あなたが知らないオノマトペ — 展覧会タイトル・作品名・主要テキスト</div>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:16px">
+        <div style="font-family:'Montserrat',sans-serif;font-size:.62rem;color:rgba(255,255,255,.3);min-width:80px;flex-shrink:0">--dk-sub .62</div>
+        <div style="font-size:.9rem;color:rgba(255,255,255,.62)">Gallery SOIL 渋谷 — 補助テキスト・会場名・ジャンル・リンクボタン文字（contrast 約5:1）</div>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:16px">
+        <div style="font-family:'Montserrat',sans-serif;font-size:.62rem;color:rgba(255,255,255,.3);min-width:80px;flex-shrink:0">--dk-meta .38</div>
+        <div style="font-size:.9rem;color:rgba(255,255,255,.38)">2026.02.18 — 03.05 — 日付・装飾ラベル専用（非コンテンツ）</div>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:16px">
+        <div style="font-family:'Montserrat',sans-serif;font-size:.62rem;color:rgba(255,255,255,.3);min-width:80px;flex-shrink:0">--dk-gold</div>
+        <div style="font-size:.9rem;color:#c9a96e">¥580,000 · active リンク · フィルターボタン選択中</div>
+      </div>
+    </div>
+
+    <!-- リンクボタン例 -->
+    <div style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.07)">
+      <div style="font-family:'Montserrat',sans-serif;font-size:.62rem;color:rgba(255,255,255,.3);margin-bottom:8px;letter-spacing:.08em">小リンクボタン（旧 .38 → 新 .62）</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <span style="display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border:1px solid rgba(255,255,255,.15);border-radius:3px;font-size:.62rem;color:rgba(255,255,255,.62)">購入までの流れ</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border:1px solid rgba(255,255,255,.15);border-radius:3px;font-size:.62rem;color:rgba(255,255,255,.62)">発送・送料について</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border:1px solid rgba(255,255,255,.15);border-radius:3px;font-size:.62rem;color:rgba(255,255,255,.62)">特定商取引法に基づく表記</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 変数対応表 -->
+  <div style="background:#fff;border:1px solid var(--border);border-radius:6px;padding:16px 20px">
+    <div style="font-family:'Montserrat',sans-serif;font-size:.62rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)">変数対応表</div>
+    <div style="display:grid;grid-template-columns:auto auto auto 1fr;gap:4px 16px;font-size:.75rem">
+      <div style="font-family:'Montserrat',sans-serif;font-size:.62rem;color:var(--muted);font-weight:600">変数</div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:.62rem;color:var(--muted);font-weight:600">opacity</div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:.62rem;color:var(--muted);font-weight:600">旧 --lmuted</div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:.62rem;color:var(--muted);font-weight:600">用途</div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:.75rem;color:var(--ink)">--dk-text</div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:.75rem;color:var(--muted)">.85</div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:.75rem;color:var(--muted)">—</div>
+      <div style="color:var(--ink)">タイトル・値・本文・spec値</div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:.75rem;color:var(--ink)">--dk-sub（旧 --lmuted）</div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:.75rem;color:var(--muted)">.62</div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:.75rem;color:#b43c14">旧 .38</div>
+      <div style="color:var(--ink)">発送情報・spec dt・会場名・リンクボタン・バイオ</div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:.75rem;color:var(--ink)">--dk-meta</div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:.75rem;color:var(--muted)">.38</div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:.75rem;color:var(--muted)">—</div>
+      <div style="color:var(--ink)">日付・セクションラベル・英語サブタイトル（装飾専用）</div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:.75rem;color:#c9a96e">--dk-gold</div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:.75rem;color:var(--muted)">—</div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:.75rem;color:var(--muted)">—</div>
+      <div style="color:var(--ink)">価格・アクセント・active・ホバー先</div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /ty-wrap -->
+
+<script>
+function setRole(btn) {
+  document.querySelectorAll('[data-role]').forEach(function(b) { b.classList.remove('on'); });
+  btn.classList.add('on');
+  document.body.classList.remove('p3-page', 'p4-page', 'p5-page');
+  var r = btn.dataset.role;
+  if (r === 'creator') document.body.classList.add('p3-page');
+  else if (r === 'gallery') document.body.classList.add('p4-page');
+  else if (r === 'user') document.body.classList.add('p5-page');
+}
+function setPageType(btn) {
+  document.querySelectorAll('[data-type]').forEach(function(b) { b.classList.remove('on'); });
+  btn.classList.add('on');
+  if (btn.dataset.type === 'mgmt') document.body.classList.add('mgmt-page');
+  else document.body.classList.remove('mgmt-page');
+}
+</script>
+</body>
+</html>

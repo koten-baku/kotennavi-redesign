@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ja">
 
 <head>
@@ -9,7 +9,7 @@
     content="田中透による個展「あなたが知らないオノマトペ」。東京・Gallery SOIL 渋谷にて2026年2月18日〜3月5日開催。絵画・現代美術。LIAISON会場連動オンライン展示・作品販売あり。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link
-    href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Noto+Sans+JP:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="./kotennavi-common.css">
   <link rel="stylesheet" href="./kotennavi-components.css">
@@ -41,6 +41,10 @@
     <button class="dbtn" onclick="setR('user+creator',this)">creator本人</button>
     <button class="dbtn" onclick="setR('user+gallery',this)">gallery本人</button>
     <button class="dbtn" onclick="setR('admin',this)">管理者</button>
+    <span class="dbar-sep" style="margin-left:8px">LIAISON：</span>
+    <button class="dbtn dbtn-liaison on" onclick="setLiaison('plus',this)">LIAISON+</button>
+    <button class="dbtn dbtn-liaison" onclick="setLiaison('liaison',this)">LIAISON</button>
+    <button class="dbtn dbtn-liaison" onclick="setLiaison('none',this)">なし</button>
   </div>
 
   <div class="dev-ph dev-ph--sidebar"></div>
@@ -88,7 +92,7 @@
           <div class="p2-title-band__inner">
             <div class="p2-title-band__meta">
               <span class="cb cb-content cb-exhibition">exhibition</span>
-              <span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span>
+              <span id="p2LiaisonBadge" class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span>
               <span class="sb sb-open">開催中 · 残り12日</span>
               <span class="p2-title-band__posted">
                 posted by
@@ -164,9 +168,10 @@
                   </svg></span>
                 <span class="p2-subnav__label">出展者</span>
               </a>
-              <a href="kotennavi-p2-5.html" class="p2-subnav__item p2-subnav__item--liaison" data-page="p2-5" data-target="p2-sec-works">
+              <a id="p2SubnavLiaison" href="kotennavi-p2-5.html" class="p2-subnav__item p2-subnav__item--liaison" data-page="p2-5" data-target="p2-sec-works">
                 <span class="p2-subnav__liaison-mark">
-                  <svg viewBox="0 0 480 240" fill="none" xmlns="http://www.w3.org/2000/svg" width="52" height="26">
+                  <!-- LIAISON（青）liaison 選択時表示 -->
+                  <svg id="p2SubnavLiSvg" viewBox="0 0 480 240" fill="none" xmlns="http://www.w3.org/2000/svg" width="52" height="26" style="display:none">
                     <defs>
                       <linearGradient id="g-li-n-p2" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
                         <stop offset="0%" stop-color="#ffffff" />
@@ -175,12 +180,27 @@
                       </linearGradient>
                       <path id="li-t-p2" d="M 80 184 Q 240 56 400 184" />
                     </defs>
-                    <path d="M 20 200 Q 240 33 460 200" stroke="url(#g-li-n-p2)" stroke-width="4" fill="none"
-                      stroke-linecap="round" />
-                    <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8"
-                      fill="url(#g-li-n-p2)">
+                    <path d="M 20 200 Q 240 33 460 200" stroke="url(#g-li-n-p2)" stroke-width="4" fill="none" stroke-linecap="round" />
+                    <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#g-li-n-p2)">
                       <textPath href="#li-t-p2" startOffset="50%" text-anchor="middle">LIAISON</textPath>
                     </text>
+                  </svg>
+                  <!-- LIAISON+（金）plus 選択時表示（デフォルト） -->
+                  <svg id="p2SubnavLiPlusSvg" viewBox="0 0 480 240" fill="none" xmlns="http://www.w3.org/2000/svg" width="52" height="26">
+                    <defs>
+                      <linearGradient id="g-li-p-p2" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
+                        <stop offset="0%"  stop-color="#c09028" />
+                        <stop offset="50%" stop-color="#f0d068" />
+                        <stop offset="100%" stop-color="#c09028" />
+                      </linearGradient>
+                      <path id="li-t-p2-plus" d="M 80 184 Q 240 56 400 184" />
+                    </defs>
+                    <path d="M 20 200 Q 240 33 460 200" stroke="url(#g-li-p-p2)" stroke-width="4" fill="none" stroke-linecap="round" />
+                    <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#g-li-p-p2)">
+                      <textPath href="#li-t-p2-plus" startOffset="50%" text-anchor="middle">LIAISON</textPath>
+                    </text>
+                    <circle cx="432" cy="183" r="22" fill="#b87c10" />
+                    <text x="432" y="183" font-family="'Bodoni Moda',serif" font-size="42" font-weight="900" fill="#fff8e8" text-anchor="middle" dominant-baseline="central">+</text>
                   </svg>
                 </span>
                 <span class="p2-subnav__label">作品</span>
@@ -198,7 +218,7 @@
 
               <!-- 展覧会について -->
               <div class="p2-about" id="p2-sec-about">
-                <div class="p2-about__label">展覧会について — About this Exhibition</div>
+                <div class="p2-about__label">この展覧会について — <span class="ktn-sec-en">About this exhibition</span></div>
                 <div class="p2-about__body">
                   <h2 class="p2-about__title">あなたが知らないオノマトペ</h2>
                   <p>「シュワシュワ」「ふわふわ」「ドキドキ」——<br>あなたが知らなかった感覚の扉</p><br>
@@ -208,7 +228,7 @@
                 </div>
                 <!-- 展覧会記事 -->
                 <div class="p2-article-head">
-                  <div class="p2-article-head__ttl">展覧会記事 <span class="p2-article-head__en">Articles</span></div>
+                  <div class="p2-article-head__ttl">展覧会記事 <span class="ktn-sec-en">Articles</span></div>
                   <a href="#" class="p2-article-head__item">
                     <div class="p2-article-head__item-title">オノマトペが絵画になるとき — 田中透の言語と絵の境界</div>
                     <div class="p2-article-head__item-sub"><span class="p2-article-head__item-date">2026.02.20</span>
@@ -266,7 +286,26 @@
               <!-- LIAISON バナー -->
               <div class="p2-liaison-banner" id="p2-sec-works">
                 <div class="p2-liaison-banner__inner">
-                  <div class="p2-liaison-banner__logo">
+                  <!-- LIAISON ロゴ（青）デフォルト非表示 -->
+                  <div id="p2LbLogoLi" class="p2-liaison-banner__logo" style="display:none">
+                    <svg viewBox="0 0 480 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <defs>
+                        <path id="p2LbB" d="M 80 184 Q 240 56 400 184"/>
+                        <linearGradient id="g-p2LbB" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
+                          <stop offset="0%"  stop-color="#7bb5d8"/>
+                          <stop offset="50%" stop-color="#005da7"/>
+                          <stop offset="100%" stop-color="#003f80"/>
+                        </linearGradient>
+                      </defs>
+                      <path d="M 20 200 Q 240 33 460 200" stroke="url(#g-p2LbB)" stroke-width="4" fill="none" stroke-linecap="round"/>
+                      <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#g-p2LbB)">
+                        <textPath href="#p2LbB" startOffset="50%" text-anchor="middle">LIAISON</textPath>
+                      </text>
+                      <text x="240" y="220" font-family="'Montserrat',sans-serif" font-size="17" font-weight="600" letter-spacing="3" fill="rgba(0,93,167,.5)" text-anchor="middle">Now on View</text>
+                    </svg>
+                  </div>
+                  <!-- LIAISON+ ロゴ（金）デフォルト表示 -->
+                  <div id="p2LbLogoLiPlus" class="p2-liaison-banner__logo">
                     <svg viewBox="0 0 480 240" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <defs>
                         <path id="p2LbA" d="M 80 184 Q 240 56 400 184"/>
@@ -286,13 +325,13 @@
                     </svg>
                   </div>
                   <div class="p2-liaison-banner__body">
-                    <h3>リエゾン — 会場連動オンライン展示・販売</h3>
-                    <p>実際の展示作品をオンラインでご覧いただけます。気に入った作品はそのまま購入も可能です。</p>
+                    <h3 id="p2LbTitle">リエゾン+ — 会場連動オンライン展示・販売</h3>
+                    <p id="p2LbDesc">実際の展示作品をオンラインでご覧いただけます。気に入った作品はそのまま購入も可能です。</p>
                     <!-- 作品サムネイル（3枚＋+マーク、JSで生成） -->
                     <div class="p2-liaison-banner__thumbs" id="p2LbThumbs"></div>
                   </div>
                   <div class="p2-liaison-banner__cta">
-                    <a href="kotennavi-p2-5-1.html" class="ktn-btn ktn-btn--liaison">
+                    <a id="p2LbCtaLink" href="kotennavi-p2-5-1.html" class="ktn-btn ktn-btn--liaison">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <rect x="3" y="3" width="18" height="18" rx="2" />
                         <circle cx="8.5" cy="8.5" r="1.5" />
@@ -315,7 +354,7 @@
                         <line x1="8" y1="2" x2="8" y2="6" />
                         <line x1="3" y1="10" x2="21" y2="10" />
                       </svg></div><span class="p2-ic__head-title">スケジュール<span
-                        class="p2-ic__head-en">Schedule</span></span>
+                        class="ktn-sec-en">Schedule</span></span>
                   </div>
                   <svg class="p2-ic__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <polyline points="6 9 12 15 18 9" />
@@ -361,7 +400,7 @@
                         stroke-width="1.8">
                         <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
                         <circle cx="12" cy="10" r="3" />
-                      </svg></div><span class="p2-ic__head-title">開催場所<span class="p2-ic__head-en">Venue</span></span>
+                      </svg></div><span class="p2-ic__head-title">開催場所<span class="ktn-sec-en">Venue</span></span>
                   </div>
                   <svg class="p2-ic__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <polyline points="6 9 12 15 18 9" />
@@ -427,9 +466,11 @@
                   <div class="p2-ic__head-l">
                     <div class="p2-ic__head-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
                         stroke-width="1.8">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                        <circle cx="12" cy="7" r="4" />
-                      </svg></div><span class="p2-ic__head-title">出展者<span class="p2-ic__head-en">Cretors</span></span>
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                      </svg></div><span class="p2-ic__head-title">出展者<span class="ktn-sec-en">Creators</span></span>
                   </div>
                   <svg class="p2-ic__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <polyline points="6 9 12 15 18 9" />
@@ -447,7 +488,7 @@
                         <div class="cc__info">
                           <div class="cc__badge-row">
                             <span class="cb cb-creator">creator</span>
-                            <span class="sb sb-sm">開催中</span>
+                            <span class="sb">開催中/開催予定</span>
                           </div>
                           <div class="cc__name">田中 透</div>
                           <div class="cc__genre">絵画・油彩</div>
@@ -518,15 +559,15 @@
                     <span class="p2-visitor__title-ja">チェックイン&amp;レビュー</span>
                     <span class="p2-visitor__title">visitor &amp; review</span>
                   </div>
-                  <span class="p2-visitor__count" id="p2RvCount">3件</span>
+                  <span class="p2-visitor__count" id="p2RvCount">4件</span>
                 </div>
                 <div id="p2ReviewList"></div>
                 <div class="p2-visitor__action">
                   <button class="ktn-btn ktn-btn--primary p2-visitor__checkin-btn" id="p2RvBtn"
                     onclick="openCheckinModal()">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                      <circle cx="12" cy="10" r="3" />
+                    <svg viewBox="0 0 16 16" fill="none">
+                      <circle cx="10" cy="5"  r="4"   fill="currentColor" opacity=".7"/>
+                      <circle cx="5"  cy="11" r="2.4" fill="currentColor" opacity=".7"/>
                     </svg>
                     チェックインしてレビューを書く
                   </button>
@@ -607,29 +648,7 @@
               <div class="p2-side-card p2-side-posted">
                 <div class="p2-side-posted__label">posted by</div>
                 <div class="p2-side-posted__dates">掲載：2026.02.10 / 最終更新：2026.02.18</div>
-                <div class="p2-side-posted__row">
-                  <div class="p2-side-posted__avatar"
-                    style="background:linear-gradient(135deg,#c4a882,#9a7c54);color:rgba(255,255,255,.85)">G</div>
-                  <div class="p2-side-posted__meta">
-                    <div class="p2-side-posted__name"><span class="cb cb-person cb-gallery">gallery</span> gallery_soil
-                    </div>
-                    <div class="p2-side-posted__sub">Gallery SOIL 渋谷 · アート</div>
-                    <div class="p2-side-posted__counts">
-                      <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="11" height="11">
-                            <use href="#icon-exh" />
-                          </svg></span><strong>3</strong>展覧会</span>
-                      <span class="pc-count pc-count--watch"><svg width="10" height="10">
-                          <use href="#icon-watch" color="#7a8a99" />
-                        </svg><strong>11</strong>ウォッチ</span>
-                    </div>
-                  </div>
-                </div>
-                <button class="ktn-btn ktn-btn--follow p2-side-posted__follow" id="p2FollowBtn">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11">
-                    <line x1="12" y1="5" x2="12" y2="19" />
-                    <line x1="5" y1="12" x2="19" y2="12" />
-                  </svg>フォロー
-                </button>
+                <div id="p2PostedByCard"></div>
               </div>
 
               <!-- 問い合わせ -->
@@ -654,7 +673,7 @@
                         <line x1="9" y1="21" x2="9" y2="9" />
                       </svg>
                     </div>
-                    <span class="p2-ic__head-title">この展覧会<span class="p2-ic__head-en">In This Exhibition</span></span>
+                    <span class="p2-ic__head-title">この展覧会<span class="ktn-sec-en">In This Exhibition</span></span>
                   </div>
                 </div>
                 <div class="p2-ic__body p2-side-links__body">
@@ -734,27 +753,44 @@
                       <polyline points="9 18 15 12 9 6" />
                     </svg>
                   </a>
-                  <a href="kotennavi-p2-5.html" class="p2-side-link p2-side-link--liaison">
-                    <span class="p2-side-link__icon"><svg viewBox="0 0 480 240" fill="none"
-                        xmlns="http://www.w3.org/2000/svg" width="24" height="12">
+                  <a href="kotennavi-p2-5.html" id="p2SideLinkWorks" class="p2-side-link p2-side-link--liaison">
+                    <span class="p2-side-link__icon">
+                      <!-- LIAISON（青）-->
+                      <svg id="p2SideLinkLiSvg" viewBox="0 0 480 240" fill="none" xmlns="http://www.w3.org/2000/svg" width="48" height="24" style="display:none">
                         <defs>
-                          <linearGradient id="g-sidelink-li" x1="0" y1="0" x2="480" y2="0"
-                            gradientUnits="userSpaceOnUse">
+                          <linearGradient id="g-li-n-side" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
                             <stop offset="0%" stop-color="#ffffff" />
                             <stop offset="55%" stop-color="#005da7" />
                             <stop offset="100%" stop-color="#003f80" />
                           </linearGradient>
-                          <path id="sidelink-li-t" d="M 80 184 Q 240 56 400 184" />
+                          <path id="li-t-side" d="M 80 184 Q 240 56 400 184" />
                         </defs>
-                        <path d="M 20 200 Q 240 33 460 200" stroke="url(#g-sidelink-li)" stroke-width="4" fill="none"
-                          stroke-linecap="round" /><text font-family="'Bodoni Moda',serif" font-size="58"
-                          font-weight="600" letter-spacing="8" fill="url(#g-sidelink-li)">
-                          <textPath href="#sidelink-li-t" startOffset="50%" text-anchor="middle">LIAISON</textPath>
+                        <path d="M 20 200 Q 240 33 460 200" stroke="url(#g-li-n-side)" stroke-width="4" fill="none" stroke-linecap="round" />
+                        <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#g-li-n-side)">
+                          <textPath href="#li-t-side" startOffset="50%" text-anchor="middle">LIAISON</textPath>
                         </text>
-                      </svg></span>
+                      </svg>
+                      <!-- LIAISON+（金）-->
+                      <svg id="p2SideLinkLiPlusSvg" viewBox="0 0 480 240" fill="none" xmlns="http://www.w3.org/2000/svg" width="48" height="24">
+                        <defs>
+                          <linearGradient id="g-li-p-side" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
+                            <stop offset="0%"  stop-color="#c09028" />
+                            <stop offset="50%" stop-color="#f0d068" />
+                            <stop offset="100%" stop-color="#c09028" />
+                          </linearGradient>
+                          <path id="li-t-side-plus" d="M 80 184 Q 240 56 400 184" />
+                        </defs>
+                        <path d="M 20 200 Q 240 33 460 200" stroke="url(#g-li-p-side)" stroke-width="4" fill="none" stroke-linecap="round" />
+                        <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#g-li-p-side)">
+                          <textPath href="#li-t-side-plus" startOffset="50%" text-anchor="middle">LIAISON</textPath>
+                        </text>
+                        <circle cx="432" cy="183" r="22" fill="#b87c10" />
+                        <text x="432" y="183" font-family="'Bodoni Moda',serif" font-size="42" font-weight="900" fill="#fff8e8" text-anchor="middle" dominant-baseline="central">+</text>
+                      </svg>
+                    </span>
                     <span class="p2-side-link__text">
                       <span class="p2-side-link__label">作品</span>
-                      <span class="p2-side-link__desc">展示8点・販売5点</span>
+                      <span class="p2-side-link__desc" id="p2SideLinkDesc">展示8点・販売5点</span>
                     </span>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12">
                       <polyline points="9 18 15 12 9 6" />
@@ -766,7 +802,7 @@
               <!-- 近くの展覧会 -->
               <div class="p2-side-card p2-side-nearby">
                 <div class="p2-side-nearby__head">
-                  <span class="p2-side-nearby__title">近くの展覧会</span>
+                  <span class="p2-side-nearby__title">近くの展覧会 — <span class="ktn-sec-en">Nearby</span></span>
                   <a href="kotennavi-p2.html?filter=near" class="p2-side-nearby__more">すべて →</a>
                 </div>
                 <div id="p2NearbyList"></div>
@@ -826,10 +862,10 @@
       { bg: 'linear-gradient(155deg,#d0e8f0,#7ab4cc)', tc: 'rgba(0,0,0,.28)', label: 'シュワシュワ', caption: '《シュワシュワ》2025年 / キャンバスに油彩 / 60.6×50.0cm' },
     ];
     window.P2_NEARBY = [
-      { title: '線と余白の詩学', venue: '渋谷アートラボ', bg: 'linear-gradient(155deg,#e0d8c8,#b4a88a)', tc: 'rgba(0,0,0,.28)', open: true, liaison: false },
-      { title: '光の破片', venue: 'GALLERY X', bg: 'linear-gradient(155deg,#c8d0e0,#8898b8)', tc: 'rgba(255,255,255,.6)', open: true, liaison: true },
-      { title: 'うつろい', venue: '東京都現代美術館', bg: 'linear-gradient(155deg,#d0c8e0,#8878b4)', tc: 'rgba(255,255,255,.6)', open: true, liaison: false },
-      { title: 'デジタルとアナログのあいだ', venue: '3331 Arts Chiyoda', bg: 'linear-gradient(155deg,#d8e8d0,#88b878)', tc: 'rgba(0,0,0,.28)', open: true, liaison: true },
+      { title: '線と余白の詩学', venue: '渋谷アートラボ', pref: '東京', bg: 'linear-gradient(155deg,#e0d8c8,#b4a88a)', tc: 'rgba(0,0,0,.28)', open: true, liaison: false, s: '05.10', e: '05.25' },
+      { title: '光の破片', venue: 'GALLERY X', pref: '東京', bg: 'linear-gradient(155deg,#c8d0e0,#8898b8)', tc: 'rgba(255,255,255,.6)', open: true, liaison: 'li', s: '05.15', e: '05.30' },
+      { title: 'うつろい', venue: '東京都現代美術館', pref: '東京', bg: 'linear-gradient(155deg,#d0c8e0,#8878b4)', tc: 'rgba(255,255,255,.6)', open: true, liaison: false, s: '04.20', e: '06.01' },
+      { title: 'デジタルとアナログのあいだ', venue: '3331 Arts Chiyoda', pref: '東京', bg: 'linear-gradient(155deg,#d8e8d0,#88b878)', tc: 'rgba(0,0,0,.28)', open: true, liaison: 'li-plus', s: '05.18', e: '05.31' },
     ];
     window.P2_REC = [
       { title: '春の景色展', venue: '代官山ヒルサイドF', bg: 'linear-gradient(155deg,#f0e0d0,#c8a888)', tc: 'rgba(0,0,0,.28)', s: '02.20', e: '03.10', open: true, liaison: false, int: 21, ci: 4 },
@@ -837,6 +873,72 @@
       { title: 'ポストカード展', venue: '吉祥寺 M&G', bg: 'linear-gradient(155deg,#d0e8e0,#88b8a8)', tc: 'rgba(0,0,0,.28)', s: '02.22', e: '03.12', open: true, liaison: false, int: 38, ci: 7 },
       { title: '春風と影', venue: '表参道ギャラリー', bg: 'linear-gradient(155deg,#ede0f0,#b89ac8)', tc: 'rgba(255,255,255,.6)', s: '02.25', e: '03.20', open: true, liaison: true, int: 14, ci: 2 },
     ];
+    /* ── LIAISON 切替（デモバー用） ── */
+    function setLiaison(type, btn) {
+      document.querySelectorAll('.dbtn-liaison').forEach(function(b){ b.classList.remove('on'); });
+      if (btn) btn.classList.add('on');
+
+      var badge      = document.getElementById('p2LiaisonBadge');
+      var subnav     = document.getElementById('p2SubnavLiaison');
+      var navSvgLi   = document.getElementById('p2SubnavLiSvg');
+      var navSvgPlus = document.getElementById('p2SubnavLiPlusSvg');
+      var banner     = document.getElementById('p2-sec-works');
+      var logoLi     = document.getElementById('p2LbLogoLi');
+      var logoPlus   = document.getElementById('p2LbLogoLiPlus');
+      var ctaLink    = document.getElementById('p2LbCtaLink');
+      var lbTitle    = document.getElementById('p2LbTitle');
+      var lbDesc     = document.getElementById('p2LbDesc');
+      var sideWorks    = document.getElementById('p2SideLinkWorks');
+      var sideLinkDesc = document.getElementById('p2SideLinkDesc');
+      var sideLiSvg     = document.getElementById('p2SideLinkLiSvg');
+      var sideLiPlusSvg = document.getElementById('p2SideLinkLiPlusSvg');
+
+      if (type === 'none') {
+        if (badge)      badge.style.display  = 'none';
+        if (subnav)     subnav.style.display = 'none';
+        if (banner)     banner.style.display = 'none';
+        if (sideWorks)  sideWorks.style.display = 'none';
+      } else if (type === 'liaison') {
+        if (badge)      { badge.style.display = ''; badge.className = 'lb-dot li'; badge.innerHTML = '<span class="lb-dot-inner"></span>LIAISON'; }
+        if (subnav)     { subnav.style.display = ''; subnav.href = 'kotennavi-p2-5.html'; }
+        if (navSvgLi)   navSvgLi.style.display   = '';
+        if (navSvgPlus) navSvgPlus.style.display  = 'none';
+        if (banner)     banner.style.display = '';
+        if (logoLi)     logoLi.style.display   = '';
+        if (logoPlus)   logoPlus.style.display  = 'none';
+        if (ctaLink)    ctaLink.href = 'kotennavi-p2-5.html';
+        if (lbTitle)    lbTitle.textContent = 'リエゾン — 会場連動オンライン展示';
+        if (lbDesc)     lbDesc.textContent  = '実際の展示作品をオンラインでご覧いただけます。';
+        if (sideWorks)  { sideWorks.style.display = ''; sideWorks.href = 'kotennavi-p2-5.html'; }
+        if (sideLinkDesc) sideLinkDesc.textContent = '展示8点';
+        if (sideLiSvg)     sideLiSvg.style.display = '';
+        if (sideLiPlusSvg) sideLiPlusSvg.style.display = 'none';
+      } else { /* plus */
+        if (badge)      { badge.style.display = ''; badge.className = 'lb-dot li-plus'; badge.innerHTML = '<span class="lb-dot-inner"></span>LIAISON+'; }
+        if (subnav)     { subnav.style.display = ''; subnav.href = 'kotennavi-p2-5-1.html'; }
+        if (navSvgLi)   navSvgLi.style.display   = 'none';
+        if (navSvgPlus) navSvgPlus.style.display  = '';
+        if (banner)     banner.style.display = '';
+        if (logoLi)     logoLi.style.display   = 'none';
+        if (logoPlus)   logoPlus.style.display  = '';
+        if (ctaLink)    ctaLink.href = 'kotennavi-p2-5-1.html';
+        if (lbTitle)    lbTitle.textContent = 'リエゾン+ — 会場連動オンライン展示・販売';
+        if (lbDesc)     lbDesc.textContent  = '実際の展示作品をオンラインでご覧いただけます。気に入った作品はそのまま購入も可能です。';
+        if (sideWorks)  { sideWorks.style.display = ''; sideWorks.href = 'kotennavi-p2-5-1.html'; }
+        if (sideLinkDesc) sideLinkDesc.textContent = '展示8点・販売5点';
+        if (sideLiSvg)     sideLiSvg.style.display = 'none';
+        if (sideLiPlusSvg) sideLiPlusSvg.style.display = '';
+      }
+    }
+
+    window.P2_POSTED_BY = {
+      type: 'gallery', href: 'kotennavi-p4.html',
+      avStyle: 'linear-gradient(135deg,#c4a882,#9a7c54)', ini: 'G', iniStyle: '1rem',
+      name: 'Gallery SOIL 渋谷', location: '東京・渋谷 · アート',
+      exh: 3, watch: 11, watchId: 'p2FollowBtn', watchOn: false, status: 'live', panel: true
+    };
+
+    setLiaison('plus', null); /* dbar デフォルト（LIAISON+）に合わせて初期化 */
     KTN.init({ page: 'p2', role: 'guest' });
 
     /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
@@ -6,11 +6,11 @@
   <title>取引デスク — 光の痕跡 No.7 | 個展なび</title>
   <meta name="robots" content="noindex">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Noto+Sans+JP:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./kotennavi-common.css">
   <link rel="stylesheet" href="./kotennavi-components.css">
 </head>
-<body class="p3-page p3-16-page">
+<body class="p3-page p3-16-page mgmt-page">
 
 <div class="ktn-toast" id="ktnToast"></div>
 
@@ -38,25 +38,6 @@
   </div>
 </div>
 
-<!-- 申込拒否モーダル -->
-<div class="p515-modal-overlay" id="p316DeclineModal" hidden>
-  <div class="p515-modal">
-    <div class="p515-modal__head">
-      <span class="p515-modal__title">この申込を断りますか？</span>
-      <button class="p515-modal__close" id="p316DeclineModalClose">✕</button>
-    </div>
-    <div class="p515-modal__body">
-      <p class="p515-modal__desc">「光の痕跡 No.7」への山田 花子さんの申込を断ります。購入者には申込がキャンセルされた旨が通知されます。</p>
-      <p class="p515-modal__warn">正当な理由のないキャンセルはクリエイター評価に影響する場合があります。</p>
-      <label class="p316-decline-reason-label">断る理由（任意・購入者に通知されます）</label>
-      <textarea class="p316-decline-reason" id="p316DeclineReason" placeholder="例：会場で先に販売が決まりました。ご申込いただきありがとうございました。" rows="3"></textarea>
-    </div>
-    <div class="p515-modal__foot">
-      <button class="p515-modal__btn ktn-op-btn" id="p316DeclineModalBack">戻る</button>
-      <button class="p515-modal__btn ktn-op-btn ktn-op-btn--danger" id="p316DeclineModalOk">申込を断る</button>
-    </div>
-  </div>
-</div>
 
 <!-- 発送完了モーダル -->
 <div class="p515-modal-overlay" id="p316ShipModal" hidden>
@@ -69,7 +50,7 @@
       <p class="p515-modal__desc">以下の追跡番号で発送完了を購入者に通知します。</p>
       <div style="margin-top:10px;font-size:.88rem;color:var(--ink);line-height:1.8">
         <div>発送業者：<strong id="p316ModalShipCarrier">ヤマト宅急便</strong></div>
-        <div>追跡番号：<strong id="p316ModalTrackingNum" style="font-family:'Montserrat',sans-serif">1234-5678-9012</strong></div>
+        <div>追跡番号：<strong id="p316ModalTrackingNum" style="font-family:var(--fm)">1234-5678-9012</strong></div>
       </div>
     </div>
     <div class="p515-modal__foot">
@@ -398,9 +379,18 @@
           <div class="p515-status__body">
             <p class="p515-status__desc">「光の痕跡 No.7」への購入申込が届いています。<strong>会場でまだ作品が売れていないことを確認した上で</strong>、この購入者に作品を販売するために購入を確定してください。確定後、作品は「売約済」に変更され、購入者に支払い案内が送られます。</p>
 
+            <div class="p316-action-deadline">
+              <div class="p316-action-deadline__row">
+                <span class="p316-action-deadline__label">確定期限</span>
+                <span class="p316-action-deadline__date">2026年5月17日（日）</span>
+                <span class="p316-action-deadline__until">まで（申込から7日以内）</span>
+              </div>
+              <p class="p316-action-deadline__note">期限を過ぎると申込は自動的にキャンセルされます。会場での販売状況を確認の上、早めにご対応ください。</p>
+            </div>
+
             <!-- LIAISON+コンソール動線 -->
             <div class="p316-callout">
-              <span>会場で作品が売れた場合は、<strong>LIAISON+コンソールの「会場売約済」</strong>を使ってください。申込者全員にシステムが自動でキャンセル通知を送り、作品が「売約済」に変更されます。このページで個別に断る必要はありません。</span>
+              <span>会場で作品が売れた場合は、<strong>LIAISON+コンソールの「会場売約済」</strong>を使ってください。申込者全員にシステムが自動でキャンセル通知を送り、作品が「売約済」に変更されます。このページで個別に操作する必要はありません。</span>
               <a class="p316-callout__link" href="kotennavi-p3-15.html">LIAISON+コンソールへ →</a>
             </div>
 
@@ -507,13 +497,10 @@
               </div>
             </div>
 
-            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:4px">
-              <button class="ktn-op-btn ktn-op-btn--danger-outline" id="p316DeclineBtn">申込を断る</button>
-              <button class="ktn-op-btn ktn-op-btn--primary ktn-op-btn--lg" id="p316ConfirmBtn" style="flex:1;min-width:200px">
-                購入を確定して取引を開始する
-                <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" width="8" height="8"><line x1="2" y1="5" x2="8" y2="5"/><polyline points="5 2 8 5 5 8"/></svg>
-              </button>
-            </div>
+            <button class="ktn-op-btn ktn-op-btn--primary ktn-op-btn--lg" id="p316ConfirmBtn" style="width:100%;margin-top:4px">
+              購入を確定して取引を開始する
+              <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" width="8" height="8"><line x1="2" y1="5" x2="8" y2="5"/><polyline points="5 2 8 5 5 8"/></svg>
+            </button>
           </div>
         </div>
 
@@ -557,6 +544,15 @@
           <div class="p515-status__body">
             <p class="p515-status__desc">購入者の支払いが完了しました。以下の配送先に作品を発送し、追跡番号を入力して発送完了を報告してください。</p>
 
+            <div class="p316-action-deadline">
+              <div class="p316-action-deadline__row">
+                <span class="p316-action-deadline__label">発送期限</span>
+                <span class="p316-action-deadline__date">2026年5月30日（土）</span>
+                <span class="p316-action-deadline__until">まで（支払いから14日以内）</span>
+              </div>
+              <p class="p316-action-deadline__note">期限を過ぎると管理者に通知され、購入者によるキャンセル申請が可能になります。</p>
+            </div>
+
             <!-- 配送先 -->
             <div class="p316-ship-addr">
               <div class="p316-ship-addr__title">配送先情報</div>
@@ -566,8 +562,8 @@
               <div class="p316-ship-addr__row"><span class="p316-ship-addr__label">受取方法</span><span>宅配便（対面受取）</span></div>
               <div class="p316-ship-addr__row"><span class="p316-ship-addr__label">受取希望日</span><span>2026年5月21日（木）</span></div>
               <div class="p316-ship-addr__row"><span class="p316-ship-addr__label">希望時間帯</span><span>14〜16時</span></div>
+              <p class="p316-privacy-note">個人情報保護法に基づき、上記の住所・電話番号・氏名は本取引の発送目的のみに使用し、第三者への提供や目的外利用を行わないでください。</p>
             </div>
-            <p class="p316-privacy-note">個人情報保護法に基づき、上記の住所・電話番号・氏名は本取引の発送目的のみに使用し、第三者への提供や目的外利用を行わないでください。</p>
 
             <!-- 追跡番号フォーム -->
             <div class="p316-tracking-form">
@@ -587,13 +583,7 @@
               </div>
               <div class="p316-tracking-form__field">
                 <label class="p316-tracking-form__label">追跡番号</label>
-                <div class="p316-tracking-num-wrap">
-                  <input class="p316-tracking-form__input" id="p316TrackingInput" type="text" placeholder="追跡番号を入力">
-                  <a class="p316-tracking-link-btn" id="p316TrackingLinkForm" href="#" target="_blank" hidden>
-                    <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" width="10" height="10"><path d="M5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V8M8 1h3v3M11 1l-5 5"/></svg>
-                    追跡を確認
-                  </a>
-                </div>
+                <input class="p316-tracking-form__input" id="p316TrackingInput" type="text" placeholder="追跡番号を入力">
               </div>
             </div>
 
@@ -628,10 +618,10 @@
               <div class="p515-ship-confirm__row">
                 <span class="p515-ship-confirm__label">追跡番号</span>
                 <span style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-                  <span style="font-family:'Montserrat',sans-serif;font-weight:500">1234-5678-9012</span>
+                  <span style="font-family:var(--fm);font-weight:500">1234-5678-9012</span>
                   <a class="p316-tracking-link-btn" href="https://jizen.kuronekoyamato.co.jp/jizen/servlet/crjizen?col=1&number=1234567890120" target="_blank" rel="noopener">
                     <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" width="10" height="10"><path d="M5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V8M8 1h3v3M11 1l-5 5"/></svg>
-                    追跡情報
+                    配送状況を確認
                   </a>
                 </span>
               </div>
@@ -656,6 +646,15 @@
           </div>
           <div class="p515-status__body">
             <p class="p515-status__desc">購入者が受取を確認しました。内容を確認の上、取引完了を確認してください。確認後、代金 ¥67,000 が確定されます。</p>
+
+            <div class="p316-action-deadline">
+              <div class="p316-action-deadline__row">
+                <span class="p316-action-deadline__label">確認期限</span>
+                <span class="p316-action-deadline__date">2026年5月28日（木）</span>
+                <span class="p316-action-deadline__until">まで（受取確認から7日以内）</span>
+              </div>
+              <p class="p316-action-deadline__note">期限を過ぎると取引は自動的に完了となり、代金が確定されます。</p>
+            </div>
 
             <!-- 購入者の評価 -->
             <div class="p316-review-display">
@@ -1219,7 +1218,7 @@ KTN.init({ page: 'p3-16', role: 'creator' });
     });
   }
   /* 発送業者 (tracking form) */
-  var tCarrierSelect = document.getElementById('p316TrackingCarrierSelect');
+  var tCarrierSelect    = document.getElementById('p316TrackingCarrierSelect');
   var tCarrierOtherWrap = document.getElementById('p316TrackingCarrierOtherWrap');
   if (tCarrierSelect) {
     tCarrierSelect.addEventListener('change', function () {
@@ -1276,25 +1275,7 @@ KTN.init({ page: 'p3-16', role: 'creator' });
     if (typeof KTN !== 'undefined' && KTN.toast) KTN.toast('購入を確定しました。作品を「売約済」に変更し、支払い案内を送信しました');
   });
 
-  /* ── 申込拒否モーダル ── */
-  var declineModal      = document.getElementById('p316DeclineModal');
-  var declineBtn        = document.getElementById('p316DeclineBtn');
-  var declineModalClose = document.getElementById('p316DeclineModalClose');
-  var declineModalBack  = document.getElementById('p316DeclineModalBack');
-  var declineModalOk    = document.getElementById('p316DeclineModalOk');
-  function openDeclineModal()  { if (declineModal) declineModal.hidden = false; }
-  function closeDeclineModal() { if (declineModal) declineModal.hidden = true; }
-  if (declineBtn)        declineBtn.addEventListener('click', openDeclineModal);
-  if (declineModalClose) declineModalClose.addEventListener('click', closeDeclineModal);
-  if (declineModalBack)  declineModalBack.addEventListener('click', closeDeclineModal);
-  if (declineModal)      declineModal.addEventListener('click', function (e) { if (e.target === declineModal) closeDeclineModal(); });
-  if (declineModalOk)    declineModalOk.addEventListener('click', function () {
-    closeDeclineModal();
-    setDemoState('cancelled');
-    if (typeof KTN !== 'undefined' && KTN.toast) KTN.toast('申込を断りました');
-  });
-
-  /* ── 発送完了モーダル ── */
+/* ── 発送完了モーダル ── */
   var shipModal      = document.getElementById('p316ShipModal');
   var shipBtn        = document.getElementById('p316ShipBtn');
   var shipModalClose = document.getElementById('p316ShipModalClose');
@@ -1305,12 +1286,10 @@ KTN.init({ page: 'p3-16', role: 'creator' });
     var numEl = document.getElementById('p316ModalTrackingNum');
     if (numEl && trackingInput) numEl.textContent = trackingInput.value || '（未入力）';
     var carrierEl = document.getElementById('p316ModalShipCarrier');
-    var tCarrier = document.getElementById('p316TrackingCarrierSelect');
-    if (carrierEl && tCarrier) {
-      var cv = tCarrier.value === 'その他'
+    if (carrierEl && tCarrierSelect) {
+      carrierEl.textContent = tCarrierSelect.value === 'その他'
         ? (document.getElementById('p316TrackingCarrierOther').value || 'その他')
-        : tCarrier.value;
-      carrierEl.textContent = cv;
+        : tCarrierSelect.value;
     }
     if (shipModal) shipModal.hidden = false;
   }

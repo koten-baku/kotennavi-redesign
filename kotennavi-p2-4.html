@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
@@ -14,7 +14,7 @@
   <meta property="og:site_name" content="個展なび">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Noto+Sans+JP:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./kotennavi-common.css">
   <link rel="stylesheet" href="./kotennavi-components.css">
 </head>
@@ -165,26 +165,25 @@
                 <div class="p2-4-creator-card__info">
                   <div class="p2-4-creator-card__badges">
                     <span class="cb cb-person cb-creator">creator</span>
-                    <span class="sb sb-open">開催中</span>
-                    <span class="lb lb-liaison">LIAISON</span>
+                    <span class="sb">開催中/開催予定</span>
                   </div>
                   <div class="p2-4-creator-card__name">田中 透</div>
                   <div class="p2-4-creator-card__name-en">Toru Tanaka</div>
                   <div class="p2-4-creator-card__genre">油彩・現代美術・ミクストメディア</div>
-                  <div class="p2-4-creator-card__counts">
-                    <div class="p2-4-creator-count">
-                      <div class="p2-4-creator-count__num">12</div>
-                      <div class="p2-4-creator-count__lbl">exhibitions</div>
-                    </div>
-                    <div class="p2-4-creator-count" style="margin-left:14px">
-                      <div class="p2-4-creator-count__num">247</div>
-                      <div class="p2-4-creator-count__lbl">watchers</div>
-                    </div>
+                  <div class="pc-counts">
+                    <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>12</span>
+                    <span class="sep"></span>
+                    <span class="pc-count pc-count--watch"><svg width="11" height="11"><use href="#icon-watch" color="#7a8a99"/></svg>247</span>
                   </div>
                 </div>
                 <div class="p2-4-creator-card__action">
-                  <button class="p2-4-creator-card__watch" id="watchBtn0">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="13" height="13"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  <button class="ktn-btn" id="watchBtn0"
+                          onclick="this.classList.toggle('on');event.preventDefault()"
+                          data-off="watch" data-on="watching" data-action="watch">
+                    <svg viewBox="0 0 16 16" fill="none">
+                      <circle cx="8" cy="8" r="7" fill="#7a8a99" opacity=".45"/>
+                      <circle class="wi-inner" cx="8" cy="8" r="2.6"/>
+                    </svg>
                     watch
                   </button>
                 </div>
@@ -193,7 +192,7 @@
               <!-- プロフィール本文 -->
               <div class="p2-4-creator-card__bio">
                 <p>1985年東京生まれ。武蔵野美術大学油絵学科卒業後、ニューヨークのアートスタジオに在籍。帰国後、「言語と感覚の境界」をテーマにした絵画作品を発表し続ける。</p>
-                <p style="margin-top:8px">日本語特有の音象徴語（オノマトペ）が持つ音の質感を、色彩と筆跡によって視覚化する独自の手法を確立。国内外の展覧会に多数参加。2024年より LIAISON 認定クリエイター。</p>
+                <p style="margin-top:8px">日本語特有の音象徴語（オノマトペ）が持つ音の質感を、色彩と筆跡によって視覚化する独自の手法を確立。国内外の展覧会に多数参加。</p>
               </div>
 
               <!-- タグ -->
@@ -285,6 +284,13 @@
             </div>
           </div>
 
+          <!-- Posted by -->
+          <div class="p2-side-card p2-side-posted">
+            <div class="p2-side-posted__label">posted by</div>
+            <div class="p2-side-posted__dates">掲載：2026.02.10 / 最終更新：2026.02.18</div>
+            <div id="p2PostedByCard"></div>
+          </div>
+
           <!-- ページ内ナビリンク -->
           <div class="p2-ic is-open p2-side-links">
             <div class="p2-ic__head">
@@ -292,7 +298,7 @@
                 <div class="p2-ic__head-icon">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
                 </div>
-                <span class="p2-ic__head-title">この展覧会<span class="p2-ic__head-en">In This Exhibition</span></span>
+                <span class="p2-ic__head-title">この展覧会<span class="ktn-sec-en">In This Exhibition</span></span>
               </div>
             </div>
             <div class="p2-ic__body p2-side-links__body">
@@ -348,35 +354,12 @@
           </div>
 
           <!-- 近くの展覧会 -->
-          <div class="p2-sub-nearby" id="p2SubNearby">
-            <div class="p2-sub-nearby__head">
-              <span class="p2-sub-nearby__title">近くの展覧会</span>
-              <a href="kotennavi-p2.html?filter=near" class="p2-sub-nearby__more">すべて →</a>
+          <div class="p2-side-card p2-side-nearby">
+            <div class="p2-side-nearby__head">
+              <span class="p2-side-nearby__title">近くの展覧会 — <span class="ktn-sec-en">Nearby</span></span>
+              <a href="kotennavi-p2.html?filter=near" class="p2-side-nearby__more">すべて →</a>
             </div>
-            <a href="kotennavi-p2.html" class="p2-sub-near-item">
-              <div class="p2-sub-near-item__poster" style="background:linear-gradient(155deg,#e0d8c8,#b4a88a);color:rgba(0,0,0,.28)">線と余</div>
-              <div class="p2-sub-near-item__body">
-                <div class="p2-sub-near-item__name">線と余白の詩学</div>
-                <div class="p2-sub-near-item__venue">渋谷アートラボ</div>
-              </div>
-              <span class="p2-sub-near-item__badge">開催中</span>
-            </a>
-            <a href="kotennavi-p2.html" class="p2-sub-near-item">
-              <div class="p2-sub-near-item__poster" style="background:linear-gradient(155deg,#c8d0e0,#8898b8);color:rgba(255,255,255,.6)"><div class="p2-sub-near-item__ldot"></div>光の破</div>
-              <div class="p2-sub-near-item__body">
-                <div class="p2-sub-near-item__name">光の破片</div>
-                <div class="p2-sub-near-item__venue">GALLERY X</div>
-              </div>
-              <span class="p2-sub-near-item__badge">開催中</span>
-            </a>
-            <a href="kotennavi-p2.html" class="p2-sub-near-item">
-              <div class="p2-sub-near-item__poster" style="background:linear-gradient(155deg,#d0c8e0,#8878b4);color:rgba(255,255,255,.6)">うつろ</div>
-              <div class="p2-sub-near-item__body">
-                <div class="p2-sub-near-item__name">うつろい</div>
-                <div class="p2-sub-near-item__venue">東京都現代美術館</div>
-              </div>
-              <span class="p2-sub-near-item__badge">開催中</span>
-            </a>
+            <div id="p2NearbyList"></div>
           </div>
 
         </aside>
@@ -403,7 +386,7 @@
     <!-- ③ 回遊：おすすめ展覧会 -->
     <section class="p2-sub-rec" aria-label="おすすめの展覧会">
       <div class="p2-sub-rec__head">
-        <h2 class="p2-sub-rec__title">おすすめの展覧会<span class="p2-sub-rec__title-en">Recommended</span></h2>
+        <h2 class="p2-sub-rec__title">おすすめの展覧会<span class="ktn-sec-en">Recommended</span></h2>
         <a href="kotennavi-p2.html" class="p2-sub-rec__more">すべて見る →</a>
       </div>
       <div class="masonry" id="p2SubRecGrid"></div>
@@ -517,7 +500,20 @@ window.P2_CREATORS_ALL = [
 window.P2_CREATOR_PROFILE_HTML = document.getElementById('p2CreatorList').innerHTML;
 initP2CreatorList([]); /* 1人＝プロフィール形式を維持（何もしない） */
 
+window.P2_POSTED_BY = {
+  type: 'gallery', href: 'kotennavi-p4.html',
+  avStyle: 'linear-gradient(135deg,#c4a882,#9a7c54)', ini: 'G', iniStyle: '1rem',
+  name: 'Gallery SOIL 渋谷', location: '東京・渋谷 · アート',
+  exh: 3, watch: 11, watchId: 'p24FollowBtn', watchOn: false, status: 'live', panel: true
+};
+window.P2_NEARBY = [
+  { title: '線と余白の詩学',           venue: '渋谷アートラボ',     pref: '東京', bg: 'linear-gradient(155deg,#e0d8c8,#b4a88a)', s:'05.10', e:'05.25', liaison: false },
+  { title: '光の破片',                 venue: 'GALLERY X',         pref: '東京', bg: 'linear-gradient(155deg,#c8d0e0,#8898b8)', s:'05.15', e:'05.30', liaison: true  },
+  { title: 'うつろい',                 venue: '東京都現代美術館',    pref: '東京', bg: 'linear-gradient(155deg,#d0c8e0,#8878b4)', s:'04.20', e:'06.01', liaison: false },
+  { title: 'デジタルとアナログのあいだ', venue: '3331 Arts Chiyoda', pref: '東京', bg: 'linear-gradient(155deg,#d8e8d0,#88b878)', s:'05.18', e:'05.31', liaison: 'li-plus' },
+];
 KTN.init({ page: 'p2-4', role: 'guest' });
+(function(){var l=document.getElementById('p2NearbyList');if(l&&window.P2_NEARBY)l.innerHTML=window.P2_NEARBY.slice(0,4).map(buildSideEcCard).join('');})();
 </script>
 </body>
 </html>

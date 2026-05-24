@@ -1,0 +1,301 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>メール通知設定 — 山田 花子 | 個展なび</title>
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+  <link rel="stylesheet" href="./kotennavi-components.css">
+</head>
+<body class="p5-page p5-13-page mgmt-page">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- 管理ドロワー -->
+<div class="p3-mgmt-drawer" id="p513Drawer">
+  <div class="p3-mgmt-drawer__overlay" id="p513DrawerOverlay"></div>
+  <div class="p3-mgmt-drawer__panel">
+    <div class="p3-mgmt-drawer__head">
+      <div class="p3-mgmt-drawer__title">管理メニュー</div>
+      <button class="p3-mgmt-drawer__close" id="p513DrawerClose" aria-label="閉じる">✕</button>
+    </div>
+    <nav class="p3-mgmt-drawer__nav">
+      <a class="p3-mgmt-nav-item" href="kotennavi-p5.html">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><circle cx="8" cy="5" r="3"/><path d="M2 13.5c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>
+        マイページ
+      </a>
+      <div class="p3-mgmt-drawer__sep"></div>
+      <a class="p3-mgmt-nav-item" href="kotennavi-p5-11.html">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><circle cx="8" cy="5" r="3"/><path d="M2 13.5c0-3.3 2.7-6 6-6s6 2.7 6 6"/><line x1="13" y1="9" x2="15" y2="9" stroke-width="1.2"/><line x1="14" y1="8" x2="14" y2="10" stroke-width="1.2"/></svg>
+        プロフィール編集
+      </a>
+      <a class="p3-mgmt-nav-item" href="kotennavi-p5-12.html">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><rect x="3" y="7" width="10" height="8" rx="1"/><path d="M5 7V5a3 3 0 0 1 6 0v2"/></svg>
+        パスワード変更
+      </a>
+      <a class="p3-mgmt-nav-item p3-mgmt-nav-item--active" href="kotennavi-p5-13.html">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><path d="M8 2a5 5 0 0 1 5 5v2l1.5 2.5H1.5L3 9V7a5 5 0 0 1 5-5z"/><path d="M6.5 13a1.5 1.5 0 0 0 3 0"/></svg>
+        通知設定
+      </a>
+      <div class="p3-mgmt-drawer__sep"></div>
+      <a class="p3-mgmt-nav-item" href="kotennavi-p5-14.html">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><rect x="2" y="3" width="12" height="10" rx="1"/><line x1="5" y1="7" x2="11" y2="7"/><line x1="5" y1="10" x2="8" y2="10"/></svg>
+        購入履歴
+      </a>
+    </nav>
+  </div>
+</div>
+
+<!-- デモバー -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ロール：</span>
+  <button class="dbtn" onclick="setR('guest',this)">ゲスト</button>
+  <button class="dbtn" onclick="setR('login',this)">ログイン</button>
+  <button class="dbtn on" onclick="setR('user+',this)">user+</button>
+  <button class="dbtn" onclick="setR('admin',this)">管理者</button>
+</div>
+
+<div class="shell">
+<div class="content-wrap" id="contentWrap">
+
+  <header class="ktn-header" id="ktnHeader">
+    <div class="ktn-header__inner">
+      <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+      <div class="ktn-hdr-actions" id="ktnActs"></div>
+    </div>
+  </header>
+
+  <main class="ktn-main" id="ktnMain">
+
+    <!-- A. ヒーロー（コンパクト版） -->
+    <div class="p5-head p5-head--compact">
+      <div class="p5-head__inner">
+        <div class="p5-head__top">
+          <a href="kotennavi-p5.html">
+            <div class="p5-head__avatar" style="background:linear-gradient(135deg,#f0c0d8,#c87aaa)">花</div>
+          </a>
+          <div class="p5-head__info">
+            <div class="p5-head__badge-row">
+              <span class="cb cb-person cb-user">user</span>
+            </div>
+            <h1 class="p5-head__name"><a href="kotennavi-p5.html" style="color:inherit;text-decoration:none">山田 花子</a></h1>
+          </div>
+          <button class="p3-mgmt-btn" id="p513MgmtBtn" aria-label="管理メニューを開く">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="16" height="16"><circle cx="10" cy="10" r="2"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2M5.05 5.05l1.41 1.41M13.54 13.54l1.41 1.41M5.05 14.95l1.41-1.41M13.54 6.46l1.41-1.41"/></svg>
+            管理
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- B. タブナビ -->
+    <nav class="p5-tabnav" id="p5Tabnav" aria-label="マイページ内ナビ">
+      <div class="p5-tabnav__inner">
+        <a class="p5-tabnav__name" href="kotennavi-p5.html"><span class="p5-tabnav__name-text">山田 花子</span></a>
+        <a class="p5-tabnav__item" href="kotennavi-p5.html">カレンダー</a>
+        <a class="p5-tabnav__item" href="kotennavi-p5-1.html">ウォッチ</a>
+        <a class="p5-tabnav__item" href="kotennavi-p5-2.html">チェックイン</a>
+        <a class="p5-tabnav__item" href="kotennavi-p5-3.html">興味あり！</a>
+      </div>
+    </nav>
+
+    <!-- C. メインコンテンツ -->
+    <div class="ktn-content">
+      <div class="p513-wrap" id="p513Wrap">
+
+        <!-- ページタイトル -->
+        <div class="p513-page-head">
+          <h2 class="p513-page-head__title">メール通知設定</h2>
+          <p class="p513-page-head__en ktn-en-label">NOTIFICATION SETTINGS</p>
+          <p class="p513-page-head__desc">受け取るメール通知の種類をカテゴリごとに設定できます。変更は即時に反映されます。</p>
+        </div>
+
+        <!-- セクション1: 展覧会通知 -->
+        <div class="p513-section">
+          <div class="p513-section__head">
+            <div class="p513-section__title">展覧会通知</div>
+            <div class="p513-section__desc">ウォッチ中のクリエイター・ギャラリーの展覧会情報をお知らせします。</div>
+          </div>
+
+          <div class="p513-row">
+            <div class="p513-row__body">
+              <div class="p513-row__label">新規展覧会（クリエイター）</div>
+              <div class="p513-row__desc">ウォッチ中のクリエイターが新しい展覧会を登録したときに通知</div>
+            </div>
+            <label class="p513-toggle">
+              <input type="checkbox" checked onchange="p513AutoSave(this)">
+              <span class="p513-toggle__track"></span>
+            </label>
+          </div>
+
+          <div class="p513-row">
+            <div class="p513-row__body">
+              <div class="p513-row__label">新規展覧会（ギャラリー）</div>
+              <div class="p513-row__desc">ウォッチ中のギャラリーが新しい展覧会を登録したときに通知</div>
+            </div>
+            <label class="p513-toggle">
+              <input type="checkbox" checked onchange="p513AutoSave(this)">
+              <span class="p513-toggle__track"></span>
+            </label>
+          </div>
+
+          <div class="p513-row">
+            <div class="p513-row__body">
+              <div class="p513-row__label">開催日前リマインダー</div>
+              <div class="p513-row__desc">「興味あり！」に追加した展覧会の開催日3日前にリマインダーをお送りします</div>
+            </div>
+            <label class="p513-toggle">
+              <input type="checkbox" onchange="p513AutoSave(this)">
+              <span class="p513-toggle__track"></span>
+            </label>
+          </div>
+
+        </div>
+
+        <!-- セクション2: LIAISON+通知 -->
+        <div class="p513-section">
+          <div class="p513-section__head">
+            <div class="p513-section__title">LIAISON+ 取引通知</div>
+            <div class="p513-section__desc">購入申込や取引の進捗に関するお知らせです。重要な通知はOFFにできません。</div>
+          </div>
+
+          <div class="p513-row">
+            <div class="p513-row__body">
+              <div class="p513-row__label">在庫確認完了・順番繰り上がり</div>
+              <div class="p513-row__desc">申込の順番が変わったときや在庫確認が完了したときに通知</div>
+            </div>
+            <label class="p513-toggle">
+              <input type="checkbox" checked disabled onchange="p513AutoSave(this)">
+              <span class="p513-toggle__track"></span>
+            </label>
+          </div>
+
+          <div class="p513-row">
+            <div class="p513-row__body">
+              <div class="p513-row__label">支払い案内・期限</div>
+              <div class="p513-row__desc">支払い手続きが必要なタイミングと期限をお知らせします</div>
+            </div>
+            <label class="p513-toggle">
+              <input type="checkbox" checked disabled onchange="p513AutoSave(this)">
+              <span class="p513-toggle__track"></span>
+            </label>
+          </div>
+
+          <div class="p513-row">
+            <div class="p513-row__body">
+              <div class="p513-row__label">発送通知</div>
+              <div class="p513-row__desc">作品が発送されたときに追跡番号と合わせてお知らせします</div>
+            </div>
+            <label class="p513-toggle">
+              <input type="checkbox" checked disabled onchange="p513AutoSave(this)">
+              <span class="p513-toggle__track"></span>
+            </label>
+          </div>
+
+          <div class="p513-row">
+            <div class="p513-row__body">
+              <div class="p513-row__label">取引完了</div>
+              <div class="p513-row__desc">取引が正常に完了したときに確認のお知らせをします</div>
+            </div>
+            <label class="p513-toggle">
+              <input type="checkbox" checked onchange="p513AutoSave(this)">
+              <span class="p513-toggle__track"></span>
+            </label>
+          </div>
+
+          <div class="p513-row">
+            <div class="p513-row__body">
+              <div class="p513-row__label">申込キャンセル・取引中止</div>
+              <div class="p513-row__desc">申込がキャンセルされた場合や取引が中止になった場合に通知</div>
+            </div>
+            <label class="p513-toggle">
+              <input type="checkbox" checked disabled onchange="p513AutoSave(this)">
+              <span class="p513-toggle__track"></span>
+            </label>
+          </div>
+
+        </div>
+
+        <!-- セクション3: 重要なお知らせ -->
+        <div class="p513-section">
+          <div class="p513-section__head">
+            <div class="p513-section__title">重要なお知らせ</div>
+            <div class="p513-section__desc">サービスの運営に関わる重要な通知です。変更できません。</div>
+          </div>
+
+          <div class="p513-row">
+            <div class="p513-row__body">
+              <div class="p513-row__label">個展なびからの重要なお知らせ</div>
+              <div class="p513-row__desc">利用規約の変更・セキュリティ情報・アカウントに関する重要な通知</div>
+            </div>
+            <span class="p513-row__mandatory">変更不可</span>
+          </div>
+
+        </div>
+
+        <!-- セクション4: プロモーション -->
+        <div class="p513-section">
+          <div class="p513-section__head">
+            <div class="p513-section__title">プロモーション</div>
+            <div class="p513-section__desc">個展なびからのお得な情報や新機能のご案内です。</div>
+          </div>
+
+          <div class="p513-row">
+            <div class="p513-row__body">
+              <div class="p513-row__label">新機能・サービス情報</div>
+              <div class="p513-row__desc">個展なびの新機能リリースやサービス改善のご案内</div>
+            </div>
+            <label class="p513-toggle">
+              <input type="checkbox" checked onchange="p513AutoSave(this)">
+              <span class="p513-toggle__track"></span>
+            </label>
+          </div>
+
+          <div class="p513-row">
+            <div class="p513-row__body">
+              <div class="p513-row__label">キャンペーン・特集</div>
+              <div class="p513-row__desc">期間限定キャンペーンや注目の展覧会特集メール</div>
+            </div>
+            <label class="p513-toggle">
+              <input type="checkbox" onchange="p513AutoSave(this)">
+              <span class="p513-toggle__track"></span>
+            </label>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </main>
+</div>
+</div>
+
+<script src="kotennavi-common.js"></script>
+<script src="kotennavi-pages.js"></script>
+<script>
+KTN.init({ page: 'p5-13', role: 'user+' });
+(function () {
+  // 管理ドロワー
+  var drawer  = document.getElementById('p513Drawer');
+  var mgmtBtn = document.getElementById('p513MgmtBtn');
+  var dClose  = document.getElementById('p513DrawerClose');
+  var dOver   = document.getElementById('p513DrawerOverlay');
+  function openDrawer()  { if (drawer) drawer.classList.add('is-open'); }
+  function closeDrawer() { if (drawer) drawer.classList.remove('is-open'); }
+  if (mgmtBtn) mgmtBtn.addEventListener('click', openDrawer);
+  if (dClose)  dClose.addEventListener('click', closeDrawer);
+  if (dOver)   dOver.addEventListener('click', closeDrawer);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeDrawer(); });
+}());
+
+function p513AutoSave(input) {
+  var label = input.closest('.p513-row').querySelector('.p513-row__label');
+  var name  = label ? label.textContent.trim() : '設定';
+  KTN.toast((input.checked ? 'ON: ' : 'OFF: ') + name);
+}
+</script>
+</body>
+</html>

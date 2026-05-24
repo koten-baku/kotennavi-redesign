@@ -1,0 +1,256 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>パスワード管理 — 山田 花子 | 個展なび</title>
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+  <link rel="stylesheet" href="./kotennavi-components.css">
+</head>
+<body class="p5-page p5-12-page mgmt-page">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- 管理ドロワー -->
+<div class="p3-mgmt-drawer" id="p512Drawer">
+  <div class="p3-mgmt-drawer__overlay" id="p512DrawerOverlay"></div>
+  <div class="p3-mgmt-drawer__panel">
+    <div class="p3-mgmt-drawer__head">
+      <div class="p3-mgmt-drawer__title">管理メニュー</div>
+      <button class="p3-mgmt-drawer__close" id="p512DrawerClose" aria-label="閉じる">✕</button>
+    </div>
+    <nav class="p3-mgmt-drawer__nav">
+      <a class="p3-mgmt-nav-item" href="kotennavi-p5.html">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><circle cx="8" cy="5" r="3"/><path d="M2 13.5c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>
+        マイページ
+      </a>
+      <div class="p3-mgmt-drawer__sep"></div>
+      <a class="p3-mgmt-nav-item" href="kotennavi-p5-11.html">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><circle cx="8" cy="5" r="3"/><path d="M2 13.5c0-3.3 2.7-6 6-6s6 2.7 6 6"/><line x1="13" y1="9" x2="15" y2="9" stroke-width="1.2"/><line x1="14" y1="8" x2="14" y2="10" stroke-width="1.2"/></svg>
+        プロフィール編集
+      </a>
+      <a class="p3-mgmt-nav-item p3-mgmt-nav-item--active" href="kotennavi-p5-12.html">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><rect x="3" y="7" width="10" height="8" rx="1"/><path d="M5 7V5a3 3 0 0 1 6 0v2"/></svg>
+        パスワード変更
+      </a>
+      <a class="p3-mgmt-nav-item" href="kotennavi-p5-13.html">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><path d="M8 2a5 5 0 0 1 5 5v2l1.5 2.5H1.5L3 9V7a5 5 0 0 1 5-5z"/><path d="M6.5 13a1.5 1.5 0 0 0 3 0"/></svg>
+        通知設定
+      </a>
+      <div class="p3-mgmt-drawer__sep"></div>
+      <a class="p3-mgmt-nav-item" href="kotennavi-p5-14.html">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><rect x="2" y="3" width="12" height="10" rx="1"/><line x1="5" y1="7" x2="11" y2="7"/><line x1="5" y1="10" x2="8" y2="10"/></svg>
+        購入履歴
+      </a>
+    </nav>
+  </div>
+</div>
+
+<!-- デモバー -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ロール：</span>
+  <button class="dbtn" onclick="setR('guest',this)">ゲスト</button>
+  <button class="dbtn" onclick="setR('login',this)">ログイン</button>
+  <button class="dbtn on" onclick="setR('user+',this)">user+</button>
+  <button class="dbtn" onclick="setR('admin',this)">管理者</button>
+</div>
+
+<div class="shell">
+<div class="content-wrap" id="contentWrap">
+
+  <header class="ktn-header" id="ktnHeader">
+    <div class="ktn-header__inner">
+      <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+      <div class="ktn-hdr-actions" id="ktnActs"></div>
+    </div>
+  </header>
+
+  <main class="ktn-main" id="ktnMain">
+
+    <!-- A. ヒーロー（コンパクト版） -->
+    <div class="p5-head p5-head--compact">
+      <div class="p5-head__inner">
+        <div class="p5-head__top">
+          <a href="kotennavi-p5.html">
+            <div class="p5-head__avatar" style="background:linear-gradient(135deg,#f0c0d8,#c87aaa)">花</div>
+          </a>
+          <div class="p5-head__info">
+            <div class="p5-head__badge-row">
+              <span class="cb cb-person cb-user">user</span>
+            </div>
+            <h1 class="p5-head__name"><a href="kotennavi-p5.html" style="color:inherit;text-decoration:none">山田 花子</a></h1>
+          </div>
+          <button class="p3-mgmt-btn" id="p512MgmtBtn" aria-label="管理メニューを開く">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="16" height="16"><circle cx="10" cy="10" r="2"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2M5.05 5.05l1.41 1.41M13.54 13.54l1.41 1.41M5.05 14.95l1.41-1.41M13.54 6.46l1.41-1.41"/></svg>
+            管理
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- B. タブナビ -->
+    <nav class="p5-tabnav" id="p5Tabnav" aria-label="マイページ内ナビ">
+      <div class="p5-tabnav__inner">
+        <a class="p5-tabnav__name" href="kotennavi-p5.html"><span class="p5-tabnav__name-text">山田 花子</span></a>
+        <a class="p5-tabnav__item" href="kotennavi-p5.html">カレンダー</a>
+        <a class="p5-tabnav__item" href="kotennavi-p5-1.html">ウォッチ</a>
+        <a class="p5-tabnav__item" href="kotennavi-p5-2.html">チェックイン</a>
+        <a class="p5-tabnav__item" href="kotennavi-p5-3.html">興味あり！</a>
+      </div>
+    </nav>
+
+    <!-- C. メインコンテンツ -->
+    <div class="ktn-content">
+      <div class="p512-wrap" id="p512Wrap">
+
+        <!-- ページタイトル -->
+        <div class="p512-page-head">
+          <h2 class="p512-page-head__title">パスワード管理</h2>
+          <p class="p512-page-head__en ktn-en-label">PASSWORD SETTINGS</p>
+          <p class="p512-page-head__desc">現在のパスワードを確認の上、新しいパスワードを設定できます。</p>
+        </div>
+
+        <!-- パスワード変更ブロック -->
+        <div class="p211-block">
+          <div class="p211-block__head">
+            <h3 class="p211-block__title">パスワード変更 <span class="p211-block__title-en">CHANGE PASSWORD</span></h3>
+          </div>
+          <div class="p211-block__body">
+
+            <!-- 現在のパスワード -->
+            <div class="p211-field">
+              <label class="p211-label" for="p512CurrentPw">現在のパスワード <span class="p211-req">*</span></label>
+              <div class="p512-pw-wrap">
+                <input class="p211-input" id="p512CurrentPw" type="password" autocomplete="current-password" placeholder="現在のパスワード">
+                <button class="p512-pw-toggle" type="button" aria-label="パスワードを表示" data-target="p512CurrentPw">
+                  <svg class="icon-show" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z"/><circle cx="8" cy="8" r="2"/></svg>
+                  <svg class="icon-hide" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z"/><circle cx="8" cy="8" r="2"/><line x1="2" y1="2" x2="14" y2="14"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- 新しいパスワード -->
+            <div class="p211-field">
+              <label class="p211-label" for="p512NewPw">新しいパスワード <span class="p211-req">*</span></label>
+              <div class="p512-pw-wrap">
+                <input class="p211-input" id="p512NewPw" type="password" autocomplete="new-password" placeholder="8文字以上" oninput="p512UpdateStrength(this.value)">
+                <button class="p512-pw-toggle" type="button" aria-label="パスワードを表示" data-target="p512NewPw">
+                  <svg class="icon-show" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z"/><circle cx="8" cy="8" r="2"/></svg>
+                  <svg class="icon-hide" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z"/><circle cx="8" cy="8" r="2"/><line x1="2" y1="2" x2="14" y2="14"/></svg>
+                </button>
+              </div>
+              <div class="p512-strength" id="p512Strength">
+                <div class="p512-strength__bars">
+                  <div class="p512-strength__bar" id="p512Bar1"></div>
+                  <div class="p512-strength__bar" id="p512Bar2"></div>
+                  <div class="p512-strength__bar" id="p512Bar3"></div>
+                  <div class="p512-strength__bar" id="p512Bar4"></div>
+                </div>
+                <span class="p512-strength__label" id="p512StrengthLabel"></span>
+              </div>
+              <p class="p211-help">8文字以上。英大文字・小文字・数字・記号を組み合わせると強度が上がります。</p>
+            </div>
+
+            <!-- 新しいパスワード（確認） -->
+            <div class="p211-field">
+              <label class="p211-label" for="p512ConfirmPw">新しいパスワード（確認） <span class="p211-req">*</span></label>
+              <div class="p512-pw-wrap">
+                <input class="p211-input" id="p512ConfirmPw" type="password" autocomplete="new-password" placeholder="もう一度入力">
+                <button class="p512-pw-toggle" type="button" aria-label="パスワードを表示" data-target="p512ConfirmPw">
+                  <svg class="icon-show" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z"/><circle cx="8" cy="8" r="2"/></svg>
+                  <svg class="icon-hide" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z"/><circle cx="8" cy="8" r="2"/><line x1="2" y1="2" x2="14" y2="14"/></svg>
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- パスワードを忘れた場合 -->
+        <a class="p512-forgot" href="#">パスワードをお忘れの場合はこちら →</a>
+
+        <!-- 送信バー -->
+        <div class="p512-submit-bar">
+          <button class="p211-submit-bar__cancel" type="button" onclick="history.back()">キャンセル</button>
+          <button class="p211-submit-bar__submit" type="button" id="p512SaveBtn">パスワードを変更する</button>
+        </div>
+
+      </div>
+    </div>
+  </main>
+</div>
+</div>
+
+<script src="kotennavi-common.js"></script>
+<script src="kotennavi-pages.js"></script>
+<script>
+KTN.init({ page: 'p5-12', role: 'user+' });
+(function () {
+  // 管理ドロワー
+  var drawer  = document.getElementById('p512Drawer');
+  var mgmtBtn = document.getElementById('p512MgmtBtn');
+  var dClose  = document.getElementById('p512DrawerClose');
+  var dOver   = document.getElementById('p512DrawerOverlay');
+  function openDrawer()  { if (drawer) drawer.classList.add('is-open'); }
+  function closeDrawer() { if (drawer) drawer.classList.remove('is-open'); }
+  if (mgmtBtn) mgmtBtn.addEventListener('click', openDrawer);
+  if (dClose)  dClose.addEventListener('click', closeDrawer);
+  if (dOver)   dOver.addEventListener('click', closeDrawer);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeDrawer(); });
+
+  // パスワード表示トグル
+  document.querySelectorAll('.p512-pw-toggle').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var input = document.getElementById(btn.dataset.target);
+      if (!input) return;
+      var isVisible = btn.classList.toggle('is-visible');
+      input.type = isVisible ? 'text' : 'password';
+    });
+  });
+
+  // 保存ボタン
+  var saveBtn = document.getElementById('p512SaveBtn');
+  if (saveBtn) {
+    saveBtn.addEventListener('click', function () {
+      var cur     = document.getElementById('p512CurrentPw');
+      var newPw   = document.getElementById('p512NewPw');
+      var confirm = document.getElementById('p512ConfirmPw');
+      if (!cur || !cur.value || !newPw || !newPw.value || !confirm || !confirm.value) {
+        KTN.toast('すべてのフィールドを入力してください');
+        return;
+      }
+      if (newPw.value !== confirm.value) {
+        KTN.toast('新しいパスワードが一致しません');
+        return;
+      }
+      KTN.toast('パスワードを変更しました');
+    });
+  }
+}());
+
+// パスワード強度
+function p512UpdateStrength(val) {
+  var bars    = [document.getElementById('p512Bar1'),document.getElementById('p512Bar2'),document.getElementById('p512Bar3'),document.getElementById('p512Bar4')];
+  var label   = document.getElementById('p512StrengthLabel');
+  var classes = ['is-weak','is-fair','is-good'];
+  var levels  = ['弱い','普通','強い','とても強い'];
+  var score   = 0;
+  if (val.length >= 8)  score++;
+  if (/[A-Z]/.test(val) && /[a-z]/.test(val)) score++;
+  if (/[0-9]/.test(val)) score++;
+  if (/[^A-Za-z0-9]/.test(val)) score++;
+  bars.forEach(function (b, i) {
+    if (!b) return;
+    b.className = 'p512-strength__bar';
+    if (val.length > 0 && i < score) {
+      b.classList.add(score <= 1 ? 'is-weak' : score <= 2 ? 'is-fair' : 'is-good');
+    }
+  });
+  if (label) label.textContent = val.length === 0 ? '' : levels[Math.min(score - 1, 3)] || '';
+}
+</script>
+</body>
+</html>

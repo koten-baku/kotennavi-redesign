@@ -1,4 +1,4 @@
-var fs = require('fs');
+﻿var fs = require('fs');
 
 /* ─── 1. HTML ─── */
 var hf = 'D:/user/baku/claude-code/kotennavi-redesign/kotennavi-p2-5.html';
@@ -99,7 +99,7 @@ var NEW_SEC = [
 '          <!-- \u304a\u3059\u3059\u3081\u306e\u5c55\u89a7\u4f1a -->',
 '          <section class="p2-sub-rec" aria-label="\u304a\u3059\u3059\u3081\u306e\u5c55\u89a7\u4f1a">',
 '            <div class="p2-sub-rec__head">',
-'              <h2 class="p2-sub-rec__title">\u304a\u3059\u3059\u3081\u306e\u5c55\u89a7\u4f1a<span class="p2-sub-rec__title-en">Recommended</span></h2>',
+'              <h2 class="p2-sub-rec__title">\u304a\u3059\u3059\u3081\u306e\u5c55\u89a7\u4f1a<span class="ktn-sec-en">Recommended</span></h2>',
 '              <a href="kotennavi-p2.html" class="p2-sub-rec__more">\u3059\u3079\u3066\u898b\u308b \u2192</a>',
 '            </div>',
 '            <div class="p2-sub-rec__grid" id="p25RecGrid"><!-- JS\u751f\u6210 --></div>',

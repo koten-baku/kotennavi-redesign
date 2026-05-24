@@ -947,7 +947,7 @@ function openCheckinModal() {
           '<button class="ktn-modal__close" onclick="closeCheckinModal()" aria-label="閉じる">\u00d7</button>' +
           '<div class="ktn-modal__inner">' +
             '<div class="ktn-modal__icon">' +
-              '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="44" height="44"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>' +
+              '<svg viewBox="0 0 16 16" fill="none" width="44" height="44"><circle cx="10" cy="5" r="4" fill="#7a8a99" opacity=".45"/><circle cx="5" cy="11" r="2.4" fill="#7a8a99" opacity=".45"/></svg>' +
             '</div>' +
             '<div class="ktn-modal__title">ログインが必要です</div>' +
             '<div class="ktn-modal__desc">ウォッチ・興味ある！・チェックインなどの<br>My機能が使えるようになります</div>' +
@@ -1037,7 +1037,7 @@ function initP2CreatorList(creators) {
         '</div>' +
         '<div class="cc__main">' +
           '<div class="cc__info">' +
-            '<div class="cc__badge-row"><span class="cb cb-person cb-creator">creator</span></div>' +
+            '<div class="cc__badge-row"><span class="cb cb-person cb-creator">creator</span><span class="sb">開催中/開催予定</span></div>' +
             '<div class="cc__name">' + c.name + '</div>' +
             '<div class="cc__genre">' + c.genre + '</div>' +
           '</div>' +
@@ -1045,8 +1045,8 @@ function initP2CreatorList(creators) {
             '<span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>' + c.exh + '</span>' +
             '<span class="sep"></span>' +
             '<span class="pc-count pc-count--watch"><svg width="11" height="11"><use href="#icon-watch" color="#7a8a99"/></svg>' + c.watch + '</span>' +
-            '<button class="ktn-btn" onclick="this.classList.toggle(\'on\');event.preventDefault()">' +
-              '<svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>' +
+            '<button class="ktn-btn" onclick="this.classList.toggle(\'on\');event.preventDefault()" data-off="watch" data-on="watching" data-action="watch">' +
+              '<svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" fill="#7a8a99" opacity=".45"/><circle class="wi-inner" cx="8" cy="8" r="2.6"/></svg>' +
               'watch<span class="tip">\u30a6\u30a9\u30c3\u30c1\u3059\u308b</span>' +
             '</button>' +
           '</div>' +

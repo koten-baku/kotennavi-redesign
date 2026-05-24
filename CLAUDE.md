@@ -1,4 +1,4 @@
-# 個展なびリデザイン プロジェクト
+﻿# 個展なびリデザイン プロジェクト
 
 ## 概要
 展覧会情報ポータルサイト「個展なび」のリデザインと新サービス「リエゾン（LIAISON）」導入のためのUI制作プロジェクト。
@@ -136,6 +136,45 @@ docs/                     仕様・設計ドキュメント
 
 ---
 
+## 管理ページ視覚識別（`.mgmt-page`）
+
+一般公開ページと管理・編集ページを視覚的に区別するための共通クラス。**全管理ページの `<body>` に必ず付与する。**
+
+### 視覚効果
+| 効果 | CSS | 詳細 |
+|---|---|---|
+| A: 背景色 | `background: #eae6e0` | 通常ページの `--paper: #f0f4f8`（クールブルー）に対してウォームベージュで区別 |
+| B: トップバー | `body.mgmt-page::before` `position:fixed; top:34px; height:3px` | dbarの直下に固定3pxライン。ロール別カラー |
+
+### トップバーのロール別カラー（バッジ色・page-accentと統一）
+| ロール | bodyクラス | バー色 | カラーコード |
+|---|---|---|---|
+| creator系 | `.p3-page` | インクブルー | `#2a5f7a` |
+| gallery系 | `.p4-page` | コッパーブラウン | `#8b5e3c` |
+| user系 | `.p5-page` | ピンク | `#b8608c` |
+| 管理者 | （なし） | ダークスレート | `#3a4a5a` |
+
+### 適用ページ一覧
+| ページ | bodyクラス構成 | 備考 |
+|---|---|---|
+| p2-12 | `p3-page mgmt-page` | LIAISON作品管理 |
+| p2-12-1 | `p3-page mgmt-page` | LIAISON+作品管理 |
+| p2-11 | `mgmt-page p211-page` + JSで `p3-page`/`p4-page` 動的付与 | creator/gallery共有・役割切替でバー色変化 |
+| p3-15 | `p3-15-page p3-page mgmt-page` | |
+| p3-16 | `p3-page p3-16-page mgmt-page` | |
+| p4-15 | `p4-15-page p4-page mgmt-page` | |
+| p4-16 | `p4-page p4-16-page mgmt-page` | |
+| p4-18 | `p4-18-page p4-page mgmt-page` | |
+| p5-14 | `p5-page p5-14-page mgmt-page` | |
+| p5-15 | `p5-page p5-15-page mgmt-page` | |
+| p5-11〜13 | `p5-page p5-{id}-page mgmt-page` | 新規作成時に適用 |
+| p11-4 | `mgmt-page` + JSで `p3-page`/`p4-page` 動的付与 | creator/gallery共有 |
+
+### ロール動的切替（creator/gallery共有ページ）
+`KTN.pages['p2-11']` / `KTN.pages['p11-4']` に `syncMgmtBar()` 関数を実装。`ktnRender` 内で `KTN.role` を読み取り `p3-page`/`p4-page` を付け外し。
+
+---
+
 ## 確定済み設計仕様
 
 ### 全ページ共通：共通ヘッダー設計
@@ -174,11 +213,13 @@ docs/                     仕様・設計ドキュメント
 
 | モディファイア | 用途 | 色 |
 |---|---|---|
-| （なし） | 通常ナビゲーション（取引デスクへ・販売代金管理へ など） | グレー枠 `var(--border)`・`var(--ink)` |
-| `--alert` | 出品者アクション必要（在庫確認・発送 など） | アラート赤 `#b43c14` |
+| （なし） | 通常ナビゲーション（取引デスクへ・販売代金管理へ など） | 白背景・グレー枠 `var(--border)`・`var(--ink)` |
+| `--alert` | 出品者アクション必要（在庫確認・発送 など） | solid 赤 `#b43c14`・白文字 |
+| `--alert-dark` | **ダーク背景上**のアラート（p2-5-1等） | solid オレンジ赤 `#c8501c`・白文字 |
 | `--ghost` | **カラー帯の中のみ**（帯の文字色を `currentColor` で継承） | 半透明白背景・`currentColor` 枠 |
 
 - `--ghost` は `.p514-aw__strip` などの有色帯の中でのみ使用する。白背景・`var(--paper)` 背景の上では枠線が ink 色になり意図しない見た目になる。
+- `--alert-dark` はダーク背景（`p251-dark` など）のカード内でのみ使用する。ライト背景では `--alert` を使う。
 
 **HTML の書き方：**
 - ページ固有クラス（レイアウト専用）と共通クラスを併記する
@@ -199,10 +240,10 @@ docs/                     仕様・設計ドキュメント
 
 | モディファイア | 用途 | 通常 | ホバー |
 |---|---|---|---|
-| （なし） | キャンセル・閉じる（モーダルのセカンダリ） | グレー枠・`var(--ink)` | `background:var(--paper)` |
-| `--primary` | 主アクション（申込確定・支払い・受取確認など） | solid `var(--page-accent,#1a4a88)` | `opacity:.88` |
+| （なし） | キャンセル・閉じる（モーダルのセカンダリ） | 白背景・グレー枠・`var(--ink)` | `background:var(--paper)` |
+| `--primary` | 主アクション（申込確定・支払い・受取確認など） | solid `#1a4a88`・白文字（固定・ロール非依存） | `opacity:.88` |
 | `--danger` | 確定的な破壊操作（取引キャンセルなど） | solid 赤 `#b43c14` | `opacity:.88` |
-| `--caution` | 慎重さを要す操作（会場売約済など） | amber tint、hover で赤に変化 | 赤枠・赤文字 |
+| `--caution` | 慎重さを要す操作（会場売約済など） | solid `#8b5e3c`（ギャラリーコッパー）・白文字 | `opacity:.88` |
 | `--danger-outline` | ソフトな破壊操作トリガー（出品取消・申込キャンセルなど） | グレー枠・`var(--muted)` | 赤枠・赤文字 |
 
 **サイズモディファイア：**
@@ -213,9 +254,10 @@ docs/                     仕様・設計ドキュメント
 | `--lg` | `13px 24px` | `0.88rem` | 支払い・受取確認などの大型CTA |
 | `--sm` | `6px 12px` | `0.75rem` | 管理コンソール・カード内の小型ボタン |
 
-**`--primary` の色はページコンテキストに追従：**
-- `--page-accent` 設定ページ（P3: `#2a5f7a` / P4: `#8b5e3c`）はその色
-- P5・未設定ページ：フォールバック `#1a4a88`（ブルー）
+**`--primary` は全ページ固定ブルー `#1a4a88`：**
+- ロール・ページ種別（表示系／管理系）を問わず固定。「青＝実行する」を一貫して学習させる
+- ロール識別は mgmt-page トップバー・タブナビアクセント・バッジ色が担う
+- `--caution`（`#8b5e3c` コッパー）は primary が固定ブルーのため P4 管理ページでも衝突しない
 
 **`--caution` の disabled 状態：**
 - HTML に `disabled` 属性を付けるだけで `opacity:.4; cursor:not-allowed` が自動適用される
@@ -238,14 +280,50 @@ docs/                     仕様・設計ドキュメント
 </div>
 ```
 
+### 全ページ共通：フォントシステム
+
+`font-family` はハードコードせず必ず CSS 変数を使う（SVG `<text>` の `font-family=` 属性を除く）。
+
+| 変数 | フォント | 用途 |
+|---|---|---|
+| `--fn` | Zen Kaku Gothic New | **和文ゴシック（UI）** — UIテキスト・ラベル・バッジ・メタ情報・管理系ページ全般 |
+| `--fs` | Shippori Mincho | **和文明朝（コンテンツ）** — 作品名・展覧会名・人名・セクション見出し・**表示系ページの読ませる文章** |
+| `--fm` | Montserrat | **欧文サンセリフ（英数）** — 数値・日付・ID・ナビ・タブ・バッジテキスト |
+| `--font-en-name` | Cormorant Garamond italic | **欧文固有名詞** — 人名・会場名・展覧会名・作品名の英語表記（`.ktn-en-sub`） |
+| `--font-en-label` | Cinzel | **欧文機能ラベル** — LIAISON+ CONSOLE など機能的英語ラベル（`.ktn-en-label`） |
+| `--fb` | Bodoni Moda | **欧文セリフ装飾** — サイトタイトル装飾・大見出し |
+
+**使い分けの原則：**
+- 表示系ページ（展覧会・作品・クリエイター・ギャラリー・記事）の読ませる文章 → `--fs`（Shippori Mincho）
+  - 対象クラス：`.p2-about__body` `.wd-body` `.p3-head__bio-text` `.p3-prof-bio` `.p4-prof-bio` `.p6-article__excerpt` `.ac__lead` `.p2-benefit__body` `.p2-1-sched-item__desc`
+- コンテンツタイトル・見出し・人名 → `--fs`（Shippori Mincho）
+- UI・操作・情報・メタ・管理系全般 → `--fn`（Zen Kaku Gothic New）
+- 英数値・識別子・英語ラベル → `--fm`（Montserrat）
+
+**例外：SVG `<text>` 要素**
+SVG の `font-family` 属性は CSS 変数に非対応のため `font-family="'Montserrat',sans-serif"` のようにハードコードを許容する（p2系作品カードの SVG プレースホルダー等）。
+
+---
+
 ### 全ページ共通：英語サブタイトルのフォント使い分け
 
-英語サブテキストは役割に応じて2種類のクラスを使い分ける。
+英語サブテキストは役割に応じて3種類のクラスを使い分ける。
 
 | 役割 | CSS変数 | クラス | フォント | 用途例 |
 |---|---|---|---|---|
 | 固有名詞 | `--font-en-name` | `.ktn-en-sub` | Cormorant Garamond italic | クリエイター名・ギャラリー名・展覧会名・作品名の英語表記 |
 | ページ・セクションラベル | `--font-en-label` | `.ktn-en-label` | Cinzel 400・小サイズ | LIAISON+ CONSOLE・EXHIBITION ARCHIVE など機能的な英語ラベル |
+| セクション見出しインライン | なし | `.ktn-sec-en` | DM Serif Display italic・0.75rem・`color:var(--muted)` | 「この展覧会について — About this exhibition」「近くの展覧会 — Nearby」のようなインライン英語サブ |
+
+**`.ktn-sec-en` の書き方：**
+```html
+<span class="p2-side-nearby__title">近くの展覧会 — <span class="ktn-sec-en">Nearby</span></span>
+```
+- em-dash（—）で日本語タイトルと英語を分ける・同一行インライン
+- `DM Serif Display` は `common.css` の `@import` で全ページ読込済み
+
+**新パターン確定時の手順：** typography.html でルールを決めたら、同様に CLAUDE.md のこのセクションに追記する。これにより将来のセッションでも一貫して適用される。
+- 旧クラス `.p2-ic__head-en` / `.p2-1-section__en` 等は `ktn-sec-en` に統一済み（common.css に `/* → .ktn-sec-en に統一済み */` コメントあり）
 
 - CSS変数は `:root` に定義済み。フォント変更は変数1箇所を変えるだけで全ページに反映される
 - `Cormorant Garamond` は common.css 先頭の `@import` で全ページに読込済み
@@ -362,6 +440,46 @@ docs/                     仕様・設計ドキュメント
 - **申込内訳アコーディオン**（`.p315-apply-detail`）：`padding-left:84px`（作品本文テキストに揃え）・背景 `rgba(0,0,0,.025)`・上枠線なし・下端に `2px solid` でユニット閉じ
 - **ボタン**：「会場売約済」「出品取消」横並び（`flex-direction:row`、デスクトップ基準）
 - **Q&Aセクション**（`.p315-faq`）：ページ下部・8項目・details/summary アコーディオン
+
+### 全表示ページ共通：コンテンツ下部 おすすめセクション（確定仕様）
+
+ページコンテンツ（`ktn-content`）の下に置くタグセクション・おすすめ展覧会・おすすめクリエイター/ギャラリーは **コンテンツから独立** し、ページ固有幅（`--w-page`）を使わず **一律 `--w-entity`（1080px）** を取る。
+
+| セクション | クラス | 幅 |
+|---|---|---|
+| おすすめ展覧会（p2系） | `.p2-sub-rec` | `max-width: var(--w-entity)` |
+| タグ（p6系） | `.p6-sub-tags` | `max-width: var(--w-entity)` |
+| おすすめ作品（p6系） | `.p6-rec-section` | `max-width: var(--w-entity)` |
+| おすすめクリエイター/ギャラリー（Gエリア） | 今後定義 | `max-width: var(--w-entity)` |
+
+**p6系 独立セクション構造：**
+```html
+<!-- タグ -->
+<section class="p6-sub-tags">
+  <div class="wd-tags" id="descTags"></div>
+</section>
+<!-- おすすめの作品 -->
+<section class="p6-rec-section">
+  <div class="ktn-section__head">
+    <h2 class="ktn-section__title">おすすめの作品 — <span class="ktn-sec-en">Recommended</span></h2>
+    <a href="#" class="ktn-section__more">すべて見る →</a>
+  </div>
+  <div class="masonry" id="p6RecGrid"></div>
+</section>
+```
+- `ktn-content` ラッパーは使わない（`p6-rec-section` が直接 `max-width` を持つ）
+
+**セクション間スペース標準（p2基準）：**
+- タグセクション → おすすめセクション間の空き：`padding-top: 28px`（p2の `.p2-sub-rec { padding: 28px 24px 0 }` を全ページの標準値とする）
+- ktn-content下端 → タグセクション間の空き：`padding-top: 16px`（`.p6-sub-tags { padding: 16px 24px 0 }` 準拠）
+
+**おすすめ展覧会カード（`buildGridEcCard(e)` — `kotennavi-pages.js`）：**
+- `cards_exhibition.html` のマソンリーグリッド完全準拠・表示件数：4件
+- ポスター：`ec__poster-noimg`（`min-height: e.imgH px`）＋ `ec__poster-overlay`
+- ポスターメタ行（`ec__poster-meta`）：`ec__remain[--live|--soon|--closed]` + `|` + 営業時間 + `|` + 距離（`本日休み` の場合は営業時間を省略）
+- バッジ行（`ec__body ec__badge-row`）：`cb-exhibition` + ステータスバッジ（`sb-live` / `sb-soon` / `sb-ending`）— LIAISONバッジはここに置かず下記ストリップで表示
+- LIAISON帯（`ec__liaison-strip` / `ec__liaison-strip--plus`）：`ec__liaison-strip-info`（バッジ＋サブテキスト）+ `ec__liaison-thumbs`（展示作品サムネイル3枚）— `ec__foot` の後に配置
+- データフィールド：`title`, `venue`（`ec__venue-sep` で都道府県と会場名を区切る）, `bg`, `s`, `e`, `imgH`, `status`, `remain`, `hours`, `dist`, `liaison`, `int`, `ci`, `thumbs[]`
 
 ### おすすめクリエイター/ギャラリー（Gエリア）
 - ktn-content外・全幅・`background: var(--paper)`

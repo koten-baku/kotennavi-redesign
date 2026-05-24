@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
@@ -6,11 +6,11 @@
   <title>取引ワークスペース — 光の痕跡 No.7 | 個展なび</title>
   <meta name="robots" content="noindex">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Noto+Sans+JP:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./kotennavi-common.css">
   <link rel="stylesheet" href="./kotennavi-components.css">
 </head>
-<body class="p5-page p5-15-page">
+<body class="p5-page p5-15-page mgmt-page">
 
 <div class="ktn-toast" id="ktnToast"></div>
 
@@ -64,15 +64,15 @@
         マイページ
       </a>
       <div class="p3-mgmt-drawer__sep"></div>
-      <a class="p3-mgmt-nav-item" href="#">
+      <a class="p3-mgmt-nav-item" href="kotennavi-p5-11.html">
         <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><circle cx="8" cy="5" r="3"/><path d="M2 13.5c0-3.3 2.7-6 6-6s6 2.7 6 6"/><line x1="13" y1="9" x2="15" y2="9" stroke-width="1.2"/><line x1="14" y1="8" x2="14" y2="10" stroke-width="1.2"/></svg>
         プロフィール編集
       </a>
-      <a class="p3-mgmt-nav-item" href="#">
+      <a class="p3-mgmt-nav-item" href="kotennavi-p5-12.html">
         <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><rect x="3" y="7" width="10" height="8" rx="1"/><path d="M5 7V5a3 3 0 0 1 6 0v2"/></svg>
         パスワード変更
       </a>
-      <a class="p3-mgmt-nav-item" href="#">
+      <a class="p3-mgmt-nav-item" href="kotennavi-p5-13.html">
         <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><path d="M8 2a5 5 0 0 1 5 5v2l1.5 2.5H1.5L3 9V7a5 5 0 0 1 5-5z"/><path d="M6.5 13a1.5 1.5 0 0 0 3 0"/></svg>
         通知設定
       </a>
@@ -284,6 +284,15 @@
           <div class="p515-status__body">
             <p class="p515-status__desc">購入の順番が確定し、出品者から送料・梱包費の情報が届きました。配送先情報を入力してお支払いへお進みください。<strong>支払期限までにお支払いがない場合、申込はキャンセルされます。</strong></p>
 
+            <div class="p316-action-deadline">
+              <div class="p316-action-deadline__row">
+                <span class="p316-action-deadline__label">支払期限</span>
+                <span class="p316-action-deadline__date">2026年5月22日（金）23:59</span>
+                <span class="p316-action-deadline__until">まで</span>
+              </div>
+              <p class="p316-action-deadline__note">期限を過ぎると申込は自動的にキャンセルされます。キャンセル後に再申込は可能ですが、申込順は最後尾になります。</p>
+            </div>
+
             <!-- 送料・梱包情報 -->
             <div class="p515-ship-info">
               <div class="p515-ship-info__row">
@@ -433,10 +442,26 @@
           </div>
           <div class="p515-status__body">
             <p class="p515-status__desc">出品者が作品を発送しました。お手元に届きましたら、受取評価を入力の上、受け取りを確認してください。</p>
+
+            <div class="p316-action-deadline">
+              <div class="p316-action-deadline__row">
+                <span class="p316-action-deadline__label">確認期限</span>
+                <span class="p316-action-deadline__date">2026年6月1日（月）</span>
+                <span class="p316-action-deadline__until">まで（発送から14日以内）</span>
+              </div>
+              <p class="p316-action-deadline__note">期限を過ぎると自動的に受取確認となります。出品者への代金支払いが確定されます。</p>
+            </div>
+
             <div class="p515-tracking">
               <div class="p515-tracking__label">追跡番号</div>
               <div class="p515-tracking__num">1234-5678-9012</div>
-              <div class="p515-tracking__carrier">ヤマト宅急便 — <a href="#" style="color:var(--accent,#2a7fa8);font-size:.68rem">配送状況を確認 →</a></div>
+              <div class="p515-tracking__carrier" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                <span>ヤマト宅急便</span>
+                <a class="p316-tracking-link-btn" href="#" target="_blank" rel="noopener">
+                  <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" width="10" height="10"><path d="M5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V8M8 1h3v3M11 1l-5 5"/></svg>
+                  配送状況を確認
+                </a>
+              </div>
             </div>
 
             <!-- 受取評価フォーム -->

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
@@ -14,12 +14,15 @@
   <meta property="og:site_name" content="個展なび">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Noto+Sans+JP:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./kotennavi-common.css">
   <link rel="stylesheet" href="./kotennavi-components.css">
 </head>
 <body>
-
+<svg style="display:none"><defs>
+  <symbol id="icon-exh" viewBox="40 47 54 54"><path d="M80.09 102.05c-1.22-.8,-2.57-2.87,-3.34-4.33c-2.48-5.91,-4.85-14.23,-13.31-20.15c-1.9-1.23,-2.03-2,-1.94-2.48c.11-.83,.82-1.52,2.3-1.3c11.09,1.95,15.22,3.96,21.07,7.61c7.85,5.36,9.57,10.76,9.65,14.09c.15,2.3,-.18,5.11,-2.61,6.56Z" fill="currentColor"/></symbol>
+  <symbol id="icon-watch" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="currentColor"/><circle cx="8" cy="8" r="2.6" fill="white"/></symbol>
+</defs></svg>
 <div class="ktn-toast" id="ktnToast"></div>
 
 <div class="dbar" id="dbar">
@@ -139,7 +142,7 @@
               <div class="p2-3-section__icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
               </div>
-              <h2 class="p2-3-section__title">展覧会記事 <span class="p2-3-section__en">Articles</span></h2>
+              <h2 class="p2-3-section__title">展覧会記事 <span class="ktn-sec-en">Articles</span></h2>
             </div>
 
             <div class="p2-3-article-list">
@@ -212,7 +215,7 @@
           <!-- ② 関連イベント -->
           <section class="p2-3-section">
             <div class="p2-3-section__head">
-              <h2 class="p2-3-section__title">関連イベント <span class="p2-3-section__en">Events</span></h2>
+              <h2 class="p2-3-section__title">関連イベント <span class="ktn-sec-en">Events</span></h2>
             </div>
 
             <div class="p2-3-text-block">
@@ -227,7 +230,7 @@
           <!-- ③ 関連情報・外部リンク -->
           <section class="p2-3-section">
             <div class="p2-3-section__head">
-              <h2 class="p2-3-section__title">関連情報 <span class="p2-3-section__en">Related Links</span></h2>
+              <h2 class="p2-3-section__title">関連情報 <span class="ktn-sec-en">Related Links</span></h2>
             </div>
 
             <div class="p2-3-text-block">
@@ -238,7 +241,7 @@
           <!-- ④ クレジット -->
           <section class="p2-3-section">
             <div class="p2-3-section__head">
-              <h2 class="p2-3-section__title">クレジット <span class="p2-3-section__en">Credits</span></h2>
+              <h2 class="p2-3-section__title">クレジット <span class="ktn-sec-en">Credits</span></h2>
             </div>
 
             <dl class="p2-3-credit-dl">
@@ -261,7 +264,7 @@
               <div class="p2-3-section__icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
               </div>
-              <h2 class="p2-3-section__title">入場・会場情報 <span class="p2-3-section__en">Admission &amp; Venue</span></h2>
+              <h2 class="p2-3-section__title">入場・会場情報 <span class="ktn-sec-en">Admission &amp; Venue</span></h2>
             </div>
 
             <div class="p2-2-info-items">
@@ -379,6 +382,13 @@
             </div>
           </div>
 
+          <!-- Posted by -->
+          <div class="p2-side-card p2-side-posted">
+            <div class="p2-side-posted__label">posted by</div>
+            <div class="p2-side-posted__dates">掲載：2026.02.10 / 最終更新：2026.02.18</div>
+            <div id="p2PostedByCard"></div>
+          </div>
+
           <!-- ページ内ナビリンク -->
           <div class="p2-ic is-open p2-side-links">
             <div class="p2-ic__head">
@@ -386,7 +396,7 @@
                 <div class="p2-ic__head-icon">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
                 </div>
-                <span class="p2-ic__head-title">この展覧会<span class="p2-ic__head-en">In This Exhibition</span></span>
+                <span class="p2-ic__head-title">この展覧会<span class="ktn-sec-en">In This Exhibition</span></span>
               </div>
             </div>
             <div class="p2-ic__body p2-side-links__body">
@@ -442,35 +452,12 @@
           </div>
 
           <!-- 近くの展覧会 -->
-          <div class="p2-sub-nearby" id="p2SubNearby">
-            <div class="p2-sub-nearby__head">
-              <span class="p2-sub-nearby__title">近くの展覧会</span>
-              <a href="kotennavi-p2.html?filter=near" class="p2-sub-nearby__more">すべて →</a>
+          <div class="p2-side-card p2-side-nearby">
+            <div class="p2-side-nearby__head">
+              <span class="p2-side-nearby__title">近くの展覧会 — <span class="ktn-sec-en">Nearby</span></span>
+              <a href="kotennavi-p2.html?filter=near" class="p2-side-nearby__more">すべて →</a>
             </div>
-            <a href="kotennavi-p2.html" class="p2-sub-near-item">
-              <div class="p2-sub-near-item__poster" style="background:linear-gradient(155deg,#e0d8c8,#b4a88a);color:rgba(0,0,0,.28)">線と余</div>
-              <div class="p2-sub-near-item__body">
-                <div class="p2-sub-near-item__name">線と余白の詩学</div>
-                <div class="p2-sub-near-item__venue">渋谷アートラボ</div>
-              </div>
-              <span class="p2-sub-near-item__badge">開催中</span>
-            </a>
-            <a href="kotennavi-p2.html" class="p2-sub-near-item">
-              <div class="p2-sub-near-item__poster" style="background:linear-gradient(155deg,#c8d0e0,#8898b8);color:rgba(255,255,255,.6)"><div class="p2-sub-near-item__ldot"></div>光の破</div>
-              <div class="p2-sub-near-item__body">
-                <div class="p2-sub-near-item__name">光の破片</div>
-                <div class="p2-sub-near-item__venue">GALLERY X</div>
-              </div>
-              <span class="p2-sub-near-item__badge">開催中</span>
-            </a>
-            <a href="kotennavi-p2.html" class="p2-sub-near-item">
-              <div class="p2-sub-near-item__poster" style="background:linear-gradient(155deg,#d0c8e0,#8878b4);color:rgba(255,255,255,.6)">うつろ</div>
-              <div class="p2-sub-near-item__body">
-                <div class="p2-sub-near-item__name">うつろい</div>
-                <div class="p2-sub-near-item__venue">東京都現代美術館</div>
-              </div>
-              <span class="p2-sub-near-item__badge">開催中</span>
-            </a>
+            <div id="p2NearbyList"></div>
           </div>
 
         </aside>
@@ -497,7 +484,7 @@
     <!-- 回遊：おすすめ展覧会 -->
     <section class="p2-sub-rec" aria-label="おすすめの展覧会">
       <div class="p2-sub-rec__head">
-        <h2 class="p2-sub-rec__title">おすすめの展覧会<span class="p2-sub-rec__title-en">Recommended</span></h2>
+        <h2 class="p2-sub-rec__title">おすすめの展覧会<span class="ktn-sec-en">Recommended</span></h2>
         <a href="kotennavi-p2.html" class="p2-sub-rec__more">すべて見る →</a>
       </div>
       <div class="masonry" id="p2SubRecGrid"></div>
@@ -551,7 +538,20 @@
 <script src="./kotennavi-common.js"></script>
 <script src="./kotennavi-pages.js"></script>
 <script>
+window.P2_POSTED_BY = {
+  type: 'gallery', href: 'kotennavi-p4.html',
+  avStyle: 'linear-gradient(135deg,#c4a882,#9a7c54)', ini: 'G', iniStyle: '1rem',
+  name: 'Gallery SOIL 渋谷', location: '東京・渋谷 · アート',
+  exh: 3, watch: 11, watchId: 'p23FollowBtn', watchOn: false, status: 'live', panel: true
+};
+window.P2_NEARBY = [
+  { title: '線と余白の詩学',           venue: '渋谷アートラボ',     pref: '東京', bg: 'linear-gradient(155deg,#e0d8c8,#b4a88a)', s:'05.10', e:'05.25', liaison: false },
+  { title: '光の破片',                 venue: 'GALLERY X',         pref: '東京', bg: 'linear-gradient(155deg,#c8d0e0,#8898b8)', s:'05.15', e:'05.30', liaison: true  },
+  { title: 'うつろい',                 venue: '東京都現代美術館',    pref: '東京', bg: 'linear-gradient(155deg,#d0c8e0,#8878b4)', s:'04.20', e:'06.01', liaison: false },
+  { title: 'デジタルとアナログのあいだ', venue: '3331 Arts Chiyoda', pref: '東京', bg: 'linear-gradient(155deg,#d8e8d0,#88b878)', s:'05.18', e:'05.31', liaison: 'li-plus' },
+];
 KTN.init({ page: 'p2-3', role: 'guest' });
+(function(){var l=document.getElementById('p2NearbyList');if(l&&window.P2_NEARBY)l.innerHTML=window.P2_NEARBY.slice(0,4).map(buildSideEcCard).join('');})();
 
 /* ── 末尾おすすめ展覧会グリッド ── */
 (function() {

@@ -1,4 +1,4 @@
-/* _common_fix.js — p2〜p2-5 共通修正 7点 */
+﻿/* _common_fix.js — p2〜p2-5 共通修正 7点 */
 var fs = require('fs');
 var BASE = 'D:/user/baku/claude-code/kotennavi-redesign/';
 
@@ -153,7 +153,7 @@ function buildSideLinks(activePage, lf) {
     '                <div class="p2-ic__head-icon">',
     '                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>',
     '                </div>',
-    '                <span class="p2-ic__head-title">この展覧会<span class="p2-ic__head-en">In This Exhibition</span></span>',
+    '                <span class="p2-ic__head-title">この展覧会<span class="ktn-sec-en">In This Exhibition</span></span>',
     '              </div>',
     '            </div>',
     '            <div class="p2-ic__body p2-side-links__body">',
