@@ -320,7 +320,7 @@ KTN.pages['p2'] = function () {
       for (var i = 0; i < 5; i++)
         stars += '<span class="rv-star"' + (i >= r.stars ? ' style="opacity:.18"' : '') + '>★</span>';
       var ci = r.ci
-        ? '\u00a0\u25cf\u00a0<span class="rv-checkin-date">' + CI_ICON + '\u00a0' + r.checkinDate + '</span>'
+        ? '\u00a0<span class="rv-checkin-date">' + CI_ICON + '\u00a0' + r.checkinDate + '</span>'
         : '';
       return '<a class="review-item" href="kotennavi-p8.html">' +
         '<div class="rv-hd">' +
@@ -366,38 +366,60 @@ KTN.pages['p2'] = function () {
   })();
 
   /* ++ recommended exhibitions ++ */
-  (function () {
-    var grid = document.getElementById('p2RecGrid');
-    if (!grid || !window.P2_REC) return;
-    grid.innerHTML = window.P2_REC.map(buildGridEcCard).join('');
-  })();
+  renderP2SubRecGrid();
 
-  /* ── interest! トグル ── */
+  /* ── interest! トグル（スティッキーボタンと状態共有） ── */
   (function () {
-    var btn = document.getElementById('p2InterestBtn');
-    var num = document.getElementById('p2IntNum');
+    var btn    = document.getElementById('p2InterestBtn');
+    var stickyBtn = document.getElementById('p2StickyInterestBtn');
+    var num    = document.getElementById('p2IntNum');
     if (!btn) return;
     var on = false, base = 41;
-    btn.addEventListener('click', function () {
-      on = !on; btn.classList.toggle('is-active', on); btn.setAttribute('aria-pressed', on);
+
+    function applyState(source) {
+      btn.classList.toggle('on', on);
+      btn.setAttribute('aria-pressed', on);
+      var tn = Array.from(btn.childNodes).find(function(n){ return n.nodeType===3 && n.textContent.trim(); });
+      if (tn) tn.textContent = ' ' + (on ? btn.dataset.on : btn.dataset.off);
+      var tip = btn.querySelector('.tip');
+      if (tip) tip.textContent = on ? '興味ある！ — 解除する' : '興味ある！に追加する';
       if (num) num.textContent = base + (on ? 1 : 0);
-      if (on && btn.animate) btn.animate(
-        [{ transform: 'scale(1)' }, { transform: 'scale(1.15)' }, { transform: 'scale(.97)' }, { transform: 'scale(1)' }],
-        { duration: 240, easing: 'ease-out' });
+      if (stickyBtn) stickyBtn.classList.toggle('on', on);
+      if (on) {
+        var animTarget = source || btn;
+        if (animTarget.animate) animTarget.animate(
+          [{ transform: 'scale(1)' }, { transform: 'scale(1.15)' }, { transform: 'scale(.97)' }, { transform: 'scale(1)' }],
+          { duration: 240, easing: 'ease-out' });
+      }
       typeof showToast === 'function' && showToast(on ? '「興味ある！」に追加しました' : '「興味ある！」を取り消しました');
+    }
+
+    btn.addEventListener('click', function () { on = !on; applyState(btn); });
+    if (stickyBtn) stickyBtn.addEventListener('click', function () { on = !on; applyState(stickyBtn); });
+    btn.dataset.ctaInit = '1'; /* KTN.cta.initCtaButtons をスキップ（p2専用処理を保護） */
+  })();
+
+  /* ── check in ── */
+  (function () {
+    var btn = document.getElementById('p2CheckinBtn');
+    if (!btn) return;
+    btn.addEventListener('click', function () {
+      openCheckinModal();
     });
   })();
 
-  /* ── check in トグル ── */
+  /* ── スティッキーCTAバー：ヒーロー非表示で出現 ── */
   (function () {
-    var btn = document.getElementById('p2CheckinBtn');
-    var num = document.getElementById('p2CiNum');
-    if (!btn) return;
-    var on = false, base = 9;
-    btn.addEventListener('click', function () {
-      on = !on; btn.classList.toggle('is-active', on);
-      if (num) num.textContent = base + (on ? 1 : 0);
-    });
+    var hero = document.getElementById('p2Hero');
+    var cta  = document.getElementById('p2StickyCta');
+    if (!hero || !cta) return;
+    if (!('IntersectionObserver' in window)) return;
+    var obs = new IntersectionObserver(function (entries) {
+      var visible = entries[0].isIntersecting;
+      cta.classList.toggle('is-visible', !visible);
+      cta.setAttribute('aria-hidden', visible ? 'true' : 'false');
+    }, { threshold: 0 });
+    obs.observe(hero);
   })();
 
   /* ── フォロートグル ── */
@@ -450,6 +472,11 @@ KTN.pages['p2'] = function () {
       if (sec) obs.observe(sec);
     });
   })();
+
+  /* QRシェアモーダルは KTN.cta.openQrModal に統一 */
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') window.closeQrModal();
+  });
 
 };
 
@@ -630,6 +657,14 @@ KTN.pages['p2-1'] = function () {
         var dp = ds.replace(/-/g,'');
         var url2 = 'https://calendar.google.com/calendar/render?action=TEMPLATE&text='+t2+'&dates='+dp+'T110000/'+dp+'T190000&details='+encodeURIComponent('https://koten-navi.com/p2');
         ctaCell = '<a href="'+url2+'" target="_blank" rel="noopener" class="p2-1-cal-row__gcal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="11" height="11"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>カレンダーに追加</a>';
+      } else if (isOpen && past) {
+        var isCheckedIn = (ds === '2026-02-19');
+        var ciCls = 'p2-1-cal-row__checkin' + (isCheckedIn ? ' is-active' : '');
+        var ciLabel = isCheckedIn ? 'checked in' : 'check in';
+        var ciSvg = isCheckedIn
+          ? '<svg viewBox="0 0 16 16" fill="none"><circle cx="10" cy="5" r="4" fill="#3a90e0"/><circle cx="5" cy="11" r="2.4" fill="#3a90e0"/></svg>'
+          : '<svg viewBox="0 0 16 16" fill="none"><circle cx="10" cy="5" r="4" fill="#7a8a99" opacity=".3"/><circle cx="5" cy="11" r="2.4" fill="#7a8a99" opacity=".3"/></svg>';
+        ctaCell = '<button type="button" class="'+ciCls+'" onclick="openCheckinModal()">'+ciSvg+ciLabel+'</button>';
       }
       return '<div class="'+cls+'">'+dateCell+statusCell+badgeCell+ctaCell+'</div>';
     }).join('');
@@ -732,23 +767,6 @@ KTN.pages['p2-2'] = function () {
 };
 
 /* ────────────────────────────────────────────────────
-   P2-3 詳細 / P2-4 出展者
-──────────────────────────────────────────────────── */
-KTN.pages['p2-3'] = function () {
-  renderP2SubRecGrid();
-};
-KTN.pages['p2-4'] = function () {
-  document.querySelectorAll('.p2-4-creator__watch button').forEach(function (btn) {
-    btn.addEventListener('click', function (e) {
-      e.preventDefault(); e.stopPropagation();
-      var isOn = this.classList.toggle('ktn-btn--primary');
-      this.classList.toggle('ktn-btn--ghost', !isOn);
-    });
-  });
-  renderP2SubRecGrid();
-};
-
-/* ────────────────────────────────────────────────────
    P2-3  詳細
 ──────────────────────────────────────────────────── */
 KTN.pages['p2-3'] = function () {
@@ -793,10 +811,11 @@ KTN.pages['p2-3'] = function () {
     if (!el || !window.P2_POSTED_BY) return;
     el.innerHTML = buildPersonCard(window.P2_POSTED_BY);
   })();
+  renderP2SubRecGrid();
 };
 
 /* ────────────────────────────────────────────────────
-   P2-4  出展者（既存定義を拡張）
+   P2-4  出展者
 ──────────────────────────────────────────────────── */
 KTN.pages['p2-4'] = function () {
   /* ++ posted by card ++ */
@@ -805,6 +824,7 @@ KTN.pages['p2-4'] = function () {
     if (!el || !window.P2_POSTED_BY) return;
     el.innerHTML = buildPersonCard(window.P2_POSTED_BY);
   })();
+  renderP2SubRecGrid();
 };
 
 
@@ -842,7 +862,7 @@ KTN.pages['p2-5'] = function () {
 
   function renderWork(w) {
     var cardClass = 'p25c' + (w.status === 'sold' ? ' p25c--sold' : '');
-    var ribbon    = w.status === 'sold' ? '<div class="p25c__sold-ribbon">SOLD</div>' : '';
+    var ribbon    = w.status === 'sold' ? '<div class="aw__sold-ribbon"><div class="aw__sold-ribbon-inner">SOLD OUT</div></div>' : '';
     var badgeMap  = {
       sale:    '<span class="p25c__badge p25c__badge--sale">\u8ca9\u58f2\u4e2d</span>',
       negot:   '<span class="p25c__badge p25c__badge--negot">\u5546\u8ac7\u4e2d</span>',
@@ -940,17 +960,7 @@ KTN.pages['p2-5'] = function () {
   })();
 
   /* ++ recommended exhibitions ++ */
-  (function () {
-    var g = document.getElementById('p25RecGrid');
-    if (!g) return;
-    var DATA = [
-      { title: '春の景色展', venue: '代官山ヒルサイドF', bg: 'linear-gradient(155deg,#f0e0d0,#c8a888)', tc: 'rgba(0,0,0,.28)', s: '02.20', e: '03.10', liaison: false, int: 21, ci: 4 },
-      { title: '現代彫刻の冒険', venue: '神楽坂BOOK・ART', bg: 'linear-gradient(155deg,#e8d0d8,#b88898)', tc: 'rgba(255,255,255,.6)', s: '02.17', e: '03.07', liaison: true, int: 19, ci: 3 },
-      { title: 'ポストカード展', venue: '吉祥寺 M&G', bg: 'linear-gradient(155deg,#d0e8e0,#88b8a8)', tc: 'rgba(0,0,0,.28)', s: '02.22', e: '03.12', liaison: false, int: 38, ci: 7 },
-      { title: '絵画の余白', venue: '恵比寿 SPACE NONA', bg: 'linear-gradient(155deg,#e0d8f0,#9880c8)', tc: 'rgba(255,255,255,.6)', s: '02.25', e: '03.08', liaison: false, int: 14, ci: 2 },
-    ];
-    g.innerHTML = DATA.map(buildGridEcCard).join('');
-  })();
+  renderP2SubRecGrid();
 };
 
 /* ────────────────────────────────────────────────────
@@ -983,7 +993,7 @@ KTN.pages['p2-5-1'] = function () {
 
   function renderWork(w) {
     var cardClass = 'p25c' + (w.status === 'sold' ? ' p25c--sold' : '');
-    var ribbon    = w.status === 'sold' ? '<div class="p25c__sold-ribbon">SOLD</div>' : '';
+    var ribbon    = w.status === 'sold' ? '<div class="aw__sold-ribbon"><div class="aw__sold-ribbon-inner">SOLD OUT</div></div>' : '';
     var badgeMap  = {
       sale:    '<span class="p25c__badge p25c__badge--sale">\u8ca9\u58f2\u4e2d</span>',
       negot:   '<span class="p25c__badge p25c__badge--negot">\u5546\u8ac7\u4e2d</span>',
@@ -1114,17 +1124,7 @@ KTN.pages['p2-5-1'] = function () {
   })();
 
   /* ++ recommended exhibitions ++ */
-  (function () {
-    var g = document.getElementById('p25RecGrid');
-    if (!g) return;
-    var DATA = [
-      { title: '春の景色展', venue: '代官山ヒルサイドF', bg: 'linear-gradient(155deg,#f0e0d0,#c8a888)', tc: 'rgba(0,0,0,.28)', s: '02.20', e: '03.10', liaison: false, int: 21, ci: 4 },
-      { title: '現代彫刻の冒険', venue: '神楽坂BOOK・ART', bg: 'linear-gradient(155deg,#e8d0d8,#b88898)', tc: 'rgba(255,255,255,.6)', s: '02.17', e: '03.07', liaison: true, int: 19, ci: 3 },
-      { title: 'ポストカード展', venue: '吉祥寺 M&G', bg: 'linear-gradient(155deg,#d0e8e0,#88b8a8)', tc: 'rgba(0,0,0,.28)', s: '02.22', e: '03.12', liaison: false, int: 38, ci: 7 },
-      { title: '絵画の余白', venue: '恵比寿 SPACE NONA', bg: 'linear-gradient(155deg,#e0d8f0,#9880c8)', tc: 'rgba(255,255,255,.6)', s: '02.25', e: '03.08', liaison: false, int: 14, ci: 2 },
-    ];
-    g.innerHTML = DATA.map(buildGridEcCard).join('');
-  })();
+  renderP2SubRecGrid();
 };
 
 /* ────────────────────────────────────────────────────
@@ -1895,6 +1895,9 @@ KTN.pages['p6'] = function() {
     if (!el || !window.P2_POSTED_BY) return;
     el.innerHTML = buildPersonCard(window.P2_POSTED_BY);
   })();
+
+  /* QRシェアモーダルは KTN.cta.openQrModal に統一 */
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') window.closeQrModal(); });
 };
 
 /* ────────────────────────────────────────────────────
@@ -2984,6 +2987,9 @@ KTN.pages['p3'] = function () {
       ktnHeader.classList.toggle('is-scrolled', !entries[0].isIntersecting);
     }, { threshold: 0 }).observe(p3Head);
   }
+
+  /* QRシェアモーダルは KTN.cta.openQrModal に統一 */
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') window.closeQrModal(); });
 };
 
 /* ────────────────────────────────────────────────────
@@ -3849,6 +3855,9 @@ KTN.pages['p4'] = function () {
       ktnHeader.classList.toggle('is-scrolled', !entries[0].isIntersecting);
     }, { threshold: 0 }).observe(p4Head);
   }
+
+  /* QRシェアモーダルは KTN.cta.openQrModal に統一 */
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') window.closeQrModal(); });
 };
 
 /* ════════════════════════════════════════

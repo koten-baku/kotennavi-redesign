@@ -65,6 +65,21 @@ function ic16(k) {
 
 
 /* ══════════════════════════════════
+   トースト通知
+══════════════════════════════════ */
+var _toastTimer = null;
+function showToast(msg) {
+  var el = document.getElementById('ktnToast');
+  if (!el) return;
+  el.textContent = msg;
+  el.classList.add('is-visible');
+  if (_toastTimer) clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(function () { el.classList.remove('is-visible'); _toastTimer = null; }, 2500);
+}
+window.KTN = window.KTN || {};
+KTN.toast = showToast;
+
+/* ══════════════════════════════════
    シェア機能
 ══════════════════════════════════ */
 function doShare() {
@@ -434,143 +449,142 @@ document.addEventListener('DOMContentLoaded', function () {
 ══════════════════════════════════ */
 const PAGES = {
   // P1 トップ
-  'p1': { n: '個展なびトップ', w: '--w-index', bc: [['Top', '/'], ['個展なびトップ', null]] },
+  'p1': { n: '個展なびトップ', bc: [['Top', '/'], ['個展なびトップ', null]] },
   // P2 展覧会
-  'p2': { n: '展覧会', w: '--w-entity', bc: [['Top', '/'], ['展覧会', null]] },
-  'p2-1': { n: '展覧会-スケジュール', w: '--w-detail', bc: [['Top', '/'], ['展覧会', '/p2'], ['あなたが知らないオノマトペ', '/p2-3'], ['スケジュール', null]] },
-  'p2-2': { n: '展覧会-開催場所', w: '--w-detail', bc: [['Top', '/'], ['展覧会', '/p2'], ['あなたが知らないオノマトペ', '/p2-3'], ['開催場所', null]] },
-  'p2-3': { n: '展覧会-詳細', w: '--w-detail', bc: [['Top', '/'], ['展覧会', '/p2'], ['あなたが知らないオノマトペ', '/p2-3'], ['詳細', null]] },
-  'p2-4': { n: '展覧会-出展者', w: '--w-detail', bc: [['Top', '/'], ['展覧会', '/p2'], ['あなたが知らないオノマトペ', '/p2-3'], ['出展者', null]] },
-  'p2-5': { n: '展覧会-リエゾン作品一覧', w: '--w-index', bc: [['Top', '/'], ['展覧会', '/p2'], ['あなたが知らないオノマトペ', '/p2-3'], ['LIAISON作品一覧', null, 'l']] },
-  'p2-5-1': { n: '展覧会-リエゾンプラス作品一覧', w: '--w-index', bc: [['Top', '/'], ['展覧会', '/p2'], ['あなたが知らないオノマトペ', '/p2-3'], ['LIAISON+ 作品一覧', null, 'lp']] },
-  'p2-11': { n: '展覧会-新規/編集/クローン', w: '--w-article', bc: [['Top', '/'], ['展覧会', '/p2'], ['あなたが知らないオノマトペ', '/p2-3'], ['新規/編集/クローン', null]] },
-  'p2-12': { n: 'LIAISON 作品管理', w: '--w-article', bc: [['Top', '/'], ['展覧会', '/p2'], ['あなたが知らないオノマトペ', '/p2-3'], ['LIAISON 作品管理', null]] },
-  'p2-13': { n: '展覧会-広告作成', w: '--w-article', bc: [['Top', '/'], ['展覧会', '/p2'], ['あなたが知らないオノマトペ', '/p2-3'], ['広告作成', null]] },
-  'p2-14': { n: '展覧会-修正依頼', w: '--w-article', bc: [['Top', '/'], ['展覧会', '/p2'], ['あなたが知らないオノマトペ', '/p2-3'], ['修正依頼', null]] },
-  'p2-15': { n: '展覧会-報告', w: '--w-article', bc: [['Top', '/'], ['展覧会', '/p2'], ['あなたが知らないオノマトペ', '/p2-3'], ['報告', null]] },
+  'p2': { n: '展覧会', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', null]] },
+  'p2-1': { n: '展覧会-スケジュール', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['スケジュール', null]] },
+  'p2-2': { n: '展覧会-開催場所', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['開催場所', null]] },
+  'p2-3': { n: '展覧会-詳細', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['詳細', null]] },
+  'p2-4': { n: '展覧会-出展者', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['出展者', null]] },
+  'p2-5': { n: '展覧会-リエゾン作品一覧', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['LIAISON作品一覧', null]] },
+  'p2-5-1': { n: '展覧会-リエゾンプラス作品一覧', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['LIAISON+ 作品一覧', null]] },
+  'p2-11': { n: '展覧会-新規/編集/クローン', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['新規/編集/クローン', null]] },
+  'p2-12': { n: 'LIAISON 作品管理', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['LIAISON 作品管理', null]] },
+  'p2-13': { n: '展覧会-広告作成', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['広告作成', null]] },
+  'p2-14': { n: '展覧会-修正依頼', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['修正依頼', null]] },
+  'p2-15': { n: '展覧会-報告', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['報告', null]] },
   // P3 クリエイター
-  'p3': { n: 'クリエイター', w: '--w-entity', bc: [['Top', '/'], ['クリエイター', '/p10-2'], ['田中 透', null]] },
-  'p3-1':  { n: '展覧会', w: '--w-detail', bc: [['Top', '/'], ['田中 透', '/p3'], ['展覧会', null]] },
-  'p3-2':  { n: 'クリエイター-記事',   w: '--w-index',   bc: [['Top', '/'], ['田中 透', '/p3'], ['記事一覧', null]] },
-  'p3-3':  { n: 'クリエイター-作品',   w: '--w-index',   bc: [['Top', '/'], ['田中 透', '/p3'], ['作品一覧', null]] },
-  'p3-11': { n: 'クリエイター-編集', w: '--w-article', bc: [['Top', '/'], ['田中 透', '/p3'], ['編集', null]] },
-  'p3-12': { n: 'クリエイター-インサイト', w: '--w-article', bc: [['Top', '/'], ['田中 透', '/p3'], ['インサイト', null]] },
-  'p3-13': { n: 'クリエイター-ウオッチャー管理', w: '--w-article', bc: [['Top', '/'], ['田中 透', '/p3'], ['ウオッチャー管理', null]] },
-  'p3-14': { n: 'クリエイター-ポートフォリオ管理', w: '--w-article', bc: [['Top', '/'], ['田中 透', '/p3'], ['ポートフォリオ管理', null, 'l']] },
-  'p3-15': { n: 'クリエイター-リエゾンコンソール', w: '--w-detail', bc: [['Top', '/'], ['田中 透', '/p3'], ['リエゾン+コンソール', null]] },
-  'p3-16': { n: 'クリエイター-取引デスク', w: '--w-detail', bc: [['Top', '/'], ['田中 透', '/p3'], ['取引デスク', null, 'lp']] },
-  'p3-17': { n: 'クリエイター販売代金管理', w: '--w-article', bc: [['Top', '/'], ['田中 透', '/p3'], ['販売代金管理', null, 'lp']] },
+  'p3': { n: 'クリエイター', bc: [['Top', '/'], ['クリエイター', '/p10-2'], ['田中 透', null]] },
+  'p3-1':  { n: '展覧会', bc: [['Top', '/'], ['クリエイター', '/p10-2'], ['田中 透', '/p3'], ['展覧会一覧', null]] },
+  'p3-2':  { n: 'クリエイター-記事',   w: '--w-index',   bc: [['Top', '/'], ['クリエイター', '/p10-2'], ['田中 透', '/p3'], ['記事一覧', null]] },
+  'p3-3':  { n: 'クリエイター-作品',   w: '--w-index',   bc: [['Top', '/'], ['クリエイター', '/p10-2'], ['田中 透', '/p3'], ['作品一覧', null]] },
+  'p3-11': { n: 'クリエイター-編集', bc: [['Top', '/'], ['クリエイター', '/p10-2'], ['田中 透', '/p3'], ['編集', null]] },
+  'p3-12': { n: 'クリエイター-インサイト', bc: [['Top', '/'], ['クリエイター', '/p10-2'], ['田中 透', '/p3'], ['インサイト', null]] },
+  'p3-13': { n: 'クリエイター-ウオッチャー管理', bc: [['Top', '/'], ['クリエイター', '/p10-2'], ['田中 透', '/p3'], ['ウオッチャー管理', null]] },
+  'p3-14': { n: 'クリエイター-ポートフォリオ管理', bc: [['Top', '/'], ['クリエイター', '/p10-2'], ['田中 透', '/p3'], ['ポートフォリオ管理', null, 'l']] },
+  'p3-15': { n: 'クリエイター-リエゾンコンソール', bc: [['Top', '/'], ['クリエイター', '/p10-2'], ['田中 透', '/p3'], ['リエゾン+コンソール', null]] },
+  'p3-16': { n: 'クリエイター-取引デスク', bc: [['Top', '/'], ['クリエイター', '/p10-2'], ['田中 透', '/p3'], ['取引デスク', null, 'lp']] },
+  'p3-17': { n: 'クリエイター販売代金管理', bc: [['Top', '/'], ['クリエイター', '/p10-2'], ['田中 透', '/p3'], ['販売代金管理', null, 'lp']] },
   // P4 ギャラリー
-  'p4': { n: 'ギャラリー', w: '--w-entity', bc: [['Top', '/'], ['ギャラリー', '/p10-3'], ['Gallery SOIL 渋谷', null]] },
-  'p4-1': { n: 'ギャラリー-展覧会アーカイブ', w: '--w-detail', bc: [['Top', '/'], ['Gallery SOIL 渋谷', '/p4'], ['展覧会アーカイブ', null]] },
-  'p4-2': { n: 'ギャラリー-記事一覧', w: '--w-detail', bc: [['Top', '/'], ['Gallery SOIL 渋谷', '/p4'], ['記事一覧', null]] },
-  'p4-11': { n: 'ギャラリー-編集', w: '--w-article', bc: [['Top', '/'], ['Gallery SOIL 渋谷', '/p4'], ['編集', null]] },
-  'p4-12': { n: 'ギャラリー-インサート', w: '--w-article', bc: [['Top', '/'], ['Gallery SOIL 渋谷', '/p4'], ['インサート', null]] },
-  'p4-13': { n: 'ギャラリー-ウオッチャー管理', w: '--w-article', bc: [['Top', '/'], ['Gallery SOIL 渋谷', '/p4'], ['ウオッチャー管理', null]] },
-    'p4-13': { n: 'ギャラリー-ウオッチャー管理', w: '--w-article', bc: [['Top', '/'], ['Gallery SOIL 渋谷', '/p4'], ['ウオッチャー管理', null]] },
-  'p4-14': { n: 'ギャラリー-リエゾンコンソール', w: '--w-detail', bc: [['Top', '/'], ['Gallery SOIL 渋谷', '/p4'], ['リエゾンコンソール', null, 'lp']] },
-  'p4-15': { n: 'ギャラリー-リエゾンコンソール', w: '--w-detail', bc: [['Top', '/'], ['Gallery SOIL 渋谷', '/p4'], ['リエゾン+コンソール', null]] },
-  'p4-16': { n: 'ギャラリー-取引デスク', w: '--w-detail', bc: [['Top', '/'], ['Gallery SOIL 渋谷', '/p4'], ['取引デスク', null, 'lp']] },
-  'p4-17': { n: 'ギャラリー-インベントリー管理', w: '--w-article', bc: [['Top', '/'], ['Gallery SOIL 渋谷', '/p4'], ['販売代金管理', null, 'lp']] },
-  'p4-18': { n: 'ギャラリー-取扱作家管理', w: '--w-article', bc: [['Top', '/'], ['Gallery SOIL 渋谷', '/p4'], ['取扱作家管理', null, 'lp']] },
+  'p4': { n: 'ギャラリー', bc: [['Top', '/'], ['ギャラリー', '/p10-3'], ['Gallery SOIL 渋谷', null]] },
+  'p4-1': { n: 'ギャラリー-展覧会アーカイブ', bc: [['Top', '/'], ['ギャラリー', '/p10-3'], ['Gallery SOIL 渋谷', '/p4'], ['展覧会アーカイブ', null]] },
+  'p4-2': { n: 'ギャラリー-記事一覧', bc: [['Top', '/'], ['ギャラリー', '/p10-3'], ['Gallery SOIL 渋谷', '/p4'], ['記事一覧', null]] },
+  'p4-11': { n: 'ギャラリー-編集', bc: [['Top', '/'], ['ギャラリー', '/p10-3'], ['Gallery SOIL 渋谷', '/p4'], ['編集', null]] },
+  'p4-12': { n: 'ギャラリー-インサート', bc: [['Top', '/'], ['ギャラリー', '/p10-3'], ['Gallery SOIL 渋谷', '/p4'], ['インサート', null]] },
+  'p4-13': { n: 'ギャラリー-ウオッチャー管理', bc: [['Top', '/'], ['ギャラリー', '/p10-3'], ['Gallery SOIL 渋谷', '/p4'], ['ウオッチャー管理', null]] },
+  'p4-14': { n: 'ギャラリー-リエゾンコンソール', bc: [['Top', '/'], ['ギャラリー', '/p10-3'], ['Gallery SOIL 渋谷', '/p4'], ['リエゾンコンソール', null, 'lp']] },
+  'p4-15': { n: 'ギャラリー-リエゾンコンソール', bc: [['Top', '/'], ['ギャラリー', '/p10-3'], ['Gallery SOIL 渋谷', '/p4'], ['リエゾン+コンソール', null]] },
+  'p4-16': { n: 'ギャラリー-取引デスク', bc: [['Top', '/'], ['ギャラリー', '/p10-3'], ['Gallery SOIL 渋谷', '/p4'], ['取引デスク', null, 'lp']] },
+  'p4-17': { n: 'ギャラリー-インベントリー管理', bc: [['Top', '/'], ['ギャラリー', '/p10-3'], ['Gallery SOIL 渋谷', '/p4'], ['販売代金管理', null, 'lp']] },
+  'p4-18': { n: 'ギャラリー-取扱作家管理', bc: [['Top', '/'], ['ギャラリー', '/p10-3'], ['Gallery SOIL 渋谷', '/p4'], ['取扱作家管理', null, 'lp']] },
   // P5 ユーザー
-  'p5': { n: 'ユーザー-展覧会カレンダー', w: '--w-entity', bc: [['Top', '/'], ['山田花子 myページ', null]] },
-  'p5-1': { n: 'ユーザー-ウオッチリスト', w: '--w-detail', bc: [['Top', '/'], ['myページ', '/p5'], ['ウオッチリスト', null]] },
-  'p5-2': { n: 'ユーザー-チェックイン記録', w: '--w-detail', bc: [['Top', '/'], ['myページ', '/p5'], ['チェックイン記録', null]] },
-  'p5-3': { n: 'ユーザー-興味あり!リスト', w: '--w-detail', bc: [['Top', '/'], ['myページ', '/p5'], ['興味あり!リスト', null]] },
-  'p5-4': { n: 'ユーザー-保存した検索条件', w: '--w-index', bc: [['Top', '/'], ['myページ', '/p5'], ['保存した検索条件', null]] },
-  'p5-11': { n: 'ユーザー-編集', w: '--w-article', bc: [['Top', '/'], ['myページ', '/p5'], ['編集', null]] },
-  'p5-12': { n: 'ユーザー-パスワード管理', w: '--w-article', bc: [['Top', '/'], ['myページ', '/p5'], ['パスワード管理', null]] },
-  'p5-13': { n: 'ユーザー-メール通知管理', w: '--w-article', bc: [['Top', '/'], ['myページ', '/p5'], ['メール通知管理', null]] },
-  'p5-14': { n: 'ユーザー-購入ダッシュボード', w: '--w-article', bc: [['Top', '/'], ['myページ', '/p5'], ['購入ダッシュボード', null, 'lp']] },
-  'p5-15': { n: 'ユーザー-取引ワークスペース', w: '--w-detail', bc: [['Top', '/'], ['myページ', '/p5'], ['取引ワークスペース', null, 'lp']] },
-  'p5-16': { n: 'ユーザー-取引ワークスペース-支払', w: '--w-article', bc: [['Top', '/'], ['myページ', '/p5'], ['取引ワークスペース', '/p5-15'], ['支払', null, 'lp']] },
-  'p5-100': { n: 'ユーザー-退会', w: '--w-article', bc: [['Top', '/'], ['myページ', '/p5'], ['退会', null]] },
+  'p5': { n: 'ユーザー-展覧会カレンダー', bc: [['Top', '/'], ['山田花子 myページ', null]] },
+  'p5-1': { n: 'ユーザー-ウオッチリスト', bc: [['Top', '/'], ['myページ', '/p5'], ['ウオッチリスト', null]] },
+  'p5-2': { n: 'ユーザー-チェックイン記録', bc: [['Top', '/'], ['myページ', '/p5'], ['チェックイン記録', null]] },
+  'p5-3': { n: 'ユーザー-興味あり!リスト', bc: [['Top', '/'], ['myページ', '/p5'], ['興味あり!リスト', null]] },
+  'p5-4': { n: 'ユーザー-保存した検索条件', bc: [['Top', '/'], ['myページ', '/p5'], ['保存した検索条件', null]] },
+  'p5-11': { n: 'ユーザー-編集', bc: [['Top', '/'], ['myページ', '/p5'], ['編集', null]] },
+  'p5-12': { n: 'ユーザー-パスワード管理', bc: [['Top', '/'], ['myページ', '/p5'], ['パスワード管理', null]] },
+  'p5-13': { n: 'ユーザー-メール通知管理', bc: [['Top', '/'], ['myページ', '/p5'], ['メール通知管理', null]] },
+  'p5-14': { n: 'ユーザー-購入ダッシュボード', bc: [['Top', '/'], ['myページ', '/p5'], ['購入ダッシュボード', null, 'lp']] },
+  'p5-15': { n: 'ユーザー-取引ワークスペース', bc: [['Top', '/'], ['myページ', '/p5'], ['取引ワークスペース', null, 'lp']] },
+  'p5-16': { n: 'ユーザー-取引ワークスペース-支払', bc: [['Top', '/'], ['myページ', '/p5'], ['取引ワークスペース', '/p5-15'], ['支払', null, 'lp']] },
+  'p5-100': { n: 'ユーザー-退会', bc: [['Top', '/'], ['myページ', '/p5'], ['退会', null]] },
   // P6 作品
-  'p6':   { n: '作品詳細', w: '--w-entity',
-    bc: [['Top', '/'], ['田中 透', '/p3'], ['オノマトペの庭', null]] },
-  'p6-1': { n: 'LIAISON作品', w: '--w-entity',
-    bc: [['Top', '/'], ['展覧会', '/p2'], ['田中 透', '/p3'], ['オノマトペの庭', null, 'l']] },
-  'p6-2': { n: 'LIAISON+作品', w: '--w-entity',
-    bc: [['Top', '/'], ['展覧会', '/p2'], ['田中 透', '/p3'], ['オノマトペの庭', null, 'lp']] },
-  'p6-11': { n: '作品-新規/編集/クローン', w: '--w-article', bc: [['Top', '/'], ['春の記憶 #3', '/p6'], ['新規/編集/クローン', null]] },
-  'p6-12': { n: '作品-インサイト', w: '--w-article', bc: [['Top', '/'], ['春の記憶 #3', '/p6'], ['インサイト', null]] },
-  'p6-13': { n: '作品-問合せ', w: '--w-article', bc: [['Top', '/'], ['春の記憶 #3', '/p6'], ['問合せ', null, 'l']] },
-  'p6-14': { n: '作品-問合せへの回答', w: '--w-article', bc: [['Top', '/'], ['春の記憶 #3', '/p6'], ['問合せへの回答', null, 'l']] },
+  'p6':   { n: '作品詳細',
+    bc: [['Top', '/'], ['作品', '/p10-1'], ['オノマトペの庭', null]] },
+  'p6-1': { n: 'LIAISON作品',
+    bc: [['Top', '/'], ['作品', '/p10-1'], ['オノマトペの庭', '/p6'], ['LIAISON', null, 'l']] },
+  'p6-2': { n: 'LIAISON+作品',
+    bc: [['Top', '/'], ['作品', '/p10-1'], ['オノマトペの庭', '/p6'], ['LIAISON+', null, 'lp']] },
+  'p6-11': { n: '作品-新規/編集/クローン', bc: [['Top', '/'], ['作品', '/p10-1'], ['春の記憶 #3', '/p6'], ['新規/編集/クローン', null]] },
+  'p6-12': { n: '作品-インサイト', bc: [['Top', '/'], ['作品', '/p10-1'], ['春の記憶 #3', '/p6'], ['インサイト', null]] },
+  'p6-13': { n: '作品-問合せ', bc: [['Top', '/'], ['作品', '/p10-1'], ['春の記憶 #3', '/p6'], ['問合せ', null, 'l']] },
+  'p6-14': { n: '作品-問合せへの回答', bc: [['Top', '/'], ['作品', '/p10-1'], ['春の記憶 #3', '/p6'], ['問合せへの回答', null, 'l']] },
   // P7 記事
-  'p7': { n: '記事', w: '--w-entity', bc: [['Top', '/'], ['記事', '/p7-list'], ['オノマトペと絵画のあいだで', null]] },
-  'p7-11': { n: '記事-新規/編集/クローン', w: '--w-article', bc: [['Top', '/'], ['オノマトペと絵画のあいだで', '/p7'], ['編集', null]] },
+  'p7': { n: '記事', bc: [['Top', '/'], ['記事', '/p7-list'], ['オノマトペと絵画のあいだで', null]] },
+  'p7-11': { n: '記事-新規/編集/クローン', bc: [['Top', '/'], ['オノマトペと絵画のあいだで', '/p7'], ['編集', null]] },
   // P8 レビュー
-  'p8': { n: 'レビュー', w: '--w-entity', bc: [['Top', '/'], ['レビュー', '/p8-list'], ['あなたが知らないオノマトペ レビュー', null]] },
-  'p8-11': { n: 'レビュー-新規/編集/クローン', w: '--w-article', bc: [['Top', '/'], ['レビュー', '/p8-list'], ['編集', null]] },
+  'p8': { n: 'レビュー', bc: [['Top', '/'], ['レビュー', '/p8-list'], ['あなたが知らないオノマトペ レビュー', null]] },
+  'p8-11': { n: 'レビュー-新規/編集/クローン', bc: [['Top', '/'], ['レビュー', '/p8-list'], ['編集', null]] },
   // P9 ニュース
-  'p9': { n: 'ニュース', w: '--w-article', bc: [['Top', '/'], ['ニュース', '/p9-list'], ['個展なびが新機能を発表', null]] },
-  'p9-11': { n: 'ニュース-新規/編集/クローン', w: '--w-article', bc: [['Top', '/'], ['ニュース', '/p9-list'], ['編集', null]] },
+  'p9': { n: 'ニュース', bc: [['Top', '/'], ['ニュース', '/p9-list'], ['個展なびが新機能を発表', null]] },
+  'p9-11': { n: 'ニュース-新規/編集/クローン', bc: [['Top', '/'], ['ニュース', '/p9-list'], ['編集', null]] },
   // P10 検索・特集
-  'p10': { n: '検索-展覧会', w: '--w-index', bc: [['Top', '/'], ['検索', null]] },
-  'p10-1': { n: '検索-作品', w: '--w-index', bc: [['Top', '/'], ['検索', null]] },
-  'p10-2': { n: '検索-クリエイター', w: '--w-index', bc: [['Top', '/'], ['検索', null]] },
-  'p10-3': { n: '検索-ギャラリー', w: '--w-index', bc: [['Top', '/'], ['検索', null]] },
-  'p10-4': { n: '特集-展覧会', w: '--w-detail', bc: [['Top', '/'], ['特集', '/feature'], ['展覧会', null]] },
-  'p10-5': { n: '特集-作品', w: '--w-detail', bc: [['Top', '/'], ['特集', '/feature'], ['作品', null]] },
-  'p10-6': { n: '特集-クリエイター', w: '--w-detail', bc: [['Top', '/'], ['特集', '/feature'], ['クリエイター', null]] },
-  'p10-7': { n: '特集-ギャラリー', w: '--w-detail', bc: [['Top', '/'], ['特集', '/feature'], ['ギャラリー', null]] },
+  'p10': { n: '検索-展覧会', bc: [['Top', '/'], ['検索', null]] },
+  'p10-1': { n: '検索-作品', bc: [['Top', '/'], ['検索', null]] },
+  'p10-2': { n: '検索-クリエイター', bc: [['Top', '/'], ['検索', null]] },
+  'p10-3': { n: '検索-ギャラリー', bc: [['Top', '/'], ['検索', null]] },
+  'p10-4': { n: '特集-展覧会', bc: [['Top', '/'], ['特集', '/feature'], ['展覧会', null]] },
+  'p10-5': { n: '特集-作品', bc: [['Top', '/'], ['特集', '/feature'], ['作品', null]] },
+  'p10-6': { n: '特集-クリエイター', bc: [['Top', '/'], ['特集', '/feature'], ['クリエイター', null]] },
+  'p10-7': { n: '特集-ギャラリー', bc: [['Top', '/'], ['特集', '/feature'], ['ギャラリー', null]] },
   // P11 認証・申込
-  'p11': { n: 'ログイン', w: '--w-article', bc: [['Top', '/'], ['ログイン', null]] },
-  'p11-1': { n: 'ユーザー新規登録', w: '--w-article', bc: [['Top', '/'], ['ログイン', null]] },
-  'p11-2': { n: 'クリエイター機能申込', w: '--w-article', bc: [['Top', '/'], ['ユーザー新規登録', null]] },
-  'p11-3': { n: 'ギャラリー機能申込', w: '--w-article', bc: [['Top', '/'], ['クリエイター機能申込', null]] },
-  'p11-4': { n: 'リエゾンプラス機能申込', w: '--w-article', bc: [['Top', '/'], ['リエゾンプラス機能申込', null, 'lp']] },
-  'p11-11': { n: 'ログイン-パスワードを忘れた方', w: '--w-article', bc: [['Top', '/'], ['ログイン-パスワードを忘れた方', null]] },
-  'p11-12': { n: 'ログインパスワード再設定', w: '--w-article', bc: [['Top', '/'], ['ログインパスワード再設定', null]] },
-  'p11-21': { n: 'ユーザー新規登録-アカウント仮登録完了', w: '--w-article', bc: [['Top', '/'], ['ユーザー新規登録-アカウント仮登録完了', null]] },
-  'p11-22': { n: 'ユーザー新規登録-メールアドレス確認完了', w: '--w-article', bc: [['Top', '/'], ['ユーザー新規登録-メールアドレス確認完了', null]] },
-  'p11-23': { n: 'ユーザー新規登録-パスワード設定', w: '--w-article', bc: [['Top', '/'], ['ユーザー新規登録-パスワード設定', null]] },
-  'p11-24': { n: 'ユーザー新規登録-ウオッチ対象の選択', w: '--w-article', bc: [['Top', '/'], ['ユーザー新規登録-ウオッチ対象の選択', null]] },
+  'p11': { n: 'ログイン', bc: [['Top', '/'], ['ログイン', null]] },
+  'p11-1': { n: 'ユーザー新規登録', bc: [['Top', '/'], ['ログイン', null]] },
+  'p11-2': { n: 'クリエイター機能申込', bc: [['Top', '/'], ['ユーザー新規登録', null]] },
+  'p11-3': { n: 'ギャラリー機能申込', bc: [['Top', '/'], ['クリエイター機能申込', null]] },
+  'p11-4': { n: 'リエゾンプラス機能申込', bc: [['Top', '/'], ['リエゾンプラス機能申込', null, 'lp']] },
+  'p11-11': { n: 'ログイン-パスワードを忘れた方', bc: [['Top', '/'], ['ログイン-パスワードを忘れた方', null]] },
+  'p11-12': { n: 'ログインパスワード再設定', bc: [['Top', '/'], ['ログインパスワード再設定', null]] },
+  'p11-21': { n: 'ユーザー新規登録-アカウント仮登録完了', bc: [['Top', '/'], ['ユーザー新規登録-アカウント仮登録完了', null]] },
+  'p11-22': { n: 'ユーザー新規登録-メールアドレス確認完了', bc: [['Top', '/'], ['ユーザー新規登録-メールアドレス確認完了', null]] },
+  'p11-23': { n: 'ユーザー新規登録-パスワード設定', bc: [['Top', '/'], ['ユーザー新規登録-パスワード設定', null]] },
+  'p11-24': { n: 'ユーザー新規登録-ウオッチ対象の選択', bc: [['Top', '/'], ['ユーザー新規登録-ウオッチ対象の選択', null]] },
   // P60 ガイド
-  'p60': { n: 'お知らせ一覧', w: '--w-article', bc: [['Top', '/'], ['お知らせ一覧', null]] },
-  'p60-1': { n: 'ご利用ガイド', w: '--w-article', bc: [['Top', '/'], ['ガイド', '/p60-1']] },
-  'p60-2': { n: '展覧会情報を探したい方', w: '--w-article', bc: [['Top', '/'], ['ガイド', '/p60-1'], ['展覧会情報を探したい方', null]] },
-  'p60-3': { n: '展覧会情報を掲載したい方', w: '--w-article', bc: [['Top', '/'], ['ガイド', '/p60-1'], ['展覧会情報を掲載したい方', null]] },
-  'p60-4': { n: '広告を出したい方', w: '--w-article', bc: [['Top', '/'], ['ガイド', '/p60-1'], ['広告を出したい方', null]] },
-  'p60-5': { n: 'よくある質問-一般', w: '--w-article', bc: [['Top', '/'], ['ガイド', '/p60-1'], ['よくある質問-一般', null]] },
-  'p60-6': { n: 'よくある質問-ユーザー編', w: '--w-article', bc: [['Top', '/'], ['ガイド', '/p60-1'], ['よくある質問-ユーザー編', null]] },
-  'p60-7': { n: 'よくある質問-クリエイター編', w: '--w-article', bc: [['Top', '/'], ['ガイド', '/p60-1'], ['よくある質問-クリエイター編', null]] },
-  'p60-8': { n: 'よくある質問-ギャラリー編', w: '--w-article', bc: [['Top', '/'], ['ガイド', '/p60-1'], ['よくある質問-ギャラリー編', null]] },
-  'p60-9': { n: '個展なびとは', w: '--w-article', bc: [['Top', '/'], ['個展なびとは', null]] },
-  'p60-10': { n: '利用規約', w: '--w-article', bc: [['Top', '/'], ['利用規約', null]] },
-  'p60-11': { n: 'プライバシポリシー', w: '--w-article', bc: [['Top', '/'], ['プライバシポリシー', null]] },
-  'p60-12': { n: 'お問合わせ', w: '--w-article', bc: [['Top', '/'], ['お問合わせ', null]] },
-  'p60-13': { n: 'サービス機能改善要望', w: '--w-article', bc: [['Top', '/'], ['サービス機能改善要望', null]] },
+  'p60': { n: 'お知らせ一覧', bc: [['Top', '/'], ['お知らせ一覧', null]] },
+  'p60-1': { n: 'ご利用ガイド', bc: [['Top', '/'], ['ガイド', '/p60-1']] },
+  'p60-2': { n: '展覧会情報を探したい方', bc: [['Top', '/'], ['ガイド', '/p60-1'], ['展覧会情報を探したい方', null]] },
+  'p60-3': { n: '展覧会情報を掲載したい方', bc: [['Top', '/'], ['ガイド', '/p60-1'], ['展覧会情報を掲載したい方', null]] },
+  'p60-4': { n: '広告を出したい方', bc: [['Top', '/'], ['ガイド', '/p60-1'], ['広告を出したい方', null]] },
+  'p60-5': { n: 'よくある質問-一般', bc: [['Top', '/'], ['ガイド', '/p60-1'], ['よくある質問-一般', null]] },
+  'p60-6': { n: 'よくある質問-ユーザー編', bc: [['Top', '/'], ['ガイド', '/p60-1'], ['よくある質問-ユーザー編', null]] },
+  'p60-7': { n: 'よくある質問-クリエイター編', bc: [['Top', '/'], ['ガイド', '/p60-1'], ['よくある質問-クリエイター編', null]] },
+  'p60-8': { n: 'よくある質問-ギャラリー編', bc: [['Top', '/'], ['ガイド', '/p60-1'], ['よくある質問-ギャラリー編', null]] },
+  'p60-9': { n: '個展なびとは', bc: [['Top', '/'], ['個展なびとは', null]] },
+  'p60-10': { n: '利用規約', bc: [['Top', '/'], ['利用規約', null]] },
+  'p60-11': { n: 'プライバシポリシー', bc: [['Top', '/'], ['プライバシポリシー', null]] },
+  'p60-12': { n: 'お問合わせ', bc: [['Top', '/'], ['お問合わせ', null]] },
+  'p60-13': { n: 'サービス機能改善要望', bc: [['Top', '/'], ['サービス機能改善要望', null]] },
   // P70 LIAISONガイド
-  'p70': { n: 'リエゾンとは', w: '--w-article', bc: [['Top', '/'], ['LIAISONとは', null, 'l']] },
-  'p70-1': { n: 'リエゾン-作品出品ガイド', w: '--w-article', bc: [['Top', '/'], ['LIAISON', '/p70'], ['リエゾン-作品出品ガイド', null, 'l']] },
-  'p70-2': { n: 'リエゾンプラス-作品販売ガイド', w: '--w-article', bc: [['Top', '/'], ['LIAISON', '/p70'], ['リエゾンプラス-作品販売ガイド', null, 'lp']] },
-  'p70-3': { n: '作品購入までの流れ', w: '--w-article', bc: [['Top', '/'], ['LIAISON', '/p70'], ['作品購入までの流れ', null, 'lp']] },
-  'p70-4': { n: '送料・配送について', w: '--w-article', bc: [['Top', '/'], ['LIAISON', '/p70'], ['送料・配送について', null, 'lp']] },
-  'p70-5': { n: '送料一覧', w: '--w-article', bc: [['Top', '/'], ['LIAISON', '/p70'], ['送料一覧', null, 'lp']] },
-  'p70-6': { n: '特定商取引法に基づく表示', w: '--w-article', bc: [['Top', '/'], ['LIAISON', '/p70'], ['特定商取引法に基づく表示', null, 'lp']] },
-  'p70-7': { n: 'リエゾンプラスの手数料について', w: '--w-article', bc: [['Top', '/'], ['LIAISON', '/p70'], ['リエゾンプラスの手数料について', null, 'lp']] },
-  'p70-8': { n: 'ギャラリーへの説明ガイド', w: '--w-article', bc: [['Top', '/'], ['LIAISON', '/p70'], ['ギャラリーへの説明ガイド', null, 'lp']] },
-  'p70-9': { n: '作品画像撮影ガイド', w: '--w-article', bc: [['Top', '/'], ['LIAISON', '/p70'], ['作品画像撮影ガイド', null, 'lp']] },
+  'p70': { n: 'リエゾンとは', bc: [['Top', '/'], ['LIAISONとは', null, 'l']] },
+  'p70-1': { n: 'リエゾン-作品出品ガイド', bc: [['Top', '/'], ['LIAISON', '/p70'], ['リエゾン-作品出品ガイド', null, 'l']] },
+  'p70-2': { n: 'リエゾンプラス-作品販売ガイド', bc: [['Top', '/'], ['LIAISON', '/p70'], ['リエゾンプラス-作品販売ガイド', null, 'lp']] },
+  'p70-3': { n: '作品購入までの流れ', bc: [['Top', '/'], ['LIAISON', '/p70'], ['作品購入までの流れ', null, 'lp']] },
+  'p70-4': { n: '送料・配送について', bc: [['Top', '/'], ['LIAISON', '/p70'], ['送料・配送について', null, 'lp']] },
+  'p70-5': { n: '送料一覧', bc: [['Top', '/'], ['LIAISON', '/p70'], ['送料一覧', null, 'lp']] },
+  'p70-6': { n: '特定商取引法に基づく表示', bc: [['Top', '/'], ['LIAISON', '/p70'], ['特定商取引法に基づく表示', null, 'lp']] },
+  'p70-7': { n: 'リエゾンプラスの手数料について', bc: [['Top', '/'], ['LIAISON', '/p70'], ['リエゾンプラスの手数料について', null, 'lp']] },
+  'p70-8': { n: 'ギャラリーへの説明ガイド', bc: [['Top', '/'], ['LIAISON', '/p70'], ['ギャラリーへの説明ガイド', null, 'lp']] },
+  'p70-9': { n: '作品画像撮影ガイド', bc: [['Top', '/'], ['LIAISON', '/p70'], ['作品画像撮影ガイド', null, 'lp']] },
   // P90 管理者
-  'p90': { n: '管理者メニュー', w: '--w-article', bc: [['Top', '/'], ['管理者メニュー', null]] },
-  'p90-1': { n: '管理者-ユーザー新規/クローン', w: '--w-article', bc: [['Top', '/'], ['管理者', '/p90'], ['ユーザー新規/クローン', null]] },
-  'p90-2': { n: '管理者-クリエイター/ギャラリー機能申込管理', w: '--w-article', bc: [['Top', '/'], ['管理者', '/p90'], ['クリエイター/ギャラリー機能申込管理', null]] },
-  'p90-3': { n: '管理者-展覧会新規', w: '--w-article', bc: [['Top', '/'], ['管理者', '/p90'], ['展覧会新規', null]] },
-  'p90-4': { n: '管理者-本日開催・公開の展覧会一覧', w: '--w-article', bc: [['Top', '/'], ['管理者', '/p90'], ['本日開催・公開の展覧会一覧', null]] },
-  'p90-5': { n: '管理者-未公開の展覧会一覧', w: '--w-article', bc: [['Top', '/'], ['管理者', '/p90'], ['未公開の展覧会一覧', null]] },
-  'p90-6': { n: '管理者-最新の展覧会一覧', w: '--w-article', bc: [['Top', '/'], ['管理者', '/p90'], ['最新の展覧会一覧', null]] },
-  'p90-7': { n: '管理者-クリエイター新規/クローン', w: '--w-article', bc: [['Top', '/'], ['管理者', '/p90'], ['クリエイター新規/クローン', null]] },
-  'p90-8': { n: '管理者-ギャラリー新規/クローン', w: '--w-article', bc: [['Top', '/'], ['管理者', '/p90'], ['ギャラリー新規/クローン', null]] },
-  'p90-9': { n: '管理者-メールテンプレート管理', w: '--w-article', bc: [['Top', '/'], ['管理者', '/p90'], ['メールテンプレート管理', null]] },
-  'p90-10': { n: '管理者-ダッシュボード', w: '--w-article', bc: [['Top', '/'], ['管理者', '/p90'], ['ダッシュボード', null]] },
-  'p90-11': { n: '管理者-リエゾンプラス機能申込管理', w: '--w-article', bc: [['Top', '/'], ['管理者', '/p90'], ['リエゾンプラス機能申込管理', null, 'lp']] },
-  'p90-12': { n: '管理者-リエゾンプラスコンソール', w: '--w-article', bc: [['Top', '/'], ['管理者', '/p90'], ['リエゾンプラスコンソール', null, 'lp']] },
-  'p90-13': { n: '管理者-取引デスク', w: '--w-article', bc: [['Top', '/'], ['管理者', '/p90'], ['取引デスク', null, 'lp']] },
-  'p90-14': { n: '管理者-販売代金管理', w: '--w-article', bc: [['Top', '/'], ['管理者', '/p90'], ['販売代金管理', null, 'lp']] },
-  'p90-15': { n: '管理者-リエゾンプラス申込者一覧', w: '--w-article', bc: [['Top', '/'], ['管理者', '/p90'], ['リエゾンプラス申込者一覧', null, 'lp']] },
-  'p90-16': { n: '管理者-作品購入ユーザー一覧', w: '--w-article', bc: [['Top', '/'], ['管理者', '/p90'], ['作品購入ユーザー一覧', null, 'lp']] },
+  'p90': { n: '管理者メニュー', bc: [['Top', '/'], ['管理者メニュー', null]] },
+  'p90-1': { n: '管理者-ユーザー新規/クローン', bc: [['Top', '/'], ['管理者', '/p90'], ['ユーザー新規/クローン', null]] },
+  'p90-2': { n: '管理者-クリエイター/ギャラリー機能申込管理', bc: [['Top', '/'], ['管理者', '/p90'], ['クリエイター/ギャラリー機能申込管理', null]] },
+  'p90-3': { n: '管理者-展覧会新規', bc: [['Top', '/'], ['管理者', '/p90'], ['展覧会新規', null]] },
+  'p90-4': { n: '管理者-本日開催・公開の展覧会一覧', bc: [['Top', '/'], ['管理者', '/p90'], ['本日開催・公開の展覧会一覧', null]] },
+  'p90-5': { n: '管理者-未公開の展覧会一覧', bc: [['Top', '/'], ['管理者', '/p90'], ['未公開の展覧会一覧', null]] },
+  'p90-6': { n: '管理者-最新の展覧会一覧', bc: [['Top', '/'], ['管理者', '/p90'], ['最新の展覧会一覧', null]] },
+  'p90-7': { n: '管理者-クリエイター新規/クローン', bc: [['Top', '/'], ['管理者', '/p90'], ['クリエイター新規/クローン', null]] },
+  'p90-8': { n: '管理者-ギャラリー新規/クローン', bc: [['Top', '/'], ['管理者', '/p90'], ['ギャラリー新規/クローン', null]] },
+  'p90-9': { n: '管理者-メールテンプレート管理', bc: [['Top', '/'], ['管理者', '/p90'], ['メールテンプレート管理', null]] },
+  'p90-10': { n: '管理者-ダッシュボード', bc: [['Top', '/'], ['管理者', '/p90'], ['ダッシュボード', null]] },
+  'p90-11': { n: '管理者-リエゾンプラス機能申込管理', bc: [['Top', '/'], ['管理者', '/p90'], ['リエゾンプラス機能申込管理', null, 'lp']] },
+  'p90-12': { n: '管理者-リエゾンプラスコンソール', bc: [['Top', '/'], ['管理者', '/p90'], ['リエゾンプラスコンソール', null, 'lp']] },
+  'p90-13': { n: '管理者-取引デスク', bc: [['Top', '/'], ['管理者', '/p90'], ['取引デスク', null, 'lp']] },
+  'p90-14': { n: '管理者-販売代金管理', bc: [['Top', '/'], ['管理者', '/p90'], ['販売代金管理', null, 'lp']] },
+  'p90-15': { n: '管理者-リエゾンプラス申込者一覧', bc: [['Top', '/'], ['管理者', '/p90'], ['リエゾンプラス申込者一覧', null, 'lp']] },
+  'p90-16': { n: '管理者-作品購入ユーザー一覧', bc: [['Top', '/'], ['管理者', '/p90'], ['作品購入ユーザー一覧', null, 'lp']] },
 };
 
 /* ══════════════════════════════════
@@ -852,15 +866,9 @@ function renderBc(page) {
    状態・レンダリング
 ══════════════════════════════════ */
 
-/* ページ→コンテンツ幅タイプ */
-const PAGE_WIDTH = {
-  article: Object.keys(PAGES).filter(k => PAGES[k].w === '--w-article'),
-  index: Object.keys(PAGES).filter(k => PAGES[k].w === '--w-index'),
-};
-
-function getWidthVar(page) {
-  const p = PAGES[page];
-  if (p && p.w) return 'var(' + p.w + ')';
+function getWidthVar() {
+  const w = document.body.dataset.w;
+  if (w) return 'var(--w-' + w + ')';
   return 'var(--w-detail)';
 }
 
@@ -898,7 +906,7 @@ KTN.init = function (opts) {
   function _renderHeader() {
     var page = window.ktnState.page;
     var role = window.ktnState.role;
-    document.documentElement.style.setProperty('--w-page', getWidthVar(page));
+    document.documentElement.style.setProperty('--w-page', getWidthVar());
     var bcEl = document.getElementById('ktnBc');
     var acEl = document.getElementById('ktnActs');
     if (bcEl) bcEl.innerHTML = renderBc(page);
@@ -918,6 +926,10 @@ KTN.init = function (opts) {
     var pageId = window.ktnState.page;
     if (window.KTN.pages && typeof window.KTN.pages[pageId] === 'function') {
       window.KTN.pages[pageId]();
+    }
+    /* CTAウィジェット共通初期化（ページ固有処理の後に実行） */
+    if (window.KTN.cta && typeof window.KTN.cta.init === 'function') {
+      window.KTN.cta.init();
     }
   }
   if (document.readyState === 'loading') {
@@ -1068,3 +1080,241 @@ function setCreatorView(n, btn) {
     initP2CreatorList(window.P2_CREATORS_ALL || []);
   }
 }
+
+
+/* ══════════════════════════════════
+   KTN.cta — CTAウィジェット共通モジュール
+   .ktn-cta-widget[data-cta-name/type/url/action] からメタを読取
+   ・QR / ウォッチャーモーダル（全ページ統一）
+   ・リードテキスト動的生成
+   ・data-action="interest" ボタントグル初期化
+══════════════════════════════════ */
+KTN.cta = (function () {
+  var _qrInit  = false;
+  var _QR_OVL  = 'ktnQrOverlay';
+  var _W_OVL   = 'ktnWatcherOverlay';
+
+  /* デモ用ウォッチャーデータ（全ページ共通） */
+  var _W_DATA = [
+    { name: '山本花子',   color: '#b8608c', watch: 12, checkin: 3,  interest: 28 },
+    { name: 'あおい',     color: '#4a7a9a', watch: 8,  checkin: 1,  interest: 35 },
+    { name: '中村めぐみ', color: '#c87aa0', watch: 5,  checkin: 2,  interest: 44 },
+    { name: '高橋りな',   color: '#a07090', watch: 9,  checkin: 4,  interest: 31 },
+    { name: 'saki',       color: '#7a90b8', watch: 3,  checkin: 0,  interest: 18 },
+    { name: '西村ゆい',   color: '#b88a7a', watch: 14, checkin: 6,  interest: 52 },
+    { name: 'hana',       color: '#8a7ab8', watch: 7,  checkin: 1,  interest: 29 },
+    { name: '伊藤ともこ', color: '#7aa87a', watch: 11, checkin: 2,  interest: 37 },
+    { name: 'mitsuki',    color: '#9a7a5a', watch: 6,  checkin: 0,  interest: 21 },
+    { name: '加藤なな',   color: '#c87a90', watch: 18, checkin: 5,  interest: 40 },
+    { name: 'yui',        color: '#5a8a9a', watch: 4,  checkin: 2,  interest: 16 },
+    { name: '小林さくら', color: '#8a6a9a', watch: 22, checkin: 8,  interest: 33 },
+    { name: 'RIKO',       color: '#6a9a7a', watch: 2,  checkin: 0,  interest: 11 },
+    { name: '松本えり',   color: '#b8907a', watch: 9,  checkin: 3,  interest: 26 },
+    { name: 'tomoko',     color: '#7a6ab8', watch: 15, checkin: 1,  interest: 48 },
+  ];
+
+  var SVG_W = '<svg viewBox="0 0 16 16" fill="none" width="11" height="11"><circle cx="8" cy="8" r="7" fill="#3a90e0"/><circle cx="8" cy="8" r="2.6" fill="#fff"/></svg>';
+  var SVG_C = '<svg viewBox="0 0 16 16" fill="none" width="11" height="11"><circle cx="10" cy="5" r="4" fill="#3a90e0"/><circle cx="5" cy="11" r="2.4" fill="#3a90e0"/></svg>';
+  var SVG_I = '<svg viewBox="0 0 16 16" fill="none" width="11" height="11"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6" stroke-linejoin="round"/></svg>';
+
+  function _getWidget() {
+    return document.querySelector('.ktn-cta-widget');
+  }
+
+  function _getCanonicalUrl() {
+    var w = _getWidget();
+    var u = w && w.dataset.ctaUrl;
+    if (u) { var a = document.createElement('a'); a.href = u; return a.href; }
+    return location.href;
+  }
+
+  function _esc(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  /* ── QRモーダル ── */
+  function _ensureQrOverlay() {
+    if (document.getElementById(_QR_OVL)) return;
+    var w = _getWidget();
+    var name = w && w.dataset.ctaName || '';
+    var type = w && w.dataset.ctaType || '';
+    var title = name
+      ? ((type === 'exhibition' || type === 'work')
+          ? '「' + _esc(name) + '」<br>をシェア'
+          : _esc(name) + '<br>をシェア')
+      : 'このページをシェア';
+    var d = document.createElement('div');
+    d.id = _QR_OVL;
+    d.className = 'p2-qr-overlay';
+    d.setAttribute('onclick', 'if(event.target===this)KTN.cta.closeQrModal()');
+    d.innerHTML =
+      '<div class="p2-qr-modal">' +
+        '<button class="ktn-modal__close" onclick="KTN.cta.closeQrModal()">✕</button>' +
+        '<div class="p2-qr-modal__inner">' +
+          '<div class="p2-qr-modal__title">' + title + '</div>' +
+          '<div class="p2-qr-modal__code" id="ktnQrCode"></div>' +
+          '<div class="p2-qr-modal__url" id="ktnQrUrl"></div>' +
+          '<button class="ktn-op-btn ktn-op-btn--primary p2-qr-modal__copy"' +
+            ' onclick="KTN.cta.copyQrUrl()">URLをコピー</button>' +
+        '</div>' +
+      '</div>';
+    document.body.appendChild(d);
+  }
+
+  function openQrModal() {
+    _ensureQrOverlay();
+    var overlay = document.getElementById(_QR_OVL);
+    if (!overlay) return;
+    overlay.classList.add('open');
+    var canonUrl = _getCanonicalUrl();
+    var a = document.createElement('a'); a.href = canonUrl;
+    var urlEl = document.getElementById('ktnQrUrl');
+    if (urlEl) urlEl.textContent = a.host + a.pathname;
+    if (!_qrInit && window.QRCode) {
+      var el = document.getElementById('ktnQrCode');
+      if (el) {
+        new QRCode(el, { text: canonUrl, width: 200, height: 200,
+          colorDark: '#231815', colorLight: '#ffffff' });
+        _qrInit = true;
+      }
+    }
+  }
+
+  function closeQrModal() {
+    var el = document.getElementById(_QR_OVL);
+    if (el) el.classList.remove('open');
+  }
+
+  function copyQrUrl() {
+    var btn = document.querySelector('#' + _QR_OVL + ' .p2-qr-modal__copy');
+    if (!navigator.clipboard) return;
+    navigator.clipboard.writeText(_getCanonicalUrl()).then(function () {
+      if (btn) {
+        btn.textContent = 'コピーしました！';
+        setTimeout(function () { btn.textContent = 'URLをコピー'; }, 2000);
+      }
+    });
+  }
+
+  /* ── ウォッチャーモーダル（全ページ統一） ── */
+  function _ensureWatcherOverlay() {
+    if (document.getElementById(_W_OVL)) return;
+    var d = document.createElement('div');
+    d.id = _W_OVL;
+    d.className = 'p2-watcher-overlay';
+    d.setAttribute('onclick', 'if(event.target===this)KTN.cta.closeWatcherModal()');
+    d.innerHTML =
+      '<div class="ktn-modal p2-watcher-modal">' +
+        '<button class="ktn-modal__close" onclick="KTN.cta.closeWatcherModal()">✕</button>' +
+        '<div class="ktn-modal__inner">' +
+          '<div class="p2-watcher-modal__head">' +
+            '<svg viewBox="0 0 16 16" fill="none" width="14" height="14" id="ktnWatcherIcon"></svg>' +
+            '<span class="p2-watcher-modal__title" id="ktnWatcherTitle"></span>' +
+          '</div>' +
+          '<div class="p2-watcher-list" id="ktnWatcherList"></div>' +
+        '</div>' +
+      '</div>';
+    document.body.appendChild(d);
+  }
+
+  function openWatcherModal() {
+    _ensureWatcherOverlay();
+    var overlay = document.getElementById(_W_OVL);
+    if (!overlay) return;
+    var w = _getWidget();
+    var isWatch = w && w.dataset.ctaAction === 'watch';
+    var iconEl = document.getElementById('ktnWatcherIcon');
+    if (iconEl) {
+      iconEl.innerHTML = isWatch
+        ? '<circle cx="8" cy="8" r="7" fill="#3a90e0"/><circle cx="8" cy="8" r="2.6" fill="#fff"/>'
+        : '<path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6" stroke-linejoin="round"/>';
+    }
+    var numEl = document.querySelector('.ktn-cta-widget .p2aw-num, .p2-action-widget .p2aw-num');
+    var count = numEl ? numEl.textContent : '';
+    var ttlEl = document.getElementById('ktnWatcherTitle');
+    if (ttlEl) {
+      ttlEl.innerHTML =
+        (isWatch ? 'ウォッチャー ' : '興味あり！ ') +
+        '<span class="p2-watcher-modal__count">' + _esc(count) + '人</span> — ' +
+        '<span class="ktn-sec-en">' + (isWatch ? 'Watchers' : 'Interest') + '</span>';
+    }
+    var data = window.KTN_CTA_WATCHERS || _W_DATA;
+    var listEl = document.getElementById('ktnWatcherList');
+    if (listEl) {
+      listEl.innerHTML = data.map(function (u) {
+        return '<div class="p2-watcher-item">' +
+          '<a href="#" class="p2-watcher-item__avatar p2-watcher-item__avatar--user" style="background:' + u.color + '">' + _esc(u.name.charAt(0)) + '</a>' +
+          '<div class="p2-watcher-item__info">' +
+            '<a href="#" class="p2-watcher-item__name">' + _esc(u.name) + '</a>' +
+            '<div class="p2-watcher-item__counts">' +
+              '<span class="p2-watcher-item__count">' + SVG_W + u.watch    + '</span>' +
+              '<span class="p2-watcher-item__count">' + SVG_C + u.checkin  + '</span>' +
+              '<span class="p2-watcher-item__count">' + SVG_I + u.interest + '</span>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeWatcherModal() {
+    var el = document.getElementById(_W_OVL);
+    if (el) { el.classList.remove('open'); document.body.style.overflow = ''; }
+  }
+
+  /* ── CTAボタントグル初期化 ── */
+  function initCtaButtons() {
+    document.querySelectorAll('.ktn-cta-widget .ktn-btn[data-action="interest"], .p2-action-widget .ktn-btn[data-action="interest"]').forEach(function (btn) {
+      if (btn.dataset.ctaInit) return;
+      btn.removeAttribute('onclick');
+      btn.dataset.ctaInit = '1';
+      btn.addEventListener('click', function () {
+        var on = btn.classList.toggle('on');
+        btn.setAttribute('aria-pressed', on.toString());
+      });
+    });
+  }
+
+  /* ── リードテキスト生成 ── */
+  function _injectLead() {
+    var w = _getWidget();
+    if (!w) return;
+    if (w.querySelector('.p2-action-widget__lead')) return;
+    var name   = w.dataset.ctaName   || '';
+    var type   = w.dataset.ctaType   || '';
+    var action = w.dataset.ctaAction || 'interest';
+    if (!name) return;
+    var lead = document.createElement('div');
+    lead.className = 'p2-action-widget__lead';
+    if (action === 'watch') {
+      lead.innerHTML = _esc(name) + 'をウォッチして<br>最新情報を受取る！';
+    } else {
+      var q = (type === 'exhibition' || type === 'work')
+        ? '「' + _esc(name) + '」' : _esc(name);
+      lead.innerHTML = q + '<br>興味あり！マークで<br>my展覧会カレンダーに追加！';
+    }
+    var btnRow = w.querySelector('.p2-action-widget__btn-row');
+    if (btnRow) w.insertBefore(lead, btnRow);
+  }
+
+  function init() {
+    _injectLead();
+    initCtaButtons();
+  }
+
+  return {
+    openQrModal: openQrModal, closeQrModal: closeQrModal,
+    copyQrUrl: copyQrUrl,
+    openWatcherModal: openWatcherModal, closeWatcherModal: closeWatcherModal,
+    init: init,
+  };
+}());
+
+/* グローバルエイリアス（ページ固有コードから上書きしないこと） */
+window.openQrModal       = KTN.cta.openQrModal;
+window.closeQrModal      = KTN.cta.closeQrModal;
+window.copyQrUrl         = KTN.cta.copyQrUrl;
+window.openWatcherModal  = KTN.cta.openWatcherModal;
+window.closeWatcherModal = KTN.cta.closeWatcherModal;

@@ -1,9 +1,9 @@
 # 進捗状況
 
-最終更新：2026-05-22
+最終更新：2026-06-06
 
 ## 現在の作業
-**P5-11〜13 完了**
+**P2系表示ページ修正完了**
 次：P1（トップページ）or P2-13〜17 or P3-11〜14
 ※ P5-16（取引ワークスペース-支払）は廃止 — 決済はStripe外部遷移に変更し、p5-15に支払済（発送待ち）状態を追加済
 
@@ -74,6 +74,7 @@
 | 2026-05-18 | p4-18 取扱作家管理（gallery）新規制作：取扱作家一覧（LIAISON+/LIAISON/未設定バッジ）・申請中・招待中セクション・承認/却下ボタン・クリエイター招待フォーム・取扱解除モーダル・管理ドロワー・p418-CSS追加・KTN.pages['p4-18']追加 |
 | 2026-05-18 | p11-4 LIAISON+機能申込 新規制作：creator/gallery分岐フォーム・デモバー（role×状態切替）・サービス説明バナー・承諾事項チェックリスト・振込先口座フォーム・利用規約同意・申込/審査中/承認済の3状態・p114-CSS追加・KTN.pages['p11-4']追加 |
 | 2026-05-20 | P5-11〜13 新規制作：プロフィール編集（アバター・氏名・ユーザーID・自己紹介・居住地）・パスワード管理（強度インジケーター・表示トグル）・メール通知設定（展覧会/LIAISON+/重要/プロモーション 4カテゴリ・自動保存トースト）・p5-14/15ドロワーリンク修正・p511-CSS/p512-CSS/p513-CSS追加・KTN.pages[p5-11/12/13]追加・管理ページ視覚識別（mgmt-page）対応済 |
+| 2026-06-06 | P2系表示ページ横断修正：meta description追加（p6/p6-1/p6-2）・CTAリード文から「が気になりますか？」削除・リード文/カウンターラベル/シェアアイコン色をvar(--ink)に統一・p2-1チェックインボタンをktn-btn準拠サイズ/色に修正（past行のopacity子要素移動）・パンくずルール再定義（展覧会→/p10・クリエイター→/p10-2・ギャラリー→/p10-3・作品→/p10-1）・p2-5/p2-5-1の4項目修正（aboutセクションpadding/gap縮小・パンくずLIAISONバッジ削除・SOLD OUT ribbonをaw__sold-ribbon構造に統一・右カラムをp2のasideに置換＋p2-5-1ダークモードCTA追加） |
 | 2026-05-22 | 読み物テキスト（--rt-*）全ページ統一：残存していたp2/p3/p4/p5系ヒーロー・下層ページの読み物クラスを一括修正（17クラス）：p4-head__bio-text・p5-head__bio-text・p2-5-about__body・p2-5-about__feature-body・p25-exhibit-desc__text・p25-venue-note__text・p2-5-creator-card__bio・p2-1-cal-card__desc・p2-1-simple-item__desc・p2-3-faq-a・p2-3-inquiry__desc・p2-3-rule__detail・p2-2-access-item__detail・rv-body（2箇所）・cmt-body・p3-about__text・p3-accordion__body-inner・p4-prof-atelier-desc・p4-prof-facility-desc に `font-family:var(--fs)` + `var(--rt-*)` 適用・硬直カラー（#3a3a3a/#555/#3d4d5c等）→ var(--ink) 統一 |
 | 2026-05-22 | フォントシステム統一（前セッション分）：--fb/--fs/--fn/--fm/--font-en-name/--font-en-label のCSS変数化・全ページfont-family文字列 → 変数参照に置換（Montserrat 94箇所・Shippori 21箇所）・font-weight:300→400・--rt-size/--rt-lh/--rt-ls/--rt-pre-size 読み物テキスト共通変数新設・管理ページのコンテンツ文字（展覧会名・作品名等）にvar(--fs)適用 |
 | 2026-05-20 | mgmt-page管理ページ視覚識別システム（warm beige背景＋ロール色3pxトップバー）・p3-3/p2-5-1/p6-2に取引デスクボタン追加（オーナーログイン時）・ktn-action-btn--alert-dark新設（ダーク背景用オレンジ枠） |

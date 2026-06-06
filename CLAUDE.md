@@ -99,6 +99,22 @@ docs/                     仕様・設計ドキュメント
   ※「申込中」は独立バッジ廃止。「販売中」バッジ＋申込件数表示に統合
 - LIAISON+で申込者がいる場合：「販売中」バッジ＋「xx件申込中」（`.aw__applicants`）をバッジ行に表示
 
+### LIAISON+ 販売手数料
+
+スライディングスケール型（2段階）。クリエイター・ギャラリーともに同一料率。  
+税込販売価格に対して計算（送料は対象外）。Stripe決済手数料は手数料に**内包**（出品者の別途負担なし）。
+
+| 販売価格 | 手数料率 | 実質マージン（国内カード目安） |
+|---|---|---|
+| 〜 29,999円 | 10% | 約 6.4% |
+| 30,000円〜 | 8% | 約 4.4% |
+
+- Stripe手数料：国内発行カード 3.6% / 海外発行カード 3.9%（税抜・手数料に内包）
+- 手数料発生タイミング：決済完了時のみ（キュー待ち中キャンセルは発生しない）
+- 振込：月次・翌月末払い予定・振込手数料は個展なびが負担
+- フェーズ2（予定）：100,000円〜 帯に 6% を追加予定（変更は「下げる方向」のみ）
+- 詳細：`docs/06_リエゾン_サービス仕様書.md` 第16章 / P70-7（手取り額シミュレーター）
+
 ---
 
 ## バッジカラー（全ページ共通）
@@ -190,6 +206,20 @@ docs/                     仕様・設計ドキュメント
   - 現在ページ名は `flex: 1` で残りスペースを使い切り（`max-width: none`）、収まらない場合だけ省略
 - `.ktn-hdr-actions { margin-left: auto }` により、1行目・2行目いずれでも右揃え
 
+#### パンくずナビのURL体系（確定）
+
+各ページの `bc` 配列における親リンク先は以下で統一する（`kotennavi-common.js` の `PAGES` オブジェクトに登録済み）。
+
+| ページ系統 | Step 1 | Step 2（カテゴリリンク） | Step 3以降 |
+|---|---|---|---|
+| P2 / P2下層 | Top → `/` | 展覧会 → `/p10` | 展覧会名（`/p2`）→ 下位ページ名 |
+| P3 / P3下層 | Top → `/` | クリエイター → `/p10-2` | クリエイター名（`/p3`）→ 下位ページ名 |
+| P4 / P4下層 | Top → `/` | ギャラリー → `/p10-3` | ギャラリー名（`/p4`）→ 下位ページ名 |
+| P6 / P6下層 | Top → `/` | 作品 → `/p10-1` | 作品名（`/p6`）→ LIAISON / LIAISON+ |
+
+- P2-5 / P2-5-1 のパンくず末尾テキストには LIAISON/LIAISON+ バッジ（`'l'` / `'lp'`）を**付けない**（テキストのみ）
+- 新ページ追加時は必ず上表のリンク先に合わせて `PAGES` に登録すること
+
 #### ページ管理メニュー（オーナーメニュー/管理者ドロップダウン）
 - **正規の設置場所：スティッキーヘッダー内**（`getActions()` で生成するドロップダウン）
 - ページヒーロー内の管理ドロワー（`p3-mgmt-drawer` 等）は暫定実装。全ページ完成後にヘッダーの `getActions()` 定義を確定し、ドロワーを廃止する
@@ -202,6 +232,33 @@ docs/                     仕様・設計ドキュメント
   - スクロール位置に応じてJSで `is-hidden` クラスを付け外し（`visibility:hidden` で幅は確保）
   - タッチデバイスでは直接スワイプも可能
 - `overflow: hidden` を親に設定しない（子スクロールコンテナを妨害するため）
+
+---
+
+### 全ページ共通：ピル型トグルボタン（`.ktn-btn`）の SVG アイコン仕様
+
+watch / interest / check-in の SVG アイコンは **`kotennavi_buttons.html` のライトパネル仕様** に準拠する。
+
+| ボタン | OFF | ON |
+|---|---|---|
+| watch | `<circle cx="8" cy="8" r="7" fill="#7a8a99" opacity=".3"/>` + inner circle | `fill="#3a90e0"` + inner circle |
+| interest | heart path `fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"` | `fill="#3a90e0" stroke="#3a90e0" stroke-width=".6" stroke-linejoin="round"` |
+| check in | 2 circles `fill="#7a8a99" opacity=".3"` | 2 circles `fill="#3a90e0"` |
+
+- dark パネルの値（`opacity=".45"` / `fill-opacity=".45"`）は使わない
+- ON 状態の SVG 色は CSS で制御する場合は `fill:#3a90e0` に統一（`#4da3f5` はダーク用）
+
+**サイズモディファイア：**
+
+| モディファイア | font-size | padding | SVG | font-family | 用途 |
+|---|---|---|---|---|---|
+| （なし） | `0.75rem` | `7px 16px` | `15px` | `--fm` | カード内・ヘッダー内インラインの watch / interest / check-in |
+| **右カラムCTA自動** | **`0.88rem`** | **`10px 22px`** | **`17px`** | `--fm` | **`.p2aw-item` 内に置くだけで自動適用。HTMLクラス変更不要** |
+| `--lg` | `1.1rem` | `14px 28px` | `20px` | `--fn` | 日本語CTA（チェックイン・問合せ等）|
+
+- `--lg` は `components.css` に負けないよう `.ktn-btn.ktn-btn--lg`（2クラス）で定義済み
+- ボタン幅は `width:100%` にせず、テキスト量に応じた自然な幅にする（サイト全体共通方針）
+- 右カラムCTAのサイズは `.p2aw-item .ktn-btn` スコープで自動適用。p2/p3/p4すべての右カラムウィジェットは `p2aw-item` を使っているため統一される
 
 ---
 
@@ -303,6 +360,12 @@ docs/                     仕様・設計ドキュメント
 **例外：SVG `<text>` 要素**
 SVG の `font-family` 属性は CSS 変数に非対応のため `font-family="'Montserrat',sans-serif"` のようにハードコードを許容する（p2系作品カードの SVG プレースホルダー等）。
 
+**管理ページのフォント使い分け（`.mgmt-page`）：**
+- UIテキスト・フォームラベル・入力欄・ヘルプテキスト・説明文・ボタンテキスト・ページ見出し（`.ktn-edit-head__title`）→ `--fn`（管理系全般のデフォルト）
+- セクション見出し（`.ktn-section__title`）・作品名・展覧会名・クリエイター名・ギャラリー名 → `--fs`（管理画面内に表示されるコンテンツ情報は引き続き `--fs`）
+- `font-family: inherit` のボタン（`.ktn-op-btn` 等）は `body` の `--fn` を自動継承
+- 参照：`kotennavi_typography.html` セクション 8
+
 ---
 
 ### 全ページ共通：英語サブタイトルのフォント使い分け
@@ -330,6 +393,64 @@ SVG の `font-family` 属性は CSS 変数に非対応のため `font-family="'M
 - `Cinzel` は各 HTML の Google Fonts `<link>` で読込済み
 - 既存の `.p3-head__en` `.p4-head__en` `.p2-title-band__sub` `.p6-hero__title-en` `.p315-page-head__en` もすべて変数参照に統一済み
 
+### P2（展覧会詳細）確定仕様
+
+#### 左カラム：コンテンツセクション（`.p2-ic`）
+
+情報の折りたたみ・常時展開を問わず、主要セクションは `.p2-ic` 構造を使う。
+
+| 要素 | クラス | padding |
+|---|---|---|
+| ラッパー | `.p2-ic` | なし（内側で管理） |
+| ヘッダー | `.p2-ic__head` | `13px 18px` |
+| ボディ | `.p2-ic__body` | `16px 18px` |
+
+- 折りたたみ可能：`is-open` クラスでボディ表示切替・ヘッダーに `onclick="p2ToggleIc(id)"` を付与
+- 常時展開（非アコーディオン）：`is-open` を静的に付与し `onclick` なし
+- ヘッダーアイコン：`.p2-ic__head-icon`（丸背景28px）＋ SVG 13px
+
+#### 右カラム：サイドセクションのパターン
+
+| パターン | クラス | padding | 用途 |
+|---|---|---|---|
+| ヘッダーありセクション | `.p2-ic is-open` | head 13px 18px / body 16px 18px | 投稿者・お問合せ / この展覧会 |
+| フラットカード | `.p2-side-card` | `16px 18px`（全体） | アクションウィジェット / 近くの展覧会 |
+
+- ヘッダーありは左カラム `.p2-ic` と padding を共有（ヘッダータイトルスタイルも同一）
+- `p2-side-card` はヘッダーなし・コンテンツがフラットに並ぶカードに限定
+- 非アコーディオンのヘッダーには `.p2-ic__head` を使わず `.p2-side-contact__head` など専用クラスで `cursor:default` を確保
+
+#### セクションタイトル 3段階ルール
+
+| Level | 適用クラス例 | font | size | weight | color | 用途 |
+|---|---|---|---|---|---|---|
+| 1 | `.p2-ic__head-title` / `.p2-side-nearby__title` | `--fs` | `0.9rem` | `600` | `var(--ink)` | アコーディオン・独立セクション見出し |
+| 2 | `.p2-about__label` / `.p2-article-head__ttl` / `.p2-ext-links__label` / `.p2-contact__sublabel` | `--fn` | `0.62rem` | `600` | `var(--muted)` | コンテンツ内サブ区分ラベル |
+| 3 | （新規使用禁止） | — | `0.54rem` | — | uppercase + muted | 旧 posted-by / inq ラベル。統合済みにつき使用しない |
+
+- Level 1 には `.ktn-sec-en` で英語サブを同行インライン付与（例：`スケジュール<span class="ktn-sec-en">Schedule</span>`）
+- Level 2 にも `.ktn-sec-en` を付与してよい（例：`この展覧会について — <span class="ktn-sec-en">About this exhibition</span>`）
+- Level 3 は廃止。右カラムに新しいサブ区分が必要な場合は Level 2 を使う
+
+#### P2-1 スケジュール：行レベル opacity の注意点
+
+過去日程行など「沈める」べき行に `opacity` を適用する場合、**行要素に直接 `opacity` を設定してはならない**。行内にボタン等のインタラクティブ要素がある場合、それも一緒に薄くなって視認性が失われる。
+
+```css
+/* NG: 行全体に opacity → ボタンまで薄くなる */
+.p2-1-cal-row--past { opacity: .42; }
+
+/* OK: 沈めたい子要素（テキスト・メタ）だけに個別適用 */
+.p2-1-cal-row--past .p2-1-cal-row__date,
+.p2-1-cal-row--past .p2-1-cal-row__status,
+.p2-1-cal-row--past .p2-1-cal-row__badges { opacity: .42; }
+/* ボタン（.p2-1-cal-row__checkin）は opacity を当てない */
+```
+
+この原則はカレンダー・申込リスト・取引行など「行単位で無効化しつつボタンを残す」すべての場面に適用する。
+
+---
+
 ### P3・P4 共通：プロフィール画像の形状
 - クリエイター：円形（`border-radius: 50%`）
 - ギャラリー：正方形・角丸小（`border-radius: 4px`）
@@ -355,7 +476,7 @@ SVG の `font-family` 属性は CSS 変数に非対応のため `font-family="'M
 - タブナビ（`.p3-tabnav`）：`sticky`・`top: calc(34px + 50px)`・`z-index: 90`
 - タブ構成：[クリエイター名] | 展覧会 作品 記事 クリエイター情報
 - 各セクション：`.p3-box`（`background: #fff`・`border: 1px solid var(--border)`・`border-radius: 4px`・`padding: 24px`）
-- セクションラベル：`.p3-sec-label`（`font-size: .57rem`・`letter-spacing: .22em`・`color: var(--page-accent)`・右横線）
+- セクション見出し：`.ktn-section__head` + `.ktn-section__title` + `.ktn-sec-en`（旧 `.p3-sec-label` は廃止済み → `ktn-section__head` に統一）
 - プロフィールセクションのみ2カラム（左：`.p3-prof-main` / 右：`.p3-prof-side` 幅280px・sticky）
 
 ### P3 展覧会セクション（Cエリア）
@@ -441,37 +562,78 @@ SVG の `font-family` 属性は CSS 変数に非対応のため `font-family="'M
 - **ボタン**：「会場売約済」「出品取消」横並び（`flex-direction:row`、デスクトップ基準）
 - **Q&Aセクション**（`.p315-faq`）：ページ下部・8項目・details/summary アコーディオン
 
-### 全表示ページ共通：コンテンツ下部 おすすめセクション（確定仕様）
+### 全表示ページ共通：コンテンツ下部エリア（確定仕様）
 
-ページコンテンツ（`ktn-content`）の下に置くタグセクション・おすすめ展覧会・おすすめクリエイター/ギャラリーは **コンテンツから独立** し、ページ固有幅（`--w-page`）を使わず **一律 `--w-entity`（1080px）** を取る。
+ページコンテンツ（`ktn-content`）の下のエリアは **コンテンツから独立** し、ページ固有幅（`--w-page`）を使わず **一律 `--w-entity`（1080px）** を取る。
+
+#### 広告配置パターン（p2基準・3か所）
+
+| 位置 | クラス | 場所 |
+|---|---|---|
+| ① | `.ktn-ad-band` | `</main>` 直後・コンテンツ下部の最上段 |
+| ② | `.ktn-ad-band` | おすすめセクション（`.p2-sub-rec`）の下 |
+| ③ | `.p2-side-ad` | 右カラム下部（`.p2-side-nearby` の後） |
+
+- `.ktn-ad-band`：横幅フル・`background:var(--warm)`・`min-height:90px`（バナー広告枠）
+- `.p2-side-ad`：右カラム内・`background:var(--warm)`・`min-height:160px`（レクタングル広告枠）
+
+#### コンテンツ下部の構成順（p2基準）
+
+```
+</main>
+↓ ① ktn-ad-band（広告）
+↓ p2-related-band（関連情報ヘッド — ページコンテキスト再提示）
+↓ p2-sub-tags（タグ）
+↓ p2-sub-rec（おすすめ展覧会）
+↓ ② ktn-ad-band（広告）
+↓ [Gエリア — おすすめクリエイター/ギャラリー（将来定義）]
+```
+
+#### 関連情報ヘッド（`.p2-related-band`）
+
+タグ・おすすめセクションの直前に置き、「このページが何の関連情報か」をユーザーとSEOに再提示する帯。
+
+```html
+<div class="p2-related-band">
+  <div class="p2-related-band__inner">
+    <span class="cb cb-content cb-exhibition">exhibition</span>
+    <h2 class="p2-related-band__title">
+      <a href="#p2Hero" class="p2-related-band__exh">あなたが知らないオノマトペ</a>
+      <span class="p2-related-band__sep">の関連情報 — <span class="ktn-sec-en">Related</span></span>
+    </h2>
+  </div>
+</div>
+```
+
+- `<h2>` にコンテンツタイトルを含める（SEO効果）
+- `.p2-related-band__inner { align-items: flex-start }` — バッジの縦伸び防止（flexデフォルトのstretchを上書き）
+- ページ種別に応じてバッジ（`cb-exhibition` / `cb-creator` 等）を切り替える
+
+#### タグセクション（`.p2-sub-tags`）
+
+```css
+.p2-sub-tags { max-width: var(--w-entity); margin: 0 auto; padding: 20px 24px 16px }
+```
+
+- タグピル（`.p2-1-tag-pills`）は `flex-wrap: wrap` で複数行対応
+- ラベル（`.p2-sub-tags__label`）を先頭に置き「タグ · Tags」と表示
+
+#### セクション幅・間隔一覧
 
 | セクション | クラス | 幅 |
 |---|---|---|
 | おすすめ展覧会（p2系） | `.p2-sub-rec` | `max-width: var(--w-entity)` |
+| タグ（p2系） | `.p2-sub-tags` | `max-width: var(--w-entity)` |
 | タグ（p6系） | `.p6-sub-tags` | `max-width: var(--w-entity)` |
 | おすすめ作品（p6系） | `.p6-rec-section` | `max-width: var(--w-entity)` |
 | おすすめクリエイター/ギャラリー（Gエリア） | 今後定義 | `max-width: var(--w-entity)` |
 
-**p6系 独立セクション構造：**
-```html
-<!-- タグ -->
-<section class="p6-sub-tags">
-  <div class="wd-tags" id="descTags"></div>
-</section>
-<!-- おすすめの作品 -->
-<section class="p6-rec-section">
-  <div class="ktn-section__head">
-    <h2 class="ktn-section__title">おすすめの作品 — <span class="ktn-sec-en">Recommended</span></h2>
-    <a href="#" class="ktn-section__more">すべて見る →</a>
-  </div>
-  <div class="masonry" id="p6RecGrid"></div>
-</section>
-```
-- `ktn-content` ラッパーは使わない（`p6-rec-section` が直接 `max-width` を持つ）
-
 **セクション間スペース標準（p2基準）：**
-- タグセクション → おすすめセクション間の空き：`padding-top: 28px`（p2の `.p2-sub-rec { padding: 28px 24px 0 }` を全ページの標準値とする）
-- ktn-content下端 → タグセクション間の空き：`padding-top: 16px`（`.p6-sub-tags { padding: 16px 24px 0 }` 準拠）
+- ktn-content下端 → 広告①間の空き：`padding: 0`（広告帯は独立）
+- 広告① → related-band間：`padding-top: 20px`
+- related-band → タグ間：`padding-top: 0`（related-bandがヘッドとして機能）
+- タグ → おすすめ間の空き：`padding-top: 28px`（`.p2-sub-rec { padding: 28px 24px 0 }` 標準値）
+- ktn-content下端 → タグセクション間の空き（related-bandなし時）：`padding-top: 16px`（`.p6-sub-tags { padding: 16px 24px 0 }` 準拠）
 
 **おすすめ展覧会カード（`buildGridEcCard(e)` — `kotennavi-pages.js`）：**
 - `cards_exhibition.html` のマソンリーグリッド完全準拠・表示件数：4件
@@ -485,6 +647,20 @@ SVG の `font-family` 属性は CSS 変数に非対応のため `font-family="'M
 - ktn-content外・全幅・`background: var(--paper)`
 - P3・P3-3・P4：`.masonry`（`columns: 4 260px`）・540px以下で2列
 - P3-1・P3-2・P4-1・P4-2：`display: grid`・`repeat(3,1fr)`・540px以下で2列
+
+---
+
+## レイアウト共通値（リファクタリング参照）
+
+CSS 変数として `:root` に定義済み。他ページ整備時は `var()` で参照し、意図的に値を変える場合のみローカルで上書きする。
+
+| 変数 | 値 | 意味 | 適用済みページ |
+|---|---|---|---|
+| `--col-gap` | `20px` | 2カラムレイアウトのカラム間隔 | p2・p2-1〜4 |
+| `--hero-gap` | `20px` | ヒーロー下端→コンテンツエリア上端の間隔 | p2 |
+
+**未変数化（全ページ完成後に検討）**
+- `.ktn-content` の `padding: 24px 20px`（左右20px＝カードと画面端の隙間）
 
 ---
 
