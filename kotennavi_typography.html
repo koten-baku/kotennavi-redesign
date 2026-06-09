@@ -876,10 +876,10 @@ body { padding-top: 34px; }
 
     <div class="ty-row">
       <div class="ty-row-meta">
-        <div class="ty-row-name">セクションラベル（p3/p4）</div>
-        <div class="ty-row-spec">.p3-sec-label / .57rem / Montserrat / accent色</div>
+        <div class="ty-row-name" style="text-decoration:line-through;opacity:.5">セクションラベル（p3/p4）</div>
+        <div class="ty-row-spec" style="color:#b43c14">.p3-sec-label / .p4-sec-label — <strong>廃止済み</strong><br>→ .ktn-section__head に移行</div>
       </div>
-      <div class="ty-row-sample" style="font-size:.57rem;font-family:'Montserrat',sans-serif;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:#2a5f7a">WORKS</div>
+      <div class="ty-row-sample" style="font-size:.75rem;color:#b43c14">全ページで .ktn-section__head + .ktn-section__title + .ktn-sec-en に統一済み</div>
     </div>
 
     <div class="ty-row">
@@ -1025,6 +1025,183 @@ body { padding-top: 34px; }
       <div style="color:var(--ink)">価格・アクセント・active・ホバー先</div>
     </div>
   </div>
+</div>
+
+<!-- ════════ 8. 管理ページ（mgmt-page）のタイポグラフィ ════════ -->
+<div class="ty-section">
+  <div class="ty-section-ttl">8. 管理ページ（mgmt-page）のタイポグラフィ</div>
+  <div class="ty-note">
+    <code>body.mgmt-page</code> を付与する全管理ページ共通の定義。
+    表示系（<code>--paper</code> クールブルー <code>#f0f4f8</code>）に対し <strong>ウォームベージュ（<code>#eae6e0</code>）</strong> で視覚識別する。
+    上部dbar「管理系」ボタンでこのページ自体の背景色が切り替わる。ロール＋管理系を組み合わせるとトップバー色も確認できる。
+  </div>
+
+  <!-- ① トップバー -->
+  <div class="ty-panel">
+    <div class="ty-panel-label">トップバー（body.mgmt-page::before） — dbar直下に固定される 3px ライン</div>
+    <div style="font-size:.75rem;color:var(--muted);margin-bottom:14px;line-height:1.6">
+      <code style="font-size:.75rem;background:rgba(0,0,0,.06);padding:1px 5px;border-radius:2px">position:fixed; top:34px; height:3px; left:0; right:0; z-index:999</code><br>
+      ロールと body クラスの組み合わせでバー色が変わり、一般公開ページとの視覚的区別を即座に与える。
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div style="display:flex;align-items:center;gap:16px">
+        <div style="width:140px;height:4px;background:#2a5f7a;border-radius:2px;flex-shrink:0"></div>
+        <div>
+          <div style="font-size:.8rem;font-weight:500;color:var(--ink)">Creator</div>
+          <div style="font-family:'Montserrat',sans-serif;font-size:.62rem;color:var(--muted)"><code style="background:rgba(0,0,0,.06);padding:1px 5px;border-radius:2px">body.p3-page.mgmt-page</code> · #2a5f7a · インクブルー</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px">
+        <div style="width:140px;height:4px;background:#8b5e3c;border-radius:2px;flex-shrink:0"></div>
+        <div>
+          <div style="font-size:.8rem;font-weight:500;color:var(--ink)">Gallery</div>
+          <div style="font-family:'Montserrat',sans-serif;font-size:.62rem;color:var(--muted)"><code style="background:rgba(0,0,0,.06);padding:1px 5px;border-radius:2px">body.p4-page.mgmt-page</code> · #8b5e3c · コッパーブラウン</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px">
+        <div style="width:140px;height:4px;background:#b8608c;border-radius:2px;flex-shrink:0"></div>
+        <div>
+          <div style="font-size:.8rem;font-weight:500;color:var(--ink)">User</div>
+          <div style="font-family:'Montserrat',sans-serif;font-size:.62rem;color:var(--muted)"><code style="background:rgba(0,0,0,.06);padding:1px 5px;border-radius:2px">body.p5-page.mgmt-page</code> · #b8608c · ピンク</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px">
+        <div style="width:140px;height:4px;background:#3a4a5a;border-radius:2px;flex-shrink:0"></div>
+        <div>
+          <div style="font-size:.8rem;font-weight:500;color:var(--ink)">Admin（ロールなし）</div>
+          <div style="font-family:'Montserrat',sans-serif;font-size:.62rem;color:var(--muted)"><code style="background:rgba(0,0,0,.06);padding:1px 5px;border-radius:2px">body.mgmt-page</code>（p3/p4/p5-page なし）· #3a4a5a · ダークスレート</div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:14px;font-size:.75rem;color:var(--muted);line-height:1.6">
+      ロール動的切替（creator/gallery 共有ページ）：<code style="background:rgba(0,0,0,.06);padding:1px 5px;border-radius:2px">p2-11</code> / <code style="background:rgba(0,0,0,.06);padding:1px 5px;border-radius:2px">p11-4</code> は JS の <code>syncMgmtBar()</code> で <code>p3-page</code> / <code>p4-page</code> を付け外し。
+    </div>
+  </div>
+
+  <!-- ② フォント使い分けマトリクス -->
+  <div class="ty-panel" style="margin-top:12px">
+    <div class="ty-panel-label">管理ページのフォント使い分け</div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      <div style="flex:1;min-width:200px;background:#f2f6fa;border:1px solid var(--border);border-radius:4px;padding:12px 14px">
+        <div style="font-family:'Montserrat',sans-serif;font-size:.62rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">--fn（Zen Kaku Gothic New）を使う</div>
+        <div style="font-size:.75rem;line-height:1.9;color:var(--ink)">
+          フォームラベル・入力欄・ヘルプテキスト・説明文・ページ見出し（ktn-edit-head__title）・ナビ・タブ・バッジ・ラベル・日付・件数・注意書き・ボタンテキスト<br>
+          <span style="color:var(--muted);font-size:.7rem">→ 管理系全般のデフォルトフォント</span>
+        </div>
+      </div>
+      <div style="flex:1;min-width:200px;background:#fdf9f5;border:1px solid #e0d8cc;border-radius:4px;padding:12px 14px">
+        <div style="font-family:'Montserrat',sans-serif;font-size:.62rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">--fs（Shippori Mincho）を使う</div>
+        <div style="font-size:.75rem;line-height:1.9;color:var(--ink)">
+          セクション見出し（.ktn-section__title）・作品名・展覧会名・クリエイター名・ギャラリー名<br>
+          <span style="color:var(--muted);font-size:.7rem">→ 管理画面内に表示されるコンテンツ情報は引き続き --fs</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ③ 管理ページ内テキスト使用例 -->
+  <div class="ty-panel-mgmt" style="margin-top:12px">
+    <div class="ty-panel-label" style="border-bottom-color:#ccc8c0">管理ページ内のテキスト — 使用例（背景 #eae6e0）</div>
+
+    <div class="ty-row" style="border-bottom-color:#ccc8c0">
+      <div class="ty-row-meta">
+        <div class="ty-row-name">ページ見出し</div>
+        <div class="ty-row-spec">.ktn-edit-head__title<br>--fn 700 / 1.3rem</div>
+      </div>
+      <div class="ty-row-sample">
+        <div class="ktn-edit-head__title">展示設定・出品管理</div>
+      </div>
+    </div>
+
+    <div class="ty-row" style="border-bottom-color:#ccc8c0">
+      <div class="ty-row-meta">
+        <div class="ty-row-name">ページ説明文</div>
+        <div class="ty-row-spec">.ktn-edit-head__desc<br>--fn 400 / .82rem / muted</div>
+      </div>
+      <div class="ty-row-sample">
+        <div class="ktn-edit-head__desc">出品作品の公開設定・販売状態・申込状況を管理します。</div>
+      </div>
+    </div>
+
+    <div class="ty-row" style="border-bottom-color:#ccc8c0">
+      <div class="ty-row-meta">
+        <div class="ty-row-name">セクション見出し</div>
+        <div class="ty-row-spec">.ktn-section__title<br>--fs 600 / 1rem ← --fs を維持</div>
+      </div>
+      <div class="ty-row-sample">
+        <div class="ktn-section__head">
+          <span class="ktn-section__title">出品作品 — <span class="ktn-sec-en">Works</span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="ty-row" style="border-bottom-color:#ccc8c0">
+      <div class="ty-row-meta">
+        <div class="ty-row-name">フォームラベル</div>
+        <div class="ty-row-spec">--fn 500 / .75rem</div>
+      </div>
+      <div class="ty-row-sample">
+        <div style="font-size:.75rem;font-weight:500;color:var(--ink);margin-bottom:3px">販売価格 <span style="font-size:.75rem;color:#b43c14;font-weight:400">必須</span></div>
+        <div style="font-size:.75rem;color:var(--muted)">税込価格を入力してください</div>
+      </div>
+    </div>
+
+    <div class="ty-row" style="border-bottom-color:#ccc8c0">
+      <div class="ty-row-meta">
+        <div class="ty-row-name">コンテンツ情報（作品名）</div>
+        <div class="ty-row-spec">--fs 600 / .9rem ← --fs を使う</div>
+      </div>
+      <div class="ty-row-sample">
+        <div style="font-family:'Shippori Mincho',serif;font-size:.9rem;font-weight:600;color:var(--ink)">《オノマトペの庭》</div>
+        <div style="font-family:'Montserrat',sans-serif;font-size:.72rem;color:var(--muted)">AW-C42-1847 · キャンバスに油彩 · 116.7×91.0cm</div>
+      </div>
+    </div>
+
+    <div class="ty-row" style="border-bottom:none">
+      <div class="ty-row-meta">
+        <div class="ty-row-name">ヘルプ・注釈</div>
+        <div class="ty-row-spec">--fn 400 / .82rem / muted</div>
+      </div>
+      <div class="ty-row-sample" style="font-size:.82rem;color:var(--muted);line-height:1.75">
+        ※ 販売期間中は在庫確認後に購入プロセスが進みます。<br>
+        ※ 申込者がいる場合は「会場売約済」ボタンで一括キャンセルできます。
+      </div>
+    </div>
+  </div>
+
+  <!-- ④ 適用ページ一覧 -->
+  <div class="ty-panel" style="margin-top:12px">
+    <div class="ty-panel-label">mgmt-page 適用ページと bodyクラス構成</div>
+    <div style="display:grid;grid-template-columns:auto auto 1fr;gap:6px 16px;font-size:.75rem;align-items:center">
+      <div style="font-family:'Montserrat',sans-serif;font-size:.62rem;color:var(--muted);font-weight:600">ページ</div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:.62rem;color:var(--muted);font-weight:600">バー</div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:.62rem;color:var(--muted);font-weight:600">bodyクラス構成</div>
+
+      <div>p2-12-1</div>
+      <div><span style="display:inline-block;width:24px;height:3px;background:#2a5f7a;border-radius:2px;vertical-align:middle"></span></div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:.72rem;color:var(--muted)">p3-page mgmt-page</div>
+
+      <div>p3-15・p3-16</div>
+      <div><span style="display:inline-block;width:24px;height:3px;background:#2a5f7a;border-radius:2px;vertical-align:middle"></span></div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:.72rem;color:var(--muted)">p3-page p3-{n}-page mgmt-page</div>
+
+      <div>p4-15・p4-16・p4-18</div>
+      <div><span style="display:inline-block;width:24px;height:3px;background:#8b5e3c;border-radius:2px;vertical-align:middle"></span></div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:.72rem;color:var(--muted)">p4-page p4-{n}-page mgmt-page</div>
+
+      <div>p5-11〜p5-15</div>
+      <div><span style="display:inline-block;width:24px;height:3px;background:#b8608c;border-radius:2px;vertical-align:middle"></span></div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:.72rem;color:var(--muted)">p5-page p5-{n}-page mgmt-page</div>
+
+      <div>p2-11・p11-4</div>
+      <div style="display:flex;gap:3px;align-items:center">
+        <span style="display:inline-block;width:12px;height:3px;background:#2a5f7a;border-radius:2px"></span>
+        <span style="display:inline-block;width:12px;height:3px;background:#8b5e3c;border-radius:2px"></span>
+      </div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:.72rem;color:var(--muted)">mgmt-page + JS で p3-page/p4-page 動的付与（syncMgmtBar）</div>
+    </div>
+  </div>
+
 </div>
 
 </div><!-- /ty-wrap -->
