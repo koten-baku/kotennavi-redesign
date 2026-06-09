@@ -293,6 +293,40 @@ watch / interest / check-in の SVG アイコンは **`kotennavi_buttons.html` �
 - ボタン幅は `width:100%` にせず、テキスト量に応じた自然な幅にする（サイト全体共通方針）
 - 右カラムCTAのサイズは `.p2aw-item .ktn-btn` スコープで自動適用。p2/p3/p4すべての右カラムウィジェットは `p2aw-item` を使っているため統一される
 
+**`handleAction` 共通実装（`kotennavi-common.js` — `KTN.action`）：**
+
+watch / interest / check-in ボタンのクリックは必ず `handleAction(btn, action)` 経由で処理する。inline onclick に直接ロジックを書かない。
+
+```html
+<!-- watch pill button -->
+<button class="ktn-btn" data-off="watch" data-on="watching" data-action="watch"
+  onclick="handleAction(this,'watch');event.preventDefault()">
+  <svg viewBox="0 0 16 16" fill="none">
+    <circle cx="8" cy="8" r="7" fill="#7a8a99" opacity=".3"/>
+    <circle class="wi-inner" cx="8" cy="8" r="2.6"/>
+  </svg>
+  watch<span class="tip">ウォッチする</span>
+</button>
+
+<!-- interest icon button -->
+<button class="ktn-icon-btn" data-action="interest"
+  onclick="handleAction(this,'interest');event.preventDefault()">
+  <svg viewBox="0 0 16 16" fill="none">
+    <path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"
+      fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/>
+  </svg>
+  <span class="tip">興味ある！に追加する</span>
+</button>
+```
+
+- `KTN.role === 'guest'` のとき → auth modal を表示（ログイン/登録を促す）
+- ログイン済みのとき → `.on` クラスをトグル・テキストノード更新・`.tip` テキスト更新
+- auth modal は `DOMContentLoaded` 時に `<body>` 末尾へ自動注入（各HTMLに記述不要）
+- pill button（`.ktn-btn`）は `data-off` / `data-on` 属性でOFF/ONラベルを定義する
+- pill button は `display:inline-flex` が必要。親コンテキストで `display:block!important` を上書きしないこと（SVG とテキストの垂直中央揃えが崩れる）
+
+**Auth modal CSS：** `common.css` の `.ktn-auth-overlay` / `.ktn-auth-modal` 等で定義済み（`components.css` の `.auth-*` とは別物）。
+
 ---
 
 ### 全ページ共通：ページ遷移アクションボタン（`.ktn-action-btn`）
@@ -604,7 +638,7 @@ SVG の `font-family` 属性は CSS 変数に非対応のため `font-family="'M
 | 位置 | クラス | 場所 |
 |---|---|---|
 | ① | `.ktn-ad-band` | `</main>` 直後・コンテンツ下部の最上段 |
-| ② | `.ktn-ad-band` | おすすめセクション（`.p2-sub-rec`）の下 |
+| ② | `.ktn-ad-band` | おすすめセクション（`.ktn-sub-rec`）の下 |
 | ③ | `.p2-side-ad` | 右カラム下部（`.p2-side-nearby` の後） |
 
 - `.ktn-ad-band`：横幅フル・`background:var(--warm)`・`min-height:90px`（バナー広告枠）
@@ -615,58 +649,66 @@ SVG の `font-family` 属性は CSS 変数に非対応のため `font-family="'M
 ```
 </main>
 ↓ ① ktn-ad-band（広告）
-↓ p2-related-band（関連情報ヘッド — ページコンテキスト再提示）
-↓ p2-sub-tags（タグ）
-↓ p2-sub-rec（おすすめ展覧会）
+↓ ktn-related-band（関連情報ヘッド — ページコンテキスト再提示）
+↓ ktn-sub-tags（タグ）
+↓ ktn-sub-rec（おすすめ）
 ↓ ② ktn-ad-band（広告）
 ↓ [Gエリア — おすすめクリエイター/ギャラリー（将来定義）]
 ```
 
-#### 関連情報ヘッド（`.p2-related-band`）
+#### 関連情報セクション（p2/p3/p4/p6/p7 共通）
+
+関連情報セクション（`.ktn-related-band`・`.ktn-sub-tags`・`.ktn-sub-rec`）は全ページ共通クラス。ページ種別によってバッジとリンク先を切り替えるだけで再利用する。
+
+**クラス名（確定）：**
+- `p2-related-band` / `p2-sub-tags` / `p2-sub-rec` / `p6-sub-tags` / `p6-rec-section` は旧名。**使用禁止**
+- 正しいクラス名：`ktn-related-band` / `ktn-sub-tags` / `ktn-sub-rec`
+
+#### 関連情報ヘッド（`.ktn-related-band`）
 
 タグ・おすすめセクションの直前に置き、「このページが何の関連情報か」をユーザーとSEOに再提示する帯。
 
 ```html
-<div class="p2-related-band">
-  <div class="p2-related-band__inner">
-    <span class="cb cb-content cb-exhibition">exhibition</span>
-    <h2 class="p2-related-band__title">
-      <a href="#p2Hero" class="p2-related-band__exh">あなたが知らないオノマトペ</a>
-      <span class="p2-related-band__sep">の関連情報 — <span class="ktn-sec-en">Related</span></span>
-    </h2>
+<div class="ktn-related-band">
+  <div class="ktn-related-band__inner">
+    <h2 class="ktn-related-band__heading">関連情報 — <span class="ktn-sec-en">Related</span></h2>
+    <div class="ktn-related-band__ctx">
+      <span class="cb cb-content cb-exhibition">exhibition</span>
+      <a href="#p2Hero" class="ktn-related-band__link">あなたが知らないオノマトペ</a>
+    </div>
   </div>
 </div>
 ```
 
 - `<h2>` にコンテンツタイトルを含める（SEO効果）
-- `.p2-related-band__inner { align-items: flex-start }` — バッジの縦伸び防止（flexデフォルトのstretchを上書き）
-- ページ種別に応じてバッジ（`cb-exhibition` / `cb-creator` 等）を切り替える
+- `.ktn-related-band__heading`：`0.9rem`（ページ上部の他セクションラベルと同じ視覚レベル）
+- `.ktn-related-band__inner { align-items: flex-start }` — バッジの縦伸び防止
+- ページ種別に応じてバッジ（`cb-exhibition` / `cb-creator` / `cb-gallery` / `cb-work` 等）を切り替える
+- `ktn-related-band__link` はコンテンツページ先頭への `#anchor` リンク
 
-#### タグセクション（`.p2-sub-tags`）
+#### タグセクション（`.ktn-sub-tags`）
 
-```css
-.p2-sub-tags { max-width: var(--w-entity); margin: 0 auto; padding: 20px 24px 16px }
-```
-
-- タグピル（`.p2-1-tag-pills`）は `flex-wrap: wrap` で複数行対応
-- ラベル（`.p2-sub-tags__label`）を先頭に置き「タグ · Tags」と表示
+- タグピル（`.ktn-tag-pill`）を `.ktn-tag-pills` にまとめ `flex-wrap: wrap` で複数行対応
+- ラベル（`.ktn-sub-tags__label`）を先頭に置き「タグ · Tags」と表示
 
 #### セクション幅・間隔一覧
 
 | セクション | クラス | 幅 |
 |---|---|---|
-| おすすめ展覧会（p2系） | `.p2-sub-rec` | `max-width: var(--w-entity)` |
-| タグ（p2系） | `.p2-sub-tags` | `max-width: var(--w-entity)` |
-| タグ（p6系） | `.p6-sub-tags` | `max-width: var(--w-entity)` |
-| おすすめ作品（p6系） | `.p6-rec-section` | `max-width: var(--w-entity)` |
+| おすすめ（全ページ共通） | `.ktn-sub-rec` | `max-width: var(--w-entity)` |
+| タグ（全ページ共通） | `.ktn-sub-tags` | `max-width: var(--w-entity)` |
 | おすすめクリエイター/ギャラリー（Gエリア） | 今後定義 | `max-width: var(--w-entity)` |
 
 **セクション間スペース標準（p2基準）：**
 - ktn-content下端 → 広告①間の空き：`padding: 0`（広告帯は独立）
-- 広告① → related-band間：`padding-top: 20px`
-- related-band → タグ間：`padding-top: 0`（related-bandがヘッドとして機能）
-- タグ → おすすめ間の空き：`padding-top: 28px`（`.p2-sub-rec { padding: 28px 24px 0 }` 標準値）
-- ktn-content下端 → タグセクション間の空き（related-bandなし時）：`padding-top: 16px`（`.p6-sub-tags { padding: 16px 24px 0 }` 準拠）
+- 広告① → ktn-related-band間：`padding-top: 20px`
+- ktn-related-band → ktn-sub-tags間：`padding-top: 0`（related-bandがヘッドとして機能）
+- ktn-sub-tags → ktn-sub-rec間：`padding-top: 28px`（`.ktn-sub-rec { padding: 28px 24px 0 }` 標準値）
+- ktn-content下端 → ktn-sub-tagsの空き（related-bandなし時）：`padding-top: 16px`（`.ktn-sub-tags { padding: 16px 24px 0 }` 準拠）
+
+**左寄せの注意点：**
+- `ktn-related-band` / `ktn-sub-tags` / `ktn-sub-rec` は `width: 100%` + `max-width: var(--w-entity)` + `margin: 0 auto` で左寄せを確保する
+- 親が `display:flex; flex-direction:column` の場合、`width:100%` がないと `margin:0 auto` が shrink-to-content + center になり視覚的に中央揃えになるため注意
 
 **おすすめ展覧会カード（`buildGridEcCard(e)` — `kotennavi-pages.js`）：**
 - `cards_exhibition.html` のマソンリーグリッド完全準拠・表示件数：4件

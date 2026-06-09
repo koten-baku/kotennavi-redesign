@@ -1318,3 +1318,96 @@ window.closeQrModal      = KTN.cta.closeQrModal;
 window.copyQrUrl         = KTN.cta.copyQrUrl;
 window.openWatcherModal  = KTN.cta.openWatcherModal;
 window.closeWatcherModal = KTN.cta.closeWatcherModal;
+
+/* ══════════════════════════════════════════════════════
+   KTN.action — Watch / Interest / Check-in 共通アクション
+══════════════════════════════════════════════════════ */
+KTN.action = (function () {
+
+  var ACTION_LABELS = {
+    watch:    { off: 'ウォッチする',        on: 'ウォッチ中 — 解除する', iconOff: 'ウォッチする',        iconOn: 'ウォッチ中 — 解除する', guest: 'ウォッチにはログインが必要です'  },
+    interest: { off: '興味ある！に追加する', on: '興味ある！ — 解除する', iconOff: '興味ある！に追加する', iconOn: '興味ある！ — 解除する', guest: 'この機能にはログインが必要です' },
+    checkin:  { off: '訪問済みにする',       on: '訪問済み — 解除する',   iconOff: '訪問済みにする',       iconOn: '訪問済み — 解除する',   guest: 'この機能にはログインが必要です' },
+  };
+
+  var ACTION_ICONS = {
+    watch:    '<svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" fill="#fff" opacity=".9"/><circle cx="8" cy="8" r="2.6" fill="#3a90e0"/></svg>',
+    interest: '<svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#fff" stroke="#fff" stroke-width=".6"/></svg>',
+    checkin:  '<svg viewBox="0 0 16 16" fill="none"><circle cx="10" cy="5" r="4" fill="#fff" opacity=".9"/><circle cx="5" cy="11" r="2.4" fill="#fff" opacity=".75"/></svg>',
+  };
+
+  var ACTION_NAMES = { watch: 'watch', interest: 'interest!', checkin: 'check in' };
+
+  function handle(btn, action) {
+    if (KTN.role === 'guest') { show(action); return; }
+    var isOn = btn.classList.toggle('on');
+    var tn = Array.from(btn.childNodes).find(function (n) {
+      return n.nodeType === 3 && n.textContent.trim();
+    });
+    if (tn && btn.dataset.off && btn.dataset.on) {
+      tn.textContent = ' ' + (isOn ? btn.dataset.on : btn.dataset.off);
+    }
+    var tip = btn.querySelector('.tip');
+    if (tip && ACTION_LABELS[action]) {
+      var lbl = ACTION_LABELS[action];
+      var isIcon = btn.classList.contains('ktn-icon-btn');
+      tip.textContent = isOn ? (isIcon ? lbl.iconOn : lbl.on) : (isIcon ? lbl.iconOff : lbl.off);
+    }
+  }
+
+  function show(action) {
+    var modal = document.getElementById('ktnAuthModal');
+    if (!modal) return;
+    var badge = document.getElementById('ktnAuthBadge');
+    var icon  = document.getElementById('ktnAuthIcon');
+    if (badge) badge.innerHTML = (ACTION_ICONS[action] || '') + ' ' + (ACTION_NAMES[action] || action);
+    if (icon)  icon.innerHTML  =  ACTION_ICONS[action] || '';
+    modal.classList.add('open');
+  }
+
+  function close(e) {
+    if (e && e.target !== document.getElementById('ktnAuthModal')) return;
+    var modal = document.getElementById('ktnAuthModal');
+    if (modal) modal.classList.remove('open');
+  }
+
+  function _inject() {
+    var el = document.createElement('div');
+    el.className = 'ktn-auth-overlay';
+    el.id = 'ktnAuthModal';
+    el.setAttribute('onclick', 'KTN.action.close(event)');
+    el.innerHTML =
+      '<div class="ktn-auth-modal">'
+      + '<div class="ktn-auth-top">'
+      + '<button class="ktn-auth-close" onclick="KTN.action.close()">'
+      + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
+      + '</button>'
+      + '<div class="ktn-auth-icon" id="ktnAuthIcon"></div>'
+      + '<div class="ktn-auth-ttl">ログインが必要です</div>'
+      + '<div class="ktn-auth-sub">ユーザー登録すると、ウォッチ・興味ある！・チェックインなどの<br>My機能がすべて使えるようになります</div>'
+      + '<div class="ktn-auth-action-badge" id="ktnAuthBadge"></div>'
+      + '</div>'
+      + '<div class="ktn-auth-body">'
+      + '<div class="ktn-auth-btns">'
+      + '<button class="ktn-auth-btn-primary" onclick="KTN.action.close()">ログイン</button>'
+      + '<div class="ktn-auth-divider">または</div>'
+      + '<button class="ktn-auth-btn-secondary" onclick="KTN.action.close()">新規ユーザー登録（無料）</button>'
+      + '</div>'
+      + '<div class="ktn-auth-note">登録は無料です。<a href="#">利用規約</a>・<a href="#">プライバシーポリシー</a>に同意のうえご利用ください。</div>'
+      + '</div>'
+      + '</div>';
+    document.body.appendChild(el);
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    _inject();
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') close();
+    });
+  });
+
+  return { handle: handle, show: show, close: close };
+}());
+
+window.handleAction   = function (btn, action) { KTN.action.handle(btn, action); };
+window.closeAuthModal = function (e)            { KTN.action.close(e); };

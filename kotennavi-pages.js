@@ -1,4 +1,4 @@
-/* ══════════════════════════════════════════════════════
+﻿/* ══════════════════════════════════════════════════════
    個展なび — ページ固有DOM操作
    kotennavi-pages.js
 ══════════════════════════════════════════════════════ */
@@ -27,9 +27,13 @@ function buildPersonCard(d) {
       + (d.hours ? '<div class="gc__hours"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.4"/><path d="M8 5v3.5l2.5 1.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>' + d.hours + '</div>' : '');
   var wId = d.watchId ? ' id="' + d.watchId + '"' : '';
   var wOn = d.watchOn ? ' on' : '';
-  var btn = '<button class="ktn-btn' + wOn + '"' + wId + ' onclick="this.classList.toggle(\'on\');event.preventDefault()">'
-    + '<svg width="12" height="12"><use href="#icon-watch" color="#7a8a99" /></svg>'
-    + ' watch<span class="tip">ウォッチする</span></button>';
+  var wLbl = d.watchOn ? 'watching' : 'watch';
+  var wTip = d.watchOn ? 'ウォッチ中 — 解除する' : 'ウォッチする';
+  var btn = '<button class="ktn-btn' + wOn + '"' + wId
+    + ' data-off="watch" data-on="watching" data-action="watch"'
+    + ' onclick="handleAction(this,\'watch\');event.preventDefault()">'
+    + '<svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" fill="#7a8a99" opacity=".3"/><circle class="wi-inner" cx="8" cy="8" r="2.6"/></svg>'
+    + ' ' + wLbl + '<span class="tip">' + wTip + '</span></button>';
   var panelCls = d.panel ? ' ' + ns + '--panel' : '';
   return '<a class="' + ns + ' ' + ns + '--h' + panelCls + '" href="' + d.href + '">'
     + '<div class="' + ns + '__top">' + av + '</div>'
@@ -51,8 +55,8 @@ function buildSideEcCard(e) {
   var liCls = e.liaison === 'li-plus' ? 'li-plus' : 'li';
   var liLabel = e.liaison === 'li-plus' ? 'LIAISON+' : 'LIAISON';
   var liaisonBadge = e.liaison ? '<span class="lb-dot ' + liCls + '"><span class="lb-dot-inner"></span>' + liLabel + '</span>' : '';
-  var intBtn = '<button class="ktn-icon-btn" onclick="this.classList.toggle(\'on\');event.preventDefault()">'
-    + '<svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>'
+  var intBtn = '<button class="ktn-icon-btn" data-action="interest" onclick="handleAction(this,\'interest\');event.preventDefault()">'
+    + '<svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>'
     + '<span class="tip">興味ある！に追加する</span></button>';
   return '<a href="kotennavi-p2.html" class="p2-side-ec">'
     + '<div class="p2-side-ec__poster" style="background:' + e.bg + '"></div>'
@@ -96,8 +100,8 @@ function buildGridEcCard(e) {
       + thumbsHtml + '</div>';
   }
 
-  var intBtn = '<button class="ktn-icon-btn" onclick="this.classList.toggle(\'on\');event.preventDefault()">'
-    + '<svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>'
+  var intBtn = '<button class="ktn-icon-btn" data-action="interest" onclick="handleAction(this,\'interest\');event.preventDefault()">'
+    + '<svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>'
     + '<span class="tip">興味ある！に追加する</span></button>';
 
   return '<div class="masonry-item"><a href="kotennavi-p2.html" class="ec">'
@@ -420,19 +424,6 @@ KTN.pages['p2'] = function () {
       cta.setAttribute('aria-hidden', visible ? 'true' : 'false');
     }, { threshold: 0 });
     obs.observe(hero);
-  })();
-
-  /* ── フォロートグル ── */
-  (function () {
-    var btn = document.getElementById('p2FollowBtn');
-    if (!btn) return;
-    var following = false;
-    btn.addEventListener('click', function () {
-      following = !following; btn.classList.toggle('is-following', following);
-      btn.innerHTML = following
-        ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><path d="M20 6L9 17l-5-5"/></svg>フォロー中'
-        : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>フォロー';
-    });
   })();
 
   /* ── アコーディオン ── */
@@ -863,16 +854,10 @@ KTN.pages['p2-5'] = function () {
   function renderWork(w) {
     var cardClass = 'p25c' + (w.status === 'sold' ? ' p25c--sold' : '');
     var ribbon    = w.status === 'sold' ? '<div class="aw__sold-ribbon"><div class="aw__sold-ribbon-inner">SOLD OUT</div></div>' : '';
-    var badgeMap  = {
-      sale:    '<span class="p25c__badge p25c__badge--sale">\u8ca9\u58f2\u4e2d</span>',
-      negot:   '<span class="p25c__badge p25c__badge--negot">\u5546\u8ac7\u4e2d</span>',
-      inquiry: '<span class="p25c__badge p25c__badge--inquiry">\u8981\u554f\u5408\u305b</span>',
-      sold:    '<span class="p25c__badge p25c__badge--sold">\u58f2\u7d04\u6e08</span>',
-      nsale:   '<span class="p25c__badge p25c__badge--nsale">\u975e\u58f2\u54c1</span>',
-    };
-    var badge = badgeMap[w.status] || '';
     var statusMap = { sale: 'forsale', negot: 'forsale', inquiry: 'forsale', nsale: 'nsale', sold: 'sold' };
     var dataStatus = statusMap[w.status] || 'nsale';
+    var svgHeart = '<svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>';
+    var svgBtnOff = '<svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>';
     return '<a class="' + cardClass + '" href="./kotennavi-p6-1.html" data-creator="' + w.creator + '" data-status="' + dataStatus + '">' +
       '<div class="p25c__img">' +
         '<div class="p25c__img-bg" style="background:' + w.bg + '"></div>' +
@@ -880,10 +865,17 @@ KTN.pages['p2-5'] = function () {
         ribbon +
       '</div>' +
       '<div class="p25c__body">' +
-        '<div class="p25c__creator">' + w.name + '</div>' +
-        '<div class="p25c__title">' + w.title + '</div>' +
-        '<div class="p25c__spec">' + w.year + ' / ' + w.spec + '</div>' +
-        '<div class="p25c__footer">' + badge + '</div>' +
+        '<div class="aw__badge-row"><span class="cb cb-content cb-artwork">artwork</span>' + (STATUS_BADGE[w.status] || '') + '</div>' +
+        '<div class="aw__title-row"><div class="aw__title">' + w.title + '</div></div>' +
+        '<div class="aw__creator p25c__creator-link" onclick="event.stopPropagation();event.preventDefault();location.href=\'./kotennavi-p4.html\'">' + w.name + '</div>' +
+        '<div class="aw__spec">' + w.year + ' / ' + w.spec + '</div>' +
+        '<div class="aw__action-row">' +
+          '<span class="aw__counter">' + svgHeart + w.interest + '</span>' +
+          '<button class="ktn-icon-btn" onclick="this.classList.toggle(\'on\');event.stopPropagation();event.preventDefault()">' +
+            svgBtnOff +
+            '<span class="tip">\u8208\u5473\u3042\u308b\uff01\u306b\u8ffd\u52a0\u3059\u308b</span>' +
+          '</button>' +
+        '</div>' +
       '</div>' +
     '</a>';
   }
@@ -991,24 +983,24 @@ KTN.pages['p2-5-1'] = function () {
     { creator:'sato',   name:'佐藤 一朗', title:'問いの形',          year:'2024', spec:'ブロンズ / H30×W12×D12 cm',           status:'inquiry', price:null,   plus:false, bg:'linear-gradient(155deg,#d8e0e8,#98a8b8)', tc:'rgba(0,0,0,.28)',        interest:4  },
   ];
 
+  var STATUS_BADGE = {
+    sale:    '<span class="aws aws-sale">\u8ca9\u58f2\u4e2d</span>',
+    negot:   '<span class="aws aws-negot">\u5546\u8ac7\u4e2d</span>',
+    inquiry: '<span class="aws aws-inquiry">\u8981\u554f\u5408\u305b</span>',
+    sold:    '<span class="aws aws-sold">SOLD</span>',
+    nsale:   '<span class="aws aws-nsale">\u975e\u58f2\u54c1</span>',
+  };
+
   function renderWork(w) {
     var cardClass = 'p25c' + (w.status === 'sold' ? ' p25c--sold' : '');
     var ribbon    = w.status === 'sold' ? '<div class="aw__sold-ribbon"><div class="aw__sold-ribbon-inner">SOLD OUT</div></div>' : '';
-    var badgeMap  = {
-      sale:    '<span class="p25c__badge p25c__badge--sale">\u8ca9\u58f2\u4e2d</span>',
-      negot:   '<span class="p25c__badge p25c__badge--negot">\u5546\u8ac7\u4e2d</span>',
-      inquiry: '<span class="p25c__badge p25c__badge--inquiry">\u8981\u554f\u5408\u305b</span>',
-      sold:    '<span class="p25c__badge p25c__badge--sold">\u58f2\u7d04\u6e08</span>',
-      nsale:   '<span class="p25c__badge p25c__badge--nsale">\u975e\u58f2\u54c1</span>',
-    };
-    var badge = badgeMap[w.status] || '';
     var statusMap = { sale: 'forsale', negot: 'forsale', inquiry: 'forsale', nsale: 'nsale', sold: 'sold' };
     var dataStatus = statusMap[w.status] || 'nsale';
     var priceHtml = w.price
-      ? '<div class="p25c__price"><span class="p25c__price-currency">&yen;</span>' + w.price.toLocaleString() + '<span class="p25c__price-tax">\uff08\u7a0e\u8fbc\uff09</span></div>'
+      ? '<div class="p25c__footer"><div class="p25c__price"><span class="p25c__price-currency">&yen;</span>' + w.price.toLocaleString() + '<span class="p25c__price-tax">\uff08\u7a0e\u8fbc\uff09</span></div></div>'
       : '';
     var applicantsHtml = (w.status === 'sale' && w.applicants)
-      ? '<span class="p25c__applicants">' + w.applicants + '\u4eba\u304c\u7533\u8fbc\u4e2d</span>'
+      ? '<span class="aw__applicants">' + w.applicants + '\u4ef6\u7533\u8fbc\u4e2d</span>'
       : '';
     var consoleHtml = (w.status === 'sale' && w.applicants)
       ? '<div class="p25c__console-wrap">'
@@ -1017,6 +1009,8 @@ KTN.pages['p2-5-1'] = function () {
         + '\u53d6\u5f15\u30c7\u30b9\u30af\u3078 \u2192</button>'
         + '</div>'
       : '';
+    var svgHeart = '<svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>';
+    var svgBtnOff = '<svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>';
     return '<a class="' + cardClass + '" href="#" data-creator="' + w.creator + '" data-status="' + dataStatus + '">' +
       '<div class="p25c__img">' +
         '<div class="p25c__img-bg" style="background:' + w.bg + '"></div>' +
@@ -1024,15 +1018,20 @@ KTN.pages['p2-5-1'] = function () {
         ribbon +
       '</div>' +
       '<div class="p25c__body">' +
-        '<div class="p25c__creator">' + w.name + '</div>' +
-        '<div class="p25c__title">' + w.title + '</div>' +
-        '<div class="p25c__spec">' + w.year + ' / ' + w.spec + '</div>' +
-        '<div class="p25c__footer">' +
-          '<div class="p25c__footer-l">' + badge + applicantsHtml + '</div>' +
-          priceHtml +
+        '<div class="aw__badge-row"><span class="cb cb-content cb-artwork">artwork</span>' + (STATUS_BADGE[w.status] || '') + applicantsHtml + '</div>' +
+        '<div class="aw__title-row"><div class="aw__title">' + w.title + '</div></div>' +
+        '<div class="aw__creator p25c__creator-link" onclick="event.stopPropagation();event.preventDefault();location.href=\'./kotennavi-p4.html\'">' + w.name + '</div>' +
+        '<div class="aw__spec">' + w.year + ' / ' + w.spec + '</div>' +
+        '<div class="aw__action-row">' +
+          '<span class="aw__counter">' + svgHeart + w.interest + '</span>' +
+          '<button class="ktn-icon-btn" onclick="this.classList.toggle(\'on\');event.stopPropagation();event.preventDefault()">' +
+            svgBtnOff +
+            '<span class="tip">\u8208\u5473\u3042\u308b\uff01\u306b\u8ffd\u52a0\u3059\u308b</span>' +
+          '</button>' +
         '</div>' +
-        consoleHtml +
       '</div>' +
+      priceHtml +
+      consoleHtml +
     '</a>';
   }
 
