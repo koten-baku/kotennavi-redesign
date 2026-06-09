@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="./kotennavi-common.css">
   <link rel="stylesheet" href="./kotennavi-components.css">
 </head>
-<body>
+<body data-w="entity">
 <svg style="display:none"><defs>
   <symbol id="icon-exh" viewBox="40 47 54 54"><path d="M80.09 102.05c-1.22-.8,-2.57-2.87,-3.34-4.33c-2.48-5.91,-4.85-14.23,-13.31-20.15c-1.9-1.23,-2.03-2,-1.94-2.48c.11-.83,.82-1.52,2.3-1.3c11.09,1.95,15.22,3.96,21.07,7.61c7.85,5.36,9.57,10.76,9.65,14.09c.15,2.3,-.18,5.11,-2.61,6.56Z" fill="currentColor"/></symbol>
   <symbol id="icon-watch" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="currentColor"/><circle cx="8" cy="8" r="2.6" fill="white"/></symbol>
@@ -58,18 +58,12 @@
           <span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>
           <span class="sb sb-live"><span class="pulse"></span>開催中</span>
           <span class="p2-title-band__remain">残り12日</span>
-          <span class="p2-title-band__posted">
-            posted by
-            <span class="cb cb-person cb-gallery">gallery</span>
-            <a href="kotennavi-p4.html">gallery_soil</a>
-            · 2026.02.18
-          </span>
         </div>
         <h2 class="p2-title-band__title--sub">あなたが知らないオノマトペ</h2>
         <p  class="p2-title-band__sub">The Onomatopoeia You Don't Know</p>
         <dl class="p2-title-band__facts">
           <dt>会場</dt>
-          <dd><strong>Gallery SOIL 渋谷</strong>　<a href="kotennavi-p2-2.html">東京都渋谷区神南1-12-14 2F</a></dd>
+          <dd><strong><a href="kotennavi-p4.html">Gallery SOIL 渋谷</a></strong>　<a href="https://maps.google.com/?q=東京都渋谷区神南1-12-14+2F" target="_blank" rel="noopener">東京都渋谷区神南1-12-14 2F</a></dd>
           <dt>会期</dt>
           <dd>
             <time datetime="2026-02-18" class="p2-title-band__ddate">2026.02.18</time><span class="p2-title-band__ddow">水</span>
@@ -148,7 +142,7 @@
               <dt>会場名</dt>
               <dd>
                 <span style="display:inline-flex;align-items:center;gap:8px;">
-                  <strong>Gallery SOIL 渋谷</strong>
+                  <strong><a href="kotennavi-p4.html">Gallery SOIL 渋谷</a></strong>
                   <button class="ktn-btn" onclick="handleAction(this,'watch')" data-off="watch" data-on="watching" data-action="watch">
                     <svg viewBox="0 0 16 16" fill="none">
                       <circle cx="8" cy="8" r="7" fill="#7a8a99" opacity=".3"/>
@@ -161,24 +155,13 @@
               </dd>
               <dt>住所</dt>
               <dd>
-                <address>〒150-0041 東京都渋谷区神南1-12-14 2F</address>
+                <a href="https://maps.google.com/?q=東京都渋谷区神南1-12-14+2F" target="_blank" rel="noopener">〒150-0041 東京都渋谷区神南1-12-14 2F</a>
               </dd>
               <dt>電話</dt>
               <dd><a href="tel:0312345678">03-1234-5678</a></dd>
               <dt>メール</dt>
               <dd><a href="mailto:info@gallery-soil.jp">info@gallery-soil.jp</a></dd>
             </dl>
-            <div class="p2-2-social-row">
-              <a href="https://gallery-soil.jp" target="_blank" rel="noopener" class="p2-2-social-icon" aria-label="公式サイト">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-              </a>
-              <a href="https://instagram.com/gallery_soil_shibuya" target="_blank" rel="noopener" class="p2-2-social-icon" aria-label="Instagram">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
-              </a>
-              <a href="https://x.com/gallery_soil" target="_blank" rel="noopener" class="p2-2-social-icon" aria-label="X (旧Twitter)">
-                <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-              </a>
-            </div>
             <div class="p2-2-info-items">
               <div class="p2-2-info-item">
                 <div class="p2-2-info-item__title">入場料</div>
@@ -195,8 +178,14 @@
             </div>
           </section>
 
-          <!-- 地図 -->
+          <!-- アクセス経路 -->
           <section class="p2-2-section">
+            <div class="p2-2-section__head">
+              <div class="p2-2-section__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              </div>
+              <h2 class="p2-2-section__title">アクセス <span class="ktn-sec-en">Access</span></h2>
+            </div>
             <div class="p2-2-map" id="p2Map">
               <div class="p2-2-map__ph">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -220,16 +209,6 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                 Apple Map で開く
               </a>
-            </div>
-          </section>
-
-          <!-- アクセス経路 -->
-          <section class="p2-2-section">
-            <div class="p2-2-section__head">
-              <div class="p2-2-section__icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-              </div>
-              <h2 class="p2-2-section__title">アクセス <span class="ktn-sec-en">Access</span></h2>
             </div>
             <div class="p2-2-access-text">
               <p class="p2-2-access-p">
@@ -292,28 +271,23 @@
         <aside class="p2-2-side">
 
           <!-- アクションウィジェット -->
-          <div class="p2-side-card p2-action-widget">
-            <div class="p2-action-widget__counts">
-              <div class="p2-action-widget__count">
-                <div class="p2-action-widget__num" id="p2IntNum">41</div>
-                <div class="p2-action-widget__lbl">interest!</div>
-              </div>
-              <div class="p2-action-widget__count-sep"></div>
-              <div class="p2-action-widget__count">
-                <div class="p2-action-widget__num" id="p2CiNum">9</div>
-                <div class="p2-action-widget__lbl">check in</div>
-              </div>
-            </div>
-            <div class="p2-action-widget__divider"></div>
+          <div class="p2-side-card p2-action-widget ktn-cta-widget" data-cta-name="あなたが知らないオノマトペ" data-cta-type="exhibition" data-cta-url="kotennavi-p2.html" data-cta-action="interest">
             <div class="p2-action-widget__btn-row">
-              <button class="p2-action-widget__btn p2-action-widget__btn--interest" id="p2InterestBtn" aria-pressed="false">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                interest!
-              </button>
-              <button class="p2-action-widget__btn p2-action-widget__btn--checkin" id="p2CheckinBtn" aria-pressed="false">
-                <svg viewBox="0 0 16 16" fill="none"><circle cx="10" cy="5" r="4" fill="#7a8a99" opacity=".45"/><circle cx="5" cy="11" r="2.4" fill="#7a8a99" opacity=".45"/></svg>
-                check in
-              </button>
+              <div class="p2aw-item">
+                <button class="ktn-btn" id="p2InterestBtn"
+                  data-off="interest!" data-on="interested!" data-action="interest" aria-pressed="false">
+                  <svg viewBox="0 0 16 16" fill="none">
+                    <path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"
+                      fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/>
+                  </svg>
+                  interest!
+                  <span class="tip">興味ある！に追加する</span>
+                </button>
+                <div class="p2aw-stat p2aw-stat--link" onclick="openWatcherModal()" role="button" tabindex="0">
+                  <span class="p2aw-num" id="p2IntNum">41</span>
+                  <span class="p2aw-desc">人が興味あり！</span>
+                </div>
+              </div>
             </div>
             <div class="p2-action-widget__sub">
               <button class="p2-action-widget__sub-btn" onclick="doShare()" title="シェア">
@@ -323,7 +297,7 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
               </a>
             </div>
-            <div class="p2-action-widget__qr">
+            <button class="p2-action-widget__qr" type="button" onclick="openQrModal()">
               <div class="p2-action-widget__qr-icon">
                 <svg width="30" height="30" viewBox="0 0 44 44" fill="none">
                   <rect x="2"  y="2"  width="16" height="16" rx="2" fill="#231815" opacity=".18"/>
@@ -335,15 +309,31 @@
                   <rect x="34" y="34" width="6"  height="6"  fill="#231815" opacity=".22"/>
                 </svg>
               </div>
-              <div class="p2-action-widget__qr-text">会場でスキャン →<br><a href="#">kotennavi.jp/ex/12345</a></div>
-            </div>
+              <div class="p2-action-widget__qr-text">この展覧会をシェア<br><span class="p2-action-widget__qr-sub">QRコードを表示</span></div>
+            </button>
           </div>
 
-          <!-- Posted by -->
-          <div class="p2-side-card p2-side-posted">
-            <div class="p2-side-posted__label">posted by</div>
-            <div class="p2-side-posted__dates">掲載：2026.02.10 / 最終更新：2026.02.18</div>
-            <div id="p2PostedByCard"></div>
+          <!-- 投稿者・お問合せ -->
+          <div class="p2-ic is-open p2-side-contact">
+            <div class="p2-side-contact__head">
+              <div class="p2-ic__head-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                  <polyline points="22,6 12,13 2,6"/>
+                </svg>
+              </div>
+              <span class="p2-ic__head-title">投稿者・お問合せ<span class="ktn-sec-en">Contact</span></span>
+            </div>
+            <div class="p2-ic__body">
+              <div class="p2-contact__sublabel">posted by</div>
+              <div class="p2-side-posted__dates">掲載：2026.02.10 / 最終更新：2026.02.18</div>
+              <div id="p2PostedByCard"></div>
+              <div class="p2-contact-inq">
+                <div class="p2-contact__sublabel">展覧会に関するお問合せ</div>
+                <div class="p2-side-inq__name">Gallery SOIL 渋谷</div>
+                <div class="p2-side-inq__email"><a href="mailto:info@gallery-soil.jp">info@gallery-soil.jp</a></div>
+              </div>
+            </div>
           </div>
 
           <!-- ページ内ナビリンク -->
@@ -417,37 +407,57 @@
             <div id="p2NearbyList"></div>
           </div>
 
+          <!-- ③ 広告：右カラム -->
+          <div class="p2-side-ad">
+            <div class="p2-side-ad__slot">広告エリア（300×250）</div>
+          </div>
+
         </aside>
 
       </div><!-- /p2-2-layout -->
 
-          <!-- タグリンク -->
-          <div class="p2-sub-tags">
-            <div class="p2-sub-tags__label">タグ · Tags</div>
-            <ul class="p2-1-tag-pills" aria-label="タグ">
-              <li><a class="p2-1-tag-pill" href="/p10?tag=絵画">絵画</a></li>
-              <li><a class="p2-1-tag-pill" href="/p10?tag=現代美術">現代美術</a></li>
-              <li><a class="p2-1-tag-pill" href="/p10?tag=油彩">油彩</a></li>
-              <li><a class="p2-1-tag-pill" href="/p10?tag=オノマトペ">オノマトペ</a></li>
-              <li><a class="p2-1-tag-pill" href="/p10?area=tokyo">東京</a></li>
-              <li><a class="p2-1-tag-pill" href="/p10?area=shibuya">渋谷</a></li>
-              <li><a class="p2-1-tag-pill" href="/p10?tag=個展">個展</a></li>
-            </ul>
-          </div>
-
     </div><!-- /ktn-content -->
   </main>
 
-    <!-- ③ 回遊：おすすめ展覧会 -->
-    <section class="p2-sub-rec" aria-label="おすすめの展覧会">
-      <div class="p2-sub-rec__head">
-        <h2 class="p2-sub-rec__title">おすすめの展覧会<span class="ktn-sec-en">Recommended</span></h2>
-        <a href="kotennavi-p2.html" class="p2-sub-rec__more">すべて見る →</a>
+  <!-- ① 広告：コンテンツ下 -->
+  <div class="ktn-ad-band" id="ktnAdBand"><div class="ktn-ad-band__inner"><div class="ktn-ad-band__slot">広告エリア（728×90 / レスポンシブ）</div></div></div>
+
+  <!-- 関連情報ヘッド -->
+  <div class="ktn-related-band">
+    <div class="ktn-related-band__inner">
+      <h2 class="ktn-related-band__heading">関連情報 — <span class="ktn-sec-en">Related</span></h2>
+      <div class="ktn-related-band__ctx">
+        <span class="cb cb-content cb-exhibition">exhibition</span>
+        <a href="kotennavi-p2.html" class="ktn-related-band__link">あなたが知らないオノマトペ</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- タグリンク -->
+  <div class="ktn-sub-tags">
+    <div class="ktn-sub-tags__label">タグ · Tags</div>
+    <ul class="ktn-tag-pills" aria-label="タグ">
+      <li><a class="ktn-tag-pill" href="/p10?tag=絵画">絵画</a></li>
+      <li><a class="ktn-tag-pill" href="/p10?tag=現代美術">現代美術</a></li>
+      <li><a class="ktn-tag-pill" href="/p10?tag=油彩">油彩</a></li>
+      <li><a class="ktn-tag-pill" href="/p10?tag=オノマトペ">オノマトペ</a></li>
+      <li><a class="ktn-tag-pill" href="/p10?area=tokyo">東京</a></li>
+      <li><a class="ktn-tag-pill" href="/p10?area=shibuya">渋谷</a></li>
+      <li><a class="ktn-tag-pill" href="/p10?tag=個展">個展</a></li>
+    </ul>
+  </div>
+
+  <!-- 回遊：おすすめ展覧会 -->
+  <section class="ktn-sub-rec" aria-label="おすすめの展覧会">
+      <div class="ktn-section__head">
+        <h2 class="ktn-section__title">おすすめの展覧会 — <span class="ktn-sec-en">Recommended</span></h2>
+        <a href="kotennavi-p2.html" class="ktn-section__more">すべて見る →</a>
       </div>
       <div class="masonry" id="p2SubRecGrid"></div>
     </section>
 
-  <div class="ktn-ad-band" id="ktnAdBand"><div class="ktn-ad-band__inner"><div class="ktn-ad-band__slot">広告エリア（728×90 / レスポンシブ）</div></div></div>
+  <!-- ② 広告：おすすめ下 -->
+  <div class="ktn-ad-band"><div class="ktn-ad-band__inner"><div class="ktn-ad-band__slot">広告エリア（728×90 / レスポンシブ）</div></div></div>
   <div class="dev-ph dev-ph--footer"></div>
 
 </div>
@@ -542,3 +552,4 @@ KTN.init({ page: 'p2-2', role: 'guest' });
 </script>
 </body>
 </html>
+

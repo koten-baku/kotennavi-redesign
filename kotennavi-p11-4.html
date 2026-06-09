@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./kotennavi-common.css">
 </head>
-<body class="mgmt-page p4-page">
+<body data-w="article" class="mgmt-page p3-page">
 
 <div class="ktn-toast" id="ktnToast"></div>
 
@@ -64,7 +64,7 @@
           <div class="p114-service-banner__fee">
             <span>展示掲載：<strong>無料</strong></span>
             <span style="color:var(--border)">|</span>
-            <span>販売手数料：<strong>15%</strong>（振込手数料込）</span>
+            <span>販売手数料：<strong>10%</strong>（〜¥29,999）/ <strong>8%</strong>（¥30,000〜）決済手数料込</span>
           </div>
         </div>
 
@@ -91,7 +91,7 @@
 
           <div class="p211-block">
             <div class="p211-block__head">
-              <div class="p211-block__title">販売する作品について <span class="p211-block__title-en">About Your Works</span></div>
+              <div class="p211-block__title">販売する作品について <span class="ktn-sec-en">About Your Works</span></div>
             </div>
             <div class="p211-block__body">
 
@@ -157,7 +157,7 @@
 
           <div class="p211-block">
             <div class="p211-block__head">
-              <div class="p211-block__title">取扱作家との関係 <span class="p211-block__title-en">About Your Artists</span></div>
+              <div class="p211-block__title">取扱作家との関係 <span class="ktn-sec-en">About Your Artists</span></div>
             </div>
             <div class="p211-block__body">
 
@@ -216,7 +216,7 @@
 
         <div class="p211-block">
           <div class="p211-block__head">
-            <div class="p211-block__title">振込先口座 <span class="p211-block__title-en">Bank Account</span></div>
+            <div class="p211-block__title">振込先口座 <span class="ktn-sec-en">Bank Account</span></div>
           </div>
           <div class="p211-block__body">
 
@@ -276,7 +276,7 @@
               <p>第2条（サービス内容）<br>
               本サービスは、実スペースの展覧会と連動したオンライン作品販売機能を提供します。出品者は本サービスを通じて申込の受付・購入プロセスの管理ができます。</p>
               <p>第3条（手数料）<br>
-              本サービスの販売手数料は売上金額（送料・梱包費を除く）の15%（税込）とします。振込手数料は本手数料に含まれます。</p>
+              本サービスの販売手数料は売上金額（送料・梱包費を除く）に対し、29,999円以下は10%、30,000円以上は8%（いずれも税込）とします。Stripe決済手数料は本手数料に含まれます。売上金額の振込は月末締め・翌月末払いとします。</p>
               <p>第4条（特定商取引法に基づく表示）<br>
               本サービスを通じて販売を行う場合、出品者は特定商取引法に基づく表示（氏名または屋号・住所・電話番号・メールアドレス）を個展なびプロフィールに掲載することに同意するものとします。</p>
               <p>第5条（会場優先販売）<br>
@@ -325,11 +325,9 @@ function setR(r, btn) {
   if (btn) btn.classList.add('on');
 
   var isGallery = (r === 'gallery');
-  if (isGallery) {
-    document.body.classList.add('p114-role-gallery');
-  } else {
-    document.body.classList.remove('p114-role-gallery');
-  }
+  document.body.classList.toggle('p114-role-gallery', isGallery);
+  document.body.classList.toggle('p3-page', !isGallery);
+  document.body.classList.toggle('p4-page', isGallery);
   document.getElementById('p114RoleNoticeCreator').hidden = isGallery;
   document.getElementById('p114RoleNoticeGallery').hidden = !isGallery;
 

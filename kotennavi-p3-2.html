@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="./kotennavi-common.css">
   <link rel="stylesheet" href="./kotennavi-components.css">
 </head>
-<body>
+<body data-w="detail">
 
 <div class="ktn-toast" id="ktnToast"></div>
 
@@ -128,7 +128,7 @@
 
         <!-- セクションヘッド -->
         <div class="p3-2-head">
-          <span>ARTICLES — 記事</span>
+          <span class="ktn-section__title">記事 — <span class="ktn-sec-en">Articles</span></span>
           <span class="p3-2-total" id="p3TotalCount">全 8 件</span>
         </div>
 
@@ -425,21 +425,21 @@
       <div class="p3-recommended__inner">
 
         <!-- タグ -->
-        <div class="p2-sub-tags">
-          <div class="p2-sub-tags__label">タグ · Tags</div>
-          <ul class="p2-1-tag-pills" aria-label="タグ">
-            <li><a class="p2-1-tag-pill" href="#">絵画</a></li>
-            <li><a class="p2-1-tag-pill" href="#">現代美術</a></li>
-            <li><a class="p2-1-tag-pill" href="#">オノマトペ</a></li>
-            <li><a class="p2-1-tag-pill" href="#">東京</a></li>
-            <li><a class="p2-1-tag-pill" href="#">個展なび</a></li>
+        <div class="ktn-sub-tags">
+          <div class="ktn-sub-tags__label">タグ · Tags</div>
+          <ul class="ktn-tag-pills" aria-label="タグ">
+            <li><a class="ktn-tag-pill" href="#">絵画</a></li>
+            <li><a class="ktn-tag-pill" href="#">現代美術</a></li>
+            <li><a class="ktn-tag-pill" href="#">オノマトペ</a></li>
+            <li><a class="ktn-tag-pill" href="#">東京</a></li>
+            <li><a class="ktn-tag-pill" href="#">個展なび</a></li>
           </ul>
         </div>
 
         <!-- おすすめのクリエイター -->
         <section class="p2-related">
           <div class="ktn-section__head">
-            <h2 class="ktn-section__title">おすすめのクリエイター<span class="p2-related__en">Recommended</span></h2>
+            <h2 class="ktn-section__title">おすすめのクリエイター — <span class="ktn-sec-en">Recommended</span></h2>
             <a href="#" class="ktn-section__more">もっと見る →</a>
           </div>
           <div class="masonry">
@@ -616,3 +616,4 @@
 </script>
 </body>
 </html>
+
