@@ -88,7 +88,7 @@
   <main class="ktn-main" id="ktnMain">
 
     <!-- A. ヒーローエリア -->
-    <div class="p3-head">
+    <div class="p3-head" id="p3Hero">
       <div class="p3-head__inner">
         <!-- 上段: 画像 + 情報 + アクション -->
         <div class="p3-head__top">
@@ -139,16 +139,21 @@
     </nav>
 
     <!-- メインコンテンツ -->
-    <div class="p3-main">
+    <div class="ktn-content p3-layout-wrap">
+      <div class="p3-layout">
 
-      <!-- C. 展覧会 -->
-      <section id="p3-sec-exhibitions" class="p3-box">
-        <div class="ktn-section__head">
-          <span class="ktn-section__title">展覧会 — <span class="ktn-sec-en">Exhibition</span></span>
-          <a class="ktn-section__more" href="kotennavi-p3-1.html">すべての展覧会 →</a>
-        </div>
+        <!-- 左カラム -->
+        <div class="p3-layout__main">
 
-        <div class="p3-exhibitions-grid">
+          <!-- C. 展覧会 -->
+          <section id="p3-sec-exhibitions" class="p2-ic is-open">
+            <div class="p2-ic__head">
+              <span class="p2-ic__head-title">展覧会 — <span class="ktn-sec-en">Exhibition</span></span>
+              <a class="ktn-section__more" href="kotennavi-p3-1.html">すべての展覧会 →</a>
+            </div>
+            <div class="p2-ic__body">
+
+          <div class="p3-exhibitions-grid">
           <div class="p3-exh-item">
             <div class="p3-exh-item__label"><span class="sb sb-live"><span class="pulse"></span>開催中</span></div>
             <a class="ec" href="kotennavi-p2.html">
@@ -325,27 +330,27 @@
           <span>過去 <strong id="p3ArchiveCount">10</strong> 件の展覧会アーカイブを掲載中</span>
           <span class="p3-archive-link__arr">→</span>
         </a>
-      </section>
 
-      <!-- D. 作品 -->
-      <section id="p3-sec-works" class="p3-box">
-        <div class="ktn-section__head">
-          <span class="ktn-section__title">作品 — <span class="ktn-sec-en">Works</span></span>
-          <a class="ktn-section__more" href="kotennavi-p3-3.html">作品一覧 →</a>
-        </div>
-        <div class="p3-works-masonry" id="p3WorksGrid"><!-- JS生成 --></div>
-      </section>
+            </div><!-- /p2-ic__body -->
+          </section><!-- /C. 展覧会 -->
 
-      <!-- F. プロフィール（2カラム） -->
-      <section id="p3-sec-profile">
-        <div class="p3-prof-layout">
-
-          <!-- 左カラム -->
-          <div class="p3-prof-main p3-box">
-
-            <div class="ktn-section__head">
-              <span class="ktn-section__title">クリエイター情報 — <span class="ktn-sec-en">Profile</span></span>
+          <!-- D. 作品 -->
+          <section id="p3-sec-works" class="p2-ic is-open">
+            <div class="p2-ic__head">
+              <span class="p2-ic__head-title">作品 — <span class="ktn-sec-en">Works</span></span>
+              <a class="ktn-section__more" href="kotennavi-p3-3.html">作品一覧 →</a>
             </div>
+            <div class="p2-ic__body">
+              <div class="p3-works-masonry" id="p3WorksGrid"><!-- JS生成 --></div>
+            </div>
+          </section><!-- /D. 作品 -->
+
+          <!-- F. プロフィール -->
+          <section id="p3-sec-profile" class="p2-ic is-open">
+            <div class="p2-ic__head">
+              <span class="p2-ic__head-title">クリエイター情報 — <span class="ktn-sec-en">Profile</span></span>
+            </div>
+            <div class="p2-ic__body">
 
             <h2 class="p3-prof-name">田中透</h2>
             <div class="p3-prof-name-en ktn-en-sub">TANAKA Toru</div>
@@ -413,21 +418,24 @@
               <span><span class="p3-prof-dates__label">最終更新</span>2026.03.15</span>
             </div>
 
-          </div><!-- /p3-prof-main -->
+            </div><!-- /p2-ic__body -->
+          </section><!-- /F. プロフィール -->
 
-          <!-- 右カラム -->
-          <div class="p3-prof-side">
+        </div><!-- /p3-layout__main -->
+
+        <!-- 右カラム -->
+        <aside class="p3-layout__side">
 
           <!-- R-1. CTAウィジェット -->
-          <div class="p3-side-card p3-box p3-side-cta ktn-cta-widget" data-cta-name="田中 透" data-cta-type="creator" data-cta-url="kotennavi-p3.html" data-cta-action="watch">
+          <div class="p2-side-card p3-side-cta ktn-cta-widget" data-cta-name="田中 透" data-cta-type="creator" data-cta-url="kotennavi-p3.html" data-cta-action="watch">
             <div class="p2-action-widget__btn-row">
               <div class="p2aw-item">
                 <button class="ktn-btn p3-action-watch-btn" id="p3WatchSide" data-off="watch" data-on="watching" data-action="watch">
                   <svg viewBox="0 0 16 16" fill="none" width="15" height="15">
-                    <circle cx="8" cy="8" r="7" fill="#7a8a99" opacity=".45"/>
-                    <circle class="wi-dark" cx="8" cy="8" r="2.6"/>
+                    <circle cx="8" cy="8" r="7" fill="#7a8a99" opacity=".3"/>
+                    <circle class="wi-inner" cx="8" cy="8" r="2.6"/>
                   </svg>
-                  <span class="ktn-btn__lbl">watch</span><span class="tip">ウォッチする</span>
+                  watch<span class="tip">ウォッチする</span>
                 </button>
                 <div class="p2aw-stat p2aw-stat--link" onclick="openWatcherModal()" role="button" tabindex="0">
                   <span class="p2aw-num" id="p3WatchNum">34</span>
@@ -459,171 +467,209 @@
             </button>
           </div>
 
-          <!-- R-2. 開催中の展覧会 -->
-          <div class="p3-side-card p3-box p3-side-exhibition" id="p3SideExhibitionCard">
-            <div class="ktn-section__head">
-              <span class="ktn-section__title">開催中 — <span class="ktn-sec-en">Exhibition</span></span>
-            </div>
-            <div id="p3SideExhibition"></div>
-          </div>
-
-          <!-- R-3. 記事 -->
-          <div id="p3-sec-articles" class="p3-side-card p3-box p3-side-articles">
-            <div class="ktn-section__head">
-              <span class="ktn-section__title">記事 — <span class="ktn-sec-en">Articles</span></span>
+          <!-- R-2. 記事 -->
+          <div id="p3-sec-articles" class="p2-ic is-open p3-side-articles">
+            <div class="p2-ic__head">
+              <span class="p2-ic__head-title">田中透の記事 — <span class="ktn-sec-en">Articles</span></span>
               <a href="kotennavi-p3-2.html" class="ktn-section__more">記事一覧 →</a>
             </div>
-            <div id="p3SideArticlesList"></div>
+            <div class="p2-ic__body">
+              <div id="p3SideArticlesList"></div>
+            </div>
           </div>
 
-          <!-- R-4. LIAISONカード（creator/adminのみ表示） -->
-          <div class="p3-side-card p3-box p3-side-liaison" id="p3SideLiaison">
-            <div class="p3-side-liaison__badge">
-              <span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>
+          <!-- R-3. 同ジャンルの展覧会 -->
+          <div class="p2-side-card p3-side-rel-exh">
+            <div class="p2-side-nearby__head">
+              <span class="p2-side-nearby__title">アートの展覧会 — <span class="ktn-sec-en">Related</span></span>
+              <a href="#" class="p2-side-nearby__more">すべて →</a>
             </div>
-            <div class="p3-side-liaison__desc">作品を出品中 · 5点</div>
-            <a href="kotennavi-p3-3.html" class="p3-side-liaison__link">LIAISON作品を見る →</a>
+            <div id="p3RelExhList">
+              <a class="p2-side-ec" href="#">
+                <div class="p2-side-ec__poster" style="background:linear-gradient(135deg,#c8d4e0,#8aaac8)"></div>
+                <div class="p2-side-ec__body">
+                  <div class="p2-side-ec__badge-row"><span class="cb cb-content cb-exhibition">exhibition</span><span class="sb sb-live"><span class="pulse"></span>開催中</span></div>
+                  <div class="p2-side-ec__name">モノクロームの詩</div>
+                  <div class="p2-side-ec__venue">東京 · Gallery SOIL 渋谷</div>
+                  <div class="p2-side-ec__period">2026. 03.01 — 03.30</div>
+                </div>
+                <button class="ktn-icon-btn" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault()"><svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg><span class="tip">興味ある！に追加する</span></button>
+              </a>
+              <a class="p2-side-ec" href="#">
+                <div class="p2-side-ec__poster" style="background:linear-gradient(135deg,#e0d4c8,#c8a888)"></div>
+                <div class="p2-side-ec__body">
+                  <div class="p2-side-ec__badge-row"><span class="cb cb-content cb-exhibition">exhibition</span><span class="sb sb-live"><span class="pulse"></span>開催中</span></div>
+                  <div class="p2-side-ec__name">光と影の境界線 — 現代絵画の探求</div>
+                  <div class="p2-side-ec__venue">大阪 · Art Space KITO</div>
+                  <div class="p2-side-ec__period">2026. 02.20 — 03.15</div>
+                </div>
+                <button class="ktn-icon-btn" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault()"><svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg><span class="tip">興味ある！に追加する</span></button>
+              </a>
+              <a class="p2-side-ec" href="#">
+                <div class="p2-side-ec__poster" style="background:linear-gradient(135deg,#d4e0c8,#98b878)"></div>
+                <div class="p2-side-ec__body">
+                  <div class="p2-side-ec__badge-row"><span class="cb cb-content cb-exhibition">exhibition</span><span class="sb sb-soon">近日開催</span></div>
+                  <div class="p2-side-ec__name">春の色彩</div>
+                  <div class="p2-side-ec__venue">神奈川 · art Truth</div>
+                  <div class="p2-side-ec__period">2026. 05.10 — 05.16</div>
+                </div>
+                <button class="ktn-icon-btn" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault()"><svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg><span class="tip">興味ある！に追加する</span></button>
+              </a>
+            </div>
           </div>
 
-          </div><!-- /p3-prof-side -->
-
-        </div><!-- /p3-prof-layout -->
-      </section>
-
-    </div><!-- /p3-main -->
-
-    <!-- G. おすすめのクリエイター -->
-    <div class="p3-recommended">
-      <div class="p3-recommended__inner">
-
-        <!-- タグ -->
-        <div class="ktn-sub-tags">
-          <div class="ktn-sub-tags__label">タグ · Tags</div>
-          <ul class="ktn-tag-pills" aria-label="タグ">
-            <li><a class="ktn-tag-pill" href="#">絵画</a></li>
-            <li><a class="ktn-tag-pill" href="#">現代美術</a></li>
-            <li><a class="ktn-tag-pill" href="#">オノマトペ</a></li>
-            <li><a class="ktn-tag-pill" href="#">東京</a></li>
-            <li><a class="ktn-tag-pill" href="#">個展なび</a></li>
-          </ul>
-        </div>
-
-        <!-- おすすめのクリエイター -->
-        <section class="p2-related">
-          <div class="ktn-section__head">
-            <h2 class="ktn-section__title">おすすめのクリエイター — <span class="ktn-sec-en">Recommended</span></h2>
-            <a href="#" class="ktn-section__more">もっと見る →</a>
+          <!-- 右カラム広告 -->
+          <div class="p2-side-ad">
+            <div class="p2-side-ad__slot">広告エリア（300×250 / レクタングル）</div>
           </div>
-          <div class="masonry">
-            <div class="masonry-item">
-              <a class="cc" href="kotennavi-p3.html">
-                <div class="cc__top">
-                  <div class="cc__avatar av-c1"><div class="cc__avatar-ph">小</div></div>
-                  <div class="cc__badge-row">
-                    <span class="cb cb-creator">creator</span>
-                    <span class="sb">開催中/開催予定</span>
-                  </div>
-                  <div class="cc__name">小野 友美</div>
-                  <div class="cc__genre">油彩・ドローイング</div>
-                  <div class="cc__watch">
-                    <button class="ktn-btn on" onclick="this.classList.toggle('on');event.preventDefault()">
-                      <svg width="14" height="14"><use href="#icon-watch" color="#3a90e0"/></svg>
-                      watching<span class="tip">ウォッチを解除する</span>
-                    </button>
-                  </div>
-                </div>
-                <div class="cc__foot">
-                  <div class="pc-counts">
-                    <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>8</span>
-                    <span class="sep"></span>
-                    <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>124</span>
-                  </div>
-                </div>
-              </a>
-            </div>
-            <div class="masonry-item">
-              <a class="cc" href="kotennavi-p3.html">
-                <div class="cc__top">
-                  <div class="cc__avatar av-c2"><div class="cc__avatar-ph">佐</div></div>
-                  <div class="cc__badge-row">
-                    <span class="cb cb-creator">creator</span>
-                  </div>
-                  <div class="cc__name">佐藤 一朗</div>
-                  <div class="cc__genre">彫刻・木工</div>
-                  <div class="cc__watch">
-                    <button class="ktn-btn" onclick="this.classList.toggle('on');event.preventDefault()">
-                      <svg width="14" height="14"><use href="#icon-watch" color="#7a8a99"/></svg>
-                      watch<span class="tip">ウォッチする</span>
-                    </button>
-                  </div>
-                </div>
-                <div class="cc__foot">
-                  <div class="pc-counts">
-                    <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>5</span>
-                    <span class="sep"></span>
-                    <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>67</span>
-                  </div>
-                </div>
-              </a>
-            </div>
-            <div class="masonry-item">
-              <a class="cc" href="kotennavi-p3.html">
-                <div class="cc__top">
-                  <div class="cc__avatar av-c3"><div class="cc__avatar-ph">山</div></div>
-                  <div class="cc__badge-row">
-                    <span class="cb cb-creator">creator</span>
-                    <span class="sb">開催中/開催予定</span>
-                  </div>
-                  <div class="cc__name">山田 葵</div>
-                  <div class="cc__genre">写真・ミクストメディア</div>
-                  <div class="cc__watch">
-                    <button class="ktn-btn" onclick="this.classList.toggle('on');event.preventDefault()">
-                      <svg width="14" height="14"><use href="#icon-watch" color="#7a8a99"/></svg>
-                      watch<span class="tip">ウォッチする</span>
-                    </button>
-                  </div>
-                </div>
-                <div class="cc__foot">
-                  <div class="pc-counts">
-                    <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>6</span>
-                    <span class="sep"></span>
-                    <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>88</span>
-                  </div>
-                </div>
-              </a>
-            </div>
-            <div class="masonry-item">
-              <a class="cc" href="kotennavi-p3.html">
-                <div class="cc__top">
-                  <div class="cc__avatar av-c4"><div class="cc__avatar-ph">林</div></div>
-                  <div class="cc__badge-row">
-                    <span class="cb cb-creator">creator</span>
-                  </div>
-                  <div class="cc__name">林 美咲</div>
-                  <div class="cc__genre">版画・イラスト</div>
-                  <div class="cc__watch">
-                    <button class="ktn-btn" onclick="this.classList.toggle('on');event.preventDefault()">
-                      <svg width="14" height="14"><use href="#icon-watch" color="#7a8a99"/></svg>
-                      watch<span class="tip">ウォッチする</span>
-                    </button>
-                  </div>
-                </div>
-                <div class="cc__foot">
-                  <div class="pc-counts">
-                    <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>3</span>
-                    <span class="sep"></span>
-                    <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>45</span>
-                  </div>
-                </div>
-              </a>
-            </div>
-          </div><!-- /masonry -->
-        </section><!-- /p2-related -->
 
-      </div><!-- /p3-recommended__inner -->
-    </div><!-- /p3-recommended -->
+        </aside><!-- /p3-layout__side -->
+
+      </div><!-- /p3-layout -->
+    </div><!-- /p3-layout-wrap -->
 
   </main>
+
+  <div class="ktn-ad-band">
+    <div class="ktn-ad-band__inner">
+      <div class="ktn-ad-band__slot">広告エリア（728×90 / レスポンシブ）</div>
+    </div>
+  </div>
+
+  <!-- 関連情報ヘッド -->
+  <div class="ktn-related-band">
+    <div class="ktn-related-band__inner">
+      <h2 class="ktn-related-band__heading">関連情報 — <span class="ktn-sec-en">Related</span></h2>
+      <div class="ktn-related-band__ctx">
+        <span class="cb cb-creator">creator</span>
+        <a href="#p3Hero" class="ktn-related-band__link">田中透</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- タグ -->
+  <div class="ktn-sub-tags">
+    <div class="ktn-sub-tags__label">タグ · Tags</div>
+    <ul class="ktn-tag-pills" aria-label="タグ">
+      <li><a class="ktn-tag-pill" href="#">絵画</a></li>
+      <li><a class="ktn-tag-pill" href="#">現代美術</a></li>
+      <li><a class="ktn-tag-pill" href="#">オノマトペ</a></li>
+      <li><a class="ktn-tag-pill" href="#">東京</a></li>
+      <li><a class="ktn-tag-pill" href="#">個展なび</a></li>
+    </ul>
+  </div>
+
+  <!-- おすすめのクリエイター -->
+  <div class="ktn-sub-rec">
+    <div class="ktn-section__head">
+      <h2 class="ktn-section__title">おすすめのクリエイター — <span class="ktn-sec-en">Recommended</span></h2>
+      <a href="#" class="ktn-section__more">もっと見る →</a>
+    </div>
+    <div class="masonry">
+      <div class="masonry-item">
+        <a class="cc" href="kotennavi-p3.html">
+          <div class="cc__top">
+            <div class="cc__avatar av-c1"><div class="cc__avatar-ph">小</div></div>
+            <div class="cc__badge-row">
+              <span class="cb cb-creator">creator</span>
+              <span class="sb">開催中/開催予定</span>
+            </div>
+            <div class="cc__name">小野 友美</div>
+            <div class="cc__genre">油彩・ドローイング</div>
+            <div class="cc__watch">
+              <button class="ktn-btn on" onclick="this.classList.toggle('on');event.preventDefault()">
+                <svg width="14" height="14"><use href="#icon-watch" color="#3a90e0"/></svg>
+                watching<span class="tip">ウォッチを解除する</span>
+              </button>
+            </div>
+          </div>
+          <div class="cc__foot">
+            <div class="pc-counts">
+              <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>8</span>
+              <span class="sep"></span>
+              <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>124</span>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="masonry-item">
+        <a class="cc" href="kotennavi-p3.html">
+          <div class="cc__top">
+            <div class="cc__avatar av-c2"><div class="cc__avatar-ph">佐</div></div>
+            <div class="cc__badge-row">
+              <span class="cb cb-creator">creator</span>
+            </div>
+            <div class="cc__name">佐藤 一朗</div>
+            <div class="cc__genre">彫刻・木工</div>
+            <div class="cc__watch">
+              <button class="ktn-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                <svg width="14" height="14"><use href="#icon-watch" color="#7a8a99"/></svg>
+                watch<span class="tip">ウォッチする</span>
+              </button>
+            </div>
+          </div>
+          <div class="cc__foot">
+            <div class="pc-counts">
+              <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>5</span>
+              <span class="sep"></span>
+              <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>67</span>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="masonry-item">
+        <a class="cc" href="kotennavi-p3.html">
+          <div class="cc__top">
+            <div class="cc__avatar av-c3"><div class="cc__avatar-ph">山</div></div>
+            <div class="cc__badge-row">
+              <span class="cb cb-creator">creator</span>
+              <span class="sb">開催中/開催予定</span>
+            </div>
+            <div class="cc__name">山田 葵</div>
+            <div class="cc__genre">写真・ミクストメディア</div>
+            <div class="cc__watch">
+              <button class="ktn-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                <svg width="14" height="14"><use href="#icon-watch" color="#7a8a99"/></svg>
+                watch<span class="tip">ウォッチする</span>
+              </button>
+            </div>
+          </div>
+          <div class="cc__foot">
+            <div class="pc-counts">
+              <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>6</span>
+              <span class="sep"></span>
+              <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>88</span>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="masonry-item">
+        <a class="cc" href="kotennavi-p3.html">
+          <div class="cc__top">
+            <div class="cc__avatar av-c4"><div class="cc__avatar-ph">林</div></div>
+            <div class="cc__badge-row">
+              <span class="cb cb-creator">creator</span>
+            </div>
+            <div class="cc__name">林 美咲</div>
+            <div class="cc__genre">版画・イラスト</div>
+            <div class="cc__watch">
+              <button class="ktn-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                <svg width="14" height="14"><use href="#icon-watch" color="#7a8a99"/></svg>
+                watch<span class="tip">ウォッチする</span>
+              </button>
+            </div>
+          </div>
+          <div class="cc__foot">
+            <div class="pc-counts">
+              <span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>3</span>
+              <span class="sep"></span>
+              <span class="pc-count pc-count--watch"><svg width="12" height="12"><use href="#icon-watch" color="#7a8a99"/></svg>45</span>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div><!-- /masonry -->
+  </div><!-- /ktn-sub-rec -->
 
   <div class="ktn-ad-band" id="ktnAdBand">
     <div class="ktn-ad-band__inner">
@@ -634,6 +680,23 @@
 
 </div><!-- /content-wrap -->
 </div><!-- /shell -->
+
+<!-- スティッキーCTAバー（スマホ：ヒーロースクロールアウト後に表示） -->
+<div class="p3-sticky-cta" id="p3StickyCta" aria-hidden="true">
+  <div class="p3-sticky-cta__inner">
+    <div class="p3-sticky-cta__name">
+      <span class="cb cb-person cb-creator">CREATOR</span>
+      <span class="p3-sticky-cta__name-text">田中透</span>
+    </div>
+    <button class="p3-sticky-cta__btn" id="p3StickyWatchBtn">
+      <svg viewBox="0 0 16 16" fill="none" width="14" height="14">
+        <circle cx="8" cy="8" r="7" fill="#7a8a99" opacity=".3"/>
+        <circle class="wi-inner" cx="8" cy="8" r="2.6"/>
+      </svg>
+      watch
+    </button>
+  </div>
+</div>
 
 <nav class="ktn-bottom-nav" id="ktnBottomNav">
   <div class="ktn-bottom-nav__inner" id="ktnBottomNavInner"></div>
@@ -735,10 +798,10 @@
     newBadges: { exhibitions: true, works: false, articles: true },
     archiveCount: 10,
     works: [
-      { id:'w1', title:'《ふわふわ》',      year:'2026', medium:'油彩',    isNew:true,  isLiaison:true,  bg:'linear-gradient(135deg,#c8e8d8,#8ab8a0)' },
-      { id:'w2', title:'《ドキドキ #3》',   year:'2025', medium:'混合技法', isNew:false, isLiaison:true,  bg:'linear-gradient(135deg,#e8c8c8,#c89898)' },
-      { id:'w3', title:'《ざわざわ（夜）》', year:'2026', medium:'アクリル', isNew:true,  isLiaison:false, bg:'linear-gradient(135deg,#2a3a5a,#4a5a7a)' },
-      { id:'w4', title:'《シュワシュワ》',   year:'2025', medium:'油彩',    isNew:false, isLiaison:false, bg:'linear-gradient(135deg,#c8d8e8,#9ab8d0)' },
+      { id:'w1', title:'《ふわふわ》',      year:'2026', medium:'油彩',    size:'45.5×38.0 cm', status:'sale',    interest:22, name:'田中 透', creatorUrl:'./kotennavi-p3.html', isNew:true,  isLiaison:true,  bg:'linear-gradient(135deg,#c8e8d8,#8ab8a0)' },
+      { id:'w2', title:'《ドキドキ #3》',   year:'2025', medium:'混合技法', size:'60.6×50.0 cm', status:'inquiry', interest:18, name:'田中 透', creatorUrl:'./kotennavi-p3.html', isNew:false, isLiaison:true,  bg:'linear-gradient(135deg,#e8c8c8,#c89898)' },
+      { id:'w3', title:'《ざわざわ（夜）》', year:'2026', medium:'アクリル', size:'72.7×60.6 cm', status:'nsale',   interest:31, name:'田中 透', creatorUrl:'./kotennavi-p3.html', isNew:true,  isLiaison:false, bg:'linear-gradient(135deg,#2a3a5a,#4a5a7a)' },
+      { id:'w4', title:'《シュワシュワ》',   year:'2025', medium:'油彩',    size:'53.0×45.5 cm', status:'sale',    interest:14, name:'田中 透', creatorUrl:'./kotennavi-p3.html', isNew:false, isLiaison:false, bg:'linear-gradient(135deg,#c8d8e8,#9ab8d0)' },
     ],
     exhibitions: [
       {
@@ -747,9 +810,9 @@
         status:'live', remain:'残り12日',
         isLiaison:false, isLiaisonPlus:true,
         works:[
-          { id:'w1', title:'《ふわふわ》',      status:'sale',     bg:'linear-gradient(135deg,#b8d8cc,#6a9e8a)', price:'¥120,000', isNew:true  },
-          { id:'w2', title:'《ドキドキ #3》',   status:'sale',     bg:'linear-gradient(135deg,#d4b8c8,#9a6a88)', price:'¥85,000',  isNew:false, queue:3 },
-          { id:'w3', title:'《ざわざわ（夜）》', status:'sold',     bg:'linear-gradient(135deg,#2a3548,#1a2535)', price:'¥98,000',  isNew:true  }
+          { id:'w1', title:'《ふわふわ》',      year:'2026', medium:'油彩',    size:'45.5×38.0 cm', status:'sale',  interest:22, name:'田中 透', creatorUrl:'./kotennavi-p3.html', bg:'linear-gradient(135deg,#b8d8cc,#6a9e8a)', price:120000 },
+          { id:'w2', title:'《ドキドキ #3》',   year:'2025', medium:'混合技法', size:'60.6×50.0 cm', status:'sale',  interest:18, name:'田中 透', creatorUrl:'./kotennavi-p3.html', bg:'linear-gradient(135deg,#d4b8c8,#9a6a88)', price:85000, queue:3 },
+          { id:'w3', title:'《ざわざわ（夜）》', year:'2026', medium:'アクリル', size:'72.7×60.6 cm', status:'sold',  interest:41, name:'田中 透', creatorUrl:'./kotennavi-p3.html', bg:'linear-gradient(135deg,#2a3548,#1a2535)', price:98000 }
         ]
       },
       {
@@ -758,10 +821,10 @@
         status:'live', remain:'残り27日',
         isLiaison:false, isLiaisonPlus:true,
         works:[
-          { id:'w6', title:'《しんしん》',   status:'sale',    bg:'linear-gradient(135deg,#c8d8e8,#7a9ab8)', price:'¥68,000',  isNew:true  },
-          { id:'w7', title:'《ぽつぽつ》',   status:'inquiry', bg:'linear-gradient(135deg,#e8d8c0,#b8a070)', price:'¥145,000', isNew:false },
-          { id:'w8', title:'《しずか》',     status:'sale',    bg:'linear-gradient(135deg,#d0e0d0,#809880)', price:'¥52,000',  isNew:false },
-          { id:'w9', title:'《もやもや》',   status:'sold',    bg:'linear-gradient(135deg,#3a3040,#1a1828)', price:'¥110,000', isNew:false }
+          { id:'w6', title:'《しんしん》',   year:'2025', medium:'油彩',    size:'38.0×45.5 cm',  status:'sale',    interest:16, name:'田中 透', creatorUrl:'./kotennavi-p3.html', bg:'linear-gradient(135deg,#c8d8e8,#7a9ab8)', price:68000  },
+          { id:'w7', title:'《ぽつぽつ》',   year:'2025', medium:'木版画',  size:'297×420 mm',    status:'inquiry', interest:9,  name:'田中 透', creatorUrl:'./kotennavi-p3.html', bg:'linear-gradient(135deg,#e8d8c0,#b8a070)', price:145000 },
+          { id:'w8', title:'《しずか》',     year:'2026', medium:'混合技法', size:'53.0×41.0 cm',  status:'sale',    interest:12, name:'田中 透', creatorUrl:'./kotennavi-p3.html', bg:'linear-gradient(135deg,#d0e0d0,#809880)', price:52000  },
+          { id:'w9', title:'《もやもや》',   year:'2024', medium:'アクリル', size:'60.6×50.0 cm',  status:'sold',    interest:28, name:'田中 透', creatorUrl:'./kotennavi-p3.html', bg:'linear-gradient(135deg,#3a3040,#1a1828)', price:110000 }
         ]
       },
       {
@@ -770,9 +833,9 @@
         status:'live', remain:'残り7日',
         isLiaison:true, isLiaisonPlus:false,
         works:[
-          { id:'w12', title:'《ざわざわ（朝）》', status:'sale',  bg:'linear-gradient(135deg,#d8e8c0,#90a870)' },
-          { id:'w13', title:'《ころころ》',       status:'nsale', bg:'linear-gradient(135deg,#e0c8d8,#a08098)' },
-          { id:'w14', title:'《きらきら》',       status:'sold',  bg:'linear-gradient(135deg,#e8e0b0,#b0a860)' }
+          { id:'w12', title:'《ざわざわ（朝）》', year:'2026', medium:'油彩',    size:'45.5×38.0 cm', status:'sale',  interest:11, name:'田中 透', creatorUrl:'./kotennavi-p3.html', bg:'linear-gradient(135deg,#d8e8c0,#90a870)' },
+          { id:'w13', title:'《ころころ》',       year:'2025', medium:'アクリル', size:'53.0×45.5 cm', status:'nsale', interest:7,  name:'田中 透', creatorUrl:'./kotennavi-p3.html', bg:'linear-gradient(135deg,#e0c8d8,#a08098)' },
+          { id:'w14', title:'《きらきら》',       year:'2025', medium:'混合技法', size:'60.6×50.0 cm', status:'sold',  interest:19, name:'田中 透', creatorUrl:'./kotennavi-p3.html', bg:'linear-gradient(135deg,#e8e0b0,#b0a860)' }
         ]
       }
     ],

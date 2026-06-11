@@ -144,6 +144,15 @@
         <!-- 左：出展者カードリスト -->
         <div class="p2-4-main" style="margin-top:20px">
 
+          <div class="p2-4-section__head">
+            <div class="p2-4-section__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </div>
+            <h2 class="p2-4-section__title">出展者 <span class="ktn-sec-en">Exhibitors</span></h2>
+          </div>
+
           <!-- 出展者データが4人以上の場合はグリッド形式に自動切替（JSで制御） -->
           <div class="p2-4-creator-list" id="p2CreatorList">
 
@@ -171,14 +180,13 @@
                   </div>
                 </div>
                 <div class="p2-4-creator-card__action">
-                  <button class="ktn-btn" id="watchBtn0"
-                          onclick="this.classList.toggle('on');event.preventDefault()"
-                          data-off="watch" data-on="watching" data-action="watch">
-                    <svg viewBox="0 0 16 16" fill="none">
-                      <circle cx="8" cy="8" r="7" fill="#7a8a99" opacity=".45"/>
+                  <button class="ktn-btn" data-off="watch" data-on="watching" data-action="watch"
+                          onclick="handleAction(this,'watch');event.preventDefault()">
+                    <svg viewBox="0 0 16 16" fill="none" width="15" height="15">
+                      <circle cx="8" cy="8" r="7" fill="#7a8a99" opacity=".3"/>
                       <circle class="wi-inner" cx="8" cy="8" r="2.6"/>
                     </svg>
-                    watch
+                    watch<span class="tip">ウォッチする</span>
                   </button>
                 </div>
               </div>
