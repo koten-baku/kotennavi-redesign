@@ -903,6 +903,13 @@ KTN.init = function (opts) {
   if (opts.page) window.ktnState.page = opts.page;
   if (opts.role) window.ktnState.role = opts.role;
 
+  function _syncHH() {
+    var hdr = document.getElementById('ktnHeader');
+    if (!hdr) return;
+    var h = hdr.offsetHeight;
+    if (h > 10) document.documentElement.style.setProperty('--hh', h + 'px');
+  }
+
   function _renderHeader() {
     var page = window.ktnState.page;
     var role = window.ktnState.role;
@@ -911,10 +918,21 @@ KTN.init = function (opts) {
     var acEl = document.getElementById('ktnActs');
     if (bcEl) bcEl.innerHTML = renderBc(page);
     if (acEl) acEl.innerHTML = getActions(page, role);
+    requestAnimationFrame(_syncHH);
   }
 
   // common.jsのrenderAllから呼ばれるフック
   window.ktnRender = _renderHeader;
+
+  /* innerWidth が変わった時だけ再計測する。
+     iOS オーバースクロール・URLバー表示切替は innerHeight しか変わらないため無視できる。 */
+  var _prevInnerW = 0;
+  function _onResize() {
+    var w = window.innerWidth;
+    if (w === _prevInnerW) return;
+    _prevInnerW = w;
+    requestAnimationFrame(_syncHH);
+  }
 
   function _runPage() {
     _renderHeader();
@@ -922,6 +940,8 @@ KTN.init = function (opts) {
     renderBottomNav();
     renderTagbar(window.ktnState.page);
     updateActiveState(window.ktnState.page);
+    _prevInnerW = window.innerWidth;
+    window.addEventListener('resize', _onResize, { passive: true });
     /* ページ固有関数を実行（kotennavi-pages.js で定義） */
     var pageId = window.ktnState.page;
     if (window.KTN.pages && typeof window.KTN.pages[pageId] === 'function') {
@@ -946,6 +966,8 @@ KTN.init = function (opts) {
 function openCheckinModal() {
   var role = (window.ktnState && window.ktnState.role) || 'guest';
   var isLoggedIn = (role !== 'guest');
+  var _CI_ICON = '<svg viewBox="0 0 16 16" fill="none"><circle cx="10" cy="5" r="4" fill="#fff" opacity=".9"/><circle cx="5" cy="11" r="2.4" fill="#fff" opacity=".75"/></svg>';
+  var _CLOSE_BTN = '<button class="ktn-auth-close" onclick="closeCheckinModal()" aria-label="閉じる"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>';
 
   var existing = document.getElementById('ktnCheckinModal');
   if (existing) existing.remove();
@@ -954,15 +976,13 @@ function openCheckinModal() {
   if (!isLoggedIn) {
     /* ── 未ログイン：ログイン促進 ── */
     html =
-      '<div class="ktn-modal-overlay" id="ktnCheckinModal" onclick="if(event.target===this)closeCheckinModal()">' +
-        '<div class="ktn-modal">' +
+      '<div class="ktn-auth-overlay" id="ktnCheckinModal" onclick="if(event.target===this)closeCheckinModal()">' +
+      '<div class="ktn-auth-modal">' +
+      '<div class="ktn-auth-top">' +
           '<button class="ktn-modal__close" onclick="closeCheckinModal()" aria-label="閉じる">\u00d7</button>' +
-          '<div class="ktn-modal__inner">' +
-            '<div class="ktn-modal__icon">' +
-              '<svg viewBox="0 0 16 16" fill="none" width="44" height="44"><circle cx="10" cy="5" r="4" fill="#7a8a99" opacity=".45"/><circle cx="5" cy="11" r="2.4" fill="#7a8a99" opacity=".45"/></svg>' +
-            '</div>' +
-            '<div class="ktn-modal__title">ログインが必要です</div>' +
-            '<div class="ktn-modal__desc">ウォッチ・興味ある！・チェックインなどの<br>My機能が使えるようになります</div>' +
+      '<div class="ktn-auth-icon">' + _CI_ICON + '</div>' +
+      '<div class="ktn-auth-ttl">ログインが必要です</div>' +
+            '<div class="ktn-auth-sub">ウォッチ・興味ある！・チェックインなどの<br>My機能が使えるようになります</div>' +
             '<div class="ktn-modal__btn-col">' +
               '<a href="/login" class="ktn-btn ktn-btn--primary">ログイン</a>' +
               '<a href="/register" class="ktn-btn">新規ユーザー登録（無料）</a>' +
@@ -1021,6 +1041,85 @@ function openCheckinModal() {
 function closeCheckinModal() {
   var m = document.getElementById('ktnCheckinModal');
   if (m) m.remove();
+}
+
+/* ── openCheckinModal（旧実装を上書き） ── */
+function openCheckinModal() {
+  var role = (window.ktnState && window.ktnState.role) || 'guest';
+  var isLoggedIn = (role !== 'guest');
+
+  var existing = document.getElementById('ktnCheckinModal');
+  if (existing) existing.remove();
+
+  var CLOSE_BTN = '<button class="ktn-auth-close" onclick="closeCheckinModal()" aria-label="閉じる"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>';
+  var CI_ICON = '<svg viewBox="0 0 16 16" fill="none"><circle cx="10" cy="5" r="4" fill="#fff" opacity=".9"/><circle cx="5" cy="11" r="2.4" fill="#fff" opacity=".75"/></svg>';
+  var html;
+
+  if (!isLoggedIn) {
+    html =
+      '<div class="ktn-auth-overlay" id="ktnCheckinModal" onclick="if(event.target===this)closeCheckinModal()">' +
+      '<div class="ktn-auth-modal">' +
+      '<div class="ktn-auth-top">' +
+      CLOSE_BTN +
+      '<div class="ktn-auth-icon">' + CI_ICON + '</div>' +
+      '<div class="ktn-auth-ttl">ログインが必要です</div>' +
+      '<div class="ktn-auth-sub">ウォッチ・興味ある！・チェックインなどの<br>My機能が使えるようになります</div>' +
+      '</div>' +
+      '<div class="ktn-auth-body">' +
+      '<div class="ktn-auth-btns">' +
+      '<button class="ktn-auth-btn-primary" onclick="closeCheckinModal()">ログイン</button>' +
+      '<div class="ktn-auth-divider">または</div>' +
+      '<button class="ktn-auth-btn-secondary" onclick="closeCheckinModal()">新規ユーザー登録（無料）</button>' +
+      '</div>' +
+      '<div class="ktn-auth-note">登録は無料です。<a href="#">利用規約</a>・<a href="#">プライバシーポリシー</a>に同意のうえご利用ください。</div>' +
+      '</div>' +
+      '</div>' +
+      '</div>';
+  } else {
+    var now = new Date();
+    var defaultDate = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+    html =
+      '<div class="ktn-auth-overlay" id="ktnCheckinModal" onclick="if(event.target===this)closeCheckinModal()">' +
+      '<div class="ktn-auth-modal">' +
+      '<div class="ktn-auth-top ktn-auth-top--compact">' +
+      CLOSE_BTN +
+      '<div class="ktn-auth-icon">' + CI_ICON + '</div>' +
+      '<div class="ktn-auth-ttl">チェックイン＆レビューを書く</div>' +
+      '</div>' +
+      '<div class="ktn-auth-body">' +
+      '<div class="ktn-modal__form-row">' +
+      '<div class="ktn-modal__label">チェックイン日時</div>' +
+      '<input type="date" class="ktn-modal__input" id="ktnCiDate" value="' + defaultDate + '">' +
+    '</div>' +
+    '<div class="ktn-modal__form-row">' +
+    '<div class="ktn-modal__label">評価</div>' +
+    '<div class="ktn-modal__stars" id="ktnStars">' +
+    '<span class="ktn-modal__star" data-v="1" onclick="ktnSetStar(1)">★</span>' +
+    '<span class="ktn-modal__star" data-v="2" onclick="ktnSetStar(2)">★</span>' +
+    '<span class="ktn-modal__star" data-v="3" onclick="ktnSetStar(3)">★</span>' +
+    '<span class="ktn-modal__star" data-v="4" onclick="ktnSetStar(4)">★</span>' +
+    '<span class="ktn-modal__star" data-v="5" onclick="ktnSetStar(5)">★</span>' +
+    '</div>' +
+    '</div>' +
+    '<div class="ktn-modal__form-row">' +
+    '<div class="ktn-modal__label">レビュー</div>' +
+    '<textarea class="ktn-modal__textarea" id="ktnReviewText" placeholder="感想をお書きください…"></textarea>' +
+    '</div>' +
+    '<div class="ktn-modal__form-row">' +
+    '<button class="ktn-modal__photo-btn" type="button">' +
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="14" height="14"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>' +
+    '写真を添付する' +
+    '</button>' +
+    '</div>' +
+      '<button class="ktn-auth-btn-primary ktn-modal__submit" onclick="ktnSubmitCheckin()">投稿する</button>' +
+      '</div>' +
+      '</div>' +
+      '</div>';
+  }
+
+  document.body.insertAdjacentHTML('beforeend', html);
+  var m = document.getElementById('ktnCheckinModal');
+  if (m) requestAnimationFrame(function () { m.classList.add('open'); });
 }
 
 function ktnSetStar(v) {
@@ -1138,10 +1237,12 @@ KTN.cta = (function () {
     var w = _getWidget();
     var name = w && w.dataset.ctaName || '';
     var type = w && w.dataset.ctaType || '';
+    var badge = type === 'creator' ? '<span class="cb cb-person cb-creator">CREATOR</span><br>' :
+                type === 'gallery' ? '<span class="cb cb-person cb-gallery">GALLERY</span><br>' : '';
     var title = name
       ? ((type === 'exhibition' || type === 'work')
           ? '「' + _esc(name) + '」<br>をシェア'
-          : _esc(name) + '<br>をシェア')
+          : badge + _esc(name) + '<br>をシェア')
       : 'このページをシェア';
     var d = document.createElement('div');
     d.id = _QR_OVL;
@@ -1266,13 +1367,14 @@ KTN.cta = (function () {
 
   /* ── CTAボタントグル初期化 ── */
   function initCtaButtons() {
-    document.querySelectorAll('.ktn-cta-widget .ktn-btn[data-action="interest"], .p2-action-widget .ktn-btn[data-action="interest"]').forEach(function (btn) {
+    document.querySelectorAll('.ktn-cta-widget .ktn-btn[data-action], .p2-action-widget .ktn-btn[data-action]').forEach(function (btn) {
       if (btn.dataset.ctaInit) return;
       btn.removeAttribute('onclick');
       btn.dataset.ctaInit = '1';
+      var action = btn.dataset.action || 'interest';
       btn.addEventListener('click', function () {
-        var on = btn.classList.toggle('on');
-        btn.setAttribute('aria-pressed', on.toString());
+        KTN.action.handle(btn, action);
+        btn.setAttribute('aria-pressed', btn.classList.contains('on').toString());
       });
     });
   }
@@ -1339,7 +1441,7 @@ KTN.action = (function () {
   var ACTION_NAMES = { watch: 'watch', interest: 'interest!', checkin: 'check in' };
 
   function handle(btn, action) {
-    if (KTN.role === 'guest') { show(action); return; }
+    if (window.ktnState.role === 'guest') { show(action); return; }
     var isOn = btn.classList.toggle('on');
     var tn = Array.from(btn.childNodes).find(function (n) {
       return n.nodeType === 3 && n.textContent.trim();
@@ -1353,15 +1455,19 @@ KTN.action = (function () {
       var isIcon = btn.classList.contains('ktn-icon-btn');
       tip.textContent = isOn ? (isIcon ? lbl.iconOn : lbl.on) : (isIcon ? lbl.iconOff : lbl.off);
     }
+    btn.blur();
+    btn.classList.add('is-just-clicked');
+    btn.addEventListener('pointerleave', function handler() {
+      btn.classList.remove('is-just-clicked');
+      btn.removeEventListener('pointerleave', handler);
+    });
   }
 
   function show(action) {
     var modal = document.getElementById('ktnAuthModal');
     if (!modal) return;
-    var badge = document.getElementById('ktnAuthBadge');
-    var icon  = document.getElementById('ktnAuthIcon');
-    if (badge) badge.innerHTML = (ACTION_ICONS[action] || '') + ' ' + (ACTION_NAMES[action] || action);
-    if (icon)  icon.innerHTML  =  ACTION_ICONS[action] || '';
+    var icon = document.getElementById('ktnAuthIcon');
+    if (icon) icon.innerHTML = ACTION_ICONS[action] || '';
     modal.classList.add('open');
   }
 
@@ -1384,8 +1490,7 @@ KTN.action = (function () {
       + '</button>'
       + '<div class="ktn-auth-icon" id="ktnAuthIcon"></div>'
       + '<div class="ktn-auth-ttl">ログインが必要です</div>'
-      + '<div class="ktn-auth-sub">ユーザー登録すると、ウォッチ・興味ある！・チェックインなどの<br>My機能がすべて使えるようになります</div>'
-      + '<div class="ktn-auth-action-badge" id="ktnAuthBadge"></div>'
+      + '<div class="ktn-auth-sub">ウォッチ・興味ある！・チェックインなどの<br>My機能がすべて使えるようになります</div>'
       + '</div>'
       + '<div class="ktn-auth-body">'
       + '<div class="ktn-auth-btns">'

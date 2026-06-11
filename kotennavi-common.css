@@ -175,7 +175,7 @@ button{font-family:inherit;cursor:pointer}
   flex-wrap:wrap;
   gap:8px;
   padding:0 24px;
-  min-height:var(--hh);
+  min-height:50px; /* JS描画前の仮高さ。var(--hh)にすると_syncHH()とフィードバックループが生じるため固定値 */
   /* ラップ時のpadding */
   padding-top:8px;
   padding-bottom:8px;
