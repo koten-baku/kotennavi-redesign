@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>個展なび — Content Type Badges</title>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="./kotennavi-common.css">
   <link rel="stylesheet" href="./kotennavi-components.css">
@@ -43,7 +43,7 @@
 
     <div class="badge-grid">
 
-      <div class="group-label">人・組織 (outline)</div>
+      <div class="group-label">人物 (solid + Cinzel uppercase)</div>
 
       <div class="badge-row">
         <span class="badge-name">creator</span>
@@ -67,7 +67,7 @@
         </div>
       </div>
 
-      <div class="group-label" style="margin-top:8px">コンテンツ (left-border)</div>
+      <div class="group-label" style="margin-top:8px">コンテンツ (left-border + Cinzel)</div>
 
       <div class="badge-row">
         <span class="badge-name">exhibition</span>
@@ -314,11 +314,11 @@
   <div class="demo-section">
     <div class="demo-section-ttl">CSS定義 — ナレッジ用コピー</div>
     <div class="code-block" id="cssCode">/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   個展なび — コンテンツタイプバッジ
+   個展なび — コンテンツタイプバッジ（エディトリアル版）
    .cb             : ベース（全バッジ共通）
-   .cb-person      : 人・組織型（outline）
-   .cb-content     : コンテンツ型（left-border）
-   各タイプクラスと組み合わせて使用
+   .cb-person      : 人物型（solid + Cinzel uppercase）
+   .cb-content     : コンテンツ型（left-border + Cinzel uppercase）
+   フォントは Cinzel に統一、形状（塗り vs 左罫線）で人物/コンテンツを区別
    例: &lt;span class="cb cb-person cb-creator"&gt;creator&lt;/span&gt;
        &lt;span class="cb cb-content cb-exhibition"&gt;exhibition&lt;/span&gt;
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
@@ -327,43 +327,49 @@
 .cb {
   display: inline-flex;
   align-items: center;
-  font-family: 'Montserrat', sans-serif;
-  font-size: .48rem;
-  font-weight: 600;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  border-radius: 3px;
+  gap: 4px;
   white-space: nowrap;
   flex-shrink: 0;
   line-height: 1;
 }
 
-/* ── 人・組織型（outline） ── */
+/* ── 人物型（solid + Cinzel uppercase） ── */
 .cb-person {
-  padding: 3px 7px;
-  border: 1px solid currentColor;
-  background: none;
+  font-family: 'Cinzel', serif;
+  font-size: .58rem;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: #fff;
+  padding: 3px 9px;
+  border-radius: 3px;
+  border: none;
 }
-.cb-creator   { color: #2a5f7a; border-color: #5a8fa8; background: rgba(42,95,122,.1); }
-.cb-gallery   { color: #8b5e3c; border-color: #b8895e; background: rgba(139,94,60,.1); }
-.cb-user      { color: #b8608c; border-color: #e8a0c8; background: rgba(232,160,200,.1); }
+.cb-creator   { background: #2a5f7a; color: #fff; }
+.cb-gallery   { background: #8b5e3c; color: #fff; }
+.cb-user      { background: #b8608c; color: #fff; }
 
-/* ── コンテンツ型（left-border） ── */
+/* ── コンテンツ型（left-border + Cinzel uppercase） ── */
 .cb-content {
-  padding: 3px 8px 3px 7px;
+  font-family: 'Cinzel', serif;
+  font-size: .58rem;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: 3px 9px 3px 8px;
   border-radius: 0 3px 3px 0;
   border-left: 2.5px solid currentColor;
 }
 .cb-exhibition { color: #005da7; background: rgba(0,93,167,.08);    border-left-color: #005da7; }
 .cb-article    { color: #2e7a4e; background: rgba(46,122,78,.08);   border-left-color: #2e7a4e; }
-.cb-artwork    { color: #7c3aab; background: rgba(124,58,171,.08);  border-left-color: #7c3aab; }
+.cb-artwork    { color: #6b46a8; background: rgba(107,70,168,.08);  border-left-color: #6b46a8; }
 .cb-review     { color: #b86a10; background: rgba(184,106,16,.08);  border-left-color: #b86a10; }
 .cb-news       { color: #c0392b; background: rgba(192,57,43,.08);   border-left-color: #c0392b; }
 
-/* ── ダーク背景用（.dark 内、または body.dark-theme で上書き） ── */
-.dark .cb-creator   { color: #c8cac0; border-color: #c8cac0; background: rgba(200,202,192,.1); }
-.dark .cb-gallery   { color: #ddc8a8; border-color: #ddc8a8; background: rgba(221,200,168,.1); }
-.dark .cb-user      { color: #f0b8d8; border-color: #f0b8d8; background: rgba(240,184,216,.1); }
+/* ── ダーク背景用 ── */
+.dark .cb-creator   { background: #5a8fa8; color: #fff; }
+.dark .cb-gallery   { background: #b8895e; color: #fff; }
+.dark .cb-user      { background: #e8a0c8; color: #fff; }
 .dark .cb-exhibition{ color: #4da3f5; background: rgba(77,163,245,.1);  border-left-color: #4da3f5; }
 .dark .cb-article   { color: #58c888; background: rgba(88,200,136,.1);  border-left-color: #58c888; }
 .dark .cb-artwork   { color: #c080f0; background: rgba(192,128,240,.1); border-left-color: #c080f0; }
@@ -393,37 +399,43 @@
 const CSS_RAW = `.cb {
   display: inline-flex;
   align-items: center;
-  font-family: 'Montserrat', sans-serif;
-  font-size: .48rem;
-  font-weight: 600;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  border-radius: 3px;
+  gap: 4px;
   white-space: nowrap;
   flex-shrink: 0;
   line-height: 1;
 }
 .cb-person {
-  padding: 3px 7px;
-  border: 1px solid currentColor;
-  background: none;
+  font-family: 'Cinzel', serif;
+  font-size: .58rem;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: #fff;
+  padding: 3px 9px;
+  border-radius: 3px;
+  border: none;
 }
-.cb-creator   { color: #2a5f7a; border-color: #5a8fa8; background: rgba(42,95,122,.1); }
-.cb-gallery   { color: #8b5e3c; border-color: #b8895e; background: rgba(139,94,60,.1); }
-.cb-user      { color: #b8608c; border-color: #e8a0c8; background: rgba(232,160,200,.1); }
+.cb-creator   { background: #2a5f7a; color: #fff; }
+.cb-gallery   { background: #8b5e3c; color: #fff; }
+.cb-user      { background: #b8608c; color: #fff; }
 .cb-content {
-  padding: 3px 8px 3px 7px;
+  font-family: 'Cinzel', serif;
+  font-size: .58rem;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: 3px 9px 3px 8px;
   border-radius: 0 3px 3px 0;
   border-left: 2.5px solid currentColor;
 }
 .cb-exhibition { color: #005da7; background: rgba(0,93,167,.08);    border-left-color: #005da7; }
 .cb-article    { color: #2e7a4e; background: rgba(46,122,78,.08);   border-left-color: #2e7a4e; }
-.cb-artwork    { color: #7c3aab; background: rgba(124,58,171,.08);  border-left-color: #7c3aab; }
+.cb-artwork    { color: #6b46a8; background: rgba(107,70,168,.08);  border-left-color: #6b46a8; }
 .cb-review     { color: #b86a10; background: rgba(184,106,16,.08);  border-left-color: #b86a10; }
 .cb-news       { color: #c0392b; background: rgba(192,57,43,.08);   border-left-color: #c0392b; }
-.dark .cb-creator   { color: #c8cac0; border-color: #c8cac0; background: rgba(200,202,192,.1); }
-.dark .cb-gallery   { color: #ddc8a8; border-color: #ddc8a8; background: rgba(221,200,168,.1); }
-.dark .cb-user      { color: #f0b8d8; border-color: #f0b8d8; background: rgba(240,184,216,.1); }
+.dark .cb-creator   { background: #5a8fa8; color: #fff; }
+.dark .cb-gallery   { background: #b8895e; color: #fff; }
+.dark .cb-user      { background: #e8a0c8; color: #fff; }
 .dark .cb-exhibition{ color: #4da3f5; background: rgba(77,163,245,.1);  border-left-color: #4da3f5; }
 .dark .cb-article   { color: #58c888; background: rgba(88,200,136,.1);  border-left-color: #58c888; }
 .dark .cb-artwork   { color: #c080f0; background: rgba(192,128,240,.1); border-left-color: #c080f0; }

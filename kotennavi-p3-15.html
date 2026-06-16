@@ -24,9 +24,13 @@
       申込中の 2名 全員にキャンセル通知（メール）が送信されます。<br>
       この操作は取り消せません。
     </p>
+    <label class="p315-modal__check" id="p315VenueModalCheckWrap" hidden>
+      <input type="checkbox" id="p315VenueModalCheckbox">
+      <span>会場での売却を確認しました</span>
+    </label>
     <div class="p315-modal__foot">
       <button class="p315-modal__cancel ktn-op-btn" type="button" id="p315VenueModalCancel">キャンセル</button>
-      <button class="p315-modal__ok ktn-op-btn ktn-op-btn--primary" type="button" id="p315VenueModalOk">売約済にする</button>
+      <button class="p315-modal__ok ktn-op-btn ktn-op-btn--danger" type="button" id="p315VenueModalOk">売約済にする</button>
     </div>
   </div>
 </div>
@@ -37,13 +41,24 @@
   <div class="p315-modal__box">
     <h3 class="p315-modal__title">出品取消</h3>
     <p class="p315-modal__body" id="p315TakedownModalBody">
-      「言葉の重力 No.3」の出品を取り消します。<br>
+      「言葉の重力 No.3」の LIAISON+ 出品を取り消します。<br>
       申込中の場合、申込者全員にキャンセル通知（メール）が送信されます。<br>
       この操作は取り消せません。
     </p>
+    <div class="p315-modal__warn" id="p315TakedownModalWarn">
+      <strong>注意：</strong>正当な理由のない出品取消は利用規約違反となる場合があります。取消後のトラブルについては出品者が責任を負います。
+    </div>
+    <label class="p315-modal__check" id="p315TakedownModalCheckWrap" hidden>
+      <input type="checkbox" id="p315TakedownModalCheckbox">
+      <span>申込者へのキャンセル通知と上記の注意事項を確認しました</span>
+    </label>
+    <label class="p315-modal__check" id="p315TakedownModalCheckWrap2">
+      <input type="checkbox" id="p315TakedownModalCheckbox2">
+      <span>正当な理由があることを確認し、出品取消に同意します</span>
+    </label>
     <div class="p315-modal__foot">
-      <button class="p315-modal__cancel ktn-op-btn" type="button" id="p315TakedownModalCancel">キャンセル</button>
-      <button class="p315-modal__ok ktn-op-btn ktn-op-btn--danger" type="button" id="p315TakedownModalOk">出品取消</button>
+      <button class="p315-modal__cancel ktn-op-btn" type="button" id="p315TakedownModalCancel">戻る</button>
+      <button class="p315-modal__ok ktn-op-btn ktn-op-btn--danger" type="button" id="p315TakedownModalOk" disabled>出品取消を実行する</button>
     </div>
   </div>
 </div>
@@ -136,7 +151,6 @@
           <div class="p3-head__info">
             <div class="p3-head__badge-row">
               <span class="cb cb-person cb-creator">CREATOR</span>
-              <!-- <span class="sb sb-live" id="p3HeadActiveBadge" hidden><span class="pulse"></span>展示中</span> -->
             </div>
             <h1 class="p3-head__name"><a href="kotennavi-p3.html">田中 透</a></h1>
             <p class="p3-head__en">TANAKA TORU</p>
@@ -163,16 +177,18 @@
 
     <!-- D. メインコンテンツ -->
     <div class="ktn-content">
-      <div class="p315-wrap">
+      <div class="p315-wrap ktn-mgmt-wrap">
 
-        <!-- D-1. ページタイトル -->
-        <div class="p315-page-head">
-          <h1 class="p315-page-head__title">リエゾン＋コンソール</h1>
-          <p class="p315-page-head__en">LIAISON+ CONSOLE</p>
-          <p class="p315-page-head__desc">
-            LIAISON+ 展覧会の稼働状況確認・申込対応・会場売約済操作を行います。
-            作品の状態・価格変更は各展覧会の「展示設定」から行ってください。
-          </p>
+        <!-- D-0. カードタイトルヘッダー -->
+        <div class="p315-card-head ktn-mgmt-head">
+          <div class="p315-card-head__left">
+            <div class="ktn-mgmt-head__badge-row">
+              <span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span>
+            </div>
+            <h1 class="ktn-mgmt-head__title">リエゾン＋コンソール</h1>
+            <p class="ktn-mgmt-head__en">LIAISON+ CONSOLE</p>
+          </div>
+          <p class="ktn-mgmt-head__desc">LIAISON+ 展覧会の稼働状況確認・申込対応・会場売約済操作を行います。作品の状態・価格変更は各展覧会の「展示設定」から行ってください。</p>
         </div>
 
         <!-- D-2. 売上サマリーカウンター -->
@@ -181,10 +197,10 @@
             <div class="p315-summary__amount-row">
               <span class="p315-summary__currency">¥</span><span class="p315-summary__amount">465,000</span>
             </div>
-            <div class="p315-summary__label">売上金額（累計）</div>
+            <div class="p315-summary__label">売上金額（税込・累計）</div>
             <div class="p315-summary__sub">
               <span class="p315-summary__sub-label">うち未精算</span>
-              <span class="p315-summary__sub-amount">¥220,000</span>
+              <span class="p315-summary__sub-amount">¥120,000</span>
               <a class="p315-summary__mgmt-link" href="kotennavi-p3-17.html">販売代金管理へ →</a>
             </div>
           </div>
@@ -228,6 +244,22 @@
           </div>
         </div>
 
+        <!-- ══ D-3b. 会場売約済・出品取消ガイド ══ -->
+        <div class="p315-ops-guide">
+          <div class="p315-ops-guide__title">会場販売との連動について</div>
+          <p class="p315-ops-guide__lead">LIAISON+ は<strong>会場に来場したお客様を最優先</strong>とする設計のため、オンライン申込は仮申込として扱われます。会場で先に売れた場合・出品をやめる場合は各作品カード下部のボタンで操作してください。システムが申込者へ自動通知します。<a href="kotennavi-p70-2.html#venue-priority" style="color:var(--accent);margin-left:6px">仕組みを詳しく読む →</a></p>
+          <dl class="p315-ops-guide__items">
+            <div class="p315-ops-guide__item">
+              <dt class="p315-ops-guide__name">会場売約済</dt>
+              <dd class="p315-ops-guide__desc">展覧会の<strong>会場でその作品が売れたとき</strong>に押します。作品は「売約済」に変わり、オンラインの申込者全員へ自動でキャンセル通知が送られます。取引デスクで1人ずつ連絡・操作する必要はありません。</dd>
+            </div>
+            <div class="p315-ops-guide__item">
+              <dt class="p315-ops-guide__name">出品取消</dt>
+              <dd class="p315-ops-guide__desc"><strong>オンラインでの販売自体を取りやめるとき</strong>に押します。申込者がいる場合は全員へ自動でキャンセル通知が送られます。会場での展示・販売には影響しません。</dd>
+            </div>
+          </dl>
+        </div>
+
         <!-- ══ D-4. 展覧会ブロック1：販売期間中・要アクションあり ══ -->
         <section class="p315-exh-block" id="p315-exh-1">
 
@@ -259,13 +291,13 @@
 
           <div class="p315-works-summary">
             <span class="p315-works-summary__total">出品 6件</span>
-            <span class="p315-ws-badge">販売中 6</span>
             <span class="p315-ws-badge">申込あり 5</span>
+            <span class="p315-ws-badge p315-ws-badge--note">申込なし 1件はp2-12-1で管理</span>
             <a class="p315-ws-mgmt-link" href="kotennavi-p2-12-1.html">展示設定・出品管理 →</a>
           </div>
           <div class="p315-txn-status">
             <span class="p315-txn-status__item p315-txn-status__item--action">
-              <span class="p315-txn-status__dot"></span>要対応 3件（在庫確認 1 · 発送 1 · 取引完了確認 1）
+              <span class="p315-txn-status__dot"></span>要対応 3件（購入確定 1 · 発送 1 · 完了確認 1）
             </span>
             <span class="p315-txn-status__sep">·</span>
             <span class="p315-txn-status__item p315-txn-status__item--user">
@@ -275,7 +307,7 @@
 
           <div class="p315-work-list">
 
-            <!-- ステップ2：在庫確認待ち（出品者アクション） -->
+            <!-- ステップ2：購入確定待ち（出品者アクション） -->
             <div class="p315-work-card p315-work-card--applying">
               <div class="p315-work-card__main">
                 <div class="p315-work-card__thumb" style="background:linear-gradient(135deg,#9ab8cc,#5a7a8e)"></div>
@@ -287,27 +319,42 @@
                     <div class="p315-work-card__price">¥85,000</div>
                     <div class="p2-121-lock-info">
                       <span class="p2-121-lock-badge">販売中</span>
-                      <span class="p2-121-lock-note"><strong class="p2-121-lock-note__num">1</strong>件申込中</span>
+                      <span class="p2-121-lock-note"><strong class="p2-121-lock-note__num">2</strong>件申込中</span>
                     </div>
-                    <button class="p315-venue-btn ktn-op-btn ktn-op-btn--caution ktn-op-btn--sm" type="button" data-work="音の輪郭 No.7" data-count="1">会場売約済</button>
-                    <button class="p315-takedown-btn ktn-op-btn ktn-op-btn--danger-outline ktn-op-btn--sm" type="button" data-work="音の輪郭 No.7" data-count="1">出品取消</button>
+                  </div>
+                  <div class="p315-work-card__ops">
+                    <span class="p315-work-card__ops-label">会場で売れた／出品をやめる場合：</span>
+                    <button class="p315-venue-btn ktn-op-btn ktn-op-btn--danger-outline ktn-op-btn--sm" type="button" data-work="音の輪郭 No.7" data-count="2">会場売約済</button>
+                    <button class="p315-takedown-btn ktn-op-btn ktn-op-btn--danger-outline ktn-op-btn--sm" type="button" data-work="音の輪郭 No.7" data-count="2">出品取消</button>
                   </div>
                 </div>
               </div>
               <details class="p315-apply-detail" open>
-                <summary class="p315-apply-summary">申込内訳（1件）</summary>
+                <summary class="p315-apply-summary">申込内訳（3件 / うち1件キャンセル）</summary>
                 <div class="p315-apply-body">
                   <div class="p315-apply-row p315-apply-row--active">
                     <span class="p315-apply-row__num">#1</span>
                     <span class="p315-apply-row__date">2026.02.21<span class="p315-apply-row__time"> 14:30</span></span>
-                    <span class="p315-apply-row__status p315-apply-status--stock">在庫確認待ち</span>
-                    <a class="p315-apply-row__link ktn-action-btn" href="#">取引デスクへ →</a>
+                    <span class="p315-apply-row__status p315-apply-status--stock">購入確定待ち</span>
+                    <span class="p315-apply-row__deadline">確定期限 2026.03.08</span>
+                    <a class="p315-apply-row__link ktn-action-btn ktn-action-btn--alert" href="kotennavi-p3-16.html">取引デスクへ →</a>
+                  </div>
+                  <div class="p315-apply-row">
+                    <span class="p315-apply-row__num">#2</span>
+                    <span class="p315-apply-row__date">2026.02.24<span class="p315-apply-row__time"> 11:05</span></span>
+                    <span class="p315-apply-row__status p315-apply-status--wait">待機中</span>
+                  </div>
+                  <div class="p315-apply-row p315-apply-row--cancelled">
+                    <span class="p315-apply-row__num">#3</span>
+                    <span class="p315-apply-row__date">2026.02.26<span class="p315-apply-row__time"> 09:18</span></span>
+                    <span class="p315-apply-row__status p315-apply-status--cancelled">申込キャンセル</span>
+                    <span class="p315-apply-row__cancelled-date">2026.02.27 キャンセル（申込者による）</span>
                   </div>
                 </div>
               </details>
             </div>
 
-            <!-- ステップ3：購入者支払待ち（購入者アクション） -->
+            <!-- ステップ3：支払待ち（購入者アクション） -->
             <div class="p315-work-card p315-work-card--applying">
               <div class="p315-work-card__main">
                 <div class="p315-work-card__thumb" style="background:linear-gradient(135deg,#c8a87a,#8b6040)"></div>
@@ -321,7 +368,10 @@
                       <span class="p2-121-lock-badge">販売中</span>
                       <span class="p2-121-lock-note"><strong class="p2-121-lock-note__num">1</strong>件申込中</span>
                     </div>
-                    <button class="p315-venue-btn ktn-op-btn ktn-op-btn--caution ktn-op-btn--sm" type="button" data-work="言葉の重力 No.3" data-count="1">会場売約済</button>
+                  </div>
+                  <div class="p315-work-card__ops">
+                    <span class="p315-work-card__ops-label">会場で売れた／出品をやめる場合：</span>
+                    <button class="p315-venue-btn ktn-op-btn ktn-op-btn--danger-outline ktn-op-btn--sm" type="button" data-work="言葉の重力 No.3" data-count="1">会場売約済</button>
                     <button class="p315-takedown-btn ktn-op-btn ktn-op-btn--danger-outline ktn-op-btn--sm" type="button" data-work="言葉の重力 No.3" data-count="1">出品取消</button>
                   </div>
                 </div>
@@ -332,8 +382,8 @@
                   <div class="p315-apply-row p315-apply-row--active">
                     <span class="p315-apply-row__num">#1</span>
                     <span class="p315-apply-row__date">2026.02.19<span class="p315-apply-row__time"> 18:44</span></span>
-                    <span class="p315-apply-row__status p315-apply-status--pay">購入者支払待ち</span>
-                    <a class="p315-apply-row__link ktn-action-btn" href="#">取引デスクへ →</a>
+                    <span class="p315-apply-row__status p315-apply-status--pay">支払待ち</span>
+                    <a class="p315-apply-row__link ktn-action-btn" href="kotennavi-p3-16.html">取引デスクへ →</a>
                   </div>
                 </div>
               </details>
@@ -353,19 +403,23 @@
                       <span class="p2-121-lock-badge">販売中</span>
                       <span class="p2-121-lock-note"><strong class="p2-121-lock-note__num">1</strong>件申込中</span>
                     </div>
-                    <button class="p315-venue-btn ktn-op-btn ktn-op-btn--caution ktn-op-btn--sm" type="button" data-work="夜の静寂" data-count="1">会場売約済</button>
+                  </div>
+                  <div class="p315-work-card__ops">
+                    <span class="p315-work-card__ops-label">会場で売れた／出品をやめる場合：</span>
+                    <button class="p315-venue-btn ktn-op-btn ktn-op-btn--danger-outline ktn-op-btn--sm" type="button" data-work="夜の静寂" data-count="1">会場売約済</button>
                     <button class="p315-takedown-btn ktn-op-btn ktn-op-btn--danger-outline ktn-op-btn--sm" type="button" data-work="夜の静寂" data-count="1">出品取消</button>
                   </div>
                 </div>
               </div>
-              <details class="p315-apply-detail">
+              <details class="p315-apply-detail" open>
                 <summary class="p315-apply-summary">申込内訳（1件）</summary>
                 <div class="p315-apply-body">
                   <div class="p315-apply-row p315-apply-row--active">
                     <span class="p315-apply-row__num">#1</span>
-                    <span class="p315-apply-row__date">2026.02.17<span class="p315-apply-row__time"> 09:30</span></span>
+                    <span class="p315-apply-row__date">2026.02.19<span class="p315-apply-row__time"> 09:30</span></span>
                     <span class="p315-apply-row__status p315-apply-status--ship">発送待ち</span>
-                    <a class="p315-apply-row__link ktn-action-btn" href="#">取引デスクへ →</a>
+                    <span class="p315-apply-row__deadline">発送期限 2026.03.07</span>
+                    <a class="p315-apply-row__link ktn-action-btn ktn-action-btn--alert" href="kotennavi-p3-16.html">取引デスクへ →</a>
                   </div>
                 </div>
               </details>
@@ -385,7 +439,10 @@
                       <span class="p2-121-lock-badge">販売中</span>
                       <span class="p2-121-lock-note"><strong class="p2-121-lock-note__num">1</strong>件申込中</span>
                     </div>
-                    <button class="p315-venue-btn ktn-op-btn ktn-op-btn--caution ktn-op-btn--sm" type="button" data-work="透明な午後" data-count="1">会場売約済</button>
+                  </div>
+                  <div class="p315-work-card__ops">
+                    <span class="p315-work-card__ops-label">会場で売れた／出品をやめる場合：</span>
+                    <button class="p315-venue-btn ktn-op-btn ktn-op-btn--danger-outline ktn-op-btn--sm" type="button" data-work="透明な午後" data-count="1">会場売約済</button>
                     <button class="p315-takedown-btn ktn-op-btn ktn-op-btn--danger-outline ktn-op-btn--sm" type="button" data-work="透明な午後" data-count="1">出品取消</button>
                   </div>
                 </div>
@@ -395,15 +452,15 @@
                 <div class="p315-apply-body">
                   <div class="p315-apply-row p315-apply-row--active">
                     <span class="p315-apply-row__num">#1</span>
-                    <span class="p315-apply-row__date">2026.02.15<span class="p315-apply-row__time"> 16:05</span></span>
+                    <span class="p315-apply-row__date">2026.02.18<span class="p315-apply-row__time"> 16:05</span></span>
                     <span class="p315-apply-row__status p315-apply-status--recv">受取確認待ち</span>
-                    <a class="p315-apply-row__link ktn-action-btn" href="#">取引デスクへ →</a>
+                    <a class="p315-apply-row__link ktn-action-btn" href="kotennavi-p3-16.html">取引デスクへ →</a>
                   </div>
                 </div>
               </details>
             </div>
 
-            <!-- ステップ6：取引完了確認待ち（出品者アクション） -->
+            <!-- ステップ6：完了確認待ち（出品者アクション） -->
             <div class="p315-work-card p315-work-card--applying">
               <div class="p315-work-card__main">
                 <div class="p315-work-card__thumb" style="background:linear-gradient(135deg,#c8b0d8,#907098)"></div>
@@ -417,40 +474,26 @@
                       <span class="p2-121-lock-badge">販売中</span>
                       <span class="p2-121-lock-note"><strong class="p2-121-lock-note__num">1</strong>件申込中</span>
                     </div>
-                    <button class="p315-venue-btn ktn-op-btn ktn-op-btn--caution ktn-op-btn--sm" type="button" data-work="流れる時間" data-count="1">会場売約済</button>
+                  </div>
+                  <div class="p315-work-card__ops">
+                    <span class="p315-work-card__ops-label">会場で売れた／出品をやめる場合：</span>
+                    <button class="p315-venue-btn ktn-op-btn ktn-op-btn--danger-outline ktn-op-btn--sm" type="button" data-work="流れる時間" data-count="1">会場売約済</button>
                     <button class="p315-takedown-btn ktn-op-btn ktn-op-btn--danger-outline ktn-op-btn--sm" type="button" data-work="流れる時間" data-count="1">出品取消</button>
                   </div>
                 </div>
               </div>
-              <details class="p315-apply-detail">
+              <details class="p315-apply-detail" open>
                 <summary class="p315-apply-summary">申込内訳（1件）</summary>
                 <div class="p315-apply-body">
                   <div class="p315-apply-row p315-apply-row--active">
                     <span class="p315-apply-row__num">#1</span>
-                    <span class="p315-apply-row__date">2026.02.10<span class="p315-apply-row__time"> 20:15</span></span>
-                    <span class="p315-apply-row__status p315-apply-status--finish">取引完了確認待ち</span>
-                    <a class="p315-apply-row__link ktn-action-btn" href="#">取引デスクへ →</a>
+                    <span class="p315-apply-row__date">2026.02.18<span class="p315-apply-row__time"> 20:15</span></span>
+                    <span class="p315-apply-row__status p315-apply-status--finish">完了確認待ち</span>
+                    <span class="p315-apply-row__deadline">確認期限 2026.03.06</span>
+                    <a class="p315-apply-row__link ktn-action-btn ktn-action-btn--alert" href="kotennavi-p3-16.html">取引デスクへ →</a>
                   </div>
                 </div>
               </details>
-            </div>
-
-            <!-- 販売中・申込なし -->
-            <div class="p315-work-card">
-              <div class="p315-work-card__main">
-                <div class="p315-work-card__thumb" style="background:linear-gradient(135deg,#d4c8b8,#a09080)"></div>
-                <div class="p315-work-card__body">
-                  <div class="p315-work-card__badge-row"><span class="cb cb-content cb-artwork">artwork</span><span class="ktn-aw-id">AW-C42-1852</span></div>
-                  <div class="p315-work-card__title">沈黙の形</div>
-                  <div class="p315-work-card__spec">2025年 · 混合技法 · 40.9×31.8cm</div>
-                  <div class="p315-work-card__price-row">
-                    <div class="p315-work-card__price">¥48,000</div>
-                    <span class="p2-121-lock-badge">販売中</span>
-                    <button class="p315-venue-btn ktn-op-btn ktn-op-btn--caution ktn-op-btn--sm" type="button" data-work="沈黙の形" data-count="0">会場売約済</button>
-                    <button class="p315-takedown-btn ktn-op-btn ktn-op-btn--danger-outline ktn-op-btn--sm" type="button" data-work="沈黙の形" data-count="0">出品取消</button>
-                  </div>
-                </div>
-              </div>
             </div>
 
           </div><!-- /.p315-work-list -->
@@ -491,13 +534,13 @@
           </div>
           <div class="p315-txn-status">
             <span class="p315-txn-status__item p315-txn-status__item--action">
-              <span class="p315-txn-status__dot"></span>要対応 1件（在庫確認 1）
+              <span class="p315-txn-status__dot"></span>要対応 1件（購入確定 1）
             </span>
           </div>
 
           <div class="p315-work-list">
 
-            <!-- 未処理申込あり（在庫確認待ち） -->
+            <!-- 未処理申込あり（購入確定待ち） -->
             <div class="p315-work-card p315-work-card--applying">
               <div class="p315-work-card__main">
                 <div class="p315-work-card__thumb" style="background:linear-gradient(135deg,#b8c8a8,#7a9870)"></div>
@@ -511,7 +554,10 @@
                       <span class="p2-121-lock-badge">販売中</span>
                       <span class="p2-121-lock-note"><strong class="p2-121-lock-note__num">1</strong>件申込中</span>
                     </div>
-                    <button class="p315-venue-btn ktn-op-btn ktn-op-btn--caution ktn-op-btn--sm" type="button" data-work="線の重なり" data-count="1">会場売約済</button>
+                  </div>
+                  <div class="p315-work-card__ops">
+                    <span class="p315-work-card__ops-label">会場で売れた／出品をやめる場合：</span>
+                    <button class="p315-venue-btn ktn-op-btn ktn-op-btn--danger-outline ktn-op-btn--sm" type="button" data-work="線の重なり" data-count="1">会場売約済</button>
                     <button class="p315-takedown-btn ktn-op-btn ktn-op-btn--danger-outline ktn-op-btn--sm" type="button" data-work="線の重なり" data-count="1">出品取消</button>
                   </div>
                 </div>
@@ -522,8 +568,9 @@
                   <div class="p315-apply-row p315-apply-row--active">
                     <span class="p315-apply-row__num">#1</span>
                     <span class="p315-apply-row__date">2026.03.22<span class="p315-apply-row__time"> 11:14</span></span>
-                    <span class="p315-apply-row__status p315-apply-status--stock">在庫確認待ち</span>
-                    <a class="p315-apply-row__link ktn-action-btn" href="#">取引デスク →</a>
+                    <span class="p315-apply-row__status p315-apply-status--stock">購入確定待ち</span>
+                    <span class="p315-apply-row__deadline">確定期限 2026.03.31</span>
+                    <a class="p315-apply-row__link ktn-action-btn ktn-action-btn--alert" href="kotennavi-p3-16.html">取引デスクへ →</a>
                   </div>
                 </div>
               </details>
@@ -581,7 +628,7 @@
                   <span class="p315-archive-result__val">2件</span>
                 </div>
                 <div class="p315-archive-result__item">
-                  <span class="p315-archive-result__label">売上金額</span>
+                  <span class="p315-archive-result__label">売上金額（税込）</span>
                   <span class="p315-archive-result__val">¥345,000</span>
                 </div>
                 <div class="p315-archive-result__item">
@@ -595,7 +642,7 @@
                 <thead>
                   <tr>
                     <th>作品名</th>
-                    <th>価格</th>
+                    <th>価格（税込）</th>
                     <th>送料・梱包費</th>
                     <th>システム手数料</th>
                     <th>受取金額</th>
@@ -607,16 +654,16 @@
                     <td>堆積する声</td>
                     <td>¥180,000</td>
                     <td>¥2,500</td>
-                    <td>¥9,000（5%）</td>
-                    <td>¥173,500</td>
+                    <td>¥14,400（8%）</td>
+                    <td>¥168,100</td>
                     <td>2026.01.08</td>
                   </tr>
                   <tr>
                     <td>積層する沈黙</td>
                     <td>¥165,000</td>
                     <td>¥2,500</td>
-                    <td>¥8,250（5%）</td>
-                    <td>¥159,250</td>
+                    <td>¥13,200（8%）</td>
+                    <td>¥154,300</td>
                     <td>2026.01.10</td>
                   </tr>
                 </tbody>
@@ -636,7 +683,7 @@
               申込が入ったらどうすればいいですか？
             </summary>
             <div class="p315-faq-item__a">
-              <p>申込が入ると、該当作品の申込内訳に「在庫確認待ち」が表示されます。まず取引デスクから会場在庫の確認を行ってください。会場でまだ販売されていない場合は購入プロセスを進め、すでに販売済みの場合は「会場売約済」ボタンを使って申込をキャンセルします。</p>
+              <p>申込が入ると、該当作品の申込内訳に「購入確定待ち」が表示されます。まず取引デスクから会場在庫の確認を行ってください。会場でまだ販売されていない場合は購入を確定し、すでに販売済みの場合は「会場売約済」ボタンを使って申込をキャンセルします。</p>
               <p>複数の申込がある場合は申込順に処理されます。先の方の取引が完了するまで、後の方は「待機中」の状態が続きます。</p>
             </div>
           </details>
@@ -675,10 +722,10 @@
           <details class="p315-faq-item">
             <summary class="p315-faq-item__q">
               <span class="p315-faq-item__q-mark">Q</span>
-              「在庫確認待ち」とはどういう状態ですか？
+              「購入確定待ち」とはどういう状態ですか？
             </summary>
             <div class="p315-faq-item__a">
-              <p>申込者が購入申込を完了した後、システムが作家側に「この作品はまだ会場にありますか？」と確認を求めている状態です。取引デスクから回答してください。回答が遅れると申込者に不安を与えるため、早めの対応をお願いします。</p>
+              <p>申込者が購入申込を完了した後、出品者が会場在庫を確認して購入を確定する番になっている状態です。取引デスクから会場在庫を確認し、購入確定の操作を行ってください。対応が遅れると申込者に不安を与えるため、早めの対応をお願いします。</p>
             </div>
           </details>
 

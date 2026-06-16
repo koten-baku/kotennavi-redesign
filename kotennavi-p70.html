@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>リエゾン・リエゾンプラスとは | 個展なび</title>
+  <meta name="description" content="個展なびの新サービス「リエゾン（LIAISON）」「リエゾンプラス（LIAISON+）」を紹介。実際の展覧会と連動したオンライン作品展示・販売サービスの仕組みと利用方法をわかりやすく説明します。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@1,400;1,600&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<body data-w="article" class="p70-page">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- デモバー -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ガイドページ</span>
+  <button class="dbtn dbtn--active" id="dbarView">閲覧</button>
+</div>
+
+<!-- ヘッダー -->
+<header class="ktn-header" id="ktnHeader">
+  <div class="ktn-header__inner">
+    <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+    <div class="ktn-hdr-actions" id="ktnActs"></div>
+  </div>
+</header>
+
+<!-- タイトルバンド -->
+<div class="p70-title-band">
+  <div class="p70-title-band__inner">
+    <div class="p70-head__sub">
+      <span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>
+      <span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span>
+      <span class="p70-head__updated">2026年4月 制定</span>
+    </div>
+    <h1 class="p70-head__title">リエゾン と リエゾン+</h1>
+    <p class="p70-head__en">Bridging the gallery and the screen</p>
+    <p class="p70-head__lead">実空間の展覧会と、オンラインの場をひとつに。<br>会期の短さや距離に阻まれてきた、作品との出会いをひらくためのサービスです。</p>
+  </div>
+</div>
+
+<main>
+  <div class="p70-wrap">
+
+    <!-- 目次 -->
+    <nav class="p70-toc" aria-label="目次">
+      <div class="p70-toc__title">目次 — Contents</div>
+      <ol class="p70-toc__list">
+        <li class="p70-toc__item"><span class="p70-toc__num">1</span><a class="p70-toc__link" href="#service-overview">サービス概要</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">2</span><a class="p70-toc__link" href="#compare">リエゾンとリエゾン+の違い</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">3</span><a class="p70-toc__link" href="#for-sellers">出品者の方へ</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">4</span><a class="p70-toc__link" href="#for-buyers">購入者の方へ</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">5</span><a class="p70-toc__link" href="#faq">よくある質問</a></li>
+      </ol>
+    </nav>
+
+    <!-- 1. サービス概要 -->
+    <section class="p70-section" id="service-overview">
+      <div class="p70-section__head">
+        <span class="p70-section__num">1</span>
+        <h2 class="p70-section__title">サービスについて</h2>
+        <span class="p70-section__en">Concept</span>
+      </div>
+      <p class="p70-lead">展覧会には、いつも限られた時間と場所があります。会期内に訪れることができなかった人にも、作品との出会いをひらく——リエゾンは、実空間の展示に呼応するオンラインの場を提供します。</p>
+
+      <!-- コンセプト図解：会場 ⇄ オンライン -->
+      <div class="p70-concept-diagram">
+        <div class="p70-concept-diagram__box p70-concept-diagram__box--venue">
+          <div class="p70-concept-diagram__box-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/>
+            </svg>
+          </div>
+          <span class="p70-bilingual">
+            <span class="p70-bilingual__en">Venue</span>
+            <span class="p70-bilingual__ja">実空間</span>
+          </span>
+          <p class="p70-concept-diagram__box-sub">会場での展示と販売<br>身体的な体験</p>
+        </div>
+        <div class="p70-concept-diagram__link">
+          <span class="p70-concept-diagram__link-label">連動</span>
+          <span>⇄</span>
+        </div>
+        <div class="p70-concept-diagram__box p70-concept-diagram__box--online">
+          <div class="p70-concept-diagram__box-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="4" width="20" height="14" rx="2"/>
+              <path d="M8 22h8M12 18v4"/>
+            </svg>
+          </div>
+          <span class="p70-bilingual">
+            <span class="p70-bilingual__en">Online</span>
+            <span class="p70-bilingual__ja">オンライン</span>
+          </span>
+          <p class="p70-concept-diagram__box-sub">場所と時間をこえる<br>新たな出会い</p>
+        </div>
+      </div>
+
+      <p class="p70-body">会期と同期した展示期間、会場と同じ作品。オンラインは実空間を補完するための「もう一つの窓」として機能します。</p>
+    </section>
+
+    <!-- 2. リエゾンとリエゾン+の違い -->
+    <section class="p70-section" id="compare">
+      <div class="p70-section__head">
+        <span class="p70-section__num">2</span>
+        <h2 class="p70-section__title">二つのサービス</h2>
+        <span class="p70-section__en">LIAISON & LIAISON+</span>
+      </div>
+      <p class="p70-body">2つのサービスの違いは、ただひとつ——<em>販売機能の有無</em>です。展示そのものは、どちらも無料でご利用いただけます。</p>
+
+      <!-- 比較カード -->
+      <div class="p70-compare">
+        <div class="p70-compare__card p70-compare__card--li">
+          <!-- LIAISON ロゴ -->
+          <svg class="p70-compare__logo" viewBox="0 40 480 160" fill="none" width="140" height="46" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="p70-cmp-li" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#ffffff"/>
+                <stop offset="55%" stop-color="#005da7"/>
+                <stop offset="100%" stop-color="#003f80"/>
+              </linearGradient>
+              <path id="p70-cmp-li-t" d="M 80 184 Q 240 56 400 184"/>
+            </defs>
+            <path d="M 20 200 Q 240 33 460 200" stroke="url(#p70-cmp-li)" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#p70-cmp-li)">
+              <textPath href="#p70-cmp-li-t" startOffset="50%" text-anchor="middle">LIAISON</textPath>
+            </text>
+          </svg>
+          <span class="p70-compare__tag">リエゾン</span>
+          <p class="p70-compare__price">Free</p>
+          <p class="p70-compare__price-sub">完全無料・追加申請なし</p>
+          <ul class="p70-compare__feats">
+            <li class="p70-compare__feat">オンラインでの作品展示</li>
+            <li class="p70-compare__feat">複数枚画像の掲載</li>
+            <li class="p70-compare__feat">展覧会と同会期で公開</li>
+            <li class="p70-compare__feat p70-compare__feat--off">作品の販売・購入申込</li>
+            <li class="p70-compare__feat p70-compare__feat--off">取引・決済の対応</li>
+          </ul>
+        </div>
+        <div class="p70-compare__card p70-compare__card--lp">
+          <!-- LIAISON+ ロゴ -->
+          <svg class="p70-compare__logo" viewBox="0 40 480 160" fill="none" width="140" height="46" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <path id="p70-cmp-lp-t" d="M 80 184 Q 240 56 400 184"/>
+              <linearGradient id="p70-cmp-lp" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#6a4010"/>
+                <stop offset="30%" stop-color="#a87020"/>
+                <stop offset="58%" stop-color="#d4a428"/>
+                <stop offset="100%" stop-color="#6a4010"/>
+              </linearGradient>
+            </defs>
+            <path d="M 20 200 Q 240 33 460 200" stroke="url(#p70-cmp-lp)" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#p70-cmp-lp)">
+              <textPath href="#p70-cmp-lp-t" startOffset="50%" text-anchor="middle">LIAISON</textPath>
+            </text>
+            <circle cx="432" cy="183" r="22" fill="#b87c10"/>
+            <text x="432" y="183" font-family="'Bodoni Moda',serif" font-size="42" font-weight="900" fill="#fff8e8" text-anchor="middle" dominant-baseline="central">+</text>
+          </svg>
+          <span class="p70-compare__tag">リエゾン+</span>
+          <p class="p70-compare__price">Free<span style="font-family:var(--fn);font-size:.5em;font-weight:400;color:var(--muted);margin-left:6px">to list</span></p>
+          <p class="p70-compare__price-sub">販売成立時のみ手数料（8〜10%）</p>
+          <ul class="p70-compare__feats">
+            <li class="p70-compare__feat">リエゾンの全機能</li>
+            <li class="p70-compare__feat">作品の販売・購入申込</li>
+            <li class="p70-compare__feat">決済・取引管理を個展なびが代行</li>
+            <li class="p70-compare__feat">代金は月次・翌月末振込</li>
+            <li class="p70-compare__feat">振込手数料は個展なびが負担</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="p70-callout">
+        <div class="p70-callout__title">どちらを選べばよいか</div>
+        <div class="p70-callout__body">
+          展示のみであれば <strong>リエゾン</strong>、販売も行う場合は <strong>リエゾン+</strong>。リエゾン+のご利用には別途申請が必要で、ギャラリーの場合は取扱作家リストの管理者承認も合わせて行います。
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. 出品者の方へ -->
+    <section class="p70-section" id="for-sellers">
+      <div class="p70-section__head">
+        <span class="p70-section__num">3</span>
+        <h2 class="p70-section__title">出展される方へ</h2>
+        <span class="p70-section__en">For artists & galleries</span>
+      </div>
+      <p class="p70-body">作品の出展には、クリエイターまたはギャラリーとしての機能申込が必要です。ご自身の立場により、利用条件と申請手順が異なります。</p>
+
+      <!-- 利用条件の図解 -->
+      <h3 class="p70-subhead">出展までの道のり</h3>
+      <div class="p70-path-diagram">
+        <div class="p70-path-diagram__col p70-path-diagram__col--creator">
+          <div class="p70-path-diagram__role-head">
+            <span class="p70-path-diagram__role-tag">CREATOR</span>
+            <span class="p70-path-diagram__role-label">クリエイターとして</span>
+          </div>
+          <ol class="p70-path-diagram__steps">
+            <li class="p70-path-diagram__step">アカウント作成</li>
+            <li class="p70-path-diagram__step">クリエイター機能申込・承認</li>
+            <li class="p70-path-diagram__step p70-path-diagram__step--goal">リエゾン出展開始<br><span style="font-size:.66rem;color:var(--muted)">リエゾン+は追加申請</span></li>
+          </ol>
+        </div>
+        <div class="p70-path-diagram__col p70-path-diagram__col--gallery">
+          <div class="p70-path-diagram__role-head">
+            <span class="p70-path-diagram__role-tag">GALLERY</span>
+            <span class="p70-path-diagram__role-label">ギャラリーとして</span>
+          </div>
+          <ol class="p70-path-diagram__steps">
+            <li class="p70-path-diagram__step">アカウント作成</li>
+            <li class="p70-path-diagram__step">ギャラリー機能申込・承認</li>
+            <li class="p70-path-diagram__step p70-path-diagram__step--required">取扱作家リスト登録・承認<span class="p70-path-diagram__badge">ギャラリーのみ</span></li>
+            <li class="p70-path-diagram__step p70-path-diagram__step--goal">リエゾン出展開始<br><span style="font-size:.66rem;color:var(--muted)">リエゾン+は追加申請</span></li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="p70-callout p70-callout--venue">
+        <div class="p70-callout__title">ギャラリーに固有のプロセス</div>
+        <div class="p70-callout__body">
+          ギャラリーがクリエイターの作品を扱う場合、<strong>取扱作家リストの登録と管理者承認</strong>が必要です。これは作品の真正性を担保するとともに、未登録のクリエイターについては管理者がページを作成するための重要なプロセスです。
+        </div>
+      </div>
+
+      <!-- ガイドへの誘導カード -->
+      <h3 class="p70-subhead">詳しいガイド</h3>
+      <div class="ktn-guide-nav-cards">
+        <a class="ktn-guide-nav-card ktn-guide-nav-card--li" href="kotennavi-p70-1.html">
+          <div class="ktn-guide-nav-card__icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2"/>
+              <path d="M3 9h18M9 21V9"/>
+            </svg>
+          </div>
+          <div class="ktn-guide-nav-card__body">
+            <span class="ktn-guide-nav-card__tag">LIAISON</span>
+            <h4 class="ktn-guide-nav-card__title">作品出展ガイド</h4>
+            <p class="ktn-guide-nav-card__desc">オンラインで作品を展示する手順、写真の整え方、展示期間の考え方</p>
+          </div>
+          <span class="ktn-guide-nav-card__arrow">→</span>
+        </a>
+        <a class="ktn-guide-nav-card ktn-guide-nav-card--lp" href="kotennavi-p70-2.html">
+          <div class="ktn-guide-nav-card__icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12c-1.5 1.5-4 4-9 4s-7.5-2.5-9-4c1.5-1.5 4-4 9-4s7.5 2.5 9 4z"/>
+              <circle cx="12" cy="12" r="2"/>
+            </svg>
+          </div>
+          <div class="ktn-guide-nav-card__body">
+            <span class="ktn-guide-nav-card__tag">LIAISON+</span>
+            <h4 class="ktn-guide-nav-card__title">作品販売ガイド</h4>
+            <p class="ktn-guide-nav-card__desc">利用申請、販売フロー、手数料体系。代金は月次・翌月末振込</p>
+          </div>
+          <span class="ktn-guide-nav-card__arrow">→</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- 4. 購入者の方へ -->
+    <section class="p70-section" id="for-buyers">
+      <div class="p70-section__head">
+        <span class="p70-section__num">4</span>
+        <h2 class="p70-section__title">作品をお求めの方へ</h2>
+        <span class="p70-section__en">For collectors</span>
+      </div>
+      <p class="p70-body">リエゾン+に出展される作品は、個展なびに登録されている方であればどなたでも購入を申し込めます。<em>「会場連動販売」</em>という独自の仕組みのため、申込から購入確定までの流れは通常のオンラインショップとは少し異なります。</p>
+
+      <!-- 購入フロー概観 -->
+      <div class="p70-flow-diagram">
+        <div class="p70-flow-diagram__title">購入の流れ — Overview</div>
+        <ol class="p70-flow-diagram__list">
+          <li class="p70-flow-diagram__item p70-flow-diagram__item--buyer">
+            <span class="p70-flow-diagram__actor">あなた</span>
+            <span class="p70-flow-diagram__num">STEP 1</span>
+            <span class="p70-flow-diagram__action">申込</span>
+          </li>
+          <li class="p70-flow-diagram__arrow">—</li>
+          <li class="p70-flow-diagram__item p70-flow-diagram__item--seller">
+            <span class="p70-flow-diagram__actor">出展者</span>
+            <span class="p70-flow-diagram__num">STEP 2</span>
+            <span class="p70-flow-diagram__action">在庫確認</span>
+          </li>
+          <li class="p70-flow-diagram__arrow">—</li>
+          <li class="p70-flow-diagram__item p70-flow-diagram__item--buyer">
+            <span class="p70-flow-diagram__actor">あなた</span>
+            <span class="p70-flow-diagram__num">STEP 3</span>
+            <span class="p70-flow-diagram__action">支払</span>
+          </li>
+          <li class="p70-flow-diagram__arrow">—</li>
+          <li class="p70-flow-diagram__item p70-flow-diagram__item--seller">
+            <span class="p70-flow-diagram__actor">出展者</span>
+            <span class="p70-flow-diagram__num">STEP 4</span>
+            <span class="p70-flow-diagram__action">発送</span>
+          </li>
+          <li class="p70-flow-diagram__arrow">—</li>
+          <li class="p70-flow-diagram__item p70-flow-diagram__item--buyer">
+            <span class="p70-flow-diagram__actor">あなた</span>
+            <span class="p70-flow-diagram__num">STEP 5</span>
+            <span class="p70-flow-diagram__action">受取</span>
+          </li>
+          <li class="p70-flow-diagram__arrow">—</li>
+          <li class="p70-flow-diagram__end">取引完了</li>
+        </ol>
+      </div>
+
+      <div class="p70-pullquote">
+        実空間の出会いを最優先する設計。<br>
+        会場で出会えた人の手に、まず作品が渡るように。
+        <span class="p70-pullquote__attr">— LIAISON+ Design Principle</span>
+      </div>
+
+      <div class="p70-callout p70-callout--venue">
+        <div class="p70-callout__title">会場ですでに作品が売れていた場合</div>
+        <div class="p70-callout__body">
+          リエゾン+は会場での販売を最優先する設計です。会場で先に売約となった場合、出展者が「会場売約済」を選択すると、申込者全員へ自動的にキャンセルのお知らせが届きます。出展者から個別にご連絡することはありません。
+        </div>
+      </div>
+
+      <!-- 購入ガイドへの誘導 -->
+      <h3 class="p70-subhead">詳しい購入ガイド</h3>
+      <div class="ktn-guide-nav-cards">
+        <a class="ktn-guide-nav-card ktn-guide-nav-card--neutral" href="#">
+          <div class="ktn-guide-nav-card__icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="9" cy="21" r="1"/>
+              <circle cx="20" cy="21" r="1"/>
+              <path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/>
+            </svg>
+          </div>
+          <div class="ktn-guide-nav-card__body">
+            <span class="ktn-guide-nav-card__tag">Purchase</span>
+            <h4 class="ktn-guide-nav-card__title">作品購入までの流れ</h4>
+            <p class="ktn-guide-nav-card__desc">申込から受取まで、決済の方法、キャンセル時の対応</p>
+          </div>
+          <span class="ktn-guide-nav-card__arrow">→</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- 5. よくある質問 -->
+    <section class="p70-section" id="faq">
+      <div class="p70-section__head">
+        <span class="p70-section__num">5</span>
+        <h2 class="p70-section__title">よくある質問</h2>
+        <span class="p70-section__en">FAQ</span>
+      </div>
+      <div class="p70-faq">
+
+        <details class="p70-faq-item">
+          <summary>リエゾンとリエゾン+は同時に使えますか</summary>
+          <div class="p70-faq-item__body">
+            展覧会ごとにいずれかを選べます。複数の展覧会を持つ方が、ある展覧会はリエゾン、別の展覧会はリエゾン+で運用することも可能です。
+          </div>
+        </details>
+
+        <details class="p70-faq-item">
+          <summary>料金は本当に無料ですか</summary>
+          <div class="p70-faq-item__body">
+            リエゾンは完全に無料です。リエゾン+も出展そのものは無料で、販売が成立した時のみ販売価格に応じた手数料（8〜10%）が発生します。月会費や登録料はいただいておりません。
+          </div>
+        </details>
+
+        <details class="p70-faq-item">
+          <summary>個展なびのアカウントがあれば、すぐに出展できますか</summary>
+          <div class="p70-faq-item__body">
+            アカウントに加えて、クリエイター機能またはギャラリー機能のお申込みが必要です。リエゾン+のご利用には、さらにリエゾン+機能の利用申請を行っていただきます。
+          </div>
+        </details>
+
+        <details class="p70-faq-item">
+          <summary>「取扱作家リスト」とは何ですか</summary>
+          <div class="p70-faq-item__body">
+            ギャラリーがリエゾン・リエゾン+で扱うクリエイターを登録するリストです。作品の真正性を担保するため、登録時に管理者が確認・承認を行います。一度承認されれば、以降そのクリエイターの作品は申請なしに出展できます。
+          </div>
+        </details>
+
+        <details class="p70-faq-item">
+          <summary>スマートフォンからでも利用できますか</summary>
+          <div class="p70-faq-item__body">
+            はい。個展なびはスマートフォン・タブレット・PCすべてに最適化されています。出展者の方は会場でのリアルタイム操作が必要な場面もあるため、スマートフォンでのご利用を推奨しています。
+          </div>
+        </details>
+
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<!-- フッター -->
+<footer class="ktn-footer" id="ktnFooter"></footer>
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  KTN.init({ page: 'p70' });
+
+  var dbarView = document.getElementById('dbarView');
+  if (dbarView) {
+    dbarView.addEventListener('click', function() {
+      this.classList.add('dbtn--active');
+    });
+  }
+});
+</script>
+</body>
+</html>

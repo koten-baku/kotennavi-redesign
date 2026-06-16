@@ -103,6 +103,32 @@ function doShare() {
   }
 }
 
+/* ══════════════════════════════════
+   コピーボタン共通（.ktn-copy-btn data-copy="..."）
+══════════════════════════════════ */
+document.addEventListener('click', function (e) {
+  var btn = e.target.closest('.ktn-copy-btn');
+  if (!btn) return;
+  e.preventDefault();
+  var text = btn.dataset.copy || '';
+  if (!text) return;
+  function ok() { showToast('コピーしました'); }
+  function fallback() {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    ok();
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(ok).catch(fallback);
+  } else {
+    fallback();
+  }
+});
+
 function closeAllPanels() {
   document.querySelectorAll('.ktn-ddmenu').forEach(el => el.classList.remove('open'));
   document.querySelectorAll('.ktn-ddbtn').forEach(el => el.classList.remove('open'));
@@ -496,7 +522,7 @@ const PAGES = {
   'p5-11': { n: 'ユーザー-編集', bc: [['Top', '/'], ['myページ', '/p5'], ['編集', null]] },
   'p5-12': { n: 'ユーザー-パスワード管理', bc: [['Top', '/'], ['myページ', '/p5'], ['パスワード管理', null]] },
   'p5-13': { n: 'ユーザー-メール通知管理', bc: [['Top', '/'], ['myページ', '/p5'], ['メール通知管理', null]] },
-  'p5-14': { n: 'ユーザー-購入ダッシュボード', bc: [['Top', '/'], ['myページ', '/p5'], ['購入ダッシュボード', null, 'lp']] },
+  'p5-14': { n: 'ユーザー-購入管理', bc: [['Top', '/'], ['myページ', '/p5'], ['購入管理', null, 'lp']] },
   'p5-15': { n: 'ユーザー-取引ワークスペース', bc: [['Top', '/'], ['myページ', '/p5'], ['取引ワークスペース', null, 'lp']] },
   'p5-16': { n: 'ユーザー-取引ワークスペース-支払', bc: [['Top', '/'], ['myページ', '/p5'], ['取引ワークスペース', '/p5-15'], ['支払', null, 'lp']] },
   'p5-100': { n: 'ユーザー-退会', bc: [['Top', '/'], ['myページ', '/p5'], ['退会', null]] },
@@ -557,16 +583,16 @@ const PAGES = {
   'p60-12': { n: 'お問合わせ', bc: [['Top', '/'], ['お問合わせ', null]] },
   'p60-13': { n: 'サービス機能改善要望', bc: [['Top', '/'], ['サービス機能改善要望', null]] },
   // P70 LIAISONガイド
-  'p70': { n: 'リエゾンとは', bc: [['Top', '/'], ['LIAISONとは', null, 'l']] },
-  'p70-1': { n: 'リエゾン-作品出品ガイド', bc: [['Top', '/'], ['LIAISON', '/p70'], ['リエゾン-作品出品ガイド', null, 'l']] },
-  'p70-2': { n: 'リエゾンプラス-作品販売ガイド', bc: [['Top', '/'], ['LIAISON', '/p70'], ['リエゾンプラス-作品販売ガイド', null, 'lp']] },
-  'p70-3': { n: '作品購入までの流れ', bc: [['Top', '/'], ['LIAISON', '/p70'], ['作品購入までの流れ', null, 'lp']] },
-  'p70-4': { n: '送料・配送について', bc: [['Top', '/'], ['LIAISON', '/p70'], ['送料・配送について', null, 'lp']] },
-  'p70-5': { n: '送料一覧', bc: [['Top', '/'], ['LIAISON', '/p70'], ['送料一覧', null, 'lp']] },
-  'p70-6': { n: '特定商取引法に基づく表示', bc: [['Top', '/'], ['LIAISON', '/p70'], ['特定商取引法に基づく表示', null, 'lp']] },
-  'p70-7': { n: 'リエゾンプラスの手数料について', bc: [['Top', '/'], ['LIAISON', '/p70'], ['リエゾンプラスの手数料について', null, 'lp']] },
-  'p70-8': { n: 'ギャラリーへの説明ガイド', bc: [['Top', '/'], ['LIAISON', '/p70'], ['ギャラリーへの説明ガイド', null, 'lp']] },
-  'p70-9': { n: '作品画像撮影ガイド', bc: [['Top', '/'], ['LIAISON', '/p70'], ['作品画像撮影ガイド', null, 'lp']] },
+  'p70': { n: 'リエゾンとは', bc: [['Top', '/'], ['LIAISONとは', null]] },
+  'p70-1': { n: 'リエゾン-作品出品ガイド', bc: [['Top', '/'], ['LIAISON', '/p70'], ['リエゾン-作品出品ガイド', null]] },
+  'p70-2': { n: 'リエゾンプラス-作品販売ガイド', bc: [['Top', '/'], ['LIAISON', '/p70'], ['リエゾンプラス-作品販売ガイド', null]] },
+  'p70-3': { n: '作品購入までの流れ', bc: [['Top', '/'], ['LIAISON', '/p70'], ['作品購入までの流れ', null]] },
+  'p70-4': { n: '送料・配送について', bc: [['Top', '/'], ['LIAISON', '/p70'], ['送料・配送について', null]] },
+  'p70-5': { n: '送料一覧', bc: [['Top', '/'], ['LIAISON', '/p70'], ['送料一覧', null]] },
+  'p70-6': { n: '特定商取引法に基づく表示', bc: [['Top', '/'], ['LIAISON', '/p70'], ['特定商取引法に基づく表示', null]] },
+  'p70-7': { n: 'リエゾンプラスの手数料について', bc: [['Top', '/'], ['LIAISON', '/p70'], ['リエゾンプラスの手数料について', null]] },
+  'p70-8': { n: 'ギャラリーへの説明ガイド', bc: [['Top', '/'], ['LIAISON', '/p70'], ['ギャラリーへの説明ガイド', null]] },
+  'p70-9': { n: '作品画像撮影ガイド', bc: [['Top', '/'], ['LIAISON', '/p70'], ['作品画像撮影ガイド', null]] },
   // P90 管理者
   'p90': { n: '管理者メニュー', bc: [['Top', '/'], ['管理者メニュー', null]] },
   'p90-1': { n: '管理者-ユーザー新規/クローン', bc: [['Top', '/'], ['管理者', '/p90'], ['ユーザー新規/クローン', null]] },
@@ -918,7 +944,6 @@ KTN.init = function (opts) {
     var acEl = document.getElementById('ktnActs');
     if (bcEl) bcEl.innerHTML = renderBc(page);
     if (acEl) acEl.innerHTML = getActions(page, role);
-    requestAnimationFrame(_syncHH);
   }
 
   // common.jsのrenderAllから呼ばれるフック
@@ -936,6 +961,14 @@ KTN.init = function (opts) {
 
   function _runPage() {
     _renderHeader();
+    requestAnimationFrame(_syncHH); /* ヘッダーレンダリング直後に --hh を実測更新 */
+    /* フォントロード・折り返し変化など任意のタイミングでヘッダー高さが変わったら --hh を更新 */
+    if (window.ResizeObserver) {
+      var _hdrEl = document.getElementById('ktnHeader');
+      if (_hdrEl) new ResizeObserver(_syncHH).observe(_hdrEl);
+    } else {
+      document.fonts.ready.then(function(){ requestAnimationFrame(_syncHH); });
+    }
     renderSidebar();
     renderBottomNav();
     renderTagbar(window.ktnState.page);

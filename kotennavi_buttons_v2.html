@@ -1,0 +1,1080 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>個展なび — Button Color System v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;1,400&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ── ページリセット ── */
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding-top: 34px;
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+  font-size: 14px;
+  background: #f0f4f8;
+  color: #1a2a38;
+  line-height: 1.6; 
+}
+a { color: inherit; }
+
+/* ── デモバー（common.css からコピー） ── */
+.dbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
+  background: #111; color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  gap: 4px; padding: 0 10px; height: 34px;
+  font-size: .62rem; letter-spacing: .04em; flex-wrap: wrap;
+}
+.dbar-sep { opacity: .25; margin: 0 4px; }
+.dbtn {
+  font-size: .61rem; padding: 2px 9px;
+  border: 1px solid rgba(255,255,255,.18); background: none;
+  color: rgba(255,255,255,.45); cursor: pointer; border-radius: 2px;
+  transition: all .15s; font-family: inherit; white-space: nowrap;
+}
+.dbtn.on, .dbtn:hover { background: rgba(255,255,255,.12); color: #fff; border-color: rgba(255,255,255,.4); }
+
+/* ── セクション構造 ── */
+.page-title {
+  text-align: center;
+  padding: 40px 24px 12px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: .15em;
+  color: #5c6b79;
+  text-transform: uppercase;
+}
+.page-subtitle {
+  text-align: center;
+  padding: 0 24px 32px;
+  font-size: .82rem;
+  color: #7a8a99;
+}
+.section-block {
+  max-width: 900px;
+  margin: 0 auto 48px;
+  padding: 0 24px;
+}
+.section-ttl {
+  font-family: 'Montserrat', sans-serif;
+  font-size: .7rem;
+  font-weight: 600;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: #5c6b79;
+  border-bottom: 1px solid #d0d8e0;
+  padding-bottom: 8px;
+  margin-bottom: 20px;
+}
+.section-note {
+  font-size: .78rem;
+  color: #7a8a99;
+  background: #e8edf2;
+  border-left: 3px solid #b0bcc8;
+  padding: 8px 12px;
+  border-radius: 2px;
+  margin-bottom: 16px;
+}
+.section-note strong { color: #1a2a38; }
+
+/* ── ボタン行 ── */
+.btn-group {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 8px;
+}
+.btn-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.btn-row-label {
+  display: inline-block;
+  min-width: 120px;
+  font-size: .72rem;
+  font-family: 'Montserrat', sans-serif;
+  color: #7a8a99;
+  flex-shrink: 0;
+}
+.btn-row-desc {
+  font-size: .72rem;
+  color: #9aa8b4;
+  margin-left: 4px;
+}
+
+/* ── コンテキストパネル（ダーク背景） ── */
+.panel-dark {
+  background: #2a3a4a;
+  border-radius: 8px;
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.panel-dark .btn-row-label { color: #8a9aaa; }
+.panel-dark .btn-row-desc  { color: #6a7a8a; }
+.panel-eyebrow {
+  font-size: .68rem;
+  font-family: 'Montserrat', sans-serif;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: #6a7a8a;
+  margin-bottom: 4px;
+}
+
+/* ── 変更前後 diff ── */
+.diff-wrap {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+.diff-col { flex: 1; min-width: 200px; }
+.diff-label {
+  font-size: .68rem;
+  font-family: 'Montserrat', sans-serif;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: #9aa8b4;
+  margin-bottom: 8px;
+}
+.diff-label.is-new { color: #1a6a38; }
+.diff-label.is-old { color: #8a4444; text-decoration: line-through; }
+
+/* ── mgmt-page 管理ページ視覚識別 ── */
+body.mgmt-page { background: #eae6e0; }
+body.mgmt-page::before {
+  content: '';
+  position: fixed;
+  top: 34px; left: 0; right: 0;
+  height: 3px;
+  background: #3a4a5a;
+  z-index: 9998;
+}
+body.mgmt-page.p3-page::before { background: #2a5f7a; }
+body.mgmt-page.p4-page::before { background: #8b5e3c; }
+body.mgmt-page.p5-page::before { background: #b8608c; }
+
+/* ── カラーチップ ── */
+.color-chip {
+  display: inline-block;
+  width: 12px; height: 12px;
+  border-radius: 2px;
+  vertical-align: middle;
+  margin-right: 4px;
+  border: 1px solid rgba(0,0,0,.12);
+}
+
+/* ═══════════════════════════════════════════
+   ktn-op-btn  操作ボタン（提案）
+═══════════════════════════════════════════ */
+.ktn-op-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: inherit;
+  font-size: .78rem;
+  font-weight: 400;
+  padding: 9px 20px;
+  border-radius: 4px;
+  border: 1px solid #c0ccd8;
+  background: #fff;
+  color: #1a2a38;
+  cursor: pointer;
+  transition: background .15s, color .15s, border-color .15s, opacity .15s;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+.ktn-op-btn:hover {
+  background: #f0f4f8;
+}
+
+/* 決定・確定（固定ブルー — page-accent非依存） */
+.ktn-op-btn--primary {
+  background: #1a4a88;
+  border-color: #1a4a88;
+  color: #fff;
+}
+.ktn-op-btn--primary:hover { opacity: .88; background: #1a4a88; }
+
+/* 注意（会場売約済など — primaryが固定ブルーのためコッパーと衝突しない） */
+.ktn-op-btn--caution {
+  background: #8b5e3c;
+  border-color: #8b5e3c;
+  color: #fff;
+}
+.ktn-op-btn--caution:hover { opacity: .88; background: #8b5e3c; }
+.ktn-op-btn--caution:disabled {
+  opacity: .4;
+  cursor: not-allowed;
+}
+
+/* 削除・取消 */
+.ktn-op-btn--danger {
+  background: #b43c14;
+  border-color: #b43c14;
+  color: #fff;
+}
+.ktn-op-btn--danger:hover { opacity: .88; background: #b43c14; }
+
+/* ソフトトリガー — v3.1: 通常時から赤枠・赤文字（グレー枠はdanger系として軽すぎた） */
+.ktn-op-btn--danger-outline {
+  background: #fff;
+  border-color: rgba(180,60,20,.5);
+  color: #b43c14;
+}
+.ktn-op-btn--danger-outline:hover {
+  border-color: #b43c14;
+  color: #b43c14;
+  background: rgba(180,60,20,.07);
+}
+
+/* サイズ */
+.ktn-op-btn--lg {
+  padding: 13px 24px;
+  font-size: .88rem;
+}
+.ktn-op-btn--sm {
+  padding: 6px 12px;
+  font-size: .75rem;
+}
+
+
+/* ═══════════════════════════════════════════
+   ktn-action-btn  ナビゲーションボタン（提案）
+═══════════════════════════════════════════ */
+.ktn-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: .75rem;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 4px;
+  border: 1px solid #c0ccd8;
+  background: #fff;
+  color: #1a2a38;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background .15s, color .15s, border-color .15s;
+  line-height: 1.5;
+}
+.ktn-action-btn:hover { background: #f0f4f8; }
+
+/* 要対応ナビ — アウトライン赤＋ドット・hoverでのみ塗る
+   塗りつぶし（solid）は「その場で実行される操作」（ktn-op-btn--danger 等）専用。
+   ページ遷移ボタンは要対応でもアウトラインに留める */
+.ktn-action-btn--alert {
+  background: #fff;
+  border-color: #b43c14;
+  color: #b43c14;
+}
+.ktn-action-btn--alert::before,
+.ktn-action-btn--alert-dark::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+.ktn-action-btn--alert:hover { background: #b43c14; border-color: #b43c14; color: #fff; }
+
+/* ダーク背景上の要対応ナビ */
+.ktn-action-btn--alert-dark {
+  background: rgba(232,128,76,.12);
+  border-color: #e8804c;
+  color: #f09468;
+}
+.ktn-action-btn--alert-dark:hover { background: #c8501c; border-color: #c8501c; color: #fff; }
+
+/* ダーク背景上の通常ナビ */
+.ktn-action-btn--dark {
+  background: rgba(255,255,255,.06);
+  border-color: rgba(255,255,255,.3);
+  color: #c8d4de;
+}
+.ktn-action-btn--dark:hover { background: rgba(255,255,255,.14); border-color: rgba(255,255,255,.5); color: #e8eef4; }
+
+/* カラー帯内 */
+.ktn-action-btn--ghost {
+  background: rgba(255,255,255,.15);
+  border-color: rgba(255,255,255,.5);
+  color: currentColor;
+}
+.ktn-action-btn--ghost:hover { background: rgba(255,255,255,.28); }
+
+/* ═══════════════════════════════════════════
+   取引ステータスバッジ（非インタラクティブ）
+   先頭ドット＋淡色塗り・枠線なし・矢印なし。
+   本番実装は .p515-status__badge（common.css）
+═══════════════════════════════════════════ */
+.ktn-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: .75rem;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 2px;
+  white-space: nowrap;
+}
+.ktn-status-badge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+  opacity: .85;
+}
+.ktn-status-badge--new        { background: rgba(26,74,136,.1);   color: #1a3a7a; }
+.ktn-status-badge--paid       { background: rgba(26,74,136,.18);  color: #0a2a6a; }
+.ktn-status-badge--shipped    { background: rgba(42,95,122,.1);   color: #2a5f7a; }
+.ktn-status-badge--confirming { background: rgba(184,124,16,.12); color: #7a5500; }
+.ktn-status-badge--done       { background: rgba(58,152,103,.1);  color: #1a5a38; }
+.ktn-status-badge--cancelled  { background: rgba(0,0,0,.06);      color: #7a8a99; }
+
+/* ═══════════════════════════════════════════
+   LIAISON+ CTA
+═══════════════════════════════════════════ */
+.liaison-plus-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: .82rem;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 4px;
+  border: 1px solid #c8a96e;
+  background: #c8a96e;
+  color: #1a1000;
+  cursor: pointer;
+  letter-spacing: .04em;
+  transition: opacity .15s;
+}
+.liaison-plus-cta:hover { opacity: .88; }
+
+/* ── デモ専用：カラー帯 ── */
+.demo-band {
+  background: linear-gradient(135deg, #1a3a50 0%, #0c2038 100%);
+  border-radius: 8px;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  color: #c8d8e8;
+  font-size: .82rem;
+}
+.demo-band-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: .68rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: #8a9aaa;
+  flex-basis: 100%;
+  margin-bottom: 4px;
+}
+.demo-liaison-band {
+  background: linear-gradient(135deg, rgba(184,124,16,.18) 0%, rgba(184,124,16,.08) 100%);
+  border: 1px solid rgba(184,124,16,.3);
+  border-radius: 8px;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  color: #3a2800;
+  font-size: .82rem;
+}
+
+/* ── モーダルフッター デモ ── */
+.modal-demo {
+  border: 1px solid #d0d8e0;
+  border-radius: 8px;
+  overflow: hidden;
+  max-width: 420px;
+}
+.modal-demo__head {
+  background: #f8f9fa;
+  border-bottom: 1px solid #d0d8e0;
+  padding: 14px 20px;
+  font-size: .88rem;
+  font-weight: 500;
+  color: #2a3a4a;
+}
+.modal-demo__body {
+  padding: 16px 20px;
+  font-size: .82rem;
+  color: #5c6b79;
+  line-height: 1.7;
+}
+.modal-demo__foot {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 12px 20px;
+  background: #f8f9fa;
+  border-top: 1px solid #d0d8e0;
+}
+.modals-wrap {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.modals-wrap .modal-demo { flex: 1; min-width: 280px; }
+
+/* ── サマリーテーブル ── */
+.summary-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .8rem;
+}
+.summary-table th, .summary-table td {
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 1px solid #d8e0e8;
+}
+.summary-table th {
+  background: #e8edf2;
+  font-family: 'Montserrat', sans-serif;
+  font-size: .68rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: #5c6b79;
+  font-weight: 600;
+}
+.summary-table tr:last-child td { border-bottom: none; }
+.summary-table td:nth-child(3) { font-family: 'Montserrat', sans-serif; font-size: .72rem; color: #4a5a6a; }
+.tag-changed {
+  display: inline-block;
+  font-size: .65rem;
+  font-family: 'Montserrat', sans-serif;
+  background: #d4edda;
+  color: #1a6a38;
+  border: 1px solid #a3d5b0;
+  border-radius: 3px;
+  padding: 1px 6px;
+  margin-left: 4px;
+  vertical-align: middle;
+}
+.tag-new {
+  display: inline-block;
+  font-size: .65rem;
+  font-family: 'Montserrat', sans-serif;
+  background: #cce5ff;
+  color: #004488;
+  border: 1px solid #99caff;
+  border-radius: 3px;
+  padding: 1px 6px;
+  margin-left: 4px;
+  vertical-align: middle;
+}
+.tag-existing {
+  display: inline-block;
+  font-size: .65rem;
+  font-family: 'Montserrat', sans-serif;
+  background: #e8edf2;
+  color: #5c6b79;
+  border: 1px solid #c0ccd8;
+  border-radius: 3px;
+  padding: 1px 6px;
+  margin-left: 4px;
+  vertical-align: middle;
+}
+</style>
+</head>
+<body>
+
+<!-- デモバー -->
+<div class="dbar">
+  <span class="dbar-sep">ロール：</span>
+  <button class="dbtn on" data-role="none" onclick="setRole(this)">(なし)</button>
+  <button class="dbtn" data-role="creator" onclick="setRole(this)">Creator</button>
+  <button class="dbtn" data-role="gallery" onclick="setRole(this)">Gallery</button>
+  <button class="dbtn" data-role="user" onclick="setRole(this)">User</button>
+  <span class="dbar-sep">ページ種別：</span>
+  <button class="dbtn on" data-type="display" onclick="setPageType(this)">表示系</button>
+  <button class="dbtn" data-type="mgmt" onclick="setPageType(this)">管理系</button>
+</div>
+
+<div class="page-title">Button Color System — v2 提案</div>
+<div class="page-subtitle">ktn-op-btn（操作ボタン） / ktn-action-btn（ナビボタン）の色体系整理案</div>
+
+<!-- ════════ 1. 操作ボタン — ktn-op-btn ════════ -->
+<div class="section-block" id="ctx-target">
+
+  <div class="section-ttl">1. 操作ボタン（ktn-op-btn）— モーダル・大型CTA</div>
+  <div class="section-note">
+    <strong>主な変更点：</strong>
+    <code>--primary</code> を <code>var(--page-accent)</code> から <strong>固定ブルー #1a4a88</strong> に変更。
+    決定ボタンの色をロール・ページを問わず統一し、ユーザーが「青＝実行する」と学習できるようにする。
+    ページアクセントカラー（クリエイター色・ギャラリー色）はナビ・ブランドのみに使用。<br>
+    <code>--caution</code>（会場売約済など）は <strong>#8b5e3c（ギャラリーコッパー）</strong>。<code>--primary</code> が固定ブルーのため P4 Gallery 管理ページでも衝突しない。
+  </div>
+
+  <!-- デフォルトサイズ -->
+  <div class="btn-group">
+
+    <div class="btn-row">
+      <span class="btn-row-label">default（キャンセル）</span>
+      <button class="ktn-op-btn">キャンセル</button>
+      <button class="ktn-op-btn">戻る</button>
+      <button class="ktn-op-btn">閉じる</button>
+      <span class="btn-row-desc">— 透明 / グレー枠</span>
+    </div>
+
+    <div class="btn-row">
+      <span class="btn-row-label">--primary（決定・確定）</span>
+      <button class="ktn-op-btn ktn-op-btn--primary">保存する</button>
+      <button class="ktn-op-btn ktn-op-btn--primary">確定する</button>
+      <button class="ktn-op-btn ktn-op-btn--primary">申込を確定する</button>
+      <span class="btn-row-desc">— 固定ブルー #1a4a88 <span class="tag-changed">変更</span></span>
+    </div>
+
+    <div class="btn-row">
+      <span class="btn-row-label">--caution（注意）</span>
+      <button class="ktn-op-btn ktn-op-btn--caution">問い合わせる</button>
+      <button class="ktn-op-btn ktn-op-btn--caution" disabled>問い合わせる（無効）</button>
+      <span class="btn-row-desc">— ギャラリーコッパー #8b5e3c。<span class="tag-changed">v3</span> 会場売約済の確定は --danger に変更（カード内トリガーはアウトライン --sm）</span>
+    </div>
+
+    <div class="btn-row">
+      <span class="btn-row-label">--danger（削除・取消）</span>
+      <button class="ktn-op-btn ktn-op-btn--danger">取引をキャンセルする</button>
+      <button class="ktn-op-btn ktn-op-btn--danger">削除する</button>
+      <span class="btn-row-desc">— 赤 #b43c14 solid <span class="tag-existing">実装済</span></span>
+    </div>
+
+    <div class="btn-row">
+      <span class="btn-row-label">--danger-outline（ソフトトリガー）</span>
+      <button class="ktn-op-btn ktn-op-btn--danger-outline">出品取消</button>
+      <button class="ktn-op-btn ktn-op-btn--danger-outline">申込キャンセル</button>
+      <span class="btn-row-desc">— 赤枠・赤文字（押すと確認モーダルが開く。確定は solid --danger）<span class="tag-changed">v3.1 変更</span> 旧グレー枠は danger 系として軽すぎたため格上げ</span>
+    </div>
+
+  </div>
+
+  <!-- サイズバリエーション -->
+  <div style="margin-top:24px;margin-bottom:8px;font-size:.72rem;font-family:'Montserrat',sans-serif;color:#7a8a99;letter-spacing:.08em;text-transform:uppercase">サイズ</div>
+  <div class="btn-group">
+
+    <div class="btn-row">
+      <span class="btn-row-label">--lg（大型CTA）</span>
+      <button class="ktn-op-btn ktn-op-btn--primary ktn-op-btn--lg">支払いへ進む</button>
+      <button class="ktn-op-btn ktn-op-btn--primary ktn-op-btn--lg">受取を確認する</button>
+      <span class="btn-row-desc">— 13px 24px / .88rem</span>
+    </div>
+
+    <div class="btn-row">
+      <span class="btn-row-label">default（標準）</span>
+      <button class="ktn-op-btn ktn-op-btn--primary">申込を確定する</button>
+      <span class="btn-row-desc">— 9px 20px / .78rem</span>
+    </div>
+
+    <div class="btn-row">
+      <span class="btn-row-label">--sm（コンソール・カード内）</span>
+      <button class="ktn-op-btn ktn-op-btn--primary ktn-op-btn--sm">在庫確認完了</button>
+      <button class="ktn-op-btn ktn-op-btn--danger-outline ktn-op-btn--sm">会場売約済</button>
+      <button class="ktn-op-btn ktn-op-btn--danger-outline ktn-op-btn--sm">出品取消</button>
+      <span class="btn-row-desc">— 6px 12px / .75rem。カード内の並列破壊トリガーは両方 --danger-outline（赤枠・確定はモーダル側 --danger）</span>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ════════ 2. モーダルフッターパターン ════════ -->
+<div class="section-block">
+
+  <div class="section-ttl">2. モーダルフッターパターン — 実際の使用例</div>
+
+  <div class="modals-wrap">
+
+    <!-- 通常確認 -->
+    <div class="modal-demo">
+      <div class="modal-demo__head">在庫確認完了</div>
+      <div class="modal-demo__body">
+        在庫の確認が取れました。購入者に通知し、支払い案内を送信します。
+      </div>
+      <div class="modal-demo__foot" id="modal-foot-1">
+        <button class="ktn-op-btn">キャンセル</button>
+        <button class="ktn-op-btn ktn-op-btn--primary">確定する</button>
+      </div>
+    </div>
+
+    <!-- 確定的操作（会場売約済 — v3 で --caution → --danger に変更） -->
+    <div class="modal-demo">
+      <div class="modal-demo__head">会場売約済にする</div>
+      <div class="modal-demo__body">
+        会場での売約を記録し、LIAISON+の申込者全員に自動キャンセルを通知します。
+      </div>
+      <div class="modal-demo__foot" id="modal-foot-2">
+        <button class="ktn-op-btn">キャンセル</button>
+        <button class="ktn-op-btn ktn-op-btn--danger">売約済にする</button>
+      </div>
+    </div>
+
+    <!-- 破壊的操作 -->
+    <div class="modal-demo">
+      <div class="modal-demo__head">取引をキャンセルする</div>
+      <div class="modal-demo__body">
+        この取引をキャンセルします。この操作は取り消せません。
+      </div>
+      <div class="modal-demo__foot" id="modal-foot-3">
+        <button class="ktn-op-btn">戻る</button>
+        <button class="ktn-op-btn ktn-op-btn--danger">キャンセルする</button>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ════════ 3. 変更前後 比較 ════════ -->
+<div class="section-block">
+
+  <div class="section-ttl">3. 変更前後 比較 — ktn-op-btn--primary</div>
+  <div class="section-note">
+    <strong>問題：</strong> 現在は <code>background: var(--page-accent)</code> のため、
+    P5（ユーザーページ）では <strong>「保存する」ボタンがピンク</strong>になってしまう。
+    P3 Creator（インクブルー）では偶然きれいに見えるが、意味論的に分離すべき。
+  </div>
+
+  <div class="diff-wrap">
+    <div class="diff-col">
+      <div class="diff-label is-old">変更前 — var(--page-accent) 依存</div>
+      <div class="btn-group">
+        <div class="btn-row">
+          <span class="btn-row-label" style="min-width:80px">P3 Creator</span>
+          <button style="background:#2a5f7a;border:1px solid #2a5f7a;color:#fff;padding:9px 20px;border-radius:4px;font-size:.78rem;cursor:pointer">保存する</button>
+        </div>
+        <div class="btn-row">
+          <span class="btn-row-label" style="min-width:80px">P4 Gallery</span>
+          <button style="background:#9a6200;border:1px solid #9a6200;color:#fff;padding:9px 20px;border-radius:4px;font-size:.78rem;cursor:pointer">保存する</button>
+        </div>
+        <div class="btn-row">
+          <span class="btn-row-label" style="min-width:80px">P5 User</span>
+          <button style="background:#b8608c;border:1px solid #b8608c;color:#fff;padding:9px 20px;border-radius:4px;font-size:.78rem;cursor:pointer">保存する</button>
+        </div>
+        <div class="btn-row">
+          <span class="btn-row-label" style="min-width:80px">P2・その他</span>
+          <button style="background:#1a4a88;border:1px solid #1a4a88;color:#fff;padding:9px 20px;border-radius:4px;font-size:.78rem;cursor:pointer">保存する</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="diff-col">
+      <div class="diff-label is-new">変更後 — #1a4a88 固定</div>
+      <div class="btn-group">
+        <div class="btn-row">
+          <span class="btn-row-label" style="min-width:80px">P3 Creator</span>
+          <button class="ktn-op-btn ktn-op-btn--primary">保存する</button>
+        </div>
+        <div class="btn-row">
+          <span class="btn-row-label" style="min-width:80px">P4 Gallery</span>
+          <button class="ktn-op-btn ktn-op-btn--primary">保存する</button>
+        </div>
+        <div class="btn-row">
+          <span class="btn-row-label" style="min-width:80px">P5 User</span>
+          <button class="ktn-op-btn ktn-op-btn--primary">保存する</button>
+        </div>
+        <div class="btn-row">
+          <span class="btn-row-label" style="min-width:80px">P2・その他</span>
+          <button class="ktn-op-btn ktn-op-btn--primary">保存する</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:16px" class="section-note">
+    <strong>代替案（上の Context ボタンで確認）：</strong>
+    P3/P4 系の管理ページでは Primary もロール色にしてもよい（「Creator専用操作」感が強まる）。
+    P5 ユーザーページは必ず固定ブルー。どちらにするかはここで確認して決定する。
+  </div>
+
+</div>
+
+<!-- ════════ 4. ナビゲーションボタン — ktn-action-btn ════════ -->
+<div class="section-block">
+
+  <div class="section-ttl">4. ナビゲーションボタン（ktn-action-btn）— ページ遷移・コンソール内リンク</div>
+  <div class="section-note">
+    <strong>v3 原則：塗りつぶし（solid）＝「その場で実行される操作」専用（ktn-op-btn 系のみ）。</strong>
+    ページ遷移ボタンは要対応状態でも<strong>アウトライン＋赤ドット</strong>に留め、hover でのみ塗る。
+    solid 赤は「押すと何かが確定・破壊される」サインとして <code>ktn-op-btn--danger</code> に予約。
+    これによりナビと操作が形で見分けられ、要対応ナビが操作ボタンより目立ちすぎる問題を解消。
+  </div>
+  <div class="section-note">
+    <strong>記号ルール（v3.1 確定）：</strong><br>
+    ・<strong>末尾「 →」</strong>＝ページ遷移するボタン（ktn-action-btn）に<strong>必ず</strong>付ける。テキスト「 →」で統一し SVG 矢印は使わない。<br>
+    ・<strong>先頭「●」</strong>＝「遷移先に要対応の取引がある」通知サイン。<code>--alert</code> / <code>--alert-dark</code> / <code>:has()</code> 要対応状態で CSS（<code>::before</code>）が自動付与。HTML に手で書かない。<br>
+    ・要対応ナビの完全形＝<strong>「● ラベル →」</strong>／通常ナビ＝「ラベル →」。<br>
+    ・矢印なし＝遷移しない（その場で実行 or モーダルを開く）。カラー帯内の操作トリガー（myコレクションへ等）は <code>--ghost</code> を共用するが矢印を付けず機能アイコンを付ける。
+  </div>
+
+  <div class="btn-group">
+
+    <div class="btn-row">
+      <span class="btn-row-label">default（通常ナビ）</span>
+      <a class="ktn-action-btn" href="#">取引デスクへ →</a>
+      <a class="ktn-action-btn" href="#">出品管理 →</a>
+      <a class="ktn-action-btn" href="#">LIAISON+ →</a>
+      <span class="btn-row-desc">— グレー枠 / 透明背景</span>
+    </div>
+
+    <div class="btn-row">
+      <span class="btn-row-label">--alert（要対応ナビ）</span>
+      <a class="ktn-action-btn ktn-action-btn--alert" href="#">取引デスクへ →</a>
+      <a class="ktn-action-btn ktn-action-btn--alert" href="#">取引ワークスペースへ →</a>
+      <span class="btn-row-desc">— 赤アウトライン＋ドット＋矢印（● ラベル →）/ hover で塗り <span class="tag-changed">v3 変更</span></span>
+    </div>
+
+  </div>
+
+  <!-- ダーク背景上 -->
+  <div style="margin-top:16px">
+    <div class="panel-dark">
+      <div class="panel-eyebrow">Dark background context（p2-5-1 LIAISON+ダーク版など）</div>
+      <div class="btn-row">
+        <span class="btn-row-label">--alert-dark</span>
+        <a class="ktn-action-btn ktn-action-btn--alert-dark" href="#">取引デスクへ →</a>
+        <a class="ktn-action-btn ktn-action-btn--alert-dark" href="#">取引一覧へ →</a>
+        <span class="btn-row-desc" style="color:#6a7a8a">— 明オレンジのアウトライン＋ドット＋矢印 / hover で塗り <span class="tag-changed">v3 変更</span></span>
+      </div>
+      <div class="btn-row">
+        <span class="btn-row-label">--dark（ダーク上通常ナビ）</span>
+        <a class="ktn-action-btn ktn-action-btn--dark" href="#">詳細を見る →</a>
+        <a class="ktn-action-btn ktn-action-btn--dark" href="#">作品一覧へ →</a>
+        <span class="btn-row-desc" style="color:#6a7a8a">— 半透明白枠（手動スタイル廃止・クラス化） <span class="tag-changed">v3 新設</span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- カラー帯内 ghost -->
+  <div style="margin-top:16px">
+    <div style="background:linear-gradient(135deg,#1a4a88,#2a6aa8);border-radius:8px;padding:14px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;color:#fff;font-size:.82rem">
+      <span style="font-size:.72rem;font-family:'Montserrat',sans-serif;letter-spacing:.1em;flex-basis:100%;opacity:.6">LIAISON+ 帯（カラー背景）</span>
+      <span>LIAISON+ 販売中 — 要発送対応</span>
+      <a class="ktn-action-btn ktn-action-btn--ghost" href="#">発送入力 →</a>
+    </div>
+    <div style="margin-top:4px;font-size:.72rem;color:#7a8a99;padding-left:4px">
+      --ghost：カラー帯内でのみ使用。白背景では使わない。
+    </div>
+  </div>
+
+  <!-- ── 実際の使用例 ── -->
+  <div style="margin-top:28px;margin-bottom:8px;font-size:.72rem;font-family:'Montserrat',sans-serif;color:#7a8a99;letter-spacing:.08em;text-transform:uppercase">実際の使用例（コンテキスト別）</div>
+
+  <!-- コンソール・管理ページリンク行（ライト背景） -->
+  <div style="background:#fff;border:1px solid #d0d8e0;border-radius:6px;overflow:hidden;margin-bottom:12px">
+    <div style="font-size:.68rem;font-family:'Montserrat',sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#7a8a99;padding:8px 16px;border-bottom:1px solid #e8edf2;background:#f8f9fa">p2-12-1 / p3-15 スタイル — ライト背景（表示系・管理系共通）</div>
+
+    <!-- LIAISON+コンソールへのリンク行 -->
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid #f0f4f8;flex-wrap:wrap">
+      <span style="font-size:.78rem;font-weight:500;color:#1a2a38;flex:1;min-width:120px">第3回個展なびART FAIR</span>
+      <span style="font-size:.68rem;background:rgba(184,124,16,.1);color:#7a5a00;border:1px solid rgba(184,124,16,.3);border-radius:3px;padding:2px 8px;white-space:nowrap">LIAISON+</span>
+      <a class="ktn-action-btn" href="#">展示設定 →</a>
+      <a class="ktn-action-btn" href="#">LIAISON+コンソール →</a>
+    </div>
+
+    <!-- 要アクション行（--alert） -->
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid #f0f4f8;background:rgba(180,60,20,.03);flex-wrap:wrap">
+      <span style="font-size:.78rem;font-weight:500;color:#1a2a38;flex:1;min-width:120px">冬の群像展 2026</span>
+      <span style="font-size:.68rem;background:rgba(184,124,16,.1);color:#7a5a00;border:1px solid rgba(184,124,16,.3);border-radius:3px;padding:2px 8px;white-space:nowrap">LIAISON+</span>
+      <span class="ktn-status-badge ktn-status-badge--new" style="font-size:.68rem">購入確定待ち</span>
+      <a class="ktn-action-btn ktn-action-btn--alert" href="#">取引デスクへ →</a>
+    </div>
+
+    <!-- 通常行 -->
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 16px;flex-wrap:wrap">
+      <span style="font-size:.78rem;font-weight:500;color:#1a2a38;flex:1;min-width:120px">春のグループ展</span>
+      <span style="font-size:.68rem;background:rgba(0,93,167,.06);color:#005da7;border:1px solid rgba(0,93,167,.25);border-radius:3px;padding:2px 8px;white-space:nowrap">LIAISON</span>
+      <a class="ktn-action-btn" href="#">展示設定 →</a>
+    </div>
+  </div>
+
+  <!-- 管理ページ背景（mgmt-page）上での表示確認 -->
+  <div style="background:#eae6e0;border:1px solid #ccc8c0;border-radius:6px;overflow:hidden;margin-bottom:12px">
+    <div style="font-size:.68rem;font-family:'Montserrat',sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#7a8a99;padding:8px 16px;border-bottom:1px solid #d8d4cc;background:#e0dcd6">管理系ページ背景（#eae6e0）上での見え方</div>
+
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid #d8d4cc;flex-wrap:wrap">
+      <span style="font-size:.78rem;font-weight:500;color:#1a2a38;flex:1;min-width:120px">《 霧の朝 》No.3</span>
+      <span style="font-size:.68rem;background:rgba(184,124,16,.12);color:#7a5a00;border:1px solid rgba(184,124,16,.3);border-radius:3px;padding:2px 8px">販売中 2件申込中</span>
+      <a class="ktn-action-btn" href="#">取引デスクへ →</a>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 16px;flex-wrap:wrap">
+      <span style="font-size:.78rem;font-weight:500;color:#1a2a38;flex:1;min-width:120px">《 朱の記憶 》</span>
+      <span class="ktn-status-badge ktn-status-badge--paid" style="font-size:.68rem">発送待ち</span>
+      <a class="ktn-action-btn ktn-action-btn--alert" href="#">取引デスクへ →</a>
+    </div>
+  </div>
+
+  <!-- :has() 動的切替の説明 -->
+  <div class="section-note" style="margin-top:8px">
+    <strong>:has() による動的切替：</strong>
+    要アクション状態（在庫確認・発送など）は JS でステータスクラスを付与するだけで、
+    <code>.p315-apply-row:has(.p315-apply-status--stock) .ktn-action-btn</code> のように
+    <code>--alert</code> スタイルに自動切替。HTMLのクラス変更不要。
+  </div>
+
+</div>
+
+<!-- ════════ 5. 取引ステータスバッジ ════════ -->
+<div class="section-block">
+
+  <div class="section-ttl">5. 取引ステータスバッジ — ボタンと形で区別する</div>
+  <div class="section-note">
+    <strong>定義（v3.1 確定）：ステータス＝「先頭ドット＋淡色塗り・枠線なし・矢印なし」。クリック不可・hover 変化なし。</strong><br>
+    ボタンは必ず「枠線＋白/透明背景」を持ち、遷移するものは末尾「 →」を持つ。
+    この形の差で「押せるもの／状態を示すだけのもの」を見分ける。
+    本番実装は <code>.p515-status__badge</code>（共通ベース・取引4ページ共用）＋状態別カラークラス。
+  </div>
+
+  <div class="btn-group">
+    <div class="btn-row">
+      <span class="btn-row-label">取引状態（S1〜F2）</span>
+      <span class="ktn-status-badge ktn-status-badge--new">購入確定待ち</span>
+      <span class="ktn-status-badge ktn-status-badge--new">支払待ち</span>
+      <span class="ktn-status-badge ktn-status-badge--paid">発送待ち</span>
+      <span class="ktn-status-badge ktn-status-badge--shipped">受取確認待ち</span>
+      <span class="ktn-status-badge ktn-status-badge--confirming">完了確認待ち</span>
+      <span class="ktn-status-badge ktn-status-badge--done">取引完了</span>
+      <span class="ktn-status-badge ktn-status-badge--cancelled">キャンセル済</span>
+    </div>
+  </div>
+
+  <!-- 見分け方サマリー -->
+  <div style="margin-top:16px;background:#fff;border:1px solid #d0d8e0;border-radius:6px;overflow:hidden">
+    <table style="width:100%;border-collapse:collapse;font-size:.74rem">
+      <tr style="background:#f8f9fa;text-align:left">
+        <th style="padding:8px 14px;border-bottom:1px solid #e0e8f0;font-weight:600">種類</th>
+        <th style="padding:8px 14px;border-bottom:1px solid #e0e8f0;font-weight:600">形</th>
+        <th style="padding:8px 14px;border-bottom:1px solid #e0e8f0;font-weight:600">記号</th>
+        <th style="padding:8px 14px;border-bottom:1px solid #e0e8f0;font-weight:600">例</th>
+      </tr>
+      <tr>
+        <td style="padding:8px 14px;border-bottom:1px solid #f0f4f8">実行ボタン（その場で確定）</td>
+        <td style="padding:8px 14px;border-bottom:1px solid #f0f4f8">solid 塗り</td>
+        <td style="padding:8px 14px;border-bottom:1px solid #f0f4f8">なし</td>
+        <td style="padding:8px 14px;border-bottom:1px solid #f0f4f8"><button class="ktn-op-btn ktn-op-btn--primary ktn-op-btn--sm">購入を確定する</button></td>
+      </tr>
+      <tr>
+        <td style="padding:8px 14px;border-bottom:1px solid #f0f4f8">破壊操作トリガー（モーダルが開く）</td>
+        <td style="padding:8px 14px;border-bottom:1px solid #f0f4f8">赤枠・白背景</td>
+        <td style="padding:8px 14px;border-bottom:1px solid #f0f4f8">なし</td>
+        <td style="padding:8px 14px;border-bottom:1px solid #f0f4f8"><button class="ktn-op-btn ktn-op-btn--danger-outline ktn-op-btn--sm">会場売約済</button></td>
+      </tr>
+      <tr>
+        <td style="padding:8px 14px;border-bottom:1px solid #f0f4f8">通常ナビ（ページ遷移）</td>
+        <td style="padding:8px 14px;border-bottom:1px solid #f0f4f8">グレー枠・白背景</td>
+        <td style="padding:8px 14px;border-bottom:1px solid #f0f4f8">末尾 →</td>
+        <td style="padding:8px 14px;border-bottom:1px solid #f0f4f8"><a class="ktn-action-btn" href="#">取引デスクへ →</a></td>
+      </tr>
+      <tr>
+        <td style="padding:8px 14px;border-bottom:1px solid #f0f4f8">要対応ナビ（遷移先に要対応あり）</td>
+        <td style="padding:8px 14px;border-bottom:1px solid #f0f4f8">赤枠・白背景</td>
+        <td style="padding:8px 14px;border-bottom:1px solid #f0f4f8">先頭●＋末尾 →</td>
+        <td style="padding:8px 14px;border-bottom:1px solid #f0f4f8"><a class="ktn-action-btn ktn-action-btn--alert" href="#">取引デスクへ →</a></td>
+      </tr>
+      <tr>
+        <td style="padding:8px 14px">ステータスバッジ（押せない）</td>
+        <td style="padding:8px 14px">淡色塗り・枠なし</td>
+        <td style="padding:8px 14px">先頭●（矢印なし・hoverなし）</td>
+        <td style="padding:8px 14px"><span class="ktn-status-badge ktn-status-badge--new">購入確定待ち</span></td>
+      </tr>
+    </table>
+  </div>
+  <div class="section-note" style="margin-top:12px">
+    <strong>破壊操作トリガーと要対応ナビはどちらも赤枠だが、</strong>ナビは「●＋→」を持ち、トリガーは記号を持たない。
+    また、ステータスバッジと要対応ナビはどちらも●を持つが、バッジは塗り・枠なし、ボタンは枠＋白背景。
+    p5-14 のストリップ行（状態行）は「ストリップのドット＋ラベル」＝ステータス表示、「枠付き＋→」＝ナビ、と同じ規則に従う。
+  </div>
+
+</div>
+
+<!-- ════════ 6. LIAISON+ CTA ════════ -->
+<div class="section-block">
+
+  <div class="section-ttl">6. LIAISON+ CTA — ゴールド（ダークパネル内限定）</div>
+  <div class="section-note">
+    ゴールド <strong>#c8a96e</strong> は LIAISON+ 専用の高優先度CTA。
+    <strong>ダーク背景パネル内でのみ</strong>使用。ライト背景では使わない（金色は軽く見え、他の赤系より目立たない）。
+  </div>
+
+  <div class="demo-liaison-band">
+    <span class="demo-band-label">LIAISON+ — ライト帯（通常ページ上）</span>
+    <span style="font-size:.88rem;font-weight:500;color:#5a3a00">《 霧の朝 》No.3 — 販売中</span>
+    <span style="font-size:.78rem;color:#7a5a20;margin-left:4px">3件申込中</span>
+    <a class="ktn-action-btn ktn-action-btn--alert" style="margin-left:auto" href="#">取引デスクへ →</a>
+  </div>
+
+  <div style="margin-top:12px" class="demo-band">
+    <span class="demo-band-label">LIAISON+ — ダークパネル（p6-2 作品詳細など）</span>
+    <span>《 霧の朝 》No.3</span>
+    <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+      <button class="liaison-plus-cta">購入を申し込む</button>
+      <a class="ktn-action-btn ktn-action-btn--alert-dark" href="#">取引デスクへ →</a>
+    </div>
+  </div>
+
+  <div style="margin-top:8px;font-size:.72rem;color:#7a8a99;padding-left:4px">
+    ゴールドボタン（<code>liaison-plus-cta</code>）：ダークパネル内の購入申込のみ。他の箇所は通常ボタンを使う。
+  </div>
+
+</div>
+
+<!-- ════════ 6. 一覧サマリー ════════ -->
+<div class="section-block">
+
+  <div class="section-ttl">7. クラス一覧 — 変更サマリー</div>
+
+  <table class="summary-table">
+    <thead>
+      <tr>
+        <th>クラス</th>
+        <th>用途</th>
+        <th>色</th>
+        <th>ステータス</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>ktn-op-btn</code>（default）</td>
+        <td>キャンセル・閉じる</td>
+        <td>透明 / グレー枠 #c0ccd8</td>
+        <td><span class="tag-existing">既存</span></td>
+      </tr>
+      <tr>
+        <td><code>ktn-op-btn--primary</code></td>
+        <td>決定・確定・保存</td>
+        <td><span class="color-chip" style="background:#1a4a88"></span>#1a4a88 固定</td>
+        <td><span class="tag-changed">変更提案</span> var(--page-accent) から変更</td>
+      </tr>
+      <tr>
+        <td><code>ktn-op-btn--caution</code></td>
+        <td>慎重操作（問い合わせる など）</td>
+        <td><span class="color-chip" style="background:#8b5e3c"></span>#8b5e3c（ギャラリーコッパー）/ ホバー opacity .88</td>
+        <td><span class="tag-changed">v3</span> 会場売約済の確定は --danger に変更</td>
+      </tr>
+      <tr>
+        <td><code>ktn-op-btn--danger</code></td>
+        <td>削除・取消（確定的）</td>
+        <td><span class="color-chip" style="background:#b43c14"></span>#b43c14</td>
+        <td><span class="tag-existing">実装済</span></td>
+      </tr>
+      <tr>
+        <td><code>ktn-op-btn--danger-outline</code></td>
+        <td>破壊系ソフトトリガー（会場売約済・出品取消・申込キャンセル等）</td>
+        <td><span class="color-chip" style="background:#fff;border:2px solid rgba(180,60,20,.5)"></span>赤枠・赤文字（記号なし）</td>
+        <td><span class="tag-changed">v3.1 変更</span> グレー枠→赤枠に格上げ</td>
+      </tr>
+      <tr>
+        <td><code>ktn-op-btn--lg</code></td>
+        <td>大型CTA（支払・受取確認）</td>
+        <td>サイズ修飾子</td>
+        <td><span class="tag-existing">実装済</span></td>
+      </tr>
+      <tr>
+        <td><code>ktn-op-btn--sm</code></td>
+        <td>コンソール・カード内</td>
+        <td>サイズ修飾子</td>
+        <td><span class="tag-existing">実装済</span></td>
+      </tr>
+      <tr>
+        <td><code>ktn-action-btn</code>（default）</td>
+        <td>通常ナビゲーション</td>
+        <td>透明 / グレー枠＋末尾 →</td>
+        <td><span class="tag-changed">v3.1</span> 末尾「 →」必須（テキスト統一・SVG矢印廃止）</td>
+      </tr>
+      <tr>
+        <td><code>ktn-action-btn--alert</code></td>
+        <td>要対応ナビ（ライト背景）</td>
+        <td><span class="color-chip" style="background:#fff;border:2px solid #b43c14"></span>#b43c14 アウトライン＋ドット / hoverで塗り</td>
+        <td><span class="tag-changed">v3 変更</span> solid→アウトライン（solid は op-btn--danger 専用に）</td>
+      </tr>
+      <tr>
+        <td><code>ktn-action-btn--alert-dark</code></td>
+        <td>要対応ナビ（ダーク背景）</td>
+        <td><span class="color-chip" style="background:#2a3440;border:2px solid #e8804c"></span>#e8804c アウトライン＋ドット / hoverで #c8501c 塗り</td>
+        <td><span class="tag-changed">v3 変更</span> solid→アウトライン</td>
+      </tr>
+      <tr>
+        <td><code>ktn-action-btn--dark</code></td>
+        <td>通常ナビ（ダーク背景）</td>
+        <td>半透明白枠 rgba(255,255,255,.3) / 文字 #c8d4de</td>
+        <td><span class="tag-changed">v3 新設</span> 手動スタイルをクラス化</td>
+      </tr>
+      <tr>
+        <td><code>ktn-action-btn--ghost</code></td>
+        <td>カラー帯内ナビ</td>
+        <td>半透明白 / currentColor枠</td>
+        <td><span class="tag-existing">既存</span></td>
+      </tr>
+      <tr>
+        <td><code>p515-status__badge</code>（取引4ページ共通）</td>
+        <td>取引ステータスバッジ（非インタラクティブ）</td>
+        <td>先頭ドット＋淡色塗り・枠なし・矢印なし</td>
+        <td><span class="tag-changed">v3.1 新定義</span> ボタンと形で区別（セクション5）</td>
+      </tr>
+      <tr>
+        <td><code>liaison-plus-cta</code></td>
+        <td>LIAISON+ 購入申込（ダーク限定）</td>
+        <td><span class="color-chip" style="background:#c8a96e"></span>#c8a96e ゴールド</td>
+        <td><span class="tag-existing">既存（p6-2）</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="margin-top:16px" class="section-note">
+    <strong>横並び時の関係ルール（v3 確定）：</strong>
+    <ul style="margin:6px 0 0;padding-left:18px;line-height:1.8">
+      <li>1行（1ボタン列）に<strong>色付きボタンは1つまで</strong>。主アクション以外はアウトラインに落とす</li>
+      <li>モーダル・送信バーでは<strong>主アクションを右端</strong>、キャンセル系を左に置く</li>
+      <li><strong>同じ性質の操作は同じ見た目</strong>：実行系＝solid（op-btn--primary/--danger/--caution）／遷移系＝アウトライン＋末尾 →（action-btn）／破壊系ソフトトリガー＝赤枠・記号なし（--danger-outline）</li>
+      <li>サイズは置き場所で決める：モーダル＝標準・ページ大型CTA＝--lg・カード/コンソール内＝--sm（action-btn は1サイズのみ）</li>
+      <li>並列の破壊操作（会場売約済＋出品取消など）は<strong>両方ともアウトライン</strong>にし、確認モーダル側の実行ボタンで solid を使う</li>
+    </ul>
+  </div>
+
+  <div style="margin-top:12px" class="section-note">
+    <strong>実装状況：</strong>
+    <code>ktn-op-btn--primary</code> の固定ブルー化・<code>--alert</code>/<code>--alert-dark</code> のアウトライン化・<code>--dark</code> 新設はすべて common.css 実装済み（2026-06-12）。
+    v3.1（同日）：<code>--danger-outline</code> の赤枠格上げ・記号ルール（→/●）・取引ステータスバッジ定義（ドット付与）も common.css 実装済み。
+    取引4ページ（p3-15 / p3-16 / p5-14 / p5-15）に先行適用、他ページは確認後に展開。
+  </div>
+
+</div>
+
+<div style="height:60px"></div>
+
+<script>
+function setRole(btn) {
+  document.querySelectorAll('[data-role]').forEach(function(b) { b.classList.remove('on'); });
+  btn.classList.add('on');
+  document.body.classList.remove('p3-page', 'p4-page', 'p5-page');
+  var r = btn.dataset.role;
+  if (r === 'creator') document.body.classList.add('p3-page');
+  else if (r === 'gallery') document.body.classList.add('p4-page');
+  else if (r === 'user') document.body.classList.add('p5-page');
+}
+
+function setPageType(btn) {
+  document.querySelectorAll('[data-type]').forEach(function(b) { b.classList.remove('on'); });
+  btn.classList.add('on');
+  if (btn.dataset.type === 'mgmt') document.body.classList.add('mgmt-page');
+  else document.body.classList.remove('mgmt-page');
+}
+</script>
+</body>
+</html>

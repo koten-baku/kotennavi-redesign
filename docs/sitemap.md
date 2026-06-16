@@ -16,7 +16,7 @@
 - **admin**: 管理者
 
 ## 画面最大幅
-- `--w-article`: 720px　　記事・テキスト・編集フォーム系
+- `--w-article`: 760px　　記事・テキスト・編集フォーム系
 - `--w-detail`: 760px　　コンテンツ下層（1カラム）
 - `--w-entity`: 1080px　　コンテンツトップ（2カラム）（1件のエンティティの表紙ページ。下位ページを持つことがある）
 - `--w-index`: 1080px　　一覧・検索（複数コンテンツを並べるページ）
@@ -58,8 +58,8 @@
 | ID | ページ名 | L/L+ | guest | login | user+ | creator | gallery | admin | max-width | html-file |
 |---|---|---|---|---|---|---|---|---|---|---|
 | P3 | クリエイター |  | R | R | R | R | R | R | --w-entity | kotennavi-p3.html |
-| P3-1 | クリエイター-展覧会アーカイブ |  | R | R | R | R | R | R | --w-detail | # |
-| P3-2 | クリエイター-記事一覧 |  | R | R | R | R | R | R | --w-detail | # |
+| P3-1 | クリエイター-展覧会アーカイブ |  | R | R | R | R | R | R | --w-entity | # |
+| P3-2 | クリエイター-記事一覧 |  | R | R | R | R | R | R | --w-entity | # |
 | P3-3 | クリエイター-作品一覧 |  | R | R | R | R | R | R | --w-entity| # |
 | P3-11 | クリエイター-編集 |  |  |  |  | W |  | W | --w-article | # |
 | P3-12 | クリエイター-インサイト |  |  |  |  | R |  | R | --w-article | # |
@@ -76,8 +76,8 @@
 | ID | ページ名 | L/L+ | guest | login | user+ | creator | gallery | admin | max-width | html-file |
 |---|---|---|---|---|---|---|---|---|---|---|
 | P4 | ギャラリー |  | R | R | R | R | R | R | --w-entity | # |
-| P4-1 | ギャラリー-展覧会アーカイブ |  | R | R | R | R | R | R | --w-detail | # |
-| P4-2 | ギャラリー-記事一覧 |  | R | R | R | R | R | R | --w-detail | # |
+| P4-1 | ギャラリー-展覧会アーカイブ |  | R | R | R | R | R | R | --w-entity | # |
+| P4-2 | ギャラリー-記事一覧 |  | R | R | R | R | R | R | --w-entity | # |
 | P4-11 | ギャラリー-編集 | L,L+ |  |  |  |  | W | W | --w-article | # |
 | P4-12 | ギャラリー-インサイト |  |  |  |  |  | R | R | --w-article | # |
 | P4-13 | ギャラリー-ウオッチャー管理 |  |  |  |  |  | R/W | R/W | --w-article | # |
@@ -207,9 +207,9 @@
 
 | ID | ページ名 | L/L+ | guest | login | user+ | creator | gallery | admin | max-width | html-file |
 |---|---|---|---|---|---|---|---|---|---|--|
-| P70 | リエゾンとは | L,L+ | R | R | R | R | R | R/W | --w-article | # |
-| P70-1 | リエゾン-作品出品ガイド | L |  |  |  | R | R | R/W | --w-article | # |
-| P70-2 | リエゾンプラス-作品販売ガイド | L+ |  |  |  | R | R | R/W | --w-article | # |
+| P70 | リエゾンとは | L,L+ | R | R | R | R | R | R/W | --w-article | kotennavi-p70.html |
+| P70-1 | リエゾン-作品出品ガイド | L |  |  |  | R | R | R/W | --w-article | kotennavi-p70-1.html |
+| P70-2 | リエゾンプラス-作品販売ガイド | L+ |  |  |  | R | R | R/W | --w-article | kotennavi-p70-2.html |
 | P70-3 | 作品購入までの流れ | L+ | R | R | R | R | R | R/W | --w-article | # |
 | P70-4 | 送料・配送について | L+ | R | R | R | R | R | R/W | --w-article | # |
 | P70-5 | 送料一覧 | L+ | R | R | R | R | R | R/W | --w-article | # |

@@ -207,7 +207,7 @@
       <section class="p2-5-works">
         <div class="p2-5-works__inner">
           <div class="p2-5-works__head">
-            <span class="p2-5-works__title-ja">展示作品 — <span class="ktn-sec-en">Artworks</span></span>
+            <span class="p2-5-works__title-ja">展示作品<span class="ktn-sec-en">Artworks</span></span>
             <span class="p2-5-works__count" id="p25WorksCount">全12点</span>
           </div>
           <!-- 展示説明文 -->
@@ -264,10 +264,11 @@
                     </div>
                   </div>
                   <div class="p2-4-creator-card__action">
-                    <button class="ktn-btn" onclick="this.classList.toggle('on');event.preventDefault()" data-off="watch" data-on="watching" data-action="watch">
-                      <svg viewBox="0 0 16 16" fill="none">
-                        <circle cx="8" cy="8" r="7" fill="#7a8a99" opacity=".45"/>
-                        <circle class="wi-dark" cx="8" cy="8" r="2.6"/>
+                    <button class="ktn-btn" data-off="watch" data-on="watching" data-action="watch"
+                      onclick="handleAction(this,'watch');event.preventDefault()">
+                      <svg viewBox="0 0 16 16" fill="none" width="15" height="15">
+                        <circle cx="8" cy="8" r="7" fill="#7a8a99" opacity=".3"/>
+                        <circle class="wi-inner" cx="8" cy="8" r="2.6"/>
                       </svg>
                       watch
                       <span class="tip">ウォッチする</span>
@@ -445,7 +446,7 @@
           <!-- 近くの展覧会 -->
           <div class="p2-side-card p2-side-nearby">
             <div class="p2-side-nearby__head">
-              <span class="p2-side-nearby__title">近くの展覧会 — <span class="ktn-sec-en">Nearby</span></span>
+              <span class="p2-side-nearby__title">近くの展覧会<span class="ktn-sec-en">Nearby</span></span>
               <a href="kotennavi-p2.html?filter=near" class="p2-side-nearby__more">すべて →</a>
             </div>
             <div id="p2NearbyList"></div>
@@ -469,7 +470,7 @@
   <!-- 関連情報ヘッド -->
   <div class="ktn-related-band">
     <div class="ktn-related-band__inner">
-      <h2 class="ktn-related-band__heading">関連情報 — <span class="ktn-sec-en">Related</span></h2>
+      <h2 class="ktn-related-band__heading">関連情報<span class="ktn-sec-en">Related</span></h2>
       <div class="ktn-related-band__ctx">
         <span class="cb cb-content cb-exhibition">exhibition</span>
         <a href="kotennavi-p2.html" class="ktn-related-band__link">あなたが知らないオノマトペ</a>
@@ -492,7 +493,7 @@
   <!-- 回遊：おすすめ展覧会 -->
   <section class="ktn-sub-rec" aria-label="おすすめの展覧会">
     <div class="ktn-section__head">
-      <h2 class="ktn-section__title">おすすめの展覧会 — <span class="ktn-sec-en">Recommended</span></h2>
+      <h2 class="ktn-section__title">おすすめの展覧会<span class="ktn-sec-en">Recommended</span></h2>
       <a href="kotennavi-p2.html" class="ktn-section__more">すべて見る →</a>
     </div>
     <div class="masonry" id="p2SubRecGrid"></div>

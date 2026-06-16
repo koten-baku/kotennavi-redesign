@@ -1,10 +1,15 @@
 # 進捗状況
 
-最終更新：2026-06-06
+最終更新：2026-06-16
 
 ## 現在の作業
-**P2系表示ページ修正完了**
-次：P1（トップページ）or P2-13〜17 or P3-11〜14
+**エディトリアル・リファインメント v2 完了 + p70 ガイドページ群完了**
+- バッジ体系刷新（`.cb` 人物=solid+Cinzel / `.sb` ステータス=dot+Cinzel）
+- `kotennavi-p70.html` 新規作成（LIAISONとは — サービス紹介・比較）
+- `kotennavi-p70-1.html` 新規作成（LIAISON 作品出品ガイド・creator/gallery ロール切替）
+- p4.html を p3-tabnav / p3-layout 共通クラス構成に統一
+- common.js _syncHH を ResizeObserver 対応に改良
+次：未定（次の作業開始時に確認）
 ※ P5-16（取引ワークスペース-支払）は廃止 — 決済はStripe外部遷移に変更し、p5-15に支払済（発送待ち）状態を追加済
 
 ---
@@ -48,6 +53,9 @@
 | kotennavi-p5-11.html | P5-11 プロフィール編集 |
 | kotennavi-p5-12.html | P5-12 パスワード管理 |
 | kotennavi-p5-13.html | P5-13 メール通知設定 |
+| kotennavi-p70.html | P70 LIAISONとは（サービス紹介） |
+| kotennavi-p70-1.html | P70-1 LIAISON作品出品ガイド |
+| kotennavi-p70-2.html | P70-2 LIAISON+作品販売ガイド |
 
 ---
 
@@ -71,9 +79,16 @@
 
 | 日付 | 内容 |
 |---|---|
+| 2026-06-16 | エディトリアル・リファインメント v2：バッジ体系刷新（`.cb` 人物→solid+Cinzel白文字・コンテンツ→left-border+Cinzel / `.sb` ステータス→dot prefix+Cinzel・pill型廃止）・タイポグラフィ変数微調整（rt-size .9→.92rem / rt-lh 1.9→2.0）・`ktn-sec-en` Cinzel化・p4.html を p3-tabnav/p3-layout 共通クラス構成に移行・sticky CTAバー追加 / p70.html（LIAISONとは）・p70-1.html（LIAISON出品ガイド・ロール切替）新規作成 / common.js _syncHH をResizeObserver対応に改良・コピーボタン共通ハンドラ追加 / cards_artwork.html：申込ボタン廃止→aw__queue（foot左）に統一 / CLAUDE.md エディトリアルv2仕様セクション追加 |
+| 2026-06-13 | ボタン体系v3.1（ユーザー指摘3点）：①記号ルール確定＝末尾「 →」はページ遷移ナビ（ktn-action-btn）に必須・テキスト統一でSVG矢印廃止（p5-14の5リンクをテキスト化・p3-16/p5-15の実行ボタン2件から矢印削除）／先頭「●」＝遷移先に要対応ありのサイン（--alert系でCSS自動付与・p5-14要対応ストリップのナビにもドット追加） ②--danger-outline格上げ＝グレー枠→通常時から赤枠・赤文字（danger系として軽すぎたため）・p5-15「申込をキャンセルする」もsolid→outline化 ③取引ステータスバッジ定義＝先頭ドット＋淡色塗り・枠なし・矢印なし（.p515-status__badgeベースにドット追加・ボタン＝枠＋白背景と形で区別）・buttons_v2.htmlにセクション5「取引ステータスバッジ—見分け方サマリー表」新設・CLAUDE.md/整合性チェック.md同期済み |
+| 2026-06-12 | 取引ページ UX改善 第3弾（3項目）＋ボタン体系v3：①売約済説明の移設（p3-16 calloutを1文＋リンクに短縮・p3-15に説明ボックス .p315-ops-guide 新設＝会場売約済/出品取消の使い分けをdl 2項目で説明） ②相手入力/自分入力の視覚識別（.ktn-io-peer/.ktn-io-self/.ktn-io-tag を common.css 末尾に追加・peer＝相手色淡背景＋左3px枠/self＝白＋自分色左枠・ドット付きタグチップ「購入者が入力した内容」等・p3-16は peer=#1a4a88/self=#2a5f7a・p5-15は逆・計10ブロックに適用） ③ボタン体系v3再定義（大原則：solid＝その場で実行される操作専用・ナビの --alert/--alert-dark をsolid→アウトライン＋赤ドット化・hoverでのみ塗り・--dark新設・p3-15 :has()要対応行も同様・会場売約済確定は--danger/--cautionの代表用途は問い合わせる等に変更・横並びルール確定＝1行に色付き1つ/主アクション右端/並列破壊トリガーは両方アウトライン・buttons_v2.html/CLAUDE.md同期済み） |
+| 2026-06-12 | 取引ページ UX改善 第2弾（8項目）：①p3-15 会場売約済/出品取消ボタンを価格行から分離し例外操作行（.p315-work-card__ops・ラベル「会場で売れた／出品をやめる場合：」・静かなアウトライン＋hover色分け）に再設計・会場売約済モーダルに確認チェックボックス（申込≥1件時必須・OKは--dangerに変更・チェックまでdisabled）・売約後はlock-infoバッジ書換＋ops行非表示 ②残日数チップ（.ktn-days-chip/--urgent）を5期限表示に追加（p3-16:確定あと14日/発送あと13日/確認あと2日urgent・p5-15:支払あと4日/確認あと12日） ③p5-15キャンセルモーダルに申込順喪失警告強化（現在1番目→キュー最後尾） ④p3-15出品者アクション申込行に期限併記（.p315-apply-row__deadline・:has()で赤強調） ⑤モバイル固定CTA（.ktn-mobile-cta・≤540px・my-turn状態のみsetDemoStateで表示・タップで該当ステータスへスクロール・買側ブルー/売側赤ラベル） ⑥取引番号・追跡番号コピーボタン（.ktn-copy-btn・common.jsに委譲ハンドラ＋トースト・4箇所） ⑦≤400pxでステップラベルを現在ステップのみ表示 ⑧ログ個人情報ブロックに消去予告（CSS ::after・expired時は自動非表示） |
+| 2026-06-12 | 取引ページ UI/UX改善（B項目1〜10完了）＋確定期限ルール修正：確定期限＝会期終了3日後または申込3日後の遅い方に統一（p3-16 03.08/p4-16 03.18・CLAUDE.md転記）・p5-15ステップにsellerターン色分け追加（p3-16と対称）・p5-14タブ「取引完了」→「過去の取引」・p3-16に「完了確認待ち（評価なし）」「完了(1週間後・個人情報消去)」デモ状態追加・p5-15発送遅延キャンセル申請FAQ・領収書と個人情報消去の関係明記・取引デスク/取引ワークスペース相互参照FAQ両側追加・p3-16 JS合計計算の旧価格65000→85000修正（2箇所） |
+| 2026-06-12 | 取引4ページ（p3-15/p3-16/p5-14/p5-15）整合性改修：状態名対応表確定（S1購入確定待ち〜S5完了確認待ち・CLAUDE.md「LIAISON+ 取引状態名」に転記）・4ページの状態名/ステップラベル/ログイベント名/期限呼称を統一・アーカイブ手数料8%修正（¥14,400/¥13,200）・カノニカルデモストーリー適用（音の輪郭 No.7/AW-C42-1847/¥85,000/TXN-20260221-1847/02.21申込〜03.04完了/山田花子1番目・全2人）・p5-14キャンセルFAQをp5-15実装に一致・FAQ 6段階フロー修正・作品バッジsetDemoState追従（確定以降「売約済」）・「取引デスクへ →」統一＋実リンク化・Stripe表記/受取方法/配送先注記統一・p5-14サマリー¥83,000/2件・p3-15未精算¥120,000に整合・チェック結果は docs/取引ページ整合性チェック.md（A項目対応済/B項目1〜10未着手） |
 | 2026-05-18 | p4-18 取扱作家管理（gallery）新規制作：取扱作家一覧（LIAISON+/LIAISON/未設定バッジ）・申請中・招待中セクション・承認/却下ボタン・クリエイター招待フォーム・取扱解除モーダル・管理ドロワー・p418-CSS追加・KTN.pages['p4-18']追加 |
 | 2026-05-18 | p11-4 LIAISON+機能申込 新規制作：creator/gallery分岐フォーム・デモバー（role×状態切替）・サービス説明バナー・承諾事項チェックリスト・振込先口座フォーム・利用規約同意・申込/審査中/承認済の3状態・p114-CSS追加・KTN.pages['p11-4']追加 |
 | 2026-05-20 | P5-11〜13 新規制作：プロフィール編集（アバター・氏名・ユーザーID・自己紹介・居住地）・パスワード管理（強度インジケーター・表示トグル）・メール通知設定（展覧会/LIAISON+/重要/プロモーション 4カテゴリ・自動保存トースト）・p5-14/15ドロワーリンク修正・p511-CSS/p512-CSS/p513-CSS追加・KTN.pages[p5-11/12/13]追加・管理ページ視覚識別（mgmt-page）対応済 |
+| 2026-06-11 | P3・P4 表示系ページ共通化修正確認：スティッキーCTAバー（p3-sticky-cta）p4に追加（IntersectionObserver・ウォッチボタン同期）・common.js _syncHH をResizeObserver対応に更新・components.css min-height フィードバックループ修正（var(--hh)→50px）・p4 ktn-main margin-bottom追加（common.css）・p4 </main>位置修正（ktn-mainの外にrelated section移動→tabnav sticky解放）・p4関連情報セクションをp4-1準拠に再構成（p4-recommended→ktn-ad-band+ktn-related-band+ktn-sub-tags+ktn-sub-rec・.cc→.gcカード・handleAction準拠） |
 | 2026-06-06 | P2系表示ページ横断修正：meta description追加（p6/p6-1/p6-2）・CTAリード文から「が気になりますか？」削除・リード文/カウンターラベル/シェアアイコン色をvar(--ink)に統一・p2-1チェックインボタンをktn-btn準拠サイズ/色に修正（past行のopacity子要素移動）・パンくずルール再定義（展覧会→/p10・クリエイター→/p10-2・ギャラリー→/p10-3・作品→/p10-1）・p2-5/p2-5-1の4項目修正（aboutセクションpadding/gap縮小・パンくずLIAISONバッジ削除・SOLD OUT ribbonをaw__sold-ribbon構造に統一・右カラムをp2のasideに置換＋p2-5-1ダークモードCTA追加） |
 | 2026-05-22 | 読み物テキスト（--rt-*）全ページ統一：残存していたp2/p3/p4/p5系ヒーロー・下層ページの読み物クラスを一括修正（17クラス）：p4-head__bio-text・p5-head__bio-text・p2-5-about__body・p2-5-about__feature-body・p25-exhibit-desc__text・p25-venue-note__text・p2-5-creator-card__bio・p2-1-cal-card__desc・p2-1-simple-item__desc・p2-3-faq-a・p2-3-inquiry__desc・p2-3-rule__detail・p2-2-access-item__detail・rv-body（2箇所）・cmt-body・p3-about__text・p3-accordion__body-inner・p4-prof-atelier-desc・p4-prof-facility-desc に `font-family:var(--fs)` + `var(--rt-*)` 適用・硬直カラー（#3a3a3a/#555/#3d4d5c等）→ var(--ink) 統一 |
 | 2026-05-22 | フォントシステム統一（前セッション分）：--fb/--fs/--fn/--fm/--font-en-name/--font-en-label のCSS変数化・全ページfont-family文字列 → 変数参照に置換（Montserrat 94箇所・Shippori 21箇所）・font-weight:300→400・--rt-size/--rt-lh/--rt-ls/--rt-pre-size 読み物テキスト共通変数新設・管理ページのコンテンツ文字（展覧会名・作品名等）にvar(--fs)適用 |

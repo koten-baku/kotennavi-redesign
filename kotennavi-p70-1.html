@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>リエゾン-作品出品ガイド | 個展なび</title>
+  <meta name="description" content="リエゾン（LIAISON）の作品出品ガイド。クリエイター・ギャラリーそれぞれの利用条件、作品登録から公開までの手順をわかりやすく解説します。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@1,400;1,600&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<body data-w="article" class="p70-page p70-1-page">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- デモバー：ロール切替（creator / gallery） -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ロール切替</span>
+  <button class="dbtn on" onclick="setP70Role('creator',this)">クリエイター</button>
+  <button class="dbtn" onclick="setP70Role('gallery',this)">ギャラリー</button>
+</div>
+
+<!-- ヘッダー -->
+<header class="ktn-header" id="ktnHeader">
+  <div class="ktn-header__inner">
+    <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+    <div class="ktn-hdr-actions" id="ktnActs"></div>
+  </div>
+</header>
+
+<!-- タイトルバンド -->
+<div class="p70-title-band">
+  <div class="p70-title-band__inner">
+    <div class="p70-head__sub">
+      <span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>
+      <span class="p70-head__updated">2026年4月 制定</span>
+    </div>
+    <h1 class="p70-head__title">作品出展ガイド</h1>
+    <p class="p70-head__en">A guide to listing on LIAISON</p>
+    <p class="p70-head__lead">リエゾンは、実空間の展覧会に呼応する<strong>無料のオンライン展示</strong>です。<br>このガイドでは、クリエイター／ギャラリーそれぞれの立場に応じた出展の手順をご案内します。</p>
+  </div>
+</div>
+
+<main>
+  <div class="p70-wrap">
+
+    <!-- 目次 -->
+    <nav class="p70-toc" aria-label="目次">
+      <div class="p70-toc__title">目次 — Contents</div>
+      <ol class="p70-toc__list">
+        <li class="p70-toc__item"><span class="p70-toc__num">1</span><a class="p70-toc__link" href="#what-is-liaison">リエゾンとは</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">2</span><a class="p70-toc__link" href="#eligibility">利用条件</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">3</span><a class="p70-toc__link" href="#listing-flow">出品の流れ</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">4</span><a class="p70-toc__link" href="#display-period">展示期間と公開範囲</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">5</span><a class="p70-toc__link" href="#want-to-sell">販売もしたい方へ</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">6</span><a class="p70-toc__link" href="#faq">よくある質問</a></li>
+      </ol>
+    </nav>
+
+    <!-- 1. リエゾンとは -->
+    <section class="p70-section" id="what-is-liaison">
+      <div class="p70-section__head">
+        <span class="p70-section__num">1</span>
+        <h2 class="p70-section__title">リエゾンについて</h2>
+        <span class="p70-section__en">About LIAISON</span>
+      </div>
+      <p class="p70-lead">リエゾンは、実空間の展覧会に呼応する<em>オンライン展示</em>です。会場と同じ作品をもう一つの窓として公開することで、会期に訪れることができなかった人にも、作品との出会いをひらきます。</p>
+
+      <!-- リエゾン特徴の3点図解 -->
+      <div class="p70-concept-diagram" style="grid-template-columns:1fr 1fr 1fr">
+        <div class="p70-concept-diagram__box" style="border-top:3px solid var(--accent)">
+          <div class="p70-concept-diagram__box-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+            </svg>
+          </div>
+          <span class="p70-bilingual">
+            <span class="p70-bilingual__en">Free</span>
+            <span class="p70-bilingual__ja">完全無料</span>
+          </span>
+          <p class="p70-concept-diagram__box-sub">出展料・月会費<br>すべて無料</p>
+        </div>
+        <div class="p70-concept-diagram__box" style="border-top:3px solid var(--accent)">
+          <div class="p70-concept-diagram__box-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2"/>
+              <circle cx="9" cy="9" r="2"/>
+              <path d="M21 15l-5-5L5 21"/>
+            </svg>
+          </div>
+          <span class="p70-bilingual">
+            <span class="p70-bilingual__en">Exhibition</span>
+            <span class="p70-bilingual__ja">展示のみ</span>
+          </span>
+          <p class="p70-concept-diagram__box-sub">販売機能なし<br>取引対応は不要</p>
+        </div>
+        <div class="p70-concept-diagram__box" style="border-top:3px solid var(--accent)">
+          <div class="p70-concept-diagram__box-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="4" width="20" height="14" rx="2"/>
+              <path d="M8 22h8M12 18v4"/>
+            </svg>
+          </div>
+          <span class="p70-bilingual">
+            <span class="p70-bilingual__en">Linked</span>
+            <span class="p70-bilingual__ja">展覧会連動</span>
+          </span>
+          <p class="p70-concept-diagram__box-sub">会期と同じ期間<br>オンライン公開</p>
+        </div>
+      </div>
+
+      <div class="p70-callout">
+        <div class="p70-callout__title">リエゾン と リエゾン+ の違いについて</div>
+        <div class="p70-callout__body">
+          2つのサービスの違いと選び方は <a href="kotennavi-p70.html">リエゾン と リエゾン+</a> でご確認いただけます。
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. 利用条件（ロール別表示） -->
+    <section class="p70-section" id="eligibility">
+      <div class="p70-section__head">
+        <span class="p70-section__num">2</span>
+        <h2 class="p70-section__title">ご利用の条件</h2>
+        <span class="p70-section__en">Eligibility</span>
+      </div>
+
+      <!-- creator 専用ブロック -->
+      <div class="p70-role-block" data-role="creator">
+        <p class="p70-body">クリエイター機能のお申込みが承認されている方は、<em>追加申請なし</em>でリエゾンをご利用いただけます。</p>
+
+        <div class="p70-path-diagram" style="grid-template-columns:1fr">
+          <div class="p70-path-diagram__col p70-path-diagram__col--creator">
+            <div class="p70-path-diagram__role-head">
+              <span class="p70-path-diagram__role-tag">Creator</span>
+              <span class="p70-path-diagram__role-label">クリエイターとして</span>
+            </div>
+            <ol class="p70-path-diagram__steps">
+              <li class="p70-path-diagram__step">アカウント作成</li>
+              <li class="p70-path-diagram__step">クリエイター機能申込・承認</li>
+              <li class="p70-path-diagram__step p70-path-diagram__step--goal">リエゾン利用可能</li>
+            </ol>
+            <p class="p70-path-diagram__note">条件を満たすと出展メニューが自動で表示されます</p>
+          </div>
+        </div>
+
+        <div class="p70-callout">
+          <div class="p70-callout__title">クリエイター機能の申込方法</div>
+          <div class="p70-callout__body">
+            ログイン後、マイページの「クリエイター機能を申込む」より申請いただけます。管理者の確認後、数営業日以内に承認されます。
+          </div>
+        </div>
+      </div>
+
+      <!-- gallery 専用ブロック -->
+      <div class="p70-role-block" data-role="gallery" style="display:none">
+        <p class="p70-body">ギャラリー機能のお申込みが承認されている方は、<em>取扱作家リストの登録と管理者承認</em>を経てリエゾンをご利用いただけます。</p>
+
+        <div class="p70-path-diagram" style="grid-template-columns:1fr">
+          <div class="p70-path-diagram__col p70-path-diagram__col--gallery">
+            <div class="p70-path-diagram__role-head">
+              <span class="p70-path-diagram__role-tag">Gallery</span>
+              <span class="p70-path-diagram__role-label">ギャラリーとして</span>
+            </div>
+            <ol class="p70-path-diagram__steps">
+              <li class="p70-path-diagram__step">アカウント作成</li>
+              <li class="p70-path-diagram__step">ギャラリー機能申込・承認</li>
+              <li class="p70-path-diagram__step p70-path-diagram__step--required">取扱作家リスト登録・承認<span class="p70-path-diagram__badge">必須</span></li>
+              <li class="p70-path-diagram__step p70-path-diagram__step--goal">リエゾン利用可能</li>
+            </ol>
+            <p class="p70-path-diagram__note">取扱作家リストの管理者承認後、出展メニューが表示されます</p>
+          </div>
+        </div>
+
+        <div class="p70-callout p70-callout--venue">
+          <div class="p70-callout__title">取扱作家リストについて</div>
+          <div class="p70-callout__body">
+            ギャラリーがリエゾンで扱うクリエイターを登録する仕組みです。作品の真正性を担保するため、登録時に管理者の確認が必要です。<br><br>
+            <strong>申請の流れ</strong><br>
+            ① ギャラリー管理画面 → 取扱作家リスト管理（P4-18）から申請<br>
+            ② 管理者による確認（既存クリエイターには本人通知）<br>
+            ③ 承認完了後、そのクリエイターの作品を出展可能
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. 出品の流れ（共通） -->
+    <section class="p70-section" id="listing-flow">
+      <div class="p70-section__head">
+        <span class="p70-section__num">3</span>
+        <h2 class="p70-section__title">出展の手順</h2>
+        <span class="p70-section__en">Listing flow</span>
+      </div>
+      <p class="p70-body">展覧会を登録し、その展覧会に紐づく作品をリエゾンに公開するまでの流れです。</p>
+
+      <!-- 出品フロー概観図 -->
+      <div class="p70-flow-diagram">
+        <div class="p70-flow-diagram__title">出展の流れ — 全4ステップ</div>
+        <ol class="p70-flow-diagram__list">
+          <li class="p70-flow-diagram__item p70-flow-diagram__item--seller">
+            <span class="p70-flow-diagram__actor">出展者</span>
+            <span class="p70-flow-diagram__num">STEP 1</span>
+            <span class="p70-flow-diagram__action">展覧会登録</span>
+          </li>
+          <li class="p70-flow-diagram__arrow">—</li>
+          <li class="p70-flow-diagram__item p70-flow-diagram__item--seller">
+            <span class="p70-flow-diagram__actor">出展者</span>
+            <span class="p70-flow-diagram__num">STEP 2</span>
+            <span class="p70-flow-diagram__action">リエゾン有効化</span>
+          </li>
+          <li class="p70-flow-diagram__arrow">—</li>
+          <li class="p70-flow-diagram__item p70-flow-diagram__item--seller">
+            <span class="p70-flow-diagram__actor">出展者</span>
+            <span class="p70-flow-diagram__num">STEP 3</span>
+            <span class="p70-flow-diagram__action">作品登録</span>
+          </li>
+          <li class="p70-flow-diagram__arrow">—</li>
+          <li class="p70-flow-diagram__item p70-flow-diagram__item--seller">
+            <span class="p70-flow-diagram__actor">出展者</span>
+            <span class="p70-flow-diagram__num">STEP 4</span>
+            <span class="p70-flow-diagram__action">公開</span>
+          </li>
+          <li class="p70-flow-diagram__arrow">—</li>
+          <li class="p70-flow-diagram__end">展示開始</li>
+        </ol>
+      </div>
+
+      <h3 class="p70-subhead">各ステップの詳細</h3>
+      <ol class="p70-step-list">
+        <li class="p70-step-list__item">展覧会管理画面で、展覧会情報（タイトル・会場・会期）を登録します</li>
+        <li class="p70-step-list__item">展覧会編集画面の「リエゾンで展示する」を有効にします</li>
+        <li class="p70-step-list__item">出展する作品を登録します（作品名・素材・サイズ・制作年・画像）</li>
+        <li class="p70-step-list__item">「公開する」を実行すると、展覧会ページのリエゾン一覧に作品が並びます</li>
+      </ol>
+
+      <div class="p70-callout">
+        <div class="p70-callout__title">作品画像の準備について</div>
+        <div class="p70-callout__body">
+          作品画像は長辺2,000px以上のJPEGまたはPNG形式を推奨します。スマートフォンでの撮影のコツや色味の調整は <a href="#">作品画像撮影ガイド</a> でご紹介しています。
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. 展示期間と公開範囲 -->
+    <section class="p70-section" id="display-period">
+      <div class="p70-section__head">
+        <span class="p70-section__num">4</span>
+        <h2 class="p70-section__title">展示期間と公開範囲</h2>
+        <span class="p70-section__en">Period & visibility</span>
+      </div>
+      <p class="p70-body">リエゾンの展示期間は、<em>展覧会の会期と同期</em>します。会期終了後も、作品ページはクリエイターまたはギャラリーのページから引き続き閲覧できます。</p>
+
+      <div class="p70-dl">
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">Period</dt>
+          <dd class="p70-dl__dd">展覧会の会期と同期間（会期初日 0:00 〜 最終日 23:59）</dd>
+        </div>
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">After</dt>
+          <dd class="p70-dl__dd">展覧会ページのリエゾン一覧からは外れますが、クリエイター／ギャラリーページから引き続き閲覧可能です</dd>
+        </div>
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">Count</dt>
+          <dd class="p70-dl__dd">点数制限なし。展覧会に紐づく作品であれば、自由に登録いただけます</dd>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. 販売もしたい方へ -->
+    <section class="p70-section" id="want-to-sell">
+      <div class="p70-section__head">
+        <span class="p70-section__num">5</span>
+        <h2 class="p70-section__title">販売もご検討の方へ</h2>
+        <span class="p70-section__en">If you wish to sell</span>
+      </div>
+      <p class="p70-body">リエゾン+では、オンライン展示に加えて<em>作品の販売</em>もご利用いただけます。決済・取引管理・代金振込まで個展なびが代行するため、出展者は梱包と発送に専念いただけます。</p>
+
+      <div class="ktn-guide-nav-cards">
+        <a class="ktn-guide-nav-card ktn-guide-nav-card--lp" href="kotennavi-p70-2.html">
+          <div class="ktn-guide-nav-card__icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12c-1.5 1.5-4 4-9 4s-7.5-2.5-9-4c1.5-1.5 4-4 9-4s7.5 2.5 9 4z"/>
+              <circle cx="12" cy="12" r="2"/>
+            </svg>
+          </div>
+          <div class="ktn-guide-nav-card__body">
+            <span class="ktn-guide-nav-card__tag">LIAISON+</span>
+            <h4 class="ktn-guide-nav-card__title">作品販売ガイド</h4>
+            <p class="ktn-guide-nav-card__desc">利用申請、販売フロー、手数料体系。リエゾン+のご利用には別途申請が必要です</p>
+          </div>
+          <span class="ktn-guide-nav-card__arrow">→</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- 6. よくある質問 -->
+    <section class="p70-section" id="faq">
+      <div class="p70-section__head">
+        <span class="p70-section__num">6</span>
+        <h2 class="p70-section__title">よくある質問</h2>
+        <span class="p70-section__en">FAQ</span>
+      </div>
+      <div class="p70-faq">
+
+        <details class="p70-faq-item">
+          <summary>リエゾンは本当に無料ですか</summary>
+          <div class="p70-faq-item__body">
+            はい、ご利用に費用は一切かかりません。出展料・月会費・登録料、すべて無料です。
+          </div>
+        </details>
+
+        <details class="p70-faq-item">
+          <summary>会期の途中から公開することはできますか</summary>
+          <div class="p70-faq-item__body">
+            可能です。「公開する」を実行したタイミングから展示が始まります。ただしリエゾンは展覧会と連動する性質のため、会期初日からの公開を推奨いたします。
+          </div>
+        </details>
+
+        <details class="p70-faq-item">
+          <summary>作品画像はどんなサイズが適していますか</summary>
+          <div class="p70-faq-item__body">
+            長辺2,000px以上、JPEG（品質80以上）またはPNG形式、ファイルサイズ10MB以下を推奨します。アップロード後は自動的に長辺1,200pxにリサイズされ、ウォーターマークが付与されます。
+          </div>
+        </details>
+
+        <details class="p70-faq-item">
+          <summary>画像の著作権はどうなりますか</summary>
+          <div class="p70-faq-item__body">
+            著作権はクリエイターに帰属します。個展なびは展示目的での利用のみ行います。アップロード時の自動ウォーターマーク付与と長辺1,200pxへのリサイズにより、二次利用への対策を行っています。
+          </div>
+        </details>
+
+        <details class="p70-faq-item">
+          <summary>あとからリエゾン+（販売あり）に切り替えられますか</summary>
+          <div class="p70-faq-item__body">
+            可能です。リエゾン+の利用申請（P11-4）が承認されると、展覧会編集画面で切り替えができます。すでに公開中の作品は一度非公開にしてから、販売情報（価格・送料設定）をご入力ください。
+          </div>
+        </details>
+
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<!-- フッター -->
+<footer class="ktn-footer" id="ktnFooter"></footer>
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+// ロール切替（グローバル・dbarインラインonclickから呼ばれる）
+function setP70Role(role, btn) {
+  document.querySelectorAll('.p70-role-block').forEach(function(el) {
+    el.style.display = (el.dataset.role === role) ? '' : 'none';
+  });
+  document.querySelectorAll('#dbar .dbtn').forEach(function(b) {
+    b.classList.remove('on');
+  });
+  if (btn) btn.classList.add('on');
+  if (window.ktnState) window.ktnState.role = role;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  KTN.init({ page: 'p70-1' });
+  // 初期表示：creator
+  setP70Role('creator', document.querySelector('#dbar .dbtn'));
+});
+</script>
+</body>
+</html>

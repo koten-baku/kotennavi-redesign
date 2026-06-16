@@ -54,121 +54,20 @@
 }
 
 
-/* ══════════════════════════════════════════
-   ステータスバッジ .sb
-   ( kotennavi_badges_status.html )
-   ══════════════════════════════════════════ */
-.sb {
-  display: inline-flex; align-items: center; gap: 5px;
-  font-family: var(--fm); font-size: .52rem; font-weight: 600; letter-spacing: .08em;
-  padding: 4px 10px; border-radius: 20px;
-  white-space: nowrap; flex-shrink: 0; line-height: 1;
-}
-.sb-live { color: #fff; background: #1a8a4a; box-shadow: 0 1px 6px rgba(26,138,74,.35); }
-.sb-live .pulse { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,.9); flex-shrink: 0; animation: pulse-live 1.8s ease-in-out infinite; }
-@keyframes pulse-live { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: .4; transform: scale(.7); } }
-.sb-upcoming { color: #3a6ea8; background: rgba(58,110,168,.1); border: 1px solid rgba(58,110,168,.3); }
-.sb-soon { color: #1a5fa8; background: rgba(26,95,168,.12); border: 1px solid rgba(26,95,168,.4); box-shadow: 0 1px 4px rgba(26,95,168,.15); }
-.sb-ending { color: #fff; background: linear-gradient(135deg,#d4820a,#e09420); box-shadow: 0 1px 6px rgba(212,130,10,.4); }
-.sb-ending .ending-dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,.85); flex-shrink: 0; animation: pulse-ending 1.2s ease-in-out infinite; }
-@keyframes pulse-ending { 0%,100% { opacity: 1; } 50% { opacity: .3; } }
-/* ダーク */
-.dark .sb-live { background: #1a9a52; box-shadow: 0 1px 8px rgba(26,154,82,.4); }
-.dark .sb-upcoming { color: #80b4f0; background: rgba(128,180,240,.1); border-color: rgba(128,180,240,.3); }
-.dark .sb-soon { color: #60a0f0; background: rgba(96,160,240,.12); border-color: rgba(96,160,240,.4); }
-.dark .sb-ending { background: linear-gradient(135deg,#c47808,#d68a10); box-shadow: 0 1px 8px rgba(196,120,8,.45); }
+/* .sb 定義は kotennavi-common.css canonical に統合済み */
 
 
 /* ══════════════════════════════════════════
-   コンテンツバッジ .cb
-   ( kotennavi_badges_content.html / kotennavi_cards_content.html )
+   .cb バッジ — common.css canonical を参照
+   重複定義を廃止し、common.css の定義のみを使う
    ══════════════════════════════════════════ */
-.cb {
-  display: inline-flex; align-items: center; gap: 4px;
-  font-family: var(--fm); font-size: .48rem; font-weight: 600;
-  letter-spacing: .14em; text-transform: uppercase;
-  border-radius: 3px; white-space: nowrap; flex-shrink: 0; line-height: 1;
-}
-/* 人・組織型 */
-.cb-person { padding: 3px 7px; border: 1px solid currentColor; background: none; }
-.cb-creator { color: #2a5f7a; border-color: #5a8fa8; background: rgba(42,95,122,.1); }
-.cb-gallery { color: #8b5e3c; border-color: #b8895e; background: rgba(139,94,60,.1); }
-.cb-user    { color: #b8608c; border-color: #e8a0c8; background: rgba(232,160,200,.1); }
-/* コンテンツ型 */
-.cb-content { padding: 3px 8px 3px 7px; border-radius: 0 3px 3px 0; border-left: 2.5px solid currentColor; }
-.cb-exhibition { color: #005da7; background: rgba(0,93,167,.08);   border-left-color: #005da7; }
-.cb-article    { color: var(--col-article); background: rgba(46,122,78,.08);  border-left-color: var(--col-article); }
-.cb-artwork    { color: #7c3aab; background: rgba(124,58,171,.08); border-left-color: #7c3aab; }
-.cb-review     { color: var(--col-review);  background: rgba(184,106,16,.08); border-left-color: var(--col-review); }
-.cb-news       { color: var(--col-news);    background: rgba(192,57,43,.08);  border-left-color: var(--col-news); }
+/* .cb / .cb-person / .cb-content の定義は kotennavi-common.css に統合済み */
 
 
-/* ══════════════════════════════════════════
-   アートワーク販売状態バッジ .aws
-   ( kotennavi_cards_artwork.html )
-   ══════════════════════════════════════════ */
-.aws {
-  display: inline-flex; align-items: center; gap: 4px;
-  font-family: var(--fm); font-size: .5rem; font-weight: 700;
-  letter-spacing: .08em; padding: 3px 9px;
-  white-space: nowrap; flex-shrink: 0; line-height: 1; border-radius: 3px;
-}
-.aws-sale     { color: var(--aws-sale); background: rgba(22,163,74,.11); border: 1.5px solid rgba(22,163,74,.45); padding: 4px 10px; }
-.aws-sale::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: #22c55e; flex-shrink: 0; animation: aws-pulse 2s ease-in-out infinite; }
-@keyframes aws-pulse { 0%,100% { opacity: 1; } 50% { opacity: .3; } }
-.aws-negot    { color: var(--aws-negot); background: rgba(217,119,6,.1); border: 1.5px solid rgba(217,119,6,.42); }
-.aws-sold     { color: var(--aws-sold); background: rgba(0,0,0,.07); border: 1.5px solid rgba(0,0,0,.15); }
-.aws-inquiry  { color: var(--aws-inquiry); border: 1.5px solid rgba(146,64,14,.45); background: rgba(146,64,14,.08); }
-.aws-nsale    { color: var(--aws-nsale); border: 1.5px solid rgba(0,0,0,.18); background: transparent; }
+/* .aws 定義は kotennavi-common.css canonical に統合済み */
 
 
-/* ══════════════════════════════════════════
-   LIAISONバッジ
-   ( kotennavi_liaison_badges.html / kotennavi_liaison_logo.html /
-     kotennavi_cards_artwork.html / kotennavi_cards_exhibition.html )
-   ══════════════════════════════════════════ */
-
-/* 横長ロゴバッジ .lb-pill */
-.lb-pill {
-  display: inline-flex; align-items: center; justify-content: center;
-  background: #fff; border-radius: 4px; padding: 3px 7px;
-  box-shadow: 0 1px 6px rgba(0,0,0,.14), 0 0 0 1px rgba(0,0,0,.06);
-  flex-shrink: 0; cursor: default; transition: box-shadow .18s;
-}
-.lb-pill:hover { box-shadow: 0 3px 12px rgba(0,0,0,.18), 0 0 0 1px rgba(0,0,0,.08); }
-.lb-pill svg { display: block; }
-.lb-pill.plus { box-shadow: 0 1px 6px rgba(0,0,0,.14), 0 0 0 1.5px rgba(184,124,16,.3); }
-.lb-pill.sm { padding: 0 5px; overflow: hidden; height: 18px; align-items: center; }
-
-/* 横長ロゴバッジ（サブテキスト付き）.lb-pill-wide */
-.lb-pill-wide {
-  display: inline-flex; align-items: center; gap: 6px;
-  background: #fff; border-radius: 4px; padding: 3px 8px 3px 6px;
-  box-shadow: 0 1px 6px rgba(0,0,0,.14), 0 0 0 1px rgba(0,0,0,.06);
-  flex-shrink: 0; cursor: default; transition: box-shadow .18s;
-}
-.lb-pill-wide:hover { box-shadow: 0 3px 12px rgba(0,0,0,.18), 0 0 0 1px rgba(0,0,0,.08); }
-.lb-pill-wide svg { display: block; flex-shrink: 0; }
-.lb-pill-wide .pw-sub {
-  font-family: var(--fm); font-weight: 700; font-size: .52rem;
-  letter-spacing: .06em; white-space: nowrap; line-height: 1;
-}
-.lb-pill-wide.plus { box-shadow: 0 1px 6px rgba(0,0,0,.14), 0 0 0 1.5px rgba(184,124,16,.3); }
-
-/* 丸バッジ .lb-circle */
-.lb-circle {
-  display: inline-flex; align-items: center; justify-content: center;
-  border-radius: 50%; background: #fff;
-  box-shadow: 0 1px 6px rgba(0,0,0,.18), 0 0 0 1px rgba(0,0,0,.07);
-  overflow: hidden; flex-shrink: 0; cursor: default;
-  transition: box-shadow .18s, transform .15s;
-}
-.lb-circle:hover { transform: scale(1.08); }
-.lb-circle.plus { box-shadow: 0 1px 6px rgba(0,0,0,.16), 0 0 0 1.5px rgba(184,124,16,.35); }
-.lb-circle.sz-lg { width: 44px; height: 44px; }
-.lb-circle.sz-md { width: 34px; height: 34px; }
-.lb-circle.sz-sm { width: 26px; height: 26px; }
-.lb-circle svg { display: block; }
+/* .lb-pill / .lb-pill-wide / .lb-circle 定義は kotennavi-common.css canonical に統合済み */
 
 /* インジケーターバッジ .lb-dot */
 .lb-dot {
@@ -264,16 +163,17 @@ body.guest .ktn-btn { opacity: .6; }
 .ktn-icon-btn.on:hover { background: rgba(58,144,224,.16); }
 .ktn-icon-btn:active { transform: scale(.92); }
 
-/* ツールチップ（ボタン下に表示）*/
+/* ツールチップ（上付き・右揃え） */
 .ktn-icon-btn .tip {
-  position: absolute; left: 50%; top: calc(100% + 7px);
-  transform: translateX(-50%) translateY(-4px);
+  position: absolute; bottom: calc(100% + 7px); top: auto;
+  left: auto; right: 0;
+  transform: translateY(4px);
   white-space: nowrap; font-family: var(--fm); font-size: .5rem; letter-spacing: .07em;
   padding: 4px 9px; pointer-events: none; opacity: 0;
   transition: opacity .15s, transform .15s; z-index: 100;
   background: #1e2d3d; color: rgba(255,255,255,.88); box-shadow: 0 2px 10px rgba(0,0,0,.22);
 }
-.ktn-icon-btn:hover .tip { opacity: 1; transform: translateX(-50%) translateY(0); }
+.ktn-icon-btn:hover .tip { opacity: 1; transform: translateY(0); }
 body.guest .ktn-icon-btn { opacity: .6; }
 
 /* Watch icon inner circle — wi-inner: 統一クラス */
@@ -876,7 +776,7 @@ body.guest .ktn-icon-btn { opacity: .6; }
    ( kotennavi_header.html )
    ══════════════════════════════════════════ */
 .ktn-header { position: sticky; top: var(--dh, 0); z-index: 100; background: #fff; border-bottom: 1px solid var(--border); width: 100%; }
-.ktn-header__inner { max-width: var(--w-page); margin: 0 auto; display: flex; align-items: center; flex-wrap: wrap; gap: 8px; padding: 0 24px; min-height: var(--hh); padding-top: 8px; padding-bottom: 8px; }
+.ktn-header__inner { max-width: var(--w-page); margin: 0 auto; display: flex; align-items: center; flex-wrap: wrap; gap: 8px; padding: 0 24px; min-height: 50px; padding-top: 8px; padding-bottom: 8px; }
 .ktn-bc { display: flex; align-items: center; flex-wrap: wrap; gap: 1px; flex: 1 1 160px; min-width: 0; }
 .ktn-bc__link { font-size: .71rem; color: var(--muted); padding: 3px 5px; border-radius: 2px; transition: color .15s, background .15s; white-space: nowrap; }
 .ktn-bc__link:hover { color: var(--accent); background: var(--paper); }

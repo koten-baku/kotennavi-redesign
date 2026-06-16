@@ -1169,7 +1169,59 @@ body { padding-top: 34px; }
     </div>
   </div>
 
-  <!-- ④ 適用ページ一覧 -->
+  <!-- ④ コンソールカードヘッダー（機能ページタイトル） -->
+  <div class="ty-panel-mgmt" style="margin-top:12px">
+    <div class="ty-panel-label" style="border-bottom-color:#ccc8c0">コンソールカードヘッダー（.p315-card-head 相当）— ページ機能を包含するカードの上端</div>
+    <div style="font-size:.75rem;color:var(--muted);margin-bottom:14px;line-height:1.6">
+      管理機能ページ（p3-15 等）で採用するカードタイトルパターン。ページタイトルと全操作セクションを同一白カードで包み、
+      カード上端の <code>border-top:3px solid var(--page-accent)</code> でロールを識別する。
+      ページ見出しは <strong>機能名（UI）</strong> のため <code>--fn</code>、英語サブタイトルは機能ラベルのため <code>--font-en-label</code>（Cinzel）を使う。
+    </div>
+
+    <div style="background:#fff;border:1px solid var(--border);border-top:3px solid var(--page-accent,#2a5f7a);border-radius:4px;overflow:hidden;margin-bottom:14px">
+      <div style="display:flex;align-items:flex-start;gap:24px;padding:20px 24px 18px;border-bottom:1px solid var(--border)">
+        <div style="flex:1;min-width:0">
+          <div style="margin-bottom:8px"><span style="display:inline-flex;align-items:center;gap:6px;font-family:'Montserrat',sans-serif;font-size:.7rem;font-weight:700;padding:3px 9px 3px 7px;border-radius:10px;background:rgba(184,124,16,.12);color:#b87c10;border:1px solid rgba(184,124,16,.35)">＋ LIAISON+</span></div>
+          <div style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:1.4rem;font-weight:700;color:var(--ink);margin-bottom:3px">リエゾン＋コンソール</div>
+          <div style="font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.2em;color:var(--page-accent,#2a5f7a);margin-bottom:0">LIAISON+ CONSOLE</div>
+        </div>
+        <div style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:.8rem;color:var(--muted);line-height:1.7;flex:1;padding-top:2px">LIAISON+ 展覧会の稼働状況確認・申込対応・会場売約済操作を行います。作品の状態・価格変更は各展覧会の「展示設定」から行ってください。</div>
+      </div>
+      <div style="padding:16px 24px;font-size:.75rem;color:var(--muted)">（操作セクション群 — カード内部に続く）</div>
+    </div>
+
+    <div class="ty-row" style="border-bottom-color:#ccc8c0">
+      <div class="ty-row-meta">
+        <div class="ty-row-name">カード機能タイトル</div>
+        <div class="ty-row-spec">.p315-card-head__title<br><strong>--fn</strong> 700 / 1.4rem<br>※ 機能名（UI）なので --fn</div>
+      </div>
+      <div class="ty-row-sample">
+        <div style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:1.4rem;font-weight:700;color:var(--ink)">リエゾン＋コンソール</div>
+      </div>
+    </div>
+
+    <div class="ty-row" style="border-bottom-color:#ccc8c0">
+      <div class="ty-row-meta">
+        <div class="ty-row-name">EN 機能ラベル</div>
+        <div class="ty-row-spec">.p315-card-head__en<br>--font-en-label（Cinzel）<br>.65rem / .2em / page-accent色<br>※ ktn-en-label と同体系</div>
+      </div>
+      <div class="ty-row-sample">
+        <div style="font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.2em;color:var(--page-accent,#2a5f7a)">LIAISON+ CONSOLE</div>
+      </div>
+    </div>
+
+    <div class="ty-row" style="border-bottom:none">
+      <div class="ty-row-meta">
+        <div class="ty-row-name">カード説明文</div>
+        <div class="ty-row-spec">.p315-card-head__desc<br>--fn 400 / .8rem / muted<br>右カラムに flex:1 で配置</div>
+      </div>
+      <div class="ty-row-sample" style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:.8rem;color:var(--muted);line-height:1.7">
+        LIAISON+ 展覧会の稼働状況確認・申込対応を行います。
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑤ 適用ページ一覧 -->
   <div class="ty-panel" style="margin-top:12px">
     <div class="ty-panel-label">mgmt-page 適用ページと bodyクラス構成</div>
     <div style="display:grid;grid-template-columns:auto auto 1fr;gap:6px 16px;font-size:.75rem;align-items:center">
@@ -1202,6 +1254,365 @@ body { padding-top: 34px; }
     </div>
   </div>
 
+</div>
+
+<!-- ════════ 9. ガイド・記事ページ（P70）のタイポグラフィ ════════ -->
+<div class="ty-section">
+  <div class="ty-section-ttl">9. ガイド・記事ページ（P70）のタイポグラフィ</div>
+  <div class="ty-note">
+    <code>body.p70-page</code> を付与する静的ガイド・記事ページ共通の定義。管理ページ（<code>mgmt-page</code>）・ロール別クラス（<code>p3/p4/p5-page</code>）は付けない。<br>
+    モデルページ：<code>kotennavi-p70-2.html</code>（LIAISON+ 作品販売ガイド）
+  </div>
+
+  <!-- ① タイトルバンド構成 -->
+  <div class="ty-panel">
+    <div class="ty-panel-label">① タイトルバンド（.p70-title-band / .p70-title-band__inner） — ヘッダー直下・白背景・<code>max-width: --w-article</code></div>
+    <div style="font-size:.75rem;color:var(--muted);margin-bottom:16px;line-height:1.6">
+      <code>ktn-header</code> の直後に置く白背景バンド。<code>&lt;main&gt;</code> の外側に配置し、コンテンツ（目次・章本文）と視覚的に分離する。<br>
+      <code>padding: 36px 20px 28px</code> — 上余白はヘッダー直下の息継ぎ確保のため十分に取る。
+    </div>
+
+    <!-- 実際のバンド見本（p3-15と同パターン：バッジ → 日本語 h1 → EN下 → lead） -->
+    <div style="background:#fff;border:1px solid var(--border);border-radius:6px;padding:36px 20px 28px;margin-bottom:16px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
+        <span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span>
+        <span style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:.7rem;color:var(--muted)">2026年4月 制定</span>
+      </div>
+      <h1 style="font-family:'Shippori Mincho',serif;font-size:2rem;font-weight:700;color:var(--ink);line-height:1.2;margin:0 0 3px">作品販売ガイド</h1>
+      <p style="font-family:'Cinzel',serif;font-size:.72rem;letter-spacing:.06em;color:var(--muted);margin:0 0 14px">LIAISON+ WORK SALES GUIDE</p>
+      <p style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:.82rem;line-height:1.8;color:var(--muted);margin:0">LIAISON+ は実際の展覧会に連動したオンライン作品展示・販売サービスです。このガイドでは、出品の準備から取引完了まで、知っておくべきことをまとめています。</p>
+    </div>
+
+    <div class="ty-row">
+      <div class="ty-row-meta">
+        <div class="ty-row-name">.p70-head__sub</div>
+        <div class="ty-row-spec">flex row / badge + .p70-head__updated — <strong>h1 の上に配置</strong><br>.p70-head__updated: --fn .7rem muted / margin-bottom: 10px</div>
+      </div>
+      <div class="ty-row-sample" style="display:flex;align-items:center;gap:12px">
+        <span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span>
+        <span style="font-size:.7rem;color:var(--muted)">2026年4月 制定</span>
+      </div>
+    </div>
+
+    <div class="ty-row">
+      <div class="ty-row-meta">
+        <div class="ty-row-name">.p70-head__title</div>
+        <div class="ty-row-spec">--fs（Shippori Mincho）700 / 2rem / lh1.2 / margin: 0 0 3px<br>p3-15 <code>ktn-mgmt-head__title</code> と同パターン。サービス名は下の EN に任せる</div>
+      </div>
+      <div class="ty-row-sample"><span style="font-family:'Shippori Mincho',serif;font-size:2rem;font-weight:700;color:var(--ink);line-height:1.2">作品販売ガイド</span></div>
+    </div>
+
+    <div class="ty-row">
+      <div class="ty-row-meta">
+        <div class="ty-row-name">.p70-head__en</div>
+        <div class="ty-row-spec">--font-en-label（Cinzel）/ .72rem / letter-spacing:.06em — <strong>h1 の下に配置</strong><br>color: <code>var(--muted)</code>（全ページ共通色・ページ種別で変えない）<br>p3-15 <code>ktn-mgmt-head__en</code> と同パターン</div>
+      </div>
+      <div class="ty-row-sample"><span style="font-family:'Cinzel',serif;font-size:.72rem;letter-spacing:.06em;color:var(--muted)">LIAISON+ WORK SALES GUIDE</span></div>
+    </div>
+
+    <div class="ty-row">
+      <div class="ty-row-meta">
+        <div class="ty-row-name">.p70-head__lead</div>
+        <div class="ty-row-spec">--fn（Zen Kaku Gothic New）/ .82rem / muted<br>※ ガイド文は --fs でなく --fn。UI・説明文カテゴリ</div>
+      </div>
+      <div class="ty-row-sample" style="font-size:.82rem;color:var(--muted);line-height:1.8">LIAISON+ は実際の展覧会に連動したオンライン作品展示・販売サービスです。</div>
+    </div>
+  </div>
+
+  <!-- ② 章見出し -->
+  <div class="ty-panel" style="margin-top:12px">
+    <div class="ty-panel-label">② 章見出し（h2） — .p70-section__head</div>
+    <div style="font-size:.75rem;color:var(--muted);margin-bottom:14px;line-height:1.6">
+      flex row：番号（--fm）+ 日本語タイトル（--fs）+ 英語サブ（DM Serif Display italic = ktn-sec-en 同体系）。下 2px ボーダーで他コンテンツと区切る。
+    </div>
+
+    <!-- 見本 -->
+    <div style="display:flex;align-items:center;gap:10px;border-bottom:2px solid var(--border);padding-bottom:8px;margin-bottom:16px">
+      <span style="font-family:'Montserrat',sans-serif;font-size:.78rem;font-weight:600;color:var(--muted);flex-shrink:0">2</span>
+      <h2 style="font-family:'Shippori Mincho',serif;font-size:1.05rem;font-weight:700;color:var(--ink);margin:0;flex:1">会場連動販売の仕組み</h2>
+      <span style="font-family:'DM Serif Display',serif;font-style:italic;font-size:.78rem;color:var(--muted);white-space:nowrap">Venue-First Design</span>
+    </div>
+
+    <div class="ty-row">
+      <div class="ty-row-meta">
+        <div class="ty-row-name">.p70-section__num</div>
+        <div class="ty-row-spec">--fm（Montserrat）600 / .78rem / muted</div>
+      </div>
+      <div class="ty-row-sample" style="font-family:'Montserrat',sans-serif;font-size:.78rem;font-weight:600;color:var(--muted)">2</div>
+    </div>
+
+    <div class="ty-row">
+      <div class="ty-row-meta">
+        <div class="ty-row-name">.p70-section__title</div>
+        <div class="ty-row-spec">--fs（Shippori Mincho）700 / 1.05rem</div>
+      </div>
+      <div class="ty-row-sample" style="font-family:'Shippori Mincho',serif;font-size:1.05rem;font-weight:700;color:var(--ink)">会場連動販売の仕組み</div>
+    </div>
+
+    <div class="ty-row">
+      <div class="ty-row-meta">
+        <div class="ty-row-name">.p70-section__en</div>
+        <div class="ty-row-spec">DM Serif Display italic / .78rem / muted<br>ktn-sec-en と同体系（セクションサブ）<br>モバイル（≤540px）では非表示</div>
+      </div>
+      <div class="ty-row-sample" style="font-family:'DM Serif Display',serif;font-style:italic;font-size:.78rem;color:var(--muted)">Venue-First Design</div>
+    </div>
+  </div>
+
+  <!-- ③ 本文・コンテンツ要素 -->
+  <div class="ty-panel" style="margin-top:12px">
+    <div class="ty-panel-label">③ 本文・コンテンツ要素</div>
+
+    <div class="ty-row">
+      <div class="ty-row-meta">
+        <div class="ty-row-name">.p70-body</div>
+        <div class="ty-row-spec">--fn（Zen Kaku Gothic New）/ .84rem / lh1.9<br><strong style="color:#b43c14">※ --fs ではなく --fn</strong><br>ガイドは UI・操作説明カテゴリ。読み物（--fs）は人名・展覧会タイトルのみ</div>
+      </div>
+      <div class="ty-row-sample" style="font-size:.84rem;line-height:1.9;color:var(--ink)">LIAISON+ は「実際の展覧会と連動した」サービスである以上、<strong style="font-weight:700">会場にご来場いただいたお客様を最優先</strong>とする設計になっています。</div>
+    </div>
+
+    <div class="ty-row">
+      <div class="ty-row-meta">
+        <div class="ty-row-name">.p70-callout（default）</div>
+        <div class="ty-row-spec">白背景 / --accent 左ボーダー3px<br>title: --fn 700 .78rem / body: --fn .8rem lh1.8</div>
+      </div>
+      <div class="ty-row-sample" style="border:1px solid var(--border);border-left:3px solid #005da7;border-radius:4px;padding:12px 14px;background:#fff">
+        <div style="font-size:.78rem;font-weight:700;color:var(--ink);margin-bottom:6px">価格設定のポイント</div>
+        <div style="font-size:.8rem;line-height:1.8;color:var(--ink)">販売価格は<strong style="font-weight:700">税込</strong>の金額を設定してください。</div>
+      </div>
+    </div>
+
+    <div class="ty-row">
+      <div class="ty-row-meta">
+        <div class="ty-row-name">.p70-callout--venue</div>
+        <div class="ty-row-spec">会場優先ポリシー専用<br>border-left: #2a5f7a（インクブルー）<br>background: rgba(42,95,122,.03)</div>
+      </div>
+      <div class="ty-row-sample" style="border:1px solid var(--border);border-left:3px solid #2a5f7a;border-radius:4px;padding:12px 14px;background:rgba(42,95,122,.03)">
+        <div style="font-size:.78rem;font-weight:700;color:var(--ink);margin-bottom:6px">オンライン申込は「仮申込」として扱われます</div>
+        <div style="font-size:.8rem;line-height:1.8;color:var(--ink)">出品者が購入確定を行うまで仮申込として扱われます。</div>
+      </div>
+    </div>
+
+    <div class="ty-row">
+      <div class="ty-row-meta">
+        <div class="ty-row-name">.p70-callout--fee</div>
+        <div class="ty-row-spec">手数料・金額情報専用<br>border-left: #8b5e3c（コッパーブラウン）<br>background: rgba(139,94,60,.03)</div>
+      </div>
+      <div class="ty-row-sample" style="border:1px solid var(--border);border-left:3px solid #8b5e3c;border-radius:4px;padding:12px 14px;background:rgba(139,94,60,.03)">
+        <div style="font-size:.78rem;font-weight:700;color:var(--ink);margin-bottom:6px">手数料の計算例</div>
+        <div style="font-size:.8rem;line-height:1.8;color:var(--ink)">販売価格 50,000円 → 手数料 4,000円 → 手取り 46,000円</div>
+      </div>
+    </div>
+
+    <div class="ty-row">
+      <div class="ty-row-meta">
+        <div class="ty-row-name">.p70-dl（定義リスト）</div>
+        <div class="ty-row-spec">dt: --fn 600 .72rem・背景 --paper・枠<br>dd: --fn .78rem lh1.7<br>flex row / 白背景カード</div>
+      </div>
+      <div class="ty-row-sample">
+        <div style="display:flex;align-items:baseline;gap:12px;padding:8px 12px;background:#fff;border:1px solid var(--border);border-radius:4px">
+          <dt style="flex-shrink:0;font-size:.72rem;font-weight:600;color:var(--ink);background:var(--paper);border:1px solid var(--border);border-radius:3px;padding:3px 8px;white-space:nowrap">会場売約済</dt>
+          <dd style="flex:1;font-size:.78rem;line-height:1.7;color:var(--ink);margin:0">会場でその作品が売れたときに押します。</dd>
+        </div>
+      </div>
+    </div>
+
+    <div class="ty-row">
+      <div class="ty-row-meta">
+        <div class="ty-row-name">.p70-faq-item（FAQ）</div>
+        <div class="ty-row-spec">details/summary アコーディオン<br>summary: --fn 600 .82rem / Q バッジ（--fm .68rem）<br>body: --fn .8rem lh1.8</div>
+      </div>
+      <div class="ty-row-sample">
+        <details style="border:1px solid var(--border);border-radius:4px;overflow:hidden" open>
+          <summary style="list-style:none;display:flex;align-items:center;gap:10px;padding:10px 12px;cursor:pointer;font-size:.82rem;font-weight:600;color:var(--ink)">
+            <span style="flex-shrink:0;font-family:'Montserrat',sans-serif;font-size:.68rem;font-weight:700;color:#fff;background:var(--muted);border-radius:3px;padding:2px 6px">Q</span>
+            発送が会期終了後になっても問題ありませんか？
+            <span style="margin-left:auto;font-family:'Montserrat',sans-serif;font-size:.82rem;color:var(--muted)">－</span>
+          </summary>
+          <div style="padding:12px;font-size:.8rem;line-height:1.8;color:var(--ink);border-top:1px solid var(--border)">問題ありません。発送期限は「会期終了後7日または支払いから7日後の遅い方」です。</div>
+        </details>
+      </div>
+    </div>
+  </div>
+
+  <!-- ④ 目次 -->
+  <div class="ty-panel" style="margin-top:12px">
+    <div class="ty-panel-label">④ 目次（.p70-toc）</div>
+    <div style="background:#fff;border:1px solid var(--border);border-radius:6px;padding:16px 20px">
+      <div style="font-size:.7rem;font-weight:700;color:var(--muted);letter-spacing:.07em;text-transform:uppercase;margin-bottom:10px">目次 — Contents</div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div style="display:flex;align-items:baseline;gap:8px">
+          <span style="font-family:'Montserrat',sans-serif;font-size:.7rem;color:var(--muted);min-width:18px">1</span>
+          <a href="#" style="font-size:.8rem;color:#005da7;text-decoration:none">LIAISON+ とは</a>
+        </div>
+        <div style="display:flex;align-items:baseline;gap:8px">
+          <span style="font-family:'Montserrat',sans-serif;font-size:.7rem;color:var(--muted);min-width:18px">2</span>
+          <a href="#" style="font-size:.8rem;color:#005da7;text-decoration:none">会場連動販売の仕組み — 会場来場者を最優先にする設計</a>
+        </div>
+      </div>
+    </div>
+    <div style="font-size:.75rem;color:var(--muted);margin-top:8px;line-height:1.6">
+      title: --fn 700 .7rem uppercase / num: --fm .7rem muted / link: .8rem var(--accent)
+    </div>
+  </div>
+
+  <!-- ⑤ ルールまとめ -->
+  <div style="background:#fff;border:1px solid var(--border);border-radius:6px;padding:16px 18px;margin-top:12px">
+    <div style="font-family:'Montserrat',sans-serif;font-size:.62rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">P70 フォント使い分けまとめ</div>
+    <div style="display:grid;grid-template-columns:auto 1fr 1fr;gap:4px 16px;font-size:.75rem;align-items:start">
+      <div style="font-family:'Montserrat',sans-serif;font-size:.62rem;color:var(--muted);font-weight:600">要素</div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:.62rem;color:var(--muted);font-weight:600">フォント</div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:.62rem;color:var(--muted);font-weight:600">サイズ / 理由</div>
+
+      <div style="color:var(--ink)">.p70-head__en</div>
+      <div style="color:var(--muted)">--font-en-label（Cinzel）</div>
+      <div style="color:var(--muted)">.72rem / ページ機能ラベル</div>
+
+      <div style="color:var(--ink)">.p70-head__title</div>
+      <div style="color:var(--muted)">--fs（Shippori Mincho）700</div>
+      <div style="color:var(--muted)">2rem / ページ主タイトル</div>
+
+      <div style="color:var(--ink)">.p70-head__lead</div>
+      <div style="color:var(--muted)">--fn（Zen Kaku Gothic New）</div>
+      <div style="color:var(--muted)">.82rem muted / UI説明文</div>
+
+      <div style="color:var(--ink)">.p70-section__num</div>
+      <div style="color:var(--muted)">--fm（Montserrat）600</div>
+      <div style="color:var(--muted)">.78rem / 章番号（数値）</div>
+
+      <div style="color:var(--ink)">.p70-section__title</div>
+      <div style="color:var(--muted)">--fs（Shippori Mincho）700</div>
+      <div style="color:var(--muted)">1.05rem / 章見出し</div>
+
+      <div style="color:var(--ink)">.p70-section__en</div>
+      <div style="color:var(--muted)">DM Serif Display italic</div>
+      <div style="color:var(--muted)">.78rem muted / セクションサブ（ktn-sec-en 同体系）</div>
+
+      <div style="color:var(--ink)">.p70-body</div>
+      <div style="color:var(--muted)">--fn（Zen Kaku Gothic New）</div>
+      <div style="color:var(--muted)">.84rem / ガイド本文（操作説明 = UI カテゴリ）</div>
+
+      <div style="color:var(--ink)">.p70-toc__title</div>
+      <div style="color:var(--muted)">--fn 700</div>
+      <div style="color:var(--muted)">.7rem uppercase / 構造ラベル</div>
+
+      <div style="color:var(--ink)">.p70-toc__link</div>
+      <div style="color:var(--muted)">継承（--fn）</div>
+      <div style="color:var(--muted)">.8rem var(--accent)</div>
+
+      <div style="color:var(--ink)">.p70-faq summary</div>
+      <div style="color:var(--muted)">--fn 600</div>
+      <div style="color:var(--muted)">.82rem / Qバッジは --fm</div>
+
+      <div style="color:var(--ink)">.p70-callout__title</div>
+      <div style="color:var(--muted)">--fn 700</div>
+      <div style="color:var(--muted)">.78rem / 注意ヘッダー</div>
+    </div>
+    <div style="margin-top:10px;font-size:.75rem;color:#b43c14;line-height:1.7">
+      <strong>NG：</strong>ガイド本文に --fs（Shippori Mincho）を使う。<br>
+      --fs は「展覧会説明・略歴・作品について・読ませる文章」専用。ガイド・操作説明は --fn。<br>
+      <strong>OK：</strong>章タイトル・ページタイトルは --fs（コンテンツ見出しとして機能するため）。
+    </div>
+  </div>
+
+</div>
+
+<!-- ════════ 10. ガイド系ページ（P70系）ナビゲーション規約 ════════ -->
+<div class="ty-section">
+  <div class="ty-section-ttl">10. ガイド系ページ（P70系）ナビゲーション規約</div>
+  <div class="ty-note">
+    リエゾン関連ガイド群（<code>p70 / p70-1 / p70-2 / p70-3 …</code>）相互のページ間誘導に使う共通ルール。<br>
+    ロールにより表示内容が異なるため、<strong>フッター固定ナビ（← 前へ／次へ →）は設置しない</strong>。代わりに2種類のリンク形式を使い分ける。
+  </div>
+
+  <!-- ① 主要導線：カード型リンク -->
+  <div class="ty-panel">
+    <div class="ty-panel-label">① 主要導線（ガイド間の章末・節末誘導） — <code>.ktn-guide-nav-card</code></div>
+    <div class="ty-note" style="margin-bottom:10px">
+      他のガイドページへの主要な導線。ロール別CTA・「販売もしたい人は→リエゾン+」のような意思決定誘導に使う。<br>
+      <strong>初心者にも「次にどこを見ればいいか」が一目でわかること</strong>を優先し、タイトル＋短い説明＋矢印の3要素で構成する。
+    </div>
+    <div style="margin:12px 0">
+      <div class="ktn-guide-nav-cards">
+        <a class="ktn-guide-nav-card ktn-guide-nav-card--li" href="#">
+          <div class="ktn-guide-nav-card__icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          </div>
+          <div class="ktn-guide-nav-card__body">
+            <span class="ktn-guide-nav-card__tag">LIAISON</span>
+            <h4 class="ktn-guide-nav-card__title">リエゾン-作品出品ガイド</h4>
+            <p class="ktn-guide-nav-card__desc">無料のオンライン展示サービス。作品の登録から公開までの手順を解説</p>
+          </div>
+          <span class="ktn-guide-nav-card__arrow">→</span>
+        </a>
+        <a class="ktn-guide-nav-card ktn-guide-nav-card--lp" href="#">
+          <div class="ktn-guide-nav-card__icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12c-1.5 1.5-4 4-9 4s-7.5-2.5-9-4c1.5-1.5 4-4 9-4s7.5 2.5 9 4z"/><circle cx="12" cy="12" r="2"/></svg>
+          </div>
+          <div class="ktn-guide-nav-card__body">
+            <span class="ktn-guide-nav-card__tag">LIAISON+</span>
+            <h4 class="ktn-guide-nav-card__title">リエゾン+作品販売ガイド</h4>
+            <p class="ktn-guide-nav-card__desc">作品販売を含む有料サービス。申請から販売フロー、手数料までを解説</p>
+          </div>
+          <span class="ktn-guide-nav-card__arrow">→</span>
+        </a>
+      </div>
+    </div>
+    <div style="background:var(--paper);border-radius:4px;padding:10px 12px;margin-top:10px">
+      <div style="font-family:'Montserrat',sans-serif;font-size:.62rem;font-weight:600;letter-spacing:.1em;color:var(--muted);margin-bottom:4px">バリアント</div>
+      <div style="font-size:.75rem;color:var(--ink);line-height:1.8">
+        <code>--li</code>：リエゾン系（左ボーダー青）<br>
+        <code>--lp</code>：リエゾン+系（左ボーダー金）<br>
+        <code>--neutral</code>：購入ガイド等の中立コンテンツ（左ボーダーグレー）<br>
+        グループ表示は <code>.ktn-guide-nav-cards</code> で囲む（縦並び・gap:10px）
+      </div>
+    </div>
+  </div>
+
+  <!-- ② インライン参照：テキストリンク+→ -->
+  <div class="ty-panel">
+    <div class="ty-panel-label">② インライン参照（本文中での他ガイド言及） — テキストリンク + 末尾 <code>→</code></div>
+    <div class="ty-note" style="margin-bottom:10px">
+      本文段落の中で他のガイド・関連ページに軽く触れる場合に使う。視認性を落とさず、本文の流れを止めないことを優先。<br>
+      末尾に半角空白 ＋ <code>→</code> を付け、リンクであることを明示する。
+    </div>
+    <div style="background:#fff;border:1px solid var(--border);border-radius:6px;padding:14px 16px;margin:10px 0">
+      <p style="font-family:var(--fn);font-size:.84rem;line-height:1.9;color:var(--ink);margin:0">
+        リエゾン+ の利用には別途申請が必要です。詳しい手数料体系は
+        <a href="#" style="color:var(--accent)">リエゾン+作品販売ガイド →</a> でご確認いただけます。
+      </p>
+    </div>
+  </div>
+
+  <!-- ③ 使い分けの判断基準 -->
+  <div class="ty-panel">
+    <div class="ty-panel-label">③ 使い分けの判断基準</div>
+    <div style="display:grid;grid-template-columns:120px 1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:4px;overflow:hidden;font-size:.75rem;margin:8px 0">
+      <div style="background:var(--paper);padding:8px 10px;font-family:'Montserrat',sans-serif;font-size:.62rem;font-weight:600;color:var(--muted);letter-spacing:.06em">判断軸</div>
+      <div style="background:var(--paper);padding:8px 10px;font-family:'Montserrat',sans-serif;font-size:.62rem;font-weight:600;color:var(--muted);letter-spacing:.06em">カード型</div>
+      <div style="background:var(--paper);padding:8px 10px;font-family:'Montserrat',sans-serif;font-size:.62rem;font-weight:600;color:var(--muted);letter-spacing:.06em">テキストリンク</div>
+
+      <div style="background:#fff;padding:8px 10px;color:var(--ink)">目的</div>
+      <div style="background:#fff;padding:8px 10px;color:var(--ink)">次のページへ誘導したい</div>
+      <div style="background:#fff;padding:8px 10px;color:var(--ink)">参照を提示するだけ</div>
+
+      <div style="background:#fff;padding:8px 10px;color:var(--ink)">配置位置</div>
+      <div style="background:#fff;padding:8px 10px;color:var(--ink)">章末・節末・独立した誘導ブロック</div>
+      <div style="background:#fff;padding:8px 10px;color:var(--ink)">段落・コールアウト本文中</div>
+
+      <div style="background:#fff;padding:8px 10px;color:var(--ink)">情報量</div>
+      <div style="background:#fff;padding:8px 10px;color:var(--ink)">タイトル + 説明（複数行）</div>
+      <div style="background:#fff;padding:8px 10px;color:var(--ink)">ページ名のみ</div>
+
+      <div style="background:#fff;padding:8px 10px;color:var(--ink)">複数並べる</div>
+      <div style="background:#fff;padding:8px 10px;color:var(--ink)">OK（縦並び・最大3枚程度）</div>
+      <div style="background:#fff;padding:8px 10px;color:var(--ink)">NG（リンク一覧用途には使わない）</div>
+    </div>
+    <div style="margin-top:10px;font-size:.75rem;color:#b43c14;line-height:1.7">
+      <strong>NG：</strong>フッターに <code>← 前へ ／ 次へ →</code> 形式の固定ナビを置く（ロールにより表示が異なるため不適切）。<br>
+      <strong>NG：</strong>大量のリンクをカード化して並べる（視認性が落ちる・スクロール量増加）。<br>
+      <strong>OK：</strong>段落内の参照はテキストリンクで処理し、ユーザーに次のアクションを促す箇所だけカードを使う。
+    </div>
+  </div>
 </div>
 
 </div><!-- /ty-wrap -->

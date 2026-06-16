@@ -210,14 +210,13 @@
                       </div>
                     </div>
                     <div class="p2-4-creator-card__action">
-                      <button class="ktn-btn" id="p6WatchBtn"
-                              onclick="this.classList.toggle('on');event.preventDefault()"
-                              data-off="watch" data-on="watching" data-action="watch">
-                        <svg viewBox="0 0 16 16" fill="none">
-                          <circle cx="8" cy="8" r="7" fill="#7a8a99" opacity=".45"/>
-                          <circle class="wi-dark" cx="8" cy="8" r="2.6"/>
+                      <button class="ktn-btn" data-off="watch" data-on="watching" data-action="watch"
+                              onclick="handleAction(this,'watch');event.preventDefault()">
+                        <svg viewBox="0 0 16 16" fill="none" width="15" height="15">
+                          <circle cx="8" cy="8" r="7" fill="#7a8a99" opacity=".3"/>
+                          <circle class="wi-inner" cx="8" cy="8" r="2.6"/>
                         </svg>
-                        watch
+                        watch<span class="tip">ウォッチする</span>
                       </button>
                     </div>
                   </div>

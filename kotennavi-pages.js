@@ -3637,7 +3637,7 @@ KTN.pages['p4'] = function () {
   if (d.newBadges) {
     Object.keys(d.newBadges).forEach(function(key){
       if (!d.newBadges[key]) return;
-      var badge = document.querySelector('.p4-tabnav__new[data-new="' + key + '"]');
+      var badge = document.querySelector('.p3-tabnav__new[data-new="' + key + '"]');
       if (badge) badge.classList.add('is-visible');
     });
   }
@@ -3699,7 +3699,7 @@ KTN.pages['p4'] = function () {
       if (!target) return;
       var hh = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--hh') || '56', 10);
       window.scrollTo({ top: target.getBoundingClientRect().top + scrollY - hh - 60, behavior: 'smooth' });
-      document.querySelectorAll('.p4-tabnav__item').forEach(function(btn){
+      document.querySelectorAll('.p3-tabnav__item').forEach(function(btn){
         btn.classList.toggle('is-active', btn.dataset.target === 'p4-sec-profile');
       });
     });
@@ -3917,7 +3917,7 @@ KTN.pages['p4'] = function () {
   // 7. タブナビ IntersectionObserver
   var tabnav = document.getElementById('p4Tabnav');
   if (tabnav && 'IntersectionObserver' in window) {
-    var tabBtns  = tabnav.querySelectorAll('.p4-tabnav__item');
+    var tabBtns  = tabnav.querySelectorAll('.p3-tabnav__item');
     var sections = document.querySelectorAll('.p4-main > section[id]');
     var hh = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--hh') || '56', 10);
     var obs = new IntersectionObserver(function(entries){
@@ -3948,6 +3948,54 @@ KTN.pages['p4'] = function () {
       ktnHeader.classList.toggle('is-scrolled', !entries[0].isIntersecting);
     }, { threshold: 0 }).observe(p4Head);
   }
+
+  /* ── スティッキーCTAバー：ヒーロースクロールアウト後に出現 ── */
+  (function () {
+    var hero      = document.querySelector('.p4-head');
+    var cta       = document.getElementById('p4StickyCta');
+    var stickyBtn = document.getElementById('p4StickyWatchBtn');
+    if (!cta || !hero) return;
+
+    function showCta(visible) {
+      cta.classList.toggle('is-visible', visible);
+      cta.setAttribute('aria-hidden', visible ? 'false' : 'true');
+    }
+
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries) {
+        showCta(!entries[0].isIntersecting);
+      }, { threshold: 0 }).observe(hero);
+    } else {
+      function onScroll() { showCta(hero.getBoundingClientRect().bottom <= 0); }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+    }
+
+    if (!stickyBtn) return;
+
+    function applyWatch(on) {
+      stickyBtn.classList.toggle('on', on);
+      document.querySelectorAll('.ktn-btn[data-action="watch"]').forEach(function (btn) {
+        btn.classList.toggle('on', on);
+        var lbl = btn.querySelector('.ktn-btn__lbl');
+        if (lbl) lbl.textContent = on ? 'watching' : 'watch';
+        var tip = btn.querySelector('.tip');
+        if (tip) tip.textContent = on ? 'ウォッチ中 — 解除する' : 'ウォッチする';
+      });
+    }
+
+    stickyBtn.addEventListener('click', function () {
+      if ((window.ktnState||{}).role === 'guest') { KTN.action.handle(stickyBtn, 'watch'); return; }
+      applyWatch(!stickyBtn.classList.contains('on'));
+      KTN.toast(stickyBtn.classList.contains('on') ? 'Gallery SOIL 渋谷をウォッチしました' : 'ウォッチを解除しました');
+    });
+
+    document.querySelectorAll('.ktn-btn[data-action="watch"]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        setTimeout(function () { stickyBtn.classList.toggle('on', btn.classList.contains('on')); }, 0);
+      });
+    });
+  })();
 
   /* QRシェアモーダルは KTN.cta.openQrModal に統一 */
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') window.closeQrModal(); });
@@ -5062,7 +5110,7 @@ KTN.pages['p5-3'] = function () {
 };
 
 /* =========================================================
-   P5-14 ユーザー – 購入履歴
+   P5-14 ユーザー – 購入管理
    ========================================================= */
 KTN.pages['p5-14'] = function () {
     document.body.classList.add('p5-page', 'p5-14-page');
@@ -5168,6 +5216,8 @@ KTN.pages['p3-15'] = function () {
   var venueModalCancel = document.getElementById('p315VenueModalCancel');
   var venueModalOk = document.getElementById('p315VenueModalOk');
   var venueModalBody = document.getElementById('p315VenueModalBody');
+  var venueModalCheckWrap = document.getElementById('p315VenueModalCheckWrap');
+  var venueModalCheckbox = document.getElementById('p315VenueModalCheckbox');
   var _venueCard = null;
 
   document.querySelectorAll('.p315-venue-btn:not(:disabled)').forEach(function (btn) {
@@ -5177,12 +5227,21 @@ KTN.pages['p3-15'] = function () {
       var count = parseInt(btn.dataset.count || '0', 10);
       if (venueModalBody) {
         venueModalBody.innerHTML = '「' + workName + '」を「売約済」に変更します。<br>' +
-          (count > 0 ? '申込中の ' + count + '名 全員にキャンセル通知（メール）が送信されます。<br>' : '') +
+          (count > 0 ? '申込中の <strong>' + count + '名</strong> 全員にキャンセル通知（メール）が送信されます。<br>' : '') +
           'この操作は取り消せません。';
       }
+      var needCheck = count > 0;
+      if (venueModalCheckWrap) venueModalCheckWrap.hidden = !needCheck;
+      if (venueModalCheckbox) venueModalCheckbox.checked = false;
+      if (venueModalOk) venueModalOk.disabled = needCheck;
       if (venueModal) venueModal.hidden = false;
     });
   });
+  if (venueModalCheckbox) {
+    venueModalCheckbox.addEventListener('change', function () {
+      if (venueModalOk) venueModalOk.disabled = !venueModalCheckbox.checked;
+    });
+  }
   function closeVenueModal() { if (venueModal) venueModal.hidden = true; }
   if (venueModalCancel) venueModalCancel.addEventListener('click', closeVenueModal);
   if (venueModalBg) venueModalBg.addEventListener('click', closeVenueModal);
@@ -5190,10 +5249,15 @@ KTN.pages['p3-15'] = function () {
     venueModalOk.addEventListener('click', function () {
       closeVenueModal();
       if (_venueCard) {
-        var statusEl = _venueCard.querySelector('.p315-work-card__status');
-        if (statusEl) statusEl.innerHTML = '<span class="aws aws-sold">売約済</span>';
-        var actionsEl = _venueCard.querySelector('.p315-work-card__actions');
-        if (actionsEl) actionsEl.style.display = 'none';
+        var lockInfo = _venueCard.querySelector('.p2-121-lock-info');
+        if (lockInfo) {
+          lockInfo.innerHTML = '<span class="p2-121-lock-badge p2-121-lock-badge--sold">売約済</span>';
+        } else {
+          var badge = _venueCard.querySelector('.p2-121-lock-badge');
+          if (badge) { badge.classList.add('p2-121-lock-badge--sold'); badge.textContent = '売約済'; }
+        }
+        var opsEl = _venueCard.querySelector('.p315-work-card__ops');
+        if (opsEl) opsEl.style.display = 'none';
       }
       KTN.toast('会場売約済に変更しました。申込者にキャンセル通知を送信しました');
     });
@@ -5205,7 +5269,17 @@ KTN.pages['p3-15'] = function () {
   var takedownModalCancel = document.getElementById('p315TakedownModalCancel');
   var takedownModalOk = document.getElementById('p315TakedownModalOk');
   var takedownModalBody = document.getElementById('p315TakedownModalBody');
+  var takedownModalCheckWrap = document.getElementById('p315TakedownModalCheckWrap');
+  var takedownModalCheckbox = document.getElementById('p315TakedownModalCheckbox');
+  var takedownModalCheckbox2 = document.getElementById('p315TakedownModalCheckbox2');
   var _takedownCard = null;
+
+  function _updateTakedownOk() {
+    if (!takedownModalOk) return;
+    var c1 = takedownModalCheckWrap && !takedownModalCheckWrap.hidden ? (takedownModalCheckbox && takedownModalCheckbox.checked) : true;
+    var c2 = takedownModalCheckbox2 ? takedownModalCheckbox2.checked : true;
+    takedownModalOk.disabled = !(c1 && c2);
+  }
 
   document.querySelectorAll('.p315-takedown-btn').forEach(function (btn) {
     btn.addEventListener('click', function () {
@@ -5213,13 +5287,19 @@ KTN.pages['p3-15'] = function () {
       var workName = btn.dataset.work || '作品';
       var count = parseInt(btn.dataset.count || '0', 10);
       if (takedownModalBody) {
-        takedownModalBody.innerHTML = '「' + workName + '」の掲載を取り下げます。<br>' +
-          (count > 0 ? '申込中の ' + count + '名 全員にキャンセル通知（メール）が送信されます。<br>' : '') +
+        takedownModalBody.innerHTML = '「' + workName + '」の LIAISON+ 出品を取り消します。<br>' +
+          (count > 0 ? '申込中の <strong>' + count + '名</strong> 全員にキャンセル通知（メール）が送信されます。<br>' : '') +
           'この操作は取り消せません。';
       }
+      if (takedownModalCheckWrap) takedownModalCheckWrap.hidden = count === 0;
+      if (takedownModalCheckbox) takedownModalCheckbox.checked = false;
+      if (takedownModalCheckbox2) takedownModalCheckbox2.checked = false;
+      _updateTakedownOk();
       if (takedownModal) takedownModal.hidden = false;
     });
   });
+  if (takedownModalCheckbox) takedownModalCheckbox.addEventListener('change', _updateTakedownOk);
+  if (takedownModalCheckbox2) takedownModalCheckbox2.addEventListener('change', _updateTakedownOk);
   function closeTakedownModal() { if (takedownModal) takedownModal.hidden = true; }
   if (takedownModalCancel) takedownModalCancel.addEventListener('click', closeTakedownModal);
   if (takedownModalBg) takedownModalBg.addEventListener('click', closeTakedownModal);
@@ -5227,7 +5307,7 @@ KTN.pages['p3-15'] = function () {
     takedownModalOk.addEventListener('click', function () {
       closeTakedownModal();
       if (_takedownCard) _takedownCard.style.display = 'none';
-      KTN.toast('掲載を取り下げました');
+      KTN.toast('出品取消を実行しました。申込者へキャンセル通知を送信しました');
     });
   }
 

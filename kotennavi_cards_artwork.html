@@ -33,11 +33,8 @@
         <code style="font-size:.45rem;color:var(--muted)">.aws-sale</code>
       </div>
       <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
-        <div style="display:flex;align-items:center;gap:8px">
-          <span class="aws aws-sale">販売中</span>
-          <span class="aw__applicants">3人が申込中</span>
-        </div>
-        <code style="font-size:.45rem;color:var(--muted)">.aws-sale + .aw__applicants（LIAISON+）</code>
+        <span class="aw__queue">3人が申込中</span>
+        <code style="font-size:.45rem;color:var(--muted)">.aw__queue（LIAISON+ foot 左）</code>
       </div>
       <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
         <span class="aws aws-negot">商談中</span>
@@ -64,11 +61,8 @@
         <code style="font-size:.45rem;color:rgba(255,255,255,.42)">.aws-sale</code>
       </div>
       <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
-        <div style="display:flex;align-items:center;gap:8px">
-          <span class="aws aws-sale">販売中</span>
-          <span class="aw__applicants">3人が申込中</span>
-        </div>
-        <code style="font-size:.45rem;color:rgba(255,255,255,.42)">LIAISON+ 申込者あり</code>
+        <span class="aw__queue">3人が申込中</span>
+        <code style="font-size:.45rem;color:rgba(255,255,255,.42)">.aw__queue（LIAISON+ foot 左）</code>
       </div>
       <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
         <span class="aws aws-negot">商談中</span>
@@ -234,7 +228,7 @@
     <p class="demo-note">価格・申込ボタン表示。販売中は申込者数をバッジ行に表示。売約済はSOLD OUTリボン。商談中は申込不可。</p>
     <div class="masonry">
 
-      <!-- 販売中（申込者3人）→ バッジ行に申込者数表示 -->
+      <!-- 販売中（申込者3人）→ 申込人数は foot 内（価格と同行・左）に表示 -->
       <div class="masonry-item">
         <a class="aw aw--plus" href="#">
           <div class="aw__img">
@@ -245,7 +239,6 @@
             <div class="aw__badge-row">
               <span class="cb cb-content cb-artwork">artwork</span>
               <span class="aws aws-sale">販売中</span>
-              <span class="aw__applicants">3人が申込中</span>
             </div>
 
             <div class="aw__title-row">
@@ -264,11 +257,8 @@
             </div>
           </div>
           <div class="aw__foot">
+            <div class="aw__queue">3人が申込中</div>
             <div class="aw__price"><span class="currency">¥</span>280,000<span class="tax">税込</span></div>
-            <button class="aw__apply-btn ktn-op-btn ktn-op-btn--primary ktn-op-btn--sm" onclick="event.preventDefault()">
-              <svg viewBox="0 0 14 14" fill="none" width="11" height="11"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-              購入申込
-            </button>
           </div>
         </a>
       </div>
@@ -372,14 +362,129 @@
           </div>
           <div class="aw__foot">
             <div class="aw__price"><span class="currency">¥</span>45,000<span class="tax">税込</span></div>
-            <button class="aw__inquiry-btn ktn-op-btn ktn-op-btn--caution ktn-op-btn--sm" onclick="event.preventDefault()">
-              <svg viewBox="0 0 14 14" fill="none" width="11" height="11"><path d="M7 2a4 4 0 0 1 .3 8H7v1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="7" cy="12.5" r=".8" fill="currentColor"/></svg>
-              問い合わせる
-            </button>
           </div>
         </a>
       </div>
 
+    </div>
+  </div>
+
+
+  <!-- ════════════════════════════════════════
+       2-D. マソンリー — リエゾンプラス・ダークモード（p2-5-1 / p2-12-1 等）
+       ════════════════════════════════════════ -->
+  <div class="demo-section">
+    <div class="demo-label">②-D .aw.aw--plus — リエゾンプラス ダークモード（p251-dark コンテキスト・出品者ログイン時）</div>
+    <p class="demo-note">出品者（クリエイター本人・ギャラリー）が p2-5-1 や LIAISON+ コンソール上で目にする表示。<br>
+    フッターは grid 2列レイアウト：申込人数（左）／価格（右寄せ・金色 #c8a96e）。申込者がいる場合のみ価格の下に「取引デスクへ →」ボタンが表示される。<br>
+    <code>&lt;div class="p251-dark"&gt;</code> でラップするだけで自動切替。</p>
+    <div class="p251-dark" style="background:#2c3e50;padding:24px;border-radius:8px">
+      <div class="masonry">
+
+        <!-- 販売中・申込あり → 取引デスクへボタン表示 -->
+        <div class="masonry-item">
+          <a class="aw aw--plus" href="#">
+            <div class="aw__img">
+              <div class="aw__lb"><span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span></div>
+              <div class="aw__img-ph t-portrait"></div>
+            </div>
+            <div class="aw__body">
+              <div class="aw__badge-row">
+                <span class="cb cb-content cb-artwork">artwork</span>
+                <span class="aws aws-sale">販売中</span>
+              </div>
+              <div class="aw__title-row">
+                <div class="aw__title">根の記憶、光の痕跡</div>
+              </div>
+              <div class="aw__creator">小野 友美</div>
+              <div class="aw__spec">2025 / 油彩・キャンバス / 100.0 × 80.0 cm</div>
+              <div class="aw__action-row">
+                <span class="aw__counter">
+                  <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>22
+                </span>
+                <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                  <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="rgba(255,255,255,.3)" stroke="rgba(255,255,255,.4)" stroke-width=".6" stroke-linejoin="round"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="aw__foot">
+              <div class="aw__queue">3人が申込中</div>
+              <div class="aw__price"><span class="currency">¥</span>280,000<span class="tax">税込</span></div>
+              <div class="p33-console-wrap">
+                <button class="p33-console-btn ktn-action-btn ktn-action-btn--alert-dark" onclick="event.stopPropagation();event.preventDefault()">
+                  取引デスクへ →
+                </button>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <!-- 販売中・申込なし -->
+        <div class="masonry-item">
+          <a class="aw aw--plus" href="#">
+            <div class="aw__img">
+              <div class="aw__lb"><span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span></div>
+              <div class="aw__img-ph t-square"></div>
+            </div>
+            <div class="aw__body">
+              <div class="aw__badge-row">
+                <span class="cb cb-content cb-artwork">artwork</span>
+                <span class="aws aws-sale">販売中</span>
+              </div>
+              <div class="aw__title-row">
+                <div class="aw__title">朝霧の鐘</div>
+              </div>
+              <div class="aw__creator">小野 友美</div>
+              <div class="aw__spec">2025 / 鉛筆・紙 / 42 × 29 cm</div>
+              <div class="aw__action-row">
+                <span class="aw__counter">
+                  <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>9
+                </span>
+                <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                  <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="rgba(255,255,255,.3)" stroke="rgba(255,255,255,.4)" stroke-width=".6" stroke-linejoin="round"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="aw__foot">
+              <div class="aw__price"><span class="currency">¥</span>148,000<span class="tax">税込</span></div>
+            </div>
+          </a>
+        </div>
+
+        <!-- 売却済（SOLD OUTリボン） -->
+        <div class="masonry-item">
+          <a class="aw aw--plus aw--sold" href="#">
+            <div class="aw__img">
+              <div class="aw__lb"><span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span></div>
+              <div class="aw__img-ph t-warm"></div>
+              <div class="aw__sold-ribbon"><div class="aw__sold-ribbon-inner">SOLD OUT</div></div>
+            </div>
+            <div class="aw__body">
+              <div class="aw__badge-row">
+                <span class="cb cb-content cb-artwork">artwork</span>
+                <span class="aws aws-sold">売却済</span>
+              </div>
+              <div class="aw__title-row">
+                <div class="aw__title">春を待つ窓辺</div>
+              </div>
+              <div class="aw__creator">山田 美咲</div>
+              <div class="aw__spec">2022 / 水彩・紙 / 24 × 33 cm</div>
+              <div class="aw__action-row">
+                <span class="aw__counter">
+                  <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>14
+                </span>
+                <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                  <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="rgba(255,255,255,.3)" stroke="rgba(255,255,255,.4)" stroke-width=".6" stroke-linejoin="round"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="aw__foot">
+              <div class="aw__price"><span class="currency">¥</span>38,000<span class="tax">税込</span></div>
+            </div>
+          </a>
+        </div>
+
+      </div>
     </div>
   </div>
 
@@ -644,7 +749,6 @@
           </div>
           <div class="aw__foot">
             <div class="aw__price"><span class="currency">¥</span>45,000<span class="tax">税込</span></div>
-            <button class="aw__inquiry-btn ktn-op-btn ktn-op-btn--caution ktn-op-btn--sm" onclick="event.preventDefault()">問い合わせる</button>
           </div>
         </div>
       </a>
