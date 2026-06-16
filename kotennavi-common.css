@@ -3722,11 +3722,6 @@ line-clamp:2;}
 .p2-ic__head:has(> .ktn-section__more){flex-direction:column;align-items:flex-start}
 .p2-ic__head:has(> .ktn-section__more) > .ktn-section__more{align-self:flex-end;margin-top:2px}
 .p2-ic__head-l{display:flex;align-items:center;gap:9px}
-.p2-ic__head-icon{
-  width:28px;height:28px;border-radius:50%;background:var(--paper);
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;
-}
-.p2-ic__head-icon svg{width:13px;height:13px;color:var(--accent);display:block}
 .p2-ic__head-title{font-family:var(--fs);font-weight:600;font-size:.96rem;letter-spacing:.02em}
 .p2-ic__head-en{/* → .ktn-sec-en に統一済み */}
 .p2-ic__sub{font-size:.62rem;color:var(--muted);margin-left:4px}
@@ -4320,7 +4315,6 @@ a.p2-action-widget__btn{text-decoration:none}
   display:flex;align-items:center;gap:8px;
   padding:13px 18px;border-bottom:1px solid var(--border);
 }
-.p2-side-contact__head .p2-ic__head-icon svg{width:13px;height:13px;color:var(--accent);display:block}
 .p2-contact__sublabel{
   font-family:'Cinzel',serif;font-weight:600;font-size:.62rem;
   letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;
@@ -5535,9 +5529,9 @@ a.p2-action-widget__btn{text-decoration:none}
 .p2-4-creator-card {
   background: #fff; border: 1px solid var(--border); border-radius: 4px;
   overflow: hidden;
-  transition: box-shadow .2s;
+  transition: transform .2s, box-shadow .2s, border-color .18s;
 }
-.p2-4-creator-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,.08); }
+.p2-4-creator-card:hover { transform: translateY(-1px); box-shadow: 0 4px 18px rgba(0,0,0,.06); border-color: rgba(0,0,0,.18); }
 
 /* カードヘッダー */
 .p2-4-creator-card__head {
@@ -6958,13 +6952,6 @@ a.p2-action-widget__btn{text-decoration:none}
 .p251-dark .p2-sub-nearby__head { border-bottom-color: rgba(255,255,255,.08); }
 .p251-dark .ktn-sub-rec__head {/* → .p251-dark .ktn-section__head */}
 
-/* セクションヘッドアイコン（ゴールド） */
-.p251-dark .p2-ic__head-icon {
-  background: rgba(200,169,110,.15);
-  color: #c8a96e;
-}
-.p251-dark .p2-ic__head-icon svg { stroke: #c8a96e; }
-
 /* サブメニューリンク項目アイコン（ゴールド） */
 .p251-dark .p2-side-link__icon { color: #c8a96e; }
 .p251-dark .p2-side-link__icon svg { stroke: #c8a96e; }
@@ -7532,6 +7519,9 @@ body.p251-dark {
   --dk-bg3: #2e4255;
 }
 
+/* ─── p6 ページスコープ（アクセントカラー：artwork バッジ色） ─── */
+body.p6-page{--page-accent:#6b46a8;--page-accent-bg:rgba(107,70,168,.08)}
+
 /* ─── p6-dark: LIAISON ダークテーマ上書き ─── */
 body.p6-dark{
   /* --dk-* を --l* エイリアスで p6-dark 既存CSSと接続 */
@@ -7579,7 +7569,7 @@ body.p6-dark.p6-plus{
 .p6-dark .wh-venue-link-ttl{color:var(--ltext)}
 .p6-dark .wh-venue-link-sub{color:var(--lmuted)}
 .p6-dark .wh-venue-arr{color:var(--lgold)}
-.p6-dark .work-desc-section{background:var(--lbg2);border-top-color:var(--lborder)}
+.p6-dark .work-desc-section{background:var(--lbg2);border-color:var(--lborder)}
 .p6-dark .wd-eyebrow{color:var(--lgold)}
 .p6-dark .wd-ttl{color:var(--ltext)}
 .p6-dark .wd-body{color:var(--ltext)}
@@ -7674,7 +7664,7 @@ body.p6-dark.p6-plus{
 .p6-dark .p2-side-ec__period{color:var(--lmuted)}
 /* おすすめ展覧会セクション ダークテーマ */
 .p6-dark .p2-related{border-top-color:rgba(255,255,255,.07)}
-.p6-dark .ktn-section__head{border-bottom-color:rgba(255,255,255,.08)}
+.p6-dark .ktn-section__head{border-bottom-color:rgba(255,255,255,.12)}
 .p6-dark .ktn-section__title{color:rgba(255,255,255,.82)}
 .p6-dark .ktn-sec-en{color:var(--lmeta)}
 .p6-dark .ktn-section__more{color:var(--lmuted)}
@@ -7715,7 +7705,9 @@ body.p6-dark.p6-plus{
 .p6-layout .wd-inner,.p6-layout .wc-inner,
 .p6-layout .rel-inner,.p6-layout .cmt-inner{max-width:none}
 /* 右カラム：縦並びFlexコンテナ＋スティッキー */
-.p6-side-inner{display:flex;flex-direction:column;gap:12px;position:sticky;top:60px}
+.p6-side-inner{display:flex;flex-direction:column;gap:12px}
+/* MORE WORKS 上の間隔（コメントセクションとの分離） */
+.p6-col-main #p6ColMoreBy{margin-top:32px}
 /* レスポンシブ：900px以下で1カラム・order制御 */
 @media(max-width:900px){
   .p6-layout{display:flex;flex-direction:column;padding:0 16px}
@@ -7735,7 +7727,7 @@ body.p6-dark.p6-plus{
 /* ════════════════════════════════
    p6 ヒーロー C案
 ════════════════════════════════ */
-.p6-hero{background:#fff;border:1px solid var(--border);border-radius:4px;overflow:hidden;margin-bottom:12px}
+.p6-hero{background:#fff;border:1px solid var(--border);border-radius:4px;overflow:hidden}
 
 /* 画像ステージ */
 .p6-hero__stage{background:#1e2d3d;display:flex;flex-direction:column;align-items:center;padding:32px 40px 0}
@@ -7932,8 +7924,8 @@ body.p6-dark.p6-plus{
 .p6-dark .p6-work-about__line{background:var(--lborder)}
 .p6-dark .p6-work-about__title{color:var(--ltext)}
 .p6-dark .ktn-main p{color:var(--lmuted)}
-.p6-dark .p6-article-item{border-bottom-color:var(--lborder);color:var(--ltext)}
-.p6-dark .p6-article-item:first-child{border-top-color:var(--lborder)}
+.p6-dark .p6-article-item{background:var(--lbg3);border-color:var(--lborder);color:var(--ltext)}
+.p6-dark .p6-article__head-ttl{color:rgba(255,255,255,.7);border-top-color:var(--lborder)}
 .p6-dark .p6-article__date{color:var(--lmeta)}
 .p6-dark .p6-article__excerpt{color:var(--lmuted)}
 .p6-dark .ktn-tag{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.1);color:var(--lmuted)}
@@ -8070,7 +8062,7 @@ body.p6-dark.p6-plus{
 
 /* ── p2-4-creator-card（クリエイターカード）── */
 .p6-dark .p2-4-creator-card{background:#1a2a3a;border-color:rgba(255,255,255,.1)}
-.p6-dark .p2-4-creator-card:hover{background:#1e3045;box-shadow:0 6px 20px rgba(0,0,0,.3)}
+.p6-dark .p2-4-creator-card:hover{transform:translateY(-1px);box-shadow:0 4px 18px rgba(0,0,0,.3);border-color:rgba(255,255,255,.22)}
 .p6-dark .p2-4-creator-card__head{border-bottom-color:rgba(255,255,255,.08)}
 .p6-dark .p2-4-creator-card__avatar{border-color:rgba(255,255,255,.12)}
 .p6-dark .p2-4-creator-card__name{color:rgba(255,255,255,.82)}
@@ -8099,12 +8091,41 @@ body.p6-dark.p6-plus{
 .p6-dark .p2-side-posted__row{border-top-color:rgba(255,255,255,.08)}
 .p6-dark .p2-side-posted__meta{color:rgba(255,255,255,.5)}
 
-/* ── .p2-ic__head-icon ── */
-.p6-dark .p2-ic__head-icon{color:rgba(255,255,255,.45)}
 .p6-dark .ktn-sec-en{color:rgba(255,255,255,.3)}
 
 /* ── .p6-dark body 全体背景 ── */
 .p6-dark .ktn-main{background:var(--lbg)}
+
+/* ── p6-dark 追加修正 ── */
+/* aboutセクション・CTA: lbg3 背景で他セクション（lbg2）と差別化 */
+.p6-dark .work-desc-section{background:var(--lbg3);border-color:rgba(255,255,255,.1)}
+.p6-dark .p2-action-widget{background:var(--lbg3);border-color:rgba(255,255,255,.1)}
+/* MORE WORKS エリア: ktn-section__head + masonry は背景なし */
+.p6-dark #p6ColMoreBy{background:transparent;border-color:transparent}
+/* CTA ウィジェット内カウンターテキスト */
+.p6-dark .p2aw-num{color:var(--lmuted)}
+.p6-dark .p2aw-desc{color:rgba(255,255,255,.42)}
+.p6-dark .p2aw-stat--link:hover .p2aw-num,.p6-dark .p2aw-stat--link:hover .p2aw-desc{color:#5cb0e8}
+/* p6-article-item: :first-child/:last-child が cascade で dark override を巻き戻す問題を修正 */
+.p6-dark .p6-article-item:first-child{border-top-color:var(--lborder)}
+.p6-dark .p6-article-item:last-child{border-bottom-color:var(--lborder)}
+/* p2-4-creator-card: L11837 .p2-4-creator-card:first-child が border-top を light color で上書きする問題を修正 */
+.p6-dark .p2-4-creator-card:first-child{border-top-color:rgba(255,255,255,.1)}
+/* CTA リード文（JSで動的注入：data-cta-name="…" から生成） */
+.p6-dark .p2-action-widget__lead{color:var(--ltext)}
+/* QR帯: .p2-action-widget.ktn-cta-widget .p2-action-widget__qr(0,3,0)より高特異度(0,4,0)でダーク背景を適用 */
+.p6-dark .p2-action-widget.ktn-cta-widget .p2-action-widget__qr{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.12)}
+.p6-dark .p2-action-widget.ktn-cta-widget .p2-action-widget__qr:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.22)}
+/* 右カラムのセクションラベル: L11594ブロック(.p2-side-contact__head .p2-ic__head-title等, 0,2,0)が
+   dark rule(.p6-dark .p2-ic__head-title, 0,2,0)をcascadeで上書きするため高特異度(0,3,0)で修正 */
+.p6-dark .p2-side-contact__head .p2-ic__head-title,
+.p6-dark .p2-side-links .p2-ic__head-title,
+.p6-dark .p2-side-card .p2-ic__head-title{color:var(--ltext)}
+/* 出品者カード(buildPersonCard生成の.cc)の名前・ジャンル: 色未設定のため継承が効かずblack */
+.p6-dark .cc__name{color:var(--ltext)}
+.p6-dark .cc__genre{color:var(--lmuted)}
+/* 記事カードタイトル: L11935 .p6-article__title{color:var(--ink)}が後方定義のため追加 */
+.p6-dark .p6-article__title{color:var(--ltext)}
 
 /* ══════════════════════════════════════════════════════
    p2-12  LIAISON 作品管理
@@ -8503,6 +8524,7 @@ body.p3-page .p3-head__bio-toggle{color:var(--page-accent)}
 /* D. 作品マソンリー */
 .p3-works-masonry{columns:4;column-gap:16px}
 .p3-works-masonry .aw{break-inside:avoid;margin-bottom:16px;display:block}
+.p6-col-main .p3-works-masonry{columns:3}
 
 /* D-2. 作品 LIAISONバンド */
 .p3-works-liaison-band{border:1px solid rgba(0,93,167,.2);background:rgba(0,93,167,.03);border-radius:6px;overflow:hidden;margin-bottom:12px}
@@ -11405,6 +11427,11 @@ body.p5-11-page .p5-tabnav,body.p5-12-page .p5-tabnav,body.p5-13-page .p5-tabnav
   border-bottom:1px solid var(--page-accent,#005da7);
   overflow-x:auto;-webkit-overflow-scrolling:touch;
 }
+.p3-tabnav,
+.p4-tabnav,
+.p5-tabnav{
+  border-top:2px solid var(--ink);
+}
 .p2-subnav{height:auto;padding:0 24px}
 .p2-subnav__item,
 .p3-tabnav__item,
@@ -11470,13 +11497,13 @@ body.p5-page{
 .p3-prof-side,
 .p4-prof-side,
 .p5-layout__side,
-.p6-side-inner{
+.p6-col-side{
   position:sticky;
   top:calc(var(--dh,34px) + var(--hh,50px) + 16px);
   align-self:start;
 }
-/* 親要素が grid なら align-self:start で sticky が機能する。
-   flex 親（.p6-layout）の場合は内側 wrapper .p6-side-inner が sticky になる */
+/* grid 親の場合: grid item 自体に sticky + align-self:start で機能する。
+   含まれるブロックは grid コンテナ（.p6-layout）全体 → 左カラムが長くても追従。 */
 
 @media(max-width:860px){
   .p2-layout__side,
@@ -11489,13 +11516,14 @@ body.p5-page{
   .p3-prof-side,
   .p4-prof-side,
   .p5-layout__side,
-  .p6-side-inner{
+  .p6-col-side{
     position:static;top:auto;
   }
 }
 
 /* ── About セクション：強コントラスト、リード段落の大字組 ── */
-.p2-about{padding:44px 28px 36px;background:#fff;border:1px solid var(--border);border-radius:4px;margin-bottom:24px}
+.p2-about{padding:44px 28px 36px;background:var(--paper);border:1px solid var(--border);border-radius:4px;margin-bottom:24px}
+.p2-about::before{content:none}
 .p2-about__title{
   font-family:var(--fs);font-weight:700;
   font-size:clamp(1.5rem,2.5vw,1.95rem);
@@ -11519,13 +11547,6 @@ body.p5-page{
   font-family:var(--fs);font-weight:700;font-size:1.25rem;
   letter-spacing:-.005em;line-height:1.3;color:var(--ink);
 }
-/* セクションタイトル左のアイコン円：exhibition バッジ色（#005da7） */
-.p2-ic__head-icon{
-  width:34px;height:34px;border-radius:50%;
-  background:transparent;border:1.5px solid #005da7;
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;
-}
-.p2-ic__head-icon svg{color:#005da7;width:14px;height:14px}
 .p2-ic__body{padding:8px 22px 24px}
 /* 開閉時のヘッダー下罫線：統一して 1px var(--border) */
 .p2-ic.is-open .p2-ic__head{border-bottom:1px solid var(--border);background:transparent}
@@ -11538,6 +11559,23 @@ body.p5-page{
   font-family:'Cinzel',serif;font-size:.66rem;font-weight:600;
   letter-spacing:.18em;text-transform:uppercase;color:var(--ink);
 }
+
+/* ── 展覧会記事：カード化 ── */
+.p2-article-head__item{
+  display:block;background:var(--paper);
+  border:1px solid var(--border);border-radius:4px;
+  padding:14px 16px 12px;margin-bottom:8px;
+  text-decoration:none;color:var(--ink);
+  transition:transform .2s,box-shadow .2s,border-color .18s;
+}
+.p2-article-head__item:last-child{border-bottom:1px solid var(--border);margin-bottom:0}
+.p2-article-head__item:hover{
+  transform:translateY(-1px);
+  box-shadow:0 4px 18px rgba(0,0,0,.06);
+  border-color:rgba(0,0,0,.18);
+  opacity:1;
+}
+.p2-article-head__item-badges{margin-bottom:6px}
 
 /* ────────────────────────────────────────────────────────────
    右カラム サイドカード（共通）
@@ -11673,20 +11711,16 @@ body.p5-page{
    ════════════════════════════════════════════════════════════════ */
 
 /* セクションアイコン：ダーク背景では明るい青 */
-.p251-dark .p2-ic__head-icon,
 .p251-dark .p2-1-section__icon,
 .p251-dark .p2-2-section__icon,
 .p251-dark .p2-3-section__icon,
-.p251-dark .p2-4-section__icon,
-.p6-dark .p2-ic__head-icon{
+.p251-dark .p2-4-section__icon{
   border-color:#5cb0e8;
 }
-.p251-dark .p2-ic__head-icon svg,
 .p251-dark .p2-1-section__icon svg,
 .p251-dark .p2-2-section__icon svg,
 .p251-dark .p2-3-section__icon svg,
-.p251-dark .p2-4-section__icon svg,
-.p6-dark .p2-ic__head-icon svg{
+.p251-dark .p2-4-section__icon svg{
   color:#5cb0e8;
 }
 
@@ -11745,6 +11779,7 @@ body.p5-page{
 .p6-dark .ktn-section__more{color:rgba(255,255,255,.55)}
 .p251-dark .ktn-section__more:hover,
 .p6-dark .ktn-section__more:hover{color:#5cb0e8}
+.p6-dark .ktn-section__head .ktn-sec-en{color:rgba(255,255,255,.52)}
 @media(max-width:540px){
   .p2-side-nearby{padding:20px 18px}
   .ktn-related-band{padding-left:18px;padding-right:18px}
@@ -11833,7 +11868,7 @@ body.p5-page{
 .p2-4-section__icon svg{color:#005da7;width:14px;height:14px}
 .p2-4-creator-card{padding:28px 4px;background:transparent;border-bottom:1px solid var(--border);border-radius:0}
 .p2-4-creator-card:first-child{border-top:1px solid var(--border)}
-.p2-4-creator-card:hover{background:rgba(0,0,0,.02);padding-left:10px;padding-right:10px;transition:padding .15s,background .15s}
+.p2-4-creator-card:hover{background:transparent}
 .p2-4-creator-card__name{font-family:var(--fs);font-weight:700;font-size:1.3rem;letter-spacing:-.005em;line-height:1.25;color:var(--ink)}
 .p2-4-creator-card__name-en{font-family:var(--font-en-name);font-style:italic;font-size:1rem;color:var(--ink);font-weight:500}
 .p2-4-creator-card__genre{font-size:.92rem;color:var(--ink)}
@@ -11906,14 +11941,38 @@ body.p5-page{
   font-size:1rem;font-weight:500;color:var(--ink);opacity:.7;
   letter-spacing:.03em;margin-bottom:16px;
 }
+.work-desc-section{border:1px solid var(--border);border-radius:4px;padding:44px 28px 36px;margin-bottom:14px}
+.p6-work-about__label{font-family:'Cinzel',serif;font-size:.66rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--ink)}
 .p6-work-about__title{
-  font-family:var(--fs);font-size:1.5rem;font-weight:700;
-  letter-spacing:-.005em;line-height:1.3;color:var(--ink);margin-bottom:24px;
+  font-family:var(--fs);font-size:clamp(1.5rem,2.5vw,1.95rem);font-weight:700;
+  letter-spacing:-.005em;line-height:1.25;color:var(--ink);margin-bottom:28px;
 }
 .p6-article__title{
   font-family:var(--fs);font-size:.95rem;font-weight:600;
   line-height:1.5;letter-spacing:.005em;color:var(--ink);margin-bottom:4px;
 }
+/* p6 記事：カード化（p2-article-head__item と同スタイル） */
+.p6-article__head-ttl{
+  font-family:'Cinzel',serif;font-size:.66rem;font-weight:600;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--ink);
+  margin:16px 0 10px;padding-top:14px;border-top:1px solid var(--border);
+}
+.p6-article-item{
+  display:block;background:var(--paper);
+  border:1px solid var(--border);border-radius:4px;
+  padding:14px 16px 12px;margin-bottom:8px;
+  text-decoration:none;color:var(--ink);
+  transition:transform .2s,box-shadow .2s,border-color .18s;
+}
+.p6-article-item:first-child{border-top:1px solid var(--border)}
+.p6-article-item:last-child{border-bottom:1px solid var(--border);margin-bottom:0}
+.p6-article-item:hover{
+  transform:translateY(-1px);
+  box-shadow:0 4px 18px rgba(0,0,0,.06);
+  border-color:rgba(0,0,0,.18);
+  opacity:1;
+}
+.p6-article__badge-row{margin-bottom:6px}
 
 /* ════════════════════════════════════════════════════════════════
    p5 系（マイページ・p5 / p5-1 / p5-2 / p5-3）

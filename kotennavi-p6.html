@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./kotennavi-common.css">
 </head>
-<body data-w="entity">
+<body data-w="entity" class="p6-page">
 
 <svg width="0" height="0" style="position:absolute;overflow:hidden">
   <defs>
@@ -57,7 +57,7 @@
 
     <!-- ① WORK HERO C案 -->
     <div class="ktn-content" style="padding-bottom:0">
-      <div class="p6-hero">
+      <div class="p6-hero" id="p6Hero">
 
         <!-- 画像ステージ -->
         <div class="p6-hero__stage">
@@ -73,7 +73,7 @@
         <!-- タイトル・仕様 -->
         <div class="p6-hero__meta">
           <div class="p6-hero__badge-row" id="p6BadgeRow">
-            <span class="p6-hero__section-label">作品詳細</span>
+            <span class="cb cb-content cb-artwork">artwork</span>
           </div>
           <h1 class="p6-hero__title" id="p6Title">《オノマトペの庭》</h1>
           <p class="p6-hero__title-en" id="p6TitleEn">Onomatopoeia Garden</p>
@@ -95,7 +95,7 @@
     </div>
 
     <!-- ② 2カラムレイアウト -->
-    <div class="ktn-content">
+    <div class="ktn-content" style="padding-top:0">
       <div class="p6-layout" id="p6Layout">
 
         <!-- 左カラム：メインコンテンツ -->
@@ -105,7 +105,7 @@
           <div id="p6ColAbout">
             <section class="work-desc-section">
               <div class="p6-work-about__head">
-                <span class="p6-work-about__label">この作品について — <span class="ktn-sec-en">About this work</span></span>
+                <span class="p6-work-about__label">この作品について<span class="ktn-sec-en">About this work</span></span>
                 <div class="p6-work-about__line"></div>
               </div>
               <h2 class="p6-work-about__title" id="p6AboutTitle">《オノマトペの庭》</h2>
@@ -119,12 +119,6 @@
             <div class="p2-ic is-open">
               <div class="p2-ic__head">
                 <div class="p2-ic__head-l">
-                  <div class="p2-ic__head-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                      <circle cx="12" cy="7" r="4"/>
-                    </svg>
-                  </div>
                   <span class="p2-ic__head-title">クリエイター<span class="ktn-sec-en">Creator</span></span>
                 </div>
               </div>
@@ -135,7 +129,7 @@
                     <div class="p2-4-creator-card__info">
                       <div class="p2-4-creator-card__badges">
                         <span class="cb cb-person cb-creator">creator</span>
-                        <span class="sb">開催中/開催予定</span>
+                        <span class="sb sb-live">開催中</span>
                       </div>
                       <div class="p2-4-creator-card__name">田中 透</div>
                       <div class="p2-4-creator-card__name-en">Toru Tanaka</div>
@@ -181,14 +175,11 @@
 
           <!-- More by -->
           <div id="p6ColMoreBy">
-            <div class="p6-more-by">
-              <div class="p6-more-by__banner">
-                <span class="p6-more-by__banner-label">More by</span>
-                <span class="p6-more-by__banner-name">田中 透</span>
-                <a href="kotennavi-p3-3.html" class="p6-more-by__banner-more">すべて見る →</a>
-              </div>
-              <div class="p6-more-by__grid" id="p6MoreByGrid"></div>
+            <div class="ktn-section__head">
+              <h2 class="ktn-section__title">田中 透のその他の作品<span class="ktn-sec-en">More Works</span></h2>
+              <a href="kotennavi-p3-3.html" class="ktn-section__more">すべて見る →</a>
             </div>
+            <div class="p3-works-masonry" id="p6MoreByGrid"></div>
           </div>
 
         </div><!-- /.p6-col-main -->
@@ -249,35 +240,22 @@
               </button>
             </div>
 
-            <!-- posted by -->
-            <div class="p2-side-card p2-side-posted">
-              <div class="p2-side-posted__label">posted by</div>
-              <div class="p2-side-posted__dates">掲載：2026.02.18 / 最終更新：2026.03.01</div>
-              <div id="p6PostedByCard"></div>
-            </div>
-
-            <!-- お問い合わせ -->
-            <div class="p2-side-card p2-side-inq" id="p6InqCard">
-              <div class="p2-side-inq__label">作品に関するお問い合わせ</div>
-              <div class="p2-side-inq__name">田中 透</div>
-              <div class="p2-side-inq__email">
-                <a href="kotennavi-p6-13.html">問い合わせフォームへ</a>
+            <!-- 投稿者・お問合せ -->
+            <div class="p2-ic is-open p2-side-contact">
+              <div class="p2-side-contact__head">
+                <span class="p2-ic__head-title">投稿者<span class="ktn-sec-en">AUTHOR</span></span>
               </div>
-              <a href="kotennavi-p6-13.html" class="ktn-btn ktn-btn--ghost p2-side-inq__btn">
-                お問い合わせ
-              </a>
+              <div class="p2-ic__body">
+                <div class="p2-contact__sublabel">posted by</div>
+                <div class="p2-side-posted__dates">掲載：2026.02.18 / 最終更新：2026.03.01</div>
+                <div id="p6PostedByCard"></div>
+              </div>
             </div>
 
             <!-- サブメニュー -->
             <div class="p2-ic is-open p2-side-links">
               <div class="p2-ic__head">
                 <div class="p2-ic__head-l">
-                  <div class="p2-ic__head-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                      <circle cx="12" cy="7" r="4"/>
-                    </svg>
-                  </div>
                   <span class="p2-ic__head-title">田中 透<span class="ktn-sec-en">Creator</span></span>
                 </div>
               </div>
@@ -357,7 +335,14 @@
                   <div class="p2-side-ec__venue">Gallery SOIL 渋谷</div>
                   <div class="p2-side-ec__period">2026. 03.01 — 03.05</div>
                 </div>
-                <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg><span class="tip">興味ある！に追加する</span></button>
+                <button class="ktn-icon-btn" data-action="interest"
+                  onclick="handleAction(this,'interest');event.preventDefault()">
+                  <svg viewBox="0 0 16 16" fill="none" width="15" height="15">
+                    <path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"
+                      fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/>
+                  </svg>
+                  <span class="tip">興味ある！に追加する</span>
+                </button>
               </a>
               <a class="p2-side-ec" href="kotennavi-p2.html">
                 <div class="p2-side-ec__poster"
@@ -368,7 +353,14 @@
                   <div class="p2-side-ec__venue">LVDB gallery 代官山</div>
                   <div class="p2-side-ec__period">2026. 04.12 — 04.26</div>
                 </div>
-                <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg><span class="tip">興味ある！に追加する</span></button>
+                <button class="ktn-icon-btn" data-action="interest"
+                  onclick="handleAction(this,'interest');event.preventDefault()">
+                  <svg viewBox="0 0 16 16" fill="none" width="15" height="15">
+                    <path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"
+                      fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/>
+                  </svg>
+                  <span class="tip">興味ある！に追加する</span>
+                </button>
               </a>
             </div>
 
@@ -377,20 +369,6 @@
 
       </div><!-- /.p6-layout -->
     </div><!-- /.ktn-content -->
-
-    <!-- タグ -->
-    <section class="ktn-sub-tags">
-      <div class="wd-tags" id="descTags"></div>
-    </section>
-
-    <!-- おすすめの作品 -->
-    <section class="ktn-sub-rec">
-      <div class="ktn-section__head">
-        <h2 class="ktn-section__title">おすすめの作品 — <span class="ktn-sec-en">Recommended</span></h2>
-        <a href="#" class="ktn-section__more">すべて見る →</a>
-      </div>
-      <div class="masonry" id="p6RecGrid"></div>
-    </section>
 
     <!-- ログインモーダル -->
     <div class="lm-overlay" id="loginModal">
@@ -444,6 +422,31 @@
   </main>
 
   <div class="ktn-ad-band" id="ktnAdBand">
+    <div class="ktn-ad-band__inner">
+      <div class="ktn-ad-band__slot">広告エリア（728×90 / レスポンシブ）</div>
+    </div>
+  </div>
+  <div class="ktn-related-band">
+    <div class="ktn-related-band__inner">
+      <h2 class="ktn-related-band__heading">関連情報<span class="ktn-sec-en">Related</span></h2>
+      <div class="ktn-related-band__ctx">
+        <span class="cb cb-content cb-artwork">artwork</span>
+        <a href="#p6Hero" class="ktn-related-band__link">《オノマトペの庭》</a>
+      </div>
+    </div>
+  </div>
+  <div class="ktn-sub-tags">
+    <div class="ktn-sub-tags__label">タグ · Tags</div>
+    <div class="wd-tags" id="descTags"></div>
+  </div>
+  <section class="ktn-sub-rec" aria-label="おすすめの作品">
+    <div class="ktn-section__head">
+      <h2 class="ktn-section__title">おすすめの作品<span class="ktn-sec-en">Recommended</span></h2>
+      <a href="#" class="ktn-section__more">すべて見る →</a>
+    </div>
+    <div class="masonry" id="p6RecGrid"></div>
+  </section>
+  <div class="ktn-ad-band">
     <div class="ktn-ad-band__inner">
       <div class="ktn-ad-band__slot">広告エリア（728×90 / レスポンシブ）</div>
     </div>

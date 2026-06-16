@@ -1,15 +1,12 @@
 # 進捗状況
 
-最終更新：2026-06-16
+最終更新：2026-06-17
 
 ## 現在の作業
-**エディトリアル・リファインメント v2 完了 + p70 ガイドページ群完了**
-- バッジ体系刷新（`.cb` 人物=solid+Cinzel / `.sb` ステータス=dot+Cinzel）
-- `kotennavi-p70.html` 新規作成（LIAISONとは — サービス紹介・比較）
-- `kotennavi-p70-1.html` 新規作成（LIAISON 作品出品ガイド・creator/gallery ロール切替）
-- p4.html を p3-tabnav / p3-layout 共通クラス構成に統一
-- common.js _syncHH を ResizeObserver 対応に改良
-次：未定（次の作業開始時に確認）
+**次：p5 エディトリアル・リファインメント（p3/p4 系と同水準に統一）**
+
+対象ページ：`kotennavi-p5.html` / `p5-1.html` / `p5-2.html` / `p5-3.html`
+方針：p3/p4 系リファインメントと同じアプローチで、タイポグラフィ・カード・サイドカラム・関連エリアを整備する
 ※ P5-16（取引ワークスペース-支払）は廃止 — 決済はStripe外部遷移に変更し、p5-15に支払済（発送待ち）状態を追加済
 
 ---
@@ -79,6 +76,7 @@
 
 | 日付 | 内容 |
 |---|---|
+| 2026-06-17 | p6/p6-1/p6-2 ダーク＆ライト修正（p2-4 クリエイターカードホバー標準化＝translateY(-1px)+shadow+border-color・パディングアニメ廃止 / p6-2 ダーク修正：CTA リード文・QR帯ダーク化（高特異度 0,4,0 で ktn-cta-widget ルール上書き）・右カラムセクションラベル（cascade 競合修正）・出品者クリエイターカード名＋ジャンル・記事カードタイトル を p6-dark 配下で明示的に白系色指定） |
 | 2026-06-16 | エディトリアル・リファインメント v2：バッジ体系刷新（`.cb` 人物→solid+Cinzel白文字・コンテンツ→left-border+Cinzel / `.sb` ステータス→dot prefix+Cinzel・pill型廃止）・タイポグラフィ変数微調整（rt-size .9→.92rem / rt-lh 1.9→2.0）・`ktn-sec-en` Cinzel化・p4.html を p3-tabnav/p3-layout 共通クラス構成に移行・sticky CTAバー追加 / p70.html（LIAISONとは）・p70-1.html（LIAISON出品ガイド・ロール切替）新規作成 / common.js _syncHH をResizeObserver対応に改良・コピーボタン共通ハンドラ追加 / cards_artwork.html：申込ボタン廃止→aw__queue（foot左）に統一 / CLAUDE.md エディトリアルv2仕様セクション追加 |
 | 2026-06-13 | ボタン体系v3.1（ユーザー指摘3点）：①記号ルール確定＝末尾「 →」はページ遷移ナビ（ktn-action-btn）に必須・テキスト統一でSVG矢印廃止（p5-14の5リンクをテキスト化・p3-16/p5-15の実行ボタン2件から矢印削除）／先頭「●」＝遷移先に要対応ありのサイン（--alert系でCSS自動付与・p5-14要対応ストリップのナビにもドット追加） ②--danger-outline格上げ＝グレー枠→通常時から赤枠・赤文字（danger系として軽すぎたため）・p5-15「申込をキャンセルする」もsolid→outline化 ③取引ステータスバッジ定義＝先頭ドット＋淡色塗り・枠なし・矢印なし（.p515-status__badgeベースにドット追加・ボタン＝枠＋白背景と形で区別）・buttons_v2.htmlにセクション5「取引ステータスバッジ—見分け方サマリー表」新設・CLAUDE.md/整合性チェック.md同期済み |
 | 2026-06-12 | 取引ページ UX改善 第3弾（3項目）＋ボタン体系v3：①売約済説明の移設（p3-16 calloutを1文＋リンクに短縮・p3-15に説明ボックス .p315-ops-guide 新設＝会場売約済/出品取消の使い分けをdl 2項目で説明） ②相手入力/自分入力の視覚識別（.ktn-io-peer/.ktn-io-self/.ktn-io-tag を common.css 末尾に追加・peer＝相手色淡背景＋左3px枠/self＝白＋自分色左枠・ドット付きタグチップ「購入者が入力した内容」等・p3-16は peer=#1a4a88/self=#2a5f7a・p5-15は逆・計10ブロックに適用） ③ボタン体系v3再定義（大原則：solid＝その場で実行される操作専用・ナビの --alert/--alert-dark をsolid→アウトライン＋赤ドット化・hoverでのみ塗り・--dark新設・p3-15 :has()要対応行も同様・会場売約済確定は--danger/--cautionの代表用途は問い合わせる等に変更・横並びルール確定＝1行に色付き1つ/主アクション右端/並列破壊トリガーは両方アウトライン・buttons_v2.html/CLAUDE.md同期済み） |

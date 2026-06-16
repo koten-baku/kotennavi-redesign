@@ -1811,18 +1811,35 @@ KTN.pages['p6'] = function() {
     hideSpecRows: ['額装','作品点数/エディション','作品状態','付属品','配送時期','配送方法'],
     renderRelated: function() {
       var MORE_BY = [
-        { title: '\u300a\u3075\u308f\u3075\u308f\u300b',     bg: 'linear-gradient(155deg,#f0e8d0,#d4b896)', href: '#' },
-        { title: '\u300a\u30c9\u30ad\u30c9\u30ad #3\u300b',  bg: 'linear-gradient(155deg,#f0d0d0,#c88080)', href: '#' },
-        { title: '\u300a\u3056\u308f\u3056\u308f\uff08\u591c\uff09\u300b', bg: 'linear-gradient(155deg,#3d3530,#1f1a18)', href: '#' },
-        { title: '\u300a\u30b7\u30e5\u30ef\u30b7\u30e5\u30ef\u300b', bg: 'linear-gradient(155deg,#d0e8f0,#7ab4cc)', href: '#' },
+        { title: '\u3075\u308f\u3075\u308f',    bg: 'linear-gradient(155deg,#f0e8d0,#d4b896)', spec: '2025 / \u6cb9\u5f69\u30fb\u30ad\u30e3\u30f3\u30d0\u30b9 / 72.7\xd760.6cm', count: 12, href: '#' },
+        { title: '\u30c9\u30ad\u30c9\u30ad #3', bg: 'linear-gradient(155deg,#f0d0d0,#c88080)', spec: '2025 / \u6cb9\u5f69\u30fb\u30ad\u30e3\u30f3\u30d0\u30b9 / 53.0\xd745.5cm', count:  5, href: '#' },
+        { title: '\u3056\u308f\u3056\u308f\uff08\u591c\uff09', bg: 'linear-gradient(155deg,#3d3530,#1f1a18)', spec: '2024 / \u6cb9\u5f69\u30fb\u30d1\u30cd\u30eb / 91.0\xd772.7cm', count: 18, href: '#' },
       ];
       var grid = document.getElementById('p6MoreByGrid');
       if (grid) {
         grid.innerHTML = MORE_BY.map(function(w) {
-          return '<a class="p6-more-by__item" href="' + w.href + '">' +
-            '<div class="p6-more-by__thumb" style="background:' + w.bg + '"></div>' +
-            '<div class="p6-more-by__title">' + w.title + '</div>' +
-            '</a>';
+          return '<a class="aw" href="' + w.href + '" data-liaison="normal" data-status="nsale">' +
+            '<div class="aw__img">' +
+              '<div class="aw__img-ph" style="background:' + w.bg + ';aspect-ratio:1/1">' +
+                '<div class="aw__img-ph-text">\u300a' + w.title + '\u300b</div>' +
+              '</div>' +
+            '</div>' +
+            '<div class="aw__body">' +
+              '<div class="aw__badge-row"><span class="cb cb-content cb-artwork">artwork</span></div>' +
+              '<div class="aw__title-row"><div class="aw__title">\u300a' + w.title + '\u300b</div></div>' +
+              '<div class="aw__spec">' + w.spec + '</div>' +
+              '<div class="aw__action-row">' +
+                '<span class="aw__counter">' +
+                  '<svg viewBox="0 0 16 16" fill="currentColor" width="12" height="12"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>' +
+                  w.count +
+                '</span>' +
+                '<button class="ktn-icon-btn" data-action="interest" onclick="handleAction(this,\'interest\');event.preventDefault()">' +
+                  '<svg viewBox="0 0 16 16" fill="none" width="15" height="15"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>' +
+                  '<span class="tip">\u8208\u5473\u3042\u308b\uff01\u306b\u8ffd\u52a0\u3059\u308b</span>' +
+                '</button>' +
+              '</div>' +
+            '</div>' +
+          '</a>';
         }).join('');
       }
     },
@@ -1895,16 +1912,20 @@ KTN.pages['p6'] = function() {
             href: 'kotennavi-p7.html',
           },
         ];
-        el.innerHTML = articles.map(function(a) {
-          return '<a class="p6-article-item" href="' + a.href + '">' +
-            '<div class="p6-article__meta-row">' +
-            '<span class="cb cb-content cb-article">article</span>' +
-            '<span class="p6-article__date">' + a.date + '</span>' +
-            '</div>' +
-            '<div class="p6-article__title">' + a.title + '</div>' +
-            '<div class="p6-article__excerpt">' + a.excerpt + '</div>' +
-            '</a>';
-        }).join('');
+        el.innerHTML =
+          '<div class="p6-article__head-ttl">作品の記事<span class="ktn-sec-en">Articles</span></div>' +
+          articles.map(function(a) {
+            return '<a class="p6-article-item" href="' + a.href + '">' +
+              '<div class="p6-article__badge-row">' +
+              '<span class="cb cb-content cb-article">article</span>' +
+              '</div>' +
+              '<div class="p6-article__title">' + a.title + '</div>' +
+              '<div class="p6-article__meta-row">' +
+              '<span class="p6-article__date">' + a.date + '</span>' +
+              '</div>' +
+              '<div class="p6-article__excerpt">' + a.excerpt + '</div>' +
+              '</a>';
+          }).join('');
       }
     },
     renderActionArea: function() {},
