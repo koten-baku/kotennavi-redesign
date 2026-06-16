@@ -8817,6 +8817,22 @@ a.p3-works-liaison-band__title:hover{text-decoration:underline;text-underline-of
 .p3-1-group-label{display:flex;align-items:center;gap:8px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
 .p3-1-group-count{font-size:.75rem;color:var(--muted);font-weight:400}
 
+/* グループラベル（バッジではなくラベル） */
+.p3-1-glbl{
+  font-family:var(--fn);font-size:.82rem;font-weight:600;
+  display:inline-flex;align-items:center;gap:6px;
+}
+.p3-1-glbl::before{
+  content:'';width:7px;height:7px;border-radius:50%;
+  background:currentColor;flex-shrink:0;
+}
+.p3-1-glbl--live{color:#2a8838}
+.p3-1-glbl--live::before{animation:sb-pulse 1.8s ease-in-out infinite}
+.p3-1-glbl--soon{color:#1a4a88}
+.p3-1-glbl--ending{color:#c8501c}
+.p3-1-glbl--past{color:var(--muted)}
+.p3-1-glbl--past::before{display:none}
+
 .p3-1-card-list{display:flex;flex-direction:column;gap:8px}
 
 .p3-1-year-group{margin-bottom:4px}
@@ -8824,7 +8840,7 @@ a.p3-works-liaison-band__title:hover{text-decoration:underline;text-underline-of
 .p3-1-year-group summary{
   cursor:pointer;list-style:none;
   display:flex;align-items:center;gap:6px;
-  font-size:.75rem;font-weight:700;color:var(--muted);
+  font-family:var(--fn);font-size:.82rem;font-weight:600;color:var(--muted);
   padding:8px 0;border-bottom:1px solid var(--border);
   user-select:none;
 }
@@ -8876,7 +8892,7 @@ body.p3-1-page .p3-recommended .masonry-item{margin-bottom:0}
 .p3-2-year-group summary{
   cursor:pointer;list-style:none;
   display:flex;align-items:center;gap:6px;
-  font-size:.75rem;font-weight:700;color:var(--muted);
+  font-family:var(--fn);font-size:.82rem;font-weight:600;color:var(--muted);
   padding:8px 0;border-bottom:1px solid var(--border);
   user-select:none;
 }
