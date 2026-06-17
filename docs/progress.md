@@ -3,10 +3,9 @@
 最終更新：2026-06-17
 
 ## 現在の作業
-**次：p5 エディトリアル・リファインメント（p3/p4 系と同水準に統一）**
+**p5 エディトリアル・リファインメント 完了**
 
-対象ページ：`kotennavi-p5.html` / `p5-1.html` / `p5-2.html` / `p5-3.html`
-方針：p3/p4 系リファインメントと同じアプローチで、タイポグラフィ・カード・サイドカラム・関連エリアを整備する
+次：未定（P1 トップページ / P10 検索 / P2-13〜17 / P3-11〜14 等より選択）
 ※ P5-16（取引ワークスペース-支払）は廃止 — 決済はStripe外部遷移に変更し、p5-15に支払済（発送待ち）状態を追加済
 
 ---
@@ -76,6 +75,7 @@
 
 | 日付 | 内容 |
 |---|---|
+| 2026-06-17 | p5 エディトリアル・リファインメント：p5.html body class 追加（p5-page）・p5.html/p5-1/p5-2/p5-3 から kotennavi-components.css 削除・全ページの interest/watch ボタンを canonical `handleAction` パターンに統一（classList.toggle → handleAction・data-action 属性追加・SVG を canonical fill="none" 半透明ハートに統一）・p5-1 の watch ボタン SVG を `<use href="#icon-watch">` 禁止パターン → inline SVG に変換（34件）・p5-3 記事カード `itn-btn` → `ktn-icon-btn` に変換（4件） |
 | 2026-06-17 | p6/p6-1/p6-2 ダーク＆ライト修正（p2-4 クリエイターカードホバー標準化＝translateY(-1px)+shadow+border-color・パディングアニメ廃止 / p6-2 ダーク修正：CTA リード文・QR帯ダーク化（高特異度 0,4,0 で ktn-cta-widget ルール上書き）・右カラムセクションラベル（cascade 競合修正）・出品者クリエイターカード名＋ジャンル・記事カードタイトル を p6-dark 配下で明示的に白系色指定） |
 | 2026-06-16 | エディトリアル・リファインメント v2：バッジ体系刷新（`.cb` 人物→solid+Cinzel白文字・コンテンツ→left-border+Cinzel / `.sb` ステータス→dot prefix+Cinzel・pill型廃止）・タイポグラフィ変数微調整（rt-size .9→.92rem / rt-lh 1.9→2.0）・`ktn-sec-en` Cinzel化・p4.html を p3-tabnav/p3-layout 共通クラス構成に移行・sticky CTAバー追加 / p70.html（LIAISONとは）・p70-1.html（LIAISON出品ガイド・ロール切替）新規作成 / common.js _syncHH をResizeObserver対応に改良・コピーボタン共通ハンドラ追加 / cards_artwork.html：申込ボタン廃止→aw__queue（foot左）に統一 / CLAUDE.md エディトリアルv2仕様セクション追加 |
 | 2026-06-13 | ボタン体系v3.1（ユーザー指摘3点）：①記号ルール確定＝末尾「 →」はページ遷移ナビ（ktn-action-btn）に必須・テキスト統一でSVG矢印廃止（p5-14の5リンクをテキスト化・p3-16/p5-15の実行ボタン2件から矢印削除）／先頭「●」＝遷移先に要対応ありのサイン（--alert系でCSS自動付与・p5-14要対応ストリップのナビにもドット追加） ②--danger-outline格上げ＝グレー枠→通常時から赤枠・赤文字（danger系として軽すぎたため）・p5-15「申込をキャンセルする」もsolid→outline化 ③取引ステータスバッジ定義＝先頭ドット＋淡色塗り・枠なし・矢印なし（.p515-status__badgeベースにドット追加・ボタン＝枠＋白背景と形で区別）・buttons_v2.htmlにセクション5「取引ステータスバッジ—見分け方サマリー表」新設・CLAUDE.md/整合性チェック.md同期済み |

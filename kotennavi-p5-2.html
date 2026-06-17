@@ -8,7 +8,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./kotennavi-common.css">
-  <link rel="stylesheet" href="./kotennavi-components.css">
 </head>
 <body data-w="detail" class="p5-page p5-2-page">
 
@@ -144,8 +143,8 @@
                     <div class="ec-actions-group">
                       <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>8</span>
                       <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="10" cy="5" r="4"/><circle cx="5" cy="11" r="2.4"/></svg>1</span>
-                      <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault();event.stopPropagation()">
-                        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>
+                      <button class="ktn-icon-btn" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault();event.stopPropagation()">
+                        <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
                         <span class="tip">興味ある！に追加する</span>
                       </button>
                       <button class="p5-2-remove-btn" type="button">記録から除外</button>
@@ -185,9 +184,9 @@
                     <div class="ec-actions-group">
                       <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>24</span>
                       <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="10" cy="5" r="4"/><circle cx="5" cy="11" r="2.4"/></svg>5</span>
-                      <button class="ktn-icon-btn on" onclick="this.classList.toggle('on');event.preventDefault();event.stopPropagation()">
-                        <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6"/></svg>
-                        <span class="tip">興味ある！ — 解除する</span>
+                      <button class="ktn-icon-btn on" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault();event.stopPropagation()">
+                        <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
+                        <span class="tip">興味ある！を解除する</span>
                       </button>
                       <button class="p5-2-remove-btn" type="button">記録から除外</button>
                     </div>
@@ -222,8 +221,8 @@
                     <div class="ec-actions-group">
                       <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>6</span>
                       <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="10" cy="5" r="4"/><circle cx="5" cy="11" r="2.4"/></svg>2</span>
-                      <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault();event.stopPropagation()">
-                        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>
+                      <button class="ktn-icon-btn" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault();event.stopPropagation()">
+                        <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
                         <span class="tip">興味ある！に追加する</span>
                       </button>
                       <button class="p5-2-remove-btn" type="button">記録から除外</button>
@@ -263,8 +262,8 @@
                     <div class="ec-actions-group">
                       <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>12</span>
                       <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="10" cy="5" r="4"/><circle cx="5" cy="11" r="2.4"/></svg>3</span>
-                      <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault();event.stopPropagation()">
-                        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>
+                      <button class="ktn-icon-btn" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault();event.stopPropagation()">
+                        <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
                         <span class="tip">興味ある！に追加する</span>
                       </button>
                       <button class="p5-2-remove-btn" type="button">記録から除外</button>
@@ -308,9 +307,9 @@
                     <div class="ec-actions-group">
                       <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>9</span>
                       <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="10" cy="5" r="4"/><circle cx="5" cy="11" r="2.4"/></svg>2</span>
-                      <button class="ktn-icon-btn on" onclick="this.classList.toggle('on');event.preventDefault();event.stopPropagation()">
-                        <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6"/></svg>
-                        <span class="tip">興味ある！ — 解除する</span>
+                      <button class="ktn-icon-btn on" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault();event.stopPropagation()">
+                        <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
+                        <span class="tip">興味ある！を解除する</span>
                       </button>
                       <button class="p5-2-remove-btn" type="button">記録から除外</button>
                     </div>
@@ -349,8 +348,8 @@
                     <div class="ec-actions-group">
                       <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>15</span>
                       <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="10" cy="5" r="4"/><circle cx="5" cy="11" r="2.4"/></svg>4</span>
-                      <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault();event.stopPropagation()">
-                        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>
+                      <button class="ktn-icon-btn" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault();event.stopPropagation()">
+                        <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
                         <span class="tip">興味ある！に追加する</span>
                       </button>
                       <button class="p5-2-remove-btn" type="button">記録から除外</button>
@@ -386,9 +385,9 @@
                     <div class="ec-actions-group">
                       <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>21</span>
                       <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="10" cy="5" r="4"/><circle cx="5" cy="11" r="2.4"/></svg>6</span>
-                      <button class="ktn-icon-btn on" onclick="this.classList.toggle('on');event.preventDefault();event.stopPropagation()">
-                        <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6"/></svg>
-                        <span class="tip">興味ある！ — 解除する</span>
+                      <button class="ktn-icon-btn on" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault();event.stopPropagation()">
+                        <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
+                        <span class="tip">興味ある！を解除する</span>
                       </button>
                       <button class="p5-2-remove-btn" type="button">記録から除外</button>
                     </div>
@@ -427,8 +426,8 @@
                     <div class="ec-actions-group">
                       <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>7</span>
                       <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="10" cy="5" r="4"/><circle cx="5" cy="11" r="2.4"/></svg>1</span>
-                      <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault();event.stopPropagation()">
-                        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>
+                      <button class="ktn-icon-btn" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault();event.stopPropagation()">
+                        <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
                         <span class="tip">興味ある！に追加する</span>
                       </button>
                       <button class="p5-2-remove-btn" type="button">記録から除外</button>
@@ -472,8 +471,8 @@
                     <div class="ec-actions-group">
                       <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>11</span>
                       <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="10" cy="5" r="4"/><circle cx="5" cy="11" r="2.4"/></svg>3</span>
-                      <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault();event.stopPropagation()">
-                        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>
+                      <button class="ktn-icon-btn" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault();event.stopPropagation()">
+                        <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
                         <span class="tip">興味ある！に追加する</span>
                       </button>
                       <button class="p5-2-remove-btn" type="button">記録から除外</button>
@@ -509,9 +508,9 @@
                     <div class="ec-actions-group">
                       <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>18</span>
                       <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="10" cy="5" r="4"/><circle cx="5" cy="11" r="2.4"/></svg>5</span>
-                      <button class="ktn-icon-btn on" onclick="this.classList.toggle('on');event.preventDefault();event.stopPropagation()">
-                        <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6"/></svg>
-                        <span class="tip">興味ある！ — 解除する</span>
+                      <button class="ktn-icon-btn on" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault();event.stopPropagation()">
+                        <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
+                        <span class="tip">興味ある！を解除する</span>
                       </button>
                       <button class="p5-2-remove-btn" type="button">記録から除外</button>
                     </div>
@@ -550,8 +549,8 @@
                     <div class="ec-actions-group">
                       <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>5</span>
                       <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="10" cy="5" r="4"/><circle cx="5" cy="11" r="2.4"/></svg>1</span>
-                      <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault();event.stopPropagation()">
-                        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>
+                      <button class="ktn-icon-btn" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault();event.stopPropagation()">
+                        <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
                         <span class="tip">興味ある！に追加する</span>
                       </button>
                       <button class="p5-2-remove-btn" type="button">記録から除外</button>
@@ -612,9 +611,9 @@
               <div class="ec__foot">
                 <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>34</span>
                 <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="10" cy="5" r="4"/><circle cx="5" cy="11" r="2.4"/></svg>2</span>
-                <button class="ktn-icon-btn on" onclick="this.classList.toggle('on');event.preventDefault()">
-                  <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>
-                  <span class="tip">興味ある！から削除する</span>
+                <button class="ktn-icon-btn on" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault()">
+                  <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
+                  <span class="tip">興味ある！を解除する</span>
                 </button>
               </div>
             </a>
@@ -646,8 +645,8 @@
               <div class="ec__foot">
                 <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>21</span>
                 <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="10" cy="5" r="4"/><circle cx="5" cy="11" r="2.4"/></svg>1</span>
-                <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
-                  <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>
+                <button class="ktn-icon-btn" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault()">
+                  <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
                   <span class="tip">興味ある！に追加する</span>
                 </button>
               </div>
@@ -680,9 +679,9 @@
               <div class="ec__foot">
                 <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>58</span>
                 <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="10" cy="5" r="4"/><circle cx="5" cy="11" r="2.4"/></svg>4</span>
-                <button class="ktn-icon-btn on" onclick="this.classList.toggle('on');event.preventDefault()">
-                  <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>
-                  <span class="tip">興味ある！から削除する</span>
+                <button class="ktn-icon-btn on" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault()">
+                  <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
+                  <span class="tip">興味ある！を解除する</span>
                 </button>
               </div>
             </a>
@@ -714,8 +713,8 @@
               <div class="ec__foot">
                 <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>15</span>
                 <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="10" cy="5" r="4"/><circle cx="5" cy="11" r="2.4"/></svg>1</span>
-                <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
-                  <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>
+                <button class="ktn-icon-btn" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault()">
+                  <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
                   <span class="tip">興味ある！に追加する</span>
                 </button>
               </div>
