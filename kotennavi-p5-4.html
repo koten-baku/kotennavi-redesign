@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>山田 花子 — マイページ | 個展なび</title>
-  <meta name="description" content="山田 花子のマイページ。展覧会カレンダー・ウォッチリスト・チェックインを管理できます。">
+  <title>コレクションルーム — 山田 花子 | 個展なび</title>
+  <meta name="description" content="山田 花子のコレクションルーム。LIAISON+ で購入した作品のコレクション。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./kotennavi-common.css">
 </head>
-<body data-w="entity" class="p5-page">
+<body data-w="entity" class="p5-page p5-4-page">
 
 <div class="ktn-toast" id="ktnToast"></div>
 
@@ -23,9 +23,10 @@
       <circle cx="8" cy="8" r="7" fill="currentColor"/>
       <circle cx="8" cy="8" r="2.6" fill="white"/>
     </symbol>
+    <!-- コレクションアイコン（額縁形） -->
     <symbol id="icon-collection" viewBox="0 0 16 16">
-      <rect x="1" y="1" width="14" height="14" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/>
-      <rect x="3.5" y="3.5" width="9" height="9" rx=".5" fill="none" stroke="currentColor" stroke-width="1"/>
+      <rect x="2" y="2" width="12" height="12" rx="1.5" stroke="currentColor" stroke-width="1.4" fill="none"/>
+      <rect x="4.5" y="4.5" width="7" height="7" rx=".5" stroke="currentColor" stroke-width="1" fill="none"/>
     </symbol>
   </defs>
 </svg>
@@ -44,6 +45,9 @@
   <button class="dbtn on" data-side-btn onclick="setSideState('normal',this)">通常</button>
   <button class="dbtn" data-side-btn onclick="setSideState('zero',this)">ゼロ</button>
   <button class="dbtn" data-side-btn onclick="setSideState('stale',this)">休止中</button>
+  <span class="dbar-sep" style="margin-left:12px">コレクション：</span>
+  <button class="dbtn on" data-coll-btn onclick="setCollState('normal',this)">通常</button>
+  <button class="dbtn" data-coll-btn onclick="setCollState('zero',this)">ゼロ</button>
 </div>
 
 <div class="shell">
@@ -58,21 +62,18 @@
 
   <main class="ktn-main" id="ktnMain">
 
-    <!-- A. ヒーローエリア -->
-    <div class="p5-head">
+    <!-- A. ヒーロー（コンパクト版） -->
+    <div class="p5-head p5-head--compact">
       <div class="p5-head__inner">
         <div class="p5-head__top">
-          <div class="p5-head__avatar" style="background:linear-gradient(135deg,#f0c0d8,#c87aaa)">花</div>
+          <a href="kotennavi-p5.html">
+            <div class="p5-head__avatar" style="background:linear-gradient(135deg,#f0c0d8,#c87aaa)">花</div>
+          </a>
           <div class="p5-head__info">
             <div class="p5-head__badge-row">
               <span class="cb cb-person cb-user">user</span>
             </div>
-            <h1 class="p5-head__name">山田 花子</h1>
-            <div class="p5-head__since">利用開始 2022.04</div>
-            <div class="p5-head__bio">
-              <p class="p5-head__bio-text" id="p5HeadBioText">言葉と光をテーマに展覧会をめぐる日々。好きな展覧会の記録と、気になるクリエイターやギャラリーをウォッチしています。展覧会の感想をノートに書き留めることが習慣で、年間30〜40本ほど鑑賞しています。東京を中心に全国の個展・グループ展に足を運ぶのが楽しみです。</p>
-              <button class="p5-head__bio-toggle" id="p5HeadBioToggle" type="button"><span>もっと見る</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="6 9 12 15 18 9"/></svg></button>
-            </div>
+            <h1 class="p5-head__name"><a href="kotennavi-p5.html" style="color:inherit;text-decoration:none">山田 花子</a></h1>
             <div class="p5-head__stats">
               <span class="p5-head__stats-item">
                 <svg viewBox="0 0 16 16" fill="none" width="11" height="11"><circle cx="8" cy="8" r="7" fill="#3a90e0"/><circle class="wi-inner" cx="8" cy="8" r="2.6"/></svg>
@@ -89,13 +90,10 @@
                 興味あり！ <span class="p5-head__stats-num">47</span>
               </span>
               <span class="p5-head__stats-sep">·</span>
-              <a class="p5-head__stats-item p5-head__stats-item--link" href="kotennavi-p5-4.html">
+              <a class="p5-head__stats-item p5-head__stats-item--link" href="#">
                 <svg viewBox="0 0 16 16" fill="none" width="11" height="11"><rect x="2" y="2" width="12" height="12" rx="1.5" stroke="#4da3f5" stroke-width="1.4"/><rect x="4.5" y="4.5" width="7" height="7" rx=".5" stroke="#4da3f5" stroke-width="1"/></svg>
                 コレクション <span class="p5-head__stats-num">5</span>
               </a>
-            </div>
-            <div class="p5-head__action p5-owner-only">
-              <a class="p5-head__edit-btn" href="#">プロフィールを編集</a>
             </div>
           </div>
         </div>
@@ -106,319 +104,144 @@
     <nav class="p5-tabnav" id="p5Tabnav" aria-label="マイページ内ナビ">
       <div class="p5-tabnav__inner">
         <a class="p5-tabnav__name" href="kotennavi-p5.html"><span class="p5-tabnav__name-text">山田 花子</span></a>
-        <a class="p5-tabnav__item is-active" href="#">カレンダー</a>
-        <a class="p5-tabnav__item" href="/kotennavi-p5-1.html">ウォッチ</a>
-        <a class="p5-tabnav__item" href="/kotennavi-p5-2.html">チェックイン</a>
-        <a class="p5-tabnav__item" href="/kotennavi-p5-3.html">興味あり！</a>
-        <a class="p5-tabnav__item p5-tabnav__coll" href="kotennavi-p5-4.html">コレクションルーム</a>
+        <a class="p5-tabnav__item" href="kotennavi-p5.html">カレンダー</a>
+        <a class="p5-tabnav__item" href="kotennavi-p5-1.html">ウォッチ</a>
+        <a class="p5-tabnav__item" href="kotennavi-p5-2.html">チェックイン</a>
+        <a class="p5-tabnav__item" href="kotennavi-p5-3.html">興味あり！</a>
+        <a class="p5-tabnav__item p5-tabnav__coll is-active" href="#">コレクションルーム</a>
       </div>
     </nav>
 
-    <!-- メインコンテンツ -->
+    <!-- C. メインコンテンツ -->
     <div class="p5-wrap">
 
-      <!-- 左メイン -->
       <div class="p5-main">
 
+        <!-- セクションヘッド -->
         <div class="ktn-tab-head">
-          <span class="ktn-tab-head__title">my カレンダー<span class="ktn-sec-en">Calendar</span></span>
+          <div class="p54-head__left">
+            <div class="ktn-tab-head__title">山田 花子 のコレクションルーム<span class="ktn-sec-en">Collection Room</span></div>
+            <div class="p54-head__counts">
+              <span class="p54-head__counts--owner">コレクション <strong>5点</strong>&ensp;/&ensp;公開中 <strong>3点</strong></span>
+              <span class="p54-head__counts--other">コレクション <strong>3点</strong></span>
+            </div>
+          </div>
+          <button class="p54-edit-link p5-owner-only" onclick="p54OpenSortModal()">並び替え・公開設定</button>
         </div>
 
-        <!-- C-2. カレンダーウィジェット -->
-        <div class="p5-calendar-widget">
+        <!-- コレクション マソンリーグリッド（通常状態） -->
+        <div class="p54-section">
+          <div class="p54-grid">
 
-          <!-- 月ナビ -->
-          <div class="p5-cal-nav">
-            <button class="p5-cal-nav__prev" id="p5CalPrev" aria-label="前の月">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><polyline points="15 18 9 12 15 6"/></svg>
-            </button>
-            <span class="p5-cal-nav__month" id="p5CalMonth">April 2026</span>
-            <button class="p5-cal-nav__next" id="p5CalNext" aria-label="次の月">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><polyline points="9 18 15 12 9 6"/></svg>
-            </button>
-          </div>
-
-          <!-- 曜日ヘッダー -->
-          <div class="p5-cal-dow-row">
-            <span class="p5-cal-dow is-sun">Su</span>
-            <span class="p5-cal-dow">Mo</span>
-            <span class="p5-cal-dow">Tu</span>
-            <span class="p5-cal-dow">We</span>
-            <span class="p5-cal-dow">Th</span>
-            <span class="p5-cal-dow">Fr</span>
-            <span class="p5-cal-dow is-sat">Sa</span>
-          </div>
-
-          <!-- 日付グリッド（April 2026: Apr1=Wed） -->
-          <div class="p5-cal-grid" id="p5CalGrid">
-            <button class="p5-cal-day is-other" data-date="2026-03-29"><span class="p5-cal-day__num">29</span><div class="p5-cal-day__dots"></div></button>
-            <button class="p5-cal-day is-other" data-date="2026-03-30"><span class="p5-cal-day__num">30</span><div class="p5-cal-day__dots"></div></button>
-            <button class="p5-cal-day is-other" data-date="2026-03-31"><span class="p5-cal-day__num">31</span><div class="p5-cal-day__dots"></div></button>
-            <button class="p5-cal-day has-event" data-date="2026-04-01"><span class="p5-cal-day__num">1</span><div class="p5-cal-day__dots"><span class="p5-cal-dot" data-dot-type="gallery"></span></div></button>
-            <button class="p5-cal-day has-event" data-date="2026-04-02"><span class="p5-cal-day__num">2</span><div class="p5-cal-day__dots"><span class="p5-cal-dot" data-dot-type="gallery"></span></div></button>
-            <button class="p5-cal-day has-event" data-date="2026-04-03"><span class="p5-cal-day__num">3</span><div class="p5-cal-day__dots"><span class="p5-cal-dot" data-dot-type="gallery"></span></div></button>
-            <button class="p5-cal-day has-event" data-date="2026-04-04"><span class="p5-cal-day__num">4</span><div class="p5-cal-day__dots"><span class="p5-cal-dot" data-dot-type="gallery"></span></div></button>
-            <button class="p5-cal-day has-event" data-date="2026-04-05"><span class="p5-cal-day__num">5</span><div class="p5-cal-day__dots"><span class="p5-cal-dot" data-dot-type="interest"></span><span class="p5-cal-dot" data-dot-type="gallery"></span></div></button>
-            <button class="p5-cal-day has-event" data-date="2026-04-06"><span class="p5-cal-day__num">6</span><div class="p5-cal-day__dots"><span class="p5-cal-dot" data-dot-type="interest"></span><span class="p5-cal-dot" data-dot-type="gallery"></span></div></button>
-            <button class="p5-cal-day has-event" data-date="2026-04-07"><span class="p5-cal-day__num">7</span><div class="p5-cal-day__dots"><span class="p5-cal-dot" data-dot-type="interest"></span><span class="p5-cal-dot" data-dot-type="gallery"></span></div></button>
-            <button class="p5-cal-day has-event" data-date="2026-04-08"><span class="p5-cal-day__num">8</span><div class="p5-cal-day__dots"><span class="p5-cal-dot" data-dot-type="interest"></span><span class="p5-cal-dot" data-dot-type="gallery"></span><span class="p5-cal-dot" data-dot-type="checkin"></span></div></button>
-            <button class="p5-cal-day has-event" data-date="2026-04-09"><span class="p5-cal-day__num">9</span><div class="p5-cal-day__dots"><span class="p5-cal-dot" data-dot-type="interest"></span><span class="p5-cal-dot" data-dot-type="gallery"></span><span class="p5-cal-dot" data-dot-type="checkin"></span></div></button>
-            <button class="p5-cal-day has-event" data-date="2026-04-10"><span class="p5-cal-day__num">10</span><div class="p5-cal-day__dots"><span class="p5-cal-dot" data-dot-type="interest"></span><span class="p5-cal-dot" data-dot-type="gallery"></span><span class="p5-cal-dot" data-dot-type="checkin"></span></div></button>
-            <button class="p5-cal-day has-event" data-date="2026-04-11"><span class="p5-cal-day__num">11</span><div class="p5-cal-day__dots"><span class="p5-cal-dot" data-dot-type="interest"></span><span class="p5-cal-dot" data-dot-type="gallery"></span><span class="p5-cal-dot" data-dot-type="checkin"></span></div></button>
-            <button class="p5-cal-day has-event" data-date="2026-04-12"><span class="p5-cal-day__num">12</span><div class="p5-cal-day__dots"><span class="p5-cal-dot" data-dot-type="interest"></span><span class="p5-cal-dot" data-dot-type="creator"></span><span class="p5-cal-dot" data-dot-type="gallery"></span><span class="p5-cal-day__more">+1</span></div></button>
-            <button class="p5-cal-day has-event" data-date="2026-04-13"><span class="p5-cal-day__num">13</span><div class="p5-cal-day__dots"><span class="p5-cal-dot" data-dot-type="interest"></span><span class="p5-cal-dot" data-dot-type="creator"></span><span class="p5-cal-dot" data-dot-type="gallery"></span><span class="p5-cal-day__more">+1</span></div></button>
-            <button class="p5-cal-day has-event" data-date="2026-04-14"><span class="p5-cal-day__num">14</span><div class="p5-cal-day__dots"><span class="p5-cal-dot" data-dot-type="interest"></span><span class="p5-cal-dot" data-dot-type="creator"></span><span class="p5-cal-dot" data-dot-type="gallery"></span><span class="p5-cal-day__more">+1</span></div></button>
-            <button class="p5-cal-day has-event" data-date="2026-04-15"><span class="p5-cal-day__num">15</span><div class="p5-cal-day__dots"><span class="p5-cal-dot" data-dot-type="interest"></span><span class="p5-cal-dot" data-dot-type="creator"></span><span class="p5-cal-dot" data-dot-type="gallery"></span></div></button>
-            <button class="p5-cal-day has-event" data-date="2026-04-16"><span class="p5-cal-day__num">16</span><div class="p5-cal-day__dots"><span class="p5-cal-dot" data-dot-type="interest"></span><span class="p5-cal-dot" data-dot-type="creator"></span><span class="p5-cal-dot" data-dot-type="gallery"></span></div></button>
-            <button class="p5-cal-day has-event" data-date="2026-04-17"><span class="p5-cal-day__num">17</span><div class="p5-cal-day__dots"><span class="p5-cal-dot" data-dot-type="interest"></span><span class="p5-cal-dot" data-dot-type="creator"></span><span class="p5-cal-dot" data-dot-type="gallery"></span></div></button>
-            <button class="p5-cal-day has-event" data-date="2026-04-18"><span class="p5-cal-day__num">18</span><div class="p5-cal-day__dots"><span class="p5-cal-dot" data-dot-type="interest"></span><span class="p5-cal-dot" data-dot-type="creator"></span><span class="p5-cal-dot" data-dot-type="gallery"></span></div></button>
-            <button class="p5-cal-day has-event" data-date="2026-04-19"><span class="p5-cal-day__num">19</span><div class="p5-cal-day__dots"><span class="p5-cal-dot" data-dot-type="interest"></span><span class="p5-cal-dot" data-dot-type="creator"></span><span class="p5-cal-dot" data-dot-type="gallery"></span></div></button>
-            <button class="p5-cal-day has-event" data-date="2026-04-20"><span class="p5-cal-day__num">20</span><div class="p5-cal-day__dots"><span class="p5-cal-dot" data-dot-type="interest"></span><span class="p5-cal-dot" data-dot-type="creator"></span><span class="p5-cal-dot" data-dot-type="gallery"></span></div></button>
-            <button class="p5-cal-day has-event" data-date="2026-04-21"><span class="p5-cal-day__num">21</span><div class="p5-cal-day__dots"><span class="p5-cal-dot" data-dot-type="interest"></span><span class="p5-cal-dot" data-dot-type="creator"></span><span class="p5-cal-dot" data-dot-type="gallery"></span></div></button>
-            <button class="p5-cal-day has-event" data-date="2026-04-22"><span class="p5-cal-day__num">22</span><div class="p5-cal-day__dots"><span class="p5-cal-dot" data-dot-type="interest"></span><span class="p5-cal-dot" data-dot-type="creator"></span><span class="p5-cal-dot" data-dot-type="gallery"></span></div></button>
-            <button class="p5-cal-day has-event" data-date="2026-04-23"><span class="p5-cal-day__num">23</span><div class="p5-cal-day__dots"><span class="p5-cal-dot" data-dot-type="interest"></span><span class="p5-cal-dot" data-dot-type="creator"></span><span class="p5-cal-dot" data-dot-type="gallery"></span></div></button>
-            <button class="p5-cal-day has-event" data-date="2026-04-24"><span class="p5-cal-day__num">24</span><div class="p5-cal-day__dots"><span class="p5-cal-dot" data-dot-type="interest"></span><span class="p5-cal-dot" data-dot-type="creator"></span><span class="p5-cal-dot" data-dot-type="gallery"></span></div></button>
-            <button class="p5-cal-day has-event" data-date="2026-04-25"><span class="p5-cal-day__num">25</span><div class="p5-cal-day__dots"><span class="p5-cal-dot" data-dot-type="interest"></span><span class="p5-cal-dot" data-dot-type="creator"></span><span class="p5-cal-dot" data-dot-type="gallery"></span></div></button>
-            <button class="p5-cal-day has-event" data-date="2026-04-26"><span class="p5-cal-day__num">26</span><div class="p5-cal-day__dots"><span class="p5-cal-dot" data-dot-type="interest"></span><span class="p5-cal-dot" data-dot-type="creator"></span><span class="p5-cal-dot" data-dot-type="gallery"></span></div></button>
-            <button class="p5-cal-day has-event" data-date="2026-04-27"><span class="p5-cal-day__num">27</span><div class="p5-cal-day__dots"><span class="p5-cal-dot" data-dot-type="interest"></span><span class="p5-cal-dot" data-dot-type="creator"></span><span class="p5-cal-dot" data-dot-type="gallery"></span></div></button>
-            <button class="p5-cal-day has-event" data-date="2026-04-28"><span class="p5-cal-day__num">28</span><div class="p5-cal-day__dots"><span class="p5-cal-dot" data-dot-type="interest"></span><span class="p5-cal-dot" data-dot-type="gallery"></span></div></button>
-            <button class="p5-cal-day has-event is-today" data-date="2026-04-29"><span class="p5-cal-day__num">29</span><div class="p5-cal-day__dots"><span class="p5-cal-dot" data-dot-type="interest"></span><span class="p5-cal-dot" data-dot-type="gallery"></span></div></button>
-            <button class="p5-cal-day has-event" data-date="2026-04-30"><span class="p5-cal-day__num">30</span><div class="p5-cal-day__dots"><span class="p5-cal-dot" data-dot-type="interest"></span><span class="p5-cal-dot" data-dot-type="gallery"></span></div></button>
-            <button class="p5-cal-day is-other" data-date="2026-05-01"><span class="p5-cal-day__num">1</span><div class="p5-cal-day__dots"></div></button>
-            <button class="p5-cal-day is-other" data-date="2026-05-02"><span class="p5-cal-day__num">2</span><div class="p5-cal-day__dots"></div></button>
-          </div>
-
-          <!-- カレンダー内選択インジケーター -->
-          <div class="p5-cal-selection-bar" id="p5CalSelectionBar" style="display:none">
-            <span class="p5-cal-selection-bar__label">選択中</span>
-            <span class="p5-cal-selection-bar__value" id="p5CalSelectionText"></span>
-            <button class="p5-cal-selection-bar__clear" id="p5DateFilterClear">✕ クリア</button>
-          </div>
-
-        </div><!-- /p5-calendar-widget -->
-
-        <!-- C-5. 展覧会リスト（フィルター内蔵） -->
-        <div class="p5-exh-section">
-          <div class="p5-exh-section__head">
-            <div class="p5-exh-section__head-top">
-              <span class="p5-exh-section__title" id="p5ExhTitle">2026年4月の展覧会</span>
-              <span class="p5-exh-section__count" id="p5ExhCount">5件</span>
+            <!-- カード①（公開・縦長ポートレート） -->
+            <div class="p54c">
+              <a class="p54c__link" href="kotennavi-p6-2.html">
+                <div class="p54c__img" style="background:linear-gradient(145deg,#2a3a5a,#1a2a4a);aspect-ratio:3/4"></div>
+                <div class="p54c__body">
+                  <div class="p54c__title">音の輪郭 No.7</div>
+                  <div class="p54c__creator">田中 透</div>
+                  <div class="p54c__prov">
+                    <span class="p54c__prov-exh">個展「光と沈黙の間」</span>
+                    <span class="p54c__prov-date">Gallery SOIL 渋谷&ensp;·&ensp;2026.01 購入</span>
+                  </div>
+                </div>
+              </a>
+              <div class="p54c__controls p5-owner-only">
+                <button class="p54c__vis-btn" data-vis="public" onclick="p54ToggleVis(this)">公開中</button>
+                <button class="p54c__remove-btn" onclick="p54Remove(this)">コレクションから外す</button>
+              </div>
             </div>
-            <div class="p5-exh-section__filters p5-owner-only" id="p5FilterBar">
-              <button class="p5-filter-btn is-active" data-filter="all">すべて</button>
-              <button class="p5-filter-btn" data-filter="creator"><span class="p5-filter-btn__dot" style="color:#2a5f7a">●</span>ウォッチクリエイター</button>
-              <button class="p5-filter-btn" data-filter="gallery"><span class="p5-filter-btn__dot" style="color:#8b5e3c">●</span>ウォッチギャラリー</button>
-              <button class="p5-filter-btn" data-filter="interest"><span class="p5-filter-btn__dot" style="color:#b8608c">●</span>興味あり</button>
-              <label class="p5-filter-checkin-label" style="margin-left:4px">
-                <input type="checkbox" id="p5FilterCheckin">
-                チェックイン済みを除く
-              </label>
+
+            <!-- カード②（公開・横長ランドスケープ） -->
+            <div class="p54c">
+              <a class="p54c__link" href="kotennavi-p6-2.html">
+                <div class="p54c__img" style="background:linear-gradient(145deg,#4a3060,#2a1840);aspect-ratio:4/3"></div>
+                <div class="p54c__body">
+                  <div class="p54c__title">光の縁 — Series B</div>
+                  <div class="p54c__creator">川村 光一</div>
+                  <div class="p54c__prov">
+                    <span class="p54c__prov-exh">個展「余白の語り」</span>
+                    <span class="p54c__prov-date">White Box 表参道&ensp;·&ensp;2025.11 購入</span>
+                  </div>
+                </div>
+              </a>
+              <div class="p54c__controls p5-owner-only">
+                <button class="p54c__vis-btn" data-vis="public" onclick="p54ToggleVis(this)">公開中</button>
+                <button class="p54c__remove-btn" onclick="p54Remove(this)">コレクションから外す</button>
+              </div>
             </div>
+
+            <!-- カード③（非公開・正方形） -->
+            <div class="p54c p54c--private">
+              <a class="p54c__link" href="kotennavi-p6-2.html">
+                <div class="p54c__img" style="background:linear-gradient(145deg,#5a3838,#3a1818);aspect-ratio:1/1"></div>
+                <div class="p54c__body">
+                  <div class="p54c__title">記憶の断層 No.3</div>
+                  <div class="p54c__creator">山本 美咲</div>
+                  <div class="p54c__prov">
+                    <span class="p54c__prov-exh">二人展「色の解体」</span>
+                    <span class="p54c__prov-date">新宿文化センター&ensp;·&ensp;2025.09 購入</span>
+                  </div>
+                </div>
+              </a>
+              <div class="p54c__controls p5-owner-only">
+                <button class="p54c__vis-btn" data-vis="private" onclick="p54ToggleVis(this)">非公開</button>
+                <button class="p54c__remove-btn" onclick="p54Remove(this)">コレクションから外す</button>
+              </div>
+            </div>
+
+            <!-- カード④（公開・縦長ポートレート） -->
+            <div class="p54c">
+              <a class="p54c__link" href="kotennavi-p6-2.html">
+                <div class="p54c__img" style="background:linear-gradient(145deg,#3a5a4a,#1a3a2a);aspect-ratio:3/4"></div>
+                <div class="p54c__body">
+                  <div class="p54c__title">白と青の際</div>
+                  <div class="p54c__creator">橋本 明</div>
+                  <div class="p54c__prov">
+                    <span class="p54c__prov-exh">個展「水平線の詩」</span>
+                    <span class="p54c__prov-date">Art Space 光 銀座&ensp;·&ensp;2025.07 購入</span>
+                  </div>
+                </div>
+              </a>
+              <div class="p54c__controls p5-owner-only">
+                <button class="p54c__vis-btn" data-vis="public" onclick="p54ToggleVis(this)">公開中</button>
+                <button class="p54c__remove-btn" onclick="p54Remove(this)">コレクションから外す</button>
+              </div>
+            </div>
+
+            <!-- カード⑤（非公開・横長） -->
+            <div class="p54c p54c--private">
+              <a class="p54c__link" href="kotennavi-p6-2.html">
+                <div class="p54c__img" style="background:linear-gradient(145deg,#4a4a2a,#2a2a0a);aspect-ratio:5/3"></div>
+                <div class="p54c__body">
+                  <div class="p54c__title">残照 2025 Winter</div>
+                  <div class="p54c__creator">鈴木 花実</div>
+                  <div class="p54c__prov">
+                    <span class="p54c__prov-exh">個展「冬の記録」</span>
+                    <span class="p54c__prov-date">Gallery 森 代官山&ensp;·&ensp;2025.03 購入</span>
+                  </div>
+                </div>
+              </a>
+              <div class="p54c__controls p5-owner-only">
+                <button class="p54c__vis-btn" data-vis="private" onclick="p54ToggleVis(this)">非公開</button>
+                <button class="p54c__remove-btn" onclick="p54Remove(this)">コレクションから外す</button>
+              </div>
+            </div>
+
           </div>
-          <div class="p5-exh-list" id="p5ExhList">
+        </div>
 
-            <!-- カード1: ウォッチクリエイター / 終了 -->
-            <a class="ec ec--h p5-exh-card" data-type="creator" data-start="2026-04-12" data-end="2026-04-27" href="#">
-              <div class="ec--h-row">
-                <div class="ec__poster-col">
-                  <div class="ec__poster" style="background:linear-gradient(160deg,#2a5f7a,#1a3f5a)"></div>
-                </div>
-                <div class="ec__main">
-                  <div class="ec__datebar">
-                    <div class="ec__datebar-dates">
-                      <span class="year">2026.</span><strong>04.12</strong><span class="dow">sun</span>
-                      <span class="sep">—</span>
-                      <strong>04.27</strong><span class="dow">mon</span>
-                    </div>
-                  </div>
-                  <div class="ec__body">
-                    <div class="ec__badge-row">
-                      <span class="cb cb-content cb-exhibition">exhibition</span>
-                      <div class="ec-actions-group">
-                        <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>8</span>
-                        <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="10" cy="5" r="4"/><circle cx="5" cy="11" r="2.4"/></svg>1</span>
-                        <button class="ktn-icon-btn" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault()">
-                          <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
-                          <span class="tip">興味あり！に追加する</span>
-                        </button>
-                      </div>
-                    </div>
-                    <div class="ec__title">「オノマトペの庭」</div>
-                    <div class="ec__venue">渋谷<span class="ec__venue-sep">|</span>Gallery SOIL 渋谷</div>
-                    <div class="p5-exh-card__reason-row p5-owner-only">
-                      <span class="p5-exh-card__badge" data-type="creator">ウォッチクリエイター 田中透</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </a>
-
-            <!-- カード2: ウォッチギャラリー / 残り1日 + LIAISON -->
-            <a class="ec ec--h p5-exh-card" data-type="gallery" data-start="2026-04-01" data-end="2026-04-30" href="#">
-              <div class="ec--h-row">
-                <div class="ec__poster-col">
-                  <div class="ec__poster" style="background:linear-gradient(160deg,#8b5e3c,#5a3c1e)"></div>
-                </div>
-                <div class="ec__main">
-                  <div class="ec__datebar">
-                    <div class="ec__datebar-dates">
-                      <span class="year">2026.</span><strong>04.01</strong><span class="dow">wed</span>
-                      <span class="sep">—</span>
-                      <strong>04.30</strong><span class="dow">thu</span>
-                    </div>
-                    <div class="ec__datebar-meta">
-                      <span class="ec__remain-lt ec__remain-lt--live">残り1日</span>
-                    </div>
-                  </div>
-                  <div class="ec__body">
-                    <div class="ec__badge-row">
-                      <span class="cb cb-content cb-exhibition">exhibition</span>
-                      <span class="sb sb-ending"><span class="ending-dot"></span>もうすぐ終了</span>
-                      <div class="ec-actions-group">
-                        <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>24</span>
-                        <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="10" cy="5" r="4"/><circle cx="5" cy="11" r="2.4"/></svg>5</span>
-                        <button class="ktn-icon-btn on" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault()">
-                          <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
-                          <span class="tip">興味あり！を解除する</span>
-                        </button>
-                      </div>
-                    </div>
-                    <div class="ec__title">「Gallery SOIL 春季グループ展」</div>
-                    <div class="ec__venue">渋谷<span class="ec__venue-sep">|</span>Gallery SOIL 渋谷</div>
-                    <div class="p5-exh-card__reason-row p5-owner-only">
-                      <span class="p5-exh-card__badge" data-type="gallery">ウォッチギャラリー Gallery SOIL 渋谷</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="ec__liaison-strip--h">
-                <div class="ec__liaison-strip-info">
-                  <span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>
-                  <span class="ec__liaison-subtext">オンライン作品展示中</span>
-                </div>
-                <div class="ec__liaison-thumbs">
-                  <div class="ec__liaison-thumb" style="background:linear-gradient(135deg,#c8b89a,#9a7a5a)"></div>
-                  <div class="ec__liaison-thumb" style="background:linear-gradient(135deg,#b8c8d8,#6a7a9a)"></div>
-                  <div class="ec__liaison-thumb" style="background:linear-gradient(135deg,#d4b8c8,#9a6a88)"></div>
-                </div>
-              </div>
-            </a>
-
-            <!-- カード3: 興味あり + ウォッチギャラリー / 残り11日 -->
-            <a class="ec ec--h p5-exh-card" data-type="interest" data-start="2026-04-20" data-end="2026-05-10" href="#">
-              <div class="ec--h-row">
-                <div class="ec__poster-col">
-                  <div class="ec__poster" style="background:linear-gradient(160deg,#7a3a60,#4a1a40)"></div>
-                </div>
-                <div class="ec__main">
-                  <div class="ec__datebar">
-                    <div class="ec__datebar-dates">
-                      <span class="year">2026.</span><strong>04.20</strong><span class="dow">mon</span>
-                      <span class="sep">—</span>
-                      <strong>05.10</strong><span class="dow">sun</span>
-                    </div>
-                    <div class="ec__datebar-meta">
-                      <span class="ec__remain-lt ec__remain-lt--live">残り11日</span>
-                    </div>
-                  </div>
-                  <div class="ec__body">
-                    <div class="ec__badge-row">
-                      <span class="cb cb-content cb-exhibition">exhibition</span>
-                      <span class="sb sb-live"><span class="pulse"></span>開催中</span>
-                      <div class="ec-actions-group">
-                        <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>41</span>
-                        <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="10" cy="5" r="4"/><circle cx="5" cy="11" r="2.4"/></svg>9</span>
-                        <button class="ktn-icon-btn on" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault()">
-                          <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
-                          <span class="tip">興味あり！を解除する</span>
-                        </button>
-                      </div>
-                    </div>
-                    <div class="ec__title">「あなたが知らないオノマトペ」</div>
-                    <div class="ec__venue">渋谷<span class="ec__venue-sep">|</span>Gallery SOIL 渋谷</div>
-                    <div class="p5-exh-card__reason-row p5-owner-only">
-                      <span class="p5-exh-card__badge" data-type="gallery">ウォッチギャラリー Gallery SOIL 渋谷</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </a>
-
-            <!-- カード4: チェックイン済 / 終了 -->
-            <a class="ec ec--h p5-exh-card" data-type="checkin" data-start="2026-04-08" data-end="2026-04-14" href="#">
-              <div class="ec--h-row">
-                <div class="ec__poster-col">
-                  <div class="ec__poster" style="background:linear-gradient(160deg,#4a5a6a,#2a3a4a)"></div>
-                </div>
-                <div class="ec__main">
-                  <div class="ec__datebar">
-                    <div class="ec__datebar-dates">
-                      <span class="year">2026.</span><strong>04.08</strong><span class="dow">wed</span>
-                      <span class="sep">—</span>
-                      <strong>04.14</strong><span class="dow">tue</span>
-                    </div>
-                  </div>
-                  <div class="ec__body">
-                    <div class="ec__badge-row">
-                      <span class="cb cb-content cb-exhibition">exhibition</span>
-                      <div class="ec-actions-group">
-                        <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>6</span>
-                        <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="10" cy="5" r="4"/><circle cx="5" cy="11" r="2.4"/></svg>2</span>
-                        <button class="ktn-icon-btn" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault()">
-                          <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
-                          <span class="tip">興味あり！に追加する</span>
-                        </button>
-                      </div>
-                    </div>
-                    <div class="ec__title">「光と影の詩」</div>
-                    <div class="ec__venue">目黒<span class="ec__venue-sep">|</span>White Box 中目黒</div>
-                    <div class="p5-exh-card__reason-row p5-owner-only">
-                      <span class="rv-checkin-date"><svg viewBox="0 0 16 16" width="9" height="9" style="display:inline-block;vertical-align:middle"><circle cx="10" cy="5" r="4" fill="currentColor"/><circle cx="5" cy="11" r="2.4" fill="currentColor"/></svg>&#160;2026.04.08</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </a>
-
-            <!-- カード5: 興味あり / 終了 -->
-            <a class="ec ec--h p5-exh-card" data-type="interest" data-start="2026-04-05" data-end="2026-04-20" href="#">
-              <div class="ec--h-row">
-                <div class="ec__poster-col">
-                  <div class="ec__poster" style="background:linear-gradient(160deg,#5a3a60,#3a1a40)"></div>
-                </div>
-                <div class="ec__main">
-                  <div class="ec__datebar">
-                    <div class="ec__datebar-dates">
-                      <span class="year">2026.</span><strong>04.05</strong><span class="dow">sun</span>
-                      <span class="sep">—</span>
-                      <strong>04.20</strong><span class="dow">mon</span>
-                    </div>
-                  </div>
-                  <div class="ec__body">
-                    <div class="ec__badge-row">
-                      <span class="cb cb-content cb-exhibition">exhibition</span>
-                      <div class="ec-actions-group">
-                        <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>19</span>
-                        <span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="10" cy="5" r="4"/><circle cx="5" cy="11" r="2.4"/></svg>3</span>
-                        <button class="ktn-icon-btn on" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault()">
-                          <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
-                          <span class="tip">興味あり！を解除する</span>
-                        </button>
-                      </div>
-                    </div>
-                    <div class="ec__title">「春の気配 — 鈴木一郎 個展」</div>
-                    <div class="ec__venue">中央区<span class="ec__venue-sep">|</span>Art Space 光 銀座</div>
-                  </div>
-                </div>
-              </div>
-            </a>
-
-          </div><!-- /p5-exh-list -->
-        </div><!-- /p5-exh-section -->
+        <!-- ゼロ状態 -->
+        <div class="p54-zero">
+          <div class="p54-zero__icon"></div>
+          <div class="p54-zero__msg">コレクションはまだありません</div>
+          <p class="p54-zero__sub">LIAISON+ で作品を購入し、取引完了後に<br>「myコレクションへ」を選ぶとここに追加されます。</p>
+          <a class="ktn-action-btn" href="#">展覧会・LIAISON+ 作品を探す →</a>
+        </div>
 
       </div><!-- /p5-main -->
 
-      <!-- 右サイド -->
+      <!-- 右サイド（p5 共通3ウィジェット） -->
       <div class="p5-side">
 
         <!-- ① アクティビティナビ -->
@@ -443,12 +266,12 @@
             <a class="p5-side-act__link" href="kotennavi-p5-1.html">ウォッチ →</a>
             <a class="p5-side-act__link" href="kotennavi-p5-2.html">チェックイン →</a>
             <a class="p5-side-act__link" href="kotennavi-p5-3.html">興味あり！→</a>
-            <a class="p5-side-act__link" href="kotennavi-p5-4.html">コレクションルーム →</a>
+            <a class="p5-side-act__link is-active" href="#">コレクションルーム →</a>
           </div>
           <div class="p5-side-act__zero-msg">まずは気になる展覧会をウォッチしてみましょう。</div>
         </div>
 
-        <!-- ② ウォッチからの展覧会 / 最近のチェックイン -->
+        <!-- ② ウォッチからの展覧会 / 興味あり！の展覧会 -->
         <div class="p5-side-widget">
           <div class="p2-side-nearby__head p5-side-watch-hd"><span class="p2-side-nearby__title">ウォッチからの展覧会<span class="ktn-sec-en">From Your Watch</span></span></div>
           <div class="p2-side-nearby__head p5-side-checkin-hd"><span class="p2-side-nearby__title">興味あり！の展覧会<span class="ktn-sec-en">Interests</span></span></div>
@@ -630,7 +453,7 @@
             </div>
           </div>
 
-          <!-- ピックアップ（Case 1 & 2） -->
+          <!-- ピックアップ（Case 1 & 2 & other） -->
           <div class="p5-side-pickup">
             <div class="ec-mini-panel--light p5-side-ending">
 
@@ -672,6 +495,7 @@
           </div>
 
         </div>
+
 
         <!-- 区切り線：右カラム -->
         <div style="border-top:1px solid var(--border);margin:12px 0 8px"></div>
@@ -852,12 +676,76 @@
       </div>
     </div>
 
-  </main>
+  </main><!-- /ktn-main -->
 
-  <div class="dev-ph dev-ph--footer"></div>
+  <footer class="ktn-footer" id="ktnFooter"></footer>
 
 </div><!-- /content-wrap -->
 </div><!-- /shell -->
+
+<!-- 並び替え・公開設定モーダル -->
+<div class="p54-sort-modal" id="p54SortModal" role="dialog" aria-modal="true" aria-labelledby="p54SortModalTitle">
+  <div class="p54-sort-modal__panel">
+    <div class="p54-sort-modal__head">
+      <h2 class="p54-sort-modal__title" id="p54SortModalTitle">並び替え・公開設定</h2>
+      <button class="p54-sort-modal__close" onclick="p54CloseSortModal()" aria-label="閉じる">×</button>
+    </div>
+    <div class="p54-sort-modal__body">
+      <ul class="p54-sort-list" id="p54SortList">
+        <li class="p54-sort-item" draggable="true">
+          <div class="p54-sort-item__handle"><span></span><span></span><span></span></div>
+          <div class="p54-sort-item__thumb" style="background:linear-gradient(145deg,#2a3a5a,#1a2a4a)"></div>
+          <div class="p54-sort-item__info">
+            <div class="p54-sort-item__title">音の輪郭 No.7</div>
+            <div class="p54-sort-item__creator">田中 透</div>
+          </div>
+          <button class="p54-sort-item__vis-btn" data-vis="public" onclick="p54ToggleModalVis(this)">公開中</button>
+        </li>
+        <li class="p54-sort-item" draggable="true">
+          <div class="p54-sort-item__handle"><span></span><span></span><span></span></div>
+          <div class="p54-sort-item__thumb" style="background:linear-gradient(145deg,#4a3060,#2a1840)"></div>
+          <div class="p54-sort-item__info">
+            <div class="p54-sort-item__title">光の縁 — Series B</div>
+            <div class="p54-sort-item__creator">川村 光一</div>
+          </div>
+          <button class="p54-sort-item__vis-btn" data-vis="public" onclick="p54ToggleModalVis(this)">公開中</button>
+        </li>
+        <li class="p54-sort-item" draggable="true">
+          <div class="p54-sort-item__handle"><span></span><span></span><span></span></div>
+          <div class="p54-sort-item__thumb" style="background:linear-gradient(145deg,#5a3838,#3a1818)"></div>
+          <div class="p54-sort-item__info">
+            <div class="p54-sort-item__title">記憶の断層 No.3</div>
+            <div class="p54-sort-item__creator">山本 美咲</div>
+          </div>
+          <button class="p54-sort-item__vis-btn" data-vis="private" onclick="p54ToggleModalVis(this)">非公開</button>
+        </li>
+        <li class="p54-sort-item" draggable="true">
+          <div class="p54-sort-item__handle"><span></span><span></span><span></span></div>
+          <div class="p54-sort-item__thumb" style="background:linear-gradient(145deg,#3a5a4a,#1a3a2a)"></div>
+          <div class="p54-sort-item__info">
+            <div class="p54-sort-item__title">白と青の際</div>
+            <div class="p54-sort-item__creator">橋本 明</div>
+          </div>
+          <button class="p54-sort-item__vis-btn" data-vis="public" onclick="p54ToggleModalVis(this)">公開中</button>
+        </li>
+        <li class="p54-sort-item" draggable="true">
+          <div class="p54-sort-item__handle"><span></span><span></span><span></span></div>
+          <div class="p54-sort-item__thumb" style="background:linear-gradient(145deg,#4a4a2a,#2a2a0a)"></div>
+          <div class="p54-sort-item__info">
+            <div class="p54-sort-item__title">残照 2025 Winter</div>
+            <div class="p54-sort-item__creator">鈴木 花実</div>
+          </div>
+          <button class="p54-sort-item__vis-btn" data-vis="private" onclick="p54ToggleModalVis(this)">非公開</button>
+        </li>
+      </ul>
+    </div>
+    <div class="p54-sort-modal__foot">
+      <span class="p54-sort-modal__hint">ドラッグして並び替え</span>
+      <button class="ktn-op-btn" onclick="p54CloseSortModal()">キャンセル</button>
+      <button class="ktn-op-btn ktn-op-btn--primary" onclick="p54SaveSort()">保存する</button>
+    </div>
+  </div>
+</div>
 
 <nav class="ktn-bottom-nav" id="ktnBottomNav">
   <div class="ktn-bottom-nav__inner" id="ktnBottomNavInner"></div>
@@ -878,7 +766,81 @@
     document.querySelectorAll('[data-side-btn]').forEach(function(b){ b.classList.remove('on'); });
     btn.classList.add('on');
   }
-  KTN.init({ page: 'p5', role: 'user+' });
+  function setCollState(state, btn) {
+    document.querySelectorAll('[data-coll-btn]').forEach(function(b){ b.classList.remove('on'); });
+    btn.classList.add('on');
+    document.body.classList.toggle('p5-coll-zero', state === 'zero');
+  }
+  function p54ToggleVis(btn) {
+    var card = btn.closest('.p54c');
+    var isPublic = btn.dataset.vis === 'public';
+    btn.dataset.vis = isPublic ? 'private' : 'public';
+    btn.textContent = isPublic ? '非公開' : '公開中';
+    card.classList.toggle('p54c--private', isPublic);
+  }
+  function p54Remove(btn) {
+    if (!confirm('このコレクションから外しますか？')) return;
+    btn.closest('.p54c').style.transition = 'opacity .3s';
+    btn.closest('.p54c').style.opacity = '0';
+    setTimeout(function() { btn.closest('.p54c').remove(); }, 300);
+  }
+
+  // 並び替え・公開設定モーダル
+  function p54OpenSortModal() {
+    document.getElementById('p54SortModal').classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+  }
+  function p54CloseSortModal() {
+    document.getElementById('p54SortModal').classList.remove('is-open');
+    document.body.style.overflow = '';
+  }
+  function p54ToggleModalVis(btn) {
+    var isPublic = btn.dataset.vis === 'public';
+    btn.dataset.vis = isPublic ? 'private' : 'public';
+    btn.textContent = isPublic ? '非公開' : '公開中';
+  }
+  function p54SaveSort() {
+    p54CloseSortModal();
+    var toast = document.getElementById('ktnToast');
+    if (toast) {
+      toast.textContent = '保存しました';
+      toast.classList.add('is-show');
+      setTimeout(function() { toast.classList.remove('is-show'); }, 2500);
+    }
+  }
+
+  // ドラッグ&ドロップ並び替え
+  (function() {
+    var list = document.getElementById('p54SortList');
+    var dragging = null;
+    list.addEventListener('dragstart', function(e) {
+      dragging = e.target.closest('.p54-sort-item');
+      if (dragging) setTimeout(function() { dragging.classList.add('is-dragging'); }, 0);
+    });
+    list.addEventListener('dragend', function() {
+      if (dragging) dragging.classList.remove('is-dragging');
+      list.querySelectorAll('.p54-sort-item').forEach(function(el) { el.classList.remove('is-over'); });
+      dragging = null;
+    });
+    list.addEventListener('dragover', function(e) {
+      e.preventDefault();
+      var over = e.target.closest('.p54-sort-item');
+      if (!over || over === dragging) return;
+      list.querySelectorAll('.p54-sort-item').forEach(function(el) { el.classList.remove('is-over'); });
+      over.classList.add('is-over');
+      var rect = over.getBoundingClientRect();
+      if (e.clientY < rect.top + rect.height / 2) {
+        list.insertBefore(dragging, over);
+      } else {
+        list.insertBefore(dragging, over.nextSibling);
+      }
+    });
+    document.getElementById('p54SortModal').addEventListener('click', function(e) {
+      if (e.target === this) p54CloseSortModal();
+    });
+  })();
+
+  KTN.init({ page: 'p5-4', role: 'user+' });
 </script>
 </body>
 </html>

@@ -1,11 +1,11 @@
 # 進捗状況
 
-最終更新：2026-06-17
+最終更新：2026-06-20
 
 ## 現在の作業
-**p5 エディトリアル・リファインメント 完了**
+**サブページ共通タブヘッド `.ktn-tab-head` 導入・全CSS整理 完了**
 
-次：未定（P1 トップページ / P10 検索 / P2-13〜17 / P3-11〜14 等より選択）
+次：未定（P1 トップページ / P10 検索 等より選択）
 ※ P5-16（取引ワークスペース-支払）は廃止 — 決済はStripe外部遷移に変更し、p5-15に支払済（発送待ち）状態を追加済
 
 ---
@@ -37,6 +37,7 @@
 | kotennavi-p5-1.html | P5-1 ウォッチリスト |
 | kotennavi-p5-2.html | P5-2 チェックイン記録 |
 | kotennavi-p5-3.html | P5-3 興味あり！リスト |
+| kotennavi-p5-4.html | P5-4 コレクションルーム |
 | kotennavi-p3-15.html | P3-15 LIAISONコンソール（creator管理） |
 | kotennavi-p4-15.html | P4-15 LIAISONコンソール（gallery管理） |
 | kotennavi-p5-14.html | P5-14 購入履歴（user管理） |
@@ -75,6 +76,8 @@
 
 | 日付 | 内容 |
 |---|---|
+| 2026-06-20 | p3-3 作品一覧 調整：コレクション済みアイコン（`.aw__collected-icon`）をバッジ行内spanに変更（ボタン廃止）・dbarコレクション切替UIと`setP33Coll()`削除・p3-3の通常作品では`.aws`販売ステータスバッジ＋`.aw__sold-ribbon`を非表示（CSS）|
+| 2026-06-20 | サブページ共通タブヘッド `.ktn-tab-head` 新設・統一：p3-1/p3-2/p3-3/p4-1/p4-2/p5/p5-1/p5-2/p5-3/p5-4/p2-2/p2-3/p2-4 の13ファイルで旧ページ固有ヘッドクラスを `.ktn-tab-head` / `.ktn-tab-head__title`（1.55rem 600 Shippori）/ `.ktn-tab-head__count` に統一・旧定義（p3-1-head/p3-2-head/p3-3-head/p5-cal-head/p5-1-head/p5-2-head/p5-3-head/p54-head/p2-2-section__head 等）と editorial v2 overrides・mobile breakpoint override を common.css から削除・p3〜p5 タブナビ下〜コンテンツ間隔を p2-4 基準の 32px に統一（`.p3-layout` padding-top / `.p5-wrap` padding-top 変更） |
 | 2026-06-17 | p5 エディトリアル・リファインメント：p5.html body class 追加（p5-page）・p5.html/p5-1/p5-2/p5-3 から kotennavi-components.css 削除・全ページの interest/watch ボタンを canonical `handleAction` パターンに統一（classList.toggle → handleAction・data-action 属性追加・SVG を canonical fill="none" 半透明ハートに統一）・p5-1 の watch ボタン SVG を `<use href="#icon-watch">` 禁止パターン → inline SVG に変換（34件）・p5-3 記事カード `itn-btn` → `ktn-icon-btn` に変換（4件） |
 | 2026-06-17 | p6/p6-1/p6-2 ダーク＆ライト修正（p2-4 クリエイターカードホバー標準化＝translateY(-1px)+shadow+border-color・パディングアニメ廃止 / p6-2 ダーク修正：CTA リード文・QR帯ダーク化（高特異度 0,4,0 で ktn-cta-widget ルール上書き）・右カラムセクションラベル（cascade 競合修正）・出品者クリエイターカード名＋ジャンル・記事カードタイトル を p6-dark 配下で明示的に白系色指定） |
 | 2026-06-16 | エディトリアル・リファインメント v2：バッジ体系刷新（`.cb` 人物→solid+Cinzel白文字・コンテンツ→left-border+Cinzel / `.sb` ステータス→dot prefix+Cinzel・pill型廃止）・タイポグラフィ変数微調整（rt-size .9→.92rem / rt-lh 1.9→2.0）・`ktn-sec-en` Cinzel化・p4.html を p3-tabnav/p3-layout 共通クラス構成に移行・sticky CTAバー追加 / p70.html（LIAISONとは）・p70-1.html（LIAISON出品ガイド・ロール切替）新規作成 / common.js _syncHH をResizeObserver対応に改良・コピーボタン共通ハンドラ追加 / cards_artwork.html：申込ボタン廃止→aw__queue（foot左）に統一 / CLAUDE.md エディトリアルv2仕様セクション追加 |
