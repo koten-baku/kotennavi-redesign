@@ -9817,7 +9817,7 @@ body.p5-15-page .p5-head,body.p5-15-page .p5-tabnav{max-width:760px}
 
 /* ── ステッププログレス ── */
 .p515-steps{background:#fff;border:1px solid var(--border);border-radius:4px;padding:14px 12px 12px}
-.p515-steps__label{font-family:var(--fn);font-size:.75rem;font-weight:600;color:var(--ink);margin:0 0 10px}
+.p515-steps__label{font-family:var(--fs);font-size:.75rem;font-weight:600;color:var(--ink);margin:0 0 10px}
 .p515-steps__label-en{font-family:var(--font-en-label);font-size:.65em;letter-spacing:.1em;color:var(--muted);margin-left:6px}
 .p515-steps__track{display:flex;align-items:flex-start}
 .p515-step{display:flex;flex-direction:column;align-items:center;gap:4px;flex:0 0 auto}
@@ -9846,7 +9846,7 @@ body.p5-15-page .p5-head,body.p5-15-page .p5-tabnav{max-width:760px}
 .p515-status__deadline{font-size:.75rem;color:var(--muted);font-family:var(--fm);margin-left:auto;white-space:nowrap}
 .p515-status__deadline--alert{color:#b43c14}
 .p515-status__body{padding:20px 16px 24px;display:flex;flex-direction:column;gap:14px}
-.p515-status__desc{font-family:var(--fn);font-size:.9rem;color:var(--ink);line-height:var(--rt-lh,2.0);margin:0}
+.p515-status__desc{font-family:var(--fs);font-size:.9rem;color:var(--ink);line-height:var(--rt-lh,2.0);margin:0}
 /* 自分のターン（要アクション）は説明文をわずかに大きく */
 .p515-status--my-turn .p515-status__desc{font-size:.96rem}
 
@@ -9882,15 +9882,15 @@ body.p5-15-page .p5-head,body.p5-15-page .p5-tabnav{max-width:760px}
 /* 取引完了 */
 .p515-done{text-align:center;padding:12px 16px 4px}
 .p515-done__icon{color:#3a9867;margin-bottom:12px}
-.p515-done__title{font-family:var(--fn);font-size:1rem;font-weight:700;color:var(--ink);margin:0 0 6px}
-.p515-done__desc{font-family:var(--fn);font-size:.82rem;color:var(--ink);line-height:1.75;margin:0 0 16px}
+.p515-done__title{font-family:var(--fs);font-size:1rem;font-weight:700;color:var(--ink);margin:0 0 6px}
+.p515-done__desc{font-family:var(--fs);font-size:.82rem;color:var(--ink);line-height:1.75;margin:0 0 16px}
 .p515-done__actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
 /* p515 done buttons → ktn-op-btn */
 
 /* ── 取引ログ ── */
 .p515-log{background:#fff;border:1px solid var(--border);border-radius:4px;padding:16px}
 .p515-log[hidden]{display:none}
-.p515-log__title{font-family:var(--fn);font-size:.75rem;font-weight:600;color:var(--ink);margin:0 0 12px}
+.p515-log__title{font-family:var(--fs);font-size:.75rem;font-weight:600;color:var(--ink);margin:0 0 12px}
 .p515-log__title-en{font-family:var(--fm);font-size:.65em;letter-spacing:.1em;color:var(--muted);margin-left:6px;text-transform:uppercase}
 .p515-log-item{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--paper)}
 .p515-log-item:last-child{border-bottom:none;padding-bottom:0}
@@ -9916,7 +9916,7 @@ body.p5-15-page .p5-head,body.p5-15-page .p5-tabnav{max-width:760px}
 
 /* キャンセル後メッセージ */
 .p515-cancelled{display:flex;flex-direction:column;gap:10px;padding:2px 0}
-.p515-cancelled__msg{font-family:var(--fn);font-size:.9rem;color:var(--ink);line-height:var(--rt-lh,2.0);margin:0}
+.p515-cancelled__msg{font-family:var(--fs);font-size:.9rem;color:var(--ink);line-height:var(--rt-lh,2.0);margin:0}
 .p515-cancelled__back{display:inline-flex;align-self:flex-start;text-decoration:none}
 
 /* expired: 申込個人情報は非表示（出品者メッセージは保持） */
@@ -9936,7 +9936,7 @@ body.p5-15-page .p5-head,body.p5-15-page .p5-tabnav{max-width:760px}
 
 /* ── 配送先入力フォーム ── */
 .p515-delivery{background:var(--paper);border-radius:4px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
-.p515-delivery__title{font-family:var(--fn);font-size:.82rem;font-weight:600;color:var(--ink)}
+.p515-delivery__title{font-family:var(--fs);font-size:.82rem;font-weight:600;color:var(--ink)}
 .p515-delivery__note{font-family:var(--fn);font-size:.75rem;color:#4a5a6a;line-height:1.6;margin:0}
 .p515-delivery__form{display:flex;flex-direction:column;gap:8px}
 .p515-delivery__field{display:flex;flex-direction:column;gap:3px}
@@ -9957,7 +9957,7 @@ body.p5-15-page .p5-head,body.p5-15-page .p5-tabnav{max-width:760px}
 
 /* ── 受取評価フォーム ── */
 .p515-review{background:var(--paper);border-radius:4px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
-.p515-review__title{font-size:.82rem;font-weight:600;color:var(--ink)}
+.p515-review__title{font-family:var(--fs);font-size:.82rem;font-weight:600;color:var(--ink)}
 .p515-review__note{font-size:.75rem;color:var(--muted);margin:0;line-height:1.6}
 .p515-review__stars{display:flex;gap:3px}
 .p515-review__star{background:none;border:none;cursor:pointer;font-size:1.5rem;color:var(--border);padding:0 2px;line-height:1;transition:color .1s}
@@ -9969,8 +9969,8 @@ body.p5-15-page .p5-head,body.p5-15-page .p5-tabnav{max-width:760px}
 .p515-status__badge--confirming{background:rgba(58,152,103,.07);color:#2e7d52}
 .p515-confirming{text-align:center;padding:8px 8px 4px;display:flex;flex-direction:column;align-items:center;gap:8px}
 .p515-confirming__icon{color:var(--muted)}
-.p515-confirming__title{font-size:.9rem;font-weight:600;color:var(--ink);margin:0}
-.p515-confirming__desc{font-size:.82rem;color:var(--ink);line-height:1.75;margin:0}
+.p515-confirming__title{font-family:var(--fs);font-size:.9rem;font-weight:600;color:var(--ink);margin:0}
+.p515-confirming__desc{font-family:var(--fs);font-size:.82rem;color:var(--ink);line-height:1.75;margin:0}
 
 /* ── 申込内容（ログ内） ── */
 .p515-log-apply{background:var(--paper);border-radius:3px;padding:6px 8px;margin-top:4px;display:flex;flex-direction:column;gap:2px}
@@ -9981,16 +9981,17 @@ body.p5-15-page .p5-head,body.p5-15-page .p5-tabnav{max-width:760px}
 /* ── 取引コメント ── */
 .p515-comments{background:#fff;border:1px solid var(--border);border-radius:4px;padding:16px}
 .p515-comments__head{display:flex;align-items:center;gap:8px;margin-bottom:12px}
-.p515-comments__title{font-size:.75rem;font-weight:600;color:var(--ink)}
+.p515-comments__title{font-family:var(--fs);font-size:.75rem;font-weight:600;color:var(--ink)}
 .p515-comments__expire{font-size:.62rem;color:var(--muted);margin-left:auto}
 .p515-comments__list{display:flex;flex-direction:column;gap:12px;margin-bottom:14px}
 .p515-comment{display:flex;gap:10px}
 .p515-comment__avatar{width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:#fff;flex-shrink:0}
 .p515-comment__avatar--user{background:linear-gradient(135deg,#f0c0d8,#c87aaa);border-radius:50%}
 .p515-comment__avatar--creator{background:linear-gradient(135deg,#b0c8e8,#5a82a8);border-radius:12px}
+.p515-comment__avatar--gallery{background:linear-gradient(135deg,#c8a888,#8b5e3c);border-radius:4px}
 .p515-comment__body{flex:1;min-width:0}
 .p515-comment__meta{display:flex;align-items:center;gap:5px;margin-bottom:3px;flex-wrap:wrap}
-.p515-comment__name{font-size:.75rem;font-weight:600;color:var(--ink)}
+.p515-comment__name{font-family:var(--fs);font-size:.75rem;font-weight:600;color:var(--ink)}
 .p515-comment__role{font-size:.62rem;background:var(--paper);color:var(--muted);padding:1px 5px;border-radius:2px;border:1px solid var(--border)}
 .p515-comment__role--buyer{background:rgba(184,96,140,.07);color:#8b406a;border-color:rgba(184,96,140,.2)}
 .p515-comment__date{font-size:.62rem;color:var(--muted);font-family:var(--fm);margin-left:auto}
@@ -10012,7 +10013,7 @@ body.p5-15-page .p5-head,body.p5-15-page .p5-tabnav{max-width:760px}
 .p515-seller__avatar{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:700;color:#fff;background:linear-gradient(135deg,#b0c8e8,#5a82a8);flex-shrink:0;border:2px solid #fff;outline:2px solid rgba(42,95,122,.45);outline-offset:2px}
 .p515-seller__info{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
 .p515-seller__badges{display:flex;gap:5px}
-.p515-seller__name{font-size:.9rem;font-weight:600;color:var(--ink)}
+.p515-seller__name{font-family:var(--fs);font-size:.9rem;font-weight:600;color:var(--ink)}
 .p515-seller__arr{color:var(--muted);flex-shrink:0;margin-left:auto}
 
 /* ── 購入作品 + 出品者 ── */
@@ -10040,12 +10041,12 @@ body.p5-15-page .p5-head,body.p5-15-page .p5-tabnav{max-width:760px}
 .p515-purchase-seller__bio{font-family:var(--fs);font-size:var(--rt-pre-size);color:var(--muted);line-height:var(--rt-lh);letter-spacing:var(--rt-ls);overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}
 .p515-purchase-seller__avatar{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:.9rem;font-weight:700;color:#fff;background:linear-gradient(135deg,#b0c8e8,#5a82a8);flex-shrink:0;border:2px solid #fff;outline:2px solid rgba(42,95,122,.45);outline-offset:2px}
 .p515-purchase-seller__info{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
-.p515-purchase-seller__name{font-size:.82rem;font-weight:600;color:var(--ink)}
+.p515-purchase-seller__name{font-family:var(--fs);font-size:.82rem;font-weight:600;color:var(--ink)}
 .p515-purchase-seller__arr{color:var(--muted);flex-shrink:0}
 
 /* 配送先確認（支払済状態） */
 .p515-ship-confirm{background:var(--paper);border-radius:6px;padding:14px 18px;display:flex;flex-direction:column;gap:0}
-.p515-ship-confirm__title{font-size:.82rem;font-weight:600;color:var(--ink);margin:0 0 10px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.p515-ship-confirm__title{font-family:var(--fs);font-size:.82rem;font-weight:600;color:var(--ink);margin:0 0 10px;padding-bottom:8px;border-bottom:1px solid var(--border)}
 .p515-ship-confirm__row{display:flex;align-items:baseline;gap:10px;padding:7px 0;border-bottom:1px solid rgba(0,0,0,.05);font-size:.9rem;color:var(--ink);line-height:1.5}
 .p515-ship-confirm__label{font-size:.75rem;color:var(--muted);width:86px;flex-shrink:0;line-height:1.5}
 .p515-ship-confirm__row--total{font-weight:700;font-size:1rem;border-bottom:none;border-top:2px solid var(--border);padding-top:10px;margin-top:4px}
@@ -10073,11 +10074,11 @@ body.p5-15-page .p5-head,body.p5-15-page .p5-tabnav{max-width:760px}
 .p515-modal-overlay[hidden]{display:none}
 .p515-modal{background:#fff;border-radius:6px;width:100%;max-width:400px;box-shadow:0 8px 40px rgba(0,0,0,.18);overflow:hidden}
 .p515-modal__head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border)}
-.p515-modal__title{font-size:.9rem;font-weight:600;color:var(--ink)}
+.p515-modal__title{font-family:var(--fs);font-size:.9rem;font-weight:600;color:var(--ink)}
 .p515-modal__close{background:none;border:none;cursor:pointer;color:var(--muted);font-size:1rem;padding:2px 6px;border-radius:3px;transition:color .12s;line-height:1}
 .p515-modal__close:hover{color:var(--ink)}
 .p515-modal__body{padding:20px}
-.p515-modal__desc{font-size:.88rem;color:var(--ink);line-height:1.75;margin:0}
+.p515-modal__desc{font-family:var(--fs);font-size:.88rem;color:var(--ink);line-height:1.75;margin:0}
 .p515-modal__warn{font-size:.78rem;color:#b43c14;margin-top:8px;line-height:1.6}
 .p515-modal__foot{display:flex;gap:10px;padding:0 20px 20px;justify-content:flex-end}
 /* p515 modal buttons → ktn-op-btn */
@@ -10592,14 +10593,14 @@ body.p4-15-page .p3-tabnav{max-width:760px}
 .p316-status__badge--cancelled{background:rgba(0,0,0,.06);color:var(--muted)}
 /* ── 申込内容 ── */
 .p316-apply-info{background:var(--paper);border-radius:6px;padding:14px 16px;display:flex;flex-direction:column;gap:0}
-.p316-apply-info__title{font-size:.75rem;font-weight:600;color:var(--ink);margin:0 0 10px;padding-bottom:7px;border-bottom:1px solid var(--border)}
+.p316-apply-info__title{font-family:var(--fs);font-size:.75rem;font-weight:600;color:var(--ink);margin:0 0 10px;padding-bottom:7px;border-bottom:1px solid var(--border)}
 .p316-apply-info__row{display:flex;align-items:baseline;gap:10px;padding:8px 0;border-bottom:1px solid rgba(0,0,0,.05);font-size:.9rem}
 .p316-apply-info__label{font-size:.75rem;color:var(--muted);width:76px;flex-shrink:0;line-height:1.5}
 .p316-apply-info__row--comment{flex-direction:column;gap:4px;border-bottom:none}
 .p316-apply-info__comment{font-size:.82rem;color:var(--ink);line-height:1.65;padding:8px 10px;background:#fff;border-radius:3px;border:1px solid var(--border);margin-top:2px}
 /* ── 送料設定フォーム ── */
 .p316-ship-form{background:var(--paper);border-radius:6px;padding:14px 16px}
-.p316-ship-form__title{font-size:.75rem;font-weight:600;color:var(--ink);margin:0 0 6px}
+.p316-ship-form__title{font-family:var(--fs);font-size:.75rem;font-weight:600;color:var(--ink);margin:0 0 6px}
 .p316-ship-form__note{font-size:.75rem;color:#4a5a6a;line-height:1.65;margin:0 0 12px}
 .p316-ship-form__fields{display:flex;flex-direction:column;gap:8px}
 .p316-ship-form__row{display:flex;gap:12px}
@@ -10612,7 +10613,7 @@ body.p4-15-page .p3-tabnav{max-width:760px}
 .p316-ship-total{font-size:.82rem;color:var(--ink);padding:10px 0 0;border-top:1px solid var(--border);margin-top:10px}
 /* ── 配送先住所（発送待ち） ── */
 .p316-ship-addr{background:rgba(26,74,136,.04);border:1px solid rgba(26,74,136,.18);border-radius:6px;padding:14px 18px;display:flex;flex-direction:column;gap:0}
-.p316-ship-addr__title{font-size:.75rem;font-weight:600;color:#1a3a7a;margin:0 0 10px;padding-bottom:7px;border-bottom:1px solid rgba(26,74,136,.15)}
+.p316-ship-addr__title{font-family:var(--fs);font-size:.75rem;font-weight:600;color:#1a3a7a;margin:0 0 10px;padding-bottom:7px;border-bottom:1px solid rgba(26,74,136,.15)}
 .p316-ship-addr__row{display:flex;align-items:baseline;gap:10px;padding:8px 0;border-bottom:1px solid rgba(26,74,136,.06);font-size:.9rem}
 .p316-ship-addr__label{font-size:.75rem;color:#3a5a7a;width:76px;flex-shrink:0;line-height:1.5}
 .p316-ship-addr__row:last-child{border-bottom:none}
@@ -10624,7 +10625,7 @@ body.p4-15-page .p3-tabnav{max-width:760px}
 .p316-tracking-form__input:focus{outline:none;border-color:var(--page-accent,#2a5f7a)}
 /* ── 購入者評価表示 ── */
 .p316-review-display{background:var(--paper);border-radius:6px;padding:14px 16px}
-.p316-review-display__title{font-size:.75rem;font-weight:600;color:var(--ink);margin:0 0 8px}
+.p316-review-display__title{font-family:var(--fs);font-size:.75rem;font-weight:600;color:var(--ink);margin:0 0 8px}
 .p316-review-display__stars{color:#e8a020;font-size:1rem;letter-spacing:.05em;margin-bottom:6px}
 .p316-review-display__text{font-size:.82rem;color:var(--ink);line-height:1.65;margin:0}
 .p316-review-display__none{font-size:.8rem;color:var(--muted);line-height:1.65;margin:0}
@@ -10636,13 +10637,13 @@ body.p4-15-page .p3-tabnav{max-width:760px}
 /* ── 取引完了 ── */
 .p316-done{display:flex;flex-direction:column;align-items:center;gap:10px;padding:8px 0 16px;text-align:center}
 .p316-done__icon{color:#3a9867}
-.p316-done__title{font-size:1rem;font-weight:700;color:var(--ink);margin:0}
+.p316-done__title{font-family:var(--fs);font-size:1rem;font-weight:700;color:var(--ink);margin:0}
 .p316-done__amount{font-family:var(--fm);font-size:1.3rem;font-weight:700;color:var(--page-accent,#2a5f7a)}
-.p316-done__desc{font-size:.82rem;color:var(--ink);line-height:1.75;margin:0 0 8px}
+.p316-done__desc{font-family:var(--fs);font-size:.82rem;color:var(--ink);line-height:1.75;margin:0 0 8px}
 .p316-done__actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
 /* ── キャンセル済 ── */
 .p316-cancelled{display:flex;flex-direction:column;align-items:center;gap:12px;padding:8px 0}
-.p316-cancelled__msg{font-size:.9rem;color:var(--ink);line-height:1.75;margin:0;text-align:center}
+.p316-cancelled__msg{font-family:var(--fs);font-size:.9rem;color:var(--ink);line-height:1.75;margin:0;text-align:center}
 @media(max-width:600px){
   .p316-purchase-buyer{width:auto}
   .p316-ship-form__row{flex-direction:column}

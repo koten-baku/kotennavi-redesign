@@ -68,7 +68,7 @@
     </div>
     <div class="p515-modal__body">
       <p class="p515-modal__desc">取引完了を確認すると、代金 ¥87,000 が確定されます。この操作は取り消せません。</p>
-      <p class="p515-modal__warn">購入者への一言メッセージも同時に送信されます。</p>
+      <p class="p515-modal__warn">購入者への一言メッセージ（任意）も同時に送信されます。</p>
     </div>
     <div class="p515-modal__foot">
       <button class="p515-modal__btn ktn-op-btn" id="p316DoneModalBack">もう一度確認する</button>
@@ -732,7 +732,6 @@
           <div class="p515-status__body">
             <div class="p316-cancelled">
               <p class="p316-cancelled__msg">この取引はキャンセルされました。</p>
-              <p class="p316-cancelled__msg" style="font-size:.78rem;color:var(--muted)">次の申込者（2番目）の購入確定に進むことができます。</p>
               <a class="ktn-op-btn ktn-op-btn--primary" href="kotennavi-p3-15.html">
                 <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" width="8" height="8"><line x1="8" y1="5" x2="2" y2="5"/><polyline points="5 2 2 5 5 8"/></svg>
                 LIAISON+コンソールへ戻る
@@ -1046,17 +1045,17 @@
               申込が来たら最初に何をすればいいですか？
             </summary>
             <div class="p315-faq-item__a">
-              <p>まず会場でその作品がまだ販売されていないことを確認してください。会場で売れている場合はLIAISON+コンソールで「会場売約済」に変更後、この申込を断ってください。会場で売れていなければ申込内容を確認し、送料・梱包費・支払期限を設定して「購入を確定」してください。</p>
+              <p>まず会場でその作品がまだ販売されていないことを確認してください。会場で売れている場合はLIAISON+コンソールで「会場売約済」に変更してください（全申込者に自動キャンセル通知が送られます）。会場で売れていなければ申込内容を確認し、送料・梱包費・支払期限を設定して「購入を確定」してください。</p>
             </div>
           </details>
 
           <details class="p315-faq-item">
             <summary class="p315-faq-item__q">
               <span class="p315-faq-item__q-mark">Q</span>
-              申込を断ることはできますか？
+              会場で作品が売れてしまった場合は？
             </summary>
             <div class="p315-faq-item__a">
-              <p>「購入確定待ち」状態であれば断ることができます。理由を入力いただくと購入者に通知されます。正当な理由のないキャンセルはクリエイター評価に影響する可能性があります。</p>
+              <p>LIAISON+コンソールの「会場売約済」操作を使ってください。作品が「売約済」に変更され、申込者全員にシステムが自動でキャンセル通知を送ります。このページで個別に操作する必要はありません。</p>
             </div>
           </details>
 
@@ -1497,7 +1496,6 @@ KTN.init({ page: 'p3-16', role: 'creator' });
     if (e.key === 'Escape') {
       closeDrawer();
       closeConfirmModal();
-      closeDeclineModal();
       closeShipModal();
       closeDoneModal();
       closeRateModal();
