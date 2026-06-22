@@ -45,6 +45,10 @@
     <button class="dbtn dbtn-liaison on" onclick="setLiaison('plus',this)">LIAISON+</button>
     <button class="dbtn dbtn-liaison" onclick="setLiaison('liaison',this)">LIAISON</button>
     <button class="dbtn dbtn-liaison" onclick="setLiaison('none',this)">なし</button>
+    <span class="dbar-sep" style="margin-left:8px">会期：</span>
+    <button class="dbtn dbtn-period" onclick="setPeriod('before',this)">会期前</button>
+    <button class="dbtn dbtn-period on" onclick="setPeriod('during',this)">会期中</button>
+    <button class="dbtn dbtn-period" onclick="setPeriod('after',this)">終了後</button>
   </div>
 
   <div class="dev-ph dev-ph--sidebar"></div>
@@ -92,7 +96,7 @@
           <div class="p2-title-band__inner">
             <div class="p2-title-band__meta">
               <span class="cb cb-content cb-exhibition">exhibition</span>
-              <span id="p2LiaisonBadge" class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span>
+              <span id="p2LiaisonBadge" class="lb-dot li-plus">LIAISON+</span>
               <span class="sb sb-open">開催中 · 残り12日</span>
             </div>
             <h1 class="p2-title-band__title">あなたが知らないオノマトペ</h1>
@@ -198,6 +202,7 @@
                   </svg>
                 </span>
                 <span class="p2-subnav__label">作品</span>
+                <span class="p2-subnav__item-tag"></span>
               </a>
             </nav>
           </div>
@@ -328,6 +333,7 @@
                     <!-- サムネイル＋ボタン行 -->
                     <div class="p2-liaison-banner__foot">
                       <div class="p2-liaison-banner__thumbs" id="p2LbThumbs"></div>
+                      <div class="p2-liaison-banner__period-msg" id="p2LbPeriodMsg"></div>
                       <a id="p2LbCtaLink" href="kotennavi-p2-5-1.html" class="p2-liaison-banner__cta-btn">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                           <rect x="3" y="3" width="18" height="18" rx="2" />
@@ -571,7 +577,7 @@
                           fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/>
                       </svg>
                       interest!
-                      <span class="tip">興味ある！に追加する</span>
+                      <span class="tip">興味あり！に追加する</span>
                     </button>
                     <div class="p2aw-stat p2aw-stat--link" onclick="openWatcherModal()" role="button" tabindex="0">
                       <span class="p2aw-num" id="p2IntNum">41</span>
@@ -849,6 +855,55 @@
       { title: 'うつろい', venue: '東京都現代美術館', pref: '東京', bg: 'linear-gradient(155deg,#d0c8e0,#8878b4)', tc: 'rgba(255,255,255,.6)', open: true, liaison: false, s: '04.20', e: '06.01' },
       { title: 'デジタルとアナログのあいだ', venue: '3331 Arts Chiyoda', pref: '東京', bg: 'linear-gradient(155deg,#d8e8d0,#88b878)', tc: 'rgba(0,0,0,.28)', open: true, liaison: 'li-plus', s: '05.18', e: '05.31' },
     ];
+    /* ── 会期状態管理 ── */
+    var _p2Period = 'during';
+
+    function _applyPeriodToTab() {
+      var isBefore = (_p2Period === 'before');
+      var isAfter  = (_p2Period === 'after');
+      var isOut    = isBefore || isAfter;
+
+      /* ── サブナビタブ ── */
+      var subnav = document.getElementById('p2SubnavLiaison');
+      if (subnav && subnav.style.display !== 'none') {
+        var tag = subnav.querySelector('.p2-subnav__item-tag');
+        if (isBefore) {
+          subnav.classList.add('p2-subnav__item--disabled');
+          subnav.dataset.liaisonTag = 'soon';
+          if (tag) tag.textContent = '近日';
+        } else if (isAfter) {
+          subnav.classList.add('p2-subnav__item--disabled');
+          subnav.dataset.liaisonTag = 'ended';
+          if (tag) tag.textContent = '展示終了';
+        } else {
+          subnav.classList.remove('p2-subnav__item--disabled');
+          delete subnav.dataset.liaisonTag;
+          if (tag) tag.textContent = '';
+        }
+      }
+
+      /* ── LIAISONバナー ── */
+      var banner    = document.getElementById('p2-sec-works');
+      var periodMsg = document.getElementById('p2LbPeriodMsg');
+      if (banner && banner.style.display !== 'none') {
+        banner.classList.toggle('p2-liaison-banner--period-out', isOut);
+        if (periodMsg) {
+          periodMsg.innerHTML = isBefore
+            ? '近日中 <span class="p2-liaison-banner__period-en">COMING SOON</span>'
+            : isAfter
+              ? '展示終了 <span class="p2-liaison-banner__period-en">EXHIBITION ENDED</span>'
+              : '';
+        }
+      }
+    }
+
+    function setPeriod(state, btn) {
+      _p2Period = state;
+      document.querySelectorAll('.dbtn-period').forEach(function(b){ b.classList.remove('on'); });
+      if (btn) btn.classList.add('on');
+      _applyPeriodToTab();
+    }
+
     /* ── LIAISON 切替（デモバー用） ── */
     function setLiaison(type, btn) {
       document.querySelectorAll('.dbtn-liaison').forEach(function(b){ b.classList.remove('on'); });
@@ -877,7 +932,7 @@
         if (banner)     banner.style.display = 'none';
         if (sideWorks)  sideWorks.style.display = 'none';
       } else if (type === 'liaison') {
-        if (badge)      { badge.style.display = ''; badge.className = 'lb-dot li'; badge.innerHTML = '<span class="lb-dot-inner"></span>LIAISON'; }
+        if (badge)      { badge.style.display = ''; badge.className = 'lb-dot li'; badge.innerHTML = 'LIAISON'; }
         if (subnav)     { subnav.style.display = ''; subnav.href = 'kotennavi-p2-5.html'; }
         if (navSvgLi)   navSvgLi.style.display   = '';
         if (navSvgPlus) navSvgPlus.style.display  = 'none';
@@ -892,7 +947,7 @@
         if (sideLiSvg)     sideLiSvg.style.display = '';
         if (sideLiPlusSvg) sideLiPlusSvg.style.display = 'none';
       } else { /* plus */
-        if (badge)      { badge.style.display = ''; badge.className = 'lb-dot li-plus'; badge.innerHTML = '<span class="lb-dot-inner"></span>LIAISON+'; }
+        if (badge)      { badge.style.display = ''; badge.className = 'lb-dot li-plus'; badge.innerHTML = 'LIAISON+'; }
         if (subnav)     { subnav.style.display = ''; subnav.href = 'kotennavi-p2-5-1.html'; }
         if (navSvgLi)   navSvgLi.style.display   = 'none';
         if (navSvgPlus) navSvgPlus.style.display  = '';
@@ -907,6 +962,7 @@
         if (sideLiSvg)     sideLiSvg.style.display = 'none';
         if (sideLiPlusSvg) sideLiPlusSvg.style.display = '';
       }
+      _applyPeriodToTab();
     }
 
     window.P2_POSTED_BY = {

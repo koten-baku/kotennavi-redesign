@@ -66,10 +66,10 @@ docs/                     仕様・設計ドキュメント
 ## 画面最大幅（CSS変数）
 | 変数 | 幅 | 用途 |
 |---|---|---|
-| `--w-article` | 720px | 記事・テキスト・編集フォーム系 |
-| `--w-detail` | 760px | コンテンツ下層（1カラム） |
-| `--w-entity` | 1080px | コンテンツトップ（2カラム） |
-| `--w-index` | 1080px | 一覧・検索（複数コンテンツ） |
+| `--w-article` | 720px | 記事・ガイド・テキスト（1カラム） |
+| `--w-detail` | 760px | 編集フォーム・管理系（1カラム） |
+| `--w-entity` | 1080px | コンテンツトップ・下位（2カラム） |
+| `--w-index` | 1080px | トップ・一覧・検索（複数コンテンツ） |
 
 ## 高さ変数（`--hh`・`--dh`）
 | 変数 | 初期値 | 用途 |
@@ -235,6 +235,7 @@ docs/                     仕様・設計ドキュメント
 
 スライディングスケール型（2段階）。クリエイター・ギャラリーともに同一料率。  
 税込販売価格に対して計算（送料は対象外）。Stripe決済手数料は手数料に**内包**（出品者の別途負担なし）。
+Stripe決済手数料-実質マージンは利用者には非公開。
 
 | 販売価格 | 手数料率 | 実質マージン（国内カード目安） |
 |---|---|---|
@@ -243,7 +244,7 @@ docs/                     仕様・設計ドキュメント
 
 - Stripe手数料：国内発行カード 3.6% / 海外発行カード 3.9%（税抜・手数料に内包）
 - 手数料発生タイミング：決済完了時のみ（キュー待ち中キャンセルは発生しない）
-- 振込：月次・翌月末払い予定・振込手数料は個展なびが負担
+- 振込：月次・翌月末払い予定・振込手数料は利用者が負担
 - フェーズ2（予定）：100,000円〜 帯に 6% を追加予定（変更は「下げる方向」のみ）
 - 詳細：`docs/06_リエゾン_サービス仕様書.md` 第16章 / P70-7（手取り額シミュレーター）
 
@@ -716,7 +717,28 @@ ON状態: `on` クラスを追加、テキストを `watching`・tip を「ウ�
 
 ---
 
-#### 2. interest ボタン（アイコン型 `.ktn-icon-btn`）— 展覧会・作品・記事用
+#### 2. watch ボタン（アイコン型 `.ktn-icon-btn`）— 展覧会・作品・記事用
+
+```html
+<!-- OFF 状態 -->
+<button class="ktn-icon-btn" data-action="watch"
+  onclick="handleAction(this,'watch');event.preventDefault()">
+  <svg viewBox="0 0 16 16" fill="none" width="15" height="15">
+    <circle cx="8" cy="8" r="7" fill="#7a8a99" opacity=".3"/>
+    <circle class="wi-inner" cx="8" cy="8" r="2.6"/>
+  </svg>
+  <span class="tip">ウォッチする</span>
+</button>
+```
+ON状態: `on` クラスを追加、tip を「ウォッチ中 — 解除する」に変更。SVG は変更不要（CSS が色を管理）。
+
+**適用コンテキスト：** 展覧会カード（`.ec`）、作品カード（`.aw`・`.p25c`）、記事カード、p2 サイドカード（ラベルテキストなし・アイコンのみ）  
+**ON 時の SVG 色は CSS が管理：** `.ktn-icon-btn[data-action="watch"].on svg circle:first-child { fill:#3a90e0; opacity:1 }` がグローバル定義済み。  
+**ツールチップ：** `.ec` 内では `.ktn-icon-btn .tip` が上向き・右端揃えに自動反転（`overflow:hidden` 対応済み）
+
+---
+
+#### 3. interest ボタン（アイコン型 `.ktn-icon-btn`）— 展覧会・作品・記事用
 
 ```html
 <!-- OFF 状態 -->
@@ -726,10 +748,10 @@ ON状態: `on` クラスを追加、テキストを `watching`・tip を「ウ�
     <path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"
       fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/>
   </svg>
-  <span class="tip">興味ある！に追加する</span>
+  <span class="tip">興味あり！に追加する</span>
 </button>
 ```
-ON状態: `on` クラスを追加、tip を「興味ある！を解除する」に変更。SVG は変更不要（CSS が色を管理）。
+ON状態: `on` クラスを追加、tip を「興味あり！を解除する」に変更。SVG は変更不要（CSS が色を管理）。
 
 **適用コンテキスト：** 展覧会カード（`.ec`）、作品カード（`.aw`・`.p25c`）、記事カード、p2 サイドカード  
 **ON 時の SVG 色は CSS が管理：** `[data-action="interest"].on svg path { fill:#3a90e0; stroke:#3a90e0 }` がグローバル定義済み。HTML の SVG 属性は変更不要。  
@@ -737,7 +759,7 @@ ON状態: `on` クラスを追加、tip を「興味ある！を解除する」�
 
 ---
 
-#### 3. interest ボタン（ピル型 `.ktn-btn`）— CTA ウィジェット用
+#### 4. interest ボタン（ピル型 `.ktn-btn`）— CTA ウィジェット用
 
 ```html
 <!-- p2aw-item で囲むと自動的に大きいサイズに -->
@@ -758,7 +780,7 @@ ON状態: `on` クラスを追加、tip を「興味ある！を解除する」�
 
 ---
 
-#### 4. check-in ボタン（ピル型 `.ktn-btn--lg`）
+#### 5. check-in ボタン（ピル型 `.ktn-btn--lg`）
 
 ```html
 <button class="ktn-btn ktn-btn--lg" data-action="checkin"
@@ -787,13 +809,17 @@ ON状態: `on` クラスを追加、tip を「興味ある！を解除する」�
 - `class="wi-dark"` → ライトパネルは **必ず `class="wi-inner"`**
 - `<use href="#icon-watch" color="#3a90e0">` → `color` 属性は CSS より優先されるため **禁止**。常に `color="#7a8a99"` か inline SVG を使う
 
-**サイズモディファイア：**
+**サイズモディファイア（`.ktn-btn` ピル型）：**
 
-| モディファイア | font-size | padding | SVG | 用途 |
-|---|---|---|---|---|
-| （なし） | `0.75rem` | `7px 16px` | `15px` | カード内インライン |
-| `.p2aw-item` 内自動 | `0.88rem` | `7px 22px` | `17px` | 右カラム CTA（クラス変更不要） |
-| `--lg` | `1.1rem` | `14px 28px` | `20px` | 日本語CTA（チェックイン等） |
+| コンテキスト | font-size | padding（watch） | padding（interest） | SVG | 用途 |
+|---|---|---|---|---|---|
+| カード内インライン（なし） | `0.75rem` | `7px 16px` | `7px 16px` | `15px` | `.ec` / `.aw` カード内、ヒーロー横 |
+| 2カラム CTA `.p2aw-item` 内自動 | `0.88rem` | `7px 30px` | `7px 22px` | `17px` | 右カラム CTA ウィジェット（クラス変更不要） |
+| 1カラム・モバイル（インライン指定） | `0.72rem` | `13px 20px` | `13px 20px` | `17px` | モバイル / 1カラムサイドCTA |
+| `--lg` | `1.1rem` | `14px 28px` | `14px 28px` | `20px` | 日本語CTA（チェックイン等） |
+
+※ `.p2aw-item` 内の watch は padding が wide（`7px 30px`）、interest は narrow（`7px 22px`）。いずれも CSS が自動適用するため HTML 側の変更不要。  
+※ 1カラム・モバイルサイズは `.p2aw-item` を使わずインラインで `style="font-size:.72rem;padding:13px 20px"` を指定する（`p3-action-watch-btn` クラスは使わない）。
 
 **ダークパネル対応（既存CSS）：**
 - `.p6-dark .ktn-btn` / `.p251-dark .ktn-btn` → ダーク用色定義済み（`color:#4da3f5` など）

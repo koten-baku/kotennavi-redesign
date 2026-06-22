@@ -1,9 +1,9 @@
 # 進捗状況
 
-最終更新：2026-06-20
+最終更新：2026-06-22
 
 ## 現在の作業
-**サブページ共通タブヘッド `.ktn-tab-head` 導入・全CSS整理 完了**
+**p5-14 エディトリアル・リファインメント完了**
 
 次：未定（P1 トップページ / P10 検索 等より選択）
 ※ P5-16（取引ワークスペース-支払）は廃止 — 決済はStripe外部遷移に変更し、p5-15に支払済（発送待ち）状態を追加済
@@ -76,6 +76,9 @@
 
 | 日付 | 内容 |
 |---|---|
+| 2026-06-22 | p5-14 購入管理 エディトリアル・リファインメント：alertバナーをタブ下に移動・ステータス＋期限/申込番号を1行に統合・購入確定待ちに申込番号＋日付表示・コレクション操作を strip から `p514-aw__collect-row` に移設・公開キャンセルと公開をモーダル確認に統一（`p514UnpublishModal`/`p514CollectModal`）・展覧会リンクを LIAISON+ バッジ→「展覧会」テキストラベルに変更＋価格行の下に移動・「コレクションルームへ」ボタンのアイコン＋クラスをボタン規約に準拠・コレクションルーム公開中バッジをユーザーピンク色に変更・strip の `--ghost` ボタンを `ktn-action-btn` に統一・キャンセル系ステータスのラベル整備（申込キャンセル/出品取消/会場売約済）・支払済累計→購入済累計 / p5-4 コレクションルーム：公開中/非公開バッジを非インタラクティブな span に変更・公開中カードに「非公開にする」ボタン・非公開カードに「公開する」ボタン（各モーダル確認付き）/ LIAISON バッジ（.lb-dot）点滅アニメーション廃止・ドット要素削除（common.css + 全 p*.html + cards_*.html + liaison_badges.html）/ 記事カード .exh-link に「展覧会」テキストラベル CSS 追加（cards_content.html・p3-2・p4-2 共通） |
+| 2026-06-22 | p3-15/p4-15 エディトリアル・リファインメント：申込バリエーション網羅（申込者キャンセル済/会場売約済/出品取消/S2+での相手待ち）・archive タブヘッダーを期間中展覧会と同構造に統一・精算状況削除・販売代金管理リンクをドロワーに移設・p4-15 ヒーロー`p4-head`修正・タブナビ`p3-tabnav`共用・archive テーブルレスポンシブ横スクロール対応（`p315-archive-table-wrap`・`min-width:520px`・`th white-space:nowrap`・列幅 `min-width` 調整）・p4-15 列順を作品名→作家名に変更・「申込者キャンセル済」テキスト統一・ステータスに期限テキスト統合（自分ターン行のみ）・`p315-txn-row--active .p315-txn-row__link` モバイル全幅ルール削除（ボタン幅を相手待ち行と統一） |
+| 2026-06-20 | p3-15/p3-16/p4-15/p4-16/p5-14/p5-15 管理ページ エディトリアル・リファインメント（第2弾）：common.css — `ktn-mgmt-head__desc` を `--rt-size`/`--rt-lh` 変数統一・`p514-aw__title-link` `.75rem→.88rem`・`p515-status__desc` lh を `--rt-lh` 統一・自分ターン時（`--my-turn`）に `.96rem` 強調・`p515-status__body` padding 増加（`16px→20px 16px 24px`）・gap `12→14px`・`p515-cancelled__msg` lh 統一・`p515-modal__desc` `.82→.88rem`・モーダル明細 CSS クラス化（`.p515-modal__detail` 等）・`p315-index-row__name` に `var(--fs)` + `.88rem`・`p315-ops-guide__desc/.lead/.note` 全体サイズUP・`p316-apply-info__row`/`p316-ship-addr__row` padding `5px→8px`・`ktn-op-btn--full` 新設 — HTML — p4-16 から `kotennavi-components.css` 削除・p3-16/p4-16 主アクションボタン `style="width:100%"` → `ktn-op-btn--full` クラス化・購入確定/発送完了モーダルの inline `font-size` → `.p515-modal__detail` クラス化 |
 | 2026-06-20 | p3-3 作品一覧 調整：コレクション済みアイコン（`.aw__collected-icon`）をバッジ行内spanに変更（ボタン廃止）・dbarコレクション切替UIと`setP33Coll()`削除・p3-3の通常作品では`.aws`販売ステータスバッジ＋`.aw__sold-ribbon`を非表示（CSS）|
 | 2026-06-20 | サブページ共通タブヘッド `.ktn-tab-head` 新設・統一：p3-1/p3-2/p3-3/p4-1/p4-2/p5/p5-1/p5-2/p5-3/p5-4/p2-2/p2-3/p2-4 の13ファイルで旧ページ固有ヘッドクラスを `.ktn-tab-head` / `.ktn-tab-head__title`（1.55rem 600 Shippori）/ `.ktn-tab-head__count` に統一・旧定義（p3-1-head/p3-2-head/p3-3-head/p5-cal-head/p5-1-head/p5-2-head/p5-3-head/p54-head/p2-2-section__head 等）と editorial v2 overrides・mobile breakpoint override を common.css から削除・p3〜p5 タブナビ下〜コンテンツ間隔を p2-4 基準の 32px に統一（`.p3-layout` padding-top / `.p5-wrap` padding-top 変更） |
 | 2026-06-17 | p5 エディトリアル・リファインメント：p5.html body class 追加（p5-page）・p5.html/p5-1/p5-2/p5-3 から kotennavi-components.css 削除・全ページの interest/watch ボタンを canonical `handleAction` パターンに統一（classList.toggle → handleAction・data-action 属性追加・SVG を canonical fill="none" 半透明ハートに統一）・p5-1 の watch ボタン SVG を `<use href="#icon-watch">` 禁止パターン → inline SVG に変換（34件）・p5-3 記事カード `itn-btn` → `ktn-icon-btn` に変換（4件） |

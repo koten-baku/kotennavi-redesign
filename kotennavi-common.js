@@ -1015,7 +1015,7 @@ function openCheckinModal() {
           '<button class="ktn-modal__close" onclick="closeCheckinModal()" aria-label="閉じる">\u00d7</button>' +
       '<div class="ktn-auth-icon">' + _CI_ICON + '</div>' +
       '<div class="ktn-auth-ttl">ログインが必要です</div>' +
-            '<div class="ktn-auth-sub">ウォッチ・興味ある！・チェックインなどの<br>My機能が使えるようになります</div>' +
+            '<div class="ktn-auth-sub">ウォッチ・興味あり！・チェックインなどの<br>My機能が使えるようになります</div>' +
             '<div class="ktn-modal__btn-col">' +
               '<a href="/login" class="ktn-btn ktn-btn--primary">ログイン</a>' +
               '<a href="/register" class="ktn-btn">新規ユーザー登録（無料）</a>' +
@@ -1096,7 +1096,7 @@ function openCheckinModal() {
       CLOSE_BTN +
       '<div class="ktn-auth-icon">' + CI_ICON + '</div>' +
       '<div class="ktn-auth-ttl">ログインが必要です</div>' +
-      '<div class="ktn-auth-sub">ウォッチ・興味ある！・チェックインなどの<br>My機能が使えるようになります</div>' +
+      '<div class="ktn-auth-sub">ウォッチ・興味あり！・チェックインなどの<br>My機能が使えるようになります</div>' +
       '</div>' +
       '<div class="ktn-auth-body">' +
       '<div class="ktn-auth-btns">' +
@@ -1228,9 +1228,9 @@ KTN.cta = (function () {
 
   /* デモ用ウォッチャーデータ（全ページ共通） */
   var _W_DATA = [
-    { name: '山本花子',   color: '#b8608c', watch: 12, checkin: 3,  interest: 28 },
+    { name: '山本花子',   color: '#b8608c', watch: 12, checkin: 3,  interest: 28, collection: 5 },
     { name: 'あおい',     color: '#4a7a9a', watch: 8,  checkin: 1,  interest: 35 },
-    { name: '中村めぐみ', color: '#c87aa0', watch: 5,  checkin: 2,  interest: 44 },
+    { name: '中村めぐみ', color: '#c87aa0', watch: 5,  checkin: 2,  interest: 44, collection: 2 },
     { name: '高橋りな',   color: '#a07090', watch: 9,  checkin: 4,  interest: 31 },
     { name: 'saki',       color: '#7a90b8', watch: 3,  checkin: 0,  interest: 18 },
     { name: '西村ゆい',   color: '#b88a7a', watch: 14, checkin: 6,  interest: 52 },
@@ -1239,15 +1239,16 @@ KTN.cta = (function () {
     { name: 'mitsuki',    color: '#9a7a5a', watch: 6,  checkin: 0,  interest: 21 },
     { name: '加藤なな',   color: '#c87a90', watch: 18, checkin: 5,  interest: 40 },
     { name: 'yui',        color: '#5a8a9a', watch: 4,  checkin: 2,  interest: 16 },
-    { name: '小林さくら', color: '#8a6a9a', watch: 22, checkin: 8,  interest: 33 },
+    { name: '小林さくら', color: '#8a6a9a', watch: 22, checkin: 8,  interest: 33, collection: 12 },
     { name: 'RIKO',       color: '#6a9a7a', watch: 2,  checkin: 0,  interest: 11 },
     { name: '松本えり',   color: '#b8907a', watch: 9,  checkin: 3,  interest: 26 },
     { name: 'tomoko',     color: '#7a6ab8', watch: 15, checkin: 1,  interest: 48 },
   ];
 
-  var SVG_W = '<svg viewBox="0 0 16 16" fill="none" width="11" height="11"><circle cx="8" cy="8" r="7" fill="#3a90e0"/><circle cx="8" cy="8" r="2.6" fill="#fff"/></svg>';
-  var SVG_C = '<svg viewBox="0 0 16 16" fill="none" width="11" height="11"><circle cx="10" cy="5" r="4" fill="#3a90e0"/><circle cx="5" cy="11" r="2.4" fill="#3a90e0"/></svg>';
-  var SVG_I = '<svg viewBox="0 0 16 16" fill="none" width="11" height="11"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6" stroke-linejoin="round"/></svg>';
+  var SVG_W    = '<svg viewBox="0 0 16 16" fill="none" width="11" height="11"><circle cx="8" cy="8" r="7" fill="#3a90e0"/><circle cx="8" cy="8" r="2.6" fill="#fff"/></svg>';
+  var SVG_C    = '<svg viewBox="0 0 16 16" fill="none" width="11" height="11"><circle cx="10" cy="5" r="4" fill="#3a90e0"/><circle cx="5" cy="11" r="2.4" fill="#3a90e0"/></svg>';
+  var SVG_I    = '<svg viewBox="0 0 16 16" fill="none" width="11" height="11"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6" stroke-linejoin="round"/></svg>';
+  var SVG_COLL = '<svg viewBox="0 0 16 16" fill="none" width="11" height="11"><rect x="2" y="2" width="12" height="12" rx="1.5" stroke="#4da3f5" stroke-width="1.4"/><rect x="4.5" y="4.5" width="7" height="7" rx=".5" stroke="#4da3f5" stroke-width="1"/></svg>';
 
   function _getWidget() {
     return document.querySelector('.ktn-cta-widget');
@@ -1384,6 +1385,7 @@ KTN.cta = (function () {
               '<span class="p2-watcher-item__count">' + SVG_W + u.watch    + '</span>' +
               '<span class="p2-watcher-item__count">' + SVG_C + u.checkin  + '</span>' +
               '<span class="p2-watcher-item__count">' + SVG_I + u.interest + '</span>' +
+              (u.collection ? '<span class="p2-watcher-item__count">' + SVG_COLL + u.collection + '</span>' : '') +
             '</div>' +
           '</div>' +
         '</div>';
@@ -1461,7 +1463,7 @@ KTN.action = (function () {
 
   var ACTION_LABELS = {
     watch:    { off: 'ウォッチする',        on: 'ウォッチ中 — 解除する', iconOff: 'ウォッチする',        iconOn: 'ウォッチ中 — 解除する', guest: 'ウォッチにはログインが必要です'  },
-    interest: { off: '興味ある！に追加する', on: '興味ある！ — 解除する', iconOff: '興味ある！に追加する', iconOn: '興味ある！ — 解除する', guest: 'この機能にはログインが必要です' },
+    interest: { off: '興味あり！に追加する', on: '興味あり！ — 解除する', iconOff: '興味あり！に追加する', iconOn: '興味あり！ — 解除する', guest: 'この機能にはログインが必要です' },
     checkin:  { off: '訪問済みにする',       on: '訪問済み — 解除する',   iconOff: '訪問済みにする',       iconOn: '訪問済み — 解除する',   guest: 'この機能にはログインが必要です' },
   };
 
@@ -1523,7 +1525,7 @@ KTN.action = (function () {
       + '</button>'
       + '<div class="ktn-auth-icon" id="ktnAuthIcon"></div>'
       + '<div class="ktn-auth-ttl">ログインが必要です</div>'
-      + '<div class="ktn-auth-sub">ウォッチ・興味ある！・チェックインなどの<br>My機能がすべて使えるようになります</div>'
+      + '<div class="ktn-auth-sub">ウォッチ・興味あり！・チェックインなどの<br>My機能がすべて使えるようになります</div>'
       + '</div>'
       + '<div class="ktn-auth-body">'
       + '<div class="ktn-auth-btns">'
@@ -1549,3 +1551,38 @@ KTN.action = (function () {
 
 window.handleAction   = function (btn, action) { KTN.action.handle(btn, action); };
 window.closeAuthModal = function (e)            { KTN.action.close(e); };
+
+/* ── モバイル デモバートグル ── */
+(function () {
+  function initDbarToggle() {
+    var dbar = document.querySelector('.dbar');
+    if (!dbar || dbar.querySelector('.dbar-toggle')) return;
+    var btn = document.createElement('button');
+    btn.className = 'dbar-toggle';
+    btn.textContent = 'DEV ▾';
+    btn.addEventListener('click', function () {
+      var isOpen = dbar.classList.toggle('is-open');
+      btn.textContent = isOpen ? '✕ 閉じる' : 'DEV ▾';
+      requestAnimationFrame(function () {
+        document.documentElement.style.setProperty('--dh', dbar.offsetHeight + 'px');
+      });
+    });
+    dbar.appendChild(btn);
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initDbarToggle);
+  } else {
+    initDbarToggle();
+  }
+  window.addEventListener('resize', function () {
+    if (window.innerWidth > 600) {
+      var dbar = document.querySelector('.dbar');
+      if (dbar && dbar.classList.contains('is-open')) {
+        dbar.classList.remove('is-open');
+        var t = dbar.querySelector('.dbar-toggle');
+        if (t) t.textContent = 'DEV ▾';
+        document.documentElement.style.setProperty('--dh', '34px');
+      }
+    }
+  });
+}());

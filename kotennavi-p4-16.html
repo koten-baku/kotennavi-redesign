@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
@@ -8,7 +8,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./kotennavi-common.css">
-  <link rel="stylesheet" href="./kotennavi-components.css">
 </head>
 <body data-w="detail" class="p4-page p4-16-page mgmt-page">
 
@@ -23,11 +22,11 @@
     </div>
     <div class="p515-modal__body">
       <p class="p515-modal__desc">以下の内容で購入者に支払いを案内します。確定後は送料・梱包費を変更できません。</p>
-      <div style="margin-top:10px;font-size:.82rem;color:var(--ink);line-height:1.8">
+      <div class="p515-modal__detail">
         <div>送料：<span id="p416ModalShipFee">¥1,200</span>（<span id="p416ModalCarrierName">ヤマト宅急便</span>）</div>
         <div>梱包費：<span id="p416ModalPackFee">¥500</span></div>
-        <div style="font-weight:700;margin-top:4px;border-top:1px solid var(--border);padding-top:6px">合計：<span id="p416ModalTotal">¥49,700</span></div>
-        <div style="margin-top:4px;font-size:.72rem;color:var(--muted)">支払期限：<span id="p416ModalDeadline">2026年3月22日</span></div>
+        <div class="p515-modal__detail-total">合計：<span id="p416ModalTotal">¥49,700</span></div>
+        <div class="p515-modal__detail-deadline">支払期限：<span id="p416ModalDeadline">2026年3月22日</span></div>
       </div>
       <p class="p515-modal__warn" style="margin-top:10px">確定と同時に作品は「売約済」に変更されます。支払期限が切れた場合は自動キャンセルされ「販売中」に戻ります。</p>
     </div>
@@ -47,7 +46,7 @@
     </div>
     <div class="p515-modal__body">
       <p class="p515-modal__desc">以下の追跡番号で発送完了を購入者に通知します。</p>
-      <div style="margin-top:10px;font-size:.88rem;color:var(--ink);line-height:1.8">
+      <div class="p515-modal__detail">
         <div>発送業者：<strong id="p416ModalShipCarrier">ヤマト宅急便</strong></div>
         <div>追跡番号：<strong id="p416ModalTrackingNum" style="font-family:var(--fm)">0000-0000-0000</strong></div>
       </div>
@@ -181,18 +180,14 @@
         <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><rect x="2" y="2" width="12" height="9" rx="1"/><path d="M5 14h6M8 11v3"/></svg>
         ギャラリーページ
       </a>
-      <a class="p3-mgmt-nav-item" href="#">
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><rect x="2" y="2" width="12" height="12" rx="1"/><path d="M5 8h6M5 11h4"/></svg>
-        展覧会を管理
-      </a>
       <div class="p3-mgmt-drawer__sep"></div>
       <a class="p3-mgmt-nav-item p3-mgmt-nav-item--active" href="kotennavi-p4-15.html">
         <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><rect x="2" y="3" width="12" height="10" rx="1"/><line x1="5" y1="7" x2="11" y2="7"/><line x1="5" y1="10" x2="8" y2="10"/></svg>
         LIAISON+コンソール
       </a>
       <a class="p3-mgmt-nav-item" href="#">
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><path d="M8 2v12M2 8h12"/></svg>
-        記事を管理
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><path d="M2 12h12M4 12V6l4-4 4 4v6M6 12V9h4v3"/></svg>
+        出品管理
       </a>
     </nav>
   </div>
@@ -289,7 +284,7 @@
           </div>
         </div>
 
-        <!-- C-2. 販売作品 + 購入者 -->
+        <!-- C-2. 購入作品 + 購入者 -->
         <div class="p515-purchase-box">
           <div class="p515-purchase-art">
             <div class="p515-purchase-box__head">販売作品<span class="p515-purchase-box__head-en">Artwork</span></div>
@@ -496,7 +491,7 @@
               </div>
             </div>
 
-            <button class="ktn-op-btn ktn-op-btn--primary ktn-op-btn--lg" id="p416ConfirmBtn" style="width:100%;margin-top:4px">
+            <button class="ktn-op-btn ktn-op-btn--primary ktn-op-btn--lg ktn-op-btn--full" id="p416ConfirmBtn" style="margin-top:4px">
               購入を確定して取引を開始する
             </button>
           </div>
@@ -588,7 +583,7 @@
               </div>
             </div>
 
-            <button class="ktn-op-btn ktn-op-btn--primary ktn-op-btn--lg" id="p416ShipBtn" style="width:100%">
+            <button class="ktn-op-btn ktn-op-btn--primary ktn-op-btn--lg ktn-op-btn--full" id="p416ShipBtn">
               発送完了を報告する
               <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" width="10" height="10"><polyline points="2,6 5,9 10,3"/></svg>
             </button>
@@ -631,6 +626,10 @@
                 </span>
               </div>
               <div class="p515-ship-confirm__row" style="border-bottom:none"><span class="p515-ship-confirm__label">発送日</span><span>2026年3月17日（火）</span></div>
+            </div>
+            <div class="p316-ship-pref-row">
+              <span class="p316-ship-pref-label">受取希望日時</span>
+              <span>指定なし</span>
             </div>
           </div>
         </div>
@@ -678,7 +677,7 @@
               <textarea class="p316-complete-msg__input" id="p416CompleteMsg" placeholder="一言メッセージを入力...">この度は松本りさの作品をお選びいただきありがとうございました。大切に楽しんでいただけると幸いです。またぜひ Gallery SOIL へお越しください。</textarea>
             </div>
 
-            <button class="ktn-op-btn ktn-op-btn--primary ktn-op-btn--lg" id="p416DoneBtn" style="width:100%">
+            <button class="ktn-op-btn ktn-op-btn--primary ktn-op-btn--lg ktn-op-btn--full" id="p416DoneBtn">
               取引完了を確認する
               <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" width="10" height="10"><polyline points="2,6 5,9 10,3"/></svg>
             </button>

@@ -147,8 +147,8 @@
                 </div>
               </a>
               <div class="p54c__controls p5-owner-only">
-                <button class="p54c__vis-btn" data-vis="public" onclick="p54ToggleVis(this)">公開中</button>
-                <button class="p54c__remove-btn" onclick="p54Remove(this)">コレクションから外す</button>
+                <span class="p54c__vis-badge p54c__vis-badge--public">公開中</span>
+                <button class="p54c__action-btn" onclick="p54ConfirmRemove(this)">非公開にする</button>
               </div>
             </div>
 
@@ -166,8 +166,8 @@
                 </div>
               </a>
               <div class="p54c__controls p5-owner-only">
-                <button class="p54c__vis-btn" data-vis="public" onclick="p54ToggleVis(this)">公開中</button>
-                <button class="p54c__remove-btn" onclick="p54Remove(this)">コレクションから外す</button>
+                <span class="p54c__vis-badge p54c__vis-badge--public">公開中</span>
+                <button class="p54c__action-btn" onclick="p54ConfirmRemove(this)">非公開にする</button>
               </div>
             </div>
 
@@ -185,8 +185,8 @@
                 </div>
               </a>
               <div class="p54c__controls p5-owner-only">
-                <button class="p54c__vis-btn" data-vis="private" onclick="p54ToggleVis(this)">非公開</button>
-                <button class="p54c__remove-btn" onclick="p54Remove(this)">コレクションから外す</button>
+                <span class="p54c__vis-badge">非公開</span>
+                <button class="p54c__action-btn p54c__action-btn--publish" onclick="p54ConfirmPublish(this)">公開する</button>
               </div>
             </div>
 
@@ -204,8 +204,8 @@
                 </div>
               </a>
               <div class="p54c__controls p5-owner-only">
-                <button class="p54c__vis-btn" data-vis="public" onclick="p54ToggleVis(this)">公開中</button>
-                <button class="p54c__remove-btn" onclick="p54Remove(this)">コレクションから外す</button>
+                <span class="p54c__vis-badge p54c__vis-badge--public">公開中</span>
+                <button class="p54c__action-btn" onclick="p54ConfirmRemove(this)">非公開にする</button>
               </div>
             </div>
 
@@ -223,8 +223,8 @@
                 </div>
               </a>
               <div class="p54c__controls p5-owner-only">
-                <button class="p54c__vis-btn" data-vis="private" onclick="p54ToggleVis(this)">非公開</button>
-                <button class="p54c__remove-btn" onclick="p54Remove(this)">コレクションから外す</button>
+                <span class="p54c__vis-badge">非公開</span>
+                <button class="p54c__action-btn p54c__action-btn--publish" onclick="p54ConfirmPublish(this)">公開する</button>
               </div>
             </div>
 
@@ -747,6 +747,44 @@
   </div>
 </div>
 
+<!-- 公開確認モーダル -->
+<div class="p514-modal-overlay" id="p54PublishModal" hidden>
+  <div class="p514-modal">
+    <div class="p514-modal__head">
+      <span class="p514-modal__title">コレクションルームで公開</span>
+      <button class="p514-modal__close" id="p54PublishModalClose">✕</button>
+    </div>
+    <div class="p514-modal__body">
+      <div class="p514-modal__thumb" id="p54PublishModalThumb"></div>
+      <div class="p514-modal__artwork-name" id="p54PublishModalName"></div>
+      <p class="p514-modal__desc">公開すると、あなたのユーザーページで作品が閲覧できるようになります。非公開にはいつでも戻せます。</p>
+    </div>
+    <div class="p514-modal__foot">
+      <button class="ktn-op-btn" id="p54PublishModalCancel">キャンセル</button>
+      <button class="ktn-op-btn ktn-op-btn--primary" id="p54PublishModalConfirm">公開する</button>
+    </div>
+  </div>
+</div>
+
+<!-- 非公開確認モーダル -->
+<div class="p514-modal-overlay" id="p54UnpublishModal" hidden>
+  <div class="p514-modal">
+    <div class="p514-modal__head">
+      <span class="p514-modal__title">コレクションルームで非公開にする</span>
+      <button class="p514-modal__close" id="p54UnpublishModalClose">✕</button>
+    </div>
+    <div class="p514-modal__body">
+      <div class="p514-modal__thumb" id="p54UnpublishModalThumb"></div>
+      <div class="p514-modal__artwork-name" id="p54UnpublishModalName"></div>
+      <p class="p514-modal__desc">非公開にすると、あなたのユーザーページから作品が表示されなくなります。再公開はいつでもできます。</p>
+    </div>
+    <div class="p514-modal__foot">
+      <button class="ktn-op-btn" id="p54UnpublishModalCancel">戻る</button>
+      <button class="ktn-op-btn ktn-op-btn--danger" id="p54UnpublishModalConfirm">外す</button>
+    </div>
+  </div>
+</div>
+
 <nav class="ktn-bottom-nav" id="ktnBottomNav">
   <div class="ktn-bottom-nav__inner" id="ktnBottomNavInner"></div>
 </nav>
@@ -771,18 +809,45 @@
     btn.classList.add('on');
     document.body.classList.toggle('p5-coll-zero', state === 'zero');
   }
-  function p54ToggleVis(btn) {
+  var _p54VisTarget = null;
+  function _p54OpenModal(btn, modalId, thumbId, nameId) {
     var card = btn.closest('.p54c');
-    var isPublic = btn.dataset.vis === 'public';
-    btn.dataset.vis = isPublic ? 'private' : 'public';
-    btn.textContent = isPublic ? '非公開' : '公開中';
-    card.classList.toggle('p54c--private', isPublic);
+    _p54VisTarget = btn;
+    document.getElementById(thumbId).style.background = card.querySelector('.p54c__img').style.background;
+    document.getElementById(nameId).textContent = card.querySelector('.p54c__title').textContent;
+    document.getElementById(modalId).removeAttribute('hidden');
+    document.body.style.overflow = 'hidden';
   }
-  function p54Remove(btn) {
-    if (!confirm('このコレクションから外しますか？')) return;
-    btn.closest('.p54c').style.transition = 'opacity .3s';
-    btn.closest('.p54c').style.opacity = '0';
-    setTimeout(function() { btn.closest('.p54c').remove(); }, 300);
+  function p54ConfirmRemove(btn) {
+    _p54OpenModal(btn, 'p54UnpublishModal', 'p54UnpublishModalThumb', 'p54UnpublishModalName');
+  }
+  function p54ConfirmPublish(btn) {
+    _p54OpenModal(btn, 'p54PublishModal', 'p54PublishModalThumb', 'p54PublishModalName');
+  }
+  function _p54ApplyVis(makePublic) {
+    var btn = _p54VisTarget;
+    if (!btn) return;
+    var card = btn.closest('.p54c');
+    var controls = card.querySelector('.p54c__controls');
+    if (makePublic) {
+      card.classList.remove('p54c--private');
+      controls.innerHTML = '<span class="p54c__vis-badge p54c__vis-badge--public">公開中</span>' +
+        '<button class="p54c__action-btn" onclick="p54ConfirmRemove(this)">非公開にする</button>';
+    } else {
+      card.classList.add('p54c--private');
+      controls.innerHTML = '<span class="p54c__vis-badge">非公開</span>' +
+        '<button class="p54c__action-btn p54c__action-btn--publish" onclick="p54ConfirmPublish(this)">公開する</button>';
+    }
+    _p54VisTarget = null;
+    document.body.style.overflow = '';
+  }
+  function _p54CloseModal(id) {
+    document.getElementById(id).setAttribute('hidden', '');
+    _p54VisTarget = null;
+    document.body.style.overflow = '';
+  }
+  function p54Remove(btn) { /* 未使用 */
+    void(0);
   }
 
   // 並び替え・公開設定モーダル
@@ -839,6 +904,34 @@
       if (e.target === this) p54CloseSortModal();
     });
   })();
+
+  // 公開モーダル
+  document.getElementById('p54PublishModalConfirm').addEventListener('click', function() {
+    _p54ApplyVis(true);
+    document.getElementById('p54PublishModal').setAttribute('hidden', '');
+  });
+  ['p54PublishModalCancel','p54PublishModalClose'].forEach(function(id) {
+    document.getElementById(id).addEventListener('click', function() { _p54CloseModal('p54PublishModal'); });
+  });
+  document.getElementById('p54PublishModal').addEventListener('click', function(e) {
+    if (e.target === this) _p54CloseModal('p54PublishModal');
+  });
+  // 非公開モーダル
+  document.getElementById('p54UnpublishModalConfirm').addEventListener('click', function() {
+    _p54ApplyVis(false);
+    document.getElementById('p54UnpublishModal').setAttribute('hidden', '');
+  });
+  ['p54UnpublishModalCancel','p54UnpublishModalClose'].forEach(function(id) {
+    document.getElementById(id).addEventListener('click', function() { _p54CloseModal('p54UnpublishModal'); });
+  });
+  document.getElementById('p54UnpublishModal').addEventListener('click', function(e) {
+    if (e.target === this) _p54CloseModal('p54UnpublishModal');
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key !== 'Escape') return;
+    if (!document.getElementById('p54PublishModal').hasAttribute('hidden')) _p54CloseModal('p54PublishModal');
+    if (!document.getElementById('p54UnpublishModal').hasAttribute('hidden')) _p54CloseModal('p54UnpublishModal');
+  });
 
   KTN.init({ page: 'p5-4', role: 'user+' });
 </script>

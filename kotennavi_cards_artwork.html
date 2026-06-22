@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -96,7 +96,7 @@
       <div class="masonry-item">
         <a class="aw" href="#">
           <div class="aw__img">
-            <div class="aw__lb"><span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span></div>
+            <div class="aw__lb"><span class="lb-dot li">LIAISON</span></div>
             <div class="aw__img-ph t-portrait"></div>
           </div>
           <div class="aw__body">
@@ -114,9 +114,9 @@
               <span class="aw__counter">
                 <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>12
               </span>
-              <button class="ktn-icon-btn on" onclick="this.classList.toggle('on');event.preventDefault()">
-                <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6" stroke-linejoin="round"/></svg>
-                <span class="tip">興味ある！— 解除する</span>
+              <button class="ktn-icon-btn on" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault()">
+                <svg viewBox="0 0 16 16" fill="none" width="15" height="15"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
+                <span class="tip">興味あり！を解除する</span>
               </button>
             </div>
           </div>
@@ -127,7 +127,7 @@
       <div class="masonry-item">
         <a class="aw" href="#">
           <div class="aw__img">
-            <div class="aw__lb"><span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span></div>
+            <div class="aw__lb"><span class="lb-dot li">LIAISON</span></div>
             <div class="aw__img-ph t-cool"></div>
           </div>
           <div class="aw__body">
@@ -145,9 +145,9 @@
               <span class="aw__counter">
                 <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>4
               </span>
-              <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
-                <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
-                <span class="tip">興味ある！に追加する</span>
+              <button class="ktn-icon-btn" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault()">
+                <svg viewBox="0 0 16 16" fill="none" width="15" height="15"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
+                <span class="tip">興味あり！に追加する</span>
               </button>
             </div>
           </div>
@@ -158,7 +158,7 @@
       <div class="masonry-item">
         <a class="aw aw--nsale" href="#">
           <div class="aw__img">
-            <div class="aw__lb"><span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span></div>
+            <div class="aw__lb"><span class="lb-dot li">LIAISON</span></div>
             <div class="aw__img-ph t-warm"></div>
           </div>
           <div class="aw__body">
@@ -176,9 +176,9 @@
               <span class="aw__counter">
                 <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>8
               </span>
-              <button class="ktn-icon-btn on" onclick="this.classList.toggle('on');event.preventDefault()">
-                <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6" stroke-linejoin="round"/></svg>
-                <span class="tip">興味ある！— 解除する</span>
+              <button class="ktn-icon-btn on" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault()">
+                <svg viewBox="0 0 16 16" fill="none" width="15" height="15"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
+                <span class="tip">興味あり！を解除する</span>
               </button>
             </div>
           </div>
@@ -189,7 +189,7 @@
       <div class="masonry-item">
         <a class="aw" href="#">
           <div class="aw__img">
-            <div class="aw__lb"><span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span></div>
+            <div class="aw__lb"><span class="lb-dot li">LIAISON</span></div>
             <div class="aw__img-ph t-light"></div>
           </div>
           <div class="aw__body">
@@ -207,9 +207,9 @@
               <span class="aw__counter">
                 <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>2
               </span>
-              <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
-                <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
-                <span class="tip">興味ある！に追加する</span>
+              <button class="ktn-icon-btn" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault()">
+                <svg viewBox="0 0 16 16" fill="none" width="15" height="15"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
+                <span class="tip">興味あり！に追加する</span>
               </button>
             </div>
           </div>
@@ -232,7 +232,7 @@
       <div class="masonry-item">
         <a class="aw aw--plus" href="#">
           <div class="aw__img">
-            <div class="aw__lb"><span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span></div>
+            <div class="aw__lb"><span class="lb-dot li-plus">LIAISON+</span></div>
             <div class="aw__img-ph t-portrait"></div>
           </div>
           <div class="aw__body">
@@ -250,9 +250,9 @@
               <span class="aw__counter">
                 <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>22
               </span>
-              <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
-                <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
-                <span class="tip">興味ある！に追加する</span>
+              <button class="ktn-icon-btn" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault()">
+                <svg viewBox="0 0 16 16" fill="none" width="15" height="15"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
+                <span class="tip">興味あり！に追加する</span>
               </button>
             </div>
           </div>
@@ -267,7 +267,7 @@
       <div class="masonry-item">
         <a class="aw aw--plus" href="#">
           <div class="aw__img">
-            <div class="aw__lb"><span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span></div>
+            <div class="aw__lb"><span class="lb-dot li-plus">LIAISON+</span></div>
             <div class="aw__img-ph t-square"></div>
           </div>
           <div class="aw__body">
@@ -285,9 +285,9 @@
               <span class="aw__counter">
                 <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>17
               </span>
-              <button class="ktn-icon-btn on" onclick="this.classList.toggle('on');event.preventDefault()">
-                <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6" stroke-linejoin="round"/></svg>
-                <span class="tip">興味ある！— 解除する</span>
+              <button class="ktn-icon-btn on" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault()">
+                <svg viewBox="0 0 16 16" fill="none" width="15" height="15"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
+                <span class="tip">興味あり！を解除する</span>
               </button>
             </div>
           </div>
@@ -301,7 +301,7 @@
       <div class="masonry-item">
         <a class="aw aw--plus aw--sold" href="#">
           <div class="aw__img">
-            <div class="aw__lb"><span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span></div>
+            <div class="aw__lb"><span class="lb-dot li-plus">LIAISON+</span></div>
             <div class="aw__img-ph t-warm"></div>
             <div class="aw__sold-ribbon"><div class="aw__sold-ribbon-inner">SOLD OUT</div></div>
           </div>
@@ -320,9 +320,9 @@
               <span class="aw__counter">
                 <svg viewBox="0 0 16 16" fill="currentColor" width="12" height="12"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>31
               </span>
-              <button class="ktn-icon-btn on" onclick="this.classList.toggle('on');event.preventDefault()">
-                <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6" stroke-linejoin="round"/></svg>
-                <span class="tip">興味ある！— 解除する</span>
+              <button class="ktn-icon-btn on" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault()">
+                <svg viewBox="0 0 16 16" fill="none" width="15" height="15"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
+                <span class="tip">興味あり！を解除する</span>
               </button>
             </div>
           </div>
@@ -336,7 +336,7 @@
       <div class="masonry-item">
         <a class="aw aw--plus" href="#">
           <div class="aw__img">
-            <div class="aw__lb"><span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span></div>
+            <div class="aw__lb"><span class="lb-dot li-plus">LIAISON+</span></div>
             <div class="aw__img-ph t-light"></div>
           </div>
           <div class="aw__body">
@@ -354,9 +354,9 @@
               <span class="aw__counter">
                 <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>6
               </span>
-              <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
-                <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
-                <span class="tip">興味ある！に追加する</span>
+              <button class="ktn-icon-btn" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault()">
+                <svg viewBox="0 0 16 16" fill="none" width="15" height="15"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
+                <span class="tip">興味あり！に追加する</span>
               </button>
             </div>
           </div>
@@ -385,7 +385,7 @@
         <div class="masonry-item">
           <a class="aw aw--plus" href="#">
             <div class="aw__img">
-              <div class="aw__lb"><span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span></div>
+              <div class="aw__lb"><span class="lb-dot li-plus">LIAISON+</span></div>
               <div class="aw__img-ph t-portrait"></div>
             </div>
             <div class="aw__body">
@@ -402,7 +402,7 @@
                 <span class="aw__counter">
                   <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>22
                 </span>
-                <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                <button class="ktn-icon-btn" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault()">
                   <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="rgba(255,255,255,.3)" stroke="rgba(255,255,255,.4)" stroke-width=".6" stroke-linejoin="round"/></svg>
                 </button>
               </div>
@@ -423,7 +423,7 @@
         <div class="masonry-item">
           <a class="aw aw--plus" href="#">
             <div class="aw__img">
-              <div class="aw__lb"><span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span></div>
+              <div class="aw__lb"><span class="lb-dot li-plus">LIAISON+</span></div>
               <div class="aw__img-ph t-square"></div>
             </div>
             <div class="aw__body">
@@ -440,7 +440,7 @@
                 <span class="aw__counter">
                   <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>9
                 </span>
-                <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                <button class="ktn-icon-btn" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault()">
                   <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="rgba(255,255,255,.3)" stroke="rgba(255,255,255,.4)" stroke-width=".6" stroke-linejoin="round"/></svg>
                 </button>
               </div>
@@ -455,7 +455,7 @@
         <div class="masonry-item">
           <a class="aw aw--plus aw--sold" href="#">
             <div class="aw__img">
-              <div class="aw__lb"><span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span></div>
+              <div class="aw__lb"><span class="lb-dot li-plus">LIAISON+</span></div>
               <div class="aw__img-ph t-warm"></div>
               <div class="aw__sold-ribbon"><div class="aw__sold-ribbon-inner">SOLD OUT</div></div>
             </div>
@@ -473,7 +473,7 @@
                 <span class="aw__counter">
                   <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>14
                 </span>
-                <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
+                <button class="ktn-icon-btn" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault()">
                   <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="rgba(255,255,255,.3)" stroke="rgba(255,255,255,.4)" stroke-width=".6" stroke-linejoin="round"/></svg>
                 </button>
               </div>
@@ -510,9 +510,9 @@
             </div>
             <div class="aw__spec">2025 / 鉛筆・紙 / 42.0 × 29.7 cm</div>
             <div class="aw__action-row">
-              <button class="ktn-icon-btn on" onclick="this.classList.toggle('on');event.preventDefault()">
-                <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6" stroke-linejoin="round"/></svg>
-                <span class="tip">興味ある！— 解除する</span>
+              <button class="ktn-icon-btn on" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault()">
+                <svg viewBox="0 0 16 16" fill="none" width="15" height="15"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
+                <span class="tip">興味あり！を解除する</span>
               </button>
             </div>
           </div>
@@ -532,9 +532,9 @@
             </div>
             <div class="aw__spec">2024 / アクリル・キャンバス / 53.0 × 45.5 cm</div>
             <div class="aw__action-row">
-              <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
-                <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
-                <span class="tip">興味ある！に追加する</span>
+              <button class="ktn-icon-btn" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault()">
+                <svg viewBox="0 0 16 16" fill="none" width="15" height="15"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
+                <span class="tip">興味あり！に追加する</span>
               </button>
             </div>
           </div>
@@ -554,9 +554,9 @@
             </div>
             <div class="aw__spec">2024 / 水彩・紙 / 24.2 × 33.3 cm</div>
             <div class="aw__action-row">
-              <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
-                <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
-                <span class="tip">興味ある！に追加する</span>
+              <button class="ktn-icon-btn" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault()">
+                <svg viewBox="0 0 16 16" fill="none" width="15" height="15"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
+                <span class="tip">興味あり！に追加する</span>
               </button>
             </div>
           </div>
@@ -576,9 +576,9 @@
             </div>
             <div class="aw__spec">2025 / 陶磁器 / H 28.0 × φ 14.0 cm</div>
             <div class="aw__action-row">
-              <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
-                <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
-                <span class="tip">興味ある！に追加する</span>
+              <button class="ktn-icon-btn" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault()">
+                <svg viewBox="0 0 16 16" fill="none" width="15" height="15"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
+                <span class="tip">興味あり！に追加する</span>
               </button>
             </div>
           </div>
@@ -611,9 +611,9 @@
               <span class="aws aws-sale">販売中</span>
               <div class="ec-actions-group">
                 <span class="aw__counter"><svg viewBox="0 0 16 16" fill="currentColor" width="11" height="11"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>12</span>
-                <button class="ktn-icon-btn on" onclick="this.classList.toggle('on');event.preventDefault()">
-                  <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6" stroke-linejoin="round"/></svg>
-                  <span class="tip">興味ある！— 解除する</span>
+                <button class="ktn-icon-btn on" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault()">
+                  <svg viewBox="0 0 16 16" fill="none" width="15" height="15"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
+                  <span class="tip">興味あり！を解除する</span>
                 </button>
               </div>
             </div>
@@ -639,9 +639,9 @@
               <span class="aws aws-nsale">非売品</span>
               <div class="ec-actions-group">
                 <span class="aw__counter"><svg viewBox="0 0 16 16" fill="currentColor" width="11" height="11"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>3</span>
-                <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
-                  <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
-                  <span class="tip">興味ある！に追加する</span>
+                <button class="ktn-icon-btn" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault()">
+                  <svg viewBox="0 0 16 16" fill="none" width="15" height="15"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
+                  <span class="tip">興味あり！に追加する</span>
                 </button>
               </div>
             </div>
@@ -671,9 +671,9 @@
               <span class="aws aws-negot">商談中</span>
               <div class="ec-actions-group">
                 <span class="aw__counter"><svg viewBox="0 0 16 16" fill="currentColor" width="11" height="11"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>17</span>
-                <button class="ktn-icon-btn on" onclick="this.classList.toggle('on');event.preventDefault()">
-                  <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6" stroke-linejoin="round"/></svg>
-                  <span class="tip">興味ある！— 解除する</span>
+                <button class="ktn-icon-btn on" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault()">
+                  <svg viewBox="0 0 16 16" fill="none" width="15" height="15"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
+                  <span class="tip">興味あり！を解除する</span>
                 </button>
               </div>
             </div>
@@ -703,9 +703,9 @@
               <span class="aws aws-sold">売却済</span>
               <div class="ec-actions-group">
                 <span class="aw__counter"><svg viewBox="0 0 16 16" fill="currentColor" width="11" height="11"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>31</span>
-                <button class="ktn-icon-btn on" onclick="this.classList.toggle('on');event.preventDefault()">
-                  <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6" stroke-linejoin="round"/></svg>
-                  <span class="tip">興味ある！— 解除する</span>
+                <button class="ktn-icon-btn on" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault()">
+                  <svg viewBox="0 0 16 16" fill="none" width="15" height="15"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
+                  <span class="tip">興味あり！を解除する</span>
                 </button>
               </div>
             </div>
@@ -734,9 +734,9 @@
               <span class="aws aws-inquiry">要問合せ</span>
               <div class="ec-actions-group">
                 <span class="aw__counter"><svg viewBox="0 0 16 16" fill="currentColor" width="11" height="11"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>6</span>
-                <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
-                  <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
-                  <span class="tip">興味ある！に追加する</span>
+                <button class="ktn-icon-btn" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault()">
+                  <svg viewBox="0 0 16 16" fill="none" width="15" height="15"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
+                  <span class="tip">興味あり！に追加する</span>
                 </button>
               </div>
             </div>
@@ -765,9 +765,9 @@
               <span class="cb cb-content cb-artwork">artwork</span>
               <div class="ec-actions-group">
                 <span class="aw__counter"><svg viewBox="0 0 16 16" fill="currentColor" width="11" height="11"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>12</span>
-                <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
-                  <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
-                  <span class="tip">興味ある！に追加する</span>
+                <button class="ktn-icon-btn" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault()">
+                  <svg viewBox="0 0 16 16" fill="none" width="15" height="15"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
+                  <span class="tip">興味あり！に追加する</span>
                 </button>
               </div>
             </div>
@@ -785,9 +785,9 @@
               <span class="cb cb-content cb-artwork">artwork</span>
               <div class="ec-actions-group">
                 <span class="aw__counter"><svg viewBox="0 0 16 16" fill="currentColor" width="11" height="11"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>7</span>
-                <button class="ktn-icon-btn on" onclick="this.classList.toggle('on');event.preventDefault()">
-                  <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6" stroke-linejoin="round"/></svg>
-                  <span class="tip">興味ある！— 解除する</span>
+                <button class="ktn-icon-btn on" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault()">
+                  <svg viewBox="0 0 16 16" fill="none" width="15" height="15"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
+                  <span class="tip">興味あり！を解除する</span>
                 </button>
               </div>
             </div>
@@ -805,9 +805,9 @@
               <span class="cb cb-content cb-artwork">artwork</span>
               <div class="ec-actions-group">
                 <span class="aw__counter"><svg viewBox="0 0 16 16" fill="currentColor" width="11" height="11"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>22</span>
-                <button class="ktn-icon-btn" onclick="this.classList.toggle('on');event.preventDefault()">
-                  <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
-                  <span class="tip">興味ある！に追加する</span>
+                <button class="ktn-icon-btn" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault()">
+                  <svg viewBox="0 0 16 16" fill="none" width="15" height="15"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
+                  <span class="tip">興味あり！に追加する</span>
                 </button>
               </div>
             </div>
@@ -1048,5 +1048,6 @@
   </div>
 
 </div><!-- /demo-wrap -->
+<script src="./kotennavi-common.js"></script>
 </body>
 </html>
