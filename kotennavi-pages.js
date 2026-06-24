@@ -1551,13 +1551,16 @@ function _p6Init(opts) {
             : isReply
               ? '<span class="cmt-type-badge cmt-type-badge--reply">出品者の回答</span>'
               : '';
+          var roleBadge = c.isCreator
+            ? '<span class="cb cb-creator">creator</span>'
+            : '<span class="cb cb-user">user</span>';
           return '<div class="cmt-card' + cardCls + '">' +
             '<div class="cmt-card-header">' +
             '<div class="cmt-avatar" style="background:' + (c.bg || 'var(--lbg3)') + '">' + c.user.slice(0,1) + '</div>' +
             '<div class="cmt-user"><div class="cmt-user-row">' +
             badge +
+            roleBadge +
             '<span class="cmt-user-name">' + c.user + '</span>' +
-            (c.purchased ? '<span class="cmt-verified">✓ 購入者</span>' : '') +
             '<span class="cmt-user-date">' + c.date + '</span>' +
             ((isOwner() || isAdmin()) ? '<button class="cmt-delete-btn" onclick="deleteCmt(' + c._cid + ')" title="削除">✕</button>' : '') +
             '</div>' +
@@ -1848,7 +1851,6 @@ KTN.pages['p6'] = function() {
         { lbl:'\u91cd\u3055',         val: w.weight },
         { lbl:'\u30a8\u30c7\u30a3\u30b7\u30e7\u30f3', val: edition, always: true },
         { lbl:'\u984d\u88c5',         val: w.framing },
-        { lbl:'\u4f5c\u54c1\u70b9\u6570/\u30a8\u30c7\u30a3\u30b7\u30e7\u30f3', val: w.qty ? w.qty + '\u70b9' : null },
         { lbl:'\u4f5c\u54c1\u72b6\u614b', val: w.condition },
         { lbl:'\u4ed8\u5c5e\u54c1',   val: w.accessories },
       ];
@@ -2016,8 +2018,8 @@ KTN.pages['p6-2'] = function() {
 
   function applyOwnerP62() {
     var isOwner = (KTN.role === 'user+creator');
-    if (applyBtn) applyBtn.style.display = isOwner ? 'none' : '';
-    if (deskBtn)  deskBtn.style.display  = isOwner ? '' : 'none';
+    if (applyBtn) applyBtn.disabled = isOwner;
+    if (deskBtn)  deskBtn.style.display = isOwner ? '' : 'none';
   }
   applyOwnerP62();
 
@@ -5175,6 +5177,149 @@ KTN.pages['p5-15'] = function () {
 /* ════════════════════════════════════════════════════
    P3-15  LIAISON+コンソール
 ════════════════════════════════════════════════════ */
+KTN.pages['p3-11'] = function () {
+
+  // 0. ページスコープ・アクセントカラー（creator＝インクブルー）
+  document.body.classList.add('p3-page');
+  document.body.style.setProperty('--page-accent',        '#2a5f7a');
+  document.body.style.setProperty('--page-accent-bg',     'rgba(42,95,122,.1)');
+  document.body.style.setProperty('--page-accent-border', '#5a8fa8');
+
+  // 1. 管理ドロワー
+  var drawer = document.getElementById('p311Drawer');
+  var mgmtBtn = document.getElementById('p311MgmtBtn');
+  var drawerClose = document.getElementById('p311DrawerClose');
+  var drawerOverlay = document.getElementById('p311DrawerOverlay');
+  function openDrawer() { if (drawer) drawer.classList.add('is-open'); }
+  function closeDrawer() { if (drawer) drawer.classList.remove('is-open'); }
+  if (mgmtBtn) mgmtBtn.addEventListener('click', openDrawer);
+  if (drawerClose) drawerClose.addEventListener('click', closeDrawer);
+  if (drawerOverlay) drawerOverlay.addEventListener('click', closeDrawer);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeDrawer(); });
+
+  // 2. スクロール連動ヘッダー
+  var header = document.getElementById('ktnHeader');
+  var hero = document.querySelector('.p3-head');
+  if (header && hero) {
+    var observer = new IntersectionObserver(function (entries) {
+      header.classList.toggle('is-scrolled', !entries[0].isIntersecting);
+    }, { threshold: 0, rootMargin: '-50px 0px 0px 0px' });
+    observer.observe(hero);
+  }
+
+  // 3. クリエイターID ライブプレビュー
+  var idInput = document.getElementById('p311CreatorId');
+  var idPreview = document.getElementById('p311IdPreview');
+  if (idInput && idPreview) {
+    idInput.addEventListener('input', function () {
+      var v = idInput.value.replace(/[^a-zA-Z0-9_-]/g, '');
+      idInput.value = v;
+      idPreview.textContent = v || '（未設定）';
+    });
+  }
+
+  // 4. アバター画像プレビュー
+  var avatarInput = document.getElementById('p311AvatarInput');
+  var avatarPreview = document.querySelector('.p211-avatar-preview');
+  if (avatarInput && avatarPreview) {
+    avatarInput.addEventListener('change', function () {
+      var f = avatarInput.files && avatarInput.files[0];
+      if (!f) return;
+      var url = URL.createObjectURL(f);
+      avatarPreview.textContent = '';
+      avatarPreview.style.background = 'none';
+      var img = document.createElement('img');
+      img.src = url;
+      avatarPreview.appendChild(img);
+    });
+  }
+
+  // 5. 繰り返し行の追加・削除
+  function bindDel(row) {
+    var del = row.querySelector('.p211-repeat__del');
+    if (del) del.addEventListener('click', function () { row.remove(); });
+  }
+  document.querySelectorAll('.p211-repeat__row').forEach(bindDel);
+  document.querySelectorAll('.p211-repeat__add').forEach(function (addBtn) {
+    addBtn.addEventListener('click', function () {
+      var list = document.getElementById(addBtn.dataset.target);
+      if (!list) return;
+      var row = document.createElement('div');
+      if (addBtn.dataset.link) {
+        row.className = 'p211-repeat__row p211-repeat__row--link';
+        row.innerHTML =
+          '<select class="p211-select">' +
+          '<option value="instagram">Instagram</option>' +
+          '<option value="x">X（Twitter）</option>' +
+          '<option value="facebook">Facebook</option>' +
+          '<option value="youtube">YouTube</option>' +
+          '<option value="website">公式サイト</option>' +
+          '<option value="other">その他</option></select>' +
+          '<input class="p211-input" type="url" placeholder="https://">' +
+          '<button class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline p211-repeat__del" type="button" aria-label="削除">✕</button>';
+      } else {
+        row.className = 'p211-repeat__row';
+        row.innerHTML =
+          '<input class="p211-input" type="text" placeholder="' + (addBtn.dataset.placeholder || '') + '">' +
+          '<button class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline p211-repeat__del" type="button" aria-label="削除">✕</button>';
+      }
+      list.appendChild(row);
+      bindDel(row);
+    });
+  });
+
+  // 6. 保存
+  var saveBtn = document.getElementById('p311SaveBtn');
+  if (saveBtn) saveBtn.addEventListener('click', function () {
+    if (typeof showToast === 'function') showToast('変更を保存しました');
+  });
+
+};
+
+KTN.pages['p3-12'] = function () {
+
+  // 0. ページスコープ・アクセントカラー（creator＝インクブルー）
+  document.body.classList.add('p3-page');
+  document.body.style.setProperty('--page-accent',        '#2a5f7a');
+  document.body.style.setProperty('--page-accent-bg',     'rgba(42,95,122,.1)');
+  document.body.style.setProperty('--page-accent-border', '#5a8fa8');
+
+  // 1. 管理ドロワー
+  var drawer = document.getElementById('p312Drawer');
+  var mgmtBtn = document.getElementById('p312MgmtBtn');
+  var drawerClose = document.getElementById('p312DrawerClose');
+  var drawerOverlay = document.getElementById('p312DrawerOverlay');
+  function openDrawer() { if (drawer) drawer.classList.add('is-open'); }
+  function closeDrawer() { if (drawer) drawer.classList.remove('is-open'); }
+  if (mgmtBtn) mgmtBtn.addEventListener('click', openDrawer);
+  if (drawerClose) drawerClose.addEventListener('click', closeDrawer);
+  if (drawerOverlay) drawerOverlay.addEventListener('click', closeDrawer);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeDrawer(); });
+
+  // 2. スクロール連動ヘッダー
+  var header = document.getElementById('ktnHeader');
+  var hero = document.querySelector('.p3-head');
+  if (header && hero) {
+    var observer = new IntersectionObserver(function (entries) {
+      header.classList.toggle('is-scrolled', !entries[0].isIntersecting);
+    }, { threshold: 0, rootMargin: '-50px 0px 0px 0px' });
+    observer.observe(hero);
+  }
+
+  // 3. 期間セレクター（デモ：active切替のみ・データは静的）
+  var periodBox = document.getElementById('p312Period');
+  if (periodBox) {
+    periodBox.querySelectorAll('.ins-period__btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        periodBox.querySelectorAll('.ins-period__btn').forEach(function (b) { b.classList.remove('is-active'); });
+        btn.classList.add('is-active');
+        if (typeof showToast === 'function') showToast('期間を変更しました（デモ）');
+      });
+    });
+  }
+
+};
+
 KTN.pages['p3-15'] = function () {
 
   // 0. ページスコープ・アクセントカラー

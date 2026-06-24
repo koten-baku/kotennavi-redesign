@@ -719,7 +719,7 @@ function getActions(page, role) {
   }
 
   /* ── P3 管理ページ群（owner/admin限定） ── */
-  if (['p3-11', 'p3-13', 'p3-14', 'p3-15', 'p3-16', 'p3-17'].includes(page)) {
+  if (['p3-11', 'p3-12', 'p3-13', 'p3-14', 'p3-15', 'p3-16', 'p3-17'].includes(page)) {
     if (role === 'creator') return owbtn('info', 'ガイド');
     if (role === 'admin') return owbtn('info', 'ガイド') + sep() + dd('管理者', ddi('chart', '統計') + ddi('sales', '精算'));
     return '';

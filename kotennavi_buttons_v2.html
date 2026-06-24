@@ -194,15 +194,15 @@ body.mgmt-page.p5-page::before { background: #b8608c; }
   background: #f0f4f8;
 }
 
-/* 決定・確定（固定ブルー — page-accent非依存） */
+/* 決定・確定（固定ブランド青 #005da7 — ロゴ色・page-accent非依存） */
 .ktn-op-btn--primary {
-  background: #1a4a88;
-  border-color: #1a4a88;
+  background: #005da7;
+  border-color: #005da7;
   color: #fff;
 }
-.ktn-op-btn--primary:hover { opacity: .88; background: #1a4a88; }
+.ktn-op-btn--primary:hover { opacity: .88; background: #005da7; }
 
-/* 注意（会場売約済など — primaryが固定ブルーのためコッパーと衝突しない） */
+/* 注意（会場売約済など — primaryが固定ブランド青のためコッパーと衝突しない） */
 .ktn-op-btn--caution {
   background: #8b5e3c;
   border-color: #8b5e3c;
@@ -516,8 +516,9 @@ body.mgmt-page.p5-page::before { background: #b8608c; }
   <div class="section-ttl">1. 操作ボタン（ktn-op-btn）— モーダル・大型CTA</div>
   <div class="section-note">
     <strong>主な変更点：</strong>
-    <code>--primary</code> を <code>var(--page-accent)</code> から <strong>固定ブルー #1a4a88</strong> に変更。
+    <code>--primary</code> を <code>var(--page-accent)</code> から <strong>固定ブランド青 #005da7（= ロゴ色・<code>var(--accent)</code>）</strong> に変更。
     決定ボタンの色をロール・ページを問わず統一し、ユーザーが「青＝実行する」と学習できるようにする。
+    リンク（<code>.ktn-guide-link</code>）も同じブランド青だが、<strong>ボタン＝塗り／リンク＝下線テキスト</strong>と form で区別する。
     ページアクセントカラー（クリエイター色・ギャラリー色）はナビ・ブランドのみに使用。<br>
     <code>--caution</code>（会場売約済など）は <strong>#8b5e3c（ギャラリーコッパー）</strong>。<code>--primary</code> が固定ブルーのため P4 Gallery 管理ページでも衝突しない。
   </div>
@@ -538,7 +539,7 @@ body.mgmt-page.p5-page::before { background: #b8608c; }
       <button class="ktn-op-btn ktn-op-btn--primary">保存する</button>
       <button class="ktn-op-btn ktn-op-btn--primary">確定する</button>
       <button class="ktn-op-btn ktn-op-btn--primary">申込を確定する</button>
-      <span class="btn-row-desc">— 固定ブルー #1a4a88 <span class="tag-changed">変更</span></span>
+      <span class="btn-row-desc">— 固定ブランド青 #005da7 <span class="tag-changed">変更</span></span>
     </div>
 
     <div class="btn-row">
@@ -674,7 +675,7 @@ body.mgmt-page.p5-page::before { background: #b8608c; }
     </div>
 
     <div class="diff-col">
-      <div class="diff-label is-new">変更後 — #1a4a88 固定</div>
+      <div class="diff-label is-new">変更後 — #005da7 固定（ブランド青）</div>
       <div class="btn-group">
         <div class="btn-row">
           <span class="btn-row-label" style="min-width:80px">P3 Creator</span>
@@ -720,6 +721,11 @@ body.mgmt-page.p5-page::before { background: #b8608c; }
     ・<strong>先頭「●」</strong>＝「遷移先に要対応の取引がある」通知サイン。<code>--alert</code> / <code>--alert-dark</code> / <code>:has()</code> 要対応状態で CSS（<code>::before</code>）が自動付与。HTML に手で書かない。<br>
     ・要対応ナビの完全形＝<strong>「● ラベル →」</strong>／通常ナビ＝「ラベル →」。<br>
     ・矢印なし＝遷移しない（その場で実行 or モーダルを開く）。カラー帯内の操作トリガー（myコレクションへ等）は <code>--ghost</code> を共用するが矢印を付けず機能アイコンを付ける。
+  </div>
+  <div class="section-note">
+    <strong>幅ルール（全ページ共通）：</strong>取引デスクへ・出品管理 など<strong>複数ページで多用される ktn-action-btn は設置場所で幅を引き伸ばさず、font-size＋padding による一定サイズを保持</strong>する。
+    base 定義が <code>display:inline-flex</code> / <code>white-space:nowrap</code> / <code>flex-shrink:0</code> のため標準では伸びない。
+    flex column（<code>align-items:stretch</code>）等で stretch されてしまう場所では <code>width:100%</code> を足さず <code>align-self:flex-start</code>（または center）で固定サイズを維持すること。
   </div>
 
   <div class="btn-group">
@@ -958,8 +964,8 @@ body.mgmt-page.p5-page::before { background: #b8608c; }
       <tr>
         <td><code>ktn-op-btn--primary</code></td>
         <td>決定・確定・保存</td>
-        <td><span class="color-chip" style="background:#1a4a88"></span>#1a4a88 固定</td>
-        <td><span class="tag-changed">変更提案</span> var(--page-accent) から変更</td>
+        <td><span class="color-chip" style="background:#005da7"></span>#005da7 固定（ブランド青）</td>
+        <td><span class="tag-changed">変更</span> var(--page-accent) → #1a4a88 → ブランド青 #005da7</td>
       </tr>
       <tr>
         <td><code>ktn-op-btn--caution</code></td>

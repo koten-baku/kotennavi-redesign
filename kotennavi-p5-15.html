@@ -181,7 +181,6 @@
           <a class="ktn-mgmt-head__back" href="kotennavi-p5-14.html">← 購入管理</a>
           <h2 class="ktn-mgmt-head__title">取引ワークスペース</h2>
           <p class="ktn-mgmt-head__en">TRANSACTION WORKSPACE</p>
-          <p class="ktn-mgmt-head__desc">申し込んだ作品の取引を進めます。<strong>支払いから受取確認、評価まで</strong>、作品が手元に届くまでの対応をここで行えます。次にすべきことは取引状態に表示されます。</p>
           <div class="ktn-mgmt-head__meta">
             <span class="ktn-mgmt-head__meta-label">取引番号</span>
             <span class="ktn-mgmt-head__meta-id">TXN-20260221-1847</span>
@@ -189,6 +188,13 @@
               <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" width="11" height="11"><rect x="4" y="4" width="7" height="7" rx="1"/><path d="M8 4V2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h2"/></svg>
               コピー
             </button>
+            <span class="ktn-mgmt-head__meta-sep" aria-hidden="true">·</span>
+            <span class="ktn-mgmt-head__meta-label">申込日</span>
+            <span class="ktn-mgmt-head__meta-date">2026.02.21</span>
+          </div>
+          <p class="ktn-mgmt-head__desc">申し込んだ作品の取引を進めます。<strong>支払いから受取確認、評価まで</strong>、作品が手元に届くまでの対応をここで行えます。次にすべきことは取引状態に表示されます。</p>
+          <div class="ktn-mgmt-head__guides">
+            <a class="ktn-guide-link" href="kotennavi-p70-3.html">購入までの流れ →</a>
           </div>
         </div>
 
@@ -269,11 +275,11 @@
         <div class="p515-status p515-status--waiting" id="p515StatusApplied" hidden>
           <div class="p515-status__head">
             <span class="p515-status__badge p515-status__badge--queue">購入確定待ち</span>
-            <span class="p515-status__deadline">申込 2026.02.21</span>
             <span class="p316-turn-label p316-turn-label--waiting">
               <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" width="9" height="9"><circle cx="5" cy="5" r="4"/><polyline points="5,2.5 5,5 7,6"/></svg>
               出品者の確認待ち
             </span>
+            <span class="p515-status__deadline">申込 2026.02.21</span>
           </div>
           <div class="p515-status__body">
             <p class="p515-status__desc">購入申込が受け付けられました。出品者が申込順に会場在庫を確認し、購入を確定しています。会場でのご購入が優先されるため、確定のご案内は会期終了後（最長で会期終了3日後）になる場合があります。しばらくお待ちください。</p>
@@ -299,6 +305,7 @@
               <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8" width="9" height="9"><polyline points="2,5 4,7 8,3"/></svg>
               あなたの操作が必要
             </span>
+            <span class="p515-status__deadline">確定 2026.02.23</span>
           </div>
           <div class="p515-status__body">
             <p class="p515-status__desc">購入の順番が確定し、出品者から送料・梱包費の情報が届きました。配送先情報を入力してお支払いへお進みください。<strong>支払期限までにお支払いがない場合、申込はキャンセルされます。</strong></p>
@@ -422,11 +429,11 @@
         <div class="p515-status p515-status--waiting" id="p515StatusPaid" hidden>
           <div class="p515-status__head">
             <span class="p515-status__badge p515-status__badge--paid">発送待ち</span>
-            <span class="p515-status__deadline">支払 2026.02.26</span>
             <span class="p316-turn-label p316-turn-label--waiting">
               <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" width="9" height="9"><circle cx="5" cy="5" r="4"/><polyline points="5,2.5 5,5 7,6"/></svg>
               出品者の発送待ち
             </span>
+            <span class="p515-status__deadline">支払 2026.02.26</span>
           </div>
           <div class="p515-status__body">
             <div class="p515-paid-success">
@@ -455,11 +462,11 @@
         <div class="p515-status p515-status--my-turn" id="p515StatusReceipt" hidden>
           <div class="p515-status__head">
             <span class="p515-status__badge p515-status__badge--buyer">受取確認待ち</span>
-            <span class="p515-status__deadline">発送日 2026.02.28</span>
             <span class="p316-turn-label p316-turn-label--mine">
               <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8" width="9" height="9"><polyline points="2,5 4,7 8,3"/></svg>
               あなたの操作が必要
             </span>
+            <span class="p515-status__deadline">発送 2026.02.28</span>
           </div>
           <div class="p515-status__body">
             <p class="p515-status__desc">出品者が作品を発送しました。お手元に届きましたら、受取評価を入力の上、受け取りを確認してください。</p>
@@ -518,11 +525,11 @@
         <div class="p515-status p515-status--waiting" id="p515StatusConfirming" hidden>
           <div class="p515-status__head">
             <span class="p515-status__badge p515-status__badge--confirming">完了確認待ち</span>
-            <span class="p515-status__deadline">受取確認 2026.03.03</span>
             <span class="p316-turn-label p316-turn-label--waiting">
               <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" width="9" height="9"><circle cx="5" cy="5" r="4"/><polyline points="5,2.5 5,5 7,6"/></svg>
               出品者の完了確認待ち
             </span>
+            <span class="p515-status__deadline">受取確認 2026.03.03</span>
           </div>
           <div class="p515-status__body">
             <div class="p515-confirming">
