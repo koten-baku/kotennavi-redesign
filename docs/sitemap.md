@@ -212,12 +212,12 @@
 | P70-2 | リエゾンプラス-作品販売ガイド | L+ |  |  |  | R | R | R/W | --w-article | kotennavi-p70-2.html |
 | P70-3 | 作品購入までの流れ | L+ | R | R | R | R | R | R/W | --w-article | # |
 | P70-4 | 送料・配送について | L+ | R | R | R | R | R | R/W | --w-article | # |
-| P70-5 | 送料一覧 | L+ | R | R | R | R | R | R/W | --w-article | # |
 | P70-6 | 特定商取引法に基づく表示 | L+ | R | R | R | R | R | R/W | --w-article | # |
 | P70-7 | リエゾンプラスの手数料について | L+ |  |  | R | R | R | R/W | --w-article | # |
 | P70-8 | ギャラリーへの説明ガイド | L,L+ |  |  | R | R |  | R/W | --w-article | # |
 | P70-9 | 作品画像撮影ガイド | L,L+ |  |  | R | R | R | R/W | --w-article | # |
-
+| P70-11 | リエゾンプラス-取引ガイド(購入者編) | L+ |  | R | R | R | R | R/W | --w-article | kotennavi-p70-11.html |
+| P70-12 | リエゾンプラス-取引ガイド(出品者編) | L+ |  |  |  | R | R | R/W | --w-article | kotennavi-p70-12.html |
 ---
 
 ## P90 管理者

@@ -858,7 +858,22 @@ body.mgmt-page.p5-page::before { background: #b8608c; }
       <span class="ktn-status-badge ktn-status-badge--done">取引完了</span>
       <span class="ktn-status-badge ktn-status-badge--cancelled">キャンセル済</span>
     </div>
+    <div class="btn-row">
+      <span class="btn-row-label">状態strip内バッジ</span>
+      <span class="ktn-status-badge ktn-status-badge--new">購入確定</span>
+      <span class="ktn-status-badge ktn-status-badge--new">支払</span>
+      <span class="ktn-status-badge ktn-status-badge--paid">発送</span>
+      <span class="ktn-status-badge ktn-status-badge--shipped">受取確認</span>
+      <span class="ktn-status-badge ktn-status-badge--confirming">完了確認</span>
+      <span class="ktn-status-badge ktn-status-badge--done">取引完了</span>
+      <span class="ktn-status-badge ktn-status-badge--cancelled">キャンセル済</span>
+    </div>
   </div>
+  <div class="section-note" style="margin-top:8px">
+    <strong>「待ち」の置き場所：</strong>状態strip（<code>.p515-status__head</code>）は常にターンラベルを伴うため、
+    バッジは<strong>行為名のみ</strong>（購入確定／支払／発送／受取確認／完了確認）とし「待ち」を付けない。
+    「待ち」はターンラベルが担う（自分の番＝「あなたの操作が必要」／相手の番＝「○○の△△待ち」）。
+    一方、<strong>一覧・ログなどターンラベルを伴わない単独表示</strong>では正式状態名（〜待ち）を使う（上段）。
 
   <!-- 見分け方サマリー -->
   <div style="margin-top:16px;background:#fff;border:1px solid #d0d8e0;border-radius:6px;overflow:hidden">

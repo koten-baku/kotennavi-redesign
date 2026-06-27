@@ -185,7 +185,7 @@
             </div>
             <div class="p514-aw__strip p514-aw__strip--payment">
               <span class="p514-aw__strip-dot"></span>
-              <span class="p514-aw__strip-label">支払待ち　期限 2026.03.02</span>
+              <span class="p514-aw__strip-label">お支払いください　期限 2026.03.02</span>
               <div class="p514-aw__strip-actions">
                 <a class="p514-aw__strip-link ktn-action-btn" href="kotennavi-p5-15.html">
                   取引ワークスペースへ →
@@ -216,7 +216,7 @@
             </div>
             <div class="p514-aw__strip p514-aw__strip--receipt">
               <span class="p514-aw__strip-dot"></span>
-              <span class="p514-aw__strip-label">受取確認待ち　期限 2026.03.20</span>
+              <span class="p514-aw__strip-label">受取を確認してください　期限 2026.03.20</span>
               <div class="p514-aw__strip-actions">
                 <a class="p514-aw__strip-link ktn-action-btn" href="kotennavi-p5-15.html">
                   取引ワークスペースへ →
@@ -247,11 +247,9 @@
             </div>
             <div class="p514-aw__strip p514-aw__strip--applied">
               <span class="p514-aw__strip-dot"></span>
-              <span class="p514-aw__strip-label">購入確定待ち　申込 #3　2026.03.25</span>
+              <span class="p514-aw__strip-label">購入確定待ち　1番目／全2人　確定期限 2026.03.25</span>
               <div class="p514-aw__strip-actions">
-                <a class="p514-aw__strip-link ktn-action-btn" href="kotennavi-p5-15.html">
-                  取引ワークスペースへ →
-                </a>
+                <button class="p514-cancel-apply-btn ktn-op-btn ktn-op-btn--danger-outline ktn-op-btn--sm">申込をキャンセル</button>
               </div>
             </div>
           </div>
@@ -309,11 +307,9 @@
             </div>
             <div class="p514-aw__strip p514-aw__strip--applied">
               <span class="p514-aw__strip-dot"></span>
-              <span class="p514-aw__strip-label">購入確定待ち　申込 #1　2026.04.10</span>
+              <span class="p514-aw__strip-label">購入確定待ち　2番目／全2人　確定期限 2026.04.10</span>
               <div class="p514-aw__strip-actions">
-                <a class="p514-aw__strip-link ktn-action-btn" href="kotennavi-p5-15.html">
-                  取引ワークスペースへ →
-                </a>
+                <button class="p514-cancel-apply-btn ktn-op-btn ktn-op-btn--danger-outline ktn-op-btn--sm">申込をキャンセル</button>
               </div>
             </div>
           </div>
@@ -513,7 +509,7 @@
               申込後にキャンセルできますか？
             </summary>
             <div class="p315-faq-item__a">
-              <p>購入確定待ち・支払待ちの状態であれば、取引ワークスペースからキャンセルできます。キャンセル後も販売期間中であれば再申込できますが、キューの最後になります。支払いが完了した後はキャンセルできません。</p>
+              <p>出品者が購入を確定する前（購入確定待ち）であれば、この購入管理ページからキャンセルできます。購入確定後（支払待ち以降）は取引ワークスペースからキャンセルしてください。いずれもキャンセル後、販売期間中であれば再申込できますが、キューの最後になります。支払いが完了した後はキャンセルできません。</p>
             </div>
           </details>
 
@@ -603,6 +599,25 @@
     <div class="p514-modal__foot">
       <button class="p514-modal__btn ktn-op-btn" id="p514UnpublishModalCancel">戻る</button>
       <button class="p514-modal__btn ktn-op-btn ktn-op-btn--danger" id="p514UnpublishModalConfirm">非公開にする</button>
+    </div>
+  </div>
+</div>
+
+<!-- 申込キャンセルモーダル -->
+<div class="p514-modal-overlay" id="p514CancelApplyModal" hidden>
+  <div class="p514-modal">
+    <div class="p514-modal__head">
+      <span class="p514-modal__title">申込をキャンセルしますか？</span>
+      <button class="p514-modal__close" id="p514CancelApplyClose">✕</button>
+    </div>
+    <div class="p514-modal__body">
+      <div class="p514-modal__thumb" id="p514CancelApplyThumb"></div>
+      <div class="p514-modal__artwork-name" id="p514CancelApplyName"></div>
+      <p class="p514-modal__desc">この作品の購入申込を取り消します。出品者が購入を確定する前のため、料金は発生しません。キャンセル後は順番待ちが繰り上がります。</p>
+    </div>
+    <div class="p514-modal__foot">
+      <button class="p514-modal__btn ktn-op-btn" id="p514CancelApplyBack">戻る</button>
+      <button class="p514-modal__btn ktn-op-btn ktn-op-btn--danger" id="p514CancelApplyConfirm">申込をキャンセルする</button>
     </div>
   </div>
 </div>
@@ -729,6 +744,43 @@ KTN.init({ page: 'p5-14', role: 'user+' });
       collectRow.appendChild(collectBtn);
     }
     closeUnpubModal();
+  });
+
+  // 申込キャンセルモーダル
+  var caModal   = document.getElementById('p514CancelApplyModal');
+  var caClose   = document.getElementById('p514CancelApplyClose');
+  var caBack    = document.getElementById('p514CancelApplyBack');
+  var caConfirm = document.getElementById('p514CancelApplyConfirm');
+  var caThumb   = document.getElementById('p514CancelApplyThumb');
+  var caName    = document.getElementById('p514CancelApplyName');
+  var _cancelApplyTarget = null;
+
+  function openCancelApplyModal(btn) {
+    _cancelApplyTarget = btn;
+    var aw = btn.closest('.p514-aw');
+    if (caName)  caName.textContent = aw ? aw.querySelector('.p514-aw__title-link').textContent : '';
+    if (caThumb) caThumb.style.background = aw ? aw.querySelector('.p514-aw__thumb').style.background : '';
+    if (caModal) caModal.hidden = false;
+  }
+  function closeCancelApplyModal() { if (caModal) caModal.hidden = true; _cancelApplyTarget = null; }
+
+  document.querySelectorAll('.p514-cancel-apply-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () { openCancelApplyModal(btn); });
+  });
+  if (caClose) caClose.addEventListener('click', closeCancelApplyModal);
+  if (caBack)  caBack.addEventListener('click', closeCancelApplyModal);
+  if (caModal) caModal.addEventListener('click', function (e) { if (e.target === caModal) closeCancelApplyModal(); });
+  if (caConfirm) caConfirm.addEventListener('click', function () {
+    var btn = _cancelApplyTarget;
+    if (!btn) { closeCancelApplyModal(); return; }
+    var aw    = btn.closest('.p514-aw');
+    var strip = aw ? aw.querySelector('.p514-aw__strip') : null;
+    if (strip) {
+      strip.className = 'p514-aw__strip p514-aw__strip--cancelled';
+      strip.innerHTML = '<span class="p514-aw__strip-dot"></span><span class="p514-aw__strip-label">キャンセル済 - 申込キャンセル</span>';
+    }
+    closeCancelApplyModal();
+    if (window.KTN && KTN.toast) KTN.toast('申込をキャンセルしました');
   });
 }());
 

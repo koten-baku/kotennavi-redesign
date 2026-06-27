@@ -2012,22 +2012,63 @@ KTN.pages['p6-2'] = function() {
   /* p6 共通描画処理を呼び出す（ABOUT・コメント・More by・各種ウィジェット・モーダル関数） */
   if (typeof KTN.pages['p6'] === 'function') KTN.pages['p6']();
 
-  /* オーナー（creator本人）: 申込ボタン → 取引デスクボタンに切替 */
-  var applyBtn = document.getElementById('p62ApplyBtn');
-  var deskBtn  = document.getElementById('p62DeskBtn');
+  var applyBtn  = document.getElementById('p62ApplyBtn');
+  var cancelBtn = document.getElementById('p62CancelApplyBtn');
+  var deskBtn   = document.getElementById('p62DeskBtn');
+  var queueEl   = document.getElementById('p62ApplyQueue');
+  var _applied  = false;  /* 申込本人かどうか（デモ：申込確定で true） */
 
-  function applyOwnerP62() {
+  /* 申込状態・ロールに応じてボタンを出し分け
+     - creator本人: 申込ボタンを無効化＋取引デスクボタン表示（従来通り）
+     - 申込前（非オーナー）: 「購入申込をする」
+     - 申込本人（非オーナー）: 「申込をキャンセル」 */
+  function renderApplyP62() {
     var isOwner = (KTN.role === 'user+creator');
-    if (applyBtn) applyBtn.disabled = isOwner;
+    var showCancel = (!isOwner && _applied);
     if (deskBtn)  deskBtn.style.display = isOwner ? '' : 'none';
+    if (applyBtn) {
+      applyBtn.disabled = isOwner;
+      applyBtn.style.display = showCancel ? 'none' : '';
+    }
+    if (cancelBtn) cancelBtn.style.display = showCancel ? '' : 'none';
+    if (queueEl && !isOwner) queueEl.textContent = _applied ? '申込済み（3人が申込中）' : '3人が申込中';
   }
-  applyOwnerP62();
+  renderApplyP62();
+
+  /* 購入申込はログイン必須：ゲストは p2 チェックインCTAと同じ共通ログインモーダルを表示
+     初期表示時は KTN.role 未設定（setR 押下まで undefined）のため ktnState.role にフォールバック */
+  window.openApplyModal = function() {
+    var role = KTN.role || (window.ktnState && window.ktnState.role) || 'guest';
+    if (role === 'guest') {
+      if (KTN.action && KTN.action.show) { KTN.action.show('apply'); return; }
+    }
+    openModal('applyModal');
+  };
+
+  /* 申込確定 → 申込本人状態へ（p6-2 専用に submitApply を差し替え） */
+  window.submitApply = function() {
+    var chk = document.getElementById('amAgreeCheck');
+    if (chk && !chk.checked) { alert('注意事項への同意が必要です'); return; }
+    closeModal('applyModal');
+    _applied = true;
+    renderApplyP62();
+    if (KTN.toast) KTN.toast('購入申込を受け付けました');
+  };
+
+  /* 申込キャンセル：確認モーダル → 確定で申込前に戻す */
+  window.openCancelApplyModal = function() { openModal('cancelApplyModal'); };
+  window.confirmCancelApply = function() {
+    closeModal('cancelApplyModal');
+    _applied = false;
+    renderApplyP62();
+    if (KTN.toast) KTN.toast('申込をキャンセルしました');
+  };
 
   /* p6 は window.setR を独自定義するため ktnRender 経由では呼ばれない → setR をラップ */
   var _prevSetR = window.setR;
   window.setR = function(role, btn) {
     if (typeof _prevSetR === 'function') _prevSetR(role, btn);
-    applyOwnerP62();
+    renderApplyP62();
   };
 };
 
@@ -5155,6 +5196,28 @@ KTN.pages['p5-14'] = function () {
     applyRole();
 };
 
+/* 取引コメントの画像添付（1枚）プレビュー — p3-16/p4-16/p5-15 共通 */
+function _initTxnCommentAttach() {
+  document.querySelectorAll('.p515-comments__form').forEach(function (form) {
+    var file    = form.querySelector('.p515-comments__file');
+    var preview = form.querySelector('.p515-comments__preview');
+    var img     = form.querySelector('.p515-comments__preview-img');
+    var del     = form.querySelector('.p515-comments__preview-del');
+    if (!file || !preview || !img) return;
+    file.addEventListener('change', function () {
+      var f = file.files && file.files[0];
+      if (!f) return;
+      img.src = URL.createObjectURL(f);
+      preview.hidden = false;
+    });
+    if (del) del.addEventListener('click', function () {
+      file.value = '';
+      img.removeAttribute('src');
+      preview.hidden = true;
+    });
+  });
+}
+
 /* =========================================================
    P5-15 ユーザー – 取引ワークスペース
    ========================================================= */
@@ -5170,6 +5233,8 @@ KTN.pages['p5-15'] = function () {
         var wrap = document.querySelector('.p515-wrap');
         if (wrap) wrap.style.display = canView ? '' : 'none';
     }
+    _initTxnCommentAttach();
+
     window.ktnRender = function () { applyRole(); };
     applyRole();
 };
@@ -5670,6 +5735,8 @@ KTN.pages['p3-16'] = function () {
     });
   });
 
+  _initTxnCommentAttach();
+
   window.ktnRender = function () {};
 };
 
@@ -5697,6 +5764,8 @@ KTN.pages['p4-16'] = function () {
       }
     });
   });
+
+  _initTxnCommentAttach();
 
   window.ktnRender = function () {};
 };

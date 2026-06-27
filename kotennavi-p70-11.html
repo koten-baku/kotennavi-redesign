@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LIAISON+ 取引ガイド 購入者編 | 個展なび</title>
+  <meta name="robots" content="noindex">
+  <meta name="description" content="個展なびLIAISON+ 取引ガイド 購入者編。購入申込から取引完了まで、各フェーズの状況・購入者の対応・期限・困ったときの対処をまとめた、取引中の購入者向けの操作マニュアルです。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@1,400;1,600&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<body data-w="article" class="p70-page">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- デモバー -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ガイドページ</span>
+  <button class="dbtn dbtn--active" id="dbarView">閲覧</button>
+</div>
+
+<!-- ヘッダー -->
+<header class="ktn-header" id="ktnHeader">
+  <div class="ktn-header__inner">
+    <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+    <div class="ktn-hdr-actions" id="ktnActs"></div>
+  </div>
+</header>
+
+<!-- タイトルバンド：ヘッダー直下・白背景・幅制限なし -->
+<div class="p70-title-band">
+  <div class="p70-title-band__inner">
+    <div class="p70-head__sub">
+      <span class="lb-dot li-plus">LIAISON+</span>
+      <span class="p70-head__updated">取引中の方向けガイド</span>
+    </div>
+    <h1 class="p70-head__title">取引ガイド <span style="font-size:.62em;font-weight:600">購入者編</span></h1>
+    <p class="p70-head__en">A guide for buyers in a transaction</p>
+    <p class="p70-head__lead">購入申込から取引完了までの各フェーズについて、<strong>購入者が行う操作</strong>・<strong>期限</strong>・<strong>困ったときの対処</strong>に関するガイドです。<br>取引デスクの「困ったとき」リンクから、進行中フェーズの項目へ直接移動できます。</p>
+  </div>
+</div>
+
+<!-- メインコンテンツ -->
+<main>
+  <div class="p70-wrap">
+
+    <!-- 目次 -->
+    <nav class="p70-toc" aria-label="目次">
+      <div class="p70-toc__title">目次 — Contents</div>
+      <ol class="p70-toc__list">
+        <li class="p70-toc__item"><span class="p70-toc__num">1</span><a class="p70-toc__link" href="#about">このガイドについて</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">2</span><a class="p70-toc__link" href="#overview">取引の流れ（全体像）</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">3</span><a class="p70-toc__link" href="#phase-confirm">購入確定 — 出品者の確定を待つ</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">4</span><a class="p70-toc__link" href="#phase-payment">支払 — 代金を支払う</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">5</span><a class="p70-toc__link" href="#phase-ship">発送 — 出品者の発送を待つ</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">6</span><a class="p70-toc__link" href="#phase-receipt">受取確認 — 作品の受取を確認する</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">7</span><a class="p70-toc__link" href="#phase-complete">完了確認 — 出品者の完了確認を待つ</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">8</span><a class="p70-toc__link" href="#terminal">取引の終わり方（完了・キャンセル）</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">9</span><a class="p70-toc__link" href="#trouble">こんなときは — 状況別インデックス</a></li>
+      </ol>
+    </nav>
+
+    <!-- 1. このガイドについて -->
+    <section class="p70-section" id="about">
+      <div class="p70-section__head">
+        <span class="p70-section__num">1</span>
+        <h2 class="p70-section__title">このガイドについて</h2>
+        <span class="p70-section__en">How to use this guide</span>
+      </div>
+      <p class="p70-lead">このガイドは、リエゾン+ の作品に<em>購入を申し込んだ購入者</em>向けのガイドです。取引開始前の購入の仕組み・申込方法は <a href="kotennavi-p70-3.html">作品購入までの流れ</a> をご覧ください。</p>
+
+      <p class="p70-body">取引は、購入者と出品者が交互に操作して進みます。各フェーズは、購入者の対応が必要なフェーズと、出品者の対応を待つフェーズに分かれます。</p>
+
+      <div class="p70-dl p70-dl--ja">
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">購入者の対応が必要</dt>
+          <dd class="p70-dl__dd">購入者が操作するフェーズです。取引デスクに必要な操作が表示されます。期限内に操作してください。</dd>
+        </div>
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">出品者の対応待ち</dt>
+          <dd class="p70-dl__dd">出品者の操作を待つフェーズです。購入者の操作は不要です。確定・発送などの通知が届くのを待ちます。</dd>
+        </div>
+      </div>
+
+      <div class="p70-callout">
+        <div class="p70-callout__title">取引デスクとの役割分担</div>
+        <div class="p70-callout__body">
+          実際の操作（支払い・受取確認）は<em>取引デスク</em>で行います。このガイドでは、各操作の手順と困ったときの対処を確認できます。<br>
+          取引デスクの「この取引について困ったとき」リンクから、進行中フェーズの項目へ移動できます。
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. 取引の流れ（全体像） -->
+    <section class="p70-section" id="overview">
+      <div class="p70-section__head">
+        <span class="p70-section__num">2</span>
+        <h2 class="p70-section__title">取引の流れ（全体像）</h2>
+        <span class="p70-section__en">The whole flow</span>
+      </div>
+      <p class="p70-body">申込から取引完了までの6ステップを、購入者と出品者が交互に進めます。購入者が操作するのは <strong>STEP 1 申込</strong> ・ <strong>STEP 3 支払</strong> ・ <strong>STEP 5 受取確認</strong> の3回です。</p>
+
+      <div class="p70-flow-diagram">
+        <div class="p70-flow-diagram__title">取引フロー — 全6ステップ</div>
+        <ol class="p70-flow-diagram__list">
+          <li class="p70-flow-diagram__item p70-flow-diagram__item--buyer p70-flow-diagram__item--mine">
+            <span class="p70-flow-diagram__actor">購入者</span>
+            <span class="p70-flow-diagram__num">STEP 1</span>
+            <span class="p70-flow-diagram__action">申込</span>
+          </li>
+          <li class="p70-flow-diagram__arrow">—</li>
+          <li class="p70-flow-diagram__item p70-flow-diagram__item--seller">
+            <span class="p70-flow-diagram__actor">出品者</span>
+            <span class="p70-flow-diagram__num">STEP 2</span>
+            <span class="p70-flow-diagram__action">購入確定</span>
+          </li>
+          <li class="p70-flow-diagram__arrow">—</li>
+          <li class="p70-flow-diagram__item p70-flow-diagram__item--buyer p70-flow-diagram__item--mine">
+            <span class="p70-flow-diagram__actor">購入者</span>
+            <span class="p70-flow-diagram__num">STEP 3</span>
+            <span class="p70-flow-diagram__action">支払</span>
+          </li>
+          <li class="p70-flow-diagram__arrow">—</li>
+          <li class="p70-flow-diagram__item p70-flow-diagram__item--seller">
+            <span class="p70-flow-diagram__actor">出品者</span>
+            <span class="p70-flow-diagram__num">STEP 4</span>
+            <span class="p70-flow-diagram__action">発送</span>
+          </li>
+          <li class="p70-flow-diagram__arrow">—</li>
+          <li class="p70-flow-diagram__item p70-flow-diagram__item--buyer p70-flow-diagram__item--mine">
+            <span class="p70-flow-diagram__actor">購入者</span>
+            <span class="p70-flow-diagram__num">STEP 5</span>
+            <span class="p70-flow-diagram__action">受取確認</span>
+          </li>
+          <li class="p70-flow-diagram__arrow">—</li>
+          <li class="p70-flow-diagram__item p70-flow-diagram__item--seller">
+            <span class="p70-flow-diagram__actor">出品者</span>
+            <span class="p70-flow-diagram__num">STEP 6</span>
+            <span class="p70-flow-diagram__action">完了確認</span>
+          </li>
+          <li class="p70-flow-diagram__arrow">—</li>
+          <li class="p70-flow-diagram__end">取引完了</li>
+        </ol>
+      </div>
+
+      <div class="p70-callout p70-callout--venue">
+        <div class="p70-callout__title">支払いが、後戻りの分かれ目です</div>
+        <div class="p70-callout__body">
+          支払い（STEP 3）の完了前は、申込のキャンセルに返金は発生しません（まだ支払っていないため）。支払い完了後のキャンセルは<em>返金を伴う手続き</em>となり、個展なび管理者を通じて行います。フェーズによって「困ったとき」の対処が変わるのはこのためです。
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. S1 購入確定（購入者は待ち） -->
+    <section class="p70-section" id="phase-confirm">
+      <div class="p70-section__head">
+        <span class="p70-section__num">3</span>
+        <h2 class="p70-section__title">購入確定 — 出品者の確定を待つ</h2>
+        <span class="p70-section__en">STEP 2 ・ Awaiting seller</span>
+      </div>
+      <p class="p70-lead"><em>出品者の対応待ちです。</em>購入を申し込みました。出品者が会場在庫を確認し、購入を確定するのを待っています。購入者の操作は不要です。</p>
+
+      <h3 class="p70-subhead">状況</h3>
+      <p class="p70-body">この時点ではまだ<em>仮申込</em>です。リエゾン+ は会場優先のため、出品者が会場在庫を確認して「購入確定」を行った時点で正式な購入が成立します。会期中に申し込んだ場合は、会期終了後に在庫を確認して確定されることが多くあります。同一作品に複数の申込がある場合は申込順のキューで管理され、順番が来ると確定の対象になります。</p>
+
+      <h3 class="p70-subhead">対応</h3>
+      <p class="p70-body">操作は不要です。出品者の確定を待ちます。購入が確定すると送料が確定し、支払い案内が届きます。会場で先に売れた場合などは、申込のキャンセル通知が届くことがあります。</p>
+
+      <div class="p70-callout p70-callout--fee">
+        <div class="p70-callout__title">期限</div>
+        <div class="p70-callout__body">
+          出品者の確定期限は <strong>会期終了の7日後</strong> または <strong>申込の7日後</strong> の<em>遅い方</em>。会期中の申込は、会期終了後に確定されるのが一般的。期限を過ぎても確定されない場合、その作品は自動で出品取消となり、申込者全員（あなたを含む）にキャンセル通知が届く。
+        </div>
+      </div>
+
+      <h3 class="p70-subhead">こんな場合は</h3>
+      <div class="p70-faq p70-faq--open">
+        <details class="p70-faq-item" open>
+          <summary>確定されるまでどれくらいかかる？</summary>
+          <div class="p70-faq-item__body">
+            会場優先のため、会期中の申込は会期終了後に確定されるのが一般的です。確定期限内に「購入確定」または「会場売約済」などの結果が通知されます。それまでお待ちください。
+          </div>
+        </details>
+        <details class="p70-faq-item" open>
+          <summary>申込をキャンセルしたい</summary>
+          <div class="p70-faq-item__body">
+            購入確定前であれば、取引デスクから申込をキャンセルできます。まだ支払っていないため返金は発生しません。確定後のキャンセルは取り扱いが変わるため、取引デスクの「困ったとき」からサポートへ連絡してください。
+          </div>
+        </details>
+        <details class="p70-faq-item" open>
+          <summary>「会場売約済」の通知が来た</summary>
+          <div class="p70-faq-item__body">
+            会場で先に作品が売れた場合、申込は自動的にキャンセルされます。支払い前のため返金は発生しません。リエゾン+ は会場優先のため、会期中の作品ではこうしたケースが起こり得ます。
+          </div>
+        </details>
+        <details class="p70-faq-item" open>
+          <summary>複数人が申し込んでいて順番待ちになっている</summary>
+          <div class="p70-faq-item__body">
+            申込は申込順のキューで管理されます。取引デスクにキュー順位（「1番目／全2人」等）が表示されます。前の順番の方の取引が確定・キャンセルされると、順番が回ってきます。
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- 4. S2 支払（購入者が操作） -->
+    <section class="p70-section" id="phase-payment">
+      <div class="p70-section__head">
+        <span class="p70-section__num">4</span>
+        <h2 class="p70-section__title">支払 — 代金を支払う</h2>
+        <span class="p70-section__en">STEP 3 ・ Action required</span>
+      </div>
+      <p class="p70-lead"><em>購入者の対応が必要です。</em>出品者が購入を確定しました。送料が確定し、お支払いに進めます。</p>
+
+      <h3 class="p70-subhead">状況</h3>
+      <p class="p70-body">購入確定により送料が確定し、支払い案内が届いています。決済を完了すると「発送」フェーズへ進み、出品者へ発送依頼が自動通知されます。決済はクレジットカード（Stripe）で行います。</p>
+
+      <h3 class="p70-subhead">対応</h3>
+      <ol class="p70-step-list">
+        <li class="p70-step-list__item">取引デスクで請求内容（作品代金・送料・合計）を確認する</li>
+        <li class="p70-step-list__item">支払方法を選び、決済を完了する</li>
+        <li class="p70-step-list__item">決済完了で、出品者へ発送依頼が自動送信される</li>
+      </ol>
+
+      <div class="p70-callout p70-callout--fee">
+        <div class="p70-callout__title">期限</div>
+        <div class="p70-callout__body">
+          支払期限は取引デスクに表示されます。期限内に支払いがない場合、取引は自動的にキャンセルされ、作品は申込可能な状態に戻ります。督促はシステムが自動で行います。
+        </div>
+      </div>
+
+      <h3 class="p70-subhead">こんな場合は</h3>
+      <div class="p70-faq p70-faq--open">
+        <details class="p70-faq-item" open>
+          <summary>送料が思ったより高い</summary>
+          <div class="p70-faq-item__body">
+            送料は作品のサイズ・配送方法に応じて出品者が設定します。確定後の送料は支払額に直結するため原則変更できません。金額に疑問がある場合は、支払い前に取引デスクの「困ったとき」からサポートへ連絡してください。
+          </div>
+        </details>
+        <details class="p70-faq-item" open>
+          <summary>支払い前にキャンセルしたい</summary>
+          <div class="p70-faq-item__body">
+            支払い完了前であれば返金は発生しません。取引デスクからキャンセルできます。確定後のキャンセルの取り扱いに不明な点があれば、「困ったとき」からサポートへ連絡してください。
+          </div>
+        </details>
+        <details class="p70-faq-item" open>
+          <summary>決済が完了しない・エラーが出る</summary>
+          <div class="p70-faq-item__body">
+            カード情報・利用限度額をご確認のうえ、再度お試しください。解決しない場合は、支払期限が切れる前に取引デスクの「困ったとき」からサポートへ連絡してください。
+          </div>
+        </details>
+        <details class="p70-faq-item" open>
+          <summary>手数料は購入者の負担？</summary>
+          <div class="p70-faq-item__body">
+            販売手数料・決済手数料は出品者が負担します。購入者のお支払いは<em>作品代金＋送料</em>のみで、手数料が上乗せされることはありません。
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- 5. S3 発送（購入者は待ち） -->
+    <section class="p70-section" id="phase-ship">
+      <div class="p70-section__head">
+        <span class="p70-section__num">5</span>
+        <h2 class="p70-section__title">発送 — 出品者の発送を待つ</h2>
+        <span class="p70-section__en">STEP 4 ・ Awaiting seller</span>
+      </div>
+      <p class="p70-lead"><em>出品者の対応待ちです。</em>お支払いが完了しました。出品者が作品を発送するのを待っています。購入者の操作は不要です。</p>
+
+      <h3 class="p70-subhead">状況</h3>
+      <p class="p70-body">支払いが確認され、出品者へ発送依頼が通知されています。出品者が作品を発送し、取引デスクに追跡番号を登録すると、発送が通知されます。展示作品は会期終了後の引き渡しが多いため、会期中は会場に展示されたままのことがあります。</p>
+
+      <h3 class="p70-subhead">対応</h3>
+      <p class="p70-body">操作は不要です。出品者の発送を待ちます。発送されると追跡番号が取引デスクに表示され、配送状況を確認できます。</p>
+
+      <div class="p70-callout p70-callout--fee">
+        <div class="p70-callout__title">期限</div>
+        <div class="p70-callout__body">
+          出品者の発送期限は <strong>会期終了後7日</strong> または <strong>支払後7日</strong> の<em>遅い方</em>。会期中に購入した展示作品は、会期終了後に発送されるのが一般的。
+        </div>
+      </div>
+
+      <h3 class="p70-subhead">こんな場合は</h3>
+      <div class="p70-faq p70-faq--open">
+        <details class="p70-faq-item" open>
+          <summary>いつ届く？会期中なのに発送されない</summary>
+          <div class="p70-faq-item__body">
+            展示作品は会期中は会場に展示されるため、発送は会期終了後になるのが基本です。発送期限も会期終了後を基準に計算されます。会期終了後しばらく待っても発送されない場合は、取引デスクの「困ったとき」からサポートへ連絡してください。
+          </div>
+        </details>
+        <details class="p70-faq-item" open>
+          <summary>発送先を変更したい</summary>
+          <div class="p70-faq-item__body">
+            発送先は申込時の登録情報が使われます。発送前であれば、取引デスクのメッセージ機能から出品者へ連絡してください。変更可否や取り扱いに不明な点があれば「困ったとき」からサポートへ連絡してください。
+          </div>
+        </details>
+        <details class="p70-faq-item" open>
+          <summary>受け取りの日時を指定したい</summary>
+          <div class="p70-faq-item__body">
+            受け取り日時の希望は、取引デスクのメッセージ機能から出品者へ伝えてください。配送方法により対応可否が異なります。
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- 6. S4 受取確認（購入者が操作） -->
+    <section class="p70-section" id="phase-receipt">
+      <div class="p70-section__head">
+        <span class="p70-section__num">6</span>
+        <h2 class="p70-section__title">受取確認 — 作品の受取を確認する</h2>
+        <span class="p70-section__en">STEP 5 ・ Action required</span>
+      </div>
+      <p class="p70-lead"><em>購入者の対応が必要です。</em>出品者が作品を発送しました。作品が届いたら、状態を確認し「受取確認」を行ってください。</p>
+
+      <h3 class="p70-subhead">状況</h3>
+      <p class="p70-body">作品が発送されました。取引デスクに追跡番号が表示されています。作品が届いたら状態を確認し、取引デスクで「受取を確認する」を実行します。受取確認後、「完了確認」フェーズへ進みます。</p>
+
+      <h3 class="p70-subhead">対応</h3>
+      <ol class="p70-step-list">
+        <li class="p70-step-list__item">届いた作品の状態（破損・相違がないか）を確認する</li>
+        <li class="p70-step-list__item">取引デスクで「受取を確認する」を実行する</li>
+        <li class="p70-step-list__item">出品者への評価・コメントを入力する（任意）</li>
+      </ol>
+
+      <div class="p70-callout p70-callout--fee">
+        <div class="p70-callout__title">期限</div>
+        <div class="p70-callout__body">
+          受取確認には期限が設定されています。期限内に確認しない場合も、システムが自動で受取確認済みとして次の段階へ進めます。作品が届いて問題がなければ、早めの確認を推奨します。
+        </div>
+      </div>
+
+      <h3 class="p70-subhead">こんな場合は</h3>
+      <div class="p70-faq p70-faq--open">
+        <details class="p70-faq-item" open>
+          <summary>作品が届かない</summary>
+          <div class="p70-faq-item__body">
+            まず取引デスクの追跡番号で配送状況をご確認ください。配送業者で確認しても届かない場合は、<em>受取確認をする前に</em>取引デスクの「困ったとき」からサポートへ連絡してください。
+          </div>
+        </details>
+        <details class="p70-faq-item" open>
+          <summary>配送中に破損していた</summary>
+          <div class="p70-faq-item__body">
+            <em>受取確認をする前に</em>、追跡番号・破損箇所の写真を添えて取引デスクの「困ったとき」からサポートへ連絡してください。受取確認を行うと取引完了に進むため、確認前のご連絡が重要です。返金・補償が必要なケースは個別に対応します。
+          </div>
+        </details>
+        <details class="p70-faq-item" open>
+          <summary>受取確認を忘れそう</summary>
+          <div class="p70-faq-item__body">
+            期限を過ぎると、システムが自動で受取確認済みとして次の段階へ進めます。取引が止まることはありませんが、破損・相違がある場合は確認前の連絡が必要なため、届いたら早めにご確認ください。
+          </div>
+        </details>
+        <details class="p70-faq-item" open>
+          <summary>イメージと違った・返品したい</summary>
+          <div class="p70-faq-item__body">
+            オリジナル作品の取引のため、原則として購入者都合の返品はできません。届いた作品が説明と著しく異なるなどの場合は、受取確認をする前に取引デスクの「困ったとき」からサポートへ連絡してください。
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- 7. S5 完了確認（購入者は待ち） -->
+    <section class="p70-section" id="phase-complete">
+      <div class="p70-section__head">
+        <span class="p70-section__num">7</span>
+        <h2 class="p70-section__title">完了確認 — 出品者の完了確認を待つ</h2>
+        <span class="p70-section__en">STEP 6 ・ Awaiting seller</span>
+      </div>
+      <p class="p70-lead"><em>出品者の対応待ちです。</em>受取を確認しました。出品者が取引完了を確認すると、取引が完了します。購入者の操作は不要です。</p>
+
+      <h3 class="p70-subhead">状況</h3>
+      <p class="p70-body">受取確認が完了しました。最後に出品者が取引デスクで「取引完了を確認する」を実行すると、取引が正式に完了します。購入者側で必要な操作はこれ以上ありません。</p>
+
+      <h3 class="p70-subhead">対応</h3>
+      <p class="p70-body">操作は不要です。出品者の完了確認を待ちます。これで作品の購入手続きはすべて終わりです。</p>
+
+      <div class="p70-callout p70-callout--fee">
+        <div class="p70-callout__title">期限</div>
+        <div class="p70-callout__body">
+          出品者の完了確認にも期限があります。期限内に確認されない場合も、システムが自動で取引を完了として処理します。購入者側で待ち続ける必要はありません。
+        </div>
+      </div>
+
+      <h3 class="p70-subhead">こんな場合は</h3>
+      <div class="p70-faq p70-faq--open">
+        <details class="p70-faq-item" open>
+          <summary>受取確認のあと、購入者がやることは？</summary>
+          <div class="p70-faq-item__body">
+            特にありません。出品者の完了確認を待つだけです。完了確認が済むと取引が完了し、取引デスクのステータスが「取引完了」になります。
+          </div>
+        </details>
+        <details class="p70-faq-item" open>
+          <summary>受取確認のあとに問題が見つかった</summary>
+          <div class="p70-faq-item__body">
+            受取確認後でも、取引に関するトラブルは取引デスクの「困ったとき」からサポートへ相談してください。内容を確認のうえ個別に対応します。
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- 8. 取引の終わり方 -->
+    <section class="p70-section" id="terminal">
+      <div class="p70-section__head">
+        <span class="p70-section__num">8</span>
+        <h2 class="p70-section__title">取引の終わり方</h2>
+        <span class="p70-section__en">How a transaction ends</span>
+      </div>
+      <p class="p70-body">取引は、正常完了（取引完了）と中断（キャンセル済）の2通りで終了します。</p>
+
+      <div class="p70-dl p70-dl--ja">
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">取引完了</dt>
+          <dd class="p70-dl__dd">受取確認・完了確認まで進んだ取引です。作品を受け取り、すべての手続きが終わった状態です。取引デスクのステータスが「取引完了」になります。</dd>
+        </div>
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">キャンセル済</dt>
+          <dd class="p70-dl__dd">会場売約済・出品取消・支払期限超過・サポート対応などで中断された取引です。<em>支払い完了前</em>のキャンセルは、まだ支払っていないため返金は発生しません。<em>支払い完了後</em>のキャンセルは、購入者への返金を伴うため、サポートを通じた手続きとなります。</dd>
+        </div>
+      </div>
+
+      <div class="p70-callout">
+        <div class="p70-callout__title">返金について</div>
+        <div class="p70-callout__body">
+          支払い完了後にやむを得ず取引がキャンセルとなった場合、お支払いいただいた金額（作品代金＋送料）は、個展なび管理者を通じて返金されます。返金が必要なケースは、取引デスクの「困ったとき」からサポートへ連絡してください。
+        </div>
+      </div>
+    </section>
+
+    <!-- 9. 状況別インデックス -->
+    <section class="p70-section" id="trouble">
+      <div class="p70-section__head">
+        <span class="p70-section__num">9</span>
+        <h2 class="p70-section__title">こんなときは — 状況別インデックス</h2>
+        <span class="p70-section__en">Situation index</span>
+      </div>
+      <p class="p70-body">状況から、対応するフェーズの項目へ移動できます。</p>
+
+      <div class="p70-dl p70-dl--ja">
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">なかなか購入が確定されない</dt>
+          <dd class="p70-dl__dd">会期終了後の確定が一般的 → <a href="#phase-confirm">購入確定フェーズ</a></dd>
+        </div>
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">申込をキャンセルしたい</dt>
+          <dd class="p70-dl__dd">支払前は取引デスクからキャンセル（返金なし）→ <a href="#phase-confirm">購入確定フェーズ</a></dd>
+        </div>
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">「会場売約済」の通知が来た</dt>
+          <dd class="p70-dl__dd">会場優先のため自動キャンセル（支払前は返金なし）→ <a href="#phase-confirm">購入確定フェーズ</a></dd>
+        </div>
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">送料が高い・金額に疑問がある</dt>
+          <dd class="p70-dl__dd">支払前にサポートへ → <a href="#phase-payment">支払フェーズ</a></dd>
+        </div>
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">決済が完了しない</dt>
+          <dd class="p70-dl__dd">カード情報を確認・支払期限前にサポートへ → <a href="#phase-payment">支払フェーズ</a></dd>
+        </div>
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">会期中なのに作品が発送されない</dt>
+          <dd class="p70-dl__dd">展示作品は会期終了後の発送が基本 → <a href="#phase-ship">発送フェーズ</a></dd>
+        </div>
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">作品が届かない・配送中に破損していた</dt>
+          <dd class="p70-dl__dd">受取確認する前にサポートへ → <a href="#phase-receipt">受取確認フェーズ</a></dd>
+        </div>
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">出品者と連絡を取りたい</dt>
+          <dd class="p70-dl__dd">取引デスクのメッセージ機能をご利用ください（全フェーズ共通）</dd>
+        </div>
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">上のどれにも当てはまらない</dt>
+          <dd class="p70-dl__dd">取引デスクの「困ったとき」からサポートへお問い合わせください</dd>
+        </div>
+      </div>
+
+      <div class="p70-callout p70-callout--venue">
+        <div class="p70-callout__title">キャンセルの分かれ目は「支払い」です</div>
+        <div class="p70-callout__body">
+          支払い完了前であれば、申込のキャンセルに返金は発生しません（まだ支払っていないため）。支払い完了後は、購入者への返金を伴うため、サポートを通じた手続きとなります。破損・不着などのトラブルは、受取確認をする前にサポートへ連絡してください。
+        </div>
+      </div>
+    </section>
+
+    <!-- フッターナビ -->
+    <div class="p70-nav-foot">
+      <a class="p70-nav-foot__link" href="kotennavi-p70-3.html">← 作品購入までの流れ（取引前）</a>
+      <a class="p70-nav-foot__link" href="kotennavi-p5-14.html">購入管理へ →</a>
+    </div>
+
+  </div><!-- /p70-wrap -->
+</main>
+
+<!-- フッター -->
+<footer class="ktn-footer" id="ktnFooter"></footer>
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  KTN.init({ page: 'p70-11' });
+
+  var dbarView = document.getElementById('dbarView');
+  if (dbarView) {
+    dbarView.addEventListener('click', function() {
+      this.classList.add('dbtn--active');
+    });
+  }
+});
+</script>
+</body>
+</html>

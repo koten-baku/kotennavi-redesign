@@ -136,36 +136,20 @@ button{font-family:inherit;cursor:pointer}
   transition:all .15s;font-family:inherit;white-space:nowrap;
 }
 .dbtn.on,.dbtn:hover{background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.4)}
-/* ── モバイル：デモバートグル ── */
-.dbar-toggle{
-  display:none;
-  position:absolute;right:8px;top:50%;transform:translateY(-50%);
-  background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);
-  color:rgba(255,255,255,.8);font-size:.6rem;font-family:inherit;
-  letter-spacing:.04em;padding:3px 8px;border-radius:2px;
-  cursor:pointer;white-space:nowrap;line-height:1;
-}
-.dbar-toggle:hover{background:rgba(255,255,255,.22);color:#fff}
+/* ── モバイル：デモバーを折り返して全ボタンを操作可能にする ── */
 @media(max-width:600px){
   .dbar{
-    flex-wrap:nowrap;overflow:hidden;
-    height:34px;justify-content:flex-start;
-    padding:0 76px 0 10px;gap:3px;
+    flex-wrap:wrap;
+    height:auto;justify-content:flex-start;
+    padding:6px 10px;gap:5px 4px;
   }
-  .dbar.is-open{
-    flex-wrap:wrap;overflow:visible;
-    height:auto;padding:8px 10px 12px;gap:4px 3px;
-    align-items:center;
-  }
-  .dbar.is-open .dbar-toggle{top:8px;transform:none}
-  .dbar-toggle{display:block}
   .dbar-sep,.dbtn{flex-shrink:0}
 }
 
 /* ══════════════════════════════════
    LAYOUT SHELL
 ══════════════════════════════════ */
-.shell{padding-top:34px}
+.shell{padding-top:var(--dh,34px)}
 .content-wrap{
   margin-left:var(--sw);
   display:flex;
@@ -176,7 +160,7 @@ button{font-family:inherit;cursor:pointer}
 
 /* ── sidebar stub ── */
 .sidebar-stub{
-  width:var(--sw);position:fixed;top:34px;left:0;bottom:0;
+  width:var(--sw);position:fixed;top:var(--dh,34px);left:0;bottom:0;
   background:#fff;border-right:1px solid var(--border);
   display:flex;align-items:center;justify-content:center;
   color:var(--border);font-size:.62rem;letter-spacing:.08em;
@@ -7505,6 +7489,8 @@ a.p2-action-widget__btn{text-decoration:none}
 .am-agree-txt a{color:var(--accent)}
 .am-submit{padding:13px;border-radius:4px;background:#c8a96e;color:#1a2535;font-size:.9rem;font-weight:700;font-family:inherit;border:none;cursor:pointer;letter-spacing:.04em;transition:background .15s}
 .am-submit:hover{background:#d4b87c}
+.am-submit--danger{background:#b43c14;color:#fff}
+.am-submit--danger:hover{background:#9a3110}
 .am-cancel{padding:8px;background:none;border:none;color:var(--muted);font-size:.75rem;cursor:pointer;font-family:inherit;text-align:center}
 .am-cancel:hover{color:var(--ink)}
 
@@ -8047,6 +8033,9 @@ body.p6-dark.p6-plus{
 .p6-liaison--lp .p6-liaison__btn-apply-queue{font-size:.62rem;font-weight:400;color:rgba(26,37,53,.65);background:rgba(26,37,53,.15);padding:2px 8px;border-radius:10px;white-space:nowrap;position:absolute;right:18px}
 /* ボタン外に移動した申込件数（p6-2用） */
 .p6-liaison__apply-queue{font-size:.75rem;color:var(--dk-sub);text-align:center;letter-spacing:.02em}
+/* 申込キャンセルボタン（p6-2 申込本人用・ダーク背景の danger-outline ソフトトリガー） */
+.p6-liaison__btn-cancel-apply{display:flex;align-items:center;justify-content:center;gap:7px;padding:17px 18px;border-radius:4px;font-size:.8rem;font-weight:600;font-family:inherit;background:transparent;color:#e8804c;border:1px solid rgba(232,128,76,.5);cursor:pointer;width:100%;box-sizing:border-box;letter-spacing:.04em;transition:background .15s,border-color .15s}
+.p6-liaison__btn-cancel-apply:hover{background:rgba(232,128,76,.1);border-color:#e8804c}
 /* 取引デスクボタン（p6-2 オーナー用・共通 .ktn-action-btn の固定サイズを維持。flex column 内で stretch させず右寄せ） */
 .p6-liaison__btn-desk{align-self:flex-end}
 .p6-liaison--lp .p6-liaison__btn-inq2{display:flex;align-items:center;justify-content:center;gap:7px;padding:15px 16px;border-radius:4px;font-size:.75rem;font-weight:500;background:transparent;color:rgba(255,255,255,.65);border:1px solid rgba(255,255,255,.2);cursor:pointer;text-decoration:none;width:100%;box-sizing:border-box;transition:background .15s}
@@ -8893,7 +8882,6 @@ a.p3-works-liaison-band__title:hover{text-decoration:underline;text-underline-of
 .p3-1-empty{text-align:center;padding:40px 0;color:var(--muted);font-size:.9rem;display:none}
 .p3-1-empty.is-visible{display:block}
 
-.ec--h--past{opacity:.65;filter:grayscale(.3)}
 .ec__remain-lt--ended{color:var(--muted);font-size:.75rem}
 
 /* p3-1 幅：p3-head・p3-tabnav・ktn-content はデフォルト(--w-entity)を使用 */
@@ -9866,12 +9854,6 @@ body.p5-15-page .p5-head,body.p5-15-page .p5-tabnav{max-width:var(--w-detail)}
 .p515-ship-info__label{font-family:var(--fn);color:var(--muted);min-width:72px;flex-shrink:0;font-size:.75rem}
 .p515-ship-info__value{font-family:var(--fn);color:var(--ink)}
 
-/* 合計金額 */
-.p515-total{display:flex;align-items:center;gap:8px;padding:12px 0 0;border-top:1px solid var(--border);flex-wrap:wrap}
-.p515-total__label{font-family:var(--fn);font-size:.75rem;color:var(--muted)}
-.p515-total__calc{font-family:var(--fn);font-size:.75rem;color:var(--ink);flex:1}
-.p515-total__amount{font-family:var(--fm);font-size:1rem;font-weight:700;color:var(--ink);margin-left:auto}
-
 /* 支払い・受取確認 → ktn-op-btn--primary ktn-op-btn--lg */
 .p515-pay-btn{width:100%;justify-content:center;text-decoration:none}
 .p515-receipt-btn{width:100%}
@@ -9932,7 +9914,6 @@ body.p5-15-page .p5-head,body.p5-15-page .p5-tabnav{max-width:var(--w-detail)}
 /* expired: 申込個人情報は非表示（出品者メッセージは保持） */
 .p515-wrap--expired .p515-log-apply:not(.p515-log-apply--msg){display:none}
 .p316-wrap--expired .p515-log-apply:not(.p515-log-apply--msg){display:none}
-.p316-purchase-buyer__expired{font-size:.78rem;color:var(--muted);line-height:1.6;margin:0}
 
 /* 会場優先説明 */
 .p515-venue-note{display:flex;gap:7px;background:rgba(26,74,136,.05);border:1px solid rgba(26,74,136,.14);border-radius:3px;padding:10px 12px;font-family:var(--fn);font-size:.75rem;color:var(--actor-buyer);line-height:1.65}
@@ -9948,6 +9929,7 @@ body.p5-15-page .p5-head,body.p5-15-page .p5-tabnav{max-width:var(--w-detail)}
 .p515-delivery{background:var(--paper);border-radius:4px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
 .p515-delivery__title{font-family:var(--fs);font-size:.82rem;font-weight:600;color:var(--ink)}
 .p515-delivery__note{font-family:var(--fn);font-size:.75rem;color:#4a5a6a;line-height:1.6;margin:0}
+.p515-delivery__help{font-family:var(--fn);font-size:.72rem;color:#4a5a6a;line-height:1.5;margin-top:3px}
 .p515-delivery__form{display:flex;flex-direction:column;gap:8px}
 .p515-delivery__field{display:flex;flex-direction:column;gap:3px}
 .p515-delivery__field-row{display:flex;gap:12px}
@@ -9983,7 +9965,7 @@ body.p5-15-page .p5-head,body.p5-15-page .p5-tabnav{max-width:var(--w-detail)}
 .p515-confirming__desc{font-family:var(--fs);font-size:.82rem;color:var(--ink);line-height:1.75;margin:0}
 
 /* ── 申込内容（ログ内） ── */
-.p515-log-apply{background:var(--paper);border-radius:3px;padding:6px 8px;margin-top:4px;display:flex;flex-direction:column;gap:2px}
+.p515-log-apply{margin-top:4px;display:flex;flex-direction:column;gap:2px}
 .p515-log-apply:not(.p515-log-apply--msg)::after{content:'※ 個人情報は取引終了から1週間後に消去されます';font-size:.65rem;color:var(--muted);margin-top:2px}
 .p515-log-apply__row{display:flex;gap:6px;font-size:.75rem;color:var(--ink);line-height:1.5}
 .p515-log-apply__label{min-width:52px;flex-shrink:0;color:var(--muted)}
@@ -9993,6 +9975,35 @@ body.p5-15-page .p5-head,body.p5-15-page .p5-tabnav{max-width:var(--w-detail)}
 .p515-comments__head{display:flex;align-items:center;gap:8px;margin-bottom:12px}
 .p515-comments__title{font-family:var(--fs);font-size:.75rem;font-weight:600;color:var(--ink)}
 .p515-comments__expire{font-size:.62rem;color:var(--muted);margin-left:auto}
+/* アーカイブ後：コメント非公開（リスト・入力を閉じ、説明のみ表示） */
+.p515-comments__closed{display:flex;align-items:flex-start;gap:7px;font-family:var(--fn);font-size:.74rem;color:var(--muted);line-height:1.7;margin:0;padding:10px 12px;background:var(--paper);border-radius:4px}
+.p515-comments__closed[hidden]{display:none}
+.p515-comments__closed svg{width:13px;height:13px;flex-shrink:0;margin-top:3px;color:var(--muted)}
+.p515-comments--closed .p515-comments__list,.p515-comments--closed .p515-comments__form{display:none}
+
+/* ── 取引サポート入口（全状態で同位置・一本化）ktn-txn-help ── */
+/* 状態パネル末尾に常設する控えめな入口。中身（シート）は状態対応で出し分け。赤は使わない */
+.ktn-txn-help{margin:14px 0 4px}
+/* 取引サポート：ガイド参照＋サポート相談の2導線（シート廃止後） */
+.ktn-txn-help__links{display:flex;flex-direction:column;gap:10px;padding:13px 15px;background:var(--paper);border:1px solid var(--border);border-radius:6px}
+.ktn-txn-help__line{display:inline-flex;align-items:center;gap:8px;width:fit-content;max-width:100%;font-family:var(--fn);font-size:.82rem;line-height:1.5}
+.ktn-txn-help__line>svg{width:15px;height:15px;flex-shrink:0;color:var(--muted)}
+.ktn-txn-help__line button.ktn-guide-link{background:none;border:0;padding:0;cursor:pointer;font:inherit;text-align:left}
+.ktn-txn-help__cancel{margin-top:11px;padding-top:12px;border-top:1px solid var(--border)}
+.ktn-txn-help__cancel[hidden]{display:none}
+/* 問い合わせモーダル：入力フィールド */
+.ktn-txn-help__field{margin-top:12px}
+.ktn-txn-help__field-label{display:block;font-family:var(--fn);font-size:.74rem;font-weight:600;color:var(--ink);margin-bottom:5px}
+/* 必須マーカー（全ページ共通・フォームラベル末尾に付与） */
+.ktn-req{margin-left:5px;font-family:var(--fn);font-size:.7rem;font-weight:500;color:#b43c14;letter-spacing:.04em}
+.ktn-txn-help__field textarea{width:100%;box-sizing:border-box;font-family:var(--fn);font-size:.8rem;padding:9px 11px;border:1px solid var(--border);border-radius:5px;resize:vertical;min-height:72px;line-height:1.6}
+/* 問い合わせモーダル：自動添付される取引コンテキスト */
+.ktn-txn-help__ctx{margin:12px 0;padding:10px 14px;background:var(--paper);border:1px solid var(--border);border-radius:5px;display:flex;flex-direction:column;gap:6px}
+.ktn-txn-help__ctx>div{display:flex;gap:10px;font-size:.8rem;align-items:baseline}
+.ktn-txn-help__ctx dt{flex:0 0 100px;white-space:nowrap;color:var(--muted);font-family:var(--fn)}
+.ktn-txn-help__ctx dd{color:var(--ink);font-family:var(--fn)}
+.ktn-txn-help__ctx dd.is-id{font-family:var(--fm)}
+.ktn-txn-help__ctx-note{margin-top:8px;font-size:.72rem;color:var(--muted)}
 .p515-comments__list{display:flex;flex-direction:column;gap:12px;margin-bottom:14px}
 .p515-comment{display:flex;gap:10px}
 .p515-comment__avatar{width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:#fff;flex-shrink:0}
@@ -10006,9 +10017,25 @@ body.p5-15-page .p5-head,body.p5-15-page .p5-tabnav{max-width:var(--w-detail)}
 .p515-comment__role--buyer{background:rgba(184,96,140,.07);color:#8b406a;border-color:rgba(184,96,140,.2)}
 .p515-comment__date{font-size:.62rem;color:var(--muted);font-family:var(--fm);margin-left:auto}
 .p515-comment__text{font-size:.75rem;color:var(--ink);line-height:1.65;margin:0}
-.p515-comments__form{display:flex;gap:8px;align-items:flex-end;padding-top:12px;border-top:1px solid var(--paper)}
+.p515-comment__image{display:inline-block;margin-top:8px;max-width:160px}
+.p515-comment__image img{display:block;width:100%;height:auto;border-radius:4px;border:1px solid var(--border)}
+.p515-comment__image-ph{display:flex;align-items:center;justify-content:center;width:150px;height:112px;border-radius:4px;border:1px solid var(--border);background:linear-gradient(135deg,#d9e2e8,#aebfc9);color:#fff;font-size:.6rem;letter-spacing:.12em;font-family:var(--fm)}
+.p515-comments__form{display:flex;flex-direction:column;gap:8px;padding-top:12px;border-top:1px solid var(--paper)}
+.p515-comments__form-row{display:flex;gap:8px;align-items:flex-end}
 .p515-comments__input{flex:1;border:1px solid var(--border);border-radius:3px;padding:7px 10px;font-size:.75rem;font-family:inherit;color:var(--ink);resize:none;line-height:1.5}
 .p515-comments__input:focus{outline:none;border-color:var(--accent,#2a7fa8)}
+.p515-comments__attach{display:inline-flex;align-items:center;gap:5px;height:34px;padding:0 12px;flex-shrink:0;border:1px solid var(--border);border-radius:3px;background:#fff;color:var(--muted);cursor:pointer;font-size:.72rem;font-family:var(--fn);white-space:nowrap;transition:border-color .12s,color .12s,background .12s}
+.p515-comments__attach:hover{border-color:var(--page-accent,var(--accent));color:var(--page-accent,var(--accent));background:var(--page-accent-bg,rgba(0,93,167,.05))}
+.p515-comments__attach svg{flex-shrink:0}
+.p515-comments__preview{position:relative;display:inline-block;width:64px;height:64px;align-self:flex-start}
+.p515-comments__preview[hidden]{display:none}
+.p515-comments__preview-img{width:100%;height:100%;object-fit:cover;border-radius:4px;border:1px solid var(--border)}
+.p515-comments__preview-del{position:absolute;top:-7px;right:-7px;width:18px;height:18px;border-radius:50%;border:none;background:var(--ink);color:#fff;font-size:.7rem;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center}
+@media (max-width:540px){
+  .p515-comments__form-row{flex-wrap:wrap}
+  .p515-comments__input{flex:1 1 100%;width:100%}
+  .p515-comments__send{margin-left:auto}
+}
 
 /* 申込時コメント（取引コメント内・最上部固定） */
 .p515-comments__apply{background:var(--paper);border-radius:3px;padding:8px 12px;margin-bottom:10px}
@@ -10101,8 +10128,6 @@ body.p5-15-page .p5-head,body.p5-15-page .p5-tabnav{max-width:var(--w-detail)}
   .p515-step__node{width:18px;height:18px;font-size:.5rem}
   .p515-steps__conn{margin-top:8px}
   .p515-aw-card__thumb-wrap{width:60px;height:60px}
-  .p515-total{flex-direction:column;align-items:flex-start}
-  .p515-total__amount{margin-left:0}
   .p515-wrap > :not(.ktn-mgmt-head){margin-left:8px;margin-right:8px}
   .p515-aw-card{padding-left:4px;padding-right:4px}
   .p515-status__head{padding-left:4px;padding-right:4px}
@@ -10662,6 +10687,13 @@ body.p4-15-page .p3-tabnav{max-width:var(--w-detail)}
 .p316-done__amount{font-family:var(--fm);font-size:1.3rem;font-weight:700;color:var(--page-accent,#2a5f7a)}
 .p316-done__desc{font-family:var(--fs);font-size:.82rem;color:var(--ink);line-height:1.75;margin:0 0 8px}
 .p316-done__actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+/* 双方の評価（取引の最終記録・永続表示） */
+.p316-done__reviews{display:flex;gap:14px;width:100%;margin:4px 0 14px;text-align:left}
+.p316-done__review{flex:1;min-width:0;border:1px solid var(--border);border-radius:4px;padding:12px 14px;background:#fff}
+.p316-done__review-head{font-family:var(--fm);font-size:.62rem;font-weight:600;letter-spacing:.06em;color:var(--muted);text-transform:uppercase;margin-bottom:5px}
+.p316-done__review-stars{font-size:.82rem;color:#e0a82e;letter-spacing:.08em;margin-bottom:5px}
+.p316-done__review-text{font-family:var(--fs);font-size:.78rem;color:var(--ink);line-height:1.7;margin:0}
+@media(max-width:600px){.p316-done__reviews{flex-direction:column;gap:10px}}
 /* ── キャンセル済 ── */
 .p316-cancelled{display:flex;flex-direction:column;align-items:center;gap:12px;padding:8px 0}
 .p316-cancelled__msg{font-family:var(--fs);font-size:.9rem;color:var(--ink);line-height:1.75;margin:0;text-align:center}
@@ -10713,7 +10745,10 @@ body.p3-16-page .p3-tabnav,body.p4-16-page .p3-tabnav{max-width:var(--w-detail)}
 /* 個人情報保護法表示 */
 .p316-privacy-note{font-size:.75rem;color:var(--ink);line-height:1.6;padding:8px 12px 8px 14px;background:rgba(0,0,0,.04);border-left:3px solid rgba(0,0,0,.25);border-radius:0 3px 3px 0;margin-top:10px;margin-bottom:0}
 /* 支払期限フィールド幅 */
-.p316-ship-form__field--date{max-width:200px}
+.p316-ship-form__field--date{max-width:240px}
+.p316-ship-form__date-row{display:flex;align-items:center;gap:8px}
+.p316-ship-form__date-row .p316-ship-form__input{flex:1;min-width:0}
+.p316-ship-form__date-suffix{font-family:var(--fn);font-size:.8rem;color:var(--ink);white-space:nowrap}
 /* 発送業者 select + 送料確認ボタン */
 .p316-carrier-wrap{display:flex;align-items:flex-end;gap:8px}
 .p316-carrier-wrap .p316-ship-form__field{flex:1;min-width:0}
@@ -10740,8 +10775,6 @@ body.p3-16-page .p3-tabnav,body.p4-16-page .p3-tabnav{max-width:var(--w-detail)}
 .p316-decline-reason-label{display:block;font-size:.75rem;font-weight:600;color:var(--ink);margin-top:12px;margin-bottom:4px}
 .p316-decline-reason{width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--border);border-radius:3px;font-family:inherit;font-size:.82rem;color:var(--ink);resize:vertical;min-height:68px}
 .p316-decline-reason:focus{outline:none;border-color:var(--page-accent,#2a5f7a)}
-.p316-cancel-request-wrap{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.p316-cancel-request-note{flex:1;min-width:180px;font-size:.75rem;color:var(--ink);line-height:1.5}
 /* ── アクション期限表示（要アクションステップ共通） ── */
 .p316-action-deadline{background:rgba(160,80,0,.05);border:1px solid rgba(160,80,0,.2);border-left:3px solid rgba(160,80,0,.5);border-radius:0 4px 4px 0;padding:10px 14px;margin-top:12px}
 .p316-action-deadline__row{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;font-size:.75rem}
@@ -10752,6 +10785,21 @@ body.p3-16-page .p3-tabnav,body.p4-16-page .p3-tabnav{max-width:var(--w-detail)}
 /* 残日数チップ（取引ページ共通） */
 .ktn-days-chip{align-self:center;margin-left:auto;font-family:var(--fm);font-size:.68rem;font-weight:600;color:#a05000;background:rgba(160,80,0,.1);border:1px solid rgba(160,80,0,.3);border-radius:999px;padding:2px 10px;white-space:nowrap}
 .ktn-days-chip--urgent{color:#fff;background:#b43c14;border-color:#b43c14}
+/* 要対応フェーズ：期限間近の注記（自分のターンのみ・JSで .is-on をトグル） */
+.p316-action-deadline__soon{display:none;align-items:center;gap:5px;margin-top:6px;font-family:var(--fn);font-size:.74rem;font-weight:600;color:#b43c14}
+.p316-action-deadline__soon.is-on{display:flex}
+.p316-action-deadline__soon::before{content:'';width:6px;height:6px;border-radius:50%;background:#b43c14;flex-shrink:0}
+/* 要対応フェーズ：期限超過アラートバナー（取引4ページ共通・状態パネル上部・JSで .is-on をトグル） */
+.ktn-txn-alert{display:none;align-items:flex-start;gap:10px;background:#fbeae5;border:1px solid #b43c14;border-left:4px solid #b43c14;border-radius:4px;padding:12px 14px;margin-bottom:14px}
+.ktn-txn-alert.is-on{display:flex}
+.ktn-txn-alert__icon{flex-shrink:0;width:18px;height:18px;color:#b43c14;margin-top:1px}
+.ktn-txn-alert__body{display:flex;flex-direction:column;gap:3px;min-width:0}
+.ktn-txn-alert__title{font-family:var(--fn);font-weight:700;font-size:.84rem;color:#7a1800;letter-spacing:.01em}
+.ktn-txn-alert__text{font-family:var(--fn);font-size:.77rem;line-height:1.65;color:var(--ink)}
+/* 待ち側ナッジ（取引4ページ共通・相手の番のフェーズで「システムが相手に確認を促している」ことを中立的に通知。期限・段階・催促表現は出さない。JSで .is-on をトグル） */
+.p515-status__waiting-nudge{display:none;align-items:flex-start;gap:8px;margin-top:12px;padding:9px 12px;background:var(--paper);border:1px solid var(--border);border-radius:4px;font-family:var(--fn);font-size:.78rem;line-height:1.6;color:var(--ink)}
+.p515-status__waiting-nudge.is-on{display:flex}
+.p515-status__waiting-nudge__icon{flex:0 0 auto;width:15px;height:15px;margin-top:2px;color:var(--muted)}
 /* コピーボタン（取引番号・追跡番号等） */
 .ktn-copy-btn{display:inline-flex;align-items:center;gap:4px;font-family:var(--fn);font-size:.65rem;color:var(--muted);background:#fff;border:1px solid var(--border);border-radius:3px;padding:2px 7px;cursor:pointer;vertical-align:middle;line-height:1.4}
 .ktn-copy-btn:hover{color:var(--ink);border-color:var(--muted)}
@@ -11217,7 +11265,7 @@ body.p114-role-gallery .p114-gallery-section{display:block}
    — 一般公開ページとの視覚的区別
 ══════════════════════════════════════════════════════ */
 /* B: トップアクセントバー（dbarの直下・管理ロール色） */
-body.mgmt-page::before{content:'';position:fixed;top:34px;left:0;right:0;height:3px;z-index:10000;pointer-events:none;background:#3a4a5a}
+body.mgmt-page::before{content:'';position:fixed;top:var(--dh,34px);left:0;right:0;height:3px;z-index:10000;pointer-events:none;background:#3a4a5a}
 /* ロール別カラー（既存バッジ・page-accentと統一） */
 body.mgmt-page.p3-page::before{background:#2a5f7a}   /* creator — インクブルー */
 body.mgmt-page.p4-page::before{background:#8b5e3c}   /* gallery — コッパーブラウン */
@@ -11299,7 +11347,7 @@ body.p5-11-page .p5-tabnav,body.p5-12-page .p5-tabnav,body.p5-13-page .p5-tabnav
 .ktn-auth-overlay.open{opacity:1;pointer-events:all}
 .ktn-auth-modal{background:#fff;border-radius:18px;width:min(400px,90vw);overflow:hidden;transform:translateY(12px) scale(.96);transition:transform .25s cubic-bezier(.34,1.3,.64,1)}
 .ktn-auth-overlay.open .ktn-auth-modal{transform:translateY(0) scale(1)}
-.ktn-auth-top{padding:32px 32px 24px;background:linear-gradient(135deg,#005da7 0%,#1a6fc4 60%,#3a90e0 100%);text-align:center;position:relative}
+.ktn-auth-top{padding:32px 32px 24px;background:var(--accent);text-align:center;position:relative}
 .ktn-auth-close{position:absolute;top:14px;right:14px;width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.15);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;transition:background .15s}
 .ktn-auth-close:hover{background:rgba(255,255,255,.28)}
 .ktn-auth-close svg{width:13px;height:13px}
@@ -11311,15 +11359,15 @@ body.p5-11-page .p5-tabnav,body.p5-12-page .p5-tabnav,body.p5-13-page .p5-tabnav
 .ktn-auth-action-badge svg{width:12px;height:12px}
 .ktn-auth-body{padding:24px 28px 28px}
 .ktn-auth-btns{display:flex;flex-direction:column;gap:10px}
-.ktn-auth-btn-primary{width:100%;padding:13px;border-radius:10px;background:linear-gradient(135deg,#005da7,#3a90e0);border:none;color:#fff;font-family:var(--fn);font-size:.88rem;font-weight:500;cursor:pointer;transition:opacity .15s,transform .12s}
+.ktn-auth-btn-primary{width:100%;padding:13px;border-radius:10px;background:var(--accent);border:none;color:#fff;font-family:var(--fn);font-size:.88rem;font-weight:500;cursor:pointer;transition:opacity .15s,transform .12s}
 .ktn-auth-btn-primary:hover{opacity:.9}
 .ktn-auth-btn-primary:active{transform:scale(.98)}
 .ktn-auth-btn-secondary{width:100%;padding:13px;border-radius:10px;background:none;border:1.5px solid #d8e2ec;color:#3d4a5c;font-family:var(--fn);font-size:.88rem;cursor:pointer;transition:border-color .15s,background .15s}
-.ktn-auth-btn-secondary:hover{border-color:#3a90e0;background:#f0f6fd}
+.ktn-auth-btn-secondary:hover{border-color:var(--accent);background:rgba(0,93,167,.06)}
 .ktn-auth-divider{display:flex;align-items:center;gap:10px;font-size:.6rem;font-family:var(--fm);color:#bbb;letter-spacing:.08em;margin:2px 0}
 .ktn-auth-divider::before,.ktn-auth-divider::after{content:'';flex:1;height:1px;background:#eee}
 .ktn-auth-note{text-align:center;font-size:.64rem;color:#bbb;margin-top:14px;line-height:1.7}
-.ktn-auth-note a{color:#3a90e0;text-decoration:none}
+.ktn-auth-note a{color:var(--accent);text-decoration:none}
 .ktn-auth-note a:hover{text-decoration:underline}
 /* チェックイン（ログイン済み）フォーム用コンパクトヘッダー */
 .ktn-auth-top--compact{padding:20px 28px 22px}
@@ -11606,6 +11654,8 @@ body.p5-11-page .p5-tabnav,body.p5-12-page .p5-tabnav,body.p5-13-page .p5-tabnav
 .p70-dl__item{display:grid;grid-template-columns:140px 1fr;gap:20px;padding:16px 4px;background:transparent;border:none;border-bottom:1px solid var(--border);border-radius:0;align-items:start}
 .p70-dl__dt{font-family:'Cinzel',serif;font-size:.6rem;font-weight:600;letter-spacing:.12em;color:var(--muted);background:transparent;border:none;border-radius:0;padding:5px 0 0;white-space:normal;text-transform:uppercase;align-self:start}
 .p70-dl__dd{font-size:.84rem;line-height:1.95}
+/* 和文の項目名（英語ミニラベルではなく日本語の見出し語）用：Cinzel/uppercase/.6rem を解除し読みやすく */
+.p70-dl--ja .p70-dl__dt{font-family:var(--fn);font-size:.8rem;font-weight:600;letter-spacing:.02em;color:var(--muted);text-transform:none;line-height:1.6}
 .p70-dl__item:has(.p70-dl__logo-cell){display:flex;align-items:flex-start;padding:20px 4px;gap:20px}
 
 /* ── ステップリスト：アウトライン数字 ── */
@@ -11622,6 +11672,9 @@ body.p5-11-page .p5-tabnav,body.p5-12-page .p5-tabnav,body.p5-13-page .p5-tabnav
 .p70-faq-item:hover summary::after{opacity:1}
 .p70-faq-item[open] summary::after{opacity:1}
 .p70-faq-item__body{padding:0 4px 24px 44px;border-top:none;font-size:.84rem;line-height:1.95}
+/* ガイド用：アコーディオンを無効化し、常時開いた静的表示にする（開閉マーカー非表示・クリック不可） */
+.p70-faq--open .p70-faq-item summary{cursor:default;pointer-events:none}
+.p70-faq--open .p70-faq-item summary::after{display:none;content:none}
 
 /* ── コンセプト図解：線画化、塗り背景なし ── */
 .p70-concept-diagram{background:transparent;border:none;padding:8px 0;margin:24px 0}
@@ -11663,6 +11716,13 @@ body.p5-11-page .p5-tabnav,body.p5-12-page .p5-tabnav,body.p5-13-page .p5-tabnav
 .p70-flow-diagram__num{font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.1em;margin-top:4px}
 .p70-flow-diagram__action{font-size:.8rem;margin-top:4px}
 .p70-flow-diagram__end{background:transparent;border:1px solid #b87c10;border-radius:0;padding:8px 14px}
+/* 要操作ステップ（このガイドの読者が操作するステップ）＝アクター色で塗り強調。待ちステップはグレーに退かせる */
+.p70-flow-diagram__item--mine.p70-flow-diagram__item--buyer{background:rgba(26,74,136,.12);border-width:1.5px}
+.p70-flow-diagram__item--mine.p70-flow-diagram__item--seller{background:rgba(42,95,122,.12);border-width:1.5px}
+.p70-flow-diagram__item--mine .p70-flow-diagram__action{font-weight:700}
+.p70-flow-diagram__item:not(.p70-flow-diagram__item--mine){border-color:rgba(0,0,0,.16)}
+.p70-flow-diagram__item:not(.p70-flow-diagram__item--mine) .p70-flow-diagram__actor,
+.p70-flow-diagram__item:not(.p70-flow-diagram__item--mine) .p70-flow-diagram__num{color:var(--muted)}
 
 /* ── ステップフロー（詳細カード）：透明背景・細い役割ライン ── */
 .p70-flow__step{background:transparent;border-radius:0;padding:18px 16px 16px 20px}

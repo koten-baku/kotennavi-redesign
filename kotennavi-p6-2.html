@@ -167,20 +167,20 @@
             <div class="p6-liaison__price-note">+ 送料・梱包費は購入確定時に別途ご案内します</div>
             <div class="p6-liaison__ship">
               <div class="p6-liaison__ship-item">
-                <span class="p6-liaison__ship-lbl">発送時期</span>
-                <span class="p6-liaison__ship-val">2026年3月31日以降）</span>
+                <span class="p6-liaison__ship-lbl">発送時期（目安）</span>
+                <span class="p6-liaison__ship-val">2026年3月31日以降</span>
               </div>
               <div class="p6-liaison__ship-item">
-                <span class="p6-liaison__ship-lbl">配送方法</span>
-                <span class="p6-liaison__ship-val">ヤマト宅急便（匿名配送対応）</span>
+                <span class="p6-liaison__ship-lbl">配送方法（予定）</span>
+                <span class="p6-liaison__ship-val">ヤマト宅急便</span>
               </div>
               <div class="p6-liaison__ship-item">
-                <span class="p6-liaison__ship-lbl">発送地</span>
-                <span class="p6-liaison__ship-val">東京都（予定）</span>
+                <span class="p6-liaison__ship-lbl">発送地（予定）</span>
+                <span class="p6-liaison__ship-val">東京都</span>
               </div>
               <div class="p6-liaison__ship-item">
-                <span class="p6-liaison__ship-lbl">梱包費</span>
-                <span class="p6-liaison__ship-val">¥1,000 <span class="p6-liaison__price-tax">税込</span>（参考）</span>
+                <span class="p6-liaison__ship-lbl">梱包費（参考）</span>
+                <span class="p6-liaison__ship-val">¥1,000 <span class="p6-liaison__price-tax">税込</span></span>
               </div>
 
             </div>
@@ -209,7 +209,7 @@
               </a>
             </div>
             <div class="p6-liaison__apply-queue" id="p62ApplyQueue">3人が申込中</div>
-            <button class="p6-liaison__btn-apply" id="p62ApplyBtn" onclick="openModal('applyModal')">
+            <button class="p6-liaison__btn-apply" id="p62ApplyBtn" onclick="openApplyModal()">
               <span class="p6-liaison__btn-apply-inner">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
                   <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
@@ -219,6 +219,8 @@
                 購入申込をする
               </span>
             </button>
+            <button class="p6-liaison__btn-cancel-apply" id="p62CancelApplyBtn"
+                    style="display:none" onclick="openCancelApplyModal()">申込をキャンセル</button>
             <button class="ktn-action-btn ktn-action-btn--dark p6-liaison__btn-desk" id="p62DeskBtn"
                     style="display:none" onclick="window.location.href='kotennavi-p3-16.html'">取引デスクへ →</button>
           </div>
@@ -563,6 +565,19 @@
         </label>
         <button class="am-submit" onclick="submitApply()">申込を確定する</button>
         <button class="am-cancel" onclick="closeModal('applyModal')">キャンセル</button>
+      </div>
+    </div>
+
+    <!-- 申込キャンセル確認モーダル -->
+    <div class="am-overlay" id="cancelApplyModal" onclick="if(event.target===this)closeModal('cancelApplyModal')">
+      <div class="am-box">
+        <div class="am-ttl">申込をキャンセルしますか？</div>
+        <div class="am-sub">
+          この作品の購入申込を取り消します。出品者が購入を確定する前のため、料金は発生しません。
+          キャンセル後、販売期間中であれば再申込できますが、キューの最後になります。
+        </div>
+        <button class="am-submit am-submit--danger" onclick="confirmCancelApply()">申込をキャンセルする</button>
+        <button class="am-cancel" onclick="closeModal('cancelApplyModal')">戻る</button>
       </div>
     </div>
 

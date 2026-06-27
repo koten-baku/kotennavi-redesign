@@ -593,6 +593,8 @@ const PAGES = {
   'p70-7': { n: 'リエゾンプラスの手数料について', bc: [['Top', '/'], ['LIAISON', '/p70'], ['リエゾンプラスの手数料について', null]] },
   'p70-8': { n: 'ギャラリーへの説明ガイド', bc: [['Top', '/'], ['LIAISON', '/p70'], ['ギャラリーへの説明ガイド', null]] },
   'p70-9': { n: '作品画像撮影ガイド', bc: [['Top', '/'], ['LIAISON', '/p70'], ['作品画像撮影ガイド', null]] },
+  'p70-11': { n: 'リエゾンプラス-取引ガイド(購入者編)', bc: [['Top', '/'], ['LIAISON', '/p70'], ['取引ガイド 購入者編', null]] },
+  'p70-12': { n: 'リエゾンプラス-取引ガイド(出品者編)', bc: [['Top', '/'], ['LIAISON', '/p70'], ['取引ガイド 出品者編', null]] },
   // P90 管理者
   'p90': { n: '管理者メニュー', bc: [['Top', '/'], ['管理者メニュー', null]] },
   'p90-1': { n: '管理者-ユーザー新規/クローン', bc: [['Top', '/'], ['管理者', '/p90'], ['ユーザー新規/クローン', null]] },
@@ -847,7 +849,7 @@ function getActions(page, role) {
   }
 
   /* ── P70 LIAISONガイド ── */
-  if (['p70-1', 'p70-2', 'p70-4'].includes(page)) {
+  if (['p70-1', 'p70-2', 'p70-4', 'p70-11', 'p70-12'].includes(page)) {
     if (role === 'admin') return dd('管理者', ddi('edit', '編集'));
     return '';
   }
@@ -1081,6 +1083,12 @@ function openCheckinModal() {
   var role = (window.ktnState && window.ktnState.role) || 'guest';
   var isLoggedIn = (role !== 'guest');
 
+  /* ゲストは共通ログインモーダル（#ktnAuthModal）に一本化 */
+  if (!isLoggedIn) {
+    if (window.KTN && KTN.action && KTN.action.show) KTN.action.show('checkin');
+    return;
+  }
+
   var existing = document.getElementById('ktnCheckinModal');
   if (existing) existing.remove();
 
@@ -1088,27 +1096,7 @@ function openCheckinModal() {
   var CI_ICON = '<svg viewBox="0 0 16 16" fill="none"><circle cx="10" cy="5" r="4" fill="#fff" opacity=".9"/><circle cx="5" cy="11" r="2.4" fill="#fff" opacity=".75"/></svg>';
   var html;
 
-  if (!isLoggedIn) {
-    html =
-      '<div class="ktn-auth-overlay" id="ktnCheckinModal" onclick="if(event.target===this)closeCheckinModal()">' +
-      '<div class="ktn-auth-modal">' +
-      '<div class="ktn-auth-top">' +
-      CLOSE_BTN +
-      '<div class="ktn-auth-icon">' + CI_ICON + '</div>' +
-      '<div class="ktn-auth-ttl">ログインが必要です</div>' +
-      '<div class="ktn-auth-sub">ウォッチ・興味あり！・チェックインなどの<br>My機能が使えるようになります</div>' +
-      '</div>' +
-      '<div class="ktn-auth-body">' +
-      '<div class="ktn-auth-btns">' +
-      '<button class="ktn-auth-btn-primary" onclick="closeCheckinModal()">ログイン</button>' +
-      '<div class="ktn-auth-divider">または</div>' +
-      '<button class="ktn-auth-btn-secondary" onclick="closeCheckinModal()">新規ユーザー登録（無料）</button>' +
-      '</div>' +
-      '<div class="ktn-auth-note">登録は無料です。<a href="#">利用規約</a>・<a href="#">プライバシーポリシー</a>に同意のうえご利用ください。</div>' +
-      '</div>' +
-      '</div>' +
-      '</div>';
-  } else {
+  {
     var now = new Date();
     var defaultDate = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
     html =
@@ -1471,6 +1459,19 @@ KTN.action = (function () {
     watch:    '<svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" fill="#fff" opacity=".9"/><circle cx="8" cy="8" r="2.6" fill="#3a90e0"/></svg>',
     interest: '<svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#fff" stroke="#fff" stroke-width=".6"/></svg>',
     checkin:  '<svg viewBox="0 0 16 16" fill="none"><circle cx="10" cy="5" r="4" fill="#fff" opacity=".9"/><circle cx="5" cy="11" r="2.4" fill="#fff" opacity=".75"/></svg>',
+    apply:    '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>',
+  };
+
+  /* モーダル見出し・説明文（action 別）。未定義の action は DEFAULT_AUTH を使う */
+  var DEFAULT_AUTH = {
+    ttl: 'ログインが必要です',
+    sub: 'ウォッチ・興味あり！・チェックインなどの<br>My機能がすべて使えるようになります',
+  };
+  var ACTION_AUTH = {
+    apply: {
+      ttl: '購入申込にはログインが必要です',
+      sub: 'ログインすると作品の購入申込や<br>出品者とのやり取りができるようになります',
+    },
   };
 
   var ACTION_NAMES = { watch: 'watch', interest: 'interest!', checkin: 'check in' };
@@ -1503,6 +1504,11 @@ KTN.action = (function () {
     if (!modal) return;
     var icon = document.getElementById('ktnAuthIcon');
     if (icon) icon.innerHTML = ACTION_ICONS[action] || '';
+    var cfg = ACTION_AUTH[action] || DEFAULT_AUTH;
+    var ttlEl = document.getElementById('ktnAuthTtl');
+    var subEl = document.getElementById('ktnAuthSub');
+    if (ttlEl) ttlEl.innerHTML = cfg.ttl;
+    if (subEl) subEl.innerHTML = cfg.sub;
     modal.classList.add('open');
   }
 
@@ -1524,14 +1530,14 @@ KTN.action = (function () {
       + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
       + '</button>'
       + '<div class="ktn-auth-icon" id="ktnAuthIcon"></div>'
-      + '<div class="ktn-auth-ttl">ログインが必要です</div>'
-      + '<div class="ktn-auth-sub">ウォッチ・興味あり！・チェックインなどの<br>My機能がすべて使えるようになります</div>'
+      + '<div class="ktn-auth-ttl" id="ktnAuthTtl">ログインが必要です</div>'
+      + '<div class="ktn-auth-sub" id="ktnAuthSub">ウォッチ・興味あり！・チェックインなどの<br>My機能がすべて使えるようになります</div>'
       + '</div>'
       + '<div class="ktn-auth-body">'
       + '<div class="ktn-auth-btns">'
-      + '<button class="ktn-auth-btn-primary" onclick="KTN.action.close()">ログイン</button>'
+      + '<button class="ktn-auth-btn-primary" onclick="location.href=\'kotennavi-p11.html\'">ログイン</button>'
       + '<div class="ktn-auth-divider">または</div>'
-      + '<button class="ktn-auth-btn-secondary" onclick="KTN.action.close()">新規ユーザー登録（無料）</button>'
+      + '<button class="ktn-auth-btn-secondary" onclick="location.href=\'kotennavi-p11-1.html\'">新規ユーザー登録（無料）</button>'
       + '</div>'
       + '<div class="ktn-auth-note">登録は無料です。<a href="#">利用規約</a>・<a href="#">プライバシーポリシー</a>に同意のうえご利用ください。</div>'
       + '</div>'
@@ -1552,37 +1558,28 @@ KTN.action = (function () {
 window.handleAction   = function (btn, action) { KTN.action.handle(btn, action); };
 window.closeAuthModal = function (e)            { KTN.action.close(e); };
 
-/* ── モバイル デモバートグル ── */
+/* ── デモバー高さ同期：モバイルで折り返すと高さが変わるため --dh を実測更新 ── */
 (function () {
-  function initDbarToggle() {
+  function syncDH() {
     var dbar = document.querySelector('.dbar');
-    if (!dbar || dbar.querySelector('.dbar-toggle')) return;
-    var btn = document.createElement('button');
-    btn.className = 'dbar-toggle';
-    btn.textContent = 'DEV ▾';
-    btn.addEventListener('click', function () {
-      var isOpen = dbar.classList.toggle('is-open');
-      btn.textContent = isOpen ? '✕ 閉じる' : 'DEV ▾';
-      requestAnimationFrame(function () {
-        document.documentElement.style.setProperty('--dh', dbar.offsetHeight + 'px');
-      });
-    });
-    dbar.appendChild(btn);
+    if (!dbar) return;
+    var h = dbar.offsetHeight;
+    if (h > 0) document.documentElement.style.setProperty('--dh', h + 'px');
+  }
+  function init() {
+    syncDH();
+    if (window.ResizeObserver) {
+      var dbar = document.querySelector('.dbar');
+      if (dbar) new ResizeObserver(syncDH).observe(dbar);
+    }
   }
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initDbarToggle);
+    document.addEventListener('DOMContentLoaded', init);
   } else {
-    initDbarToggle();
+    init();
   }
-  window.addEventListener('resize', function () {
-    if (window.innerWidth > 600) {
-      var dbar = document.querySelector('.dbar');
-      if (dbar && dbar.classList.contains('is-open')) {
-        dbar.classList.remove('is-open');
-        var t = dbar.querySelector('.dbar-toggle');
-        if (t) t.textContent = 'DEV ▾';
-        document.documentElement.style.setProperty('--dh', '34px');
-      }
-    }
-  });
+  window.addEventListener('resize', syncDH);
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(syncDH);
+  }
 }());
