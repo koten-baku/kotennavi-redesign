@@ -58,8 +58,12 @@ function buildSideEcCard(e) {
   var intBtn = '<button class="ktn-icon-btn" data-action="interest" onclick="handleAction(this,\'interest\');event.preventDefault()">'
     + '<svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>'
     + '<span class="tip">興味あり！に追加する</span></button>';
+  var dist = e.dist
+    ? '<span class="p2-side-ec__dist"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M8 1.6c-2.4 0-4.3 1.9-4.3 4.3 0 3 4.3 7.5 4.3 7.5s4.3-4.5 4.3-7.5c0-2.4-1.9-4.3-4.3-4.3z"/><circle cx="8" cy="5.9" r="1.5"/></svg>' + e.dist + '</span>'
+    : '';
   return '<a href="kotennavi-p2.html" class="p2-side-ec">'
-    + '<div class="p2-side-ec__poster" style="background:' + e.bg + '"></div>'
+    + '<div class="p2-side-ec__media">' + dist
+    + '<div class="p2-side-ec__poster" style="background:' + e.bg + '"></div></div>'
     + '<div class="p2-side-ec__body">'
     + '<div class="p2-side-ec__badge-row"><span class="cb cb-content cb-exhibition">exhibition</span>' + liaisonBadge + '</div>'
     + '<div class="p2-side-ec__name">' + e.title + '</div>'
@@ -1377,7 +1381,7 @@ function _p6Init(opts) {
       { lbl:'作品状態',   val: '新品・未展示' },
       { lbl:'付属品',     val: '真作証明書・作家サイン入り' },
       { lbl:'配送時期',   val: w.shipping ? w.shipping.timing : null },
-      { lbl:'配送方法',   val: renderShipping(w.shipping) },
+      { lbl:'発送方法',   val: renderShipping(w.shipping) },
     ];
     if (opts.hideSpecRows) {
       rows = rows.filter(function(r) { return opts.hideSpecRows.indexOf(r.lbl) === -1; });
@@ -1791,7 +1795,7 @@ KTN.pages['p6'] = function() {
   _p6Init({
     relLink: 'kotennavi-p6.html',
     noRating: true,
-    hideSpecRows: ['額装','作品点数/エディション','作品状態','付属品','配送時期','配送方法'],
+    hideSpecRows: ['額装','作品点数/エディション','作品状態','付属品','配送時期','発送方法'],
     renderRelated: function() {
       var MORE_BY = [
         { title: '\u3075\u308f\u3075\u308f',    bg: 'linear-gradient(155deg,#f0e8d0,#d4b896)', spec: '2025 / \u6cb9\u5f69\u30fb\u30ad\u30e3\u30f3\u30d0\u30b9 / 72.7\xd760.6cm', count: 12, href: '#' },
@@ -2263,7 +2267,6 @@ KTN.pages['p2-121'] = function() {
   var dateStart   = document.getElementById('p2121DateStart');
   var dateEnd     = document.getElementById('p2121DateEnd');
   var customPreview = document.getElementById('p2121CustomPreview');
-  var periodSave  = document.getElementById('p2121PeriodSave');
 
   function getCheckedValue() {
     for (var i = 0; i < radios.length; i++) {
@@ -2307,24 +2310,6 @@ KTN.pages['p2-121'] = function() {
   }
   if (dateEnd) {
     dateEnd.addEventListener('change', updateCustomPreview);
-  }
-
-  if (periodSave) {
-    periodSave.addEventListener('click', function() {
-      var val = getCheckedValue();
-      var label = val === 'same'   ? '展覧会会期と同じ期間で設定しました' :
-                  val === 'plus2w' ? '会期終了後2週間まで設定しました' :
-                  '販売期間を保存しました';
-      if (window.KTN && KTN.toast) KTN.toast(label);
-    });
-  }
-
-  /* ── 発送・梱包 保存 ── */
-  var shipSave = document.getElementById('p2121ShipSave');
-  if (shipSave) {
-    shipSave.addEventListener('click', function() {
-      if (window.KTN && KTN.toast) KTN.toast('発送・梱包情報を保存しました');
-    });
   }
 
   /* ── 以下：作品リスト（p2-12 と同一ロジック） ── */
@@ -2602,7 +2587,7 @@ KTN.pages['p3'] = function () {
   }
 
   // 1. watchボタン トグル（ヒーロー + サイド + ヘッダーHIB 連動）
-  var watchBtns = document.querySelectorAll('[data-action="watch"], #ktnP3WatchHib');
+  var watchBtns = Array.prototype.filter.call(document.querySelectorAll('[data-action="watch"], #ktnP3WatchHib'), function(b){ return !b.closest('.cc,.gc,.uc'); });
   watchBtns.forEach(function(btn){
     if (btn.closest('.ktn-cta-widget, .p2-action-widget')) btn.dataset.ctaInit = '1';
     btn.addEventListener('click', function(){
@@ -2617,7 +2602,7 @@ KTN.pages['p3'] = function () {
         var tip = b.querySelector('.tip');
         if (tip) tip.textContent = !isOn ? 'ウォッチ中 — 解除する' : 'ウォッチする';
       });
-      KTN.toast(isOn ? 'ウォッチを解除しました' : '田中 透をウォッチしました');
+      KTN.toast(isOn ? 'ウォッチを解除しました' : 'ウォッチしました');
     });
   });
 
@@ -3087,7 +3072,7 @@ KTN.pages['p3'] = function () {
 
     function applyWatch(on) {
       stickyBtn.classList.toggle('on', on);
-      document.querySelectorAll('.ktn-btn[data-action="watch"]').forEach(function (btn) {
+      Array.prototype.filter.call(document.querySelectorAll('.ktn-btn[data-action="watch"]'), function(b){return !b.closest('.cc,.gc,.uc');}).forEach(function (btn) {
         btn.classList.toggle('on', on);
         var lbl = btn.querySelector('.ktn-btn__lbl');
         if (lbl) lbl.textContent = on ? 'watching' : 'watch';
@@ -3100,7 +3085,7 @@ KTN.pages['p3'] = function () {
       applyWatch(!stickyBtn.classList.contains('on'));
     });
 
-    document.querySelectorAll('.ktn-btn[data-action="watch"]').forEach(function (btn) {
+    Array.prototype.filter.call(document.querySelectorAll('.ktn-btn[data-action="watch"]'), function(b){return !b.closest('.cc,.gc,.uc');}).forEach(function (btn) {
       btn.addEventListener('click', function () {
         setTimeout(function () {
           stickyBtn.classList.toggle('on', btn.classList.contains('on'));
@@ -3167,7 +3152,7 @@ KTN.pages['p3-1'] = function () {
   });
 
   // 2. watchボタン トグル
-  var watchBtns = document.querySelectorAll('[data-action="watch"]');
+  var watchBtns = Array.prototype.filter.call(document.querySelectorAll('[data-action="watch"]'), function(b){ return !b.closest('.cc,.gc,.uc'); });
   watchBtns.forEach(function(btn){
     if (btn.closest('.ktn-cta-widget, .p2-action-widget')) btn.dataset.ctaInit = '1';
     btn.addEventListener('click', function(){
@@ -3182,7 +3167,7 @@ KTN.pages['p3-1'] = function () {
         var tip = b.querySelector('.tip');
         if (tip) tip.textContent = !isOn ? 'ウォッチ中 — 解除する' : 'ウォッチする';
       });
-      KTN.toast(isOn ? 'ウォッチを解除しました' : '田中 透をウォッチしました');
+      KTN.toast(isOn ? 'ウォッチを解除しました' : 'ウォッチしました');
     });
   });
 
@@ -3364,7 +3349,7 @@ KTN.pages['p3-2'] = function () {
   });
 
   // 2. watchボタン トグル
-  var watchBtns = document.querySelectorAll('[data-action="watch"]');
+  var watchBtns = Array.prototype.filter.call(document.querySelectorAll('[data-action="watch"]'), function(b){ return !b.closest('.cc,.gc,.uc'); });
   watchBtns.forEach(function(btn){
     if (btn.closest('.ktn-cta-widget, .p2-action-widget')) btn.dataset.ctaInit = '1';
     btn.addEventListener('click', function(){
@@ -3379,7 +3364,7 @@ KTN.pages['p3-2'] = function () {
         var tip = b.querySelector('.tip');
         if (tip) tip.textContent = !isOn ? 'ウォッチ中 — 解除する' : 'ウォッチする';
       });
-      KTN.toast(isOn ? 'ウォッチを解除しました' : '田中 透をウォッチしました');
+      KTN.toast(isOn ? 'ウォッチを解除しました' : 'ウォッチしました');
     });
   });
 
@@ -3527,7 +3512,7 @@ KTN.pages['p3-3'] = function () {
   });
 
   // 2. watchボタン トグル
-  var watchBtns = document.querySelectorAll('[data-action="watch"]');
+  var watchBtns = Array.prototype.filter.call(document.querySelectorAll('[data-action="watch"]'), function(b){ return !b.closest('.cc,.gc,.uc'); });
   watchBtns.forEach(function(btn){
     if (btn.closest('.ktn-cta-widget, .p2-action-widget')) btn.dataset.ctaInit = '1';
     btn.addEventListener('click', function(){
@@ -3542,7 +3527,7 @@ KTN.pages['p3-3'] = function () {
         var tip = b.querySelector('.tip');
         if (tip) tip.textContent = !isOn ? 'ウォッチ中 — 解除する' : 'ウォッチする';
       });
-      KTN.toast(isOn ? 'ウォッチを解除しました' : '田中 透をウォッチしました');
+      KTN.toast(isOn ? 'ウォッチを解除しました' : 'ウォッチしました');
     });
   });
 
@@ -3687,7 +3672,7 @@ KTN.pages['p4'] = function () {
   }
 
   // 1. watchボタン トグル
-  var watchBtns = document.querySelectorAll('[data-action="watch"]');
+  var watchBtns = Array.prototype.filter.call(document.querySelectorAll('[data-action="watch"]'), function(b){ return !b.closest('.cc,.gc,.uc'); });
   watchBtns.forEach(function(btn){
     if (btn.closest('.ktn-cta-widget, .p2-action-widget')) btn.dataset.ctaInit = '1';
     btn.addEventListener('click', function(){
@@ -3702,7 +3687,7 @@ KTN.pages['p4'] = function () {
         var tip = b.querySelector('.tip');
         if (tip) tip.textContent = !isOn ? 'ウォッチ中 — 解除する' : 'ウォッチする';
       });
-      KTN.toast(isOn ? 'ウォッチを解除しました' : 'Gallery SOIL 渋谷をウォッチしました');
+      KTN.toast(isOn ? 'ウォッチを解除しました' : 'ウォッチしました');
     });
   });
 
@@ -4019,7 +4004,7 @@ KTN.pages['p4'] = function () {
 
     function applyWatch(on) {
       stickyBtn.classList.toggle('on', on);
-      document.querySelectorAll('.ktn-btn[data-action="watch"]').forEach(function (btn) {
+      Array.prototype.filter.call(document.querySelectorAll('.ktn-btn[data-action="watch"]'), function(b){return !b.closest('.cc,.gc,.uc');}).forEach(function (btn) {
         btn.classList.toggle('on', on);
         var lbl = btn.querySelector('.ktn-btn__lbl');
         if (lbl) lbl.textContent = on ? 'watching' : 'watch';
@@ -4031,10 +4016,10 @@ KTN.pages['p4'] = function () {
     stickyBtn.addEventListener('click', function () {
       if ((window.ktnState||{}).role === 'guest') { KTN.action.handle(stickyBtn, 'watch'); return; }
       applyWatch(!stickyBtn.classList.contains('on'));
-      KTN.toast(stickyBtn.classList.contains('on') ? 'Gallery SOIL 渋谷をウォッチしました' : 'ウォッチを解除しました');
+      KTN.toast(stickyBtn.classList.contains('on') ? 'ウォッチしました' : 'ウォッチを解除しました');
     });
 
-    document.querySelectorAll('.ktn-btn[data-action="watch"]').forEach(function (btn) {
+    Array.prototype.filter.call(document.querySelectorAll('.ktn-btn[data-action="watch"]'), function(b){return !b.closest('.cc,.gc,.uc');}).forEach(function (btn) {
       btn.addEventListener('click', function () {
         setTimeout(function () { stickyBtn.classList.toggle('on', btn.classList.contains('on')); }, 0);
       });
@@ -4097,7 +4082,7 @@ KTN.pages['p4-1'] = function () {
   });
 
   // 2. watchボタン トグル
-  var watchBtns = document.querySelectorAll('[data-action="watch"]');
+  var watchBtns = Array.prototype.filter.call(document.querySelectorAll('[data-action="watch"]'), function(b){ return !b.closest('.cc,.gc,.uc'); });
   watchBtns.forEach(function(btn){
     if (btn.closest('.ktn-cta-widget, .p2-action-widget')) btn.dataset.ctaInit = '1';
     btn.addEventListener('click', function(){
@@ -4112,7 +4097,7 @@ KTN.pages['p4-1'] = function () {
         var tip = b.querySelector('.tip');
         if (tip) tip.textContent = !isOn ? 'ウォッチ中 — 解除する' : 'ウォッチする';
       });
-      KTN.toast(isOn ? 'ウォッチを解除しました' : 'Gallery SOIL 渋谷をウォッチしました');
+      KTN.toast(isOn ? 'ウォッチを解除しました' : 'ウォッチしました');
     });
   });
 
@@ -4286,7 +4271,7 @@ KTN.pages['p4-2'] = function () {
   });
 
   // 2. watchボタン トグル
-  var watchBtns = document.querySelectorAll('[data-action="watch"]');
+  var watchBtns = Array.prototype.filter.call(document.querySelectorAll('[data-action="watch"]'), function(b){ return !b.closest('.cc,.gc,.uc'); });
   watchBtns.forEach(function(btn){
     if (btn.closest('.ktn-cta-widget, .p2-action-widget')) btn.dataset.ctaInit = '1';
     btn.addEventListener('click', function(){
@@ -4301,7 +4286,7 @@ KTN.pages['p4-2'] = function () {
         var tip = b.querySelector('.tip');
         if (tip) tip.textContent = !isOn ? 'ウォッチ中 — 解除する' : 'ウォッチする';
       });
-      KTN.toast(isOn ? 'ウォッチを解除しました' : 'Gallery SOIL 渋谷をウォッチしました');
+      KTN.toast(isOn ? 'ウォッチを解除しました' : 'ウォッチしました');
     });
   });
 
@@ -5842,6 +5827,20 @@ KTN.pages['p11-4'] = function () {
     document.body.classList.remove('p3-page', 'p4-page', 'p5-page');
     if (r === 'creator')      document.body.classList.add('p3-page');
     else if (r === 'gallery') document.body.classList.add('p4-page');
+  }
+  syncMgmtBar();
+  window.ktnRender = function () { syncMgmtBar(); };
+};
+
+/* ════════════════════════════════════════════════════
+   P6-11  作品 新規投稿・編集・クローン
+════════════════════════════════════════════════════ */
+KTN.pages['p6-11'] = function () {
+  function syncMgmtBar() {
+    const r = window.ktnState && window.ktnState.role || 'creator';
+    document.body.classList.remove('p3-page', 'p4-page', 'p5-page');
+    if (r === 'gallery')      document.body.classList.add('p4-page');
+    else                      document.body.classList.add('p3-page');
   }
   syncMgmtBar();
   window.ktnRender = function () { syncMgmtBar(); };

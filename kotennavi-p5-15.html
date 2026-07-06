@@ -35,11 +35,11 @@
 <div class="p515-modal-overlay" id="p515CancelModal" hidden>
   <div class="p515-modal">
     <div class="p515-modal__head">
-      <span class="p515-modal__title">購入をキャンセルしますか？</span>
+      <span class="p515-modal__title" id="p515CancelModalTitle">購入をキャンセルしますか？</span>
       <button class="p515-modal__close" id="p515CancelModalClose">✕</button>
     </div>
     <div class="p515-modal__body">
-      <p class="p515-modal__desc">「音の輪郭 No.7」の購入をキャンセルします。</p>
+      <p class="p515-modal__desc" id="p515CancelModalDesc">「音の輪郭 No.7」の購入をキャンセルします。</p>
       <p class="p515-modal__desc" style="margin-top:8px">お支払い前であればキャンセルできます。販売期間中であれば再申込できますが、<strong>キューの最後になります</strong>。お支払い後はキャンセルできません。</p>
     </div>
     <div class="p515-modal__foot">
@@ -53,24 +53,34 @@
 <div class="p515-modal-overlay" id="p515ContactModal" hidden>
   <div class="p515-modal">
     <div class="p515-modal__head">
-      <span class="p515-modal__title">個展なびサポートに相談する</span>
+      <span class="p515-modal__title">個展なび事務局に相談する</span>
       <button class="p515-modal__close" id="p515ContactClose">✕</button>
     </div>
-    <div class="p515-modal__body">
-      <p class="p515-modal__desc">ガイドで解決しない取引上の問題について、個展なびサポートにご相談いただけます。いただいた内容を確認のうえ、ご登録のメールにご連絡します。</p>
-      <dl class="ktn-txn-help__ctx">
-        <div><dt>取引番号</dt><dd class="is-id" id="p515ContactTxn">—</dd></div>
-        <div><dt>現在のフェーズ</dt><dd id="p515ContactPhase">—</dd></div>
-      </dl>
-      <div class="ktn-txn-help__field">
-        <span class="ktn-txn-help__field-label">ご相談内容<span class="ktn-req">必須</span></span>
-        <textarea id="p515ContactNote" placeholder="例：作品が届かない / 出品者と連絡が取れない など"></textarea>
+    <div id="p515ContactForm">
+      <div class="p515-modal__body">
+        <p class="p515-modal__desc">ガイドで解決しない取引上の問題について、個展なび事務局にご相談いただけます。いただいた内容を確認のうえ、ご登録のメールにご連絡します。</p>
+        <dl class="ktn-txn-help__ctx">
+          <div><dt>取引番号</dt><dd class="is-id" id="p515ContactTxn">—</dd></div>
+          <div><dt>現在のフェーズ</dt><dd id="p515ContactPhase">—</dd></div>
+        </dl>
+        <div class="ktn-txn-help__field">
+          <span class="ktn-txn-help__field-label">ご相談内容<span class="ktn-req">必須</span></span>
+          <textarea id="p515ContactNote" placeholder="例：作品が届かない / 出品者と連絡が取れない など"></textarea>
+        </div>
+        <p class="ktn-txn-help__ctx-note">取引番号と現在のフェーズは自動で添付されます。</p>
       </div>
-      <p class="ktn-txn-help__ctx-note">取引番号と現在のフェーズは自動で添付されます。</p>
+      <div class="p515-modal__foot">
+        <button class="p515-modal__btn ktn-op-btn" id="p515ContactBack">戻る</button>
+        <button class="p515-modal__btn ktn-op-btn ktn-op-btn--primary" id="p515ContactOk">送信する</button>
+      </div>
     </div>
-    <div class="p515-modal__foot">
-      <button class="p515-modal__btn ktn-op-btn" id="p515ContactBack">戻る</button>
-      <button class="p515-modal__btn ktn-op-btn ktn-op-btn--primary" id="p515ContactOk">送信する</button>
+    <div id="p515ContactSent" hidden>
+      <div class="p515-modal__body">
+        <p class="p515-modal__desc">ご相談を受け付けました。hanaco さんのご登録メールアドレス（<strong>{{メール}}</strong>）宛に受付確認をお送りしました。内容を確認のうえ、個展なび事務局より回答をお送りします。回答までしばらくお待ちください。</p>
+      </div>
+      <div class="p515-modal__foot">
+        <button class="p515-modal__btn ktn-op-btn ktn-op-btn--primary" id="p515ContactDone">確認</button>
+      </div>
     </div>
   </div>
 </div>
@@ -127,7 +137,8 @@
   <button class="dbtn on" onclick="setR('user+',this)">user+</button>
   <button class="dbtn" onclick="setR('admin',this)">管理者</button>
   <span class="dbar-sep">状態：</span>
-  <button class="dbtn on" id="dbarPayment" onclick="setDemoState('payment')">支払待ち</button>
+  <button class="dbtn on" id="dbarApplied" onclick="setDemoState('applied')">購入確定待ち</button>
+  <button class="dbtn" id="dbarPayment" onclick="setDemoState('payment')">支払待ち</button>
   <button class="dbtn" id="dbarPaid" onclick="setDemoState('paid')">発送待ち</button>
   <button class="dbtn" id="dbarReceipt" onclick="setDemoState('receipt')">受取確認待ち</button>
   <button class="dbtn" id="dbarConfirming" onclick="setDemoState('confirming')">完了確認待ち</button>
@@ -192,7 +203,6 @@
     <!-- B. タブナビ -->
     <nav class="p5-tabnav" id="p5Tabnav" aria-label="マイページ内ナビ">
       <div class="p5-tabnav__inner">
-        <a class="p5-tabnav__name" href="kotennavi-p5.html"><span class="p5-tabnav__name-text">山田 花子</span></a>
         <a class="p5-tabnav__item" href="kotennavi-p5.html">カレンダー</a>
         <a class="p5-tabnav__item" href="kotennavi-p5-1.html">ウォッチ</a>
         <a class="p5-tabnav__item" href="kotennavi-p5-2.html">チェックイン</a>
@@ -297,7 +307,44 @@
           </div>
         </div>
 
-        <!-- C-4b. 状態: 支払待ち（デフォルト） -->
+        <!-- C-4a. 状態: 購入確定待ち（S1・申込順が到来し出品者の確定待ち／デフォルト。S0申込済はこのワークスペースに入れず p5-14 で扱う） -->
+        <div class="p515-status p515-status--waiting" id="p515StatusApplied" hidden>
+          <div class="p515-status__head">
+            <span class="p515-status__badge">購入確定</span>
+            <span class="p316-turn-label p316-turn-label--waiting">
+              <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" width="9" height="9"><circle cx="5" cy="5" r="4"/><polyline points="5,2.5 5,5 7,6"/></svg>
+              出品者の購入確定待ち
+            </span>
+            <span class="p515-status__deadline">申込 2026.02.21</span>
+          </div>
+          <div class="p515-status__body">
+            <div class="p515-confirming">
+              <svg class="p515-confirming__icon" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5" width="36" height="36"><circle cx="20" cy="20" r="17"/><path d="M20 12v9l5 3"/></svg>
+              <p class="p515-confirming__title">出品者の購入確定を待っています</p>
+              <p class="p515-confirming__desc">お申込みを受け付けました。この作品は実会場での展示・販売を優先するため、出品者が会場での在庫を確認して購入を確定します。確定後、送料・梱包費の情報が届き、お支払いへ進めます。</p>
+            </div>
+            <div class="p515-status__waiting-nudge">
+              <svg class="p515-status__waiting-nudge__icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2.2a3 3 0 0 0-3 3c0 3.2-1.2 4.1-1.2 4.1h8.4S11 8.4 11 5.2a3 3 0 0 0-3-3z"/><path d="M6.9 11.8a1.2 1.2 0 0 0 2.2 0"/></svg>
+              <span>システムから出品者へ購入確定のご確認をお願いしています。</span>
+            </div>
+            <div class="p515-confirm-deadline">
+              <div class="p515-confirm-deadline__row">
+                <span class="p515-confirm-deadline__label">確定期限</span>
+                <span class="p515-confirm-deadline__date">2026年3月2日（月）まで</span>
+              </div>
+              <p class="p515-confirm-deadline__note">会期終了7日後または申込7日後の遅い方が期限です。期限までに出品者が確定しない場合、この作品の出品は自動的に取消され、申込者全員にキャンセルが通知されます（次の申込者へ繰り上げは行いません）。</p>
+            </div>
+            <div class="p515-ship-confirm">
+              <div class="p515-ship-confirm__title">申込内容</div>
+              <div class="p515-ship-confirm__row"><span class="p515-ship-confirm__label">申込ID</span><span>#1</span></div>
+              <div class="p515-ship-confirm__row"><span class="p515-ship-confirm__label">申込者</span><span>山田 花子（ヤマダ ハナコ）</span></div>
+              <div class="p515-ship-confirm__row"><span class="p515-ship-confirm__label">郵便番号</span><span>〒150-0001</span></div>
+              <div class="p515-ship-confirm__row" style="border-bottom:none"><span class="p515-ship-confirm__label">都道府県</span><span>東京都</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- C-4b. 状態: 支払待ち -->
         <div class="p515-status p515-status--my-turn" id="p515StatusPayment">
           <div class="ktn-txn-alert">
             <svg class="ktn-txn-alert__icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M10 2.5 1.8 17h16.4z"/><line x1="10" y1="8" x2="10" y2="12.2"/><circle cx="10" cy="14.8" r=".7" fill="currentColor" stroke="none"/></svg>
@@ -310,7 +357,7 @@
             <span class="p515-status__badge p515-status__badge--buyer">支払</span>
             <span class="p316-turn-label p316-turn-label--mine">
               <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8" width="9" height="9"><polyline points="2,5 4,7 8,3"/></svg>
-              お支払いください
+              お支払いにお進みください
             </span>
             <span class="p515-status__deadline">確定 2026.02.23</span>
           </div>
@@ -576,7 +623,7 @@
             <div class="p515-done">
               <svg class="p515-done__icon" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" width="40" height="40"><circle cx="20" cy="20" r="17"/><polyline points="12,20 17,25 28,14"/></svg>
               <h3 class="p515-done__title">取引が完了しました</h3>
-              <p class="p515-done__desc">「音の輪郭 No.7」の取引が正常に完了しました。作品をmyコレクションルームに追加すると、プロフィールページに表示されます。</p>
+              <p class="p515-done__desc">「音の輪郭 No.7」の取引が正常に完了しました。この作品はあなたのコレクションルームに追加されました。コレクションルームで公開に設定すると、あなたのユーザーページに作品を表示できます。公開・非公開はいつでも切り替えられます。</p>
 
               <!-- 双方の評価（取引の最終記録として永続表示） -->
               <div class="p316-done__reviews">
@@ -633,7 +680,7 @@
             </span>
             <span class="ktn-txn-help__line">
               <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="6.5"/><path d="M6.2 6.4a1.9 1.9 0 0 1 3.6.6c0 1.3-1.8 1.6-1.8 2.7"/><circle cx="8" cy="11.6" r=".5" fill="currentColor" stroke="none"/></svg>
-              <button class="ktn-guide-link" id="p515ConsultLink" type="button">取引についてサポートに相談する →</button>
+              <button class="ktn-guide-link" id="p515ConsultLink" type="button">取引について事務局に相談する →</button>
             </span>
           </div>
           <!-- 支払い前のみ：購入者の自己完結キャンセル（返金なし・管理者不要） -->
@@ -642,7 +689,24 @@
           </div>
         </div>
 
-        <!-- C-5. 取引ログ: 支払待ち（デフォルト） -->
+        <!-- C-5. 取引ログ: 購入確定待ち（申込済） -->
+        <div class="p515-log" id="p515LogApplied" hidden>
+          <div class="p515-log__title">取引ログ<span class="p515-log__title-en">Transaction Log</span></div>
+          <div class="p515-log-item">
+            <div class="p515-log-item__dot-col"><div class="p515-log-item__dot p515-log-item__dot--user"></div></div>
+            <div class="p515-log-item__body">
+              <div class="p515-log-item__text">購入申込受付</div>
+              <div class="p515-log-item__note">申込ID#1</div>
+              <div class="p515-log-apply">
+                <div class="p515-log-apply__row"><span class="p515-log-apply__label">申込者</span><span>山田 花子</span></div>
+                <div class="p515-log-apply__row"><span class="p515-log-apply__label">郵便番号</span><span>〒150-0001</span></div>
+              </div>
+              <div class="p515-log-item__date">2026.02.21 14:30</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- C-5. 取引ログ: 支払待ち -->
         <div class="p515-log" id="p515LogPayment">
           <div class="p515-log__title">取引ログ<span class="p515-log__title-en">Transaction Log</span></div>
           <div class="p515-log-item">
@@ -659,7 +723,7 @@
             <div class="p515-log-item__dot-col"><div class="p515-log-item__dot p515-log-item__dot--user"></div></div>
             <div class="p515-log-item__body">
               <div class="p515-log-item__text">購入申込受付</div>
-              <div class="p515-log-item__note">申込 #1</div>
+              <div class="p515-log-item__note">申込ID#1</div>
               <div class="p515-log-apply">
                 <div class="p515-log-apply__row"><span class="p515-log-apply__label">申込者</span><span>山田 花子</span></div>
                 <div class="p515-log-apply__row"><span class="p515-log-apply__label">郵便番号</span><span>〒150-0001</span></div>
@@ -694,7 +758,7 @@
             <div class="p515-log-item__dot-col"><div class="p515-log-item__dot p515-log-item__dot--user"></div></div>
             <div class="p515-log-item__body">
               <div class="p515-log-item__text">購入申込受付</div>
-              <div class="p515-log-item__note">申込 #1</div>
+              <div class="p515-log-item__note">申込ID#1</div>
               <div class="p515-log-apply">
                 <div class="p515-log-apply__row"><span class="p515-log-apply__label">申込者</span><span>山田 花子</span></div>
                 <div class="p515-log-apply__row"><span class="p515-log-apply__label">郵便番号</span><span>〒150-0001</span></div>
@@ -737,7 +801,7 @@
             <div class="p515-log-item__dot-col"><div class="p515-log-item__dot p515-log-item__dot--user"></div></div>
             <div class="p515-log-item__body">
               <div class="p515-log-item__text">購入申込受付</div>
-              <div class="p515-log-item__note">申込 #1</div>
+              <div class="p515-log-item__note">申込ID#1</div>
               <div class="p515-log-apply">
                 <div class="p515-log-apply__row"><span class="p515-log-apply__label">申込者</span><span>山田 花子</span></div>
                 <div class="p515-log-apply__row"><span class="p515-log-apply__label">郵便番号</span><span>〒150-0001</span></div>
@@ -788,7 +852,7 @@
             <div class="p515-log-item__dot-col"><div class="p515-log-item__dot p515-log-item__dot--user"></div></div>
             <div class="p515-log-item__body">
               <div class="p515-log-item__text">購入申込受付</div>
-              <div class="p515-log-item__note">申込 #1</div>
+              <div class="p515-log-item__note">申込ID#1</div>
               <div class="p515-log-apply">
                 <div class="p515-log-apply__row"><span class="p515-log-apply__label">申込者</span><span>山田 花子</span></div>
                 <div class="p515-log-apply__row"><span class="p515-log-apply__label">郵便番号</span><span>〒150-0001</span></div>
@@ -847,7 +911,7 @@
             <div class="p515-log-item__dot-col"><div class="p515-log-item__dot p515-log-item__dot--user"></div></div>
             <div class="p515-log-item__body">
               <div class="p515-log-item__text">購入申込受付</div>
-              <div class="p515-log-item__note">申込 #1</div>
+              <div class="p515-log-item__note">申込ID#1</div>
               <div class="p515-log-apply">
                 <div class="p515-log-apply__row"><span class="p515-log-apply__label">申込者</span><span>山田 花子</span></div>
                 <div class="p515-log-apply__row"><span class="p515-log-apply__label">郵便番号</span><span>〒150-0001</span></div>
@@ -864,7 +928,7 @@
             <div class="p515-log-item__dot-col"><div class="p515-log-item__dot p515-log-item__dot--user"></div></div>
             <div class="p515-log-item__body">
               <div class="p515-log-item__text">購入申込受付</div>
-              <div class="p515-log-item__note">申込 #1</div>
+              <div class="p515-log-item__note">申込ID#1</div>
               <div class="p515-log-apply">
                 <div class="p515-log-apply__row"><span class="p515-log-apply__label">申込者</span><span>山田 花子</span></div>
                 <div class="p515-log-apply__row"><span class="p515-log-apply__label">郵便番号</span><span>〒150-0001</span></div>
@@ -967,7 +1031,7 @@
               購入をキャンセルできますか？
             </summary>
             <div class="p315-faq-item__a">
-              <p>お支払い前（支払待ち）であれば、このページからキャンセルできます。出品者が購入を確定する前（購入確定待ち）のキャンセルは、<a class="ktn-guide-link" href="kotennavi-p5-14.html">購入管理ページ →</a>から行えます。キャンセル後も販売期間中であれば再申込できますが、<strong>キューの最後になります</strong>。支払いが完了した後は原則キャンセルできません（出品者の発送が期限を過ぎた場合を除く。下記参照）。</p>
+              <p>お支払い前であれば、このページ（取引ワークスペース）からキャンセルできます。出品者が購入を確定する前（購入確定待ち）の申込キャンセルも、支払待ちの購入キャンセルも、いずれもこのページで行えます。キャンセル後も販売期間中であれば再申込できますが、<strong>キューの最後になります</strong>。支払いが完了した後は原則キャンセルできません（出品者の発送が期限を過ぎた場合を除く。下記参照）。</p>
             </div>
           </details>
 
@@ -1017,7 +1081,7 @@
               受け取った作品に問題があった場合は？
             </summary>
             <div class="p315-faq-item__a">
-              <p>まず出品者に連絡してください。解決しない場合は個展なびサポートへお問い合わせください。<strong>受取確認後のキャンセルは原則受け付けられません。</strong>受け取り時に必ず状態をご確認ください。</p>
+              <p>まず出品者に連絡してください。解決しない場合は事務局へお問い合わせください。<strong>受取確認後のキャンセルは原則受け付けられません。</strong>受け取り時に必ず状態をご確認ください。</p>
             </div>
           </details>
 
@@ -1120,6 +1184,16 @@ KTN.init({ page: 'p5-15', role: 'user+' });
     /* 支払い前（applied/payment）のみ、購入者の自己完結キャンセル導線を表示 */
     var cancelRow = document.getElementById('p515CancelRow');
     if (cancelRow) cancelRow.hidden = !(effectiveKey === 'applied' || effectiveKey === 'payment');
+    /* キャンセル文言は状態依存：申込済（applied）＝「申込」／購入確定後（payment）＝「購入」 */
+    var cw = (effectiveKey === 'applied') ? '申込' : '購入';
+    var cLink  = document.getElementById('p515CancelLink');
+    var cTitle = document.getElementById('p515CancelModalTitle');
+    var cDesc  = document.getElementById('p515CancelModalDesc');
+    var cOk    = document.getElementById('p515CancelModalOk');
+    if (cLink)  cLink.textContent  = cw + 'をキャンセルする';
+    if (cTitle) cTitle.textContent = cw + 'をキャンセルしますか？';
+    if (cDesc)  cDesc.textContent  = '「音の輪郭 No.7」の' + cw + 'をキャンセルします。';
+    if (cOk)    cOk.textContent    = cw + 'をキャンセルする';
     /* 取引完了・アーカイブ後はサポート2リンクを非表示（記録閲覧フェーズ・完了後の相談はサイト共通窓口へ） */
     var txnHelp = document.getElementById('p515TxnHelp');
     if (txnHelp) txnHelp.hidden = (effectiveKey === 'done');
@@ -1159,7 +1233,7 @@ KTN.init({ page: 'p5-15', role: 'user+' });
     updateSteps(isExpired ? 'done' : effectiveKey);
 
     /* モバイル固定CTA */
-    var MCTA_LABELS = { payment: 'お支払いください', receipt: '受取を確認してください' };
+    var MCTA_LABELS = { payment: 'お支払いにお進みください', receipt: '受取を確認してください' };
     var mcta = document.getElementById('p515MobileCta');
     if (mcta) {
       var mctaLbl = MCTA_LABELS[effectiveKey];
@@ -1187,9 +1261,8 @@ KTN.init({ page: 'p5-15', role: 'user+' });
      期限前1段階（間近）のみ。overdue レベルが来ても near に畳む */
   var NO_ESCALATE = { receipt: 1 };
   /* 相手の番（waiting）のうち、催促連動で「システムが相手に確認を促している」通知を出す状態。
-     期限・段階は出さず中立的な一文のみ（paid=S3出品者の発送待ち）。
-     ※S1（出品者の確定待ち＝applied）はこの購入者デスクに状態ブロックが無いため対象外 */
-  var WAITING_NUDGE = { paid: 1 };
+     期限・段階は出さず中立的な一文のみ（applied=S1出品者の購入確定待ち／paid=S3出品者の発送待ち）。 */
+  var WAITING_NUDGE = { applied: 1, paid: 1 };
   window.txnUrgency = 'normal';
   document.querySelectorAll('.ktn-days-chip').forEach(function (c) { c.dataset.daysOrig = c.textContent; });
 
@@ -1254,7 +1327,7 @@ KTN.init({ page: 'p5-15', role: 'user+' });
     window.scrollTo({ top: y, behavior: 'smooth' });
   });
 
-  setDemoState('payment');
+  setDemoState('applied');
 
   /* ── 管理ドロワー ── */
   var drawer  = document.getElementById('p515Drawer');
@@ -1267,7 +1340,7 @@ KTN.init({ page: 'p5-15', role: 'user+' });
   if (dClose)  dClose.addEventListener('click', closeDrawer);
   if (dOver)   dOver.addEventListener('click', closeDrawer);
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') { closeDrawer(); closeReceiptModal(); closeCancelModal(); if (contactModal) contactModal.hidden = true; }
+    if (e.key === 'Escape') { closeDrawer(); closeReceiptModal(); closeCancelModal(); closeContactModal(); }
   });
 
   /* ── 受取希望日：指定なし ── */
@@ -1314,9 +1387,10 @@ KTN.init({ page: 'p5-15', role: 'user+' });
   if (cancelModalBack)  cancelModalBack.addEventListener('click', closeCancelModal);
   if (cancelModal)      cancelModal.addEventListener('click', function (e) { if (e.target === cancelModal) closeCancelModal(); });
   if (cancelModalOk)    cancelModalOk.addEventListener('click', function () {
+    var cw = (setDemoState.curKey === 'applied') ? '申込' : '購入';
     closeCancelModal();
     setDemoState('cancelled');
-    if (typeof KTN !== 'undefined' && KTN.toast) KTN.toast('購入をキャンセルしました');
+    if (typeof KTN !== 'undefined' && KTN.toast) KTN.toast(cw + 'をキャンセルしました');
   });
 
   /* ── 受取評価スター ── */
@@ -1348,24 +1422,41 @@ KTN.init({ page: 'p5-15', role: 'user+' });
 
   /* ── 問い合わせモーダル（取引番号＋現在フェーズを自動添付） ── */
   var contactModal = document.getElementById('p515ContactModal');
+  var contactForm = document.getElementById('p515ContactForm');
+  var contactSent = document.getElementById('p515ContactSent');
+  var contactTitle = contactModal ? contactModal.querySelector('.p515-modal__title') : null;
+  var CONTACT_TITLE = contactTitle ? contactTitle.textContent : '';
   var PHASE_LABEL = { applied: '購入確定待ち', payment: '支払待ち', paid: '発送待ち', receipt: '受取確認待ち', confirming: '完了確認待ち', done: '取引完了', cancelled: 'キャンセル済' };
+  function resetContactView() {
+    if (contactForm) contactForm.hidden = false;
+    if (contactSent) contactSent.hidden = true;
+    if (contactTitle) contactTitle.textContent = CONTACT_TITLE;
+  }
+  function closeContactModal() {
+    if (contactModal) contactModal.hidden = true;
+    resetContactView();
+    var note = document.getElementById('p515ContactNote'); if (note) note.value = '';
+  }
   function openContactModal() {
     var k = (window.setDemoState && window.setDemoState.curKey) || 'payment';
     var idEl = document.querySelector('.ktn-mgmt-head__meta-id');
     var t = document.getElementById('p515ContactTxn'); if (t) t.textContent = idEl ? idEl.textContent : '—';
     var p = document.getElementById('p515ContactPhase'); if (p) p.textContent = PHASE_LABEL[k] || '—';
+    resetContactView();
     if (contactModal) contactModal.hidden = false;
   }
-  ['p515ContactClose', 'p515ContactBack'].forEach(function (id) { var b = document.getElementById(id); if (b && contactModal) b.addEventListener('click', function () { contactModal.hidden = true; }); });
-  if (contactModal) contactModal.addEventListener('click', function (e) { if (e.target === contactModal) contactModal.hidden = true; });
+  ['p515ContactClose', 'p515ContactBack'].forEach(function (id) { var b = document.getElementById(id); if (b) b.addEventListener('click', closeContactModal); });
+  if (contactModal) contactModal.addEventListener('click', function (e) { if (e.target === contactModal) closeContactModal(); });
   var contactOk = document.getElementById('p515ContactOk');
   if (contactOk) contactOk.addEventListener('click', function () {
     var note = document.getElementById('p515ContactNote');
     if (note && !note.value.trim()) { note.focus(); return; }
-    if (contactModal) contactModal.hidden = true;
-    if (note) note.value = '';
-    if (typeof KTN !== 'undefined' && KTN.toast) { KTN.toast('サポートに送信しました。確認のうえメールでご連絡します（デモ）'); }
+    if (contactForm) contactForm.hidden = true;
+    if (contactSent) contactSent.hidden = false;
+    if (contactTitle) contactTitle.textContent = 'ご相談を受け付けました';
   });
+  var contactDone = document.getElementById('p515ContactDone');
+  if (contactDone) contactDone.addEventListener('click', closeContactModal);
 
 }());
 </script>

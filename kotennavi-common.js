@@ -68,9 +68,14 @@ function ic16(k) {
    トースト通知
 ══════════════════════════════════ */
 var _toastTimer = null;
+var _toastLast = { msg: '', at: 0 };
 function showToast(msg) {
   var el = document.getElementById('ktnToast');
   if (!el) return;
+  /* 同一メッセージが至近（400ms以内）で連続した場合は無視＝共有handleとページ個別ハンドラの二重発火を畳む */
+  var now = Date.now();
+  if (msg === _toastLast.msg && now - _toastLast.at < 400) return;
+  _toastLast.msg = msg; _toastLast.at = now;
   el.textContent = msg;
   el.classList.add('is-visible');
   if (_toastTimer) clearTimeout(_toastTimer);
@@ -436,6 +441,15 @@ function renderTagbar(page) {
   if (!el) return;
   var tagbar = document.getElementById('ktnTagbar');
   var defs = TAGBAR_DEFS[page];
+  // 下位ページ（p2-1・p6-1 等）に専用定義が無ければ、末尾の -N を1段ずつ削って
+  // 親ページ（p2-1→p2 / p2-5-1→p2-5 / p6-1→p6）のタグバーを継承する
+  if ((!defs || !defs.length) && page) {
+    var parent = page;
+    while (parent.indexOf('-') !== -1) {
+      parent = parent.replace(/-[^-]+$/, '');
+      if (TAGBAR_DEFS[parent]) { defs = TAGBAR_DEFS[parent]; break; }
+    }
+  }
   if (!defs || !defs.length) {
     if (tagbar) tagbar.style.display = 'none';
     return;
@@ -533,7 +547,7 @@ const PAGES = {
     bc: [['Top', '/'], ['作品', '/p10-1'], ['オノマトペの庭', '/p6'], ['LIAISON', null, 'l']] },
   'p6-2': { n: 'LIAISON+作品',
     bc: [['Top', '/'], ['作品', '/p10-1'], ['オノマトペの庭', '/p6'], ['LIAISON+', null, 'lp']] },
-  'p6-11': { n: '作品-新規/編集/クローン', bc: [['Top', '/'], ['作品', '/p10-1'], ['春の記憶 #3', '/p6'], ['新規/編集/クローン', null]] },
+  'p6-11': { n: '作品-新規/編集/クローン', bc: [['Top', '/'], ['作品', '/p10-1'], ['オノマトペの庭', '/p6'], ['新規/編集/クローン', null]] },
   'p6-12': { n: '作品-インサイト', bc: [['Top', '/'], ['作品', '/p10-1'], ['春の記憶 #3', '/p6'], ['インサイト', null]] },
   'p6-13': { n: '作品-問合せ', bc: [['Top', '/'], ['作品', '/p10-1'], ['春の記憶 #3', '/p6'], ['問合せ', null, 'l']] },
   'p6-14': { n: '作品-問合せへの回答', bc: [['Top', '/'], ['作品', '/p10-1'], ['春の記憶 #3', '/p6'], ['問合せへの回答', null, 'l']] },
@@ -783,7 +797,7 @@ function getActions(page, role) {
   }
 
   if (['p6-11', 'p6-12', 'p6-13', 'p6-14'].includes(page)) {
-    if (role === 'creator') return owbtn('info', 'ガイド');
+    if (role === 'creator' || role === 'gallery') return owbtn('info', 'ガイド');
     if (role === 'admin') return owbtn('info', 'ガイド') + sep() + dd('管理者', ddi('chart', '統計'));
     return '';
   }
@@ -1476,6 +1490,13 @@ KTN.action = (function () {
 
   var ACTION_NAMES = { watch: 'watch', interest: 'interest!', checkin: 'check in' };
 
+  /* CTA トグル時のトースト文言（action 別・全ページ共通）。固有名を含めない汎用文言で統一 */
+  var ACTION_TOAST = {
+    watch:    { on: 'ウォッチしました',            off: 'ウォッチを解除しました' },
+    interest: { on: '「興味あり！」に追加しました', off: '「興味あり！」を取り消しました' },
+    checkin:  { on: '訪問済みにしました',          off: '訪問済みを取り消しました' },
+  };
+
   function handle(btn, action) {
     if (window.ktnState.role === 'guest') { show(action); return; }
     var isOn = btn.classList.toggle('on');
@@ -1490,6 +1511,9 @@ KTN.action = (function () {
       var lbl = ACTION_LABELS[action];
       var isIcon = btn.classList.contains('ktn-icon-btn');
       tip.textContent = isOn ? (isIcon ? lbl.iconOn : lbl.on) : (isIcon ? lbl.iconOff : lbl.off);
+    }
+    if (KTN.toast && ACTION_TOAST[action]) {
+      KTN.toast(isOn ? ACTION_TOAST[action].on : ACTION_TOAST[action].off);
     }
     btn.blur();
     btn.classList.add('is-just-clicked');

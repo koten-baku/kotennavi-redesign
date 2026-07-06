@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>作品を編集 — オノマトペの庭 | 個展なび</title>
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<body data-w="article" class="mgmt-page p6-11-page p3-page">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- デモバー -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ロール：</span>
+  <button class="dbtn on" onclick="setR('creator',this)">creator</button>
+  <button class="dbtn" onclick="setR('gallery',this)">gallery</button>
+  <button class="dbtn" onclick="setR('admin',this)">管理者</button>
+  <span class="dbar-sep">モード：</span>
+  <button class="dbtn" id="dbarNew" onclick="setDemoMode('new')">新規</button>
+  <button class="dbtn on" id="dbarEdit" onclick="setDemoMode('edit')">編集</button>
+  <button class="dbtn" id="dbarClone" onclick="setDemoMode('clone')">クローン</button>
+</div>
+
+<div class="shell">
+<div class="content-wrap" id="contentWrap">
+
+  <header class="ktn-header" id="ktnHeader">
+    <div class="ktn-header__inner">
+      <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+      <div class="ktn-hdr-actions" id="ktnActs"></div>
+    </div>
+  </header>
+
+  <main class="ktn-main" id="ktnMain">
+    <div class="ktn-content ktn-content--article">
+
+      <!-- クローン元バナー（クローンモードのみ表示） -->
+      <div class="p211-mode-banner" id="p611CloneBanner" hidden>
+        <span class="p211-mode-banner__icon">📋</span>
+        <div class="p211-mode-banner__text">
+          <strong>《オノマトペの庭》</strong>のクローンです。内容を確認・修正の上、公開してください。タイトル・画像・サイズは必ず更新してください。
+        </div>
+      </div>
+
+      <!-- 作品バナー（編集・クローンモードのみ表示） -->
+      <a class="p211-exh-banner" id="p611WorkBanner" href="kotennavi-p6.html">
+        <div class="p211-exh-banner__thumb" style="background:linear-gradient(155deg,#b8d8cc,#6a9e8a)"></div>
+        <div class="p211-exh-banner__body">
+          <div class="p211-exh-banner__title">《オノマトペの庭》</div>
+          <div class="p211-exh-banner__meta">田中 透 · 2026年 · キャンバスに油彩</div>
+        </div>
+        <span class="p211-exh-banner__arr">作品ページを見る →</span>
+      </a>
+
+      <!-- ページヘッド -->
+      <div class="ktn-edit-head">
+        <div class="ktn-edit-head__row">
+          <h1 class="ktn-edit-head__title" id="p611PageTitle">作品を編集</h1>
+        </div>
+        <p class="ktn-edit-head__desc">作品情報を入力・更新してください。<span class="p211-req">*</span> は必須項目です。</p>
+      </div>
+
+      <!-- ─── 1. 基本情報 ─── -->
+      <div class="p211-block">
+        <div class="p211-block__head">
+          <div class="p211-block__title">基本情報 <span class="p211-block__title-en">Basic Info</span></div>
+        </div>
+        <div class="p211-block__body">
+
+          <!-- 投稿者 -->
+          <div class="p211-field">
+            <label class="p211-label">投稿者</label>
+            <div style="display:flex;align-items:center;gap:8px;font-size:.85rem;color:var(--ink);padding:6px 0">
+              <span class="cb cb-person cb-creator" style="font-size:.6rem">creator</span>
+              <strong>田中 透</strong>
+            </div>
+          </div>
+
+          <!-- タイトル -->
+          <div class="p211-field">
+            <label class="p211-label">作品タイトル <span class="p211-req">*</span></label>
+            <input class="p211-input" type="text" id="p611Title" value="オノマトペの庭" placeholder="例：春の記憶 #3">
+          </div>
+
+          <!-- タイトル読み -->
+          <div class="p211-field">
+            <label class="p211-label">作品タイトル読み（カナ） <span class="p211-req">*</span></label>
+            <input class="p211-input" type="text" value="オノマトペノニワ" placeholder="全角カタカナ">
+          </div>
+
+          <!-- タイトル（英語） -->
+          <div class="p211-field">
+            <label class="p211-label">作品タイトル（英語）</label>
+            <input class="p211-input" type="text" value="Onomatopoeia Garden" placeholder="English title (optional)">
+          </div>
+
+          <!-- ジャンル -->
+          <div class="p211-field">
+            <label class="p211-label">ジャンル <span class="p211-req">*</span></label>
+            <p class="p211-help" style="margin-bottom:6px">作品にもっとも近いジャンルを選んでください。</p>
+            <div class="p211-pill-group" id="p611GenreGroup">
+              <label class="p211-pill is-active"><input type="radio" name="p611genre" value="painting" checked>絵画</label>
+              <label class="p211-pill"><input type="radio" name="p611genre" value="print">版画</label>
+              <label class="p211-pill"><input type="radio" name="p611genre" value="sculpture">立体・彫刻</label>
+              <label class="p211-pill"><input type="radio" name="p611genre" value="craft">工芸</label>
+              <label class="p211-pill"><input type="radio" name="p611genre" value="photo">写真</label>
+              <label class="p211-pill"><input type="radio" name="p611genre" value="other">その他</label>
+            </div>
+          </div>
+
+          <!-- タグ -->
+          <div class="p211-field">
+            <label class="p211-label">タグ</label>
+            <div class="p211-tag-area" id="p611TagArea">
+              <span class="p211-tag">絵画<button class="p211-tag__del" onclick="this.closest('.p211-tag').remove()" type="button">✕</button></span>
+              <span class="p211-tag">油彩<button class="p211-tag__del" onclick="this.closest('.p211-tag').remove()" type="button">✕</button></span>
+              <span class="p211-tag">現代美術<button class="p211-tag__del" onclick="this.closest('.p211-tag').remove()" type="button">✕</button></span>
+              <span class="p211-tag">オノマトペ<button class="p211-tag__del" onclick="this.closest('.p211-tag').remove()" type="button">✕</button></span>
+              <input class="p211-tag-input" id="p611TagInput" type="text" placeholder="タグを入力してEnter">
+              <span class="p211-tag-hint">半角スペース区切り</span>
+            </div>
+            <p class="p211-help">作品カテゴリーを表すハッシュタグの単語を入力してください。</p>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ─── 2. 作品仕様 ─── -->
+      <div class="p211-block">
+        <div class="p211-block__head">
+          <div class="p211-block__title">作品仕様 <span class="p211-block__title-en">Specifications</span></div>
+        </div>
+        <div class="p211-block__body">
+
+          <!-- 制作年 -->
+          <div class="p211-field">
+            <label class="p211-label">制作年 <span class="p211-req">*</span></label>
+            <input class="p211-input" type="text" value="2026年" placeholder="例：2026年" style="max-width:200px">
+          </div>
+
+          <!-- 素材・技法 -->
+          <div class="p211-field">
+            <label class="p211-label">素材・技法 <span class="p211-req">*</span></label>
+            <input class="p211-input" type="text" value="キャンバスに油彩" placeholder="例：キャンバスに油彩、アクリル">
+          </div>
+
+          <!-- サイズ -->
+          <div class="p211-field">
+            <label class="p211-label">サイズ <span class="p211-req">*</span></label>
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+              <span style="font-size:.82rem;color:var(--muted)">高さ</span>
+              <input class="p211-input" type="number" value="116.7" placeholder="0" style="width:90px">
+              <span style="font-size:.82rem;color:var(--muted)">×</span>
+              <span style="font-size:.82rem;color:var(--muted)">幅</span>
+              <input class="p211-input" type="number" value="91.0" placeholder="0" style="width:90px">
+              <span style="font-size:.82rem;color:var(--muted)">×</span>
+              <span style="font-size:.82rem;color:var(--muted)">奥行</span>
+              <input class="p211-input" type="number" value="4.0" placeholder="0" style="width:90px">
+              <span style="font-size:.82rem;color:var(--muted)">cm</span>
+            </div>
+            <p class="p211-help">額装込みの外寸を入力してください。立体作品は最大寸法でかまいません。</p>
+          </div>
+
+          <!-- 重さ -->
+          <div class="p211-field">
+            <label class="p211-label">重さ</label>
+            <div style="display:flex;align-items:center;gap:8px">
+              <input class="p211-input" type="number" value="3.2" placeholder="0" style="width:120px">
+              <span style="font-size:.82rem;color:var(--muted)">kg（額装込み）</span>
+            </div>
+            <p class="p211-help">送料の目安計算に使用します。</p>
+          </div>
+
+          <!-- 額装 -->
+          <div class="p211-field">
+            <label class="p211-label">額装</label>
+            <div class="p211-pill-group">
+              <label class="p211-pill is-active"><input type="radio" name="p611frame" value="framed" checked>額装あり</label>
+              <label class="p211-pill"><input type="radio" name="p611frame" value="unframed">額装なし</label>
+            </div>
+          </div>
+
+          <!-- 作品状態 -->
+          <div class="p211-field">
+            <label class="p211-label">作品状態</label>
+            <input class="p211-input" type="text" value="新品・未展示" placeholder="例：新品・未展示／良好" style="max-width:360px">
+          </div>
+
+          <!-- 付属品 -->
+          <div class="p211-field">
+            <label class="p211-label">付属品</label>
+            <input class="p211-input" type="text" value="真作証明書・作家サイン入り" placeholder="例：真作証明書、額縁、保管箱">
+          </div>
+
+          <!-- エディション -->
+          <div class="p211-field">
+            <label class="p211-label">エディション・作品点数</label>
+            <input class="p211-input" type="text" placeholder="例：ed. 3/10、一点もの" style="max-width:360px">
+            <p class="p211-help">版画・写真などエディションがある場合に入力してください。一点ものは空欄で構いません。</p>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ─── 3. 作品説明 ─── -->
+      <div class="p211-block">
+        <div class="p211-block__head">
+          <div class="p211-block__title">作品説明 <span class="p211-block__title-en">Description</span></div>
+        </div>
+        <div class="p211-block__body">
+
+          <div class="p211-field">
+            <label class="p211-label">作品説明</label>
+            <textarea class="p211-textarea p211-textarea--tall">日本語特有の音象徴語（オノマトペ）が持つ音の質感を、色彩と筆跡によって視覚化した連作のうちの一点。
+
+緑のグラデーションと白の余白が織りなす画面には、「さわさわ」「ぽつぽつ」といった言葉にならない庭の気配が静かに満ちている。
+
+近くで見ると油彩の厚みとストロークの方向が音のリズムを生み、離れて見ると一つの風景として立ち上がる。観る距離によって表情を変える作品。</textarea>
+            <p class="p211-help">作品の背景・制作意図・見どころなどをできるだけ詳細にご記入ください。</p>
+          </div>
+
+          <div class="p211-field">
+            <label class="p211-label">関連記事リンク</label>
+            <input class="p211-input" type="url" placeholder="https://">
+            <p class="p211-help">この作品を取り上げたインタビュー・レビュー記事などの URL があれば入力してください。</p>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ─── 4. 画像 ─── -->
+      <div class="p211-block">
+        <div class="p211-block__head">
+          <div class="p211-block__title">画像 <span class="p211-block__title-en">Images</span></div>
+        </div>
+        <div class="p211-block__body">
+
+          <div class="p211-field">
+            <label class="p211-label">メイン画像 <span class="p211-req">*</span></label>
+            <p class="p211-help" style="margin-bottom:8px">作品一覧・作品ページで最初に表示されます。作品全体が写った画像を推奨します。</p>
+            <div class="p211-img-uploaded">
+              <div class="p211-img-uploaded__thumb" style="background:linear-gradient(155deg,#b8d8cc,#6a9e8a)"></div>
+              <span class="p211-img-uploaded__name">onomatopoeia_garden_full.jpg</span>
+              <button class="p211-img-uploaded__del" type="button" title="削除">
+                <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" width="12" height="12"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg>
+              </button>
+            </div>
+            <div class="p211-img-drop" id="p611MainDrop" onclick="document.getElementById('p611MainFile').click()">
+              <button class="p211-img-drop__btn" type="button">画像を選択</button>
+              <div>または、画像をドラッグ＆ドロップ</div>
+              <input type="file" id="p611MainFile" accept="image/jpeg" hidden>
+            </div>
+          </div>
+
+          <div class="p211-field">
+            <label class="p211-label">サブ画像（最大9枚）</label>
+            <p class="p211-help" style="margin-bottom:8px">部分・側面・額装・展示風景など。アップロード後、ドラッグ＆ドロップで表示順を入れ替えられます。</p>
+            <div class="p211-img-drop" id="p611SubDrop" onclick="document.getElementById('p611SubFile').click()">
+              <button class="p211-img-drop__btn" type="button">画像を選択</button>
+              <div>または、画像をドラッグ＆ドロップ</div>
+              <p class="p211-img-count">残り 6 枚</p>
+              <input type="file" id="p611SubFile" accept="image/jpeg" multiple hidden>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ─── 5. 関連展覧会 ─── -->
+      <div class="p211-block">
+        <div class="p211-block__head">
+          <div class="p211-block__title">関連展覧会 <span class="p211-block__title-en">Exhibition</span></div>
+        </div>
+        <div class="p211-block__body">
+          <p style="font-size:.82rem;color:var(--muted);margin:0 0 12px">この作品が紐づく展覧会：<strong style="color:var(--ink)">あなたが知らないオノマトペ — 田中 透 個展</strong>（Gallery SOIL 渋谷）</p>
+          <div class="p211-sub-links">
+            <a class="p211-sub-link" href="#">
+              <svg class="p211-sub-link__icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><rect x="1" y="2" width="12" height="11" rx="1"/><line x1="1" y1="5" x2="13" y2="5"/><line x1="4" y1="1" x2="4" y2="3"/><line x1="10" y1="1" x2="10" y2="3"/></svg>
+              <span class="p211-sub-link__label">紐づく展覧会を変更する（展覧会を選択）</span>
+              <span class="p211-sub-link__arr">→</span>
+            </a>
+          </div>
+          <p class="p211-help" style="margin-top:8px">展覧会に紐づけると、その展覧会ページの作品一覧・LIAISON タブに表示されます。</p>
+        </div>
+      </div>
+
+      <!-- ─── 6. LIAISON設定 ─── -->
+      <div class="p211-block">
+        <div class="p211-block__head">
+          <div class="p211-block__title">LIAISON設定 <span class="p211-block__title-en">LIAISON</span></div>
+        </div>
+        <div class="p211-block__body">
+
+          <div class="p211-liaison-opt" id="p611LiaisonOpt">
+            <input class="p211-liaison-opt__check" type="checkbox" id="p611LiaisonChk" onchange="toggleLiaison()">
+            <div class="p211-liaison-opt__body">
+              <div class="p211-liaison-opt__title">この作品を LIAISON で展示する</div>
+              <p class="p211-liaison-opt__desc">オンラインで作品を展示します（販売なし・無料）。展示の有効化・公開設定は展覧会の LIAISON 作品管理で行います。</p>
+              <a class="p211-liaison-opt__link" href="kotennavi-p2-12.html" id="p611LiaisonLink" hidden>
+                <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" width="10" height="10"><rect x="1" y="1" width="10" height="10" rx="1"/><line x1="4" y1="6" x2="8" y2="6"/></svg>
+                LIAISON 作品管理へ →
+              </a>
+            </div>
+          </div>
+
+          <div class="p211-liaison-opt" id="p611LiaisonPlusOpt">
+            <input class="p211-liaison-opt__check" type="checkbox" id="p611LiaisonPlusChk" checked onchange="toggleLiaisonPlus()">
+            <div class="p211-liaison-opt__body">
+              <div class="p211-liaison-opt__title">この作品を LIAISON+ で販売する</div>
+              <p class="p211-liaison-opt__desc">オンライン展示＋販売を有効にします。販売価格・発送方法・梱包費などの出品設定は LIAISON+ 作品管理で行います。（販売手数料あり）</p>
+              <a class="p211-liaison-opt__link" href="kotennavi-p2-12-1.html" id="p611LiaisonPlusLink">
+                <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" width="10" height="10"><rect x="1" y="1" width="10" height="10" rx="1"/><line x1="4" y1="6" x2="8" y2="6"/><line x1="6" y1="4" x2="6" y2="8"/></svg>
+                LIAISON+ 作品管理（価格・発送設定）へ →
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ─── 7. 公開設定 ─── -->
+      <div class="p211-block">
+        <div class="p211-block__head">
+          <div class="p211-block__title">公開設定 <span class="p211-block__title-en">Publish</span></div>
+        </div>
+        <div class="p211-block__body">
+
+          <label class="p211-publish-opt">
+            <input type="radio" name="p611publish" value="now" checked onchange="togglePublishDate()">
+            <div class="p211-publish-opt__body">
+              <div class="p211-publish-opt__title">今すぐ公開する</div>
+              <div class="p211-publish-opt__desc">保存と同時に公開されます。</div>
+            </div>
+          </label>
+
+          <label class="p211-publish-opt">
+            <input type="radio" name="p611publish" value="scheduled" onchange="togglePublishDate()">
+            <div class="p211-publish-opt__body">
+              <div class="p211-publish-opt__title">公開日時を指定する</div>
+              <div class="p211-publish-opt__desc">指定した日時に自動公開されます。</div>
+              <div class="p211-publish-datetime" id="p611PublishDatetime" hidden>
+                <input type="date" value="2026-06-10">
+                <input type="time" value="10:00">
+              </div>
+            </div>
+          </label>
+
+          <label class="p211-publish-opt">
+            <input type="radio" name="p611publish" value="draft" onchange="togglePublishDate()">
+            <div class="p211-publish-opt__body">
+              <div class="p211-publish-opt__title">下書きとして保存する</div>
+              <div class="p211-publish-opt__desc">公開せず保存します。あとから公開できます。</div>
+            </div>
+          </label>
+
+        </div>
+      </div>
+
+      <!-- スペーサー（sticky submitbarの分） -->
+      <div style="height:8px"></div>
+
+    </div>
+  </main>
+</div>
+</div>
+
+<!-- 送信バー（sticky） -->
+<div class="p211-submit-bar">
+  <button class="p211-submit-bar__cancel" type="button" onclick="history.back()">キャンセル</button>
+  <button class="p211-submit-bar__submit" type="button" id="p611SubmitBtn" onclick="handleSubmit()">保存して公開する</button>
+  <span class="p211-submit-bar__note" id="p611SubmitNote">* 必須項目を入力してください</span>
+</div>
+
+<script src="kotennavi-common.js"></script>
+<script src="kotennavi-pages.js"></script>
+<script>
+KTN.init({ page: 'p6-11', role: 'creator' });
+
+/* ── デモモード切り替え ── */
+var MODE_TITLES = { new: '新規作品を投稿', edit: '作品を編集', clone: '作品をクローンで作成' };
+var MODE_SUBMIT = { new: '公開する', edit: '保存して公開する', clone: '公開する' };
+
+function setDemoMode(mode) {
+  ['new', 'edit', 'clone'].forEach(function (m) {
+    var btn = document.getElementById('dbar' + m.charAt(0).toUpperCase() + m.slice(1));
+    if (btn) btn.classList.toggle('on', m === mode);
+  });
+
+  document.getElementById('p611PageTitle').textContent = MODE_TITLES[mode];
+  document.getElementById('p611SubmitBtn').textContent = MODE_SUBMIT[mode];
+
+  var cloneBanner = document.getElementById('p611CloneBanner');
+  var workBanner  = document.getElementById('p611WorkBanner');
+  if (cloneBanner) cloneBanner.hidden = (mode !== 'clone');
+  if (workBanner)  workBanner.hidden  = (mode === 'new');
+
+  if (mode === 'new') clearForm();
+}
+
+function clearForm() {
+  document.querySelectorAll('.p211-input, .p211-textarea').forEach(function (el) {
+    el.value = '';
+  });
+  document.querySelectorAll('.p211-pill.is-active').forEach(function (el) {
+    el.classList.remove('is-active');
+  });
+  document.querySelectorAll('.p211-tag').forEach(function (el) {
+    el.remove();
+  });
+  document.querySelectorAll('.p211-img-uploaded').forEach(function (el) {
+    el.style.display = 'none';
+  });
+  ['p611LiaisonChk', 'p611LiaisonPlusChk'].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) { el.checked = false; }
+  });
+  toggleLiaison(); toggleLiaisonPlus();
+  togglePublishDate();
+}
+
+/* ── ピル選択の active 切り替え ── */
+document.querySelectorAll('.p211-pill-group').forEach(function (group) {
+  var isRadio = group.querySelector('input[type=radio]');
+  group.querySelectorAll('.p211-pill').forEach(function (pill) {
+    pill.addEventListener('click', function () {
+      if (isRadio) {
+        group.querySelectorAll('.p211-pill').forEach(function (p) { p.classList.remove('is-active'); });
+      }
+      pill.classList.toggle('is-active', !isRadio || true);
+      if (isRadio) pill.classList.add('is-active');
+    });
+  });
+});
+
+/* ── タグ入力（Enter で追加） ── */
+(function () {
+  var tagInput = document.getElementById('p611TagInput');
+  var tagArea  = document.getElementById('p611TagArea');
+  if (!tagInput) return;
+  tagInput.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      var val = tagInput.value.trim();
+      if (!val) return;
+      var tag = document.createElement('span');
+      tag.className = 'p211-tag';
+      tag.innerHTML = val + '<button class="p211-tag__del" type="button">✕</button>';
+      tag.querySelector('.p211-tag__del').addEventListener('click', function () { tag.remove(); });
+      tagArea.insertBefore(tag, tagInput);
+      tagInput.value = '';
+    }
+  });
+})();
+
+/* ── LIAISON チェック ── */
+function toggleLiaison() {
+  var chk  = document.getElementById('p611LiaisonChk');
+  var link = document.getElementById('p611LiaisonLink');
+  if (link) link.hidden = !chk.checked;
+}
+function toggleLiaisonPlus() {
+  var chk  = document.getElementById('p611LiaisonPlusChk');
+  var link = document.getElementById('p611LiaisonPlusLink');
+  if (link) link.hidden = !chk.checked;
+}
+toggleLiaison();
+toggleLiaisonPlus();
+
+/* ── 公開日時フィールドの表示 ── */
+function togglePublishDate() {
+  var radios = document.querySelectorAll('input[name=p611publish]');
+  var datetime = document.getElementById('p611PublishDatetime');
+  if (!datetime) return;
+  radios.forEach(function (r) {
+    if (r.checked) datetime.hidden = (r.value !== 'scheduled');
+  });
+}
+
+/* ── 送信ハンドラ（デモ） ── */
+function handleSubmit() {
+  if (typeof KTN !== 'undefined' && KTN.toast) {
+    KTN.toast('作品を保存しました（デモ）');
+  }
+}
+</script>
+</body>
+</html>

@@ -48,7 +48,7 @@
     <div class="p515-modal__body">
       <p class="p515-modal__desc">以下の追跡番号で発送完了を購入者に通知します。</p>
       <div class="p515-modal__detail">
-        <div>発送業者：<strong id="p316ModalShipCarrier">ヤマト宅急便</strong></div>
+        <div>発送方法：<strong id="p316ModalShipCarrier">ヤマト宅急便</strong></div>
         <div>追跡番号：<strong id="p316ModalTrackingNum" style="font-family:var(--fm)">1234-5678-9012</strong></div>
       </div>
     </div>
@@ -107,24 +107,34 @@
 <div class="p515-modal-overlay" id="p316ContactModal" hidden>
   <div class="p515-modal">
     <div class="p515-modal__head">
-      <span class="p515-modal__title">個展なびサポートに相談する</span>
+      <span class="p515-modal__title">個展なび事務局に相談する</span>
       <button class="p515-modal__close" id="p316ContactClose">✕</button>
     </div>
-    <div class="p515-modal__body">
-      <p class="p515-modal__desc">ガイドで解決しない取引上の問題について、個展なびサポートにご相談いただけます。いただいた内容を確認のうえ、ご登録のメールにご連絡します。</p>
-      <dl class="ktn-txn-help__ctx">
-        <div><dt>取引番号</dt><dd class="is-id" id="p316ContactTxn">—</dd></div>
-        <div><dt>現在のフェーズ</dt><dd id="p316ContactPhase">—</dd></div>
-      </dl>
-      <div class="ktn-txn-help__field">
-        <span class="ktn-txn-help__field-label">ご相談内容<span class="ktn-req">必須</span></span>
-        <textarea id="p316ContactNote" placeholder="例：会場で破損が見つかった / 購入者と連絡が取れない など"></textarea>
+    <div id="p316ContactForm">
+      <div class="p515-modal__body">
+        <p class="p515-modal__desc">ガイドで解決しない取引上の問題について、個展なび事務局にご相談いただけます。いただいた内容を確認のうえ、ご登録のメールにご連絡します。</p>
+        <dl class="ktn-txn-help__ctx">
+          <div><dt>取引番号</dt><dd class="is-id" id="p316ContactTxn">—</dd></div>
+          <div><dt>現在のフェーズ</dt><dd id="p316ContactPhase">—</dd></div>
+        </dl>
+        <div class="ktn-txn-help__field">
+          <span class="ktn-txn-help__field-label">ご相談内容<span class="ktn-req">必須</span></span>
+          <textarea id="p316ContactNote" placeholder="例：会場で破損が見つかった / 購入者と連絡が取れない など"></textarea>
+        </div>
+        <p class="ktn-txn-help__ctx-note">取引番号と現在のフェーズは自動で添付されます。</p>
       </div>
-      <p class="ktn-txn-help__ctx-note">取引番号と現在のフェーズは自動で添付されます。</p>
+      <div class="p515-modal__foot">
+        <button class="p515-modal__btn ktn-op-btn" id="p316ContactBack">戻る</button>
+        <button class="p515-modal__btn ktn-op-btn ktn-op-btn--primary" id="p316ContactOk">送信する</button>
+      </div>
     </div>
-    <div class="p515-modal__foot">
-      <button class="p515-modal__btn ktn-op-btn" id="p316ContactBack">戻る</button>
-      <button class="p515-modal__btn ktn-op-btn ktn-op-btn--primary" id="p316ContactOk">送信する</button>
+    <div id="p316ContactSent" hidden>
+      <div class="p515-modal__body">
+        <p class="p515-modal__desc">ご相談を受け付けました。田中 透さんのご登録メールアドレス（<strong>{{メール}}</strong>）宛に受付確認をお送りしました。内容を確認のうえ、個展なび事務局より回答をお送りします。回答までしばらくお待ちください。</p>
+      </div>
+      <div class="p515-modal__foot">
+        <button class="p515-modal__btn ktn-op-btn ktn-op-btn--primary" id="p316ContactDone">確認</button>
+      </div>
     </div>
   </div>
 </div>
@@ -284,7 +294,7 @@
                 <div class="p316-purchase-buyer__name">hanaco</div>
               </div>
             </a>
-            <div class="p316-purchase-buyer__date"><span class="p316-purchase-buyer__apply-no">申込 #1</span>2026.02.21</div>
+            <div class="p316-purchase-buyer__date"><span class="p316-purchase-buyer__apply-no">申込ID#1</span>2026.02.21</div>
           </div>
         </div>
 
@@ -384,7 +394,7 @@
             <div class="p316-ship-form ktn-io-self">
               <p class="ktn-io-self-guide">
                 <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" width="13" height="13"><path d="M9.5 2.5l2 2L5 11l-2.5.5L3 9z"/></svg>
-                ここからは<strong>あなたが入力します</strong> — 発送業者・送料・梱包費・発送可能日を設定してください
+                ここからは<strong>あなたが入力します</strong> — 発送方法・送料・梱包費・発送可能日を設定してください
               </p>
               <div class="p316-ship-form__title">送料・梱包費・発送可能日の設定</div>
               <!-- 発送地→配送先ルート -->
@@ -400,12 +410,12 @@
                   <span class="p316-ship-route__value">〒150-0001 東京都</span>
                 </div>
               </div>
-              <p class="p316-ship-form__note">発送業者と送料を設定してください。確定後は変更できません。</p>
+              <p class="p316-ship-form__note">発送方法と送料を設定してください。確定後は変更できません。</p>
               <div class="p316-ship-form__fields">
                 <div class="p316-ship-form__row">
                   <div class="p316-carrier-wrap">
                     <div class="p316-ship-form__field">
-                      <label class="p316-ship-form__label">発送業者<span class="ktn-req">必須</span></label>
+                      <label class="p316-ship-form__label">発送方法<span class="ktn-req">必須</span></label>
                       <select class="p316-ship-form__select" id="p316CarrierSelect">
                         <option value="ヤマト宅急便">ヤマト宅急便</option>
                         <option value="ヤマト らくらく家財宅急便">ヤマト らくらく家財宅急便（大型・額装向け）</option>
@@ -422,8 +432,8 @@
                 </div>
                 <div class="p316-carrier-other-wrap" id="p316CarrierOtherWrap" hidden>
                   <div class="p316-ship-form__field">
-                    <label class="p316-ship-form__label">業者名を入力<span class="ktn-req">必須</span></label>
-                    <input class="p316-ship-form__input" id="p316CarrierOther" type="text" placeholder="発送業者名">
+                    <label class="p316-ship-form__label">発送方法名を入力<span class="ktn-req">必須</span></label>
+                    <input class="p316-ship-form__input" id="p316CarrierOther" type="text" placeholder="発送方法名">
                   </div>
                 </div>
                 <div class="p316-ship-form__row">
@@ -432,7 +442,7 @@
                     <input class="p316-ship-form__input" id="p316ShipFeeInput" type="number" value="1500" min="0" step="100">
                   </div>
                   <div class="p316-ship-form__field">
-                    <label class="p316-ship-form__label">梱包費（税込・円）</label>
+                    <label class="p316-ship-form__label">梱包費（税込・円／任意）</label>
                     <input class="p316-ship-form__input" id="p316PackFeeInput" type="number" value="500" min="0" step="100">
                   </div>
                 </div>
@@ -555,10 +565,10 @@
             <div class="p316-tracking-form ktn-io-self">
               <p class="ktn-io-self-guide">
                 <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" width="13" height="13"><path d="M9.5 2.5l2 2L5 11l-2.5.5L3 9z"/></svg>
-                ここからは<strong>あなたが入力します</strong> — 発送業者・追跡番号を入力して発送完了を通知してください
+                ここからは<strong>あなたが入力します</strong> — 発送方法・追跡番号を入力して発送完了を通知してください
               </p>
               <div class="p316-tracking-form__field">
-                <label class="p316-tracking-form__label">発送業者<span class="ktn-req">必須</span></label>
+                <label class="p316-tracking-form__label">発送方法<span class="ktn-req">必須</span></label>
                 <select class="p316-ship-form__select" id="p316TrackingCarrierSelect">
                   <option value="ヤマト宅急便" selected>ヤマト宅急便</option>
                   <option value="ヤマト らくらく家財宅急便">ヤマト らくらく家財宅急便（大型・額装向け）</option>
@@ -568,8 +578,8 @@
                 </select>
               </div>
               <div class="p316-tracking-form__field" id="p316TrackingCarrierOtherWrap" hidden>
-                <label class="p316-tracking-form__label">業者名を入力<span class="ktn-req">必須</span></label>
-                <input class="p316-tracking-form__input" id="p316TrackingCarrierOther" type="text" placeholder="発送業者名">
+                <label class="p316-tracking-form__label">発送方法名を入力<span class="ktn-req">必須</span></label>
+                <input class="p316-tracking-form__input" id="p316TrackingCarrierOther" type="text" placeholder="発送方法名">
               </div>
               <div class="p316-tracking-form__field">
                 <label class="p316-tracking-form__label">追跡番号<span class="ktn-req">必須</span></label>
@@ -602,7 +612,7 @@
             </div>
             <div class="p515-ship-confirm">
               <div class="p515-ship-confirm__title">発送情報</div>
-              <div class="p515-ship-confirm__row"><span class="p515-ship-confirm__label">発送業者</span><span>ヤマト宅急便</span></div>
+              <div class="p515-ship-confirm__row"><span class="p515-ship-confirm__label">発送方法</span><span>ヤマト宅急便</span></div>
               <div class="p515-ship-confirm__row">
                 <span class="p515-ship-confirm__label">追跡番号</span>
                 <span style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
@@ -756,7 +766,7 @@
             </span>
             <span class="ktn-txn-help__line">
               <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="6.5"/><path d="M6.2 6.4a1.9 1.9 0 0 1 3.6.6c0 1.3-1.8 1.6-1.8 2.7"/><circle cx="8" cy="11.6" r=".5" fill="currentColor" stroke="none"/></svg>
-              <button class="ktn-guide-link" id="p316ConsultLink" type="button">取引についてサポートに相談する →</button>
+              <button class="ktn-guide-link" id="p316ConsultLink" type="button">取引について事務局に相談する →</button>
             </span>
           </div>
         </div>
@@ -768,7 +778,7 @@
             <div class="p515-log-item__dot-col"><div class="p515-log-item__dot p515-log-item__dot--user"></div></div>
             <div class="p515-log-item__body">
               <div class="p515-log-item__text">購入申込受付</div>
-              <div class="p515-log-item__note">申込 #1</div>
+              <div class="p515-log-item__note">申込ID#1</div>
               <div class="p515-log-apply">
                 <div class="p515-log-apply__row"><span class="p515-log-apply__label">申込者</span><span>山田 花子 様</span></div>
                 <div class="p515-log-apply__row"><span class="p515-log-apply__label">郵便番号</span><span>〒150-0001（東京都）</span></div>
@@ -795,7 +805,7 @@
             <div class="p515-log-item__dot-col"><div class="p515-log-item__dot p515-log-item__dot--user"></div></div>
             <div class="p515-log-item__body">
               <div class="p515-log-item__text">購入申込受付</div>
-              <div class="p515-log-item__note">申込 #1</div>
+              <div class="p515-log-item__note">申込ID#1</div>
               <div class="p515-log-apply">
                 <div class="p515-log-apply__row"><span class="p515-log-apply__label">申込者</span><span>山田 花子 様</span></div>
                 <div class="p515-log-apply__row"><span class="p515-log-apply__label">郵便番号</span><span>〒150-0001（東京都）</span></div>
@@ -830,7 +840,7 @@
             <div class="p515-log-item__dot-col"><div class="p515-log-item__dot p515-log-item__dot--user"></div></div>
             <div class="p515-log-item__body">
               <div class="p515-log-item__text">購入申込受付</div>
-              <div class="p515-log-item__note">申込 #1</div>
+              <div class="p515-log-item__note">申込ID#1</div>
               <div class="p515-log-apply">
                 <div class="p515-log-apply__row"><span class="p515-log-apply__label">申込者</span><span>山田 花子 様</span></div>
                 <div class="p515-log-apply__row"><span class="p515-log-apply__label">郵便番号</span><span>〒150-0001（東京都）</span></div>
@@ -873,7 +883,7 @@
             <div class="p515-log-item__dot-col"><div class="p515-log-item__dot p515-log-item__dot--user"></div></div>
             <div class="p515-log-item__body">
               <div class="p515-log-item__text">購入申込受付</div>
-              <div class="p515-log-item__note">申込 #1</div>
+              <div class="p515-log-item__note">申込ID#1</div>
               <div class="p515-log-apply">
                 <div class="p515-log-apply__row"><span class="p515-log-apply__label">申込者</span><span>山田 花子 様</span></div>
                 <div class="p515-log-apply__row"><span class="p515-log-apply__label">郵便番号</span><span>〒150-0001（東京都）</span></div>
@@ -924,7 +934,7 @@
             <div class="p515-log-item__dot-col"><div class="p515-log-item__dot p515-log-item__dot--user"></div></div>
             <div class="p515-log-item__body">
               <div class="p515-log-item__text">購入申込受付</div>
-              <div class="p515-log-item__note">申込 #1</div>
+              <div class="p515-log-item__note">申込ID#1</div>
               <div class="p515-log-apply">
                 <div class="p515-log-apply__row"><span class="p515-log-apply__label">申込者</span><span>山田 花子 様</span></div>
                 <div class="p515-log-apply__row"><span class="p515-log-apply__label">郵便番号</span><span>〒150-0001（東京都）</span></div>
@@ -983,7 +993,7 @@
             <div class="p515-log-item__dot-col"><div class="p515-log-item__dot p515-log-item__dot--user"></div></div>
             <div class="p515-log-item__body">
               <div class="p515-log-item__text">購入申込受付</div>
-              <div class="p515-log-item__note">申込 #1</div>
+              <div class="p515-log-item__note">申込ID#1</div>
               <div class="p515-log-apply">
                 <div class="p515-log-apply__row"><span class="p515-log-apply__label">申込者</span><span>山田 花子 様</span></div>
                 <div class="p515-log-apply__row"><span class="p515-log-apply__label">郵便番号</span><span>〒150-0001（東京都）</span></div>
@@ -1007,7 +1017,7 @@
             <div class="p515-log-item__dot-col"><div class="p515-log-item__dot p515-log-item__dot--user"></div></div>
             <div class="p515-log-item__body">
               <div class="p515-log-item__text">購入申込受付</div>
-              <div class="p515-log-item__note">申込 #1</div>
+              <div class="p515-log-item__note">申込ID#1</div>
               <div class="p515-log-apply">
                 <div class="p515-log-apply__row"><span class="p515-log-apply__label">申込者</span><span>山田 花子 様</span></div>
                 <div class="p515-log-apply__row"><span class="p515-log-apply__label">郵便番号</span><span>〒150-0001（東京都）</span></div>
@@ -1104,13 +1114,23 @@
             </div>
           </details>
 
+          <details class="p315-faq-item" data-faq-phase="new">
+            <summary class="p315-faq-item__q">
+              <span class="p315-faq-item__q-mark">Q</span>
+              送料の設定の仕方は？
+            </summary>
+            <div class="p315-faq-item__a">
+              <p>購入者の郵便番号（都道府県）を参考に、実際の発送コストを入力してください。梱包費を購入者に求める場合は梱包費欄に入力します（出品者負担の場合は空欄のままで構いません）。送料・梱包費とも確定後は変更できませんので、慎重に入力してください。</p>
+            </div>
+          </details>
+
           <details class="p315-faq-item" data-faq-phase="paid">
             <summary class="p315-faq-item__q">
               <span class="p315-faq-item__q-mark">Q</span>
-              発送業者はどれを選べばいいですか？
+              発送方法はどれを選べばいいですか？
             </summary>
             <div class="p315-faq-item__a">
-              <p>小〜中型の作品はヤマト宅急便・佐川急便・ゆうパックが一般的です。大型の額装作品や割れ物はヤマト「らくらく家財宅急便」が梱包・取扱いの面で適しています。「送料を確認」ボタンで各業者の送料目安を確認できます。</p>
+              <p>小〜中型の作品はヤマト宅急便・佐川急便・ゆうパックが一般的です。大型の額装作品や割れ物はヤマト「らくらく家財宅急便」が梱包・取扱いの面で適しています。「送料を確認」ボタンで各社の送料目安を確認できます。</p>
             </div>
           </details>
 
@@ -1120,7 +1140,7 @@
               作品の発送はいつすればいいですか？
             </summary>
             <div class="p315-faq-item__a">
-              <p>購入者の支払い完了通知が届いたら、できるだけ早めに発送してください。ただし、会期中で展示している作品は、会期が終了してからの発送で問題ありません。発送の際は「配送先情報」に表示された住所へ送り、発送業者と追跡番号を入力して「発送完了を通知する」を押すと、購入者に発送通知が届きます。</p>
+              <p>購入者の支払い完了通知が届いたら、できるだけ早めに発送してください。ただし、会期中で展示している作品は、会期が終了してからの発送で問題ありません。発送の際は「配送先情報」に表示された住所へ送り、発送方法と追跡番号を入力して「発送完了を通知する」を押すと、購入者に発送通知が届きます。</p>
             </div>
           </details>
 
@@ -1150,7 +1170,7 @@
               受け取った作品に問題があると購入者から連絡があった場合は？
             </summary>
             <div class="p315-faq-item__a">
-              <p>まず取引メッセージで状況を確認し、誠実に対応してください。破損等の問題がある場合は個展なびサポートへご連絡ください。取引メッセージのやり取りを保存しておくことをお勧めします。</p>
+              <p>まず取引メッセージで状況を確認し、誠実に対応してください。破損等の問題がある場合は事務局へご連絡ください。取引メッセージのやり取りを保存しておくことをお勧めします。</p>
             </div>
           </details>
 
@@ -1193,7 +1213,9 @@ KTN.init({ page: 'p3-16', role: 'creator' });
     paid:       [null, 'done',   'done',   'done',   'seller', 'future', 'future'],
     shipped:    [null, 'done',   'done',   'done',   'done',   'buyer',  'future'],
     confirming: [null, 'done',   'done',   'done',   'done',   'done',   'seller'],
+    confirmingNr: [null, 'done',   'done',   'done',   'done',   'done',   'seller'],
     done:       [null, 'done',   'done',   'done',   'done',   'done',   'done'],
+    expired:      [null, 'done',   'done',   'done',   'done',   'done',   'done'],
     cancelled:  [null, 'future', 'future', 'future', 'future', 'future', 'future']
   };
   var STATUS_IDS = [
@@ -1429,7 +1451,7 @@ KTN.init({ page: 'p3-16', role: 'creator' });
   if (shipFeeEl) shipFeeEl.addEventListener('input', updateTotal);
   if (packFeeEl) packFeeEl.addEventListener('input', updateTotal);
 
-  /* ── 発送業者 select → その他入力 ── */
+  /* ── 発送方法 select → その他入力 ── */
   var carrierSelect = document.getElementById('p316CarrierSelect');
   var carrierOtherWrap = document.getElementById('p316CarrierOtherWrap');
   if (carrierSelect) {
@@ -1437,7 +1459,7 @@ KTN.init({ page: 'p3-16', role: 'creator' });
       if (carrierOtherWrap) carrierOtherWrap.hidden = (carrierSelect.value !== 'その他');
     });
   }
-  /* 発送業者 (tracking form) */
+  /* 発送方法 (tracking form) */
   var tCarrierSelect    = document.getElementById('p316TrackingCarrierSelect');
   var tCarrierOtherWrap = document.getElementById('p316TrackingCarrierOtherWrap');
   if (tCarrierSelect) {
@@ -1592,24 +1614,41 @@ KTN.init({ page: 'p3-16', role: 'creator' });
 
   /* ── 問い合わせモーダル（取引番号＋現在フェーズを自動添付） ── */
   var contactModal = document.getElementById('p316ContactModal');
+  var contactForm = document.getElementById('p316ContactForm');
+  var contactSent = document.getElementById('p316ContactSent');
+  var contactTitle = contactModal ? contactModal.querySelector('.p515-modal__title') : null;
+  var CONTACT_TITLE = contactTitle ? contactTitle.textContent : '';
   var PHASE_LABEL = { new: '購入確定待ち', confirmed: '支払待ち', paid: '発送待ち', shipped: '受取確認待ち', confirming: '完了確認待ち', done: '取引完了', cancelled: 'キャンセル済' };
+  function resetContactView() {
+    if (contactForm) contactForm.hidden = false;
+    if (contactSent) contactSent.hidden = true;
+    if (contactTitle) contactTitle.textContent = CONTACT_TITLE;
+  }
+  function closeContactModal() {
+    if (contactModal) contactModal.hidden = true;
+    resetContactView();
+    var note = document.getElementById('p316ContactNote'); if (note) note.value = '';
+  }
   function openContactModal() {
     var k = (window.setDemoState && window.setDemoState.curKey) || 'new';
     var idEl = document.querySelector('.ktn-mgmt-head__meta-id');
     var t = document.getElementById('p316ContactTxn'); if (t) t.textContent = idEl ? idEl.textContent : '—';
     var p = document.getElementById('p316ContactPhase'); if (p) p.textContent = PHASE_LABEL[k] || '—';
+    resetContactView();
     if (contactModal) contactModal.hidden = false;
   }
-  ['p316ContactClose', 'p316ContactBack'].forEach(function (id) { var b = document.getElementById(id); if (b && contactModal) b.addEventListener('click', function () { contactModal.hidden = true; }); });
-  if (contactModal) contactModal.addEventListener('click', function (e) { if (e.target === contactModal) contactModal.hidden = true; });
+  ['p316ContactClose', 'p316ContactBack'].forEach(function (id) { var b = document.getElementById(id); if (b) b.addEventListener('click', closeContactModal); });
+  if (contactModal) contactModal.addEventListener('click', function (e) { if (e.target === contactModal) closeContactModal(); });
   var contactOk = document.getElementById('p316ContactOk');
   if (contactOk) contactOk.addEventListener('click', function () {
     var note = document.getElementById('p316ContactNote');
     if (note && !note.value.trim()) { note.focus(); return; }
-    if (contactModal) contactModal.hidden = true;
-    if (note) note.value = '';
-    if (typeof KTN !== 'undefined' && KTN.toast) { KTN.toast('サポートに送信しました。確認のうえメールでご連絡します（デモ）'); }
+    if (contactForm) contactForm.hidden = true;
+    if (contactSent) contactSent.hidden = false;
+    if (contactTitle) contactTitle.textContent = 'ご相談を受け付けました';
   });
+  var contactDone = document.getElementById('p316ContactDone');
+  if (contactDone) contactDone.addEventListener('click', closeContactModal);
 
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') {
@@ -1618,7 +1657,7 @@ KTN.init({ page: 'p3-16', role: 'creator' });
       closeShipModal();
       closeDoneModal();
       closeRateModal();
-      if (contactModal) contactModal.hidden = true;
+      closeContactModal();
     }
   });
 

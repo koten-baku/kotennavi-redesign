@@ -122,7 +122,7 @@
       </div>
     </div>
 
-    <div class="ktn-content ktn-content--detail p2-3-wrap">
+    <div class="ktn-content ktn-content--flush-x-desk p2-3-wrap">
 
       <!-- 2カラム -->
       <div class="p2-3-layout">
@@ -131,7 +131,7 @@
         <div class="p2-3-main">
 
           <!-- ① 展覧会記事 -->
-          <section class="p2-3-section">
+          <section class="p2-3-section ktn-csec">
             <div class="ktn-tab-head">
               <h2 class="ktn-tab-head__title">展覧会記事 <span class="ktn-sec-en">Articles</span></h2>
             </div>
@@ -204,7 +204,7 @@
           </section>
 
           <!-- ② 関連イベント -->
-          <section class="p2-3-section">
+          <section class="p2-3-section ktn-csec">
             <div class="ktn-tab-head">
               <h2 class="ktn-tab-head__title">関連イベント <span class="ktn-sec-en">Events</span></h2>
             </div>
@@ -219,7 +219,7 @@
           </section>
 
           <!-- ③ 関連情報・外部リンク -->
-          <section class="p2-3-section">
+          <section class="p2-3-section ktn-csec">
             <div class="ktn-tab-head">
               <h2 class="ktn-tab-head__title">関連情報 <span class="ktn-sec-en">Related Links</span></h2>
             </div>
@@ -230,7 +230,7 @@
           </section>
 
           <!-- ④ クレジット -->
-          <section class="p2-3-section">
+          <section class="p2-3-section ktn-csec">
             <div class="ktn-tab-head">
               <h2 class="ktn-tab-head__title">クレジット <span class="ktn-sec-en">Credits</span></h2>
             </div>
@@ -250,7 +250,7 @@
           </section>
 
           <!-- ⑤ 入場・会場情報 -->
-          <section class="p2-3-section">
+          <section class="p2-3-section ktn-csec">
             <div class="ktn-tab-head">
               <h2 class="ktn-tab-head__title">入場・会場情報 <span class="ktn-sec-en">Admission &amp; Venue</span></h2>
             </div>
@@ -555,10 +555,10 @@ window.P2_POSTED_BY = {
   exh: 3, watch: 11, watchId: 'p23FollowBtn', watchOn: false, status: 'live', panel: true
 };
 window.P2_NEARBY = [
-  { title: '線と余白の詩学',           venue: '渋谷アートラボ',     pref: '東京', bg: 'linear-gradient(155deg,#e0d8c8,#b4a88a)', s:'05.10', e:'05.25', liaison: false },
-  { title: '光の破片',                 venue: 'GALLERY X',         pref: '東京', bg: 'linear-gradient(155deg,#c8d0e0,#8898b8)', s:'05.15', e:'05.30', liaison: true  },
-  { title: 'うつろい',                 venue: '東京都現代美術館',    pref: '東京', bg: 'linear-gradient(155deg,#d0c8e0,#8878b4)', s:'04.20', e:'06.01', liaison: false },
-  { title: 'デジタルとアナログのあいだ', venue: '3331 Arts Chiyoda', pref: '東京', bg: 'linear-gradient(155deg,#d8e8d0,#88b878)', s:'05.18', e:'05.31', liaison: 'li-plus' },
+  { title: '線と余白の詩学',           venue: '渋谷アートラボ',     pref: '東京', bg: 'linear-gradient(155deg,#e0d8c8,#b4a88a)', s:'05.10', e:'05.25', liaison: false, dist:'1.2km' },
+  { title: '光の破片',                 venue: 'GALLERY X',         pref: '東京', bg: 'linear-gradient(155deg,#c8d0e0,#8898b8)', s:'05.15', e:'05.30', liaison: true, dist:'2.8km'  },
+  { title: 'うつろい',                 venue: '東京都現代美術館',    pref: '東京', bg: 'linear-gradient(155deg,#d0c8e0,#8878b4)', s:'04.20', e:'06.01', liaison: false, dist:'3.5km' },
+  { title: 'デジタルとアナログのあいだ', venue: '3331 Arts Chiyoda', pref: '東京', bg: 'linear-gradient(155deg,#d8e8d0,#88b878)', s:'05.18', e:'05.31', liaison: 'li-plus', dist:'5.4km' },
 ];
 KTN.init({ page: 'p2-3', role: 'guest' });
 (function(){var l=document.getElementById('p2NearbyList');if(l&&window.P2_NEARBY)l.innerHTML=window.P2_NEARBY.slice(0,4).map(buildSideEcCard).join('');})();

@@ -114,7 +114,7 @@
 | P6 | 作品 |  | R | R | R | R | R | R | --w-entity | kotennavi-p6.html |
 | P6-1 | 作品-リエゾン出品時 | L | R | R | R | R | R | R | --w-entity | kotennavi-p6-1.html |
 | P6-2 | 作品-リエゾンプラス出品時 | L+ | R | R | R | R | R | R | --w-entity | kotennavi-p6-2.html |
-| P6-11 | 作品-新規/編集/クローン |  |  |  |  | W | W | W | --w-detail | # |
+| P6-11 | 作品-新規/編集/クローン |  |  |  |  | W | W | W | --w-detail | kotennavi-p6-11.html |
 | P6-12 | 作品-インサイト |  |  |  |  | R |  | R | --w-article | # |
 | P6-13 | 作品-問合せ | L |  | W | W |  | W | R | --w-detail | # |
 | P6-14 | 作品-問合せへの回答 | L |  |  |  | R/W |  | R/W | --w-detail | # |

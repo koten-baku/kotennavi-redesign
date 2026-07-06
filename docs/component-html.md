@@ -258,3 +258,141 @@ LIAISON / LIAISON+ の作品一覧・サイドカラムで共用する正方形�
 - **展示前バリアント**（展覧会がまだ開催されていない場合）：`ec__liaison-thumbs` を省略し文言を変更。CSS追加不要
   - LIAISON：「オンライン作品展示予定」
   - LIAISON+：「オンライン作品展示・販売予定」
+
+---
+
+## 全ページ共通：watch / interest / check-in ボタン（完成定義）
+
+> **新規ページでページ個別の CSS は一切追加しない。** 以下の HTML をそのままコピーするだけで common.css の共通定義が自動適用される。canonical 規約は `CLAUDE.md`「watch / interest / check-in ボタン」セクションの要約を参照。
+
+---
+
+### 1. watch ボタン（ピル型 `.ktn-btn`）— クリエイター・ギャラリー用
+
+```html
+<!-- OFF 状態（未ウォッチ） -->
+<button class="ktn-btn" data-off="watch" data-on="watching" data-action="watch"
+  onclick="handleAction(this,'watch');event.preventDefault()">
+  <svg viewBox="0 0 16 16" fill="none" width="15" height="15">
+    <circle cx="8" cy="8" r="7" fill="#7a8a99" opacity=".3"/>
+    <circle class="wi-inner" cx="8" cy="8" r="2.6"/>
+  </svg>
+  watch<span class="tip">ウォッチする</span>
+</button>
+```
+ON状態: `on` クラスを追加、テキストを `watching`・tip を「ウォッチを解除する」に変更。SVG は同一（CSS が色を管理）。
+
+**適用コンテキスト：** クリエイターカード（`.cc`）、ギャラリーカード（`.gc`）、p2 出展者カード、p3/p4 サイドCTA ウィジェット  
+**OFF/ON 色は CSS が自動管理：** `.ktn-btn` / `.ktn-btn.on` の共通定義が適用される。SVG の `fill="#7a8a99"` は OFF 時の初期値。ON 時は `circle:first-child` ルールが `#3a90e0` に上書き。
+
+---
+
+### 2. watch ボタン（アイコン型 `.ktn-icon-btn`）— 展覧会・作品・記事用
+
+```html
+<!-- OFF 状態 -->
+<button class="ktn-icon-btn" data-action="watch"
+  onclick="handleAction(this,'watch');event.preventDefault()">
+  <svg viewBox="0 0 16 16" fill="none" width="15" height="15">
+    <circle cx="8" cy="8" r="7" fill="#7a8a99" opacity=".3"/>
+    <circle class="wi-inner" cx="8" cy="8" r="2.6"/>
+  </svg>
+  <span class="tip">ウォッチする</span>
+</button>
+```
+ON状態: `on` クラスを追加、tip を「ウォッチ中 — 解除する」に変更。SVG は変更不要（CSS が色を管理）。
+
+**適用コンテキスト：** 展覧会カード（`.ec`）、作品カード（`.aw`・`.p25c`）、記事カード、p2 サイドカード（ラベルテキストなし・アイコンのみ）  
+**ON 時の SVG 色は CSS が管理：** `.ktn-icon-btn[data-action="watch"].on svg circle:first-child { fill:#3a90e0; opacity:1 }` がグローバル定義済み。  
+**ツールチップ：** `.ec` 内では `.ktn-icon-btn .tip` が上向き・右端揃えに自動反転（`overflow:hidden` 対応済み）
+
+---
+
+### 3. interest ボタン（アイコン型 `.ktn-icon-btn`）— 展覧会・作品・記事用
+
+```html
+<!-- OFF 状態 -->
+<button class="ktn-icon-btn" data-action="interest"
+  onclick="handleAction(this,'interest');event.preventDefault()">
+  <svg viewBox="0 0 16 16" fill="none" width="15" height="15">
+    <path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"
+      fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/>
+  </svg>
+  <span class="tip">興味あり！に追加する</span>
+</button>
+```
+ON状態: `on` クラスを追加、tip を「興味あり！を解除する」に変更。SVG は変更不要（CSS が色を管理）。
+
+**適用コンテキスト：** 展覧会カード（`.ec`）、作品カード（`.aw`・`.p25c`）、記事カード、p2 サイドカード  
+**ON 時の SVG 色は CSS が管理：** `[data-action="interest"].on svg path { fill:#3a90e0; stroke:#3a90e0 }` がグローバル定義済み。HTML の SVG 属性は変更不要。  
+**ツールチップ：** `.ec` 内では上向き・右端揃えに自動反転（`overflow:hidden` 対応済み）
+
+---
+
+### 4. interest ボタン（ピル型 `.ktn-btn`）— CTA ウィジェット用
+
+```html
+<!-- p2aw-item で囲むと自動的に大きいサイズに -->
+<div class="p2aw-item">
+  <button class="ktn-btn" id="p2InterestBtn"
+    data-off="interest!" data-on="interested!" data-action="interest" aria-pressed="false">
+    <svg viewBox="0 0 16 16" fill="none">
+      <path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"
+        fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/>
+    </svg>
+    interest!<span class="tip">興味あり！に追加する</span>
+  </button>
+</div>
+```
+
+**適用コンテキスト：** p2/p3/p4/p6 右カラム CTA ウィジェット（`.ktn-cta-widget`）  
+**id 命名：** `p{ページID}InterestBtn`（pages.js のバインド用）
+
+---
+
+### 5. check-in ボタン（ピル型 `.ktn-btn--lg`）
+
+```html
+<button class="ktn-btn ktn-btn--lg" data-action="checkin"
+  onclick="openCheckinModal();event.preventDefault()">
+  <svg viewBox="0 0 16 16" fill="none" width="20" height="20">
+    <circle cx="10" cy="5" r="4" fill="#7a8a99" opacity=".3"/>
+    <circle cx="5" cy="11" r="2.4" fill="#7a8a99" opacity=".3"/>
+  </svg>
+  チェックイン＆レビュー
+</button>
+```
+
+**適用コンテキスト：** p2/p3/p4/p6 右カラム CTA ウィジェット  
+**モーダル：** `openCheckinModal()` がゲスト判定→auth modal / ログイン済み→チェックインフォームを自動選択
+
+---
+
+### 共通ルール
+
+**`handleAction` 経由を徹底：**
+- `onclick="this.classList.toggle('on')"` は禁止。ゲスト判定・tip テキスト更新が動作しない
+- p3/p4 のヒーローウォッチボタン（ヒーロー・サイドCTA・ヘッダーHIBの同期が必要）のみ pages.js の `addEventListener` で管理。inline `onclick` を付けない
+
+**SVG 禁止パターン：**
+- `opacity=".45"` → ダーク専用値。ライトパネルは **必ず `.3`**
+- `class="wi-dark"` → ライトパネルは **必ず `class="wi-inner"`**
+- `<use href="#icon-watch" color="#3a90e0">` → `color` 属性は CSS より優先されるため **禁止**。常に `color="#7a8a99"` か inline SVG を使う
+
+**サイズモディファイア（`.ktn-btn` ピル型）：**
+
+| コンテキスト | font-size | padding（watch） | padding（interest） | SVG | 用途 |
+|---|---|---|---|---|---|
+| カード内インライン（なし） | `0.75rem` | `7px 16px` | `7px 16px` | `15px` | `.ec` / `.aw` カード内、ヒーロー横 |
+| 2カラム CTA `.p2aw-item` 内自動 | `0.88rem` | `7px 30px` | `7px 22px` | `17px` | 右カラム CTA ウィジェット（クラス変更不要） |
+| 1カラム・モバイル（インライン指定） | `0.72rem` | `13px 20px` | `13px 20px` | `17px` | モバイル / 1カラムサイドCTA |
+| `--lg` | `1.1rem` | `14px 28px` | `14px 28px` | `20px` | 日本語CTA（チェックイン等） |
+
+※ `.p2aw-item` 内の watch は padding が wide（`7px 30px`）、interest は narrow（`7px 22px`）。いずれも CSS が自動適用するため HTML 側の変更不要。  
+※ 1カラム・モバイルサイズは `.p2aw-item` を使わずインラインで `style="font-size:.72rem;padding:13px 20px"` を指定する（`p3-action-watch-btn` クラスは使わない）。
+
+**ダークパネル対応（既存CSS）：**
+- `.p6-dark .ktn-btn` / `.p251-dark .ktn-btn` → ダーク用色定義済み（`color:#4da3f5` など）
+- 新規ダーク背景セクションに置く場合は親に `.p6-dark` 等の既存クラスを使うか、同パターンで追加する
+
+**Auth modal：** `common.js` の `_inject()` が DOMContentLoaded 時に `<body>` 末尾へ自動注入。各 HTML への記述不要。

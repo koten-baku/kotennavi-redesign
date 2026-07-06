@@ -121,7 +121,6 @@
     <!-- B. タブナビ（アクティブなし・管理ページ） -->
     <nav class="p5-tabnav" id="p5Tabnav" aria-label="マイページ内ナビ">
       <div class="p5-tabnav__inner">
-        <a class="p5-tabnav__name" href="kotennavi-p5.html"><span class="p5-tabnav__name-text">山田 花子</span></a>
         <a class="p5-tabnav__item" href="kotennavi-p5.html">カレンダー</a>
         <a class="p5-tabnav__item" href="kotennavi-p5-1.html">ウォッチ</a>
         <a class="p5-tabnav__item" href="kotennavi-p5-2.html">チェックイン</a>
@@ -184,8 +183,7 @@
               </div>
             </div>
             <div class="p514-aw__strip p514-aw__strip--payment">
-              <span class="p514-aw__strip-dot"></span>
-              <span class="p514-aw__strip-label">お支払いください　期限 2026.03.02</span>
+              <span class="p514-aw__strip-label">お支払いにお進みください　申込ID#1　期限 2026.03.02</span>
               <div class="p514-aw__strip-actions">
                 <a class="p514-aw__strip-link ktn-action-btn" href="kotennavi-p5-15.html">
                   取引ワークスペースへ →
@@ -215,8 +213,7 @@
               </div>
             </div>
             <div class="p514-aw__strip p514-aw__strip--receipt">
-              <span class="p514-aw__strip-dot"></span>
-              <span class="p514-aw__strip-label">受取を確認してください　期限 2026.03.20</span>
+              <span class="p514-aw__strip-label">受取を確認してください　申込ID#1　期限 2026.03.20</span>
               <div class="p514-aw__strip-actions">
                 <a class="p514-aw__strip-link ktn-action-btn" href="kotennavi-p5-15.html">
                   取引ワークスペースへ →
@@ -246,10 +243,11 @@
               </div>
             </div>
             <div class="p514-aw__strip p514-aw__strip--applied">
-              <span class="p514-aw__strip-dot"></span>
-              <span class="p514-aw__strip-label">購入確定待ち　1番目／全2人　確定期限 2026.03.25</span>
+              <span class="p514-aw__strip-label">購入確定待ち　申込ID#1（全2件） 2026.02.21　確定期限 2026.03.25</span>
               <div class="p514-aw__strip-actions">
-                <button class="p514-cancel-apply-btn ktn-op-btn ktn-op-btn--danger-outline ktn-op-btn--sm">申込をキャンセル</button>
+                <a class="p514-aw__strip-link ktn-action-btn" href="kotennavi-p5-15.html">
+                  取引ワークスペースへ →
+                </a>
               </div>
             </div>
           </div>
@@ -275,8 +273,7 @@
               </div>
             </div>
             <div class="p514-aw__strip p514-aw__strip--applied">
-              <span class="p514-aw__strip-dot"></span>
-              <span class="p514-aw__strip-label">発送待ち</span>
+              <span class="p514-aw__strip-label">発送待ち　申込ID#1</span>
               <div class="p514-aw__strip-actions">
                 <a class="p514-aw__strip-link ktn-action-btn" href="kotennavi-p5-15.html">
                   取引ワークスペースへ →
@@ -285,7 +282,7 @@
             </div>
           </div>
 
-          <!-- 購入確定待ち: キュー待ち -->
+          <!-- 申込済（S0・順番待ち／確定期限・ワークスペース導線なし・キャンセルはこの一覧で完結） -->
           <div class="p514-aw">
             <div class="p514-aw__row">
               <a class="p514-aw__thumb-wrap" href="kotennavi-p6-2.html">
@@ -305,11 +302,10 @@
                 </div>
               </div>
             </div>
-            <div class="p514-aw__strip p514-aw__strip--applied">
-              <span class="p514-aw__strip-dot"></span>
-              <span class="p514-aw__strip-label">購入確定待ち　2番目／全2人　確定期限 2026.04.10</span>
+            <div class="p514-aw__strip p514-aw__strip--pending">
+              <span class="p514-aw__strip-label">申込済　申込ID#2（全2件） 2026.02.28</span>
               <div class="p514-aw__strip-actions">
-                <button class="p514-cancel-apply-btn ktn-op-btn ktn-op-btn--danger-outline ktn-op-btn--sm">申込をキャンセル</button>
+                <button class="p514-cancel-apply-btn ktn-op-btn ktn-op-btn--danger-outline ktn-op-btn--sm" type="button" data-name="夕暮れの記憶" data-apply="#2">申込をキャンセル</button>
               </div>
             </div>
           </div>
@@ -340,15 +336,12 @@
                   <a class="p514-aw__exh-name" href="kotennavi-p2.html">光と影 — 田中透 個展 2025秋</a>
                 </div>
                 <div class="p514-aw__collect-row">
-                  <button class="p514-collect-btn ktn-op-btn ktn-op-btn--sm" data-name="春の庭" data-bg="linear-gradient(135deg,#b8d0b0,#7a9870)">
-                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" width="10" height="10"><rect x="2" y="2" width="12" height="12" rx="1.5" stroke-width="1.4"/><rect x="4.5" y="4.5" width="7" height="7" rx=".5" stroke-width="1"/></svg>
-                    コレクションルームへ
-                  </button>
+                  <span class="p514-collect-status p514-collect-status--private">非公開</span>
+                  <a class="p514-collect-link ktn-action-btn" href="kotennavi-p5-4.html">コレクションルームで見る →</a>
                 </div>
               </div>
             </div>
             <div class="p514-aw__strip p514-aw__strip--done">
-              <span class="p514-aw__strip-dot"></span>
               <span class="p514-aw__strip-label">取引完了　2026.02.20</span>
               <div class="p514-aw__strip-actions">
                 <a class="p514-aw__strip-link ktn-action-btn" href="kotennavi-p5-15.html">取引詳細 →</a>
@@ -376,13 +369,12 @@
                   <a class="p514-aw__exh-name" href="kotennavi-p2.html">記憶と忘却</a>
                 </div>
                 <div class="p514-aw__collect-row">
-                  <span class="p514-published-badge"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" width="9" height="9"><rect x="2" y="2" width="12" height="12" rx="1.5" stroke-width="1.4"/><rect x="4.5" y="4.5" width="7" height="7" rx=".5" stroke-width="1"/></svg>コレクション公開中</span>
-                  <button class="p514-unpublish-btn">公開キャンセル</button>
+                  <span class="p514-collect-status p514-collect-status--public"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" width="9" height="9"><rect x="2" y="2" width="12" height="12" rx="1.5" stroke-width="1.4"/><rect x="4.5" y="4.5" width="7" height="7" rx=".5" stroke-width="1"/></svg>コレクション公開中</span>
+                  <a class="p514-collect-link ktn-action-btn" href="kotennavi-p5-4.html">コレクションルームで見る →</a>
                 </div>
               </div>
             </div>
             <div class="p514-aw__strip p514-aw__strip--done">
-              <span class="p514-aw__strip-dot"></span>
               <span class="p514-aw__strip-label">取引完了　2025.11.15</span>
             </div>
           </div>
@@ -408,7 +400,6 @@
               </div>
             </div>
             <div class="p514-aw__strip p514-aw__strip--cancelled">
-              <span class="p514-aw__strip-dot"></span>
               <span class="p514-aw__strip-label">キャンセル済 - 申込キャンセル</span>
             </div>
           </div>
@@ -434,7 +425,6 @@
               </div>
             </div>
             <div class="p514-aw__strip p514-aw__strip--cancelled">
-              <span class="p514-aw__strip-dot"></span>
               <span class="p514-aw__strip-label">キャンセル済 - 出品者による出品取消</span>
             </div>
           </div>
@@ -460,7 +450,6 @@
               </div>
             </div>
             <div class="p514-aw__strip p514-aw__strip--cancelled">
-              <span class="p514-aw__strip-dot"></span>
               <span class="p514-aw__strip-label">キャンセル済 - 出品者による会場売約済</span>
             </div>
           </div>
@@ -496,10 +485,10 @@
           <details class="p315-faq-item">
             <summary class="p315-faq-item__q">
               <span class="p315-faq-item__q-mark">Q</span>
-              「購入確定待ち」とはどういう状態ですか？
+              「申込済」と「購入確定待ち」はどう違いますか？
             </summary>
             <div class="p315-faq-item__a">
-              <p>申込が完了し、出品者が会場在庫を確認して購入を確定するのを待っている状態です。通常数日以内に回答が届きます。会場で既に販売済みの場合はキャンセルになることがあります。</p>
+              <p>「申込済」は、申込を受け付けたあと、申込順であなたの番が来るのを待っている状態です。この段階では確定期限はまだ発生せず、取引ワークスペースには進めません（キャンセルはこのページから行えます）。あなたの番が来ると自動的に「購入確定待ち」へ変わり、出品者が会場在庫を確認して購入を確定します。この時点で確定期限が表示され、取引ワークスペースで手続きを進められます。会場で既に販売済みの場合はキャンセルになることがあります。</p>
             </div>
           </details>
 
@@ -509,7 +498,7 @@
               申込後にキャンセルできますか？
             </summary>
             <div class="p315-faq-item__a">
-              <p>出品者が購入を確定する前（購入確定待ち）であれば、この購入管理ページからキャンセルできます。購入確定後（支払待ち以降）は取引ワークスペースからキャンセルしてください。いずれもキャンセル後、販売期間中であれば再申込できますが、キューの最後になります。支払いが完了した後はキャンセルできません。</p>
+              <p>「申込済」（順番待ち）の作品は、このページの各作品にある「申込をキャンセル」から取り消せます。「購入確定待ち」以降（支払待ちを含む）は、取引ワークスペースからキャンセルします。いずれもキャンセル後、販売期間中であれば再申込できますが、申込順は最後尾になります。支払いが完了した後はキャンセルできません。</p>
             </div>
           </details>
 
@@ -584,59 +573,20 @@
   <div class="ktn-bottom-nav__inner" id="ktnBottomNavInner"></div>
 </nav>
 
-<!-- 公開キャンセルモーダル -->
-<div class="p514-modal-overlay" id="p514UnpublishModal" hidden>
-  <div class="p514-modal">
-    <div class="p514-modal__head">
-      <span class="p514-modal__title">コレクションルームから非公開にする</span>
-      <button class="p514-modal__close" id="p514UnpublishModalClose">✕</button>
-    </div>
-    <div class="p514-modal__body">
-      <div class="p514-modal__thumb" id="p514UnpublishModalThumb"></div>
-      <div class="p514-modal__artwork-name" id="p514UnpublishModalName"></div>
-      <p class="p514-modal__desc">非公開にすると、あなたのユーザーページから作品が表示されなくなります。再公開はいつでもできます。</p>
-    </div>
-    <div class="p514-modal__foot">
-      <button class="p514-modal__btn ktn-op-btn" id="p514UnpublishModalCancel">戻る</button>
-      <button class="p514-modal__btn ktn-op-btn ktn-op-btn--danger" id="p514UnpublishModalConfirm">非公開にする</button>
-    </div>
-  </div>
-</div>
-
-<!-- 申込キャンセルモーダル -->
+<!-- 申込キャンセルモーダル（申込済 S0・順番待ち中のキャンセル。支払前・返金なし・管理者不要） -->
 <div class="p514-modal-overlay" id="p514CancelApplyModal" hidden>
   <div class="p514-modal">
     <div class="p514-modal__head">
       <span class="p514-modal__title">申込をキャンセルしますか？</span>
-      <button class="p514-modal__close" id="p514CancelApplyClose">✕</button>
+      <button class="p514-modal__close" id="p514CancelApplyModalClose">✕</button>
     </div>
     <div class="p514-modal__body">
-      <div class="p514-modal__thumb" id="p514CancelApplyThumb"></div>
-      <div class="p514-modal__artwork-name" id="p514CancelApplyName"></div>
-      <p class="p514-modal__desc">この作品の購入申込を取り消します。出品者が購入を確定する前のため、料金は発生しません。キャンセル後は順番待ちが繰り上がります。</p>
+      <p class="p514-modal__desc" id="p514CancelApplyModalDesc">この作品の申込をキャンセルします。</p>
+      <p class="p514-modal__desc" style="margin-top:8px">まだ購入確定前のため、料金は発生しません。販売期間中であれば再申込できますが、<strong>申込順は最後尾になります</strong>。</p>
     </div>
     <div class="p514-modal__foot">
-      <button class="p514-modal__btn ktn-op-btn" id="p514CancelApplyBack">戻る</button>
-      <button class="p514-modal__btn ktn-op-btn ktn-op-btn--danger" id="p514CancelApplyConfirm">申込をキャンセルする</button>
-    </div>
-  </div>
-</div>
-
-<!-- コレクションモーダル -->
-<div class="p514-modal-overlay" id="p514CollectModal" hidden>
-  <div class="p514-modal">
-    <div class="p514-modal__head">
-      <span class="p514-modal__title">コレクションルームで公開</span>
-      <button class="p514-modal__close" id="p514ModalClose">✕</button>
-    </div>
-    <div class="p514-modal__body">
-      <div class="p514-modal__thumb" id="p514ModalThumb"></div>
-      <div class="p514-modal__artwork-name" id="p514ModalName"></div>
-      <p class="p514-modal__desc">公開すると、あなたのユーザーページで作品が閲覧できるようになります。非公開にはいつでも戻せます。</p>
-    </div>
-    <div class="p514-modal__foot">
-      <button class="p514-modal__btn ktn-op-btn" id="p514ModalCancel">キャンセル</button>
-      <button class="p514-modal__btn ktn-op-btn ktn-op-btn--primary" id="p514ModalPublish">公開する</button>
+      <button class="p514-modal__btn ktn-op-btn" id="p514CancelApplyModalBack">戻る</button>
+      <button class="p514-modal__btn ktn-op-btn ktn-op-btn--danger" id="p514CancelApplyModalOk">申込をキャンセルする</button>
     </div>
   </div>
 </div>
@@ -673,115 +623,36 @@ KTN.init({ page: 'p5-14', role: 'user+' });
     });
   });
 
-  // コレクションモーダル
-  var modal       = document.getElementById('p514CollectModal');
-  var modalClose  = document.getElementById('p514ModalClose');
-  var modalCancel = document.getElementById('p514ModalCancel');
-  var modalPublish= document.getElementById('p514ModalPublish');
-  var modalThumb  = document.getElementById('p514ModalThumb');
-  var modalName   = document.getElementById('p514ModalName');
-
-  function openModal(name, bg) {
-    if (modalName)  modalName.textContent  = name || '';
-    if (modalThumb) modalThumb.style.background = bg || '';
-    if (modal) modal.hidden = false;
-  }
-  function closeModal() { if (modal) modal.hidden = true; }
-
-  document.querySelectorAll('.p514-collect-btn').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      openModal(btn.dataset.name, btn.dataset.bg);
-    });
-  });
-  if (modalClose)  modalClose.addEventListener('click', closeModal);
-  if (modalCancel) modalCancel.addEventListener('click', closeModal);
-  if (modal) modal.addEventListener('click', function (e) {
-    if (e.target === modal) closeModal();
-  });
-  if (modalPublish) modalPublish.addEventListener('click', function () {
-    location.href = 'kotennavi-p5-4.html';
-  });
-
-  // 公開キャンセルモーダル
-  var unpubModal   = document.getElementById('p514UnpublishModal');
-  var unpubClose   = document.getElementById('p514UnpublishModalClose');
-  var unpubCancel  = document.getElementById('p514UnpublishModalCancel');
-  var unpubConfirm = document.getElementById('p514UnpublishModalConfirm');
-  var unpubThumb   = document.getElementById('p514UnpublishModalThumb');
-  var unpubName    = document.getElementById('p514UnpublishModalName');
-  var _unpublishTarget = null;
-
-  function openUnpubModal(btn) {
-    _unpublishTarget = btn;
-    var aw = btn.closest('.p514-aw');
-    if (unpubName)  unpubName.textContent = aw ? aw.querySelector('.p514-aw__title-link').textContent : '';
-    if (unpubThumb) unpubThumb.style.background = aw ? aw.querySelector('.p514-aw__thumb').style.background : '';
-    if (unpubModal) unpubModal.hidden = false;
-  }
-  function closeUnpubModal() { if (unpubModal) unpubModal.hidden = true; _unpublishTarget = null; }
-
-  document.querySelectorAll('.p514-unpublish-btn').forEach(function (btn) {
-    btn.addEventListener('click', function () { openUnpubModal(btn); });
-  });
-  if (unpubClose)  unpubClose.addEventListener('click', closeUnpubModal);
-  if (unpubCancel) unpubCancel.addEventListener('click', closeUnpubModal);
-  if (unpubModal)  unpubModal.addEventListener('click', function (e) { if (e.target === unpubModal) closeUnpubModal(); });
-  if (unpubConfirm) unpubConfirm.addEventListener('click', function () {
-    var btn = _unpublishTarget;
-    if (!btn) { closeUnpubModal(); return; }
-    var aw      = btn.closest('.p514-aw');
-    var collectRow = aw ? aw.querySelector('.p514-aw__collect-row') : null;
-    var name    = aw ? aw.querySelector('.p514-aw__title-link').textContent : '';
-    var bg      = aw ? aw.querySelector('.p514-aw__thumb').style.background : '';
-    if (collectRow) {
-      var collectBtn = document.createElement('button');
-      collectBtn.className = 'p514-collect-btn ktn-op-btn ktn-op-btn--sm';
-      collectBtn.dataset.name = name;
-      collectBtn.dataset.bg   = bg;
-      collectBtn.innerHTML = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" width="10" height="10"><rect x="2" y="2" width="12" height="12" rx="1.5" stroke-width="1.4"/><rect x="4.5" y="4.5" width="7" height="7" rx=".5" stroke-width="1"/></svg> コレクションルームへ';
-      collectBtn.addEventListener('click', function () { openModal(name, bg); });
-      collectRow.innerHTML = '';
-      collectRow.appendChild(collectBtn);
-    }
-    closeUnpubModal();
-  });
-
-  // 申込キャンセルモーダル
+  // 申込キャンセルモーダル（申込済 S0）
   var caModal   = document.getElementById('p514CancelApplyModal');
-  var caClose   = document.getElementById('p514CancelApplyClose');
-  var caBack    = document.getElementById('p514CancelApplyBack');
-  var caConfirm = document.getElementById('p514CancelApplyConfirm');
-  var caThumb   = document.getElementById('p514CancelApplyThumb');
-  var caName    = document.getElementById('p514CancelApplyName');
-  var _cancelApplyTarget = null;
-
-  function openCancelApplyModal(btn) {
-    _cancelApplyTarget = btn;
-    var aw = btn.closest('.p514-aw');
-    if (caName)  caName.textContent = aw ? aw.querySelector('.p514-aw__title-link').textContent : '';
-    if (caThumb) caThumb.style.background = aw ? aw.querySelector('.p514-aw__thumb').style.background : '';
+  var caClose   = document.getElementById('p514CancelApplyModalClose');
+  var caBack    = document.getElementById('p514CancelApplyModalBack');
+  var caOk      = document.getElementById('p514CancelApplyModalOk');
+  var caDesc    = document.getElementById('p514CancelApplyModalDesc');
+  var _caTarget = null;
+  function openCaModal(btn) {
+    _caTarget = btn;
+    var name = btn.dataset.name || 'この作品';
+    if (caDesc) caDesc.textContent = '「' + name + '」の申込をキャンセルします。';
     if (caModal) caModal.hidden = false;
   }
-  function closeCancelApplyModal() { if (caModal) caModal.hidden = true; _cancelApplyTarget = null; }
-
+  function closeCaModal() { if (caModal) caModal.hidden = true; _caTarget = null; }
   document.querySelectorAll('.p514-cancel-apply-btn').forEach(function (btn) {
-    btn.addEventListener('click', function () { openCancelApplyModal(btn); });
+    btn.addEventListener('click', function () { openCaModal(btn); });
   });
-  if (caClose) caClose.addEventListener('click', closeCancelApplyModal);
-  if (caBack)  caBack.addEventListener('click', closeCancelApplyModal);
-  if (caModal) caModal.addEventListener('click', function (e) { if (e.target === caModal) closeCancelApplyModal(); });
-  if (caConfirm) caConfirm.addEventListener('click', function () {
-    var btn = _cancelApplyTarget;
-    if (!btn) { closeCancelApplyModal(); return; }
-    var aw    = btn.closest('.p514-aw');
-    var strip = aw ? aw.querySelector('.p514-aw__strip') : null;
-    if (strip) {
-      strip.className = 'p514-aw__strip p514-aw__strip--cancelled';
-      strip.innerHTML = '<span class="p514-aw__strip-dot"></span><span class="p514-aw__strip-label">キャンセル済 - 申込キャンセル</span>';
+  if (caClose) caClose.addEventListener('click', closeCaModal);
+  if (caBack)  caBack.addEventListener('click', closeCaModal);
+  if (caModal) caModal.addEventListener('click', function (e) { if (e.target === caModal) closeCaModal(); });
+  if (caOk) caOk.addEventListener('click', function () {
+    var btn = _caTarget;
+    closeCaModal();
+    if (btn) {
+      var aw = btn.closest('.p514-aw');
+      if (aw) aw.remove();
     }
-    closeCancelApplyModal();
-    if (window.KTN && KTN.toast) KTN.toast('申込をキャンセルしました');
+    if (typeof KTN !== 'undefined' && KTN.toast) KTN.toast('申込をキャンセルしました');
   });
+
 }());
 
 // デモ: データあり/空状態切替

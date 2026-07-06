@@ -209,14 +209,14 @@
         </div>
 
         <!-- ④ 2カラムレイアウト -->
-        <div class="ktn-content p2-layout-wrap">
+        <div class="ktn-content ktn-content--flush-x-desk p2-layout-wrap">
           <div class="p2-layout">
 
             <!-- 左カラム -->
             <div class="p2-layout__main">
 
               <!-- 展覧会について -->
-              <div class="p2-about" id="p2-sec-about">
+              <div class="p2-about ktn-csec" id="p2-sec-about">
                 <div class="p2-about__label">この展覧会について<span class="ktn-sec-en">About this exhibition</span></div>
                 <div class="p2-about__body">
                   <h2 class="p2-about__title">あなたが知らないオノマトペ</h2>
@@ -348,7 +348,7 @@
               </div>
 
               <!-- スケジュール概要 -->
-              <div class="p2-ic is-open" id="p2IcSch">
+              <div class="p2-ic ktn-csec is-open" id="p2IcSch">
                 <div class="p2-ic__head" onclick="p2ToggleIc('p2IcSch')">
                   <div class="p2-ic__head-l"><span class="p2-ic__head-title">スケジュール<span
                         class="ktn-sec-en">Schedule</span></span>
@@ -390,7 +390,7 @@
               </div>
 
               <!-- 開催場所概要 -->
-              <div class="p2-ic is-open" id="p2IcVen">
+              <div class="p2-ic ktn-csec is-open" id="p2IcVen">
                 <div class="p2-ic__head" onclick="p2ToggleIc('p2IcVen')">
                   <div class="p2-ic__head-l"><span class="p2-ic__head-title">開催場所<span class="ktn-sec-en">Venue</span></span>
                   </div>
@@ -453,7 +453,7 @@
               </div>
 
               <!-- 出展者：クリエイターカード 2枚プレースホルダー -->
-              <div class="p2-ic is-open" id="p2IcCr">
+              <div class="p2-ic ktn-csec is-open" id="p2IcCr">
                 <div class="p2-ic__head" onclick="p2ToggleIc('p2IcCr')">
                   <div class="p2-ic__head-l"><span class="p2-ic__head-title">出展者<span class="ktn-sec-en">Creators</span></span>
                   </div>
@@ -850,10 +850,10 @@
       { bg: 'linear-gradient(155deg,#d0e8f0,#7ab4cc)', tc: 'rgba(0,0,0,.28)', label: 'シュワシュワ', caption: '《シュワシュワ》2025年 / キャンバスに油彩 / 60.6×50.0cm' },
     ];
     window.P2_NEARBY = [
-      { title: '線と余白の詩学', venue: '渋谷アートラボ', pref: '東京', bg: 'linear-gradient(155deg,#e0d8c8,#b4a88a)', tc: 'rgba(0,0,0,.28)', open: true, liaison: false, s: '05.10', e: '05.25' },
-      { title: '光の破片', venue: 'GALLERY X', pref: '東京', bg: 'linear-gradient(155deg,#c8d0e0,#8898b8)', tc: 'rgba(255,255,255,.6)', open: true, liaison: 'li', s: '05.15', e: '05.30' },
-      { title: 'うつろい', venue: '東京都現代美術館', pref: '東京', bg: 'linear-gradient(155deg,#d0c8e0,#8878b4)', tc: 'rgba(255,255,255,.6)', open: true, liaison: false, s: '04.20', e: '06.01' },
-      { title: 'デジタルとアナログのあいだ', venue: '3331 Arts Chiyoda', pref: '東京', bg: 'linear-gradient(155deg,#d8e8d0,#88b878)', tc: 'rgba(0,0,0,.28)', open: true, liaison: 'li-plus', s: '05.18', e: '05.31' },
+      { title: '線と余白の詩学', venue: '渋谷アートラボ', pref: '東京', bg: 'linear-gradient(155deg,#e0d8c8,#b4a88a)', tc: 'rgba(0,0,0,.28)', open: true, liaison: false, s: '05.10', e: '05.25', dist: '1.2km' },
+      { title: '光の破片', venue: 'GALLERY X', pref: '東京', bg: 'linear-gradient(155deg,#c8d0e0,#8898b8)', tc: 'rgba(255,255,255,.6)', open: true, liaison: 'li', s: '05.15', e: '05.30', dist: '2.8km' },
+      { title: 'うつろい', venue: '東京都現代美術館', pref: '東京', bg: 'linear-gradient(155deg,#d0c8e0,#8878b4)', tc: 'rgba(255,255,255,.6)', open: true, liaison: false, s: '04.20', e: '06.01', dist: '3.5km' },
+      { title: 'デジタルとアナログのあいだ', venue: '3331 Arts Chiyoda', pref: '東京', bg: 'linear-gradient(155deg,#d8e8d0,#88b878)', tc: 'rgba(0,0,0,.28)', open: true, liaison: 'li-plus', s: '05.18', e: '05.31', dist: '5.4km' },
     ];
     /* ── 会期状態管理 ── */
     var _p2Period = 'during';

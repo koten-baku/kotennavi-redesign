@@ -78,6 +78,23 @@ docs/                     仕様・設計ドキュメント
 | `--w-entity` | 1080px | コンテンツトップ・下位（2カラム） |
 | `--w-index` | 1080px | トップ・一覧・検索（複数コンテンツ） |
 
+### ヒーロー幅＝コンテンツ幅（左右padding 20pxで統一・全ページ共通）
+
+**ヒーローバンド（タイトルバンド・head）の幅と、その下のコンテンツ（2カラム含む）の幅は必ず一致させる。** 両者は同じ最大幅（表示系＝1080px / mgmt・detail＝760px）に `margin:0 auto` で置き、**左右paddingを `.ktn-content` と同じ20pxに統一**する。両者とも同じ外枠幅・同じ内側20pxなので左端がぴったり揃う（＝中身1040px／760系は720px）。上下paddingはヒーローの余白感のため各要素で自由（統一するのは左右のみ）。
+
+- **ガターを0にして最大幅までフル使い（edge-to-edge）にしない。** 過去に共通変数 `--pad-x:0` でヒーローを端まで広げたが、ヒーロー内テキストが左壁に密着して不可となり撤回済み。**「幅を揃える」＝「paddingを等しくする（20px）」であって「0にする」ことではない**（20pxでも両者1080幅・内側20pxで左端は既に一致している）。
+- 対象ヒーロー `__inner`（`--compact` 含む）：`.p2-title-band__inner`／`.p3-head__inner`／`.p4-head__inner`／`.p5-head__inner`。いずれも左右20pxを base 値として直書きし、`.ktn-content`（左右20px）と揃える。
+- **p6系ヒーロー（`.p6-hero`）は白背景＋枠線の「カード」型**で、他ページの全幅カラー帯と違い枠線自体が幅の見切りになる。`.ktn-content` に包まれるため素のままだと1040に収まり、下の帯（p2/p3/p4/p5 のカラー帯＝1080）や本来のページ最大幅と揃わない。そこで**ヒーローを包む `.ktn-content` に `.ktn-content--flush-x`（左右padding 0）を付けて枠線を1080まで広げる**。文字の余白は帯内側の `.p6-hero__stage`（左右40px）・`.p6-hero__meta`（左右24px）が持つため左壁に密着しない。2カラム部分は通常の `.ktn-content`（20px）のまま＝カードは1040に inset。
+- **p2-5／p2-5-1** は色付きフルブリード帯（`var(--warm)`／`--paper` 等）を持つ設計で、`.p2-5-*__inner`・`.p25-layout`・`.p25-fullwidth` の左右20pxは**「帯の内部余白」**として同じ20px。`.p2-5-wrap` 自身は `padding:0`（帯はフルブリード）で、ガターは内側セクション `__inner` が担う。
+- **ネストする wrap（`.p418-wrap`／`.p114-wrap` 等、`.ktn-content` の内側）** も左右20pxを持ち、内容が外側 content と同じ位置に来るよう揃える。
+- **パンくず・タブナビ/サブナビの左端も20pxグリッドに揃える（2026-07-05 確定）**：帯の max-width は元から全て1080（パンくず `.ktn-header__inner`＝`--w-page`→display系1080／`.p2-subnav-bar`・`.p3-tabnav`・`.p5-tabnav`＝`--w-entity` 1080）で幅は一致済み。左端テキスト位置だけをヒーロー/コンテンツと同じ20pxへ合わせる。
+  - パンくず `.ktn-header__inner` の左右paddingは **20px**（旧24pxから是正・グローバル。mobile 14pxは別グリッドで据え置き）。
+  - **名前要素を持つナビ（p3/p4/p5）**：最左の `.p3-tabnav__name`（p4もHTMLで再利用）・`.p5-tabnav__name` の左右padding＝**20px**（`__inner` は padding 0）。タブ項目 `.pN-tabnav__item` の左右padding（20px）はタブ間隔＝据え置き。
+  - **名前要素を持たないナビ（p2-subnav）**：行 `.p2-subnav` は `padding:0`（左右0）にし、**最初のタブ項目 `.p2-subnav__item` の左padding(20px)を左端ガターに一致**させる（行に左右paddingを足さない＝二重にずれるため）。
+  - **ナビ帯に20px以外の左右paddingをハードコードしない**（過去に行24px＋item20pxで最初のタブ文字が44pxに居てヒーロー20pxと不一致だった）。
+- **ヒーロー独自 `__inner` に20px以外の左右px をハードコードしない**（過去に24〜28px 直書きで各ヒーローがコンテンツより8〜16px狭くなっていた）。新規ヒーロー追加時も左右20pxに揃える。
+- 特別な視覚・操作・デザイン上の意図で幅を変える場合のみ例外とし、その理由を handoff-decisions.md に残す。
+
 ## 高さ変数（`--hh`・`--dh`）
 | 変数 | 初期値 | 用途 |
 |---|---|---|
@@ -163,7 +180,7 @@ docs/                     仕様・設計ドキュメント
 | **サイドカード** | `.p2-side-card` / `.p3-side-card` / `.p4-side-card` / `.p5-side-card` | 白背景＋ヘアライン枠、padding 24px |
 | **サイドカード見出し** | `.p2-side-card .p2-ic__head-title` / `.p3-side-card__title` / etc. | Shippori Mincho .95rem + Cinzel .58rem 英サブ |
 | **CTA ウィジェット** | `.p2-action-widget`（全ページ再利用） | paper bg、Bodoni Moda 3rem 数値、Cinzel ラベル |
-| **関連・回遊ゾーン** | 右カラム末尾：`.p2-side-nearby`（p2/p6）/ `.p3-side-rel-exh`（p3 アートの展覧会）/ `.p4-side-rel-exh`（p4 アートの展覧会）　＋　ページ下部：`.ktn-related-band` / `.ktn-sub-tags` / `.ktn-sub-rec` | **背景は通常（transparent）・上部 2px ink アクセントラインのみで識別**。色を多用せず、ラインで他コンテンツと区別 |
+| **関連・回遊ゾーン** | 右カラム末尾：`.p2-side-nearby`（p2＝「近くの展覧会」Nearby・会場基準で距離あり）/ `.p3-side-rel-exh`（p3系＝クリエイターページ。**このクリエイターの作品と同カテゴリー（同ジャンル）の展覧会**を出すディスカバリー枠＝「アートの展覧会 Related」。会場基準ではないので距離は出さない。※p6の「作家自身の展覧会」とは別物なので混同しない＝クリエイター自身の展覧会に置き換えないこと）/ `.p4-side-rel-exh`（p4系 表示ページ＝ギャラリーは固定会場を持つため「近くの展覧会」Nearby・距離あり）/ **`.p6-side-rel-exh`（p6系＝「作家の他の展覧会」・作品ページは会場基準点を持たないため距離を出さない）**　＋　ページ下部：`.ktn-related-band` / `.ktn-sub-tags` / `.ktn-sub-rec`。**「近くの展覧会」カード（`.p2-side-ec`）のみ距離を表示**：左カラムを `.p2-side-ec__media`（縦スタック）にし、サムネイル（`.p2-side-ec__poster`）の**真上**に `.p2-side-ec__dist`〔ピン＋距離・`var(--page-accent)`〕を積む（オーバーレイではなく画像の上部）。p2 は `buildSideEcCard`（pages.js）が `e.dist` を出力（`dist` があれば表示）、p4系は静的HTMLに直書き。**p6系は距離を持たない**（作品は場所を特定できない＝「近く」概念が成立しないため、`.p2-side-nearby` ではなく `.p6-side-rel-exh`＝作家の他の展覧会） | **背景は通常（transparent）・上部 2px ink アクセントラインのみで識別**。色を多用せず、ラインで他コンテンツと区別 |
 | **右カラム sticky スクロール** | `.p2-layout__side` / `.p2-1〜4-side` / `.p25-side-col` / `.p3-layout__side` / `.p3-prof-side` / `.p4-prof-side` / `.p5-layout__side` / `.p6-side-inner` | 左コンテンツが長い場合、右カラムは画面内に固定。左コンテンツが下端まで来たら追従。`top: calc(--dh + --hh + 16px)` / `align-self: start` / モバイル時は `position: static` |
 | **本文色強化** | `.ec__venue` / `.aw__spec` / `.ac__lead` 等 | `var(--ink)` に統一、opacity フェード排除 |
 | **コンテンツ余白** | `.ktn-content` | 32px 20px 48px（呼吸感UP） |
@@ -194,6 +211,20 @@ docs/                     仕様・設計ドキュメント
 | 下位ページ見出し | Shippori Mincho | `clamp(1.8rem, 3.5vw, 2.6rem)` | 700 |
 
 すべて **`var(--ink)` 濃色 + letter-spacing -.005〜0 + line-height 1.18〜1.25**。
+
+### 表示系ヒーローの外枠・共通化ルール（p2/p3/p4/p5＝2026-07-05 確定）
+
+表示系ヒーロー（`.p2-title-band`／`.p3-head`／`.p4-head`／`.p5-head`）は**内部DOM構造は役割ごとに異なる（テキストのみ／アバター付き）まま**、外枠・アクセント・区切り・余白の4層を共通化する。**p6（`.p6-hero`＝画像主役の囲みカード＋暗いステージ）はこの統一の対象外**（別物として現行維持）。個別ページでこれらを上書きしない。
+
+| 層 | 共通ルール | 実装 |
+|---|---|---|
+| **箱** | `background:#fff`・**full border/radius なし**（p2/p3/p4/p5 共通）。p3/p4/p5 は `position:relative;overflow:hidden`（アクセント線の土台）。**p5 の旧「四方border＋radius:4px 囲みカード」は廃止**しp3/p4と同一の箱へ | `.p5-head{background:#fff;…;position:relative;overflow:hidden}` |
+| **アクセント線** | **左3px の縦線は人物ページ（creator/gallery/user＝p3/p4/p5）のみ**。展覧会（p2＝コンテンツ）には付けない。色は `body.pN-page` の `--page-accent` が供給（creator青緑／gallery銅／user桃） | グループ `.p3-head::before,.p4-head::before,.p5-head::before{…background:linear-gradient(to bottom,var(--page-accent) 0%,transparent 100%)}`（個別ルールに分けない） |
+| **区切り線** | ヒーロー↔ナビ間の線は **p2/p3/p4/p5 共通で「ナビ側」に持たせる**（上 `2px var(--ink)` ＋下 `1px var(--page-accent)`）。**ヒーロー本体に border-bottom を書かない**（p2 の旧 `.p2-title-band` border-bottom は廃止し、区切りを `.p2-subnav-bar` の上罫線へ寄せた） | editorial v2 の grouped `.p2-subnav-bar,.p3-tabnav,.p4-tabnav,.p5-tabnav{border-top:2px var(--ink)}` |
+| **文字領域の左右padding** | `--hero-pad-x`（desktop 20px）を単一ソースに。`.p2-title-band__inner`／`.p3-head__inner`／`.p4-head__inner`／`.p5-head__inner`／`.p6-hero__meta` が `var(--hero-pad-x)` を参照（p6 meta は 24→20 に是正）。**横paddingを各所に数値直書きしない**（mobile の 16px 系のみ意図的に据え置き） | `:root{--hero-pad-x:20px}` |
+
+- **なぜclass統合でなくトークン＋grouped selectorか**：4ヒーローは中身の主役（展覧会名／人名＋アバター）が違い、1classへ畳むと条件分岐が増え可読性が落ちる。**「同じ役割の値・見た目」はトークンとグループ化ルールで単一ソース化し、classは役割ごとに分ける**（カード共通ルール・バッジ設計と同じ思想）。本当のコンポーネント統合は React CSR 化時に `<Hero variant>` として行う想定。
+- **未使用CSSの排除**：`.p5-head__en`（英サブ）はHTML/JSから未使用の死にCSSだったため削除。p5 の副題は `.p5-head__since`（利用開始月）のみ。
 
 ### 関連・回遊ゾーンの背景色ルール
 
@@ -286,9 +317,12 @@ Stripe決済手数料-実質マージンは利用者には非公開。
 取引関連ページ（p3-15 / p3-16 / p5-14 / p5-15）の状態名は以下に統一する。
 **状態名は出品者側・購入者側で同一の客観名を使う。「誰の番か」は状態名に含めず、ターンラベル（自分の番＝命令形CTA「作品を発送してください」等／相手の番＝「出品者の発送待ち」等）と色で表現する。**
 
+**ページ呼称（UI上の名称）：** 取引対応ページの**UI表示名はロールで分ける**。出品者側（p3-16 / p4-16）＝**「取引デスク」**、購入者側（p5-15）＝**「取引ワークスペース」**（p5-14 からの導線・FAQ・タイトル・H2 すべて「取引ワークスペース」で統一。完了済み取引への導線のみ「取引詳細」）。本 CLAUDE.md ではこれら4ページの総称として便宜上「取引デスク」「取引4ページ」と書く箇所があるが、**購入者側の実UI名は「取引ワークスペース」が正**。
+
 | # | フェーズ | 正式状態名 | アクション側 | 廃止した旧呼称 |
 |---|---|---|---|---|
-| S1 | 申込受付 → 購入確定 | 購入確定待ち | 出品者 | 在庫確認待ち / 在庫確認回答待ち / 申込中 |
+| S0 | 申込 → 受付（会期中の待機） | 申込済 | —（申込ID順に自動処理・待機） | 申込中（不採用） |
+| S1 | 申込ID順が到来 → 購入確定 | 購入確定待ち | 出品者 | 在庫確認待ち / 在庫確認回答待ち / 申込中 |
 | S2 | 購入確定 → 支払 | 支払待ち | 購入者 | 購入者支払待ち |
 | S3 | 支払 → 発送 | 発送待ち | 出品者 | 支払完了（バッジ名として） |
 | S4 | 発送 → 受取確認 | 受取確認待ち | 購入者 | — |
@@ -303,9 +337,11 @@ Stripe決済手数料-実質マージンは利用者には非公開。
 - 確定期限のルール：実会場優先のため **会期終了7日後または申込7日後の遅い方**（2026-06-27 改訂。旧「会期終了3日後または申込3日後」は使用禁止）。**期限超過時の挙動＝その作品を自動で出品取消し、申込者全員にキャンセル通知（次の申込者へ繰り上げない＝申込者飛ばし防止）。確定期限切れは出品者マイページに記録**
 - 発送期限のルール：展示作品は会期終了後の引渡しが多いため **会期終了後7日または支払後7日の遅い方**（「支払いから14日以内」は誤り・使用禁止）
 - 「在庫確認」は状態名としては使わない。操作説明の動詞句としてのみ使用可（例：「会場在庫を確認して購入を確定してください」）
-- キュー待ち中（順番がまだ来ていない購入者）も「購入確定待ち」に統合し、キュー順位（「1番目／全2人」等）を補足表示する
-- **状態strip内の状態バッジ表示は「待ち」を外した行為名**（S1=購入確定 / S2=支払 / S3=発送 / S4=受取確認 / S5=完了確認＝ステップノードと共通。終端は 取引完了 / キャンセル済）。「待ち」はターンラベルが担う。**自分の番のターンラベルは命令形CTAで必要操作を明示する**（S1=購入を確定してください / S2=お支払いください / S3=作品を発送してください / S4=受取を確認してください / S5=取引完了を確認してください）。相手の番は「○○の△△待ち」。**自分のターンで状態名が「待ち」に見える違和感を解消するための表示ルール。** 正式状態名（〜待ち）は一覧・ログ・説明文など**ターンラベルを伴わない単独表示**では引き続き用いる（テーブルの「正式状態名」が canonical）。
-- **一覧ページの状態ラベル（取引一覧・LIAISON+コンソール：p3-15 `.p315-txn-row__status` / p4-15 同 / p5-14 `.p514-aw__strip-label`）は期限を同じラベルにバンドルする（「○○　期限 2026.xx.xx」）ため、ターンラベルを持たない。** この文脈では **自分のターンの行は命令形CTA**（S1=「購入を確定してください」/ S2=「お支払いください」/ S3=「作品を発送してください」/ S4=「受取を確認してください」/ S5=「取引完了を確認してください」）で意味を明確にし、**相手のターンの行は「〜待ち」**（支払待ち・受取確認待ち・購入確定待ち＋申込#n 等）のまま残す。strip（ターンラベルあり）とは扱いが異なる点に注意。
+- **S0「申込済」は購入確定待ちとは別状態**：申込直後〜申込ID順が到来するまでの待機状態。**確定期限を持たず（表示もしない）・取引ワークスペース（p5-15）に入れない**。この段階のキャンセルは一覧（p5-14）で行う。申込ID順が到来すると**システムが自動で「購入確定待ち」へ遷移**（前の申込者のキャンセル/確定で繰り上げ）、確定期限が発生・表示され、ワークスペースに入れる。バッジはニュートラルグレー（進行に本人操作を要さない待機のため）
+- **「N番目／全M人」等のキュー順位表示は廃止**（申込ID＝順位と誤認されるため）。一覧（p5-14）の状態帯は **申込ID#N を軸に表示し、現在の申込総数は申込IDへ括弧併記**（`申込ID#N（全M件）`）＝"申込"の語の重複を避けスマートに。申込済行＝`申込済　申込ID#N（全M件）　YYYY.MM.DD`、購入確定待ち行＝`購入確定待ち　申込ID#N（全M件）　YYYY.MM.DD　確定期限 …`（総数を出すのは申込済・購入確定待ちのみ）、支払待ち以降＝`申込ID#N` のみ（総数なし）。**申込日は「申込日」等のラベルを付けず日付のみ**で置き、文脈（申込済・購入確定待ち＝申込直後の状態）で申込日と読ませる（確定期限は「確定期限」ラベル付きなので混同しない）。個別ページ（p5-15 ワークスペース）に総数・順位は表示しない（申込ID#N のみ継続性のため表示）
+- **申込IDの表記は「申込ID#N」で統一**（購入者接点＝p5-14/p5-15、取引ログ＝p3-16/p4-16/p5-15、取引デスクの購入者カード＝p3-16/p4-16 `.p316-purchase-buyer__apply-no`）。旧「申込 #N」は使わない。**例外＝一覧コンソール（p3-15/p4-15）**は「申込者 M件」ラベルで総数が別途出るため、コンパクトな「#N」を安定IDとして継続使用
+- **状態strip内の状態バッジ表示は「待ち」を外した行為名**（S1=購入確定 / S2=支払 / S3=発送 / S4=受取確認 / S5=完了確認＝ステップノードと共通。終端は 取引完了 / キャンセル済）。「待ち」はターンラベルが担う。**自分の番のターンラベルは命令形CTAで必要操作を明示する**（S1=購入を確定してください / S2=お支払いにお進みください / S3=作品を発送してください / S4=受取を確認してください / S5=取引完了を確認してください）。相手の番は「○○の△△待ち」。**自分のターンで状態名が「待ち」に見える違和感を解消するための表示ルール。** 正式状態名（〜待ち）は一覧・ログ・説明文など**ターンラベルを伴わない単独表示**では引き続き用いる（テーブルの「正式状態名」が canonical）。
+- **一覧ページの状態ラベル（取引一覧・LIAISON+コンソール：p3-15 `.p315-txn-row__status` / p4-15 同 / p5-14 `.p514-aw__strip-label`）は期限を同じラベルにバンドルする（「○○　期限 2026.xx.xx」）ため、ターンラベルを持たない。** この文脈では **自分のターンの行は命令形CTA**（S1=「購入を確定してください」/ S2=「お支払いにお進みください」/ S3=「作品を発送してください」/ S4=「受取を確認してください」/ S5=「取引完了を確認してください」）で意味を明確にし、**相手のターンの行は「〜待ち」**（支払待ち・受取確認待ち・購入確定待ち＋申込ID#n 等）のまま残す。**申込済（S0）の行はターンも命令形も持たず「申込済　申込ID#n（全M件）　日付」のみ**（日付は「申込日」ラベルを付けず日付だけで申込日と読ませる・ワークスペース導線なし・キャンセルは一覧で完結）。strip（ターンラベルあり）とは扱いが異なる点に注意。**出品者コンソール（p3-15/p4-15）の申込者リストでは申込ID#n・総数（申込者 M件）・購入者名が別カラムで出るため、S0 行の `.p315-txn-row__status` セルは「申込済　申込日」のみ**（例：`申込済　2026.02.26`。旧アドホック名「待機中」は使わない＝S0 の客観名は出品者・購入者とも「申込済」で統一）。同行はターンバッジ・取引デスク導線を持たない（順番待ちで出品者の操作対象外のため）。
 
 **状態strip（`.p515-status__head`）の書式（取引4ページ共通・p3-16/p4-16/p5-15）：**
 - レイアウト＝`[状態バッジ][ターンラベル]` を左寄せ、`一つ前の終了日時（.p515-status__deadline）` を右寄せ（`margin-left:auto`）。DOM順は バッジ→ターンラベル→日時で統一。
@@ -617,6 +653,7 @@ p2-5-1（LIAISON+作品一覧）・p2-12-1（LIAISON+作品管理）・p6-dark�
 | p2-12 | `p3-page mgmt-page` | LIAISON作品管理 |
 | p2-12-1 | `p3-page mgmt-page` | LIAISON+作品管理 |
 | p2-11 | `mgmt-page p211-page` + JSで `p3-page`/`p4-page` 動的付与 | creator/gallery共有・役割切替でバー色変化 |
+| p6-11 | `mgmt-page p6-11-page` + JSで `p3-page`(creator)/`p4-page`(gallery) 動的付与 | 作品-新規/編集/クローン・creator/gallery共有・`.p211-*` フォーム部品を再利用 |
 | p3-15 | `p3-15-page p3-page mgmt-page` | |
 | p3-16 | `p3-page p3-16-page mgmt-page` | |
 | p4-15 | `p4-15-page p4-page mgmt-page` | |
@@ -628,7 +665,7 @@ p2-5-1（LIAISON+作品一覧）・p2-12-1（LIAISON+作品管理）・p6-dark�
 | p11-4 | `mgmt-page` + JSで `p3-page`/`p4-page` 動的付与 | creator/gallery共有 |
 
 ### ロール動的切替（creator/gallery共有ページ）
-`KTN.pages['p2-11']` / `KTN.pages['p11-4']` に `syncMgmtBar()` 関数を実装。`ktnRender` 内で `KTN.role` を読み取り `p3-page`/`p4-page` を付け外し。
+`KTN.pages['p2-11']` / `KTN.pages['p11-4']` / `KTN.pages['p6-11']` に `syncMgmtBar()` 関数を実装。`ktnRender` 内で `KTN.role` を読み取り `p3-page`/`p4-page` を付け外し。
 
 ---
 
@@ -731,144 +768,22 @@ z-index: 90;
   - スクロール位置に応じてJSで `is-hidden` クラスを付け外し（`visibility:hidden` で幅は確保）
   - タッチデバイスでは直接スワイプも可能
 - `overflow: hidden` を親に設定しない（子スクロールコンテナを妨害するため）
+- **定義は `TAGBAR_DEFS`（common.js）にページID単位で登録**。`renderTagbar(page)` が `TAGBAR_DEFS[page]` を描画し、無ければ非表示。
+- **下位ページは親のタグバーを継承**（2026-07-05 確定）：`TAGBAR_DEFS[page]` に専用定義が無い場合、`renderTagbar` が末尾の `-N` を1段ずつ削って親ページの定義を探す（`p2-1→p2` / `p2-5-1→p2-5` / `p6-1→p6` / `p3-1→p3` / `p4-1→p4`）。**下位ページ用に個別定義を増やさず**、上位ページと同じタグバーを自動表示する。専用のタグバーを出したい下位ページ（例：`p2-3`・`p2-5`）は `TAGBAR_DEFS` に明示登録すれば継承より優先される。
 
 ---
 
-### 全ページ共通：watch / interest / check-in ボタン（完成定義）
+### 全ページ共通：watch / interest / check-in ボタン
 
-> **新規ページでページ個別の CSS は一切追加しない。** 以下の HTML をそのままコピーするだけで common.css の共通定義が自動適用される。
+**新規ページでページ個別の CSS は一切追加しない。** HTML をそのままコピーするだけで common.css の共通定義（OFF/ON 色・tip・サイズ）が自動適用される。
 
----
-
-#### 1. watch ボタン（ピル型 `.ktn-btn`）— クリエイター・ギャラリー用
-
-```html
-<!-- OFF 状態（未ウォッチ） -->
-<button class="ktn-btn" data-off="watch" data-on="watching" data-action="watch"
-  onclick="handleAction(this,'watch');event.preventDefault()">
-  <svg viewBox="0 0 16 16" fill="none" width="15" height="15">
-    <circle cx="8" cy="8" r="7" fill="#7a8a99" opacity=".3"/>
-    <circle class="wi-inner" cx="8" cy="8" r="2.6"/>
-  </svg>
-  watch<span class="tip">ウォッチする</span>
-</button>
-```
-ON状態: `on` クラスを追加、テキストを `watching`・tip を「ウォッチを解除する」に変更。SVG は同一（CSS が色を管理）。
-
-**適用コンテキスト：** クリエイターカード（`.cc`）、ギャラリーカード（`.gc`）、p2 出展者カード、p3/p4 サイドCTA ウィジェット  
-**OFF/ON 色は CSS が自動管理：** `.ktn-btn` / `.ktn-btn.on` の共通定義が適用される。SVG の `fill="#7a8a99"` は OFF 時の初期値。ON 時は `circle:first-child` ルールが `#3a90e0` に上書き。
-
----
-
-#### 2. watch ボタン（アイコン型 `.ktn-icon-btn`）— 展覧会・作品・記事用
-
-```html
-<!-- OFF 状態 -->
-<button class="ktn-icon-btn" data-action="watch"
-  onclick="handleAction(this,'watch');event.preventDefault()">
-  <svg viewBox="0 0 16 16" fill="none" width="15" height="15">
-    <circle cx="8" cy="8" r="7" fill="#7a8a99" opacity=".3"/>
-    <circle class="wi-inner" cx="8" cy="8" r="2.6"/>
-  </svg>
-  <span class="tip">ウォッチする</span>
-</button>
-```
-ON状態: `on` クラスを追加、tip を「ウォッチ中 — 解除する」に変更。SVG は変更不要（CSS が色を管理）。
-
-**適用コンテキスト：** 展覧会カード（`.ec`）、作品カード（`.aw`・`.p25c`）、記事カード、p2 サイドカード（ラベルテキストなし・アイコンのみ）  
-**ON 時の SVG 色は CSS が管理：** `.ktn-icon-btn[data-action="watch"].on svg circle:first-child { fill:#3a90e0; opacity:1 }` がグローバル定義済み。  
-**ツールチップ：** `.ec` 内では `.ktn-icon-btn .tip` が上向き・右端揃えに自動反転（`overflow:hidden` 対応済み）
-
----
-
-#### 3. interest ボタン（アイコン型 `.ktn-icon-btn`）— 展覧会・作品・記事用
-
-```html
-<!-- OFF 状態 -->
-<button class="ktn-icon-btn" data-action="interest"
-  onclick="handleAction(this,'interest');event.preventDefault()">
-  <svg viewBox="0 0 16 16" fill="none" width="15" height="15">
-    <path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"
-      fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/>
-  </svg>
-  <span class="tip">興味あり！に追加する</span>
-</button>
-```
-ON状態: `on` クラスを追加、tip を「興味あり！を解除する」に変更。SVG は変更不要（CSS が色を管理）。
-
-**適用コンテキスト：** 展覧会カード（`.ec`）、作品カード（`.aw`・`.p25c`）、記事カード、p2 サイドカード  
-**ON 時の SVG 色は CSS が管理：** `[data-action="interest"].on svg path { fill:#3a90e0; stroke:#3a90e0 }` がグローバル定義済み。HTML の SVG 属性は変更不要。  
-**ツールチップ：** `.ec` 内では上向き・右端揃えに自動反転（`overflow:hidden` 対応済み）
-
----
-
-#### 4. interest ボタン（ピル型 `.ktn-btn`）— CTA ウィジェット用
-
-```html
-<!-- p2aw-item で囲むと自動的に大きいサイズに -->
-<div class="p2aw-item">
-  <button class="ktn-btn" id="p2InterestBtn"
-    data-off="interest!" data-on="interested!" data-action="interest" aria-pressed="false">
-    <svg viewBox="0 0 16 16" fill="none">
-      <path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"
-        fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/>
-    </svg>
-    interest!<span class="tip">興味あり！に追加する</span>
-  </button>
-</div>
-```
-
-**適用コンテキスト：** p2/p3/p4/p6 右カラム CTA ウィジェット（`.ktn-cta-widget`）  
-**id 命名：** `p{ページID}InterestBtn`（pages.js のバインド用）
-
----
-
-#### 5. check-in ボタン（ピル型 `.ktn-btn--lg`）
-
-```html
-<button class="ktn-btn ktn-btn--lg" data-action="checkin"
-  onclick="openCheckinModal();event.preventDefault()">
-  <svg viewBox="0 0 16 16" fill="none" width="20" height="20">
-    <circle cx="10" cy="5" r="4" fill="#7a8a99" opacity=".3"/>
-    <circle cx="5" cy="11" r="2.4" fill="#7a8a99" opacity=".3"/>
-  </svg>
-  チェックイン＆レビュー
-</button>
-```
-
-**適用コンテキスト：** p2/p3/p4/p6 右カラム CTA ウィジェット  
-**モーダル：** `openCheckinModal()` がゲスト判定→auth modal / ログイン済み→チェックインフォームを自動選択
-
----
-
-#### 共通ルール
-
-**`handleAction` 経由を徹底：**
-- `onclick="this.classList.toggle('on')"` は禁止。ゲスト判定・tip テキスト更新が動作しない
-- p3/p4 のヒーローウォッチボタン（ヒーロー・サイドCTA・ヘッダーHIBの同期が必要）のみ pages.js の `addEventListener` で管理。inline `onclick` を付けない
-
-**SVG 禁止パターン：**
-- `opacity=".45"` → ダーク専用値。ライトパネルは **必ず `.3`**
-- `class="wi-dark"` → ライトパネルは **必ず `class="wi-inner"`**
-- `<use href="#icon-watch" color="#3a90e0">` → `color` 属性は CSS より優先されるため **禁止**。常に `color="#7a8a99"` か inline SVG を使う
-
-**サイズモディファイア（`.ktn-btn` ピル型）：**
-
-| コンテキスト | font-size | padding（watch） | padding（interest） | SVG | 用途 |
-|---|---|---|---|---|---|
-| カード内インライン（なし） | `0.75rem` | `7px 16px` | `7px 16px` | `15px` | `.ec` / `.aw` カード内、ヒーロー横 |
-| 2カラム CTA `.p2aw-item` 内自動 | `0.88rem` | `7px 30px` | `7px 22px` | `17px` | 右カラム CTA ウィジェット（クラス変更不要） |
-| 1カラム・モバイル（インライン指定） | `0.72rem` | `13px 20px` | `13px 20px` | `17px` | モバイル / 1カラムサイドCTA |
-| `--lg` | `1.1rem` | `14px 28px` | `14px 28px` | `20px` | 日本語CTA（チェックイン等） |
-
-※ `.p2aw-item` 内の watch は padding が wide（`7px 30px`）、interest は narrow（`7px 22px`）。いずれも CSS が自動適用するため HTML 側の変更不要。  
-※ 1カラム・モバイルサイズは `.p2aw-item` を使わずインラインで `style="font-size:.72rem;padding:13px 20px"` を指定する（`p3-action-watch-btn` クラスは使わない）。
-
-**ダークパネル対応（既存CSS）：**
-- `.p6-dark .ktn-btn` / `.p251-dark .ktn-btn` → ダーク用色定義済み（`color:#4da3f5` など）
-- 新規ダーク背景セクションに置く場合は親に `.p6-dark` 等の既存クラスを使うか、同パターンで追加する
-
-**Auth modal：** `common.js` の `_inject()` が DOMContentLoaded 時に `<body>` 末尾へ自動注入。各 HTML への記述不要。
+- **HTMLテンプレート（5種：watchピル/watchアイコン/interestアイコン/interestピル/check-in）・サイズモディファイア表・SVG禁止パターン・ダーク対応の詳細：`docs/component-html.md`「watch / interest / check-in ボタン（完成定義）」を Read で参照。**
+- 必須ルール（要点）：
+  - **`handleAction(this,'watch'|'interest')` 経由を徹底**。`onclick="this.classList.toggle('on')"` は禁止（ゲスト判定・tip 更新が動かない）。p3/p4 ヒーローウォッチのみ pages.js の `addEventListener` で管理し inline onclick を付けない
+  - ライトパネルの SVG は **必ず `opacity=".3"` + `class="wi-inner"`**（`.45` / `wi-dark` はダーク専用）。`<use href=… color=…>` は CSS を上書きするため禁止
+  - check-in は `openCheckinModal()`、CTAピルの interest は id `p{ページID}InterestBtn`
+  - Auth modal は `common.js` の `_inject()` が自動注入（各HTMLへの記述不要）
+  - **完了トーストは共有 `KTN.action.handle` が `ACTION_TOAST`（action→{on,off} 汎用文言）で自動発火する。ページ個別に `KTN.toast(...)` を書かない**（固有名入りトーストも禁止＝共有 handle は対象を判定しないため全パス汎用文言に統一）。ヒーロー等 inline onclick を付けない同期ハンドラは自前で `KTN.toast` を呼ぶが、文言は `ACTION_TOAST` と同一にする。`showToast` は同一メッセージ400ms以内の重複を無視する。ウォッチ同期セレクタ（`[data-action="watch"]`）は関連人物カード（`.cc`/`.gc`/`.uc`）を `.closest()` で除外し、別エンティティのウォッチをページオーナーと同期させない
 
 ---
 
@@ -977,7 +892,7 @@ ON状態: `on` クラスを追加、tip を「興味あり！を解除する」�
 - **文字色はブランド青 `#005da7`**（`--accent` ＝ロゴ `kotennavi-logo3.svg` と同色／hover `#004a85`）。下線＋`text-underline-offset:2px`。確定ボタン（`.ktn-op-btn--primary` `#1a4a88`）とは**別色**＝「実行ボタン」と「参照リンク」を色で区別する。
 - **サイズは文脈継承**（font-size を持たない）。本文中は本文サイズ、ヘッド補足の `.ktn-mgmt-head__guides` 内は `.75rem`。
 - 末尾に半角空白＋`→` をテキストで付ける（SVG矢印は使わない）。
-- 使用例：取引デスク（p3-16/p4-16/p5-15）・LIAISON+コンソール（p3-15/p4-15）のヘッド補足リンク、本文中の他ガイド参照。
+- 使用例：取引デスク（p3-16/p4-16）・取引ワークスペース（p5-15）・LIAISON+コンソール（p3-15/p4-15）のヘッド補足リンク、本文中の他ガイド参照。
 - 旧 `.p315-ops-guide__more`（赤）は本クラスに統一済み。新規のガイド参照は必ず `.ktn-guide-link` を使う（色のハードコード禁止）。
 
 ### 全ページ共通：必須マーカー（`.ktn-req`）
@@ -1050,11 +965,23 @@ ON状態: `on` クラスを追加、tip を「興味あり！を解除する」�
 **例外：SVG `<text>` 要素**
 SVG の `font-family` 属性は CSS 変数に非対応のため `font-family="'Montserrat',sans-serif"` のようにハードコードを許容する（p2系作品カードの SVG プレースホルダー等）。
 
-**管理ページのフォント使い分け（`.mgmt-page`）：**
-- UIテキスト・フォームラベル・入力欄・ヘルプテキスト・説明文・ボタンテキスト・ページ見出し（`.ktn-edit-head__title`）→ `--fn`（管理系全般のデフォルト）
-- セクション見出し（`.ktn-section__title`）・作品名・展覧会名・クリエイター名・ギャラリー名 → `--fs`（管理画面内に表示されるコンテンツ情報は引き続き `--fs`）
+**管理ページ・取引フローのフォント使い分け（`.mgmt-page` / 取引4ページ）：**
+
+**大原則（2026-07-04 確定）：明朝（`--fs`）は「コンテンツ固有名詞」と「表示系ページの読ませる文章・見出し」に限定する。操作・状態・機能を説明する UI テキストはすべてゴシック（`--fn`）。** 「操作を説明する文字は明朝にしない」を判断軸とする。取引フロー（p3-16 / p4-16 / p5-15）の状態文・手順ラベル・機能サブ見出し・モーダル文言・管理系の見出しは、コンテンツ名ではなく機能テキストなので `--fn`。
+
+- **`--fn`（ゴシック）に寄せる：**
+  - UIテキスト・フォームラベル・入力欄・ヘルプテキスト・説明文・ボタンテキスト・ページ見出し（`.ktn-edit-head__title` / `.p418-page-head__title` / `.p114-service-banner__title`）
+  - 取引フローの**状態文・完了/中断メッセージ・レビュー本文**（`.p515-confirming__title/__desc` / `.p515-done__desc` / `.p515-cancelled__msg` / `.p316-done__desc/__review-text` / `.p316-cancelled__msg`）
+  - 取引フローの**機能サブ見出し・手順ラベル**（`.p515-steps__label` / `.p515-log__title` / `.p515-comments__title` / `.p515-delivery__title` / `.p515-review__title` / `.p515-ship-confirm__title` / `.p515-done__title` / `.p316-apply-info__title` / `.p316-ship-form__title` / `.p316-ship-addr__title` / `.p316-review-display__title` / `.p316-done__title`）
+  - **操作モーダル文言**（`.p515-modal__title` / `.p515-modal__desc`）＝取引3ページ共有モーダル
+- **`--fs`（明朝）を維持：** 作品名・展覧会名・クリエイター名・ギャラリー名・人名（管理画面内に表示される**コンテンツ固有名詞**）。表示系ページの読ませる文章・章見出し。**機能サブ見出しには使わない**（旧 `.ktn-section__title`→`--fs` の一律例外は撤回。管理・取引フロー内の機能見出しは `--fn`。コンテンツ名を表示する見出しのみ `--fs`）。
 - `font-family: inherit` のボタン（`.ktn-op-btn` 等）は `body` の `--fn` を自動継承
 - 参照：`kotennavi_typography.html` セクション 8
+
+**Tier 3（2026-07-04 確定・ナビ／図中ラベル系）：** 機能ナビ・図中ラベルは `--fn`（ゴシック）に揃える。ただし**コンテンツ固有名詞を表示する要素は明朝を維持**（大原則どおり）。
+- **`--fn` に変更済み：** フッターリンク（`.ktn-footer__links a`＝利用規約・お問い合わせ等のサイトナビ）／パンくず現在地（`.ktn-bc__current`＝ナビchrome。先祖リンク `.ktn-bc__link` は既に body 継承で `--fn` のため、末尾だけ明朝の不統一を解消）／P70 フロー図の手順・終端ラベル（`.p70-flow-diagram__action` / `.p70-flow-diagram__end`＝申込・購入確定・支払…／取引完了＝取引ステップ名。Tier 2 の `.p515-steps__label` と同じ機能ラベル扱い）。
+- **`--fs`（明朝）を維持：** タブナビ名（`.p3-tabnav__name` / `.p5-tabnav__name`＝クリエイター名・ギャラリー名・ユーザー名の**固有名詞**）。ヒーロー見出し `.p3-head__name` / `.p4-head__name` / `.p5-head__name`（すべて `--fs`）と**同一の名前**を表示するため、ゴシック化すると同ページ内で人名が2フォントに割れる。固有名詞＝明朝の原則どおり据え置く。
+- **タブナビ項目（`.pN-tabnav__item` / `.p2-subnav__item`）は本スイープ対象外**：エディトリアル v2 で意図的に Shippori Mincho（サブナビ設計）としており、今回は変更しない（将来ナビ全体の方針を見直す際に別途判断）。
 
 ---
 
@@ -1092,7 +1019,7 @@ SVG の `font-family` 属性は CSS 変数に非対応のため `font-family="'M
 | 参照先 | 内容 |
 |---|---|
 | `docs/page-specs.md` | P2/P3/P4/P70/P3-15/コンテンツ下部エリア の確定仕様 |
-| `docs/component-html.md` | `.aw` / `.p25c` / `.p2-side-ec` / `.ec` コンポーネントHTML |
+| `docs/component-html.md` | `.aw` / `.p25c` / `.p2-side-ec` / `.ec` コンポーネントHTML、watch / interest / check-in ボタン完成定義 |
 
 ---
 
