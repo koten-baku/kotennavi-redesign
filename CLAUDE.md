@@ -667,6 +667,66 @@ p2-5-1（LIAISON+作品一覧）・p2-12-1（LIAISON+作品管理）・p6-dark�
 ### ロール動的切替（creator/gallery共有ページ）
 `KTN.pages['p2-11']` / `KTN.pages['p11-4']` / `KTN.pages['p6-11']` に `syncMgmtBar()` 関数を実装。`ktnRender` 内で `KTN.role` を読み取り `p3-page`/`p4-page` を付け外し。
 
+### 管理ページの幅（`--w-detail` 760px で全層統一・2026-07-06 確定）
+
+**管理・編集ページは「パンくず＝ヒーロー帯＝tabnav＝コンテンツ＝ページ最大幅」を全て `--w-detail`（760px）に揃える**（sitemap.md の正＝全 mgmt ページ 760px）。表示系（p2/p3/p4/p5 の公開ページ＝`--w-entity` 1080px）と異なり、管理系は1カラム760で確定。
+
+- **パンくず・ヒーロー・tabnav は汎用ルールが自動適用**（common.css L11326〜11332）。`<body>` に `mgmt-page` を付ければ以下が効くため、**ページ個別に `max-width` を書く必要はない**：
+  ```css
+  body.mgmt-page .ktn-header__inner{max-width:var(--w-detail)}          /* パンくず */
+  body.mgmt-page .p3-head,.p4-head,.p5-head{max-width:var(--w-detail)}  /* ヒーロー */
+  body.mgmt-page .p3-tabnav,.p4-tabnav,.p5-tabnav{max-width:var(--w-detail)} /* tabnav */
+  ```
+  - 以前は各ページに個別 `max-width:var(--w-detail)` 指定が残っていたが、汎用ルールと重複するため**削除済み（2026-07-06）**。新規ページで個別指定を追加しない。
+- **コンテンツ本体（`.ktn-content` は素だと 1080）は必ず760へ絞る**。素の `.ktn-content` を1080のまま置かない。次の4手段のいずれかを使う：
+  | 手段 | 使う場面 | 例 |
+  |---|---|---|
+  | `.ktn-content--detail` を併記 | フォーム・詳細1カラム | p3-11 |
+  | `.ktn-content--article` を併記 | 編集フォーム系 | p2-11/p2-12/p2-12-1/p6-11/p11-4 |
+  | 内側wrapに `max-width:var(--w-detail);margin:0 auto` | 独自レイアウト | p4-18（`.p418-wrap`）・p5-11〜13 |
+  | 内側wrapに `.ktn-mgmt-wrap` を併記（白カード＋760） | 取引・コンソール系 | p3-15/p4-15/p3-16/p4-16/p5-14/p5-15（`class="pNNN-wrap ktn-mgmt-wrap"`） |
+- **`data-w` 属性は不要**：`body.mgmt-page .ktn-header__inner` がパンくず幅を data-w に関わらず760へ固定するため。
+- 左右padding は20pxで統一（`.ktn-mgmt-wrap` 系は子要素 `margin:0 20px`、モバイルで縮小）。
+
+### 管理ボックス共通パターン（`.ktn-mgmt-wrap` ＋ `.ktn-mgmt-stack`・2026-07-06 確定）
+
+取引・コンソール系（p3-15/p4-15/p3-16/p4-16/p5-14/p5-15）の**「ヒーロー帯＋タブナビ → その下に操作コンテンツを白ボックスへ格納（ボックス上端にオーナーのアクセントライン）」**という構造は共通コンポーネント化済み。**新規の管理・操作ページはこの3クラスの組み合わせをコピーするだけでよい**（ページ固有CSSは原則不要）。
+
+**3層アナトミー：**
+1. **ヒーロー帯＋タブナビ**（`.pN-head` ＋ `.pN-tabnav`）＝760px。`body.mgmt-page` の汎用ルールで自動760化（前項）。
+2. **操作ボックス**（`.ktn-mgmt-wrap`）＝白カード＋ヘアライン枠＋**上端3pxのオーナーアクセントライン**（`border-top:3px solid var(--page-accent)`）＋760px。`--page-accent` は `body.pN-page` が供給（creator青緑／gallery銅／user桃）。
+3. **ボックス内本文スタック**（`.ktn-mgmt-stack`）＝ヘッド＋操作ブロックを縦積み。
+
+**クラスの役割分担（canonical：common.css `.ktn-mgmt-*` ブロック）：**
+
+| クラス | 役割 | 既定値 |
+|---|---|---|
+| `.ktn-mgmt-wrap` | 白ボックス・アクセントライン・760px | `max-width:760;border;border-top:3px accent;radius:4px;shadow` |
+| `.ktn-mgmt-stack` | 本文スタック（**再利用の主役**） | `flex column;gap:20px;padding:0 0 60px` ＋ ヘッド以外の子を左右20px inset（モバイル8px） |
+| `.ktn-mgmt-head` | ボックス上部のタイトル帯（全幅・下罫線・自前24px padding） | `__title`／`__en`／`__desc`／`__meta`／`__guides` の子要素あり |
+
+**HTMLテンプレート（これをコピー）：**
+```html
+<div class="ktn-content">
+  <div class="ktn-mgmt-wrap ktn-mgmt-stack">      <!-- ページ固有クラス .pNNN-wrap は任意で併記 -->
+    <div class="ktn-mgmt-head">
+      <h2 class="ktn-mgmt-head__title">ページ名</h2>
+      <p class="ktn-mgmt-head__en">PAGE NAME</p>
+      <p class="ktn-mgmt-head__desc">説明文…</p>
+    </div>
+    <!-- 以下、操作ブロックを直接子として並べる（自動で左右20px inset・縦gap） -->
+    <div class="…">…</div>
+    <div class="…">…</div>
+  </div>
+</div>
+```
+
+**運用ルール：**
+- `.ktn-mgmt-head` は**必ずボックスの最初の子**に置く（全幅・inset対象外）。それ以外の直接子は自動で20px inset＋縦積みされる。
+- **gap・下paddingが既定（20px／60px）でよければページ固有CSSは書かない**。変えたい時だけ `.pNNN-wrap` を併記して `gap` / `padding-bottom` のみ上書き（例：p5-15＝`.p515-wrap{gap:16px;padding-bottom:80px}`／p3-16=p4-16＝`.p316-wrap{padding-bottom:48px}`）。**`display:flex` や child-inset をページ側に再定義しない**（`.ktn-mgmt-stack` が単一ソース）。
+- **p3-15/p4-15（`.p315-wrap`）は `.ktn-mgmt-stack` を併用するが半移行**：主要セクション（ops-guide/exh-block/works-summary/archive）は `.p315-tab-panel` 内にネストするため、stack の child-inset（左右20px）は直下の子＝`.p315-faq` にしか効かない。**タブ内セクションの横insetは `.p315-tab-panel{padding:16px 20px 0}`／`.p315-tab-nav{padding-left:20px}`（モバイル540pxで8px）が別途供給**し、値を stack と揃えて全6ページのセクション横幅を一致させた（2026-07-06、旧24px→20pxへ commonize）。`.p315-wrap` は `gap:0`＋独自 `margin-top` 間隔・`!important` を残す bespoke のままなので、**stack の gap/inset をこのページの他要素向けに前提にしない**。
+- `body` には `mgmt-page` ＋ `pN-page`（アクセント色供給）を付ける（→「管理ページ視覚識別」）。
+
 ---
 
 ## 確定済み設計仕様
