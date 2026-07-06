@@ -369,7 +369,7 @@ const TAGBAR_DEFS = {
     { label: 'LIAISON+あり', href: '/p2?liaison=1', mod: 'liaison' },
   ],
   'p2-3': [
-    { label: '展覧会詳細', href: '#', active: true },
+    { label: '記事・案内', href: '#', active: true },
     { label: '作品一覧', href: '#artworks' },
     { label: 'クリエイター', href: '#creator' },
     { label: 'ギャラリー情報', href: '#gallery' },
@@ -377,7 +377,7 @@ const TAGBAR_DEFS = {
     { label: 'LIAISON作品', href: '/p2-5', mod: 'liaison' },
   ],
   'p2-5': [
-    { label: '展覧会詳細', href: '/p2-3' },
+    { label: '記事・案内', href: '/p2-3' },
     { label: 'LIAISON作品一覧', href: '#', mod: 'liaison', active: true },
   ],
   'p3': [
@@ -494,7 +494,7 @@ const PAGES = {
   'p2': { n: '展覧会', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', null]] },
   'p2-1': { n: '展覧会-スケジュール', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['スケジュール', null]] },
   'p2-2': { n: '展覧会-開催場所', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['開催場所', null]] },
-  'p2-3': { n: '展覧会-詳細', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['詳細', null]] },
+  'p2-3': { n: '展覧会-記事・案内', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['記事・案内', null]] },
   'p2-4': { n: '展覧会-出展者', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['出展者', null]] },
   'p2-5': { n: '展覧会-リエゾン作品一覧', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['LIAISON作品一覧', null]] },
   'p2-5-1': { n: '展覧会-リエゾンプラス作品一覧', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['LIAISON+ 作品一覧', null]] },
@@ -667,7 +667,7 @@ function ddSep() { return `<div class="ktn-dd-sep"></div>`; }
 function getActions(page, role) {
   ddSeq = 0; // IDリセット（レンダリングごと）
 
-  /* ── P2-3 展覧会詳細 ── */
+  /* ── P2-3 記事・案内 ── */
   if (['p2-3', 'p2-5'].includes(page)) {
     const cmn = hib('heart', '興味あり') + shareBtn() + sep();
     if (role === 'guest' || role === 'login')

@@ -3789,6 +3789,11 @@ line-clamp:2;}
   text-transform:lowercase;
 }
 .p2-sch-sep{font-size:1.3rem;color:var(--border);flex-shrink:0;padding:0 4px;margin-top:18px}
+/* 会期状態の小さな添え書き（開始–終了バー直下・ヒーローバッジと連動） */
+.p2-sch-status{display:flex;align-items:center;justify-content:center;gap:10px;margin:-4px 0 14px}
+.p2-sch-status__remain{font-family:var(--fm);font-size:.72rem;font-weight:600;letter-spacing:.04em;color:var(--muted)}
+.p2-sch-status__closed{display:none;font-size:.72rem;font-weight:600;color:#c8501c}
+.p2-sch-status__closed.is-on{display:inline}
 .p2-sch-detail{font-size:.75rem;line-height:1.8;padding-top:12px;border-top:1px solid var(--border)}
 .p2-sch-hl{background:rgba(0,93,167,.07);color:var(--accent);padding:1px 5px;border-radius:2px}
 
@@ -4578,6 +4583,7 @@ a.p2-action-widget__btn{text-decoration:none}
 /* ── 2. タイトルバンド：会場・会期 ── */
 .p2-title-band__facts{
   display:grid;grid-template-columns:auto 1fr;
+  align-items:baseline;
   gap:5px 14px;margin-top:12px;
   padding-top:12px;border-top:1px solid var(--border);
 }
@@ -4592,6 +4598,17 @@ a.p2-action-widget__btn{text-decoration:none}
 .p2-title-band__ddow{font-size:.75rem;color:var(--muted);margin-left:3px}
 .p2-title-band__ddash{font-size:.75rem;opacity:.35;margin:0 8px}
 .p2-title-band__dtime{margin-left:8px;font-size:.75rem;color:var(--muted)}
+/* 本日休み（会期中の休館日）：時間の代わりに表示 */
+.p2-title-band__dtime--closed{color:#c8501c;font-weight:600}
+/* 会場行の現在地からの距離チップ（.p2-side-ec__dist と同系） */
+.p2-title-band__dist{
+  display:inline-flex;align-items:center;gap:2px;margin-left:8px;
+  font-family:var(--fm);font-size:.62rem;font-weight:600;letter-spacing:.02em;
+  color:var(--page-accent,#005da7);line-height:1;white-space:nowrap;
+}
+.p2-title-band__dist svg{width:9px;height:9px}
+/* dl の独立行で使う場合は左マージンを消して他ddと左端を揃える */
+.p2-title-band__dist--row{margin-left:0}
 
 /* ── 3. クリエイターカード プレースホルダー（2列グリッド） ── */
 .p2-creator-grid{
