@@ -52,6 +52,10 @@ button{cursor:pointer;font-family:inherit}
   --actor-buyer: #1a4a88; /* 取引フローの購入者・ユーザー側アクター色。ブランド青と用途を分離（tint は rgba(26,74,136,…)） */
   --muted: #3d4f5e;
   --border: #d0dae4;
+  --tag-bg: #e8edf2; /* 画像プレースホルダー・サムネイル下地（旧 components.css から移設） */
+  --col-article: #2e7a4e; /* 記事カード（.mc/.lc）アクセント＝cb-article と同色（旧 components.css から移設） */
+  --col-review: #b86a10;  /* レビュー同上＝cb-review と同色 */
+  --col-news: #c0392b;    /* ニュース同上＝cb-news と同色 */
   --lr: #c0392b;
   --lp: #8a6a00;
   --danger: #c0392b;
@@ -635,7 +639,6 @@ button{font-family:inherit;cursor:pointer}
 }
 .main-placeholder {
   height: 400px;
-  background: linear-gradient(180deg, var(--warm-white), var(--paper));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -938,7 +941,6 @@ button{font-family:inherit;cursor:pointer}
 ══════════════════════════════════════════ */
 .ktn-ad-band {
   width: 100%;
-  background: var(--warm-white);
   border-top: 1px solid var(--border);
   padding: 20px 0;
 }
@@ -3201,6 +3203,66 @@ line-clamp:2;}
 .exh-link__arrow{font-size:.72rem;color:var(--muted);flex-shrink:0;transition:transform .12s}
 .exh-link:hover .exh-link__title{text-decoration:underline}
 .exh-link:hover .exh-link__arrow{transform:translateX(2px)}
+
+/* ── マガジンカード .mc（p2-3 記事・案内）／リストカード .lc（p3-2・p4-2 記事一覧）──
+   デモ専用 kotennavi-components.css から移設（2026-07-08）。radius 4px・控えめホバーのカード共通ルールに是正 */
+.byline-author{display:inline-flex;align-items:center;gap:4px;min-width:0;flex-shrink:1;overflow:hidden}
+.byline-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer;transition:color .15s}
+.byline-name:hover{color:var(--accent);text-decoration:underline;text-underline-offset:2px}
+.mc{display:block;background:#fff;border:1px solid var(--border);border-radius:4px;overflow:hidden;cursor:pointer;color:inherit;transition:transform .2s,box-shadow .2s}
+.mc:hover{transform:translateY(-1px);box-shadow:0 4px 18px rgba(0,0,0,.06)}
+.mc__img{width:100%;overflow:hidden;aspect-ratio:16/9;background:var(--tag-bg)}
+.mc__img img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none;transition:transform .3s}
+.mc:hover .mc__img img{transform:scale(1.03)}
+.mc__img-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:var(--fs);font-size:1.1rem;font-weight:600;color:rgba(255,255,255,.22);letter-spacing:.06em}
+.ph-1{background:linear-gradient(145deg,#8a9aaa,#506070)}
+.ph-2{background:linear-gradient(145deg,#aa9a8a,#705040)}
+.ph-3{background:linear-gradient(145deg,#8aaa9a,#407060)}
+.ph-4{background:linear-gradient(145deg,#aa8a9a,#704060)}
+.ph-5{background:linear-gradient(145deg,#9a8aaa,#504070)}
+.ph-6{background:linear-gradient(145deg,#9aaa8a,#507040)}
+.ph-n1{background:linear-gradient(145deg,#7a8a9a,#3a5060)}
+.ph-n2{background:linear-gradient(145deg,#9a7a8a,#603050)}
+.mc__body{padding:12px 14px 0}
+.mc__badge-row{display:flex;align-items:center;gap:5px;margin-bottom:8px;flex-wrap:wrap}
+.mc__title{font-family:var(--fs);font-weight:600;font-size:.9rem;line-height:1.5;letter-spacing:.03em;margin-bottom:5px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.mc__lead{font-size:.65rem;color:var(--muted);line-height:1.7;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;margin-bottom:9px;letter-spacing:.02em}
+.mc__byline{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:.6rem;color:var(--muted);letter-spacing:.02em;padding-bottom:10px;row-gap:3px}
+.mc__byline-sep{opacity:.4;flex-shrink:0}
+.mc__date{flex-shrink:0;font-family:var(--fm);font-size:.55rem;letter-spacing:.05em}
+.mc__foot{display:flex;align-items:center;gap:8px;padding:7px 14px 10px;border-top:1px solid rgba(0,0,0,.05);justify-content:flex-end}
+.mc--img-article{border-bottom:3px solid var(--col-article)}
+.mc--img-review{border-bottom:3px solid var(--col-review)}
+.mc--img-news{border-bottom:3px solid var(--col-news)}
+.mc--noimg{border-bottom-width:3px}
+.mc--noimg-article{border-bottom-color:var(--col-article)}
+.mc--noimg-review{border-bottom-color:var(--col-review)}
+.mc--noimg-news{border-bottom-color:var(--col-news)}
+.mc--noimg .mc__byline{border-top:1px solid rgba(0,0,0,.05);padding-top:7px;margin-top:auto}
+.lc{display:flex;flex-direction:row;align-items:stretch;background:#fff;border:1px solid var(--border);border-radius:4px;border-bottom:3px solid transparent;overflow:hidden;cursor:pointer;color:inherit;transition:transform .2s,box-shadow .2s}
+.lc:hover{transform:translateY(-1px);box-shadow:0 4px 18px rgba(0,0,0,.06)}
+.lc--article{border-bottom-color:var(--col-article)}
+.lc--review{border-bottom-color:var(--col-review)}
+.lc--news{border-bottom-color:var(--col-news)}
+.lc__body{padding:10px 14px 0;flex:1;min-width:0;display:flex;flex-direction:column}
+.lc__badge-row{display:flex;align-items:center;gap:5px;margin-bottom:7px;flex-wrap:wrap}
+.lc__title{font-family:var(--fs);font-weight:600;font-size:.84rem;line-height:1.5;letter-spacing:.03em;margin-bottom:4px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.lc__lead{font-size:.62rem;color:var(--muted);line-height:1.7;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;margin-bottom:6px;letter-spacing:.02em}
+.lc__byline{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:.6rem;color:var(--muted);letter-spacing:.02em;border-top:1px solid rgba(0,0,0,.05);padding:6px 0 9px;margin-top:auto;row-gap:3px}
+.lc__byline-sep{opacity:.4;flex-shrink:0}
+.lc__date{flex-shrink:0;font-family:var(--fm);font-size:.55rem;letter-spacing:.05em}
+.lc__thumb{width:80px;flex-shrink:0;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+.lc__thumb--article{background:linear-gradient(160deg,rgba(46,122,78,.14) 0%,rgba(46,122,78,.05) 100%)}
+.lc__thumb--review{background:linear-gradient(160deg,rgba(184,106,16,.14) 0%,rgba(184,106,16,.05) 100%)}
+.lc__thumb--news{background:linear-gradient(160deg,rgba(192,57,43,.14) 0%,rgba(192,57,43,.05) 100%)}
+.lc__thumb--photo{background:var(--tag-bg)}
+.lc__thumb--photo img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s}
+.lc:hover .lc__thumb--photo img{transform:scale(1.04)}
+.lc__thumb-label{font-family:var(--fm);font-size:.44rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;writing-mode:vertical-rl;opacity:.2}
+.lc__thumb--article .lc__thumb-label{color:var(--col-article)}
+.lc__thumb--review .lc__thumb-label{color:var(--col-review)}
+.lc__thumb--news .lc__thumb-label{color:var(--col-news)}
+.lc--noimg .lc__body{padding-left:14px}
 
 
 
@@ -5476,7 +5538,6 @@ a.p2-action-widget__btn{text-decoration:none}
 
 /* ── 関連記事リスト ── */
 .p2-3-article-list { display: flex; flex-direction: column; gap: 12px; padding: 10px 18px 14px; }
-.p2-3-article-list .mc { border-radius: 6px; }
 
 /* ── セクション「もっと見る」リンク ── */
 .p2-3-section__more { padding: 6px 18px 14px; }
@@ -9617,7 +9678,7 @@ body.p5-1-page .ktn-content{max-width:800px}
 .p5-2-remove-btn:hover{color:#e74c3c;border-color:#e74c3c}
 .p5-3-ac{display:flex;gap:12px;padding:12px 14px;border-bottom:1px solid var(--border);text-decoration:none;color:inherit;transition:background .15s}
 .p5-3-ac:last-child{border-bottom:none}
-.p5-3-ac:hover{background:var(--bg)}
+.p5-3-ac:hover{background:var(--warm)}
 .p5-3-ac__thumb{width:56px;height:56px;flex-shrink:0;border-radius:4px}
 .p5-3-ac__body{flex:1;min-width:0}
 .p5-3-ac__meta{display:flex;align-items:center;gap:5px;margin-bottom:3px}
@@ -9651,7 +9712,7 @@ body.p5-1-page .ktn-content{max-width:800px}
 .p5-type-tab{background:none;border:none;padding:9px 16px;font-size:.82rem;color:var(--muted);cursor:pointer;font-family:inherit;border-bottom:2px solid transparent;margin-bottom:-2px;transition:color .15s,border-color .15s;white-space:nowrap}
 .p5-type-tab:hover{color:var(--ink)}
 .p5-type-tab.is-active{color:var(--page-accent,#b8608c);border-bottom-color:var(--page-accent,#b8608c);font-weight:600}
-.p5-type-tab .p5-list-tab__count{font-size:.75rem;background:var(--bg);color:var(--muted);border-radius:10px;padding:1px 7px;font-weight:400;margin-left:2px}
+.p5-type-tab .p5-list-tab__count{font-size:.75rem;background:var(--tag-bg);color:var(--muted);border-radius:10px;padding:1px 7px;font-weight:400;margin-left:2px}
 .p5-type-tab.is-active .p5-list-tab__count{background:var(--page-accent-bg,rgba(184,96,140,.1));color:var(--page-accent,#b8608c);font-weight:500}
 /* ── p5-cbox: p5-1/2/3 コンテンツボックス（軸②フィルター内蔵） ─── */
 .p5-cbox{background:#fff;border:1px solid var(--border);border-radius:4px;overflow:hidden;margin-bottom:24px}
@@ -9747,7 +9808,7 @@ body.p3-3-page .aw--plus .aw__foot>.p33-console-wrap{order:3}
 .p514-tab{display:inline-flex;align-items:center;gap:6px;font-family:inherit;font-size:.82rem;font-weight:400;padding:9px 16px;border:none;background:none;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-2px;transition:color .15s;white-space:nowrap}
 .p514-tab.is-active{color:var(--page-accent,#b8608c);border-bottom-color:var(--page-accent,#b8608c);font-weight:600}
 .p514-tab:hover:not(.is-active){color:var(--ink)}
-.p514-tab__count{font-size:.75rem;background:var(--bg);color:var(--muted);border-radius:10px;padding:1px 7px;font-weight:400;margin-left:2px}
+.p514-tab__count{font-size:.75rem;background:var(--tag-bg);color:var(--muted);border-radius:10px;padding:1px 7px;font-weight:400;margin-left:2px}
 .p514-tab.is-active .p514-tab__count{background:var(--page-accent-bg,rgba(184,96,140,.1));color:var(--page-accent,#b8608c);font-weight:500}
 
 /* ── タブペイン ── */
@@ -10725,7 +10786,7 @@ body.p4-15-page{--page-accent:#8b5e3c}
 .p5-15-page .p515-status--my-turn .p515-status__badge{background:rgba(184,96,140,.12);color:#b8608c}
 .p515-status--waiting .p515-status__badge{background:rgba(0,0,0,.05);color:var(--muted)}
 /* turn-label は状態バッジの直後（左寄せ）。背景なし・色付きテキスト＋アイコンのみ。前ステップ完了日時 .p515-status__deadline が margin-left:auto で右寄せ */
-.p316-turn-label{display:inline-flex;align-items:center;gap:4px;font-size:.75rem;font-family:var(--font-ui);font-weight:600;flex-shrink:0;white-space:nowrap}
+.p316-turn-label{display:inline-flex;align-items:center;gap:4px;font-size:.75rem;font-family:var(--fn);font-weight:600;flex-shrink:0;white-space:nowrap}
 .p316-turn-label--mine{color:#2a5f7a}
 .p4-16-page .p316-turn-label--mine{color:#8b5e3c}
 .p5-15-page .p316-turn-label--mine{color:#b8608c}
@@ -10746,7 +10807,7 @@ body.p4-15-page{--page-accent:#8b5e3c}
 .p316-carrier-wrap .p316-ship-form__field{flex:1;min-width:0}
 .p316-ship-form__select{width:100%;padding:7px 10px;border:1px solid var(--border);border-radius:3px;font-size:.82rem;font-family:inherit;background:#fff;box-sizing:border-box;cursor:pointer}
 .p316-ship-form__select:focus{outline:none;border-color:var(--page-accent,#2a5f7a)}
-.p316-rate-btn{height:32px;padding:0 10px;background:#fff;border:1px solid var(--border);border-radius:3px;font-size:.75rem;font-family:var(--font-ui);color:var(--muted);cursor:pointer;white-space:nowrap;flex-shrink:0;display:flex;align-items:center;gap:4px}
+.p316-rate-btn{height:32px;padding:0 10px;background:#fff;border:1px solid var(--border);border-radius:3px;font-size:.75rem;font-family:var(--fn);color:var(--muted);cursor:pointer;white-space:nowrap;flex-shrink:0;display:flex;align-items:center;gap:4px}
 .p316-rate-btn:hover{border-color:var(--page-accent,#2a5f7a);color:var(--page-accent,#2a5f7a)}
 .p316-carrier-other-wrap{margin-top:6px}
 /* 梱包費・送料合計ブレイクダウン */
