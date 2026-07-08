@@ -36,7 +36,7 @@
   </header>
 
   <main class="ktn-main" id="ktnMain">
-    <div class="ktn-content ktn-content--article">
+    <div class="ktn-content">
 
       <!-- クローン元バナー（クローンモードのみ表示） -->
       <div class="p211-mode-banner" id="p611CloneBanner" hidden>
@@ -56,12 +56,14 @@
         <span class="p211-exh-banner__arr">作品ページを見る →</span>
       </a>
 
+      <!-- 管理ボックス -->
+      <div class="ktn-mgmt-wrap">
+
       <!-- ページヘッド -->
-      <div class="ktn-edit-head">
-        <div class="ktn-edit-head__row">
-          <h1 class="ktn-edit-head__title" id="p611PageTitle">作品を編集</h1>
-        </div>
-        <p class="ktn-edit-head__desc">作品情報を入力・更新してください。<span class="p211-req">*</span> は必須項目です。</p>
+      <div class="ktn-mgmt-head">
+        <h2 class="ktn-mgmt-head__title" id="p611PageTitle">作品を編集</h2>
+        <p class="ktn-mgmt-head__en">ARTWORK EDITOR</p>
+        <p class="ktn-mgmt-head__desc">作品情報を入力・更新してください。<span class="p211-req">*</span> は必須項目です。</p>
       </div>
 
       <!-- ─── 1. 基本情報 ─── -->
@@ -360,19 +362,18 @@
         </div>
       </div>
 
-      <!-- スペーサー（sticky submitbarの分） -->
-      <div style="height:8px"></div>
+      <!-- 送信バー（sticky） -->
+      <div class="p211-submit-bar">
+        <button class="p211-submit-bar__cancel" type="button" onclick="history.back()">キャンセル</button>
+        <button class="p211-submit-bar__submit" type="button" id="p611SubmitBtn" onclick="handleSubmit()">保存して公開する</button>
+        <span class="p211-submit-bar__note" id="p611SubmitNote">* 必須項目を入力してください</span>
+      </div>
+
+      </div><!-- /.ktn-mgmt-wrap -->
 
     </div>
   </main>
 </div>
-</div>
-
-<!-- 送信バー（sticky） -->
-<div class="p211-submit-bar">
-  <button class="p211-submit-bar__cancel" type="button" onclick="history.back()">キャンセル</button>
-  <button class="p211-submit-bar__submit" type="button" id="p611SubmitBtn" onclick="handleSubmit()">保存して公開する</button>
-  <span class="p211-submit-bar__note" id="p611SubmitNote">* 必須項目を入力してください</span>
 </div>
 
 <script src="kotennavi-common.js"></script>

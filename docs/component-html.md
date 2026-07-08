@@ -32,7 +32,7 @@
 
 **主要CSS（`common.css`）：** ポスター52×52px（`border-radius:4px`）・`p2-side-ec__name` は `--fs` 0.8rem・venue/period は `--fn` 0.68rem muted
 
-**コンテナ：** `p2-side-card` + ページ固有クラス（例：`p3-side-rel-exh`）で包む。ヘッダーは `.p2-side-nearby__head` + `.p2-side-nearby__title` + `.p2-side-nearby__more`（右端リンク）
+**コンテナ：** `p2-side-card` + ページ固有クラス（例：`p3-side-rel-exh`）で包む。ヘッダーは `.p2-side-nearby__head` + `.p2-side-nearby__title` + `.ktn-more-link`（右端リンク）
 
 ---
 

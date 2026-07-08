@@ -33,17 +33,18 @@
       <div class="ktn-hdr-actions" id="ktnActs"></div>
     </div>
   </header>
-  <div class="ktn-tagbar" id="ktnTagbar">
-    <div class="ktn-tagbar__inner" id="ktnTagbarInner"></div>
-  </div>
 
   <main class="ktn-main" id="ktnMain">
-    <div class="ktn-content ktn-content--article">
+    <div class="ktn-content">
+
+      <!-- 管理ボックス -->
+      <div class="ktn-mgmt-wrap ktn-mgmt-stack">
 
       <!-- ページタイトル -->
-      <div class="ktn-edit-head">
-        <h1 class="ktn-edit-head__title">LIAISON 展示設定</h1>
-        <p class="ktn-edit-head__desc">この展覧会に連動したオンライン作品展示の設定を行います。展示した作品は展覧会ページの LIAISON タブで公開されます。</p>
+      <div class="ktn-mgmt-head">
+        <h2 class="ktn-mgmt-head__title">LIAISON 展示設定</h2>
+        <p class="ktn-mgmt-head__en">LIAISON SETTINGS</p>
+        <p class="ktn-mgmt-head__desc">この展覧会に連動したオンライン作品展示の設定を行います。展示した作品は展覧会ページの LIAISON タブで公開されます。</p>
       </div>
 
       <!-- 1. 展覧会コンパクトバナー -->
@@ -72,54 +73,6 @@
         <div class="p2-12-mode-bar__actions">
           <button class="p2-12-mode-switch" onclick="p212OpenModal('switch')">LIAISON+ に切り替える</button>
           <button class="p2-12-mode-none" onclick="p212OpenModal('none')">LIAISON作品展示しない</button>
-        </div>
-      </div>
-
-      <!-- LIAISON+ 切替確認モーダル（申請済みユーザー向け） -->
-      <div id="p212-modal-switch-ok" class="p2-12-modal" hidden>
-        <div class="p2-12-modal__bg" onclick="p212CloseModal('switch-ok')"></div>
-        <div class="p2-12-modal__box">
-          <h3 class="p2-12-modal__title">LIAISON+ に切り替えますか？</h3>
-          <ul class="p2-12-modal__notes">
-            <li>LIAISON+ では価格設定と販売期間の設定が必要になります。</li>
-            <li>切り替え後は LIAISON+ 作品管理ページに移動します。</li>
-          </ul>
-          <div class="p2-12-modal__foot">
-            <button class="p2-12-modal__cancel" onclick="p212CloseModal('switch-ok')">キャンセル</button>
-            <button class="p2-12-modal__ok" onclick="location.href='kotennavi-p2-12-1.html'">切り替える</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- LIAISON+ 切替案内モーダル（未申請ユーザー向け） -->
-      <div id="p212-modal-switch-ng" class="p2-12-modal" hidden>
-        <div class="p2-12-modal__bg" onclick="p212CloseModal('switch-ng')"></div>
-        <div class="p2-12-modal__box">
-          <h3 class="p2-12-modal__title">LIAISON+ のご利用には申込が必要です</h3>
-          <ul class="p2-12-modal__notes">
-            <li>LIAISON+ は申込・承認済みのクリエイター/ギャラリーのみご利用いただけます。</li>
-            <li>申込ページから申請してください。審査後にご利用いただけます。</li>
-          </ul>
-          <div class="p2-12-modal__foot">
-            <button class="p2-12-modal__cancel" onclick="p212CloseModal('switch-ng')">キャンセル</button>
-            <button class="p2-12-modal__ok" onclick="location.href='kotennavi-p11-4.html'">LIAISON+ を申し込む</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- 使用しない 切替確認モーダル -->
-      <div id="p212-modal-none" class="p2-12-modal" hidden>
-        <div class="p2-12-modal__bg" onclick="p212CloseModal('none')"></div>
-        <div class="p2-12-modal__box">
-          <h3 class="p2-12-modal__title">LIAISON を解除しますか？</h3>
-          <ul class="p2-12-modal__notes">
-            <li>LIAISON の設定と登録作品がすべて削除されます。</li>
-            <li>展覧会の編集ページで「使用しない」を選択して保存します。</li>
-          </ul>
-          <div class="p2-12-modal__foot">
-            <button class="p2-12-modal__cancel" onclick="p212CloseModal('none')">キャンセル</button>
-            <button class="p2-12-modal__ok danger" onclick="location.href='kotennavi-p2-11.html'">編集ページへ</button>
-          </div>
         </div>
       </div>
 
@@ -176,6 +129,56 @@
         </div>
 
       </section>
+
+      </div><!-- /.ktn-mgmt-wrap -->
+
+      <!-- LIAISON+ 切替確認モーダル（申請済みユーザー向け） -->
+      <div id="p212-modal-switch-ok" class="p2-12-modal" hidden>
+        <div class="p2-12-modal__bg" onclick="p212CloseModal('switch-ok')"></div>
+        <div class="p2-12-modal__box">
+          <h3 class="p2-12-modal__title">LIAISON+ に切り替えますか？</h3>
+          <ul class="p2-12-modal__notes">
+            <li>LIAISON+ では価格設定と販売期間の設定が必要になります。</li>
+            <li>切り替え後は LIAISON+ 作品管理ページに移動します。</li>
+          </ul>
+          <div class="p2-12-modal__foot">
+            <button class="p2-12-modal__cancel" onclick="p212CloseModal('switch-ok')">キャンセル</button>
+            <button class="p2-12-modal__ok" onclick="location.href='kotennavi-p2-12-1.html'">切り替える</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- LIAISON+ 切替案内モーダル（未申請ユーザー向け） -->
+      <div id="p212-modal-switch-ng" class="p2-12-modal" hidden>
+        <div class="p2-12-modal__bg" onclick="p212CloseModal('switch-ng')"></div>
+        <div class="p2-12-modal__box">
+          <h3 class="p2-12-modal__title">LIAISON+ のご利用には申込が必要です</h3>
+          <ul class="p2-12-modal__notes">
+            <li>LIAISON+ は申込・承認済みのクリエイター/ギャラリーのみご利用いただけます。</li>
+            <li>申込ページから申請してください。審査後にご利用いただけます。</li>
+          </ul>
+          <div class="p2-12-modal__foot">
+            <button class="p2-12-modal__cancel" onclick="p212CloseModal('switch-ng')">キャンセル</button>
+            <button class="p2-12-modal__ok" onclick="location.href='kotennavi-p11-4.html'">LIAISON+ を申し込む</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 使用しない 切替確認モーダル -->
+      <div id="p212-modal-none" class="p2-12-modal" hidden>
+        <div class="p2-12-modal__bg" onclick="p212CloseModal('none')"></div>
+        <div class="p2-12-modal__box">
+          <h3 class="p2-12-modal__title">LIAISON を解除しますか？</h3>
+          <ul class="p2-12-modal__notes">
+            <li>LIAISON の設定と登録作品がすべて削除されます。</li>
+            <li>展覧会の編集ページで「使用しない」を選択して保存します。</li>
+          </ul>
+          <div class="p2-12-modal__foot">
+            <button class="p2-12-modal__cancel" onclick="p212CloseModal('none')">キャンセル</button>
+            <button class="p2-12-modal__ok danger" onclick="location.href='kotennavi-p2-11.html'">編集ページへ</button>
+          </div>
+        </div>
+      </div>
 
     </div><!-- /.ktn-content -->
   </main>

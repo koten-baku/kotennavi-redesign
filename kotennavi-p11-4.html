@@ -36,27 +36,34 @@
   </header>
 
   <main class="ktn-main" id="ktnMain">
-    <div class="ktn-content ktn-content--article">
-      <div class="p114-wrap">
+    <div class="ktn-content">
 
-        <!-- 審査中バナー（審査中デモ） -->
-        <div class="p114-status-notice p114-status-notice--pending" id="p114PendingBanner" hidden>
-          <div class="p114-status-notice__icon">⏳</div>
-          <div class="p114-status-notice__title">現在審査中です</div>
-          <p class="p114-status-notice__desc">申込を受け付けました。審査には通常3〜5営業日かかります。結果はメールでご連絡します。</p>
-        </div>
+      <!-- 審査中バナー（審査中デモ） -->
+      <div class="p114-status-notice p114-status-notice--pending" id="p114PendingBanner" hidden>
+        <div class="p114-status-notice__icon">⏳</div>
+        <div class="p114-status-notice__title">現在審査中です</div>
+        <p class="p114-status-notice__desc">申込を受け付けました。審査には通常3〜5営業日かかります。結果はメールでご連絡します。</p>
+      </div>
 
-        <!-- 承認済バナー（承認済デモ） -->
-        <div class="p114-status-notice" id="p114ApprovedBanner" hidden style="border-color:rgba(42,120,60,.3);background:rgba(42,120,60,.04)">
-          <div class="p114-status-notice__icon">✅</div>
-          <div class="p114-status-notice__title">LIAISON+ 機能が有効です</div>
-          <p class="p114-status-notice__desc">LIAISON+ 機能が承認されています。展覧会の作品管理ページからLIAISON+を設定して出品を開始できます。</p>
+      <!-- 承認済バナー（承認済デモ） -->
+      <div class="p114-status-notice" id="p114ApprovedBanner" hidden style="border-color:rgba(42,120,60,.3);background:rgba(42,120,60,.04)">
+        <div class="p114-status-notice__icon">✅</div>
+        <div class="p114-status-notice__title">LIAISON+ 機能が有効です</div>
+        <p class="p114-status-notice__desc">LIAISON+ 機能が承認されています。展覧会の作品管理ページからLIAISON+を設定して出品を開始できます。</p>
+      </div>
+
+      <!-- 管理ボックス -->
+      <div class="p114-wrap ktn-mgmt-wrap ktn-mgmt-stack">
+
+        <!-- ページヘッド -->
+        <div class="ktn-mgmt-head">
+          <h2 class="ktn-mgmt-head__title">リエゾンプラス機能申込</h2>
+          <p class="ktn-mgmt-head__en">LIAISON+ APPLICATION</p>
         </div>
 
         <!-- サービス説明バナー -->
         <div class="p114-service-banner" id="p114ServiceBanner">
           <div class="p114-service-banner__badge">LIAISON+</div>
-          <h1 class="p114-service-banner__title">リエゾンプラス機能申込</h1>
           <p class="p114-service-banner__desc">
             リエゾンプラス（LIAISON+）は、実スペースの展覧会と連動したオンライン作品販売サービスです。<br>
             会期中に申込を受け付け、販売期間中に順番で購入プロセスを進めます。

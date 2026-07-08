@@ -29,17 +29,18 @@
       <div class="ktn-hdr-actions" id="ktnActs"></div>
     </div>
   </header>
-  <div class="ktn-tagbar" id="ktnTagbar">
-    <div class="ktn-tagbar__inner" id="ktnTagbarInner"></div>
-  </div>
 
   <main class="ktn-main" id="ktnMain">
-    <div class="ktn-content ktn-content--article">
+    <div class="ktn-content">
+
+      <!-- 管理ボックス -->
+      <div class="ktn-mgmt-wrap ktn-mgmt-stack">
 
       <!-- ページタイトル -->
-      <div class="ktn-edit-head">
-        <h1 class="ktn-edit-head__title">LIAISON+ 展示・販売設定</h1>
-        <p class="ktn-edit-head__desc">展示作品のオンライン販売設定を行います。作品と販売情報は展覧会ページの LIAISON タブで公開されます。</p>
+      <div class="ktn-mgmt-head">
+        <h2 class="ktn-mgmt-head__title">LIAISON+ 展示・販売設定</h2>
+        <p class="ktn-mgmt-head__en">LIAISON+ SETTINGS</p>
+        <p class="ktn-mgmt-head__desc">展示作品のオンライン販売設定を行います。作品と販売情報は展覧会ページの LIAISON タブで公開されます。</p>
       </div>
 
       <!-- 1. 展覧会コンパクトバナー -->
@@ -68,39 +69,6 @@
         <div class="p2-12-mode-bar__actions">
           <button class="p2-12-mode-switch" onclick="p2121OpenModal('switch')">LIAISON に切り替える</button>
           <button class="p2-12-mode-none" onclick="p2121OpenModal('none')">LIAISON作品展示しない</button>
-        </div>
-      </div>
-
-      <!-- LIAISON 切替確認モーダル -->
-      <div id="p2121-modal-switch" class="p2-12-modal" hidden>
-        <div class="p2-12-modal__bg" onclick="p2121CloseModal('switch')"></div>
-        <div class="p2-12-modal__box">
-          <h3 class="p2-12-modal__title">LIAISON に切り替えますか？</h3>
-          <div class="p2-12-modal__warn">⚠️ LIAISON+ の設定（価格・販売期間）と購入申込・キューのデータがすべて失われます。この操作は取り消せません。</div>
-          <ul class="p2-12-modal__notes">
-            <li>「商談中」「売約済」の作品がある場合は切り替えできません。</li>
-            <li>切り替え後は LIAISON 作品管理ページに移動します。</li>
-          </ul>
-          <div class="p2-12-modal__foot">
-            <button class="p2-12-modal__cancel" onclick="p2121CloseModal('switch')">キャンセル</button>
-            <button class="p2-12-modal__ok danger" onclick="location.href='kotennavi-p2-12.html'">切り替える</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- 使用しない 切替確認モーダル -->
-      <div id="p2121-modal-none" class="p2-12-modal" hidden>
-        <div class="p2-12-modal__bg" onclick="p2121CloseModal('none')"></div>
-        <div class="p2-12-modal__box">
-          <h3 class="p2-12-modal__title">LIAISON+ を解除しますか？</h3>
-          <div class="p2-12-modal__warn">⚠️ LIAISON+ の設定（価格・販売期間）と購入申込・キューのデータがすべて失われます。この操作は取り消せません。</div>
-          <ul class="p2-12-modal__notes">
-            <li>展覧会の編集ページで「使用しない」を選択して保存します。</li>
-          </ul>
-          <div class="p2-12-modal__foot">
-            <button class="p2-12-modal__cancel" onclick="p2121CloseModal('none')">キャンセル</button>
-            <button class="p2-12-modal__ok danger" onclick="location.href='kotennavi-p2-11.html'">編集ページへ</button>
-          </div>
         </div>
       </div>
 
@@ -296,6 +264,41 @@
         </div>
 
       </section>
+
+      </div><!-- /.ktn-mgmt-wrap -->
+
+      <!-- LIAISON 切替確認モーダル -->
+      <div id="p2121-modal-switch" class="p2-12-modal" hidden>
+        <div class="p2-12-modal__bg" onclick="p2121CloseModal('switch')"></div>
+        <div class="p2-12-modal__box">
+          <h3 class="p2-12-modal__title">LIAISON に切り替えますか？</h3>
+          <div class="p2-12-modal__warn">⚠️ LIAISON+ の設定（価格・販売期間）と購入申込・キューのデータがすべて失われます。この操作は取り消せません。</div>
+          <ul class="p2-12-modal__notes">
+            <li>「商談中」「売約済」の作品がある場合は切り替えできません。</li>
+            <li>切り替え後は LIAISON 作品管理ページに移動します。</li>
+          </ul>
+          <div class="p2-12-modal__foot">
+            <button class="p2-12-modal__cancel" onclick="p2121CloseModal('switch')">キャンセル</button>
+            <button class="p2-12-modal__ok danger" onclick="location.href='kotennavi-p2-12.html'">切り替える</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 使用しない 切替確認モーダル -->
+      <div id="p2121-modal-none" class="p2-12-modal" hidden>
+        <div class="p2-12-modal__bg" onclick="p2121CloseModal('none')"></div>
+        <div class="p2-12-modal__box">
+          <h3 class="p2-12-modal__title">LIAISON+ を解除しますか？</h3>
+          <div class="p2-12-modal__warn">⚠️ LIAISON+ の設定（価格・販売期間）と購入申込・キューのデータがすべて失われます。この操作は取り消せません。</div>
+          <ul class="p2-12-modal__notes">
+            <li>展覧会の編集ページで「使用しない」を選択して保存します。</li>
+          </ul>
+          <div class="p2-12-modal__foot">
+            <button class="p2-12-modal__cancel" onclick="p2121CloseModal('none')">キャンセル</button>
+            <button class="p2-12-modal__ok danger" onclick="location.href='kotennavi-p2-11.html'">編集ページへ</button>
+          </div>
+        </div>
+      </div>
 
     </div><!-- /.ktn-content -->
   </main>

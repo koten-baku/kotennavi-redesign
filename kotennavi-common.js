@@ -440,6 +440,11 @@ function renderTagbar(page) {
   var el = document.getElementById('ktnTagbarInner');
   if (!el) return;
   var tagbar = document.getElementById('ktnTagbar');
+  // 管理・編集ページ（mgmt-page）にタグバーは出さない（親ページからの継承も含め常に非表示）
+  if (document.body.classList.contains('mgmt-page')) {
+    if (tagbar) tagbar.style.display = 'none';
+    return;
+  }
   var defs = TAGBAR_DEFS[page];
   // 下位ページ（p2-1・p6-1 等）に専用定義が無ければ、末尾の -N を1段ずつ削って
   // 親ページ（p2-1→p2 / p2-5-1→p2-5 / p6-1→p6）のタグバーを継承する

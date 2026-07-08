@@ -180,7 +180,7 @@ docs/                     仕様・設計ドキュメント
 | **サイドカード** | `.p2-side-card` / `.p3-side-card` / `.p4-side-card` / `.p5-side-card` | 白背景＋ヘアライン枠、padding 24px |
 | **サイドカード見出し** | `.p2-side-card .p2-ic__head-title` / `.p3-side-card__title` / etc. | Shippori Mincho .95rem + Cinzel .58rem 英サブ |
 | **CTA ウィジェット** | `.p2-action-widget`（全ページ再利用） | paper bg、Bodoni Moda 3rem 数値、Cinzel ラベル |
-| **関連・回遊ゾーン** | 右カラム末尾：`.p2-side-nearby`（p2＝「近くの展覧会」Nearby・会場基準で距離あり）/ `.p3-side-rel-exh`（p3系＝クリエイターページ。**このクリエイターの作品と同カテゴリー（同ジャンル）の展覧会**を出すディスカバリー枠＝「アートの展覧会 Related」。会場基準ではないので距離は出さない。※p6の「作家自身の展覧会」とは別物なので混同しない＝クリエイター自身の展覧会に置き換えないこと）/ `.p4-side-rel-exh`（p4系 表示ページ＝ギャラリーは固定会場を持つため「近くの展覧会」Nearby・距離あり）/ **`.p6-side-rel-exh`（p6系＝「作家の他の展覧会」・作品ページは会場基準点を持たないため距離を出さない）**　＋　ページ下部：`.ktn-related-band` / `.ktn-sub-tags` / `.ktn-sub-rec`。**「近くの展覧会」カード（`.p2-side-ec`）のみ距離を表示**：左カラムを `.p2-side-ec__media`（縦スタック）にし、サムネイル（`.p2-side-ec__poster`）の**真上**に `.p2-side-ec__dist`〔ピン＋距離・`var(--page-accent)`〕を積む（オーバーレイではなく画像の上部）。p2 は `buildSideEcCard`（pages.js）が `e.dist` を出力（`dist` があれば表示）、p4系は静的HTMLに直書き。**p6系は距離を持たない**（作品は場所を特定できない＝「近く」概念が成立しないため、`.p2-side-nearby` ではなく `.p6-side-rel-exh`＝作家の他の展覧会） | **背景は通常（transparent）・上部 2px ink アクセントラインのみで識別**。色を多用せず、ラインで他コンテンツと区別 |
+| **関連・回遊ゾーン** | 右カラム末尾：`.p2-side-nearby`（p2＝「近くの展覧会」Nearby・会場基準で距離あり）/ `.p3-side-rel-exh`（p3系＝クリエイターページ。**このクリエイターの作品と同カテゴリー（同ジャンル）の展覧会**を出すディスカバリー枠＝「アートの展覧会 Related」。会場基準ではないので距離は出さない。※p6の「作家自身の展覧会」とは別物なので混同しない＝クリエイター自身の展覧会に置き換えないこと）/ `.p4-side-rel-exh`（p4系 表示ページ＝ギャラリーは固定会場を持つため「近くの展覧会」Nearby・距離あり）/ **`.p6-side-rel-exh`（p6系＝「作家の他の展覧会」・作品ページは会場基準点を持たないため距離を出さない）** / **`.p5-side-rel`（p5〜p5-4＝「最近のウォッチ Recently Watched」＋「最近の興味あり！ Recent Interests」。ウォッチしたクリエイター・ギャラリーをウォッチ日降順で最大3件〔`.p5-side-wl-cards` 縦積み＝**p2/p2-5 の投稿者カードと同型の人物カード `.cc--h.cc--panel`／`.gc--h.gc--panel`**・badge-row に `cb-creator`/`cb-gallery`・watch ボタン（on）付き。**日付（ウォッチ日）は表示しない**（並び順にのみ使用）。旧 `.p5-side-wl` 行リストは2026-07-07廃止〕、興味あり！展覧会を最大3件〔`.p2-side-ec`・`cb-exhibition` バッジ・interest ボタン付き〕。**関連・回遊ゾーンに表示するコンテンツカードは基本CTAボタン付き**（展覧会カード＝interest／人物カード＝watch・2026-07-07 確定）。**ゾーン内のブロック間は 1px solid var(--ink) 罫線＋広め間隔（padding 28px/margin 30px）で区切る**（`.p5-side-rel__head2` border-top／`.p5-side-rel-pickup` border-bottom。ゾーン開始線〔2px solid var(--ink)〕と同色で太さだけ落とした線＝階層を色で揃え太さで下げる。ブロック内タイトル下線〔1px solid var(--border) ヘアライン〕とは色の濃さで区別。solid var(--border)・dotted 案は「タイトル下線と区別できない」ため不採用・2026-07-07）。先頭に「ピックアップ Picks for You」〔`.p5-side-rel-pickup`・カードは「最近の興味あり！」と同型の `.p2-side-ec`（`cb-exhibition`＋interest ボタン=off）〕＝**ゼロ・他ユーザー表示時のみ** CSSで表示（`body.p5-zero`/`body.p5-other`。同時にウィジェット②「もうすぐ終了」を `:has(.p5-side-ending-hd)` で非表示）。ゼロ状態＝アクティビティが無いオーナー：タブナビのカレンダー以外を `p5-tabnav__item--zero-off` で disable・カウンター下リンク〔`.p5-side-act__links`〕非表示。デモバー「休止中」（stale）は2026-07-07廃止。旧「ウォッチからの展覧会」ウィジェット〔`.p5-side-watch-*`〕は2026-07-07廃止）**　＋　ページ下部：`.ktn-related-band` / `.ktn-sub-tags` / `.ktn-sub-rec`。**「近くの展覧会」カード（`.p2-side-ec`）のみ距離を表示**：左カラムを `.p2-side-ec__media`（縦スタック）にし、サムネイル（`.p2-side-ec__poster`）の**真上**に `.p2-side-ec__dist`〔ピン＋距離・`var(--page-accent)`〕を積む（オーバーレイではなく画像の上部）。p2 は `buildSideEcCard`（pages.js）が `e.dist` を出力（`dist` があれば表示）、p4系は静的HTMLに直書き。**p6系は距離を持たない**（作品は場所を特定できない＝「近く」概念が成立しないため、`.p2-side-nearby` ではなく `.p6-side-rel-exh`＝作家の他の展覧会） | **背景は transparent・上部 2px ink アクセントラインで識別**（2026-07-07 一時 #faf7f1 化したが「ゾーン内ブロック区切りがあれば背景色不要」のユーザー判断で復帰）。ゾーン内に複数ブロックがある場合（p5系）はゾーン開始線と同色の 1px solid var(--ink)＋広め間隔で区切る（タイトル下線のヘアラインと色の濃さで区別）。**「もっと見る →」は head 内でなくコンテンツ下のブロック型 `.ktn-more-link` で全ページ統一**（2026-07-08 旧 `.p2-side-nearby__more` から共通名化。旧「すべて →」「すべて見る」は廃止・既存 href は維持。p5ゼロ状態メッセージの「展覧会を探す →」も同クラス＝関連ゾーン系のブロック型遷移リンクは全てこれを使う） |
 | **右カラム sticky スクロール** | `.p2-layout__side` / `.p2-1〜4-side` / `.p25-side-col` / `.p3-layout__side` / `.p3-prof-side` / `.p4-prof-side` / `.p5-layout__side` / `.p6-side-inner` | 左コンテンツが長い場合、右カラムは画面内に固定。左コンテンツが下端まで来たら追従。`top: calc(--dh + --hh + 16px)` / `align-self: start` / モバイル時は `position: static` |
 | **本文色強化** | `.ec__venue` / `.aw__spec` / `.ac__lead` 等 | `var(--ink)` に統一、opacity フェード排除 |
 | **コンテンツ余白** | `.ktn-content` | 32px 20px 48px（呼吸感UP） |
@@ -661,7 +661,7 @@ p2-5-1（LIAISON+作品一覧）・p2-12-1（LIAISON+作品管理）・p6-dark�
 | p4-18 | `p4-18-page p4-page mgmt-page` | |
 | p5-14 | `p5-page p5-14-page mgmt-page` | |
 | p5-15 | `p5-page p5-15-page mgmt-page` | |
-| p5-11〜13 | `p5-page p5-{id}-page mgmt-page` | 新規作成時に適用 |
+| p5-11〜13 | `p5-page p5-{id}-page mgmt-page` | |
 | p11-4 | `mgmt-page` + JSで `p3-page`/`p4-page` 動的付与 | creator/gallery共有 |
 
 ### ロール動的切替（creator/gallery共有ページ）
@@ -678,19 +678,26 @@ p2-5-1（LIAISON+作品一覧）・p2-12-1（LIAISON+作品管理）・p6-dark�
   body.mgmt-page .p3-tabnav,.p4-tabnav,.p5-tabnav{max-width:var(--w-detail)} /* tabnav */
   ```
   - 以前は各ページに個別 `max-width:var(--w-detail)` 指定が残っていたが、汎用ルールと重複するため**削除済み（2026-07-06）**。新規ページで個別指定を追加しない。
-- **コンテンツ本体（`.ktn-content` は素だと 1080）は必ず760へ絞る**。素の `.ktn-content` を1080のまま置かない。次の4手段のいずれかを使う：
-  | 手段 | 使う場面 | 例 |
-  |---|---|---|
-  | `.ktn-content--detail` を併記 | フォーム・詳細1カラム | p3-11 |
-  | `.ktn-content--article` を併記 | 編集フォーム系 | p2-11/p2-12/p2-12-1/p6-11/p11-4 |
-  | 内側wrapに `max-width:var(--w-detail);margin:0 auto` | 独自レイアウト | p4-18（`.p418-wrap`）・p5-11〜13 |
-  | 内側wrapに `.ktn-mgmt-wrap` を併記（白カード＋760） | 取引・コンソール系 | p3-15/p4-15/p3-16/p4-16/p5-14/p5-15（`class="pNNN-wrap ktn-mgmt-wrap"`） |
+- **コンテンツの760化は `.ktn-mgmt-wrap`（白カード・max-width:760・margin:0 auto）が担う**。管理ページの `.ktn-content` は**素のまま**（1080・左右padding20px）置き、その中で wrap が760に自制する（→次項「管理ボックス共通パターン」）。17ページ全部この方式：Model A（stackなし）＝p2-11/p6-11/p3-11/p3-12/p5-11/p5-12、Model B（`ktn-mgmt-stack` 併用）＝p2-12/p2-12-1/p3-15/p4-15/p3-16/p4-16/p4-18/p5-13/p5-14/p5-15/p11-4。
+  - **`.ktn-content--article` / `--detail` を管理ページに併記しない（2026-07-07 是正）**：これらは max-width:760 に**左右padding20pxを含む**ため、中の wrap が **720px** に縮み、パンくず帯・ヒーロー帯（760）とボックス外枠が揃わなくなる。「幅を揃える」＝**ボックスの外枠端＝パンくず帯・ヒーロー帯の外枠端（760）**の一致（過去に7ページ＝p2-11/p2-12/p2-12-1/p6-11/p11-4/p3-11/p3-12 で併記が残っており720に縮んでいたのを削除済み）。
+  - **wrap 外に置く要素（状態バナー・審査notice）は自前で `max-width:var(--w-detail);margin:0 auto`** を持たせて wrap と同幅にする（`.p211-mode-banner`／`.p211-exh-banner`／`.p114-status-notice` は付与済み）。
 - **`data-w` 属性は不要**：`body.mgmt-page .ktn-header__inner` がパンくず幅を data-w に関わらず760へ固定するため。
 - 左右padding は20pxで統一（`.ktn-mgmt-wrap` 系は子要素 `margin:0 20px`、モバイルで縮小）。
 
-### 管理ボックス共通パターン（`.ktn-mgmt-wrap` ＋ `.ktn-mgmt-stack`・2026-07-06 確定）
+### 管理ボックス共通パターン（`.ktn-mgmt-wrap` ＋ `.ktn-mgmt-stack`・2026-07-06 確定／2026-07-07 全管理ページへ展開完了）
 
-取引・コンソール系（p3-15/p4-15/p3-16/p4-16/p5-14/p5-15）の**「ヒーロー帯＋タブナビ → その下に操作コンテンツを白ボックスへ格納（ボックス上端にオーナーのアクセントライン）」**という構造は共通コンポーネント化済み。**新規の管理・操作ページはこの3クラスの組み合わせをコピーするだけでよい**（ページ固有CSSは原則不要）。
+**「ヒーロー帯＋タブナビ → その下に操作コンテンツを白ボックスへ格納（ボックス上端にオーナーのアクセントライン）」**という構造は共通コンポーネント化済みで、**管理・編集系17ページすべてに適用済み**。**新規の管理・操作ページはこの3クラスの組み合わせをコピーするだけでよい**（ページ固有CSSは原則不要）。
+
+**2つの適用モデル：**
+
+| モデル | 構成 | 用途 | 適用ページ |
+|---|---|---|---|
+| **Model A（フラットフォーム型）** | `.ktn-mgmt-wrap` のみ（stack なし） | `.p211-block` 構成の編集フォーム。`.ktn-mgmt-wrap:not(.ktn-mgmt-stack) > .p211-block` がカード装飾を剥がし border-bottom 区切りへフラット化。sticky `.p211-submit-bar` をボックス末尾に内包 | p2-11 / p6-11 / p3-11 / p3-12 / p5-11 / p5-12 |
+| **Model B（カードスタック型）** | `.ktn-mgmt-wrap ktn-mgmt-stack` | カード・セクションを縦積みする操作ページ。子はカード枠を保ったまま自動 inset | p2-12 / p2-12-1 / p3-15 / p4-15 / p3-16 / p4-16 / p4-18 / p5-13 / p5-14 / p5-15 / p11-4 |
+
+**ボックスの外に置くもの（stack の子 inset・box 幅の影響を受けないように）：**
+- **fixed モーダル**（`position:fixed;inset:0`）＝stack の子マージンがオーバーレイを縮めるため、必ず `.ktn-mgmt-wrap` の閉じタグ後（`.ktn-content` 内でよい）に置く
+- **状態バナー・審査notice**（p2-11/p6-11 のクローン・展覧会バナー、p11-4 の審査中/承認済notice）＝ページレベルのモード通知はボックスの上に置く
 
 **3層アナトミー：**
 1. **ヒーロー帯＋タブナビ**（`.pN-head` ＋ `.pN-tabnav`）＝760px。`body.mgmt-page` の汎用ルールで自動760化（前項）。
@@ -828,6 +835,7 @@ z-index: 90;
   - スクロール位置に応じてJSで `is-hidden` クラスを付け外し（`visibility:hidden` で幅は確保）
   - タッチデバイスでは直接スワイプも可能
 - `overflow: hidden` を親に設定しない（子スクロールコンテナを妨害するため）
+- **管理・編集ページ（`body.mgmt-page`）にはタグバーを出さない（2026-07-07 確定）**：`renderTagbar` 冒頭の mgmt-page ガードが親ページからの継承を含め常に非表示化する（単一ソース）。管理ページのHTMLに `.ktn-tagbar` markup 自体も置かない（17ページから削除済み）。
 - **定義は `TAGBAR_DEFS`（common.js）にページID単位で登録**。`renderTagbar(page)` が `TAGBAR_DEFS[page]` を描画し、無ければ非表示。
 - **下位ページは親のタグバーを継承**（2026-07-05 確定）：`TAGBAR_DEFS[page]` に専用定義が無い場合、`renderTagbar` が末尾の `-N` を1段ずつ削って親ページの定義を探す（`p2-1→p2` / `p2-5-1→p2-5` / `p6-1→p6` / `p3-1→p3` / `p4-1→p4`）。**下位ページ用に個別定義を増やさず**、上位ページと同じタグバーを自動表示する。専用のタグバーを出したい下位ページ（例：`p2-3`・`p2-5`）は `TAGBAR_DEFS` に明示登録すれば継承より優先される。
 
@@ -1030,7 +1038,7 @@ SVG の `font-family` 属性は CSS 変数に非対応のため `font-family="'M
 **大原則（2026-07-04 確定）：明朝（`--fs`）は「コンテンツ固有名詞」と「表示系ページの読ませる文章・見出し」に限定する。操作・状態・機能を説明する UI テキストはすべてゴシック（`--fn`）。** 「操作を説明する文字は明朝にしない」を判断軸とする。取引フロー（p3-16 / p4-16 / p5-15）の状態文・手順ラベル・機能サブ見出し・モーダル文言・管理系の見出しは、コンテンツ名ではなく機能テキストなので `--fn`。
 
 - **`--fn`（ゴシック）に寄せる：**
-  - UIテキスト・フォームラベル・入力欄・ヘルプテキスト・説明文・ボタンテキスト・ページ見出し（`.ktn-edit-head__title` / `.p418-page-head__title` / `.p114-service-banner__title`）
+  - UIテキスト・フォームラベル・入力欄・ヘルプテキスト・説明文・ボタンテキスト・ページ見出し（`.ktn-mgmt-head__title`。旧 `.ktn-edit-head__title` / `.p418-page-head__title` / `.p114-service-banner__title` は mgmt-head へ統合済み）
   - 取引フローの**状態文・完了/中断メッセージ・レビュー本文**（`.p515-confirming__title/__desc` / `.p515-done__desc` / `.p515-cancelled__msg` / `.p316-done__desc/__review-text` / `.p316-cancelled__msg`）
   - 取引フローの**機能サブ見出し・手順ラベル**（`.p515-steps__label` / `.p515-log__title` / `.p515-comments__title` / `.p515-delivery__title` / `.p515-review__title` / `.p515-ship-confirm__title` / `.p515-done__title` / `.p316-apply-info__title` / `.p316-ship-form__title` / `.p316-ship-addr__title` / `.p316-review-display__title` / `.p316-done__title`）
   - **操作モーダル文言**（`.p515-modal__title` / `.p515-modal__desc`）＝取引3ページ共有モーダル

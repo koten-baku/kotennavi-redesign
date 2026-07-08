@@ -3,6 +3,60 @@
 最終更新：2026-07-07
 
 ## 現在の作業
+**p5系右カラム再修正（フィードバック7項目）＋関連ゾーン全ページ統一 ✓実装済・ブラウザ確認待ち（ユーザー実施）**
+
+- **①「もっと見る →」全ページ統一**：右カラム関連ゾーンのリンクを head 内インライン「すべて →」「すべて見る」から**コンテンツ下のブロック型「もっと見る →」**（p5書式）へ統一。canonical＝`.p2-side-nearby__more`（block・`--fn` .75rem・page-accent色・旧 Cinzel uppercase 上書きは削除）。対象22ファイル＝p5系5（前回済）＋p2/p2-1〜5/p2-5-1（href=`kotennavi-p2.html?filter=near` 維持）＋p3/p3-1〜3・p4/p4-1〜2（`#`）＋p6/p6-1〜2（`kotennavi-p3-1.html` 維持）。`.p5-side-widget__more` クラスは廃止
+- **②改称**：「興味あり！の展覧会 Interests」→「**最近の興味あり！ Recent Interests**」（p5系5ファイル）
+- **③デモバー「休止中」（stale）廃止**：p5系5ファイルのボタン・JS（`p5-stale` トグル）・CSS を削除。JSは `classList.toggle('p5-zero', state==='zero')` の1行に簡素化
+- **④⑤ゼロ状態の再設計**：ゼロ＝**サイト内アクティビティが無いオーナーユーザー**（p5-1〜p5-4 が空で無意味）という意味に是正
+  - タブナビ：カレンダー以外の4項目に `p5-tabnav__item--zero-off` を付与し `body.p5-zero` で disable（pointer-events:none・muted・opacity .5）
+  - 右カラム：カウンター下のサブメニューリンク（`.p5-side-act__links`）非表示・ゼロメッセージ表示
+  - ピックアップ：「今週のピックアップ」→「**ピックアップ** Picks for You」に改称し、ウィジェット②から関連情報ゾーン（`.p5-side-rel`）の**最初のセクション**（`.p5-side-rel-pickup`）へ移設。ゼロ・他ユーザー表示時のみ CSS で表示（通常オーナー時は非表示）。ウィジェット②「もうすぐ終了」はゼロ・他ユーザー時 `:has(.p5-side-ending-hd)` で丸ごと非表示
+  - **解釈（要ブラウザ確認）**：ゼロ状態ではピックアップ→最近のウォッチ→最近の興味あり！の順で3セクションとも表示（「通常ユーザーに表示される最近のウォッチ・興味あり!の前にピックアップを表示」の文字通りの読み）
+- **⑥A案＝関連ゾーン背景**：全ページの右カラム関連・回遊ゾーン（grouped selector：`.p2-side-nearby`／`.p3-side-rel-exh`／`.p4-side-rel-exh`／`.p6-side-rel-exh`／`.p5-side-rel`）の背景を transparent → **`#faf7f1`（warm cream）** に変更＋`padding:24px 22px`。ページ下部の関連・回遊ゾーンと同色で「回遊誘導」を色で識別。ダーク面（`.p251-dark`・`.p6-dark`・panel-dark）は transparent 維持
+- **⑦右カラムカードにバッジ**：p5系ウォッチ行に `cb-creator`/`cb-gallery`、興味あり！カードに `cb-exhibition` を追加（他ページの `.p2-side-ec` は既にバッジ済みを確認）
+- **再修正ラウンド（2026-07-07・ユーザー確認①〜④⑦OK）**：
+  - **⑤の取り違え是正＝ゾーン内ブロック区切り**：問題は「ゾーンと上のコンテンツの区切り」（→太ラインで既に解決済み）ではなく、**ゾーン内の複数ブロック（ピックアップ／最近のウォッチ／最近の興味あり！）が繋がって見える**こと。ブロック区切りを追加＝`.p5-side-rel__head2` border-top／`.p5-side-rel-pickup` border-bottom（ピックアップ表示時のみ現れる）。**再々修正（ラウンド4→5）**：初回実装の `1px solid var(--border)` はブロック内タイトル下線（`.p2-side-nearby__head` の editorial v2 下罫線）と同一の見た目で区切りとして認識されないとの指摘 → dotted 案（`1px dotted rgba(35,24,21,.4)`）も「区別できない」→ **最終＝`1px solid var(--ink)`（ゾーン開始線 2px solid ink と同色・太さだけ 1px に）＋間隔拡大（padding 28px／margin 30px）**。罫線階層＝ゾーン上端 2px ink ＞ ブロック間 1px ink ＞ タイトル下線 1px var(--border) ヘアライン（色の濃さ＋太さで階層）。**クリーム背景（⑥A案）は「ブロック区切りがあれば背景色不要」のユーザー判断で transparent に復帰**（ダーク上書きも不要になり削除）
+  - **⑥バッジ配置＝「バッジ改行タイトル」**：ウォッチ行を `.p5-side-wl-info`（縦積み）＋`.p5-side-wl-badge-row`（cb バッジ＋日付右寄せ）→ 下に `.p5-side-wl-name` の構造へ変更（既存CSSを活用・p5系5ファイル）。**ピックアップの3カードにも `cb-exhibition` を追加**（`.p5-side-ending__meta` 先頭・ウィジェット②「もうすぐ終了」側には付けない）
+- **カード形式統一ラウンド（2026-07-07・区切り線1px ink案はOK）**：
+  - **ウィジェット②「もうすぐ終了」の3項目にも `cb-exhibition` バッジ追加**（前ラウンドの「付けない」判断をユーザー指示で転換）。**再修正**：バッジ位置はメタ行（ボックス外）ではなく**ボックス内・展覧会タイトルの上**（新設 `.ec__mini-badge-row`）＋**タイトル右の矢印（`.ec__mini-arrow`）は削除**（ユーザー指示・p5系のみ。デモ `kotennavi_cards_exhibition.html` は現状維持）
+  - **ピックアップのカードを「最近の興味あり！」と同型の `.p2-side-ec` に変更**（旧 `.ec--mini` ミニパネル廃止。badge-row＝`cb-exhibition`＋開催ステータス、名前・会場・会期、interest ボタン=off「興味あり！に追加する」）
+  - **「最近のウォッチ」を p2 投稿者ギャラリー／p2-5 投稿者クリエイターカードと同型の人物カードに変更**：`.p5-side-wl-cards`（flex縦積み gap10px）に `.cc--h.cc--panel`／`.gc--h.gc--panel` を3枚（`buildPersonCard` の panel 出力と同構造の静的HTML）。badge-row に `cb-creator`/`cb-gallery`、watch ボタン=on「watching」。旧 `.p5-side-wl` 行リスト（CSS 14ルール＋モバイル2カラムグリッド）は廃止・削除。**日付（ウォッチ日）はユーザー指示で非表示に**（`.p5-side-rel__date` は全廃・CSSも削除。並び順＝ウォッチ日降順は維持）
+  - **原則確定：関連・回遊ゾーンに表示するコンテンツカードは基本CTAボタン付き**（展覧会＝interest／人物＝watch）→ CLAUDE.md に反映
+- **ゼロ状態メッセージ是正（2026-07-08）**：本人ゼロ時のカウンター下メッセージ「まずは気になる展覧会をウォッチしてみましょう。」→ 展覧会はウォッチ対象外（watch＝クリエイター/ギャラリー・展覧会は興味あり！）のため「**まずは気になる展覧会を探してみましょう。**」に変更＋検索ページへのリンク「展覧会を探す →」を追加（p10 未制作のため href="#"・制作後に差し替え。p5〜p5-4 の5ファイル）
+- **仕様確定（2026-07-08）：LIAISON+ 作品情報の編集制御**＝スナップショットなし・ロック/凍結モデル（申込発生＝同一性フィールドロック／取引完了＝恒久凍結／売約済は削除不可）→ 仕様書 06 に**第17章**新設＋handoff 記録。UI反映（p6-11/p2-12-1 のロック時 disable＋notice、コンソールの凍結作品編集導線非表示)は未実装・別タスク
+- **もっと見るリンクの共通名化（2026-07-08）**：`.p2-side-nearby__more` → **`.ktn-more-link`** に全ファイル一括リネーム（CSS 9箇所＋HTML 24ファイル＋docs。関連ゾーン系のブロック型遷移リンクの共通クラス）。ゼロ状態の「展覧会を探す →」も当初の `ktn-guide-link`（参照リンク）から `.ktn-more-link` に変更＝同じ右カラム内の P10 行きリンクを1書式に統一（ユーザー指示）
+- 残：ブラウザ目視確認（ユーザー実施）— もうすぐ終了バッジ・ピックアップ `.p2-side-ec` 化・ウォッチ人物カード化・ゼロ状態メッセージ（デモバー「ゼロ」）の見え方（p5〜p5-4。ピックアップはデモバー「ゼロ」「他ユーザー」で表示）
+
+### 前タスク（参考）
+**p5〜p5-4 右カラム「ウォッチからの展覧会」廃止 → 関連情報「最近のウォッチ／興味あり！の展覧会」新設 ✓実装済・ブラウザ確認待ち**
+
+- **対象**：p5 / p5-1 / p5-2 / p5-3 / p5-4 の右カラム（5ページ同一マークアップ）
+- **廃止**：旧ウィジェット②「ウォッチからの展覧会 / 興味あり！の展覧会」（`.p5-side-widget` 内の6状態バリアント `.p5-side-watch-normal/-empty/-stale/-other/-other-zero/-other-stale`＋`.p5-side-from`＋`.p5-side-checkin-row`）を5ページから削除。関連CSS（状態トグル `body.p5-zero/.p5-stale/.p5-other` の watch 系セレクタ・empty/stale サブスタイル）も dead 化して削除（act/ending/pickup 系トグルは残置）
+- **新設**：右カラム末尾（区切り線・広告の前）に回遊ゾーン `.p5-side-rel` を追加。サイト共通の related-zone 書式（transparent 背景＋上部 2px ink ライン＝grouped selector L12101 に `.p5-side-rel` を追加）
+  - **最近のウォッチ**（Recently Watched）：ウォッチしたクリエイター・ギャラリーをウォッチ日降順で最大3件（`.p5-side-wl-item` アバター行＋`.p5-side-rel__date` 日付）＋「もっと見る →」（クリエイター/ギャラリー検索ページ＝P10-2/P10-3。未制作のため現状 `#`）
+  - **興味あり！の展覧会**（Interests）：最大3件（`.p2-side-ec` カード＋interest トグル on）＋「もっと見る →」（展覧会検索ページ＝P10。未制作のため現状 `#`）
+- **新規CSS**：`.p5-side-rel__head2{margin-top:26px}`／`.p5-side-rel__date`（fm .62rem muted 右寄せ）／`.p5-side-rel .p5-side-widget__more{padding:8px 0 0}`／grouped selectors（L12101・L12116）へ `.p5-side-rel` 追加
+- **設計判断**：旧ウィジェットの owner/other/zero/stale 状態バリアントは持たない（全閲覧者に同一表示）。詳細は handoff-decisions 7章
+- 残：ブラウザ目視確認（未実施）
+
+### 前々タスク（参考）
+**管理ボックス共通パターン（ktn-mgmt-wrap）を残り9つの管理・編集ページへ展開 ✓実装済・ブラウザ確認待ち**
+
+- **目的**：取引6ページ（p3-15/p4-15/p3-16/p4-16/p5-14/p5-15）で確立した「パンくず幅＝ヒーロー帯幅＝コンテンツ幅（760）＋コンテンツを白ボックス（`.ktn-mgmt-wrap`・上端3pxオーナーアクセントライン）へ格納」を、残りの管理・編集ページ9枚に適用
+- **適用9ページと方式**：
+  - **Model A（フラットフォーム型・wrap のみ／stack なし。p3-11 と同型）**：p2-11（展覧会エディタ・EN: EXHIBITION EDITOR）／p6-11（作品エディタ・ARTWORK EDITOR）／p5-11（プロフィール編集・PROFILE SETTINGS）／p5-12（パスワード管理・PASSWORD SETTINGS）。`.p211-block` を `.ktn-mgmt-wrap:not(.ktn-mgmt-stack) > .p211-block{背景/枠なし・border-bottom区切り}` でフラット化し、sticky `.p211-submit-bar` をボックス末尾に内包（p2-11/p6-11 は文書末にあったバーを wrap 内へ移設・spacer 削除。p5-11/p5-12 は `.p511/p512-submit-bar`→共通 `.p211-submit-bar` へ改名）
+  - **Model B（カードスタック型・wrap＋stack。p5-14 と同型）**：p2-12（LIAISON 展示設定・LIAISON SETTINGS）／p2-12-1（LIAISON+ 展示・販売設定・LIAISON+ SETTINGS）／p4-18（取扱作家管理・MANAGED ARTISTS。追加ボタンは `.p418-page-head__title-row` 構造を mgmt-head 内に温存）／p5-13（メール通知設定・NOTIFICATION SETTINGS）／p11-4（リエゾンプラス機能申込・LIAISON+ APPLICATION）
+- **共通の頭部**：各ページの旧 page-head（`.ktn-edit-head`／`.p418-page-head`／`.p51N-page-head`／`.p114-service-banner__title`）を `.ktn-mgmt-head`（`__title`/`__en`/`__desc`）へ置換。JS 参照は ID（`p211PageTitle`/`p611PageTitle` 等）のため無影響
+- **ボックス外に出したもの**：①fixed モーダル（p2-12×3・p2-12-1×2。stack の子マージンが `position:fixed;inset:0` を縮めるため wrap 外へ）②状態バナー（p2-11/p6-11 のクローン・展覧会バナー、p11-4 の審査中/承認済notice＝`hidden` トグルのみで安全）
+- **CSS 追加/変更（common.css）**：フラット化4ルールを `:not(.ktn-mgmt-stack)` でスコープ（p11-4 直下の p211-block カードを守る）／`.ktn-mgmt-stack >` の margin-bottom:0 リセット（p2-12系・p114系・p418系）／`.p211-mode-banner{margin-bottom:10px}`・`.p211-exh-banner{margin-bottom:16px}`（バナー→ボックス間隔）／`.ktn-mgmt-wrap > .p512-forgot{display:block;margin:16px 24px}`
+- **CSS 削除（dead化）**：`.p511/p512/p513-wrap{max-width…}`・`.p51N-page-head` 系グループ・`.p511/p512-submit-bar`・mobile の wrap padding／`.p418-wrap{…}`・`.p418-page-head` 系（title-row のみ残置）／`.p114-wrap{max-width…}`・`.p114-service-banner__title`
+- **これで管理・編集系は17ページすべて `.ktn-mgmt-wrap` 適用**（既存8：p3-11/p3-12/p3-15/p3-16/p4-15/p4-16/p5-14/p5-15 ＋ 今回9）。`.ktn-edit-head` は本番ページから消滅（typography デモのみ・canonical CSS は残置）
+- **幅是正（ユーザー指摘）**：7ページ（p2-11/p2-12/p2-12-1/p6-11/p11-4/p3-11/p3-12）に `.ktn-content--article`/`--detail` の併記が残り、max-width:760 が左右padding20pxを含むためボックスが **720px** に縮小＝パンくず帯・ヒーロー帯（760）と外枠不一致だった。修飾クラスを削除して素の `.ktn-content`（1080）に統一し、wrap 自身の760で全層一致。wrap 外のバナー（`.p211-mode-banner`/`.p211-exh-banner`/`.p114-status-notice`）には `max-width:var(--w-detail);margin:0 auto` を付与して同幅化
+- **タグバー廃止（ユーザー指摘）**：管理・編集ページにタグバー（回遊導線）は不要。`renderTagbar`（common.js）冒頭に `body.mgmt-page` ガードを追加（親ページ定義の継承を含め常に非表示＝単一ソース）＋markup が残っていた5ページ（p2-12/p2-12-1/p4-18/p3-15/p4-15）から `.ktn-tagbar` div を削除
+- 残：ブラウザ目視確認（未実施）
+
+### 過去タスク（参考）
 **取引操作を取引ワークスペース（p5-15）に集約・購入管理（p5-14）は全状態でワークスペース導線に統一 ✓実装済・ブラウザ確認待ち**
 
 - **目的**：購入者が申込した時点で取引IDが振られ、取引に関する状態確認・操作はすべて取引ワークスペース（p5-15）で行う設計に統一。従来は購入確定待ち（S1）だけ購入管理（p5-14）側で申込キャンセルできていたが、これをワークスペースへ移し、購入管理は**全状態で「取引ワークスペースへ →」導線のみ**に統一
@@ -17,7 +71,7 @@
 - **番号確認**：ユーザーの言う「p5-15/p5-16」は実ファイルでは p5-14（購入管理）/p5-15（取引ワークスペース）。p5-16 は作成しない（AskUserQuestion で確認済み）
 - 残：ブラウザ目視確認（未実施）
 
-### 前タスク（参考）
+### 過去タスク（参考）
 **表示系ページのセクション間マージンを共通クラス `.ktn-csec` に一元化（p2〜p5-4）✓実装済・ブラウザ確認待ち**
 
 - **目的**：メインカラムの「セクション箱どうしの縦間隔」がページごとに別々のクラス・別々の値で散らばっていたのを、単一ソース `--section-gap`（`:root` L62 ＝ **40px**）＋共通クラス **`.ktn-csec`**（common.css L12448 `margin-bottom:var(--section-gap)`）に集約
@@ -28,7 +82,7 @@
 - **各固有クラスの `margin-bottom` は fallback として残置**（`.ktn-csec` が付かない箇所での従来値を維持。将来クリーンアップは任意・低優先）
 - **後工程（React CSR）**：セクション箱の外側ラッパを単一 `SectionWrapper`（`.ktn-csec` 相当・`--section-gap` 参照）に寄せられる。各ページ固有の箱/見出しコンポーネントは温存
 
-### 前々タスク（参考）
+### 過去タスク（参考）
 **P2-2/P2-3 セクション見出しを p2-1「開催時間」フォーマットに統一 ✓実装済・ブラウザ確認待ち**
 
 - **対象**：p2-2（会場情報・アクセス・周辺スポット）／p2-3（展覧会記事・関連イベント・関連情報・クレジット・入場会場情報）の各白箱セクション（`.p2-2-section`/`.p2-3-section`）。見出しは `.ktn-tab-head`>`.ktn-tab-head__title`

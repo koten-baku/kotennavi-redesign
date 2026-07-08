@@ -41,7 +41,7 @@
 | P2-3 | 展覧会-詳細(関連イベント・在廊・などその他情報) |  | R | R | R | R | R | R | --w-entity | kotennavi-p2-3.html |
 | P2-4 | 展覧会-出展者 |  | R | R | R | R | R | R | --w-entity| kotennavi-p2-4.html |
 | P2-5 | 展覧会-リエゾン作品一覧 | L | R | R | R | R | R | R | --w-entity | kotennavi-p2-5.html |
-| P2-5-1 | 展覧会-リエゾンプラス作品一覧 | L+ | R | R | R | R | R | R | --w-entity | kotennavi-p2-5-1.html |
+| P2-5-1 | 展覧会-リエゾンプラス作品一覧 | L+ | R | R | R | R | R | R | --w-entity | kotennavi-p2-5-1.html 
 | P2-11 | 展覧会-新規/編集/クローン |  |  |  |  | W | W | W | --w-detail | # |
 | P2-12 | 展覧会-リエゾン作品管理 |  |  |  |  | W | W | W | --w-detail | kotennavi-p2-12.html |
 | P2-12-1 | 展覧会-リエゾン+作品管理 |  |  |  |  | W | W | W | --w-detail | kotennavi-p2-12-1.html |
