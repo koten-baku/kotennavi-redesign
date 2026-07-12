@@ -119,12 +119,19 @@ function buildP25cCard(w, liaisonType) {
 }
 
 /* グリッド展覧会カード（.masonry-item .ec） — cards_exhibition.html マソンリー完全準拠 */
+function ecDow(md) {
+  if (!md) return '';
+  var p = String(md).split('.');
+  var d = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'][new Date(2026, +p[0] - 1, +p[1]).getDay()];
+  return '<span class="dow">' + d + '</span>';
+}
 function buildGridEcCard(e) {
-  /* ポスターメタ（残り日数 | 営業時間 | 距離） */
-  var remainCls = e.status === 'soon' ? 'ec__remain--soon' : e.status === 'closed' ? 'ec__remain--closed' : 'ec__remain--live';
+  /* ポスターメタ（残り日数 | 営業時間 | 距離）。本日休み（e.closedToday）は時間の位置に「本日休み」を表示（残り日数バッジは通常どおり） */
+  var remainCls = e.status === 'soon' ? 'ec__remain--soon' : 'ec__remain--live';
   var metaParts = [];
   if (e.remain) metaParts.push('<span class="ec__remain ' + remainCls + '">' + e.remain + '</span>');
-  if (e.hours && e.status !== 'closed') metaParts.push('<span class="meta-sep">|</span><span>' + e.hours + '</span>');
+  var hoursTxt = e.closedToday ? '本日休み' : e.hours;
+  if (hoursTxt) metaParts.push('<span class="meta-sep">|</span><span>' + hoursTxt + '</span>');
   if (e.dist)  metaParts.push('<span class="meta-sep">|</span><span>' + e.dist + '</span>');
   var metaHtml = metaParts.length ? '<div class="ec__poster-meta">' + metaParts.join('') + '</div>' : '';
 
@@ -139,8 +146,10 @@ function buildGridEcCard(e) {
   if (e.liaison) {
     var liCls   = e.liaison === 'li-plus' ? 'li-plus' : 'li';
     var liLabel = e.liaison === 'li-plus' ? 'LIAISON+' : 'LIAISON';
-    var liSub   = e.liaison === 'li-plus' ? 'オンライン作品展示・販売中' : 'オンライン作品展示中';
-    var thumbsHtml = (e.thumbs && e.thumbs.length)
+    var liSub   = e.status === 'soon'
+      ? (e.liaison === 'li-plus' ? 'オンライン展示・販売予定' : 'オンライン展示予定')
+      : (e.liaison === 'li-plus' ? 'オンライン作品展示・販売中' : 'オンライン作品展示中');
+    var thumbsHtml = (e.thumbs && e.thumbs.length && e.status !== 'soon')
       ? '<div class="ec__liaison-thumbs">' + e.thumbs.map(function(t){ return '<div class="ec__liaison-thumb" style="background:' + t + '"></div>'; }).join('') + '</div>'
       : '';
     liaisonHtml = '<div class="ec__liaison-strip' + (e.liaison === 'li-plus' ? ' ec__liaison-strip--plus' : '') + '">'
@@ -155,15 +164,15 @@ function buildGridEcCard(e) {
 
   return '<div class="masonry-item"><a href="kotennavi-p2.html" class="ec">'
     + '<div class="ec__poster" style="background:' + e.bg + '">'
-    + '<div class="ec__poster-noimg" style="min-height:' + (e.imgH || 190) + 'px"></div>'
+    + '<div class="ec__poster-noimg' + (e.light ? ' ec__poster-noimg--light' : '') + '" style="min-height:' + (e.imgH || 190) + 'px"></div>'
     + '<div class="ec__poster-overlay">'
-    + '<div class="ec__poster-dates"><span class="year">2026.</span><strong>' + (e.s || '') + '</strong><span class="sep">—</span><strong>' + (e.e || '') + '</strong></div>'
+    + '<div class="ec__poster-dates"><span class="year">2026.</span><strong>' + (e.s || '') + '</strong>' + ecDow(e.s) + '<span class="sep">—</span><strong>' + (e.e || '') + '</strong>' + ecDow(e.e) + '</div>'
     + metaHtml
     + '</div></div>'
     + '<div class="ec__body">'
     + '<div class="ec__badge-row"><span class="cb cb-content cb-exhibition">exhibition</span>' + sbHtml + '</div>'
     + '<div class="ec__title">' + e.title + '</div>'
-    + '<div class="ec__venue">' + e.venue + '</div>'
+    + '<div class="ec__venue">' + (e.area ? e.area + '<span class="ec__venue-sep">|</span>' : '') + e.venue + '</div>'
     + '</div>'
     + '<div class="ec__foot">'
     + '<span class="ec-action"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>' + (e.int || 0) + '</span>'
@@ -667,10 +676,10 @@ KTN.pages['p2-1'] = function () {
         '</div>';
       var statusCell = isOpen
         ? '<div class="p2-1-cal-row__status">11:00 – 19:00</div>'
-        : '<div class="p2-1-cal-row__status p2-1-cal-row__status--closed">休廀</div>';
+        : '<div class="p2-1-cal-row__status p2-1-cal-row__status--closed">休廊</div>';
       var badges = '';
       if (isOpen) {
-        if (attend) badges += '<span class="p2-1-cal-row__badge p2-1-cal-row__badge--attend">作家在廀</span>';
+        if (attend) badges += '<span class="p2-1-cal-row__badge p2-1-cal-row__badge--attend">クリエイター在廊</span>';
         if (ev) {
           var bc = ev.type === 'special' ? 'p2-1-cal-row__badge--special' : 'p2-1-cal-row__badge--event';
           badges += '<span class="p2-1-cal-row__badge '+bc+'">'+ev.label+' '+ev.time+'</span>';
@@ -730,7 +739,7 @@ KTN.pages['p2-1'] = function () {
             '<span class="p2-1-simple-item__dow">'+DOW_JA[d.getDay()]+'</span>' +
           '</div>' +
           '<div class="p2-1-simple-item__body">' +
-            '<div class="p2-1-simple-item__title">田中 透 在廀'+(today?' <span style="font-size:.68rem;color:#c0392b">(本日)</span>':'')+' </div>' +
+            '<div class="p2-1-simple-item__title">田中 透 在廊'+(today?' <span style="font-size:.68rem;color:#c0392b">(本日)</span>':'')+' </div>' +
             '<div class="p2-1-simple-item__desc">Gallery SOIL 渋谷にてお声がけいただければ対応いたします。</div>' +
           '</div>' +
         '</li>'
@@ -2090,18 +2099,113 @@ KTN.pages['p2-12'] = function() {
     { value:'nonsale',  label:'非売品' },
   ];
 
-  /* ── サンプルデータ ── */
+  /* ── 出展クリエイター（この展覧会の確認済み出展者＝出品を許可する作者。key＝作者レジストリのキー）
+     デモ：creator ロール＝個展（本人1名）／gallery ロール＝グループ展（複数作家）を表現するため
+     出展者リストをロールで切替える。本番は展覧会エンティティの確定出展者を返す（ロール非依存）。 ── */
+  var EXH_ARTISTS_SOLO  = [{ key:'tanaka', name:'田中 透' }];
+  var EXH_ARTISTS_GROUP = [
+    { key:'tanaka', name:'田中 透' },
+    { key:'sato',   name:'佐藤 みなと' },
+    { key:'suzuki', name:'鈴木 洋' },
+  ];
+  var SELF_CREATOR = '田中 透'; // creator ロール時の本人（デモ）
+  function isGalleryRole() {
+    var r = window.ktnState && window.ktnState.role;
+    return r === 'user+gallery' || r === 'gallery';
+  }
+  /* グループ展＝gallery ロールは複数作家、個展＝creator ロールは本人のみ */
+  function exhArtists() { return isGalleryRole() ? EXH_ARTISTS_GROUP : EXH_ARTISTS_SOLO; }
+  function isAllowedAuthor(w) {
+    return exhArtists().some(function (a) { return a.name === w.author; });
+  }
+  /* ロールに応じて追加パネルの文言・出展クリエイター表示を切替 */
+  function renderAddTexts() {
+    var isGallery = isGalleryRole();
+    var box = document.getElementById('p212ExhArtists');
+    if (box) {
+      var items = exhArtists().map(function (a) {
+        return '<span class="p2-12-exh-artists__item">'
+          + '<span class="cb cb-person cb-creator">creator</span>'
+          + '<span class="p2-12-exh-artists__name">' + a.name + '</span></span>';
+      }).join('');
+      box.innerHTML =
+        '<span class="p2-12-exh-artists__label">この展覧会の出展クリエイター</span>'
+        + '<div class="p2-12-exh-artists__list">' + items + '</div>';
+    }
+    var orEl = document.getElementById('p212AddOr');
+    if (orEl) orEl.textContent = isGallery
+      ? 'または出展クリエイターの既存の作品から選ぶ'
+      : 'またはあなたの既存の作品から選ぶ';
+    var hintEl = document.getElementById('p212AddHint');
+    if (hintEl) hintEl.textContent = isGallery
+      ? '出展クリエイターの登録作品のみ追加できます。取扱いのある他の作家の作品は、この展覧会の出展クリエイターではないため表示されません。'
+      : 'あなたがこれまでに登録した作品から選んで追加できます。';
+  }
+
+  /* 「新規作品を作成」＝作者を先に確定させてから p6-11 へ遷移（作者固定で開く）。
+     出展1名＝自動確定。複数＝作者ピッカーを開いて選択させる。 */
+  function newWorkUrl(artist) {
+    var isGallery = isGalleryRole();
+    var self = (!isGallery && artist.name === SELF_CREATOR);
+    return 'kotennavi-p6-11.html?mode=new&author=' + encodeURIComponent(artist.key)
+      + (isGallery ? '&role=gallery' : (self ? '&self=1' : ''));
+  }
+  function bindNewBtn() {
+    var btn = document.getElementById('p212NewBtn');
+    if (!btn) return;
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      var artists = exhArtists();
+      if (artists.length === 1) { location.href = newWorkUrl(artists[0]); return; }
+      /* 複数＝簡易ピッカーをトグル表示 */
+      var pick = document.getElementById('p212NewPicker');
+      if (!pick) {
+        pick = document.createElement('div');
+        pick.id = 'p212NewPicker';
+        pick.className = 'p2-12-new-picker';
+        pick.innerHTML = '<span class="p2-12-new-picker__label">どの出展クリエイターの作品を作成しますか？</span>'
+          + '<span class="p2-12-new-picker__note">同姓同名の作者は「確認 ↗」でクリエイターページを開き、本人か確かめてから選択してください。</span>'
+          + artists.map(function (a) {
+              return '<div class="p2-12-new-picker__opt" data-key="' + a.key + '">'
+                + '<span class="p2-12-new-picker__avatar">' + a.name.charAt(0) + '</span>'
+                + '<span class="p2-12-new-picker__name">' + a.name + '</span>'
+                + '<a class="p2-12-new-picker__verify" href="kotennavi-p3.html?c=' + encodeURIComponent(a.key) + '" target="_blank" rel="noopener">確認 ↗</a>'
+                + '<button type="button" class="p2-12-new-picker__select ktn-op-btn ktn-op-btn--sm">選択 →</button>'
+                + '</div>';
+            }).join('');
+        btn.parentNode.insertBefore(pick, btn.nextSibling);
+        pick.querySelectorAll('.p2-12-new-picker__opt').forEach(function (opt) {
+          /* 「確認 ↗」は別タブでクリエイターページを開くだけ（既定動作に任せる）。「選択 →」でのみ p6-11 へ遷移 */
+          var sel = opt.querySelector('.p2-12-new-picker__select');
+          if (sel) sel.addEventListener('click', function () {
+            var a = exhArtists().filter(function (x) { return x.key === opt.dataset.key; })[0];
+            if (a) location.href = newWorkUrl(a);
+          });
+        });
+      } else {
+        pick.hidden = !pick.hidden;
+      }
+    });
+  }
+
+  /* ── サンプルデータ（author＝作者。creator/gallery 共通で常時表示） ── */
   var INITIAL = [
-    { id:'w1', title:'《オノマトペの庭》', year:'2026年', medium:'キャンバスに油彩', size:'116.7×91.0cm', bg:'linear-gradient(155deg,#b8d8cc,#6a9e8a)', status:'inquiry' },
-    { id:'w2', title:'《ふわふわ》',       year:'2025年', medium:'キャンバスに油彩', size:'72.7×60.6cm',  bg:'linear-gradient(155deg,#f0e8d0,#d4b896)', status:'sale' },
-    { id:'w3', title:'《ざわざわ（夜）》',  year:'2025年', medium:'アクリル・パネル', size:'53.0×45.5cm',  bg:'linear-gradient(155deg,#3d3530,#1f1a18)', status:'nonsale' },
+    { id:'w1', title:'《オノマトペの庭》', author:'田中 透', year:'2026年', medium:'キャンバスに油彩', size:'116.7×91.0cm', bg:'linear-gradient(155deg,#b8d8cc,#6a9e8a)', status:'inquiry' },
+    { id:'w2', title:'《ふわふわ》',       author:'田中 透', year:'2025年', medium:'キャンバスに油彩', size:'72.7×60.6cm',  bg:'linear-gradient(155deg,#f0e8d0,#d4b896)', status:'sale' },
+    { id:'w3', title:'《ざわざわ（夜）》',  author:'田中 透', year:'2025年', medium:'アクリル・パネル', size:'53.0×45.5cm',  bg:'linear-gradient(155deg,#3d3530,#1f1a18)', status:'nonsale' },
   ];
   var EXTRA = [
-    { id:'w4', title:'《ドキドキ #3》',   year:'2025年', bg:'linear-gradient(155deg,#f0d0d0,#c88080)', status:'inquiry' },
-    { id:'w5', title:'《シュワシュワ》',   year:'2024年', bg:'linear-gradient(155deg,#d0e8f0,#7ab4cc)', status:'inquiry' },
-    { id:'w6', title:'《言葉の断片 I》',  year:'2024年', bg:'linear-gradient(155deg,#d8c8e8,#a888cc)', status:'inquiry' },
-    { id:'w7', title:'《言葉の断片 II》', year:'2024年', bg:'linear-gradient(155deg,#c8d8e8,#7898b8)', status:'inquiry' },
-    { id:'w8', title:'《ふわふわ No.2》', year:'2024年', bg:'linear-gradient(155deg,#e0d8c8,#b4a88a)', status:'inquiry' },
+    { id:'w4', title:'《ドキドキ #3》',   author:'田中 透', year:'2025年', bg:'linear-gradient(155deg,#f0d0d0,#c88080)', status:'inquiry' },
+    { id:'w5', title:'《シュワシュワ》',   author:'田中 透', year:'2024年', bg:'linear-gradient(155deg,#d0e8f0,#7ab4cc)', status:'inquiry' },
+    { id:'w6', title:'《言葉の断片 I》',  author:'田中 透', year:'2024年', bg:'linear-gradient(155deg,#d8c8e8,#a888cc)', status:'inquiry' },
+    { id:'w7', title:'《言葉の断片 II》', author:'田中 透', year:'2024年', bg:'linear-gradient(155deg,#c8d8e8,#7898b8)', status:'inquiry' },
+    { id:'w8', title:'《ふわふわ No.2》', author:'田中 透', year:'2024年', bg:'linear-gradient(155deg,#e0d8c8,#b4a88a)', status:'inquiry' },
+    /* 別作家の作品：gallery グループ展ロールでは出展クリエイター（佐藤・鈴木）として候補に出る。
+       creator 個展ロールでは出展外のため候補に出ない（isAllowedAuthor がロールで判定）。 */
+    { id:'x1', title:'《余白のコンポジション》', author:'佐藤 みなと', year:'2025年', bg:'linear-gradient(155deg,#e8e2d4,#b0a888)', status:'inquiry' },
+    { id:'x2', title:'《海の記憶》',            author:'佐藤 みなと', year:'2024年', bg:'linear-gradient(155deg,#cfe0e8,#7a9cb0)', status:'inquiry' },
+    { id:'x3', title:'《かたちの記譜》',         author:'鈴木 洋', year:'2025年', bg:'linear-gradient(155deg,#e2d8e8,#9a86b4)', status:'inquiry' },
+    { id:'x4', title:'《遠い水平線》',           author:'鈴木 洋', year:'2023年', bg:'linear-gradient(155deg,#d4e2dc,#84a89a)', status:'inquiry' },
   ];
   var ALL = INITIAL.concat(EXTRA);
 
@@ -2143,6 +2247,7 @@ KTN.pages['p2-12'] = function() {
       '<div class="p2-12-work-card__thumb" style="background:'+w.bg+'"></div>'+
       '<div class="p2-12-work-card__body">'+
         '<div class="p2-12-work-card__title">'+w.title+'</div>'+
+        '<div class="p2-12-work-card__author"><span class="p2-12-work-card__author-label">作者</span>'+(w.author||'—')+'</div>'+
         '<div class="p2-12-work-card__meta">'+meta+'</div>'+
       '</div>'+
       '<div class="p2-12-work-card__controls">'+
@@ -2168,10 +2273,11 @@ KTN.pages['p2-12'] = function() {
     updateCount();
   }
 
-  /* ── 候補グリッド描画 ── */
+  /* ── 候補グリッド描画（出展クリエイター以外の作品は候補に出さない） ── */
   function renderCandGrid() {
     candGrid.innerHTML = '';
     ALL.forEach(function(w) {
+      if (!isAllowedAuthor(w)) return;
       var added = displayedIds.indexOf(w.id) !== -1;
       var div = document.createElement('div');
       div.className = 'p2-12-candidate-card'+(added?' is-added':'');
@@ -2180,6 +2286,7 @@ KTN.pages['p2-12'] = function() {
         '<div class="p2-12-candidate-card__thumb" style="background:'+w.bg+'"></div>'+
         '<div class="p2-12-candidate-card__info">'+
           '<div class="p2-12-candidate-card__title">'+w.title+'</div>'+
+          '<div class="p2-12-candidate-card__author">'+(w.author||'')+'</div>'+
           '<div class="p2-12-candidate-card__year">'+(w.year||'')+'</div>'+
           '<div class="p2-12-candidate-card__added">追加済み</div>'+
         '</div>';
@@ -2198,6 +2305,7 @@ KTN.pages['p2-12'] = function() {
   function openPanel() {
     addPanel.hidden = false;
     addBtn.classList.add('is-open');
+    renderAddTexts();
     renderCandGrid();
   }
   function closePanel() {
@@ -2241,7 +2349,16 @@ KTN.pages['p2-12'] = function() {
   }
 
   /* ── 初期状態：パネルを開いた状態で表示 ── */
+  bindNewBtn();
   openPanel();
+
+  /* ── ロール切替に追従（デモバー creator/gallery）── */
+  var _prevRender = window.ktnRender;
+  window.ktnRender = function () {
+    if (typeof _prevRender === 'function') _prevRender();
+    renderAddTexts();
+    renderCandGrid();
+  };
 
 };
 
@@ -2324,22 +2441,116 @@ KTN.pages['p2-121'] = function() {
   /* 販売期間開始済みフラグ（デモ：開始済み） */
   var SALE_ACTIVE = true;
 
+  /* ── 出展クリエイター（この展覧会の確認済み出展者＝出品を許可する作者。key＝作者レジストリのキー）
+     デモ：creator ロール＝個展（本人1名）／gallery ロール＝グループ展（複数作家）を表現するため
+     出展者リストをロールで切替える。本番は展覧会エンティティの確定出展者を返す（ロール非依存）。 ── */
+  var EXH_ARTISTS_SOLO  = [{ key:'tanaka', name:'田中 透' }];
+  var EXH_ARTISTS_GROUP = [
+    { key:'tanaka', name:'田中 透' },
+    { key:'sato',   name:'佐藤 みなと' },
+    { key:'suzuki', name:'鈴木 洋' },
+  ];
+  var SELF_CREATOR = '田中 透'; // creator ロール時の本人（デモ）
+  function isGalleryRole() {
+    var r = window.ktnState && window.ktnState.role;
+    return r === 'user+gallery' || r === 'gallery';
+  }
+  /* グループ展＝gallery ロールは複数作家、個展＝creator ロールは本人のみ */
+  function exhArtists() { return isGalleryRole() ? EXH_ARTISTS_GROUP : EXH_ARTISTS_SOLO; }
+  function isAllowedAuthor(w) {
+    return exhArtists().some(function (a) { return a.name === w.author; });
+  }
+  /* ロールに応じて追加パネルの文言・出展クリエイター表示を切替 */
+  function renderAddTexts() {
+    var isGallery = isGalleryRole();
+    var box = document.getElementById('p212ExhArtists');
+    if (box) {
+      var items = exhArtists().map(function (a) {
+        return '<span class="p2-12-exh-artists__item">'
+          + '<span class="cb cb-person cb-creator">creator</span>'
+          + '<span class="p2-12-exh-artists__name">' + a.name + '</span></span>';
+      }).join('');
+      box.innerHTML =
+        '<span class="p2-12-exh-artists__label">この展覧会の出展クリエイター</span>'
+        + '<div class="p2-12-exh-artists__list">' + items + '</div>';
+    }
+    var orEl = document.getElementById('p212AddOr');
+    if (orEl) orEl.textContent = isGallery
+      ? 'または出展クリエイターの既存の作品から選ぶ'
+      : 'またはあなたの既存の作品から選ぶ';
+    var hintEl = document.getElementById('p212AddHint');
+    if (hintEl) hintEl.textContent = isGallery
+      ? '出展クリエイターの登録作品のみ追加できます。取扱いのある他の作家の作品は、この展覧会の出展クリエイターではないため表示されません。'
+      : 'あなたがこれまでに登録した作品から選んで追加できます。';
+  }
+
+  /* 「新規作品を作成」＝作者を先に確定させてから p6-11 へ遷移（作者固定で開く）。
+     出展1名＝自動確定。複数＝作者ピッカーを開いて選択させる。 */
+  function newWorkUrl(artist) {
+    var isGallery = isGalleryRole();
+    var self = (!isGallery && artist.name === SELF_CREATOR);
+    return 'kotennavi-p6-11.html?mode=new&author=' + encodeURIComponent(artist.key)
+      + (isGallery ? '&role=gallery' : (self ? '&self=1' : ''));
+  }
+  function bindNewBtn() {
+    var btn = document.getElementById('p212NewBtn');
+    if (!btn) return;
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      var artists = exhArtists();
+      if (artists.length === 1) { location.href = newWorkUrl(artists[0]); return; }
+      var pick = document.getElementById('p212NewPicker');
+      if (!pick) {
+        pick = document.createElement('div');
+        pick.id = 'p212NewPicker';
+        pick.className = 'p2-12-new-picker';
+        pick.innerHTML = '<span class="p2-12-new-picker__label">どの出展クリエイターの作品を作成しますか？</span>'
+          + '<span class="p2-12-new-picker__note">同姓同名の作者は「確認 ↗」でクリエイターページを開き、本人か確かめてから選択してください。</span>'
+          + artists.map(function (a) {
+              return '<div class="p2-12-new-picker__opt" data-key="' + a.key + '">'
+                + '<span class="p2-12-new-picker__avatar">' + a.name.charAt(0) + '</span>'
+                + '<span class="p2-12-new-picker__name">' + a.name + '</span>'
+                + '<a class="p2-12-new-picker__verify" href="kotennavi-p3.html?c=' + encodeURIComponent(a.key) + '" target="_blank" rel="noopener">確認 ↗</a>'
+                + '<button type="button" class="p2-12-new-picker__select ktn-op-btn ktn-op-btn--sm">選択 →</button>'
+                + '</div>';
+            }).join('');
+        btn.parentNode.insertBefore(pick, btn.nextSibling);
+        pick.querySelectorAll('.p2-12-new-picker__opt').forEach(function (opt) {
+          /* 「確認 ↗」は別タブでクリエイターページを開くだけ（既定動作に任せる）。「選択 →」でのみ p6-11 へ遷移 */
+          var sel = opt.querySelector('.p2-12-new-picker__select');
+          if (sel) sel.addEventListener('click', function () {
+            var a = exhArtists().filter(function (x) { return x.key === opt.dataset.key; })[0];
+            if (a) location.href = newWorkUrl(a);
+          });
+        });
+      } else {
+        pick.hidden = !pick.hidden;
+      }
+    });
+  }
+
   var INITIAL = [
     /* locked:true = 販売中・申込者あり → 状態・価格ロック */
-    { id:'w1', title:'《オノマトペの庭》', year:'2026年', medium:'キャンバスに油彩', size:'116.7×91.0cm', bg:'linear-gradient(155deg,#b8d8cc,#6a9e8a)', status:'sale', price:480000, locked:true, applyCount:2 },
-    { id:'w2', title:'《ふわふわ》',       year:'2025年', medium:'キャンバスに油彩', size:'72.7×60.6cm',  bg:'linear-gradient(155deg,#f0e8d0,#d4b896)', status:'sale',    price:220000 },
-    { id:'w3', title:'《ざわざわ（夜）》',  year:'2025年', medium:'アクリル・パネル', size:'53.0×45.5cm',  bg:'linear-gradient(155deg,#3d3530,#1f1a18)', status:'nonsale' },
+    { id:'w1', title:'《オノマトペの庭》', author:'田中 透', year:'2026年', medium:'キャンバスに油彩', size:'116.7×91.0cm', bg:'linear-gradient(155deg,#b8d8cc,#6a9e8a)', status:'sale', price:480000, locked:true, applyCount:2 },
+    { id:'w2', title:'《ふわふわ》',       author:'田中 透', year:'2025年', medium:'キャンバスに油彩', size:'72.7×60.6cm',  bg:'linear-gradient(155deg,#f0e8d0,#d4b896)', status:'sale',    price:220000 },
+    { id:'w3', title:'《ざわざわ（夜）》',  author:'田中 透', year:'2025年', medium:'アクリル・パネル', size:'53.0×45.5cm',  bg:'linear-gradient(155deg,#3d3530,#1f1a18)', status:'nonsale' },
     /* soldOnline:true = オンライン取引完了 → 状態・価格ロック */
-    { id:'w9', title:'《言葉の重力 No.3》', year:'2024年', medium:'油彩', size:'72.7×60.6cm', bg:'linear-gradient(135deg,#c8a87a,#8b6040)', status:'sold', price:120000, soldOnline:true },
+    { id:'w9', title:'《言葉の重力 No.3》', author:'田中 透', year:'2024年', medium:'油彩', size:'72.7×60.6cm', bg:'linear-gradient(135deg,#c8a87a,#8b6040)', status:'sold', price:120000, soldOnline:true },
     /* priceLocked:true = 会場売約済 → 状態選択可・価格ロック */
-    { id:'w10', title:'《ざわざわ No.2》', year:'2024年', medium:'アクリル・パネル', size:'45.5×38.0cm', bg:'linear-gradient(155deg,#c8c0d8,#8880a8)', status:'sold', price:85000, priceLocked:true },
+    { id:'w10', title:'《ざわざわ No.2》', author:'田中 透', year:'2024年', medium:'アクリル・パネル', size:'45.5×38.0cm', bg:'linear-gradient(155deg,#c8c0d8,#8880a8)', status:'sold', price:85000, priceLocked:true },
   ];
   var EXTRA = [
-    { id:'w4', title:'《ドキドキ #3》',   year:'2025年', bg:'linear-gradient(155deg,#f0d0d0,#c88080)', status:'inquiry' },
-    { id:'w5', title:'《シュワシュワ》',   year:'2024年', bg:'linear-gradient(155deg,#d0e8f0,#7ab4cc)', status:'inquiry' },
-    { id:'w6', title:'《言葉の断片 I》',  year:'2024年', bg:'linear-gradient(155deg,#d8c8e8,#a888cc)', status:'inquiry' },
-    { id:'w7', title:'《言葉の断片 II》', year:'2024年', bg:'linear-gradient(155deg,#c8d8e8,#7898b8)', status:'inquiry' },
-    { id:'w8', title:'《ふわふわ No.2》', year:'2024年', bg:'linear-gradient(155deg,#e0d8c8,#b4a88a)', status:'inquiry' },
+    { id:'w4', title:'《ドキドキ #3》',   author:'田中 透', year:'2025年', bg:'linear-gradient(155deg,#f0d0d0,#c88080)', status:'inquiry' },
+    { id:'w5', title:'《シュワシュワ》',   author:'田中 透', year:'2024年', bg:'linear-gradient(155deg,#d0e8f0,#7ab4cc)', status:'inquiry' },
+    { id:'w6', title:'《言葉の断片 I》',  author:'田中 透', year:'2024年', bg:'linear-gradient(155deg,#d8c8e8,#a888cc)', status:'inquiry' },
+    { id:'w7', title:'《言葉の断片 II》', author:'田中 透', year:'2024年', bg:'linear-gradient(155deg,#c8d8e8,#7898b8)', status:'inquiry' },
+    { id:'w8', title:'《ふわふわ No.2》', author:'田中 透', year:'2024年', bg:'linear-gradient(155deg,#e0d8c8,#b4a88a)', status:'inquiry' },
+    /* 別作家の作品：gallery グループ展ロールでは出展クリエイター（佐藤・鈴木）として候補に出る。
+       creator 個展ロールでは出展外のため候補に出ない（isAllowedAuthor がロールで判定）。 */
+    { id:'x1', title:'《余白のコンポジション》', author:'佐藤 みなと', year:'2025年', bg:'linear-gradient(155deg,#e8e2d4,#b0a888)', status:'inquiry' },
+    { id:'x2', title:'《海の記憶》',            author:'佐藤 みなと', year:'2024年', bg:'linear-gradient(155deg,#cfe0e8,#7a9cb0)', status:'inquiry' },
+    { id:'x3', title:'《かたちの記譜》',         author:'鈴木 洋', year:'2025年', bg:'linear-gradient(155deg,#e2d8e8,#9a86b4)', status:'inquiry' },
+    { id:'x4', title:'《遠い水平線》',           author:'鈴木 洋', year:'2023年', bg:'linear-gradient(155deg,#d4e2dc,#84a89a)', status:'inquiry' },
   ];
   var ALL = INITIAL.concat(EXTRA);
   var displayedIds = INITIAL.map(function(w){ return w.id; });
@@ -2420,6 +2631,7 @@ KTN.pages['p2-121'] = function() {
       '<div class="p2-12-work-card__thumb" style="background:'+w.bg+'"></div>'+
       '<div class="p2-12-work-card__body">'+
         '<div class="p2-12-work-card__title">'+w.title+'</div>'+
+        '<div class="p2-12-work-card__author"><span class="p2-12-work-card__author-label">作者</span>'+(w.author||'—')+'</div>'+
         '<div class="p2-12-work-card__meta">'+meta+'</div>'+
       '</div>'+
       '<div class="p2-12-work-card__controls">'+
@@ -2468,6 +2680,7 @@ KTN.pages['p2-121'] = function() {
   function renderCandGrid() {
     candGrid.innerHTML = '';
     ALL.forEach(function(w) {
+      if (!isAllowedAuthor(w)) return;
       var added = displayedIds.indexOf(w.id) !== -1;
       var div = document.createElement('div');
       div.className = 'p2-12-candidate-card'+(added?' is-added':'');
@@ -2476,6 +2689,7 @@ KTN.pages['p2-121'] = function() {
         '<div class="p2-12-candidate-card__thumb" style="background:'+w.bg+'"></div>'+
         '<div class="p2-12-candidate-card__info">'+
           '<div class="p2-12-candidate-card__title">'+w.title+'</div>'+
+          '<div class="p2-12-candidate-card__author">'+(w.author||'')+'</div>'+
           '<div class="p2-12-candidate-card__year">'+(w.year||'')+'</div>'+
           '<div class="p2-12-candidate-card__added">追加済み</div>'+
         '</div>';
@@ -2493,6 +2707,7 @@ KTN.pages['p2-121'] = function() {
   function openPanel() {
     addPanel.hidden = false;
     addBtn.classList.add('is-open');
+    renderAddTexts();
     renderCandGrid();
   }
   function closePanel() {
@@ -2508,6 +2723,22 @@ KTN.pages['p2-121'] = function() {
 
   INITIAL.forEach(function(w){ listEl.appendChild(makeCard(w)); });
   updateCount();
+
+  /* デモバー「申込：あり/なし」＝w1 の申込ロックを切替（LIAISON切替ブロックの両状態確認用） */
+  window.p2121DemoApply = function (on, btn) {
+    var w1 = INITIAL[0];
+    w1.locked = !!on;
+    w1.applyCount = on ? 2 : 0;
+    listEl.innerHTML = '';
+    displayedIds.forEach(function (id) {
+      var w = ALL.filter(function (x) { return x.id === id; })[0];
+      if (w) listEl.appendChild(makeCard(w));
+    });
+    if (btn) {
+      document.querySelectorAll('.dbar [onclick^="p2121DemoApply"]').forEach(function (b) { b.classList.remove('on'); });
+      btn.classList.add('on');
+    }
+  };
 
   if (window.Sortable) {
     Sortable.create(listEl, {
@@ -2537,7 +2768,16 @@ KTN.pages['p2-121'] = function() {
     descTA.addEventListener('input', updateDescCount);
   }
 
+  bindNewBtn();
   openPanel();
+
+  /* ── ロール切替に追従（デモバー creator/gallery）── */
+  var _prevRender = window.ktnRender;
+  window.ktnRender = function () {
+    if (typeof _prevRender === 'function') _prevRender();
+    renderAddTexts();
+    renderCandGrid();
+  };
 
 };
 
@@ -5235,17 +5475,7 @@ KTN.pages['p3-11'] = function () {
   document.body.style.setProperty('--page-accent-bg',     'rgba(42,95,122,.1)');
   document.body.style.setProperty('--page-accent-border', '#5a8fa8');
 
-  // 1. 管理ドロワー
-  var drawer = document.getElementById('p311Drawer');
-  var mgmtBtn = document.getElementById('p311MgmtBtn');
-  var drawerClose = document.getElementById('p311DrawerClose');
-  var drawerOverlay = document.getElementById('p311DrawerOverlay');
-  function openDrawer() { if (drawer) drawer.classList.add('is-open'); }
-  function closeDrawer() { if (drawer) drawer.classList.remove('is-open'); }
-  if (mgmtBtn) mgmtBtn.addEventListener('click', openDrawer);
-  if (drawerClose) drawerClose.addEventListener('click', closeDrawer);
-  if (drawerOverlay) drawerOverlay.addEventListener('click', closeDrawer);
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeDrawer(); });
+  // 1. 管理メニューはヘッダー getActions のオーナーメニューへ集約（identity strip 試作・ドロワー廃止）
 
   // 2. スクロール連動ヘッダー
   var header = document.getElementById('ktnHeader');
@@ -5532,6 +5762,239 @@ KTN.pages['p3-15'] = function () {
 };
 
 /* ════════════════════════════════════════════════════
+   P4-14  作品インベントリー管理（ギャラリー版）
+   ── ギャラリーが取り扱う作品の在庫を管理。作者は登録済み
+   　　クリエイターのみ（真正性担保）。作者を常時表示し、作者で
+   　　フィルタできる（クリエイター版 p3 相当には無い、複数作家を
+   　　束ねるギャラリー固有の軸）。
+════════════════════════════════════════════════════ */
+KTN.pages['p4-14'] = function () {
+
+  // 0. ページスコープ・アクセントカラー（gallery）
+  document.body.classList.add('p4-page');
+  document.body.style.setProperty('--page-accent',        '#8b5e3c');
+  document.body.style.setProperty('--page-accent-bg',     'rgba(139,94,60,.1)');
+  document.body.style.setProperty('--page-accent-border', '#b07840');
+
+  /* ── 販売状態マスタ ── */
+  var STATUS = {
+    sale:    { label:'販売中',   cls:'aws-sale' },
+    negot:   { label:'商談中',   cls:'aws-negot' },
+    sold:    { label:'売約済',   cls:'aws-sold' },
+    inquiry: { label:'要問合せ', cls:'aws-inquiry' },
+    nonsale: { label:'非売品',   cls:'aws-nsale' },
+  };
+
+  /* ── 作者名 → レジストリキー（p6-11 の作者固定に使う） ── */
+  var AUTHOR_KEY = { '高橋 信':'takahashi', '佐藤 みなと':'sato', '大野 藍':'ohno' };
+  function authorKey(name) { return AUTHOR_KEY[name] || ''; }
+
+  /* ── サンプルデータ（このギャラリーが取り扱う作品）──
+     author＝登録済みクリエイター（真正性担保のため未登録作家は入らない）。
+     exhs＝出品中の展覧会（空なら未出品）。 */
+  var WORKS = [
+    { id:'g1', title:'《静かな水面》',        author:'高橋 信',     year:'2025年', medium:'キャンバスに油彩', bg:'linear-gradient(155deg,#cfe0e8,#7a9cb0)', status:'negot',
+      exhs:[{ n:'色彩の対話 — 現代絵画グループ展', mode:'lp' }] },
+    { id:'g2', title:'《余白のコンポジション》', author:'佐藤 みなと', year:'2025年', medium:'キャンバスに油彩', bg:'linear-gradient(155deg,#e8e2d4,#b0a888)', status:'sale',
+      exhs:[{ n:'色彩の対話 — 現代絵画グループ展', mode:'lp' }] },
+    { id:'g3', title:'《海の記憶》',           author:'佐藤 みなと', year:'2024年', medium:'アクリル・パネル', bg:'linear-gradient(155deg,#cfe0e8,#7a9cb0)', status:'inquiry',
+      exhs:[] },
+    { id:'g4', title:'《朝の気配》',           author:'高橋 信',     year:'2024年', medium:'キャンバスに油彩', bg:'linear-gradient(155deg,#f0e8d0,#d4b896)', status:'sold',
+      exhs:[{ n:'冬のグループ展 2025', mode:'l' }] },
+    { id:'g5', title:'《無題（青の連作 I）》',  author:'大野 藍',     year:'2026年', medium:'ミクストメディア', bg:'linear-gradient(155deg,#c8d8e8,#7898b8)', status:'sale',
+      exhs:[{ n:'色彩の対話 — 現代絵画グループ展', mode:'lp' }] },
+    { id:'g6', title:'《無題（青の連作 II）》', author:'大野 藍',     year:'2026年', medium:'ミクストメディア', bg:'linear-gradient(155deg,#d0e8f0,#7ab4cc)', status:'sale',
+      exhs:[] },
+    { id:'g7', title:'《庭の記憶》',           author:'高橋 信',     year:'2023年', medium:'キャンバスに油彩', bg:'linear-gradient(155deg,#d8c8e8,#a888cc)', status:'nonsale',
+      exhs:[] },
+    { id:'g8', title:'《光の粒》',             author:'佐藤 みなと', year:'2023年', medium:'和紙・岩絵具',     bg:'linear-gradient(155deg,#f0d0d0,#c88080)', status:'inquiry',
+      exhs:[] },
+  ];
+
+  /* ── DOM ── */
+  var listEl    = document.getElementById('p414List');
+  var countEl   = document.getElementById('p414Count');
+  var emptyEl   = document.getElementById('p414Empty');
+  var authorSel = document.getElementById('p414FilterAuthor');
+  var listedSel = document.getElementById('p414FilterListed');
+  if (!listEl || !countEl || !authorSel || !listedSel) return;
+
+  /* ── 作者フィルタの選択肢を作品の作者から生成 ── */
+  var authors = [];
+  WORKS.forEach(function (w) { if (authors.indexOf(w.author) === -1) authors.push(w.author); });
+  authors.forEach(function (a) {
+    var opt = document.createElement('option');
+    opt.value = a; opt.textContent = a;
+    authorSel.appendChild(opt);
+  });
+
+  /* ── カード生成 ── */
+  function makeCard(w) {
+    var st = STATUS[w.status] || STATUS.inquiry;
+    var listed = w.exhs && w.exhs.length > 0;
+    var exhHtml = listed
+      ? w.exhs.map(function (e) {
+          var badge = e.mode === 'lp'
+            ? '<span class="lb-dot li-plus">LIAISON+</span>'
+            : '<span class="lb-dot li">LIAISON</span>';
+          return '<span class="p414-item__exh">'+badge+'<span class="p414-item__exh-name">'+e.n+'</span></span>';
+        }).join('')
+      : '<span class="p414-item__unlisted">未出品</span>';
+
+    var li = document.createElement('li');
+    li.className = 'p414-item';
+    li.dataset.author = w.author;
+    li.dataset.listed = listed ? 'listed' : 'unlisted';
+    li.innerHTML =
+      '<div class="p414-item__thumb" style="background:'+w.bg+'"></div>'+
+      '<div class="p414-item__body">'+
+        '<div class="p414-item__title-row">'+
+          '<span class="cb cb-content cb-artwork">artwork</span>'+
+          '<span class="p414-item__title">'+w.title+'</span>'+
+        '</div>'+
+        '<div class="p414-item__author"><span class="p414-item__author-label">作者</span>'+
+          '<span class="cb cb-person cb-creator">creator</span>'+
+          '<span class="p414-item__author-name">'+w.author+'</span>'+
+        '</div>'+
+        '<div class="p414-item__meta">'+[w.year, w.medium].filter(Boolean).join('　')+'</div>'+
+        '<div class="p414-item__exhs">'+exhHtml+'</div>'+
+      '</div>'+
+      '<div class="p414-item__side">'+
+        '<span class="aws '+st.cls+'">'+st.label+'</span>'+
+        '<a class="p414-item__edit ktn-action-btn" href="kotennavi-p6-11.html?role=gallery&author='+encodeURIComponent(authorKey(w.author))+'">編集 →</a>'+
+      '</div>';
+    return li;
+  }
+
+  /* ── フィルタ描画 ── */
+  function render() {
+    var fa = authorSel.value;
+    var fl = listedSel.value;
+    listEl.innerHTML = '';
+    var n = 0;
+    WORKS.forEach(function (w) {
+      if (fa && w.author !== fa) return;
+      var listed = w.exhs && w.exhs.length > 0;
+      if (fl === 'listed' && !listed) return;
+      if (fl === 'unlisted' && listed) return;
+      listEl.appendChild(makeCard(w));
+      n++;
+    });
+    countEl.textContent = n;
+    if (emptyEl) emptyEl.hidden = n !== 0;
+  }
+
+  authorSel.addEventListener('change', render);
+  listedSel.addEventListener('change', render);
+  render();
+
+  /* ── 新規作品：作者ピッカー（検索付きオートコンプリート）──
+     取扱クリエイター＝このギャラリーが展覧会に出展させた登録済みクリエイターの和集合。
+     出展歴が数百人規模になり得るため、フラットリストでなく「検索＋最近/よく使う」方式にする：
+     ・未入力時＝最近作成・よく出品する作者（fav）だけを既定表示
+     ・入力時＝母集団全体を氏名/よみがなでインクリメンタル絞り込み
+     選択で p6-11 へ作者固定・gallery ロールで遷移。母集団はデモ固定（本番はサーバー検索API）。
+     インベントリー作者（高橋/佐藤/大野）は現在在庫があるため fav（最近）扱い。 */
+  /* 同姓同名（同一漢字・同一よみ）が起こり得るため、名前・よみがなだけでは特定できない。
+     各候補に拠点・ジャンルのメタ＋クリエイターページへの「確認」リンク（別タブ）を付け、
+     ギャラリーが本人かを確かめてから選択できるようにする（mori1/mori2＝同名デモ）。 */
+  var POOL = [
+    { key:'takahashi', name:'高橋 信',   kana:'たかはししん',   hub:'東京',   genre:'油彩',           fav:true },
+    { key:'sato',      name:'佐藤 みなと', kana:'さとうみなと',   hub:'神奈川', genre:'油彩',           fav:true },
+    { key:'ohno',      name:'大野 藍',   kana:'おおのあい',     hub:'東京',   genre:'ミクストメディア', fav:true },
+    { key:'suzuki',    name:'鈴木 洋',   kana:'すずきひろし',   hub:'千葉',   genre:'現代美術',       fav:true },
+    { key:'ito',       name:'伊藤 かえで', kana:'いとうかえで',   hub:'東京',   genre:'日本画',         fav:true },
+    { key:'tanaka',    name:'田中 透',   kana:'たなかとおる',   hub:'東京',   genre:'油彩' },
+    { key:'yamamoto',  name:'山本 詩織', kana:'やまもとしおり', hub:'大阪',   genre:'版画' },
+    { key:'nakamura',  name:'中村 圭',   kana:'なかむらけい',   hub:'愛知',   genre:'彫刻' },
+    { key:'kobayashi', name:'小林 千夏', kana:'こばやしちなつ', hub:'東京',   genre:'写真' },
+    { key:'watanabe',  name:'渡辺 陽',   kana:'わたなべよう',   hub:'福岡',   genre:'現代美術' },
+    { key:'matsumoto', name:'松本 玲',   kana:'まつもとれい',   hub:'京都',   genre:'日本画' },
+    { key:'hayashi',   name:'林 青磁',   kana:'はやしせいじ',   hub:'東京',   genre:'陶芸' },
+    { key:'kimura',    name:'木村 悠',   kana:'きむらゆう',     hub:'神奈川', genre:'油彩' },
+    { key:'shimizu',   name:'清水 奈々', kana:'しみずなな',     hub:'兵庫',   genre:'イラスト' },
+    { key:'morita',    name:'森田 岳',   kana:'もりたがく',     hub:'東京',   genre:'油彩' },
+    /* 同姓同名デモ：氏名・よみが完全一致。拠点・ジャンル＋確認リンクで見分ける */
+    { key:'mori1',     name:'森 陽介',   kana:'もりようすけ',   hub:'東京',   genre:'油彩' },
+    { key:'mori2',     name:'森 陽介',   kana:'もりようすけ',   hub:'京都',   genre:'日本画' },
+    { key:'fujita',    name:'藤田 美咲', kana:'ふじたみさき',   hub:'東京',   genre:'現代美術' },
+  ];
+
+  var newBtn      = document.getElementById('p414NewBtn');
+  var picker      = document.getElementById('p414Picker');
+  var pickerBg    = document.getElementById('p414PickerBg');
+  var pickerClose = document.getElementById('p414PickerClose');
+  var pickerList  = document.getElementById('p414PickerList');
+  var pickerSearch= document.getElementById('p414PickerSearch');
+  var pickerHint  = document.getElementById('p414PickerHint');
+  var pickerEmpty = document.getElementById('p414PickerEmpty');
+
+  if (newBtn && picker && pickerList) {
+    if (POOL.length === 0) {
+      /* 取扱クリエイターが居ない＝まず展覧会を作り出展クリエイターを確定する必要がある */
+      newBtn.disabled = true;
+      newBtn.title = '取扱クリエイターがいません。先に展覧会を作成し、出展クリエイターを確定してください。';
+    } else {
+      var normalize = function (s) { return (s || '').toLowerCase().replace(/[\s　]+/g, ''); };
+      var optHtml = function (a) {
+        var meta = [a.kana, a.hub, a.genre].filter(Boolean).join(' · ');
+        return '<div class="p414-picker__opt" data-key="'+a.key+'">'+
+          '<span class="p414-picker__opt-avatar">'+a.name.charAt(0)+'</span>'+
+          '<span class="p414-picker__opt-info">'+
+            '<span class="p414-picker__opt-name">'+a.name+'</span>'+
+            '<span class="p414-picker__opt-meta">'+meta+'</span>'+
+          '</span>'+
+          '<a class="p414-picker__opt-verify" href="kotennavi-p3.html?c='+encodeURIComponent(a.key)+'" target="_blank" rel="noopener">確認 ↗</a>'+
+          '<button type="button" class="p414-picker__opt-select ktn-op-btn ktn-op-btn--sm">選択 →</button>'+
+          '</div>';
+      };
+      var renderPickerList = function (q) {
+        var query = normalize(q);
+        var rows, hint;
+        if (!query) {
+          rows = POOL.filter(function (a) { return a.fav; });
+          hint = '最近・よく出品する作者';
+        } else {
+          rows = POOL.filter(function (a) {
+            return normalize(a.name).indexOf(query) !== -1 || (a.kana || '').indexOf(query) !== -1;
+          });
+          hint = '検索結果 ' + rows.length + '件';
+        }
+        if (pickerHint) pickerHint.textContent = hint;
+        pickerList.innerHTML = rows.map(optHtml).join('');
+        if (pickerEmpty) pickerEmpty.hidden = rows.length !== 0;
+      };
+
+      var openPicker = function () {
+        picker.hidden = false;
+        if (pickerSearch) pickerSearch.value = '';
+        renderPickerList('');
+        if (pickerSearch) pickerSearch.focus();
+      };
+      var closePicker = function () { picker.hidden = true; };
+
+      newBtn.addEventListener('click', openPicker);
+      if (pickerBg)     pickerBg.addEventListener('click', closePicker);
+      if (pickerClose)  pickerClose.addEventListener('click', closePicker);
+      if (pickerSearch) pickerSearch.addEventListener('input', function () { renderPickerList(pickerSearch.value); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !picker.hidden) closePicker(); });
+      pickerList.addEventListener('click', function (e) {
+        /* 「確認 ↗」は別タブでクリエイターページを開くだけ（既定動作に任せる） */
+        if (e.target.closest('.p414-picker__opt-verify')) return;
+        /* 「選択 →」でのみ p6-11 へ遷移（誤操作で作成に進まないようボタン限定） */
+        if (!e.target.closest('.p414-picker__opt-select')) return;
+        var opt = e.target.closest('.p414-picker__opt');
+        if (!opt) return;
+        location.href = 'kotennavi-p6-11.html?mode=new&role=gallery&author=' + encodeURIComponent(opt.dataset.key);
+      });
+      renderPickerList('');
+    }
+  }
+
+  window.ktnRender = function () {};
+};
+
+/* ════════════════════════════════════════════════════
    P4-15  LIAISON+コンソール（ギャラリー版）
 ════════════════════════════════════════════════════ */
 KTN.pages['p4-15'] = function () {
@@ -5755,6 +6218,20 @@ KTN.pages['p4-16'] = function () {
   window.ktnRender = function () {};
 };
 
+/* 非人系（コンテンツ）strip のオーナー表示をロール別に populate する共通ヘルパー。
+   idBase='p211Owner'→#p211OwnerBadge/#p211OwnerName を対象。role で creator/gallery を切替 */
+KTN.MGMT_OWNER = {
+  creator: { cls: 'cb-creator', label: 'creator', name: '田中 透',          href: 'kotennavi-p3.html' },
+  gallery: { cls: 'cb-gallery', label: 'gallery', name: 'Gallery SOIL 渋谷', href: 'kotennavi-p4.html' }
+};
+KTN.syncMgmtOwner = function (idBase, role) {
+  const o = KTN.MGMT_OWNER[role] || KTN.MGMT_OWNER.creator;
+  const badge = document.getElementById(idBase + 'Badge');
+  if (badge) { badge.className = 'cb cb-person ' + o.cls; badge.textContent = o.label; }
+  const name = document.getElementById(idBase + 'Name');
+  if (name) { name.textContent = o.name; name.href = o.href; }
+};
+
 /* ════════════════════════════════════════════════════
    P2-11  展覧会 新規投稿・編集・クローン
 ════════════════════════════════════════════════════ */
@@ -5764,33 +6241,12 @@ KTN.pages['p2-11'] = function () {
     document.body.classList.remove('p3-page', 'p4-page', 'p5-page');
     if (r === 'creator')      document.body.classList.add('p3-page');
     else if (r === 'gallery') document.body.classList.add('p4-page');
+    // オーナーは仮にギャラリー（YUGEN Gallery）固定＝HTML直書き。ロール切替では変えない
+    // 開催場所のロール別 default・ヘルプはページ内スクリプトが担当（未定義なら no-op）
+    if (typeof window.p211RoleSync === 'function') window.p211RoleSync();
   }
   syncMgmtBar();
   window.ktnRender = function () { syncMgmtBar(); };
-};
-
-/* ════════════════════════════════════════════════════
-   P4-18  ギャラリー 取扱作家管理
-════════════════════════════════════════════════════ */
-KTN.pages['p4-18'] = function () {
-  document.body.classList.add('p4-page');
-  document.body.style.setProperty('--page-accent',        '#8b5e3c');
-  document.body.style.setProperty('--page-accent-bg',     'rgba(139,94,60,.1)');
-  document.body.style.setProperty('--page-accent-border', '#b07a50');
-
-  document.querySelectorAll('.p3-tabnav__item').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      if (btn.dataset.tab === 'exhibitions') {
-        window.location.href = 'kotennavi-p4-1.html';
-      } else if (btn.dataset.tab === 'articles') {
-        window.location.href = 'kotennavi-p4-2.html';
-      } else if (btn.dataset.target) {
-        window.location.href = 'kotennavi-p4.html#' + btn.dataset.target;
-      }
-    });
-  });
-
-  window.ktnRender = function () {};
 };
 
 /* ════════════════════════════════════════════════════
@@ -5822,11 +6278,34 @@ KTN.pages['p4-18'] = function () {
    P11-4  リエゾンプラス機能申込
 ════════════════════════════════════════════════════ */
 KTN.pages['p11-4'] = function () {
+  // identity strip（申込者）のロール別デモデータ
+  const CTX = {
+    creator: { media: '--creator', bg: 'linear-gradient(135deg,#7ab4cc,#4a8099)', init: 'T',
+               badge: '<span class="cb cb-person cb-creator">creator</span>', name: '田中 透',
+               href: 'kotennavi-p3.html', view: 'クリエイターページへ →' },
+    gallery: { media: '--gallery', bg: 'linear-gradient(135deg,#c8a888,#8b5e3c)', init: 'SOIL',
+               badge: '<span class="cb cb-person cb-gallery">gallery</span>', name: 'Gallery SOIL 渋谷',
+               href: 'kotennavi-p4.html', view: 'ギャラリーページへ →' }
+  };
   function syncMgmtBar() {
     const r = window.ktnState && window.ktnState.role || 'gallery';
     document.body.classList.remove('p3-page', 'p4-page', 'p5-page');
     if (r === 'creator')      document.body.classList.add('p3-page');
     else if (r === 'gallery') document.body.classList.add('p4-page');
+    const c = CTX[r] || CTX.gallery;
+    const media = document.getElementById('p114CtxMedia');
+    if (media) {
+      media.className = 'ktn-mgmt-context__media ktn-mgmt-context__media' + c.media;
+      media.style.background = c.bg;
+      media.textContent = c.init;
+      media.href = c.href;
+    }
+    const badges = document.getElementById('p114CtxBadges');
+    if (badges) badges.innerHTML = c.badge;
+    const name = document.getElementById('p114CtxName');
+    if (name) { name.textContent = c.name; name.href = c.href; }
+    const view = document.getElementById('p114CtxView');
+    if (view) { view.textContent = c.view; view.href = c.href; }
   }
   syncMgmtBar();
   window.ktnRender = function () { syncMgmtBar(); };
@@ -5841,7 +6320,666 @@ KTN.pages['p6-11'] = function () {
     document.body.classList.remove('p3-page', 'p4-page', 'p5-page');
     if (r === 'gallery')      document.body.classList.add('p4-page');
     else                      document.body.classList.add('p3-page');
+    KTN.syncMgmtOwner('p611Owner', r === 'gallery' ? 'gallery' : 'creator');
+    if (typeof window.p611RoleSync === 'function') window.p611RoleSync();
   }
   syncMgmtBar();
   window.ktnRender = function () { syncMgmtBar(); };
+};
+
+/* ════════════════════════════════════════════════════
+   P10  検索-展覧会（ディスカバリーハブ）
+════════════════════════════════════════════════════ */
+KTN.pages['p10'] = function () {
+  document.body.classList.add('p10-page');
+  document.body.style.setProperty('--page-accent', '#005da7');
+  document.body.style.setProperty('--page-accent-bg', 'rgba(0,93,167,.08)');
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  /* ── デモデータ ── */
+  var EX = [
+    { id: 1,  title: '静寂のかたち — 田中透 油彩展', venue: '白日ギャラリー', area: '東京', s: '06.28', e: '07.13', hours: '11:00–19:00', status: 'live',   remain: '残り5日',  rd: 5,  tags: ['絵画', '現代美術'], type: 'solo',  free: 1, liaison: 'li',      pop: 88, int: 214, ci: 56, dist: '1.2km', wk: 1, isNew: 0, imgH: 200, bg: 'linear-gradient(135deg,#5a6b80,#2e3a4a)', thumbs: ['linear-gradient(135deg,#7a8ba0,#4e5a6a)', 'linear-gradient(135deg,#8a7a60,#5e4a3a)', 'linear-gradient(135deg,#6a8a7a,#3e5a4a)'] },
+    { id: 2,  title: '墨聲 — 現代書道の地平', venue: '東京書芸館', area: '東京', s: '06.20', e: '07.10', hours: '10:00–18:00', status: 'ending', remain: '残り2日',  rd: 2,  tags: ['書道'], type: 'group', free: 0, liaison: 'li-plus', pop: 92, int: 342, ci: 128, dist: '2.4km', wk: 1, isNew: 0, imgH: 165, bg: 'linear-gradient(135deg,#2e2a28,#5a5450)', thumbs: ['linear-gradient(135deg,#4a4440,#2a2624)', 'linear-gradient(135deg,#6a6058,#3a342e)', 'linear-gradient(135deg,#8a8078,#5a544e)'] },
+    { id: 3,  title: '光を編む — 篠原恵 写真展', venue: 'ギャラリー日向', area: '東京', s: '07.01', e: '07.17', hours: '12:00–19:00', status: 'live',   remain: '残り9日',  rd: 9,  tags: ['写真'], type: 'solo',  free: 1, liaison: '',        pop: 65, int: 98,  ci: 24, dist: '3.1km', wk: 0, isNew: 1, imgH: 250, bg: 'linear-gradient(135deg,#c0a880,#8a6e4a)' },
+    { id: 4,  title: '彫りと摺り — 木版画の現在', venue: '京都版画舎', area: '京都', s: '06.25', e: '07.20', hours: '10:00–17:00', status: 'live',   remain: '残り12日', rd: 12, tags: ['版画'], type: 'group', free: 0, liaison: '',        pop: 74, int: 156, ci: 42, dist: null,    wk: 1, isNew: 0, imgH: 190, bg: 'linear-gradient(135deg,#7a6a8a,#4a3e5a)' },
+    { id: 5,  title: 'マチエールの実験', venue: 'gallery TRACE', area: '東京', s: '06.30', e: '07.16', hours: '11:00–20:00', status: 'live',   remain: '残り8日',  rd: 8,  tags: ['絵画', '現代美術'], type: 'group', free: 0, liaison: 'li',      pop: 81, int: 188, ci: 61, dist: '0.8km', wk: 1, isNew: 0, imgH: 215, bg: 'linear-gradient(135deg,#a05a4a,#6a3428)', thumbs: ['linear-gradient(135deg,#b07a6a,#7a4838)', 'linear-gradient(135deg,#c09a8a,#8a5e4e)', 'linear-gradient(135deg,#906a5a,#5a3a2e)'] },
+    { id: 6,  title: '海と孤影 — 山根拓 写真展', venue: 'フォトスペース博多', area: '福岡', s: '07.18', e: '08.02', hours: '11:00–18:00', status: 'soon',   remain: '10日後に開催', rd: 99, tags: ['写真'], type: 'solo',  free: 0, liaison: '',        pop: 62, int: 74,  ci: 0,  dist: null,    wk: 0, isNew: 1, imgH: 235, bg: 'linear-gradient(135deg,#3a5a7a,#1e3448)' },
+    { id: 7,  title: '筆の呼吸 — 二人の書', venue: '大阪墨美堂', area: '大阪', s: '07.02', e: '07.14', hours: '10:00–18:00', status: 'live',   remain: '残り6日',  rd: 6,  tags: ['書道'], type: 'group', free: 1, liaison: '',        pop: 55, int: 62,  ci: 18, dist: null,    wk: 1, isNew: 0, imgH: 180, bg: 'linear-gradient(135deg,#4a4a4a,#1e1e1e)' },
+    { id: 8,  title: '都市の水彩 — 岡島みのり', venue: '横浜アートポート', area: '神奈川', s: '06.22', e: '07.11', hours: '11:00–19:00', status: 'ending', remain: '残り3日',  rd: 3,  tags: ['絵画'], type: 'solo',  free: 0, liaison: '',        pop: 58, int: 87,  ci: 31, dist: '5.6km', wk: 1, isNew: 0, imgH: 210, bg: 'linear-gradient(135deg,#6a9ab0,#3a5e74)' },
+    { id: 9,  title: '陶と土のリズム', venue: '瀬戸クラフト館', area: '愛知', s: '06.27', e: '07.23', hours: '10:00–17:00', status: 'live',   remain: '残り15日', rd: 15, tags: ['陶芸', 'クラフト'], type: 'group', free: 0, liaison: '',        pop: 49, int: 53,  ci: 12, dist: null,    wk: 0, isNew: 0, imgH: 195, bg: 'linear-gradient(135deg,#9a8a6a,#5e5238)' },
+    { id: 10, title: '銅版のミクロコスモス — 早瀬涼', venue: 'ギャラリー刻', area: '東京', s: '07.04', e: '07.18', hours: '12:00–19:00', status: 'live',   remain: '残り10日', rd: 10, tags: ['版画'], type: 'solo',  free: 0, liaison: 'li',      pop: 67, int: 112, ci: 27, dist: '4.2km', wk: 0, isNew: 1, imgH: 225, bg: 'linear-gradient(135deg,#5a7a6a,#2e4638)', thumbs: ['linear-gradient(135deg,#7a9a8a,#4a6a58)', 'linear-gradient(135deg,#6a8a7a,#3a5a48)', 'linear-gradient(135deg,#8aaa9a,#5a7a68)'] },
+    { id: 11, title: 'セルフポートレイトの練習', venue: 'studio hue', area: '東京', s: '07.11', e: '07.26', hours: '13:00–20:00', status: 'soon',   remain: '3日後に開催', rd: 98, tags: ['写真', '現代美術'], type: 'solo',  free: 0, liaison: 'li-plus', pop: 79, int: 143, ci: 0,  dist: null,    wk: 1, isNew: 1, imgH: 170, bg: 'linear-gradient(135deg,#b08aa0,#7a4e68)', thumbs: ['linear-gradient(135deg,#c0a0b0,#8a5e78)', 'linear-gradient(135deg,#a07a90,#6a4258)', 'linear-gradient(135deg,#d0b0c0,#9a6e88)'] },
+    { id: 12, title: 'ガラスのなかの庭 — 三好文乃', venue: '天神ガラス工房', area: '福岡', s: '06.29', e: '07.19', hours: '11:00–18:00', status: 'live',   remain: '残り11日', rd: 11, tags: ['クラフト'], type: 'solo',  free: 1, liaison: '',        pop: 66, int: 91,  ci: 22, dist: null,    wk: 0, isNew: 0, imgH: 205, bg: 'linear-gradient(135deg,#7ab0a8,#3e6e66)' },
+    { id: 13, title: '抽象の温度', venue: 'アートスペース青', area: '東京', s: '06.18', e: '07.10', hours: '11:00–19:00', status: 'ending', remain: '残り2日',  rd: 2,  tags: ['現代美術'], type: 'group', free: 0, liaison: '',        pop: 90, int: 276, ci: 94, dist: '2.9km', wk: 1, isNew: 0, imgH: 240, bg: 'linear-gradient(135deg,#c07040,#7a3e18)' },
+    { id: 14, title: '白の器展', venue: '京都陶々庵', area: '京都', s: '07.01', e: '07.28', hours: '10:00–17:00', status: 'live',   remain: '残り20日', rd: 20, tags: ['陶芸'], type: 'group', free: 0, liaison: '',        pop: 47, int: 44,  ci: 9,  dist: null,    wk: 0, isNew: 0, imgH: 185, light: 1, bg: 'linear-gradient(135deg,#b0aca0,#6e6a5e)' },
+    { id: 15, title: '路地と光 — 街歩き写真部', venue: 'コートギャラリー谷中', area: '東京', s: '07.03', e: '07.15', hours: '11:00–18:00', status: 'live',   remain: '残り7日',  rd: 7,  tags: ['写真'], type: 'group', free: 1, liaison: '',        pop: 71, int: 104, ci: 38, dist: '1.8km', wk: 1, isNew: 1, imgH: 220, bg: 'linear-gradient(135deg,#8a8a70,#4e4e38)' },
+    { id: 16, title: 'えんぴつと余白 — 西尾栞', venue: '鎌倉小町ギャラリー', area: '神奈川', s: '07.20', e: '08.04', hours: '10:00–17:00', status: 'soon',   remain: '12日後に開催', rd: 97, tags: ['絵画'], type: 'solo',  free: 1, liaison: '',        pop: 40, int: 31,  ci: 0,  dist: null,    wk: 0, isNew: 1, imgH: 175, light: 1, bg: 'linear-gradient(135deg,#d0c8a0,#8a8258)' },
+  ];
+
+  function isOn(x) { return x.status === 'live' || x.status === 'ending'; }
+
+  /* ── 特集プリセット（アルゴリズム生成の保存済み検索）
+     アイコンはプリセットの主ファセット軸（axis）から決定的にマッピング（2026-07-08 確定）：
+       area=ピン / date=カレンダー / price=チケット / pop=星 / tag=タグ
+     自動生成でも「生成条件の主軸 → アイコン」が一意に決まる（恣意的な絵文字は使わない）。
+     LIAISON のみ html でブランドマーク（lb-dot）を付与（商標＝ファセットでなくサービス識別のため） ── */
+  var P10_ICONS = {
+    area:  '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M13 6.5c0 3.2-5 7.5-5 7.5S3 9.7 3 6.5a5 5 0 0 1 10 0z"/><circle cx="8" cy="6.5" r="1.8"/></svg>',
+    date:  '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="3.5" width="11" height="10" rx="1"/><path d="M2.5 6.8h11M5.5 2v2.5M10.5 2v2.5"/></svg>',
+    price: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 6V4.8a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1V6a2 2 0 0 0 0 4v1.2a1 1 0 0 1-1 1h-9a1 1 0 0 1-1-1V10a2 2 0 0 0 0-4z"/><path d="M9.8 5.5v1.2M9.8 7.4v1.2M9.8 9.3v1.2"/></svg>',
+    pop:   '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"><path d="M8 2.4l1.7 3.5 3.9.6-2.8 2.7.7 3.9L8 11.2l-3.5 1.9.7-3.9-2.8-2.7 3.9-.6L8 2.4z"/></svg>',
+    tag:   '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"><path d="M2.5 8V3.5a1 1 0 0 1 1-1H8a1 1 0 0 1 .7.3l4.8 4.8a1 1 0 0 1 0 1.4l-4.5 4.5a1 1 0 0 1-1.4 0L2.8 8.7a1 1 0 0 1-.3-.7z"/><circle cx="5.6" cy="5.6" r="1"/></svg>',
+  };
+  var PRESETS = {
+    'week-picks':   { rail: 1, axis: 'pop',   label: '今週のおすすめ',        desc: '今週の「人気シグナル上位 × 開催中」から自動生成した特集です。', f: function (x) { return x.pop >= 80 && isOn(x); } },
+    'liaison':      { rail: 1, label: 'オンラインで楽しめる',  html: '<span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>オンラインで楽しめる', desc: '「LIAISON・LIAISON+ オンライン展示あり」条件から自動生成した特集です。', f: function (x) { return !!x.liaison; } },
+    'liaison-plus': { rail: 1, label: 'オンラインで購入できる', html: '<span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span>オンラインで購入できる', desc: '「LIAISON+（オンライン販売あり）」条件から自動生成した特集です。会場に行けなくても作品を購入できます。', f: function (x) { return x.liaison === 'li-plus'; } },
+    'fukuoka':      { rail: 1, axis: 'area',  label: '福岡で行くべき展覧会',  desc: '「福岡」エリアの掲載展覧会から自動生成した特集です。', f: function (x) { return x.area === '福岡'; } },
+    'shodo':        { rail: 1, axis: 'tag',   label: '話題の書道展',          desc: '「書道」タグ × 人気シグナルの組み合わせで自動生成した特集です。', f: function (x) { return x.tags.indexOf('書道') !== -1; } },
+    'weekend':      { rail: 1, axis: 'date',  label: 'この週末に行きたい',    desc: '「今週末に開催」条件から自動生成した特集です。', f: function (x) { return !!x.wk; } },
+    'tokyo-gendai': { rail: 1, axis: 'area',  label: '東京・現代美術',        desc: '「東京」エリア × 「現代美術」タグの組み合わせで自動生成した特集です。', f: function (x) { return x.area === '東京' && x.tags.indexOf('現代美術') !== -1; } },
+    'hanga':        { rail: 1, axis: 'tag',   label: '版画の世界',            desc: '「版画」タグの掲載展覧会から自動生成した特集です。', f: function (x) { return x.tags.indexOf('版画') !== -1; } },
+    'photo':        { rail: 1, axis: 'tag',   label: '写真展セレクション',    desc: '「写真」タグの掲載展覧会から自動生成した特集です。', f: function (x) { return x.tags.indexOf('写真') !== -1; } },
+    'near-live':    { rail: 1, axis: 'area',  label: '近くで開催中',          desc: '現在地から10km以内 × 開催中の条件から自動生成した特集です。', f: function (x) { return !!x.dist && isOn(x); } },
+    'free':         { rail: 1, axis: 'price', label: '無料で楽しめる展示',    desc: '「入場無料」条件から自動生成した特集です。', f: function (x) { return !!x.free; } },
+    'solo-month':   { rail: 1, axis: 'pop',   label: '今月注目の個展',        desc: '「個展」タイプ × 今月の人気シグナルから自動生成した特集です。', f: function (x) { return x.type === 'solo' && x.pop >= 60; } },
+    'ending-all':   { rail: 0, axis: 'date',  label: 'もうすぐ終了の展覧会',  desc: '会期終了が近い順に表示しています。', f: function (x) { return x.status === 'ending'; } },
+    'new-all':      { rail: 0, axis: 'date',  label: '新着掲載の展覧会',      desc: '最近個展なびに掲載された展覧会です。', f: function (x) { return !!x.isNew; } },
+    'trending':     { rail: 0, axis: 'pop',   label: 'いま注目の展覧会',      desc: '興味あり！とチェックインが集まっている展覧会です。', f: function (x) { return true; } },
+  };
+  function presetInner(key) {
+    var p = PRESETS[key];
+    return p.html || ((P10_ICONS[p.axis] || '') + esc(p.label));
+  }
+
+  /* ── カード描画は共通 buildGridEcCard（cards_exhibition.html 標準）を使用 ── */
+  var buildEc = buildGridEcCard;
+
+  function toSideEc(x) {
+    return { pref: x.area, title: x.title, venue: x.venue, s: x.s, e: x.e, bg: x.bg, dist: x.dist, liaison: x.liaison };
+  }
+
+  /* ── 今オンラインで買える作品（LIAISON+・作品単位のデモデータ） ──
+     展覧会（EX）とは別に、価格つきで販売中の作品を並べるディスカバリー用。
+     status: sale=販売中 / negot=商談中 / sold=売約済。queue=申込中の人数。 */
+  var AWORKS = [
+    { title: '静寂 I',        name: '田中透',   year: '2026', medium: '油彩・キャンバス', size: '727×606mm', price: 180000, status: 'sale',  queue: 2, interest: 48, bg: 'linear-gradient(135deg,#5a6b80,#2e3a4a)' },
+    { title: '墨の余白',      name: '高橋蒼',   year: '2026', medium: '紙本墨画',        size: '半切',       price: 96000,  status: 'sale',  queue: 0, interest: 71, bg: 'linear-gradient(135deg,#2e2a28,#5a5450)' },
+    { title: 'Self / 03',     name: 'studio hue', year: '2025', medium: 'ジークレー',    size: 'A2 ed.5',    price: 42000,  status: 'sale',  queue: 1, interest: 33, bg: 'linear-gradient(135deg,#b08aa0,#7a4e68)' },
+    { title: '銅版の庭',      name: '早瀬涼',   year: '2026', medium: '銅版画',          size: '300×400mm ed.10', price: 55000, status: 'negot', queue: 3, interest: 62, bg: 'linear-gradient(135deg,#5a7a6a,#2e4638)' },
+    { title: 'マチエール断章', name: '結城玲',   year: '2026', medium: 'ミクストメディア', size: '500×500mm', price: 128000, status: 'sale',  queue: 0, interest: 27, bg: 'linear-gradient(135deg,#a05a4a,#6a3428)' },
+    { title: '筆勢 — 二',     name: '大西澄',   year: '2025', medium: '紙本墨書',        size: '額装',       price: 74000,  status: 'sold',  queue: 0, interest: 55, bg: 'linear-gradient(135deg,#4a4a4a,#1e1e1e)' },
+  ];
+
+  /* ── 状態 ── */
+  var activePreset = null;
+  var shownCount = 8;
+  var PAGE_SIZE = 8;
+
+  var elDisc    = document.getElementById('p10Discovery');
+  var elResults = document.getElementById('p10Results');
+  var elZero    = document.getElementById('p10Zero');
+  var elKeyword = document.getElementById('p10Keyword');
+  var elSort    = document.getElementById('p10Sort');
+
+  function showView(v) {
+    elDisc.hidden    = v !== 'disc';
+    elResults.hidden = v !== 'results';
+    elZero.hidden    = v !== 'zero';
+  }
+
+  /* ── フィルタエンジン ── */
+  function activeChipFilters() {
+    var m = {};
+    document.querySelectorAll('.p10-chip.is-on[data-f]').forEach(function (c) {
+      var i = c.dataset.f.indexOf(':');
+      var k = c.dataset.f.slice(0, i), v = c.dataset.f.slice(i + 1);
+      if (!m[k]) m[k] = [];
+      if (m[k].indexOf(v) === -1) m[k].push(v);
+    });
+    return m;
+  }
+
+  function matches(x, filters, kw) {
+    if (activePreset && !PRESETS[activePreset].f(x)) return false;
+    for (var k in filters) {
+      var vals = filters[k], ok = false;
+      for (var i = 0; i < vals.length; i++) {
+        var v = vals[i];
+        if (k === 'st' && v === 'live' && isOn(x)) ok = true;
+        else if (k === 'weekend' && x.wk) ok = true;
+        else if (k === 'near' && x.dist) ok = true;
+        else if (k === 'free' && x.free) ok = true;
+        else if (k === 'area' && x.area === v) ok = true;
+        else if (k === 'tag' && x.tags.indexOf(v) !== -1) ok = true;
+        else if (k === 'type' && x.type === v) ok = true;
+        else if (k === 'liaison' && (v === 'lp' ? x.liaison === 'li-plus' : !!x.liaison)) ok = true;
+      }
+      if (!ok) return false;
+    }
+    if (kw) {
+      var hay = (x.title + ' ' + x.venue + ' ' + x.tags.join(' ')).toLowerCase();
+      if (hay.indexOf(kw.toLowerCase()) === -1) return false;
+    }
+    return true;
+  }
+
+  function sortResults(list) {
+    var mode = elSort ? elSort.value : 'end';
+    var out = list.slice();
+    if (mode === 'pop')      out.sort(function (a, b) { return b.pop - a.pop; });
+    else if (mode === 'new') out.sort(function (a, b) { return (b.isNew - a.isNew) || (a.rd - b.rd); });
+    else                     out.sort(function (a, b) { return a.rd - b.rd; });
+    return out;
+  }
+
+  /* ── fchips（適用中フィルタ表示） ── */
+  var FLABEL = {
+    'st:live': '開催中', 'weekend:1': '今週末', 'near:1': '近くで開催', 'free:1': '入場無料',
+    'type:solo': '個展', 'type:group': 'グループ展', 'liaison:li': 'LIAISON展示あり', 'liaison:lp': 'LIAISON+購入可',
+  };
+  function fchipLabel(k, v) {
+    var key = k + ':' + v;
+    if (FLABEL[key]) return FLABEL[key];
+    if (k === 'tag') return '# ' + v;
+    return v;
+  }
+
+  function renderFchips(filters, kw) {
+    var box = document.getElementById('p10Fchips');
+    var html = [];
+    if (activePreset) {
+      html.push('<span class="p10-fchip">' + esc(PRESETS[activePreset].label)
+        + '<button class="p10-fchip__x" type="button" data-rm="preset" aria-label="この特集を外す">×</button></span>');
+    }
+    for (var k in filters) {
+      filters[k].forEach(function (v) {
+        html.push('<span class="p10-fchip">' + esc(fchipLabel(k, v))
+          + '<button class="p10-fchip__x" type="button" data-rm="' + esc(k + ':' + v) + '" aria-label="この条件を外す">×</button></span>');
+      });
+    }
+    if (kw) {
+      html.push('<span class="p10-fchip">「' + esc(kw) + '」'
+        + '<button class="p10-fchip__x" type="button" data-rm="kw" aria-label="キーワードを外す">×</button></span>');
+    }
+    if (html.length >= 2) html.push('<button class="p10-fclear" type="button" data-rm="all">すべてクリア</button>');
+    box.innerHTML = html.join('');
+    box.hidden = !html.length;
+    box.querySelectorAll('[data-rm]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var rm = btn.dataset.rm;
+        if (rm === 'all') { clearAll(); showView('disc'); return; }
+        if (rm === 'preset') { setPreset(null); }
+        else if (rm === 'kw') { elKeyword.value = ''; }
+        else { document.querySelectorAll('.p10-chip[data-f="' + rm + '"]').forEach(function (c) { c.classList.remove('is-on'); }); }
+        runFilter();
+      });
+    });
+  }
+
+  /* ── 結果描画 ── */
+  function renderResultGrid(list) {
+    var grid = document.getElementById('p10ResultGrid');
+    grid.innerHTML = list.slice(0, shownCount).map(buildEc).join('');
+    var moreBtn = document.getElementById('p10MoreBtn');
+    moreBtn.parentElement.style.display = list.length > shownCount ? '' : 'none';
+    renderResultGrid._last = list;
+  }
+
+  function runFilter() {
+    var filters = activeChipFilters();
+    var kw = elKeyword.value.trim();
+    var hasAny = activePreset || kw || Object.keys(filters).length;
+    if (!hasAny) { showView('disc'); syncRail(); return; }
+
+    var list = EX.filter(function (x) { return matches(x, filters, kw); });
+    syncRail();
+
+    if (!list.length) {
+      document.getElementById('p10ZeroTitle').textContent = kw
+        ? '「' + kw + '」に一致する展覧会が見つかりませんでした'
+        : '条件に合う展覧会が見つかりませんでした';
+      renderZeroSugg();
+      showView('zero');
+      return;
+    }
+
+    var p = activePreset ? PRESETS[activePreset] : null;
+    document.getElementById('p10CtxEyebrow').textContent = p ? 'Feature' : 'Search Results';
+    document.getElementById('p10CtxTitle').textContent = p ? p.label : (kw ? '「' + kw + '」の検索結果' : '検索結果');
+    var descEl = document.getElementById('p10CtxDesc');
+    descEl.textContent = p ? p.desc : '';
+    descEl.hidden = !p;
+    renderFchips(filters, kw);
+    document.getElementById('p10Count').innerHTML = '<strong>' + list.length + '</strong>件';
+    shownCount = PAGE_SIZE;
+    renderResultGrid(sortResults(list));
+    showView('results');
+  }
+
+  /* ── プリセット ── */
+  function setPreset(key) {
+    activePreset = key;
+    syncRail();
+  }
+  function syncRail() {
+    document.querySelectorAll('.p10-preset[data-key]').forEach(function (b) {
+      b.classList.toggle('is-on', b.dataset.key === activePreset);
+    });
+  }
+  function applyPreset(key) {
+    clearAll();
+    activePreset = key;
+    runFilter();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function clearAll() {
+    activePreset = null;
+    elKeyword.value = '';
+    document.querySelectorAll('.p10-chip.is-on,.p10-day.is-on').forEach(function (c) { c.classList.remove('is-on'); });
+    var near = document.querySelector('.p10-adv__near-input');
+    if (near) near.value = '';
+    syncRail();
+  }
+
+  /* ── プリセットレール ── */
+  (function () {
+    var rail = document.getElementById('p10PresetRail');
+    var html = '';
+    for (var key in PRESETS) {
+      if (!PRESETS[key].rail) continue;
+      html += '<button class="p10-preset" type="button" data-key="' + key + '">' + presetInner(key) + '</button>';
+    }
+    rail.innerHTML = html;
+    rail.querySelectorAll('.p10-preset').forEach(function (b) {
+      b.addEventListener('click', function () {
+        if (activePreset === b.dataset.key) { clearAll(); showView('disc'); }
+        else applyPreset(b.dataset.key);
+      });
+    });
+    /* 横スクロール矢印（tagbar と同パターン） */
+    var arrL = document.getElementById('p10PresetArrL');
+    var arrR = document.getElementById('p10PresetArrR');
+    function syncArr() {
+      var max = rail.scrollWidth - rail.clientWidth;
+      arrL.classList.toggle('is-hidden', rail.scrollLeft <= 4);
+      arrR.classList.toggle('is-hidden', rail.scrollLeft >= max - 4);
+    }
+    arrL.addEventListener('click', function () { rail.scrollBy({ left: -220, behavior: 'smooth' }); });
+    arrR.addEventListener('click', function () { rail.scrollBy({ left: 220, behavior: 'smooth' }); });
+    rail.addEventListener('scroll', syncArr);
+    window.addEventListener('resize', syncArr);
+    syncArr();
+  })();
+
+  /* ── ディスカバリー棚 ── */
+  (function () {
+    var ending = EX.filter(PRESETS['ending-all'].f).sort(function (a, b) { return a.rd - b.rd; });
+    document.getElementById('p10EndingGrid').innerHTML = ending.slice(0, 4).map(buildEc).join('');
+
+    var nearby = EX.filter(PRESETS['near-live'].f).sort(function (a, b) { return parseFloat(a.dist) - parseFloat(b.dist); });
+    document.getElementById('p10NearbyGrid').innerHTML = nearby.slice(0, 3).map(toSideEc).map(buildSideEcCard).join('');
+
+    var liaison = EX.filter(PRESETS['liaison'].f).sort(function (a, b) { return b.pop - a.pop; });
+    document.getElementById('p10LiaisonGrid').innerHTML = liaison.slice(0, 4).map(buildEc).join('');
+
+    /* 今オンラインで買える作品（LIAISON+）＝作品単位のディスカバリー。
+       LIAISONを回遊の主役にするため、展覧会だけでなく「買える作品」を価格つきで前に出す。
+       カードは共通 buildP25cCard（p25c）を li-plus で描画。 */
+    document.getElementById('p10BuyGrid').innerHTML = AWORKS.map(function (w) {
+      return buildP25cCard(w, 'li-plus');
+    }).join('');
+
+    function fillFeature(num, key) {
+      var p = PRESETS[key];
+      document.getElementById('p10Feat' + num + 'Title').innerHTML = esc(p.label) + '<span class="ktn-sec-en">Feature</span>';
+      document.getElementById('p10Feat' + num + 'More').dataset.preset = key;
+      document.getElementById('p10Feat' + num + 'Grid').innerHTML =
+        EX.filter(p.f).sort(function (a, b) { return b.pop - a.pop; }).slice(0, 4).map(buildEc).join('');
+    }
+    fillFeature(1, 'tokyo-gendai');
+    fillFeature(2, 'weekend');
+
+    var trending = EX.slice().sort(function (a, b) { return b.pop - a.pop; });
+    document.getElementById('p10RecGrid').innerHTML = trending.slice(0, 4).map(buildEc).join('');
+
+    var news = EX.filter(function (x) { return x.isNew; }).sort(function (a, b) { return a.rd - b.rd; });
+    document.getElementById('p10NewGrid').innerHTML = news.slice(0, 4).map(buildEc).join('');
+  })();
+
+  /* 棚の「もっと見る」→ プリセット着地 */
+  document.querySelectorAll('[data-preset]').forEach(function (a) {
+    a.addEventListener('click', function (ev) {
+      ev.preventDefault();
+      applyPreset(a.dataset.preset);
+    });
+  });
+
+  /* ── ゼロヒット ── */
+  function renderZeroSugg() {
+    var sugg = document.getElementById('p10ZeroSugg');
+    sugg.innerHTML = ['near-live', 'liaison', 'free', 'weekend', 'week-picks'].map(function (key) {
+      return '<button class="p10-preset" type="button" data-zero-preset="' + key + '">' + presetInner(key) + '</button>';
+    }).join('');
+    sugg.querySelectorAll('[data-zero-preset]').forEach(function (b) {
+      b.addEventListener('click', function () { applyPreset(b.dataset.zeroPreset); });
+    });
+    var trending = EX.slice().sort(function (a, b) { return b.pop - a.pop; });
+    document.getElementById('p10ZeroGrid').innerHTML = trending.slice(0, 4).map(buildEc).join('');
+  }
+
+  /* ── 検索操作 ── */
+  document.getElementById('p10SearchBtn').addEventListener('click', runFilter);
+  elKeyword.addEventListener('keydown', function (ev) {
+    if (ev.key === 'Enter') { ev.preventDefault(); runFilter(); }
+  });
+
+  /* チップ（data-f あり＝実フィルタ／なし＝視覚デモ） */
+  document.querySelectorAll('.p10-chip,.p10-day').forEach(function (c) {
+    c.addEventListener('click', function () {
+      var on = !c.classList.contains('is-on');
+      if (c.dataset.f) {
+        document.querySelectorAll('[data-f="' + c.dataset.f + '"]').forEach(function (s) { s.classList.toggle('is-on', on); });
+        if (!c.closest('#p10Adv')) runFilter();
+      } else {
+        c.classList.toggle('is-on', on);
+      }
+    });
+  });
+
+  /* 詳細条件ドロワー */
+  var advToggle = document.getElementById('p10AdvToggle');
+  var adv = document.getElementById('p10Adv');
+  advToggle.addEventListener('click', function () {
+    var open = !adv.classList.contains('is-open');
+    adv.classList.toggle('is-open', open);
+    advToggle.classList.toggle('is-open', open);
+    advToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  document.getElementById('p10AdvClear').addEventListener('click', function () {
+    document.querySelectorAll('.p10-chip.is-on,.p10-day.is-on').forEach(function (c) { c.classList.remove('is-on'); });
+    var near = document.querySelector('.p10-adv__near-input');
+    if (near) near.value = '';
+  });
+  document.getElementById('p10AdvSearch').addEventListener('click', function () {
+    adv.classList.remove('is-open');
+    advToggle.classList.remove('is-open');
+    advToggle.setAttribute('aria-expanded', 'false');
+    runFilter();
+  });
+
+  /* 並び替え・さらに読み込む */
+  if (elSort) elSort.addEventListener('change', function () {
+    if (!elResults.hidden && renderResultGrid._last) {
+      shownCount = PAGE_SIZE;
+      renderResultGrid(sortResults(renderResultGrid._last));
+    }
+  });
+  document.getElementById('p10MoreBtn').addEventListener('click', function () {
+    if (!renderResultGrid._last) return;
+    shownCount = renderResultGrid._last.length;
+    renderResultGrid(renderResultGrid._last);
+  });
+
+  /* ── デモバー：表示状態切替 ── */
+  window.setP10View = function (view, btn) {
+    document.querySelectorAll('[data-p10-view]').forEach(function (b) { b.classList.remove('on'); });
+    if (btn && btn.hasAttribute('data-p10-view')) btn.classList.add('on');
+    clearAll();
+    if (view === 'disc') { showView('disc'); }
+    else if (view === 'preset') { applyPreset('tokyo-gendai'); }
+    else if (view === 'result') {
+      ['st:live', 'area:東京', 'free:1'].forEach(function (f) {
+        document.querySelectorAll('.p10-chip[data-f="' + f + '"]').forEach(function (c) { c.classList.add('is-on'); });
+      });
+      runFilter();
+    }
+    else if (view === 'zero') { elKeyword.value = '深夜の青騎士'; runFilter(); }
+  };
+
+  /* ── ロール反映（guest/login でおすすめ棚の見出し切替） ── */
+  function applyRole() {
+    var login = (window.curRole || 'guest') !== 'guest';
+    document.getElementById('p10RecTitleLogin').hidden = !login;
+    document.getElementById('p10RecDescLogin').hidden = !login;
+    document.getElementById('p10RecTitleGuest').hidden = login;
+    document.getElementById('p10RecDescGuest').hidden = login;
+  }
+  applyRole();
+  var prevRender = window.ktnRender;
+  window.ktnRender = function () {
+    if (typeof prevRender === 'function') prevRender();
+    applyRole();
+  };
+};
+
+/* ════════════════════════════════════════════════════
+   P1  個展なびトップ
+   P1＝時間軸・パーソナルフィード＋入口（プレビュー棚＋P10送客）。
+   棚はP10（もうすぐ終了/近く/Liaison/特集/おすすめ/新着掲載）と重複させない。
+════════════════════════════════════════════════════ */
+KTN.pages['p1'] = function () {
+  document.body.classList.add('p1-page');
+  document.body.style.setProperty('--page-accent', '#005da7');
+  document.body.style.setProperty('--page-accent-bg', 'rgba(0,93,167,.08)');
+
+  /* ── デモデータ（p10 と同一の世界観。watched=ウォッチ中の投稿者 / mine=興味あり！済） ── */
+  var EX = [
+    { id: 1,  title: '静寂のかたち — 田中透 油彩展', venue: '白日ギャラリー', area: '東京', s: '06.28', e: '07.13', hours: '11:00–19:00', status: 'live',   remain: '残り5日',  rd: 5,  tags: ['絵画', '現代美術'], liaison: 'li',      pop: 88, int: 214, ci: 56, dist: '1.2km', isNew: 0, watched: 1, mine: 1, imgH: 200, bg: 'linear-gradient(135deg,#5a6b80,#2e3a4a)', thumbs: ['linear-gradient(135deg,#7a8ba0,#4e5a6a)', 'linear-gradient(135deg,#8a7a60,#5e4a3a)', 'linear-gradient(135deg,#6a8a7a,#3e5a4a)'] },
+    { id: 2,  title: '墨聲 — 現代書道の地平', venue: '東京書芸館', area: '東京', s: '06.20', e: '07.10', hours: '10:00–18:00', status: 'ending', remain: '残り2日',  rd: 2,  tags: ['書道'], liaison: 'li-plus', pop: 92, int: 342, ci: 128, dist: '2.4km', isNew: 0, mine: 1, imgH: 165, bg: 'linear-gradient(135deg,#2e2a28,#5a5450)', thumbs: ['linear-gradient(135deg,#4a4440,#2a2624)', 'linear-gradient(135deg,#6a6058,#3a342e)', 'linear-gradient(135deg,#8a8078,#5a544e)'] },
+    { id: 3,  title: '光を編む — 篠原恵 写真展', venue: 'ギャラリー日向', area: '東京', s: '07.01', e: '07.17', hours: '12:00–19:00', status: 'live',   remain: '残り9日',  rd: 9,  tags: ['写真'], liaison: '',        pop: 65, int: 98,  ci: 24, dist: '3.1km', isNew: 1, watched: 1, imgH: 250, bg: 'linear-gradient(135deg,#c0a880,#8a6e4a)' },
+    { id: 4,  title: '彫りと摺り — 木版画の現在', venue: '京都版画舎', area: '京都', s: '06.25', e: '07.20', hours: '10:00–17:00', status: 'live',   remain: '残り12日', rd: 12, tags: ['版画'], liaison: '',        pop: 74, int: 156, ci: 42, dist: null,    isNew: 0, closedToday: 1, imgH: 190, bg: 'linear-gradient(135deg,#7a6a8a,#4a3e5a)' },
+    { id: 5,  title: 'マチエールの実験', venue: 'gallery TRACE', area: '東京', s: '06.30', e: '07.16', hours: '11:00–20:00', status: 'live',   remain: '残り8日',  rd: 8,  tags: ['絵画', '現代美術'], liaison: 'li',      pop: 81, int: 188, ci: 61, dist: '0.8km', isNew: 0, imgH: 215, bg: 'linear-gradient(135deg,#a05a4a,#6a3428)', thumbs: ['linear-gradient(135deg,#b07a6a,#7a4838)', 'linear-gradient(135deg,#c09a8a,#8a5e4e)', 'linear-gradient(135deg,#906a5a,#5a3a2e)'] },
+    { id: 6,  title: '海と孤影 — 山根拓 写真展', venue: 'フォトスペース博多', area: '福岡', s: '07.18', e: '08.02', hours: '11:00–18:00', status: 'soon',   remain: '10日後に開催', rd: 99, tags: ['写真'], liaison: '',        pop: 62, int: 74,  ci: 0,  dist: null,    isNew: 1, watched: 1, imgH: 235, bg: 'linear-gradient(135deg,#3a5a7a,#1e3448)' },
+    { id: 7,  title: '筆の呼吸 — 二人の書', venue: '大阪墨美堂', area: '大阪', s: '07.02', e: '07.14', hours: '10:00–18:00', status: 'live',   remain: '残り6日',  rd: 6,  tags: ['書道'], liaison: '',        pop: 55, int: 62,  ci: 18, dist: null,    isNew: 0, imgH: 180, bg: 'linear-gradient(135deg,#4a4a4a,#1e1e1e)' },
+    { id: 8,  title: '都市の水彩 — 岡島みのり', venue: '横浜アートポート', area: '神奈川', s: '06.22', e: '07.11', hours: '11:00–19:00', status: 'ending', remain: '残り3日',  rd: 3,  tags: ['絵画'], liaison: '',        pop: 58, int: 87,  ci: 31, dist: '5.6km', isNew: 0, mine: 1, imgH: 210, bg: 'linear-gradient(135deg,#6a9ab0,#3a5e74)' },
+    { id: 9,  title: '陶と土のリズム', venue: '瀬戸クラフト館', area: '愛知', s: '06.27', e: '07.23', hours: '10:00–17:00', status: 'live',   remain: '残り15日', rd: 15, tags: ['陶芸', 'クラフト'], liaison: '',        pop: 49, int: 53,  ci: 12, dist: null,    isNew: 0, imgH: 195, bg: 'linear-gradient(135deg,#9a8a6a,#5e5238)' },
+    { id: 10, title: '銅版のミクロコスモス — 早瀬涼', venue: 'ギャラリー刻', area: '東京', s: '07.04', e: '07.18', hours: '12:00–19:00', status: 'live',   remain: '残り10日', rd: 10, tags: ['版画'], liaison: 'li',      pop: 67, int: 112, ci: 27, dist: '4.2km', isNew: 1, imgH: 225, bg: 'linear-gradient(135deg,#5a7a6a,#2e4638)', thumbs: ['linear-gradient(135deg,#7a9a8a,#4a6a58)', 'linear-gradient(135deg,#6a8a7a,#3a5a48)', 'linear-gradient(135deg,#8aaa9a,#5a7a68)'] },
+    { id: 11, title: 'セルフポートレイトの練習', venue: 'studio hue', area: '東京', s: '07.11', e: '07.26', hours: '13:00–20:00', status: 'soon',   remain: '3日後に開催', rd: 98, tags: ['写真', '現代美術'], liaison: 'li-plus', pop: 79, int: 143, ci: 0,  dist: null,    isNew: 1, watched: 1, imgH: 170, bg: 'linear-gradient(135deg,#b08aa0,#7a4e68)', thumbs: ['linear-gradient(135deg,#c0a0b0,#8a5e78)', 'linear-gradient(135deg,#a07a90,#6a4258)', 'linear-gradient(135deg,#d0b0c0,#9a6e88)'] },
+    { id: 12, title: 'ガラスのなかの庭 — 三好文乃', venue: '天神ガラス工房', area: '福岡', s: '06.29', e: '07.19', hours: '11:00–18:00', status: 'live',   remain: '残り11日', rd: 11, tags: ['クラフト'], liaison: '',        pop: 66, int: 91,  ci: 22, dist: null,    isNew: 0, imgH: 205, bg: 'linear-gradient(135deg,#7ab0a8,#3e6e66)' },
+    { id: 13, title: '抽象の温度', venue: 'アートスペース青', area: '東京', s: '06.18', e: '07.10', hours: '11:00–19:00', status: 'ending', remain: '残り2日',  rd: 2,  tags: ['現代美術'], liaison: '',        pop: 90, int: 276, ci: 94, dist: '2.9km', isNew: 0, mine: 1, imgH: 240, bg: 'linear-gradient(135deg,#c07040,#7a3e18)' },
+    { id: 14, title: '路地と光 — 街歩き写真部', venue: 'コートギャラリー谷中', area: '東京', s: '07.03', e: '07.15', hours: '11:00–18:00', status: 'live',   remain: '残り7日',  rd: 7,  tags: ['写真'], liaison: '',        pop: 71, int: 104, ci: 38, dist: '1.8km', isNew: 1, imgH: 220, bg: 'linear-gradient(135deg,#8a8a70,#4e4e38)' },
+  ];
+  function exById(id) { for (var i = 0; i < EX.length; i++) if (EX[i].id === id) return EX[i]; return null; }
+
+  /* ── A. ヒーロー（ピックアップ・自動ローテーション） ── */
+  var HERO = [
+    { id: 1,  artist: '田中透',   en: 'Shapes of Silence — Toru Tanaka',  lead: '日常の光と影を静謐な色面に還元する田中透、3年ぶりの個展。近作の油彩24点を、LIAISONオンライン展示とあわせて公開しています。' },
+    { id: 2,  artist: 'グループ展', en: 'Voices of Ink — Contemporary Sho', lead: '筆と墨のいまを問う気鋭6名によるグループ展。会期はまもなく終了、LIAISON+でのオンライン購入は販売期間中も受け付けます。' },
+    { id: 5,  artist: 'グループ展', en: 'Experiments in Matiere',           lead: '絵肌＝マチエールの物質感を主題に、支持体と画材の実験を重ねる4名の共同展示。ギャラリーの壁一面を使ったインスタレーションも。' },
+    { id: 13, artist: 'グループ展', en: 'Temperature of Abstraction',       lead: '抽象絵画の「温度」をテーマにした注目のグループ展。興味あり！とチェックインがいま最も集まっています。会期は残りわずか。' },
+    { id: 11, artist: 'studio hue', en: 'Practicing Self-Portraits',        lead: 'セルフポートレイトという営みを見つめ直す写真と映像の個展。開催前からLIAISON+のオンライン展示・販売が話題です。' },
+  ];
+  var heroIdx = 0, heroTimer = null;
+
+  function renderHero(i) {
+    heroIdx = i;
+    var h = HERO[i], x = exById(h.id);
+    document.getElementById('p1HeroPoster').style.backgroundImage = x.bg;
+    var sbHtml = '';
+    if (x.status === 'live')        sbHtml = '<span class="sb sb-live"><span class="pulse"></span>開催中</span>';
+    else if (x.status === 'soon')   sbHtml = '<span class="sb sb-soon">もうすぐ開催</span>';
+    else if (x.status === 'ending') sbHtml = '<span class="sb sb-ending"><span class="ending-dot"></span>もうすぐ終了</span>';
+    var liHtml = x.liaison
+      ? '<span class="lb-dot ' + (x.liaison === 'li-plus' ? 'li-plus' : 'li') + '"><span class="lb-dot-inner"></span>' + (x.liaison === 'li-plus' ? 'LIAISON+' : 'LIAISON') + '</span>'
+      : '';
+    document.getElementById('p1HeroBadges').innerHTML = '<span class="cb cb-content cb-exhibition">exhibition</span>' + sbHtml + liHtml;
+    document.getElementById('p1HeroTitle').textContent = x.title;
+    document.getElementById('p1HeroEn').textContent = h.en;
+    var pinSvg = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M13 6.5c0 3.2-5 7.5-5 7.5S3 9.7 3 6.5a5 5 0 0 1 10 0z"/><circle cx="8" cy="6.5" r="1.8"/></svg>';
+    var calSvg = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="3.5" width="11" height="10" rx="1"/><path d="M2.5 6.8h11M5.5 2v2.5M10.5 2v2.5"/></svg>';
+    document.getElementById('p1HeroMeta').innerHTML =
+      '<span class="p1-hero__meta-item p1-hero__meta-item--date">' + calSvg + '<span class="p1-hero__dyear">2026.</span>' + x.s + '<span class="p1-hero__ddash">—</span><span class="p1-hero__dyear">2026.</span>' + x.e + '</span>'
+      + '<span class="p1-hero__meta-item p1-hero__meta-item--venue">' + pinSvg + x.area + '｜' + x.venue + '</span>';
+    document.getElementById('p1HeroLead').textContent = h.lead;
+    var dots = document.getElementById('p1HeroDots');
+    dots.querySelectorAll('.p1-hero__dot').forEach(function (d, j) { d.classList.toggle('is-on', j === i); });
+  }
+  function startHeroTimer() {
+    if (heroTimer) clearInterval(heroTimer);
+    heroTimer = setInterval(function () { renderHero((heroIdx + 1) % HERO.length); }, 6000);
+  }
+  (function () {
+    var dots = document.getElementById('p1HeroDots');
+    dots.innerHTML = HERO.map(function (_, j) {
+      return '<button class="p1-hero__dot" type="button" role="tab" aria-label="ピックアップ ' + (j + 1) + '"></button>';
+    }).join('');
+    dots.querySelectorAll('.p1-hero__dot').forEach(function (d, j) {
+      d.addEventListener('click', function () { renderHero(j); startHeroTimer(); });
+    });
+    renderHero(0);
+    startHeroTimer();
+  })();
+
+  /* ── B. 新着ティッカー（時間軸：新着掲載・まもなく終了・LIAISON） ── */
+  (function () {
+    var items = [];
+    EX.forEach(function (x) {
+      if (x.isNew) items.push({ tag: 'New', cls: '', text: '「' + x.title + '」を掲載しました（' + x.area + '・' + x.venue + '）' });
+    });
+    EX.forEach(function (x) {
+      if (x.status === 'ending') items.push({ tag: 'Ending', cls: ' p1-ticker__tag--ending', text: '「' + x.title + '」は' + x.remain + 'で会期終了' });
+    });
+    /* LIAISON+ を時間軸フックに接続（もうすぐ開始／申込締切間近／受付中）＝オンライン販売の緊急性で回遊を促す */
+    EX.forEach(function (x) {
+      if (x.liaison !== 'li-plus') return;
+      if (x.status === 'soon')        items.push({ tag: 'Liaison+', cls: ' p1-ticker__tag--liaison', text: '「' + x.title + '」まもなくオンライン展示・販売開始（2026.' + x.s + '〜）' });
+      else if (x.status === 'ending') items.push({ tag: 'Liaison+', cls: ' p1-ticker__tag--ending', text: '「' + x.title + '」オンライン販売の申込締切間近・' + x.remain });
+      else                            items.push({ tag: 'Liaison+', cls: ' p1-ticker__tag--liaison', text: '「' + x.title + '」オンライン販売受付中' });
+    });
+    var track = document.getElementById('p1TickerTrack');
+    track.innerHTML = items.map(function (t) {
+      return '<a class="p1-ticker__item" href="kotennavi-p2.html"><span class="p1-ticker__tag' + t.cls + '">' + t.tag + '</span><span class="p1-ticker__text">' + t.text + '</span></a>';
+    }).join('');
+    /* 1件ずつ静止表示 → クロスフェードで切替（横スクロール廃止）。
+       hover で自動送りを止めて読了・クリックできる */
+    var els = track.querySelectorAll('.p1-ticker__item');
+    if (els.length) {
+      var idx = 0;
+      els[0].classList.add('is-on');
+      if (els.length > 1) {
+        var timer = null;
+        function advance() {
+          els[idx].classList.remove('is-on');
+          idx = (idx + 1) % els.length;
+          els[idx].classList.add('is-on');
+        }
+        function start() { if (!timer) timer = setInterval(advance, 4500); }
+        function stop() { clearInterval(timer); timer = null; }
+        start();
+        var vp = track.parentNode;
+        vp.addEventListener('mouseenter', stop);
+        vp.addEventListener('mouseleave', start);
+      }
+    }
+  })();
+
+  /* ── C2. 近くの展覧会（ゲスト・位置情報フック） ──
+     ログイン前でも現在地から回遊を始められる導線。許可＝距離順、不許可/不可＝人気順にフォールバック。
+     プロトタイプでは実 geolocation の許可ダイアログのみ使い、距離は EX の静的 dist で近似する
+     （本番は取得座標と会場座標から距離を算出）。 */
+  (function () {
+    var btn = document.getElementById('p1NearbyBtn');
+    if (!btn) return;
+    var promptEl = document.getElementById('p1NearbyPrompt');
+    var resultEl = document.getElementById('p1NearbyResult');
+    var statusEl = document.getElementById('p1NearbyStatus');
+    var grid = document.getElementById('p1NearbyGrid');
+    var pinSvg = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M13 6.5c0 3.2-5 7.5-5 7.5S3 9.7 3 6.5a5 5 0 0 1 10 0z"/><circle cx="8" cy="6.5" r="1.8"/></svg>';
+    function toSide(x) { return { pref: x.area, title: x.title, venue: x.venue, s: x.s, e: x.e, bg: x.bg, dist: x.dist, liaison: x.liaison }; }
+    function render(list, statusHtml) {
+      grid.innerHTML = list.slice(0, 3).map(toSide).map(buildSideEcCard).join('');
+      statusEl.innerHTML = statusHtml;
+      promptEl.hidden = true;
+      resultEl.hidden = false;
+    }
+    function showNearby() {
+      var list = EX.filter(function (x) { return x.dist && x.status !== 'soon'; })
+        .sort(function (a, b) { return parseFloat(a.dist) - parseFloat(b.dist); });
+      render(list, pinSvg + '現在地の近くで開催中の展覧会');
+    }
+    function showFallback(msg) {
+      var list = EX.filter(function (x) { return x.status !== 'soon'; })
+        .sort(function (a, b) { return b.pop - a.pop; });
+      render(list, msg);
+    }
+    btn.addEventListener('click', function () {
+      btn.disabled = true;
+      btn.textContent = '現在地を取得中…';
+      if (!navigator.geolocation) { showFallback('位置情報が使えないため、人気の展覧会を表示しています。'); return; }
+      navigator.geolocation.getCurrentPosition(
+        function () { showNearby(); },
+        function () { showFallback('位置情報が取得できなかったため、人気の展覧会を表示しています。'); },
+        { enableHighAccuracy: false, timeout: 8000, maximumAge: 600000 }
+      );
+    });
+  })();
+
+  /* ── E. パーソナルフィード（ログインのみ） ── */
+  (function () {
+    var watch = EX.filter(function (x) { return x.watched; }).sort(function (a, b) { return (b.isNew - a.isNew) || (a.rd - b.rd); });
+    document.getElementById('p1WatchGrid').innerHTML = watch.slice(0, 4).map(buildGridEcCard).join('');
+
+    var remind = EX.filter(function (x) { return x.mine && x.rd <= 5; }).sort(function (a, b) { return a.rd - b.rd; });
+    document.getElementById('p1RemindGrid').innerHTML = remind.slice(0, 3).map(function (x) {
+      return buildSideEcCard({ pref: x.area, title: x.title, venue: x.venue, s: x.s, e: x.e, bg: x.bg, dist: x.dist, liaison: x.liaison });
+    }).join('');
+  })();
+
+  /* ── F. 最新の展覧会（メインフィード・ジャンル絞り込み） ── */
+  var feedGenre = '';
+  var feedShown = 8;
+  var FEED_PAGE = 8;
+  function feedList() {
+    var list = EX.filter(function (x) { return !feedGenre || x.tags.indexOf(feedGenre) !== -1; });
+    return list.sort(function (a, b) { return (b.isNew - a.isNew) || (a.rd - b.rd); });
+  }
+  function renderFeed() {
+    var list = feedList();
+    document.getElementById('p1FeedGrid').innerHTML = list.slice(0, feedShown).map(buildGridEcCard).join('');
+    document.getElementById('p1MoreWrap').style.display = list.length > feedShown ? '' : 'none';
+  }
+  document.querySelectorAll('.p1-genre').forEach(function (b) {
+    b.addEventListener('click', function () {
+      document.querySelectorAll('.p1-genre').forEach(function (o) { o.classList.remove('is-on'); });
+      b.classList.add('is-on');
+      feedGenre = b.dataset.genre || '';
+      feedShown = FEED_PAGE;
+      renderFeed();
+    });
+  });
+  document.getElementById('p1MoreBtn').addEventListener('click', function () {
+    feedShown = feedList().length;
+    renderFeed();
+  });
+  renderFeed();
+
+  /* ── G. LIAISON帯サムネイル ── */
+  (function () {
+    var thumbs = [];
+    EX.forEach(function (x) { if (x.thumbs) thumbs = thumbs.concat(x.thumbs); });
+    document.getElementById('p1LiaisonThumbs').innerHTML = thumbs.slice(0, 4).map(function (t) {
+      return '<div class="p1-liaison__thumb" style="background:' + t + '"></div>';
+    }).join('');
+  })();
+
+  /* ── ロール反映（ゲスト＝サイト紹介／ログイン＝パーソナルフィード） ── */
+  function applyRole() {
+    var login = (window.curRole || 'guest') !== 'guest';
+    document.getElementById('p1Nearby').hidden = login;
+    document.getElementById('p1Intro').hidden = login;
+    document.getElementById('p1Personal').hidden = !login;
+  }
+  applyRole();
+  var prevRender = window.ktnRender;
+  window.ktnRender = function () {
+    if (typeof prevRender === 'function') prevRender();
+    applyRole();
+  };
 };

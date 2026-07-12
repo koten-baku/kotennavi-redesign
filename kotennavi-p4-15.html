@@ -103,9 +103,6 @@
   <button class="dbtn" onclick="setR('login',this)">ログイン</button>
   <button class="dbtn on" onclick="setR('user+gallery',this)">gallery本人</button>
   <button class="dbtn" onclick="setR('admin',this)">管理者</button>
-  <span class="dbar-sep">画像：</span>
-  <button class="dbtn on" id="dbarImgOn" onclick="setImg(true,this)">あり</button>
-  <button class="dbtn" id="dbarImgOff" onclick="setImg(false,this)">なし</button>
 </div>
 
 <div class="shell">
@@ -120,41 +117,23 @@
 
   <main class="ktn-main" id="ktnMain">
 
-    <!-- A. ヒーロー（コンパクト版） -->
-    <div class="p4-head p4-head--compact">
-      <div class="p4-head__inner">
-        <div class="p4-head__top">
-          <a class="p4-head__avatar-wrap" href="kotennavi-p4.html">
-            <div class="p4-head__avatar" style="background:linear-gradient(135deg,#c8a888,#8b5e3c)">SOIL</div>
-          </a>
-          <div class="p4-head__info">
-            <div class="p4-head__badge-row">
-              <span class="cb cb-person cb-gallery">GALLERY</span>
-            </div>
-            <h1 class="p4-head__name"><a href="kotennavi-p4.html">Gallery SOIL 渋谷</a></h1>
-            <p class="p4-head__en">GALLERY SOIL SHIBUYA</p>
-            <p class="p4-head__genre">絵画・現代美術 · 東京・渋谷</p>
-          </div>
-          <button class="p3-mgmt-btn" id="p415MgmtBtn" aria-label="管理メニューを開く">
-            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="16" height="16"><circle cx="10" cy="10" r="2"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2M5.05 5.05l1.41 1.41M13.54 13.54l1.41 1.41M5.05 14.95l1.41-1.41M13.54 6.46l1.41-1.41"/></svg>
-            管理
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- B. タブナビ -->
-    <nav class="p3-tabnav" id="p4Tabnav" aria-label="ギャラリーページ内ナビ">
-      <div class="p3-tabnav__inner">
-        <a class="p3-tabnav__name" href="kotennavi-p4.html"><span class="p3-tabnav__name-text">Gallery SOIL 渋谷</span></a>
-        <button class="p3-tabnav__item" data-tab="exhibitions"><span class="p3-tabnav__label">展覧会</span></button>
-        <button class="p3-tabnav__item" data-tab="articles"><span class="p3-tabnav__label">記事</span></button>
-        <button class="p3-tabnav__item" data-target="p4-sec-profile">ギャラリー情報</button>
-      </div>
-    </nav>
-
     <!-- D. メインコンテンツ -->
     <div class="ktn-content">
+
+      <!-- 親エンティティ文脈ストリップ（identity strip） -->
+      <div class="ktn-mgmt-context">
+        <a class="ktn-mgmt-context__media ktn-mgmt-context__media--gallery" href="kotennavi-p4.html" style="background:linear-gradient(135deg,#c8a888,#8b5e3c)">SOIL</a>
+        <div class="ktn-mgmt-context__body">
+          <div class="ktn-mgmt-context__badges">
+            <span class="cb cb-person cb-gallery">GALLERY</span>
+          </div>
+          <div class="ktn-mgmt-context__name"><a href="kotennavi-p4.html">Gallery SOIL 渋谷</a></div>
+          <div class="ktn-mgmt-context__meta">絵画・現代美術 · 東京・渋谷</div>
+        </div>
+        <div class="ktn-mgmt-context__actions">
+          <a class="ktn-mgmt-context__view" href="kotennavi-p4.html">ギャラリーページへ →</a>        </div>
+      </div>
+
       <div class="p315-wrap ktn-mgmt-wrap ktn-mgmt-stack">
 
         <!-- ページヘッダー -->
@@ -648,22 +627,8 @@
 <script src="./kotennavi-common.js"></script>
 <script src="./kotennavi-pages.js"></script>
 <script>
-  window.P4_DATA = { hasImage: true, hasActiveExhibition: true };
+  window.P4_DATA = { hasActiveExhibition: true };
   KTN.init({ page: 'p4-15', role: 'user+gallery' });
-
-  function applyHeadImageMode(hasImage) {
-    var head = document.querySelector('.p3-head');
-    if (!head) return;
-    head.classList.remove('p3-head--has-image', 'p3-head--no-image');
-    head.classList.add(hasImage ? 'p3-head--has-image' : 'p3-head--no-image');
-    var wrap = head.querySelector('.p3-head__avatar-wrap');
-    if (wrap) wrap.style.display = hasImage ? '' : 'none';
-  }
-  function setImg(hasImage) {
-    document.getElementById('dbarImgOn').classList.toggle('on', hasImage);
-    document.getElementById('dbarImgOff').classList.toggle('on', !hasImage);
-    applyHeadImageMode(hasImage);
-  }
   function setR(role, btn) {
     document.querySelectorAll('.dbtn').forEach(function(b){ b.classList.remove('on'); });
     btn.classList.add('on');

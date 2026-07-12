@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>作品インベントリー管理 — Gallery SOIL 渋谷 | 個展なび</title>
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<body data-w="detail" class="p4-14-page p4-page mgmt-page">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- デモバー -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ロール：</span>
+  <button class="dbtn" onclick="setR('guest',this)">ゲスト</button>
+  <button class="dbtn" onclick="setR('login',this)">ログイン</button>
+  <button class="dbtn on" onclick="setR('user+gallery',this)">gallery本人</button>
+  <button class="dbtn" onclick="setR('admin',this)">管理者</button>
+</div>
+
+<div class="shell">
+<div class="content-wrap" id="contentWrap">
+
+  <header class="ktn-header" id="ktnHeader">
+    <div class="ktn-header__inner">
+      <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+      <div class="ktn-hdr-actions" id="ktnActs"></div>
+    </div>
+  </header>
+
+  <main class="ktn-main" id="ktnMain">
+    <div class="ktn-content">
+
+      <!-- ギャラリー 文脈ストリップ（identity strip） -->
+      <div class="ktn-mgmt-context">
+        <a class="ktn-mgmt-context__media ktn-mgmt-context__media--gallery" href="kotennavi-p4.html" style="background:linear-gradient(135deg,#c8a888,#8b5e3c)">SOIL</a>
+        <div class="ktn-mgmt-context__body">
+          <div class="ktn-mgmt-context__badges">
+            <span class="cb cb-person cb-gallery">gallery</span>
+          </div>
+          <div class="ktn-mgmt-context__name"><a href="kotennavi-p4.html">Gallery SOIL 渋谷</a></div>
+          <div class="ktn-mgmt-context__meta">絵画・現代美術 · 東京・渋谷</div>
+        </div>
+        <div class="ktn-mgmt-context__actions">
+          <a class="ktn-mgmt-context__view" href="kotennavi-p4.html">ギャラリーページへ →</a>
+        </div>
+      </div>
+
+      <!-- 管理ボックス -->
+      <div class="p414-wrap ktn-mgmt-wrap ktn-mgmt-stack">
+
+        <!-- ページタイトル -->
+        <div class="ktn-mgmt-head">
+          <h2 class="ktn-mgmt-head__title">作品インベントリー</h2>
+          <p class="ktn-mgmt-head__en">ARTWORK INVENTORY</p>
+          <p class="ktn-mgmt-head__desc">ギャラリーが取り扱う作品を登録・管理します。ここで登録した作品を、展覧会の LIAISON / LIAISON+ に<strong>出品</strong>できます。</p>
+        </div>
+
+        <!-- 非公開の注記 -->
+        <div class="p414-notice">
+          <svg class="p414-notice__icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="17" height="17" aria-hidden="true"><path d="M2 10s3-5.5 8-5.5S18 10 18 10s-3 5.5-8 5.5S2 10 2 10Z"/><circle cx="10" cy="10" r="2.3"/><line x1="3.5" y1="3.5" x2="16.5" y2="16.5"/></svg>
+          <div class="p414-notice__body">
+            <strong>インベントリーはギャラリーページには公開表示されません。</strong>
+            ここに登録された作品は在庫管理用です。作品が閲覧できるのは、展覧会に出品された LIAISON / LIAISON+ の作品ページに限られます。
+          </div>
+        </div>
+
+        <!-- 真正性の注記 -->
+        <div class="p414-authenticity">
+          <svg class="p414-authenticity__icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="16" height="16" aria-hidden="true"><path d="M10 2.5 3.5 5v4.5c0 4 2.8 6.6 6.5 8 3.7-1.4 6.5-4 6.5-8V5L10 2.5Z"/><path d="M7.3 10l1.9 1.9 3.6-3.8"/></svg>
+          <div class="p414-authenticity__body">
+            作者に指定できるのは<strong>個展なびに登録済みのクリエイター</strong>のみです。未登録の作家の作品は登録できません。取り扱う作品の真正性を担保するためのルールです。
+          </div>
+        </div>
+
+        <!-- ツールバー：作者フィルタ・状態フィルタ・新規作成 -->
+        <div class="p414-toolbar">
+          <div class="p414-toolbar__filters">
+            <label class="p414-filter">
+              <span class="p414-filter__label">作者</span>
+              <select class="p414-filter__sel" id="p414FilterAuthor">
+                <option value="">すべての作者</option>
+              </select>
+            </label>
+            <label class="p414-filter">
+              <span class="p414-filter__label">出品状況</span>
+              <select class="p414-filter__sel" id="p414FilterListed">
+                <option value="">すべて</option>
+                <option value="listed">出品中</option>
+                <option value="unlisted">未出品</option>
+              </select>
+            </label>
+          </div>
+          <button type="button" class="p414-new-btn ktn-op-btn ktn-op-btn--sm" id="p414NewBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+            新規作品を作成
+          </button>
+        </div>
+
+        <!-- 件数表示 -->
+        <div class="p414-count-row">
+          <span class="p414-count" id="p414Count">0</span>
+          <span class="p414-count-row__unit">件</span>
+        </div>
+
+        <!-- インベントリー一覧 -->
+        <ul class="p414-list" id="p414List" aria-label="作品インベントリー一覧"></ul>
+
+        <!-- ゼロ状態 -->
+        <div class="p414-empty" id="p414Empty" hidden>
+          <p class="p414-empty__msg">該当する作品がありません。</p>
+        </div>
+
+      </div><!-- /.ktn-mgmt-wrap -->
+
+      <!-- 新規作品：作者選択モーダル（取扱クリエイターから選択→p6-11へ作者固定で遷移） -->
+      <div class="p414-picker" id="p414Picker" hidden>
+        <div class="p414-picker__bg" id="p414PickerBg"></div>
+        <div class="p414-picker__panel" role="dialog" aria-modal="true" aria-labelledby="p414PickerTitle">
+          <div class="p414-picker__head">
+            <h3 class="p414-picker__title" id="p414PickerTitle">どのクリエイターの作品を作成しますか？</h3>
+            <button class="p414-picker__close" id="p414PickerClose" type="button" aria-label="閉じる">✕</button>
+          </div>
+          <p class="p414-picker__desc">このギャラリーが取り扱う（展覧会に出展した）<strong>登録済みクリエイター</strong>のみ選択できます。未登録の作家の作品は登録できません（真正性を担保するためのルールです）。同姓同名の作者は「確認 ↗」でクリエイターページを開き、本人か確かめてから選択してください。</p>
+          <div class="p414-picker__search">
+            <svg class="p414-picker__search-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" width="16" height="16" aria-hidden="true"><circle cx="9" cy="9" r="6"/><line x1="13.5" y1="13.5" x2="17" y2="17"/></svg>
+            <input type="text" class="p414-picker__search-input" id="p414PickerSearch" placeholder="作者名・よみがなで検索" autocomplete="off" aria-label="作者を検索">
+          </div>
+          <p class="p414-picker__hint" id="p414PickerHint"></p>
+          <div class="p414-picker__list" id="p414PickerList"></div>
+          <p class="p414-picker__empty" id="p414PickerEmpty" hidden>該当する作者がいません。</p>
+        </div>
+      </div>
+
+    </div><!-- /.ktn-content -->
+  </main>
+
+</div><!-- /.content-wrap -->
+</div><!-- /.shell -->
+
+<nav class="ktn-bottom-nav" id="ktnBottomNav"><div class="ktn-bottom-nav__inner" id="ktnBottomNavInner"></div></nav>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Top","item":"https://koten-navi.com/"},{"@type":"ListItem","position":2,"name":"ギャラリー","item":"https://koten-navi.com/p10-3"},{"@type":"ListItem","position":3,"name":"Gallery SOIL 渋谷","item":"https://koten-navi.com/p4"},{"@type":"ListItem","position":4,"name":"作品インベントリー管理"}]}</script>
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+  KTN.init({ page: 'p4-14', role: 'user+gallery' });
+  function setR(role, btn) {
+    document.querySelectorAll('.dbtn').forEach(function(b){ b.classList.remove('on'); });
+    btn.classList.add('on');
+    window.curRole = role;
+    if (window.ktnRender) ktnRender();
+  }
+</script>
+</body>
+</html>

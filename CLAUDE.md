@@ -86,7 +86,7 @@ docs/                     仕様・設計ドキュメント
 - 対象ヒーロー `__inner`（`--compact` 含む）：`.p2-title-band__inner`／`.p3-head__inner`／`.p4-head__inner`／`.p5-head__inner`。いずれも左右20pxを base 値として直書きし、`.ktn-content`（左右20px）と揃える。
 - **p6系ヒーロー（`.p6-hero`）は白背景＋枠線の「カード」型**で、他ページの全幅カラー帯と違い枠線自体が幅の見切りになる。`.ktn-content` に包まれるため素のままだと1040に収まり、下の帯（p2/p3/p4/p5 のカラー帯＝1080）や本来のページ最大幅と揃わない。そこで**ヒーローを包む `.ktn-content` に `.ktn-content--flush-x`（左右padding 0）を付けて枠線を1080まで広げる**。文字の余白は帯内側の `.p6-hero__stage`（左右40px）・`.p6-hero__meta`（左右24px）が持つため左壁に密着しない。2カラム部分は通常の `.ktn-content`（20px）のまま＝カードは1040に inset。
 - **p2-5／p2-5-1** は色付きフルブリード帯（`var(--warm)`／`--paper` 等）を持つ設計で、`.p2-5-*__inner`・`.p25-layout`・`.p25-fullwidth` の左右20pxは**「帯の内部余白」**として同じ20px。`.p2-5-wrap` 自身は `padding:0`（帯はフルブリード）で、ガターは内側セクション `__inner` が担う。
-- **ネストする wrap（`.p418-wrap`／`.p114-wrap` 等、`.ktn-content` の内側）** も左右20pxを持ち、内容が外側 content と同じ位置に来るよう揃える。
+- **ネストする wrap（`.p114-wrap` 等、`.ktn-content` の内側）** も左右20pxを持ち、内容が外側 content と同じ位置に来るよう揃える。
 - **パンくず・タブナビ/サブナビの左端も20pxグリッドに揃える（2026-07-05 確定）**：帯の max-width は元から全て1080（パンくず `.ktn-header__inner`＝`--w-page`→display系1080／`.p2-subnav-bar`・`.p3-tabnav`・`.p5-tabnav`＝`--w-entity` 1080）で幅は一致済み。左端テキスト位置だけをヒーロー/コンテンツと同じ20pxへ合わせる。
   - パンくず `.ktn-header__inner` の左右paddingは **20px**（旧24pxから是正・グローバル。mobile 14pxは別グリッドで据え置き）。
   - **名前要素を持つナビ（p3/p4/p5）**：最左の `.p3-tabnav__name`（p4もHTMLで再利用）・`.p5-tabnav__name` の左右padding＝**20px**（`__inner` は padding 0）。タブ項目 `.pN-tabnav__item` の左右padding（20px）はタブ間隔＝据え置き。
@@ -263,17 +263,34 @@ docs/                     仕様・設計ドキュメント
 
 **設計方針：** P70ガイドページのエディトリアル方向（罫線中心・色を絞る・行間広め・余白多め）を基準とし、表示系ページ（p2/p3/p4/p6 系）の本文・見出しもこの方向で統一する。
 
-### 表示系ページ見出しの基準
+### 表示系ページ見出しの基準（2ティア・2026-07-09 v2 実標準に整合）
+
+見出しは**役割で2ティアに分ける**。旧版は「ヒーロー大見出し＝600 / .005em」の1本値だったが、**editorial refinement v2 が全表示ヒーロー（`.p2-title-band__title`／`.p3-head__name`／`.p4-head__name`／`.p5-head__name`）を 700・負の字間で上書き**しており、旧表がカスケード後の実描画と食い違っていた（＝この表の古さが weight/letter-spacing 競合の発生源だった）。**実際に描画される v2 の値を正**とし、以下に統一する。
+
+**ティア①：エディトリアル・ヒーロー大見出し**（色帯ヒーローの主役名＝展覧会名・人名）
+
+| 対象 | font-size | font-weight | letter-spacing |
+|---|---|---|---|
+| `.p2-title-band__title` | `clamp(2rem,5vw,3.4rem)` | **`700`** | **`-.01em`** |
+| `.p3-head__name` / `.p4-head__name` | `clamp(1.8rem,3.5vw,2.6rem)` | **`700`** | **`-.005em`** |
+| `.p5-head__name` | `clamp(1.6rem,3vw,2.2rem)` | **`700`** | **`-.005em`** |
+| `.p1-hero__title`（P1 Pick Up ヒーロー） | `clamp(1.6rem,3.2vw,2.4rem)` | **`700`** | **`-.005em`** |
+| 下位ページ見出し（`.p2-{n}-page-head__title`＝p2-1〜4 のサブページ head） | `clamp(1.8rem,3.5vw,2.6rem)` | **`700`** | **`-.005em`** |
+| ヒーロー英サブ（`.pN-head__en` 等） | `1.1rem` | `500` italic | `.03em` |
+
+ティア①は「大型・力強い明朝＋わずかに詰めた負の字間」で editorial の主役を張る。色帯ヒーローの主役名（展覧会名・人名）と、その配下の p2 サブページ head が該当。**新規の色帯ヒーロー主役名・editorial サブページ head はこの値に合わせる**（600 / 正字間にしない）。
+
+**ティア②：機能ページ／章／カード見出し**（色帯ヒーローを持たない検索・機能ページ head、章タイトル、カードタイトル）
 
 | 種別 | font-size | font-weight | letter-spacing |
 |---|---|---|---|
-| ヒーロー大見出し（`.p3-head__name` 等） | `2.1rem` | `600` | `.005em` |
-| 下位ページ見出し（`.p2-{n}-page-head__title`） | `1.55rem` | `600` | `.005em` |
+| 機能ページ head（`.p10-search__title`＝検索ハブ・色帯ヒーロー無し） | `1.55rem` | `600` | `.005em` |
 | 章見出し（`.ktn-section__title`） | `1.1rem` | `600` | `.02em` |
 | カードタイトル（`.ec__title` `.aw__title`） | `.93rem` | `600` | `.01em` |
-| ヒーロー英サブ（`.p3-head__en` 等） | `.95rem` | `500` italic | `.04em` |
 
-**`font-weight: 800` は装飾的用途（ポスタープレースホルダー、アバターイニシャル、SOLDリボン等）のみで使用。本文系・見出し系は最大でも 700、通常は 600。**
+ティア②は `600` / 正の字間で「機能・情報の見出し」に留める。**P10（検索ディスカバリーハブ）は色帯ヒーローを持たない機能ページなので `.p10-search__title` はティア②（600）が正**（P1 の editorial ヒーローとは役割が別＝競合ではない）。
+
+**`font-weight: 800` は装飾的用途（ポスタープレースホルダー、アバターイニシャル、SOLDリボン等）のみで使用。見出し系は ティア①＝700／ティア②＝600 の2値に集約する（中間の 650 等は使わない）。本文系は 600 まで。**
 
 ### サイドカードラベル
 
@@ -658,7 +675,6 @@ p2-5-1（LIAISON+作品一覧）・p2-12-1（LIAISON+作品管理）・p6-dark�
 | p3-16 | `p3-page p3-16-page mgmt-page` | |
 | p4-15 | `p4-15-page p4-page mgmt-page` | |
 | p4-16 | `p4-page p4-16-page mgmt-page` | |
-| p4-18 | `p4-18-page p4-page mgmt-page` | |
 | p5-14 | `p5-page p5-14-page mgmt-page` | |
 | p5-15 | `p5-page p5-15-page mgmt-page` | |
 | p5-11〜13 | `p5-page p5-{id}-page mgmt-page` | |
@@ -678,22 +694,35 @@ p2-5-1（LIAISON+作品一覧）・p2-12-1（LIAISON+作品管理）・p6-dark�
   body.mgmt-page .p3-tabnav,.p4-tabnav,.p5-tabnav{max-width:var(--w-detail)} /* tabnav */
   ```
   - 以前は各ページに個別 `max-width:var(--w-detail)` 指定が残っていたが、汎用ルールと重複するため**削除済み（2026-07-06）**。新規ページで個別指定を追加しない。
-- **コンテンツの760化は `.ktn-mgmt-wrap`（白カード・max-width:760・margin:0 auto）が担う**。管理ページの `.ktn-content` は**素のまま**（1080・左右padding20px）置き、その中で wrap が760に自制する（→次項「管理ボックス共通パターン」）。17ページ全部この方式：Model A（stackなし）＝p2-11/p6-11/p3-11/p3-12/p5-11/p5-12、Model B（`ktn-mgmt-stack` 併用）＝p2-12/p2-12-1/p3-15/p4-15/p3-16/p4-16/p4-18/p5-13/p5-14/p5-15/p11-4。
+- **コンテンツの760化は `.ktn-mgmt-wrap`（白カード・max-width:760・margin:0 auto）が担う**。管理ページの `.ktn-content` は**素のまま**（1080・左右padding20px）置き、その中で wrap が760に自制する（→次項「管理ボックス共通パターン」）。16ページ全部この方式（p4-18 は2026-07-10仕様変更で廃止）：Model A（stackなし）＝p2-11/p6-11/p3-11/p3-12/p5-11/p5-12、Model B（`ktn-mgmt-stack` 併用）＝p2-12/p2-12-1/p3-15/p4-15/p3-16/p4-16/p5-13/p5-14/p5-15/p11-4。
   - **`.ktn-content--article` / `--detail` を管理ページに併記しない（2026-07-07 是正）**：これらは max-width:760 に**左右padding20pxを含む**ため、中の wrap が **720px** に縮み、パンくず帯・ヒーロー帯（760）とボックス外枠が揃わなくなる。「幅を揃える」＝**ボックスの外枠端＝パンくず帯・ヒーロー帯の外枠端（760）**の一致（過去に7ページ＝p2-11/p2-12/p2-12-1/p6-11/p11-4/p3-11/p3-12 で併記が残っており720に縮んでいたのを削除済み）。
-  - **wrap 外に置く要素（状態バナー・審査notice）は自前で `max-width:var(--w-detail);margin:0 auto`** を持たせて wrap と同幅にする（`.p211-mode-banner`／`.p211-exh-banner`／`.p114-status-notice` は付与済み）。
+  - **wrap 外に置く要素（identity strip・状態バナー・審査notice）は自前で `max-width:var(--w-detail);margin:0 auto`** を持たせて wrap と同幅にする（`.ktn-mgmt-context`／`.p211-mode-banner`／`.p114-status-notice` は付与済み）。
 - **`data-w` 属性は不要**：`body.mgmt-page .ktn-header__inner` がパンくず幅を data-w に関わらず760へ固定するため。
 - 左右padding は20pxで統一（`.ktn-mgmt-wrap` 系は子要素 `margin:0 20px`、モバイルで縮小）。
 
+### 管理ページの identity strip（`.ktn-mgmt-context`・全16管理ページ標準・2026-07-09 確定／2026-07-10 p4-18廃止で17→16）
+
+**管理・編集ページのヘッダー文脈表示を1コンポーネントへ統一。** 旧3パターン（人物＝親 `.pN-head--compact` ヒーロー＋公開 `.pN-tabnav` 継承／p2-11・p6-11＝`.p211-exh-banner`／p2-12・p2-12-1＝`.p2-12-banner`）を撤去し、`.ktn-mgmt-wrap` ボックスの**外・上**に置く横ストリップ `.ktn-mgmt-context` に集約した（旧2バナークラスの CSS は廃止）。canonical は `kotennavi-common.css` の `.ktn-guide-link` 直後。
+
+- **構造**：`[media][body: badges / name(親リンク) / meta / (非人系のみ)owner行][actions: 「○○ページへ →」view リンク]`。自前で 760px 中央寄せ（wrap外要素）。`.ktn-content` 直下に置くと `:has(> .ktn-mgmt-context){padding-top:16px}` で上余白が詰まる。
+- **media バリアント**：人物＝`--creator`/`--gallery`/`--user`（アバター形状ルール準拠の角丸＋ロール色 outline）。コンテンツ＝`--content`（outline無し・薄フレームの矩形サムネ）。badges も人物＝`cb-person`／コンテンツ＝`cb-content` で対応。
+- **非人系（コンテンツ）strip はオーナー行 `.ktn-mgmt-context__owner` を持つ（2026-07-09 確定）**：`__meta` の下に「`Owner`（Cinzel micro-label）＋人物バッジ（`cb cb-person cb-creator`/`cb-gallery`）＋オーナー名（p3/p4リンク・`--fs`）」を出し、**このコンテンツの操作主体が誰か**を明示する（人系 strip は identity 自体がオーナーなので不要）。**オーナーはコンテンツ固有の所有者に合わせる**（ページ横断の汎用デモペア〔田中透／Gallery SOIL 渋谷〕を機械的に流用しない＝会場・作家と食い違うため）。p2-12・p2-12-1（creator 田中透→p3）と**p2-11（展覧会 松田啓佑展／会場 YUGEN Gallery＝仮にギャラリー所有・`gallery` YUGEN Gallery→p4）はHTML直書き固定**（p2-11 はロール切替でオーナーを変えない＝この展覧会は gallery 所有と確定）。**role別 populate が要るのは p6-11 のみ**：作品《オノマトペの庭》＝作家 田中透 のデモデータが共通ペアと一致するため、`KTN.syncMgmtOwner('p611Owner', role)`（共通ヘルパー・`KTN.MGMT_OWNER` マップ）が `#p611OwnerBadge`／`#p611OwnerName` をロール別 populate。p11-4 は人系 strip なので対象外。
+- **公開タブナビは管理画面に出さない**（編集集中・誤操作離脱防止。identity/親リンク機能は strip が継承）。
+- **管理メニュー＝strip には置かない（2026-07-09 確定）**：strip の actions は view リンクのみ。旧「strip のみ」方式で移設した `.p3-mgmt-btn`（`管理`）は**全ページ撤去済み**（ユーザー指示「管理ボタンは不要」）。管理メニューはヘッダー `getActions()` へ寄せる想定で、その正式化は p1/p10 と同じく後続の一括作業へ後回し。**既存の管理ドロワー（`.p3-mgmt-drawer`）＋JS結線（null-safe）は残置**するが、開くトリガー（管理ボタン）が無いため現状は休眠。getActions 一括化のバッチでドロワー廃止 or getActions 結線を確定する。**例外＝p3-11 のみ**は先行して `getActions('p3-11','creator')` の `dd('オーナーメニュー')` に集約済み（ドロワーも撤去・横展開しない）。
+- **非人系（コンテンツ編集・管理）ページも同じ扱い（2026-07-09 確定・案A）**：p2-11・p6-11・p2-12・p2-12-1・p11-4 も strip は identity＋view リンクのみ。オーナーメニューは**人系と共通のヘッダー getActions 1本**に寄せる（編集対象はコンテンツでも操作主体は creator/gallery 本人で、開くメニュー内容は人系と同一のため別立てにしない）。**creator/gallery 兼用ページ（p2-11・p6-11・p11-4）は getActions もロール別に出し分ける**（p11-4 の `CTX` と同発想）。実装は p1/p10 デザインFixと同じ後続の一括バッチで人系・非人系まとめて行う（今は未実装＝16ページ全て strip 確定状態）。
+- **モード切替を持つページ**：p2-11（`id=p211ExhBanner`）・p6-11（`id=p611WorkBanner`）は編集/クローンモードで strip を hidden 切替する id を strip 根に維持。p11-4 は creator/gallery 兼用のため `syncMgmtBar()` が `CTX` デモデータで media/badge/name/view をロール別に populate。
+- 新規管理ページは strip をコピーし、media 形状・badge・エンティティ名・view リンク先を対象に合わせるだけでよい。
+
 ### 管理ボックス共通パターン（`.ktn-mgmt-wrap` ＋ `.ktn-mgmt-stack`・2026-07-06 確定／2026-07-07 全管理ページへ展開完了）
 
-**「ヒーロー帯＋タブナビ → その下に操作コンテンツを白ボックスへ格納（ボックス上端にオーナーのアクセントライン）」**という構造は共通コンポーネント化済みで、**管理・編集系17ページすべてに適用済み**。**新規の管理・操作ページはこの3クラスの組み合わせをコピーするだけでよい**（ページ固有CSSは原則不要）。
+**「ヒーロー帯＋タブナビ → その下に操作コンテンツを白ボックスへ格納（ボックス上端にオーナーのアクセントライン）」**という構造は共通コンポーネント化済みで、**管理・編集系16ページすべてに適用済み**。**新規の管理・操作ページはこの3クラスの組み合わせをコピーするだけでよい**（ページ固有CSSは原則不要）。
 
 **2つの適用モデル：**
 
 | モデル | 構成 | 用途 | 適用ページ |
 |---|---|---|---|
 | **Model A（フラットフォーム型）** | `.ktn-mgmt-wrap` のみ（stack なし） | `.p211-block` 構成の編集フォーム。`.ktn-mgmt-wrap:not(.ktn-mgmt-stack) > .p211-block` がカード装飾を剥がし border-bottom 区切りへフラット化。sticky `.p211-submit-bar` をボックス末尾に内包 | p2-11 / p6-11 / p3-11 / p3-12 / p5-11 / p5-12 |
-| **Model B（カードスタック型）** | `.ktn-mgmt-wrap ktn-mgmt-stack` | カード・セクションを縦積みする操作ページ。子はカード枠を保ったまま自動 inset | p2-12 / p2-12-1 / p3-15 / p4-15 / p3-16 / p4-16 / p4-18 / p5-13 / p5-14 / p5-15 / p11-4 |
+| **Model B（カードスタック型）** | `.ktn-mgmt-wrap ktn-mgmt-stack` | カード・セクションを縦積みする操作ページ。子はカード枠を保ったまま自動 inset | p2-12 / p2-12-1 / p3-15 / p4-15 / p3-16 / p4-16 / p5-13 / p5-14 / p5-15 / p11-4 |
 
 **ボックスの外に置くもの（stack の子 inset・box 幅の影響を受けないように）：**
 - **fixed モーダル**（`position:fixed;inset:0`）＝stack の子マージンがオーバーレイを縮めるため、必ず `.ktn-mgmt-wrap` の閉じタグ後（`.ktn-content` 内でよい）に置く
@@ -835,7 +864,7 @@ z-index: 90;
   - スクロール位置に応じてJSで `is-hidden` クラスを付け外し（`visibility:hidden` で幅は確保）
   - タッチデバイスでは直接スワイプも可能
 - `overflow: hidden` を親に設定しない（子スクロールコンテナを妨害するため）
-- **管理・編集ページ（`body.mgmt-page`）にはタグバーを出さない（2026-07-07 確定）**：`renderTagbar` 冒頭の mgmt-page ガードが親ページからの継承を含め常に非表示化する（単一ソース）。管理ページのHTMLに `.ktn-tagbar` markup 自体も置かない（17ページから削除済み）。
+- **管理・編集ページ（`body.mgmt-page`）にはタグバーを出さない（2026-07-07 確定）**：`renderTagbar` 冒頭の mgmt-page ガードが親ページからの継承を含め常に非表示化する（単一ソース）。管理ページのHTMLに `.ktn-tagbar` markup 自体も置かない（当時17ページから削除済み・現16＝p4-18は2026-07-10廃止）。
 - **定義は `TAGBAR_DEFS`（common.js）にページID単位で登録**。`renderTagbar(page)` が `TAGBAR_DEFS[page]` を描画し、無ければ非表示。
 - **下位ページは親のタグバーを継承**（2026-07-05 確定）：`TAGBAR_DEFS[page]` に専用定義が無い場合、`renderTagbar` が末尾の `-N` を1段ずつ削って親ページの定義を探す（`p2-1→p2` / `p2-5-1→p2-5` / `p6-1→p6` / `p3-1→p3` / `p4-1→p4`）。**下位ページ用に個別定義を増やさず**、上位ページと同じタグバーを自動表示する。専用のタグバーを出したい下位ページ（例：`p2-3`・`p2-5`）は `TAGBAR_DEFS` に明示登録すれば継承より優先される。
 
@@ -1038,7 +1067,7 @@ SVG の `font-family` 属性は CSS 変数に非対応のため `font-family="'M
 **大原則（2026-07-04 確定）：明朝（`--fs`）は「コンテンツ固有名詞」と「表示系ページの読ませる文章・見出し」に限定する。操作・状態・機能を説明する UI テキストはすべてゴシック（`--fn`）。** 「操作を説明する文字は明朝にしない」を判断軸とする。取引フロー（p3-16 / p4-16 / p5-15）の状態文・手順ラベル・機能サブ見出し・モーダル文言・管理系の見出しは、コンテンツ名ではなく機能テキストなので `--fn`。
 
 - **`--fn`（ゴシック）に寄せる：**
-  - UIテキスト・フォームラベル・入力欄・ヘルプテキスト・説明文・ボタンテキスト・ページ見出し（`.ktn-mgmt-head__title`。旧 `.ktn-edit-head__title` / `.p418-page-head__title` / `.p114-service-banner__title` は mgmt-head へ統合済み）
+  - UIテキスト・フォームラベル・入力欄・ヘルプテキスト・説明文・ボタンテキスト・ページ見出し（`.ktn-mgmt-head__title`。旧 `.ktn-edit-head__title` / `.p114-service-banner__title` は mgmt-head へ統合済み）
   - 取引フローの**状態文・完了/中断メッセージ・レビュー本文**（`.p515-confirming__title/__desc` / `.p515-done__desc` / `.p515-cancelled__msg` / `.p316-done__desc/__review-text` / `.p316-cancelled__msg`）
   - 取引フローの**機能サブ見出し・手順ラベル**（`.p515-steps__label` / `.p515-log__title` / `.p515-comments__title` / `.p515-delivery__title` / `.p515-review__title` / `.p515-ship-confirm__title` / `.p515-done__title` / `.p316-apply-info__title` / `.p316-ship-form__title` / `.p316-ship-addr__title` / `.p316-review-display__title` / `.p316-done__title`）
   - **操作モーダル文言**（`.p515-modal__title` / `.p515-modal__desc`）＝取引3ページ共有モーダル

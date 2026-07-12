@@ -46,15 +46,25 @@
         </div>
       </div>
 
-      <!-- 作品バナー（編集・クローンモードのみ表示） -->
-      <a class="p211-exh-banner" id="p611WorkBanner" href="kotennavi-p6.html">
-        <div class="p211-exh-banner__thumb" style="background:linear-gradient(155deg,#b8d8cc,#6a9e8a)"></div>
-        <div class="p211-exh-banner__body">
-          <div class="p211-exh-banner__title">《オノマトペの庭》</div>
-          <div class="p211-exh-banner__meta">田中 透 · 2026年 · キャンバスに油彩</div>
+      <!-- 作品 文脈ストリップ（編集・クローンモードのみ表示・identity strip content variant） -->
+      <div class="ktn-mgmt-context" id="p611WorkBanner">
+        <a class="ktn-mgmt-context__media ktn-mgmt-context__media--content" href="kotennavi-p6.html" style="background:linear-gradient(155deg,#b8d8cc,#6a9e8a)"></a>
+        <div class="ktn-mgmt-context__body">
+          <div class="ktn-mgmt-context__badges">
+            <span class="cb cb-content cb-artwork">artwork</span>
+          </div>
+          <div class="ktn-mgmt-context__name"><a href="kotennavi-p6.html">《オノマトペの庭》</a></div>
+          <div class="ktn-mgmt-context__meta">田中 透 · 2026年 · キャンバスに油彩</div>
+          <div class="ktn-mgmt-context__owner">
+            <span class="ktn-mgmt-context__owner-label">Owner</span>
+            <span class="cb cb-person" id="p611OwnerBadge"></span>
+            <a id="p611OwnerName" href="#"></a>
+          </div>
         </div>
-        <span class="p211-exh-banner__arr">作品ページを見る →</span>
-      </a>
+        <div class="ktn-mgmt-context__actions">
+          <a class="ktn-mgmt-context__view" href="kotennavi-p6.html">作品ページを見る →</a>
+        </div>
+      </div>
 
       <!-- 管理ボックス -->
       <div class="ktn-mgmt-wrap">
@@ -63,7 +73,7 @@
       <div class="ktn-mgmt-head">
         <h2 class="ktn-mgmt-head__title" id="p611PageTitle">作品を編集</h2>
         <p class="ktn-mgmt-head__en">ARTWORK EDITOR</p>
-        <p class="ktn-mgmt-head__desc">作品情報を入力・更新してください。<span class="p211-req">*</span> は必須項目です。</p>
+        <p class="ktn-mgmt-head__desc">作品情報を入力・更新してください。</p>
       </div>
 
       <!-- ─── 1. 基本情報 ─── -->
@@ -73,24 +83,39 @@
         </div>
         <div class="p211-block__body">
 
-          <!-- 投稿者 -->
+          <!-- 作者 -->
           <div class="p211-field">
-            <label class="p211-label">投稿者</label>
-            <div style="display:flex;align-items:center;gap:8px;font-size:.85rem;color:var(--ink);padding:6px 0">
-              <span class="cb cb-person cb-creator" style="font-size:.6rem">creator</span>
-              <strong>田中 透</strong>
+            <label class="p211-label">作者<span class="ktn-req">必須</span></label>
+            <!-- creator＝本人で固定（入力不可・表示のみ） -->
+            <div class="p611-author p611-author--fixed" id="p611AuthorFixed">
+              <span class="cb cb-person cb-creator">creator</span>
+              <strong class="p611-author__name">田中 透</strong>
+              <span class="p611-author__note">あなたの作品として登録されます</span>
+            </div>
+            <!-- gallery＝登録済みクリエイターから選択（フリーテキスト不可） -->
+            <div class="p611-author p611-author--select" id="p611AuthorSelect" hidden>
+              <select class="p211-input p611-author__sel" id="p611AuthorSel">
+                <option value="">— 作者を選択 —</option>
+                <option value="tanaka"    data-genre="油彩・現代美術">田中 透（油彩・現代美術）</option>
+                <option value="sato"      data-genre="日本画">佐藤 みなと（日本画）</option>
+                <option value="suzuki"    data-genre="現代美術・立体">鈴木 洋（現代美術・立体）</option>
+                <option value="ito"       data-genre="写真">伊藤 かえで（写真）</option>
+                <option value="takahashi" data-genre="油彩">高橋 信（油彩）</option>
+                <option value="ohno"      data-genre="ミクストメディア">大野 藍（ミクストメディア）</option>
+              </select>
+              <p class="p211-help">個展なびに<strong>登録済みのクリエイター</strong>のみ選択できます。作者本人がクリエイター登録している必要があり、未登録の作家の作品は登録できません（取り扱う作品の真正性を担保するためのルールです）。</p>
             </div>
           </div>
 
           <!-- タイトル -->
           <div class="p211-field">
-            <label class="p211-label">作品タイトル <span class="p211-req">*</span></label>
+            <label class="p211-label">作品タイトル<span class="ktn-req">必須</span></label>
             <input class="p211-input" type="text" id="p611Title" value="オノマトペの庭" placeholder="例：春の記憶 #3">
           </div>
 
           <!-- タイトル読み -->
           <div class="p211-field">
-            <label class="p211-label">作品タイトル読み（カナ） <span class="p211-req">*</span></label>
+            <label class="p211-label">作品タイトル読み（カナ）<span class="ktn-req">必須</span></label>
             <input class="p211-input" type="text" value="オノマトペノニワ" placeholder="全角カタカナ">
           </div>
 
@@ -102,7 +127,7 @@
 
           <!-- ジャンル -->
           <div class="p211-field">
-            <label class="p211-label">ジャンル <span class="p211-req">*</span></label>
+            <label class="p211-label">ジャンル<span class="ktn-req">必須</span></label>
             <p class="p211-help" style="margin-bottom:6px">作品にもっとも近いジャンルを選んでください。</p>
             <div class="p211-pill-group" id="p611GenreGroup">
               <label class="p211-pill is-active"><input type="radio" name="p611genre" value="painting" checked>絵画</label>
@@ -140,19 +165,19 @@
 
           <!-- 制作年 -->
           <div class="p211-field">
-            <label class="p211-label">制作年 <span class="p211-req">*</span></label>
+            <label class="p211-label">制作年<span class="ktn-req">必須</span></label>
             <input class="p211-input" type="text" value="2026年" placeholder="例：2026年" style="max-width:200px">
           </div>
 
           <!-- 素材・技法 -->
           <div class="p211-field">
-            <label class="p211-label">素材・技法 <span class="p211-req">*</span></label>
+            <label class="p211-label">素材・技法<span class="ktn-req">必須</span></label>
             <input class="p211-input" type="text" value="キャンバスに油彩" placeholder="例：キャンバスに油彩、アクリル">
           </div>
 
           <!-- サイズ -->
           <div class="p211-field">
-            <label class="p211-label">サイズ <span class="p211-req">*</span></label>
+            <label class="p211-label">サイズ<span class="ktn-req">必須</span></label>
             <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
               <span style="font-size:.82rem;color:var(--muted)">高さ</span>
               <input class="p211-input" type="number" value="116.7" placeholder="0" style="width:90px">
@@ -242,7 +267,7 @@
         <div class="p211-block__body">
 
           <div class="p211-field">
-            <label class="p211-label">メイン画像 <span class="p211-req">*</span></label>
+            <label class="p211-label">メイン画像<span class="ktn-req">必須</span></label>
             <p class="p211-help" style="margin-bottom:8px">作品一覧・作品ページで最初に表示されます。作品全体が写った画像を推奨します。</p>
             <div class="p211-img-uploaded">
               <div class="p211-img-uploaded__thumb" style="background:linear-gradient(155deg,#b8d8cc,#6a9e8a)"></div>
@@ -364,9 +389,9 @@
 
       <!-- 送信バー（sticky） -->
       <div class="p211-submit-bar">
-        <button class="p211-submit-bar__cancel" type="button" onclick="history.back()">キャンセル</button>
-        <button class="p211-submit-bar__submit" type="button" id="p611SubmitBtn" onclick="handleSubmit()">保存して公開する</button>
-        <span class="p211-submit-bar__note" id="p611SubmitNote">* 必須項目を入力してください</span>
+        <button class="p211-submit-bar__cancel ktn-op-btn" type="button" onclick="history.back()">キャンセル</button>
+        <button class="p211-submit-bar__submit ktn-op-btn ktn-op-btn--primary" type="button" id="p611SubmitBtn" onclick="handleSubmit()">保存して公開する</button>
+        <span class="p211-submit-bar__note" id="p611SubmitNote">必須項目を入力してください</span>
       </div>
 
       </div><!-- /.ktn-mgmt-wrap -->
@@ -480,6 +505,62 @@ function togglePublishDate() {
     if (r.checked) datetime.hidden = (r.value !== 'scheduled');
   });
 }
+
+/* ── 作者レジストリ（key→氏名。登録済みクリエイターのみ） ── */
+var P611_AUTHORS = {
+  tanaka:'田中 透', sato:'佐藤 みなと', suzuki:'鈴木 洋',
+  ito:'伊藤 かえで', takahashi:'高橋 信', ohno:'大野 藍',
+  /* 取扱クリエイター拡張（p4-14 の検索プールデモ用） */
+  yamamoto:'山本 詩織', nakamura:'中村 圭', kobayashi:'小林 千夏',
+  watanabe:'渡辺 陽', matsumoto:'松本 玲', hayashi:'林 青磁',
+  kimura:'木村 悠', shimizu:'清水 奈々', morita:'森田 岳', fujita:'藤田 美咲',
+  /* 同姓同名（同一漢字・同一よみ）デモペア。key で別人を区別する */
+  mori1:'森 陽介', mori2:'森 陽介'
+};
+
+/* ── 作者ブロックの出し分け ──
+   ・?author=<key> で文脈から作者が確定している場合＝ロール不問で固定表示
+     （p2-12/p2-12-1・p4-14 の「新規作品を作成」は必ず作者を先に確定させて遷移する）
+   ・?self=1 なら「あなたの作品として登録されます」（creator 本人フロー）
+   ・パラメータ無しの直接入店のみ、従来どおりロールで固定/選択を出し分け */
+window.p611RoleSync = function () {
+  var r = window.ktnState && window.ktnState.role;
+  var isGallery = (r === 'gallery');
+  var fixed = document.getElementById('p611AuthorFixed');
+  var sel   = document.getElementById('p611AuthorSelect');
+  var params = new URLSearchParams(location.search);
+  var authorKey = params.get('author');
+
+  if (authorKey && P611_AUTHORS[authorKey]) {
+    if (fixed) {
+      fixed.hidden = false;
+      var nameEl = fixed.querySelector('.p611-author__name');
+      var noteEl = fixed.querySelector('.p611-author__note');
+      if (nameEl) nameEl.textContent = P611_AUTHORS[authorKey];
+      if (noteEl) noteEl.textContent = params.get('self') === '1'
+        ? 'あなたの作品として登録されます'
+        : '選択した作者の作品として登録されます';
+    }
+    if (sel) sel.hidden = true;
+    return;
+  }
+
+  if (fixed) fixed.hidden = isGallery;
+  if (sel)   sel.hidden   = !isGallery;
+};
+
+/* ── URL パラメータで初期ロール・モード・作者を適用（新規作品フローからの遷移） ── */
+(function applyEntryParams() {
+  var params = new URLSearchParams(location.search);
+  if (params.get('role') === 'gallery') {
+    var gBtn = document.querySelector('.dbar [onclick*="gallery"]');
+    if (gBtn && typeof setR === 'function') setR('gallery', gBtn);
+  }
+  if (params.get('mode') === 'new' && typeof setDemoMode === 'function') {
+    setDemoMode('new');
+  }
+  window.p611RoleSync();
+})();
 
 /* ── 送信ハンドラ（デモ） ── */
 function handleSubmit() {

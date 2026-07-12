@@ -13,44 +13,6 @@
 
 <div class="ktn-toast" id="ktnToast"></div>
 
-<!-- 管理ドロワー -->
-<div class="p3-mgmt-drawer" id="p311Drawer">
-  <div class="p3-mgmt-drawer__overlay" id="p311DrawerOverlay"></div>
-  <div class="p3-mgmt-drawer__panel">
-    <div class="p3-mgmt-drawer__head">
-      <div class="p3-mgmt-drawer__title">管理メニュー</div>
-      <button class="p3-mgmt-drawer__close" id="p311DrawerClose" aria-label="閉じる">✕</button>
-    </div>
-    <nav class="p3-mgmt-drawer__nav">
-      <a class="p3-mgmt-nav-item" href="kotennavi-p3.html">
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><circle cx="8" cy="5" r="3"/><path d="M2 13.5c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>
-        クリエイターページ
-      </a>
-      <a class="p3-mgmt-nav-item p3-mgmt-nav-item--active" href="kotennavi-p3-11.html">
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><circle cx="8" cy="5" r="3"/><path d="M2 13.5c0-3.3 2.7-6 6-6s6 2.7 6 6"/><line x1="13" y1="9" x2="15" y2="9" stroke-width="1.2"/><line x1="14" y1="8" x2="14" y2="10" stroke-width="1.2"/></svg>
-        プロフィール編集
-      </a>
-      <a class="p3-mgmt-nav-item" href="#">
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><rect x="2" y="2" width="12" height="12" rx="1"/><path d="M5 8h6M5 11h4"/></svg>
-        展覧会を管理
-      </a>
-      <a class="p3-mgmt-nav-item" href="kotennavi-p3-15.html">
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><rect x="2" y="2" width="5.5" height="5.5" rx="1"/><rect x="8.5" y="2" width="5.5" height="5.5" rx="1"/><rect x="2" y="8.5" width="5.5" height="5.5" rx="1"/><rect x="8.5" y="8.5" width="5.5" height="5.5" rx="1"/></svg>
-        LIAISON+コンソール
-      </a>
-      <a class="p3-mgmt-nav-item" href="kotennavi-p3-12.html">
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg>
-        インサイト
-      </a>
-      <div class="p3-mgmt-drawer__sep"></div>
-      <a class="p3-mgmt-nav-item" href="kotennavi-p5-11.html">
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><circle cx="8" cy="5" r="3"/><path d="M2 13.5c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>
-        アカウント設定
-      </a>
-    </nav>
-  </div>
-</div>
-
 <!-- デモバー -->
 <div class="dbar" id="dbar">
   <span class="dbar-sep">ロール：</span>
@@ -70,49 +32,28 @@
 
   <main class="ktn-main" id="ktnMain">
 
-    <!-- A. ヒーロー（コンパクト版） -->
-    <div class="p3-head p3-head--compact">
-      <div class="p3-head__inner">
-        <div class="p3-head__top">
-          <a class="p3-head__avatar-wrap" href="kotennavi-p3.html">
-            <div class="p3-head__avatar" style="background:linear-gradient(135deg,#7ab4cc,#4a8099)">T</div>
-          </a>
-          <div class="p3-head__info">
-            <div class="p3-head__badge-row">
-              <span class="cb cb-person cb-creator">CREATOR</span>
-            </div>
-            <h1 class="p3-head__name"><a href="kotennavi-p3.html">田中 透</a></h1>
-            <p class="p3-head__en">TANAKA TORU</p>
-            <p class="p3-head__genre">絵画・現代美術 · 東京</p>
+    <!-- メインコンテンツ -->
+    <div class="ktn-content">
+
+      <!-- 親エンティティ文脈ストリップ（identity strip・試作 2026-07-09） -->
+      <div class="ktn-mgmt-context">
+        <a class="ktn-mgmt-context__media ktn-mgmt-context__media--creator" href="kotennavi-p3.html" style="background:linear-gradient(135deg,#7ab4cc,#4a8099)">T</a>
+        <div class="ktn-mgmt-context__body">
+          <div class="ktn-mgmt-context__badges">
+            <span class="cb cb-person cb-creator">CREATOR</span>
           </div>
-          <button class="p3-mgmt-btn" id="p311MgmtBtn" aria-label="管理メニューを開く">
-            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="16" height="16"><circle cx="10" cy="10" r="2"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2M5.05 5.05l1.41 1.41M13.54 13.54l1.41 1.41M5.05 14.95l1.41-1.41M13.54 6.46l1.41-1.41"/></svg>
-            管理
-          </button>
+          <div class="ktn-mgmt-context__name"><a href="kotennavi-p3.html">田中 透</a></div>
+          <div class="ktn-mgmt-context__meta">絵画・現代美術 · 東京</div>
+        </div>
+        <div class="ktn-mgmt-context__actions">
+          <a class="ktn-mgmt-context__view" href="kotennavi-p3.html">クリエイターページへ →</a>
         </div>
       </div>
-    </div>
 
-    <!-- B. タブナビ -->
-    <nav class="p3-tabnav" id="p3Tabnav" aria-label="クリエイターページ内ナビ">
-      <div class="p3-tabnav__inner">
-        <a class="p3-tabnav__name" href="kotennavi-p3.html"><span class="p3-tabnav__name-text">田中 透</span></a>
-        <a class="p3-tabnav__item" href="kotennavi-p3-1.html">展覧会</a>
-        <a class="p3-tabnav__item" href="kotennavi-p3-3.html">作品</a>
-        <a class="p3-tabnav__item" href="kotennavi-p3-2.html">記事</a>
-        <a class="p3-tabnav__item" href="kotennavi-p3.html#p3-sec-profile">クリエイター情報</a>
-      </div>
-    </nav>
-
-    <!-- C. メインコンテンツ -->
-    <div class="ktn-content">
       <div class="p311-wrap ktn-mgmt-wrap" id="p311Wrap">
 
         <!-- ページヘッダー（枠内・p3-15踏襲） -->
         <div class="ktn-mgmt-head">
-          <div class="ktn-mgmt-head__badge-row">
-            <span class="cb cb-person cb-creator">CREATOR</span>
-          </div>
           <h2 class="ktn-mgmt-head__title">プロフィール編集</h2>
           <p class="ktn-mgmt-head__en">CREATOR PROFILE</p>
           <p class="ktn-mgmt-head__desc">クリエイターページに表示される名前・自己紹介・ジャンル・リンクなどを編集します。変更は保存するとすぐに公開ページへ反映されます。</p>
@@ -144,7 +85,7 @@
 
             <!-- 表示名 -->
             <div class="p211-field">
-              <label class="p211-label" for="p311Name">表示名 <span class="p211-req">*</span></label>
+              <label class="p211-label" for="p311Name">表示名<span class="ktn-req">必須</span></label>
               <input class="p211-input" id="p311Name" type="text" value="田中 透">
               <p class="p211-help">クリエイターページの見出しに表示される名前です。</p>
             </div>
@@ -158,7 +99,7 @@
 
             <!-- クリエイターID -->
             <div class="p211-field">
-              <label class="p211-label" for="p311CreatorId">クリエイターID（URL） <span class="p211-req">*</span></label>
+              <label class="p211-label" for="p311CreatorId">クリエイターID（URL）<span class="ktn-req">必須</span></label>
               <input class="p211-input" id="p311CreatorId" type="text" value="toru_tanaka" pattern="[a-zA-Z0-9_-]+" autocomplete="off">
               <div class="p211-id-preview">
                 <span class="p211-id-preview__base">kotennavi.jp/creator/</span><span class="p211-id-preview__val" id="p311IdPreview">toru_tanaka</span>

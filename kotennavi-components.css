@@ -467,101 +467,10 @@ body.guest .ktn-icon-btn { opacity: .6; }
 /* ══════════════════════════════════════════
    展覧会カード .ec
    ( kotennavi_cards_exhibition.html )
+   → kotennavi-common.css の canonical に一本化（2026-07-08）。
+     ここに重複定義を置くと common.css を後読みで上書きし、
+     デモ＝正・本番＝崩れの乖離を生むため再追加禁止。
    ══════════════════════════════════════════ */
-.ec {
-  display: block; background: #fff; border: 1px solid var(--border);
-  overflow: hidden; cursor: pointer; color: inherit;
-  transition: transform .22s ease, box-shadow .22s ease;
-}
-.ec:hover { transform: translateY(-3px); box-shadow: 0 12px 36px rgba(0,0,0,.12); }
-.ec__poster { position: relative; width: 100%; overflow: hidden; background: var(--tag-bg); }
-.ec__poster img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .3s; pointer-events: none; user-select: none; }
-.ec:hover .ec__poster img { transform: scale(1.03); }
-.ec__poster-inner { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; min-height: 160px; }
-.ec__poster-text { font-family: var(--fs); font-weight: 800; color: rgba(255,255,255,.92); font-size: clamp(1.4rem,5vw,2.2rem); writing-mode: vertical-rl; letter-spacing: .1em; line-height: 1.2; text-align: center; }
-.ec__poster-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,.52); padding: 8px 12px 9px; display: flex; flex-direction: column; gap: 4px; }
-.ec__poster-dates { font-family: var(--fm); font-size: .7rem; font-weight: 500; color: #fff; letter-spacing: .02em; line-height: 1.3; display: flex; align-items: baseline; gap: 4px; flex-wrap: wrap; }
-.ec__poster-dates .year { font-size: .6rem; opacity: .75; margin-right: 1px; }
-.ec__poster-dates .dow  { font-size: .58rem; opacity: .72; margin-left: 1px; }
-.ec__poster-dates .sep  { opacity: .5; margin: 0 3px; }
-.ec__poster-meta { display: flex; align-items: center; gap: 8px; font-family: var(--fm); font-size: .58rem; color: rgba(255,255,255,.72); letter-spacing: .02em; }
-.ec__poster-meta .meta-sep { opacity: .35; }
-.ec__remain { display: inline-flex; align-items: center; gap: 3px; font-family: var(--fm); font-size: .52rem; font-weight: 700; letter-spacing: .04em; padding: 2px 8px; white-space: nowrap; background: transparent; }
-.ec__remain--live   { color: #e09420; border: 1.5px solid #d4820a; }
-.ec__remain--soon   { color: #6eb4ff; border: 1.5px solid #6eb4ff; }
-.ec__remain--closed { color: rgba(255,255,255,.55); border: 1.5px solid rgba(255,255,255,.38); }
-.ec__body { padding: 11px 14px 9px; }
-.ec__badge-row { display: flex; align-items: center; gap: 6px; margin-bottom: 9px; flex-wrap: wrap; }
-.ec__badge-row .ktn-icon-btn { margin-left: auto; }
-.ec__title { font-family: var(--fs); font-weight: 600; font-size: .9rem; line-height: 1.55; letter-spacing: .03em; margin-bottom: 5px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.ec__venue { font-size: .68rem; color: var(--muted); letter-spacing: .02em; display: flex; align-items: center; gap: 3px; }
-.ec__venue-sep { opacity: .4; margin: 0 1px; }
-.ec__foot { padding: 7px 14px 10px; border-top: 1px solid rgba(0,0,0,.05); display: flex; align-items: center; gap: 12px; justify-content: flex-end; }
-/* .ec-action → kotennavi-common.css に一本化 */
-.ec--ended { opacity: .72; }
-.ec--ended .ec__poster-inner { filter: grayscale(.5); }
-.ec--ended .ec__poster img { filter: grayscale(.5); }
-.ec--ended .ec__title { color: var(--muted); }
-
-/* 水平バリアント .ec--h */
-.ec--h { display: flex; flex-direction: column; }
-.ec--h-row { display: flex; flex-direction: row; align-items: stretch; flex: 1; }
-.ec--h .ec__poster { width: 128px; flex-shrink: 0; overflow: hidden; display: grid; grid-template-columns: 32px 1fr; position: static; }
-.ec__poster-label { display: flex; align-items: center; justify-content: center; padding: 10px 0; font-family: var(--fs); font-weight: 800; font-size: .75rem; writing-mode: vertical-rl; letter-spacing: .1em; line-height: 1.2; color: rgba(255,255,255,.88); background: rgba(0,0,0,.38); flex-shrink: 0; text-overflow: ellipsis; overflow: hidden; }
-.ec__poster-img { overflow: hidden; position: relative; }
-.ec__poster-img img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; transition: transform .3s; }
-.ec--h:hover .ec__poster-img img { transform: scale(1.04); }
-.ec__poster-img--empty { background: linear-gradient(160deg,rgba(255,255,255,.08),transparent); }
-.ec--h .ec__poster-inner  { display: none; }
-.ec--h .ec__poster-overlay { display: none; }
-.ec--h .ec__main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
-.ec__datebar { padding: 7px 13px 6px; border-bottom: 1px solid rgba(0,0,0,.05); display: flex; align-items: center; gap: 5px; flex-wrap: wrap; background: #fafbfc; }
-.ec__datebar-dates { font-family: var(--fm); font-size: .64rem; font-weight: 500; color: var(--ink); letter-spacing: .02em; line-height: 1.3; display: flex; align-items: baseline; gap: 3px; flex-wrap: wrap; }
-.ec__datebar-dates .year { font-size: .56rem; opacity: .6; margin-right: 1px; }
-.ec__datebar-dates .dow  { font-size: .54rem; opacity: .65; margin-left: 1px; }
-.ec__datebar-dates .sep  { opacity: .4; margin: 0 3px; }
-.ec__datebar-meta { display: flex; align-items: center; gap: 6px; font-family: var(--fm); font-size: .56rem; color: var(--muted); }
-.ec__datebar-meta::before { content: '|'; opacity: .22; margin-right: 1px; font-size: .6rem; }
-.ec__datebar-meta .meta-sep { opacity: .3; }
-.ec__remain-lt { display: inline-flex; align-items: center; gap: 3px; font-family: var(--fm); font-size: .5rem; font-weight: 700; letter-spacing: .04em; padding: 2px 7px; white-space: nowrap; background: transparent; }
-.ec__remain-lt--live   { color: #d4820a; border: 1.5px solid #d4820a; }
-.ec__remain-lt--soon   { color: #1a5fa8; border: 1.5px solid #1a5fa8; }
-.ec__remain-lt--closed { color: #7a8a99; border: 1.5px solid #b0bcc8; }
-.ec--h .ec__body  { padding: 8px 13px 7px; flex: 1; }
-.ec--h .ec__title { font-size: .84rem; -webkit-line-clamp: 2; margin-bottom: 4px; }
-.ec--h .ec__badge-row { margin-bottom: 7px; }
-.ec--h .ec__foot  { padding: 6px 13px 8px; }
-
-/* ミニカード .ec--mini */
-.ec--mini {
-  display: flex; align-items: center; gap: 14px;
-  padding: 11px 16px;
-  background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.09);
-  border-radius: 8px; cursor: pointer; color: inherit; text-decoration: none;
-  transition: background .18s, border-color .18s;
-}
-.ec--mini:hover { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.18); }
-.ec__mini-thumb { width: 52px; height: 52px; flex-shrink: 0; border-radius: 4px; overflow: hidden; background: var(--tag-bg); }
-.ec__mini-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.ec__mini-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
-.ec__mini-title-row { display: flex; align-items: baseline; gap: 8px; }
-.ec__mini-title { font-family: var(--fs); font-weight: 600; font-size: .88rem; color: rgba(255,255,255,.92); letter-spacing: .03em; line-height: 1.45; }
-.ec__mini-arrow { flex-shrink: 0; font-size: .9rem; line-height: 1; color: rgba(255,255,255,.45); transition: color .18s, transform .18s; margin-left: 2px; }
-.ec--mini:hover .ec__mini-arrow { color: rgba(255,255,255,.8); transform: translateX(4px); }
-.ec__mini-meta { font-family: var(--fn); font-size: .63rem; font-weight: 300; color: rgba(255,255,255,.42); letter-spacing: .02em; }
-.ec__mini-meta .sep { margin: 0 3px; opacity: .6; }
-.ec-mini-panel { background: #1a2535; border-radius: 10px; padding: 18px 18px 22px; max-width: 540px; }
-.ec-mini-panel-head { font-family: var(--fm); font-size: .48rem; font-weight: 700; letter-spacing: .24em; text-transform: uppercase; color: rgba(255,255,255,.3); text-align: center; margin-bottom: 16px; }
-.ec-mini-list { display: flex; flex-direction: column; gap: 6px; }
-/* ライト版パネル */
-.ec-mini-panel--light { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 18px 18px 22px; max-width: 540px; }
-.ec-mini-panel--light .ec-mini-panel-head { color: var(--muted); }
-.ec-mini-panel--light .ec--mini { background: rgba(0,0,0,.03); border: 1px solid rgba(0,0,0,.07); }
-.ec-mini-panel--light .ec--mini:hover { background: rgba(0,0,0,.055); border-color: rgba(0,0,0,.13); }
-.ec-mini-panel--light .ec__mini-title { color: var(--ink); }
-.ec-mini-panel--light .ec__mini-arrow { color: rgba(0,0,0,.3); }
-.ec-mini-panel--light .ec--mini:hover .ec__mini-arrow { color: var(--ink); }
-.ec-mini-panel--light .ec__mini-meta { color: var(--muted); }
 
 
 /* ══════════════════════════════════════════

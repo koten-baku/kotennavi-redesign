@@ -326,10 +326,10 @@ bc: [
 **おすすめ展覧会カード（`buildGridEcCard(e)` — `kotennavi-pages.js`）：**
 - `cards_exhibition.html` のマソンリーグリッド完全準拠・表示件数：4件
 - ポスター：`ec__poster-noimg`（`min-height: e.imgH px`）＋ `ec__poster-overlay`
-- ポスターメタ行（`ec__poster-meta`）：`ec__remain[--live|--soon|--closed]` + `|` + 営業時間 + `|` + 距離（`本日休み` の場合は営業時間を省略）
+- ポスターメタ行（`ec__poster-meta`）：`ec__remain[--live|--soon]` + `|` + 営業時間 + `|` + 距離（本日休み＝`e.closedToday` の場合は時間の位置に「本日休み」を表示。残り日数バッジは通常どおり。旧 `--closed` グレー枠線バッジは2026-07-08廃止）
 - バッジ行（`ec__body ec__badge-row`）：`cb-exhibition` + ステータスバッジ（`sb-live` / `sb-soon` / `sb-ending`）— LIAISONバッジはここに置かず下記ストリップで表示
 - LIAISON帯（`ec__liaison-strip` / `ec__liaison-strip--plus`）：`ec__liaison-strip-info`（バッジ＋サブテキスト）+ `ec__liaison-thumbs`（展示作品サムネイル3枚）— `ec__foot` の後に配置
-- データフィールド：`title`, `venue`（`ec__venue-sep` で都道府県と会場名を区切る）, `bg`, `s`, `e`, `imgH`, `status`, `remain`, `hours`, `dist`, `liaison`, `int`, `ci`, `thumbs[]`
+- データフィールド：`title`, `venue`（`ec__venue-sep` で都道府県と会場名を区切る）, `bg`, `s`, `e`, `imgH`, `status`, `remain`, `hours`, `closedToday`, `dist`, `liaison`, `int`, `ci`, `thumbs[]`
 
 ### おすすめクリエイター/ギャラリー（Gエリア）
 - ktn-content外・全幅・`background: var(--paper)`

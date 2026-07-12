@@ -154,7 +154,7 @@
 
       <!-- gallery 専用ブロック -->
       <div class="p70-role-block" data-role="gallery" style="display:none">
-        <p class="p70-body">ギャラリー機能のお申込みが承認されている方は、<em>取扱作家リストの登録と管理者承認</em>を経てリエゾンをご利用いただけます。</p>
+        <p class="p70-body">ギャラリー機能のお申込みが承認されている方は、<em>追加申請なし</em>でリエゾンをご利用いただけます。クリエイターと同じ流れです。</p>
 
         <div class="p70-path-diagram" style="grid-template-columns:1fr">
           <div class="p70-path-diagram__col p70-path-diagram__col--gallery">
@@ -165,21 +165,17 @@
             <ol class="p70-path-diagram__steps">
               <li class="p70-path-diagram__step">アカウント作成</li>
               <li class="p70-path-diagram__step">ギャラリー機能申込・承認</li>
-              <li class="p70-path-diagram__step p70-path-diagram__step--required">取扱作家リスト登録・承認<span class="p70-path-diagram__badge">必須</span></li>
               <li class="p70-path-diagram__step p70-path-diagram__step--goal">リエゾン利用可能</li>
             </ol>
-            <p class="p70-path-diagram__note">取扱作家リストの管理者承認後、出展メニューが表示されます</p>
+            <p class="p70-path-diagram__note">条件を満たすと出展メニューが自動で表示されます</p>
           </div>
         </div>
 
         <div class="p70-callout p70-callout--venue">
-          <div class="p70-callout__title">取扱作家リストについて</div>
+          <div class="p70-callout__title">出展クリエイターと作品の真正性について</div>
           <div class="p70-callout__body">
-            ギャラリーがリエゾンで扱うクリエイターを登録する仕組みです。作品の真正性を担保するため、登録時に管理者の確認が必要です。<br><br>
-            <strong>申請の流れ</strong><br>
-            ① ギャラリー管理画面 → 取扱作家リスト管理（P4-18）から申請<br>
-            ② 管理者による確認（既存クリエイターには本人通知）<br>
-            ③ 承認完了後、そのクリエイターの作品を出展可能
+            ギャラリーが登録した展覧会は、公開前に個展なびが内容を確認し、出展クリエイターのページを展覧会にリンク付けします（個展なびに未登録のクリエイターは、入力情報を基に個展なびがページを作成します）。<br><br>
+            展覧会の公開後、その展覧会の出展クリエイターの作品を出品できるようになります。個展なびに登録済みのクリエイターの作品を出品登録すると、当該クリエイターへ通知が送られます。
           </div>
         </div>
       </div>
@@ -210,16 +206,16 @@
             <span class="p70-flow-diagram__action">リエゾン有効化</span>
           </li>
           <li class="p70-flow-diagram__arrow">—</li>
-          <li class="p70-flow-diagram__item p70-flow-diagram__item--seller">
-            <span class="p70-flow-diagram__actor">出展者</span>
+          <li class="p70-flow-diagram__item">
+            <span class="p70-flow-diagram__actor">個展なび</span>
             <span class="p70-flow-diagram__num">STEP 3</span>
-            <span class="p70-flow-diagram__action">作品登録</span>
+            <span class="p70-flow-diagram__action">確認・公開</span>
           </li>
           <li class="p70-flow-diagram__arrow">—</li>
           <li class="p70-flow-diagram__item p70-flow-diagram__item--seller">
             <span class="p70-flow-diagram__actor">出展者</span>
             <span class="p70-flow-diagram__num">STEP 4</span>
-            <span class="p70-flow-diagram__action">公開</span>
+            <span class="p70-flow-diagram__action">作品登録・公開</span>
           </li>
           <li class="p70-flow-diagram__arrow">—</li>
           <li class="p70-flow-diagram__end">展示開始</li>
@@ -228,10 +224,10 @@
 
       <h3 class="p70-subhead">各ステップの詳細</h3>
       <ol class="p70-step-list">
-        <li class="p70-step-list__item">展覧会管理画面で、展覧会情報（タイトル・会場・会期）を登録します</li>
+        <li class="p70-step-list__item">展覧会管理画面で、展覧会情報（タイトル・会場・会期・出展者）を登録します</li>
         <li class="p70-step-list__item">展覧会編集画面の「リエゾンで展示する」を有効にします</li>
-        <li class="p70-step-list__item">出展する作品を登録します（作品名・素材・サイズ・制作年・画像）</li>
-        <li class="p70-step-list__item">「公開する」を実行すると、展覧会ページのリエゾン一覧に作品が並びます</li>
+        <li class="p70-step-list__item">個展なびが内容を確認し、出展クリエイターのページをリンク付けして展覧会を公開します</li>
+        <li class="p70-step-list__item">公開後、オーナーメニューの作品管理から出展作品を登録し（作品名・素材・サイズ・制作年・画像）、「公開する」を実行すると展覧会ページのリエゾン一覧に作品が並びます</li>
       </ol>
 
       <div class="p70-callout">
@@ -259,6 +255,10 @@
         <div class="p70-dl__item">
           <dt class="p70-dl__dt">After</dt>
           <dd class="p70-dl__dd">展覧会ページのリエゾン一覧からは外れますが、クリエイター／ギャラリーページから引き続き閲覧可能です</dd>
+        </div>
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">Your page</dt>
+          <dd class="p70-dl__dd">クリエイターが出品した作品は、会期に関わらず自分のクリエイターページで<em>常時公開</em>できます。ポートフォリオとしてもご活用いただけます</dd>
         </div>
         <div class="p70-dl__item">
           <dt class="p70-dl__dt">Count</dt>

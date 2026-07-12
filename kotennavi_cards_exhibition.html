@@ -14,7 +14,7 @@
 <div class="demo-wrap">
   <h1>展覧会カード v3</h1>
   <p class="demo-meta">
-    残り日数: 開催中=<strong>緑枠線（残り日数問わず統一）</strong> / xx日後に開催=<strong>青枠線</strong> / 本日休み=<strong>グレー枠線（時間非表示・距離のみ）</strong> / 終了=<strong>メタ行なし</strong><br>
+    残り日数: 開催中=<strong>緑枠線（残り日数問わず統一）</strong> / xx日後に開催=<strong>青枠線</strong> / 本日休み=<strong>残りxx日バッジ＋時間の位置に「本日休み」表示（距離の前）</strong> / 終了=<strong>メタ行なし</strong><br>
     バッジ行: コンテンツバッジ <code>.cb-content</code> + ステータスバッジ <code>.sb-ending / .sb-soon</code> + LIAISONバッジ M（水平リストのみ）+ アクションボタン<br>
     カウントアイコン: 興味ある=<strong>#e05a8a（ピンク）</strong> / チェックイン=<strong>#3a90e0（ブルー）</strong> で統一
   </p>
@@ -151,7 +151,7 @@
         </a>
       </div>
 
-      <!-- ④ 本日休み・LIAISON+（グレー枠線・時間非表示・距離のみ） -->
+      <!-- ④ 本日休み・LIAISON+（残り日数バッジ＋時間の位置に「本日休み」） -->
       <div class="masonry-item">
         <a class="ec" href="#">
           <div class="ec__poster" style="background:linear-gradient(160deg,#c8b89a,#9a8870)">
@@ -162,9 +162,11 @@
                 <span class="sep">—</span>
                 <strong>03.10</strong><span class="dow">tue</span>
               </div>
-              <!-- 本日休み: 時間非表示・距離のみ -->
+              <!-- 本日休み: 残り日数バッジは通常表示・時間の代わりに「本日休み」 -->
               <div class="ec__poster-meta">
-                <span class="ec__remain ec__remain--closed">本日休み</span>
+                <span class="ec__remain ec__remain--live">残り6日</span>
+                <span class="meta-sep">|</span>
+                <span>本日休み</span>
                 <span class="meta-sep">|</span>
                 <span>1,088.3km</span>
               </div>
@@ -550,7 +552,9 @@
               <strong>03.10</strong><span class="dow">tue</span>
             </div>
             <div class="ec__datebar-meta">
-              <span class="ec__remain-lt ec__remain-lt--closed">本日休み</span>
+              <span class="ec__remain-lt ec__remain-lt--live">残り6日</span>
+              <span class="meta-sep">|</span>
+              <span>本日休み</span>
               <span class="meta-sep">|</span>
               <span>1,088.3km</span>
             </div>

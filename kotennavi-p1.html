@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>個展なび | 個展・グループ展の展覧会情報ポータル</title>
+  <meta name="description" content="全国の個展・グループ展を探せる展覧会情報ポータル「個展なび」。開催中・近くの展覧会から、オンラインで作品を鑑賞・購入できるLIAISON連動の展覧会まで、いまのアートシーンに出会えます。">
+  <link rel="canonical" href="https://koten-navi.com/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="個展なび | 個展・グループ展の展覧会情報ポータル">
+  <meta property="og:url" content="https://koten-navi.com/">
+  <meta property="og:site_name" content="個展なび">
+  <meta name="twitter:card" content="summary">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&family=Cormorant+Garamond:ital,wght@1,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<body data-w="index">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- デモバー -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ロール：</span>
+  <button class="dbtn on" onclick="setR('guest',this)">ゲスト</button>
+  <button class="dbtn" onclick="setR('login',this)">ログイン</button>
+</div>
+
+<div class="shell">
+
+<!-- サイドバー（共通コンポーネント：kotennavi_sidebar_footer.html 由来・#ktnRoleNav は renderSidebar() がJS注入） -->
+<aside class="ktn-sidebar" id="ktnSidebar">
+
+  <!-- ロゴ (logo5-1) -->
+  <a href="kotennavi-p1.html" class="ktn-sidebar__logo" data-page="p1">
+    <img src="./images/kotennavi-logo5-1.svg" alt="個展なび">
+  </a>
+
+  <!-- 検索 → P10 検索ハブ -->
+  <a href="kotennavi-p10.html" class="ktn-sidebar__item" data-page="p10">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <circle cx="11" cy="11" r="7.5"/>
+        <path d="M21 21l-4.5-4.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">検索</span>
+  </a>
+
+  <!-- お知らせ → P60（未制作） -->
+  <a href="kotennavi-p60.html" class="ktn-sidebar__item" id="ktnSidebarNotice" data-page="p60">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__dot" id="ktnNoticeDot" style="display:none"></span>
+    <span class="ktn-sidebar__label">お知らせ</span>
+  </a>
+
+  <!-- ガイド → P60-1（未制作） -->
+  <a href="kotennavi-p60-1.html" class="ktn-sidebar__item" data-page="p60-1">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" stroke-linecap="round"/>
+        <path d="M12 16v-4M12 8h.01" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">ガイド</span>
+  </a>
+
+  <div class="ktn-sidebar__divider"></div>
+
+  <!-- ロール別アイコン（JS注入） -->
+  <div id="ktnRoleNav" style="width:100%;display:flex;flex-direction:column;align-items:center"></div>
+
+  <div class="ktn-sidebar__footer">
+    <a href="https://www.facebook.com/" target="_blank">Facebook</a><br>
+    <a href="https://x.com/" target="_blank">X</a><br><br>
+    ©2010 kotennavi<br>Co., Ltd.
+  </div>
+</aside>
+
+<div class="content-wrap" id="contentWrap">
+
+  <header class="ktn-header" id="ktnHeader">
+    <div class="ktn-header__inner">
+      <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+      <div class="ktn-hdr-actions" id="ktnActs"></div>
+    </div>
+  </header>
+  <div class="ktn-tagbar" id="ktnTagbar">
+    <div class="ktn-tagbar__inner" id="ktnTagbarInner"></div>
+  </div>
+
+  <main class="ktn-main" id="ktnMain">
+
+    <!-- A. ヒーロー（ピックアップ） -->
+    <section class="p1-hero" aria-label="ピックアップ展覧会">
+      <div class="p1-hero__inner">
+        <a class="p1-hero__poster" id="p1HeroPoster" href="kotennavi-p2.html">
+          <span class="p1-hero__poster-noimg">Exhibition Poster</span>
+        </a>
+        <div class="p1-hero__text">
+          <div class="p1-hero__eyebrow"><span class="p1-hero__eyebrow-en">Pick Up</span><span class="p1-hero__eyebrow-line"></span></div>
+          <div class="p1-hero__badge-row" id="p1HeroBadges"></div>
+          <h1 class="p1-hero__title" id="p1HeroTitle"></h1>
+          <p class="p1-hero__en" id="p1HeroEn"></p>
+          <div class="p1-hero__meta" id="p1HeroMeta"></div>
+          <p class="p1-hero__lead" id="p1HeroLead"></p>
+          <div class="p1-hero__cta-row">
+            <a class="p1-hero__cta" href="kotennavi-p2.html">この展覧会を見る →</a>
+          </div>
+          <div class="p1-hero__dots" id="p1HeroDots" role="tablist" aria-label="ピックアップ切替"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- B. 新着ティッカー -->
+    <div class="p1-ticker" aria-label="最新の動き">
+      <div class="p1-ticker__inner">
+        <span class="p1-ticker__label">News</span>
+        <div class="p1-ticker__viewport">
+          <div class="p1-ticker__track" id="p1TickerTrack"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- C. 検索送客（→ P10 検索ハブ） -->
+    <section class="p1-search-lead" aria-label="展覧会を探す">
+      <div class="p1-search-lead__inner">
+        <a class="p1-search-box" href="kotennavi-p10.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+          <span class="p1-search-box__ph">展覧会名・出展者名・会場名で検索</span>
+          <span class="p1-search-box__go">展覧会を探す</span>
+        </a>
+        <div class="p1-search-chips">
+          <a class="p1-chip" href="kotennavi-p10.html">開催中</a>
+          <a class="p1-chip" href="kotennavi-p10.html">今週末</a>
+          <a class="p1-chip" href="kotennavi-p10.html">近くで開催</a>
+          <a class="p1-chip" href="kotennavi-p10.html">入場無料</a>
+          <span class="p1-search-chips__sep"></span>
+          <a class="p1-chip" href="kotennavi-p10.html"><span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>オンライン展示あり</a>
+          <a class="p1-chip" href="kotennavi-p10.html"><span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span>オンラインで購入できる</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- C2. 近くの展覧会（ゲスト回遊フック・位置情報） -->
+    <section class="p1-nearby" id="p1Nearby" aria-label="近くの展覧会">
+      <div class="p1-nearby__inner">
+        <div class="ktn-section__head">
+          <h2 class="ktn-section__title">近くの展覧会<span class="ktn-sec-en">Near You</span></h2>
+          <a href="kotennavi-p10.html" class="ktn-section__more">エリアから探す →</a>
+        </div>
+        <!-- 状態1：位置情報の許可プロンプト -->
+        <div class="p1-nearby__prompt" id="p1NearbyPrompt">
+          <span class="p1-nearby__prompt-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 5-8 11-8 11s-8-6-8-11a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="2.8"/></svg>
+          </span>
+          <div class="p1-nearby__prompt-body">
+            <p class="p1-nearby__prompt-ttl">いまいる場所の近くで開催中の展覧会を表示</p>
+            <p class="p1-nearby__prompt-sub">位置情報を許可すると、現在地に近い順で展覧会を並べます。ログインは不要です。</p>
+          </div>
+          <button class="ktn-op-btn ktn-op-btn--primary" type="button" id="p1NearbyBtn">近くの展覧会を見る</button>
+        </div>
+        <!-- 状態2：結果（許可後／フォールバック） -->
+        <div class="p1-nearby__result" id="p1NearbyResult" hidden>
+          <p class="p1-nearby__status" id="p1NearbyStatus"></p>
+          <div class="p1-nearby__grid" id="p1NearbyGrid"></div>
+          <a class="ktn-more-link" href="kotennavi-p10.html">近くの展覧会をすべて見る →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- D. サイト紹介（ゲストのみ） -->
+    <section class="p1-intro" id="p1Intro" aria-label="個展なびとは">
+      <div class="p1-intro__inner">
+        <div class="p1-intro__text">
+          <h2 class="p1-intro__title">個展なびとは？</h2>
+          <p class="p1-intro__desc">個展なびは、全国の個展・グループ展を「探す・記録する・応援する」ための展覧会情報ポータルです。気になるクリエイターやギャラリーをウォッチして新しい展覧会の情報を受け取り、LIAISON連動の展覧会ではオンラインで作品を鑑賞・購入できます。</p>
+        </div>
+        <ul class="p1-intro__points">
+          <li class="p1-intro__point">
+            <span class="p1-intro__point-num">01</span>
+            <div class="p1-intro__point-body">
+              <span class="p1-intro__point-ttl">見たい展覧会がすぐ見つかる</span>
+              <span class="p1-intro__point-sub">地域・ジャンル・開催日から探せる</span>
+            </div>
+          </li>
+          <li class="p1-intro__point">
+            <span class="p1-intro__point-num">02</span>
+            <div class="p1-intro__point-body">
+              <span class="p1-intro__point-ttl">気になる展覧会を記録できる</span>
+              <span class="p1-intro__point-sub">ウォッチ・興味あり！・チェックインで記録</span>
+            </div>
+          </li>
+          <li class="p1-intro__point">
+            <span class="p1-intro__point-num">03</span>
+            <div class="p1-intro__point-body">
+              <span class="p1-intro__point-ttl">行けない展覧会もオンラインで</span>
+              <span class="p1-intro__point-sub">LIAISONで会場に行けなくても作品に出会える</span>
+            </div>
+          </li>
+        </ul>
+        <div class="p1-intro__cta">
+          <button class="ktn-op-btn ktn-op-btn--primary" type="button" onclick="KTN.action.show('signup')">無料ではじめる</button>
+          <a class="ktn-guide-link" href="kotennavi-p70.html">個展なびの使い方 →</a>
+          <a class="ktn-guide-link" href="kotennavi-p70.html#for-sellers">展覧会の掲載を希望する方へ →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- E. パーソナルフィード（ログインのみ） -->
+    <div class="ktn-content p1-personal" id="p1Personal" hidden>
+      <section class="p1-shelf">
+        <div class="ktn-section__head">
+          <h2 class="ktn-section__title">あなたのウォッチから新着<span class="ktn-sec-en">Watch Updates</span></h2>
+          <a href="kotennavi-p5-1.html" class="ktn-section__more">ウォッチリストへ →</a>
+        </div>
+        <p class="p1-shelf__desc">ウォッチ中のクリエイター・ギャラリーの新しい展覧会。</p>
+        <div class="p1-shelf-grid" id="p1WatchGrid"></div>
+      </section>
+      <section class="p1-shelf">
+        <div class="ktn-section__head">
+          <h2 class="ktn-section__title">興味あり！のもうすぐ終了<span class="ktn-sec-en">Don't Miss</span></h2>
+          <a href="kotennavi-p5-3.html" class="ktn-section__more">興味あり！リストへ →</a>
+        </div>
+        <p class="p1-shelf__desc">興味あり！に追加した展覧会のうち、会期終了が近いもの。</p>
+        <div class="p1-remind-grid" id="p1RemindGrid"></div>
+      </section>
+    </div>
+
+    <!-- F. 最新の展覧会（メインフィード） -->
+    <div class="ktn-content p1-feed">
+      <section class="p1-shelf">
+        <div class="ktn-section__head">
+          <h2 class="ktn-section__title">最新の展覧会<span class="ktn-sec-en">Now &amp; New</span></h2>
+          <a href="kotennavi-p10.html" class="ktn-section__more">もっと見る →</a>
+        </div>
+        <div class="p1-genres" id="p1Genres">
+          <button class="p1-genre is-on" type="button" data-genre="">すべて</button>
+          <button class="p1-genre" type="button" data-genre="絵画">絵画</button>
+          <button class="p1-genre" type="button" data-genre="写真">写真</button>
+          <button class="p1-genre" type="button" data-genre="版画">版画</button>
+          <button class="p1-genre" type="button" data-genre="書道">書道</button>
+          <button class="p1-genre" type="button" data-genre="現代美術">現代美術</button>
+          <button class="p1-genre" type="button" data-genre="陶芸">陶芸</button>
+          <button class="p1-genre" type="button" data-genre="クラフト">クラフト</button>
+        </div>
+        <div class="p1-feed-grid" id="p1FeedGrid"></div>
+        <div class="p1-more-wrap" id="p1MoreWrap">
+          <button class="ktn-op-btn" id="p1MoreBtn" type="button">さらに読み込む</button>
+        </div>
+        <a class="ktn-more-link" href="kotennavi-p10.html">条件をしぼって探す →</a>
+      </section>
+    </div>
+
+    <!-- G. LIAISON ブランド帯 -->
+    <section class="p1-liaison ktn-cv-auto" aria-label="LIAISONについて">
+      <div class="p1-liaison__inner">
+        <div class="p1-liaison__brand">
+          <span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>
+          <span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span>
+        </div>
+        <div class="p1-liaison__text">
+          <h2 class="p1-liaison__title">会場のその先へ。オンラインで作品と出会う</h2>
+          <p class="p1-liaison__desc">LIAISONは、実スペースの展覧会と連動したオンライン作品展示サービスです。会期中の作品をオンラインで鑑賞でき、LIAISON+ならそのまま購入もできます。遠方の展覧会も、見逃した個展も、作品との出会いをあきらめない。</p>
+          <div class="p1-liaison__links">
+            <a class="ktn-action-btn ktn-action-btn--dark" href="kotennavi-p70.html">LIAISONとは →</a>
+            <a class="ktn-action-btn ktn-action-btn--dark" href="kotennavi-p10.html">オンラインで楽しめる展覧会 →</a>
+          </div>
+        </div>
+        <div class="p1-liaison__thumbs" id="p1LiaisonThumbs" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <!-- 広告 -->
+    <div class="ktn-ad-band">
+      <div class="ktn-ad-band__inner">
+        <div class="ktn-ad-band__slot">広告エリア（728×90 / レスポンシブ）</div>
+      </div>
+    </div>
+
+  </main><!-- /ktn-main -->
+
+  <footer class="ktn-footer" id="ktnFooter"></footer>
+
+</div><!-- /content-wrap -->
+</div><!-- /shell -->
+
+<nav class="ktn-bottom-nav" id="ktnBottomNav">
+  <div class="ktn-bottom-nav__inner" id="ktnBottomNavInner"></div>
+</nav>
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+  KTN.init({ page: 'p1', role: 'guest' });
+</script>
+</body>
+</html>

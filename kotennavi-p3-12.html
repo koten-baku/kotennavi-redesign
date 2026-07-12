@@ -70,42 +70,21 @@
 
   <main class="ktn-main" id="ktnMain">
 
-    <!-- A. ヒーロー（コンパクト版） -->
-    <div class="p3-head p3-head--compact">
-      <div class="p3-head__inner">
-        <div class="p3-head__top">
-          <a class="p3-head__avatar-wrap" href="kotennavi-p3.html">
-            <div class="p3-head__avatar" style="background:linear-gradient(135deg,#7ab4cc,#4a8099)">T</div>
-          </a>
-          <div class="p3-head__info">
-            <div class="p3-head__badge-row">
-              <span class="cb cb-person cb-creator">CREATOR</span>
-            </div>
-            <h1 class="p3-head__name"><a href="kotennavi-p3.html">田中 透</a></h1>
-            <p class="p3-head__en">TANAKA TORU</p>
-            <p class="p3-head__genre">絵画・現代美術 · 東京</p>
-          </div>
-          <button class="p3-mgmt-btn" id="p312MgmtBtn" aria-label="管理メニューを開く">
-            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="16" height="16"><circle cx="10" cy="10" r="2"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2M5.05 5.05l1.41 1.41M13.54 13.54l1.41 1.41M5.05 14.95l1.41-1.41M13.54 6.46l1.41-1.41"/></svg>
-            管理
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- B. タブナビ -->
-    <nav class="p3-tabnav" id="p3Tabnav" aria-label="クリエイターページ内ナビ">
-      <div class="p3-tabnav__inner">
-        <a class="p3-tabnav__name" href="kotennavi-p3.html"><span class="p3-tabnav__name-text">田中 透</span></a>
-        <a class="p3-tabnav__item" href="kotennavi-p3-1.html">展覧会</a>
-        <a class="p3-tabnav__item" href="kotennavi-p3-3.html">作品</a>
-        <a class="p3-tabnav__item" href="kotennavi-p3-2.html">記事</a>
-        <a class="p3-tabnav__item" href="kotennavi-p3.html#p3-sec-profile">クリエイター情報</a>
-      </div>
-    </nav>
-
     <!-- C. メインコンテンツ -->
     <div class="ktn-content">
+      <!-- 親エンティティ文脈ストリップ（identity strip） -->
+      <div class="ktn-mgmt-context">
+        <a class="ktn-mgmt-context__media ktn-mgmt-context__media--creator" href="kotennavi-p3.html" style="background:linear-gradient(135deg,#7ab4cc,#4a8099)">T</a>
+        <div class="ktn-mgmt-context__body">
+          <div class="ktn-mgmt-context__badges">
+            <span class="cb cb-person cb-creator">CREATOR</span>
+          </div>
+          <div class="ktn-mgmt-context__name"><a href="kotennavi-p3.html">田中 透</a></div>
+          <div class="ktn-mgmt-context__meta">絵画・現代美術 · 東京</div>
+        </div>
+        <div class="ktn-mgmt-context__actions">
+          <a class="ktn-mgmt-context__view" href="kotennavi-p3.html">クリエイターページへ →</a>        </div>
+      </div>
       <div class="p312-wrap ktn-mgmt-wrap" id="p312Wrap">
 
         <!-- ページヘッダー（枠内・p3-15踏襲） -->

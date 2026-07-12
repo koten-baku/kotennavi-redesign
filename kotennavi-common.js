@@ -219,6 +219,14 @@ function updateActiveState() {
 }
 
 function handleNav(e, page, url) {
+  /* コンポーネントデモ（#mainPlaceholder あり）ではページ切替をシミュレート。
+     本番プロトタイプページでは curPage を書き換えず（ヘッダー状態が壊れるため）
+     ローカルHTMLファイルへ実遷移する（未制作ページは404になる） */
+  if (!document.getElementById('mainPlaceholder')) {
+    e.preventDefault();
+    location.href = 'kotennavi-' + page + '.html';
+    return;
+  }
   e.preventDefault();
   curPage = page;
   document.querySelectorAll('.dbar [onclick^="setP"]').forEach(b => b.classList.remove('on'));
@@ -268,6 +276,10 @@ function renderSidebar() {
 
 function renderBottomNav() {
   const inner = document.getElementById('ktnBottomNavInner');
+  /* ボトムナビを持たないページ（管理・編集系）で throw すると
+     _runPage / renderAll が途中で死に、ページモジュール（KTN.pages）や
+     ロール切替の再描画が動かなくなるため必ず null ガードする */
+  if (!inner) return;
   let html = `
     <a href="/p1" class="ktn-bottom-nav__item ktn-bottom-nav__item--home" data-page="p1" onclick="handleNav(event,'p1','/p1')">
       <div class="ktn-bottom-nav__icon">${ICONS.home}</div>
@@ -503,7 +515,7 @@ const PAGES = {
   'p2-4': { n: '展覧会-出展者', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['出展者', null]] },
   'p2-5': { n: '展覧会-リエゾン作品一覧', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['LIAISON作品一覧', null]] },
   'p2-5-1': { n: '展覧会-リエゾンプラス作品一覧', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['LIAISON+ 作品一覧', null]] },
-  'p2-11': { n: '展覧会-新規/編集/クローン', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['新規/編集/クローン', null]] },
+  'p2-11': { n: '展覧会-新規/編集/クローン', bc: [['Top', '/'], ['展覧会', '/p10'], ['松田啓佑展［仮称］', '/p2'], ['展覧会を編集', null]] },
   'p2-12': { n: 'LIAISON 作品管理', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['LIAISON 作品管理', null]] },
   'p2-121': { n: 'LIAISON+ 作品管理', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['LIAISON+ 作品管理', null]] },
   'p2-13': { n: '展覧会-広告作成', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['広告作成', null]] },
@@ -528,11 +540,10 @@ const PAGES = {
   'p4-11': { n: 'ギャラリー-編集', bc: [['Top', '/'], ['ギャラリー', '/p10-3'], ['Gallery SOIL 渋谷', '/p4'], ['編集', null]] },
   'p4-12': { n: 'ギャラリー-インサート', bc: [['Top', '/'], ['ギャラリー', '/p10-3'], ['Gallery SOIL 渋谷', '/p4'], ['インサート', null]] },
   'p4-13': { n: 'ギャラリー-ウオッチャー管理', bc: [['Top', '/'], ['ギャラリー', '/p10-3'], ['Gallery SOIL 渋谷', '/p4'], ['ウオッチャー管理', null]] },
-  'p4-14': { n: 'ギャラリー-リエゾンコンソール', bc: [['Top', '/'], ['ギャラリー', '/p10-3'], ['Gallery SOIL 渋谷', '/p4'], ['リエゾンコンソール', null, 'lp']] },
+  'p4-14': { n: 'ギャラリー-インベントリー管理', bc: [['Top', '/'], ['ギャラリー', '/p10-3'], ['Gallery SOIL 渋谷', '/p4'], ['インベントリー管理', null]] },
   'p4-15': { n: 'ギャラリー-リエゾンコンソール', bc: [['Top', '/'], ['ギャラリー', '/p10-3'], ['Gallery SOIL 渋谷', '/p4'], ['リエゾン+コンソール', null]] },
   'p4-16': { n: 'ギャラリー-取引デスク', bc: [['Top', '/'], ['ギャラリー', '/p10-3'], ['Gallery SOIL 渋谷', '/p4'], ['取引デスク', null, 'lp']] },
-  'p4-17': { n: 'ギャラリー-インベントリー管理', bc: [['Top', '/'], ['ギャラリー', '/p10-3'], ['Gallery SOIL 渋谷', '/p4'], ['販売代金管理', null, 'lp']] },
-  'p4-18': { n: 'ギャラリー-取扱作家管理', bc: [['Top', '/'], ['ギャラリー', '/p10-3'], ['Gallery SOIL 渋谷', '/p4'], ['取扱作家管理', null, 'lp']] },
+  'p4-17': { n: 'ギャラリー-販売代金管理', bc: [['Top', '/'], ['ギャラリー', '/p10-3'], ['Gallery SOIL 渋谷', '/p4'], ['販売代金管理', null, 'lp']] },
   // P5 ユーザー
   'p5': { n: 'ユーザー-展覧会カレンダー', bc: [['Top', '/'], ['山田花子 myページ', null]] },
   'p5-1': { n: 'ユーザー-ウオッチリスト', bc: [['Top', '/'], ['myページ', '/p5'], ['ウオッチリスト', null]] },
@@ -740,8 +751,19 @@ function getActions(page, role) {
     return cmn;
   }
 
+  /* ── P3-11 プロフィール編集（identity strip 試作・管理メニューをヘッダー getActions へ集約） ── */
+  if (page === 'p3-11') {
+    if (role === 'creator')
+      return owbtn('info', 'ガイド') + dd('オーナーメニュー',
+        ddi('edit', 'プロフィール編集') + ddSep() +
+        ddi('grid', '展覧会を管理') + ddi('desk', 'LIAISON+コンソール') + ddi('chart', 'インサイト') + ddSep() +
+        ddi('user', 'アカウント設定'));
+    if (role === 'admin') return owbtn('info', 'ガイド') + sep() + dd('管理者', ddi('chart', '統計') + ddi('sales', '精算'));
+    return '';
+  }
+
   /* ── P3 管理ページ群（owner/admin限定） ── */
-  if (['p3-11', 'p3-12', 'p3-13', 'p3-14', 'p3-15', 'p3-16', 'p3-17'].includes(page)) {
+  if (['p3-12', 'p3-13', 'p3-14', 'p3-15', 'p3-16', 'p3-17'].includes(page)) {
     if (role === 'creator') return owbtn('info', 'ガイド');
     if (role === 'admin') return owbtn('info', 'ガイド') + sep() + dd('管理者', ddi('chart', '統計') + ddi('sales', '精算'));
     return '';

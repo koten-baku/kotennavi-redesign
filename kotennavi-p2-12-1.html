@@ -19,6 +19,9 @@
   <button class="dbtn on" onclick="setR('user+creator',this)">creator本人</button>
   <button class="dbtn" onclick="setR('user+gallery',this)">gallery本人</button>
   <button class="dbtn" onclick="setR('admin',this)">管理者</button>
+  <span class="dbar-sep">申込：</span>
+  <button class="dbtn on" onclick="p2121DemoApply(true,this)">あり（切替不可）</button>
+  <button class="dbtn" onclick="p2121DemoApply(false,this)">なし（切替可）</button>
 </div>
 <div class="shell">
 <div class="content-wrap" id="contentWrap">
@@ -33,6 +36,27 @@
   <main class="ktn-main" id="ktnMain">
     <div class="ktn-content">
 
+      <!-- 展覧会 文脈ストリップ（identity strip content variant・ボックス外の識別ヘッダー） -->
+      <div class="ktn-mgmt-context">
+        <a class="ktn-mgmt-context__media ktn-mgmt-context__media--content" href="kotennavi-p2.html" style="background:linear-gradient(135deg,#b8d8cc,#6a9e8a)"></a>
+        <div class="ktn-mgmt-context__body">
+          <div class="ktn-mgmt-context__badges">
+            <span class="cb cb-content cb-exhibition">exhibition</span>
+            <span class="lb-dot li">LIAISON+</span>
+          </div>
+          <div class="ktn-mgmt-context__name"><a href="kotennavi-p2.html">あなたが知らないオノマトペ</a></div>
+          <div class="ktn-mgmt-context__meta">Gallery SOIL 渋谷 · 2026.02.18 — 2026.03.05</div>
+          <div class="ktn-mgmt-context__owner">
+            <span class="ktn-mgmt-context__owner-label">Owner</span>
+            <span class="cb cb-person cb-creator">creator</span>
+            <a href="kotennavi-p3.html">田中 透</a>
+          </div>
+        </div>
+        <div class="ktn-mgmt-context__actions">
+          <a class="ktn-mgmt-context__view" href="kotennavi-p2.html">展覧会ページを見る →</a>
+        </div>
+      </div>
+
       <!-- 管理ボックス -->
       <div class="ktn-mgmt-wrap ktn-mgmt-stack">
 
@@ -43,32 +67,18 @@
         <p class="ktn-mgmt-head__desc">展示作品のオンライン販売設定を行います。作品と販売情報は展覧会ページの LIAISON タブで公開されます。</p>
       </div>
 
-      <!-- 1. 展覧会コンパクトバナー -->
-      <a href="kotennavi-p2.html" class="p2-12-banner">
-        <div class="p2-12-banner__thumb" style="background:linear-gradient(135deg,#b8d8cc,#6a9e8a)"></div>
-        <div class="p2-12-banner__body">
-          <div class="p2-12-banner__badges">
-            <span class="sb sb-live"><span class="pulse"></span>開催中</span>
-            <span class="lb-dot li">LIAISON+</span>
-          </div>
-          <div class="p2-12-banner__title">あなたが知らないオノマトペ</div>
-          <div class="p2-12-banner__meta">
-            <span>Gallery SOIL 渋谷</span>
-            <span class="p2-12-banner__sep">·</span>
-            <span>2026.02.18 — 2026.03.05</span>
-          </div>
-        </div>
-      </a>
-
       <!-- モード切替バー -->
       <div class="p2-12-mode-bar">
-        <div class="p2-12-mode-bar__current">
-          <span class="p2-12-mode-bar__label">現在のモード：</span>
-          <span class="lb-dot li-plus">LIAISON+</span>
-        </div>
-        <div class="p2-12-mode-bar__actions">
-          <button class="p2-12-mode-switch" onclick="p2121OpenModal('switch')">LIAISON に切り替える</button>
-          <button class="p2-12-mode-none" onclick="p2121OpenModal('none')">LIAISON作品展示しない</button>
+        <h3 class="p2-12-mode-bar__title">モード切替</h3>
+        <div class="p2-12-mode-bar__row">
+          <div class="p2-12-mode-bar__current">
+            <span class="p2-12-mode-bar__label">現在のモード：</span>
+            <span class="lb-dot li-plus">LIAISON+</span>
+          </div>
+          <div class="p2-12-mode-bar__actions">
+            <button class="p2-12-mode-switch" onclick="p2121OpenModal('switch')">LIAISON に切り替える</button>
+            <button class="p2-12-mode-none" onclick="p2121OpenModal('none')">LIAISON+ の利用をやめる</button>
+          </div>
         </div>
       </div>
 
@@ -246,21 +256,23 @@
               <span class="p2-12-add-panel__head-title">作品を選んで追加</span>
               <button class="p2-12-add-panel__close" id="p212CloseBtn" type="button">✕ 閉じる</button>
             </div>
+            <div class="p2-12-exh-artists" id="p212ExhArtists"></div>
             <div class="p2-12-add-panel__new">
-              <a href="#" class="p2-12-new-btn">
+              <a href="#" class="p2-12-new-btn" id="p212NewBtn">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
                 新規作品を作成
               </a>
             </div>
-            <div class="p2-12-add-panel__or">または既存の作品から選ぶ</div>
+            <div class="p2-12-add-panel__or" id="p212AddOr">またはあなたの既存の作品から選ぶ</div>
+            <p class="p2-12-add-panel__hint" id="p212AddHint">あなたがこれまでに登録した作品から選んで追加できます。</p>
             <div class="p2-12-candidate-grid" id="p212CandidateGrid"></div>
           </div>
         </div>
 
         <!-- フォームアクション -->
         <div class="p2-12-form-actions">
-          <button class="p2-12-form-actions__cancel" type="button" onclick="history.back()">キャンセル</button>
-          <button class="p2-12-form-actions__save" type="button" id="p212SaveAll">保存する</button>
+          <button class="p2-12-form-actions__cancel ktn-op-btn" type="button" onclick="history.back()">キャンセル</button>
+          <button class="p2-12-form-actions__save ktn-op-btn ktn-op-btn--primary" type="button" id="p212SaveAll">保存する</button>
         </div>
 
       </section>
@@ -272,14 +284,16 @@
         <div class="p2-12-modal__bg" onclick="p2121CloseModal('switch')"></div>
         <div class="p2-12-modal__box">
           <h3 class="p2-12-modal__title">LIAISON に切り替えますか？</h3>
-          <div class="p2-12-modal__warn">⚠️ LIAISON+ の設定（価格・販売期間）と購入申込・キューのデータがすべて失われます。この操作は取り消せません。</div>
+          <div class="p2-12-modal__warn" id="p2121SwitchWarn">⚠️ LIAISON+ の設定（価格・販売期間）と購入申込・キューのデータがすべて失われます。この操作は取り消せません。</div>
+          <div class="p2-12-modal__blocked" id="p2121SwitchBlocked" hidden>現在、購入申込のある出品作品があるため切り替えできません。コンソールで申込への対応（購入確定・キャンセル）が完了すると切り替えできるようになります。</div>
           <ul class="p2-12-modal__notes">
+            <li>購入申込のある作品がある場合は切り替えできません。</li>
             <li>「商談中」「売約済」の作品がある場合は切り替えできません。</li>
             <li>切り替え後は LIAISON 作品管理ページに移動します。</li>
           </ul>
           <div class="p2-12-modal__foot">
-            <button class="p2-12-modal__cancel" onclick="p2121CloseModal('switch')">キャンセル</button>
-            <button class="p2-12-modal__ok danger" onclick="location.href='kotennavi-p2-12.html'">切り替える</button>
+            <button class="p2-12-modal__cancel ktn-op-btn" onclick="p2121CloseModal('switch')">キャンセル</button>
+            <button class="p2-12-modal__ok ktn-op-btn ktn-op-btn--danger" id="p2121SwitchOk" onclick="location.href='kotennavi-p2-12.html'">切り替える</button>
           </div>
         </div>
       </div>
@@ -288,14 +302,14 @@
       <div id="p2121-modal-none" class="p2-12-modal" hidden>
         <div class="p2-12-modal__bg" onclick="p2121CloseModal('none')"></div>
         <div class="p2-12-modal__box">
-          <h3 class="p2-12-modal__title">LIAISON+ を解除しますか？</h3>
-          <div class="p2-12-modal__warn">⚠️ LIAISON+ の設定（価格・販売期間）と購入申込・キューのデータがすべて失われます。この操作は取り消せません。</div>
+          <h3 class="p2-12-modal__title">LIAISON+ の利用停止は編集ページで行います</h3>
+          <div class="p2-12-modal__warn">⚠️ 利用をやめて保存すると、LIAISON+ の設定（価格・販売期間）と購入申込・キューのデータがすべて失われます。取り消せません。</div>
           <ul class="p2-12-modal__notes">
-            <li>展覧会の編集ページで「使用しない」を選択して保存します。</li>
+            <li>この画面では停止されません。展覧会の編集ページ「LIAISON設定」で「利用しない」を選択して保存した時点で利用停止となります。</li>
           </ul>
           <div class="p2-12-modal__foot">
-            <button class="p2-12-modal__cancel" onclick="p2121CloseModal('none')">キャンセル</button>
-            <button class="p2-12-modal__ok danger" onclick="location.href='kotennavi-p2-11.html'">編集ページへ</button>
+            <button class="p2-12-modal__cancel ktn-op-btn" onclick="p2121CloseModal('none')">キャンセル</button>
+            <button class="p2-12-modal__ok ktn-op-btn ktn-op-btn--primary" onclick="location.href='kotennavi-p2-11.html'">編集ページを開く →</button>
           </div>
         </div>
       </div>
@@ -315,6 +329,13 @@
 <script>
 KTN.init({ page: 'p2-121', role: 'user+creator' });
 function p2121OpenModal(type) {
+  if (type === 'switch') {
+    /* 出品作品に購入申込が1件以上ある間は LIAISON へ切り替え不可（申込対応の完了が先） */
+    var blocked = !!document.querySelector('#p212WorkList .p2-121-lock-note__num');
+    document.getElementById('p2121SwitchWarn').hidden = blocked;
+    document.getElementById('p2121SwitchBlocked').hidden = !blocked;
+    document.getElementById('p2121SwitchOk').disabled = blocked;
+  }
   document.getElementById('p2121-modal-' + type).hidden = false;
 }
 function p2121CloseModal(type) {
