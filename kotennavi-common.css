@@ -11029,6 +11029,61 @@ body.p4-15-page{--page-accent:#8b5e3c}
 .p211-exc-row__del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:.85rem;padding:4px 6px;line-height:1}
 .p211-exc-row__del:hover{color:#b43c14}
 
+/* 開催スケジュール詳細：日別カレンダー（ハイブリッド＝基本ルールを下地に個別日をクリックで上書き） */
+.p211-sched-cal{margin-top:12px;border:1px solid var(--border);border-radius:6px;padding:14px}
+.p211-sched-cal__bar{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:12px}
+.p211-sched-cal__month{font-family:var(--fn);font-weight:700;font-size:1rem;color:var(--ink);min-width:120px;text-align:center}
+.p211-sched-cal__nav{width:32px;height:32px;border:1px solid var(--border);border-radius:4px;background:#fff;font-size:1.1rem;line-height:1;color:var(--ink);cursor:pointer;transition:background .12s}
+.p211-sched-cal__nav:hover:not(:disabled){background:var(--paper)}
+.p211-sched-cal__nav:disabled{opacity:.3;cursor:not-allowed}
+.p211-sched-cal__legend{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:14px;font-size:.72rem;color:var(--muted)}
+.p211-sched-cal__lg{display:inline-flex;align-items:center;gap:5px}
+.p211-sched-cal__sw{width:11px;height:11px;border-radius:2px;flex-shrink:0}
+.p211-sched-cal__sw--open{background:#fff;border:1px solid var(--border)}
+.p211-sched-cal__sw--rest{background:#f3f1ee;border:1px solid #d8d4cd}
+.p211-sched-cal__sw--closed{background:rgba(180,60,20,.14);border:1px solid #b43c14}
+.p211-sched-cal__sw--special{background:rgba(26,122,61,.14);border:1px solid #1a7a3d}
+.p211-sched-cal__sw--hours{background:rgba(0,93,167,.12);border:1px solid #005da7}
+.p211-sched-cal__dows{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:4px}
+.p211-sched-cal__dows span{text-align:center;font-family:var(--fm);font-size:.7rem;font-weight:600;color:var(--muted);padding:2px 0}
+.p211-sched-cal__dows span:first-child{color:#c0392b}
+.p211-sched-cal__dows span:last-child{color:#1a4a88}
+.p211-sched-cal__grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.p211-sched-cal__cell{min-height:50px;border:1px solid var(--border);border-radius:4px;background:#fff;padding:4px 5px 3px;display:flex;flex-direction:column;align-items:flex-start;cursor:pointer;transition:border-color .15s,box-shadow .15s}
+.p211-sched-cal__cell:hover{border-color:rgba(0,0,0,.32);box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.p211-sched-cal__cell.is-blank,.p211-sched-cal__cell.is-out{border-color:transparent;background:transparent;cursor:default;box-shadow:none;pointer-events:none}
+.p211-sched-cal__cell.is-selected{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink)}
+.p211-sched-cal__cell.is-rest{background:#f3f1ee}
+.p211-sched-cal__cell.ov--closed{border-color:rgba(180,60,20,.5);background:rgba(180,60,20,.06)}
+.p211-sched-cal__cell.ov--special{border-color:rgba(26,122,61,.5);background:rgba(26,122,61,.06)}
+.p211-sched-cal__cell.ov--hours{border-color:rgba(0,93,167,.5);background:rgba(0,93,167,.05)}
+.p211-sched-cal__num{font-family:var(--fm);font-size:.8rem;font-weight:600;color:var(--ink);line-height:1.1}
+.p211-sched-cal__cell.is-out .p211-sched-cal__num{color:var(--muted);opacity:.45}
+.p211-sched-cal__st{font-family:var(--fm);font-size:.64rem;font-weight:600;color:var(--muted);margin-top:auto;letter-spacing:.01em}
+.p211-sched-cal__cell.is-rest .p211-sched-cal__st{color:#8a8a8a}
+.p211-sched-cal__cell.ov--closed .p211-sched-cal__st{color:#b43c14;font-weight:700}
+.p211-sched-cal__cell.ov--special .p211-sched-cal__st{color:#1a7a3d;font-weight:700}
+.p211-sched-cal__cell.ov--hours .p211-sched-cal__st{color:#005da7;font-weight:700}
+.p211-sched-cal__editor{margin-top:14px;border:1px solid var(--border);border-top:3px solid var(--accent);border-radius:4px;padding:14px 16px;background:var(--paper)}
+.p211-sched-cal__editor[hidden]{display:none}
+.p211-sched-cal__ed-date{font-family:var(--fn);font-weight:700;font-size:.95rem;color:var(--ink);margin:0 0 10px}
+.p211-sched-cal__ed-seg{display:inline-flex;border:1px solid var(--border);border-radius:4px;overflow:hidden;margin-bottom:12px}
+.p211-sched-cal__ed-seg button{padding:6px 18px;font-family:var(--fn);font-size:.82rem;background:#fff;border:none;cursor:pointer;color:var(--ink);transition:background .12s}
+.p211-sched-cal__ed-seg button+button{border-left:1px solid var(--border)}
+.p211-sched-cal__ed-seg button.is-on{background:var(--accent);color:#fff;font-weight:700}
+.p211-sched-cal__ed-time{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.p211-sched-cal__ed-time[hidden]{display:none}
+.p211-sched-cal__ed-time input{padding:7px 10px;border:1px solid var(--border);border-radius:4px;font-size:.82rem;font-family:var(--fm);color:var(--ink);background:#fff}
+.p211-sched-cal__ed-time span{font-size:.8rem;color:var(--muted)}
+.p211-sched-cal__ed-base{font-size:.75rem;color:var(--muted);margin:0 0 12px}
+.p211-sched-cal__ed-foot{display:flex;gap:8px;justify-content:flex-end}
+@media (max-width:540px){
+  .p211-sched-cal__cell{min-height:44px;padding:3px 3px 2px}
+  .p211-sched-cal__num{font-size:.74rem}
+  .p211-sched-cal__st{font-size:.58rem}
+  .p211-sched-cal__grid,.p211-sched-cal__dows{gap:3px}
+}
+
 /* イベント登録アイテム（スケジュール詳細・カード型） */
 .p211-event-item{display:flex;flex-direction:column;gap:10px;border:1px solid var(--border);border-radius:4px;background:#fff;padding:14px 16px;margin-bottom:10px}
 .p211-event-item__head{display:flex;align-items:center;gap:10px}
@@ -11136,6 +11191,23 @@ label.p211-liaison-opt{cursor:pointer}
 .p211-presave__list li::before{content:'';position:absolute;left:2px;top:.62em;width:5px;height:5px;border-radius:50%;background:var(--muted)}
 .p211-presave__consent{display:flex;align-items:flex-start;gap:9px;margin-top:14px;font-size:.84rem;font-weight:600;color:var(--ink);line-height:1.6;cursor:pointer}
 .p211-presave__consent input{width:16px;height:16px;margin-top:3px;accent-color:var(--accent);cursor:pointer;flex-shrink:0}
+
+/* ── p2-11 管理者管理セクション（admin 専用・情報提供者/UID/確認/公開の管理。オフライン掲載時は検索で設定） ── */
+.p211-admin-block{border:1px solid rgba(58,74,90,.35);border-top:3px solid #3a4a5a;border-radius:4px}
+.p211-admin-note{display:flex;align-items:flex-start;gap:8px;margin:0 0 18px;padding:10px 12px;background:rgba(58,74,90,.06);border-radius:4px;font-size:.8rem;line-height:1.7;color:var(--ink)}
+.p211-admin-note svg{flex-shrink:0;margin-top:2px;color:#3a4a5a}
+.p211-search-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.p211-search-row .p211-input{flex:1 1 200px}
+.p211-search-row .p211-select{flex:0 0 130px;width:130px}
+.p211-search-row .ktn-op-btn{flex-shrink:0}
+.p211-ref-sub{margin:4px 0 0;font-size:.75rem;color:var(--muted)}
+.p211-check{display:flex;align-items:flex-start;gap:9px;font-size:.88rem;color:var(--ink);line-height:1.6;cursor:pointer}
+.p211-check input{width:16px;height:16px;margin-top:2px;accent-color:var(--accent);cursor:pointer;flex-shrink:0}
+.p211-admin-group{margin:0 0 22px;padding:16px 16px 4px;border:1px solid var(--border);border-radius:4px;background:rgba(58,74,90,.02)}
+.p211-admin-group:last-of-type{margin-bottom:0}
+.p211-admin-group__label{font-family:var(--fn);font-size:.82rem;font-weight:700;letter-spacing:.04em;color:#3a4a5a;margin:0 0 14px;padding-bottom:8px;border-bottom:1px solid rgba(58,74,90,.18)}
+.p211-admin-pubdate{margin:8px 0 0;padding:8px 10px;background:rgba(58,74,90,.06);border-radius:4px;font-size:.78rem;line-height:1.6;color:var(--ink)}
+.p211-admin-pubdate strong{font-family:var(--fm);font-weight:600}
 
 /* ── 保存確認モーダル（主要項目サマリー） ── */
 .p211-modal{position:fixed;inset:0;z-index:900;display:flex;align-items:center;justify-content:center}

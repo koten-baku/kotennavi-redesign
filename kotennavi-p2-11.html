@@ -329,9 +329,9 @@
           <div class="p211-field">
             <label class="p211-label">開催時間<span class="ktn-req">必須</span></label>
             <div class="p211-datetime-pair">
-              <input type="time" value="13:00">
+              <input type="time" id="p211TimeFrom" value="13:00">
               <span class="p211-datetime-pair__sep">〜</span>
-              <input type="time" value="19:00">
+              <input type="time" id="p211TimeTo" value="19:00">
             </div>
             <p class="p211-help">基本の開催時間です。曜日や日によって異なる時間がある場合は、下の「開催スケジュール詳細」の時間変更で登録します。</p>
           </div>
@@ -352,70 +352,26 @@
               <span class="p211-sub-link__benefit">臨時休業・時間変更が日別カレンダーに反映され、来場者が安心して予定を立てられます。</span>
             </a>
             <div class="p211-acc-panel" id="p211AccSched" hidden>
-              <p class="p211-help" style="margin:0">基本の会期・定休日・開催時間は上の欄で入力します。ここでは基本と異なる予定（臨時休業・時間変更）を登録します。上の欄の内容とあわせて、展覧会ページの開催時間・日別カレンダー表示に反映されます。</p>
-              <div class="p211-field">
-                <label class="p211-label">臨時休業（休業日・休業期間）</label>
-                <div id="p211ExcClosedList">
-                  <div class="p211-exc-row">
-                    <input type="date" value="2026-07-01">
-                    <span class="p211-exc-row__sep">〜</span>
-                    <input type="date">
-                    <button class="p211-exc-row__del" type="button" title="削除" onclick="delExcRow(this)">✕</button>
-                  </div>
+              <p class="p211-help" style="margin:0">上の「会期・休み・開催時間」で入力した内容がそのままカレンダーに反映されます。基本と異なる日（臨時休業・臨時開館・時間変更）は、その日をクリックして直接変更してください。変更した日は色分けして表示され、展覧会ページの日別カレンダーにも反映されます。</p>
+              <div class="p211-sched-cal" id="p211SchedCal">
+                <div class="p211-sched-cal__bar">
+                  <button class="p211-sched-cal__nav" type="button" id="p211SchedPrev" onclick="schedNav(-1)" aria-label="前の月">‹</button>
+                  <span class="p211-sched-cal__month" id="p211SchedMonth">2026年6月</span>
+                  <button class="p211-sched-cal__nav" type="button" id="p211SchedNext" onclick="schedNav(1)" aria-label="次の月">›</button>
                 </div>
-                <button class="p211-acc-add" type="button" onclick="addExcRow('closed')">＋ 休業日・休業期間を追加</button>
-                <p class="p211-help" style="margin-top:8px">1日だけの場合は開始日のみ入力してください。夏季休業・年末年始などの連休は期間で登録できます。毎週の定休日は上の「休み」欄で入力します。</p>
-              </div>
-              <div class="p211-field">
-                <label class="p211-label">開催時間の変更</label>
-                <div id="p211ExcHoursList">
-                  <div class="p211-exc-row">
-                    <input type="date" value="2026-07-20">
-                    <span class="p211-exc-row__sep">〜</span>
-                    <input type="date">
-                    <select class="p211-select">
-                      <option value="all" selected>全日</option>
-                      <option value="weekend">土・日</option>
-                      <option value="weekend-hol">土日祝</option>
-                      <option value="weekday">平日</option>
-                      <option value="mon">月曜</option>
-                      <option value="tue">火曜</option>
-                      <option value="wed">水曜</option>
-                      <option value="thu">木曜</option>
-                      <option value="fri">金曜</option>
-                      <option value="sat">土曜</option>
-                      <option value="sun">日曜</option>
-                    </select>
-                    <input type="time" value="13:00">
-                    <span class="p211-exc-row__sep">〜</span>
-                    <input type="time" value="17:00">
-                    <button class="p211-exc-row__del" type="button" title="削除" onclick="delExcRow(this)">✕</button>
-                  </div>
-                  <div class="p211-exc-row">
-                    <input type="date" value="2026-06-20">
-                    <span class="p211-exc-row__sep">〜</span>
-                    <input type="date" value="2026-07-19">
-                    <select class="p211-select">
-                      <option value="all">全日</option>
-                      <option value="weekend">土・日</option>
-                      <option value="weekend-hol" selected>土日祝</option>
-                      <option value="weekday">平日</option>
-                      <option value="mon">月曜</option>
-                      <option value="tue">火曜</option>
-                      <option value="wed">水曜</option>
-                      <option value="thu">木曜</option>
-                      <option value="fri">金曜</option>
-                      <option value="sat">土曜</option>
-                      <option value="sun">日曜</option>
-                    </select>
-                    <input type="time" value="13:00">
-                    <span class="p211-exc-row__sep">〜</span>
-                    <input type="time" value="20:00">
-                    <button class="p211-exc-row__del" type="button" title="削除" onclick="delExcRow(this)">✕</button>
-                  </div>
+                <div class="p211-sched-cal__legend">
+                  <span class="p211-sched-cal__lg"><i class="p211-sched-cal__sw p211-sched-cal__sw--open"></i>開催</span>
+                  <span class="p211-sched-cal__lg"><i class="p211-sched-cal__sw p211-sched-cal__sw--rest"></i>定休</span>
+                  <span class="p211-sched-cal__lg"><i class="p211-sched-cal__sw p211-sched-cal__sw--closed"></i>臨時休業</span>
+                  <span class="p211-sched-cal__lg"><i class="p211-sched-cal__sw p211-sched-cal__sw--special"></i>臨時開館</span>
+                  <span class="p211-sched-cal__lg"><i class="p211-sched-cal__sw p211-sched-cal__sw--hours"></i>時間変更</span>
                 </div>
-                <button class="p211-acc-add" type="button" onclick="addExcRow('hours')">＋ 時間変更を追加</button>
-                <p class="p211-help" style="margin-top:8px">1日だけの場合は開始日のみ入力してください。期間と曜日を組み合わせると、「会期中の土日祝だけ時間延長」も1行で登録できます。</p>
+                <div class="p211-sched-cal__dows">
+                  <span>日</span><span>月</span><span>火</span><span>水</span><span>木</span><span>金</span><span>土</span>
+                </div>
+                <div class="p211-sched-cal__grid" id="p211SchedGrid"></div>
+                <div class="p211-sched-cal__editor" id="p211SchedEditor" hidden></div>
+                <p class="p211-help" style="margin-top:10px">祝日をまとめて休みにする場合は上の「休み」欄の「祝日」で設定します。会期が数か月にわたる場合は月送り（‹ ›）で表示を切り替えられます。</p>
               </div>
             </div>
 
@@ -904,6 +860,142 @@
         </div>
       </div>
 
+      <!-- ─── 管理者管理（admin 専用・情報提供者/UID/確認/公開の管理。検索連携は後工程で実装） ─── -->
+      <div class="p211-block p211-admin-block" id="p211AdminBlock" hidden>
+        <div class="p211-block__head">
+          <div class="p211-block__title">管理者管理 <span class="p211-block__title-en">Admin</span></div>
+        </div>
+        <div class="p211-block__body">
+
+          <p class="p211-admin-note">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><circle cx="8" cy="8" r="6.5"/><line x1="8" y1="7.2" x2="8" y2="11.5"/><line x1="8" y1="4.6" x2="8" y2="4.61"/></svg>
+            <span>この欄はサイト管理者のみに表示されます。展覧会を投稿したクリエイター・ギャラリーの場合、<strong>情報提供者・UID は自動設定</strong>されます。オフラインで掲載依頼を受けた場合は、下の<strong>情報提供者検索・UID検索</strong>から設定してください。</span>
+          </p>
+
+          <!-- ── グループ1：投稿者・UID ── -->
+          <div class="p211-admin-group">
+            <div class="p211-admin-group__label">投稿者・UID</div>
+
+            <!-- UID -->
+            <div class="p211-field">
+              <label class="p211-label">UID（ユーザーID）</label>
+              <p class="p211-help" style="margin-bottom:6px">ユーザーID。変更する場合は ID を指定してください。</p>
+              <input class="p211-input" type="text" id="p211Uid" value="6616" style="max-width:200px">
+            </div>
+
+            <!-- UID検索 -->
+            <div class="p211-field">
+              <label class="p211-label">UID検索</label>
+              <p class="p211-help" style="margin-bottom:6px">検索する条件を入力し、名前のタイプを選択して検索ボタンをクリックしてください。入力された文字を含むクリエイター・ギャラリーを検索します。</p>
+              <div class="p211-search-row">
+                <input class="p211-input" type="text" placeholder="クリエイター・ギャラリー名">
+                <select class="p211-select">
+                  <option value="creator">creator</option>
+                  <option value="gallery">gallery</option>
+                </select>
+                <button class="ktn-op-btn ktn-op-btn--sm" type="button">検索する</button>
+              </div>
+            </div>
+
+            <!-- 情報提供者 -->
+            <div class="p211-field">
+              <label class="p211-label">情報提供者</label>
+              <input class="p211-input" type="text" id="p211InfoProvider" value="ART FACTORY城南島">
+              <p class="p211-ref-sub">ART FACTORY城南島 （gallery）</p>
+            </div>
+
+            <!-- 情報提供者検索 -->
+            <div class="p211-field">
+              <label class="p211-label">情報提供者検索</label>
+              <p class="p211-help" style="margin-bottom:6px">検索する条件を入力し、名前のタイプを選択して検索ボタンをクリックしてください。入力された文字を含むクリエイター・ギャラリーを検索します。</p>
+              <div class="p211-search-row">
+                <input class="p211-input" type="text" placeholder="クリエイター・ギャラリー名">
+                <select class="p211-select">
+                  <option value="creator">creator</option>
+                  <option value="gallery">gallery</option>
+                </select>
+                <button class="ktn-op-btn ktn-op-btn--sm" type="button">検索する</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── グループ2：招待券・おすすめ ── -->
+          <div class="p211-admin-group">
+            <div class="p211-admin-group__label">招待券・おすすめ</div>
+
+            <!-- 招待券プレゼント有無 -->
+            <div class="p211-field">
+              <label class="p211-label">招待券プレゼント有無</label>
+              <select class="p211-select" style="max-width:200px">
+                <option value="none">- なし -</option>
+                <option value="yes">あり</option>
+              </select>
+            </div>
+
+            <!-- 招待券プレゼント申込URL -->
+            <div class="p211-field">
+              <label class="p211-label">招待券プレゼント申込URL</label>
+              <input class="p211-input" type="url" placeholder="https://">
+            </div>
+
+            <!-- 招待券プレゼント応募期間 -->
+            <div class="p211-field">
+              <label class="p211-label">招待券プレゼント応募期間</label>
+              <div style="display:flex;gap:12px;flex-wrap:wrap">
+                <div style="flex:1 1 180px">
+                  <p class="p211-help" style="margin-bottom:4px">申込開始日付</p>
+                  <input class="p211-input" type="date">
+                </div>
+                <div style="flex:1 1 180px">
+                  <p class="p211-help" style="margin-bottom:4px">申込終了日付</p>
+                  <input class="p211-input" type="date">
+                </div>
+              </div>
+            </div>
+
+            <!-- オススメ設定 -->
+            <div class="p211-field">
+              <label class="p211-label">オススメ設定</label>
+              <p class="p211-help" style="margin-bottom:6px">チェックすると、公開期間中、トップページ・検索ページのおすすめ枠に表示されます。</p>
+              <label class="p211-check"><input type="checkbox"> オススメに設定する</label>
+            </div>
+          </div>
+
+          <!-- ── グループ3：公開ステータス ── -->
+          <div class="p211-admin-group">
+            <div class="p211-admin-group__label">公開ステータス</div>
+
+            <!-- OGタグ非公開 -->
+            <div class="p211-field">
+              <label class="p211-label">OGタグ非公開</label>
+              <label class="p211-check"><input type="checkbox"> OGタグ非公開</label>
+            </div>
+
+            <!-- 確認済み -->
+            <div class="p211-field">
+              <label class="p211-label">確認済み</label>
+              <p class="p211-help" style="margin-bottom:6px">投稿に関する審査が済んでいる場合にチェックしてください。確認済みでない投稿は、ステータス「公開」をチェックしても公開されません（下書き状態）。</p>
+              <label class="p211-check"><input type="checkbox"> Admin確認済み</label>
+            </div>
+
+            <!-- 公開 -->
+            <div class="p211-field">
+              <label class="p211-label">公開</label>
+              <p class="p211-help" style="margin-bottom:6px">Admin確認が取れていない場合、「公開」をチェックしても公開されません。Admin確認済みの場合のみ、公開・非公開を選択できます。</p>
+              <label class="p211-check"><input type="checkbox"> 公開</label>
+              <p class="p211-admin-pubdate" id="p211AdminPubDate">投稿者が公開日を設定しています：<strong>2026-06-10</strong>（この日付で自動公開されます）</p>
+            </div>
+
+            <!-- 管理者コメント -->
+            <div class="p211-field">
+              <label class="p211-label">管理者コメント</label>
+              <textarea class="p211-textarea" style="min-height:70px" placeholder="管理用のコメント（サイトには表示されません）"></textarea>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
       <!-- 送信バー（sticky） -->
       <div class="p211-submit-bar">
         <button class="p211-submit-bar__cancel ktn-op-btn" type="button" onclick="history.back()">キャンセル</button>
@@ -1027,6 +1119,7 @@ function setDemoMode(mode) {
   applyVenueRole();
   closeAllAcc();
   syncOptUI();
+  if (typeof schedCloseEditor === 'function') schedCloseEditor();   /* モードの会期・上書きでカレンダー再描画 */
 }
 
 /* ── 管理者確認済トグル ── */
@@ -1074,22 +1167,157 @@ function closeAllAcc() {
   document.querySelectorAll('.p211-sub-link.is-open').forEach(function (l) { l.classList.remove('is-open'); });
 }
 
-/* ── スケジュール詳細：臨時休業行／時間変更行の2種類（kind='closed'|'hours'） ── */
+/* ── 曜日オプション（時間変更・在廊予定の期間×曜日フィルタで共用） ── */
 var EXC_DAY_OPTS = '<option value="all">全日</option><option value="weekend">土・日</option><option value="weekend-hol">土日祝</option><option value="weekday">平日</option>' +
   '<option value="mon">月曜</option><option value="tue">火曜</option><option value="wed">水曜</option><option value="thu">木曜</option><option value="fri">金曜</option><option value="sat">土曜</option><option value="sun">日曜</option>';
-function addExcRow(kind) {
-  var list = document.getElementById(kind === 'closed' ? 'p211ExcClosedList' : 'p211ExcHoursList');
-  if (!list) return;
-  var row = document.createElement('div');
-  row.className = 'p211-exc-row is-added';
-  var dates = '<input type="date"><span class="p211-exc-row__sep">〜</span><input type="date">';
-  var del = '<button class="p211-exc-row__del" type="button" title="削除" onclick="delExcRow(this)">✕</button>';
-  row.innerHTML = (kind === 'closed')
-    ? dates + del
-    : dates + '<select class="p211-select">' + EXC_DAY_OPTS + '</select>' +
-      '<input type="time"><span class="p211-exc-row__sep">〜</span><input type="time">' + del;
-  list.appendChild(row);
+
+/* ── 開催スケジュール詳細：日別カレンダー（ハイブリッド）
+   基本ルール（会期・定休曜日・基本時間＝上の欄）を下地に全日を自動生成し、
+   個別日をクリックして臨時休業／臨時開館／時間変更を上書きする。
+   overrides[date] = {open:false}（休業）｜{open:true,from,to}（開催・時間指定）。基本と同じ状態は正規化で削除。
+   本番（React CSR）は overrides を API に保存し、展覧会ページの日別カレンダーへ同反映する想定。 */
+/* 編集モードのデモ既定（臨時休業・時間延長・臨時開館の例）。clearForm/restoreDefaults で出し入れする */
+var SCHED_SEED = {
+  '2026-07-01': { open: false },                       /* 臨時休業（水） */
+  '2026-06-27': { open: true, from: '11:00', to: '20:00' }, /* 土：時間延長 */
+  '2026-07-04': { open: true, from: '11:00', to: '20:00' }, /* 土：時間延長 */
+  '2026-06-29': { open: true, from: '13:00', to: '19:00' }  /* 月（定休）を臨時開館 */
+};
+function schedCloneSeed() { return JSON.parse(JSON.stringify(SCHED_SEED)); }
+var SCHED = {
+  overrides: schedCloneSeed(),
+  view: null,   /* {y, m}（m=1始まり） */
+  sel: null     /* 選択中の 'YYYY-MM-DD' */
+};
+var SCHED_DOW = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+var SCHED_DOW_JA = ['日', '月', '火', '水', '木', '金', '土'];
+function schedPad(n) { return (n < 10 ? '0' : '') + n; }
+function schedYmd(y, m, d) { return y + '-' + schedPad(m) + '-' + schedPad(d); }
+function schedParse(s) { var a = s.split('-'); return { y: +a[0], m: +a[1], d: +a[2] }; }
+function schedDate(s) { var p = schedParse(s); return new Date(p.y, p.m - 1, p.d); }
+function schedHm(t) { if (!t) return ''; var p = t.split(':'); return p[1] === '00' ? String(+p[0]) : (+p[0]) + ':' + p[1]; }
+function schedRules() {
+  var g = function (id) { var el = document.getElementById(id); return el ? el.value : ''; };
+  var rest = {};
+  document.querySelectorAll('input[name="p211closedDow"]:checked').forEach(function (c) { rest[c.value] = true; });
+  return { from: g('p211DateFrom'), to: g('p211DateTo'), baseFrom: g('p211TimeFrom'), baseTo: g('p211TimeTo'), rest: rest };
 }
+function schedInPeriod(s, r) { return r.from && r.to && s >= r.from && s <= r.to; }
+function schedBase(s, r) {
+  var dow = SCHED_DOW[schedDate(s).getDay()];   /* 祝日はデモでは判定しない（本番で祝日カレンダーと突合） */
+  return r.rest[dow] ? { closed: true } : { closed: false, from: r.baseFrom, to: r.baseTo };
+}
+function schedEff(s, r) {
+  var base = schedBase(s, r), ov = SCHED.overrides[s];
+  if (!ov) return { closed: base.closed, from: base.from, to: base.to, ov: null };
+  if (ov.open === false) return { closed: true, ov: base.closed ? null : 'closed' };
+  var from = ov.from || r.baseFrom, to = ov.to || r.baseTo;
+  return { closed: false, from: from, to: to, ov: base.closed ? 'special' : 'hours' };
+}
+function schedNormalize(s, r) {
+  var ov = SCHED.overrides[s]; if (!ov) return;
+  var base = schedBase(s, r);
+  if (ov.open === false && base.closed) { delete SCHED.overrides[s]; return; }
+  if (ov.open === true && !base.closed && (ov.from || r.baseFrom) === base.from && (ov.to || r.baseTo) === base.to) delete SCHED.overrides[s];
+}
+function schedMonths(r) {
+  if (!r.from || !r.to) return [];
+  var a = schedParse(r.from), b = schedParse(r.to), out = [], y = a.y, m = a.m;
+  while (y < b.y || (y === b.y && m <= b.m)) { out.push({ y: y, m: m }); if (++m > 12) { m = 1; y++; } }
+  return out;
+}
+function schedRender() {
+  var grid = document.getElementById('p211SchedGrid'); if (!grid) return;
+  var r = schedRules(), months = schedMonths(r);
+  if (!months.length) { grid.innerHTML = ''; return; }
+  if (!SCHED.view || !months.some(function (mm) { return mm.y === SCHED.view.y && mm.m === SCHED.view.m; })) SCHED.view = months[0];
+  var v = SCHED.view;
+  var mo = document.getElementById('p211SchedMonth'); if (mo) mo.textContent = v.y + '年' + v.m + '月';
+  var lead = new Date(v.y, v.m - 1, 1).getDay(), dim = new Date(v.y, v.m, 0).getDate(), html = '';
+  for (var i = 0; i < lead; i++) html += '<div class="p211-sched-cal__cell is-blank"></div>';
+  for (var d = 1; d <= dim; d++) {
+    var s = schedYmd(v.y, v.m, d);
+    if (!schedInPeriod(s, r)) { html += '<div class="p211-sched-cal__cell is-out"><span class="p211-sched-cal__num">' + d + '</span></div>'; continue; }
+    var e = schedEff(s, r), cls = 'p211-sched-cal__cell', st = '';
+    if (e.closed) { if (e.ov === 'closed') { cls += ' ov--closed'; st = '休業'; } else { cls += ' is-rest'; st = '休'; } }
+    else { if (e.ov === 'special') cls += ' ov--special'; else if (e.ov === 'hours') cls += ' ov--hours'; st = schedHm(e.from) + '–' + schedHm(e.to); }
+    if (SCHED.sel === s) cls += ' is-selected';
+    html += '<div class="' + cls + '" onclick="schedPick(\'' + s + '\')"><span class="p211-sched-cal__num">' + d + '</span><span class="p211-sched-cal__st">' + st + '</span></div>';
+  }
+  grid.innerHTML = html;
+  var idx = months.findIndex(function (mm) { return mm.y === v.y && mm.m === v.m; });
+  var pv = document.getElementById('p211SchedPrev'), nx = document.getElementById('p211SchedNext');
+  if (pv) pv.disabled = idx <= 0;
+  if (nx) nx.disabled = idx >= months.length - 1;
+}
+function schedNav(delta) {
+  var months = schedMonths(schedRules());
+  var idx = months.findIndex(function (mm) { return SCHED.view && mm.y === SCHED.view.y && mm.m === SCHED.view.m; });
+  var ni = idx + delta;
+  if (ni < 0 || ni >= months.length) return;
+  SCHED.view = months[ni];
+  schedRender();
+}
+function schedPick(s) { SCHED.sel = s; schedRender(); schedRenderEditor(); }
+function schedRenderEditor() {
+  var ed = document.getElementById('p211SchedEditor'); if (!ed) return;
+  if (!SCHED.sel) { ed.hidden = true; return; }
+  var r = schedRules(), s = SCHED.sel, e = schedEff(s, r), base = schedBase(s, r);
+  var dt = schedDate(s), open = !e.closed;
+  var from = e.from || r.baseFrom || '13:00', to = e.to || r.baseTo || '19:00';
+  var baseTxt = base.closed ? '定休日（休業）' : ((base.from || '') + '〜' + (base.to || ''));
+  ed.hidden = false;
+  ed.innerHTML =
+    '<p class="p211-sched-cal__ed-date">' + (dt.getMonth() + 1) + '月' + dt.getDate() + '日（' + SCHED_DOW_JA[dt.getDay()] + '）</p>' +
+    '<div class="p211-sched-cal__ed-seg">' +
+      '<button type="button" class="' + (open ? 'is-on' : '') + '" onclick="schedSetOpen(true)">開催</button>' +
+      '<button type="button" class="' + (open ? '' : 'is-on') + '" onclick="schedSetOpen(false)">休業</button>' +
+    '</div>' +
+    '<div class="p211-sched-cal__ed-time"' + (open ? '' : ' hidden') + '>' +
+      '<input type="time" id="p211SchedEdFrom" value="' + from + '" onchange="schedTimeChange()">' +
+      '<span>〜</span>' +
+      '<input type="time" id="p211SchedEdTo" value="' + to + '" onchange="schedTimeChange()">' +
+    '</div>' +
+    '<p class="p211-sched-cal__ed-base">基本：' + baseTxt + '</p>' +
+    '<div class="p211-sched-cal__ed-foot">' +
+      '<button type="button" class="ktn-op-btn ktn-op-btn--sm" onclick="schedResetDay()">基本に戻す</button>' +
+      '<button type="button" class="ktn-op-btn ktn-op-btn--primary ktn-op-btn--sm" onclick="schedCloseEditor()">完了</button>' +
+    '</div>';
+}
+function schedSetOpen(open) {
+  if (!SCHED.sel) return;
+  var r = schedRules(), s = SCHED.sel;
+  if (open) {
+    var f = (document.getElementById('p211SchedEdFrom') || {}).value || r.baseFrom || '13:00';
+    var t = (document.getElementById('p211SchedEdTo') || {}).value || r.baseTo || '19:00';
+    SCHED.overrides[s] = { open: true, from: f, to: t };
+  } else {
+    SCHED.overrides[s] = { open: false };
+  }
+  schedNormalize(s, r); schedRender(); schedRenderEditor();
+}
+function schedTimeChange() {
+  if (!SCHED.sel) return;
+  var r = schedRules(), s = SCHED.sel;
+  SCHED.overrides[s] = {
+    open: true,
+    from: (document.getElementById('p211SchedEdFrom') || {}).value || r.baseFrom,
+    to: (document.getElementById('p211SchedEdTo') || {}).value || r.baseTo
+  };
+  schedNormalize(s, r); schedRender();
+}
+function schedResetDay() { if (!SCHED.sel) return; delete SCHED.overrides[SCHED.sel]; schedRender(); schedRenderEditor(); }
+function schedCloseEditor() { SCHED.sel = null; var ed = document.getElementById('p211SchedEditor'); if (ed) ed.hidden = true; schedRender(); }
+(function schedInit() {
+  schedRender();
+  var reflow = function () { schedRender(); if (SCHED.sel) schedRenderEditor(); };
+  ['p211DateFrom', 'p211DateTo', 'p211TimeFrom', 'p211TimeTo'].forEach(function (id) {
+    var el = document.getElementById(id); if (el) el.addEventListener('change', reflow);
+  });
+  var dg = document.getElementById('p211ClosedDowGroup');
+  if (dg) dg.addEventListener('change', reflow);
+})();
+
 function delExcRow(btn) {
   var row = btn.closest('.p211-exc-row');
   if (!row) return;
@@ -1327,6 +1555,9 @@ function clearForm() {
   /* 例外日・イベント・在廊：追加行は削除・直書き行は hide（復元可能に） */
   document.querySelectorAll('.p211-exc-row.is-added, .p211-event-item.is-added').forEach(function (el) { el.remove(); });
   document.querySelectorAll('.p211-exc-row, .p211-event-item').forEach(function (el) { el.style.display = 'none'; });
+  /* スケジュール詳細カレンダー：例外日をすべてクリア（新規＝白紙） */
+  SCHED.overrides = {};
+  SCHED.sel = null;
   /* 出展クリエイター：空に（ロール別 default は applyVenueRole が設定） */
   artistList = [];
   renderArtists();
@@ -1360,6 +1591,9 @@ function restoreDefaults() {
   togglePublishDate();
   document.querySelectorAll('.p211-exc-row.is-added, .p211-event-item.is-added').forEach(function (el) { el.remove(); });
   document.querySelectorAll('.p211-exc-row, .p211-event-item').forEach(function (el) { el.style.display = ''; });
+  /* スケジュール詳細カレンダー：デモ既定の例外日へ復元 */
+  SCHED.overrides = schedCloneSeed();
+  SCHED.sel = null;
   artistList = [{ name: '松田 啓佑', isNew: false }];
   renderArtists();
   clearFieldErrors();
@@ -1454,7 +1688,13 @@ function applyVenueRole() {
   }
   checkVenueNew(false);
 }
-window.p211RoleSync = function () { applyVenueRole(); syncOptUI(); };   /* ロール切替＝新規モードの出展クリエイター default が変わるためチップも再計算 */
+window.p211RoleSync = function () {
+  applyVenueRole();
+  syncOptUI();
+  /* 管理者管理セクションは admin ロールのみ表示 */
+  var adminBlock = document.getElementById('p211AdminBlock');
+  if (adminBlock) adminBlock.hidden = !(window.ktnState && window.ktnState.role === 'admin');
+};   /* ロール切替＝新規モードの出展クリエイター default が変わるためチップも再計算 */
 
 /* ── 保存前の関係者了承チェック → 送信ボタン活性 ── */
 function syncConsent() {
@@ -1662,8 +1902,6 @@ syncOptUI();
    復元＝モードを揃えてリセット → 追加行を再生成 → DOM順で値を書き戻す。 */
 var DRAFT_KEY = 'ktn-p211-draft';
 var DRAFT_ADDED_LISTS = [
-  { list: 'p211ExcClosedList', add: function () { addExcRow('closed'); } },
-  { list: 'p211ExcHoursList',  add: function () { addExcRow('hours'); } },
   { list: 'p211EventList',     add: addEventRow },
   { list: 'p211AttList',       add: addAttRow }
 ];
@@ -1672,7 +1910,7 @@ var DRAFT_ADDED_LISTS = [
 function draftEls() {
   return Array.prototype.filter.call(
     document.querySelectorAll('.ktn-mgmt-wrap input:not([type=file]), .ktn-mgmt-wrap select, .ktn-mgmt-wrap textarea'),
-    function (el) { return !el.closest('.p211-artist-detail') && el.id !== 'p211TagInput'; }
+    function (el) { return !el.closest('.p211-artist-detail') && !el.closest('.p211-sched-cal') && el.id !== 'p211TagInput'; }
   );
 }
 function readDraft() {
@@ -1711,7 +1949,7 @@ function saveDraft() {
     if (el.tagName === 'SELECT') return { s: el.selectedIndex };
     return { v: el.value };
   });
-  var data = { at: new Date().toISOString(), mode: demoMode, added: added, tags: tags, vals: vals, artists: artistList };
+  var data = { at: new Date().toISOString(), mode: demoMode, added: added, tags: tags, vals: vals, artists: artistList, sched: SCHED.overrides };
   try { localStorage.setItem(DRAFT_KEY, JSON.stringify(data)); } catch (e) {}
   showDraftNotice();
   if (typeof KTN !== 'undefined' && KTN.toast) KTN.toast('下書きを保存しました（デモ）');
@@ -1730,6 +1968,9 @@ function restoreDraft() {
   /* 3) 出展クリエイター */
   artistList = data.artists || [];
   renderArtists();
+  /* 3b) スケジュール詳細カレンダーの上書き（overrides）を復元 */
+  SCHED.overrides = data.sched || {};
+  SCHED.sel = null;
   /* 4) タグ：直書きタグを隠し、保存済みタグを再構築 */
   document.querySelectorAll('#p211TagArea .p211-tag:not(.is-added)').forEach(function (t) { t.style.display = 'none'; });
   (data.tags || []).forEach(addTagSpan);
@@ -1752,6 +1993,7 @@ function restoreDraft() {
   togglePublishDate();
   syncConsent();
   syncOptUI();
+  schedCloseEditor();   /* 復元した会期・定休・上書きでカレンダーを再描画（エディタは閉じる） */
   showDraftNotice();
 }
 function openDiscardModal() {
