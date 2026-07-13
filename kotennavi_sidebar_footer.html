@@ -27,7 +27,7 @@
   <span style="margin-left:16px">ページ切替：</span>
   <button class="demo-btn" onclick="setPage('p1')">ホーム</button>
   <button class="demo-btn" onclick="setPage('p10-1')">検索</button>
-  <button class="demo-btn" onclick="setPage('p60')">お知らせ</button>
+  <button class="demo-btn" onclick="setPage('p61')">お知らせ</button>
   <button class="demo-btn" onclick="setPage('p5')">myページ(P5)</button>
   <button class="demo-btn" onclick="setPage('p3')">myクリエイター(P3)</button>
   <button class="demo-btn" onclick="setPage('p4')">myギャラリー(P4)</button>
@@ -53,8 +53,8 @@
     <span class="ktn-sidebar__label">検索</span>
   </a>
 
-  <!-- お知らせ → P60 -->
-  <a href="/p60" class="ktn-sidebar__item" id="ktnSidebarNotice" data-page="p60" onclick="handleNav(event,'p60','/p60')">
+  <!-- お知らせ → P61 -->
+  <a href="/p61" class="ktn-sidebar__item" id="ktnSidebarNotice" data-page="p61" onclick="handleNav(event,'p61','/p61')">
     <div class="ktn-sidebar__icon">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
         <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke-linecap="round" stroke-linejoin="round"/>
@@ -65,8 +65,8 @@
     <span class="ktn-sidebar__label">お知らせ</span>
   </a>
 
-  <!-- ガイド → P60-1 -->
-  <a href="/p60-1" class="ktn-sidebar__item" data-page="p60-1" onclick="handleNav(event,'p60-1','/p60-1')">
+  <!-- ガイド → P60 -->
+  <a href="/p60" class="ktn-sidebar__item" data-page="p60" onclick="handleNav(event,'p60','/p60')">
     <div class="ktn-sidebar__icon">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" stroke-linecap="round"/>
@@ -200,9 +200,9 @@
         <div class="ktn-footer__col">
           <p class="ktn-footer__col-title">ご利用について</p>
           <ul class="ktn-footer__links">
-            <li><a href="/p60-1">ご利用ガイド</a></li>
+            <li><a href="/p60">ご利用ガイド</a></li>
             <li><a href="/p2-11">展覧会を掲載する</a></li>
-            <li><a href="/p60">お知らせ</a></li>
+            <li><a href="/p61">お知らせ</a></li>
           </ul>
           <p class="ktn-footer__col-title" style="margin-top:20px">会員登録</p>
           <ul class="ktn-footer__links">
@@ -322,7 +322,7 @@ const PAGE_NAV_MAP = {
   'p1':    'p1',
   'p10-1': 'p10-1',
   'p60':   'p60',
-  'p60-1': 'p60-1',
+  'p61':   'p61',
   'p5':    'p5',
   'p3':    'p3',
   'p4':    'p4',
@@ -406,11 +406,11 @@ function renderBottomNav() {
 
   if (currentRole === 'guest') {
     html += `
-      <a href="/p60" class="ktn-bottom-nav__item" data-page="p60" onclick="handleNav(event,'p60','/p60')">
+      <a href="/p61" class="ktn-bottom-nav__item" data-page="p61" onclick="handleNav(event,'p61','/p61')">
         <div class="ktn-bottom-nav__icon">${ICONS.notice}</div>
         <span class="ktn-bottom-nav__label">お知らせ</span>
       </a>
-      <a href="/p60-1" class="ktn-bottom-nav__item" data-page="p60-1" onclick="handleNav(event,'p60-1','/p60-1')">
+      <a href="/p60" class="ktn-bottom-nav__item" data-page="p60" onclick="handleNav(event,'p60','/p60')">
         <div class="ktn-bottom-nav__icon">${ICONS.guide}</div>
         <span class="ktn-bottom-nav__label">ガイド</span>
       </a>
@@ -421,7 +421,7 @@ function renderBottomNav() {
     `;
   } else {
     html += `
-      <a href="/p60" class="ktn-bottom-nav__item" data-page="p60" onclick="handleNav(event,'p60','/p60')" style="position:relative">
+      <a href="/p61" class="ktn-bottom-nav__item" data-page="p61" onclick="handleNav(event,'p61','/p61')" style="position:relative">
         <span class="ktn-bottom-nav__dot"></span>
         <div class="ktn-bottom-nav__icon">${ICONS.notice}</div>
         <span class="ktn-bottom-nav__label">お知らせ</span>

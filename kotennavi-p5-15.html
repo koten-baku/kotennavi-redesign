@@ -965,100 +965,10 @@
           </div>
         </div>
 
-        <!-- C-FAQ. よくある質問 -->
+        <!-- C-FAQ. よくある質問（本文は KTN.QA〔liaison-txn/buyer〕を単一ソースに renderQA で描画。phase 連動は setDemoState が data-faq-phase を見て出し分け） -->
         <section class="p315-faq">
           <div class="p315-faq__head">よくある質問</div>
-
-          <details class="p315-faq-item">
-            <summary class="p315-faq-item__q">
-              <span class="p315-faq-item__q-mark">Q</span>
-              申込してから購入完了まで、どんな流れですか？
-            </summary>
-            <div class="p315-faq-item__a">
-              <p>申込 → 購入確定（出品者が会場在庫を確認して確定）→ 支払 → 発送（出品者）→ 受取確認 → 完了確認（出品者）、の順に進みます。各ステップで通知が届きますので、案内に従って操作してください。</p>
-            </div>
-          </details>
-
-          <details class="p315-faq-item" data-faq-phase="applied">
-            <summary class="p315-faq-item__q">
-              <span class="p315-faq-item__q-mark">Q</span>
-              「購入確定待ち」とはどういう状態ですか？
-            </summary>
-            <div class="p315-faq-item__a">
-              <p>この作品は1点ものです。会場でのご購入が最優先となり、購入申込は申込順に処理されます。出品者が会場在庫の確認（会場未売・発送対応可否の確認）を行い購入を確定すると、支払いへ進めます。会期中でも在庫が確認できれば確定されることがあります。確定期限は会期終了7日後または申込7日後の遅い方で、期限までに出品者がいずれの操作（購入確定／会場売約済／出品取消）も行わなかった場合、その作品は出品取消となり、申込者全員にキャンセル通知が届きます（次の方へは繰り上がりません）。なお前の順番の方が支払期限切れや自己都合でキャンセルした場合は、あなたの順番が繰り上がります。</p>
-            </div>
-          </details>
-
-          <details class="p315-faq-item">
-            <summary class="p315-faq-item__q">
-              <span class="p315-faq-item__q-mark">Q</span>
-              購入をキャンセルできますか？
-            </summary>
-            <div class="p315-faq-item__a">
-              <p>お支払い前であれば、このページ（取引ワークスペース）からキャンセルできます。出品者が購入を確定する前（購入確定待ち）の申込キャンセルも、支払待ちの購入キャンセルも、いずれもこのページで行えます。キャンセル後も販売期間中であれば再申込できますが、<strong>キューの最後になります</strong>。支払いが完了した後は原則キャンセルできません（出品者の発送が期限を過ぎた場合を除く。下記参照）。</p>
-            </div>
-          </details>
-
-          <details class="p315-faq-item" data-faq-phase="applied">
-            <summary class="p315-faq-item__q">
-              <span class="p315-faq-item__q-mark">Q</span>
-              郵便番号を変更したい場合は？
-            </summary>
-            <div class="p315-faq-item__a">
-              <p>郵便番号は申込時に送料を計算するために登録した情報のため、このページでの変更はできません。変更が必要な場合は申込をキャンセルし、正しい郵便番号で再申込ください。なお、<strong>再申込の場合はキューの最後になります</strong>。</p>
-            </div>
-          </details>
-
-          <details class="p315-faq-item" data-faq-phase="payment">
-            <summary class="p315-faq-item__q">
-              <span class="p315-faq-item__q-mark">Q</span>
-              支払い方法と支払いタイミングは？
-            </summary>
-            <div class="p315-faq-item__a">
-              <p>出品者の購入確定が完了すると支払いページへ案内されます。クレジットカードでのお支払いとなります。支払期限が設けられていますので、通知を受け取ったら速やかに対応してください。</p>
-            </div>
-          </details>
-
-          <details class="p315-faq-item" data-faq-phase="paid">
-            <summary class="p315-faq-item__q">
-              <span class="p315-faq-item__q-mark">Q</span>
-              作品はいつ届きますか？
-            </summary>
-            <div class="p315-faq-item__a">
-              <p>支払い完了後に出品者が梱包・発送します。発送されると通知が届き、追跡番号もこのページで確認できます。到着予定は配送業者・距離により異なります。</p>
-            </div>
-          </details>
-
-          <details class="p315-faq-item" data-faq-phase="receipt">
-            <summary class="p315-faq-item__q">
-              <span class="p315-faq-item__q-mark">Q</span>
-              「受取確認」とは何をすればいいですか？
-            </summary>
-            <div class="p315-faq-item__a">
-              <p>作品が届いたら評価を入力し、「受け取りを確認しました」ボタンを押してください。その後、出品者の取引完了確認が行われると代金が確定されます。受け取り後は速やかにご確認ください。</p>
-            </div>
-          </details>
-
-          <details class="p315-faq-item">
-            <summary class="p315-faq-item__q">
-              <span class="p315-faq-item__q-mark">Q</span>
-              受け取った作品に問題があった場合は？
-            </summary>
-            <div class="p315-faq-item__a">
-              <p>まず出品者に連絡してください。解決しない場合は事務局へお問い合わせください。<strong>受取確認後のキャンセルは原則受け付けられません。</strong>受け取り時に必ず状態をご確認ください。</p>
-            </div>
-          </details>
-
-          <details class="p315-faq-item">
-            <summary class="p315-faq-item__q">
-              <span class="p315-faq-item__q-mark">Q</span>
-              取引完了後に領収書は発行できますか？
-            </summary>
-            <div class="p315-faq-item__a">
-              <p>取引完了後はこのページの「領収書を発行」ボタンからPDF形式で発行できます。なお、取引完了から1週間後に配送先住所などの個人情報はこのページから消去され、取引メッセージは取引完了から2週間後に非公開になります（削除はされず、取引の記録として保存されます）。<strong>領収書・取引明細はこれらの対象外</strong>で、消去後もマイページの購入管理からいつでも発行・確認できます。</p>
-            </div>
-          </details>
-
+          <div id="p515QaTxn"></div>
         </section>
 
       </div>
@@ -1078,6 +988,9 @@
 <script src="kotennavi-pages.js"></script>
 <script>
 KTN.init({ page: 'p5-15', role: 'user+' });
+
+/* FAQ本文は KTN.QA を単一ソースに描画（setDemoState の phase 連動より前に走らせる） */
+KTN.renderQA('#p515QaTxn', { category: 'liaison-txn', side: 'buyer', style: 'desk' });
 
 (function () {
 

@@ -149,6 +149,7 @@
             <p class="ktn-mgmt-head__desc">LIAISON+は<strong>会場優先</strong>の仕組みです。申込が入った作品の取引対応・会場売約済操作を行います。作品の状態・価格変更は展覧会ページ→オーナーメニュー→「リエゾン+出品管理」から行ってください。</p>
             <div class="ktn-mgmt-head__guides">
               <a class="ktn-guide-link" href="kotennavi-p70-2.html" target="_blank" rel="noopener">LIAISON+の会場優先について →</a>
+              <a class="ktn-guide-link" href="kotennavi-p70-12.html" target="_blank" rel="noopener">取引の進め方・困ったとき →</a>
             </div>
           </div>
         </div>
@@ -548,59 +549,10 @@
           </div>
         </div><!-- /p415-panel-archive -->
 
-        <!-- FAQ（タブ外・常時表示） -->
+        <!-- FAQ（タブ外・常時表示。本文は KTN.QA〔liaison-txn/seller/console〕を単一ソースに renderQA で描画。p3-15 と同一ソース＝ドリフト解消・全問common） -->
         <section class="p315-faq">
           <div class="p315-faq__head">よくある質問</div>
-
-          <details class="p315-faq-item">
-            <summary class="p315-faq-item__q"><span class="p315-faq-item__q-mark">Q</span>申込が入ったらどうすればいいですか？</summary>
-            <div class="p315-faq-item__a">
-              <p>「取引中」タブに「購入確定待ち」として表示されます。取引デスクへ進んで会場在庫を確認し、購入を確定してください。会場で先に売れた場合は「会場売約済」ボタンを使います。複数の申込がある場合は申込順に処理されます。</p>
-            </div>
-          </details>
-
-          <details class="p315-faq-item">
-            <summary class="p315-faq-item__q"><span class="p315-faq-item__q-mark">Q</span>「発送待ち」になっています。何をすればいいですか？</summary>
-            <div class="p315-faq-item__a">
-              <p>申込者の支払いが完了した状態です。作家と連絡を取り、作品の梱包・発送を手配してください。取引デスクで追跡番号などの発送情報を入力します。速やかな対応をお願いします。</p>
-            </div>
-          </details>
-
-          <details class="p315-faq-item">
-            <summary class="p315-faq-item__q"><span class="p315-faq-item__q-mark">Q</span>「会場売約済」ボタンはいつ使いますか？</summary>
-            <div class="p315-faq-item__a">
-              <p>会期中に会場で作品が実際に売れたときに使います。ボタンを押すと作品が「売約済」に変更され、申込中の全員に自動でキャンセル通知が送られます。<strong>この操作は取り消せません。</strong></p>
-            </div>
-          </details>
-
-          <details class="p315-faq-item">
-            <summary class="p315-faq-item__q"><span class="p315-faq-item__q-mark">Q</span>「会場売約済」と「出品取消」の違いは何ですか？</summary>
-            <div class="p315-faq-item__a">
-              <p><strong>会場売約済</strong>：会場での販売を理由に作品を売約済にします。作品の状態が「売約済」に変更されます。</p>
-              <p><strong>出品取消</strong>：LIAISON+ からの出品自体を取り下げます。作品の状態は変更されません。どちらも申込者へ自動でキャンセル通知が送られます。いずれも<strong>取り消しできません。</strong></p>
-            </div>
-          </details>
-
-          <details class="p315-faq-item">
-            <summary class="p315-faq-item__q"><span class="p315-faq-item__q-mark">Q</span>販売期間が終了したのに、まだ「取引中」に表示されています。</summary>
-            <div class="p315-faq-item__a">
-              <p>未処理の申込がある場合は、販売期間終了後も「取引中」タブに表示されます。すべての申込の処理（取引完了またはキャンセル）が完了すると、自動的に「終了」タブへ移動します。</p>
-            </div>
-          </details>
-
-          <details class="p315-faq-item">
-            <summary class="p315-faq-item__q"><span class="p315-faq-item__q-mark">Q</span>作品の価格や状態を変更したいのですが。</summary>
-            <div class="p315-faq-item__a">
-              <p>展覧会ページ→オーナーメニュー→「リエゾン+出品管理」から変更できます。ただし、申込者がいる作品は価格と状態の変更がロックされています。</p>
-            </div>
-          </details>
-
-          <details class="p315-faq-item">
-            <summary class="p315-faq-item__q"><span class="p315-faq-item__q-mark">Q</span>売上サマリーの「うち未精算」とは何ですか？</summary>
-            <div class="p315-faq-item__a">
-              <p>取引が完了しているが、まだ個展なびから振込まれていない金額の合計です。「販売代金管理」ページで精算予定日や振込先口座の確認・登録ができます。</p>
-            </div>
-          </details>
+          <div id="p415QaConsole"></div>
         </section>
 
       </div><!-- /p315-wrap -->
@@ -629,6 +581,10 @@
 <script>
   window.P4_DATA = { hasActiveExhibition: true };
   KTN.init({ page: 'p4-15', role: 'user+gallery' });
+
+  /* FAQ本文は KTN.QA を単一ソースに描画（p3-15 と同一 liaison-txn/seller 統合セット＝取引デスクと共通。ctx 軸は廃止済み） */
+  KTN.renderQA('#p415QaConsole', { category: 'liaison-txn', side: 'seller', style: 'desk' });
+
   function setR(role, btn) {
     document.querySelectorAll('.dbtn').forEach(function(b){ b.classList.remove('on'); });
     btn.classList.add('on');

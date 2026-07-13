@@ -83,11 +83,11 @@
   <button class="dbtn" onclick="setP('p10-8',this)">特集-ギャラリー</button>
   <span class="dbar-sep">|</span>
   <span class="dbar-sep" style="opacity:.4">P60:</span>
-  <button class="dbtn" onclick="setP('p60-1',this)">ガイド</button>
-  <button class="dbtn" onclick="setP('p60-5',this)">FAQ</button>
-  <button class="dbtn" onclick="setP('p60-9',this)">個展なびとは</button>
-  <button class="dbtn" onclick="setP('p60-10',this)">利用規約</button>
-  <button class="dbtn" onclick="setP('p60-11',this)">プライバシー</button>
+  <button class="dbtn" onclick="setP('p60',this)">ガイド</button>
+  <button class="dbtn" onclick="setP('p60-4',this)">FAQ</button>
+  <button class="dbtn" onclick="setP('p60-8',this)">個展なびとは</button>
+  <button class="dbtn" onclick="setP('p60-9',this)">利用規約</button>
+  <button class="dbtn" onclick="setP('p60-10',this)">プライバシー</button>
   <span class="dbar-sep">|</span>
   <span class="dbar-sep" style="opacity:.4">P70:</span>
   <button class="dbtn" onclick="setP('p70-1',this)">LIAISONとは</button>
@@ -225,12 +225,14 @@ const PAGES = {
   'p10-6': {n:'特集 作品',        bc:[['Top','/'],['特集','/feature'],['注目の作品',null]]},
   'p10-7': {n:'特集 クリエイター',bc:[['Top','/'],['特集','/feature'],['今月注目のクリエイター',null]]},
   'p10-8': {n:'特集 ギャラリー',  bc:[['Top','/'],['特集','/feature'],['東京のギャラリー',null]]},
-  // P60
-  'p60-1': {n:'ご利用ガイド',     bc:[['Top','/'],['ガイド','/p60-1']]},
-  'p60-5': {n:'よくある質問',     bc:[['Top','/'],['ガイド','/p60-1'],['よくある質問',null]]},
-  'p60-9': {n:'個展なびとは',     bc:[['Top','/'],['個展なびとは',null]]},
-  'p60-10':{n:'利用規約',         bc:[['Top','/'],['利用規約',null]]},
-  'p60-11':{n:'プライバシーポリシー',bc:[['Top','/'],['プライバシーポリシー',null]]},
+  // P60（番号は docs/sitemap.md を正とする）
+  'p60':   {n:'ご利用ガイド',     bc:[['Top','/'],['ガイド',null]]},
+  'p60-4': {n:'よくある質問-一般',bc:[['Top','/'],['ガイド','/p60'],['よくある質問-一般',null]]},
+  'p60-8': {n:'個展なびとは',     bc:[['Top','/'],['個展なびとは',null]]},
+  'p60-9': {n:'利用規約',         bc:[['Top','/'],['利用規約',null]]},
+  'p60-10':{n:'プライバシポリシー',bc:[['Top','/'],['プライバシポリシー',null]]},
+  // P61
+  'p61':   {n:'お知らせ一覧',     bc:[['Top','/'],['お知らせ一覧',null]]},
   // P70
   'p70-1': {n:'LIAISONとは',      bc:[['Top','/'],['LIAISONとは',null,'l']]},
   'p70-2': {n:'作品出品ガイド',   bc:[['Top','/'],['LIAISON','/p70-1'],['作品出品ガイド',null,'l']]},
@@ -471,7 +473,7 @@ function getActions(page, role){
   }
 
   /* ── P60 ガイド・法的ページ ── */
-  if(['p60-1','p60-5','p60-9','p60-10','p60-11'].includes(page)){
+  if(['p60','p60-4','p60-8','p60-9','p60-10'].includes(page)){
     if(role==='admin') return dd('管理者', ddi('edit','編集'));
     return '';
   }
@@ -658,7 +660,7 @@ let curRole='guest', curPage='p2-3';
 /* ページ→コンテンツ幅タイプ */
 const PAGE_WIDTH = {
   article: ['p7','p7-11','p8','p8-11','p9','p9-11',
-            'p60-1','p60-5','p60-9','p60-10','p60-11',
+            'p60','p60-4','p60-8','p60-9','p60-10','p61',
             'p70-1','p70-2','p70-4',
             'p2-11','p2-12','p2-13',
             'p3-11','p3-13','p3-14','p3-15','p3-16','p3-17',

@@ -1058,60 +1058,10 @@
           </div>
         </div>
 
-        <!-- C-FAQ. よくある質問 -->
+        <!-- C-FAQ. よくある質問（本文は KTN.QA〔liaison-txn/seller〕を単一ソースに renderQA で描画。creator側 p3-16 と同一ソース＝ドリフト解消。phase 連動は setDemoState が出し分け） -->
         <section class="p315-faq">
           <div class="p315-faq__head">よくある質問</div>
-
-          <details class="p315-faq-item" data-faq-phase="new">
-            <summary class="p315-faq-item__q">
-              <span class="p315-faq-item__q-mark">Q</span>
-              申込が来たら最初に何をすればいいですか？
-            </summary>
-            <div class="p315-faq-item__a">
-              <p>まず会場でその作品がまだ販売されていないことを確認してください。会場で売れている場合はLIAISON+コンソールで「会場売約済」に変更してください（全申込者に自動キャンセル通知が送られます）。会場で売れていなければ申込内容を確認し、送料・梱包費・支払期限を設定して「購入を確定」してください。</p>
-            </div>
-          </details>
-
-          <details class="p315-faq-item" data-faq-phase="new">
-            <summary class="p315-faq-item__q">
-              <span class="p315-faq-item__q-mark">Q</span>
-              会場で作品が売れてしまった場合は？
-            </summary>
-            <div class="p315-faq-item__a">
-              <p>まだ申込が入っていない場合は、展覧会の「リエゾン+出品管理」画面で販売状態を「売約済」に変更してください。すでに申込が入っている場合は、LIAISON+コンソールの「会場売約済」操作を使ってください。作品が「売約済」に変更され、申込者全員にシステムが自動でキャンセル通知が送られます。</p>
-            </div>
-          </details>
-
-          <details class="p315-faq-item" data-faq-phase="new">
-            <summary class="p315-faq-item__q">
-              <span class="p315-faq-item__q-mark">Q</span>
-              送料の設定の仕方は？
-            </summary>
-            <div class="p315-faq-item__a">
-              <p>購入者の郵便番号（都道府県）を参考に、実際の発送コストを入力してください。梱包費を購入者に求める場合は梱包費欄に入力します（出品者負担の場合は空欄のままで構いません）。送料・梱包費とも確定後は変更できませんので、慎重に入力してください。</p>
-            </div>
-          </details>
-
-          <details class="p315-faq-item" data-faq-phase="paid">
-            <summary class="p315-faq-item__q">
-              <span class="p315-faq-item__q-mark">Q</span>
-              作品の発送はいつすればいいですか？
-            </summary>
-            <div class="p315-faq-item__a">
-              <p>購入者の支払い完了通知が届いたら、できるだけ早めに発送してください。ただし、会期中で展示している作品は、会期が終了してからの発送で問題ありません。発送の際は「配送先情報」に表示された住所へ送り、発送方法と追跡番号を入力して「発送完了を通知する」を押すと、購入者に発送通知が届きます。</p>
-            </div>
-          </details>
-
-          <details class="p315-faq-item">
-            <summary class="p315-faq-item__q">
-              <span class="p315-faq-item__q-mark">Q</span>
-              取引完了後、代金はいつ振り込まれますか？
-            </summary>
-            <div class="p315-faq-item__a">
-              <p>取引完了確認の翌月末（または翌々月末）に、手数料を差し引いた金額が登録口座に振り込まれます。振込スケジュールと手数料の詳細は販売代金管理ページでご確認ください。</p>
-            </div>
-          </details>
-
+          <div id="p416QaTxn"></div>
         </section>
 
       </div>
@@ -1131,6 +1081,8 @@
 <script src="kotennavi-pages.js"></script>
 <script>
 KTN.init({ page: 'p4-16', role: 'gallery' });
+/* FAQ本文は KTN.QA を単一ソースに描画（p3-16 と同一 seller ソース＝ドリフト解消。setDemoState の phase 連動より前に走らせる） */
+KTN.renderQA('#p416QaTxn', { category: 'liaison-txn', side: 'seller', style: 'desk' });
 
 (function () {
 

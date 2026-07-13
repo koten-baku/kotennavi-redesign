@@ -576,25 +576,57 @@ KTN.pages['p2-1'] = function () {
   var END = new Date('2026-03-05');
   var OPEN_DOW = [4, 5, 6, 0]; /* 木金土日 */
   var DOW_JA = ['日', '月', '火', '水', '木', '金', '土'];
+  var DEFAULT_HOURS = '11:00 – 19:00';
+  /* 開催時間の変更（p2-11「開催時間の変更」に対応）。定休曜でも登録があれば開場扱いにする。
+     これにより初日2/18（水・定休曜）が13:00開場でカレンダーと整合する。 */
+  var HOURS_EXC = {
+    '2026-02-18': '13:00 – 19:00', /* 初日 */
+    '2026-03-05': '11:00 – 17:00'  /* 最終日 */
+  };
 
+  /* イベント（p2-11「イベント」に対応）。time はフリーテキストで1日複数回セッションも表現。
+     calTime はカレンダー行のコンパクト表示用（省略時は time を使用）。 */
   var EVENTS = [
     {
-      date: '2026-02-21', dow: '土', time: '15:00–16:30', type: 'talk', label: 'ギャラリートーク',
+      date: '2026-02-21', dow: '土', time: '15:00–16:30', calTime: '15:00〜', type: 'talk', label: 'ギャラリートーク',
       title: '作家によるギャラリートーク 第1回',
       desc: '展示作品について作家自身が解説。参加無料・要予約（定員15名）。ギャラリーへお電話でご予約ください。'
     },
     {
-      date: '2026-02-28', dow: '土', time: '15:00–16:30', type: 'talk', label: 'ギャラリートーク',
+      date: '2026-02-22', dow: '日', time: '①11:00〜 ②14:00〜 ③16:00〜（各回60分）', calTime: '11:00〜 他', type: 'workshop', label: 'ワークショップ',
+      title: 'ドローイング・ワークショップ',
+      desc: '1日3回開催。各回定員8名・参加費500円・当日受付。オノマトペをテーマに手を動かします。'
+    },
+    {
+      date: '2026-02-28', dow: '土', time: '15:00–16:30', calTime: '15:00〜', type: 'talk', label: 'ギャラリートーク',
       title: '作家によるギャラリートーク 第2回',
       desc: '「オノマトペと絵画の関係性」をテーマに制作プロセスを深掘り。参加無料・要予約（定員15名）。ギャラリーへお電話でご予約ください。'
     },
     {
-      date: '2026-03-05', dow: '木', time: '15:00–17:00', type: 'special', label: 'スペシャルイベント',
+      date: '2026-03-05', dow: '木', time: '15:00–17:00', calTime: '15:00〜', type: 'special', label: 'スペシャルイベント',
       title: 'クロージング・トーク & レセプション',
       desc: '最終日特別トーク＋軽食付きレセプション。参加無料・予約不要。'
     }
   ];
-  var ATTENDANCE_DATES = ['2026-02-18', '2026-02-21', '2026-02-28', '2026-03-05'];
+
+  /* クリエイター在廊予定（p2-11「クリエイター在廊予定」に対応）。
+     期間（from〜to）＋曜日フィルタ（dow）＋メモ。単日は from===to。 */
+  var DOW_LABEL = { all: '全日', weekend: '土・日', 'weekend-hol': '土日祝', weekday: '平日', mon: '月', tue: '火', wed: '水', thu: '木', fri: '金', sat: '土', sun: '日' };
+  var ATTENDANCE = [
+    { name: '田中 透', from: '2026-02-18', to: '2026-02-18', dow: 'all',         memo: '初日・終日在廊予定' },
+    { name: '田中 透', from: '2026-02-19', to: '2026-03-04', dow: 'weekend-hol', memo: '午後在廊予定（14:00頃〜）' },
+    { name: '田中 透', from: '2026-03-05', to: '2026-03-05', dow: 'all',         memo: '最終日・終日在廊予定' }
+  ];
+  function isOpenDate(ds, dow) { return OPEN_DOW.indexOf(dow) !== -1 || !!HOURS_EXC[ds]; }
+  function dowMatch(filter, dow) {
+    switch (filter) {
+      case 'all':         return true;
+      case 'weekend':     return dow === 0 || dow === 6;
+      case 'weekend-hol': return dow === 0 || dow === 6; /* 祝日はデモでは簡略 */
+      case 'weekday':     return dow >= 1 && dow <= 5;
+      default: return { sun: 0, mon: 1, tue: 2, wed: 3, thu: 4, fri: 5, sat: 6 }[filter] === dow;
+    }
+  }
 
   /* ── ユーティリティ ── */
   function dateStr(d) {
@@ -658,10 +690,17 @@ KTN.pages['p2-1'] = function () {
     var days = [], cur = new Date(START);
     while (cur <= END) { days.push(new Date(cur)); cur.setDate(cur.getDate()+1); }
     var evMap  = {}; EVENTS.forEach(function(e) { evMap[e.date] = e; });
-    var attSet = {}; ATTENDANCE_DATES.forEach(function(d) { attSet[d] = true; });
+    var attSet = {};
+    ATTENDANCE.forEach(function(a) {
+      var c = parseDate(a.from), t = parseDate(a.to);
+      for (; c <= t; c.setDate(c.getDate() + 1)) {
+        var ds = dateStr(c), dow = c.getDay();
+        if (isOpenDate(ds, dow) && dowMatch(a.dow, dow)) attSet[ds] = true;
+      }
+    });
     grid.innerHTML = days.map(function(d) {
       var ds = dateStr(d), dow = d.getDay();
-      var isOpen = OPEN_DOW.indexOf(dow) !== -1;
+      var isOpen = isOpenDate(ds, dow);
       var past = isPast(d), today = isToday(d);
       var attend = !!attSet[ds], ev = evMap[ds] || null;
       var cls = 'p2-1-cal-row';
@@ -674,15 +713,16 @@ KTN.pages['p2-1'] = function () {
           '<time datetime="'+ds+'" class="p2-1-cal-row__md">'+(d.getMonth()+1)+'.'+('0'+d.getDate()).slice(-2)+'</time>' +
           '<span class="p2-1-cal-row__dow">'+DOW_JA[dow]+'</span>' +
         '</div>';
+      var dayHours = HOURS_EXC[ds] || DEFAULT_HOURS;
       var statusCell = isOpen
-        ? '<div class="p2-1-cal-row__status">11:00 – 19:00</div>'
-        : '<div class="p2-1-cal-row__status p2-1-cal-row__status--closed">休廊</div>';
+        ? '<div class="p2-1-cal-row__status">'+dayHours+'</div>'
+        : '<div class="p2-1-cal-row__status p2-1-cal-row__status--closed">休み</div>';
       var badges = '';
       if (isOpen) {
         if (attend) badges += '<span class="p2-1-cal-row__badge p2-1-cal-row__badge--attend">クリエイター在廊</span>';
         if (ev) {
           var bc = ev.type === 'special' ? 'p2-1-cal-row__badge--special' : 'p2-1-cal-row__badge--event';
-          badges += '<span class="p2-1-cal-row__badge '+bc+'">'+ev.label+' '+ev.time+'</span>';
+          badges += '<span class="p2-1-cal-row__badge '+bc+'">'+ev.label+' '+(ev.calTime||ev.time)+'</span>';
         }
       }
       var badgeCell = '<div class="p2-1-cal-row__badges">'+badges+'</div>';
@@ -690,7 +730,8 @@ KTN.pages['p2-1'] = function () {
       if (isOpen && !past) {
         var t2 = encodeURIComponent('【個展】あなたが知らないオノマトペ @ Gallery SOIL 渋谷');
         var dp = ds.replace(/-/g,'');
-        var url2 = 'https://calendar.google.com/calendar/render?action=TEMPLATE&text='+t2+'&dates='+dp+'T110000/'+dp+'T190000&details='+encodeURIComponent('https://koten-navi.com/p2');
+        var hm = dayHours.split('–').map(function(s){ return s.trim().replace(':','')+'00'; });
+        var url2 = 'https://calendar.google.com/calendar/render?action=TEMPLATE&text='+t2+'&dates='+dp+'T'+hm[0]+'/'+dp+'T'+hm[1]+'&details='+encodeURIComponent('https://koten-navi.com/p2');
         ctaCell = '<a href="'+url2+'" target="_blank" rel="noopener" class="p2-1-cal-row__gcal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="11" height="11"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>カレンダーに追加</a>';
       } else if (isOpen && past) {
         var isCheckedIn = (ds === '2026-02-19');
@@ -727,20 +768,27 @@ KTN.pages['p2-1'] = function () {
     }).join('');
   })();
 
-  /* ── ④ 在廊予定 シンプルリスト ── */
+  /* ── ④ 在廊予定 シンプルリスト（p2-11 入力＝期間＋曜日フィルタ＋メモ に対応） ── */
   (function() {
     var list = document.getElementById('p2AttendanceGrid'); if (!list) return;
-    list.innerHTML = ATTENDANCE_DATES.map(function(ds) {
-      var d = parseDate(ds), past = isPast(d), today = isToday(d);
+    function md(d) { return (d.getMonth()+1)+'/'+d.getDate(); }
+    list.innerHTML = ATTENDANCE.map(function(a) {
+      var f = parseDate(a.from), t = parseDate(a.to);
+      var single = a.from === a.to;
+      var sched = single
+        ? (f.getMonth()+1)+'.'+('0'+f.getDate()).slice(-2)+'（'+DOW_JA[f.getDay()]+'）'
+        : md(f)+'〜'+md(t)+' の'+DOW_LABEL[a.dow];
+      var past = t < TODAY;
+      var todayIn = TODAY >= f && TODAY <= t && dowMatch(a.dow, TODAY.getDay()) && isOpenDate(dateStr(TODAY), TODAY.getDay());
       return (
         '<li class="p2-1-simple-item'+(past?' p2-1-simple-item--past':'')+'">' +
-          '<div class="p2-1-simple-item__date">' +
-            '<time datetime="'+ds+'" class="p2-1-simple-item__md">'+ds.slice(5).replace('-','.')+'</time>' +
-            '<span class="p2-1-simple-item__dow">'+DOW_JA[d.getDay()]+'</span>' +
-          '</div>' +
           '<div class="p2-1-simple-item__body">' +
-            '<div class="p2-1-simple-item__title">田中 透 在廊'+(today?' <span style="font-size:.68rem;color:#c0392b">(本日)</span>':'')+' </div>' +
-            '<div class="p2-1-simple-item__desc">Gallery SOIL 渋谷にてお声がけいただければ対応いたします。</div>' +
+            '<div class="p2-1-simple-item__meta">' +
+              '<span class="p2-1-simple-item__badge p2-1-simple-item__badge--attend">在廊</span>' +
+              '<span class="p2-1-simple-item__time">'+sched+'</span>' +
+            '</div>' +
+            '<div class="p2-1-simple-item__title">'+a.name+(todayIn?' <span style="font-size:.68rem;color:#c0392b">(本日)</span>':'')+'</div>' +
+            '<div class="p2-1-simple-item__desc">'+a.memo+'</div>' +
           '</div>' +
         '</li>'
       );

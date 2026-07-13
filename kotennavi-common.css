@@ -4996,8 +4996,7 @@ a.p2-action-widget__btn{text-decoration:none}
 .p2-1-notice {
   display: flex; align-items: flex-start; gap: 5px;
   font-size: .75rem; color: var(--muted); line-height: 1.7;
-  padding: 10px 18px; background: var(--paper);
-  border-bottom: 1px solid var(--border);
+  padding: 2px 18px 6px;
 }
 .p2-1-attendance-grid {
   display: flex; flex-wrap: wrap; gap: 8px; padding: 14px 18px;
@@ -6192,7 +6191,7 @@ a.p2-action-widget__btn{text-decoration:none}
 }
 .p2-1-simple-item__body { flex: 1; min-width: 0; }
 .p2-1-simple-item__meta {
-  display: flex; align-items: center; gap: 7px; margin-bottom: 3px;
+  display: flex; align-items: center; gap: 7px; margin-bottom: 3px; flex-wrap: wrap;
 }
 .p2-1-simple-item__badge {
   font-family: var(--fm); font-size: .56rem; font-weight: 600;
@@ -6200,6 +6199,9 @@ a.p2-action-widget__btn{text-decoration:none}
   background: var(--accent); color: #fff;
 }
 .p2-1-simple-item__badge--special { background: #c0392b; }
+.p2-1-simple-item__badge--attend {
+  background: rgba(0,93,167,.1); color: var(--accent);
+}
 .p2-1-simple-item__time {
   font-family: 'DM Serif Display', serif; font-size: .75rem; color: var(--muted);
 }
@@ -9807,6 +9809,10 @@ body.mgmt-page .ktn-content:has(> .ktn-mgmt-context){padding-top:16px}
 .ktn-mgmt-context__actions{flex-shrink:0;display:flex;align-items:center;gap:10px}
 .ktn-mgmt-context__view{font-family:var(--fn);font-size:.75rem;color:var(--accent);text-decoration:none;white-space:nowrap}
 .ktn-mgmt-context__view:hover{text-decoration:underline}
+/* 新規作成モードの strip はオーナー（ギャラリー）のみ表示（展覧会名がまだ無いため）。
+   非新規＝new-only を隠し／新規＝edit-only を隠す（各要素の自然な display を保つ） */
+.ktn-mgmt-context:not(.ktn-mgmt-context--new) .ktn-mgmt-context__new-only{display:none}
+.ktn-mgmt-context--new .ktn-mgmt-context__edit-only{display:none}
 @media(max-width:540px){
   .ktn-mgmt-context{flex-wrap:wrap;gap:10px 12px}
   .ktn-mgmt-context__actions{width:100%;justify-content:flex-end;order:3}
@@ -10992,7 +10998,7 @@ body.p4-15-page{--page-accent:#8b5e3c}
 .p211-sub-link:hover{background:#eef5fa;border-color:#c4dcee}
 .p211-sub-link__icon{flex-shrink:0;color:var(--muted)}
 .p211-sub-link__label{flex:1}
-.p211-sub-link__arr{color:var(--muted);font-size:.75rem;margin-left:auto}
+.p211-sub-link__arr{color:var(--muted);font-size:.75rem;margin-left:auto;display:inline-flex;align-items:center}
 .p211-sub-links{display:flex;flex-direction:column;gap:8px}
 .p211-sub-link.is-locked{opacity:.45;pointer-events:none} /* 管理者確認済＝直接変更ロック（変更は問い合わせ経由） */
 
@@ -11001,10 +11007,13 @@ body.p4-15-page{--page-accent:#8b5e3c}
 .p211-sub-link__benefit{flex-basis:100%;font-size:.72rem;font-weight:400;color:var(--muted);line-height:1.55;padding-left:22px;margin-top:2px}
 .p211-sub-link__state{display:none;flex-shrink:0;font-family:var(--fm);font-size:.62rem;font-weight:600;letter-spacing:.05em;color:#1a7a3d;background:rgba(26,122,61,.07);border:1px solid rgba(26,122,61,.3);border-radius:3px;padding:2px 7px;line-height:1.3}
 .p211-sub-link.has-input .p211-sub-link__state{display:inline-block}
+/* 未入力の任意項目に付く「＋ 追加項目」バッジ（入力を促す名札）。入力済み＝✓チップに切替、確認済ロック時は非表示 */
+.p211-sub-link__opt{flex-shrink:0;font-family:var(--fm);font-size:.62rem;font-weight:600;letter-spacing:.04em;color:var(--page-accent,#2a7fa8);background:var(--page-accent-bg,rgba(42,127,168,.08));border:1px solid var(--page-accent,#2a7fa8);border-radius:3px;padding:2px 7px;line-height:1.3;white-space:nowrap}
+.p211-sub-link.has-input .p211-sub-link__opt,.p211-sub-link.is-locked .p211-sub-link__opt{display:none}
 
 /* ── サブリンクのアコーディオン展開（詳細入力を別ページでなくインラインで） ── */
 .p211-sub-link .p211-sub-link__arr{transition:transform .15s}
-.p211-sub-link.is-open .p211-sub-link__arr{transform:rotate(90deg)}
+.p211-sub-link.is-open .p211-sub-link__arr{transform:rotate(180deg)}
 .p211-acc-panel{display:flex;flex-direction:column;gap:14px;padding:16px;border:1px solid var(--border);border-radius:4px;background:#fff}
 .p211-acc-panel[hidden]{display:none}
 .p211-acc-panel .p211-field{margin:0}
@@ -11043,6 +11052,30 @@ body.p4-15-page{--page-accent:#8b5e3c}
 .p211-artist-empty{font-size:.78rem;color:var(--muted);margin:0;padding:10px 12px;border:1px dashed var(--border);border-radius:4px}
 .p211-artist-add{display:flex;gap:8px;align-items:center}
 .p211-artist-add .p211-input{flex:1}
+.p211-artist-add .p211-combo{flex:1}
+
+/* ── 会場・クリエイター選択コンボ（datalist 代替＝候補に「確認 ↗」リンクを付け同姓同名を区別できるようにする） ── */
+.p211-combo{position:relative}
+.p211-combo__list{position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:30;background:#fff;border:1px solid var(--border);border-radius:4px;box-shadow:0 6px 20px rgba(0,0,0,.12);max-height:290px;overflow-y:auto;padding:5px}
+.p211-combo__list[hidden]{display:none}
+.p211-combo__opt{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:4px;transition:background .12s}
+.p211-combo__opt:hover{background:var(--paper)}
+.p211-combo__opt-info{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}
+.p211-combo__opt-name{font-family:var(--fs);font-size:.86rem;color:var(--ink)}
+.p211-combo__opt-meta{font-family:var(--fn);font-size:.68rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.p211-combo__opt-verify{flex:0 0 auto;font-family:var(--fn);font-size:.72rem;color:var(--accent);text-decoration:underline;text-underline-offset:2px;white-space:nowrap}
+.p211-combo__opt-verify:hover{color:var(--accent-d)}
+.p211-combo__opt-select{flex:0 0 auto;white-space:nowrap}
+.p211-combo__new{padding:9px 11px;font-family:var(--fn);font-size:.73rem;color:var(--muted);line-height:1.55;border-top:1px solid var(--border);margin-top:4px}
+.p211-combo__new strong{color:var(--ink);font-weight:600}
+
+/* 新規会場を直接入力したときに詳細入力を促すノート（request 6） */
+.p211-venue-new-note{display:flex;gap:7px;align-items:flex-start;margin:8px 0 0;padding:9px 12px;background:rgba(180,120,20,.08);border:1px solid rgba(180,120,20,.3);border-radius:4px;font-family:var(--fn);font-size:.76rem;line-height:1.6;color:var(--ink)}
+.p211-venue-new-note[hidden]{display:none}
+.p211-venue-new-note strong{font-weight:600}
+/* 新規会場時は「開催場所の詳細情報」サブリンクを強調（詳細入力の見落とし防止） */
+.p211-sub-link--need{border-color:rgba(180,120,20,.5);background:rgba(180,120,20,.06)}
+.p211-sub-link--need:hover{background:rgba(180,120,20,.1)}
 /* 新規クリエイター（個展なび未登録）＝バッジ＋詳細入力パネル */
 .p211-artist-item{display:flex;flex-direction:column;gap:6px}
 .p211-artist-row__new{display:inline-block;font-family:var(--fn);font-size:.62rem;font-weight:600;color:#b86a10;border:1px solid rgba(184,106,16,.4);border-radius:3px;padding:1px 6px;margin-left:6px;vertical-align:2px;letter-spacing:.04em}
@@ -11774,6 +11807,9 @@ body.mgmt-page .p5-tabnav{max-width:var(--w-detail)}
 .p70-faq-item summary::after{content:'＋';margin-left:auto;font-family:var(--fm);font-size:.82rem;color:var(--muted)}
 .p70-faq-item[open] summary::after{content:'－'}
 .p70-faq-item__body{padding:12px 14px;font-family:var(--fn);font-size:.8rem;line-height:1.8;color:var(--ink);border-top:1px solid var(--border)}
+/* KTN.renderQA が出す group 小見出し（p60系 FAQ・カテゴリ内の A/B/C… 区切り） */
+.p60-faq-group{font-family:var(--fs);font-size:1.02rem;font-weight:600;color:var(--ink);letter-spacing:.01em;margin:32px 0 10px}
+.p60-faq-group:first-child{margin-top:0}
 .p70-nav-foot{display:flex;justify-content:space-between;align-items:center;padding:20px 0;border-top:1px solid var(--border);margin-top:12px}
 .p70-nav-foot__link{font-family:var(--fn);font-size:.78rem;color:var(--accent);text-decoration:none}
 .p70-nav-foot__link:hover{text-decoration:underline}

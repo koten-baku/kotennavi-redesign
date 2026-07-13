@@ -112,7 +112,7 @@
                 <span class="p2-title-band__ddate"><span class="p2-title-band__dyear">2026.</span>02.18</span><span class="p2-title-band__ddow">水</span>
                 <span class="p2-title-band__ddash">—</span>
                 <span class="p2-title-band__ddate"><span class="p2-title-band__dyear">2026.</span>03.05</span><span class="p2-title-band__ddow">木</span>
-                <span class="p2-title-band__dtime" id="p2DateTime">11:00 – 19:00（木〜日）</span>
+                <span class="p2-title-band__dtime" id="p2DateTime">11:00 – 19:00</span>
               </dd>
             </dl>
           </div>
@@ -383,8 +383,8 @@
                     <span id="p2SchRemain" class="p2-sch-status__remain">開催中 · 残り12日</span>
                     <span id="p2SchClosed" class="p2-sch-status__closed">本日休み</span>
                   </div>
-                  <div class="p2-sch-detail">開廊時間：<span class="p2-sch-hl">11:00 – 19:00</span>（木・金・土・日）　最終入館
-                    18:30<br>休廊日：月・火・水曜日<br>ギャラリートーク：毎週土曜日 15:00〜（要予約・参加無料）</div>
+                  <div class="p2-sch-detail">開場時間：<span class="p2-sch-hl">11:00 – 19:00</span>　最終入場
+                    18:30<br>休み：月・火・水<br>ギャラリートーク：毎週土 15:00〜（要予約・参加無料）</div>
                   <a href="kotennavi-p2-1.html" class="p2-ic__more"><svg viewBox="0 0 24 24" fill="none"
                       stroke="currentColor" stroke-width="2">
                       <rect x="3" y="4" width="18" height="18" rx="2" />
@@ -869,7 +869,7 @@
     /* ── 会期状態管理 ── */
     var _p2Period = 'during';
     var _p2Closed = false; /* 本日が会期中の休館日か（デモトグル・本番は日付から算出） */
-    var _p2Hours  = '11:00 – 19:00（木〜日）';
+    var _p2Hours  = '11:00 – 19:00';
 
     /* バッジ（会期全体の状態）と会期の時間行（今日の開館状況）を状態に連動させる。
        バッジ＝会期スパンのステータス／時間行＝今日の開館状況、と役割を分ける。

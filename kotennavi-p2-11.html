@@ -58,23 +58,28 @@
         </div>
       </div>
 
-      <!-- 展覧会 文脈ストリップ（編集・クローンモードのみ表示・identity strip content variant） -->
+      <!-- 展覧会 文脈ストリップ（編集・クローン＝展覧会 identity／新規＝オーナー〈ギャラリー〉のみ表示） -->
       <div class="ktn-mgmt-context" id="p211ExhBanner">
-        <a class="ktn-mgmt-context__media ktn-mgmt-context__media--content" href="kotennavi-p2.html" style="background:linear-gradient(135deg,#e8d0b8,#c8a880)"></a>
+        <!-- 編集・クローン：展覧会サムネ／新規：オーナー（ギャラリー）アバター -->
+        <a class="ktn-mgmt-context__media ktn-mgmt-context__media--content ktn-mgmt-context__edit-only" href="kotennavi-p2.html" style="background:linear-gradient(135deg,#e8d0b8,#c8a880)"></a>
+        <a class="ktn-mgmt-context__media ktn-mgmt-context__media--gallery ktn-mgmt-context__new-only" href="kotennavi-p4.html" style="background:linear-gradient(135deg,#a8825e,#8b5e3c)">Y</a>
         <div class="ktn-mgmt-context__body">
           <div class="ktn-mgmt-context__badges">
-            <span class="cb cb-content cb-exhibition">exhibition</span>
+            <span class="cb cb-content cb-exhibition ktn-mgmt-context__edit-only">exhibition</span>
+            <span class="cb cb-person cb-gallery ktn-mgmt-context__new-only">gallery</span>
           </div>
-          <div class="ktn-mgmt-context__name"><a href="kotennavi-p2.html" id="p211StripName">松田啓佑展［仮称］</a></div>
-          <div class="ktn-mgmt-context__meta" id="p211StripMeta">YUGEN Gallery · 2026.06.20 — 2026.07.20</div>
-          <div class="ktn-mgmt-context__owner">
+          <div class="ktn-mgmt-context__name ktn-mgmt-context__edit-only"><a href="kotennavi-p2.html" id="p211StripName">松田啓佑展［仮称］</a></div>
+          <div class="ktn-mgmt-context__meta ktn-mgmt-context__edit-only" id="p211StripMeta">YUGEN Gallery · 2026.06.20 — 2026.07.20</div>
+          <div class="ktn-mgmt-context__name ktn-mgmt-context__new-only"><a href="kotennavi-p4.html">YUGEN Gallery</a></div>
+          <div class="ktn-mgmt-context__meta ktn-mgmt-context__new-only">新しい展覧会を作成しています</div>
+          <div class="ktn-mgmt-context__owner ktn-mgmt-context__edit-only">
             <span class="ktn-mgmt-context__owner-label">Owner</span>
             <span class="cb cb-person cb-gallery">gallery</span>
             <a href="kotennavi-p4.html">YUGEN Gallery</a>
           </div>
         </div>
         <div class="ktn-mgmt-context__actions">
-          <a class="ktn-mgmt-context__view" href="kotennavi-p2.html">展覧会ページを見る →</a>
+          <a class="ktn-mgmt-context__view ktn-mgmt-context__edit-only" href="kotennavi-p2.html">展覧会ページを見る →</a>
         </div>
       </div>
 
@@ -86,15 +91,15 @@
         <h2 class="ktn-mgmt-head__title" id="p211PageTitle">展覧会を編集</h2>
         <p class="ktn-mgmt-head__en">EXHIBITION EDITOR</p>
         <p class="ktn-mgmt-head__desc">展覧会情報を入力・更新してください。</p>
-        <p class="ktn-mgmt-head__desc"><strong style="color:var(--ink)">必須項目だけで公開できます</strong>（入力の目安：約5分）。「→」の付いた追加項目を入力すると展覧会ページの情報が充実し、来場のきっかけが増えます。保存後もいつでも追記・編集できます。入力を中断するときは「下書き保存」で途中の内容を保存できます。</p>
+        <p class="ktn-mgmt-head__desc"><strong style="color:var(--ink)">必須項目だけで公開できます</strong>（入力の目安：約5分）。<span style="color:var(--page-accent)">＋ 追加項目</span> と付いた欄を開いて入力すると展覧会ページの情報が充実し、来場のきっかけが増えます。保存後もいつでも追記・編集できます。入力を中断するときは「下書き保存」で途中の内容を保存できます。</p>
+        <p class="ktn-mgmt-head__guides">登録・編集の手順や、管理者確認・公開までの流れは <a class="ktn-guide-link" id="p211FaqLink" href="/p60-7">よくある質問（展覧会の登録・編集）→</a></p>
       </div>
 
-      <!-- 下書き通知バー（保存済み下書きがある場合のみ表示） -->
+      <!-- 下書き通知バー（保存済み下書きがある場合＝開いた時点で自動復元済み） -->
       <div class="p211-draft-notice" id="p211DraftNotice" hidden>
         <svg class="p211-draft-notice__icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><circle cx="7" cy="7" r="6"/><path d="M7 3.5V7l2.5 1.5"/></svg>
-        <span class="p211-draft-notice__txt">下書きが保存されています<span class="p211-draft-notice__at">（<span id="p211DraftAt"></span> 保存）</span></span>
-        <button class="ktn-op-btn ktn-op-btn--sm" type="button" onclick="restoreDraft()">復元する</button>
-        <button class="ktn-op-btn ktn-op-btn--sm" type="button" onclick="discardDraft()">破棄する</button>
+        <span class="p211-draft-notice__txt">下書きから復元しました<span class="p211-draft-notice__at">（<span id="p211DraftAt"></span> 保存）</span></span>
+        <button class="ktn-op-btn ktn-op-btn--sm" type="button" onclick="openDiscardModal()">破棄する</button>
       </div>
 
       <!-- ─── 1. 基本情報 ─── -->
@@ -155,7 +160,8 @@
               <svg class="p211-sub-link__icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M1.5 1.5h5l6 6-5 5-6-6z" stroke-linejoin="round"/><circle cx="4.5" cy="4.5" r="1"/></svg>
               <span class="p211-sub-link__label">タグ・英語タイトルを入力する</span>
               <span class="p211-sub-link__state">✓ 入力あり</span>
-              <span class="p211-sub-link__arr">→</span>
+              <span class="p211-sub-link__opt">＋ 追加項目</span>
+              <span class="p211-sub-link__arr"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" width="13" height="13"><path d="M3.5 5.25 7 8.75l3.5-3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
               <span class="p211-sub-link__benefit">タグ検索・タグ一覧から見つけてもらいやすくなり、英語タイトルは海外の方にも展覧会を伝えます。</span>
             </a>
             <div class="p211-acc-panel" id="p211AccBasicOpt" hidden>
@@ -210,7 +216,8 @@
               <svg class="p211-sub-link__icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><rect x="2" y="1" width="10" height="12" rx="1"/><line x1="4.5" y1="4" x2="9.5" y2="4"/><line x1="4.5" y1="7" x2="9.5" y2="7"/><line x1="4.5" y1="10" x2="7.5" y2="10"/></svg>
               <span class="p211-sub-link__label">関連イベント・主催・ウェブリンクなどを入力する</span>
               <span class="p211-sub-link__state">✓ 入力あり</span>
-              <span class="p211-sub-link__arr">→</span>
+              <span class="p211-sub-link__opt">＋ 追加項目</span>
+              <span class="p211-sub-link__arr"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" width="13" height="13"><path d="M3.5 5.25 7 8.75l3.5-3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
               <span class="p211-sub-link__benefit">イベント告知や公式サイトへのリンクが展覧会ページに掲載され、来場前に伝えられる情報が増えます。</span>
             </a>
             <div class="p211-acc-panel" id="p211AccDescOpt" hidden>
@@ -267,7 +274,8 @@
               <svg class="p211-sub-link__icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><rect x="1" y="2" width="12" height="10" rx="1"/><circle cx="4.5" cy="5.5" r="1.2"/><path d="M1.5 10.5l3-2.5 2.5 2 2.5-3 3 3.5"/></svg>
               <span class="p211-sub-link__label">サブ画像を追加する（最大9枚）</span>
               <span class="p211-sub-link__state">✓ 入力あり</span>
-              <span class="p211-sub-link__arr">→</span>
+              <span class="p211-sub-link__opt">＋ 追加項目</span>
+              <span class="p211-sub-link__arr"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" width="13" height="13"><path d="M3.5 5.25 7 8.75l3.5-3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
               <span class="p211-sub-link__benefit">会場や作品の様子が伝わり、展覧会ページの印象が大きく変わります。</span>
             </a>
             <div class="p211-acc-panel" id="p211AccSubImg" hidden>
@@ -330,7 +338,7 @@
 
           <div class="p211-field">
             <label class="p211-label">スケジュール補足</label>
-            <textarea class="p211-textarea" style="min-height:60px" placeholder="例：入場は閉場30分前まで">入場は閉場の30分前まで</textarea>
+            <textarea class="p211-textarea" style="min-height:60px" placeholder="例：入場は閉場30分前まで／祝日はオープン・祝翌日はクローズ">入場は閉場の30分前まで</textarea>
             <p class="p211-help">カレンダーには反映されない補足情報があれば入力してください（展覧会ページに文章として表示されます）。</p>
           </div>
 
@@ -339,7 +347,8 @@
               <svg class="p211-sub-link__icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><rect x="1" y="2" width="12" height="11" rx="1"/><line x1="1" y1="5" x2="13" y2="5"/><line x1="4" y1="1" x2="4" y2="3"/><line x1="10" y1="1" x2="10" y2="3"/></svg>
               <span class="p211-sub-link__label">開催スケジュール詳細を入力する（カレンダー設定）</span>
               <span class="p211-sub-link__state">✓ 入力あり</span>
-              <span class="p211-sub-link__arr">→</span>
+              <span class="p211-sub-link__opt">＋ 追加項目</span>
+              <span class="p211-sub-link__arr"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" width="13" height="13"><path d="M3.5 5.25 7 8.75l3.5-3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
               <span class="p211-sub-link__benefit">臨時休業・時間変更が日別カレンダーに反映され、来場者が安心して予定を立てられます。</span>
             </a>
             <div class="p211-acc-panel" id="p211AccSched" hidden>
@@ -414,7 +423,8 @@
               <svg class="p211-sub-link__icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M7 1.2l1.7 3.6 3.9.5-2.9 2.7.8 3.9L7 10l-3.5 1.9.8-3.9L1.4 5.3l3.9-.5z" stroke-linejoin="round"/></svg>
               <span class="p211-sub-link__label">イベントを入力する（トーク・ワークショップなど）</span>
               <span class="p211-sub-link__state">✓ 入力あり</span>
-              <span class="p211-sub-link__arr">→</span>
+              <span class="p211-sub-link__opt">＋ 追加項目</span>
+              <span class="p211-sub-link__arr"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" width="13" height="13"><path d="M3.5 5.25 7 8.75l3.5-3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
               <span class="p211-sub-link__benefit">イベント予定が展覧会ページとカレンダーに表示され、来場のきっかけになります。</span>
             </a>
             <div class="p211-acc-panel" id="p211AccEvents" hidden>
@@ -445,18 +455,9 @@
                       <input class="p211-input" type="text" placeholder="未入力の場合は展覧会の会場">
                     </div>
                   </div>
-                  <div style="display:flex;gap:10px;flex-wrap:wrap">
-                    <div class="p211-event-item__field" style="flex:1;min-width:200px">
-                      <label class="p211-label">担当クリエイター</label>
-                      <select class="p211-select">
-                        <option value="">—（展覧会全体）</option>
-                        <option selected>松田 啓佑</option>
-                      </select>
-                    </div>
-                    <div class="p211-event-item__field" style="flex:1;min-width:200px">
-                      <label class="p211-label">詳細・申込URL</label>
-                      <input class="p211-input" type="url" placeholder="https://">
-                    </div>
+                  <div class="p211-event-item__field">
+                    <label class="p211-label">詳細・申込URL</label>
+                    <input class="p211-input" type="url" placeholder="https://">
                   </div>
                   <div class="p211-event-item__field">
                     <label class="p211-label">説明</label>
@@ -488,18 +489,9 @@
                       <input class="p211-input" type="text" placeholder="未入力の場合は展覧会の会場">
                     </div>
                   </div>
-                  <div style="display:flex;gap:10px;flex-wrap:wrap">
-                    <div class="p211-event-item__field" style="flex:1;min-width:200px">
-                      <label class="p211-label">担当クリエイター</label>
-                      <select class="p211-select">
-                        <option value="">—（展覧会全体）</option>
-                        <option selected>松田 啓佑</option>
-                      </select>
-                    </div>
-                    <div class="p211-event-item__field" style="flex:1;min-width:200px">
-                      <label class="p211-label">詳細・申込URL</label>
-                      <input class="p211-input" type="url" placeholder="https://">
-                    </div>
+                  <div class="p211-event-item__field">
+                    <label class="p211-label">詳細・申込URL</label>
+                    <input class="p211-input" type="url" placeholder="https://">
                   </div>
                   <div class="p211-event-item__field">
                     <label class="p211-label">説明</label>
@@ -508,14 +500,15 @@
                 </div>
               </div>
               <button class="p211-acc-add" type="button" onclick="addEventRow()">＋ イベントを追加</button>
-              <p class="p211-help" style="margin-top:8px">1日に複数回のセッションがある場合は、時間欄にまとめて記入してください（例：①11:00〜 ②14:00〜）。クリエイター別に開催する場合は、イベントを分けて追加し、それぞれ担当クリエイターを選択してください。</p>
+              <p class="p211-help" style="margin-top:8px">1日に複数回のセッションがある場合は、時間欄にまとめて記入してください（例：①11:00〜 ②14:00〜）。内容の異なるイベントは、分けて追加してください。</p>
             </div>
 
             <a class="p211-sub-link" href="#" onclick="toggleAcc('p211AccAttend', this); return false;">
               <svg class="p211-sub-link__icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><circle cx="7" cy="5.5" r="2.5"/><path d="M2 13c0-2.76 2.24-5 5-5s5 2.24 5 5"/></svg>
               <span class="p211-sub-link__label">クリエイター在廊予定を入力する</span>
               <span class="p211-sub-link__state">✓ 入力あり</span>
-              <span class="p211-sub-link__arr">→</span>
+              <span class="p211-sub-link__opt">＋ 追加項目</span>
+              <span class="p211-sub-link__arr"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" width="13" height="13"><path d="M3.5 5.25 7 8.75l3.5-3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
               <span class="p211-sub-link__benefit">在廊日がカレンダーに表示されます。クリエイターに会えることは強い来場動機になります。</span>
             </a>
             <div class="p211-acc-panel" id="p211AccAttend" hidden>
@@ -562,13 +555,15 @@
 
           <div class="p211-field">
             <label class="p211-label">開催場所<span class="ktn-req">必須</span></label>
-            <input class="p211-input" type="text" id="p211Venue" value="YUGEN Gallery" placeholder="会場名を入力（候補から選択または新規入力）" list="p211VenueList">
-            <datalist id="p211VenueList">
-              <option value="YUGEN Gallery" label="東京都渋谷区神宮前 X-XX-X YUGENビル 2F"></option>
-              <option value="Gallery SOIL 渋谷" label="東京都渋谷区宇田川町 X-X SOILビル 1F"></option>
-              <option value="スペースYUI" label="東京都港区南青山 X-X-X"></option>
-            </datalist>
-            <p class="p211-help" id="p211VenueHelp">ギャラリーユーザーの方はご自身のギャラリーが設定されています。別会場の場合は、過去の展覧会で入力した会場を候補から選択するか、新しい会場名を直接入力してください。</p>
+            <div class="p211-combo" id="p211VenueCombo">
+              <input class="p211-input" type="text" id="p211Venue" value="YUGEN Gallery" placeholder="会場名を入力（登録済みの会場は候補から選択）" autocomplete="off">
+              <div class="p211-combo__list" id="p211VenueComboList" hidden></div>
+            </div>
+            <p class="p211-help" id="p211VenueHelp">ギャラリーユーザーの方はご自身のギャラリーが設定されています。別会場の場合は、登録済みの会場を候補から選択するか、新しい会場名を直接入力してください。同名の会場は候補の「確認 ↗」で会場ページを開き、確かめてから選択できます。</p>
+            <p class="p211-venue-new-note" id="p211VenueNewNote" hidden>
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15" style="flex-shrink:0;margin-top:1px"><path d="M8 1.5 15 14H1z" stroke-linejoin="round"/><line x1="8" y1="6" x2="8" y2="9.5"/><line x1="8" y1="11.5" x2="8" y2="11.51"/></svg>
+              <span><strong>登録されていない新しい会場です。</strong>下の「開催場所の詳細情報」から<strong>場所名読み（カナ）・住所は必須</strong>です。アクセス・地図などもあわせてご記入ください（会場ページ作成のため必要です）。</span>
+            </p>
             <p class="p211-confirmed-note" id="p211VenueConfNote">✓ 管理者確認済 — 開催場所ページへのリンクが設定されています。 <a class="ktn-guide-link" href="kotennavi-p2-2.html">会場ページを確認 →</a><br>開催場所の変更が必要な場合は、<a class="ktn-guide-link" href="#">お問い合わせ</a> からご連絡ください。</p>
           </div>
 
@@ -577,17 +572,18 @@
               <svg class="p211-sub-link__icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><circle cx="7" cy="5.5" r="2.5"/><path d="M2 13c0-2.76 2.24-5 5-5s5 2.24 5 5"/></svg>
               <span class="p211-sub-link__label">開催場所の詳細情報を入力する（住所・アクセス・地図）</span>
               <span class="p211-sub-link__state">✓ 入力あり</span>
-              <span class="p211-sub-link__arr">→</span>
+              <span class="p211-sub-link__opt">＋ 追加項目</span>
+              <span class="p211-sub-link__arr"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" width="13" height="13"><path d="M3.5 5.25 7 8.75l3.5-3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
               <span class="p211-sub-link__benefit">住所・アクセス・地図が開催場所ページに反映され、来場者が迷わずたどり着けます。</span>
             </a>
             <div class="p211-acc-panel" id="p211AccVenue" hidden>
               <p class="p211-help" style="margin:0">候補から選択した会場は登録済みの情報が使用されるため、入力は不要です。新しい会場の場合、または登録済みの会場でも住所などに変更がある場合にご記入ください。</p>
-              <div class="p211-field">
-                <label class="p211-label">場所名読み（カナ）</label>
+              <div class="p211-field" id="p211VenueKanaField">
+                <label class="p211-label">場所名読み（カナ）<span class="ktn-req" id="p211VenueKanaReq" hidden>必須</span></label>
                 <input class="p211-input" type="text" value="ユウゲンギャラリー" placeholder="全角カタカナ">
               </div>
-              <div class="p211-field">
-                <label class="p211-label">住所</label>
+              <div class="p211-field" id="p211VenueAddrField">
+                <label class="p211-label">住所<span class="ktn-req" id="p211VenueAddrReq" hidden>必須</span></label>
                 <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:8px">
                   <input class="p211-input" type="text" value="150-0001" placeholder="郵便番号" style="max-width:130px">
                   <select class="p211-select" style="max-width:160px">
@@ -648,7 +644,8 @@
               <svg class="p211-sub-link__icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><circle cx="7" cy="7" r="6"/><line x1="7" y1="6.2" x2="7" y2="10"/><line x1="7" y1="4" x2="7" y2="4.01"/></svg>
               <span class="p211-sub-link__label">会場利用案内を入力する（撮影・入場料・作品販売・特典など）</span>
               <span class="p211-sub-link__state">✓ 入力あり</span>
-              <span class="p211-sub-link__arr">→</span>
+              <span class="p211-sub-link__opt">＋ 追加項目</span>
+              <span class="p211-sub-link__arr"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" width="13" height="13"><path d="M3.5 5.25 7 8.75l3.5-3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
               <span class="p211-sub-link__benefit">撮影可否・入場料などの来場情報が展覧会ページに表示され、はじめての来場者も安心できます。</span>
             </a>
             <div class="p211-acc-panel" id="p211AccFacility" hidden>
@@ -773,14 +770,18 @@
           <div class="p211-block__title">出展クリエイター <span class="p211-block__title-en">Artists</span></div>
         </div>
         <div class="p211-block__body">
-          <p class="p211-artist-cur">現在の出展クリエイター：<span id="p211ArtistSummary"><strong>松田 啓佑</strong></span></p>
+          <div class="p211-field" id="p211ArtistReqField">
+            <label class="p211-label">出展クリエイター<span class="ktn-req">必須</span></label>
+            <p class="p211-artist-cur" style="margin:0">現在の出展クリエイター：<span id="p211ArtistSummary"><strong>松田 啓佑</strong></span></p>
+          </div>
           <p class="p211-confirmed-note" id="p211ArtistConfNote" style="margin:0 0 12px">✓ 管理者確認済 — 出展クリエイターページへのリンクが設定されています。 <a class="ktn-guide-link" href="kotennavi-p3.html">松田 啓佑 のクリエイターページを確認 →</a><br>出展クリエイターの変更が必要な場合は、<a class="ktn-guide-link" href="#">お問い合わせ</a> からご連絡ください。</p>
           <div class="p211-sub-links">
             <a class="p211-sub-link" id="p211ArtistSubLink" href="#" onclick="toggleAcc('p211AccArtist', this); return false;">
               <svg class="p211-sub-link__icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><circle cx="7" cy="5" r="2.5"/><path d="M2.5 12c0-2.48 2.02-4.5 4.5-4.5s4.5 2.02 4.5 4.5"/><line x1="11" y1="5" x2="14" y2="5"/><line x1="12.5" y1="3.5" x2="12.5" y2="6.5"/></svg>
               <span class="p211-sub-link__label">出展クリエイター情報を入力する（追加・削除・並び替え）</span>
               <span class="p211-sub-link__state">✓ 入力あり</span>
-              <span class="p211-sub-link__arr">→</span>
+              <span class="p211-sub-link__opt">＋ 追加項目</span>
+              <span class="p211-sub-link__arr"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" width="13" height="13"><path d="M3.5 5.25 7 8.75l3.5-3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
               <span class="p211-sub-link__benefit">クリエイターページへのリンクが設定され、プロフィールや他の展覧会から興味を持ってもらえます。</span>
             </a>
             <div class="p211-acc-panel" id="p211AccArtist" hidden>
@@ -791,12 +792,10 @@
               <div class="p211-field">
                 <label class="p211-label">クリエイターを追加</label>
                 <div class="p211-artist-add">
-                  <input class="p211-input" type="text" id="p211ArtistInput" list="p211ArtistCands" placeholder="クリエイター名を入力（候補から選択または新規入力）">
-                  <datalist id="p211ArtistCands">
-                    <option value="松田 啓佑" label="アート／絵画・セラミック"></option>
-                    <option value="田中 透" label="アート／油彩"></option>
-                    <option value="木梨 アイネ" label="クラフト／テキスタイル"></option>
-                  </datalist>
+                  <div class="p211-combo" id="p211ArtistCombo">
+                    <input class="p211-input" type="text" id="p211ArtistInput" placeholder="クリエイター名を入力（登録済みは候補から選択）" autocomplete="off">
+                    <div class="p211-combo__list" id="p211ArtistComboList" hidden></div>
+                  </div>
                   <button class="ktn-op-btn ktn-op-btn--sm" type="button" onclick="addArtist()">追加</button>
                 </div>
                 <p class="p211-help">グループ展の場合は複数登録できます。過去の展覧会で入力したクリエイターは候補から選択できます。新しいクリエイター名を追加した場合は、リストの「詳細」からプロフィールなどの詳細情報をご記入ください。登録済みのクリエイターでも、内容の修正・追記がある場合は「詳細」からご記入いただけます。入力内容をもとに、管理者が展覧会の確認時にクリエイターページを作成または編集し、リンクを設定します。</p>
@@ -930,6 +929,19 @@
         </div>
       </div>
 
+      <!-- 下書き破棄の確認モーダル -->
+      <div class="p211-modal" id="p211DiscardModal" hidden>
+        <div class="p211-modal__overlay" onclick="closeDiscardModal()"></div>
+        <div class="p211-modal__box">
+          <p class="p211-modal__title">下書きを破棄しますか？</p>
+          <p class="p211-modal__note">保存されている下書きを削除します。この操作は取り消せません。</p>
+          <div class="p211-modal__foot">
+            <button class="ktn-op-btn" type="button" onclick="closeDiscardModal()">戻る</button>
+            <button class="ktn-op-btn ktn-op-btn--danger" type="button" onclick="confirmDiscard()">破棄する</button>
+          </div>
+        </div>
+      </div>
+
     </div>
   </main>
 </div>
@@ -985,7 +997,11 @@ function setDemoMode(mode) {
   var cloneBanner = document.getElementById('p211CloneBanner');
   var exhBanner   = document.getElementById('p211ExhBanner');
   if (cloneBanner) cloneBanner.hidden = (mode !== 'clone');
-  if (exhBanner)   exhBanner.hidden   = (mode === 'new');
+  /* strip は全モードで表示。新規＝オーナーのみ（--new）、編集/クローン＝展覧会 identity */
+  if (exhBanner) {
+    exhBanner.hidden = false;
+    exhBanner.classList.toggle('ktn-mgmt-context--new', mode === 'new');
+  }
 
   /* identity strip：クローンモードはクローン元（過去展）を表示 */
   var strip = (mode === 'clone') ? CLONE_STRIP : EDIT_STRIP;
@@ -1042,6 +1058,7 @@ function setConfirmed(on) {
     });
   }
   toggleLiaisonMode();
+  checkVenueNew(false);   /* 確認済トグルで新規会場ノートの表示条件（!demoConfirmed）を更新 */
 }
 
 /* ── サブリンクのアコーディオン開閉 ── */
@@ -1163,12 +1180,89 @@ function moveArtist(i, d) {
   renderArtists();
 }
 
-/* ── イベント・在廊行（開催スケジュール詳細） ── */
-function artistOptions(sel) {
-  return artistList.map(function (a) {
-    return '<option' + (a.name === sel ? ' selected' : '') + '>' + escHtml(a.name) + '</option>';
-  }).join('');
+/* ── 会場・クリエイター選択コンボ（datalist 代替）──
+   datalist はリンクを持てないため、候補行に「確認 ↗」（別タブで実ページを開く）を付けて
+   同姓同名・同名会場を確かめてから選択できるようにする（p4-14 と同思想）。新規入力も可。 */
+var VENUE_POOL = [
+  { name: 'YUGEN Gallery',    meta: '東京都渋谷区神宮前 X-XX-X YUGENビル 2F', url: 'kotennavi-p4.html?g=yugen' },
+  { name: 'Gallery SOIL 渋谷', meta: '東京都渋谷区宇田川町 X-X SOILビル 1F',    url: 'kotennavi-p4.html?g=soil' },
+  { name: 'スペースYUI',       meta: '東京都港区南青山 X-X-X',                  url: 'kotennavi-p4.html?g=yui-tokyo' },
+  { name: 'スペースYUI',       meta: '京都府京都市中京区 X-X（同名の別会場）',   url: 'kotennavi-p4.html?g=yui-kyoto' }   /* 同名の別会場デモ */
+];
+var CREATOR_POOL = [
+  { name: '松田 啓佑', meta: 'アート／絵画・セラミック',           url: 'kotennavi-p3.html?c=matsuda' },
+  { name: '田中 透',   meta: 'アート／油彩',                       url: 'kotennavi-p3.html?c=tanaka-1' },
+  { name: '田中 透',   meta: 'アート／油彩（同姓同名・別の作家）', url: 'kotennavi-p3.html?c=tanaka-2' },   /* 同姓同名同ジャンルのデモ */
+  { name: '木梨 アイネ', meta: 'クラフト／テキスタイル',           url: 'kotennavi-p3.html?c=kinashi' }
+];
+function initP211Combo(cfg) {
+  var input = document.getElementById(cfg.inputId);
+  var list  = document.getElementById(cfg.listId);
+  var combo = document.getElementById(cfg.comboId);
+  if (!input || !list || !combo) return;
+  var norm = function (s) { return (s || '').toLowerCase().replace(/[\s　]+/g, ''); };
+  function render() {
+    var q = norm(input.value);
+    var rows = cfg.pool.filter(function (o) { return !q || norm(o.name).indexOf(q) !== -1; });
+    var html = rows.map(function (o) {
+      return '<div class="p211-combo__opt" data-name="' + escHtml(o.name) + '">' +
+        '<span class="p211-combo__opt-info">' +
+          '<span class="p211-combo__opt-name">' + escHtml(o.name) + '</span>' +
+          '<span class="p211-combo__opt-meta">' + escHtml(o.meta) + '</span>' +
+        '</span>' +
+        '<a class="p211-combo__opt-verify" href="' + o.url + '" target="_blank" rel="noopener">確認 ↗</a>' +
+        '<button type="button" class="p211-combo__opt-select ktn-op-btn ktn-op-btn--sm">選択</button>' +
+        '</div>';
+    }).join('');
+    var typed = input.value.trim();
+    var exact = cfg.pool.some(function (o) { return o.name === typed; });
+    if (typed && !exact) {
+      html += '<div class="p211-combo__new">「<strong>' + escHtml(typed) + '</strong>」は候補にありません。このまま新しい名称として' + cfg.newVerb + 'できます（登録内容は管理者の確認時に反映されます）。</div>';
+    } else if (!rows.length) {
+      html = '<div class="p211-combo__new">候補がありません。入力した名称のまま' + cfg.newVerb + 'できます（登録内容は管理者の確認時に反映されます）。</div>';
+    }
+    list.innerHTML = html;
+  }
+  function open() { if (input.disabled) return; render(); list.hidden = false; }
+  function close() { list.hidden = true; }
+  input.addEventListener('focus', open);
+  input.addEventListener('input', function () { if (input.disabled) return; render(); list.hidden = false; if (cfg.onInput) cfg.onInput(); });
+  input.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
+  list.addEventListener('click', function (e) {
+    if (e.target.closest('.p211-combo__opt-verify')) return;   /* 確認↗＝別タブで開くだけ（選択しない） */
+    var opt = e.target.closest('.p211-combo__opt');
+    if (!opt) return;
+    input.value = opt.dataset.name;
+    close();
+    if (cfg.onSelect) cfg.onSelect(opt.dataset.name);
+  });
+  document.addEventListener('click', function (e) {
+    if (!list.hidden && !e.target.closest('#' + cfg.comboId)) close();
+  });
 }
+
+/* request 6：登録済みにない新しい会場を入力したら、詳細入力を促すノートを出し
+   「開催場所の詳細情報」アコーディオンを自動展開（詳細入力の見落とし防止） */
+function checkVenueNew(autoOpen) {
+  var venue   = document.getElementById('p211Venue');
+  var note    = document.getElementById('p211VenueNewNote');
+  var subLink = document.getElementById('p211VenueSubLink');
+  var acc     = document.getElementById('p211AccVenue');
+  var kanaReq = document.getElementById('p211VenueKanaReq');
+  var addrReq = document.getElementById('p211VenueAddrReq');
+  if (!venue) return;
+  var v = venue.value.trim();
+  var known = VENUE_POOL.some(function (o) { return o.name === v; });
+  var isNew = !!v && !known && !demoConfirmed;   /* 確認済ロック時は促さない */
+  if (note) note.hidden = !isNew;
+  if (subLink) subLink.classList.toggle('p211-sub-link--need', isNew);
+  /* 新規会場のときだけカナ・住所を必須化（登録済み会場は登録情報が使われるため任意） */
+  if (kanaReq) kanaReq.hidden = !isNew;
+  if (addrReq) addrReq.hidden = !isNew;
+  if (autoOpen && isNew && acc && acc.hidden) toggleAcc('p211AccVenue', subLink);
+}
+
+/* ── イベント・在廊行（開催スケジュール詳細） ── */
 function addEventRow() {
   var list = document.getElementById('p211EventList');
   if (!list) return;
@@ -1182,9 +1276,7 @@ function addEventRow() {
     '<div style="display:flex;gap:10px;flex-wrap:wrap">' +
       '<div class="p211-event-item__field" style="flex:1;min-width:200px"><label class="p211-label">時間</label><input class="p211-input" type="text" placeholder="例：①11:00〜 ②14:00〜（各回60分）"></div>' +
       '<div class="p211-event-item__field" style="flex:1;min-width:200px"><label class="p211-label">場所</label><input class="p211-input" type="text" placeholder="未入力の場合は展覧会の会場"></div></div>' +
-    '<div style="display:flex;gap:10px;flex-wrap:wrap">' +
-      '<div class="p211-event-item__field" style="flex:1;min-width:200px"><label class="p211-label">担当クリエイター</label><select class="p211-select"><option value="">—（展覧会全体）</option>' + artistOptions() + '</select></div>' +
-      '<div class="p211-event-item__field" style="flex:1;min-width:200px"><label class="p211-label">詳細・申込URL</label><input class="p211-input" type="url" placeholder="https://"></div></div>' +
+    '<div class="p211-event-item__field"><label class="p211-label">詳細・申込URL</label><input class="p211-input" type="url" placeholder="https://"></div>' +
     '<div class="p211-event-item__field"><label class="p211-label">説明</label><textarea class="p211-textarea" style="min-height:48px" placeholder="参加方法・定員・料金など"></textarea></div>';
   list.appendChild(item);
 }
@@ -1342,13 +1434,16 @@ function toggleLiaisonMode() {
    gallery＝自ギャラリーが default（変更可）／creator＝default なし。
    入力方法はどちらも同じ（過去展の会場を候補から選択 or 新規入力） */
 var VENUE_HELP = {
-  gallery: 'ギャラリーユーザーの方はご自身のギャラリーが設定されています。別会場の場合は、過去の展覧会で入力した会場を候補から選択するか、新しい会場名を直接入力してください。',
-  creator: '過去の展覧会で入力した会場は候補から選択できます。新しい会場名は直接入力してください。'
+  gallery: 'ギャラリーユーザーの方はご自身のギャラリーが設定されています。別会場の場合は、登録済みの会場を候補から選択するか、新しい会場名を直接入力してください。同名の会場は候補の「確認 ↗」で会場ページを開き、確かめてから選択できます。',
+  creator: '登録済みの会場は候補から選択できます。新しい会場名は直接入力してください。同名の会場は候補の「確認 ↗」で会場ページを開き、確かめてから選択できます。'
 };
 function applyVenueRole() {
   var role = (window.ktnState && window.ktnState.role === 'creator') ? 'creator' : 'gallery';
   var help = document.getElementById('p211VenueHelp');
   if (help) help.textContent = VENUE_HELP[role];
+  /* FAQ参照リンクをロール別に（creator＝p60-6 クリエイター編／gallery＝p60-7 ギャラリー編） */
+  var faq = document.getElementById('p211FaqLink');
+  if (faq) faq.setAttribute('href', role === 'creator' ? '/p60-6' : '/p60-7');
   /* 新規モードのみ default を反映（編集・クローンは既存値を保持）
      開催場所＝gallery のみ自ギャラリー／出展クリエイター＝creator のみ自分 */
   if (demoMode === 'new') {
@@ -1357,6 +1452,7 @@ function applyVenueRole() {
     artistList = (role === 'creator') ? [{ name: '田中 透', isNew: false }] : [];
     renderArtists();
   }
+  checkVenueNew(false);
 }
 window.p211RoleSync = function () { applyVenueRole(); syncOptUI(); };   /* ロール切替＝新規モードの出展クリエイター default が変わるためチップも再計算 */
 
@@ -1367,11 +1463,29 @@ function syncConsent() {
   if (chk && btn) btn.disabled = !chk.checked;
 }
 
+/* 会場・クリエイター選択コンボの初期化（datalist 代替） */
+initP211Combo({
+  comboId: 'p211VenueCombo', inputId: 'p211Venue', listId: 'p211VenueComboList',
+  pool: VENUE_POOL, newVerb: '入力',
+  onInput: function () { checkVenueNew(false); },
+  onSelect: function () { checkVenueNew(true); }
+});
+initP211Combo({
+  comboId: 'p211ArtistCombo', inputId: 'p211ArtistInput', listId: 'p211ArtistComboList',
+  pool: CREATOR_POOL, newVerb: '追加',
+  onSelect: function () { addArtist(); }   /* 候補の「選択」で即リストへ追加 */
+});
+(function () {
+  var venue = document.getElementById('p211Venue');
+  if (venue) venue.addEventListener('change', function () { checkVenueNew(true); });
+})();
+
 /* 初期状態（編集モード・確認済） */
 setConfirmed(true);
 applyVenueRole();
 renderArtists();
 syncConsent();
+checkVenueNew(false);
 
 /* ── 公開日時フィールドの表示 ── */
 function togglePublishDate() {
@@ -1428,10 +1542,21 @@ function validateRequired() {
   clearFieldErrors();
   var first = null;
   document.querySelectorAll('.ktn-mgmt-wrap .p211-label .ktn-req').forEach(function (mark) {
+    /* 条件付き必須（新規会場のカナ・住所）＝マーカー非表示時は対象外 */
+    if (mark.hidden) return;
     var field = mark.closest('.p211-field');
     if (!field) return;
     var filled;
-    if (field.querySelector('.p211-pill-group')) {
+    if (field.id === 'p211ArtistReqField') {
+      /* 出展クリエイターは配列管理（artistList）＝1名以上あれば充足 */
+      filled = artistList.length > 0;
+    } else if (field.id === 'p211VenueAddrField') {
+      /* 住所＝都道府県＋番地欄（市区町村〜建物）が入っていれば充足（郵便番号は任意） */
+      var pref = field.querySelector('select');
+      var texts = field.querySelectorAll('input[type=text]');
+      var addrLine = texts[texts.length - 1];
+      filled = !!(pref && pref.value.trim()) && !!(addrLine && addrLine.value.trim());
+    } else if (field.querySelector('.p211-pill-group')) {
       filled = !!field.querySelector('.p211-pill-group input:checked');
     } else if (field.querySelector('.p211-img-drop')) {
       var up = field.querySelector('.p211-img-uploaded');
@@ -1440,7 +1565,22 @@ function validateRequired() {
       var inputs = field.querySelectorAll('input:not([type=file]), select, textarea');
       filled = inputs.length > 0 && Array.prototype.every.call(inputs, function (el) { return el.value.trim() !== ''; });
     }
-    if (!filled) { field.classList.add('is-error'); if (!first) first = field; }
+    if (!filled) {
+      field.classList.add('is-error');
+      /* 出展クリエイター未設定＝追加できるようアコーディオンを開く */
+      if (field.id === 'p211ArtistReqField') {
+        var accA = document.getElementById('p211AccArtist');
+        var subA = document.getElementById('p211ArtistSubLink');
+        if (accA && accA.hidden) toggleAcc('p211AccArtist', subA);
+      }
+      /* 新規会場のカナ・住所未入力＝詳細アコーディオンを開く */
+      if (field.id === 'p211VenueKanaField' || field.id === 'p211VenueAddrField') {
+        var accV = document.getElementById('p211AccVenue');
+        var subV = document.getElementById('p211VenueSubLink');
+        if (accV && accV.hidden) toggleAcc('p211AccVenue', subV);
+      }
+      if (!first) first = field;
+    }
   });
   if (first) {
     first.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -1468,8 +1608,8 @@ var OPT_ITEMS = [
   { panel: 'p211AccEvents' },     /* イベント */
   { panel: 'p211AccAttend' },     /* 在廊予定 */
   { panel: 'p211AccVenue' },      /* 開催場所詳細 */
-  { panel: 'p211AccFacility' },   /* 会場利用案内 */
-  { panel: 'p211AccArtist', check: function () { return artistList.length > 0; } }
+  { panel: 'p211AccFacility' }    /* 会場利用案内 */
+  /* 出展クリエイター（p211AccArtist）は必須項目へ変更したため追加項目メーターから除外 */
 ];
 /* パネル内に1つでも入力があるか（hide された行・タグは除外＝デモの非破壊リセットと整合） */
 function panelFilled(panel) {
@@ -1612,14 +1752,24 @@ function restoreDraft() {
   togglePublishDate();
   syncConsent();
   syncOptUI();
-  if (typeof KTN !== 'undefined' && KTN.toast) KTN.toast('下書きを復元しました（デモ）');
+  showDraftNotice();
 }
-function discardDraft() {
+function openDiscardModal() {
+  var m = document.getElementById('p211DiscardModal');
+  if (m) m.hidden = false;
+}
+function closeDiscardModal() {
+  var m = document.getElementById('p211DiscardModal');
+  if (m) m.hidden = true;
+}
+function confirmDiscard() {
+  closeDiscardModal();
   try { localStorage.removeItem(DRAFT_KEY); } catch (e) {}
   showDraftNotice();
   if (typeof KTN !== 'undefined' && KTN.toast) KTN.toast('下書きを破棄しました');
 }
-showDraftNotice();
+/* ページを開いた時点で下書きがあれば自動復元（手動「復元する」は廃止）。無ければバーを隠すだけ。 */
+if (readDraft()) restoreDraft(); else showDraftNotice();
 </script>
 </body>
 </html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>よくある質問 — ギャラリー編 | 個展なび</title>
+  <meta name="description" content="個展なびのギャラリー向けよくある質問。展覧会の登録・編集の必須項目、管理者確認・公開までの流れ、会場や出展クリエイターの指定、LIAISON設定などをわかりやすく説明します。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@1,400;1,600&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<body data-w="article" class="p70-page">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- デモバー -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">FAQページ</span>
+  <button class="dbtn dbtn--active" id="dbarView">閲覧</button>
+</div>
+
+<!-- ヘッダー -->
+<header class="ktn-header" id="ktnHeader">
+  <div class="ktn-header__inner">
+    <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+    <div class="ktn-hdr-actions" id="ktnActs"></div>
+  </div>
+</header>
+
+<!-- タイトルバンド -->
+<div class="p70-title-band">
+  <div class="p70-title-band__inner">
+    <div class="p70-head__sub">
+      <span class="p70-head__updated">よくある質問</span>
+    </div>
+    <h1 class="p70-head__title">ギャラリー編</h1>
+    <p class="p70-head__en">FAQ for galleries</p>
+    <p class="p70-head__lead">展覧会の登録・編集についての、ギャラリーの方からよくいただくご質問をまとめました。<br>ここで解決しない場合は、お問合せフォームからご連絡ください。</p>
+  </div>
+</div>
+
+<main>
+  <div class="p70-wrap">
+
+    <!-- 目次 -->
+    <nav class="p70-toc" aria-label="目次">
+      <div class="p70-toc__title">目次 — Contents</div>
+      <ol class="p70-toc__list">
+        <li class="p70-toc__item"><span class="p70-toc__num">1</span><a class="p70-toc__link" href="#exhibition-edit">展覧会の登録・編集</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">2</span><a class="p70-toc__link" href="#contact">解決しない場合</a></li>
+      </ol>
+    </nav>
+
+    <!-- 1. 展覧会の登録・編集（KTN.QA から描画） -->
+    <section class="p70-section" id="exhibition-edit">
+      <div class="p70-section__head">
+        <span class="p70-section__num">1</span>
+        <h2 class="p70-section__title">展覧会の登録・編集</h2>
+        <span class="p70-section__en">Registering &amp; editing exhibitions</span>
+      </div>
+      <div id="p607QaExhibition"></div>
+    </section>
+
+    <!-- 2. 解決しない場合 -->
+    <section class="p70-section" id="contact">
+      <div class="p70-section__head">
+        <span class="p70-section__num">2</span>
+        <h2 class="p70-section__title">解決しない場合</h2>
+        <span class="p70-section__en">Still need help?</span>
+      </div>
+      <p class="p70-body">上記で解決しない場合は、お問合せフォームからご連絡ください。内容を確認のうえ、個別にご案内します。</p>
+      <p><a class="ktn-guide-link" href="/p60-11">お問合せフォームへ →</a></p>
+    </section>
+
+  </div>
+</main>
+
+<!-- フッター -->
+<footer class="ktn-footer" id="ktnFooter"></footer>
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  KTN.init({ page: 'p60-7' });
+
+  // ギャラリー編＝audience gallery + common を「展覧会の登録・編集」カテゴリで描画
+  KTN.renderQA('#p607QaExhibition', { audience: 'gallery', category: 'exhibition-edit' });
+
+  var dbarView = document.getElementById('dbarView');
+  if (dbarView) {
+    dbarView.addEventListener('click', function () {
+      this.classList.add('dbtn--active');
+    });
+  }
+});
+</script>
+</body>
+</html>

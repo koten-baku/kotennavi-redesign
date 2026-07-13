@@ -58,6 +58,7 @@
         <li class="p70-toc__item"><span class="p70-toc__num">7</span><a class="p70-toc__link" href="#phase-complete">完了確認 — 出品者の完了確認を待つ</a></li>
         <li class="p70-toc__item"><span class="p70-toc__num">8</span><a class="p70-toc__link" href="#terminal">取引の終わり方（完了・キャンセル）</a></li>
         <li class="p70-toc__item"><span class="p70-toc__num">9</span><a class="p70-toc__link" href="#trouble">こんなときは — 状況別インデックス</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">10</span><a class="p70-toc__link" href="#faq">よくある質問</a></li>
       </ol>
     </nav>
 
@@ -481,6 +482,17 @@
       </div>
     </section>
 
+    <!-- 10. よくある質問（KTN.QA から描画＝購入管理・取引ワークスペースと単一ソースの統合セット。phase無しで全表示） -->
+    <section class="p70-section" id="faq">
+      <div class="p70-section__head">
+        <span class="p70-section__num">10</span>
+        <h2 class="p70-section__title">よくある質問</h2>
+        <span class="p70-section__en">FAQ</span>
+      </div>
+      <p class="p70-body">購入管理（一覧）と取引ワークスペース（個別進行）でよく寄せられる質問です。上のフェーズ解説とあわせてご覧ください。</p>
+      <div id="p711QaTxn"></div>
+    </section>
+
     <!-- フッターナビ -->
     <div class="p70-nav-foot">
       <a class="p70-nav-foot__link" href="kotennavi-p70-3.html">← 作品購入までの流れ（取引前）</a>
@@ -498,6 +510,9 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   KTN.init({ page: 'p70-11' });
+
+  /* よくある質問＝KTN.QA を単一ソースに描画（購入者の統合セット全件・phase無しで全表示） */
+  KTN.renderQA('#p711QaTxn', { category: 'liaison-txn', side: 'buyer', style: 'guide' });
 
   var dbarView = document.getElementById('dbarView');
   if (dbarView) {
