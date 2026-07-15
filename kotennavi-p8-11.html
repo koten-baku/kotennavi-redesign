@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>レビュー編集 — あなたが知らないオノマトペ | 個展なび</title>
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<body data-w="article" class="p5-page p8-11-page mgmt-page">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- デモバー -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ロール：</span>
+  <button class="dbtn" onclick="setR('guest',this)">ゲスト</button>
+  <button class="dbtn on" onclick="setR('user+',this)">投稿者本人</button>
+  <button class="dbtn" onclick="setR('admin',this)">管理者</button>
+</div>
+
+<div class="shell">
+<div class="content-wrap" id="contentWrap">
+
+  <header class="ktn-header" id="ktnHeader">
+    <div class="ktn-header__inner">
+      <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+      <div class="ktn-hdr-actions" id="ktnActs"></div>
+    </div>
+  </header>
+
+  <main class="ktn-main" id="ktnMain">
+
+    <div class="ktn-content">
+
+      <!-- 親エンティティ文脈ストリップ（identity strip・content variant） -->
+      <div class="ktn-mgmt-context">
+        <a class="ktn-mgmt-context__media ktn-mgmt-context__media--content" href="kotennavi-p8.html" style="background:linear-gradient(155deg,#b8d8cc,#6a9e8a)"></a>
+        <div class="ktn-mgmt-context__body">
+          <div class="ktn-mgmt-context__badges">
+            <span class="cb cb-content cb-review">review</span>
+          </div>
+          <div class="ktn-mgmt-context__name"><a href="kotennavi-p8.html">あなたが知らないオノマトペ <span class="p8-head__title-suffix">レビュー</span></a></div>
+          <div class="ktn-mgmt-context__meta">チェックイン 2026.02.20</div>
+          <div class="ktn-mgmt-context__owner">
+            <span class="ktn-mgmt-context__owner-label">Reviewer</span>
+            <span class="cb cb-person cb-user">user</span>
+            <a href="kotennavi-p5.html">A.K.</a>
+          </div>
+        </div>
+        <div class="ktn-mgmt-context__actions">
+          <a class="ktn-mgmt-context__view" href="kotennavi-p8.html">レビューを見る →</a>
+        </div>
+      </div>
+
+      <div class="p811-wrap ktn-mgmt-wrap" id="p811Wrap">
+
+        <!-- ページタイトル -->
+        <div class="ktn-mgmt-head">
+          <h2 class="ktn-mgmt-head__title">レビューを編集</h2>
+          <p class="ktn-mgmt-head__en">EDIT REVIEW</p>
+          <p class="ktn-mgmt-head__desc">チェックイン日・評価・レビュー内容を編集できます。レビューを空欄にして保存することはできません。レビューを取り消したい場合は、マイページのチェックイン一覧から削除してください。</p>
+        </div>
+
+        <!-- ブロック: レビュー内容 -->
+        <div class="p211-block">
+          <div class="p211-block__head">
+            <h3 class="p211-block__title">レビュー内容 <span class="p211-block__title-en">REVIEW</span></h3>
+          </div>
+          <div class="p211-block__body">
+
+            <!-- チェックイン日 -->
+            <div class="p211-field">
+              <label class="p211-label" for="p811Date">チェックイン日<span class="ktn-req">必須</span></label>
+              <input class="p211-input" id="p811Date" type="date" value="2026-02-20">
+              <p class="p211-help">実際に展覧会を訪れた日を選択してください。</p>
+            </div>
+
+            <!-- 評価 -->
+            <div class="p211-field">
+              <div class="p211-label">評価<span class="ktn-req">必須</span></div>
+              <div class="ktn-modal__stars" id="p811Stars">
+                <span class="ktn-modal__star on" data-v="1" onclick="ktnSetStar(1)">★</span>
+                <span class="ktn-modal__star on" data-v="2" onclick="ktnSetStar(2)">★</span>
+                <span class="ktn-modal__star on" data-v="3" onclick="ktnSetStar(3)">★</span>
+                <span class="ktn-modal__star on" data-v="4" onclick="ktnSetStar(4)">★</span>
+                <span class="ktn-modal__star on" data-v="5" onclick="ktnSetStar(5)">★</span>
+              </div>
+            </div>
+
+            <!-- レビュー本文 -->
+            <div class="p211-field">
+              <label class="p211-label" for="p811Body">レビュー本文<span class="ktn-req">必須</span></label>
+              <textarea class="p211-textarea p811-body" id="p811Body">田中透さんの個展「あなたが知らないオノマトペ」を訪れました。会場に足を踏み入れた瞬間から、言葉が視覚へと変換されていく感覚に引き込まれました。特に《ふわふわ》と《どきどき》の2点は、音の質感がそのまま色と筆致に置き換えられていて、見ているだけで擬音語が耳の奥で鳴り出すような不思議な体験でした。
+
+絵の前に立つと、自分の中にある「ふわふわ」のイメージと、作家が描いた「ふわふわ」がゆっくり重なっていきます。言葉と絵のあいだにこんなにも豊かな余白があるのだと気づかされました。受付でいただいたポストカードも嬉しく、帰り道もずっと余韻に浸っていました。会期中にもう一度、今度は静かな平日に訪れたいと思います。</textarea>
+              <p class="p211-help">最大1,000文字。公開レビューとして表示されます。</p>
+            </div>
+
+            <!-- 写真 -->
+            <div class="p211-field">
+              <div class="p211-label">写真（任意）</div>
+              <div class="p811-photos">
+                <div class="p811-photo" style="background:linear-gradient(155deg,#f0e8d0,#d4b896)">
+                  <button class="p811-photo__remove" type="button" aria-label="削除">✕</button>
+                </div>
+                <label class="p811-photo-add">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="18" height="18"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><polyline points="21 3 21 9 15 9"/></svg>
+                  <span>差し替え</span>
+                  <input type="file" accept="image/*" style="display:none" id="p811PhotoInput">
+                </label>
+              </div>
+              <p class="p211-help">JPG / PNG / WebP・1枚5MB以内・写真は1枚まで。</p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 送信バー -->
+        <div class="p211-submit-bar">
+          <a class="p211-submit-bar__cancel ktn-op-btn" href="kotennavi-p8.html">キャンセル</a>
+          <button class="p211-submit-bar__submit ktn-op-btn ktn-op-btn--primary" type="button" id="p811SaveBtn">変更を保存する</button>
+        </div>
+
+      </div>
+    </div>
+  </main>
+</div>
+</div>
+
+<script src="kotennavi-common.js"></script>
+<script src="kotennavi-pages.js"></script>
+<script>
+KTN.init({ page: 'p8-11', role: 'user+' });
+(function () {
+  // 写真削除（デモ）
+  document.querySelectorAll('.p811-photo__remove').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var ph = b.closest('.p811-photo');
+      if (ph) ph.remove();
+    });
+  });
+
+  // 保存ボタン（レビュー本文の空欄保存を禁止）
+  var saveBtn = document.getElementById('p811SaveBtn');
+  if (saveBtn) saveBtn.addEventListener('click', function () {
+    var body  = (document.getElementById('p811Body')  || {}).value || '';
+    var stars = document.querySelectorAll('#p811Stars .ktn-modal__star.on').length;
+    if (!body.trim()) {
+      KTN.toast('レビュー本文を入力してください');
+      var t = document.getElementById('p811Body');
+      if (t) t.focus();
+      return;
+    }
+    if (stars < 1) {
+      KTN.toast('評価を選択してください');
+      return;
+    }
+    KTN.toast('レビューを保存しました');
+  });
+}());
+</script>
+</body>
+</html>

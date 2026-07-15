@@ -95,13 +95,6 @@
         <p class="ktn-mgmt-head__guides">登録・編集の手順や、管理者確認・公開までの流れは <a class="ktn-guide-link" id="p211FaqLink" href="/p60-7">よくある質問（展覧会の登録・編集）→</a></p>
       </div>
 
-      <!-- 下書き通知バー（保存済み下書きがある場合＝開いた時点で自動復元済み） -->
-      <div class="p211-draft-notice" id="p211DraftNotice" hidden>
-        <svg class="p211-draft-notice__icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><circle cx="7" cy="7" r="6"/><path d="M7 3.5V7l2.5 1.5"/></svg>
-        <span class="p211-draft-notice__txt">下書きから復元しました<span class="p211-draft-notice__at">（<span id="p211DraftAt"></span> 保存）</span></span>
-        <button class="ktn-op-btn ktn-op-btn--sm" type="button" onclick="openDiscardModal()">破棄する</button>
-      </div>
-
       <!-- ─── 1. 基本情報 ─── -->
       <div class="p211-block">
         <div class="p211-block__head">
@@ -1021,19 +1014,6 @@
         </div>
       </div>
 
-      <!-- 下書き破棄の確認モーダル -->
-      <div class="p211-modal" id="p211DiscardModal" hidden>
-        <div class="p211-modal__overlay" onclick="closeDiscardModal()"></div>
-        <div class="p211-modal__box">
-          <p class="p211-modal__title">下書きを破棄しますか？</p>
-          <p class="p211-modal__note">保存されている下書きを削除します。この操作は取り消せません。</p>
-          <div class="p211-modal__foot">
-            <button class="ktn-op-btn" type="button" onclick="closeDiscardModal()">戻る</button>
-            <button class="ktn-op-btn ktn-op-btn--danger" type="button" onclick="confirmDiscard()">破棄する</button>
-          </div>
-        </div>
-      </div>
-
     </div>
   </main>
 </div>
@@ -1896,122 +1876,12 @@ function syncOptUI() {
 })();
 syncOptUI();
 
-/* ── ③下書き保存（デモ実装：localStorage。本番は Drupal 側の下書き保存APIを想定） ──
-   必須チェック・関係者了承チェックなしで途中の内容を保存できる。
-   保存対象＝静的フィールド値＋追加行の本数＋タグ＋出展クリエイター。
-   復元＝モードを揃えてリセット → 追加行を再生成 → DOM順で値を書き戻す。 */
-var DRAFT_KEY = 'ktn-p211-draft';
-var DRAFT_ADDED_LISTS = [
-  { list: 'p211EventList',     add: addEventRow },
-  { list: 'p211AttList',       add: addAttRow }
-];
-/* 保存・復元の対象フィールド（DOM順で対応付け）。
-   出展クリエイター詳細＝artistList 側に値を持つため除外／タグ入力欄＝一時入力のため除外 */
-function draftEls() {
-  return Array.prototype.filter.call(
-    document.querySelectorAll('.ktn-mgmt-wrap input:not([type=file]), .ktn-mgmt-wrap select, .ktn-mgmt-wrap textarea'),
-    function (el) { return !el.closest('.p211-artist-detail') && !el.closest('.p211-sched-cal') && el.id !== 'p211TagInput'; }
-  );
-}
-function readDraft() {
-  var raw;
-  try { raw = localStorage.getItem(DRAFT_KEY); } catch (e) { return null; }
-  if (!raw) return null;
-  try { return JSON.parse(raw); } catch (e) { return null; }
-}
-function fmtDraftAt(iso) {
-  var d = new Date(iso);
-  if (isNaN(d)) return '';
-  var p = function (n) { return (n < 10 ? '0' : '') + n; };
-  return d.getFullYear() + '.' + p(d.getMonth() + 1) + '.' + p(d.getDate()) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
-}
-function showDraftNotice() {
-  var notice = document.getElementById('p211DraftNotice');
-  if (!notice) return;
-  var data = readDraft();
-  notice.hidden = !data;
-  if (data) {
-    var at = document.getElementById('p211DraftAt');
-    if (at) at.textContent = fmtDraftAt(data.at);
-  }
-}
+/* ── ③下書き保存（デモスタブ） ──
+   本番＝「確認依頼フラグ OFF で保存」＝保存して確認依頼（flag ON）と同一の保存処理・同一ペイロード。
+   下書きは別ストアではなくフラグ違いなので、デモでは保存経路が2つある事だけ示す（トーストのみ）。 */
 function saveDraft() {
-  var added = DRAFT_ADDED_LISTS.map(function (d) {
-    var l = document.getElementById(d.list);
-    return l ? l.querySelectorAll('.is-added').length : 0;
-  });
-  var tags = [];
-  document.querySelectorAll('#p211TagArea .p211-tag').forEach(function (t) {
-    if (t.style.display !== 'none') tags.push(t.childNodes[0].textContent);
-  });
-  var vals = draftEls().map(function (el) {
-    if (el.type === 'checkbox' || el.type === 'radio') return { c: el.checked ? 1 : 0 };
-    if (el.tagName === 'SELECT') return { s: el.selectedIndex };
-    return { v: el.value };
-  });
-  var data = { at: new Date().toISOString(), mode: demoMode, added: added, tags: tags, vals: vals, artists: artistList, sched: SCHED.overrides };
-  try { localStorage.setItem(DRAFT_KEY, JSON.stringify(data)); } catch (e) {}
-  showDraftNotice();
   if (typeof KTN !== 'undefined' && KTN.toast) KTN.toast('下書きを保存しました（デモ）');
 }
-function restoreDraft() {
-  var data = readDraft();
-  if (!data) return;
-  /* 1) モードを揃えてクリーンな状態から始める（clearForm/restoreDefaults を内包） */
-  var mode = (data.mode && MODE_TITLES[data.mode]) ? data.mode : demoMode;
-  setDemoMode(mode);
-  /* 2) 追加行を保存時の本数だけ再生成（DOM順を保存時と一致させる） */
-  DRAFT_ADDED_LISTS.forEach(function (d, i) {
-    var n = (data.added && data.added[i]) || 0;
-    for (var k = 0; k < n; k++) d.add();
-  });
-  /* 3) 出展クリエイター */
-  artistList = data.artists || [];
-  renderArtists();
-  /* 3b) スケジュール詳細カレンダーの上書き（overrides）を復元 */
-  SCHED.overrides = data.sched || {};
-  SCHED.sel = null;
-  /* 4) タグ：直書きタグを隠し、保存済みタグを再構築 */
-  document.querySelectorAll('#p211TagArea .p211-tag:not(.is-added)').forEach(function (t) { t.style.display = 'none'; });
-  (data.tags || []).forEach(addTagSpan);
-  /* 5) フィールド値を DOM 順で書き戻す */
-  var els = draftEls();
-  (data.vals || []).forEach(function (d, i) {
-    var el = els[i];
-    if (!el) return;
-    if ('c' in d) el.checked = !!d.c;
-    else if ('s' in d) el.selectedIndex = d.s;
-    else el.value = d.v;
-  });
-  /* 6) 値に依存する UI を再同期 */
-  document.querySelectorAll('.p211-pill').forEach(function (pill) {
-    var inp = pill.querySelector('input');
-    if (inp) pill.classList.toggle('is-active', inp.checked);
-  });
-  ['Bonus', 'Photo', 'Attend', 'Entry', 'Sale', 'Child'].forEach(toggleFacility);
-  toggleLiaisonMode();
-  togglePublishDate();
-  syncConsent();
-  syncOptUI();
-  schedCloseEditor();   /* 復元した会期・定休・上書きでカレンダーを再描画（エディタは閉じる） */
-  showDraftNotice();
-}
-function openDiscardModal() {
-  var m = document.getElementById('p211DiscardModal');
-  if (m) m.hidden = false;
-}
-function closeDiscardModal() {
-  var m = document.getElementById('p211DiscardModal');
-  if (m) m.hidden = true;
-}
-function confirmDiscard() {
-  closeDiscardModal();
-  try { localStorage.removeItem(DRAFT_KEY); } catch (e) {}
-  showDraftNotice();
-  if (typeof KTN !== 'undefined' && KTN.toast) KTN.toast('下書きを破棄しました');
-}
-/* ページを開いた時点で下書きがあれば自動復元（手動「復元する」は廃止）。無ければバーを隠すだけ。 */
-if (readDraft()) restoreDraft(); else showDraftNotice();
 </script>
 </body>
 </html>

@@ -349,70 +349,6 @@ KTN.pages['p2'] = function () {
     }).join('');
   })();
 
-  /* ── レビュー（exhibition_v6 投稿者カード形式・カラーアバター） ── */
-  (function () {
-    var list = document.getElementById('p2ReviewList');
-    if (!list) return;
-    var RV = [
-      {
-        ini: 'A', name: 'A.K.', av: 'linear-gradient(135deg,#f0d8c8,#c8987a)', tc: 'rgba(255,255,255,.9)',
-        date: '2026.02.20', stars: 5, ci: true, checkinDate: '2026.02.20',
-        body: 'ふわふわとドキドキの作品が特に印象的でした。言葉が視覚に変換される感覚が新鮮でした。ポストカードも嬉しかったです。'
-      },
-      {
-        ini: 'M', name: 'mari_t', av: 'linear-gradient(135deg,#d8e8c8,#98b878)', tc: 'rgba(255,255,255,.9)',
-        date: '2026.02.19', stars: 5, ci: true, checkinDate: '2026.02.19',
-        body: '作家さんのトークも聴けてとても良かったです。色使いがとても独特で、何度でも来たいと思いました。'
-      },
-      {
-        ini: 'S', name: 'sato.hide', av: 'linear-gradient(135deg,#c8d8e8,#7898b8)', tc: 'rgba(255,255,255,.9)',
-        date: '2026.02.18', stars: 4, ci: true, checkinDate: '2026.02.18',
-        body: '特に「ざわざわ（夜）」は長い時間立ち止まって見入ってしまいました。会期中にまた行きたいと思っています。'
-      },
-      {
-        ini: 'Y', name: 'yuki88', av: 'linear-gradient(135deg,#e8d8f0,#b888c8)', tc: 'rgba(255,255,255,.9)',
-        date: '2026.02.17', stars: 5, ci: false, checkinDate: '',
-        body: '初めて個展を見に行ったのですが、とても丁寧な展示で感動しました。「言葉の断片」シリーズが特に好みでした。'
-      },
-    ];
-    var CI_ICON = '<svg viewBox="0 0 16 16" width="9" height="9" style="display:inline-block;vertical-align:middle"><circle cx="10" cy="5" r="4" fill="currentColor"/><circle cx="5" cy="11" r="2.4" fill="currentColor"/></svg>';
-    var LIMIT = 3;
-    function buildRvItem(r) {
-      var stars = '';
-      for (var i = 0; i < 5; i++)
-        stars += '<span class="rv-star"' + (i >= r.stars ? ' style="opacity:.18"' : '') + '>★</span>';
-      var ci = r.ci
-        ? '\u00a0<span class="rv-checkin-date">' + CI_ICON + '\u00a0' + r.checkinDate + '</span>'
-        : '';
-      return '<a class="review-item" href="kotennavi-p8.html">' +
-        '<div class="rv-hd">' +
-        '<div class="rv-av" style="background:' + r.av + ';color:' + r.tc + '">' + r.ini + '</div>' +
-        '<div style="flex:1;min-width:0">' +
-        '<div class="rv-name"><span class="cb cb-user">user</span>\u00a0' + r.name + ci + '</div>' +
-        '<div class="rv-stars">' + stars + '</div>' +
-        '</div>' +
-        '<div class="rv-date">' + r.date + '</div>' +
-        '</div>' +
-        '<div class="rv-body">' + r.body + '</div>' +
-        '</a>';
-    }
-    var html = RV.slice(0, LIMIT).map(buildRvItem).join('');
-    var extra = RV.slice(LIMIT);
-    if (extra.length) {
-      html += '<div class="p2-rv-more" id="p2RvMore">' + extra.map(buildRvItem).join('') + '</div>';
-      html += '<button class="p2-rv-toggle" id="p2RvToggle" type="button">残り' + extra.length + '件を見る</button>';
-    }
-    list.innerHTML = html;
-    if (extra.length) {
-      document.getElementById('p2RvToggle').addEventListener('click', function () {
-        var moreEl = document.getElementById('p2RvMore');
-        var open = moreEl.style.display === 'block';
-        moreEl.style.display = open ? '' : 'block';
-        this.textContent = open ? '残り' + extra.length + '件を見る' : '閉じる';
-      });
-    }
-  })();
-
   /* ++ posted by card ++ */
   (function () {
     var el = document.getElementById('p2PostedByCard');
@@ -513,6 +449,13 @@ KTN.pages['p2'] = function () {
     if (e.key === 'Escape') window.closeQrModal();
   });
 
+  /* ── ロール切替に追従（デモバー guest/login）＝本人チェックイン&レビューの表示制御 ── */
+  var _prevRender = window.ktnRender;
+  window.ktnRender = function () {
+    if (typeof _prevRender === 'function') _prevRender();
+    if (typeof window.syncP2Own === 'function') window.syncP2Own();
+  };
+
 };
 
 /* p2-1〜4 共通おすすめグリッドデータ */
@@ -556,6 +499,35 @@ function renderP2SubRecGrid() {
   var grid = document.getElementById('p2SubRecGrid'); if (!grid) return;
   grid.innerHTML = P2_SUB_REC_DATA.map(buildGridEcCard).join('');
 }
+
+/* ────────────────────────────────────────────────────
+   P8 レビュー詳細（親展覧会・投稿者・おすすめ）
+──────────────────────────────────────────────────── */
+KTN.pages['p8'] = function () {
+  /* おすすめ展覧会グリッド（p2 と同データ・部品を再利用） */
+  var grid = document.getElementById('p8SubRecGrid');
+  if (grid) grid.innerHTML = P2_SUB_REC_DATA.map(buildGridEcCard).join('');
+
+  /* 親展覧会サイドカード（buildSideEcCard 再利用・href は p2 固定） */
+  var exh = document.getElementById('p8ExhCard');
+  if (exh) exh.innerHTML = buildSideEcCard({
+    title: 'あなたが知らないオノマトペ', pref: '東京', venue: 'Gallery SOIL 渋谷',
+    s: '02.18', e: '03.05', liaison: 'li-plus',
+    bg: 'linear-gradient(155deg,#b8d8cc,#6a9e8a)'
+  });
+
+  /* 投稿者本人（ログイン）のみ「レビューを編集 →」を表示 */
+  function syncOwnerEdit() {
+    var oe = document.getElementById('p8OwnerEdit');
+    if (oe) oe.hidden = (window.ktnState.role === 'guest');
+  }
+  syncOwnerEdit();
+  var _prevRender = window.ktnRender;
+  window.ktnRender = function () {
+    if (typeof _prevRender === 'function') _prevRender();
+    syncOwnerEdit();
+  };
+};
 
 /* ────────────────────────────────────────────────────
    P2-1 スケジュール
@@ -5179,7 +5151,7 @@ KTN.pages['p5-2'] = function () {
         });
         var fb = document.getElementById('p52FilterBar');
         if (fb) fb.style.display = canFilter ? '' : 'none';
-        document.querySelectorAll('.p5-2-remove-btn').forEach(function (el) {
+        document.querySelectorAll('.ktn-owner-menu-btn').forEach(function (el) {
             el.style.display = isOwner ? '' : 'none';
         });
     }
@@ -5236,19 +5208,109 @@ KTN.pages['p5-2'] = function () {
         });
     }
 
-    // ── 記録除外ボタン ────────────────────────────────────────────────────────
-    document.querySelectorAll('.p5-2-remove-btn').forEach(function (btn) {
+    // ── オーナー操作メニュー（…）: チェックイン日/レビュー編集・削除 ─────────────
+    var CI_SVG = '<svg viewBox="0 0 16 16" width="9" height="9" style="display:inline-block;vertical-align:middle"><circle cx="10" cy="5" r="4" fill="currentColor"/><circle cx="5" cy="11" r="2.4" fill="currentColor"/></svg>';
+    var REVIEW_LINK = '<button class="p5-2-review-link ktn-guide-link" type="button" onclick="location.href=\'kotennavi-p8.html\';event.preventDefault();event.stopPropagation()">レビュー詳細を見る →</button>';
+
+    function esc(s) { var d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+
+    function readCard(card) {
+        var dateEl = card.querySelector('.rv-checkin-date');
+        var iso = dateEl ? dateEl.textContent.replace(/[^0-9.]/g, '').replace(/\./g, '-') : '';
+        var bodyEl = card.querySelector('.rv-body');
+        var review = bodyEl ? bodyEl.textContent.trim() : '';
+        var stars = 0;
+        card.querySelectorAll('.rv-star').forEach(function (s) {
+            if (!/opacity/.test(s.getAttribute('style') || '')) stars++;
+        });
+        return { iso: iso, review: review, stars: stars };
+    }
+
+    function applyCardData(card, data) {
+        var row = card.querySelector('.p5-exh-card__reason-row');
+        if (!row) return;
+        var display = (data.date || '').replace(/-/g, '.');
+        var hasReview = !!(data.review && data.review.length);
+        if (hasReview) {
+            var starsHtml = '';
+            for (var i = 1; i <= 5; i++)
+                starsHtml += '<span class="rv-star"' + (i <= data.stars ? '' : ' style="opacity:.18"') + '>★</span>';
+            row.innerHTML =
+                '<div class="p5-2-checkin-row">' +
+                '<span class="rv-checkin-date">' + CI_SVG + ' ' + display + '</span>' +
+                '<div class="rv-stars">' + starsHtml + '</div>' +
+                '</div>' +
+                '<div class="rv-body">' + esc(data.review) + '</div>' +
+                REVIEW_LINK;
+            card.setAttribute('data-has-review', '1');
+        } else {
+            row.innerHTML = '<span class="rv-checkin-date">' + CI_SVG + ' ' + display + '</span>';
+            card.removeAttribute('data-has-review');
+        }
+    }
+
+    function updateGroupCount(card) {
+        var group = card.closest('.p5-2-year-group');
+        if (!group) return;
+        var visible = group.querySelectorAll('.ec:not(.is-hidden)').length;
+        var countEl = group.querySelector('.p5-2-year-group__count');
+        if (countEl) countEl.textContent = '（' + visible + '件）';
+    }
+
+    function closeCardMenu() { ktnCloseOwnerMenu(); }
+
+    function cardAction(act, card) {
+        var cur = readCard(card);
+        var hasReview = card.getAttribute('data-has-review') === '1';
+        if (act === 'editDate') {
+            openCheckinEditModal({
+                title: 'チェックインを編集', date: cur.iso, stars: cur.stars, review: cur.review,
+                onSave: function (d) { applyCardData(card, d); }
+            });
+        } else if (act === 'review') {
+            openCheckinEditModal({
+                title: hasReview ? 'レビューを編集' : 'レビューを書く',
+                date: cur.iso, stars: cur.stars, review: cur.review, focusReview: true,
+                onSave: function (d) { applyCardData(card, d); }
+            });
+        } else if (act === 'delReview') {
+            ktnConfirmModal({
+                title: 'レビューを削除しますか？',
+                message: 'このレビューを削除します。<strong>展覧会ページからも表示されなくなります。</strong>チェックインの記録は残ります。',
+                confirmLabel: 'レビューを削除',
+                onConfirm: function () { applyCardData(card, { date: cur.iso, stars: 0, review: '' }); }
+            });
+        } else if (act === 'delCheckin') {
+            ktnConfirmModal({
+                title: 'チェックインを削除しますか？',
+                message: hasReview
+                    ? 'このチェックインの記録を削除します。<strong>投稿したレビューも一緒に削除され、展覧会ページからも表示されなくなります。</strong>この操作は取り消せません。'
+                    : 'このチェックインの記録を削除します。この操作は取り消せません。',
+                confirmLabel: 'チェックインを削除',
+                onConfirm: function () { card.classList.add('is-hidden'); updateGroupCount(card); }
+            });
+        }
+    }
+
+    function openCardMenu(btn, card) {
+        var hasReview = card.getAttribute('data-has-review') === '1';
+        var items = [
+            { label: 'チェックイン日を編集', onClick: function () { cardAction('editDate', card); } },
+            { label: hasReview ? 'レビューを編集' : 'レビューを書く', onClick: function () { cardAction('review', card); } }
+        ];
+        if (hasReview) items.push({ label: 'レビューを削除', danger: true, sep: true, onClick: function () { cardAction('delReview', card); } });
+        else items[items.length - 1].sep = true;
+        items.push({ label: 'チェックインを削除', danger: true, onClick: function () { cardAction('delCheckin', card); } });
+        ktnOpenOwnerMenu(btn, items);
+    }
+
+    document.querySelectorAll('.ktn-owner-menu-btn').forEach(function (btn) {
         btn.addEventListener('click', function (e) {
             e.preventDefault();
             e.stopPropagation();
             var card = btn.closest('.ec');
-            if (card) card.classList.add('is-hidden');
-            var group = btn.closest('.p5-2-year-group');
-            if (group) {
-                var visible = group.querySelectorAll('.ec:not(.is-hidden)').length;
-                var countEl = group.querySelector('.p5-2-year-group__count');
-                if (countEl) countEl.textContent = '（' + visible + '件）';
-            }
+            if (!card) return;
+            openCardMenu(btn, card);
         });
     });
 
@@ -5301,7 +5363,7 @@ KTN.pages['p5-3'] = function () {
     function applyArticleCatFilter() {
         var active = document.querySelector('#p53AcBox .p5-filter-btn.is-active');
         var val = active ? active.dataset.accat : 'all';
-        document.querySelectorAll('#p53AcBox .p5-3-ac').forEach(function (item) {
+        document.querySelectorAll('#p53AcBox .lc').forEach(function (item) {
             item.style.display = (val === 'all' || item.dataset.accat === val) ? '' : 'none';
         });
     }
@@ -5394,7 +5456,7 @@ KTN.pages['p5-3'] = function () {
         btn.addEventListener('click', function (e) {
             e.preventDefault();
             e.stopPropagation();
-            var card = btn.closest('.p5-3-ac');
+            var card = btn.closest('.lc');
             if (card) card.style.display = 'none';
         });
     });

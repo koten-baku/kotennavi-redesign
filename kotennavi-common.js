@@ -737,7 +737,7 @@ const PAGES = {
   'p7-11': { n: '記事-新規/編集/クローン', bc: [['Top', '/'], ['オノマトペと絵画のあいだで', '/p7'], ['編集', null]] },
   // P8 レビュー
   'p8': { n: 'レビュー', bc: [['Top', '/'], ['レビュー', '/p8-list'], ['あなたが知らないオノマトペ レビュー', null]] },
-  'p8-11': { n: 'レビュー-新規/編集/クローン', bc: [['Top', '/'], ['レビュー', '/p8-list'], ['編集', null]] },
+  'p8-11': { n: 'レビュー-編集', bc: [['Top', '/'], ['レビュー', '/p8-list'], ['編集', null]] },
   // P9 ニュース
   'p9': { n: 'ニュース', bc: [['Top', '/'], ['ニュース', '/p9-list'], ['個展なびが新機能を発表', null]] },
   'p9-11': { n: 'ニュース-新規/編集/クローン', bc: [['Top', '/'], ['ニュース', '/p9-list'], ['編集', null]] },
@@ -1336,7 +1336,7 @@ function openCheckinModal() {
     '<div class="ktn-modal__form-row">' +
     '<button class="ktn-modal__photo-btn" type="button">' +
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="14" height="14"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>' +
-    '写真を添付する' +
+    '写真を1枚添付' +
     '</button>' +
     '</div>' +
       '<button class="ktn-auth-btn-primary ktn-modal__submit" onclick="ktnSubmitCheckin()">投稿する</button>' +
@@ -1360,6 +1360,130 @@ function ktnSubmitCheckin() {
   showToast('\u6295\u7a3f\u3057\u307e\u3057\u305f\uff01');
   closeCheckinModal();
 }
+
+/* \u2500\u2500 \u30c1\u30a7\u30c3\u30af\u30a4\u30f3\uff06\u30ec\u30d3\u30e5\u30fc \u7de8\u96c6\u30e2\u30fc\u30c0\u30eb\uff08\u5171\u6709\uff1ap5-2\uff0f\u5c06\u6765 p2\u30fbp8-11 \u304c\u518d\u5229\u7528\uff09 \u2500\u2500
+   opts: { title, date(yyyy-mm-dd), stars(0-5), review, focusReview, onSave({date,stars,review}) } */
+function openCheckinEditModal(opts) {
+  opts = opts || {};
+  var existing = document.getElementById('ktnCheckinModal');
+  if (existing) existing.remove();
+
+  var CLOSE_BTN = '<button class="ktn-auth-close" onclick="closeCheckinModal()" aria-label="\u9589\u3058\u308b"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>';
+  var CI_ICON = '<svg viewBox="0 0 16 16" fill="none"><circle cx="10" cy="5" r="4" fill="#fff" opacity=".9"/><circle cx="5" cy="11" r="2.4" fill="#fff" opacity=".75"/></svg>';
+  var stars = opts.stars || 0;
+  var starHtml = '';
+  for (var i = 1; i <= 5; i++)
+    starHtml += '<span class="ktn-modal__star' + (i <= stars ? ' on' : '') + '" data-v="' + i + '" onclick="ktnSetStar(' + i + ')">\u2605</span>';
+
+  var html =
+    '<div class="ktn-auth-overlay" id="ktnCheckinModal" onclick="if(event.target===this)closeCheckinModal()">' +
+    '<div class="ktn-auth-modal">' +
+    '<div class="ktn-auth-top ktn-auth-top--compact">' + CLOSE_BTN +
+    '<div class="ktn-auth-icon">' + CI_ICON + '</div>' +
+    '<div class="ktn-auth-ttl">' + (opts.title || '\u30c1\u30a7\u30c3\u30af\u30a4\u30f3\uff06\u30ec\u30d3\u30e5\u30fc\u3092\u7de8\u96c6') + '</div>' +
+    '</div>' +
+    '<div class="ktn-auth-body">' +
+    '<div class="ktn-modal__form-row">' +
+    '<div class="ktn-modal__label">\u30c1\u30a7\u30c3\u30af\u30a4\u30f3\u65e5</div>' +
+    '<input type="date" class="ktn-modal__input" id="ktnCiDate" value="' + (opts.date || '') + '">' +
+    '</div>' +
+    '<div class="ktn-modal__form-row">' +
+    '<div class="ktn-modal__label">\u8a55\u4fa1</div>' +
+    '<div class="ktn-modal__stars" id="ktnStars">' + starHtml + '</div>' +
+    '</div>' +
+    '<div class="ktn-modal__form-row">' +
+    '<div class="ktn-modal__label">\u30ec\u30d3\u30e5\u30fc</div>' +
+    '<textarea class="ktn-modal__textarea" id="ktnReviewText" placeholder="\u611f\u60f3\u3092\u304a\u66f8\u304d\u304f\u3060\u3055\u3044\u2026"></textarea>' +
+    '</div>' +
+    '<div class="ktn-modal__form-row">' +
+    '<button class="ktn-modal__photo-btn" type="button">' +
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="14" height="14"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>' +
+    '\u5199\u771f\u30921\u679a\u6dfb\u4ed8' +
+    '</button>' +
+    '</div>' +
+    '<button class="ktn-auth-btn-primary ktn-modal__submit" id="ktnCiSaveBtn">\u4fdd\u5b58\u3059\u308b</button>' +
+    '</div></div></div>';
+
+  document.body.insertAdjacentHTML('beforeend', html);
+  var t = document.getElementById('ktnReviewText');
+  if (t) t.value = opts.review || '';
+  var saveBtn = document.getElementById('ktnCiSaveBtn');
+  if (saveBtn) saveBtn.addEventListener('click', function () {
+    var d = (document.getElementById('ktnCiDate') || {}).value || '';
+    var s = document.querySelectorAll('.ktn-modal__star.on').length;
+    var r = ((document.getElementById('ktnReviewText') || {}).value || '').trim();
+    if (typeof opts.onSave === 'function') opts.onSave({ date: d, stars: s, review: r });
+    closeCheckinModal();
+    showToast('\u4fdd\u5b58\u3057\u307e\u3057\u305f');
+  });
+  var m = document.getElementById('ktnCheckinModal');
+  if (m) requestAnimationFrame(function () { m.classList.add('open'); });
+  if (opts.focusReview && t) t.focus();
+}
+
+/* \u2500\u2500 \u5171\u6709 \u78ba\u8a8d\u30e2\u30fc\u30c0\u30eb\uff08\u524a\u9664\u78ba\u8a8d\u30fbp5-2\uff0f\u5c06\u6765 p2\u30fbp8-11 \u304c\u518d\u5229\u7528\uff09 \u2500\u2500
+   opts: { title, message(HTML\u53ef), confirmLabel, cancelLabel, danger(=true), onConfirm } */
+function ktnConfirmModal(opts) {
+  opts = opts || {};
+  var existing = document.getElementById('ktnConfirmModal');
+  if (existing) existing.remove();
+  var danger = opts.danger !== false;
+  var confirmCls = 'ktn-op-btn ' + (danger ? 'ktn-op-btn--danger' : 'ktn-op-btn--primary');
+  var html =
+    '<div class="ktn-auth-overlay" id="ktnConfirmModal" onclick="if(event.target===this)ktnCloseConfirm()">' +
+    '<div class="ktn-auth-modal ktn-confirm-modal">' +
+    '<div class="ktn-auth-body">' +
+    '<div class="ktn-confirm-modal__title">' + (opts.title || '\u78ba\u8a8d') + '</div>' +
+    '<div class="ktn-confirm-modal__msg">' + (opts.message || '') + '</div>' +
+    '<div class="ktn-confirm-modal__foot">' +
+    '<button class="ktn-op-btn" onclick="ktnCloseConfirm()">' + (opts.cancelLabel || '\u30ad\u30e3\u30f3\u30bb\u30eb') + '</button>' +
+    '<button class="' + confirmCls + '" id="ktnConfirmOk">' + (opts.confirmLabel || '\u524a\u9664\u3059\u308b') + '</button>' +
+    '</div></div></div></div>';
+  document.body.insertAdjacentHTML('beforeend', html);
+  var ok = document.getElementById('ktnConfirmOk');
+  if (ok) ok.addEventListener('click', function () {
+    if (typeof opts.onConfirm === 'function') opts.onConfirm();
+    ktnCloseConfirm();
+  });
+  var m = document.getElementById('ktnConfirmModal');
+  if (m) requestAnimationFrame(function () { m.classList.add('open'); });
+}
+function ktnCloseConfirm() {
+  var m = document.getElementById('ktnConfirmModal');
+  if (m) { m.classList.remove('open'); setTimeout(function () { m.remove(); }, 200); }
+}
+
+/* ── 共有オーナー操作メニュー（body追従・共有：p2／p5-2） ──
+   btn: トリガー要素 / items: [{ label, danger, sep, onClick }] */
+function ktnCloseOwnerMenu() {
+  var m = document.getElementById('ktnOwnerMenu');
+  if (m) m.remove();
+}
+function ktnOpenOwnerMenu(btn, items) {
+  if (document.getElementById('ktnOwnerMenu')) { ktnCloseOwnerMenu(); return; }
+  var menu = document.createElement('div');
+  menu.className = 'ktn-owner-menu';
+  menu.id = 'ktnOwnerMenu';
+  (items || []).forEach(function (it) {
+    if (it.sep) { var sp = document.createElement('div'); sp.className = 'ktn-owner-menu__sep'; menu.appendChild(sp); }
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'ktn-owner-menu__item' + (it.danger ? ' ktn-owner-menu__item--danger' : '');
+    b.textContent = it.label;
+    b.addEventListener('click', function (e) {
+      e.preventDefault(); e.stopPropagation();
+      ktnCloseOwnerMenu();
+      if (typeof it.onClick === 'function') it.onClick();
+    });
+    menu.appendChild(b);
+  });
+  document.body.appendChild(menu);
+  var r = btn.getBoundingClientRect();
+  menu.style.top = (window.scrollY + r.bottom + 4) + 'px';
+  menu.style.left = (window.scrollX + Math.min(r.right - menu.offsetWidth, window.innerWidth - menu.offsetWidth - 8)) + 'px';
+  setTimeout(function () { document.addEventListener('click', ktnCloseOwnerMenu, { once: true }); }, 0);
+}
+window.addEventListener('resize', ktnCloseOwnerMenu);
 
 /* ── 出展者リスト切替（3件以下：プロフィール形式 / 4件以上：.cc--h グリッド） ── */
 function initP2CreatorList(creators) {

@@ -46,10 +46,9 @@
 | P2-1 | 展覧会-スケジュール |  | R | R | R | R | R | R | --w-entity | kotennavi-p2-1.html | Fix済 |
 | P2-2 | 展覧会-開催場所 |  | R | R | R | R | R | R | --w-entity | kotennavi-p2-2.html | Fix済 |
 | P2-3 | 展覧会-詳細(関連イベント・在廊・などその他情報) |  | R | R | R | R | R | R | --w-entity | kotennavi-p2-3.html | Fix済 |
-| P2-4 | 展覧会-出展者 |  | R | R | R | R | R | R | --w-entity| kotennavi-p2-4.html | Fix済 |
-| P2-5 | 展覧会-リエゾン作品一覧 | L | R | R | R | R | R | R | --w-entity | kotennavi-p2-5.html | Fix済 |
+| P2-4 | 展覧会-リエゾン作品一覧 | L | R | R | R | R | R | R | --w-entity | kotennavi-p2-5.html | Fix済 |
 | P2-5-1 | 展覧会-リエゾンプラス作品一覧 | L+ | R | R | R | R | R | R | --w-entity | kotennavi-p2-5-1.html | Fix済 |
-| P2-11 | 展覧会-新規/編集/クローン |  |  |  |  | W | W | W | --w-detail | kotennavi-p2-11.html | 調整中 |
+| P2-11 | 展覧会-新規/編集/クローン |  |  |  |  | W | W | W | --w-detail | kotennavi-p2-11.html | Fix済 |
 | P2-12 | 展覧会-リエゾン作品管理 |  |  |  |  | W | W | W | --w-detail | kotennavi-p2-12.html | 調整中 |
 | P2-12-1 | 展覧会-リエゾン+作品管理 |  |  |  |  | W | W | W | --w-detail | kotennavi-p2-12-1.html | 調整中 |
 | P2-13 | 展覧会-記事管理 |  |  |  |  | W | W | W | --w-detail | # | 未作成 |
@@ -143,8 +142,8 @@
 
 | ID | ページ名 | L/L+ | guest | login | user+ | creator | gallery | admin | max-width | html-file | 進捗 |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| P8 | レビュー |  | R | R | R | R | R | R | --w-entity | # | 未作成 |
-| P8-11 | レビュー-新規/編集/クローン |  |  |  | W |  |  | W | --w-detail | # | 未作成 |
+| P8 | レビュー |  | R | R | R | R | R | R | --w-entity | kotennavi-p8.html | 完成（ブラウザ確認待ち） |
+| P8-11 | レビュー-編集 |  |  |  | W |  |  | W | --w-detail | kotennavi-p8-11.html | 完成（ブラウザ確認待ち） |
 
 ---
 
