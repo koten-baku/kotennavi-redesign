@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>あなたが知らないオノマトペ — 作品リスト（会場配布） | Gallery SOIL 渋谷 | 個展なび</title>
+  <meta name="description" content="田中透 個展「あなたが知らないオノマトペ」の作品リスト。会場配布・QR・印刷兼用。Gallery SOIL 渋谷にて2026年2月〜3月開催。">
+  <link rel="canonical" href="https://koten-navi.com/p2-6">
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<body data-w="detail" class="p2-6-page p2-6-plus">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- デモ：サービス種別トグル（本番は展覧会設定で一意に決まる） -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">デモ表示：</span>
+  <button class="dbtn" onclick="p26SetVariant('list',this)">LIAISON（作品リスト・価格なし）</button>
+  <button class="dbtn on" onclick="p26SetVariant('plus',this)">LIAISON+（作品リスト・価格あり）</button>
+</div>
+
+<div class="shell">
+<div class="content-wrap" id="contentWrap">
+
+  <header class="ktn-header" id="ktnHeader">
+    <div class="ktn-header__inner">
+      <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+      <div class="ktn-hdr-actions" id="ktnActs"></div>
+    </div>
+  </header>
+
+  <main class="ktn-main" id="ktnMain">
+    <div class="ktn-content p26-content">
+
+      <!-- 操作ツールバー（印刷では非表示） -->
+      <div class="p26-toolbar">
+        <div class="p26-toolbar__info">
+          この画面は会場に置く作品リストです。<strong>印刷</strong>してそのまま配布したり、<strong>QRコード</strong>を掲示して来場者のスマホで開いてもらえます。
+        </div>
+        <button class="ktn-op-btn ktn-op-btn--primary p26-toolbar__print" type="button" onclick="window.print()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="15" height="15"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          印刷する
+        </button>
+      </div>
+
+      <!-- 印刷される本体シート -->
+      <article class="p26-sheet">
+
+        <header class="p26-sheet__head">
+          <div class="p26-sheet__brandrow">
+            <span class="p26-sheet__service">
+              <span class="p26-sheet__service-ja" id="p26ServiceJa">作品リスト</span>
+              <span class="p26-sheet__service-en" id="p26ServiceEn">Artwork List</span>
+            </span>
+            <span class="p26-sheet__badge" id="p26ServiceBadge"><span class="lb-dot li-plus">LIAISON+</span></span>
+          </div>
+          <h1 class="p26-sheet__title">あなたが知らないオノマトペ</h1>
+          <p class="p26-sheet__sub">The Onomatopoeia You Don't Know</p>
+          <dl class="p26-sheet__meta">
+            <div class="p26-sheet__meta-row"><dt>会場</dt><dd>Gallery SOIL 渋谷（東京都渋谷区神南1-12-14 2F）</dd></div>
+            <div class="p26-sheet__meta-row"><dt>会期</dt><dd>2026.02.18（水）— 03.05（木）</dd></div>
+          </dl>
+        </header>
+
+        <div class="p26-sheet__count"><span class="ktn-count" id="p26Count">全16点</span></div>
+
+        <!-- 作品リスト本体（JS生成） -->
+        <div id="p26ListMount"></div>
+
+        <div class="p26-saleinfo" id="p26SaleNote">
+          <span class="p26-saleinfo__label">オンライン販売期間</span>
+          <span class="p26-saleinfo__range">2026.02.18 — 2026.03.19</span>
+          <span class="p26-saleinfo__note">期間終了後はオンラインでの購入受付を停止します。会場での購入はスタッフにお声がけください。</span>
+        </div>
+
+        <footer class="p26-sheet__foot">
+          <div class="p26-sheet__qr">
+            <svg width="72" height="72" viewBox="0 0 44 44" fill="none" aria-hidden="true">
+              <rect x="2" y="2" width="16" height="16" rx="1.5" fill="none" stroke="#231815" stroke-width="2"/>
+              <rect x="6" y="6" width="8" height="8" fill="#231815"/>
+              <rect x="26" y="2" width="16" height="16" rx="1.5" fill="none" stroke="#231815" stroke-width="2"/>
+              <rect x="30" y="6" width="8" height="8" fill="#231815"/>
+              <rect x="2" y="26" width="16" height="16" rx="1.5" fill="none" stroke="#231815" stroke-width="2"/>
+              <rect x="6" y="30" width="8" height="8" fill="#231815"/>
+              <rect x="24" y="24" width="5" height="5" fill="#231815"/>
+              <rect x="33" y="24" width="5" height="5" fill="#231815"/>
+              <rect x="24" y="33" width="5" height="5" fill="#231815"/>
+              <rect x="33" y="33" width="5" height="5" fill="#231815"/>
+              <rect x="38" y="29" width="4" height="4" fill="#231815"/>
+              <rect x="29" y="38" width="4" height="4" fill="#231815"/>
+            </svg>
+            <span class="p26-sheet__qr-cap">スマホで一覧を見る</span>
+          </div>
+          <div class="p26-sheet__contact">
+            <div class="p26-sheet__contact-line"><span class="p26-sheet__contact-label">お問合せ</span>Gallery SOIL 渋谷 ／ <a href="mailto:info@gallery-soil.jp">info@gallery-soil.jp</a></div>
+            <div class="p26-sheet__liaison">本リストは個展なび <strong>LIAISON</strong> で自動作成しています。各作品はスマホからも詳細をご覧いただけます。</div>
+          </div>
+        </footer>
+
+      </article>
+
+    </div><!-- /ktn-content -->
+  </main>
+
+  <div class="dev-ph dev-ph--footer"></div>
+
+</div>
+</div>
+
+<nav class="ktn-bottom-nav" id="ktnBottomNav"><div class="ktn-bottom-nav__inner" id="ktnBottomNavInner"></div></nav>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type":"ListItem","position":1,"name":"Top","item":"https://koten-navi.com/"},
+    {"@type":"ListItem","position":2,"name":"展覧会","item":"https://koten-navi.com/p2"},
+    {"@type":"ListItem","position":3,"name":"あなたが知らないオノマトペ","item":"https://koten-navi.com/p2"},
+    {"@type":"ListItem","position":4,"name":"作品リスト"}
+  ]
+}
+</script>
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+  KTN.init({ page: 'p2-6', role: 'guest' });
+</script>
+</body>
+</html>

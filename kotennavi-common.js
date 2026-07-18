@@ -85,6 +85,58 @@ window.KTN = window.KTN || {};
 KTN.toast = showToast;
 
 /* ══════════════════════════════════
+   作品リスト QRコード モーダル（p2-12 / p2-12-1 共通・名称は「作品リスト」で統一）
+   ・リストを開かずQRだけ取得したいケース向け（会場ポスター掲示・DL用）
+   ・.ktn-auth-overlay / .ktn-auth-modal のシェルを再利用
+   ・kind は将来の出し分け用に受けるが、表示名は L/L+ とも「作品リスト」で統一
+══════════════════════════════════ */
+function ktnListQr(kind) {
+  var label = '作品リスト';
+  var url = 'https://koten-navi.com/p2-6';
+  var el = document.getElementById('ktnListQrModal');
+  if (!el) {
+    el = document.createElement('div');
+    el.className = 'ktn-auth-overlay';
+    el.id = 'ktnListQrModal';
+    el.setAttribute('onclick', 'ktnListQrClose(event)');
+    el.innerHTML =
+      '<div class="ktn-auth-modal ktn-listqr">'
+      + '<div class="ktn-auth-top">'
+      + '<button class="ktn-auth-close" onclick="ktnListQrClose()">'
+      + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
+      + '</button>'
+      + '<div class="ktn-auth-ttl" id="ktnListQrTtl"></div>'
+      + '<div class="ktn-auth-sub">スマホで読み取ると、会場配布用のリストが開きます。<br>画像を保存して会場ポスターやSNSにも掲示できます。</div>'
+      + '</div>'
+      + '<div class="ktn-auth-body">'
+      + '<div class="ktn-listqr__code" aria-hidden="true">'
+      + '<svg viewBox="0 0 44 44" width="180" height="180" shape-rendering="crispEdges">'
+      + '<rect width="44" height="44" fill="#fff"/>'
+      + '<path fill="#231815" d="M4 4h7v7H4zM6 6v3h3V6zM13 4h2v2h-2zM17 4h2v4h-2zM21 4h2v2h-2zM25 4h2v2h2v2h-2v2h-2v-2h-2V6h2zM33 4h7v7h-7zM35 6v3h3V6zM15 6h2v2h-2zM13 8h2v2h-2zM4 13h7v7H4zM6 15v3h3v-3zM13 13h2v2h-2zM17 13h2v2h2v2h-2v2h-2v-2h-2v-2h2zM23 13h2v4h-2zM27 13h2v2h-2zM31 13h2v2h2v2h-2v2h-2v-2h-2v-2h2zM37 13h2v2h-2zM33 15h2v2h-2zM33 33h7v7h-7zM35 35v3h3v-3zM13 33h2v2h-2zM17 33h2v4h-2zM21 33h2v2h-2zM25 33h2v2h-2zM29 33h2v2h-2zM13 37h2v2h-2zM21 37h2v2h-2zM25 37h2v2h-2zM4 33h7v7H4zM6 35v3h3v-3zM4 22h2v2h-2zM8 22h2v2h-2zM12 22h2v2h-2zM16 22h2v2h-2zM20 22h2v2h-2zM24 22h2v2h-2zM28 22h2v2h-2zM32 22h2v2h-2zM36 22h2v2h-2zM40 22h2v2h-2zM4 26h2v2H4zM10 26h2v2h-2zM14 26h2v2h-2zM18 26h2v2h-2zM22 26h2v2h-2zM26 26h2v2h-2zM30 26h2v2h-2zM34 26h2v2h-2zM38 26h2v2h-2zM4 30h2v2H4zM8 30h2v2H8zM12 30h2v2h-2zM16 30h2v2h-2zM20 30h2v2h-2zM24 30h2v2h-2zM28 30h2v2h-2zM32 30h2v2h-2z"/>'
+      + '</svg>'
+      + '</div>'
+      + '<div class="ktn-listqr__url" id="ktnListQrUrl"></div>'
+      + '<div class="ktn-auth-btns">'
+      + '<button class="ktn-auth-btn-primary" onclick="KTN.toast(\'QRコード画像の保存機能は準備中です\')">QRコード画像を保存</button>'
+      + '<button class="ktn-auth-btn-secondary" onclick="ktnListQrClose()">閉じる</button>'
+      + '</div>'
+      + '</div>'
+      + '</div>';
+    document.body.appendChild(el);
+  }
+  document.getElementById('ktnListQrTtl').textContent = label + 'のQRコード';
+  document.getElementById('ktnListQrUrl').textContent = url;
+  requestAnimationFrame(function () { el.classList.add('open'); });
+}
+function ktnListQrClose(e) {
+  if (e && e.target !== document.getElementById('ktnListQrModal')) return;
+  var m = document.getElementById('ktnListQrModal');
+  if (m) m.classList.remove('open');
+}
+window.ktnListQr = ktnListQr;
+window.ktnListQrClose = ktnListQrClose;
+
+/* ══════════════════════════════════
    シェア機能
 ══════════════════════════════════ */
 function doShare() {
@@ -679,6 +731,7 @@ const PAGES = {
   'p2-4': { n: '展覧会-出展者', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['出展者', null]] },
   'p2-5': { n: '展覧会-リエゾン作品一覧', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['LIAISON作品一覧', null]] },
   'p2-5-1': { n: '展覧会-リエゾンプラス作品一覧', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['LIAISON+ 作品一覧', null]] },
+  'p2-6': { n: '展覧会-作品リスト', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['作品リスト', null]] },
   'p2-11': { n: '展覧会-新規/編集/クローン', bc: [['Top', '/'], ['展覧会', '/p10'], ['松田啓佑展［仮称］', '/p2'], ['展覧会を編集', null]] },
   'p2-12': { n: 'LIAISON 作品管理', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['LIAISON 作品管理', null]] },
   'p2-121': { n: 'LIAISON+ 作品管理', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['LIAISON+ 作品管理', null]] },

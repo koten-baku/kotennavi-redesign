@@ -22,6 +22,9 @@
   <span class="dbar-sep">申込：</span>
   <button class="dbtn on" onclick="p2121DemoApply(true,this)">あり（切替不可）</button>
   <button class="dbtn" onclick="p2121DemoApply(false,this)">なし（切替可）</button>
+  <span class="dbar-sep">候補：</span>
+  <button class="dbtn on" onclick="p2121DemoCands(false,this)">多い（絞込あり）</button>
+  <button class="dbtn" onclick="p2121DemoCands(true,this)">少ない（絞込なし）</button>
 </div>
 <div class="shell">
 <div class="content-wrap" id="contentWrap">
@@ -237,12 +240,27 @@
         <div class="p2-12-works-block">
           <div class="p2-12-section-head">
             <h3 class="p2-12-section-head__title">展示作品</h3>
-            <span class="p2-12-count" id="p212Count">5</span>
-            <span class="p2-12-section-head__note">ドラッグで並び順を変更できます</span>
+            <span class="ktn-count p2-12-count" id="p212Count">5</span>
           </div>
           <p class="p2-12-works-hint">販売状態は会場の状況に合わせて随時更新してください。不明な場合は「要問合せ」に設定することを推奨します。</p>
-          <p class="p2-12-works-hint">購入申込者が1人以上の場合、作品に関する操作は「コンソールで操作」をクリックして移動した「リエゾン+コンソール」ページから操作してください。</p>
+          <p class="p2-12-works-hint">購入申込者が1人以上の場合、作品に関する操作は「リエゾン+コンソール」をクリックして移動した「リエゾン+コンソール」ページから操作してください。</p>
+          <div class="p2-12-reorder-bar">
+            <span class="p2-12-section-head__note">ドラッグで並び順を変更できます</span>
+            <button class="p2-12-reorder-btn" id="p212ReorderBtn" type="button">並べ替え</button>
+          </div>
           <ul class="p2-12-work-list" id="p212WorkList" aria-label="展示作品リスト"></ul>
+        </div>
+
+        <!-- 会場配布用リスト出力（→ p2-6 作品リストビュー・L+は価格列あり） -->
+        <div class="ktn-mgmt-export">
+          <div class="ktn-mgmt-export__text">
+            <span class="ktn-mgmt-export__title">会場配布用の作品リスト</span>
+            <span class="ktn-mgmt-export__desc">登録した作品・価格から、会場配布・QR掲示・印刷に使える作品リストを自動作成します。作品を登録するほどリストが充実します。</span>
+          </div>
+          <div class="ktn-mgmt-export__actions">
+            <a class="ktn-action-btn" href="kotennavi-p2-6.html">作品リストを印刷 →</a>
+            <button class="ktn-action-btn" type="button" onclick="ktnListQr('list')">作品リストのQRコードを表示</button>
+          </div>
         </div>
 
         <!-- 作品を追加ボタン + 追加パネル（一体化） -->
@@ -284,11 +302,11 @@
         <div class="p2-12-modal__bg" onclick="p2121CloseModal('switch')"></div>
         <div class="p2-12-modal__box">
           <h3 class="p2-12-modal__title">LIAISON に切り替えますか？</h3>
-          <div class="p2-12-modal__warn" id="p2121SwitchWarn">⚠️ LIAISON+ の設定（価格・販売期間）と購入申込・キューのデータがすべて失われます。この操作は取り消せません。</div>
-          <div class="p2-12-modal__blocked" id="p2121SwitchBlocked" hidden>現在、購入申込のある出品作品があるため切り替えできません。コンソールで申込への対応（購入確定・キャンセル）が完了すると切り替えできるようになります。</div>
+          <div class="p2-12-modal__warn" id="p2121SwitchWarn">⚠️ LIAISON+ の設定（価格・販売期間）がすべて失われます。この操作は取り消せません。</div>
+          <div class="p2-12-modal__blocked" id="p2121SwitchBlocked" hidden>現在、購入申込のある出品作品があるため切り替えできません。コンソールで申込への対応が完了すると切り替えできるようになります。</div>
           <ul class="p2-12-modal__notes">
             <li>購入申込のある作品がある場合は切り替えできません。</li>
-            <li>「商談中」「売約済」の作品がある場合は切り替えできません。</li>
+            <li>「申込中」「売約済」の作品がある場合は切り替えできません。</li>
             <li>切り替え後は LIAISON 作品管理ページに移動します。</li>
           </ul>
           <div class="p2-12-modal__foot">
@@ -303,7 +321,7 @@
         <div class="p2-12-modal__bg" onclick="p2121CloseModal('none')"></div>
         <div class="p2-12-modal__box">
           <h3 class="p2-12-modal__title">LIAISON+ の利用停止は編集ページで行います</h3>
-          <div class="p2-12-modal__warn">⚠️ 利用をやめて保存すると、LIAISON+ の設定（価格・販売期間）と購入申込・キューのデータがすべて失われます。取り消せません。</div>
+          <div class="p2-12-modal__warn">⚠️ 利用をやめて保存すると、LIAISON+ の設定（価格・販売期間）がすべて失われます。取り消せません。</div>
           <ul class="p2-12-modal__notes">
             <li>この画面では停止されません。展覧会の編集ページ「LIAISON設定」で「利用しない」を選択して保存した時点で利用停止となります。</li>
           </ul>

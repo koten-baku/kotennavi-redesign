@@ -890,21 +890,21 @@ KTN.pages['p2-5'] = function () {
 
   /* ── 作品データ ── */
   var WORKS = [
-    /* 田中 透 */
-    { creator:'tanaka', name:'田中 透', title:'ふわふわ',           year:'2026', spec:'油彩・キャンバス / 45.5×38.0 cm', status:'sale',    plus:true,  bg:'linear-gradient(155deg,#f0e8d0,#d4b896)', tc:'rgba(0,0,0,.28)',       interest:22 },
-    { creator:'tanaka', name:'田中 透', title:'ドキドキ #3',         year:'2026', spec:'油彩・キャンバス / 53.0×45.5 cm', status:'sale',    plus:true,  bg:'linear-gradient(155deg,#f0d0d0,#c88080)', tc:'rgba(255,255,255,.6)', interest:18 },
-    { creator:'tanaka', name:'田中 透', title:'ざわざわ（夜）', year:'2025', spec:'油彩・キャンバス / 72.7×60.6 cm', status:'nsale',   plus:false, bg:'linear-gradient(155deg,#3d3530,#1f1a18)', tc:'rgba(255,255,255,.55)', interest:31 },
-    { creator:'tanaka', name:'田中 透', title:'シュワシュワ',       year:'2025', spec:'油彩・キャンバス / 38.0×45.5 cm', status:'sale',    plus:true,  bg:'linear-gradient(155deg,#d0e8f0,#7ab4cc)', tc:'rgba(0,0,0,.28)',       interest:14 },
-    { creator:'tanaka', name:'田中 透', title:'オノマトペの庭', year:'2026', spec:'ミクストメディア / 60.6×50.0 cm',  status:'sold',    plus:true,  bg:'linear-gradient(155deg,#b8d8cc,#6a9e8a)', tc:'rgba(255,255,255,.6)', interest:41 },
+    /* 田中 透（no＝会場プライスリスト由来の作品番号・手動/任意。言葉の断片 I/II は未設定＝任意の例） */
+    { no:1,  creator:'tanaka', name:'田中 透', title:'ふわふわ',           year:'2026', spec:'油彩・キャンバス / 45.5×38.0 cm', status:'sale',    plus:true,  bg:'linear-gradient(155deg,#f0e8d0,#d4b896)', tc:'rgba(0,0,0,.28)',       interest:22 },
+    { no:2,  creator:'tanaka', name:'田中 透', title:'ドキドキ #3',         year:'2026', spec:'油彩・キャンバス / 53.0×45.5 cm', status:'sale',    plus:true,  bg:'linear-gradient(155deg,#f0d0d0,#c88080)', tc:'rgba(255,255,255,.6)', interest:18 },
+    { no:3,  creator:'tanaka', name:'田中 透', title:'ざわざわ（夜）', year:'2025', spec:'油彩・キャンバス / 72.7×60.6 cm', status:'nsale',   plus:false, bg:'linear-gradient(155deg,#3d3530,#1f1a18)', tc:'rgba(255,255,255,.55)', interest:31 },
+    { no:4,  creator:'tanaka', name:'田中 透', title:'シュワシュワ',       year:'2025', spec:'油彩・キャンバス / 38.0×45.5 cm', status:'sale',    plus:true,  bg:'linear-gradient(155deg,#d0e8f0,#7ab4cc)', tc:'rgba(0,0,0,.28)',       interest:14 },
+    { no:5,  creator:'tanaka', name:'田中 透', title:'オノマトペの庭', year:'2026', spec:'ミクストメディア / 60.6×50.0 cm',  status:'sold',    plus:true,  bg:'linear-gradient(155deg,#b8d8cc,#6a9e8a)', tc:'rgba(255,255,255,.6)', interest:41 },
     { creator:'tanaka', name:'田中 透', title:'言葉の断片 I',    year:'2024', spec:'油彩・麻布 / 53.0×45.5 cm',                status:'nsale',   plus:false, bg:'linear-gradient(155deg,#d8c8e8,#a888cc)', tc:'rgba(255,255,255,.6)', interest:9  },
     { creator:'tanaka', name:'田中 透', title:'言葉の断片 II',   year:'2024', spec:'油彩・麻布 / 45.5×38.0 cm',                status:'inquiry', plus:false, bg:'linear-gradient(155deg,#c8d8e8,#7898b8)', tc:'rgba(255,255,255,.6)', interest:7  },
     /* 山田 葵 */
-    { creator:'yamada', name:'山田 葵', title:'記憶の断層 #1',  year:'2025', spec:'写真・ジクレープリント / A2', status:'sale',  plus:true,  bg:'linear-gradient(155deg,#d0c8e0,#8878b4)', tc:'rgba(255,255,255,.6)', interest:16 },
-    { creator:'yamada', name:'山田 葵', title:'記憶の断層 #2',  year:'2025', spec:'写真・ジクレープリント / A2', status:'sale',  plus:true,  bg:'linear-gradient(155deg,#c8d8e8,#7898b8)', tc:'rgba(255,255,255,.6)', interest:12 },
-    { creator:'yamada', name:'山田 葵', title:'光の解像度',     year:'2026', spec:'写真・ミクストメディア / 60×80 cm', status:'nsale', plus:false, bg:'linear-gradient(155deg,#e8d8c8,#c8a888)', tc:'rgba(0,0,0,.28)', interest:8 },
+    { no:8,  creator:'yamada', name:'山田 葵', title:'記憶の断層 #1',  year:'2025', spec:'写真・ジクレープリント / A2', status:'sale',  plus:true,  bg:'linear-gradient(155deg,#d0c8e0,#8878b4)', tc:'rgba(255,255,255,.6)', interest:16 },
+    { no:9,  creator:'yamada', name:'山田 葵', title:'記憶の断層 #2',  year:'2025', spec:'写真・ジクレープリント / A2', status:'sale',  plus:true,  bg:'linear-gradient(155deg,#c8d8e8,#7898b8)', tc:'rgba(255,255,255,.6)', interest:12 },
+    { no:10, creator:'yamada', name:'山田 葵', title:'光の解像度',     year:'2026', spec:'写真・ミクストメディア / 60×80 cm', status:'nsale', plus:false, bg:'linear-gradient(155deg,#e8d8c8,#c8a888)', tc:'rgba(0,0,0,.28)', interest:8 },
     /* 佐藤 一朗 */
-    { creator:'sato',   name:'佐藤 一朗', title:'白樺の記憶',   year:'2025', spec:'木彫・彩色 / H24×W18×D12 cm', status:'negot', plus:true,  bg:'linear-gradient(155deg,#e0e8d0,#a0b888)', tc:'rgba(0,0,0,.28)', interest:11 },
-    { creator:'sato',   name:'佐藤 一朗', title:'沈黙する形 #3', year:'2024', spec:'木版画 / 38.0×45.5 cm',                    status:'nsale', plus:false, bg:'linear-gradient(155deg,#d8c8b8,#a89878)', tc:'rgba(0,0,0,.28)', interest:5 },
+    { no:11, creator:'sato',   name:'佐藤 一朗', title:'白樺の記憶',   year:'2025', spec:'木彫・彩色 / H24×W18×D12 cm', status:'negot', plus:true,  bg:'linear-gradient(155deg,#e0e8d0,#a0b888)', tc:'rgba(0,0,0,.28)', interest:11 },
+    { no:12, creator:'sato',   name:'佐藤 一朗', title:'沈黙する形 #3', year:'2024', spec:'木版画 / 38.0×45.5 cm',                    status:'nsale', plus:false, bg:'linear-gradient(155deg,#d8c8b8,#a89878)', tc:'rgba(0,0,0,.28)', interest:5 },
   ];
 
   var STATUS_BADGE = {
@@ -922,9 +922,11 @@ KTN.pages['p2-5'] = function () {
     var dataStatus = statusMap[w.status] || 'nsale';
     var svgHeart = '<svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>';
     var svgBtnOff = '<svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>';
+    var noHtml = w.no ? '<span class="p25c__no">No.' + w.no + '</span>' : '';
     return '<a class="' + cardClass + '" href="./kotennavi-p6-1.html" data-creator="' + w.creator + '" data-status="' + dataStatus + '">' +
       '<div class="p25c__img">' +
         '<div class="p25c__img-bg" style="background:' + w.bg + '"></div>' +
+        noHtml +
         '<div class="p25c__img-title" style="color:' + w.tc + '">' + w.title + '</div>' +
         ribbon +
       '</div>' +
@@ -1026,25 +1028,25 @@ KTN.pages['p2-5-1'] = function () {
 
   /* ── 作品データ（価格付き・pending2件追加） ── */
   var WORKS = [
-    /* 田中 透 */
-    { creator:'tanaka', name:'田中 透', title:'ふわふわ',           year:'2026', spec:'油彩・キャンバス / 45.5×38.0 cm',      status:'sale',    price:88000,  plus:true,  bg:'linear-gradient(155deg,#f0e8d0,#d4b896)', tc:'rgba(0,0,0,.28)',        interest:22 },
-    { creator:'tanaka', name:'田中 透', title:'ドキドキ #3',         year:'2026', spec:'油彩・キャンバス / 53.0×45.5 cm',      status:'sale',    price:110000, plus:true,  bg:'linear-gradient(155deg,#f0d0d0,#c88080)', tc:'rgba(255,255,255,.6)',  interest:18 },
-    { creator:'tanaka', name:'田中 透', title:'ざわざわ（夜）',      year:'2025', spec:'油彩・キャンバス / 72.7×60.6 cm',      status:'nsale',   price:null,   plus:false, bg:'linear-gradient(155deg,#3d3530,#1f1a18)', tc:'rgba(255,255,255,.55)', interest:31 },
-    { creator:'tanaka', name:'田中 透', title:'シュワシュワ',        year:'2025', spec:'油彩・キャンバス / 38.0×45.5 cm',      status:'sale',    price:75000,  plus:true,  bg:'linear-gradient(155deg,#d0e8f0,#7ab4cc)', tc:'rgba(0,0,0,.28)',        interest:14 },
-    { creator:'tanaka', name:'田中 透', title:'オノマトペの庭',      year:'2026', spec:'ミクストメディア / 60.6×50.0 cm',      status:'sold',    price:null,   plus:true,  bg:'linear-gradient(155deg,#b8d8cc,#6a9e8a)', tc:'rgba(255,255,255,.6)',  interest:41 },
+    /* 田中 透（no＝会場プライスリスト由来の作品番号・手動/任意。言葉の断片 I・沈黙する形 #3 は未設定＝任意の例） */
+    { no:1,  creator:'tanaka', name:'田中 透', title:'ふわふわ',           year:'2026', spec:'油彩・キャンバス / 45.5×38.0 cm',      status:'sale',    price:88000,  plus:true,  bg:'linear-gradient(155deg,#f0e8d0,#d4b896)', tc:'rgba(0,0,0,.28)',        interest:22 },
+    { no:2,  creator:'tanaka', name:'田中 透', title:'ドキドキ #3',         year:'2026', spec:'油彩・キャンバス / 53.0×45.5 cm',      status:'sale',    price:110000, plus:true,  bg:'linear-gradient(155deg,#f0d0d0,#c88080)', tc:'rgba(255,255,255,.6)',  interest:18 },
+    { no:3,  creator:'tanaka', name:'田中 透', title:'ざわざわ（夜）',      year:'2025', spec:'油彩・キャンバス / 72.7×60.6 cm',      status:'nsale',   price:null,   plus:false, bg:'linear-gradient(155deg,#3d3530,#1f1a18)', tc:'rgba(255,255,255,.55)', interest:31 },
+    { no:4,  creator:'tanaka', name:'田中 透', title:'シュワシュワ',        year:'2025', spec:'油彩・キャンバス / 38.0×45.5 cm',      status:'sale',    price:75000,  plus:true,  bg:'linear-gradient(155deg,#d0e8f0,#7ab4cc)', tc:'rgba(0,0,0,.28)',        interest:14 },
+    { no:5,  creator:'tanaka', name:'田中 透', title:'オノマトペの庭',      year:'2026', spec:'ミクストメディア / 60.6×50.0 cm',      status:'sold',    price:null,   plus:true,  bg:'linear-gradient(155deg,#b8d8cc,#6a9e8a)', tc:'rgba(255,255,255,.6)',  interest:41 },
     { creator:'tanaka', name:'田中 透', title:'言葉の断片 I',        year:'2024', spec:'油彩・麻布 / 53.0×45.5 cm',           status:'nsale',   price:null,   plus:false, bg:'linear-gradient(155deg,#d8c8e8,#a888cc)', tc:'rgba(255,255,255,.6)',  interest:9  },
-    { creator:'tanaka', name:'田中 透', title:'言葉の断片 II',       year:'2024', spec:'油彩・麻布 / 45.5×38.0 cm',           status:'sale',    price:180000, plus:false, bg:'linear-gradient(155deg,#c8d8e8,#7898b8)', tc:'rgba(255,255,255,.6)',  interest:7,  applicants:2 },
-    { creator:'tanaka', name:'田中 透', title:'音の気配',            year:'2026', spec:'油彩・キャンバス / 45.5×38.0 cm',      status:'sale',    price:95000,  plus:true,  bg:'linear-gradient(155deg,#e8d8c0,#c4a870)', tc:'rgba(0,0,0,.3)',         interest:15, applicants:3 },
+    { no:7,  creator:'tanaka', name:'田中 透', title:'言葉の断片 II',       year:'2024', spec:'油彩・麻布 / 45.5×38.0 cm',           status:'sale',    price:180000, plus:false, bg:'linear-gradient(155deg,#c8d8e8,#7898b8)', tc:'rgba(255,255,255,.6)',  interest:7,  applicants:2 },
+    { no:8,  creator:'tanaka', name:'田中 透', title:'音の気配',            year:'2026', spec:'油彩・キャンバス / 45.5×38.0 cm',      status:'sale',    price:95000,  plus:true,  bg:'linear-gradient(155deg,#e8d8c0,#c4a870)', tc:'rgba(0,0,0,.3)',         interest:15, applicants:3 },
     /* 山田 葵 */
-    { creator:'yamada', name:'山田 葵', title:'記憶の断層 #1',       year:'2025', spec:'写真・ジクレープリント / A2',           status:'sale',    price:55000,  plus:true,  bg:'linear-gradient(155deg,#d0c8e0,#8878b4)', tc:'rgba(255,255,255,.6)',  interest:16 },
-    { creator:'yamada', name:'山田 葵', title:'記憶の断層 #2',       year:'2025', spec:'写真・ジクレープリント / A2',           status:'sale',    price:55000,  plus:true,  bg:'linear-gradient(155deg,#c8d8e8,#7898b8)', tc:'rgba(255,255,255,.6)',  interest:12 },
-    { creator:'yamada', name:'山田 葵', title:'光の解像度',          year:'2026', spec:'写真・ミクストメディア / 60×80 cm',    status:'nsale',   price:null,   plus:false, bg:'linear-gradient(155deg,#e8d8c8,#c8a888)', tc:'rgba(0,0,0,.28)',        interest:8  },
-    { creator:'yamada', name:'山田 葵', title:'朝の残響',            year:'2026', spec:'写真・ジクレープリント / A1',           status:'sale',    price:68000,  plus:true,  bg:'linear-gradient(155deg,#d8e8d0,#88b880)', tc:'rgba(0,0,0,.28)',        interest:10, applicants:1 },
+    { no:9,  creator:'yamada', name:'山田 葵', title:'記憶の断層 #1',       year:'2025', spec:'写真・ジクレープリント / A2',           status:'sale',    price:55000,  plus:true,  bg:'linear-gradient(155deg,#d0c8e0,#8878b4)', tc:'rgba(255,255,255,.6)',  interest:16 },
+    { no:10, creator:'yamada', name:'山田 葵', title:'記憶の断層 #2',       year:'2025', spec:'写真・ジクレープリント / A2',           status:'sale',    price:55000,  plus:true,  bg:'linear-gradient(155deg,#c8d8e8,#7898b8)', tc:'rgba(255,255,255,.6)',  interest:12 },
+    { no:11, creator:'yamada', name:'山田 葵', title:'光の解像度',          year:'2026', spec:'写真・ミクストメディア / 60×80 cm',    status:'nsale',   price:null,   plus:false, bg:'linear-gradient(155deg,#e8d8c8,#c8a888)', tc:'rgba(0,0,0,.28)',        interest:8  },
+    { no:12, creator:'yamada', name:'山田 葵', title:'朝の残響',            year:'2026', spec:'写真・ジクレープリント / A1',           status:'sale',    price:68000,  plus:true,  bg:'linear-gradient(155deg,#d8e8d0,#88b880)', tc:'rgba(0,0,0,.28)',        interest:10, applicants:1 },
     /* 佐藤 一朗 */
-    { creator:'sato',   name:'佐藤 一朗', title:'白樺の記憶',        year:'2025', spec:'木彫・彩色 / H24×W18×D12 cm',         status:'sale',    price:128000, plus:true,  bg:'linear-gradient(155deg,#e0e8d0,#a0b888)', tc:'rgba(0,0,0,.28)',        interest:11 },
+    { no:13, creator:'sato',   name:'佐藤 一朗', title:'白樺の記憶',        year:'2025', spec:'木彫・彩色 / H24×W18×D12 cm',         status:'sale',    price:128000, plus:true,  bg:'linear-gradient(155deg,#e0e8d0,#a0b888)', tc:'rgba(0,0,0,.28)',        interest:11 },
     { creator:'sato',   name:'佐藤 一朗', title:'沈黙する形 #3',     year:'2024', spec:'木版画 / 38.0×45.5 cm',               status:'nsale',   price:null,   plus:false, bg:'linear-gradient(155deg,#d8c8b8,#a89878)', tc:'rgba(0,0,0,.28)',        interest:5  },
-    { creator:'sato',   name:'佐藤 一朗', title:'刻まれた光 #2',     year:'2025', spec:'木彫・彩色 / H18×W15×D10 cm',         status:'negot',   price:98000,  plus:true,  bg:'linear-gradient(155deg,#e8dcc8,#c0a878)', tc:'rgba(0,0,0,.28)',        interest:9  },
-    { creator:'sato',   name:'佐藤 一朗', title:'問いの形',          year:'2024', spec:'ブロンズ / H30×W12×D12 cm',           status:'inquiry', price:null,   plus:false, bg:'linear-gradient(155deg,#d8e0e8,#98a8b8)', tc:'rgba(0,0,0,.28)',        interest:4  },
+    { no:15, creator:'sato',   name:'佐藤 一朗', title:'刻まれた光 #2',     year:'2025', spec:'木彫・彩色 / H18×W15×D10 cm',         status:'negot',   price:98000,  plus:true,  bg:'linear-gradient(155deg,#e8dcc8,#c0a878)', tc:'rgba(0,0,0,.28)',        interest:9  },
+    { no:16, creator:'sato',   name:'佐藤 一朗', title:'問いの形',          year:'2024', spec:'ブロンズ / H30×W12×D12 cm',           status:'inquiry', price:null,   plus:false, bg:'linear-gradient(155deg,#d8e0e8,#98a8b8)', tc:'rgba(0,0,0,.28)',        interest:4  },
   ];
 
   var STATUS_BADGE = {
@@ -1075,9 +1077,11 @@ KTN.pages['p2-5-1'] = function () {
       : '';
     var svgHeart = '<svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>';
     var svgBtnOff = '<svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>';
+    var noHtml = w.no ? '<span class="p25c__no">No.' + w.no + '</span>' : '';
     return '<a class="' + cardClass + '" href="#" data-creator="' + w.creator + '" data-status="' + dataStatus + '">' +
       '<div class="p25c__img">' +
         '<div class="p25c__img-bg" style="background:' + w.bg + '"></div>' +
+        noHtml +
         '<div class="p25c__img-title" style="color:' + w.tc + '">' + w.title + '</div>' +
         ribbon +
       '</div>' +
@@ -1194,7 +1198,7 @@ KTN.pages['p2-5-1'] = function () {
    P6 共通データ（全3バリアント共用）
 ──────────────────────────────────────────────────── */
 var _p6Works = [
-  { id:1, title:'オノマトペの庭', titleEn:'Onomatopoeia Garden',
+  { id:1, no:5, title:'オノマトペの庭', titleEn:'Onomatopoeia Garden',
     creator:'田中 透', creatorEn:'Toru Tanaka',
     year:2026, medium:'キャンバスに油彩', size:'116.7×91.0cm',
     weight:'約3.2kg（額装込み）', framing:'木製フローティングフレーム（白木）',
@@ -1218,7 +1222,7 @@ var _p6Works = [
       { lbl:'展示・設置について', body:'フローティングフレーム仕様のため、壁から数センチ浮いた形で設置されます。取付金具・ワイヤー付属。壁の耐荷重をご確認のうえ設置をお願いします。設置方法についてご不明な点はお気軽にお問い合わせください。' },
     ],
   },
-  { id:2, title:'ふわふわ', titleEn:'Fuwafuwa',
+  { id:2, no:1, title:'ふわふわ', titleEn:'Fuwafuwa',
     creator:'田中 透', creatorEn:'Toru Tanaka',
     year:2026, medium:'キャンバスに油彩', size:'72.7×60.6cm',
     weight:null, framing:null,
@@ -1237,7 +1241,7 @@ var _p6Works = [
       { lbl:'作品のケアについて', body:'油彩・キャンバス作品です。直射日光と湿気を避け、温度変化の少ない環境での保管をお願いします。' },
     ],
   },
-  { id:3, title:'ドキドキ #3', titleEn:'Dokidoki #3',
+  { id:3, no:2, title:'ドキドキ #3', titleEn:'Dokidoki #3',
     creator:'田中 透', creatorEn:'Toru Tanaka',
     year:2025, medium:'和紙に混合技法', size:'91.0×72.7cm',
     weight:'約2.8kg', framing:null,
@@ -1253,7 +1257,7 @@ var _p6Works = [
     tags:['絵画','混合技法','和紙','エディション','F25号','2025年制作'],
     extras:[],
   },
-  { id:4, title:'ざわざわ（夜）', titleEn:'Zawazawa (Night)',
+  { id:4, no:3, title:'ざわざわ（夜）', titleEn:'Zawazawa (Night)',
     creator:'田中 透', creatorEn:'Toru Tanaka',
     year:2026, medium:'キャンバスにアクリル', size:'130.3×89.4cm',
     weight:'約5.1kg（額装込み）', framing:'黒塗りスチールフレーム',
@@ -1400,6 +1404,7 @@ function _p6Init(opts) {
       qtyVal = w.qty + '点 ' + (w.edition ? '<span class="wh-edition">' + w.edition + '</span>' : '');
     }
     var rows = [
+      { lbl:'出品番号',   val: w.no ? 'No.' + w.no : null },
       { lbl:'作家',       val: w.creator + '（' + w.creatorEn + '）', always:true },
       { lbl:'制作年',     val: w.year ? w.year + '年' : null },
       { lbl:'素材・技法', val: w.medium },
@@ -1818,6 +1823,125 @@ function _p6Init(opts) {
 }
 
 /* ────────────────────────────────────────────────────
+   P2-6 作品リスト／プライスリスト（会場配布・QR・印刷兼用）
+   read-only ビュー。1展覧会＝{LIAISON／LIAISON+}のいずれか。
+   body.p2-6-plus = LIAISON+（プライスリスト・価格列あり）
+   それ以外       = LIAISON（作品リスト・価格列なし）
+──────────────────────────────────────────────────── */
+KTN.pages['p2-6'] = function () {
+
+  /* 出品作品（p2-5-1 と同一デモデータ。React 化時は works クエリから供給） */
+  var WORKS = [
+    { no:1,  name:'田中 透',   title:'ふわふわ',        year:'2026', spec:'油彩・キャンバス / 45.5×38.0 cm', status:'sale',    price:88000  },
+    { no:2,  name:'田中 透',   title:'ドキドキ #3',     year:'2026', spec:'油彩・キャンバス / 53.0×45.5 cm', status:'sale',    price:110000 },
+    { no:3,  name:'田中 透',   title:'ざわざわ（夜）',  year:'2025', spec:'油彩・キャンバス / 72.7×60.6 cm', status:'nsale',   price:null   },
+    { no:4,  name:'田中 透',   title:'シュワシュワ',    year:'2025', spec:'油彩・キャンバス / 38.0×45.5 cm', status:'sale',    price:75000  },
+    { no:5,  name:'田中 透',   title:'オノマトペの庭',  year:'2026', spec:'ミクストメディア / 60.6×50.0 cm', status:'sold',    price:null   },
+    { no:null, name:'田中 透', title:'言葉の断片 I',    year:'2024', spec:'油彩・麻布 / 53.0×45.5 cm',      status:'nsale',   price:null   },
+    { no:7,  name:'田中 透',   title:'言葉の断片 II',   year:'2024', spec:'油彩・麻布 / 45.5×38.0 cm',      status:'sale',    price:180000 },
+    { no:8,  name:'田中 透',   title:'音の気配',        year:'2026', spec:'油彩・キャンバス / 45.5×38.0 cm', status:'sale',    price:95000  },
+    { no:9,  name:'山田 葵',   title:'記憶の断層 #1',   year:'2025', spec:'写真・ジクレープリント / A2',    status:'sale',    price:55000  },
+    { no:10, name:'山田 葵',   title:'記憶の断層 #2',   year:'2025', spec:'写真・ジクレープリント / A2',    status:'sale',    price:55000  },
+    { no:11, name:'山田 葵',   title:'光の解像度',      year:'2026', spec:'写真・ミクストメディア / 60×80 cm', status:'nsale', price:null   },
+    { no:12, name:'山田 葵',   title:'朝の残響',        year:'2026', spec:'写真・ジクレープリント / A1',    status:'sale',    price:68000  },
+    { no:13, name:'佐藤 一朗', title:'白樺の記憶',      year:'2025', spec:'木彫・彩色 / H24×W18×D12 cm',    status:'sale',    price:128000 },
+    { no:null, name:'佐藤 一朗', title:'沈黙する形 #3', year:'2024', spec:'木版画 / 38.0×45.5 cm',          status:'nsale',   price:null   },
+    { no:15, name:'佐藤 一朗', title:'刻まれた光 #2',   year:'2025', spec:'木彫・彩色 / H18×W15×D10 cm',    status:'negot',   price:98000  },
+    { no:16, name:'佐藤 一朗', title:'問いの形',        year:'2024', spec:'ブロンズ / H30×W12×D12 cm',      status:'inquiry', price:null   }
+  ];
+
+  /* 価格列（LIAISON+のみ）。販売状態は随時変化するため印刷リストに載せず、
+     価格が公開されない作品（非売品・要問合せ・売約済等）は ASK と表示。
+     現在の販売状態は各行リンク先の作品ページ(p6)を単一ソースにする。 */
+  function priceCell(w) {
+    if (w.price) return '<span class="p26-list__yen">￥' + w.price.toLocaleString() + '</span>';
+    return '<span class="p26-list__ask">ASK</span>';
+  }
+
+  /* サムネイル（デモはプレースホルダ。React 化時は w.thumb の <img> に置換）。
+     作品名から決定的な淡色を生成し、他カードと同じ「画像未登録の枠」を表現。 */
+  function thumbCell(w) {
+    var t = w.title || '', h = 0, i;
+    for (i = 0; i < t.length; i++) h = (h * 31 + t.charCodeAt(i)) % 360;
+    return '<span class="p26-list__thumb" aria-hidden="true" style="background:' +
+      'linear-gradient(135deg,hsl(' + h + ',30%,86%),hsl(' + ((h + 38) % 360) + ',26%,74%))"></span>';
+  }
+
+  function sortWorks(list) {
+    return list.slice().sort(function (a, b) {
+      var an = (a.no == null) ? Infinity : a.no;
+      var bn = (b.no == null) ? Infinity : b.no;
+      return an - bn;
+    });
+  }
+
+  function render() {
+    var plus = document.body.classList.contains('p2-6-plus');
+
+    /* サービス見出し／販売期間の出し分け */
+    var svcJa = document.getElementById('p26ServiceJa');
+    var svcEn = document.getElementById('p26ServiceEn');
+    if (svcJa) svcJa.textContent = '作品リスト';
+    if (svcEn) svcEn.textContent = 'Artwork List';
+    var badge = document.getElementById('p26ServiceBadge');
+    if (badge) badge.innerHTML = plus
+      ? '<span class="lb-dot li-plus">LIAISON+</span>'
+      : '<span class="lb-dot">LIAISON</span>';
+    var salebox = document.getElementById('p26SaleNote');
+    if (salebox) salebox.style.display = plus ? '' : 'none';
+
+    var mount = document.getElementById('p26ListMount');
+    if (!mount) return;
+
+    var priceHead  = plus ? '<th class="p26-list__th p26-list__th--price">価格（税込）</th>' : '';
+    var thead =
+      '<thead><tr>' +
+        '<th class="p26-list__th p26-list__th--no">No.</th>' +
+        '<th class="p26-list__th p26-list__th--thumb" aria-label="図版"></th>' +
+        '<th class="p26-list__th p26-list__th--title">作品名</th>' +
+        '<th class="p26-list__th p26-list__th--artist">作家</th>' +
+        '<th class="p26-list__th p26-list__th--spec">技法・サイズ</th>' +
+        '<th class="p26-list__th p26-list__th--year">制作年</th>' +
+        priceHead +
+      '</tr></thead>';
+
+    var body = sortWorks(WORKS).map(function (w) {
+      var noCell = (w.no != null) ? w.no : '—';
+      var priceCol = plus
+        ? '<td class="p26-list__td p26-list__td--price" data-label="価格（税込）">' + priceCell(w) + '</td>'
+        : '';
+      return '<tr class="p26-list__row" tabindex="0" role="link" onclick="location.href=\'./kotennavi-p6.html\'">' +
+          '<td class="p26-list__td p26-list__td--no" data-label="No.">' + noCell + '</td>' +
+          '<td class="p26-list__td p26-list__td--thumb">' + thumbCell(w) + '</td>' +
+          '<td class="p26-list__td p26-list__td--title" data-label="作品名">' + w.title + '</td>' +
+          '<td class="p26-list__td p26-list__td--artist" data-label="作家">' + w.name + '</td>' +
+          '<td class="p26-list__td p26-list__td--spec" data-label="技法・サイズ">' + w.spec + '</td>' +
+          '<td class="p26-list__td p26-list__td--year" data-label="制作年">' + w.year + '</td>' +
+          priceCol +
+        '</tr>';
+    }).join('');
+
+    mount.innerHTML = '<table class="p26-list">' + thead + '<tbody>' + body + '</tbody></table>';
+
+    var cnt = document.getElementById('p26Count');
+    if (cnt) cnt.textContent = '全' + WORKS.length + '点';
+  }
+
+  /* デモ：サービス種別トグル（本番は展覧会設定で一意） */
+  window.p26SetVariant = function (v, btn) {
+    document.body.classList.toggle('p2-6-plus', v === 'plus');
+    if (btn) {
+      var bar = btn.parentNode;
+      if (bar) bar.querySelectorAll('.dbtn').forEach(function (b) { b.classList.remove('on'); });
+      btn.classList.add('on');
+    }
+    render();
+  };
+
+  render();
+};
+
+/* ────────────────────────────────────────────────────
    P6 作品詳細（通常版）
 ──────────────────────────────────────────────────── */
 KTN.pages['p6'] = function() {
@@ -1877,6 +2001,7 @@ KTN.pages['p6'] = function() {
         ? (w.qty + '\u70b9 / ' + w.edition)
         : '1\u70b9\uff08\u30a8\u30c7\u30a3\u30b7\u30e7\u30f3\u306a\u3057\uff09';
       var specs = [
+        { lbl:'\u51fa\u54c1\u756a\u53f7', val: w.no ? 'No.' + w.no : null },
         { lbl:'\u4f5c\u5bb6',         val: w.creator + '\uff08' + w.creatorEn + '\uff09', always: true },
         { lbl:'\u5236\u4f5c\u5e74',   val: w.year ? w.year + '\u5e74' : null },
         { lbl:'\u7d20\u6750\u30fb\u6280\u6cd5', val: w.medium },
@@ -2210,9 +2335,9 @@ KTN.pages['p2-12'] = function() {
 
   /* ── サンプルデータ（author＝作者。creator/gallery 共通で常時表示） ── */
   var INITIAL = [
-    { id:'w1', title:'《オノマトペの庭》', author:'田中 透', year:'2026年', medium:'キャンバスに油彩', size:'116.7×91.0cm', bg:'linear-gradient(155deg,#b8d8cc,#6a9e8a)', status:'inquiry' },
-    { id:'w2', title:'《ふわふわ》',       author:'田中 透', year:'2025年', medium:'キャンバスに油彩', size:'72.7×60.6cm',  bg:'linear-gradient(155deg,#f0e8d0,#d4b896)', status:'sale' },
-    { id:'w3', title:'《ざわざわ（夜）》',  author:'田中 透', year:'2025年', medium:'アクリル・パネル', size:'53.0×45.5cm',  bg:'linear-gradient(155deg,#3d3530,#1f1a18)', status:'nonsale' },
+    { id:'w1', no:5, title:'《オノマトペの庭》', author:'田中 透', year:'2026年', medium:'キャンバスに油彩', size:'116.7×91.0cm', bg:'linear-gradient(155deg,#b8d8cc,#6a9e8a)', status:'inquiry' },
+    { id:'w2', no:1, title:'《ふわふわ》',       author:'田中 透', year:'2025年', medium:'キャンバスに油彩', size:'72.7×60.6cm',  bg:'linear-gradient(155deg,#f0e8d0,#d4b896)', status:'sale' },
+    { id:'w3', no:3, title:'《ざわざわ（夜）》',  author:'田中 透', year:'2025年', medium:'アクリル・パネル', size:'53.0×45.5cm',  bg:'linear-gradient(155deg,#3d3530,#1f1a18)', status:'nonsale' },
   ];
   var EXTRA = [
     { id:'w4', title:'《ドキドキ #3》',   author:'田中 透', year:'2025年', bg:'linear-gradient(155deg,#f0d0d0,#c88080)', status:'inquiry' },
@@ -2220,6 +2345,11 @@ KTN.pages['p2-12'] = function() {
     { id:'w6', title:'《言葉の断片 I》',  author:'田中 透', year:'2024年', bg:'linear-gradient(155deg,#d8c8e8,#a888cc)', status:'inquiry' },
     { id:'w7', title:'《言葉の断片 II》', author:'田中 透', year:'2024年', bg:'linear-gradient(155deg,#c8d8e8,#7898b8)', status:'inquiry' },
     { id:'w8', title:'《ふわふわ No.2》', author:'田中 透', year:'2024年', bg:'linear-gradient(155deg,#e0d8c8,#b4a88a)', status:'inquiry' },
+    /* creator 個展ロールで候補が閾値（10件）を超え検索欄が出ることを確認するためのデモ作品 */
+    { id:'w9',  title:'《きらきら》',      author:'田中 透', year:'2024年', bg:'linear-gradient(155deg,#f0ead0,#c8b878)', status:'inquiry' },
+    { id:'w10', title:'《ざわざわ（朝）》', author:'田中 透', year:'2023年', bg:'linear-gradient(155deg,#dce8e0,#8ca898)', status:'inquiry' },
+    { id:'w11', title:'《ぐるぐる #2》',   author:'田中 透', year:'2023年', bg:'linear-gradient(155deg,#e8dcd0,#b89878)', status:'inquiry' },
+    { id:'w12', title:'《ぽつぽつ》',      author:'田中 透', year:'2023年', bg:'linear-gradient(155deg,#d0d8e8,#8090b8)', status:'inquiry' },
     /* 別作家の作品：gallery グループ展ロールでは出展クリエイター（佐藤・鈴木）として候補に出る。
        creator 個展ロールでは出展外のため候補に出ない（isAllowedAuthor がロールで判定）。 */
     { id:'x1', title:'《余白のコンポジション》', author:'佐藤 みなと', year:'2025年', bg:'linear-gradient(155deg,#e8e2d4,#b0a888)', status:'inquiry' },
@@ -2263,19 +2393,27 @@ KTN.pages['p2-12'] = function() {
     li.dataset.id = w.id;
     var meta = [w.year, w.medium, w.size].filter(Boolean).join('　');
     li.innerHTML =
-      '<div class="p2-12-work-card__handle" title="ドラッグで並び替え">'+HANDLE_SVG+'</div>'+
-      '<div class="p2-12-work-card__thumb" style="background:'+w.bg+'"></div>'+
-      '<div class="p2-12-work-card__body">'+
-        '<div class="p2-12-work-card__title">'+w.title+'</div>'+
-        '<div class="p2-12-work-card__author"><span class="p2-12-work-card__author-label">作者</span>'+(w.author||'—')+'</div>'+
-        '<div class="p2-12-work-card__meta">'+meta+'</div>'+
-      '</div>'+
-      '<div class="p2-12-work-card__controls">'+
-        '<select class="p2-12-status-sel" aria-label="販売状態">'+statusOpts(w.status)+'</select>'+
-        '<button class="p2-12-remove-btn" type="button" data-id="'+w.id+'" aria-label="取り外す">'+
-          '<svg class="p2-12-remove-btn__icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13" aria-hidden="true"><line x1="3" y1="3" x2="13" y2="13"/><line x1="13" y1="3" x2="3" y2="13"/></svg>'+
-          '<span class="p2-12-remove-btn__text">取り外す</span>'+
+      '<div class="p2-12-work-card__main">'+
+        '<div class="p2-12-work-card__handle" title="ドラッグで並び替え">'+HANDLE_SVG+'</div>'+
+        '<div class="p2-12-work-card__thumb" style="background:'+w.bg+'"></div>'+
+        '<div class="p2-12-work-card__no" title="作品番号（任意）">'+
+          '<span class="p2-12-work-card__no-label">No.</span>'+
+          '<input class="p2-12-no-input" type="text" inputmode="numeric" maxlength="4" placeholder="—" value="'+(w.no||'')+'" aria-label="作品番号（任意）">'+
+        '</div>'+
+        '<div class="p2-12-work-card__body">'+
+          '<div class="p2-12-work-card__title">'+w.title+'</div>'+
+          '<div class="p2-12-work-card__author"><span class="p2-12-work-card__author-label">作者</span>'+(w.author||'—')+'</div>'+
+          '<div class="p2-12-work-card__meta">'+meta+'</div>'+
+        '</div>'+
+        '<button class="p2-12-remove-btn" type="button" data-id="'+w.id+'" title="取り外す" aria-label="取り外す">'+
+          '<svg class="p2-12-remove-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" width="13" height="13" aria-hidden="true"><line x1="6" y1="12" x2="18" y2="12"/></svg>'+
         '</button>'+
+      '</div>'+
+      '<div class="p2-12-work-card__settings">'+
+        '<div class="p2-12-field">'+
+          '<span class="p2-12-field__label">販売状態</span>'+
+          '<select class="p2-12-status-sel" aria-label="販売状態">'+statusOpts(w.status)+'</select>'+
+        '</div>'+
       '</div>';
     li.querySelector('.p2-12-remove-btn').addEventListener('click', handleRemove);
     return li;
@@ -2289,36 +2427,140 @@ KTN.pages['p2-12'] = function() {
     var card = e.currentTarget.closest('.p2-12-work-card');
     if (card) card.remove();
     var cc = candGrid.querySelector('[data-id="'+id+'"]');
-    if (cc) cc.classList.remove('is-added');
+    if (cc) { cc.classList.remove('is-added'); cc.title = '出品する'; }
     updateCount();
+  }
+
+  /* ── 候補フィルター（検索＝候補が多い時のみ／作者チップ＝galleryのみ）── */
+  var candSearch = '', candCreator = '', candSort = '';
+  var CAND_FILTER_MIN = 10; /* 候補がこれを超えたら絞込UI（検索／作者チップ／並び順）を出す */
+  var candPoolCap = 0; /* デモ用：>0 なら候補をこの件数に制限（少数作品＝絞込UIが出ないことの確認用・デモバー「候補：少ない」） */
+  var candFilterEl = null, candEmptyEl = null;
+
+  /* 候補プール（isAllowedAuthor 通過作品／デモの少数モードでは candPoolCap 件に制限） */
+  function candPool() {
+    var pool = ALL.filter(isAllowedAuthor);
+    return candPoolCap > 0 ? pool.slice(0, candPoolCap) : pool;
+  }
+
+  function candMatch(w) {
+    if (candCreator && w.author !== candCreator) return false;
+    var q = candSearch.trim();
+    if (q && (w.title + ' ' + (w.author || '')).indexOf(q) === -1) return false;
+    return true;
+  }
+
+  /* 候補の並び替え（candSort=''＝登録順=データ順） */
+  function candYearNum(w) { var m = (w.year || '').match(/\d+/); return m ? parseInt(m[0], 10) : 0; }
+  function candSortList(list) {
+    var a = list.slice();
+    if (candSort === 'title')      a.sort(function(x,y){ return (x.title  || '').localeCompare(y.title  || '', 'ja'); });
+    else if (candSort === 'year-desc') a.sort(function(x,y){ return candYearNum(y) - candYearNum(x); });
+    else if (candSort === 'year-asc')  a.sort(function(x,y){ return candYearNum(x) - candYearNum(y); });
+    else if (candSort === 'author')    a.sort(function(x,y){ return (x.author || '').localeCompare(y.author || '', 'ja'); });
+    return a;
+  }
+
+  function syncCandFilter() {
+    var allowed = candPool();
+    var many = allowed.length > CAND_FILTER_MIN;
+    var showSearch = many;
+    var showChips  = many && isGalleryRole();
+    if (!candFilterEl) {
+      candFilterEl = document.createElement('div');
+      candFilterEl.className = 'p2-12-cand-filter';
+      candGrid.parentNode.insertBefore(candFilterEl, candGrid);
+    }
+    if (!showSearch && !showChips) { candFilterEl.hidden = true; candFilterEl.innerHTML = ''; return; }
+    candFilterEl.hidden = false;
+
+    var chipsHtml = '';
+    if (showChips) {
+      var chips = [{ name:'', label:'すべて', n:allowed.length }].concat(
+        exhArtists().map(function(a){
+          return { name:a.name, label:a.name, n:allowed.filter(function(w){ return w.author===a.name; }).length };
+        }));
+      chipsHtml = '<div class="p2-12-cand-filter__chips" role="group" aria-label="作者で絞り込み">'
+        + chips.map(function(c){
+            return '<button type="button" class="p2-12-cand-filter__chip'+(candCreator===c.name?' is-active':'')+'" data-creator="'+c.name+'">'
+              + c.label + '<span class="p2-12-cand-filter__chip-n">'+c.n+'</span></button>';
+          }).join('')
+        + '</div>';
+    }
+    var toolsHtml = '';
+    if (showSearch) {
+      if (candSort === 'author' && !isGalleryRole()) candSort = ''; /* creator では作者順は無効 */
+      var searchPh = isGalleryRole() ? '作品名・クリエイター名で絞り込み' : '作品名で絞り込み';
+      var sortOpts = [
+        { v:'',          label:'登録順' },
+        { v:'title',     label:'作品名順' },
+        { v:'year-desc', label:'制作年（新しい順）' },
+        { v:'year-asc',  label:'制作年（古い順）' }
+      ];
+      if (isGalleryRole()) sortOpts.push({ v:'author', label:'クリエイター名順' });
+      toolsHtml = '<div class="p2-12-cand-filter__tools">'
+        + '<div class="p2-12-cand-filter__search">'
+        +   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="15" height="15" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>'
+        +   '<input type="search" class="p2-12-cand-filter__input" placeholder="'+searchPh+'" aria-label="'+searchPh+'" value="'+candSearch.replace(/"/g,'&quot;')+'">'
+        + '</div>'
+        + '<label class="p2-12-cand-filter__sort">'
+        +   '<span class="p2-12-cand-filter__sort-lbl">並び順</span>'
+        +   '<select class="p2-12-cand-filter__sort-sel" aria-label="並び順">'
+        +     sortOpts.map(function(o){ return '<option value="'+o.v+'"'+(candSort===o.v?' selected':'')+'>'+o.label+'</option>'; }).join('')
+        +   '</select>'
+        + '</label>'
+        + '</div>';
+    }
+    candFilterEl.innerHTML = chipsHtml + toolsHtml;
+
+    Array.prototype.forEach.call(candFilterEl.querySelectorAll('.p2-12-cand-filter__chip'), function(btn){
+      btn.addEventListener('click', function(){ candCreator = btn.dataset.creator; syncCandFilter(); renderCandGrid(); });
+    });
+    var input = candFilterEl.querySelector('.p2-12-cand-filter__input');
+    if (input) input.addEventListener('input', function(){ candSearch = input.value; renderCandGrid(); });
+    var sortSel = candFilterEl.querySelector('.p2-12-cand-filter__sort-sel');
+    if (sortSel) sortSel.addEventListener('change', function(){ candSort = sortSel.value; renderCandGrid(); });
   }
 
   /* ── 候補グリッド描画（出展クリエイター以外の作品は候補に出さない） ── */
   function renderCandGrid() {
     candGrid.innerHTML = '';
-    ALL.forEach(function(w) {
-      if (!isAllowedAuthor(w)) return;
+    var shown = 0;
+    candSortList(candPool().filter(candMatch)).forEach(function(w) {
       var added = displayedIds.indexOf(w.id) !== -1;
       var div = document.createElement('div');
       div.className = 'p2-12-candidate-card'+(added?' is-added':'');
       div.dataset.id = w.id;
+      div.title = added ? '' : '出品する';
       div.innerHTML =
+        '<span class="p2-12-candidate-card__mark" aria-hidden="true">'+
+          '<svg class="p2-12-candidate-card__mark-add" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" width="13" height="13"><line x1="12" y1="6" x2="12" y2="18"/><line x1="6" y1="12" x2="18" y2="12"/></svg>'+
+        '</span>'+
+        '<span class="p2-12-candidate-card__listed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" width="11" height="11" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>出品中</span>'+
         '<div class="p2-12-candidate-card__thumb" style="background:'+w.bg+'"></div>'+
         '<div class="p2-12-candidate-card__info">'+
           '<div class="p2-12-candidate-card__title">'+w.title+'</div>'+
           '<div class="p2-12-candidate-card__author">'+(w.author||'')+'</div>'+
-          '<div class="p2-12-candidate-card__year">'+(w.year||'')+'</div>'+
-          '<div class="p2-12-candidate-card__added">追加済み</div>'+
+          '<div class="p2-12-candidate-card__meta">'+[w.year,w.medium,w.size].filter(Boolean).join('　')+'</div>'+
         '</div>';
       div.addEventListener('click', function() {
         if (div.classList.contains('is-added')) return;
         displayedIds.push(w.id);
         listEl.appendChild(makeCard(w));
         div.classList.add('is-added');
+        div.title = '';
         updateCount();
       });
       candGrid.appendChild(div);
+      shown++;
     });
+    if (!candEmptyEl) {
+      candEmptyEl = document.createElement('p');
+      candEmptyEl.className = 'p2-12-cand-empty';
+      candEmptyEl.textContent = '該当する作品がありません。';
+      candGrid.parentNode.insertBefore(candEmptyEl, candGrid.nextSibling);
+    }
+    candEmptyEl.hidden = shown !== 0;
   }
 
   /* ── パネル開閉 ── */
@@ -2326,6 +2568,7 @@ KTN.pages['p2-12'] = function() {
     addPanel.hidden = false;
     addBtn.classList.add('is-open');
     renderAddTexts();
+    syncCandFilter();
     renderCandGrid();
   }
   function closePanel() {
@@ -2336,6 +2579,16 @@ KTN.pages['p2-12'] = function() {
   /* ── 初期描画 ── */
   INITIAL.forEach(function(w){ listEl.appendChild(makeCard(w)); });
   updateCount();
+
+  /* デモバー「候補：多い/少ない」＝候補プールを制限し、少数時に絞込UI（検索/作者チップ）が出ないことを確認 */
+  window.p212DemoCands = function (few, btn) {
+    candPoolCap = few ? 8 : 0;
+    if (!addPanel.hidden) { syncCandFilter(); renderCandGrid(); }
+    if (btn) {
+      document.querySelectorAll('.dbar [onclick^="p212DemoCands"]').forEach(function (b) { b.classList.remove('on'); });
+      btn.classList.add('on');
+    }
+  };
 
   /* ── SortableJS ── */
   if (window.Sortable) {
@@ -2348,6 +2601,17 @@ KTN.pages['p2-12'] = function() {
         displayedIds = [];
         listEl.querySelectorAll('.p2-12-work-card').forEach(function(c){ displayedIds.push(c.dataset.id); });
       },
+    });
+  }
+
+  /* ── 並べ替えモード：カードをハンドル＋サムネ＋作品名の薄い行に圧縮し、スマホでも一覧しながら並べ替えやすくする ── */
+  var reorderBtn = document.getElementById('p212ReorderBtn');
+  if (reorderBtn) {
+    var reorderScope = listEl.closest('.p2-12-works-block') || listEl;
+    reorderBtn.addEventListener('click', function () {
+      var on = reorderScope.classList.toggle('is-reordering');
+      reorderBtn.classList.toggle('is-active', on);
+      reorderBtn.textContent = on ? '並べ替え完了' : '並べ替え';
     });
   }
 
@@ -2377,6 +2641,8 @@ KTN.pages['p2-12'] = function() {
   window.ktnRender = function () {
     if (typeof _prevRender === 'function') _prevRender();
     renderAddTexts();
+    candCreator = ''; /* ロール変更で作者候補が変わるためリセット */
+    syncCandFilter();
     renderCandGrid();
   };
 
@@ -2552,8 +2818,8 @@ KTN.pages['p2-121'] = function() {
   var INITIAL = [
     /* locked:true = 販売中・申込者あり → 状態・価格ロック */
     { id:'w1', title:'《オノマトペの庭》', author:'田中 透', year:'2026年', medium:'キャンバスに油彩', size:'116.7×91.0cm', bg:'linear-gradient(155deg,#b8d8cc,#6a9e8a)', status:'sale', price:480000, locked:true, applyCount:2 },
-    { id:'w2', title:'《ふわふわ》',       author:'田中 透', year:'2025年', medium:'キャンバスに油彩', size:'72.7×60.6cm',  bg:'linear-gradient(155deg,#f0e8d0,#d4b896)', status:'sale',    price:220000 },
-    { id:'w3', title:'《ざわざわ（夜）》',  author:'田中 透', year:'2025年', medium:'アクリル・パネル', size:'53.0×45.5cm',  bg:'linear-gradient(155deg,#3d3530,#1f1a18)', status:'nonsale' },
+    { id:'w2', no:1, title:'《ふわふわ》',       author:'田中 透', year:'2025年', medium:'キャンバスに油彩', size:'72.7×60.6cm',  bg:'linear-gradient(155deg,#f0e8d0,#d4b896)', status:'sale',    price:220000 },
+    { id:'w3', no:3, title:'《ざわざわ（夜）》',  author:'田中 透', year:'2025年', medium:'アクリル・パネル', size:'53.0×45.5cm',  bg:'linear-gradient(155deg,#3d3530,#1f1a18)', status:'nonsale' },
     /* soldOnline:true = オンライン取引完了 → 状態・価格ロック */
     { id:'w9', title:'《言葉の重力 No.3》', author:'田中 透', year:'2024年', medium:'油彩', size:'72.7×60.6cm', bg:'linear-gradient(135deg,#c8a87a,#8b6040)', status:'sold', price:120000, soldOnline:true },
     /* priceLocked:true = 会場売約済 → 状態選択可・価格ロック */
@@ -2565,6 +2831,9 @@ KTN.pages['p2-121'] = function() {
     { id:'w6', title:'《言葉の断片 I》',  author:'田中 透', year:'2024年', bg:'linear-gradient(155deg,#d8c8e8,#a888cc)', status:'inquiry' },
     { id:'w7', title:'《言葉の断片 II》', author:'田中 透', year:'2024年', bg:'linear-gradient(155deg,#c8d8e8,#7898b8)', status:'inquiry' },
     { id:'w8', title:'《ふわふわ No.2》', author:'田中 透', year:'2024年', bg:'linear-gradient(155deg,#e0d8c8,#b4a88a)', status:'inquiry' },
+    /* creator 個展ロールで候補が閾値（10件）を超え検索欄が出ることを確認するためのデモ作品（w9/w10 は INITIAL 使用済のため w11 から） */
+    { id:'w11', title:'《きらきら》',    author:'田中 透', year:'2024年', bg:'linear-gradient(155deg,#f0ead0,#c8b878)', status:'inquiry' },
+    { id:'w12', title:'《ぐるぐる #2》', author:'田中 透', year:'2023年', bg:'linear-gradient(155deg,#e8dcd0,#b89878)', status:'inquiry' },
     /* 別作家の作品：gallery グループ展ロールでは出展クリエイター（佐藤・鈴木）として候補に出る。
        creator 個展ロールでは出展外のため候補に出ない（isAllowedAuthor がロールで判定）。 */
     { id:'x1', title:'《余白のコンポジション》', author:'佐藤 みなと', year:'2025年', bg:'linear-gradient(155deg,#e8e2d4,#b0a888)', status:'inquiry' },
@@ -2599,71 +2868,97 @@ KTN.pages['p2-121'] = function() {
 
   function makeCard(w) {
     var li = document.createElement('li');
-    li.className = 'p2-12-work-card';
     li.dataset.id = w.id;
     var meta = [w.year, w.medium, w.size].filter(Boolean).join('　');
 
     var isLocked = w.locked || w.soldOnline;
     var isPriceLocked = isLocked || !!w.priceLocked;
+    li.className = 'p2-12-work-card' + (isLocked ? ' p2-12-work-card--locked ' + (w.locked ? 'p2-12-work-card--applied' : 'p2-12-work-card--sold') : '');
 
-    /* 価格エリア */
-    var priceHtml;
-    if (isPriceLocked) {
-      priceHtml =
-        '<div class="p2-121-price-wrap is-locked">'+
-          '<span class="p2-121-price-wrap__sign">¥</span>'+
-          '<input class="p2-121-price-wrap__input" type="number" value="'+(w.price||'')+'" disabled>'+
-          '<span class="p2-121-price-wrap__tax">税込</span>'+
+    /* 販売設定エリア：ロック済み（読み取り専用）と編集可で構造を分ける */
+    var priceText = w.price ? '¥'+Number(w.price).toLocaleString('ja-JP') : '';
+    var settingsHtml;
+    if (isLocked) {
+      /* ロック済み（申込中／売約済）＝状態パネル＋管理先への遷移CTA（編集フィールドにしない） */
+      var lockBadge, lockNote, hintText, ctaLabel, ctaHref;
+      if (w.locked) {
+        lockBadge = '<span class="p2-121-lock-badge">販売中</span>';
+        lockNote  = '<span class="p2-121-lock-note"><strong class="p2-121-lock-note__num">'+w.applyCount+'</strong>件申込中</span>';
+        hintText  = '申込対応中のため、詳細はリエゾン+コンソールで確認して下さい。';
+        ctaLabel  = 'リエゾン+コンソール';
+        ctaHref   = 'kotennavi-p3-15.html';
+      } else {
+        lockBadge = '<span class="p2-121-lock-badge p2-121-lock-badge--sold">売約済</span>';
+        lockNote  = '<span class="p2-121-lock-note">取引完了</span>';
+        hintText  = '取引が成立した作品のため、詳細は取引デスクで確認して下さい。';
+        ctaLabel  = '取引デスク';
+        ctaHref   = 'kotennavi-p3-16.html';
+      }
+      settingsHtml =
+        '<div class="p2-12-work-card__settings p2-12-work-card__settings--locked">'+
+          '<div class="p2-121-locked-info">'+
+            '<div class="p2-121-locked-summary">'+
+              lockBadge + lockNote +
+              (priceText ? '<span class="p2-121-locked-price">'+priceText+'</span>' : '')+
+            '</div>'+
+            '<div class="p2-121-locked-hint">'+
+              '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>'+
+              '<span>'+hintText+'</span>'+
+            '</div>'+
+          '</div>'+
+          '<a class="ktn-action-btn p2-121-locked-cta" href="'+ctaHref+'">'+ctaLabel+' →</a>'+
         '</div>';
     } else {
-      priceHtml =
-        '<div class="p2-121-price-wrap">'+
-          '<span class="p2-121-price-wrap__sign">¥</span>'+
-          '<input class="p2-121-price-wrap__input" type="number" min="0" step="1000"'+
-            ' placeholder="価格" aria-label="価格（税込）" value="'+(w.price||'')+'">'+
-          '<span class="p2-121-price-wrap__tax">税込</span>'+
+      /* 編集可＝販売状態(select)＋価格(input) の2フィールド */
+      var priceHtml;
+      if (isPriceLocked) {
+        priceHtml =
+          '<div class="p2-121-price-wrap is-locked">'+
+            '<span class="p2-121-price-wrap__sign">¥</span>'+
+            '<input class="p2-121-price-wrap__input" type="number" value="'+(w.price||'')+'" disabled>'+
+          '</div>';
+      } else {
+        priceHtml =
+          '<div class="p2-121-price-wrap">'+
+            '<span class="p2-121-price-wrap__sign">¥</span>'+
+            '<input class="p2-121-price-wrap__input" type="number" min="0" step="1000"'+
+              ' placeholder="価格" aria-label="価格（税込）" value="'+(w.price||'')+'">'+
+          '</div>';
+      }
+      settingsHtml =
+        '<div class="p2-12-work-card__settings">'+
+          '<div class="p2-12-field">'+
+            '<span class="p2-12-field__label">価格<span class="p2-12-field__tax">（税込）</span></span>'+
+            priceHtml+
+          '</div>'+
+          '<div class="p2-12-field">'+
+            '<span class="p2-12-field__label">販売状態</span>'+
+            '<select class="p2-12-status-sel" aria-label="販売状態">'+statusOpts(w.status)+'</select>'+
+          '</div>'+
         '</div>';
     }
 
-    /* 販売状態エリア */
-    var statusHtml;
-    if (w.locked) {
-      /* 販売中（申込者あり）：ロック＋コンソールリンク */
-      statusHtml =
-        '<div class="p2-121-lock-info">'+
-          '<span class="p2-121-lock-badge">販売中</span>'+
-          '<span class="p2-121-lock-note"><strong class="p2-121-lock-note__num">'+w.applyCount+'</strong>件申込中</span>'+
-          '<a class="p2-121-console-link" href="kotennavi-p3-15.html">コンソールで操作 →</a>'+
-        '</div>';
-    } else if (w.soldOnline) {
-      /* 売約済（オンライン取引完了）：ロック */
-      statusHtml =
-        '<div class="p2-121-lock-info">'+
-          '<span class="p2-121-lock-badge p2-121-lock-badge--sold">売約済</span>'+
-          '<span class="p2-121-lock-note">取引完了</span>'+
-        '</div>';
-    } else {
-      statusHtml = '<select class="p2-12-status-sel" aria-label="販売状態">'+statusOpts(w.status)+'</select>';
-    }
+    var removeHtml = isLocked ? '' :
+      '<button class="p2-12-remove-btn" type="button" data-id="'+w.id+'" title="取り外す" aria-label="取り外す">'+
+        '<svg class="p2-12-remove-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" width="13" height="13" aria-hidden="true"><line x1="6" y1="12" x2="18" y2="12"/></svg>'+
+      '</button>';
 
     li.innerHTML =
-      '<div class="p2-12-work-card__handle" title="ドラッグで並び替え">'+HANDLE_SVG+'</div>'+
-      '<div class="p2-12-work-card__thumb" style="background:'+w.bg+'"></div>'+
-      '<div class="p2-12-work-card__body">'+
-        '<div class="p2-12-work-card__title">'+w.title+'</div>'+
-        '<div class="p2-12-work-card__author"><span class="p2-12-work-card__author-label">作者</span>'+(w.author||'—')+'</div>'+
-        '<div class="p2-12-work-card__meta">'+meta+'</div>'+
+      '<div class="p2-12-work-card__main">'+
+        '<div class="p2-12-work-card__handle" title="ドラッグで並び替え">'+HANDLE_SVG+'</div>'+
+        '<div class="p2-12-work-card__thumb" style="background:'+w.bg+'"></div>'+
+        '<div class="p2-12-work-card__no" title="作品番号（任意）">'+
+          '<span class="p2-12-work-card__no-label">No.</span>'+
+          '<input class="p2-12-no-input" type="text" inputmode="numeric" maxlength="4" placeholder="—" value="'+(w.no||'')+'" aria-label="作品番号（任意）">'+
+        '</div>'+
+        '<div class="p2-12-work-card__body">'+
+          '<div class="p2-12-work-card__title">'+w.title+'</div>'+
+          '<div class="p2-12-work-card__author"><span class="p2-12-work-card__author-label">作者</span>'+(w.author||'—')+'</div>'+
+          '<div class="p2-12-work-card__meta">'+meta+'</div>'+
+        '</div>'+
+        removeHtml +
       '</div>'+
-      '<div class="p2-12-work-card__controls">'+
-        priceHtml+
-        statusHtml+
-        (!isLocked ?
-          '<button class="p2-12-remove-btn" type="button" data-id="'+w.id+'" aria-label="取り外す">'+
-            '<svg class="p2-12-remove-btn__icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13" aria-hidden="true"><line x1="3" y1="3" x2="13" y2="13"/><line x1="13" y1="3" x2="3" y2="13"/></svg>'+
-            '<span class="p2-12-remove-btn__text">取り外す</span>'+
-          '</button>'
-        : '') +
-      '</div>';
+      settingsHtml;
 
     if (!isLocked) {
       li.querySelector('.p2-12-remove-btn').addEventListener('click', handleRemove);
@@ -2693,41 +2988,146 @@ KTN.pages['p2-121'] = function() {
     var card = e.currentTarget.closest('.p2-12-work-card');
     if (card) card.remove();
     var cc = candGrid.querySelector('[data-id="'+id+'"]');
-    if (cc) cc.classList.remove('is-added');
+    if (cc) { cc.classList.remove('is-added'); cc.title = '出品する'; }
     updateCount();
+  }
+
+  /* ── 候補フィルター（検索＝候補が多い時のみ／作者チップ＝galleryのみ）── */
+  var candSearch = '', candCreator = '', candSort = '';
+  var CAND_FILTER_MIN = 10; /* 候補がこれを超えたら絞込UI（検索／作者チップ／並び順）を出す */
+  var candPoolCap = 0; /* デモ用：>0 なら候補をこの件数に制限（少数作品＝絞込UIが出ないことの確認用・デモバー「候補：少ない」） */
+  var candFilterEl = null, candEmptyEl = null;
+
+  /* 候補プール（isAllowedAuthor 通過作品／デモの少数モードでは candPoolCap 件に制限） */
+  function candPool() {
+    var pool = ALL.filter(isAllowedAuthor);
+    return candPoolCap > 0 ? pool.slice(0, candPoolCap) : pool;
+  }
+
+  function candMatch(w) {
+    if (candCreator && w.author !== candCreator) return false;
+    var q = candSearch.trim();
+    if (q && (w.title + ' ' + (w.author || '')).indexOf(q) === -1) return false;
+    return true;
+  }
+
+  /* 候補の並び替え（candSort=''＝登録順=データ順） */
+  function candYearNum(w) { var m = (w.year || '').match(/\d+/); return m ? parseInt(m[0], 10) : 0; }
+  function candSortList(list) {
+    var a = list.slice();
+    if (candSort === 'title')      a.sort(function(x,y){ return (x.title  || '').localeCompare(y.title  || '', 'ja'); });
+    else if (candSort === 'year-desc') a.sort(function(x,y){ return candYearNum(y) - candYearNum(x); });
+    else if (candSort === 'year-asc')  a.sort(function(x,y){ return candYearNum(x) - candYearNum(y); });
+    else if (candSort === 'author')    a.sort(function(x,y){ return (x.author || '').localeCompare(y.author || '', 'ja'); });
+    return a;
+  }
+
+  function syncCandFilter() {
+    var allowed = candPool();
+    var many = allowed.length > CAND_FILTER_MIN;
+    var showSearch = many;
+    var showChips  = many && isGalleryRole();
+    if (!candFilterEl) {
+      candFilterEl = document.createElement('div');
+      candFilterEl.className = 'p2-12-cand-filter';
+      candGrid.parentNode.insertBefore(candFilterEl, candGrid);
+    }
+    if (!showSearch && !showChips) { candFilterEl.hidden = true; candFilterEl.innerHTML = ''; return; }
+    candFilterEl.hidden = false;
+
+    var chipsHtml = '';
+    if (showChips) {
+      var chips = [{ name:'', label:'すべて', n:allowed.length }].concat(
+        exhArtists().map(function(a){
+          return { name:a.name, label:a.name, n:allowed.filter(function(w){ return w.author===a.name; }).length };
+        }));
+      chipsHtml = '<div class="p2-12-cand-filter__chips" role="group" aria-label="作者で絞り込み">'
+        + chips.map(function(c){
+            return '<button type="button" class="p2-12-cand-filter__chip'+(candCreator===c.name?' is-active':'')+'" data-creator="'+c.name+'">'
+              + c.label + '<span class="p2-12-cand-filter__chip-n">'+c.n+'</span></button>';
+          }).join('')
+        + '</div>';
+    }
+    var toolsHtml = '';
+    if (showSearch) {
+      if (candSort === 'author' && !isGalleryRole()) candSort = ''; /* creator では作者順は無効 */
+      var searchPh = isGalleryRole() ? '作品名・クリエイター名で絞り込み' : '作品名で絞り込み';
+      var sortOpts = [
+        { v:'',          label:'登録順' },
+        { v:'title',     label:'作品名順' },
+        { v:'year-desc', label:'制作年（新しい順）' },
+        { v:'year-asc',  label:'制作年（古い順）' }
+      ];
+      if (isGalleryRole()) sortOpts.push({ v:'author', label:'クリエイター名順' });
+      toolsHtml = '<div class="p2-12-cand-filter__tools">'
+        + '<div class="p2-12-cand-filter__search">'
+        +   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="15" height="15" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>'
+        +   '<input type="search" class="p2-12-cand-filter__input" placeholder="'+searchPh+'" aria-label="'+searchPh+'" value="'+candSearch.replace(/"/g,'&quot;')+'">'
+        + '</div>'
+        + '<label class="p2-12-cand-filter__sort">'
+        +   '<span class="p2-12-cand-filter__sort-lbl">並び順</span>'
+        +   '<select class="p2-12-cand-filter__sort-sel" aria-label="並び順">'
+        +     sortOpts.map(function(o){ return '<option value="'+o.v+'"'+(candSort===o.v?' selected':'')+'>'+o.label+'</option>'; }).join('')
+        +   '</select>'
+        + '</label>'
+        + '</div>';
+    }
+    candFilterEl.innerHTML = chipsHtml + toolsHtml;
+
+    Array.prototype.forEach.call(candFilterEl.querySelectorAll('.p2-12-cand-filter__chip'), function(btn){
+      btn.addEventListener('click', function(){ candCreator = btn.dataset.creator; syncCandFilter(); renderCandGrid(); });
+    });
+    var input = candFilterEl.querySelector('.p2-12-cand-filter__input');
+    if (input) input.addEventListener('input', function(){ candSearch = input.value; renderCandGrid(); });
+    var sortSel = candFilterEl.querySelector('.p2-12-cand-filter__sort-sel');
+    if (sortSel) sortSel.addEventListener('change', function(){ candSort = sortSel.value; renderCandGrid(); });
   }
 
   function renderCandGrid() {
     candGrid.innerHTML = '';
-    ALL.forEach(function(w) {
-      if (!isAllowedAuthor(w)) return;
+    var shown = 0;
+    candSortList(candPool().filter(candMatch)).forEach(function(w) {
       var added = displayedIds.indexOf(w.id) !== -1;
       var div = document.createElement('div');
       div.className = 'p2-12-candidate-card'+(added?' is-added':'');
       div.dataset.id = w.id;
+      div.title = added ? '' : '出品する';
       div.innerHTML =
+        '<span class="p2-12-candidate-card__mark" aria-hidden="true">'+
+          '<svg class="p2-12-candidate-card__mark-add" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" width="13" height="13"><line x1="12" y1="6" x2="12" y2="18"/><line x1="6" y1="12" x2="18" y2="12"/></svg>'+
+        '</span>'+
+        '<span class="p2-12-candidate-card__listed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" width="11" height="11" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>出品中</span>'+
         '<div class="p2-12-candidate-card__thumb" style="background:'+w.bg+'"></div>'+
         '<div class="p2-12-candidate-card__info">'+
           '<div class="p2-12-candidate-card__title">'+w.title+'</div>'+
           '<div class="p2-12-candidate-card__author">'+(w.author||'')+'</div>'+
-          '<div class="p2-12-candidate-card__year">'+(w.year||'')+'</div>'+
-          '<div class="p2-12-candidate-card__added">追加済み</div>'+
+          '<div class="p2-12-candidate-card__meta">'+[w.year,w.medium,w.size].filter(Boolean).join('　')+'</div>'+
         '</div>';
       div.addEventListener('click', function() {
         if (div.classList.contains('is-added')) return;
         displayedIds.push(w.id);
         listEl.appendChild(makeCard(w));
         div.classList.add('is-added');
+        div.title = '';
         updateCount();
       });
       candGrid.appendChild(div);
+      shown++;
     });
+    if (!candEmptyEl) {
+      candEmptyEl = document.createElement('p');
+      candEmptyEl.className = 'p2-12-cand-empty';
+      candEmptyEl.textContent = '該当する作品がありません。';
+      candGrid.parentNode.insertBefore(candEmptyEl, candGrid.nextSibling);
+    }
+    candEmptyEl.hidden = shown !== 0;
   }
 
   function openPanel() {
     addPanel.hidden = false;
     addBtn.classList.add('is-open');
     renderAddTexts();
+    syncCandFilter();
     renderCandGrid();
   }
   function closePanel() {
@@ -2760,6 +3160,16 @@ KTN.pages['p2-121'] = function() {
     }
   };
 
+  /* デモバー「候補：多い/少ない」＝候補プールを制限し、少数時に絞込UI（検索/作者チップ）が出ないことを確認 */
+  window.p2121DemoCands = function (few, btn) {
+    candPoolCap = few ? 8 : 0;
+    if (!addPanel.hidden) { syncCandFilter(); renderCandGrid(); }
+    if (btn) {
+      document.querySelectorAll('.dbar [onclick^="p2121DemoCands"]').forEach(function (b) { b.classList.remove('on'); });
+      btn.classList.add('on');
+    }
+  };
+
   if (window.Sortable) {
     Sortable.create(listEl, {
       handle: '.p2-12-work-card__handle',
@@ -2770,6 +3180,17 @@ KTN.pages['p2-121'] = function() {
         displayedIds = [];
         listEl.querySelectorAll('.p2-12-work-card').forEach(function(c){ displayedIds.push(c.dataset.id); });
       },
+    });
+  }
+
+  /* ── 並べ替えモード：カードをハンドル＋サムネ＋作品名の薄い行に圧縮し、スマホでも一覧しながら並べ替えやすくする ── */
+  var reorderBtn = document.getElementById('p212ReorderBtn');
+  if (reorderBtn) {
+    var reorderScope = listEl.closest('.p2-12-works-block') || listEl;
+    reorderBtn.addEventListener('click', function () {
+      var on = reorderScope.classList.toggle('is-reordering');
+      reorderBtn.classList.toggle('is-active', on);
+      reorderBtn.textContent = on ? '並べ替え完了' : '並べ替え';
     });
   }
 
@@ -2796,6 +3217,8 @@ KTN.pages['p2-121'] = function() {
   window.ktnRender = function () {
     if (typeof _prevRender === 'function') _prevRender();
     renderAddTexts();
+    candCreator = ''; /* ロール変更で作者候補が変わるためリセット */
+    syncCandFilter();
     renderCandGrid();
   };
 
@@ -5765,9 +6188,9 @@ KTN.pages['p3-15'] = function () {
   var tabPanels = document.querySelectorAll('.p315-tab-panel');
   tabBtns.forEach(function (btn) {
     btn.addEventListener('click', function () {
-      tabBtns.forEach(function (b) { b.classList.remove('p315-tab-btn--active'); b.setAttribute('aria-selected', 'false'); });
+      tabBtns.forEach(function (b) { b.classList.remove('is-active'); b.setAttribute('aria-selected', 'false'); });
       tabPanels.forEach(function (p) { p.hidden = true; });
-      btn.classList.add('p315-tab-btn--active');
+      btn.classList.add('is-active');
       btn.setAttribute('aria-selected', 'true');
       var panel = document.getElementById(btn.dataset.panel);
       if (panel) panel.hidden = false;
@@ -6158,9 +6581,9 @@ KTN.pages['p4-15'] = function () {
   var tabPanels = document.querySelectorAll('.p315-tab-panel');
   tabBtns.forEach(function (btn) {
     btn.addEventListener('click', function () {
-      tabBtns.forEach(function (b) { b.classList.remove('p315-tab-btn--active'); b.setAttribute('aria-selected', 'false'); });
+      tabBtns.forEach(function (b) { b.classList.remove('is-active'); b.setAttribute('aria-selected', 'false'); });
       tabPanels.forEach(function (p) { p.hidden = true; });
-      btn.classList.add('p315-tab-btn--active');
+      btn.classList.add('is-active');
       btn.setAttribute('aria-selected', 'true');
       var panel = document.getElementById(btn.dataset.panel);
       if (panel) panel.hidden = false;

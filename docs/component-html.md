@@ -396,3 +396,85 @@ ON状態: `on` クラスを追加、tip を「興味あり！を解除する」�
 - 新規ダーク背景セクションに置く場合は親に `.p6-dark` 等の既存クラスを使うか、同パターンで追加する
 
 **Auth modal：** `common.js` の `_inject()` が DOMContentLoaded 時に `<body>` 末尾へ自動注入。各 HTML への記述不要。
+
+---
+
+## ボタン2系統の詳細（`.ktn-action-btn` / `.ktn-op-btn`）
+
+CLAUDE.md「ページ遷移アクションボタン」「操作ボタン」の詳細版。**v3大原則・記号ルール・横並びルールは CLAUDE.md 側が canonical**。本節はモディファイア表・HTML記述例・モーダル配置・取引ステータスバッジの詳細を保持する。
+
+### `.ktn-action-btn`（ページ遷移ナビ）
+
+基本：Montserrat 600・0.75rem・`border-radius: 4px`・`padding: 4px 12px`。
+
+| モディファイア | 用途 | 色 |
+|---|---|---|
+| （なし） | 通常ナビゲーション（取引デスクへ・販売代金管理へ など） | 白背景・グレー枠 `var(--border)`・`var(--ink)` |
+| `--alert` | 要対応ナビ（在庫確認・発送が必要な取引へ など） | 白背景・赤枠 `#b43c14`・赤文字＋赤ドット（`::before`）。hover で solid 赤＋白文字 |
+| `--alert-dark` | **ダーク背景上**の要対応ナビ（p2-5-1等） | 明オレンジ枠 `#e8804c`・淡色文字＋ドット。hover で solid `#c8501c` |
+| `--dark` | **ダーク背景上**の通常ナビ | 半透明白枠 `rgba(255,255,255,.3)`・文字 `#c8d4de` |
+| `--ghost` | **カラー帯の中のみ**（帯の文字色を `currentColor` で継承） | 半透明白背景・`currentColor` 枠 |
+
+- `--ghost` は `.p514-aw__strip` などの有色帯の中でのみ使用する。白背景・`var(--paper)` 背景の上では枠線が ink 色になり意図しない見た目になる。
+- `--alert-dark` / `--dark` はダーク背景（`p251-dark` など）のカード内でのみ使用する。ライト背景では `--alert` / 無印を使う。ダーク上で手動 style 指定はしない（`--dark` クラスを使う）。
+
+**HTML の書き方：**
+- ページ固有クラス（レイアウト専用）と共通クラスを併記する
+- 例：`class="p315-apply-row__link ktn-action-btn"` / `class="p514-aw__strip-link ktn-action-btn ktn-action-btn--ghost"`
+- ページ固有クラスは `margin-left:auto` などレイアウト専用のみを保持し、視覚スタイルは持たない
+
+**状態の動的切替：**
+- 要アクション行は `:has()` で自動的に alert（赤アウトライン＋ドット）に切り替わる（HTML クラスの変更不要）
+  - 例：`.p315-apply-row:has(.p315-apply-status--stock) .ktn-action-btn`
+
+### `.ktn-op-btn`（操作ボタン）
+
+基本：`font-family:inherit`・0.78rem・`border-radius: 4px`・`padding: 9px 20px`。
+
+| モディファイア | 用途 | 通常 | ホバー |
+|---|---|---|---|
+| （なし） | キャンセル・閉じる（モーダルのセカンダリ） | 白背景・グレー枠・`var(--ink)` | `background:var(--paper)` |
+| `--primary` | 主アクション（申込確定・支払い・受取確認など） | solid `var(--accent)` #005da7・白文字（固定・ロール非依存） | `opacity:.88` |
+| `--danger` | 確定的な破壊操作（取引キャンセルなど） | solid 赤 `#b43c14` | `opacity:.88` |
+| `--caution` | 慎重さを要す操作（問い合わせる など。※会場売約済の確定は v3 で `--danger` に変更） | solid `#8b5e3c`（ギャラリーコッパー）・白文字 | `opacity:.88` |
+| `--danger-outline` | 破壊操作のソフトトリガー（会場売約済・出品取消・申込キャンセルなど。押すと確認モーダルが開き、確定はモーダル側 `--danger`） | 赤枠 `rgba(180,60,20,.5)`・赤文字 `#b43c14`・白背景（※v3.1でグレー枠から格上げ） | 赤枠濃く・淡赤背景 |
+
+**サイズモディファイア：**
+
+| モディファイア | padding | font-size | 用途 |
+|---|---|---|---|
+| （なし） | `9px 20px` | `0.78rem` | モーダルボタン・完了後アクション |
+| `--lg` | `13px 24px` | `0.88rem` | 支払い・受取確認などの大型CTA |
+| `--sm` | `6px 12px` | `0.75rem` | 管理コンソール・カード内の小型ボタン |
+
+**`--primary` は全ページ固定ブランド青 `var(--accent)` #005da7（＝ロゴ色）：**
+- ロール・ページ種別（表示系／管理系）を問わず固定。「青＝実行する」を一貫して学習させる
+- ブランド青に統一済み（旧 `#1a4a88` から変更）。リンク（`.ktn-guide-link`）と同じブランド青だが、**実行ボタン＝塗り／リンク＝下線テキスト**と form で区別する
+- ロール識別は mgmt-page トップバー・タブナビアクセント・バッジ色が担う
+- `--caution`（`#8b5e3c` コッパー）は primary がブランド青のため P4 管理ページでも衝突しない
+
+**`--caution` の disabled 状態：** HTML に `disabled` 属性を付けるだけで `opacity:.4; cursor:not-allowed` が自動適用される。
+
+**HTML の書き方：**
+- ページ固有クラスと共通クラスを併記する。JS で querySelectorAll するボタンはページ固有クラスを保持し、視覚スタイルは `ktn-op-btn` で担う
+- 例：`class="p315-venue-btn ktn-op-btn ktn-op-btn--danger-outline ktn-op-btn--sm"`（カード内の会場売約済トリガー。確定はモーダル側の `--danger`。ページ固有のホバー色上書きはしない）
+
+**モーダル内ボタン配置パターン：**
+```html
+<!-- 通常確認 -->
+<div class="p---modal__foot">
+  <button class="ktn-op-btn">キャンセル</button>
+  <button class="ktn-op-btn ktn-op-btn--primary">確定する</button>
+</div>
+<!-- 破壊的操作 -->
+<div class="p---modal__foot">
+  <button class="ktn-op-btn">戻る</button>
+  <button class="ktn-op-btn ktn-op-btn--danger">削除する</button>
+</div>
+```
+
+### 取引ステータスバッジ（取引4ページ共通・`.p515-status__badge`）
+- 定義：**先頭ドット（`::before`）＋淡色塗り・枠線なし・矢印なし**。クリック不可・hover変化なし
+- ボタンとの見分け：ボタン＝「枠線＋白/透明背景（遷移なら末尾 →）」／バッジ＝「塗り＋ドット・枠なし」
+- 破壊トリガー（赤枠・記号なし）と要対応ナビ（赤枠・●＋→）はどちらも赤枠だが記号で区別する
+- 状態別カラークラス（`--new`/`--paid`/`--shipped`/`--confirming`/`--done`/`--cancelled` 等）は p316/p515 プレフィックスのまま共用。デモ：`kotennavi_buttons_v2.html` セクション5
