@@ -513,7 +513,7 @@
               <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15" style="flex-shrink:0;margin-top:1px"><path d="M8 1.5 15 14H1z" stroke-linejoin="round"/><line x1="8" y1="6" x2="8" y2="9.5"/><line x1="8" y1="11.5" x2="8" y2="11.51"/></svg>
               <span><strong>登録されていない新しい会場です。</strong>下の「開催場所の詳細情報」から<strong>場所名読み（カナ）・住所は必須</strong>です。アクセス・地図などもあわせてご記入ください（会場ページ作成のため必要です）。</span>
             </p>
-            <p class="p211-confirmed-note" id="p211VenueConfNote">✓ 管理者確認済 — 開催場所ページへのリンクが設定されています。 <a class="ktn-guide-link" href="kotennavi-p2-2.html">会場ページを確認 →</a><br>開催場所の変更が必要な場合は、<a class="ktn-guide-link" href="#">お問い合わせ</a> からご連絡ください。</p>
+            <p class="p211-confirmed-note" id="p211VenueConfNote">✓ 管理者確認済 — 開催場所ページへのリンクが設定されています。 <a class="ktn-guide-link" href="kotennavi-p2-2.html">会場ページを確認 →</a><span id="p211VenueConfContact"><br>開催場所の変更が必要な場合は、<a class="ktn-guide-link" href="#">お問い合わせ</a> からご連絡ください。</span></p>
           </div>
 
           <div class="p211-sub-links">
@@ -526,6 +526,21 @@
               <span class="p211-sub-link__benefit">住所・アクセス・地図が開催場所ページに反映され、来場者が迷わずたどり着けます。</span>
             </a>
             <div class="p211-acc-panel" id="p211AccVenue" hidden>
+              <!-- 管理者：開催場所ページの設定（admin ロールのみ表示・2026-07-19 仕様）
+                   サイト内のギャラリーページを検索して開催場所として設定（設定できるのは1ページのみ）。
+                   該当ページが無い場合は「新規作成」で p4-11（ギャラリー編集）を別ページで開く -->
+              <div class="p211-admin-link-panel" id="p211VenueAdminPanel" hidden>
+                <div class="p211-admin-link-panel__head">開催場所ページの設定（管理者）</div>
+                <p class="p211-help" style="margin:0">サイト内のギャラリーページを検索し、開催場所として設定します。設定できるギャラリーページは<strong>1つのみ</strong>です（選択すると置き換わります）。該当するページがない場合は「新規作成」からギャラリーページを作成してください。</p>
+                <div class="p211-artist-add">
+                  <div class="p211-combo" id="p211VenuePageCombo">
+                    <input class="p211-input" type="text" id="p211VenuePageInput" placeholder="ギャラリーページを検索（名称を入力）" autocomplete="off">
+                    <div class="p211-combo__list" id="p211VenuePageComboList" hidden></div>
+                  </div>
+                  <a class="ktn-action-btn" href="kotennavi-p4-11.html" target="_blank" rel="noopener">ギャラリーページを新規作成 →</a>
+                </div>
+                <p class="p211-admin-link-panel__cur" id="p211VenuePageCur">設定中：<strong id="p211VenuePageCurName">YUGEN Gallery</strong> <a class="ktn-guide-link" id="p211VenuePageCurLink" href="kotennavi-p4.html?g=yugen" target="_blank" rel="noopener">ギャラリーページを確認 ↗</a></p>
+              </div>
               <p class="p211-help" style="margin:0">候補から選択した会場は登録済みの情報が使用されるため、入力は不要です。新しい会場の場合、または登録済みの会場でも住所などに変更がある場合にご記入ください。</p>
               <div class="p211-field" id="p211VenueKanaField">
                 <label class="p211-label">場所名読み（カナ）<span class="ktn-req" id="p211VenueKanaReq" hidden>必須</span></label>
@@ -721,21 +736,37 @@
         <div class="p211-block__body">
           <div class="p211-field" id="p211ArtistReqField">
             <label class="p211-label">出展クリエイター<span class="ktn-req">必須</span></label>
-            <p class="p211-artist-cur" style="margin:0">現在の出展クリエイター：<span id="p211ArtistSummary"><strong>松田 啓佑</strong></span></p>
+            <p class="p211-artist-cur" style="margin:0">現在の出展クリエイター <span class="ktn-count p211-artist-count"></span>：<span id="p211ArtistSummary"><strong>松田 啓佑</strong></span></p>
           </div>
-          <p class="p211-confirmed-note" id="p211ArtistConfNote" style="margin:0 0 12px">✓ 管理者確認済 — 出展クリエイターページへのリンクが設定されています。 <a class="ktn-guide-link" href="kotennavi-p3.html">松田 啓佑 のクリエイターページを確認 →</a><br>出展クリエイターの変更が必要な場合は、<a class="ktn-guide-link" href="#">お問い合わせ</a> からご連絡ください。</p>
+          <p class="p211-confirmed-note" id="p211ArtistConfNote" style="margin:0 0 12px">✓ 管理者確認済 — 出展クリエイターページへのリンクが設定されています。 <a class="ktn-guide-link" href="kotennavi-p3.html">松田 啓佑 のクリエイターページを確認 →</a><span id="p211ArtistConfContact"><br>出展クリエイターの変更が必要な場合は、<a class="ktn-guide-link" href="#">お問い合わせ</a> からご連絡ください。</span></p>
+
           <div class="p211-sub-links">
             <a class="p211-sub-link" id="p211ArtistSubLink" href="#" onclick="toggleAcc('p211AccArtist', this); return false;">
               <svg class="p211-sub-link__icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><circle cx="7" cy="5" r="2.5"/><path d="M2.5 12c0-2.48 2.02-4.5 4.5-4.5s4.5 2.02 4.5 4.5"/><line x1="11" y1="5" x2="14" y2="5"/><line x1="12.5" y1="3.5" x2="12.5" y2="6.5"/></svg>
-              <span class="p211-sub-link__label">出展クリエイター情報を入力する（追加・削除・並び替え）</span>
+              <span class="p211-sub-link__label">出展クリエイター情報を入力する（追加・削除）</span>
               <span class="p211-sub-link__state">✓ 入力あり</span>
               <span class="p211-sub-link__opt">＋ 追加項目</span>
               <span class="p211-sub-link__arr"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" width="13" height="13"><path d="M3.5 5.25 7 8.75l3.5-3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
               <span class="p211-sub-link__benefit">クリエイターページへのリンクが設定され、プロフィールや他の展覧会から興味を持ってもらえます。</span>
             </a>
             <div class="p211-acc-panel" id="p211AccArtist" hidden>
+              <!-- 管理者：出展クリエイターページの設定（admin ロールのみ表示・2026-07-19 仕様）
+                   サイト内のクリエイターページを検索して出展クリエイターとして設定（複数登録可）。
+                   該当ページが無い場合は「新規作成」で p3-11（クリエイター編集）を別ページで開く -->
+              <div class="p211-admin-link-panel" id="p211ArtistAdminPanel" hidden>
+                <div class="p211-admin-link-panel__head">出展クリエイターページの設定（管理者）</div>
+                <p class="p211-help" style="margin:0">サイト内のクリエイターページを検索し、出展クリエイターとして設定します（複数登録できます。追加したクリエイターは下のリストに入ります）。該当するページがない場合は「新規作成」からクリエイターページを作成してください。</p>
+                <div class="p211-artist-add">
+                  <div class="p211-combo" id="p211ArtistPageCombo">
+                    <input class="p211-input" type="text" id="p211ArtistPageInput" placeholder="クリエイターページを検索（名前を入力）" autocomplete="off">
+                    <div class="p211-combo__list" id="p211ArtistPageComboList" hidden></div>
+                  </div>
+                  <a class="ktn-action-btn" href="kotennavi-p3-11.html" target="_blank" rel="noopener">クリエイターページを新規作成 →</a>
+                </div>
+              </div>
               <div class="p211-field">
-                <label class="p211-label">出展クリエイター（上から掲載順）</label>
+                <label class="p211-label">出展クリエイター <span class="ktn-count p211-artist-count"></span></label>
+                <p class="p211-help" style="margin:2px 0 6px">掲載順の指定はありません。展覧会ページの出展クリエイターは、システムが自動的に五十音順（アイウエオ順）で表示します。</p>
                 <div class="p211-artist-list" id="p211ArtistList"></div>
               </div>
               <div class="p211-field">
@@ -760,6 +791,12 @@
           <div class="p211-block__title">LIAISON設定 <span class="p211-block__title-en">LIAISON</span></div>
         </div>
         <div class="p211-block__body">
+
+          <!-- 会期開始ロック（2026-07-19 仕様＝モード切替は展覧会会期開始日以降は変更不可） -->
+          <p class="p211-liaison-locknote" id="p211LiaisonLockNote" hidden>
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14" style="flex-shrink:0;margin-top:2px"><rect x="3" y="7" width="10" height="7" rx="1"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></svg>
+            <span>展覧会の会期開始日（<span id="p211LiaisonLockDate"></span>）を過ぎているため、リエゾンモード（利用しない／LIAISON／LIAISON+）は変更できません。作品の出品・管理は引き続き行えます。</span>
+          </p>
 
           <label class="p211-liaison-opt" id="p211LiaisonNoneOpt">
             <input class="p211-liaison-opt__check" type="radio" name="p211liaison" value="none" onchange="toggleLiaisonMode()">
@@ -989,6 +1026,15 @@
         </div>
       </div>
 
+      <!-- 保存エラーパネル（共通 .ktn-form-error・保存時バリデーションで表示。送信バー直上の固定位置） -->
+      <div class="ktn-form-error" id="p211SaveError" role="alert" hidden>
+        <div class="ktn-form-error__head">
+          <svg class="ktn-form-error__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <span class="ktn-form-error__title">保存できませんでした</span>
+        </div>
+        <ul class="ktn-form-error__list" id="p211SaveErrorList"></ul>
+      </div>
+
       <!-- 送信バー（sticky） -->
       <div class="p211-submit-bar">
         <button class="p211-submit-bar__cancel ktn-op-btn" type="button" onclick="history.back()">キャンセル</button>
@@ -1042,6 +1088,7 @@ var CLONE_FIELDS = {
 };
 var demoConfirmed = true;
 var demoMode = 'edit';
+function isAdminRole() { return !!(window.ktnState && window.ktnState.role === 'admin'); }
 
 /* モード別パンくず（新規＝親展覧会なし／編集・クローン＝対象展覧会を親に） */
 var MODE_BC = {
@@ -1097,6 +1144,7 @@ function setDemoMode(mode) {
   setConfirmed(MODE_CONFIRMED[mode]);
   setBc(mode);
   applyVenueRole();
+  applyLiaisonDateLock();
   closeAllAcc();
   syncOptUI();
   if (typeof schedCloseEditor === 'function') schedCloseEditor();   /* モードの会期・上書きでカレンダー再描画 */
@@ -1113,18 +1161,20 @@ function setConfirmed(on) {
     var el = document.getElementById(id);
     if (el) el.hidden = !demoConfirmed;
   });
-  /* 確認済＝開催場所・出展クリエイターの直接変更をロック（変更は問い合わせ経由） */
+  /* 確認済＝開催場所・出展クリエイターの直接変更をロック（変更は問い合わせ経由）。
+     管理者はロック対象外（2026-07-19 仕様＝確認済でも開催場所・出展クリエイターを編集できる） */
+  var lock = demoConfirmed && !isAdminRole();
   var venue = document.getElementById('p211Venue');
-  if (venue) venue.disabled = demoConfirmed;
+  if (venue) venue.disabled = lock;
   ['p211VenueSubLink', 'p211ArtistSubLink'].forEach(function (id) {
     var el = document.getElementById(id);
     if (el) {
-      el.classList.toggle('is-locked', demoConfirmed);
-      if (demoConfirmed) el.classList.remove('is-open');
+      el.classList.toggle('is-locked', lock);
+      if (lock) el.classList.remove('is-open');
     }
   });
   /* ロック時は開きっぱなしのアコーディオンも閉じる */
-  if (demoConfirmed) {
+  if (lock) {
     ['p211AccVenue', 'p211AccArtist'].forEach(function (id) {
       var p = document.getElementById(id);
       if (p) p.hidden = true;
@@ -1325,15 +1375,13 @@ function renderArtists() {
   if (list) {
     list.innerHTML = artistList.length
       ? artistList.map(function (a, i) {
+          /* 並べ替えUIなし（2026-07-19 仕様＝掲載順は指定不可・展覧会ページではシステムが五十音順で自動表示） */
           var html = '<div class="p211-artist-item">' +
             '<div class="p211-artist-row">' +
-            '<span class="p211-artist-row__num">' + (i + 1) + '</span>' +
             '<span class="p211-artist-row__name">' + escHtml(a.name) +
             (a.isNew ? ' <span class="p211-artist-row__new">新規</span>' : '') + '</span>' +
             '<span class="p211-artist-row__ctrl">' +
             '<button type="button" class="p211-artist-row__btn' + (a.open ? ' is-open' : '') + '" onclick="toggleArtistDetail(' + i + ')">詳細</button>' +
-            '<button type="button" class="p211-artist-row__btn" onclick="moveArtist(' + i + ',-1)"' + (i === 0 ? ' disabled' : '') + '>↑</button>' +
-            '<button type="button" class="p211-artist-row__btn" onclick="moveArtist(' + i + ',1)"' + (i === artistList.length - 1 ? ' disabled' : '') + '>↓</button>' +
             '<button type="button" class="p211-artist-row__btn p211-artist-row__btn--del" onclick="removeArtist(' + i + ')">削除</button>' +
             '</span></div>';
           if (a.open) {
@@ -1364,6 +1412,10 @@ function renderArtists() {
       ? artistList.map(function (a) { return '<strong>' + escHtml(a.name) + '</strong>'; }).join('、')
       : '<span style="color:var(--muted)">未設定</span>';
   }
+  /* 設定数カウント（サマリ行＋アコーディオン内リストラベルの2箇所・canonical .ktn-count） */
+  document.querySelectorAll('.p211-artist-count').forEach(function (el) {
+    el.innerHTML = '<strong>' + artistList.length + '</strong>名';
+  });
 }
 function addArtist() {
   var inp = document.getElementById('p211ArtistInput');
@@ -1381,12 +1433,6 @@ function addArtist() {
 function toggleArtistDetail(i) { artistList[i].open = !artistList[i].open; renderArtists(); }
 function updArtistField(i, key, val) { if (artistList[i]) artistList[i][key] = val; }   /* 再描画しない（フォーカス維持） */
 function removeArtist(i) { artistList.splice(i, 1); renderArtists(); }
-function moveArtist(i, d) {
-  var j = i + d;
-  if (j < 0 || j >= artistList.length) return;
-  var t = artistList[i]; artistList[i] = artistList[j]; artistList[j] = t;
-  renderArtists();
-}
 
 /* ── 会場・クリエイター選択コンボ（datalist 代替）──
    datalist はリンクを持てないため、候補行に「確認 ↗」（別タブで実ページを開く）を付けて
@@ -1424,10 +1470,13 @@ function initP211Combo(cfg) {
     }).join('');
     var typed = input.value.trim();
     var exact = cfg.pool.some(function (o) { return o.name === typed; });
+    /* cfg.newMsg あり＝新規テキスト入力不可のコンボ（管理者のページリンク設定）。候補外は案内文のみ表示 */
     if (typed && !exact) {
-      html += '<div class="p211-combo__new">「<strong>' + escHtml(typed) + '</strong>」は候補にありません。このまま新しい名称として' + cfg.newVerb + 'できます（登録内容は管理者の確認時に反映されます）。</div>';
+      html += '<div class="p211-combo__new">' + (cfg.newMsg
+        || '「<strong>' + escHtml(typed) + '</strong>」は候補にありません。このまま新しい名称として' + cfg.newVerb + 'できます（登録内容は管理者の確認時に反映されます）。') + '</div>';
     } else if (!rows.length) {
-      html = '<div class="p211-combo__new">候補がありません。入力した名称のまま' + cfg.newVerb + 'できます（登録内容は管理者の確認時に反映されます）。</div>';
+      html = '<div class="p211-combo__new">' + (cfg.newMsg
+        || '候補がありません。入力した名称のまま' + cfg.newVerb + 'できます（登録内容は管理者の確認時に反映されます）。') + '</div>';
     }
     list.innerHTML = html;
   }
@@ -1644,6 +1693,27 @@ function toggleLiaisonMode() {
   if (lp) lp.hidden = !(demoConfirmed && v === 'plus');
 }
 
+/* ── リエゾンモードの会期開始ロック（2026-07-19 仕様）──
+   モード切替（利用しない/LIAISON/LIAISON+）は展覧会会期開始日以降は変更不可。
+   新規・クローン＝これから作る展覧会のため対象外。編集モードのみ、会期開始日（デモ＝フォームの開始日値）と今日を比較。
+   本番（React CSR）は保存済み展覧会エンティティの会期開始日で判定（サーバー側でも拒否） */
+function applyLiaisonDateLock() {
+  var from = document.getElementById('p211DateFrom');
+  var note = document.getElementById('p211LiaisonLockNote');
+  var t = new Date();
+  var todayIso = t.getFullYear() + '-' + ('0' + (t.getMonth() + 1)).slice(-2) + '-' + ('0' + t.getDate()).slice(-2);
+  var locked = demoMode === 'edit' && !!(from && from.value) && from.value <= todayIso;
+  document.querySelectorAll('input[name=p211liaison]').forEach(function (r) { r.disabled = locked; });
+  document.querySelectorAll('.p211-liaison-opt').forEach(function (l) { l.classList.toggle('is-locked', locked); });
+  if (note) {
+    note.hidden = !locked;
+    if (locked) {
+      var el = document.getElementById('p211LiaisonLockDate');
+      if (el) el.textContent = from.value.replace(/-/g, '.');
+    }
+  }
+}
+
 /* ── 開催場所のロール別 default・ヘルプ文言 ──
    gallery＝自ギャラリーが default（変更可）／creator＝default なし。
    入力方法はどちらも同じ（過去展の会場を候補から選択 or 新規入力） */
@@ -1668,12 +1738,28 @@ function applyVenueRole() {
   }
   checkVenueNew(false);
 }
+/* 管理者専用UIの表示同期：ページリンク設定パネルの表示／確認済ノートの「お問い合わせ」文言
+   （管理者は自分で変更できるため問い合わせ案内を出さない） */
+function syncAdminPanels() {
+  var admin = isAdminRole();
+  ['p211VenueAdminPanel', 'p211ArtistAdminPanel'].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) el.hidden = !admin;
+  });
+  ['p211VenueConfContact', 'p211ArtistConfContact'].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) el.hidden = admin;
+  });
+}
 window.p211RoleSync = function () {
   applyVenueRole();
   syncOptUI();
   /* 管理者管理セクションは admin ロールのみ表示 */
   var adminBlock = document.getElementById('p211AdminBlock');
-  if (adminBlock) adminBlock.hidden = !(window.ktnState && window.ktnState.role === 'admin');
+  if (adminBlock) adminBlock.hidden = !isAdminRole();
+  /* 確認済ロックを再適用（admin＝確認済でも開催場所・出展クリエイターを編集可） */
+  setConfirmed(demoConfirmed);
+  syncAdminPanels();
 };   /* ロール切替＝新規モードの出展クリエイター default が変わるためチップも再計算 */
 
 /* ── 保存前の関係者了承チェック → 送信ボタン活性 ── */
@@ -1695,14 +1781,58 @@ initP211Combo({
   pool: CREATOR_POOL, newVerb: '追加',
   onSelect: function () { addArtist(); }   /* 候補の「選択」で即リストへ追加 */
 });
+
+/* ── 管理者：ページリンク設定コンボ（2026-07-19 仕様）──
+   開催場所＝サイト内ギャラリーページから検索・設定（1ページのみ＝選択で置換）。
+   出展クリエイター＝サイト内クリエイターページから検索・追加（複数可）。
+   どちらも新規テキスト入力は不可（newMsg）＝該当ページが無ければ「新規作成」で p4-11／p3-11 を別ページで開く */
+initP211Combo({
+  comboId: 'p211VenuePageCombo', inputId: 'p211VenuePageInput', listId: 'p211VenuePageComboList',
+  pool: VENUE_POOL,
+  newMsg: '該当するギャラリーページがありません。右の「ギャラリーページを新規作成」からページを作成してください。',
+  onSelect: function (name) {
+    /* 選択＝開催場所ページとして設定（1つのみ＝置き換え）。開催場所名フィールドにも反映 */
+    var sel = null;
+    VENUE_POOL.forEach(function (o) { if (o.name === name) sel = sel || o; });
+    var curName = document.getElementById('p211VenuePageCurName');
+    var curLink = document.getElementById('p211VenuePageCurLink');
+    if (curName) curName.textContent = name;
+    if (curLink && sel) curLink.setAttribute('href', sel.url);
+    var venueInput = document.getElementById('p211Venue');
+    if (venueInput) venueInput.value = name;
+    var pageInput = document.getElementById('p211VenuePageInput');
+    if (pageInput) pageInput.value = '';
+    checkVenueNew(false);
+    KTN.toast('開催場所ページを設定しました');
+  }
+});
+initP211Combo({
+  comboId: 'p211ArtistPageCombo', inputId: 'p211ArtistPageInput', listId: 'p211ArtistPageComboList',
+  pool: CREATOR_POOL,
+  newMsg: '該当するクリエイターページがありません。右の「クリエイターページを新規作成」からページを作成してください。',
+  onSelect: function (name) {
+    /* 選択＝出展クリエイターとして追加（既存の artistList を共用・重複は無視） */
+    var dup = artistList.some(function (a) { return a.name === name; });
+    if (!dup) artistList.push({ name: name, isNew: false });
+    renderArtists();
+    var pageInput = document.getElementById('p211ArtistPageInput');
+    if (pageInput) pageInput.value = '';
+    KTN.toast(dup ? 'すでに出展クリエイターに設定されています' : '出展クリエイターに追加しました');
+  }
+});
 (function () {
   var venue = document.getElementById('p211Venue');
   if (venue) venue.addEventListener('change', function () { checkVenueNew(true); });
+  /* 会期開始日の変更＝リエゾンモードのロック判定を再計算（デモ用。本番は保存値で判定） */
+  var dateFrom = document.getElementById('p211DateFrom');
+  if (dateFrom) dateFrom.addEventListener('change', applyLiaisonDateLock);
 })();
 
 /* 初期状態（編集モード・確認済） */
 setConfirmed(true);
 applyVenueRole();
+applyLiaisonDateLock();
+syncAdminPanels();
 renderArtists();
 syncConsent();
 checkVenueNew(false);
@@ -1760,7 +1890,9 @@ function clearFieldErrors() {
 }
 function validateRequired() {
   clearFieldErrors();
-  var first = null;
+  var errBox  = document.getElementById('p211SaveError');
+  var errList = document.getElementById('p211SaveErrorList');
+  var missing = [];
   document.querySelectorAll('.ktn-mgmt-wrap .p211-label .ktn-req').forEach(function (mark) {
     /* 条件付き必須（新規会場のカナ・住所）＝マーカー非表示時は対象外 */
     if (mark.hidden) return;
@@ -1799,14 +1931,45 @@ function validateRequired() {
         var subV = document.getElementById('p211VenueSubLink');
         if (accV && accV.hidden) toggleAcc('p211AccVenue', subV);
       }
-      if (!first) first = field;
+      /* パネル表示用にラベル名（必須マーカーを除いたテキスト）と該当フィールドを控える */
+      var label = mark.closest('.p211-label');
+      var name = '必須項目';
+      if (label) {
+        var clone = label.cloneNode(true);
+        var req = clone.querySelector('.ktn-req');
+        if (req) req.parentNode.removeChild(req);
+        name = clone.textContent.trim() || name;
+      }
+      missing.push({ name: name, field: field });
     }
   });
-  if (first) {
-    first.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    if (typeof KTN !== 'undefined' && KTN.toast) KTN.toast('必須項目に未入力があります');
+  if (missing.length) {
+    if (errBox && errList) {
+      errList.innerHTML = '';
+      var sum = document.createElement('li');
+      sum.className = 'ktn-form-error__item';
+      sum.textContent = '必須項目に未入力が' + missing.length + '件あります。入力してから保存してください。';
+      errList.appendChild(sum);
+      missing.forEach(function (m) {
+        var li = document.createElement('li');
+        li.className = 'ktn-form-error__item';
+        li.appendChild(document.createTextNode('「' + m.name + '」が未入力です。 '));
+        var jump = document.createElement('button');
+        jump.type = 'button';
+        jump.className = 'ktn-form-error__jump';
+        jump.textContent = '該当箇所へ →';
+        jump.addEventListener('click', function () {
+          m.field.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+        li.appendChild(jump);
+        errList.appendChild(li);
+      });
+      errBox.hidden = false;
+      errBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
     return false;
   }
+  if (errBox) errBox.hidden = true;
   return true;
 }
 

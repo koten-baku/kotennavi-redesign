@@ -766,7 +766,7 @@
                       </svg>
                     </span>
                     <span class="p2-side-link__text">
-                      <span class="p2-side-link__label">作品</span>
+                      <span class="p2-side-link__label">作品<span class="p2-side-link__tag" id="p2SideLinkTag"></span></span>
                       <span class="p2-side-link__desc" id="p2SideLinkDesc">展示8点・販売5点</span>
                     </span>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12">
@@ -915,23 +915,50 @@
       var isBefore = (_p2Period === 'before');
       var isAfter  = (_p2Period === 'after');
       var isOut    = isBefore || isAfter;
+      /* 出品者（creator/gallery 本人）と管理者は公開期間外でも p2-5/p2-5-1（公開前プレビュー）へ入れる */
+      var role = (window.ktnState && window.ktnState.role) || 'guest';
+      var canPreview = (role === 'user+creator' || role === 'user+gallery' || role === 'admin');
 
       /* ── サブナビタブ ── */
       var subnav = document.getElementById('p2SubnavLiaison');
       if (subnav && subnav.style.display !== 'none') {
         var tag = subnav.querySelector('.p2-subnav__item-tag');
-        if (isBefore) {
-          subnav.classList.add('p2-subnav__item--disabled');
+        subnav.classList.toggle('p2-subnav__item--disabled', isOut && !canPreview);
+        subnav.classList.toggle('p2-subnav__item--preview', isOut && canPreview);
+        if (isOut && canPreview) {
+          /* 出品者・管理者＝押せる入口であることを「プレビュー」タグ（ink×ゴールド）で明示 */
+          subnav.dataset.liaisonTag = 'preview';
+          if (tag) tag.textContent = 'プレビュー';
+        } else if (isBefore) {
           subnav.dataset.liaisonTag = 'soon';
-          if (tag) tag.textContent = '近日';
+          if (tag) tag.textContent = 'まもなく公開';
         } else if (isAfter) {
-          subnav.classList.add('p2-subnav__item--disabled');
           subnav.dataset.liaisonTag = 'ended';
           if (tag) tag.textContent = '展示終了';
         } else {
-          subnav.classList.remove('p2-subnav__item--disabled');
           delete subnav.dataset.liaisonTag;
           if (tag) tag.textContent = '';
+        }
+      }
+
+      /* ── 右カラムサブメニュー「この展覧会」の作品リンク（タブナビと同じ状態表現を反映） ── */
+      var sideWorks2 = document.getElementById('p2SideLinkWorks');
+      if (sideWorks2 && sideWorks2.style.display !== 'none') {
+        var sideTag = document.getElementById('p2SideLinkTag');
+        sideWorks2.classList.toggle('p2-side-link--disabled', isOut && !canPreview);
+        sideWorks2.classList.toggle('p2-side-link--preview', isOut && canPreview);
+        if (isOut && canPreview) {
+          sideWorks2.dataset.liaisonTag = 'preview';
+          if (sideTag) sideTag.textContent = 'プレビュー';
+        } else if (isBefore) {
+          sideWorks2.dataset.liaisonTag = 'soon';
+          if (sideTag) sideTag.textContent = 'まもなく公開';
+        } else if (isAfter) {
+          sideWorks2.dataset.liaisonTag = 'ended';
+          if (sideTag) sideTag.textContent = '展示終了';
+        } else {
+          delete sideWorks2.dataset.liaisonTag;
+          if (sideTag) sideTag.textContent = '';
         }
       }
 
@@ -940,6 +967,7 @@
       var periodMsg = document.getElementById('p2LbPeriodMsg');
       if (banner && banner.style.display !== 'none') {
         banner.classList.toggle('p2-liaison-banner--period-out', isOut);
+        banner.classList.toggle('p2-liaison-banner--preview', isOut && canPreview);
         if (periodMsg) {
           periodMsg.innerHTML = isBefore
             ? '近日中 <span class="p2-liaison-banner__period-en">COMING SOON</span>'
@@ -949,6 +977,8 @@
         }
       }
     }
+    /* ロール切替（デモバー）でも期間外プレビュー可否を再計算する（pages.js の ktnRender ラッパーが呼ぶ） */
+    window.p2ApplyPeriodToTab = _applyPeriodToTab;
 
     function setPeriod(state, btn) {
       _p2Period = state;

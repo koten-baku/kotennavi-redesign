@@ -28,6 +28,10 @@
   <button class="dbtn" onclick="setR('user+creator',this)">creator本人</button>
   <button class="dbtn" onclick="setR('user+gallery',this)">gallery本人</button>
   <button class="dbtn" onclick="setR('admin',this)">管理者</button>
+  <span class="dbar-sep" style="margin-left:8px">公開期間：</span>
+  <button class="dbtn dbtn-p25period" onclick="setP25Period('before',this)">公開前</button>
+  <button class="dbtn dbtn-p25period on" onclick="setP25Period('during',this)">公開中</button>
+  <button class="dbtn dbtn-p25period" onclick="setP25Period('after',this)">公開終了後</button>
 </div>
 
 <div class="dev-ph dev-ph--sidebar"></div>
@@ -59,6 +63,19 @@
   </div>
 
   <main class="ktn-main" id="ktnMain">
+
+    <!-- 公開前プレビューバンド（本番＝「公開期間外 かつ 出品者or管理者」で表示。デモ＝ロール×公開期間ボタン連動） -->
+    <div class="p25-preview-band" id="p25PreviewBand" hidden>
+      <div class="p25-preview-band__inner">
+        <span class="p25-preview-band__badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          <span id="p25PreviewBadgeLabel">公開前プレビュー</span>
+        </span>
+        <span class="p25-preview-band__desc" id="p25PreviewDesc">このページは一般公開前のため、出品者と管理者のみ閲覧できます。</span>
+        <span class="p25-preview-band__period">公開期間：<strong>2026.02.18</strong>（会期開始）— <strong>2026.03.19</strong>（オンライン販売終了）</span>
+        <span class="p25-preview-band__note">※LIAISON+ は会期終了日（2026.03.05）とオンライン販売終了日のいずれか遅い方まで公開されます。</span>
+      </div>
+    </div>
 
     <!-- タイトルバンド -->
     <div class="p2-title-band p2-sub">
@@ -109,7 +126,7 @@
             <span class="p2-subnav__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
             <span class="p2-subnav__label">出展者</span>
           </a>
-          <a href="kotennavi-p2-5-1.html" class="p2-subnav__item p2-subnav__item--liaison is-active" data-page="p2-5-1">
+          <a href="kotennavi-p2-5-1.html" class="p2-subnav__item p2-subnav__item--liaison is-active" data-page="p2-5-1" id="p25SubnavLiaison">
             <span class="p2-subnav__liaison-mark">
               <svg viewBox="0 0 480 240" fill="none" width="52" height="26">
                 <defs>
@@ -130,6 +147,7 @@
               </svg>
             </span>
             <span class="p2-subnav__label">作品</span>
+            <span class="p2-subnav__item-tag"></span>
           </a>
         </nav>
       </div>

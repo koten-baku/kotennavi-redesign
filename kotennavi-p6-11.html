@@ -556,8 +556,9 @@ window.p611RoleSync = function () {
     var gBtn = document.querySelector('.dbar [onclick*="gallery"]');
     if (gBtn && typeof setR === 'function') setR('gallery', gBtn);
   }
-  if (params.get('mode') === 'new' && typeof setDemoMode === 'function') {
-    setDemoMode('new');
+  var m = params.get('mode');
+  if ((m === 'new' || m === 'edit' || m === 'clone') && typeof setDemoMode === 'function') {
+    setDemoMode(m);
   }
   window.p611RoleSync();
 })();

@@ -20,6 +20,9 @@
   <span class="dbar-sep">デモ表示：</span>
   <button class="dbtn" onclick="p26SetVariant('list',this)">LIAISON（作品リスト・価格なし）</button>
   <button class="dbtn on" onclick="p26SetVariant('plus',this)">LIAISON+（作品リスト・価格あり）</button>
+  <span class="dbar-sep">閲覧者：</span>
+  <button class="dbtn on" onclick="p26SetViewer('owner',this)">出品者（オーナー）</button>
+  <button class="dbtn" onclick="p26SetViewer('visitor',this)">来場者（QR）</button>
 </div>
 
 <div class="shell">
@@ -129,6 +132,17 @@
 <script src="./kotennavi-pages.js"></script>
 <script>
   KTN.init({ page: 'p2-6', role: 'guest' });
+
+  /* デモ：閲覧者切替（2026-07-19 仕様）。上部の印刷案内ツールバーは出品者（展覧会オーナー）にのみ表示し、
+     QRコードからアクセスした来場者には出さない。本番＝ログイン中ユーザーが展覧会オーナー（または管理者）の場合のみ表示 */
+  function p26SetViewer(kind, btn) {
+    var tb = document.querySelector('.p26-toolbar');
+    if (tb) tb.style.display = (kind === 'owner') ? '' : 'none';
+    if (btn) {
+      btn.parentNode.querySelectorAll('[onclick^="p26SetViewer"]').forEach(function (b) { b.classList.remove('on'); });
+      btn.classList.add('on');
+    }
+  }
 </script>
 </body>
 </html>

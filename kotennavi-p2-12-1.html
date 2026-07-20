@@ -22,6 +22,9 @@
   <span class="dbar-sep">申込：</span>
   <button class="dbtn on" onclick="p2121DemoApply(true,this)">あり（切替不可）</button>
   <button class="dbtn" onclick="p2121DemoApply(false,this)">なし（切替可）</button>
+  <span class="dbar-sep">会期：</span>
+  <button class="dbtn" onclick="p2121DemoTerm(false,this)">開始前（変更可）</button>
+  <button class="dbtn on" onclick="p2121DemoTerm(true,this)">開始後（変更不可）</button>
   <span class="dbar-sep">候補：</span>
   <button class="dbtn on" onclick="p2121DemoCands(false,this)">多い（絞込あり）</button>
   <button class="dbtn" onclick="p2121DemoCands(true,this)">少ない（絞込なし）</button>
@@ -68,6 +71,7 @@
         <h2 class="ktn-mgmt-head__title">LIAISON+ 展示・販売設定</h2>
         <p class="ktn-mgmt-head__en">LIAISON+ SETTINGS</p>
         <p class="ktn-mgmt-head__desc">展示作品のオンライン販売設定を行います。作品と販売情報は展覧会ページの LIAISON タブで公開されます。</p>
+        <p class="ktn-mgmt-head__guides">公開期間（会期開始日〜販売終了日または会期終了日の遅い方）の外でも、出品者と管理者は展覧会ページの作品タブから実際の表示を確認できます（公開前プレビュー）。詳しくは <a class="ktn-guide-link" href="kotennavi-p70-2.html" target="_blank" rel="noopener">リエゾン+ 作品販売ガイド →</a></p>
       </div>
 
       <!-- モード切替バー -->
@@ -83,32 +87,27 @@
             <button class="p2-12-mode-none" onclick="p2121OpenModal('none')">LIAISON+ の利用をやめる</button>
           </div>
         </div>
-      </div>
-
-      <!-- 販売期間中通知（販売期間開始後に表示） -->
-      <div class="p2-121-sale-notice" id="p2121SaleNotice" hidden>
-        <div class="p2-121-sale-notice__body">
-          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg>
-          <span>販売期間中です（2026.02.18 — 2026.03.19）。申込対応・会場売約済操作はコンソールから行ってください。</span>
-        </div>
-        <a class="p2-121-sale-notice__link" href="kotennavi-p3-15.html">LIAISON+コンソール →</a>
+        <!-- 会期開始ロック（2026-07-19 仕様＝モード切替は展覧会会期開始日以降は変更不可） -->
+        <p class="p2-12-mode-bar__locknote" id="p2121ModeLockNote" hidden>展覧会の会期開始日（2026.02.18）を過ぎているため、モード（利用しない／LIAISON／LIAISON+）は変更できません。</p>
       </div>
 
       <!-- 2. LIAISON+ 展示・販売設定（統合セクション） -->
       <section class="p2-12-liaison-section">
 
-        <!-- 販売期間設定ブロック -->
-        <div class="p2-121-period-block">
+        <!-- 販売期間設定ブロック（デモ：保存済みの販売期間＝会期と同じ。延長→他展覧会出品との重複で保存エラーを確認） -->
+        <div class="p2-121-period-block" id="p2121PeriodBlock">
           <div class="p2-12-section-head">
             <h3 class="p2-12-section-head__title">販売期間</h3>
           </div>
-          <p class="p2-121-period-hint">作品のオンライン販売を受け付ける期間を設定します。期間終了後は自動的に購入受付が停止されます。<br>この設定は販売期間開始後、変更できなくなります。</p>
+          <p class="p2-121-period-hint">作品のオンライン販売を受け付ける期間を設定します。期間終了後は自動的に購入受付が停止されます。<br>この設定は展覧会の会期開始日以降、変更できなくなります。</p>
+          <!-- 会期開始ロック（2026-07-19 仕様＝販売期間は展覧会会期開始日以降は変更不可） -->
+          <p class="p2-12-mode-bar__locknote" id="p2121PeriodLockNote" hidden>展覧会の会期開始日（2026.02.18）を過ぎているため、販売期間は変更できません。</p>
 
           <div class="p2-121-period-opts" role="radiogroup" aria-label="販売期間の選択">
 
-            <!-- 展覧会会期と同じ -->
+            <!-- 展覧会会期と同じ（デモ：保存済みの選択） -->
             <label class="p2-121-period-opt">
-              <input type="radio" name="p2121Period" value="same">
+              <input type="radio" name="p2121Period" value="same" checked>
               <span class="p2-121-period-opt__mark"></span>
               <span class="p2-121-period-opt__body">
                 <span class="p2-121-period-opt__label">展覧会会期と同じ</span>
@@ -118,7 +117,7 @@
 
             <!-- 会期終了後2週間まで -->
             <label class="p2-121-period-opt">
-              <input type="radio" name="p2121Period" value="plus2w" checked>
+              <input type="radio" name="p2121Period" value="plus2w">
               <span class="p2-121-period-opt__mark"></span>
               <span class="p2-121-period-opt__body">
                 <span class="p2-121-period-opt__label">会期終了後2週間まで<span class="p2-121-period-opt__tag">おすすめ</span></span>
@@ -243,9 +242,11 @@
             <span class="ktn-count p2-12-count" id="p212Count">5</span>
           </div>
           <p class="p2-12-works-hint">販売状態は会場の状況に合わせて随時更新してください。不明な場合は「要問合せ」に設定することを推奨します。</p>
-          <p class="p2-12-works-hint">購入申込者が1人以上の場合、作品に関する操作は「リエゾン+コンソール」をクリックして移動した「リエゾン+コンソール」ページから操作してください。</p>
+          <!-- 旧・上部の販売期間中通知帯とここの「購入申込者が1人以上〜」補足をマージ（2026-07-19・販売期間開始後のみ表示） -->
+          <p class="p2-12-works-hint" id="p2121SaleNotice" hidden>販売期間中です（2026.02.18 — 2026.03.05）。購入申込者が1人以上いる作品の操作（申込対応・会場売約済への変更など）は <a class="ktn-guide-link" href="kotennavi-p3-15.html">LIAISON+コンソール →</a> から行ってください。</p>
+
           <div class="p2-12-reorder-bar">
-            <span class="p2-12-section-head__note">ドラッグで並び順を変更できます</span>
+            <span class="p2-12-section-head__note">ドラッグで並び順を変更できます（作品No.は並び順で自動採番）</span>
             <button class="p2-12-reorder-btn" id="p212ReorderBtn" type="button">並べ替え</button>
           </div>
           <ul class="p2-12-work-list" id="p212WorkList" aria-label="展示作品リスト"></ul>
@@ -285,6 +286,15 @@
             <p class="p2-12-add-panel__hint" id="p212AddHint">あなたがこれまでに登録した作品から選んで追加できます。</p>
             <div class="p2-12-candidate-grid" id="p212CandidateGrid"></div>
           </div>
+        </div>
+
+        <!-- 保存エラーパネル（共通 .ktn-form-error・保存時バリデーションで表示。フォームアクション直上の固定位置） -->
+        <div class="ktn-form-error" id="p2121SaveError" role="alert" hidden>
+          <div class="ktn-form-error__head">
+            <svg class="ktn-form-error__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <span class="ktn-form-error__title">保存できませんでした</span>
+          </div>
+          <ul class="ktn-form-error__list" id="p2121SaveErrorList"></ul>
         </div>
 
         <!-- フォームアクション -->

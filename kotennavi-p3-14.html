@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ポートフォリオ管理 — 田中 透 | 個展なび</title>
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<body data-w="detail" class="p3-14-page p3-page mgmt-page">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- デモバー -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ロール：</span>
+  <button class="dbtn" onclick="setR('guest',this)">ゲスト</button>
+  <button class="dbtn" onclick="setR('login',this)">ログイン</button>
+  <button class="dbtn on" onclick="setR('user+creator',this)">creator本人</button>
+  <button class="dbtn" onclick="setR('admin',this)">管理者</button>
+</div>
+
+<div class="shell">
+<div class="content-wrap" id="contentWrap">
+
+  <header class="ktn-header" id="ktnHeader">
+    <div class="ktn-header__inner">
+      <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+      <div class="ktn-hdr-actions" id="ktnActs"></div>
+    </div>
+  </header>
+
+  <main class="ktn-main" id="ktnMain">
+    <div class="ktn-content">
+
+      <!-- クリエイター 文脈ストリップ（identity strip） -->
+      <div class="ktn-mgmt-context">
+        <a class="ktn-mgmt-context__media ktn-mgmt-context__media--creator" href="kotennavi-p3.html" style="background:linear-gradient(135deg,#7ab4cc,#4a8099)">T</a>
+        <div class="ktn-mgmt-context__body">
+          <div class="ktn-mgmt-context__badges">
+            <span class="cb cb-person cb-creator">creator</span>
+          </div>
+          <div class="ktn-mgmt-context__name"><a href="kotennavi-p3.html">田中 透</a></div>
+          <div class="ktn-mgmt-context__meta">絵画・現代美術 · 東京</div>
+        </div>
+        <div class="ktn-mgmt-context__actions">
+          <a class="ktn-mgmt-context__view" href="kotennavi-p3.html">クリエイターページへ →</a>
+        </div>
+      </div>
+
+      <!-- 管理ボックス -->
+      <div class="p314-wrap ktn-mgmt-wrap ktn-mgmt-stack">
+
+        <!-- ページタイトル -->
+        <div class="ktn-mgmt-head">
+          <h2 class="ktn-mgmt-head__title">ポートフォリオ管理</h2>
+          <p class="ktn-mgmt-head__en">PORTFOLIO</p>
+          <p class="ktn-mgmt-head__desc">あなたの作品を登録・管理します。作品はクリエイターページに表示でき（公開・非公開を設定可）、展覧会の LIAISON / LIAISON+ に<strong>出品</strong>できます。</p>
+        </div>
+
+        <!-- 新規作成（独立CTA） -->
+        <div class="p314-new-row">
+          <a class="ktn-action-btn" id="p314NewBtn" href="kotennavi-p6-11.html?mode=new&author=tanaka&self=1">新規作品を作成 →</a>
+        </div>
+
+        <!-- 作成済みの作品セクション -->
+        <div class="p314-sec-head">
+          <h3 class="p314-sec-head__title">登録済みの作品</h3>
+          <span class="ktn-count"><span id="p314Count">0</span>件</span>
+        </div>
+
+        <!-- 公開・非公開の注記 -->
+        <div class="p314-notice">
+          <svg class="p314-notice__icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="17" height="17" aria-hidden="true"><path d="M2 10s3-5.5 8-5.5S18 10 18 10s-3 5.5-8 5.5S2 10 2 10Z"/><circle cx="10" cy="10" r="2.3"/></svg>
+          <div class="p314-notice__body">
+            <strong>「公開」の作品はクリエイターページの「作品」に表示されます。</strong>
+            「非公開」の作品はサイト内には表示されませんが、LIAISON / LIAISON+ の出品候補としては使用できます（出品すると展覧会の作品ページでは閲覧できます）。
+          </div>
+        </div>
+
+        <!-- ツールバー：公開状態・出品状況・並べ替え・新規作成 -->
+        <div class="p314-toolbar">
+          <div class="p314-toolbar__filters">
+            <label class="p314-filter">
+              <span class="p314-filter__label">公開状態</span>
+              <select class="p314-filter__sel" id="p314FilterPub">
+                <option value="">すべて</option>
+                <option value="pub">公開</option>
+                <option value="unpub">非公開</option>
+              </select>
+            </label>
+            <label class="p314-filter">
+              <span class="p314-filter__label">出品状況</span>
+              <select class="p314-filter__sel" id="p314FilterListed">
+                <option value="">すべて</option>
+                <option value="listed">出品中</option>
+                <option value="past">現在未出品（出品歴あり）</option>
+                <option value="never">未出品（出品歴なし）</option>
+              </select>
+            </label>
+            <label class="p314-filter">
+              <span class="p314-filter__label">並べ替え</span>
+              <select class="p314-filter__sel" id="p314Sort">
+                <option value="reg-desc">登録が新しい順</option>
+                <option value="reg-asc">登録が古い順</option>
+                <option value="year-desc">制作年が新しい順</option>
+                <option value="year-asc">制作年が古い順</option>
+                <option value="title">作品名順</option>
+              </select>
+            </label>
+          </div>
+        </div>
+
+        <!-- ポートフォリオ一覧 -->
+        <ul class="p314-list" id="p314List" aria-label="ポートフォリオ一覧"></ul>
+
+        <!-- ゼロ状態 -->
+        <div class="p314-empty" id="p314Empty" hidden>
+          <p class="p314-empty__msg">該当する作品がありません。</p>
+        </div>
+
+      </div><!-- /.ktn-mgmt-wrap -->
+
+    </div><!-- /.ktn-content -->
+  </main>
+
+</div><!-- /.content-wrap -->
+</div><!-- /.shell -->
+
+<nav class="ktn-bottom-nav" id="ktnBottomNav"><div class="ktn-bottom-nav__inner" id="ktnBottomNavInner"></div></nav>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Top","item":"https://koten-navi.com/"},{"@type":"ListItem","position":2,"name":"クリエイター","item":"https://koten-navi.com/p10-2"},{"@type":"ListItem","position":3,"name":"田中 透","item":"https://koten-navi.com/p3"},{"@type":"ListItem","position":4,"name":"ポートフォリオ管理"}]}</script>
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+  KTN.init({ page: 'p3-14', role: 'user+creator' });
+  function setR(role, btn) {
+    document.querySelectorAll('.dbtn').forEach(function(b){ b.classList.remove('on'); });
+    btn.classList.add('on');
+    window.curRole = role;
+    if (window.ktnRender) ktnRender();
+  }
+</script>
+</body>
+</html>

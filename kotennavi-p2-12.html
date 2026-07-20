@@ -26,6 +26,9 @@
   <span class="dbar-sep">候補：</span>
   <button class="dbtn on" onclick="p212DemoCands(false,this)">多い（絞込あり）</button>
   <button class="dbtn" onclick="p212DemoCands(true,this)">少ない（絞込なし）</button>
+  <span class="dbar-sep">会期：</span>
+  <button class="dbtn" onclick="p212DemoTerm(false,this)">開始前（変更可）</button>
+  <button class="dbtn on" onclick="p212DemoTerm(true,this)">開始後（変更不可）</button>
 </div>
 <div class="shell">
 <div class="content-wrap" id="contentWrap">
@@ -69,6 +72,7 @@
         <h2 class="ktn-mgmt-head__title">LIAISON 展示設定</h2>
         <p class="ktn-mgmt-head__en">LIAISON SETTINGS</p>
         <p class="ktn-mgmt-head__desc">この展覧会に連動したオンライン作品展示の設定を行います。展示した作品は展覧会ページの LIAISON タブで公開されます。</p>
+        <p class="ktn-mgmt-head__guides">公開期間（＝会期）の外でも、出品者と管理者は展覧会ページの作品タブから実際の表示を確認できます（公開前プレビュー）。詳しくは <a class="ktn-guide-link" href="kotennavi-p70-1.html" target="_blank" rel="noopener">リエゾン 作品出品ガイド →</a></p>
       </div>
 
       <!-- モード切替バー -->
@@ -84,6 +88,7 @@
             <button class="p2-12-mode-none" onclick="p212OpenModal('none')">LIAISON の利用をやめる</button>
           </div>
         </div>
+        <p class="p2-12-mode-bar__locknote" id="p212ModeLockNote" hidden>展覧会の会期開始日（2026.02.18）を過ぎているため、モード（利用しない／LIAISON／LIAISON+）は変更できません。</p>
       </div>
 
       <!-- 展示設定セクション -->
@@ -107,7 +112,7 @@
           </div>
           <p class="p2-12-works-hint">販売状態は会場の状況に合わせて随時更新してください。不明な場合は「要問合せ」に設定することを推奨します。</p>
           <div class="p2-12-reorder-bar">
-            <span class="p2-12-section-head__note">ドラッグで並び順を変更できます</span>
+            <span class="p2-12-section-head__note">ドラッグで並び順を変更できます（作品No.は並び順で自動採番）</span>
             <button class="p2-12-reorder-btn" id="p212ReorderBtn" type="button">並べ替え</button>
           </div>
           <ul class="p2-12-work-list" id="p212WorkList" aria-label="展示作品リスト"></ul>
@@ -232,6 +237,18 @@ function p212OpenModal(type) {
 function p212CloseModal(type) {
   document.getElementById('p212-modal-' + type).hidden = true;
 }
+/* 2026-07-19 仕様：リエゾンモード切替は展覧会会期開始日以降は変更不可。
+   本番＝会期開始日と当日をサーバー側でも比較して拒否。デモは dbar トグルで再現 */
+function p212DemoTerm(started, btn) {
+  document.querySelectorAll('.p2-12-mode-switch, .p2-12-mode-none').forEach(function (b) { b.disabled = !!started; });
+  var note = document.getElementById('p212ModeLockNote');
+  if (note) note.hidden = !started;
+  if (btn) {
+    document.querySelectorAll('.dbar [onclick^="p212DemoTerm"]').forEach(function (b) { b.classList.remove('on'); });
+    btn.classList.add('on');
+  }
+}
+p212DemoTerm(true);
 </script>
 </body>
 </html>

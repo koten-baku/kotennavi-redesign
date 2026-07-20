@@ -35,6 +35,7 @@
   <button class="dbtn" onclick="switchWork(2,this)">id=2 ふわふわ</button>
   <button class="dbtn" onclick="switchWork(3,this)">id=3 ドキドキ</button>
   <button class="dbtn" onclick="switchWork(4,this)">id=4 ざわざわ</button>
+  <button class="dbtn" onclick="switchWork(5,this)">id=5 ぱちぱち（取引完了）</button>
 </div>
 
 <div class="dev-ph dev-ph--sidebar"></div>
@@ -87,6 +88,11 @@
           <div class="p6-specs-id">
             <dt>作品ID</dt>
             <dd><span class="p6-specs-id__value">AW-C42-1847</span><button class="p6-specs-id__copy" aria-label="作品IDをコピー" title="作品IDをコピー">⎘</button></dd>
+          </div>
+          <!-- 現在の所蔵：LIAISON+取引完了＋購入者オプトイン（コレクションルーム・作品とも公開）時のみJSが表示 -->
+          <div class="p6-provenance" id="p6Provenance" hidden>
+            <span class="p6-provenance__label">現在の所蔵</span>
+            <a class="ktn-guide-link" href="kotennavi-p5-4.html">購入者のコレクションルーム →</a>
           </div>
         </div>
 

@@ -478,3 +478,86 @@ CLAUDE.md「ページ遷移アクションボタン」「操作ボタン」の�
 - ボタンとの見分け：ボタン＝「枠線＋白/透明背景（遷移なら末尾 →）」／バッジ＝「塗り＋ドット・枠なし」
 - 破壊トリガー（赤枠・記号なし）と要対応ナビ（赤枠・●＋→）はどちらも赤枠だが記号で区別する
 - 状態別カラークラス（`--new`/`--paid`/`--shipped`/`--confirming`/`--done`/`--cancelled` 等）は p316/p515 プレフィックスのまま共用。デモ：`kotennavi_buttons_v2.html` セクション5
+
+---
+
+## フォーム保存エラーパネル（`.ktn-form-error`）
+
+編集・管理ページの保存時バリデーションエラーをフォームアクション直上に常設表示する共通コンポーネント。運用ルール（配置・トースト禁止・色・併用赤枠等）の canonical は CLAUDE.md「全ページ共通：フォーム保存エラーパネル」。CSS canonical は `kotennavi-common.css` `.ktn-listqr__url` 直後。
+
+**枠のHTML（静的に置く・`hidden` で初期非表示）：**
+```html
+<!-- 保存エラーパネル（共通 .ktn-form-error・保存時バリデーションで表示。フォームアクション直上の固定位置） -->
+<div class="ktn-form-error" id="p---SaveError" role="alert" hidden>
+  <div class="ktn-form-error__head">
+    <svg class="ktn-form-error__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    <span class="ktn-form-error__title">保存できませんでした</span>
+  </div>
+  <ul class="ktn-form-error__list" id="p---SaveErrorList"></ul>
+</div>
+```
+
+**項目のHTML（JSが保存試行ごとに `__list` へ再構築）：**
+```html
+<!-- シンプル項目（必須未入力・p2-11型）＝メッセージ＋ジャンプ -->
+<li class="ktn-form-error__item">「展覧会タイトル」が未入力です。
+  <button type="button" class="ktn-form-error__jump">該当箇所へ →</button>
+</li>
+
+<!-- リッチ項目（クロスフィールド検証・p2-12-1型）＝メッセージ＋詳細行＋ヒント＋ジャンプ -->
+<li class="ktn-form-error__item">
+  販売期間（2026.02.18 — 2026.03.19）に他の展覧会で出品設定されている作品が2点あるため、この期間では保存できません。
+  <span class="ktn-form-error__detail">
+    <span><span class="ktn-form-error__name">《ふわふわ》</span> — <span class="ktn-form-error__name">グループ展「余白のかたち」</span>（2026.03.10 — 2026.03.24）に出品設定中</span>
+  </span>
+  <span class="ktn-form-error__hint">販売期間の終了日を 2026.03.09 以前にするか、該当作品の他展覧会の出品設定を解除してください。</span>
+  <button type="button" class="ktn-form-error__jump">該当箇所へ →</button>
+</li>
+```
+
+**ルール（要点）：**
+- パネル表示＝`hidden=false`＋`errBox.scrollIntoView({behavior:'smooth',block:'center'})`。成功時は `hidden=true`（トーストは成功通知のみ可）
+- `__jump` は対象要素への参照を閉包で持ち `scrollIntoView({behavior:'smooth',block:'center'})`（対象に id が無くてもよい）
+- 固有名詞（作品名・展覧会名）のみ `__name`（明朝）。ラベル・説明文はゴシックのまま
+- フィールド側の赤枠強調（`.p211-field.is-error` / `.p2-12-work-card--conflict` 等）は保存試行ごとにクリア→再付与
+- 実装例：p2-11（`validateRequired()`）／p2-12-1（`kotennavi-pages.js` p2-121 の保存バリデーション）
+
+---
+
+## トグルスイッチ（`.ktn-switch`）
+
+on/off 状態切替の汎用スイッチ。運用ルール（aria必須・on色=page-accent・状態ラベル必須等）の canonical は CLAUDE.md「全ページ共通：トグルスイッチ」。CSS canonical は `kotennavi-common.css` `.ktn-switch` ブロック（2026-07-20 新設・初出 p3-14）。
+
+**HTML（on状態）：**
+```html
+<button type="button" class="ktn-switch is-on" role="switch" aria-checked="true"
+        title="クリックで公開/非公開を切り替え">
+  <span class="ktn-switch__track"><span class="ktn-switch__knob"></span></span>
+  <span class="ktn-switch__label">公開中</span>
+</button>
+```
+
+**HTML（off状態）：**
+```html
+<button type="button" class="ktn-switch" role="switch" aria-checked="false"
+        title="クリックで公開/非公開を切り替え">
+  <span class="ktn-switch__track"><span class="ktn-switch__knob"></span></span>
+  <span class="ktn-switch__label">非公開</span>
+</button>
+```
+
+**JSトグルパターン（クラス・aria・ラベルを同時更新）：**
+```js
+function toggleSwitch(btn) {
+  var on = !btn.classList.contains('is-on');
+  btn.classList.toggle('is-on', on);
+  btn.setAttribute('aria-checked', on);
+  btn.querySelector('.ktn-switch__label').textContent = on ? '公開中' : '非公開';
+}
+```
+
+**ルール（要点）：**
+- on 色は `var(--page-accent)`（body の `.pN-page` が供給・ロール連動）。ページ側で色を上書きしない
+- ページ側フッククラス（`.p314-pub-sw` / `.p54-vis-sw`）は位置調整のみ（例：`.p54-vis-sw{flex-shrink:0}`）
+- ラベルは状態テキスト（公開中/非公開 等）。ラベル無しで使わない
+- 適用済み：p3-14 作品公開スイッチ（pages.js makeItem 内で動的生成）／p5-4 並び替えモーダルの公開/非公開（静的HTML＋`p54ToggleModalVis`）

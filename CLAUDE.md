@@ -853,6 +853,31 @@ z-index: 90;
 - **「（必須）」「`*`」など旧表記は使わない**（色のハードコードも禁止）。任意項目は従来どおりラベル内に「（任意）」と書く。
 - **注意：** p2-11 の `.p211-req`（`*` アスタリスク＋JSバリデーション）は自己完結した既存システムのため本パスでは未統合。将来のフォーム整備時に `.ktn-req` へ寄せるか検討。
 
+### 全ページ共通：トグルスイッチ（`.ktn-switch`）
+
+on/off の2状態を切り替える汎用トグルスイッチ。canonical は `kotennavi-common.css`（`.ktn-switch` ブロック・2026-07-20 新設）。HTMLテンプレートは `docs/component-html.md`「トグルスイッチ」を参照。
+
+- **構造：** `button.ktn-switch[.is-on] > span.ktn-switch__track > span.ktn-switch__knob` ＋ `span.ktn-switch__label`。`role="switch"` と `aria-checked` を必ず併記し、JS でクラス・aria・ラベルテキストを同時にトグルする。
+- **on 色は `var(--page-accent)`**（ロール連動：p3系=creator青緑／p5系=user桃…）。色のハードコード禁止。off はトラック `#c9c4bc`・ラベル `var(--muted)`。
+- **ラベルは状態テキスト**（「公開中」「非公開」等）を on/off で書き換える。ラベル無し運用はしない（状態が色だけになるため）。
+- **適用済み：** p3-14（作品の公開/非公開 `.p314-pub-sw`）／p5-4（コレクションルームの公開/非公開 `.p54-vis-sw`）。ページ側フッククラスは位置調整（`flex-shrink` 等）のみに使い、**見た目のCSSをページ側に再定義しない**。
+- 新規ページはHTMLをコピーするだけでよい（ページ個別CSS不要）。「その場で実行される操作」だが押しボタンではなく**状態の切替**である場合にこれを使う（実行系は `.ktn-op-btn`）。
+- React 変換：`<Switch checked onChange label={{on,off}}>`。
+
+### 全ページ共通：フォーム保存エラーパネル（`.ktn-form-error`）
+
+編集・管理ページの**保存ボタン押下時バリデーションエラー**の共通表示。canonical は `kotennavi-common.css`（`.ktn-listqr__url` 直後・`.ktn-guide-link` の前）。HTMLテンプレートは `docs/component-html.md`「フォーム保存エラーパネル」を参照。
+
+- **配置＝フォームアクション（保存/キャンセル）直上の固定位置に常設**。トースト（消えるメッセージ）でバリデーションエラーを出すのは禁止（旧p2-11方式は廃止済み）。パネルは次の保存試行まで残り、成功時に `hidden` で消す。
+- **構造**：`__head`（⚠SVG＋タイトル「保存できませんでした」）＋ `__list`＞`__item`（●付き）。項目内は任意で `__detail`（詳細行）／`__hint`（解決ヒント・濃赤）／`__jump`（「該当箇所へ →」ボタン＝`scrollIntoView`）。
+- **色は `.ktn-txn-alert` と同じエディトリアル赤系**（bg `#fbeae5` / border `#b43c14` / タイトル `#7a1800`）。canonical を使い、ページ側で色を再定義しない。
+- **固有名詞（作品名・展覧会名等）は `__name`（明朝 `--fs`・600）**。フィールドラベル等の機能テキストはゴシックのまま。
+- **フィールド側の赤枠強調は併用**（p2-11＝`.p211-field.is-error`／p2-12-1＝`.p2-12-work-card--conflict`）。パネル＝内容の説明、赤枠＝場所の副次サイン、`__jump`＝両者をつなぐ動線。
+- **表示は `hidden` 属性トグル**（`.ktn-form-error[hidden]{display:none}` が canonical にあるため class 側の `display:flex` と衝突しない）。パネル根に `role="alert"` を付ける。
+- **ページ側CSSは inset の margin のみ**：Model A（`.ktn-mgmt-wrap` 直接子・sticky送信バー直上）＝汎用 `.ktn-mgmt-wrap > .ktn-form-error{margin:20px 20px 16px}` が common 済みで個別CSS不要／セクション枠内に置く場合のみページ側で margin を持つ（例 `.p2-12-liaison-section > .ktn-form-error{margin:20px 16px 0}`）。
+- **適用済み**：p2-11（必須未入力＝件数サマリ行＋項目別「該当箇所へ →」）／p2-12-1（販売期間×他展覧会出品の重複＝クロスフィールド検証の実装例）。
+- React 変換：`<FormErrorPanel items>`（items=[{message, details[], hint, jumpTarget}]）。
+
 ### 全ページ共通：取引期限アラート（`.ktn-txn-alert` / `.p316-action-deadline__soon`）
 
 取引4ページ（p3-16 / p4-16 / p5-15）の**要対応（自分の番＝my-turn）フェーズ**で操作がない場合に出す期限アラート。canonical は `kotennavi-common.css`（`.ktn-days-chip--urgent` 直後 L10787〜）。表示要素は2段階（間近＝`.p316-action-deadline__soon` 赤文字1行／超過・最終警告＝`.ktn-txn-alert` バナー）で、いずれも `.is-on` クラスでトグル（`hidden` 属性は使わない）。

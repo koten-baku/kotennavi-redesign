@@ -626,6 +626,7 @@ KTN.QA = [
   { id: 'TXN-S11', cat: 'liaison-txn', side: 'seller', aud: 'common', grp: '出品者の取引', q: '売上サマリーの「うち未精算」とは何ですか？', a: '取引が完了しているが、まだ個展なびから振込まれていない金額の合計です。「販売代金管理」ページで精算予定日や振込先口座の確認・登録ができます。' },
   { id: 'TXN-S12', cat: 'liaison-txn', side: 'seller', aud: 'common', grp: '出品者の取引', q: '受け取った作品に問題があると購入者から連絡があった場合は？', a: 'まず取引メッセージで状況を確認し、誠実に対応してください。破損等の問題がある場合は事務局へご連絡ください。取引メッセージのやり取りを保存しておくことをお勧めします。' },
   { id: 'TXN-S13', cat: 'liaison-txn', side: 'seller', aud: 'common', grp: '出品者の取引', q: '購入者の住所・氏名はいつまで確認できますか？', a: '個人情報保護のため、取引完了から1週間後に購入者の氏名・配送先住所（お届け先情報）はこのページから消去されます。発送に必要な情報は期間中に確認してください。取引メッセージは取引完了から2週間後に非公開になります（削除はされず、取引の記録として保存されます）。なお、取引明細・売上情報（個人情報を除く）はアーカイブと販売代金管理ページで引き続き確認できます。' },
+  { id: 'TXN-S14', cat: 'liaison-txn', side: 'seller', aud: 'common', grp: '出品者の取引', q: '取引が完了した作品は、その後どうなりますか？', a: '作品はポートフォリオ（作品管理）に残り、クリエイターページへの公開/非公開もこれまで通り設定できます。ただし作品はご購入者の所有となるため、LIAISON / LIAISON+ の出品候補からは自動的に外れ、再出品や作品情報の編集はできません（クローンで複製した作品は新規作品として出品できます）。公開ページでは「売約済」と表示されます。会場売却などで手動設定した「売約済」はこの対象外で、状態の変更や再出品が可能です。' },
 
   /* ─── cat:'liaison-txn' / side:'buyer'（購入者の取引＝user）───
      取引ワークスペース（p5-15）・購入管理（p5-14）・購入者ハブ（p70-11）が共通で描画する統合セット。
@@ -639,7 +640,8 @@ KTN.QA = [
   { id: 'TXN-B06', cat: 'liaison-txn', side: 'buyer', aud: 'common', phase: ['paid'], grp: '購入者の取引', q: '作品はいつ届きますか？', a: '支払い完了後に出品者が梱包・発送します。発送されると通知が届き、追跡番号も取引ワークスペースで確認できます。到着予定は配送業者・距離により異なります。' },
   { id: 'TXN-B07', cat: 'liaison-txn', side: 'buyer', aud: 'common', phase: ['receipt'], grp: '購入者の取引', q: '「受取確認」とは何をすればいいですか？', a: '作品が届いたら評価を入力し、取引ワークスペースで「受け取りを確認しました」ボタンを押してください。その後、出品者の取引完了確認が行われると代金が確定されます。受け取り後は速やかにご確認ください。' },
   { id: 'TXN-B08', cat: 'liaison-txn', side: 'buyer', aud: 'common', grp: '購入者の取引', q: '受け取った作品に問題があった場合は？', a: 'まず取引ワークスペースのメッセージ機能で出品者に連絡してください。解決しない場合は事務局へお問い合わせください。受取確認後のキャンセルは原則受け付けられません。受け取り時に必ず状態をご確認ください。' },
-  { id: 'TXN-B09', cat: 'liaison-txn', side: 'buyer', aud: 'common', grp: '購入者の取引', q: '取引完了後、領収書の発行や購入管理はいつまでできますか？', a: '取引完了後も、購入管理ではいつでも取引をご確認いただけます。領収書は取引ワークスペースの「領収書を発行」ボタンからPDF形式で発行できます。なお、取引完了から1週間後に配送先住所などの個人情報はワークスペースから消去され、取引メッセージは取引完了から2週間後に非公開になります（削除はされず、取引の記録として保存されます）。領収書・取引明細はこれらの対象外で、消去後も購入管理からいつでも発行・確認できます。' }
+  { id: 'TXN-B09', cat: 'liaison-txn', side: 'buyer', aud: 'common', grp: '購入者の取引', q: '取引完了後、領収書の発行や購入管理はいつまでできますか？', a: '取引完了後も、購入管理ではいつでも取引をご確認いただけます。領収書は取引ワークスペースの「領収書を発行」ボタンからPDF形式で発行できます。なお、取引完了から1週間後に配送先住所などの個人情報はワークスペースから消去され、取引メッセージは取引完了から2週間後に非公開になります（削除はされず、取引の記録として保存されます）。領収書・取引明細はこれらの対象外で、消去後も購入管理からいつでも発行・確認できます。' },
+  { id: 'TXN-B10', cat: 'liaison-txn', side: 'buyer', aud: 'common', grp: '購入者の取引', q: '購入した作品はコレクションルームでどう扱われますか？公開されますか？', a: '取引完了後、作品はあなたのコレクションルーム（マイページ）に収蔵されます。収蔵作品は既定では非公開です。あなたがコレクションルームを公開し、その作品も公開に設定した場合のみ、作品ページに「現在の所蔵」としてあなたのコレクションルームへの案内が表示されます。公開するかどうかはいつでも変更できます。' }
 ];
 
 /* cat×aud×side でフィルタし、target に描画する。
@@ -1221,6 +1223,19 @@ KTN.init = function (opts) {
     requestAnimationFrame(_syncHH);
   }
 
+  /* p2系サブナビ（横スクロール・スクロールバー非表示）：狭い画面でアクティブタブが
+     右端にはみ出して見えなくなるため、読み込み時にアクティブタブを可視位置へ寄せる */
+  function _scrollActiveSubnav() {
+    var bar = document.querySelector('.p2-subnav-bar');
+    if (!bar || bar.scrollWidth <= bar.clientWidth) return;
+    var act = bar.querySelector('.p2-subnav__item.is-active');
+    if (!act) return;
+    var barRect = bar.getBoundingClientRect();
+    var actRect = act.getBoundingClientRect();
+    if (actRect.right > barRect.right) bar.scrollLeft += actRect.right - barRect.right + 12;
+    else if (actRect.left < barRect.left) bar.scrollLeft -= barRect.left - actRect.left + 12;
+  }
+
   function _runPage() {
     _renderHeader();
     requestAnimationFrame(_syncHH); /* ヘッダーレンダリング直後に --hh を実測更新 */
@@ -1235,6 +1250,11 @@ KTN.init = function (opts) {
     renderBottomNav();
     renderTagbar(window.ktnState.page);
     updateActiveState(window.ktnState.page);
+    requestAnimationFrame(_scrollActiveSubnav);
+    /* フォント読込で幅が変わった後にも再調整（未スクロール時のみ実質作用） */
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function () { requestAnimationFrame(_scrollActiveSubnav); });
+    }
     _prevInnerW = window.innerWidth;
     window.addEventListener('resize', _onResize, { passive: true });
     /* ページ固有関数を実行（kotennavi-pages.js で定義） */
