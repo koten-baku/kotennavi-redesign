@@ -50,69 +50,98 @@
         </div>
       </div>
 
-      <!-- 管理ボックス -->
+      <!-- 管理ボックス（構造は p3-14 と共通＝.p314-* を再利用） -->
       <div class="p414-wrap ktn-mgmt-wrap ktn-mgmt-stack">
 
         <!-- ページタイトル -->
         <div class="ktn-mgmt-head">
           <h2 class="ktn-mgmt-head__title">作品インベントリー</h2>
           <p class="ktn-mgmt-head__en">ARTWORK INVENTORY</p>
-          <p class="ktn-mgmt-head__desc">ギャラリーが取り扱う作品を登録・管理します。ここで登録した作品を、展覧会の LIAISON / LIAISON+ に<strong>出品</strong>できます。</p>
+          <p class="ktn-mgmt-head__desc">ギャラリーが取り扱う作品を登録・管理します。ここで登録した作品を、展覧会の LIAISON / LIAISON+ に<strong>出品</strong>できます。作者に指定できるのは、このギャラリーの展覧会に出展したクリエイターのみです。各作品を開くと<strong>出品歴</strong>と<strong>オーナーメモ</strong>（非公開）を確認・記録できます。</p>
+        </div>
+
+        <!-- 新規作成（独立CTA・作者ピッカーを開く） -->
+        <div class="p314-new-row">
+          <button type="button" class="ktn-action-btn" id="p414NewBtn">新規作品を作成 →</button>
+        </div>
+
+        <!-- 作品タブ（登録済み／売約済） -->
+        <div class="p314-tabs" role="tablist" aria-label="作品の表示切替">
+          <button class="p314-tab is-active" id="p414TabActive" role="tab" aria-selected="true" type="button">
+            登録済みの作品
+            <span class="ktn-count ktn-count--pill is-idle"><span id="p414CountActive">0</span></span>
+          </button>
+          <button class="p314-tab" id="p414TabSold" role="tab" aria-selected="false" type="button">
+            売約済（取引完了）
+            <span class="ktn-count ktn-count--pill is-idle"><span id="p414CountSold">0</span></span>
+          </button>
+        </div>
+
+        <!-- 売約済タブの注記（JSで開閉） -->
+        <div class="p314-sold-notice" id="p414SoldNotice" hidden>
+          <svg class="p314-notice__icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="17" height="17" aria-hidden="true"><path d="M2 10s3-5.5 8-5.5S18 10 18 10s-3 5.5-8 5.5S2 10 2 10Z"/><circle cx="10" cy="10" r="2.3"/></svg>
+          <div class="p314-notice__body">
+            <strong>取引完了（オンライン売約済）の作品です。</strong>
+            所有者は購入者に移っているため、<strong>この作品は編集・削除できません</strong>（販売状態・価格に限らず作品情報すべて）。在庫記録として保持し、クローンでの複製は可能です。
+          </div>
         </div>
 
         <!-- 非公開の注記 -->
-        <div class="p414-notice">
-          <svg class="p414-notice__icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="17" height="17" aria-hidden="true"><path d="M2 10s3-5.5 8-5.5S18 10 18 10s-3 5.5-8 5.5S2 10 2 10Z"/><circle cx="10" cy="10" r="2.3"/><line x1="3.5" y1="3.5" x2="16.5" y2="16.5"/></svg>
-          <div class="p414-notice__body">
+        <div class="p314-notice">
+          <svg class="p314-notice__icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="17" height="17" aria-hidden="true"><path d="M2 10s3-5.5 8-5.5S18 10 18 10s-3 5.5-8 5.5S2 10 2 10Z"/><circle cx="10" cy="10" r="2.3"/><line x1="3.5" y1="3.5" x2="16.5" y2="16.5"/></svg>
+          <div class="p314-notice__body">
             <strong>インベントリーはギャラリーページには公開表示されません。</strong>
             ここに登録された作品は在庫管理用です。作品が閲覧できるのは、展覧会に出品された LIAISON / LIAISON+ の作品ページに限られます。
           </div>
         </div>
 
-        <!-- 真正性の注記 -->
-        <div class="p414-authenticity">
-          <svg class="p414-authenticity__icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="16" height="16" aria-hidden="true"><path d="M10 2.5 3.5 5v4.5c0 4 2.8 6.6 6.5 8 3.7-1.4 6.5-4 6.5-8V5L10 2.5Z"/><path d="M7.3 10l1.9 1.9 3.6-3.8"/></svg>
-          <div class="p414-authenticity__body">
-            作者に指定できるのは<strong>個展なびに登録済みのクリエイター</strong>のみです。未登録の作家の作品は登録できません。取り扱う作品の真正性を担保するためのルールです。
+        <!-- 下書きの注記（下書きがある時のみ表示・JSで開閉） -->
+        <div class="p314-draft-banner" id="p414DraftBanner" hidden>
+          <svg class="p314-draft-banner__icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="17" height="17" aria-hidden="true"><path d="M4 14.5V16h1.5l8-8-1.5-1.5-8 8Z"/><path d="M12.5 5l1.5-1.5a1 1 0 0 1 1.4 0l.1.1a1 1 0 0 1 0 1.4L14 6.5"/></svg>
+          <div class="p314-draft-banner__body">
+            <strong>作成途中の下書きが<span id="p414DraftCount">0</span>件あります。</strong>
+            下書きは未完成のため<strong>出品・検索の対象にならず、上の作品数にも含みません</strong>。一覧の最上部に固定表示しています。各下書きの「編集を再開 →」から続きを入力し、必須項目がそろえば「保存（完成）」で出品できるようになります。
           </div>
         </div>
 
-        <!-- ツールバー：作者フィルタ・状態フィルタ・新規作成 -->
-        <div class="p414-toolbar">
-          <div class="p414-toolbar__filters">
-            <label class="p414-filter">
-              <span class="p414-filter__label">作者</span>
-              <select class="p414-filter__sel" id="p414FilterAuthor">
-                <option value="">すべての作者</option>
+        <!-- ツールバー：作者・出品状況・並べ替え -->
+        <div class="p314-toolbar">
+          <div class="p314-toolbar__filters">
+            <label class="p314-filter">
+              <span class="p314-filter__label">作者</span>
+              <select class="p314-filter__sel" id="p414FilterAuthor">
+                <option value="">すべて</option>
               </select>
             </label>
-            <label class="p414-filter">
-              <span class="p414-filter__label">出品状況</span>
-              <select class="p414-filter__sel" id="p414FilterListed">
+            <label class="p314-filter" id="p414FilterListedWrap">
+              <span class="p314-filter__label">出品状況</span>
+              <select class="p314-filter__sel" id="p414FilterListed">
                 <option value="">すべて</option>
                 <option value="listed">出品中</option>
-                <option value="unlisted">未出品</option>
+                <option value="past">現在未出品（出品歴あり）</option>
+                <option value="never">未出品（出品歴なし）</option>
+              </select>
+            </label>
+            <label class="p314-filter">
+              <span class="p314-filter__label">並べ替え</span>
+              <select class="p314-filter__sel" id="p414Sort">
+                <option value="reg-desc">登録が新しい順</option>
+                <option value="reg-asc">登録が古い順</option>
+                <option value="year-desc">制作年が新しい順</option>
+                <option value="year-asc">制作年が古い順</option>
+                <option value="author">作者名順</option>
+                <option value="title">作品名順</option>
               </select>
             </label>
           </div>
-          <button type="button" class="p414-new-btn ktn-op-btn ktn-op-btn--sm" id="p414NewBtn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-            新規作品を作成
-          </button>
-        </div>
-
-        <!-- 件数表示 -->
-        <div class="p414-count-row">
-          <span class="p414-count" id="p414Count">0</span>
-          <span class="p414-count-row__unit">件</span>
         </div>
 
         <!-- インベントリー一覧 -->
-        <ul class="p414-list" id="p414List" aria-label="作品インベントリー一覧"></ul>
+        <ul class="p314-list" id="p414List" aria-label="作品インベントリー一覧"></ul>
 
         <!-- ゼロ状態 -->
-        <div class="p414-empty" id="p414Empty" hidden>
-          <p class="p414-empty__msg">該当する作品がありません。</p>
+        <div class="p314-empty" id="p414Empty" hidden>
+          <p class="p314-empty__msg">該当する作品がありません。</p>
         </div>
 
       </div><!-- /.ktn-mgmt-wrap -->
@@ -125,7 +154,7 @@
             <h3 class="p414-picker__title" id="p414PickerTitle">どのクリエイターの作品を作成しますか？</h3>
             <button class="p414-picker__close" id="p414PickerClose" type="button" aria-label="閉じる">✕</button>
           </div>
-          <p class="p414-picker__desc">このギャラリーが取り扱う（展覧会に出展した）<strong>登録済みクリエイター</strong>のみ選択できます。未登録の作家の作品は登録できません（真正性を担保するためのルールです）。同姓同名の作者は「確認 ↗」でクリエイターページを開き、本人か確かめてから選択してください。</p>
+          <p class="p414-picker__desc">作者に指定できるのは、<strong>このギャラリーが作成した展覧会（管理者確認済み）に出展クリエイターとしてリンクされているクリエイター</strong>のみです。未登録の作家、および出展実績のない作家の作品は登録できません（取り扱う作品の真正性を担保するためのルールです）。同姓同名の作者は「確認 ↗」でクリエイターページを開き、本人か確かめてから選択してください。</p>
           <div class="p414-picker__search">
             <svg class="p414-picker__search-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" width="16" height="16" aria-hidden="true"><circle cx="9" cy="9" r="6"/><line x1="13.5" y1="13.5" x2="17" y2="17"/></svg>
             <input type="text" class="p414-picker__search-input" id="p414PickerSearch" placeholder="作者名・よみがなで検索" autocomplete="off" aria-label="作者を検索">
@@ -133,6 +162,19 @@
           <p class="p414-picker__hint" id="p414PickerHint"></p>
           <div class="p414-picker__list" id="p414PickerList"></div>
           <p class="p414-picker__empty" id="p414PickerEmpty" hidden>該当する作者がいません。</p>
+        </div>
+      </div>
+
+      <!-- 削除／下書き破棄 確認モーダル（.ktn-mgmt-wrap の外＝fixed オーバーレイ） -->
+      <div class="p314-del-modal" id="p414DelModal" hidden>
+        <div class="p314-del-modal__bg" id="p414DelBg"></div>
+        <div class="p314-del-modal__panel" role="dialog" aria-modal="true" aria-labelledby="p414DelTitle">
+          <h3 class="p314-del-modal__title" id="p414DelTitle">作品を削除しますか？</h3>
+          <p class="p314-del-modal__desc" id="p414DelDesc"></p>
+          <div class="p314-del-modal__actions">
+            <button type="button" class="ktn-op-btn" id="p414DelCancel">キャンセル</button>
+            <button type="button" class="ktn-op-btn ktn-op-btn--danger" id="p414DelConfirm">削除する</button>
+          </div>
         </div>
       </div>
 

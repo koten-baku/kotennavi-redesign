@@ -3346,7 +3346,7 @@ line-clamp:2;}
 /* タブ件数は親タブの is-active で active 表示に戻す（.is-idle を上書き）。
    creator/gallery は淡tint(rgba .1)が --tag-bg とほぼ同色で active が視認できないため、
    全ロール共通でロール色ソリッド塗り＋白文字にして idle(中立グレー)との差を明確化 */
-.p5-type-tab.is-active .ktn-count--pill,.p514-tab.is-active .ktn-count--pill,.p315-tab-btn.is-active .ktn-count--pill{background:var(--page-accent,#b8608c);color:#fff;font-weight:600}
+.p5-type-tab.is-active .ktn-count--pill,.p514-tab.is-active .ktn-count--pill,.p315-tab-btn.is-active .ktn-count--pill,.p314-tab.is-active .ktn-count--pill{background:var(--page-accent,#b8608c);color:#fff;font-weight:600}
 
 /* ── 編集ページ共通タイトルヘッダー .ktn-edit-head ── */
 .ktn-edit-head{margin-bottom:20px}
@@ -8047,6 +8047,10 @@ body.p6-dark.p6-plus{
 .p6-hero__specs{display:grid;grid-template-columns:repeat(2,auto 1fr);gap:5px 24px;margin:0}
 .p6-hero__specs dt{font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);line-height:1.9;white-space:nowrap}
 .p6-hero__specs dd{font-size:.82rem;line-height:1.9;color:var(--ink);margin:0}
+/* 「その他」＝仕様の補足。長文のため 2カラム grid をまたぎ全幅で縦積み（ラベル→本文）。上に区切り罫線 */
+.p6-hero__specs .p6-hero__specs-full{grid-column:1/-1;white-space:normal}
+.p6-hero__specs dt.p6-hero__specs-full--lbl{margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
+.p6-hero__specs dd.p6-hero__specs-full{font-family:var(--fn);font-size:.78rem;line-height:1.85}
 
 /* キャプション（ステージ内） */
 .p6-hero__caption{font-size:.75rem;color:rgba(255,255,255,.45);font-style:italic;padding:6px 0 14px;align-self:flex-start;letter-spacing:.03em}
@@ -8745,6 +8749,10 @@ body.p6-dark.p6-plus{
 .p2-121-custom-picker__label{font-size:.75rem;font-weight:600;color:var(--muted)}
 .p2-121-custom-picker__input{padding:7px 10px;border:1.5px solid var(--border);border-radius:5px;font-size:.82rem;color:var(--ink);background:#fff;font-family:inherit;transition:border-color .15s;width:100%;box-sizing:border-box}
 .p2-121-custom-picker__input:focus{outline:none;border-color:var(--accent)}
+/* 日付＋時刻を横並び（時刻は初期値0:00/23:59・変更可） */
+.p2-121-custom-picker__dt{display:flex;gap:6px}
+.p2-121-custom-picker__input--date{flex:1 1 auto}
+.p2-121-custom-picker__input--time{flex:0 0 96px;width:96px}
 .p2-121-custom-picker__sep{font-size:.9rem;color:var(--muted);padding-bottom:8px;flex-shrink:0}
 .p2-121-custom-picker__note{margin:8px 0 0;font-size:.75rem;color:var(--muted);line-height:1.5}
 
@@ -9356,6 +9364,7 @@ body.p3-2-page .p3-recommended .masonry-item{margin-bottom:0}
   color:var(--ink);-webkit-appearance:none;appearance:none;cursor:pointer;
 }
 .p3-3-filter__select:focus{outline:2px solid var(--page-accent,var(--accent));outline-offset:1px}
+.p3-3-filter__select--sort{margin-left:auto}
 /* .p3-3-filter__count → .ktn-count--result に統合（canonical） */
 
 .p3-3-grid{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start;margin-top:0}
@@ -10114,6 +10123,38 @@ body.p3-3-page .aw--plus .aw__foot>.p33-console-wrap{order:3}
 .ktn-form-error__jump:hover{color:#7a1800}
 /* Model A（.ktn-mgmt-wrap フラットフォーム型）＝sticky 送信バー直上に直接子として置く場合の inset（p2-11 等） */
 .ktn-mgmt-wrap > .ktn-form-error{margin:20px 20px 16px}
+
+/* ── 管理者コメント欄（コンテンツ編集ページ共通・role=admin のときのみ表示・canonical）──
+   展覧会編集(p2-11)・作品編集(p6-11) 等のコンテンツ編集ページに設置。管理者スレート #3a4a5a を軸に
+   一般フォーム欄と視覚的に分離する。既定は hidden で、renderAll → syncAdminNote() が role で表示切替。
+   出品者ロール（creator/gallery）では非表示＝出品者には見えない管理者用メモ。 */
+.ktn-admin-note{display:flex;flex-direction:column;gap:10px;margin:24px 20px 4px;padding:16px 18px;background:#f4f5f7;border:1px solid #d3d8de;border-left:3px solid #3a4a5a;border-radius:4px}
+.ktn-admin-note[hidden]{display:none}
+.ktn-admin-note__head{display:flex;align-items:center;gap:8px}
+.ktn-admin-note__badge{flex-shrink:0;font-family:var(--fm);font-size:.58rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#fff;background:#3a4a5a;padding:2px 7px;border-radius:3px}
+.ktn-admin-note__title{font-family:var(--fn);font-size:.9rem;font-weight:600;color:var(--ink)}
+.ktn-admin-note__desc{font-family:var(--fn);font-size:.75rem;line-height:1.7;color:var(--muted)}
+.ktn-admin-note__textarea{width:100%;min-height:92px;resize:vertical;padding:10px 12px;font-family:var(--fn);font-size:.85rem;line-height:1.75;color:var(--ink);background:#fff;border:1px solid #d3d8de;border-radius:4px}
+.ktn-admin-note__textarea:focus{outline:none;border-color:#3a4a5a;box-shadow:0 0 0 2px rgba(58,74,90,.12)}
+@media(max-width:540px){.ktn-admin-note{margin:24px 8px 4px}}
+
+/* ── 長文タイトル/名前/キャプション/仕様値のフォールバック折り返し（表示系・全ページ共通・2026-07-22）──
+   稀に異常に長い作品名・展覧会名・人名・キャプション・仕様値が入力された場合でも、スペースの無い連続
+   文字列でカード/ヒーロー/グリッドを横に突き破らないようにする。overflow-wrap:anywhere は通常の（スペースで
+   折れる）文言には無影響＝長すぎる時だけ効く。入力側に文字数制限は設けず表示側でグレースフルに受ける方針。
+   line-clamp 済み要素（.ec/.ac/.rc/.nc/.mc/.lc タイトル等）は overflow:hidden で既に安全だが、連続文字列を
+   行内に収めて2行を使い切れるよう anywhere を併せて付与。 */
+.ec__title,.ac__title,.rc__title,.nc__title,.mc__title,.lc__title,
+.cc__name,.gc__name,.uc__name,
+.p2-ec__name,.p2-side-ec__name,.p5-side-near-title,.p5-side-rec-title,
+.p2-title-band__title,.p2-title-band__title--sub,
+.p3-head__name,.p4-head__name,.p5-head__name,.p1-hero__title,
+.p6-hero__title,.p6-more-by__title,.p2-12-work-card__title,
+.p6-hero__caption,.p2-hero__caption,.p2-poster-caption,
+.p3-prof-media-caption,.p4-prof-media-caption,
+.p3-prof-gallery-caption,.p4-gallery__modal-caption,.p3-gallery__modal-caption,
+.p6-hero__specs dt,.p6-hero__specs dd{overflow-wrap:anywhere}
+
 /* 共通ガイドリンク（補足の参照リンク・色はブランド青 --accent #005da7 ＝ロゴ kotennavi-logo3.svg と同色）。サイズは文脈継承。末尾「 →」はテキストで付与 */
 .ktn-guide-link{color:var(--accent);text-decoration:underline;text-underline-offset:2px}
 .ktn-guide-link:hover{color:var(--accent-d)}
@@ -10126,6 +10167,8 @@ body.p3-3-page .aw--plus .aw__foot>.p33-console-wrap{order:3}
    右に「○○ページへ →」view リンク＋任意で管理メニュー（人物ページは移設した .p3-mgmt-btn／p3-11 は getActions へ集約）。
    p11-4 のみ creator/gallery 兼用のため syncMgmtBar が JS でロール別に populate。 */
 .ktn-mgmt-context{max-width:var(--w-detail);margin:0 auto 14px;display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--border);border-radius:4px;padding:10px 14px}
+/* display:flex を持つため UA の [hidden]{display:none} が上書きされる。JS で hidden トグルする（p6-11 の新規/クローンで strip を隠す等）ため明示的に潰す */
+.ktn-mgmt-context[hidden]{display:none}
 /* strip がコンテンツにある管理ページは上余白を詰めてパンくずとの空きすぎを解消（32→16px・ユーザー確定 2026-07-09）。
    人物ページは strip が先頭、p2-11/p6-11 は先頭にクローンバナー（hidden既定）→strip の順のため :first-child を外して両対応 */
 body.mgmt-page .ktn-content:has(> .ktn-mgmt-context){padding-top:16px}
@@ -10138,6 +10181,9 @@ body.mgmt-page .ktn-content:has(> .ktn-mgmt-context){padding-top:16px}
 .ktn-mgmt-context__media--content{border-radius:4px;border:1px solid rgba(0,0,0,.06)}
 .ktn-mgmt-context__body{flex:1;min-width:0}
 .ktn-mgmt-context__badges{display:flex;align-items:center;gap:6px;margin-bottom:3px}
+/* 自動採番ID（作品ID等）：識別子なので Montserrat・muted の淡いモノ表記。編集時のみ表示（[hidden] で制御） */
+.ktn-mgmt-context__id{font-family:var(--fm);font-size:.66rem;font-weight:500;letter-spacing:.04em;color:var(--muted);background:var(--tag-bg);padding:1px 6px;border-radius:3px}
+.ktn-mgmt-context__id[hidden]{display:none}
 .ktn-mgmt-context__name{font-family:var(--fs);font-size:.92rem;font-weight:600;color:var(--ink);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ktn-mgmt-context__name a{color:inherit;text-decoration:none}
 .ktn-mgmt-context__name .p8-head__title-suffix{font-size:.68em}
@@ -11318,11 +11364,23 @@ body.p4-15-page{--page-accent:#8b5e3c}
 .p211-tag-hint{font-size:.75rem;color:var(--muted);padding:0 2px;align-self:center}
 
 /* ── 画像エリア ── */
-.p211-img-uploaded{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--paper);border-radius:4px;margin-bottom:8px}
+/* アップロード済み画像チップ＝常時表示の入力。paper 背景は「追加入力帯(.p211-sub-link)」のサインになったため、白＋ヘアライン枠の中立扱いにして区別する（サブ画像はアコーディオンの paper パネル上で白として浮く） */
+.p211-img-uploaded{display:flex;align-items:flex-start;gap:10px;padding:9px 12px;background:#fff;border:1px solid var(--border);border-radius:4px;margin-bottom:8px}
 .p211-img-uploaded__thumb{width:52px;height:40px;border-radius:3px;object-fit:cover;flex-shrink:0;background:linear-gradient(135deg,#e8d0b8,#c8a880)}
+.p211-img-uploaded__body{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
+.p211-img-uploaded__row{display:flex;align-items:center;gap:8px}
 .p211-img-uploaded__name{font-size:.75rem;color:var(--ink);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.p211-img-uploaded__del{background:none;border:none;cursor:pointer;color:var(--muted);font-size:.9rem;padding:4px;border-radius:3px;transition:color .12s}
+.p211-img-uploaded__del{background:none;border:none;cursor:pointer;color:var(--muted);font-size:.9rem;padding:4px;border-radius:3px;transition:color .12s;flex-shrink:0}
 .p211-img-uploaded__del:hover{color:#c0392b}
+.p211-img-caption{width:100%;box-sizing:border-box;padding:6px 9px;border:1px solid var(--border);border-radius:4px;font-size:.75rem;font-family:var(--fn);color:var(--ink);background:#fff;transition:border-color .12s}
+.p211-img-caption::placeholder{color:var(--muted)}
+.p211-img-caption:focus{outline:none;border-color:#2a7fa8}
+.p211-img-list{display:flex;flex-direction:column}
+.p211-img-uploaded__handle{flex-shrink:0;align-self:center;display:flex;align-items:center;padding:2px;color:var(--muted);cursor:grab;touch-action:none}
+.p211-img-uploaded__handle:active{cursor:grabbing}
+.p211-img-uploaded__handle:hover{color:var(--ink)}
+.p211-img-uploaded.is-dragging{opacity:.4}
+.p211-img-list.is-reordering .p211-img-uploaded{border:1px dashed var(--border)}
 .p211-img-drop{border:2px dashed var(--border);border-radius:6px;padding:20px;text-align:center;color:var(--muted);font-size:.75rem;cursor:pointer;transition:border-color .12s;background:#fff}
 .p211-img-drop:hover,.p211-img-drop.is-over{border-color:#2a7fa8;background:#eef5fa;color:#2a7fa8}
 .p211-img-drop__btn{display:inline-block;padding:6px 14px;border:1.5px solid var(--border);border-radius:4px;background:#fff;font-size:.75rem;font-family:inherit;color:var(--ink);cursor:pointer;transition:all .12s;margin-bottom:6px}
@@ -11356,8 +11414,15 @@ body.p4-15-page{--page-accent:#8b5e3c}
 /* ── サブリンクのアコーディオン展開（詳細入力を別ページでなくインラインで） ── */
 .p211-sub-link .p211-sub-link__arr{transition:transform .15s}
 .p211-sub-link.is-open .p211-sub-link__arr{transform:rotate(180deg)}
-.p211-acc-panel{display:flex;flex-direction:column;gap:14px;padding:16px;border:1px solid var(--border);border-radius:4px;background:#fff}
+/* 開いたパネルは帯（.p211-sub-link＝var(--paper)）と同じ背景にし、開閉のまとまりを明示（内部の入力欄は白なので浮いて見える） */
+.p211-acc-panel{display:flex;flex-direction:column;gap:14px;padding:16px;border:1px solid var(--border);border-radius:4px;background:var(--paper)}
 .p211-acc-panel[hidden]{display:none}
+/* 開いた帯＋直後のパネルを1つの連続ボックスに見せる：接する角を四角に・gap(8px)を負マージンで相殺・
+   二重罫線を避けるため帯の下罫線を区切りに使いパネル上罫線を消す（帯直後の対応パネルにのみ隣接セレクタで適用） */
+.p211-sub-link.is-open{border-bottom-left-radius:0;border-bottom-right-radius:0}
+/* 開いている間はホバーで色を変えない（ホバー色 #eef5fa がパネル(var(--paper))と食い違い、連続ボックスが上下で別色に見えるのを防ぐ） */
+.p211-sub-link.is-open:hover{background:var(--paper);border-color:var(--border)}
+.p211-sub-link.is-open + .p211-acc-panel{margin-top:-8px;border-top:none;border-top-left-radius:0;border-top-right-radius:0}
 .p211-acc-panel .p211-field{margin:0}
 .p211-acc-add{align-self:flex-start;background:none;border:1px dashed var(--border);border-radius:4px;padding:7px 14px;font-size:.78rem;font-family:inherit;color:var(--muted);cursor:pointer;transition:all .12s;margin-top:8px}
 .p211-acc-add:hover{border-color:var(--ink);color:var(--ink)}
@@ -11590,14 +11655,21 @@ label.p211-liaison-opt{cursor:pointer}
 .p211-submit-bar__progress strong{color:var(--ink);font-weight:600;font-family:var(--fm)}
 .p211-submit-bar__progress + .p211-submit-bar__note{margin-left:0}
 
-/* ── p6-11/p2-12 作者ブロック（creator=本人固定／gallery=登録済みクリエイターから選択） ── */
+/* ── p6-11 作者ブロック（常に固定表示・作者は入口で確定済み＝p6-11 内では選ばせない） ── */
 .p611-author{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:6px 0}
 .p611-author[hidden]{display:none}
 .p611-author .cb{font-size:.6rem}
 .p611-author__name{font-size:.9rem;color:var(--ink)}
 .p611-author__note{font-size:.75rem;color:var(--muted)}
-.p611-author--select{display:block;padding:0}
-.p611-author__sel{max-width:340px}
+/* 送信バー2段レイアウト（`.p211-submit-bar--stacked`）＝一時保存（下書き）チェックを
+   上段・操作ボタンを下段に。下書きチェックはラベル＋説明文を最初から常時表示（tip ではない）。
+   p6-11（作品エディタ）／p2-11（展覧会エディタ）共通。 */
+.p211-submit-bar--stacked{flex-direction:column;align-items:stretch;gap:14px}
+.p211-submit-bar__row{display:flex;align-items:center;gap:12px}
+.p211-draft-check{align-items:flex-start}
+.p211-draft-check__text{display:flex;flex-direction:column;gap:2px}
+.p211-draft-check__label{font-size:.85rem;font-weight:600;color:var(--ink)}
+.p211-draft-check__desc{font-size:.75rem;color:var(--muted);line-height:1.7}
 
 /* ══ 汎用トグルスイッチ（.ktn-switch）══ 2026-07-20 新設（初出＝p3-14 公開/非公開）
    ON/OFF の2状態を直接切り替える設定スイッチ。ON色は --page-accent（ロール色）。
@@ -11627,14 +11699,22 @@ label.p211-liaison-opt{cursor:pointer}
 .p314-toolbar{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
 .p314-toolbar__filters{display:flex;gap:14px;flex-wrap:wrap}
 .p314-filter{display:flex;flex-direction:column;gap:4px}
+.p314-filter[hidden]{display:none}
 .p314-filter__label{font-family:var(--fm);font-size:.58rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .p314-filter__sel{font-family:var(--fn);font-size:.82rem;padding:7px 10px;border:1px solid var(--border);border-radius:4px;background:#fff;color:var(--ink);min-width:140px}
-/* 作成済みの作品セクション見出し（2026-07-20 件数行を見出し化＝「新規作成」と「作成済」の2区分。件数は base .ktn-count） */
-.p314-sec-head{display:flex;align-items:baseline;gap:10px;border-bottom:1px solid var(--border);padding-bottom:8px}
-.p314-sec-head__title{margin:0;font-family:var(--fn);font-size:.9rem;font-weight:600;letter-spacing:.02em;color:var(--ink)}
+/* 作品タブ（登録済み／売約済＝取引完了。2026-07-21 セクション見出しを2バケットのタブへ。件数は共通 .ktn-count--pill・active は親 .is-active で page-accent 化） */
+.p314-tabs{display:flex;border-bottom:2px solid var(--border);overflow-x:auto;scrollbar-width:none}
+.p314-tabs::-webkit-scrollbar{display:none}
+.p314-tab{background:none;border:none;border-bottom:2px solid transparent;padding:9px 16px;font-family:var(--fn);font-size:.82rem;font-weight:400;color:var(--muted);cursor:pointer;display:inline-flex;align-items:center;gap:6px;margin-bottom:-2px;transition:color .15s;white-space:nowrap}
+.p314-tab.is-active{color:var(--page-accent);border-bottom-color:var(--page-accent);font-weight:600}
+/* 売約済タブの注記（取引完了作品の説明） */
+.p314-sold-notice{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:4px;font-size:.78rem;line-height:1.65;background:var(--paper);border:1px solid var(--border);color:var(--ink)}
+.p314-sold-notice[hidden]{display:none}
+.p314-sold-notice .p314-notice__icon{flex-shrink:0;margin-top:2px;color:var(--muted)}
+.p314-sold-notice .p314-notice__body strong{font-weight:700}
 /* 一覧 */
 .p314-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
-.p314-item{border:1px solid var(--border);border-radius:4px;background:#fff}
+.p314-item{border:1px solid var(--border);border-radius:4px;background:#fff;position:relative}
 .p314-item__main{display:flex;gap:14px;padding:14px 14px 12px}
 /* カードクリック＝作品ページへ（2026-07-20 ユーザー指定。矢印は付けず hover affordance で示す） */
 .p314-item__main--link{cursor:pointer}
@@ -11643,7 +11723,7 @@ label.p211-liaison-opt{cursor:pointer}
 .p314-item__thumb{flex-shrink:0;width:72px;height:72px;border-radius:3px}
 .p314-item__body{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
 .p314-item__title-row{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
-.p314-item__title{font-family:var(--fs);font-size:.95rem;font-weight:600;color:var(--ink)}
+.p314-item__title{display:block;margin-top:4px;font-family:var(--fs);font-size:.95rem;font-weight:600;color:var(--ink);line-height:1.4}
 .p314-item__meta{font-size:.74rem;color:var(--muted)}
 .p314-item__exhs{display:flex;flex-wrap:wrap;gap:8px;margin-top:2px}
 /* 出品中/取引完了/未出品マーク（一覧はマークのみ・出品先の展覧会名は詳細内の出品歴へ＝2026-07-20） */
@@ -11651,6 +11731,29 @@ label.p211-liaison-opt{cursor:pointer}
 .p314-item__unlisted{font-family:var(--fm);font-size:.62rem;font-weight:600;letter-spacing:.06em;color:var(--muted);padding:2px 8px;border:1px dashed var(--border);border-radius:3px}
 /* 取引完了＝LIAISON+オンライン取引で売約済（出品候補から外れた確定状態＝solid ink で「確定」を表す） */
 .p314-item__done{font-family:var(--fm);font-size:.62rem;font-weight:600;letter-spacing:.06em;color:#fff;background:var(--ink);border:1px solid var(--ink);border-radius:3px;padding:2px 8px}
+/* 下書きアイテムのカード地をくすみブルーグレーで区別（作業中の在庫・ブックマークと同系） */
+.p314-item--draft{background:rgba(91,100,112,.09)}
+/* 下書きブックマーク（右肩から下がる縦長の短冊＋下端V字切込み＝しおり形・縦書き。色は未完成を表すくすみブルーグレー＝ブランド/ロール色と非干渉） */
+.p314-item__ribbon{position:absolute;top:0;right:16px;writing-mode:vertical-rl;padding:10px 7px 16px;font-family:var(--fm);font-size:.63rem;font-weight:600;letter-spacing:.08em;line-height:1;color:#fff;background:#5b6470;clip-path:polygon(0 0,100% 0,100% 100%,50% 90%,0 100%);filter:drop-shadow(0 2px 3px rgba(0,0,0,.2));pointer-events:none;z-index:2}
+/* 下書きの説明バナー（一覧上部・公開/非公開の注記と同列。下書きがある時のみJSで表示）。
+   カード毎の重複説明を避け、下書きの意味・作品数除外・最上部固定を一箇所に集約＝2026-07-21 */
+.p314-draft-banner{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;background:rgba(91,100,112,.09);border:1px solid rgba(91,100,112,.32);border-radius:4px}
+.p314-draft-banner[hidden]{display:none}
+.p314-draft-banner[hidden]{display:none}
+.p314-draft-banner__icon{flex-shrink:0;color:#5b6470;margin-top:1px}
+.p314-draft-banner__body{font-family:var(--fn);font-size:.78rem;line-height:1.7;color:#333a41}
+.p314-draft-banner__body strong{color:#2a3138;font-weight:700}
+/* 下書きのアクション行はトグルが無い。「下書きを破棄」＋「編集を再開 →」を右にまとめて隣接配置（破棄が再開の左横） */
+.p314-item__actions--draft{justify-content:flex-end}
+/* 削除／下書き破棄 確認モーダル（p3-14/p4-14 共有・破壊操作の confirm。.p515-modal と同レシピ） */
+.p314-del-modal{position:fixed;inset:0;z-index:900;display:flex;align-items:center;justify-content:center;padding:20px}
+.p314-del-modal[hidden]{display:none}
+.p314-del-modal__bg{position:absolute;inset:0;background:rgba(0,0,0,.48)}
+.p314-del-modal__panel{position:relative;background:#fff;border-radius:6px;width:100%;max-width:400px;box-shadow:0 8px 40px rgba(0,0,0,.18);padding:22px 22px 20px}
+.p314-del-modal__title{font-family:var(--fn);font-size:.98rem;font-weight:700;color:var(--ink);margin:0 0 12px}
+.p314-del-modal__desc{font-family:var(--fn);font-size:.82rem;color:#333a41;line-height:1.8;margin:0}
+.p314-del-modal__name{display:block;font-family:var(--fs);font-size:.92rem;font-weight:600;color:var(--ink);margin-bottom:6px}
+.p314-del-modal__actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
 .p314-item__side{flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:8px}
 /* 一覧の販売状態＋価格表示（.p314-item__last 系）は廃止（2026-07-20 詳細の出品歴内へ集約） */
 /* 登録日・更新日（p5-1 .p5-1-watch-date と同レシピ＝さりげなく右下） */
@@ -11701,46 +11804,16 @@ a.p314-hist__name:hover{color:var(--page-accent)}
   .p314-item__actions{flex-wrap:wrap}
 }
 
-/* ══ P4-14 作品インベントリー管理（ギャラリー版）══ */
-/* 注記バナー（非公開・真正性） */
-.p414-notice,.p414-authenticity{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:4px;font-size:.78rem;line-height:1.65}
-.p414-notice{background:var(--paper);border:1px solid var(--border);color:var(--ink)}
-.p414-notice__icon{flex-shrink:0;margin-top:2px;color:var(--muted)}
-.p414-notice__body strong{font-weight:700}
-.p414-authenticity{background:var(--page-accent-bg);border:1px solid var(--page-accent-border);color:var(--ink)}
-.p414-authenticity__icon{flex-shrink:0;margin-top:2px;color:var(--page-accent)}
-.p414-authenticity__body strong{font-weight:700}
-/* ツールバー */
-.p414-toolbar{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
-.p414-toolbar__filters{display:flex;gap:14px;flex-wrap:wrap}
-.p414-filter{display:flex;flex-direction:column;gap:4px}
-.p414-filter__label{font-family:var(--fm);font-size:.58rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-.p414-filter__sel{font-family:var(--fn);font-size:.82rem;padding:7px 10px;border:1px solid var(--border);border-radius:4px;background:#fff;color:var(--ink);min-width:170px}
-.p414-new-btn{display:inline-flex;align-items:center;gap:6px;text-decoration:none;white-space:nowrap}
-/* 件数 */
-.p414-count-row{display:flex;align-items:baseline;gap:3px;border-bottom:1px solid var(--border);padding-bottom:8px}
-.p414-count{font-family:var(--fm);font-size:1.05rem;font-weight:600;color:var(--ink)}
-.p414-count-row__unit{font-size:.72rem;color:var(--muted)}
-/* 一覧 */
-.p414-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
-.p414-item{display:flex;gap:14px;padding:14px;border:1px solid var(--border);border-radius:4px;background:#fff}
-.p414-item__thumb{flex-shrink:0;width:72px;height:72px;border-radius:3px}
-.p414-item__body{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
-.p414-item__title-row{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
-.p414-item__title{font-family:var(--fs);font-size:.95rem;font-weight:600;color:var(--ink)}
+/* ══ P4-14 作品インベントリー管理（ギャラリー版）══
+   構造・カード・注記・ツールバー・一覧は p3-14 と共通（.p314-* を再利用）。
+   ギャラリー固有の追加＝真正性の注記／カードの作者行／新規作成の作者ピッカーのみ .p414-*。
+   （2026-07-20 パリティ化＝重複していた .p414-notice/toolbar/filter/count/list/item/exh/side/empty を
+   　.p314-* へ統合し削除。p315/p316 と同方式） */
+/* カードの作者行（複数作家を束ねるギャラリー固有の軸）＝ .p314-item__body の中に置く */
 .p414-item__author{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .p414-item__author-label{font-family:var(--fm);font-size:.56rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .p414-item__author .cb{font-size:.56rem}
 .p414-item__author-name{font-size:.82rem;color:var(--ink)}
-.p414-item__meta{font-size:.74rem;color:var(--muted)}
-.p414-item__exhs{display:flex;flex-wrap:wrap;gap:8px;margin-top:2px}
-.p414-item__exh{display:inline-flex;align-items:center;gap:6px;font-size:.72rem;color:var(--ink)}
-.p414-item__exh-name{color:var(--muted)}
-.p414-item__unlisted{font-family:var(--fm);font-size:.62rem;font-weight:600;letter-spacing:.06em;color:var(--muted);padding:2px 8px;border:1px dashed var(--border);border-radius:3px}
-.p414-item__side{flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between;gap:10px}
-.p414-item__edit{white-space:nowrap}
-.p414-empty{padding:36px 20px;text-align:center}
-.p414-empty__msg{font-size:.85rem;color:var(--muted)}
 /* 新規作品：作者選択モーダル */
 .p414-picker{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
 .p414-picker[hidden]{display:none}
@@ -11767,14 +11840,7 @@ a.p314-hist__name:hover{color:var(--page-accent)}
 .p414-picker__opt-verify:hover{color:var(--accent-d)}
 .p414-picker__opt-select{flex:0 0 auto;white-space:nowrap}
 .p414-picker__empty{margin:14px 0 0;font-size:.8rem;text-align:center;color:var(--muted)}
-@media(max-width:540px){
-  .p414-toolbar{flex-direction:column;align-items:stretch}
-  .p414-toolbar__filters{flex-direction:column}
-  .p414-filter__sel{min-width:0;width:100%}
-  .p414-new-btn{justify-content:center}
-  .p414-item{flex-wrap:wrap}
-  .p414-item__side{flex-direction:row;width:100%;align-items:center;justify-content:space-between}
-}
+/* レスポンシブは .p314-* の @media(max-width:540px) が共通適用（toolbar/filter/item） */
 
 @media(max-width:540px){
   .p211-row{flex-direction:column}
@@ -11782,6 +11848,7 @@ a.p314-hist__name:hover{color:var(--page-accent)}
   .p211-facility-detail,.p211-facility-price{padding-left:0}
   .p211-datetime-pair{flex-wrap:wrap}
   .p211-submit-bar{flex-wrap:wrap}   /* 下書き保存＋充実度メーターが加わり4要素のため折返し許可 */
+  .p211-submit-bar__row{flex-wrap:wrap}   /* 2段レイアウトの下段（ボタン＋メーター）も折返し許可 */
   .p211-submit-bar__note{display:none}
 }
 

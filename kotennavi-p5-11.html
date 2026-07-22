@@ -225,6 +225,16 @@
           </div>
         </div>
 
+        <!-- 管理者コメント欄（role=admin のときのみ表示・共通 syncAdminNote が切替） -->
+        <div class="ktn-admin-note" id="p511AdminNote" hidden>
+          <div class="ktn-admin-note__head">
+            <span class="ktn-admin-note__badge">Admin</span>
+            <span class="ktn-admin-note__title">管理者コメント</span>
+          </div>
+          <p class="ktn-admin-note__desc">管理上の対応履歴・申し送りを記録します。管理者のみが閲覧できます。</p>
+          <textarea class="ktn-admin-note__textarea" id="p511AdminComment" placeholder="例：2026-07-20 不適切な自己紹介文について注意喚起。"></textarea>
+        </div>
+
         <!-- 送信バー -->
         <div class="p211-submit-bar">
           <button class="p211-submit-bar__cancel ktn-op-btn" type="button" onclick="history.back()">キャンセル</button>

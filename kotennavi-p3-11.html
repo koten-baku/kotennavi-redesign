@@ -118,15 +118,23 @@
           <div class="p211-block__body">
 
             <!-- ジャンル -->
-            <div class="p211-row">
-              <div class="p211-field">
-                <label class="p211-label" for="p311Genre">ジャンル</label>
-                <input class="p211-input" id="p311Genre" type="text" value="絵画・現代美術">
+            <div class="p211-field">
+              <label class="p211-label">ジャンル</label>
+              <p class="p211-help" style="margin-bottom:6px">活動にもっとも近いジャンルを選んでください（複数可）。</p>
+              <div class="p211-pill-group" id="p311GenreGroup">
+                <label class="p211-pill is-active"><input type="checkbox" name="p311genre" value="art" checked>アート</label>
+                <label class="p211-pill"><input type="checkbox" name="p311genre" value="craft">クラフト</label>
+                <label class="p211-pill"><input type="checkbox" name="p311genre" value="fashion">ファッション</label>
+                <label class="p211-pill"><input type="checkbox" name="p311genre" value="photo">写真</label>
+                <label class="p211-pill"><input type="checkbox" name="p311genre" value="arch">建築</label>
+                <label class="p211-pill"><input type="checkbox" name="p311genre" value="other">その他</label>
               </div>
-              <div class="p211-field">
-                <label class="p211-label" for="p311Base">活動拠点</label>
-                <input class="p211-input" id="p311Base" type="text" value="東京">
-              </div>
+            </div>
+
+            <!-- 活動拠点 -->
+            <div class="p211-field">
+              <label class="p211-label" for="p311Base">活動拠点</label>
+              <input class="p211-input" id="p311Base" type="text" value="東京">
             </div>
 
             <!-- 作品ブランド -->
@@ -250,6 +258,16 @@
           </div>
         </div>
 
+        <!-- 管理者コメント欄（role=admin のときのみ表示・共通 syncAdminNote が切替） -->
+        <div class="ktn-admin-note" id="p311AdminNote" hidden>
+          <div class="ktn-admin-note__head">
+            <span class="ktn-admin-note__badge">Admin</span>
+            <span class="ktn-admin-note__title">管理者コメント</span>
+          </div>
+          <p class="ktn-admin-note__desc">管理上の対応履歴・申し送りを記録します。管理者のみが閲覧できます。</p>
+          <textarea class="ktn-admin-note__textarea" id="p311AdminComment" placeholder="例：2026-07-20 本人確認書類を確認・承認。"></textarea>
+        </div>
+
         <!-- 送信バー -->
         <div class="p211-submit-bar">
           <button class="ktn-op-btn" type="button" onclick="history.back()">キャンセル</button>
@@ -266,5 +284,19 @@
 <script src="kotennavi-common.js"></script>
 <script src="kotennavi-pages.js"></script>
 <script>KTN.init({ page: 'p3-11', role: 'creator' });</script>
+<script>
+/* ── ピル選択の active 切り替え（input の checked 状態から同期） ── */
+document.querySelectorAll('.p211-pill-group').forEach(function (group) {
+  function syncPills() {
+    group.querySelectorAll('.p211-pill').forEach(function (p) {
+      var inp = p.querySelector('input');
+      if (inp) p.classList.toggle('is-active', inp.checked);
+    });
+  }
+  group.querySelectorAll('input').forEach(function (inp) {
+    inp.addEventListener('change', syncPills);
+  });
+});
+</script>
 </body>
 </html>

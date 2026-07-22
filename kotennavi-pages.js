@@ -1289,8 +1289,7 @@ var _p6Works = [
     note:'「庭」という言葉を頭に浮かべたとき、まず耳に届いたのは「しんと静まり返った空気感」と「葉が揺れる微かな音」だった。その二つの感覚が混ざり合う瞬間を、画面の上で再現しようと試みた。',
     tags:['絵画','油彩','現代美術','抽象','オノマトペ','F30号','2026年制作'],
     extras:[
-      { lbl:'作品のケアについて', body:'油彩作品のため、直射日光・高温多湿の環境を避けて保管ください。額装ガラスは紫外線カットタイプを推奨します。表面の汚れは乾いた柔らかい布で軽く拭き取るのみとし、洗剤・溶剤の使用は避けてください。' },
-      { lbl:'展示・設置について', body:'フローティングフレーム仕様のため、壁から数センチ浮いた形で設置されます。取付金具・ワイヤー付属。壁の耐荷重をご確認のうえ設置をお願いします。設置方法についてご不明な点はお気軽にお問い合わせください。' },
+      { lbl:'その他', body:'油彩作品のため、直射日光・高温多湿の環境を避けて保管してください。額装ガラスは紫外線カットタイプを推奨します。フローティングフレーム仕様のため壁から数センチ浮かせて設置され、取付金具・ワイヤーが付属します。壁の耐荷重をご確認のうえ設置してください。' },
     ],
   },
   { id:2, no:1, awid:'AW-C42-1731', title:'ふわふわ', titleEn:'Fuwafuwa',
@@ -1309,7 +1308,7 @@ var _p6Works = [
     note:'「ふわふわ」と口に出したとき、舌の動きが生み出す柔らかさを、そのまま絵の具に置き換えたかった。',
     tags:['絵画','油彩','現代美術','抽象','F20号','2026年制作'],
     extras:[
-      { lbl:'作品のケアについて', body:'油彩・キャンバス作品です。直射日光と湿気を避け、温度変化の少ない環境での保管をお願いします。' },
+      { lbl:'その他', body:'油彩・キャンバス作品です。直射日光と湿気を避け、温度変化の少ない環境での保管をお願いします。' },
     ],
   },
   { id:3, no:2, awid:'AW-C42-1808', title:'ドキドキ #3', titleEn:'Dokidoki #3',
@@ -1468,18 +1467,8 @@ function _p6Init(opts) {
     if (el) el.innerHTML = w.desc.map(function(p) { return '<p>' + p + '</p>'; }).join('');
     el = document.getElementById('descTags');
     if (el) el.innerHTML = w.tags.map(function(t) { return '<span class="wd-tag">' + t + '</span>'; }).join('');
-    var blocks = [];
-    if (w.note) {
-      blocks.push('<div class="wd-note"><div class="wd-note-lbl">制作ノート</div>' +
-        '<div class="wd-note-body">' + w.note + '</div>' +
-        '<div class="wd-note-sig">— ' + w.creator + ' / ' + w.creatorEn + ', ' + w.year + '</div></div>');
-    }
-    (w.extras || []).forEach(function(ex) {
-      blocks.push('<div class="wd-note"><div class="wd-note-lbl">' + ex.lbl + '</div>' +
-        '<div class="wd-note-body" style="font-style:normal;font-size:.74rem">' + ex.body + '</div></div>');
-    });
-    el = document.getElementById('descRightCol');
-    if (el) el.innerHTML = blocks.join('');
+    /* 「その他」（extras）は作品仕様（#p6Specs）に全幅行として描画する（initExtra 内）。
+       ※ 制作ノート（w.note）は現行レイアウトに表示枠が無く従来から未描画のためここでは扱わない（別途整備）。 */
     if (opts.initExtra) opts.initExtra(WORK);
   }
 
@@ -2110,10 +2099,18 @@ KTN.pages['p6'] = function() {
         { lbl:'\u4ed8\u5c5e\u54c1',   val: w.accessories },
       ];
       el = document.getElementById('p6Specs');
-      if (el) el.innerHTML = specs
-        .filter(function(r) { return r.always || r.val; })
-        .map(function(r) { return '<dt>' + r.lbl + '</dt><dd>' + r.val + '</dd>'; })
-        .join('');
+      if (el) {
+        var specHtml = specs
+          .filter(function(r) { return r.always || r.val; })
+          .map(function(r) { return '<dt>' + r.lbl + '</dt><dd>' + r.val + '</dd>'; })
+          .join('');
+        /* 「その他」（extras）は仕様の補足として末尾に全幅行で追加（長文のため 2カラム grid をまたぐ） */
+        specHtml += (w.extras || []).map(function(ex) {
+          return '<dt class="p6-hero__specs-full p6-hero__specs-full--lbl">' + ex.lbl + '</dt>' +
+            '<dd class="p6-hero__specs-full">' + ex.body + '</dd>';
+        }).join('');
+        el.innerHTML = specHtml;
+      }
       /* サムネイル */
       el = document.getElementById('p6Thumbs');
       if (el && w.thumbs) {
@@ -2769,12 +2766,21 @@ KTN.pages['p2-121'] = function() {
     return iso.replace(/-/g, '.');
   }
   function fmtRange(s, e) { return fmtDate(s) + ' — ' + fmtDate(e); }
+  function fmtTime(t) {
+    // '00:00' → '0:00' / '23:59' → '23:59'（時の先頭0を落とす）
+    if (!t) return '';
+    var p = t.split(':');
+    return parseInt(p[0], 10) + ':' + p[1];
+  }
+  function fmtDT(d, t) { return fmtDate(d) + ' ' + fmtTime(t); }
 
   /* ── 販売期間設定 ── */
   var radios      = document.querySelectorAll('input[name="p2121Period"]');
   var customPicker = document.getElementById('p2121CustomPicker');
   var dateStart   = document.getElementById('p2121DateStart');
   var dateEnd     = document.getElementById('p2121DateEnd');
+  var timeStart   = document.getElementById('p2121TimeStart');
+  var timeEnd     = document.getElementById('p2121TimeEnd');
   var customPreview = document.getElementById('p2121CustomPreview');
 
   function getCheckedValue() {
@@ -2787,8 +2793,11 @@ KTN.pages['p2-121'] = function() {
   function updateCustomPreview() {
     if (!dateStart || !dateEnd || !customPreview) return;
     var s = dateStart.value, e = dateEnd.value;
-    if (s && e && s <= e) {
-      customPreview.textContent = fmtRange(s, e);
+    var st = timeStart ? timeStart.value : '00:00';
+    var et = timeEnd ? timeEnd.value : '23:59';
+    // 同日は開始時刻 <= 終了時刻を要求
+    if (s && e && (s < e || (s === e && st <= et))) {
+      customPreview.textContent = fmtDT(s, st) + ' — ' + fmtDT(e, et);
     } else {
       customPreview.textContent = '日程を選択';
     }
@@ -2820,6 +2829,8 @@ KTN.pages['p2-121'] = function() {
   if (dateEnd) {
     dateEnd.addEventListener('change', updateCustomPreview);
   }
+  if (timeStart) timeStart.addEventListener('change', updateCustomPreview);
+  if (timeEnd)   timeEnd.addEventListener('change', updateCustomPreview);
 
   /* ── 以下：作品リスト（p2-12 と同一ロジック） ── */
   var STATUS = [
@@ -3000,9 +3011,9 @@ KTN.pages['p2-121'] = function() {
       } else {
         lockBadge = '<span class="p2-121-lock-badge p2-121-lock-badge--sold">売約済</span>';
         lockNote  = '<span class="p2-121-lock-note">取引完了</span>';
-        hintText  = '取引が成立した作品のため、詳細は取引デスクで確認して下さい。';
-        ctaLabel  = '取引デスク';
-        ctaHref   = 'kotennavi-p3-16.html';
+        hintText  = '取引が成立した作品のため、詳細はリエゾン+コンソールで確認して下さい。';
+        ctaLabel  = 'リエゾン+コンソール';
+        ctaHref   = 'kotennavi-p3-15.html';
       }
       settingsHtml =
         '<div class="p2-12-work-card__settings p2-12-work-card__settings--locked">'+
@@ -4477,24 +4488,23 @@ KTN.pages['p3-3'] = function () {
     }
   });
 
-  // 5. 作品フィルター絞り込み
+  // 5. 作品フィルター絞り込み・並べ替え
   (function(){
     var selects = document.querySelectorAll('.p3-3-filter__select');
     var filterCountEl = document.getElementById('p3FilterCount');
     var emptyEl = document.getElementById('p3FilterEmpty');
+    var grid = document.getElementById('p3WorksGrid');
+    var sortSel = document.getElementById('p3SortBy');
+    var defaultOrder = grid ? Array.prototype.slice.call(grid.querySelectorAll('.aw')) : [];
 
     function filterWorks() {
       var liaison = document.getElementById('p3FilterLiaison') ? document.getElementById('p3FilterLiaison').value : '';
-      var status  = document.getElementById('p3FilterStatus')  ? document.getElementById('p3FilterStatus').value  : '';
-      var genre   = document.getElementById('p3FilterGenre')   ? document.getElementById('p3FilterGenre').value   : '';
       var year    = document.getElementById('p3FilterYear')    ? document.getElementById('p3FilterYear').value    : '';
-      var hasFilter = !!(liaison || status || genre || year);
+      var hasFilter = !!(liaison || year);
       var totalVisible = 0;
 
       document.querySelectorAll('.p3-3-grid .aw').forEach(function(card){
         var match = (!liaison || card.dataset.liaison === liaison)
-                 && (!status  || card.dataset.status  === status)
-                 && (!genre   || card.dataset.genre   === genre)
                  && (!year    || card.dataset.year    === year);
         if (match) {
           card.removeAttribute('hidden');
@@ -4515,7 +4525,33 @@ KTN.pages['p3-3'] = function () {
       if (emptyEl) emptyEl.classList.toggle('is-visible', totalVisible === 0);
     }
 
+    var TIER = { 'liaison-plus': 0, 'liaison': 1, 'normal': 2 };
+    function tierRank(c){ var r = TIER[c.dataset.liaison]; return r === undefined ? 3 : r; }
+    function titleOf(c){ var el = c.querySelector('.aw__title'); return el ? el.textContent.replace(/[《》]/g, '').trim() : ''; }
+    function favOf(c){ var el = c.querySelector('.aw__counter'); return el ? (parseInt(el.textContent.replace(/[^\d]/g, ''), 10) || 0) : 0; }
+
+    function sortWorks() {
+      if (!grid) return;
+      var v = sortSel ? sortSel.value : '';
+      var arr = defaultOrder.slice();
+      if (v === 'added') {
+        arr.sort(function(a, b){ return (parseInt(b.dataset.added, 10) || 0) - (parseInt(a.dataset.added, 10) || 0); });
+      } else if (v === 'year-desc') {
+        arr.sort(function(a, b){ return (parseInt(b.dataset.year, 10) || 0) - (parseInt(a.dataset.year, 10) || 0); });
+      } else if (v === 'year-asc') {
+        arr.sort(function(a, b){ return (parseInt(a.dataset.year, 10) || 0) - (parseInt(b.dataset.year, 10) || 0); });
+      } else if (v === 'title') {
+        arr.sort(function(a, b){ return titleOf(a).localeCompare(titleOf(b), 'ja'); });
+      } else if (v === 'fav') {
+        arr.sort(function(a, b){ return favOf(b) - favOf(a); });
+      } else {
+        arr.sort(function(a, b){ return tierRank(a) - tierRank(b); });
+      }
+      arr.forEach(function(c){ grid.appendChild(c); });
+    }
+
     selects.forEach(function(sel){ sel.addEventListener('change', filterWorks); });
+    if (sortSel) sortSel.addEventListener('change', sortWorks);
   })();
 
   // 6. creator本人: 申込中カードにコンソールボタン表示
@@ -6547,16 +6583,21 @@ KTN.pages['p3-14'] = function () {
   var EXH_PAST3 = { mode:'lp', n:'音のかたち、かたちの音',     term:'2025.11.15 — 11.30', state:'ended', href:'kotennavi-p2.html' };
   /* online:true＝LIAISON+のオンライン取引で成立した売約済（取引完了）。
      手動売約済（会場売却等・オーナー設定）と区別し、取引完了の作品は出品候補から外れる（仕様書 第7章/第17章） */
-  function rec(exh, sale, price, online) {
-    return { mode:exh.mode, n:exh.n, term:exh.term, state:exh.state, href:exh.href, sale:sale, price:price || '', online:!!online };
+  function rec(exh, sale, price, online, queue) {
+    return { mode:exh.mode, n:exh.n, term:exh.term, state:exh.state, href:exh.href, sale:sale, price:price || '', online:!!online, queue:queue || 0 };
   }
   /* awid＝作品ID（作品作成時にシステムが自動採番＝登録日順に増加。AW-C42-1847=《オノマトペの庭》は
      p3-15/p3-16/p5-14/p5-15/p6 の既存デモIDと同一） */
   var WORKS = [
+    /* 下書き（p6-11 の一時保存で作成・未完成＝サイズ未入力）。pub:false 固定・hist なし＝公開/出品候補に出ない */
+    { id:'w10', title:'《かさかさ》',       awid:'AW-C42-1852', year:'2026年', medium:'キャンバスに油彩', size:'', bg:'linear-gradient(155deg,#e0d4bc,#b8a884)', pub:false, reg:'2026.2.22', upd:'2026.2.22', rs:20260222, draft:true,
+      hist:[], memo:'サイズ未確定。写真を撮り直してから仕上げる。' },
+    { id:'w11', title:'《まだらの朝（仮）》', awid:'AW-C42-1849', year:'2026年', medium:'', size:'', bg:'linear-gradient(155deg,#d8c8b0,#a89878)', pub:false, reg:'2026.2.10', upd:'2026.2.14', rs:20260210, draft:true,
+      hist:[], memo:'技法・サイズ未定。タイトルも仮。会期に間に合えば出品検討。' },
     { id:'w1', title:'《オノマトペの庭》',  awid:'AW-C42-1847', year:'2026年', medium:'キャンバスに油彩', size:'116.7×91.0cm', bg:'linear-gradient(155deg,#b8d8cc,#6a9e8a)', pub:true,  reg:'2026.1.12', upd:'2026.2.20', rs:20260112,
       hist:[rec(EXH_NOW,'inquiry')], memo:'DM掲載作品。会期初日に価格の問い合わせ1件（未提示・要問合せのまま様子見）。' },
     { id:'w2', title:'《ふわふわ》',        awid:'AW-C42-1731', year:'2025年', medium:'キャンバスに油彩', size:'72.7×60.6cm',  bg:'linear-gradient(155deg,#f0e8d0,#d4b896)', pub:true,  reg:'2025.4.3',  upd:'2026.2.18', rs:20250403,
-      hist:[rec(EXH_NOW,'sale','¥180,000'), rec(EXH_PAST,'sale','¥165,000')], memo:'前回出品 ¥165,000 → 今回 ¥180,000 に改定。初日から興味あり！が多め。' },
+      hist:[rec(EXH_NOW,'sale','¥180,000',false,2), rec(EXH_PAST,'sale','¥165,000')], memo:'前回出品 ¥165,000 → 今回 ¥180,000 に改定。初日から興味あり！が多め。現在2件の購入申込あり（取引準備中）。' },
     { id:'w3', title:'《ざわざわ（夜）》',   awid:'AW-C42-1790', year:'2025年', medium:'アクリル・パネル', size:'53.0×45.5cm',  bg:'linear-gradient(155deg,#3d3530,#1f1a18)', pub:true,  reg:'2025.9.20', upd:'2026.1.30', rs:20250920,
       hist:[rec(EXH_NOW,'nonsale')], memo:'' },
     { id:'w4', title:'《ドキドキ #3》',     awid:'AW-C42-1815', year:'2025年', medium:'キャンバスに油彩', size:'45.5×38.0cm',  bg:'linear-gradient(155deg,#f0d0d0,#c88080)', pub:false, reg:'2025.11.8', upd:'2025.11.8', rs:20251108,
@@ -6574,13 +6615,22 @@ KTN.pages['p3-14'] = function () {
   ];
 
   /* ── DOM ── */
-  var listEl    = document.getElementById('p314List');
-  var countEl   = document.getElementById('p314Count');
-  var emptyEl   = document.getElementById('p314Empty');
-  var pubSel    = document.getElementById('p314FilterPub');
-  var listedSel = document.getElementById('p314FilterListed');
-  var sortSel   = document.getElementById('p314Sort');
-  if (!listEl || !countEl || !pubSel || !listedSel || !sortSel) return;
+  var listEl      = document.getElementById('p314List');
+  var emptyEl     = document.getElementById('p314Empty');
+  var pubSel      = document.getElementById('p314FilterPub');
+  var listedSel   = document.getElementById('p314FilterListed');
+  var sortSel     = document.getElementById('p314Sort');
+  var draftBanner = document.getElementById('p314DraftBanner');
+  var draftCntEl  = document.getElementById('p314DraftCount');
+  var tabActive   = document.getElementById('p314TabActive');
+  var tabSold     = document.getElementById('p314TabSold');
+  var cntActive   = document.getElementById('p314CountActive');
+  var cntSold     = document.getElementById('p314CountSold');
+  var soldNotice  = document.getElementById('p314SoldNotice');
+  var listedWrap  = document.getElementById('p314FilterListedWrap');
+  if (!listEl || !pubSel || !listedSel || !sortSel) return;
+
+  var curTab = 'active'; /* 'active' | 'sold' */
 
   /* 詳細アコーディオンの開閉状態（再描画をまたいで維持） */
   var openIds = {};
@@ -6593,6 +6643,14 @@ KTN.pages['p3-14'] = function () {
   function isSoldOnline(w) {
     return w.hist.some(function (h) { return h.sale === 'sold' && h.online; });
   }
+
+  /* 販売中かつ購入申込あり（取引準備中）＝作品の編集を凍結する。申込者は現在の作品内容に対して申し込んでいるため */
+  function hasLiveApply(w) {
+    return w.hist.some(function (h) { return h.state === 'now' && h.sale === 'sale' && h.queue > 0; });
+  }
+
+  /* 下書き＝p6-11 の一時保存で作られた未完成作品（在庫のみ・公開/検索/出品候補に出ない） */
+  function isDraft(w) { return !!w.draft; }
 
   function p611Link(mode, id) {
     return 'kotennavi-p6-11.html?mode=' + mode + '&author=tanaka&self=1&work=' + encodeURIComponent(id);
@@ -6612,12 +6670,18 @@ KTN.pages['p3-14'] = function () {
   function makeItem(w) {
     var listed = isListed(w);
     var soldOnline = isSoldOnline(w);
-    /* 一覧には出品中/取引完了/未出品のマークのみ（出品先の展覧会名・出品歴は詳細内） */
-    var exhHtml = listed
-      ? '<span class="p314-item__listed">出品中</span>'
-      : soldOnline
-        ? '<span class="p314-item__done">取引完了</span>'
-        : '<span class="p314-item__unlisted">未出品</span>';
+    var liveApply = hasLiveApply(w);
+    var draft = isDraft(w);
+    /* 削除可否：下書きは破棄可。完成作品は「出品中（ライブ）」「取引完了（凍結・購入者所有）」以外は削除可 */
+    var canDelete = draft || (!listed && !soldOnline);
+    /* 一覧には下書き/出品中/取引完了/未出品のマークのみ（出品先の展覧会名・出品歴は詳細内） */
+    var exhHtml = draft
+      ? ''
+      : listed
+        ? '<span class="p314-item__listed">出品中</span>'
+        : soldOnline
+          ? '<span class="p314-item__done">売約済（取引完了）</span>'
+          : '<span class="p314-item__unlisted">未出品</span>';
 
     var histHtml = w.hist.length
       ? '<ul class="p314-hist">' + w.hist.map(function (h) {
@@ -6648,50 +6712,67 @@ KTN.pages['p3-14'] = function () {
     var open = !!openIds[w.id];
     var wl = workLink(w);
     var li = document.createElement('li');
-    li.className = 'p314-item';
+    li.className = 'p314-item' + (draft ? ' p314-item--draft' : '');
     li.dataset.id = w.id;
     li.innerHTML =
+      (draft ? '<span class="p314-item__ribbon">下書き</span>' : '') +
       '<div class="p314-item__main' + (wl ? ' p314-item__main--link" title="クリックで作品ページを新しいタブで表示' : '') + '">' +
         '<div class="p314-item__thumb" style="background:' + w.bg + '"></div>' +
         '<div class="p314-item__body">' +
           '<div class="p314-item__title-row">' +
             '<span class="cb cb-content cb-artwork">artwork</span>' +
             '<span class="ktn-aw-id">' + w.awid + '</span>' +
-            '<span class="p314-item__title">' + w.title + '</span>' +
           '</div>' +
+          '<div class="p314-item__title">' + w.title + '</div>' +
           '<div class="p314-item__meta">' + [w.year, w.medium, w.size].filter(Boolean).join('　') + '</div>' +
           '<div class="p314-item__exhs">' + exhHtml + '</div>' +
         '</div>' +
         '<div class="p314-item__side">' +
-          '<button type="button" class="ktn-switch p314-pub-sw' + (w.pub ? ' is-on' : '') +
-            '" role="switch" aria-checked="' + w.pub + '" title="クリックで公開/非公開を切り替え">' +
-            '<span class="ktn-switch__track"><span class="ktn-switch__knob"></span></span>' +
-            '<span class="ktn-switch__label">' + (w.pub ? '公開中' : '非公開') + '</span>' +
-          '</button>' +
+          /* 下書きは公開できない＝スイッチ自体を出さない（右肩の「下書き」リボン＋詳細ノートで代替） */
+          (draft
+            ? ''
+            : '<button type="button" class="ktn-switch p314-pub-sw' + (w.pub ? ' is-on' : '') +
+                '" role="switch" aria-checked="' + w.pub + '" title="クリックで公開/非公開を切り替え">' +
+                '<span class="ktn-switch__track"><span class="ktn-switch__knob"></span></span>' +
+                '<span class="ktn-switch__label">' + (w.pub ? '公開中' : '非公開') + '</span>' +
+              '</button>') +
         '</div>' +
       '</div>' +
       '<div class="p314-item__dates">登録 ' + w.reg + '<span class="p314-item__dates-sep">·</span>更新 ' + w.upd + '</div>' +
-      '<div class="p314-item__actions">' +
-        '<button type="button" class="p314-item__toggle" aria-expanded="' + open + '">' + (open ? '詳細を閉じる ▴' : '詳細を表示 ▾') + '</button>' +
-        '<a class="ktn-action-btn" href="' + p611Link('clone', w.id) + '">クローン →</a>' +
-        /* 取引完了作品はレコード凍結＝編集導線を出さない（クローン・公開切替は可） */
-        (soldOnline ? '' : '<a class="ktn-action-btn" href="' + p611Link('edit', w.id) + '">編集 →</a>') +
+      /* 下書きの説明は一覧上部のバナー（#p314DraftBanner）に集約。カードは編集再開のみ */
+      '<div class="p314-item__actions' + (draft ? ' p314-item__actions--draft' : '') + '">' +
+        /* 下書きは出品歴/メモの展開トグルを出さない（完成が先） */
+        (draft ? '' : '<button type="button" class="p314-item__toggle" aria-expanded="' + open + '">' + (open ? '出品歴・メモを閉じる ▴' : '出品歴・メモを表示 ▾') + '</button>') +
+        /* 削除／下書き破棄（確認モーダルで確定）。出品中＝ライブ・取引完了＝凍結のため出さない */
+        (canDelete ? '<button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline p314-item__del">' + (draft ? '下書きを破棄' : '削除') + '</button>' : '') +
+        /* 下書き＝編集の再開のみ（クローンは完成作品向けなので出さない） */
+        (draft
+          ? '<a class="ktn-action-btn" href="' + p611Link('edit', w.id) + '">編集を再開 →</a>'
+          : '<a class="ktn-action-btn" href="' + p611Link('clone', w.id) + '">クローン →</a>' +
+            /* 編集導線を出さない条件：取引完了＝レコード凍結／販売中×申込あり＝申込者が現内容に申込済みのため作品編集を凍結。いずれもクローン・公開切替は可 */
+            (soldOnline || liveApply ? '' : '<a class="ktn-action-btn" href="' + p611Link('edit', w.id) + '">編集 →</a>')) +
       '</div>' +
-      '<div class="p314-item__detail"' + (open ? '' : ' hidden') + '>' +
-        (soldOnline
-          ? '<div class="p314-done-note">LIAISON+のオンライン取引が完了した作品です。クリエイターページへの公開/非公開はこれまで通り設定できますが、作品はご購入者の所有となるため、LIAISON / LIAISON+ の出品候補からは外れ、作品情報の編集はできません（クローンで複製した作品は新規作品として出品できます）。</div>'
-          : '') +
-        '<div class="p314-detail-sec">' +
-          '<div class="p314-detail-sec__title">出品歴</div>' +
-          histHtml +
-        '</div>' +
-        '<div class="p314-detail-sec">' +
-          '<div class="p314-detail-sec__title">オーナーメモ</div>' +
-          '<p class="p314-detail-sec__help">あなただけが見られる非公開のメモです（付けた価格の経緯・興味を持った方の記録など）。作品ページには表示されません。</p>' +
-          '<textarea class="p314-memo__input" placeholder="この作品についてのメモ（任意）">' + w.memo + '</textarea>' +
-          '<div class="p314-memo__foot"><button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--primary p314-memo-save">メモを保存</button></div>' +
-        '</div>' +
-      '</div>';
+      /* 下書きは詳細アコーディオン自体を出さない（ノートは上に常時表示済み） */
+      (draft
+        ? ''
+        : '<div class="p314-item__detail"' + (open ? '' : ' hidden') + '>' +
+            (soldOnline
+              ? '<div class="p314-done-note">LIAISON+のオンライン取引が完了した作品です。クリエイターページへの公開/非公開はこれまで通り設定できますが、作品はご購入者の所有となるため、LIAISON / LIAISON+ の出品候補からは外れ、作品情報の編集はできません（クローンで複製した作品は新規作品として出品できます）。</div>'
+              : '') +
+            (liveApply
+              ? '<div class="p314-done-note">販売中で購入申込を受け付けている作品です。申込者は現在の作品内容にもとづいて申し込んでいるため、取引が進行する間は作品情報を編集できません（公開/非公開の切替・クローンは可）。編集が必要な場合は出品を取り消してから行ってください。</div>'
+              : '') +
+            '<div class="p314-detail-sec">' +
+              '<div class="p314-detail-sec__title">出品歴</div>' +
+              histHtml +
+            '</div>' +
+            '<div class="p314-detail-sec">' +
+              '<div class="p314-detail-sec__title">オーナーメモ</div>' +
+              '<p class="p314-detail-sec__help">あなただけが見られる非公開のメモです（付けた価格の経緯・興味を持った方の記録など）。作品ページには表示されません。</p>' +
+              '<textarea class="p314-memo__input" placeholder="この作品についてのメモ（任意）">' + w.memo + '</textarea>' +
+              '<div class="p314-memo__foot"><button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--primary p314-memo-save">メモを保存</button></div>' +
+            '</div>' +
+          '</div>');
     return li;
   }
 
@@ -6699,15 +6780,20 @@ KTN.pages['p3-14'] = function () {
   var SORTS = {
     'reg-desc':  function (a, b) { return b.rs - a.rs; },
     'reg-asc':   function (a, b) { return a.rs - b.rs; },
-    'year-desc': function (a, b) { return parseInt(b.year, 10) - parseInt(a.year, 10); },
-    'year-asc':  function (a, b) { return parseInt(a.year, 10) - parseInt(b.year, 10); },
+    'year-desc': function (a, b) { return (parseInt(b.year, 10) || 0) - (parseInt(a.year, 10) || 0); },
+    'year-asc':  function (a, b) { return (parseInt(a.year, 10) || 0) - (parseInt(b.year, 10) || 0); },
     'title':     function (a, b) { return a.title.localeCompare(b.title, 'ja'); },
   };
 
   function render() {
     var fp = pubSel.value;
     var fl = listedSel.value;
+    var sold = curTab === 'sold';
     var rows = WORKS.filter(function (w) {
+      /* タブでバケット分割：売約済（取引完了）タブはオンライン取引完了作品のみ、登録済みタブはそれ以外 */
+      if (isSoldOnline(w)) { if (!sold) return false; } else { if (sold) return false; }
+      /* 下書き＝別もの。公開・出品状況で絞り込む時は候補から外す（「すべて」表示時のみ最上部に固定） */
+      if (isDraft(w)) return fp === '' && fl === '';
       if (fp === 'pub'      && !w.pub) return false;
       if (fp === 'unpub'    &&  w.pub) return false;
       if (fl === 'listed' && !isListed(w)) return false;
@@ -6716,15 +6802,44 @@ KTN.pages['p3-14'] = function () {
       return true;
     });
     rows.sort(SORTS[sortSel.value] || SORTS['reg-desc']);
+    rows.sort(function (a, b) { return (isDraft(b) ? 1 : 0) - (isDraft(a) ? 1 : 0); });
     listEl.innerHTML = '';
     rows.forEach(function (w) { listEl.appendChild(makeItem(w)); });
-    countEl.textContent = rows.length;
+    /* 下書き数はバナーで案内（売約済タブには下書きは入らない） */
+    var draftN = rows.filter(isDraft).length;
+    if (draftBanner) draftBanner.hidden = draftN === 0;
+    if (draftCntEl) draftCntEl.textContent = draftN;
     if (emptyEl) emptyEl.hidden = rows.length !== 0;
+    if (listedWrap) listedWrap.hidden = sold; /* 出品状況フィルタは登録済みタブのみ */
+    if (soldNotice) soldNotice.hidden = !sold;
   }
 
+  /* タブ別のバケット件数（フィルタ非依存の総数） */
+  function syncTabCounts() {
+    var a = 0, s = 0;
+    WORKS.forEach(function (w) {
+      if (isSoldOnline(w)) { s++; return; }
+      if (isDraft(w)) return; /* 下書きは作品数に含めない */
+      a++;
+    });
+    if (cntActive) cntActive.textContent = a;
+    if (cntSold) cntSold.textContent = s;
+  }
+
+  function switchTab(tab) {
+    if (curTab === tab) return;
+    curTab = tab;
+    if (tabActive) { tabActive.classList.toggle('is-active', tab === 'active'); tabActive.setAttribute('aria-selected', tab === 'active'); }
+    if (tabSold)   { tabSold.classList.toggle('is-active', tab === 'sold');   tabSold.setAttribute('aria-selected', tab === 'sold'); }
+    render();
+  }
+
+  if (tabActive) tabActive.addEventListener('click', function () { switchTab('active'); });
+  if (tabSold)   tabSold.addEventListener('click', function () { switchTab('sold'); });
   pubSel.addEventListener('change', render);
   listedSel.addEventListener('change', render);
   sortSel.addEventListener('change', render);
+  syncTabCounts();
   render();
 
   /* ── 操作（イベント委譲）── */
@@ -6757,12 +6872,58 @@ KTN.pages['p3-14'] = function () {
       if (KTN.toast) KTN.toast('オーナーメモを保存しました（デモ）');
       return;
     }
+    /* 削除／下書き破棄＝確認モーダルを開いてから確定 */
+    if (e.target.closest('.p314-item__del')) {
+      openDelModal(w);
+      return;
+    }
     /* カード（main部）クリック＝作品ページを新しいタブで開く（内側のリンク・ボタンは除外） */
     if (e.target.closest('.p314-item__main--link') && !e.target.closest('a') && !e.target.closest('button')) {
       var wl = workLink(w);
       if (wl) window.open(wl, '_blank');
       return;
     }
+  });
+
+  /* ── 削除／下書き破棄モーダル（破壊操作＝confirm を経て実行） ── */
+  var delModal   = document.getElementById('p314DelModal');
+  var delTitle   = document.getElementById('p314DelTitle');
+  var delDesc    = document.getElementById('p314DelDesc');
+  var delCancel  = document.getElementById('p314DelCancel');
+  var delConfirm = document.getElementById('p314DelConfirm');
+  var delBg      = document.getElementById('p314DelBg');
+  var pendingDel = null;
+
+  function openDelModal(w) {
+    if (!delModal) return;
+    pendingDel = w.id;
+    var draft = isDraft(w);
+    if (delTitle) delTitle.textContent = draft ? '下書きを破棄しますか？' : '作品を削除しますか？';
+    if (delDesc) delDesc.innerHTML = '<span class="p314-del-modal__name">' + w.title + '</span>' +
+      (draft
+        ? 'この下書きを完全に破棄します。入力済みの内容は復元できません。'
+        : 'この作品をポートフォリオから完全に削除します。過去の出品記録・オーナーメモも失われ、復元できません。');
+    if (delConfirm) delConfirm.textContent = draft ? '破棄する' : '削除する';
+    delModal.hidden = false;
+  }
+  function closeDelModal() {
+    if (!delModal) return;
+    delModal.hidden = true;
+    pendingDel = null;
+  }
+  if (delCancel) delCancel.addEventListener('click', closeDelModal);
+  if (delBg)     delBg.addEventListener('click', closeDelModal);
+  if (delConfirm) delConfirm.addEventListener('click', function () {
+    if (!pendingDel) return;
+    var wasDraft = false;
+    for (var i = 0; i < WORKS.length; i++) {
+      if (WORKS[i].id === pendingDel) { wasDraft = isDraft(WORKS[i]); WORKS.splice(i, 1); break; }
+    }
+    delete openIds[pendingDel];
+    closeDelModal();
+    syncTabCounts();
+    render();
+    if (KTN.toast) KTN.toast(wasDraft ? '下書きを破棄しました（デモ）' : '作品を削除しました（デモ）');
   });
 
   window.ktnRender = function () {};
@@ -6783,7 +6944,7 @@ KTN.pages['p4-14'] = function () {
   document.body.style.setProperty('--page-accent-bg',     'rgba(139,94,60,.1)');
   document.body.style.setProperty('--page-accent-border', '#b07840');
 
-  /* ── 販売状態マスタ ── */
+  /* ── 販売状態マスタ（p3-14 と同一） ── */
   var STATUS = {
     sale:    { label:'販売中',   cls:'aws-sale' },
     negot:   { label:'商談中',   cls:'aws-negot' },
@@ -6796,35 +6957,68 @@ KTN.pages['p4-14'] = function () {
   var AUTHOR_KEY = { '高橋 信':'takahashi', '佐藤 みなと':'sato', '大野 藍':'ohno' };
   function authorKey(name) { return AUTHOR_KEY[name] || ''; }
 
-  /* ── サンプルデータ（このギャラリーが取り扱う作品）──
+  /* ── 出品先の展覧会（ギャラリーのグループ展）──
+     href＝展覧会ページ。終了後もページは残るためリンクを持つ（デモでは代表として p2 を指す） */
+  var EXH_NOW   = { mode:'lp', n:'色彩の対話 — 現代絵画グループ展', term:'2026.2.18 — 3.5',   state:'now',   href:'kotennavi-p2.html' };
+  var EXH_PAST  = { mode:'l',  n:'冬のグループ展 2025',            term:'2025.12.6 — 12.21', state:'ended', href:'kotennavi-p2.html' };
+  var EXH_PAST2 = { mode:'l',  n:'三人の視点展',                  term:'2025.5.10 — 5.25',  state:'ended', href:'kotennavi-p2.html' };
+  var EXH_PAST3 = { mode:'lp', n:'オンライン・セレクション 2025',   term:'2025.9.1 — 9.30',   state:'ended', href:'kotennavi-p2.html' };
+  /* online:true＝LIAISON+のオンライン取引で成立した売約済（取引完了）。
+     手動売約済（会場売却等）と区別し、取引完了の作品は出品候補から外れる（仕様書 第7章/第17章） */
+  function rec(exh, sale, price, online, queue) {
+    return { mode:exh.mode, n:exh.n, term:exh.term, state:exh.state, href:exh.href, sale:sale, price:price || '', online:!!online, queue:queue || 0 };
+  }
+
+  /* ── サンプルデータ（このギャラリーが取り扱う作品。p3-14 と同じデータモデル）──
      author＝登録済みクリエイター（真正性担保のため未登録作家は入らない）。
-     exhs＝出品中の展覧会（空なら未出品）。 */
+     hist＝出品記録（複数あり得る・新しい順）。販売状態・価格は各出品記録が持つ。
+     awid＝作品ID（作品作成時のシステム自動採番）。reg/upd＝登録日・最終更新日。rs＝並べ替えキー。
+     memo＝オーナーメモ（ギャラリー担当者だけが見られる非公開の備忘録）。
+     ※ギャラリーインベントリーはギャラリーページに公開表示されないため公開/非公開の概念は持たない。 */
   var WORKS = [
-    { id:'g1', title:'《静かな水面》',        author:'高橋 信',     year:'2025年', medium:'キャンバスに油彩', bg:'linear-gradient(155deg,#cfe0e8,#7a9cb0)', status:'negot',
-      exhs:[{ n:'色彩の対話 — 現代絵画グループ展', mode:'lp' }] },
-    { id:'g2', title:'《余白のコンポジション》', author:'佐藤 みなと', year:'2025年', medium:'キャンバスに油彩', bg:'linear-gradient(155deg,#e8e2d4,#b0a888)', status:'sale',
-      exhs:[{ n:'色彩の対話 — 現代絵画グループ展', mode:'lp' }] },
-    { id:'g3', title:'《海の記憶》',           author:'佐藤 みなと', year:'2024年', medium:'アクリル・パネル', bg:'linear-gradient(155deg,#cfe0e8,#7a9cb0)', status:'inquiry',
-      exhs:[] },
-    { id:'g4', title:'《朝の気配》',           author:'高橋 信',     year:'2024年', medium:'キャンバスに油彩', bg:'linear-gradient(155deg,#f0e8d0,#d4b896)', status:'sold',
-      exhs:[{ n:'冬のグループ展 2025', mode:'l' }] },
-    { id:'g5', title:'《無題（青の連作 I）》',  author:'大野 藍',     year:'2026年', medium:'ミクストメディア', bg:'linear-gradient(155deg,#c8d8e8,#7898b8)', status:'sale',
-      exhs:[{ n:'色彩の対話 — 現代絵画グループ展', mode:'lp' }] },
-    { id:'g6', title:'《無題（青の連作 II）》', author:'大野 藍',     year:'2026年', medium:'ミクストメディア', bg:'linear-gradient(155deg,#d0e8f0,#7ab4cc)', status:'sale',
-      exhs:[] },
-    { id:'g7', title:'《庭の記憶》',           author:'高橋 信',     year:'2023年', medium:'キャンバスに油彩', bg:'linear-gradient(155deg,#d8c8e8,#a888cc)', status:'nonsale',
-      exhs:[] },
-    { id:'g8', title:'《光の粒》',             author:'佐藤 みなと', year:'2023年', medium:'和紙・岩絵具',     bg:'linear-gradient(155deg,#f0d0d0,#c88080)', status:'inquiry',
-      exhs:[] },
+    /* 下書き（p6-11 の一時保存で作成・未完成）。hist なし＝出品候補に出ない。作者は登録済みクリエイター */
+    { id:'g10', title:'《岸辺のスケッチ》',    author:'高橋 信',     awid:'AW-T18-2260', year:'2026年', medium:'キャンバスに油彩', bg:'linear-gradient(155deg,#e0d4bc,#b8a884)', reg:'2026.2.21', upd:'2026.2.21', rs:20260221, draft:true,
+      hist:[], memo:'素材・技法は仮。作家に額装の有無を確認してから仕上げる。' },
+    { id:'g11', title:'《無題（習作）》',       author:'佐藤 みなと', awid:'AW-S24-1533', year:'2026年', medium:'', bg:'linear-gradient(155deg,#d8c8b0,#a89878)', reg:'2026.2.9', upd:'2026.2.13', rs:20260209, draft:true,
+      hist:[], memo:'技法未定・タイトル仮。作家と展示可否を相談中。' },
+    { id:'g1', title:'《静かな水面》',        author:'高橋 信',     awid:'AW-T18-2203', year:'2025年', medium:'キャンバスに油彩', bg:'linear-gradient(155deg,#cfe0e8,#7a9cb0)', reg:'2025.11.4', upd:'2026.2.18', rs:20251104,
+      hist:[rec(EXH_NOW,'sale','¥240,000',false,2)], memo:'グループ展の目玉作品。初日から複数の問い合わせあり。現在2件の購入申込あり（取引準備中）。' },
+    { id:'g2', title:'《余白のコンポジション》', author:'佐藤 みなと', awid:'AW-S24-1510', year:'2025年', medium:'キャンバスに油彩', bg:'linear-gradient(155deg,#e8e2d4,#b0a888)', reg:'2025.10.20', upd:'2026.2.18', rs:20251020,
+      hist:[rec(EXH_NOW,'sale','¥180,000')], memo:'' },
+    { id:'g3', title:'《海の記憶》',           author:'佐藤 みなと', awid:'AW-S24-1489', year:'2024年', medium:'アクリル・パネル', bg:'linear-gradient(155deg,#cfe0e8,#7a9cb0)', reg:'2025.6.2', upd:'2025.10.1', rs:20250602,
+      hist:[rec(EXH_PAST2,'sale','¥120,000')], memo:'三人の視点展に出品。会期後に一件商談があったが不成立。次回展で再出品予定。' },
+    { id:'g4', title:'《朝の気配》',           author:'高橋 信',     awid:'AW-T18-2150', year:'2024年', medium:'キャンバスに油彩', bg:'linear-gradient(155deg,#f0e8d0,#d4b896)', reg:'2025.8.15', upd:'2025.10.5', rs:20250815,
+      hist:[rec(EXH_PAST3,'sold','¥150,000',true)], memo:'オンライン・セレクションで販売・取引完了。ご購入者がコレクションルームで公開中。' },
+    { id:'g5', title:'《無題（青の連作 I）》',  author:'大野 藍',     awid:'AW-O31-0442', year:'2026年', medium:'ミクストメディア', bg:'linear-gradient(155deg,#c8d8e8,#7898b8)', reg:'2026.1.10', upd:'2026.2.18', rs:20260110,
+      hist:[rec(EXH_NOW,'sale','¥200,000')], memo:'' },
+    { id:'g6', title:'《無題（青の連作 II）》', author:'大野 藍',     awid:'AW-O31-0443', year:'2026年', medium:'ミクストメディア', bg:'linear-gradient(155deg,#d0e8f0,#7ab4cc)', reg:'2026.1.10', upd:'2026.1.10', rs:20260110,
+      hist:[], memo:'連作の対。次回展で I とセット展示を検討。' },
+    { id:'g7', title:'《庭の記憶》',           author:'高橋 信',     awid:'AW-T18-2098', year:'2023年', medium:'キャンバスに油彩', bg:'linear-gradient(155deg,#d8c8e8,#a888cc)', reg:'2024.9.3', upd:'2025.6.1', rs:20240903,
+      hist:[rec(EXH_PAST,'sold','¥160,000')], memo:'冬のグループ展の会場で売約（会場手続き）。' },
+    { id:'g8', title:'《光の粒》',             author:'佐藤 みなと', awid:'AW-S24-1402', year:'2023年', medium:'和紙・岩絵具',     bg:'linear-gradient(155deg,#f0d0d0,#c88080)', reg:'2024.7.20', upd:'2024.7.20', rs:20240720,
+      hist:[], memo:'' },
   ];
 
   /* ── DOM ── */
-  var listEl    = document.getElementById('p414List');
-  var countEl   = document.getElementById('p414Count');
-  var emptyEl   = document.getElementById('p414Empty');
-  var authorSel = document.getElementById('p414FilterAuthor');
-  var listedSel = document.getElementById('p414FilterListed');
-  if (!listEl || !countEl || !authorSel || !listedSel) return;
+  var listEl      = document.getElementById('p414List');
+  var emptyEl     = document.getElementById('p414Empty');
+  var authorSel   = document.getElementById('p414FilterAuthor');
+  var listedSel   = document.getElementById('p414FilterListed');
+  var sortSel     = document.getElementById('p414Sort');
+  var draftBanner = document.getElementById('p414DraftBanner');
+  var draftCntEl  = document.getElementById('p414DraftCount');
+  var tabActive   = document.getElementById('p414TabActive');
+  var tabSold     = document.getElementById('p414TabSold');
+  var cntActive   = document.getElementById('p414CountActive');
+  var cntSold     = document.getElementById('p414CountSold');
+  var soldNotice  = document.getElementById('p414SoldNotice');
+  var listedWrap  = document.getElementById('p414FilterListedWrap');
+  if (!listEl || !authorSel || !listedSel || !sortSel) return;
+
+  var curTab = 'active'; /* 'active' | 'sold' */
+
+  /* 詳細アコーディオンの開閉状態（再描画をまたいで維持） */
+  var openIds = {};
 
   /* ── 作者フィルタの選択肢を作品の作者から生成 ── */
   var authors = [];
@@ -6835,65 +7029,281 @@ KTN.pages['p4-14'] = function () {
     authorSel.appendChild(opt);
   });
 
-  /* ── カード生成 ── */
-  function makeCard(w) {
-    var st = STATUS[w.status] || STATUS.inquiry;
-    var listed = w.exhs && w.exhs.length > 0;
-    var exhHtml = listed
-      ? w.exhs.map(function (e) {
-          var badge = e.mode === 'lp'
+  function isListed(w) {
+    return w.hist.some(function (h) { return h.state === 'now'; });
+  }
+
+  /* LIAISON+のオンライン取引が完了した作品（所有が購入者へ移転＝出品候補から外れ・レコード凍結で編集不可） */
+  function isSoldOnline(w) {
+    return w.hist.some(function (h) { return h.sale === 'sold' && h.online; });
+  }
+
+  /* 販売中かつ購入申込あり（取引準備中）＝作品の編集を凍結する。申込者は現在の作品内容に対して申し込んでいるため */
+  function hasLiveApply(w) {
+    return w.hist.some(function (h) { return h.state === 'now' && h.sale === 'sale' && h.queue > 0; });
+  }
+
+  /* 下書き＝p6-11 の一時保存で作られた未完成作品（在庫のみ・公開/検索/出品候補に出ない） */
+  function isDraft(w) { return !!w.draft; }
+
+  function p611Link(mode, w) {
+    return 'kotennavi-p6-11.html?mode=' + mode + '&role=gallery&author=' + encodeURIComponent(authorKey(w.author)) +
+      '&work=' + encodeURIComponent(w.id);
+  }
+
+  /* 公開作品ページへのリンク先。ギャラリーインベントリーは非公開なので、公開ページを持つのは
+     出品中（展覧会の作品ページ LIAISON/LIAISON+）の作品のみ。未出品・取引完了は null（カードクリック無効） */
+  function workLink(w) {
+    for (var i = 0; i < w.hist.length; i++) {
+      if (w.hist[i].state === 'now') return w.hist[i].mode === 'lp' ? 'kotennavi-p6-2.html' : 'kotennavi-p6-1.html';
+    }
+    return null;
+  }
+
+  /* ── アイテム生成（p3-14 と共通の .p314-* 構造＋ギャラリー固有の作者行。公開スイッチは無し）── */
+  function makeItem(w) {
+    var listed = isListed(w);
+    var soldOnline = isSoldOnline(w);
+    var liveApply = hasLiveApply(w);
+    var draft = isDraft(w);
+    /* 削除可否：下書きは破棄可。完成作品は「出品中（ライブ）」「取引完了（凍結・購入者所有）」以外は削除可 */
+    var canDelete = draft || (!listed && !soldOnline);
+    /* 一覧には下書き/出品中/取引完了/未出品のマークのみ（出品先の展覧会名・出品歴は詳細内） */
+    var exhHtml = draft
+      ? ''
+      : listed
+        ? '<span class="p314-item__listed">出品中</span>'
+        : soldOnline
+          ? '<span class="p314-item__done">売約済（取引完了）</span>'
+          : '<span class="p314-item__unlisted">未出品</span>';
+
+    var histHtml = w.hist.length
+      ? '<ul class="p314-hist">' + w.hist.map(function (h) {
+          var badge = h.mode === 'lp'
             ? '<span class="lb-dot li-plus">LIAISON+</span>'
             : '<span class="lb-dot li">LIAISON</span>';
-          return '<span class="p414-item__exh">'+badge+'<span class="p414-item__exh-name">'+e.n+'</span></span>';
-        }).join('')
-      : '<span class="p414-item__unlisted">未出品</span>';
+          var name = h.href
+            ? '<a class="p314-hist__name" href="' + h.href + '" target="_blank" rel="noopener">' + h.n + '</a>'
+            : '<span class="p314-hist__name">' + h.n + '</span>';
+          var state = h.state === 'now'
+            ? '<span class="sb sb-live"><span class="pulse"></span>開催中</span>'
+            : '<span class="sb sb-closed">終了</span>';
+          var hs = STATUS[h.sale];
+          /* 終了した記録では進行中の販売状態を出さない（売約済・非売品のみ結果として表示） */
+          var showSale = hs && (h.state === 'now' || h.sale === 'sold' || h.sale === 'nonsale');
+          var saleHtml = '<span class="p314-hist__sale">' +
+            (showSale ? '<span class="aws ' + hs.cls + '">' + hs.label + '</span>' : '') +
+            (h.online ? '<span class="p314-hist__online">取引完了</span>' : '') +
+            (h.price ? '<span class="p314-hist__price">' + h.price + '</span>' : '') +
+            '</span>';
+          return '<li class="p314-hist__row">' + badge + name + state +
+            '<span class="p314-hist__term">' + h.term + '</span>' + saleHtml + '</li>';
+        }).join('') + '</ul>'
+      : '<p class="p314-hist-empty">出品歴はありません。</p>';
 
+    var open = !!openIds[w.id];
+    var wl = workLink(w);
     var li = document.createElement('li');
-    li.className = 'p414-item';
-    li.dataset.author = w.author;
-    li.dataset.listed = listed ? 'listed' : 'unlisted';
+    li.className = 'p314-item' + (draft ? ' p314-item--draft' : '');
+    li.dataset.id = w.id;
     li.innerHTML =
-      '<div class="p414-item__thumb" style="background:'+w.bg+'"></div>'+
-      '<div class="p414-item__body">'+
-        '<div class="p414-item__title-row">'+
-          '<span class="cb cb-content cb-artwork">artwork</span>'+
-          '<span class="p414-item__title">'+w.title+'</span>'+
-        '</div>'+
-        '<div class="p414-item__author"><span class="p414-item__author-label">作者</span>'+
-          '<span class="cb cb-person cb-creator">creator</span>'+
-          '<span class="p414-item__author-name">'+w.author+'</span>'+
-        '</div>'+
-        '<div class="p414-item__meta">'+[w.year, w.medium].filter(Boolean).join('　')+'</div>'+
-        '<div class="p414-item__exhs">'+exhHtml+'</div>'+
-      '</div>'+
-      '<div class="p414-item__side">'+
-        '<span class="aws '+st.cls+'">'+st.label+'</span>'+
-        '<a class="p414-item__edit ktn-action-btn" href="kotennavi-p6-11.html?role=gallery&author='+encodeURIComponent(authorKey(w.author))+'">編集 →</a>'+
-      '</div>';
+      (draft ? '<span class="p314-item__ribbon">下書き</span>' : '') +
+      '<div class="p314-item__main' + (wl ? ' p314-item__main--link" title="クリックで作品ページを新しいタブで表示' : '') + '">' +
+        '<div class="p314-item__thumb" style="background:' + w.bg + '"></div>' +
+        '<div class="p314-item__body">' +
+          '<div class="p314-item__title-row">' +
+            '<span class="cb cb-content cb-artwork">artwork</span>' +
+            '<span class="ktn-aw-id">' + w.awid + '</span>' +
+          '</div>' +
+          '<div class="p314-item__title">' + w.title + '</div>' +
+          '<div class="p414-item__author"><span class="p414-item__author-label">作者</span>' +
+            '<span class="cb cb-person cb-creator">creator</span>' +
+            '<span class="p414-item__author-name">' + w.author + '</span>' +
+          '</div>' +
+          '<div class="p314-item__meta">' + [w.year, w.medium].filter(Boolean).join('　') + '</div>' +
+          '<div class="p314-item__exhs">' + exhHtml + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="p314-item__dates">登録 ' + w.reg + '<span class="p314-item__dates-sep">·</span>更新 ' + w.upd + '</div>' +
+      /* 下書きの説明は一覧上部のバナー（#p414DraftBanner）に集約。カードは編集再開のみ */
+      '<div class="p314-item__actions' + (draft ? ' p314-item__actions--draft' : '') + '">' +
+        /* 下書きは出品歴/メモの展開トグルを出さない（完成が先） */
+        (draft ? '' : '<button type="button" class="p314-item__toggle" aria-expanded="' + open + '">' + (open ? '出品歴・メモを閉じる ▴' : '出品歴・メモを表示 ▾') + '</button>') +
+        /* 削除／下書き破棄（確認モーダルで確定）。出品中＝ライブ・取引完了＝凍結のため出さない */
+        (canDelete ? '<button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline p314-item__del">' + (draft ? '下書きを破棄' : '削除') + '</button>' : '') +
+        /* 下書き＝編集の再開のみ（クローンは完成作品向けなので出さない） */
+        (draft
+          ? '<a class="ktn-action-btn" href="' + p611Link('edit', w) + '">編集を再開 →</a>'
+          : '<a class="ktn-action-btn" href="' + p611Link('clone', w) + '">クローン →</a>' +
+            /* 編集導線を出さない条件：取引完了＝レコード凍結／販売中×申込あり＝申込者が現内容に申込済みのため作品編集を凍結。いずれもクローン・出品は可 */
+            (soldOnline || liveApply ? '' : '<a class="ktn-action-btn" href="' + p611Link('edit', w) + '">編集 →</a>')) +
+      '</div>' +
+      /* 下書きは詳細アコーディオン自体を出さない（ノートは上に常時表示済み） */
+      (draft
+        ? ''
+        : '<div class="p314-item__detail"' + (open ? '' : ' hidden') + '>' +
+            (soldOnline
+              ? '<div class="p314-done-note">LIAISON+のオンライン取引が完了した作品です。作品はご購入者の所有となるため、LIAISON / LIAISON+ の出品候補からは外れ、作品情報の編集はできません（クローンで複製した作品は新規作品として出品できます）。</div>'
+              : '') +
+            (liveApply
+              ? '<div class="p314-done-note">販売中で購入申込を受け付けている作品です。申込者は現在の作品内容にもとづいて申し込んでいるため、取引が進行する間は作品情報を編集できません（クローンは可）。編集が必要な場合は出品を取り消してから行ってください。</div>'
+              : '') +
+            '<div class="p314-detail-sec">' +
+              '<div class="p314-detail-sec__title">出品歴</div>' +
+              histHtml +
+            '</div>' +
+            '<div class="p314-detail-sec">' +
+              '<div class="p314-detail-sec__title">オーナーメモ</div>' +
+              '<p class="p314-detail-sec__help">ギャラリーの担当者だけが見られる非公開のメモです（付けた価格の経緯・興味を持った方の記録など）。作品ページには表示されません。</p>' +
+              '<textarea class="p314-memo__input" placeholder="この作品についてのメモ（任意）">' + w.memo + '</textarea>' +
+              '<div class="p314-memo__foot"><button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--primary p314-memo-save">メモを保存</button></div>' +
+            '</div>' +
+          '</div>');
     return li;
   }
 
-  /* ── フィルタ描画 ── */
+  /* ── フィルタ・並べ替え描画 ── */
+  var SORTS = {
+    'reg-desc':  function (a, b) { return b.rs - a.rs; },
+    'reg-asc':   function (a, b) { return a.rs - b.rs; },
+    'year-desc': function (a, b) { return (parseInt(b.year, 10) || 0) - (parseInt(a.year, 10) || 0); },
+    'year-asc':  function (a, b) { return (parseInt(a.year, 10) || 0) - (parseInt(b.year, 10) || 0); },
+    'author':    function (a, b) { return a.author.localeCompare(b.author, 'ja'); },
+    'title':     function (a, b) { return a.title.localeCompare(b.title, 'ja'); },
+  };
+
   function render() {
     var fa = authorSel.value;
     var fl = listedSel.value;
-    listEl.innerHTML = '';
-    var n = 0;
-    WORKS.forEach(function (w) {
-      if (fa && w.author !== fa) return;
-      var listed = w.exhs && w.exhs.length > 0;
-      if (fl === 'listed' && !listed) return;
-      if (fl === 'unlisted' && listed) return;
-      listEl.appendChild(makeCard(w));
-      n++;
+    var sold = curTab === 'sold';
+    var rows = WORKS.filter(function (w) {
+      /* タブでバケット分割：売約済（取引完了）タブはオンライン取引完了作品のみ、登録済みタブはそれ以外 */
+      if (isSoldOnline(w)) { if (!sold) return false; } else { if (sold) return false; }
+      if (fa && w.author !== fa) return false;            /* 作者は下書きにも適用（属性であり状況ではない） */
+      /* 下書き＝別もの。出品状況で絞り込む時は候補から外す（作者/すべて表示時のみ最上部に固定） */
+      if (isDraft(w)) return fl === '';
+      if (fl === 'listed' && !isListed(w)) return false;
+      if (fl === 'past'   && (isListed(w) || !w.hist.length)) return false;
+      if (fl === 'never'  &&  w.hist.length) return false;
+      return true;
     });
-    countEl.textContent = n;
-    if (emptyEl) emptyEl.hidden = n !== 0;
+    rows.sort(SORTS[sortSel.value] || SORTS['reg-desc']);
+    rows.sort(function (a, b) { return (isDraft(b) ? 1 : 0) - (isDraft(a) ? 1 : 0); });
+    listEl.innerHTML = '';
+    rows.forEach(function (w) { listEl.appendChild(makeItem(w)); });
+    /* 下書き数はバナーで案内（売約済タブには下書きは入らない） */
+    var draftN = rows.filter(isDraft).length;
+    if (draftBanner) draftBanner.hidden = draftN === 0;
+    if (draftCntEl) draftCntEl.textContent = draftN;
+    if (emptyEl) emptyEl.hidden = rows.length !== 0;
+    if (listedWrap) listedWrap.hidden = sold; /* 出品状況フィルタは登録済みタブのみ */
+    if (soldNotice) soldNotice.hidden = !sold;
   }
 
+  /* タブ別のバケット件数（フィルタ非依存の総数） */
+  function syncTabCounts() {
+    var a = 0, s = 0;
+    WORKS.forEach(function (w) {
+      if (isSoldOnline(w)) { s++; return; }
+      if (isDraft(w)) return; /* 下書きは作品数に含めない */
+      a++;
+    });
+    if (cntActive) cntActive.textContent = a;
+    if (cntSold) cntSold.textContent = s;
+  }
+
+  function switchTab(tab) {
+    if (curTab === tab) return;
+    curTab = tab;
+    if (tabActive) { tabActive.classList.toggle('is-active', tab === 'active'); tabActive.setAttribute('aria-selected', tab === 'active'); }
+    if (tabSold)   { tabSold.classList.toggle('is-active', tab === 'sold');   tabSold.setAttribute('aria-selected', tab === 'sold'); }
+    render();
+  }
+
+  if (tabActive) tabActive.addEventListener('click', function () { switchTab('active'); });
+  if (tabSold)   tabSold.addEventListener('click', function () { switchTab('sold'); });
   authorSel.addEventListener('change', render);
   listedSel.addEventListener('change', render);
+  sortSel.addEventListener('change', render);
+  syncTabCounts();
   render();
+
+  /* ── 操作（イベント委譲）── */
+  function findWork(id) {
+    for (var i = 0; i < WORKS.length; i++) if (WORKS[i].id === id) return WORKS[i];
+    return null;
+  }
+
+  listEl.addEventListener('click', function (e) {
+    var item = e.target.closest('.p314-item');
+    if (!item) return;
+    var w = findWork(item.dataset.id);
+    if (!w) return;
+
+    if (e.target.closest('.p314-item__toggle')) {
+      openIds[w.id] = !openIds[w.id];
+      render();
+      return;
+    }
+    if (e.target.closest('.p314-memo-save')) {
+      var ta = item.querySelector('.p314-memo__input');
+      if (ta) w.memo = ta.value;
+      if (KTN.toast) KTN.toast('オーナーメモを保存しました（デモ）');
+      return;
+    }
+    /* 削除／下書き破棄＝確認モーダルを開いてから確定 */
+    if (e.target.closest('.p314-item__del')) {
+      openDelModal(w);
+      return;
+    }
+    /* カード（main部）クリック＝作品ページを新しいタブで開く（内側のリンク・ボタンは除外） */
+    if (e.target.closest('.p314-item__main--link') && !e.target.closest('a') && !e.target.closest('button')) {
+      var wl = workLink(w);
+      if (wl) window.open(wl, '_blank');
+      return;
+    }
+  });
+
+  /* ── 削除／下書き破棄モーダル（破壊操作＝confirm を経て実行） ── */
+  var delModal   = document.getElementById('p414DelModal');
+  var delTitle   = document.getElementById('p414DelTitle');
+  var delDesc    = document.getElementById('p414DelDesc');
+  var delCancel  = document.getElementById('p414DelCancel');
+  var delConfirm = document.getElementById('p414DelConfirm');
+  var delBg      = document.getElementById('p414DelBg');
+  var pendingDel = null;
+
+  function openDelModal(w) {
+    if (!delModal) return;
+    pendingDel = w.id;
+    var draft = isDraft(w);
+    if (delTitle) delTitle.textContent = draft ? '下書きを破棄しますか？' : '作品を削除しますか？';
+    if (delDesc) delDesc.innerHTML = '<span class="p314-del-modal__name">' + w.title + '</span>' +
+      (draft
+        ? 'この下書きを完全に破棄します。入力済みの内容は復元できません。'
+        : 'この作品をインベントリーから完全に削除します。過去の出品記録・オーナーメモも失われ、復元できません。');
+    if (delConfirm) delConfirm.textContent = draft ? '破棄する' : '削除する';
+    delModal.hidden = false;
+  }
+  function closeDelModal() {
+    if (!delModal) return;
+    delModal.hidden = true;
+    pendingDel = null;
+  }
+  if (delCancel) delCancel.addEventListener('click', closeDelModal);
+  if (delBg)     delBg.addEventListener('click', closeDelModal);
+  if (delConfirm) delConfirm.addEventListener('click', function () {
+    if (!pendingDel) return;
+    var wasDraft = false;
+    for (var i = 0; i < WORKS.length; i++) {
+      if (WORKS[i].id === pendingDel) { wasDraft = isDraft(WORKS[i]); WORKS.splice(i, 1); break; }
+    }
+    delete openIds[pendingDel];
+    closeDelModal();
+    syncTabCounts();
+    render();
+    if (KTN.toast) KTN.toast(wasDraft ? '下書きを破棄しました（デモ）' : '作品を削除しました（デモ）');
+  });
 
   /* ── 新規作品：作者ピッカー（検索付きオートコンプリート）──
      取扱クリエイター＝このギャラリーが展覧会に出展させた登録済みクリエイターの和集合。
@@ -7242,6 +7652,44 @@ KTN.syncMgmtOwner = function (idBase, role) {
 /* ════════════════════════════════════════════════════
    P2-11  展覧会 新規投稿・編集・クローン
 ════════════════════════════════════════════════════ */
+/* サブ画像リストのドラッグ並べ替え（p2-11 / p6-11 共通・ハンドル起点） */
+KTN.initImgReorder = function (list) {
+  if (!list || list.dataset.reorderBound) return;
+  list.dataset.reorderBound = '1';
+  var dragEl = null;
+
+  list.addEventListener('dragstart', function (e) {
+    var handle = e.target.closest('.p211-img-uploaded__handle');
+    if (!handle || !list.contains(handle)) { e.preventDefault(); return; }
+    dragEl = handle.closest('.p211-img-uploaded');
+    if (!dragEl) return;
+    dragEl.classList.add('is-dragging');
+    if (e.dataTransfer) {
+      e.dataTransfer.effectAllowed = 'move';
+      try { e.dataTransfer.setData('text/plain', ''); } catch (err) {}
+      if (e.dataTransfer.setDragImage) e.dataTransfer.setDragImage(dragEl, 16, 16);
+    }
+  });
+
+  list.addEventListener('dragover', function (e) {
+    if (!dragEl) return;
+    e.preventDefault();
+    if (e.dataTransfer) e.dataTransfer.dropEffect = 'move';
+    var over = e.target.closest('.p211-img-uploaded');
+    if (!over || over === dragEl || !list.contains(over)) return;
+    var rect = over.getBoundingClientRect();
+    var after = (e.clientY - rect.top) > rect.height / 2;
+    list.insertBefore(dragEl, after ? over.nextSibling : over);
+  });
+
+  list.addEventListener('drop', function (e) { e.preventDefault(); });
+
+  list.addEventListener('dragend', function () {
+    if (dragEl) dragEl.classList.remove('is-dragging');
+    dragEl = null;
+  });
+};
+
 KTN.pages['p2-11'] = function () {
   function syncMgmtBar() {
     const r = window.ktnState && window.ktnState.role || 'gallery';
@@ -7253,6 +7701,7 @@ KTN.pages['p2-11'] = function () {
     if (typeof window.p211RoleSync === 'function') window.p211RoleSync();
   }
   syncMgmtBar();
+  KTN.initImgReorder(document.getElementById('p211SubList'));
   window.ktnRender = function () { syncMgmtBar(); };
 };
 
@@ -7331,6 +7780,7 @@ KTN.pages['p6-11'] = function () {
     if (typeof window.p611RoleSync === 'function') window.p611RoleSync();
   }
   syncMgmtBar();
+  KTN.initImgReorder(document.getElementById('p611SubList'));
   window.ktnRender = function () { syncMgmtBar(); };
 };
 
@@ -7943,8 +8393,13 @@ KTN.pages['p1'] = function () {
   var feedGenre = '';
   var feedShown = 8;
   var FEED_PAGE = 8;
+  var GENRE_MAP = { '絵画': 'アート', '油彩': 'アート', 'アクリル': 'アート', '現代美術': 'アート', '版画': 'アート', '書道': 'アート', '写真': '写真', '陶芸': 'クラフト', 'クラフト': 'クラフト', 'ガラス': 'クラフト' };
+  function exGenre(x) {
+    for (var i = 0; i < x.tags.length; i++) { if (GENRE_MAP[x.tags[i]]) return GENRE_MAP[x.tags[i]]; }
+    return 'その他';
+  }
   function feedList() {
-    var list = EX.filter(function (x) { return !feedGenre || x.tags.indexOf(feedGenre) !== -1; });
+    var list = EX.filter(function (x) { return !feedGenre || exGenre(x) === feedGenre; });
     return list.sort(function (a, b) { return (b.isNew - a.isNew) || (a.rd - b.rd); });
   }
   function renderFeed() {

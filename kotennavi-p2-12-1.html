@@ -111,7 +111,7 @@
               <span class="p2-121-period-opt__mark"></span>
               <span class="p2-121-period-opt__body">
                 <span class="p2-121-period-opt__label">展覧会会期と同じ</span>
-                <span class="p2-121-period-opt__range">2026.02.18 — 2026.03.05</span>
+                <span class="p2-121-period-opt__range">2026.02.18 0:00 — 2026.03.05 23:59</span>
               </span>
             </label>
 
@@ -121,7 +121,7 @@
               <span class="p2-121-period-opt__mark"></span>
               <span class="p2-121-period-opt__body">
                 <span class="p2-121-period-opt__label">会期終了後2週間まで<span class="p2-121-period-opt__tag">おすすめ</span></span>
-                <span class="p2-121-period-opt__range">2026.02.18 — 2026.03.19</span>
+                <span class="p2-121-period-opt__range">2026.02.18 0:00 — 2026.03.19 23:59</span>
               </span>
             </label>
 
@@ -137,22 +137,28 @@
 
           </div>
 
-          <!-- カスタム日付ピッカー -->
+          <!-- カスタム日付ピッカー（日付＋時刻。時刻の初期値＝開始0:00・終了23:59・変更可） -->
           <div class="p2-121-custom-picker" id="p2121CustomPicker" hidden>
             <div class="p2-121-custom-picker__row">
               <div class="p2-121-custom-picker__field">
-                <label class="p2-121-custom-picker__label" for="p2121DateStart">開始日</label>
-                <input class="p2-121-custom-picker__input" type="date" id="p2121DateStart"
-                  value="2026-02-18" min="2026-02-18" max="2026-03-19">
+                <label class="p2-121-custom-picker__label" for="p2121DateStart">開始日時</label>
+                <div class="p2-121-custom-picker__dt">
+                  <input class="p2-121-custom-picker__input p2-121-custom-picker__input--date" type="date" id="p2121DateStart"
+                    value="2026-02-18" min="2026-02-18" max="2026-03-19">
+                  <input class="p2-121-custom-picker__input p2-121-custom-picker__input--time" type="time" id="p2121TimeStart" value="00:00" aria-label="開始時刻">
+                </div>
               </div>
               <span class="p2-121-custom-picker__sep">—</span>
               <div class="p2-121-custom-picker__field">
-                <label class="p2-121-custom-picker__label" for="p2121DateEnd">終了日</label>
-                <input class="p2-121-custom-picker__input" type="date" id="p2121DateEnd"
-                  value="2026-03-19" min="2026-02-18" max="2026-03-19">
+                <label class="p2-121-custom-picker__label" for="p2121DateEnd">終了日時</label>
+                <div class="p2-121-custom-picker__dt">
+                  <input class="p2-121-custom-picker__input p2-121-custom-picker__input--date" type="date" id="p2121DateEnd"
+                    value="2026-03-19" min="2026-02-18" max="2026-03-19">
+                  <input class="p2-121-custom-picker__input p2-121-custom-picker__input--time" type="time" id="p2121TimeEnd" value="23:59" aria-label="終了時刻">
+                </div>
               </div>
             </div>
-            <p class="p2-121-custom-picker__note">設定できる範囲：2026.02.18 — 2026.03.19（会期終了後2週間まで）</p>
+            <p class="p2-121-custom-picker__note">設定できる範囲：2026.02.18 — 2026.03.19（会期終了後2週間まで）。時刻の初期値は開始 0:00・終了 23:59 です（変更できます）。</p>
           </div>
 
         </div>

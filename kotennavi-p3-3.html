@@ -137,28 +137,21 @@
             <option value="">すべての展示状況</option>
             <option value="liaison-plus">LIAISON+出品中</option>
             <option value="liaison">LIAISON出品中</option>
-            <option value="normal">通常作品</option>
-          </select>
-          <select class="p3-3-filter__select" data-filter="status" id="p3FilterStatus">
-            <option value="">すべての販売状態</option>
-            <option value="sale">販売中</option>
-            <option value="nsale">非売品</option>
-            <option value="inquiry">要問合せ</option>
-            <option value="sold">売却済</option>
-          </select>
-          <select class="p3-3-filter__select" data-filter="genre" id="p3FilterGenre">
-            <option value="">すべてのジャンル</option>
-            <option value="oil">油彩</option>
-            <option value="acrylic">アクリル</option>
-            <option value="mixed">混合技法</option>
-            <option value="drawing">ドローイング</option>
-            <option value="print">版画</option>
+            <option value="normal">ポートフォリオ作品</option>
           </select>
           <select class="p3-3-filter__select" data-filter="year" id="p3FilterYear">
             <option value="">すべての年</option>
             <option value="2026">2026</option>
             <option value="2025">2025</option>
             <option value="2024">2024</option>
+          </select>
+          <select class="p3-3-filter__select p3-3-filter__select--sort" id="p3SortBy" aria-label="並べ替え">
+            <option value="">標準の並び</option>
+            <option value="added">新着順</option>
+            <option value="year-desc">制作年が新しい順</option>
+            <option value="year-asc">制作年が古い順</option>
+            <option value="title">作品名順</option>
+            <option value="fav">お気に入り数順</option>
           </select>
           <span class="ktn-count ktn-count--result" id="p3FilterCount" hidden></span>
         </div>
@@ -168,7 +161,7 @@
 
           <!-- ① ふわふわ / LIAISON+ / 油彩 / 販売中 / 2026 -->
           <a class="aw aw--plus" href="#"
-             data-liaison="liaison-plus" data-status="sale" data-genre="oil" data-year="2026">
+             data-liaison="liaison-plus" data-status="sale" data-year="2026" data-added="202612">
             <div class="aw__img">
               <div class="aw__lb"><span class="lb-dot li-plus">LIAISON+</span></div>
               <div class="aw__img-ph" style="background:linear-gradient(160deg,#e8d0b8,#c8a880);min-height:200px">
@@ -201,7 +194,7 @@
 
           <!-- ② ドキドキ #3 / LIAISON+ / 混合技法 / 販売中(3人申込中) / 2025 -->
           <a class="aw aw--plus" href="#"
-             data-liaison="liaison-plus" data-status="sale" data-genre="mixed" data-year="2025">
+             data-liaison="liaison-plus" data-status="sale" data-year="2025" data-added="202512">
             <div class="aw__img">
               <div class="aw__lb"><span class="lb-dot li-plus">LIAISON+</span></div>
               <div class="aw__img-ph" style="background:linear-gradient(160deg,#2a3548,#1a2535);min-height:180px">
@@ -238,7 +231,7 @@
 
           <!-- ③ しんしん / LIAISON+ / アクリル / 販売中 / 2026 -->
           <a class="aw aw--plus" href="#"
-             data-liaison="liaison-plus" data-status="sale" data-genre="acrylic" data-year="2026">
+             data-liaison="liaison-plus" data-status="sale" data-year="2026" data-added="202611">
             <div class="aw__img">
               <div class="aw__lb"><span class="lb-dot li-plus">LIAISON+</span></div>
               <div class="aw__img-ph" style="background:linear-gradient(160deg,#b8d8e8,#6a9ab8);min-height:220px">
@@ -271,7 +264,7 @@
 
           <!-- ④ うきうき / LIAISON+ / 油彩 / 販売中 / 2026 -->
           <a class="aw aw--plus" href="#"
-             data-liaison="liaison-plus" data-status="sale" data-genre="oil" data-year="2026">
+             data-liaison="liaison-plus" data-status="sale" data-year="2026" data-added="202610">
             <div class="aw__img">
               <div class="aw__lb"><span class="lb-dot li-plus">LIAISON+</span></div>
               <div class="aw__img-ph" style="background:linear-gradient(160deg,#d8c8a0,#b8a070);min-height:190px">
@@ -304,7 +297,7 @@
 
           <!-- ⑤ わくわく / LIAISON+ / 混合技法 / 販売中(1人申込中) / 2026 -->
           <a class="aw aw--plus" href="#"
-             data-liaison="liaison-plus" data-status="sale" data-genre="mixed" data-year="2026">
+             data-liaison="liaison-plus" data-status="sale" data-year="2026" data-added="202609">
             <div class="aw__img">
               <div class="aw__lb"><span class="lb-dot li-plus">LIAISON+</span></div>
               <div class="aw__img-ph" style="background:linear-gradient(160deg,#d0b8d8,#9878a8);min-height:210px">
@@ -341,7 +334,7 @@
 
           <!-- ⑥ シュワシュワ / LIAISON / 油彩 / 販売中 / 2025 -->
           <a class="aw" href="#"
-             data-liaison="liaison" data-status="sale" data-genre="oil" data-year="2025">
+             data-liaison="liaison" data-status="sale" data-year="2025" data-added="202511">
             <div class="aw__img">
               <div class="aw__lb"><span class="lb-dot li">LIAISON</span></div>
               <div class="aw__img-ph" style="background:linear-gradient(160deg,#b8d8c8,#6a9e88);min-height:195px">
@@ -371,7 +364,7 @@
 
           <!-- ⑦ ふわり / LIAISON / ドローイング / 売却済（コレクション済み） / 2025 -->
           <a class="aw aw--sold aw--collected" href="#"
-             data-liaison="liaison" data-status="sold" data-genre="drawing" data-year="2025">
+             data-liaison="liaison" data-status="sold" data-year="2025" data-added="202510">
             <div class="aw__img">
               <div class="aw__lb"><span class="lb-dot li">LIAISON</span></div>
               <div class="aw__img-ph" style="background:linear-gradient(160deg,#e8e0d0,#c8b8a0);min-height:230px">
@@ -408,7 +401,7 @@
 
           <!-- ⑧ ざわざわ（朝） / LIAISON / アクリル / 販売中 / 2026 -->
           <a class="aw" href="#"
-             data-liaison="liaison" data-status="sale" data-genre="acrylic" data-year="2026">
+             data-liaison="liaison" data-status="sale" data-year="2026" data-added="202608">
             <div class="aw__img">
               <div class="aw__lb"><span class="lb-dot li">LIAISON</span></div>
               <div class="aw__img-ph" style="background:linear-gradient(160deg,#f0e8d0,#d8c898);min-height:185px">
@@ -438,7 +431,7 @@
 
           <!-- ⑨ ころころ / LIAISON / 版画 / 非売品 / 2025 -->
           <a class="aw aw--nsale" href="#"
-             data-liaison="liaison" data-status="nsale" data-genre="print" data-year="2025">
+             data-liaison="liaison" data-status="nsale" data-year="2025" data-added="202509">
             <div class="aw__img">
               <div class="aw__lb"><span class="lb-dot li">LIAISON</span></div>
               <div class="aw__img-ph" style="background:linear-gradient(160deg,#1a2838,#0d1828);min-height:205px">
@@ -468,7 +461,7 @@
 
           <!-- ⑩ ざわざわ（夜） / 通常 / アクリル / 販売中 / 2026 -->
           <a class="aw" href="#"
-             data-liaison="normal" data-status="sale" data-genre="acrylic" data-year="2026">
+             data-liaison="normal" data-status="sale" data-year="2026" data-added="202607">
             <div class="aw__img">
               <div class="aw__img-ph" style="background:linear-gradient(160deg,#1a1a2a,#0a0a18);min-height:215px">
                 <div class="aw__img-ph-text">ざわざわ（夜）</div>
@@ -497,7 +490,7 @@
 
           <!-- ⑪ もやもや / 通常 / 混合技法 / 売却済（コレクション済み） / 2025 -->
           <a class="aw aw--sold aw--collected" href="#"
-             data-liaison="normal" data-status="sold" data-genre="mixed" data-year="2025">
+             data-liaison="normal" data-status="sold" data-year="2025" data-added="202508">
             <div class="aw__img">
               <div class="aw__img-ph" style="background:linear-gradient(160deg,#c0b8d0,#8880a0);min-height:190px">
                 <div class="aw__img-ph-text">もやもや</div>
@@ -533,7 +526,7 @@
 
           <!-- ⑫ きらきら / 通常 / 油彩 / 売却済 / 2025 -->
           <a class="aw aw--sold" href="#"
-             data-liaison="normal" data-status="sold" data-genre="oil" data-year="2025">
+             data-liaison="normal" data-status="sold" data-year="2025" data-added="202507">
             <div class="aw__img">
               <div class="aw__img-ph" style="background:linear-gradient(160deg,#e8e0a8,#c8b870);min-height:170px">
                 <div class="aw__img-ph-text">きらきら</div>
@@ -563,7 +556,7 @@
 
           <!-- ⑬ ぽつぽつ / 通常 / ドローイング / 非売品 / 2024 -->
           <a class="aw aw--nsale" href="#"
-             data-liaison="normal" data-status="nsale" data-genre="drawing" data-year="2024">
+             data-liaison="normal" data-status="nsale" data-year="2024" data-added="202412">
             <div class="aw__img">
               <div class="aw__img-ph" style="background:linear-gradient(160deg,#e0e8d8,#b8c8a8);min-height:200px">
                 <div class="aw__img-ph-text">ぽつぽつ</div>
@@ -592,7 +585,7 @@
 
           <!-- ⑭ しずか / 通常 / 版画 / 販売中 / 2026 -->
           <a class="aw" href="#"
-             data-liaison="normal" data-status="sale" data-genre="print" data-year="2026">
+             data-liaison="normal" data-status="sale" data-year="2026" data-added="202606">
             <div class="aw__img">
               <div class="aw__img-ph" style="background:linear-gradient(160deg,#d8e8e0,#98b8b0);min-height:225px">
                 <div class="aw__img-ph-text">しずか</div>
@@ -621,7 +614,7 @@
 
           <!-- ⑮ ぼんやり / 通常 / 油彩 / 売却済 / 2024 -->
           <a class="aw aw--sold" href="#"
-             data-liaison="normal" data-status="sold" data-genre="oil" data-year="2024">
+             data-liaison="normal" data-status="sold" data-year="2024" data-added="202411">
             <div class="aw__img">
               <div class="aw__img-ph" style="background:linear-gradient(160deg,#e8d8c8,#c0a888);min-height:185px">
                 <div class="aw__img-ph-text">ぼんやり</div>
@@ -651,7 +644,7 @@
 
           <!-- ⑯ にじむ / 通常 / アクリル / 非売品 / 2024 -->
           <a class="aw aw--nsale" href="#"
-             data-liaison="normal" data-status="nsale" data-genre="acrylic" data-year="2024">
+             data-liaison="normal" data-status="nsale" data-year="2024" data-added="202410">
             <div class="aw__img">
               <div class="aw__img-ph" style="background:linear-gradient(160deg,#b8c8e0,#7888a8);min-height:210px">
                 <div class="aw__img-ph-text">にじむ</div>
@@ -680,7 +673,7 @@
 
           <!-- ⑰ ざわり / 通常 / 混合技法 / 販売中 / 2025 -->
           <a class="aw" href="#"
-             data-liaison="normal" data-status="sale" data-genre="mixed" data-year="2025">
+             data-liaison="normal" data-status="sale" data-year="2025" data-added="202506">
             <div class="aw__img">
               <div class="aw__img-ph" style="background:linear-gradient(160deg,#d0c8b8,#a89878);min-height:195px">
                 <div class="aw__img-ph-text">ざわり</div>
@@ -709,7 +702,7 @@
 
           <!-- ⑱ ゆらゆら / 通常 / 版画 / 非売品 / 2025 -->
           <a class="aw aw--nsale" href="#"
-             data-liaison="normal" data-status="nsale" data-genre="print" data-year="2025">
+             data-liaison="normal" data-status="nsale" data-year="2025" data-added="202505">
             <div class="aw__img">
               <div class="aw__img-ph" style="background:linear-gradient(160deg,#c8d8c8,#88a888);min-height:180px">
                 <div class="aw__img-ph-text">ゆらゆら</div>

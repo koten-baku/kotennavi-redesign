@@ -42,7 +42,7 @@
       <div class="p211-mode-banner" id="p611CloneBanner" hidden>
         <span class="p211-mode-banner__icon">📋</span>
         <div class="p211-mode-banner__text">
-          <strong>《オノマトペの庭》</strong>のクローンです。内容を確認・修正の上、公開してください。タイトル・画像・サイズは必ず更新してください。
+          <strong>《オノマトペの庭》</strong>のクローンです。内容を確認・修正の上、公開してください。<strong>タイトルとメイン画像は必ず更新</strong>してください（他の項目は元作品の内容を引き継いでいます）。
         </div>
       </div>
 
@@ -52,6 +52,7 @@
         <div class="ktn-mgmt-context__body">
           <div class="ktn-mgmt-context__badges">
             <span class="cb cb-content cb-artwork">artwork</span>
+            <span class="ktn-mgmt-context__id" id="p611WorkId">AW-C42-1847</span>
           </div>
           <div class="ktn-mgmt-context__name"><a href="kotennavi-p6.html">《オノマトペの庭》</a></div>
           <div class="ktn-mgmt-context__meta">田中 透 · 2026年 · キャンバスに油彩</div>
@@ -73,7 +74,7 @@
       <div class="ktn-mgmt-head">
         <h2 class="ktn-mgmt-head__title" id="p611PageTitle">作品を編集</h2>
         <p class="ktn-mgmt-head__en">ARTWORK EDITOR</p>
-        <p class="ktn-mgmt-head__desc">作品情報を入力・更新してください。</p>
+        <p class="ktn-mgmt-head__desc"><strong style="color:var(--ink)">必須項目だけで登録できます</strong>（入力の目安：約3分）。<span style="color:var(--page-accent)">＋ 追加項目</span> と付いた欄を開いて入力すると作品ページの情報が充実し、興味を持ってもらいやすくなります。保存後もいつでも追記・編集できます。入力を中断するときは下の「一時保存（下書き）」で途中まで保存できます。</p>
       </div>
 
       <!-- ─── 1. 基本情報 ─── -->
@@ -85,25 +86,12 @@
 
           <!-- 作者 -->
           <div class="p211-field">
-            <label class="p211-label">作者<span class="ktn-req">必須</span></label>
-            <!-- creator＝本人で固定（入力不可・表示のみ） -->
+            <label class="p211-label">作者</label>
+            <!-- 作者は入口（p4-14／p2-12／p2-12-1）で確定済み＝p6-11 内では常に固定表示（入力不可）。creatorバッジ/ノートは p611RoleSync がロール・?author で更新 -->
             <div class="p611-author p611-author--fixed" id="p611AuthorFixed">
-              <span class="cb cb-person cb-creator">creator</span>
+              <span class="cb cb-person cb-creator" id="p611AuthorBadge">creator</span>
               <strong class="p611-author__name">田中 透</strong>
               <span class="p611-author__note">あなたの作品として登録されます</span>
-            </div>
-            <!-- gallery＝登録済みクリエイターから選択（フリーテキスト不可） -->
-            <div class="p611-author p611-author--select" id="p611AuthorSelect" hidden>
-              <select class="p211-input p611-author__sel" id="p611AuthorSel">
-                <option value="">— 作者を選択 —</option>
-                <option value="tanaka"    data-genre="油彩・現代美術">田中 透（油彩・現代美術）</option>
-                <option value="sato"      data-genre="日本画">佐藤 みなと（日本画）</option>
-                <option value="suzuki"    data-genre="現代美術・立体">鈴木 洋（現代美術・立体）</option>
-                <option value="ito"       data-genre="写真">伊藤 かえで（写真）</option>
-                <option value="takahashi" data-genre="油彩">高橋 信（油彩）</option>
-                <option value="ohno"      data-genre="ミクストメディア">大野 藍（ミクストメディア）</option>
-              </select>
-              <p class="p211-help">個展なびに<strong>登録済みのクリエイター</strong>のみ選択できます。作者本人がクリエイター登録している必要があり、未登録の作家の作品は登録できません（取り扱う作品の真正性を担保するためのルールです）。</p>
             </div>
           </div>
 
@@ -119,54 +107,205 @@
             <input class="p211-input" type="text" value="オノマトペノニワ" placeholder="全角カタカナ">
           </div>
 
-          <!-- タイトル（英語） -->
-          <div class="p211-field">
-            <label class="p211-label">作品タイトル（英語）</label>
-            <input class="p211-input" type="text" value="Onomatopoeia Garden" placeholder="English title (optional)">
-          </div>
-
           <!-- ジャンル -->
           <div class="p211-field">
             <label class="p211-label">ジャンル<span class="ktn-req">必須</span></label>
             <p class="p211-help" style="margin-bottom:6px">作品にもっとも近いジャンルを選んでください。</p>
             <div class="p211-pill-group" id="p611GenreGroup">
-              <label class="p211-pill is-active"><input type="radio" name="p611genre" value="painting" checked>絵画</label>
-              <label class="p211-pill"><input type="radio" name="p611genre" value="print">版画</label>
-              <label class="p211-pill"><input type="radio" name="p611genre" value="sculpture">立体・彫刻</label>
-              <label class="p211-pill"><input type="radio" name="p611genre" value="craft">工芸</label>
+              <label class="p211-pill is-active"><input type="radio" name="p611genre" value="art" checked>アート</label>
+              <label class="p211-pill"><input type="radio" name="p611genre" value="craft">クラフト</label>
+              <label class="p211-pill"><input type="radio" name="p611genre" value="fashion">ファッション</label>
               <label class="p211-pill"><input type="radio" name="p611genre" value="photo">写真</label>
+              <label class="p211-pill"><input type="radio" name="p611genre" value="arch">建築</label>
               <label class="p211-pill"><input type="radio" name="p611genre" value="other">その他</label>
             </div>
           </div>
 
-          <!-- タグ -->
-          <div class="p211-field">
-            <label class="p211-label">タグ</label>
-            <div class="p211-tag-area" id="p611TagArea">
-              <span class="p211-tag">絵画<button class="p211-tag__del" onclick="this.closest('.p211-tag').remove()" type="button">✕</button></span>
-              <span class="p211-tag">油彩<button class="p211-tag__del" onclick="this.closest('.p211-tag').remove()" type="button">✕</button></span>
-              <span class="p211-tag">現代美術<button class="p211-tag__del" onclick="this.closest('.p211-tag').remove()" type="button">✕</button></span>
-              <span class="p211-tag">オノマトペ<button class="p211-tag__del" onclick="this.closest('.p211-tag').remove()" type="button">✕</button></span>
-              <input class="p211-tag-input" id="p611TagInput" type="text" placeholder="タグを入力してEnter">
-              <span class="p211-tag-hint">半角スペース区切り</span>
+          <!-- 追加項目：英語タイトル・タグ -->
+          <div class="p211-sub-links">
+            <a class="p211-sub-link" href="#" onclick="toggleAcc('p611AccBasicOpt', this); return false;">
+              <svg class="p211-sub-link__icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M1.5 1.5h5l6 6-5 5-6-6z" stroke-linejoin="round"/><circle cx="4.5" cy="4.5" r="1"/></svg>
+              <span class="p211-sub-link__label">英語タイトル・タグを入力する</span>
+              <span class="p211-sub-link__state">✓ 入力あり</span>
+              <span class="p211-sub-link__opt">＋ 追加項目</span>
+              <span class="p211-sub-link__arr"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" width="13" height="13"><path d="M3.5 5.25 7 8.75l3.5-3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="p211-sub-link__benefit">タグ検索・関連作品から見つけてもらいやすくなり、英語タイトルは海外の方にも作品を伝えます。</span>
+            </a>
+            <div class="p211-acc-panel" id="p611AccBasicOpt" hidden>
+              <div class="p211-field">
+                <label class="p211-label">作品タイトル（英語）</label>
+                <input class="p211-input" type="text" value="Onomatopoeia Garden" placeholder="English title (optional)">
+              </div>
+              <div class="p211-field">
+                <label class="p211-label">タグ</label>
+                <div class="p211-tag-area" id="p611TagArea">
+                  <span class="p211-tag">絵画<button class="p211-tag__del" onclick="this.closest('.p211-tag').remove()" type="button">✕</button></span>
+                  <span class="p211-tag">油彩<button class="p211-tag__del" onclick="this.closest('.p211-tag').remove()" type="button">✕</button></span>
+                  <span class="p211-tag">現代美術<button class="p211-tag__del" onclick="this.closest('.p211-tag').remove()" type="button">✕</button></span>
+                  <span class="p211-tag">オノマトペ<button class="p211-tag__del" onclick="this.closest('.p211-tag').remove()" type="button">✕</button></span>
+                  <input class="p211-tag-input" id="p611TagInput" type="text" placeholder="タグを入力してEnter">
+                  <span class="p211-tag-hint">半角スペース区切り</span>
+                </div>
+                <p class="p211-help">作品カテゴリーを表すハッシュタグの単語を入力してください。</p>
+              </div>
             </div>
-            <p class="p211-help">作品カテゴリーを表すハッシュタグの単語を入力してください。</p>
           </div>
 
         </div>
       </div>
 
-      <!-- ─── 2. 作品仕様 ─── -->
+      <!-- ─── 2. 画像 ─── -->
+      <div class="p211-block">
+        <div class="p211-block__head">
+          <div class="p211-block__title">画像 <span class="p211-block__title-en">Images</span></div>
+        </div>
+        <div class="p211-block__body">
+
+          <div class="p211-field">
+            <label class="p211-label">メイン画像<span class="ktn-req">必須</span></label>
+            <p class="p211-help" style="margin-bottom:8px">作品一覧・作品ページで最初に表示されます。作品全体が写った画像を推奨します。</p>
+            <div class="p211-img-uploaded">
+              <div class="p211-img-uploaded__thumb" style="background:linear-gradient(155deg,#b8d8cc,#6a9e8a)"></div>
+              <div class="p211-img-uploaded__body">
+                <div class="p211-img-uploaded__row">
+                  <span class="p211-img-uploaded__name">onomatopoeia_garden_full.jpg</span>
+                  <button class="p211-img-uploaded__del" type="button" title="削除">
+                    <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" width="12" height="12"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg>
+                  </button>
+                </div>
+                <input type="text" class="p211-img-caption" maxlength="60" placeholder="キャプション（任意）例：作品全体" value="全体 — キャンバスに油彩 116.7×91.0cm">
+              </div>
+            </div>
+            <div class="p211-img-drop" id="p611MainDrop" onclick="document.getElementById('p611MainFile').click()">
+              <button class="p211-img-drop__btn" type="button">画像を選択</button>
+              <div>または、画像をドラッグ＆ドロップ</div>
+              <input type="file" id="p611MainFile" accept="image/jpeg" hidden>
+            </div>
+          </div>
+
+          <!-- 追加項目：サブ画像 -->
+          <div class="p211-sub-links">
+            <a class="p211-sub-link" href="#" onclick="toggleAcc('p611AccSubImg', this); return false;">
+              <svg class="p211-sub-link__icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M1.5 1.5h5l6 6-5 5-6-6z" stroke-linejoin="round"/><circle cx="4.5" cy="4.5" r="1"/></svg>
+              <span class="p211-sub-link__label">サブ画像を追加する（最大9枚）</span>
+              <span class="p211-sub-link__state">✓ 入力あり</span>
+              <span class="p211-sub-link__opt">＋ 追加項目</span>
+              <span class="p211-sub-link__arr"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" width="13" height="13"><path d="M3.5 5.25 7 8.75l3.5-3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="p211-sub-link__benefit">部分・側面・展示風景など複数の画像があると、作品の魅力が伝わりやすくなります。</span>
+            </a>
+            <div class="p211-acc-panel" id="p611AccSubImg" hidden>
+              <div class="p211-field">
+                <label class="p211-label">サブ画像（最大9枚）</label>
+                <p class="p211-help" style="margin-bottom:8px">部分・側面・額装・展示風景など。左のハンドル（⠿）をドラッグして表示順を入れ替えられます。各画像にキャプションを付けられます。</p>
+                <div class="p211-img-list" id="p611SubList">
+                  <div class="p211-img-uploaded">
+                    <span class="p211-img-uploaded__handle" draggable="true" title="ドラッグして並べ替え" aria-label="ドラッグして並べ替え">
+                      <svg viewBox="0 0 12 12" width="12" height="12" fill="currentColor"><circle cx="3.5" cy="2.5" r="1"/><circle cx="8.5" cy="2.5" r="1"/><circle cx="3.5" cy="6" r="1"/><circle cx="8.5" cy="6" r="1"/><circle cx="3.5" cy="9.5" r="1"/><circle cx="8.5" cy="9.5" r="1"/></svg>
+                    </span>
+                    <div class="p211-img-uploaded__thumb" style="background:linear-gradient(135deg,#9cc4b8,#5a8e7a)"></div>
+                    <div class="p211-img-uploaded__body">
+                      <div class="p211-img-uploaded__row">
+                        <span class="p211-img-uploaded__name">onomatopoeia_garden_detail01.jpg</span>
+                        <button class="p211-img-uploaded__del" type="button" title="削除">
+                          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" width="12" height="12"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg>
+                        </button>
+                      </div>
+                      <input type="text" class="p211-img-caption" maxlength="60" placeholder="キャプション（任意）" value="詳細① — 中央部分のテクスチャー">
+                    </div>
+                  </div>
+                  <div class="p211-img-uploaded">
+                    <span class="p211-img-uploaded__handle" draggable="true" title="ドラッグして並べ替え" aria-label="ドラッグして並べ替え">
+                      <svg viewBox="0 0 12 12" width="12" height="12" fill="currentColor"><circle cx="3.5" cy="2.5" r="1"/><circle cx="8.5" cy="2.5" r="1"/><circle cx="3.5" cy="6" r="1"/><circle cx="8.5" cy="6" r="1"/><circle cx="3.5" cy="9.5" r="1"/><circle cx="8.5" cy="9.5" r="1"/></svg>
+                    </span>
+                    <div class="p211-img-uploaded__thumb" style="background:linear-gradient(155deg,#d0e8e0,#8abba8)"></div>
+                    <div class="p211-img-uploaded__body">
+                      <div class="p211-img-uploaded__row">
+                        <span class="p211-img-uploaded__name">onomatopoeia_garden_detail02.jpg</span>
+                        <button class="p211-img-uploaded__del" type="button" title="削除">
+                          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" width="12" height="12"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg>
+                        </button>
+                      </div>
+                      <input type="text" class="p211-img-caption" maxlength="60" placeholder="キャプション（任意）" value="詳細② — 左上の筆致">
+                    </div>
+                  </div>
+                  <div class="p211-img-uploaded">
+                    <span class="p211-img-uploaded__handle" draggable="true" title="ドラッグして並べ替え" aria-label="ドラッグして並べ替え">
+                      <svg viewBox="0 0 12 12" width="12" height="12" fill="currentColor"><circle cx="3.5" cy="2.5" r="1"/><circle cx="8.5" cy="2.5" r="1"/><circle cx="3.5" cy="6" r="1"/><circle cx="8.5" cy="6" r="1"/><circle cx="3.5" cy="9.5" r="1"/><circle cx="8.5" cy="9.5" r="1"/></svg>
+                    </span>
+                    <div class="p211-img-uploaded__thumb" style="background:linear-gradient(165deg,#c4d8d0,#7aaa98)"></div>
+                    <div class="p211-img-uploaded__body">
+                      <div class="p211-img-uploaded__row">
+                        <span class="p211-img-uploaded__name">onomatopoeia_garden_install.jpg</span>
+                        <button class="p211-img-uploaded__del" type="button" title="削除">
+                          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" width="12" height="12"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg>
+                        </button>
+                      </div>
+                      <input type="text" class="p211-img-caption" maxlength="60" placeholder="キャプション（任意）" value="展示 — Gallery SOIL 渋谷 展示風景">
+                    </div>
+                  </div>
+                </div>
+                <div class="p211-img-drop" id="p611SubDrop" onclick="document.getElementById('p611SubFile').click()">
+                  <button class="p211-img-drop__btn" type="button">画像を選択</button>
+                  <div>または、画像をドラッグ＆ドロップ</div>
+                  <p class="p211-img-count">残り 6 枚</p>
+                  <input type="file" id="p611SubFile" accept="image/jpeg" multiple hidden>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ─── 3. 作品説明 ─── -->
+      <div class="p211-block">
+        <div class="p211-block__head">
+          <div class="p211-block__title">作品説明 <span class="p211-block__title-en">Description</span></div>
+        </div>
+        <div class="p211-block__body">
+
+          <div class="p211-field">
+            <label class="p211-label">作品説明</label>
+            <textarea class="p211-textarea p211-textarea--tall">日本語特有の音象徴語（オノマトペ）が持つ音の質感を、色彩と筆跡によって視覚化した連作のうちの一点。
+
+緑のグラデーションと白の余白が織りなす画面には、「さわさわ」「ぽつぽつ」といった言葉にならない庭の気配が静かに満ちている。
+
+近くで見ると油彩の厚みとストロークの方向が音のリズムを生み、離れて見ると一つの風景として立ち上がる。観る距離によって表情を変える作品。</textarea>
+            <p class="p211-help">作品の背景・制作意図・見どころなどをできるだけ詳細にご記入ください。</p>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ─── 4. 作品仕様 ─── -->
       <div class="p211-block">
         <div class="p211-block__head">
           <div class="p211-block__title">作品仕様 <span class="p211-block__title-en">Specifications</span></div>
         </div>
         <div class="p211-block__body">
 
-          <!-- 制作年 -->
+          <!-- 制作年（4モード：単年／期間／推定〜年頃／不明） -->
           <div class="p211-field">
             <label class="p211-label">制作年<span class="ktn-req">必須</span></label>
-            <input class="p211-input" type="text" value="2026年" placeholder="例：2026年" style="max-width:200px">
+            <div class="p211-pill-group" id="p611YearMode">
+              <label class="p211-pill is-active"><input type="radio" name="p611yearmode" value="single" checked>単年</label>
+              <label class="p211-pill"><input type="radio" name="p611yearmode" value="range">期間</label>
+              <label class="p211-pill"><input type="radio" name="p611yearmode" value="circa">推定（〜年頃）</label>
+              <label class="p211-pill"><input type="radio" name="p611yearmode" value="unknown">不明</label>
+            </div>
+            <!-- 単年・推定：1つの年 -->
+            <div class="p611-year-input" data-year-input="single circa" style="margin-top:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+              <input class="p211-input" type="number" value="2026" placeholder="例：2026" style="width:120px" aria-label="制作年">
+              <span style="font-size:.82rem;color:var(--muted)">年<span data-year-suffix="circa" hidden>頃</span></span>
+            </div>
+            <!-- 期間：開始〜終了 -->
+            <div class="p611-year-input" data-year-input="range" hidden style="margin-top:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+              <input class="p211-input" type="number" placeholder="開始" style="width:110px" aria-label="制作年（開始）">
+              <span style="font-size:.82rem;color:var(--muted)">〜</span>
+              <input class="p211-input" type="number" placeholder="終了" style="width:110px" aria-label="制作年（終了）">
+              <span style="font-size:.82rem;color:var(--muted)">年</span>
+            </div>
+            <p class="p211-help">制作年は作品ページに表示され、一覧の並べ替え（制作年順）に使われます。期間・推定の場合は代表となる年（期間は終了年）で並べ替えられ、「不明」を選ぶと「制作年不明」と表示され並べ替えでは末尾にまとまります。</p>
           </div>
 
           <!-- 素材・技法 -->
@@ -192,206 +331,93 @@
             <p class="p211-help">額装込みの外寸を入力してください。立体作品は最大寸法でかまいません。</p>
           </div>
 
-          <!-- 重さ -->
-          <div class="p211-field">
-            <label class="p211-label">重さ</label>
-            <div style="display:flex;align-items:center;gap:8px">
-              <input class="p211-input" type="number" value="3.2" placeholder="0" style="width:120px">
-              <span style="font-size:.82rem;color:var(--muted)">kg（額装込み）</span>
-            </div>
-            <p class="p211-help">送料の目安計算に使用します。</p>
-          </div>
-
-          <!-- 額装 -->
-          <div class="p211-field">
-            <label class="p211-label">額装</label>
-            <div class="p211-pill-group">
-              <label class="p211-pill is-active"><input type="radio" name="p611frame" value="framed" checked>額装あり</label>
-              <label class="p211-pill"><input type="radio" name="p611frame" value="unframed">額装なし</label>
-            </div>
-          </div>
-
-          <!-- 作品状態 -->
-          <div class="p211-field">
-            <label class="p211-label">作品状態</label>
-            <input class="p211-input" type="text" value="新品・未展示" placeholder="例：新品・未展示／良好" style="max-width:360px">
-          </div>
-
-          <!-- 付属品 -->
-          <div class="p211-field">
-            <label class="p211-label">付属品</label>
-            <input class="p211-input" type="text" value="真作証明書・作家サイン入り" placeholder="例：真作証明書、額縁、保管箱">
-          </div>
-
-          <!-- エディション -->
-          <div class="p211-field">
-            <label class="p211-label">エディション・作品点数</label>
-            <input class="p211-input" type="text" placeholder="例：ed. 3/10、一点もの" style="max-width:360px">
-            <p class="p211-help">版画・写真などエディションがある場合に入力してください。一点ものは空欄で構いません。</p>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- ─── 3. 作品説明 ─── -->
-      <div class="p211-block">
-        <div class="p211-block__head">
-          <div class="p211-block__title">作品説明 <span class="p211-block__title-en">Description</span></div>
-        </div>
-        <div class="p211-block__body">
-
-          <div class="p211-field">
-            <label class="p211-label">作品説明</label>
-            <textarea class="p211-textarea p211-textarea--tall">日本語特有の音象徴語（オノマトペ）が持つ音の質感を、色彩と筆跡によって視覚化した連作のうちの一点。
-
-緑のグラデーションと白の余白が織りなす画面には、「さわさわ」「ぽつぽつ」といった言葉にならない庭の気配が静かに満ちている。
-
-近くで見ると油彩の厚みとストロークの方向が音のリズムを生み、離れて見ると一つの風景として立ち上がる。観る距離によって表情を変える作品。</textarea>
-            <p class="p211-help">作品の背景・制作意図・見どころなどをできるだけ詳細にご記入ください。</p>
-          </div>
-
-          <div class="p211-field">
-            <label class="p211-label">関連記事リンク</label>
-            <input class="p211-input" type="url" placeholder="https://">
-            <p class="p211-help">この作品を取り上げたインタビュー・レビュー記事などの URL があれば入力してください。</p>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- ─── 4. 画像 ─── -->
-      <div class="p211-block">
-        <div class="p211-block__head">
-          <div class="p211-block__title">画像 <span class="p211-block__title-en">Images</span></div>
-        </div>
-        <div class="p211-block__body">
-
-          <div class="p211-field">
-            <label class="p211-label">メイン画像<span class="ktn-req">必須</span></label>
-            <p class="p211-help" style="margin-bottom:8px">作品一覧・作品ページで最初に表示されます。作品全体が写った画像を推奨します。</p>
-            <div class="p211-img-uploaded">
-              <div class="p211-img-uploaded__thumb" style="background:linear-gradient(155deg,#b8d8cc,#6a9e8a)"></div>
-              <span class="p211-img-uploaded__name">onomatopoeia_garden_full.jpg</span>
-              <button class="p211-img-uploaded__del" type="button" title="削除">
-                <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" width="12" height="12"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg>
-              </button>
-            </div>
-            <div class="p211-img-drop" id="p611MainDrop" onclick="document.getElementById('p611MainFile').click()">
-              <button class="p211-img-drop__btn" type="button">画像を選択</button>
-              <div>または、画像をドラッグ＆ドロップ</div>
-              <input type="file" id="p611MainFile" accept="image/jpeg" hidden>
-            </div>
-          </div>
-
-          <div class="p211-field">
-            <label class="p211-label">サブ画像（最大9枚）</label>
-            <p class="p211-help" style="margin-bottom:8px">部分・側面・額装・展示風景など。アップロード後、ドラッグ＆ドロップで表示順を入れ替えられます。</p>
-            <div class="p211-img-drop" id="p611SubDrop" onclick="document.getElementById('p611SubFile').click()">
-              <button class="p211-img-drop__btn" type="button">画像を選択</button>
-              <div>または、画像をドラッグ＆ドロップ</div>
-              <p class="p211-img-count">残り 6 枚</p>
-              <input type="file" id="p611SubFile" accept="image/jpeg" multiple hidden>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- ─── 5. 関連展覧会 ─── -->
-      <div class="p211-block">
-        <div class="p211-block__head">
-          <div class="p211-block__title">関連展覧会 <span class="p211-block__title-en">Exhibition</span></div>
-        </div>
-        <div class="p211-block__body">
-          <p style="font-size:.82rem;color:var(--muted);margin:0 0 12px">この作品が紐づく展覧会：<strong style="color:var(--ink)">あなたが知らないオノマトペ — 田中 透 個展</strong>（Gallery SOIL 渋谷）</p>
+          <!-- 追加項目：重さ・額装・状態・付属品・エディション -->
           <div class="p211-sub-links">
-            <a class="p211-sub-link" href="#">
-              <svg class="p211-sub-link__icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><rect x="1" y="2" width="12" height="11" rx="1"/><line x1="1" y1="5" x2="13" y2="5"/><line x1="4" y1="1" x2="4" y2="3"/><line x1="10" y1="1" x2="10" y2="3"/></svg>
-              <span class="p211-sub-link__label">紐づく展覧会を変更する（展覧会を選択）</span>
-              <span class="p211-sub-link__arr">→</span>
+            <a class="p211-sub-link" href="#" onclick="toggleAcc('p611AccSpecOpt', this); return false;">
+              <svg class="p211-sub-link__icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M1.5 1.5h5l6 6-5 5-6-6z" stroke-linejoin="round"/><circle cx="4.5" cy="4.5" r="1"/></svg>
+              <span class="p211-sub-link__label">重さ・額装・状態などを入力する</span>
+              <span class="p211-sub-link__state">✓ 入力あり</span>
+              <span class="p211-sub-link__opt">＋ 追加項目</span>
+              <span class="p211-sub-link__arr"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" width="13" height="13"><path d="M3.5 5.25 7 8.75l3.5-3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="p211-sub-link__benefit">状態・付属品・額装がわかると購入検討者が安心でき、重さは送料の目安計算に使われます。</span>
             </a>
-          </div>
-          <p class="p211-help" style="margin-top:8px">展覧会に紐づけると、その展覧会ページの作品一覧・LIAISON タブに表示されます。</p>
-        </div>
-      </div>
+            <div class="p211-acc-panel" id="p611AccSpecOpt" hidden>
+              <!-- 重さ -->
+              <div class="p211-field">
+                <label class="p211-label">重さ</label>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <input class="p211-input" type="number" value="3.2" placeholder="0" style="width:120px">
+                  <span style="font-size:.82rem;color:var(--muted)">kg（額装込み）</span>
+                </div>
+                <p class="p211-help">送料の目安計算に使用します。</p>
+              </div>
 
-      <!-- ─── 6. LIAISON設定 ─── -->
-      <div class="p211-block">
-        <div class="p211-block__head">
-          <div class="p211-block__title">LIAISON設定 <span class="p211-block__title-en">LIAISON</span></div>
-        </div>
-        <div class="p211-block__body">
+              <!-- 額装 -->
+              <div class="p211-field">
+                <label class="p211-label">額装</label>
+                <div class="p211-pill-group" data-clearable>
+                  <label class="p211-pill is-active"><input type="radio" name="p611frame" value="framed" checked>額装あり</label>
+                  <label class="p211-pill"><input type="radio" name="p611frame" value="unframed">額装なし</label>
+                </div>
+                <p class="p211-help">選択中の項目をもう一度押すと選択を解除できます（＝額装の記載なし）。</p>
+              </div>
 
-          <div class="p211-liaison-opt" id="p611LiaisonOpt">
-            <input class="p211-liaison-opt__check" type="checkbox" id="p611LiaisonChk" onchange="toggleLiaison()">
-            <div class="p211-liaison-opt__body">
-              <div class="p211-liaison-opt__title">この作品を LIAISON で展示する</div>
-              <p class="p211-liaison-opt__desc">オンラインで作品を展示します（販売なし・無料）。展示の有効化・公開設定は展覧会の LIAISON 作品管理で行います。</p>
-              <a class="p211-liaison-opt__link" href="kotennavi-p2-12.html" id="p611LiaisonLink" hidden>
-                <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" width="10" height="10"><rect x="1" y="1" width="10" height="10" rx="1"/><line x1="4" y1="6" x2="8" y2="6"/></svg>
-                LIAISON 作品管理へ →
-              </a>
-            </div>
-          </div>
+              <!-- 作品状態 -->
+              <div class="p211-field">
+                <label class="p211-label">作品状態</label>
+                <input class="p211-input" type="text" value="新品・未展示" placeholder="例：新品・未展示／良好" style="max-width:360px">
+              </div>
 
-          <div class="p211-liaison-opt" id="p611LiaisonPlusOpt">
-            <input class="p211-liaison-opt__check" type="checkbox" id="p611LiaisonPlusChk" checked onchange="toggleLiaisonPlus()">
-            <div class="p211-liaison-opt__body">
-              <div class="p211-liaison-opt__title">この作品を LIAISON+ で販売する</div>
-              <p class="p211-liaison-opt__desc">オンライン展示＋販売を有効にします。販売価格・発送方法・梱包費などの出品設定は LIAISON+ 作品管理で行います。（販売手数料あり）</p>
-              <a class="p211-liaison-opt__link" href="kotennavi-p2-12-1.html" id="p611LiaisonPlusLink">
-                <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" width="10" height="10"><rect x="1" y="1" width="10" height="10" rx="1"/><line x1="4" y1="6" x2="8" y2="6"/><line x1="6" y1="4" x2="6" y2="8"/></svg>
-                LIAISON+ 作品管理（価格・発送設定）へ →
-              </a>
-            </div>
-          </div>
+              <!-- 付属品 -->
+              <div class="p211-field">
+                <label class="p211-label">付属品</label>
+                <input class="p211-input" type="text" value="真作証明書・作家サイン入り" placeholder="例：真作証明書、額縁、保管箱">
+              </div>
 
-        </div>
-      </div>
-
-      <!-- ─── 7. 公開設定 ─── -->
-      <div class="p211-block">
-        <div class="p211-block__head">
-          <div class="p211-block__title">公開設定 <span class="p211-block__title-en">Publish</span></div>
-        </div>
-        <div class="p211-block__body">
-
-          <label class="p211-publish-opt">
-            <input type="radio" name="p611publish" value="now" checked onchange="togglePublishDate()">
-            <div class="p211-publish-opt__body">
-              <div class="p211-publish-opt__title">今すぐ公開する</div>
-              <div class="p211-publish-opt__desc">保存と同時に公開されます。</div>
-            </div>
-          </label>
-
-          <label class="p211-publish-opt">
-            <input type="radio" name="p611publish" value="scheduled" onchange="togglePublishDate()">
-            <div class="p211-publish-opt__body">
-              <div class="p211-publish-opt__title">公開日時を指定する</div>
-              <div class="p211-publish-opt__desc">指定した日時に自動公開されます。</div>
-              <div class="p211-publish-datetime" id="p611PublishDatetime" hidden>
-                <input type="date" value="2026-06-10">
-                <input type="time" value="10:00">
+              <!-- エディション -->
+              <div class="p211-field">
+                <label class="p211-label">エディション</label>
+                <input class="p211-input" type="text" placeholder="例：ed. 3/10、一点もの" style="max-width:360px">
+                <p class="p211-help">版画・写真などエディションがある場合に入力してください。一点ものは空欄で構いません。</p>
               </div>
             </div>
-          </label>
+          </div>
 
-          <label class="p211-publish-opt">
-            <input type="radio" name="p611publish" value="draft" onchange="togglePublishDate()">
-            <div class="p211-publish-opt__body">
-              <div class="p211-publish-opt__title">下書きとして保存する</div>
-              <div class="p211-publish-opt__desc">公開せず保存します。あとから公開できます。</div>
-            </div>
-          </label>
+          <!-- その他（取扱・展示メモなど・任意）＝仕様の補足として作品仕様に含める -->
+          <div class="p211-field" style="margin-top:16px">
+            <label class="p211-label">その他</label>
+            <textarea class="p211-textarea" placeholder="例：直射日光・高温多湿を避けて保管してください。壁掛けの際は付属のワイヤーとフックをご使用ください。明るい自然光の入る湿気の少ない場所での展示がおすすめです。額装ガラスは紫外線カットタイプを推奨します。">油彩作品のため、直射日光・高温多湿の環境を避けて保管してください。額装ガラスは紫外線カットタイプを推奨します。フローティングフレーム仕様のため壁から数センチ浮かせて設置され、取付金具・ワイヤーが付属します。壁の耐荷重をご確認のうえ設置してください。</textarea>
+            <p class="p211-help">取扱方法・飾り方の提案など、仕様の補足として購入者・鑑賞者に伝えたいことを自由にご記入ください。作品ページ（p6〜p6-2）の作品仕様に「その他」として表示されます。</p>
+          </div>
 
         </div>
+      </div>
+
+      <!-- 管理者コメント欄（role=admin のときのみ表示・共通 syncAdminNote が切替） -->
+      <div class="ktn-admin-note" id="p611AdminNote" hidden>
+        <div class="ktn-admin-note__head">
+          <span class="ktn-admin-note__badge">Admin</span>
+          <span class="ktn-admin-note__title">管理者コメント</span>
+        </div>
+        <p class="ktn-admin-note__desc">管理上の対応履歴・申し送りを記録します。管理者のみが閲覧できます。</p>
+        <textarea class="ktn-admin-note__textarea" id="p611AdminComment" placeholder="例：2026-07-20 メイン画像の解像度が低いため差し替えを依頼。"></textarea>
       </div>
 
       <!-- 送信バー（sticky） -->
-      <div class="p211-submit-bar">
-        <button class="p211-submit-bar__cancel ktn-op-btn" type="button" onclick="history.back()">キャンセル</button>
-        <button class="p211-submit-bar__submit ktn-op-btn ktn-op-btn--primary" type="button" id="p611SubmitBtn" onclick="handleSubmit()">保存して公開する</button>
-        <span class="p211-submit-bar__note" id="p611SubmitNote">必須項目を入力してください</span>
+      <div class="p211-submit-bar p211-submit-bar--stacked">
+        <label class="p211-check p211-draft-check">
+          <input type="checkbox" id="p611DraftChk" onchange="syncDraftMode()">
+          <span class="p211-draft-check__text">
+            <span class="p211-draft-check__label">一時保存（下書き）として保存する</span>
+            <span class="p211-draft-check__desc">未完成でも保存できます。下書きは在庫（作品管理）にのみ残り、公開ページ・検索・出品候補には出ません。あとから在庫で仕上げると出品できます。</span>
+          </span>
+        </label>
+        <div class="p211-submit-bar__row">
+          <button class="p211-submit-bar__cancel ktn-op-btn" type="button" onclick="history.back()">キャンセル</button>
+          <button class="p211-submit-bar__submit ktn-op-btn ktn-op-btn--primary" type="button" id="p611SubmitBtn" onclick="handleSubmit()">保存する</button>
+          <span class="p211-submit-bar__progress" id="p611OptProgress"></span>
+          <span class="p211-submit-bar__note" id="p611SubmitNote">必須項目を入力すると保存できます</span>
+        </div>
       </div>
 
       </div><!-- /.ktn-mgmt-wrap -->
@@ -408,7 +434,7 @@ KTN.init({ page: 'p6-11', role: 'creator' });
 
 /* ── デモモード切り替え ── */
 var MODE_TITLES = { new: '新規作品を投稿', edit: '作品を編集', clone: '作品をクローンで作成' };
-var MODE_SUBMIT = { new: '公開する', edit: '保存して公開する', clone: '公開する' };
+var MODE_SUBMIT = { new: '保存する', edit: '保存する', clone: '保存する' };
 
 function setDemoMode(mode) {
   ['new', 'edit', 'clone'].forEach(function (m) {
@@ -418,13 +444,21 @@ function setDemoMode(mode) {
 
   document.getElementById('p611PageTitle').textContent = MODE_TITLES[mode];
   document.getElementById('p611SubmitBtn').textContent = MODE_SUBMIT[mode];
+  if (typeof syncDraftMode === 'function') syncDraftMode();
 
   var cloneBanner = document.getElementById('p611CloneBanner');
   var workBanner  = document.getElementById('p611WorkBanner');
   if (cloneBanner) cloneBanner.hidden = (mode !== 'clone');
-  if (workBanner)  workBanner.hidden  = (mode === 'new');
+  /* identity strip は「既存作品を編集している」文脈表示なので編集時のみ。
+     クローン＝新規作品を作る操作（元作品の文脈はクローンバナーが担う）／新規＝対象なし、で隠す。 */
+  if (workBanner)  workBanner.hidden  = (mode !== 'edit');
+
+  /* 作品IDは編集時のみ表示（クローン＝新規作品でID未採番） */
+  var workId = document.getElementById('p611WorkId');
+  if (workId) workId.hidden = (mode !== 'edit');
 
   if (mode === 'new') clearForm();
+  if (typeof syncOptUI === 'function') syncOptUI();
 }
 
 function clearForm() {
@@ -440,20 +474,31 @@ function clearForm() {
   document.querySelectorAll('.p211-img-uploaded').forEach(function (el) {
     el.style.display = 'none';
   });
-  ['p611LiaisonChk', 'p611LiaisonPlusChk'].forEach(function (id) {
-    var el = document.getElementById(id);
-    if (el) { el.checked = false; }
-  });
-  toggleLiaison(); toggleLiaisonPlus();
-  togglePublishDate();
+  var draft = document.getElementById('p611DraftChk');
+  if (draft) draft.checked = false;
+  if (typeof closeAllAcc === 'function') closeAllAcc();
+  if (typeof syncDraftMode === 'function') syncDraftMode();
+  if (typeof syncOptUI === 'function') syncOptUI();
 }
 
 /* ── ピル選択の active 切り替え ── */
 document.querySelectorAll('.p211-pill-group').forEach(function (group) {
   var isRadio = group.querySelector('input[type=radio]');
+  var clearable = group.hasAttribute('data-clearable');
   group.querySelectorAll('.p211-pill').forEach(function (pill) {
-    pill.addEventListener('click', function () {
+    pill.addEventListener('click', function (e) {
+      /* label クリックは「label 自身の click」＋「中の radio が発火し bubble した click」で2回走る。
+         2回目（e.target = radio input）は無視し、clearable の再クリック判定が誤爆しないようにする */
+      if (e.target && e.target.tagName === 'INPUT') return;
       if (isRadio) {
+        /* clearable グループ＝選択中のピルを再クリックすると選択解除＝入力なしに戻す（任意項目の額装など） */
+        if (clearable && pill.classList.contains('is-active')) {
+          e.preventDefault();
+          pill.classList.remove('is-active');
+          var r = pill.querySelector('input[type=radio]');
+          if (r) r.checked = false;
+          return;
+        }
         group.querySelectorAll('.p211-pill').forEach(function (p) { p.classList.remove('is-active'); });
       }
       pill.classList.toggle('is-active', !isRadio || true);
@@ -482,29 +527,25 @@ document.querySelectorAll('.p211-pill-group').forEach(function (group) {
   });
 })();
 
-/* ── LIAISON チェック ── */
-function toggleLiaison() {
-  var chk  = document.getElementById('p611LiaisonChk');
-  var link = document.getElementById('p611LiaisonLink');
-  if (link) link.hidden = !chk.checked;
-}
-function toggleLiaisonPlus() {
-  var chk  = document.getElementById('p611LiaisonPlusChk');
-  var link = document.getElementById('p611LiaisonPlusLink');
-  if (link) link.hidden = !chk.checked;
-}
-toggleLiaison();
-toggleLiaisonPlus();
-
-/* ── 公開日時フィールドの表示 ── */
-function togglePublishDate() {
-  var radios = document.querySelectorAll('input[name=p611publish]');
-  var datetime = document.getElementById('p611PublishDatetime');
-  if (!datetime) return;
-  radios.forEach(function (r) {
-    if (r.checked) datetime.hidden = (r.value !== 'scheduled');
+/* ── 制作年モード切替（単年/期間/推定/不明で入力欄を出し分け） ── */
+(function p611YearMode() {
+  var group = document.getElementById('p611YearMode');
+  if (!group) return;
+  function sync() {
+    var checked = group.querySelector('input[type=radio]:checked');
+    var mode = checked ? checked.value : 'single';
+    document.querySelectorAll('.p611-year-input').forEach(function (el) {
+      var modes = el.getAttribute('data-year-input').split(' ');
+      el.hidden = (modes.indexOf(mode) === -1);
+    });
+    var circaSuffix = document.querySelector('[data-year-suffix="circa"]');
+    if (circaSuffix) circaSuffix.hidden = (mode !== 'circa');
+  }
+  group.querySelectorAll('input[type=radio]').forEach(function (r) {
+    r.addEventListener('change', sync);
   });
-}
+  sync();
+})();
 
 /* ── 作者レジストリ（key→氏名。登録済みクリエイターのみ） ── */
 var P611_AUTHORS = {
@@ -518,35 +559,31 @@ var P611_AUTHORS = {
   mori1:'森 陽介', mori2:'森 陽介'
 };
 
-/* ── 作者ブロックの出し分け ──
-   ・?author=<key> で文脈から作者が確定している場合＝ロール不問で固定表示
-     （p2-12/p2-12-1・p4-14 の「新規作品を作成」は必ず作者を先に確定させて遷移する）
-   ・?self=1 なら「あなたの作品として登録されます」（creator 本人フロー）
-   ・パラメータ無しの直接入店のみ、従来どおりロールで固定/選択を出し分け */
+/* ── 作者ブロック（常に固定表示・p6-11 内では作者を選ばせない） ──
+   作者は入口（p4-14／p2-12/p2-12-1）で必ず確定してから遷移する＝p6-11 は「確定済み作者」を表示するだけ。
+   ・?author=<key> があればその作者を固定表示（本フロー）
+   ・?self=1 なら creator 本人フロー（「あなたの作品として登録されます」）
+   ・パラメータ無しの直接入店（デモのロール切替のみ）＝ロールに応じたデモ既定作者を固定表示 */
+var P611_GALLERY_DEFAULT_AUTHOR = 'takahashi';  /* デモ：ギャラリー在庫の代表作者 */
 window.p611RoleSync = function () {
   var r = window.ktnState && window.ktnState.role;
   var isGallery = (r === 'gallery');
   var fixed = document.getElementById('p611AuthorFixed');
-  var sel   = document.getElementById('p611AuthorSelect');
+  if (!fixed) return;
   var params = new URLSearchParams(location.search);
   var authorKey = params.get('author');
+  var isSelf = params.get('self') === '1' || (!authorKey && !isGallery);
 
-  if (authorKey && P611_AUTHORS[authorKey]) {
-    if (fixed) {
-      fixed.hidden = false;
-      var nameEl = fixed.querySelector('.p611-author__name');
-      var noteEl = fixed.querySelector('.p611-author__note');
-      if (nameEl) nameEl.textContent = P611_AUTHORS[authorKey];
-      if (noteEl) noteEl.textContent = params.get('self') === '1'
-        ? 'あなたの作品として登録されます'
-        : '選択した作者の作品として登録されます';
-    }
-    if (sel) sel.hidden = true;
-    return;
-  }
+  var name = (authorKey && P611_AUTHORS[authorKey])
+    ? P611_AUTHORS[authorKey]
+    : (isGallery ? P611_AUTHORS[P611_GALLERY_DEFAULT_AUTHOR] : '田中 透');
 
-  if (fixed) fixed.hidden = isGallery;
-  if (sel)   sel.hidden   = !isGallery;
+  var nameEl = fixed.querySelector('.p611-author__name');
+  var noteEl = fixed.querySelector('.p611-author__note');
+  if (nameEl) nameEl.textContent = name;
+  if (noteEl) noteEl.textContent = isSelf
+    ? 'あなたの作品として登録されます'
+    : '選択した作者の作品として登録されます';
 };
 
 /* ── URL パラメータで初期ロール・モード・作者を適用（新規作品フローからの遷移） ── */
@@ -563,12 +600,119 @@ window.p611RoleSync = function () {
   window.p611RoleSync();
 })();
 
-/* ── 送信ハンドラ（デモ） ── */
-function handleSubmit() {
-  if (typeof KTN !== 'undefined' && KTN.toast) {
-    KTN.toast('作品を保存しました（デモ）');
+/* ── 一時保存（下書き）チェック → 保存モード同期 ──
+   チェック時＝下書き（必須gateなし・在庫のみ／公開・検索・出品候補に出ない）。
+   未チェック時＝完成保存（必須gateあり）。ボタン名・ノートを状態で書き換える。 */
+function syncDraftMode() {
+  var chk  = document.getElementById('p611DraftChk');
+  var btn  = document.getElementById('p611SubmitBtn');
+  var note = document.getElementById('p611SubmitNote');
+  var isDraft = !!(chk && chk.checked);
+  if (btn)  btn.textContent = isDraft ? '一時保存する' : '保存する';
+  // 下書き説明は .p211-draft-check__desc が常時表示するため、
+  // 下書き時のノートは空にし、完成保存時のみ必須ガイドを出す。
+  if (note) {
+    note.style.color = '';
+    note.textContent = isDraft ? '' : '必須項目を入力すると保存できます';
   }
 }
+
+/* ── 必須テキスト欄の未入力収集（デモ）。単一 .p211-input を持つ必須欄のみ対象＝
+   サイズ（複数入力）・ジャンル（ピル）・画像はデモ簡略化で gate 対象外。 */
+function collectMissing() {
+  var missing = [];
+  document.querySelectorAll('.p211-field').forEach(function (field) {
+    if (!field.querySelector('.ktn-req')) return;
+    var inputs = field.querySelectorAll('.p211-input');
+    if (inputs.length !== 1) return;
+    if (!inputs[0].value.trim()) {
+      var lbl = field.querySelector('.p211-label');
+      missing.push(lbl ? (lbl.firstChild.textContent || '').trim() : '必須項目');
+    }
+  });
+  return missing;
+}
+
+/* ── 送信ハンドラ（デモ） ── */
+function handleSubmit() {
+  var chk = document.getElementById('p611DraftChk');
+  var note = document.getElementById('p611SubmitNote');
+  if (chk && chk.checked) {
+    if (typeof KTN !== 'undefined' && KTN.toast) KTN.toast('下書きとして在庫に保存しました（デモ）');
+    return;
+  }
+  var missing = collectMissing();
+  if (missing.length) {
+    if (note) { note.textContent = '必須項目が未入力です：' + missing.join('、'); note.style.color = '#b43c14'; }
+    if (typeof KTN !== 'undefined' && KTN.toast) KTN.toast('必須項目を入力してください（デモ）');
+    return;
+  }
+  if (note) note.style.color = '';
+  if (typeof KTN !== 'undefined' && KTN.toast) KTN.toast('作品を保存しました（デモ）');
+}
+syncDraftMode();
+
+/* ── 追加項目のアコーディオン開閉 ── */
+function toggleAcc(id, link) {
+  var panel = document.getElementById(id);
+  if (!panel) return;
+  var open = panel.hidden;
+  panel.hidden = !open;
+  if (link) link.classList.toggle('is-open', open);
+}
+function closeAllAcc() {
+  document.querySelectorAll('.p211-acc-panel').forEach(function (p) { p.hidden = true; });
+  document.querySelectorAll('.p211-sub-link.is-open').forEach(function (l) { l.classList.remove('is-open'); });
+}
+
+/* ── 追加項目の入力状況（サブリンクの「✓ 入力あり」チップ＋送信バーの充実度メーター） ── */
+var OPT_ITEMS = [
+  { panel: 'p611AccBasicOpt' },   /* 英語タイトル・タグ */
+  { panel: 'p611AccSpecOpt' },    /* 重さ・額装・状態・付属品・エディション */
+  { panel: 'p611AccSubImg' }      /* サブ画像 */
+];
+/* パネル内に1つでも入力があるか。既定チェック済みラジオ（額装＝額装あり）は
+   「入力した」とはみなさない（defaultChecked を除外）＝新規作品でメーターが誤カウントしないため。 */
+function panelFilled(panel) {
+  var els = panel.querySelectorAll('input, select, textarea');
+  for (var i = 0; i < els.length; i++) {
+    var el = els[i];
+    if (el.type === 'file') continue;
+    if (el.type === 'checkbox' || el.type === 'radio') { if (el.checked && !el.defaultChecked) return true; continue; }
+    if (el.tagName === 'SELECT') { if (el.selectedIndex > 0 && el.value !== '') return true; continue; }
+    if (el.value && el.value.trim() !== '') return true;
+  }
+  var tags = panel.querySelectorAll('.p211-tag');
+  for (var j = 0; j < tags.length; j++) { if (tags[j].style.display !== 'none') return true; }
+  var up = panel.querySelector('.p211-img-uploaded');
+  if (up && up.style.display !== 'none') return true;
+  return false;
+}
+function syncOptUI() {
+  var n = 0;
+  OPT_ITEMS.forEach(function (item) {
+    var panel = document.getElementById(item.panel);
+    if (!panel) return;
+    var filled = panelFilled(panel);
+    if (filled) n++;
+    var link = panel.previousElementSibling;
+    if (link && link.classList.contains('p211-sub-link')) link.classList.toggle('has-input', filled);
+  });
+  var meter = document.getElementById('p611OptProgress');
+  if (meter) meter.innerHTML = '追加項目の入力 <strong>' + n + '</strong> / ' + OPT_ITEMS.length;
+}
+/* 入力・操作のたびに再計算（rAF で1フレームに1回へ間引き） */
+(function () {
+  var wrap = document.querySelector('.ktn-mgmt-wrap');
+  if (!wrap) return;
+  var raf = null;
+  function queueSync() {
+    if (raf) return;
+    raf = requestAnimationFrame(function () { raf = null; syncOptUI(); });
+  }
+  ['input', 'change', 'click', 'keyup'].forEach(function (ev) { wrap.addEventListener(ev, queueSync); });
+})();
+syncOptUI();
 </script>
 </body>
 </html>

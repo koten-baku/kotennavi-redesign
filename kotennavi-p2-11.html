@@ -249,10 +249,15 @@
             <p class="p211-help" style="margin-bottom:8px">展覧会一覧などで表示されます。</p>
             <div class="p211-img-uploaded">
               <div class="p211-img-uploaded__thumb"></div>
-              <span class="p211-img-uploaded__name">portfolio_image.jpg</span>
-              <button class="p211-img-uploaded__del" type="button" title="削除">
-                <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" width="12" height="12"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg>
-              </button>
+              <div class="p211-img-uploaded__body">
+                <div class="p211-img-uploaded__row">
+                  <span class="p211-img-uploaded__name">portfolio_image.jpg</span>
+                  <button class="p211-img-uploaded__del" type="button" title="削除">
+                    <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" width="12" height="12"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg>
+                  </button>
+                </div>
+                <input type="text" class="p211-img-caption" maxlength="60" placeholder="キャプション（任意）例：会場エントランス" value="松田啓佑展「Slippage」メインビジュアル">
+              </div>
             </div>
             <div class="p211-img-drop" id="p211MainDrop" onclick="document.getElementById('p211MainFile').click()">
               <button class="p211-img-drop__btn" type="button">画像を選択</button>
@@ -274,11 +279,43 @@
             <div class="p211-acc-panel" id="p211AccSubImg" hidden>
               <div class="p211-field">
                 <label class="p211-label">サブ画像（最大9枚）</label>
-                <p class="p211-help" style="margin-bottom:8px">アップロード後、ドラッグ＆ドロップで表示順を入れ替えられます。</p>
+                <p class="p211-help" style="margin-bottom:8px">左のハンドル（⠿）をドラッグして表示順を入れ替えられます。各画像にキャプションを付けられます。</p>
+                <div class="p211-img-list" id="p211SubList">
+                  <div class="p211-img-uploaded">
+                    <span class="p211-img-uploaded__handle" draggable="true" title="ドラッグして並べ替え" aria-label="ドラッグして並べ替え">
+                      <svg viewBox="0 0 12 12" width="12" height="12" fill="currentColor"><circle cx="3.5" cy="2.5" r="1"/><circle cx="8.5" cy="2.5" r="1"/><circle cx="3.5" cy="6" r="1"/><circle cx="8.5" cy="6" r="1"/><circle cx="3.5" cy="9.5" r="1"/><circle cx="8.5" cy="9.5" r="1"/></svg>
+                    </span>
+                    <div class="p211-img-uploaded__thumb" style="background:linear-gradient(140deg,#d8c4a8,#b09068)"></div>
+                    <div class="p211-img-uploaded__body">
+                      <div class="p211-img-uploaded__row">
+                        <span class="p211-img-uploaded__name">venue_view_01.jpg</span>
+                        <button class="p211-img-uploaded__del" type="button" title="削除">
+                          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" width="12" height="12"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg>
+                        </button>
+                      </div>
+                      <input type="text" class="p211-img-caption" maxlength="60" placeholder="キャプション（任意）" value="展示風景（YUGEN Gallery 1F）">
+                    </div>
+                  </div>
+                  <div class="p211-img-uploaded">
+                    <span class="p211-img-uploaded__handle" draggable="true" title="ドラッグして並べ替え" aria-label="ドラッグして並べ替え">
+                      <svg viewBox="0 0 12 12" width="12" height="12" fill="currentColor"><circle cx="3.5" cy="2.5" r="1"/><circle cx="8.5" cy="2.5" r="1"/><circle cx="3.5" cy="6" r="1"/><circle cx="8.5" cy="6" r="1"/><circle cx="3.5" cy="9.5" r="1"/><circle cx="8.5" cy="9.5" r="1"/></svg>
+                    </span>
+                    <div class="p211-img-uploaded__thumb" style="background:linear-gradient(140deg,#c8d0d8,#8898a8)"></div>
+                    <div class="p211-img-uploaded__body">
+                      <div class="p211-img-uploaded__row">
+                        <span class="p211-img-uploaded__name">venue_view_02.jpg</span>
+                        <button class="p211-img-uploaded__del" type="button" title="削除">
+                          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" width="12" height="12"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg>
+                        </button>
+                      </div>
+                      <input type="text" class="p211-img-caption" maxlength="60" placeholder="キャプション（任意）" value="オープニングの様子">
+                    </div>
+                  </div>
+                </div>
                 <div class="p211-img-drop" id="p211SubDrop" onclick="document.getElementById('p211SubFile').click()">
                   <button class="p211-img-drop__btn" type="button">画像を選択</button>
                   <div>または、画像をドラッグ＆ドロップ</div>
-                  <p class="p211-img-count">残り 9 枚</p>
+                  <p class="p211-img-count">残り 7 枚</p>
                   <input type="file" id="p211SubFile" accept="image/jpeg" multiple hidden>
                 </div>
               </div>
@@ -1035,13 +1072,31 @@
         <ul class="ktn-form-error__list" id="p211SaveErrorList"></ul>
       </div>
 
+      <!-- 管理者コメント欄（role=admin のときのみ表示・共通 syncAdminNote が切替） -->
+      <div class="ktn-admin-note" id="p211AdminNote" hidden>
+        <div class="ktn-admin-note__head">
+          <span class="ktn-admin-note__badge">Admin</span>
+          <span class="ktn-admin-note__title">管理者コメント</span>
+        </div>
+        <p class="ktn-admin-note__desc">管理上の対応履歴・申し送りを記録します。管理者のみが閲覧できます。</p>
+        <textarea class="ktn-admin-note__textarea" id="p211AdminComment" placeholder="例：2026-07-20 会期の表記に誤りがあるため確認依頼。"></textarea>
+      </div>
+
       <!-- 送信バー（sticky） -->
-      <div class="p211-submit-bar">
-        <button class="p211-submit-bar__cancel ktn-op-btn" type="button" onclick="history.back()">キャンセル</button>
-        <button class="ktn-op-btn" type="button" onclick="saveDraft()" title="入力途中の内容を保存します（サイトには公開されません）">下書き保存</button>
-        <button class="p211-submit-bar__submit ktn-op-btn ktn-op-btn--primary" type="button" id="p211SubmitBtn" onclick="handleSubmit()" disabled>保存して確認依頼</button>
-        <span class="p211-submit-bar__progress" id="p211OptProgress"></span>
-        <span class="p211-submit-bar__note" id="p211SubmitNote">必須項目を入力してください</span>
+      <div class="p211-submit-bar p211-submit-bar--stacked">
+        <label class="p211-check p211-draft-check">
+          <input type="checkbox" id="p211DraftChk" onchange="syncDraftMode()">
+          <span class="p211-draft-check__text">
+            <span class="p211-draft-check__label">下書きとして保存する（確認依頼しない）</span>
+            <span class="p211-draft-check__desc">入力途中でも保存できます。下書きはサイトに公開されず、管理者への確認依頼も送られません。あとから続きを入力して確認依頼できます。</span>
+          </span>
+        </label>
+        <div class="p211-submit-bar__row">
+          <button class="p211-submit-bar__cancel ktn-op-btn" type="button" onclick="history.back()">キャンセル</button>
+          <button class="p211-submit-bar__submit ktn-op-btn ktn-op-btn--primary" type="button" id="p211SubmitBtn" onclick="submitPrimary()" disabled>保存して確認依頼</button>
+          <span class="p211-submit-bar__progress" id="p211OptProgress"></span>
+          <span class="p211-submit-bar__note" id="p211SubmitNote">必須項目を入力してください</span>
+        </div>
       </div>
 
       </div><!-- /.ktn-mgmt-wrap -->
@@ -1147,6 +1202,7 @@ function setDemoMode(mode) {
   applyLiaisonDateLock();
   closeAllAcc();
   syncOptUI();
+  syncDraftMode();   /* 下書きチェックはモード切替でリセット済み＝ボタン名/ノートを再同期 */
   if (typeof schedCloseEditor === 'function') schedCloseEditor();   /* モードの会期・上書きでカレンダー再描画 */
 }
 
@@ -1593,7 +1649,9 @@ function clearForm() {
   clearFieldErrors();
   var consent = document.getElementById('p211Consent');
   if (consent) consent.checked = false;
-  syncConsent();
+  var draft = document.getElementById('p211DraftChk');
+  if (draft) draft.checked = false;
+  if (typeof syncDraftMode === 'function') syncDraftMode(); else syncConsent();
 }
 
 /* ── HTML 初期値（＝編集モードのデモ内容）へ復元 ── */
@@ -1762,11 +1820,37 @@ window.p211RoleSync = function () {
   syncAdminPanels();
 };   /* ロール切替＝新規モードの出展クリエイター default が変わるためチップも再計算 */
 
-/* ── 保存前の関係者了承チェック → 送信ボタン活性 ── */
+/* ── 保存前の関係者了承チェック → 送信ボタン活性 ──
+   下書きモード（確認依頼しない保存）＝公開されないので関係者了承の gate 対象外＝常に活性。 */
 function syncConsent() {
-  var chk = document.getElementById('p211Consent');
-  var btn = document.getElementById('p211SubmitBtn');
-  if (chk && btn) btn.disabled = !chk.checked;
+  var chk   = document.getElementById('p211Consent');
+  var btn   = document.getElementById('p211SubmitBtn');
+  var draft = document.getElementById('p211DraftChk');
+  if (!btn) return;
+  var isDraft = !!(draft && draft.checked);
+  btn.disabled = !isDraft && !(chk && chk.checked);
+}
+
+/* ── 下書き（一時保存）チェック → 保存モード同期 ──
+   チェック時＝下書き保存（確認依頼フラグ OFF・必須/了承 gate なし・サイト非公開）。
+   未チェック時＝保存して確認依頼（必須 gate あり・関係者了承チェック必須）。
+   ボタン名・活性・ノートを状態で書き換える（p6-11 と同型の送信バー2段レイアウト）。 */
+function syncDraftMode() {
+  var chk  = document.getElementById('p211DraftChk');
+  var btn  = document.getElementById('p211SubmitBtn');
+  var note = document.getElementById('p211SubmitNote');
+  var isDraft = !!(chk && chk.checked);
+  if (btn) btn.textContent = isDraft ? '下書き保存' : MODE_SUBMIT[demoMode];
+  syncConsent();   /* 下書き＝常に活性／確認依頼＝了承チェックで gate */
+  /* 下書きの説明は .p211-draft-check__desc が常時表示するため、下書き時のノートは空にする */
+  if (note) { note.style.color = ''; note.textContent = isDraft ? '' : '必須項目を入力してください'; }
+}
+
+/* ── 保存ボタンのディスパッチ（下書き or 確認依頼） ── */
+function submitPrimary() {
+  var chk = document.getElementById('p211DraftChk');
+  if (chk && chk.checked) { saveDraft(); return; }
+  handleSubmit();
 }
 
 /* 会場・クリエイター選択コンボの初期化（datalist 代替） */
@@ -1834,7 +1918,7 @@ applyVenueRole();
 applyLiaisonDateLock();
 syncAdminPanels();
 renderArtists();
-syncConsent();
+syncDraftMode();
 checkVenueNew(false);
 
 /* ── 公開日時フィールドの表示 ── */

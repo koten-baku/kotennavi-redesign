@@ -709,6 +709,16 @@ function renderAll() {
   renderBottomNav();
   renderTagbar(window.ktnState.page);
   updateActiveState(window.ktnState.page);
+  syncAdminNote();
+}
+
+/* 管理者コメント欄（コンテンツ編集ページ共通）を role で表示切替。
+   .ktn-admin-note を持つページなら自動で効くため、ページ側の結線は不要。 */
+function syncAdminNote() {
+  var isAdmin = window.ktnState.role === 'admin';
+  document.querySelectorAll('.ktn-admin-note').forEach(function (el) {
+    el.hidden = !isAdmin;
+  });
 }
 
 /* ── DOMContentLoaded で初期化 ── */

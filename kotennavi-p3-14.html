@@ -57,7 +57,7 @@
         <div class="ktn-mgmt-head">
           <h2 class="ktn-mgmt-head__title">ポートフォリオ管理</h2>
           <p class="ktn-mgmt-head__en">PORTFOLIO</p>
-          <p class="ktn-mgmt-head__desc">あなたの作品を登録・管理します。作品はクリエイターページに表示でき（公開・非公開を設定可）、展覧会の LIAISON / LIAISON+ に<strong>出品</strong>できます。</p>
+          <p class="ktn-mgmt-head__desc">あなたの作品を登録・管理します。作品はクリエイターページに表示でき（公開・非公開を設定可）、展覧会の LIAISON / LIAISON+ に<strong>出品</strong>できます。各作品を開くと<strong>出品歴</strong>と<strong>オーナーメモ</strong>（非公開）を確認・記録できます。</p>
         </div>
 
         <!-- 新規作成（独立CTA） -->
@@ -65,10 +65,25 @@
           <a class="ktn-action-btn" id="p314NewBtn" href="kotennavi-p6-11.html?mode=new&author=tanaka&self=1">新規作品を作成 →</a>
         </div>
 
-        <!-- 作成済みの作品セクション -->
-        <div class="p314-sec-head">
-          <h3 class="p314-sec-head__title">登録済みの作品</h3>
-          <span class="ktn-count"><span id="p314Count">0</span>件</span>
+        <!-- 作品タブ（登録済み／売約済） -->
+        <div class="p314-tabs" role="tablist" aria-label="作品の表示切替">
+          <button class="p314-tab is-active" id="p314TabActive" role="tab" aria-selected="true" type="button">
+            登録済みの作品
+            <span class="ktn-count ktn-count--pill is-idle"><span id="p314CountActive">0</span></span>
+          </button>
+          <button class="p314-tab" id="p314TabSold" role="tab" aria-selected="false" type="button">
+            売約済（取引完了）
+            <span class="ktn-count ktn-count--pill is-idle"><span id="p314CountSold">0</span></span>
+          </button>
+        </div>
+
+        <!-- 売約済タブの注記（JSで開閉） -->
+        <div class="p314-sold-notice" id="p314SoldNotice" hidden>
+          <svg class="p314-notice__icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="17" height="17" aria-hidden="true"><path d="M2 10s3-5.5 8-5.5S18 10 18 10s-3 5.5-8 5.5S2 10 2 10Z"/><circle cx="10" cy="10" r="2.3"/></svg>
+          <div class="p314-notice__body">
+            <strong>取引完了（オンライン売約済）の作品です。</strong>
+            所有者は購入者に移っているため、<strong>この作品は編集・削除できません</strong>（販売状態・価格に限らず作品情報すべて）。クローンでの複製と、クリエイターページ上の公開／非公開の操作は引き続き可能です。
+          </div>
         </div>
 
         <!-- 公開・非公開の注記 -->
@@ -77,6 +92,15 @@
           <div class="p314-notice__body">
             <strong>「公開」の作品はクリエイターページの「作品」に表示されます。</strong>
             「非公開」の作品はサイト内には表示されませんが、LIAISON / LIAISON+ の出品候補としては使用できます（出品すると展覧会の作品ページでは閲覧できます）。
+          </div>
+        </div>
+
+        <!-- 下書きの注記（下書きがある時のみ表示・JSで開閉） -->
+        <div class="p314-draft-banner" id="p314DraftBanner" hidden>
+          <svg class="p314-draft-banner__icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="17" height="17" aria-hidden="true"><path d="M4 14.5V16h1.5l8-8-1.5-1.5-8 8Z"/><path d="M12.5 5l1.5-1.5a1 1 0 0 1 1.4 0l.1.1a1 1 0 0 1 0 1.4L14 6.5"/></svg>
+          <div class="p314-draft-banner__body">
+            <strong>作成途中の下書きが<span id="p314DraftCount">0</span>件あります。</strong>
+            下書きは未完成のため<strong>公開・出品・検索の対象にならず、上の作品数にも含みません</strong>。一覧の最上部に固定表示しています。各下書きの「編集を再開 →」から続きを入力し、必須項目がそろえば「保存（完成）」で公開・出品できるようになります。
           </div>
         </div>
 
@@ -91,7 +115,7 @@
                 <option value="unpub">非公開</option>
               </select>
             </label>
-            <label class="p314-filter">
+            <label class="p314-filter" id="p314FilterListedWrap">
               <span class="p314-filter__label">出品状況</span>
               <select class="p314-filter__sel" id="p314FilterListed">
                 <option value="">すべて</option>
@@ -122,6 +146,19 @@
         </div>
 
       </div><!-- /.ktn-mgmt-wrap -->
+
+      <!-- 削除／下書き破棄 確認モーダル（.ktn-mgmt-wrap の外＝fixed オーバーレイ） -->
+      <div class="p314-del-modal" id="p314DelModal" hidden>
+        <div class="p314-del-modal__bg" id="p314DelBg"></div>
+        <div class="p314-del-modal__panel" role="dialog" aria-modal="true" aria-labelledby="p314DelTitle">
+          <h3 class="p314-del-modal__title" id="p314DelTitle">作品を削除しますか？</h3>
+          <p class="p314-del-modal__desc" id="p314DelDesc"></p>
+          <div class="p314-del-modal__actions">
+            <button type="button" class="ktn-op-btn" id="p314DelCancel">キャンセル</button>
+            <button type="button" class="ktn-op-btn ktn-op-btn--danger" id="p314DelConfirm">削除する</button>
+          </div>
+        </div>
+      </div>
 
     </div><!-- /.ktn-content -->
   </main>
