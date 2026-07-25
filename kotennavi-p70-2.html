@@ -1,15 +1,15 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LIAISON+ 作品販売ガイド | 個展なび</title>
-  <meta name="description" content="個展なびLIAISON+ 作品販売ガイド。会場連動型オンライン展示・販売の仕組み、出品手順、申込から取引完了までのフロー、手数料体系をまとめたガイドページです。">
+  <meta name="description" content="個展なびLIAISON+ 作品販売ガイド。会場連動型オンライン展示・販売の仕組み、出品手順、申込から取引完了までのフロー、サービス利用料体系をまとめたガイドページです。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@1,400;1,600&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./kotennavi-common.css">
 </head>
-<body data-w="article" class="p70-page">
+<body data-w="article" class="p70-page p70-2-page">
 
 <div class="ktn-toast" id="ktnToast"></div>
 
@@ -27,16 +27,16 @@
   </div>
 </header>
 
-<!-- タイトルバンド：ヘッダー直下・白背景・幅制限なし -->
-<div class="p70-title-band">
+<!-- タイトルバンド（LIAISON+ ダーク） -->
+<div class="p70-title-band p70-title-band--dark">
   <div class="p70-title-band__inner">
     <div class="p70-head__sub">
-      <span class="lb-dot li-plus">LIAISON+</span>
+      <span class="lb-dot-lp-hero"><span class="dot"></span>LIAISON+</span>
       <span class="p70-head__updated">2026年4月 制定</span>
     </div>
     <h1 class="p70-head__title">作品販売ガイド</h1>
     <p class="p70-head__en">A guide to selling on LIAISON+</p>
-    <p class="p70-head__lead">リエゾン+は、実空間の展覧会に呼応する<strong>オンラインの展示・販売</strong>です。<br>このガイドでは、出展の準備から取引完了まで、知っておくべきことをひととおりまとめています。</p>
+    <p class="p70-head__lead">リエゾン+は、実空間の展覧会に呼応する<strong>オンラインの展示・販売</strong>です。<br>出展の準備から取引完了まで、知っておくべきことをひととおりまとめています。</p>
   </div>
 </div>
 
@@ -48,18 +48,18 @@
     <nav class="p70-toc" aria-label="目次">
       <div class="p70-toc__title">目次 — Contents</div>
       <ol class="p70-toc__list">
-        <li class="p70-toc__item"><span class="p70-toc__num">1</span><a class="p70-toc__link" href="#what-is-liaison-plus">LIAISON+ とは</a></li>
-        <li class="p70-toc__item"><span class="p70-toc__num">2</span><a class="p70-toc__link" href="#how-to-apply">リエゾン+を利用するには</a></li>
-        <li class="p70-toc__item"><span class="p70-toc__num">3</span><a class="p70-toc__link" href="#venue-priority">会場連動販売の仕組み</a></li>
-        <li class="p70-toc__item"><span class="p70-toc__num">4</span><a class="p70-toc__link" href="#listing-setup">出品の準備と公開</a></li>
-        <li class="p70-toc__item"><span class="p70-toc__num">5</span><a class="p70-toc__link" href="#sales-flow">販売フロー</a></li>
-        <li class="p70-toc__item"><span class="p70-toc__num">6</span><a class="p70-toc__link" href="#fees">販売手数料</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">1</span><a class="p70-toc__link" href="#about">リエゾン+ とは</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">2</span><a class="p70-toc__link" href="#apply">利用するには</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">3</span><a class="p70-toc__link" href="#venue">会場連動の仕組み</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">4</span><a class="p70-toc__link" href="#setup">出品の準備</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">5</span><a class="p70-toc__link" href="#flow">販売フロー</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">6</span><a class="p70-toc__link" href="#fees">サービス利用料</a></li>
         <li class="p70-toc__item"><span class="p70-toc__num">7</span><a class="p70-toc__link" href="#faq">よくある質問</a></li>
       </ol>
     </nav>
 
-    <!-- 1. LIAISON+ とは -->
-    <section class="p70-section" id="what-is-liaison-plus">
+    <!-- 1. リエゾン+ とは -->
+    <section class="p70-section" id="about">
       <div class="p70-section__head">
         <span class="p70-section__num">1</span>
         <h2 class="p70-section__title">リエゾン+ について</h2>
@@ -69,127 +69,74 @@
 
       <div class="p70-dl">
         <div class="p70-dl__item">
-          <div class="p70-dl__logo-cell">
-            <svg viewBox="0 40 480 160" fill="none" width="150" height="50" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <linearGradient id="p70dl-li-g" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stop-color="#ffffff"/>
-                  <stop offset="55%" stop-color="#005da7"/>
-                  <stop offset="100%" stop-color="#003f80"/>
-                </linearGradient>
-                <path id="p70dl-li-t" d="M 80 184 Q 240 56 400 184"/>
-              </defs>
-              <path d="M 20 200 Q 240 33 460 200" stroke="url(#p70dl-li-g)" stroke-width="4" fill="none" stroke-linecap="round"/>
-              <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#p70dl-li-g)">
-                <textPath href="#p70dl-li-t" startOffset="50%" text-anchor="middle">LIAISON</textPath>
-              </text>
-            </svg>
-            <span class="p70-dl__logo-label">リエゾン</span>
-          </div>
-          <dd class="p70-dl__dd">オンライン展示のみ。作品を公開し、鑑賞者に届ける。販売機能はなし。<strong>無料</strong>。</dd>
+          <dt class="p70-dl__dt">LIAISON</dt>
+          <dd class="p70-dl__dd">オンライン展示のみ（無料）。作品を公開し、鑑賞者に届けます。販売機能はなく、追加申請なしで始められます</dd>
         </div>
         <div class="p70-dl__item">
-          <div class="p70-dl__logo-cell">
-            <svg viewBox="0 40 480 160" fill="none" width="150" height="50" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <path id="p70dl-lp-t" d="M 80 184 Q 240 56 400 184"/>
-                <linearGradient id="p70dl-lp-g" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stop-color="#6a4010"/>
-                  <stop offset="30%" stop-color="#a87020"/>
-                  <stop offset="58%" stop-color="#d4a428"/>
-                  <stop offset="100%" stop-color="#6a4010"/>
-                </linearGradient>
-              </defs>
-              <path d="M 20 200 Q 240 33 460 200" stroke="url(#p70dl-lp-g)" stroke-width="4" fill="none" stroke-linecap="round"/>
-              <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#p70dl-lp-g)">
-                <textPath href="#p70dl-lp-t" startOffset="50%" text-anchor="middle">LIAISON</textPath>
-              </text>
-              <circle cx="432" cy="183" r="22" fill="#b87c10"/>
-              <text x="432" y="183" font-family="'Bodoni Moda',serif" font-size="42" font-weight="900" fill="#fff8e8" text-anchor="middle" dominant-baseline="central">+</text>
-            </svg>
-            <span class="p70-dl__logo-label">リエゾン+</span>
-          </div>
-          <dd class="p70-dl__dd">オンライン展示 + 作品販売。購入申込・決済・発送まで一連のフローをサポート。出品無料・<strong>販売成立時のみ手数料</strong>あり。</dd>
+          <dt class="p70-dl__dt">LIAISON+</dt>
+          <dd class="p70-dl__dd">オンライン展示に加えて作品販売まで。購入申込・決済・発送まで一連のフローをサポート。出品無料・<em>販売成立時のみサービス利用料</em>あり</dd>
         </div>
       </div>
 
-      <p class="p70-body" style="margin-top:14px">リエゾン+ に出展できるのは、個展なびに登録された展覧会と連動する作品のみです。展示・販売期間は、展覧会単位で設定します。</p>
+      <p class="p70-body">リエゾン+ に出展できるのは、個展なびに登録された展覧会と連動する作品のみです。展示・販売期間は、展覧会単位で設定します。</p>
+
+      <div class="p70-callout">
+        <div class="p70-callout__title">リエゾン と リエゾン+ の違いについて</div>
+        <div class="p70-callout__body">
+          2つのサービスの違いと選び方は <a href="kotennavi-p70.html">リエゾン と リエゾン+</a> でご確認いただけます。
+        </div>
+      </div>
     </section>
 
-    <!-- 2. リエゾン+を利用するには -->
-    <section class="p70-section" id="how-to-apply">
+    <!-- 2. 利用するには -->
+    <section class="p70-section" id="apply">
       <div class="p70-section__head">
         <span class="p70-section__num">2</span>
         <h2 class="p70-section__title">ご利用までの道のり</h2>
-        <span class="p70-section__en">Applying for LIAISON+</span>
+        <span class="p70-section__en">Getting started</span>
       </div>
-      <p class="p70-body">リエゾン+で作品を販売するには、クリエイター機能・ギャラリー機能のお申込みに加えて、<em>リエゾン+機能の利用申請</em>が必要です。申請はログイン後 <a href="kotennavi-p11-4.html">マイページ → リエゾン+機能申込</a> から行えます。</p>
+      <p class="p70-lead">リエゾン+で作品を販売するには、クリエイター機能・ギャラリー機能のお申込みに加えて、リエゾン+機能の利用申請が必要です。申請はログイン後 <a href="kotennavi-p11-4.html">マイページ → リエゾン+機能申込</a> から行えます。</p>
 
-      <h3 class="p70-subhead">利用条件 — ロール別の必要ステップ</h3>
-      <div class="p70-path-diagram">
-        <div class="p70-path-diagram__col p70-path-diagram__col--creator">
-          <div class="p70-path-diagram__role-head">
-            <span class="p70-path-diagram__role-tag">Creator</span>
-            <span class="p70-path-diagram__role-label">クリエイターの方</span>
-          </div>
-          <ol class="p70-path-diagram__steps">
-            <li class="p70-path-diagram__step">アカウント作成</li>
-            <li class="p70-path-diagram__step">クリエイター機能申込・承認</li>
-            <li class="p70-path-diagram__step p70-path-diagram__step--goal">リエゾン+機能申込</li>
-          </ol>
-          <p class="p70-path-diagram__note">最短3ステップで利用開始</p>
+      <div class="p70-dl">
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">Creator</dt>
+          <dd class="p70-dl__dd">アカウント作成 → クリエイター機能申込・承認 → リエゾン+機能申込。最短3ステップで利用開始できます</dd>
         </div>
-        <div class="p70-path-diagram__col p70-path-diagram__col--gallery">
-          <div class="p70-path-diagram__role-head">
-            <span class="p70-path-diagram__role-tag">Gallery</span>
-            <span class="p70-path-diagram__role-label">ギャラリーの方</span>
-          </div>
-          <ol class="p70-path-diagram__steps">
-            <li class="p70-path-diagram__step">アカウント作成</li>
-            <li class="p70-path-diagram__step">ギャラリー機能申込・承認</li>
-            <li class="p70-path-diagram__step p70-path-diagram__step--goal">リエゾン+機能申込</li>
-          </ol>
-          <p class="p70-path-diagram__note">クリエイターと同じ最短3ステップで利用開始</p>
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">Gallery</dt>
+          <dd class="p70-dl__dd">アカウント作成 → ギャラリー機能申込・承認 → リエゾン+機能申込。クリエイターと同じ最短3ステップです</dd>
         </div>
       </div>
 
       <h3 class="p70-subhead">申請から利用開始まで</h3>
       <ol class="p70-step-list">
         <li class="p70-step-list__item">ログイン後、マイページから「リエゾン+機能申込」を開きます</li>
-        <li class="p70-step-list__item">利用規約・販売手数料の内容をご確認のうえ、フォームを送信します</li>
+        <li class="p70-step-list__item">利用規約・サービス利用料の内容をご確認のうえ、フォームを送信します</li>
         <li class="p70-step-list__item">個展なび管理者が申請内容を確認します（通常数営業日以内）</li>
         <li class="p70-step-list__item">承認後、通知メールとともにリエゾン+コンソールから出展準備を始められます</li>
       </ol>
 
-      <div class="p70-callout">
+      <div class="p70-callout p70-callout--fee">
         <div class="p70-callout__title">先に「リエゾン」から始めることもできます</div>
         <div class="p70-callout__body">
-          販売機能のないリエゾンは、追加申請なしでオンライン展示を始められます。サービスに慣れてから、リエゾン+の申請に進むのも一つの選び方です。<br>
-          → <a href="kotennavi-p70-1.html">リエゾン作品出展ガイド</a>
+          販売機能のないリエゾンは、追加申請なしでオンライン展示を始められます。サービスに慣れてから、リエゾン+の申請に進むのも一つの選び方です。<a href="kotennavi-p70-1.html">リエゾン作品出展ガイド</a>
         </div>
       </div>
     </section>
 
-    <!-- 3. 会場連動販売の仕組み -->
-    <section class="p70-section" id="venue-priority">
+    <!-- 3. 会場連動の仕組み -->
+    <section class="p70-section" id="venue">
       <div class="p70-section__head">
         <span class="p70-section__num">3</span>
         <h2 class="p70-section__title">会場連動という設計</h2>
-        <span class="p70-section__en">Venue-first design</span>
+        <span class="p70-section__en">Venue-linked design</span>
       </div>
-      <p class="p70-body">リエゾン+ は実空間の展覧会に呼応するサービスである以上、<em>会場へ足を運んでくださった方を最優先</em>する設計になっています。会場で作品を実際にご覧になった方の体験と意思を、オンラインからの購入申込より重んじるためです。</p>
-
-      <div class="p70-pullquote">
-        会場での出会いが、まず先に。<br>
-        オンラインは、それを補う「もう一つの窓」として。
-        <span class="p70-pullquote__attr">— LIAISON+ Design Principle</span>
-      </div>
+      <p class="p70-lead">リエゾン+ は実空間の展覧会に呼応するサービスである以上、会場へ足を運んでくださった方を最優先する設計になっています。会場で作品を実際にご覧になった方の体験と意思を、オンラインからの購入申込より重んじるためです。</p>
 
       <div class="p70-callout p70-callout--venue">
         <div class="p70-callout__title">オンライン申込は「仮申込」として扱われます</div>
         <div class="p70-callout__body">
-          オンラインで購入申込をいただいた段階では、それはまだ<em>仮申込</em>の状態です。出展者（クリエイターまたはギャラリー）が会場の在庫を確認し、「購入確定」を行ったときに、はじめて正式な購入が成立します。<br>
-          会場で先に作品が売約となった場合でも、仮申込の方への通知はシステムが自動で行うため、混乱やトラブルを未然に防ぎます。
+          オンラインで購入申込をいただいた段階では、それはまだ仮申込の状態です。出展者が会場の在庫を確認し「購入確定」を行ったときに、はじめて正式な購入が成立します。会場で先に作品が売約となった場合でも、仮申込の方への通知はシステムが自動で行うため、混乱やトラブルを未然に防ぎます。
         </div>
       </div>
 
@@ -197,26 +144,26 @@
 
       <div class="p70-dl">
         <div class="p70-dl__item">
-          <dt class="p70-dl__dt">Sold (Venue)</dt>
-          <dd class="p70-dl__dd">会場で作品が先に売約となった場合に使います。オンラインの仮申込者全員に自動でキャンセル通知が届き、作品ステータスが「売約済」に切り替わります。</dd>
+          <dt class="p70-dl__dt">Sold at venue</dt>
+          <dd class="p70-dl__dd"><em>会場売約済</em>。会場で作品が先に売約となった場合に使います。オンラインの仮申込者全員に自動でキャンセル通知が届き、作品ステータスが「売約済」に切り替わります</dd>
         </div>
         <div class="p70-dl__item">
           <dt class="p70-dl__dt">Withdraw</dt>
-          <dd class="p70-dl__dd">出品を取り下げる際に使います（作品を引き上げる、展示の事情が変わった等）。申込者がいる場合は全員にキャンセル通知が送られます。正当な理由のない取り下げは、利用規約違反となる場合があります。</dd>
+          <dd class="p70-dl__dd"><em>出品取消</em>。出品を取り下げる際に使います。申込者がいる場合は全員にキャンセル通知が送られます。正当な理由のない取り下げは、利用規約違反となる場合があります</dd>
         </div>
       </div>
 
-      <p class="p70-body">これらの操作は、<a href="kotennavi-p3-15.html">リエゾン+コンソール</a>（クリエイター）または <a href="kotennavi-p4-15.html">リエゾン+コンソール（ギャラリー）</a> の各作品カードからご利用いただけます。</p>
+      <p class="p70-body">これらの操作は、<a href="kotennavi-p3-15.html">リエゾン+コンソール（クリエイター）</a>または <a href="kotennavi-p4-15.html">リエゾン+コンソール（ギャラリー）</a> の各作品カードからご利用いただけます。</p>
     </section>
 
-    <!-- 4. 出品の準備と公開 -->
-    <section class="p70-section" id="listing-setup">
+    <!-- 4. 出品の準備 -->
+    <section class="p70-section" id="setup">
       <div class="p70-section__head">
         <span class="p70-section__num">4</span>
         <h2 class="p70-section__title">出展の準備と公開</h2>
-        <span class="p70-section__en">Setting up your listing</span>
+        <span class="p70-section__en">Setup & publishing</span>
       </div>
-      <p class="p70-body">リエゾン+ への出展には、対象となる展覧会に紐づく出展設定が必要です。次の流れで準備を進めます。</p>
+      <p class="p70-lead">リエゾン+ への出展には、対象となる展覧会に紐づく出展設定が必要です。次の流れで準備を進めます。</p>
 
       <ol class="p70-step-list">
         <li class="p70-step-list__item">展覧会管理ページで「リエゾン+ で販売する」を有効にします</li>
@@ -226,31 +173,31 @@
         <li class="p70-step-list__item">「公開する」を実行すると、展覧会ページのリエゾン+一覧に作品が並びます</li>
       </ol>
 
-      <div class="p70-callout">
+      <div class="p70-callout p70-callout--fee">
         <div class="p70-callout__title">価格設定について</div>
         <div class="p70-callout__body">
-          販売価格は<em>税込</em>の金額をご設定ください。送料は購入確定後に出展者が別途確定するため、価格には含めません。手数料は販売価格に対して計算され、送料は手数料の計算対象外です。
+          販売価格は税込の金額をご設定ください。送料・梱包費は購入確定後に出展者が別途確定するため、販売価格には含めません。サービス利用料は、販売価格に送料・梱包費を加えた受取総額に対して計算されます（代金の回収を個展なびが代行するため）。料率は作品の販売価格帯で決まります。
         </div>
       </div>
 
       <div class="p70-callout">
         <div class="p70-callout__title">公開期間と公開前の確認</div>
         <div class="p70-callout__body">
-          リエゾン+ の作品一覧ページは、会期開始日から<em>「オンライン販売終了日」または「会期終了日」のいずれか遅い方</em>まで公開されます。公開期間外は一般の方には表示されませんが、出品者と管理者は展覧会ページの作品タブから実際の表示を確認できます（確認中はページ上部に「公開前プレビュー」の帯が表示されます）。
+          リエゾン+ の作品一覧ページは、会期開始日から「オンライン販売終了日」または「会期終了日」のいずれか遅い方まで公開されます。公開期間外は一般の方には表示されませんが、出品者と管理者は展覧会ページの作品タブから実際の表示を確認できます（確認中はページ上部に「公開前プレビュー」の帯が表示されます）。
         </div>
       </div>
     </section>
 
     <!-- 5. 販売フロー -->
-    <section class="p70-section" id="sales-flow">
+    <section class="p70-section" id="flow">
       <div class="p70-section__head">
         <span class="p70-section__num">5</span>
         <h2 class="p70-section__title">販売の流れ</h2>
-        <span class="p70-section__en">Sales flow overview</span>
+        <span class="p70-section__en">Sales flow</span>
       </div>
-      <p class="p70-body">作品の申込から取引完了まで、購入者と出展者が交互にアクションを進める<em>6つのステップ</em>があります。まずは下の図で全体を見渡してから、各ステップの詳細をご確認ください。</p>
+      <p class="p70-lead">作品の申込から取引完了まで、購入者と出展者が交互にアクションを進める6つのステップがあります。まずは下の図で全体を見渡してから、各ステップの詳細をご確認ください。</p>
 
-      <!-- フロー概観図 -->
+      <!-- フロー概観図（既存共通部品 .p70-flow-diagram を流用） -->
       <div class="p70-flow-diagram">
         <div class="p70-flow-diagram__title">取引フロー — 全6ステップ</div>
         <ol class="p70-flow-diagram__list">
@@ -383,70 +330,51 @@
 
       </div>
 
-      <div class="p70-callout p70-callout--venue" style="margin-top:20px">
+      <div class="p70-callout p70-callout--venue">
         <div class="p70-callout__title">同じ作品に複数の申込が入った場合</div>
         <div class="p70-callout__body">
-          申込順にキュー（順番待ち）で管理されます。出展者は<em>必ず申込順</em>に対応し、特定の申込者を飛ばして後の方を選ぶことはできません。1件目が「購入確定」または「会場売約済・出品取消」のいずれかで処理されるまで、2件目以降の方は待機状態です。確定期限・発送期限は、対応中の1件目をもとに計算されます。<br>
-          なお1件目が確定期限までにいずれの操作もされなかった場合、その作品は<em>自動で出品取消</em>となり、申込者全員にキャンセル通知が送られます（次の方へ自動で繰り上がることはありません）。期限切れを使った「申込者飛ばし」を防ぐための仕組みです。
-        </div>
-      </div>
-
-      <div class="p70-dl" style="margin-top:20px">
-        <div class="p70-dl__item">
-          <dt class="p70-dl__dt">Payout</dt>
-          <dd class="p70-dl__dd">取引完了分は月次で集計し、<em>翌月末</em>に指定口座へお振込みします。振込手数料は利用者負担です。</dd>
-        </div>
-        <div class="p70-dl__item">
-          <dt class="p70-dl__dt">Amount</dt>
-          <dd class="p70-dl__dd">販売価格（税込）＋ 送料 から手数料を差し引いた金額。手数料は販売価格のみに適用され、送料は対象外です。</dd>
-        </div>
-        <div class="p70-dl__item">
-          <dt class="p70-dl__dt">Timing</dt>
-          <dd class="p70-dl__dd">手数料は決済完了時のみ発生します。申込キャンセルや確定前キャンセルでは発生しません。</dd>
+          申込順にキュー（順番待ち）で管理されます。出展者は必ず申込順に対応し、特定の申込者を飛ばして後の方を選ぶことはできません。1件目が「購入確定」または「会場売約済・出品取消」のいずれかで処理されるまで、2件目以降の方は待機状態です。なお1件目が確定期限までにいずれの操作もされなかった場合、その作品は自動で出品取消となり、申込者全員にキャンセル通知が送られます（次の方へ自動で繰り上がることはありません）。期限切れを使った「申込者飛ばし」を防ぐための仕組みです。
         </div>
       </div>
     </section>
 
-    <!-- 6. 販売手数料 -->
+    <!-- 6. サービス利用料 -->
     <section class="p70-section" id="fees">
       <div class="p70-section__head">
         <span class="p70-section__num">6</span>
-        <h2 class="p70-section__title">販売手数料</h2>
-        <span class="p70-section__en">Commission</span>
+        <h2 class="p70-section__title">サービス利用料</h2>
+        <span class="p70-section__en">Service fee</span>
       </div>
-      <p class="p70-body">リエゾン+ の手数料は<em>スライディングスケール型</em>。販売価格（税込）に応じて以下の料率が適用されます。決済手数料は手数料に内包しており、出展者の別途負担はありません。</p>
+      <p class="p70-lead">リエゾン+ のサービス利用料はスライディングスケール型。作品の販売価格（税込）に応じて以下の料率が決まり、その料率を<em>販売価格＋送料＋梱包費の合計</em>に対して計算します。送料・梱包費も個展なびが代金回収を代行し決済手数料が発生するため、合計を対象にしています。決済にかかる手数料はサービス利用料に内包しており、出展者の別途負担はありません。費用がかかるのは作品が売れたとき（取引成立時）のみで、掲載・初期費用・月額費用はすべて無料です。</p>
 
-      <table class="p70-fee-table">
-        <thead>
-          <tr>
-            <th>販売価格（税込）</th>
-            <th>手数料率</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>〜 29,999円</td>
-            <td><strong>10%</strong></td>
-          </tr>
-          <tr>
-            <td>30,000円 〜</td>
-            <td><strong>8%</strong></td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="p70-dl p70-dl--ja">
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">展示の掲載</dt>
+          <dd class="p70-dl__dd">無料</dd>
+        </div>
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">初期費用・月額費用</dt>
+          <dd class="p70-dl__dd">無料</dd>
+        </div>
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">サービス利用料（作品価格 〜29,999円）</dt>
+          <dd class="p70-dl__dd"><em>10%</em>（低〜中価格帯）</dd>
+        </div>
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">サービス利用料（作品価格 30,000円〜）</dt>
+          <dd class="p70-dl__dd"><em>8%</em>（高価格帯）</dd>
+        </div>
+      </div>
+      <p class="p70-body">※ 料率は作品の販売価格帯で決まり、その料率を「販売価格＋送料＋梱包費」の合計（税込）に対して計算します。</p>
 
       <div class="p70-callout p70-callout--fee">
         <div class="p70-callout__title">計算例</div>
         <div class="p70-callout__body">
-          販売価格 50,000円（税込）の作品が売れた場合：<br>
-          手数料 ＝ 50,000 × 8% ＝ <strong>4,000円</strong><br>
-          手取り額 ＝ 50,000 − 4,000 ＋ 送料 ＝ <strong>46,000円＋送料</strong>（送料は全額手取り）<br>
-          <br>
-          手取り額の試算は <a href="#">手取り額シミュレーター</a> でご確認いただけます。
+          作品の販売価格 50,000円＋送料 1,500円＋梱包費 500円（いずれも税込）＝合計 52,000円の取引が成立した場合：料率は作品価格が30,000円以上のため8%。サービス利用料 ＝ 52,000 × 8% ＝ <em>4,160円</em>。出展者の受取額 ＝ 52,000 − 4,160 ＝ <em>47,840円</em>。ここから実際の送料・梱包費（2,000円）をお支払いいただくと、作品分の手取りは約 <em>45,840円</em> です。サービス利用料は決済完了時のみ発生し、申込キャンセルや確定前キャンセルでは発生しません。売上はあらかじめ定められた振込日にご指定の口座へお振込みします（振込手数料は利用者負担）。
         </div>
       </div>
 
-      <p class="p70-body" style="font-size:.78rem;color:var(--muted)">フェーズ2以降、100,000円〜 帯に 6% の追加ステップを設ける予定です（料率の変更は下げる方向のみ）。</p>
+      <p class="p70-body">フェーズ2以降、100,000円〜 帯に 6% の追加ステップを設ける予定です（料率の変更は下げる方向のみ）。</p>
     </section>
 
     <!-- 7. よくある質問 -->
@@ -456,6 +384,8 @@
         <h2 class="p70-section__title">よくある質問</h2>
         <span class="p70-section__en">FAQ</span>
       </div>
+      <p class="p70-lead">出品・販売に関するよくある疑問にお答えします。</p>
+
       <div class="p70-faq">
 
         <details class="p70-faq-item">
@@ -475,7 +405,7 @@
         <details class="p70-faq-item">
           <summary>同じ作品に複数の申込が来た場合はどうなりますか</summary>
           <div class="p70-faq-item__body">
-            申込はキュー（順番待ち）として管理され、申込順に並びます。出展者は<em>申込順に対応する決まり</em>で、特定の申込者を飛ばすことはできません。1件目の購入確定、または会場売約済・出品取消の操作をすると、2件目以降の方にシステムが順番を通知します。1件目が確定期限までに処理されなかった場合は、その作品が自動で出品取消となり申込者全員にキャンセル通知が送られ（次の方へ繰り上がりません）、公平性が保たれます。1作品の購入者は1名のみで、複数の方に同時に確定することはできません。
+            申込はキュー（順番待ち）として管理され、申込順に並びます。出展者は申込順に対応する決まりで、特定の申込者を飛ばすことはできません。1件目の購入確定、または会場売約済・出品取消の操作をすると、2件目以降の方にシステムが順番を通知します。1件目が確定期限までに処理されなかった場合は、その作品が自動で出品取消となり申込者全員にキャンセル通知が送られ（次の方へ繰り上がりません）、公平性が保たれます。1作品の購入者は1名のみです。
           </div>
         </details>
 
@@ -494,16 +424,16 @@
         </details>
 
         <details class="p70-faq-item">
-          <summary>手数料はいつ引かれますか。事前にクレジットカード登録は必要ですか</summary>
+          <summary>サービス利用料はいつ引かれますか。事前にクレジットカード登録は必要ですか</summary>
           <div class="p70-faq-item__body">
-            手数料は決済完了時のみ発生します。事前のクレジットカード登録は不要で、取引完了後の月次精算時に振込額から差し引かれます。申込・確定段階では一切のご負担はありません。
+            サービス利用料は決済完了時のみ発生します。出品者の事前登録は不要で、取引完了後の月次精算時に振込額から差し引かれます。申込・確定段階では一切のご負担はありません。
           </div>
         </details>
 
         <details class="p70-faq-item">
-          <summary>送料は税込・税抜どちらで入力しますか</summary>
+          <summary>送料・梱包費は税込・税抜どちらで入力しますか</summary>
           <div class="p70-faq-item__body">
-            送料は税込金額でご入力ください。送料に手数料はかかりません（手数料の計算対象は販売価格のみ）。出展者負担の場合は送料0円のご設定も可能です。
+            送料・梱包費は税込金額でご入力ください。サービス利用料は、販売価格に送料・梱包費を加えた合計に対して計算されます（代金の回収を個展なびが代行するため）。出展者負担の場合は送料0円のご設定も可能です。
           </div>
         </details>
 
@@ -515,15 +445,25 @@
         </details>
 
       </div>
+
+      <div class="ktn-guide-nav-cards">
+        <a class="ktn-guide-nav-card ktn-guide-nav-card--lp" href="kotennavi-p11-4.html">
+          <div class="ktn-guide-nav-card__icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+          </div>
+          <div class="ktn-guide-nav-card__body">
+            <span class="ktn-guide-nav-card__tag">LIAISON+</span>
+            <h4 class="ktn-guide-nav-card__title">リエゾン+ 機能を申し込む</h4>
+            <p class="ktn-guide-nav-card__desc">展覧会の会期後も、遠方のコレクターへ届けるチャンスを広げましょう。ご利用には別途申請が必要です</p>
+          </div>
+          <span class="ktn-guide-nav-card__arrow">→</span>
+        </a>
+      </div>
     </section>
 
-    <!-- フッターナビ -->
-    <div class="p70-nav-foot">
-      <a class="p70-nav-foot__link" href="#">← LIAISON+ コンソールに戻る</a>
-      <a class="p70-nav-foot__link" href="#">手取り額シミュレーター →</a>
-    </div>
-
-  </div><!-- /p70-wrap -->
+  </div>
 </main>
 
 <!-- フッター -->

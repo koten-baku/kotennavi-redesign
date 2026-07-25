@@ -11333,6 +11333,7 @@ body.p4-15-page{--page-accent:#8b5e3c}
 .p211-field{display:flex;flex-direction:column;gap:5px;margin-bottom:16px}
 .p211-field:last-child{margin-bottom:0}
 .p211-label{font-size:.75rem;font-weight:600;color:var(--ink);display:flex;align-items:center;gap:4px}
+.p211-label__unit{font-family:var(--fm);font-size:.7rem;font-weight:500;color:var(--muted);letter-spacing:.04em}
 /* 必須マーカーは共通 .ktn-req を使用（旧 .p211-req は廃止） */
 .p211-input{width:100%;padding:8px 11px;border:1px solid var(--border);border-radius:4px;font-size:.9rem;font-family:inherit;color:var(--ink);background:#fff;box-sizing:border-box;transition:border-color .12s}
 .p211-input:focus{outline:none;border-color:#2a7fa8}
@@ -11995,31 +11996,79 @@ a.p314-hist__name:hover{color:var(--page-accent)}
 }
 
 /* ─────────────────────────────────────────
-   P11-4 リエゾンプラス機能申込
+   機能申込ファミリ 共通コンポーネント（.p114-*）
+   ＝ p11-2 クリエイター機能申込 / p11-3 ギャラリー機能申込 / p11-4 リエゾンプラス機能申込
+   の3ページで共有する申込フォーム部品。命名は歴史的に p114 だが p11-2/p11-3 も本セットを使う。
+   固有部（クリエイター名/ジャンル 等）は各ページの .p211-* フォーム部品で組む。
 ───────────────────────────────────────── */
 /* .p114-wrap は .ktn-mgmt-wrap.ktn-mgmt-stack を併記（幅・余白は共通側が供給） */
-.ktn-mgmt-stack > .p114-service-banner,
 .ktn-mgmt-stack > .p114-role-notice,
 .ktn-mgmt-stack > .p211-block{margin-bottom:0}
 .ktn-mgmt-stack > .p114-section-head{margin:8px 20px -6px}
 .ktn-mgmt-stack > .p114-submit-wrap{margin-top:8px}
 
-.p114-service-banner{background:linear-gradient(135deg,rgba(184,124,16,.07),rgba(184,124,16,.03));border:1px solid rgba(184,124,16,.28);border-radius:6px;padding:20px 24px;margin-bottom:24px;text-align:center}
-.p114-service-banner__badge{display:inline-flex;align-items:center;gap:6px;font-size:.62rem;letter-spacing:.14em;font-weight:600;color:#7a5008;background:rgba(184,124,16,.12);border:1px solid rgba(184,124,16,.3);padding:3px 12px;border-radius:3px;margin-bottom:12px}
-.p114-service-banner__desc{font-size:.82rem;color:var(--muted);line-height:1.7;margin:0 auto;max-width:480px}
-.p114-service-banner__fee{display:inline-flex;align-items:center;gap:8px;margin-top:12px;font-size:.75rem;color:var(--ink);background:#fff;border:1px solid rgba(184,124,16,.2);border-radius:4px;padding:7px 16px}
-.p114-service-banner__fee strong{color:#7a5008}
+/* 申込者ストリップ（p11-2/p11-3＝申込者はログインユーザー本人＝リンク先エンティティを持たない。
+   p11-4 の .ktn-mgmt-context〔既存クリエイター/ギャラリーへリンク〕とは別＝まだ creator/gallery でない申込者を表す） */
+.p114-applicant{max-width:var(--w-detail);margin:0 auto 16px;display:flex;align-items:center;gap:12px;padding:12px 16px;background:#fff;border:1px solid var(--border);border-left:3px solid var(--page-accent,#2a5f7a);border-radius:4px}
+.p114-applicant__icon{flex-shrink:0;width:36px;height:36px;border-radius:50%;background:var(--page-accent-bg,rgba(42,95,122,.1));color:var(--page-accent,#2a5f7a);display:flex;align-items:center;justify-content:center}
+.p114-applicant__icon svg{width:18px;height:18px}
+.p114-applicant__body{display:flex;flex-direction:column;gap:2px;min-width:0}
+.p114-applicant__label{font-family:var(--fm);font-size:.58rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.p114-applicant__name{font-family:var(--fn);font-size:.9rem;font-weight:600;color:var(--ink)}
+.p114-applicant__name small{font-weight:400;color:var(--muted);font-size:.78rem;margin-left:6px}
+
+/* ページ内目次（全ページ共通）。長い1カラムページ冒頭に置き、各ゾーン〔.ktn-zone〕へアンカージャンプ。
+   番号は自動採番。番号色/hover は --page-accent（ロール連動・未設定時 creator 青緑にフォールバック）。 */
+.ktn-index{margin:0 0 6px;padding:14px 18px 8px;background:#faf7f1;border:1px solid var(--border);border-radius:4px}
+.ktn-index[hidden]{display:none}
+.ktn-index__label{margin:0 0 6px;font-family:var(--font-en-label,'Cinzel',serif);font-size:.6rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.ktn-index__list{margin:0;padding:0;list-style:none;counter-reset:ktnidx}
+.ktn-index__list li{counter-increment:ktnidx}
+.ktn-index__link{display:flex;align-items:baseline;gap:10px;padding:9px 2px;font-family:var(--fn);font-size:.88rem;color:var(--ink);text-decoration:none;border-top:1px solid var(--border);transition:color .15s}
+.ktn-index__list li:first-child .ktn-index__link{border-top:none}
+.ktn-index__link::before{content:counter(ktnidx);font-family:var(--fm);font-size:.72rem;font-weight:600;color:var(--page-accent,#2a5f7a)}
+.ktn-index__link::after{content:"→";margin-left:auto;color:var(--page-accent,#2a5f7a);opacity:0;transform:translateX(-4px);transition:opacity .15s,transform .15s}
+.ktn-index__link:hover{color:var(--page-accent,#2a5f7a)}
+.ktn-index__link:hover::after{opacity:1;transform:translateX(0)}
+/* 目次ジャンプ先＝スティッキーヘッダー分オフセット（ゾーンヘッダー .ktn-zone に併記） */
+.ktn-index-target{scroll-margin-top:calc(var(--dh,0px) + var(--hh,50px) + 16px)}
+
+/* 大区分ゾーンヘッダー（全ページ共通）。.ktn-index の各項目に対応する「章」見出し。
+   .p114-section-head 等のサブ節見出しより上位＝太字大＋2px ink 下線で区分を明示。 */
+.ktn-zone{display:flex;align-items:baseline;gap:12px;margin:8px 0 0;padding:0 0 11px;border-bottom:2px solid var(--ink)}
+.ktn-zone__num{flex-shrink:0;font-family:var(--fm);font-size:.82rem;font-weight:700;color:var(--page-accent,#2a5f7a);line-height:1.2}
+.ktn-zone__title{font-family:var(--fn);font-size:1.08rem;font-weight:700;color:var(--ink);letter-spacing:.01em;line-height:1.2}
+.ktn-zone__en{margin-left:auto;align-self:center;font-family:var(--font-en-label,'Cinzel',serif);font-size:.6rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+
+/* LIAISON+ サービスロゴ（p11-4 の About ゾーン冒頭・kotennavi_liaison_logo.html の SVG を流用）。中央寄せのみ担う */
+.p114-about-logo{text-align:center;margin:2px 0 22px}
+.p114-about-logo svg{max-width:100%;height:auto}
+
+/* p11-2/p11-3/p11-4 冒頭のサービスガイド（申込フォーム前の入口文章）。
+   mgmt-stack の子として左右20px inset 済み。読み物としてさらに左右へ余白を与え
+   （＝入力フォームより内側に寄せて「読ませる文章」だと分かるようにする）、
+   下端の1px罫線でフォーム群と視覚的に分ける。
+   p11-4（.p114-guide）は先頭に .p114-about-logo（サービスロゴ）を内包する点だけ異なり、外枠は共通。 */
+.p112-guide,.p114-guide{padding:8px 24px 4px;margin-bottom:30px;border-bottom:1px solid var(--border)}
+.p112-guide > .p70-lead:first-child,.p114-guide > .p70-lead:first-child{margin-top:0}
+@media(max-width:540px){.p112-guide,.p114-guide{padding:4px 6px 4px}}
 
 .p114-role-notice{padding:11px 14px;background:rgba(42,95,122,.04);border:1px solid rgba(42,95,122,.18);border-radius:4px;font-size:.82rem;color:var(--ink);margin-bottom:20px;display:flex;align-items:center;gap:8px;line-height:1.5}
 .p114-role-notice svg{width:14px;height:14px;flex-shrink:0;color:#2a5f7a}
 .p114-role-notice--gallery{background:rgba(139,94,60,.04);border-color:rgba(139,94,60,.2)}
 .p114-role-notice--gallery svg{color:#8b5e3c}
+.p114-role-notice[hidden]{display:none}
 
 .p114-section-head{display:flex;align-items:center;gap:10px;margin:28px 0 14px;padding-bottom:10px;border-bottom:2px solid rgba(0,0,0,.08)}
-.p114-section-head__badge{font-size:.62rem;font-weight:600;letter-spacing:.1em;padding:3px 9px;border-radius:3px}
-.p114-section-head__badge--creator{background:rgba(42,95,122,.12);color:#1a4f6e;border:1.5px solid rgba(42,95,122,.3)}
-.p114-section-head__badge--gallery{background:rgba(139,94,60,.12);color:#6b3e18;border:1.5px solid rgba(139,94,60,.3)}
 .p114-section-head__title{font-size:.9rem;font-weight:600;color:var(--ink)}
+/* 非公開マーカー（PRIVATE 等・セクションの取り扱い区分。人物/コンテンツバッジではない） */
+.p114-section-head__badge{font-size:.6rem;font-weight:600;letter-spacing:.12em;padding:3px 8px;border-radius:3px;background:var(--tag-bg);color:var(--muted);border:1px solid var(--border);font-family:var(--fm)}
+/* 読み取り専用の本人情報（機能申込時の登録内容を引き継ぎ表示） */
+.p114-identity-readout{margin:0 0 14px;border:1px solid var(--border);border-radius:4px;background:#faf9f7}
+.p114-identity-readout__row{display:flex;gap:14px;padding:10px 14px;border-bottom:1px solid var(--border)}
+.p114-identity-readout__row:last-child{border-bottom:none}
+.p114-identity-readout dt{flex:0 0 92px;font-size:.72rem;font-weight:600;letter-spacing:.04em;color:var(--muted);font-family:var(--fn)}
+.p114-identity-readout dd{flex:1;margin:0;font-size:.86rem;color:var(--ink);font-family:var(--fs)}
 
 .p114-creator-section{display:block}
 .p114-gallery-section{display:none}
@@ -12051,9 +12100,27 @@ body.p114-role-gallery .p114-gallery-section{display:block}
 .p114-status-notice__title{font-size:.9rem;font-weight:700;margin:0 0 6px}
 .p114-status-notice__desc{font-size:.82rem;color:var(--muted);line-height:1.6;margin:0}
 
+/* 非公開情報の注記（本人確認情報ブロック冒頭＝鍵アイコン＋「公開されません」説明） */
+.p114-privacy-note{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;margin-bottom:14px;background:rgba(42,95,122,.05);border:1px solid rgba(42,95,122,.18);border-radius:4px;font-size:.78rem;line-height:1.6;color:var(--ink)}
+.p114-privacy-note svg{flex-shrink:0;width:14px;height:14px;margin-top:2px;color:var(--page-accent,#2a5f7a)}
+
+/* お申込み前の注意事項（受付不可条件・非公開情報の扱い等）。p11-2/p11-3/p11-4 共有。
+   エラー(赤 .ktn-txn-alert)ではなく「送信前に必ず読む」警告のため warm amber（LIAISON+ 料金と同系）。 */
+.p114-notice{margin:0 0 16px;padding:14px 16px;background:#fbf6ec;border:1px solid rgba(180,117,16,.3);border-radius:4px}
+.p114-notice__title{display:flex;align-items:center;gap:7px;font-family:var(--fn);font-size:.82rem;font-weight:700;color:#7a5008;margin:0 0 10px}
+.p114-notice__title svg{width:15px;height:15px;flex-shrink:0}
+.p114-notice__list{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:9px}
+.p114-notice__item{position:relative;padding-left:16px;font-size:.78rem;line-height:1.75;color:var(--ink)}
+.p114-notice__item::before{content:"";position:absolute;left:3px;top:.62em;width:5px;height:5px;border-radius:50%;background:#b47510}
+.p114-notice__item strong{font-weight:700;color:#7a5008}
+
+/* 代理人選択時のみ展開する追加欄（本人/代理人セレクタ直下）。左罫線で条件付きを示す */
+.p114-agent-block{margin-top:14px;padding:14px 16px;background:var(--paper);border:1px solid var(--border);border-left:3px solid var(--page-accent,#2a5f7a);border-radius:4px}
+.p114-agent-block[hidden]{display:none}
+.p114-agent-block__lead{font-size:.78rem;color:var(--muted);line-height:1.6;margin:0 0 12px}
+
 @media(max-width:540px){
   .p114-bank-row{flex-direction:column}
-  .p114-service-banner{padding:16px}
 }
 
 /* ─────────────────────────────────────────
@@ -12255,6 +12322,18 @@ body.mgmt-page .p5-tabnav{max-width:var(--w-detail)}
 
 /* ══ P70 ガイド・記事ページ ══ */
 .p70-page{background:var(--paper)}
+
+/* 申込・送信フォーム系（中立・ロール非依存）＝ブランド青の page-accent。paper 地は .p70-page が供給。
+   p60-11/12 お問合わせ・要望、p11-2/3/4 機能申込。ロール所有の編集ページ（mgmt-page）と違い、
+   申込者はまだそのロールの chrome（ベージュ地・ロールバー・ロール色）を持たないため中立化する。 */
+body.p60-page,body.p11-page{--page-accent:#005da7;--page-accent-bg:rgba(0,93,167,.08)}
+/* 送信フォーム系（p60-11 お問合わせ／p60-13 問題を報告する 等）で共有する
+   「文脈ボックス」＝問い合わせ元／報告対象などの対象コンテキスト表示。左罫線は中立ブランド青（--page-accent）。 */
+.ktn-form-faqhint{margin:0 0 22px;font-family:var(--fn);font-size:.82rem;line-height:1.9;color:var(--muted)}
+.ktn-refbox{margin:0 0 22px;padding:14px 16px;background:#faf7f1;border:1px solid var(--border);border-left:3px solid var(--page-accent);border-radius:4px}
+.ktn-refbox__label{display:block;font-family:var(--font-en-label,'Cinzel',serif);font-size:.58rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+.ktn-refbox__target{margin:0;font-family:var(--fs);font-size:.92rem;font-weight:600;color:var(--ink)}
+.ktn-refbox__note{margin:4px 0 0;font-family:var(--fn);font-size:.8rem;line-height:1.7;color:var(--muted)}
 .p70-title-band{background:#fff;border-bottom:1px solid var(--border)}
 .p70-title-band__inner{max-width:var(--w-article);margin:0 auto;padding:52px 20px 28px}
 .p70-wrap{max-width:var(--w-article);margin:0 auto;padding:28px 20px 60px}
@@ -12294,6 +12373,13 @@ body.mgmt-page .p5-tabnav{max-width:var(--w-detail)}
 .p70-dl__logo-label{font-family:var(--fm);font-size:.6rem;font-weight:600;letter-spacing:.08em;color:var(--muted);text-align:center}
 .p70-dl__dt{flex-shrink:0;font-family:var(--fn);font-size:.72rem;font-weight:600;color:var(--ink);background:var(--paper);border:1px solid var(--border);border-radius:3px;padding:3px 8px;white-space:nowrap}
 .p70-dl__dd{flex:1;font-family:var(--fn);font-size:.78rem;line-height:1.7;color:var(--ink);margin:0}
+/* p70 ガイドの簡易表（料金表など）。p11-2/3/4・p70 系で共有する2〜数列のヘアライン表 */
+.p70-table{width:auto;max-width:100%;border-collapse:collapse;margin:14px 0;font-family:var(--fn);font-size:.82rem}
+.p70-table th,.p70-table td{border:1px solid var(--border);padding:9px 14px;text-align:left;line-height:1.5}
+.p70-table thead th{background:var(--paper);font-weight:600;color:var(--ink);font-size:.76rem;letter-spacing:.02em}
+.p70-table tbody td:last-child{font-family:var(--fm);font-weight:600;color:var(--ink);white-space:nowrap}
+.p70-table__note{display:block;margin-top:3px;font-family:var(--fn);font-size:.68rem;font-weight:400;color:var(--muted);letter-spacing:0;white-space:normal}
+.p70-table__band{font-family:var(--fn);font-weight:400;color:var(--muted);margin-right:8px}
 .p70-flow-diagram{background:#f8f7f5;border:1px solid var(--border);border-radius:6px;padding:14px 16px;margin:16px 0}
 .p70-flow-diagram__title{font-family:var(--fn);font-size:.7rem;font-weight:600;color:var(--muted);letter-spacing:.04em;text-align:center;margin-bottom:10px}
 .p70-flow-diagram__list{display:flex;flex-wrap:wrap;align-items:stretch;justify-content:center;gap:4px;list-style:none;padding:0;margin:0}
@@ -12330,6 +12416,7 @@ body.mgmt-page .p5-tabnav{max-width:var(--w-detail)}
 .p70-step-list{counter-reset:step-counter;list-style:none;padding:0;margin:12px 0;display:flex;flex-direction:column;gap:8px}
 .p70-step-list__item{counter-increment:step-counter;display:flex;align-items:baseline;gap:10px;font-family:var(--fn);font-size:.82rem;line-height:1.7;color:var(--ink)}
 .p70-step-list__item::before{content:counter(step-counter);flex-shrink:0;width:20px;height:20px;border-radius:50%;background:var(--accent);color:#fff;font-family:var(--fm);font-size:.68rem;font-weight:600;display:flex;align-items:center;justify-content:center}
+.p70-step-list__item--prep{counter-increment:none}
 .p70-path-diagram{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0 20px}
 .p70-path-diagram__col{background:#fff;border:1px solid var(--border);border-radius:6px;padding:14px 14px 12px;display:flex;flex-direction:column}
 .p70-path-diagram__col--creator{border-top:3px solid #2a5f7a}
@@ -12616,6 +12703,28 @@ body.mgmt-page .p5-tabnav{max-width:var(--w-detail)}
   .p70-lead--cap::first-letter{font-size:2.8rem}
   .p70-pullquote{font-size:1rem;padding:28px 16px 24px;margin:32px 0}
 }
+
+
+/* ════════════════════════════════════════════════════════════════
+   P70 ガイド — LIAISON+ ダークタイトル帯（.p70-title-band--dark）
+   リエゾン+ ガイド（p70-2 等）は本文は標準 .p70- エディトリアルデザイン
+   だが、タイトル帯のみ p6-2 のダーク基調にしてサービスを差別化する。
+   ゴールド LIAISON+ バッジ（.lb-dot-lp-hero）は帯内で再利用。
+   ════════════════════════════════════════════════════════════════ */
+/* LIAISON+ バッジ（ゴールド・ダーク帯用） */
+.lb-dot-lp-hero{display:inline-flex;align-items:center;gap:5px;font-family:var(--fm);font-size:.5rem;font-weight:700;letter-spacing:.1em;padding:3px 9px 3px 7px;border-radius:20px;background:#b87c10;color:#fff;white-space:nowrap}
+.lb-dot-lp-hero .dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.85)}
+
+/* ダークタイトル帯 */
+.p70-title-band--dark{background:linear-gradient(135deg,#1a2a3a 0%,#2e3f52 60%,#1e3248 100%);border-bottom:none;position:relative;overflow:hidden}
+.p70-title-band--dark::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 80% 40%,rgba(184,124,16,.12) 0%,transparent 60%),radial-gradient(ellipse 40% 60% at 10% 80%,rgba(0,93,167,.15) 0%,transparent 55%);pointer-events:none}
+.p70-title-band--dark .p70-title-band__inner{position:relative;z-index:1}
+.p70-title-band--dark .p70-head__title{color:#fff}
+.p70-title-band--dark .p70-head__en{color:rgba(255,255,255,.5)}
+.p70-title-band--dark .p70-head__updated{color:rgba(255,255,255,.5)}
+.p70-title-band--dark .p70-head__lead{color:rgba(255,255,255,.72);opacity:1}
+.p70-title-band--dark .p70-head__lead strong,
+.p70-title-band--dark .p70-head__lead em{color:#fff;font-style:normal}
 
 
 /* ════════════════════════════════════════════════════════════════

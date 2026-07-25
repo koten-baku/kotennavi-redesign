@@ -305,26 +305,30 @@ docs/                     仕様・設計ドキュメント
 |---|---|---|
 | オンライン作品展示 | ✅ | ✅ |
 | 作品販売 | ❌ | ✅ |
-| 料金 | 無料 | 展示無料・販売手数料あり |
+| 料金 | 無料 | 展示無料・販売成立時にサービス利用料 |
 
 - 販売フロー：会場優先型（会期中は会場優先→販売期間中に申込順で購入プロセス）
 - 作品の販売状態（5種類）：販売中 / 商談中 / 売約済 / 要問合せ / 非売品
   ※「申込中」は独立バッジ廃止。「販売中」バッジ＋申込件数表示に統合
 - LIAISON+で申込者がいる場合：「販売中」バッジ（バッジ行）＋ `.aw__queue` で申込人数を `.aw__foot` 内の左側（価格と同行）に表示
 
-### LIAISON+ 販売手数料
+### LIAISON+ サービス利用料
+
+**呼称＝「サービス利用料」（2026-07-24 確定。旧「販売手数料」を全面改称）。** 理由＝手数料は作品代金だけでなく**回収する総額（作品代金＋送料＋梱包費）**に課すため、「販売」（作品の売買）を主語にすると「送料に手数料は理不尽」という反論を招く。また料率が2段階（10%／8%）で動くこと自体が「実費（決済手数料）ではなくサービスの対価」である証左なので、名目もサービスの利用料へ寄せる。掲載・展示・キュー管理・代金回収代行を含む LIAISON+ 利用全体の対価。UI表示では必ず「**作品が売れたとき（取引成立時）にかかる**」＋「**作品代金・送料・梱包費の合計に対して計算**」を近接配置し、無料訴求（掲載・初期・月額は無料）との誤読を防ぐ。**「販売手数料」は今後使わない**（Stripe決済手数料・振込手数料は別物なので据え置き）。
 
 スライディングスケール型（2段階）。クリエイター・ギャラリーともに同一料率。  
-税込販売価格に対して計算（送料は対象外）。Stripe決済手数料は手数料に**内包**（出品者の別途負担なし）。
+**課金ベース＝税込の「作品の販売価格＋送料＋梱包費」の合計**に対して計算（2026-07-24 変更）。**送料・梱包費も代金回収代行〔Stripe〕で回収し決済手数料が発生するため、合計をベースにしてサービス利用料の内包ロジックを一貫させる**（旧＝作品価格のみ・送料対象外は廃止）。Stripe決済手数料はサービス利用料に**内包**（出品者の別途負担なし）。
 Stripe決済手数料-実質マージンは利用者には非公開。
 
-| 販売価格 | 手数料率 | 実質マージン（国内カード目安） |
+**料率tier（10%／8%）を決めるのは「作品の販売価格」帯**（送料・梱包費は購入確定後に確定＝出品時点で決まらないため、tier判定は出品時点で確定する作品価格で行う）。決まった料率を合計ベースに適用する。
+
+| 作品の販売価格（tier判定） | 利用料率 | 実質マージン（国内カード目安） |
 |---|---|---|
 | 〜 29,999円 | 10% | 約 6.4% |
 | 30,000円〜 | 8% | 約 4.4% |
 
-- Stripe手数料：国内発行カード 3.6% / 海外発行カード 3.9%（税抜・手数料に内包）
-- 手数料発生タイミング：決済完了時のみ（キュー待ち中キャンセルは発生しない）
+- Stripe手数料：国内発行カード 3.6% / 海外発行カード 3.9%（税抜・サービス利用料に内包）
+- サービス利用料の発生タイミング：決済完了時のみ（キュー待ち中キャンセルは発生しない）
 - 振込：月次・翌月末払い予定・振込手数料は利用者が負担
 - フェーズ2（予定）：100,000円〜 帯に 6% を追加予定（変更は「下げる方向」のみ）
 - 詳細：`docs/06_リエゾン_サービス仕様書.md` 第16章 / P70-7（手取り額シミュレーター）
@@ -562,9 +566,40 @@ p2-5-1（LIAISON+作品一覧）・p2-12-1（LIAISON+作品管理）・p6-dark�
 
 ---
 
+## 申込・送信フォーム系（中立フォーム・`body.p70-page` ＋ `pXX-page`＝ブランド青／2026-07-23 確定）
+
+サイトのページは大きく3系統に分かれる：〈読み物（p70 ガイド）〉〈**ロール所有コンテンツの編集**（`mgmt-page`）〉〈**入力フォーム**〉。**「申込・お問合わせ・要望」などユーザーが送信するフォームは3つ目の系統**で、`mgmt-page`（＝すでにそのロールを所有している人がコンテンツを編集する画面）とは別に扱う。
+
+**対象：** p11-2 / p11-3（機能申込＝**まだ creator/gallery ロールを持たない login ユーザー**）・p60-11 / p60-12 / p60-13 / p60-14（お問合わせ・要望等）。
+
+**p11-4（リエゾンプラス機能申込）は例外＝mgmt-page（p2-11 型・2026-07-24 確定）**：p11-4 の申込者は**すでに creator/gallery ロールを所有している人**（LIAISON+ という追加機能を申し込む）。ロールを持たない p11-2/p11-3 と違い「ロール chrome を先に出すと矛盾」しないため、**p2-11 と同じ mgmt-page フォーマット**（ベージュ地・ロール別トップバー・ロール色 `--page-accent`）にする。body＝`mgmt-page p11-4-page p3-page`（creator 既定）、`setR` が `p3-page`/`p4-page` を動的トグルしてトップバー色を切替（gallery＝`p4-page`＋`body.p114-role-gallery`）。**identity strip は p3-11 と同型の `.ktn-mgmt-context`**（ロール保有者本人を media＋バッジ＋名前リンク＋view で表示。`P114_CTX`＋`p114SyncContext(r)` がロール別 populate）＝申込アカウント抽象 strip `.p114-applicant` から変更（追補⑧・p3-11 との視覚統一）。**本文は p11-2 型〈目次 `.ktn-index` → About `.ktn-zone`（`.p114-guide` 冒頭に LIAISON+ サービスロゴ `.p114-about-logo`〔`kotennavi_liaison_logo.html` の LIAISON+ Light 版 SVG〕＋p70 ガイド部品で「リエゾンとの違い／料金／販売の流れ／本人確認・口座が必要な理由」を厚く説明）→ FAQ（`liaisonplus-apply` カテゴリ）→ 申込フォーム〉**に統一（ヘッドの `__desc`/`__guides` は撤去し説明を About ゾーンへ移した。旧 `.p114-service-banner`〔説明文＋手数料の帯〕は About 本文と重複するため廃止しロゴのみ残した）。※以前 追補④ で一時中立化したが、ロール所有者の追加申込という性質に合わせ mgmt-page へ戻した（CLAUDE.md「管理ページ視覚識別」適用表の p11-4 記載と整合）。
+
+**なぜ p11-2/p11-3 は mgmt-page にしないか：** 申込者は**まだそのロール（creator/gallery）や機能を持っていない**（これから取得するために送る）。ロール所有者向けの chrome（ウォームベージュ地 `#eae6e0`・ロール別トップバー・ロール色 `--page-accent`）を先に出すのは意味的に矛盾する。creator/gallery どちら向けの申込かは、**ロール別トップバーではなくフォーム内容（ロール通知ブロック・専用セクション・申込アカウント表示名）で表現**する。
+
+**外枠・トークンの単一ソース：**
+
+| 層 | 値 | 実装 |
+|---|---|---|
+| 背景 | paper `--paper`（クールブルー・mgmt のベージュではない） | `body.p70-page{background:var(--paper)}` を付与 |
+| `--page-accent` | **ブランド青 `#005da7`（ロール非依存で中立）** | `body.p60-page,body.p11-page{--page-accent:#005da7;--page-accent-bg:rgba(0,93,167,.08)}`（canonical・`.p70-page` 直後） |
+| ヘッダー/コンテンツ幅 | 760px（`--w-detail`／`--w-article`） | `data-w="article"` で `--w-page`=760（`mgmt-page` の 760 強制は不要） |
+| indexable | noindex 継続（申込はログイン必須で送信目的のため）※SEO方針は別途判断 | `<meta robots noindex,nofollow>` |
+
+**中身は共通フォーム部品を再利用（新規フォームCSSを作らない）：** `.p211-block`／`.p211-field`＋`.ktn-req`／`.p211-input`・`.p211-select`・`.p211-textarea`・`.p211-help`、申込アカウント strip `.p114-applicant`（左罫線は `--page-accent`＝中立ブランド青）、保存エラーパネル `.ktn-form-error`、送信完了 `KTN.submitDone()`。長い申込フォームは `.ktn-mgmt-wrap`＋`.ktn-mgmt-stack`＋`.ktn-index`/`.ktn-zone`（白ボックス・アクセント線はブランド青）を、短いお問合わせ/要望は `.p70-title-band`＋`.p70-wrap` を使う（ボックスの有無は分量で選ぶ／どちらも中立 chrome ＋共通フォーム部品は同じ）。
+
+**ロールバーを出さない（p11-2/p11-3・p60系）：** これらは creator/gallery 兼用でも**ロール別トップバー・`p3-page`/`p4-page` の body 付与はしない**（中立）。ロール差は `body.p114-role-gallery`（専用セクション表示）＋ロール通知ブロック＋申込アカウント名で表現する。**identity strip は `.ktn-mgmt-context`（mgmt 用）でなく `.p114-applicant`（申込アカウント）に統一**。（p11-4 は上記のとおり例外＝mgmt-page でロールバーを出し、strip も `.p114-applicant` でなく p3-11 と同型の `.ktn-mgmt-context` を使う〔追補⑧〕。）
+
+**新規の申込・送信フォームは：** `<body data-w="article" class="p70-page p11-page">`（p60系は `p60-page`）＋共通フォーム部品をコピーするだけ。ページ個別の chrome CSS は追加しない。**ただしロール所有者が追加機能を申し込むフォーム（p11-4 型）は mgmt-page（`mgmt-page {pageid}-page p3-page`）＋ヘッドに `__desc`/`__guides`** を付ける。React 変換：中立系＝`<AppFormPage>`（p70 外枠＋中立 accent）／ロール所有者の追加申込＝`<MgmtFormPage role>`（mgmt chrome）。いずれも共通フォーム部品コンポーネントを共有。
+
+**対象コンテキストボックス（`.ktn-refbox` / `.ktn-form-faqhint`・送信フォーム系共通）：** 「問い合わせ元」「報告対象」など**送信フォームが対象とするコンテキストを表示する枠**。`.ktn-refbox`（左罫線＝中立ブランド青 `--page-accent`）＋`__label`（Cinzel）／`__target`（対象名・明朝）／`__note`（補足）。`.ktn-form-faqhint` は FAQ/別フォームへの軽い誘導文。**p60-11（お問合わせ）・p60-13（問題を報告する）で共有**（旧 p60-11 固有 `.p6011-ref*` は 2026-07-24 に汎用リネーム）。
+
+**問題報告フロー（`p60-13`「問題を報告する」＝コンテンツ報告の単一集約先・2026-07-24 確定）：** 表示系コンテンツ（展覧会/クリエイター/ギャラリー/作品/記事/レビュー）の問題報告は**コンテンツ種別ごとにページを作らず**、単一の中立フォーム `p60-13` に `?from=<pageId>&type=<contentType>` で文脈を渡す。理由 select は type で出し分け（`REPORT_REASONS`）。**ヘッダーの「問題を報告する」メニューは common.js `reportItem(page)`＋`REPORT_TYPE` マップ**（p2*→exhibition／p3→creator／p4→gallery／p6*→artwork／p7→article／p8→review）が生成。**p5（マイページ）は他者の公開コンテンツでないため報告対象外**。旧 sitemap の P2-17 は P60-13 へ集約済み。
+
+---
+
 ## 管理ページ視覚識別（`.mgmt-page`）
 
-一般公開ページと管理・編集ページを視覚的に区別するための共通クラス。**全管理ページの `<body>` に必ず付与する。**
+一般公開ページと管理・編集ページを視覚的に区別するための共通クラス。**全管理ページの `<body>` に必ず付与する。**（※ユーザーが送信する「申込・お問合わせ・要望」フォームは mgmt-page ではなく上記「申込・送信フォーム系」を使う。）
 
 ### 視覚効果
 | 効果 | CSS | 詳細 |
@@ -626,7 +661,7 @@ p2-5-1（LIAISON+作品一覧）・p2-12-1（LIAISON+作品管理）・p6-dark�
 - **公開タブナビは管理画面に出さない**（編集集中・誤操作離脱防止。identity/親リンク機能は strip が継承）。
 - **管理メニュー＝strip には置かない（2026-07-09 確定）**：strip の actions は view リンクのみ。旧「strip のみ」方式で移設した `.p3-mgmt-btn`（`管理`）は**全ページ撤去済み**（ユーザー指示「管理ボタンは不要」）。管理メニューはヘッダー `getActions()` へ寄せる想定で、その正式化は p1/p10 と同じく後続の一括作業へ後回し。**既存の管理ドロワー（`.p3-mgmt-drawer`）＋JS結線（null-safe）は残置**するが、開くトリガー（管理ボタン）が無いため現状は休眠。getActions 一括化のバッチでドロワー廃止 or getActions 結線を確定する。**例外＝p3-11 のみ**は先行して `getActions('p3-11','creator')` の `dd('オーナーメニュー')` に集約済み（ドロワーも撤去・横展開しない）。
 - **非人系（コンテンツ編集・管理）ページも同じ扱い（2026-07-09 確定・案A）**：p2-11・p6-11・p2-12・p2-12-1・p11-4 も strip は identity＋view リンクのみ。オーナーメニューは**人系と共通のヘッダー getActions 1本**に寄せる（編集対象はコンテンツでも操作主体は creator/gallery 本人で、開くメニュー内容は人系と同一のため別立てにしない）。**creator/gallery 兼用ページ（p2-11・p6-11・p11-4）は getActions もロール別に出し分ける**（p11-4 の `CTX` と同発想）。実装は p1/p10 デザインFixと同じ後続の一括バッチで人系・非人系まとめて行う（今は未実装＝16ページ全て strip 確定状態）。
-- **モード切替を持つページ**：p2-11（`id=p211ExhBanner`）・p6-11（`id=p611WorkBanner`）は編集/クローンモードで strip を hidden 切替する id を strip 根に維持。p11-4 は creator/gallery 兼用のため `syncMgmtBar()` が `CTX` デモデータで media/badge/name/view をロール別に populate。
+- **モード切替を持つページ**：p2-11（`id=p211ExhBanner`）・p6-11（`id=p611WorkBanner`）は編集/クローンモードで strip を hidden 切替する id を strip 根に維持。p11-4 は creator/gallery 兼用のため `p114SyncContext(r)`（`P114_CTX` マップ）が media/badge/name/meta/view をロール別に populate（`setR` から呼び出し・デモバー切替に追従）。
 - 新規管理ページは strip をコピーし、media 形状・badge・エンティティ名・view リンク先を対象に合わせるだけでよい。
 
 ### 管理ボックス共通パターン（`.ktn-mgmt-wrap` ＋ `.ktn-mgmt-stack`・2026-07-06 確定／2026-07-07 全管理ページへ展開完了）
@@ -864,6 +899,19 @@ on/off の2状態を切り替える汎用トグルスイッチ。canonical は `
 - 新規ページはHTMLをコピーするだけでよい（ページ個別CSS不要）。「その場で実行される操作」だが押しボタンではなく**状態の切替**である場合にこれを使う（実行系は `.ktn-op-btn`）。
 - React 変換：`<Switch checked onChange label={{on,off}}>`。
 
+### 全ページ共通：ページ内目次＋ゾーンヘッダー（`.ktn-index` / `.ktn-zone`）
+
+長い1カラムページを大区分（章）に分け、冒頭の目次から各区分へアンカージャンプさせる共通部品。canonical は `kotennavi-common.css`（`.p114-applicant__name` 直後・2026-07-23 に `.p114-*` から昇格）。**目次 `.ktn-index` とゾーンヘッダー `.ktn-zone` は対で使う**（目次の各項目 ↔ 各ゾーンの `href`/`id`）。
+
+- **目次 `.ktn-index`**：`nav.ktn-index > p.ktn-index__label`（Cinzel「INDEX」）＋`ul.ktn-index__list > li > a.ktn-index__link[href="#ゾーンid"]`。番号は CSS counter で**自動採番**（HTMLに番号を書かない）。hover で末尾 `→` が出る（ナビ affordance）。背景 `#faf7f1`・ヘアライン枠。
+- **ゾーンヘッダー `.ktn-zone`**：`div.ktn-zone.ktn-index-target[id] > span.ktn-zone__num（数字）＋ span.ktn-zone__title（章名・明朝1.08rem/700）＋ span.ktn-zone__en（Cinzel英ラベル）`。**2px ink 下線**で章を区切る。`.p114-section-head` 等のサブ節見出しより**上位の階層**（章＞節）。
+- **`.ktn-index-target`**：ゾーンヘッダーに併記するとスティッキーヘッダー分（`--dh + --hh + 16px`）の `scroll-margin-top` が付き、ジャンプ時に見出しがヘッダーに隠れない。
+- **番号色・hover 色は `var(--page-accent)`**（ロール連動・未設定時 creator 青緑 `#2a5f7a` フォールバック）。色のハードコード禁止。
+- **`.ktn-mgmt-stack` 直下に置けば左右20pxインセット自動適用**（stack の汎用ルール）。stack外で使う場合は幅を親で制御。
+- **適用済み：** p11-2（クリエイター機能申込＝目次3項目「クリエイター機能とは／よくある質問／申込フォーム」＋3ゾーンヘッダー）。p11-3/p11-4 も同方式で展開想定。
+- 新規ページはHTMLをコピーし、目次の `href` とゾーンの `id`・章名・英ラベルを差し替えるだけ（ページ個別CSS不要）。
+- React 変換：`<PageIndex items>` ＋ `<Zone num title en id>`。
+
 ### 全ページ共通：フォーム保存エラーパネル（`.ktn-form-error`）
 
 編集・管理ページの**保存ボタン押下時バリデーションエラー**の共通表示。canonical は `kotennavi-common.css`（`.ktn-listqr__url` 直後・`.ktn-guide-link` の前）。HTMLテンプレートは `docs/component-html.md`「フォーム保存エラーパネル」を参照。
@@ -877,6 +925,18 @@ on/off の2状態を切り替える汎用トグルスイッチ。canonical は `
 - **ページ側CSSは inset の margin のみ**：Model A（`.ktn-mgmt-wrap` 直接子・sticky送信バー直上）＝汎用 `.ktn-mgmt-wrap > .ktn-form-error{margin:20px 20px 16px}` が common 済みで個別CSS不要／セクション枠内に置く場合のみページ側で margin を持つ（例 `.p2-12-liaison-section > .ktn-form-error{margin:20px 16px 0}`）。
 - **適用済み**：p2-11（必須未入力＝件数サマリ行＋項目別「該当箇所へ →」）／p2-12-1（販売期間×他展覧会出品の重複＝クロスフィールド検証の実装例）。
 - React 変換：`<FormErrorPanel items>`（items=[{message, details[], hint, jumpTarget}]）。
+
+### 全ページ共通：送信完了モーダル（`KTN.submitDone()`）
+
+申込・送信フォームの**submit成功後**に出す完了モーダル。canonical JS は `kotennavi-common.js`（`ktnListQrClose` 直後・`ktnSubmitDone`）。**新規CSSなし**＝既存の `.ktn-auth-*` モーダルシェル（`.ktn-auth-overlay`／`.ktn-auth-modal`／`.ktn-auth-top--compact`＋チェックアイコン `.ktn-auth-icon`／`.ktn-auth-ttl`／`.ktn-auth-sub`／`.ktn-auth-btn-primary`）を再利用する。
+
+- **呼び出し：** `KTN.submitDone({ title, message, action:{ label, href } })`。`message` は HTML 可（`<br>` 等）。確認ボタン押下で `action.href` へ `location.href` 遷移。`href` 省略時はモーダルを閉じるだけ。
+- **モーダル注入は初回のみ**（`#ktnSubmitDoneModal` を使い回し）。`requestAnimationFrame` で `.open` 付与＝ktnListQr と同型のアニメーション。
+- **確認ボタンは1つ（primary のみ）＝完了通知は選択肢を出さない**。close ボタン（×）・overlay クリック閉じは付けない（申込は「受付済み→次へ進む」の一方向のため）。
+- **バリデーションとの役割分担：** submit 時はまず `.ktn-form-error`（保存エラーパネル）で必須チェック→通過したら `KTN.submitDone()`。エラー時は完了モーダルを出さない。
+- **適用済み：** p11-2（クリエイター機能申込＝`p112Submit()` が必須チェック通過後に呼び、`./kotennavi-p1.html`〔トップ〕へ遷移）。
+- **展開予定：** p11-3（ギャラリー機能申込）・p11-4（LIAISON+申込）等の申込/送信フォームは同じ `KTN.submitDone()` を呼ぶ（ページ個別の完了処理を書かない）。
+- React 変換：`<SubmitDoneModal open title message action={{label,href}} onConfirm>`。
 
 ### 全ページ共通：取引期限アラート（`.ktn-txn-alert` / `.p316-action-deadline__soon`）
 
@@ -968,6 +1028,7 @@ SVG の `font-family` 属性は CSS 変数に非対応のため `font-family="'M
 | `docs/component-html.md` | `.aw` / `.p25c` / `.p2-side-ec` / `.ec` コンポーネントHTML、watch / interest / check-in ボタン完成定義 |
 | `docs/badge-system.md` | バッジ形状ボキャブラリー・色パレット枠分け・各カテゴリ詳細HTML/バリアント・新規追加手順（4原則とカテゴリ一覧は CLAUDE.md 側が canonical） |
 | `docs/transaction-states.md` | 取引状態の付随ルール・状態strip書式・取引期限アラートの段階設計/JS実装（状態名テーブルとページ呼称は CLAUDE.md 側が canonical） |
+| `docs/email-templates.md` | 自動送出メール文面の単一ソース（発火点インベントリ＋文面）。Drupal 送出フェーズへの入力仕様。プレーンテキスト先行・`{{token}}` プレースホルダー。状態名/期限/呼称は CLAUDE.md・transaction-states.md が canonical |
 
 ---
 

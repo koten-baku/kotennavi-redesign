@@ -137,6 +137,56 @@ window.ktnListQr = ktnListQr;
 window.ktnListQrClose = ktnListQrClose;
 
 /* ══════════════════════════════════
+   送信完了モーダル（全ページ共通・申込/送信のsubmit後に表示）
+   ・.ktn-auth-overlay / .ktn-auth-modal シェルを再利用（新規CSSなし）
+   ・opts = { title, message(HTML可), action:{ label, href } }
+   ・確認ボタンで action.href へ遷移。href省略時は閉じるのみ
+══════════════════════════════════ */
+function ktnSubmitDone(opts) {
+  opts = opts || {};
+  var title = opts.title || '送信が完了しました';
+  var message = opts.message || '';
+  var action = opts.action || {};
+  var label = action.label || '閉じる';
+  KTN._submitDoneHref = action.href || '';
+  var el = document.getElementById('ktnSubmitDoneModal');
+  if (!el) {
+    el = document.createElement('div');
+    el.className = 'ktn-auth-overlay';
+    el.id = 'ktnSubmitDoneModal';
+    el.innerHTML =
+      '<div class="ktn-auth-modal">'
+      + '<div class="ktn-auth-top ktn-auth-top--compact">'
+      + '<div class="ktn-auth-icon">'
+      + '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>'
+      + '</div>'
+      + '<div class="ktn-auth-ttl" id="ktnSubmitDoneTtl"></div>'
+      + '<div class="ktn-auth-sub" id="ktnSubmitDoneSub"></div>'
+      + '</div>'
+      + '<div class="ktn-auth-body">'
+      + '<div class="ktn-auth-btns">'
+      + '<button class="ktn-auth-btn-primary" id="ktnSubmitDoneBtn" onclick="ktnSubmitDoneConfirm()"></button>'
+      + '</div>'
+      + '</div>'
+      + '</div>';
+    document.body.appendChild(el);
+  }
+  document.getElementById('ktnSubmitDoneTtl').textContent = title;
+  document.getElementById('ktnSubmitDoneSub').innerHTML = message;
+  document.getElementById('ktnSubmitDoneBtn').textContent = label;
+  requestAnimationFrame(function () { el.classList.add('open'); });
+}
+function ktnSubmitDoneConfirm() {
+  var href = KTN._submitDoneHref;
+  if (href) { location.href = href; return; }
+  var m = document.getElementById('ktnSubmitDoneModal');
+  if (m) m.classList.remove('open');
+}
+KTN.submitDone = ktnSubmitDone;
+window.ktnSubmitDone = ktnSubmitDone;
+window.ktnSubmitDoneConfirm = ktnSubmitDoneConfirm;
+
+/* ══════════════════════════════════
    シェア機能
 ══════════════════════════════════ */
 function doShare() {
@@ -590,16 +640,33 @@ KTN.QA = [
   { id: 'EXH-31', cat: 'exhibition-edit', aud: 'common', grp: '画像・タグ・任意項目', q: '主催者名や公式サイトのリンクは入れられますか？', a: '「主催・ウェブリンク」（＋ 追加項目）で入力できます。' },
   // H. LIAISON / LIAISON+
   { id: 'EXH-32', cat: 'exhibition-edit', aud: 'common', grp: 'LIAISON / LIAISON+', q: 'LIAISON とは何ですか？', a: '会場の展覧会と連動したオンライン作品展示サービス（無料）です。展覧会に設定すると、オンラインでも作品を見てもらえます。' },
-  { id: 'EXH-33', cat: 'exhibition-edit', aud: 'common', grp: 'LIAISON / LIAISON+', q: 'LIAISON+ とは何が違いますか？', a: '展示に加えてオンライン販売ができるサービスです（販売手数料あり）。' },
-  { id: 'EXH-34', cat: 'exhibition-edit', aud: 'common', grp: 'LIAISON / LIAISON+', q: '展覧会登録時に LIAISON を設定できますか？', a: 'はい。登録画面の LIAISON ブロックで設定します。作品の登録・出品は作品管理から行います。販売手数料・取引の流れは「LIAISON ガイド」をご参照ください。' },
+  { id: 'EXH-33', cat: 'exhibition-edit', aud: 'common', grp: 'LIAISON / LIAISON+', q: 'LIAISON+ とは何が違いますか？', a: '展示に加えてオンライン販売ができるサービスです（作品が売れたときにサービス利用料あり）。' },
+  { id: 'EXH-34', cat: 'exhibition-edit', aud: 'common', grp: 'LIAISON / LIAISON+', q: '展覧会登録時に LIAISON を設定できますか？', a: 'はい。登録画面の LIAISON ブロックで設定します。作品の登録・出品は作品管理から行います。サービス利用料・取引の流れは「LIAISON ガイド」をご参照ください。' },
   { id: 'EXH-35', cat: 'exhibition-edit', aud: 'gallery', grp: 'LIAISON / LIAISON+', q: 'ギャラリーが出品した作品は、ギャラリーページに公開されますか？', a: 'いいえ。ギャラリーの作品在庫は非公開で、展覧会に出品されたときに公開されます。' },
   // I. 編集・修正・クローン
   { id: 'EXH-36', cat: 'exhibition-edit', aud: 'common', grp: '編集・修正・クローン', q: '公開後に内容を修正できますか？', a: '編集できます。変更は管理者の確認を経て反映されます。' },
-  { id: 'EXH-37', cat: 'exhibition-edit', aud: 'common', grp: '編集・修正・クローン', q: '一部の項目が編集できなくなっています。', a: '管理者の確認が済んだ項目は、誤って変更されないようロックされます。ご自身での解除はできません。修正が必要な場合はお問合せください。' },
+  { id: 'EXH-37', cat: 'exhibition-edit', aud: 'common', grp: '編集・修正・クローン', q: '一部の項目が編集できなくなっています。', a: '管理者の確認が済んだ項目は、誤って変更されないようロックされます。ご自身での解除はできません。修正が必要な場合は{{contact}}よりご連絡ください。' },
   { id: 'EXH-38', cat: 'exhibition-edit', aud: 'common', grp: '編集・修正・クローン', q: '過去の展覧会をベースに新しく作れますか？', a: '「クローン」で過去の展覧会を複製し、内容を変えて新規登録できます。' },
   { id: 'EXH-39', cat: 'exhibition-edit', aud: 'common', grp: '編集・修正・クローン', q: '登録した展覧会を削除・非公開にしたい。', a: '管理者の確認が完了する前なら、展覧会管理ページから削除できます。確認が完了すると、ウォッチしている方への通知と個展なび公式SNSでの告知が行われるため、それ以降は削除・非公開はできません。' },
   // J. 解決しないとき
-  { id: 'EXH-40', cat: 'exhibition-edit', aud: 'common', grp: '解決しないとき', q: 'ここで解決しない場合は？', a: 'お問合せフォームからご連絡ください。' },
+  { id: 'EXH-40', cat: 'exhibition-edit', aud: 'common', grp: '解決しないとき', q: 'ここで解決しない場合は？', a: 'ここで解決しない場合は、{{contact}}よりご連絡ください。' },
+
+  /* ─── cat:'creator-apply'（クリエイター機能申込＝p11-2）───
+     申込ページ下部にアコーディオンFAQとして描画（KTN.renderQA '#p112Faq' guide）。
+     団体名申込の抑止・「確認/利用開始」の軟らか語・本人確認情報の用途統一とページ本文を整合させる。 */
+  { id: 'CAP-01', cat: 'creator-apply', aud: 'common', grp: 'よくあるご質問', q: 'クリエイター機能の利用は無料ですか？', a: 'はい、無料です。クリエイターページの作成、展覧会・作品・記事の掲載まで、費用は一切かかりません。' },
+  { id: 'CAP-11', cat: ['creator-apply', 'gallery-apply'], aud: 'common', grp: 'よくあるご質問', q: '個展以外の展覧会も掲載できますか？', a: 'はい、掲載できます。「個展なび」という名称ですが、個展のほか、グループ展・二人展・企画展など、さまざまな展覧会を掲載いただけます。' },
+  { id: 'CAP-12', cat: ['creator-apply', 'gallery-apply'], aud: 'common', grp: 'よくあるご質問', q: 'すでに私の展覧会情報が個展なびに載っているようです。引き継げますか？', a: 'はい、引き継げます。個展なびでは、他の方が投稿した展覧会情報をもとに、事務局がクリエイター・ギャラリーのページをあらかじめ作成している場合があります（この時点ではオーナーが設定されていません）。機能のお申込み時、該当するページに心当たりがあれば「既存の掲載ページ」欄にURLや名称をご記入ください。事務局で確認のうえ、そのページのオーナーをご本人に切り替え、これまでの展覧会情報を引き継ぎます。ご記入がなくても事務局が名寄せして引き継げる場合があり、その結果は設定完了メールでお知らせします。' },
+  { id: 'CAP-13', cat: ['creator-apply', 'gallery-apply'], aud: 'common', grp: 'よくあるご質問', q: '以前この機能を申し込んだのですが、ログイン方法が分からなくなりました。', a: 'クリエイター・ギャラリー機能は、お申込み時のユーザーアカウントに紐づいています。もう一度お申込みいただく必要はありません。ログイン方法が分からない場合は、ログイン画面の「パスワードをお忘れの方」から、ご登録のメールアドレスでパスワードを再設定してログインしてください。ログインすると、これまでのクリエイター・ギャラリーページや機能をそのままご利用いただけます。ご登録のメールアドレスもご不明な場合は、お手数ですが{{contact}}より事務局までご連絡ください。' },
+  { id: 'CAP-02', cat: 'creator-apply', aud: 'common', grp: 'よくあるご質問', q: '申し込んでから、いつ使えるようになりますか？', a: 'お申込み後、個展なび事務局が申込内容を確認し、設定作業を行います。少々お時間をいただき、設定が完了しましたら設定完了メールでお知らせします。確認にかかる日数はお約束していないため、お早めのお申込みをおすすめします。' },
+  { id: 'CAP-10', cat: ['creator-apply', 'gallery-apply', 'watch'], aud: 'common', grp: 'よくあるご質問', q: '「ウォッチ」とは何ですか？', a: '個展なびのユーザーが、気になるクリエイター・ギャラリーを登録しておけるサイトの機能です（フォローのようなもの）。ウォッチしておくと、そのクリエイター・ギャラリーが新しい展覧会・作品・記事を掲載したときに自動でお知らせが届きます。クリエイター・ギャラリーにとっては、掲載を続けるほど活動が届きやすくなる仕組みです。' },
+  { id: 'CAP-03', cat: 'creator-apply', aud: 'common', grp: 'よくあるご質問', q: '企業・団体・グループ・展覧会名で申し込めますか？', a: 'いいえ。クリエイター機能は個人の作り手のための機能です。企業・団体・グループ・展覧会名ではお申込みいただけません。活動されている個人名でお申込みください。' },
+  { id: 'CAP-04', cat: 'creator-apply', aud: 'common', grp: 'よくあるご質問', q: 'クリエイター名は本名でないといけませんか？', a: 'いいえ。本名でも活動名でも構いません。ただし個人名でご登録ください（企業・団体・グループ・展覧会名は登録できません）。' },
+  { id: 'CAP-05', cat: 'creator-apply', aud: 'common', grp: 'よくあるご質問', q: '本名・住所などの本人確認情報は公開されますか？', a: '公開されません。ご本人の確認・ご連絡、掲載情報の内容確認が必要となった場合、および将来リエゾンプラス（作品販売）お申込み時の本人確認にのみ使用します。' },
+  { id: 'CAP-06', cat: 'creator-apply', aud: 'common', grp: 'よくあるご質問', q: '本人に代わって申し込めますか？（代理申込）', a: 'できます。「申込者について」で「代理人」を選び、代理人の氏名・本人との関係をご入力ください。クリエイター情報・本人確認情報は、登録されるご本人のものをご入力ください。' },
+  { id: 'CAP-07', cat: 'creator-apply', aud: 'common', grp: 'よくあるご質問', q: '作品の展示・販売（リエゾン／リエゾンプラス）はすぐ使えますか？', a: 'リエゾン（無料のオンライン展示）は、クリエイター機能のご利用開始後、申込不要でそのままお使いいただけます。販売もできるリエゾンプラスは、別途お申込みが必要です。' },
+  { id: 'CAP-08', cat: 'creator-apply', aud: 'common', grp: 'よくあるご質問', q: 'すでにギャラリーとして登録していますが、クリエイター機能も使えますか？', a: 'クリエイターとギャラリーは、いずれか一方のご利用となります。両方を同時にご利用いただくことはできません。ご不明な場合は{{contact}}よりご連絡ください。' },
+  { id: 'CAP-09', cat: 'creator-apply', aud: 'common', grp: 'よくあるご質問', q: 'ここで解決しない場合は？', a: 'ここで解決しない場合は、{{contact}}よりご連絡ください。' },
 
   /* ─── cat:'liaison'（リエゾン/リエゾン+ サービス全般＝p70-1/p70-2 ハブ）───
      出典＝p70-1「よくある質問」5問。aud=common（全ロール向けサービス案内）。 */
@@ -609,6 +676,22 @@ KTN.QA = [
   { id: 'LIA-04', cat: 'liaison', aud: 'common', grp: 'リエゾン / リエゾン+', q: '画像の著作権はどうなりますか', a: '著作権はクリエイターに帰属します。個展なびは展示目的での利用のみ行います。アップロード時の自動ウォーターマーク付与と長辺1,200pxへのリサイズにより、二次利用への対策を行っています。' },
   { id: 'LIA-05', cat: 'liaison', aud: 'common', grp: 'リエゾン / リエゾン+', q: 'あとからリエゾン+（販売あり）に切り替えられますか', a: '可能です。リエゾン+の利用申請（P11-4）が承認されると、展覧会編集画面で切り替えができます。すでに公開中の作品は一度非公開にしてから、販売情報（価格・送料設定）をご入力ください。' },
 
+  /* ─── cat:'liaisonplus-apply'（リエゾンプラス機能申込＝p11-4）───
+     申込ページ（p11-4）下部にアコーディオンFAQとして描画（KTN.renderQA '#p114Faq' guide）。
+     すでにクリエイター／ギャラリー機能を持つ人が「販売あり」の追加機能を申し込む前提。
+     「なぜ本人確認・口座が必要か」「リエゾンとの違い」「会場優先・キャンセル・サービス利用料・振込」を本文（About ゾーン）と整合。 */
+  { id: 'LAP-01', cat: 'liaisonplus-apply', aud: 'common', grp: 'よくあるご質問', q: 'リエゾンプラスの利用は有料ですか？', a: 'オンライン展示の掲載は無料です。費用がかかるのは作品が売れたとき（取引成立時）のサービス利用料のみで、初期費用・月額費用はありません。サービス利用料は作品代金・送料・梱包費の合計（税込）に対して計算され、決済にかかる手数料もこの中に含まれます（別途負担はありません）。具体的な料率は「サービス利用料はいくらですか？」をご覧ください。' },
+  { id: 'LAP-02', cat: 'liaisonplus-apply', aud: 'common', grp: 'よくあるご質問', q: 'リエゾンとリエゾンプラスは何が違いますか？', a: 'リエゾンは、会期中の展覧会と連動して出品作品を「オンラインで展示」できる機能です。リエゾンプラスは、その展示に加えて「作品の販売」までを行える機能です。販売＝実際に金銭のやり取りが発生するため、リエゾンプラスのご利用にはお申込み（このフォーム）と、本人確認・振込先口座のご登録が必要になります。' },
+  { id: 'LAP-03', cat: 'liaisonplus-apply', aud: 'common', grp: 'よくあるご質問', q: 'なぜ本人確認情報や口座情報が必要なのですか？', a: 'リエゾンプラスは作品の売買が発生する販売サービスのためです。（1）購入者に安心してお取引いただくため、また特定商取引法に基づき、購入者から請求があった場合に氏名・住所・電話番号をお伝えできるようにしておく必要があります（常時公開されるわけではありません）。（2）売れた作品の売上をお振込みするため、振込先口座を登録いただきます。本人確認のための情報は公開されず、ご本人の確認・ご連絡、特商法に基づく開示、振込の目的にのみ使用します。' },
+  { id: 'LAP-04', cat: 'liaisonplus-apply', aud: 'common', grp: 'よくあるご質問', q: '申し込んでから、いつ使えるようになりますか？', a: 'お申込み後、個展なび事務局にて審査を行います。通常3〜5営業日以内に審査結果をメールでご連絡します。承認されると、展覧会の編集でリエゾンプラスを選べるようになり、展覧会のオーナーメニューの「リエゾンプラス出品管理」から出品設定を行えます。' },
+  { id: 'LAP-05', cat: 'liaisonplus-apply', aud: 'common', grp: 'よくあるご質問', q: 'サービス利用料はいくらですか？', a: '料率は作品の販売価格に応じて、〜¥29,999は10%、¥30,000〜は8%です。サービス利用料は、作品が売れたとき（取引成立時）に作品代金・送料・梱包費の合計（税込）に対して計算されます（送料・梱包費も個展なびが代金回収を代行し決済手数料が発生するため）。決済にかかる手数料はこのサービス利用料に含まれるため、出品者の別途負担はありません。サービス利用料が発生するのは決済が完了したときのみで、申込のキャンセル時には発生しません。' },
+  { id: 'LAP-06', cat: 'liaisonplus-apply', aud: 'common', grp: 'よくあるご質問', q: '会場で作品が売れた場合はどうなりますか？', a: 'リエゾンプラスは会場での販売を優先する「会場優先型」です。会期中に会場で作品が売れたときは、出品者が「会場売約済」に設定します（システムが自動で判定するのではなく、会場の販売状況に合わせて出品者が操作します）。設定すると、オンラインの申込者へ自動でキャンセル通知が送られます（サービス利用料は発生しません）。なお、オンラインの販売期間は会期に合わせて柔軟に設定でき（最大で会期終了後2週間まで）、この販売期間中に購入申込を受け付けます。申し込まれた作品は、会場での販売状況に合わせて申込順に取引を進めます。' },
+  { id: 'LAP-07', cat: 'liaisonplus-apply', aud: 'common', grp: 'よくあるご質問', q: '出品者から取引をキャンセルできますか？', a: '出品者の側から、特定の申込だけをキャンセルすることはできません。会場で作品が売れた場合は「会場売約済」に、やむを得ない事情で販売を続けられない場合は「出品取消」で対応できますが、いずれも購入を確定する前（申込を受け付けている段階）に限られ、その作品への申込はすべて取り消されます。いったん購入を確定したあとは、取引が完了するまで、「会場売約済」「出品取消」を含め出品者側から取引をキャンセルすることはできません。' },
+  { id: 'LAP-08', cat: 'liaisonplus-apply', aud: 'common', grp: 'よくあるご質問', q: '売上はいつ振り込まれますか？', a: '取引完了後、あらかじめ定められた振込日に、サービス利用料を差し引いた金額をご登録の口座へお振込みします（振込手数料は利用者のご負担）。口座情報は申込後もマイページから変更できます。' },
+  { id: 'LAP-09', cat: 'liaisonplus-apply', aud: 'common', grp: 'よくあるご質問', q: 'リエゾンプラスを使うには、先にクリエイター／ギャラリー機能が必要ですか？', a: 'はい。リエゾンプラスは、すでにクリエイターまたはギャラリー機能をご利用中の方向けの追加機能です。まだ機能をお持ちでない場合は、先にクリエイター機能またはギャラリー機能をお申込みください。' },
+  { id: 'LAP-10', cat: 'liaisonplus-apply', aud: 'gallery', grp: 'よくあるご質問', q: 'ギャラリーとして、所属クリエイターの作品を出品できますか？', a: '出品できるのは、個展なびで確認・公開された展覧会の出展クリエイターの作品に限られます。作品の真正性についてはギャラリーが責任を負います。売上はギャラリーの登録口座へお振込みします。' },
+  { id: 'LAP-11', cat: 'liaisonplus-apply', aud: 'common', grp: 'よくあるご質問', q: 'ここで解決しない場合は？', a: 'ここで解決しない場合は、{{contact}}よりご連絡ください。' },
+
   /* ─── cat:'liaison-txn' / side:'seller'（出品者の取引＝creator/gallery 共通）───
      取引デスク（p3-16/p4-16）・LIAISON+コンソール（p3-15/p4-15）・出品者ハブ（p70-12）が共通で描画する統合セット。
      旧 ctx（desk/console）分割は廃止＝取引デスクとコンソールで重複していたQ（申込対応・会場売約済・発送・キャンセル 等）を1問へ統合した（2026-07-13）。
@@ -616,13 +699,13 @@ KTN.QA = [
   { id: 'TXN-S01', cat: 'liaison-txn', side: 'seller', aud: 'common', phase: ['new'], grp: '出品者の取引', q: '申込が来たら最初に何をすればいいですか？', a: 'コンソールの「取引中」タブに「購入確定待ち」として表示されます。取引デスクへ進み、まず会場でその作品がまだ販売されていないことを確認してください。会場で売れている場合はLIAISON+コンソールで「会場売約済」に変更してください（申込者全員に自動でキャンセル通知が送られます）。会場で売れていなければ申込内容を確認し、送料・梱包費・支払期限を設定して「購入を確定」してください。複数の申込がある場合は申込順に処理されます。' },
   { id: 'TXN-S02', cat: 'liaison-txn', side: 'seller', aud: 'common', phase: ['new'], grp: '出品者の取引', q: '会場で作品が売れてしまった場合は？（「会場売約済」ボタンの使い方）', a: 'まだ申込が入っていない場合は、展覧会の「リエゾン+出品管理」画面で販売状態を「売約済」に変更してください。すでに申込が入っている場合は、LIAISON+コンソールの「会場売約済」ボタンを使います（会期中に会場で作品が実際に売れたときの操作です）。ボタンを押すと作品が「売約済」に変更され、申込者全員に自動でキャンセル通知が送られます。この操作は取り消せません。' },
   { id: 'TXN-S03', cat: 'liaison-txn', side: 'seller', aud: 'common', grp: '出品者の取引', q: '「会場売約済」と「出品取消」の違いは何ですか？', a: '「会場売約済」は会場での販売を理由に作品を売約済にします（作品の状態が「売約済」に変更されます）。「出品取消」はLIAISON+からの出品自体を取り下げます（作品の状態は変更されません）。どちらも申込者へ自動でキャンセル通知が送られ、いずれも取り消しできません。' },
-  { id: 'TXN-S04', cat: 'liaison-txn', side: 'seller', aud: 'common', grp: '出品者の取引', q: '取引をキャンセルできますか？', a: '申込が入った後は、特定の申込に対してキャンセルすることはできません。会場で売却済みになった場合や、やむを得ない事情がある場合は「出品取消」で対応します（その作品への申込はすべて取り消されます）。' },
+  { id: 'TXN-S04', cat: 'liaison-txn', side: 'seller', aud: 'common', grp: '出品者の取引', q: '取引をキャンセルできますか？', a: '申込が入った後も、特定の申込だけをキャンセルすることはできません。会場で作品が売れた場合は「会場売約済」に、やむを得ない事情で販売を続けられない場合は「出品取消」で対応できますが、いずれも購入を確定する前に限られます（その作品への申込はすべて取り消されます）。いったん購入を確定したあとは、取引が完了するまで、「会場売約済」「出品取消」を含め出品者側から取引をキャンセルすることはできません。' },
   { id: 'TXN-S05', cat: 'liaison-txn', side: 'seller', aud: 'common', phase: ['new'], grp: '出品者の取引', q: '送料の設定の仕方は？', a: '購入者の郵便番号（都道府県）を参考に、実際の発送コストを入力してください。梱包費を購入者に求める場合は梱包費欄に入力します（出品者負担の場合は空欄のままで構いません）。送料・梱包費とも確定後は変更できませんので、慎重に入力してください。' },
   { id: 'TXN-S06', cat: 'liaison-txn', side: 'seller', aud: 'common', phase: ['paid'], grp: '出品者の取引', q: '発送方法はどれを選べばいいですか？', a: '小〜中型の作品はヤマト宅急便・佐川急便・ゆうパックが一般的です。大型の額装作品や割れ物はヤマト「らくらく家財宅急便」が梱包・取扱いの面で適しています。「送料を確認」ボタンで各社の送料目安を確認できます。' },
   { id: 'TXN-S07', cat: 'liaison-txn', side: 'seller', aud: 'common', phase: ['paid'], grp: '出品者の取引', q: '「発送待ち」になりました。作品の発送はいつ、どうすればいいですか？', a: '「発送待ち」は購入者の支払いが完了した状態です。支払い完了通知が届いたら、できるだけ早めに作品を梱包・発送してください。ただし、会期中で展示している作品は、会期が終了してからの発送で問題ありません。発送の際は「配送先情報」に表示された住所へ送り、取引デスクで発送方法と追跡番号を入力して「発送完了を通知する」を押すと、購入者に発送通知が届きます。' },
   { id: 'TXN-S08', cat: 'liaison-txn', side: 'seller', aud: 'common', grp: '出品者の取引', q: '販売期間が終了したのに、まだ「取引中」に表示されています。', a: '未処理の申込がある場合は、販売期間終了後も「取引中」タブに表示されます。すべての申込の処理（取引完了またはキャンセル）が完了すると、自動的に「終了」タブへ移動します。' },
   { id: 'TXN-S09', cat: 'liaison-txn', side: 'seller', aud: 'common', grp: '出品者の取引', q: '作品の価格や状態を変更したいのですが。', a: '展覧会ページ→オーナーメニュー→「リエゾン+出品管理」から変更できます。ただし、申込者がいる作品は価格と状態の変更がロックされています。' },
-  { id: 'TXN-S10', cat: 'liaison-txn', side: 'seller', aud: 'common', grp: '出品者の取引', q: '取引完了後、代金はいつ振り込まれますか？', a: '取引完了確認の翌月末（または翌々月末）に、手数料を差し引いた金額が登録口座に振り込まれます。振込スケジュールと手数料の詳細は販売代金管理ページでご確認ください。' },
+  { id: 'TXN-S10', cat: 'liaison-txn', side: 'seller', aud: 'common', grp: '出品者の取引', q: '取引完了後、代金はいつ振り込まれますか？', a: '取引完了後、あらかじめ定められた振込日に、サービス利用料を差し引いた金額が登録口座に振り込まれます。振込スケジュールとサービス利用料の詳細は販売代金管理ページでご確認ください。' },
   { id: 'TXN-S11', cat: 'liaison-txn', side: 'seller', aud: 'common', grp: '出品者の取引', q: '売上サマリーの「うち未精算」とは何ですか？', a: '取引が完了しているが、まだ個展なびから振込まれていない金額の合計です。「販売代金管理」ページで精算予定日や振込先口座の確認・登録ができます。' },
   { id: 'TXN-S12', cat: 'liaison-txn', side: 'seller', aud: 'common', grp: '出品者の取引', q: '受け取った作品に問題があると購入者から連絡があった場合は？', a: 'まず取引メッセージで状況を確認し、誠実に対応してください。破損等の問題がある場合は事務局へご連絡ください。取引メッセージのやり取りを保存しておくことをお勧めします。' },
   { id: 'TXN-S13', cat: 'liaison-txn', side: 'seller', aud: 'common', grp: '出品者の取引', q: '購入者の住所・氏名はいつまで確認できますか？', a: '個人情報保護のため、取引完了から1週間後に購入者の氏名・配送先住所（お届け先情報）はこのページから消去されます。発送に必要な情報は期間中に確認してください。取引メッセージは取引完了から2週間後に非公開になります（削除はされず、取引の記録として保存されます）。なお、取引明細・売上情報（個人情報を除く）はアーカイブと販売代金管理ページで引き続き確認できます。' },
@@ -635,11 +718,11 @@ KTN.QA = [
   { id: 'TXN-B01', cat: 'liaison-txn', side: 'buyer', aud: 'common', grp: '購入者の取引', q: '申込してから購入完了まで、どんな流れですか？', a: '申込 → 購入確定（出品者が会場在庫を確認して確定）→ 支払 → 発送（出品者）→ 受取確認 → 完了確認（出品者）→ 取引完了、の順に進みます。各ステップで通知が届きますので、案内に従って操作してください。' },
   { id: 'TXN-B02', cat: 'liaison-txn', side: 'buyer', aud: 'common', phase: ['applied'], grp: '購入者の取引', q: '「申込済」と「購入確定待ち」はどう違いますか？', a: 'この作品は1点もので、会場でのご購入が最優先です。購入申込は申込順に処理されます。「申込済」は、申込を受け付けたあと、申込順であなたの番が来るのを待っている状態です。この段階では確定期限はまだ発生せず、取引ワークスペースには進めません（キャンセルは購入管理ページから行えます）。あなたの番が来ると自動的に「購入確定待ち」へ変わり、出品者が会場在庫の確認（会場未売・発送対応可否）を行って購入を確定すると、支払いへ進めます。会期中でも在庫が確認できれば確定されることがあります。この時点で確定期限が表示され、取引ワークスペースで手続きを進められます。確定期限は会期終了7日後または申込7日後の遅い方で、期限までに出品者がいずれの操作（購入確定／会場売約済／出品取消）も行わなかった場合、その作品は出品取消となり、申込者全員にキャンセル通知が届きます（次の方へは繰り上がりません）。なお前の順番の方が支払期限切れや自己都合でキャンセルした場合は、あなたの順番が繰り上がります。' },
   { id: 'TXN-B03', cat: 'liaison-txn', side: 'buyer', aud: 'common', grp: '購入者の取引', q: '申込・購入をキャンセルできますか？', a: 'お支払い前であればキャンセルできます。「申込済」（順番待ち）の作品は購入管理ページの「申込をキャンセル」から、「購入確定待ち」以降（支払待ちを含む）は取引ワークスペースからキャンセルします。キャンセル後も販売期間中であれば再申込できますが、申込順は最後尾になります。支払いが完了した後は原則キャンセルできません（出品者の発送が期限を過ぎた場合を除く）。' },
-  { id: 'TXN-B04', cat: 'liaison-txn', side: 'buyer', aud: 'common', phase: ['applied'], grp: '購入者の取引', q: '郵便番号を変更したい場合は？', a: '郵便番号は申込時に送料を計算するために登録した情報のため、変更はできません。変更が必要な場合は申込をキャンセルし、正しい郵便番号で再申込ください。なお、再申込の場合はキューの最後になります。' },
+  { id: 'TXN-B04', cat: 'liaison-txn', side: 'buyer', aud: 'common', phase: ['applied'], grp: '購入者の取引', q: '郵便番号を変更したい場合は？', a: '郵便番号は申込時に送料を計算するために登録した情報のため、変更はできません。変更が必要な場合は申込をキャンセルし、正しい郵便番号で再申込ください。なお、再申込の場合は申込順の最後になります。' },
   { id: 'TXN-B05', cat: 'liaison-txn', side: 'buyer', aud: 'common', phase: ['payment'], grp: '購入者の取引', q: '支払い方法と支払いタイミングは？', a: '出品者の購入確定が完了すると支払いページへ案内されます。クレジットカードでのお支払いとなります。支払期限が設けられていますので、通知を受け取ったら速やかに対応してください。' },
   { id: 'TXN-B06', cat: 'liaison-txn', side: 'buyer', aud: 'common', phase: ['paid'], grp: '購入者の取引', q: '作品はいつ届きますか？', a: '支払い完了後に出品者が梱包・発送します。発送されると通知が届き、追跡番号も取引ワークスペースで確認できます。到着予定は配送業者・距離により異なります。' },
   { id: 'TXN-B07', cat: 'liaison-txn', side: 'buyer', aud: 'common', phase: ['receipt'], grp: '購入者の取引', q: '「受取確認」とは何をすればいいですか？', a: '作品が届いたら評価を入力し、取引ワークスペースで「受け取りを確認しました」ボタンを押してください。その後、出品者の取引完了確認が行われると代金が確定されます。受け取り後は速やかにご確認ください。' },
-  { id: 'TXN-B08', cat: 'liaison-txn', side: 'buyer', aud: 'common', grp: '購入者の取引', q: '受け取った作品に問題があった場合は？', a: 'まず取引ワークスペースのメッセージ機能で出品者に連絡してください。解決しない場合は事務局へお問い合わせください。受取確認後のキャンセルは原則受け付けられません。受け取り時に必ず状態をご確認ください。' },
+  { id: 'TXN-B08', cat: 'liaison-txn', side: 'buyer', aud: 'common', grp: '購入者の取引', q: '受け取った作品に問題があった場合は？', a: 'まず取引ワークスペースのメッセージ機能で出品者に連絡してください。解決しない場合は{{contact}}より事務局へご連絡ください。受取確認後のキャンセルは原則受け付けられません。受け取り時に必ず状態をご確認ください。' },
   { id: 'TXN-B09', cat: 'liaison-txn', side: 'buyer', aud: 'common', grp: '購入者の取引', q: '取引完了後、領収書の発行や購入管理はいつまでできますか？', a: '取引完了後も、購入管理ではいつでも取引をご確認いただけます。領収書は取引ワークスペースの「領収書を発行」ボタンからPDF形式で発行できます。なお、取引完了から1週間後に配送先住所などの個人情報はワークスペースから消去され、取引メッセージは取引完了から2週間後に非公開になります（削除はされず、取引の記録として保存されます）。領収書・取引明細はこれらの対象外で、消去後も購入管理からいつでも発行・確認できます。' },
   { id: 'TXN-B10', cat: 'liaison-txn', side: 'buyer', aud: 'common', grp: '購入者の取引', q: '購入した作品はコレクションルームでどう扱われますか？公開されますか？', a: '取引完了後、作品はあなたのコレクションルーム（マイページ）に収蔵されます。収蔵作品は既定では非公開です。あなたがコレクションルームを公開し、その作品も公開に設定した場合のみ、作品ページに「現在の所蔵」としてあなたのコレクションルームへの案内が表示されます。公開するかどうかはいつでも変更できます。' }
 ];
@@ -662,13 +745,32 @@ KTN.renderQA = function (target, opts) {
   opts = opts || {};
   var cat = opts.category, aud = opts.audience, side = opts.side,
       style = opts.style || 'guide';
+  /* cat は item 側・opts 側とも string か配列を許す（配列＝複数カテゴリで共有できる項目／複数カテゴリをまとめて描画）。
+     いずれかが交差すれば該当。従来の string×string 呼び出しは挙動不変。 */
+  var wantCats = cat == null ? null : (Array.isArray(cat) ? cat : [cat]);
+  var inCat = function (xc) {
+    if (!wantCats) return true;
+    var has = Array.isArray(xc) ? xc : [xc];
+    return has.some(function (c) { return wantCats.indexOf(c) >= 0; });
+  };
   var items = KTN.QA.filter(function (x) {
-    if (cat && x.cat !== cat) return false;
+    if (!inCat(x.cat)) return false;
     if (aud && !(x.aud === 'common' || x.aud === aud)) return false;
     if (side && x.side && x.side !== side) return false;
     return true;
   });
   var esc = function (s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); };
+  /* 回答本文（プレーン単一ソース）内の {{contact}} トークンを、現在ページ＋該当QAを文脈として渡す
+     お問合わせフォーム（p60-11）へのリンクに変換する。esc は & < > のみ置換するので {{contact}} はそのまま残る。 */
+  var ansHtml = function (x) {
+    var s = esc(x.a);
+    if (s.indexOf('{{contact}}') >= 0) {
+      var from = (window.ktnState && window.ktnState.page) || '';
+      var href = './kotennavi-p60-11.html?from=' + encodeURIComponent(from) + '&qa=' + encodeURIComponent(x.id);
+      s = s.split('{{contact}}').join('<a href="' + href + '" class="ktn-guide-link">お問合わせフォーム</a>');
+    }
+    return s;
+  };
   var html = '';
 
   if (style === 'desk') {
@@ -677,23 +779,24 @@ KTN.renderQA = function (target, opts) {
       var ph = (x.phase && x.phase.length) ? ' data-faq-phase="' + esc(x.phase.join(' ')) + '"' : '';
       return '<details class="p315-faq-item"' + ph + '>'
            + '<summary class="p315-faq-item__q"><span class="p315-faq-item__q-mark">Q</span> ' + esc(x.q) + '</summary>'
-           + '<div class="p315-faq-item__a"><p>' + esc(x.a) + '</p></div>'
+           + '<div class="p315-faq-item__a"><p>' + ansHtml(x) + '</p></div>'
            + '</details>';
     }).join('');
     el.innerHTML = html;
     return;
   }
 
-  /* guide（既定）＝group 見出し＋アコーディオン */
+  /* guide（既定）＝group 見出し＋アコーディオン。hideGroup=true でページ側ゾーンヘッダーに委ね group 見出しを省く */
+  var hideGroup = opts.hideGroup;
   var curGrp = null;
   items.forEach(function (x) {
     if (x.grp !== curGrp) {
       if (curGrp !== null) html += '</div>';
       curGrp = x.grp;
-      html += '<h3 class="p60-faq-group">' + esc(x.grp) + '</h3><div class="p70-faq">';
+      html += (hideGroup ? '' : '<h3 class="p60-faq-group">' + esc(x.grp) + '</h3>') + '<div class="p70-faq">';
     }
     html += '<details class="p70-faq-item"><summary>' + esc(x.q) + '</summary>'
-          + '<div class="p70-faq-item__body">' + esc(x.a) + '</div></details>';
+          + '<div class="p70-faq-item__body">' + ansHtml(x) + '</div></details>';
   });
   if (curGrp !== null) html += '</div>';
   el.innerHTML = html;
@@ -749,7 +852,7 @@ const PAGES = {
   'p2-121': { n: 'LIAISON+ 作品管理', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['LIAISON+ 作品管理', null]] },
   'p2-13': { n: '展覧会-広告作成', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['広告作成', null]] },
   'p2-14': { n: '展覧会-修正依頼', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['修正依頼', null]] },
-  'p2-15': { n: '展覧会-報告', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['報告', null]] },
+  // 旧 'p2-15'「展覧会-報告」は全表示系共通の報告フォーム 'p60-13'「問題を報告する」に統合（2026-07-24）。
   // P3 クリエイター
   'p3': { n: 'クリエイター', bc: [['Top', '/'], ['クリエイター', '/p10-2'], ['田中 透', null]] },
   'p3-1':  { n: '展覧会', bc: [['Top', '/'], ['クリエイター', '/p10-2'], ['田中 透', '/p3'], ['展覧会一覧', null]] },
@@ -818,8 +921,8 @@ const PAGES = {
   // P11 認証・申込
   'p11': { n: 'ログイン', bc: [['Top', '/'], ['ログイン', null]] },
   'p11-1': { n: 'ユーザー新規登録', bc: [['Top', '/'], ['ログイン', null]] },
-  'p11-2': { n: 'クリエイター機能申込', bc: [['Top', '/'], ['ユーザー新規登録', null]] },
-  'p11-3': { n: 'ギャラリー機能申込', bc: [['Top', '/'], ['クリエイター機能申込', null]] },
+  'p11-2': { n: 'クリエイター機能申込', bc: [['Top', '/'], ['クリエイター機能申込', null]] },
+  'p11-3': { n: 'ギャラリー機能申込', bc: [['Top', '/'], ['ギャラリー機能申込', null]] },
   'p11-4': { n: 'リエゾンプラス機能申込', bc: [['Top', '/'], ['リエゾンプラス機能申込', null, 'lp']] },
   'p11-11': { n: 'ログイン-パスワードを忘れた方', bc: [['Top', '/'], ['ログイン-パスワードを忘れた方', null]] },
   'p11-12': { n: 'ログインパスワード再設定', bc: [['Top', '/'], ['ログインパスワード再設定', null]] },
@@ -841,6 +944,7 @@ const PAGES = {
   'p60-10': { n: 'プライバシポリシー', bc: [['Top', '/'], ['プライバシポリシー', null]] },
   'p60-11': { n: 'お問合わせ', bc: [['Top', '/'], ['お問合わせ', null]] },
   'p60-12': { n: 'サービス機能改善要望', bc: [['Top', '/'], ['サービス機能改善要望', null]] },
+  'p60-13': { n: '問題を報告する', bc: [['Top', '/'], ['問題を報告する', null]] },
   // P61 お知らせ
   'p61': { n: 'お知らせ一覧', bc: [['Top', '/'], ['お知らせ一覧', null]] },
   // P70 LIAISONガイド
@@ -851,7 +955,7 @@ const PAGES = {
   'p70-4': { n: '送料・配送について', bc: [['Top', '/'], ['LIAISON', '/p70'], ['送料・配送について', null]] },
   'p70-5': { n: '送料一覧', bc: [['Top', '/'], ['LIAISON', '/p70'], ['送料一覧', null]] },
   'p70-6': { n: '特定商取引法に基づく表示', bc: [['Top', '/'], ['LIAISON', '/p70'], ['特定商取引法に基づく表示', null]] },
-  'p70-7': { n: 'リエゾンプラスの手数料について', bc: [['Top', '/'], ['LIAISON', '/p70'], ['リエゾンプラスの手数料について', null]] },
+  'p70-7': { n: 'リエゾンプラスのサービス利用料について', bc: [['Top', '/'], ['LIAISON', '/p70'], ['リエゾンプラスのサービス利用料について', null]] },
   'p70-8': { n: 'ギャラリーへの説明ガイド', bc: [['Top', '/'], ['LIAISON', '/p70'], ['ギャラリーへの説明ガイド', null]] },
   'p70-9': { n: '作品画像撮影ガイド', bc: [['Top', '/'], ['LIAISON', '/p70'], ['作品画像撮影ガイド', null]] },
   'p70-11': { n: 'リエゾンプラス-取引ガイド(購入者編)', bc: [['Top', '/'], ['LIAISON', '/p70'], ['取引ガイド 購入者編', null]] },
@@ -875,6 +979,9 @@ const PAGES = {
   'p90-15': { n: '管理者-リエゾンプラス申込者一覧', bc: [['Top', '/'], ['管理者', '/p90'], ['リエゾンプラス申込者一覧', null, 'lp']] },
   'p90-16': { n: '管理者-作品購入ユーザー一覧', bc: [['Top', '/'], ['管理者', '/p90'], ['作品購入ユーザー一覧', null, 'lp']] },
 };
+
+/* ページID → 表示名（パンくず登録名）。外部（p60-11 の問い合わせ元表示等）から参照するための公開アクセサ。 */
+KTN.pageName = function (id) { return (PAGES[id] && PAGES[id].n) || id || ''; };
 
 /* ══════════════════════════════════
    ヘルパー — HTML生成
@@ -908,6 +1015,20 @@ function ddinote(iconK, label, note) {
 }
 function ddSep() { return `<div class="ktn-dd-sep"></div>`; }
 
+/* 「問題を報告する」＝全表示系ページ共通の報告フォーム P60-13 へ from/type 文脈付きで遷移（単一ソース）。
+   ページ固有の報告ページ（旧 p2-17 等）は作らず、対象種別を type で受け渡して p60-13 側で理由select を出し分ける。 */
+const REPORT_TYPE = {
+  p2: 'exhibition', 'p2-3': 'exhibition', 'p2-5': 'exhibition',
+  p3: 'creator', p4: 'gallery',
+  p6: 'artwork', 'p6-1': 'artwork', 'p6-2': 'artwork',
+  p7: 'article', p8: 'review'
+};
+function reportItem(page) {
+  const type = REPORT_TYPE[page] || 'other';
+  const href = './kotennavi-p60-13.html?from=' + encodeURIComponent(page) + '&type=' + type;
+  return `<button class="ktn-ddi danger" onclick="location.href='${href}'">${ic('warn')}問題を報告する</button>`;
+}
+
 /* ══════════════════════════════════
    アクション定義（ページグループ × ロール）
 ══════════════════════════════════ */
@@ -919,7 +1040,7 @@ function getActions(page, role) {
     const cmn = hib('heart', '興味あり') + shareBtn() + sep();
     if (role === 'guest' || role === 'login')
       return cmn + dd('その他',
-        ddi('fix', '修正を依頼する') + ddSep() + ddi('warn', '問題を報告する', true));
+        ddi('fix', '修正を依頼する') + ddSep() + reportItem(page));
     if (role === 'creator')
       return cmn + owbtn('edit', '編集') + dd('オーナーメニュー',
         ddi('edit', '編集') + ddi('file', '記事の追加') + ddSep() +
@@ -968,7 +1089,7 @@ function getActions(page, role) {
   if (page === 'p3') {
     const cmn = hib('watch', 'ウォッチ', 'ktnP3WatchHib') + shareBtn() + sep();
     if (role === 'guest' || role === 'login')
-      return cmn + dd('その他', ddi('warn', '問題を報告する', true));
+      return cmn + dd('その他', reportItem(page));
     if (role === 'creator')
       return cmn + owbtn('edit', '編集') + dd('オーナーメニュー',
         ddi('edit', 'プロフィール編集') + ddSep() +
@@ -1003,7 +1124,7 @@ function getActions(page, role) {
   if (page === 'p4') {
     const cmn = hib('watch', 'ウォッチ') + shareBtn() + sep();
     if (role === 'guest' || role === 'login')
-      return cmn + dd('その他', ddi('warn', '問題を報告する', true));
+      return cmn + dd('その他', reportItem(page));
     if (role === 'gallery')
       return cmn + owbtn('edit', '編集') + dd('オーナーメニュー',
         ddi('edit', 'プロフィール編集') + ddSep() +
@@ -1044,7 +1165,7 @@ function getActions(page, role) {
   if (['p6', 'p6-1', 'p6-2'].includes(page)) {
     const cmn = hib('heart', '興味あり') + shareBtn() + sep();
     if (role === 'guest' || role === 'login')
-      return cmn + dd('その他', ddi('warn', '問題を報告する', true));
+      return cmn + dd('その他', reportItem(page));
     if (role === 'creator')
       return cmn + owbtn('edit', '編集') + dd('オーナーメニュー',
         ddi('edit', '作品編集') + ddSep() + ddi('chart', 'インサイト') + ddSep() + ddi('trash', '削除', true));
@@ -1064,7 +1185,7 @@ function getActions(page, role) {
   if (page === 'p7') {
     const cmn = shareBtn() + sep();
     if (role === 'guest' || role === 'login')
-      return cmn + dd('その他', ddi('warn', '問題を報告する', true));
+      return cmn + dd('その他', reportItem(page));
     if (role === 'creator' || role === 'gallery')
       return cmn + owbtn('edit', '編集') + dd('オーナーメニュー',
         ddi('edit', '編集') + ddSep() + ddi('trash', '削除', true));
@@ -1084,7 +1205,7 @@ function getActions(page, role) {
   if (page === 'p8') {
     const cmn = shareBtn() + sep();
     if (role === 'guest' || role === 'login')
-      return cmn + dd('その他', ddi('warn', '問題を報告する', true));
+      return cmn + dd('その他', reportItem(page));
     if (role === 'admin')
       return cmn + dd('管理者', ddi('edit', '編集') + ddSep() + ddi('trash', '削除', true));
     return cmn;

@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./kotennavi-common.css">
 </head>
-<body data-w="article" class="mgmt-page p3-page">
+<body data-w="article" class="mgmt-page p11-4-page p3-page">
 
 <div class="ktn-toast" id="ktnToast"></div>
 
@@ -38,15 +38,18 @@
   <main class="ktn-main" id="ktnMain">
     <div class="ktn-content">
 
-      <!-- 申込者 文脈ストリップ（identity strip・creator/gallery でロール別に切替＝syncMgmtBar が populate） -->
+      <!-- 申込者ストリップ（p3-11 型 identity strip・申込者＝既存の creator/gallery 本人。ロールで表示切替） -->
       <div class="ktn-mgmt-context" id="p114Context">
-        <a class="ktn-mgmt-context__media" id="p114CtxMedia" href="kotennavi-p4.html"></a>
+        <a class="ktn-mgmt-context__media ktn-mgmt-context__media--creator" id="p114CtxMedia" href="kotennavi-p3.html" style="background:linear-gradient(135deg,#7ab4cc,#4a8099)">T</a>
         <div class="ktn-mgmt-context__body">
-          <div class="ktn-mgmt-context__badges" id="p114CtxBadges"></div>
-          <div class="ktn-mgmt-context__name"><a id="p114CtxName" href="kotennavi-p4.html"></a></div>
+          <div class="ktn-mgmt-context__badges">
+            <span class="cb cb-person cb-creator" id="p114CtxBadge">CREATOR</span>
+          </div>
+          <div class="ktn-mgmt-context__name"><a id="p114CtxName" href="kotennavi-p3.html">田中 透</a></div>
+          <div class="ktn-mgmt-context__meta" id="p114CtxMeta">絵画・現代美術 · 東京</div>
         </div>
         <div class="ktn-mgmt-context__actions">
-          <a class="ktn-mgmt-context__view" id="p114CtxView" href="kotennavi-p4.html"></a>
+          <a class="ktn-mgmt-context__view" id="p114CtxView" href="kotennavi-p3.html">クリエイターページへ →</a>
         </div>
       </div>
 
@@ -61,7 +64,7 @@
       <div class="p114-status-notice" id="p114ApprovedBanner" hidden style="border-color:rgba(42,120,60,.3);background:rgba(42,120,60,.04)">
         <div class="p114-status-notice__icon">✅</div>
         <div class="p114-status-notice__title">LIAISON+ 機能が有効です</div>
-        <p class="p114-status-notice__desc">LIAISON+ 機能が承認されています。展覧会の作品管理ページからLIAISON+を設定して出品を開始できます。</p>
+        <p class="p114-status-notice__desc">LIAISON+ 機能が承認されています。展覧会の編集でリエゾンプラスを選び、展覧会のオーナーメニューの「リエゾンプラス出品管理」から出品設定を行えます。</p>
       </div>
 
       <!-- 管理ボックス -->
@@ -73,19 +76,109 @@
           <p class="ktn-mgmt-head__en">LIAISON+ APPLICATION</p>
         </div>
 
-        <!-- サービス説明バナー -->
-        <div class="p114-service-banner" id="p114ServiceBanner">
-          <div class="p114-service-banner__badge">LIAISON+</div>
-          <p class="p114-service-banner__desc">
-            リエゾンプラス（LIAISON+）は、実スペースの展覧会と連動したオンライン作品販売サービスです。<br>
-            会期中に申込を受け付け、販売期間中に順番で購入プロセスを進めます。
-          </p>
-          <div class="p114-service-banner__fee">
-            <span>展示掲載：<strong>無料</strong></span>
-            <span style="color:var(--border)">|</span>
-            <span>販売手数料：<strong>10%</strong>（〜¥29,999）/ <strong>8%</strong>（¥30,000〜）決済手数料込</span>
+        <!-- ページ内目次（3ゾーンへのアンカージャンプ・p11-2 と同型） -->
+        <nav class="ktn-index" id="p114Index" aria-label="ページ内の目次">
+          <p class="ktn-index__label">INDEX</p>
+          <ul class="ktn-index__list">
+            <li><a class="ktn-index__link" href="#p114AboutZone">リエゾンプラスとは</a></li>
+            <li><a class="ktn-index__link" href="#p114FaqZone">よくある質問</a></li>
+            <li><a class="ktn-index__link" href="#p114SecForm">リエゾンプラス機能申込フォーム</a></li>
+          </ul>
+        </nav>
+
+        <!-- ①リエゾンプラスとは（ガイド・申込フォームの前の丁寧な説明） -->
+        <div class="ktn-zone ktn-index-target" id="p114AboutZone"><span class="ktn-zone__num">1</span><span class="ktn-zone__title">リエゾンプラスとは</span><span class="ktn-zone__en">About</span></div>
+        <div class="p114-guide" id="p114AboutGuide">
+
+          <!-- サービスロゴ（kotennavi_liaison_logo.html の LIAISON+ Light 版） -->
+          <div class="p114-about-logo">
+            <svg viewBox="0 0 480 240" fill="none" width="200" height="100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="LIAISON+ ロゴ">
+              <defs>
+                <path id="lp-p114-lt-t" d="M 80 184 Q 240 56 400 184"/>
+                <linearGradient id="g-lp-p114-lt" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%"   stop-color="#6a4010"/>
+                  <stop offset="30%"  stop-color="#a87020"/>
+                  <stop offset="58%"  stop-color="#d4a428"/>
+                  <stop offset="100%" stop-color="#6a4010"/>
+                </linearGradient>
+              </defs>
+              <path d="M 20 200 Q 240 33 460 200" stroke="url(#g-lp-p114-lt)" stroke-width="4" fill="none" stroke-linecap="round"/>
+              <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#g-lp-p114-lt)">
+                <textPath href="#lp-p114-lt-t" startOffset="50%" text-anchor="middle">LIAISON</textPath>
+              </text>
+              <circle cx="432" cy="183" r="22" fill="#b87c10"/>
+              <text x="432" y="183" font-family="'Bodoni Moda',serif" font-size="42" font-weight="900" fill="#fff8e8" text-anchor="middle" dominant-baseline="central">+</text>
+              <text x="240" y="220" font-family="'Montserrat',sans-serif" font-size="17" font-weight="600" letter-spacing="3" fill="#8a6018" text-anchor="middle">Now on View + Shop</text>
+            </svg>
           </div>
+
+          <p class="p70-lead">リエゾンプラスは、実スペースの展覧会と連動して作品をオンラインで展示し、販売まで行えるサービスです。クリエイターはご自身の作品を、ギャラリーは取り扱う作品を、会場に足を運べない人にも届けられます。「見てもらう」だけでなく「買ってもらう」機会を広げます。</p>
+
+          <h3 class="p70-subhead">リエゾンとの違い</h3>
+          <p class="p70-body">個展なびには、展覧会と連動して作品をオンラインで見せる仕組みが2段階あります。リエゾンプラスは、オンライン連動展示の「リエゾン」に<strong>販売機能</strong>を加えたものです。</p>
+          <div class="p70-dl p70-dl--ja">
+            <div class="p70-dl__item">
+              <dt class="p70-dl__dt">リエゾン</dt>
+              <dd class="p70-dl__dd">会期中の展覧会と連動し、出品作品をオンラインで展示できます。クリエイター／ギャラリー機能のご利用開始後、<strong>申込不要・無料</strong>でそのままお使いいただけます。</dd>
+            </div>
+            <div class="p70-dl__item">
+              <dt class="p70-dl__dt">リエゾンプラス</dt>
+              <dd class="p70-dl__dd">オンライン展示に加えて、<strong>作品の販売</strong>まで行えます。作品と代金の受け渡しをともなうため、このフォームでのお申込みと、本人確認・振込先口座のご登録が必要です。</dd>
+            </div>
+          </div>
+
+          <h3 class="p70-subhead">販売の流れ（会場優先型）</h3>
+          <p class="p70-body">リエゾンプラスは、会場での販売を優先する<strong>「会場優先型」</strong>で取引が進みます。会期中はオンラインで購入希望の申込みを受け付け、会場での販売状況を見ながら、申込順に購入手続きを進めます。流れは次のとおりです。</p>
+          <ol class="p70-step-list">
+            <li class="p70-step-list__item p70-step-list__item--prep">出品（展覧会を登録し、作品を出品）</li>
+            <li class="p70-step-list__item">申込（会期中・購入希望者から受付）</li>
+            <li class="p70-step-list__item">購入確定（出品者が会場在庫を確認して確定）</li>
+            <li class="p70-step-list__item">支払（購入者）</li>
+            <li class="p70-step-list__item">発送（出品者）</li>
+            <li class="p70-step-list__item">受取確認（購入者）</li>
+            <li class="p70-step-list__item">取引完了</li>
+          </ol>
+
+          <h3 class="p70-subhead">料金・サービス利用料</h3>
+          <p class="p70-body">費用がかかるのは作品が売れたとき（取引成立時）の<strong>サービス利用料のみ</strong>。展示の掲載・初期費用・月額費用はすべて無料です。料率は作品の販売価格で決まり、決定した料率を「作品代金＋送料＋梱包費」の合計（税込）に対して計算します。</p>
+          <table class="p70-table">
+            <thead>
+              <tr><th>費用項目</th><th>金額</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>展示の掲載</td><td>無料</td></tr>
+              <tr><td>初期費用</td><td>無料</td></tr>
+              <tr><td>月額費用</td><td>無料</td></tr>
+              <tr><td rowspan="2">サービス利用料<br><span class="p70-table__note">※作品が売れたときのみ・下記いずれか一方</span></td><td><span class="p70-table__band">作品価格 〜¥29,999</span>10%</td></tr>
+              <tr><td><span class="p70-table__band">作品価格 ¥30,000〜</span>8%</td></tr>
+            </tbody>
+          </table>
+          <p class="p70-body">決済にかかる手数料もこのサービス利用料に含まれており、別途のご負担はありません。</p>
+
+          <h3 class="p70-subhead">本人確認・振込先口座が必要な理由</h3>
+          <p class="p70-body">リエゾンプラスは作品の売買が発生する販売サービスです。安心してお取引いただくために、以下の情報をお預かりします。</p>
+          <div class="p70-dl p70-dl--ja">
+            <div class="p70-dl__item">
+              <dt class="p70-dl__dt">本人確認のための情報</dt>
+              <dd class="p70-dl__dd">購入者に安心してお取引いただくため、また<strong>特定商取引法に基づき</strong>、購入者から請求があった場合に氏名・住所・電話番号をお伝えできるようにしておくために使用します（常時公開されるわけではありません）。この情報が販売目的以外に公開されることはありません。</dd>
+            </div>
+            <div class="p70-dl__item">
+              <dt class="p70-dl__dt">振込先口座</dt>
+              <dd class="p70-dl__dd">売れた作品の売上をお振込みするための口座です。サービス利用料を差し引いた金額を<strong>あらかじめ定められた振込日</strong>にお振込みします（口座情報は申込後もマイページから変更できます）。</dd>
+            </div>
+          </div>
+          <p class="p70-body"><a class="ktn-guide-link" href="./kotennavi-p70.html">リエゾン・リエゾンプラスについて詳しく →</a></p>
+
+          <h3 class="p70-subhead">お申込みの前に</h3>
+          <p class="p70-body">リエゾンプラスは、すでに<strong>クリエイターまたはギャラリー機能をご利用中の方</strong>向けの追加機能です。お申込み後、個展なび事務局にて審査を行い、通常3〜5営業日以内に結果をメールでご連絡します。承認されると、リエゾンプラスでの出品を開始できます。</p>
         </div>
+
+        <!-- ②よくある質問（FAQ・アコーディオン・KTN.renderQA で描画） -->
+        <div class="ktn-zone ktn-index-target" id="p114FaqZone"><span class="ktn-zone__num">2</span><span class="ktn-zone__title">よくある質問</span><span class="ktn-zone__en">FAQ</span></div>
+        <div id="p114Faq"></div>
+
+        <!-- ③リエゾンプラス機能申込フォーム -->
+        <div class="ktn-zone ktn-index-target" id="p114SecForm"><span class="ktn-zone__num">3</span><span class="ktn-zone__title">リエゾンプラス機能申込フォーム</span><span class="ktn-zone__en">Form</span></div>
 
         <!-- ロール通知（creator） -->
         <div class="p114-role-notice" id="p114RoleNoticeCreator">
@@ -104,7 +197,6 @@
 
           <!-- C-1. クリエイター確認事項 -->
           <div class="p114-section-head">
-            <span class="p114-section-head__badge p114-section-head__badge--creator">CREATOR</span>
             <span class="p114-section-head__title">クリエイターとしての確認事項</span>
           </div>
 
@@ -136,32 +228,6 @@
             </div>
           </div>
 
-          <div class="p211-block">
-            <div class="p211-block__head">
-              <div class="p211-block__title">承諾事項<span class="ktn-req">必須</span></div>
-            </div>
-            <div class="p211-block__body">
-              <div class="p114-checklist">
-                <label class="p114-checklist__item">
-                  <input type="checkbox" name="creator-agree" id="ca1">
-                  <span>販売価格・梱包費・送料は出品者が設定・負担し、購入確定後に変更しないことを理解しました</span>
-                </label>
-                <label class="p114-checklist__item">
-                  <input type="checkbox" name="creator-agree" id="ca2">
-                  <span>会場での販売が優先され、会場で売れた場合は「会場売約済」として処理されることを理解しました</span>
-                </label>
-                <label class="p114-checklist__item">
-                  <input type="checkbox" name="creator-agree" id="ca3">
-                  <span>購入確定後のキャンセルには原則として応じられないことを理解しました（やむを得ない場合はサポートへ連絡）</span>
-                </label>
-                <label class="p114-checklist__item">
-                  <input type="checkbox" name="creator-agree" id="ca4">
-                  <span>特定商取引法に基づく表示（氏名・住所・電話番号）の掲載に同意します</span>
-                </label>
-              </div>
-            </div>
-          </div>
-
         </div>
         <!-- /クリエイター専用セクション -->
 
@@ -170,7 +236,6 @@
 
           <!-- G-1. ギャラリー確認事項 -->
           <div class="p114-section-head">
-            <span class="p114-section-head__badge p114-section-head__badge--gallery">GALLERY</span>
             <span class="p114-section-head__title">ギャラリーとしての確認事項</span>
           </div>
 
@@ -199,107 +264,124 @@
             </div>
           </div>
 
-          <div class="p211-block">
-            <div class="p211-block__head">
-              <div class="p211-block__title">承諾事項<span class="ktn-req">必須</span></div>
-            </div>
-            <div class="p211-block__body">
-              <div class="p114-checklist">
-                <label class="p114-checklist__item">
-                  <input type="checkbox" name="gallery-agree" id="ga1">
-                  <span>出品作品の登録は、展覧会が個展なびで確認・公開された後に、当該展覧会の出展クリエイターの作品に限って行えることを理解しました</span>
-                </label>
-                <label class="p114-checklist__item">
-                  <input type="checkbox" name="gallery-agree" id="ga2">
-                  <span>個展なびに登録済みのクリエイターの作品を出品登録すると当該クリエイターへ通知が送られること、および出品作品の真正性についてギャラリーが責任を負うことを理解しました</span>
-                </label>
-                <label class="p114-checklist__item">
-                  <input type="checkbox" name="gallery-agree" id="ga3">
-                  <span>売上は販売手数料を差し引いたうえで、出品者であるギャラリーの登録口座へ振り込まれることを理解しました</span>
-                </label>
-                <label class="p114-checklist__item">
-                  <input type="checkbox" name="gallery-agree" id="ga4">
-                  <span>特定商取引法に基づく表示（事業者名・住所・電話番号）の掲載に同意します</span>
-                </label>
-              </div>
-            </div>
-          </div>
-
         </div>
         <!-- /ギャラリー専用セクション -->
 
-        <!-- ━━ 共通：振込先口座 ━━ -->
+        <!-- ━━ 共通：本人確認（非公開） ━━ -->
         <div class="p114-section-head">
-          <span class="p114-section-head__title">振込先口座情報</span>
+          <span class="p114-section-head__badge">PRIVATE</span>
+          <span class="p114-section-head__title">本人確認（サイトには公開されません）</span>
+        </div>
+
+        <div class="p114-privacy-note">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+          <span>作品販売にあたり、事務局が本人確認を行います。ここで扱う情報は<strong>公開されません</strong>。本人確認・ご連絡の目的にのみ使用します。</span>
+        </div>
+
+        <!-- 登録済みの本人情報（読み取り専用・機能申込時の登録内容を引き継ぎ） -->
+        <div class="p211-block">
+          <div class="p211-block__head">
+            <div class="p211-block__title">登録済みの本人情報 <span class="ktn-sec-en">Your Identity</span></div>
+          </div>
+          <div class="p211-block__body">
+            <p class="p211-help" id="p114IdIntro" style="margin-bottom:14px">クリエイター基本情報に登録されている本人情報を表示しています。この内容で本人確認を行いますので、最新の内容かご確認ください。変更はクリエイター基本情報の編集から行えます（本人情報はクリエイター基本情報で一元管理されます）。</p>
+            <dl class="p114-identity-readout">
+              <div class="p114-identity-readout__row"><dt id="p114IdLabel1">本名</dt><dd id="p114IdVal1">—</dd></div>
+              <div class="p114-identity-readout__row"><dt id="p114IdLabel2">生年月日</dt><dd id="p114IdVal2">—</dd></div>
+              <div class="p114-identity-readout__row"><dt id="p114IdLabel3">住所</dt><dd id="p114IdVal3">—</dd></div>
+              <div class="p114-identity-readout__row"><dt id="p114IdLabel4">電話番号</dt><dd id="p114IdVal4">—</dd></div>
+            </dl>
+            <a class="ktn-guide-link" id="p114IdEditLink" href="./kotennavi-p3-11.html">本人情報を変更する（クリエイター基本情報の編集） →</a>
+          </div>
+        </div>
+
+        <!-- 本人確認書類の添付（このページのみ・確認後に削除） -->
+        <div class="p211-block">
+          <div class="p211-block__head">
+            <div class="p211-block__title">本人確認書類の添付 <span class="ktn-sec-en">ID Document</span></div>
+          </div>
+          <div class="p211-block__body">
+            <p class="p211-help" style="margin-bottom:14px">顔写真付きで、氏名・住所・生年月日が記載された本人確認書類の画像をご提出ください。ご利用いただけるのは<strong>運転免許証</strong>・<strong>マイナンバーカード（個人番号カード）</strong>です。それ以外の書類をご利用の場合はお問合わせください。上記のご登録情報（特に氏名・住所）と突合のうえ、事務局が確認します。<strong>ご提出いただいた画像は本人確認の完了後に削除し、保存しません。</strong></p>
+            <div class="p211-field">
+              <label class="p211-label">本人確認書類の画像（複数添付可）<span class="ktn-req">必須</span></label>
+              <div class="p211-img-list" id="p114IdDocList"></div>
+              <div class="p211-img-drop" id="p114IdDocDrop" onclick="document.getElementById('p114IdDocFile').click()">
+                <button class="p211-img-drop__btn" type="button">画像を追加</button>
+                <div>または、画像をドラッグ＆ドロップ</div>
+                <p class="p211-img-count" id="p114IdDocCount">まだ添付されていません</p>
+                <input type="file" id="p114IdDocFile" accept="image/*,application/pdf" multiple hidden>
+              </div>
+              <p class="p211-help">運転免許証は表・裏の両面、マイナンバーカードは表面（顔写真の面）を撮影してください。<strong>一度にまとめて選んでも、あとから1枚ずつ追加してもかまいません。</strong>氏名・住所・生年月日が鮮明に読み取れる画像を添付してください。</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ━━ 共通：同意事項（サブミット直前・p11-2 と同フォーマット） ━━ -->
+        <div class="p114-section-head">
+          <span class="p114-section-head__title">同意事項</span>
         </div>
 
         <div class="p211-block">
           <div class="p211-block__head">
-            <div class="p211-block__title">振込先口座 <span class="ktn-sec-en">Bank Account</span></div>
+            <div class="p211-block__title">申込にあたっての確認<span class="ktn-req">必須</span></div>
           </div>
           <div class="p211-block__body">
 
-            <p class="p211-help" style="margin-bottom:16px">
-              LIAISON+ での売上は登録された口座に振り込まれます（月末締め・翌月末払い）。本人名義の口座をご登録ください。口座情報は申込後もマイページから変更できます。
-            </p>
-
-            <div class="p114-bank-row">
-              <div class="p211-field">
-                <label class="p211-label">金融機関名<span class="ktn-req">必須</span></label>
-                <input class="p211-input" type="text" placeholder="○○銀行">
-              </div>
-              <div class="p211-field">
-                <label class="p211-label">支店名<span class="ktn-req">必須</span></label>
-                <input class="p211-input" type="text" placeholder="渋谷支店">
-              </div>
-            </div>
-
-            <div class="p114-bank-row" style="margin-top:12px">
-              <div class="p211-field">
-                <label class="p211-label">口座種別<span class="ktn-req">必須</span></label>
-                <select class="p211-select">
-                  <option value="">選択してください</option>
-                  <option>普通</option>
-                  <option>当座</option>
-                </select>
-              </div>
-              <div class="p211-field">
-                <label class="p211-label">口座番号<span class="ktn-req">必須</span></label>
-                <input class="p211-input" type="text" placeholder="1234567" inputmode="numeric" maxlength="8">
+            <!-- ロール別承諾事項（body.p114-role-gallery で表示切替） -->
+            <div class="p114-creator-section">
+              <div class="p114-checklist">
+                <label class="p114-checklist__item">
+                  <input type="checkbox" name="creator-agree" id="ca1" onchange="p114UpdateSubmit()">
+                  <span>販売価格・梱包費・送料は出品者が設定・負担し、購入確定後に変更しないことを理解しました</span>
+                </label>
+                <label class="p114-checklist__item">
+                  <input type="checkbox" name="creator-agree" id="ca2" onchange="p114UpdateSubmit()">
+                  <span>会場での販売が優先され、会場で売れた場合は「会場売約済」として処理されることを理解しました</span>
+                </label>
+                <label class="p114-checklist__item">
+                  <input type="checkbox" name="creator-agree" id="ca3" onchange="p114UpdateSubmit()">
+                  <span>購入確定後のキャンセルには原則として応じられないことを理解しました（やむを得ない場合はサポートへ連絡）</span>
+                </label>
+                <label class="p114-checklist__item">
+                  <input type="checkbox" name="creator-agree" id="ca4" onchange="p114UpdateSubmit()">
+                  <span>特定商取引法に基づき、購入者から請求があった場合に氏名・住所・電話番号を開示することに同意します</span>
+                </label>
               </div>
             </div>
 
-            <div class="p211-field" style="margin-top:12px">
-              <label class="p211-label">口座名義（カタカナ）<span class="ktn-req">必須</span></label>
-              <input class="p211-input" type="text" placeholder="タナカ トオル" id="p114BankName">
-              <p class="p211-help">金融機関の登録名義と完全に一致するカタカナ氏名を入力してください。半角カタカナ・全角カタカナどちらでも可。</p>
+            <div class="p114-gallery-section">
+              <div class="p114-checklist">
+                <label class="p114-checklist__item">
+                  <input type="checkbox" name="gallery-agree" id="ga1" onchange="p114UpdateSubmit()">
+                  <span>出品作品の登録は、展覧会が個展なびで確認・公開された後に、当該展覧会の出展クリエイターの作品に限って行えることを理解しました</span>
+                </label>
+                <label class="p114-checklist__item">
+                  <input type="checkbox" name="gallery-agree" id="ga2" onchange="p114UpdateSubmit()">
+                  <span>出品作品の真正性についてギャラリーが責任を負うことを理解しました</span>
+                </label>
+                <label class="p114-checklist__item">
+                  <input type="checkbox" name="gallery-agree" id="ga3" onchange="p114UpdateSubmit()">
+                  <span>売上はサービス利用料を差し引いたうえで、出品者であるギャラリーの登録口座へ振り込まれることを理解しました</span>
+                </label>
+                <label class="p114-checklist__item">
+                  <input type="checkbox" name="gallery-agree" id="ga4" onchange="p114UpdateSubmit()">
+                  <span>特定商取引法に基づき、購入者から請求があった場合に事業者名・住所・電話番号を開示することに同意します</span>
+                </label>
+              </div>
             </div>
 
-          </div>
-        </div>
-
-        <!-- ━━ 共通：利用規約 ━━ -->
-        <div class="p114-section-head">
-          <span class="p114-section-head__title">利用規約</span>
-        </div>
-
-        <div class="p211-block">
-          <div class="p211-block__head">
-            <div class="p211-block__title">LIAISON+利用規約<span class="ktn-req">必須</span></div>
-          </div>
-          <div class="p211-block__body">
-            <div class="p114-terms-box">
+            <div class="p114-terms-box" style="margin-top:16px">
               <h4>LIAISON+ 利用規約（抜粋）</h4>
               <p>第1条（目的）<br>
               本規約は、個展なびが提供するLIAISON+サービス（以下「本サービス」）の利用に関する条件を定めるものです。</p>
               <p>第2条（サービス内容）<br>
               本サービスは、実スペースの展覧会と連動したオンライン作品販売機能を提供します。出品者は本サービスを通じて申込の受付・購入プロセスの管理ができます。</p>
-              <p>第3条（手数料）<br>
-              本サービスの販売手数料は売上金額（送料・梱包費を除く）に対し、29,999円以下は10%、30,000円以上は8%（いずれも税込）とします。Stripe決済手数料は本手数料に含まれます。売上金額の振込は月末締め・翌月末払いとします。</p>
+              <p>第3条（サービス利用料）<br>
+              本サービスのサービス利用料は、作品が売れたとき（取引成立時）に、作品の販売価格に送料・梱包費を加えた合計金額（税込）に対して計算します。料率は作品の販売価格が29,999円以下は10%、30,000円以上は8%とし、決定した料率を前記合計金額に適用します。決済手数料は本サービス利用料に含まれます。売上金額の振込は、あらかじめ定められた振込日に行います。</p>
               <p>第4条（特定商取引法に基づく表示）<br>
-              本サービスを通じて販売を行う場合、出品者は特定商取引法に基づく表示（氏名または屋号・住所・電話番号・メールアドレス）を個展なびプロフィールに掲載することに同意するものとします。</p>
+              本サービスを通じて販売を行う場合、出品者は特定商取引法に基づき、購入者から請求があったときは遅滞なく氏名または屋号・住所・電話番号・メールアドレスを開示することに同意するものとします（常時公開されるものではありません）。</p>
               <p>第5条（会場優先販売）<br>
-              本サービスの販売は実スペースでの展覧会開催と連動します。展覧会会場での販売が優先されます。会場で売れた作品は「会場売約済」として処理されます。</p>
+              本サービスの販売は実スペースでの展覧会開催と連動します。展覧会会場での販売が優先されます。会場で売れた作品は、出品者が「会場売約済」に設定します。</p>
               <p>第6条（禁止事項）<br>
               出品者は以下の行為を行ってはなりません：虚偽の商品説明、購入確定後の一方的なキャンセル、第三者への権利の帰属する作品の無断出品など。</p>
               <p>第7条（免責事項）<br>
@@ -334,23 +416,64 @@
 <script src="./kotennavi-common.js"></script>
 <script src="./kotennavi-pages.js"></script>
 <script>
-window.ktnState = { page: 'p11-4', role: 'creator' };
-
 var p114CurrentMode = 'form';
 
+/* ロール切替（デモ）＝p2-11 と同じ mgmt-page フォーマット。
+   p11-4 の申込者はすでに creator/gallery ロールを持つ（追加機能の申込）ため、
+   mgmt-page のロール別トップバー（p3-page=creator青緑／p4-page=gallery銅）を出す。
+   creator/gallery の違いはトップバー色＋フォーム内容（ロール通知＋専用セクション＝body.p114-role-gallery）＋申込アカウント表示名で表現する。 */
+/* 申込者ストリップ（ktn-mgmt-context・p3-11型）のロール別表示データ */
+var P114_CTX = {
+  creator: { media: 'ktn-mgmt-context__media--creator', bg: 'linear-gradient(135deg,#7ab4cc,#4a8099)', char: 'T', badgeCls: 'cb-creator', badgeLabel: 'CREATOR', name: '田中 透',          meta: '絵画・現代美術 · 東京', href: 'kotennavi-p3.html', view: 'クリエイターページへ →',
+    id: [['本名','田中 透（タナカ トオル）'],['生年月日','1988年5月14日'],['住所','〒150-0001 東京都渋谷区神宮前1-2-3 ○○ビル 4F'],['電話番号','090-1234-5678']],
+    editHref: 'kotennavi-p3-11.html', term: 'クリエイター基本情報' },
+  gallery: { media: 'ktn-mgmt-context__media--gallery', bg: 'linear-gradient(135deg,#d8bfa4,#a8794f)', char: 'G', badgeCls: 'cb-gallery', badgeLabel: 'GALLERY', name: 'Gallery SOIL 渋谷', meta: '現代美術 · 渋谷',      href: 'kotennavi-p4.html', view: 'ギャラリーページへ →',
+    id: [['事業者名','Gallery SOIL 渋谷'],['代表者','佐藤 健一（サトウ ケンイチ）'],['所在地','〒150-0002 東京都渋谷区渋谷2-3-4 SOILビル'],['電話番号','03-1234-5678']],
+    editHref: 'kotennavi-p4-11.html', term: 'ギャラリー基本情報' }
+};
+function p114SyncContext(r) {
+  var c = P114_CTX[r] || P114_CTX.creator;
+  var media = document.getElementById('p114CtxMedia');
+  media.className = 'ktn-mgmt-context__media ' + c.media;
+  media.style.background = c.bg;
+  media.textContent = c.char;
+  media.href = c.href;
+  var badge = document.getElementById('p114CtxBadge');
+  badge.className = 'cb cb-person ' + c.badgeCls;
+  badge.textContent = c.badgeLabel;
+  var name = document.getElementById('p114CtxName');
+  name.textContent = c.name; name.href = c.href;
+  document.getElementById('p114CtxMeta').textContent = c.meta;
+  var view = document.getElementById('p114CtxView');
+  view.textContent = c.view; view.href = c.href;
+  // 本人確認セクションの読み取り情報＋編集リンク（ロール別）
+  for (var i = 0; i < 4; i++) {
+    var lb = document.getElementById('p114IdLabel' + (i + 1));
+    var vl = document.getElementById('p114IdVal' + (i + 1));
+    if (lb && c.id[i]) lb.textContent = c.id[i][0];
+    if (vl && c.id[i]) vl.textContent = c.id[i][1];
+  }
+  var edit = document.getElementById('p114IdEditLink');
+  if (edit) { edit.href = './' + c.editHref; edit.textContent = '本人情報を変更する（' + c.term + 'の編集） →'; }
+  var intro = document.getElementById('p114IdIntro');
+  if (intro) intro.textContent = c.term + 'に登録されている本人情報を表示しています。この内容で本人確認を行いますので、最新の内容かご確認ください。変更は' + c.term + 'の編集から行えます（本人情報は' + c.term + 'で一元管理されます）。';
+}
+
 function setR(r, btn) {
-  curRole = r;
-  document.querySelectorAll('.dbtn').forEach(function(b) { b.classList.remove('on'); });
+  window.ktnState.role = r;
+  document.querySelectorAll('.dbar [onclick^="setR"]').forEach(function(b) { b.classList.remove('on'); });
   if (btn) btn.classList.add('on');
 
   var isGallery = (r === 'gallery');
   document.body.classList.toggle('p114-role-gallery', isGallery);
-  document.body.classList.toggle('p3-page', !isGallery);
   document.body.classList.toggle('p4-page', isGallery);
+  document.body.classList.toggle('p3-page', !isGallery);
   document.getElementById('p114RoleNoticeCreator').hidden = isGallery;
   document.getElementById('p114RoleNoticeGallery').hidden = !isGallery;
+  p114SyncContext(r);
+  p114UpdateSubmit();
 
-  if (typeof window.ktnRender === 'function') ktnRender();
+  if (typeof window.ktnRender === 'function') window.ktnRender();
 }
 
 function setDemoMode(mode) {
@@ -361,7 +484,9 @@ function setDemoMode(mode) {
 
   document.getElementById('p114PendingBanner').hidden = !isPending;
   document.getElementById('p114ApprovedBanner').hidden = !isApproved;
-  document.getElementById('p114ServiceBanner').hidden = isApproved;
+  document.getElementById('p114AboutZone').hidden = isApproved;
+  document.getElementById('p114AboutGuide').hidden = isApproved;
+  document.getElementById('p114Index').hidden = isApproved;
   document.getElementById('p114SubmitWrap').hidden = !isForm;
 
   ['p114CreatorSection', 'p114GallerySection'].forEach(function(id) {
@@ -376,16 +501,102 @@ function setDemoMode(mode) {
 }
 
 function p114UpdateSubmit() {
-  var checked = document.getElementById('p114TermsCheck').checked;
-  document.getElementById('p114SubmitBtn').disabled = !checked;
+  var terms = document.getElementById('p114TermsCheck').checked;
+  var role = (window.ktnState && window.ktnState.role === 'gallery') ? 'gallery' : 'creator';
+  var acks = Array.prototype.slice.call(document.querySelectorAll('input[name="' + role + '-agree"]'));
+  var allAck = acks.length > 0 && acks.every(function (c) { return c.checked; });
+  document.getElementById('p114SubmitBtn').disabled = !(terms && allAck);
 }
 
 function p114Submit() {
-  setDemoMode('pending');
-  if (typeof showToast === 'function') showToast('申込を受け付けました。審査結果をメールでご連絡します。');
+  KTN.submitDone({
+    title: 'リエゾンプラス機能のお申込みを受け付けました',
+    message: '個展なび事務局にて審査のうえ、通常3〜5営業日以内に<br>審査結果をメールでご連絡します。',
+    action: { label: 'トップページへ', href: './kotennavi-p1.html' }
+  });
 }
 
-if (typeof KTN !== 'undefined' && KTN.pages && KTN.pages['p11-4']) KTN.pages['p11-4']();
+KTN.init({ page: 'p11-4', role: 'creator' });
+p114SyncContext('creator');
+
+// 本人確認書類アップローダー（追加式＋サムネイル・デモ）
+(function p114InitIdUploader() {
+  var input = document.getElementById('p114IdDocFile');
+  var list = document.getElementById('p114IdDocList');
+  var drop = document.getElementById('p114IdDocDrop');
+  var count = document.getElementById('p114IdDocCount');
+  if (!input || !list || !drop) return;
+  var items = [];
+  function refresh() {
+    count.textContent = items.length ? ('添付 ' + items.length + ' 枚') : 'まだ添付されていません';
+  }
+  function addFiles(fileList) {
+    Array.prototype.forEach.call(fileList, function (f) {
+      var item = { file: f, url: null };
+      items.push(item);
+      var row = document.createElement('div');
+      row.className = 'p211-img-uploaded';
+
+      var isImg = /^image\//.test(f.type);
+      var thumb;
+      if (isImg) {
+        thumb = document.createElement('img');
+        thumb.className = 'p211-img-uploaded__thumb';
+        item.url = URL.createObjectURL(f);
+        thumb.src = item.url;
+        thumb.alt = f.name;
+      } else {
+        thumb = document.createElement('div');
+        thumb.className = 'p211-img-uploaded__thumb';
+        thumb.style.cssText = 'display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:600;color:#fff';
+        thumb.textContent = 'PDF';
+      }
+
+      var body = document.createElement('div');
+      body.className = 'p211-img-uploaded__body';
+      var r = document.createElement('div');
+      r.className = 'p211-img-uploaded__row';
+      var name = document.createElement('span');
+      name.className = 'p211-img-uploaded__name';
+      name.textContent = f.name;
+      var del = document.createElement('button');
+      del.type = 'button';
+      del.className = 'p211-img-uploaded__del';
+      del.title = '削除';
+      del.innerHTML = '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" width="12" height="12"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg>';
+      del.addEventListener('click', function () {
+        if (item.url) URL.revokeObjectURL(item.url);
+        var idx = items.indexOf(item);
+        if (idx > -1) items.splice(idx, 1);
+        row.remove();
+        refresh();
+      });
+      r.appendChild(name);
+      r.appendChild(del);
+      body.appendChild(r);
+      row.appendChild(thumb);
+      row.appendChild(body);
+      list.appendChild(row);
+    });
+    refresh();
+  }
+  input.addEventListener('change', function () {
+    if (this.files && this.files.length) addFiles(this.files);
+    this.value = ''; // 同じ書類を再選択・1枚ずつ追加できるようにリセット
+  });
+  ['dragenter', 'dragover'].forEach(function (ev) {
+    drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.add('is-over'); });
+  });
+  ['dragleave', 'drop'].forEach(function (ev) {
+    drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.remove('is-over'); });
+  });
+  drop.addEventListener('drop', function (e) {
+    if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) addFiles(e.dataTransfer.files);
+  });
+})();
+
+// 申込FAQ（アコーディオン・閉じた状態で描画＝縦に伸びない）
+if (typeof KTN.renderQA === 'function') KTN.renderQA('#p114Faq', { category: 'liaisonplus-apply', style: 'guide', hideGroup: true });
 </script>
 </body>
 </html>

@@ -7734,37 +7734,24 @@ KTN.pages['p2-11'] = function () {
    P11-4  リエゾンプラス機能申込
 ════════════════════════════════════════════════════ */
 KTN.pages['p11-4'] = function () {
-  // identity strip（申込者）のロール別デモデータ
-  const CTX = {
-    creator: { media: '--creator', bg: 'linear-gradient(135deg,#7ab4cc,#4a8099)', init: 'T',
-               badge: '<span class="cb cb-person cb-creator">creator</span>', name: '田中 透',
-               href: 'kotennavi-p3.html', view: 'クリエイターページへ →' },
-    gallery: { media: '--gallery', bg: 'linear-gradient(135deg,#c8a888,#8b5e3c)', init: 'SOIL',
-               badge: '<span class="cb cb-person cb-gallery">gallery</span>', name: 'Gallery SOIL 渋谷',
-               href: 'kotennavi-p4.html', view: 'ギャラリーページへ →' }
+  // 申込アカウント（申込者）のロール別デモ表示名。中立化のためロールバー/ロール色は付けず、
+  // creator/gallery の違いは申込アカウント名＋フォーム内容（ロール通知・専用セクション）で表現。
+  const ACC = {
+    creator: '田中 透 <small>1997sakura2022@gmail.com</small>',
+    gallery: 'Gallery SOIL 渋谷 <small>1997sakura2022@gmail.com</small>'
   };
-  function syncMgmtBar() {
-    const r = window.ktnState && window.ktnState.role || 'gallery';
-    document.body.classList.remove('p3-page', 'p4-page', 'p5-page');
-    if (r === 'creator')      document.body.classList.add('p3-page');
-    else if (r === 'gallery') document.body.classList.add('p4-page');
-    const c = CTX[r] || CTX.gallery;
-    const media = document.getElementById('p114CtxMedia');
-    if (media) {
-      media.className = 'ktn-mgmt-context__media ktn-mgmt-context__media' + c.media;
-      media.style.background = c.bg;
-      media.textContent = c.init;
-      media.href = c.href;
-    }
-    const badges = document.getElementById('p114CtxBadges');
-    if (badges) badges.innerHTML = c.badge;
-    const name = document.getElementById('p114CtxName');
-    if (name) { name.textContent = c.name; name.href = c.href; }
-    const view = document.getElementById('p114CtxView');
-    if (view) { view.textContent = c.view; view.href = c.href; }
+  function syncApplicant() {
+    const r = (window.ktnState && window.ktnState.role) || 'creator';
+    const el = document.getElementById('p114ApplicantName');
+    if (el) el.innerHTML = ACC[r] || ACC.creator;
   }
-  syncMgmtBar();
-  window.ktnRender = function () { syncMgmtBar(); };
+  syncApplicant();
+  // KTN.init が設定したヘッダー描画フックを保持し、ロール変更時にヘッダー＋申込アカウントを再同期
+  const prevRender = window.ktnRender;
+  window.ktnRender = function () {
+    if (typeof prevRender === 'function') prevRender();
+    syncApplicant();
+  };
 };
 
 /* ════════════════════════════════════════════════════

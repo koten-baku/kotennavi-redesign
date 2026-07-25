@@ -258,6 +258,65 @@
           </div>
         </div>
 
+        <!-- ブロック5: 本人確認情報（非公開・本人と事務局のみ閲覧） -->
+        <div class="p211-block">
+          <div class="p211-block__head">
+            <h3 class="p211-block__title">本人確認情報 <span class="p211-block__title-en">IDENTITY（PRIVATE）</span></h3>
+          </div>
+          <div class="p211-block__body">
+
+            <div class="p114-privacy-note">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+              <span>この情報は<strong>公開されません</strong>。本人の確認・ご連絡、掲載情報の内容確認、およびリエゾンプラス（作品販売）お申込み時の本人確認にのみ使用します。閲覧できるのはご本人と個展なび事務局のみです。</span>
+            </div>
+
+            <div class="p211-field">
+              <label class="p211-label" for="p311RealName">本名（フルネーム）<span class="ktn-req">必須</span></label>
+              <input class="p211-input" id="p311RealName" type="text" value="田中 透">
+              <p class="p211-help">戸籍・本人確認書類と一致する氏名を入力してください。</p>
+            </div>
+
+            <div class="p211-field">
+              <label class="p211-label" for="p311RealNameKana">フリガナ（全角カナ）<span class="ktn-req">必須</span></label>
+              <input class="p211-input" id="p311RealNameKana" type="text" value="タナカ トオル">
+            </div>
+
+            <div class="p211-field">
+              <label class="p211-label" for="p311Birth">生年月日</label>
+              <input class="p211-input" id="p311Birth" type="date" value="1988-05-14" style="max-width:220px">
+              <p class="p211-help">リエゾンプラス（作品販売）の本人確認に使用します。</p>
+            </div>
+
+            <div class="p211-field">
+              <label class="p211-label" for="p311Zip">郵便番号<span class="ktn-req">必須</span></label>
+              <input class="p211-input" id="p311Zip" type="text" value="150-0001" inputmode="numeric" maxlength="8" style="max-width:180px">
+            </div>
+
+            <div class="p211-row">
+              <div class="p211-field">
+                <label class="p211-label" for="p311Pref">都道府県<span class="ktn-req">必須</span></label>
+                <input class="p211-input" id="p311Pref" type="text" value="東京都">
+              </div>
+              <div class="p211-field">
+                <label class="p211-label" for="p311City">市区町村<span class="ktn-req">必須</span></label>
+                <input class="p211-input" id="p311City" type="text" value="渋谷区神宮前">
+              </div>
+            </div>
+
+            <div class="p211-field">
+              <label class="p211-label" for="p311Addr">番地・建物名<span class="ktn-req">必須</span></label>
+              <input class="p211-input" id="p311Addr" type="text" value="1-2-3 ○○ビル 4F">
+            </div>
+
+            <div class="p211-field">
+              <label class="p211-label" for="p311Tel">電話番号<span class="ktn-req">必須</span></label>
+              <input class="p211-input" id="p311Tel" type="tel" value="090-1234-5678" inputmode="tel" style="max-width:260px">
+              <p class="p211-help">日中に連絡のつく番号を入力してください。</p>
+            </div>
+
+          </div>
+        </div>
+
         <!-- 管理者コメント欄（role=admin のときのみ表示・共通 syncAdminNote が切替） -->
         <div class="ktn-admin-note" id="p311AdminNote" hidden>
           <div class="ktn-admin-note__head">

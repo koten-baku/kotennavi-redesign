@@ -40,7 +40,7 @@
     </div>
     <div class="p515-modal__body">
       <p class="p515-modal__desc" id="p515CancelModalDesc">「音の輪郭 No.7」の購入をキャンセルします。</p>
-      <p class="p515-modal__desc" style="margin-top:8px">お支払い前であればキャンセルできます。販売期間中であれば再申込できますが、<strong>キューの最後になります</strong>。お支払い後はキャンセルできません。</p>
+      <p class="p515-modal__desc" style="margin-top:8px">お支払い前であればキャンセルできます。販売期間中であれば再申込できますが、<strong>申込順の最後になります</strong>。お支払い後はキャンセルできません。</p>
     </div>
     <div class="p515-modal__foot">
       <button class="p515-modal__btn ktn-op-btn" id="p515CancelModalBack">戻る</button>
@@ -626,7 +626,7 @@
           <div class="p515-status__body">
             <div class="p515-cancelled">
               <p class="p515-cancelled__msg">購入をキャンセルしました。</p>
-              <p class="p515-cancelled__msg">販売期間中であれば再申込できます（キューの最後になります）。</p>
+              <p class="p515-cancelled__msg">販売期間中であれば再申込できます（申込順の最後になります）。</p>
               <a class="p515-cancelled__back ktn-op-btn ktn-op-btn--primary" href="kotennavi-p6-2.html">
                 <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" width="8" height="8"><line x1="8" y1="5" x2="2" y2="5"/><polyline points="5 2 2 5 5 8"/></svg>
                 作品ページへ戻る
@@ -1228,7 +1228,7 @@ KTN.renderQA('#p515QaTxn', { category: 'liaison-txn', side: 'buyer', style: 'des
     if (this.checked) dateInput.value = '';
   });
 
-  /* ── Stripe支払いボタン（デモ） ── */
+  /* ── 支払いボタン（デモ） ── */
   var payBtn = document.getElementById('p515PayBtn');
   if (payBtn) payBtn.addEventListener('click', function () {
     setDemoState('paid');

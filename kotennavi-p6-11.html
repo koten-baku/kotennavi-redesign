@@ -284,51 +284,31 @@
         </div>
         <div class="p211-block__body">
 
-          <!-- 制作年（4モード：単年／期間／推定〜年頃／不明） -->
+          <!-- 制作年（年（西暦）／不明の2モード） -->
           <div class="p211-field">
             <label class="p211-label">制作年<span class="ktn-req">必須</span></label>
             <div class="p211-pill-group" id="p611YearMode">
-              <label class="p211-pill is-active"><input type="radio" name="p611yearmode" value="single" checked>単年</label>
-              <label class="p211-pill"><input type="radio" name="p611yearmode" value="range">期間</label>
-              <label class="p211-pill"><input type="radio" name="p611yearmode" value="circa">推定（〜年頃）</label>
+              <label class="p211-pill is-active"><input type="radio" name="p611yearmode" value="single" checked>年（西暦）</label>
               <label class="p211-pill"><input type="radio" name="p611yearmode" value="unknown">不明</label>
             </div>
-            <!-- 単年・推定：1つの年 -->
-            <div class="p611-year-input" data-year-input="single circa" style="margin-top:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+            <div class="p611-year-input" data-year-input="single" style="margin-top:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
               <input class="p211-input" type="number" value="2026" placeholder="例：2026" style="width:120px" aria-label="制作年">
-              <span style="font-size:.82rem;color:var(--muted)">年<span data-year-suffix="circa" hidden>頃</span></span>
-            </div>
-            <!-- 期間：開始〜終了 -->
-            <div class="p611-year-input" data-year-input="range" hidden style="margin-top:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-              <input class="p211-input" type="number" placeholder="開始" style="width:110px" aria-label="制作年（開始）">
-              <span style="font-size:.82rem;color:var(--muted)">〜</span>
-              <input class="p211-input" type="number" placeholder="終了" style="width:110px" aria-label="制作年（終了）">
               <span style="font-size:.82rem;color:var(--muted)">年</span>
             </div>
-            <p class="p211-help">制作年は作品ページに表示され、一覧の並べ替え（制作年順）に使われます。期間・推定の場合は代表となる年（期間は終了年）で並べ替えられ、「不明」を選ぶと「制作年不明」と表示され並べ替えでは末尾にまとまります。</p>
+            <p class="p211-help">制作年は作品ページに表示され、一覧の並べ替え（制作年順）に使われます。「不明」を選ぶと「制作年不明」と表示され、並べ替えでは末尾にまとまります。</p>
           </div>
 
           <!-- 素材・技法 -->
           <div class="p211-field">
             <label class="p211-label">素材・技法<span class="ktn-req">必須</span></label>
-            <input class="p211-input" type="text" value="キャンバスに油彩" placeholder="例：キャンバスに油彩、アクリル">
+            <textarea class="p211-textarea" placeholder="例：キャンバスに油彩、アクリル／和紙に岩絵具、金箔">キャンバスに油彩</textarea>
           </div>
 
           <!-- サイズ -->
           <div class="p211-field">
-            <label class="p211-label">サイズ<span class="ktn-req">必須</span></label>
-            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-              <span style="font-size:.82rem;color:var(--muted)">高さ</span>
-              <input class="p211-input" type="number" value="116.7" placeholder="0" style="width:90px">
-              <span style="font-size:.82rem;color:var(--muted)">×</span>
-              <span style="font-size:.82rem;color:var(--muted)">幅</span>
-              <input class="p211-input" type="number" value="91.0" placeholder="0" style="width:90px">
-              <span style="font-size:.82rem;color:var(--muted)">×</span>
-              <span style="font-size:.82rem;color:var(--muted)">奥行</span>
-              <input class="p211-input" type="number" value="4.0" placeholder="0" style="width:90px">
-              <span style="font-size:.82rem;color:var(--muted)">cm</span>
-            </div>
-            <p class="p211-help">額装込みの外寸を入力してください。立体作品は最大寸法でかまいません。</p>
+            <label class="p211-label">サイズ<span class="p211-label__unit">cm</span><span class="ktn-req">必須</span></label>
+            <input class="p211-input" type="text" value="H116.7 × W91.0 × D4.0" placeholder="H × W × D">
+            <p class="p211-help">縦・横・（立体は）奥行の順に、単位はセンチで入力してください。平面作品は「H30 × W40」のように奥行を省略できます。額装込みの外寸を基本とし、立体作品は最大寸法でかまいません。</p>
           </div>
 
           <!-- 追加項目：重さ・額装・状態・付属品・エディション -->
@@ -387,7 +367,7 @@
           <div class="p211-field" style="margin-top:16px">
             <label class="p211-label">その他</label>
             <textarea class="p211-textarea" placeholder="例：直射日光・高温多湿を避けて保管してください。壁掛けの際は付属のワイヤーとフックをご使用ください。明るい自然光の入る湿気の少ない場所での展示がおすすめです。額装ガラスは紫外線カットタイプを推奨します。">油彩作品のため、直射日光・高温多湿の環境を避けて保管してください。額装ガラスは紫外線カットタイプを推奨します。フローティングフレーム仕様のため壁から数センチ浮かせて設置され、取付金具・ワイヤーが付属します。壁の耐荷重をご確認のうえ設置してください。</textarea>
-            <p class="p211-help">取扱方法・飾り方の提案など、仕様の補足として購入者・鑑賞者に伝えたいことを自由にご記入ください。作品ページ（p6〜p6-2）の作品仕様に「その他」として表示されます。</p>
+            <p class="p211-help">取扱方法・飾り方の提案など、仕様の補足として購入者・鑑賞者に伝えたいことを自由にご記入ください。</p>
           </div>
 
         </div>
@@ -527,7 +507,7 @@ document.querySelectorAll('.p211-pill-group').forEach(function (group) {
   });
 })();
 
-/* ── 制作年モード切替（単年/期間/推定/不明で入力欄を出し分け） ── */
+/* ── 制作年モード切替（年（西暦）/不明で入力欄を出し分け） ── */
 (function p611YearMode() {
   var group = document.getElementById('p611YearMode');
   if (!group) return;
@@ -538,8 +518,6 @@ document.querySelectorAll('.p211-pill-group').forEach(function (group) {
       var modes = el.getAttribute('data-year-input').split(' ');
       el.hidden = (modes.indexOf(mode) === -1);
     });
-    var circaSuffix = document.querySelector('[data-year-suffix="circa"]');
-    if (circaSuffix) circaSuffix.hidden = (mode !== 'circa');
   }
   group.querySelectorAll('input[type=radio]').forEach(function (r) {
     r.addEventListener('change', sync);
@@ -617,13 +595,13 @@ function syncDraftMode() {
   }
 }
 
-/* ── 必須テキスト欄の未入力収集（デモ）。単一 .p211-input を持つ必須欄のみ対象＝
-   サイズ（複数入力）・ジャンル（ピル）・画像はデモ簡略化で gate 対象外。 */
+/* ── 必須テキスト欄の未入力収集（デモ）。単一 .p211-input／.p211-textarea を持つ
+   必須欄のみ対象＝ジャンル（ピル）・画像はデモ簡略化で gate 対象外。 */
 function collectMissing() {
   var missing = [];
   document.querySelectorAll('.p211-field').forEach(function (field) {
     if (!field.querySelector('.ktn-req')) return;
-    var inputs = field.querySelectorAll('.p211-input');
+    var inputs = field.querySelectorAll('.p211-input, .p211-textarea');
     if (inputs.length !== 1) return;
     if (!inputs[0].value.trim()) {
       var lbl = field.querySelector('.p211-label');
