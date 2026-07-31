@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ギャラリー情報編集 — Gallery SOIL 渋谷 | 個展なび</title>
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<body data-w="detail" class="p4-11-page p4-page mgmt-page">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- デモバー -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ロール：</span>
+  <button class="dbtn on" onclick="setR('gallery',this)">ギャラリー本人</button>
+  <button class="dbtn" onclick="setR('admin',this)">管理者</button>
+  <span class="dbar-sep">リエゾンプラス：</span>
+  <button class="dbtn" id="dbarLpNone" onclick="setLpMode('none')">未申請</button>
+  <button class="dbtn on" id="dbarLpApproved" onclick="setLpMode('approved')">承認済</button>
+</div>
+
+<div class="shell">
+<div class="content-wrap" id="contentWrap">
+
+  <header class="ktn-header" id="ktnHeader">
+    <div class="ktn-header__inner">
+      <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+      <div class="ktn-hdr-actions" id="ktnActs"></div>
+    </div>
+  </header>
+
+  <main class="ktn-main" id="ktnMain">
+
+    <!-- メインコンテンツ -->
+    <div class="ktn-content">
+
+      <!-- 親エンティティ文脈ストリップ（identity strip） -->
+      <div class="ktn-mgmt-context">
+        <a class="ktn-mgmt-context__media ktn-mgmt-context__media--gallery" href="kotennavi-p4.html" style="background:linear-gradient(135deg,#a9855f,#8b5e3c)">S</a>
+        <div class="ktn-mgmt-context__body">
+          <div class="ktn-mgmt-context__badges">
+            <span class="cb cb-person cb-gallery">GALLERY</span>
+          </div>
+          <div class="ktn-mgmt-context__name"><a href="kotennavi-p4.html">Gallery SOIL 渋谷</a></div>
+          <div class="ktn-mgmt-context__meta">アート・写真 · 東京都渋谷区</div>
+        </div>
+        <div class="ktn-mgmt-context__actions">
+          <a class="ktn-mgmt-context__view" href="kotennavi-p4.html">ギャラリーページへ →</a>
+        </div>
+      </div>
+
+      <div class="p411-wrap ktn-mgmt-wrap" id="p411Wrap">
+
+        <!-- ページヘッダー -->
+        <div class="ktn-mgmt-head">
+          <h2 class="ktn-mgmt-head__title">ギャラリー情報編集</h2>
+          <p class="ktn-mgmt-head__en">GALLERY INFORMATION</p>
+          <p class="ktn-mgmt-head__desc">ギャラリーページに表示される名称・紹介文・所在地・利用案内・リンクなどを編集します。変更は保存するとすぐに公開ページへ反映されます。</p>
+        </div>
+
+        <!-- ブロック1: 基本情報 -->
+        <div class="p211-block">
+          <div class="p211-block__head">
+            <h3 class="p211-block__title">基本情報 <span class="p211-block__title-en">BASIC INFO</span></h3>
+          </div>
+          <div class="p211-block__body">
+
+            <!-- ギャラリーロゴ -->
+            <div class="p211-field">
+              <div class="p211-label">ギャラリーロゴ</div>
+              <div class="p211-avatar-field">
+                <div class="p211-avatar-preview" style="background:linear-gradient(135deg,#a9855f,#8b5e3c);border-radius:4px">S</div>
+                <div class="p211-avatar-actions">
+                  <label class="ktn-op-btn ktn-op-btn--sm">
+                    <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" width="12" height="12"><path d="M7 1v8M4 4l3-3 3 3M2 11h10"/></svg>
+                    画像をアップロード
+                    <input type="file" accept="image/*" style="display:none" id="p411LogoInput">
+                  </label>
+                  <button class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline" type="button">削除</button>
+                  <p class="p211-help">JPG / PNG / WebP・5MB以内・正方形推奨</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- ギャラリー名（表示名） -->
+            <div class="p211-field">
+              <label class="p211-label" for="p411Name">ギャラリー名（表示名）<span class="ktn-req">必須</span></label>
+              <input class="p211-input" id="p411Name" type="text" value="Gallery SOIL 渋谷">
+              <p class="p211-help">ギャラリーページの見出しに表示される名称です。</p>
+            </div>
+
+            <!-- 英語表記名 -->
+            <div class="p211-field">
+              <label class="p211-label" for="p411NameEn">英語表記名</label>
+              <input class="p211-input" id="p411NameEn" type="text" value="Gallery SOIL Shibuya">
+              <p class="p211-help">名前の下に欧文サブとして表示されます。</p>
+            </div>
+
+            <!-- ギャラリーID -->
+            <div class="p211-field">
+              <label class="p211-label" for="p411GalleryId">ギャラリーID（URL）<span class="ktn-req">必須</span></label>
+              <input class="p211-input" id="p411GalleryId" type="text" value="soil_shibuya" pattern="[a-zA-Z0-9_-]+" autocomplete="off">
+              <div class="p211-id-preview">
+                <span class="p211-id-preview__base">kotennavi.jp/gallery/</span><span class="p211-id-preview__val" id="p411IdPreview">soil_shibuya</span>
+              </div>
+              <p class="p211-help">半角英数字・アンダースコア・ハイフンのみ。変更すると旧URLは無効になります。</p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ブロック2: ギャラリー紹介 -->
+        <div class="p211-block">
+          <div class="p211-block__head">
+            <h3 class="p211-block__title">ギャラリー紹介 <span class="p211-block__title-en">INTRODUCTION</span></h3>
+          </div>
+          <div class="p211-block__body">
+
+            <!-- 取扱ジャンル -->
+            <div class="p211-field">
+              <label class="p211-label">主な取扱いジャンル</label>
+              <p class="p211-help" style="margin-bottom:6px">取り扱うことの多いジャンルを選んでください（複数可）。</p>
+              <div class="p211-pill-group" id="p411GenreGroup">
+                <label class="p211-pill is-active"><input type="checkbox" name="p411genre" value="art" checked>アート</label>
+                <label class="p211-pill"><input type="checkbox" name="p411genre" value="craft">クラフト</label>
+                <label class="p211-pill"><input type="checkbox" name="p411genre" value="fashion">ファッション</label>
+                <label class="p211-pill is-active"><input type="checkbox" name="p411genre" value="photo" checked>写真</label>
+                <label class="p211-pill"><input type="checkbox" name="p411genre" value="arch">建築</label>
+                <label class="p211-pill"><input type="checkbox" name="p411genre" value="other">その他</label>
+              </div>
+            </div>
+
+            <!-- 紹介文 -->
+            <div class="p211-field">
+              <label class="p211-label" for="p411Bio">ギャラリー紹介文</label>
+              <textarea class="p211-textarea p211-textarea--tall" id="p411Bio">渋谷・松濤エリアに拠点を構えるコンテンポラリーアートギャラリー。現代美術・写真を中心に、国内外の若手作家の個展を年間を通じて開催。作家と鑑賞者の距離が近い、対話を大切にした展示空間を目指しています。</textarea>
+              <p class="p211-help">ギャラリー情報セクションに表示される紹介文です。</p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ブロック3: ギャラリー情報・アクセス -->
+        <div class="p211-block">
+          <div class="p211-block__head">
+            <h3 class="p211-block__title">ギャラリー情報・アクセス <span class="p211-block__title-en">VENUE &amp; ACCESS</span></h3>
+          </div>
+          <div class="p211-block__body">
+
+            <div class="p211-field">
+              <label class="p211-label" for="p411Addr">所在地<span class="ktn-req">必須</span></label>
+              <input class="p211-input" id="p411Addr" type="text" value="東京都渋谷区松濤1-XX-XX">
+              <p class="p211-help">来場者に公開される住所です（地図・アクセス情報に使用されます）。</p>
+            </div>
+
+            <div class="p211-row">
+              <div class="p211-field">
+                <label class="p211-label" for="p411Tel">電話番号<span class="ktn-req">必須</span></label>
+                <input class="p211-input" id="p411Tel" type="tel" value="03-XXXX-XXXX">
+              </div>
+              <div class="p211-field">
+                <label class="p211-label" for="p411Email">メールアドレス<span class="ktn-req">必須</span></label>
+                <input class="p211-input" id="p411Email" type="email" value="info@soilgallery.jp">
+              </div>
+            </div>
+            <p class="p211-help">こちらの電話番号・メールアドレスは来場者向けにギャラリーページで公開されます。</p>
+
+            <div class="p211-field">
+              <label class="p211-label" for="p411Hours">営業時間</label>
+              <input class="p211-input" id="p411Hours" type="text" value="火〜土 11:00〜19:00（日月定休）">
+            </div>
+
+            <!-- 最寄り駅 -->
+            <div class="p211-field">
+              <label class="p211-label">最寄り駅</label>
+              <div class="p211-repeat" id="p411StationList">
+                <div class="p211-repeat__row">
+                  <input class="p211-input" type="text" value="渋谷駅（徒歩12分）">
+                  <button class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline p211-repeat__del" type="button" aria-label="削除">✕</button>
+                </div>
+                <div class="p211-repeat__row">
+                  <input class="p211-input" type="text" value="神泉駅（徒歩7分）">
+                  <button class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline p211-repeat__del" type="button" aria-label="削除">✕</button>
+                </div>
+              </div>
+              <button class="ktn-op-btn ktn-op-btn--sm p211-repeat__add" type="button" data-target="p411StationList" data-placeholder="駅名（徒歩○分）">＋ 最寄り駅を追加</button>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ブロック4: 利用案内（施設情報） -->
+        <div class="p211-block">
+          <div class="p211-block__head">
+            <h3 class="p211-block__title">利用案内 <span class="p211-block__title-en">FACILITY INFO</span></h3>
+          </div>
+          <div class="p211-block__body">
+            <p class="p211-help" style="margin-bottom:12px">ギャラリーページに常時表示される来場案内です（展覧会ごとの案内は各展覧会の編集画面で設定します）。</p>
+
+            <!-- 入場料 -->
+            <div class="p211-facility-item">
+              <div class="p211-facility-row">
+                <span class="p211-facility-row__label">入場料</span>
+                <div class="p211-facility-row__ctrl">
+                  <select class="p211-select" id="p411FacEntry" onchange="p411ToggleFacility('Entry')">
+                    <option value="">— なし —</option>
+                    <option value="free" selected>無料</option>
+                    <option value="paid">有料</option>
+                  </select>
+                </div>
+              </div>
+              <div class="p211-facility-detail" id="p411FacEntryDetail">
+                <textarea class="p211-textarea" style="min-height:60px" placeholder="入場料に関して来場者にお伝えすることがあればご記入ください。">入場無料。一部企画展は有料となる場合あり。</textarea>
+              </div>
+            </div>
+
+            <!-- 駐車場 -->
+            <div class="p211-facility-item">
+              <div class="p211-facility-row">
+                <span class="p211-facility-row__label">駐車場</span>
+                <div class="p211-facility-row__ctrl">
+                  <select class="p211-select" id="p411FacParking" onchange="p411ToggleFacility('Parking')">
+                    <option value="">— なし —</option>
+                    <option value="none" selected>なし</option>
+                    <option value="yes">あり</option>
+                  </select>
+                </div>
+              </div>
+              <div class="p211-facility-detail" id="p411FacParkingDetail">
+                <textarea class="p211-textarea" style="min-height:60px" placeholder="駐車場の有無・近隣コインパーキングなどをご記入ください。">専用駐車場なし。近隣にコインパーキングあり。</textarea>
+              </div>
+            </div>
+
+            <!-- バリアフリー -->
+            <div class="p211-facility-item">
+              <div class="p211-facility-row">
+                <span class="p211-facility-row__label">バリアフリー</span>
+                <div class="p211-facility-row__ctrl">
+                  <select class="p211-select" id="p411FacAccessible" onchange="p411ToggleFacility('Accessible')">
+                    <option value="">— なし —</option>
+                    <option value="yes" selected>対応</option>
+                    <option value="no">非対応</option>
+                  </select>
+                </div>
+              </div>
+              <div class="p211-facility-detail" id="p411FacAccessibleDetail">
+                <textarea class="p211-textarea" style="min-height:60px" placeholder="段差・エレベーター・車椅子対応などをご記入ください。">段差なし・エレベーター完備。車椅子でのご来場が可能です。</textarea>
+              </div>
+            </div>
+
+            <!-- クレカ・電子マネー -->
+            <div class="p211-facility-item">
+              <div class="p211-facility-row">
+                <span class="p211-facility-row__label">クレカ・電子マネー</span>
+                <div class="p211-facility-row__ctrl">
+                  <select class="p211-select" id="p411FacPayment" onchange="p411ToggleFacility('Payment')">
+                    <option value="">— なし —</option>
+                    <option value="yes" selected>可</option>
+                    <option value="no">不可（現金のみ）</option>
+                  </select>
+                </div>
+              </div>
+              <div class="p211-facility-detail" id="p411FacPaymentDetail">
+                <textarea class="p211-textarea" style="min-height:60px" placeholder="対応する決済手段をご記入ください。">各種クレジットカード・PayPay・交通系IC対応。</textarea>
+              </div>
+            </div>
+
+            <!-- Wi-Fi -->
+            <div class="p211-facility-item">
+              <div class="p211-facility-row">
+                <span class="p211-facility-row__label">Wi-Fi</span>
+                <div class="p211-facility-row__ctrl">
+                  <select class="p211-select" id="p411FacWifi" onchange="p411ToggleFacility('Wifi')">
+                    <option value="">— なし —</option>
+                    <option value="yes">あり</option>
+                    <option value="no" selected>なし</option>
+                  </select>
+                </div>
+              </div>
+              <div class="p211-facility-detail" id="p411FacWifiDetail" hidden>
+                <textarea class="p211-textarea" style="min-height:60px" placeholder="フリーWi-Fiの有無・接続方法などをご記入ください。"></textarea>
+              </div>
+            </div>
+
+            <!-- レンタル -->
+            <div class="p211-facility-item">
+              <div class="p211-facility-row">
+                <span class="p211-facility-row__label">レンタル</span>
+                <div class="p211-facility-row__ctrl">
+                  <select class="p211-select" id="p411FacRental" onchange="p411ToggleFacility('Rental')">
+                    <option value="">— なし —</option>
+                    <option value="yes" selected>可</option>
+                    <option value="no">不可</option>
+                  </select>
+                </div>
+              </div>
+              <div class="p211-facility-detail" id="p411FacRentalDetail">
+                <textarea class="p211-textarea" style="min-height:60px" placeholder="レンタル利用に関して来場者・利用希望者にお伝えすることをご記入ください。">個展・グループ展でのレンタル利用を承っています。内覧のうえお気軽にお問合わせください。</textarea>
+                <div class="p211-facility-price">
+                  <span>面積：</span>
+                  <input type="text" inputmode="numeric" placeholder="60" value="60" style="max-width:70px">
+                  <span>㎡</span>
+                  <span style="margin-left:16px">基本料金（税込）：</span>
+                  <input type="text" inputmode="numeric" placeholder="30,000" value="30,000" style="max-width:90px">
+                  <span>円 /</span>
+                  <input type="text" inputmode="numeric" placeholder="1" value="1" style="max-width:40px">
+                  <span>日</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ブロック5: リンク -->
+        <div class="p211-block">
+          <div class="p211-block__head">
+            <h3 class="p211-block__title">リンク <span class="p211-block__title-en">LINKS</span></h3>
+          </div>
+          <div class="p211-block__body">
+            <div class="p211-field">
+              <label class="p211-label">SNS・外部リンク</label>
+              <div class="p211-repeat" id="p411LinkList">
+                <div class="p211-repeat__row p211-repeat__row--link">
+                  <select class="p211-select">
+                    <option value="instagram" selected>Instagram</option>
+                    <option value="x">X（Twitter）</option>
+                    <option value="facebook">Facebook</option>
+                    <option value="youtube">YouTube</option>
+                    <option value="website">公式サイト</option>
+                    <option value="other">その他</option>
+                  </select>
+                  <input class="p211-input" type="url" value="https://instagram.com/soil_gallery">
+                  <button class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline p211-repeat__del" type="button" aria-label="削除">✕</button>
+                </div>
+                <div class="p211-repeat__row p211-repeat__row--link">
+                  <select class="p211-select">
+                    <option value="instagram">Instagram</option>
+                    <option value="x">X（Twitter）</option>
+                    <option value="facebook">Facebook</option>
+                    <option value="youtube">YouTube</option>
+                    <option value="website" selected>公式サイト</option>
+                    <option value="other">その他</option>
+                  </select>
+                  <input class="p211-input" type="url" value="https://soilgallery.jp">
+                  <button class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline p211-repeat__del" type="button" aria-label="削除">✕</button>
+                </div>
+              </div>
+              <button class="ktn-op-btn ktn-op-btn--sm p211-repeat__add" type="button" data-target="p411LinkList" data-link="1">＋ リンクを追加</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ブロック6: ご担当者情報（非公開・p11-3と同一構成） -->
+        <div class="p211-block">
+          <div class="p211-block__head">
+            <h3 class="p211-block__title">ご担当者情報 <span class="p211-block__title-en">CONTACT（PRIVATE）</span></h3>
+          </div>
+          <div class="p211-block__body">
+
+            <div class="p114-privacy-note">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+              <span>ギャラリーページの管理・展覧会掲載についてご連絡する際の窓口として、ご担当者の情報をお預かりします。この情報が<strong>公開されることはありません</strong>。掲載内容の確認やご連絡が必要な場合にのみ使用します。<strong>ご担当者の交代や連絡先の変更があった場合は、その都度こちらを最新の内容に更新してください。</strong>情報が古いままだと、ご連絡やお手続きが必要になった際にお時間をいただく場合があります。</span>
+            </div>
+
+            <div class="p211-field">
+              <label class="p211-label" for="p411RepName">ご担当者お名前（フルネーム）<span class="ktn-req">必須</span></label>
+              <input class="p211-input" id="p411RepName" type="text" value="鈴木 一郎">
+              <p class="p211-help">ギャラリーページ・展覧会情報に関するご連絡の際にお伺いする氏名です。</p>
+            </div>
+
+            <div class="p211-field">
+              <label class="p211-label" for="p411RepNameKana">ご担当者フリガナ（全角カナ）<span class="ktn-req">必須</span></label>
+              <input class="p211-input" id="p411RepNameKana" type="text" value="スズキ イチロウ">
+            </div>
+
+            <div class="p211-field">
+              <label class="p211-label" for="p411RepRelation">ギャラリーとのご関係<span class="ktn-req">必須</span></label>
+              <select class="p211-select" id="p411RepRelation">
+                <option value="">選択してください</option>
+                <option selected>オーナー・運営者</option>
+                <option>スタッフ</option>
+                <option>広報委託先（代理店など）</option>
+              </select>
+              <p class="p211-help">ご担当者は、ギャラリー・美術館・スペースの運営者・スタッフ、またはギャラリー・美術館・スペースから正式に広報活動を依頼された代理の方に限らせていただいております。最も近いものを選択してください。</p>
+            </div>
+
+            <div class="p211-field">
+              <label class="p211-label" for="p411RepAffil">ご担当者の所属</label>
+              <input class="p211-input" id="p411RepAffil" type="text" placeholder="例：Gallery SOIL 渋谷 広報部">
+              <p class="p211-help">任意です。所属会社名・部署名など。</p>
+            </div>
+
+            <div class="p211-field">
+              <label class="p211-label" for="p411RepTitle">ご担当者のタイトル</label>
+              <input class="p211-input" id="p411RepTitle" type="text" value="ディレクター">
+              <p class="p211-help">任意です。</p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ブロック6.5: リエゾンプラス責任者（参考表示・非公開・読み取り専用／p11-4の承認結果を引き継ぎ。LIAISON+未申請／承認済で分岐＝id分岐はデモ用トグル、実装ではLIAISON+ステータスで自動出し分け） -->
+        <div class="p211-block">
+          <div class="p211-block__head">
+            <h3 class="p211-block__title">リエゾンプラス 責任者（参考表示） <span class="p211-block__title-en">RESPONSIBLE PERSON（REFERENCE）</span></h3>
+          </div>
+          <div class="p211-block__body">
+
+            <!-- LIAISON+ 未申請（デモ：dbarLpNone） -->
+            <div id="p411LpNone" hidden>
+              <div class="p114-privacy-note">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+                <span>まだリエゾンプラスにお申込みいただいていないため、責任者情報は登録されていません。リエゾンプラス（作品販売）をご利用いただくには、機能申込フォームで責任者情報のご入力と事務局の審査が必要です。</span>
+              </div>
+              <a class="ktn-guide-link" href="./kotennavi-p11-4.html">リエゾンプラスに申し込む →</a>
+            </div>
+
+            <!-- LIAISON+ 承認済（デモ：dbarLpApproved） -->
+            <div id="p411LpApproved">
+              <div class="p114-privacy-note">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+                <span>リエゾンプラスのお申込み時にご登録いただいた責任者の氏名を、精算時の振込名義人確認・責任者変更の記録用に参考表示しています。この情報は<strong>公開されることはありません</strong>。ご担当者と責任者は別の方の場合があるため、こちらは<strong>ご担当者情報とは別に管理</strong>しています。</span>
+              </div>
+
+              <dl class="p114-identity-readout">
+                <div class="p114-identity-readout__row"><dt>責任者名</dt><dd>鈴木 一郎</dd></div>
+                <div class="p114-identity-readout__row"><dt>法人番号</dt><dd>1234567890123</dd></div>
+                <div class="p114-identity-readout__row"><dt>最終承認日</dt><dd>2026-05-12</dd></div>
+              </dl>
+              <p class="p211-help">責任者が変更になった場合は、直接ここを編集せず、リエゾンプラス機能申込から再申請・再承認を行ってください。再承認のたびにこの表示が更新され、変更の記録が残ります。</p>
+              <a class="ktn-guide-link" href="./kotennavi-p11-4.html">責任者情報を変更する（リエゾンプラス機能申込より再申請） →</a>
+
+              <div class="p211-field" style="margin-top:16px">
+                <label class="p211-label" for="p411ShipPref">作品の発送地（既定）<span class="ktn-req">必須</span></label>
+                <select class="p211-select" id="p411ShipPref" style="max-width:280px">
+                  <option value="">選択してください</option>
+                  <option>北海道</option>
+                  <option>青森県</option><option>岩手県</option><option>宮城県</option><option>秋田県</option><option>山形県</option><option>福島県</option>
+                  <option>茨城県</option><option>栃木県</option><option>群馬県</option><option>埼玉県</option><option>千葉県</option><option selected>東京都</option><option>神奈川県</option>
+                  <option>新潟県</option><option>富山県</option><option>石川県</option><option>福井県</option><option>山梨県</option><option>長野県</option>
+                  <option>岐阜県</option><option>静岡県</option><option>愛知県</option><option>三重県</option>
+                  <option>滋賀県</option><option>京都府</option><option>大阪府</option><option>兵庫県</option><option>奈良県</option><option>和歌山県</option>
+                  <option>鳥取県</option><option>島根県</option><option>岡山県</option><option>広島県</option><option>山口県</option>
+                  <option>徳島県</option><option>香川県</option><option>愛媛県</option><option>高知県</option>
+                  <option>福岡県</option><option>佐賀県</option><option>長崎県</option><option>熊本県</option><option>大分県</option><option>宮崎県</option><option>鹿児島県</option><option>沖縄県</option>
+                </select>
+                <p class="p211-help">LIAISON+ で作品を出品する際（LIAISON+ 出品設定）の発送地の初期値です。リエゾンプラス機能申込でご登録いただいた内容を表示しています。展示ごとの発送地は出品設定側で個別に変更でき、この既定値はここで直接更新できます。</p>
+              </div>
+
+              <div class="p211-field" style="margin-top:16px">
+                <label class="p211-label" for="p411InvoiceNumber">事業者番号（インボイス制度・任意）</label>
+                <input class="p211-input" id="p411InvoiceNumber" type="text" value="T1234567890123" placeholder="例：T1234567890123" maxlength="14" style="max-width:260px">
+                <p class="p211-help">適格請求書発行事業者登録番号です。リエゾンプラス機能申込でご登録いただいた内容を表示しています。未登録・免税事業者の場合は空欄のままで構いません。登録された場合はここで直接更新できます。</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 管理者コメント欄（role=admin のときのみ表示・共通 syncAdminNote が切替） -->
+        <div class="ktn-admin-note" id="p411AdminNote" hidden>
+          <div class="ktn-admin-note__head">
+            <span class="ktn-admin-note__badge">Admin</span>
+            <span class="ktn-admin-note__title">管理者コメント</span>
+          </div>
+          <p class="ktn-admin-note__desc">管理上の対応履歴・申し送りを記録します。管理者のみが閲覧できます。</p>
+          <textarea class="ktn-admin-note__textarea" id="p411AdminComment" placeholder="例：2026-07-20 ご担当者へ掲載内容の確認を実施。"></textarea>
+        </div>
+
+        <!-- 送信バー -->
+        <div class="p211-submit-bar">
+          <button class="ktn-op-btn" type="button" onclick="history.back()">キャンセル</button>
+          <button class="ktn-op-btn ktn-op-btn--primary" type="button" id="p411SaveBtn">変更を保存する</button>
+          <span class="p211-submit-bar__note">最終更新 2026.03.15</span>
+        </div>
+
+      </div>
+    </div>
+  </main>
+</div>
+</div>
+
+<script src="kotennavi-common.js"></script>
+<script src="kotennavi-pages.js"></script>
+<script>KTN.init({ page: 'p4-11', role: 'gallery' });</script>
+<script>
+/* ── ピル選択の active 切り替え（input の checked 状態から同期） ── */
+document.querySelectorAll('.p211-pill-group').forEach(function (group) {
+  function syncPills() {
+    group.querySelectorAll('.p211-pill').forEach(function (p) {
+      var inp = p.querySelector('input');
+      if (inp) p.classList.toggle('is-active', inp.checked);
+    });
+  }
+  group.querySelectorAll('input').forEach(function (inp) {
+    inp.addEventListener('change', syncPills);
+  });
+});
+
+/* ── リエゾンプラス責任者ブロック：未申請／承認済デモ切替 ── */
+function setLpMode(mode) {
+  var isNone = (mode === 'none');
+  document.getElementById('p411LpNone').hidden = !isNone;
+  document.getElementById('p411LpApproved').hidden = isNone;
+  document.getElementById('dbarLpNone').classList.toggle('on', isNone);
+  document.getElementById('dbarLpApproved').classList.toggle('on', !isNone);
+}
+
+/* ── 利用案内 show/hide ── */
+function p411ToggleFacility(key) {
+  var sel    = document.getElementById('p411Fac' + key);
+  var detail = document.getElementById('p411Fac' + key + 'Detail');
+  if (!sel || !detail) return;
+  detail.hidden = (sel.value === '');
+}
+['Entry', 'Parking', 'Accessible', 'Payment', 'Wifi', 'Rental'].forEach(p411ToggleFacility);
+</script>
+</body>
+</html>

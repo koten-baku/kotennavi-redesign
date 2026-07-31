@@ -74,7 +74,7 @@
 | P3-14 | クリエイター-ポートフォリオ管理 | L |  |  |  | R/W |  | R/W | --w-detail | kotennavi-p3-14.html | Fix済 |
 | P3-15 | クリエイター-リエゾン+コンソール | L+ |  |  |  | R/W |  | R/W | --w-detail | kotennavi-p3-15.html | Fix済 |
 | P3-16 | クリエイター-取引デスク | L+ |  |  |  | R/W |  | R/W | --w-detail | kotennavi-p3-16.html | Fix済 |
-| P3-17 | クリエイター販売代金管理 | L+ |  |  |  | R/W |  | R/W | --w-detail | # | 未作成 |
+| P3-17 | クリエイター販売代金管理 | L+ |  |  |  | R/W |  | R/W | --w-detail | kotennavi-p3-17.html | Fix済 |
 | P3-18 | クリエイター-展覧会管理 | L |  |  |  | R/W |  | R/W | --w-detail | # | 未作成 |
 
 ---
@@ -86,13 +86,13 @@
 | P4 | ギャラリー |  | R | R | R | R | R | R | --w-entity | kotennavi-p4.html | Fix済 |
 | P4-1 | ギャラリー-展覧会アーカイブ |  | R | R | R | R | R | R | --w-entity | kotennavi-p4-1.html | Fix済 |
 | P4-2 | ギャラリー-記事一覧 |  | R | R | R | R | R | R | --w-entity | kotennavi-p4-2.html | Fix済 |
-| P4-11 | ギャラリー-編集 | L,L+ |  |  |  |  | W | W | --w-detail | # | 未作成 |
+| P4-11 | ギャラリー-編集 | L,L+ |  |  |  |  | W | W | --w-detail | kotennavi-p4-11.html | 調整中 |
 | P4-12 | ギャラリー-インサイト |  |  |  |  |  | R | R | --w-article | # | 未作成 |
 | P4-13 | ギャラリー-ウオッチャー管理 |  |  |  |  |  | R/W | R/W | --w-detail | # | 未作成 |
 | P4-14 | ギャラリー-インベントリー管理 | L,L+ |  |  |  |  | R/W | R/W | --w-detail | kotennavi-p4-14.html | Fix済 |
 | P4-15 | ギャラリー-リエゾン+コンソール | L+ |  |  |  |  | R/W | R/W | --w-detail | kotennavi-p4-15.html | Fix済 |
 | P4-16 | ギャラリー-取引デスク | L+ |  |  |  |  | R/W | R/W | --w-detail | kotennavi-p4-16.html | Fix済 |
-| P4-17 | ギャラリー-販売代金管理 | L+ |  |  |  |  | R/W | R/W | --w-detail | # | 未作成 |
+| P4-17 | ギャラリー-販売代金管理 | L+ |  |  |  |  | R/W | R/W | --w-detail | kotennavi-p4-17.html | Fix済 |
 | P4-18 | ギャラリー-展覧会管理 | L |  |  |  |  | R/W | R/W | --w-detail | # | 未作成 |
 
 ---
@@ -169,9 +169,9 @@
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | P11 | ログイン |  | W |  |  |  |  |  | --w-detail | # | 未作成 |
 | P11-1 | ユーザー新規登録 |  | W |  |  |  |  |  | --w-detail | # | 未作成 |
-| P11-2 | クリエイター機能申込 |  |  | W |  |  |  |  | --w-detail | # | 未作成 |
-| P11-3 | ギャラリー機能申込 |  |  | W |  |  |  |  | --w-detail | # | 未作成 |
-| P11-4 | リエゾンプラス機能申込 |  |  |  |  | W | W |  | --w-detail | kotennavi-p11-4.html | 調整中 |
+| P11-2 | クリエイター機能申込 |  |  | W |  |  |  |  | --w-detail | kotennavi-p11-2.html | 調整中 |
+| P11-3 | ギャラリー機能申込 |  |  | W |  |  |  |  | --w-detail | kotennavi-p11-3.html | 調整中 |
+| P11-4 | リエゾンプラス機能申込 |  |  |  |  | W | W |  | --w-detail | kotennavi-p11-4.html | Fix済 |
 | P11-11 | ログイン-パスワードを忘れた方 |  | W |  |  |  |  |  | --w-detail | # | 未作成 |
 | P11-12 | ログインパスワード再設定 |  | W |  |  |  |  |  | --w-detail | # | 未作成 |
 | P11-21 | ユーザー新規登録-アカウント仮登録完了 |  | R |  |  |  |  |  | --w-detail | # | 未作成 |

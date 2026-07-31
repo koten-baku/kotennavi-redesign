@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>販売代金管理 — Gallery SOIL 渋谷 | 個展なび</title>
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<body data-w="detail" class="p4-page p4-17-page mgmt-page">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- デモバー -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ロール：</span>
+  <button class="dbtn on" onclick="setR('gallery',this)">gallery</button>
+  <button class="dbtn" onclick="setR('admin',this)">管理者</button>
+  <span class="dbar-sep">残高：</span>
+  <button class="dbtn on" id="dbarBalAbove" onclick="setBalanceState('above')">下限以上</button>
+  <button class="dbtn" id="dbarBalBelow" onclick="setBalanceState('below')">繰越中（下限未満）</button>
+  <span class="dbar-sep">Stripe連携：</span>
+  <button class="dbtn on" id="dbarStripeOn" onclick="setStripeConn('connected')">連携済み</button>
+  <button class="dbtn" id="dbarStripeOff" onclick="setStripeConn('unconnected')">未連携</button>
+</div>
+
+<div class="shell">
+<div class="content-wrap" id="contentWrap">
+
+  <header class="ktn-header" id="ktnHeader">
+    <div class="ktn-header__inner">
+      <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+      <div class="ktn-hdr-actions" id="ktnActs"></div>
+    </div>
+  </header>
+
+  <main class="ktn-main" id="ktnMain">
+
+    <!-- C. メインコンテンツ -->
+    <div class="ktn-content">
+
+      <!-- 親エンティティ文脈ストリップ（identity strip） -->
+      <div class="ktn-mgmt-context">
+        <a class="ktn-mgmt-context__media ktn-mgmt-context__media--gallery" href="kotennavi-p4.html" style="background:linear-gradient(135deg,#c8a888,#8b5e3c)">SOIL</a>
+        <div class="ktn-mgmt-context__body">
+          <div class="ktn-mgmt-context__badges">
+            <span class="cb cb-person cb-gallery">gallery</span>
+          </div>
+          <div class="ktn-mgmt-context__name"><a href="kotennavi-p4.html">Gallery SOIL 渋谷</a></div>
+        </div>
+        <div class="ktn-mgmt-context__actions">
+          <a class="ktn-mgmt-context__view" href="kotennavi-p4.html">ギャラリーページへ →</a>        </div>
+      </div>
+
+      <div class="p317-wrap ktn-mgmt-wrap ktn-mgmt-stack">
+
+        <!-- C-1. ページヘッド -->
+        <div class="ktn-mgmt-head">
+          <a class="ktn-mgmt-head__back" href="kotennavi-p4-15.html">← LIAISON+コンソール</a>
+          <div class="ktn-mgmt-head__badge-row">
+            <span class="lb-dot li-plus">LIAISON+</span>
+          </div>
+          <h2 class="ktn-mgmt-head__title">販売代金管理</h2>
+          <p class="ktn-mgmt-head__en">SALES REVENUE</p>
+          <p class="ktn-mgmt-head__desc">LIAISON+で取引が完了した代金の残高・精算予定・振込先口座を管理します。精算は<strong>月末締め・翌月20日の一括振込</strong>（20日が金融機関休業日の場合は翌営業日）です。精算下限額と振込先口座はこのページで設定できます。</p>
+          <div class="ktn-mgmt-head__guides">
+            <a class="ktn-guide-link" href="kotennavi-p70-2.html" target="_blank" rel="noopener">サービス利用料について →</a>
+          </div>
+        </div>
+
+        <!-- Stripe連携ステータス（未連携時のみアラート／連携済みは目立たない小表示・排他表示） -->
+        <div class="ktn-txn-alert" id="p417StripeAlert">
+          <svg class="ktn-txn-alert__icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M10 2.5 1.8 17h16.4z"/><line x1="10" y1="8" x2="10" y2="12.2"/><circle cx="10" cy="14.8" r=".7" fill="currentColor" stroke="none"/></svg>
+          <div class="ktn-txn-alert__body">
+            <span class="ktn-txn-alert__title">決済連携の確認が必要です</span>
+            <span class="ktn-txn-alert__text">Stripeとの連携が確認できません。通常、LIAISON+ お申込み時に連携済みのため、これはStripe側で追加確認が必要になった場合などの例外的な状態です。<strong>連携が完了するまで、精算設定・振込先口座の変更はできません。</strong></span>
+            <div style="display:flex;justify-content:flex-end;margin-top:6px">
+              <button class="ktn-op-btn ktn-op-btn--primary" type="button" id="p417StripeConnectBtn">Stripeの利用規約に同意して連携する</button>
+            </div>
+          </div>
+        </div>
+        <div class="p317-stripe-status p317-stripe-status--ok p317-stripe-status--mini" id="p417StripeMini">
+          <span class="p317-stripe-status__dot"></span>
+          <span class="p317-stripe-status__label">決済パートナー（Stripe）連携済み</span>
+          <span class="p317-stripe-status__date">最終確認：2026年6月2日</span>
+        </div>
+
+        <!-- C-2. 次回振込予定（未精算残高より「次にいくら・いつ振り込まれるか」を主役に統合） -->
+        <div class="p211-block">
+          <div class="p211-block__head">
+            <h3 class="p211-block__title">次回振込予定 <span class="p211-block__title-en">NEXT PAYOUT</span></h3>
+          </div>
+          <div class="p211-block__body">
+
+            <!-- 残高が精算下限額以上（デモ：dbarBalAbove） -->
+            <div id="p417BalAbove" class="p317-hero">
+              <span class="p317-hero__lbl">精算金額（2026年7月31日締め時点の未精算残高）</span>
+              <div class="p317-hero__amt">¥214,800</div>
+              <p class="p317-hero__date">2026年8月20日にお振込み予定（振込手数料差引後の金額が実際の振込額になります）</p>
+              <details class="p317-hero__more">
+                <summary>金額の内訳・繰越条件について</summary>
+                <p>2026年7月31日の月末締めで確定した未精算残高です（前月以前からの繰越分があればこの金額に含まれます）。8月に完了した取引はこの金額に含まれず、次回（8月末締め・9月20日振込）以降の対象になります。</p>
+              </details>
+            </div>
+
+            <!-- 残高が精算下限額未満（デモ：dbarBalBelow） -->
+            <div id="p417BalBelow" class="p317-hero p317-hero--carry" hidden>
+              <span class="p317-hero__lbl">精算金額（2026年7月31日締め時点の未精算残高）</span>
+              <div class="p317-hero__amt">¥6,300</div>
+              <span class="p317-carry-badge">繰越中（下限未達）</span>
+              <p class="p317-hero__date">精算下限額（¥10,000）未満のため、2026年8月20日の振込はありません（この金額のまま翌月以降に繰り越されます）</p>
+              <details class="p317-hero__more">
+                <summary>繰越の仕組みについて</summary>
+                <p>2026年7月31日の月末締めで確定した残高です。残高は翌月以降にそのまま繰り越され、繰り越しに期限はありません。精算下限額に達した月の翌月20日に一括で振り込まれます。</p>
+              </details>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- C-3. 精算設定・振込先口座（いずれも翌月20日の振込までに設定完了が必要なため1セクションに統合） -->
+        <div class="p211-block" id="p417SettingsBlock">
+          <div class="p211-block__head">
+            <h3 class="p211-block__title">精算設定・振込先口座 <span class="p211-block__title-en">SETTLEMENT &amp; BANK ACCOUNT</span></h3>
+          </div>
+          <div class="p211-block__body">
+
+            <p class="p211-help">精算下限額・振込先口座は<strong>翌月20日の振込までに設定を完了</strong>してください（精算は月末締め・翌月20日払い。20日が金融機関休業日の場合は翌営業日）。「設定変更」から内容の確認・変更ができます。</p>
+
+            <div class="p317-setup-checklist">
+
+              <div class="p317-setup-checklist__item">
+                <div class="p317-setup-checklist__row">
+                  <span class="p317-setup-checklist__icon"></span>
+                  <span class="p317-setup-checklist__text">精算下限額：<strong>¥10,000</strong> に設定済み</span>
+                  <button class="p317-setup-checklist__toggle" type="button" id="p417ThresholdToggle" aria-expanded="false" aria-controls="p417ThresholdPanel">設定変更</button>
+                </div>
+                <div class="p317-setup-checklist__panel" id="p417ThresholdPanel" hidden>
+                  <div class="p211-field">
+                    <label class="p211-label" for="p417Threshold">精算下限額</label>
+                    <select class="p211-select" id="p417Threshold" style="max-width:220px">
+                      <option value="1000">¥1,000</option>
+                      <option value="3000">¥3,000</option>
+                      <option value="5000">¥5,000</option>
+                      <option value="10000" selected>¥10,000</option>
+                      <option value="30000">¥30,000</option>
+                      <option value="50000">¥50,000</option>
+                      <option value="100000">¥100,000</option>
+                    </select>
+                    <p class="p211-help">月末（締め日）時点の残高がこの金額以上の場合にのみ、翌月20日に振り込まれます。残高がこの金額に満たない月は振込を行わず、翌月以降に繰り越されます。</p>
+                  </div>
+                  <div style="display:flex;justify-content:flex-end;margin-top:4px">
+                    <button class="ktn-op-btn ktn-op-btn--primary" type="button" id="p417SaveSettings">設定を保存する</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="p317-setup-checklist__item">
+                <div class="p317-setup-checklist__row">
+                  <span class="p317-setup-checklist__icon"></span>
+                  <span class="p317-setup-checklist__text">振込先口座：登録済み（Stripe社で管理）</span>
+                  <button class="p317-setup-checklist__toggle" type="button" id="p417BankToggle" aria-expanded="false" aria-controls="p417BankPanel">設定変更</button>
+                </div>
+                <div class="p317-setup-checklist__panel" id="p417BankPanel" hidden>
+                  <p class="p211-help">振込先口座情報は決済パートナーである<strong>Stripe社</strong>が管理しており、個展なびでは口座番号などの詳細を保持していません。ボタンを押すとStripe社にご登録済みの内容（一部マスク）を確認できます。</p>
+
+                  <!-- 未確認状態：確認ボタンのみ（Stripeからの取得はボタン押下時のみ行う） -->
+                  <div id="p417BankUnrevealed">
+                    <div style="display:flex;justify-content:flex-end">
+                      <button class="ktn-op-btn ktn-op-btn--primary" type="button" id="p417RevealBankBtn">登録口座情報を確認する</button>
+                    </div>
+                  </div>
+
+                  <!-- 確認済み状態：マスク表示＋変更ボタン -->
+                  <div id="p417BankRevealed" hidden>
+                    <dl class="p114-identity-readout">
+                      <div class="p114-identity-readout__row"><dt>金融機関名</dt><dd id="p417BankNameView">三井住友銀行</dd></div>
+                      <div class="p114-identity-readout__row"><dt>口座番号</dt><dd id="p417AcctNumView">•••••21</dd></div>
+                      <div class="p114-identity-readout__row"><dt>口座名義</dt><dd id="p417AcctHolderView">スズキ イチロウ</dd></div>
+                    </dl>
+                    <p class="p211-help">口座名義はStripe社での本人確認情報と照合済みです。</p>
+
+                    <div style="display:flex;justify-content:flex-end;margin-top:14px">
+                      <button class="ktn-op-btn ktn-op-btn--primary" type="button" id="p417ChangeBankBtn">Stripeの画面で口座情報を変更する</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+        <!-- C-5. 精算履歴（参照専用のため弱色化） -->
+        <div class="p211-block p211-block--quiet">
+          <div class="p211-block__head">
+            <h3 class="p211-block__title">精算履歴 <span class="p211-block__title-en">PAYOUT HISTORY</span></h3>
+          </div>
+          <div class="p211-block__body">
+            <div class="p315-archive-table-wrap">
+              <table class="p315-archive-table p315-archive-table--grouped">
+                <thead>
+                  <tr>
+                    <th colspan="2" class="p315-archive-table__grp">精算</th>
+                    <th colspan="3" class="p315-archive-table__grp">振込</th>
+                    <th rowspan="2">状態</th>
+                    <th rowspan="2"></th>
+                  </tr>
+                  <tr>
+                    <th>締め日</th>
+                    <th>当月精算金額</th>
+                    <th>振込日</th>
+                    <th>振込手数料</th>
+                    <th>振込金額</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td data-label="締め日">2026.06.30</td>
+                    <td data-label="当月精算金額">¥239,150</td>
+                    <td data-label="振込日">2026.07.20</td>
+                    <td data-label="振込手数料">¥250</td>
+                    <td data-label="振込金額">¥238,900</td>
+                    <td data-label="状態"><span class="p315-archive-table__status--done">振込完了</span></td>
+                    <td><button type="button" class="p315-archive-table__detail-btn" data-payout="2026-07-20">明細を見る</button></td>
+                  </tr>
+                  <tr>
+                    <td data-label="締め日">2026.05.31</td>
+                    <td data-label="当月精算金額">¥141,050</td>
+                    <td data-label="振込日">2026.06.20</td>
+                    <td data-label="振込手数料">¥250</td>
+                    <td data-label="振込金額">¥146,200</td>
+                    <td data-label="状態"><span class="p315-archive-table__status--done">振込完了</span></td>
+                    <td><button type="button" class="p315-archive-table__detail-btn" data-payout="2026-06-20">明細を見る</button></td>
+                  </tr>
+                  <tr>
+                    <td data-label="締め日">2026.04.30</td>
+                    <td data-label="当月精算金額">¥5,400</td>
+                    <td data-label="振込日">—</td>
+                    <td data-label="振込手数料">—</td>
+                    <td data-label="振込金額">—</td>
+                    <td data-label="状態">繰越（下限未達）</td>
+                    <td></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="p211-help" style="margin-top:10px">取引ごとの内訳（作品名・送料・サービス利用料等）は各展覧会のLIAISON+コンソール「終了した展覧会」アーカイブでご確認いただけます。</p>
+          </div>
+        </div>
+
+        <!-- 振込明細モーダル（精算履歴「明細を見る」から開く。PDF生成の代わりにその場で内訳を表示し、印刷して保存できるようにする） -->
+        <div class="p515-modal-overlay" id="p417PayoutModal" hidden>
+          <div class="p515-modal p515-modal--invoice">
+            <div class="p515-modal__head">
+              <span class="p515-modal__title">振込明細</span>
+              <button class="p515-modal__close" id="p417PayoutModalClose">✕</button>
+            </div>
+            <div class="p515-modal__body">
+              <p class="p515-modal__desc">この振込の内訳です。取引ごとの詳細（作品名等）は各展覧会のLIAISON+コンソール「終了した展覧会」アーカイブでご確認いただけます。</p>
+              <div class="p515-invoice-sheet" id="p417PayoutSheet">
+                <div class="p515-invoice-sheet__head">
+                  <h3 class="p515-invoice-sheet__ttl">振込明細</h3>
+                  <p class="p515-invoice-sheet__no">振込日：<span class="is-id" id="p417PayoutDate">2026.07.20</span></p>
+                </div>
+                <dl class="p515-invoice-sheet__meta">
+                  <div class="p515-invoice-sheet__meta-row"><dt>締め日</dt><dd id="p417PayoutCutoff">2026.06.30</dd></div>
+                  <div class="p515-invoice-sheet__meta-row"><dt>対象取引</dt><dd id="p417PayoutCount">5件</dd></div>
+                </dl>
+                <div class="p515-invoice-sheet__amount">
+                  <span class="p515-invoice-sheet__amount-lbl">振込金額</span>
+                  <span class="p515-invoice-sheet__amount-val" id="p417PayoutAmount">¥238,900</span>
+                </div>
+                <div class="p515-invoice-sheet__detail">
+                  <p class="p515-invoice-sheet__detail-ttl">内訳</p>
+                  <table class="p515-invoice-sheet__table" id="p417PayoutTable">
+                    <thead><tr><th>項目</th><th>金額</th></tr></thead>
+                    <tbody></tbody>
+                    <tfoot><tr><th>振込金額</th><td id="p417PayoutTotal">¥238,900</td></tr></tfoot>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="p515-modal__foot">
+              <button class="p515-modal__btn ktn-op-btn" id="p417PayoutModalClose2">閉じる</button>
+              <button class="p515-modal__btn ktn-op-btn ktn-op-btn--primary" id="p417PayoutPrint">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="14" height="14"><path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="7"/></svg>
+                印刷する
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- C-6. FAQ（本文は KTN.QA〔liaison-settlement/seller〕を単一ソースに renderQA で描画・参照専用のため弱色化） -->
+        <section class="p315-faq p315-faq--quiet">
+          <div class="p315-faq__head">よくある質問</div>
+          <div id="p417QaSettlement"></div>
+        </section>
+
+      </div><!-- /p317-wrap -->
+    </div><!-- /ktn-content -->
+
+  </main>
+
+  <div class="ktn-ad-band" id="ktnAdBand">
+    <div class="ktn-ad-band__inner">
+      <div class="ktn-ad-band__slot">広告エリア（728×90 / レスポンシブ）</div>
+    </div>
+  </div>
+  <div class="dev-ph dev-ph--footer"></div>
+
+</div><!-- /content-wrap -->
+</div><!-- /shell -->
+
+<nav class="ktn-bottom-nav" id="ktnBottomNav">
+  <div class="ktn-bottom-nav__inner" id="ktnBottomNavInner"></div>
+</nav>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"個展なび","item":"https://koten-navi.com/"},{"@type":"ListItem","position":2,"name":"Gallery SOIL 渋谷","item":"https://koten-navi.com/gallery/soil-shibuya"},{"@type":"ListItem","position":3,"name":"販売代金管理","item":"https://koten-navi.com/gallery/soil-shibuya/sales-settlement"}]}</script>
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+KTN.init({ page: 'p4-17', role: 'gallery' });
+
+/* FAQ本文は KTN.QA を単一ソースに描画 */
+KTN.renderQA('#p417QaSettlement', { category: 'liaison-settlement', side: 'seller', style: 'desk' });
+
+/* ── 残高：下限以上／繰越中デモ切替 ── */
+function setBalanceState(state) {
+  var isAbove = (state === 'above');
+  document.getElementById('p417BalAbove').hidden = !isAbove;
+  document.getElementById('p417BalBelow').hidden = isAbove;
+  document.getElementById('dbarBalAbove').classList.toggle('on', isAbove);
+  document.getElementById('dbarBalBelow').classList.toggle('on', !isAbove);
+}
+
+/* ── Stripe連携：連携済み／未連携デモ切替（未連携時は精算設定・振込先口座を操作不可に） ── */
+function setStripeConn(state) {
+  var connected = (state === 'connected');
+  document.getElementById('p417StripeAlert').classList.toggle('is-on', !connected);
+  document.getElementById('p417StripeMini').hidden = !connected;
+  document.getElementById('dbarStripeOn').classList.toggle('on', connected);
+  document.getElementById('dbarStripeOff').classList.toggle('on', !connected);
+  document.getElementById('p417SettingsBlock').classList.toggle('p317-gated', !connected);
+}
+(function () {
+  var btn = document.getElementById('p417StripeConnectBtn');
+  if (btn) btn.addEventListener('click', function () {
+    setStripeConn('connected');
+    if (typeof KTN !== 'undefined' && KTN.toast) KTN.toast('Stripeとの連携が完了しました（デモ）');
+  });
+})();
+
+/* ── C-3チェックリスト：「設定変更」ボタンで編集パネルを開閉 ── */
+document.querySelectorAll('.p317-setup-checklist__toggle').forEach(function (toggleBtn) {
+  var panel = document.getElementById(toggleBtn.getAttribute('aria-controls'));
+  if (!panel) return;
+  toggleBtn.addEventListener('click', function () {
+    var willOpen = panel.hidden;
+    panel.hidden = !willOpen;
+    toggleBtn.setAttribute('aria-expanded', String(willOpen));
+    toggleBtn.textContent = willOpen ? '閉じる' : '設定変更';
+  });
+});
+
+/* ── 精算設定：保存（デモ） ── */
+(function () {
+  var btn = document.getElementById('p417SaveSettings');
+  if (btn) btn.addEventListener('click', function () {
+    if (typeof KTN !== 'undefined' && KTN.toast) KTN.toast('設定を保存しました（デモ）');
+  });
+})();
+
+/* ── 振込先口座：確認ボタン押下時のみStripeから取得（デモ）して表示。変更はStripeの画面へ遷移（個展なびは口座情報を保持しないため照合・保存処理を持たない） ── */
+(function () {
+  var revealBtn = document.getElementById('p417RevealBankBtn');
+  var unrevealed = document.getElementById('p417BankUnrevealed');
+  var revealed = document.getElementById('p417BankRevealed');
+  if (revealBtn) revealBtn.addEventListener('click', function () {
+    unrevealed.hidden = true;
+    revealed.hidden = false;
+  });
+
+  var changeBtn = document.getElementById('p417ChangeBankBtn');
+  if (changeBtn) changeBtn.addEventListener('click', function () {
+    if (typeof KTN !== 'undefined' && KTN.toast) KTN.toast('Stripeの画面へ移動します（デモ）');
+  });
+})();
+
+/* ── 精算履歴：振込ごとの明細内訳をモーダルで表示し、ブラウザ印刷で保存できるようにする（PDF生成の代わり） ── */
+(function () {
+  var P417_PAYOUTS = {
+    '2026-07-20': {
+      date: '2026.07.20', cutoff: '2026.06.30', count: '5件',
+      rows: [
+        ['作品代金合計', '¥260,000'],
+        ['送料合計', '¥4,500'],
+        ['梱包費合計', '¥1,500'],
+        ['サービス利用料', '−¥26,850'],
+        ['振込手数料', '−¥250']
+      ],
+      total: '¥238,900'
+    },
+    '2026-06-20': {
+      date: '2026.06.20', cutoff: '2026.05.31', count: '3件',
+      rows: [
+        ['作品代金合計', '¥158,000'],
+        ['送料合計', '¥3,000'],
+        ['梱包費合計', '¥1,200'],
+        ['サービス利用料', '−¥15,750'],
+        ['振込手数料', '−¥250']
+      ],
+      total: '¥146,200'
+    }
+  };
+
+  var modal = document.getElementById('p417PayoutModal');
+  var closeBtn1 = document.getElementById('p417PayoutModalClose');
+  var closeBtn2 = document.getElementById('p417PayoutModalClose2');
+  var printBtn = document.getElementById('p417PayoutPrint');
+  var tbody = modal ? modal.querySelector('#p417PayoutTable tbody') : null;
+
+  function openPayoutModal(payoutId) {
+    var data = P417_PAYOUTS[payoutId];
+    if (!data || !modal) return;
+    document.getElementById('p417PayoutDate').textContent = data.date;
+    document.getElementById('p417PayoutCutoff').textContent = data.cutoff;
+    document.getElementById('p417PayoutCount').textContent = data.count;
+    document.getElementById('p417PayoutAmount').textContent = data.total;
+    document.getElementById('p417PayoutTotal').textContent = data.total;
+    tbody.innerHTML = data.rows.map(function (row) {
+      return '<tr><td>' + row[0] + '</td><td>' + row[1] + '</td></tr>';
+    }).join('');
+    modal.hidden = false;
+  }
+  function closePayoutModal() { if (modal) modal.hidden = true; }
+
+  document.querySelectorAll('.p315-archive-table__detail-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () { openPayoutModal(btn.dataset.payout); });
+  });
+  if (closeBtn1) closeBtn1.addEventListener('click', closePayoutModal);
+  if (closeBtn2) closeBtn2.addEventListener('click', closePayoutModal);
+  if (modal) modal.addEventListener('click', function (e) { if (e.target === modal) closePayoutModal(); });
+  if (printBtn) printBtn.addEventListener('click', function () {
+    document.body.classList.add('p417-print-payout');
+    window.print();
+  });
+  window.addEventListener('afterprint', function () {
+    document.body.classList.remove('p417-print-payout');
+  });
+})();
+</script>
+
+</body>
+</html>

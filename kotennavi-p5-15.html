@@ -85,6 +85,72 @@
   </div>
 </div>
 
+<!-- 領収書モーダル（出品者自身の登録情報をもとに生成・個展なびは代行発行者にならない方式） -->
+<div class="p515-modal-overlay" id="p515InvoiceModal" hidden>
+  <div class="p515-modal p515-modal--invoice">
+    <div class="p515-modal__head">
+      <span class="p515-modal__title">領収書</span>
+      <button class="p515-modal__close" id="p515InvoiceModalClose">✕</button>
+    </div>
+    <div class="p515-modal__body">
+      <p class="p515-modal__desc">出品者がご登録の氏名・登録番号をもとに生成した領収書です。<strong>出品者本人の情報</strong>が記載されます。</p>
+
+      <div class="p515-invoice-sheet" id="p515InvoiceSheet">
+        <div class="p515-invoice-sheet__head">
+          <h3 class="p515-invoice-sheet__ttl">領収書</h3>
+          <p class="p515-invoice-sheet__no">管理番号：<span class="is-id">TXN-20260221-1847</span></p>
+        </div>
+        <div class="p515-invoice-sheet__to">
+          <input type="text" class="p515-invoice-sheet__to-input" id="p515InvoiceToName" placeholder="宛名をご入力ください">
+          <span class="p515-invoice-sheet__to-suffix">様</span>
+        </div>
+        <div class="p515-invoice-sheet__note">
+          <span class="p515-invoice-sheet__note-lbl">但し書き</span>
+          <input type="text" class="p515-invoice-sheet__note-input" id="p515InvoiceNote" value="作品代金として">
+        </div>
+        <p class="p515-invoice-sheet__date">ご購入日：<span id="p515InvoicePurchaseDate">2026.02.21</span></p>
+        <div class="p515-invoice-sheet__amount">
+          <span class="p515-invoice-sheet__amount-lbl">金額</span>
+          <span class="p515-invoice-sheet__amount-val">¥87,000</span>
+          <span class="p515-invoice-sheet__amount-tax">（税込）</span>
+        </div>
+        <dl class="p515-invoice-sheet__meta">
+          <div class="p515-invoice-sheet__meta-row"><dt>発行日</dt><dd id="p515InvoiceDate">—</dd></div>
+          <div class="p515-invoice-sheet__meta-row"><dt>発行者</dt><dd>田中 透</dd></div>
+          <div class="p515-invoice-sheet__meta-row"><dt>登録番号</dt><dd>未登録（適格請求書発行事業者ではありません）</dd></div>
+        </dl>
+        <div class="p515-invoice-sheet__detail">
+          <p class="p515-invoice-sheet__detail-ttl">ご購入明細</p>
+          <table class="p515-invoice-sheet__table">
+            <thead>
+              <tr><th>内訳</th><th>数量</th><th>単価</th><th>金額</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>音の輪郭 No.7（作品代金）</td><td>1</td><td>¥85,000</td><td>¥85,000</td></tr>
+              <tr><td>送料</td><td>1</td><td>¥1,500</td><td>¥1,500</td></tr>
+              <tr><td>梱包費</td><td>1</td><td>¥500</td><td>¥500</td></tr>
+            </tbody>
+            <tfoot>
+              <tr><th colspan="3">合計（税込）</th><td>¥87,000</td></tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+
+      <p class="p515-modal__desc" style="margin-top:14px">宛名・但し書きは領収書内の入力欄に直接ご記入ください。</p>
+      <p class="p515-modal__desc" style="margin-top:6px">適格請求書発行事業者登録番号の記載有無は、出品者によって異なります。</p>
+      <p class="p515-modal__desc" style="margin-top:6px">紙の領収書が必要な場合は、お客様にて印刷のうえ保管してください（紙の領収書の郵送は行っておりません）。</p>
+    </div>
+    <div class="p515-modal__foot">
+      <button class="p515-modal__btn ktn-op-btn" id="p515InvoiceModalClose2">閉じる</button>
+      <button class="p515-modal__btn ktn-op-btn ktn-op-btn--primary" id="p515InvoiceModalDownload">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="14" height="14"><path d="M12 3v12"/><polyline points="7 10 12 15 17 10"/><path d="M4 19h16"/></svg>
+        PDFをダウンロード
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- 管理ドロワー -->
 <div class="p3-mgmt-drawer" id="p515Drawer">
   <div class="p3-mgmt-drawer__overlay" id="p515DrawerOverlay"></div>
@@ -235,38 +301,38 @@
           </div>
         </div>
 
-        <!-- C-3. ステッププログレス -->
-        <div class="p515-steps">
-          <div class="p515-steps__label">取引の流れ<span class="p515-steps__label-en">Transaction Progress</span></div>
-          <div class="p515-steps__track">
-            <div class="p515-step" id="p515Step1">
-              <div class="p515-step__node">1</div>
-              <div class="p515-step__label">申込</div>
+        <!-- C-3. ステッププログレス（共通コンポーネント .ktn-steps/.ktn-step） -->
+        <div class="ktn-steps ktn-steps--sm">
+          <div class="ktn-steps__label">取引の流れ<span class="ktn-steps__label-en">Transaction Progress</span></div>
+          <div class="ktn-steps__track">
+            <div class="ktn-step" id="p515Step1">
+              <div class="ktn-step__node">1</div>
+              <div class="ktn-step__label">申込</div>
             </div>
-            <div class="p515-steps__conn" id="p515Conn1"></div>
-            <div class="p515-step" id="p515Step2">
-              <div class="p515-step__node">2</div>
-              <div class="p515-step__label">購入確定</div>
+            <div class="ktn-steps__conn" id="p515Conn1"></div>
+            <div class="ktn-step" id="p515Step2">
+              <div class="ktn-step__node">2</div>
+              <div class="ktn-step__label">購入確定</div>
             </div>
-            <div class="p515-steps__conn" id="p515Conn2"></div>
-            <div class="p515-step" id="p515Step3">
-              <div class="p515-step__node">3</div>
-              <div class="p515-step__label">支払</div>
+            <div class="ktn-steps__conn" id="p515Conn2"></div>
+            <div class="ktn-step" id="p515Step3">
+              <div class="ktn-step__node">3</div>
+              <div class="ktn-step__label">支払</div>
             </div>
-            <div class="p515-steps__conn" id="p515Conn3"></div>
-            <div class="p515-step" id="p515Step4">
-              <div class="p515-step__node">4</div>
-              <div class="p515-step__label">発送</div>
+            <div class="ktn-steps__conn" id="p515Conn3"></div>
+            <div class="ktn-step" id="p515Step4">
+              <div class="ktn-step__node">4</div>
+              <div class="ktn-step__label">発送</div>
             </div>
-            <div class="p515-steps__conn" id="p515Conn4"></div>
-            <div class="p515-step" id="p515Step5">
-              <div class="p515-step__node">5</div>
-              <div class="p515-step__label">受取確認</div>
+            <div class="ktn-steps__conn" id="p515Conn4"></div>
+            <div class="ktn-step" id="p515Step5">
+              <div class="ktn-step__node">5</div>
+              <div class="ktn-step__label">受取確認</div>
             </div>
-            <div class="p515-steps__conn" id="p515Conn5"></div>
-            <div class="p515-step" id="p515Step6">
-              <div class="p515-step__node">6</div>
-              <div class="p515-step__label">完了確認</div>
+            <div class="ktn-steps__conn" id="p515Conn5"></div>
+            <div class="ktn-step" id="p515Step6">
+              <div class="ktn-step__node">6</div>
+              <div class="ktn-step__label">完了確認</div>
             </div>
           </div>
         </div>
@@ -608,7 +674,7 @@
                   <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" width="10" height="10"><polygon points="6,1 7.5,4.5 11,4.8 8.5,7 9.3,10.5 6,8.5 2.7,10.5 3.5,7 1,4.8 4.5,4.5"/></svg>
                   myコレクションへ
                 </button>
-                <button class="p515-done__btn ktn-op-btn">
+                <button class="p515-done__btn ktn-op-btn" id="p515InvoiceBtn">
                   <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" width="10" height="10"><rect x="2" y="2" width="8" height="9" rx="1"/><line x1="4" y1="5" x2="8" y2="5"/><line x1="4" y1="7.5" x2="6.5" y2="7.5"/></svg>
                   領収書を発行
                 </button>
@@ -985,6 +1051,7 @@
 </div>
 
 <script src="kotennavi-common.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.2/dist/html2pdf.bundle.min.js"></script>
 <script src="kotennavi-pages.js"></script>
 <script>
 KTN.init({ page: 'p5-15', role: 'user+' });
@@ -996,11 +1063,11 @@ KTN.renderQA('#p515QaTxn', { category: 'liaison-txn', side: 'buyer', style: 'des
 
   /* ── デモ状態管理 ── */
   var STEP_CFG = {
-    applied:    [null, 'done',   'seller', 'future', 'future', 'future', 'future'],
+    applied:    [null, 'done',   'seller-soft', 'future', 'future', 'future', 'future'],
     payment:    [null, 'done',   'done',   'buyer',  'future', 'future', 'future'],
-    paid:       [null, 'done',   'done',   'done',   'seller', 'future', 'future'],
+    paid:       [null, 'done',   'done',   'done',   'seller-soft', 'future', 'future'],
     receipt:    [null, 'done',   'done',   'done',   'done',   'buyer',  'future'],
-    confirming: [null, 'done',   'done',   'done',   'done',   'done',   'seller'],
+    confirming: [null, 'done',   'done',   'done',   'done',   'done',   'seller-soft'],
     done:       [null, 'done',   'done',   'done',   'done',   'done',   'done'],
     cancelled:  [null, 'future', 'future', 'future', 'future', 'future', 'future']
   };
@@ -1024,12 +1091,12 @@ KTN.renderQA('#p515QaTxn', { category: 'liaison-txn', side: 'buyer', style: 'des
       var cls  = cfg[i];
       var step = document.getElementById('p515Step' + i);
       if (!step) continue;
-      step.className = 'p515-step p515-step--' + cls;
-      var node = step.querySelector('.p515-step__node');
+      step.className = 'ktn-step ktn-step--' + cls;
+      var node = step.querySelector('.ktn-step__node');
       if (node) node.textContent = cls === 'done' ? '✓' : i;
       if (i < 6) {
         var conn = document.getElementById('p515Conn' + i);
-        if (conn) conn.className = 'p515-steps__conn' + (cls === 'done' ? ' p515-steps__conn--done' : '');
+        if (conn) conn.className = 'ktn-steps__conn' + (cls === 'done' ? ' ktn-steps__conn--done' : '');
       }
     }
   }
@@ -1251,6 +1318,103 @@ KTN.renderQA('#p515QaTxn', { category: 'liaison-txn', side: 'buyer', style: 'des
     closeReceiptModal();
     setDemoState('confirming');
     if (typeof KTN !== 'undefined' && KTN.toast) KTN.toast('受取確認が完了しました');
+  });
+
+  /* ── 領収書モーダル（出品者自身の登録情報から生成・個展なびは代行発行者にならない。宛名・但し書きは都度入力＝個人情報を保持せず、生成時に購入者自身が入力する） ── */
+  var invoiceModal      = document.getElementById('p515InvoiceModal');
+  var invoiceBtn         = document.getElementById('p515InvoiceBtn');
+  var invoiceClose1      = document.getElementById('p515InvoiceModalClose');
+  var invoiceClose2      = document.getElementById('p515InvoiceModalClose2');
+  var invoiceDownload    = document.getElementById('p515InvoiceModalDownload');
+  var invoiceNameInput   = document.getElementById('p515InvoiceToName');
+  var invoiceNoteInput   = document.getElementById('p515InvoiceNote');
+  function openInvoiceModal() {
+    var dateEl = document.getElementById('p515InvoiceDate');
+    if (dateEl) {
+      var d = new Date();
+      dateEl.textContent = d.getFullYear() + '.' + String(d.getMonth() + 1).padStart(2, '0') + '.' + String(d.getDate()).padStart(2, '0');
+    }
+    /* 毎回入力欄を初期状態に戻す（保存済みの個人情報は再利用しない） */
+    if (invoiceNameInput) invoiceNameInput.value = '';
+    if (invoiceNoteInput) invoiceNoteInput.value = '作品代金として';
+    if (invoiceModal) invoiceModal.hidden = false;
+    if (invoiceNameInput) invoiceNameInput.focus();
+  }
+  function closeInvoiceModal() { if (invoiceModal) invoiceModal.hidden = true; }
+  if (invoiceBtn)      invoiceBtn.addEventListener('click', openInvoiceModal);
+  if (invoiceClose1)   invoiceClose1.addEventListener('click', closeInvoiceModal);
+  if (invoiceClose2)   invoiceClose2.addEventListener('click', closeInvoiceModal);
+  if (invoiceModal)    invoiceModal.addEventListener('click', function (e) { if (e.target === invoiceModal) closeInvoiceModal(); });
+  if (invoiceDownload) invoiceDownload.addEventListener('click', function () {
+    if (invoiceNameInput && !invoiceNameInput.value.trim()) {
+      invoiceNameInput.focus();
+      if (typeof KTN !== 'undefined' && KTN.toast) KTN.toast('宛名をご入力ください');
+      return;
+    }
+    var sheet = document.getElementById('p515InvoiceSheet');
+    if (!sheet || typeof html2pdf === 'undefined') {
+      document.body.classList.add('p515-print-invoice');
+      window.print();
+      return;
+    }
+    invoiceDownload.disabled = true;
+    var fname = '領収書_' + invoiceNameInput.value.trim() + '.pdf';
+    /* html2pdfはPDF化の際、対象要素をopacity:0の複製コンテナ（ページ印刷可能幅に強制リサイズ）へ
+       移し替えてからhtml2canvasへ渡す。html2canvasの既定挙動（x/y/幅/高さ省略）は「ページ全体を
+       複製してcrop」する方式のため、そのコンテナの祖先が持つopacity:0がcropした絵にもそのまま
+       反映されてしまい、出力が真っ白になる。そこで toContainer() を明示的に先に実行し、実際に
+       生成されたコンテナ自身の座標・実寸をhtml2canvasのx/y/幅/高さへ渡して直接そこを描画させる
+       （祖先のopacity:0を経由する複製cropを回避し、コンテナ幅＝ページ幅で正しく収まる） */
+    var worker = html2pdf().set({
+      margin: 10,
+      filename: fname,
+      image: { type: 'jpeg', quality: 0.98 },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    }).from(sheet);
+    worker.toContainer().then(function () {
+      var container = worker.prop.container;
+      /* 宛名・但し書きは<input>のため折り返しできず、長い文字列は表示幅を
+         超えた分がキャプチャに写らず欠けてしまう（実機PDFで長い宛名が
+         途中で切れる不具合として確認済み）。captureはtoContainer()が
+         生成した複製（画面には表示されないコンテナ）に対して行うため、
+         この複製内の<input>だけを折り返し可能な<span>へ差し替え、
+         元のモーダル（編集中の入力欄）には影響を与えずに全文を表示させる */
+      ['p515InvoiceToName', 'p515InvoiceNote'].forEach(function (id) {
+        var input = container.querySelector('#' + id);
+        if (!input) return;
+        var span = document.createElement('span');
+        span.className = input.className;
+        span.textContent = input.value;
+        span.style.whiteSpace = 'normal';
+        span.style.overflowWrap = 'anywhere';
+        span.style.wordBreak = 'break-word';
+        input.replaceWith(span);
+      });
+      var rect = container.getBoundingClientRect();
+      /* x/y/幅/高さをrectの実測値ぴったりに合わせると、html2canvas内部の
+         端数丸め処理により右端・下端の1px罫線がわずかに欠けることがある
+         （実機PDFで右枠線が切れる不具合として確認済み）。安全のため幅・高さに
+         余白（+12px）を足して罫線が確実に収まるようにする（背景は白で埋まる
+         ため余白が見えても不自然にならない） */
+      worker.opt.html2canvas = Object.assign({}, worker.opt.html2canvas, {
+        scale: 2,
+        backgroundColor: '#ffffff',
+        x: rect.x, y: rect.y, scrollX: 0, scrollY: 0,
+        width: Math.ceil(rect.width) + 12, height: Math.ceil(rect.height) + 12
+      });
+      return worker.save();
+    }).then(function () {
+      invoiceDownload.disabled = false;
+    }).catch(function () {
+      invoiceDownload.disabled = false;
+      var leftoverOverlay = document.querySelector('.html2pdf__overlay');
+      if (leftoverOverlay) leftoverOverlay.remove();
+      document.body.classList.add('p515-print-invoice');
+      window.print();
+    });
+  });
+  window.addEventListener('afterprint', function () {
+    document.body.classList.remove('p515-print-invoice');
   });
 
   /* ── キャンセル確認モーダル ── */

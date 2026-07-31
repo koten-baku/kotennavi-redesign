@@ -279,38 +279,38 @@
           </div>
         </div>
 
-        <!-- C-3. ステッププログレス -->
-        <div class="p515-steps">
-          <div class="p515-steps__label">取引の流れ<span class="p515-steps__label-en">Transaction Progress</span></div>
-          <div class="p515-steps__track">
-            <div class="p316-step" id="p316Step1">
-              <div class="p316-step__node">1</div>
-              <div class="p316-step__label">申込</div>
+        <!-- C-3. ステッププログレス（共通コンポーネント .ktn-steps/.ktn-step） -->
+        <div class="ktn-steps">
+          <div class="ktn-steps__label">取引の流れ<span class="ktn-steps__label-en">Transaction Progress</span></div>
+          <div class="ktn-steps__track">
+            <div class="ktn-step" id="p316Step1">
+              <div class="ktn-step__node">1</div>
+              <div class="ktn-step__label">申込</div>
             </div>
-            <div class="p515-steps__conn" id="p316Conn1"></div>
-            <div class="p316-step" id="p316Step2">
-              <div class="p316-step__node">2</div>
-              <div class="p316-step__label">購入確定</div>
+            <div class="ktn-steps__conn" id="p316Conn1"></div>
+            <div class="ktn-step" id="p316Step2">
+              <div class="ktn-step__node">2</div>
+              <div class="ktn-step__label">購入確定</div>
             </div>
-            <div class="p515-steps__conn" id="p316Conn2"></div>
-            <div class="p316-step" id="p316Step3">
-              <div class="p316-step__node">3</div>
-              <div class="p316-step__label">支払</div>
+            <div class="ktn-steps__conn" id="p316Conn2"></div>
+            <div class="ktn-step" id="p316Step3">
+              <div class="ktn-step__node">3</div>
+              <div class="ktn-step__label">支払</div>
             </div>
-            <div class="p515-steps__conn" id="p316Conn3"></div>
-            <div class="p316-step" id="p316Step4">
-              <div class="p316-step__node">4</div>
-              <div class="p316-step__label">発送</div>
+            <div class="ktn-steps__conn" id="p316Conn3"></div>
+            <div class="ktn-step" id="p316Step4">
+              <div class="ktn-step__node">4</div>
+              <div class="ktn-step__label">発送</div>
             </div>
-            <div class="p515-steps__conn" id="p316Conn4"></div>
-            <div class="p316-step" id="p316Step5">
-              <div class="p316-step__node">5</div>
-              <div class="p316-step__label">受取確認</div>
+            <div class="ktn-steps__conn" id="p316Conn4"></div>
+            <div class="ktn-step" id="p316Step5">
+              <div class="ktn-step__node">5</div>
+              <div class="ktn-step__label">受取確認</div>
             </div>
-            <div class="p515-steps__conn" id="p316Conn5"></div>
-            <div class="p316-step" id="p316Step6">
-              <div class="p316-step__node">6</div>
-              <div class="p316-step__label">完了確認</div>
+            <div class="ktn-steps__conn" id="p316Conn5"></div>
+            <div class="ktn-step" id="p316Step6">
+              <div class="ktn-step__node">6</div>
+              <div class="ktn-step__label">完了確認</div>
             </div>
           </div>
         </div>
@@ -1102,9 +1102,9 @@ KTN.renderQA('#p316QaTxn', { category: 'liaison-txn', side: 'seller', style: 'de
   /* ── デモ状態管理 ── */
   var STEP_CFG = {
     new:        [null, 'done',   'seller', 'future', 'future', 'future', 'future'],
-    confirmed:  [null, 'done',   'done',   'buyer',  'future', 'future', 'future'],
+    confirmed:  [null, 'done',   'done',   'buyer-soft', 'future', 'future', 'future'],
     paid:       [null, 'done',   'done',   'done',   'seller', 'future', 'future'],
-    shipped:    [null, 'done',   'done',   'done',   'done',   'buyer',  'future'],
+    shipped:    [null, 'done',   'done',   'done',   'done',   'buyer-soft', 'future'],
     confirming: [null, 'done',   'done',   'done',   'done',   'done',   'seller'],
     confirmingNr: [null, 'done',   'done',   'done',   'done',   'done',   'seller'],
     done:       [null, 'done',   'done',   'done',   'done',   'done',   'done'],
@@ -1132,12 +1132,12 @@ KTN.renderQA('#p316QaTxn', { category: 'liaison-txn', side: 'seller', style: 'de
       var cls  = cfg[i];
       var step = document.getElementById('p316Step' + i);
       if (!step) continue;
-      step.className = 'p316-step p316-step--' + cls;
-      var node = step.querySelector('.p316-step__node');
+      step.className = 'ktn-step ktn-step--' + cls;
+      var node = step.querySelector('.ktn-step__node');
       if (node) node.textContent = cls === 'done' ? '✓' : i;
       if (i < 6) {
         var conn = document.getElementById('p316Conn' + i);
-        if (conn) conn.className = 'p515-steps__conn' + (cls === 'done' ? ' p515-steps__conn--done' : '');
+        if (conn) conn.className = 'ktn-steps__conn' + (cls === 'done' ? ' ktn-steps__conn--done' : '');
       }
     }
   }

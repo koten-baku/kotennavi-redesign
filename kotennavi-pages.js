@@ -6344,6 +6344,95 @@ KTN.pages['p3-11'] = function () {
 
 };
 
+KTN.pages['p4-11'] = function () {
+
+  // 0. ページスコープ・アクセントカラー（gallery＝コッパーブラウン）
+  document.body.classList.add('p4-page');
+  document.body.style.setProperty('--page-accent',        '#8b5e3c');
+  document.body.style.setProperty('--page-accent-bg',     'rgba(139,94,60,.1)');
+  document.body.style.setProperty('--page-accent-border', '#b07840');
+
+  // 1. 管理メニューはヘッダー getActions のオーナーメニューへ集約
+
+  // 2. スクロール連動ヘッダー
+  var header = document.getElementById('ktnHeader');
+  var hero = document.querySelector('.p4-head');
+  if (header && hero) {
+    var observer = new IntersectionObserver(function (entries) {
+      header.classList.toggle('is-scrolled', !entries[0].isIntersecting);
+    }, { threshold: 0, rootMargin: '-50px 0px 0px 0px' });
+    observer.observe(hero);
+  }
+
+  // 3. ギャラリーID ライブプレビュー
+  var idInput = document.getElementById('p411GalleryId');
+  var idPreview = document.getElementById('p411IdPreview');
+  if (idInput && idPreview) {
+    idInput.addEventListener('input', function () {
+      var v = idInput.value.replace(/[^a-zA-Z0-9_-]/g, '');
+      idInput.value = v;
+      idPreview.textContent = v || '（未設定）';
+    });
+  }
+
+  // 4. ロゴ画像プレビュー
+  var logoInput = document.getElementById('p411LogoInput');
+  var logoPreview = document.querySelector('.p211-avatar-preview');
+  if (logoInput && logoPreview) {
+    logoInput.addEventListener('change', function () {
+      var f = logoInput.files && logoInput.files[0];
+      if (!f) return;
+      var url = URL.createObjectURL(f);
+      logoPreview.textContent = '';
+      logoPreview.style.background = 'none';
+      var img = document.createElement('img');
+      img.src = url;
+      logoPreview.appendChild(img);
+    });
+  }
+
+  // 5. 繰り返し行の追加・削除
+  function bindDel(row) {
+    var del = row.querySelector('.p211-repeat__del');
+    if (del) del.addEventListener('click', function () { row.remove(); });
+  }
+  document.querySelectorAll('.p211-repeat__row').forEach(bindDel);
+  document.querySelectorAll('.p211-repeat__add').forEach(function (addBtn) {
+    addBtn.addEventListener('click', function () {
+      var list = document.getElementById(addBtn.dataset.target);
+      if (!list) return;
+      var row = document.createElement('div');
+      if (addBtn.dataset.link) {
+        row.className = 'p211-repeat__row p211-repeat__row--link';
+        row.innerHTML =
+          '<select class="p211-select">' +
+          '<option value="instagram">Instagram</option>' +
+          '<option value="x">X（Twitter）</option>' +
+          '<option value="facebook">Facebook</option>' +
+          '<option value="youtube">YouTube</option>' +
+          '<option value="website">公式サイト</option>' +
+          '<option value="other">その他</option></select>' +
+          '<input class="p211-input" type="url" placeholder="https://">' +
+          '<button class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline p211-repeat__del" type="button" aria-label="削除">✕</button>';
+      } else {
+        row.className = 'p211-repeat__row';
+        row.innerHTML =
+          '<input class="p211-input" type="text" placeholder="' + (addBtn.dataset.placeholder || '') + '">' +
+          '<button class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline p211-repeat__del" type="button" aria-label="削除">✕</button>';
+      }
+      list.appendChild(row);
+      bindDel(row);
+    });
+  });
+
+  // 6. 保存
+  var saveBtn = document.getElementById('p411SaveBtn');
+  if (saveBtn) saveBtn.addEventListener('click', function () {
+    if (typeof showToast === 'function') showToast('変更を保存しました');
+  });
+
+};
+
 KTN.pages['p3-12'] = function () {
 
   // 0. ページスコープ・アクセントカラー（creator＝インクブルー）

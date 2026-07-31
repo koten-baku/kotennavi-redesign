@@ -171,7 +171,7 @@
           <p class="p2-121-period-hint">購入者の作品購入の参考にするため作品の発送に関する情報を設定します。<br>この設定は販売期間開始後、変更できなくなります。</p>
 
           <div class="p2-121-ship-grid">
-            <!-- 発送地 -->
+            <!-- 発送地：初期値はクリエイター/ギャラリー基本情報（p3-11/p4-11）のリエゾンプラスセクションに登録された既定の発送地（元はp11-4申込時の入力）。この展示限りで変更可 -->
             <div class="p2-121-ship-field">
               <label class="p2-121-ship-field__label" for="p2121ShipPref">発送地</label>
               <select class="p2-121-ship-field__select" id="p2121ShipPref">
@@ -186,6 +186,7 @@
                 <option>徳島県</option><option>香川県</option><option>愛媛県</option><option>高知県</option>
                 <option>福岡県</option><option>佐賀県</option><option>長崎県</option><option>熊本県</option><option>大分県</option><option>宮崎県</option><option>鹿児島県</option><option>沖縄県</option>
               </select>
+              <p class="p2-121-custom-picker__note" style="margin-top:4px">初期値は、クリエイター基本情報／ギャラリー基本情報に登録された発送地です。この展示だけ変更する場合はここで選び直してください。</p>
             </div>
 
             <!-- 発送時期の目安 -->
@@ -294,6 +295,12 @@
           </div>
         </div>
 
+        <!-- 出品にあたって（個別取引に関するQA・p11-4申込フォームから移動＝出品作業の直前で理解を得る。同意チェックではなく参照情報） -->
+        <section class="p315-faq">
+          <div class="p315-faq__head">出品にあたって</div>
+          <div id="p2121Faq"></div>
+        </section>
+
         <!-- 保存エラーパネル（共通 .ktn-form-error・保存時バリデーションで表示。フォームアクション直上の固定位置） -->
         <div class="ktn-form-error" id="p2121SaveError" role="alert" hidden>
           <div class="ktn-form-error__head">
@@ -362,6 +369,7 @@
 <script src="./kotennavi-pages.js"></script>
 <script>
 KTN.init({ page: 'p2-121', role: 'user+creator' });
+if (typeof KTN.renderQA === 'function') KTN.renderQA('#p2121Faq', { category: 'liaisonplus-listing', style: 'desk' });
 function p2121OpenModal(type) {
   if (type === 'switch') {
     /* 出品作品に購入申込が1件以上ある間は LIAISON へ切り替え不可（申込対応の完了が先） */

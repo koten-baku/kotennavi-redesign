@@ -18,6 +18,9 @@
   <span class="dbar-sep">ロール：</span>
   <button class="dbtn on" onclick="setR('creator',this)">creator本人</button>
   <button class="dbtn" onclick="setR('admin',this)">管理者</button>
+  <span class="dbar-sep">リエゾンプラス：</span>
+  <button class="dbtn" id="dbarLpNone" onclick="setLpMode('none')">未申請</button>
+  <button class="dbtn on" id="dbarLpApproved" onclick="setLpMode('approved')">承認済</button>
 </div>
 
 <div class="shell">
@@ -267,7 +270,7 @@
 
             <div class="p114-privacy-note">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
-              <span>この情報は<strong>公開されません</strong>。本人の確認・ご連絡、掲載情報の内容確認、およびリエゾンプラス（作品販売）お申込み時の本人確認にのみ使用します。閲覧できるのはご本人と個展なび事務局のみです。</span>
+              <span>この情報は<strong>公開されません</strong>。本人の確認・ご連絡、掲載情報の内容確認、およびリエゾンプラス（作品販売）お申込み時の本人確認にのみ使用します。閲覧できるのはご本人と個展なび事務局のみです。<strong>ご住所・お電話番号等に変更があった場合は、その都度こちらを最新の内容に更新してください。</strong>ご登録から時間が経って内容が古いままだと、リエゾンプラスのお申込みなど必要な際の確認・お手続きにお時間をいただく場合があります。</span>
             </div>
 
             <div class="p211-field">
@@ -317,6 +320,59 @@
           </div>
         </div>
 
+        <!-- ブロック5.5: リエゾンプラス本人確認状況（参考表示・非公開・読み取り専用／LIAISON+未申請／承認済で分岐＝id分岐はデモ用トグル、実装ではLIAISON+ステータスで自動出し分け） -->
+        <div class="p211-block">
+          <div class="p211-block__head">
+            <h3 class="p211-block__title">リエゾンプラス 本人確認状況（参考表示） <span class="p211-block__title-en">IDENTITY VERIFICATION STATUS（REFERENCE）</span></h3>
+          </div>
+          <div class="p211-block__body">
+
+            <!-- LIAISON+ 未申請（デモ：dbarLpNone） -->
+            <div id="p311LpNone" hidden>
+              <div class="p114-privacy-note">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+                <span>まだリエゾンプラスにお申込みいただいていないため、上記「本人確認情報」はリエゾンプラスの本人確認としては未使用です。リエゾンプラス（作品販売）をご利用いただくには、機能申込フォームでの審査が必要です。</span>
+              </div>
+              <a class="ktn-guide-link" href="./kotennavi-p11-4.html">リエゾンプラスに申し込む →</a>
+            </div>
+
+            <!-- LIAISON+ 承認済（デモ：dbarLpApproved） -->
+            <div id="p311LpApproved">
+              <div class="p114-privacy-note">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+                <span>リエゾンプラス（作品販売）の本人確認は承認済みです。上記「本人確認情報」がそのまま責任者情報として使用されます。内容に変更があった場合は、上記を直接更新してください（再申請の必要はありません）。</span>
+              </div>
+              <dl class="p114-identity-readout">
+                <div class="p114-identity-readout__row"><dt>最終承認日</dt><dd>2026-05-12</dd></div>
+              </dl>
+
+              <div class="p211-field" style="margin-top:16px">
+                <label class="p211-label" for="p311ShipPref">作品の発送地（既定）<span class="ktn-req">必須</span></label>
+                <select class="p211-select" id="p311ShipPref" style="max-width:280px">
+                  <option value="">選択してください</option>
+                  <option>北海道</option>
+                  <option>青森県</option><option>岩手県</option><option>宮城県</option><option>秋田県</option><option>山形県</option><option>福島県</option>
+                  <option>茨城県</option><option>栃木県</option><option>群馬県</option><option>埼玉県</option><option>千葉県</option><option selected>東京都</option><option>神奈川県</option>
+                  <option>新潟県</option><option>富山県</option><option>石川県</option><option>福井県</option><option>山梨県</option><option>長野県</option>
+                  <option>岐阜県</option><option>静岡県</option><option>愛知県</option><option>三重県</option>
+                  <option>滋賀県</option><option>京都府</option><option>大阪府</option><option>兵庫県</option><option>奈良県</option><option>和歌山県</option>
+                  <option>鳥取県</option><option>島根県</option><option>岡山県</option><option>広島県</option><option>山口県</option>
+                  <option>徳島県</option><option>香川県</option><option>愛媛県</option><option>高知県</option>
+                  <option>福岡県</option><option>佐賀県</option><option>長崎県</option><option>熊本県</option><option>大分県</option><option>宮崎県</option><option>鹿児島県</option><option>沖縄県</option>
+                </select>
+                <p class="p211-help">LIAISON+ で作品を出品する際（LIAISON+ 出品設定）の発送地の初期値です。リエゾンプラス機能申込でご登録いただいた内容を表示しています。展示ごとの発送地は出品設定側で個別に変更でき、この既定値はここで直接更新できます。</p>
+              </div>
+
+              <div class="p211-field" style="margin-top:16px">
+                <label class="p211-label" for="p311InvoiceNumber">事業者番号（インボイス制度・任意）</label>
+                <input class="p211-input" id="p311InvoiceNumber" type="text" placeholder="例：T1234567890123" maxlength="14" style="max-width:260px">
+                <p class="p211-help">適格請求書発行事業者登録番号です。リエゾンプラス機能申込でご登録いただいた内容を表示しています。未登録・免税事業者の場合は空欄のままで構いません。登録された場合はここで直接更新できます。</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
         <!-- 管理者コメント欄（role=admin のときのみ表示・共通 syncAdminNote が切替） -->
         <div class="ktn-admin-note" id="p311AdminNote" hidden>
           <div class="ktn-admin-note__head">
@@ -344,6 +400,15 @@
 <script src="kotennavi-pages.js"></script>
 <script>KTN.init({ page: 'p3-11', role: 'creator' });</script>
 <script>
+/* ── リエゾンプラス本人確認状況ブロック：未申請／承認済デモ切替 ── */
+function setLpMode(mode) {
+  var isNone = (mode === 'none');
+  document.getElementById('p311LpNone').hidden = !isNone;
+  document.getElementById('p311LpApproved').hidden = isNone;
+  document.getElementById('dbarLpNone').classList.toggle('on', isNone);
+  document.getElementById('dbarLpApproved').classList.toggle('on', !isNone);
+}
+
 /* ── ピル選択の active 切り替え（input の checked 状態から同期） ── */
 document.querySelectorAll('.p211-pill-group').forEach(function (group) {
   function syncPills() {

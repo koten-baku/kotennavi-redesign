@@ -10333,22 +10333,43 @@ a.p514-aw__exh-name:hover{text-decoration:underline;color:var(--accent,#2a7fa8)}
 .p515-aw-card__exh-link:hover{text-decoration:underline}
 .p515-aw-card__price{font-family:var(--fm);font-size:.9rem;font-weight:600;color:var(--ink);margin-top:2px}
 
-/* ── ステッププログレス ── */
-.p515-steps{background:#fff;border:1px solid var(--border);border-radius:4px;padding:14px 12px 12px}
-.p515-steps__label{font-family:var(--fn);font-size:.75rem;font-weight:600;color:var(--ink);margin:0 0 10px}
-.p515-steps__label-en{font-family:var(--font-en-label);font-size:.65em;letter-spacing:.1em;color:var(--muted);margin-left:6px}
-.p515-steps__track{display:flex;align-items:flex-start}
-.p515-step{display:flex;flex-direction:column;align-items:center;gap:4px;flex:0 0 auto}
-.p515-steps__conn{flex:1;height:2px;background:var(--border);margin-top:9px;min-width:6px}
-.p515-steps__conn--done{background:#3a9867}
-.p515-step__node{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.55rem;font-weight:700;font-family:var(--fm);flex-shrink:0;transition:background .2s,color .2s}
-.p515-step__label{font-family:var(--fn);font-size:.52rem;color:var(--muted);text-align:center;line-height:1.25;max-width:38px}
-.p515-step--done .p515-step__node{background:#3a9867;color:#fff}
-.p515-step--buyer .p515-step__node{background:var(--actor-buyer);color:#fff;outline:3px solid rgba(26,74,136,.18);outline-offset:1px}
-.p515-step--buyer .p515-step__label{color:var(--actor-buyer);font-weight:600}
-.p515-step--seller .p515-step__node{background:rgba(42,95,122,.1);border:2px solid rgba(42,95,122,.3);color:#2a5f7a}
-.p515-step--seller .p515-step__label{color:#2a5f7a}
-.p515-step--future .p515-step__node{background:var(--paper);border:2px solid var(--border);color:var(--muted)}
+/* ── ステッププログレス（共通コンポーネント・p3-16/p4-16/p5-15/p11-4 で使用。旧 .p515-step/.p316-step を統合・2026-07-28）── */
+.ktn-steps{background:#fff;border:1px solid var(--border);border-radius:4px;padding:14px 12px 12px}
+.ktn-steps__label{font-family:var(--fn);font-size:.75rem;font-weight:600;color:var(--ink);margin:0 0 10px}
+.ktn-steps__label-en{font-family:var(--font-en-label);font-size:.65em;letter-spacing:.1em;color:var(--muted);margin-left:6px}
+.ktn-steps__track{display:flex;align-items:flex-start}
+.ktn-steps__conn{flex:1;height:2px;background:var(--border);margin-top:9px;min-width:6px}
+.ktn-steps__conn--done{background:#3a9867}
+.ktn-step{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;position:relative}
+.ktn-step__node{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:.75rem;font-weight:700;transition:background .2s,color .2s;border:2px solid var(--border);background:var(--paper);color:var(--muted)}
+.ktn-step__label{font-family:var(--fn);font-size:.55rem;color:var(--muted);text-align:center;line-height:1.3;white-space:nowrap}
+.ktn-step--done .ktn-step__node{background:#3a9867;border-color:#3a9867;color:#fff}
+.ktn-step--done .ktn-step__label{color:var(--ink)}
+/* --seller/--buyer＝そのページの「自分の番」＝ソリッド塗り（seller はロール色 page-accent／buyer は固定 actor-buyer 色＋リング） */
+.ktn-step--seller .ktn-step__node{background:var(--page-accent,#2a5f7a);border-color:var(--page-accent,#2a5f7a);color:#fff}
+.ktn-step--seller .ktn-step__label{color:var(--page-accent,#2a5f7a);font-weight:600}
+.ktn-step--buyer .ktn-step__node{background:var(--actor-buyer);border-color:var(--actor-buyer);color:#fff;outline:3px solid rgba(26,74,136,.18);outline-offset:1px}
+.ktn-step--buyer .ktn-step__label{color:var(--actor-buyer);font-weight:600}
+/* --seller-soft/--buyer-soft＝「相手の番」を控えめなtintで表示（自分の番の塗りより弱いトーン） */
+.ktn-step--seller-soft .ktn-step__node{background:rgba(42,95,122,.1);border-color:rgba(42,95,122,.3);color:#2a5f7a}
+.ktn-step--seller-soft .ktn-step__label{color:#2a5f7a}
+.ktn-step--buyer-soft .ktn-step__node{background:rgba(26,74,136,.1);border-color:rgba(26,74,136,.25);color:var(--actor-buyer)}
+.ktn-step--buyer-soft .ktn-step__label{color:var(--actor-buyer)}
+/* --sm：購入者ページ（p5-15）のコンパクト表示。他ページは既定サイズ（28px）を使用 */
+.ktn-steps--sm .ktn-step{flex:0 0 auto}
+.ktn-steps--sm .ktn-step__node{width:20px;height:20px;font-size:.55rem}
+.ktn-steps--sm .ktn-step__label{font-size:.52rem;max-width:38px}
+@media(max-width:600px){
+  .ktn-step__label{font-size:.46rem;max-width:30px}
+  .ktn-step__node{width:18px;height:18px;font-size:.5rem}
+  .ktn-steps__conn{margin-top:8px}
+}
+/* 極小幅：現在ステップ（自分／相手の番）のラベルのみ表示 */
+@media(max-width:400px){
+  .ktn-step__label{display:none}
+  .ktn-step--seller .ktn-step__label,.ktn-step--buyer .ktn-step__label,
+  .ktn-step--seller-soft .ktn-step__label,.ktn-step--buyer-soft .ktn-step__label{display:block;max-width:52px;white-space:normal}
+}
 
 /* ── 現在状態 ── */
 .p515-status{background:#fff;border:1px solid var(--border);border-radius:4px;overflow:hidden}
@@ -10642,10 +10663,79 @@ a.p514-aw__exh-name:hover{text-decoration:underline;color:var(--accent,#2a7fa8)}
 .p515-modal__detail{margin-top:10px;font-size:.88rem;color:var(--ink);line-height:1.8;display:flex;flex-direction:column;gap:2px}
 .p515-modal__detail-total{font-weight:700;margin-top:4px;border-top:1px solid var(--border);padding-top:6px}
 
+/* 領収書モーダル（p515-invoice-sheet）：出品者名義で生成する書式付き領収書。印刷（PDFで保存）にも同じマークアップを使う */
+.p515-modal--invoice{max-width:480px}
+.p515-invoice-sheet{margin-top:14px;border:1px solid var(--ink);border-radius:2px;background:#fff;padding:28px 26px 22px;font-family:var(--fn);color:var(--ink)}
+.p515-invoice-sheet__head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:18px}
+.p515-invoice-sheet__ttl{font-family:var(--fs);font-size:1.3rem;font-weight:700;letter-spacing:.1em;margin:0}
+.p515-invoice-sheet__no{font-size:.7rem;color:var(--muted);margin:0}
+.p515-invoice-sheet__no .is-id{font-family:var(--fm);letter-spacing:.02em}
+.p515-invoice-sheet__to{display:flex;align-items:baseline;gap:8px;border-bottom:1px solid var(--ink);padding-bottom:8px;margin-bottom:10px}
+.p515-invoice-sheet__to-input{flex:1;min-width:0;border:none;background:transparent;padding:0;font-family:var(--fs);font-size:1.15rem;font-weight:600;letter-spacing:.02em;color:var(--ink)}
+.p515-invoice-sheet__to-input::placeholder{color:var(--muted);font-weight:400}
+.p515-invoice-sheet__to-input:focus{outline:none}
+.p515-invoice-sheet__to-suffix{font-size:.85rem;color:var(--muted)}
+.p515-invoice-sheet__note{display:flex;align-items:baseline;gap:8px;margin-bottom:14px}
+.p515-invoice-sheet__note-lbl{flex:0 0 auto;font-size:.7rem;color:var(--muted)}
+.p515-invoice-sheet__note-input{flex:1;min-width:0;border:none;border-bottom:1px solid var(--border);background:transparent;padding:2px 0;font-family:var(--fn);font-size:.82rem;color:var(--ink)}
+.p515-invoice-sheet__note-input:focus{outline:none;border-bottom-color:var(--ink)}
+.p515-invoice-sheet__date{font-size:.78rem;color:var(--muted);margin:0 0 16px}
+.p515-invoice-sheet__amount{display:flex;align-items:baseline;gap:8px;padding:14px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:14px}
+.p515-invoice-sheet__amount-lbl{font-size:.72rem;color:var(--muted);letter-spacing:.06em}
+.p515-invoice-sheet__amount-val{font-family:var(--fm);font-size:1.9rem;font-weight:700;letter-spacing:.01em}
+.p515-invoice-sheet__amount-tax{font-size:.74rem;color:var(--muted)}
+.p515-invoice-sheet__meta{margin:0 0 18px;display:flex;flex-direction:column;gap:4px}
+.p515-invoice-sheet__meta-row{display:flex;gap:12px;font-size:.78rem}
+.p515-invoice-sheet__meta-row dt{flex:0 0 68px;color:var(--muted)}
+.p515-invoice-sheet__meta-row dd{margin:0;color:var(--ink)}
+.p515-invoice-sheet__detail-ttl{font-size:.8rem;font-weight:600;border-bottom:1px solid var(--ink);padding-bottom:6px;margin:0 0 8px}
+.p515-invoice-sheet__table{width:100%;border-collapse:collapse;font-size:.76rem}
+.p515-invoice-sheet__table th,.p515-invoice-sheet__table td{padding:7px 6px;border-bottom:1px solid var(--border);text-align:left}
+.p515-invoice-sheet__table thead th{color:var(--muted);font-weight:500;font-size:.68rem;letter-spacing:.04em}
+.p515-invoice-sheet__table td:nth-child(2),.p515-invoice-sheet__table td:nth-child(3),.p515-invoice-sheet__table td:nth-child(4),
+.p515-invoice-sheet__table th:nth-child(2),.p515-invoice-sheet__table th:nth-child(3),.p515-invoice-sheet__table th:nth-child(4){text-align:right;white-space:nowrap}
+.p515-invoice-sheet__table tfoot th,.p515-invoice-sheet__table tfoot td{border-top:2px solid var(--ink);border-bottom:none;font-weight:700}
+
+/* 印刷（PDFで保存）：他要素を隠し領収書シートのみを1ページで出力（kotennavi-p2-6.html の window.print() 方式を踏襲） */
+@media print{
+  body.p515-print-invoice>*{display:none!important}
+  body.p515-print-invoice #p515InvoiceModal{display:flex!important;position:static;background:none;padding:0}
+  body.p515-print-invoice #p515InvoiceModal .p515-modal{box-shadow:none;max-width:none;width:auto;border-radius:0}
+  body.p515-print-invoice #p515InvoiceModal .p515-modal__head,
+  body.p515-print-invoice #p515InvoiceModal .p515-modal__desc,
+  body.p515-print-invoice #p515InvoiceModal .p515-modal__foot{display:none!important}
+  body.p515-print-invoice #p515InvoiceModal .p515-modal__body{padding:0}
+  body.p515-print-invoice .p515-invoice-sheet{border:none;margin:0;padding:0}
+  @page{margin:18mm}
+}
+
+/* 精算履歴の明細内訳（p3-17 C-5）：PDFダウンロードに代えてその場で明細を表示し、同じ印刷方式で保存できるようにする（2026-07-30） */
+@media print{
+  body.p317-print-payout>*{display:none!important}
+  body.p317-print-payout #p317PayoutModal{display:flex!important;position:static;background:none;padding:0}
+  body.p317-print-payout #p317PayoutModal .p515-modal{box-shadow:none;max-width:none;width:auto;border-radius:0}
+  body.p317-print-payout #p317PayoutModal .p515-modal__head,
+  body.p317-print-payout #p317PayoutModal .p515-modal__desc,
+  body.p317-print-payout #p317PayoutModal .p515-modal__foot{display:none!important}
+  body.p317-print-payout #p317PayoutModal .p515-modal__body{padding:0}
+  body.p317-print-payout .p515-invoice-sheet{border:none;margin:0;padding:0}
+  @page{margin:18mm}
+}
+
+/* 精算履歴の明細内訳（p4-17 C-5・p3-17と同型・ギャラリー側）（2026-07-31） */
+@media print{
+  body.p417-print-payout>*{display:none!important}
+  body.p417-print-payout #p417PayoutModal{display:flex!important;position:static;background:none;padding:0}
+  body.p417-print-payout #p417PayoutModal .p515-modal{box-shadow:none;max-width:none;width:auto;border-radius:0}
+  body.p417-print-payout #p417PayoutModal .p515-modal__head,
+  body.p417-print-payout #p417PayoutModal .p515-modal__desc,
+  body.p417-print-payout #p417PayoutModal .p515-modal__foot{display:none!important}
+  body.p417-print-payout #p417PayoutModal .p515-modal__body{padding:0}
+  body.p417-print-payout .p515-invoice-sheet{border:none;margin:0;padding:0}
+  @page{margin:18mm}
+}
+
 @media(max-width:540px){
-  .p515-step__label{font-size:.46rem;max-width:30px}
-  .p515-step__node{width:18px;height:18px;font-size:.5rem}
-  .p515-steps__conn{margin-top:8px}
   .p515-aw-card__thumb-wrap{width:60px;height:60px}
   .p515-aw-card{padding-left:4px;padding-right:4px}
   .p515-status__head{padding-left:4px;padding-right:4px}
@@ -10791,9 +10881,11 @@ a.p514-aw__exh-name:hover{text-decoration:underline;color:var(--accent,#2a7fa8)}
 /* 作品内訳バー */
 .p315-works-summary{display:flex;align-items:center;flex-wrap:wrap;gap:6px;padding:10px 20px;background:var(--paper);border-top:1px solid var(--border)}
 .p315-works-summary__total{margin-right:4px} /* サイズ/weight/色は .ktn-count--strong に統合 */
-.p315-ws-badge{font-size:.75rem;padding:2px 8px;border-radius:10px;background:var(--paper);color:var(--muted);border:1px solid var(--border)}
+.p315-ws-badge{font-size:.75rem;padding:2px 8px;border-radius:10px;background:var(--paper);color:var(--muted);border:1px solid var(--border);white-space:nowrap}
 /* 注記（「申込なし X件はp2-12-1で管理」等） */
 .p315-ws-badge--note{font-size:.68rem;font-style:italic;border-style:dashed}
+/* 完了系（精算履歴の「振込完了」等・p3-17/p4-17で使用） */
+.p315-ws-badge--done{color:#006030;border-color:rgba(0,96,48,.35);background:rgba(0,96,48,.06)}
 .p315-ws-sales{margin-left:auto;font-size:.75rem;color:var(--muted);white-space:nowrap;flex-shrink:0}
 .p315-ws-sales strong{color:var(--ink);font-family:var(--fm);font-weight:600}
 
@@ -10893,11 +10985,24 @@ a.p514-aw__exh-name:hover{text-decoration:underline;color:var(--accent,#2a7fa8)}
 .p315-archive-result__link:hover{text-decoration:underline}
 .p315-archive-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
 .p315-archive-table{width:100%;border-collapse:collapse;font-size:.82rem;min-width:520px}
-.p315-archive-table th{text-align:left;padding:8px 20px;background:var(--paper);color:var(--muted);font-weight:500;font-size:.75rem;border-bottom:1px solid var(--border);white-space:nowrap}
-.p315-archive-table td{padding:10px 20px;border-bottom:1px solid var(--border);color:var(--ink)}
-.p315-archive-table th:nth-child(1),.p315-archive-table td:nth-child(1){min-width:130px}
-.p315-archive-table th:nth-child(2),.p315-archive-table td:nth-child(2){min-width:110px}
+.p315-archive-table th{text-align:left;padding:8px 16px;background:var(--paper);color:var(--muted);font-weight:500;font-size:.75rem;border-bottom:1px solid var(--border);white-space:nowrap}
+.p315-archive-table td{padding:10px 16px;border-bottom:1px solid var(--border);color:var(--ink)}
+.p315-archive-table th:nth-child(1),.p315-archive-table td:nth-child(1){min-width:100px;padding-right:10px}
+.p315-archive-table th:nth-child(2),.p315-archive-table td:nth-child(2){min-width:85px;padding-left:10px;padding-right:10px}
+.p315-archive-table th:nth-child(6),.p315-archive-table td:nth-child(6){padding-left:10px;padding-right:10px}
+.p315-archive-table th:last-child,.p315-archive-table td:last-child{padding-left:10px;padding-right:16px}
 .p315-archive-table tr:last-child td{border-bottom:none}
+.p315-archive-table__detail-btn{font-family:var(--fn);font-size:.72rem;color:var(--accent);background:none;border:none;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:2px;white-space:nowrap}
+.p315-archive-table__detail-btn:hover{color:var(--accent-d)}
+/* 状態列（精算履歴＝p3-17/p4-17）：バッジではなく色付きの素テキストで表示 */
+.p315-archive-table__status--done{color:#006030;font-weight:600}
+/* 精算履歴の列グルーピング（p3-17/p4-17専用モディファイア。p3-15/p4-15の6列テーブルには影響しない） */
+.p315-archive-table--grouped thead tr:first-child th{text-align:center;font-size:.62rem;letter-spacing:.1em;padding:6px 16px 4px}
+.p315-archive-table--grouped thead tr:last-child th{padding-top:4px}
+.p315-archive-table--grouped th[rowspan]{vertical-align:bottom;padding-left:10px;padding-right:10px}
+.p315-archive-table--grouped thead tr:first-child th:first-child,
+.p315-archive-table--grouped thead tr:last-child th:nth-child(2),
+.p315-archive-table--grouped tbody td:nth-child(2){border-right:1px solid var(--border)}
 
 /* ── 確認モーダル ── */
 .p315-modal{position:fixed;inset:0;z-index:900;display:flex;align-items:center;justify-content:center;padding:20px}
@@ -10914,6 +11019,60 @@ a.p514-aw__exh-name:hover{text-decoration:underline;color:var(--accent,#2a7fa8)}
 .p315-modal__foot{display:flex;justify-content:flex-end;gap:8px}
 /* p315 modal buttons → ktn-op-btn */
 
+/* ===== P3-17/P4-17: 販売代金管理（残高・次回精算予定） ===== */
+.p317-balance{display:flex;flex-wrap:wrap;gap:28px;padding:4px 0 8px}
+.p317-balance__item{flex:1;min-width:200px}
+.p317-balance__lbl{display:block;font-family:'Cinzel',serif;font-size:.6rem;font-weight:600;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;margin-bottom:8px}
+.p317-balance__num{font-family:var(--fm);font-size:1.9rem;font-weight:700;color:var(--ink);line-height:1}
+.p317-balance__sub{font-family:var(--fn);font-size:.78rem;color:var(--muted);line-height:1.6;margin:8px 0 0}
+.p317-carry-badge{display:inline-flex;align-items:center;font-family:var(--fn);font-size:.7rem;font-weight:600;color:#8b5e3c;background:rgba(139,94,60,.1);padding:3px 10px;border-radius:12px;margin:8px 0 0}
+
+/* ── Stripe連携ステータス（p3-17/p4-17 共通） ── */
+.p317-stripe-status{display:inline-flex;align-items:center;gap:8px;margin:0 0 10px}
+.p317-stripe-status__dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.p317-stripe-status--ok .p317-stripe-status__dot{background:#2a783c}
+.p317-stripe-status--pending .p317-stripe-status__dot{background:#b43c14}
+.p317-stripe-status__label{font-family:var(--fn);font-size:.82rem;font-weight:700;color:var(--ink)}
+.p317-stripe-status--pending .p317-stripe-status__label{color:#b43c14}
+.p317-stripe-status__date{font-family:var(--fn);font-size:.72rem;color:var(--muted)}
+.p317-stripe-status--mini{margin:0 0 4px}
+.p317-gated{opacity:.4;pointer-events:none;filter:grayscale(.3)}
+
+/* ── C-2 次回振込予定ヒーロー（2026-07-30 レイアウト整理：残高2項目並列→振込予定を主役に統合） ── */
+.p317-hero{padding:4px 0 6px}
+.p317-hero__lbl{display:block;font-family:'Cinzel',serif;font-size:.6rem;font-weight:600;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;margin-bottom:10px}
+.p317-hero__amt{font-family:var(--fm);font-size:2.4rem;font-weight:700;color:var(--ink);line-height:1}
+.p317-hero--carry .p317-hero__amt{color:var(--muted)}
+.p317-hero__date{font-family:var(--fn);font-size:.82rem;color:var(--ink);line-height:1.6;margin:8px 0 0}
+.p317-hero__more{margin-top:10px}
+.p317-hero__more summary{display:flex;align-items:center;gap:5px;cursor:pointer;list-style:none;font-family:var(--fn);font-size:.74rem;color:var(--accent);user-select:none}
+.p317-hero__more summary::-webkit-details-marker{display:none}
+.p317-hero__more summary::before{content:'›';display:inline-block;transition:transform .2s;color:var(--accent)}
+.p317-hero__more[open] summary::before{transform:rotate(90deg)}
+.p317-hero__more p{font-family:var(--fn);font-size:.78rem;color:var(--muted);line-height:1.7;margin:8px 0 0}
+
+/* ── C-3 精算設定チェックリスト（2026-07-30・長文の.p114-privacy-noteに代えて設定状況を一目化。
+   各項目は行右端の「設定変更」ボタンで編集UIパネルを開閉。既定は折りたたみ。2026-07-30 追加調整＝行全体でなくボタンのみをトリガーに変更） ── */
+.p317-setup-checklist{border:1px solid var(--border);border-radius:4px;overflow:hidden;margin-bottom:12px}
+.p317-setup-checklist__item{border-bottom:1px solid var(--border)}
+.p317-setup-checklist__item:last-child{border-bottom:none}
+.p317-setup-checklist__row{display:flex;align-items:center;gap:8px;padding:11px 14px}
+.p317-setup-checklist__text{flex:1;min-width:0;font-family:var(--fn);font-size:.82rem;color:var(--ink)}
+.p317-setup-checklist__toggle{flex-shrink:0;font-family:var(--fn);font-size:.72rem;font-weight:600;color:var(--accent);background:none;border:1px solid var(--border);border-radius:4px;padding:5px 12px;cursor:pointer;transition:background-color .15s,border-color .15s,color .15s}
+.p317-setup-checklist__toggle:hover{background:rgba(0,93,167,.06);border-color:var(--accent)}
+.p317-setup-checklist__toggle[aria-expanded="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.p317-setup-checklist__panel{padding:14px 14px 16px;border-top:1px solid var(--border)}
+.p317-setup-checklist__panel[hidden]{display:none}
+.p317-setup-checklist__icon{flex-shrink:0;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(42,120,60,.12)}
+.p317-setup-checklist__icon::before{content:'✓';font-size:.64rem;font-weight:700;color:#2a783c}
+
+/* ── 参照専用セクションの弱色化（精算履歴・FAQ。2026-07-30・.p211-block/.p315-faq のモディファイア） ── */
+.p211-block--quiet{border-color:rgba(0,0,0,.08)}
+.p211-block--quiet > .p211-block__head{border-bottom-color:rgba(0,0,0,.08)}
+.p211-block--quiet > .p211-block__head .p211-block__title{font-weight:600;color:var(--muted)}
+.p315-faq--quiet{border-color:rgba(0,0,0,.08)}
+.p315-faq--quiet .p315-faq__head{border-bottom-color:rgba(0,0,0,.08);color:var(--muted)}
+
 /* ── レスポンシブ ── */
 @media(max-width:640px){
   .p315-summary{padding:12px 16px}
@@ -10925,8 +11084,32 @@ a.p514-aw__exh-name:hover{text-decoration:underline;color:var(--accent,#2a7fa8)}
   .p315-apply-row{gap:6px 8px;flex-wrap:wrap}
   .p315-apply-row__link{margin-left:auto}
   .p315-apply-row__time{display:none}
+  /* 精算履歴テーブル：横スクロールでは列が多く「切れて見える」ため、行をカード化して縦積みに再構成（data-label駆動・p26-listと同型パターン） */
+  .p315-archive-table-wrap{overflow-x:visible}
+  .p315-archive-table,.p315-archive-table tbody,.p315-archive-table tr,.p315-archive-table td{display:block;width:auto;min-width:0}
+  .p315-archive-table thead{display:none}
   .p315-archive-table{font-size:.75rem}
-  .p315-archive-table th,.p315-archive-table td{padding:8px 12px}
+  .p315-archive-table tr{border:1px solid var(--border);border-radius:4px;padding:6px 14px;margin-bottom:10px}
+  .p315-archive-table tr:last-child{margin-bottom:0}
+  .p315-archive-table td{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;padding:6px 0;border-bottom:1px solid var(--border);text-align:right}
+  .p315-archive-table tr:last-child td:not(:last-child){border-bottom:1px solid var(--border)}
+  .p315-archive-table td:last-child{border-bottom:none}
+  .p315-archive-table td:nth-child(1),.p315-archive-table td:nth-child(2){min-width:0}
+  .p315-archive-table td::before{content:attr(data-label);font-family:var(--fm);font-size:.58rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:left;flex:0 0 auto;padding-top:2px}
+  /* 精算履歴（p3-17/p4-17専用モディファイア）：締め日→当月精算金額、振込日→振込手数料・振込金額を字下げで親子関係を表現。状態は字下げしない（基底ルールnth-child(6)のpadding-left:10pxを打ち消す） */
+  .p315-archive-table--grouped td:nth-child(2),
+  .p315-archive-table--grouped td:nth-child(4),
+  .p315-archive-table--grouped td:nth-child(5){padding-left:14px}
+  .p315-archive-table--grouped td:nth-child(6){padding-left:0}
+  /* デスクトップの縦罫線（精算/振込グループの区切り）はカード表示では不要。当月精算金額だけ振込手数料・振込金額と表示が変わってしまうため非表示（詳細度をL11005の基底ルールに合わせるためtbodyまで指定） */
+  .p315-archive-table--grouped tbody td:nth-child(2){border-right:none}
+  /* 振込日・振込手数料・振込金額は他列と違いpadding-rightの指定が無く内容（値）が右端に密着していたため、他列と同じ10pxに揃える */
+  .p315-archive-table--grouped td:nth-child(3),
+  .p315-archive-table--grouped td:nth-child(4),
+  .p315-archive-table--grouped td:nth-child(5){padding-right:10px}
+  /* 項目名・内容の文字サイズを一回り拡大 */
+  .p315-archive-table--grouped td{font-size:.82rem}
+  .p315-archive-table--grouped td::before{font-size:.64rem}
   .p315-index-row__name{font-size:.75rem}
   .p315-wrap{padding-left:4px!important;padding-right:4px!important}
   .p315-work-card__price{flex:0 0 100%}
@@ -10937,6 +11120,9 @@ a.p514-aw__exh-name:hover{text-decoration:underline;color:var(--accent,#2a7fa8)}
   .p315-works-summary{padding:10px 12px!important}
   .p315-exh-head__mgmt{padding:5px 12px 6px}
   .p315-txn-status{padding:8px 4px!important}
+  .p317-balance{gap:20px}
+  .p317-balance__num{font-size:1.5rem}
+  .p317-hero__amt{font-size:1.8rem}
 }
 
 /* ── D-6 FAQ ── */
@@ -10948,7 +11134,7 @@ a.p514-aw__exh-name:hover{text-decoration:underline;color:var(--accent,#2a7fa8)}
 .p315-faq-item__q:hover{background:rgba(0,0,0,.02)}
 .p315-faq-item__q::-webkit-details-marker{display:none}
 .p315-faq-item[open]>.p315-faq-item__q{border-bottom:1px solid var(--border)}
-.p315-faq-item__q-mark{font-size:.75rem;font-weight:700;color:#fff;background:var(--page-accent,#2a5f7a);border-radius:3px;padding:2px 5px;flex-shrink:0;margin-top:2px}
+.p315-faq-item__q-mark{font-size:.75rem;font-weight:700;color:#fff;background:var(--accent);border-radius:3px;padding:2px 5px;flex-shrink:0;margin-top:2px}
 .p315-faq-item__a{padding:13px 20px 15px;font-size:.82rem;line-height:1.8;color:var(--ink);background:var(--paper)}
 .p315-faq-item__a p+p{margin-top:6px}
 .p315-faq-item__a strong{color:var(--ink)}
@@ -11087,16 +11273,7 @@ body.p4-15-page{--page-accent:#8b5e3c}
    P3-16  取引デスク（creator）
    prefix: .p316-
 ════════════════════════════════════════════════════ */
-/* ── ステッププログレス ── */
-.p316-step{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;position:relative}
-.p316-step__node{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:.75rem;font-weight:700;transition:background .2s,color .2s;border:2px solid var(--border);background:var(--paper);color:var(--muted)}
-.p316-step__label{font-size:.55rem;color:var(--muted);text-align:center;line-height:1.3;white-space:nowrap}
-.p316-step--done .p316-step__node{background:#3a9867;border-color:#3a9867;color:#fff}
-.p316-step--done .p316-step__label{color:var(--ink)}
-.p316-step--seller .p316-step__node{background:var(--page-accent,#2a5f7a);border-color:var(--page-accent,#2a5f7a);color:#fff}
-.p316-step--seller .p316-step__label{color:var(--page-accent,#2a5f7a);font-weight:600}
-.p316-step--buyer .p316-step__node{background:rgba(26,74,136,.1);border-color:rgba(26,74,136,.25);color:var(--actor-buyer)}
-.p316-step--buyer .p316-step__label{color:var(--actor-buyer)}
+/* ── ステッププログレス → .ktn-step 共通化済み（kotennavi-common.css 内 .ktn-steps ブロックを参照） ── */
 /* ── 購入者パネル ── */
 .p316-purchase-buyer{flex-shrink:0;width:244px;padding:16px;display:flex;flex-direction:column;gap:10px}
 .p316-purchase-buyer__card{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);padding:6px 0;transition:opacity .12s}
@@ -11176,14 +11353,6 @@ body.p4-15-page{--page-accent:#8b5e3c}
 @media(max-width:600px){
   .p316-purchase-buyer{width:auto}
   .p316-ship-form__row{flex-direction:column}
-  .p316-step__label{font-size:.46rem;max-width:30px}
-  .p316-step__node{width:18px;height:18px;font-size:.5rem}
-}
-/* 極小幅：現在ステップ（あなた／相手の番）のラベルのみ表示 */
-@media(max-width:400px){
-  .p515-step__label,.p316-step__label{display:none}
-  .p515-step--buyer .p515-step__label,.p515-step--seller .p515-step__label,
-  .p316-step--seller .p316-step__label,.p316-step--buyer .p316-step__label{display:block;max-width:52px;white-space:normal}
 }
 
 .p316-wrap{padding-bottom:48px}
@@ -11328,6 +11497,9 @@ body.p4-15-page{--page-accent:#8b5e3c}
 .p211-block__title-en{font-family:var(--fm);font-size:.6em;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
 .p211-block__body{padding:16px 18px}
 .p211-block__body--tight{padding:12px 18px}
+/* 1ブロック内で関連設定をグルーピングするサブ見出し（例：p3-17/p4-17の精算下限額・振込先口座統合） */
+.p211-block__subhead{font-family:var(--fn);font-size:.72rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:22px 0 12px;padding-top:18px;border-top:1px solid var(--border)}
+.p211-block__subhead:first-child{margin-top:0;padding-top:0;border-top:none}
 
 /* ── フィールド ── */
 .p211-field{display:flex;flex-direction:column;gap:5px;margin-bottom:16px}
@@ -11341,9 +11513,11 @@ body.p4-15-page{--page-accent:#8b5e3c}
 .p211-input--sm{font-size:.82rem;padding:6px 10px}
 .p211-textarea{width:100%;padding:9px 11px;border:1px solid var(--border);border-radius:4px;font-size:.9rem;font-family:inherit;color:var(--ink);background:#fff;box-sizing:border-box;resize:vertical;min-height:88px;transition:border-color .12s;line-height:1.65}
 .p211-textarea:focus{outline:none;border-color:#2a7fa8}
+.p211-textarea:disabled{background:rgba(0,0,0,.04);color:var(--muted);cursor:not-allowed;resize:none}
 .p211-textarea--tall{min-height:140px}
 .p211-select{width:100%;padding:8px 32px 8px 11px;border:1px solid var(--border);border-radius:4px;font-size:.9rem;font-family:inherit;color:var(--ink);background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6' fill='none' stroke='%235c6b79' stroke-width='1.5'%3E%3Cpolyline points='1 1 5 5 9 1'/%3E%3C/svg%3E") no-repeat right 11px center/10px;-webkit-appearance:none;appearance:none;box-sizing:border-box;cursor:pointer;transition:border-color .12s}
 .p211-select:focus{outline:none;border-color:#2a7fa8}
+.p211-select:disabled{background-color:rgba(0,0,0,.04);color:var(--muted);cursor:not-allowed}
 .p211-help{font-size:.75rem;color:var(--muted);line-height:1.6;margin:0}
 .p211-row{display:flex;gap:12px}
 .p211-row .p211-field{flex:1;min-width:0;margin-bottom:0}
@@ -12040,6 +12214,14 @@ a.p314-hist__name:hover{color:var(--page-accent)}
 .ktn-zone__title{font-family:var(--fn);font-size:1.08rem;font-weight:700;color:var(--ink);letter-spacing:.01em;line-height:1.2}
 .ktn-zone__en{margin-left:auto;align-self:center;font-family:var(--font-en-label,'Cinzel',serif);font-size:.6rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
 
+/* 折りたたみ可能なゾーン（全ページ共通）。.ktn-zone を <details><summary> でラップするだけで開閉可能になる
+   （専用クラス不要・ネイティブ <details> の open 属性でJSからも制御可）。折りたたみ時は末尾に山形アイコンを表示。 */
+details > summary.ktn-zone{list-style:none;cursor:pointer}
+details > summary.ktn-zone::-webkit-details-marker{display:none}
+details > summary.ktn-zone::marker{display:none}
+.ktn-zone__toggle-icon{flex-shrink:0;align-self:center;width:8px;height:8px;border-right:1.5px solid var(--muted);border-bottom:1.5px solid var(--muted);transform:rotate(45deg);transition:transform .15s}
+details[open] > summary.ktn-zone .ktn-zone__toggle-icon{transform:rotate(-135deg)}
+
 /* LIAISON+ サービスロゴ（p11-4 の About ゾーン冒頭・kotennavi_liaison_logo.html の SVG を流用）。中央寄せのみ担う */
 .p114-about-logo{text-align:center;margin:2px 0 22px}
 .p114-about-logo svg{max-width:100%;height:auto}
@@ -12061,8 +12243,6 @@ a.p314-hist__name:hover{color:var(--page-accent)}
 
 .p114-section-head{display:flex;align-items:center;gap:10px;margin:28px 0 14px;padding-bottom:10px;border-bottom:2px solid rgba(0,0,0,.08)}
 .p114-section-head__title{font-size:.9rem;font-weight:600;color:var(--ink)}
-/* 非公開マーカー（PRIVATE 等・セクションの取り扱い区分。人物/コンテンツバッジではない） */
-.p114-section-head__badge{font-size:.6rem;font-weight:600;letter-spacing:.12em;padding:3px 8px;border-radius:3px;background:var(--tag-bg);color:var(--muted);border:1px solid var(--border);font-family:var(--fm)}
 /* 読み取り専用の本人情報（機能申込時の登録内容を引き継ぎ表示） */
 .p114-identity-readout{margin:0 0 14px;border:1px solid var(--border);border-radius:4px;background:#faf9f7}
 .p114-identity-readout__row{display:flex;gap:14px;padding:10px 14px;border-bottom:1px solid var(--border)}
@@ -12081,6 +12261,13 @@ body.p114-role-gallery .p114-gallery-section{display:block}
 .p114-checklist__item input{margin-top:3px;accent-color:#7a5008;flex-shrink:0;cursor:pointer}
 .p114-checklist__item span{line-height:1.55;color:var(--ink)}
 
+/* Step1審査中＝送信済み内容を表示のみ・編集不可（p114SetStep1Readonly()がフォーム側に付与）。
+   input/select/textareaはdisabled属性＋上記:disabledスタイルで表現し、ここではクリック操作系（添付・チェック項目）のみ抑止 */
+#p114Step1Form.p114-readonly .p211-img-drop,
+#p114Step1Form.p114-readonly .p211-img-list{pointer-events:none;opacity:.6}
+#p114Step1Form.p114-readonly .p114-checklist__item,
+#p114Step1Form.p114-readonly .p114-terms-agree{pointer-events:none;opacity:.6}
+
 .p114-bank-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:0}
 .p114-bank-row .p211-field{flex:1;min-width:130px;margin-bottom:0}
 
@@ -12093,6 +12280,9 @@ body.p114-role-gallery .p114-gallery-section{display:block}
 .p114-submit-wrap{margin-top:24px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px}
 /* 送信ボタンは共通 .ktn-op-btn --primary --lg を使用（視覚定義は共通側・disabled も共通） */
 .p114-submit-note{font-size:.75rem;color:var(--muted);line-height:1.55}
+
+/* ステップインジケーター（wrap外要素なので自前で760幅・中央寄せ。中身は共通 .ktn-steps/.ktn-step を使用） */
+#p114Steps{max-width:var(--w-detail);margin:0 auto 20px}
 
 .p114-status-notice{max-width:var(--w-detail);padding:20px 24px;background:#fff;border:1px solid var(--border);border-radius:6px;text-align:center;margin:0 auto 20px}
 .p114-status-notice--pending{border-color:rgba(180,117,16,.3);background:rgba(180,117,16,.04)}

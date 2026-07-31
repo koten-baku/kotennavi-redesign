@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ギャラリー機能申込 | 個展なび</title>
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<body data-w="article" class="p70-page p11-page">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- デモバー（ギャラリー専用ページのためロール切替なし・状態のみ） -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">状態：</span>
+  <button class="dbtn on" id="dbarForm" onclick="setDemoMode('form')">申込フォーム</button>
+  <button class="dbtn" id="dbarPending" onclick="setDemoMode('pending')">確認中</button>
+  <button class="dbtn" id="dbarApproved" onclick="setDemoMode('approved')">利用開始</button>
+</div>
+
+<div class="shell">
+<div class="content-wrap" id="contentWrap">
+
+  <header class="ktn-header" id="ktnHeader">
+    <div class="ktn-header__inner">
+      <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+      <div class="ktn-hdr-actions" id="ktnActs"></div>
+    </div>
+  </header>
+
+  <main class="ktn-main" id="ktnMain">
+    <div class="ktn-content">
+
+      <!-- 申込者ストリップ（ログイン中のユーザー＝申込アカウント） -->
+      <div class="p114-applicant">
+        <div class="p114-applicant__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+        </div>
+        <div class="p114-applicant__body">
+          <span class="p114-applicant__label">申込アカウント</span>
+          <span class="p114-applicant__name">鈴木 一郎 <small>1997sakura2022@gmail.com</small></span>
+        </div>
+      </div>
+
+      <!-- 確認中バナー -->
+      <div class="p114-status-notice p114-status-notice--pending" id="p113PendingBanner" hidden>
+        <div class="p114-status-notice__icon">⏳</div>
+        <div class="p114-status-notice__title">現在確認中です</div>
+        <p class="p114-status-notice__desc">申込を受け付けました。個展なび事務局による確認・設定作業のため少々お時間をいただきます。完了しましたらメールでご連絡します。</p>
+      </div>
+
+      <!-- 利用開始バナー -->
+      <div class="p114-status-notice" id="p113ApprovedBanner" hidden style="border-color:rgba(42,120,60,.3);background:rgba(42,120,60,.04)">
+        <div class="p114-status-notice__icon">✅</div>
+        <div class="p114-status-notice__title">ギャラリー機能が有効です</div>
+        <p class="p114-status-notice__desc">ギャラリーページの作成・展覧会情報の掲載ができるようになりました。ギャラリーページから情報を入力して公開を始めましょう。</p>
+      </div>
+
+      <!-- 管理ボックス -->
+      <div class="p113-wrap ktn-mgmt-wrap ktn-mgmt-stack">
+
+        <!-- ページヘッド -->
+        <div class="ktn-mgmt-head">
+          <h2 class="ktn-mgmt-head__title">ギャラリー機能申込</h2>
+          <p class="ktn-mgmt-head__en">GALLERY APPLICATION</p>
+        </div>
+
+        <!-- ページ内目次（3ゾーンへのアンカージャンプ） -->
+        <nav class="ktn-index" id="p113Index" aria-label="ページ内の目次">
+          <p class="ktn-index__label">INDEX</p>
+          <ul class="ktn-index__list">
+            <li><a class="ktn-index__link" href="#p113AboutZone">ギャラリー機能とは</a></li>
+            <li><a class="ktn-index__link" href="#p113FaqZone">よくある質問</a></li>
+            <li><a class="ktn-index__link" href="#p113SecForm">ギャラリー機能申込フォーム</a></li>
+          </ul>
+        </nav>
+
+        <!-- ①ギャラリー機能とは（ガイド・申込フォームの前の説明） -->
+        <div class="ktn-zone ktn-index-target" id="p113AboutZone"><span class="ktn-zone__num">1</span><span class="ktn-zone__title">ギャラリー機能とは</span><span class="ktn-zone__en">About</span></div>
+        <div class="p113-guide" id="p113ServiceBanner">
+          <p class="p70-lead">展覧会を、より多くの人へ。ギャラリー機能は、ギャラリー・美術館・展示スペースなど、展覧会を主催するすべての方のための機能です。会場で開催する展覧会をご自身で掲載・管理し、活動を継続的に記録し、発信できます。</p>
+
+          <p class="p70-body">掲載した展覧会は、ウォッチするアートファンへ自動的に通知され、会期の終了後は活動の記録として自動的にアーカイブされます。展覧会にとどまらず、ギャラリーの活動の記事や利用案内（入場料・駐車場・バリアフリー・レンタル等）までを一つのページにまとめられる、ギャラリーのためのサービスです。</p>
+
+          <p class="p70-body"><strong>利用料は無料。</strong>申込フォームの入力は数分で完了します。ご利用は、個展なび事務局が申込内容を確認したのち、開始いただけます。</p>
+
+          <h3 class="p70-subhead">利用できる機能</h3>
+          <div class="p70-dl p70-dl--ja">
+            <div class="p70-dl__item">
+              <dt class="p70-dl__dt">展覧会</dt>
+              <dd class="p70-dl__dd">会場で開催する展覧会情報を自由に掲載・編集できます。会期や会場に加え、出展クリエイターの指定、作品画像や詳細な解説まで登録が可能です。公開後はウォッチするアートファンへ自動的に通知され、会期の終了後は自動的にアーカイブされます。</dd>
+            </div>
+            <div class="p70-dl__item">
+              <dt class="p70-dl__dt">記事</dt>
+              <dd class="p70-dl__dd">展覧会のレポートやギャラリーの活動を、文章・画像・動画で発信できます。</dd>
+            </div>
+            <div class="p70-dl__item">
+              <dt class="p70-dl__dt">ギャラリーページ</dt>
+              <dd class="p70-dl__dd">ギャラリー情報・取扱いジャンル・アクセス・利用案内（入場料・駐車場・バリアフリー・支払方法・レンタル等）をまとめた、専用の活動ページを作成できます。</dd>
+            </div>
+          </div>
+
+          <h3 class="p70-subhead">さらに利用できる機能</h3>
+          <p class="p70-body">会場での展覧会と連動して、出品作品をオンラインで展示・販売できる<strong>リエゾン</strong>・<strong>リエゾンプラス</strong>もご利用いただけます。</p>
+          <div class="p70-dl p70-dl--ja">
+            <div class="p70-dl__item">
+              <dt class="p70-dl__dt">リエゾン</dt>
+              <dd class="p70-dl__dd">会期中の展覧会と連動し、その展覧会の出展クリエイターの作品をオンラインで展示できます。ギャラリー機能のご利用開始後、申込不要・無料でそのままお使いいただけます。</dd>
+            </div>
+            <div class="p70-dl__item">
+              <dt class="p70-dl__dt">リエゾンプラス</dt>
+              <dd class="p70-dl__dd">オンライン展示に加え、作品の販売までを行えます。ご利用にはお申込みが必要です。</dd>
+            </div>
+          </div>
+          <p class="p70-body"><a class="ktn-guide-link" href="./kotennavi-p70.html">リエゾン・リエゾンプラスについて詳しく →</a></p>
+
+          <h3 class="p70-subhead">ご利用開始まで</h3>
+          <ol class="p70-step-list">
+            <li class="p70-step-list__item">ユーザー登録（無料）</li>
+            <li class="p70-step-list__item">ギャラリー機能を申し込む</li>
+            <li class="p70-step-list__item">事務局の確認後、設定完了メールを受け取る</li>
+            <li class="p70-step-list__item">ギャラリー情報を登録する</li>
+            <li class="p70-step-list__item">展覧会・記事を掲載する</li>
+          </ol>
+        </div>
+
+        <!-- ②よくある質問（FAQ・アコーディオン・KTN.renderQA で描画） -->
+        <div class="ktn-zone ktn-index-target" id="p113FaqZone"><span class="ktn-zone__num">2</span><span class="ktn-zone__title">よくある質問</span><span class="ktn-zone__en">FAQ</span></div>
+        <div id="p113Faq"></div>
+
+        <!-- ③ギャラリー機能申込フォーム -->
+        <div class="ktn-zone ktn-index-target" id="p113SecForm"><span class="ktn-zone__num">3</span><span class="ktn-zone__title">ギャラリー機能申込フォーム</span><span class="ktn-zone__en">Form</span></div>
+
+        <!-- ━━ ①ギャラリー情報（公開） ━━ -->
+        <div class="p114-section-head">
+          <span class="p114-section-head__title">ギャラリー情報（サイトに公開されます）</span>
+        </div>
+
+        <div class="p211-block">
+          <div class="p211-block__head">
+            <div class="p211-block__title">ギャラリーとしての表示情報 <span class="ktn-sec-en">Gallery Information</span></div>
+          </div>
+          <div class="p211-block__body">
+
+            <div class="p211-field">
+              <label class="p211-label">ギャラリー名（表示名）<span class="ktn-req">必須</span></label>
+              <input class="p211-input" type="text" placeholder="例：Gallery SOIL 渋谷">
+              <p class="p211-help">ギャラリーページや展覧会情報に表示される名称です。</p>
+            </div>
+
+            <div class="p211-field">
+              <label class="p211-label">ギャラリー名（全角カナ）<span class="ktn-req">必須</span></label>
+              <input class="p211-input" type="text" placeholder="例：ギャラリー ソイル シブヤ">
+              <p class="p211-help">表示名の読み仮名です。並び替え・検索に使用します。</p>
+            </div>
+
+            <div class="p211-field">
+              <label class="p211-label">ギャラリー名（英語表記）</label>
+              <input class="p211-input" type="text" placeholder="例：Gallery SOIL Shibuya">
+              <p class="p211-help">英語ページ・海外向け表示に使用します（任意）。</p>
+            </div>
+
+            <div class="p211-field">
+              <label class="p211-label">主な取扱いジャンル<span class="ktn-req">必須</span></label>
+              <select class="p211-select">
+                <option value="">選択してください</option>
+                <option>アート</option>
+                <option>クラフト</option>
+                <option>ファッション</option>
+                <option>写真</option>
+                <option>建築</option>
+                <option>その他</option>
+              </select>
+              <p class="p211-help">主に取扱う作品のジャンルを選択してください。より詳しいジャンル・タグはご利用開始後に設定できます。</p>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="p211-block">
+          <div class="p211-block__head">
+            <div class="p211-block__title">所在地・連絡先 <span class="ktn-sec-en">Venue &amp; Contact</span></div>
+          </div>
+          <div class="p211-block__body">
+
+            <div class="p211-field">
+              <label class="p211-label">郵便番号<span class="ktn-req">必須</span></label>
+              <input class="p211-input" type="text" placeholder="150-0001" inputmode="numeric" maxlength="8" style="max-width:180px">
+            </div>
+
+            <div class="p114-bank-row" style="margin-top:12px">
+              <div class="p211-field">
+                <label class="p211-label">都道府県<span class="ktn-req">必須</span></label>
+                <input class="p211-input" type="text" placeholder="東京都">
+              </div>
+              <div class="p211-field">
+                <label class="p211-label">市区町村<span class="ktn-req">必須</span></label>
+                <input class="p211-input" type="text" placeholder="渋谷区松濤">
+              </div>
+            </div>
+
+            <div class="p211-field" style="margin-top:12px">
+              <label class="p211-label">番地・建物名<span class="ktn-req">必須</span></label>
+              <input class="p211-input" type="text" placeholder="1-2-3 ○○ビル 1F">
+              <p class="p211-help">来場者に公開される住所です。</p>
+            </div>
+
+            <div class="p114-bank-row" style="margin-top:12px">
+              <div class="p211-field">
+                <label class="p211-label">電話番号<span class="ktn-req">必須</span></label>
+                <input class="p211-input" type="tel" placeholder="03-1234-5678" inputmode="tel">
+              </div>
+              <div class="p211-field">
+                <label class="p211-label">メールアドレス<span class="ktn-req">必須</span></label>
+                <input class="p211-input" type="email" placeholder="info@example.com">
+              </div>
+            </div>
+            <p class="p211-help">来場者からの問合せ先として公開されます。</p>
+
+            <div class="p211-field" style="margin-top:12px">
+              <label class="p211-label">ホームページ・SNS</label>
+              <div class="p211-repeat" id="p113LinkList">
+                <div class="p211-repeat__row p211-repeat__row--link">
+                  <select class="p211-select">
+                    <option value="instagram" selected>Instagram</option>
+                    <option value="x">X（Twitter）</option>
+                    <option value="facebook">Facebook</option>
+                    <option value="youtube">YouTube</option>
+                    <option value="website">公式サイト</option>
+                    <option value="other">その他</option>
+                  </select>
+                  <input class="p211-input" type="url" placeholder="https://instagram.com/...">
+                  <button class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline p211-repeat__del" type="button" aria-label="削除">✕</button>
+                </div>
+              </div>
+              <button class="ktn-op-btn ktn-op-btn--sm p211-repeat__add" type="button" data-target="p113LinkList" data-link="1">＋ リンクを追加</button>
+              <p class="p211-help">活動を確認できるリンクがあればご記入ください（任意・確認の参考にします）。</p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ━━ ②ご担当者情報（非公開） ━━ -->
+        <div class="p114-section-head">
+          <span class="p114-section-head__title">ご担当者情報（サイトには公開されません）</span>
+        </div>
+
+        <div class="p114-privacy-note">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+          <span>ギャラリーページの管理・展覧会掲載についてご連絡する際の窓口として、ご担当者の情報をお預かりします。この情報が<strong>公開されることはありません</strong>。掲載内容の確認やご連絡が必要な場合にのみ使用します。</span>
+        </div>
+
+        <div class="p211-block">
+          <div class="p211-block__head">
+            <div class="p211-block__title">ご担当者情報 <span class="ktn-sec-en">Contact</span></div>
+          </div>
+          <div class="p211-block__body">
+
+            <div class="p211-field">
+              <label class="p211-label">ご担当者お名前（フルネーム）<span class="ktn-req">必須</span></label>
+              <input class="p211-input" type="text" placeholder="例：鈴木 一郎">
+              <p class="p211-help">ギャラリーページ・展覧会情報に関するご連絡の際にお伺いする氏名です。</p>
+            </div>
+
+            <div class="p211-field">
+              <label class="p211-label">ご担当者フリガナ（全角カナ）<span class="ktn-req">必須</span></label>
+              <input class="p211-input" type="text" placeholder="例：スズキ イチロウ">
+            </div>
+
+            <div class="p211-field">
+              <label class="p211-label">ギャラリーとのご関係<span class="ktn-req">必須</span></label>
+              <select class="p211-select">
+                <option value="">選択してください</option>
+                <option>オーナー・運営者</option>
+                <option>スタッフ</option>
+                <option>広報委託先（代理店など）</option>
+              </select>
+              <p class="p211-help">ご担当者は、ギャラリー・美術館・スペースの運営者・スタッフ、またはギャラリー・美術館・スペースから正式に広報活動を依頼された代理の方に限らせていただいております。最も近いものを選択してください。</p>
+            </div>
+
+            <div class="p211-field">
+              <label class="p211-label">ご担当者の所属</label>
+              <input class="p211-input" type="text" placeholder="例：Gallery SOIL 渋谷 広報部">
+              <p class="p211-help">任意です。所属会社名・部署名など。</p>
+            </div>
+
+            <div class="p211-field">
+              <label class="p211-label">ご担当者のタイトル</label>
+              <input class="p211-input" type="text" placeholder="例：ディレクター">
+              <p class="p211-help">任意です。</p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ━━ ④その他（任意） ━━ -->
+        <div class="p114-section-head">
+          <span class="p114-section-head__title">その他（任意）</span>
+        </div>
+
+        <div class="p211-block">
+          <div class="p211-block__head">
+            <div class="p211-block__title">既存の掲載ページ <span class="ktn-sec-en">Existing Page</span></div>
+          </div>
+          <div class="p211-block__body">
+            <div class="p211-field">
+              <label class="p211-label">すでに個展なびに掲載されているページ（任意）</label>
+              <input class="p211-input" type="text" placeholder="ページのURL、またはギャラリー名">
+              <p class="p211-help">クリエイターなどが投稿した展覧会情報から、ページがすでに作成されている場合があります。心当たりのあるページ（URLまたは名称）があればご記入ください。事務局で確認のうえ、そのページのオーナーを切り替え、これまでの展覧会情報を引き継ぎます。心当たりがなくても、事務局が名寄せして引き継げる場合があります（結果は機能付与完了メールでお知らせします）。</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="p211-block">
+          <div class="p211-block__head">
+            <div class="p211-block__title">ご連絡事項 <span class="ktn-sec-en">Notes</span></div>
+          </div>
+          <div class="p211-block__body">
+            <div class="p211-field">
+              <label class="p211-label">事務局への連絡事項（任意）</label>
+              <textarea class="p211-textarea" rows="3" placeholder="例：主な取扱い作家、過去の主な展覧会歴、今後の展覧会の予定、活動を確認できる情報、その他伝えておきたいこと など"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- ━━ ⑤同意事項 ━━ -->
+        <div class="p114-section-head">
+          <span class="p114-section-head__title">同意事項</span>
+        </div>
+
+        <div class="p211-block">
+          <div class="p211-block__head">
+            <div class="p211-block__title">申込にあたっての確認<span class="ktn-req">必須</span></div>
+          </div>
+          <div class="p211-block__body">
+            <div class="p114-notice">
+              <p class="p114-notice__title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3 2.5 20h19L12 3z"/><line x1="12" y1="10" x2="12" y2="14"/><circle cx="12" cy="17.2" r=".7" fill="currentColor" stroke="none"/></svg>
+                お申込みの前にご確認ください
+              </p>
+              <ul class="p114-notice__list">
+                <li class="p114-notice__item">ご入力内容に不完全・誤りがある場合、お申込みを受け付けられないことがあります。</li>
+                <li class="p114-notice__item">ギャラリーとしての活動が確認できない場合、お申込みを受け付けられないことがあります。</li>
+                <li class="p114-notice__item">ご入力いただいた非公開の情報は公開されません。ご担当者ご本人へのご連絡、掲載情報（展覧会・記事など）の内容確認が必要となった場合にのみ使用し、それ以外の目的では使用しません。</li>
+              </ul>
+            </div>
+
+            <div class="p114-checklist">
+              <label class="p114-checklist__item">
+                <input type="checkbox" name="gallery-agree" id="gga0" onchange="p113UpdateSubmit()">
+                <span>ギャラリーの正当な担当者として申し込みます</span>
+              </label>
+              <label class="p114-checklist__item">
+                <input type="checkbox" name="gallery-agree" id="gga1" onchange="p113UpdateSubmit()">
+                <span>入力したギャラリー情報が正確であり、掲載する展覧会・作品情報について当ギャラリーに掲載の権利があることを確認しました</span>
+              </label>
+              <label class="p114-checklist__item">
+                <input type="checkbox" name="gallery-agree" id="gga2" onchange="p113UpdateSubmit()">
+                <span>ご担当者情報（氏名・所属など）は公開されず、ご連絡目的にのみ使用されることを理解しました</span>
+              </label>
+              <label class="p114-checklist__item">
+                <input type="checkbox" name="gallery-agree" id="gga3" onchange="p113UpdateSubmit()">
+                <span>虚偽の情報や第三者になりすました申込があった場合、登録の取消し・掲載の削除が行われることを理解しました</span>
+              </label>
+            </div>
+
+            <div class="p114-terms-box" style="margin-top:16px">
+              <h4>ギャラリー機能 利用規約（抜粋）</h4>
+              <p>第1条（目的）<br>
+              本規約は、個展なびが提供するギャラリー機能の利用に関する条件を定めるものです。</p>
+              <p>第2条（機能内容）<br>
+              ギャラリー機能は、ギャラリーページの作成・公開および展覧会情報の掲載・管理を行う機能を提供します。</p>
+              <p>第3条（掲載責任）<br>
+              利用者は、掲載する展覧会・作品・記事等の情報について、自らに掲載の権利があることを保証し、その内容について責任を負うものとします。</p>
+              <p>第4条（ご担当者情報）<br>
+              利用者が登録するご担当者の情報は公開されません。掲載情報の内容確認やご連絡が必要となった場合にのみ使用し、それ以外の目的では使用しません。</p>
+              <p>第5条（利用の開始・取消し）<br>
+              個展なびは申込内容を確認のうえ、ギャラリー機能を提供します。虚偽の情報・なりすまし・不適切な掲載が判明した場合、機能の提供停止および掲載の削除を行うことがあります。</p>
+              <p>付則：本規約は2026年4月1日より施行します。</p>
+            </div>
+
+            <label class="p114-terms-agree" id="p113TermsLabel">
+              <input type="checkbox" id="p113TermsCheck" onchange="p113UpdateSubmit()">
+              <span>ギャラリー機能 利用規約を読み、内容に同意します</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- 保存エラーパネル（共通 .ktn-form-error・送信時の必須チェックで表示。送信バー直上の固定位置） -->
+        <div class="ktn-form-error" id="p113SaveError" role="alert" hidden>
+          <div class="ktn-form-error__head">
+            <svg class="ktn-form-error__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <span class="ktn-form-error__title">お申込みできませんでした</span>
+          </div>
+          <ul class="ktn-form-error__list" id="p113SaveErrorList"></ul>
+        </div>
+
+        <!-- ━━ 送信ボタン ━━ -->
+        <div class="p114-submit-wrap" id="p113SubmitWrap">
+          <button class="p114-submit-btn ktn-op-btn ktn-op-btn--primary ktn-op-btn--lg" id="p113SubmitBtn" disabled onclick="p113Submit()">
+            ギャラリー機能を申込する
+          </button>
+          <p class="p114-submit-note">
+            お申込み後、個展なび事務局による確認・設定作業のため少々お時間をいただきます。<br>
+            設定が完了しましたら、ギャラリー機能付与完了メールでお知らせします。
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </main>
+</div>
+</div>
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+var p113CurrentMode = 'form';
+
+function setDemoMode(mode) {
+  p113CurrentMode = mode;
+  var isForm = (mode === 'form');
+  var isPending = (mode === 'pending');
+  var isApproved = (mode === 'approved');
+
+  document.getElementById('p113PendingBanner').hidden = !isPending;
+  document.getElementById('p113ApprovedBanner').hidden = !isApproved;
+  document.getElementById('p113AboutZone').hidden = isApproved;
+  document.getElementById('p113ServiceBanner').hidden = isApproved;
+  document.getElementById('p113Index').hidden = isApproved;
+  document.getElementById('p113SubmitWrap').hidden = !isForm;
+
+  ['dbarForm','dbarPending','dbarApproved'].forEach(function(id) {
+    document.getElementById(id).classList.remove('on');
+  });
+  document.getElementById('dbar' + mode.charAt(0).toUpperCase() + mode.slice(1)).classList.add('on');
+}
+
+function p113UpdateSubmit() {
+  var terms = document.getElementById('p113TermsCheck').checked;
+  var acks = Array.prototype.slice.call(document.querySelectorAll('input[name="gallery-agree"]'));
+  var allAck = acks.length > 0 && acks.every(function(c){ return c.checked; });
+  document.getElementById('p113SubmitBtn').disabled = !(terms && allAck);
+}
+
+/* ── 必須項目チェック（.ktn-req マーカーの .p211-field を走査・共通 .ktn-form-error パネルに表示） ── */
+function p113ClearFieldErrors() {
+  document.querySelectorAll('.p211-field.is-error').forEach(function (f) { f.classList.remove('is-error'); });
+}
+function p113ValidateRequired() {
+  p113ClearFieldErrors();
+  var errBox  = document.getElementById('p113SaveError');
+  var errList = document.getElementById('p113SaveErrorList');
+  var missing = [];
+  document.querySelectorAll('.ktn-mgmt-wrap .p211-label .ktn-req').forEach(function (mark) {
+    var field = mark.closest('.p211-field');
+    if (!field) return;
+    /* 非表示ブロック内（本人選択時の代理人欄など）は対象外 */
+    if (field.closest('[hidden]')) return;
+    var filled;
+    if (field.querySelector('.p211-pill-group')) {
+      filled = !!field.querySelector('.p211-pill-group input:checked');
+    } else {
+      var inputs = field.querySelectorAll('input:not([type=file]), select, textarea');
+      filled = inputs.length > 0 && Array.prototype.every.call(inputs, function (el) { return el.value.trim() !== ''; });
+    }
+    if (!filled) {
+      field.classList.add('is-error');
+      var label = mark.closest('.p211-label');
+      var name = '必須項目';
+      if (label) {
+        var clone = label.cloneNode(true);
+        var req = clone.querySelector('.ktn-req');
+        if (req) req.parentNode.removeChild(req);
+        name = clone.textContent.trim() || name;
+      }
+      missing.push({ name: name, field: field });
+    }
+  });
+  if (missing.length) {
+    errList.innerHTML = '';
+    var sum = document.createElement('li');
+    sum.className = 'ktn-form-error__item';
+    sum.textContent = '必須項目に未入力が' + missing.length + '件あります。入力してからお申込みください。';
+    errList.appendChild(sum);
+    missing.forEach(function (m) {
+      var li = document.createElement('li');
+      li.className = 'ktn-form-error__item';
+      li.appendChild(document.createTextNode('「' + m.name + '」が未入力です。 '));
+      var jump = document.createElement('button');
+      jump.type = 'button';
+      jump.className = 'ktn-form-error__jump';
+      jump.textContent = '該当箇所へ →';
+      jump.addEventListener('click', function () {
+        m.field.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+      li.appendChild(jump);
+      errList.appendChild(li);
+    });
+    errBox.hidden = false;
+    errBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return false;
+  }
+  errBox.hidden = true;
+  return true;
+}
+
+function p113Submit() {
+  if (!p113ValidateRequired()) return;
+  KTN.submitDone({
+    title: 'ギャラリー機能のお申込みを受け付けました',
+    message: '個展なび事務局による確認・設定が完了しましたら、<br>設定完了メールでお知らせします。',
+    action: { label: 'トップページへ', href: './kotennavi-p1.html' }
+  });
+}
+
+// SNS・外部リンクの追加/削除（ローカルハンドラ・p11-2 と同型）
+document.addEventListener('click', function(e) {
+  var add = e.target.closest('.p211-repeat__add');
+  if (add && add.dataset.target === 'p113LinkList') {
+    var list = document.getElementById('p113LinkList');
+    var row = list.querySelector('.p211-repeat__row--link');
+    if (row) {
+      var clone = row.cloneNode(true);
+      clone.querySelectorAll('input').forEach(function(i) { i.value = ''; });
+      var sel = clone.querySelector('select');
+      if (sel) sel.selectedIndex = 0;
+      list.appendChild(clone);
+    }
+    return;
+  }
+  var del = e.target.closest('.p211-repeat__del');
+  if (del && del.closest('#p113LinkList')) {
+    var rows = document.querySelectorAll('#p113LinkList .p211-repeat__row--link');
+    if (rows.length > 1) del.closest('.p211-repeat__row--link').remove();
+  }
+});
+
+KTN.init({ page: 'p11-3', role: 'gallery' });
+
+// 申込FAQ（アコーディオン・閉じた状態で描画＝縦に伸びない）
+if (typeof KTN.renderQA === 'function') KTN.renderQA('#p113Faq', { category: 'gallery-apply', style: 'guide', hideGroup: true });
+</script>
+</body>
+</html>

@@ -20,8 +20,10 @@
   <button class="dbtn on" onclick="setR('creator',this)">creator</button>
   <button class="dbtn" onclick="setR('gallery',this)">gallery</button>
   <span class="dbar-sep">状態：</span>
-  <button class="dbtn on" id="dbarForm" onclick="setDemoMode('form')">申込フォーム</button>
-  <button class="dbtn" id="dbarPending" onclick="setDemoMode('pending')">審査中</button>
+  <button class="dbtn on" id="dbarForm" onclick="setDemoMode('form')">Step1申込フォーム</button>
+  <button class="dbtn" id="dbarPending" onclick="setDemoMode('pending')">Step1審査中</button>
+  <button class="dbtn" id="dbarStep2" onclick="setDemoMode('step2')">Step2 口座登録</button>
+  <button class="dbtn" id="dbarStripePending" onclick="setDemoMode('stripePending')">Stripe審査中</button>
   <button class="dbtn" id="dbarApproved" onclick="setDemoMode('approved')">承認済</button>
 </div>
 
@@ -53,11 +55,51 @@
         </div>
       </div>
 
-      <!-- 審査中バナー（審査中デモ） -->
+      <!-- ステップインジケーター（4段階の逐次フローを常時可視化。共通コンポーネント .ktn-steps/.ktn-step を使用＝page-accentで色付く「現在地」表現） -->
+      <div class="ktn-steps" id="p114Steps">
+        <div class="ktn-steps__label">お申込みの流れ<span class="ktn-steps__label-en">Application Steps</span></div>
+        <div class="ktn-steps__track">
+          <div class="ktn-step ktn-step--seller" id="p114Step1">
+            <div class="ktn-step__node">1</div>
+            <div class="ktn-step__label">申込</div>
+          </div>
+          <div class="ktn-steps__conn" id="p114Conn1"></div>
+          <div class="ktn-step" id="p114Step2">
+            <div class="ktn-step__node">2</div>
+            <div class="ktn-step__label">審査</div>
+          </div>
+          <div class="ktn-steps__conn" id="p114Conn2"></div>
+          <div class="ktn-step" id="p114Step3">
+            <div class="ktn-step__node">3</div>
+            <div class="ktn-step__label">口座・Stripe</div>
+          </div>
+          <div class="ktn-steps__conn" id="p114Conn3"></div>
+          <div class="ktn-step" id="p114Step4">
+            <div class="ktn-step__node">4</div>
+            <div class="ktn-step__label">利用開始</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step1審査中バナー（審査中デモ） -->
       <div class="p114-status-notice p114-status-notice--pending" id="p114PendingBanner" hidden>
         <div class="p114-status-notice__icon">⏳</div>
-        <div class="p114-status-notice__title">現在審査中です</div>
-        <p class="p114-status-notice__desc">申込を受け付けました。審査には通常3〜5営業日かかります。結果はメールでご連絡します。</p>
+        <div class="p114-status-notice__title">現在、本人確認の審査中です</div>
+        <p class="p114-status-notice__desc">申込を受け付けました。審査には通常3〜5営業日かかります。審査を通過すると、続きのお手続き（振込先口座のご登録）に進むためのご案内をメールでお送りします。</p>
+      </div>
+
+      <!-- Step2バナー（Step1審査通過・口座登録待ちデモ・メール内URLからの到達を想定） -->
+      <div class="p114-status-notice" id="p114Step2Banner" hidden style="border-color:rgba(0,93,167,.3);background:rgba(0,93,167,.05)">
+        <div class="p114-status-notice__icon">📩</div>
+        <div class="p114-status-notice__title">本人確認の審査が完了しました</div>
+        <p class="p114-status-notice__desc">続いて、決済パートナーであるStripe社の画面で振込先口座情報をご登録ください。Stripe社の審査を通過すると、LIAISON+ のご利用が可能になります。</p>
+      </div>
+
+      <!-- Stripe審査中バナー（Step2送信後デモ） -->
+      <div class="p114-status-notice p114-status-notice--pending" id="p114StripePendingBanner" hidden>
+        <div class="p114-status-notice__icon">⏳</div>
+        <div class="p114-status-notice__title">Stripeの審査結果をお待ちください</div>
+        <p class="p114-status-notice__desc">Stripe社の画面で振込先口座情報を登録し、審査に進みました。Stripe側の審査が完了すると、LIAISON+ 機能が有効になります。結果はメールでご連絡します。</p>
       </div>
 
       <!-- 承認済バナー（承認済デモ） -->
@@ -86,8 +128,9 @@
           </ul>
         </nav>
 
-        <!-- ①リエゾンプラスとは（ガイド・申込フォームの前の丁寧な説明） -->
-        <div class="ktn-zone ktn-index-target" id="p114AboutZone"><span class="ktn-zone__num">1</span><span class="ktn-zone__title">リエゾンプラスとは</span><span class="ktn-zone__en">About</span></div>
+        <!-- ①リエゾンプラスとは（ガイド・申込フォームの前の丁寧な説明。Step1審査中以降は折りたたみ表示） -->
+        <details class="ktn-zone-details" id="p114AboutDetails" open>
+        <summary class="ktn-zone ktn-index-target" id="p114AboutZone"><span class="ktn-zone__num">1</span><span class="ktn-zone__title">リエゾンプラスとは</span><span class="ktn-zone__en">About</span><span class="ktn-zone__toggle-icon"></span></summary>
         <div class="p114-guide" id="p114AboutGuide">
 
           <!-- サービスロゴ（kotennavi_liaison_logo.html の LIAISON+ Light 版） -->
@@ -160,11 +203,11 @@
           <div class="p70-dl p70-dl--ja">
             <div class="p70-dl__item">
               <dt class="p70-dl__dt">本人確認のための情報</dt>
-              <dd class="p70-dl__dd">購入者に安心してお取引いただくため、また<strong>特定商取引法に基づき</strong>、購入者から請求があった場合に氏名・住所・電話番号をお伝えできるようにしておくために使用します（常時公開されるわけではありません）。この情報が販売目的以外に公開されることはありません。</dd>
+              <dd class="p70-dl__dd">購入者に安心してお取引いただくため、また<strong>特定商取引法に基づき</strong>、購入者から請求があった場合に氏名・住所・電話番号をお伝えできるようにしておくために使用します（常時公開されるわけではありません）。この情報が販売目的以外に公開されることはありません。この本人確認は、なりすまし防止や出品作品の真正性確認を目的とした<strong>個展なび独自の審査</strong>であり、下記のStripe社による確認とは別の手続きです。</dd>
             </div>
             <div class="p70-dl__item">
-              <dt class="p70-dl__dt">振込先口座</dt>
-              <dd class="p70-dl__dd">売れた作品の売上をお振込みするための口座です。サービス利用料を差し引いた金額を<strong>あらかじめ定められた振込日</strong>にお振込みします（口座情報は申込後もマイページから変更できます）。</dd>
+              <dt class="p70-dl__dt">振込先口座（決済パートナーとの連携）</dt>
+              <dd class="p70-dl__dd">売れた作品の売上は、サービス利用料を差し引いた金額を<strong>あらかじめ定められた振込日</strong>にお振込みします。この振込処理は、決済パートナーである<strong>Stripe社</strong>に委託しているため、口座情報や本人確認書類は<strong>Stripe社の画面で直接ご登録</strong>いただきます（個展なびの本人確認〔上記〕承認後にご案内し、個展なびは口座番号等をお預かりしません）。ご登録済みの口座情報は、マイページで金融機関名・口座名義・口座番号の下4桁など一部をいつでもご確認いただけます。変更が必要な場合も、その都度Stripe社の画面へ移動してご対応いただきます。</dd>
             </div>
           </div>
           <p class="p70-body"><a class="ktn-guide-link" href="./kotennavi-p70.html">リエゾン・リエゾンプラスについて詳しく →</a></p>
@@ -172,13 +215,19 @@
           <h3 class="p70-subhead">お申込みの前に</h3>
           <p class="p70-body">リエゾンプラスは、すでに<strong>クリエイターまたはギャラリー機能をご利用中の方</strong>向けの追加機能です。お申込み後、個展なび事務局にて審査を行い、通常3〜5営業日以内に結果をメールでご連絡します。承認されると、リエゾンプラスでの出品を開始できます。</p>
         </div>
+        </details>
 
-        <!-- ②よくある質問（FAQ・アコーディオン・KTN.renderQA で描画） -->
-        <div class="ktn-zone ktn-index-target" id="p114FaqZone"><span class="ktn-zone__num">2</span><span class="ktn-zone__title">よくある質問</span><span class="ktn-zone__en">FAQ</span></div>
+        <!-- ②よくある質問（FAQ・アコーディオン・KTN.renderQA で描画。Step1審査中以降は折りたたみ表示） -->
+        <details class="ktn-zone-details" id="p114FaqDetails" open>
+        <summary class="ktn-zone ktn-index-target" id="p114FaqZone"><span class="ktn-zone__num">2</span><span class="ktn-zone__title">よくある質問</span><span class="ktn-zone__en">FAQ</span><span class="ktn-zone__toggle-icon"></span></summary>
         <div id="p114Faq"></div>
+        </details>
 
         <!-- ③リエゾンプラス機能申込フォーム -->
         <div class="ktn-zone ktn-index-target" id="p114SecForm"><span class="ktn-zone__num">3</span><span class="ktn-zone__title">リエゾンプラス機能申込フォーム</span><span class="ktn-zone__en">Form</span></div>
+
+        <!-- ━━━━━ Step1：本人確認入力→申込（Step1審査通過までの表示） ━━━━━ -->
+        <div id="p114Step1Form">
 
         <!-- ロール通知（creator） -->
         <div class="p114-role-notice" id="p114RoleNoticeCreator">
@@ -267,9 +316,37 @@
         </div>
         <!-- /ギャラリー専用セクション -->
 
+        <!-- ━━ 共通：作品の発送地（LIAISON+出品設定＝p2-12-1の初期値。あとからクリエイター/ギャラリー基本情報でも変更可） ━━ -->
+        <div class="p114-section-head">
+          <span class="p114-section-head__title">作品の発送</span>
+        </div>
+
+        <div class="p211-block">
+          <div class="p211-block__head">
+            <div class="p211-block__title">作品の発送地 <span class="ktn-sec-en">Shipping Origin</span></div>
+          </div>
+          <div class="p211-block__body">
+            <div class="p211-field">
+              <label class="p211-label" for="p114ShipPref">作品を発送する都道府県<span class="ktn-req">必須</span></label>
+              <select class="p211-select" id="p114ShipPref" style="max-width:280px">
+                <option value="">選択してください</option>
+                <option>北海道</option>
+                <option>青森県</option><option>岩手県</option><option>宮城県</option><option>秋田県</option><option>山形県</option><option>福島県</option>
+                <option>茨城県</option><option>栃木県</option><option>群馬県</option><option>埼玉県</option><option>千葉県</option><option>東京都</option><option>神奈川県</option>
+                <option>新潟県</option><option>富山県</option><option>石川県</option><option>福井県</option><option>山梨県</option><option>長野県</option>
+                <option>岐阜県</option><option>静岡県</option><option>愛知県</option><option>三重県</option>
+                <option>滋賀県</option><option>京都府</option><option>大阪府</option><option>兵庫県</option><option>奈良県</option><option>和歌山県</option>
+                <option>鳥取県</option><option>島根県</option><option>岡山県</option><option>広島県</option><option>山口県</option>
+                <option>徳島県</option><option>香川県</option><option>愛媛県</option><option>高知県</option>
+                <option>福岡県</option><option>佐賀県</option><option>長崎県</option><option>熊本県</option><option>大分県</option><option>宮崎県</option><option>鹿児島県</option><option>沖縄県</option>
+              </select>
+              <p class="p211-help">作品を発送する際の出荷元の都道府県です。LIAISON+ で作品を出品する際（LIAISON+ 出品設定）の発送地の初期値として使用します。展示ごとに変更でき、また承認後もクリエイター基本情報／ギャラリー基本情報から変更できます。</p>
+            </div>
+          </div>
+        </div>
+
         <!-- ━━ 共通：本人確認（非公開） ━━ -->
         <div class="p114-section-head">
-          <span class="p114-section-head__badge">PRIVATE</span>
           <span class="p114-section-head__title">本人確認（サイトには公開されません）</span>
         </div>
 
@@ -278,20 +355,108 @@
           <span>作品販売にあたり、事務局が本人確認を行います。ここで扱う情報は<strong>公開されません</strong>。本人確認・ご連絡の目的にのみ使用します。</span>
         </div>
 
-        <!-- 登録済みの本人情報（読み取り専用・機能申込時の登録内容を引き継ぎ） -->
+        <!-- creator：登録済みの本人情報（読み取り専用・クリエイター基本情報の登録内容を引き継ぎ） -->
+        <div class="p114-creator-section">
+          <div class="p211-block">
+            <div class="p211-block__head">
+              <div class="p211-block__title">登録済みの本人情報 <span class="ktn-sec-en">Your Identity</span></div>
+            </div>
+            <div class="p211-block__body">
+              <p class="p211-help" id="p114IdIntro" style="margin-bottom:14px">クリエイター基本情報に登録されている本人情報を表示しています。この内容で本人確認を行いますので、最新の内容かご確認ください。変更はクリエイター基本情報の編集から行えます（本人情報はクリエイター基本情報で一元管理されます）。</p>
+              <dl class="p114-identity-readout">
+                <div class="p114-identity-readout__row"><dt id="p114IdLabel1">本名</dt><dd id="p114IdVal1">—</dd></div>
+                <div class="p114-identity-readout__row"><dt id="p114IdLabel2">生年月日</dt><dd id="p114IdVal2">—</dd></div>
+                <div class="p114-identity-readout__row"><dt id="p114IdLabel3">住所</dt><dd id="p114IdVal3">—</dd></div>
+                <div class="p114-identity-readout__row"><dt id="p114IdLabel4">電話番号</dt><dd id="p114IdVal4">—</dd></div>
+              </dl>
+              <a class="ktn-guide-link" id="p114IdEditLink" href="./kotennavi-p3-11.html">本人情報を変更する（クリエイター基本情報の編集） →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- gallery：責任者情報（本人確認）を都度入力・ギャラリー基本情報のご担当者とは別人の場合があるため、ギャラリー本体には保存せずこの申込ごとに収集する -->
+        <div class="p114-gallery-section">
+          <div class="p211-block">
+            <div class="p211-block__head">
+              <div class="p211-block__title">責任者情報（本人確認） <span class="ktn-sec-en">Responsible Person</span></div>
+            </div>
+            <div class="p211-block__body">
+              <p class="p211-help" style="margin-bottom:14px">作品代金・送料等の受け渡し、振込先口座に関する責任を負う方（代表者・経営者・個人事業主本人など）の情報をご入力ください。ギャラリー基本情報にご登録の「ご担当者」とは<strong>別の方でもかまいません</strong>。ここでのご入力内容にもとづき、事務局が本人確認を行います。</p>
+
+              <div class="p211-field">
+                <label class="p211-label" for="p114RespName">責任者お名前（フルネーム）<span class="ktn-req">必須</span></label>
+                <input class="p211-input" id="p114RespName" type="text" placeholder="例：佐藤 健一">
+                <p class="p211-help">戸籍・本人確認書類と一致する氏名を入力してください。</p>
+              </div>
+
+              <div class="p211-field">
+                <label class="p211-label" for="p114RespNameKana">フリガナ（全角カナ）<span class="ktn-req">必須</span></label>
+                <input class="p211-input" id="p114RespNameKana" type="text" placeholder="例：サトウ ケンイチ">
+              </div>
+
+              <div class="p211-field">
+                <label class="p211-label" for="p114RespRole">ギャラリーでのお立場<span class="ktn-req">必須</span></label>
+                <select class="p211-select" id="p114RespRole">
+                  <option value="">選択してください</option>
+                  <option>代表者・経営者</option>
+                  <option>役員</option>
+                  <option>個人事業主（本人）</option>
+                </select>
+              </div>
+
+              <div class="p211-field">
+                <label class="p211-label" for="p114CorpNumber">法人番号（法人の場合）</label>
+                <input class="p211-input" id="p114CorpNumber" type="text" inputmode="numeric" maxlength="13" placeholder="例：1234567890123" style="max-width:260px">
+                <p class="p211-help">国税庁の法人番号（13桁）をご入力ください。個人事業主として登録される場合は空欄のままで構いません。</p>
+              </div>
+
+              <div class="p211-field">
+                <label class="p211-label" for="p114RespBirth">生年月日<span class="ktn-req">必須</span></label>
+                <input class="p211-input" id="p114RespBirth" type="date" style="max-width:220px">
+              </div>
+
+              <div class="p211-field">
+                <label class="p211-label" for="p114RespZip">郵便番号<span class="ktn-req">必須</span></label>
+                <input class="p211-input" id="p114RespZip" type="text" inputmode="numeric" maxlength="8" placeholder="150-0002" style="max-width:180px">
+              </div>
+
+              <div class="p211-row">
+                <div class="p211-field">
+                  <label class="p211-label" for="p114RespPref">都道府県<span class="ktn-req">必須</span></label>
+                  <input class="p211-input" id="p114RespPref" type="text" placeholder="東京都">
+                </div>
+                <div class="p211-field">
+                  <label class="p211-label" for="p114RespCity">市区町村<span class="ktn-req">必須</span></label>
+                  <input class="p211-input" id="p114RespCity" type="text" placeholder="渋谷区渋谷">
+                </div>
+              </div>
+
+              <div class="p211-field">
+                <label class="p211-label" for="p114RespAddr">番地・建物名<span class="ktn-req">必須</span></label>
+                <input class="p211-input" id="p114RespAddr" type="text" placeholder="2-3-4 SOILビル">
+              </div>
+
+              <div class="p211-field">
+                <label class="p211-label" for="p114RespTel">電話番号<span class="ktn-req">必須</span></label>
+                <input class="p211-input" id="p114RespTel" type="tel" inputmode="tel" placeholder="03-1234-5678" style="max-width:260px">
+                <p class="p211-help">日中に連絡のつく番号を入力してください。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ━━ 共通：事業者番号（インボイス制度・任意） ━━ -->
         <div class="p211-block">
           <div class="p211-block__head">
-            <div class="p211-block__title">登録済みの本人情報 <span class="ktn-sec-en">Your Identity</span></div>
+            <div class="p211-block__title">事業者番号（インボイス制度） <span class="ktn-sec-en">Invoice Registration</span></div>
           </div>
           <div class="p211-block__body">
-            <p class="p211-help" id="p114IdIntro" style="margin-bottom:14px">クリエイター基本情報に登録されている本人情報を表示しています。この内容で本人確認を行いますので、最新の内容かご確認ください。変更はクリエイター基本情報の編集から行えます（本人情報はクリエイター基本情報で一元管理されます）。</p>
-            <dl class="p114-identity-readout">
-              <div class="p114-identity-readout__row"><dt id="p114IdLabel1">本名</dt><dd id="p114IdVal1">—</dd></div>
-              <div class="p114-identity-readout__row"><dt id="p114IdLabel2">生年月日</dt><dd id="p114IdVal2">—</dd></div>
-              <div class="p114-identity-readout__row"><dt id="p114IdLabel3">住所</dt><dd id="p114IdVal3">—</dd></div>
-              <div class="p114-identity-readout__row"><dt id="p114IdLabel4">電話番号</dt><dd id="p114IdVal4">—</dd></div>
-            </dl>
-            <a class="ktn-guide-link" id="p114IdEditLink" href="./kotennavi-p3-11.html">本人情報を変更する（クリエイター基本情報の編集） →</a>
+            <p class="p211-help" style="margin-bottom:14px">適格請求書発行事業者として登録されている場合は、登録番号をご入力ください。未登録の方・免税事業者の方は空欄のままで構いません（後からのご登録・変更も可能です）。</p>
+            <div class="p211-field">
+              <label class="p211-label" for="p114InvoiceNumber">適格請求書発行事業者登録番号（任意）</label>
+              <input class="p211-input" id="p114InvoiceNumber" type="text" placeholder="例：T1234567890123" maxlength="14" style="max-width:260px">
+              <p class="p211-help">「T」から始まる13桁の番号です（国税庁 適格請求書発行事業者公表サイトでご確認いただけます）。</p>
+            </div>
           </div>
         </div>
 
@@ -301,7 +466,7 @@
             <div class="p211-block__title">本人確認書類の添付 <span class="ktn-sec-en">ID Document</span></div>
           </div>
           <div class="p211-block__body">
-            <p class="p211-help" style="margin-bottom:14px">顔写真付きで、氏名・住所・生年月日が記載された本人確認書類の画像をご提出ください。ご利用いただけるのは<strong>運転免許証</strong>・<strong>マイナンバーカード（個人番号カード）</strong>です。それ以外の書類をご利用の場合はお問合わせください。上記のご登録情報（特に氏名・住所）と突合のうえ、事務局が確認します。<strong>ご提出いただいた画像は本人確認の完了後に削除し、保存しません。</strong></p>
+            <p class="p211-help" style="margin-bottom:14px"><strong>本名・顔写真・住所・生年月日</strong>が確認できる本人確認書類の画像をご提出ください。事務局の目視確認のため、特定の書類に限定していません。1点で4項目すべてを確認できる書類（運転免許証・マイナンバーカード〔個人番号カード〕・パスポート・在留カード／特別永住者証明書・運転経歴証明書など）は1点のご提出で構いません。顔写真や住所の記載がない書類（健康保険証など）をご利用の場合は、住所・生年月日が確認できる書類（住民票の写しなど）とあわせて<strong>複数点を組み合わせてご提出</strong>ください。上記のご登録情報（特に氏名・住所）と突合のうえ、事務局が確認します。<strong>ご提出いただいた画像は本人確認の完了後に削除し、保存しません。</strong></p>
             <div class="p211-field">
               <label class="p211-label">本人確認書類の画像（複数添付可）<span class="ktn-req">必須</span></label>
               <div class="p211-img-list" id="p114IdDocList"></div>
@@ -311,7 +476,7 @@
                 <p class="p211-img-count" id="p114IdDocCount">まだ添付されていません</p>
                 <input type="file" id="p114IdDocFile" accept="image/*,application/pdf" multiple hidden>
               </div>
-              <p class="p211-help">運転免許証は表・裏の両面、マイナンバーカードは表面（顔写真の面）を撮影してください。<strong>一度にまとめて選んでも、あとから1枚ずつ追加してもかまいません。</strong>氏名・住所・生年月日が鮮明に読み取れる画像を添付してください。</p>
+              <p class="p211-help">両面の記載を要する書類（運転免許証等）は表・裏を、片面のみの書類（マイナンバーカード等）は本人確認に必要な面を撮影してください。<strong>一度にまとめて選んでも、あとから1枚ずつ追加してもかまいません。</strong>氏名・住所・生年月日が鮮明に読み取れる画像を添付してください。</p>
             </div>
           </div>
         </div>
@@ -327,30 +492,31 @@
           </div>
           <div class="p211-block__body">
 
-            <!-- ロール別承諾事項（body.p114-role-gallery で表示切替） -->
+            <!-- ロール別承諾事項（body.p114-role-gallery で表示切替）。価格・梱包費／会場優先／購入確定後キャンセルの個別取引に関する事項は
+                 出品作業の直前（LIAISON+展示・販売設定＝p2-12-1）へ移動済み。ここは①個展なびによる個人情報の取扱いへの同意、②購入者への開示（特商法）同意の2点 -->
             <div class="p114-creator-section">
               <div class="p114-checklist">
                 <label class="p114-checklist__item">
-                  <input type="checkbox" name="creator-agree" id="ca1" onchange="p114UpdateSubmit()">
-                  <span>販売価格・梱包費・送料は出品者が設定・負担し、購入確定後に変更しないことを理解しました</span>
-                </label>
-                <label class="p114-checklist__item">
-                  <input type="checkbox" name="creator-agree" id="ca2" onchange="p114UpdateSubmit()">
-                  <span>会場での販売が優先され、会場で売れた場合は「会場売約済」として処理されることを理解しました</span>
-                </label>
-                <label class="p114-checklist__item">
-                  <input type="checkbox" name="creator-agree" id="ca3" onchange="p114UpdateSubmit()">
-                  <span>購入確定後のキャンセルには原則として応じられないことを理解しました（やむを得ない場合はサポートへ連絡）</span>
+                  <input type="checkbox" name="creator-agree" id="ca5" onchange="p114UpdateSubmit()">
+                  <span>本人確認のためにご提供いただく氏名・住所・生年月日・本人確認書類の画像等の個人情報を、個展なび事務局が本人確認・審査・ご連絡の目的で取扱うことに同意します</span>
                 </label>
                 <label class="p114-checklist__item">
                   <input type="checkbox" name="creator-agree" id="ca4" onchange="p114UpdateSubmit()">
                   <span>特定商取引法に基づき、購入者から請求があった場合に氏名・住所・電話番号を開示することに同意します</span>
+                </label>
+                <label class="p114-checklist__item">
+                  <input type="checkbox" name="creator-agree" id="ca6" onchange="p114UpdateSubmit()">
+                  <span>購入者への領収書等の証憑書類が、ご登録の氏名・登録番号（インボイス制度・登録がある場合）等をもとに、あなた自身の名義で作成・発行されることに同意します</span>
                 </label>
               </div>
             </div>
 
             <div class="p114-gallery-section">
               <div class="p114-checklist">
+                <label class="p114-checklist__item">
+                  <input type="checkbox" name="gallery-agree" id="ga5" onchange="p114UpdateSubmit()">
+                  <span>本人確認のためにご提供いただく責任者の氏名・住所・生年月日・本人確認書類の画像等の個人情報を、個展なび事務局が本人確認・審査・ご連絡の目的で取扱うことに同意します</span>
+                </label>
                 <label class="p114-checklist__item">
                   <input type="checkbox" name="gallery-agree" id="ga1" onchange="p114UpdateSubmit()">
                   <span>出品作品の登録は、展覧会が個展なびで確認・公開された後に、当該展覧会の出展クリエイターの作品に限って行えることを理解しました</span>
@@ -367,6 +533,10 @@
                   <input type="checkbox" name="gallery-agree" id="ga4" onchange="p114UpdateSubmit()">
                   <span>特定商取引法に基づき、購入者から請求があった場合に事業者名・住所・電話番号を開示することに同意します</span>
                 </label>
+                <label class="p114-checklist__item">
+                  <input type="checkbox" name="gallery-agree" id="ga6" onchange="p114UpdateSubmit()">
+                  <span>購入者への領収書等の証憑書類が、ご登録の事業者名・登録番号（インボイス制度・登録がある場合）等をもとに、あなた自身の名義で作成・発行されることに同意します</span>
+                </label>
               </div>
             </div>
 
@@ -378,13 +548,17 @@
               本サービスは、実スペースの展覧会と連動したオンライン作品販売機能を提供します。出品者は本サービスを通じて申込の受付・購入プロセスの管理ができます。</p>
               <p>第3条（サービス利用料）<br>
               本サービスのサービス利用料は、作品が売れたとき（取引成立時）に、作品の販売価格に送料・梱包費を加えた合計金額（税込）に対して計算します。料率は作品の販売価格が29,999円以下は10%、30,000円以上は8%とし、決定した料率を前記合計金額に適用します。決済手数料は本サービス利用料に含まれます。売上金額の振込は、あらかじめ定められた振込日に行います。</p>
-              <p>第4条（特定商取引法に基づく表示）<br>
+              <p>第4条（決済代行サービスの利用）<br>
+              本サービスの決済処理・売上金の管理及び振込は、個展なびが提携する決済代行会社（Stripe, Inc.及びその関連会社）を通じて行います。出品者は、本サービスの利用にあたり決済代行会社所定の手続き（利用規約への同意、本人確認等）に応じるものとし、個展なびは連携に必要な範囲で出品者の登録情報を決済代行会社に提供します。</p>
+              <p>第5条（特定商取引法に基づく表示）<br>
               本サービスを通じて販売を行う場合、出品者は特定商取引法に基づき、購入者から請求があったときは遅滞なく氏名または屋号・住所・電話番号・メールアドレスを開示することに同意するものとします（常時公開されるものではありません）。</p>
-              <p>第5条（会場優先販売）<br>
+              <p>第6条（証憑書類の作成・発行）<br>
+              出品者は、本サービスを通じた取引について購入者へ交付する領収書その他の証憑書類が、個展なびのシステムにより、出品者がご登録の氏名または屋号・登録番号（適格請求書発行事業者登録番号を保有する場合）その他出品者自身の情報に基づき作成・発行されることに同意するものとします。当該書類は出品者本人の名義で発行されるものであり、個展なびが自己の名義で代行発行するものではありません。</p>
+              <p>第7条（会場優先販売）<br>
               本サービスの販売は実スペースでの展覧会開催と連動します。展覧会会場での販売が優先されます。会場で売れた作品は、出品者が「会場売約済」に設定します。</p>
-              <p>第6条（禁止事項）<br>
+              <p>第8条（禁止事項）<br>
               出品者は以下の行為を行ってはなりません：虚偽の商品説明、購入確定後の一方的なキャンセル、第三者への権利の帰属する作品の無断出品など。</p>
-              <p>第7条（免責事項）<br>
+              <p>第9条（免責事項）<br>
               個展なびは、本サービスを通じた取引の成立、作品の品質、配送トラブル等について責任を負いません。ただし、サービスの適切な運営については誠実に対応します。</p>
               <p>付則：本規約は2026年4月1日より施行します。</p>
             </div>
@@ -403,9 +577,84 @@
           </button>
           <p class="p114-submit-note">
             申込後、通常3〜5営業日以内に審査結果をメールでお知らせします。<br>
-            審査に通過すると LIAISON+ 機能が有効になります。
+            審査を通過すると、続きのお手続き（振込先口座の登録・Stripeとの連携）のご案内をメールでお送りします。
           </p>
         </div>
+
+        </div>
+        <!-- /Step1：本人確認入力→申込 -->
+
+        <!-- ━━━━━ Step2：Stripeでの口座登録（振込先口座情報はStripe社のホスト画面で直接入力・個展なびは保持しない。個展なび独自の本人確認〔Step1〕とは別の手続き） ━━━━━ -->
+        <div id="p114Step2Form" hidden>
+
+          <div class="p114-section-head">
+            <span class="p114-section-head__title">Stripeでの口座登録</span>
+          </div>
+
+          <div class="p211-block" id="p114BankBlock">
+            <div class="p211-block__head">
+              <div class="p211-block__title">Stripeでのお手続き <span class="p211-block__title-en">STRIPE ONBOARDING</span></div>
+            </div>
+            <div class="p211-block__body">
+              <p class="p211-help" style="margin-bottom:14px">売上金の振込先口座は、決済パートナーである<strong>Stripe社</strong>の画面で直接ご登録いただきます（個展なびは口座番号等をお預かりしません）。下のボタンを押すとStripe社の画面へ移動しますので、案内に沿ってご登録ください。入力後は自動的にこの画面に戻ります。</p>
+
+              <p class="p211-help" style="margin-bottom:14px"><strong>Stripeの画面では以下の情報の入力を求められます。あらかじめご準備ください。</strong><br>
+              ・振込先口座情報（金融機関名・支店名・口座番号・口座名義）<br>
+              ・生年月日・住所・電話番号などの本人情報<br>
+              ・本人確認書類の画像（運転免許証・マイナンバーカード等）<br>
+              <span class="p114-gallery-section">・法人番号などの事業者情報（法人の場合）<br></span>
+              ※これは決済のためにStripe社が求める情報で、個展なびが先ほどお預かりした本人確認情報（Step1）とは別の手続きです。</p>
+
+              <div class="p114-checklist" style="margin:16px 0 4px">
+                <label class="p114-checklist__item">
+                  <input type="checkbox" id="p114StripeConsent" onchange="p114UpdateStep2Submit()">
+                  <span>Stripe社の画面へ移動し、同社のサービス（本人確認・口座確認・送金）を利用することに同意します</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="p114-submit-wrap" id="p114Step2SubmitWrap">
+            <button class="p114-submit-btn ktn-op-btn ktn-op-btn--primary ktn-op-btn--lg" id="p114Step2SubmitBtn" disabled onclick="p114Step2Submit()">
+              Stripeで口座情報を登録する
+            </button>
+            <p class="p114-submit-note">
+              ボタンを押すとStripe社の画面へ移動します。<br>
+              登録完了後の審査結果はメールでご連絡します。
+            </p>
+          </div>
+
+        </div>
+        <!-- /Step2：Stripeでの口座登録 -->
+
+        <!-- ━━━━━ 承認済：お申込み内容のご確認（本人確認情報は除く。ギャラリーのみ責任者の氏名・フリガナを表示） ━━━━━ -->
+        <div id="p114ApprovedReview" hidden>
+
+          <div class="p114-section-head">
+            <span class="p114-section-head__title">お申込み内容のご確認</span>
+          </div>
+
+          <div class="p211-block">
+            <div class="p211-block__head">
+              <div class="p211-block__title">ご登録内容 <span class="ktn-sec-en">Your Application</span></div>
+            </div>
+            <div class="p211-block__body">
+              <p class="p211-help" style="margin-bottom:14px">お申込み時にご登録いただいた内容です。本人確認情報（本名・生年月日・住所・電話番号・本人確認書類）は表示していません。内容の確認後、下のボタンからLIAISON+コンソールへお進みください。</p>
+              <dl class="p114-identity-readout" id="p114ReviewList"></dl>
+            </div>
+          </div>
+
+          <div class="p114-submit-wrap" id="p114ConfirmWrap">
+            <button class="p114-submit-btn ktn-op-btn ktn-op-btn--primary ktn-op-btn--lg" id="p114ConfirmBtn" onclick="p114ConfirmApproved()">
+              内容を確認しました
+            </button>
+            <p class="p114-submit-note">
+              確認後、LIAISON+コンソールへ移動します。
+            </p>
+          </div>
+
+        </div>
+        <!-- /承認済：お申込み内容のご確認 -->
 
       </div>
     </div>
@@ -427,9 +676,8 @@ var P114_CTX = {
   creator: { media: 'ktn-mgmt-context__media--creator', bg: 'linear-gradient(135deg,#7ab4cc,#4a8099)', char: 'T', badgeCls: 'cb-creator', badgeLabel: 'CREATOR', name: '田中 透',          meta: '絵画・現代美術 · 東京', href: 'kotennavi-p3.html', view: 'クリエイターページへ →',
     id: [['本名','田中 透（タナカ トオル）'],['生年月日','1988年5月14日'],['住所','〒150-0001 東京都渋谷区神宮前1-2-3 ○○ビル 4F'],['電話番号','090-1234-5678']],
     editHref: 'kotennavi-p3-11.html', term: 'クリエイター基本情報' },
-  gallery: { media: 'ktn-mgmt-context__media--gallery', bg: 'linear-gradient(135deg,#d8bfa4,#a8794f)', char: 'G', badgeCls: 'cb-gallery', badgeLabel: 'GALLERY', name: 'Gallery SOIL 渋谷', meta: '現代美術 · 渋谷',      href: 'kotennavi-p4.html', view: 'ギャラリーページへ →',
-    id: [['事業者名','Gallery SOIL 渋谷'],['代表者','佐藤 健一（サトウ ケンイチ）'],['所在地','〒150-0002 東京都渋谷区渋谷2-3-4 SOILビル'],['電話番号','03-1234-5678']],
-    editHref: 'kotennavi-p4-11.html', term: 'ギャラリー基本情報' }
+  gallery: { media: 'ktn-mgmt-context__media--gallery', bg: 'linear-gradient(135deg,#d8bfa4,#a8794f)', char: 'G', badgeCls: 'cb-gallery', badgeLabel: 'GALLERY', name: 'Gallery SOIL 渋谷', meta: '現代美術 · 渋谷',      href: 'kotennavi-p4.html', view: 'ギャラリーページへ →' }
+  /* gallery は責任者情報を読み取り専用で引き継がず、申込のたびに .p114-gallery-section 内のフォームへ都度入力する（ご担当者と責任者が別人の場合があるため。2026-07-26確定） */
 };
 function p114SyncContext(r) {
   var c = P114_CTX[r] || P114_CTX.creator;
@@ -446,17 +694,19 @@ function p114SyncContext(r) {
   document.getElementById('p114CtxMeta').textContent = c.meta;
   var view = document.getElementById('p114CtxView');
   view.textContent = c.view; view.href = c.href;
-  // 本人確認セクションの読み取り情報＋編集リンク（ロール別）
-  for (var i = 0; i < 4; i++) {
-    var lb = document.getElementById('p114IdLabel' + (i + 1));
-    var vl = document.getElementById('p114IdVal' + (i + 1));
-    if (lb && c.id[i]) lb.textContent = c.id[i][0];
-    if (vl && c.id[i]) vl.textContent = c.id[i][1];
+  // 本人確認セクションの読み取り情報＋編集リンク（creatorのみ・galleryは.p114-gallery-sectionへの都度入力のためスキップ）
+  if (c.id) {
+    for (var i = 0; i < 4; i++) {
+      var lb = document.getElementById('p114IdLabel' + (i + 1));
+      var vl = document.getElementById('p114IdVal' + (i + 1));
+      if (lb && c.id[i]) lb.textContent = c.id[i][0];
+      if (vl && c.id[i]) vl.textContent = c.id[i][1];
+    }
+    var edit = document.getElementById('p114IdEditLink');
+    if (edit) { edit.href = './' + c.editHref; edit.textContent = '本人情報を変更する（' + c.term + 'の編集） →'; }
+    var intro = document.getElementById('p114IdIntro');
+    if (intro) intro.textContent = c.term + 'に登録されている本人情報を表示しています。この内容で本人確認を行いますので、最新の内容かご確認ください。変更は' + c.term + 'の編集から行えます（本人情報は' + c.term + 'で一元管理されます）。';
   }
-  var edit = document.getElementById('p114IdEditLink');
-  if (edit) { edit.href = './' + c.editHref; edit.textContent = '本人情報を変更する（' + c.term + 'の編集） →'; }
-  var intro = document.getElementById('p114IdIntro');
-  if (intro) intro.textContent = c.term + 'に登録されている本人情報を表示しています。この内容で本人確認を行いますので、最新の内容かご確認ください。変更は' + c.term + 'の編集から行えます（本人情報は' + c.term + 'で一元管理されます）。';
 }
 
 function setR(r, btn) {
@@ -472,29 +722,108 @@ function setR(r, btn) {
   document.getElementById('p114RoleNoticeGallery').hidden = !isGallery;
   p114SyncContext(r);
   p114UpdateSubmit();
+  p114SyncApprovedReview(r);
 
   if (typeof window.ktnRender === 'function') window.ktnRender();
+}
+
+/* 承認済：お申込み内容のご確認（本人確認情報〔本名・生年月日・住所・電話番号・本人確認書類〕は除く。
+   ギャラリーのみ責任者情報のうち氏名・フリガナだけを再掲する＝それ以外〔立場・法人番号・生年月日・住所・電話番号〕は本人確認情報のため除外） */
+var P114_REVIEW = {
+  creator: [
+    ['販売予定作品の価格帯（目安）', '¥50,000 〜 ¥100,000'],
+    ['LIAISON+を利用したい理由・目的', 'オンラインで購入希望者を把握したい'],
+    ['作品の発送地', '東京都']
+  ],
+  gallery: [
+    ['LIAISON+を利用予定の展覧会規模（年間）', '3〜5回'],
+    ['LIAISON+を利用したい理由・目的', '来場できない遠方のコレクターに対応したい'],
+    ['作品の発送地', '東京都'],
+    ['責任者お名前', '鈴木 一郎'],
+    ['責任者フリガナ', 'スズキ イチロウ']
+  ]
+};
+function p114SyncApprovedReview(r) {
+  var list = document.getElementById('p114ReviewList');
+  if (!list) return;
+  var rows = P114_REVIEW[r] || P114_REVIEW.creator;
+  list.innerHTML = rows.map(function (row) {
+    return '<div class="p114-identity-readout__row"><dt>' + row[0] + '</dt><dd>' + row[1] + '</dd></div>';
+  }).join('');
+}
+function p114ConfirmApproved() {
+  var r = (window.ktnState && window.ktnState.role === 'gallery') ? 'gallery' : 'creator';
+  location.href = './' + (r === 'gallery' ? 'kotennavi-p4-15.html' : 'kotennavi-p3-15.html');
+}
+
+/* ── ステップインジケーター：demoモード→4ノードの現在地反映（共通コンポーネント .ktn-steps/.ktn-step を使用） ── */
+var P114_STEP_CFG = {
+  form:          ['seller', 'future', 'future', 'future'],
+  pending:       ['done',   'seller', 'future', 'future'],
+  step2:         ['done',   'done',   'seller', 'future'],
+  stripePending: ['done',   'done',   'done',   'seller'],
+  approved:      ['done',   'done',   'done',   'done']
+};
+function p114UpdateSteps(mode) {
+  var cfg = P114_STEP_CFG[mode] || P114_STEP_CFG.form;
+  for (var i = 1; i <= 4; i++) {
+    var cls = cfg[i - 1];
+    var step = document.getElementById('p114Step' + i);
+    if (!step) continue;
+    step.className = 'ktn-step ktn-step--' + cls;
+    var node = step.querySelector('.ktn-step__node');
+    if (node) node.textContent = cls === 'done' ? '✓' : i;
+    if (i < 4) {
+      var conn = document.getElementById('p114Conn' + i);
+      if (conn) conn.className = 'ktn-steps__conn' + (cls === 'done' ? ' ktn-steps__conn--done' : '');
+    }
+  }
+}
+
+/* Step1審査中＝送信済み内容を表示のみとし、編集不可にする（フォーム欄をdisabled化＋添付・チェック項目の操作を抑止） */
+function p114SetStep1Readonly(readonly) {
+  var form = document.getElementById('p114Step1Form');
+  if (!form) return;
+  form.classList.toggle('p114-readonly', readonly);
+  var els = form.querySelectorAll('input, select, textarea');
+  for (var i = 0; i < els.length; i++) els[i].disabled = readonly;
 }
 
 function setDemoMode(mode) {
   p114CurrentMode = mode;
   var isForm = (mode === 'form');
   var isPending = (mode === 'pending');
+  var isStep2 = (mode === 'step2');
+  var isStripePending = (mode === 'stripePending');
   var isApproved = (mode === 'approved');
+  var isStep1Phase = (isForm || isPending);
+  var isStep2Phase = (isStep2 || isStripePending);
 
   document.getElementById('p114PendingBanner').hidden = !isPending;
+  document.getElementById('p114Step2Banner').hidden = !isStep2;
+  document.getElementById('p114StripePendingBanner').hidden = !isStripePending;
   document.getElementById('p114ApprovedBanner').hidden = !isApproved;
-  document.getElementById('p114AboutZone').hidden = isApproved;
-  document.getElementById('p114AboutGuide').hidden = isApproved;
-  document.getElementById('p114Index').hidden = isApproved;
+  p114UpdateSteps(mode);
+
+  /* リエゾンプラスとは／よくある質問は常時表示・Step1審査中以降は折りたたみ（<details>のopenで制御。クリックで開閉可） */
+  document.getElementById('p114AboutDetails').open = isForm;
+  document.getElementById('p114FaqDetails').open = isForm;
+
+  document.getElementById('p114Step1Form').hidden = !isStep1Phase;
+  document.getElementById('p114Step2Form').hidden = !isStep2Phase;
   document.getElementById('p114SubmitWrap').hidden = !isForm;
+  document.getElementById('p114Step2SubmitWrap').hidden = !isStep2;
+  document.getElementById('p114ApprovedReview').hidden = !isApproved;
+  p114SetStep1Readonly(isPending);
 
   ['p114CreatorSection', 'p114GallerySection'].forEach(function(id) {
     var el = document.getElementById(id);
     if (el) el.style.opacity = isForm ? '' : '0.5';
   });
+  var step2Form = document.getElementById('p114Step2Form');
+  if (step2Form) step2Form.style.opacity = isStripePending ? '0.5' : '';
 
-  ['dbarForm','dbarPending','dbarApproved'].forEach(function(id) {
+  ['dbarForm','dbarPending','dbarStep2','dbarStripePending','dbarApproved'].forEach(function(id) {
     document.getElementById(id).classList.remove('on');
   });
   document.getElementById('dbar' + mode.charAt(0).toUpperCase() + mode.slice(1)).classList.add('on');
@@ -511,13 +840,26 @@ function p114UpdateSubmit() {
 function p114Submit() {
   KTN.submitDone({
     title: 'リエゾンプラス機能のお申込みを受け付けました',
-    message: '個展なび事務局にて審査のうえ、通常3〜5営業日以内に<br>審査結果をメールでご連絡します。',
+    message: '個展なび事務局にて本人確認の審査のうえ、通常3〜5営業日以内に<br>続きのお手続き（振込先口座の登録・Stripeとの連携）のご案内をメールでお送りします。',
     action: { label: 'トップページへ', href: './kotennavi-p1.html' }
   });
 }
 
+function p114UpdateStep2Submit() {
+  var consent = document.getElementById('p114StripeConsent').checked;
+  document.getElementById('p114Step2SubmitBtn').disabled = !consent;
+}
+
+function p114Step2Submit() {
+  /* 本番ではStripeのHosted Onboarding（Account Links）へリダイレクトし、完了後にこの画面へ戻る。
+     デモではp3-17のsetStripeConnと同様、状態切替＋トーストで往復を模擬する。 */
+  setDemoMode('stripePending');
+  if (typeof KTN !== 'undefined' && KTN.toast) KTN.toast('Stripeの画面へ移動します（デモ）');
+}
+
 KTN.init({ page: 'p11-4', role: 'creator' });
 p114SyncContext('creator');
+p114SyncApprovedReview('creator');
 
 // 本人確認書類アップローダー（追加式＋サムネイル・デモ）
 (function p114InitIdUploader() {
