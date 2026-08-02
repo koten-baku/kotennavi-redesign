@@ -147,25 +147,25 @@
 
             <div class="p211-field">
               <label class="p211-label">ギャラリー名（表示名）<span class="ktn-req">必須</span></label>
-              <input class="p211-input" type="text" placeholder="例：Gallery SOIL 渋谷">
+              <input class="p211-input" id="p113Name" type="text" placeholder="例：Gallery SOIL 渋谷">
               <p class="p211-help">ギャラリーページや展覧会情報に表示される名称です。</p>
             </div>
 
             <div class="p211-field">
               <label class="p211-label">ギャラリー名（全角カナ）<span class="ktn-req">必須</span></label>
-              <input class="p211-input" type="text" placeholder="例：ギャラリー ソイル シブヤ">
+              <input class="p211-input" id="p113Kana" type="text" placeholder="例：ギャラリー ソイル シブヤ">
               <p class="p211-help">表示名の読み仮名です。並び替え・検索に使用します。</p>
             </div>
 
             <div class="p211-field">
               <label class="p211-label">ギャラリー名（英語表記）</label>
-              <input class="p211-input" type="text" placeholder="例：Gallery SOIL Shibuya">
+              <input class="p211-input" id="p113NameEn" type="text" placeholder="例：Gallery SOIL Shibuya">
               <p class="p211-help">英語ページ・海外向け表示に使用します（任意）。</p>
             </div>
 
             <div class="p211-field">
               <label class="p211-label">主な取扱いジャンル<span class="ktn-req">必須</span></label>
-              <select class="p211-select">
+              <select class="p211-select" id="p113Genre">
                 <option value="">選択してください</option>
                 <option>アート</option>
                 <option>クラフト</option>
@@ -188,34 +188,34 @@
 
             <div class="p211-field">
               <label class="p211-label">郵便番号<span class="ktn-req">必須</span></label>
-              <input class="p211-input" type="text" placeholder="150-0001" inputmode="numeric" maxlength="8" style="max-width:180px">
+              <input class="p211-input" id="p113Zip" type="text" placeholder="150-0001" inputmode="numeric" maxlength="8" style="max-width:180px">
             </div>
 
             <div class="p114-bank-row" style="margin-top:12px">
               <div class="p211-field">
                 <label class="p211-label">都道府県<span class="ktn-req">必須</span></label>
-                <input class="p211-input" type="text" placeholder="東京都">
+                <input class="p211-input" id="p113Pref" type="text" placeholder="東京都">
               </div>
               <div class="p211-field">
                 <label class="p211-label">市区町村<span class="ktn-req">必須</span></label>
-                <input class="p211-input" type="text" placeholder="渋谷区松濤">
+                <input class="p211-input" id="p113City" type="text" placeholder="渋谷区松濤">
               </div>
             </div>
 
             <div class="p211-field" style="margin-top:12px">
               <label class="p211-label">番地・建物名<span class="ktn-req">必須</span></label>
-              <input class="p211-input" type="text" placeholder="1-2-3 ○○ビル 1F">
+              <input class="p211-input" id="p113Addr" type="text" placeholder="1-2-3 ○○ビル 1F">
               <p class="p211-help">来場者に公開される住所です。</p>
             </div>
 
             <div class="p114-bank-row" style="margin-top:12px">
               <div class="p211-field">
                 <label class="p211-label">電話番号<span class="ktn-req">必須</span></label>
-                <input class="p211-input" type="tel" placeholder="03-1234-5678" inputmode="tel">
+                <input class="p211-input" id="p113Tel" type="tel" placeholder="03-1234-5678" inputmode="tel">
               </div>
               <div class="p211-field">
                 <label class="p211-label">メールアドレス<span class="ktn-req">必須</span></label>
-                <input class="p211-input" type="email" placeholder="info@example.com">
+                <input class="p211-input" id="p113Email" type="email" placeholder="info@example.com">
               </div>
             </div>
             <p class="p211-help">来場者からの問合せ先として公開されます。</p>
@@ -224,7 +224,7 @@
               <label class="p211-label">ホームページ・SNS</label>
               <div class="p211-repeat" id="p113LinkList">
                 <div class="p211-repeat__row p211-repeat__row--link">
-                  <select class="p211-select">
+                  <select class="p211-select" id="p113SnsType0">
                     <option value="instagram" selected>Instagram</option>
                     <option value="x">X（Twitter）</option>
                     <option value="facebook">Facebook</option>
@@ -232,7 +232,7 @@
                     <option value="website">公式サイト</option>
                     <option value="other">その他</option>
                   </select>
-                  <input class="p211-input" type="url" placeholder="https://instagram.com/...">
+                  <input class="p211-input" id="p113SnsUrl0" type="url" placeholder="https://instagram.com/...">
                   <button class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline p211-repeat__del" type="button" aria-label="削除">✕</button>
                 </div>
               </div>
@@ -261,18 +261,18 @@
 
             <div class="p211-field">
               <label class="p211-label">ご担当者お名前（フルネーム）<span class="ktn-req">必須</span></label>
-              <input class="p211-input" type="text" placeholder="例：鈴木 一郎">
+              <input class="p211-input" id="p113ContactName" type="text" placeholder="例：鈴木 一郎">
               <p class="p211-help">ギャラリーページ・展覧会情報に関するご連絡の際にお伺いする氏名です。</p>
             </div>
 
             <div class="p211-field">
               <label class="p211-label">ご担当者フリガナ（全角カナ）<span class="ktn-req">必須</span></label>
-              <input class="p211-input" type="text" placeholder="例：スズキ イチロウ">
+              <input class="p211-input" id="p113ContactKana" type="text" placeholder="例：スズキ イチロウ">
             </div>
 
             <div class="p211-field">
               <label class="p211-label">ギャラリーとのご関係<span class="ktn-req">必須</span></label>
-              <select class="p211-select">
+              <select class="p211-select" id="p113Relation">
                 <option value="">選択してください</option>
                 <option>オーナー・運営者</option>
                 <option>スタッフ</option>
@@ -283,13 +283,13 @@
 
             <div class="p211-field">
               <label class="p211-label">ご担当者の所属</label>
-              <input class="p211-input" type="text" placeholder="例：Gallery SOIL 渋谷 広報部">
+              <input class="p211-input" id="p113ContactDept" type="text" placeholder="例：Gallery SOIL 渋谷 広報部">
               <p class="p211-help">任意です。所属会社名・部署名など。</p>
             </div>
 
             <div class="p211-field">
               <label class="p211-label">ご担当者のタイトル</label>
-              <input class="p211-input" type="text" placeholder="例：ディレクター">
+              <input class="p211-input" id="p113ContactTitle" type="text" placeholder="例：ディレクター">
               <p class="p211-help">任意です。</p>
             </div>
 
@@ -308,7 +308,7 @@
           <div class="p211-block__body">
             <div class="p211-field">
               <label class="p211-label">すでに個展なびに掲載されているページ（任意）</label>
-              <input class="p211-input" type="text" placeholder="ページのURL、またはギャラリー名">
+              <input class="p211-input" id="p113ExistingPage" type="text" placeholder="ページのURL、またはギャラリー名">
               <p class="p211-help">クリエイターなどが投稿した展覧会情報から、ページがすでに作成されている場合があります。心当たりのあるページ（URLまたは名称）があればご記入ください。事務局で確認のうえ、そのページのオーナーを切り替え、これまでの展覧会情報を引き継ぎます。心当たりがなくても、事務局が名寄せして引き継げる場合があります（結果は機能付与完了メールでお知らせします）。</p>
             </div>
           </div>
@@ -321,7 +321,7 @@
           <div class="p211-block__body">
             <div class="p211-field">
               <label class="p211-label">事務局への連絡事項（任意）</label>
-              <textarea class="p211-textarea" rows="3" placeholder="例：主な取扱い作家、過去の主な展覧会歴、今後の展覧会の予定、活動を確認できる情報、その他伝えておきたいこと など"></textarea>
+              <textarea class="p211-textarea" id="p113Notes" rows="3" placeholder="例：主な取扱い作家、過去の主な展覧会歴、今後の展覧会の予定、活動を確認できる情報、その他伝えておきたいこと など"></textarea>
             </div>
           </div>
         </div>
@@ -403,7 +403,7 @@
           <button class="p114-submit-btn ktn-op-btn ktn-op-btn--primary ktn-op-btn--lg" id="p113SubmitBtn" disabled onclick="p113Submit()">
             ギャラリー機能を申込する
           </button>
-          <p class="p114-submit-note">
+          <p class="p114-submit-note" id="p113SubmitNote">
             お申込み後、個展なび事務局による確認・設定作業のため少々お時間をいただきます。<br>
             設定が完了しましたら、ギャラリー機能付与完了メールでお知らせします。
           </p>
@@ -420,18 +420,48 @@
 <script>
 var p113CurrentMode = 'form';
 
+/* ── 確認中／利用開始デモ：以前の申込内容（Gallery SOIL 渋谷デモペルソナ・p4-11と同一データ） ── */
+var P113_DEMO_VALUES = {
+  p113Name: 'Gallery SOIL 渋谷', p113Kana: 'ギャラリー ソイル シブヤ', p113NameEn: 'Gallery SOIL Shibuya', p113Genre: 'アート',
+  p113Zip: '150-0001', p113Pref: '東京都', p113City: '渋谷区松濤', p113Addr: '1-2-3 ○○ビル 1F',
+  p113Tel: '03-XXXX-XXXX', p113Email: 'info@soilgallery.jp',
+  p113SnsUrl0: 'https://instagram.com/soilgallery_shibuya',
+  p113ContactName: '鈴木 一郎', p113ContactKana: 'スズキ イチロウ', p113Relation: 'オーナー・運営者',
+  p113ContactDept: '', p113ContactTitle: '', p113ExistingPage: '', p113Notes: ''
+};
+
+function p113ApplyPriorInput(submitted) {
+  Object.keys(P113_DEMO_VALUES).forEach(function(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    if (submitted) el.value = P113_DEMO_VALUES[id];
+    el.disabled = submitted;
+  });
+  document.querySelectorAll('input[name="gallery-agree"], #p113TermsCheck').forEach(function(cb) {
+    if (submitted) cb.checked = true;
+    cb.disabled = submitted;
+  });
+}
+
 function setDemoMode(mode) {
   p113CurrentMode = mode;
   var isForm = (mode === 'form');
   var isPending = (mode === 'pending');
   var isApproved = (mode === 'approved');
+  var isSubmitted = isPending || isApproved;
 
   document.getElementById('p113PendingBanner').hidden = !isPending;
   document.getElementById('p113ApprovedBanner').hidden = !isApproved;
   document.getElementById('p113AboutZone').hidden = isApproved;
   document.getElementById('p113ServiceBanner').hidden = isApproved;
   document.getElementById('p113Index').hidden = isApproved;
-  document.getElementById('p113SubmitWrap').hidden = !isForm;
+
+  p113ApplyPriorInput(isSubmitted);
+  document.getElementById('p113SubmitBtn').disabled = isSubmitted || !p113AgreementsOk();
+  document.getElementById('p113SubmitNote').innerHTML = isSubmitted
+    ? 'この内容ですでにお申込みを受け付けています。内容の変更が必要な場合は、お問合わせフォームより個展なび事務局までご連絡ください。'
+    : 'お申込み後、個展なび事務局による確認・設定作業のため少々お時間をいただきます。<br>設定が完了しましたら、ギャラリー機能付与完了メールでお知らせします。';
+  if (isForm) document.getElementById('p113SaveError').hidden = true;
 
   ['dbarForm','dbarPending','dbarApproved'].forEach(function(id) {
     document.getElementById(id).classList.remove('on');
@@ -439,11 +469,16 @@ function setDemoMode(mode) {
   document.getElementById('dbar' + mode.charAt(0).toUpperCase() + mode.slice(1)).classList.add('on');
 }
 
-function p113UpdateSubmit() {
+function p113AgreementsOk() {
   var terms = document.getElementById('p113TermsCheck').checked;
   var acks = Array.prototype.slice.call(document.querySelectorAll('input[name="gallery-agree"]'));
   var allAck = acks.length > 0 && acks.every(function(c){ return c.checked; });
-  document.getElementById('p113SubmitBtn').disabled = !(terms && allAck);
+  return terms && allAck;
+}
+
+function p113UpdateSubmit() {
+  if (p113CurrentMode !== 'form') return;
+  document.getElementById('p113SubmitBtn').disabled = !p113AgreementsOk();
 }
 
 /* ── 必須項目チェック（.ktn-req マーカーの .p211-field を走査・共通 .ktn-form-error パネルに表示） ── */

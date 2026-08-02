@@ -882,9 +882,11 @@ const PAGES = {
   'p2-11': { n: '展覧会-新規/編集/クローン', bc: [['Top', '/'], ['展覧会', '/p10'], ['松田啓佑展［仮称］', '/p2'], ['展覧会を編集', null]] },
   'p2-12': { n: 'LIAISON 作品管理', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['LIAISON 作品管理', null]] },
   'p2-121': { n: 'LIAISON+ 作品管理', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['LIAISON+ 作品管理', null]] },
-  'p2-13': { n: '展覧会-広告作成', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['広告作成', null]] },
-  'p2-14': { n: '展覧会-修正依頼', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['修正依頼', null]] },
-  // 旧 'p2-15'「展覧会-報告」は全表示系共通の報告フォーム 'p60-13'「問題を報告する」に統合（2026-07-24）。
+  'p2-13': { n: '展覧会-記事管理', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['記事管理', null]] },
+  'p2-14': { n: '展覧会-インサイト', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['インサイト', null]] },
+  'p2-15': { n: '展覧会-広告作成', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['広告作成', null]] },
+  'p2-16': { n: '展覧会-修正依頼', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['修正依頼', null]] },
+  // 旧「展覧会-報告」は全表示系共通の報告フォーム 'p60-13'「問題を報告する」に統合（2026-07-24）。
   // P3 クリエイター
   'p3': { n: 'クリエイター', bc: [['Top', '/'], ['クリエイター', '/p10-2'], ['田中 透', null]] },
   'p3-1':  { n: '展覧会', bc: [['Top', '/'], ['クリエイター', '/p10-2'], ['田中 透', '/p3'], ['展覧会一覧', null]] },
@@ -897,6 +899,7 @@ const PAGES = {
   'p3-15': { n: 'クリエイター-リエゾンコンソール', bc: [['Top', '/'], ['クリエイター', '/p10-2'], ['田中 透', '/p3'], ['リエゾン+コンソール', null]] },
   'p3-16': { n: 'クリエイター-取引デスク', bc: [['Top', '/'], ['クリエイター', '/p10-2'], ['田中 透', '/p3'], ['取引デスク', null, 'lp']] },
   'p3-17': { n: 'クリエイター販売代金管理', bc: [['Top', '/'], ['クリエイター', '/p10-2'], ['田中 透', '/p3'], ['販売代金管理', null, 'lp']] },
+  'p3-19': { n: 'クリエイター-記事管理', bc: [['Top', '/'], ['クリエイター', '/p10-2'], ['田中 透', '/p3'], ['記事管理', null]] },
   // P4 ギャラリー
   'p4': { n: 'ギャラリー', bc: [['Top', '/'], ['ギャラリー', '/p10-3'], ['Gallery SOIL 渋谷', null]] },
   'p4-1': { n: 'ギャラリー-展覧会アーカイブ', bc: [['Top', '/'], ['ギャラリー', '/p10-3'], ['Gallery SOIL 渋谷', '/p4'], ['展覧会アーカイブ', null]] },
@@ -908,6 +911,7 @@ const PAGES = {
   'p4-15': { n: 'ギャラリー-リエゾンコンソール', bc: [['Top', '/'], ['ギャラリー', '/p10-3'], ['Gallery SOIL 渋谷', '/p4'], ['リエゾン+コンソール', null]] },
   'p4-16': { n: 'ギャラリー-取引デスク', bc: [['Top', '/'], ['ギャラリー', '/p10-3'], ['Gallery SOIL 渋谷', '/p4'], ['取引デスク', null, 'lp']] },
   'p4-17': { n: 'ギャラリー-販売代金管理', bc: [['Top', '/'], ['ギャラリー', '/p10-3'], ['Gallery SOIL 渋谷', '/p4'], ['販売代金管理', null, 'lp']] },
+  'p4-19': { n: 'ギャラリー-記事管理', bc: [['Top', '/'], ['ギャラリー', '/p10-3'], ['Gallery SOIL 渋谷', '/p4'], ['記事管理', null]] },
   // P5 ユーザー
   'p5': { n: 'ユーザー-展覧会カレンダー', bc: [['Top', '/'], ['山田花子 myページ', null]] },
   'p5-1': { n: 'ユーザー-ウオッチリスト', bc: [['Top', '/'], ['myページ', '/p5'], ['ウオッチリスト', null]] },
@@ -932,9 +936,10 @@ const PAGES = {
   'p6-12': { n: '作品-インサイト', bc: [['Top', '/'], ['作品', '/p10-1'], ['春の記憶 #3', '/p6'], ['インサイト', null]] },
   'p6-13': { n: '作品-問合せ', bc: [['Top', '/'], ['作品', '/p10-1'], ['春の記憶 #3', '/p6'], ['問合せ', null, 'l']] },
   'p6-14': { n: '作品-問合せへの回答', bc: [['Top', '/'], ['作品', '/p10-1'], ['春の記憶 #3', '/p6'], ['問合せへの回答', null, 'l']] },
+  'p6-15': { n: '作品-記事管理', bc: [['Top', '/'], ['作品', '/p10-1'], ['オノマトペの庭', '/p6'], ['記事管理', null]] },
   // P7 記事
-  'p7': { n: '記事', bc: [['Top', '/'], ['記事', '/p7-list'], ['オノマトペと絵画のあいだで', null]] },
-  'p7-11': { n: '記事-新規/編集/クローン', bc: [['Top', '/'], ['オノマトペと絵画のあいだで', '/p7'], ['編集', null]] },
+  'p7': { n: '記事', bc: [['Top', '/'], ['記事', '/p7-list'], ['『オノマトペの庭』制作について', null]] },
+  'p7-11': { n: '記事-新規/編集/クローン', bc: [['Top', '/'], ['『オノマトペの庭』制作について', '/p7'], ['編集', null]] },
   // P8 レビュー
   'p8': { n: 'レビュー', bc: [['Top', '/'], ['レビュー', '/p8-list'], ['あなたが知らないオノマトペ レビュー', null]] },
   'p8-11': { n: 'レビュー-編集', bc: [['Top', '/'], ['レビュー', '/p8-list'], ['編集', null]] },
@@ -1110,8 +1115,8 @@ function getActions(page, role) {
     return '';
   }
 
-  /* ── P2-12 インサイト / P2-13 広告 ── */
-  if (['p2-12', 'p2-121', 'p2-13'].includes(page)) {
+  /* ── P2-12 LIAISON作品管理 / P2-12-1 LIAISON+作品管理 ── */
+  if (['p2-12', 'p2-121'].includes(page)) {
     if (role === 'creator' || role === 'gallery') return owbtn('info', 'ガイド');
     if (role === 'admin') return owbtn('info', 'ガイド') + sep() + dd('管理者', ddi('info', '詳細情報'));
     return '';
@@ -1448,6 +1453,56 @@ KTN.init = function (opts) {
   }
 };
 
+
+/* ══════════════════════════════════
+   KTN.pagination — 管理一覧の共通ページング
+   （p3-14/p4-14/p3-19 等・件数が多い一覧の並べ替え・絞り込みと組合せて使う）
+══════════════════════════════════ */
+KTN.pagination = (function () {
+  /* 現在ページを中心に前後1ページ＋先頭/末尾を表示し、間は … で省略 */
+  function _pageList(cur, total) {
+    var list = [];
+    for (var i = 1; i <= total; i++) {
+      if (i === 1 || i === total || (i >= cur - 1 && i <= cur + 1)) list.push(i);
+    }
+    var out = [], prev = 0;
+    list.forEach(function (i) {
+      if (prev && i - prev > 1) out.push('…');
+      out.push(i);
+      prev = i;
+    });
+    return out;
+  }
+
+  function render(el, opts) {
+    if (!el) return;
+    var page = opts.page || 1;
+    var totalPages = Math.max(1, opts.totalPages || 1);
+    var onGoto = opts.onGoto || function () {};
+    if (totalPages <= 1) { el.innerHTML = ''; el.hidden = true; return; }
+    el.hidden = false;
+    var html = '<button type="button" class="ktn-pagination__btn ktn-pagination__btn--prev"' +
+      (page <= 1 ? ' disabled' : '') + ' aria-label="前のページ">‹</button>';
+    _pageList(page, totalPages).forEach(function (p) {
+      html += (p === '…')
+        ? '<span class="ktn-pagination__ellipsis">…</span>'
+        : '<button type="button" class="ktn-pagination__btn' + (p === page ? ' is-active' : '') +
+          '" data-page="' + p + '"' + (p === page ? ' aria-current="page"' : '') + '>' + p + '</button>';
+    });
+    html += '<button type="button" class="ktn-pagination__btn ktn-pagination__btn--next"' +
+      (page >= totalPages ? ' disabled' : '') + ' aria-label="次のページ">›</button>';
+    el.innerHTML = html;
+    el.querySelectorAll('.ktn-pagination__btn[data-page]').forEach(function (btn) {
+      btn.addEventListener('click', function () { onGoto(parseInt(btn.dataset.page, 10)); });
+    });
+    var prevBtn = el.querySelector('.ktn-pagination__btn--prev');
+    var nextBtn = el.querySelector('.ktn-pagination__btn--next');
+    if (prevBtn) prevBtn.addEventListener('click', function () { if (page > 1) onGoto(page - 1); });
+    if (nextBtn) nextBtn.addEventListener('click', function () { if (page < totalPages) onGoto(page + 1); });
+  }
+
+  return { render: render };
+}());
 
 /* ══════════════════════════════════
    チェックイン・レビュー モーダル
@@ -1992,14 +2047,28 @@ KTN.cta = (function () {
     var lead = document.createElement('div');
     lead.className = 'p2-action-widget__lead';
     if (action === 'watch') {
-      lead.innerHTML = _esc(name) + 'をウォッチして<br>最新情報を受取る！';
+      lead.innerHTML = _esc(name) + 'をウォッチすると<br>'
+        + '<a class="p2-action-widget__lead-link" href="kotennavi-p5.html">my展覧会カレンダー</a>で<br>最新情報を受取れる！';
     } else {
       var q = (type === 'exhibition' || type === 'work')
         ? '「' + _esc(name) + '」' : _esc(name);
-      lead.innerHTML = q + '<br>興味あり！マークで<br>my展覧会カレンダーに追加！';
+      var isExh     = (type === 'exhibition');
+      var linkLabel = isExh ? 'my展覧会カレンダー' : 'my興味あり！';
+      var linkHref  = isExh ? 'kotennavi-p5.html' : 'kotennavi-p5-3.html';
+      lead.innerHTML = q + '<br>興味あり！マークで<br>'
+        + '<a class="p2-action-widget__lead-link" href="' + linkHref + '">' + linkLabel + '</a>に追加！';
     }
     var btnRow = w.querySelector('.p2-action-widget__btn-row');
     if (btnRow) w.insertBefore(lead, btnRow);
+    var leadLink = lead.querySelector('.p2-action-widget__lead-link');
+    if (leadLink) {
+      leadLink.addEventListener('click', function (e) {
+        if (window.ktnState.role === 'guest') {
+          e.preventDefault();
+          KTN.action.show(action);
+        }
+      });
+    }
   }
 
   function init() {

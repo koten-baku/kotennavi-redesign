@@ -630,9 +630,14 @@ p2-5-1（LIAISON+作品一覧）・p2-12-1（LIAISON+作品管理）・p6-dark�
 | p5-15 | `p5-page p5-15-page mgmt-page` | |
 | p5-11〜13 | `p5-page p5-{id}-page mgmt-page` | |
 | p11-4 | `mgmt-page` + JSで `p3-page`/`p4-page` 動的付与 | creator/gallery共有 |
+| p7-11 | `mgmt-page p7-11-page` + JSで `p3-page`(creator)/`p4-page`(gallery) 動的付与 | 記事-新規/編集/クローン・creator/gallery共有・`.p211-*` フォーム部品を再利用 |
+| p3-19 | `p3-19-page p3-page mgmt-page` | クリエイター-記事管理（全掲載先横断） |
+| p2-13 | `p2-13-page p3-page mgmt-page` | 展覧会-記事管理（この展覧会の記事のみ・掲載先フィルター無し） |
+| p4-19 | `p4-19-page p4-page mgmt-page` | ギャラリー-記事管理（全掲載先横断・p3-19とミラー） |
+| p6-15 | `p6-15-page p3-page mgmt-page` | 作品-記事管理（この作品の記事のみ・掲載先フィルター無し） |
 
 ### ロール動的切替（creator/gallery共有ページ）
-`KTN.pages['p2-11']` / `KTN.pages['p11-4']` / `KTN.pages['p6-11']` に `syncMgmtBar()` 関数を実装。`ktnRender` 内で `KTN.role` を読み取り `p3-page`/`p4-page` を付け外し。
+`KTN.pages['p2-11']` / `KTN.pages['p11-4']` / `KTN.pages['p6-11']` / `KTN.pages['p7-11']` に `syncMgmtBar()` 関数を実装。`ktnRender` 内で `KTN.role` を読み取り `p3-page`/`p4-page` を付け外し。
 
 ### 管理ページの幅（`--w-detail` 760px で全層統一・2026-07-06 確定）
 
@@ -645,28 +650,28 @@ p2-5-1（LIAISON+作品一覧）・p2-12-1（LIAISON+作品管理）・p6-dark�
   body.mgmt-page .p3-tabnav,.p4-tabnav,.p5-tabnav{max-width:var(--w-detail)} /* tabnav */
   ```
   - 以前は各ページに個別 `max-width:var(--w-detail)` 指定が残っていたが、汎用ルールと重複するため**削除済み（2026-07-06）**。新規ページで個別指定を追加しない。
-- **コンテンツの760化は `.ktn-mgmt-wrap`（白カード・max-width:760・margin:0 auto）が担う**。管理ページの `.ktn-content` は**素のまま**（1080・左右padding20px）置き、その中で wrap が760に自制する（→次項「管理ボックス共通パターン」）。16ページ全部この方式（p4-18 は2026-07-10仕様変更で廃止）：Model A（stackなし）＝p2-11/p6-11/p3-11/p3-12/p5-11/p5-12、Model B（`ktn-mgmt-stack` 併用）＝p2-12/p2-12-1/p3-15/p4-15/p3-16/p4-16/p5-13/p5-14/p5-15/p11-4。
+- **コンテンツの760化は `.ktn-mgmt-wrap`（白カード・max-width:760・margin:0 auto）が担う**。管理ページの `.ktn-content` は**素のまま**（1080・左右padding20px）置き、その中で wrap が760に自制する（→次項「管理ボックス共通パターン」）。17ページ全部この方式（p4-18 は2026-07-10仕様変更で廃止）：Model A（stackなし）＝p2-11/p6-11/p3-11/p3-12/p5-11/p5-12/p7-11、Model B（`ktn-mgmt-stack` 併用）＝p2-12/p2-12-1/p3-15/p4-15/p3-16/p4-16/p5-13/p5-14/p5-15/p11-4。
   - **`.ktn-content--article` / `--detail` を管理ページに併記しない（2026-07-07 是正）**：これらは max-width:760 に**左右padding20pxを含む**ため、中の wrap が **720px** に縮み、パンくず帯・ヒーロー帯（760）とボックス外枠が揃わなくなる。「幅を揃える」＝**ボックスの外枠端＝パンくず帯・ヒーロー帯の外枠端（760）**の一致（過去に7ページ＝p2-11/p2-12/p2-12-1/p6-11/p11-4/p3-11/p3-12 で併記が残っており720に縮んでいたのを削除済み）。
   - **wrap 外に置く要素（identity strip・状態バナー・審査notice）は自前で `max-width:var(--w-detail);margin:0 auto`** を持たせて wrap と同幅にする（`.ktn-mgmt-context`／`.p211-mode-banner`／`.p114-status-notice` は付与済み）。
 - **`data-w` 属性は不要**：`body.mgmt-page .ktn-header__inner` がパンくず幅を data-w に関わらず760へ固定するため。
 - 左右padding は20pxで統一（`.ktn-mgmt-wrap` 系は子要素 `margin:0 20px`、モバイルで縮小）。
 
-### 管理ページの identity strip（`.ktn-mgmt-context`・全16管理ページ標準・2026-07-09 確定／2026-07-10 p4-18廃止で17→16）
+### 管理ページの identity strip（`.ktn-mgmt-context`・全17管理ページ標準・2026-07-09 確定／2026-07-10 p4-18廃止で17→16／2026-08-01 p7-11新設で16→17）
 
 **管理・編集ページのヘッダー文脈表示を1コンポーネントへ統一。** 旧3パターン（人物＝親 `.pN-head--compact` ヒーロー＋公開 `.pN-tabnav` 継承／p2-11・p6-11＝`.p211-exh-banner`／p2-12・p2-12-1＝`.p2-12-banner`）を撤去し、`.ktn-mgmt-wrap` ボックスの**外・上**に置く横ストリップ `.ktn-mgmt-context` に集約した（旧2バナークラスの CSS は廃止）。canonical は `kotennavi-common.css` の `.ktn-guide-link` 直後。
 
 - **構造**：`[media][body: badges / name(親リンク) / meta / (非人系のみ)owner行][actions: 「○○ページへ →」view リンク]`。自前で 760px 中央寄せ（wrap外要素）。`.ktn-content` 直下に置くと `:has(> .ktn-mgmt-context){padding-top:16px}` で上余白が詰まる。
 - **media バリアント**：人物＝`--creator`/`--gallery`/`--user`（アバター形状ルール準拠の角丸＋ロール色 outline）。コンテンツ＝`--content`（outline無し・薄フレームの矩形サムネ）。badges も人物＝`cb-person`／コンテンツ＝`cb-content` で対応。
-- **非人系（コンテンツ）strip はオーナー行 `.ktn-mgmt-context__owner` を持つ（2026-07-09 確定）**：`__meta` の下に「`Owner`（Cinzel micro-label）＋人物バッジ（`cb cb-person cb-creator`/`cb-gallery`）＋オーナー名（p3/p4リンク・`--fs`）」を出し、**このコンテンツの操作主体が誰か**を明示する（人系 strip は identity 自体がオーナーなので不要）。**オーナーはコンテンツ固有の所有者に合わせる**（ページ横断の汎用デモペア〔田中透／Gallery SOIL 渋谷〕を機械的に流用しない＝会場・作家と食い違うため）。p2-12・p2-12-1（creator 田中透→p3）と**p2-11（展覧会 松田啓佑展／会場 YUGEN Gallery＝仮にギャラリー所有・`gallery` YUGEN Gallery→p4）はHTML直書き固定**（p2-11 はロール切替でオーナーを変えない＝この展覧会は gallery 所有と確定）。**role別 populate が要るのは p6-11 のみ**：作品《オノマトペの庭》＝作家 田中透 のデモデータが共通ペアと一致するため、`KTN.syncMgmtOwner('p611Owner', role)`（共通ヘルパー・`KTN.MGMT_OWNER` マップ）が `#p611OwnerBadge`／`#p611OwnerName` をロール別 populate。p11-4 は人系 strip なので対象外。
+- **非人系（コンテンツ）strip はオーナー行 `.ktn-mgmt-context__owner` を持つ（2026-07-09 確定）**：`__meta` の下に「`Owner`（Cinzel micro-label）＋人物バッジ（`cb cb-person cb-creator`/`cb-gallery`）＋オーナー名（p3/p4リンク・`--fs`）」を出し、**このコンテンツの操作主体が誰か**を明示する（人系 strip は identity 自体がオーナーなので不要）。**オーナーはコンテンツ固有の所有者に合わせる**（ページ横断の汎用デモペア〔田中透／Gallery SOIL 渋谷〕を機械的に流用しない＝会場・作家と食い違うため）。p2-12・p2-12-1（creator 田中透→p3）と**p2-11（展覧会 松田啓佑展／会場 YUGEN Gallery＝仮にギャラリー所有・`gallery` YUGEN Gallery→p4）はHTML直書き固定**（p2-11 はロール切替でオーナーを変えない＝この展覧会は gallery 所有と確定）。**role別 populate が要るのは p6-11・p7-11**：作品《オノマトペの庭》＝作家 田中透（p7-11 のデモ記事も同一の作家・ギャラリーのペアデータを流用）のデモデータが共通ペアと一致するため、`KTN.syncMgmtOwner('p611Owner', role)`／`KTN.syncMgmtOwner('p711Owner', role)`（共通ヘルパー・`KTN.MGMT_OWNER` マップ）が `#p611OwnerBadge`／`#p611OwnerName`・`#p711OwnerBadge`／`#p711OwnerName` をロール別 populate。p7-11 の strip も media は `--content`（記事はコンテンツ・非人系）で p6-11 と同型。p11-4 は人系 strip なので対象外。
 - **公開タブナビは管理画面に出さない**（編集集中・誤操作離脱防止。identity/親リンク機能は strip が継承）。
 - **管理メニュー＝strip には置かない（2026-07-09 確定）**：strip の actions は view リンクのみ。旧「strip のみ」方式で移設した `.p3-mgmt-btn`（`管理`）は**全ページ撤去済み**（ユーザー指示「管理ボタンは不要」）。管理メニューはヘッダー `getActions()` へ寄せる想定で、その正式化は p1/p10 と同じく後続の一括作業へ後回し。**既存の管理ドロワー（`.p3-mgmt-drawer`）＋JS結線（null-safe）は残置**するが、開くトリガー（管理ボタン）が無いため現状は休眠。getActions 一括化のバッチでドロワー廃止 or getActions 結線を確定する。**例外＝p3-11 のみ**は先行して `getActions('p3-11','creator')` の `dd('オーナーメニュー')` に集約済み（ドロワーも撤去・横展開しない）。
-- **非人系（コンテンツ編集・管理）ページも同じ扱い（2026-07-09 確定・案A）**：p2-11・p6-11・p2-12・p2-12-1・p11-4 も strip は identity＋view リンクのみ。オーナーメニューは**人系と共通のヘッダー getActions 1本**に寄せる（編集対象はコンテンツでも操作主体は creator/gallery 本人で、開くメニュー内容は人系と同一のため別立てにしない）。**creator/gallery 兼用ページ（p2-11・p6-11・p11-4）は getActions もロール別に出し分ける**（p11-4 の `CTX` と同発想）。実装は p1/p10 デザインFixと同じ後続の一括バッチで人系・非人系まとめて行う（今は未実装＝16ページ全て strip 確定状態）。
+- **非人系（コンテンツ編集・管理）ページも同じ扱い（2026-07-09 確定・案A）**：p2-11・p6-11・p2-12・p2-12-1・p11-4・p7-11 も strip は identity＋view リンクのみ。オーナーメニューは**人系と共通のヘッダー getActions 1本**に寄せる（編集対象はコンテンツでも操作主体は creator/gallery 本人で、開くメニュー内容は人系と同一のため別立てにしない）。**creator/gallery 兼用ページ（p2-11・p6-11・p11-4・p7-11）は getActions もロール別に出し分ける**（p11-4 の `CTX` と同発想）。実装は p1/p10 デザインFixと同じ後続の一括バッチで人系・非人系まとめて行う（今は未実装＝17ページ全て strip 確定状態）。
 - **モード切替を持つページ**：p2-11（`id=p211ExhBanner`）・p6-11（`id=p611WorkBanner`）は編集/クローンモードで strip を hidden 切替する id を strip 根に維持。p11-4 は creator/gallery 兼用のため `p114SyncContext(r)`（`P114_CTX` マップ）が media/badge/name/meta/view をロール別に populate（`setR` から呼び出し・デモバー切替に追従）。
 - 新規管理ページは strip をコピーし、media 形状・badge・エンティティ名・view リンク先を対象に合わせるだけでよい。
 
 ### 管理ボックス共通パターン（`.ktn-mgmt-wrap` ＋ `.ktn-mgmt-stack`・2026-07-06 確定／2026-07-07 全管理ページへ展開完了）
 
-**「ヒーロー帯＋タブナビ → その下に操作コンテンツを白ボックスへ格納（ボックス上端にオーナーのアクセントライン）」**という構造は共通コンポーネント化済みで、**管理・編集系16ページすべてに適用済み**。**新規の管理・操作ページはこの3クラスの組み合わせをコピーするだけでよい**（ページ固有CSSは原則不要）。
+**「ヒーロー帯＋タブナビ → その下に操作コンテンツを白ボックスへ格納（ボックス上端にオーナーのアクセントライン）」**という構造は共通コンポーネント化済みで、**管理・編集系17ページすべてに適用済み**。**新規の管理・操作ページはこの3クラスの組み合わせをコピーするだけでよい**（ページ固有CSSは原則不要）。
 
 **2つの適用モデル：**
 

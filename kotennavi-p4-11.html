@@ -20,6 +20,7 @@
   <button class="dbtn" onclick="setR('admin',this)">管理者</button>
   <span class="dbar-sep">リエゾンプラス：</span>
   <button class="dbtn" id="dbarLpNone" onclick="setLpMode('none')">未申請</button>
+  <button class="dbtn" id="dbarLpPending" onclick="setLpMode('pending')">審査中</button>
   <button class="dbtn on" id="dbarLpApproved" onclick="setLpMode('approved')">承認済</button>
 </div>
 
@@ -420,6 +421,15 @@
               <a class="ktn-guide-link" href="./kotennavi-p11-4.html">リエゾンプラスに申し込む →</a>
             </div>
 
+            <!-- LIAISON+ 審査中（デモ：dbarLpPending） -->
+            <div id="p411LpPending" hidden>
+              <div class="p114-privacy-note">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+                <span>リエゾンプラスのお申込みを受け付け、現在審査中です（通常3〜5営業日）。審査状況の詳細はリエゾンプラス機能申込ページでご確認いただけます。審査完了まで、責任者情報は登録されていません。</span>
+              </div>
+              <a class="ktn-guide-link" href="./kotennavi-p11-4.html">申込状況を確認する →</a>
+            </div>
+
             <!-- LIAISON+ 承認済（デモ：dbarLpApproved） -->
             <div id="p411LpApproved">
               <div class="p114-privacy-note">
@@ -502,13 +512,14 @@ document.querySelectorAll('.p211-pill-group').forEach(function (group) {
   });
 });
 
-/* ── リエゾンプラス責任者ブロック：未申請／承認済デモ切替 ── */
+/* ── リエゾンプラス責任者ブロック：未申請／審査中／承認済デモ切替 ── */
 function setLpMode(mode) {
-  var isNone = (mode === 'none');
-  document.getElementById('p411LpNone').hidden = !isNone;
-  document.getElementById('p411LpApproved').hidden = isNone;
-  document.getElementById('dbarLpNone').classList.toggle('on', isNone);
-  document.getElementById('dbarLpApproved').classList.toggle('on', !isNone);
+  document.getElementById('p411LpNone').hidden = (mode !== 'none');
+  document.getElementById('p411LpPending').hidden = (mode !== 'pending');
+  document.getElementById('p411LpApproved').hidden = (mode !== 'approved');
+  document.getElementById('dbarLpNone').classList.toggle('on', mode === 'none');
+  document.getElementById('dbarLpPending').classList.toggle('on', mode === 'pending');
+  document.getElementById('dbarLpApproved').classList.toggle('on', mode === 'approved');
 }
 
 /* ── 利用案内 show/hide ── */

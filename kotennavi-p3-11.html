@@ -20,6 +20,7 @@
   <button class="dbtn" onclick="setR('admin',this)">管理者</button>
   <span class="dbar-sep">リエゾンプラス：</span>
   <button class="dbtn" id="dbarLpNone" onclick="setLpMode('none')">未申請</button>
+  <button class="dbtn" id="dbarLpPending" onclick="setLpMode('pending')">審査中</button>
   <button class="dbtn on" id="dbarLpApproved" onclick="setLpMode('approved')">承認済</button>
 </div>
 
@@ -132,12 +133,6 @@
                 <label class="p211-pill"><input type="checkbox" name="p311genre" value="arch">建築</label>
                 <label class="p211-pill"><input type="checkbox" name="p311genre" value="other">その他</label>
               </div>
-            </div>
-
-            <!-- 活動拠点 -->
-            <div class="p211-field">
-              <label class="p211-label" for="p311Base">活動拠点</label>
-              <input class="p211-input" id="p311Base" type="text" value="東京">
             </div>
 
             <!-- 作品ブランド -->
@@ -336,6 +331,15 @@
               <a class="ktn-guide-link" href="./kotennavi-p11-4.html">リエゾンプラスに申し込む →</a>
             </div>
 
+            <!-- LIAISON+ 審査中（デモ：dbarLpPending） -->
+            <div id="p311LpPending" hidden>
+              <div class="p114-privacy-note">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+                <span>リエゾンプラスのお申込みを受け付け、現在審査中です（通常3〜5営業日）。審査状況の詳細はリエゾンプラス機能申込ページでご確認いただけます。審査完了まで、上記「本人確認情報」はリエゾンプラスの本人確認としては未使用です。</span>
+              </div>
+              <a class="ktn-guide-link" href="./kotennavi-p11-4.html">申込状況を確認する →</a>
+            </div>
+
             <!-- LIAISON+ 承認済（デモ：dbarLpApproved） -->
             <div id="p311LpApproved">
               <div class="p114-privacy-note">
@@ -400,13 +404,14 @@
 <script src="kotennavi-pages.js"></script>
 <script>KTN.init({ page: 'p3-11', role: 'creator' });</script>
 <script>
-/* ── リエゾンプラス本人確認状況ブロック：未申請／承認済デモ切替 ── */
+/* ── リエゾンプラス本人確認状況ブロック：未申請／審査中／承認済デモ切替 ── */
 function setLpMode(mode) {
-  var isNone = (mode === 'none');
-  document.getElementById('p311LpNone').hidden = !isNone;
-  document.getElementById('p311LpApproved').hidden = isNone;
-  document.getElementById('dbarLpNone').classList.toggle('on', isNone);
-  document.getElementById('dbarLpApproved').classList.toggle('on', !isNone);
+  document.getElementById('p311LpNone').hidden = (mode !== 'none');
+  document.getElementById('p311LpPending').hidden = (mode !== 'pending');
+  document.getElementById('p311LpApproved').hidden = (mode !== 'approved');
+  document.getElementById('dbarLpNone').classList.toggle('on', mode === 'none');
+  document.getElementById('dbarLpPending').classList.toggle('on', mode === 'pending');
+  document.getElementById('dbarLpApproved').classList.toggle('on', mode === 'approved');
 }
 
 /* ── ピル選択の active 切り替え（input の checked 状態から同期） ── */

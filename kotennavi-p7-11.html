@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>記事を編集 — オノマトペの庭 制作について | 個展なび</title>
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<body data-w="article" class="mgmt-page p7-11-page p3-page">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- デモバー -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ロール：</span>
+  <button class="dbtn on" onclick="setR('creator',this)">creator</button>
+  <button class="dbtn" onclick="setR('gallery',this)">gallery</button>
+  <button class="dbtn" onclick="setR('admin',this)">管理者</button>
+  <span class="dbar-sep">モード：</span>
+  <button class="dbtn" id="dbarNew" onclick="setDemoMode('new')">新規</button>
+  <button class="dbtn on" id="dbarEdit" onclick="setDemoMode('edit')">編集</button>
+  <button class="dbtn" id="dbarClone" onclick="setDemoMode('clone')">クローン</button>
+  <span class="dbar-sep">作成元ページ（デモ用）：</span>
+  <button class="dbtn on" id="dbarEntryArtwork" onclick="p711SetEntry('artwork')">作品</button>
+  <button class="dbtn" id="dbarEntryExhibition" onclick="p711SetEntry('exhibition')">展覧会</button>
+  <button class="dbtn" id="dbarEntryCreator" onclick="p711SetEntry('creator')">クリエイターページ</button>
+  <button class="dbtn" id="dbarEntryGallery" onclick="p711SetEntry('gallery')" hidden>ギャラリーページ</button>
+</div>
+
+<div class="shell">
+<div class="content-wrap" id="contentWrap">
+
+  <header class="ktn-header" id="ktnHeader">
+    <div class="ktn-header__inner">
+      <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+      <div class="ktn-hdr-actions" id="ktnActs"></div>
+    </div>
+  </header>
+
+  <main class="ktn-main" id="ktnMain">
+    <div class="ktn-content">
+
+      <!-- クローン元バナー（クローンモードのみ表示） -->
+      <div class="p211-mode-banner" id="p711CloneBanner" hidden>
+        <span class="p211-mode-banner__icon">📋</span>
+        <div class="p211-mode-banner__text">
+          <strong id="p711CloneOrigTitle">「オノマトペの庭 制作について」</strong>のクローンです。内容を確認・修正の上、公開してください。<strong>タイトルは必ず更新</strong>してください（他の項目は元記事の内容を引き継いでいます）。
+        </div>
+      </div>
+
+      <!-- 記事 文脈ストリップ（編集・クローンモードのみ表示・identity strip content variant） -->
+      <div class="ktn-mgmt-context" id="p711ArticleBanner">
+        <a class="ktn-mgmt-context__media ktn-mgmt-context__media--content" href="kotennavi-p7.html" style="background:linear-gradient(155deg,#c8ddc9,#4f8f5c)"></a>
+        <div class="ktn-mgmt-context__body">
+          <div class="ktn-mgmt-context__badges">
+            <span class="cb cb-content cb-article">article</span>
+            <span class="at at-c" id="p711TypeBadge">制作日記</span>
+            <span class="ktn-mgmt-context__id" id="p711ArticleId">AT-C42-0031</span>
+          </div>
+          <div class="ktn-mgmt-context__name"><a href="kotennavi-p7.html" id="p711ContextTitle">オノマトペの庭 制作について</a></div>
+          <div class="ktn-mgmt-context__meta" id="p711ContextMeta">掲載先：作品《オノマトペの庭》</div>
+          <div class="ktn-mgmt-context__meta" id="p711ContextDates">作成日：2026年3月2日 ／ 最終更新：2026年3月5日</div>
+          <div class="ktn-mgmt-context__owner">
+            <span class="ktn-mgmt-context__owner-label">Owner</span>
+            <span class="cb cb-person" id="p711OwnerBadge"></span>
+            <a id="p711OwnerName" href="#"></a>
+          </div>
+        </div>
+        <div class="ktn-mgmt-context__actions">
+          <a class="ktn-mgmt-context__view" href="kotennavi-p7.html">記事ページを見る →</a>
+        </div>
+      </div>
+
+      <!-- 管理ボックス -->
+      <div class="ktn-mgmt-wrap">
+
+      <!-- ページヘッド -->
+      <div class="ktn-mgmt-head">
+        <h2 class="ktn-mgmt-head__title" id="p711PageTitle">記事を編集</h2>
+        <p class="ktn-mgmt-head__en">ARTICLE EDITOR</p>
+        <p class="ktn-mgmt-head__desc"><strong style="color:var(--ink)">タイトルと本文だけで投稿できます</strong>（入力の目安：約5分）。テキスト・画像・動画のブロックを自由に組み合わせて記事を作成できます。保存後もいつでも追記・編集できます。入力を中断するときは下の「一時保存（下書き）」で途中まで保存できます。</p>
+      </div>
+
+      <!-- ─── 1. 基本情報 ─── -->
+      <div class="p211-block">
+        <div class="p211-block__head">
+          <div class="p211-block__title">基本情報 <span class="p211-block__title-en">Basic Info</span></div>
+        </div>
+        <div class="p211-block__body">
+
+          <!-- タイトル -->
+          <div class="p211-field">
+            <label class="p211-label">タイトル<span class="ktn-req">必須</span></label>
+            <input class="p211-input" type="text" id="p711Title" value="オノマトペの庭 制作について" placeholder="例：展覧会レポート：初日の様子">
+          </div>
+
+          <!-- 投稿者（常に本人固定・記事は creator/gallery 本人としてのみ投稿できる） -->
+          <div class="p211-field">
+            <label class="p211-label">投稿者</label>
+            <div class="p711-author p711-author--fixed" id="p711AuthorFixed">
+              <span class="cb cb-person cb-creator" id="p711AuthorBadge">creator</span>
+              <strong class="p711-author__name">田中 透</strong>
+              <span class="p711-author__note">あなたの記事として投稿されます</span>
+            </div>
+          </div>
+
+          <!-- 掲載先（この記事の掲載先・固定表示。記事を作成したページによって自動的に決まり、ここでは変更できない） -->
+          <div class="p211-field">
+            <label class="p211-label">この記事の掲載先</label>
+            <div class="p711-linkage" id="p711Linkage">
+              <span class="cb cb-content cb-artwork" id="p711LinkageBadge">作品</span>
+              <span class="p711-linkage__target" id="p711LinkageTarget"><a href="kotennavi-p6.html">《オノマトペの庭》</a></span>
+            </div>
+            <p class="p211-help" id="p711LinkageNote">掲載先は、この記事を作成したページによって自動的に決まります。ここでは変更できません。</p>
+          </div>
+
+          <!-- 記事種別 -->
+          <div class="p211-field">
+            <label class="p211-label">記事種別<span class="ktn-req">必須</span></label>
+            <div class="p211-pill-group" id="p711TypeGroup">
+              <label class="p211-pill" data-role="creator gallery" data-type="a"><input type="radio" name="p711type" value="a">レポート</label>
+              <label class="p211-pill" data-role="creator gallery" data-type="b"><input type="radio" name="p711type" value="b">インタビュー</label>
+              <label class="p211-pill is-active" data-role="creator" data-type="c"><input type="radio" name="p711type" value="c" checked>制作日記</label>
+              <label class="p211-pill" data-role="gallery" data-type="c" hidden><input type="radio" name="p711type" value="c">ギャラリーノート</label>
+              <label class="p211-pill" data-role="creator gallery" data-type="d"><input type="radio" name="p711type" value="d">お知らせ</label>
+              <label class="p211-pill" data-role="creator" data-type="e"><input type="radio" name="p711type" value="e">ワークショップ</label>
+              <label class="p211-pill" data-role="creator gallery" data-type="f"><input type="radio" name="p711type" value="f">＋ その他</label>
+            </div>
+          </div>
+
+          <!-- 記事種別「その他」の自由入力（選択時のみ表示） -->
+          <div class="p211-field" id="p711CustomTypeField" hidden>
+            <label class="p211-label">記事種別（自由入力）<span class="ktn-req">必須</span></label>
+            <input class="p211-input" type="text" id="p711CustomTypeInput" placeholder="例：座談会">
+            <p class="p211-help">既存の種別に当てはまらない場合に入力してください。記事一覧・検索では「その他」として分類され、入力したラベルは記事ページに補足表示されます。</p>
+          </div>
+
+          <!-- 追加項目：英語サブタイトル・タグ -->
+          <div class="p211-sub-links">
+            <a class="p211-sub-link" href="#" onclick="toggleAcc('p711AccBasicOpt', this); return false;">
+              <svg class="p211-sub-link__icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M1.5 1.5h5l6 6-5 5-6-6z" stroke-linejoin="round"/><circle cx="4.5" cy="4.5" r="1"/></svg>
+              <span class="p211-sub-link__label">英語サブタイトル・タグを入力する</span>
+              <span class="p211-sub-link__state">✓ 入力あり</span>
+              <span class="p211-sub-link__opt">＋ 追加項目</span>
+              <span class="p211-sub-link__arr"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" width="13" height="13"><path d="M3.5 5.25 7 8.75l3.5-3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="p211-sub-link__benefit">タグは記事一覧・検索から見つけてもらいやすくなり、英語サブタイトルは海外の方にも記事を伝えます。</span>
+            </a>
+            <div class="p211-acc-panel" id="p711AccBasicOpt" hidden>
+              <div class="p211-field">
+                <label class="p211-label">英語サブタイトル</label>
+                <input class="p211-input" type="text" value="Behind the Creation of Onomatopoeia Garden" placeholder="English subtitle (optional)">
+              </div>
+              <div class="p211-field">
+                <label class="p211-label">タグ</label>
+                <div class="p211-tag-area" id="p711TagArea">
+                  <span class="p211-tag">制作過程<button class="p211-tag__del" onclick="this.closest('.p211-tag').remove()" type="button">✕</button></span>
+                  <span class="p211-tag">アトリエ<button class="p211-tag__del" onclick="this.closest('.p211-tag').remove()" type="button">✕</button></span>
+                  <input class="p211-tag-input" id="p711TagInput" type="text" placeholder="タグを入力してEnter">
+                  <span class="p211-tag-hint">半角スペース区切り</span>
+                </div>
+                <p class="p211-help">記事カテゴリーを表すハッシュタグの単語を入力してください。</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ─── 2. 本文 ─── -->
+      <div class="p211-block">
+        <div class="p211-block__head">
+          <div class="p211-block__title">本文 <span class="p211-block__title-en">Content Blocks</span></div>
+        </div>
+        <div class="p211-block__body">
+          <p class="p211-help" style="margin-bottom:12px">テキスト・画像・動画のブロックを自由に組み合わせて記事を作成できます。左のハンドル（⠿）をドラッグして順序を入れ替えられます。</p>
+
+          <div class="p711-blocks" id="p711Blocks">
+
+            <!-- block: text -->
+            <div class="p711-block" data-type="text">
+              <div class="p711-block__head">
+                <span class="p711-block__handle" draggable="true" title="ドラッグして並べ替え" aria-label="ドラッグして並べ替え">⠿</span>
+                <span class="p711-block__tag">テキスト</span>
+                <button class="p711-block__del" type="button" title="このブロックを削除" onclick="p711RemoveBlock(this)">✕</button>
+              </div>
+              <div class="p711-block__body">
+                <input type="text" class="p211-input p711-block__subtitle" placeholder="サブタイトル（任意）">
+                <textarea class="p211-textarea p211-textarea--tall">「ふわふわ」「ざわざわ」「きらきら」――日本語のオノマトペは、音でも、手触りでも、光の揺らぎでもある不思議な言葉たちだ。今回の新作《オノマトペの庭》は、そうした感覚の断片を一枚の画面に集め、ひとつの「庭」として編み直す試みだった。制作期間はおよそ4ヶ月。ここでは、そのプロセスの一部を振り返ってみたい。</textarea>
+              </div>
+            </div>
+
+            <!-- block: image -->
+            <div class="p711-block" data-type="image">
+              <div class="p711-block__head">
+                <span class="p711-block__handle" draggable="true" title="ドラッグして並べ替え" aria-label="ドラッグして並べ替え">⠿</span>
+                <span class="p711-block__tag">画像</span>
+                <button class="p711-block__del" type="button" title="このブロックを削除" onclick="p711RemoveBlock(this)">✕</button>
+              </div>
+              <div class="p711-block__body">
+                <div class="p211-img-uploaded">
+                  <div class="p211-img-uploaded__thumb" style="background:linear-gradient(155deg,#e8e0c8,#c4b888)"></div>
+                  <div class="p211-img-uploaded__body">
+                    <div class="p211-img-uploaded__row">
+                      <span class="p211-img-uploaded__name">sketch_early01.jpg</span>
+                      <button class="p211-img-uploaded__del" type="button" title="削除" onclick="this.closest('.p211-img-uploaded').remove();syncOptUI()">
+                        <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" width="12" height="12"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg>
+                      </button>
+                    </div>
+                    <input type="text" class="p211-img-caption" maxlength="80" placeholder="キャプション（任意）" value="制作初期のドローイング。「ふわふわ」という言葉から浮かんだ最初の形。">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- block: text -->
+            <div class="p711-block" data-type="text">
+              <div class="p711-block__head">
+                <span class="p711-block__handle" draggable="true" title="ドラッグして並べ替え" aria-label="ドラッグして並べ替え">⠿</span>
+                <span class="p711-block__tag">テキスト</span>
+                <button class="p711-block__del" type="button" title="このブロックを削除" onclick="p711RemoveBlock(this)">✕</button>
+              </div>
+              <div class="p711-block__body">
+                <input type="text" class="p211-input p711-block__subtitle" placeholder="サブタイトル（任意）" value="言葉を「感じ」に変える">
+                <textarea class="p211-textarea p211-textarea--tall">最初に手を動かしたのは、言葉そのものを絵にしようとするのではなく、言葉を口にしたときの「感じ」を線にすることだった。「ふわふわ」なら弾むような曲線、「ざわざわ」なら細かく震える短い線。ドローイングを何十枚も重ねるうちに、画面全体を「庭」として構成するアイデアが生まれた。</textarea>
+              </div>
+            </div>
+
+            <!-- block: video -->
+            <div class="p711-block" data-type="video">
+              <div class="p711-block__head">
+                <span class="p711-block__handle" draggable="true" title="ドラッグして並べ替え" aria-label="ドラッグして並べ替え">⠿</span>
+                <span class="p711-block__tag">動画</span>
+                <button class="p711-block__del" type="button" title="このブロックを削除" onclick="p711RemoveBlock(this)">✕</button>
+              </div>
+              <div class="p711-block__body">
+                <div class="p211-field">
+                  <label class="p211-label">動画URL<span class="ktn-req">必須</span></label>
+                  <input class="p211-input" type="url" value="https://www.youtube.com/watch?v=dQw4w9WgXcQ" placeholder="https://www.youtube.com/watch?v=…">
+                  <p class="p211-help">YouTube・Vimeo等の動画ページURLを入力してください（動画ファイルのアップロードは不要です）。</p>
+                </div>
+                <input type="text" class="p211-img-caption" maxlength="80" placeholder="キャプション（任意）" value="アトリエでの制作風景。緑がかった色面を少しずつ重ねていく。">
+                <div class="p711-video-meta">
+                  <label class="p211-label">再生時間（表示用）</label>
+                  <input class="p211-input" type="text" value="0:52" placeholder="0:45" style="width:100px">
+                </div>
+              </div>
+            </div>
+
+            <!-- block: text -->
+            <div class="p711-block" data-type="text">
+              <div class="p711-block__head">
+                <span class="p711-block__handle" draggable="true" title="ドラッグして並べ替え" aria-label="ドラッグして並べ替え">⠿</span>
+                <span class="p711-block__tag">テキスト</span>
+                <button class="p711-block__del" type="button" title="このブロックを削除" onclick="p711RemoveBlock(this)">✕</button>
+              </div>
+              <div class="p711-block__body">
+                <input type="text" class="p211-input p711-block__subtitle" placeholder="サブタイトル（任意）">
+                <textarea class="p211-textarea p211-textarea--tall">画面中央の緑がかった空間は、複数の「やわらかい音」が重なり合う場所として描いた。色を置いては拭き取り、また置く――その反復のなかで、ようやく「静かな庭」の気配が画面に宿り始めた。F30号という大きさは、鑑賞者が作品の前に立ったとき、その場の空気ごと体験できるようにという意図から選んでいる。</textarea>
+              </div>
+            </div>
+
+            <!-- block: pair images -->
+            <div class="p711-block" data-type="pair">
+              <div class="p711-block__head">
+                <span class="p711-block__handle" draggable="true" title="ドラッグして並べ替え" aria-label="ドラッグして並べ替え">⠿</span>
+                <span class="p711-block__tag">画像2枚</span>
+                <button class="p711-block__del" type="button" title="このブロックを削除" onclick="p711RemoveBlock(this)">✕</button>
+              </div>
+              <div class="p711-block__body">
+                <div class="p711-pair-imgs">
+                  <div class="p211-img-uploaded">
+                    <div class="p211-img-uploaded__thumb" style="background:linear-gradient(135deg,#9cc4b8,#5a8e7a)"></div>
+                    <div class="p211-img-uploaded__body">
+                      <div class="p211-img-uploaded__row">
+                        <span class="p211-img-uploaded__name">rough_mid.jpg</span>
+                        <button class="p211-img-uploaded__del" type="button" title="削除" onclick="this.closest('.p211-img-uploaded').remove();syncOptUI()">
+                          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" width="12" height="12"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="p211-img-uploaded">
+                    <div class="p211-img-uploaded__thumb" style="background:linear-gradient(165deg,#c4d8d0,#7aaa98)"></div>
+                    <div class="p211-img-uploaded__body">
+                      <div class="p211-img-uploaded__row">
+                        <span class="p211-img-uploaded__name">near_final.jpg</span>
+                        <button class="p211-img-uploaded__del" type="button" title="削除" onclick="this.closest('.p211-img-uploaded').remove();syncOptUI()">
+                          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" width="12" height="12"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <input type="text" class="p211-img-caption" maxlength="80" placeholder="キャプション（任意・2枚共通）" value="左：制作中盤のラフ。右：完成に近づいた状態。">
+              </div>
+            </div>
+
+            <!-- block: text -->
+            <div class="p711-block" data-type="text">
+              <div class="p711-block__head">
+                <span class="p711-block__handle" draggable="true" title="ドラッグして並べ替え" aria-label="ドラッグして並べ替え">⠿</span>
+                <span class="p711-block__tag">テキスト</span>
+                <button class="p711-block__del" type="button" title="このブロックを削除" onclick="p711RemoveBlock(this)">✕</button>
+              </div>
+              <div class="p711-block__body">
+                <input type="text" class="p211-input p711-block__subtitle" placeholder="サブタイトル（任意）">
+                <textarea class="p211-textarea p211-textarea--tall">「庭」という言葉を頭に浮かべたとき、まず耳に届いたのは「しんと静まり返った空気感」と「葉が揺れる微かな音」だった。その二つの感覚が混ざり合う瞬間を、画面の上に留めておきたい――そう思いながら筆を置いた。完成した《オノマトペの庭》は、会場でじっくり向き合っていただけたら嬉しい。</textarea>
+              </div>
+            </div>
+
+          </div><!-- /.p711-blocks -->
+
+          <div class="p711-add-bar">
+            <span class="p711-add-bar__label">ブロックを追加：</span>
+            <button class="p711-add-btn" type="button" onclick="p711AddBlock('text')">＋ テキスト</button>
+            <button class="p711-add-btn" type="button" onclick="p711AddBlock('image')">＋ 画像</button>
+            <button class="p711-add-btn" type="button" onclick="p711AddBlock('pair')">＋ 画像2枚</button>
+            <button class="p711-add-btn" type="button" onclick="p711AddBlock('video')">＋ 動画</button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- 管理者コメント欄（role=admin のときのみ表示・共通 syncAdminNote が切替） -->
+      <div class="ktn-admin-note" id="p711AdminNote" hidden>
+        <div class="ktn-admin-note__head">
+          <span class="ktn-admin-note__badge">Admin</span>
+          <span class="ktn-admin-note__title">管理者コメント</span>
+        </div>
+        <p class="ktn-admin-note__desc">管理上の対応履歴・申し送りを記録します。管理者のみが閲覧できます。</p>
+        <textarea class="ktn-admin-note__textarea" id="p711AdminComment" placeholder="例：2026-07-20 画像の著作権確認のため一時非公開。"></textarea>
+      </div>
+
+      <!-- 送信バー（sticky） -->
+      <div class="p211-submit-bar p211-submit-bar--stacked">
+        <label class="p211-check p211-draft-check">
+          <input type="checkbox" id="p711DraftChk" onchange="syncDraftMode()">
+          <span class="p211-draft-check__text">
+            <span class="p211-draft-check__label">一時保存（下書き）として保存する</span>
+            <span class="p211-draft-check__desc">未完成でも保存できます。下書きは記事管理にのみ残り、公開ページ・記事一覧・検索には出ません。あとから記事管理で仕上げると公開できます。</span>
+          </span>
+        </label>
+        <div class="p211-submit-bar__row">
+          <button class="p211-submit-bar__cancel ktn-op-btn" type="button" onclick="history.back()">キャンセル</button>
+          <button class="p211-submit-bar__submit ktn-op-btn ktn-op-btn--primary" type="button" id="p711SubmitBtn" onclick="handleSubmit()">保存する</button>
+          <span class="p211-submit-bar__progress" id="p711OptProgress"></span>
+          <span class="p211-submit-bar__note" id="p711SubmitNote">必須項目を入力すると保存できます</span>
+        </div>
+      </div>
+
+      </div><!-- /.ktn-mgmt-wrap -->
+
+    </div>
+  </main>
+</div>
+</div>
+
+<script src="kotennavi-common.js"></script>
+<script src="kotennavi-pages.js"></script>
+<script>
+KTN.init({ page: 'p7-11', role: 'creator' });
+
+/* ── デモモード切り替え ── */
+var MODE_TITLES = { new: '新規記事を投稿', edit: '記事を編集', clone: '記事をクローンで作成' };
+var MODE_SUBMIT = { new: '保存する', edit: '保存する', clone: '保存する' };
+var P711_MODE = 'edit';
+
+function setDemoMode(mode) {
+  P711_MODE = mode;
+  ['new', 'edit', 'clone'].forEach(function (m) {
+    var btn = document.getElementById('dbar' + m.charAt(0).toUpperCase() + m.slice(1));
+    if (btn) btn.classList.toggle('on', m === mode);
+  });
+
+  document.getElementById('p711PageTitle').textContent = MODE_TITLES[mode];
+  document.getElementById('p711SubmitBtn').textContent = MODE_SUBMIT[mode];
+  if (typeof syncDraftMode === 'function') syncDraftMode();
+
+  var cloneBanner = document.getElementById('p711CloneBanner');
+  var articleBanner = document.getElementById('p711ArticleBanner');
+  if (cloneBanner) cloneBanner.hidden = (mode !== 'clone');
+  /* identity strip は「元記事（編集中／クローン元）」の文脈表示。新規＝参照する既存記事がないため隠す。
+     クローン時は「複製元の記事」の情報として表示し、クローンバナーの補足として機能日付を明示する。 */
+  if (articleBanner) articleBanner.hidden = (mode === 'new');
+
+  var articleId = document.getElementById('p711ArticleId');
+  if (articleId) articleId.hidden = (mode === 'new');
+
+  if (mode === 'new') clearForm();
+  else if (typeof p711SetEntry === 'function') p711SetEntry(P711_CURRENT_ENTRY);
+  if (typeof syncOptUI === 'function') syncOptUI();
+}
+
+function clearForm() {
+  document.getElementById('p711Title').value = '';
+  document.querySelectorAll('#p711AccBasicOpt .p211-input, #p711AccBasicOpt .p211-textarea').forEach(function (el) {
+    el.value = '';
+  });
+  document.querySelectorAll('#p711TagArea .p211-tag').forEach(function (el) { el.remove(); });
+
+  var customField = document.getElementById('p711CustomTypeField');
+  var customInput = document.getElementById('p711CustomTypeInput');
+  if (customField) customField.hidden = true;
+  if (customInput) customInput.value = '';
+
+  /* 本文ブロックは空のテキストブロック1つに戻す */
+  var blocks = document.getElementById('p711Blocks');
+  if (blocks) {
+    blocks.innerHTML = '';
+    blocks.appendChild(p711MakeBlock('text'));
+  }
+
+  var draft = document.getElementById('p711DraftChk');
+  if (draft) draft.checked = false;
+  if (typeof closeAllAcc === 'function') closeAllAcc();
+  if (typeof syncDraftMode === 'function') syncDraftMode();
+  if (typeof syncOptUI === 'function') syncOptUI();
+}
+
+/* ── ピル選択の active 切り替え（p6-11 と同型） ── */
+document.querySelectorAll('.p211-pill-group').forEach(function (group) {
+  var isRadio = group.querySelector('input[type=radio]');
+  var clearable = group.hasAttribute('data-clearable');
+  group.querySelectorAll('.p211-pill').forEach(function (pill) {
+    pill.addEventListener('click', function (e) {
+      if (e.target && e.target.tagName === 'INPUT') return;
+      if (isRadio) {
+        if (clearable && pill.classList.contains('is-active')) {
+          e.preventDefault();
+          pill.classList.remove('is-active');
+          var r = pill.querySelector('input[type=radio]');
+          if (r) r.checked = false;
+          return;
+        }
+        group.querySelectorAll('.p211-pill').forEach(function (p) { p.classList.remove('is-active'); });
+      }
+      pill.classList.toggle('is-active', !isRadio || true);
+      if (isRadio) pill.classList.add('is-active');
+    });
+  });
+});
+
+/* ── タグ入力（Enter で追加） ── */
+(function () {
+  var tagInput = document.getElementById('p711TagInput');
+  var tagArea  = document.getElementById('p711TagArea');
+  if (!tagInput) return;
+  tagInput.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      var val = tagInput.value.trim();
+      if (!val) return;
+      var tag = document.createElement('span');
+      tag.className = 'p211-tag';
+      tag.innerHTML = val + '<button class="p211-tag__del" type="button">✕</button>';
+      tag.querySelector('.p211-tag__del').addEventListener('click', function () { tag.remove(); });
+      tagArea.insertBefore(tag, tagInput);
+      tagInput.value = '';
+    }
+  });
+})();
+
+/* ── この記事の掲載先（固定表示）── 記事新規の作成元ページ（展覧会/作品/クリエイターページ/ギャラリーページ）で
+   掲載先は自動的に決まり、p7-11 内では変更できない（対象の作品・展覧会も選べない）。
+   実運用では作成元ページの遷移元から決まるが、本デモページには実ルーティングが無いため
+   デモバー「作成元ページ（デモ用）」で4パターンを切り替えて確認できるようにしている。 */
+var P711_ENTRY = {
+  artwork: {
+    role: 'creator', label: '作品',
+    badgeCls: 'cb-artwork', badgeText: '作品', name: '《オノマトペの庭》', href: 'kotennavi-p6.html',
+    linkageText: '掲載先：作品《オノマトペの庭》',
+    articleTitle: 'オノマトペの庭 制作について',
+    typeDefault: 'c', typeBadgeText: '制作日記',
+    articleId: 'AT-C42-0031', created: '2026年3月2日', updated: '2026年3月5日'
+  },
+  exhibition: {
+    role: 'both', label: '展覧会',
+    badgeCls: 'cb-exhibition', badgeText: '展覧会', name: 'あなたが知らないオノマトペ', href: 'kotennavi-p2.html',
+    linkageText: '掲載先：展覧会「あなたが知らないオノマトペ」',
+    articleTitle: '展評：あなたが知らないオノマトペ 会場レポート',
+    typeDefault: 'a', typeBadgeText: 'レポート',
+    articleId: 'AT-A18-0044', created: '2026年3月7日', updated: '2026年3月10日'
+  },
+  creator: {
+    role: 'creator', label: 'クリエイターページ', standalone: true,
+    standaloneText: 'クリエイターページの記事（単独掲載）',
+    articleTitle: '田中透インタビュー：言語と絵画のあいだで',
+    typeDefault: 'b', typeBadgeText: 'インタビュー',
+    articleId: 'AT-B05-0012', created: '2025年11月15日', updated: '2025年11月20日'
+  },
+  gallery: {
+    role: 'gallery', label: 'ギャラリーページ', standalone: true,
+    standaloneText: 'ギャラリーページの記事（単独掲載）',
+    articleTitle: 'Gallery SOIL 渋谷 ノート：展示替えの舞台裏',
+    typeDefault: 'c', typeBadgeText: 'ギャラリーノート',
+    articleId: 'AT-C09-0027', created: '2026年3月9日', updated: '2026年3月12日'
+  }
+};
+var P711_CURRENT_ENTRY = 'artwork';
+
+function p711SetEntry(key) {
+  var e = P711_ENTRY[key];
+  if (!e) return;
+  P711_CURRENT_ENTRY = key;
+
+  Object.keys(P711_ENTRY).forEach(function (k) {
+    var btn = document.getElementById('dbarEntry' + k.charAt(0).toUpperCase() + k.slice(1));
+    if (btn) btn.classList.toggle('on', k === key);
+  });
+
+  var badge = document.getElementById('p711LinkageBadge');
+  var target = document.getElementById('p711LinkageTarget');
+  if (e.standalone) {
+    if (badge) badge.hidden = true;
+    if (target) target.innerHTML = e.standaloneText;
+  } else {
+    if (badge) { badge.hidden = false; badge.className = 'cb cb-content ' + e.badgeCls; badge.textContent = e.badgeText; }
+    if (target) target.innerHTML = '<a href="' + e.href + '">' + e.name + '</a>';
+  }
+
+  /* identity strip・クローンバナーは「元記事（編集中／クローン元）の情報」を映すため、
+     新規モードでは触れない（新規は参照する既存記事が無い）。 */
+  if (P711_MODE !== 'new') {
+    var typeBadge = document.getElementById('p711TypeBadge');
+    if (typeBadge) { typeBadge.className = 'at at-' + e.typeDefault; typeBadge.textContent = e.typeBadgeText; }
+    var articleId = document.getElementById('p711ArticleId');
+    if (articleId) articleId.textContent = e.articleId;
+    var titleLink = document.getElementById('p711ContextTitle');
+    if (titleLink) titleLink.textContent = e.articleTitle;
+    var meta = document.getElementById('p711ContextMeta');
+    if (meta) meta.textContent = e.standalone ? e.standaloneText : e.linkageText;
+    var dates = document.getElementById('p711ContextDates');
+    if (dates) dates.textContent = '作成日：' + e.created + ' ／ 最終更新：' + e.updated;
+    var cloneTitle = document.getElementById('p711CloneOrigTitle');
+    if (cloneTitle) cloneTitle.textContent = '「' + e.articleTitle + '」';
+    var titleField = document.getElementById('p711Title');
+    if (titleField) titleField.value = e.articleTitle;
+  }
+}
+
+/* ── 記事種別のロール別出し分け＋「作成元ページ（デモ用）」のロール別出し分け ── */
+function p711SyncRoleFields(role) {
+  document.querySelectorAll('#p711TypeGroup .p211-pill').forEach(function (pill) {
+    var roles = (pill.dataset.role || '').split(' ');
+    pill.hidden = (roles.indexOf(role) === -1);
+  });
+  var typeGroup = document.getElementById('p711TypeGroup');
+  if (typeGroup) {
+    var active = typeGroup.querySelector('.p211-pill.is-active');
+    if (!active || active.hidden) {
+      typeGroup.querySelectorAll('.p211-pill.is-active').forEach(function (p) { p.classList.remove('is-active'); });
+      var visible = Array.prototype.filter.call(typeGroup.querySelectorAll('.p211-pill'), function (p) { return !p.hidden; });
+      if (visible[0]) {
+        visible[0].classList.add('is-active');
+        var r = visible[0].querySelector('input[type=radio]');
+        if (r) r.checked = true;
+      }
+    }
+  }
+
+  Object.keys(P711_ENTRY).forEach(function (k) {
+    var btn = document.getElementById('dbarEntry' + k.charAt(0).toUpperCase() + k.slice(1));
+    if (!btn) return;
+    var e = P711_ENTRY[k];
+    btn.hidden = !(e.role === 'both' || e.role === role);
+  });
+
+  var cur = P711_ENTRY[P711_CURRENT_ENTRY];
+  if (!cur || (cur.role !== 'both' && cur.role !== role)) {
+    p711SetEntry(role === 'gallery' ? 'gallery' : 'artwork');
+  }
+}
+
+/* ── 記事種別「その他」選択時、自由入力欄を表示 ── */
+(function () {
+  var group = document.getElementById('p711TypeGroup');
+  if (!group) return;
+  group.addEventListener('click', function () {
+    setTimeout(function () {
+      var checked = group.querySelector('input[type=radio]:checked');
+      var field = document.getElementById('p711CustomTypeField');
+      if (field) field.hidden = !(checked && checked.value === 'f');
+    }, 0);
+  });
+})();
+
+/* ── 投稿者ブロック（常に本人固定・記事は creator/gallery 本人としてのみ投稿できる） ── */
+window.p711RoleSync = function () {
+  var r = (window.ktnState && window.ktnState.role) || 'creator';
+  var isGallery = (r === 'gallery');
+  var fixed = document.getElementById('p711AuthorFixed');
+  if (fixed) {
+    var badge  = document.getElementById('p711AuthorBadge');
+    var nameEl = fixed.querySelector('.p711-author__name');
+    var noteEl = fixed.querySelector('.p711-author__note');
+    if (badge)  { badge.className = 'cb cb-person ' + (isGallery ? 'cb-gallery' : 'cb-creator'); badge.textContent = isGallery ? 'gallery' : 'creator'; }
+    if (nameEl) nameEl.textContent = isGallery ? 'Gallery SOIL 渋谷' : '田中 透';
+    if (noteEl) noteEl.textContent = isGallery ? 'ギャラリーの記事として投稿されます' : 'あなたの記事として投稿されます';
+  }
+  p711SyncRoleFields(isGallery ? 'gallery' : 'creator');
+};
+
+/* ── URL パラメータで初期モードを適用 ── */
+(function applyEntryParams() {
+  var params = new URLSearchParams(location.search);
+  var m = params.get('mode');
+  if ((m === 'new' || m === 'edit' || m === 'clone') && typeof setDemoMode === 'function') {
+    setDemoMode(m);
+  }
+})();
+
+/* ── 一時保存（下書き）チェック → 保存モード同期 ── */
+function syncDraftMode() {
+  var chk  = document.getElementById('p711DraftChk');
+  var btn  = document.getElementById('p711SubmitBtn');
+  var note = document.getElementById('p711SubmitNote');
+  var isDraft = !!(chk && chk.checked);
+  if (btn) btn.textContent = isDraft ? '一時保存する' : '保存する';
+  if (note) {
+    note.style.color = '';
+    note.textContent = isDraft ? '' : '必須項目を入力すると保存できます';
+  }
+}
+
+/* ── 必須テキスト欄の未入力収集（デモ）。単一 .p211-input／.p211-textarea を持つ必須欄のみ対象 ── */
+function collectMissing() {
+  var missing = [];
+  document.querySelectorAll('.p211-field').forEach(function (field) {
+    if (field.hidden) return;
+    if (!field.querySelector('.ktn-req')) return;
+    var inputs = field.querySelectorAll('.p211-input, .p211-textarea');
+    if (inputs.length !== 1) return;
+    if (!inputs[0].value.trim()) {
+      var lbl = field.querySelector('.p211-label');
+      missing.push(lbl ? (lbl.firstChild.textContent || '').trim() : '必須項目');
+    }
+  });
+  return missing;
+}
+
+/* ── 送信ハンドラ（デモ） ── */
+function handleSubmit() {
+  var chk = document.getElementById('p711DraftChk');
+  var note = document.getElementById('p711SubmitNote');
+  if (chk && chk.checked) {
+    if (typeof KTN !== 'undefined' && KTN.toast) KTN.toast('下書きとして記事管理に保存しました（デモ）');
+    return;
+  }
+  var missing = collectMissing();
+  if (missing.length) {
+    if (note) { note.textContent = '必須項目が未入力です：' + missing.join('、'); note.style.color = '#b43c14'; }
+    if (typeof KTN !== 'undefined' && KTN.toast) KTN.toast('必須項目を入力してください（デモ）');
+    return;
+  }
+  if (note) note.style.color = '';
+  if (typeof KTN !== 'undefined' && KTN.toast) KTN.toast('記事を保存しました（デモ）');
+}
+syncDraftMode();
+
+/* ── 追加項目のアコーディオン開閉 ── */
+function toggleAcc(id, link) {
+  var panel = document.getElementById(id);
+  if (!panel) return;
+  var open = panel.hidden;
+  panel.hidden = !open;
+  if (link) link.classList.toggle('is-open', open);
+}
+function closeAllAcc() {
+  document.querySelectorAll('.p211-acc-panel').forEach(function (p) { p.hidden = true; });
+  document.querySelectorAll('.p211-sub-link.is-open').forEach(function (l) { l.classList.remove('is-open'); });
+}
+
+/* ── 追加項目の入力状況（サブリンクの「✓ 入力あり」チップ＋送信バーの充実度メーター） ── */
+var OPT_ITEMS = [
+  { panel: 'p711AccBasicOpt' }  /* 英語サブタイトル・タグ */
+];
+function panelFilled(panel) {
+  var els = panel.querySelectorAll('input, select, textarea');
+  for (var i = 0; i < els.length; i++) {
+    var el = els[i];
+    if (el.type === 'file') continue;
+    if (el.type === 'checkbox' || el.type === 'radio') { if (el.checked && !el.defaultChecked) return true; continue; }
+    if (el.value && el.value.trim() !== '') return true;
+  }
+  var tags = panel.querySelectorAll('.p211-tag');
+  for (var j = 0; j < tags.length; j++) { if (tags[j].style.display !== 'none') return true; }
+  return false;
+}
+function syncOptUI() {
+  var n = 0;
+  OPT_ITEMS.forEach(function (item) {
+    var panel = document.getElementById(item.panel);
+    if (!panel) return;
+    var filled = panelFilled(panel);
+    if (filled) n++;
+    var link = panel.previousElementSibling;
+    if (link && link.classList.contains('p211-sub-link')) link.classList.toggle('has-input', filled);
+  });
+  var meter = document.getElementById('p711OptProgress');
+  if (meter) meter.innerHTML = '追加項目の入力 <strong>' + n + '</strong> / ' + OPT_ITEMS.length;
+}
+(function () {
+  var wrap = document.querySelector('.ktn-mgmt-wrap');
+  if (!wrap) return;
+  var raf = null;
+  function queueSync() {
+    if (raf) return;
+    raf = requestAnimationFrame(function () { raf = null; syncOptUI(); });
+  }
+  ['input', 'change', 'click', 'keyup'].forEach(function (ev) { wrap.addEventListener(ev, queueSync); });
+})();
+syncOptUI();
+p711SetEntry(P711_CURRENT_ENTRY);
+
+/* ── 本文ブロックエディタ（追加・削除・並べ替え） ── */
+var P711_BLOCK_LABEL = { text: 'テキスト', image: '画像', pair: '画像2枚', video: '動画' };
+
+function p711MakeBlock(type) {
+  var el = document.createElement('div');
+  el.className = 'p711-block';
+  el.dataset.type = type;
+  var body = '';
+  if (type === 'text') {
+    body =
+      '<input type="text" class="p211-input p711-block__subtitle" placeholder="サブタイトル（任意）">' +
+      '<textarea class="p211-textarea p211-textarea--tall" placeholder="本文を入力してください"></textarea>';
+  } else if (type === 'image') {
+    body =
+      '<div class="p211-img-drop" onclick="this.nextElementSibling && this.nextElementSibling.click && this.nextElementSibling.click()">' +
+        '<button class="p211-img-drop__btn" type="button">画像を選択</button>' +
+        '<div>または、画像をドラッグ＆ドロップ</div>' +
+      '</div>' +
+      '<input type="text" class="p211-img-caption" maxlength="80" placeholder="キャプション（任意）" style="margin-top:8px">';
+  } else if (type === 'pair') {
+    body =
+      '<div class="p711-pair-imgs">' +
+        '<div class="p211-img-drop" onclick="">' +
+          '<button class="p211-img-drop__btn" type="button">画像を選択</button><div>1枚目</div>' +
+        '</div>' +
+        '<div class="p211-img-drop" onclick="">' +
+          '<button class="p211-img-drop__btn" type="button">画像を選択</button><div>2枚目</div>' +
+        '</div>' +
+      '</div>' +
+      '<input type="text" class="p211-img-caption" maxlength="80" placeholder="キャプション（任意・2枚共通）">';
+  } else if (type === 'video') {
+    body =
+      '<div class="p211-field">' +
+        '<label class="p211-label">動画URL<span class="ktn-req">必須</span></label>' +
+        '<input class="p211-input" type="url" placeholder="https://www.youtube.com/watch?v=…">' +
+        '<p class="p211-help">YouTube・Vimeo等の動画ページURLを入力してください（動画ファイルのアップロードは不要です）。</p>' +
+      '</div>' +
+      '<input type="text" class="p211-img-caption" maxlength="80" placeholder="キャプション（任意）">' +
+      '<div class="p711-video-meta">' +
+        '<label class="p211-label">再生時間（表示用）</label>' +
+        '<input class="p211-input" type="text" placeholder="0:45" style="width:100px">' +
+      '</div>';
+  }
+  el.innerHTML =
+    '<div class="p711-block__head">' +
+      '<span class="p711-block__handle" draggable="true" title="ドラッグして並べ替え" aria-label="ドラッグして並べ替え">⠿</span>' +
+      '<span class="p711-block__tag">' + P711_BLOCK_LABEL[type] + '</span>' +
+      '<button class="p711-block__del" type="button" title="このブロックを削除" onclick="p711RemoveBlock(this)">✕</button>' +
+    '</div>' +
+    '<div class="p711-block__body">' + body + '</div>';
+  return el;
+}
+
+function p711AddBlock(type) {
+  var blocks = document.getElementById('p711Blocks');
+  if (!blocks) return;
+  blocks.appendChild(p711MakeBlock(type));
+  if (typeof syncOptUI === 'function') syncOptUI();
+}
+
+function p711RemoveBlock(btn) {
+  var block = btn.closest('.p711-block');
+  var blocks = document.getElementById('p711Blocks');
+  if (!block || !blocks) return;
+  /* 最後の1ブロックは削除させない（記事本文を空にしないため） */
+  if (blocks.children.length <= 1) {
+    if (typeof KTN !== 'undefined' && KTN.toast) KTN.toast('本文には最低1つのブロックが必要です（デモ）');
+    return;
+  }
+  block.remove();
+}
+
+/* 本文ブロックのドラッグ並べ替え（ハンドル起点・p6-11 のサブ画像並べ替えと同型） */
+(function () {
+  var list = document.getElementById('p711Blocks');
+  if (!list) return;
+  var dragEl = null;
+
+  list.addEventListener('dragstart', function (e) {
+    var handle = e.target.closest('.p711-block__handle');
+    if (!handle || !list.contains(handle)) { e.preventDefault(); return; }
+    dragEl = handle.closest('.p711-block');
+    if (!dragEl) return;
+    dragEl.classList.add('is-dragging');
+    if (e.dataTransfer) {
+      e.dataTransfer.effectAllowed = 'move';
+      try { e.dataTransfer.setData('text/plain', ''); } catch (err) {}
+      if (e.dataTransfer.setDragImage) e.dataTransfer.setDragImage(dragEl, 16, 16);
+    }
+  });
+
+  list.addEventListener('dragover', function (e) {
+    if (!dragEl) return;
+    e.preventDefault();
+    if (e.dataTransfer) e.dataTransfer.dropEffect = 'move';
+    var over = e.target.closest('.p711-block');
+    if (!over || over === dragEl || !list.contains(over)) return;
+    var rect = over.getBoundingClientRect();
+    var after = (e.clientY - rect.top) > rect.height / 2;
+    list.insertBefore(dragEl, after ? over.nextSibling : over);
+  });
+
+  list.addEventListener('drop', function (e) { e.preventDefault(); });
+
+  list.addEventListener('dragend', function () {
+    if (dragEl) dragEl.classList.remove('is-dragging');
+    dragEl = null;
+  });
+})();
+
+</script>
+</body>
+</html>

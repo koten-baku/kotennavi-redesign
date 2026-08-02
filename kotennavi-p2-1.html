@@ -195,16 +195,18 @@
             <ul class="p2-1-simple-list" id="p2EventList"><!-- JSで生成 --></ul>
           </section>
 
-          <!-- ④ クリエイター在廊予定（シンプルリスト） -->
+          <!-- ④ クリエイター在廊予定（構造化スケジュール＝p2-11アコーディオン入力＋会場利用案内「クリエイター在廊」有無ラベル・説明文をそのままテキスト表示） -->
           <section class="p2-1-section ktn-csec">
             <div class="p2-1-section__head">
               <h2 class="p2-1-section__title">クリエイター在廊予定 <span class="ktn-sec-en">Creator Attendance</span></h2>
             </div>
-            <p class="p2-1-notice">
+            <p class="p2-1-notice" id="p2AttendanceNotice">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="13" height="13"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-              在廊日程は変更になる場合があります。事前にギャラリーへご確認ください。
+              在廊日程は変更になる場合があります。事前に展覧会のお問合わせ先へご確認ください。
             </p>
+            <p class="p2-1-attendance-text" id="p2AttendanceText"><!-- JSで生成 --></p>
             <ul class="p2-1-simple-list" id="p2AttendanceGrid"><!-- JSで生成 --></ul>
+            <p class="p2-1-empty" id="p2AttendanceEmpty" hidden>本展覧会ではクリエイターの在廊予定は登録されていません。</p>
           </section>
 
         </div><!-- /p2-1-main -->

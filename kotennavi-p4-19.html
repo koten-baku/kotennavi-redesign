@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>記事管理 — Gallery SOIL 渋谷 | 個展なび</title>
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<body data-w="detail" class="p4-19-page p4-page mgmt-page">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- デモバー -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ロール：</span>
+  <button class="dbtn" onclick="setR('guest',this)">ゲスト</button>
+  <button class="dbtn" onclick="setR('login',this)">ログイン</button>
+  <button class="dbtn on" onclick="setR('user+gallery',this)">gallery本人</button>
+  <button class="dbtn" onclick="setR('admin',this)">管理者</button>
+</div>
+
+<div class="shell">
+<div class="content-wrap" id="contentWrap">
+
+  <header class="ktn-header" id="ktnHeader">
+    <div class="ktn-header__inner">
+      <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+      <div class="ktn-hdr-actions" id="ktnActs"></div>
+    </div>
+  </header>
+
+  <main class="ktn-main" id="ktnMain">
+    <div class="ktn-content">
+
+      <!-- ギャラリー 文脈ストリップ（identity strip） -->
+      <div class="ktn-mgmt-context">
+        <a class="ktn-mgmt-context__media ktn-mgmt-context__media--gallery" href="kotennavi-p4.html" style="background:linear-gradient(135deg,#c8a888,#8b5e3c)">SOIL</a>
+        <div class="ktn-mgmt-context__body">
+          <div class="ktn-mgmt-context__badges">
+            <span class="cb cb-person cb-gallery">gallery</span>
+          </div>
+          <div class="ktn-mgmt-context__name"><a href="kotennavi-p4.html">Gallery SOIL 渋谷</a></div>
+          <div class="ktn-mgmt-context__meta">絵画・現代美術 · 東京・渋谷</div>
+        </div>
+        <div class="ktn-mgmt-context__actions">
+          <a class="ktn-mgmt-context__view" href="kotennavi-p4.html">ギャラリーページへ →</a>
+        </div>
+      </div>
+
+      <!-- 管理ボックス -->
+      <div class="p419-wrap ktn-mgmt-wrap ktn-mgmt-stack">
+
+        <!-- ページタイトル -->
+        <div class="ktn-mgmt-head">
+          <h2 class="ktn-mgmt-head__title">記事管理</h2>
+          <p class="ktn-mgmt-head__en">ARTICLES</p>
+          <p class="ktn-mgmt-head__desc">あなたが投稿した記事を確認・編集・削除します。記事は<strong>作品ページ・展覧会ページ・ギャラリーページ</strong>のいずれかから作成でき、掲載先はその作成元によって自動的に決まります（あとから変更はできません）。公開済みの記事はいつでも編集・クローンでの複製ができます。</p>
+        </div>
+
+        <!-- 新規作成（独立CTA） -->
+        <div class="p319-new-row">
+          <a class="ktn-action-btn" id="p419NewBtn" href="kotennavi-p7-11.html?mode=new&role=gallery&self=1">新規記事を作成 →</a>
+        </div>
+
+        <!-- 記事について注記 -->
+        <div class="p319-notice">
+          <svg class="p319-notice__icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="17" height="17" aria-hidden="true"><path d="M2 10s3-5.5 8-5.5S18 10 18 10s-3 5.5-8 5.5S2 10 2 10Z"/><circle cx="10" cy="10" r="2.3"/></svg>
+          <div class="p319-notice__body">
+            <strong>この一覧には、作品・展覧会・ギャラリーページから作成したすべての記事が表示されます。</strong>
+            掲載先（作品・展覧会・ギャラリー）にもそれぞれ管理ページがありますが、記事をまとめて一元管理できるのはこの一覧だけです。
+          </div>
+        </div>
+
+        <!-- 下書きの注記（下書きがある時のみ表示・JSで開閉） -->
+        <div class="p319-draft-banner" id="p419DraftBanner" hidden>
+          <svg class="p319-draft-banner__icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="17" height="17" aria-hidden="true"><path d="M4 14.5V16h1.5l8-8-1.5-1.5-8 8Z"/><path d="M12.5 5l1.5-1.5a1 1 0 0 1 1.4 0l.1.1a1 1 0 0 1 0 1.4L14 6.5"/></svg>
+          <div class="p319-draft-banner__body">
+            <strong>作成途中の下書きが<span id="p419DraftCount">0</span>件あります。</strong>
+            下書きは未完成のため<strong>公開・記事一覧・検索の対象にならず</strong>、一覧の最上部に固定表示しています。各下書きの「編集を再開 →」から続きを入力し、必須項目がそろえば保存で公開できます。
+          </div>
+        </div>
+
+        <!-- ツールバー：記事種別・掲載先・並べ替え -->
+        <div class="p319-toolbar">
+          <div class="p319-toolbar__filters">
+            <label class="p319-filter">
+              <span class="p319-filter__label">記事種別</span>
+              <select class="p319-filter__sel" id="p419FilterType">
+                <option value="">すべて</option>
+                <option value="a">レポート</option>
+                <option value="b">インタビュー</option>
+                <option value="c">ギャラリーノート</option>
+                <option value="d">お知らせ</option>
+                <option value="e">ワークショップ</option>
+                <option value="f">その他</option>
+              </select>
+            </label>
+            <label class="p319-filter">
+              <span class="p319-filter__label">掲載先</span>
+              <select class="p319-filter__sel" id="p419FilterDest">
+                <option value="">すべて</option>
+                <option value="artwork">作品</option>
+                <option value="exhibition">展覧会</option>
+                <option value="standalone">ギャラリーページ</option>
+              </select>
+            </label>
+            <label class="p319-filter">
+              <span class="p319-filter__label">並べ替え</span>
+              <select class="p319-filter__sel" id="p419Sort">
+                <option value="reg-desc">登録が新しい順</option>
+                <option value="reg-asc">登録が古い順</option>
+                <option value="title">タイトル順</option>
+              </select>
+            </label>
+          </div>
+        </div>
+
+        <!-- 記事一覧 -->
+        <ul class="p319-list" id="p419List" aria-label="記事一覧"></ul>
+
+        <!-- ゼロ状態 -->
+        <div class="p319-empty" id="p419Empty" hidden>
+          <p class="p319-empty__msg">該当する記事がありません。</p>
+        </div>
+
+        <!-- ページング -->
+        <nav class="ktn-pagination" id="p419Pagination" aria-label="ページ送り" hidden></nav>
+
+      </div><!-- /.ktn-mgmt-wrap -->
+
+      <!-- 削除／下書き破棄 確認モーダル（.ktn-mgmt-wrap の外＝fixed オーバーレイ） -->
+      <div class="p319-del-modal" id="p419DelModal" hidden>
+        <div class="p319-del-modal__bg" id="p419DelBg"></div>
+        <div class="p319-del-modal__panel" role="dialog" aria-modal="true" aria-labelledby="p419DelTitle">
+          <h3 class="p319-del-modal__title" id="p419DelTitle">記事を削除しますか？</h3>
+          <p class="p319-del-modal__desc" id="p419DelDesc"></p>
+          <div class="p319-del-modal__actions">
+            <button type="button" class="ktn-op-btn" id="p419DelCancel">キャンセル</button>
+            <button type="button" class="ktn-op-btn ktn-op-btn--danger" id="p419DelConfirm">削除する</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /.ktn-content -->
+  </main>
+
+</div><!-- /.content-wrap -->
+</div><!-- /.shell -->
+
+<nav class="ktn-bottom-nav" id="ktnBottomNav"><div class="ktn-bottom-nav__inner" id="ktnBottomNavInner"></div></nav>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Top","item":"https://koten-navi.com/"},{"@type":"ListItem","position":2,"name":"ギャラリー","item":"https://koten-navi.com/p10-3"},{"@type":"ListItem","position":3,"name":"Gallery SOIL 渋谷","item":"https://koten-navi.com/p4"},{"@type":"ListItem","position":4,"name":"記事管理"}]}</script>
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+  KTN.init({ page: 'p4-19', role: 'user+gallery' });
+  function setR(role, btn) {
+    document.querySelectorAll('.dbtn').forEach(function(b){ b.classList.remove('on'); });
+    btn.classList.add('on');
+    window.curRole = role;
+    if (window.ktnRender) ktnRender();
+  }
+</script>
+</body>
+</html>

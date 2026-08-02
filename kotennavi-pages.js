@@ -531,6 +531,452 @@ KTN.pages['p8'] = function () {
 };
 
 /* ────────────────────────────────────────────────────
+   P7 記事詳細（親作品・投稿者・おすすめ）
+──────────────────────────────────────────────────── */
+KTN.pages['p7'] = function () {
+  /* おすすめ展覧会グリッド（p2 と同データ・部品を再利用） */
+  var grid = document.getElementById('p7SubRecGrid');
+  if (grid) grid.innerHTML = P2_SUB_REC_DATA.map(buildGridEcCard).join('');
+};
+
+/* 記事の掲載先（作品／展覧会／クリエイターページ／ギャラリーページ）デモ切替
+   掲載先＝コンテンツ（作品・展覧会）は interest、人物（クリエイター・ギャラリー）は watch を使う */
+var P7_CONTEXTS = {
+  artwork: {
+    leadHref: 'kotennavi-p6.html',
+    leadLabel: 'この作品の記事',
+    leadHtml: `
+      <span class="ktn-content-lead__thumb" style="background:linear-gradient(155deg,#b8d8cc,#6a9e8a)"></span>
+      <span class="ktn-content-lead__body">
+        <span class="ktn-content-lead__name"><span class="cb cb-content cb-artwork">artwork</span>オノマトペの庭</span>
+        <span class="ktn-content-lead__meta">田中 透 ・ 2026年 ・ ミクストメディア</span>
+      </span>`,
+    badgesHtml: `<span class="cb cb-content cb-article">article</span><span class="at at-c">制作日記</span>`,
+    title: '『オノマトペの庭』制作について —— 音のかたちを探して',
+    en: 'Making of Onomatopoeia Garden: In Search of the Shape of Sound',
+    authorHref: 'kotennavi-p3.html',
+    authorHtml: `
+      <span class="p7-head__avatar" style="background:linear-gradient(135deg,#7ab4cc,#4a8099);color:rgba(255,255,255,.9)">T</span>
+      <span class="p7-head__author-info">
+        <span class="p7-head__author-name"><span class="cb cb-person cb-creator">creator</span>&nbsp;田中 透</span>
+        <span class="p7-head__date">2026.03.05 公開</span>
+      </span>`,
+    articleHtml: `
+      <div class="p7-article__block p7-article__block--text">
+        <p>「ふわふわ」「ざわざわ」「きらきら」――日本語のオノマトペは、音でも、手触りでも、光の揺らぎでもある不思議な言葉たちだ。今回の新作《オノマトペの庭》は、そうした感覚の断片を一枚の画面に集め、ひとつの「庭」として編み直す試みだった。制作期間はおよそ4ヶ月。ここでは、そのプロセスの一部を振り返ってみたい。</p>
+      </div>
+      <figure class="p7-article__block p7-article__block--media p7-article__media--single">
+        <div class="p7-article__media-img" style="background:linear-gradient(155deg,#e8e0c8,#c4b888)"></div>
+        <figcaption class="p7-article__caption">制作初期のドローイング。「ふわふわ」という言葉から浮かんだ最初の形。</figcaption>
+      </figure>
+      <div class="p7-article__block p7-article__block--text">
+        <p class="p7-article__subtitle">言葉を「感じ」に変える</p>
+        <p>最初に手を動かしたのは、言葉そのものを絵にしようとするのではなく、言葉を口にしたときの「感じ」を線にすることだった。「ふわふわ」なら弾むような曲線、「ざわざわ」なら細かく震える短い線。ドローイングを何十枚も重ねるうちに、画面全体を「庭」として構成するアイデアが生まれた。</p>
+      </div>
+      <figure class="p7-article__block p7-article__block--media p7-article__media--video">
+        <div class="p7-article__media-video" style="background:linear-gradient(155deg,#3d3530,#1f1a18)">
+          <button class="p7-article__video-play" type="button" aria-label="動画を再生">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none"><polygon points="9,6 19,12 9,18" fill="#fff"/></svg>
+          </button>
+          <span class="p7-article__video-time">2:14</span>
+        </div>
+        <figcaption class="p7-article__caption">アトリエでの制作風景。緑がかった色面を少しずつ重ねていく。</figcaption>
+      </figure>
+      <div class="p7-article__block p7-article__block--text">
+        <p>画面中央の緑がかった空間は、複数の「やわらかい音」が重なり合う場所として描いた。色を置いては拭き取り、また置く――その反復のなかで、ようやく「静かな庭」の気配が画面に宿り始めた。F30号という大きさは、鑑賞者が作品の前に立ったとき、その場の空気ごと体験できるようにという意図から選んでいる。</p>
+      </div>
+      <figure class="p7-article__block p7-article__block--media p7-article__media--pair">
+        <div class="p7-article__media-col">
+          <div class="p7-article__media-img" style="background:linear-gradient(135deg,#9cc4b8,#5a8e7a)"></div>
+          <figcaption class="p7-article__caption">制作中盤のラフ。</figcaption>
+        </div>
+        <div class="p7-article__media-col">
+          <div class="p7-article__media-img" style="background:linear-gradient(165deg,#c4d8d0,#7aaa98)"></div>
+          <figcaption class="p7-article__caption">完成に近づいた状態。</figcaption>
+        </div>
+      </figure>
+      <div class="p7-article__block p7-article__block--text">
+        <p>「庭」という言葉を頭に浮かべたとき、まず耳に届いたのは「しんと静まり返った空気感」と「葉が揺れる微かな音」だった。その二つの感覚が混ざり合う瞬間を、画面の上に留めておきたい――そう思いながら筆を置いた。完成した《オノマトペの庭》は、会場でじっくり向き合っていただけたら嬉しい。</p>
+      </div>`,
+    sideParentTitle: 'この記事の作品',
+    sideParentTitleEn: 'Artwork',
+    sideParentHtml: `
+      <div class="p7-side-card__title">この記事の作品<span class="ktn-sec-en">Artwork</span></div>
+      <a href="kotennavi-p6.html" class="p2-side-ec">
+        <div class="p2-side-ec__media"><div class="p2-side-ec__poster" style="background:linear-gradient(155deg,#b8d8cc,#6a9e8a)"></div></div>
+        <div class="p2-side-ec__body">
+          <div class="p2-side-ec__badge-row"><span class="cb cb-content cb-artwork">artwork</span><span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span></div>
+          <div class="p2-side-ec__name">オノマトペの庭</div>
+          <div class="p2-side-ec__venue">田中 透 ・ 2026年</div>
+        </div>
+        <button class="ktn-icon-btn" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault()">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
+          <span class="tip">興味あり！に追加する</span>
+        </button>
+      </a>
+      <a href="kotennavi-p6.html" class="ktn-more-link">作品ページへ →</a>`,
+    sideAuthorHtml: `
+      <div class="p7-side-card__title">投稿者<span class="ktn-sec-en">Posted by</span></div>
+      <div class="p2-side-posted__dates">公開：2026.03.05 / 最終更新：2026.03.05</div>
+      <a class="p7-author-card" href="kotennavi-p3.html">
+        <div class="p7-author-card__avatar" style="background:linear-gradient(135deg,#7ab4cc,#4a8099);color:rgba(255,255,255,.9)">T</div>
+        <div class="p7-author-card__info">
+          <div class="p7-author-card__badge-row"><span class="cb cb-person cb-creator">creator</span></div>
+          <div class="p7-author-card__name">田中 透</div>
+          <div class="p2-watcher-item__counts">
+            <span class="p2-watcher-item__count"><svg viewBox="0 0 16 16" fill="none" width="11" height="11"><circle cx="8" cy="8" r="7" fill="#3a90e0"/><circle cx="8" cy="8" r="2.6" fill="#fff"/></svg>34</span>
+            <span class="p2-watcher-item__count"><svg viewBox="0 0 16 16" fill="none" width="11" height="11"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6" stroke-linejoin="round"/></svg>52</span>
+          </div>
+          <div class="p7-author-card__foot">
+            <button class="ktn-btn" data-off="watch" data-on="watching" data-action="watch"
+              onclick="handleAction(this,'watch');event.preventDefault()">
+              <svg viewBox="0 0 16 16" fill="none" width="15" height="15">
+                <circle cx="8" cy="8" r="7" fill="#7a8a99" opacity=".3"/>
+                <circle class="wi-inner" cx="8" cy="8" r="2.6"/>
+              </svg>
+              watch<span class="tip">ウォッチする</span>
+            </button>
+          </div>
+        </div>
+      </a>`,
+    ctaName: '『オノマトペの庭』制作について',
+    relatedCtxHtml: `<span class="cb cb-content cb-artwork">artwork</span><a href="kotennavi-p6.html" class="ktn-related-band__link">オノマトペの庭</a>`,
+    tagsHtml: `
+      <li><a class="ktn-tag-pill" href="/p10?tag=絵画">絵画</a></li>
+      <li><a class="ktn-tag-pill" href="/p10?tag=現代美術">現代美術</a></li>
+      <li><a class="ktn-tag-pill" href="/p10?tag=オノマトペ">オノマトペ</a></li>
+      <li><a class="ktn-tag-pill" href="/p10?tag=制作日記">制作日記</a></li>
+      <li><a class="ktn-tag-pill" href="/p10?area=tokyo">東京</a></li>`
+  },
+  exhibition: {
+    leadHref: 'kotennavi-p2.html',
+    leadLabel: 'この展覧会の記事',
+    leadHtml: `
+      <span class="ktn-content-lead__thumb" style="background:linear-gradient(155deg,#bcd4ea,#5a8fbe)"></span>
+      <span class="ktn-content-lead__body">
+        <span class="ktn-content-lead__name"><span class="cb cb-content cb-exhibition">exhibition</span>あなたが知らないオノマトペ</span>
+        <span class="ktn-content-lead__meta">Gallery SOIL 渋谷 ・ 2026.02.18 — 03.05</span>
+      </span>`,
+    badgesHtml: `<span class="cb cb-content cb-article">article</span><span class="at at-a">レポート</span>`,
+    title: '展評：オノマトペの庭「田中透」',
+    en: 'Exhibition Review: Tanaka Toru "Onomatopoeia Garden"',
+    authorHref: 'kotennavi-p3.html',
+    authorHtml: `
+      <span class="p7-head__avatar" style="background:linear-gradient(135deg,#7ab4cc,#4a8099);color:rgba(255,255,255,.9)">T</span>
+      <span class="p7-head__author-info">
+        <span class="p7-head__author-name"><span class="cb cb-person cb-creator">creator</span>&nbsp;田中 透</span>
+        <span class="p7-head__date">2026.03.10 公開</span>
+      </span>`,
+    articleHtml: `
+      <div class="p7-article__block p7-article__block--text">
+        <p>会場に足を踏み入れると、まず目に入るのは天井まで届く大きな窓から差し込む自然光だった。Gallery SOIL 渋谷の白い壁に、田中透の新作群が静かに並ぶ。「あなたが知らないオノマトペ」と題された今回の個展は、会期を通して多くの来場者を集めた。</p>
+      </div>
+      <figure class="p7-article__block p7-article__block--media p7-article__media--single">
+        <div class="p7-article__media-img" style="background:linear-gradient(155deg,#bcd4ea,#5a8fbe)"></div>
+        <figcaption class="p7-article__caption">会場入口から見た展示風景。自然光が作品の色面を柔らかく照らす。</figcaption>
+      </figure>
+      <div class="p7-article__block p7-article__block--text">
+        <p>中央に据えられた《オノマトペの庭》は、本展の核となる大作だ。緑がかった色面が生む静けさは、会場の白い壁と呼応し、来場者を自然と作品の前に留まらせる。</p>
+      </div>
+      <figure class="p7-article__block p7-article__block--media p7-article__media--video">
+        <div class="p7-article__media-video" style="background:linear-gradient(155deg,#3d3530,#1f1a18)">
+          <button class="p7-article__video-play" type="button" aria-label="動画を再生">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none"><polygon points="9,6 19,12 9,18" fill="#fff"/></svg>
+          </button>
+          <span class="p7-article__video-time">1:42</span>
+        </div>
+        <figcaption class="p7-article__caption">会場でのアーティストトーク（抜粋）。田中透が制作の背景を語る。</figcaption>
+      </figure>
+      <div class="p7-article__block p7-article__block--text">
+        <p>会期中に行われたギャラリートークには、立ち見が出るほどの来場者が集まった。田中の言葉を借りれば、「音を色に置き換える作業は、いつも半分は失敗する。でもその失敗の跡こそが、絵になる」。</p>
+      </div>
+      <figure class="p7-article__block p7-article__block--media p7-article__media--pair">
+        <div class="p7-article__media-col">
+          <div class="p7-article__media-img" style="background:linear-gradient(135deg,#d8e0e8,#9cb4c8)"></div>
+          <figcaption class="p7-article__caption">会場全景。</figcaption>
+        </div>
+        <div class="p7-article__media-col">
+          <div class="p7-article__media-img" style="background:linear-gradient(165deg,#e8dcc4,#c8a878)"></div>
+          <figcaption class="p7-article__caption">来場者の様子。</figcaption>
+        </div>
+      </figure>
+      <div class="p7-article__block p7-article__block--text">
+        <p>会期は2026年3月5日まで。オノマトペという身近でありながら捉えどころのない言葉たちが、絵画という形でどのように立ち上がるか――ぜひ会場で確かめてほしい。</p>
+      </div>`,
+    sideParentTitle: 'この記事の展覧会',
+    sideParentTitleEn: 'Exhibition',
+    sideParentHtml: `
+      <div class="p7-side-card__title">この記事の展覧会<span class="ktn-sec-en">Exhibition</span></div>
+      <a href="kotennavi-p2.html" class="p2-side-ec">
+        <div class="p2-side-ec__media"><div class="p2-side-ec__poster" style="background:linear-gradient(155deg,#bcd4ea,#5a8fbe)"></div></div>
+        <div class="p2-side-ec__body">
+          <div class="p2-side-ec__badge-row"><span class="cb cb-content cb-exhibition">exhibition</span><span class="sb sb-closed">会期終了</span></div>
+          <div class="p2-side-ec__name">あなたが知らないオノマトペ</div>
+          <div class="p2-side-ec__venue">Gallery SOIL 渋谷 ・ 2026.02.18–03.05</div>
+        </div>
+        <button class="ktn-icon-btn" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault()">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>
+          <span class="tip">興味あり！に追加する</span>
+        </button>
+      </a>
+      <a href="kotennavi-p2.html" class="ktn-more-link">展覧会ページへ →</a>`,
+    sideAuthorHtml: `
+      <div class="p7-side-card__title">投稿者<span class="ktn-sec-en">Posted by</span></div>
+      <div class="p2-side-posted__dates">公開：2026.03.10 / 最終更新：2026.03.10</div>
+      <a class="p7-author-card" href="kotennavi-p3.html">
+        <div class="p7-author-card__avatar" style="background:linear-gradient(135deg,#7ab4cc,#4a8099);color:rgba(255,255,255,.9)">T</div>
+        <div class="p7-author-card__info">
+          <div class="p7-author-card__badge-row"><span class="cb cb-person cb-creator">creator</span></div>
+          <div class="p7-author-card__name">田中 透</div>
+          <div class="p2-watcher-item__counts">
+            <span class="p2-watcher-item__count"><svg viewBox="0 0 16 16" fill="none" width="11" height="11"><circle cx="8" cy="8" r="7" fill="#3a90e0"/><circle cx="8" cy="8" r="2.6" fill="#fff"/></svg>34</span>
+            <span class="p2-watcher-item__count"><svg viewBox="0 0 16 16" fill="none" width="11" height="11"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6" stroke-linejoin="round"/></svg>52</span>
+          </div>
+          <div class="p7-author-card__foot">
+            <button class="ktn-btn" data-off="watch" data-on="watching" data-action="watch"
+              onclick="handleAction(this,'watch');event.preventDefault()">
+              <svg viewBox="0 0 16 16" fill="none" width="15" height="15">
+                <circle cx="8" cy="8" r="7" fill="#7a8a99" opacity=".3"/>
+                <circle class="wi-inner" cx="8" cy="8" r="2.6"/>
+              </svg>
+              watch<span class="tip">ウォッチする</span>
+            </button>
+          </div>
+        </div>
+      </a>`,
+    ctaName: '展評：オノマトペの庭「田中透」',
+    relatedCtxHtml: `<span class="cb cb-content cb-exhibition">exhibition</span><a href="kotennavi-p2.html" class="ktn-related-band__link">あなたが知らないオノマトペ</a>`,
+    tagsHtml: `
+      <li><a class="ktn-tag-pill" href="/p10?tag=絵画">絵画</a></li>
+      <li><a class="ktn-tag-pill" href="/p10?tag=現代美術">現代美術</a></li>
+      <li><a class="ktn-tag-pill" href="/p10?tag=展評">展評</a></li>
+      <li><a class="ktn-tag-pill" href="/p10?area=tokyo">東京</a></li>
+      <li><a class="ktn-tag-pill" href="/p10?area=shibuya">渋谷</a></li>`
+  },
+  creator: {
+    leadHref: 'kotennavi-p3.html',
+    leadLabel: 'このクリエイターの記事',
+    leadHtml: `
+      <span class="ktn-content-lead__thumb" style="background:linear-gradient(155deg,#8fb0c2,#2a5f7a)"></span>
+      <span class="ktn-content-lead__body">
+        <span class="ktn-content-lead__name"><span class="cb cb-person cb-creator">creator</span>田中 透</span>
+        <span class="ktn-content-lead__meta">画家 ・ 絵画・ミクストメディア</span>
+      </span>`,
+    badgesHtml: `<span class="cb cb-content cb-article">article</span><span class="at at-b">インタビュー</span>`,
+    title: '田中透インタビュー：言語と絵画のあいだで',
+    en: 'Interview with Tanaka Toru: Between Language and Painting',
+    authorHref: 'kotennavi-p3.html',
+    authorHtml: `
+      <span class="p7-head__avatar" style="background:linear-gradient(135deg,#7ab4cc,#4a8099);color:rgba(255,255,255,.9)">T</span>
+      <span class="p7-head__author-info">
+        <span class="p7-head__author-name"><span class="cb cb-person cb-creator">creator</span>&nbsp;田中 透</span>
+        <span class="p7-head__date">2025.11.20 公開</span>
+      </span>`,
+    articleHtml: `
+      <div class="p7-article__block p7-article__block--text">
+        <p>「言葉は音であり、色であり、触感でもある」――そう語るのは、独自の表現を追い続けるアーティスト・田中透だ。オノマトペという身近な言葉をモチーフに、絵画という形でどのように立ち上げているのか。制作の背景から今後の展望まで、じっくりと話を聞いた。</p>
+      </div>
+      <figure class="p7-article__block p7-article__block--media p7-article__media--single">
+        <div class="p7-article__media-img" style="background:linear-gradient(155deg,#7ab4cc,#4a8099)"></div>
+        <figcaption class="p7-article__caption">アトリエにて。壁には制作中のドローイングが並ぶ。</figcaption>
+      </figure>
+      <div class="p7-article__block p7-article__block--text">
+        <p>――オノマトペをモチーフにされたきっかけは？「小さい頃から、言葉の『音』に強く反応するタイプでした。『ふわふわ』と聞くと実際に何かが軽く弾むのが見える気がして。その感覚をずっと絵にしたいと思っていました」</p>
+      </div>
+      <figure class="p7-article__block p7-article__block--media p7-article__media--video">
+        <div class="p7-article__media-video" style="background:linear-gradient(155deg,#3d3530,#1f1a18)">
+          <button class="p7-article__video-play" type="button" aria-label="動画を再生">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none"><polygon points="9,6 19,12 9,18" fill="#fff"/></svg>
+          </button>
+          <span class="p7-article__video-time">3:08</span>
+        </div>
+        <figcaption class="p7-article__caption">インタビュー映像（抜粋）。制作風景とあわせて収録。</figcaption>
+      </figure>
+      <div class="p7-article__block p7-article__block--text">
+        <p>――制作で大切にしていることは？「言葉を『説明』しないこと。オノマトペそのものを絵解きするのではなく、その言葉を発したときの体の感覚――喉の震え、口の形――をそのまま画面に落とし込むようにしています」</p>
+      </div>
+      <figure class="p7-article__block p7-article__block--media p7-article__media--pair">
+        <div class="p7-article__media-col">
+          <div class="p7-article__media-img" style="background:linear-gradient(135deg,#e8e0c8,#c4b888)"></div>
+          <figcaption class="p7-article__caption">初期のドローイング。</figcaption>
+        </div>
+        <div class="p7-article__media-col">
+          <div class="p7-article__media-img" style="background:linear-gradient(165deg,#9cc4b8,#5a8e7a)"></div>
+          <figcaption class="p7-article__caption">完成に近い状態のキャンバス。</figcaption>
+        </div>
+      </figure>
+      <div class="p7-article__block p7-article__block--text">
+        <p>――今後の展望は？「言葉と絵画の境界をもっと曖昧にしていきたい。次回作では音そのものを展示空間に持ち込むことも考えています」。次回作にも期待が高まる。</p>
+      </div>`,
+    sideParentTitle: '',
+    sideParentTitleEn: '',
+    sideParentHtml: '',
+    sideAuthorHtml: `
+      <div class="p7-side-card__title">投稿者<span class="ktn-sec-en">Posted by</span></div>
+      <div class="p2-side-posted__dates">公開：2025.11.20 / 最終更新：2025.11.20</div>
+      <a class="p7-author-card" href="kotennavi-p3.html">
+        <div class="p7-author-card__avatar" style="background:linear-gradient(135deg,#7ab4cc,#4a8099);color:rgba(255,255,255,.9)">T</div>
+        <div class="p7-author-card__info">
+          <div class="p7-author-card__badge-row"><span class="cb cb-person cb-creator">creator</span></div>
+          <div class="p7-author-card__name">田中 透</div>
+          <div class="p2-watcher-item__counts">
+            <span class="p2-watcher-item__count"><svg viewBox="0 0 16 16" fill="none" width="11" height="11"><circle cx="8" cy="8" r="7" fill="#3a90e0"/><circle cx="8" cy="8" r="2.6" fill="#fff"/></svg>34</span>
+            <span class="p2-watcher-item__count"><svg viewBox="0 0 16 16" fill="none" width="11" height="11"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6" stroke-linejoin="round"/></svg>52</span>
+          </div>
+          <div class="p7-author-card__foot">
+            <button class="ktn-btn" data-off="watch" data-on="watching" data-action="watch"
+              onclick="handleAction(this,'watch');event.preventDefault()">
+              <svg viewBox="0 0 16 16" fill="none" width="15" height="15">
+                <circle cx="8" cy="8" r="7" fill="#7a8a99" opacity=".3"/>
+                <circle class="wi-inner" cx="8" cy="8" r="2.6"/>
+              </svg>
+              watch<span class="tip">ウォッチする</span>
+            </button>
+          </div>
+        </div>
+      </a>`,
+    ctaName: '田中透インタビュー：言語と絵画のあいだで',
+    relatedCtxHtml: `<span class="cb cb-person cb-creator">creator</span><a href="kotennavi-p3.html" class="ktn-related-band__link">田中 透</a>`,
+    tagsHtml: `
+      <li><a class="ktn-tag-pill" href="/p10?tag=絵画">絵画</a></li>
+      <li><a class="ktn-tag-pill" href="/p10?tag=現代美術">現代美術</a></li>
+      <li><a class="ktn-tag-pill" href="/p10?tag=インタビュー">インタビュー</a></li>
+      <li><a class="ktn-tag-pill" href="/p10?area=tokyo">東京</a></li>`
+  },
+  gallery: {
+    leadHref: 'kotennavi-p4.html',
+    leadLabel: 'このギャラリーの記事',
+    leadHtml: `
+      <span class="ktn-content-lead__thumb" style="background:linear-gradient(155deg,#c9ac86,#8b5e3c)"></span>
+      <span class="ktn-content-lead__body">
+        <span class="ktn-content-lead__name"><span class="cb cb-person cb-gallery">gallery</span>Gallery SOIL 渋谷</span>
+        <span class="ktn-content-lead__meta">渋谷区松濤 ・ 現代美術・絵画</span>
+      </span>`,
+    badgesHtml: `<span class="cb cb-content cb-article">article</span><span class="at at-c">ギャラリーノート</span>`,
+    title: 'Gallery SOIL 渋谷 ノート：展示替えの舞台裏',
+    en: 'Gallery Notes: Behind the Scenes of the Rehang',
+    authorHref: 'kotennavi-p4.html',
+    authorHtml: `
+      <span class="p7-head__avatar" style="background:linear-gradient(135deg,#c9ac86,#8b5e3c);color:rgba(255,255,255,.9);border-radius:4px;outline-color:rgba(139,94,60,.45)">G</span>
+      <span class="p7-head__author-info">
+        <span class="p7-head__author-name"><span class="cb cb-person cb-gallery">gallery</span>&nbsp;Gallery SOIL 渋谷</span>
+        <span class="p7-head__date">2026.03.12 公開</span>
+      </span>`,
+    articleHtml: `
+      <div class="p7-article__block p7-article__block--text">
+        <p>「あなたが知らないオノマトペ」展の会期が終わり、次の展示に向けて会場の展示替えが始まった。今回は、その舞台裏を少しだけご紹介したい。</p>
+      </div>
+      <figure class="p7-article__block p7-article__block--media p7-article__media--single">
+        <div class="p7-article__media-img" style="background:linear-gradient(155deg,#ded6c8,#a89478)"></div>
+        <figcaption class="p7-article__caption">撤収作業中のギャラリー。壁の跡がまだ残る。</figcaption>
+      </figure>
+      <div class="p7-article__block p7-article__block--text">
+        <p>作品の搬出は早朝から始まる。大型作品は2人がかりで慎重に梱包し、専用の輸送車へ。壁に空いた釘穴を補修し、白く塗り直す――この繰り返しが、次の展示のための「まっさらな壁」を作る。</p>
+      </div>
+      <figure class="p7-article__block p7-article__block--media p7-article__media--video">
+        <div class="p7-article__media-video" style="background:linear-gradient(155deg,#3d3530,#1f1a18)">
+          <button class="p7-article__video-play" type="button" aria-label="動画を再生">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none"><polygon points="9,6 19,12 9,18" fill="#fff"/></svg>
+          </button>
+          <span class="p7-article__video-time">1:05</span>
+        </div>
+        <figcaption class="p7-article__caption">展示替えの様子（タイムラプス）。</figcaption>
+      </figure>
+      <div class="p7-article__block p7-article__block--text">
+        <p>照明の位置決めも重要な作業のひとつ。次回展示の作家と相談しながら、作品ごとに最適な角度・明るさを探る。「同じ壁でも、照明ひとつで作品の見え方はまったく変わります」とスタッフは語る。</p>
+      </div>
+      <figure class="p7-article__block p7-article__block--media p7-article__media--pair">
+        <div class="p7-article__media-col">
+          <div class="p7-article__media-img" style="background:linear-gradient(135deg,#c9ac86,#8b5e3c)"></div>
+          <figcaption class="p7-article__caption">壁の補修作業。</figcaption>
+        </div>
+        <div class="p7-article__media-col">
+          <div class="p7-article__media-img" style="background:linear-gradient(165deg,#e8dcc4,#c8a878)"></div>
+          <figcaption class="p7-article__caption">新しい照明プランのテスト。</figcaption>
+        </div>
+      </figure>
+      <div class="p7-article__block p7-article__block--text">
+        <p>次回の展示は4月上旬オープン予定。会場が生まれ変わる様子を、また別の機会にご紹介できればと思う。</p>
+      </div>`,
+    sideParentTitle: '',
+    sideParentTitleEn: '',
+    sideParentHtml: '',
+    sideAuthorHtml: `
+      <div class="p7-side-card__title">投稿者<span class="ktn-sec-en">Posted by</span></div>
+      <div class="p2-side-posted__dates">公開：2026.03.12 / 最終更新：2026.03.12</div>
+      <a class="p7-author-card" href="kotennavi-p4.html">
+        <div class="p7-author-card__avatar" style="background:linear-gradient(135deg,#c9ac86,#8b5e3c);color:rgba(255,255,255,.9);border-radius:4px;outline-color:rgba(139,94,60,.45)">G</div>
+        <div class="p7-author-card__info">
+          <div class="p7-author-card__badge-row"><span class="cb cb-person cb-gallery">gallery</span></div>
+          <div class="p7-author-card__name">Gallery SOIL 渋谷</div>
+          <div class="p2-watcher-item__counts">
+            <span class="p2-watcher-item__count"><svg viewBox="0 0 16 16" fill="none" width="11" height="11"><circle cx="8" cy="8" r="7" fill="#3a90e0"/><circle cx="8" cy="8" r="2.6" fill="#fff"/></svg>61</span>
+            <span class="p2-watcher-item__count"><svg viewBox="0 0 16 16" fill="none" width="11" height="11"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6" stroke-linejoin="round"/></svg>28</span>
+          </div>
+          <div class="p7-author-card__foot">
+            <button class="ktn-btn" data-off="watch" data-on="watching" data-action="watch"
+              onclick="handleAction(this,'watch');event.preventDefault()">
+              <svg viewBox="0 0 16 16" fill="none" width="15" height="15">
+                <circle cx="8" cy="8" r="7" fill="#7a8a99" opacity=".3"/>
+                <circle class="wi-inner" cx="8" cy="8" r="2.6"/>
+              </svg>
+              watch<span class="tip">ウォッチする</span>
+            </button>
+          </div>
+        </div>
+      </a>`,
+    ctaName: 'Gallery SOIL 渋谷 ノート：展示替えの舞台裏',
+    relatedCtxHtml: `<span class="cb cb-person cb-gallery">gallery</span><a href="kotennavi-p4.html" class="ktn-related-band__link">Gallery SOIL 渋谷</a>`,
+    tagsHtml: `
+      <li><a class="ktn-tag-pill" href="/p10?tag=ギャラリー">ギャラリー</a></li>
+      <li><a class="ktn-tag-pill" href="/p10?tag=現代美術">現代美術</a></li>
+      <li><a class="ktn-tag-pill" href="/p10?tag=展示替え">展示替え</a></li>
+      <li><a class="ktn-tag-pill" href="/p10?area=tokyo">東京</a></li>
+      <li><a class="ktn-tag-pill" href="/p10?area=shibuya">渋谷</a></li>`
+  }
+};
+
+function switchP7Context(key, btn) {
+  var d = P7_CONTEXTS[key];
+  if (!d) return;
+  var group = btn.parentElement.querySelectorAll('button[onclick^="switchP7Context"]');
+  for (var i = 0; i < group.length; i++) group[i].classList.remove('on');
+  btn.classList.add('on');
+
+  var leadLabel = document.getElementById('p7LeadLabel');
+  if (leadLabel) leadLabel.textContent = d.leadLabel;
+  var leadCard = document.getElementById('p7LeadCard');
+  if (leadCard) { leadCard.href = d.leadHref; leadCard.innerHTML = d.leadHtml; }
+  var badges = document.getElementById('p7Badges');
+  if (badges) badges.innerHTML = d.badgesHtml;
+  var title = document.getElementById('p7Title');
+  if (title) title.textContent = d.title;
+  var en = document.getElementById('p7En');
+  if (en) en.textContent = d.en;
+  var al = document.getElementById('p7AuthorLink');
+  if (al) { al.href = d.authorHref; al.innerHTML = d.authorHtml; }
+  var article = document.getElementById('p7Article');
+  if (article) article.innerHTML = d.articleHtml;
+  var sideParent = document.getElementById('p7SideParent');
+  if (sideParent) {
+    sideParent.innerHTML = d.sideParentHtml;
+    sideParent.style.display = d.sideParentHtml ? '' : 'none';
+  }
+  var sideAuthor = document.getElementById('p7SideAuthor');
+  if (sideAuthor) {
+    sideAuthor.innerHTML = d.sideAuthorHtml;
+    sideAuthor.style.display = d.sideAuthorHtml ? '' : 'none';
+  }
+  var cta = document.getElementById('p7CtaWidget');
+  if (cta) cta.setAttribute('data-cta-name', d.ctaName);
+  var relCtx = document.getElementById('p7RelatedCtx');
+  if (relCtx) relCtx.innerHTML = d.relatedCtxHtml;
+  var tags = document.getElementById('p7Tags');
+  if (tags) tags.innerHTML = d.tagsHtml;
+}
+window.switchP7Context = switchP7Context;
+
+/* ────────────────────────────────────────────────────
    P2-1 スケジュール
 ──────────────────────────────────────────────────── */
 KTN.pages['p2-1'] = function () {
@@ -582,7 +1028,7 @@ KTN.pages['p2-1'] = function () {
     }
   ];
 
-  /* クリエイター在廊予定（p2-11「クリエイター在廊予定」に対応）。
+  /* クリエイター在廊予定（p2-11「クリエイター在廊予定を入力する」アコーディオンに対応）。
      期間（from〜to）＋曜日フィルタ（dow）＋メモ。単日は from===to。 */
   var DOW_LABEL = { all: '全日', weekend: '土・日', 'weekend-hol': '土日祝', weekday: '平日', mon: '月', tue: '火', wed: '水', thu: '木', fri: '金', sat: '土', sun: '日' };
   var ATTENDANCE = [
@@ -590,6 +1036,13 @@ KTN.pages['p2-1'] = function () {
     { name: '田中 透', from: '2026-02-19', to: '2026-03-04', dow: 'weekend-hol', memo: '午後在廊予定（14:00頃〜）' },
     { name: '田中 透', from: '2026-03-05', to: '2026-03-05', dow: 'all',         memo: '最終日・終日在廊予定' }
   ];
+  /* p2-11「会場利用案内」内クリエイター在廊（select#p211FacAttend：''=未設定/'yes'=在廊あり/'no'=在廊なし＋自由記述）に対応。
+     この項目はそのままテキストで表示する（構造化リストへの再加工はしない）。在廊有無自体もラベルとして表示する。 */
+  var FACILITY_ATTEND = {
+    attend: 'yes',
+    note: '田中透：初日・最終日は終日、会期中の土日祝は午後（14:00頃〜）在廊予定です。詳しい日程は下記の在廊予定表をご確認ください。'
+  };
+  var FACILITY_ATTEND_LABEL = { yes: '在廊あり', no: '在廊なし' };
   function isOpenDate(ds, dow) { return OPEN_DOW.indexOf(dow) !== -1 || !!HOURS_EXC[ds]; }
   function dowMatch(filter, dow) {
     switch (filter) {
@@ -741,31 +1194,53 @@ KTN.pages['p2-1'] = function () {
     }).join('');
   })();
 
-  /* ── ④ 在廊予定 シンプルリスト（p2-11 入力＝期間＋曜日フィルタ＋メモ に対応） ── */
+  /* ── ④ 在廊予定（構造化スケジュール＝ATTENDANCE配列＋p2-11会場利用案内「クリエイター在廊」有無・自由記述をそのままテキスト表示） ── */
   (function() {
-    var list = document.getElementById('p2AttendanceGrid'); if (!list) return;
+    var list   = document.getElementById('p2AttendanceGrid');
+    var box    = document.getElementById('p2AttendanceText');
+    var notice = document.getElementById('p2AttendanceNotice');
+    var empty  = document.getElementById('p2AttendanceEmpty');
+    if (!list && !box) return;
+    var hasSchedule = ATTENDANCE.length > 0;
+    var hasNote     = FACILITY_ATTEND.attend === 'yes' || FACILITY_ATTEND.attend === 'no';
+    if (!hasSchedule && !hasNote) {
+      if (notice) notice.hidden = true;
+      if (list)   list.hidden = true;
+      if (box)    box.hidden = true;
+      if (empty)  empty.hidden = false;
+      return;
+    }
     function md(d) { return (d.getMonth()+1)+'/'+d.getDate(); }
-    list.innerHTML = ATTENDANCE.map(function(a) {
-      var f = parseDate(a.from), t = parseDate(a.to);
-      var single = a.from === a.to;
-      var sched = single
-        ? (f.getMonth()+1)+'.'+('0'+f.getDate()).slice(-2)+'（'+DOW_JA[f.getDay()]+'）'
-        : md(f)+'〜'+md(t)+' の'+DOW_LABEL[a.dow];
-      var past = t < TODAY;
-      var todayIn = TODAY >= f && TODAY <= t && dowMatch(a.dow, TODAY.getDay()) && isOpenDate(dateStr(TODAY), TODAY.getDay());
-      return (
-        '<li class="p2-1-simple-item'+(past?' p2-1-simple-item--past':'')+'">' +
-          '<div class="p2-1-simple-item__body">' +
-            '<div class="p2-1-simple-item__meta">' +
-              '<span class="p2-1-simple-item__badge p2-1-simple-item__badge--attend">在廊</span>' +
-              '<span class="p2-1-simple-item__time">'+sched+'</span>' +
+    if (hasSchedule && list) {
+      list.innerHTML = ATTENDANCE.map(function(a) {
+        var f = parseDate(a.from), t = parseDate(a.to);
+        var single = a.from === a.to;
+        var sched = single
+          ? (f.getMonth()+1)+'.'+('0'+f.getDate()).slice(-2)+'（'+DOW_JA[f.getDay()]+'）'
+          : md(f)+'〜'+md(t)+' の'+DOW_LABEL[a.dow];
+        var past = t < TODAY;
+        var todayIn = TODAY >= f && TODAY <= t && dowMatch(a.dow, TODAY.getDay()) && isOpenDate(dateStr(TODAY), TODAY.getDay());
+        return (
+          '<li class="p2-1-simple-item'+(past?' p2-1-simple-item--past':'')+'">' +
+            '<div class="p2-1-simple-item__body">' +
+              '<div class="p2-1-simple-item__meta">' +
+                '<span class="p2-1-simple-item__badge p2-1-simple-item__badge--attend">在廊</span>' +
+                '<span class="p2-1-simple-item__time">'+sched+'</span>' +
+              '</div>' +
+              '<div class="p2-1-simple-item__title">'+a.name+(todayIn?' <span style="font-size:.68rem;color:#c0392b">(本日)</span>':'')+'</div>' +
+              '<div class="p2-1-simple-item__desc">'+a.memo+'</div>' +
             '</div>' +
-            '<div class="p2-1-simple-item__title">'+a.name+(todayIn?' <span style="font-size:.68rem;color:#c0392b">(本日)</span>':'')+'</div>' +
-            '<div class="p2-1-simple-item__desc">'+a.memo+'</div>' +
-          '</div>' +
-        '</li>'
-      );
-    }).join('');
+          '</li>'
+        );
+      }).join('');
+    } else if (list) {
+      list.hidden = true;
+    }
+    if (hasNote && box) {
+      box.innerHTML = '<span class="p2-1-attendance-text__state">'+FACILITY_ATTEND_LABEL[FACILITY_ATTEND.attend]+'</span>'+FACILITY_ATTEND.note;
+    } else if (box) {
+      box.hidden = true;
+    }
   })();
 
   /* ── 近くの展覧会ミニリスト ── */
@@ -1436,7 +1911,7 @@ function _p6Init(opts) {
 
   function initPage() {
     var w = WORK;
-    document.title = '《' + w.title + '》' + w.creator + ' | 個展なび';
+    document.title = w.title + ' — ' + w.creator + ' | 個展なび';
     var el;
     el = document.getElementById('workTitle');
     if (el) el.innerHTML = '<span class="wh-title-kagi">《</span>' + w.title + '<span class="wh-title-kagi">》</span>';
@@ -1604,7 +2079,7 @@ function _p6Init(opts) {
 
   function openApplyModal() {
     var el = document.getElementById('amTitle');
-    if (el) el.textContent = '《' + WORK.title + '》購入申込';
+    if (el) el.textContent = WORK.title + ' 購入申込';
     openModal('applyModal');
   }
 
@@ -1805,6 +2280,7 @@ function _p6Init(opts) {
 
   function setR(role, btn) {
     KTN.role = role;
+    window.ktnState.role = role;
     dbtnGroup('setR');
     btn.classList.add('on');
     renderHeaderActs();
@@ -2067,7 +2543,7 @@ KTN.pages['p6'] = function() {
       if (el && w.thumbs && w.thumbs[0]) el.textContent = w.thumbs[0].label;
       /* タイトル */
       el = document.getElementById('p6Title');
-      if (el) el.textContent = '\u300a' + w.title + '\u300b';
+      if (el) el.textContent = w.title;
       el = document.getElementById('p6TitleEn');
       if (el) el.textContent = w.titleEn;
       /* \u30d0\u30c3\u30b8\u884c\uff1a\u58f2\u7d04\u6e08\u4f5c\u54c1\u306f aws \u30d0\u30c3\u30b8\u3092\u4f75\u8a18\uff08\u624b\u52d5\u58f2\u7d04\u6e08\uff0f\u30aa\u30f3\u30e9\u30a4\u30f3\u53d6\u5f15\u5b8c\u4e86\u3068\u3082
@@ -2122,7 +2598,7 @@ KTN.pages['p6'] = function() {
       }
       /* 作品タイトル（ABOUT THIS WORK セクション） */
       el = document.getElementById('p6AboutTitle');
-      if (el) el.textContent = '\u300a' + w.title + '\u300b';
+      if (el) el.textContent = w.title;
       /* 関連記事 */
       el = document.getElementById('p6Articles');
       if (el) {
@@ -6717,9 +7193,12 @@ KTN.pages['p3-14'] = function () {
   var cntSold     = document.getElementById('p314CountSold');
   var soldNotice  = document.getElementById('p314SoldNotice');
   var listedWrap  = document.getElementById('p314FilterListedWrap');
+  var pagerEl     = document.getElementById('p314Pagination');
   if (!listEl || !pubSel || !listedSel || !sortSel) return;
 
   var curTab = 'active'; /* 'active' | 'sold' */
+  var page = 1;
+  var PER_PAGE = 5;
 
   /* 詳細アコーディオンの開閉状態（再描画をまたいで維持） */
   var openIds = {};
@@ -6892,16 +7371,27 @@ KTN.pages['p3-14'] = function () {
     });
     rows.sort(SORTS[sortSel.value] || SORTS['reg-desc']);
     rows.sort(function (a, b) { return (isDraft(b) ? 1 : 0) - (isDraft(a) ? 1 : 0); });
-    listEl.innerHTML = '';
-    rows.forEach(function (w) { listEl.appendChild(makeItem(w)); });
-    /* 下書き数はバナーで案内（売約済タブには下書きは入らない） */
+    /* 下書き数・ゼロ状態は絞り込み後の全件から算出（ページングで切り出す前） */
     var draftN = rows.filter(isDraft).length;
     if (draftBanner) draftBanner.hidden = draftN === 0;
     if (draftCntEl) draftCntEl.textContent = draftN;
     if (emptyEl) emptyEl.hidden = rows.length !== 0;
     if (listedWrap) listedWrap.hidden = sold; /* 出品状況フィルタは登録済みタブのみ */
     if (soldNotice) soldNotice.hidden = !sold;
+
+    var totalPages = Math.max(1, Math.ceil(rows.length / PER_PAGE));
+    if (page > totalPages) page = totalPages;
+    var pageRows = rows.slice((page - 1) * PER_PAGE, page * PER_PAGE);
+    listEl.innerHTML = '';
+    pageRows.forEach(function (w) { listEl.appendChild(makeItem(w)); });
+    KTN.pagination.render(pagerEl, {
+      page: page,
+      totalPages: totalPages,
+      onGoto: function (p) { page = p; render(); },
+    });
   }
+
+  function renderReset() { page = 1; render(); }
 
   /* タブ別のバケット件数（フィルタ非依存の総数） */
   function syncTabCounts() {
@@ -6920,14 +7410,14 @@ KTN.pages['p3-14'] = function () {
     curTab = tab;
     if (tabActive) { tabActive.classList.toggle('is-active', tab === 'active'); tabActive.setAttribute('aria-selected', tab === 'active'); }
     if (tabSold)   { tabSold.classList.toggle('is-active', tab === 'sold');   tabSold.setAttribute('aria-selected', tab === 'sold'); }
-    render();
+    renderReset();
   }
 
   if (tabActive) tabActive.addEventListener('click', function () { switchTab('active'); });
   if (tabSold)   tabSold.addEventListener('click', function () { switchTab('sold'); });
-  pubSel.addEventListener('change', render);
-  listedSel.addEventListener('change', render);
-  sortSel.addEventListener('change', render);
+  pubSel.addEventListener('change', renderReset);
+  listedSel.addEventListener('change', renderReset);
+  sortSel.addEventListener('change', renderReset);
   syncTabCounts();
   render();
 
@@ -7102,9 +7592,12 @@ KTN.pages['p4-14'] = function () {
   var cntSold     = document.getElementById('p414CountSold');
   var soldNotice  = document.getElementById('p414SoldNotice');
   var listedWrap  = document.getElementById('p414FilterListedWrap');
+  var pagerEl     = document.getElementById('p414Pagination');
   if (!listEl || !authorSel || !listedSel || !sortSel) return;
 
   var curTab = 'active'; /* 'active' | 'sold' */
+  var page = 1;
+  var PER_PAGE = 5;
 
   /* 詳細アコーディオンの開閉状態（再描画をまたいで維持） */
   var openIds = {};
@@ -7278,16 +7771,27 @@ KTN.pages['p4-14'] = function () {
     });
     rows.sort(SORTS[sortSel.value] || SORTS['reg-desc']);
     rows.sort(function (a, b) { return (isDraft(b) ? 1 : 0) - (isDraft(a) ? 1 : 0); });
-    listEl.innerHTML = '';
-    rows.forEach(function (w) { listEl.appendChild(makeItem(w)); });
-    /* 下書き数はバナーで案内（売約済タブには下書きは入らない） */
+    /* 下書き数・ゼロ状態は絞り込み後の全件から算出（ページングで切り出す前） */
     var draftN = rows.filter(isDraft).length;
     if (draftBanner) draftBanner.hidden = draftN === 0;
     if (draftCntEl) draftCntEl.textContent = draftN;
     if (emptyEl) emptyEl.hidden = rows.length !== 0;
     if (listedWrap) listedWrap.hidden = sold; /* 出品状況フィルタは登録済みタブのみ */
     if (soldNotice) soldNotice.hidden = !sold;
+
+    var totalPages = Math.max(1, Math.ceil(rows.length / PER_PAGE));
+    if (page > totalPages) page = totalPages;
+    var pageRows = rows.slice((page - 1) * PER_PAGE, page * PER_PAGE);
+    listEl.innerHTML = '';
+    pageRows.forEach(function (w) { listEl.appendChild(makeItem(w)); });
+    KTN.pagination.render(pagerEl, {
+      page: page,
+      totalPages: totalPages,
+      onGoto: function (p) { page = p; render(); },
+    });
   }
+
+  function renderReset() { page = 1; render(); }
 
   /* タブ別のバケット件数（フィルタ非依存の総数） */
   function syncTabCounts() {
@@ -7306,14 +7810,14 @@ KTN.pages['p4-14'] = function () {
     curTab = tab;
     if (tabActive) { tabActive.classList.toggle('is-active', tab === 'active'); tabActive.setAttribute('aria-selected', tab === 'active'); }
     if (tabSold)   { tabSold.classList.toggle('is-active', tab === 'sold');   tabSold.setAttribute('aria-selected', tab === 'sold'); }
-    render();
+    renderReset();
   }
 
   if (tabActive) tabActive.addEventListener('click', function () { switchTab('active'); });
   if (tabSold)   tabSold.addEventListener('click', function () { switchTab('sold'); });
-  authorSel.addEventListener('change', render);
-  listedSel.addEventListener('change', render);
-  sortSel.addEventListener('change', render);
+  authorSel.addEventListener('change', renderReset);
+  listedSel.addEventListener('change', renderReset);
+  sortSel.addEventListener('change', renderReset);
   syncTabCounts();
   render();
 
@@ -7858,6 +8362,835 @@ KTN.pages['p6-11'] = function () {
   syncMgmtBar();
   KTN.initImgReorder(document.getElementById('p611SubList'));
   window.ktnRender = function () { syncMgmtBar(); };
+};
+
+/* ════════════════════════════════════════════════════
+   P7-11  記事 新規投稿・編集・クローン
+════════════════════════════════════════════════════ */
+KTN.pages['p7-11'] = function () {
+  function syncMgmtBar() {
+    const r = window.ktnState && window.ktnState.role || 'creator';
+    document.body.classList.remove('p3-page', 'p4-page', 'p5-page');
+    if (r === 'gallery')      document.body.classList.add('p4-page');
+    else                      document.body.classList.add('p3-page');
+    KTN.syncMgmtOwner('p711Owner', r === 'gallery' ? 'gallery' : 'creator');
+    if (typeof window.p711RoleSync === 'function') window.p711RoleSync();
+  }
+  syncMgmtBar();
+  window.ktnRender = function () { syncMgmtBar(); };
+};
+
+/* ════════════════════════════════════════════════════
+   P3-19  記事管理（クリエイター版）
+   ── p2-13(展覧会)/p4-19(ギャラリー)/p6-15(作品) と対になる記事一覧管理。
+   　　作品・展覧会・クリエイターページ・ギャラリーページの4か所いずれかで
+   　　作成した記事を1画面に集約。掲載先は作成元で自動確定・変更不可のため
+   　　p3-14と違い出品歴タブ・公開/非公開スイッチ・詳細アコーディオンは無い。
+   　　デモデータの一部は p7-11 の P711_ENTRY と同一記事（同一ID/日付）。
+════════════════════════════════════════════════════ */
+KTN.pages['p3-19'] = function () {
+
+  /* ── 記事種別マスタ（.at-a〜.at-f） ── */
+  var TYPE = {
+    a: { label:'レポート',     cls:'at-a' },
+    b: { label:'インタビュー', cls:'at-b' },
+    c: { label:'制作日記',     cls:'at-c' },
+    d: { label:'お知らせ',     cls:'at-d' },
+    e: { label:'ワークショップ', cls:'at-e' },
+    f: { label:'その他',       cls:'at-f' },
+  };
+
+  /* ── サンプルデータ（田中透の記事。P711_ENTRY と同一記事を含む）──
+     dest＝掲載先種別（artwork/exhibition/standalone）。作成元で自動確定・以後変更不可。
+     destName/destHref＝掲載先の作品/展覧会名とリンク（standaloneはクリエイターページ自身のため無し）。
+     reg/upd＝登録日・最終更新日。rs＝登録日の並べ替えキー。draft＝下書き（未完成・非公開・一覧の最上部固定）。 */
+  var ARTICLES = [
+    { id:'t3', atid:'AT-B05-0012', title:'田中透インタビュー：言語と絵画のあいだで', type:'b',
+      dest:'standalone', destLabel:'クリエイターページ', destName:'', destHref:'',
+      reg:'2025.11.15', upd:'2025.11.20', rs:20251115, draft:false, bg:'linear-gradient(155deg,#d8c8e8,#a888cc)' },
+    { id:'t1', atid:'AT-C42-0031', title:'オノマトペの庭 制作について', type:'c',
+      dest:'artwork', destLabel:'作品', destName:'《オノマトペの庭》', destHref:'kotennavi-p6.html',
+      reg:'2026.3.2', upd:'2026.3.5', rs:20260302, draft:false, bg:'linear-gradient(155deg,#b8d8cc,#6a9e8a)' },
+    { id:'t2', atid:'AT-A18-0044', title:'展評：あなたが知らないオノマトペ 会場レポート', type:'a',
+      dest:'exhibition', destLabel:'展覧会', destName:'あなたが知らないオノマトペ', destHref:'kotennavi-p2.html',
+      reg:'2026.3.7', upd:'2026.3.10', rs:20260307, draft:false, bg:'linear-gradient(155deg,#e0d4bc,#b8a884)' },
+    { id:'t4', atid:'AT-D42-0009', title:'個展「あなたが知らないオノマトペ」開催のお知らせ', type:'d',
+      dest:'exhibition', destLabel:'展覧会', destName:'あなたが知らないオノマトペ', destHref:'kotennavi-p2.html',
+      reg:'2026.1.20', upd:'2026.1.20', rs:20260120, draft:false, bg:'linear-gradient(155deg,#f0e8d0,#d4b896)' },
+    { id:'t5', atid:'AT-E42-0004', title:'会場ワークショップ「ことばと絵の即興対話」参加者募集', type:'e',
+      dest:'exhibition', destLabel:'展覧会', destName:'あなたが知らないオノマトペ', destHref:'kotennavi-p2.html',
+      reg:'2026.1.25', upd:'2026.2.1', rs:20260125, draft:false, bg:'linear-gradient(155deg,#f0d0d0,#c88080)' },
+    { id:'t6', atid:'AT-F05-0002', title:'よくいただく質問と、その周辺のこと', type:'f',
+      dest:'standalone', destLabel:'クリエイターページ', destName:'', destHref:'',
+      reg:'2024.9.10', upd:'2024.9.10', rs:20240910, draft:false, bg:'linear-gradient(155deg,#d0e8f0,#7ab4cc)' },
+    { id:'t7', atid:'AT-C42-0033', title:'《かさかさ》ができるまで（仮）', type:'c',
+      dest:'artwork', destLabel:'作品', destName:'《かさかさ》', destHref:'kotennavi-p6.html',
+      reg:'2026.3.12', upd:'2026.3.12', rs:20260312, draft:true, bg:'linear-gradient(155deg,#e0d4bc,#b8a884)' },
+  ];
+
+  /* ── DOM ── */
+  var listEl      = document.getElementById('p319List');
+  var emptyEl     = document.getElementById('p319Empty');
+  var typeSel     = document.getElementById('p319FilterType');
+  var destSel     = document.getElementById('p319FilterDest');
+  var sortSel     = document.getElementById('p319Sort');
+  var draftBanner = document.getElementById('p319DraftBanner');
+  var draftCntEl  = document.getElementById('p319DraftCount');
+  var pagerEl     = document.getElementById('p319Pagination');
+  if (!listEl || !typeSel || !destSel || !sortSel) return;
+
+  var page = 1;
+  var PER_PAGE = 5;
+
+  function isDraft(a) { return !!a.draft; }
+
+  function p711Link(mode, id) {
+    return 'kotennavi-p7-11.html?mode=' + mode + '&author=tanaka&self=1&article=' + encodeURIComponent(id);
+  }
+
+  /* 公開記事ページへのリンク先。下書きは公開ページが存在しないため null */
+  function articleLink(a) {
+    return isDraft(a) ? null : 'kotennavi-p7.html';
+  }
+
+  /* ── アイテム生成 ── */
+  function makeItem(a) {
+    var draft = isDraft(a);
+    var t = TYPE[a.type] || TYPE.f;
+    var al = articleLink(a);
+    var destHtml = a.dest === 'standalone'
+      ? '<span class="p319-item__dest-name">' + a.destLabel + '</span>'
+      : '<span class="cb cb-content cb-' + a.dest + '">' + a.destLabel + '</span>' +
+        (a.destHref
+          ? '<a class="p319-item__dest-name" href="' + a.destHref + '" target="_blank" rel="noopener">' + a.destName + '</a>'
+          : '<span class="p319-item__dest-name">' + a.destName + '</span>');
+
+    var li = document.createElement('li');
+    li.className = 'p319-item' + (draft ? ' p319-item--draft' : '');
+    li.dataset.id = a.id;
+    li.innerHTML =
+      (draft ? '<span class="p319-item__ribbon">下書き</span>' : '') +
+      '<div class="p319-item__main' + (al ? ' p319-item__main--link" title="クリックで記事ページを新しいタブで表示' : '') + '">' +
+        '<div class="p319-item__thumb" style="background:' + a.bg + '"></div>' +
+        '<div class="p319-item__body">' +
+          '<div class="p319-item__title-row">' +
+            '<span class="cb cb-content cb-article">article</span>' +
+            '<span class="at ' + t.cls + '">' + t.label + '</span>' +
+            '<span class="ktn-aw-id">' + a.atid + '</span>' +
+          '</div>' +
+          '<div class="p319-item__title">' + a.title + '</div>' +
+          '<div class="p319-item__dest">掲載先：' + destHtml + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="p319-item__dates">登録 ' + a.reg + '<span class="p319-item__dates-sep">·</span>更新 ' + a.upd + '</div>' +
+      '<div class="p319-item__actions">' +
+        '<button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline p319-item__del">' + (draft ? '下書きを破棄' : '削除') + '</button>' +
+        (draft
+          ? '<a class="ktn-action-btn" href="' + p711Link('edit', a.id) + '">編集を再開 →</a>'
+          : '<a class="ktn-action-btn" href="' + p711Link('clone', a.id) + '">クローン →</a>' +
+            '<a class="ktn-action-btn" href="' + p711Link('edit', a.id) + '">編集 →</a>') +
+      '</div>';
+    return li;
+  }
+
+  /* ── フィルタ・並べ替え描画 ── */
+  var SORTS = {
+    'reg-desc': function (a, b) { return b.rs - a.rs; },
+    'reg-asc':  function (a, b) { return a.rs - b.rs; },
+    'title':    function (a, b) { return a.title.localeCompare(b.title, 'ja'); },
+  };
+
+  function render() {
+    var ft = typeSel.value;
+    var fd = destSel.value;
+    var rows = ARTICLES.filter(function (a) {
+      /* 下書き＝別もの。種別・掲載先で絞り込む時は候補から外す（「すべて」表示時のみ最上部に固定） */
+      if (isDraft(a)) return ft === '' && fd === '';
+      if (ft && a.type !== ft) return false;
+      if (fd && a.dest !== fd) return false;
+      return true;
+    });
+    rows.sort(SORTS[sortSel.value] || SORTS['reg-desc']);
+    rows.sort(function (a, b) { return (isDraft(b) ? 1 : 0) - (isDraft(a) ? 1 : 0); });
+    /* 下書き数・ゼロ状態は絞り込み後の全件から算出（ページングで切り出す前） */
+    var draftN = rows.filter(isDraft).length;
+    if (draftBanner) draftBanner.hidden = draftN === 0;
+    if (draftCntEl) draftCntEl.textContent = draftN;
+    if (emptyEl) emptyEl.hidden = rows.length !== 0;
+
+    var totalPages = Math.max(1, Math.ceil(rows.length / PER_PAGE));
+    if (page > totalPages) page = totalPages;
+    var pageRows = rows.slice((page - 1) * PER_PAGE, page * PER_PAGE);
+    listEl.innerHTML = '';
+    pageRows.forEach(function (a) { listEl.appendChild(makeItem(a)); });
+    KTN.pagination.render(pagerEl, {
+      page: page,
+      totalPages: totalPages,
+      onGoto: function (p) { page = p; render(); },
+    });
+  }
+
+  function renderReset() { page = 1; render(); }
+
+  typeSel.addEventListener('change', renderReset);
+  destSel.addEventListener('change', renderReset);
+  sortSel.addEventListener('change', renderReset);
+  render();
+
+  /* ── 操作（イベント委譲）── */
+  function findArticle(id) {
+    for (var i = 0; i < ARTICLES.length; i++) if (ARTICLES[i].id === id) return ARTICLES[i];
+    return null;
+  }
+
+  listEl.addEventListener('click', function (e) {
+    var item = e.target.closest('.p319-item');
+    if (!item) return;
+    var a = findArticle(item.dataset.id);
+    if (!a) return;
+
+    if (e.target.closest('.p319-item__del')) {
+      openDelModal(a);
+      return;
+    }
+    /* カード（main部）クリック＝記事ページを新しいタブで開く（内側のリンク・ボタンは除外） */
+    if (e.target.closest('.p319-item__main--link') && !e.target.closest('a') && !e.target.closest('button')) {
+      var al = articleLink(a);
+      if (al) window.open(al, '_blank');
+      return;
+    }
+  });
+
+  /* ── 削除／下書き破棄モーダル（破壊操作＝confirm を経て実行） ── */
+  var delModal   = document.getElementById('p319DelModal');
+  var delTitle   = document.getElementById('p319DelTitle');
+  var delDesc    = document.getElementById('p319DelDesc');
+  var delCancel  = document.getElementById('p319DelCancel');
+  var delConfirm = document.getElementById('p319DelConfirm');
+  var delBg      = document.getElementById('p319DelBg');
+  var pendingDel = null;
+
+  function openDelModal(a) {
+    if (!delModal) return;
+    pendingDel = a.id;
+    var draft = isDraft(a);
+    if (delTitle) delTitle.textContent = draft ? '下書きを破棄しますか？' : '記事を削除しますか？';
+    if (delDesc) delDesc.innerHTML = '<span class="p319-del-modal__name">' + a.title + '</span>' +
+      (draft
+        ? 'この下書きを完全に破棄します。入力済みの内容は復元できません。'
+        : 'この記事を完全に削除します。掲載先ページからも削除され、復元できません。');
+    if (delConfirm) delConfirm.textContent = draft ? '破棄する' : '削除する';
+    delModal.hidden = false;
+  }
+  function closeDelModal() {
+    if (!delModal) return;
+    delModal.hidden = true;
+    pendingDel = null;
+  }
+  if (delCancel) delCancel.addEventListener('click', closeDelModal);
+  if (delBg)     delBg.addEventListener('click', closeDelModal);
+  if (delConfirm) delConfirm.addEventListener('click', function () {
+    if (!pendingDel) return;
+    var wasDraft = false;
+    for (var i = 0; i < ARTICLES.length; i++) {
+      if (ARTICLES[i].id === pendingDel) { wasDraft = isDraft(ARTICLES[i]); ARTICLES.splice(i, 1); break; }
+    }
+    closeDelModal();
+    render();
+    if (KTN.toast) KTN.toast(wasDraft ? '下書きを破棄しました（デモ）' : '記事を削除しました（デモ）');
+  });
+
+  window.ktnRender = function () {};
+};
+
+/* ════════════════════════════════════════════════════
+   P2-13  展覧会-記事管理（この展覧会に掲載された記事のみ。全記事の一元管理は p3-19）
+════════════════════════════════════════════════════ */
+KTN.pages['p2-13'] = function () {
+
+  var TYPE = {
+    a: { label:'レポート',     cls:'at-a' },
+    b: { label:'インタビュー', cls:'at-b' },
+    c: { label:'制作日記',     cls:'at-c' },
+    d: { label:'お知らせ',     cls:'at-d' },
+    e: { label:'ワークショップ', cls:'at-e' },
+    f: { label:'その他',       cls:'at-f' },
+  };
+
+  /* ── サンプルデータ（この展覧会「あなたが知らないオノマトペ」に掲載された記事のみ。t2/t4/t5 は p3-19 と同一記事）── */
+  var ARTICLES = [
+    { id:'t2', atid:'AT-A18-0044', title:'展評：あなたが知らないオノマトペ 会場レポート', type:'a',
+      reg:'2026.3.7', upd:'2026.3.10', rs:20260307, draft:false, bg:'linear-gradient(155deg,#e0d4bc,#b8a884)' },
+    { id:'t4', atid:'AT-D42-0009', title:'個展「あなたが知らないオノマトペ」開催のお知らせ', type:'d',
+      reg:'2026.1.20', upd:'2026.1.20', rs:20260120, draft:false, bg:'linear-gradient(155deg,#f0e8d0,#d4b896)' },
+    { id:'t5', atid:'AT-E42-0004', title:'会場ワークショップ「ことばと絵の即興対話」参加者募集', type:'e',
+      reg:'2026.1.25', upd:'2026.2.1', rs:20260125, draft:false, bg:'linear-gradient(155deg,#f0d0d0,#c88080)' },
+    { id:'e1', atid:'AT-B18-0051', title:'会場インタビュー：来場者に聞く「オノマトペ」の読み方', type:'b',
+      reg:'2026.2.20', upd:'2026.2.22', rs:20260220, draft:false, bg:'linear-gradient(155deg,#d8c8e8,#a888cc)' },
+    { id:'e2', atid:'AT-F18-0007', title:'会期終了レポート（執筆中）', type:'f',
+      reg:'2026.3.4', upd:'2026.3.4', rs:20260304, draft:true, bg:'linear-gradient(155deg,#d0e8f0,#7ab4cc)' },
+  ];
+
+  /* ── DOM ── */
+  var listEl      = document.getElementById('p213List');
+  var emptyEl     = document.getElementById('p213Empty');
+  var typeSel     = document.getElementById('p213FilterType');
+  var sortSel     = document.getElementById('p213Sort');
+  var draftBanner = document.getElementById('p213DraftBanner');
+  var draftCntEl  = document.getElementById('p213DraftCount');
+  var pagerEl     = document.getElementById('p213Pagination');
+  if (!listEl || !typeSel || !sortSel) return;
+
+  var page = 1;
+  var PER_PAGE = 5;
+
+  function isDraft(a) { return !!a.draft; }
+
+  function p711Link(mode, id) {
+    return 'kotennavi-p7-11.html?mode=' + mode + '&author=tanaka&self=1&article=' + encodeURIComponent(id);
+  }
+
+  /* 公開記事ページへのリンク先（掲載先＝この展覧会）。下書きは公開ページが存在しないため null */
+  function articleLink(a) {
+    return isDraft(a) ? null : 'kotennavi-p2.html';
+  }
+
+  /* ── アイテム生成（掲載先は固定＝この展覧会のため掲載先行は表示しない） ── */
+  function makeItem(a) {
+    var draft = isDraft(a);
+    var t = TYPE[a.type] || TYPE.f;
+    var al = articleLink(a);
+
+    var li = document.createElement('li');
+    li.className = 'p319-item' + (draft ? ' p319-item--draft' : '');
+    li.dataset.id = a.id;
+    li.innerHTML =
+      (draft ? '<span class="p319-item__ribbon">下書き</span>' : '') +
+      '<div class="p319-item__main' + (al ? ' p319-item__main--link" title="クリックで記事ページを新しいタブで表示' : '') + '">' +
+        '<div class="p319-item__thumb" style="background:' + a.bg + '"></div>' +
+        '<div class="p319-item__body">' +
+          '<div class="p319-item__title-row">' +
+            '<span class="cb cb-content cb-article">article</span>' +
+            '<span class="at ' + t.cls + '">' + t.label + '</span>' +
+            '<span class="ktn-aw-id">' + a.atid + '</span>' +
+          '</div>' +
+          '<div class="p319-item__title">' + a.title + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="p319-item__dates">登録 ' + a.reg + '<span class="p319-item__dates-sep">·</span>更新 ' + a.upd + '</div>' +
+      '<div class="p319-item__actions">' +
+        '<button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline p319-item__del">' + (draft ? '下書きを破棄' : '削除') + '</button>' +
+        (draft
+          ? '<a class="ktn-action-btn" href="' + p711Link('edit', a.id) + '">編集を再開 →</a>'
+          : '<a class="ktn-action-btn" href="' + p711Link('clone', a.id) + '">クローン →</a>' +
+            '<a class="ktn-action-btn" href="' + p711Link('edit', a.id) + '">編集 →</a>') +
+      '</div>';
+    return li;
+  }
+
+  /* ── フィルタ・並べ替え描画 ── */
+  var SORTS = {
+    'reg-desc': function (a, b) { return b.rs - a.rs; },
+    'reg-asc':  function (a, b) { return a.rs - b.rs; },
+    'title':    function (a, b) { return a.title.localeCompare(b.title, 'ja'); },
+  };
+
+  function render() {
+    var ft = typeSel.value;
+    var rows = ARTICLES.filter(function (a) {
+      if (isDraft(a)) return ft === '';
+      if (ft && a.type !== ft) return false;
+      return true;
+    });
+    rows.sort(SORTS[sortSel.value] || SORTS['reg-desc']);
+    rows.sort(function (a, b) { return (isDraft(b) ? 1 : 0) - (isDraft(a) ? 1 : 0); });
+    var draftN = rows.filter(isDraft).length;
+    if (draftBanner) draftBanner.hidden = draftN === 0;
+    if (draftCntEl) draftCntEl.textContent = draftN;
+    if (emptyEl) emptyEl.hidden = rows.length !== 0;
+
+    var totalPages = Math.max(1, Math.ceil(rows.length / PER_PAGE));
+    if (page > totalPages) page = totalPages;
+    var pageRows = rows.slice((page - 1) * PER_PAGE, page * PER_PAGE);
+    listEl.innerHTML = '';
+    pageRows.forEach(function (a) { listEl.appendChild(makeItem(a)); });
+    KTN.pagination.render(pagerEl, {
+      page: page,
+      totalPages: totalPages,
+      onGoto: function (p) { page = p; render(); },
+    });
+  }
+
+  function renderReset() { page = 1; render(); }
+
+  typeSel.addEventListener('change', renderReset);
+  sortSel.addEventListener('change', renderReset);
+  render();
+
+  /* ── 操作（イベント委譲）── */
+  function findArticle(id) {
+    for (var i = 0; i < ARTICLES.length; i++) if (ARTICLES[i].id === id) return ARTICLES[i];
+    return null;
+  }
+
+  listEl.addEventListener('click', function (e) {
+    var item = e.target.closest('.p319-item');
+    if (!item) return;
+    var a = findArticle(item.dataset.id);
+    if (!a) return;
+
+    if (e.target.closest('.p319-item__del')) {
+      openDelModal(a);
+      return;
+    }
+    if (e.target.closest('.p319-item__main--link') && !e.target.closest('a') && !e.target.closest('button')) {
+      var al = articleLink(a);
+      if (al) window.open(al, '_blank');
+      return;
+    }
+  });
+
+  /* ── 削除／下書き破棄モーダル ── */
+  var delModal   = document.getElementById('p213DelModal');
+  var delTitle   = document.getElementById('p213DelTitle');
+  var delDesc    = document.getElementById('p213DelDesc');
+  var delCancel  = document.getElementById('p213DelCancel');
+  var delConfirm = document.getElementById('p213DelConfirm');
+  var delBg      = document.getElementById('p213DelBg');
+  var pendingDel = null;
+
+  function openDelModal(a) {
+    if (!delModal) return;
+    pendingDel = a.id;
+    var draft = isDraft(a);
+    if (delTitle) delTitle.textContent = draft ? '下書きを破棄しますか？' : '記事を削除しますか？';
+    if (delDesc) delDesc.innerHTML = '<span class="p319-del-modal__name">' + a.title + '</span>' +
+      (draft
+        ? 'この下書きを完全に破棄します。入力済みの内容は復元できません。'
+        : 'この記事を完全に削除します。掲載先ページからも削除され、復元できません。');
+    if (delConfirm) delConfirm.textContent = draft ? '破棄する' : '削除する';
+    delModal.hidden = false;
+  }
+  function closeDelModal() {
+    if (!delModal) return;
+    delModal.hidden = true;
+    pendingDel = null;
+  }
+  if (delCancel) delCancel.addEventListener('click', closeDelModal);
+  if (delBg)     delBg.addEventListener('click', closeDelModal);
+  if (delConfirm) delConfirm.addEventListener('click', function () {
+    if (!pendingDel) return;
+    var wasDraft = false;
+    for (var i = 0; i < ARTICLES.length; i++) {
+      if (ARTICLES[i].id === pendingDel) { wasDraft = isDraft(ARTICLES[i]); ARTICLES.splice(i, 1); break; }
+    }
+    closeDelModal();
+    render();
+    if (KTN.toast) KTN.toast(wasDraft ? '下書きを破棄しました（デモ）' : '記事を削除しました（デモ）');
+  });
+
+  window.ktnRender = function () {};
+};
+
+/* ════════════════════════════════════════════════════
+   P6-15  作品-記事管理（この作品に掲載された記事のみ。全記事の一元管理は p3-19）
+════════════════════════════════════════════════════ */
+KTN.pages['p6-15'] = function () {
+
+  var TYPE = {
+    a: { label:'レポート',     cls:'at-a' },
+    b: { label:'インタビュー', cls:'at-b' },
+    c: { label:'制作日記',     cls:'at-c' },
+    d: { label:'お知らせ',     cls:'at-d' },
+    e: { label:'ワークショップ', cls:'at-e' },
+    f: { label:'その他',       cls:'at-f' },
+  };
+
+  /* ── サンプルデータ（この作品《オノマトペの庭》に掲載された記事のみ。t1 は p3-19 と同一記事）── */
+  var ARTICLES = [
+    { id:'t1', atid:'AT-C42-0031', title:'オノマトペの庭 制作について', type:'c',
+      reg:'2026.3.2', upd:'2026.3.5', rs:20260302, draft:false, bg:'linear-gradient(155deg,#b8d8cc,#6a9e8a)' },
+    { id:'f1', atid:'AT-A42-0002', title:'《オノマトペの庭》をめぐる小さな考察', type:'a',
+      reg:'2026.3.15', upd:'2026.3.15', rs:20260315, draft:false, bg:'linear-gradient(155deg,#e0d4bc,#b8a884)' },
+    { id:'f2', atid:'AT-D42-0015', title:'《オノマトペの庭》原画展示に関するお知らせ', type:'d',
+      reg:'2026.3.20', upd:'2026.3.20', rs:20260320, draft:false, bg:'linear-gradient(155deg,#f0e8d0,#d4b896)' },
+    { id:'f3', atid:'AT-C42-0040', title:'《オノマトペの庭》その後（執筆中）', type:'c',
+      reg:'2026.3.25', upd:'2026.3.25', rs:20260325, draft:true, bg:'linear-gradient(155deg,#b8d8cc,#6a9e8a)' },
+  ];
+
+  /* ── DOM ── */
+  var listEl      = document.getElementById('p615List');
+  var emptyEl     = document.getElementById('p615Empty');
+  var typeSel     = document.getElementById('p615FilterType');
+  var sortSel     = document.getElementById('p615Sort');
+  var draftBanner = document.getElementById('p615DraftBanner');
+  var draftCntEl  = document.getElementById('p615DraftCount');
+  var pagerEl     = document.getElementById('p615Pagination');
+  if (!listEl || !typeSel || !sortSel) return;
+
+  var page = 1;
+  var PER_PAGE = 5;
+
+  function isDraft(a) { return !!a.draft; }
+
+  function p711Link(mode, id) {
+    return 'kotennavi-p7-11.html?mode=' + mode + '&author=tanaka&self=1&article=' + encodeURIComponent(id);
+  }
+
+  /* 公開記事ページへのリンク先（掲載先＝この作品）。下書きは公開ページが存在しないため null */
+  function articleLink(a) {
+    return isDraft(a) ? null : 'kotennavi-p6.html';
+  }
+
+  /* ── アイテム生成（掲載先は固定＝この作品のため掲載先行は表示しない） ── */
+  function makeItem(a) {
+    var draft = isDraft(a);
+    var t = TYPE[a.type] || TYPE.f;
+    var al = articleLink(a);
+
+    var li = document.createElement('li');
+    li.className = 'p319-item' + (draft ? ' p319-item--draft' : '');
+    li.dataset.id = a.id;
+    li.innerHTML =
+      (draft ? '<span class="p319-item__ribbon">下書き</span>' : '') +
+      '<div class="p319-item__main' + (al ? ' p319-item__main--link" title="クリックで記事ページを新しいタブで表示' : '') + '">' +
+        '<div class="p319-item__thumb" style="background:' + a.bg + '"></div>' +
+        '<div class="p319-item__body">' +
+          '<div class="p319-item__title-row">' +
+            '<span class="cb cb-content cb-article">article</span>' +
+            '<span class="at ' + t.cls + '">' + t.label + '</span>' +
+            '<span class="ktn-aw-id">' + a.atid + '</span>' +
+          '</div>' +
+          '<div class="p319-item__title">' + a.title + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="p319-item__dates">登録 ' + a.reg + '<span class="p319-item__dates-sep">·</span>更新 ' + a.upd + '</div>' +
+      '<div class="p319-item__actions">' +
+        '<button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline p319-item__del">' + (draft ? '下書きを破棄' : '削除') + '</button>' +
+        (draft
+          ? '<a class="ktn-action-btn" href="' + p711Link('edit', a.id) + '">編集を再開 →</a>'
+          : '<a class="ktn-action-btn" href="' + p711Link('clone', a.id) + '">クローン →</a>' +
+            '<a class="ktn-action-btn" href="' + p711Link('edit', a.id) + '">編集 →</a>') +
+      '</div>';
+    return li;
+  }
+
+  /* ── フィルタ・並べ替え描画 ── */
+  var SORTS = {
+    'reg-desc': function (a, b) { return b.rs - a.rs; },
+    'reg-asc':  function (a, b) { return a.rs - b.rs; },
+    'title':    function (a, b) { return a.title.localeCompare(b.title, 'ja'); },
+  };
+
+  function render() {
+    var ft = typeSel.value;
+    var rows = ARTICLES.filter(function (a) {
+      if (isDraft(a)) return ft === '';
+      if (ft && a.type !== ft) return false;
+      return true;
+    });
+    rows.sort(SORTS[sortSel.value] || SORTS['reg-desc']);
+    rows.sort(function (a, b) { return (isDraft(b) ? 1 : 0) - (isDraft(a) ? 1 : 0); });
+    var draftN = rows.filter(isDraft).length;
+    if (draftBanner) draftBanner.hidden = draftN === 0;
+    if (draftCntEl) draftCntEl.textContent = draftN;
+    if (emptyEl) emptyEl.hidden = rows.length !== 0;
+
+    var totalPages = Math.max(1, Math.ceil(rows.length / PER_PAGE));
+    if (page > totalPages) page = totalPages;
+    var pageRows = rows.slice((page - 1) * PER_PAGE, page * PER_PAGE);
+    listEl.innerHTML = '';
+    pageRows.forEach(function (a) { listEl.appendChild(makeItem(a)); });
+    KTN.pagination.render(pagerEl, {
+      page: page,
+      totalPages: totalPages,
+      onGoto: function (p) { page = p; render(); },
+    });
+  }
+
+  function renderReset() { page = 1; render(); }
+
+  typeSel.addEventListener('change', renderReset);
+  sortSel.addEventListener('change', renderReset);
+  render();
+
+  /* ── 操作（イベント委譲）── */
+  function findArticle(id) {
+    for (var i = 0; i < ARTICLES.length; i++) if (ARTICLES[i].id === id) return ARTICLES[i];
+    return null;
+  }
+
+  listEl.addEventListener('click', function (e) {
+    var item = e.target.closest('.p319-item');
+    if (!item) return;
+    var a = findArticle(item.dataset.id);
+    if (!a) return;
+
+    if (e.target.closest('.p319-item__del')) {
+      openDelModal(a);
+      return;
+    }
+    if (e.target.closest('.p319-item__main--link') && !e.target.closest('a') && !e.target.closest('button')) {
+      var al = articleLink(a);
+      if (al) window.open(al, '_blank');
+      return;
+    }
+  });
+
+  /* ── 削除／下書き破棄モーダル ── */
+  var delModal   = document.getElementById('p615DelModal');
+  var delTitle   = document.getElementById('p615DelTitle');
+  var delDesc    = document.getElementById('p615DelDesc');
+  var delCancel  = document.getElementById('p615DelCancel');
+  var delConfirm = document.getElementById('p615DelConfirm');
+  var delBg      = document.getElementById('p615DelBg');
+  var pendingDel = null;
+
+  function openDelModal(a) {
+    if (!delModal) return;
+    pendingDel = a.id;
+    var draft = isDraft(a);
+    if (delTitle) delTitle.textContent = draft ? '下書きを破棄しますか？' : '記事を削除しますか？';
+    if (delDesc) delDesc.innerHTML = '<span class="p319-del-modal__name">' + a.title + '</span>' +
+      (draft
+        ? 'この下書きを完全に破棄します。入力済みの内容は復元できません。'
+        : 'この記事を完全に削除します。掲載先ページからも削除され、復元できません。');
+    if (delConfirm) delConfirm.textContent = draft ? '破棄する' : '削除する';
+    delModal.hidden = false;
+  }
+  function closeDelModal() {
+    if (!delModal) return;
+    delModal.hidden = true;
+    pendingDel = null;
+  }
+  if (delCancel) delCancel.addEventListener('click', closeDelModal);
+  if (delBg)     delBg.addEventListener('click', closeDelModal);
+  if (delConfirm) delConfirm.addEventListener('click', function () {
+    if (!pendingDel) return;
+    var wasDraft = false;
+    for (var i = 0; i < ARTICLES.length; i++) {
+      if (ARTICLES[i].id === pendingDel) { wasDraft = isDraft(ARTICLES[i]); ARTICLES.splice(i, 1); break; }
+    }
+    closeDelModal();
+    render();
+    if (KTN.toast) KTN.toast(wasDraft ? '下書きを破棄しました（デモ）' : '記事を削除しました（デモ）');
+  });
+
+  window.ktnRender = function () {};
+};
+
+/* ════════════════════════════════════════════════════
+   P4-19  ギャラリー-記事管理（p3-19 と同型・Gallery SOIL 渋谷の全記事を一元管理）
+════════════════════════════════════════════════════ */
+KTN.pages['p4-19'] = function () {
+
+  /* ── 記事種別マスタ（.at-a〜.at-f）。type=c はギャラリーの場合ラベルが異なる（p7-11 の役割別出し分けと同一） ── */
+  var TYPE = {
+    a: { label:'レポート',       cls:'at-a' },
+    b: { label:'インタビュー',   cls:'at-b' },
+    c: { label:'ギャラリーノート', cls:'at-c' },
+    d: { label:'お知らせ',       cls:'at-d' },
+    e: { label:'ワークショップ', cls:'at-e' },
+    f: { label:'その他',         cls:'at-f' },
+  };
+
+  /* ── サンプルデータ（Gallery SOIL 渋谷の記事。g-t1 は p7-11 の P711_ENTRY.gallery と同一記事）──
+     dest＝掲載先種別（artwork/exhibition/standalone）。作成元で自動確定・以後変更不可。 */
+  var ARTICLES = [
+    { id:'g-t1', atid:'AT-C09-0027', title:'Gallery SOIL 渋谷 ノート：展示替えの舞台裏', type:'c',
+      dest:'standalone', destLabel:'ギャラリーページ', destName:'', destHref:'',
+      reg:'2026.3.9', upd:'2026.3.12', rs:20260309, draft:false, bg:'linear-gradient(155deg,#d8c8e8,#a888cc)' },
+    { id:'g-t2', atid:'AT-A09-0018', title:'展評：色彩の対話 — 現代絵画グループ展 会場レポート', type:'a',
+      dest:'exhibition', destLabel:'展覧会', destName:'色彩の対話 — 現代絵画グループ展', destHref:'kotennavi-p2.html',
+      reg:'2026.3.6', upd:'2026.3.9', rs:20260306, draft:false, bg:'linear-gradient(155deg,#e0d4bc,#b8a884)' },
+    { id:'g-t3', atid:'AT-D09-0006', title:'「色彩の対話」開催のお知らせ', type:'d',
+      dest:'exhibition', destLabel:'展覧会', destName:'色彩の対話 — 現代絵画グループ展', destHref:'kotennavi-p2.html',
+      reg:'2026.1.15', upd:'2026.1.15', rs:20260115, draft:false, bg:'linear-gradient(155deg,#f0e8d0,#d4b896)' },
+    { id:'g-t4', atid:'AT-C18-0022', title:'《静かな水面》ができるまで', type:'c',
+      dest:'artwork', destLabel:'作品', destName:'《静かな水面》', destHref:'kotennavi-p6.html',
+      reg:'2026.2.10', upd:'2026.2.14', rs:20260210, draft:false, bg:'linear-gradient(155deg,#b8d8cc,#6a9e8a)' },
+    { id:'g-t5', atid:'AT-F18-0003', title:'高橋信の制作環境について', type:'f',
+      dest:'artwork', destLabel:'作品', destName:'《静かな水面》', destHref:'kotennavi-p6.html',
+      reg:'2025.12.1', upd:'2025.12.1', rs:20251201, draft:false, bg:'linear-gradient(155deg,#d0e8f0,#7ab4cc)' },
+    { id:'g-t6', atid:'AT-B09-0011', title:'Gallery SOIL 渋谷 オーナーインタビュー：これまでとこれから', type:'b',
+      dest:'standalone', destLabel:'ギャラリーページ', destName:'', destHref:'',
+      reg:'2025.10.5', upd:'2025.10.10', rs:20251005, draft:false, bg:'linear-gradient(155deg,#d8c8e8,#a888cc)' },
+    { id:'g-t7', atid:'AT-C24-0002', title:'佐藤みなと 新作について（執筆中）', type:'c',
+      dest:'artwork', destLabel:'作品', destName:'佐藤みなと 新作', destHref:'kotennavi-p6.html',
+      reg:'2026.3.18', upd:'2026.3.18', rs:20260318, draft:true, bg:'linear-gradient(155deg,#b8d8cc,#6a9e8a)' },
+  ];
+
+  /* ── DOM ── */
+  var listEl      = document.getElementById('p419List');
+  var emptyEl     = document.getElementById('p419Empty');
+  var typeSel     = document.getElementById('p419FilterType');
+  var destSel     = document.getElementById('p419FilterDest');
+  var sortSel     = document.getElementById('p419Sort');
+  var draftBanner = document.getElementById('p419DraftBanner');
+  var draftCntEl  = document.getElementById('p419DraftCount');
+  var pagerEl     = document.getElementById('p419Pagination');
+  if (!listEl || !typeSel || !destSel || !sortSel) return;
+
+  var page = 1;
+  var PER_PAGE = 5;
+
+  function isDraft(a) { return !!a.draft; }
+
+  function p711Link(mode, id) {
+    return 'kotennavi-p7-11.html?mode=' + mode + '&role=gallery&self=1&article=' + encodeURIComponent(id);
+  }
+
+  /* 公開記事ページへのリンク先。下書きは公開ページが存在しないため null */
+  function articleLink(a) {
+    return isDraft(a) ? null : 'kotennavi-p7.html';
+  }
+
+  /* ── アイテム生成 ── */
+  function makeItem(a) {
+    var draft = isDraft(a);
+    var t = TYPE[a.type] || TYPE.f;
+    var al = articleLink(a);
+    var destHtml = a.dest === 'standalone'
+      ? '<span class="p319-item__dest-name">' + a.destLabel + '</span>'
+      : '<span class="cb cb-content cb-' + a.dest + '">' + a.destLabel + '</span>' +
+        (a.destHref
+          ? '<a class="p319-item__dest-name" href="' + a.destHref + '" target="_blank" rel="noopener">' + a.destName + '</a>'
+          : '<span class="p319-item__dest-name">' + a.destName + '</span>');
+
+    var li = document.createElement('li');
+    li.className = 'p319-item' + (draft ? ' p319-item--draft' : '');
+    li.dataset.id = a.id;
+    li.innerHTML =
+      (draft ? '<span class="p319-item__ribbon">下書き</span>' : '') +
+      '<div class="p319-item__main' + (al ? ' p319-item__main--link" title="クリックで記事ページを新しいタブで表示' : '') + '">' +
+        '<div class="p319-item__thumb" style="background:' + a.bg + '"></div>' +
+        '<div class="p319-item__body">' +
+          '<div class="p319-item__title-row">' +
+            '<span class="cb cb-content cb-article">article</span>' +
+            '<span class="at ' + t.cls + '">' + t.label + '</span>' +
+            '<span class="ktn-aw-id">' + a.atid + '</span>' +
+          '</div>' +
+          '<div class="p319-item__title">' + a.title + '</div>' +
+          '<div class="p319-item__dest">掲載先：' + destHtml + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="p319-item__dates">登録 ' + a.reg + '<span class="p319-item__dates-sep">·</span>更新 ' + a.upd + '</div>' +
+      '<div class="p319-item__actions">' +
+        '<button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline p319-item__del">' + (draft ? '下書きを破棄' : '削除') + '</button>' +
+        (draft
+          ? '<a class="ktn-action-btn" href="' + p711Link('edit', a.id) + '">編集を再開 →</a>'
+          : '<a class="ktn-action-btn" href="' + p711Link('clone', a.id) + '">クローン →</a>' +
+            '<a class="ktn-action-btn" href="' + p711Link('edit', a.id) + '">編集 →</a>') +
+      '</div>';
+    return li;
+  }
+
+  /* ── フィルタ・並べ替え描画 ── */
+  var SORTS = {
+    'reg-desc': function (a, b) { return b.rs - a.rs; },
+    'reg-asc':  function (a, b) { return a.rs - b.rs; },
+    'title':    function (a, b) { return a.title.localeCompare(b.title, 'ja'); },
+  };
+
+  function render() {
+    var ft = typeSel.value;
+    var fd = destSel.value;
+    var rows = ARTICLES.filter(function (a) {
+      if (isDraft(a)) return ft === '' && fd === '';
+      if (ft && a.type !== ft) return false;
+      if (fd && a.dest !== fd) return false;
+      return true;
+    });
+    rows.sort(SORTS[sortSel.value] || SORTS['reg-desc']);
+    rows.sort(function (a, b) { return (isDraft(b) ? 1 : 0) - (isDraft(a) ? 1 : 0); });
+    var draftN = rows.filter(isDraft).length;
+    if (draftBanner) draftBanner.hidden = draftN === 0;
+    if (draftCntEl) draftCntEl.textContent = draftN;
+    if (emptyEl) emptyEl.hidden = rows.length !== 0;
+
+    var totalPages = Math.max(1, Math.ceil(rows.length / PER_PAGE));
+    if (page > totalPages) page = totalPages;
+    var pageRows = rows.slice((page - 1) * PER_PAGE, page * PER_PAGE);
+    listEl.innerHTML = '';
+    pageRows.forEach(function (a) { listEl.appendChild(makeItem(a)); });
+    KTN.pagination.render(pagerEl, {
+      page: page,
+      totalPages: totalPages,
+      onGoto: function (p) { page = p; render(); },
+    });
+  }
+
+  function renderReset() { page = 1; render(); }
+
+  typeSel.addEventListener('change', renderReset);
+  destSel.addEventListener('change', renderReset);
+  sortSel.addEventListener('change', renderReset);
+  render();
+
+  /* ── 操作（イベント委譲）── */
+  function findArticle(id) {
+    for (var i = 0; i < ARTICLES.length; i++) if (ARTICLES[i].id === id) return ARTICLES[i];
+    return null;
+  }
+
+  listEl.addEventListener('click', function (e) {
+    var item = e.target.closest('.p319-item');
+    if (!item) return;
+    var a = findArticle(item.dataset.id);
+    if (!a) return;
+
+    if (e.target.closest('.p319-item__del')) {
+      openDelModal(a);
+      return;
+    }
+    /* カード（main部）クリック＝記事ページを新しいタブで開く（内側のリンク・ボタンは除外） */
+    if (e.target.closest('.p319-item__main--link') && !e.target.closest('a') && !e.target.closest('button')) {
+      var al = articleLink(a);
+      if (al) window.open(al, '_blank');
+      return;
+    }
+  });
+
+  /* ── 削除／下書き破棄モーダル（破壊操作＝confirm を経て実行） ── */
+  var delModal   = document.getElementById('p419DelModal');
+  var delTitle   = document.getElementById('p419DelTitle');
+  var delDesc    = document.getElementById('p419DelDesc');
+  var delCancel  = document.getElementById('p419DelCancel');
+  var delConfirm = document.getElementById('p419DelConfirm');
+  var delBg      = document.getElementById('p419DelBg');
+  var pendingDel = null;
+
+  function openDelModal(a) {
+    if (!delModal) return;
+    pendingDel = a.id;
+    var draft = isDraft(a);
+    if (delTitle) delTitle.textContent = draft ? '下書きを破棄しますか？' : '記事を削除しますか？';
+    if (delDesc) delDesc.innerHTML = '<span class="p319-del-modal__name">' + a.title + '</span>' +
+      (draft
+        ? 'この下書きを完全に破棄します。入力済みの内容は復元できません。'
+        : 'この記事を完全に削除します。掲載先ページからも削除され、復元できません。');
+    if (delConfirm) delConfirm.textContent = draft ? '破棄する' : '削除する';
+    delModal.hidden = false;
+  }
+  function closeDelModal() {
+    if (!delModal) return;
+    delModal.hidden = true;
+    pendingDel = null;
+  }
+  if (delCancel) delCancel.addEventListener('click', closeDelModal);
+  if (delBg)     delBg.addEventListener('click', closeDelModal);
+  if (delConfirm) delConfirm.addEventListener('click', function () {
+    if (!pendingDel) return;
+    var wasDraft = false;
+    for (var i = 0; i < ARTICLES.length; i++) {
+      if (ARTICLES[i].id === pendingDel) { wasDraft = isDraft(ARTICLES[i]); ARTICLES.splice(i, 1); break; }
+    }
+    closeDelModal();
+    render();
+    if (KTN.toast) KTN.toast(wasDraft ? '下書きを破棄しました（デモ）' : '記事を削除しました（デモ）');
+  });
+
+  window.ktnRender = function () {};
 };
 
 /* ════════════════════════════════════════════════════

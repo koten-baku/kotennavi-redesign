@@ -151,25 +151,25 @@
 
             <div class="p211-field">
               <label class="p211-label">クリエイター名（表示名・活動名）<span class="ktn-req">必須</span></label>
-              <input class="p211-input" type="text" placeholder="例：田中 透">
+              <input class="p211-input" id="p112Name" type="text" placeholder="例：田中 透">
               <p class="p211-help">クリエイターページや展覧会情報に表示される名前です。本名・活動名のいずれでも構いませんが、<strong>個人名でご登録ください（企業・団体・グループ・展覧会名では登録できません）</strong>。</p>
             </div>
 
             <div class="p211-field">
               <label class="p211-label">クリエイター名（全角カナ）<span class="ktn-req">必須</span></label>
-              <input class="p211-input" type="text" placeholder="例：タナカ トオル">
+              <input class="p211-input" id="p112Kana" type="text" placeholder="例：タナカ トオル">
               <p class="p211-help">表示名の読み仮名です。並び替え・検索に使用します。</p>
             </div>
 
             <div class="p211-field">
               <label class="p211-label">クリエイター名（英語表記）</label>
-              <input class="p211-input" type="text" placeholder="例：Toru Tanaka">
+              <input class="p211-input" id="p112Romaji" type="text" placeholder="例：Toru Tanaka">
               <p class="p211-help">英語ページ・海外向け表示に使用します（任意）。</p>
             </div>
 
             <div class="p211-field">
               <label class="p211-label">作品ジャンル<span class="ktn-req">必須</span></label>
-              <select class="p211-select">
+              <select class="p211-select" id="p112Genre">
                 <option value="">選択してください</option>
                 <option>アート</option>
                 <option>クラフト</option>
@@ -185,7 +185,7 @@
               <label class="p211-label">ホームページ・SNS</label>
               <div class="p211-repeat" id="p112LinkList">
                 <div class="p211-repeat__row p211-repeat__row--link">
-                  <select class="p211-select">
+                  <select class="p211-select" id="p112SnsType0">
                     <option value="instagram" selected>Instagram</option>
                     <option value="x">X（Twitter）</option>
                     <option value="facebook">Facebook</option>
@@ -193,7 +193,7 @@
                     <option value="website">公式サイト</option>
                     <option value="other">その他</option>
                   </select>
-                  <input class="p211-input" type="url" placeholder="https://instagram.com/...">
+                  <input class="p211-input" id="p112SnsUrl0" type="url" placeholder="https://instagram.com/...">
                   <button class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline p211-repeat__del" type="button" aria-label="削除">✕</button>
                 </div>
               </div>
@@ -222,24 +222,24 @@
 
             <div class="p211-field">
               <label class="p211-label">本名（フルネーム）<span class="ktn-req">必須</span></label>
-              <input class="p211-input" type="text" placeholder="例：田中 透">
+              <input class="p211-input" id="p112RealName" type="text" placeholder="例：田中 透">
               <p class="p211-help">戸籍・本人確認書類と一致する氏名を入力してください。</p>
             </div>
 
             <div class="p211-field">
               <label class="p211-label">フリガナ（全角カナ）<span class="ktn-req">必須</span></label>
-              <input class="p211-input" type="text" placeholder="例：タナカ トオル">
+              <input class="p211-input" id="p112RealKana" type="text" placeholder="例：タナカ トオル">
             </div>
 
             <div class="p114-bank-row">
               <div class="p211-field">
                 <label class="p211-label">生年月日（任意）</label>
-                <input class="p211-input" type="date">
+                <input class="p211-input" id="p112Birth" type="date">
                 <p class="p211-help">クリエイター機能のご利用には必須ではありません。将来リエゾンプラス（作品販売）をお申込みの際の本人確認で必要になります。</p>
               </div>
               <div class="p211-field">
                 <label class="p211-label">性別</label>
-                <select class="p211-select">
+                <select class="p211-select" id="p112Gender">
                   <option value="">選択しない</option>
                   <option>女性</option>
                   <option>男性</option>
@@ -250,28 +250,28 @@
 
             <div class="p211-field" style="margin-top:12px">
               <label class="p211-label">郵便番号<span class="ktn-req">必須</span></label>
-              <input class="p211-input" type="text" placeholder="150-0001" inputmode="numeric" maxlength="8" style="max-width:180px">
+              <input class="p211-input" id="p112Zip" type="text" placeholder="150-0001" inputmode="numeric" maxlength="8" style="max-width:180px">
             </div>
 
             <div class="p114-bank-row" style="margin-top:12px">
               <div class="p211-field">
                 <label class="p211-label">都道府県<span class="ktn-req">必須</span></label>
-                <input class="p211-input" type="text" placeholder="東京都">
+                <input class="p211-input" id="p112Pref" type="text" placeholder="東京都">
               </div>
               <div class="p211-field">
                 <label class="p211-label">市区町村<span class="ktn-req">必須</span></label>
-                <input class="p211-input" type="text" placeholder="渋谷区神宮前">
+                <input class="p211-input" id="p112City" type="text" placeholder="渋谷区神宮前">
               </div>
             </div>
 
             <div class="p211-field" style="margin-top:12px">
               <label class="p211-label">番地・建物名<span class="ktn-req">必須</span></label>
-              <input class="p211-input" type="text" placeholder="1-2-3 ○○ビル 4F">
+              <input class="p211-input" id="p112Addr" type="text" placeholder="1-2-3 ○○ビル 4F">
             </div>
 
             <div class="p211-field" style="margin-top:12px">
               <label class="p211-label">電話番号<span class="ktn-req">必須</span></label>
-              <input class="p211-input" type="tel" placeholder="090-1234-5678" inputmode="tel" style="max-width:260px">
+              <input class="p211-input" id="p112Tel" type="tel" placeholder="090-1234-5678" inputmode="tel" style="max-width:260px">
               <p class="p211-help">日中に連絡のつく番号を入力してください。</p>
             </div>
 
@@ -333,7 +333,7 @@
           <div class="p211-block__body">
             <div class="p211-field">
               <label class="p211-label">すでに個展なびに掲載されているあなたのページ（任意）</label>
-              <input class="p211-input" type="text" placeholder="ページのURL、またはクリエイター名">
+              <input class="p211-input" id="p112ExistingPage" type="text" placeholder="ページのURL、またはクリエイター名">
               <p class="p211-help">ギャラリーなどが投稿した展覧会情報から、あなたのクリエイターページがすでに作成されている場合があります。心当たりのあるページ（URLまたは名称）があればご記入ください。事務局で確認のうえ、そのページのオーナーをご本人に切り替え、これまでの展覧会情報を引き継ぎます。心当たりがなくても、事務局が名寄せして引き継げる場合があります（結果は機能付与完了メールでお知らせします）。</p>
             </div>
           </div>
@@ -346,7 +346,7 @@
           <div class="p211-block__body">
             <div class="p211-field">
               <label class="p211-label">事務局への連絡事項（任意）</label>
-              <textarea class="p211-textarea" rows="3" placeholder="例：過去の主な展覧会歴、制作している作品の説明、今後の展覧会の予定、活動を確認できる情報、その他伝えておきたいこと など"></textarea>
+              <textarea class="p211-textarea" id="p112Notes" rows="3" placeholder="例：過去の主な展覧会歴、制作している作品の説明、今後の展覧会の予定、活動を確認できる情報、その他伝えておきたいこと など"></textarea>
             </div>
           </div>
         </div>
@@ -429,7 +429,7 @@
           <button class="p114-submit-btn ktn-op-btn ktn-op-btn--primary ktn-op-btn--lg" id="p112SubmitBtn" disabled onclick="p112Submit()">
             クリエイター機能を申込する
           </button>
-          <p class="p114-submit-note">
+          <p class="p114-submit-note" id="p112SubmitNote">
             お申込み後、個展なび事務局による確認・設定作業のため少々お時間をいただきます。<br>
             設定が完了しましたら、クリエイター機能付与完了メールでお知らせします。
           </p>
@@ -446,18 +446,48 @@
 <script>
 var p112CurrentMode = 'form';
 
+/* ── 確認中／利用開始デモ：以前の申込内容（田中透デモペルソナ・p3-11と同一データ） ── */
+var P112_DEMO_VALUES = {
+  p112Name: '田中 透', p112Kana: 'タナカ トオル', p112Romaji: 'Toru Tanaka', p112Genre: 'アート',
+  p112SnsUrl0: 'https://instagram.com/toru_tanaka_art',
+  p112RealName: '田中 透', p112RealKana: 'タナカ トオル', p112Birth: '1985-04-12', p112Gender: '男性',
+  p112Zip: '150-0001', p112Pref: '東京都', p112City: '渋谷区神宮前', p112Addr: '1-2-3 ○○ビル 4F', p112Tel: '090-1234-5678',
+  p112ExistingPage: '', p112Notes: ''
+};
+
+function p112ApplyPriorInput(submitted) {
+  Object.keys(P112_DEMO_VALUES).forEach(function(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    if (submitted) el.value = P112_DEMO_VALUES[id];
+    el.disabled = submitted;
+  });
+  document.querySelectorAll('input[name="creator-agree"], #p112TermsCheck').forEach(function(cb) {
+    if (submitted) cb.checked = true;
+    cb.disabled = submitted;
+  });
+  document.querySelectorAll('input[name="p112applicant"]').forEach(function(r) { r.disabled = submitted; });
+}
+
 function setDemoMode(mode) {
   p112CurrentMode = mode;
   var isForm = (mode === 'form');
   var isPending = (mode === 'pending');
   var isApproved = (mode === 'approved');
+  var isSubmitted = isPending || isApproved;
 
   document.getElementById('p112PendingBanner').hidden = !isPending;
   document.getElementById('p112ApprovedBanner').hidden = !isApproved;
   document.getElementById('p112AboutZone').hidden = isApproved;
   document.getElementById('p112ServiceBanner').hidden = isApproved;
   document.getElementById('p112Index').hidden = isApproved;
-  document.getElementById('p112SubmitWrap').hidden = !isForm;
+
+  p112ApplyPriorInput(isSubmitted);
+  document.getElementById('p112SubmitBtn').disabled = isSubmitted || !p112AgreementsOk();
+  document.getElementById('p112SubmitNote').innerHTML = isSubmitted
+    ? 'この内容ですでにお申込みを受け付けています。内容の変更が必要な場合は、お問合わせフォームより個展なび事務局までご連絡ください。'
+    : 'お申込み後、個展なび事務局による確認・設定作業のため少々お時間をいただきます。<br>設定が完了しましたら、クリエイター機能付与完了メールでお知らせします。';
+  if (isForm) document.getElementById('p112SaveError').hidden = true;
 
   ['dbarForm','dbarPending','dbarApproved'].forEach(function(id) {
     document.getElementById(id).classList.remove('on');
@@ -473,11 +503,16 @@ function p112ToggleAgent() {
   });
 }
 
-function p112UpdateSubmit() {
+function p112AgreementsOk() {
   var terms = document.getElementById('p112TermsCheck').checked;
   var acks = Array.prototype.slice.call(document.querySelectorAll('input[name="creator-agree"]'));
   var allAck = acks.length > 0 && acks.every(function(c){ return c.checked; });
-  document.getElementById('p112SubmitBtn').disabled = !(terms && allAck);
+  return terms && allAck;
+}
+
+function p112UpdateSubmit() {
+  if (p112CurrentMode !== 'form') return;
+  document.getElementById('p112SubmitBtn').disabled = !p112AgreementsOk();
 }
 
 /* ── 必須項目チェック（.ktn-req マーカーの .p211-field を走査・共通 .ktn-form-error パネルに表示） ── */

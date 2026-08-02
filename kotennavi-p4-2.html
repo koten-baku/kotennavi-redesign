@@ -128,7 +128,7 @@
         <!-- セクションヘッド -->
         <div class="ktn-tab-head">
           <span class="ktn-tab-head__title">記事<span class="ktn-sec-en">Articles</span></span>
-          <span class="ktn-count ktn-tab-head__count" id="p4TotalCount">全 7 件</span>
+          <span class="ktn-count ktn-tab-head__count" id="p4TotalCount">全 8 件</span>
         </div>
 
         <!-- フィルターバー -->
@@ -137,6 +137,7 @@
             <option value="">すべての投稿先</option>
             <option value="gallery">ギャラリーページ</option>
             <option value="exhibition">展覧会ページ</option>
+            <option value="artwork">作品ページ</option>
           </select>
           <select class="p3-2-filter__select" data-filter="category" id="p4FilterCategory">
             <option value="">すべてのカテゴリ</option>
@@ -158,7 +159,7 @@
 
           <!-- ─── 2026年グループ ─── -->
           <details class="p3-2-year-group" open>
-            <summary>2026年 <span class="ktn-count p3-2-year-count">5件</span></summary>
+            <summary>2026年 <span class="ktn-count p3-2-year-count">6件</span></summary>
             <div class="p3-2-year-cards">
 
               <!-- 1. SOIL NOTES vol.3 / ギャラリーノート / gallery / 画像あり -->
@@ -304,6 +305,35 @@
                     <span class="lc__byline-sep">/</span>
                     <span class="lc__date">2026.01.08</span>
                     <span class="itn-count sm" style="margin-left:auto"><svg><use href="#icon-interest-off"/></svg>62</span>
+                    <button class="itn-btn sm" onclick="this.classList.toggle('on');event.preventDefault()">
+                      <svg><use href="#icon-interest-off"/></svg>
+                      <span class="tip">興味あり！に追加する</span>
+                    </button>
+                  </div>
+                </div>
+              </a>
+
+              <!-- 6. 《オノマトペの庭》について / ギャラリーノート / artwork / 画像なし / exh-link--artwork -->
+              <a class="lc lc--noimg lc--article" href="#"
+                 data-dest="artwork" data-category="diary" data-year="2026">
+                <div class="lc__body">
+                  <div class="lc__badge-row">
+                    <span class="cb cb-content cb-article">article</span>
+                    <span class="at at-c">ギャラリーノート</span>
+                  </div>
+                  <div class="lc__title">《オノマトペの庭》について — ギャラリーノート</div>
+                  <div class="lc__lead">出品作品《オノマトペの庭》の見どころを、ギャラリー視点で綴ります。</div>
+                  <span class="exh-link exh-link--artwork" onclick="event.preventDefault();event.stopPropagation()">
+                    <span class="exh-link__title">《オノマトペの庭》</span>
+                  </span>
+                  <div class="lc__byline">
+                    <span class="byline-author">
+                      <span class="cb cb-person cb-gallery">gallery</span>
+                      <span class="byline-name">Gallery SOIL 渋谷</span>
+                    </span>
+                    <span class="lc__byline-sep">/</span>
+                    <span class="lc__date">2026.03.02</span>
+                    <span class="itn-count sm" style="margin-left:auto"><svg><use href="#icon-interest-off"/></svg>15</span>
                     <button class="itn-btn sm" onclick="this.classList.toggle('on');event.preventDefault()">
                       <svg><use href="#icon-interest-off"/></svg>
                       <span class="tip">興味あり！に追加する</span>

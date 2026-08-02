@@ -81,6 +81,7 @@
 | `.ktn-admin-note` | `<AdminNote>` | 全 p*-11 編集ページ共通の管理者コメント欄（Admin バッジ＋タイトル＋desc＋textarea）＝管理上の対応履歴を記録。管理者スレート `#3a4a5a` 軸で一般フォーム欄と視覚分離。管理者のみ閲覧 | `hidden` 既定・共通 `syncAdminNote()`（`renderAll()` 内）が `role==='admin'` で表示切替＝ページ側結線不要 | common.css `.ktn-admin-note`（`.ktn-form-error` 直後・2026-07-22 新設。設置＝p2-11/p3-11/p5-11/p6-11/p8-11。p70-11 は公開ガイドで対象外） |
 | `.p5-side-rel` | `<PickupList>` ＋ `<RecentWatchList>` ＋ `<InterestExhibitionList>` | p5〜p5-4 右カラム末尾の回遊ゾーン。(0)ピックアップ（`.p5-side-rel-pickup`・**ゼロ/他ユーザー表示時のみ**先頭に表示）(a)最近のウォッチ＝ウォッチしたクリエイター/ギャラリー（ウォッチ日降順・limit=3・cb-creator/cb-gallery バッジ付き）(b)最近の興味あり！＝展覧会 limit=3（cb-exhibition バッジ付き）。各「もっと見る →」（`.p2-side-nearby__more` ブロック型）は検索ページ（P10-2/P10-3・P10）へ | zero/other で (0) 表示切替（body class＋CSS） | related-zone grouped selector＋ `.p5-side-rel__*`／`.p5-side-rel-pickup`（L9447〜） |
 | `.ktn-steps` / `.ktn-step` | `<Steps current>` ＋ `<Step index label turn>` | 取引フローの逐次ステッププログレス（4〜6ノード＋接続線）。旧 `.p515-step`（p5-15）と `.p316-step`（p3-16/p4-16）を統合し p11-4（4ノード）にも展開。modifier＝`--done`（完了・緑）／`--seller`・`--buyer`（そのページの「自分の番」＝ソリッド塗り。seller は `var(--page-accent)`、buyer は固定 `var(--actor-buyer)` + リング）／`--seller-soft`・`--buyer-soft`（「相手の番」＝控えめtint）／`--future`（未到達）。コンテナ modifier `--sm`＝ノード28px→20pxの縮小版（p5-15 のみ使用） | JS が `step.className` を丸ごと差し替え（`ktn-step ktn-step--{state}`）。turn の物語＝ページのロール視点で自明に決まる（seller固定/buyer固定ではなく「このページの自分」がsolid） | common.css `.ktn-steps`（旧 `.p515-steps` ブロック跡地・2026-07-28 統合） |
+| `.ktn-pagination` | `<Pagination page totalPages onGoto>` | 管理一覧（フィルタ/並べ替え併用）の番号式ページング。前へ/番号(先頭・末尾・現在±1のみ・他は「…」省略)/次へ。`totalPages<=1`で自動非表示 | active＝ロール色ソリッド塗り、disabled | common.css `.ktn-pagination`（2026-08-02新設・初出=p3-14/p4-14/p3-19） |
 
 - 2026-06-22【seed】バッジ4原則：single source of truth／**色でなく形で意味を区別**／共通フォントCinzel uppercase／pulseは行動待ち時のみ（→ CLAUDE.md「バッジ設計システム」）。React化後も「variant=色」ではなく「kind=形」を第一軸にする。
 
@@ -2293,3 +2294,320 @@ React の条件レンダリングと Drupal のアクセス制御の共通の元
 - **保留事項**：ブラウザでの目視確認は未実施（ユーザー確認待ち）。
 - **影響ファイル**：`kotennavi-common.css`のみ（HTML変更なし）。`--grouped`修飾クラスでスコープしているためp3-15/p4-15の6列テーブルには影響しない。
 - **React/Drupalへの含意**：モバイルカード化コンポーネントでは、各列の`padding-right`を「値の右揃え位置」として全列で明示的に統一値を持たせる（一部列だけ未指定にしない）。ラベル/値のフォントサイズも列共通のトークン（例：`--card-label-size`/`--card-value-size`）で管理し、列ごとの指定漏れを防ぐ設計が望ましい。
+
+### 2026-08-01 追補(86)（P7-11：記事 新規投稿・編集・クローンページを新規作成。コンテンツブロックエディタ＋記事の紐づけ先データモデルを新設）
+
+- **経緯**：ユーザー指示「p7-11お願いします。p7の展覧会付き記事、作品付き記事、クリエイターページ付き記事、ギャラリーページ付き記事のデモバーでそれぞれが確認できるようにしてください」。(b)のp7.html側デモバー切替（P7_CONTEXTS）は先行対応済みで、本追補は(a)＝`kotennavi-p7-11.html`新規作成分。
+- **決定内容（記事の紐づけ先＝データモデル）**：記事の親文脈は「作品／展覧会／クリエイターページ（紐づけなし）／ギャラリーページ（紐づけなし）」の4値**排他選択**とし、ロールで選べる値が異なる（作品・クリエイターページ紐づけなし＝creator限定／ギャラリーページ紐づけなし＝gallery限定／展覧会＝両ロール共通）。UIは`data-role`属性付きピルグループ（`#p711ParentGroup`）で選択肢自体をロール別にhidden切替し、非表示になった選択中ピルがあれば同グループ内の最初の可視ピルへ自動再選択する汎用関数`p711SyncRoleFields(role)`を新設。記事種別（レポート/インタビュー/制作日記〔creator〕・ギャラリーノート〔gallery〕/お知らせ/ワークショップ〔creator限定〕）も同じ関数で出し分け。**React/Drupal実装では`Article.parentType: 'artwork'|'exhibition'|'creator'|'gallery'` ＋ `Article.parentId`（creator/galleryの場合はnull）のフィールドとして持たせ、選択肢のロール別フィルタリングはサーバ側バリデーションでも二重化することを推奨**（フロントの`hidden`切替はUI都合であり、送信値の正当性はAPI側でロール×選択肢の組み合わせを検証する必要がある）。
+- **決定内容（投稿者表示の簡素化＝p6-11との設計差）**：p6-11（作品エディタ）は「本人以外を代理登録できる」ため`P611_AUTHORS`レジストリ＋URL`?author=`/`?self=1`パラメータで作者を確定する仕組みを持つが、**記事にはこの概念がない**（記事は常にログイン中のcreator/gallery本人が本人として投稿）。そのためp7-11の`window.p711RoleSync()`はURLパラメータ解決を持たず、`window.ktnState.role`から直接バッジ・氏名・注記を書き換えるだけの実装に簡素化した。後工程でも「記事＝本人投稿のみ・代理投稿なし」という制約はAPI設計に反映すること（作成者IDはセッションから取得し、リクエストボディで指定不可にする）。
+- **決定内容（本文＝新規のコンテンツブロックエディタ）**：記事本文を「テキスト／画像／画像2枚／動画」の4種ブロックの配列として編集する`.p711-blocks`エディタを新設（コードベースに前例なし）。各ブロックは⠿ハンドルでドラッグ並べ替え、✕で削除（最後の1ブロックは削除不可＝本文を空にできない）、ツールバー「＋テキスト／＋画像／＋画像2枚／＋動画」で追加。既存の画像アップロード部品（`.p211-img-uploaded`/`.p211-img-drop`/`.p211-img-caption`）・テキストエリア（`.p211-textarea`）をブロック内部品として再利用し、新規CSSは`.p711-*`のラッパー・ツールバー・ドラッグ演出のみに限定。ドラッグ並べ替えは`KTN.initImgReorder`（p6-11のサブ画像用・クラス名がハードコードされ汎用転用不可）を使わず、`#p711Blocks`にスコープした専用IIFEとして別実装。**React/Drupal実装では`Article.body: Block[]`（`Block = {type:'text',content}|{type:'image',url,caption}|{type:'pair',urls:[string,string],caption}|{type:'video',url,caption,duration}`）という順序付き配列として永続化し、`<ContentBlockEditor blocks onChange>`コンポーネント（`<Block>`のtype別レンダラ＋dnd-kit等によるドラッグ並べ替え）に対応させる設計を推奨**。
+- **`kotennavi-pages.js`側の対応**：`KTN.pages['p7-11']`を新設（`KTN.pages['p6-11']`と同型の`syncMgmtBar()`／`window.ktnRender`フック）。`KTN.syncMgmtOwner('p711Owner', role)`で identity strip の Owner 行を populate。`kotennavi-common.js`の`getActions()`は`'p7-11'`分岐が既存のプレースホルダー実装のまま合致するため変更不要。
+- **保留事項**：ブラウザでの目視確認は未実施（ユーザー確認待ち）。
+- **影響ファイル**：新規`kotennavi-p7-11.html`、`kotennavi-common.css`（`.p711-*`追記）、`kotennavi-pages.js`（`KTN.pages['p7-11']`追加）。`docs/sitemap.md`のP7/P7-11行を`html-file`/進捗欄とも更新。
+
+### 2026-08-01 追補(87)（P7-11：ユーザーフィードバック6点を反映。紐づけ先を「入口ページ」による固定表示へ変更（追補86のデータモデルを訂正）／タイトルを先頭化／記事種別「その他」自由入力／テキストブロックにサブタイトル／動画をURL方式に変更／編集・クローン時に元記事の作成日・更新日を明記）
+
+- **経緯**：ユーザーより「p7-11のコメント」として6点指摘。うち①は追補(86)で実装した「紐づけ先をピルグループで**ユーザーが選択**する」UIが設計として誤りだったことの訂正指示：「記事新規の入り口は展覧会or作品orクリエイターページorギャラリーページ。入口が展覧会or作品の場合、紐づけは展覧会or作品＋クリエイターページorギャラリーページ。入口がクリエイターページorギャラリーページの場合は紐づけはクリエイターページorギャラリーページ。なのでp7-11の新規・編集・クローンのいずれの場合もすでに紐づけ先が決まっていて変更できない。対象の作品も選択できない」。
+- **決定内容（①紐づけ先＝「入口ページ」で決まる固定値・非選択に変更＝追補86のデータモデルを訂正）**：記事の紐づけ先はp7-11内でユーザーが選択するものではなく、**「どのページから新規記事作成を起動したか（入口）」によって100%自動的に決まる**。入口は「作品ページ／展覧会ページ／クリエイターページ／ギャラリーページ」の4種（作品・展覧会からの入口＝紐づけ先はその作品・展覧会＋作者〔creator/gallery〕、クリエイター・ギャラリーページからの入口＝紐づけなしの本人ページ記事）。旧`#p711ParentGroup`ピルグループ（ユーザーが紐づけ先を選ぶUI）・`P711_TARGETS`・`p711SyncParentContext()`は全廃止し、**表示専用の固定バッジ＋対象名**（`#p711Linkage`＝`cb-artwork`/`cb-exhibition`バッジ＋対象名リンク、紐づけなしの場合はバッジ非表示＋「◯◯ページの記事（紐づけなし）」テキストのみ）に置き換えた。実ページには存在しないURLパラメータ相当のデモ機構として、dbarに「入口（デモ用）」切替（`p711SetEntry(key)`／`P711_ENTRY`マップ）を新設し、4入口シナリオを目視確認できるようにした。**React/Drupal実装では`Article.parentType`/`Article.parentId`のフィールド構造自体は追補86のまま有効だが、これを決定するのはp7-11のフォームUIではなく「新規記事作成」ボタンを設置した側のページ（p2/p6=作品・展覧会側／p3/p4=クリエイター・ギャラリー側）が渡すクエリパラメータ（例：`?from=artwork&id=…`）である。p7-11（Article編集フォーム）はこの値を`readonly`で受け取り表示するのみで、フォーム側にparentType選択UIを持たせない**（作品の選択肢も出さない＝対象作品はp6側で確定済み）。
+- **決定内容（②記事タイトルを基本情報の先頭に移動）**：`.p211-block`内のフィールド順を「タイトル→紐づけ先（表示専用）→記事種別→…」に変更。実装上の理由はなく単純な項目順変更。
+- **決定内容（③記事種別「その他」の自由入力＋検索/絞り込みの設計方針）**：記事種別ピルグループに`f`＝「＋ その他」を追加し、選択時のみ`#p711CustomTypeField`（自由入力・必須）を表示。**検索・絞り込みでは、自由入力させた個別ラベルをそのまま新しいフィルタ選択肢として増殖させない**（絞り込みUIの選択肢が無限に増えて破綻するため）。カノニカルなバッジ`.at-f`（色`#4a5a6a`・ラベル「その他」）を新設し、**自由入力ラベルはあくまで記事ページ上の補足表示（本文冒頭や種別バッジのtitle属性等）に留め、記事一覧・検索フィルタ上の分類は常に「その他」の1カテゴリに集約する**。理由：種別絞り込みの目的は「大まかなジャンルで発見可能にすること」であり、自由入力を絞り込み軸に昇格させると表記ゆれ（「座談会」「対談」等）で同じ内容の記事が別カテゴリに分散し、絞り込みの実用性が下がる。**React/Drupal実装では`Article.type: 'report'|'interview'|'diary'|'notice'|'workshop'|'other'`（enum固定・DBスキーマの絞り込みインデックス対象はこのenumのみ）＋`Article.customTypeLabel: string|null`（`type==='other'`の時のみ使用・表示専用でインデックス対象外）の2フィールドで表現することを推奨**。将来的に特定の自由入力ラベルの出現頻度が高くなった場合は、運営判断で正式なenum値へ追加する運用（自動昇格はさせない）。
+- **決定内容（④テキストブロックにオプションのサブタイトル欄）**：`p711MakeBlock('text')`の生成HTML・および静的サンプル4ブロックに`<input type="text" class="p211-input p711-block__subtitle" placeholder="サブタイトル（任意）">`をテキストエリアの直前に追加。**必須ではない**（空でも保存可）。**React/Drupal実装では`Block`型`text`ケースに`subtitle?: string`を追加**（追補86の`Block`型定義を拡張。他ブロック種別＝image/pair/videoにはサブタイトル概念を持たせない＝テキストブロックのみの機能）。
+- **決定内容（⑤動画ブロックをアップロード方式から外部URL方式に変更）**：静的サンプルの動画ブロック・`p711MakeBlock('video')`双方から画像アップロード風ウィジェット（`.p211-img-drop`）を撤去し、`<input type="url" class="p211-input">`（必須・YouTube/Vimeo等の動画ページURL）＋キャプション＋「再生時間（表示用）」テキスト入力に置き換え。**理由＝動画ファイル自体をサイトでホスティング・エンコードする想定がなく、外部動画プラットフォームへのリンクを埋め込む設計のため**（画像ブロックは引き続きアップロード方式のまま＝対象外）。**React/Drupal実装では`Block`型`video`ケースを`{type:'video', url:string, caption?:string, duration?:string}`とし、サーバ側でファイルアップロード処理・エンコードパイプラインを実装する必要はない**（URLの形式バリデーションのみでよい）。
+- **決定内容（⑥編集・クローン時に元記事の作成日・最終更新日をidentity stripへ明記）**：`.ktn-mgmt-context`内に`__meta`スタイルを再利用した2行目`#p711ContextDates`（「作成日：{created} ／ 最終更新：{updated}」）を追加。`P711_ENTRY`マップの`created`/`updated`フィールドから`p711SetEntry()`が populate。**新規モード（`P711_MODE==='new'`）では非表示のまま**（元記事が存在しないため。`p711SetEntry`内で`P711_MODE !== 'new'`をガード条件にして日付更新をスキップする実装）。**React/Drupal実装では`Article.createdAt`/`Article.updatedAt`は既存フィールドを流用でき、新規フィールド追加は不要**（表示条件＝`mode !== 'new'`のみ後工程に伝達すればよい）。
+- **保留事項**：ブラウザでの目視確認は未実施（ユーザー確認待ち）。
+- **影響ファイル**：`kotennavi-p7-11.html`（紐づけ先UI全面差し替え・入口デモバー新設・タイトル順序変更・記事種別その他欄・テキストブロックsubtitle・動画ブロックURL化・identity strip日付行）、`kotennavi-common.css`（`.at-f`新設・`.p711-linkage*`新設・`.p711-block__subtitle`新設）。
+
+### 2026-08-01 追補(88)（P7-11：画面表示テキストから設計用語「紐づけ」「入口」を排除し、利用者向けの言葉に置換）
+
+- **経緯**：ユーザーより「『紐づけ』や『入口』は仕様を決めるときの用語なので、画面にはそれ以外の適切な言葉に置き換えて下さい」と指摘。追補(87)で導入した画面文言に、仕様検討時にのみ使う内部用語がそのまま露出していたための是正。
+- **決定内容**：`kotennavi-p7-11.html`内の**画面表示テキスト**（HTML静的文言・JS `P711_ENTRY` マップが populate する文言）を以下に置換。**コード内の変数名・関数名・IDセレクタ（`p711Linkage`/`p711SetEntry`/`P711_ENTRY`等）・開発者向けコメントは対象外**（画面には出ないため据え置き）。
+  - 「この記事の紐づけ先」（フォームラベル）→「この記事の掲載先」
+  - 「紐づけ先は、この記事の投稿元ページ（入口）によって自動的に決まります。ここでは変更できません。」（ヘルプテキスト）→「掲載先は、この記事を作成したページによって自動的に決まります。ここでは変更できません。」
+  - identity strip・クローンバナー等が表示する「紐づけ：{対象名}」→「掲載先：{対象名}」
+  - 「◯◯ページの記事（紐づけなし）」→「◯◯ページの記事（単独掲載）」
+  - dbar「入口（デモ用）：」→「作成元ページ（デモ用）：」
+- **本追補で確定した用語対応（今後この画面領域を触る際の基準）**：仕様語「紐づけ（先）」＝画面語「掲載先」／仕様語「入口（ページ）」＝画面語「作成元ページ」。**本ドキュメント（handoff-decisions.md）内の記述は仕様検討用の正確性を優先し、引き続き「紐づけ」「入口」を使用してよい**（本追補が対象とするのはあくまでHTML/JSが実際にレンダリングする画面文言のみ）。
+- **保留事項**：ブラウザでの目視確認は未実施（ユーザー確認待ち）。
+- **影響ファイル**：`kotennavi-p7-11.html`（HTML文言・JS文字列リテラルの置換。CSS・構造変更なし）。
+
+**追記（同日・ユーザー指示「p7もp7-11の修正に合わせて修正してください」を受けp7.htmlへ横展開）**：`kotennavi-p7.html`のdbarラベル「親文脈：」→「掲載先：」に修正。対応する開発者コメント（`kotennavi-p7.html`内・`kotennavi-pages.js`の`P7_CONTEXTS`定義直前）も「親文脈」→「掲載先」に統一。**`switchP7Context()`関数名・`P7_CONTEXTS`変数名・`p7HeadParent`等のIDは非表示のコード識別子のため据え置き**（p7-11と同じ方針＝画面文言のみ対象）。画面表示ラベル本体（「この作品の記事」「この展覧会の記事」「このクリエイターの記事」「このギャラリーの記事」＝`p7-head__parent-label`）は元々一般語で書かれており修正不要だった。**影響ファイル追加**：`kotennavi-p7.html`、`kotennavi-pages.js`（コメントのみ）。
+
+### 2026-08-01 追補(89)（P7：ユーザーフィードバック6点を反映。ヒーロー見出しの可読性・投稿者カードの重複解消＋改行・p7-11サブタイトルの反映）
+
+- **経緯**：ユーザーより「p7のコメント」として6点指摘。
+- **① タイトルが画面幅いっぱいで読みにくい（p2も同様）**：`.p7-head__inner`／`.p2-title-band__inner`の左右padding（`--hero-pad-x` 20px）は「ヒーロー幅＝コンテンツ幅／パンくず・タブナビと20pxグリッドで揃える」という全ページ共通の位置合わせルール（CLAUDE.md「幅を揃える」節）の単一ソースであり、過去にヒーロー側だけ24〜28pxへ変更して他要素とズレた失敗が明文化されている。**paddingそのものは変更せず**、新設した`--hero-title-max-w`（820px）を`.p7-head__title`・`.p2-title-band__title`に`max-width`として追加し、大型見出しが1行で箱の全幅（1040px）まで伸びきらないよう折り返しの上限だけを設けた。左端は他要素と同じ20pxのまま、右側の余白のみ確保する形で読みやすさを改善（box自体の位置合わせルールには抵触しない）。
+- **② クリエイター・ギャラリー付きの場合の「このクリエイター」「このギャラリー」カードは不要・他と同様に投稿者を表示**：`P7_CONTEXTS.creator`/`.gallery`の`sideParentHtml`（watchボタン＋「〇〇ページへ→」付きの重複カード）を空文字にし`switchP7Context()`側で`#p7SideParent`を非表示化（`#p7SideAuthor`と同じ空文字hide方式に統一）。代わりに`sideAuthorHtml`へ、artwork/exhibitionと同一構造（タイトル・日付・`.p7-author-card`のみ、watch/more-linkなし）の投稿者カードを新設。
+- **③ クリエイター・ギャラリーカードのバッジとタイトルは改行**：②の統合により4コンテキスト共通となった`.p7-author-card`コンポーネントに`.p7-author-card__badge-row`（バッジ単独の行）を新設し、`.p7-author-card__name`から`display:flex`＋`&nbsp;`によるバッジ・氏名の同一行表示を廃止。バッジが上段・氏名が下段になる。canonical 1箇所の変更で4コンテキスト全てに反映（common.css）。
+- **④ 作品・展覧会付きの場合の執筆者→投稿者に統一**：`P7_CONTEXTS.artwork`/`.exhibition`の`sideAuthorHtml`タイトルを「執筆者 / Written by」→「投稿者 / Posted by」に変更（p2.html「投稿者・お問合せ」の呼称に合わせた）。②で新設したcreator/gallery側も同じ「投稿者 / Posted by」で統一（4コンテキスト共通の呼称に）。
+- **⑤ p7-11のテキストサブタイトルを表示**：新設`.p7-article__subtitle`（Shippori Mincho 600・1.05rem）を`.p7-article__block--text`内の本文`<p>`直前に追加できるようにし、p7-11のデモ入力（2番目のテキストブロックのサブタイトル「言葉を『感じ』に変える」）に対応する箇所へ実際に反映（`kotennavi-p7.html`の静的HTML＝artwork表示、`P7_CONTEXTS.artwork.articleHtml`の両方）。他コンテキスト（exhibition/creator/gallery）はp7-11側にサブタイトル入力の実データが無いため今回は追加なし（サブタイトルは任意項目のため、無くても不整合ではない）。
+- **⑥ 画像の埋め込み仕様（質問への回答・実装変更なし）**：現状は実画像でなくプレースホルダーの`background:linear-gradient(...)`divのため、リテラルな`object-fit:cover`はまだコードに存在しないが、本番で実画像`<img>`に差し替える際の意図はcover。単体画像（`.p7-article__media--single`）は`aspect-ratio:3/2`。連続（2枚組・`.p7-article__media--pair`）は`display:flex;gap:10px`で**横並び**、各`aspect-ratio:1/1`（モバイル≤540pxのみ`flex-direction:column`で縦積みに切替）。キャプション（`figcaption.p7-article__caption`）は同一`<figure>`内で画像の**直下**（`margin-top:8px`）に1つだけ配置され、2枚組の場合も画像2枚に対してキャプション1つ（「左：〇〇。右：〇〇。」の形で書き分ける運用）。
+- **保留事項**：ブラウザでの目視確認は未実施（ユーザー確認待ち）。
+- **影響ファイル**：`kotennavi-common.css`（`--hero-title-max-w`新設・`.p7-head__title`/`.p2-title-band__title`にmax-width追加・`.p7-author-card__badge-row`新設・`.p7-author-card__name`のflex解除・`.p7-article__subtitle`新設）、`kotennavi-p7.html`（投稿者カード改称・改行構造・サブタイトル追加）、`kotennavi-pages.js`（`P7_CONTEXTS`全4件の`sideParentHtml`/`sideAuthorHtml`更新・`switchP7Context()`に`#p7SideParent`の空文字hide追加・artworkの`articleHtml`にサブタイトル追加）。
+
+### 2026-08-01 追補(90)（P6：タイトル可読性＋《》撤去範囲の確定、右カラムCTAのモバイルorder不具合修正）
+
+- **経緯**：ユーザーより6点指摘を受けたが、**実際にp6宛だったのは①のみ**（②〜⑥は本来p7宛のコメントであり、後続のユーザー訂正「先のコメントは1.以外はp7についてのコメントでした」を受けて誤適用と判明・全て取り消し／リバート済み。詳細は追補(91)を参照）。
+- **① タイトルの可読性＋《》撤去**：`.p6-hero__title`のcanonical定義（common.css内、p7/p2と同じく後勝ちの位置）に既存`--hero-title-max-w`（820px）を追加。**《》はデータではなくJSが描画時に付与していたシステム装飾**と確認（`_p6Works`の`title`フィールド自体には《》を含まない）。撤去範囲は**この作品の単体自己参照箇所のみ**：ヒーローH1（`#p6Title`）・About見出し（`#p6AboutTitle`）・関連バンドの自己リンク・`document.title`・購入申込モーダルタイトル（いずれも`kotennavi-pages.js`の`_p6Init`/`KTN.pages['p6']`内）。**複数の作品を並べて表示する一覧・グリッド文脈（MORE WORKSグリッド・関連作品グリッド等の`P6_REC`/`MORE_BY`データ由来の表示、および他ページの同種一覧）は対象外**とし、《》を残置した。理由：これはサイト全体で確立された「カード見出し内で作品名を視覚的に区別する」表記慣行であり、今回の指摘は「このページの主役タイトル」の可読性に限定されるため、一覧側まで一括で剥がすと影響範囲が不必要に広がる（p7の記事一覧・p3-3等の作品グリッドにも同じ表記が多数あるが今回はノータッチ）。p6/p6-1/p6-2は`_p6Init`を共有するため3ページとも同時に反映（p6-1/p6-2の静的プレースホルダーHTMLも合わせて手動修正）。
+- **右カラムCTAのモバイルorder不具合（独立した既存バグ修正・②〜⑥の誤適用とは無関係に維持）**：モバイル（≤900px）専用のレスポンシブCSSで`.p6-side-inner{display:contents}`により子要素が親flexへ展開され`order`プロパティで並び順を制御する設計だったが、投稿者・お問合せカードを対象とするセレクタが`.p2-side-posted`（p2ページのクラス名）のままで実際のp6マークアップのクラス（`.p2-side-contact`）と不一致だった。このためこのカードには`order`が適用されず既定値`0`となり、CTA（`order:6`）より先に描画されるモバイル限定の不具合が発生していた。セレクタに`.p2-side-contact`を追加し`order:7`を適用して修正。
+- **取り消し済み（誤適用・リバート済み）**：旧②〜⑥（投稿者カードのウォッチCTA・サブタイトル変更・作品説明への画像埋め込み新設`.p6-desc-media`・関連する`_p6Works[1].media`フィールド・`titleEn`変更）は全てp7宛の指摘をp6に誤って実装したものであり、コード（`kotennavi-common.css`の`.p6-desc-media`ブロック・`kotennavi-pages.js`の`_p6Works[1].media`と`descBody`描画ロジック・`titleEn`値・`kotennavi-p6*.html`/`p6-11.html`の`titleEn`表示）を全て元の状態へ戻した。
+- **保留事項**：ブラウザでの目視確認は未実施（ユーザー確認待ち）。
+- **影響ファイル**：`kotennavi-common.css`（`.p6-hero__title`にmax-width追加・`.p6-side-inner`モバイルorder用セレクタに`.p2-side-contact`追加）、`kotennavi-pages.js`（`document.title`/`#p6Title`/`#p6AboutTitle`/購入申込モーダルタイトルの《》除去）、`kotennavi-p6.html`／`kotennavi-p6-1.html`／`kotennavi-p6-2.html`（静的プレースホルダーの《》除去）。
+
+### 2026-08-01 追補(91)（P7：ユーザーフィードバック追加5点を反映。投稿者カードへのwatch追加・サブタイトル明瞭化・記事内2枚組画像のcover実装＋個別キャプション化・右カラムCTAを先頭へ移動）
+
+- **経緯**：追補(90)で一度p6に誤適用していた6点のうち②〜⑥は、ユーザーの訂正により本来p7宛と判明。ここで正しくp7へ実装した。
+- **② 投稿者カードにwatch CTAを追加**：`.p7-author-card`（`P7_CONTEXTS`全4コンテキスト共通コンポーネント）は追補(89)時点でwatchボタンを持たない設計だったが、`docs/component-html.md`の canonical テンプレート（ピル型`.ktn-btn` watchボタン）を`.p7-author-card__info`内に新設した`.p7-author-card__foot`へ追加。`.p7-author-card`自体が`<a>`のため、他ページの`.p2-side-ec`内`.ktn-icon-btn`と同様`handleAction(this,'watch');event.preventDefault()`でアンカーの遷移を防止。静的HTML（`kotennavi-p7.html`）と`P7_CONTEXTS`の4コンテキスト全ての`sideAuthorHtml`に反映。
+- **③ サブタイトルの明瞭化**：`#p7En`／`P7_CONTEXTS.artwork.en`を`Making of "Onomatopoeia Garden" — In Search of the Shape of Sound`（二重引用符＋emダッシュで読点混雑）から`Making of Onomatopoeia Garden: In Search of the Shape of Sound`（引用符を外しコロン区切りに整理）へ変更。exhibition/creator/gallery の`en`は元々明瞭なため対象外。
+- **④ 記事内2枚組画像の実装**：CSS `.p7-article__media-img`に`object-fit:cover;object-position:center;display:block`を追加（実画像`<img>`への将来差し替えに備え、現状のプレースホルダーdiv構造は維持＝`.p211-img-uploaded__thumb`の静的デモ運用に倣い`<img src="">`は使わない）。モバイル（≤540px）専用の`.p7-article__media--pair{flex-direction:column}`を削除し、画面幅に関わらず常に1行2枚を維持するよう変更（同じ`@media`ブロック内の他2ルールは維持）。新設`.p7-article__media-col{flex:1;min-width:0}`で画像＋キャプションを1組にラップし、従来「左：〇〇。右：〇〇。」の共有キャプション1つだったものを画像ごとの個別キャプションへ分割（各画像の直下に配置）。静的HTML1箇所＋`P7_CONTEXTS`の4コンテキスト（artwork/exhibition/creator/gallery）articleHtml内の2枚組figure、計5箇所に適用。
+- **⑤ 右カラムCTA（興味あり！ウィジェット）を先頭へ移動**：`kotennavi-p7.html`の`<aside class="p2-layout__side">`内で`#p7CtaWidget`を`#p7SideParent`より前（先頭）に並べ替え。`switchP7Context()`はidベースのinnerHTML書き換えのみでDOM順を変更しないため、4コンテキスト全てで自動的にCTA先頭が維持される。**関連する確認事項**：「興味あり！」でマークした場合の表示範囲を調査したところ、p5.html（p5タブナビ上は「カレンダー」表記＝マイページトップ）は実際には興味あり専用フィルタチップ（`data-filter="interest"`）とメインフィード内の興味ありカード、および右カラム「最近の興味あり！」ウィジェットを持っており、**興味あり項目はp5-3（興味あり！リスト）だけでなくp5（カレンダー/マイページトップ）にも表示される**のが現状の実装（「カレンダーには出ない」という想定とは異なる）。今回はこの点についてコード変更は行っていない（現状の仕様として報告のみ）。
+- **⑥ Drupal質問への回答（実装変更なし・再掲）**：テキスト・画像・動画を不規則なブロックとして自由に配置できる記事編集は、Drupalの**Paragraphsモジュール**（コンテンツタイプのフィールドとして複数の段落タイプ＝テキスト/画像/動画パラグラフを任意順・複数回配置できる）、または**Layout Builder**（セクション・ブロックの視覚的配置）で標準的に実現可能。p7-11の「不規則ブロック」UIはこの設計を先取りしたモックアップである旨を回答。
+- **保留事項**：ブラウザでの目視確認は未実施（ユーザー確認待ち）。⑤の「興味ありがカレンダーに出る」現状仕様について、意図通りか改めてユーザー確認が必要。
+- **影響ファイル**：`kotennavi-common.css`（`.p7-article__media-img`にobject-fit追加・`.p7-article__media-col`新設・モバイル`flex-direction:column`削除・`.p7-author-card__foot`新設）、`kotennavi-p7.html`（投稿者カードへwatchボタン追加・`#p7En`文言変更・2枚組figureの構造変更＋キャプション分割・右カラム`#p7CtaWidget`を先頭へ移動）、`kotennavi-pages.js`（`P7_CONTEXTS`全4件の`sideAuthorHtml`にwatchボタン追加・`artwork.en`変更・4件の`articleHtml`内2枚組figure構造変更）。
+
+### 2026-08-01 追補(92)（横断9点ラウンド：p2〜p2-4／p2-11↔p2-1／p3-11／p5-15／p3-15↔p4-15／p3-11↔p4-11／p11-4／p11-2↔p11-3）
+
+- **経緯**：ユーザーから9点の指摘・依頼を一括で受け、複数ページ横断で反映。うち以下3点は後工程（React/Drupal）向けに判断根拠を残す。
+- **p3-11/p4-11「審査中」状態＝ページレベルバナーでなくローカル参照ブロックの3状態化を選択**：p11-4には既にページ全体の状態通知として`.p114-status-notice`（Pending/Step2/StripePending/Approved の4状態バナー）が確立済みだが、p3-11/p4-11のLIAISON+識別ステータスは、そのページの「本人確認情報」ブロック内に置かれた小型の参照ノート`.p114-privacy-note`（アイコン＋1文＋ガイドリンク）という別コンポーネントで表現されている。今回「審査中」を追加するにあたり、p11-4のページレベルバナーを輸入するのではなく、**この参照ブロックの既存ローカル慣行（2状態→3状態のトグル）をそのまま踏襲**した。理由：この場所は「本人確認情報の状態」を短く参照するだけの脇役表示であり、申込ページ本体（p11-4）とは文脈上の役割が異なる（p3-11/p4-11は本人確認情報の持ち主が自分の状態を確認する場、p11-4は申込そのものを行う場）。React変換時、`.p114-privacy-note`は`<IdentityStatusNote status="none|pending|approved">`のような小型コンポーネントとし、p11-4の`<ApplicationStatusBanner>`とは別コンポーネントに分離してよい。
+- **p11-4 事業者番号ヘルプテキスト＝購入者側の実表示を根拠に文言決定**：ヘルプテキスト追加にあたり、実際にこの番号がどこでどう使われるかをp5-15.html（購入者向け領収書モーダル）で確認し、`<dt>登録番号</dt><dd>未登録（適格請求書発行事業者ではありません）</dd>`という実表示があることを確認した上で「ご入力いただいた番号は、作品が売れた際に購入者へ発行される領収書に記載されます」という一文を追加。単なる説明文の書き足しではなく、実データフロー（出品者側の入力→購入者側の領収書表示）を裏取りした上での文言決定である。
+- **p11-2/p11-3「確認中／利用開始」時のフォーム挙動＝非表示でなく「プリフィル＋disabled」を採用**：旧実装は該当状態で送信フォーム（`p112SubmitWrap`/`p113SubmitWrap`）自体を`hidden`にし、フォーム項目も空欄のまま編集可能という状態だったが、これは「既に申込済みである」という状態を利用者が確認できず、かつ空欄操作可能なフォームが残るという2重の不備だった。対応として、送信ラッパーの`hidden`切替を廃止して常時表示に変え、`pXXXApplyPriorInput(submitted)`ヘルパー（p112/p113共通パターン）が対象フィールド群・同意チェックボックスへ以前の入力値をセットしたうえで`disabled`化、送信ボタンも`disabled`化し、注記文言のみ「この内容ですでにお申込みを受け付けています。内容の変更が必要な場合は…事務局までご連絡ください。」に切替える設計にした。**「隠す」ではなく「見せた上で凍結する」を選んだ理由**：ユーザーが自分の申込内容を後から確認できることの方が、フォームを隠すことよりも有用（他の管理ページの「ロックは取引連動項目だけ凍結・カード全体は隠さない」という既存方針と同じ思想）。デモ用の入力値はp3-11（クリエイター＝田中透）／p4-11（ギャラリー＝Gallery SOIL 渋谷）と同一ペルソナのデータを流用し、サイト内のデモデータ一貫性を保った。React変換時は`<ApplicationForm mode="edit|readonly-submitted">`とし、`readonly-submitted`時はプリフィル値をpropsで渡してdisabled化、送信ボタンはdisabled固定＋注記テキスト切替という同じ2値状態で実装できる。
+- **保留事項**：#7（p11-4「ギャラリーでのお立場」代替表現）はテキストでの提案のみで実装は保留（ユーザーの選択待ちのため、決定確定後に別途追記）。ブラウザでの目視確認は未実施（ユーザー確認待ち）。
+- **影響ファイル**：`kotennavi-p3-11.html`／`kotennavi-p4-11.html`（LIAISON+審査中ブロック追加・`setLpMode()`3状態化）、`kotennavi-p11-4.html`（事業者番号ヘルプテキスト）、`kotennavi-p11-2.html`／`kotennavi-p11-3.html`（フィールドid付与・`pXXXApplyPriorInput`/`setDemoMode`/`pXXXAgreementsOk`/`pXXXUpdateSubmit`書き換え）、`kotennavi-p2.html`〜`kotennavi-p2-4.html`（ヒーロー帯ボーダー統一）、`kotennavi-p2-11.html`／`kotennavi-p2-1.html`（在廊情報連携）、`kotennavi-p5-15.html`（領収書PDF項目修正）、`kotennavi-p3-15.html`／`kotennavi-p4-15.html`（p3-17/p4-17リンク追加）。
+
+### 2026-08-01 追補(93)（追補92の9点ラウンドへの言い直し・修正3点：p2-11↔p2-1の連携方式訂正／p3-15↔p4-15リード文リンク撤去／p11-4ラベル統一）
+
+- **経緯**：追補(92)反映後、ユーザーから9点のうち3点について「それ以外は確認しました」付きの言い直し・修正依頼を受けた。
+- **p2-11↔p2-1連携の訂正＝どちらのフィールドが正なのか（構造化 vs 素テキスト）**：追補(92)時点の実装は、p2-11の**アコーディオン「クリエイター在廊予定を入力する」**（`#p211AccAttend`＝日付範囲・曜日フィルタ・メモを持つ構造化データ、JS側`ATTENDANCE`配列）をp2-1の在廊予定表示（旧`#p2AttendanceGrid`）へ流用していたが、これはp2-11に存在するもう一つの別フィールド——**会場利用案内セクション内「クリエイター在廊」**（`#p211FacAttend`のyes/no + `#p211FacAttendDetail`の自由記述textarea）——と混同したものだった。ユーザーの指摘は後者（会場利用案内側）を指しており、かつ「そのままテキストベースで表示」という要求は、構造化リストへ再加工せず**yes/no状態＋自由記述をそのまま文字列として出す**という意味だった。この2フィールドはp2-11内で役割が異なる（アコーディオン＝p2-1の日別カレンダーに日付ごとの在廊バッジを立てるための構造化データ源／会場利用案内＝会場運用に関する簡易な有無＋補足説明）ため、**アコーディオン側（`ATTENDANCE`配列・日別カレンダーの②セクション）は今回の指摘と無関係であり変更していない**。修正後は、新設`FACILITY_ATTEND`（`{has, note}`）が会場利用案内側フィールドに対応するデータとして④セクションの`#p2AttendanceText`（`<p>`要素）に`textContent`でそのまま出力される。p2-11側のデモ値（「松田啓佑：6/20（土）…」）は別デモ展覧会の日付で今回のp2-1（田中透・2/18〜3/5）と噛み合わないため、p2-11のテキストを機械的にコピーはせず、p2-1側で**このページの展覧会に一致する新しいデモ文言**を独自に用意した（静的デモページ間でデータが実連動しない現行方式を踏襲。CLAUDE.mdの進捗運用と同じ「パターンを踏襲した文脈整合デモ値」の考え方）。React/Drupal変換時は、この2フィールドが同一エンティティ（展覧会）内の別プロパティ（`attendanceSchedule[]`＝構造化・`facilityAttendance:{has,note}`＝簡易テキスト）として並存する設計になる。
+- **p3-15/p4-15リード文ガイドリンクの撤去理由**：`.ktn-mgmt-head__guides`は「このページの使い方ガイド」を集約する場所（LIAISON+の会場優先について／取引の進め方・困ったとき、の2リンクのみが元々の設計）であり、別ページ（販売代金管理＝p3-17/p4-17）への横移動リンクを混ぜると、ページ内の役割（使い方説明）と役割（他ページへの遷移導線）が同じ場所に混在し唐突に見える。既にサイドバーの`.p3-mgmt-nav-item`にp3-17/p4-17への正規ナビ項目が存在するため、リード文側は重複かつ文脈違反と判断し撤去した。「関連情報へのリンクは今の場所の役割に合わせる（ガイド欄＝使い方、ナビ＝ページ遷移）」という切り分けは今後のガイド欄追記時にも踏襲する。
+- **p11-4ラベル統一**：p11-3の既存表現「ギャラリーとのご関係」にp11-4を合わせた（p11-3が先行表現・p11-4が追随）。creator/gallery兼用ページ間の表記揺れ防止のため、今後同種のラベルを追加する際はp11-2/p11-3の既存語彙を先に確認する。
+- **保留事項**：ブラウザでの目視確認は未実施（ユーザー確認待ち）。
+- **影響ファイル**：`kotennavi-p2-1.html`（`#p2AttendanceGrid`→`#p2AttendanceText`、コメント修正）、`kotennavi-pages.js`（`FACILITY_ATTEND`新設・④セクションIIFE書き換え・未使用`DOW_LABEL`削除）、`kotennavi-common.css`（未使用`.p2-1-attendance-grid`/`.p2-1-attend-chip*`を`.p2-1-attendance-text`に置換）、`kotennavi-p3-15.html`／`kotennavi-p4-15.html`（`.ktn-mgmt-head__guides`からp3-17/p4-17リンク削除）、`kotennavi-p11-4.html`（ラベル文言変更）。
+
+### 2026-08-01 追補(94)（追補93の3点がユーザー意図とズレていたための再修正：p2-1は「置換」でなく「併記」／p3-15↔p4-15は「削除」でなく「別枠で再設置」／p11-4に選択肢追加）
+
+- **経緯**：追補(93)の対応後、ユーザーから2点についてさらに言い直しがあった。「テキストベースで表示」＝構造化リストの**置き換え**ではなく、構造化リストは残したうえで会場利用案内のテキストを**追加で**併記してほしいという意図だった。また「別に設置してほしい」＝リンクの**削除**ではなく、リード文・ガイドとは別の場所への**再設置**を求めるものだった。加えて新規に選択肢追加の依頼（項目7）を受けた。
+- **p2-1「クリエイター在廊予定」＝構造化リスト（`ATTENDANCE`配列・#p2AttendanceGrid）とテキスト（`FACILITY_ATTEND`・#p2AttendanceText）の併記が正**：追補(93)では「そのままテキストベースで表示」を「構造化リストをテキストに置き換える」と解釈したが、これは誤りだった。正しくは、p2-11に存在する2つの別フィールド（アコーディオン＝構造化スケジュール／会場利用案内＝簡易な有無＋自由記述）を**両方**p2-1に反映し、構造化リストの下に会場利用案内のテキストを補足として並べる構成。この教訓：「そのまま表示」という指示は情報源の**加工方法**（構造化→素テキスト）を指定しているのであって、既存要素の**置き換え**を指示しているとは限らない。既存表示を削る前に「追加なのか置換なのか」を再確認する必要がある事例として記録。フォントサイズは同一セクション内の`.p2-1-simple-item__desc`（`--rt-pre-size`）に揃え、`.p2-1-attendance-text`も同じ変数を使うよう修正（ページ内での視覚的な文章サイズの統一）。
+- **p3-15/p4-15「販売代金管理へ」リンク＝削除でなく別枠で再設置が正**：追補(93)では「違和感がある」＝そのリンク自体が不要と解釈し削除したが、正しくは「置き場所」が問題であり、リンク自体は必要だった。カードヘッド内の2カラム構造（`__left`＝タイトル／`__right`＝リード文＋ガイド）とは独立した新しい行（`.p315-related-link`）をカードヘッドの直後に設け、`.ktn-action-btn`（CLAUDE.mdのページ遷移アクションボタン規約＝末尾「→」のアウトラインボタン）でp3-17/p4-17への遷移を表現。この教訓：ユーザーが「〇〇にあるのは違和感がある」と言った場合、要素の**削除**でなく**置き場所の変更**を求めているケースがある（特に、既存のサイドバーナビだけでは「今見ているコンテンツから直接遷移する」導線として弱いため、コンテンツ内に独立した遷移リンクを求める場合がある）。
+- **p11-4「ギャラリーとのご関係」に「従業員」を追加**：既存選択肢（代表者・経営者／役員／個人事業主〔本人〕）に、役員の次・個人事業主の手前として追加。p11-3の同種選択肢（オーナー・運営者／スタッフ／広報委託先）とは項目セットが異なる（p11-4は法人の登記上の立場に寄せた選択肢、p11-3はより緩やかな運営実態ベースの選択肢）ため、今回はp11-3側への横展開は行っていない。
+- **保留事項**：ブラウザでの目視確認は未実施（ユーザー確認待ち）。
+- **影響ファイル**：`kotennavi-p2-1.html`（`#p2AttendanceGrid`復活＋`#p2AttendanceText`併記）、`kotennavi-pages.js`（④セクションIIFEを構造化リスト生成＋テキスト表示の両対応に書き換え・`DOW_LABEL`復活）、`kotennavi-common.css`（`.p2-1-attendance-text`のfont-sizeを`--rt-pre-size`に変更・`.p315-related-link`新設）、`kotennavi-p3-15.html`／`kotennavi-p4-15.html`（カードヘッド直後に`.p315-related-link`行を追加）、`kotennavi-p11-4.html`（「従業員」選択肢追加）。
+
+### 2026-08-01 追補(95)（追補94の2点への微調整：p2-1は表示順を「テキスト→リスト」に入替／p3-15↔p4-15の別枠リンクに簡単な説明文を追加）
+
+- **経緯**：追補(94)の対応後、ユーザーからさらに2点の微調整依頼（項目7は追補(94)の対応で確認済み・変更なし）。
+- **p2-1「クリエイター在廊予定」＝表示順を入替（会場利用案内テキストが先・構造化リストが後）**：追補(94)では`#p2AttendanceText`（会場利用案内の簡易テキスト）を構造化リスト`#p2AttendanceGrid`の**後**に配置していたが、「構造化リストが下にしてください」との指示により順序を反転。HTML上は`#p2AttendanceText`→`#p2AttendanceGrid`の順に変更（JS側の生成ロジックはid参照のためDOM順に依存せず無変更）。この並び替えに伴い、`FACILITY_ATTEND.note`内の参照文言「詳しい日程は**上記**の在廊予定表をご確認ください」を「詳しい日程は**下記**の在廊予定表をご確認ください」に修正（テキストが指す構造化リストの位置が上→下になったため、文言も実際の位置関係に追従させた）。
+- **p3-15/p4-15「販売代金管理へ」リンクに説明文を追加**：追補(94)で新設した`.p315-related-link`（カードヘッド直後の独立行）は当初リンクのみだったが、「販売代金管理ページについての簡単な説明をリンクの前に付けて」との依頼を受け、`.p315-related-link__desc`（`<p>`要素）をリンクの前に追加。文面は実際のp3-17.html／p4-17.htmlの`.ktn-mgmt-head__desc`（「LIAISON+で取引が完了した代金の残高・精算予定・振込先口座を管理します。精算は月末締め・翌月20日の一括振込…」）を要約した「取引完了後の代金の残高・精算予定・振込先口座の確認はこちら。」を採用（遷移先ページの実際の説明文から要約する＝機械的な仮文言にしない）。レイアウトは`.p315-related-link{justify-content:flex-end}`から`{justify-content:space-between}`に変更し、説明文（左）とリンク（右）を横並びに配置。p3-15/p4-15はペアページのため両方に同一パターンで反映（宛先URLのみp3-17/p4-17で相違）。
+- **教訓**：今回の2点はいずれも「機能追加・削除」ではなく「既存要素の並び順・付随情報の追加」という細かな微調整だった。ラウンドを重ねるほど指示は粗い方向修正から細部の調整へ移行する傾向があるため、直前の実装内容を前提に「具体的に何が変わったか」を正確に読み取ることが重要（大きな意味の取り違えは無かったため、追補(93)→(94)のような設計レベルの訂正は発生していない）。
+- **保留事項**：ブラウザでの目視確認は未実施（ユーザー確認待ち）。
+- **影響ファイル**：`kotennavi-p2-1.html`（`#p2AttendanceText`と`#p2AttendanceGrid`の表示順入替）、`kotennavi-pages.js`（`FACILITY_ATTEND.note`内「上記」→「下記」修正）、`kotennavi-common.css`（`.p315-related-link`を`space-between`に変更・`.p315-related-link__desc`新設）、`kotennavi-p3-15.html`／`kotennavi-p4-15.html`（`.p315-related-link__desc`をリンク前に追加）。
+
+### 2026-08-01 追補(96)（p2-1「クリエイター在廊予定」テキストに会場利用案内の在廊有無ラベルを追加）
+
+- **経緯**：追補(95)対応後、ユーザーから「会場利用案内の在廊有無も表示してください」と指摘。それまでの`#p2AttendanceText`は在廊に関する自由記述（`FACILITY_ATTEND.note`）のみを表示しており、p2-11の会場利用案内内`select#p211FacAttend`（`''`=未設定／`'yes'`=在廊あり／`'no'`=在廊なし）が持つ**有無そのもの**は画面に出ていなかった。
+- **データ形の変更（`has`真偽値→`attend`文字列）**：`FACILITY_ATTEND`を`{has:true, note:'…'}`から`{attend:'yes', note:'…'}`に変更し、p2-11の`select`が持つ値（`''`/`'yes'`/`'no'`）とそのまま対応させた。表示判定`hasNote`は`attend==='yes' || attend==='no'`（＝select値が未設定でなければ表示。p2-11側で`''`のとき`.p211-facility-detail`が`hidden`になる挙動と一致させた）。ラベル文言は`FACILITY_ATTEND_LABEL = {yes:'在廊あり', no:'在廊なし'}`でp2-11の`<option>`テキストとそのまま揃えた（新しい言い回しを作らない）。
+- **表示＝チップラベル＋自由記述を同一`<p>`内に併記**：`#p2AttendanceText`の`textContent`代入を`innerHTML`に変え、冒頭に`<span class="p2-1-attendance-text__state">在廊あり</span>`を差し込んだ後に自由記述本文を続ける形にした。新設`.p2-1-attendance-text__state`は構造化リスト側の`.p2-1-simple-item__badge--attend`（`background:rgba(0,93,167,.1);color:var(--accent)`の淡tintピル）と同じ見た目に揃え、「在廊」を示す視覚言語をページ内で統一した（新しいバッジ意匠を増やさない＝CLAUDE.mdバッジ設計原則「single source of truth」に沿う）。
+- **React/Drupal変換時**：`facilityAttendance:{attend:'yes'|'no'|null, note:string}`という構造で持たせ、`attend`の値に応じたラベル（在廊あり/在廊なし）とnoteを併記するテンプレートにする。
+- **保留事項**：ブラウザでの目視確認は未実施（ユーザー確認待ち）。
+- **影響ファイル**：`kotennavi-pages.js`（`FACILITY_ATTEND`のデータ形変更・`FACILITY_ATTEND_LABEL`新設・④セクションIIFEの`box.innerHTML`化）、`kotennavi-common.css`（`.p2-1-attendance-text__state`新設）、`kotennavi-p2-1.html`（コメント更新のみ）。
+
+### 2026-08-01 追補(97)（p7-11「画像2枚」ブロック＝2枚の存在意図の確認とモバイル横並び不具合の修正）
+
+- **経緯**：ユーザーより「p7/p7-11のブロック追加になぜ画像2枚の種別があるのか、1枚を2回では同様のことができないのか」と質問。回答として、`.p7-article__media--pair`は同一文脈の2枚（p7.htmlの実例＝「制作中盤のラフ」/「完成に近づいた状態」のbefore/after）を**横並び1組**として見せるための専用レイアウトであり、単体「画像」ブロック（`.p7-article__media--single`＝`aspect-ratio:3/2`の単独figure）を2回追加しても縦に2つ並ぶだけで横並びは再現できない旨を説明し、ユーザーは「2枚」種別の維持に合意。
+- **続けてユーザーから「スマホサイズで縦並びになるのが気になる。横並びが意図なら常に横並びの方がよいのでは」と指摘**。調査の結果、**公開ページ`kotennavi-p7.html`側の`.p7-article__media--pair`は追補(91)で既にモバイル専用`flex-direction:column`を削除済みで、画面幅に関わらず常時横並び**（不具合なし）。一方、**編集UI`kotennavi-p7-11.html`の`.p711-pair-imgs`にだけ`flex-wrap:wrap`＋子要素`flex:1 1 200px;min-width:160px`が残っており**、2枚合計最小幅(160×2+gap10=330px)がモバイル実寸（`.ktn-mgmt-stack`のモバイルinset8px適用後の実効幅）を超えるため折り返し、編集画面上でのみ縦積みに見えていた。公開ページ側は既に「常時横並び」の意図で確定済みだったため、**編集UI側もそれに揃えるのが妥当**と判断し修正。
+- **修正内容**：`.p711-pair-imgs`から`flex-wrap:wrap`を削除し、子`.p211-img-uploaded`を`flex:1 1 200px;min-width:160px`→`flex:1 1 0;min-width:0`に変更。サムネイル（`.p211-img-uploaded__thumb`）は固定52×40pxで縮まず、ファイル名（`.p211-img-uploaded__name`）は`min-width:0`＋`text-overflow:ellipsis`で省略表示に対応済みのため、縮小しても表示は破綻しない。
+- **教訓**：同じ概念（画像2枚組の横並び）が公開ページ用CSSと編集UI用CSSの2箇所に別々に実装されており、片方だけ仕様変更（追補91のモバイル対応）が反映され、もう片方が古いままになっていた。**同一コンポーネントの「表示用」と「編集用」で見た目のルール（特にレスポンシブ挙動）が分岐していないか、変更時は両方を確認する**必要がある事例として記録。
+- **保留事項**：ブラウザでの目視確認は未実施（ユーザー確認待ち）。
+- **影響ファイル**：`kotennavi-common.css`（`.p711-pair-imgs`・`.p711-pair-imgs .p211-img-uploaded`のflex設定変更）。
+
+### 2026-08-01 追補(98)（p7右カラムのモバイル右端切れ＝`.p2-side-card`共通`min-width:0`未設定によるCSS Grid overflowを修正）
+
+- **経緯**：ユーザーより「p7で右カラムの全セクションの右側がスマホサイズで切れている。この右カラム幅の決め方はp2/p3/p4/p5/p6/p8で共通化していないのか」と指摘。
+- **調査**：p2・p7・p8は`.ktn-content.p2-layout-wrap > .p2-layout > .p2-layout__side`のグリッドを共有しており、幅決定ロジック自体は既に共通（`.p2-layout__side`は`@media(max-width:900px)`で`display:grid;grid-template-columns:1fr 1fr`、`@media(max-width:680px)`で`grid-template-columns:1fr`に切替）。p3/p4は別方式（`.p3-prof-side`/`.p4-prof-side`＝`width:280px`→`860px`以下で`width:100%;position:static`の直接切替）、p6は`.p6-layout`（grid→`860px`以下で`display:flex;flex-direction:column`）、p5はそもそも右カラム構造（`.p2-layout`/`aside`）自体が主要ページに存在しない。**「右カラムの幅決定」はp2系グリッド（p2/p7/p8共有）・p3/p4系（直接width切替）・p6系（grid→flex切替）の3パターンに分かれており、真の意味では統一されていない**が、これは今回の切れ症状の直接原因ではなかった。
+- **真因**：`.p2-layout__side`が900px以下で`display:grid`になった際、直接の子（`.p2-side-card`を持つ各サイドカード＝p7では`.p7-side-parent`/`.p7-side-author`/`.p7-side-related`、p2では`.p2-side-posted`/`.p2-side-inq`/`.p2-side-nearby`等）に`min-width:0`が設定されておらず、CSS Gridの既定「automatic minimum size（`min-width:auto`）」により、子要素の中に`white-space:nowrap`な最小内容幅（`.p7-side-related`内`.p2-article-head__item-lead`＝関連記事の1行プレビュー文）があると、そのグリッドアイテム（ひいてはトラック）がビューポート幅を超えて広がり、右カラム全体が右にはみ出して見えていた。**p2自身の同型サイドカードはたまたま長いnowrapコンテンツを持たず症状が顕在化していなかっただけで、`.p2-side-card`系共通の潜在バグ**（p2/p3/p4/p5共通定義 `kotennavi-common.css` L13347〜）だった。
+- **修正**：canonical `.p2-side-card,.p3-side-card,.p4-side-card,.p5-side-card{padding:24px;background:#fff;border:1px solid var(--border)}` に `min-width:0` を追加。1箇所の修正でp2/p7/p8のサイドカードすべてが正しくグリッド内で縮小されるようになった。p3/p4/p6は別レイアウト方式（grid項目にならない）のため今回のバグの対象外だが、`min-width:0`追加自体は無害。
+- **教訓**：CSS Gridの子要素は明示的に`min-width:0`を置かない限り、内容物（特に`white-space:nowrap`テキストや固定幅要素）の最小幅でトラックを押し広げてオーバーフローする。**グリッド化するコンテナ（`.p2-layout__side`等）を新設・変更する際は、直接の子に`min-width:0`（横方向グリッド/フレックスの場合）を必ず併記する**のが再発防止のルール。今回は子側（`.p2-side-card`）に一括で持たせる形で解決したが、今後新しいグリッド構造を作る場合も同様の観点で確認すること。
+- **保留事項**：ブラウザでの目視確認は未実施（ユーザー確認待ち）。「右カラム幅決定の3パターン分岐」自体の統一（p3/p4/p6をp2系グリッドへ揃えるか等）は今回のバグ修正の範囲外・別途判断。
+- **影響ファイル**：`kotennavi-common.css`（`.p2-side-card,.p3-side-card,.p4-side-card,.p5-side-card`に`min-width:0`追加）。
+
+### 2026-08-01 追補(99)（p7モバイル幅でコンテンツ↔右カラムの間隔が無い不具合＝p6を参照して`.p2-layout__main`にmargin-bottom追加）
+
+- **経緯**：ユーザーより「p7のレスポンシブのスマホサイズで、コンテンツと右カラムの間に間隔をあけてほしい。p6参照」と指摘（追補98の右端切れ修正の直後）。
+- **調査**：p6は`.p6-layout`（grid→900px以下で`display:flex;flex-direction:column`）の`.p6-col-main{margin-bottom:20px}`により、1カラム積み時にコンテンツ↔右カラムの間隔を確保している。一方p2/p7/p8が共有する`.p2-layout`は900px以下で`grid-template-columns:1fr`にするだけ（`display:grid`のまま）で、`gap:0 var(--col-gap)`のrow-gapが0のまま・`.p2-layout__main`にも間隔用marginが無く、コンテンツ直後に右カラムが密着していた。
+- **修正**：`.p2-layout__main`に`@media(max-width:900px){margin-bottom:20px}`を追加（p6と同じ20pxに統一）。p2/p7/p8共有クラスのため1箇所の修正で3ページとも反映される。
+- **教訓**：p6は「grid→flexへの明示的な切替＋mainのmargin-bottom」で1カラム時の間隔を確保する設計だったが、p2系（p2/p7/p8共有の`.p2-layout`）は「gridのまま列数だけ1に変更」する設計で、モバイル時の縦間隔をrow-gapにもmarginにも委ねておらず抜け落ちていた。**グリッドを1カラムへ畳む場合、row-gapが0のままだと縦積み時の間隔も0になる**ため、畳んだ後の間隔は明示的なmargin/gap上書きが必要という点を追補98と合わせて記録（同根の「モバイル畳み込み時の抜け漏れ」パターン）。
+- **保留事項**：ブラウザでの目視確認は未実施（ユーザー確認待ち）。
+- **影響ファイル**：`kotennavi-common.css`（`.p2-layout__main`に`@media(max-width:900px)`のmargin-bottom追加）。
+
+### 2026-08-01 追補(100)（p7本文をp8同様のボックス表示へ統一＝`.p7-article`に`.p8-review`と同じ枠・背景・paddingを追加）
+
+- **経緯**：ユーザーより「p7のコンテンツ部をp8のようにボックスに入れてほしい」と指摘。
+- **内容**：p8の本文`<article class="p8-review">`は`background:var(--paper);border:1px solid var(--border);border-radius:4px;padding:var(--content-box-pad)`（`--content-box-pad`＝28px・`.p2-about`とも共通の本文ボックス変数）で囲まれた白背景カード状の枠を持つが、p7の本文`.p7-article`（`display:flex;flex-direction:column;gap:28px`のみ）は枠なしのプレーンな流し込みだった。
+- **修正**：`.p7-article`に`.p8-review`と同じボックス装飾（`background:var(--paper);border:1px solid var(--border);border-radius:4px;padding:var(--content-box-pad)`）を追加し、`@media(max-width:540px)`に`.p7-article{padding:32px 20px 28px}`（`.p8-review`のモバイルpaddingと同値）を追加。既存の`display:flex;flex-direction:column;gap:28px`（本文ブロックの縦積み）はそのまま維持。
+- **保留事項**：ブラウザでの目視確認は未実施（ユーザー確認待ち）。
+- **影響ファイル**：`kotennavi-common.css`（`.p7-article`にボックス装飾・モバイルpadding追加）。
+
+### 2026-08-01 追補(101)（p7「掲載先」カードをヒーローから本文冒頭へ移設＝記事が何についてかを読み始めですぐわかるように）
+
+- **経緯**：ユーザーより「p7の記事が何について書いた記事かがわかりやすくなるように、ページの一番上にある関連コンテンツカードをコンテンツに取り入れた方がいい。レイアウトはどうすればいいか」と相談を受けた。ヒーロー内`.p7-head__parent`（掲載先＝作品/展覧会/クリエイター/ギャラリーへのリンクカード）は本文を読み始める前の位置にあり、記事本文と視覚的に分離していたため、「記事の主題を本文の冒頭で明示する」目的には弱かった。提案時にヒーロー側を残したまま本文にも重複表示する案とヒーロー側を廃止する案を検討したが、ユーザーから「ヒーロー側なしの方向で」と指定を受け、完全移設で実装。
+- **設計判断**：
+  - 新しいカードは`.p7-article`（本文コンテナ）の最初の子とし、既存の`.p7-head__parent`の構造（サムネイル＋ラベル＋名前＋メタ情報、interestボタン等の操作要素なし）をそのまま流用・リネームした。サイドバーの`.p2-side-ec`（興味あり！ボタン付き）とは役割が異なる＝サイドの方はアクション可能な回遊カード、本文冒頭の方は「この記事の主題を示す静的なコンテキスト表示」であるため、意図的に別コンポーネントとして残した（統合すると本文内にinterestボタンが出てしまい文脈上不自然）。
+  - `.p7-article`は前段（追補100）でpaper背景＋枠のボックスになっているため、カードの`background`は`var(--paper)`から`#fff`へ変更（背景と同化しないよう白背景で視認性を確保）。
+  - `.p7-article`は`display:flex;flex-direction:column`のため、カードを直接子にすると既定で全幅に引き伸ばされてしまう。元のヒーロー内では`display:inline-flex`（ブロック整形コンテキスト内）でコンテンツ幅に収まっていたのと同じ見た目を保つため、`align-self:flex-start`を追加。
+  - 旧`margin-bottom:18px`は削除（`.p7-article`のflex `gap:28px`が後続ブロックとの間隔を担うため、二重指定を避けた）。
+- **実装**：
+  1. `kotennavi-common.css`：`.p7-head__parent*`（`-thumb`/`-body`/`-label`/`-name`/`-meta`）を`.p7-article__lead*`へ全面リネーム＋上記スタイル変更。`@media(max-width:540px)`内の同名クラスも追随。
+  2. `kotennavi-p7.html`：`.p7-head__inner`から`#p7HeadParent`のカードを削除。`<article class="p7-article" id="p7Article">`の最初の子として同内容を`.p7-article__lead`/`#p7ArticleLead`で追加。
+  3. `kotennavi-pages.js`：デモの掲載先切替機構`P7_CONTEXTS`（`artwork`/`exhibition`/`creator`/`gallery`の4コンテキスト）が持つ`headParentHref`/`headParentHtml`フィールドを`leadHref`/`leadHtml`へリネーム（内包HTML中のクラス名も追随）。`switchP7Context()`は元々`#p7HeadParent`要素を直接書き換えていたが、その対象がHTML側で削除されたため、代わりに`#p7Article`の`innerHTML`をリードカードのマークアップ（`d.leadHref`/`d.leadHtml`から組み立て）＋`d.articleHtml`で一括生成する方式に変更。これによりコンテキスト切替の度にリードカードごと正しく再生成される（`creator`/`gallery`コンテキストではサイドバー側の親カード`sideParentHtml`が空になり非表示になるが、本文内のリードカードは4コンテキストすべてで表示される＝作品/展覧会の記事だけでなくクリエイター/ギャラリー自身のページに掲載された記事でも「どこに掲載された記事か」が本文冒頭で明示される）。
+- **保留事項**：ブラウザでの目視確認は未実施（ユーザー確認待ち）。
+- **影響ファイル**：`kotennavi-common.css`（`.p7-head__parent*`→`.p7-article__lead*`リネーム・再スタイル）、`kotennavi-p7.html`（ヒーローから削除・本文冒頭へ追加）、`kotennavi-pages.js`（`P7_CONTEXTS`フィールドリネーム・`switchP7Context()`のDOM組み立てロジック変更）。
+- **【追補102で設計変更・下記参照】**：本追補で実装した「本文ボックスの最初の子として配置」は、ユーザーから「p7,p8はこの紐づけに関しては同義なのでレイアウトを揃えるべき。単に本文直前に置くのは意図として分かりにくい」との再指摘を受け、追補102で「本文ボックスの外に独立した文脈ストリップとして配置」する設計に置き換えられた。本追補のクラス名（`.p7-article__lead*`）・実装方式は追補102時点で廃止済み。経緯の記録として残す。
+
+### 2026-08-01 追補(102)（p7/p8共通「コンテンツ紐づけ帯」`.ktn-content-lead`を新設＝追補101の設計をp7/p8共通コンポーネントへ置き換え）
+
+- **経緯**：追補101でp7の本文ボックス（`.p7-article`）内の最初の子要素として掲載先カードを実装したが、ユーザーから「p7,p8はこの紐づけ（コンテンツが何についてのものかを示す関係）に関しては同義だと思うので、両方はレイアウトを揃えた方がいい。単に上部にあったカードをコンテンツの直前に表示するのはやはり意図としてはわかりにくい」と再指摘を受けた。p8のレビューも`.p8-head__parent`という同種の「このレビューは展覧会Xについて」カードをヒーロー内に持っており、p7の記事同様「コンテンツが何について書かれたものかを示す紐づけ」という同一の役割を持つコンポーネントだったため、両ページ共通の設計に立て直した。
+- **設計判断**：
+  - 「本文ボックスの最初の子として本文と同じ枠内に置く」＝視覚的に本文の一部（最初の段落やブロック）に見えてしまい、なぜそこにあるのかが伝わりにくい、という指摘を踏まえ、**本文ボックス（`.p7-article`/`.p8-review`）の外側・`.p2-layout__main`内でボックスの直前**に独立した文脈ストリップとして配置する設計に変更。「本文の一部」ではなく「本文に前置される文脈情報（メタデータ）」であることを構造的に分離して示す。
+  - ストリップは2段構成：①見出しラベル（`.ktn-content-lead__label`＝「この作品の記事」「この展覧会のレビュー」等、紐づけの種類を表す文言。元は追補101でカード内バッジ横に添えていたテキストを、カードの「上」に独立させて昇格した）→②サムネイル＋バッジ付き名前＋メタのカード（`.ktn-content-lead__card`）。ラベルが先に「これは何の情報か」を宣言し、その下にカードが続く構成にすることで、単体で意味の通る文脈提示になる。
+  - p7・p8は同一の役割（コンテンツの紐づけ先を示す）を持つため、ページ固有クラス（`.p7-*`/`.p8-*`）ではなく**共通canonical `.ktn-content-lead`**として`kotennavi-common.css`に1箇所定義し、両ページで同一クラス・同一構造を使い回す（CLAUDE.mdの「CSSは共通化徹底」原則に沿う）。
+  - カードの背景は`#fff`を維持（本文ボックスがpaper背景のため対比を保つ）。ボックス外に出したことで`.p7-article`のflexコンテキストに縛られなくなり、追補101で必要だった`align-self:flex-start`のハックは不要になった（`.p2-layout__main`は素のブロック要素のため、`inline-flex`カードは自然にコンテンツ幅で収まる）。
+- **実装**：
+  1. `kotennavi-common.css`：`.ktn-content-lead`（`__label`/`__card`/`__thumb`/`__body`/`__name`/`__meta`）をcanonicalとして新設。旧`.p8-head__parent*`・追補101の`.p7-article__lead*`は削除。
+  2. `kotennavi-p7.html`：本文ボックス内に入れていたカードを撤去し、`.p2-layout__main`内・`<article class="p7-article">`の直前に`.ktn-content-lead`（`#p7ContentLead`/`#p7LeadLabel`/`#p7LeadCard`）を新設。
+  3. `kotennavi-p8.html`：ヒーローの`.p8-head__parent`カードを削除し、`.p2-layout__main`内・`<article class="p8-review">`の直前に`.ktn-content-lead`を追加（p8は掲載先切替デモを持たないため静的HTMLのみ）。
+  4. `kotennavi-pages.js`：`P7_CONTEXTS`（artwork/exhibition/creator/gallery全4種）に`leadLabel`（見出しラベル文言）フィールドを追加し、`leadHtml`はカード本体（サムネイル＋バッジ付き名前＋メタ）のみに簡素化。`switchP7Context()`は`#p7LeadLabel`のテキストと`#p7LeadCard`のhref/innerHTMLを更新するよう変更し、本文`#p7Article`への注入処理（追補101で追加）は撤回して元通り`d.articleHtml`のみを流し込む単純な形に戻した。
+- **教訓**：「関連性の高い情報を本文に近づける」という目的だけでは配置の仕方までは決まらない。**「本文の一部に見える配置」と「本文に前置される独立した文脈情報に見える配置」は似て非なるもの**で、後者を狙う場合は本文ボックスの外に出し、見出しラベルで「これは何の情報か」を明示する方が意図が伝わる。また、同種の役割を持つコンポーネントが複数ページ（p7/p8）に存在する場合、一方だけを修正するのではなく共通化を先に検討するべき（CLAUDE.mdの原則どおり）。
+- **保留事項**：ブラウザでの目視確認は未実施（ユーザー確認待ち）。
+- **影響ファイル**：`kotennavi-common.css`（`.ktn-content-lead`新設・旧`.p8-head__parent*`/`.p7-article__lead*`削除）、`kotennavi-p7.html`（本文ボックス内カード撤去・ボックス直前に文脈ストリップ追加）、`kotennavi-p8.html`（ヒーローからカード削除・ボックス直前に文脈ストリップ追加）、`kotennavi-pages.js`（`P7_CONTEXTS`に`leadLabel`追加・`switchP7Context()`のDOM組み立てロジック変更）。
+- **【追補103で比較のため差し替え・下記参照】**：本追補の「代替案」（本文ボックス外の独立ストリップ＋サムネイル付きカード）をユーザーに見せた後、「推奨案も見せてほしい」との依頼を受け、追補103で「ヒーロー内・タイトル直上のテキスト行（キッカー）」案に一旦差し替えた。本追補のクラス名（`.ktn-content-lead*`）は追補103時点でCSS/HTML/JSから撤去済み。どちらを採用するかはユーザー確認待ち（経緯の記録として残す）。
+
+### 2026-08-02 追補(103)（p7/p8共通「ヒーロー・キッカー行」`.ktn-hero-kicker`を新設＝追補102のカード案と比較するため推奨案を実装）
+
+- **経緯**：追補102の「コンテンツ紐づけ帯」`.ktn-content-lead`（代替案＝本文ボックス外の独立ストリップ＋サムネイル付きカード）をユーザーに提示した後、「推奨案も見せてほしい」との依頼を受けた。当初の2案提示時点で推奨案としていたのは「ヒーロー内・タイトル直上に、サムネイルなしの軽量なテキスト行（キッカー）を配置する」案だったため、これを実装して比較材料とした。
+- **設計判断**：
+  - キッカーは1行のテキストのみで構成：バッジ（対象種別を示す`.cb`）＋リンク化した対象名＋「についての記事/レビュー」という定型サフィックス。サムネイルやカード枠は持たない＝視覚的な重さを最小限にし、タイトルの前にさらりと前置きするだけの軽量な情報として扱う。
+  - 配置は`.p7-head__inner`/`.p8-head__inner`の最上部・種別バッジ行（`.p7-head__badges`/`.p8-head__badges`）の直前。「この記事/レビューが何についてのものか」を、記事自体の種別バッジ・タイトルより前に読ませることで、追補102のねらい（本文を読む前に主題を把握できる）と同じ効果をヒーロー内で実現する。
+  - 対象名のリンクは**カード全体ではなくテキストリンク**（hoverで下線）。エンティティ名単体へのリンクには末尾「→」を付けないという既存ルール（`feedback_arrow_navigation.md`＝矢印は明示ナビCTAのみ・カード全体/エンティティ名リンクはhover affordanceで示す）に従った。
+  - p7・p8共通のcanonicalコンポーネントとして`kotennavi-common.css`に1箇所定義（`.ktn-hero-kicker`/`__link`）。追補102の`.ktn-content-lead*`は本設計に置き換えたため撤去した（両案を同時に常設せず、依頼のたびに実装を差し替える運用とした＝デモ環境上の判断であり、最終的にどちらを採用するかは未確定）。
+- **実装**：
+  1. `kotennavi-common.css`：`.ktn-content-lead*`一式を削除し、`.ktn-hero-kicker`/`.ktn-hero-kicker__link`をcanonicalとして新設（同じ挿入位置＝p8ヘッド直後）。
+  2. `kotennavi-p7.html`：`.p2-layout__main`内の`.ktn-content-lead`ストリップを削除。`.p7-head__badges`の直前に`.ktn-hero-kicker`（`#p7Kicker`/`#p7KickerBadge`/`#p7KickerLink`/`#p7KickerSuffix`）を新設。
+  3. `kotennavi-p8.html`：`.p2-layout__main`内の`.ktn-content-lead`ストリップを削除。`.p8-head__badges`の直前に`.ktn-hero-kicker`（静的HTML、掲載先切替デモを持たないため固定値）を新設。
+  4. `kotennavi-pages.js`：`P7_CONTEXTS`（artwork/exhibition/creator/gallery全4種）の`leadHref`/`leadLabel`/`leadHtml`フィールドを`kickerBadgeClass`/`kickerBadgeLabel`/`kickerHref`/`kickerName`/`kickerSuffix`に置き換え。`switchP7Context()`は`#p7KickerBadge`のclassName/textContent・`#p7KickerLink`のhref/textContent・`#p7KickerSuffix`のtextContentを更新するよう変更。
+- **保留事項**：ブラウザでの目視確認・追補102（カード型）と本追補（テキスト行型）のどちらを採用するかの最終判断は未実施（ユーザー確認待ち）。
+- **影響ファイル**：`kotennavi-common.css`（`.ktn-hero-kicker`新設・旧`.ktn-content-lead*`削除）、`kotennavi-p7.html`（本文ボックス外ストリップ撤去・ヒーロー内にキッカー行追加）、`kotennavi-p8.html`（同上）、`kotennavi-pages.js`（`P7_CONTEXTS`フィールド差し替え・`switchP7Context()`のDOM組み立てロジック変更）。
+- **【追補104で最終決定・下記参照】**：ユーザーへ本追補（キッカー行）と追補102（カード）を見比べてもらった結果、「さりげなくてデザイン的にいいが、前の直前のカードのほうがやはり直感的でわかりやすい」とのフィードバックで**追補102のカード案が最終採用**となり、本追補の`.ktn-hero-kicker`は撤回された。経緯の記録として残す。
+
+### 2026-08-02 追補(104)（p7/p8「コンテンツ紐づけ帯」最終決定＝`.ktn-content-lead`カード案を採用・`.ktn-hero-kicker`テキスト行案は撤回）
+
+- **経緯**：追補102（カード＝本文ボックス外の独立ストリップ＋サムネイル付きカード）と追補103（キッカー＝ヒーロー内・タイトル直上のテキスト行）の両方を実装し、ユーザーに見比べてもらった。ユーザーからのフィードバックは「さりげなくてデザイン的にいいが、前の直前のカードのほうがやはり直感的でわかりやすい」——キッカー行のデザイン的な軽さ・上品さは評価しつつも、**直感的なわかりやすさではサムネイル付きカードに軍配が上がる**という判断だった。
+- **結論**：p7/p8共通「コンテンツ紐づけ帯」は**`.ktn-content-lead`（本文ボックス外・独立ストリップ＋サムネイル付きカード）に確定**。`.ktn-hero-kicker`は撤回し、CSS/HTML/JSから削除した。
+- **教訓**：デザインの洗練度（さりげなさ）と情報の伝わりやすさ（直感性）はトレードオフになりうる。今回のようなナビゲーション性を持つ文脈情報（「このコンテンツは何についてのものか」）は、視覚的な軽さよりも**サムネイル画像による具体性**（見ればそれが何かひと目でわかる）が優先される場面があると確認できた。今後同種の「紐づけ表示」を設計する際は、まずサムネイル付きカード案を基本形として検討し、軽量化（テキスト行化）は明確な理由がある場合のみ選択する。
+- **実装**：
+  1. `kotennavi-common.css`：`.ktn-hero-kicker*`を削除し、`.ktn-content-lead*`（追補102と同一定義）を復元。
+  2. `kotennavi-p7.html`：ヒーロー内の`.ktn-hero-kicker`を削除。`.p2-layout__main`内・`<article class="p7-article">`の直前に`.ktn-content-lead`（`#p7ContentLead`/`#p7LeadLabel`/`#p7LeadCard`）を復元。
+  3. `kotennavi-p8.html`：ヒーロー内の`.ktn-hero-kicker`を削除。`.p2-layout__main`内・`<article class="p8-review">`の直前に`.ktn-content-lead`を復元。
+  4. `kotennavi-pages.js`：`P7_CONTEXTS`（artwork/exhibition/creator/gallery全4種）を`kickerBadgeClass`/`kickerBadgeLabel`/`kickerHref`/`kickerName`/`kickerSuffix`から`leadHref`/`leadLabel`/`leadHtml`フィールドへ復元。`switchP7Context()`も`#p7LeadLabel`のテキストと`#p7LeadCard`のhref/innerHTMLを更新する形に戻した。
+- **本件の最終状態（今後参照する場合はこの追補が正）**：p7/p8の「コンテンツ紐づけ帯」＝`.ktn-content-lead`（本文ボックス外・`<article>`直前・見出しラベル＋サムネイル付きカード）。追補101（本文内配置）・追補103（キッカー行）は不採用として履歴に残す。
+- **保留事項**：ブラウザでの目視確認は未実施（ユーザー確認待ち）。
+- **影響ファイル**：`kotennavi-common.css`（`.ktn-hero-kicker*`削除・`.ktn-content-lead*`復元）、`kotennavi-p7.html`（キッカー削除・本文ボックス外ストリップ復元）、`kotennavi-p8.html`（同上）、`kotennavi-pages.js`（`P7_CONTEXTS`フィールド復元・`switchP7Context()`のDOM組み立てロジック復元）。
+
+### 2026-08-02 追補(105)（p7「N人が興味あり！」をp6同様のウォッチャーモーダルに接続）
+
+- **経緯**：ユーザーから「p7の右カラムのCTAボタンの下のxx人確認しましたをp6の同箇所と同じモーダル表示にして下さい」と指摘。調査の結果、対象は`.p2-action-widget`内の「N人が興味あり！」件数表示（`.p2aw-stat`）だった。p6（作品ページ）はここに`p2aw-stat--link`クラス＋`onclick="openWatcherModal()"`が付いており、クリックすると`kotennavi-common.js`の全ページ共通モーダル（`_ensureWatcherOverlay`/`openWatcherModal`/`closeWatcherModal`）が開き、興味あり！/ウォッチしたユーザーの一覧（アバター・氏名・watch/checkin/interest件数）を表示する。p7（記事ページ）は同じ見た目だがこのクラス・onclickが欠けており、クリックしても反応しなかった。
+- **結論**：p7の`.p2aw-stat`（`#p7IntNum`を含む）にp6と同一の`p2aw-stat--link`クラス＋`onclick="openWatcherModal()"`＋`role="button" tabindex="0"`を追加し、同じモーダルが開くようにした。
+- **なぜJS実装の追加が不要だったか**：`openWatcherModal()`はp2/p2-1〜5/p3/p3-1〜3/p4/p4-1〜2/p6/p6-1〜2など既に多数のページで使われているページ非依存の共通関数で、対象ウィジェットを`.ktn-cta-widget`/`.p2-action-widget`のセレクタで汎用的に探す作りになっている。一覧データも`window.KTN_CTA_WATCHERS`（ページ側で未定義なら共通フォールバック`_W_DATA`）を参照するため、p7側で新たに定義する必要がなかった。p8（レビューページ）は同種の「興味あり！」ウィジェットを持たない（「参考になった」ボタンのみ）ため対象外。
+- **実装**：`kotennavi-p7.html`の`#p7CtaWidget`内、`<div class="p2aw-stat">`を`<div class="p2aw-stat p2aw-stat--link" onclick="openWatcherModal()" role="button" tabindex="0">`に変更（1箇所のみ）。CSS・JS（common.js/pages.js）は変更なし。
+- **保留事項**：ブラウザでの目視確認は未実施（ユーザー確認待ち）。
+- **影響ファイル**：`kotennavi-p7.html`のみ。
+
+### 2026-08-02 追補(106)（記事管理をP3-19/P2-13/P4-19/P6-15の4画面フルCRUDに決定・P3-19を新規作成）
+
+- **経緯**：記事（作品/展覧会/クリエイターページ/ギャラリーページの4か所から作成できる）の管理画面をどう設計するか相談。1画面へ統合する案（例：全記事を横断する単一の記事管理ハブ）も検討したが、ユーザーは「4画面CRUD画面にします。まずp3-19の作成をお願いします。確認出来たらほかに展開します。」と明確に決定。sitemap.md記載のP3-19（クリエイター-記事管理）/P2-13（展覧会-記事管理）/P4-19（ギャラリー-記事管理）/P6-15（作品-記事管理）を、それぞれ「ページオーナー視点で自分の記事を一覧・編集・削除する」独立したフル管理画面として作る方針。まずP3-19を作成し、ユーザー確認後に残り3画面へ展開する（本追補時点ではP3-19のみ完了・他3画面は未着手）。
+- **P3-19の構造決定**：`kotennavi-p3-14.html`（クリエイター-ポートフォリオ管理）を構造テンプレートとして採用。理由＝「identity strip→mgmt-head→新規CTA→注記→ツールバー→一覧→削除モーダル」という管理系一覧ページの型が既に確立済みで、記事管理も同じ型に当てはまるため。ただしp3-14と異なり以下は省略：
+  - **公開/非公開スイッチ**：記事にはpub/unpubトグルの前例が無い（リポジトリ全体をgrepしても「記事の非公開」概念は存在しない）。記事は下書き（未完成・非公開・検索対象外）→公開（完成・掲載）の一方向のみで、完成後に非公開へ戻す運用は無いと判断。
+  - **タブ（登録済み/売約済 相当）・詳細アコーディオン（出品歴/オーナーメモ）**：記事の掲載先（作品/展覧会/クリエイターページ/ギャラリーページ）は作成元で自動確定し事後変更不可（p7-11の設計で確定済み）。作品のような「複数回出品する・出品歴が積み上がる」概念が記事には無いため、タブ分岐も出品歴アコーディオンも不要。掲載先は一覧の各行に1行（`.p319-item__dest`）で表示するのみ。
+- **CSS共有ネームスペース**：p3-14/p4-14が`.p314-*`を共有ネームスペースとして使う前例（後続ページが同一クラスをそのまま再利用する設計）に倣い、P3-19のCSSクラスは`.p3-19-*`ではなく`.p319-*`とした。P2-13/P4-19/P6-15を作る際も同じ`.p319-*`をそのまま再利用する想定（`kotennavi-common.css`内のコメントに明記）。
+- **デモデータの整合**：`kotennavi-p7-11.html`の記事作成/編集/クローンフォームが持つ`P711_ENTRY`（4エントリーポイントのデモデータ）と記事ID・タイトル・日付を一致させた（`AT-C42-0031`＝作品《オノマトペの庭》制作日記、`AT-A18-0044`＝展覧会レポート、`AT-B05-0012`＝クリエイターページ単独インタビュー）。p3-19の一覧からp7-11への遷移リンクは`kotennavi-p7-11.html?mode=new|edit|clone&author=tanaka&self=1&article={id}`（p3-14の`p611Link`と同型の`p711Link`ヘルパー）。
+- **`.ktn-aw-id`の再利用**：クラス名は"aw"（artwork）だが、既にp3-15/p3-16/p4-15/p4-16/p5-14/p5-15/typography.htmlで汎用的なエンティティID表示として再利用されている前例を確認済みのため、記事ID（`AT-xxx`）表示にもそのまま流用（新規クラスを作らない）。
+- **実装ファイル**：`kotennavi-p3-19.html`（新規）、`kotennavi-common.css`（`.p319-*`ブロック新設）、`kotennavi-pages.js`（`KTN.pages['p3-19']`新設）、`docs/sitemap.md`（P3-19行を`未作成`→`調整中`、ファイル名を反映）。
+- **保留事項**：ブラウザでの目視確認は未実施（ユーザー確認待ち）。ユーザー確認後にP2-13/P4-19/P6-15へ同方式で展開予定（それまでは着手しない）。
+- **影響ファイル**：`kotennavi-p3-19.html`、`kotennavi-common.css`、`kotennavi-pages.js`、`docs/sitemap.md`、`docs/progress.md`。
+
+### 2026-08-02 追補(107)（記事の「掲載先」二重表示モデルを明確化＝作品発記事もp3-2/p4-2に掲載されるよう`.exh-link`を汎用化）
+
+- **経緯**：P3-19確認中にユーザーから「一つ認識を合わせる必要があります。展覧会・作品から作成された記事はクリエイター・ギャラリーページにも掲載されます。その場合、記事カードの中に展覧会名・作品名が表示されます」と指摘。P3-19実装時点では「記事の掲載先は作成元1つに確定し変更不可」（追補106）という理解だったが、これは「作成元」の話であり、**表示先（どこに掲載されるか）は別の軸**だった：展覧会/作品から作成された記事は、その展覧会/作品ページに掲載されるのに**加えて**、著者（クリエイター/ギャラリー）自身の記事一覧ページ（p3-2/p4-2）にも常に二重掲載される。
+- **既存実装の棚卸し**：`kotennavi-common.css`の`.exh-link`コンポーネント（記事カード共通展覧会リンク）がこの「展覧会発記事の二重掲載」を既に実装済みだったことを確認（p3-2.html/p4-2.htmlの`.lc`カード内に`<span class="exh-link"><span class="exh-link__title">展覧会名</span></span>`＝カード内リンクとして展覧会名を表示）。ただし**作品発の記事には対応する仕組みが無かった**：(1) `.exh-link::before{content:'展覧会'}`が展覧会専用にハードコードされ作品ラベルの選択肢が無い、(2) `#p3FilterDest`/`#p4FilterDest`（掲載先フィルター）に「作品ページ」の選択肢が存在しない、(3) 作品発記事のデモカード自体がp3-2/p4-2のどちらにも存在しない。
+- **確認と承認**：p3-2.html/p4-2.htmlはsitemap.mdで「Fix済」のため、既存の確定ページに手を入れる前にユーザーへ確認。ユーザーから「そうです、私も今確認してお願いしようと思っていたところ。進めて下さい」と明示的な承認を得て実施。
+- **対応（class名は変更せずモディファイアで汎用化＝影響範囲を最小化）**：
+  1. `kotennavi-common.css`：`.exh-link--artwork::before{content:'作品'}`を`.exh-link::before`直後に追加。既存の`.exh-link`/`.exh-link__title`はそのまま維持（p3-2.html/p4-2.html/kotennavi_cards_content.htmlの3ファイルのみが対象で、`.rc__exh-link`/`.ac__exh-link`/`.p6-liaison__exh-link`/`.p515-aw-card__exh-link`など類似名の無関係クラスは対象外と確認済み）。
+  2. `kotennavi-p3-2.html`：`#p3FilterDest`に`<option value="artwork">作品ページ</option>`追加。2026年グループに作品発デモ記事「オノマトペの庭 制作について」（`data-dest="artwork" data-category="diary"`・田中透名義・`.exh-link--artwork`で《オノマトペの庭》へリンク）を追加——このIDはP3-19/p7-11で既出のAT-C42-0031と同一記事として整合させた（追補106のクロスページ整合パターンを継続）。件数表示（年グループ5→6件、`#p3TotalCount`全8→9件）を更新。
+  3. `kotennavi-p4-2.html`：`#p4FilterDest`に同オプション追加。2026年グループにギャラリー発の作品関連デモ記事「《オノマトペの庭》について — ギャラリーノート」（Gallery SOIL 渋谷名義・同作品にリンク）を追加——venue/作品/展覧会の既存関係（「あなたが知らないオノマトペ」展＠Gallery SOIL渋谷＝《オノマトペの庭》出品）に整合する新規デモデータとして作成。件数表示（年グループ5→6件、`#p4TotalCount`全7→8件）を更新。p3-2.htmlとボタン実装が異なる点（p4-2は`itn-btn`＋`this.classList.toggle`、p3-2は`ktn-icon-btn`＋`data-action="interest"`）はこのページの既存パターンをそのまま踏襲（統一はスコープ外）。
+  4. JS変更なし：`kotennavi-pages.js`の`KTN.pages['p3-2']`/`KTN.pages['p4-2']`の掲載先フィルターは`card.dataset.dest`との汎用比較のため、`data-dest="artwork"`の追加のみで自動的にフィルター対象になることを事前に読んで確認済み。
+  5. `kotennavi_cards_content.html`（デモ専用の参照ファイル）への`.exh-link--artwork`例追加は優先度が低いため今回は見送り（本番2ファイルの整合を優先）。同ファイルは`.exh-link__arrow`という本番未使用の装飾spanを持つ既存の差異があるが、これも今回のスコープ外として据え置いた。
+- **今後の含意**：P2-13（展覧会-記事管理）/P6-15（作品-記事管理）を作る際、そこで作成された記事は同様に著者のp3-2/p4-2へ二重掲載される前提でカードデータ・フィルターを設計する必要がある。
+- **影響ファイル**：`kotennavi-common.css`、`kotennavi-p3-2.html`、`kotennavi-p4-2.html`、`docs/progress.md`。
+
+### 2026-08-02 追補(108)（CTAウィジェットのリード文言をtype別に分岐＝作品/記事は「my興味あり！」、展覧会は「my展覧会カレンダー」のまま。p5/p5-3へのリンク化＋ゲストログインモーダル対応）
+
+- **経緯**：ユーザーから「p6,p7の右カラムのCTAセクションの『my展覧会カレンダー』を『my 興味あり！』に変更してください。作品・記事は展覧会カレンダーに表示することはないため」＋「この各ページの右カラムのCTAセクションの『my展覧会カレンダー・my興味あり!』にp5,p5-3へのリンクを付けられるか（ゲストユーザーはCTAボタン押したときと同じようにログインモーダルが出る）」と依頼。
+- **調査で判明した実装形態**：p6/p6-1/p6-2/p7それぞれのHTMLに文言はハードコードされておらず、`kotennavi-common.js`の`KTN.cta._injectLead()`が`.p2-action-widget`の`data-cta-type`（`exhibition`/`work`/`article`/`creator`/`gallery`）と`data-cta-action`（`watch`/`interest`）から動的生成する**全ページ共通コンポーネント**（`.p2-action-widget__lead`）である。従来コードは`action==='interest'`の場合、typeに関わらず一律「興味あり！マークでmy展覧会カレンダーに追加！」を出力していた。
+- **なぜ誤りか**：`kotennavi-p5.html`（myカレンダー）のフィルターボタン（`data-filter="interest"`）で興味あり！マーク済みアイテムが表示される対象は**展覧会のみ**（カレンダーは日付を持つ展覧会向けの機能で、作品・記事には日付概念が無いため掲載されない）。作品（p6系）・記事（p7）で興味あり！マークした場合の実際の行き先は`kotennavi-p5-3.html`（興味あり！リスト）であり、文言と実際の遷移先が一致していなかった。
+- **対応（`kotennavi-common.js`の`_injectLead()`1箇所のみ変更・共通コンポーネントのため対象ページのHTML変更は不要）**：
+  - `type==='exhibition'` → ラベル「my展覧会カレンダー」・リンク先`kotennavi-p5.html`（従来どおり、変更なし）
+  - それ以外（`work`＝作品／`article`＝記事、将来追加されうる他typeも同様）→ ラベル「my興味あり！」・リンク先`kotennavi-p5-3.html`
+  - ラベルを`<a class="p2-action-widget__lead-link">`として生成。クリック時、ゲスト（`window.ktnState.role==='guest'`）は`preventDefault()`＋`KTN.action.show(action)`でCTAボタン押下時と同一のログインモーダル（`#ktnAuthModal`）を表示。ログイン済みユーザーは通常のリンク遷移。
+  - `kotennavi-common.css`：`.p2-action-widget__lead-link{color:var(--accent);text-decoration:underline;...}`＋hover（`--accent-d`）を新規追加（`.p2-action-widget__lead`の最終定義＝L13614付近、直後）。
+- **なぜwatch分岐は対象外か**：`action==='watch'`（p3/p3-1/p3-3・p4/p4-1/p4-2＝creator/gallery）のリード文は「○○をウォッチして最新情報を受取る！」であり、「myカレンダー/興味あり！」の文言自体を持たないため今回の分岐ロジックと無関係（別のif分岐で処理済み）。
+- **横展開の範囲**：p6/p6-1/p6-2（work）・p7（article）が今回のユーザー依頼の直接対象だが、共通関数を直したためp2系（exhibition＝interest action）も自動的に同じコードパスを通る。ただしexhibitionは従来と同じ文言・リンク先のため**p2系の見た目・挙動に変化なし**（既に「my展覧会カレンダー」が正しかったケース）。
+- **React化時**：`<ActionWidget type actionLabel actionHref>`のように、typeから文言・リンク先を導出するマッピングをコンポーネント内に持たせる（ページ側で分岐しない）。ゲスト時のモーダル表示はCTAボタンと共通の認証ゲート関数を再利用する。
+- **保留事項**：ブラウザでの目視確認は未実施（ユーザー確認待ち）。
+- **影響ファイル**：`kotennavi-common.js`、`kotennavi-common.css`、`docs/progress.md`。
+
+### 2026-08-02 追補(109)（p6デモバーのロール切替が共通CTAウィジェットに反映されないバグを修正＝ページ固有`setR`がレガシー`KTN.role`しか更新せず`window.ktnState.role`が取り残されていた）
+
+- **経緯**：ユーザー報告「p6のデモバーで『ユーザー』に切り替えてもゲストと同じ動きだった（CTAボタンを押してもログインモーダルが出る）」。
+- **原因**：`kotennavi-pages.js`の`_p6Init`（p6/p6-1/p6-2共有）はページ固有の`setR(role,btn)`を持ち、これが共通`kotennavi-common.js`側の`window.setR`（`window.ktnState.role`＝`curRole`を更新する版）をページ内で完全に上書きしていた。p6固有`setR`はレガシー変数`KTN.role`のみを更新し、`renderHeaderActs()`/`renderActionArea()`/`renderComments()`（いずれも`KTN.role`を参照する`isLoggedIn()`/`isOwner()`/`isAdmin()`経由）だけを再描画していた。
+- **一方**、CTAウィジェット（`.p2-action-widget`/`.ktn-cta-widget`）のボタンは`kotennavi-common.js`の`initCtaButtons()`が初期表示時にinline onclickを剥がし`KTN.action.handle(btn,action)`へ結線する。この`KTN.action.handle`が実際にゲスト判定するのは`window.ktnState.role`であり、p6固有`setR`はここを一切更新しないため、デモバーで何度ロールを切り替えても共通CTAボタンの判定は初期値（実質`guest`）のまま変化しなかった。p6独自のヒーロー内「興味あり！」ボタン（`favShareRow()`／`toggleInterest()`）は同じ`KTN.role`を見ているため正常に動いており、共通CTAウィジェット側だけがこの二重管理から取り残されていた形。
+- **対応**：`kotennavi-pages.js`のp6固有`setR(role,btn)`に`window.ktnState.role = role;`を1行追加し、レガシー`KTN.role`と共通`window.ktnState.role`を同時更新するようにした。`KTN.role`依存の既存ロジック（`isOwner()`等）はそのまま維持しつつ、共通CTA機構とも同期させる最小差分の修正。
+- **教訓（横展開時の注意）**：ページ固有コードが`window.setR`/`window.curRole`等のグローバル関数・状態を独自定義で上書きする場合、共通コンポーネント（CTAウィジェット・ヘッダー等）が参照する状態（`window.ktnState.role`）も必ず同期させること。同種の「ページ固有`setR`によるグローバル上書き」パターン（p6-2の`_prevSetR`ラップ等）が他にないか、今後同様の不具合報告があれば同じ観点で調査する。
+- **React化時**：ロール状態は単一のグローバルストア（Context/Redux等）に一本化し、ページ固有コードがロール切替関数を独自実装・上書きしない設計にする（本バグはHTML/JS分離ゆえの状態二重管理が原因のため、コンポーネント化で自然に解消される想定）。
+- **保留事項**：ブラウザでの目視確認は未実施（ユーザー確認待ち）。
+- **影響ファイル**：`kotennavi-pages.js`、`docs/progress.md`。
+
+### 2026-08-02 追補(110)（p3/p4系CTAリード文言の`watch`分岐にも「my展覧会カレンダー」リンクを追加＝追補108のinterest分岐と対の対応）
+
+- **経緯**：追補108（作品/記事のリード文言をmy興味あり！に分岐）の対応後、ユーザーから「p3,p4の表示系も同様に右カラムのCTAセクションにmy展覧会カレンダーと表示してリンクを付けてほしい」と依頼。
+- **対応**：`kotennavi-common.js`の`KTN.cta._injectLead()`、`action==='watch'`分岐（p3/p3-1/p3-3・p4/p4-1/p4-2＝creator/gallery対象）に「{name}をウォッチすると<br>my展覧会カレンダーで<br>最新情報を受取れる！」を追加し、ラベルを`<a class="p2-action-widget__lead-link" href="kotennavi-p5.html">`として生成するよう変更（従来は「○○をウォッチして最新情報を受取る！」のみでリンクなし）。
+- **ゲスト時の挙動は追補108と共通の仕組みをそのまま再利用**：`_injectLead()`末尾でif/elseブロックの外に出た共通処理が、生成された`.p2-action-widget__lead-link`へ`action`変数（この場合`'watch'`）を使ったclickハンドラを結線するため、`watch`分岐追加にあたり新規のイベント結線コードは不要だった。ゲストは`preventDefault()`＋`KTN.action.show('watch')`でログインモーダル（`DEFAULT_AUTH`の汎用文言＝`watch`専用の`ACTION_AUTH`エントリは無く、フォールバックで問題ない内容と判断）を表示。
+- **横展開の範囲**：`_injectLead()`は1関数のため、p3/p3-1/p3-3・p4/p4-1/p4-2の計6ページに個別HTML変更なしで自動反映。
+- **React化時**：追補108と同一の`<ActionWidget type action actionLabel actionHref>`設計に含める（`action==='watch'`時も`actionHref`をコンポーネント内マッピングで導出）。
+- **保留事項**：ブラウザでの目視確認は未実施（ユーザー確認待ち）。
+- **影響ファイル**：`kotennavi-common.js`、`docs/progress.md`。
+
+### 2026-08-02 追補(111)（管理一覧の共通ページング`.ktn-pagination`/`KTN.pagination`を新設＋p3-14/p4-14/p3-19へ適用）
+
+- **経緯**：ユーザーからp3-14/p4-14（作品数が多くなった場合の一覧表示）について「インフィニットスクロールとページングどちらがよいか」と質問。並べ替え機能を併用する管理一覧では、並べ替え後にスクロール位置がリセットされる／件数把握がしにくいインフィニットスクロールより番号ページングの方が適すると回答し了承を得た上で、「後工程のためにp3-14,p4-14,p3-19にそれぞれページングを実装してください」と依頼された。
+- **新規共通コンポーネント**：既存コードベースには件数バッジ・回遊リンク（`.ktn-more-link`）はあったが、番号式ページングは今回が初導入。
+  - `kotennavi-common.css`：`.ktn-pagination`（前へ/番号/省略記号「…」/次へ。active＝`var(--page-accent,var(--accent))`塗り＋白文字、hover＝枠線とテキストがpage-accent化、disabled＝opacity .35）。
+  - `kotennavi-common.js`：`KTN.pagination.render(el,{page,totalPages,onGoto})`。`totalPages<=1`なら`el.hidden=true`で自動的に非表示（1ページしかない一覧ではUIを出さない）。表示ページ番号は「先頭・末尾・現在±1」のみで残りは「…」省略（ページ数が増えても横に伸びすぎない設計）。クリックは`onGoto(pageNumber)`を呼ぶだけで、実際の再描画はページ側`render()`に委譲する薄いプレゼンテーション層。
+- **各ページ側の実装パターン（3ページ共通）**：`render()`内で絞り込み・並べ替え後の全件配列から下書き件数・ゼロ状態を算出した**後**、`PER_PAGE=5`件ずつ`Array.slice`で切り出してDOM描画。フィルタ/並べ替え/タブ切替は`renderReset()`（`page=1`にしてから`render()`）に差し替え、削除・メモ保存等の操作起点の再描画は従来どおり`render()`を直接呼ぶ（`totalPages`超過時に`page`を自動クランプするため、削除で現在ページが空になっても前ページへ自然に戻る）。
+- **なぜ`.ktn-more-link`と別物か**：`.ktn-more-link`は関連・回遊ゾーンの「もっと見る→」のようなブロック型の一方向遷移リンクで、一覧の総ページ数やページ間移動という概念を持たない。今回はフィルタ・並べ替えと組み合わせて同一ページ内のデータセットをページ切り替えする必要があり、既存コンポーネントの流用ではなく新規コンポーネントが必要だった。
+- **横展開**：p3-14/p4-14/p3-19の3ページの`<nav class="ktn-pagination" id="{page}Pagination">`をゼロ状態直後・`.ktn-mgmt-wrap`終了直前に追加。今後PER_PAGE超の一覧を持つ管理ページ（P2-13/P4-19/P6-15等・記事管理の横展開先）でも同じHTML＋JSパターンをコピーする想定。
+- **React化時**：`<Pagination page totalPages onGoto>`。ページ側は表示用スライスのみ担当し、コンポーネント自体はページ番号生成ロジック（先頭/末尾/現在±1＋省略記号）を内包する。
+- **保留事項**：ブラウザでの目視確認は未実施（ユーザー確認待ち）。デモデータ件数は現状PER_PAGE(5)を超えないページもあるため、複数ページにまたがる表示の確認は件数を一時的に増やすかページネーション自体のロジックレビューで代替する必要がある。
+- **影響ファイル**：`kotennavi-common.css`、`kotennavi-common.js`、`kotennavi-pages.js`、`kotennavi-p3-14.html`、`kotennavi-p4-14.html`、`kotennavi-p3-19.html`、`docs/progress.md`。
+
+### 2026-08-02 追補(112)（記事管理4画面CRUDをP2-13/P4-19/P6-15へ展開＝追補106のP3-19方式を残り3ページへ横展開・PAGES欠落バグも修正）
+
+- **経緯**：追補106でP3-19（クリエイター-記事管理）を確認後、ユーザーから「了解です。ではこれp3-19を残りの記事管理の3ページに展開してください」と依頼。P3-19のCRUD構造・`.p319-*`CSSクラスをそのまま流用し、P2-13（展覧会-記事管理）/P4-19（ギャラリー-記事管理）/P6-15（作品-記事管理）を新規作成。
+- **単一エンティティ・スコープ付き一覧（P2-13/P6-15）は掲載先フィルター・掲載先行を省略**：P3-19/P4-19は著者（クリエイター/ギャラリー）が持つ全記事を横断する一覧のため「掲載先＝作品/展覧会/自ページ」を区別するフィルター・カード内表示行が必要だが、P2-13/P6-15は「この展覧会/この作品に掲載された記事だけ」を表示するスコープ付き一覧であり、掲載先は常に一定（展覧会 or 作品自身）。掲載先フィルター（`#p213FilterDest`/`#p615FilterDest`相当）と記事カードの`.p319-item__dest`行を持たせない設計とした（`makeItem()`から`destHtml`生成ロジックごと省略）。ヘッド説明文に「あなたが投稿したすべての記事を一元管理するには 記事管理（すべて）→」でP3-19へのクロスリンクを追加し、全体管理はP3-19側に一本化されていることを明示。
+- **P4-19はP3-19と完全ミラー＋ラベル差し替えのみ**：ギャラリーはクリエイターと同じ「複数エンティティ横断」の記事一覧を持つため、掲載先フィルター込みでP3-19の構造をそのまま複製。唯一の差分は記事種別`c`のラベルで、`kotennavi-p7-11.html`の`P711_ENTRY`/`p711SyncRoleFields(role)`がロール別に`c`タイプのラベルを「制作日記」（creator）/「ギャラリーノート」（gallery）で出し分けている前例に合わせ、P4-19の`TYPE.c.label`を「ギャラリーノート」にした。
+- **記事の投稿主体はロール本体のみ**：p7-11の`window.p711RoleSync`を確認し、記事の著者は常にページ自身のロール識別（creator=田中透、gallery=Gallery SOIL 渋谷）に固定され、ギャラリー在籍の個別作家（高橋信等）が記事著者になることは無いと確認。これによりP4-19の新規作成リンクに作家別`author=`パラメータは不要と判断（`role=gallery&self=1`のみ）。
+- **identity stripの変体使い分け**：P4-19はギャラリー本体がidentityそのものなので人物変体（`--gallery`、オーナー行なし）。P2-13/P6-15はコンテンツ（展覧会/作品）自体がidentityで、操作主体は別に存在するためコンテンツ変体＋オーナー行（オーナー＝creator 田中透、`kotennavi-p2-12.html`の identity strip 構造をそのまま複製）。P6-15は`p6-11.html`のような役割別動的オーナー切替は持たない静的1オーナー表示（作品のオーナーは固定のデモ作品のため）。
+- **新規/編集リンクのパラメータ**：`applyEntryParams()`（p7-11）は現状`mode`パラメータのみ読み取りが実装済みで、`author=`/`self=`/`role=`/`entry=`は将来の後方互換用の未結線パラメータと確認済み（P3-19時点で既に同じ設計方針）。この前例に倣い、P2-13/P6-15は`author=tanaka&self=1&entry=exhibition|artwork`、P4-19は`role=gallery&self=1`を付与（現状は装飾的だが後工程のReact/Drupal実装時に文脈を伝える設計意図として残す）。
+- **副次的に発見したバグ2件（ユーザー未報告・自己発見で修正）**：
+  1. `kotennavi-common.js`の`PAGES`オブジェクトに**P3-19のエントリ自体が丸ごと欠落**していた（追補106でP3-19を新規作成した際、`PAGES`への登録が漏れていた）。`renderBc(page)`は`const p=PAGES[page]; if(!p) return '';`という実装のため、エラーは出ず**パンくずが無音で空表示になる**バグだった。ユーザーからの報告は無く、本追補作業中の調査で自己発見・修正。
+  2. 同オブジェクトの`p2-13`/`p2-14`キーが旧番号体系（P2-13=広告作成/P2-14=修正依頼）のまま残っており、`docs/sitemap.md`の現行番号（P2-13=記事管理/P2-14=インサイト/P2-15=広告作成/P2-16=修正依頼）と食い違っていた。プロジェクトルール（sitemap.mdが番号の正）に従い`PAGES`側を是正。ついでに`getActions()`内の旧グループ`['p2-12','p2-121','p2-13']`（コメントが旧p2-13=「広告」を参照）から`p2-13`を除外（記事管理は他の記事管理ページ同様getActionsグルーピングを持たない方針のため）。
+- **検証**：`node --check kotennavi-common.js`／`node --check kotennavi-pages.js`とも実行しOK（構文エラーなし）。
+- **実装ファイル**：`kotennavi-p2-13.html`（新規）、`kotennavi-p4-19.html`（新規）、`kotennavi-p6-15.html`（新規）、`kotennavi-common.js`（`PAGES`3件追加+2件修正、`getActions()`修正）、`kotennavi-pages.js`（`KTN.pages['p2-13']`/`['p6-15']`/`['p4-19']`新設）、`docs/sitemap.md`（P2-13/P4-19/P6-15行を`未作成`→`調整中`、ファイル名反映）。
+- **保留事項**：ブラウザでの目視確認は未実施（ユーザー確認待ち）。これで記事管理4画面CRUD（P3-19/P2-13/P4-19/P6-15）が全て実装完了。
+- **影響ファイル**：`kotennavi-p2-13.html`、`kotennavi-p4-19.html`、`kotennavi-p6-15.html`、`kotennavi-common.js`、`kotennavi-pages.js`、`docs/sitemap.md`、`docs/progress.md`。
