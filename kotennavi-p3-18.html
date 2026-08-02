@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>展覧会管理 — 田中 透 | 個展なび</title>
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<body data-w="detail" class="p3-18-page p3-page mgmt-page">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- デモバー -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ロール：</span>
+  <button class="dbtn" onclick="setR('guest',this)">ゲスト</button>
+  <button class="dbtn" onclick="setR('login',this)">ログイン</button>
+  <button class="dbtn on" onclick="setR('user+creator',this)">creator本人</button>
+  <button class="dbtn" onclick="setR('admin',this)">管理者</button>
+</div>
+
+<div class="shell">
+<div class="content-wrap" id="contentWrap">
+
+  <header class="ktn-header" id="ktnHeader">
+    <div class="ktn-header__inner">
+      <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+      <div class="ktn-hdr-actions" id="ktnActs"></div>
+    </div>
+  </header>
+
+  <main class="ktn-main" id="ktnMain">
+    <div class="ktn-content">
+
+      <!-- クリエイター 文脈ストリップ（identity strip） -->
+      <div class="ktn-mgmt-context">
+        <a class="ktn-mgmt-context__media ktn-mgmt-context__media--creator" href="kotennavi-p3.html" style="background:linear-gradient(135deg,#7ab4cc,#4a8099)">T</a>
+        <div class="ktn-mgmt-context__body">
+          <div class="ktn-mgmt-context__badges">
+            <span class="cb cb-person cb-creator">creator</span>
+          </div>
+          <div class="ktn-mgmt-context__name"><a href="kotennavi-p3.html">田中 透</a></div>
+          <div class="ktn-mgmt-context__meta">絵画・現代美術 · 東京</div>
+        </div>
+        <div class="ktn-mgmt-context__actions">
+          <a class="ktn-mgmt-context__view" href="kotennavi-p3.html">クリエイターページへ →</a>
+        </div>
+      </div>
+
+      <!-- 管理ボックス -->
+      <div class="p318-wrap ktn-mgmt-wrap ktn-mgmt-stack">
+
+        <!-- ページタイトル -->
+        <div class="ktn-mgmt-head">
+          <h2 class="ktn-mgmt-head__title">展覧会管理</h2>
+          <p class="ktn-mgmt-head__en">EXHIBITIONS</p>
+          <p class="ktn-mgmt-head__desc">あなたが<strong>投稿者</strong>として展覧会を作成・確認・編集・削除します。</p>
+        </div>
+
+        <!-- 新規作成（独立CTA） -->
+        <div class="p319-new-row">
+          <a class="ktn-action-btn" id="p318NewBtn" href="kotennavi-p2-11.html?mode=new&author=tanaka&self=1">新規展覧会を作成 →</a>
+        </div>
+
+        <!-- 展覧会について注記 -->
+        <div class="p319-notice">
+          <svg class="p319-notice__icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="17" height="17" aria-hidden="true"><path d="M2 10s3-5.5 8-5.5S18 10 18 10s-3 5.5-8 5.5S2 10 2 10Z"/><circle cx="10" cy="10" r="2.3"/></svg>
+          <div class="p319-notice__body">
+            <strong>この一覧には、あなたが投稿者として作成した展覧会のみが表示されます。</strong>
+            ギャラリー等、他の投稿者が主催する展覧会に出展クリエイターとして参加している場合は含まれません。参加履歴を含めた全ての展覧会は<a class="ktn-guide-link" href="kotennavi-p3-1.html">展覧会アーカイブ →</a>でご確認いただけます。
+          </div>
+        </div>
+
+        <!-- 確認・公開／会期終了ロックについての注記 -->
+        <div class="p319-notice">
+          <svg class="p319-notice__icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="17" height="17" aria-hidden="true"><path d="M2 10s3-5.5 8-5.5S18 10 18 10s-3 5.5-8 5.5S2 10 2 10Z"/><circle cx="10" cy="10" r="2.3"/></svg>
+          <div class="p319-notice__body">
+            <strong>作成時に公開日（今すぐ公開する／公開日時を指定する）を設定でき、作成後は管理者確認を経て掲載されます。</strong>
+            確認待ち・公開日未到来の間は、この一覧上でのみ状態を確認できます。また、<strong>編集・削除ができるのは会期が終了していない展覧会のみです（開催前の展覧会を含みます）</strong>。会期を終了すると編集・削除はできなくなりますが、あなたのクリエイターページの展覧会一覧には終了後もそのまま表示され続けます。
+          </div>
+        </div>
+
+        <!-- 下書きの注記（下書きがある時のみ表示・JSで開閉） -->
+        <div class="p319-draft-banner" id="p318DraftBanner" hidden>
+          <svg class="p319-draft-banner__icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="17" height="17" aria-hidden="true"><path d="M4 14.5V16h1.5l8-8-1.5-1.5-8 8Z"/><path d="M12.5 5l1.5-1.5a1 1 0 0 1 1.4 0l.1.1a1 1 0 0 1 0 1.4L14 6.5"/></svg>
+          <div class="p319-draft-banner__body">
+            <strong>作成途中の下書きが<span id="p318DraftCount">0</span>件あります。</strong>
+            下書きは未完成のため<strong>掲載・管理者確認の対象にならず</strong>、一覧の最上部に固定表示しています。各下書きの「編集を再開 →」から続きを入力し、必須項目がそろえば保存で確認待ちに進めます。
+          </div>
+        </div>
+
+        <!-- ツールバー：種別・ステータス・並べ替え -->
+        <div class="p319-toolbar">
+          <div class="p319-toolbar__filters">
+            <label class="p319-filter">
+              <span class="p319-filter__label">種別</span>
+              <select class="p319-filter__sel" id="p318FilterType">
+                <option value="">すべて</option>
+                <option value="solo">個展</option>
+                <option value="group">グループ展</option>
+                <option value="other">その他</option>
+              </select>
+            </label>
+            <label class="p319-filter">
+              <span class="p319-filter__label">ステータス</span>
+              <select class="p319-filter__sel" id="p318FilterStatus">
+                <option value="">すべて</option>
+                <option value="pending">確認待ち</option>
+                <option value="scheduled">公開予定</option>
+                <option value="upcoming">開催前</option>
+                <option value="soon">もうすぐ開始</option>
+                <option value="live">開催中</option>
+                <option value="ending">もうすぐ終了</option>
+                <option value="closed">終了</option>
+              </select>
+            </label>
+            <label class="p319-filter">
+              <span class="p319-filter__label">並べ替え</span>
+              <select class="p319-filter__sel" id="p318Sort">
+                <option value="reg-desc">登録が新しい順</option>
+                <option value="reg-asc">登録が古い順</option>
+                <option value="title">タイトル順</option>
+              </select>
+            </label>
+          </div>
+        </div>
+
+        <!-- 展覧会一覧 -->
+        <ul class="p319-list" id="p318List" aria-label="展覧会一覧"></ul>
+
+        <!-- ゼロ状態 -->
+        <div class="p319-empty" id="p318Empty" hidden>
+          <p class="p319-empty__msg">該当する展覧会がありません。</p>
+        </div>
+
+        <!-- ページング -->
+        <nav class="ktn-pagination" id="p318Pagination" aria-label="ページ送り" hidden></nav>
+
+      </div><!-- /.ktn-mgmt-wrap -->
+
+      <!-- 削除／下書き破棄 確認モーダル（.ktn-mgmt-wrap の外＝fixed オーバーレイ） -->
+      <div class="p319-del-modal" id="p318DelModal" hidden>
+        <div class="p319-del-modal__bg" id="p318DelBg"></div>
+        <div class="p319-del-modal__panel" role="dialog" aria-modal="true" aria-labelledby="p318DelTitle">
+          <h3 class="p319-del-modal__title" id="p318DelTitle">展覧会を削除しますか？</h3>
+          <p class="p319-del-modal__desc" id="p318DelDesc"></p>
+          <div class="p319-del-modal__actions">
+            <button type="button" class="ktn-op-btn" id="p318DelCancel">キャンセル</button>
+            <button type="button" class="ktn-op-btn ktn-op-btn--danger" id="p318DelConfirm">削除する</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 新規作成の重複確認モーダル（確認待ち／公開予定の展覧会が既にある場合のみ表示） -->
+      <div class="p319-del-modal p319-dup-modal" id="p318DupModal" hidden>
+        <div class="p319-del-modal__bg" id="p318DupBg"></div>
+        <div class="p319-del-modal__panel" role="dialog" aria-modal="true" aria-labelledby="p318DupTitle">
+          <h3 class="p319-del-modal__title" id="p318DupTitle">確認待ち・公開前の展覧会があります</h3>
+          <p class="p319-del-modal__desc">同じ内容の展覧会を重複して作成していないか、先にご確認ください。</p>
+          <ul class="p319-dup-modal__list" id="p318DupList"></ul>
+          <p class="p319-dup-modal__hint">確認済み・公開済みの展覧会は一覧でご確認ください。</p>
+          <div class="p319-del-modal__actions">
+            <button type="button" class="ktn-op-btn" id="p318DupCancel">キャンセル</button>
+            <a class="ktn-op-btn ktn-op-btn--caution" id="p318DupProceed" href="#">新規作成</a>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /.ktn-content -->
+  </main>
+
+</div><!-- /.content-wrap -->
+</div><!-- /.shell -->
+
+<nav class="ktn-bottom-nav" id="ktnBottomNav"><div class="ktn-bottom-nav__inner" id="ktnBottomNavInner"></div></nav>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Top","item":"https://koten-navi.com/"},{"@type":"ListItem","position":2,"name":"クリエイター","item":"https://koten-navi.com/p10-2"},{"@type":"ListItem","position":3,"name":"田中 透","item":"https://koten-navi.com/p3"},{"@type":"ListItem","position":4,"name":"展覧会管理"}]}</script>
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+  KTN.init({ page: 'p3-18', role: 'user+creator' });
+  function setR(role, btn) {
+    document.querySelectorAll('.dbtn').forEach(function(b){ b.classList.remove('on'); });
+    btn.classList.add('on');
+    window.curRole = role;
+    if (window.ktnRender) ktnRender();
+  }
+</script>
+</body>
+</html>

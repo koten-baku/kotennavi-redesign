@@ -75,7 +75,7 @@
 | P3-15 | クリエイター-リエゾン+コンソール | L+ |  |  |  | R/W |  | R/W | --w-detail | kotennavi-p3-15.html | Fix済 |
 | P3-16 | クリエイター-取引デスク | L+ |  |  |  | R/W |  | R/W | --w-detail | kotennavi-p3-16.html | Fix済 |
 | P3-17 | クリエイター販売代金管理 | L+ |  |  |  | R/W |  | R/W | --w-detail | kotennavi-p3-17.html | Fix済 |
-| P3-18 | クリエイター-展覧会管理 |  |  |  |  | R/W |  | R/W | --w-detail | # | 未作成 |
+| P3-18 | クリエイター-展覧会管理 |  |  |  |  | R/W |  | R/W | --w-detail | kotennavi-p3-18.html | Fix済 |
 | P3-19 | クリエイター-記事管理 |  |  |  |  | R/W |  | R/W | --w-detail | kotennavi-p3-19.html | Fix済 |
 
 ---
@@ -94,7 +94,7 @@
 | P4-15 | ギャラリー-リエゾン+コンソール | L+ |  |  |  |  | R/W | R/W | --w-detail | kotennavi-p4-15.html | Fix済 |
 | P4-16 | ギャラリー-取引デスク | L+ |  |  |  |  | R/W | R/W | --w-detail | kotennavi-p4-16.html | Fix済 |
 | P4-17 | ギャラリー-販売代金管理 | L+ |  |  |  |  | R/W | R/W | --w-detail | kotennavi-p4-17.html | Fix済 |
-| P4-18 | ギャラリー-展覧会管理 |  |  |  |  |  | R/W | R/W | --w-detail | # | 未作成 |
+| P4-18 | ギャラリー-展覧会管理 |  |  |  |  |  | R/W | R/W | --w-detail | kotennavi-p4-18.html | Fix済 |
 | P4-19 | ギャラリー-記事管理 |  |  |  |  |  | R/W | R/W | --w-detail | kotennavi-p4-19.html | Fix済 |
 
 ---
