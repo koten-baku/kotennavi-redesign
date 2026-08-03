@@ -3352,7 +3352,7 @@ line-clamp:2;}
 /* タブ件数は親タブの is-active で active 表示に戻す（.is-idle を上書き）。
    creator/gallery は淡tint(rgba .1)が --tag-bg とほぼ同色で active が視認できないため、
    全ロール共通でロール色ソリッド塗り＋白文字にして idle(中立グレー)との差を明確化 */
-.p5-type-tab.is-active .ktn-count--pill,.p514-tab.is-active .ktn-count--pill,.p315-tab-btn.is-active .ktn-count--pill,.p314-tab.is-active .ktn-count--pill{background:var(--page-accent,#b8608c);color:#fff;font-weight:600}
+.p5-type-tab.is-active .ktn-count--pill,.p514-tab.is-active .ktn-count--pill,.p315-tab-btn.is-active .ktn-count--pill,.p314-tab.is-active .ktn-count--pill,.p313-tab.is-active .ktn-count--pill{background:var(--page-accent,#b8608c);color:#fff;font-weight:600}
 
 /* ── 編集ページ共通タイトルヘッダー .ktn-edit-head ── */
 .ktn-edit-head{margin-bottom:20px}
@@ -11082,6 +11082,23 @@ a.p514-aw__exh-name:hover{text-decoration:underline;color:var(--accent,#2a7fa8)}
 .p315-archive-table--grouped thead tr:last-child th:nth-child(2),
 .p315-archive-table--grouped tbody td:nth-child(2){border-right:1px solid var(--border)}
 
+/* 購入者一覧（p3-15/p4-15）：列ソートボタン・購入者リンク */
+.p315-buyers-sort-btn{display:flex;align-items:center;gap:4px;width:100%;font-family:inherit;font-size:inherit;font-weight:500;color:var(--muted);background:none;border:none;padding:0;cursor:pointer;text-align:left;white-space:nowrap}
+.p315-buyers-sort-btn:hover{color:var(--ink)}
+.p315-buyers-sort-btn.is-active{color:var(--page-accent)}
+.p315-buyers-sort-btn__arrow{width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;border-bottom:5px solid currentColor;opacity:.25;flex-shrink:0;transition:opacity .15s,transform .15s}
+.p315-buyers-sort-btn.is-active .p315-buyers-sort-btn__arrow{opacity:.8}
+.p315-buyers-sort-btn.is-desc .p315-buyers-sort-btn__arrow{transform:rotate(180deg)}
+.p315-buyer-link{font-family:var(--fn);color:var(--ink);font-weight:500;text-decoration:none}
+.p315-buyer-link:hover{color:var(--accent);text-decoration:underline;text-underline-offset:2px}
+/* モバイル（640px以下）は列ヘッダーごとカード化され .p315-buyers-sort-btn が非表示になるため、代替の並べ替えセレクトを表示 */
+.p315-buyers-sort-mobile{display:none}
+@media(max-width:640px){
+  .p315-buyers-sort-mobile{display:flex;align-items:center;gap:8px;margin:0 0 12px}
+  .p315-buyers-sort-mobile__label{font-family:var(--fn);font-size:.72rem;color:var(--muted);flex-shrink:0}
+  .p315-buyers-sort-mobile__sel{flex:1;min-width:0;font-family:var(--fn);font-size:.78rem;color:var(--ink);border:1px solid var(--border);border-radius:4px;padding:7px 8px;background:#fff}
+}
+
 /* ── 確認モーダル ── */
 .p315-modal{position:fixed;inset:0;z-index:900;display:flex;align-items:center;justify-content:center;padding:20px}
 .p315-modal[hidden]{display:none}
@@ -11228,7 +11245,8 @@ body.p4-15-page{--page-accent:#8b5e3c}
 .p315-wrap > .p315-faq{margin-top:20px}
 /* タブナビゲーション */
 /* タブは p5-14（.p514-tab）に揃える（active も is-active 方式に統一）。件数は .ktn-count--pill(.is-idle)＋親 .p315-tab-btn.is-active に統合 */
-.p315-tab-nav{display:flex;border-bottom:2px solid var(--border);padding-left:20px}
+.p315-tab-nav{display:flex;border-bottom:2px solid var(--border);padding-left:20px;overflow-x:auto;scrollbar-width:none}
+.p315-tab-nav::-webkit-scrollbar{display:none}
 .p315-tab-btn{background:none;border:none;border-bottom:2px solid transparent;padding:9px 16px;font-family:var(--fn);font-size:.82rem;font-weight:400;color:var(--muted);cursor:pointer;display:inline-flex;align-items:center;gap:6px;margin-bottom:-2px;transition:color .15s;white-space:nowrap}
 .p315-tab-btn:hover:not(.is-active){color:var(--ink)}
 .p315-tab-btn.is-active{color:var(--page-accent);border-bottom-color:var(--page-accent);font-weight:600}
@@ -12212,6 +12230,46 @@ a.p319-item__dest-name:hover{color:var(--page-accent)}
   .p319-filter__sel{min-width:0;width:100%}
   .p319-item__main{flex-wrap:wrap}
   .p319-item__actions{flex-wrap:wrap}
+}
+
+/* ── P3-13/P4-13 オーディエンス管理（.p313-* を共有ネームスペースとしてP4-13も再利用）
+   ウォッチャー・チェックインの2タブ構成。一覧行はどちらも .p2-watcher-item/.p2-watcher-list
+   （p2ウォッチャーモーダルと同一部品）を流用するため、ここでは KPIガイドリンク・通知トグル行・
+   タブ切替・ツールバー（.p319-toolbar系と同型）・チェックイン訪問履歴・ゼロ状態のみ定義。
+   通知はウォッチャー／チェックインを分けず共通の単一トグル（.p313-notify-sw）。
+   種別（user/creator/gallery）の絞り込みUIは持たない（watch/checkinはユーザー機能として
+   ロールを意識させない設計のため）。ただしtypeフィールド自体はアバター形状・outline色の
+   識別に引き続き使用する（サイト全体のアバター規約と同じ扱い）。 ── */
+.p313-kpi-guide{margin:10px 0 0;font-size:.82rem}
+.p313-notify-list{display:flex;flex-direction:column;gap:10px}
+.p313-notify-row{display:flex;align-items:center;justify-content:space-between;gap:16px;background:#fff;border:1px solid var(--border);border-radius:4px;padding:16px 18px}
+.p313-notify-row__title{font-family:var(--fn);font-size:.86rem;font-weight:600;color:var(--ink);margin:0 0 4px}
+.p313-notify-row__desc{font-family:var(--fn);font-size:.78rem;color:var(--muted);margin:0;line-height:1.6}
+.p313-notify-sw{flex-shrink:0}
+.p313-tabs{display:flex;border-bottom:2px solid var(--border);margin-bottom:14px}
+.p313-tab{display:inline-flex;align-items:center;gap:6px;font-family:var(--fn);font-size:.82rem;font-weight:400;padding:9px 16px;border:none;background:none;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-2px;transition:color .15s;white-space:nowrap}
+.p313-tab:hover:not(.is-active){color:var(--ink)}
+.p313-tab.is-active{color:var(--page-accent);border-bottom-color:var(--page-accent);font-weight:600}
+.p313-tab-panel[hidden]{display:none}
+.p313-toolbar{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.p313-toolbar__filters{display:flex;gap:14px;flex-wrap:wrap}
+.p313-filter{display:flex;flex-direction:column;gap:4px}
+.p313-filter__label{font-family:var(--fm);font-size:.58rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.p313-filter__sel{font-family:var(--fn);font-size:.82rem;padding:7px 10px;border:1px solid var(--border);border-radius:4px;background:#fff;color:var(--ink);min-width:140px}
+.p313-w-since{display:inline-flex;align-items:center;gap:4px;font-family:var(--fn);font-size:.74rem;color:var(--muted);margin-top:5px}
+.p313-ck-visits{display:flex;flex-direction:column;gap:4px;margin-top:5px}
+.p313-ck-visit{display:flex;flex-direction:column;gap:3px;font-family:var(--fn);font-size:.74rem;color:var(--muted);line-height:1.5}
+.p313-ck-visit__date{flex-shrink:0;display:inline-flex;align-items:center;gap:4px;color:var(--ink);font-weight:600}
+.p313-ck-visit__exh{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;color:var(--muted)}
+.p313-empty{padding:36px 20px;text-align:center}
+.p313-empty__msg{font-size:.85rem;color:var(--muted)}
+@media(max-width:540px){
+  .p313-notify-row{flex-direction:column;align-items:flex-start}
+  .p313-tab{padding:9px 12px}
+  .p313-toolbar{flex-direction:column;align-items:stretch}
+  .p313-toolbar__filters{flex-direction:column}
+  .p313-filter__sel{min-width:0;width:100%}
+  .p313-toolbar .ktn-count--result{margin-left:0}
 }
 
 @media(max-width:540px){

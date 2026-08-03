@@ -207,7 +207,8 @@
       "Bash(curl -s -o /dev/null -w \"p4-2: %{http_code}\\\\n\" http://localhost:8080/kotennavi-p4-2.html)",
       "Bash(awk 'NR==7503,NR==7981' kotennavi-pages.js)",
       "Bash(awk 'NR==8362,NR==8564' kotennavi-pages.js)",
-      "Bash(awk -F'|' '{print $2, $3}')"
+      "Bash(awk -F'|' '{print $2, $3}')",
+      "Bash(awk -F: '$1>=8617')"
     ]
   }
 }

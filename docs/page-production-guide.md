@@ -560,7 +560,7 @@ KTN.pages = {
 | P3-3 | 作品一覧 | `--w-detail` | なし | 全員 |
 | P3-11 | 編集 | `--w-article` | なし | creator / admin |
 | P3-12 | インサイト | `--w-article` | なし | creator / admin |
-| P3-13 | ウォッチャー管理 | `--w-article` | なし | creator / admin |
+| P3-13 | オーディエンス管理 | `--w-article` | なし | creator / admin |
 | P3-14 | ポートフォリオ管理 | `--w-article` | なし | creator / admin（LIAISON） |
 | P3-15 | LIAISONコンソール | `--w-detail` | なし | creator / admin（LIAISON+） |
 | P3-16 | 取引デスク | `--w-detail` | なし | creator / admin（LIAISON+） |
@@ -574,8 +574,7 @@ KTN.pages = {
 | P4-2 | 記事一覧 | `--w-detail` | なし | 全員 |
 | P4-11 | 編集 | `--w-article` | なし | gallery / admin |
 | P4-12 | インサイト | `--w-article` | なし | gallery / admin |
-| P4-13 | ウォッチャー管理 | `--w-article` | なし | gallery / admin |
-| P4-13 | ウォッチャー管理 | `--w-article` | なし | gallery / admin |
+| P4-13 | オーディエンス管理 | `--w-article` | なし | gallery / admin |
 | P4-14 | LIAISONコンソール | `--w-detail` | なし | gallery / admin（LIAISON+） |
 | P4-15 | 取引デスク | `--w-detail` | なし | gallery / admin（LIAISON+） |
 | P4-16 | 販売代金管理 | `--w-article` | なし | gallery / admin（LIAISON+） |

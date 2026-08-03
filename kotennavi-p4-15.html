@@ -160,13 +160,16 @@
           <a class="ktn-action-btn" href="kotennavi-p4-17.html">販売代金管理へ →</a>
         </div>
 
-        <!-- 2タブナビゲーション -->
+        <!-- 3タブナビゲーション -->
         <div class="p315-tab-nav" role="tablist">
           <button class="p315-tab-btn is-active" role="tab" data-panel="p415-panel-active" aria-selected="true">
             期間中展覧会 <span class="ktn-count ktn-count--pill is-idle">2</span>
           </button>
           <button class="p315-tab-btn" role="tab" data-panel="p415-panel-archive" aria-selected="false">
             終了した展覧会 <span class="ktn-count ktn-count--pill is-idle">1</span>
+          </button>
+          <button class="p315-tab-btn" role="tab" data-panel="p415-panel-buyers" aria-selected="false">
+            購入者一覧 <span class="ktn-count ktn-count--pill is-idle">10</span>
           </button>
         </div>
 
@@ -554,6 +557,119 @@
             </div>
           </div>
         </div><!-- /p415-panel-archive -->
+
+        <!-- ══ Tab 3: 購入者一覧（期間中・終了した展覧会を横断した購入者の一覧） ══ -->
+        <div class="p315-tab-panel" id="p415-panel-buyers" hidden role="tabpanel">
+          <p class="p315-related-link__desc" style="margin:0 0 14px">開催中・終了した展覧会を横断して、これまでの購入者を一覧できます。個別の取引対応は各行の「取引デスクへ →」から。</p>
+          <div class="p315-buyers-sort-mobile">
+            <label class="p315-buyers-sort-mobile__label" for="p415BuyersSortSel">並べ替え</label>
+            <select class="p315-buyers-sort-mobile__sel" id="p415BuyersSortSel">
+              <option value="buyer:asc">購入者順</option>
+              <option value="work:asc">作品名順</option>
+              <option value="exh:asc">展覧会名順</option>
+              <option value="price:desc">価格が高い順</option>
+              <option value="price:asc">価格が低い順</option>
+              <option value="status:asc">ステータス（進行順）</option>
+              <option value="status:desc">ステータス（新しい順）</option>
+            </select>
+          </div>
+          <div class="p315-archive-table-wrap">
+          <table class="p315-archive-table" id="p415BuyersTable">
+            <thead>
+              <tr>
+                <th><button type="button" class="p315-buyers-sort-btn" data-sort="buyer">購入者<span class="p315-buyers-sort-btn__arrow"></span></button></th>
+                <th><button type="button" class="p315-buyers-sort-btn" data-sort="work">作品<span class="p315-buyers-sort-btn__arrow"></span></button></th>
+                <th><button type="button" class="p315-buyers-sort-btn" data-sort="exh">展覧会<span class="p315-buyers-sort-btn__arrow"></span></button></th>
+                <th><button type="button" class="p315-buyers-sort-btn" data-sort="price">価格（税込）<span class="p315-buyers-sort-btn__arrow"></span></button></th>
+                <th><button type="button" class="p315-buyers-sort-btn" data-sort="status">ステータス<span class="p315-buyers-sort-btn__arrow"></span></button></th>
+                <th>取引</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr data-buyer="kato_maki" data-work="静かな水面" data-exh="色彩の対話 — 現代絵画グループ展" data-price="48000" data-status="5">
+                <td data-label="購入者"><a class="p315-buyer-link" href="kotennavi-p5.html">kato_maki</a></td>
+                <td data-label="作品">静かな水面</td>
+                <td data-label="展覧会">色彩の対話 — 現代絵画グループ展</td>
+                <td data-label="価格（税込）">¥48,000</td>
+                <td data-label="ステータス"><span class="p315-txn-row__status p315-apply-status--finish">完了確認待ち</span></td>
+                <td data-label="取引"><a class="ktn-action-btn" href="kotennavi-p4-16.html">取引デスクへ →</a></td>
+              </tr>
+              <tr data-buyer="daisuke_t" data-work="光の堆積 No.2" data-exh="色彩の対話 — 現代絵画グループ展" data-price="95000" data-status="1">
+                <td data-label="購入者"><a class="p315-buyer-link" href="kotennavi-p5.html">daisuke_t</a></td>
+                <td data-label="作品">光の堆積 No.2</td>
+                <td data-label="展覧会">色彩の対話 — 現代絵画グループ展</td>
+                <td data-label="価格（税込）">¥95,000</td>
+                <td data-label="ステータス"><span class="p315-txn-row__status p315-apply-status--stock">購入確定待ち</span></td>
+                <td data-label="取引"><a class="ktn-action-btn" href="kotennavi-p4-16.html">取引デスクへ →</a></td>
+              </tr>
+              <tr data-buyer="sakura_n" data-work="燃える地平" data-exh="色彩の対話 — 現代絵画グループ展" data-price="280000" data-status="3">
+                <td data-label="購入者"><a class="p315-buyer-link" href="kotennavi-p5.html">sakura_n</a></td>
+                <td data-label="作品">燃える地平</td>
+                <td data-label="展覧会">色彩の対話 — 現代絵画グループ展</td>
+                <td data-label="価格（税込）">¥280,000</td>
+                <td data-label="ステータス"><span class="p315-txn-row__status p315-apply-status--ship">発送待ち</span></td>
+                <td data-label="取引"><a class="ktn-action-btn" href="kotennavi-p4-16.html">取引デスクへ →</a></td>
+              </tr>
+              <tr data-buyer="takuya_n" data-work="朝の余白" data-exh="色彩の対話 — 現代絵画グループ展" data-price="72000" data-status="2">
+                <td data-label="購入者"><a class="p315-buyer-link" href="kotennavi-p5.html">takuya_n</a></td>
+                <td data-label="作品">朝の余白</td>
+                <td data-label="展覧会">色彩の対話 — 現代絵画グループ展</td>
+                <td data-label="価格（税込）">¥72,000</td>
+                <td data-label="ステータス"><span class="p315-txn-row__status p315-apply-status--pay">支払待ち</span></td>
+                <td data-label="取引"><a class="ktn-action-btn" href="kotennavi-p4-16.html">取引デスクへ →</a></td>
+              </tr>
+              <tr data-buyer="yumi_o" data-work="境界に咲く" data-exh="色彩の対話 — 現代絵画グループ展" data-price="58000" data-status="4">
+                <td data-label="購入者"><a class="p315-buyer-link" href="kotennavi-p5.html">yumi_o</a></td>
+                <td data-label="作品">境界に咲く</td>
+                <td data-label="展覧会">色彩の対話 — 現代絵画グループ展</td>
+                <td data-label="価格（税込）">¥58,000</td>
+                <td data-label="ステータス"><span class="p315-txn-row__status p315-apply-status--recv">受取確認待ち</span></td>
+                <td data-label="取引"><a class="ktn-action-btn" href="kotennavi-p4-16.html">取引デスクへ →</a></td>
+              </tr>
+              <tr data-buyer="hayashi_koji" data-work="影と光 No.5" data-exh="モノクロームの詩 — 松本りさ 個展" data-price="145000" data-status="1">
+                <td data-label="購入者"><a class="p315-buyer-link" href="kotennavi-p5.html">hayashi_koji</a></td>
+                <td data-label="作品">影と光 No.5</td>
+                <td data-label="展覧会">モノクロームの詩 — 松本りさ 個展</td>
+                <td data-label="価格（税込）">¥145,000</td>
+                <td data-label="ステータス"><span class="p315-txn-row__status p315-apply-status--stock">購入確定待ち</span></td>
+                <td data-label="取引"><a class="ktn-action-btn" href="kotennavi-p4-16.html">取引デスクへ →</a></td>
+              </tr>
+              <tr data-buyer="yoko_t" data-work="沈黙の輪郭" data-exh="モノクロームの詩 — 松本りさ 個展" data-price="68000" data-status="6">
+                <td data-label="購入者"><a class="p315-buyer-link" href="kotennavi-p5.html">yoko_t</a></td>
+                <td data-label="作品">沈黙の輪郭</td>
+                <td data-label="展覧会">モノクロームの詩 — 松本りさ 個展</td>
+                <td data-label="価格（税込）">¥68,000</td>
+                <td data-label="ステータス"><span class="p315-txn-row__status p315-apply-status--done">取引完了 · 2026.04.15</span></td>
+                <td data-label="取引"><a class="ktn-action-btn" href="kotennavi-p4-16.html">取引デスクへ →</a></td>
+              </tr>
+              <tr data-buyer="nanami_s" data-work="断層 No.1" data-exh="光の断層 — 現代版画グループ展" data-price="210000" data-status="6">
+                <td data-label="購入者"><a class="p315-buyer-link" href="kotennavi-p5.html">nanami_s</a></td>
+                <td data-label="作品">断層 No.1</td>
+                <td data-label="展覧会">光の断層 — 現代版画グループ展</td>
+                <td data-label="価格（税込）">¥210,000</td>
+                <td data-label="ステータス"><span class="p315-txn-row__status p315-apply-status--done">取引完了 · 2026.01.07</span></td>
+                <td data-label="取引"><a class="ktn-action-btn" href="kotennavi-p4-16.html">取引デスクへ →</a></td>
+              </tr>
+              <tr data-buyer="ryota_m" data-work="光の記憶 III" data-exh="光の断層 — 現代版画グループ展" data-price="185000" data-status="6">
+                <td data-label="購入者"><a class="p315-buyer-link" href="kotennavi-p5.html">ryota_m</a></td>
+                <td data-label="作品">光の記憶 III</td>
+                <td data-label="展覧会">光の断層 — 現代版画グループ展</td>
+                <td data-label="価格（税込）">¥185,000</td>
+                <td data-label="ステータス"><span class="p315-txn-row__status p315-apply-status--done">取引完了 · 2026.01.09</span></td>
+                <td data-label="取引"><a class="ktn-action-btn" href="kotennavi-p4-16.html">取引デスクへ →</a></td>
+              </tr>
+              <tr data-buyer="kenji_o" data-work="夜の断片" data-exh="光の断層 — 現代版画グループ展" data-price="145000" data-status="6">
+                <td data-label="購入者"><a class="p315-buyer-link" href="kotennavi-p5.html">kenji_o</a></td>
+                <td data-label="作品">夜の断片</td>
+                <td data-label="展覧会">光の断層 — 現代版画グループ展</td>
+                <td data-label="価格（税込）">¥145,000</td>
+                <td data-label="ステータス"><span class="p315-txn-row__status p315-apply-status--done">取引完了 · 2026.01.12</span></td>
+                <td data-label="取引"><a class="ktn-action-btn" href="kotennavi-p4-16.html">取引デスクへ →</a></td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+        </div><!-- /p415-panel-buyers -->
 
         <!-- FAQ（タブ外・常時表示。本文は KTN.QA〔liaison-txn/seller/console〕を単一ソースに renderQA で描画。p3-15 と同一ソース＝ドリフト解消・全問common） -->
         <section class="p315-faq">

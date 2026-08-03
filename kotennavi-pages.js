@@ -7111,6 +7111,54 @@ KTN.pages['p3-15'] = function () {
     });
   }
 
+  // 7. 購入者一覧タブ：列ソート（デスクトップ＝列見出しボタン／モバイル＝カード化でthead非表示のため代替セレクトで操作）
+  (function () {
+    var table = document.getElementById('p315BuyersTable');
+    if (!table) return;
+    var tbody = table.querySelector('tbody');
+    var rows = Array.prototype.slice.call(tbody.querySelectorAll('tr'));
+    var btns = table.querySelectorAll('.p315-buyers-sort-btn');
+    var sel = document.getElementById('p315BuyersSortSel');
+    var curKey = null, curDir = 1;
+
+    function sortRows(key, dir) {
+      var isNum = (key === 'price' || key === 'status');
+      rows.sort(function (a, b) {
+        var av = a.dataset[key], bv = b.dataset[key];
+        if (isNum) { return (parseFloat(av) - parseFloat(bv)) * dir; }
+        return av.localeCompare(bv, 'ja') * dir;
+      });
+      rows.forEach(function (r) { tbody.appendChild(r); });
+    }
+
+    function applySort(key, dir) {
+      curKey = key; curDir = dir;
+      btns.forEach(function (b) { b.classList.remove('is-active', 'is-desc'); });
+      var matchBtn = table.querySelector('.p315-buyers-sort-btn[data-sort="' + key + '"]');
+      if (matchBtn) {
+        matchBtn.classList.add('is-active');
+        if (dir === -1) matchBtn.classList.add('is-desc');
+      }
+      if (sel) sel.value = key + ':' + (dir === -1 ? 'desc' : 'asc');
+      sortRows(key, dir);
+    }
+
+    btns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var key = btn.dataset.sort;
+        var dir = (curKey === key) ? curDir * -1 : 1;
+        applySort(key, dir);
+      });
+    });
+
+    if (sel) {
+      sel.addEventListener('change', function () {
+        var parts = sel.value.split(':');
+        applySort(parts[0], parts[1] === 'desc' ? -1 : 1);
+      });
+    }
+  })();
+
   window.ktnRender = function () {};
 };
 
@@ -8161,6 +8209,54 @@ KTN.pages['p4-15'] = function () {
     });
   }
 
+  // 7. 購入者一覧タブ：列ソート（デスクトップ＝列見出しボタン／モバイル＝カード化でthead非表示のため代替セレクトで操作）
+  (function () {
+    var table = document.getElementById('p415BuyersTable');
+    if (!table) return;
+    var tbody = table.querySelector('tbody');
+    var rows = Array.prototype.slice.call(tbody.querySelectorAll('tr'));
+    var btns = table.querySelectorAll('.p315-buyers-sort-btn');
+    var sel = document.getElementById('p415BuyersSortSel');
+    var curKey = null, curDir = 1;
+
+    function sortRows(key, dir) {
+      var isNum = (key === 'price' || key === 'status');
+      rows.sort(function (a, b) {
+        var av = a.dataset[key], bv = b.dataset[key];
+        if (isNum) { return (parseFloat(av) - parseFloat(bv)) * dir; }
+        return av.localeCompare(bv, 'ja') * dir;
+      });
+      rows.forEach(function (r) { tbody.appendChild(r); });
+    }
+
+    function applySort(key, dir) {
+      curKey = key; curDir = dir;
+      btns.forEach(function (b) { b.classList.remove('is-active', 'is-desc'); });
+      var matchBtn = table.querySelector('.p315-buyers-sort-btn[data-sort="' + key + '"]');
+      if (matchBtn) {
+        matchBtn.classList.add('is-active');
+        if (dir === -1) matchBtn.classList.add('is-desc');
+      }
+      if (sel) sel.value = key + ':' + (dir === -1 ? 'desc' : 'asc');
+      sortRows(key, dir);
+    }
+
+    btns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var key = btn.dataset.sort;
+        var dir = (curKey === key) ? curDir * -1 : 1;
+        applySort(key, dir);
+      });
+    });
+
+    if (sel) {
+      sel.addEventListener('change', function () {
+        var parts = sel.value.split(':');
+        applySort(parts[0], parts[1] === 'desc' ? -1 : 1);
+      });
+    }
+  })();
+
   window.ktnRender = function () {};
 };
 
@@ -8598,6 +8694,454 @@ KTN.pages['p3-19'] = function () {
     render();
     if (KTN.toast) KTN.toast(wasDraft ? '下書きを破棄しました（デモ）' : '記事を削除しました（デモ）');
   });
+
+  window.ktnRender = function () {};
+};
+
+/* ════════════════════════════════════════════════════
+   P3-13  クリエイター-オーディエンス管理（p4-13=ギャラリー版と対）
+   「ウォッチャー」（自分をウォッチしているアカウント）と「チェックイン」（自分の展覧会＝
+   投稿・参加のいずれも対象にチェックインしたアカウント）をタブで切替表示する。
+   ウォッチ元・チェックイン元は一般ユーザー・クリエイター・ギャラリーいずれもありうるが、
+   watch/checkinはユーザー機能として定義しているため種別（ロール）の絞り込みUIは持たない
+   （ウォッチ対象になれるのはクリエイター・ギャラリーのみだが、ウォッチ/チェックインする側の種別は意識させない）。
+   一覧行はどちらのタブも .p2-watcher-item/.p2-watcher-list（p2ウォッチャーモーダルと同一部品）を流用。
+   カウンターはp2モーダルと同じ並び（ウォッチ数→チェックイン数→興味あり数）で揃え、
+   ウォッチ数＝このアカウントがサイト全体でウォッチしている先（クリエイター・ギャラリー）の総数。
+   総ウォッチャー数・新規ウォッチャー・チェックイン人数（過去30日）の数値はp3-12インサイトの同項目と揃えている。
+════════════════════════════════════════════════════ */
+KTN.pages['p3-13'] = function () {
+
+  /* ── タブ切替（ウォッチャー／チェックイン） ── */
+  var tabsEl = document.getElementById('p313Tabs');
+  if (tabsEl) {
+    var panels = { watch: document.getElementById('p313PanelWatch'), checkin: document.getElementById('p313PanelCheckin') };
+    tabsEl.querySelectorAll('.p313-tab').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var key = btn.dataset.tab;
+        tabsEl.querySelectorAll('.p313-tab').forEach(function (b) { b.classList.toggle('is-active', b === btn); });
+        Object.keys(panels).forEach(function (k) { if (panels[k]) panels[k].hidden = (k !== key); });
+      });
+    });
+  }
+
+  var SVG_W = '<svg viewBox="0 0 16 16" fill="none" width="11" height="11"><circle cx="8" cy="8" r="7" fill="#3a90e0"/><circle cx="8" cy="8" r="2.6" fill="#fff"/></svg>';
+  var SVG_C = '<svg viewBox="0 0 16 16" fill="none" width="11" height="11"><circle cx="10" cy="5" r="4" fill="#3a90e0"/><circle cx="5" cy="11" r="2.4" fill="#3a90e0"/></svg>';
+  var SVG_I = '<svg viewBox="0 0 16 16" fill="none" width="11" height="11"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6" stroke-linejoin="round"/></svg>';
+  var SVG_C_GRAY = '<svg viewBox="0 0 16 16" fill="none" width="10" height="10"><circle cx="10" cy="5" r="4" fill="#9aa3ac"/><circle cx="5" cy="11" r="2.4" fill="#9aa3ac"/></svg>';
+  var SVG_W_GRAY = '<svg viewBox="0 0 16 16" fill="none" width="10" height="10"><circle cx="8" cy="8" r="7" fill="#9aa3ac"/><circle cx="8" cy="8" r="2.6" fill="#fff"/></svg>';
+
+  /* ── サンプルデータ（田中透をウォッチしているアカウント）──
+     type＝user/creator/gallery（アバター形状・outline色は .p2-watcher-item__avatar--{type} が担当）。
+     watch＝このアカウントがサイト全体でウォッチしている先（クリエイター・ギャラリー）の総数＝p2ウォッチャーモーダルと同じSVG_W。
+     checkin＝田中透の展覧会へのチェックイン回数、interest＝田中透の作品への興味あり！件数。
+     since＝ウォッチ開始日（表示用）、ts＝並べ替え用の数値キー。 */
+  var WATCHERS = [
+    { id:'w1',  name:'佐藤 美咲',        type:'user',    color:'linear-gradient(145deg,#a8b8c8,#6a8098)', watch:12, checkin:3, interest:5, since:'2026.5.20', ts:20260520 },
+    { id:'w2',  name:'高橋 陶子',        type:'creator', color:'linear-gradient(145deg,#6a9aaa,#2a6a8a)', watch:8,  checkin:1, interest:2, since:'2026.4.2',  ts:20260402 },
+    { id:'w3',  name:'Gallery MUKU',    type:'gallery', color:'linear-gradient(145deg,#c8b89a,#a09070)', watch:6,  checkin:2, interest:0, since:'2026.3.14', ts:20260314 },
+    { id:'w4',  name:'中村 拓也',        type:'user',    color:'linear-gradient(145deg,#c8a8b8,#986878)', watch:4,  checkin:0, interest:1, since:'2026.6.1',  ts:20260601 },
+    { id:'w5',  name:'木村 彩',          type:'user',    color:'linear-gradient(145deg,#b8c8a8,#789068)', watch:9,  checkin:1, interest:3, since:'2026.5.2',  ts:20260502 },
+    { id:'w6',  name:'渡辺 硝子',        type:'creator', color:'linear-gradient(145deg,#aa7a9a,#7a3a6a)', watch:15, checkin:0, interest:4, since:'2026.2.18', ts:20260218 },
+    { id:'w7',  name:'Gallery SOIL 渋谷', type:'gallery', color:'linear-gradient(145deg,#9ab8c8,#6a8898)', watch:11, checkin:4, interest:1, since:'2026.1.9',  ts:20260109 },
+    { id:'w8',  name:'小林 志保',        type:'user',    color:'linear-gradient(145deg,#8a9aaa,#4a5a7a)', watch:7,  checkin:2, interest:2, since:'2026.5.28', ts:20260528 },
+    { id:'w9',  name:'加藤 蒼',          type:'user',    color:'linear-gradient(145deg,#a8b8c8,#6a8098)', watch:2,  checkin:0, interest:0, since:'2026.6.10', ts:20260610 },
+    { id:'w10', name:'吉田 織部',        type:'creator', color:'linear-gradient(145deg,#8aaa6a,#4a7a2a)', watch:10, checkin:1, interest:1, since:'2026.3.30', ts:20260330 },
+    { id:'w11', name:'山本 結',          type:'user',    color:'linear-gradient(145deg,#c8a8b8,#986878)', watch:18, checkin:3, interest:6, since:'2026.4.25', ts:20260425 },
+    { id:'w12', name:'Gallery 灯',       type:'gallery', color:'linear-gradient(145deg,#b8a8c8,#8878a8)', watch:5,  checkin:1, interest:0, since:'2026.2.5',  ts:20260205 },
+    { id:'w13', name:'鈴木 遥',          type:'user',    color:'linear-gradient(145deg,#b8c8a8,#789068)', watch:3,  checkin:0, interest:2, since:'2026.6.15', ts:20260615 },
+    { id:'w14', name:'松本 版画',        type:'creator', color:'linear-gradient(145deg,#aaaa6a,#7a7a1a)', watch:13, checkin:2, interest:3, since:'2026.1.22', ts:20260122 },
+  ];
+
+  var listEl  = document.getElementById('p313List');
+  var emptyEl = document.getElementById('p313Empty');
+  var sortSel = document.getElementById('p313Sort');
+  var countEl = document.getElementById('p313Count');
+  var pagerEl = document.getElementById('p313Pagination');
+  if (!listEl || !sortSel) return;
+
+  var page = 1;
+  var PER_PAGE = 8;
+
+  var SORTS = {
+    'since-desc':  function (a, b) { return b.ts - a.ts; },
+    'since-asc':   function (a, b) { return a.ts - b.ts; },
+    'name':        function (a, b) { return a.name.localeCompare(b.name, 'ja'); },
+    'engage-desc': function (a, b) { return (b.watch + b.checkin + b.interest) - (a.watch + a.checkin + a.interest); },
+  };
+
+  function makeItem(w) {
+    return '<div class="p2-watcher-item">' +
+      '<a href="#" class="p2-watcher-item__avatar p2-watcher-item__avatar--' + w.type + '" style="background:' + w.color + '">' + w.name.charAt(0) + '</a>' +
+      '<div class="p2-watcher-item__info">' +
+        '<a href="#" class="p2-watcher-item__name">' + w.name + '</a>' +
+        '<div class="p2-watcher-item__counts">' +
+          '<span class="p2-watcher-item__count">' + SVG_W + w.watch + '</span>' +
+          '<span class="p2-watcher-item__count">' + SVG_C + w.checkin + '</span>' +
+          '<span class="p2-watcher-item__count">' + SVG_I + w.interest + '</span>' +
+        '</div>' +
+        '<div class="p313-w-since">' + SVG_W_GRAY + w.since + '</div>' +
+      '</div>' +
+    '</div>';
+  }
+
+  function render() {
+    var rows = WATCHERS.slice();
+    rows.sort(SORTS[sortSel.value] || SORTS['since-desc']);
+    if (countEl) countEl.textContent = rows.length + '件';
+    if (emptyEl) emptyEl.hidden = rows.length !== 0;
+
+    var totalPages = Math.max(1, Math.ceil(rows.length / PER_PAGE));
+    if (page > totalPages) page = totalPages;
+    var pageRows = rows.slice((page - 1) * PER_PAGE, page * PER_PAGE);
+    listEl.innerHTML = pageRows.map(makeItem).join('');
+    KTN.pagination.render(pagerEl, {
+      page: page,
+      totalPages: totalPages,
+      onGoto: function (p) { page = p; render(); },
+    });
+  }
+
+  function renderReset() { page = 1; render(); }
+  sortSel.addEventListener('change', renderReset);
+  render();
+
+  /* ── 通知トグル（ウォッチャー・チェックイン共通の単一設定） ── */
+  var notifySw = document.getElementById('p313NotifySw');
+  if (notifySw) {
+    notifySw.addEventListener('click', function () {
+      var on = !notifySw.classList.contains('is-on');
+      notifySw.classList.toggle('is-on', on);
+      notifySw.setAttribute('aria-checked', on);
+      notifySw.querySelector('.ktn-switch__label').textContent = on ? '受け取る' : '受け取らない';
+      if (KTN.toast) KTN.toast(on ? '新しいオーディエンスの通知をオンにしました' : '新しいオーディエンスの通知をオフにしました');
+    });
+  }
+
+  /* ── チェックイン一覧 ──
+     1行＝1人（人物の重複を作らない）。visits＝この人物がチェックインした履歴の配列
+     （exh＝p3-18のEXHIBITIONSと同一id・x4/x5/x7、exhName＝表示名、period＝会期、date/ts＝チェックイン日）。
+     同一人物が複数展覧会／複数回チェックインしていればvisitsが複数件になり、カード内に複数行で表示する
+     （カウンター行の下＝チェックイン日＋展覧会名・会期を1行、というユーザー指示に対応）。
+     watch/interest＝そのアカウントのサイト全体でのウォッチ数・興味あり数、checkin数はvisits.lengthから算出
+     （ウォッチャー一覧と同じ3アイコン・同じ順序＝ウォッチ→チェックイン→興味あり！）。 */
+  var CHECKINS = [
+    { id:'c1',  name:'佐藤 美咲',        type:'user',    color:'linear-gradient(145deg,#a8b8c8,#6a8098)', watch:12, interest:5,
+      visits:[ { exh:'x4', exhName:'水のうつわ、光のかけら', period:'2026.7.20 - 2026.8.10', date:'2026.7.22', ts:20260722 } ] },
+    { id:'c2',  name:'岡田 陸',          type:'user',    color:'linear-gradient(145deg,#9ab0c0,#5a7898)', watch:3,  interest:1,
+      visits:[ { exh:'x4', exhName:'水のうつわ、光のかけら', period:'2026.7.20 - 2026.8.10', date:'2026.7.24', ts:20260724 } ] },
+    { id:'c3',  name:'高橋 陶子',        type:'creator', color:'linear-gradient(145deg,#6a9aaa,#2a6a8a)', watch:8,  interest:2,
+      visits:[
+        { exh:'x4', exhName:'水のうつわ、光のかけら', period:'2026.7.20 - 2026.8.10', date:'2026.7.25', ts:20260725 },
+        { exh:'x4', exhName:'水のうつわ、光のかけら', period:'2026.7.20 - 2026.8.10', date:'2026.8.9',  ts:20260809 },
+      ] },
+    { id:'c4',  name:'Gallery SOIL 渋谷', type:'gallery', color:'linear-gradient(145deg,#9ab8c8,#6a8898)', watch:11, interest:1,
+      visits:[ { exh:'x4', exhName:'水のうつわ、光のかけら', period:'2026.7.20 - 2026.8.10', date:'2026.7.27', ts:20260727 } ] },
+    { id:'c5',  name:'中村 拓也',        type:'user',    color:'linear-gradient(145deg,#c8a8b8,#986878)', watch:4,  interest:1,
+      visits:[ { exh:'x4', exhName:'水のうつわ、光のかけら', period:'2026.7.20 - 2026.8.10', date:'2026.7.30', ts:20260730 } ] },
+    { id:'c6',  name:'木村 彩',          type:'user',    color:'linear-gradient(145deg,#b8c8a8,#789068)', watch:9,  interest:3,
+      visits:[ { exh:'x5', exhName:'まなざしの重奏', period:'2026.7.25 - 2026.8.5', date:'2026.7.28', ts:20260728 } ] },
+    { id:'c7',  name:'渡辺 硝子',        type:'creator', color:'linear-gradient(145deg,#aa7a9a,#7a3a6a)', watch:15, interest:4,
+      visits:[ { exh:'x5', exhName:'まなざしの重奏', period:'2026.7.25 - 2026.8.5', date:'2026.7.29', ts:20260729 } ] },
+    { id:'c8',  name:'福田 玲奈',        type:'user',    color:'linear-gradient(145deg,#c8b0a0,#987860)', watch:1,  interest:0,
+      visits:[ { exh:'x5', exhName:'まなざしの重奏', period:'2026.7.25 - 2026.8.5', date:'2026.8.1',  ts:20260801 } ] },
+    { id:'c9',  name:'小林 志保',        type:'user',    color:'linear-gradient(145deg,#8a9aaa,#4a5a7a)', watch:7,  interest:2,
+      visits:[ { exh:'x7', exhName:'ことばの余白', period:'2025.12.1 - 2025.12.20', date:'2025.12.10', ts:20251210 } ] },
+    { id:'c10', name:'Gallery 灯',       type:'gallery', color:'linear-gradient(145deg,#b8a8c8,#8878a8)', watch:5,  interest:0,
+      visits:[ { exh:'x7', exhName:'ことばの余白', period:'2025.12.1 - 2025.12.20', date:'2025.12.14', ts:20251214 } ] },
+    { id:'c11', name:'吉田 織部',        type:'creator', color:'linear-gradient(145deg,#8aaa6a,#4a7a2a)', watch:10, interest:1,
+      visits:[ { exh:'x7', exhName:'ことばの余白', period:'2025.12.1 - 2025.12.20', date:'2025.12.18', ts:20251218 } ] },
+    { id:'c12', name:'山本 結',          type:'user',    color:'linear-gradient(145deg,#c8a8b8,#986878)', watch:18, interest:6,
+      visits:[
+        { exh:'x7', exhName:'ことばの余白', period:'2025.12.1 - 2025.12.20', date:'2025.12.19', ts:20251219 },
+        { exh:'x5', exhName:'まなざしの重奏', period:'2026.7.25 - 2026.8.5', date:'2026.7.31', ts:20260731 },
+      ] },
+  ];
+
+  var ckListEl  = document.getElementById('p313CkList');
+  var ckEmptyEl = document.getElementById('p313CkEmpty');
+  var ckExhSel  = document.getElementById('p313CkFilterExh');
+  var ckSortSel = document.getElementById('p313CkSort');
+  var ckCountEl = document.getElementById('p313CkCount');
+  var ckPagerEl = document.getElementById('p313CkPagination');
+
+  if (ckListEl && ckExhSel && ckSortSel) {
+    var ckPage = 1;
+    var CK_PER_PAGE = 8;
+
+    function ckLatestTs(c) { return Math.max.apply(null, c.visits.map(function (v) { return v.ts; })); }
+    function ckEarliestTs(c) { return Math.min.apply(null, c.visits.map(function (v) { return v.ts; })); }
+
+    var CK_SORTS = {
+      'date-desc':   function (a, b) { return ckLatestTs(b) - ckLatestTs(a); },
+      'date-asc':    function (a, b) { return ckEarliestTs(a) - ckEarliestTs(b); },
+      'name':        function (a, b) { return a.name.localeCompare(b.name, 'ja'); },
+      'engage-desc': function (a, b) { return (b.watch + b.visits.length + b.interest) - (a.watch + a.visits.length + a.interest); },
+    };
+
+    var makeCkItem = function (c) {
+      var visitsSorted = c.visits.slice().sort(function (a, b) { return b.ts - a.ts; });
+      var visitsHtml = visitsSorted.map(function (v) {
+        return '<div class="p313-ck-visit">' +
+          '<span class="p313-ck-visit__date">' + SVG_C_GRAY + v.date + '</span>' +
+          '<span class="p313-ck-visit__exh"><span class="cb cb-content cb-exhibition">exhibition</span>' + v.exhName + ' · ' + v.period + '</span>' +
+        '</div>';
+      }).join('');
+      return '<div class="p2-watcher-item">' +
+        '<a href="#" class="p2-watcher-item__avatar p2-watcher-item__avatar--' + c.type + '" style="background:' + c.color + '">' + c.name.charAt(0) + '</a>' +
+        '<div class="p2-watcher-item__info">' +
+          '<a href="#" class="p2-watcher-item__name">' + c.name + '</a>' +
+          '<div class="p2-watcher-item__counts">' +
+            '<span class="p2-watcher-item__count">' + SVG_W + c.watch + '</span>' +
+            '<span class="p2-watcher-item__count">' + SVG_C + c.visits.length + '</span>' +
+            '<span class="p2-watcher-item__count">' + SVG_I + c.interest + '</span>' +
+          '</div>' +
+          '<div class="p313-ck-visits">' + visitsHtml + '</div>' +
+        '</div>' +
+      '</div>';
+    };
+
+    var renderCk = function () {
+      var fe = ckExhSel.value;
+      var rows = CHECKINS.filter(function (c) {
+        return !fe || c.visits.some(function (v) { return v.exh === fe; });
+      });
+      rows.sort(CK_SORTS[ckSortSel.value] || CK_SORTS['date-desc']);
+      if (ckCountEl) ckCountEl.textContent = rows.length + '件';
+      if (ckEmptyEl) ckEmptyEl.hidden = rows.length !== 0;
+
+      var totalPages = Math.max(1, Math.ceil(rows.length / CK_PER_PAGE));
+      if (ckPage > totalPages) ckPage = totalPages;
+      var pageRows = rows.slice((ckPage - 1) * CK_PER_PAGE, ckPage * CK_PER_PAGE);
+      ckListEl.innerHTML = pageRows.map(makeCkItem).join('');
+      KTN.pagination.render(ckPagerEl, {
+        page: ckPage,
+        totalPages: totalPages,
+        onGoto: function (p) { ckPage = p; renderCk(); },
+      });
+    };
+
+    var renderCkReset = function () { ckPage = 1; renderCk(); };
+    ckExhSel.addEventListener('change', renderCkReset);
+    ckSortSel.addEventListener('change', renderCkReset);
+    renderCk();
+  }
+
+  window.ktnRender = function () {};
+};
+
+/* ════════════════════════════════════════════════════
+   P4-13  ギャラリー-オーディエンス管理（p3-13=クリエイター版と対）
+   構造・CSSクラスは .p313-* を共有ネームスペースとして再利用（p3-14/p4-14と同じ方式）。
+   要素IDのみ p413* に差し替え、KTN.pages['p3-13']とは別関数として実装。
+   チェックイン展覧会データはp4-18のEXHIBITIONS（g4/g5/g7＝live-solo/ending-group/closed-solo）と対応。
+════════════════════════════════════════════════════ */
+KTN.pages['p4-13'] = function () {
+
+  /* ── タブ切替（ウォッチャー／チェックイン） ── */
+  var tabsEl = document.getElementById('p413Tabs');
+  if (tabsEl) {
+    var panels = { watch: document.getElementById('p413PanelWatch'), checkin: document.getElementById('p413PanelCheckin') };
+    tabsEl.querySelectorAll('.p313-tab').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var key = btn.dataset.tab;
+        tabsEl.querySelectorAll('.p313-tab').forEach(function (b) { b.classList.toggle('is-active', b === btn); });
+        Object.keys(panels).forEach(function (k) { if (panels[k]) panels[k].hidden = (k !== key); });
+      });
+    });
+  }
+
+  var SVG_W = '<svg viewBox="0 0 16 16" fill="none" width="11" height="11"><circle cx="8" cy="8" r="7" fill="#3a90e0"/><circle cx="8" cy="8" r="2.6" fill="#fff"/></svg>';
+  var SVG_C = '<svg viewBox="0 0 16 16" fill="none" width="11" height="11"><circle cx="10" cy="5" r="4" fill="#3a90e0"/><circle cx="5" cy="11" r="2.4" fill="#3a90e0"/></svg>';
+  var SVG_I = '<svg viewBox="0 0 16 16" fill="none" width="11" height="11"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6" stroke-linejoin="round"/></svg>';
+  var SVG_C_GRAY = '<svg viewBox="0 0 16 16" fill="none" width="10" height="10"><circle cx="10" cy="5" r="4" fill="#9aa3ac"/><circle cx="5" cy="11" r="2.4" fill="#9aa3ac"/></svg>';
+  var SVG_W_GRAY = '<svg viewBox="0 0 16 16" fill="none" width="10" height="10"><circle cx="8" cy="8" r="7" fill="#9aa3ac"/><circle cx="8" cy="8" r="2.6" fill="#fff"/></svg>';
+
+  /* ── サンプルデータ（Gallery SOIL 渋谷をウォッチしているアカウント）── p3-13と同じフィールド構成 */
+  var WATCHERS = [
+    { id:'w1',  name:'佐藤 美咲',        type:'user',    color:'linear-gradient(145deg,#a8b8c8,#6a8098)', watch:9,  checkin:2, interest:3, since:'2026.5.18', ts:20260518 },
+    { id:'w2',  name:'田中 透',          type:'creator', color:'linear-gradient(145deg,#7ab4cc,#4a8099)', watch:6,  checkin:1, interest:1, since:'2026.4.30', ts:20260430 },
+    { id:'w3',  name:'Gallery 灯',       type:'gallery', color:'linear-gradient(145deg,#b8a8c8,#8878a8)', watch:4,  checkin:0, interest:0, since:'2026.3.9',  ts:20260309 },
+    { id:'w4',  name:'中村 拓也',        type:'user',    color:'linear-gradient(145deg,#c8a8b8,#986878)', watch:3,  checkin:1, interest:2, since:'2026.6.3',  ts:20260603 },
+    { id:'w5',  name:'木村 彩',          type:'user',    color:'linear-gradient(145deg,#b8c8a8,#789068)', watch:7,  checkin:0, interest:1, since:'2026.5.6',  ts:20260506 },
+    { id:'w6',  name:'渡辺 硝子',        type:'creator', color:'linear-gradient(145deg,#aa7a9a,#7a3a6a)', watch:11, checkin:2, interest:3, since:'2026.2.20', ts:20260220 },
+    { id:'w7',  name:'Gallery MUKU',    type:'gallery', color:'linear-gradient(145deg,#c8b89a,#a09070)', watch:5,  checkin:1, interest:0, since:'2026.1.12', ts:20260112 },
+    { id:'w8',  name:'小林 志保',        type:'user',    color:'linear-gradient(145deg,#8a9aaa,#4a5a7a)', watch:6,  checkin:1, interest:2, since:'2026.5.25', ts:20260525 },
+    { id:'w9',  name:'加藤 蒼',          type:'user',    color:'linear-gradient(145deg,#a8b8c8,#6a8098)', watch:1,  checkin:0, interest:0, since:'2026.6.8',  ts:20260608 },
+    { id:'w10', name:'吉田 織部',        type:'creator', color:'linear-gradient(145deg,#8aaa6a,#4a7a2a)', watch:8,  checkin:1, interest:1, since:'2026.3.27', ts:20260327 },
+    { id:'w11', name:'山本 結',          type:'user',    color:'linear-gradient(145deg,#c8a8b8,#986878)', watch:13, checkin:2, interest:4, since:'2026.4.21', ts:20260421 },
+    { id:'w12', name:'岡田 陸',          type:'user',    color:'linear-gradient(145deg,#9ab0c0,#5a7898)', watch:2,  checkin:0, interest:1, since:'2026.2.2',  ts:20260202 },
+    { id:'w13', name:'鈴木 遥',          type:'user',    color:'linear-gradient(145deg,#b8c8a8,#789068)', watch:2,  checkin:0, interest:1, since:'2026.6.12', ts:20260612 },
+    { id:'w14', name:'松本 版画',        type:'creator', color:'linear-gradient(145deg,#aaaa6a,#7a7a1a)', watch:9,  checkin:1, interest:2, since:'2026.1.19', ts:20260119 },
+  ];
+
+  var listEl  = document.getElementById('p413List');
+  var emptyEl = document.getElementById('p413Empty');
+  var sortSel = document.getElementById('p413Sort');
+  var countEl = document.getElementById('p413Count');
+  var pagerEl = document.getElementById('p413Pagination');
+  if (!listEl || !sortSel) return;
+
+  var page = 1;
+  var PER_PAGE = 8;
+
+  var SORTS = {
+    'since-desc':  function (a, b) { return b.ts - a.ts; },
+    'since-asc':   function (a, b) { return a.ts - b.ts; },
+    'name':        function (a, b) { return a.name.localeCompare(b.name, 'ja'); },
+    'engage-desc': function (a, b) { return (b.watch + b.checkin + b.interest) - (a.watch + a.checkin + a.interest); },
+  };
+
+  function makeItem(w) {
+    return '<div class="p2-watcher-item">' +
+      '<a href="#" class="p2-watcher-item__avatar p2-watcher-item__avatar--' + w.type + '" style="background:' + w.color + '">' + w.name.charAt(0) + '</a>' +
+      '<div class="p2-watcher-item__info">' +
+        '<a href="#" class="p2-watcher-item__name">' + w.name + '</a>' +
+        '<div class="p2-watcher-item__counts">' +
+          '<span class="p2-watcher-item__count">' + SVG_W + w.watch + '</span>' +
+          '<span class="p2-watcher-item__count">' + SVG_C + w.checkin + '</span>' +
+          '<span class="p2-watcher-item__count">' + SVG_I + w.interest + '</span>' +
+        '</div>' +
+        '<div class="p313-w-since">' + SVG_W_GRAY + w.since + '</div>' +
+      '</div>' +
+    '</div>';
+  }
+
+  function render() {
+    var rows = WATCHERS.slice();
+    rows.sort(SORTS[sortSel.value] || SORTS['since-desc']);
+    if (countEl) countEl.textContent = rows.length + '件';
+    if (emptyEl) emptyEl.hidden = rows.length !== 0;
+
+    var totalPages = Math.max(1, Math.ceil(rows.length / PER_PAGE));
+    if (page > totalPages) page = totalPages;
+    var pageRows = rows.slice((page - 1) * PER_PAGE, page * PER_PAGE);
+    listEl.innerHTML = pageRows.map(makeItem).join('');
+    KTN.pagination.render(pagerEl, {
+      page: page,
+      totalPages: totalPages,
+      onGoto: function (p) { page = p; render(); },
+    });
+  }
+
+  function renderReset() { page = 1; render(); }
+  sortSel.addEventListener('change', renderReset);
+  render();
+
+  /* ── 通知トグル（ウォッチャー・チェックイン共通の単一設定） ── */
+  var notifySw = document.getElementById('p413NotifySw');
+  if (notifySw) {
+    notifySw.addEventListener('click', function () {
+      var on = !notifySw.classList.contains('is-on');
+      notifySw.classList.toggle('is-on', on);
+      notifySw.setAttribute('aria-checked', on);
+      notifySw.querySelector('.ktn-switch__label').textContent = on ? '受け取る' : '受け取らない';
+      if (KTN.toast) KTN.toast(on ? '新しいオーディエンスの通知をオンにしました' : '新しいオーディエンスの通知をオフにしました');
+    });
+  }
+
+  /* ── チェックイン一覧 ── exh＝p4-18のEXHIBITIONSと同一id（g4/g5/g7） */
+  var CHECKINS = [
+    { id:'c1',  name:'佐藤 美咲',        type:'user',    color:'linear-gradient(145deg,#a8b8c8,#6a8098)', watch:9,  interest:3,
+      visits:[ { exh:'g4', exhName:'色彩のかけら、その先へ', period:'2026.7.25 - 2026.8.15', date:'2026.7.27', ts:20260727 } ] },
+    { id:'c2',  name:'岡田 陸',          type:'user',    color:'linear-gradient(145deg,#9ab0c0,#5a7898)', watch:2,  interest:1,
+      visits:[ { exh:'g4', exhName:'色彩のかけら、その先へ', period:'2026.7.25 - 2026.8.15', date:'2026.7.29', ts:20260729 } ] },
+    { id:'c3',  name:'田中 透',          type:'creator', color:'linear-gradient(145deg,#7ab4cc,#4a8099)', watch:6,  interest:1,
+      visits:[
+        { exh:'g4', exhName:'色彩のかけら、その先へ', period:'2026.7.25 - 2026.8.15', date:'2026.7.30', ts:20260730 },
+        { exh:'g4', exhName:'色彩のかけら、その先へ', period:'2026.7.25 - 2026.8.15', date:'2026.8.9',  ts:20260809 },
+      ] },
+    { id:'c4',  name:'Gallery MUKU',    type:'gallery', color:'linear-gradient(145deg,#c8b89a,#a09070)', watch:5,  interest:0,
+      visits:[ { exh:'g4', exhName:'色彩のかけら、その先へ', period:'2026.7.25 - 2026.8.15', date:'2026.8.1',  ts:20260801 } ] },
+    { id:'c5',  name:'中村 拓也',        type:'user',    color:'linear-gradient(145deg,#c8a8b8,#986878)', watch:3,  interest:2,
+      visits:[ { exh:'g4', exhName:'色彩のかけら、その先へ', period:'2026.7.25 - 2026.8.15', date:'2026.8.3',  ts:20260803 } ] },
+    { id:'c6',  name:'木村 彩',          type:'user',    color:'linear-gradient(145deg,#b8c8a8,#789068)', watch:7,  interest:1,
+      visits:[ { exh:'g5', exhName:'かたちなきものたちの声', period:'2026.7.10 - 2026.7.24', date:'2026.7.13', ts:20260713 } ] },
+    { id:'c7',  name:'渡辺 硝子',        type:'creator', color:'linear-gradient(145deg,#aa7a9a,#7a3a6a)', watch:11, interest:3,
+      visits:[ { exh:'g5', exhName:'かたちなきものたちの声', period:'2026.7.10 - 2026.7.24', date:'2026.7.15', ts:20260715 } ] },
+    { id:'c8',  name:'福田 玲奈',        type:'user',    color:'linear-gradient(145deg,#c8b0a0,#987860)', watch:1,  interest:0,
+      visits:[ { exh:'g5', exhName:'かたちなきものたちの声', period:'2026.7.10 - 2026.7.24', date:'2026.7.20', ts:20260720 } ] },
+    { id:'c9',  name:'小林 志保',        type:'user',    color:'linear-gradient(145deg,#8a9aaa,#4a5a7a)', watch:6,  interest:2,
+      visits:[ { exh:'g7', exhName:'路地裏の詩、冬の記録', period:'2025.12.1 - 2025.12.20', date:'2025.12.6',  ts:20251206 } ] },
+    { id:'c10', name:'Gallery 灯',       type:'gallery', color:'linear-gradient(145deg,#b8a8c8,#8878a8)', watch:4,  interest:0,
+      visits:[ { exh:'g7', exhName:'路地裏の詩、冬の記録', period:'2025.12.1 - 2025.12.20', date:'2025.12.11', ts:20251211 } ] },
+    { id:'c11', name:'吉田 織部',        type:'creator', color:'linear-gradient(145deg,#8aaa6a,#4a7a2a)', watch:8,  interest:1,
+      visits:[ { exh:'g7', exhName:'路地裏の詩、冬の記録', period:'2025.12.1 - 2025.12.20', date:'2025.12.16', ts:20251216 } ] },
+    { id:'c12', name:'山本 結',          type:'user',    color:'linear-gradient(145deg,#c8a8b8,#986878)', watch:13, interest:4,
+      visits:[
+        { exh:'g7', exhName:'路地裏の詩、冬の記録', period:'2025.12.1 - 2025.12.20', date:'2025.12.17', ts:20251217 },
+        { exh:'g5', exhName:'かたちなきものたちの声', period:'2026.7.10 - 2026.7.24', date:'2026.7.22', ts:20260722 },
+      ] },
+  ];
+
+  var ckListEl  = document.getElementById('p413CkList');
+  var ckEmptyEl = document.getElementById('p413CkEmpty');
+  var ckExhSel  = document.getElementById('p413CkFilterExh');
+  var ckSortSel = document.getElementById('p413CkSort');
+  var ckCountEl = document.getElementById('p413CkCount');
+  var ckPagerEl = document.getElementById('p413CkPagination');
+
+  if (ckListEl && ckExhSel && ckSortSel) {
+    var ckPage = 1;
+    var CK_PER_PAGE = 8;
+
+    function ckLatestTs(c) { return Math.max.apply(null, c.visits.map(function (v) { return v.ts; })); }
+    function ckEarliestTs(c) { return Math.min.apply(null, c.visits.map(function (v) { return v.ts; })); }
+
+    var CK_SORTS = {
+      'date-desc':   function (a, b) { return ckLatestTs(b) - ckLatestTs(a); },
+      'date-asc':    function (a, b) { return ckEarliestTs(a) - ckEarliestTs(b); },
+      'name':        function (a, b) { return a.name.localeCompare(b.name, 'ja'); },
+      'engage-desc': function (a, b) { return (b.watch + b.visits.length + b.interest) - (a.watch + a.visits.length + a.interest); },
+    };
+
+    var makeCkItem = function (c) {
+      var visitsSorted = c.visits.slice().sort(function (a, b) { return b.ts - a.ts; });
+      var visitsHtml = visitsSorted.map(function (v) {
+        return '<div class="p313-ck-visit">' +
+          '<span class="p313-ck-visit__date">' + SVG_C_GRAY + v.date + '</span>' +
+          '<span class="p313-ck-visit__exh"><span class="cb cb-content cb-exhibition">exhibition</span>' + v.exhName + ' · ' + v.period + '</span>' +
+        '</div>';
+      }).join('');
+      return '<div class="p2-watcher-item">' +
+        '<a href="#" class="p2-watcher-item__avatar p2-watcher-item__avatar--' + c.type + '" style="background:' + c.color + '">' + c.name.charAt(0) + '</a>' +
+        '<div class="p2-watcher-item__info">' +
+          '<a href="#" class="p2-watcher-item__name">' + c.name + '</a>' +
+          '<div class="p2-watcher-item__counts">' +
+            '<span class="p2-watcher-item__count">' + SVG_W + c.watch + '</span>' +
+            '<span class="p2-watcher-item__count">' + SVG_C + c.visits.length + '</span>' +
+            '<span class="p2-watcher-item__count">' + SVG_I + c.interest + '</span>' +
+          '</div>' +
+          '<div class="p313-ck-visits">' + visitsHtml + '</div>' +
+        '</div>' +
+      '</div>';
+    };
+
+    var renderCk = function () {
+      var fe = ckExhSel.value;
+      var rows = CHECKINS.filter(function (c) {
+        return !fe || c.visits.some(function (v) { return v.exh === fe; });
+      });
+      rows.sort(CK_SORTS[ckSortSel.value] || CK_SORTS['date-desc']);
+      if (ckCountEl) ckCountEl.textContent = rows.length + '件';
+      if (ckEmptyEl) ckEmptyEl.hidden = rows.length !== 0;
+
+      var totalPages = Math.max(1, Math.ceil(rows.length / CK_PER_PAGE));
+      if (ckPage > totalPages) ckPage = totalPages;
+      var pageRows = rows.slice((ckPage - 1) * CK_PER_PAGE, ckPage * CK_PER_PAGE);
+      ckListEl.innerHTML = pageRows.map(makeCkItem).join('');
+      KTN.pagination.render(ckPagerEl, {
+        page: ckPage,
+        totalPages: totalPages,
+        onGoto: function (p) { ckPage = p; renderCk(); },
+      });
+    };
+
+    var renderCkReset = function () { ckPage = 1; renderCk(); };
+    ckExhSel.addEventListener('change', renderCkReset);
+    ckSortSel.addEventListener('change', renderCkReset);
+    renderCk();
+  }
 
   window.ktnRender = function () {};
 };

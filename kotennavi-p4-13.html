@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>オーディエンス管理 — Gallery SOIL 渋谷 | 個展なび</title>
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<body data-w="detail" class="p4-13-page p4-page mgmt-page">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- デモバー -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ロール：</span>
+  <button class="dbtn" onclick="setR('guest',this)">ゲスト</button>
+  <button class="dbtn" onclick="setR('login',this)">ログイン</button>
+  <button class="dbtn on" onclick="setR('user+gallery',this)">gallery本人</button>
+  <button class="dbtn" onclick="setR('admin',this)">管理者</button>
+</div>
+
+<div class="shell">
+<div class="content-wrap" id="contentWrap">
+
+  <header class="ktn-header" id="ktnHeader">
+    <div class="ktn-header__inner">
+      <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+      <div class="ktn-hdr-actions" id="ktnActs"></div>
+    </div>
+  </header>
+
+  <main class="ktn-main" id="ktnMain">
+    <div class="ktn-content">
+
+      <!-- ギャラリー 文脈ストリップ（identity strip） -->
+      <div class="ktn-mgmt-context">
+        <a class="ktn-mgmt-context__media ktn-mgmt-context__media--gallery" href="kotennavi-p4.html" style="background:linear-gradient(135deg,#c8a888,#8b5e3c)">SOIL</a>
+        <div class="ktn-mgmt-context__body">
+          <div class="ktn-mgmt-context__badges">
+            <span class="cb cb-person cb-gallery">gallery</span>
+          </div>
+          <div class="ktn-mgmt-context__name"><a href="kotennavi-p4.html">Gallery SOIL 渋谷</a></div>
+          <div class="ktn-mgmt-context__meta">絵画・現代美術 · 東京・渋谷</div>
+        </div>
+        <div class="ktn-mgmt-context__actions">
+          <a class="ktn-mgmt-context__view" href="kotennavi-p4.html">ギャラリーページへ →</a>
+        </div>
+      </div>
+
+      <!-- 管理ボックス（構造は p3-13 と共通＝.p313-* を再利用） -->
+      <div class="p413-wrap ktn-mgmt-wrap ktn-mgmt-stack">
+
+        <!-- ページタイトル -->
+        <div class="ktn-mgmt-head">
+          <h2 class="ktn-mgmt-head__title">オーディエンス管理</h2>
+          <p class="ktn-mgmt-head__en">AUDIENCE</p>
+          <p class="ktn-mgmt-head__desc">あなたをウォッチしているユーザーと、あなたの展覧会にチェックインしたユーザーを確認できます。通知の有無もここで設定できます。</p>
+        </div>
+
+        <!-- 1. サマリー -->
+        <section class="ktn-section">
+          <div class="ktn-section__head">
+            <h3 class="ktn-section__title">サマリー<span class="ktn-sec-en">Overview</span></h3>
+          </div>
+          <div class="ins-kpi-grid">
+            <div class="ins-kpi">
+              <p class="ins-kpi__label">
+                <svg class="ins-kpi__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="6.5"/><circle cx="8" cy="8" r="2.4"/></svg>
+                総ウォッチャー数
+              </p>
+              <p class="ins-kpi__val">218<span class="unit">人</span></p>
+            </div>
+            <div class="ins-kpi">
+              <p class="ins-kpi__label">
+                <svg class="ins-kpi__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="6.5"/><circle cx="8" cy="8" r="2.4"/></svg>
+                新規ウォッチャー
+              </p>
+              <p class="ins-kpi__val">42<span class="unit">人</span></p>
+              <span class="ins-kpi__delta ins-kpi__delta--up">▲ 18%<span class="ins-kpi__delta-note">前期間比・過去30日</span></span>
+            </div>
+            <div class="ins-kpi">
+              <p class="ins-kpi__label">
+                <svg class="ins-kpi__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="6" r="3"/><path d="M8 9c-3 0-5 2-5 4.5h10C13 11 11 9 8 9z"/></svg>
+                チェックイン人数
+              </p>
+              <p class="ins-kpi__val">96<span class="unit">人</span></p>
+            </div>
+            <div class="ins-kpi">
+              <p class="ins-kpi__label">
+                <svg class="ins-kpi__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="6" r="3"/><path d="M8 9c-3 0-5 2-5 4.5h10C13 11 11 9 8 9z"/></svg>
+                新規チェックイン
+              </p>
+              <p class="ins-kpi__val">21<span class="unit">人</span></p>
+              <span class="ins-kpi__delta ins-kpi__delta--flat">― 増減なし<span class="ins-kpi__delta-note">前期間比・過去30日</span></span>
+            </div>
+          </div>
+          <p class="p313-kpi-guide"><a class="ktn-guide-link" href="kotennavi-p4-12.html">ウォッチャー・チェックイン推移の詳細はインサイトで見る →</a></p>
+        </section>
+
+        <!-- 2. 通知設定 -->
+        <section class="ktn-section">
+          <div class="ktn-section__head">
+            <h3 class="ktn-section__title">通知設定<span class="ktn-sec-en">Notifications</span></h3>
+          </div>
+          <div class="p313-notify-list">
+            <div class="p313-notify-row">
+              <div class="p313-notify-row__body">
+                <p class="p313-notify-row__title">新しいオーディエンスの通知</p>
+                <p class="p313-notify-row__desc">新しくウォッチしてくれた人や、あなたの展覧会にチェックインした人がいたとき、メールで通知を受け取ります。</p>
+              </div>
+              <button type="button" class="ktn-switch is-on p313-notify-sw" id="p413NotifySw" role="switch" aria-checked="true" title="クリックで通知のオン/オフを切り替え">
+                <span class="ktn-switch__track"><span class="ktn-switch__knob"></span></span>
+                <span class="ktn-switch__label">受け取る</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- 3. 一覧（ウォッチャー／チェックイン タブ切替） -->
+        <section class="ktn-section">
+          <div class="ktn-section__head">
+            <h3 class="ktn-section__title">一覧<span class="ktn-sec-en">Audience List</span></h3>
+          </div>
+
+          <nav class="p313-tabs" id="p413Tabs" aria-label="表示切替">
+            <button type="button" class="p313-tab is-active" data-tab="watch">ウォッチャー <span class="ktn-count ktn-count--pill">218</span></button>
+            <button type="button" class="p313-tab" data-tab="checkin">チェックイン <span class="ktn-count ktn-count--pill is-idle">96</span></button>
+          </nav>
+
+          <!-- ウォッチャー タブ -->
+          <div class="p313-tab-panel" id="p413PanelWatch" data-panel="watch">
+            <div class="p313-toolbar">
+              <div class="p313-toolbar__filters">
+                <label class="p313-filter">
+                  <span class="p313-filter__label">並べ替え</span>
+                  <select class="p313-filter__sel" id="p413Sort">
+                    <option value="since-desc">ウォッチが新しい順</option>
+                    <option value="since-asc">ウォッチが古い順</option>
+                    <option value="name">名前順</option>
+                    <option value="engage-desc">エンゲージメントが多い順</option>
+                  </select>
+                </label>
+              </div>
+              <span class="ktn-count ktn-count--result" id="p413Count"></span>
+            </div>
+
+            <div class="p2-watcher-list" id="p413List" aria-label="ウォッチャー一覧"></div>
+
+            <div class="p313-empty" id="p413Empty" hidden>
+              <p class="p313-empty__msg">該当するウォッチャーがいません。</p>
+            </div>
+
+            <nav class="ktn-pagination" id="p413Pagination" aria-label="ページ送り" hidden></nav>
+          </div>
+
+          <!-- チェックイン タブ -->
+          <div class="p313-tab-panel" id="p413PanelCheckin" data-panel="checkin" hidden>
+            <div class="p313-toolbar">
+              <div class="p313-toolbar__filters">
+                <label class="p313-filter">
+                  <span class="p313-filter__label">展覧会</span>
+                  <select class="p313-filter__sel" id="p413CkFilterExh">
+                    <option value="">すべて</option>
+                    <option value="g4">色彩のかけら、その先へ</option>
+                    <option value="g5">かたちなきものたちの声</option>
+                    <option value="g7">路地裏の詩、冬の記録</option>
+                  </select>
+                </label>
+                <label class="p313-filter">
+                  <span class="p313-filter__label">並べ替え</span>
+                  <select class="p313-filter__sel" id="p413CkSort">
+                    <option value="date-desc">チェックインが新しい順</option>
+                    <option value="date-asc">チェックインが古い順</option>
+                    <option value="name">名前順</option>
+                    <option value="engage-desc">エンゲージメントが多い順</option>
+                  </select>
+                </label>
+              </div>
+              <span class="ktn-count ktn-count--result" id="p413CkCount"></span>
+            </div>
+
+            <div class="p2-watcher-list" id="p413CkList" aria-label="チェックイン一覧"></div>
+
+            <div class="p313-empty" id="p413CkEmpty" hidden>
+              <p class="p313-empty__msg">該当するチェックインがありません。</p>
+            </div>
+
+            <nav class="ktn-pagination" id="p413CkPagination" aria-label="ページ送り" hidden></nav>
+          </div>
+        </section>
+
+      </div><!-- /.ktn-mgmt-wrap -->
+
+    </div><!-- /.ktn-content -->
+  </main>
+
+</div><!-- /.content-wrap -->
+</div><!-- /.shell -->
+
+<nav class="ktn-bottom-nav" id="ktnBottomNav"><div class="ktn-bottom-nav__inner" id="ktnBottomNavInner"></div></nav>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Top","item":"https://koten-navi.com/"},{"@type":"ListItem","position":2,"name":"ギャラリー","item":"https://koten-navi.com/p10-3"},{"@type":"ListItem","position":3,"name":"Gallery SOIL 渋谷","item":"https://koten-navi.com/p4"},{"@type":"ListItem","position":4,"name":"オーディエンス管理"}]}</script>
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+  KTN.init({ page: 'p4-13', role: 'user+gallery' });
+  function setR(role, btn) {
+    document.querySelectorAll('.dbtn').forEach(function(b){ b.classList.remove('on'); });
+    btn.classList.add('on');
+    window.curRole = role;
+    if (window.ktnRender) ktnRender();
+  }
+</script>
+</body>
+</html>
