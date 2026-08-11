@@ -70,7 +70,7 @@
 | P3-3 | クリエイター-作品一覧 |  | R | R | R | R | R | R | --w-entity| kotennavi-p3-3.html | Fix済 |
 | P3-11 | クリエイター-編集 |  |  |  |  | W |  | W | --w-detail | kotennavi-p3-11.html | Fix済 |
 | P3-12 | クリエイター-インサイト |  |  |  |  | R |  | R | --w-article | kotennavi-p3-12.html | 調整中 |
-| P3-13 | クリエイター-オーディエンス管理 |  |  |  |  | R/W |  | R/W | --w-detail | kotennavi-p3-13.html | 調整中 |
+| P3-13 | クリエイター-オーディエンス管理 |  |  |  |  | R/W |  | R/W | --w-detail | kotennavi-p3-13.html | Fix済 |
 | P3-14 | クリエイター-ポートフォリオ管理 | L |  |  |  | R/W |  | R/W | --w-detail | kotennavi-p3-14.html | Fix済 |
 | P3-15 | クリエイター-リエゾン+コンソール | L+ |  |  |  | R/W |  | R/W | --w-detail | kotennavi-p3-15.html | Fix済 |
 | P3-16 | クリエイター-取引デスク | L+ |  |  |  | R/W |  | R/W | --w-detail | kotennavi-p3-16.html | Fix済 |
@@ -89,7 +89,7 @@
 | P4-2 | ギャラリー-記事一覧 |  | R | R | R | R | R | R | --w-entity | kotennavi-p4-2.html | Fix済 |
 | P4-11 | ギャラリー-編集 | L,L+ |  |  |  |  | W | W | --w-detail | kotennavi-p4-11.html | Fix済 |
 | P4-12 | ギャラリー-インサイト |  |  |  |  |  | R | R | --w-article | # | 未作成 |
-| P4-13 | ギャラリー-オーディエンス管理 |  |  |  |  |  | R/W | R/W | --w-detail | kotennavi-p4-13.html | 調整中 |
+| P4-13 | ギャラリー-オーディエンス管理 |  |  |  |  |  | R/W | R/W | --w-detail | kotennavi-p4-13.html | Fix済 |
 | P4-14 | ギャラリー-インベントリー管理 | L,L+ |  |  |  |  | R/W | R/W | --w-detail | kotennavi-p4-14.html | Fix済 |
 | P4-15 | ギャラリー-リエゾン+コンソール | L+ |  |  |  |  | R/W | R/W | --w-detail | kotennavi-p4-15.html | Fix済 |
 | P4-16 | ギャラリー-取引デスク | L+ |  |  |  |  | R/W | R/W | --w-detail | kotennavi-p4-16.html | Fix済 |
@@ -156,9 +156,9 @@
 | ID | ページ名 | L/L+ | guest | login | user+ | creator | gallery | admin | max-width | html-file | 進捗 |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | P10 | 検索-展覧会 |  | R | R | R | R | R | R | --w-index | kotennavi-p10.html | プロトタイプ |
-| P10-1 | 検索-作品 |  |  | R | R | R | R | R | --w-index | # | 未作成 |
-| P10-2 | 検索-クリエイター |  |  | R | R | R | R | R | --w-index | # | 未作成 |
-| P10-3 | 検索-ギャラリー |  |  | R | R | R | R | R | --w-index | # | 未作成 |
+| P10-1 | 検索-作品 |  |  | R | R | R | R | R | --w-index | kotennavi-p10-1.html | プロトタイプ |
+| P10-2 | 検索-クリエイター |  |  | R | R | R | R | R | --w-index | kotennavi-p10-2.html | プロトタイプ |
+| P10-3 | 検索-ギャラリー |  |  | R | R | R | R | R | --w-index | kotennavi-p10-3.html | プロトタイプ |
 | P10-4 | 特集-展覧会 |  | R | R | R | R | R | R/W | --w-entity | # | 未作成 |
 | P10-5 | 特集-作品 |  | R | R | R | R | R | R/W | --w-entity | # | 未作成 |
 | P10-6 | 特集-クリエイター |  | R | R | R | R | R | R/W | --w-entity | # | 未作成 |
@@ -238,16 +238,18 @@
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | P90 | 管理者メニュー |  |  |  |  |  |  | R/W | --w-detail| # | 未作成 |
 | P90-1 | 管理者-ユーザー新規/クローン |  |  |  |  |  |  | R/W | --w-detail | # | 未作成 |
-| P90-2 | 管理者-クリエイター/ギャラリー機能申込管理 |  |  |  |  |  |  | R/W | --w-detail | # | 未作成 |
+| P90-2 | 管理者-クリエイター/ギャラリー機能申込管理 |  |  |  |  |  |  | R/W | --w-detail | kotennavi-p90-2.html | 調整中 |
+| P90-2-1 | 管理者-クリエイター/ギャラリー機能申込審査 |  |  |  |  |  |  | R/W | --w-detail | kotennavi-p90-2-1.html | 調整中 |
 | P90-3 | 管理者-展覧会新規 |  |  |  |  |  |  | R/W | --w-detail | # | 未作成 |
 | P90-4 | 管理者-本日開催・公開の展覧会一覧 |  |  |  |  |  |  | R/W | --w-article | # | 未作成 |
 | P90-5 | 管理者-未公開の展覧会一覧 |  |  |  |  |  |  | R/W | --w-article | # | 未作成 |
 | P90-6 | 管理者-最新の展覧会一覧 |  |  |  |  |  |  | R/W | --w-article | # | 未作成 |
 | P90-7 | 管理者-クリエイター新規/クローン |  |  |  |  |  |  | R/W | --w-detail | # | 未作成 |
 | P90-8 | 管理者-ギャラリー新規/クローン |  |  |  |  |  |  | R/W | --w-detail | # | 未作成 |
-| P90-9 | 管理者-メールテンプレート管理 |  |  |  |  |  |  | R/W | --w-detail | # | 未作成 |
+| P90-9 | 管理者-メールテンプレート管理 |  |  |  |  |  |  | R/W | --w-detail | kotennavi-p90-9.html | 調整中 |
 | P90-10 | 管理者-リエゾンプラスダッシュボード | L+ |  |  |  |  |  | R/W | --w-detail | # | 未作成 |
-| P90-11 | 管理者-リエゾンプラス機能申込管理 | L+ |  |  |  |  |  | R/W | --w-detail | # | 未作成 |
+| P90-11 | 管理者-リエゾンプラス機能申込管理 | L+ |  |  |  |  |  | R/W | --w-detail | kotennavi-p90-11.html | 調整中 |
+| P90-11-1 | 管理者-リエゾンプラス機能申込審査 | L+ |  |  |  |  |  | R/W | --w-detail | kotennavi-p90-11-1.html | 調整中 |
 | P90-12 | 管理者-リエゾンプラスコンソール | L+ |  |  |  |  |  | R/W | --w-detail | # | 未作成 |
 | P90-13 | 管理者-取引デスク | L+ |  |  |  |  |  | R/W | --w-detail | # | 未作成 |
 | P90-14 | 管理者-販売代金管理 | L+ |  |  |  |  |  | R/W | --w-detail | # | 未作成 |

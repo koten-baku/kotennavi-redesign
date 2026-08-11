@@ -1141,7 +1141,9 @@ line-clamp:2;}
 .cb-article,
 .cb-artwork,
 .cb-review,
-.cb-news{
+.cb-news,
+.cb-normal,
+.cb-abnormal{
   font-family:'Cinzel',serif;
   font-size:.58rem;font-weight:600;
   letter-spacing:.14em;text-transform:uppercase;
@@ -1154,6 +1156,9 @@ line-clamp:2;}
 .cb-artwork   {color:#6b46a8;background:rgba(107,70,168,.08);border-left-color:#6b46a8}
 .cb-review    {color:#b86a10;background:rgba(184,106,16,.08);border-left-color:#b86a10}
 .cb-news      {color:#c0392b;background:rgba(192,57,43,.08);border-left-color:#c0392b}
+/* P90-9メールテンプレートのパターン区分バッジ（正常系＝cb-article系の緑、非正常系＝cb-review系のamberを踏襲・新規色相は増やさない） */
+.cb-normal    {color:#2e7a4e;background:rgba(46,122,78,.08);border-left-color:#2e7a4e}
+.cb-abnormal  {color:#b86a10;background:rgba(184,106,16,.08);border-left-color:#b86a10}
 
 /* ── ダーク背景用 ── */
 .dark .cb-creator,
@@ -1749,6 +1754,7 @@ body.guest .panel-light .ktn-icon-btn .tip::after{border-bottom-color:#431407}
   transition:background .12s,border-color .12s,color .12s,opacity .12s;
 }
 .ktn-op-btn:hover{background:var(--paper)}
+.ktn-op-btn[hidden]{display:none} /* display:inline-flex が UA の [hidden] を上書きするためのガード */
 /* primary — solid filled（主アクション・固定ブルー・ロール非依存） */
 .ktn-op-btn--primary{background:var(--accent);border-color:var(--accent);color:#fff}
 .ktn-op-btn--primary:hover{background:var(--accent);opacity:.88}
@@ -3352,7 +3358,7 @@ line-clamp:2;}
 /* タブ件数は親タブの is-active で active 表示に戻す（.is-idle を上書き）。
    creator/gallery は淡tint(rgba .1)が --tag-bg とほぼ同色で active が視認できないため、
    全ロール共通でロール色ソリッド塗り＋白文字にして idle(中立グレー)との差を明確化 */
-.p5-type-tab.is-active .ktn-count--pill,.p514-tab.is-active .ktn-count--pill,.p315-tab-btn.is-active .ktn-count--pill,.p314-tab.is-active .ktn-count--pill,.p313-tab.is-active .ktn-count--pill{background:var(--page-accent,#b8608c);color:#fff;font-weight:600}
+.p5-type-tab.is-active .ktn-count--pill,.p514-tab.is-active .ktn-count--pill,.p315-tab-btn.is-active .ktn-count--pill,.p314-tab.is-active .ktn-count--pill,.p313-tab.is-active .ktn-count--pill,.p902-tab-btn.is-active .ktn-count--pill{background:var(--page-accent,#b8608c);color:#fff;font-weight:600}
 
 /* ── 編集ページ共通タイトルヘッダー .ktn-edit-head ── */
 .ktn-edit-head{margin-bottom:20px}
@@ -10205,6 +10211,19 @@ body.p3-3-page .aw--plus .aw__foot>.p33-console-wrap{order:3}
 .ktn-admin-note__textarea:focus{outline:none;border-color:#3a4a5a;box-shadow:0 0 0 2px rgba(58,74,90,.12)}
 @media(max-width:540px){.ktn-admin-note{margin:24px 8px 4px}}
 
+/* ── 審査ステータスチップ（.ktn-review-status・管理者申込審査系共通・2026-08-03新設）──
+   機能申込（P90-2＝creator/gallery機能／P90-11＝LIAISON+機能）で使う審査ステータス表示。
+   両ページで終端状態の名称が異なる（P90-2＝確認中/利用開始/取消・差し戻し無し／
+   P90-11＝確認中/利用開始/差し戻し・独自の3値フロー）ため、--cancelled と --returned を別クラスとして両方維持する。
+   .p318-status は展覧会固有状態専用のため流用せず、審査系専用の別コンポーネントとして新設。
+   pill+枠線は .p318-status と同系の視覚言語（border:currentColor）を踏襲し統一感を保つ。 */
+.ktn-review-status{display:inline-flex;align-items:center;gap:4px;font-family:var(--fm);font-size:.6rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:20px;border:1px solid currentColor;white-space:nowrap}
+.ktn-review-status--new{color:#5b6470;background:rgba(91,100,112,.08)}
+.ktn-review-status--pending{color:#a06010;background:rgba(160,96,16,.06)}
+.ktn-review-status--granted{color:#1a7a42;background:rgba(26,122,66,.06)}
+.ktn-review-status--returned{color:#b43c14;background:rgba(180,60,20,.06)}
+.ktn-review-status--cancelled{color:#5b6470;background:rgba(91,100,112,.1)}
+
 /* ── 長文タイトル/名前/キャプション/仕様値のフォールバック折り返し（表示系・全ページ共通・2026-07-22）──
    稀に異常に長い作品名・展覧会名・人名・キャプション・仕様値が入力された場合でも、スペースの無い連続
    文字列でカード/ヒーロー/グリッドを横に突き破らないようにする。overflow-wrap:anywhere は通常の（スペースで
@@ -10610,7 +10629,12 @@ a.p514-aw__exh-name:hover{text-decoration:underline;color:var(--accent,#2a7fa8)}
 .ktn-txn-help__ctx dt{flex:0 0 100px;white-space:nowrap;color:var(--muted);font-family:var(--fn)}
 .ktn-txn-help__ctx dd{color:var(--ink);font-family:var(--fn)}
 .ktn-txn-help__ctx dd.is-id{font-family:var(--fm)}
+.ktn-txn-help__ctx dd .ktn-txn-help__ctx-sub{display:block;margin-top:2px;font-size:.72rem;color:var(--muted)}
 .ktn-txn-help__ctx-note{margin-top:8px;font-size:.72rem;color:var(--muted)}
+@media(max-width:540px){
+  .ktn-txn-help__ctx>div{flex-direction:column;gap:2px}
+  .ktn-txn-help__ctx dt{flex:none}
+}
 .p515-comments__list{display:flex;flex-direction:column;gap:12px;margin-bottom:14px}
 .p515-comment{display:flex;gap:10px}
 .p515-comment__avatar{width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:#fff;flex-shrink:0}
@@ -10729,6 +10753,13 @@ a.p514-aw__exh-name:hover{text-decoration:underline;color:var(--accent,#2a7fa8)}
 /* モーダル内 明細リスト（確定内容・送料内訳等） */
 .p515-modal__detail{margin-top:10px;font-size:.88rem;color:var(--ink);line-height:1.8;display:flex;flex-direction:column;gap:2px}
 .p515-modal__detail-total{font-weight:700;margin-top:4px;border-top:1px solid var(--border);padding-top:6px}
+
+/* 取引明細モーダル（p3-16/p4-16「取引完了/完了(アーカイブ)」の取引明細を確認・要約タイムライン） */
+.p316-detail-timeline{margin-top:16px}
+.p316-detail-timeline__row{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:7px 0;border-top:1px solid var(--border);font-size:.78rem}
+.p316-detail-timeline__row:first-child{border-top:none}
+.p316-detail-timeline__label{color:var(--ink);font-family:var(--fn)}
+.p316-detail-timeline__date{color:var(--muted);font-family:var(--fm);white-space:nowrap}
 
 /* 領収書モーダル（p515-invoice-sheet）：出品者名義で生成する書式付き領収書。印刷（PDFで保存）にも同じマークアップを使う */
 .p515-modal--invoice{max-width:480px}
@@ -12230,6 +12261,219 @@ a.p319-item__dest-name:hover{color:var(--page-accent)}
   .p319-filter__sel{min-width:0;width:100%}
   .p319-item__main{flex-wrap:wrap}
   .p319-item__actions{flex-wrap:wrap}
+  .p902-nidjump{flex-wrap:wrap}
+  .p902-nidjump__input{max-width:none;width:100%}
+}
+
+/* ── P90-2 管理者-クリエイター/ギャラリー機能申込管理（2026-08-03新設／2026-08-03 2タブ化＋1行カード→表形式へ改修）
+   ツールバー・ゼロ状態・ページングの骨格は .p319-* を共有ネームスペースとして再利用（P3-18/P4-18 と同じ流用方針）。
+   一覧本体は P3-15「購入者一覧」タブと同じ .p315-archive-table 汎用テーブル（モバイルでは自動的にカード折返し）を再利用し、
+   行クリックで審査モーダルを開く挙動のみ .p902-table 側で追加。
+   審査対象1件＝1行。クリックで審査モーダル（.p319-del-modal シェルを共有＋幅広modifier）を開く。
+   P90-11（LIAISON+申込管理）も同じ .p902-review-* モーダル部品・.ktn-review-status を再利用する想定。
+   NIDクイックオープン（.p902-nidjump）・入力内容CSV自動生成（.p902-csv）・新規作成/既存リンクの
+   選択フロー自体は P90-2 固有（P90-11 は既存ページを保有済みの申込のため対象外）。ただし .p902-flow-panel／
+   .p902-cancel-check 自体は「送信メールの件名・本文を編集する」共通パネル部品として P90-11-1 の
+   案内メール・差し戻し連絡メールでも再利用する（2026-08-09）。 */
+
+/* タブ（未処理・処理中／処理完了・.p315-tab-nav と同値のページ専用ネームスペース） */
+.p902-tab-nav{display:flex;border-bottom:2px solid var(--border);overflow-x:auto;scrollbar-width:none;margin-bottom:16px}
+.p902-tab-nav::-webkit-scrollbar{display:none}
+.p902-tab-btn{background:none;border:none;border-bottom:2px solid transparent;padding:9px 16px;font-family:var(--fn);font-size:.82rem;font-weight:400;color:var(--muted);cursor:pointer;display:inline-flex;align-items:center;gap:6px;margin-bottom:-2px;transition:color .15s;white-space:nowrap}
+.p902-tab-btn:hover:not(.is-active){color:var(--ink)}
+.p902-tab-btn.is-active{color:var(--page-accent);border-bottom-color:var(--page-accent);font-weight:600}
+.p902-tab-panel[hidden]{display:none}
+
+/* 一覧テーブル（.p315-archive-table を流用・行クリックで審査モーダルを開く） */
+.p902-table tbody tr{cursor:pointer;transition:background-color .15s}
+.p902-table tbody tr:hover{background:var(--paper)}
+.p902-table tbody tr:hover .p902-cell--name{color:var(--page-accent);text-decoration:underline;text-underline-offset:2px}
+/* UIDは識別コードで名前ではないため強調(bold)は不要。ホバー時のアクセント色・下線（クリック可能を示すサイン）のみ維持（2026-08-10） */
+.p902-cell--muted{color:var(--muted)}
+/* 「確認中」バッジの下に何を確認しているかを別行で添える（バッジ自体の文言は固定のまま・2026-08-08） */
+.p902-proc-reason{margin-top:4px;font-family:var(--fn);font-size:.68rem;color:var(--muted)}
+/* 1セルに2項目（処理内容＋完了日時等）をまとめた列の見出しを、セル内表示と同じく主項目＋副項目を縦2段で示す（2026-08-10） */
+.p902-th-sub{display:block;font-size:.62rem;font-weight:400;margin-top:2px}
+/* UID列は .p315-archive-table 既定の min-width:100px だと列数の多いこのテーブルでは間延びするため詰める（列順が変わっても効くよう位置ではなくクラスで指定） */
+.p902-table th.p902-col-uid,.p902-table td.p902-col-uid{min-width:64px;padding-right:8px}
+/* 処理完了タブ（7列）でも760px枠内にステータス列まで収まるよう、.p315-archive-table既定16pxの列間隔を全体的に詰める。
+   両端の列のみ枠端の見た目を保つため16pxを維持し、中間列（申込種別・ログインメールアドレス等）は10pxへ縮小（2026-08-10） */
+.p902-table th,.p902-table td{padding-left:10px;padding-right:10px}
+.p902-table th:first-child,.p902-table td:first-child{padding-left:16px}
+.p902-table th:last-child,.p902-table td:last-child{padding-right:16px}
+/* 処理完了タブ等、列数の多い行で項目（ログインメールアドレス・処理内容等）が2行に折り返され行の高さがバラつくのを防ぐ。表全体は .p315-archive-table-wrap の横スクロールで対応するためラップさせない（モバイルのカード折返しでは通常どおり折返し可） */
+.p902-table td{white-space:nowrap}
+/* P90-11処理完了タブの「処理内容」列（Stripeステータス／差し戻し理由）は文言が長くなりうるため、この列のみ折返しを許可し
+   他列はnowrapのまま760px枠に収まるようにする（2026-08-10） */
+#p9011ListDone td:nth-child(6){white-space:normal}
+/* ログインメールアドレス列（両タブ・P90-2/P90-11共通で5列目）も長いアドレスで表がはみ出すため折返しを許可。
+   他列の間隔・nowrapはそのまま維持（現状の詰め方はちょうど良いとのユーザー確認済み・2026-08-10） */
+.p902-table td:nth-child(5){white-space:normal}
+@media(max-width:640px){
+  .p902-table td{white-space:normal}
+}
+
+/* 審査モーダル（.p319-del-modal シェルを共有・幅広+スクロール化） */
+.p902-review-modal .p319-del-modal__panel{max-width:640px;max-height:88vh;overflow-y:auto;padding:26px 26px 22px}
+
+/* P90-9 メールテンプレート新規／編集モーダル（.p319-del-modal シェルを共有・幅広+スクロール化・.p211-field を縦積み） */
+.p909-edit-modal .p319-del-modal__panel{max-width:640px;max-height:88vh;overflow-y:auto;padding:26px 26px 22px}
+.p909-edit-modal .p211-field{margin-bottom:16px}
+.p909-edit-modal .p211-help code{font-family:var(--fm);font-size:.72rem;background:var(--tag-bg,#f5f3ef);padding:1px 5px;border-radius:3px;margin-right:2px}
+.p909-toolbar-row{display:flex;justify-content:flex-end;margin:0 0 14px}
+
+/* P90-9 一覧テーブル（.p315-archive-table 基本レイアウトを共有・行クリック遷移は無いため .p902-table は使わない）
+   パターン／使用画面・識別キー／テンプレート名／更新日／状態／操作 の6列 */
+.p909-cell--meta{line-height:1.4}
+.p909-cell__screen{font-size:.76rem;color:var(--ink)}
+.p909-cell__key{margin-top:2px;font-family:var(--fm);font-size:.66rem;color:var(--muted);letter-spacing:.02em}
+.p909-cell--title{font-family:var(--fs);font-size:.92rem;font-weight:600;color:var(--ink);line-height:1.4}
+.p909-cell--muted{font-family:var(--fm);font-size:.72rem;color:var(--muted);white-space:nowrap}
+.p909-cell--actions{white-space:nowrap}
+/* 編集・削除ボタンを縦並びにする共通ラッパー（手動送信・自動送信タブで共有）。
+   <td>自体にdisplay:flexを付けると table-cell から外れ行の高さストレッチに参加できず罫線がずれるため、
+   flex化するのはtd内側のこのラッパーのみに留める */
+.p909-actions-stack{display:flex;flex-direction:column;align-items:flex-start;gap:6px}
+.p909-table td{vertical-align:middle}
+/* 自動送信タブ：カテゴリごとに独立した<table>のため、既定(auto)のままだと内容の違いで列幅・列位置が表ごとにずれる。
+   table-layout:fixedで共通幅を明示し、3表とも同じx位置に列を揃える（件名列のみ幅指定を持たせず残り幅を吸収） */
+.p909-auto-table{table-layout:fixed}
+.p909-auto-table th:nth-child(1),.p909-auto-table td:nth-child(1){width:8%}
+.p909-auto-table th:nth-child(2),.p909-auto-table td:nth-child(2){width:20%}
+.p909-auto-table th:nth-child(3),.p909-auto-table td:nth-child(3){width:26%;white-space:normal}
+.p909-auto-table th:nth-child(5),.p909-auto-table td:nth-child(5){width:10%}
+.p909-auto-table th:nth-child(6),.p909-auto-table td:nth-child(6){width:12%}
+/* 自動送信タブ：対象/トリガー元/タイミングの3行メタ */
+.p909-auto-meta__line{font-size:.72rem;color:var(--muted);line-height:1.7}
+
+/* P90-9 タブ（手動送信／自動送信・.p315-tab-nav と同値のページ専用ネームスペース・is-active方式） */
+.p909-tab-nav{display:flex;border-bottom:2px solid var(--border);margin:4px 0 16px;overflow-x:auto;scrollbar-width:none}
+.p909-tab-nav::-webkit-scrollbar{display:none}
+.p909-tab-btn{background:none;border:none;border-bottom:2px solid transparent;padding:9px 4px;margin-right:20px;font-family:var(--fn);font-size:.82rem;font-weight:400;color:var(--muted);cursor:pointer;display:inline-flex;align-items:center;gap:6px;margin-bottom:-2px;transition:color .15s;white-space:nowrap}
+.p909-tab-btn:hover:not(.is-active){color:var(--ink)}
+.p909-tab-btn.is-active{color:var(--page-accent,#3a4a5a);border-bottom-color:var(--page-accent,#3a4a5a);font-weight:600}
+.p909-tab-btn.is-active .ktn-count--pill{background:var(--page-accent,#3a4a5a);color:#fff;font-weight:600}
+.p909-tab-panel[hidden]{display:none}
+
+/* P90-9 自動送信タブ（可視化・読み取り専用テーブル。カテゴリごとにグルーピング・表本体は手動送信タブと
+   同じ .p315-archive-table / .p909-cell--* を共有） */
+.p909-auto-intro{font-size:.78rem;color:var(--muted);line-height:1.7;margin:0 0 16px}
+.p909-auto-group{margin-bottom:22px}
+.p909-auto-group:last-child{margin-bottom:0}
+.p909-auto-group__title{display:flex;align-items:center;gap:8px;font-family:var(--fn);font-size:.84rem;font-weight:600;color:var(--ink);margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+
+/* P90-9 自動送信・文面編集モーダルの発火点コンテキスト表示（読み取り専用） */
+.p909-auto-edit-ctx{background:var(--tag-bg,#f5f3ef);border:1px solid var(--border);border-radius:4px;padding:10px 12px;margin-bottom:16px;font-size:.74rem;color:var(--muted);line-height:1.8}
+.p909-auto-edit-ctx strong{color:var(--ink);font-weight:600;margin-right:6px}
+
+.p902-review-panel__close{position:absolute;top:16px;right:16px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;border:none;background:none;color:var(--muted);cursor:pointer;font-size:1rem;border-radius:4px}
+.p902-review-panel__close:hover{background:var(--tag-bg,#f5f3ef);color:var(--ink)}
+.p902-review-head{padding-right:30px;border-bottom:1px solid var(--border);margin-bottom:18px;padding-bottom:16px}
+.p902-review-head__badges{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.p902-review-head__name{margin:0 0 4px;font-family:var(--fn);font-size:1.15rem;font-weight:600;color:var(--ink)}
+.p902-review-head__meta{margin:0;font-family:var(--fn);font-size:.76rem;color:var(--muted);line-height:1.7}
+
+/* 入力内容ボックス（申込者が入力した内容であることを視覚的に明示。旧モーダルでは全体がパネルに
+   包まれていたため不要だったが、ページ化で管理者コメント等の他要素と地続きになったため導入・2026-08-09） */
+.p902-input-box{position:relative;margin:0 0 20px;padding:16px 18px 2px;background:#fff;border:1px solid var(--border);border-radius:4px}
+.p902-input-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--page-accent);border-radius:4px 4px 0 0}
+.p902-input-box__label{display:flex;align-items:baseline;gap:8px;margin:2px 0 14px}
+.p902-input-box__label-jp{font-family:var(--fn);font-size:.7rem;font-weight:700;color:var(--ink)}
+.p902-input-box__label-en{font-family:var(--font-en-label);font-size:.58rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.p902-input-box .p902-review-section:last-child{margin-bottom:16px}
+
+.p902-review-section{margin:0 0 20px}
+.p902-review-result{margin:20px 0 0;padding:14px 16px;background:var(--tag-bg,#f5f3ef);border:1px solid var(--border);border-radius:4px}
+.p902-review-result .p902-review-section__title{border-bottom:none;padding-bottom:0;margin-bottom:8px}
+.p902-review-section__title{margin:0 0 10px;font-family:var(--fn);font-size:.82rem;font-weight:700;color:var(--ink);padding-bottom:6px;border-bottom:1px solid var(--border)}
+.p902-review-section__note{margin:0 0 10px;font-family:var(--fn);font-size:.72rem;color:var(--muted);line-height:1.7}
+.p902-review-grid{display:grid;grid-template-columns:150px 1fr;gap:9px 14px}
+.p902-review-grid dt{font-family:var(--fm);font-size:.62rem;font-weight:600;letter-spacing:.04em;color:var(--muted);padding-top:1px}
+.p902-review-grid dd{margin:0;font-family:var(--fn);font-size:.84rem;color:var(--ink);line-height:1.6}
+.p902-review-grid dd a{color:var(--accent)}
+.p902-review-links{display:flex;flex-direction:column;gap:3px}
+
+/* 本人確認書類のダミー画像（確認中のみ表示・P90-11-1）。実ファイルは持たず、カード系ポスターと同じ
+   グラデーションdivのプレースホルダーで代替する（.ec__poster等サイト標準の画像プレースホルダー手法を踏襲） */
+.p902-kyc-docs{display:flex;flex-wrap:wrap;gap:14px;margin-top:4px}
+.p902-kyc-doc{width:150px}
+.p902-kyc-doc__img{aspect-ratio:3/2;border-radius:4px;border:1px solid var(--border)}
+.p902-kyc-doc__cap{margin:6px 0 0;font-family:var(--fn);font-size:.66rem;color:var(--muted);text-align:center}
+
+/* NIDクイックオープン（一覧上部・p11-2/p11-3の申込通知に含まれるNIDから直接開く） */
+.p902-nidjump{display:flex;align-items:center;gap:8px;margin-bottom:14px;padding:12px 14px;background:var(--tag-bg,#f5f3ef);border-radius:4px}
+.p902-nidjump__label{flex-shrink:0;font-family:var(--fm);font-size:.62rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.p902-nidjump__input{flex:1;max-width:220px;padding:8px 10px;font-family:var(--fm);font-size:.82rem;color:var(--ink);background:#fff;border:1px solid var(--border);border-radius:4px}
+.p902-nidjump__btn{flex-shrink:0}
+
+/* 入力内容CSV（申込を開いた時点で自動生成） */
+.p902-csv{margin:0 0 20px}
+.p902-csv__head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+.p902-csv__hint{margin:0 0 8px;font-family:var(--fn);font-size:.68rem;color:var(--muted);line-height:1.6}
+.p902-csv__box{width:100%;min-height:64px;resize:vertical;padding:9px 11px;font-family:var(--fm);font-size:.72rem;line-height:1.6;color:var(--ink);background:#fff;border:1px solid var(--border);border-radius:4px;white-space:pre;overflow-x:auto}
+
+/* 新規作成／既存リンクの操作パネル（中立トーン・差し戻しパネルの赤系とは色で区別） */
+.p902-flow-panel{margin:20px 0 0;padding:14px 16px;background:var(--tag-bg,#f5f3ef);border:1px solid var(--border);border-radius:4px}
+.p902-flow-panel[hidden]{display:none}
+.p902-flow-panel__title{margin:0 0 10px;font-family:var(--fn);font-size:.82rem;font-weight:700;color:var(--ink)}
+.p902-flow-panel__row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.p902-flow-panel__row[hidden]{display:none}
+.p902-flow-panel__input{flex:1;min-width:160px;padding:9px 11px;font-family:var(--fm);font-size:.85rem;color:var(--ink);background:#fff;border:1px solid var(--border);border-radius:4px}
+.p902-flow-panel__label{display:block;margin:12px 0 4px;font-family:var(--fn);font-size:.72rem;font-weight:600;color:var(--muted)}
+.p902-flow-panel__label:first-child{margin-top:0}
+.p902-flow-panel__dup{margin:10px 0 0;padding:9px 11px;background:rgba(180,60,20,.06);border:1px solid rgba(180,60,20,.25);border-radius:4px;font-family:var(--fn);font-size:.78rem;color:#7a1800;line-height:1.7}
+.p902-flow-panel__dup[hidden]{display:none}
+.p902-flow-panel__hint{margin:10px 0 0;font-family:var(--fn);font-size:.78rem;color:var(--ink);line-height:1.7}
+.p902-flow-panel__hint[hidden]{display:none}
+.p902-flow-panel__actions{display:flex;justify-content:flex-end;gap:10px;margin-top:12px}
+.p902-flow-panel__actions[hidden]{display:none}
+.p902-flow-panel__textarea{width:100%;min-height:150px;resize:vertical;margin-top:10px;padding:10px 12px;font-family:var(--fn);font-size:.8rem;line-height:1.8;color:var(--ink);background:#fff;border:1px solid var(--border);border-radius:4px}
+.p902-flow-panel__textarea[hidden]{display:none}
+.p902-flow-panel__result{margin:12px 0 0;padding:10px 12px;background:rgba(26,122,66,.06);border:1px solid rgba(26,122,66,.3);border-radius:4px;font-family:var(--fn);font-size:.78rem;color:var(--ink);line-height:1.8}
+.p902-flow-panel__result[hidden]{display:none}
+.p902-flow-panel__result strong{font-family:var(--fs);font-weight:600}
+.p902-flow-panel__result a{margin-left:4px;color:var(--accent);text-decoration:underline;text-underline-offset:2px}
+
+.p902-return-panel{margin:20px 0 0;padding:14px 16px;background:rgba(180,60,20,.05);border:1px solid rgba(180,60,20,.3);border-radius:4px}
+.p902-return-panel[hidden]{display:none}
+.p902-return-panel__title{margin:0 0 10px;font-family:var(--fn);font-size:.82rem;font-weight:700;color:#7a1800}
+.p902-return-panel__reasons{display:flex;flex-direction:column;gap:7px;margin-bottom:10px}
+.p902-return-panel__reasons label{display:flex;align-items:center;gap:7px;font-family:var(--fn);font-size:.78rem;color:var(--ink)}
+.p902-return-panel__free{width:100%;min-height:64px;resize:vertical;padding:9px 11px;font-family:var(--fn);font-size:.8rem;line-height:1.7;color:var(--ink);background:#fff;border:1px solid var(--border);border-radius:4px}
+
+/* 確認メール送信済みの小さな注記（返信待ち・procStatus:'reviewing'のまま）
+   送信日時・種別は事実確認の要点のため、文中に埋めず label:value で明示する */
+.p902-inquiry-note{margin:12px 0 0;padding:9px 11px;background:rgba(0,93,167,.06);border:1px solid rgba(0,93,167,.25);border-radius:4px;font-family:var(--fn);font-size:.78rem;color:var(--ink);line-height:1.5}
+.p902-inquiry-note[hidden]{display:none}
+.p902-inquiry-note strong{color:var(--accent)}
+.p902-inquiry-note__meta{display:flex;flex-wrap:wrap;gap:2px 20px;margin-top:5px}
+.p902-inquiry-note__meta-item{display:flex;align-items:baseline;gap:6px}
+.p902-inquiry-note__meta-label{font-size:.66rem;color:var(--muted)}
+.p902-inquiry-note__meta-value{font-weight:700;color:var(--ink)}
+
+/* 取消のご連絡メールを送信するかの任意チェック（case-by-caseで管理者が判断） */
+.p902-cancel-check{display:flex;align-items:center;gap:7px;margin:12px 0 0;font-family:var(--fn);font-size:.8rem;color:var(--ink)}
+
+/* ボタンが多いため2グループに分離して縦積み（各グループ内は flex-wrap で自然折返し＝画面幅をはみ出さない） */
+.p902-review-actions{display:flex;flex-direction:column;gap:12px;margin-top:22px;padding-top:16px;border-top:1px solid var(--border)}
+/* display:flex を持つため UA の [hidden]{display:none} が上書きされる。処理完了の申込ではリンク付け／新規作成ボタンを出さない、
+   操作パネルを開いた時はボタン行自体を隠すため、いずれも明示的に [hidden] を上書きする */
+.p902-review-actions[hidden]{display:none}
+.p902-review-actions__group{display:flex;flex-wrap:wrap;gap:10px}
+/* 取消トラック（申込者に確認する／取消にする）＝右寄せ・下に破線区切りで承認トラックと分ける */
+.p902-review-actions__group--caution{justify-content:flex-end;padding-bottom:12px;border-bottom:1px dashed var(--border)}
+/* 承認トラック（リンク付け／新規作成／閉じる）＝右寄せ */
+.p902-review-actions__group--main{justify-content:flex-end}
+#p902CreateNewBtn[hidden],#p902LinkExistingBtn[hidden],#p902InquiryBtn[hidden],#p902CancelFlowBtn[hidden],
+#p9011InquiryBtn[hidden],#p9011CancelFlowBtn[hidden],#p9011ApproveBtn[hidden]{display:none}
+/* 取消トラックの2ボタンが両方とも非表示（処理完了後）＝グループ自体を畳み、空の区切り線だけが残らないようにする（P90-11-1も同パターン） */
+.p902-review-actions__group--caution:has(#p902InquiryBtn[hidden]):has(#p902CancelFlowBtn[hidden]),
+.p902-review-actions__group--caution:has(#p9011InquiryBtn[hidden]):has(#p9011CancelFlowBtn[hidden]){display:none}
+@media(max-width:540px){
+  .p902-review-grid{grid-template-columns:1fr}
+  .p902-review-grid dt{padding-top:8px}
+  .p902-review-actions__group{flex-wrap:wrap}
+  .p902-review-actions__group .ktn-op-btn{flex:1 1 auto}
 }
 
 /* ── P3-13/P4-13 オーディエンス管理（.p313-* を共有ネームスペースとしてP4-13も再利用）
@@ -12238,8 +12482,8 @@ a.p319-item__dest-name:hover{color:var(--page-accent)}
    タブ切替・ツールバー（.p319-toolbar系と同型）・チェックイン訪問履歴・ゼロ状態のみ定義。
    通知はウォッチャー／チェックインを分けず共通の単一トグル（.p313-notify-sw）。
    種別（user/creator/gallery）の絞り込みUIは持たない（watch/checkinはユーザー機能として
-   ロールを意識させない設計のため）。ただしtypeフィールド自体はアバター形状・outline色の
-   識別に引き続き使用する（サイト全体のアバター規約と同じ扱い）。 ── */
+   ロールを意識させない設計のため）。アバター形状も同じ理由で種別によらず常に
+   .p2-watcher-item__avatar--user（円形）で統一する＝typeフィールドは参考情報にとどめる。 ── */
 .p313-kpi-guide{margin:10px 0 0;font-size:.82rem}
 .p313-notify-list{display:flex;flex-direction:column;gap:10px}
 .p313-notify-row{display:flex;align-items:center;justify-content:space-between;gap:16px;background:#fff;border:1px solid var(--border);border-radius:4px;padding:16px 18px}
@@ -13384,6 +13628,13 @@ body.p5-page{
   --page-accent:#b8608c;
   --page-accent-bg:rgba(184,96,140,.1);
 }
+/* 管理者専用の mgmt-page（ロールクラスなし＝body.mgmt-page::before の既定バーと同じダークスレート）
+   に --page-accent を補完。無いと .ktn-mgmt-wrap 等のフォールバック値(#2a5f7a creator緑)に
+   誤って揃ってしまう（P90系・管理者専用ページで発生。2026-08-03） */
+body.mgmt-page:not(.p3-page):not(.p4-page):not(.p5-page){
+  --page-accent:#3a4a5a;
+  --page-accent-bg:rgba(58,74,90,.08);
+}
 
 /* ────────────────────────────────────────────────────────────
    右カラム sticky スクロール（共通）
@@ -14154,6 +14405,53 @@ body.p5-coll-zero.p5-other .p5-tabnav__coll{display:none}
 .p10-shelf-grid{columns:4 220px;column-gap:16px;margin-top:16px}
 .p10-nearby-grid{display:flex;flex-wrap:wrap;column-gap:28px;margin-top:8px}
 .p10-nearby-grid .p2-side-ec{width:calc(33.333% - 19px)}
+/* 人物カード（.cc--h/.gc--h）グリッド — p10-2/p10-3（クリエイター/ギャラリー検索）の棚・結果グリッド共通。1行4枚＝スクショ準拠でカードを縮小
+   カード内は独自の並び（1行目バッジ / 2行目サムネイル+名前+ジャンル改行 / 下部カウンター+ウォッチ）にするため、
+   共通 --h（横並び）レイアウトを .p10-person-grid スコープ内のみ display:contents で解いて内部グリッドへ再配置する */
+.p10-person-grid{display:grid;grid-template-columns:repeat(4,1fr);column-gap:8px;row-gap:14px;margin-top:16px;align-items:start}
+.p10-person-grid .cc--h,.p10-person-grid .gc--h{
+  border-radius:6px;display:grid;
+  grid-template-columns:46px minmax(0,1fr);
+  grid-template-rows:auto auto auto 1fr auto;
+  grid-template-areas:
+    "badges badges"
+    "avatar name"
+    "avatar genre"
+    ".      .     "
+    "foot   foot";
+  column-gap:12px;
+}
+.p10-person-grid .cc--h .cc__main,.p10-person-grid .gc--h .gc__main,
+.p10-person-grid .cc--h .cc__info,.p10-person-grid .gc--h .gc__info{display:contents}
+
+.p10-person-grid .cc--h .cc__top,.p10-person-grid .gc--h .gc__top{
+  grid-area:avatar;display:flex;align-items:center;
+  padding:10px 0 8px 12px;background:none;border-right:none;
+}
+.p10-person-grid .cc--h .cc__avatar,.p10-person-grid .gc--h .gc__avatar{width:34px;height:34px}
+
+.p10-person-grid .cc--h .cc__info .cc__badge-row,.p10-person-grid .gc--h .gc__info .gc__badge-row{
+  grid-area:badges;display:flex;justify-content:flex-start;flex-wrap:nowrap;gap:5px;
+  margin:10px 12px 0;
+}
+.p10-person-grid .cc--h .cc__info .cc__badge-row .cb-person,.p10-person-grid .gc--h .gc__info .gc__badge-row .cb-person{font-size:.54rem;padding:3px 7px}
+.p10-person-grid .cc--h .cc__info .cc__badge-row .sb,.p10-person-grid .gc--h .gc__info .gc__badge-row .sb{font-size:.54rem;gap:5px}
+.p10-person-grid .cc--h .cc__info .cc__badge-row .sb::before,.p10-person-grid .gc--h .gc__info .gc__badge-row .sb::before{width:6px;height:6px}
+
+.p10-person-grid .cc--h .cc__info .cc__name,.p10-person-grid .gc--h .gc__info .gc__name{
+  grid-area:name;font-size:.74rem;margin:0 12px 0 0;align-self:end;
+  min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.p10-person-grid .cc--h .cc__info .cc__genre,.p10-person-grid .gc--h .gc__info .gc__location{
+  grid-area:genre;font-size:.58rem;margin:0 12px 0 0;align-self:start;
+  min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.p10-person-grid .gc--h .gc__hours{display:none}
+
+.p10-person-grid .cc--h .cc__hfoot,.p10-person-grid .gc--h .gc__hfoot{
+  grid-area:foot;padding:3px 12px 7px;margin-top:0;
+}
+.p10-person-grid .cc--h .cc__hfoot .ktn-btn,.p10-person-grid .gc--h .gc__hfoot .ktn-btn{padding:3px 6px;font-size:.5rem}
 /* ── D. 結果状態 ── */
 .p10-ctx{border-bottom:1px solid var(--border);padding-bottom:16px;margin-bottom:16px}
 .p10-ctx__eyebrow{font-family:var(--font-en-label);font-size:.6rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
@@ -14179,10 +14477,12 @@ body.p5-coll-zero.p5-other .p5-tabnav__coll{display:none}
 @media(max-width:860px){
   .p10-nearby-grid .p2-side-ec{width:calc(50% - 14px)}
   .p10-search__types{margin-left:0;flex-basis:100%;order:9}
+  .p10-person-grid{grid-template-columns:repeat(2,1fr)}
 }
 @media(max-width:540px){
   .p10-shelf-grid{columns:2 140px;column-gap:12px}
   .p10-nearby-grid .p2-side-ec{width:100%}
+  .p10-person-grid{grid-template-columns:repeat(2,1fr)}
   .p10-adv__group{flex-direction:column;gap:7px}
   .p10-adv__label{flex-basis:auto;padding-top:0}
   .p10-search__submit{padding:0 16px}

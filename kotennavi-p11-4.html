@@ -271,6 +271,18 @@
               </div>
 
               <div class="p211-field">
+                <label class="p211-label">LIAISON+を利用予定の展覧会規模（年間）</label>
+                <select class="p211-select">
+                  <option value="">選択してください</option>
+                  <option>1〜2回</option>
+                  <option>3〜5回</option>
+                  <option>6〜10回</option>
+                  <option>10回以上</option>
+                  <option>未定</option>
+                </select>
+              </div>
+
+              <div class="p211-field">
                 <label class="p211-label">LIAISON+を利用したい理由・目的（任意）</label>
                 <textarea class="p211-textarea" rows="3" placeholder="例：オンラインで購入希望者を把握したい、会場での接客に加えてオンライン販売もしたい など"></textarea>
               </div>
@@ -293,6 +305,21 @@
               <div class="p211-block__title">LIAISON+ の利用予定 <span class="ktn-sec-en">About Your Plans</span></div>
             </div>
             <div class="p211-block__body">
+
+              <div class="p211-field">
+                <label class="p211-label">販売予定作品の価格帯（目安）<span class="ktn-req">必須</span></label>
+                <select class="p211-select">
+                  <option value="">選択してください</option>
+                  <option>〜 ¥10,000</option>
+                  <option>¥10,000 〜 ¥50,000</option>
+                  <option>¥50,000 〜 ¥100,000</option>
+                  <option>¥100,000 〜 ¥300,000</option>
+                  <option>¥300,000 〜 ¥500,000</option>
+                  <option>¥500,000 〜</option>
+                  <option>未定 / 作品によって異なる</option>
+                </select>
+                <p class="p211-help">参考情報として使用します。実際の価格は作品ごとに設定できます。</p>
+              </div>
 
               <div class="p211-field">
                 <label class="p211-label">LIAISON+を利用予定の展覧会規模（年間）</label>
@@ -421,20 +448,14 @@
                 <input class="p211-input" id="p114RespZip" type="text" inputmode="numeric" maxlength="8" placeholder="150-0002" style="max-width:180px">
               </div>
 
-              <div class="p211-row">
-                <div class="p211-field">
-                  <label class="p211-label" for="p114RespPref">都道府県<span class="ktn-req">必須</span></label>
-                  <input class="p211-input" id="p114RespPref" type="text" placeholder="東京都">
-                </div>
-                <div class="p211-field">
-                  <label class="p211-label" for="p114RespCity">市区町村<span class="ktn-req">必須</span></label>
-                  <input class="p211-input" id="p114RespCity" type="text" placeholder="渋谷区渋谷">
-                </div>
+              <div class="p211-field">
+                <label class="p211-label" for="p114RespPref">都道府県<span class="ktn-req">必須</span></label>
+                <input class="p211-input" id="p114RespPref" type="text" placeholder="東京都" style="max-width:220px">
               </div>
 
               <div class="p211-field">
-                <label class="p211-label" for="p114RespAddr">番地・建物名<span class="ktn-req">必須</span></label>
-                <input class="p211-input" id="p114RespAddr" type="text" placeholder="2-3-4 SOILビル">
+                <label class="p211-label" for="p114RespAddr">市区町村・番地以降<span class="ktn-req">必須</span></label>
+                <input class="p211-input" id="p114RespAddr" type="text" placeholder="渋谷区渋谷2-3-4 SOILビル">
               </div>
 
               <div class="p211-field">
@@ -733,10 +754,12 @@ function setR(r, btn) {
 var P114_REVIEW = {
   creator: [
     ['販売予定作品の価格帯（目安）', '¥50,000 〜 ¥100,000'],
+    ['LIAISON+を利用予定の展覧会規模（年間）', '3〜5回'],
     ['LIAISON+を利用したい理由・目的', 'オンラインで購入希望者を把握したい'],
     ['作品の発送地', '東京都']
   ],
   gallery: [
+    ['販売予定作品の価格帯（目安）', '¥50,000 〜 ¥100,000'],
     ['LIAISON+を利用予定の展覧会規模（年間）', '3〜5回'],
     ['LIAISON+を利用したい理由・目的', '来場できない遠方のコレクターに対応したい'],
     ['作品の発送地', '東京都'],

@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>メールテンプレート管理 — 管理者 | 個展なび</title>
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<body data-w="detail" class="p90-9-page mgmt-page">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- デモバー -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ロール：</span>
+  <button class="dbtn on" onclick="setR('admin',this)">管理者</button>
+</div>
+
+<div class="shell">
+<div class="content-wrap" id="contentWrap">
+
+  <header class="ktn-header" id="ktnHeader">
+    <div class="ktn-header__inner">
+      <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+      <div class="ktn-hdr-actions" id="ktnActs"></div>
+    </div>
+  </header>
+
+  <main class="ktn-main" id="ktnMain">
+    <div class="ktn-content">
+
+      <!-- 管理ボックス -->
+      <div class="p909-wrap ktn-mgmt-wrap ktn-mgmt-stack">
+
+        <!-- ページタイトル -->
+        <div class="ktn-mgmt-head">
+          <h2 class="ktn-mgmt-head__title">メールテンプレート管理</h2>
+          <p class="ktn-mgmt-head__en">MAIL TEMPLATES</p>
+          <p class="ktn-mgmt-head__desc">管理者が送信する通知・確認メールの文面を、使用する管理画面ごとに一元管理します。各画面の送信パネルはここで登録したテンプレートを選択して使用します（<a class="ktn-guide-link" href="docs/mail-template-system.md" target="_blank" rel="noopener">仕様</a>）。</p>
+        </div>
+
+        <!-- タブ：手動送信／自動送信（可視化） -->
+        <div class="p909-tab-nav" id="p909Tabs" role="tablist">
+          <button type="button" class="p909-tab-btn is-active" role="tab" data-panel="p909PanelManual" aria-selected="true">
+            手動送信 <span class="ktn-count ktn-count--pill is-idle" id="p909TabCountManual"></span>
+          </button>
+          <button type="button" class="p909-tab-btn" role="tab" data-panel="p909PanelAuto" aria-selected="false">
+            自動送信（可視化） <span class="ktn-count ktn-count--pill is-idle" id="p909TabCountAuto"></span>
+          </button>
+        </div>
+
+        <!-- 手動送信タブ -->
+        <div class="p909-tab-panel" id="p909PanelManual" role="tabpanel">
+
+          <div class="p909-toolbar-row">
+            <button type="button" class="ktn-op-btn ktn-op-btn--primary ktn-op-btn--sm" id="p909NewBtn">＋ 新規テンプレート</button>
+          </div>
+
+          <!-- ツールバー：画面・パターン -->
+          <div class="p319-toolbar">
+            <div class="p319-toolbar__filters">
+              <label class="p319-filter">
+                <span class="p319-filter__label">使用画面</span>
+                <select class="p319-filter__sel" id="p909FilterScreen">
+                  <option value="">すべて</option>
+                </select>
+              </label>
+              <label class="p319-filter">
+                <span class="p319-filter__label">パターン</span>
+                <select class="p319-filter__sel" id="p909FilterPattern">
+                  <option value="">すべて</option>
+                  <option value="normal">正常系</option>
+                  <option value="abnormal">非正常系</option>
+                </select>
+              </label>
+              <label class="p319-filter">
+                <span class="p319-filter__label">状態</span>
+                <select class="p319-filter__sel" id="p909FilterStatus">
+                  <option value="active">有効</option>
+                  <option value="">すべて（廃止含む）</option>
+                </select>
+              </label>
+            </div>
+            <p class="ktn-count ktn-count--result" id="p909Count"></p>
+          </div>
+
+          <!-- テンプレート一覧（表形式） -->
+          <div class="p315-archive-table-wrap">
+            <table class="p315-archive-table p909-table" aria-label="テンプレート一覧">
+              <thead>
+                <tr>
+                  <th>パターン</th>
+                  <th>使用画面 / 識別キー</th>
+                  <th>テンプレート名</th>
+                  <th>更新日</th>
+                  <th>状態</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody id="p909List"></tbody>
+            </table>
+          </div>
+
+          <!-- ゼロ状態 -->
+          <div class="p319-empty" id="p909Empty" hidden>
+            <p class="p319-empty__msg">該当するテンプレートがありません。</p>
+          </div>
+
+          <!-- ページング -->
+          <nav class="ktn-pagination" id="p909Pagination" aria-label="ページ送り" hidden></nav>
+
+        </div><!-- /#p909PanelManual -->
+
+        <!-- 自動送信タブ（可視化・読み取り専用） -->
+        <div class="p909-tab-panel" id="p909PanelAuto" role="tabpanel" hidden>
+          <p class="p909-auto-intro">Drupal がシステムの状態変化にあわせて自動送出するメールの発火点一覧です。送信画面のピックリストは経由しませんが、件名・本文はここで起草・編集できます（Drupal実装フェーズへの入力仕様。詳細は <a class="ktn-guide-link" href="docs/email-templates.md" target="_blank" rel="noopener">docs/email-templates.md</a> を参照）。</p>
+
+          <div class="p909-toolbar-row">
+            <button type="button" class="ktn-op-btn ktn-op-btn--primary ktn-op-btn--sm" id="p909AutoNewBtn">＋ 発火点を追加</button>
+          </div>
+
+          <!-- ツールバー：カテゴリ -->
+          <div class="p319-toolbar">
+            <div class="p319-toolbar__filters">
+              <label class="p319-filter">
+                <span class="p319-filter__label">カテゴリ</span>
+                <select class="p319-filter__sel" id="p909AutoFilterCategory">
+                  <option value="">すべて</option>
+                  <option value="apply">機能申込系</option>
+                  <option value="txn">取引系（LIAISON+）</option>
+                  <option value="activity">アクティビティ系（ウォッチ通知）</option>
+                </select>
+              </label>
+            </div>
+            <p class="ktn-count ktn-count--result" id="p909AutoCount"></p>
+          </div>
+
+          <div id="p909AutoList"></div>
+
+          <!-- ゼロ状態 -->
+          <div class="p319-empty" id="p909AutoEmpty" hidden>
+            <p class="p319-empty__msg">該当する発火点がありません。</p>
+          </div>
+
+        </div><!-- /#p909PanelAuto -->
+
+      </div><!-- /.ktn-mgmt-wrap -->
+
+      <!-- 新規／編集モーダル -->
+      <div class="p319-del-modal p909-edit-modal" id="p909EditModal" hidden>
+        <div class="p319-del-modal__bg" id="p909EditBg"></div>
+        <div class="p319-del-modal__panel p909-edit-modal__panel" role="dialog" aria-modal="true" aria-labelledby="p909EditTitle">
+          <h3 class="p319-del-modal__title" id="p909EditTitle">新規テンプレート</h3>
+
+          <div class="p211-field">
+            <label class="p211-label">使用画面<span class="ktn-req">必須</span></label>
+            <select class="p211-select" id="p909FormScreen">
+              <option value="p90-2">P90-2：クリエイター/ギャラリー機能申込管理</option>
+              <option value="p90-11">P90-11：リエゾンプラス機能申込管理</option>
+            </select>
+          </div>
+
+          <div class="p211-field">
+            <label class="p211-label">パターン<span class="ktn-req">必須</span></label>
+            <select class="p211-select" id="p909FormPattern">
+              <option value="normal">正常系</option>
+              <option value="abnormal">非正常系</option>
+            </select>
+          </div>
+
+          <div class="p211-field">
+            <label class="p211-label">識別キー（variantKey）<span class="ktn-req">必須</span></label>
+            <input class="p211-input" type="text" id="p909FormKey" placeholder="例：creator-new / confirm-input-error">
+            <p class="p211-help">送信画面側がこの値を読み取って選択肢と紐付けます。新規追加時は他と重複しない値にしてください。</p>
+          </div>
+
+          <div class="p211-field">
+            <label class="p211-label">テンプレート名<span class="ktn-req">必須</span></label>
+            <input class="p211-input" type="text" id="p909FormName" placeholder="例：入力不足・入力誤り">
+          </div>
+
+          <div class="p211-field">
+            <label class="p211-label">送信元<span class="ktn-req">必須</span></label>
+            <select class="p211-select" id="p909FormFrom"></select>
+            <p class="p211-help">このテンプレートで送信するメールのFromアドレスです。送信画面側の初期値になります（送信時に変更も可）。</p>
+          </div>
+
+          <div class="p211-field">
+            <label class="p211-label">件名<span class="ktn-req">必須</span></label>
+            <input class="p211-input" type="text" id="p909FormSubject" placeholder="例：【個展なび】{{roleName}}機能のご利用を開始いただけます">
+          </div>
+
+          <div class="p211-field">
+            <label class="p211-label">本文<span class="ktn-req">必須</span></label>
+            <textarea class="p211-textarea p211-textarea--tall" id="p909FormBody" rows="12" placeholder="本文を入力してください"></textarea>
+            <p class="p211-help">使用できるトークン：<code>{{userName}}</code> <code>{{roleName}}</code> <code>{{applyId}}</code> <code>{{pageName}}</code> <code>{{pageUrl}}</code> <code>{{supportUrl}}</code> <code>{{commonFooter}}</code></p>
+          </div>
+
+          <div class="p211-field">
+            <label class="p211-label">補足メモ</label>
+            <textarea class="p211-textarea" id="p909FormNote" rows="3" placeholder="いつ使うか、管理者向けの補足（送信画面には表示されません）"></textarea>
+          </div>
+
+          <div class="p319-del-modal__actions">
+            <button type="button" class="ktn-op-btn" id="p909EditCancel">キャンセル</button>
+            <button type="button" class="ktn-op-btn ktn-op-btn--primary" id="p909EditSave">保存する</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 自動送信・文面編集モーダル -->
+      <div class="p319-del-modal p909-edit-modal" id="p909AutoEditModal" hidden>
+        <div class="p319-del-modal__bg" id="p909AutoEditBg"></div>
+        <div class="p319-del-modal__panel p909-edit-modal__panel" role="dialog" aria-modal="true" aria-labelledby="p909AutoEditTitle">
+          <h3 class="p319-del-modal__title" id="p909AutoEditTitle">文面を編集</h3>
+          <div class="p909-auto-edit-ctx" id="p909AutoEditCtx"></div>
+
+          <div class="p211-field">
+            <label class="p211-label">件名<span class="ktn-req">必須</span></label>
+            <input class="p211-input" type="text" id="p909AutoFormSubject" placeholder="例：【個展なび】クリエイター機能のお申込みを受け付けました">
+          </div>
+
+          <div class="p211-field">
+            <label class="p211-label">本文<span class="ktn-req">必須</span></label>
+            <textarea class="p211-textarea p211-textarea--tall" id="p909AutoFormBody" rows="12" placeholder="本文を入力してください"></textarea>
+            <p class="p211-help">状態名・期限呼称・ページ呼称は CLAUDE.md / docs/transaction-states.md に合わせてください（メール独自の言い換えをしない）。末尾に <code>{{commonFooter}}</code> を置く共通フッターは記載不要です。</p>
+          </div>
+
+          <div class="p211-field">
+            <label class="p211-label">補足メモ</label>
+            <textarea class="p211-textarea" id="p909AutoFormNote" rows="3" placeholder="起草時の注意点など管理者向けの補足"></textarea>
+          </div>
+
+          <div class="p319-del-modal__actions">
+            <button type="button" class="ktn-op-btn" id="p909AutoEditCancel">キャンセル</button>
+            <button type="button" class="ktn-op-btn ktn-op-btn--primary" id="p909AutoEditSave">保存する</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 自動送信・発火点を追加モーダル -->
+      <div class="p319-del-modal p909-edit-modal" id="p909AutoNewModal" hidden>
+        <div class="p319-del-modal__bg" id="p909AutoNewBg"></div>
+        <div class="p319-del-modal__panel p909-edit-modal__panel" role="dialog" aria-modal="true" aria-labelledby="p909AutoNewTitle">
+          <h3 class="p319-del-modal__title" id="p909AutoNewTitle">発火点を追加</h3>
+
+          <div class="p211-field">
+            <label class="p211-label">ID<span class="ktn-req">必須</span></label>
+            <input class="p211-input" type="text" id="p909AutoNewId" placeholder="例：T-11">
+            <p class="p211-help">docs/email-templates.md の発火点インベントリと対応させるIDです。他と重複しない値にしてください。</p>
+          </div>
+
+          <div class="p211-field">
+            <label class="p211-label">カテゴリ<span class="ktn-req">必須</span></label>
+            <select class="p211-select" id="p909AutoNewCategory">
+              <option value="apply">機能申込系</option>
+              <option value="txn">取引系（LIAISON+）</option>
+              <option value="activity">アクティビティ系（ウォッチ通知）</option>
+            </select>
+          </div>
+
+          <div class="p211-field">
+            <label class="p211-label">発火イベント<span class="ktn-req">必須</span></label>
+            <input class="p211-input" type="text" id="p909AutoNewEvent" placeholder="例：期限超過リマインド（2通目）">
+          </div>
+
+          <div class="p211-field">
+            <label class="p211-label">対象</label>
+            <input class="p211-input" type="text" id="p909AutoNewAud" placeholder="例：出品者">
+          </div>
+
+          <div class="p211-field">
+            <label class="p211-label">トリガー元</label>
+            <input class="p211-input" type="text" id="p909AutoNewSource" placeholder="例：S3 発送待ち">
+          </div>
+
+          <div class="p211-field">
+            <label class="p211-label">タイミング</label>
+            <input class="p211-input" type="text" id="p909AutoNewTiming" placeholder="例：期限接近時">
+          </div>
+
+          <div class="p211-field">
+            <label class="p211-label">件名</label>
+            <input class="p211-input" type="text" id="p909AutoNewSubject" placeholder="未定なら空欄のまま追加し、後から「編集」で起草できます">
+          </div>
+
+          <div class="p211-field">
+            <label class="p211-label">本文</label>
+            <textarea class="p211-textarea p211-textarea--tall" id="p909AutoNewBody" rows="10" placeholder="本文を入力してください（後からでも編集可）"></textarea>
+          </div>
+
+          <div class="p211-field">
+            <label class="p211-label">補足メモ</label>
+            <textarea class="p211-textarea" id="p909AutoNewNote" rows="3" placeholder="いつ使うか、管理者向けの補足"></textarea>
+          </div>
+
+          <div class="p319-del-modal__actions">
+            <button type="button" class="ktn-op-btn" id="p909AutoNewCancel">キャンセル</button>
+            <button type="button" class="ktn-op-btn ktn-op-btn--primary" id="p909AutoNewSave">追加する</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 削除確認モーダル -->
+      <div class="p319-del-modal" id="p909DelModal" hidden>
+        <div class="p319-del-modal__bg" id="p909DelBg"></div>
+        <div class="p319-del-modal__panel" role="dialog" aria-modal="true" aria-labelledby="p909DelTitle">
+          <h3 class="p319-del-modal__title" id="p909DelTitle">テンプレートを削除しますか？</h3>
+          <p class="p319-del-modal__desc" id="p909DelDesc"></p>
+          <div class="p319-del-modal__actions">
+            <button type="button" class="ktn-op-btn" id="p909DelCancel">キャンセル</button>
+            <button type="button" class="ktn-op-btn ktn-op-btn--danger" id="p909DelConfirm">削除する</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /.ktn-content -->
+  </main>
+
+</div><!-- /.content-wrap -->
+</div><!-- /.shell -->
+
+<nav class="ktn-bottom-nav" id="ktnBottomNav"><div class="ktn-bottom-nav__inner" id="ktnBottomNavInner"></div></nav>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Top","item":"https://koten-navi.com/"},{"@type":"ListItem","position":2,"name":"管理者","item":"https://koten-navi.com/p90"},{"@type":"ListItem","position":3,"name":"メールテンプレート管理"}]}</script>
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+  KTN.init({ page: 'p90-9', role: 'admin' });
+  function setR(role, btn) {
+    document.querySelectorAll('.dbtn').forEach(function(b){ b.classList.remove('on'); });
+    btn.classList.add('on');
+    window.curRole = role;
+    if (window.ktnRender) ktnRender();
+  }
+</script>
+</body>
+</html>

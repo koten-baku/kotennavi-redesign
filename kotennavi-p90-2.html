@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>クリエイター/ギャラリー機能申込管理 — 管理者 | 個展なび</title>
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<body data-w="detail" class="p90-2-page mgmt-page">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- デモバー -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ロール：</span>
+  <button class="dbtn on" onclick="setR('admin',this)">管理者</button>
+</div>
+
+<div class="shell">
+<div class="content-wrap" id="contentWrap">
+
+  <header class="ktn-header" id="ktnHeader">
+    <div class="ktn-header__inner">
+      <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+      <div class="ktn-hdr-actions" id="ktnActs"></div>
+    </div>
+  </header>
+
+  <main class="ktn-main" id="ktnMain">
+    <div class="ktn-content">
+
+      <!-- 管理ボックス -->
+      <div class="p902-wrap ktn-mgmt-wrap ktn-mgmt-stack">
+
+        <!-- ページタイトル -->
+        <div class="ktn-mgmt-head">
+          <h2 class="ktn-mgmt-head__title">クリエイター/ギャラリー機能申込管理</h2>
+          <p class="ktn-mgmt-head__en">FUNCTION APPLICATIONS</p>
+          <p class="ktn-mgmt-head__desc">クリエイター機能・ギャラリー機能の申込を確認し、入力内容の確認・重複確認等を経て機能の利用を開始します。既存の掲載ページがある場合は、内容を確認のうえリンク付けてください。</p>
+        </div>
+
+        <!-- NIDクイックオープン：申込フォームのNIDから直接開く -->
+        <div class="p902-nidjump">
+          <span class="p902-nidjump__label">申込NID</span>
+          <input type="text" class="p902-nidjump__input" id="p902NidJumpInput" placeholder="例：N-58021" autocomplete="off">
+          <button type="button" class="ktn-op-btn ktn-op-btn--sm p902-nidjump__btn" id="p902NidJumpBtn">開く</button>
+        </div>
+
+        <!-- タブ：未処理・処理中／処理完了 -->
+        <div class="p902-tab-nav" role="tablist">
+          <button type="button" class="p902-tab-btn is-active" role="tab" data-panel="p902-panel-open" aria-selected="true">
+            未処理・処理中 <span class="ktn-count ktn-count--pill is-idle" id="p902TabCountOpen"></span>
+          </button>
+          <button type="button" class="p902-tab-btn" role="tab" data-panel="p902-panel-done" aria-selected="false">
+            処理完了 <span class="ktn-count ktn-count--pill is-idle" id="p902TabCountDone"></span>
+          </button>
+        </div>
+
+        <!-- タブ①：未処理・処理中（申込日降順固定） -->
+        <div class="p902-tab-panel" id="p902-panel-open" role="tabpanel">
+          <div class="p319-toolbar">
+            <div class="p319-toolbar__filters">
+              <label class="p319-filter">
+                <span class="p319-filter__label">申込種別</span>
+                <select class="p319-filter__sel" id="p902FilterRoleOpen">
+                  <option value="">すべて</option>
+                  <option value="creator">クリエイター</option>
+                  <option value="gallery">ギャラリー</option>
+                </select>
+              </label>
+              <label class="p319-filter">
+                <span class="p319-filter__label">ステータス</span>
+                <select class="p319-filter__sel" id="p902FilterStatusOpen">
+                  <option value="">すべて</option>
+                  <option value="new">未処理</option>
+                  <option value="reviewing">確認中</option>
+                </select>
+              </label>
+            </div>
+            <p class="ktn-count ktn-count--result" id="p902CountOpen"></p>
+          </div>
+
+          <div class="p315-archive-table-wrap">
+            <table class="p315-archive-table p902-table" aria-label="未処理・処理中の申込">
+              <thead>
+                <tr>
+                  <th>申込日時</th>
+                  <th>申込NID</th>
+                  <th>申込種別</th>
+                  <th class="p902-col-uid">UID</th>
+                  <th>ログインメールアドレス</th>
+                  <th>ステータス</th>
+                </tr>
+              </thead>
+              <tbody id="p902ListOpen"></tbody>
+            </table>
+          </div>
+
+          <div class="p319-empty" id="p902EmptyOpen" hidden>
+            <p class="p319-empty__msg">該当する申込がありません。</p>
+          </div>
+
+          <nav class="ktn-pagination" id="p902PaginationOpen" aria-label="ページ送り" hidden></nav>
+        </div>
+
+        <!-- タブ②：処理完了（処理完了日降順固定） -->
+        <div class="p902-tab-panel" id="p902-panel-done" role="tabpanel" hidden>
+          <div class="p319-toolbar">
+            <div class="p319-toolbar__filters">
+              <label class="p319-filter">
+                <span class="p319-filter__label">申込種別</span>
+                <select class="p319-filter__sel" id="p902FilterRoleDone">
+                  <option value="">すべて</option>
+                  <option value="creator">クリエイター</option>
+                  <option value="gallery">ギャラリー</option>
+                </select>
+              </label>
+              <label class="p319-filter">
+                <span class="p319-filter__label">処理種別</span>
+                <select class="p319-filter__sel" id="p902FilterProcTypeDone">
+                  <option value="">すべて</option>
+                  <option value="new">新規作成</option>
+                  <option value="link">既存リンク</option>
+                  <option value="cancel">取消</option>
+                </select>
+              </label>
+            </div>
+            <p class="ktn-count ktn-count--result" id="p902CountDone"></p>
+          </div>
+
+          <div class="p315-archive-table-wrap">
+            <table class="p315-archive-table p902-table" aria-label="処理完了の申込">
+              <thead>
+                <tr>
+                  <th>申込日時</th>
+                  <th>申込NID</th>
+                  <th>申込種別</th>
+                  <th class="p902-col-uid">UID</th>
+                  <th>ログインメールアドレス</th>
+                  <th>処理内容</th>
+                  <th>ステータス</th>
+                </tr>
+              </thead>
+              <tbody id="p902ListDone"></tbody>
+            </table>
+          </div>
+
+          <div class="p319-empty" id="p902EmptyDone" hidden>
+            <p class="p319-empty__msg">該当する申込がありません。</p>
+          </div>
+
+          <nav class="ktn-pagination" id="p902PaginationDone" aria-label="ページ送り" hidden></nav>
+        </div>
+
+      </div><!-- /.ktn-mgmt-wrap -->
+
+    </div><!-- /.ktn-content -->
+  </main>
+
+</div><!-- /.content-wrap -->
+</div><!-- /.shell -->
+
+<nav class="ktn-bottom-nav" id="ktnBottomNav"><div class="ktn-bottom-nav__inner" id="ktnBottomNavInner"></div></nav>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Top","item":"https://koten-navi.com/"},{"@type":"ListItem","position":2,"name":"管理者","item":"https://koten-navi.com/p90"},{"@type":"ListItem","position":3,"name":"クリエイター/ギャラリー機能申込管理"}]}</script>
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+  KTN.init({ page: 'p90-2', role: 'admin' });
+  function setR(role, btn) {
+    document.querySelectorAll('.dbtn').forEach(function(b){ b.classList.remove('on'); });
+    btn.classList.add('on');
+    window.curRole = role;
+    if (window.ktnRender) ktnRender();
+  }
+</script>
+</body>
+</html>

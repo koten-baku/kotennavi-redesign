@@ -7003,9 +7003,10 @@ KTN.pages['p3-15'] = function () {
     observer.observe(hero);
   }
 
-  // 4. コンソール内2タブ切替
+  // 4. コンソール内2タブ切替（FAQ＝「期間中展覧会」タブのみ表示。終了した展覧会/購入者一覧では不要）
   var tabBtns = document.querySelectorAll('.p315-tab-btn');
   var tabPanels = document.querySelectorAll('.p315-tab-panel');
+  var faqSection = document.querySelector('.p315-faq');
   tabBtns.forEach(function (btn) {
     btn.addEventListener('click', function () {
       tabBtns.forEach(function (b) { b.classList.remove('is-active'); b.setAttribute('aria-selected', 'false'); });
@@ -7014,6 +7015,7 @@ KTN.pages['p3-15'] = function () {
       btn.setAttribute('aria-selected', 'true');
       var panel = document.getElementById(btn.dataset.panel);
       if (panel) panel.hidden = false;
+      if (faqSection) faqSection.hidden = btn.dataset.panel !== 'p315-panel-active';
     });
   });
 
@@ -8101,9 +8103,10 @@ KTN.pages['p4-15'] = function () {
     observer.observe(hero);
   }
 
-  // 4. コンソール内2タブ切替
+  // 4. コンソール内2タブ切替（FAQ＝「期間中展覧会」タブのみ表示。終了した展覧会/購入者一覧では不要）
   var tabBtns = document.querySelectorAll('.p315-tab-btn');
   var tabPanels = document.querySelectorAll('.p315-tab-panel');
+  var faqSection = document.querySelector('.p315-faq');
   tabBtns.forEach(function (btn) {
     btn.addEventListener('click', function () {
       tabBtns.forEach(function (b) { b.classList.remove('is-active'); b.setAttribute('aria-selected', 'false'); });
@@ -8112,6 +8115,7 @@ KTN.pages['p4-15'] = function () {
       btn.setAttribute('aria-selected', 'true');
       var panel = document.getElementById(btn.dataset.panel);
       if (panel) panel.hidden = false;
+      if (faqSection) faqSection.hidden = btn.dataset.panel !== 'p315-panel-active';
     });
   });
 
@@ -8336,6 +8340,18 @@ KTN.syncMgmtOwner = function (idBase, role) {
   if (badge) { badge.className = 'cb cb-person ' + o.cls; badge.textContent = o.label; }
   const name = document.getElementById(idBase + 'Name');
   if (name) { name.textContent = o.name; name.href = o.href; }
+};
+
+/* 手動送信メールの送信元アドレス（P90-9で選択・設定 → P90-2-1/P90-11-1の送信パネルに反映される単一ソース） */
+KTN.MAIL_FROM_ADDRESSES = [
+  'info@koten-navi.com', 'register@koten-navi.com', 'inquiry@koten-navi.com',
+  'add-event@koten-navi.com', 'comment@koten-navi.com', 'contact@koten-navi.com',
+  'improper@koten-navi.com', 'monitor@koten-navi.com', 'liaison@koten-navi.com'
+];
+KTN.mailFromOptionsHtml = function (selected) {
+  return KTN.MAIL_FROM_ADDRESSES.map(function (addr) {
+    return '<option value="' + addr + '"' + (addr === selected ? ' selected' : '') + '>' + addr + '</option>';
+  }).join('');
 };
 
 /* ════════════════════════════════════════════════════
@@ -8699,6 +8715,2722 @@ KTN.pages['p3-19'] = function () {
 };
 
 /* ════════════════════════════════════════════════════
+   P90-2  管理者-クリエイター/ギャラリー機能申込管理
+   P11-2（クリエイター機能申込）／P11-3（ギャラリー機能申込）から届いた申込を一覧・審査する。
+   一覧骨格は .p319-* を共有ネームスペースとして再利用（P3-18/P4-18 と同じ流用方針）。
+   審査ステータスは3値（pending=確認中〔入力内容の確認・重複確認など〕／granted=利用開始／cancelled=取消）。
+   本フローに差し戻し（却下）は無い＝確認事項はpending内のprocStatus（未処理/確認中）で扱う。
+   granted・cancelledはどちらも終端状態として「処理完了」タブに入る（processType='new'/'link'/'cancel'で区別）。
+   P90-11（LIAISON+申込管理）は独自に3値（pending/granted/returned）の差し戻しフローを持つため、
+   本ページのステータス設計とは別（.p902-review-*／.ktn-review-status／.p902-return-panelのCSSはP90-11用に共有のまま残す）。
+
+   2026-08-03 改修（後工程からの詳細仕様に合わせて実装）：
+   ・P11-2/P11-3送信時、フォームのNIDと入力内容が管理者へ通知される想定 → 一覧に加え
+     NIDクイックオープン（.p902-nidjump）で直接申込を開ける。
+   ・申込を開くと入力内容のCSVを自動生成（.p902-csv／列構成は2026-08-06確定・buildCsv()参照）。
+   ・旧「承認する」単一ボタンを2系統に分割：
+     - 新規クリエイター・ギャラリー作成：Alias入力→重複確認（重複時は連番を提案）→
+       作成確定でP3/P4ページを生成し、申込者UIDをオーナーに設定・NID/URLを返す（すべてデモ内シミュレーション）。
+     - 既存クリエイター・ギャラリーのリンク付け：既存ページのNIDを入力→内容確認→確定で
+       既存ページのオーナーを申込者UIDに設定する（デモ内シミュレーション）。
+     いずれも確定後は grantedとして扱う（申込者からの既存ページ申告 a.existingClaim は
+     どちらの操作を選ぶかの参考情報として表示するのみ＝紐付け先の自動決定はしない）。
+   ・上記により旧「事務局作成の未割当ページを名前で検索」コンボ（KTN.linkCombo）は
+     NID直接入力に置き換えたため使用しなくなった（KTN.linkCombo自体は本ページの新設のために
+     作られた専用モジュールで他に利用箇所が無いため、common.js側も削除済み）。
+
+   2026-08-03 追加改修（ユーザーからの業務フロー訂正）：
+   ・本フローに「差し戻し」は存在しない → returnedステータス・差し戻しボタン／パネルを廃止。
+     RETURN_REASONS・a.returnReasonも削除。
+   ・入力内容の確認や重複確認など「確認すること」自体はある → これは元々pending内の
+     procStatus（new=未処理／reviewing=確認中）が担っており、そのまま維持。
+   ・「既存ページの申告（a.existingClaim）が無くても既存ページをリンクする場合がある」ことを明記
+     → 元々existingClaimは参考表示のみで両操作ボタンの表示可否には影響していなかった（変更不要）。
+     リード文もexistingClaimの有無に関わらずリンク操作を行う旨に修正。
+
+   2026-08-03 追加改修②（取消ステータスの追加）：
+   ・「取消」（申込者による取り下げ等・差し戻しとは別の終端状態）を追加し、pending／granted／
+     cancelledの3値に変更。cancelledはgrantedと同じく「処理完了」タブに入る（自分の番を待たない
+     終端状態という点で同格のため）。
+   ・処理完了タブに列を2つ追加：処理種別（processType＝new/link/cancelを表示。
+     PROCESS_TYPE_LABELで日本語化）・完了日時（grantedDate＝granted/cancelled共通で使う処理完了日時。
+     フィールド名はgrantedDateのまま維持し「処理完了日時」の意味へ用途拡張）。
+   ・タブ①（未処理・処理中）用の makeItem() はそのまま維持し、タブ②専用に makeDoneItem()
+     を新設（列構成が分岐したため関数を分離）。
+   ・cancelledの発生契機（取消にする操作ボタン等）は本ラウンドでは未実装。デモデータ（a8）で
+     表示のみ再現。
+
+   2026-08-09 廃止（既存ページ申告フィールドの撤去）：
+   ・a.existingClaim（構造化フィールド）とその表示UI（.p902-link-claim）を廃止。
+     ユーザー判断：「既存ページ申告」は申込フォーム自体の入力項目ではなく、確認メールへの
+     返信内容（メールでのやり取り）であるため、構造化データとして自動表示するのではなく
+     管理者コメント（adminNote）で手動管理する方針に統一。
+   ・reviewReason:'existing-claim'（「確認中」の内訳ラベル）自体はカテゴリとして引き続き有効
+     （既存ページ申告の確認中であること自体は変わらない・変更対象はテキストの保持方法のみ）。
+════════════════════════════════════════════════════ */
+/* ── P90-2 共有データ・ヘルパー（一覧ページ p90-2 と審査ページ p90-2-1 で共有・sessionStorageで状態同期） ──
+   別ページへのフルページ遷移をまたいで審査結果（ステータス変更・管理メモ等）を一覧側へ反映するため、
+   審査ページ側での変更は saveOverride() で sessionStorage に保存し、次回 P902Data() 生成時に APPS へマージする。 */
+function p902LoadOverrides() {
+  try {
+    var raw = sessionStorage.getItem('ktnP902Overrides');
+    return raw ? JSON.parse(raw) : {};
+  } catch (e) { return {}; }
+}
+function p902SaveOverride(id, patch) {
+  try {
+    var all = p902LoadOverrides();
+    all[id] = Object.assign({}, all[id] || {}, patch);
+    sessionStorage.setItem('ktnP902Overrides', JSON.stringify(all));
+  } catch (e) {}
+}
+
+function P902Data() {
+
+  var STATUS = {
+    pending:   { label: '確認中',   cls: 'pending' },
+    granted:   { label: '利用開始', cls: 'granted' },
+    cancelled: { label: '取消',     cls: 'cancelled' },
+  };
+  var ROLE_LABEL = { creator: 'クリエイター', gallery: 'ギャラリー' };
+  /* 処理完了タブの「処理種別」列・フィルター用ラベル（processTypeの表示名） */
+  var PROCESS_TYPE_LABEL = { new: '新規作成', link: '既存リンク', cancel: '取消' };
+
+  /* ── 取消理由（確認メールの理由／取消確定時の理由は同じ枠を共有） ──
+     取消は「①確認メール送信→②申込者からの返信→③返信内容 or 申込者の希望をもとに管理者が取消を確定」の
+     流れが基本（2026-08-08 確定）。role-switchのみ、申込者からの連絡が起点のため確認メールを経由しないこともある。 */
+  var CANCEL_REASON_LABEL = {
+    'input-error': '入力不足・入力誤り',
+    'duplicate':   '以前に別アカウントで申込済み',
+    'role-switch': '希望ロールの変更（申込者からの連絡による）',
+    'other':       'その他',
+  };
+
+  /* ── 「確認中」の内訳（一覧のステータス表示に"何を確認しているか"を出すための短い名詞ラベル）──
+     確認メール送信済み（inquiry）の申込はinquiry.reasonをキーに使う（duplicate等はCANCEL_REASON_LABELの
+     キーと共有）。まだ確認メールを送っていないreviewing（書類突合・既存ページ申告の確認等）は
+     申込データのreviewReasonを使う。procLabel()がどちらのキーかを判定して参照する。 */
+  var REVIEW_REASON_LABEL = {
+    'existing-claim': '既存ページ申告',
+    'documents':      '実在確認資料',
+    'identity':       '本人確認書類',
+    'duplicate':      '重複申込',
+    'input-error':    '入力内容',
+    'role-switch':    '希望ロールの変更',
+    'other':          '確認事項',
+  };
+
+  /* ── メールテンプレート（P90-9管理者-メールテンプレート管理 で一元管理する想定のデータ・docs/mail-template-system.md準拠）──
+     本ページはP90-9とデータを共有しない独立したデモ配列を持つ（React CSR化前提・詳細は同ドキュメント参照）。
+     pattern：'normal'＝正常系（利用開始のご案内）／'abnormal'＝非正常系（確認・取消。主目的が今回は成立しなかった/保留された通知）。
+     variantKey命名：正常系={role}-{processType}／確認=confirm-{reason}／取消=cancel-{reason}。 */
+  var MAIL_GRANT_BODY_NEW =
+    '{{userName}} 様\n\nお待たせしました。個展なび事務局での確認が完了し、\n{{roleName}}機能をご利用いただけるようになりました。\n\n' +
+    'あなたの{{roleName}}ページはこちらです。\n　{{pageName}}\n　{{pageUrl}}\n\n' +
+    'これから、展覧会・作品・記事の掲載や、\nウォッチしてくださっている方への発信ができます。\n\n' +
+    'まずはページの内容をご確認のうえ、\nプロフィールや掲載情報の追加をお試しください。\n\n{{commonFooter}}';
+  var MAIL_GRANT_BODY_LINK =
+    '{{userName}} 様\n\nお待たせしました。個展なび事務局での確認が完了し、\n{{roleName}}機能をご利用いただけるようになりました。\n\n' +
+    'あなたの{{roleName}}ページはこちらです。\n　{{pageName}}\n　{{pageUrl}}\n\n' +
+    'これから、展覧会・作品・記事の掲載や、\nウォッチしてくださっている方への発信ができます。\n\n' +
+    '──────────────────────────────\n これまでの掲載情報を引き継ぎました\n──────────────────────────────\n' +
+    '他の方が投稿された情報をもとに事務局が先行して作成していた\nあなたのページを確認し、オーナーをあなたに切り替えました。\n' +
+    'これまでの展覧会情報もそのまま引き継がれています。\n内容に相違がある場合は、下記よりお知らせください。\n　{{supportUrl}}\n' +
+    '──────────────────────────────\n\nまずはページの内容をご確認のうえ、\nプロフィールや掲載情報の追加をお試しください。\n\n{{commonFooter}}';
+  var MAIL_CANCEL_BODY_STD =
+    '{{userName}} 様\n\nご連絡いただきありがとうございました。\n' +
+    'いただいたご返信内容を確認し、今回の{{roleName}}機能のお申込み（申込NID：{{applyId}}）は取消とさせていただきました。\n\n' +
+    '改めてお申込みをご希望の場合は、お手数ですが再度お申込みフォームよりお手続きください。\n\n{{commonFooter}}';
+
+  var MAIL_TEMPLATES = [
+    { id: 'mt-1', screenId: 'p90-2', screenLabel: 'クリエイター/ギャラリー機能申込管理', pattern: 'normal', variantKey: 'creator-new', from: 'register@koten-navi.com',
+      name: 'クリエイター機能 – 新規ページ作成', subject: '【個展なび】{{roleName}}機能のご利用を開始いただけます', body: MAIL_GRANT_BODY_NEW,
+      status: 'active', usageNote: '新規にクリエイターページを作成して機能を付与した時に送る（M-02）。', updatedAt: '2026.8.8' },
+    { id: 'mt-2', screenId: 'p90-2', screenLabel: 'クリエイター/ギャラリー機能申込管理', pattern: 'normal', variantKey: 'creator-link', from: 'register@koten-navi.com',
+      name: 'クリエイター機能 – 既存ページのリンク付け', subject: '【個展なび】{{roleName}}機能のご利用を開始いただけます', body: MAIL_GRANT_BODY_LINK,
+      status: 'active', usageNote: '事務局が先行作成済みの未割当ページにオーナーとしてリンクした時に送る（M-02・引き継ぎ結果ブロック付き）。', updatedAt: '2026.8.8' },
+    { id: 'mt-3', screenId: 'p90-2', screenLabel: 'クリエイター/ギャラリー機能申込管理', pattern: 'normal', variantKey: 'gallery-new', from: 'register@koten-navi.com',
+      name: 'ギャラリー機能 – 新規ページ作成', subject: '【個展なび】{{roleName}}機能のご利用を開始いただけます', body: MAIL_GRANT_BODY_NEW,
+      status: 'active', usageNote: '新規にギャラリーページを作成して機能を付与した時に送る（M-04）。', updatedAt: '2026.8.8' },
+    { id: 'mt-4', screenId: 'p90-2', screenLabel: 'クリエイター/ギャラリー機能申込管理', pattern: 'normal', variantKey: 'gallery-link', from: 'register@koten-navi.com',
+      name: 'ギャラリー機能 – 既存ページのリンク付け', subject: '【個展なび】{{roleName}}機能のご利用を開始いただけます', body: MAIL_GRANT_BODY_LINK,
+      status: 'active', usageNote: '事務局が先行作成済みの未割当ページにオーナーとしてリンクした時に送る（M-04・引き継ぎ結果ブロック付き）。', updatedAt: '2026.8.8' },
+    { id: 'mt-5', screenId: 'p90-2', screenLabel: 'クリエイター/ギャラリー機能申込管理', pattern: 'abnormal', variantKey: 'confirm-input-error', from: 'inquiry@koten-navi.com',
+      name: '入力不足・入力誤り', subject: '【個展なび】{{roleName}}機能のお申込み内容について確認のお願い',
+      body: '{{userName}} 様\n\nこのたびは個展なびの{{roleName}}機能にお申し込みいただき、ありがとうございます。\n' +
+        'いただいた内容を確認したところ、下記の点についてご確認をお願いしたく、ご連絡いたしました。\n\n' +
+        '──────────────────────────────\n 申込NID：{{applyId}}\n 確認事項：（ここに具体的な不足・誤りの内容を記載してください）\n──────────────────────────────\n\n' +
+        'お手数をおかけいたしますが、本メールへの返信にて、上記についてご回答いただけますと幸いです。\nご回答をもって、あらためて内容を確認のうえ対応いたします。\n\n' +
+        '※本メールへの返信がない場合、恐れ入りますが今回のお申込みは取消とさせていただく場合がございます。\n\n{{commonFooter}}',
+      status: 'active', usageNote: '入力内容に不足・誤りの疑いがある時、取消を確定する前に事情を確認する1通（M-06パターン①）。', updatedAt: '2026.8.8' },
+    { id: 'mt-6', screenId: 'p90-2', screenLabel: 'クリエイター/ギャラリー機能申込管理', pattern: 'abnormal', variantKey: 'confirm-duplicate', from: 'inquiry@koten-navi.com',
+      name: '重複申込の可能性', subject: '【個展なび】{{roleName}}機能のお申込みについて確認のお願い（重複申込の可能性）',
+      body: '{{userName}} 様\n\nこのたびは個展なびの{{roleName}}機能にお申し込みいただき、ありがとうございます。\n' +
+        '確認したところ、以前に別のアカウントで同様のお申込みをいただいている可能性がございます。\n\n' +
+        'お手数をおかけいたしますが、本メールへの返信にて、以前にお申込みいただいたアカウント（メールアドレス等）についてご確認いただけますと幸いです。\n\n' +
+        '※ご返信内容を確認のうえ、重複が確認できた場合は、今回のお申込みを取消とさせていただきます。\n\n{{commonFooter}}',
+      status: 'active', usageNote: '以前に別アカウントで同様の申込がある疑いがある時に事情を確認する1通（M-06パターン②）。', updatedAt: '2026.8.8' },
+    { id: 'mt-7', screenId: 'p90-2', screenLabel: 'クリエイター/ギャラリー機能申込管理', pattern: 'abnormal', variantKey: 'cancel-input-error', from: 'register@koten-navi.com',
+      name: '入力不足・入力誤り', subject: '【個展なび】{{roleName}}機能のお申込みの取消について', body: MAIL_CANCEL_BODY_STD,
+      status: 'active', usageNote: '確認メールへの返信・入力不足を理由に取消を確定した時に送る（M-07パターン①・送信は任意）。', updatedAt: '2026.8.8' },
+    { id: 'mt-8', screenId: 'p90-2', screenLabel: 'クリエイター/ギャラリー機能申込管理', pattern: 'abnormal', variantKey: 'cancel-duplicate', from: 'register@koten-navi.com',
+      name: '以前に別アカウントで申込済み', subject: '【個展なび】{{roleName}}機能のお申込みの取消について', body: MAIL_CANCEL_BODY_STD,
+      status: 'active', usageNote: '重複申込が確認できたことを理由に取消を確定した時に送る（M-07パターン①・送信は任意）。', updatedAt: '2026.8.8' },
+    { id: 'mt-9', screenId: 'p90-2', screenLabel: 'クリエイター/ギャラリー機能申込管理', pattern: 'abnormal', variantKey: 'cancel-role-switch', from: 'register@koten-navi.com',
+      name: '希望ロールの変更', subject: '【個展なび】{{roleName}}機能のお申込みの取消について',
+      body: '{{userName}} 様\n\nご連絡いただきありがとうございました。\n' +
+        'ご希望のとおり、今回の{{roleName}}機能のお申込み（申込NID：{{applyId}}）は取消とさせていただきました。\n\n' +
+        'あらためて別の機能でお申込みをご希望の場合は、お手数ですが再度お申込みフォームよりお手続きください。\n\n{{commonFooter}}',
+      status: 'active', usageNote: '申込者本人からの希望ロール変更の連絡をもとに取消を確定した時に送る（M-07パターン②・送信は任意）。', updatedAt: '2026.8.8' },
+    { id: 'mt-10', screenId: 'p90-2', screenLabel: 'クリエイター/ギャラリー機能申込管理', pattern: 'abnormal', variantKey: 'cancel-other', from: 'register@koten-navi.com',
+      name: 'その他', subject: '【個展なび】{{roleName}}機能のお申込みの取消について', body: MAIL_CANCEL_BODY_STD,
+      status: 'active', usageNote: '上記に当てはまらない理由で取消を確定した時に送る（M-07パターン①・送信は任意）。', updatedAt: '2026.8.8' },
+  ];
+
+  /* ── トークン展開・テンプレート検索ヘルパー（P90-9共通仕様・docs/mail-template-system.md 7章）── */
+  function tplTokens(a) {
+    return {
+      userName: a.name,
+      roleName: ROLE_LABEL[a.role],
+      applyId: a.nid,
+      pageUrl: a.linkedPage ? a.linkedPage.url : '',
+      pageName: a.linkedPage ? a.linkedPage.name : a.name,
+      supportUrl: 'https://koten-navi.com/contact',
+      commonFooter: 'お問い合わせ：https://koten-navi.com/contact',
+    };
+  }
+  function applyTokens(text, tokens) {
+    return (text || '').replace(/\{\{(\w+)\}\}/g, function (m, key) {
+      return Object.prototype.hasOwnProperty.call(tokens, key) ? tokens[key] : m;
+    });
+  }
+  function findTemplate(variantKey) {
+    for (var i = 0; i < MAIL_TEMPLATES.length; i++) {
+      if (MAIL_TEMPLATES[i].variantKey === variantKey && MAIL_TEMPLATES[i].status === 'active') return MAIL_TEMPLATES[i];
+    }
+    return null;
+  }
+  function templatesByPattern(pattern) {
+    return MAIL_TEMPLATES.filter(function (t) { return t.status === 'active' && t.pattern === pattern; });
+  }
+  function templatesByPrefix(prefix) {
+    return MAIL_TEMPLATES.filter(function (t) { return t.status === 'active' && t.variantKey.indexOf(prefix) === 0; });
+  }
+  /* 確認理由・取消理由は同じ枠（CANCEL_REASON_LABEL）を共有するため、variantKeyのprefixを外した裸のキーで登録・参照する */
+  function bareReasonKey(variantKey) {
+    return (variantKey || '').replace(/^(confirm|cancel)-/, '');
+  }
+  /* 選択肢の末尾に「＋ 新しいテンプレートとして追加」を付けてプルダウンを再構成する（確認・取消の両パネルで共有） */
+  function populateReasonSelect(sel, prefix) {
+    if (!sel) return;
+    var items = templatesByPrefix(prefix);
+    sel.innerHTML = items.map(function (t) {
+      return '<option value="' + t.variantKey + '">' + t.name + '</option>';
+    }).join('') + '<option value="__new__">＋ 新しいテンプレートとして追加</option>';
+  }
+  /* 送信パネルでその場に追加するカスタムテンプレート（P90-9とは非同期のローカル配列に追加するのみ・デモ） */
+  function addCustomTemplate(pattern, prefix, name, subject, body) {
+    var t = {
+      id: 'mt-custom-' + Date.now(), screenId: 'p90-2', screenLabel: 'クリエイター/ギャラリー機能申込管理',
+      pattern: pattern, variantKey: prefix + '-' + Date.now(), name: name, subject: subject, body: body,
+      status: 'active', usageNote: '管理者がP90-2の送信パネルからその場で追加', updatedAt: todayLabel(),
+    };
+    MAIL_TEMPLATES.push(t);
+    CANCEL_REASON_LABEL[bareReasonKey(t.variantKey)] = name;
+    return t;
+  }
+
+  /* ── 事務局が先行作成済みの未割当ページ（オーナー未設定ページ引き継ぎ用レジストリ・NIDキー）──
+     「既存クリエイター・ギャラリーのリンク付け」で管理者が入力したNIDをここから照合する。 */
+  var EXISTING_PAGES = {
+    'N-30210': { name: '木内 遥',        kind: 'creator', meta: '陶芸／事務局作成・未割当（松田啓佑展 出展者情報より）', url: 'kotennavi-p3.html?c=kiuchi-admin' },
+    'N-41080': { name: 'KUMO Art Space', kind: 'gallery', meta: '現代美術／事務局作成・未割当（会場情報より）',           url: 'kotennavi-p4.html?g=kumo-admin' },
+  };
+
+  /* ── alias重複確認用レジストリ（デモ内の「既に使われているalias」一覧）──
+     'hayakawa-ren'は申込a2（早川蓮／Hayakawa Ren）のローマ字表記からそのまま導かれるaliasと意図的に一致させてあり、
+     新規作成パネルを開くと自動入力される候補alias（suggestAlias参照）で「確認する」を押すと重複エラーを再現できる。 */
+  var ALIAS_TAKEN = ['kiuchi-admin', 'kumo-admin', 'tanaka', 'tanaka-1', 'tanaka-2', 'yugen', 'soil', 'yui-tokyo', 'yui-kyoto', 'matsuda', 'hayakawa-ren'];
+
+  /* ── 新規作成時に払い出すNIDの採番（デモ内カウンタ） ── */
+  var nextNidSeq = 60000;
+  function genNid() { nextNidSeq += 1; return 'N-' + nextNidSeq; }
+
+  /* ── 既存ページのリンク付け「確認OKパターン」デモ＝申込者からの既存ページ申告（管理者コメントで手動記録）が
+     EXISTING_PAGESのどのNIDを指しているかをあらかじめ紐付け、パネルを開いた時点でNIDを自動入力する（確認するボタン1つでOK例を再現） */
+  var DEMO_LINK_NID = { a1: 'N-30210', a3: 'N-41080' };
+
+  /* ── サンプル申込データ（nid＝このフォーム送信自体のNID／uid＝申込者のUID／email＝申込者アカウントのメールアドレス）──
+     procStatus（pendingのみ）＝「未処理」「確認中」タブ内ステータス絞り込み用サブ状態（入力内容の確認・重複確認等はここに含む）
+     processType／procSS（grantedのみ）＝「処理完了」タブの処理種別絞り込み・処理完了日降順ソート用
+     ※本フローに差し戻し（returned）は無い。確認事項が残る申込はpending＋procStatus:'reviewing'のまま扱う
+     inquiry（任意）＝{reason, date}＝申込者への確認メール送信済みの記録（procStatus:'reviewing'のまま・一覧/モーダルに「返信待ち」の小さな注記を出す）
+     cancelReason／cancelEmailSent（processType:'cancel'のみ）＝取消理由・取消のご連絡メールを送信したか
+     grantMailSent／grantMailDate（processType:'new'/'link'のみ）＝利用開始のご案内メールを送信したか・送信日時（送信は処理結果エリアのボタンから任意タイミング） */
+  var APPS = [
+    { id: 'a1', role: 'creator', status: 'pending', procStatus: 'reviewing', nid: 'N-58021', uid: 'U-10432',
+      email: 'kiuchi.haruka@example.com',
+      name: '木内 遥', kana: 'キウチ ハルカ', romaji: 'Kiuchi Haruka', genre: 'クラフト',
+      links: ['https://instagram.com/kiuchi_haruka_ceramics'],
+      applicantType: 'self', agent: null,
+      kyc: { realName: '木内 遥', realKana: 'キウチ ハルカ', birth: '1994.6.2', gender: '女性',
+             zip: '150-0001', pref: '東京都', addr: '渋谷区神宮前X-XX-X', tel: '090-XXXX-XXXX' },
+      notes: '', submitted: '2026.7.28 9:14', ss: 20260728,
+      adminNote: '申告のあった「松田啓佑展」出展時のページ作成経緯について申込者へメールで確認中。既存NIDの特定ができ次第、リンク付けで対応予定。',
+      reviewReason: 'existing-claim',
+      linkedPage: null, grantedDate: null, processType: null, procSS: null },
+    { id: 'a2', role: 'creator', status: 'pending', procStatus: 'new', nid: 'N-58034', uid: 'U-10488',
+      email: 'hayakawa.ren@example.com',
+      name: '早川 蓮', kana: 'ハヤカワ レン', romaji: 'Hayakawa Ren', genre: '写真',
+      links: ['https://hayakawa-ren.example'],
+      applicantType: 'agent', agent: { name: '早川マネジメント', kana: 'ハヤカワマネジメント', relation: 'マネージャー' },
+      kyc: { realName: '早川 蓮', realKana: 'ハヤカワ レン', birth: '1988.11.30', gender: '男性',
+             zip: '160-0022', pref: '東京都', addr: '新宿区新宿X-X-X', tel: '080-XXXX-XXXX' },
+      notes: '代理申込のため、確認のご連絡は早川マネジメント宛にお願いします。',
+      submitted: '2026.7.30 16:40', ss: 20260730,
+      adminNote: '', linkedPage: null, grantedDate: null, processType: null, procSS: null },
+    { id: 'a3', role: 'gallery', status: 'pending', procStatus: 'reviewing', nid: 'N-58012', uid: 'U-10401',
+      email: 'sasaki.hina@example.com',
+      name: 'KUMO Art Space', kana: 'クモ アートスペース', nameEn: 'KUMO Art Space', genre: 'アート',
+      venue: { zip: '530-0001', pref: '大阪府', addr: '大阪市北区梅田X-X-X KUMOビル 3F', tel: '06-XXXX-XXXX', email: 'info@kumo-art.example' },
+      links: ['https://kumo-art.example'],
+      contact: { name: '佐々木 陽菜', kana: 'ササキ ヒナ', relation: 'オーナー・運営者', dept: '', title: '代表' },
+      notes: '', submitted: '2026.7.20 11:02', ss: 20260720,
+      adminNote: '申込者より「2025年に『松田啓佑展』の会場として掲載いただいたことがある」との申告あり。既存NIDの特定のため確認中。', reviewReason: 'existing-claim',
+      linkedPage: null, grantedDate: null, processType: null, procSS: null },
+    { id: 'a4', role: 'creator', status: 'granted', procStatus: null, nid: 'N-51002', uid: 'U-10022',
+      email: 'tanaka.toru@example.com',
+      name: '田中 透', kana: 'タナカ トオル', romaji: 'Tanaka Toru', genre: 'アート',
+      links: ['https://tanaka-toru.example', 'https://instagram.com/tanaka_toru_art', 'https://x.com/tanaka_toru_art'],
+      applicantType: 'self', agent: null,
+      kyc: { realName: '田中 透', realKana: 'タナカ トオル', birth: '1985.2.14', gender: '男性',
+             zip: '150-0002', pref: '東京都', addr: '渋谷区渋谷X-X-X', tel: '090-XXXX-XXXX' },
+      notes: '',
+      submitted: '2025.10.2 13:20', ss: 20251002,
+      adminNote: '本人確認書類確認済み。既存クリエイターページ（NID：N-30044）とのリンク付けで対応。',
+      linkedPage: { name: '田中 透', url: 'kotennavi-p3.html', nid: 'N-30044', kind: 'creator' },
+      grantedDate: '2025.10.5 11:20', processType: 'link', procSS: 20251005,
+      grantMailSent: true, grantMailDate: '2025.10.5 11:22' },
+    { id: 'a5', role: 'gallery', status: 'pending', procStatus: 'reviewing', nid: 'N-57810', uid: 'U-10390',
+      email: 'nakamura.yu@example.com',
+      name: 'ART BASE', kana: 'アートベース', nameEn: 'ART BASE', genre: 'クラフト',
+      venue: { zip: '231-0012', pref: '神奈川県', addr: '横浜市中区相生町X-X', tel: '045-XXXX-XXXX', email: 'contact@artbase.example' },
+      links: [], contact: { name: '中村 悠', kana: 'ナカムラ ユウ', relation: 'スタッフ', dept: '企画', title: '' },
+      notes: '',
+      submitted: '2026.7.10 8:55', ss: 20260710,
+      adminNote: 'ギャラリーの実在確認ができる資料（登記簿・賃貸契約書等）の追加提出を依頼し確認中。',
+      reviewReason: 'documents',
+      linkedPage: null, grantedDate: null, processType: null, procSS: null },
+    { id: 'a6', role: 'creator', status: 'pending', procStatus: 'reviewing', nid: 'N-56390', uid: 'U-10355',
+      email: 'fujii.aoi@example.com',
+      name: '藤井 碧', kana: 'フジイ アオイ', romaji: 'Fujii Aoi', genre: 'アート',
+      links: [], applicantType: 'self', agent: null,
+      kyc: { realName: '藤井 碧', realKana: 'フジイ アオイ', birth: '1999.5.9', gender: '女性',
+             zip: '170-0013', pref: '東京都', addr: '豊島区東池袋X-X-X', tel: '080-XXXX-XXXX' },
+      notes: '',
+      submitted: '2026.6.15 19:30', ss: 20260615,
+      adminNote: '同一申込者からの重複申込の可能性があり、既存申込との突合を確認中。',
+      reviewReason: 'duplicate',
+      inquiry: { reason: 'duplicate', date: '2026.6.18 14:05' },
+      linkedPage: null, grantedDate: null, processType: null, procSS: null },
+    { id: 'a7', role: 'gallery', status: 'granted', procStatus: null, nid: 'N-59102', uid: 'U-10502',
+      email: 'yanagi.miwa@example.com',
+      name: 'アトリエ凪', kana: 'アトリエ ナギ', nameEn: 'Atelier Nagi', genre: 'クラフト',
+      venue: { zip: '602-0000', pref: '京都府', addr: '京都市上京区X-X-X', tel: '075-XXXX-XXXX', email: 'info@atelier-nagi.example' },
+      links: ['https://atelier-nagi.example'],
+      contact: { name: '柳 美和', kana: 'ヤナギ ミワ', relation: 'オーナー・運営者', dept: '', title: '代表' },
+      notes: '',
+      submitted: '2026.6.1 10:15', ss: 20260601,
+      adminNote: '新規ページとして作成し、申込者をオーナーに設定。',
+      linkedPage: { name: 'アトリエ凪', url: 'kotennavi-p4.html?g=atelier-nagi', nid: 'N-60001', kind: 'gallery' },
+      grantedDate: '2026.6.4 10:05', processType: 'new', procSS: 20260604,
+      grantMailSent: false },
+    { id: 'a8', role: 'creator', status: 'cancelled', procStatus: null, nid: 'N-57210', uid: 'U-10366',
+      email: 'oshima.rui@example.com',
+      name: '大島 塁', kana: 'オオシマ ルイ', romaji: 'Oshima Rui', genre: 'アート',
+      links: [], applicantType: 'self', agent: null,
+      kyc: { realName: '大島 塁', realKana: 'オオシマ ルイ', birth: '1992.9.19', gender: '男性',
+             zip: '862-0950', pref: '熊本県', addr: '熊本市中央区X-X-X', tel: '090-XXXX-XXXX' },
+      notes: '',
+      submitted: '2026.7.12 10:00', ss: 20260712,
+      adminNote: '申込者本人より、都合により申込を取り下げたいとのご連絡があったため対応を終了。',
+      cancelReason: 'other', cancelEmailSent: false,
+      linkedPage: null, grantedDate: '2026.7.14 15:40', processType: 'cancel', procSS: 20260714 },
+  ];
+
+  /* ── 別ページ遷移をまたいだ状態同期（審査ページで保存したオーバーライドをここでマージ） ── */
+  var _overrides = p902LoadOverrides();
+  APPS.forEach(function (a) {
+    if (_overrides[a.id]) Object.assign(a, _overrides[a.id]);
+  });
+  function saveOverride(a) {
+    p902SaveOverride(a.id, {
+      status: a.status, procStatus: a.procStatus, grantedDate: a.grantedDate,
+      processType: a.processType, procSS: a.procSS, linkedPage: a.linkedPage,
+      cancelReason: a.cancelReason, cancelEmailSent: a.cancelEmailSent,
+      inquiry: a.inquiry, adminNote: a.adminNote,
+      grantMailSent: a.grantMailSent, grantMailDate: a.grantMailDate,
+    });
+  }
+
+  /* ── procStatus（未処理・処理中タブのサブ状態）／processType（処理完了タブの絞り込み用ラベル） ── */
+  var PROC_STATUS = {
+    new:       { label: '未処理', cls: 'new' },
+    reviewing: { label: '確認中', cls: 'pending' },
+  };
+  /* 「確認中」バッジ自体は固定文言のまま、事務局が何を確認しているかは reason として別行に分けて返す
+     （procStatus自体はreviewingのまま・新しい状態値は追加しない）。確認メール送信済み（inquiry）は
+     返信待ちであることも reason に併記する。 */
+  function procLabel(a) {
+    if (a.procStatus !== 'reviewing') return { label: (PROC_STATUS[a.procStatus] || PROC_STATUS.new).label, cls: (PROC_STATUS[a.procStatus] || PROC_STATUS.new).cls, reason: null };
+    var reason = a.inquiry
+      ? (REVIEW_REASON_LABEL[a.inquiry.reason] || REVIEW_REASON_LABEL.other) + '・返信待ち'
+      : REVIEW_REASON_LABEL[a.reviewReason] || null;
+    return { label: PROC_STATUS.reviewing.label, cls: 'pending', reason: reason };
+  }
+
+  function findApp(id) {
+    for (var i = 0; i < APPS.length; i++) if (APPS[i].id === id) return APPS[i];
+    return null;
+  }
+  function findAppByNid(nid) {
+    nid = (nid || '').trim();
+    if (!nid) return null;
+    for (var i = 0; i < APPS.length; i++) if (APPS[i].nid === nid) return APPS[i];
+    return null;
+  }
+
+  function fieldsHtml(fields) {
+    return '<dl class="p902-review-grid">' + fields.map(function (f) {
+      return '<dt>' + f[0] + '</dt><dd>' + (f[1] || '—') + '</dd>';
+    }).join('') + '</dl>';
+  }
+
+  function linksHtml(links) {
+    if (!links || !links.length) return '—';
+    return '<div class="p902-review-links">' + links.map(function (u) {
+      return '<a href="' + u + '" target="_blank" rel="noopener">' + u + '</a>';
+    }).join('') + '</div>';
+  }
+
+  /* ── 入力内容CSV（列構成＝ユーザー指定・2026-08-06確定） ── */
+  function csvEscape(v) { return '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"'; }
+  function buildCsv(a) {
+    var cols, vals;
+    if (a.role === 'creator') {
+      cols = ['クリエイター名', 'フリガナ', 'ローマ字表記', 'ジャンル', 'HP/SNS(複数)', '郵便番号', '住所(都道府県+住所)', '電話番号',
+        '性別', '本名', '本名フリガナ', '生年月日', '本人/代理人', '本人との関係', '代理人氏名', '代理人フリガナ', '連絡事項'];
+      vals = [a.name, a.kana, a.romaji, a.genre, (a.links || []).join(';'), a.kyc.zip, a.kyc.pref + a.kyc.addr, a.kyc.tel,
+        a.kyc.gender, a.kyc.realName, a.kyc.realKana, a.kyc.birth,
+        a.applicantType === 'self' ? '本人' : '代理人',
+        a.agent ? a.agent.relation : '', a.agent ? a.agent.name : '', a.agent ? a.agent.kana : '',
+        a.notes || ''];
+    } else {
+      cols = ['ギャラリー名', 'フリガナ', 'ローマ字表記', 'ジャンル', 'HP/SNS(複数)', '郵便番号', '住所(都道府県+住所)', '電話番号',
+        'メールアドレス', '担当者名', '担当者フリガナ', 'ギャラリーとの関係', '所属', 'タイトル', '', '', '連絡事項'];
+      vals = [a.name, a.kana, a.nameEn, a.genre, (a.links || []).join(';'), a.venue.zip, a.venue.pref + a.venue.addr, a.venue.tel,
+        a.venue.email, a.contact.name, a.contact.kana, a.contact.relation, a.contact.dept, a.contact.title, '', '',
+        a.notes || ''];
+    }
+    cols.unshift('申込タイプC/G', '申込NID');
+    vals.unshift(a.role === 'creator' ? 'C' : 'G', a.nid);
+    return cols.map(csvEscape).join(',') + '\n' + vals.map(csvEscape).join(',');
+  }
+
+  function buildBody(a) {
+    var html = '';
+    if (a.role === 'creator') {
+      html += '<div class="p902-review-section"><h4 class="p902-review-section__title">公開予定のクリエイター情報</h4>' +
+        fieldsHtml([
+          ['クリエイター名（表示名・活動名）', a.name], ['クリエイター名（全角カナ）', a.kana], ['クリエイター名（英語表記）', a.romaji], ['作品ジャンル', a.genre],
+          ['ホームページ・SNS', linksHtml(a.links)],
+        ]) + '</div>';
+      html += '<div class="p902-review-section"><h4 class="p902-review-section__title">非公開・本人確認のための情報</h4>' +
+        fieldsHtml([
+          ['本名（フルネーム）', a.kyc.realName], ['フリガナ（全角カナ）', a.kyc.realKana], ['生年月日', a.kyc.birth], ['性別', a.kyc.gender],
+          ['郵便番号', a.kyc.zip], ['都道府県', a.kyc.pref], ['市区町村・番地以降', a.kyc.addr], ['電話番号', a.kyc.tel],
+        ]) + '</div>';
+      html += '<div class="p902-review-section"><h4 class="p902-review-section__title">申込者について</h4>' +
+        (a.applicantType === 'self'
+          ? fieldsHtml([['申込者の区分', 'クリエイター本人']])
+          : fieldsHtml([
+              ['申込者の区分', '代理人（ご家族など）'], ['代理人氏名（フルネーム）', a.agent.name],
+              ['代理人フリガナ（全角カナ）', a.agent.kana], ['クリエイター本人との関係', a.agent.relation],
+            ])
+        ) + '</div>';
+    } else {
+      html += '<div class="p902-review-section"><h4 class="p902-review-section__title">公開予定のギャラリー情報</h4>' +
+        fieldsHtml([
+          ['ギャラリー名（表示名）', a.name], ['ギャラリー名（全角カナ）', a.kana], ['ギャラリー名（英語表記）', a.nameEn], ['主な取扱いジャンル', a.genre],
+          ['郵便番号', a.venue.zip], ['都道府県', a.venue.pref], ['市区町村・番地以降', a.venue.addr],
+          ['電話番号', a.venue.tel], ['メールアドレス', a.venue.email], ['ホームページ・SNS', linksHtml(a.links)],
+        ]) + '</div>';
+      html += '<div class="p902-review-section"><h4 class="p902-review-section__title">非公開・ご担当者情報</h4>' +
+        '<p class="p902-review-section__note">ギャラリーのご担当者様は本人確認の対象外です（施設としての本人確認は所在地情報で行います）。</p>' +
+        fieldsHtml([
+          ['ご担当者お名前（フルネーム）', a.contact.name], ['ご担当者フリガナ（全角カナ）', a.contact.kana], ['ギャラリーとのご関係', a.contact.relation],
+          ['ご担当者の所属', a.contact.dept], ['ご担当者のタイトル', a.contact.title],
+        ]) + '</div>';
+    }
+    html += '<div class="p902-review-section"><h4 class="p902-review-section__title">連絡事項</h4>' +
+      '<p class="p902-review-section__note" style="font-size:.8rem;color:var(--ink)">' + (a.notes || '—') + '</p></div>';
+    return html;
+  }
+
+  /* linkedPage.urlの?c=/?g=クエリ値がalias。新規作成時は必ず付与されるが、事務局作成の既存ページ等は
+     aliasが未設定（トップNIDのみ）のケースもあるためnullを返す（2026-08-10） */
+  function extractAlias(url) {
+    var m = /[?&][cg]=([^&]+)/.exec(url || '');
+    return m ? m[1] : null;
+  }
+  /* ── 処理結果（granted/cancelledの申込＝レビューページ末尾に表示。完了メッセージ＋処理種別・完了日時） ── */
+  function buildResult(a) {
+    var html = '<h4 class="p902-review-section__title">処理結果</h4>';
+    if (a.processType === 'new' && a.linkedPage) {
+      html += '<p class="p902-flow-panel__result">新規ページを作成し、オーナーを申込者（' + a.uid + '）に設定しました。<br>' +
+        'NID：<strong>' + a.linkedPage.nid + '</strong>　Alias：' + (extractAlias(a.linkedPage.url)
+          ? '<a href="' + a.linkedPage.url + '" target="_blank" rel="noopener">' + extractAlias(a.linkedPage.url) + '</a>' : '—') + '</p>';
+    } else if (a.processType === 'link' && a.linkedPage) {
+      html += '<p class="p902-flow-panel__result">既存ページのオーナーを申込者（' + a.uid + '）に設定しました。<br>' +
+        'NID：<strong>' + a.linkedPage.nid + '</strong>　Alias：' + (extractAlias(a.linkedPage.url)
+          ? '<a href="' + a.linkedPage.url + '" target="_blank" rel="noopener">' + extractAlias(a.linkedPage.url) + '</a>' : '—') + '</p>';
+    }
+    var fields = [
+      ['処理種別', PROCESS_TYPE_LABEL[a.processType] || '—'],
+      ['完了日時', a.grantedDate || '—'],
+    ];
+    if (a.processType === 'cancel') {
+      fields.push(['取消理由', CANCEL_REASON_LABEL[a.cancelReason] || '—']);
+      fields.push(['取消のご連絡メール', a.cancelEmailSent ? '送信済み' : '送信なし']);
+    } else if (a.processType === 'new' || a.processType === 'link') {
+      fields.push(['利用開始のご案内メール', a.grantMailSent ? ('送信済み（' + a.grantMailDate + '）') : '未送信']);
+    }
+    html += fieldsHtml(fields);
+    /* 成功パターン（新規作成／既存リンク付け）＝未送信の間だけ送信ボタンを出す。resultElはbuildResultの都度innerHTMLで
+       再生成されるため、クリックはresultEl側のイベント委譲で拾う（ボタン自体にリスナーは付けない） */
+    if ((a.processType === 'new' || a.processType === 'link') && !a.grantMailSent) {
+      html += '<div class="p902-flow-panel__actions"><button type="button" class="ktn-op-btn ktn-op-btn--sm" id="p902GrantMailBtn">ご利用開始のご案内メールを送信する</button></div>';
+    }
+    return html;
+  }
+
+  /* 申込者名（ローマ字表記／ギャラリーは英語名）からalias候補を機械的に導く（デモの初期値・確定値ではない） */
+  function suggestAlias(a) {
+    var src = a.romaji || a.nameEn || '';
+    return src.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  }
+
+  function todaySS() {
+    var d = new Date();
+    return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
+  }
+  /* 完了日時の表示＝「日時」ラベルどおり時刻まで含める。submitted（'2026.7.28 9:14'等）と同じ
+     「YYYY.M.D H:MM」表記の実日時にする（'今日'のような相対文言・日付のみは使わない） */
+  function todayLabel() {
+    var d = new Date();
+    var mm = d.getMinutes();
+    return d.getFullYear() + '.' + (d.getMonth() + 1) + '.' + d.getDate() + ' ' + d.getHours() + ':' + (mm < 10 ? '0' : '') + mm;
+  }
+  return {
+    STATUS: STATUS, ROLE_LABEL: ROLE_LABEL, PROCESS_TYPE_LABEL: PROCESS_TYPE_LABEL,
+    CANCEL_REASON_LABEL: CANCEL_REASON_LABEL, REVIEW_REASON_LABEL: REVIEW_REASON_LABEL,
+    MAIL_TEMPLATES: MAIL_TEMPLATES, tplTokens: tplTokens, applyTokens: applyTokens,
+    findTemplate: findTemplate, templatesByPattern: templatesByPattern, templatesByPrefix: templatesByPrefix,
+    bareReasonKey: bareReasonKey, populateReasonSelect: populateReasonSelect, addCustomTemplate: addCustomTemplate,
+    EXISTING_PAGES: EXISTING_PAGES, ALIAS_TAKEN: ALIAS_TAKEN, genNid: genNid, DEMO_LINK_NID: DEMO_LINK_NID,
+    APPS: APPS, PROC_STATUS: PROC_STATUS, procLabel: procLabel,
+    findApp: findApp, findAppByNid: findAppByNid, saveOverride: saveOverride,
+    fieldsHtml: fieldsHtml, linksHtml: linksHtml, csvEscape: csvEscape, buildCsv: buildCsv,
+    buildBody: buildBody, buildResult: buildResult, suggestAlias: suggestAlias,
+    todaySS: todaySS, todayLabel: todayLabel,
+  };
+}
+
+
+KTN.pages['p90-2'] = function () {
+  var D = P902Data();
+
+  /* ── タブ切替（未処理・処理中／処理完了） ── */
+  var tabBtns   = document.querySelectorAll('.p902-tab-btn');
+  var tabPanels = document.querySelectorAll('.p902-tab-panel');
+  function activateTabPanel(panelId) {
+    tabBtns.forEach(function (b) {
+      var isTarget = b.dataset.panel === panelId;
+      b.classList.toggle('is-active', isTarget);
+      b.setAttribute('aria-selected', isTarget ? 'true' : 'false');
+    });
+    tabPanels.forEach(function (p) { p.hidden = (p.id !== panelId); });
+  }
+  tabBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () { activateTabPanel(btn.dataset.panel); });
+  });
+
+  /* ── DOM（未処理・処理中タブ） ── */
+  var listOpenEl     = document.getElementById('p902ListOpen');
+  var emptyOpenEl    = document.getElementById('p902EmptyOpen');
+  var roleOpenSel    = document.getElementById('p902FilterRoleOpen');
+  var statOpenSel    = document.getElementById('p902FilterStatusOpen');
+  var countOpenEl    = document.getElementById('p902CountOpen');
+  var pagerOpenEl    = document.getElementById('p902PaginationOpen');
+  var tabCountOpenEl = document.getElementById('p902TabCountOpen');
+
+  /* ── DOM（処理完了タブ） ── */
+  var listDoneEl     = document.getElementById('p902ListDone');
+  var emptyDoneEl    = document.getElementById('p902EmptyDone');
+  var roleDoneSel    = document.getElementById('p902FilterRoleDone');
+  var typeDoneSel    = document.getElementById('p902FilterProcTypeDone');
+  var countDoneEl    = document.getElementById('p902CountDone');
+  var pagerDoneEl    = document.getElementById('p902PaginationDone');
+  var tabCountDoneEl = document.getElementById('p902TabCountDone');
+
+  if (!listOpenEl || !listDoneEl) return;
+
+  var pageOpen = 1, pageDone = 1;
+  var PER_PAGE = 5;
+
+  /* ── 一覧行（表形式：申込日／申込NID／申込種別／UID／ログインメールアドレス／ステータス）※タブ①未処理・処理中用 ── */
+  function makeItem(a, statusInfo) {
+    var tr = document.createElement('tr');
+    tr.className = 'p902-row';
+    tr.dataset.id = a.id;
+    tr.title = 'クリックして詳細を確認';
+    tr.innerHTML =
+      '<td data-label="申込日時" class="p902-cell--muted">' + a.submitted + '</td>' +
+      '<td data-label="申込NID" class="p902-cell--muted">' + a.nid + '</td>' +
+      '<td data-label="申込種別">' + (D.ROLE_LABEL[a.role] || a.role) + '</td>' +
+      '<td data-label="UID" class="p902-cell--name p902-col-uid">' + a.uid + '</td>' +
+      '<td data-label="ログインメールアドレス" class="p902-cell--muted">' + a.email + '</td>' +
+      '<td data-label="ステータス"><span class="ktn-review-status ktn-review-status--' + statusInfo.cls + '">' + statusInfo.label + '</span>' +
+      (statusInfo.reason ? '<div class="p902-proc-reason">' + statusInfo.reason + '</div>' : '') + '</td>';
+    return tr;
+  }
+
+  /* ── 一覧行（表形式：申込日／申込NID／申込種別／UID／ログインメールアドレス／処理内容(処理種別+完了日時を上下2段表示)／ステータス）※タブ②処理完了専用（granted/cancelledの終端2状態） ── */
+  function makeDoneItem(a) {
+    var tr = document.createElement('tr');
+    tr.className = 'p902-row';
+    tr.dataset.id = a.id;
+    tr.title = 'クリックして詳細を確認';
+    var statusInfo = D.STATUS[a.status];
+    tr.innerHTML =
+      '<td data-label="申込日時" class="p902-cell--muted">' + a.submitted + '</td>' +
+      '<td data-label="申込NID" class="p902-cell--muted">' + a.nid + '</td>' +
+      '<td data-label="申込種別">' + (D.ROLE_LABEL[a.role] || a.role) + '</td>' +
+      '<td data-label="UID" class="p902-cell--name p902-col-uid">' + a.uid + '</td>' +
+      '<td data-label="ログインメールアドレス" class="p902-cell--muted">' + a.email + '</td>' +
+      '<td data-label="処理内容">' + (D.PROCESS_TYPE_LABEL[a.processType] || '—') +
+      '<div class="p902-proc-reason">' + (a.grantedDate || '—') + '</div></td>' +
+      '<td data-label="ステータス"><span class="ktn-review-status ktn-review-status--' + statusInfo.cls + '">' + statusInfo.label + '</span></td>';
+    return tr;
+  }
+
+  /* ── 行クリック／NIDクイックオープンはいずれも審査ページ（p90-2-1）へ同一タブで遷移する ── */
+  function bindItemClicks(el) {
+    el.addEventListener('click', function (e) {
+      var row = e.target.closest('.p902-row');
+      if (!row) return;
+      var a = D.findApp(row.dataset.id);
+      if (a) location.href = 'kotennavi-p90-2-1.html?id=' + encodeURIComponent(a.id);
+    });
+  }
+  bindItemClicks(listOpenEl);
+  bindItemClicks(listDoneEl);
+
+  /* ── タブ①：未処理・処理中（並べ替えなし・申込日降順固定） ── */
+  function renderOpen() {
+    var fr = roleOpenSel ? roleOpenSel.value : '', fp = statOpenSel ? statOpenSel.value : '';
+    var rows = D.APPS.filter(function (a) {
+      if (a.status !== 'pending') return false;
+      if (fr && a.role !== fr) return false;
+      if (fp && a.procStatus !== fp) return false;
+      return true;
+    });
+    rows.sort(function (a, b) { return b.ss - a.ss; });
+    if (tabCountOpenEl) tabCountOpenEl.textContent = D.APPS.filter(function (a) { return a.status === 'pending'; }).length;
+    if (emptyOpenEl) emptyOpenEl.hidden = rows.length !== 0;
+    if (countOpenEl) countOpenEl.innerHTML = '<strong>' + rows.length + '</strong>件該当';
+
+    var totalPages = Math.max(1, Math.ceil(rows.length / PER_PAGE));
+    if (pageOpen > totalPages) pageOpen = totalPages;
+    var pageRows = rows.slice((pageOpen - 1) * PER_PAGE, pageOpen * PER_PAGE);
+    listOpenEl.innerHTML = '';
+    pageRows.forEach(function (a) { listOpenEl.appendChild(makeItem(a, D.procLabel(a))); });
+    KTN.pagination.render(pagerOpenEl, {
+      page: pageOpen,
+      totalPages: totalPages,
+      onGoto: function (p) { pageOpen = p; renderOpen(); },
+    });
+  }
+
+  /* ── タブ②：処理完了（並べ替えなし・処理完了日降順固定） ── */
+  function renderDone() {
+    var fr = roleDoneSel ? roleDoneSel.value : '', ft = typeDoneSel ? typeDoneSel.value : '';
+    var rows = D.APPS.filter(function (a) {
+      if (a.status !== 'granted' && a.status !== 'cancelled') return false;
+      if (fr && a.role !== fr) return false;
+      if (ft && a.processType !== ft) return false;
+      return true;
+    });
+    rows.sort(function (a, b) { return (b.procSS || 0) - (a.procSS || 0); });
+    if (tabCountDoneEl) tabCountDoneEl.textContent = D.APPS.filter(function (a) { return a.status === 'granted' || a.status === 'cancelled'; }).length;
+    if (emptyDoneEl) emptyDoneEl.hidden = rows.length !== 0;
+    if (countDoneEl) countDoneEl.innerHTML = '<strong>' + rows.length + '</strong>件該当';
+
+    var totalPages = Math.max(1, Math.ceil(rows.length / PER_PAGE));
+    if (pageDone > totalPages) pageDone = totalPages;
+    var pageRows = rows.slice((pageDone - 1) * PER_PAGE, pageDone * PER_PAGE);
+    listDoneEl.innerHTML = '';
+    pageRows.forEach(function (a) { listDoneEl.appendChild(makeDoneItem(a)); });
+    KTN.pagination.render(pagerDoneEl, {
+      page: pageDone,
+      totalPages: totalPages,
+      onGoto: function (p) { pageDone = p; renderDone(); },
+    });
+  }
+
+  function renderAll() { renderOpen(); renderDone(); }
+
+  function renderResetOpen() { pageOpen = 1; renderOpen(); }
+  function renderResetDone() { pageDone = 1; renderDone(); }
+  if (roleOpenSel) roleOpenSel.addEventListener('change', renderResetOpen);
+  if (statOpenSel) statOpenSel.addEventListener('change', renderResetOpen);
+  if (roleDoneSel) roleDoneSel.addEventListener('change', renderResetDone);
+  if (typeDoneSel) typeDoneSel.addEventListener('change', renderResetDone);
+  renderAll();
+
+  /* ── NIDクイックオープン（審査ページへ遷移） ── */
+  var nidJumpInput = document.getElementById('p902NidJumpInput');
+  var nidJumpBtn   = document.getElementById('p902NidJumpBtn');
+  function jumpToNid() {
+    var a = D.findAppByNid(nidJumpInput ? nidJumpInput.value : '');
+    if (a) location.href = 'kotennavi-p90-2-1.html?id=' + encodeURIComponent(a.id);
+    else if (KTN.toast) KTN.toast('該当するNIDの申込が見つかりません');
+  }
+  if (nidJumpBtn) nidJumpBtn.addEventListener('click', jumpToNid);
+  if (nidJumpInput) nidJumpInput.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); jumpToNid(); } });
+
+  window.ktnRender = function () {};
+};
+
+
+KTN.pages['p90-2-1'] = function () {
+  var D = P902Data();
+
+  var params = new URLSearchParams(location.search);
+  var current = D.findApp(params.get('id')) || (params.get('nid') ? D.findAppByNid(params.get('nid')) : null);
+
+  /* ── DOM（審査ページ本体） ── */
+  var statusChip = document.getElementById('p902ReviewStatus');
+  var titleEl    = document.getElementById('p902ReviewTitle');
+  var metaEl     = document.getElementById('p902ReviewMeta');
+  var bodyEl     = document.getElementById('p902ReviewBody');
+  var csvBox     = document.getElementById('p902CsvBox');
+  var csvCopyBtn = document.getElementById('p902CsvCopyBtn');
+  var adminNoteEl   = document.getElementById('p902AdminNote');
+  var resultEl       = document.getElementById('p902ReviewResult');
+  var reviewActionsEl = document.getElementById('p902ReviewActions');
+
+  if (!current) {
+    if (titleEl) titleEl.textContent = '申込が見つかりません';
+    if (metaEl) metaEl.textContent = '';
+    if (bodyEl) bodyEl.innerHTML = '<p>指定された申込データが見つかりませんでした。一覧から選び直してください。</p>';
+    if (reviewActionsEl) reviewActionsEl.hidden = true;
+    window.ktnRender = function () {};
+    return;
+  }
+
+  /* 新規クリエイター・ギャラリー作成パネル */
+  var createBtn       = document.getElementById('p902CreateNewBtn');
+  var createPanel      = document.getElementById('p902CreatePanel');
+  var createPanelTitle = document.getElementById('p902CreatePanelTitle');
+  var aliasInput       = document.getElementById('p902AliasInput');
+  var aliasCheckBtn    = document.getElementById('p902AliasCheckBtn');
+  var aliasDupEl       = document.getElementById('p902AliasDup');
+  var aliasOkEl        = document.getElementById('p902AliasOk');
+  var aliasConfirmWrap = document.getElementById('p902AliasConfirmWrap');
+  var aliasConfirmBtn  = document.getElementById('p902AliasConfirmBtn');
+  var aliasCancelBtn   = document.getElementById('p902AliasCancelBtn');
+
+  /* 既存クリエイター・ギャラリーのリンク付けパネル */
+  var linkBtn        = document.getElementById('p902LinkExistingBtn');
+  var linkPanel       = document.getElementById('p902LinkPanel');
+  var nidLinkInput    = document.getElementById('p902NidLinkInput');
+  var nidCheckBtn     = document.getElementById('p902NidCheckBtn');
+  var nidErrorEl      = document.getElementById('p902NidError');
+  var nidPreviewEl    = document.getElementById('p902NidPreview');
+  var nidConfirmWrap  = document.getElementById('p902NidConfirmWrap');
+  var nidConfirmBtn   = document.getElementById('p902NidConfirmBtn');
+  var nidCancelBtn    = document.getElementById('p902NidCancelBtn');
+  var pendingLinkNid  = null;
+
+  /* 確認メール送信済みの小さな注記（返信待ち・procStatus:'reviewing'のまま） */
+  var inquiryNoteEl = document.getElementById('p902InquiryNote');
+
+  /* 申込者への確認メール（取消の決定前に事情を尋ねる1通） */
+  var inquiryBtn       = document.getElementById('p902InquiryBtn');
+  var inquiryPanel      = document.getElementById('p902InquiryPanel');
+  var inquiryReasonSel  = document.getElementById('p902InquiryReasonSel');
+  var inquiryFromEl     = document.getElementById('p902InquiryFrom');
+  var inquirySubjectEl  = document.getElementById('p902InquirySubject');
+  var inquiryBodyEl     = document.getElementById('p902InquiryBody');
+  var inquiryNewRow     = document.getElementById('p902InquiryNewNameRow');
+  var inquiryNewName    = document.getElementById('p902InquiryNewName');
+  var inquiryNewSaveBtn = document.getElementById('p902InquiryNewSaveBtn');
+  var inquirySendBtn    = document.getElementById('p902InquirySendBtn');
+  var inquiryCancelBtn  = document.getElementById('p902InquiryCancelBtn');
+
+  /* お申込みの取消（確認メールへの返信内容、または申込者からの取消希望をもとに確定） */
+  var cancelFlowBtn      = document.getElementById('p902CancelFlowBtn');
+  var cancelPanel         = document.getElementById('p902CancelPanel');
+  var cancelReasonSel     = document.getElementById('p902CancelReasonSel');
+  var cancelSendMailChk   = document.getElementById('p902CancelSendMail');
+  var cancelMailFieldsEl  = document.getElementById('p902CancelMailFields');
+  var cancelFromEl        = document.getElementById('p902CancelFrom');
+  var cancelSubjectEl     = document.getElementById('p902CancelSubject');
+  var cancelBodyEl        = document.getElementById('p902CancelBody');
+  var cancelNewRow        = document.getElementById('p902CancelNewNameRow');
+  var cancelNewName       = document.getElementById('p902CancelNewName');
+  var cancelNewSaveBtn    = document.getElementById('p902CancelNewSaveBtn');
+  var cancelBackBtn       = document.getElementById('p902CancelBackBtn');
+  var cancelConfirmBtn    = document.getElementById('p902CancelConfirmBtn');
+
+  /* ご利用開始のご案内メール（成功パターン＝処理完了後、処理結果エリアのボタンから任意タイミングで送信） */
+  var grantMailPanel     = document.getElementById('p902GrantMailPanel');
+  var grantTemplateSel   = document.getElementById('p902GrantTemplateSel');
+  var grantFromEl        = document.getElementById('p902GrantFrom');
+  var grantMailSubject   = document.getElementById('p902GrantMailSubject');
+  var grantMailBody      = document.getElementById('p902GrantMailBody');
+  var grantMailCancelBtn = document.getElementById('p902GrantMailCancelBtn');
+  var grantMailSendBtn   = document.getElementById('p902GrantMailSendBtn');
+
+  [inquiryFromEl, cancelFromEl, grantFromEl].forEach(function (sel) {
+    if (sel) sel.innerHTML = KTN.mailFromOptionsHtml();
+  });
+
+  /* ── 操作パネルの相互排他（新規作成／既存リンクは同時に1つだけ開く） ── */
+  function resetFlowPanels() {
+    if (createPanel) createPanel.hidden = true;
+    if (aliasInput) aliasInput.value = '';
+    if (aliasDupEl) aliasDupEl.hidden = true;
+    if (aliasOkEl) aliasOkEl.hidden = true;
+    if (aliasConfirmWrap) aliasConfirmWrap.hidden = true;
+    if (aliasInput) aliasInput.disabled = false;
+    if (aliasCheckBtn) aliasCheckBtn.disabled = false;
+    if (aliasCancelBtn) aliasCancelBtn.disabled = false;
+
+    if (linkPanel) linkPanel.hidden = true;
+    if (nidLinkInput) nidLinkInput.value = '';
+    if (nidErrorEl) nidErrorEl.hidden = true;
+    if (nidPreviewEl) nidPreviewEl.hidden = true;
+    if (nidConfirmWrap) nidConfirmWrap.hidden = true;
+    if (nidLinkInput) nidLinkInput.disabled = false;
+    if (nidCheckBtn) nidCheckBtn.disabled = false;
+    if (nidCancelBtn) nidCancelBtn.disabled = false;
+    pendingLinkNid = null;
+
+    if (inquiryPanel) inquiryPanel.hidden = true;
+    if (inquiryReasonSel) inquiryReasonSel.value = 'input-error';
+    if (inquiryBodyEl) inquiryBodyEl.value = '';
+
+    if (cancelPanel) cancelPanel.hidden = true;
+    if (cancelReasonSel) cancelReasonSel.value = 'input-error';
+    if (cancelSendMailChk) cancelSendMailChk.checked = false;
+    if (cancelBodyEl) cancelBodyEl.value = '';
+
+    if (grantMailPanel) grantMailPanel.hidden = true;
+    if (grantMailBody) grantMailBody.value = '';
+
+    if (reviewActionsEl) reviewActionsEl.hidden = false;
+  }
+  function closeActionPanels() {
+    if (createPanel) createPanel.hidden = true;
+    if (linkPanel) linkPanel.hidden = true;
+    if (inquiryPanel) inquiryPanel.hidden = true;
+    if (cancelPanel) cancelPanel.hidden = true;
+    if (grantMailPanel) grantMailPanel.hidden = true;
+  }
+
+  /* ── 審査ページ本体の描画（旧openReviewModal相当・モーダル開閉なし） ── */
+  function renderReview() {
+    var a = current;
+    var st = D.STATUS[a.status];
+    if (statusChip) { statusChip.className = 'ktn-review-status ktn-review-status--' + st.cls; statusChip.textContent = st.label; }
+    if (titleEl) titleEl.textContent = D.ROLE_LABEL[a.role] + '機能申込';
+    if (metaEl) metaEl.innerHTML = '申込日時：' + a.submitted + ' ・ 申込NID：' + a.nid + ' ・ 申込種別：' + D.ROLE_LABEL[a.role] +
+      '<br>UID：' + a.uid + ' ・ ログインメールアドレス：' + a.email;
+    if (bodyEl) bodyEl.innerHTML = D.buildBody(a);
+
+    /* 入力内容CSV */
+    var csv = D.buildCsv(a);
+    if (csvBox) csvBox.value = csv;
+    if (csvCopyBtn) csvCopyBtn.dataset.copy = csv;
+
+    /* 確認メール送信済みの小さな注記（返信待ち） */
+    if (inquiryNoteEl) {
+      if (a.inquiry) {
+        inquiryNoteEl.hidden = false;
+        inquiryNoteEl.innerHTML = '<strong>確認メール送信済み</strong>'
+          + '<span class="p902-inquiry-note__meta">'
+          + '<span class="p902-inquiry-note__meta-item"><span class="p902-inquiry-note__meta-label">送信日時</span><span class="p902-inquiry-note__meta-value">' + a.inquiry.date + '</span></span>'
+          + '<span class="p902-inquiry-note__meta-item"><span class="p902-inquiry-note__meta-label">種別</span><span class="p902-inquiry-note__meta-value">' + (D.CANCEL_REASON_LABEL[a.inquiry.reason] || '') + '</span></span>'
+          + '</span>';
+      } else {
+        inquiryNoteEl.hidden = true;
+        inquiryNoteEl.innerHTML = '';
+      }
+    }
+
+    if (adminNoteEl) adminNoteEl.value = a.adminNote || '';
+
+    /* 処理結果（処理完了の申込のみ・末尾に表示） */
+    if (resultEl) {
+      if (a.status === 'pending') { resultEl.hidden = true; resultEl.innerHTML = ''; }
+      else { resultEl.hidden = false; resultEl.innerHTML = D.buildResult(a); }
+    }
+
+    resetFlowPanels();
+
+    /* 処理済みの申込は結果を表示するのみ（操作ボタンは出さない） */
+    if (createBtn) { createBtn.hidden = a.status !== 'pending'; createBtn.textContent = '新規' + D.ROLE_LABEL[a.role] + '作成'; }
+    if (linkBtn) { linkBtn.hidden = a.status !== 'pending'; linkBtn.textContent = '既存' + D.ROLE_LABEL[a.role] + 'のリンク付け'; }
+    if (inquiryBtn) inquiryBtn.hidden = a.status !== 'pending';
+    if (cancelFlowBtn) cancelFlowBtn.hidden = a.status !== 'pending';
+  }
+  renderReview();
+
+  if (adminNoteEl) adminNoteEl.addEventListener('input', function () {
+    if (!current) return;
+    current.adminNote = adminNoteEl.value;
+    D.saveOverride(current);
+  });
+
+  /* ── 利用開始の確定（新規作成／既存リンク共通の終着処理） ── */
+  function finishGranted(linkedPage, processType) {
+    if (!current) return;
+    current.status = 'granted';
+    current.procStatus = null;
+    current.grantedDate = D.todayLabel();
+    current.processType = processType || null;
+    current.procSS = D.todaySS();
+    current.linkedPage = linkedPage || null;
+    D.saveOverride(current);
+    var st = D.STATUS['granted'];
+    if (statusChip) { statusChip.className = 'ktn-review-status ktn-review-status--' + st.cls; statusChip.textContent = st.label; }
+    if (bodyEl) bodyEl.innerHTML = D.buildBody(current);
+    if (resultEl) { resultEl.hidden = false; resultEl.innerHTML = D.buildResult(current); }
+    /* 処理結果に完了メッセージ・NID・ページリンクを表示するため、入力パネル（alias/NID欄）はもう不要 */
+    if (createPanel) createPanel.hidden = true;
+    if (linkPanel) linkPanel.hidden = true;
+    if (createBtn) createBtn.hidden = true;
+    if (linkBtn) linkBtn.hidden = true;
+    if (inquiryBtn) inquiryBtn.hidden = true;
+    if (cancelFlowBtn) cancelFlowBtn.hidden = true;
+    if (reviewActionsEl) reviewActionsEl.hidden = false;
+  }
+
+  /* ── お申込みの取消（確認メールへの返信内容、または申込者からの取消希望をもとに確定） ── */
+  function finishCancelled(reason, emailSent) {
+    if (!current) return;
+    current.status = 'cancelled';
+    current.procStatus = null;
+    current.grantedDate = D.todayLabel();
+    current.processType = 'cancel';
+    current.procSS = D.todaySS();
+    current.cancelReason = reason || 'other';
+    current.cancelEmailSent = !!emailSent;
+    current.inquiry = null;
+    D.saveOverride(current);
+    var st = D.STATUS['cancelled'];
+    if (statusChip) { statusChip.className = 'ktn-review-status ktn-review-status--' + st.cls; statusChip.textContent = st.label; }
+    if (inquiryNoteEl) { inquiryNoteEl.hidden = true; inquiryNoteEl.innerHTML = ''; }
+    if (bodyEl) bodyEl.innerHTML = D.buildBody(current);
+    if (resultEl) { resultEl.hidden = false; resultEl.innerHTML = D.buildResult(current); }
+    if (createPanel) createPanel.hidden = true;
+    if (linkPanel) linkPanel.hidden = true;
+    if (inquiryPanel) inquiryPanel.hidden = true;
+    if (cancelPanel) cancelPanel.hidden = true;
+    if (createBtn) createBtn.hidden = true;
+    if (linkBtn) linkBtn.hidden = true;
+    if (inquiryBtn) inquiryBtn.hidden = true;
+    if (cancelFlowBtn) cancelFlowBtn.hidden = true;
+    if (reviewActionsEl) reviewActionsEl.hidden = false;
+  }
+
+  /* ── 新規クリエイター・ギャラリー作成 ── */
+  if (createBtn) createBtn.addEventListener('click', function () {
+    if (!current) return;
+    closeActionPanels();
+    if (reviewActionsEl) reviewActionsEl.hidden = true;
+    if (createPanelTitle) createPanelTitle.textContent = '新規' + D.ROLE_LABEL[current.role] + 'ページの作成';
+    if (createPanel) createPanel.hidden = false;
+    /* alias候補を自動入力（a2＝早川蓮は候補'hayakawa-ren'がALIAS_TAKENと一致するため、そのまま確認するとエラーになる） */
+    if (aliasInput) aliasInput.value = D.suggestAlias(current);
+    if (aliasInput) aliasInput.focus();
+  });
+  if (aliasCancelBtn) aliasCancelBtn.addEventListener('click', function () {
+    closeActionPanels();
+    if (aliasInput) aliasInput.value = '';
+    if (aliasDupEl) aliasDupEl.hidden = true;
+    if (aliasOkEl) aliasOkEl.hidden = true;
+    if (aliasConfirmWrap) aliasConfirmWrap.hidden = true;
+    if (reviewActionsEl) reviewActionsEl.hidden = false;
+  });
+  if (aliasCheckBtn) aliasCheckBtn.addEventListener('click', function () {
+    var v = aliasInput ? aliasInput.value.trim() : '';
+    if (aliasDupEl) aliasDupEl.hidden = true;
+    if (aliasOkEl) aliasOkEl.hidden = true;
+    if (aliasConfirmWrap) aliasConfirmWrap.hidden = true;
+    if (!v) { if (KTN.toast) KTN.toast('aliasを入力してください'); return; }
+    if (!/^[a-z0-9-]+$/.test(v)) {
+      if (aliasDupEl) { aliasDupEl.hidden = false; aliasDupEl.textContent = 'aliasは半角英数字・ハイフンのみで入力してください。'; }
+      return;
+    }
+    if (D.ALIAS_TAKEN.indexOf(v) !== -1) {
+      var suggestion = v + '-2';
+      while (D.ALIAS_TAKEN.indexOf(suggestion) !== -1) suggestion = suggestion + '-2';
+      if (aliasDupEl) {
+        aliasDupEl.hidden = false;
+        aliasDupEl.innerHTML = 'そのaliasは既に使われています。例：<strong>' + suggestion + '</strong>';
+      }
+    } else {
+      if (aliasOkEl) { aliasOkEl.hidden = false; aliasOkEl.textContent = '「' + v + '」は使用できます。'; }
+      if (aliasConfirmWrap) aliasConfirmWrap.hidden = false;
+    }
+  });
+  if (aliasConfirmBtn) aliasConfirmBtn.addEventListener('click', function () {
+    if (!current) return;
+    var v = aliasInput ? aliasInput.value.trim() : '';
+    if (!v) return;
+    D.ALIAS_TAKEN.push(v);
+    var nid = D.genNid();
+    var kind = current.role;
+    var url = (kind === 'creator' ? 'kotennavi-p3.html?c=' : 'kotennavi-p4.html?g=') + v;
+    var linkedPage = { name: current.name, url: url, nid: nid, kind: kind };
+    finishGranted(linkedPage, 'new');
+    if (KTN.toast) KTN.toast('新規ページを作成し、利用を開始しました（デモ）');
+  });
+
+  /* ── 既存クリエイター・ギャラリーのリンク付け ── */
+  if (linkBtn) linkBtn.addEventListener('click', function () {
+    if (!current) return;
+    closeActionPanels();
+    if (reviewActionsEl) reviewActionsEl.hidden = true;
+    if (linkPanel) linkPanel.hidden = false;
+    /* OKパターンのデモ：既存ページ申告に対応するNIDが分かっている申込は自動入力し、確認するボタン1つで成功例を再現できるようにする */
+    if (nidLinkInput) nidLinkInput.value = D.DEMO_LINK_NID[current.id] || '';
+    if (nidLinkInput) nidLinkInput.focus();
+  });
+  if (nidCancelBtn) nidCancelBtn.addEventListener('click', function () {
+    closeActionPanels();
+    if (nidLinkInput) nidLinkInput.value = '';
+    if (nidErrorEl) nidErrorEl.hidden = true;
+    if (nidPreviewEl) nidPreviewEl.hidden = true;
+    if (nidConfirmWrap) nidConfirmWrap.hidden = true;
+    pendingLinkNid = null;
+    if (reviewActionsEl) reviewActionsEl.hidden = false;
+  });
+  if (nidCheckBtn) nidCheckBtn.addEventListener('click', function () {
+    if (!current) return;
+    var v = nidLinkInput ? nidLinkInput.value.trim() : '';
+    if (nidErrorEl) nidErrorEl.hidden = true;
+    if (nidPreviewEl) nidPreviewEl.hidden = true;
+    if (nidConfirmWrap) nidConfirmWrap.hidden = true;
+    pendingLinkNid = null;
+    if (!v) { if (KTN.toast) KTN.toast('NIDを入力してください'); return; }
+    var page = D.EXISTING_PAGES[v];
+    if (!page) {
+      if (nidErrorEl) { nidErrorEl.hidden = false; nidErrorEl.textContent = '該当するページが見つかりません。NIDをご確認ください。'; }
+      return;
+    }
+    if (page.kind !== current.role) {
+      if (nidErrorEl) { nidErrorEl.hidden = false; nidErrorEl.textContent = 'このページは' + D.ROLE_LABEL[page.kind] + 'ページのため、' + D.ROLE_LABEL[current.role] + 'の申込とはリンクできません。'; }
+      return;
+    }
+    pendingLinkNid = v;
+    if (nidPreviewEl) {
+      nidPreviewEl.hidden = false;
+      nidPreviewEl.innerHTML = '<strong>' + page.name + '</strong>（' + v + '）・' + page.meta;
+    }
+    if (nidConfirmWrap) nidConfirmWrap.hidden = false;
+  });
+  if (nidConfirmBtn) nidConfirmBtn.addEventListener('click', function () {
+    if (!current || !pendingLinkNid) return;
+    var page = D.EXISTING_PAGES[pendingLinkNid];
+    if (!page) return;
+    var linkedPage = { name: page.name, url: page.url, nid: pendingLinkNid, kind: page.kind };
+    finishGranted(linkedPage, 'link');
+    if (KTN.toast) KTN.toast('既存ページにリンクし、利用を開始しました（デモ）');
+  });
+
+  /* ── 申込者への確認メール（取消の決定前に事情を尋ねる1通・テンプレート選択＋その場での新規追加に対応） ── */
+  function loadInquiryTemplate(variantKey) {
+    if (!current) return;
+    if (variantKey === '__new__') {
+      if (inquiryNewRow) inquiryNewRow.hidden = false;
+      return;
+    }
+    if (inquiryNewRow) inquiryNewRow.hidden = true;
+    var t = D.findTemplate(variantKey);
+    if (!t) return;
+    if (inquiryFromEl) inquiryFromEl.value = t.from;
+    var tokens = D.tplTokens(current);
+    if (inquirySubjectEl) inquirySubjectEl.value = D.applyTokens(t.subject, tokens);
+    if (inquiryBodyEl) inquiryBodyEl.value = D.applyTokens(t.body, tokens);
+  }
+  if (inquiryBtn) inquiryBtn.addEventListener('click', function () {
+    if (!current) return;
+    closeActionPanels();
+    if (reviewActionsEl) reviewActionsEl.hidden = true;
+    D.populateReasonSelect(inquiryReasonSel, 'confirm-');
+    if (inquiryReasonSel) inquiryReasonSel.value = 'confirm-input-error';
+    loadInquiryTemplate('confirm-input-error');
+    if (inquiryPanel) inquiryPanel.hidden = false;
+  });
+  if (inquiryReasonSel) inquiryReasonSel.addEventListener('change', function () {
+    loadInquiryTemplate(inquiryReasonSel.value);
+  });
+  if (inquiryNewSaveBtn) inquiryNewSaveBtn.addEventListener('click', function () {
+    if (!current || !inquiryNewName) return;
+    var name = inquiryNewName.value.trim();
+    if (!name) { if (KTN.toast) KTN.toast('テンプレート名を入力してください'); return; }
+    var t = D.addCustomTemplate('abnormal', 'confirm', name, inquirySubjectEl ? inquirySubjectEl.value : '', inquiryBodyEl ? inquiryBodyEl.value : '');
+    D.populateReasonSelect(inquiryReasonSel, 'confirm-');
+    if (inquiryReasonSel) inquiryReasonSel.value = t.variantKey;
+    if (inquiryNewRow) inquiryNewRow.hidden = true;
+    inquiryNewName.value = '';
+    if (KTN.toast) KTN.toast('新しいテンプレートを追加しました（デモ）');
+  });
+  if (inquiryCancelBtn) inquiryCancelBtn.addEventListener('click', function () {
+    closeActionPanels();
+    if (reviewActionsEl) reviewActionsEl.hidden = false;
+  });
+  if (inquirySendBtn) inquirySendBtn.addEventListener('click', function () {
+    if (!current) return;
+    var reasonKey = inquiryReasonSel ? D.bareReasonKey(inquiryReasonSel.value) || 'input-error' : 'input-error';
+    current.inquiry = { reason: reasonKey, date: D.todayLabel() };
+    D.saveOverride(current);
+    if (inquiryNoteEl) {
+      inquiryNoteEl.hidden = false;
+      inquiryNoteEl.innerHTML = '<strong>確認メール送信済み</strong>'
+        + '<span class="p902-inquiry-note__meta">'
+        + '<span class="p902-inquiry-note__meta-item"><span class="p902-inquiry-note__meta-label">送信日時</span><span class="p902-inquiry-note__meta-value">' + current.inquiry.date + '</span></span>'
+        + '<span class="p902-inquiry-note__meta-item"><span class="p902-inquiry-note__meta-label">種別</span><span class="p902-inquiry-note__meta-value">' + (D.CANCEL_REASON_LABEL[current.inquiry.reason] || '') + '</span></span>'
+        + '</span>';
+    }
+    closeActionPanels();
+    if (reviewActionsEl) reviewActionsEl.hidden = false;
+    if (KTN.toast) KTN.toast('確認メールを送信しました（デモ）');
+  });
+
+  /* ── お申込みの取消（テンプレート選択＋その場での新規追加に対応） ── */
+  function loadCancelTemplate(variantKey) {
+    if (!current) return;
+    if (variantKey === '__new__') {
+      if (cancelNewRow) cancelNewRow.hidden = false;
+      return;
+    }
+    if (cancelNewRow) cancelNewRow.hidden = true;
+    var t = D.findTemplate(variantKey);
+    if (!t) return;
+    if (cancelFromEl) cancelFromEl.value = t.from;
+    var tokens = D.tplTokens(current);
+    if (cancelSubjectEl) cancelSubjectEl.value = D.applyTokens(t.subject, tokens);
+    if (cancelBodyEl) cancelBodyEl.value = D.applyTokens(t.body, tokens);
+  }
+  if (cancelFlowBtn) cancelFlowBtn.addEventListener('click', function () {
+    if (!current) return;
+    closeActionPanels();
+    if (reviewActionsEl) reviewActionsEl.hidden = true;
+    D.populateReasonSelect(cancelReasonSel, 'cancel-');
+    var defaultReason = current.inquiry ? current.inquiry.reason : 'input-error';
+    if (cancelReasonSel) cancelReasonSel.value = 'cancel-' + defaultReason;
+    if (cancelSendMailChk) cancelSendMailChk.checked = false;
+    if (cancelMailFieldsEl) cancelMailFieldsEl.hidden = false;
+    if (cancelNewRow) cancelNewRow.hidden = true;
+    loadCancelTemplate(cancelReasonSel ? cancelReasonSel.value : 'cancel-input-error');
+    if (cancelPanel) cancelPanel.hidden = false;
+  });
+  if (cancelReasonSel) cancelReasonSel.addEventListener('change', function () {
+    loadCancelTemplate(cancelReasonSel.value);
+  });
+  if (cancelNewSaveBtn) cancelNewSaveBtn.addEventListener('click', function () {
+    if (!current || !cancelNewName) return;
+    var name = cancelNewName.value.trim();
+    if (!name) { if (KTN.toast) KTN.toast('テンプレート名を入力してください'); return; }
+    var t = D.addCustomTemplate('abnormal', 'cancel', name, cancelSubjectEl ? cancelSubjectEl.value : '', cancelBodyEl ? cancelBodyEl.value : '');
+    D.populateReasonSelect(cancelReasonSel, 'cancel-');
+    if (cancelReasonSel) cancelReasonSel.value = t.variantKey;
+    if (cancelNewRow) cancelNewRow.hidden = true;
+    cancelNewName.value = '';
+    if (KTN.toast) KTN.toast('新しいテンプレートを追加しました（デモ）');
+  });
+  if (cancelBackBtn) cancelBackBtn.addEventListener('click', function () {
+    closeActionPanels();
+    if (reviewActionsEl) reviewActionsEl.hidden = false;
+  });
+  if (cancelConfirmBtn) cancelConfirmBtn.addEventListener('click', function () {
+    if (!current) return;
+    var reason = cancelReasonSel ? (D.bareReasonKey(cancelReasonSel.value) || 'other') : 'other';
+    var emailSent = cancelSendMailChk ? cancelSendMailChk.checked : false;
+    finishCancelled(reason, emailSent);
+    if (KTN.toast) KTN.toast('お申込みを取消しました（デモ）');
+  });
+
+  /* ── ご利用開始のご案内メール（成功パターン・処理結果エリアのボタンから起動。テンプレート選択に対応） ──
+     ボタンはbuildResult()の都度innerHTMLで再生成されるためresultEl側でイベント委譲する */
+  function defaultGrantVariantKey(a) {
+    return a.role + '-' + (a.processType === 'link' ? 'link' : 'new');
+  }
+  function loadGrantTemplate(variantKey) {
+    if (!current) return;
+    var t = D.findTemplate(variantKey);
+    if (!t) return;
+    if (grantFromEl) grantFromEl.value = t.from;
+    var tokens = D.tplTokens(current);
+    if (grantMailSubject) grantMailSubject.value = D.applyTokens(t.subject, tokens);
+    if (grantMailBody) grantMailBody.value = D.applyTokens(t.body, tokens);
+  }
+  if (resultEl) resultEl.addEventListener('click', function (e) {
+    var btn = e.target && e.target.closest ? e.target.closest('#p902GrantMailBtn') : null;
+    if (!btn || !current) return;
+    closeActionPanels();
+    if (reviewActionsEl) reviewActionsEl.hidden = true;
+    if (grantTemplateSel) {
+      grantTemplateSel.innerHTML = D.templatesByPattern('normal').map(function (t) {
+        return '<option value="' + t.variantKey + '">' + t.name + '</option>';
+      }).join('');
+      grantTemplateSel.value = defaultGrantVariantKey(current);
+      loadGrantTemplate(grantTemplateSel.value);
+    } else {
+      loadGrantTemplate(defaultGrantVariantKey(current));
+    }
+    if (grantMailPanel) grantMailPanel.hidden = false;
+  });
+  if (grantTemplateSel) grantTemplateSel.addEventListener('change', function () {
+    loadGrantTemplate(grantTemplateSel.value);
+  });
+  if (grantMailCancelBtn) grantMailCancelBtn.addEventListener('click', function () {
+    closeActionPanels();
+    if (reviewActionsEl) reviewActionsEl.hidden = false;
+  });
+  if (grantMailSendBtn) grantMailSendBtn.addEventListener('click', function () {
+    if (!current) return;
+    current.grantMailSent = true;
+    current.grantMailDate = D.todayLabel();
+    D.saveOverride(current);
+    closeActionPanels();
+    if (reviewActionsEl) reviewActionsEl.hidden = false;
+    if (resultEl) resultEl.innerHTML = D.buildResult(current);
+    if (KTN.toast) KTN.toast('ご利用開始のご案内メールを送信しました（デモ）');
+  });
+
+  window.ktnRender = function () {};
+};
+
+
+/* ════════════════════════════════════════════════════
+   P90-11 共有データ  管理者-リエゾンプラス機能申込管理
+   P11-4（LIAISON+機能申込）から届いた申込を一覧（P90-11）・審査サブページ（P90-11-1）で
+   共有するデータ・ヘルパー。P90-2/P90-2-1のP902Data()と同じ分割パターン（モーダル→サブページ化・2026-08-09）。
+   ここで扱うのは事務局側の本人確認（Step1）のみ。Step2（Stripeオンボーディング）は
+   Stripe側の自動審査のため個別の管理者レビュー対象外＝この画面での操作はない
+   （granted＝「本人確認OK・Stripe手続きへ進める」の意味で、即「利用開始」ではない）。
+   一覧骨格・審査ページは P90-2 の .p319-* / .p902-review-* / .ktn-review-status をそのまま再利用。
+   申込者はP11-2/P11-3と異なりすでにcreator/galleryページを保有しているため、
+   P90-2の「オーナー未設定ページ紐付け」（KTN.linkCombo）は対象外＝既存ページへの直接リンクのみ表示する。
+════════════════════════════════════════════════════ */
+function P9011Data() {
+
+  var STATUS = {
+    pending:   { label: '確認中',     cls: 'pending' },
+    granted:   { label: '本人確認OK', cls: 'granted' },
+    cancelled: { label: '取消',       cls: 'cancelled' },
+  };
+  var ROLE_LABEL = { creator: 'クリエイター', gallery: 'ギャラリー' };
+  var STRIPE_LABEL = { not_started: '未着手', in_progress: '手続き中', completed: '完了・利用中' };
+  var STRIPE_CLS   = { not_started: 'pending', in_progress: 'pending', completed: 'granted' };
+
+  /* ── 「確認中」の内訳（一覧のステータス表示に"何を確認しているか"を出すための短い名詞ラベル）──
+     本フローに差し戻し（returned）は無い。確認事項が残る申込はpendingのまま扱い、確認メール送信済みなら
+     inquiry.reasonを、未送信ならreviewReasonを参照する（P902Dataと同パターン）。
+     取消（cancelled）の理由も同じ枠を共有する（confirm-*で尋ねた内容がそのままcancel-*の理由になるため、
+     P902Dataと異なりCANCEL_REASON_LABELを別オブジェクトにせずエイリアスする・2026-08-11）。 */
+  var REVIEW_REASON_LABEL = {
+    'document-unclear': '本人確認書類が不鮮明',
+    'info-mismatch':    '登録情報との不一致',
+    'resp-info':        '責任者情報の不備',
+    'missing-fields':   '必須項目の不足',
+    'other':            'その他',
+  };
+  var CANCEL_REASON_LABEL = REVIEW_REASON_LABEL;
+
+  /* 本人確認書類のダミー画像（確認中のみ表示。実ファイルは持たず.ec__poster等と同じグラデーションdivで代替） */
+  var KYC_DOC_DEMO = [
+    { label: '本人確認書類（表面）', g: '#d8d0c0,#a89878' },
+    { label: '本人確認書類（裏面）', g: '#c8d0d8,#8898a8' },
+  ];
+
+  /* ── メールテンプレート（案内・確認・取消／P90-9〔メールテンプレート管理〕でP902Dataと同様にvariantKey単位で
+     一元管理する。P90-9とはページ間のデータ連携がないため、同内容を本関数のローカル配列としても保持する
+     〔docs/mail-template-system.md 1章〕。本フローに差し戻しは無いため、非正常系は「申込者に確認する」メール
+     （confirm-*）と「取消のご連絡」メール（cancel-*・P902Dataのcancel-*と同じ役割）を持つ（2026-08-11 取消追加）。 */
+  var MAIL_INVITE_SUBJECT = '【個展なび】LIAISON+のご利用にあたり、本人確認の続きをお願いします';
+  var MAIL_INVITE_BODY =
+    '{{userName}} 様\n\n個展なび事務局です。\n{{roleName}}機能のお申込み（申込NID：{{applyId}}）について、\n' +
+    'ご提出いただいた本人確認書類の内容を確認いたしました。\n\n' +
+    '引き続き、Stripeでの本人確認手続き（Step2）にお進みください。\n　{{pageUrl}}\n\n' +
+    'Step2の手続きが完了すると、LIAISON+のご利用（作品販売）が開始されます。\n\n{{commonFooter}}';
+  var MAIL_CANCEL_BODY_STD =
+    '{{userName}} 様\n\n個展なび事務局です。\nご連絡いただきありがとうございました。\n' +
+    'いただいた内容を確認し、今回の{{roleName}}機能のお申込み（申込NID：{{applyId}}）は取消とさせていただきました。\n\n' +
+    '改めてお申込みをご希望の場合は、お手数ですが再度お申込みフォームよりお手続きください。\n\n{{commonFooter}}';
+
+  /* screenId='p90-11'のP90-9デモ配列と同内容（idはページ間で不一致でよい＝variantKeyのみが送信画面との対応キー） */
+  var MAIL_TEMPLATES = [
+    { id: 'mt-p9011-1', screenId: 'p90-11', screenLabel: 'リエゾンプラス機能申込管理', pattern: 'normal', variantKey: 'invite', from: 'liaison@koten-navi.com',
+      name: '本人確認OKのご案内（Step2へ）', subject: MAIL_INVITE_SUBJECT, body: MAIL_INVITE_BODY,
+      status: 'active', usageNote: '本人確認OKにした後、処理結果エリアのボタンから任意タイミングで送る。', updatedAt: '2026.8.10' },
+    { id: 'mt-p9011-2', screenId: 'p90-11', screenLabel: 'リエゾンプラス機能申込管理', pattern: 'abnormal', variantKey: 'confirm-document-unclear', from: 'inquiry@koten-navi.com',
+      name: '本人確認書類が不鮮明', subject: '【個展なび】本人確認書類について確認のお願い（LIAISON+機能お申込み）',
+      body: '{{userName}} 様\n\n個展なび事務局です。\n{{roleName}}機能のお申込み（申込NID：{{applyId}}）について、\n' +
+        'ご提出いただいた本人確認書類の内容を確認したところ、画像が不鮮明なため氏名・住所・生年月日を確認できませんでした。\n\n' +
+        'お手数をおかけいたしますが、本メールへの返信にて、鮮明な画像を再度ご提出いただけますと幸いです。\nご提出いただき次第、あらためて内容を確認いたします。\n\n{{commonFooter}}',
+      status: 'active', usageNote: '本人確認書類の画像が不鮮明で内容を確認できない時に送る。', updatedAt: '2026.8.10' },
+    { id: 'mt-p9011-3', screenId: 'p90-11', screenLabel: 'リエゾンプラス機能申込管理', pattern: 'abnormal', variantKey: 'confirm-info-mismatch', from: 'inquiry@koten-navi.com',
+      name: '登録情報と書類の不一致', subject: '【個展なび】ご登録情報と本人確認書類について確認のお願い（LIAISON+機能お申込み）',
+      body: '{{userName}} 様\n\n個展なび事務局です。\n{{roleName}}機能のお申込み（申込NID：{{applyId}}）について、\n' +
+        'ご登録いただいた情報と、ご提出いただいた本人確認書類に記載の内容が一致しない箇所がございました。\n\n' +
+        'お手数をおかけいたしますが、本メールへの返信にて、現在の情報が確認できる書類とあわせてご回答いただけますと幸いです。\n\n{{commonFooter}}',
+      status: 'active', usageNote: '登録情報と本人確認書類の記載内容が一致しない時に送る。', updatedAt: '2026.8.10' },
+    { id: 'mt-p9011-4', screenId: 'p90-11', screenLabel: 'リエゾンプラス機能申込管理', pattern: 'abnormal', variantKey: 'confirm-resp-info', from: 'inquiry@koten-navi.com',
+      name: '責任者情報の不備（ギャラリーのみ）', subject: '【個展なび】責任者情報について確認のお願い（LIAISON+機能お申込み）',
+      body: '{{userName}} 様\n\n個展なび事務局です。\n{{roleName}}機能のお申込み（申込NID：{{applyId}}）について、\n' +
+        'ご登録いただいた責任者情報の内容に不備があり、本人確認を進められない状態です。\n\n' +
+        'お手数をおかけいたしますが、本メールへの返信にて、責任者情報の不足箇所についてご回答いただけますと幸いです。\n\n{{commonFooter}}',
+      status: 'active', usageNote: 'ギャラリーの責任者情報に不備がある時に送る。', updatedAt: '2026.8.10' },
+    { id: 'mt-p9011-5', screenId: 'p90-11', screenLabel: 'リエゾンプラス機能申込管理', pattern: 'abnormal', variantKey: 'confirm-missing-fields', from: 'inquiry@koten-navi.com',
+      name: '必須項目の未入力・記載不足', subject: '【個展なび】お申込み内容について確認のお願い（LIAISON+機能お申込み）',
+      body: '{{userName}} 様\n\n個展なび事務局です。\n{{roleName}}機能のお申込み（申込NID：{{applyId}}）について、\n' +
+        '必須項目に未入力・記載不足の箇所があり、本人確認を進められない状態です。\n\n' +
+        'お手数をおかけいたしますが、本メールへの返信にて、不足箇所についてご回答いただけますと幸いです。\n\n{{commonFooter}}',
+      status: 'active', usageNote: '必須項目の未入力・記載不足がある時に送る。', updatedAt: '2026.8.10' },
+    { id: 'mt-p9011-6', screenId: 'p90-11', screenLabel: 'リエゾンプラス機能申込管理', pattern: 'abnormal', variantKey: 'confirm-other', from: 'inquiry@koten-navi.com',
+      name: 'その他', subject: '【個展なび】お申込み内容について確認のお願い（LIAISON+機能お申込み）',
+      body: '{{userName}} 様\n\n個展なび事務局です。\n{{roleName}}機能のお申込み（申込NID：{{applyId}}）について、\n' +
+        '下記の点についてご確認をお願いしたく、ご連絡いたしました。\n\n' +
+        '──────────────────────────────\n 確認事項：（ここに具体的な内容を記載してください）\n──────────────────────────────\n\n' +
+        'お手数をおかけいたしますが、本メールへの返信にてご回答いただけますと幸いです。\n\n{{commonFooter}}',
+      status: 'active', usageNote: '上記に当てはまらない理由で確認する時に送る。', updatedAt: '2026.8.10' },
+    { id: 'mt-p9011-7', screenId: 'p90-11', screenLabel: 'リエゾンプラス機能申込管理', pattern: 'abnormal', variantKey: 'cancel-document-unclear', from: 'liaison@koten-navi.com',
+      name: '本人確認書類が不鮮明', subject: '【個展なび】LIAISON+機能のお申込みの取消について', body: MAIL_CANCEL_BODY_STD,
+      status: 'active', usageNote: '本人確認書類の再提出依頼への返信・未返信を理由に取消を確定した時に送る（送信は任意）。', updatedAt: '2026.8.11' },
+    { id: 'mt-p9011-8', screenId: 'p90-11', screenLabel: 'リエゾンプラス機能申込管理', pattern: 'abnormal', variantKey: 'cancel-info-mismatch', from: 'liaison@koten-navi.com',
+      name: '登録情報と書類の不一致', subject: '【個展なび】LIAISON+機能のお申込みの取消について', body: MAIL_CANCEL_BODY_STD,
+      status: 'active', usageNote: '登録情報と本人確認書類の不一致を理由に取消を確定した時に送る（送信は任意）。', updatedAt: '2026.8.11' },
+    { id: 'mt-p9011-9', screenId: 'p90-11', screenLabel: 'リエゾンプラス機能申込管理', pattern: 'abnormal', variantKey: 'cancel-resp-info', from: 'liaison@koten-navi.com',
+      name: '責任者情報の不備（ギャラリーのみ）', subject: '【個展なび】LIAISON+機能のお申込みの取消について', body: MAIL_CANCEL_BODY_STD,
+      status: 'active', usageNote: 'ギャラリーの責任者情報の不備を理由に取消を確定した時に送る（送信は任意）。', updatedAt: '2026.8.11' },
+    { id: 'mt-p9011-10', screenId: 'p90-11', screenLabel: 'リエゾンプラス機能申込管理', pattern: 'abnormal', variantKey: 'cancel-missing-fields', from: 'liaison@koten-navi.com',
+      name: '必須項目の未入力・記載不足', subject: '【個展なび】LIAISON+機能のお申込みの取消について', body: MAIL_CANCEL_BODY_STD,
+      status: 'active', usageNote: '必須項目の未入力・記載不足を理由に取消を確定した時に送る（送信は任意）。', updatedAt: '2026.8.11' },
+    { id: 'mt-p9011-11', screenId: 'p90-11', screenLabel: 'リエゾンプラス機能申込管理', pattern: 'abnormal', variantKey: 'cancel-other', from: 'liaison@koten-navi.com',
+      name: 'その他', subject: '【個展なび】LIAISON+機能のお申込みの取消について', body: MAIL_CANCEL_BODY_STD,
+      status: 'active', usageNote: '上記に当てはまらない理由で取消を確定した時に送る（送信は任意）。', updatedAt: '2026.8.11' },
+  ];
+
+  function tplTokens(a) {
+    return {
+      userName: a.name,
+      roleName: ROLE_LABEL[a.role],
+      applyId: a.nid,
+      pageUrl: 'kotennavi-p11-4.html',
+      commonFooter: 'お問い合わせ：https://koten-navi.com/contact',
+    };
+  }
+  function applyTokens(text, tokens) {
+    return (text || '').replace(/\{\{(\w+)\}\}/g, function (m, key) {
+      return Object.prototype.hasOwnProperty.call(tokens, key) ? tokens[key] : m;
+    });
+  }
+  function findTemplate(variantKey) {
+    for (var i = 0; i < MAIL_TEMPLATES.length; i++) {
+      if (MAIL_TEMPLATES[i].variantKey === variantKey && MAIL_TEMPLATES[i].status === 'active') return MAIL_TEMPLATES[i];
+    }
+    return null;
+  }
+  function templatesByPattern(pattern) {
+    return MAIL_TEMPLATES.filter(function (t) { return t.status === 'active' && t.pattern === pattern; });
+  }
+  function templatesByPrefix(prefix) {
+    return MAIL_TEMPLATES.filter(function (t) { return t.status === 'active' && t.variantKey.indexOf(prefix) === 0; });
+  }
+  /* 確認理由・取消理由はREVIEW_REASON_LABEL（=CANCEL_REASON_LABEL）と同じ枠を共有するため、
+     variantKeyのprefixを外した裸のキーで登録・参照する（P902Dataのbareキー方式と同パターン） */
+  function bareReasonKey(variantKey) {
+    return (variantKey || '').replace(/^(confirm|cancel)-/, '');
+  }
+  /* 選択肢の末尾に「＋ 新しいテンプレートとして追加」を付けてプルダウンを再構成する */
+  function populateReasonSelect(sel, prefix) {
+    if (!sel) return;
+    var items = templatesByPrefix(prefix);
+    sel.innerHTML = items.map(function (t) {
+      return '<option value="' + t.variantKey + '">' + t.name + '</option>';
+    }).join('') + '<option value="__new__">＋ 新しいテンプレートとして追加</option>';
+  }
+  /* 送信パネルでその場に追加するカスタムテンプレート（P90-9とは非同期のローカル配列に追加するのみ・デモ） */
+  function addCustomTemplate(pattern, prefix, name, subject, body) {
+    var t = {
+      id: 'mt-p9011-custom-' + Date.now(), screenId: 'p90-11', screenLabel: 'リエゾンプラス機能申込管理',
+      pattern: pattern, variantKey: prefix + '-' + Date.now(), name: name, subject: subject, body: body,
+      status: 'active', usageNote: '管理者がP90-11-1の送信パネルからその場で追加', updatedAt: todayLabel(),
+    };
+    MAIL_TEMPLATES.push(t);
+    return t;
+  }
+
+  /* ── サンプル申込データ ──
+     creator の kyc は P3-11（クリエイター基本情報）からの読み込み＝申込時点では編集不可。
+     gallery の resp（責任者情報）はギャラリー基本情報のご担当者と別人の場合があるため申込ごとに収集。 */
+  var APPS = [
+    { id: 'a1', role: 'creator', status: 'granted', nid: 'N-61200', uid: 'U-10022', email: 'tanaka.toru@example.com',
+      name: '田中 透', kana: 'たなか とおる', genre: '絵画・現代美術', existingUrl: 'kotennavi-p3.html', existingNid: 'N-30044',
+      priceRange: '¥100,000 〜 ¥300,000', exhibitionScale: '3〜5回', purpose: 'オンラインで購入希望者を把握したい。',
+      shipPref: '東京都', invoiceNumber: 'T1234567890123',
+      kyc: { realName: '田中 透', realNameKana: 'たなか とおる', birth: '1985.2.14', zip: '150-0002', pref: '東京都', addr: '渋谷区渋谷X-X-X', tel: '090-XXXX-XXXX' },
+      submitted: '2025.9.10 10:32', ss: 20250910,
+      adminNote: '本人確認書類確認済み。', grantedDate: '2025.9.14 10:05', stripeStatus: 'completed',
+      inviteMailSent: true, inviteMailDate: '2025.9.14 10:10' },
+    { id: 'a2', role: 'gallery', status: 'granted', nid: 'N-61180', uid: 'U-10025', email: 'info@gallery-soil.example',
+      name: 'Gallery SOIL 渋谷', kana: 'ギャラリーソイル しぶや', nameEn: 'Gallery SOIL Shibuya', genre: '現代美術', existingUrl: 'kotennavi-p4.html', existingNid: 'N-30061',
+      priceRange: '¥100,000 〜 ¥300,000', exhibitionScale: '6〜10回', purpose: '来場できない遠方のコレクターに対応したい。',
+      shipPref: '東京都', invoiceNumber: 'T9876543210123',
+      resp: { name: '佐藤 健一', kana: 'サトウ ケンイチ', relation: '代表者・経営者', corpNumber: '', birth: '1978.4.2', zip: '150-0021', pref: '東京都', addr: '渋谷区恵比寿X-X-X SOILビル', tel: '03-XXXX-XXXX' },
+      submitted: '2025.9.5 14:08', ss: 20250905,
+      adminNote: '責任者本人確認書類確認済み。', grantedDate: '2025.9.9 15:30', stripeStatus: 'completed',
+      inviteMailSent: true, inviteMailDate: '2025.9.9 15:35' },
+    { id: 'a3', role: 'creator', status: 'pending', nid: 'N-62240', uid: 'U-10510', email: 'morimoto.yoshino@example.com',
+      name: '森本 佳乃', kana: 'もりもと よしの', genre: '染色', existingUrl: 'kotennavi-p3.html?c=morimoto-demo', existingNid: 'N-31102',
+      priceRange: '¥50,000 〜 ¥100,000', exhibitionScale: '1〜2回', purpose: '',
+      shipPref: '京都府', invoiceNumber: '',
+      kyc: { realName: '森本 佳乃', realNameKana: 'もりもと よしの', birth: '1991.8.20', zip: '604-0022', pref: '京都府', addr: '京都市中京区X-X', tel: '080-XXXX-XXXX' },
+      submitted: '2026.7.29 16:45', ss: 20260729,
+      adminNote: '', grantedDate: null, stripeStatus: null },
+    { id: 'a4', role: 'gallery', status: 'pending', nid: 'N-62265', uid: 'U-10515', email: 'info@bunkyo-gallery.example',
+      name: '文京画廊', kana: 'ぶんきょうがろう', nameEn: 'Bunkyo Gallery', genre: '版画・工芸', existingUrl: 'kotennavi-p4.html?g=bunkyo-demo', existingNid: 'N-31145',
+      priceRange: '¥50,000 〜 ¥100,000', exhibitionScale: '3〜5回', purpose: '',
+      shipPref: '東京都', invoiceNumber: 'T5010001012345',
+      resp: { name: '小野寺 真', kana: 'オノデラ マコト', relation: '役員', corpNumber: '5010001012345', birth: '1982.12.1', zip: '113-0033', pref: '東京都', addr: '文京区本郷X-X-X', tel: '03-XXXX-XXXX' },
+      submitted: '2026.8.1 9:20', ss: 20260801,
+      adminNote: '', grantedDate: null, stripeStatus: null },
+    { id: 'a5', role: 'creator', status: 'pending', nid: 'N-62190', uid: 'U-10520', email: 'sakurai.sota@example.com',
+      name: '桜井 蒼太', kana: 'さくらい そうた', genre: '写真', existingUrl: 'kotennavi-p3.html?c=sakurai-demo', existingNid: 'N-30890',
+      priceRange: '〜 ¥10,000', exhibitionScale: '1〜2回', purpose: 'SNSのフォロワーからの購入希望に応えたい。',
+      shipPref: '福岡県', invoiceNumber: '',
+      kyc: { realName: '桜井 蒼太', realNameKana: 'さくらい そうた', birth: '1996.3.3', zip: '810-0001', pref: '福岡県', addr: '福岡市中央区X-X', tel: '090-XXXX-XXXX' },
+      submitted: '2026.7.18 13:07', ss: 20260718,
+      adminNote: 'ご提出いただいた運転免許証の画像がぼやけており、生年月日欄が確認できませんでした。鮮明な画像の再提出をお願いしています。', grantedDate: null, stripeStatus: null,
+      inquiry: { reason: 'document-unclear', date: '2026.7.21 11:20' } },
+    { id: 'a6', role: 'gallery', status: 'pending', nid: 'N-62110', uid: 'U-10525', email: 'contact@ren-gallery.example',
+      name: 'REN GALLERY', kana: 'レンギャラリー', nameEn: 'REN GALLERY', genre: '現代美術', existingUrl: 'kotennavi-p4.html?g=ren-demo', existingNid: 'N-30755',
+      priceRange: '¥50,000 〜 ¥100,000', exhibitionScale: '1〜2回', purpose: '',
+      shipPref: '愛知県', invoiceNumber: '',
+      resp: { name: '西田 玲', kana: 'ニシダ レイ', relation: '従業員', corpNumber: '', birth: '1990.6.6', zip: '460-0008', pref: '愛知県', addr: '名古屋市中区X-X-X', tel: '052-XXXX-XXXX' },
+      submitted: '2026.7.5 11:52', ss: 20260705,
+      adminNote: '責任者情報にご入力の住所と、本人確認書類（運転免許証）記載の住所が異なっていました。現住所が確認できる書類（住民票の写し等）とあわせてご提出をお願いする予定。', grantedDate: null, stripeStatus: null,
+      reviewReason: 'info-mismatch' },
+    { id: 'a7', role: 'creator', status: 'granted', nid: 'N-62225', uid: 'U-10530', email: 'hayasaka.mio@example.com',
+      name: '早坂 澪', kana: 'はやさか みお', genre: '彫刻', existingUrl: 'kotennavi-p3.html?c=hayasaka-demo', existingNid: 'N-31200',
+      priceRange: '¥300,000 〜 ¥500,000', exhibitionScale: '3〜5回', purpose: '',
+      shipPref: '北海道', invoiceNumber: '',
+      kyc: { realName: '早坂 澪', realNameKana: 'はやさか みお', birth: '1983.10.10', zip: '060-0001', pref: '北海道', addr: '札幌市中央区X-X-X', tel: '090-XXXX-XXXX' },
+      submitted: '2026.7.26 15:38', ss: 20260726,
+      adminNote: '本人確認書類確認済み。Stripe側の手続き案内を送付済み。', grantedDate: '2026.7.27 9:40', stripeStatus: 'in_progress',
+      inviteMailSent: true, inviteMailDate: '2026.7.27 9:45' },
+    { id: 'a8', role: 'creator', status: 'cancelled', nid: 'N-62055', uid: 'U-10508', email: 'kondo.rui@example.com',
+      name: '近藤 塁', kana: 'こんどう るい', genre: '陶芸', existingUrl: 'kotennavi-p3.html?c=kondo-demo', existingNid: 'N-31088',
+      priceRange: '¥50,000 〜 ¥100,000', exhibitionScale: '1〜2回', purpose: '',
+      shipPref: '愛知県', invoiceNumber: '',
+      kyc: { realName: '近藤 塁', realNameKana: 'こんどう るい', birth: '1993.5.19', zip: '460-0002', pref: '愛知県', addr: '名古屋市中区X-X', tel: '090-XXXX-XXXX' },
+      submitted: '2026.7.10 9:15', ss: 20260710,
+      adminNote: '確認メールへの返信で、本人確認書類の再提出が難しいとのご連絡があり取消としました。', grantedDate: '2026.7.16 10:20', stripeStatus: null,
+      cancelReason: 'document-unclear', cancelEmailSent: true,
+      inquiry: null },
+  ];
+
+  function findApp(id) {
+    for (var i = 0; i < APPS.length; i++) if (APPS[i].id === id) return APPS[i];
+    return null;
+  }
+  function dateSS(s) {
+    if (!s) return 0;
+    var p = s.split('.');
+    return parseInt(p[0], 10) * 10000 + parseInt(p[1], 10) * 100 + parseInt(p[2], 10);
+  }
+  function procDate(a) {
+    if (a.status === 'granted' || a.status === 'cancelled') return a.grantedDate;
+    return null;
+  }
+
+  /* ── 審査サブページ（P90-11-1）での変更をsessionStorageに保存し、一覧側に反映する（P902Dataと同パターン） ── */
+  var OKEY = 'ktnP9011Overrides';
+  function loadOverrides() {
+    try { return JSON.parse(sessionStorage.getItem(OKEY) || '{}'); } catch (e) { return {}; }
+  }
+  function saveOverride(app) {
+    var all = loadOverrides();
+    all[app.id] = { status: app.status, adminNote: app.adminNote, grantedDate: app.grantedDate, stripeStatus: app.stripeStatus, reviewReason: app.reviewReason, inquiry: app.inquiry, inviteMailSent: app.inviteMailSent, inviteMailDate: app.inviteMailDate, cancelReason: app.cancelReason, cancelEmailSent: app.cancelEmailSent };
+    try { sessionStorage.setItem(OKEY, JSON.stringify(all)); } catch (e) {}
+  }
+  var overrides = loadOverrides();
+  APPS.forEach(function (a) {
+    if (overrides[a.id]) { for (var k in overrides[a.id]) a[k] = overrides[a.id][k]; }
+  });
+
+  function fieldsHtml(fields) {
+    return '<dl class="p902-review-grid">' + fields.map(function (f) {
+      return '<dt>' + f[0] + '</dt><dd>' + (f[1] || '—') + '</dd>';
+    }).join('') + '</dl>';
+  }
+
+  /* linkedPage.urlの?c=/?g=クエリ値がalias。既存の実ページ（自分のURLをそのまま持つ・クエリなし）は
+     aliasが未設定のケースもあるためnullを返す（P902Dataのextractalias同様のロジック） */
+  function extractAlias(url) {
+    var m = /[?&][cg]=([^&]+)/.exec(url || '');
+    return m ? m[1] : null;
+  }
+
+  /* ── 入力内容CSV（列構成＝ユーザー指定・2026-08-11確定／2026-08-11 追補：C/Galiasの後にC/G名を追加、
+     クリエイターの本名フリガナを追加）
+     UID/メアド/申込日時/申込NID/申込種別/C/GNID/C/Galias/C/G名 の共通8列＋入力内容。
+     価格帯（目安）・展覧会規模（年間）はp11-4フォームでクリエイター・ギャラリー双方が入力するため
+     両ロールとも実値を出力（ブランク対象外化）。それ以外の入力内容はクリエイター・ギャラリーで
+     項目が異なるため、位置を揃えたうえで対応の無い列はブランク（列名・値とも空）で埋め、
+     両ロールとも同じ列数にする（本人確認書類の画像は対象外）。 */
+  function csvEscape(v) { return '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"'; }
+  function buildCsv(a) {
+    var cols = ['UID', 'メアド', '申込日時', '申込NID', '申込種別', 'C/GNID', 'C/Galias', 'C/G名'];
+    var vals = [a.uid, a.email, a.submitted, a.nid, a.role === 'creator' ? 'C' : 'G', a.existingNid || '', extractAlias(a.existingUrl) || '', a.name];
+    if (a.role === 'creator') {
+      cols = cols.concat(['価格帯（目安）', '展覧会規模（年間）', '理由・目的', '作品の発送地', '適格請求書発行事業者登録番号', '本名', '本名フリガナ', '', '', '生年月日', '郵便番号', '住所(都道府県+住所)', '電話番号']);
+      vals = vals.concat([a.priceRange, a.exhibitionScale, a.purpose, a.shipPref, a.invoiceNumber, a.kyc.realName, a.kyc.realNameKana, '', '', a.kyc.birth, a.kyc.zip, a.kyc.pref + a.kyc.addr, a.kyc.tel]);
+    } else {
+      cols = cols.concat(['価格帯（目安）', '展覧会規模（年間）', '理由・目的', '作品の発送地', '適格請求書発行事業者登録番号', '責任者お名前', '責任者フリガナ', 'ギャラリーとの関係', '法人番号', '生年月日', '郵便番号', '住所(都道府県+住所)', '電話番号']);
+      vals = vals.concat([a.priceRange, a.exhibitionScale, a.purpose, a.shipPref, a.invoiceNumber, a.resp.name, a.resp.kana, a.resp.relation, a.resp.corpNumber, a.resp.birth, a.resp.zip, a.resp.pref + a.resp.addr, a.resp.tel]);
+    }
+    return cols.map(csvEscape).join(',') + '\n' + vals.map(csvEscape).join(',');
+  }
+
+  function buildBody(a) {
+    var html = '';
+    if (a.role === 'creator') {
+      html += '<div class="p902-review-section"><h4 class="p902-review-section__title">クリエイターとしての申込内容</h4>' +
+        fieldsHtml([
+          ['価格帯（目安）', a.priceRange], ['展覧会規模（年間）', a.exhibitionScale], ['理由・目的', a.purpose], ['作品の発送地', a.shipPref],
+        ]) + '</div>';
+      html += '<div class="p902-review-section"><h4 class="p902-review-section__title">非公開・本人確認のための情報</h4>' +
+        '<p class="p902-review-section__note">クリエイター基本情報（P3-11）から読み込んだ内容です。申込時点では申込者側で変更できません。</p>' +
+        fieldsHtml([
+          ['本名', a.kyc.realName], ['本名フリガナ', a.kyc.realNameKana], ['生年月日', a.kyc.birth],
+          ['住所', '〒' + a.kyc.zip + ' ' + a.kyc.pref + a.kyc.addr], ['電話番号', a.kyc.tel],
+        ]) + '</div>';
+    } else {
+      html += '<div class="p902-review-section"><h4 class="p902-review-section__title">ギャラリーとしての申込内容</h4>' +
+        fieldsHtml([
+          ['価格帯（目安）', a.priceRange], ['展覧会規模（年間）', a.exhibitionScale], ['理由・目的', a.purpose], ['作品の発送地', a.shipPref],
+        ]) + '</div>';
+      html += '<div class="p902-review-section"><h4 class="p902-review-section__title">非公開・責任者情報（本人確認）</h4>' +
+        '<p class="p902-review-section__note">ギャラリー基本情報のご担当者とは別の方の場合があります。この申込にあたり入力された内容です。</p>' +
+        fieldsHtml([
+          ['責任者お名前', a.resp.name], ['ふりがな', a.resp.kana], ['ギャラリーとの関係', a.resp.relation],
+          ['法人番号', a.resp.corpNumber], ['生年月日', a.resp.birth],
+          ['住所', '〒' + a.resp.zip + ' ' + a.resp.pref + a.resp.addr], ['電話番号', a.resp.tel],
+        ]) + '</div>';
+    }
+    html += '<div class="p902-review-section"><h4 class="p902-review-section__title">事業者番号（インボイス制度）</h4>' +
+      fieldsHtml([['適格請求書発行事業者登録番号', a.invoiceNumber || '未登録（任意）']]) + '</div>';
+
+    html += '<div class="p902-review-section"><h4 class="p902-review-section__title">本人確認書類</h4>' +
+      (a.status === 'pending'
+        ? '<p class="p902-review-section__note">氏名・住所・生年月日が確認できる画像が添付されています。上記の登録情報と突合して確認してください（画像はデモのためダミー表示）。</p>' +
+          '<div class="p902-kyc-docs">' +
+            KYC_DOC_DEMO.map(function (d) {
+              return '<div class="p902-kyc-doc"><div class="p902-kyc-doc__img" style="background:linear-gradient(160deg,' + d.g + ')"></div>' +
+                '<p class="p902-kyc-doc__cap">' + d.label + '</p></div>';
+            }).join('')
+          + '</div>'
+        : '<p class="p902-review-section__note">本人確認書類の画像は確認完了後に削除しており、現在は保存されていません。</p>'
+      ) + '</div>';
+    return html;
+  }
+
+  /* 処理結果（granted/cancelledの申込＝レビューページ末尾寄り・管理者コメント直下に表示。P902Dataのbuild
+     Result()と同じ単一「処理結果」見出し＋fieldsHtml構成に統一（2026-08-09、位置・見出しをP90-2に合わせて再構成／
+     2026-08-11 取消の分岐を追加）） */
+  function buildStatusBody(a) {
+    var html = '<h4 class="p902-review-section__title">処理結果</h4>';
+    if (a.status === 'granted' && a.stripeStatus) {
+      html += '<p class="p902-review-section__note">本人確認OK後、申込者側の操作でStripeの本人確認手続き（Step2）に進みます。Stripe側の自動審査のため、この画面での操作はありません。</p>' +
+        '<span class="ktn-review-status ktn-review-status--' + STRIPE_CLS[a.stripeStatus] + '">' + STRIPE_LABEL[a.stripeStatus] + '</span>' +
+        fieldsHtml([
+          ['完了日時', a.grantedDate || '—'],
+          ['本人確認手続きのご案内メール', a.inviteMailSent ? ('送信済み（' + a.inviteMailDate + '）') : '未送信'],
+        ]);
+      /* 案内メールは本人確認OKの操作と切り離した任意タイミングの送信（P902Dataの利用開始案内メールと同パターン）。
+         resultElはbuildStatusBodyの都度innerHTMLで再生成されるため、クリックはresultEl側のイベント委譲で拾う */
+      if (!a.inviteMailSent) {
+        html += '<div class="p902-flow-panel__actions"><button type="button" class="ktn-op-btn ktn-op-btn--sm" id="p9011InviteMailBtn">ご案内メールを送信する</button></div>';
+      }
+    } else if (a.status === 'cancelled') {
+      html += fieldsHtml([
+        ['完了日時', a.grantedDate || '—'],
+        ['取消理由', CANCEL_REASON_LABEL[a.cancelReason] || '—'],
+        ['取消のご連絡メール', a.cancelEmailSent ? '送信済み' : '送信なし'],
+      ]);
+    }
+    return html;
+  }
+
+  function todayLabel() {
+    var d = new Date();
+    var mm = d.getMinutes();
+    return d.getFullYear() + '.' + (d.getMonth() + 1) + '.' + d.getDate() + ' ' + d.getHours() + ':' + (mm < 10 ? '0' : '') + mm;
+  }
+
+  return {
+    STATUS: STATUS, ROLE_LABEL: ROLE_LABEL, STRIPE_LABEL: STRIPE_LABEL, STRIPE_CLS: STRIPE_CLS, REVIEW_REASON_LABEL: REVIEW_REASON_LABEL,
+    CANCEL_REASON_LABEL: CANCEL_REASON_LABEL,
+    MAIL_TEMPLATES: MAIL_TEMPLATES,
+    tplTokens: tplTokens, applyTokens: applyTokens,
+    findTemplate: findTemplate, templatesByPattern: templatesByPattern, templatesByPrefix: templatesByPrefix,
+    bareReasonKey: bareReasonKey, populateReasonSelect: populateReasonSelect, addCustomTemplate: addCustomTemplate,
+    APPS: APPS, findApp: findApp, dateSS: dateSS, procDate: procDate,
+    fieldsHtml: fieldsHtml, extractAlias: extractAlias, buildCsv: buildCsv, buildBody: buildBody, buildStatusBody: buildStatusBody,
+    saveOverride: saveOverride, todayLabel: todayLabel,
+  };
+}
+
+/* ════════════════════════════════════════════════════
+   P90-11  管理者-リエゾンプラス機能申込管理（一覧のみ・審査はP90-11-1へ分離／2026-08-09）
+════════════════════════════════════════════════════ */
+KTN.pages['p90-11'] = function () {
+  var D = P9011Data();
+  var STATUS = D.STATUS, ROLE_LABEL = D.ROLE_LABEL, STRIPE_LABEL = D.STRIPE_LABEL, REVIEW_REASON_LABEL = D.REVIEW_REASON_LABEL;
+  var CANCEL_REASON_LABEL = D.CANCEL_REASON_LABEL;
+  var APPS = D.APPS, findApp = D.findApp, dateSS = D.dateSS, procDate = D.procDate;
+
+  /* 本人確認OK後もStripe本人確認（Step2）が完了しLIAISON+が利用開始できるまでは「未処理・処理中」に留める。
+     本フローに差し戻し（returned）は無く、確認事項が残る申込もpendingのまま「未処理・処理中」に分類される
+     （2026-08-11）。処理完了は「本人確認OK＋Stripe完了」または「取消」（2026-08-11 取消追加）。 */
+  function isOpenApp(a) { return a.status === 'pending' || (a.status === 'granted' && a.stripeStatus !== 'completed'); }
+  function isDoneApp(a) { return (a.status === 'granted' && a.stripeStatus === 'completed') || a.status === 'cancelled'; }
+
+  /* ── タブ切替（未処理・処理中／処理完了） ── */
+  var tabBtns   = document.querySelectorAll('.p902-tab-btn');
+  var tabPanels = document.querySelectorAll('.p902-tab-panel');
+  function activateTabPanel(panelId) {
+    tabBtns.forEach(function (b) {
+      var isTarget = b.dataset.panel === panelId;
+      b.classList.toggle('is-active', isTarget);
+      b.setAttribute('aria-selected', isTarget ? 'true' : 'false');
+    });
+    tabPanels.forEach(function (p) { p.hidden = (p.id !== panelId); });
+  }
+  tabBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () { activateTabPanel(btn.dataset.panel); });
+  });
+
+  /* ── DOM（未処理・処理中タブ） ── */
+  var listOpenEl     = document.getElementById('p9011ListOpen');
+  var emptyOpenEl    = document.getElementById('p9011EmptyOpen');
+  var roleOpenSel    = document.getElementById('p9011FilterRoleOpen');
+  var countOpenEl    = document.getElementById('p9011CountOpen');
+  var pagerOpenEl    = document.getElementById('p9011PaginationOpen');
+  var tabCountOpenEl = document.getElementById('p9011TabCountOpen');
+
+  /* ── DOM（処理完了タブ） ── */
+  var listDoneEl     = document.getElementById('p9011ListDone');
+  var emptyDoneEl    = document.getElementById('p9011EmptyDone');
+  var roleDoneSel    = document.getElementById('p9011FilterRoleDone');
+  var countDoneEl    = document.getElementById('p9011CountDone');
+  var pagerDoneEl    = document.getElementById('p9011PaginationDone');
+  var tabCountDoneEl = document.getElementById('p9011TabCountDone');
+
+  if (!listOpenEl || !listDoneEl) return;
+
+  var pageOpen = 1, pageDone = 1;
+  var PER_PAGE = 5;
+
+  /* ── 一覧行（表形式：申込日時／申込NID／ロール／UID／ログインメールアドレス／ステータス）※タブ①未処理・処理中用
+     （確認中＝pending、本人確認OKだがStripe未完了＝granted&stripeStatus!=='completed'の2パターン。
+     本フローに差し戻し（returned）は無い。確認事項が残るpendingは、確認メール送信済みならinquiry.reasonを、
+     未送信ならreviewReasonを内訳ラベルとして小さく添える・P902Dataのprocラベルと同パターン） ── */
+  function makeOpenRow(a) {
+    var tr = document.createElement('tr');
+    tr.className = 'p902-row';
+    tr.dataset.id = a.id;
+    tr.title = 'クリックして詳細を確認';
+    var statusCell;
+    if (a.status === 'granted') {
+      statusCell = '<span class="ktn-review-status ktn-review-status--' + STATUS.granted.cls + '">' + STATUS.granted.label + '</span>' +
+        (a.stripeStatus ? '<div class="p902-proc-reason">Stripe ' + STRIPE_LABEL[a.stripeStatus] + '</div>' : '');
+    } else {
+      var reasonKey = a.inquiry ? a.inquiry.reason : a.reviewReason;
+      statusCell = '<span class="ktn-review-status ktn-review-status--' + STATUS.pending.cls + '">' + STATUS.pending.label + '</span>' +
+        (reasonKey ? '<div class="p902-proc-reason">' + (REVIEW_REASON_LABEL[reasonKey] || reasonKey) + (a.inquiry ? '（返信待ち）' : '') + '</div>' : '');
+    }
+    tr.innerHTML =
+      '<td data-label="申込日時" class="p902-cell--muted">' + a.submitted + '</td>' +
+      '<td data-label="申込NID" class="p902-cell--muted">' + a.nid + '</td>' +
+      '<td data-label="ロール">' + (ROLE_LABEL[a.role] || a.role) + '</td>' +
+      '<td data-label="UID" class="p902-cell--name p902-col-uid">' + a.uid + '</td>' +
+      '<td data-label="ログインメールアドレス" class="p902-cell--muted">' + a.email + '</td>' +
+      '<td data-label="ステータス">' + statusCell + '</td>';
+    return tr;
+  }
+
+  /* ── 一覧行（表形式：申込日時／申込NID／ロール／UID／ログインメールアドレス／処理内容(内容+完了日時を上下2段表示)／ステータス）
+     ※タブ②処理完了専用。isDoneAppにより「本人確認OK＋Stripe完了」または「取消」が対象（差し戻しは未処理・処理中タブへ分類・
+     2026-08-10／2026-08-11 取消を追加）。P90-2のmakeDoneItem（処理種別+完了日時を1列・ステータスは別列）と同じ列構成 ── */
+  function makeDoneRow(a) {
+    var st = STATUS[a.status];
+    var tr = document.createElement('tr');
+    tr.className = 'p902-row';
+    tr.dataset.id = a.id;
+    tr.title = 'クリックして詳細を確認';
+    var content = a.status === 'cancelled' ? ('取消：' + (CANCEL_REASON_LABEL[a.cancelReason] || '—'))
+      : a.stripeStatus ? ('Stripe ' + STRIPE_LABEL[a.stripeStatus]) : '—';
+    tr.innerHTML =
+      '<td data-label="申込日時" class="p902-cell--muted">' + a.submitted + '</td>' +
+      '<td data-label="申込NID" class="p902-cell--muted">' + a.nid + '</td>' +
+      '<td data-label="ロール">' + (ROLE_LABEL[a.role] || a.role) + '</td>' +
+      '<td data-label="UID" class="p902-cell--name p902-col-uid">' + a.uid + '</td>' +
+      '<td data-label="ログインメールアドレス" class="p902-cell--muted">' + a.email + '</td>' +
+      '<td data-label="処理内容">' + content +
+        '<div class="p902-proc-reason">' + (procDate(a) || '—') + '</div></td>' +
+      '<td data-label="ステータス"><span class="ktn-review-status ktn-review-status--' + st.cls + '">' + st.label + '</span></td>';
+    return tr;
+  }
+
+  /* ── 行クリックで審査サブページ（P90-11-1）へ遷移 ── */
+  function bindRowClicks(el) {
+    el.addEventListener('click', function (e) {
+      var row = e.target.closest('.p902-row');
+      if (!row) return;
+      var a = findApp(row.dataset.id);
+      if (a) location.href = 'kotennavi-p90-11-1.html?id=' + encodeURIComponent(a.id);
+    });
+  }
+  bindRowClicks(listOpenEl);
+  bindRowClicks(listDoneEl);
+
+  /* ── タブ①：未処理・処理中（並べ替えなし・申込日降順固定） ── */
+  function renderOpen() {
+    var fr = roleOpenSel ? roleOpenSel.value : '';
+    var rows = APPS.filter(function (a) {
+      if (!isOpenApp(a)) return false;
+      if (fr && a.role !== fr) return false;
+      return true;
+    });
+    rows.sort(function (a, b) { return b.ss - a.ss; });
+    if (tabCountOpenEl) tabCountOpenEl.textContent = APPS.filter(isOpenApp).length;
+    if (emptyOpenEl) emptyOpenEl.hidden = rows.length !== 0;
+    if (countOpenEl) countOpenEl.innerHTML = '<strong>' + rows.length + '</strong>件該当';
+
+    var totalPages = Math.max(1, Math.ceil(rows.length / PER_PAGE));
+    if (pageOpen > totalPages) pageOpen = totalPages;
+    var pageRows = rows.slice((pageOpen - 1) * PER_PAGE, pageOpen * PER_PAGE);
+    listOpenEl.innerHTML = '';
+    pageRows.forEach(function (a) { listOpenEl.appendChild(makeOpenRow(a)); });
+    KTN.pagination.render(pagerOpenEl, {
+      page: pageOpen,
+      totalPages: totalPages,
+      onGoto: function (p) { pageOpen = p; renderOpen(); },
+    });
+  }
+
+  /* ── タブ②：処理完了（並べ替えなし・処理完了日降順固定） ── */
+  function renderDone() {
+    var fr = roleDoneSel ? roleDoneSel.value : '';
+    var rows = APPS.filter(function (a) {
+      if (!isDoneApp(a)) return false;
+      if (fr && a.role !== fr) return false;
+      return true;
+    });
+    rows.sort(function (a, b) { return dateSS(procDate(b)) - dateSS(procDate(a)); });
+    if (tabCountDoneEl) tabCountDoneEl.textContent = APPS.filter(isDoneApp).length;
+    if (emptyDoneEl) emptyDoneEl.hidden = rows.length !== 0;
+    if (countDoneEl) countDoneEl.innerHTML = '<strong>' + rows.length + '</strong>件該当';
+
+    var totalPages = Math.max(1, Math.ceil(rows.length / PER_PAGE));
+    if (pageDone > totalPages) pageDone = totalPages;
+    var pageRows = rows.slice((pageDone - 1) * PER_PAGE, pageDone * PER_PAGE);
+    listDoneEl.innerHTML = '';
+    pageRows.forEach(function (a) { listDoneEl.appendChild(makeDoneRow(a)); });
+    KTN.pagination.render(pagerDoneEl, {
+      page: pageDone,
+      totalPages: totalPages,
+      onGoto: function (p) { pageDone = p; renderDone(); },
+    });
+  }
+
+  function renderAll() { renderOpen(); renderDone(); }
+
+  function renderResetOpen() { pageOpen = 1; renderOpen(); }
+  function renderResetDone() { pageDone = 1; renderDone(); }
+  if (roleOpenSel) roleOpenSel.addEventListener('change', renderResetOpen);
+  if (roleDoneSel) roleDoneSel.addEventListener('change', renderResetDone);
+  renderAll();
+
+  window.ktnRender = function () {};
+};
+
+/* ════════════════════════════════════════════════════
+   P90-11-1  管理者-リエゾンプラス機能申込審査（サブページ・旧審査モーダルから分離／2026-08-09）
+   P90-2-1と同じ分割パターン：URLの?idで対象を特定し、結果はその場で再描画する
+   （画面遷移せず一覧へは「一覧へ戻る →」で戻る）。本フローに差し戻しは無く、確認事項が残る申込は
+   「確認中」のまま「申込者に確認する」でテンプレートメール送信のみ行う（2026-08-11、P902Dataと同パターン）。
+   終端アクションは本人確認OK・取消の2つ（2026-08-11 取消追加）。ボタン行（reviewActionsEl）は
+   P902-1と同様、いずれかの操作パネルが開いている間は隠す（隠さないと開いたパネルの下に
+   トリガーボタン自体が残ってしまう＝2026-08-11 バグ修正）。
+════════════════════════════════════════════════════ */
+KTN.pages['p90-11-1'] = function () {
+  var D = P9011Data();
+
+  var params = new URLSearchParams(location.search);
+  var current = D.findApp(params.get('id'));
+
+  var statusChip = document.getElementById('p9011ReviewStatus');
+  var titleEl    = document.getElementById('p9011ReviewTitle');
+  var metaEl     = document.getElementById('p9011ReviewMeta');
+  var bodyEl     = document.getElementById('p9011ReviewBody');
+  var csvBox     = document.getElementById('p9011CsvBox');
+  var csvCopyBtn = document.getElementById('p9011CsvCopyBtn');
+  var resultEl   = document.getElementById('p9011ReviewResult');
+  var adminNoteEl   = document.getElementById('p9011AdminNote');
+  var reviewActionsEl = document.getElementById('p9011ReviewActions');
+
+  /* 確認メール送信済みの小さな注記（返信待ち・statusはpendingのまま） */
+  var inquiryNoteEl = document.getElementById('p9011InquiryNote');
+
+  /* 申込者に確認する（本フローに差し戻しは無く、確認事項が残る申込は「確認中」のまま扱う。P902DataのInquiryパネルと同パターン） */
+  var inquiryBtn        = document.getElementById('p9011InquiryBtn');
+  var inquiryPanel       = document.getElementById('p9011InquiryPanel');
+  var inquiryReasonSel   = document.getElementById('p9011InquiryReasonSel');
+  var inquiryFromEl      = document.getElementById('p9011InquiryFrom');
+  var inquirySubjectEl   = document.getElementById('p9011InquirySubject');
+  var inquiryBodyEl      = document.getElementById('p9011InquiryBody');
+  var inquiryNewRow      = document.getElementById('p9011InquiryNewNameRow');
+  var inquiryNewName     = document.getElementById('p9011InquiryNewName');
+  var inquiryNewSaveBtn  = document.getElementById('p9011InquiryNewSaveBtn');
+  var inquirySendBtn     = document.getElementById('p9011InquirySendBtn');
+  var inquiryCancelBtn   = document.getElementById('p9011InquiryCancelBtn');
+
+  /* お申込みの取消（確認メールへの返信内容、または申込者からの取消希望をもとに確定。P902DataのCancelパネルと同パターン） */
+  var cancelFlowBtn      = document.getElementById('p9011CancelFlowBtn');
+  var cancelPanel         = document.getElementById('p9011CancelPanel');
+  var cancelReasonSel     = document.getElementById('p9011CancelReasonSel');
+  var cancelSendMailChk   = document.getElementById('p9011CancelSendMail');
+  var cancelMailFieldsEl  = document.getElementById('p9011CancelMailFields');
+  var cancelFromEl        = document.getElementById('p9011CancelFrom');
+  var cancelSubjectEl     = document.getElementById('p9011CancelSubject');
+  var cancelBodyEl        = document.getElementById('p9011CancelBody');
+  var cancelNewRow        = document.getElementById('p9011CancelNewNameRow');
+  var cancelNewName       = document.getElementById('p9011CancelNewName');
+  var cancelNewSaveBtn    = document.getElementById('p9011CancelNewSaveBtn');
+  var cancelBackBtn       = document.getElementById('p9011CancelBackBtn');
+  var cancelConfirmBtn    = document.getElementById('p9011CancelConfirmBtn');
+
+  var approveBtn    = document.getElementById('p9011ApproveBtn');
+  var inviteMailPanel   = document.getElementById('p9011InviteMailPanel');
+  var inviteTemplateSel = document.getElementById('p9011InviteTemplateSel');
+  var inviteFromEl      = document.getElementById('p9011InviteFrom');
+  var inviteMailSubject = document.getElementById('p9011InviteMailSubject');
+  var inviteMailBody    = document.getElementById('p9011InviteMailBody');
+  var inviteMailCancelBtn = document.getElementById('p9011InviteMailCancelBtn');
+  var inviteMailSendBtn   = document.getElementById('p9011InviteMailSendBtn');
+
+  [inquiryFromEl, cancelFromEl, inviteFromEl].forEach(function (sel) {
+    if (sel) sel.innerHTML = KTN.mailFromOptionsHtml();
+  });
+
+  if (!current) {
+    if (titleEl) titleEl.textContent = '申込が見つかりません';
+    if (metaEl) metaEl.textContent = '';
+    if (bodyEl) bodyEl.innerHTML = '<p>指定された申込データが見つかりませんでした。一覧から選び直してください。</p>';
+    if (statusChip) statusChip.hidden = true;
+    if (reviewActionsEl) reviewActionsEl.hidden = true;
+    window.ktnRender = function () {};
+    return;
+  }
+
+  /* ── 操作パネルを一括で閉じる（P902DataのcloseActionPanelsと同パターン） ── */
+  function closeActionPanels() {
+    if (inquiryPanel) inquiryPanel.hidden = true;
+    if (cancelPanel) cancelPanel.hidden = true;
+    if (inviteMailPanel) inviteMailPanel.hidden = true;
+  }
+
+  /* ── 申込者への確認メール（本フローに差し戻しは無く、確認事項が残る申込は「確認中」のまま扱う。
+     テンプレートはP90-9で一元管理し、プルダウンから選択・その場での新規追加にも対応。
+     P902DataのInquiryパネルと同パターン：送信してもステータスは変わらない） ── */
+  function loadInquiryTemplate(variantKey) {
+    if (!current) return;
+    if (variantKey === '__new__') {
+      if (inquiryNewRow) inquiryNewRow.hidden = false;
+      return;
+    }
+    if (inquiryNewRow) inquiryNewRow.hidden = true;
+    var t = D.findTemplate(variantKey);
+    if (!t) return;
+    if (inquiryFromEl) inquiryFromEl.value = t.from;
+    var tokens = D.tplTokens(current);
+    if (inquirySubjectEl) inquirySubjectEl.value = D.applyTokens(t.subject, tokens);
+    if (inquiryBodyEl) inquiryBodyEl.value = D.applyTokens(t.body, tokens);
+  }
+
+  /* ── お申込みの取消（テンプレート選択＋その場での新規追加に対応。P902DataのCancelパネルと同パターン） ── */
+  function loadCancelTemplate(variantKey) {
+    if (!current) return;
+    if (variantKey === '__new__') {
+      if (cancelNewRow) cancelNewRow.hidden = false;
+      return;
+    }
+    if (cancelNewRow) cancelNewRow.hidden = true;
+    var t = D.findTemplate(variantKey);
+    if (!t) return;
+    if (cancelFromEl) cancelFromEl.value = t.from;
+    var tokens = D.tplTokens(current);
+    if (cancelSubjectEl) cancelSubjectEl.value = D.applyTokens(t.subject, tokens);
+    if (cancelBodyEl) cancelBodyEl.value = D.applyTokens(t.body, tokens);
+  }
+
+  /* ── 案内メールパネル（本人確認OK後・処理結果エリアのボタンから任意タイミングで送信。P902Grantパネルと同パターン） ── */
+  function loadInviteTemplate(variantKey) {
+    if (!current) return;
+    var t = D.findTemplate(variantKey);
+    if (!t) return;
+    var tokens = D.tplTokens(current);
+    if (inviteFromEl) inviteFromEl.value = t.from;
+    if (inviteMailSubject) inviteMailSubject.value = D.applyTokens(t.subject, tokens);
+    if (inviteMailBody) inviteMailBody.value = D.applyTokens(t.body, tokens);
+  }
+
+  /* ── 審査ページ本体の描画（旧openReviewModal相当・モーダル開閉なし） ── */
+  function renderReview() {
+    var a = current;
+    var st = D.STATUS[a.status];
+    if (statusChip) { statusChip.className = 'ktn-review-status ktn-review-status--' + st.cls; statusChip.textContent = st.label; }
+    if (titleEl) titleEl.textContent = a.name;
+    if (metaEl) metaEl.innerHTML = '申込日時：' + a.submitted + ' ・ 申込NID：' + a.nid + ' ・ 申込種別：' + D.ROLE_LABEL[a.role] +
+      '<br>UID：' + a.uid + ' ・ ログインメールアドレス：' + a.email +
+      ' ・ <a class="ktn-guide-link" href="' + a.existingUrl + '" target="_blank" rel="noopener">' + (a.role === 'creator' ? 'クリエイターページ' : 'ギャラリーページ') + ' →</a>';
+    if (bodyEl) bodyEl.innerHTML = D.buildBody(a);
+
+    /* 入力内容CSV */
+    var csv = D.buildCsv(a);
+    if (csvBox) csvBox.value = csv;
+    if (csvCopyBtn) csvCopyBtn.dataset.copy = csv;
+
+    /* 確認メール送信済みの小さな注記（返信待ち・P902Dataと同パターン） */
+    if (inquiryNoteEl) {
+      if (a.inquiry) {
+        inquiryNoteEl.hidden = false;
+        inquiryNoteEl.innerHTML = '<strong>確認メール送信済み</strong>'
+          + '<span class="p902-inquiry-note__meta">'
+          + '<span class="p902-inquiry-note__meta-item"><span class="p902-inquiry-note__meta-label">送信日時</span><span class="p902-inquiry-note__meta-value">' + a.inquiry.date + '</span></span>'
+          + '<span class="p902-inquiry-note__meta-item"><span class="p902-inquiry-note__meta-label">種別</span><span class="p902-inquiry-note__meta-value">' + (D.REVIEW_REASON_LABEL[a.inquiry.reason] || '') + '</span></span>'
+          + '</span>';
+      } else {
+        inquiryNoteEl.hidden = true;
+        inquiryNoteEl.innerHTML = '';
+      }
+    }
+
+    if (adminNoteEl) adminNoteEl.value = a.adminNote || '';
+
+    /* 処理結果（未処理・処理中＝pendingの間は非表示。P902Dataのresult表示と同パターン） */
+    if (resultEl) {
+      if (a.status === 'pending') { resultEl.hidden = true; resultEl.innerHTML = ''; }
+      else { resultEl.hidden = false; resultEl.innerHTML = D.buildStatusBody(a); }
+    }
+
+    closeActionPanels();
+    if (reviewActionsEl) reviewActionsEl.hidden = false;
+
+    /* 処理済みの申込は結果を表示するのみ（本人確認OKボタン・確認する/取消ボタンは出さない） */
+    if (approveBtn) approveBtn.hidden = a.status !== 'pending';
+    if (inquiryBtn) inquiryBtn.hidden = a.status !== 'pending';
+    if (cancelFlowBtn) cancelFlowBtn.hidden = a.status !== 'pending';
+  }
+  renderReview();
+
+  if (adminNoteEl) adminNoteEl.addEventListener('input', function () {
+    current.adminNote = adminNoteEl.value;
+    D.saveOverride(current);
+  });
+
+  if (inquiryBtn) inquiryBtn.addEventListener('click', function () {
+    if (!current) return;
+    closeActionPanels();
+    if (reviewActionsEl) reviewActionsEl.hidden = true;
+    D.populateReasonSelect(inquiryReasonSel, 'confirm-');
+    if (inquiryReasonSel) inquiryReasonSel.value = 'confirm-document-unclear';
+    loadInquiryTemplate('confirm-document-unclear');
+    if (inquiryPanel) inquiryPanel.hidden = false;
+  });
+  if (inquiryReasonSel) inquiryReasonSel.addEventListener('change', function () {
+    loadInquiryTemplate(inquiryReasonSel.value);
+  });
+  if (inquiryNewSaveBtn) inquiryNewSaveBtn.addEventListener('click', function () {
+    if (!current || !inquiryNewName) return;
+    var name = inquiryNewName.value.trim();
+    if (!name) { if (KTN.toast) KTN.toast('テンプレート名を入力してください'); return; }
+    var t = D.addCustomTemplate('abnormal', 'confirm', name, inquirySubjectEl ? inquirySubjectEl.value : '', inquiryBodyEl ? inquiryBodyEl.value : '');
+    D.populateReasonSelect(inquiryReasonSel, 'confirm-');
+    if (inquiryReasonSel) inquiryReasonSel.value = t.variantKey;
+    if (inquiryNewRow) inquiryNewRow.hidden = true;
+    inquiryNewName.value = '';
+    if (KTN.toast) KTN.toast('新しいテンプレートを追加しました（デモ）');
+  });
+  if (inquiryCancelBtn) inquiryCancelBtn.addEventListener('click', function () {
+    closeActionPanels();
+    if (reviewActionsEl) reviewActionsEl.hidden = false;
+  });
+  if (inquirySendBtn) inquirySendBtn.addEventListener('click', function () {
+    if (!current) return;
+    var reasonKey = inquiryReasonSel ? D.bareReasonKey(inquiryReasonSel.value) || 'other' : 'other';
+    current.inquiry = { reason: reasonKey, date: D.todayLabel() };
+    D.saveOverride(current);
+    renderReview();
+    if (KTN.toast) KTN.toast('確認メールを送信しました（デモ）');
+  });
+
+  if (cancelFlowBtn) cancelFlowBtn.addEventListener('click', function () {
+    if (!current) return;
+    closeActionPanels();
+    if (reviewActionsEl) reviewActionsEl.hidden = true;
+    D.populateReasonSelect(cancelReasonSel, 'cancel-');
+    var defaultReason = current.inquiry ? current.inquiry.reason : 'document-unclear';
+    if (cancelReasonSel) cancelReasonSel.value = 'cancel-' + defaultReason;
+    if (cancelSendMailChk) cancelSendMailChk.checked = false;
+    if (cancelMailFieldsEl) cancelMailFieldsEl.hidden = false;
+    if (cancelNewRow) cancelNewRow.hidden = true;
+    loadCancelTemplate(cancelReasonSel ? cancelReasonSel.value : 'cancel-document-unclear');
+    if (cancelPanel) cancelPanel.hidden = false;
+  });
+  if (cancelReasonSel) cancelReasonSel.addEventListener('change', function () {
+    loadCancelTemplate(cancelReasonSel.value);
+  });
+  if (cancelNewSaveBtn) cancelNewSaveBtn.addEventListener('click', function () {
+    if (!current || !cancelNewName) return;
+    var name = cancelNewName.value.trim();
+    if (!name) { if (KTN.toast) KTN.toast('テンプレート名を入力してください'); return; }
+    var t = D.addCustomTemplate('abnormal', 'cancel', name, cancelSubjectEl ? cancelSubjectEl.value : '', cancelBodyEl ? cancelBodyEl.value : '');
+    D.populateReasonSelect(cancelReasonSel, 'cancel-');
+    if (cancelReasonSel) cancelReasonSel.value = t.variantKey;
+    if (cancelNewRow) cancelNewRow.hidden = true;
+    cancelNewName.value = '';
+    if (KTN.toast) KTN.toast('新しいテンプレートを追加しました（デモ）');
+  });
+  if (cancelBackBtn) cancelBackBtn.addEventListener('click', function () {
+    closeActionPanels();
+    if (reviewActionsEl) reviewActionsEl.hidden = false;
+  });
+  if (cancelConfirmBtn) cancelConfirmBtn.addEventListener('click', function () {
+    if (!current) return;
+    var reason = cancelReasonSel ? (D.bareReasonKey(cancelReasonSel.value) || 'other') : 'other';
+    var emailSent = cancelSendMailChk ? cancelSendMailChk.checked : false;
+    current.status = 'cancelled';
+    current.cancelReason = reason;
+    current.cancelEmailSent = emailSent;
+    current.grantedDate = D.todayLabel();
+    current.inquiry = null;
+    D.saveOverride(current);
+    renderReview();
+    if (KTN.toast) KTN.toast('お申込みを取消しました（デモ）');
+  });
+
+  if (approveBtn) approveBtn.addEventListener('click', function () {
+    current.status = 'granted';
+    current.grantedDate = D.todayLabel();
+    current.stripeStatus = 'not_started';
+    D.saveOverride(current);
+    renderReview();
+    if (KTN.toast) KTN.toast('本人確認OKにしました。ご案内メールは処理結果エリアから送信してください（デモ）');
+  });
+
+  /* 案内メールボタンはbuildStatusBodyの都度resultEl.innerHTMLで再生成されるため、
+     クリックはresultEl側のイベント委譲で拾う（P902Dataの利用開始案内メールボタンと同パターン） */
+  if (resultEl) resultEl.addEventListener('click', function (e) {
+    var btn = e.target && e.target.closest ? e.target.closest('#p9011InviteMailBtn') : null;
+    if (!btn || !current) return;
+    closeActionPanels();
+    if (reviewActionsEl) reviewActionsEl.hidden = true;
+    if (inviteTemplateSel) {
+      inviteTemplateSel.innerHTML = D.templatesByPattern('normal').map(function (t) {
+        return '<option value="' + t.variantKey + '">' + t.name + '</option>';
+      }).join('');
+      inviteTemplateSel.value = 'invite';
+      loadInviteTemplate(inviteTemplateSel.value);
+    } else {
+      loadInviteTemplate('invite');
+    }
+    if (inviteMailPanel) inviteMailPanel.hidden = false;
+  });
+  if (inviteTemplateSel) inviteTemplateSel.addEventListener('change', function () {
+    loadInviteTemplate(inviteTemplateSel.value);
+  });
+  if (inviteMailCancelBtn) inviteMailCancelBtn.addEventListener('click', function () {
+    closeActionPanels();
+    if (reviewActionsEl) reviewActionsEl.hidden = false;
+  });
+  if (inviteMailSendBtn) inviteMailSendBtn.addEventListener('click', function () {
+    current.inviteMailSent = true;
+    current.inviteMailDate = D.todayLabel();
+    D.saveOverride(current);
+    renderReview();
+    if (KTN.toast) KTN.toast('ご案内メールを送信しました（デモ）');
+  });
+
+  window.ktnRender = function () {};
+};
+
+/* ════════════════════════════════════════════════════
+   P90-9  管理者-メールテンプレート管理（docs/mail-template-system.md 準拠）
+   使用画面（screenId）×パターン（normal/abnormal）でテンプレートを一元管理する汎用CRUD。
+   variantKeyは画面側だけが解釈する不透明な文字列としてそのまま保存する（意味の解釈はしない）。
+   本ページはP90-2とデータを共有しない独立したデモ配列を持つ（React CSR化前提・同ドキュメント1章参照）。
+════════════════════════════════════════════════════ */
+KTN.pages['p90-9'] = function () {
+
+  var SCREEN_LABEL = { 'p90-2': 'クリエイター/ギャラリー機能申込管理', 'p90-11': 'リエゾンプラス機能申込管理' };
+  var PATTERN_LABEL = { normal: '正常系', abnormal: '非正常系' };
+  var PATTERN_CLS   = { normal: 'cb-normal', abnormal: 'cb-abnormal' };
+
+  /* 画面が実装された時点で確定する「必須区分」（送信パネルの数・構成そのものと対応）。
+     テンプレートの残数に関わらず、この区分定義自体は画面のコード構造から決まる固定情報。
+     削除ガード（openDelModal）はこの定義を使い、区分内の最後の1件を誤って廃止できないようにする。 */
+  var SCREEN_REQUIRED_CATEGORIES = {
+    'p90-2': [
+      { pattern: 'normal',   prefix: null,       label: '正常系（利用開始のご案内）' },
+      { pattern: 'abnormal', prefix: 'confirm-', label: '非正常系・確認メール' },
+      { pattern: 'abnormal', prefix: 'cancel-',  label: '非正常系・取消のご連絡' }
+    ],
+    'p90-11': [
+      { pattern: 'normal',   prefix: null,       label: '正常系（本人確認OKのご案内）' },
+      { pattern: 'abnormal', prefix: 'confirm-', label: '非正常系・確認メール' },
+      { pattern: 'abnormal', prefix: 'cancel-',  label: '非正常系・取消のご連絡' }
+    ]
+  };
+  function findCategory(t) {
+    var cats = SCREEN_REQUIRED_CATEGORIES[t.screenId];
+    if (!cats) return null;
+    for (var i = 0; i < cats.length; i++) {
+      var c = cats[i];
+      if (c.pattern !== t.pattern) continue;
+      if (c.prefix && t.variantKey.indexOf(c.prefix) !== 0) continue;
+      return c;
+    }
+    return null;
+  }
+  function isLastActiveInCategory(t, cat) {
+    var count = TEMPLATES.filter(function (o) {
+      if (o.status !== 'active') return false;
+      if (o.screenId !== t.screenId || o.pattern !== cat.pattern) return false;
+      if (cat.prefix && o.variantKey.indexOf(cat.prefix) !== 0) return false;
+      return true;
+    }).length;
+    return count <= 1;
+  }
+
+  var GRANT_BODY_NEW =
+    '{{userName}} 様\n\nお待たせしました。個展なび事務局での確認が完了し、\n{{roleName}}機能をご利用いただけるようになりました。\n\n' +
+    'あなたの{{roleName}}ページはこちらです。\n　{{pageName}}\n　{{pageUrl}}\n\n' +
+    'これから、展覧会・作品・記事の掲載や、\nウォッチしてくださっている方への発信ができます。\n\n' +
+    'まずはページの内容をご確認のうえ、\nプロフィールや掲載情報の追加をお試しください。\n\n{{commonFooter}}';
+  var GRANT_BODY_LINK =
+    '{{userName}} 様\n\nお待たせしました。個展なび事務局での確認が完了し、\n{{roleName}}機能をご利用いただけるようになりました。\n\n' +
+    'あなたの{{roleName}}ページはこちらです。\n　{{pageName}}\n　{{pageUrl}}\n\n' +
+    'これから、展覧会・作品・記事の掲載や、\nウォッチしてくださっている方への発信ができます。\n\n' +
+    '──────────────────────────────\n これまでの掲載情報を引き継ぎました\n──────────────────────────────\n' +
+    '他の方が投稿された情報をもとに事務局が先行して作成していた\nあなたのページを確認し、オーナーをあなたに切り替えました。\n' +
+    'これまでの展覧会情報もそのまま引き継がれています。\n内容に相違がある場合は、下記よりお知らせください。\n　{{supportUrl}}\n' +
+    '──────────────────────────────\n\nまずはページの内容をご確認のうえ、\nプロフィールや掲載情報の追加をお試しください。\n\n{{commonFooter}}';
+  var CANCEL_BODY_STD =
+    '{{userName}} 様\n\nご連絡いただきありがとうございました。\n' +
+    'いただいたご返信内容を確認し、今回の{{roleName}}機能のお申込み（申込NID：{{applyId}}）は取消とさせていただきました。\n\n' +
+    '改めてお申込みをご希望の場合は、お手数ですが再度お申込みフォームよりお手続きください。\n\n{{commonFooter}}';
+
+  /* ── デモデータ（P90-2側のMAIL_TEMPLATESと同内容だが、ページ間の実データ連携がないため個別配列として保持） ── */
+  var TEMPLATES = [
+    { id: 'mt-1', screenId: 'p90-2', pattern: 'normal', variantKey: 'creator-new', from: 'register@koten-navi.com',
+      name: 'クリエイター機能 – 新規ページ作成', subject: '【個展なび】{{roleName}}機能のご利用を開始いただけます', body: GRANT_BODY_NEW,
+      status: 'active', usageNote: '新規にクリエイターページを作成して機能を付与した時に送る（M-02）。', updatedAt: '2026.8.8' },
+    { id: 'mt-2', screenId: 'p90-2', pattern: 'normal', variantKey: 'creator-link', from: 'register@koten-navi.com',
+      name: 'クリエイター機能 – 既存ページのリンク付け', subject: '【個展なび】{{roleName}}機能のご利用を開始いただけます', body: GRANT_BODY_LINK,
+      status: 'active', usageNote: '事務局が先行作成済みの未割当ページにオーナーとしてリンクした時に送る（M-02・引き継ぎ結果ブロック付き）。', updatedAt: '2026.8.8' },
+    { id: 'mt-3', screenId: 'p90-2', pattern: 'normal', variantKey: 'gallery-new', from: 'register@koten-navi.com',
+      name: 'ギャラリー機能 – 新規ページ作成', subject: '【個展なび】{{roleName}}機能のご利用を開始いただけます', body: GRANT_BODY_NEW,
+      status: 'active', usageNote: '新規にギャラリーページを作成して機能を付与した時に送る（M-04）。', updatedAt: '2026.8.8' },
+    { id: 'mt-4', screenId: 'p90-2', pattern: 'normal', variantKey: 'gallery-link', from: 'register@koten-navi.com',
+      name: 'ギャラリー機能 – 既存ページのリンク付け', subject: '【個展なび】{{roleName}}機能のご利用を開始いただけます', body: GRANT_BODY_LINK,
+      status: 'active', usageNote: '事務局が先行作成済みの未割当ページにオーナーとしてリンクした時に送る（M-04・引き継ぎ結果ブロック付き）。', updatedAt: '2026.8.8' },
+    { id: 'mt-5', screenId: 'p90-2', pattern: 'abnormal', variantKey: 'confirm-input-error', from: 'inquiry@koten-navi.com',
+      name: '入力不足・入力誤り', subject: '【個展なび】{{roleName}}機能のお申込み内容について確認のお願い',
+      body: '{{userName}} 様\n\nこのたびは個展なびの{{roleName}}機能にお申し込みいただき、ありがとうございます。\n' +
+        'いただいた内容を確認したところ、下記の点についてご確認をお願いしたく、ご連絡いたしました。\n\n' +
+        '──────────────────────────────\n 申込NID：{{applyId}}\n 確認事項：（ここに具体的な不足・誤りの内容を記載してください）\n──────────────────────────────\n\n' +
+        'お手数をおかけいたしますが、本メールへの返信にて、上記についてご回答いただけますと幸いです。\nご回答をもって、あらためて内容を確認のうえ対応いたします。\n\n' +
+        '※本メールへの返信がない場合、恐れ入りますが今回のお申込みは取消とさせていただく場合がございます。\n\n{{commonFooter}}',
+      status: 'active', usageNote: '入力内容に不足・誤りの疑いがある時、取消を確定する前に事情を確認する1通（M-06パターン①）。', updatedAt: '2026.8.8' },
+    { id: 'mt-6', screenId: 'p90-2', pattern: 'abnormal', variantKey: 'confirm-duplicate', from: 'inquiry@koten-navi.com',
+      name: '重複申込の可能性', subject: '【個展なび】{{roleName}}機能のお申込みについて確認のお願い（重複申込の可能性）',
+      body: '{{userName}} 様\n\nこのたびは個展なびの{{roleName}}機能にお申し込みいただき、ありがとうございます。\n' +
+        '確認したところ、以前に別のアカウントで同様のお申込みをいただいている可能性がございます。\n\n' +
+        'お手数をおかけいたしますが、本メールへの返信にて、以前にお申込みいただいたアカウント（メールアドレス等）についてご確認いただけますと幸いです。\n\n' +
+        '※ご返信内容を確認のうえ、重複が確認できた場合は、今回のお申込みを取消とさせていただきます。\n\n{{commonFooter}}',
+      status: 'active', usageNote: '以前に別アカウントで同様の申込がある疑いがある時に事情を確認する1通（M-06パターン②）。', updatedAt: '2026.8.8' },
+    { id: 'mt-7', screenId: 'p90-2', pattern: 'abnormal', variantKey: 'cancel-input-error', from: 'register@koten-navi.com',
+      name: '入力不足・入力誤り', subject: '【個展なび】{{roleName}}機能のお申込みの取消について', body: CANCEL_BODY_STD,
+      status: 'active', usageNote: '確認メールへの返信・入力不足を理由に取消を確定した時に送る（M-07パターン①・送信は任意）。', updatedAt: '2026.8.8' },
+    { id: 'mt-8', screenId: 'p90-2', pattern: 'abnormal', variantKey: 'cancel-duplicate', from: 'register@koten-navi.com',
+      name: '以前に別アカウントで申込済み', subject: '【個展なび】{{roleName}}機能のお申込みの取消について', body: CANCEL_BODY_STD,
+      status: 'active', usageNote: '重複申込が確認できたことを理由に取消を確定した時に送る（M-07パターン①・送信は任意）。', updatedAt: '2026.8.8' },
+    { id: 'mt-9', screenId: 'p90-2', pattern: 'abnormal', variantKey: 'cancel-role-switch', from: 'register@koten-navi.com',
+      name: '希望ロールの変更', subject: '【個展なび】{{roleName}}機能のお申込みの取消について',
+      body: '{{userName}} 様\n\nご連絡いただきありがとうございました。\n' +
+        'ご希望のとおり、今回の{{roleName}}機能のお申込み（申込NID：{{applyId}}）は取消とさせていただきました。\n\n' +
+        'あらためて別の機能でお申込みをご希望の場合は、お手数ですが再度お申込みフォームよりお手続きください。\n\n{{commonFooter}}',
+      status: 'active', usageNote: '申込者本人からの希望ロール変更の連絡をもとに取消を確定した時に送る（M-07パターン②・送信は任意）。', updatedAt: '2026.8.8' },
+    { id: 'mt-10', screenId: 'p90-2', pattern: 'abnormal', variantKey: 'cancel-other', from: 'register@koten-navi.com',
+      name: 'その他', subject: '【個展なび】{{roleName}}機能のお申込みの取消について', body: CANCEL_BODY_STD,
+      status: 'active', usageNote: '上記に当てはまらない理由で取消を確定した時に送る（M-07パターン①・送信は任意）。', updatedAt: '2026.8.8' },
+    { id: 'mt-p9011-1', screenId: 'p90-11', pattern: 'normal', variantKey: 'invite', from: 'liaison@koten-navi.com',
+      name: '本人確認OKのご案内（Step2へ）', subject: '【個展なび】LIAISON+のご利用にあたり、本人確認の続きをお願いします',
+      body: '{{userName}} 様\n\n個展なび事務局です。\n{{roleName}}機能のお申込み（申込NID：{{applyId}}）について、\n' +
+        'ご提出いただいた本人確認書類の内容を確認いたしました。\n\n' +
+        '引き続き、Stripeでの本人確認手続き（Step2）にお進みください。\n　{{pageUrl}}\n\n' +
+        'Step2の手続きが完了すると、LIAISON+のご利用（作品販売）が開始されます。\n\n{{commonFooter}}',
+      status: 'active', usageNote: '本人確認OKにした後、処理結果エリアのボタンから任意タイミングで送る（P90-11-1）。', updatedAt: '2026.8.10' },
+    { id: 'mt-p9011-2', screenId: 'p90-11', pattern: 'abnormal', variantKey: 'confirm-document-unclear', from: 'inquiry@koten-navi.com',
+      name: '本人確認書類が不鮮明', subject: '【個展なび】本人確認書類について確認のお願い（LIAISON+機能お申込み）',
+      body: '{{userName}} 様\n\n個展なび事務局です。\n{{roleName}}機能のお申込み（申込NID：{{applyId}}）について、\n' +
+        'ご提出いただいた本人確認書類の内容を確認したところ、画像が不鮮明なため氏名・住所・生年月日を確認できませんでした。\n\n' +
+        'お手数をおかけいたしますが、本メールへの返信にて、鮮明な画像を再度ご提出いただけますと幸いです。\nご提出いただき次第、あらためて内容を確認いたします。\n\n{{commonFooter}}',
+      status: 'active', usageNote: '本人確認書類の画像が不鮮明で内容を確認できない時に送る（P90-11-1）。', updatedAt: '2026.8.11' },
+    { id: 'mt-p9011-3', screenId: 'p90-11', pattern: 'abnormal', variantKey: 'confirm-info-mismatch', from: 'inquiry@koten-navi.com',
+      name: '登録情報と書類の不一致', subject: '【個展なび】ご登録情報と本人確認書類について確認のお願い（LIAISON+機能お申込み）',
+      body: '{{userName}} 様\n\n個展なび事務局です。\n{{roleName}}機能のお申込み（申込NID：{{applyId}}）について、\n' +
+        'ご登録いただいた情報と、ご提出いただいた本人確認書類に記載の内容が一致しない箇所がございました。\n\n' +
+        'お手数をおかけいたしますが、本メールへの返信にて、現在の情報が確認できる書類とあわせてご回答いただけますと幸いです。\n\n{{commonFooter}}',
+      status: 'active', usageNote: '登録情報と本人確認書類の記載内容が一致しない時に送る（P90-11-1）。', updatedAt: '2026.8.11' },
+    { id: 'mt-p9011-4', screenId: 'p90-11', pattern: 'abnormal', variantKey: 'confirm-resp-info', from: 'inquiry@koten-navi.com',
+      name: '責任者情報の不備（ギャラリーのみ）', subject: '【個展なび】責任者情報について確認のお願い（LIAISON+機能お申込み）',
+      body: '{{userName}} 様\n\n個展なび事務局です。\n{{roleName}}機能のお申込み（申込NID：{{applyId}}）について、\n' +
+        'ご登録いただいた責任者情報の内容に不備があり、本人確認を進められない状態です。\n\n' +
+        'お手数をおかけいたしますが、本メールへの返信にて、責任者情報の不足箇所についてご回答いただけますと幸いです。\n\n{{commonFooter}}',
+      status: 'active', usageNote: 'ギャラリーの責任者情報に不備がある時に送る（P90-11-1）。', updatedAt: '2026.8.11' },
+    { id: 'mt-p9011-5', screenId: 'p90-11', pattern: 'abnormal', variantKey: 'confirm-missing-fields', from: 'inquiry@koten-navi.com',
+      name: '必須項目の未入力・記載不足', subject: '【個展なび】お申込み内容について確認のお願い（LIAISON+機能お申込み）',
+      body: '{{userName}} 様\n\n個展なび事務局です。\n{{roleName}}機能のお申込み（申込NID：{{applyId}}）について、\n' +
+        '必須項目に未入力・記載不足の箇所があり、本人確認を進められない状態です。\n\n' +
+        'お手数をおかけいたしますが、本メールへの返信にて、不足箇所についてご回答いただけますと幸いです。\n\n{{commonFooter}}',
+      status: 'active', usageNote: '必須項目の未入力・記載不足がある時に送る（P90-11-1）。', updatedAt: '2026.8.11' },
+    { id: 'mt-p9011-6', screenId: 'p90-11', pattern: 'abnormal', variantKey: 'confirm-other', from: 'inquiry@koten-navi.com',
+      name: 'その他', subject: '【個展なび】お申込み内容について確認のお願い（LIAISON+機能お申込み）',
+      body: '{{userName}} 様\n\n個展なび事務局です。\n{{roleName}}機能のお申込み（申込NID：{{applyId}}）について、\n' +
+        '下記の点についてご確認をお願いしたく、ご連絡いたしました。\n\n' +
+        '──────────────────────────────\n 確認事項：（ここに具体的な内容を記載してください）\n──────────────────────────────\n\n' +
+        'お手数をおかけいたしますが、本メールへの返信にてご回答いただけますと幸いです。\n\n{{commonFooter}}',
+      status: 'active', usageNote: '上記に当てはまらない理由で確認する時に送る（P90-11-1）。', updatedAt: '2026.8.11' },
+    { id: 'mt-p9011-7', screenId: 'p90-11', pattern: 'abnormal', variantKey: 'cancel-document-unclear', from: 'liaison@koten-navi.com',
+      name: '本人確認書類が不鮮明', subject: '【個展なび】LIAISON+機能のお申込みの取消について', body: CANCEL_BODY_STD,
+      status: 'active', usageNote: '確認メールへの返信が無い、または書類を再提出できない旨の連絡をもとに取消を確定した時に送る（P90-11-1・送信は任意）。', updatedAt: '2026.8.11' },
+    { id: 'mt-p9011-8', screenId: 'p90-11', pattern: 'abnormal', variantKey: 'cancel-info-mismatch', from: 'liaison@koten-navi.com',
+      name: '登録情報との不一致', subject: '【個展なび】LIAISON+機能のお申込みの取消について', body: CANCEL_BODY_STD,
+      status: 'active', usageNote: '登録情報と本人確認書類の不一致が解消しなかった時に取消を確定した時に送る（P90-11-1・送信は任意）。', updatedAt: '2026.8.11' },
+    { id: 'mt-p9011-9', screenId: 'p90-11', pattern: 'abnormal', variantKey: 'cancel-resp-info', from: 'liaison@koten-navi.com',
+      name: '責任者情報の不備', subject: '【個展なび】LIAISON+機能のお申込みの取消について', body: CANCEL_BODY_STD,
+      status: 'active', usageNote: 'ギャラリーの責任者情報の不備が解消しなかった時に取消を確定した時に送る（P90-11-1・送信は任意）。', updatedAt: '2026.8.11' },
+    { id: 'mt-p9011-10', screenId: 'p90-11', pattern: 'abnormal', variantKey: 'cancel-missing-fields', from: 'liaison@koten-navi.com',
+      name: '必須項目の不足', subject: '【個展なび】LIAISON+機能のお申込みの取消について', body: CANCEL_BODY_STD,
+      status: 'active', usageNote: '必須項目の不足が解消しなかった時に取消を確定した時に送る（P90-11-1・送信は任意）。', updatedAt: '2026.8.11' },
+    { id: 'mt-p9011-11', screenId: 'p90-11', pattern: 'abnormal', variantKey: 'cancel-other', from: 'liaison@koten-navi.com',
+      name: 'その他', subject: '【個展なび】LIAISON+機能のお申込みの取消について', body: CANCEL_BODY_STD,
+      status: 'active', usageNote: '上記に当てはまらない理由で取消を確定した時に送る（P90-11-1・送信は任意）。', updatedAt: '2026.8.11' },
+  ];
+
+  /* ── 自動送信メール（可視化＋文面編集）── データは docs/email-templates.md の
+     発火点インベントリ（M-01/M-03/M-05・T-01〜T-10・A-01＝Drupalが状態変化で自動送出するもの）を構造化。
+     M-02/M-04/M-06/M-07 は事務局がP90-2で選択・編集して送る「手動」のためここには含めない（TEMPLATESが正）。
+     送信画面のピックリスト（screenId/variantKey）は持たない＝「管理」対象ではないため一覧性が主目的だが、
+     件名・本文はDrupal実装フェーズへの入力仕様として起草・編集できる。
+     旧「起草進捗」列（起草済/未着手の自動判定バッジ）は2026-08-11に撤去済み：本番運用フェーズでは全件
+     文面が確定済み（＝「未着手」が発生しない）状態を前提とするため、管理する意味を持たないとユーザー判断。
+     件名列で入力有無（「—」＝未入力）がそのまま代替の目安になるため、別列としての状態表示は不要とした。 */
+  var AUTO_CATEGORY_LABEL = { apply: '機能申込系', txn: '取引系（LIAISON+）', activity: 'アクティビティ系（ウォッチ通知）' };
+  var AUTO_BODY_M01 =
+    '{{userName}} 様\n\nこのたびは個展なびのクリエイター機能にお申し込みいただき、\nありがとうございます。\n以下の内容でお申込みを受け付けました。\n\n' +
+    '──────────────────────────────\n お申込み日：{{applyDate}}\n クリエイター名：{{creatorName}}\n──────────────────────────────\n\n' +
+    '内容は個展なび事務局にて確認いたします。\n確認・設定が完了しましたら、あらためて\n「設定完了（ご利用開始）」のメールでお知らせします。\n（通常、数営業日以内にご連絡します）\n\n' +
+    '※本メールは送信専用です。ご不明な点は下記よりお問い合わせください。\n　{{supportUrl}}\n\n{{commonFooter}}';
+  var AUTO_TRIGGERS = [
+    { id: 'M-01', category: 'apply', event: 'クリエイター機能 申込受付', aud: '申込者', source: 'p11-2 submit', timing: '送信直後（自動）',
+      subject: '【個展なび】クリエイター機能のお申込みを受け付けました', body: AUTO_BODY_M01, note: 'docs/email-templates.md M-01 と同内容。', updatedAt: '2026.8.9' },
+    { id: 'M-03', category: 'apply', event: 'ギャラリー機能 申込受付', aud: '申込者', source: 'p11-3 submit', timing: '送信直後（自動）',
+      subject: '', body: '', note: 'M-01と同文面を{{roleName}}差替で共有予定。', updatedAt: '2026.8.9' },
+    { id: 'M-05', category: 'apply', event: 'LIAISON+ 申込受付／利用開始', aud: '申込者', source: 'p11-4 submit / admin', timing: '送信直後 / 承認後', subject: '', body: '', note: '', updatedAt: '2026.8.9' },
+    { id: 'T-01', category: 'txn', event: '購入申込を受け付けた', aud: '購入者', source: 'S0 申込済', timing: '申込直後', subject: '', body: '', note: '', updatedAt: '2026.8.9' },
+    { id: 'T-02', category: 'txn', event: '申込ID順が到来・購入確定をお願い', aud: '出品者', source: 'S1 購入確定待ち', timing: '繰り上げ時', subject: '', body: '', note: '', updatedAt: '2026.8.9' },
+    { id: 'T-03', category: 'txn', event: '購入が確定・お支払いのお願い', aud: '購入者', source: 'S2 支払待ち', timing: '出品者の確定後', subject: '', body: '', note: '', updatedAt: '2026.8.9' },
+    { id: 'T-04', category: 'txn', event: '支払完了・発送のお願い', aud: '出品者', source: 'S3 発送待ち', timing: '購入者の支払後', subject: '', body: '', note: '', updatedAt: '2026.8.9' },
+    { id: 'T-05', category: 'txn', event: '発送完了・受取確認のお願い', aud: '購入者', source: 'S4 受取確認待ち', timing: '出品者の発送後', subject: '', body: '', note: '', updatedAt: '2026.8.9' },
+    { id: 'T-06', category: 'txn', event: '受取確認・完了確認のお願い', aud: '出品者', source: 'S5 完了確認待ち', timing: '購入者の受取後', subject: '', body: '', note: '', updatedAt: '2026.8.9' },
+    { id: 'T-07', category: 'txn', event: '取引完了', aud: '双方', source: 'F1 取引完了', timing: '完了確定時', subject: '', body: '', note: '', updatedAt: '2026.8.9' },
+    { id: 'T-08', category: 'txn', event: '取引キャンセル', aud: '双方', source: 'F2 キャンセル済', timing: '中断時', subject: '', body: '', note: '', updatedAt: '2026.8.9' },
+    { id: 'T-09', category: 'txn', event: '期限間近リマインド', aud: 'my-turn側', source: 'S1〜S5', timing: '期限接近時', subject: '', body: '', note: '', updatedAt: '2026.8.9' },
+    { id: 'T-10', category: 'txn', event: '確定期限超過・出品自動取消', aud: '申込者全員', source: 'S1 超過', timing: '確定期限超過時', subject: '', body: '', note: '', updatedAt: '2026.8.9' },
+    { id: 'A-01', category: 'activity', event: 'ウォッチ中のクリエイター/ギャラリーが新規掲載', aud: 'ウォッチ元ユーザー', source: '展覧会/作品/記事の公開', timing: '公開時（バッチ可）', subject: '', body: '', note: '', updatedAt: '2026.8.9' },
+  ];
+  var AUTO_CATEGORY_ORDER = ['apply', 'txn', 'activity'];
+  function findAuto(id) {
+    for (var i = 0; i < AUTO_TRIGGERS.length; i++) if (AUTO_TRIGGERS[i].id === id) return AUTO_TRIGGERS[i];
+    return null;
+  }
+
+  /* ── DOM ── */
+  var listEl    = document.getElementById('p909List');
+  var emptyEl   = document.getElementById('p909Empty');
+  var screenSel = document.getElementById('p909FilterScreen');
+  var patSel    = document.getElementById('p909FilterPattern');
+  var statSel   = document.getElementById('p909FilterStatus');
+  var countEl   = document.getElementById('p909Count');
+  var pagerEl   = document.getElementById('p909Pagination');
+  var newBtn    = document.getElementById('p909NewBtn');
+  if (!listEl || !screenSel || !patSel || !statSel) return;
+
+  var page = 1;
+  var PER_PAGE = 20;
+
+  /* ── タブ切替（手動送信／自動送信） ── */
+  var tabsEl        = document.getElementById('p909Tabs');
+  var tabCountManual = document.getElementById('p909TabCountManual');
+  var tabCountAuto   = document.getElementById('p909TabCountAuto');
+  if (tabsEl) {
+    tabsEl.querySelectorAll('.p909-tab-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        tabsEl.querySelectorAll('.p909-tab-btn').forEach(function (b) {
+          var active = b === btn;
+          b.classList.toggle('is-active', active);
+          b.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+        document.querySelectorAll('.p909-tab-panel').forEach(function (panel) {
+          panel.hidden = panel.id !== btn.dataset.panel;
+        });
+      });
+    });
+  }
+  /* ── 自動送信タブの描画（カテゴリごとにグルーピング・カテゴリフィルター対応）＋文面編集・新規追加 ── */
+  var autoListEl      = document.getElementById('p909AutoList');
+  var autoEmptyEl     = document.getElementById('p909AutoEmpty');
+  var autoCountEl     = document.getElementById('p909AutoCount');
+  var autoFilterCatSel = document.getElementById('p909AutoFilterCategory');
+
+  function renderAuto() {
+    if (tabCountAuto) tabCountAuto.textContent = AUTO_TRIGGERS.length + '件';
+    if (!autoListEl) return;
+    var fcat = autoFilterCatSel ? autoFilterCatSel.value : '';
+    var filtered = AUTO_TRIGGERS.filter(function (a) { return !fcat || a.category === fcat; });
+    if (autoCountEl) autoCountEl.innerHTML = '<strong>' + filtered.length + '</strong>件該当';
+    if (autoEmptyEl) autoEmptyEl.hidden = filtered.length !== 0;
+    var html = '';
+    AUTO_CATEGORY_ORDER.forEach(function (cat) {
+      if (fcat && cat !== fcat) return;
+      var rows = filtered.filter(function (a) { return a.category === cat; });
+      if (!rows.length) return;
+      html += '<div class="p909-auto-group">' +
+        '<h4 class="p909-auto-group__title">' + AUTO_CATEGORY_LABEL[cat] + '<span class="ktn-count ktn-count--pill is-idle">' + rows.length + '件</span></h4>' +
+        '<div class="p315-archive-table-wrap">' +
+        '<table class="p315-archive-table p909-table p909-auto-table" aria-label="' + AUTO_CATEGORY_LABEL[cat] + 'の自動送信一覧">' +
+          '<thead><tr>' +
+            '<th>ID</th><th>発火イベント</th><th>対象 / トリガー元 / タイミング</th><th>件名</th><th>更新日</th><th>操作</th>' +
+          '</tr></thead>' +
+          '<tbody>' +
+          rows.map(function (a) {
+            return '<tr class="p909-auto-row" data-id="' + a.id + '">' +
+              '<td data-label="ID" class="p909-cell--muted">' + a.id + '</td>' +
+              '<td data-label="発火イベント" class="p909-cell--title">' + a.event + '</td>' +
+              '<td data-label="対象 / トリガー元 / タイミング" class="p909-cell--meta">' +
+                '<div class="p909-auto-meta__line">対象：' + a.aud + '</div>' +
+                '<div class="p909-auto-meta__line">トリガー元：' + a.source + '</div>' +
+                '<div class="p909-auto-meta__line">タイミング：' + a.timing + '</div>' +
+              '</td>' +
+              '<td data-label="件名" class="p909-cell--meta">' + ((a.subject || '').trim() ? a.subject : '<span class="p909-cell--muted">—</span>') + '</td>' +
+              '<td data-label="更新日" class="p909-cell--muted">' + (a.updatedAt || '—') + '</td>' +
+              '<td data-label="操作" class="p909-cell--actions">' +
+                '<div class="p909-actions-stack">' +
+                  '<button type="button" class="ktn-op-btn ktn-op-btn--sm p909-auto-row__editbtn">編集</button>' +
+                  '<button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline p909-auto-row__delbtn">削除</button>' +
+                '</div>' +
+              '</td>' +
+            '</tr>';
+          }).join('') +
+          '</tbody>' +
+        '</table>' +
+        '</div>' +
+      '</div>';
+    });
+    autoListEl.innerHTML = html;
+  }
+  renderAuto();
+  if (autoFilterCatSel) autoFilterCatSel.addEventListener('change', renderAuto);
+
+  if (autoListEl) autoListEl.addEventListener('click', function (e) {
+    var editBtn = e.target.closest('.p909-auto-row__editbtn');
+    var delBtn  = e.target.closest('.p909-auto-row__delbtn');
+    if (!editBtn && !delBtn) return;
+    var row = e.target.closest('.p909-auto-row');
+    var a = row && findAuto(row.dataset.id);
+    if (!a) return;
+    if (editBtn) openAutoEditModal(a);
+    if (delBtn)  openDelModal(a, 'auto');
+  });
+
+  /* ── 自動送信・文面編集モーダル ── */
+  var autoEditModal   = document.getElementById('p909AutoEditModal');
+  var autoEditBg      = document.getElementById('p909AutoEditBg');
+  var autoEditCtx     = document.getElementById('p909AutoEditCtx');
+  var autoEditCancel  = document.getElementById('p909AutoEditCancel');
+  var autoEditSave    = document.getElementById('p909AutoEditSave');
+  var autoFormSubject = document.getElementById('p909AutoFormSubject');
+  var autoFormBody    = document.getElementById('p909AutoFormBody');
+  var autoFormNote    = document.getElementById('p909AutoFormNote');
+  var autoEditingId   = null;
+
+  function openAutoEditModal(a) {
+    if (!autoEditModal) return;
+    autoEditingId = a.id;
+    if (autoEditCtx) autoEditCtx.innerHTML =
+      '<strong>' + a.id + '</strong>' + a.event + '<br>対象：' + a.aud + '　トリガー元：' + a.source + '　タイミング：' + a.timing;
+    if (autoFormSubject) autoFormSubject.value = a.subject || '';
+    if (autoFormBody)    autoFormBody.value    = a.body || '';
+    if (autoFormNote)    autoFormNote.value    = a.note || '';
+    autoEditModal.hidden = false;
+  }
+  function closeAutoEditModal() {
+    if (!autoEditModal) return;
+    autoEditModal.hidden = true;
+    autoEditingId = null;
+  }
+  if (autoEditCancel) autoEditCancel.addEventListener('click', closeAutoEditModal);
+  if (autoEditBg)     autoEditBg.addEventListener('click', closeAutoEditModal);
+  if (autoEditSave) autoEditSave.addEventListener('click', function () {
+    if (!autoEditingId) return;
+    var a = findAuto(autoEditingId);
+    if (!a) return;
+    if (!(autoFormSubject.value || '').trim() || !(autoFormBody.value || '').trim()) {
+      if (KTN.toast) KTN.toast('件名・本文を入力してください');
+      return;
+    }
+    a.subject = autoFormSubject.value.trim();
+    a.body    = autoFormBody.value;
+    a.note    = (autoFormNote.value || '').trim();
+    a.updatedAt = todayLabel();
+    closeAutoEditModal();
+    renderAuto();
+    if (KTN.toast) KTN.toast('文面を保存しました（デモ）');
+  });
+
+  /* ── 自動送信・発火点を追加モーダル（docs/email-templates.md の発火点インベントリに新規行を登録する想定） ── */
+  var autoNewBtn      = document.getElementById('p909AutoNewBtn');
+  var autoNewModal    = document.getElementById('p909AutoNewModal');
+  var autoNewBg       = document.getElementById('p909AutoNewBg');
+  var autoNewCancel   = document.getElementById('p909AutoNewCancel');
+  var autoNewSave     = document.getElementById('p909AutoNewSave');
+  var autoNewId       = document.getElementById('p909AutoNewId');
+  var autoNewCategory = document.getElementById('p909AutoNewCategory');
+  var autoNewEvent    = document.getElementById('p909AutoNewEvent');
+  var autoNewAud      = document.getElementById('p909AutoNewAud');
+  var autoNewSource   = document.getElementById('p909AutoNewSource');
+  var autoNewTiming   = document.getElementById('p909AutoNewTiming');
+  var autoNewSubject  = document.getElementById('p909AutoNewSubject');
+  var autoNewBody     = document.getElementById('p909AutoNewBody');
+  var autoNewNote     = document.getElementById('p909AutoNewNote');
+
+  function openAutoNewModal() {
+    if (!autoNewModal) return;
+    if (autoNewId)       autoNewId.value = '';
+    if (autoNewCategory) autoNewCategory.value = (autoFilterCatSel && autoFilterCatSel.value) || 'apply';
+    if (autoNewEvent)    autoNewEvent.value = '';
+    if (autoNewAud)      autoNewAud.value = '';
+    if (autoNewSource)   autoNewSource.value = '';
+    if (autoNewTiming)   autoNewTiming.value = '';
+    if (autoNewSubject)  autoNewSubject.value = '';
+    if (autoNewBody)     autoNewBody.value = '';
+    if (autoNewNote)     autoNewNote.value = '';
+    autoNewModal.hidden = false;
+  }
+  function closeAutoNewModal() {
+    if (!autoNewModal) return;
+    autoNewModal.hidden = true;
+  }
+  if (autoNewBtn)    autoNewBtn.addEventListener('click', openAutoNewModal);
+  if (autoNewCancel) autoNewCancel.addEventListener('click', closeAutoNewModal);
+  if (autoNewBg)     autoNewBg.addEventListener('click', closeAutoNewModal);
+  if (autoNewSave) autoNewSave.addEventListener('click', function () {
+    var id = (autoNewId.value || '').trim();
+    var event = (autoNewEvent.value || '').trim();
+    if (!id || !event) {
+      if (KTN.toast) KTN.toast('必須項目を入力してください');
+      return;
+    }
+    if (findAuto(id)) {
+      if (KTN.toast) KTN.toast('このIDは既に使用されています');
+      return;
+    }
+    AUTO_TRIGGERS.push({
+      id: id, category: autoNewCategory.value, event: event,
+      aud: (autoNewAud.value || '').trim(), source: (autoNewSource.value || '').trim(), timing: (autoNewTiming.value || '').trim(),
+      subject: (autoNewSubject.value || '').trim(), body: autoNewBody.value || '', note: (autoNewNote.value || '').trim(),
+      updatedAt: todayLabel(),
+    });
+    closeAutoNewModal();
+    renderAuto();
+    if (KTN.toast) KTN.toast('発火点を追加しました（デモ）');
+  });
+
+  function todayLabel() {
+    var d = new Date();
+    var mm = d.getMinutes();
+    return d.getFullYear() + '.' + (d.getMonth() + 1) + '.' + d.getDate() + ' ' + d.getHours() + ':' + (mm < 10 ? '0' : '') + mm;
+  }
+
+  /* 使用画面フィルタの選択肢はデータから動的に構築（新規追加のscreenIdが増えても手動更新不要） */
+  (function buildScreenOptions() {
+    var seen = {}, ids = [];
+    TEMPLATES.forEach(function (t) { if (!seen[t.screenId]) { seen[t.screenId] = 1; ids.push(t.screenId); } });
+    ids.forEach(function (id) {
+      var opt = document.createElement('option');
+      opt.value = id;
+      opt.textContent = (SCREEN_LABEL[id] || id) + '（' + id.toUpperCase() + '）';
+      screenSel.appendChild(opt);
+    });
+  })();
+
+  function findTpl(id) {
+    for (var i = 0; i < TEMPLATES.length; i++) if (TEMPLATES[i].id === id) return TEMPLATES[i];
+    return null;
+  }
+
+  function makeItem(t) {
+    var tr = document.createElement('tr');
+    tr.className = 'p909-row';
+    tr.dataset.id = t.id;
+    tr.innerHTML =
+      '<td data-label="パターン"><span class="cb cb-content ' + PATTERN_CLS[t.pattern] + '">' + PATTERN_LABEL[t.pattern] + '</span></td>' +
+      '<td data-label="使用画面 / 識別キー" class="p909-cell--meta">' +
+        '<div class="p909-cell__screen">' + (SCREEN_LABEL[t.screenId] || t.screenId) + '</div>' +
+        '<div class="p909-cell__key">' + t.variantKey + '</div>' +
+      '</td>' +
+      '<td data-label="テンプレート名" class="p909-cell--title">' + t.name + '</td>' +
+      '<td data-label="更新日" class="p909-cell--muted">' + t.updatedAt + '</td>' +
+      '<td data-label="状態">' + (t.status === 'archived' ? '<span class="ktn-review-status ktn-review-status--returned">廃止</span>' : '<span class="ktn-review-status ktn-review-status--granted">有効</span>') + '</td>' +
+      '<td data-label="操作" class="p909-cell--actions"><div class="p909-actions-stack">' +
+        '<button type="button" class="ktn-op-btn ktn-op-btn--sm p909-row__edit">編集</button>' +
+        (t.status === 'active' ? '<button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline p909-row__del">削除</button>' : '') +
+      '</div></td>';
+    return tr;
+  }
+
+  function render() {
+    var fscr = screenSel.value, fpat = patSel.value, fstat = statSel.value;
+    var rows = TEMPLATES.filter(function (t) {
+      if (fscr && t.screenId !== fscr) return false;
+      if (fpat && t.pattern !== fpat) return false;
+      if (fstat && t.status !== fstat) return false;
+      return true;
+    });
+    if (emptyEl) emptyEl.hidden = rows.length !== 0;
+    if (countEl) countEl.innerHTML = '<strong>' + rows.length + '</strong>件該当';
+    if (tabCountManual) tabCountManual.textContent = TEMPLATES.filter(function (t) { return t.status === 'active'; }).length + '件';
+
+    var totalPages = Math.max(1, Math.ceil(rows.length / PER_PAGE));
+    if (page > totalPages) page = totalPages;
+    var pageRows = rows.slice((page - 1) * PER_PAGE, page * PER_PAGE);
+    listEl.innerHTML = '';
+    pageRows.forEach(function (t) { listEl.appendChild(makeItem(t)); });
+    KTN.pagination.render(pagerEl, {
+      page: page,
+      totalPages: totalPages,
+      onGoto: function (p) { page = p; render(); },
+    });
+  }
+
+  function renderReset() { page = 1; render(); }
+  screenSel.addEventListener('change', renderReset);
+  patSel.addEventListener('change', renderReset);
+  statSel.addEventListener('change', renderReset);
+  render();
+
+  /* ── 新規／編集モーダル ── */
+  var editModal    = document.getElementById('p909EditModal');
+  var editBg       = document.getElementById('p909EditBg');
+  var editTitle    = document.getElementById('p909EditTitle');
+  var editCancel   = document.getElementById('p909EditCancel');
+  var editSave     = document.getElementById('p909EditSave');
+  var formScreen   = document.getElementById('p909FormScreen');
+  var formPattern  = document.getElementById('p909FormPattern');
+  var formKey      = document.getElementById('p909FormKey');
+  var formName     = document.getElementById('p909FormName');
+  var formFrom     = document.getElementById('p909FormFrom');
+  var formSubject  = document.getElementById('p909FormSubject');
+  var formBody     = document.getElementById('p909FormBody');
+  var formNote     = document.getElementById('p909FormNote');
+  var editingId    = null;
+
+  if (formFrom) formFrom.innerHTML = KTN.mailFromOptionsHtml();
+
+  function openEditModal(t) {
+    if (!editModal) return;
+    editingId = t ? t.id : null;
+    if (editTitle) editTitle.textContent = t ? 'テンプレートを編集' : '新規テンプレート';
+    if (formScreen)  formScreen.value  = t ? t.screenId : (screenSel.value || 'p90-2');
+    if (formPattern) formPattern.value = t ? t.pattern  : (patSel.value || 'normal');
+    if (formKey)     formKey.value     = t ? t.variantKey : '';
+    if (formName)    formName.value    = t ? t.name : '';
+    if (formFrom)    formFrom.value    = t ? t.from : KTN.MAIL_FROM_ADDRESSES[0];
+    if (formSubject) formSubject.value = t ? t.subject : '';
+    if (formBody)    formBody.value    = t ? t.body : '';
+    if (formNote)    formNote.value    = t ? (t.usageNote || '') : '';
+    editModal.hidden = false;
+  }
+  function closeEditModal() {
+    if (!editModal) return;
+    editModal.hidden = true;
+    editingId = null;
+  }
+  if (newBtn)     newBtn.addEventListener('click', function () { openEditModal(null); });
+  if (editCancel) editCancel.addEventListener('click', closeEditModal);
+  if (editBg)     editBg.addEventListener('click', closeEditModal);
+
+  if (editSave) editSave.addEventListener('click', function () {
+    var key = (formKey.value || '').trim();
+    var name = (formName.value || '').trim();
+    var subject = (formSubject.value || '').trim();
+    var body = formBody.value || '';
+    if (!key || !name || !subject || !body.trim()) {
+      if (KTN.toast) KTN.toast('必須項目を入力してください');
+      return;
+    }
+    var dup = TEMPLATES.some(function (t) { return t.variantKey === key && t.id !== editingId; });
+    if (dup) {
+      if (KTN.toast) KTN.toast('この識別キーは既に使用されています');
+      return;
+    }
+    if (editingId) {
+      var t = findTpl(editingId);
+      if (t) {
+        t.screenId = formScreen.value; t.pattern = formPattern.value; t.variantKey = key;
+        t.name = name; t.from = formFrom ? formFrom.value : t.from; t.subject = subject; t.body = body; t.usageNote = formNote.value || '';
+        t.updatedAt = todayLabel();
+      }
+    } else {
+      TEMPLATES.push({
+        id: 'mt-' + Date.now(), screenId: formScreen.value, pattern: formPattern.value, variantKey: key,
+        name: name, from: formFrom ? formFrom.value : KTN.MAIL_FROM_ADDRESSES[0], subject: subject, body: body, status: 'active', usageNote: formNote.value || '', updatedAt: todayLabel(),
+      });
+    }
+    closeEditModal();
+    render();
+    if (KTN.toast) KTN.toast('テンプレートを保存しました（デモ）');
+  });
+
+  /* ── 一覧の操作（イベント委譲） ── */
+  listEl.addEventListener('click', function (e) {
+    var item = e.target.closest('.p909-row');
+    if (!item) return;
+    var t = findTpl(item.dataset.id);
+    if (!t) return;
+    if (e.target.closest('.p909-row__edit')) { openEditModal(t); return; }
+    if (e.target.closest('.p909-row__del'))  { openDelModal(t); return; }
+  });
+
+  /* ── 削除（archived化のみ・個々の使用実績＝ログは判定しない。
+        ただし画面の必須区分〔SCREEN_REQUIRED_CATEGORIES〕内の最後の1件は
+        送信パネルが空になるため削除をブロックする） ── */
+  var delModal   = document.getElementById('p909DelModal');
+  var delTitle   = document.getElementById('p909DelTitle');
+  var delDesc    = document.getElementById('p909DelDesc');
+  var delCancel  = document.getElementById('p909DelCancel');
+  var delConfirm = document.getElementById('p909DelConfirm');
+  var delBg      = document.getElementById('p909DelBg');
+  var pendingDel     = null;
+  var pendingDelType = 'manual'; /* 'manual' | 'auto'（自動送信タブの発火点削除も同一モーダルを共用） */
+
+  function removeAuto(id) {
+    for (var i = 0; i < AUTO_TRIGGERS.length; i++) {
+      if (AUTO_TRIGGERS[i].id === id) { AUTO_TRIGGERS.splice(i, 1); return; }
+    }
+  }
+
+  /* type='auto' の場合、区分ガード（SCREEN_REQUIRED_CATEGORIES）は手動送信テンプレート固有のため適用しない */
+  function openDelModal(t, type) {
+    if (!delModal) return;
+    pendingDel = t.id;
+    pendingDelType = type || 'manual';
+    if (pendingDelType === 'auto') {
+      if (delTitle) delTitle.textContent = '発火点を削除しますか？';
+      if (delDesc) delDesc.innerHTML = '<span class="p319-del-modal__name">' + t.event + '</span>（ID：' + t.id + '）を一覧から削除します。docs/email-templates.md の発火点インベントリとの対応が失われるため、Drupal側でこの発火点自体が不要になった場合のみ削除してください。';
+      if (delConfirm) delConfirm.hidden = false;
+      if (delCancel) delCancel.textContent = 'キャンセル';
+      delModal.hidden = false;
+      return;
+    }
+    var cat = findCategory(t);
+    var blocked = cat && isLastActiveInCategory(t, cat);
+    if (blocked) {
+      if (delTitle) delTitle.textContent = 'この操作は行えません';
+      if (delDesc) delDesc.innerHTML = '<span class="p319-del-modal__name">' + t.name + '</span>' +
+        (SCREEN_LABEL[t.screenId] || t.screenId) + 'の「' + cat.label + '」に該当する有効なテンプレートが、これ1件のみです。削除すると送信画面のパネルが空になるため、先に同じ区分の別テンプレートを追加するか、このテンプレートを編集してご利用ください。';
+      if (delConfirm) delConfirm.hidden = true;
+      if (delCancel) delCancel.textContent = '閉じる';
+    } else {
+      if (delTitle) delTitle.textContent = 'テンプレートを削除しますか？';
+      if (delDesc) delDesc.innerHTML = '<span class="p319-del-modal__name">' + t.name + '</span>' +
+        'このテンプレートを一覧から削除します（廃止扱いとなり、送信画面の選択肢からも表示されなくなります）。';
+      if (delConfirm) delConfirm.hidden = false;
+      if (delCancel) delCancel.textContent = 'キャンセル';
+    }
+    delModal.hidden = false;
+  }
+  function closeDelModal() {
+    if (!delModal) return;
+    delModal.hidden = true;
+    pendingDel = null;
+    pendingDelType = 'manual';
+  }
+  if (delCancel) delCancel.addEventListener('click', closeDelModal);
+  if (delBg)     delBg.addEventListener('click', closeDelModal);
+  if (delConfirm) delConfirm.addEventListener('click', function () {
+    if (!pendingDel) return;
+    if (pendingDelType === 'auto') {
+      removeAuto(pendingDel);
+      closeDelModal();
+      renderAuto();
+      if (KTN.toast) KTN.toast('発火点を削除しました（デモ）');
+      return;
+    }
+    var t = findTpl(pendingDel);
+    if (t) { t.status = 'archived'; t.updatedAt = todayLabel(); }
+    closeDelModal();
+    render();
+    if (KTN.toast) KTN.toast('テンプレートを削除しました（デモ）');
+  });
+
+  window.ktnRender = function () {};
+};
+
+/* ════════════════════════════════════════════════════
    P3-13  クリエイター-オーディエンス管理（p4-13=ギャラリー版と対）
    「ウォッチャー」（自分をウォッチしているアカウント）と「チェックイン」（自分の展覧会＝
    投稿・参加のいずれも対象にチェックインしたアカウント）をタブで切替表示する。
@@ -8732,7 +11464,7 @@ KTN.pages['p3-13'] = function () {
   var SVG_W_GRAY = '<svg viewBox="0 0 16 16" fill="none" width="10" height="10"><circle cx="8" cy="8" r="7" fill="#9aa3ac"/><circle cx="8" cy="8" r="2.6" fill="#fff"/></svg>';
 
   /* ── サンプルデータ（田中透をウォッチしているアカウント）──
-     type＝user/creator/gallery（アバター形状・outline色は .p2-watcher-item__avatar--{type} が担当）。
+     type＝user/creator/gallery（アカウント種別の参考情報。ウォッチ/チェックインはuserとしての機能のため、アバター形状は種別によらず常に .p2-watcher-item__avatar--user＝円形で統一）。
      watch＝このアカウントがサイト全体でウォッチしている先（クリエイター・ギャラリー）の総数＝p2ウォッチャーモーダルと同じSVG_W。
      checkin＝田中透の展覧会へのチェックイン回数、interest＝田中透の作品への興味あり！件数。
      since＝ウォッチ開始日（表示用）、ts＝並べ替え用の数値キー。 */
@@ -8772,7 +11504,7 @@ KTN.pages['p3-13'] = function () {
 
   function makeItem(w) {
     return '<div class="p2-watcher-item">' +
-      '<a href="#" class="p2-watcher-item__avatar p2-watcher-item__avatar--' + w.type + '" style="background:' + w.color + '">' + w.name.charAt(0) + '</a>' +
+      '<a href="#" class="p2-watcher-item__avatar p2-watcher-item__avatar--user" style="background:' + w.color + '">' + w.name.charAt(0) + '</a>' +
       '<div class="p2-watcher-item__info">' +
         '<a href="#" class="p2-watcher-item__name">' + w.name + '</a>' +
         '<div class="p2-watcher-item__counts">' +
@@ -8888,7 +11620,7 @@ KTN.pages['p3-13'] = function () {
         '</div>';
       }).join('');
       return '<div class="p2-watcher-item">' +
-        '<a href="#" class="p2-watcher-item__avatar p2-watcher-item__avatar--' + c.type + '" style="background:' + c.color + '">' + c.name.charAt(0) + '</a>' +
+        '<a href="#" class="p2-watcher-item__avatar p2-watcher-item__avatar--user" style="background:' + c.color + '">' + c.name.charAt(0) + '</a>' +
         '<div class="p2-watcher-item__info">' +
           '<a href="#" class="p2-watcher-item__name">' + c.name + '</a>' +
           '<div class="p2-watcher-item__counts">' +
@@ -8994,7 +11726,7 @@ KTN.pages['p4-13'] = function () {
 
   function makeItem(w) {
     return '<div class="p2-watcher-item">' +
-      '<a href="#" class="p2-watcher-item__avatar p2-watcher-item__avatar--' + w.type + '" style="background:' + w.color + '">' + w.name.charAt(0) + '</a>' +
+      '<a href="#" class="p2-watcher-item__avatar p2-watcher-item__avatar--user" style="background:' + w.color + '">' + w.name.charAt(0) + '</a>' +
       '<div class="p2-watcher-item__info">' +
         '<a href="#" class="p2-watcher-item__name">' + w.name + '</a>' +
         '<div class="p2-watcher-item__counts">' +
@@ -9104,7 +11836,7 @@ KTN.pages['p4-13'] = function () {
         '</div>';
       }).join('');
       return '<div class="p2-watcher-item">' +
-        '<a href="#" class="p2-watcher-item__avatar p2-watcher-item__avatar--' + c.type + '" style="background:' + c.color + '">' + c.name.charAt(0) + '</a>' +
+        '<a href="#" class="p2-watcher-item__avatar p2-watcher-item__avatar--user" style="background:' + c.color + '">' + c.name.charAt(0) + '</a>' +
         '<div class="p2-watcher-item__info">' +
           '<a href="#" class="p2-watcher-item__name">' + c.name + '</a>' +
           '<div class="p2-watcher-item__counts">' +
@@ -10773,6 +13505,1075 @@ KTN.pages['p10'] = function () {
     if (typeof prevRender === 'function') prevRender();
     applyRole();
   };
+};
+
+/* ════════════════════════════════════════════════════
+   P10-1  検索-作品（ログイン限定・ゲスト非公開）
+════════════════════════════════════════════════════ */
+KTN.pages['p10-1'] = function () {
+  document.body.classList.add('p10-page');
+  document.body.style.setProperty('--page-accent', '#005da7');
+  document.body.style.setProperty('--page-accent-bg', 'rgba(0,93,167,.08)');
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  /* ── デモデータ（作品） ── */
+  var WORKS = [
+    { id:1,  title:'静寂 I',                  name:'田中透',     creatorUrl:'kotennavi-p3.html', year:'2026', medium:'油彩・キャンバス',   size:'727×606mm',       price:180000, status:'sale',    liaison:'li-plus', tags:['絵画','現代美術'],     area:'東京',   pop:88, interest:48,  queue:2, isNew:0, bg:'linear-gradient(135deg,#5a6b80,#2e3a4a)' },
+    { id:2,  title:'墨の余白',                name:'高橋蒼',     creatorUrl:'#',                 year:'2026', medium:'紙本墨画',           size:'半切',            price:96000,  status:'sale',    liaison:'li-plus', tags:['書道'],                area:'東京',   pop:70, interest:71,  queue:0, isNew:0, bg:'linear-gradient(135deg,#2e2a28,#5a5450)' },
+    { id:3,  title:'Self / 03',              name:'studio hue', creatorUrl:'#',                 year:'2025', medium:'ジークレー',         size:'A2 ed.5',         price:42000,  status:'sale',    liaison:'li-plus', tags:['写真','現代美術'],     area:'東京',   pop:55, interest:33,  queue:1, isNew:1, bg:'linear-gradient(135deg,#b08aa0,#7a4e68)' },
+    { id:4,  title:'銅版の庭',                name:'早瀬涼',     creatorUrl:'#',                 year:'2026', medium:'銅版画',             size:'300×400mm ed.10', price:55000,  status:'negot',   liaison:'li-plus', tags:['版画'],                area:'東京',   pop:60, interest:62,  queue:3, isNew:0, bg:'linear-gradient(135deg,#5a7a6a,#2e4638)' },
+    { id:5,  title:'マチエール断章',          name:'結城玲',     creatorUrl:'#',                 year:'2026', medium:'ミクストメディア',   size:'500×500mm',       price:128000, status:'sale',    liaison:'li-plus', tags:['絵画','現代美術'],     area:'大阪',   pop:77, interest:27,  queue:0, isNew:1, bg:'linear-gradient(135deg,#a05a4a,#6a3428)' },
+    { id:6,  title:'筆勢 — 二',               name:'大西澄',     creatorUrl:'#',                 year:'2025', medium:'紙本墨書',           size:'額装',            price:74000,  status:'sold',    liaison:'li-plus', tags:['書道'],                area:'京都',   pop:50, interest:55,  queue:0, isNew:0, bg:'linear-gradient(135deg,#4a4a4a,#1e1e1e)' },
+    { id:7,  title:'陶花器 III',              name:'桐生藍',     creatorUrl:'#',                 year:'2026', medium:'陶芸',               size:'H180mm',          price:38000,  status:'sale',    liaison:'li-plus', tags:['陶芸','クラフト'],     area:'愛知',   pop:45, interest:40,  queue:0, isNew:1, bg:'linear-gradient(135deg,#9a8a6a,#5e5238)' },
+    { id:8,  title:'光の断面',                name:'篠原恵',     creatorUrl:'#',                 year:'2026', medium:'写真 ed.8',          size:'A1',              price:65000,  status:'sale',    liaison:'li-plus', tags:['写真'],                area:'東京',   pop:82, interest:98,  queue:1, isNew:0, bg:'linear-gradient(135deg,#c0a880,#8a6e4a)' },
+    { id:9,  title:'街の輪郭',                name:'岡島みのり', creatorUrl:'#',                 year:'2025', medium:'水彩紙本',           size:'F6',              price:null,   status:'nsale',   liaison:'li',      tags:['絵画'],                area:'神奈川', pop:40, interest:20,  queue:0, isNew:0, bg:'linear-gradient(135deg,#6a9ab0,#3a5e74)' },
+    { id:10, title:'硝子の庭',                name:'三好文乃',   creatorUrl:'#',                 year:'2026', medium:'ガラス工芸',         size:'H220mm',          price:88000,  status:'inquiry', liaison:'li-plus', tags:['クラフト'],            area:'福岡',   pop:58, interest:44,  queue:0, isNew:1, bg:'linear-gradient(135deg,#7ab0a8,#3e6e66)' },
+    { id:11, title:'静物 — 器と光',           name:'高橋蒼',     creatorUrl:'#',                 year:'2026', medium:'油彩・キャンバス',   size:'F20',             price:210000, status:'sale',    liaison:'li-plus', tags:['絵画'],                area:'東京',   pop:72, interest:66,  queue:0, isNew:0, bg:'linear-gradient(135deg,#7a6a8a,#4a3e5a)' },
+    { id:12, title:'木版譚',                  name:'早瀬涼',     creatorUrl:'#',                 year:'2025', medium:'木版画 ed.10',       size:'350×450mm',       price:33000,  status:'sale',    liaison:'li-plus', tags:['版画'],                area:'京都',   pop:63, interest:58,  queue:1, isNew:0, bg:'linear-gradient(135deg,#c07040,#7a3e18)' },
+    { id:13, title:'セルフポートレイトの練習', name:'studio hue', creatorUrl:'#',                 year:'2025', medium:'ジークレー',         size:'A2 ed.5',         price:null,   status:'nsale',   liaison:'li',      tags:['写真','現代美術'],     area:'東京',   pop:68, interest:90,  queue:0, isNew:1, bg:'linear-gradient(135deg,#b08aa0,#7a4e68)' },
+    { id:14, title:'陰影の記憶',              name:'田中透',     creatorUrl:'kotennavi-p3.html', year:'2025', medium:'油彩・キャンバス',   size:'F30',             price:152000, status:'sold',    liaison:'li-plus', tags:['絵画'],                area:'東京',   pop:85, interest:120, queue:0, isNew:0, bg:'linear-gradient(135deg,#5a6b80,#2e3a4a)' },
+    { id:15, title:'布と刻',                  name:'結城玲',     creatorUrl:'#',                 year:'2026', medium:'染色',               size:'M',               price:47000,  status:'sale',    liaison:'li-plus', tags:['クラフト','現代美術'], area:'大阪',   pop:52, interest:36,  queue:0, isNew:1, bg:'linear-gradient(135deg,#a05a4a,#6a3428)' },
+    { id:16, title:'墨韻',                    name:'大西澄',     creatorUrl:'#',                 year:'2026', medium:'書',                 size:'半切',            price:61000,  status:'negot',   liaison:'li-plus', tags:['書道'],                area:'京都',   pop:58, interest:41,  queue:2, isNew:0, bg:'linear-gradient(135deg,#4a4a4a,#1e1e1e)' },
+  ];
+
+  function priceBand(p) {
+    if (p == null) return null;
+    if (p <= 50000) return '~5';
+    if (p <= 100000) return '5-10';
+    if (p <= 300000) return '10-30';
+    return '30-';
+  }
+
+  /* ── 特集プリセット（アルゴリズム生成の保存済み検索） ── */
+  var P10_ICONS = {
+    area:  '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M13 6.5c0 3.2-5 7.5-5 7.5S3 9.7 3 6.5a5 5 0 0 1 10 0z"/><circle cx="8" cy="6.5" r="1.8"/></svg>',
+    date:  '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="3.5" width="11" height="10" rx="1"/><path d="M2.5 6.8h11M5.5 2v2.5M10.5 2v2.5"/></svg>',
+    price: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 6V4.8a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1V6a2 2 0 0 0 0 4v1.2a1 1 0 0 1-1 1h-9a1 1 0 0 1-1-1V10a2 2 0 0 0 0-4z"/><path d="M9.8 5.5v1.2M9.8 7.4v1.2M9.8 9.3v1.2"/></svg>',
+    pop:   '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"><path d="M8 2.4l1.7 3.5 3.9.6-2.8 2.7.7 3.9L8 11.2l-3.5 1.9.7-3.9-2.8-2.7 3.9-.6L8 2.4z"/></svg>',
+    tag:   '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"><path d="M2.5 8V3.5a1 1 0 0 1 1-1H8a1 1 0 0 1 .7.3l4.8 4.8a1 1 0 0 1 0 1.4l-4.5 4.5a1 1 0 0 1-1.4 0L2.8 8.7a1 1 0 0 1-.3-.7z"/><circle cx="5.6" cy="5.6" r="1"/></svg>',
+  };
+  var PRESETS = {
+    'sale-now':      { rail: 1, axis: 'price', label: '今すぐ購入できる',   desc: '「販売中 × LIAISON+」条件から自動生成した特集です。会場に行けなくても購入できます。', f: function (x) { return x.status === 'sale' && x.liaison === 'li-plus'; } },
+    'new-arrival':   { rail: 1, axis: 'date',  label: '新着作品',          desc: '「新着掲載」条件から自動生成した特集です。', f: function (x) { return !!x.isNew; } },
+    'under-50k':     { rail: 1, axis: 'price', label: '5万円以下で探す',   desc: '「価格帯 〜5万円」条件から自動生成した特集です。', f: function (x) { return priceBand(x.price) === '~5'; } },
+    'tokyo-works':   { rail: 1, axis: 'area',  label: '東京の作品',        desc: '「東京」エリアの掲載作品から自動生成した特集です。', f: function (x) { return x.area === '東京'; } },
+    'popular':       { rail: 1, axis: 'pop',   label: '人気の作品',        desc: '「興味あり！」シグナル上位から自動生成した特集です。', f: function (x) { return x.pop >= 70; } },
+    'genre-paint':   { rail: 1, axis: 'tag',   label: '絵画作品を探す',    desc: '「絵画」ジャンルの掲載作品から自動生成した特集です。', f: function (x) { return x.tags.indexOf('絵画') !== -1; } },
+    'negot-all':     { rail: 0, axis: 'price', label: '商談受付中の作品',  desc: '出品者と条件を相談できる「商談中」の作品です。', f: function (x) { return x.status === 'negot'; } },
+    'new-all':       { rail: 0, axis: 'date',  label: '新着作品',          desc: '最近個展なびに掲載された作品です。', f: function (x) { return !!x.isNew; } },
+    'trending':      { rail: 0, axis: 'pop',   label: 'あなたへのおすすめ', desc: 'ウォッチ中のクリエイター・興味あり！の傾向からのおすすめです。', f: function (x) { return true; } },
+  };
+  function presetInner(key) {
+    var p = PRESETS[key];
+    return (P10_ICONS[p.axis] || '') + esc(p.label);
+  }
+
+  /* ── カード描画は共通 buildP25cCard（p25c）を使用。liaison:'li' の作品は非売品扱い（価格・在庫バッジ非表示） ── */
+  function buildWorkCard(w) {
+    return buildP25cCard(w, w.liaison === 'li-plus' ? 'li-plus' : null);
+  }
+
+  /* ── 状態 ── */
+  var activePreset = null;
+  var shownCount = 8;
+  var PAGE_SIZE = 8;
+
+  var elDisc    = document.getElementById('p101Discovery');
+  var elResults = document.getElementById('p101Results');
+  var elZero    = document.getElementById('p101Zero');
+  var elKeyword = document.getElementById('p101Keyword');
+  var elSort    = document.getElementById('p101Sort');
+
+  function showView(v) {
+    elDisc.hidden    = v !== 'disc';
+    elResults.hidden = v !== 'results';
+    elZero.hidden    = v !== 'zero';
+  }
+
+  function activeChipFilters() {
+    var m = {};
+    document.querySelectorAll('.p10-chip.is-on[data-f]').forEach(function (c) {
+      var i = c.dataset.f.indexOf(':');
+      var k = c.dataset.f.slice(0, i), v = c.dataset.f.slice(i + 1);
+      if (!m[k]) m[k] = [];
+      if (m[k].indexOf(v) === -1) m[k].push(v);
+    });
+    return m;
+  }
+
+  function matches(x, filters, kw) {
+    if (activePreset && !PRESETS[activePreset].f(x)) return false;
+    for (var k in filters) {
+      var vals = filters[k], ok = false;
+      for (var i = 0; i < vals.length; i++) {
+        var v = vals[i];
+        if (k === 'st' && x.status === v) ok = true;
+        else if (k === 'tag' && x.tags.indexOf(v) !== -1) ok = true;
+        else if (k === 'area' && x.area === v) ok = true;
+        else if (k === 'new' && x.isNew) ok = true;
+        else if (k === 'price' && priceBand(x.price) === v) ok = true;
+        else if (k === 'liaison' && (v === 'lp' ? x.liaison === 'li-plus' : !!x.liaison)) ok = true;
+      }
+      if (!ok) return false;
+    }
+    if (kw) {
+      var hay = (x.title + ' ' + x.name + ' ' + x.tags.join(' ')).toLowerCase();
+      if (hay.indexOf(kw.toLowerCase()) === -1) return false;
+    }
+    return true;
+  }
+
+  function sortResults(list) {
+    var mode = elSort ? elSort.value : 'pop';
+    var out = list.slice();
+    if (mode === 'price-asc')       out.sort(function (a, b) { return (a.price || 0) - (b.price || 0); });
+    else if (mode === 'price-desc') out.sort(function (a, b) { return (b.price || 0) - (a.price || 0); });
+    else if (mode === 'new')        out.sort(function (a, b) { return b.isNew - a.isNew; });
+    else                            out.sort(function (a, b) { return b.pop - a.pop; });
+    return out;
+  }
+
+  var FLABEL = {
+    'st:sale': '販売中', 'st:negot': '商談中', 'st:inquiry': '要問合せ', 'st:sold': 'SOLD', 'st:nsale': '非売品',
+    'new:1': '新着', 'liaison:li': 'LIAISON', 'liaison:lp': 'LIAISON+',
+    'price:~5': '〜5万円', 'price:5-10': '5〜10万円', 'price:10-30': '10〜30万円', 'price:30-': '30万円〜',
+  };
+  function fchipLabel(k, v) {
+    var key = k + ':' + v;
+    if (FLABEL[key]) return FLABEL[key];
+    if (k === 'tag') return '# ' + v;
+    return v;
+  }
+
+  function renderFchips(filters, kw) {
+    var box = document.getElementById('p101Fchips');
+    var html = [];
+    if (activePreset) {
+      html.push('<span class="p10-fchip">' + esc(PRESETS[activePreset].label)
+        + '<button class="p10-fchip__x" type="button" data-rm="preset" aria-label="この特集を外す">×</button></span>');
+    }
+    for (var k in filters) {
+      filters[k].forEach(function (v) {
+        html.push('<span class="p10-fchip">' + esc(fchipLabel(k, v))
+          + '<button class="p10-fchip__x" type="button" data-rm="' + esc(k + ':' + v) + '" aria-label="この条件を外す">×</button></span>');
+      });
+    }
+    if (kw) {
+      html.push('<span class="p10-fchip">「' + esc(kw) + '」'
+        + '<button class="p10-fchip__x" type="button" data-rm="kw" aria-label="キーワードを外す">×</button></span>');
+    }
+    if (html.length >= 2) html.push('<button class="p10-fclear" type="button" data-rm="all">すべてクリア</button>');
+    box.innerHTML = html.join('');
+    box.hidden = !html.length;
+    box.querySelectorAll('[data-rm]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var rm = btn.dataset.rm;
+        if (rm === 'all') { clearAll(); showView('disc'); return; }
+        if (rm === 'preset') { setPreset(null); }
+        else if (rm === 'kw') { elKeyword.value = ''; }
+        else { document.querySelectorAll('.p10-chip[data-f="' + rm + '"]').forEach(function (c) { c.classList.remove('is-on'); }); }
+        runFilter();
+      });
+    });
+  }
+
+  function renderResultGrid(list) {
+    var grid = document.getElementById('p101ResultGrid');
+    grid.innerHTML = list.slice(0, shownCount).map(buildWorkCard).join('');
+    var moreBtn = document.getElementById('p101MoreBtn');
+    moreBtn.parentElement.style.display = list.length > shownCount ? '' : 'none';
+    renderResultGrid._last = list;
+  }
+
+  function runFilter() {
+    var filters = activeChipFilters();
+    var kw = elKeyword.value.trim();
+    var hasAny = activePreset || kw || Object.keys(filters).length;
+    if (!hasAny) { showView('disc'); syncRail(); return; }
+
+    var list = WORKS.filter(function (x) { return matches(x, filters, kw); });
+    syncRail();
+
+    if (!list.length) {
+      document.getElementById('p101ZeroTitle').textContent = kw
+        ? '「' + kw + '」に一致する作品が見つかりませんでした'
+        : '条件に合う作品が見つかりませんでした';
+      renderZeroSugg();
+      showView('zero');
+      return;
+    }
+
+    var p = activePreset ? PRESETS[activePreset] : null;
+    document.getElementById('p101CtxEyebrow').textContent = p ? 'Feature' : 'Search Results';
+    document.getElementById('p101CtxTitle').textContent = p ? p.label : (kw ? '「' + kw + '」の検索結果' : '検索結果');
+    var descEl = document.getElementById('p101CtxDesc');
+    descEl.textContent = p ? p.desc : '';
+    descEl.hidden = !p;
+    renderFchips(filters, kw);
+    document.getElementById('p101Count').innerHTML = '<strong>' + list.length + '</strong>件';
+    shownCount = PAGE_SIZE;
+    renderResultGrid(sortResults(list));
+    showView('results');
+  }
+
+  function setPreset(key) {
+    activePreset = key;
+    syncRail();
+  }
+  function syncRail() {
+    document.querySelectorAll('.p10-preset[data-key]').forEach(function (b) {
+      b.classList.toggle('is-on', b.dataset.key === activePreset);
+    });
+  }
+  function applyPreset(key) {
+    clearAll();
+    activePreset = key;
+    runFilter();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function clearAll() {
+    activePreset = null;
+    elKeyword.value = '';
+    document.querySelectorAll('.p10-chip.is-on').forEach(function (c) { c.classList.remove('is-on'); });
+    syncRail();
+  }
+
+  (function () {
+    var rail = document.getElementById('p101PresetRail');
+    var html = '';
+    for (var key in PRESETS) {
+      if (!PRESETS[key].rail) continue;
+      html += '<button class="p10-preset" type="button" data-key="' + key + '">' + presetInner(key) + '</button>';
+    }
+    rail.innerHTML = html;
+    rail.querySelectorAll('.p10-preset').forEach(function (b) {
+      b.addEventListener('click', function () {
+        if (activePreset === b.dataset.key) { clearAll(); showView('disc'); }
+        else applyPreset(b.dataset.key);
+      });
+    });
+    var arrL = document.getElementById('p101PresetArrL');
+    var arrR = document.getElementById('p101PresetArrR');
+    function syncArr() {
+      var max = rail.scrollWidth - rail.clientWidth;
+      arrL.classList.toggle('is-hidden', rail.scrollLeft <= 4);
+      arrR.classList.toggle('is-hidden', rail.scrollLeft >= max - 4);
+    }
+    arrL.addEventListener('click', function () { rail.scrollBy({ left: -220, behavior: 'smooth' }); });
+    arrR.addEventListener('click', function () { rail.scrollBy({ left: 220, behavior: 'smooth' }); });
+    rail.addEventListener('scroll', syncArr);
+    window.addEventListener('resize', syncArr);
+    syncArr();
+  })();
+
+  (function () {
+    var saleNow = WORKS.filter(PRESETS['sale-now'].f).sort(function (a, b) { return b.pop - a.pop; });
+    document.getElementById('p101SaleGrid').innerHTML = saleNow.slice(0, 4).map(buildWorkCard).join('');
+
+    var negot = WORKS.filter(PRESETS['negot-all'].f).sort(function (a, b) { return b.pop - a.pop; });
+    document.getElementById('p101NegotGrid').innerHTML = negot.slice(0, 4).map(buildWorkCard).join('');
+
+    var news = WORKS.filter(function (x) { return x.isNew; }).sort(function (a, b) { return b.pop - a.pop; });
+    document.getElementById('p101NewGrid').innerHTML = news.slice(0, 4).map(buildWorkCard).join('');
+
+    var popular = WORKS.slice().sort(function (a, b) { return b.pop - a.pop; });
+    document.getElementById('p101PopularGrid').innerHTML = popular.slice(0, 4).map(buildWorkCard).join('');
+
+    var picks = WORKS.slice().sort(function (a, b) { return b.interest - a.interest; });
+    document.getElementById('p101PicksGrid').innerHTML = picks.slice(0, 4).map(buildWorkCard).join('');
+  })();
+
+  document.querySelectorAll('[data-preset]').forEach(function (a) {
+    a.addEventListener('click', function (ev) {
+      ev.preventDefault();
+      applyPreset(a.dataset.preset);
+    });
+  });
+
+  function renderZeroSugg() {
+    var sugg = document.getElementById('p101ZeroSugg');
+    sugg.innerHTML = ['sale-now', 'under-50k', 'new-arrival', 'popular', 'tokyo-works'].map(function (key) {
+      return '<button class="p10-preset" type="button" data-zero-preset="' + key + '">' + presetInner(key) + '</button>';
+    }).join('');
+    sugg.querySelectorAll('[data-zero-preset]').forEach(function (b) {
+      b.addEventListener('click', function () { applyPreset(b.dataset.zeroPreset); });
+    });
+    var popular = WORKS.slice().sort(function (a, b) { return b.pop - a.pop; });
+    document.getElementById('p101ZeroGrid').innerHTML = popular.slice(0, 4).map(buildWorkCard).join('');
+  }
+
+  document.getElementById('p101SearchBtn').addEventListener('click', runFilter);
+  elKeyword.addEventListener('keydown', function (ev) {
+    if (ev.key === 'Enter') { ev.preventDefault(); runFilter(); }
+  });
+
+  document.querySelectorAll('.p10-chip').forEach(function (c) {
+    c.addEventListener('click', function () {
+      var on = !c.classList.contains('is-on');
+      if (c.dataset.f) {
+        document.querySelectorAll('[data-f="' + c.dataset.f + '"]').forEach(function (s) { s.classList.toggle('is-on', on); });
+        if (!c.closest('#p101Adv')) runFilter();
+      } else {
+        c.classList.toggle('is-on', on);
+      }
+    });
+  });
+
+  var advToggle = document.getElementById('p101AdvToggle');
+  var adv = document.getElementById('p101Adv');
+  advToggle.addEventListener('click', function () {
+    var open = !adv.classList.contains('is-open');
+    adv.classList.toggle('is-open', open);
+    advToggle.classList.toggle('is-open', open);
+    advToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  document.getElementById('p101AdvClear').addEventListener('click', function () {
+    document.querySelectorAll('.p10-chip.is-on').forEach(function (c) { c.classList.remove('is-on'); });
+  });
+  document.getElementById('p101AdvSearch').addEventListener('click', function () {
+    adv.classList.remove('is-open');
+    advToggle.classList.remove('is-open');
+    advToggle.setAttribute('aria-expanded', 'false');
+    runFilter();
+  });
+
+  if (elSort) elSort.addEventListener('change', function () {
+    if (!elResults.hidden && renderResultGrid._last) {
+      shownCount = PAGE_SIZE;
+      renderResultGrid(sortResults(renderResultGrid._last));
+    }
+  });
+  document.getElementById('p101MoreBtn').addEventListener('click', function () {
+    if (!renderResultGrid._last) return;
+    shownCount = renderResultGrid._last.length;
+    renderResultGrid(renderResultGrid._last);
+  });
+
+  /* ── デモバー：表示状態切替（ログイン限定ページのためロール切替なし） ── */
+  window.setP101View = function (view, btn) {
+    document.querySelectorAll('[data-p101-view]').forEach(function (b) { b.classList.remove('on'); });
+    if (btn && btn.hasAttribute('data-p101-view')) btn.classList.add('on');
+    clearAll();
+    if (view === 'disc') { showView('disc'); }
+    else if (view === 'preset') { applyPreset('tokyo-works'); }
+    else if (view === 'result') {
+      ['st:sale', 'area:東京'].forEach(function (f) {
+        document.querySelectorAll('.p10-chip[data-f="' + f + '"]').forEach(function (c) { c.classList.add('is-on'); });
+      });
+      runFilter();
+    }
+    else if (view === 'zero') { elKeyword.value = '深夜の青騎士'; runFilter(); }
+  };
+
+  window.ktnRender = function () {};
+};
+
+/* ════════════════════════════════════════════════════
+   P10-2  検索-クリエイター（ログイン限定・ゲスト非公開）
+════════════════════════════════════════════════════ */
+KTN.pages['p10-2'] = function () {
+  document.body.classList.add('p10-page');
+  document.body.style.setProperty('--page-accent', '#005da7');
+  document.body.style.setProperty('--page-accent-bg', 'rgba(0,93,167,.08)');
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  /* ── デモデータ（クリエイター）。avStyle は p10-1/p1 の同名人物と同一グラデーションで統一 ── */
+  var CREATORS = [
+    { id: 1,  name: '田中透',       href: 'kotennavi-p3.html', genreTags: ['絵画', '現代美術'],   genre: '絵画・現代美術',   area: '東京',   status: 'live',     exh: 3, watch: 214, pop: 88, isNew: 0, liaison: 'li-plus', avStyle: 'linear-gradient(135deg,#5a6b80,#2e3a4a)', ini: '田' },
+    { id: 2,  name: '高橋蒼',       href: '#',                 genreTags: ['書道'],                genre: '書道',              area: '東京',   status: '',         exh: 2, watch: 71,  pop: 70, isNew: 0, liaison: 'li-plus', avStyle: 'linear-gradient(135deg,#2e2a28,#5a5450)', ini: '高' },
+    { id: 3,  name: 'studio hue',  href: '#',                 genreTags: ['写真', '現代美術'],   genre: '写真・現代美術',   area: '東京',   status: 'upcoming', exh: 2, watch: 143, pop: 79, isNew: 1, liaison: 'li-plus', avStyle: 'linear-gradient(135deg,#b08aa0,#7a4e68)', ini: 'S' },
+    { id: 4,  name: '早瀬涼',       href: '#',                 genreTags: ['版画'],                genre: '版画',              area: '京都',   status: '',         exh: 2, watch: 112, pop: 67, isNew: 0, liaison: 'li',      avStyle: 'linear-gradient(135deg,#5a7a6a,#2e4638)', ini: '早' },
+    { id: 5,  name: '結城玲',       href: '#',                 genreTags: ['絵画', 'クラフト'],   genre: '絵画・クラフト',   area: '大阪',   status: '',         exh: 1, watch: 36,  pop: 52, isNew: 1, liaison: 'li-plus', avStyle: 'linear-gradient(135deg,#a05a4a,#6a3428)', ini: '結' },
+    { id: 6,  name: '大西澄',       href: '#',                 genreTags: ['書道'],                genre: '書道',              area: '京都',   status: '',         exh: 1, watch: 41,  pop: 58, isNew: 0, liaison: 'li-plus', avStyle: 'linear-gradient(135deg,#4a4a4a,#1e1e1e)', ini: '大' },
+    { id: 7,  name: '桐生藍',       href: '#',                 genreTags: ['陶芸', 'クラフト'],   genre: '陶芸・クラフト',   area: '愛知',   status: 'live',     exh: 1, watch: 40,  pop: 45, isNew: 1, liaison: 'li-plus', avStyle: 'linear-gradient(135deg,#9a8a6a,#5e5238)', ini: '桐' },
+    { id: 8,  name: '篠原恵',       href: '#',                 genreTags: ['写真'],                genre: '写真',              area: '東京',   status: 'live',     exh: 1, watch: 98,  pop: 82, isNew: 0, liaison: 'li-plus', avStyle: 'linear-gradient(135deg,#c0a880,#8a6e4a)', ini: '篠' },
+    { id: 9,  name: '岡島みのり',   href: '#',                 genreTags: ['絵画'],                genre: '絵画',              area: '神奈川', status: 'live',     exh: 1, watch: 87,  pop: 58, isNew: 0, liaison: 'li',      avStyle: 'linear-gradient(135deg,#6a9ab0,#3a5e74)', ini: '岡' },
+    { id: 10, name: '三好文乃',     href: '#',                 genreTags: ['クラフト'],            genre: 'クラフト',          area: '福岡',   status: 'live',     exh: 1, watch: 91,  pop: 66, isNew: 0, liaison: 'li-plus', avStyle: 'linear-gradient(135deg,#7ab0a8,#3e6e66)', ini: '三' },
+    { id: 11, name: '山根拓',       href: '#',                 genreTags: ['写真'],                genre: '写真',              area: '福岡',   status: 'upcoming', exh: 1, watch: 74,  pop: 62, isNew: 1, liaison: '',         avStyle: 'linear-gradient(135deg,#3a5a7a,#1e3448)', ini: '山' },
+    { id: 12, name: '森田一葉',     href: '#',                 genreTags: ['陶芸'],                genre: '陶芸',              area: '京都',   status: '',         exh: 1, watch: 28,  pop: 38, isNew: 0, liaison: '',         avStyle: 'linear-gradient(135deg,#8a8a70,#4e4e38)', ini: '森' },
+  ];
+
+  /* ── 特集プリセット（アルゴリズム生成の保存済み検索） ── */
+  var P10_ICONS = {
+    area: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M13 6.5c0 3.2-5 7.5-5 7.5S3 9.7 3 6.5a5 5 0 0 1 10 0z"/><circle cx="8" cy="6.5" r="1.8"/></svg>',
+    date: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="3.5" width="11" height="10" rx="1"/><path d="M2.5 6.8h11M5.5 2v2.5M10.5 2v2.5"/></svg>',
+    pop:  '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"><path d="M8 2.4l1.7 3.5 3.9.6-2.8 2.7.7 3.9L8 11.2l-3.5 1.9.7-3.9-2.8-2.7 3.9-.6L8 2.4z"/></svg>',
+    tag:  '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"><path d="M2.5 8V3.5a1 1 0 0 1 1-1H8a1 1 0 0 1 .7.3l4.8 4.8a1 1 0 0 1 0 1.4l-4.5 4.5a1 1 0 0 1-1.4 0L2.8 8.7a1 1 0 0 1-.3-.7z"/><circle cx="5.6" cy="5.6" r="1"/></svg>',
+  };
+  var PRESETS = {
+    'exh-live':      { rail: 1, axis: 'date', label: '開催中の展覧会があるクリエイター', desc: '「開催中」条件から自動生成した特集です。いま会場・LIAISONで作品を見られます。', f: function (x) { return x.status === 'live'; } },
+    'new-arrival':   { rail: 1, axis: 'date', label: '新着クリエイター',                 desc: '「新着掲載」条件から自動生成した特集です。', f: function (x) { return !!x.isNew; } },
+    'liaison-plus':  { rail: 1, axis: 'tag',  label: 'LIAISON+作品があるクリエイター',   desc: '「LIAISON+」条件から自動生成した特集です。会場に行けなくても作品を購入できます。', f: function (x) { return x.liaison === 'li-plus'; } },
+    'tokyo-creators':{ rail: 1, axis: 'area', label: '東京のクリエイター',               desc: '「東京」エリアで活動するクリエイターから自動生成した特集です。', f: function (x) { return x.area === '東京'; } },
+    'popular':       { rail: 1, axis: 'pop',  label: '人気のクリエイター',               desc: '「興味あり！」シグナル上位から自動生成した特集です。', f: function (x) { return x.pop >= 70; } },
+    'genre-paint':   { rail: 1, axis: 'tag',  label: '絵画のクリエイター',               desc: '「絵画」ジャンルのクリエイターから自動生成した特集です。', f: function (x) { return x.genreTags.indexOf('絵画') !== -1; } },
+    'upcoming-all':  { rail: 0, axis: 'date', label: '開催予定の展覧会があるクリエイター', desc: 'まもなく展覧会が始まるクリエイターです。', f: function (x) { return x.status === 'upcoming'; } },
+    'new-all':       { rail: 0, axis: 'date', label: '新着クリエイター',                 desc: '最近個展なびに掲載されたクリエイターです。', f: function (x) { return !!x.isNew; } },
+    'trending':      { rail: 0, axis: 'pop',  label: 'あなたへのおすすめ',               desc: 'ウォッチ中のクリエイター・興味あり！の傾向からのおすすめです。', f: function (x) { return true; } },
+  };
+  function presetInner(key) {
+    var p = PRESETS[key];
+    return (P10_ICONS[p.axis] || '') + esc(p.label);
+  }
+
+  /* ── カード描画は共通 buildPersonCard（cc--h）を使用 ── */
+  function buildCreatorCard(x) {
+    return buildPersonCard({ type: 'creator', avStyle: x.avStyle, ini: x.ini, name: x.name, genre: x.genre, exh: x.exh, watch: x.watch, panel: false, href: x.href, status: x.status });
+  }
+
+  /* ── 状態 ── */
+  var activePreset = null;
+  var shownCount = 8;
+  var PAGE_SIZE = 8;
+
+  var elDisc    = document.getElementById('p102Discovery');
+  var elResults = document.getElementById('p102Results');
+  var elZero    = document.getElementById('p102Zero');
+  var elKeyword = document.getElementById('p102Keyword');
+  var elSort    = document.getElementById('p102Sort');
+
+  function showView(v) {
+    elDisc.hidden    = v !== 'disc';
+    elResults.hidden = v !== 'results';
+    elZero.hidden    = v !== 'zero';
+  }
+
+  function activeChipFilters() {
+    var m = {};
+    document.querySelectorAll('.p10-chip.is-on[data-f]').forEach(function (c) {
+      var i = c.dataset.f.indexOf(':');
+      var k = c.dataset.f.slice(0, i), v = c.dataset.f.slice(i + 1);
+      if (!m[k]) m[k] = [];
+      if (m[k].indexOf(v) === -1) m[k].push(v);
+    });
+    return m;
+  }
+
+  function matches(x, filters, kw) {
+    if (activePreset && !PRESETS[activePreset].f(x)) return false;
+    for (var k in filters) {
+      var vals = filters[k], ok = false;
+      for (var i = 0; i < vals.length; i++) {
+        var v = vals[i];
+        if (k === 'st' && (v === 'none' ? !x.status : x.status === v)) ok = true;
+        else if (k === 'tag' && x.genreTags.indexOf(v) !== -1) ok = true;
+        else if (k === 'area' && x.area === v) ok = true;
+        else if (k === 'new' && x.isNew) ok = true;
+        else if (k === 'liaison' && (v === 'lp' ? x.liaison === 'li-plus' : !!x.liaison)) ok = true;
+      }
+      if (!ok) return false;
+    }
+    if (kw) {
+      var hay = (x.name + ' ' + x.genreTags.join(' ') + ' ' + x.area).toLowerCase();
+      if (hay.indexOf(kw.toLowerCase()) === -1) return false;
+    }
+    return true;
+  }
+
+  function sortResults(list) {
+    var mode = elSort ? elSort.value : 'pop';
+    var out = list.slice();
+    if (mode === 'new')      out.sort(function (a, b) { return b.isNew - a.isNew; });
+    else if (mode === 'exh') out.sort(function (a, b) { return b.exh - a.exh; });
+    else                     out.sort(function (a, b) { return b.pop - a.pop; });
+    return out;
+  }
+
+  var FLABEL = {
+    'st:live': '開催中', 'st:upcoming': '開催予定', 'st:none': '現在開催なし',
+    'new:1': '新着', 'liaison:li': 'LIAISON', 'liaison:lp': 'LIAISON+',
+  };
+  function fchipLabel(k, v) {
+    var key = k + ':' + v;
+    if (FLABEL[key]) return FLABEL[key];
+    if (k === 'tag') return '# ' + v;
+    return v;
+  }
+
+  function renderFchips(filters, kw) {
+    var box = document.getElementById('p102Fchips');
+    var html = [];
+    if (activePreset) {
+      html.push('<span class="p10-fchip">' + esc(PRESETS[activePreset].label)
+        + '<button class="p10-fchip__x" type="button" data-rm="preset" aria-label="この特集を外す">×</button></span>');
+    }
+    for (var k in filters) {
+      filters[k].forEach(function (v) {
+        html.push('<span class="p10-fchip">' + esc(fchipLabel(k, v))
+          + '<button class="p10-fchip__x" type="button" data-rm="' + esc(k + ':' + v) + '" aria-label="この条件を外す">×</button></span>');
+      });
+    }
+    if (kw) {
+      html.push('<span class="p10-fchip">「' + esc(kw) + '」'
+        + '<button class="p10-fchip__x" type="button" data-rm="kw" aria-label="キーワードを外す">×</button></span>');
+    }
+    if (html.length >= 2) html.push('<button class="p10-fclear" type="button" data-rm="all">すべてクリア</button>');
+    box.innerHTML = html.join('');
+    box.hidden = !html.length;
+    box.querySelectorAll('[data-rm]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var rm = btn.dataset.rm;
+        if (rm === 'all') { clearAll(); showView('disc'); return; }
+        if (rm === 'preset') { setPreset(null); }
+        else if (rm === 'kw') { elKeyword.value = ''; }
+        else { document.querySelectorAll('.p10-chip[data-f="' + rm + '"]').forEach(function (c) { c.classList.remove('is-on'); }); }
+        runFilter();
+      });
+    });
+  }
+
+  function renderResultGrid(list) {
+    var grid = document.getElementById('p102ResultGrid');
+    grid.innerHTML = list.slice(0, shownCount).map(buildCreatorCard).join('');
+    var moreBtn = document.getElementById('p102MoreBtn');
+    moreBtn.parentElement.style.display = list.length > shownCount ? '' : 'none';
+    renderResultGrid._last = list;
+  }
+
+  function runFilter() {
+    var filters = activeChipFilters();
+    var kw = elKeyword.value.trim();
+    var hasAny = activePreset || kw || Object.keys(filters).length;
+    if (!hasAny) { showView('disc'); syncRail(); return; }
+
+    var list = CREATORS.filter(function (x) { return matches(x, filters, kw); });
+    syncRail();
+
+    if (!list.length) {
+      document.getElementById('p102ZeroTitle').textContent = kw
+        ? '「' + kw + '」に一致するクリエイターが見つかりませんでした'
+        : '条件に合うクリエイターが見つかりませんでした';
+      renderZeroSugg();
+      showView('zero');
+      return;
+    }
+
+    var p = activePreset ? PRESETS[activePreset] : null;
+    document.getElementById('p102CtxEyebrow').textContent = p ? 'Feature' : 'Search Results';
+    document.getElementById('p102CtxTitle').textContent = p ? p.label : (kw ? '「' + kw + '」の検索結果' : '検索結果');
+    var descEl = document.getElementById('p102CtxDesc');
+    descEl.textContent = p ? p.desc : '';
+    descEl.hidden = !p;
+    renderFchips(filters, kw);
+    document.getElementById('p102Count').innerHTML = '<strong>' + list.length + '</strong>件';
+    shownCount = PAGE_SIZE;
+    renderResultGrid(sortResults(list));
+    showView('results');
+  }
+
+  function setPreset(key) {
+    activePreset = key;
+    syncRail();
+  }
+  function syncRail() {
+    document.querySelectorAll('.p10-preset[data-key]').forEach(function (b) {
+      b.classList.toggle('is-on', b.dataset.key === activePreset);
+    });
+  }
+  function applyPreset(key) {
+    clearAll();
+    activePreset = key;
+    runFilter();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function clearAll() {
+    activePreset = null;
+    elKeyword.value = '';
+    document.querySelectorAll('.p10-chip.is-on').forEach(function (c) { c.classList.remove('is-on'); });
+    syncRail();
+  }
+
+  (function () {
+    var rail = document.getElementById('p102PresetRail');
+    var html = '';
+    for (var key in PRESETS) {
+      if (!PRESETS[key].rail) continue;
+      html += '<button class="p10-preset" type="button" data-key="' + key + '">' + presetInner(key) + '</button>';
+    }
+    rail.innerHTML = html;
+    rail.querySelectorAll('.p10-preset').forEach(function (b) {
+      b.addEventListener('click', function () {
+        if (activePreset === b.dataset.key) { clearAll(); showView('disc'); }
+        else applyPreset(b.dataset.key);
+      });
+    });
+    var arrL = document.getElementById('p102PresetArrL');
+    var arrR = document.getElementById('p102PresetArrR');
+    function syncArr() {
+      var max = rail.scrollWidth - rail.clientWidth;
+      arrL.classList.toggle('is-hidden', rail.scrollLeft <= 4);
+      arrR.classList.toggle('is-hidden', rail.scrollLeft >= max - 4);
+    }
+    arrL.addEventListener('click', function () { rail.scrollBy({ left: -220, behavior: 'smooth' }); });
+    arrR.addEventListener('click', function () { rail.scrollBy({ left: 220, behavior: 'smooth' }); });
+    rail.addEventListener('scroll', syncArr);
+    window.addEventListener('resize', syncArr);
+    syncArr();
+  })();
+
+  (function () {
+    var live = CREATORS.filter(PRESETS['exh-live'].f).sort(function (a, b) { return b.pop - a.pop; });
+    document.getElementById('p102LiveGrid').innerHTML = live.slice(0, 4).map(buildCreatorCard).join('');
+
+    var upcoming = CREATORS.filter(PRESETS['upcoming-all'].f).sort(function (a, b) { return b.pop - a.pop; });
+    document.getElementById('p102UpcomingGrid').innerHTML = upcoming.slice(0, 4).map(buildCreatorCard).join('');
+
+    var news = CREATORS.filter(function (x) { return x.isNew; }).sort(function (a, b) { return b.pop - a.pop; });
+    document.getElementById('p102NewGrid').innerHTML = news.slice(0, 4).map(buildCreatorCard).join('');
+
+    var popular = CREATORS.slice().sort(function (a, b) { return b.pop - a.pop; });
+    document.getElementById('p102PopularGrid').innerHTML = popular.slice(0, 4).map(buildCreatorCard).join('');
+
+    var picks = CREATORS.slice().sort(function (a, b) { return b.watch - a.watch; });
+    document.getElementById('p102PicksGrid').innerHTML = picks.slice(0, 4).map(buildCreatorCard).join('');
+  })();
+
+  document.querySelectorAll('[data-preset]').forEach(function (a) {
+    a.addEventListener('click', function (ev) {
+      ev.preventDefault();
+      applyPreset(a.dataset.preset);
+    });
+  });
+
+  function renderZeroSugg() {
+    var sugg = document.getElementById('p102ZeroSugg');
+    sugg.innerHTML = ['exh-live', 'liaison-plus', 'new-arrival', 'popular', 'tokyo-creators'].map(function (key) {
+      return '<button class="p10-preset" type="button" data-zero-preset="' + key + '">' + presetInner(key) + '</button>';
+    }).join('');
+    sugg.querySelectorAll('[data-zero-preset]').forEach(function (b) {
+      b.addEventListener('click', function () { applyPreset(b.dataset.zeroPreset); });
+    });
+    var popular = CREATORS.slice().sort(function (a, b) { return b.pop - a.pop; });
+    document.getElementById('p102ZeroGrid').innerHTML = popular.slice(0, 4).map(buildCreatorCard).join('');
+  }
+
+  document.getElementById('p102SearchBtn').addEventListener('click', runFilter);
+  elKeyword.addEventListener('keydown', function (ev) {
+    if (ev.key === 'Enter') { ev.preventDefault(); runFilter(); }
+  });
+
+  document.querySelectorAll('.p10-chip').forEach(function (c) {
+    c.addEventListener('click', function () {
+      var on = !c.classList.contains('is-on');
+      if (c.dataset.f) {
+        document.querySelectorAll('[data-f="' + c.dataset.f + '"]').forEach(function (s) { s.classList.toggle('is-on', on); });
+        if (!c.closest('#p102Adv')) runFilter();
+      } else {
+        c.classList.toggle('is-on', on);
+      }
+    });
+  });
+
+  var advToggle = document.getElementById('p102AdvToggle');
+  var adv = document.getElementById('p102Adv');
+  advToggle.addEventListener('click', function () {
+    var open = !adv.classList.contains('is-open');
+    adv.classList.toggle('is-open', open);
+    advToggle.classList.toggle('is-open', open);
+    advToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  document.getElementById('p102AdvClear').addEventListener('click', function () {
+    document.querySelectorAll('.p10-chip.is-on').forEach(function (c) { c.classList.remove('is-on'); });
+  });
+  document.getElementById('p102AdvSearch').addEventListener('click', function () {
+    adv.classList.remove('is-open');
+    advToggle.classList.remove('is-open');
+    advToggle.setAttribute('aria-expanded', 'false');
+    runFilter();
+  });
+
+  if (elSort) elSort.addEventListener('change', function () {
+    if (!elResults.hidden && renderResultGrid._last) {
+      shownCount = PAGE_SIZE;
+      renderResultGrid(sortResults(renderResultGrid._last));
+    }
+  });
+  document.getElementById('p102MoreBtn').addEventListener('click', function () {
+    if (!renderResultGrid._last) return;
+    shownCount = renderResultGrid._last.length;
+    renderResultGrid(renderResultGrid._last);
+  });
+
+  /* ── デモバー：表示状態切替（ログイン限定ページのためロール切替なし） ── */
+  window.setP102View = function (view, btn) {
+    document.querySelectorAll('[data-p102-view]').forEach(function (b) { b.classList.remove('on'); });
+    if (btn && btn.hasAttribute('data-p102-view')) btn.classList.add('on');
+    clearAll();
+    if (view === 'disc') { showView('disc'); }
+    else if (view === 'preset') { applyPreset('tokyo-creators'); }
+    else if (view === 'result') {
+      ['st:live', 'area:東京'].forEach(function (f) {
+        document.querySelectorAll('.p10-chip[data-f="' + f + '"]').forEach(function (c) { c.classList.add('is-on'); });
+      });
+      runFilter();
+    }
+    else if (view === 'zero') { elKeyword.value = '深夜の青騎士'; runFilter(); }
+  };
+
+  window.ktnRender = function () {};
+};
+
+/* ════════════════════════════════════════════════════
+   P10-3  検索-ギャラリー（ログイン限定・ゲスト非公開）
+════════════════════════════════════════════════════ */
+KTN.pages['p10-3'] = function () {
+  document.body.classList.add('p10-page');
+  document.body.style.setProperty('--page-accent', '#005da7');
+  document.body.style.setProperty('--page-accent-bg', 'rgba(0,93,167,.08)');
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  /* ── デモデータ（ギャラリー）。avStyle は p1（EX）の同名会場と同一グラデーションで統一 ── */
+  var GALLERIES = [
+    { id: 1,  name: '白日ギャラリー',       href: 'kotennavi-p4.html', genreTags: ['絵画', '現代美術'], area: '東京',   location: '渋谷区',   hours: '11:00–19:00', status: 'live',     exh: 4, watch: 180, pop: 85, isNew: 0, liaison: 'li',      avStyle: 'linear-gradient(135deg,#5a6b80,#2e3a4a)', ini: '白' },
+    { id: 2,  name: '東京書芸館',           href: '#',                 genreTags: ['書道'],              area: '東京',   location: '千代田区', hours: '10:00–18:00', status: 'live',     exh: 2, watch: 220, pop: 90, isNew: 0, liaison: 'li-plus', avStyle: 'linear-gradient(135deg,#2e2a28,#5a5450)', ini: '東' },
+    { id: 3,  name: 'ギャラリー日向',       href: '#',                 genreTags: ['写真'],              area: '東京',   location: '目黒区',   hours: '12:00–19:00', status: 'live',     exh: 2, watch: 75,  pop: 66, isNew: 1, liaison: '',         avStyle: 'linear-gradient(135deg,#c0a880,#8a6e4a)', ini: '日' },
+    { id: 4,  name: '京都版画舎',           href: '#',                 genreTags: ['版画'],              area: '京都',   location: '左京区',   hours: '10:00–17:00', status: 'live',     exh: 3, watch: 98,  pop: 70, isNew: 0, liaison: '',         avStyle: 'linear-gradient(135deg,#7a6a8a,#4a3e5a)', ini: '京' },
+    { id: 5,  name: 'gallery TRACE',       href: '#',                 genreTags: ['絵画', '現代美術'], area: '東京',   location: '台東区',   hours: '11:00–20:00', status: 'live',     exh: 2, watch: 130, pop: 78, isNew: 0, liaison: 'li',      avStyle: 'linear-gradient(135deg,#a05a4a,#6a3428)', ini: 'T' },
+    { id: 6,  name: 'フォトスペース博多',   href: '#',                 genreTags: ['写真'],              area: '福岡',   location: '博多区',   hours: '11:00–18:00', status: 'upcoming', exh: 1, watch: 40,  pop: 55, isNew: 1, liaison: '',         avStyle: 'linear-gradient(135deg,#3a5a7a,#1e3448)', ini: '博' },
+    { id: 7,  name: '大阪墨美堂',           href: '#',                 genreTags: ['書道'],              area: '大阪',   location: '中央区',   hours: '10:00–18:00', status: 'live',     exh: 2, watch: 50,  pop: 52, isNew: 0, liaison: '',         avStyle: 'linear-gradient(135deg,#4a4a4a,#1e1e1e)', ini: '大' },
+    { id: 8,  name: '横浜アートポート',     href: '#',                 genreTags: ['絵画'],              area: '神奈川', location: '西区',     hours: '11:00–19:00', status: 'live',     exh: 1, watch: 64,  pop: 56, isNew: 0, liaison: '',         avStyle: 'linear-gradient(135deg,#6a9ab0,#3a5e74)', ini: '横' },
+    { id: 9,  name: '瀬戸クラフト館',       href: '#',                 genreTags: ['陶芸', 'クラフト'], area: '愛知',   location: '瀬戸市',   hours: '10:00–17:00', status: 'live',     exh: 1, watch: 35,  pop: 47, isNew: 0, liaison: '',         avStyle: 'linear-gradient(135deg,#9a8a6a,#5e5238)', ini: '瀬' },
+    { id: 10, name: 'ギャラリー刻',         href: '#',                 genreTags: ['版画'],              area: '東京',   location: '文京区',   hours: '12:00–19:00', status: 'live',     exh: 2, watch: 88,  pop: 64, isNew: 1, liaison: 'li',      avStyle: 'linear-gradient(135deg,#5a7a6a,#2e4638)', ini: '刻' },
+    { id: 11, name: 'YUGEN Gallery',       href: '#',                 genreTags: ['現代美術'],          area: '東京',   location: '中央区',   hours: '11:00–19:00', status: '',         exh: 1, watch: 22,  pop: 33, isNew: 0, liaison: '',         avStyle: 'linear-gradient(135deg,#4a5a6a,#26323e)', ini: 'Y' },
+    { id: 12, name: 'Gallery SOIL 渋谷',   href: '#',                 genreTags: ['クラフト', '現代美術'], area: '東京', location: '渋谷区',   hours: '11:00–20:00', status: '',         exh: 2, watch: 45,  pop: 48, isNew: 1, liaison: 'li-plus', avStyle: 'linear-gradient(135deg,#7a9a8a,#3e5a4a)', ini: 'S' },
+  ];
+
+  /* ── 特集プリセット（アルゴリズム生成の保存済み検索） ── */
+  var P10_ICONS = {
+    area: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M13 6.5c0 3.2-5 7.5-5 7.5S3 9.7 3 6.5a5 5 0 0 1 10 0z"/><circle cx="8" cy="6.5" r="1.8"/></svg>',
+    date: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="3.5" width="11" height="10" rx="1"/><path d="M2.5 6.8h11M5.5 2v2.5M10.5 2v2.5"/></svg>',
+    pop:  '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"><path d="M8 2.4l1.7 3.5 3.9.6-2.8 2.7.7 3.9L8 11.2l-3.5 1.9.7-3.9-2.8-2.7 3.9-.6L8 2.4z"/></svg>',
+    tag:  '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"><path d="M2.5 8V3.5a1 1 0 0 1 1-1H8a1 1 0 0 1 .7.3l4.8 4.8a1 1 0 0 1 0 1.4l-4.5 4.5a1 1 0 0 1-1.4 0L2.8 8.7a1 1 0 0 1-.3-.7z"/><circle cx="5.6" cy="5.6" r="1"/></svg>',
+  };
+  var PRESETS = {
+    'exh-live':        { rail: 1, axis: 'date', label: '開催中の展覧会があるギャラリー', desc: '「開催中」条件から自動生成した特集です。いま会場・LIAISONで作品を見られます。', f: function (x) { return x.status === 'live'; } },
+    'new-arrival':     { rail: 1, axis: 'date', label: '新着ギャラリー',                 desc: '「新着掲載」条件から自動生成した特集です。', f: function (x) { return !!x.isNew; } },
+    'liaison-plus':    { rail: 1, axis: 'tag',  label: 'LIAISON+作品があるギャラリー',   desc: '「LIAISON+」条件から自動生成した特集です。会場に行けなくても作品を購入できます。', f: function (x) { return x.liaison === 'li-plus'; } },
+    'tokyo-galleries': { rail: 1, axis: 'area', label: '東京のギャラリー',               desc: '「東京」エリアで活動するギャラリーから自動生成した特集です。', f: function (x) { return x.area === '東京'; } },
+    'popular':         { rail: 1, axis: 'pop',  label: '人気のギャラリー',               desc: '「興味あり！」シグナル上位から自動生成した特集です。', f: function (x) { return x.pop >= 70; } },
+    'genre-paint':     { rail: 1, axis: 'tag',  label: '絵画を扱うギャラリー',           desc: '「絵画」ジャンルを扱うギャラリーから自動生成した特集です。', f: function (x) { return x.genreTags.indexOf('絵画') !== -1; } },
+    'upcoming-all':    { rail: 0, axis: 'date', label: '開催予定の展覧会があるギャラリー', desc: 'まもなく展覧会が始まるギャラリーです。', f: function (x) { return x.status === 'upcoming'; } },
+    'new-all':         { rail: 0, axis: 'date', label: '新着ギャラリー',                 desc: '最近個展なびに掲載されたギャラリーです。', f: function (x) { return !!x.isNew; } },
+    'trending':        { rail: 0, axis: 'pop',  label: 'あなたへのおすすめ',             desc: 'ウォッチ中のギャラリー・興味あり！の傾向からのおすすめです。', f: function (x) { return true; } },
+  };
+  function presetInner(key) {
+    var p = PRESETS[key];
+    return (P10_ICONS[p.axis] || '') + esc(p.label);
+  }
+
+  /* ── カード描画は共通 buildPersonCard（gc--h）を使用 ── */
+  function buildGalleryCard(x) {
+    return buildPersonCard({ type: 'gallery', avStyle: x.avStyle, ini: x.ini, name: x.name, location: x.location, hours: x.hours, exh: x.exh, watch: x.watch, panel: false, href: x.href, status: x.status });
+  }
+
+  /* ── 状態 ── */
+  var activePreset = null;
+  var shownCount = 8;
+  var PAGE_SIZE = 8;
+
+  var elDisc    = document.getElementById('p103Discovery');
+  var elResults = document.getElementById('p103Results');
+  var elZero    = document.getElementById('p103Zero');
+  var elKeyword = document.getElementById('p103Keyword');
+  var elSort    = document.getElementById('p103Sort');
+
+  function showView(v) {
+    elDisc.hidden    = v !== 'disc';
+    elResults.hidden = v !== 'results';
+    elZero.hidden    = v !== 'zero';
+  }
+
+  function activeChipFilters() {
+    var m = {};
+    document.querySelectorAll('.p10-chip.is-on[data-f]').forEach(function (c) {
+      var i = c.dataset.f.indexOf(':');
+      var k = c.dataset.f.slice(0, i), v = c.dataset.f.slice(i + 1);
+      if (!m[k]) m[k] = [];
+      if (m[k].indexOf(v) === -1) m[k].push(v);
+    });
+    return m;
+  }
+
+  function matches(x, filters, kw) {
+    if (activePreset && !PRESETS[activePreset].f(x)) return false;
+    for (var k in filters) {
+      var vals = filters[k], ok = false;
+      for (var i = 0; i < vals.length; i++) {
+        var v = vals[i];
+        if (k === 'st' && (v === 'none' ? !x.status : x.status === v)) ok = true;
+        else if (k === 'tag' && x.genreTags.indexOf(v) !== -1) ok = true;
+        else if (k === 'area' && x.area === v) ok = true;
+        else if (k === 'new' && x.isNew) ok = true;
+        else if (k === 'liaison' && (v === 'lp' ? x.liaison === 'li-plus' : !!x.liaison)) ok = true;
+      }
+      if (!ok) return false;
+    }
+    if (kw) {
+      var hay = (x.name + ' ' + x.genreTags.join(' ') + ' ' + x.area + ' ' + x.location).toLowerCase();
+      if (hay.indexOf(kw.toLowerCase()) === -1) return false;
+    }
+    return true;
+  }
+
+  function sortResults(list) {
+    var mode = elSort ? elSort.value : 'pop';
+    var out = list.slice();
+    if (mode === 'new')      out.sort(function (a, b) { return b.isNew - a.isNew; });
+    else if (mode === 'exh') out.sort(function (a, b) { return b.exh - a.exh; });
+    else                     out.sort(function (a, b) { return b.pop - a.pop; });
+    return out;
+  }
+
+  var FLABEL = {
+    'st:live': '開催中', 'st:upcoming': '開催予定', 'st:none': '現在開催なし',
+    'new:1': '新着', 'liaison:li': 'LIAISON', 'liaison:lp': 'LIAISON+',
+  };
+  function fchipLabel(k, v) {
+    var key = k + ':' + v;
+    if (FLABEL[key]) return FLABEL[key];
+    if (k === 'tag') return '# ' + v;
+    return v;
+  }
+
+  function renderFchips(filters, kw) {
+    var box = document.getElementById('p103Fchips');
+    var html = [];
+    if (activePreset) {
+      html.push('<span class="p10-fchip">' + esc(PRESETS[activePreset].label)
+        + '<button class="p10-fchip__x" type="button" data-rm="preset" aria-label="この特集を外す">×</button></span>');
+    }
+    for (var k in filters) {
+      filters[k].forEach(function (v) {
+        html.push('<span class="p10-fchip">' + esc(fchipLabel(k, v))
+          + '<button class="p10-fchip__x" type="button" data-rm="' + esc(k + ':' + v) + '" aria-label="この条件を外す">×</button></span>');
+      });
+    }
+    if (kw) {
+      html.push('<span class="p10-fchip">「' + esc(kw) + '」'
+        + '<button class="p10-fchip__x" type="button" data-rm="kw" aria-label="キーワードを外す">×</button></span>');
+    }
+    if (html.length >= 2) html.push('<button class="p10-fclear" type="button" data-rm="all">すべてクリア</button>');
+    box.innerHTML = html.join('');
+    box.hidden = !html.length;
+    box.querySelectorAll('[data-rm]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var rm = btn.dataset.rm;
+        if (rm === 'all') { clearAll(); showView('disc'); return; }
+        if (rm === 'preset') { setPreset(null); }
+        else if (rm === 'kw') { elKeyword.value = ''; }
+        else { document.querySelectorAll('.p10-chip[data-f="' + rm + '"]').forEach(function (c) { c.classList.remove('is-on'); }); }
+        runFilter();
+      });
+    });
+  }
+
+  function renderResultGrid(list) {
+    var grid = document.getElementById('p103ResultGrid');
+    grid.innerHTML = list.slice(0, shownCount).map(buildGalleryCard).join('');
+    var moreBtn = document.getElementById('p103MoreBtn');
+    moreBtn.parentElement.style.display = list.length > shownCount ? '' : 'none';
+    renderResultGrid._last = list;
+  }
+
+  function runFilter() {
+    var filters = activeChipFilters();
+    var kw = elKeyword.value.trim();
+    var hasAny = activePreset || kw || Object.keys(filters).length;
+    if (!hasAny) { showView('disc'); syncRail(); return; }
+
+    var list = GALLERIES.filter(function (x) { return matches(x, filters, kw); });
+    syncRail();
+
+    if (!list.length) {
+      document.getElementById('p103ZeroTitle').textContent = kw
+        ? '「' + kw + '」に一致するギャラリーが見つかりませんでした'
+        : '条件に合うギャラリーが見つかりませんでした';
+      renderZeroSugg();
+      showView('zero');
+      return;
+    }
+
+    var p = activePreset ? PRESETS[activePreset] : null;
+    document.getElementById('p103CtxEyebrow').textContent = p ? 'Feature' : 'Search Results';
+    document.getElementById('p103CtxTitle').textContent = p ? p.label : (kw ? '「' + kw + '」の検索結果' : '検索結果');
+    var descEl = document.getElementById('p103CtxDesc');
+    descEl.textContent = p ? p.desc : '';
+    descEl.hidden = !p;
+    renderFchips(filters, kw);
+    document.getElementById('p103Count').innerHTML = '<strong>' + list.length + '</strong>件';
+    shownCount = PAGE_SIZE;
+    renderResultGrid(sortResults(list));
+    showView('results');
+  }
+
+  function setPreset(key) {
+    activePreset = key;
+    syncRail();
+  }
+  function syncRail() {
+    document.querySelectorAll('.p10-preset[data-key]').forEach(function (b) {
+      b.classList.toggle('is-on', b.dataset.key === activePreset);
+    });
+  }
+  function applyPreset(key) {
+    clearAll();
+    activePreset = key;
+    runFilter();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function clearAll() {
+    activePreset = null;
+    elKeyword.value = '';
+    document.querySelectorAll('.p10-chip.is-on').forEach(function (c) { c.classList.remove('is-on'); });
+    syncRail();
+  }
+
+  (function () {
+    var rail = document.getElementById('p103PresetRail');
+    var html = '';
+    for (var key in PRESETS) {
+      if (!PRESETS[key].rail) continue;
+      html += '<button class="p10-preset" type="button" data-key="' + key + '">' + presetInner(key) + '</button>';
+    }
+    rail.innerHTML = html;
+    rail.querySelectorAll('.p10-preset').forEach(function (b) {
+      b.addEventListener('click', function () {
+        if (activePreset === b.dataset.key) { clearAll(); showView('disc'); }
+        else applyPreset(b.dataset.key);
+      });
+    });
+    var arrL = document.getElementById('p103PresetArrL');
+    var arrR = document.getElementById('p103PresetArrR');
+    function syncArr() {
+      var max = rail.scrollWidth - rail.clientWidth;
+      arrL.classList.toggle('is-hidden', rail.scrollLeft <= 4);
+      arrR.classList.toggle('is-hidden', rail.scrollLeft >= max - 4);
+    }
+    arrL.addEventListener('click', function () { rail.scrollBy({ left: -220, behavior: 'smooth' }); });
+    arrR.addEventListener('click', function () { rail.scrollBy({ left: 220, behavior: 'smooth' }); });
+    rail.addEventListener('scroll', syncArr);
+    window.addEventListener('resize', syncArr);
+    syncArr();
+  })();
+
+  (function () {
+    var live = GALLERIES.filter(PRESETS['exh-live'].f).sort(function (a, b) { return b.pop - a.pop; });
+    document.getElementById('p103LiveGrid').innerHTML = live.slice(0, 4).map(buildGalleryCard).join('');
+
+    var upcoming = GALLERIES.filter(PRESETS['upcoming-all'].f).sort(function (a, b) { return b.pop - a.pop; });
+    document.getElementById('p103UpcomingGrid').innerHTML = upcoming.slice(0, 4).map(buildGalleryCard).join('');
+
+    var news = GALLERIES.filter(function (x) { return x.isNew; }).sort(function (a, b) { return b.pop - a.pop; });
+    document.getElementById('p103NewGrid').innerHTML = news.slice(0, 4).map(buildGalleryCard).join('');
+
+    var popular = GALLERIES.slice().sort(function (a, b) { return b.pop - a.pop; });
+    document.getElementById('p103PopularGrid').innerHTML = popular.slice(0, 4).map(buildGalleryCard).join('');
+
+    var picks = GALLERIES.slice().sort(function (a, b) { return b.watch - a.watch; });
+    document.getElementById('p103PicksGrid').innerHTML = picks.slice(0, 4).map(buildGalleryCard).join('');
+  })();
+
+  document.querySelectorAll('[data-preset]').forEach(function (a) {
+    a.addEventListener('click', function (ev) {
+      ev.preventDefault();
+      applyPreset(a.dataset.preset);
+    });
+  });
+
+  function renderZeroSugg() {
+    var sugg = document.getElementById('p103ZeroSugg');
+    sugg.innerHTML = ['exh-live', 'liaison-plus', 'new-arrival', 'popular', 'tokyo-galleries'].map(function (key) {
+      return '<button class="p10-preset" type="button" data-zero-preset="' + key + '">' + presetInner(key) + '</button>';
+    }).join('');
+    sugg.querySelectorAll('[data-zero-preset]').forEach(function (b) {
+      b.addEventListener('click', function () { applyPreset(b.dataset.zeroPreset); });
+    });
+    var popular = GALLERIES.slice().sort(function (a, b) { return b.pop - a.pop; });
+    document.getElementById('p103ZeroGrid').innerHTML = popular.slice(0, 4).map(buildGalleryCard).join('');
+  }
+
+  document.getElementById('p103SearchBtn').addEventListener('click', runFilter);
+  elKeyword.addEventListener('keydown', function (ev) {
+    if (ev.key === 'Enter') { ev.preventDefault(); runFilter(); }
+  });
+
+  document.querySelectorAll('.p10-chip').forEach(function (c) {
+    c.addEventListener('click', function () {
+      var on = !c.classList.contains('is-on');
+      if (c.dataset.f) {
+        document.querySelectorAll('[data-f="' + c.dataset.f + '"]').forEach(function (s) { s.classList.toggle('is-on', on); });
+        if (!c.closest('#p103Adv')) runFilter();
+      } else {
+        c.classList.toggle('is-on', on);
+      }
+    });
+  });
+
+  var advToggle = document.getElementById('p103AdvToggle');
+  var adv = document.getElementById('p103Adv');
+  advToggle.addEventListener('click', function () {
+    var open = !adv.classList.contains('is-open');
+    adv.classList.toggle('is-open', open);
+    advToggle.classList.toggle('is-open', open);
+    advToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  document.getElementById('p103AdvClear').addEventListener('click', function () {
+    document.querySelectorAll('.p10-chip.is-on').forEach(function (c) { c.classList.remove('is-on'); });
+  });
+  document.getElementById('p103AdvSearch').addEventListener('click', function () {
+    adv.classList.remove('is-open');
+    advToggle.classList.remove('is-open');
+    advToggle.setAttribute('aria-expanded', 'false');
+    runFilter();
+  });
+
+  if (elSort) elSort.addEventListener('change', function () {
+    if (!elResults.hidden && renderResultGrid._last) {
+      shownCount = PAGE_SIZE;
+      renderResultGrid(sortResults(renderResultGrid._last));
+    }
+  });
+  document.getElementById('p103MoreBtn').addEventListener('click', function () {
+    if (!renderResultGrid._last) return;
+    shownCount = renderResultGrid._last.length;
+    renderResultGrid(renderResultGrid._last);
+  });
+
+  /* ── デモバー：表示状態切替（ログイン限定ページのためロール切替なし） ── */
+  window.setP103View = function (view, btn) {
+    document.querySelectorAll('[data-p103-view]').forEach(function (b) { b.classList.remove('on'); });
+    if (btn && btn.hasAttribute('data-p103-view')) btn.classList.add('on');
+    clearAll();
+    if (view === 'disc') { showView('disc'); }
+    else if (view === 'preset') { applyPreset('tokyo-galleries'); }
+    else if (view === 'result') {
+      ['st:live', 'area:東京'].forEach(function (f) {
+        document.querySelectorAll('.p10-chip[data-f="' + f + '"]').forEach(function (c) { c.classList.add('is-on'); });
+      });
+      runFilter();
+    }
+    else if (view === 'zero') { elKeyword.value = '深夜の青騎士'; runFilter(); }
+  };
+
+  window.ktnRender = function () {};
 };
 
 /* ════════════════════════════════════════════════════

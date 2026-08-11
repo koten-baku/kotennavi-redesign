@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>本人確認審査 — 管理者 | 個展なび</title>
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<body data-w="detail" class="p90-11-page mgmt-page">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- デモバー -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ロール：</span>
+  <button class="dbtn on" onclick="setR('admin',this)">管理者</button>
+</div>
+
+<div class="shell">
+<div class="content-wrap" id="contentWrap">
+
+  <header class="ktn-header" id="ktnHeader">
+    <div class="ktn-header__inner">
+      <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+      <div class="ktn-hdr-actions" id="ktnActs"></div>
+    </div>
+  </header>
+
+  <main class="ktn-main" id="ktnMain">
+    <div class="ktn-content">
+
+      <!-- 管理ボックス -->
+      <div class="p9011-wrap ktn-mgmt-wrap ktn-mgmt-stack">
+
+        <!-- ページタイトル -->
+        <div class="ktn-mgmt-head">
+          <h2 class="ktn-mgmt-head__title">本人確認審査</h2>
+          <p class="ktn-mgmt-head__en">IDENTITY VERIFICATION REVIEW</p>
+          <p class="ktn-mgmt-head__desc">入力内容と本人確認書類を確認のうえ、本人確認OKまたは差し戻しのいずれかを行ってください。</p>
+        </div>
+
+        <div class="p902-review-head">
+          <div class="p902-review-head__badges">
+            <span class="ktn-review-status ktn-review-status--pending" id="p9011ReviewStatus">確認中</span>
+          </div>
+          <h3 class="p902-review-head__name" id="p9011ReviewTitle"></h3>
+          <p class="p902-review-head__meta" id="p9011ReviewMeta"></p>
+        </div>
+
+        <!-- 入力内容ボックス（申込者が入力した内容であることを明示・P90-2-1と同一パターン） -->
+        <div class="p902-input-box">
+          <div class="p902-input-box__label">
+            <span class="p902-input-box__label-jp">入力内容</span>
+            <span class="p902-input-box__label-en">APPLICANT INPUT</span>
+          </div>
+          <div id="p9011ReviewBody"></div>
+
+          <!-- 入力内容CSV（NID指定で開いた申込内容の自動生成CSV・P90-2-1と同パターン） -->
+          <div class="p902-csv">
+            <div class="p902-csv__head">
+              <h4 class="p902-review-section__title" style="margin:0;padding:0;border:none">入力内容CSV</h4>
+              <button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-copy-btn" id="p9011CsvCopyBtn">CSVをコピー</button>
+            </div>
+            <p class="p902-csv__hint">事務局が外部へ持ち出す際の入力内容の要約です。1行目が列名、2行目がこの申込者の値です。</p>
+            <textarea class="p902-csv__box" id="p9011CsvBox" readonly rows="3"></textarea>
+          </div>
+        </div>
+
+        <!-- 確認メール送信済みの小さな注記（返信待ち・P90-2-1と同パターン） -->
+        <p class="p902-inquiry-note" id="p9011InquiryNote" hidden></p>
+
+        <!-- 管理者コメント -->
+        <div class="ktn-admin-note">
+          <div class="ktn-admin-note__head">
+            <span class="ktn-admin-note__badge">ADMIN</span>
+            <span class="ktn-admin-note__title">管理者コメント</span>
+          </div>
+          <p class="ktn-admin-note__desc">申込者には表示されません（内部の引き継ぎメモ）。</p>
+          <textarea class="ktn-admin-note__textarea" id="p9011AdminNote" placeholder="確認事項・引き継ぎメモなど"></textarea>
+        </div>
+
+        <!-- 処理結果（本人確認OK＝Stripeオンボーディング状況／差し戻し＝差し戻し内容。P90-2の#p902ReviewResultと同じ位置
+             ＝管理者コメントの直下・処理完了の申込のみ表示。案内メール送信ボタンもここに内包する） -->
+        <div class="p902-review-section p902-review-result" id="p9011ReviewResult" hidden></div>
+
+        <!-- 申込者への確認メール（本フローに差し戻しは無く、確認事項が残る申込は「確認中」のまま扱う。
+             P90-2-1のP902InquiryPanelと同パターン：テンプレートから選択し、件名・本文を確認・編集のうえ送信する。
+             送信してもステータスは変わらない） -->
+        <div class="p902-flow-panel" id="p9011InquiryPanel" hidden>
+          <p class="p902-flow-panel__title">申込者に確認する</p>
+          <div class="p902-flow-panel__row">
+            <select class="p902-flow-panel__input" id="p9011InquiryReasonSel"></select>
+          </div>
+          <div class="p902-flow-panel__row p902-flow-panel__new-row" id="p9011InquiryNewNameRow" hidden>
+            <input type="text" class="p902-flow-panel__input" id="p9011InquiryNewName" placeholder="新しいテンプレート名" autocomplete="off">
+            <button type="button" class="ktn-op-btn ktn-op-btn--sm" id="p9011InquiryNewSaveBtn">テンプレートとして保存</button>
+          </div>
+          <label class="p902-flow-panel__label" for="p9011InquiryFrom">送信元</label>
+          <div class="p902-flow-panel__row">
+            <select class="p902-flow-panel__input" id="p9011InquiryFrom"></select>
+          </div>
+          <label class="p902-flow-panel__label" for="p9011InquirySubject">件名</label>
+          <div class="p902-flow-panel__row">
+            <input type="text" class="p902-flow-panel__input" id="p9011InquirySubject">
+          </div>
+          <textarea class="p902-flow-panel__textarea" id="p9011InquiryBody" rows="10"></textarea>
+          <p class="p902-flow-panel__hint">本文を確認・編集のうえ送信してください。送信後は一覧に「確認中（返信待ち）」の注記が表示されます。</p>
+          <div class="p902-flow-panel__actions">
+            <button type="button" class="ktn-op-btn ktn-op-btn--sm" id="p9011InquiryCancelBtn">キャンセル</button>
+            <button type="button" class="ktn-op-btn ktn-op-btn--primary" id="p9011InquirySendBtn">このメールを送信する</button>
+          </div>
+        </div>
+
+        <!-- お申込みの取消（確認メールへの返信内容、または申込者からの取消希望をもとに確定。P902-1のCancelパネルと同パターン） -->
+        <div class="p902-return-panel" id="p9011CancelPanel" hidden>
+          <p class="p902-return-panel__title">お申込みを取消にする</p>
+          <div class="p902-flow-panel__row">
+            <select class="p902-flow-panel__input" id="p9011CancelReasonSel">
+              <option value="cancel-document-unclear">本人確認書類が不鮮明</option>
+              <option value="cancel-info-mismatch">登録情報との不一致</option>
+              <option value="cancel-resp-info">責任者情報の不備</option>
+              <option value="cancel-missing-fields">必須項目の不足</option>
+              <option value="cancel-other">その他</option>
+              <option value="__new__">＋ 新しいテンプレートとして追加</option>
+            </select>
+          </div>
+          <label class="p902-cancel-check">
+            <input type="checkbox" id="p9011CancelSendMail">
+            取消のご連絡メールを送信する
+          </label>
+          <p class="p902-flow-panel__hint">本文はチェックの有無に関わらず確認・編集できます。実際に送信する場合のみ上のチェックを入れてください。</p>
+          <div id="p9011CancelMailFields" hidden>
+            <div class="p902-flow-panel__row p902-flow-panel__new-row" id="p9011CancelNewNameRow" hidden>
+              <input type="text" class="p902-flow-panel__input" id="p9011CancelNewName" placeholder="新しいテンプレート名" autocomplete="off">
+              <button type="button" class="ktn-op-btn ktn-op-btn--sm" id="p9011CancelNewSaveBtn">テンプレートとして保存</button>
+            </div>
+            <label class="p902-flow-panel__label" for="p9011CancelFrom">送信元</label>
+            <div class="p902-flow-panel__row">
+              <select class="p902-flow-panel__input" id="p9011CancelFrom"></select>
+            </div>
+            <label class="p902-flow-panel__label" for="p9011CancelSubject">件名</label>
+            <div class="p902-flow-panel__row">
+              <input type="text" class="p902-flow-panel__input" id="p9011CancelSubject">
+            </div>
+            <textarea class="p902-flow-panel__textarea" id="p9011CancelBody" rows="10"></textarea>
+          </div>
+          <div class="p902-flow-panel__actions">
+            <button type="button" class="ktn-op-btn ktn-op-btn--sm" id="p9011CancelBackBtn">戻る</button>
+            <button type="button" class="ktn-op-btn ktn-op-btn--danger" id="p9011CancelConfirmBtn">取消を確定する</button>
+          </div>
+        </div>
+
+        <!-- 案内メールパネル（本人確認OK後・処理結果エリアのボタンから任意タイミングで送信） -->
+        <div class="p902-flow-panel" id="p9011InviteMailPanel" hidden>
+          <p class="p902-flow-panel__title">ご案内メールを送信する</p>
+          <div class="p902-flow-panel__row">
+            <select class="p902-flow-panel__input" id="p9011InviteTemplateSel"></select>
+          </div>
+          <label class="p902-flow-panel__label" for="p9011InviteFrom">送信元</label>
+          <div class="p902-flow-panel__row">
+            <select class="p902-flow-panel__input" id="p9011InviteFrom"></select>
+          </div>
+          <label class="p902-flow-panel__label" for="p9011InviteMailSubject">件名</label>
+          <div class="p902-flow-panel__row">
+            <input type="text" class="p902-flow-panel__input" id="p9011InviteMailSubject">
+          </div>
+          <textarea class="p902-flow-panel__textarea" id="p9011InviteMailBody" rows="10"></textarea>
+          <p class="p902-flow-panel__hint">本文を確認・編集のうえ送信してください。</p>
+          <div class="p902-flow-panel__actions">
+            <button type="button" class="ktn-op-btn ktn-op-btn--sm" id="p9011InviteMailCancelBtn">キャンセル</button>
+            <button type="button" class="ktn-op-btn ktn-op-btn--primary" id="p9011InviteMailSendBtn">このメールを送信する</button>
+          </div>
+        </div>
+
+        <!-- ボタン行は常に最下部＝入力パネルが開いている間は隠れ、閉じたら／完了したらここに戻る
+             2グループに分離：上＝取消トラック（確認する／取消にする）、下＝承認トラック（本人確認OK／一覧へ戻る） -->
+        <div class="p902-review-actions" id="p9011ReviewActions">
+          <div class="p902-review-actions__group p902-review-actions__group--caution">
+            <button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline" id="p9011InquiryBtn">申込者に確認する</button>
+            <button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline" id="p9011CancelFlowBtn">取消にする</button>
+          </div>
+          <div class="p902-review-actions__group p902-review-actions__group--main">
+            <button type="button" class="ktn-op-btn ktn-op-btn--primary" id="p9011ApproveBtn">本人確認OKにする</button>
+            <a class="ktn-action-btn" href="kotennavi-p90-11.html">一覧へ戻る →</a>
+          </div>
+        </div>
+
+      </div><!-- /.ktn-mgmt-wrap -->
+
+    </div><!-- /.ktn-content -->
+  </main>
+
+</div><!-- /.content-wrap -->
+</div><!-- /.shell -->
+
+<nav class="ktn-bottom-nav" id="ktnBottomNav"><div class="ktn-bottom-nav__inner" id="ktnBottomNavInner"></div></nav>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Top","item":"https://koten-navi.com/"},{"@type":"ListItem","position":2,"name":"管理者","item":"https://koten-navi.com/p90"},{"@type":"ListItem","position":3,"name":"リエゾンプラス機能申込管理","item":"https://koten-navi.com/p90-11"},{"@type":"ListItem","position":4,"name":"審査"}]}</script>
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+  KTN.init({ page: 'p90-11-1', role: 'admin' });
+  function setR(role, btn) {
+    document.querySelectorAll('.dbtn').forEach(function(b){ b.classList.remove('on'); });
+    btn.classList.add('on');
+    window.curRole = role;
+    if (window.ktnRender) ktnRender();
+  }
+</script>
+</body>
+</html>

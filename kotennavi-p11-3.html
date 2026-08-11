@@ -191,20 +191,14 @@
               <input class="p211-input" id="p113Zip" type="text" placeholder="150-0001" inputmode="numeric" maxlength="8" style="max-width:180px">
             </div>
 
-            <div class="p114-bank-row" style="margin-top:12px">
-              <div class="p211-field">
-                <label class="p211-label">都道府県<span class="ktn-req">必須</span></label>
-                <input class="p211-input" id="p113Pref" type="text" placeholder="東京都">
-              </div>
-              <div class="p211-field">
-                <label class="p211-label">市区町村<span class="ktn-req">必須</span></label>
-                <input class="p211-input" id="p113City" type="text" placeholder="渋谷区松濤">
-              </div>
+            <div class="p211-field" style="margin-top:12px">
+              <label class="p211-label">都道府県<span class="ktn-req">必須</span></label>
+              <input class="p211-input" id="p113Pref" type="text" placeholder="東京都" style="max-width:220px">
             </div>
 
             <div class="p211-field" style="margin-top:12px">
-              <label class="p211-label">番地・建物名<span class="ktn-req">必須</span></label>
-              <input class="p211-input" id="p113Addr" type="text" placeholder="1-2-3 ○○ビル 1F">
+              <label class="p211-label">市区町村・番地以降<span class="ktn-req">必須</span></label>
+              <input class="p211-input" id="p113Addr" type="text" placeholder="渋谷区松濤1-2-3 ○○ビル 1F">
               <p class="p211-help">来場者に公開される住所です。</p>
             </div>
 
@@ -423,7 +417,7 @@ var p113CurrentMode = 'form';
 /* ── 確認中／利用開始デモ：以前の申込内容（Gallery SOIL 渋谷デモペルソナ・p4-11と同一データ） ── */
 var P113_DEMO_VALUES = {
   p113Name: 'Gallery SOIL 渋谷', p113Kana: 'ギャラリー ソイル シブヤ', p113NameEn: 'Gallery SOIL Shibuya', p113Genre: 'アート',
-  p113Zip: '150-0001', p113Pref: '東京都', p113City: '渋谷区松濤', p113Addr: '1-2-3 ○○ビル 1F',
+  p113Zip: '150-0001', p113Pref: '東京都', p113Addr: '渋谷区松濤1-2-3 ○○ビル 1F',
   p113Tel: '03-XXXX-XXXX', p113Email: 'info@soilgallery.jp',
   p113SnsUrl0: 'https://instagram.com/soilgallery_shibuya',
   p113ContactName: '鈴木 一郎', p113ContactKana: 'スズキ イチロウ', p113Relation: 'オーナー・運営者',

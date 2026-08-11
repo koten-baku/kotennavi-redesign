@@ -208,7 +208,32 @@
       "Bash(awk 'NR==7503,NR==7981' kotennavi-pages.js)",
       "Bash(awk 'NR==8362,NR==8564' kotennavi-pages.js)",
       "Bash(awk -F'|' '{print $2, $3}')",
-      "Bash(awk -F: '$1>=8617')"
+      "Bash(awk -F: '$1>=8617')",
+      "Bash(awk '/KTN.pages\\\\[.p90-2.\\\\]/,/^\\\\};$/' kotennavi-pages.js)",
+      "Bash(awk '/KTN.pages\\\\[.p90-2.\\\\]/{f=1} f{print NR\": \"$0} /window.ktnRender = function \\\\\\(\\\\\\) \\\\{\\\\};/{if\\(f\\){exit}}' kotennavi-pages.js)",
+      "Bash(pkill -f \"http.server 8791\")",
+      "Bash(awk 'NR==8723,NR==9260' kotennavi-pages.js)",
+      "Bash(awk 'NR==8723,NR==9350' kotennavi-pages.js)",
+      "Bash(awk 'NR==8723,NR==9100' kotennavi-pages.js)",
+      "Bash(awk -F: '$1>=8905 && $1<=8935')",
+      "Bash(awk -F: '$1>=8926 && $1<=8945')",
+      "Bash(awk 'NR==8700,NR==8780' \"D:\\\\user\\\\baku\\\\claude-code\\\\kotennavi-redesign\\\\kotennavi-pages.js\")",
+      "Bash(awk '/var APPS = \\\\[/,0' \"D:\\\\user\\\\baku\\\\claude-code\\\\kotennavi-redesign\\\\kotennavi-pages.js\")",
+      "Bash(sort -t補 -k2 -n)",
+      "Bash(sed -n '8748,8753p' kotennavi-pages.js)",
+      "Bash(sed -n '9838,9844p' kotennavi-pages.js)",
+      "Bash(head -n 8750 kotennavi-pages.js)",
+      "Bash(cat .tmp_p902_block.js)",
+      "Bash(echo \"\")",
+      "Bash(cat .tmp_p902_list.js)",
+      "Bash(cat .tmp_p902_review.js)",
+      "Bash(mv .tmp_pages_new.js kotennavi-pages.js)",
+      "Bash(rm .tmp_p902_block.js .tmp_p902_list.js .tmp_p902_review.js)",
+      "Bash(ls .tmp_p90*)",
+      "Bash(sed -i '161,329d' kotennavi-p90-2.html)",
+      "Bash(sed -n '150,168p' kotennavi-p90-2.html)",
+      "Bash(awk 'NR==9900,NR==10289' kotennavi-pages.js)",
+      "Bash(awk *)"
     ]
   }
 }

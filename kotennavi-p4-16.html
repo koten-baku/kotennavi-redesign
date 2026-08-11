@@ -76,6 +76,43 @@
   </div>
 </div>
 
+<!-- 取引明細モーダル（取引完了／完了(アーカイブ)共通） -->
+<div class="p515-modal-overlay" id="p416DetailModal" hidden>
+  <div class="p515-modal">
+    <div class="p515-modal__head">
+      <span class="p515-modal__title">取引明細</span>
+      <button class="p515-modal__close" id="p416DetailModalClose">✕</button>
+    </div>
+    <div class="p515-modal__body">
+      <dl class="ktn-txn-help__ctx">
+        <div><dt>取引番号</dt><dd class="is-id">TXN-20260308-2204</dd></div>
+        <div><dt>作品</dt><dd>朝の余白 No.3</dd></div>
+        <div><dt>展覧会</dt><dd><a href="kotennavi-p2.html">モノクロームの詩 — 松本りさ 個展</a><span class="ktn-txn-help__ctx-sub">Gallery SOIL 渋谷 · 2026.03.01 — 2026.03.30</span></dd></div>
+        <div><dt>購入者</dt><dd><a class="ktn-guide-link" href="#">ken_s</a></dd></div>
+      </dl>
+      <div class="p515-modal__detail">
+        <div>作品代金：<span>¥48,000</span></div>
+        <div>送料：<span>¥1,200</span>（ヤマト宅急便）</div>
+        <div>梱包費：<span>¥500</span></div>
+        <div class="p515-modal__detail-total">合計（税込）：<span>¥49,700</span></div>
+      </div>
+      <div class="p515-log__title" style="margin-top:16px">取引の流れ<span class="p515-log__title-en">Timeline</span></div>
+      <div class="p316-detail-timeline">
+        <div class="p316-detail-timeline__row"><span class="p316-detail-timeline__label">購入申込受付</span><span class="p316-detail-timeline__date">2026.03.08 10:15</span></div>
+        <div class="p316-detail-timeline__row"><span class="p316-detail-timeline__label">購入確定・送料確定</span><span class="p316-detail-timeline__date">2026.03.10 11:30</span></div>
+        <div class="p316-detail-timeline__row"><span class="p316-detail-timeline__label">支払い完了</span><span class="p316-detail-timeline__date">2026.03.14 09:44</span></div>
+        <div class="p316-detail-timeline__row"><span class="p316-detail-timeline__label">発送完了</span><span class="p316-detail-timeline__date">2026.03.17 14:20</span></div>
+        <div class="p316-detail-timeline__row"><span class="p316-detail-timeline__label">受取確認</span><span class="p316-detail-timeline__date">2026.03.20 17:22</span></div>
+        <div class="p316-detail-timeline__row"><span class="p316-detail-timeline__label">取引完了確認</span><span class="p316-detail-timeline__date">2026.03.21 10:05</span></div>
+      </div>
+      <a class="ktn-guide-link" href="kotennavi-p4-17.html" style="display:inline-block;margin-top:14px">精算の詳細は販売代金管理へ →</a>
+    </div>
+    <div class="p515-modal__foot">
+      <button class="p515-modal__btn ktn-op-btn" id="p416DetailModalClose2">閉じる</button>
+    </div>
+  </div>
+</div>
+
 <!-- 送料テーブルモーダル -->
 <div class="p515-modal-overlay" id="p416RateModal" hidden>
   <div class="p515-modal">
@@ -711,7 +748,7 @@
                   <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" width="10" height="10"><line x1="7" y1="2" x2="2" y2="2"/><polyline points="5 5 2 2 5 -1"/><rect x="4" y="4" width="7" height="7" rx="1"/></svg>
                   LIAISON+コンソールへ
                 </a>
-                <button class="ktn-op-btn">
+                <button type="button" class="ktn-op-btn" id="p416DetailBtn">
                   <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" width="10" height="10"><rect x="2" y="2" width="8" height="9" rx="1"/><line x1="4" y1="5" x2="8" y2="5"/><line x1="4" y1="7.5" x2="6.5" y2="7.5"/></svg>
                   取引明細を確認
                 </button>
@@ -1413,6 +1450,18 @@ KTN.renderQA('#p416QaTxn', { category: 'liaison-txn', side: 'seller', style: 'de
   if (rateModalClose2) rateModalClose2.addEventListener('click', closeRateModal);
   if (rateModal)       rateModal.addEventListener('click', function (e) { if (e.target === rateModal) closeRateModal(); });
 
+  /* ── 取引明細モーダル ── */
+  var detailModal       = document.getElementById('p416DetailModal');
+  var detailBtn         = document.getElementById('p416DetailBtn');
+  var detailModalClose  = document.getElementById('p416DetailModalClose');
+  var detailModalClose2 = document.getElementById('p416DetailModalClose2');
+  function openDetailModal()  { if (detailModal) detailModal.hidden = false; }
+  function closeDetailModal() { if (detailModal) detailModal.hidden = true; }
+  if (detailBtn)         detailBtn.addEventListener('click', openDetailModal);
+  if (detailModalClose)  detailModalClose.addEventListener('click', closeDetailModal);
+  if (detailModalClose2) detailModalClose2.addEventListener('click', closeDetailModal);
+  if (detailModal)       detailModal.addEventListener('click', function (e) { if (e.target === detailModal) closeDetailModal(); });
+
   /* ── 発送方法（tracking form） ── */
   var tCarrierSelect    = document.getElementById('p416TrackingCarrierSelect');
   var tCarrierOtherWrap = document.getElementById('p416TrackingCarrierOtherWrap');
@@ -1513,7 +1562,7 @@ KTN.renderQA('#p416QaTxn', { category: 'liaison-txn', side: 'seller', style: 'de
 
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') {
-      closeDrawer(); closeConfirmModal(); closeRateModal(); closeShipModal(); closeDoneModal(); closeContactModal();
+      closeDrawer(); closeConfirmModal(); closeRateModal(); closeShipModal(); closeDoneModal(); closeDetailModal(); closeContactModal();
     }
   });
 
