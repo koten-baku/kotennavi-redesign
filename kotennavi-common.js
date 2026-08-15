@@ -754,6 +754,7 @@ function renderTagbar(page) {
    ─ 本文の実体は1つ。各FAQページ／取引ページは cat×aud×side でフィルタして
      参照表示する＝ページ間で文言がずれる二重管理を避ける。
    ─ cat: 'exhibition-edit'（展覧会の登録・編集）
+          'article-edit'（記事の登録・編集＝p2-13/p3-19/p4-19/p6-15/p7-11。p60-6/p60-7チャプター）
           'liaison'（リエゾン/リエゾン+ サービス全般＝p70-1/p70-2 ハブ）
           'liaison-txn'（取引フロー＝取引6ページ＋p70-11/p70-12 ハブ）
    ─ aud: 'common'（全ロール可視）/ 'creator' / 'gallery'（exhibition-edit の編別）
@@ -816,6 +817,24 @@ KTN.QA = [
   { id: 'EXH-39', cat: 'exhibition-edit', aud: 'common', grp: '編集・修正・クローン', q: '登録した展覧会を削除・非公開にしたい。', a: '管理者の確認が完了する前なら、展覧会管理ページから削除できます。確認が完了すると、ウォッチしている方への通知と個展なび公式SNSでの告知が行われるため、それ以降は削除・非公開はできません。' },
   // J. 解決しないとき
   { id: 'EXH-40', cat: 'exhibition-edit', aud: 'common', grp: '解決しないとき', q: 'ここで解決しない場合は？', a: 'ここで解決しない場合は、{{contact}}よりご連絡ください。' },
+
+  /* ─── cat:'article-edit'（記事の登録・編集＝p2-13/p3-19/p4-19/p6-15/p7-11）───
+     p60-6（クリエイター編）／p60-7（ギャラリー編）FAQの「記事の登録・編集」チャプターで描画。
+     展覧会（exhibition-edit）との最大の違い＝管理者確認を経ない即時公開・削除に制限がない点。 */
+  { id: 'ART-01', cat: 'article-edit', aud: 'common', grp: 'はじめに・基本', q: '誰が記事を投稿できますか？', a: '登録済みのクリエイター・ギャラリーが、ご自分の記事管理ページから投稿できます。ゲスト・一般ユーザーは投稿できません。' },
+  { id: 'ART-02', cat: 'article-edit', aud: 'common', grp: 'はじめに・基本', q: '投稿にどれくらい時間がかかりますか？', a: 'タイトルと本文だけなら約5分で投稿できます。テキスト・画像・動画のブロックを自由に組み合わせて記事を作成できます。' },
+  { id: 'ART-03', cat: 'article-edit', aud: 'common', grp: 'はじめに・基本', q: '記事はすぐ公開されますか？', a: 'はい。展覧会の登録と異なり管理者確認はなく、「下書き」を選ばずに保存すると即座に公開されます。' },
+  { id: 'ART-04', cat: 'article-edit', aud: 'common', grp: '掲載先について', q: '記事の掲載先はどう決まりますか？', a: '記事を作成したページによって自動的に決まり、あとから変更はできません（例：展覧会の記事管理から作成した記事は、その展覧会に掲載されます）。' },
+  { id: 'ART-05', cat: 'article-edit', aud: 'common', grp: '掲載先について', q: '1つの記事を複数の場所に掲載できますか？', a: 'いいえ。1記事につき掲載先は1つです。複数の場所に掲載したい場合は、それぞれのページの記事管理から個別に投稿してください。' },
+  { id: 'ART-06', cat: 'article-edit', aud: 'creator', grp: '掲載先について', q: 'クリエイターページには、どんな記事を投稿できますか？', a: '制作ノート・出展予定の展覧会の予告・主宰する教室やワークショップの案内・制作にまつわる近況など、あなたの活動をファンに伝える記事を投稿できます。' },
+  { id: 'ART-07', cat: 'article-edit', aud: 'gallery', grp: '掲載先について', q: 'ギャラリーページには、どんな記事を投稿できますか？', a: '会場からのお知らせ・展覧会レポート・取扱作家の紹介など、ギャラリーの活動を伝える記事を投稿できます。' },
+  { id: 'ART-08', cat: 'article-edit', aud: 'common', grp: '記事種別', q: '記事種別は何を選べばいいですか？', a: 'レポート・インタビュー・お知らせなど、内容に近いものを選んでください。当てはまらない場合は「＋ その他」から自由入力できます。' },
+  { id: 'ART-09', cat: 'article-edit', aud: 'creator', grp: '記事種別', q: '「制作日記」「ワークショップ」はクリエイター専用ですか？', a: 'はい。クリエイターのみ選べる種別です（ギャラリーには同じ位置に「ギャラリーノート」が表示されます）。' },
+  { id: 'ART-10', cat: 'article-edit', aud: 'common', grp: '下書き・編集・削除・クローン', q: '入力を途中でやめても大丈夫ですか？（下書き）', a: '「一時保存（下書き）」で保存できます。下書きは記事管理にのみ表示され、公開ページ・記事一覧・検索には出ません。あとから記事管理で仕上げると公開できます。' },
+  { id: 'ART-11', cat: 'article-edit', aud: 'common', grp: '下書き・編集・削除・クローン', q: '公開後に内容を修正できますか？', a: 'いつでも編集できます。展覧会と異なり管理者確認は不要で、保存すると即座に反映されます。' },
+  { id: 'ART-12', cat: 'article-edit', aud: 'common', grp: '下書き・編集・削除・クローン', q: '過去の記事をもとに新しく作れますか？', a: '「クローン」で過去の記事を複製し、内容を変えて新規投稿できます。クローン後はタイトルを必ず更新してください。' },
+  { id: 'ART-13', cat: 'article-edit', aud: 'common', grp: '下書き・編集・削除・クローン', q: '投稿した記事を削除したい。', a: '記事管理ページからいつでも削除できます（確認画面が表示されます）。展覧会と異なり、削除に制限はありません。' },
+  { id: 'ART-14', cat: 'article-edit', aud: 'common', grp: '解決しないとき', q: 'ここで解決しない場合は？', a: 'ここで解決しない場合は、{{contact}}よりご連絡ください。' },
 
   /* ─── cat:'creator-apply'（クリエイター機能申込＝p11-2）／cat:'gallery-apply'（ギャラリー機能申込＝p11-3）───
      どちらも申込ページ下部にアコーディオンFAQとして描画（KTN.renderQA '#p112Faq' / '#p113Faq' guide）。
@@ -1435,10 +1454,16 @@ function getActions(page, role) {
 
   /* ── P2 管理サブページ群（展覧会編集／LIAISON・LIAISON+作品管理／記事管理／インサイト） ── */
   if (['p2-11', 'p2-12', 'p2-121', 'p2-13', 'p2-14'].includes(page)) {
+    /* ガイドボタンのリンク先：p60-6（クリエイター編）/ p60-7（ギャラリー編）FAQの該当チャプターへ。
+       p2-11=展覧会の登録・編集チャプター、p2-13=記事の登録・編集チャプター。
+       p2-12/p2-121/p2-14（LIAISON作品管理・インサイト）はまだ該当チャプターが無いため装飾のまま。 */
+    const guideFile = role === 'gallery' ? './kotennavi-p60-7.html' : './kotennavi-p60-6.html';
+    const guideAnchor = page === 'p2-11' ? '#exhibition-edit' : page === 'p2-13' ? '#article-edit' : '';
+    const guideBtn = owbtn('info', 'ガイド', guideAnchor ? `location.href='${guideFile}${guideAnchor}'` : '');
     if (role === 'creator' || role === 'gallery')
-      return owbtn('info', 'ガイド') + dd('オーナーメニュー', p2OwnerMenuItems());
+      return guideBtn + dd('オーナーメニュー', p2OwnerMenuItems());
     if (role === 'admin')
-      return owbtn('info', 'ガイド') + dd('オーナーメニュー', p2OwnerMenuItems()) + dd('管理者', p2AdminMenuItems());
+      return guideBtn + dd('オーナーメニュー', p2OwnerMenuItems()) + dd('管理者', p2AdminMenuItems());
     return '';
   }
 

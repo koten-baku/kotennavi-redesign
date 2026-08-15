@@ -4084,3 +4084,18 @@ React の条件レンダリングと Drupal のアクセス制御の共通の元
 - **修正**：編集可否判定を`p2CanEdit()`（`!(st.confirmed && st.phase==='after')`＝追補218で確立した`p2OwnerMenuItems()`内の編集ボタン表示条件と同一ロジック）として単一ヘルパーへ切り出し、`getActions()`のP2トップ分岐でクイックボタンにも適用（`const editBtn = p2CanEdit() ? owbtn(...) : ''`）。creator/gallery・adminの両return文で`editBtn`を使用。ドロップダウン側`p2OwnerMenuItems()`のロジック自体は変更していない（既に正しかったため）。
 - **検証**：Node.jsで`getActions('p2', role)`を5状態（会期終了後×確認済(creator)＝非表示／会期終了後×確認済(admin)＝非表示／会期終了後×未確認(creator)＝表示／会期中×確認済(creator)＝表示／会期前×未確認(creator)＝表示）で直接検証し全て一致。P2系13ページ×5ロールのスモークテストでエラー0を確認。
 - **影響ファイル**：`kotennavi-common.js`（`p2CanEdit()`新設・`getActions()`のP2トップ分岐）、`docs/progress.md`。
+
+### 追補220（2026-08-15）：P2-11・P2-13のヘッダー「ガイド」ボタンをP60-6/P60-7のFAQチャプターへ配線・記事編集FAQカテゴリ新設
+
+- **経緯**：ユーザーから「p2-11,p2-13にガイドボタンがあるが、リンク先はどこにすればいいですか？」との質問。CLAUDE.md「各ページのヘッダーアクション定義は全ページ完成後に個別確定予定。制作中は暫定`owbtn('info','ガイド')`で構わない」という方針上、通常は後回しにしてよい項目だが、既にP60-6（クリエイター編FAQ）／P60-7（ギャラリー編FAQ）が整合性のみ待ちの状態で存在していたため、ユーザーが「リンク先はp60-6,p60-7(ロールによってリンク先が変わる)のQAの展覧会新規・編集と記事新規・編集のQAチャプターでしょうね」と具体的な設計を指示し、その場で確定・実装した。
+- **設計**：`getActions()`のP2管理サブページ分岐（`p2-11`/`p2-12`/`p2-121`/`p2-13`/`p2-14`）で、ガイドボタンのリンク先を`role==='gallery' ? './kotennavi-p60-7.html' : './kotennavi-p60-6.html'`＋ページ別アンカー（`p2-11`→`#exhibition-edit`、`p2-13`→`#article-edit`）として算出し、`owbtn('info','ガイド', ...)`のonclickへ渡す。`p2-12`/`p2-121`/`p2-14`（LIAISON・LIAISON+作品管理／インサイト）は対応するFAQチャプターがまだ存在しないため`guideAnchor=''`のままとし、ボタンは従来どおり装飾（onclickなし）で維持した（今回のスコープ外）。
+- **`#exhibition-edit`チャプターは既存**（`cat:'exhibition-edit'`のQA群）のためコンテンツ追加は不要。**`#article-edit`（記事の登録・編集）は未整備**だったため、`KTN.QA`に新カテゴリ`cat:'article-edit'`を新設し14件（`ART-01`〜`ART-14`）を追加。内容は`kotennavi-p7-11.html`（記事-新規/編集/クローン）の実フォーム仕様を根拠に執筆：
+  - 掲載先は記事を作成した元ページで自動決定・変更不可（ART-04/05）。
+  - **展覧会編集との最大の違い＝管理者確認を経ない即時公開**（ART-03/11）。展覧会は確認待ちがあるが記事にはない。
+  - 削除に制限なし（ART-13）＝展覧会が会期終了後は削除不可（`project_exhibition_ended_lock`メモリ）なのと対照的。
+  - creator限定（制作日記／ワークショップ）・gallery限定（ギャラリーノート）の記事種別はそれぞれ`aud:'creator'`/`aud:'gallery'`で出し分け（ART-06/07/09）。
+- **P60-6.html／P60-7.htmlへの反映**：両ファイルとも同一パターンで、目次に項目2「記事の登録・編集」（`href="#article-edit"`）を追加し既存「解決しない場合」を3へ繰り下げ、新セクション`<section id="article-edit">`（`__num`=2・タイトル「記事の登録・編集」・英ラベル「Writing & editing articles」）を追加、`KTN.renderQA('#p606QaArticle'/'#p607QaArticle', { audience:'creator'/'gallery', category:'article-edit' })`を`DOMContentLoaded`内に追記。meta descriptionと`.p70-head__lead`にも記事の投稿・編集への言及を追加。
+- **admin roleの扱い**：`role==='gallery'`のみ判定しそれ以外（creator/admin/未指定）は全てp60-6（creator向け）にフォールバック。admin専用FAQは存在しないため、既存の「adminはオーナーメニュー相当を見る」設計と同様にcreator側を代表として表示する。
+- **検証**：Node.jsのvmサンドボックス（`window`/`document`等を最小スタブ化）で`kotennavi-common.js`をロードし、①`KTN.QA`内の`article-edit`カテゴリが14件・ID一致で存在すること、②`getActions('p2-11'/'p2-13', 'creator'/'gallery'/'admin')`が期待どおり`kotennavi-p60-6.html#exhibition-edit`等のURLを返すこと、③`getActions('p2-12'/'p2-121'/'p2-14', ...)`のガイドボタンが引き続き非対話（onclickなし）であることを直接確認。`node -c kotennavi-common.js`で構文チェック済み。
+- **保留事項**：ブラウザでの目視確認はユーザー確認待ち。`p3-19`/`p4-19`/`p6-15`/`p7-11`（他の記事編集系ページ）のガイドボタンは今回のスコープ外（`article-edit`カテゴリ自体は再利用可能なので、後続でこれらのページのガイドボタンを配線する際は新規FAQ執筆不要でそのまま参照できる）。
+- **影響ファイル**：`kotennavi-common.js`（`KTN.QA`に`cat:'article-edit'`14件追加・ヘッダーdocコメント更新・`getActions()`のP2管理サブページ分岐書き換え）、`kotennavi-p60-6.html`（目次・新セクション・renderQA・meta description・lead文）、`kotennavi-p60-7.html`（同上・gallery版）、`docs/progress.md`。
