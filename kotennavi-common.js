@@ -1459,7 +1459,7 @@ function getActions(page, role) {
        p2-12/p2-121/p2-14（LIAISON作品管理・インサイト）はまだ該当チャプターが無いため装飾のまま。 */
     const guideFile = role === 'gallery' ? './kotennavi-p60-7.html' : './kotennavi-p60-6.html';
     const guideAnchor = page === 'p2-11' ? '#exhibition-edit' : page === 'p2-13' ? '#article-edit' : '';
-    const guideBtn = owbtn('info', 'ガイド', guideAnchor ? `location.href='${guideFile}${guideAnchor}'` : '');
+    const guideBtn = owbtn('info', 'ガイド', guideAnchor ? `window.open('${guideFile}${guideAnchor}','_blank')` : '');
     if (role === 'creator' || role === 'gallery')
       return guideBtn + dd('オーナーメニュー', p2OwnerMenuItems());
     if (role === 'admin')

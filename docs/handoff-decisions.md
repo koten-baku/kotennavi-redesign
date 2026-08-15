@@ -4099,3 +4099,13 @@ React の条件レンダリングと Drupal のアクセス制御の共通の元
 - **検証**：Node.jsのvmサンドボックス（`window`/`document`等を最小スタブ化）で`kotennavi-common.js`をロードし、①`KTN.QA`内の`article-edit`カテゴリが14件・ID一致で存在すること、②`getActions('p2-11'/'p2-13', 'creator'/'gallery'/'admin')`が期待どおり`kotennavi-p60-6.html#exhibition-edit`等のURLを返すこと、③`getActions('p2-12'/'p2-121'/'p2-14', ...)`のガイドボタンが引き続き非対話（onclickなし）であることを直接確認。`node -c kotennavi-common.js`で構文チェック済み。
 - **保留事項**：ブラウザでの目視確認はユーザー確認待ち。`p3-19`/`p4-19`/`p6-15`/`p7-11`（他の記事編集系ページ）のガイドボタンは今回のスコープ外（`article-edit`カテゴリ自体は再利用可能なので、後続でこれらのページのガイドボタンを配線する際は新規FAQ執筆不要でそのまま参照できる）。
 - **影響ファイル**：`kotennavi-common.js`（`KTN.QA`に`cat:'article-edit'`14件追加・ヘッダーdocコメント更新・`getActions()`のP2管理サブページ分岐書き換え）、`kotennavi-p60-6.html`（目次・新セクション・renderQA・meta description・lead文）、`kotennavi-p60-7.html`（同上・gallery版）、`docs/progress.md`。
+
+### 追補221（2026-08-15）：ガイド系リンクは別タブで開く（`window.open`方式を標準化）
+
+- **ユーザー指示（原文）**：「ガイド系リンクは別タブ開く」
+- **背景**：追補220で実装したP2-11/P2-13のガイドボタンは`location.href='${guideFile}${guideAnchor}'`で同タブ遷移していた。編集中のページ（フォーム入力途中の可能性がある管理画面）からFAQを見に行くと離脱してしまう問題があるため、別タブで開く方式へ変更。
+- **修正**：`getActions()`の`guideBtn`生成部分を`window.open('${guideFile}${guideAnchor}','_blank')`に変更（`kotennavi-common.js` L1462付近）。`owbtn()`自体はonclick文字列をそのまま埋め込むだけの汎用ヘルパーなので変更不要。
+- **今後の方針**：ガイド系リンク（FAQ・ガイドページへの遷移）は今回のP2-11/P2-13に限らず、今後P3/P4/P6/P7等へ横展開する際も同じ`window.open(url,'_blank')`方式を標準とする。同タブ遷移の`location.href`は使わない。ページ内の他のナビゲーション（オーナーメニューの「展覧会編集」等・同一操作フロー内の遷移）とは区別し、ガイド／FAQ／ヘルプ系のみ新規タブが対象。
+- **検証**：Node.jsのvmサンドボックスで`getActions('p2-11'/'p2-13', 'creator'/'gallery')`の出力に`window.open('...','_blank')`が含まれることを直接確認。`node -c kotennavi-common.js`で構文チェック済み。
+- **保留事項**：ブラウザでの目視確認はユーザー確認待ち。
+- **影響ファイル**：`kotennavi-common.js`（`getActions()`の`guideBtn`生成）、`docs/progress.md`。
