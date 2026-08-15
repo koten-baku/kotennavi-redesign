@@ -1330,33 +1330,34 @@ function p2CanEdit() {
    - 確認済かつ会期終了後：編集ボタンなし。記事管理＋（リエゾン+かつ販売期間内なら）リエゾン+項目＋インサイト
    - 確認済かつ会期終了前（会期前・会期中とも）：編集・記事管理・QR・フライヤーを表示。リエゾン/リエゾン+・インサイトは公開日到達済の場合のみ追加表示 */
 function p2OwnerMenuItems() {
+  /* 並び順（確定）：展覧会編集・リエゾン/リエゾン+・記事・会場チェックインQR・フライヤー・インサイト・削除。
+     各項目の表示条件（confirmed/phase/publishArrived等）はこの並び順変更以前と同一。 */
   var st = ktnExhState();
   var edit = ddi('edit', '展覧会編集', false, "location.href='./kotennavi-p2-11.html'");
-  var articles = ddi('file', '記事管理', false, "location.href='./kotennavi-p2-13.html'");
   var liaisonLabel = st.liaison === 'plus' ? 'リエゾン+ 展示設定・作品管理' : 'リエゾン 展示設定・作品管理';
   var liaisonItem = st.liaison !== 'none' ? ddi('grid', liaisonLabel, false, 'p2GotoWorks()') : '';
-  var insight = ddi('chart', 'インサイト', false, "location.href='./kotennavi-p2-14.html'");
+  var articles = ddi('file', '記事管理', false, "location.href='./kotennavi-p2-13.html'");
   var qr = ddi('qr', '会場チェックイン用QRコードを表示', false, "ktnListQr('venue')");
   var flyer = ddi('print', '会場フライヤーを作成', false, 'ktnVenueFlyer()');
+  var insight = ddi('chart', 'インサイト', false, "location.href='./kotennavi-p2-14.html'");
   var del = ddi('trash', '削除', true);
 
   if (!st.confirmed) {
-    return edit + ddSep() + articles + ddSep() + del;
+    return [edit, articles, del].join(ddSep());
   }
 
   if (st.phase === 'after') {
-    var items3 = articles;
-    if (st.liaison === 'plus' && !st.salesOver) items3 += ddSep() + liaisonItem;
-    items3 += ddSep() + insight;
-    return items3;
+    var items3 = [];
+    if (st.liaison === 'plus' && !st.salesOver) items3.push(liaisonItem);
+    items3.push(articles, insight);
+    return items3.join(ddSep());
   }
 
-  var items = edit + ddSep() + articles + ddSep() + qr + ddSep() + flyer;
-  if (st.publishArrived) {
-    if (liaisonItem) items += ddSep() + liaisonItem;
-    items += ddSep() + insight;
-  }
-  return items;
+  var items = [edit];
+  if (st.publishArrived && liaisonItem) items.push(liaisonItem);
+  items.push(articles, qr, flyer);
+  if (st.publishArrived) items.push(insight);
+  return items.join(ddSep());
 }
 
 /* P2 管理者メニュー（オーナーメニューの全項目を含むスーパーセット＋管理者専用項目）。
