@@ -1299,8 +1299,9 @@ window.ktnExhState = ktnExhState;
 window.ktnSetExh = ktnSetExh;
 
 /* P2（展覧会）オーナーメニュー（単一ソース・p2/p2-1〜p2-6/p2-11/p2-12/p2-12-1/p2-13/p2-14 共通）。
-   会期・確認状態（ktnExhState）で3段階に出し分ける：
-   1=会期前かつ未確認／2=確認済（会期前 or 会期中）／3=会期終了後 */
+   会期終了後（st.num===3）は専用の縮小メニュー。それ以外（会期前・会期中とも）は confirmed/publishArrived で出し分け：
+   - 確認前：編集・記事管理・削除のみ（リエゾン/インサイト/QR/フライヤーは非表示。削除は確認前のみ可能）
+   - 確認済：編集・記事管理・QR・フライヤーを表示。リエゾン/リエゾン+・インサイトは「確認済 かつ 公開日到達済」の場合のみ追加表示 */
 function p2OwnerMenuItems() {
   var st = ktnExhState();
   var edit = ddi('edit', '展覧会編集', false, "location.href='./kotennavi-p2-11.html'");
@@ -1312,27 +1313,38 @@ function p2OwnerMenuItems() {
   var flyer = ddi('print', '会場フライヤーを作成', false, 'ktnVenueFlyer()');
   var del = ddi('trash', '削除', true);
 
-  if (st.num === 1) {
-    return edit + ddSep() + articles + ddSep() + del;
-  }
   if (st.num === 3) {
     var items3 = articles;
     if (st.liaison === 'plus' && !st.salesOver) items3 += ddSep() + liaisonItem;
     items3 += ddSep() + insight;
     return items3;
   }
-  // st.num === 2
-  var items2 = edit + ddSep() + articles;
-  if (liaisonItem) items2 += ddSep() + liaisonItem;
-  if (st.publishArrived) items2 += ddSep() + insight;
-  items2 += ddSep() + qr + ddSep() + flyer;
-  return items2;
+
+  var items = edit + ddSep() + articles;
+  if (st.confirmed) {
+    items += ddSep() + qr + ddSep() + flyer;
+    if (st.publishArrived) {
+      if (liaisonItem) items += ddSep() + liaisonItem;
+      items += ddSep() + insight;
+    }
+  } else {
+    items += ddSep() + del;
+  }
+  return items;
 }
 
-/* P2 管理者専用メニュー（軽量版：オーナーddが別途併記されるため管理者専用の追加項目のみ返す。会期状態に関わらず常設） */
+/* P2 管理者メニュー（オーナーメニューの全項目を含むスーパーセット＋管理者専用項目）。
+   オーナーメニューが状態次第で非表示にしている項目（確認前/公開前で消えるインサイト、確認済で消える削除）を
+   管理者は常時利用できるよう補完し、さらにクローンを追加する。 */
 function p2AdminMenuItems() {
-  return ddi('chart', 'インサイト', false, "location.href='./kotennavi-p2-14.html'") + ddSep() +
-    ddi('clone', 'クローン') + ddSep() + ddi('trash', '削除', true);
+  var st = ktnExhState();
+  var items = p2OwnerMenuItems();
+  var hasInsight = st.num === 3 || (st.confirmed && st.publishArrived);
+  if (!hasInsight) items += ddSep() + ddi('chart', 'インサイト', false, "location.href='./kotennavi-p2-14.html'");
+  items += ddSep() + ddi('clone', 'クローン');
+  var hasDel = st.num !== 3 && !st.confirmed;
+  if (!hasDel) items += ddSep() + ddi('trash', '削除', true);
+  return items;
 }
 
 /* P3（クリエイター）オーナーメニュー（単一ソース・トップ〜全管理サブページ共通） */
