@@ -4076,3 +4076,11 @@ React の条件レンダリングと Drupal のアクセス制御の共通の元
   - `p2AdminMenuItems()`の`hasInsight`/`hasDel`判定も同じ軸に合わせて更新：`hasInsight = st.confirmed && (st.phase==='after' || st.publishArrived)`、`hasDel = !st.confirmed`。管理者メニューが常にオーナーメニューの超集合であるという不変条件（追補217で導入）は維持。
 - **検証**：Node.jsで8状態（確認前×会期前/会期中/会期終了後、確認済×会期前(公開前/公開後)/会期中/会期終了後(販売中/販売終了)）を直接検証し、確認前は会期段階を問わず「編集・記事管理・削除」の3項目、確認済かつ会期終了後のみ編集が消えることを確認。P2系13ページ×5ロールのスモークテストでエラー0を確認。
 - **影響ファイル**：`kotennavi-common.js`（`p2OwnerMenuItems()`・`p2AdminMenuItems()`）、`docs/progress.md`。
+
+### 追補219（2026-08-15）：P2ヘッダーのクイック「編集」ボタンが確認済＋会期終了後も表示され続ける不具合を修正（`p2CanEdit()`新設）
+
+- **経緯**：追補218の修正確認中、ユーザーから「確認済会期終了に編集ボタンがまだ表示されています」と報告。
+- **問題**：追補218で`p2OwnerMenuItems()`（オーナーメニュー＝ドロップダウン内の編集項目）は確認済＋会期終了後で正しく非表示になっていたが、`getActions()`のP2トップ分岐（`page==='p2'`等）には**それとは別経路の独立したクイックアクセスボタン**`owbtn('edit','編集',"location.href='./kotennavi-p2-11.html'")`があり、こちらはドロップダウンの状態と無関係に常時表示される実装のままだった。ドロップダウン側だけを直したためユーザーの目には「まだ直っていない」ように見えていた。
+- **修正**：編集可否判定を`p2CanEdit()`（`!(st.confirmed && st.phase==='after')`＝追補218で確立した`p2OwnerMenuItems()`内の編集ボタン表示条件と同一ロジック）として単一ヘルパーへ切り出し、`getActions()`のP2トップ分岐でクイックボタンにも適用（`const editBtn = p2CanEdit() ? owbtn(...) : ''`）。creator/gallery・adminの両return文で`editBtn`を使用。ドロップダウン側`p2OwnerMenuItems()`のロジック自体は変更していない（既に正しかったため）。
+- **検証**：Node.jsで`getActions('p2', role)`を5状態（会期終了後×確認済(creator)＝非表示／会期終了後×確認済(admin)＝非表示／会期終了後×未確認(creator)＝表示／会期中×確認済(creator)＝表示／会期前×未確認(creator)＝表示）で直接検証し全て一致。P2系13ページ×5ロールのスモークテストでエラー0を確認。
+- **影響ファイル**：`kotennavi-common.js`（`p2CanEdit()`新設・`getActions()`のP2トップ分岐）、`docs/progress.md`。

@@ -1298,6 +1298,13 @@ function ktnSetExh(key, val, btn) {
 window.ktnExhState = ktnExhState;
 window.ktnSetExh = ktnSetExh;
 
+/* P2（展覧会）編集可否（ヘッダーのクイック「編集」ボタン・p2OwnerMenuItems()両方で共用）。
+   確認済かつ会期終了後のみ編集不可。それ以外（確認前は会期段階問わず／確認済かつ会期終了前）は編集可。 */
+function p2CanEdit() {
+  var st = ktnExhState();
+  return !(st.confirmed && st.phase === 'after');
+}
+
 /* P2（展覧会）オーナーメニュー（単一ソース・p2/p2-1〜p2-6/p2-11/p2-12/p2-12-1/p2-13/p2-14 共通）。
    分岐の主軸は confirmed（管理者確認済かどうか）：
    - 確認前：会期状態に関わらず編集・記事管理・削除のみ（リエゾン/インサイト/QR/フライヤーは非表示）
@@ -1416,13 +1423,13 @@ function getActions(page, role) {
   /* ── P2 展覧会トップ＋公開サブページ（p2-1〜p2-6・p2-5-1） ── */
   if (['p2', 'p2-1', 'p2-2', 'p2-3', 'p2-4', 'p2-5', 'p2-5-1', 'p2-6'].includes(page)) {
     const cmn = hib('heart', '興味あり', '', 'interest') + shareBtn() + sep();
+    const editBtn = p2CanEdit() ? owbtn('edit', '編集', "location.href='./kotennavi-p2-11.html'") : '';
     if (role === 'guest' || role === 'login')
       return cmn + ddMore(ddi('fix', '修正を依頼する', false, "location.href='./kotennavi-p2-16.html'") + ddSep() + reportItem(page));
     if (role === 'creator' || role === 'gallery')
-      return cmn + owbtn('edit', '編集', "location.href='./kotennavi-p2-11.html'") + dd('オーナーメニュー', p2OwnerMenuItems());
+      return cmn + editBtn + dd('オーナーメニュー', p2OwnerMenuItems());
     if (role === 'admin')
-      return cmn + owbtn('edit', '編集', "location.href='./kotennavi-p2-11.html'") +
-        dd('オーナーメニュー', p2OwnerMenuItems()) + dd('管理者', p2AdminMenuItems());
+      return cmn + editBtn + dd('オーナーメニュー', p2OwnerMenuItems()) + dd('管理者', p2AdminMenuItems());
     return cmn;
   }
 
