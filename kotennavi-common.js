@@ -40,7 +40,9 @@ const I = {
   warn: `<svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>`,
   fix: `<svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`,
   info: `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r=".5" fill="currentColor" stroke="none"/></svg>`,
-  watch: `<svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`,
+  watch: `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3"/></svg>`,
+  qr: `<svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><line x1="14" y1="14" x2="14" y2="21"/><line x1="21" y1="14" x2="21" y2="21"/><line x1="17" y1="14" x2="17" y2="17"/></svg>`,
+  print: `<svg viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>`,
   sales: `<svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>`,
   desk: `<svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>`,
   frame: `<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="1"/><rect x="6" y="6" width="12" height="12" rx=".5"/><line x1="3" y1="3" x2="6" y2="6"/><line x1="21" y1="3" x2="18" y2="6"/><line x1="3" y1="21" x2="6" y2="18"/><line x1="21" y1="21" x2="18" y2="18"/></svg>`,
@@ -85,14 +87,19 @@ window.KTN = window.KTN || {};
 KTN.toast = showToast;
 
 /* ══════════════════════════════════
-   作品リスト QRコード モーダル（p2-12 / p2-12-1 共通・名称は「作品リスト」で統一）
-   ・リストを開かずQRだけ取得したいケース向け（会場ポスター掲示・DL用）
+   QRコード モーダル（list=作品リスト／venue=会場チェックイン／creator・gallery=ウォッチ用）
    ・.ktn-auth-overlay / .ktn-auth-modal のシェルを再利用
-   ・kind は将来の出し分け用に受けるが、表示名は L/L+ とも「作品リスト」で統一
 ══════════════════════════════════ */
+const KTN_LISTQR_KINDS = {
+  list: { label: '作品リスト', url: 'https://koten-navi.com/p2-6', sub: 'スマホで読み取ると、会場配布用のリストが開きます。<br>画像を保存して会場ポスターやSNSにも掲示できます。' },
+  venue: { label: '会場チェックイン', url: 'https://koten-navi.com/p2', sub: 'スマホで読み取ると、この展覧会のページが開きます。<br>来場者はそのままチェックインやレビュー投稿ができます。画像を保存して受付・壁面に掲示できます。' },
+  creator: { label: '田中 透', url: 'https://koten-navi.com/p3', sub: 'スマホで読み取ると、あなたのクリエイターページが開きます。<br>SNS・DM・名刺等に掲示すると、ウォッチしてくれる人が増えやすくなります。' },
+  gallery: { label: 'Gallery SOIL 渋谷', url: 'https://koten-navi.com/p4', sub: 'スマホで読み取ると、ギャラリーページが開きます。<br>SNS・DM・名刺等に掲示すると、ウォッチしてくれる人が増えやすくなります。' }
+};
 function ktnListQr(kind) {
-  var label = '作品リスト';
-  var url = 'https://koten-navi.com/p2-6';
+  var def = KTN_LISTQR_KINDS[kind] || KTN_LISTQR_KINDS.list;
+  var label = def.label;
+  var url = def.url;
   var el = document.getElementById('ktnListQrModal');
   if (!el) {
     el = document.createElement('div');
@@ -106,7 +113,7 @@ function ktnListQr(kind) {
       + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
       + '</button>'
       + '<div class="ktn-auth-ttl" id="ktnListQrTtl"></div>'
-      + '<div class="ktn-auth-sub">スマホで読み取ると、会場配布用のリストが開きます。<br>画像を保存して会場ポスターやSNSにも掲示できます。</div>'
+      + '<div class="ktn-auth-sub" id="ktnListQrSub"></div>'
       + '</div>'
       + '<div class="ktn-auth-body">'
       + '<div class="ktn-listqr__code" aria-hidden="true">'
@@ -125,6 +132,7 @@ function ktnListQr(kind) {
     document.body.appendChild(el);
   }
   document.getElementById('ktnListQrTtl').textContent = label + 'のQRコード';
+  document.getElementById('ktnListQrSub').innerHTML = def.sub;
   document.getElementById('ktnListQrUrl').textContent = url;
   requestAnimationFrame(function () { el.classList.add('open'); });
 }
@@ -135,6 +143,164 @@ function ktnListQrClose(e) {
 }
 window.ktnListQr = ktnListQr;
 window.ktnListQrClose = ktnListQrClose;
+
+/* ══════════════════════════════════
+   ページ共有モーダル（ktnPageShare・creator/gallery＝QR＋URL＋埋め込みバッジ）
+   ・.ktn-auth-overlay / .ktn-auth-modal のシェル＋.ktn-listqr__code/__url を再利用
+   ・独自ブロック：.ktn-pshare-badge（バッジプレビュー＋埋め込みコード）
+══════════════════════════════════ */
+const KTN_PSHARE_KINDS = {
+  creator: { label: '田中 透', url: 'https://koten-navi.com/p3', badgeLabel: '田中 透 - 個展なび' },
+  gallery: { label: 'Gallery SOIL 渋谷', url: 'https://koten-navi.com/p4', badgeLabel: 'Gallery SOIL 渋谷 - 個展なび' }
+};
+function ktnPageShare(kind) {
+  var def = KTN_PSHARE_KINDS[kind] || KTN_PSHARE_KINDS.creator;
+  var code = '<a href="' + def.url + '" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:#005da7;color:#fff;font-family:sans-serif;font-size:12px;text-decoration:none;">' + def.badgeLabel + '</a>';
+  var el = document.getElementById('ktnPageShareModal');
+  if (!el) {
+    el = document.createElement('div');
+    el.className = 'ktn-auth-overlay';
+    el.id = 'ktnPageShareModal';
+    el.setAttribute('onclick', 'ktnPageShareClose(event)');
+    el.innerHTML =
+      '<div class="ktn-auth-modal ktn-listqr">'
+      + '<div class="ktn-auth-top">'
+      + '<button class="ktn-auth-close" onclick="ktnPageShareClose()">'
+      + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
+      + '</button>'
+      + '<div class="ktn-auth-ttl" id="ktnPageShareTtl"></div>'
+      + '<div class="ktn-auth-sub" id="ktnPageShareSub"></div>'
+      + '</div>'
+      + '<div class="ktn-auth-body">'
+      + '<div class="ktn-listqr__code" aria-hidden="true">'
+      + '<svg viewBox="0 0 44 44" width="180" height="180" shape-rendering="crispEdges">'
+      + '<rect width="44" height="44" fill="#fff"/>'
+      + '<path fill="#231815" d="M4 4h7v7H4zM6 6v3h3V6zM13 4h2v2h-2zM17 4h2v4h-2zM21 4h2v2h-2zM25 4h2v2h2v2h-2v2h-2v-2h-2V6h2zM33 4h7v7h-7zM35 6v3h3V6zM15 6h2v2h-2zM13 8h2v2h-2zM4 13h7v7H4zM6 15v3h3v-3zM13 13h2v2h-2zM17 13h2v2h2v2h-2v2h-2v-2h-2v-2h2zM23 13h2v4h-2zM27 13h2v2h-2zM31 13h2v2h2v2h-2v2h-2v-2h-2v-2h2zM37 13h2v2h-2zM33 15h2v2h-2zM33 33h7v7h-7zM35 35v3h3v-3zM13 33h2v2h-2zM17 33h2v4h-2zM21 33h2v2h-2zM25 33h2v2h-2zM29 33h2v2h-2zM13 37h2v2h-2zM21 37h2v2h-2zM25 37h2v2h-2zM4 33h7v7H4zM6 35v3h3v-3zM4 22h2v2h-2zM8 22h2v2h-2zM12 22h2v2h-2zM16 22h2v2h-2zM20 22h2v2h-2zM24 22h2v2h-2zM28 22h2v2h-2zM32 22h2v2h-2zM36 22h2v2h-2zM40 22h2v2h-2zM4 26h2v2H4zM10 26h2v2h-2zM14 26h2v2h-2zM18 26h2v2h-2zM22 26h2v2h-2zM26 26h2v2h-2zM30 26h2v2h-2zM34 26h2v2h-2zM38 26h2v2h-2zM4 30h2v2H4zM8 30h2v2H8zM12 30h2v2h-2zM16 30h2v2h-2zM20 30h2v2h-2zM24 30h2v2h-2zM28 30h2v2h-2zM32 30h2v2h-2z"/>'
+      + '</svg>'
+      + '</div>'
+      + '<div class="ktn-listqr__url" id="ktnPageShareUrl"></div>'
+      + '<div class="ktn-pshare-badge">'
+      + '<div class="ktn-pshare-badge__label">埋め込みバッジ</div>'
+      + '<div class="ktn-pshare-badge__preview" id="ktnPageShareBadgePrev"></div>'
+      + '<textarea class="ktn-pshare-badge__code" id="ktnPageShareCode" readonly></textarea>'
+      + '<button class="ktn-auth-btn-secondary" onclick="ktnPageShareCopyBadge()">埋め込みコードをコピー</button>'
+      + '</div>'
+      + '<div class="ktn-auth-btns">'
+      + '<button class="ktn-auth-btn-primary" onclick="KTN.toast(\'QRコード画像の保存機能は準備中です\')">QRコード画像を保存</button>'
+      + '<button class="ktn-auth-btn-secondary" onclick="ktnPageShareClose()">閉じる</button>'
+      + '</div>'
+      + '</div>'
+      + '</div>';
+    document.body.appendChild(el);
+  }
+  document.getElementById('ktnPageShareTtl').textContent = def.label + 'のページを共有';
+  document.getElementById('ktnPageShareSub').innerHTML = 'スマホで読み取ると、' + def.label + 'のページが開きます。<br>埋め込みバッジをブログ・SNSプロフィール等に貼ると、そのままページへのリンクになります。';
+  document.getElementById('ktnPageShareUrl').textContent = def.url;
+  document.getElementById('ktnPageShareBadgePrev').innerHTML = code;
+  document.getElementById('ktnPageShareCode').value = code;
+  requestAnimationFrame(function () { el.classList.add('open'); });
+}
+function ktnPageShareClose(e) {
+  if (e && e.target !== document.getElementById('ktnPageShareModal')) return;
+  var m = document.getElementById('ktnPageShareModal');
+  if (m) m.classList.remove('open');
+}
+function ktnPageShareCopyBadge() {
+  var ta = document.getElementById('ktnPageShareCode');
+  if (!ta) return;
+  ta.select();
+  try {
+    document.execCommand('copy');
+    showToast('コピーしました');
+  } catch (e) {
+    navigator.clipboard && navigator.clipboard.writeText(ta.value).then(function () { showToast('コピーしました'); });
+  }
+}
+window.ktnPageShare = ktnPageShare;
+window.ktnPageShareClose = ktnPageShareClose;
+window.ktnPageShareCopyBadge = ktnPageShareCopyBadge;
+
+/* ══════════════════════════════════
+   会場フライヤー（A4印刷プレビュー・展覧会情報QR＋チェックインQRを1枚に配置）
+   ・.ktn-auth-overlay / .ktn-auth-modal のシェル＋QRダミーSVGは ktnListQr と同型を再利用
+   ・独自ブロック：.ktn-vflyer__sheet（A4プレビュー・印刷時は @media print で全画面化）
+══════════════════════════════════ */
+function ktnVenueFlyer() {
+  var el = document.getElementById('ktnVenueFlyerModal');
+  if (!el) {
+    var qrSvg = '<svg viewBox="0 0 44 44" width="180" height="180" shape-rendering="crispEdges">'
+      + '<rect width="44" height="44" fill="#fff"/>'
+      + '<path fill="#231815" d="M4 4h7v7H4zM6 6v3h3V6zM13 4h2v2h-2zM17 4h2v4h-2zM21 4h2v2h-2zM25 4h2v2h2v2h-2v2h-2v-2h-2V6h2zM33 4h7v7h-7zM35 6v3h3V6zM15 6h2v2h-2zM13 8h2v2h-2zM4 13h7v7H4zM6 15v3h3v-3zM13 13h2v2h-2zM17 13h2v2h2v2h-2v2h-2v-2h-2v-2h2zM23 13h2v4h-2zM27 13h2v2h-2zM31 13h2v2h2v2h-2v2h-2v-2h-2v-2h2zM37 13h2v2h-2zM33 15h2v2h-2zM33 33h7v7h-7zM35 35v3h3v-3zM13 33h2v2h-2zM17 33h2v4h-2zM21 33h2v2h-2zM25 33h2v2h-2zM29 33h2v2h-2zM13 37h2v2h-2zM21 37h2v2h-2zM25 37h2v2h-2zM4 33h7v7H4zM6 35v3h3v-3zM4 22h2v2h-2zM8 22h2v2h-2zM12 22h2v2h-2zM16 22h2v2h-2zM20 22h2v2h-2zM24 22h2v2h-2zM28 22h2v2h-2zM32 22h2v2h-2zM36 22h2v2h-2zM40 22h2v2h-2zM4 26h2v2H4zM10 26h2v2h-2zM14 26h2v2h-2zM18 26h2v2h-2zM22 26h2v2h-2zM26 26h2v2h-2zM30 26h2v2h-2zM34 26h2v2h-2zM38 26h2v2h-2zM4 30h2v2H4zM8 30h2v2H8zM12 30h2v2h-2zM16 30h2v2h-2zM20 30h2v2h-2zM24 30h2v2h-2zM28 30h2v2h-2zM32 30h2v2h-2z"/>'
+      + '</svg>';
+    el = document.createElement('div');
+    el.className = 'ktn-auth-overlay';
+    el.id = 'ktnVenueFlyerModal';
+    el.setAttribute('onclick', 'ktnVenueFlyerClose(event)');
+    el.innerHTML =
+      '<div class="ktn-auth-modal ktn-vflyer">'
+      + '<div class="ktn-auth-top">'
+      + '<button class="ktn-auth-close" onclick="ktnVenueFlyerClose()">'
+      + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
+      + '</button>'
+      + '<div class="ktn-auth-ttl">会場フライヤー（A4）</div>'
+      + '<div class="ktn-auth-sub">展覧会情報QR・チェックインQRを1枚に配置したA4フライヤーです。印刷してそのまま会場受付・壁面に掲示できます。</div>'
+      + '</div>'
+      + '<div class="ktn-auth-body">'
+      + '<div class="ktn-vflyer__sheet">'
+      + '<div class="ktn-vflyer__logo"><img src="./images/kotennavi-logo5-1.svg" alt=""><span>KOTEN-NAVI</span></div>'
+      + '<div class="ktn-vflyer__main">'
+      + '<div class="ktn-vflyer__head">'
+      + '<div class="ktn-vflyer__headtext">'
+      + '<p class="ktn-vflyer__en">EXHIBITION</p>'
+      + '<h3 class="ktn-vflyer__title">あなたが知らないオノマトペ</h3>'
+      + '<p class="ktn-vflyer__artist">田中 透</p>'
+      + '<p class="ktn-vflyer__greet">本日はご来場いただき、誠にありがとうございます。</p>'
+      + '</div>'
+      + '<div class="ktn-vflyer__infoqr">'
+      + '<div class="ktn-vflyer__qr-code" aria-hidden="true">' + qrSvg + '</div>'
+      + '<p class="ktn-vflyer__qr-lbl">詳しくはこちら</p>'
+      + '</div>'
+      + '</div>'
+      + '<dl class="ktn-vflyer__facts">'
+      + '<dt>会場</dt><dd>Gallery SOIL 渋谷（東京都渋谷区神南1-12-14 2F）</dd>'
+      + '<dt>会期</dt><dd>2026年2月18日（水）— 3月5日（木）　11:00–19:00</dd>'
+      + '</dl>'
+      + '</div>'
+      + '<div class="ktn-vflyer__checkin">'
+      + '<div class="ktn-vflyer__qr-code" aria-hidden="true">' + qrSvg + '</div>'
+      + '<div class="ktn-vflyer__checkin-body">'
+      + '<p class="ktn-vflyer__checkin-ttl">チェックインのお願い</p>'
+      + '<p class="ktn-vflyer__checkin-desc">ご来場の記念に、QRからチェックインをお願いいたします。感想やレビューもぜひお聞かせください。</p>'
+      + '<p class="ktn-vflyer__checkin-note">※チェックインには個展なびのアカウントが必要です（その場で無料登録できます）</p>'
+      + '</div>'
+      + '</div>'
+      + '<p class="ktn-vflyer__foot">koten-navi.com</p>'
+      + '</div>'
+      + '</div>'
+      + '<div class="ktn-auth-btns">'
+      + '<button class="ktn-auth-btn-primary" onclick="ktnVenueFlyerPrint()">印刷する（A4）</button>'
+      + '<button class="ktn-auth-btn-secondary" onclick="ktnVenueFlyerClose()">閉じる</button>'
+      + '</div>'
+      + '</div>';
+    document.body.appendChild(el);
+  }
+  requestAnimationFrame(function () { el.classList.add('open'); });
+}
+function ktnVenueFlyerClose(e) {
+  if (e && e.target !== document.getElementById('ktnVenueFlyerModal')) return;
+  var m = document.getElementById('ktnVenueFlyerModal');
+  if (m) m.classList.remove('open');
+}
+function ktnVenueFlyerPrint() {
+  document.body.classList.add('ktn-printing-flyer');
+  window.print();
+}
+window.addEventListener('afterprint', function () {
+  document.body.classList.remove('ktn-printing-flyer');
+});
+window.ktnVenueFlyer = ktnVenueFlyer;
+window.ktnVenueFlyerClose = ktnVenueFlyerClose;
+window.ktnVenueFlyerPrint = ktnVenueFlyerPrint;
 
 /* ══════════════════════════════════
    送信完了モーダル（全ページ共通・申込/送信のsubmit後に表示）
@@ -871,21 +1037,21 @@ const PAGES = {
   // P1 トップ
   'p1': { n: '個展なびトップ', bc: [['Top', '/'], ['個展なびトップ', null]] },
   // P2 展覧会
-  'p2': { n: '展覧会', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', null]] },
-  'p2-1': { n: '展覧会-スケジュール', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['スケジュール', null]] },
-  'p2-2': { n: '展覧会-開催場所', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['開催場所', null]] },
-  'p2-3': { n: '展覧会-記事・案内', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['記事・案内', null]] },
-  'p2-4': { n: '展覧会-出展者', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['出展者', null]] },
-  'p2-5': { n: '展覧会-リエゾン作品一覧', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['LIAISON作品一覧', null]] },
-  'p2-5-1': { n: '展覧会-リエゾンプラス作品一覧', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['LIAISON+ 作品一覧', null]] },
-  'p2-6': { n: '展覧会-作品リスト', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['作品リスト', null]] },
-  'p2-11': { n: '展覧会-新規/編集/クローン', bc: [['Top', '/'], ['展覧会', '/p10'], ['松田啓佑展［仮称］', '/p2'], ['展覧会を編集', null]] },
-  'p2-12': { n: 'LIAISON 作品管理', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['LIAISON 作品管理', null]] },
-  'p2-121': { n: 'LIAISON+ 作品管理', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['LIAISON+ 作品管理', null]] },
-  'p2-13': { n: '展覧会-記事管理', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['記事管理', null]] },
-  'p2-14': { n: '展覧会-インサイト', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['インサイト', null]] },
-  'p2-15': { n: '展覧会-広告作成', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['広告作成', null]] },
-  'p2-16': { n: '展覧会-修正依頼', bc: [['Top', '/'], ['展覧会', '/p10'], ['あなたが知らないオノマトペ', '/p2'], ['修正依頼', null]] },
+  'p2': { n: '展覧会', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', null]] },
+  'p2-1': { n: '展覧会-スケジュール', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', '/p2'], ['スケジュール', null]] },
+  'p2-2': { n: '展覧会-開催場所', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', '/p2'], ['開催場所', null]] },
+  'p2-3': { n: '展覧会-記事・案内', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', '/p2'], ['記事・案内', null]] },
+  'p2-4': { n: '展覧会-出展者', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', '/p2'], ['出展者', null]] },
+  'p2-5': { n: '展覧会-リエゾン作品一覧', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', '/p2'], ['LIAISON作品一覧', null]] },
+  'p2-5-1': { n: '展覧会-リエゾンプラス作品一覧', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', '/p2'], ['LIAISON+ 作品一覧', null]] },
+  'p2-6': { n: '展覧会-作品リスト', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', '/p2'], ['作品リスト', null]] },
+  'p2-11': { n: '展覧会-新規/編集/クローン', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['松田啓佑展［仮称］', '/p2'], ['展覧会を編集', null]] },
+  'p2-12': { n: 'LIAISON 作品管理', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', '/p2'], ['LIAISON 作品管理', null]] },
+  'p2-121': { n: 'LIAISON+ 作品管理', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', '/p2'], ['LIAISON+ 作品管理', null]] },
+  'p2-13': { n: '展覧会-記事管理', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', '/p2'], ['記事管理', null]] },
+  'p2-14': { n: '展覧会-インサイト', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', '/p2'], ['インサイト', null]] },
+  'p2-15': { n: '展覧会-広告作成', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', '/p2'], ['広告作成', null]] },
+  'p2-16': { n: '展覧会-修正依頼', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', '/p2'], ['修正依頼', null]] },
   // 旧「展覧会-報告」は全表示系共通の報告フォーム 'p60-13'「問題を報告する」に統合（2026-07-24）。
   // P3 クリエイター
   'p3': { n: 'クリエイター', bc: [['Top', '/'], ['クリエイター', '/p10-2'], ['田中 透', null]] },
@@ -1027,9 +1193,17 @@ KTN.pageName = function (id) { return (PAGES[id] && PAGES[id].n) || id || ''; };
 /* ══════════════════════════════════
    ヘルパー — HTML生成
 ══════════════════════════════════ */
-function hib(iconK, label, id = '') {
+function hib(iconK, label, id = '', action = '') {
   const idAttr = id ? ' id="' + id + '"' : '';
-  return '<button class="ktn-hib"' + idAttr + '>' + ic16(iconK) + '<span class="ktn-hib__lbl">' + label + '</span></button>';
+  let actAttr = '';
+  let oc = '';
+  if (action === 'interest') {
+    actAttr = ' data-action="interest"';
+    oc = ` onclick="handleAction(this,'interest');event.preventDefault()"`;
+  } else if (action === 'watch') {
+    actAttr = ' data-action="watch"';
+  }
+  return '<button class="ktn-hib"' + idAttr + actAttr + oc + '><span class="ktn-hib__icon">' + ic16(iconK) + '</span><span class="ktn-hib__lbl">' + label + '</span></button>';
 }
 function sep() { return `<div class="ktn-hdr-sep"></div>`; }
 
@@ -1040,27 +1214,29 @@ function shareBtn() {
     </button>
   </div>`;
 }
-function owbtn(iconK, label) {
-  return `<button class="ktn-hdr-owbtn">${ic(iconK)}<span>${label}</span></button>`;
+function owbtn(iconK, label, onclick = '') {
+  const oc = onclick ? ` onclick="${onclick}"` : '';
+  return `<button class="ktn-hdr-owbtn"${oc}>${ic(iconK)}<span>${label}</span></button>`;
 }
 let ddSeq = 0;
-function dd(label, items) {
+function dd(label, items, noChevron = false) {
   const id = 'dd' + (++ddSeq);
-  return `<div class="ktn-ddw"><button class="ktn-ddbtn" onclick="toggleDD('${id}',this)">${label}<svg class="chv" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${I.chev}</svg></button><div class="ktn-ddmenu" id="${id}">${items}</div></div>`;
+  const chv = noChevron ? '' : `<svg class="chv" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${I.chev}</svg>`;
+  return `<div class="ktn-ddw"><button class="ktn-ddbtn" onclick="toggleDD('${id}',this)">${label}${chv}</button><div class="ktn-ddmenu" id="${id}">${items}</div></div>`;
 }
-function ddi(iconK, label, danger = false) {
-  return `<button class="ktn-ddi${danger ? ' danger' : ''}">${ic(iconK)}${label}</button>`;
-}
-function ddinote(iconK, label, note) {
-  return `<button class="ktn-ddi ktn-ddi--note"><span class="note-head">${ic(iconK)}<span>${label}</span></span><span class="note-sub">${note}</span></button>`;
+function ddMore(items) { return dd('…', items, true); }
+function ddi(iconK, label, danger = false, onclick = '') {
+  const oc = onclick ? ` onclick="closeAllPanels();${onclick}"` : '';
+  return `<button class="ktn-ddi${danger ? ' danger' : ''}"${oc}>${ic(iconK)}${label}</button>`;
 }
 function ddSep() { return `<div class="ktn-dd-sep"></div>`; }
 
 /* 「問題を報告する」＝全表示系ページ共通の報告フォーム P60-13 へ from/type 文脈付きで遷移（単一ソース）。
    ページ固有の報告ページ（旧 p2-17 等）は作らず、対象種別を type で受け渡して p60-13 側で理由select を出し分ける。 */
 const REPORT_TYPE = {
-  p2: 'exhibition', 'p2-3': 'exhibition', 'p2-5': 'exhibition',
-  p3: 'creator', p4: 'gallery',
+  p2: 'exhibition', 'p2-1': 'exhibition', 'p2-2': 'exhibition', 'p2-3': 'exhibition', 'p2-4': 'exhibition', 'p2-5': 'exhibition', 'p2-5-1': 'exhibition', 'p2-6': 'exhibition',
+  p3: 'creator', 'p3-1': 'creator', 'p3-2': 'creator', 'p3-3': 'creator',
+  p4: 'gallery', 'p4-1': 'gallery', 'p4-2': 'gallery',
   p6: 'artwork', 'p6-1': 'artwork', 'p6-2': 'artwork',
   p7: 'article', p8: 'review'
 };
@@ -1070,146 +1246,229 @@ function reportItem(page) {
   return `<button class="ktn-ddi danger" onclick="location.href='${href}'">${ic('warn')}問題を報告する</button>`;
 }
 
+/* P5（マイページ）全サブページ共通「設定」dd（単一ソース） */
+function p5SettingsMenuItems() {
+  return ddi('edit', 'プロフィール編集', false, "location.href='./kotennavi-p5-11.html'") +
+    ddi('key', 'パスワード', false, "location.href='./kotennavi-p5-12.html'") +
+    ddi('bell', 'メール通知設定', false, "location.href='./kotennavi-p5-13.html'") + ddSep() +
+    ddi('trash', '退会', true);
+}
+
+/* P2＝展覧会の「LIAISON 展示設定・作品管理」ルーティング。p2-11（編集フォーム）の選択中ラジオ→
+   p2（トップ）のバッジ状態→どちらも無ければ liaison 扱いの順にフォールバックして振り分ける。 */
+function p2GotoWorks() {
+  var radio = document.querySelector('input[name="p211liaison"]:checked');
+  var badge = document.getElementById('p2LiaisonBadge');
+  var state = null;
+  if (radio) {
+    state = radio.value; // 'none' | 'liaison' | 'plus'
+  } else if (badge) {
+    state = (badge.style.display === 'none') ? 'none' : (badge.classList.contains('li-plus') ? 'plus' : 'liaison');
+  } else {
+    state = 'liaison';
+  }
+  if (state === 'plus') location.href = './kotennavi-p2-12-1.html';
+  else if (state === 'liaison') location.href = './kotennavi-p2-12.html';
+  else KTN.toast('この展覧会はLIAISON/LIAISON+が設定されていません');
+}
+window.p2GotoWorks = p2GotoWorks;
+
+/* 展覧会の会期・確認状態（デモ用グローバル状態）。setPeriod()/setLiaison()（p2.html）・
+   setConfirmed()/toggleLiaisonMode()（p2-11.html）が直接プロパティを書き換えてから ktnRender() を呼ぶ。 */
+KTN.exh = { phase: 'during', confirmed: true, publishArrived: true, liaison: 'plus', salesOver: false };
+function ktnExhState() {
+  var e = KTN.exh || {};
+  var num;
+  if (e.phase === 'after') num = 3;
+  else if (e.phase === 'before' && !e.confirmed) num = 1;
+  else num = 2;
+  return { num: num, phase: e.phase, confirmed: e.confirmed, publishArrived: e.publishArrived, liaison: e.liaison, salesOver: e.salesOver };
+}
+function ktnSetExh(key, val, btn) {
+  if (val === 'true') val = true;
+  else if (val === 'false') val = false;
+  KTN.exh[key] = val;
+  if (btn) {
+    document.querySelectorAll('[data-exh-key="' + key + '"]').forEach(function (b) {
+      b.classList.toggle('on', b === btn);
+    });
+  }
+  if (typeof ktnRender === 'function') ktnRender();
+}
+window.ktnExhState = ktnExhState;
+window.ktnSetExh = ktnSetExh;
+
+/* P2（展覧会）オーナーメニュー（単一ソース・p2/p2-1〜p2-6/p2-11/p2-12/p2-12-1/p2-13/p2-14 共通）。
+   会期・確認状態（ktnExhState）で3段階に出し分ける：
+   1=会期前かつ未確認／2=確認済（会期前 or 会期中）／3=会期終了後 */
+function p2OwnerMenuItems() {
+  var st = ktnExhState();
+  var edit = ddi('edit', '展覧会編集', false, "location.href='./kotennavi-p2-11.html'");
+  var articles = ddi('file', '記事管理', false, "location.href='./kotennavi-p2-13.html'");
+  var liaisonLabel = st.liaison === 'plus' ? 'リエゾン+ 展示設定・作品管理' : 'リエゾン 展示設定・作品管理';
+  var liaisonItem = st.liaison !== 'none' ? ddi('grid', liaisonLabel, false, 'p2GotoWorks()') : '';
+  var insight = ddi('chart', 'インサイト', false, "location.href='./kotennavi-p2-14.html'");
+  var qr = ddi('qr', '会場チェックイン用QRコードを表示', false, "ktnListQr('venue')");
+  var flyer = ddi('print', '会場フライヤーを作成', false, 'ktnVenueFlyer()');
+  var del = ddi('trash', '削除', true);
+
+  if (st.num === 1) {
+    return edit + ddSep() + articles + ddSep() + del;
+  }
+  if (st.num === 3) {
+    var items3 = articles;
+    if (st.liaison === 'plus' && !st.salesOver) items3 += ddSep() + liaisonItem;
+    items3 += ddSep() + insight;
+    return items3;
+  }
+  // st.num === 2
+  var items2 = edit + ddSep() + articles;
+  if (liaisonItem) items2 += ddSep() + liaisonItem;
+  if (st.publishArrived) items2 += ddSep() + insight;
+  items2 += ddSep() + qr + ddSep() + flyer;
+  return items2;
+}
+
+/* P2 管理者専用メニュー（軽量版：オーナーddが別途併記されるため管理者専用の追加項目のみ返す。会期状態に関わらず常設） */
+function p2AdminMenuItems() {
+  return ddi('chart', 'インサイト', false, "location.href='./kotennavi-p2-14.html'") + ddSep() +
+    ddi('clone', 'クローン') + ddSep() + ddi('trash', '削除', true);
+}
+
+/* P3（クリエイター）オーナーメニュー（単一ソース・トップ〜全管理サブページ共通） */
+function p3OwnerMenuItems() {
+  return ddi('edit', 'プロフィール編集', false, "location.href='./kotennavi-p3-11.html'") + ddSep() +
+    ddi('grid', '展覧会を管理', false, "location.href='./kotennavi-p3-18.html'") +
+    ddi('frame', 'ポートフォリオ管理', false, "location.href='./kotennavi-p3-14.html'") +
+    ddi('file', '記事管理', false, "location.href='./kotennavi-p3-19.html'") + ddSep() +
+    ddi('shop', 'LIAISON+コンソール', false, "location.href='./kotennavi-p3-15.html'") +
+    ddi('desk', '取引デスク', false, "location.href='./kotennavi-p3-16.html'") +
+    ddi('sales', '販売代金管理', false, "location.href='./kotennavi-p3-17.html'") + ddSep() +
+    ddi('watch', 'オーディエンス管理', false, "location.href='./kotennavi-p3-13.html'") +
+    ddi('chart', 'インサイト', false, "location.href='./kotennavi-p3-12.html'") + ddSep() +
+    ddi('share', 'ページを共有する', false, "ktnPageShare('creator')") +
+    ddi('qr', 'ウォッチ用QRコードを表示', false, "ktnListQr('creator')") + ddSep() +
+    ddi('user', 'アカウント設定', false, "location.href='./kotennavi-p5.html'");
+}
+
+/* P4（ギャラリー）オーナーメニュー（単一ソース・p3と対称・インベントリー管理のみラベル差） */
+function p4OwnerMenuItems() {
+  return ddi('edit', 'ギャラリー情報編集', false, "location.href='./kotennavi-p4-11.html'") + ddSep() +
+    ddi('grid', '展覧会を管理', false, "location.href='./kotennavi-p4-18.html'") +
+    ddi('frame', 'インベントリー管理', false, "location.href='./kotennavi-p4-14.html'") +
+    ddi('file', '記事管理', false, "location.href='./kotennavi-p4-19.html'") + ddSep() +
+    ddi('shop', 'LIAISON+コンソール', false, "location.href='./kotennavi-p4-15.html'") +
+    ddi('desk', '取引デスク', false, "location.href='./kotennavi-p4-16.html'") +
+    ddi('sales', '販売代金管理', false, "location.href='./kotennavi-p4-17.html'") + ddSep() +
+    ddi('watch', 'オーディエンス管理', false, "location.href='./kotennavi-p4-13.html'") +
+    ddi('chart', 'インサイト', false, "location.href='./kotennavi-p4-12.html'") + ddSep() +
+    ddi('share', 'ページを共有する', false, "ktnPageShare('gallery')") +
+    ddi('qr', 'ウォッチ用QRコードを表示', false, "ktnListQr('gallery')") + ddSep() +
+    ddi('user', 'アカウント設定', false, "location.href='./kotennavi-p5.html'");
+}
+
+/* P3/P4 共通・管理者専用メニュー（アカウントを持つロールページなので統計/精算/なりすまし/強制退会まで持つ） */
+function p3p4AdminItems() {
+  return ddi('chart', '統計') + ddi('sales', '精算') + ddSep() +
+    ddi('user', 'なりすましログイン') + ddi('clone', 'クローン') + ddSep() +
+    ddi('trash', '強制退会', true) + ddi('trash', '削除', true);
+}
+
+/* P6（作品）オーナーメニュー（単一ソース） */
+function p6OwnerItems() {
+  return ddi('edit', '作品編集') + ddSep() + ddi('chart', 'インサイト') + ddSep() + ddi('trash', '削除', true);
+}
+
+/* P7（記事）オーナーメニュー（単一ソース） */
+function p7OwnerItems() {
+  return ddi('edit', '編集') + ddSep() + ddi('trash', '削除', true);
+}
+
+/* P6/P7 共通・管理者専用メニュー（コンテンツのみのページ＝アカウント操作系は持たない） */
+function p6p7AdminItems() {
+  return ddi('clone', 'クローン') + ddSep() + ddi('trash', '削除', true);
+}
+
 /* ══════════════════════════════════
    アクション定義（ページグループ × ロール）
 ══════════════════════════════════ */
 function getActions(page, role) {
   ddSeq = 0; // IDリセット（レンダリングごと）
 
-  /* ── P2-3 記事・案内 ── */
-  if (['p2-3', 'p2-5'].includes(page)) {
+  /* デモバーの役割ボタンはページによって 'user+creator'/'user+gallery'（p2/p3/p4トップ等）と
+     'creator'/'gallery'（管理サブページ等）が混在するため、以降の分岐は正規化した値で判定する。 */
+  if (role === 'user+creator') role = 'creator';
+  else if (role === 'user+gallery') role = 'gallery';
+
+  /* ── P2 展覧会トップ＋公開サブページ（p2-1〜p2-6・p2-5-1） ── */
+  if (['p2', 'p2-1', 'p2-2', 'p2-3', 'p2-4', 'p2-5', 'p2-5-1', 'p2-6'].includes(page)) {
     const cmn = hib('heart', '興味あり') + shareBtn() + sep();
     if (role === 'guest' || role === 'login')
-      return cmn + dd('その他',
-        ddi('fix', '修正を依頼する') + ddSep() + reportItem(page));
-    if (role === 'creator')
-      return cmn + owbtn('edit', '編集') + dd('オーナーメニュー',
-        ddi('edit', '編集') + ddi('file', '記事の追加') + ddSep() +
-        ddinote('grid', 'LIAISON作品管理', 'LIAISON（会場連動オンライン展示/販売）とは →') + ddSep() +
-        ddi('chart', 'インサイト') + ddi('info', 'ガイド') + ddSep() +
-        ddi('trash', '削除', true));
-    if (role === 'gallery')
-      return cmn + owbtn('edit', '編集') + dd('オーナーメニュー',
-        ddi('edit', '編集') + ddi('file', '記事の追加') + ddSep() +
-        ddinote('grid', 'LIAISON作品管理', 'LIAISON（会場連動オンライン展示/販売）とは →') + ddSep() +
-        ddi('chart', 'インサイト') + ddi('info', 'ガイド') + ddSep() +
-        ddi('trash', '削除', true));
+      return cmn + dd('その他', reportItem(page));
+    if (role === 'creator' || role === 'gallery')
+      return cmn + owbtn('edit', '編集', "location.href='./kotennavi-p2-11.html'") + dd('オーナーメニュー', p2OwnerMenuItems());
     if (role === 'admin')
-      return cmn + owbtn('edit', '編集') +
-        dd('オーナーメニュー',
-          ddi('edit', '編集') + ddi('file', '記事の追加') + ddSep() +
-          ddi('grid', 'LIAISON作品管理') + ddi('chart', 'インサイト') + ddSep() +
-          ddi('trash', '削除', true)) +
-        dd('管理者',
-          ddi('edit', '編集') + ddi('send', 'SNS投稿') + ddi('file', '校正データ生成') + ddSep() +
-          ddi('clone', 'clone') + ddi('plus', '新規展覧会') + ddi('user', '新規クリエイター') + ddSep() +
-          ddi('info', 'コンテンツ詳細情報') + ddSep() + ddi('trash', '削除', true));
+      return cmn + owbtn('edit', '編集', "location.href='./kotennavi-p2-11.html'") +
+        dd('オーナーメニュー', p2OwnerMenuItems()) + dd('管理者', p2AdminMenuItems());
+    return cmn;
   }
 
-  /* ── P2 一覧系 ── */
-  if (page === 'p2')
-    return role === 'admin'
-      ? dd('管理者', ddi('plus', '新規展覧会') + ddi('send', 'SNS投稿') + ddSep() + ddi('chart', 'ダッシュボード'))
-      : '';
-
-  /* ── P2-11 展覧会編集 ── */
-  if (page === 'p2-11') {
-    if (role === 'creator' || role === 'gallery') return owbtn('info', 'ガイド');
-    if (role === 'admin') return owbtn('info', 'ガイド') + sep() + dd('管理者', ddi('info', 'コンテンツ詳細情報'));
+  /* ── P2 管理サブページ群（展覧会編集／LIAISON・LIAISON+作品管理／記事管理／インサイト） ── */
+  if (['p2-11', 'p2-12', 'p2-121', 'p2-13', 'p2-14'].includes(page)) {
+    if (role === 'creator' || role === 'gallery')
+      return owbtn('info', 'ガイド') + dd('オーナーメニュー', p2OwnerMenuItems());
+    if (role === 'admin')
+      return owbtn('info', 'ガイド') + dd('オーナーメニュー', p2OwnerMenuItems()) + dd('管理者', p2AdminMenuItems());
     return '';
   }
 
-  /* ── P2-12 LIAISON作品管理 / P2-12-1 LIAISON+作品管理 ── */
-  if (['p2-12', 'p2-121'].includes(page)) {
-    if (role === 'creator' || role === 'gallery') return owbtn('info', 'ガイド');
-    if (role === 'admin') return owbtn('info', 'ガイド') + sep() + dd('管理者', ddi('info', '詳細情報'));
-    return '';
-  }
-
-  /* ── P3 クリエイタートップ＋サブ ── */
+  /* ── P3 クリエイタートップ ── */
   if (page === 'p3') {
     const cmn = hib('watch', 'ウォッチ', 'ktnP3WatchHib') + shareBtn() + sep();
     if (role === 'guest' || role === 'login')
       return cmn + dd('その他', reportItem(page));
     if (role === 'creator')
-      return cmn + owbtn('edit', '編集') + dd('オーナーメニュー',
-        ddi('edit', 'プロフィール編集') + ddSep() +
-        ddi('watch', 'オーディエンス管理') + ddi('frame', 'ポートフォリオ管理') + ddSep() +
-        ddi('grid', 'LIAISONコンソール') + ddi('desk', '取引デスク') + ddi('sales', '販売代金管理'));
+      return cmn + owbtn('edit', '編集', "location.href='./kotennavi-p3-11.html'") + dd('オーナーメニュー', p3OwnerMenuItems());
     if (role === 'admin')
-      return cmn + owbtn('edit', '編集') + dd('管理者',
-        ddi('edit', '編集') + ddSep() +
-        ddi('watch', 'オーディエンス管理') + ddi('chart', 'インサイト') + ddSep() + ddi('trash', '削除', true));
+      return cmn + dd('オーナーメニュー', p3OwnerMenuItems()) + dd('管理者', p3p4AdminItems());
     return cmn;
   }
 
-  /* ── P3-11 プロフィール編集（identity strip 試作・管理メニューをヘッダー getActions へ集約） ── */
-  if (page === 'p3-11') {
-    if (role === 'creator')
-      return owbtn('info', 'ガイド') + dd('オーナーメニュー',
-        ddi('edit', 'プロフィール編集') + ddSep() +
-        ddi('grid', '展覧会を管理') + ddi('desk', 'LIAISON+コンソール') + ddi('chart', 'インサイト') + ddSep() +
-        ddi('user', 'アカウント設定'));
-    if (role === 'admin') return owbtn('info', 'ガイド') + sep() + dd('管理者', ddi('chart', '統計') + ddi('sales', '精算'));
+  /* ── P3 全サブページ（プロフィール編集／展覧会・作品・記事一覧／各種管理ページ・共通オーナーメニュー） ── */
+  if (['p3-1', 'p3-2', 'p3-3', 'p3-11', 'p3-12', 'p3-13', 'p3-14', 'p3-15', 'p3-16', 'p3-17', 'p3-18', 'p3-19'].includes(page)) {
+    if (role === 'creator') return owbtn('info', 'ガイド') + dd('オーナーメニュー', p3OwnerMenuItems());
+    if (role === 'admin') return owbtn('info', 'ガイド') + dd('オーナーメニュー', p3OwnerMenuItems()) + dd('管理者', p3p4AdminItems());
     return '';
   }
 
-  /* ── P3 管理ページ群（owner/admin限定） ── */
-  if (['p3-12', 'p3-13', 'p3-14', 'p3-15', 'p3-16', 'p3-17'].includes(page)) {
-    if (role === 'creator') return owbtn('info', 'ガイド');
-    if (role === 'admin') return owbtn('info', 'ガイド') + sep() + dd('管理者', ddi('chart', '統計') + ddi('sales', '精算'));
-    return '';
-  }
-
-  /* ── P4 ギャラリートップ＋サブ ── */
+  /* ── P4 ギャラリートップ ── */
   if (page === 'p4') {
     const cmn = hib('watch', 'ウォッチ') + shareBtn() + sep();
     if (role === 'guest' || role === 'login')
       return cmn + dd('その他', reportItem(page));
     if (role === 'gallery')
-      return cmn + owbtn('edit', '編集') + dd('オーナーメニュー',
-        ddi('edit', 'ギャラリー情報編集') + ddSep() +
-        ddi('watch', 'オーディエンス管理') + ddSep() +
-        ddi('grid', 'LIAISONコンソール') + ddi('desk', '取引デスク') + ddi('sales', '販売代金管理') + ddSep() +
-        ddi('chart', 'インサイト'));
+      return cmn + owbtn('edit', '編集', "location.href='./kotennavi-p4-11.html'") + dd('オーナーメニュー', p4OwnerMenuItems());
     if (role === 'admin')
-      return cmn + owbtn('edit', '編集') + dd('管理者',
-        ddi('edit', '編集') + ddSep() + ddi('watch', 'オーディエンス管理') + ddSep() + ddi('trash', '削除', true));
+      return cmn + dd('オーナーメニュー', p4OwnerMenuItems()) + dd('管理者', p3p4AdminItems());
     return cmn;
   }
 
-  /* ── P4-11 ギャラリー情報編集（p3-11同様・管理メニューをヘッダー getActions へ集約） ── */
-  if (page === 'p4-11') {
-    if (role === 'gallery')
-      return owbtn('info', 'ガイド') + dd('オーナーメニュー',
-        ddi('edit', 'ギャラリー情報編集') + ddSep() +
-        ddi('grid', '展覧会を管理') + ddi('desk', 'LIAISON+コンソール') + ddi('chart', 'インサイト') + ddSep() +
-        ddi('user', 'アカウント設定'));
-    if (role === 'admin') return owbtn('info', 'ガイド') + sep() + dd('管理者', ddi('chart', '統計') + ddi('sales', '精算'));
+  /* ── P4 全サブページ（ギャラリー情報編集／展覧会・記事一覧／各種管理ページ・共通オーナーメニュー） ── */
+  if (['p4-1', 'p4-2', 'p4-11', 'p4-12', 'p4-13', 'p4-14', 'p4-15', 'p4-16', 'p4-17', 'p4-18', 'p4-19'].includes(page)) {
+    if (role === 'gallery') return owbtn('info', 'ガイド') + dd('オーナーメニュー', p4OwnerMenuItems());
+    if (role === 'admin') return owbtn('info', 'ガイド') + dd('オーナーメニュー', p4OwnerMenuItems()) + dd('管理者', p3p4AdminItems());
     return '';
   }
 
-  if (['p4-12', 'p4-13'].includes(page)) {
-    if (role === 'gallery') return owbtn('info', 'ガイド');
-    if (role === 'admin') return owbtn('info', 'ガイド') + sep() + dd('管理者', ddi('chart', '統計'));
-    return '';
-  }
-
-  /* ── P5 myページ＋サブ ── */
-  if (page === 'p5') {
+  /* ── P5 myページ＋サブ（p5-1/p5-2含む全サブページ共通「設定」dd・2026-08-14 統合） ── */
+  if (['p5', 'p5-1', 'p5-2', 'p5-3', 'p5-4', 'p5-11', 'p5-12', 'p5-13', 'p5-14', 'p5-15', 'p5-16'].includes(page)) {
     if (role === 'guest') return '';
-    const cmn = shareBtn() + sep();
+    const cmn = page === 'p5' ? shareBtn() + sep() : '';
     if (role === 'login' || role === 'creator' || role === 'gallery')
-      return cmn + dd('設定',
-        ddi('edit', 'プロフィール編集') + ddi('key', 'パスワード') + ddi('bell', 'メール通知設定') + ddSep() + ddi('trash', '退会', true));
+      return cmn + dd('設定', p5SettingsMenuItems());
     if (role === 'admin')
-      return cmn + dd('管理者',
+      return cmn + dd('設定', p5SettingsMenuItems()) + dd('管理者',
         ddi('edit', '編集') + ddSep() + ddi('user', 'なりすましログイン') + ddSep() + ddi('trash', '強制退会', true));
-    return '';
-  }
-
-  if (['p5-3', 'p5-4', 'p5-11', 'p5-12', 'p5-13', 'p5-14', 'p5-15', 'p5-16'].includes(page)) {
-    if (role === 'admin') return dd('管理者', ddi('user', '代理操作') + ddi('info', '詳細情報'));
     return '';
   }
 
@@ -1218,12 +1477,10 @@ function getActions(page, role) {
     const cmn = hib('heart', '興味あり') + shareBtn() + sep();
     if (role === 'guest' || role === 'login')
       return cmn + dd('その他', reportItem(page));
-    if (role === 'creator')
-      return cmn + owbtn('edit', '編集') + dd('オーナーメニュー',
-        ddi('edit', '作品編集') + ddSep() + ddi('chart', 'インサイト') + ddSep() + ddi('trash', '削除', true));
+    if (role === 'creator' || role === 'gallery')
+      return cmn + owbtn('edit', '編集') + dd('オーナーメニュー', p6OwnerItems());
     if (role === 'admin')
-      return cmn + owbtn('edit', '編集') + dd('管理者',
-        ddi('edit', '編集') + ddSep() + ddi('chart', 'インサイト') + ddSep() + ddi('trash', '削除', true));
+      return cmn + owbtn('edit', '編集') + dd('オーナーメニュー', p6OwnerItems()) + dd('管理者', p6p7AdminItems());
     return cmn;
   }
 
@@ -1239,11 +1496,9 @@ function getActions(page, role) {
     if (role === 'guest' || role === 'login')
       return cmn + dd('その他', reportItem(page));
     if (role === 'creator' || role === 'gallery')
-      return cmn + owbtn('edit', '編集') + dd('オーナーメニュー',
-        ddi('edit', '編集') + ddSep() + ddi('trash', '削除', true));
+      return cmn + owbtn('edit', '編集') + dd('オーナーメニュー', p7OwnerItems());
     if (role === 'admin')
-      return cmn + owbtn('edit', '編集') + dd('管理者',
-        ddi('edit', '編集') + ddSep() + ddi('trash', '削除', true));
+      return cmn + owbtn('edit', '編集') + dd('オーナーメニュー', p7OwnerItems()) + dd('管理者', p6p7AdminItems());
     return cmn;
   }
 
@@ -1448,6 +1703,10 @@ KTN.init = function (opts) {
     /* CTAウィジェット共通初期化（ページ固有処理の後に実行） */
     if (window.KTN.cta && typeof window.KTN.cta.init === 'function') {
       window.KTN.cta.init();
+    }
+    /* 会場フライヤー・会場チェックインQR経由（?checkin=1）の自動チェックインモーダル起動（P2限定） */
+    if (pageId === 'p2' && location.search.indexOf('checkin=1') !== -1 && typeof openCheckinModal === 'function') {
+      requestAnimationFrame(function () { openCheckinModal(); });
     }
   }
   if (document.readyState === 'loading') {

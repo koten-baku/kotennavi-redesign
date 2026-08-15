@@ -1531,7 +1531,8 @@ KTN.pages['p2-5'] = function () {
     applyOwner25();
   };
   applyOwner25();
-  window.ktnRender = function () { applyOwner25(); };
+  var _prevRenderP25 = window.ktnRender;
+  window.ktnRender = function () { if (_prevRenderP25) _prevRenderP25(); applyOwner25(); };
 };
 
 /* ────────────────────────────────────────────────────
@@ -1701,7 +1702,8 @@ KTN.pages['p2-5-1'] = function () {
     applyOwner251();
   };
   applyOwner251();
-  window.ktnRender = function () { applyOwner251(); };
+  var _prevRenderP251 = window.ktnRender;
+  window.ktnRender = function () { if (_prevRenderP251) _prevRenderP251(); applyOwner251(); };
 
   /* ── 近くの展覧会 ── */
   (function () {
@@ -2253,29 +2255,12 @@ function _p6Init(opts) {
     renderComments();
   }
 
+  /* 旧実装は独自markupでヘッダーを描画し、共有 getActions() の出力（興味ありCTA・報告メニュー等）を
+     上書きしていた。単一ソースの getActions() へ委譲し、p6/p6-1/p6-2 とも共通ヘッダー構成に揃える。 */
   function renderHeaderActs() {
     var el = document.getElementById('ktnActs');
     if (!el) return;
-    ddSeq = 0;
-    var shareH = '<button class="ktn-hib" onclick="shareWork()" aria-label="シェア">' +
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>' +
-      '<span class="ktn-hib__lbl">シェア</span></button>';
-    var html = shareH;
-    if (isOwner()) {
-      html += sep() + owbtn('edit', '編集') + dd('オーナーメニュー',
-        ddi('edit', '作品を編集する') + ddSep() +
-        ddi('chart', 'インサイト') + ddSep() +
-        ddi('trash', '削除', true));
-    } else if (isAdmin()) {
-      html += sep() + owbtn('edit', '編集') + dd('オーナーメニュー',
-        ddi('edit', '作品を編集する') + ddSep() +
-        ddi('chart', 'インサイト') + ddSep() +
-        ddi('trash', '削除', true)) +
-        dd('管理者',
-          ddi('info', 'コンテンツ詳細情報') + ddSep() +
-          ddi('trash', '削除', true));
-    }
-    el.innerHTML = html;
+    el.innerHTML = getActions(window.ktnState.page, KTN.role);
   }
 
   function setR(role, btn) {
@@ -3930,6 +3915,34 @@ KTN.pages['p2-121'] = function() {
 
 };
 
+/* P3/P4系ページ本人（オーナー）ページの複数watchボタン（ヒーロー/サイド/ヘッダーHIB）を束ねて同期トグルする。
+   直接 querySelectorAll → forEach → addEventListener で個々の要素にバインドすると、ロール切替のたびに
+   getActions() が #ktnActs を丸ごと再描画してヘッダーHIBのDOM要素ごと差し替わり、リスナーが失われて
+   動作しなくなる（P3/P4トップ・下位ページ共通の不具合）。document への delegated listener にすることで
+   要素の生成・破棄に依存せず動作する。ページ初期化時に一度だけ呼ぶ。 */
+function ktnBindWatchSync() {
+  document.querySelectorAll('[data-action="watch"]').forEach(function (b) {
+    if (!b.closest('.cc,.gc,.uc') && b.closest('.ktn-cta-widget, .p2-action-widget')) b.dataset.ctaInit = '1';
+  });
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest('[data-action="watch"]');
+    if (!btn || btn.closest('.cc,.gc,.uc')) return;
+    if ((window.ktnState || {}).role === 'guest') { KTN.action.handle(btn, 'watch'); return; }
+    var isOn = btn.classList.contains('on');
+    var watchBtns = Array.prototype.filter.call(document.querySelectorAll('[data-action="watch"]'), function (b) { return !b.closest('.cc,.gc,.uc'); });
+    watchBtns.forEach(function (b) {
+      b.classList.toggle('on', !isOn);
+      var lbl = b.querySelector('.ktn-btn__lbl');
+      var newText = !isOn ? (b.dataset.on || 'watching') : (b.dataset.off || 'watch');
+      if (lbl) { lbl.textContent = newText; }
+      else { var tn = Array.from(b.childNodes).find(function (n) { return n.nodeType === 3 && n.textContent.trim(); }); if (tn) tn.textContent = ' ' + newText; }
+      var tip = b.querySelector('.tip');
+      if (tip) tip.textContent = !isOn ? 'ウォッチ中 — 解除する' : 'ウォッチする';
+    });
+    KTN.toast(isOn ? 'ウォッチを解除しました' : 'ウォッチしました');
+  });
+}
+
 /* ────────────────────────────────────────────────────
    P3 クリエイタートップ
 ──────────────────────────────────────────────────── */
@@ -3976,24 +3989,7 @@ KTN.pages['p3'] = function () {
   }
 
   // 1. watchボタン トグル（ヒーロー + サイド + ヘッダーHIB 連動）
-  var watchBtns = Array.prototype.filter.call(document.querySelectorAll('[data-action="watch"], #ktnP3WatchHib'), function(b){ return !b.closest('.cc,.gc,.uc'); });
-  watchBtns.forEach(function(btn){
-    if (btn.closest('.ktn-cta-widget, .p2-action-widget')) btn.dataset.ctaInit = '1';
-    btn.addEventListener('click', function(){
-      if ((window.ktnState||{}).role === 'guest') { KTN.action.handle(btn, 'watch'); return; }
-      var isOn = btn.classList.contains('on');
-      watchBtns.forEach(function(b){
-        b.classList.toggle('on', !isOn);
-        var lbl = b.querySelector('.ktn-btn__lbl');
-        var newText = !isOn ? (b.dataset.on||'watching') : (b.dataset.off||'watch');
-        if (lbl) { lbl.textContent = newText; }
-        else { var tn = Array.from(b.childNodes).find(function(n){ return n.nodeType===3 && n.textContent.trim(); }); if (tn) tn.textContent = ' '+newText; }
-        var tip = b.querySelector('.tip');
-        if (tip) tip.textContent = !isOn ? 'ウォッチ中 — 解除する' : 'ウォッチする';
-      });
-      KTN.toast(isOn ? 'ウォッチを解除しました' : 'ウォッチしました');
-    });
-  });
+  ktnBindWatchSync();
 
   // 2. ウォッチャーモーダル
   var modal = document.getElementById('p3WatcherModal');
@@ -4541,24 +4537,7 @@ KTN.pages['p3-1'] = function () {
   });
 
   // 2. watchボタン トグル
-  var watchBtns = Array.prototype.filter.call(document.querySelectorAll('[data-action="watch"]'), function(b){ return !b.closest('.cc,.gc,.uc'); });
-  watchBtns.forEach(function(btn){
-    if (btn.closest('.ktn-cta-widget, .p2-action-widget')) btn.dataset.ctaInit = '1';
-    btn.addEventListener('click', function(){
-      if ((window.ktnState||{}).role === 'guest') { KTN.action.handle(btn, 'watch'); return; }
-      var isOn = btn.classList.contains('on');
-      watchBtns.forEach(function(b){
-        b.classList.toggle('on', !isOn);
-        var lbl = b.querySelector('.ktn-btn__lbl');
-        var newText = !isOn ? (b.dataset.on||'watching') : (b.dataset.off||'watch');
-        if (lbl) { lbl.textContent = newText; }
-        else { var tn = Array.from(b.childNodes).find(function(n){ return n.nodeType===3 && n.textContent.trim(); }); if (tn) tn.textContent = ' '+newText; }
-        var tip = b.querySelector('.tip');
-        if (tip) tip.textContent = !isOn ? 'ウォッチ中 — 解除する' : 'ウォッチする';
-      });
-      KTN.toast(isOn ? 'ウォッチを解除しました' : 'ウォッチしました');
-    });
-  });
+  ktnBindWatchSync();
 
   // 3. ウォッチャーモーダル
   var modal = document.getElementById('p3WatcherModal');
@@ -4738,24 +4717,7 @@ KTN.pages['p3-2'] = function () {
   });
 
   // 2. watchボタン トグル
-  var watchBtns = Array.prototype.filter.call(document.querySelectorAll('[data-action="watch"]'), function(b){ return !b.closest('.cc,.gc,.uc'); });
-  watchBtns.forEach(function(btn){
-    if (btn.closest('.ktn-cta-widget, .p2-action-widget')) btn.dataset.ctaInit = '1';
-    btn.addEventListener('click', function(){
-      if ((window.ktnState||{}).role === 'guest') { KTN.action.handle(btn, 'watch'); return; }
-      var isOn = btn.classList.contains('on');
-      watchBtns.forEach(function(b){
-        b.classList.toggle('on', !isOn);
-        var lbl = b.querySelector('.ktn-btn__lbl');
-        var newText = !isOn ? (b.dataset.on||'watching') : (b.dataset.off||'watch');
-        if (lbl) { lbl.textContent = newText; }
-        else { var tn = Array.from(b.childNodes).find(function(n){ return n.nodeType===3 && n.textContent.trim(); }); if (tn) tn.textContent = ' '+newText; }
-        var tip = b.querySelector('.tip');
-        if (tip) tip.textContent = !isOn ? 'ウォッチ中 — 解除する' : 'ウォッチする';
-      });
-      KTN.toast(isOn ? 'ウォッチを解除しました' : 'ウォッチしました');
-    });
-  });
+  ktnBindWatchSync();
 
   // 3. ウォッチャーモーダル
   var modal = document.getElementById('p3WatcherModal');
@@ -4901,24 +4863,7 @@ KTN.pages['p3-3'] = function () {
   });
 
   // 2. watchボタン トグル
-  var watchBtns = Array.prototype.filter.call(document.querySelectorAll('[data-action="watch"]'), function(b){ return !b.closest('.cc,.gc,.uc'); });
-  watchBtns.forEach(function(btn){
-    if (btn.closest('.ktn-cta-widget, .p2-action-widget')) btn.dataset.ctaInit = '1';
-    btn.addEventListener('click', function(){
-      if ((window.ktnState||{}).role === 'guest') { KTN.action.handle(btn, 'watch'); return; }
-      var isOn = btn.classList.contains('on');
-      watchBtns.forEach(function(b){
-        b.classList.toggle('on', !isOn);
-        var lbl = b.querySelector('.ktn-btn__lbl');
-        var newText = !isOn ? (b.dataset.on||'watching') : (b.dataset.off||'watch');
-        if (lbl) { lbl.textContent = newText; }
-        else { var tn = Array.from(b.childNodes).find(function(n){ return n.nodeType===3 && n.textContent.trim(); }); if (tn) tn.textContent = ' '+newText; }
-        var tip = b.querySelector('.tip');
-        if (tip) tip.textContent = !isOn ? 'ウォッチ中 — 解除する' : 'ウォッチする';
-      });
-      KTN.toast(isOn ? 'ウォッチを解除しました' : 'ウォッチしました');
-    });
-  });
+  ktnBindWatchSync();
 
   // 3. ウォッチャーモーダル
   var modal = document.getElementById('p3WatcherModal');
@@ -5038,7 +4983,8 @@ KTN.pages['p3-3'] = function () {
     });
   }
   applyOwner();
-  window.ktnRender = function () { applyOwner(); };
+  var _prevRender = window.ktnRender;
+  window.ktnRender = function () { if (typeof _prevRender === 'function') _prevRender(); applyOwner(); };
 };
 
 /* ────────────────────────────────────────────────────
@@ -5086,24 +5032,7 @@ KTN.pages['p4'] = function () {
   }
 
   // 1. watchボタン トグル
-  var watchBtns = Array.prototype.filter.call(document.querySelectorAll('[data-action="watch"]'), function(b){ return !b.closest('.cc,.gc,.uc'); });
-  watchBtns.forEach(function(btn){
-    if (btn.closest('.ktn-cta-widget, .p2-action-widget')) btn.dataset.ctaInit = '1';
-    btn.addEventListener('click', function(){
-      if ((window.ktnState||{}).role === 'guest') { KTN.action.handle(btn, 'watch'); return; }
-      var isOn = btn.classList.contains('on');
-      watchBtns.forEach(function(b){
-        b.classList.toggle('on', !isOn);
-        var lbl = b.querySelector('.ktn-btn__lbl');
-        var newText = !isOn ? (b.dataset.on||'watching') : (b.dataset.off||'watch');
-        if (lbl) { lbl.textContent = newText; }
-        else { var tn = Array.from(b.childNodes).find(function(n){ return n.nodeType===3 && n.textContent.trim(); }); if (tn) tn.textContent = ' '+newText; }
-        var tip = b.querySelector('.tip');
-        if (tip) tip.textContent = !isOn ? 'ウォッチ中 — 解除する' : 'ウォッチする';
-      });
-      KTN.toast(isOn ? 'ウォッチを解除しました' : 'ウォッチしました');
-    });
-  });
+  ktnBindWatchSync();
 
   // 2. ウォッチャーモーダル
   var modal = document.getElementById('p4WatcherModal');
@@ -5496,24 +5425,7 @@ KTN.pages['p4-1'] = function () {
   });
 
   // 2. watchボタン トグル
-  var watchBtns = Array.prototype.filter.call(document.querySelectorAll('[data-action="watch"]'), function(b){ return !b.closest('.cc,.gc,.uc'); });
-  watchBtns.forEach(function(btn){
-    if (btn.closest('.ktn-cta-widget, .p2-action-widget')) btn.dataset.ctaInit = '1';
-    btn.addEventListener('click', function(){
-      if ((window.ktnState||{}).role === 'guest') { KTN.action.handle(btn, 'watch'); return; }
-      var isOn = btn.classList.contains('on');
-      watchBtns.forEach(function(b){
-        b.classList.toggle('on', !isOn);
-        var lbl = b.querySelector('.ktn-btn__lbl');
-        var newText = !isOn ? (b.dataset.on||'watching') : (b.dataset.off||'watch');
-        if (lbl) { lbl.textContent = newText; }
-        else { var tn = Array.from(b.childNodes).find(function(n){ return n.nodeType===3 && n.textContent.trim(); }); if (tn) tn.textContent = ' '+newText; }
-        var tip = b.querySelector('.tip');
-        if (tip) tip.textContent = !isOn ? 'ウォッチ中 — 解除する' : 'ウォッチする';
-      });
-      KTN.toast(isOn ? 'ウォッチを解除しました' : 'ウォッチしました');
-    });
-  });
+  ktnBindWatchSync();
 
   // 3. ウォッチャーモーダル
   var modal = document.getElementById('p4WatcherModal');
@@ -5685,24 +5597,7 @@ KTN.pages['p4-2'] = function () {
   });
 
   // 2. watchボタン トグル
-  var watchBtns = Array.prototype.filter.call(document.querySelectorAll('[data-action="watch"]'), function(b){ return !b.closest('.cc,.gc,.uc'); });
-  watchBtns.forEach(function(btn){
-    if (btn.closest('.ktn-cta-widget, .p2-action-widget')) btn.dataset.ctaInit = '1';
-    btn.addEventListener('click', function(){
-      if ((window.ktnState||{}).role === 'guest') { KTN.action.handle(btn, 'watch'); return; }
-      var isOn = btn.classList.contains('on');
-      watchBtns.forEach(function(b){
-        b.classList.toggle('on', !isOn);
-        var lbl = b.querySelector('.ktn-btn__lbl');
-        var newText = !isOn ? (b.dataset.on||'watching') : (b.dataset.off||'watch');
-        if (lbl) { lbl.textContent = newText; }
-        else { var tn = Array.from(b.childNodes).find(function(n){ return n.nodeType===3 && n.textContent.trim(); }); if (tn) tn.textContent = ' '+newText; }
-        var tip = b.querySelector('.tip');
-        if (tip) tip.textContent = !isOn ? 'ウォッチ中 — 解除する' : 'ウォッチする';
-      });
-      KTN.toast(isOn ? 'ウォッチを解除しました' : 'ウォッチしました');
-    });
-  });
+  ktnBindWatchSync();
 
   // 3. ウォッチャーモーダル
   var modal = document.getElementById('p4WatcherModal');
@@ -6280,7 +6175,8 @@ KTN.pages['p5-1'] = function () {
     var sortEl = document.getElementById('p51Sort');
     if (sortEl) sortEl.addEventListener('change', function () { applySort(this.value); });
 
-    window.ktnRender = function () { applyRole(); };
+    var _prevRender = window.ktnRender;
+    window.ktnRender = function () { if (typeof _prevRender === 'function') _prevRender(); applyRole(); };
     applyRole();
 };
 
@@ -6468,7 +6364,8 @@ KTN.pages['p5-2'] = function () {
         });
     });
 
-    window.ktnRender = function () { applyRole(); };
+    var _prevRender = window.ktnRender;
+    window.ktnRender = function () { if (typeof _prevRender === 'function') _prevRender(); applyRole(); };
     applyRole();
 };
 
@@ -6638,7 +6535,8 @@ KTN.pages['p5-3'] = function () {
     // 初期状態: 展覧会パネルをすべて表示
     applyStatusFilter();
 
-    window.ktnRender = function () { applyRole(); };
+    var _prevRender = window.ktnRender;
+    window.ktnRender = function () { if (typeof _prevRender === 'function') _prevRender(); applyRole(); };
     applyRole();
 };
 
@@ -6660,7 +6558,8 @@ KTN.pages['p5-4'] = function () {
         document.body.classList.toggle('p5-other', !isOwner && role !== 'admin');
     }
 
-    window.ktnRender = function () { applyRole(); };
+    var _prevRender = window.ktnRender;
+    window.ktnRender = function () { if (typeof _prevRender === 'function') _prevRender(); applyRole(); };
     applyRole();
 };
 
@@ -6681,7 +6580,8 @@ KTN.pages['p5-14'] = function () {
         if (wrap) wrap.style.display = canView ? '' : 'none';
     }
 
-    window.ktnRender = function () { applyRole(); };
+    var _prevRender = window.ktnRender;
+    window.ktnRender = function () { if (typeof _prevRender === 'function') _prevRender(); applyRole(); };
     applyRole();
 };
 
@@ -6724,7 +6624,8 @@ KTN.pages['p5-15'] = function () {
     }
     _initTxnCommentAttach();
 
-    window.ktnRender = function () { applyRole(); };
+    var _prevRender = window.ktnRender;
+    window.ktnRender = function () { if (typeof _prevRender === 'function') _prevRender(); applyRole(); };
     applyRole();
 };
 
@@ -6941,6 +6842,24 @@ KTN.pages['p3-12'] = function () {
 
   // 3. 期間セレクター（デモ：active切替のみ・データは静的）
   var periodBox = document.getElementById('p312Period');
+  if (periodBox) {
+    periodBox.querySelectorAll('.ins-period__btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        periodBox.querySelectorAll('.ins-period__btn').forEach(function (b) { b.classList.remove('is-active'); });
+        btn.classList.add('is-active');
+        if (typeof showToast === 'function') showToast('期間を変更しました（デモ）');
+      });
+    });
+  }
+
+};
+
+/* ════════════════════════════════════════════════════
+   P4-12  ギャラリー-インサイト
+════════════════════════════════════════════════════ */
+KTN.pages['p4-12'] = function () {
+
+  var periodBox = document.getElementById('p412Period');
   if (periodBox) {
     periodBox.querySelectorAll('.ins-period__btn').forEach(function (btn) {
       btn.addEventListener('click', function () {
@@ -8407,7 +8326,8 @@ KTN.pages['p2-11'] = function () {
   }
   syncMgmtBar();
   KTN.initImgReorder(document.getElementById('p211SubList'));
-  window.ktnRender = function () { syncMgmtBar(); };
+  var _prevRender = window.ktnRender;
+  window.ktnRender = function () { if (typeof _prevRender === 'function') _prevRender(); syncMgmtBar(); };
 };
 
 /* ════════════════════════════════════════════════════
@@ -8426,7 +8346,8 @@ KTN.pages['p2-11'] = function () {
         var wrap = document.querySelector('.' + pageId.replace('-','') + '-wrap');
         if (wrap) wrap.style.display = canView ? '' : 'none';
       }
-      window.ktnRender = function () { applyRole(); };
+      var _prevRender = window.ktnRender;
+      window.ktnRender = function () { if (typeof _prevRender === 'function') _prevRender(); applyRole(); };
       applyRole();
     };
   }
@@ -8473,7 +8394,36 @@ KTN.pages['p6-11'] = function () {
   }
   syncMgmtBar();
   KTN.initImgReorder(document.getElementById('p611SubList'));
-  window.ktnRender = function () { syncMgmtBar(); };
+  var _prevRender = window.ktnRender;
+  window.ktnRender = function () { if (typeof _prevRender === 'function') _prevRender(); syncMgmtBar(); };
+};
+
+/* ════════════════════════════════════════════════════
+   P6-12  作品-インサイト
+════════════════════════════════════════════════════ */
+KTN.pages['p6-12'] = function () {
+  function syncMgmtBar() {
+    const r = window.ktnState && window.ktnState.role || 'creator';
+    document.body.classList.remove('p3-page', 'p4-page', 'p5-page');
+    if (r === 'gallery')      document.body.classList.add('p4-page');
+    else                      document.body.classList.add('p3-page');
+    KTN.syncMgmtOwner('p612Owner', r === 'gallery' ? 'gallery' : 'creator');
+  }
+  syncMgmtBar();
+
+  var periodBox = document.getElementById('p612Period');
+  if (periodBox) {
+    periodBox.querySelectorAll('.ins-period__btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        periodBox.querySelectorAll('.ins-period__btn').forEach(function (b) { b.classList.remove('is-active'); });
+        btn.classList.add('is-active');
+        if (typeof showToast === 'function') showToast('期間を変更しました（デモ）');
+      });
+    });
+  }
+
+  var _prevRender = window.ktnRender;
+  window.ktnRender = function () { if (typeof _prevRender === 'function') _prevRender(); syncMgmtBar(); };
 };
 
 /* ════════════════════════════════════════════════════
@@ -8489,7 +8439,8 @@ KTN.pages['p7-11'] = function () {
     if (typeof window.p711RoleSync === 'function') window.p711RoleSync();
   }
   syncMgmtBar();
-  window.ktnRender = function () { syncMgmtBar(); };
+  var _prevRender = window.ktnRender;
+  window.ktnRender = function () { if (typeof _prevRender === 'function') _prevRender(); syncMgmtBar(); };
 };
 
 /* ════════════════════════════════════════════════════
@@ -12524,6 +12475,17 @@ KTN.pages['p2-13'] = function () {
   var draftBanner = document.getElementById('p213DraftBanner');
   var draftCntEl  = document.getElementById('p213DraftCount');
   var pagerEl     = document.getElementById('p213Pagination');
+
+  /* ── 「一元管理するには」の遷移先：展覧会オーナー（creator/gallery）に応じてクリエイター/ギャラリーページを切替 ── */
+  var destEl   = document.getElementById('p213DestType');
+  var destLink = document.getElementById('p213DestLink');
+  if (destEl && destLink) {
+    var ownerBadge = document.querySelector('.ktn-mgmt-context__owner .cb-person');
+    var isGallery  = !!(ownerBadge && ownerBadge.classList.contains('cb-gallery'));
+    destEl.textContent = isGallery ? 'ギャラリー' : 'クリエイター';
+    destLink.href = isGallery ? './kotennavi-p4-19.html' : './kotennavi-p3-19.html';
+  }
+
   if (!listEl || !typeSel || !sortSel) return;
 
   var page = 1;
@@ -12710,6 +12672,17 @@ KTN.pages['p6-15'] = function () {
   var draftBanner = document.getElementById('p615DraftBanner');
   var draftCntEl  = document.getElementById('p615DraftCount');
   var pagerEl     = document.getElementById('p615Pagination');
+
+  /* ── 「一元管理するには」の遷移先：作品オーナー（creator/gallery）に応じてクリエイター/ギャラリーページを切替 ── */
+  var destEl   = document.getElementById('p615DestType');
+  var destLink = document.getElementById('p615DestLink');
+  if (destEl && destLink) {
+    var ownerBadge = document.querySelector('.ktn-mgmt-context__owner .cb-person');
+    var isGallery  = !!(ownerBadge && ownerBadge.classList.contains('cb-gallery'));
+    destEl.textContent = isGallery ? 'ギャラリー' : 'クリエイター';
+    destLink.href = isGallery ? './kotennavi-p4-19.html' : './kotennavi-p3-19.html';
+  }
+
   if (!listEl || !typeSel || !sortSel) return;
 
   var page = 1;
@@ -12860,6 +12833,24 @@ KTN.pages['p6-15'] = function () {
   });
 
   window.ktnRender = function () {};
+};
+
+/* ════════════════════════════════════════════════════
+   P2-14  展覧会-インサイト
+════════════════════════════════════════════════════ */
+KTN.pages['p2-14'] = function () {
+
+  var periodBox = document.getElementById('p214Period');
+  if (periodBox) {
+    periodBox.querySelectorAll('.ins-period__btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        periodBox.querySelectorAll('.ins-period__btn').forEach(function (b) { b.classList.remove('is-active'); });
+        btn.classList.add('is-active');
+        if (typeof showToast === 'function') showToast('期間を変更しました（デモ）');
+      });
+    });
+  }
+
 };
 
 /* ════════════════════════════════════════════════════

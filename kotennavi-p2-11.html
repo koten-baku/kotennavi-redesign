@@ -27,6 +27,16 @@
   <span class="dbar-sep">確認：</span>
   <button class="dbtn" id="dbarConfOff" onclick="setConfirmed(false)">確認前</button>
   <button class="dbtn on" id="dbarConfOn" onclick="setConfirmed(true)">確認済</button>
+  <span class="dbar-sep">会期：</span>
+  <button class="dbtn dbtn-exh" data-exh-key="phase" onclick="ktnSetExh('phase','before',this)">会期前</button>
+  <button class="dbtn dbtn-exh on" data-exh-key="phase" onclick="ktnSetExh('phase','during',this)">会期中</button>
+  <button class="dbtn dbtn-exh" data-exh-key="phase" onclick="ktnSetExh('phase','after',this)">終了後</button>
+  <span class="dbar-sep">公開日：</span>
+  <button class="dbtn dbtn-exh on" data-exh-key="publishArrived" onclick="ktnSetExh('publishArrived','true',this)">到達済</button>
+  <button class="dbtn dbtn-exh" data-exh-key="publishArrived" onclick="ktnSetExh('publishArrived','false',this)">未到達</button>
+  <span class="dbar-sep">販売期間：</span>
+  <button class="dbtn dbtn-exh on" data-exh-key="salesOver" onclick="ktnSetExh('salesOver','false',this)">終了前</button>
+  <button class="dbtn dbtn-exh" data-exh-key="salesOver" onclick="ktnSetExh('salesOver','true',this)">終了済</button>
 </div>
 
 <div class="shell">
@@ -1099,6 +1109,15 @@
         </div>
       </div>
 
+      <!-- 保存直後の会場QR/フライヤー誘導（確認済＝会期前or会期中のみ表示・confirmSave()がトグル） -->
+      <div class="p211-qr-nudge" id="p211QrNudge" hidden>
+        <span class="p211-qr-nudge__icon">✓</span>
+        <p class="p211-qr-nudge__text">保存しました。会場に掲示するQRコード・フライヤーは、オーナーメニューからいつでも発行できます。<a class="ktn-guide-link" href="javascript:void(0)" onclick="ktnVenueFlyer()">会場フライヤーを作成する →</a></p>
+        <button class="p211-qr-nudge__close" type="button" onclick="document.getElementById('p211QrNudge').hidden=true" aria-label="閉じる">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
       </div><!-- /.ktn-mgmt-wrap -->
 
       <!-- 保存確認モーダル（fixed のため wrap の外に置く） -->
@@ -1209,6 +1228,8 @@ function setDemoMode(mode) {
 /* ── 管理者確認済トグル ── */
 function setConfirmed(on) {
   demoConfirmed = !!on;
+  KTN.exh.confirmed = demoConfirmed;
+  if (window.ktnRender) ktnRender();
   var bOff = document.getElementById('dbarConfOff');
   var bOn  = document.getElementById('dbarConfOn');
   if (bOff) bOff.classList.toggle('on', !demoConfirmed);
@@ -1749,6 +1770,8 @@ function toggleLiaisonMode() {
   /* 作品管理ページへのリンクは「管理者確認済 かつ 該当プラン選択時」のみ表示 */
   if (l)  l.hidden  = !(demoConfirmed && v === 'liaison');
   if (lp) lp.hidden = !(demoConfirmed && v === 'plus');
+  KTN.exh.liaison = v;
+  if (window.ktnRender) ktnRender();
 }
 
 /* ── リエゾンモードの会期開始ロック（2026-07-19 仕様）──
@@ -1965,6 +1988,11 @@ function confirmSave() {
   closeConfirmModal();
   if (typeof KTN !== 'undefined' && KTN.toast) {
     KTN.toast('保存しました。管理者の確認後に掲載されます（デモ）');
+  }
+  var nudge = document.getElementById('p211QrNudge');
+  if (nudge) {
+    var st = typeof ktnExhState === 'function' ? ktnExhState() : null;
+    nudge.hidden = !(st && st.num === 2);
   }
 }
 

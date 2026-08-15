@@ -29,6 +29,19 @@
   <span class="dbar-sep">会期：</span>
   <button class="dbtn" onclick="p212DemoTerm(false,this)">開始前（変更可）</button>
   <button class="dbtn on" onclick="p212DemoTerm(true,this)">開始後（変更不可）</button>
+  <span class="dbar-sep" style="margin-left:8px">オーナーメニュー会期：</span>
+  <button class="dbtn dbtn-exh" data-exh-key="phase" onclick="ktnSetExh('phase','before',this)">会期前</button>
+  <button class="dbtn dbtn-exh on" data-exh-key="phase" onclick="ktnSetExh('phase','during',this)">会期中</button>
+  <button class="dbtn dbtn-exh" data-exh-key="phase" onclick="ktnSetExh('phase','after',this)">終了後</button>
+  <span class="dbar-sep" style="margin-left:8px">確認：</span>
+  <button class="dbtn dbtn-exh on" data-exh-key="confirmed" onclick="ktnSetExh('confirmed','true',this)">確認済</button>
+  <button class="dbtn dbtn-exh" data-exh-key="confirmed" onclick="ktnSetExh('confirmed','false',this)">確認前</button>
+  <span class="dbar-sep" style="margin-left:8px">公開日：</span>
+  <button class="dbtn dbtn-exh on" data-exh-key="publishArrived" onclick="ktnSetExh('publishArrived','true',this)">到達済</button>
+  <button class="dbtn dbtn-exh" data-exh-key="publishArrived" onclick="ktnSetExh('publishArrived','false',this)">未到達</button>
+  <span class="dbar-sep" style="margin-left:8px">販売期間：</span>
+  <button class="dbtn dbtn-exh on" data-exh-key="salesOver" onclick="ktnSetExh('salesOver','false',this)">終了前</button>
+  <button class="dbtn dbtn-exh" data-exh-key="salesOver" onclick="ktnSetExh('salesOver','true',this)">終了済</button>
 </div>
 <div class="shell">
 <div class="content-wrap" id="contentWrap">

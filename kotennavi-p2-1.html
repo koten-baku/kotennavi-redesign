@@ -30,6 +30,23 @@
   <button class="dbtn" onclick="setR('user+creator',this)">creator本人</button>
   <button class="dbtn" onclick="setR('user+gallery',this)">gallery本人</button>
   <button class="dbtn" onclick="setR('admin',this)">管理者</button>
+  <span class="dbar-sep" style="margin-left:8px">会期：</span>
+  <button class="dbtn dbtn-exh" data-exh-key="phase" onclick="ktnSetExh('phase','before',this)">会期前</button>
+  <button class="dbtn dbtn-exh on" data-exh-key="phase" onclick="ktnSetExh('phase','during',this)">会期中</button>
+  <button class="dbtn dbtn-exh" data-exh-key="phase" onclick="ktnSetExh('phase','after',this)">終了後</button>
+  <span class="dbar-sep" style="margin-left:8px">確認：</span>
+  <button class="dbtn dbtn-exh on" data-exh-key="confirmed" onclick="ktnSetExh('confirmed','true',this)">確認済</button>
+  <button class="dbtn dbtn-exh" data-exh-key="confirmed" onclick="ktnSetExh('confirmed','false',this)">確認前</button>
+  <span class="dbar-sep" style="margin-left:8px">公開日：</span>
+  <button class="dbtn dbtn-exh on" data-exh-key="publishArrived" onclick="ktnSetExh('publishArrived','true',this)">到達済</button>
+  <button class="dbtn dbtn-exh" data-exh-key="publishArrived" onclick="ktnSetExh('publishArrived','false',this)">未到達</button>
+  <span class="dbar-sep" style="margin-left:8px">LIAISON：</span>
+  <button class="dbtn dbtn-exh" data-exh-key="liaison" onclick="ktnSetExh('liaison','none',this)">利用なし</button>
+  <button class="dbtn dbtn-exh" data-exh-key="liaison" onclick="ktnSetExh('liaison','liaison',this)">LIAISON</button>
+  <button class="dbtn dbtn-exh on" data-exh-key="liaison" onclick="ktnSetExh('liaison','plus',this)">LIAISON+</button>
+  <span class="dbar-sep" style="margin-left:8px">販売期間：</span>
+  <button class="dbtn dbtn-exh on" data-exh-key="salesOver" onclick="ktnSetExh('salesOver','false',this)">終了前</button>
+  <button class="dbtn dbtn-exh" data-exh-key="salesOver" onclick="ktnSetExh('salesOver','true',this)">終了済</button>
 </div>
 <div class="dev-ph dev-ph--sidebar"></div>
 <div class="shell">
@@ -237,7 +254,7 @@
               <button class="p2-action-widget__sub-btn" onclick="doShare()" title="シェア">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
               </button>
-              <a href="kotennavi-p2-14.html" class="p2-action-widget__sub-btn" title="修正依頼">
+              <a href="kotennavi-p2-16.html" class="p2-action-widget__sub-btn" title="修正依頼">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
               </a>
             </div>

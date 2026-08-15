@@ -20,6 +20,23 @@
   <button class="dbtn" onclick="setR('login',this)">ログイン</button>
   <button class="dbtn on" onclick="setR('user+creator',this)">creator本人</button>
   <button class="dbtn" onclick="setR('admin',this)">管理者</button>
+  <span class="dbar-sep" style="margin-left:8px">会期：</span>
+  <button class="dbtn dbtn-exh" data-exh-key="phase" onclick="ktnSetExh('phase','before',this)">会期前</button>
+  <button class="dbtn dbtn-exh on" data-exh-key="phase" onclick="ktnSetExh('phase','during',this)">会期中</button>
+  <button class="dbtn dbtn-exh" data-exh-key="phase" onclick="ktnSetExh('phase','after',this)">終了後</button>
+  <span class="dbar-sep" style="margin-left:8px">確認：</span>
+  <button class="dbtn dbtn-exh on" data-exh-key="confirmed" onclick="ktnSetExh('confirmed','true',this)">確認済</button>
+  <button class="dbtn dbtn-exh" data-exh-key="confirmed" onclick="ktnSetExh('confirmed','false',this)">確認前</button>
+  <span class="dbar-sep" style="margin-left:8px">公開日：</span>
+  <button class="dbtn dbtn-exh on" data-exh-key="publishArrived" onclick="ktnSetExh('publishArrived','true',this)">到達済</button>
+  <button class="dbtn dbtn-exh" data-exh-key="publishArrived" onclick="ktnSetExh('publishArrived','false',this)">未到達</button>
+  <span class="dbar-sep" style="margin-left:8px">LIAISON：</span>
+  <button class="dbtn dbtn-exh" data-exh-key="liaison" onclick="ktnSetExh('liaison','none',this)">利用なし</button>
+  <button class="dbtn dbtn-exh" data-exh-key="liaison" onclick="ktnSetExh('liaison','liaison',this)">LIAISON</button>
+  <button class="dbtn dbtn-exh on" data-exh-key="liaison" onclick="ktnSetExh('liaison','plus',this)">LIAISON+</button>
+  <span class="dbar-sep" style="margin-left:8px">販売期間：</span>
+  <button class="dbtn dbtn-exh on" data-exh-key="salesOver" onclick="ktnSetExh('salesOver','false',this)">終了前</button>
+  <button class="dbtn dbtn-exh" data-exh-key="salesOver" onclick="ktnSetExh('salesOver','true',this)">終了済</button>
 </div>
 
 <div class="shell">
@@ -60,10 +77,10 @@
 
         <!-- ページタイトル -->
         <div class="ktn-mgmt-head">
-          <h2 class="ktn-mgmt-head__title">記事管理</h2>
+          <h2 class="ktn-mgmt-head__title">記事管理 - 展覧会</h2>
           <p class="ktn-mgmt-head__en">ARTICLES</p>
-          <p class="ktn-mgmt-head__desc">この展覧会に掲載された記事を確認・編集・削除します。記事は<strong>作品ページ・展覧会ページ・クリエイターページ</strong>のいずれかから作成でき、掲載先はその作成元によって自動的に決まります（あとから変更はできません）。</p>
-          <p class="ktn-mgmt-head__guides">ここにはこの展覧会に掲載された記事のみが表示されます。あなたが投稿したすべての記事を一元管理するには <a class="ktn-guide-link" href="kotennavi-p3-19.html">記事管理（すべて）→</a></p>
+          <p class="ktn-mgmt-head__desc">「あなたが知らないオノマトペ」に掲載される記事を作成・編集・削除します。<strong>会場レポート・作家インタビュー・作品解説・ワークショップやイベントの案内</strong>など、この展覧会にまつわる記事を作成できます。</p>
+          <p class="ktn-mgmt-head__guides">ここにはこの展覧会に掲載された記事のみが表示されます。あなたが投稿したすべての記事を一元管理するには<span id="p213DestType">クリエイター</span>ページの <a class="ktn-guide-link" href="kotennavi-p3-19.html" id="p213DestLink">記事管理（すべて）→</a></p>
         </div>
 
         <!-- 新規作成（独立CTA） -->

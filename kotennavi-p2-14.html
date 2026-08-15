@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>インサイト — あなたが知らないオノマトペ・田中透 | 個展なび</title>
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<body data-w="article" class="p2-14-page p3-page mgmt-page">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- デモバー -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ロール：</span>
+  <button class="dbtn" onclick="setR('guest',this)">ゲスト</button>
+  <button class="dbtn" onclick="setR('login',this)">ログイン</button>
+  <button class="dbtn on" onclick="setR('user+creator',this)">creator本人</button>
+  <button class="dbtn" onclick="setR('admin',this)">管理者</button>
+  <span class="dbar-sep" style="margin-left:8px">会期：</span>
+  <button class="dbtn dbtn-exh" data-exh-key="phase" onclick="ktnSetExh('phase','before',this)">会期前</button>
+  <button class="dbtn dbtn-exh on" data-exh-key="phase" onclick="ktnSetExh('phase','during',this)">会期中</button>
+  <button class="dbtn dbtn-exh" data-exh-key="phase" onclick="ktnSetExh('phase','after',this)">終了後</button>
+  <span class="dbar-sep" style="margin-left:8px">確認：</span>
+  <button class="dbtn dbtn-exh on" data-exh-key="confirmed" onclick="ktnSetExh('confirmed','true',this)">確認済</button>
+  <button class="dbtn dbtn-exh" data-exh-key="confirmed" onclick="ktnSetExh('confirmed','false',this)">確認前</button>
+  <span class="dbar-sep" style="margin-left:8px">公開日：</span>
+  <button class="dbtn dbtn-exh on" data-exh-key="publishArrived" onclick="ktnSetExh('publishArrived','true',this)">到達済</button>
+  <button class="dbtn dbtn-exh" data-exh-key="publishArrived" onclick="ktnSetExh('publishArrived','false',this)">未到達</button>
+  <span class="dbar-sep" style="margin-left:8px">LIAISON：</span>
+  <button class="dbtn dbtn-exh" data-exh-key="liaison" onclick="ktnSetExh('liaison','none',this)">利用なし</button>
+  <button class="dbtn dbtn-exh" data-exh-key="liaison" onclick="ktnSetExh('liaison','liaison',this)">LIAISON</button>
+  <button class="dbtn dbtn-exh on" data-exh-key="liaison" onclick="ktnSetExh('liaison','plus',this)">LIAISON+</button>
+  <span class="dbar-sep" style="margin-left:8px">販売期間：</span>
+  <button class="dbtn dbtn-exh on" data-exh-key="salesOver" onclick="ktnSetExh('salesOver','false',this)">終了前</button>
+  <button class="dbtn dbtn-exh" data-exh-key="salesOver" onclick="ktnSetExh('salesOver','true',this)">終了済</button>
+</div>
+
+<div class="shell">
+<div class="content-wrap" id="contentWrap">
+
+  <header class="ktn-header" id="ktnHeader">
+    <div class="ktn-header__inner">
+      <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+      <div class="ktn-hdr-actions" id="ktnActs"></div>
+    </div>
+  </header>
+
+  <main class="ktn-main" id="ktnMain">
+    <div class="ktn-content">
+
+      <!-- 展覧会 文脈ストリップ（identity strip content variant） -->
+      <div class="ktn-mgmt-context">
+        <a class="ktn-mgmt-context__media ktn-mgmt-context__media--content" href="kotennavi-p2.html" style="background:linear-gradient(135deg,#b8d8cc,#6a9e8a)"></a>
+        <div class="ktn-mgmt-context__body">
+          <div class="ktn-mgmt-context__badges">
+            <span class="cb cb-content cb-exhibition">exhibition</span>
+          </div>
+          <div class="ktn-mgmt-context__name"><a href="kotennavi-p2.html">あなたが知らないオノマトペ</a></div>
+          <div class="ktn-mgmt-context__meta">Gallery SOIL 渋谷 · 2026.02.18 — 2026.03.05</div>
+          <div class="ktn-mgmt-context__owner">
+            <span class="ktn-mgmt-context__owner-label">Owner</span>
+            <span class="cb cb-person cb-creator">creator</span>
+            <a href="kotennavi-p3.html">田中 透</a>
+          </div>
+        </div>
+        <div class="ktn-mgmt-context__actions">
+          <a class="ktn-mgmt-context__view" href="kotennavi-p2.html">展覧会ページを見る →</a>
+        </div>
+      </div>
+
+      <div class="p214-wrap ktn-mgmt-wrap" id="p214Wrap">
+
+        <!-- ページヘッダー -->
+        <div class="ktn-mgmt-head">
+          <h2 class="ktn-mgmt-head__title">インサイト</h2>
+          <p class="ktn-mgmt-head__en">INSIGHTS</p>
+          <p class="ktn-mgmt-head__desc">この展覧会がどれだけ見られ、どんな反応を集めているかを確認できます。告知の効果を振り返り、会期中の展開や次の展覧会づくりに役立てましょう。</p>
+        </div>
+
+        <!-- ツールバー（集計対象＋期間） -->
+        <div class="ins-toolbar">
+          <div class="ins-target">
+            <div class="ins-target__thumb" style="background:linear-gradient(135deg,#b8d8cc,#6a9e8a)"></div>
+            <div class="ins-target__body">
+              <p class="ins-target__label">Target</p>
+              <p class="ins-target__name">展覧会ページ全体（あなたが知らないオノマトペ）</p>
+            </div>
+            <a class="ins-target__link ktn-action-btn" href="kotennavi-p2.html">ページを見る →</a>
+          </div>
+          <div class="ins-period" id="p214Period">
+            <span class="ins-period__label">Period</span>
+            <button class="ins-period__btn" type="button" data-period="7">過去7日</button>
+            <button class="ins-period__btn is-active" type="button" data-period="30">過去30日</button>
+            <button class="ins-period__btn" type="button" data-period="90">過去90日</button>
+            <button class="ins-period__btn" type="button" data-period="all">全期間</button>
+          </div>
+        </div>
+
+        <!-- 1. KPIサマリー -->
+        <section class="ktn-section">
+          <div class="ktn-section__head">
+            <h3 class="ktn-section__title">サマリー<span class="ktn-sec-en">Overview</span></h3>
+          </div>
+          <div class="ins-kpi-grid">
+            <div class="ins-kpi">
+              <p class="ins-kpi__label">
+                <svg class="ins-kpi__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z"/><circle cx="8" cy="8" r="2"/></svg>
+                ページ閲覧数
+              </p>
+              <p class="ins-kpi__val">958<span class="unit">回</span></p>
+              <span class="ins-kpi__delta ins-kpi__delta--up">▲ 21%<span class="ins-kpi__delta-note">前期間比</span></span>
+            </div>
+            <div class="ins-kpi">
+              <p class="ins-kpi__label">
+                <svg class="ins-kpi__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 13.5C7.6 13.2 1.5 9.3 1.5 5.6A3.1 3.1 0 0 1 8 5a3.1 3.1 0 0 1 6.5.6C14.5 9.3 8.4 13.2 8 13.5z"/></svg>
+                興味あり！
+              </p>
+              <p class="ins-kpi__val">16<span class="unit">件</span></p>
+              <span class="ins-kpi__delta ins-kpi__delta--up">▲ 14%<span class="ins-kpi__delta-note">前期間比</span></span>
+            </div>
+            <div class="ins-kpi">
+              <p class="ins-kpi__label">
+                <svg class="ins-kpi__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="6" r="3"/><path d="M8 9c-3 0-5 2-5 4.5h10C13 11 11 9 8 9z"/></svg>
+                会場チェックイン
+              </p>
+              <p class="ins-kpi__val">34<span class="unit">人</span></p>
+              <span class="ins-kpi__delta ins-kpi__delta--up">▲ 8%<span class="ins-kpi__delta-note">前期間比</span></span>
+            </div>
+            <div class="ins-kpi">
+              <p class="ins-kpi__label">
+                <svg class="ins-kpi__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 4h12v8H2z"/><path d="M2 4l6 5 6-5"/></svg>
+                お問い合わせ件数
+              </p>
+              <p class="ins-kpi__val">5<span class="unit">件</span></p>
+              <span class="ins-kpi__delta ins-kpi__delta--flat">― 増減なし<span class="ins-kpi__delta-note">前期間比</span></span>
+            </div>
+          </div>
+          <p class="ins-note">「興味あり！」は来場を検討している人の数、「会場チェックイン」は実際に会場へ足を運んだ人の数です。会期前は「興味あり！」、会期中は「チェックイン」が伸びる傾向があります。</p>
+        </section>
+
+        <!-- 2. 閲覧数の推移 -->
+        <section class="ktn-section">
+          <div class="ktn-section__head">
+            <h3 class="ktn-section__title">閲覧数の推移<span class="ktn-sec-en">Trend</span></h3>
+          </div>
+          <div class="ins-trend">
+            <div class="ins-bars" id="p214Bars">
+              <div class="ins-bars__col"><span class="ins-bars__val">26</span><span class="ins-bars__bar" style="height:26%"></span><span class="ins-bars__x">5/26</span></div>
+              <div class="ins-bars__col"><span class="ins-bars__val">34</span><span class="ins-bars__bar" style="height:34%"></span><span class="ins-bars__x">5/29</span></div>
+              <div class="ins-bars__col"><span class="ins-bars__val">29</span><span class="ins-bars__bar" style="height:29%"></span><span class="ins-bars__x">6/1</span></div>
+              <div class="ins-bars__col"><span class="ins-bars__val">47</span><span class="ins-bars__bar" style="height:47%"></span><span class="ins-bars__x">6/4</span></div>
+              <div class="ins-bars__col"><span class="ins-bars__val">68</span><span class="ins-bars__bar" style="height:68%"></span><span class="ins-bars__x">6/7</span></div>
+              <div class="ins-bars__col"><span class="ins-bars__val">99</span><span class="ins-bars__bar" style="height:100%"></span><span class="ins-bars__x">6/10</span></div>
+              <div class="ins-bars__col"><span class="ins-bars__val">82</span><span class="ins-bars__bar" style="height:83%"></span><span class="ins-bars__x">6/13</span></div>
+              <div class="ins-bars__col"><span class="ins-bars__val">61</span><span class="ins-bars__bar" style="height:62%"></span><span class="ins-bars__x">6/16</span></div>
+              <div class="ins-bars__col"><span class="ins-bars__val">50</span><span class="ins-bars__bar" style="height:51%"></span><span class="ins-bars__x">6/19</span></div>
+              <div class="ins-bars__col"><span class="ins-bars__val">41</span><span class="ins-bars__bar" style="height:41%"></span><span class="ins-bars__x">6/22</span></div>
+            </div>
+            <div class="ins-trend__foot">
+              <span class="ins-trend__legend">日別ページ閲覧数</span>
+              <span class="ins-trend__legend" style="--page-accent:transparent">6/10 開催告知でピーク</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- 3. ページを伸ばすヒント -->
+        <section class="ktn-section">
+          <div class="ktn-section__head">
+            <h3 class="ktn-section__title">ページを伸ばすヒント<span class="ktn-sec-en">Grow Your Reach</span></h3>
+          </div>
+          <div class="ins-grow">
+            <div class="ins-grow__card">
+              <svg class="ins-grow__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 13.5C7.6 13.2 1.5 9.3 1.5 5.6A3.1 3.1 0 0 1 8 5a3.1 3.1 0 0 1 6.5.6C14.5 9.3 8.4 13.2 8 13.5z"/></svg>
+              <div class="ins-grow__body">
+                <p class="ins-grow__msg">「興味あり！」が増えるほど、開催が近づくにつれて閲覧数も伸びる傾向があります。会期・会場情報や作品画像を充実させておくと、興味あり！が付きやすくなります。</p>
+                <p class="ins-grow__stat">「興味あり！」が多い展覧会ほど <strong>会期直前の閲覧数が増加</strong></p>
+              </div>
+            </div>
+            <div class="ins-grow__card">
+              <svg class="ins-grow__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="6" r="3"/><path d="M8 9c-3 0-5 2-5 4.5h10C13 11 11 9 8 9z"/></svg>
+              <div class="ins-grow__body">
+                <p class="ins-grow__msg">会場チェックインをした人は、あなたの次の展覧会にも関心を持ってくれる可能性が高いファンです。会場での案内やSNS投稿を活用しましょう。</p>
+                <p class="ins-grow__stat">チェックインした人の <strong>約半数</strong> が次の展覧会情報もチェック</p>
+              </div>
+            </div>
+          </div>
+          <p class="ins-note">「興味あり！」やチェックインを増やすには、展覧会情報を充実させ、SNSでの発信を続けることが効果的です。</p>
+        </section>
+
+        <!-- 4. LIAISON+ ファネル -->
+        <section class="ktn-section">
+          <div class="ktn-section__head">
+            <h3 class="ktn-section__title">作品販売のうごき<span class="ktn-sec-en">LIAISON+ Funnel</span></h3>
+          </div>
+          <div class="ins-funnel">
+            <div class="ins-funnel__row">
+              <div class="ins-funnel__label"><span class="ins-funnel__stage">作品を見た</span><span class="ins-funnel__sub">作品ページ閲覧（合計）</span></div>
+              <div class="ins-funnel__track"><div class="ins-funnel__bar" style="width:100%"><span class="ins-funnel__num">743</span></div></div>
+              <span class="ins-funnel__rate">100%</span>
+            </div>
+            <div class="ins-funnel__row">
+              <div class="ins-funnel__label"><span class="ins-funnel__stage">興味あり！</span><span class="ins-funnel__sub">気になる登録</span></div>
+              <div class="ins-funnel__track"><div class="ins-funnel__bar" style="width:10%"><span class="ins-funnel__num">71</span></div></div>
+              <span class="ins-funnel__rate">9.6%</span>
+            </div>
+            <div class="ins-funnel__row">
+              <div class="ins-funnel__label"><span class="ins-funnel__stage">購入を申込</span><span class="ins-funnel__sub">申込フォーム送信</span></div>
+              <div class="ins-funnel__track"><div class="ins-funnel__bar" style="width:2%"><span class="ins-funnel__num">5</span></div></div>
+              <span class="ins-funnel__rate">0.7%</span>
+            </div>
+            <div class="ins-funnel__row">
+              <div class="ins-funnel__label"><span class="ins-funnel__stage">購入成立</span><span class="ins-funnel__sub">取引完了</span></div>
+              <div class="ins-funnel__track"><div class="ins-funnel__bar" style="width:1%"><span class="ins-funnel__num">2</span></div></div>
+              <span class="ins-funnel__rate">0.3%</span>
+            </div>
+          </div>
+          <p class="ins-note">「作品を見た人」から「購入につながった人」までの流れです。この展覧会でLIAISON+販売中の作品が対象です。販売実績の詳細は<a href="kotennavi-p3-16.html">取引デスク</a>から確認できます。</p>
+        </section>
+
+      </div><!-- /.ktn-mgmt-wrap -->
+
+    </div>
+  </main>
+</div>
+</div>
+
+<script src="kotennavi-common.js"></script>
+<script src="kotennavi-pages.js"></script>
+<script>KTN.init({ page: 'p2-14', role: 'user+creator' });</script>
+</body>
+</html>

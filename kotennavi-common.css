@@ -253,8 +253,31 @@ button{font-family:inherit;cursor:pointer}
 .ktn-hib__lbl{font-size:.46rem;color:var(--muted);white-space:nowrap}
 .ktn-hib.is-active svg{stroke:#e0341e;fill:#e0341e}
 .ktn-hib.is-active .ktn-hib__lbl{color:#e0341e}
-.ktn-hib.on svg{stroke:#2d82d4}
+.ktn-hib.on svg{stroke:#2d82d4;fill:#2d82d4}
 .ktn-hib.on .ktn-hib__lbl{color:#2d82d4}
+
+/* トグル系hib（watch/interest）：淡い塗りだけでは白背景に溶けて視認しづらいため、
+   ②Icon-only（.ktn-icon-btn）と同じ円形枠を`.ktn-hib__icon`ラッパーに付与して可視性を確保。
+   report/share等の単発アクション系hibはラッパーを持たないため対象外（従来の素アイコンのまま） */
+.ktn-hib__icon{
+  width:28px;height:28px;border-radius:50%;border:1.5px solid rgba(0,0,0,.18);
+  background:#fff;display:flex;align-items:center;justify-content:center;
+  transition:background .16s,border-color .16s;
+}
+.ktn-hib:hover .ktn-hib__icon{border-color:rgba(0,0,0,.3);background:#f5f5f5}
+.ktn-hib.on .ktn-hib__icon{border-color:#3a90e0;background:rgba(58,144,224,.08)}
+.ktn-hib.on:hover .ktn-hib__icon{background:rgba(58,144,224,.16)}
+.ktn-hib__icon svg{width:15px;height:15px}
+
+/* watch：CTAボタンと同じ「大丸塗り＋小丸白カットアウト」の二重円デザイン */
+.ktn-hib[data-action="watch"] svg{stroke:none}
+.ktn-hib[data-action="watch"] svg circle:first-child{fill:#7a8a99;opacity:.3}
+.ktn-hib[data-action="watch"] svg circle:last-child{fill:#fff;opacity:1}
+.ktn-hib.on[data-action="watch"] svg circle:first-child{fill:#2d82d4;opacity:1}
+
+/* interest：他hibアイコン（stroke:currentColorの黒インク輪郭）と違い、CTAボタンと同じ薄グレー塗り＋輪郭に統一 */
+.ktn-hib[data-action="interest"] svg{fill:#7a8a99;fill-opacity:.3;stroke:#7a8a99;stroke-opacity:.25}
+.ktn-hib.on[data-action="interest"] svg{fill:#2d82d4;fill-opacity:1;stroke:#2d82d4;stroke-opacity:1}
 
 /* セパレーター */
 .ktn-hdr-sep{width:1px;height:24px;background:var(--border);margin:0 2px;flex-shrink:0}
@@ -10175,6 +10198,68 @@ body.p3-3-page .aw--plus .aw__foot>.p33-console-wrap{order:3}
 .ktn-listqr__code svg{border:1px solid var(--border);border-radius:6px;padding:10px;background:#fff}
 .ktn-listqr__url{margin:12px 0 4px;text-align:center;font-family:var(--fm);font-size:.78rem;letter-spacing:.02em;color:var(--muted);word-break:break-all}
 
+/* ページ共有モーダル（ktnPageShare・.ktn-listqr の内側に追加するバッジ埋め込みブロック） */
+.ktn-pshare-badge{margin-top:16px;padding-top:16px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:8px}
+.ktn-pshare-badge__label{font-family:var(--fn);font-size:.74rem;font-weight:600;color:var(--muted)}
+.ktn-pshare-badge__preview{display:flex;justify-content:center;padding:10px;background:var(--paper);border-radius:6px}
+.ktn-pshare-badge__code{width:100%;resize:none;font-family:var(--fm);font-size:.72rem;color:var(--muted);background:#fff;border:1px solid var(--border);border-radius:4px;padding:8px 10px;line-height:1.5}
+
+/* ── 会場フライヤー（A4）モーダル（ktnVenueFlyer・.ktn-auth-modal シェル再利用・2026-08-14 新設） ──
+   展覧会情報QR＋チェックインQRを1枚に配置したA4プレビュー。印刷は @media print で .ktn-vflyer__sheet のみを
+   可視化する（PDF生成ライブラリ不使用・ブラウザの「印刷→PDF保存」に委ねる） */
+.ktn-auth-modal.ktn-vflyer{width:min(480px,92vw)}
+.ktn-vflyer__sheet{width:320px;aspect-ratio:210/297;margin:4px auto 0;box-sizing:border-box;padding:22px 20px;display:flex;flex-direction:column;background:#fff;border:1px solid var(--border);box-shadow:0 2px 10px rgba(0,0,0,.08)}
+.ktn-vflyer__logo{display:flex;align-items:center;gap:6px;opacity:.55}
+.ktn-vflyer__logo img{width:16px;height:16px;display:block}
+.ktn-vflyer__logo span{font-family:var(--fm);font-size:.6rem;letter-spacing:.04em;color:var(--muted)}
+.ktn-vflyer__main{margin-top:18px}
+.ktn-vflyer__head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
+.ktn-vflyer__headtext{flex:1;min-width:0}
+.ktn-vflyer__en{margin:0 0 6px;font-family:var(--font-en-label);font-size:.6rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.ktn-vflyer__title{margin:0 0 6px;font-family:var(--fs);font-size:1.15rem;font-weight:700;line-height:1.35;color:var(--ink)}
+.ktn-vflyer__artist{margin:0 0 10px;font-family:var(--fs);font-size:.85rem;color:var(--ink)}
+.ktn-vflyer__greet{margin:0;font-family:var(--fn);font-size:.62rem;line-height:1.6;color:var(--muted)}
+.ktn-vflyer__infoqr{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:4px}
+.ktn-vflyer__infoqr .ktn-vflyer__qr-code svg{width:44px;height:44px}
+.ktn-vflyer__infoqr .ktn-vflyer__qr-lbl{max-width:64px;font-size:.5rem}
+.ktn-vflyer__facts{margin:16px 0 0;font-family:var(--fn);font-size:.68rem;line-height:1.6;color:var(--ink)}
+.ktn-vflyer__facts dt{margin-top:8px;font-weight:600;color:var(--muted)}
+.ktn-vflyer__facts dt:first-child{margin-top:0}
+.ktn-vflyer__facts dd{margin:0}
+.ktn-vflyer__qr-code svg{width:64px;height:64px}
+.ktn-vflyer__qr-lbl{margin:0;font-family:var(--fn);font-size:.58rem;letter-spacing:.02em;color:var(--muted);text-align:center}
+.ktn-vflyer__checkin{display:flex;align-items:center;gap:14px;margin-top:auto;padding:14px;background:rgba(0,93,167,.05);border:1px solid rgba(0,93,167,.14);border-radius:6px}
+.ktn-vflyer__checkin-body{flex:1;min-width:0}
+.ktn-vflyer__checkin-ttl{margin:0 0 4px;font-family:var(--fs);font-size:.72rem;font-weight:700;color:var(--ink)}
+.ktn-vflyer__checkin-desc{margin:0;font-family:var(--fn);font-size:.58rem;line-height:1.5;color:var(--ink)}
+.ktn-vflyer__checkin-note{margin:6px 0 0;font-family:var(--fn);font-size:.5rem;line-height:1.5;color:var(--muted)}
+.ktn-vflyer__foot{margin:14px 0 0;font-family:var(--fm);font-size:.56rem;letter-spacing:.04em;color:var(--muted);text-align:center}
+@media print{
+  /* body直下の他要素（ヘッダー・サイドバー・本文・トースト・他モーダル等）を全て非表示にし、
+     フライヤーモーダルだけを通常フロー化して印刷する（visibility:hidden方式は非表示要素が
+     レイアウト高さを持ち続け、position:fixedの祖先と絡んで印刷ページが分割される不具合が
+     あったため display:none 方式に変更・2026-08-14） */
+  body.ktn-printing-flyer > *{display:none!important}
+  body.ktn-printing-flyer #ktnVenueFlyerModal{display:block!important;position:static!important;inset:auto!important;background:none!important;backdrop-filter:none!important;opacity:1!important;pointer-events:auto!important;z-index:auto!important}
+  body.ktn-printing-flyer #ktnVenueFlyerModal .ktn-auth-modal{position:static!important;width:auto!important;transform:none!important;box-shadow:none!important;border-radius:0!important;background:none!important;overflow:visible!important}
+  body.ktn-printing-flyer #ktnVenueFlyerModal .ktn-auth-top,
+  body.ktn-printing-flyer #ktnVenueFlyerModal .ktn-auth-btns{display:none!important}
+  body.ktn-printing-flyer #ktnVenueFlyerModal .ktn-auth-body{padding:0!important}
+  body.ktn-printing-flyer .ktn-vflyer__sheet{position:static;width:210mm;height:297mm;aspect-ratio:auto;margin:0;box-shadow:none;border:none;padding:24mm 20mm}
+  body.ktn-printing-flyer .ktn-vflyer__title{font-size:1.9rem}
+  body.ktn-printing-flyer .ktn-vflyer__artist{font-size:1.2rem}
+  body.ktn-printing-flyer .ktn-vflyer__greet{font-size:.85rem}
+  body.ktn-printing-flyer .ktn-vflyer__facts{font-size:.95rem}
+  body.ktn-printing-flyer .ktn-vflyer__infoqr .ktn-vflyer__qr-code svg{width:78px;height:78px}
+  body.ktn-printing-flyer .ktn-vflyer__infoqr .ktn-vflyer__qr-lbl{max-width:96px;font-size:.66rem}
+  body.ktn-printing-flyer .ktn-vflyer__checkin{padding:20px}
+  body.ktn-printing-flyer .ktn-vflyer__checkin .ktn-vflyer__qr-code svg{width:150px;height:150px}
+  body.ktn-printing-flyer .ktn-vflyer__checkin-ttl{font-size:1.05rem}
+  body.ktn-printing-flyer .ktn-vflyer__checkin-desc{font-size:.8rem}
+  body.ktn-printing-flyer .ktn-vflyer__checkin-note{font-size:.7rem}
+  @page{size:A4;margin:0}
+}
+
 /* ── フォーム保存エラーパネル（.ktn-form-error）＝編集・管理ページ共通（2026-07-18 新設・確定） ──
    保存ボタン押下時のバリデーションエラーを、フォームアクション（保存/キャンセル）直上の固定位置に
    常設表示する（トーストのように消えない）。各項目＝本文＋詳細行＋解決ヒント＋「該当箇所へ →」ジャンプ。
@@ -11612,6 +11697,18 @@ body.p4-15-page{--page-accent:#8b5e3c}
 .p211-mode-banner--confirmed .p211-mode-banner__icon{color:#1a7a3d;font-weight:700}
 .p211-mode-banner--confirmed .p211-mode-banner__text strong{color:#1a7a3d}
 
+/* ── 保存直後の会場QR/フライヤー誘導（.ktn-mgmt-wrap の直接子・confirmSave()がhiddenトグル。
+   会場QR/フライヤーはオーナーメニューの奥に埋もれ発見されにくいため、会期・会場を保存した
+   直後にも軽く案内する＝2026-08-14 新設） ── */
+.p211-qr-nudge{margin:16px 20px 20px;padding:12px 14px;display:flex;align-items:flex-start;gap:10px;background:rgba(26,122,61,.07);border:1px solid rgba(26,122,61,.3);border-radius:6px;font-size:.82rem;color:var(--ink);line-height:1.6}
+.p211-qr-nudge[hidden]{display:none}
+.p211-qr-nudge__icon{flex-shrink:0;margin-top:1px;color:#1a7a3d;font-weight:700}
+.p211-qr-nudge__text{flex:1;min-width:0;margin:0}
+.p211-qr-nudge__text .ktn-guide-link{margin-left:6px;white-space:nowrap}
+.p211-qr-nudge__close{flex-shrink:0;width:20px;height:20px;padding:0;border:none;background:none;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.p211-qr-nudge__close svg{width:14px;height:14px}
+.p211-qr-nudge__close:hover{color:var(--ink)}
+
 /* ── 管理者確認済ノート（開催場所・出展クリエイターのブロック内） ── */
 .p211-confirmed-note{font-size:.75rem;color:#1a7a3d;line-height:1.6;margin:10px 0 0;padding:8px 12px;background:rgba(26,122,61,.06);border:1px solid rgba(26,122,61,.25);border-radius:4px}
 
@@ -12621,25 +12718,14 @@ a.p319-item__dest-name:hover{color:var(--page-accent)}
 .ins-trend__legend{display:inline-flex;align-items:center;gap:5px;font-size:.68rem;color:var(--muted)}
 .ins-trend__legend::before{content:'';width:10px;height:10px;border-radius:2px;background:var(--page-accent,#2a5f7a)}
 
-/* ── 流入経路（横バー） ── */
-.ins-chan{display:flex;flex-direction:column;gap:12px}
-.ins-chan__row{display:flex;align-items:center;gap:12px}
-.ins-chan__name{flex:0 0 120px;font-size:.78rem;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ins-chan__track{flex:1;height:18px;background:var(--paper);border-radius:3px;overflow:hidden;min-width:0}
-.ins-chan__fill{height:100%;background:var(--page-accent,#2a5f7a);border-radius:3px;transition:width .3s}
-.ins-chan__pct{flex:0 0 56px;text-align:right;font-family:var(--fm);font-size:.78rem;font-weight:600;color:var(--ink)}
-
-/* ── 人気コンテンツ ランキング ── */
-.ins-rank{display:flex;flex-direction:column}
-.ins-rank__item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
-.ins-rank__item:last-child{border-bottom:none}
-.ins-rank__no{flex:0 0 26px;font-family:'DM Serif Display',var(--fs);font-size:1.2rem;color:var(--page-accent,#2a5f7a);text-align:center}
-.ins-rank__body{flex:1;min-width:0}
-.ins-rank__title{font-family:var(--fs);font-size:.9rem;font-weight:600;color:var(--ink);margin:0 0 3px;line-height:1.4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.ins-rank__meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.ins-rank__views{flex-shrink:0;text-align:right}
-.ins-rank__views-num{font-family:var(--fm);font-size:.95rem;font-weight:600;color:var(--ink);line-height:1}
-.ins-rank__views-label{font-size:.6rem;color:var(--muted)}
+/* ── ページを伸ばすヒント（行動→反響の相関メッセージ） ── */
+.ins-grow{display:flex;flex-direction:column;gap:12px}
+.ins-grow__card{display:flex;align-items:flex-start;gap:14px;padding:16px 18px;background:var(--page-accent-bg,rgba(42,95,122,.06));border-radius:4px}
+.ins-grow__ico{flex-shrink:0;width:30px;height:30px;padding:7px;border-radius:50%;background:#fff;color:var(--page-accent,#2a5f7a)}
+.ins-grow__body{flex:1;min-width:0}
+.ins-grow__msg{font-size:.85rem;color:var(--ink);line-height:1.7;margin:0 0 6px}
+.ins-grow__stat{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-family:var(--fm);font-size:.76rem;color:var(--muted)}
+.ins-grow__stat strong{font-size:.86rem;font-weight:700;color:var(--page-accent,#2a5f7a)}
 
 /* ── LIAISON+ ファネル ── */
 .ins-funnel{display:flex;flex-direction:column;gap:2px}
@@ -12662,7 +12748,6 @@ a.p319-item__dest-name:hover{color:var(--page-accent)}
 @media(max-width:540px){
   .ins-kpi{flex:1 1 calc(50% - 12px);min-width:0}
   .ins-kpi__val{font-size:1.8rem}
-  .ins-chan__name{flex-basis:88px;font-size:.72rem}
   .ins-funnel__label{flex-basis:96px}
   .ins-bars{gap:3px}
   .ins-bars__val{display:none}
@@ -12785,6 +12870,7 @@ body.p114-role-gallery .p114-gallery-section{display:block}
 
 .p114-status-notice{max-width:var(--w-detail);padding:20px 24px;background:#fff;border:1px solid var(--border);border-radius:6px;text-align:center;margin:0 auto 20px}
 .p114-status-notice--pending{border-color:rgba(180,117,16,.3);background:rgba(180,117,16,.04)}
+.p114-status-notice--cancelled{border-color:rgba(180,60,20,.3);background:rgba(180,60,20,.05)}
 .p114-status-notice__icon{font-size:1.5rem;margin-bottom:8px}
 .p114-status-notice__title{font-size:.9rem;font-weight:700;margin:0 0 6px}
 .p114-status-notice__desc{font-size:.82rem;color:var(--muted);line-height:1.6;margin:0}
