@@ -1402,9 +1402,9 @@ function getActions(page, role) {
 
   /* ── P2 展覧会トップ＋公開サブページ（p2-1〜p2-6・p2-5-1） ── */
   if (['p2', 'p2-1', 'p2-2', 'p2-3', 'p2-4', 'p2-5', 'p2-5-1', 'p2-6'].includes(page)) {
-    const cmn = hib('heart', '興味あり') + shareBtn() + sep();
+    const cmn = hib('heart', '興味あり', '', 'interest') + shareBtn() + sep();
     if (role === 'guest' || role === 'login')
-      return cmn + dd('その他', reportItem(page));
+      return cmn + ddMore(ddi('fix', '修正を依頼する', false, "location.href='./kotennavi-p2-16.html'") + ddSep() + reportItem(page));
     if (role === 'creator' || role === 'gallery')
       return cmn + owbtn('edit', '編集', "location.href='./kotennavi-p2-11.html'") + dd('オーナーメニュー', p2OwnerMenuItems());
     if (role === 'admin')
@@ -1422,11 +1422,11 @@ function getActions(page, role) {
     return '';
   }
 
-  /* ── P3 クリエイタートップ ── */
-  if (page === 'p3') {
-    const cmn = hib('watch', 'ウォッチ', 'ktnP3WatchHib') + shareBtn() + sep();
+  /* ── P3 クリエイタートップ＋公開サブページ（p3-1〜p3-3） ── */
+  if (['p3', 'p3-1', 'p3-2', 'p3-3'].includes(page)) {
+    const cmn = hib('watch', 'ウォッチ', page === 'p3' ? 'ktnP3WatchHib' : '', 'watch') + shareBtn() + sep();
     if (role === 'guest' || role === 'login')
-      return cmn + dd('その他', reportItem(page));
+      return cmn + ddMore(reportItem(page));
     if (role === 'creator')
       return cmn + owbtn('edit', '編集', "location.href='./kotennavi-p3-11.html'") + dd('オーナーメニュー', p3OwnerMenuItems());
     if (role === 'admin')
@@ -1434,18 +1434,18 @@ function getActions(page, role) {
     return cmn;
   }
 
-  /* ── P3 全サブページ（プロフィール編集／展覧会・作品・記事一覧／各種管理ページ・共通オーナーメニュー） ── */
-  if (['p3-1', 'p3-2', 'p3-3', 'p3-11', 'p3-12', 'p3-13', 'p3-14', 'p3-15', 'p3-16', 'p3-17', 'p3-18', 'p3-19'].includes(page)) {
+  /* ── P3 管理サブページ群（プロフィール編集／各種管理ページ・共通オーナーメニュー） ── */
+  if (['p3-11', 'p3-12', 'p3-13', 'p3-14', 'p3-15', 'p3-16', 'p3-17', 'p3-18', 'p3-19'].includes(page)) {
     if (role === 'creator') return owbtn('info', 'ガイド') + dd('オーナーメニュー', p3OwnerMenuItems());
     if (role === 'admin') return owbtn('info', 'ガイド') + dd('オーナーメニュー', p3OwnerMenuItems()) + dd('管理者', p3p4AdminItems());
     return '';
   }
 
-  /* ── P4 ギャラリートップ ── */
-  if (page === 'p4') {
-    const cmn = hib('watch', 'ウォッチ') + shareBtn() + sep();
+  /* ── P4 ギャラリートップ＋公開サブページ（p4-1〜p4-2） ── */
+  if (['p4', 'p4-1', 'p4-2'].includes(page)) {
+    const cmn = hib('watch', 'ウォッチ', '', 'watch') + shareBtn() + sep();
     if (role === 'guest' || role === 'login')
-      return cmn + dd('その他', reportItem(page));
+      return cmn + ddMore(reportItem(page));
     if (role === 'gallery')
       return cmn + owbtn('edit', '編集', "location.href='./kotennavi-p4-11.html'") + dd('オーナーメニュー', p4OwnerMenuItems());
     if (role === 'admin')
@@ -1453,8 +1453,8 @@ function getActions(page, role) {
     return cmn;
   }
 
-  /* ── P4 全サブページ（ギャラリー情報編集／展覧会・記事一覧／各種管理ページ・共通オーナーメニュー） ── */
-  if (['p4-1', 'p4-2', 'p4-11', 'p4-12', 'p4-13', 'p4-14', 'p4-15', 'p4-16', 'p4-17', 'p4-18', 'p4-19'].includes(page)) {
+  /* ── P4 管理サブページ群（ギャラリー情報編集／各種管理ページ・共通オーナーメニュー） ── */
+  if (['p4-11', 'p4-12', 'p4-13', 'p4-14', 'p4-15', 'p4-16', 'p4-17', 'p4-18', 'p4-19'].includes(page)) {
     if (role === 'gallery') return owbtn('info', 'ガイド') + dd('オーナーメニュー', p4OwnerMenuItems());
     if (role === 'admin') return owbtn('info', 'ガイド') + dd('オーナーメニュー', p4OwnerMenuItems()) + dd('管理者', p3p4AdminItems());
     return '';
@@ -1474,9 +1474,9 @@ function getActions(page, role) {
 
   /* ── P6 作品 ── */
   if (['p6', 'p6-1', 'p6-2'].includes(page)) {
-    const cmn = hib('heart', '興味あり') + shareBtn() + sep();
+    const cmn = hib('heart', '興味あり', '', 'interest') + shareBtn() + sep();
     if (role === 'guest' || role === 'login')
-      return cmn + dd('その他', reportItem(page));
+      return cmn + ddMore(reportItem(page));
     if (role === 'creator' || role === 'gallery')
       return cmn + owbtn('edit', '編集') + dd('オーナーメニュー', p6OwnerItems());
     if (role === 'admin')
@@ -1492,9 +1492,9 @@ function getActions(page, role) {
 
   /* ── P7 記事 ── */
   if (page === 'p7') {
-    const cmn = shareBtn() + sep();
+    const cmn = hib('heart', '興味あり', '', 'interest') + shareBtn() + sep();
     if (role === 'guest' || role === 'login')
-      return cmn + dd('その他', reportItem(page));
+      return cmn + ddMore(reportItem(page));
     if (role === 'creator' || role === 'gallery')
       return cmn + owbtn('edit', '編集') + dd('オーナーメニュー', p7OwnerItems());
     if (role === 'admin')
@@ -1512,7 +1512,7 @@ function getActions(page, role) {
   if (page === 'p8') {
     const cmn = shareBtn() + sep();
     if (role === 'guest' || role === 'login')
-      return cmn + dd('その他', reportItem(page));
+      return cmn + ddMore(reportItem(page));
     if (role === 'admin')
       return cmn + dd('管理者', ddi('edit', '編集') + ddSep() + ddi('trash', '削除', true));
     return cmn;
