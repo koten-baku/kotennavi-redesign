@@ -19,6 +19,7 @@
   <button class="dbtn on" id="dbarForm" onclick="setDemoMode('form')">申込フォーム</button>
   <button class="dbtn" id="dbarPending" onclick="setDemoMode('pending')">確認中</button>
   <button class="dbtn" id="dbarApproved" onclick="setDemoMode('approved')">利用開始</button>
+  <button class="dbtn" id="dbarCancelled" onclick="setDemoMode('cancelled')">取消</button>
 </div>
 
 <div class="shell">
@@ -57,6 +58,13 @@
         <div class="p114-status-notice__icon">✅</div>
         <div class="p114-status-notice__title">ギャラリー機能が有効です</div>
         <p class="p114-status-notice__desc">ギャラリーページの作成・展覧会情報の掲載ができるようになりました。ギャラリーページから情報を入力して公開を始めましょう。</p>
+      </div>
+
+      <!-- 取消バナー -->
+      <div class="p114-status-notice p114-status-notice--cancelled" id="p113CancelledBanner" hidden>
+        <div class="p114-status-notice__icon">✕</div>
+        <div class="p114-status-notice__title">お申込みは取消となりました</div>
+        <p class="p114-status-notice__desc">今回のお申込みは取消とさせていただきました。取消の理由につきましては、お送りしたメールをご確認ください。</p>
       </div>
 
       <!-- 管理ボックス -->
@@ -442,22 +450,27 @@ function setDemoMode(mode) {
   var isForm = (mode === 'form');
   var isPending = (mode === 'pending');
   var isApproved = (mode === 'approved');
-  var isSubmitted = isPending || isApproved;
+  var isCancelled = (mode === 'cancelled');
+  /* 取消も申込済み内容を表示のみ（編集不可）とする＝pending/approvedと同じ「入力済み・disabled」表示 */
+  var isSubmitted = isPending || isApproved || isCancelled;
 
   document.getElementById('p113PendingBanner').hidden = !isPending;
   document.getElementById('p113ApprovedBanner').hidden = !isApproved;
+  document.getElementById('p113CancelledBanner').hidden = !isCancelled;
   document.getElementById('p113AboutZone').hidden = isApproved;
   document.getElementById('p113ServiceBanner').hidden = isApproved;
   document.getElementById('p113Index').hidden = isApproved;
 
   p113ApplyPriorInput(isSubmitted);
   document.getElementById('p113SubmitBtn').disabled = isSubmitted || !p113AgreementsOk();
-  document.getElementById('p113SubmitNote').innerHTML = isSubmitted
-    ? 'この内容ですでにお申込みを受け付けています。内容の変更が必要な場合は、お問合わせフォームより個展なび事務局までご連絡ください。'
-    : 'お申込み後、個展なび事務局による確認・設定作業のため少々お時間をいただきます。<br>設定が完了しましたら、ギャラリー機能付与完了メールでお知らせします。';
+  document.getElementById('p113SubmitNote').innerHTML = isCancelled
+    ? 'このお申込みは取消となっています。入力内容はご確認いただけますが、編集はできません。'
+    : isSubmitted
+      ? 'この内容ですでにお申込みを受け付けています。内容の変更が必要な場合は、お問合わせフォームより個展なび事務局までご連絡ください。'
+      : 'お申込み後、個展なび事務局による確認・設定作業のため少々お時間をいただきます。<br>設定が完了しましたら、ギャラリー機能付与完了メールでお知らせします。';
   if (isForm) document.getElementById('p113SaveError').hidden = true;
 
-  ['dbarForm','dbarPending','dbarApproved'].forEach(function(id) {
+  ['dbarForm','dbarPending','dbarApproved','dbarCancelled'].forEach(function(id) {
     document.getElementById(id).classList.remove('on');
   });
   document.getElementById('dbar' + mode.charAt(0).toUpperCase() + mode.slice(1)).classList.add('on');

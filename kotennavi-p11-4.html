@@ -25,6 +25,7 @@
   <button class="dbtn" id="dbarStep2" onclick="setDemoMode('step2')">Step2 口座登録</button>
   <button class="dbtn" id="dbarStripePending" onclick="setDemoMode('stripePending')">Stripe審査中</button>
   <button class="dbtn" id="dbarApproved" onclick="setDemoMode('approved')">承認済</button>
+  <button class="dbtn" id="dbarCancelled" onclick="setDemoMode('cancelled')">取消</button>
 </div>
 
 <div class="shell">
@@ -107,6 +108,13 @@
         <div class="p114-status-notice__icon">✅</div>
         <div class="p114-status-notice__title">LIAISON+ 機能が有効です</div>
         <p class="p114-status-notice__desc">LIAISON+ 機能が承認されています。展覧会の編集でリエゾンプラスを選び、展覧会のオーナーメニューの「リエゾンプラス出品管理」から出品設定を行えます。</p>
+      </div>
+
+      <!-- 取消バナー（Step1本人確認 NG デモ） -->
+      <div class="p114-status-notice p114-status-notice--cancelled" id="p114CancelledBanner" hidden>
+        <div class="p114-status-notice__icon">✕</div>
+        <div class="p114-status-notice__title">お申込みは取消となりました</div>
+        <p class="p114-status-notice__desc">今回のお申込みは取消とさせていただきました。取消の理由につきましては、お送りしたメールをご確認ください。</p>
       </div>
 
       <!-- 管理ボックス -->
@@ -786,7 +794,8 @@ var P114_STEP_CFG = {
   pending:       ['done',   'seller', 'future', 'future'],
   step2:         ['done',   'done',   'seller', 'future'],
   stripePending: ['done',   'done',   'done',   'seller'],
-  approved:      ['done',   'done',   'done',   'done']
+  approved:      ['done',   'done',   'done',   'done'],
+  cancelled:     ['done',   'future', 'future', 'future']
 };
 function p114UpdateSteps(mode) {
   var cfg = P114_STEP_CFG[mode] || P114_STEP_CFG.form;
@@ -820,13 +829,16 @@ function setDemoMode(mode) {
   var isStep2 = (mode === 'step2');
   var isStripePending = (mode === 'stripePending');
   var isApproved = (mode === 'approved');
-  var isStep1Phase = (isForm || isPending);
+  var isCancelled = (mode === 'cancelled');
+  /* 取消はStep1申込済み内容を表示のみ（編集不可）とする＝pendingと同じreadonly表示 */
+  var isStep1Phase = (isForm || isPending || isCancelled);
   var isStep2Phase = (isStep2 || isStripePending);
 
   document.getElementById('p114PendingBanner').hidden = !isPending;
   document.getElementById('p114Step2Banner').hidden = !isStep2;
   document.getElementById('p114StripePendingBanner').hidden = !isStripePending;
   document.getElementById('p114ApprovedBanner').hidden = !isApproved;
+  document.getElementById('p114CancelledBanner').hidden = !isCancelled;
   p114UpdateSteps(mode);
 
   /* リエゾンプラスとは／よくある質問は常時表示・Step1審査中以降は折りたたみ（<details>のopenで制御。クリックで開閉可） */
@@ -838,7 +850,7 @@ function setDemoMode(mode) {
   document.getElementById('p114SubmitWrap').hidden = !isForm;
   document.getElementById('p114Step2SubmitWrap').hidden = !isStep2;
   document.getElementById('p114ApprovedReview').hidden = !isApproved;
-  p114SetStep1Readonly(isPending);
+  p114SetStep1Readonly(isPending || isCancelled);
 
   ['p114CreatorSection', 'p114GallerySection'].forEach(function(id) {
     var el = document.getElementById(id);
@@ -847,7 +859,7 @@ function setDemoMode(mode) {
   var step2Form = document.getElementById('p114Step2Form');
   if (step2Form) step2Form.style.opacity = isStripePending ? '0.5' : '';
 
-  ['dbarForm','dbarPending','dbarStep2','dbarStripePending','dbarApproved'].forEach(function(id) {
+  ['dbarForm','dbarPending','dbarStep2','dbarStripePending','dbarApproved','dbarCancelled'].forEach(function(id) {
     document.getElementById(id).classList.remove('on');
   });
   document.getElementById('dbar' + mode.charAt(0).toUpperCase() + mode.slice(1)).classList.add('on');
