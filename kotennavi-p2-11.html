@@ -89,10 +89,17 @@
   <div id="ktnRoleNav" style="width:100%;display:flex;flex-direction:column;align-items:center"></div>
 
   <div class="ktn-sidebar__footer">
-    <a href="https://www.facebook.com/" target="_blank">Facebook</a><br>
-    <a href="https://x.com/" target="_blank">X</a><br><br>
-    ©2010 kotennavi<br>Co., Ltd.
+    <p class="ktn-sidebar__footer-label">Follow us</p>
+    <div class="ktn-sidebar__sns">
+      <a href="https://www.facebook.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="Facebook">
+        <svg viewBox="0 0 320 512" fill="currentColor"><path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/></svg>
+      </a>
+      <a href="https://x.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="X">
+        <svg viewBox="0 0 512 512" fill="currentColor"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg>
+      </a>
+    </div>
   </div>
+
 </aside>
 
 <div class="content-wrap" id="contentWrap">
@@ -956,11 +963,10 @@
           <label class="p211-publish-opt">
             <input type="radio" name="p211publish" value="scheduled" onchange="togglePublishDate()">
             <div class="p211-publish-opt__body">
-              <div class="p211-publish-opt__title">公開日時を指定する</div>
-              <div class="p211-publish-opt__desc">管理者の確認完了後、指定した日時に自動公開されます。</div>
+              <div class="p211-publish-opt__title">公開日を指定する</div>
+              <div class="p211-publish-opt__desc">管理者の確認完了後、指定した日に自動公開されます。</div>
               <div class="p211-publish-datetime" id="p211PublishDatetime" hidden>
                 <input type="date" value="2026-06-10">
-                <input type="time" value="10:00">
               </div>
             </div>
           </label>
@@ -2001,7 +2007,7 @@ renderArtists();
 syncDraftMode();
 checkVenueNew(false);
 
-/* ── 公開日時フィールドの表示 ── */
+/* ── 公開日フィールドの表示 ── */
 function togglePublishDate() {
   var radios = document.querySelectorAll('input[name=p211publish]');
   var datetime = document.getElementById('p211PublishDatetime');
@@ -2028,7 +2034,7 @@ function buildSummary() {
   var pub = '今すぐ公開（管理者確認後）';
   if (pubSel && pubSel.value === 'scheduled') {
     var dt = document.querySelectorAll('#p211PublishDatetime input');
-    pub = '日時指定（' + fmtDate(dt[0] ? dt[0].value : '') + ' ' + (dt[1] ? dt[1].value : '') + '）';
+    pub = '日付指定（' + fmtDate(dt[0] ? dt[0].value : '') + '）';
   }
   return row('展覧会名', escHtml(val('p211Title'))) +
          row('会期', term) +

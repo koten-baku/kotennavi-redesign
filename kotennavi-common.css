@@ -516,8 +516,18 @@ button{font-family:inherit;cursor:pointer}
   width: 100%;
   text-align: center;
   padding: 4px 12px 14px;
-  border-bottom: 1px solid var(--border);
   margin-bottom: 12px;
+  position: relative;
+}
+.ktn-sidebar__logo::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 72%;
+  height: 1px;
+  background: var(--border);
 }
 .ktn-sidebar__logo img {
   width: 72px;
@@ -651,15 +661,37 @@ button{font-family:inherit;cursor:pointer}
 /* sidebar footer */
 .ktn-sidebar__footer {
   margin-top: auto;
-  font-size: 0.52rem;
-  color: #bbb;
   text-align: center;
-  line-height: 1.9;
-  padding: 8px;
+  padding: 10px 8px;
   flex-shrink: 0;
 }
-.ktn-sidebar__footer a { color: #bbb; text-decoration: none; }
-.ktn-sidebar__footer a:hover { color: var(--muted); }
+.ktn-sidebar__footer-label {
+  font-family: var(--font-en-label);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 8px;
+}
+.ktn-sidebar__sns {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+.ktn-sidebar__sns-link {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border);
+  background: #fafafa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  transition: border-color 0.15s, background 0.15s, color 0.15s, transform 0.18s;
+}
+.ktn-sidebar__sns-link svg { width: 14px; height: 14px; }
+.ktn-sidebar__sns-link:hover { border-color: var(--accent); color: var(--accent); background: #fff; transform: scale(1.06); }
 
 /* ══════════════════════════════════════════
    MAIN
@@ -717,7 +749,7 @@ button{font-family:inherit;cursor:pointer}
 }
 .ktn-footer__tagline {
   font-size: 0.75rem;
-  color: rgba(255,255,255,0.38);
+  color: rgba(255,255,255,0.58);
   line-height: 1.95;
   letter-spacing: 0.04em;
   margin-bottom: 20px;
@@ -732,24 +764,24 @@ button{font-family:inherit;cursor:pointer}
   gap: 5px;
   font-size: 0.75rem;
   letter-spacing: 0.1em;
-  color: rgba(255,255,255,0.3);
+  color: rgba(255,255,255,0.52);
   text-decoration: none;
   transition: color 0.18s;
   padding: 4px 10px;
-  border: 1px solid rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.18);
   border-radius: 2px;
 }
-.ktn-footer__sns-link:hover { color: rgba(255,255,255,0.7); border-color: rgba(255,255,255,0.3); }
+.ktn-footer__sns-link:hover { color: #fff; border-color: rgba(255,255,255,0.5); }
 
 /* .ktn-footer__col — スタイルは後続ルールで定義 */
 .ktn-footer__col-title {
   font-size: 0.62rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.3);
+  color: rgba(255,255,255,0.5);
   margin-bottom: 14px;
   padding-bottom: 8px;
-  border-bottom: 1px solid rgba(255,255,255,0.07);
+  border-bottom: 1px solid rgba(255,255,255,0.12);
 }
 .ktn-footer__links {
   list-style: none;
@@ -760,7 +792,7 @@ button{font-family:inherit;cursor:pointer}
 .ktn-footer__links a {
   font-family: var(--fn);
   font-size: 0.75rem;
-  color: rgba(255,255,255,0.52);
+  color: rgba(255,255,255,0.74);
   text-decoration: none;
   letter-spacing: 0.03em;
   transition: color 0.18s;
@@ -768,7 +800,7 @@ button{font-family:inherit;cursor:pointer}
   align-items: center;
   gap: 5px;
 }
-.ktn-footer__links a:hover { color: rgba(255,255,255,0.9); }
+.ktn-footer__links a:hover { color: #fff; }
 .badge-l {
   font-family: var(--fm);
   font-size: 0.45rem;
@@ -790,16 +822,16 @@ button{font-family:inherit;cursor:pointer}
 }
 .ktn-footer__feature-tag {
   font-size: 0.75rem;
-  color: rgba(255,255,255,0.42);
+  color: rgba(255,255,255,0.62);
   text-decoration: none;
-  border: 1px solid rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
   padding: 3px 9px;
   border-radius: 2px;
   transition: color 0.18s, border-color 0.18s;
   letter-spacing: 0.03em;
   white-space: nowrap;
 }
-.ktn-footer__feature-tag:hover { color: rgba(255,255,255,0.75); border-color: rgba(255,255,255,0.3); }
+.ktn-footer__feature-tag:hover { color: #fff; border-color: rgba(255,255,255,0.5); }
 
 /* ── LIAISON帯 ── */
 .ktn-footer__liaison-band {
@@ -818,7 +850,7 @@ button{font-family:inherit;cursor:pointer}
 .ktn-footer__liaison-logo svg { opacity: 0.8; }
 .ktn-footer__liaison-desc {
   font-size: 0.75rem;
-  color: rgba(255,255,255,0.35);
+  color: rgba(255,255,255,0.58);
   letter-spacing: 0.04em;
   line-height: 1.7;
   flex: 1;
@@ -826,15 +858,15 @@ button{font-family:inherit;cursor:pointer}
 .ktn-footer__liaison-link {
   font-size: 0.75rem;
   letter-spacing: 0.12em;
-  color: rgba(255,255,255,0.45);
+  color: rgba(255,255,255,0.68);
   text-decoration: none;
-  border: 1px solid rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.25);
   padding: 6px 14px;
   white-space: nowrap;
   transition: all 0.18s;
   flex-shrink: 0;
 }
-.ktn-footer__liaison-link:hover { color: rgba(255,255,255,0.8); border-color: rgba(255,255,255,0.4); }
+.ktn-footer__liaison-link:hover { color: #fff; border-color: rgba(255,255,255,0.55); }
 
 /* ── bottom bar ── */
 .ktn-footer__bottom {
@@ -847,7 +879,7 @@ button{font-family:inherit;cursor:pointer}
 }
 .ktn-footer__copy {
   font-size: 0.62rem;
-  color: rgba(255,255,255,0.22);
+  color: rgba(255,255,255,0.45);
   letter-spacing: 0.08em;
 }
 .ktn-footer__policy {
@@ -856,12 +888,12 @@ button{font-family:inherit;cursor:pointer}
 }
 .ktn-footer__policy a {
   font-size: 0.62rem;
-  color: rgba(255,255,255,0.22);
+  color: rgba(255,255,255,0.45);
   text-decoration: none;
   letter-spacing: 0.06em;
   transition: color 0.18s;
 }
-.ktn-footer__policy a:hover { color: rgba(255,255,255,0.55); }
+.ktn-footer__policy a:hover { color: #fff; }
 
 /* ══════════════════════════════════════════
    ktn-bottom-nav
@@ -10349,9 +10381,9 @@ body.p3-3-page .aw--plus .aw__foot>.p33-console-wrap{order:3}
 .ktn-mgmt-context{max-width:var(--w-detail);margin:0 auto 14px;display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--border);border-radius:4px;padding:10px 14px}
 /* display:flex を持つため UA の [hidden]{display:none} が上書きされる。JS で hidden トグルする（p6-11 の新規/クローンで strip を隠す等）ため明示的に潰す */
 .ktn-mgmt-context[hidden]{display:none}
-/* strip がコンテンツにある管理ページは上余白を詰めてパンくずとの空きすぎを解消（32→16px・ユーザー確定 2026-07-09）。
+/* strip がコンテンツにある管理ページはパンくず直下の余白を0に（32→16px・2026-07-09→0px・2026-08-16 p3-11トライアル後ユーザー確定・mgmt-page全体へ展開）。
    人物ページは strip が先頭、p2-11/p6-11 は先頭にクローンバナー（hidden既定）→strip の順のため :first-child を外して両対応 */
-body.mgmt-page .ktn-content:has(> .ktn-mgmt-context){padding-top:16px}
+body.mgmt-page .ktn-content:has(> .ktn-mgmt-context){padding-top:0}
 .ktn-mgmt-context__media{flex-shrink:0;width:46px;height:46px;border-radius:4px;background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center;font-family:var(--fs);font-weight:700;color:#fff;font-size:1.05rem;text-decoration:none}
 /* 人物ロール別アバター形状・枠（アバター形状ルール準拠：creator角丸中/gallery角丸小/user円） */
 .ktn-mgmt-context__media--creator{border-radius:12px;border:2px solid #fff;outline:2px solid rgba(42,95,122,.45);outline-offset:2px}
@@ -12327,12 +12359,15 @@ a.p319-item__dest-name:hover{color:var(--page-accent)}
 /* 下書きアイテムのカード地（p3-14 と同じくすみブルーグレー） */
 .p319-item--draft{background:rgba(91,100,112,.09)}
 .p319-item__ribbon{position:absolute;top:0;right:16px;writing-mode:vertical-rl;padding:10px 7px 16px;font-family:var(--fm);font-size:.63rem;font-weight:600;letter-spacing:.08em;line-height:1;color:#fff;background:#5b6470;clip-path:polygon(0 0,100% 0,100% 100%,50% 90%,0 100%);filter:drop-shadow(0 2px 3px rgba(0,0,0,.2));pointer-events:none;z-index:2}
+/* P3-18/P4-18「確認待ち」＝下書きと同じ右肩リボンで表示（2026-08-16）。色は琥珀（確認待ち専用色） */
+.p319-item__ribbon--pending{background:#a06010}
 .p319-draft-banner{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;background:rgba(91,100,112,.09);border:1px solid rgba(91,100,112,.32);border-radius:4px}
 .p319-draft-banner[hidden]{display:none}
 .p319-draft-banner__icon{flex-shrink:0;color:#5b6470;margin-top:1px}
 .p319-draft-banner__body{font-family:var(--fn);font-size:.78rem;line-height:1.7;color:#333a41}
 .p319-draft-banner__body strong{color:#2a3138;font-weight:700}
-.p319-item__dates{font-family:var(--fm);font-size:.54rem;color:var(--accent);opacity:.72;letter-spacing:.04em;text-align:right;padding:0 14px 8px}
+.p319-item__dates{display:flex;align-items:center;padding:0 14px 8px}
+.p319-item__dates-text{font-family:var(--fm);font-size:.54rem;color:var(--accent);opacity:.72;letter-spacing:.04em;margin-left:auto}
 .p319-item__dates-sep{margin:0 5px;opacity:.6}
 .p319-item__actions{display:flex;align-items:center;justify-content:flex-end;gap:10px;padding:8px 14px;border-top:1px solid var(--border)}
 .p319-del-modal{position:fixed;inset:0;z-index:900;display:flex;align-items:center;justify-content:center;padding:20px}
@@ -12355,17 +12390,30 @@ a.p319-item__dest-name:hover{color:var(--page-accent)}
 .p319-dup-modal__hint{margin:14px 0 0;font-family:var(--fn);font-size:.76rem;color:var(--muted);line-height:1.7}
 .p319-empty{padding:36px 20px;text-align:center}
 .p319-empty__msg{font-size:.85rem;color:var(--muted)}
-/* ── P3-18/P4-18 展覧会管理 専用：確認待ち／公開予定（page-local・sb-* とは別カテゴリのため badge system に加えない）
-   confirmed→published の間に入る「公開予定」は p2-11「公開設定」でオーナーが日時指定した場合のみ（日付を chip 内に表示）。
+/* ── P3-18/P4-18 展覧会管理 専用：公開中／公開前（page-local・sb-* とは別カテゴリのため badge system に加えない）
+   開催期間（開催前/もうすぐ/開催中/終了）はこのバッジでは表現しない＝公開・確認軸のみ（2026-08-16 簡素化）。
+   タイトル行での並びは「LIAISON/LIAISON+ バッジの後ろ」（liaisonHtml → statusHtml の順、2026-08-16）。
+   「確認待ち」は下書きと同様に右肩リボン（.p319-item__ribbon--pending）で表示する（2026-08-16）。
+   公開日指定のみバッジでなく登録/更新日付行の .p318-status-note-wrap で左寄せ表示（リボンと文字色が競合
+   しないよう確認待ち文言はリボン側にのみ持たせ、ノート側は公開日指定1種類に単純化）。表示条件は生の
+   publishMode==='scheduled'＋publishDate のみ（confirmed/published は問わない）＝「公開日が設定されている」
+   という事実を確認待ち中・公開済み後も一貫して示す注記（2026-08-16 是正）。ステータスフィルタ「公開日前」
+   （旧ラベル「公開予定」）はこれとは別軸の判定＝publishMode==='scheduled'＋publishDate に加え !published
+   （まだ公開日を迎えていない）も条件にするため、ノート表示件数とフィルタ絞り込み件数は一致しない
+   （公開済み後もノートは履歴として残るが「公開日前」フィルタからは外れる＝意図的な差分）。
    非公開（管理者専用の状態遷移）はこの一覧自体から除外されるためバッジを持たない（2026-08-02）。 */
 .p318-status{display:inline-flex;align-items:center;font-family:var(--fm);font-size:.58rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:20px;border:1px solid currentColor}
-.p318-status--pending{color:#a06010;background:rgba(160,96,16,.06)}
-.p318-status--scheduled{color:#1a4a88;background:rgba(26,74,136,.06)}
+.p318-status--live{color:#2a8838;background:rgba(42,136,56,.06)}
+.p318-status--pre{color:var(--muted);background:rgba(91,100,112,.06)}
+.p318-status-note-wrap{margin-right:auto;display:flex;align-items:center;gap:10px}
+.p318-status-note{font-family:var(--fn);font-size:.74rem}
+.p318-status-note--scheduled{color:#1a4a88}
 @media(max-width:540px){
   .p319-toolbar{flex-direction:column;align-items:stretch}
   .p319-toolbar__filters{flex-direction:column}
   .p319-filter__sel{min-width:0;width:100%}
   .p319-item__main{flex-wrap:wrap}
+  .p319-item__dates{flex-wrap:wrap;row-gap:4px}
   .p319-item__actions{flex-wrap:wrap}
   .p902-nidjump{flex-wrap:wrap}
   .p902-nidjump__input{max-width:none;width:100%}

@@ -11838,55 +11838,53 @@ KTN.pages['p4-13'] = function () {
 ════════════════════════════════════════════════════ */
 KTN.pages['p3-18'] = function () {
 
-  /* ── 開催ステータス（sb-*・確認済＋公開の展覧会のみ算出済みの状態として持つ）── */
-  var STATUS = {
-    live:     { cls:'sb-live',     label:'開催中',       pre:'<span class="pulse"></span>' },
-    upcoming: { cls:'sb-upcoming', label:'開催前' },
-    soon:     { cls:'sb-soon',     label:'もうすぐ開始' },
-    ending:   { cls:'sb-ending',   label:'もうすぐ終了', pre:'<span class="ending-dot"></span>' },
-    closed:   { cls:'sb-closed',   label:'終了' },
-  };
-
   /* ── サンプルデータ（田中透が投稿者の展覧会）──
      confirmed＝管理者確認済み。publishMode／publishDate＝p2-11「公開設定」でオーナーが投稿時に選んだ値
      （'now'＝確認完了後すぐ公開、'scheduled'＝確認完了後に指定日時で自動公開）。オーナーは確認前（投稿時点）に
-     既にこれを選択済みのことがあるため、confirmed:false（確認待ち）の項目でも publishMode/publishDate が
-     入っている場合がある＝「確認待ちだが公開予定日は設定済み」（statusHtml がこの場合を分けて表示する）。
+     既にこれを選択済みのことがあるため、confirmed:false（確認待ち）や published:true（公開済み後も履歴として
+     残る）の項目にも publishMode/publishDate が入っている場合がある。statusNoteHtml の「公開日指定」注記は
+     publishMode==='scheduled'＋publishDate があれば confirmed/published を問わず常に表示する（x2＝確認待ち・
+     x8＝確認済み未公開・x6＝公開済み後の3件すべてに出る＝2026-08-16 是正）。一方ステータスフィルタ「公開日前」
+     は別軸の判定＝上記に加え !published（まだ公開日を迎えていない）も条件にするため x2/x8 の2件のみ該当し
+     x6（公開済み）は外れる＝注記件数とフィルタ件数が一致しないのは意図的な設計。
      published＝実際に公開済みかどうか（confirmed かつ 'now'、または確認済みで publishDate 到来後に true になる）。
-     sstatus は confirmed && published のときのみ時間軸ステータスとして算出される。
+     sstatus＝開催期間の時間軸ステータス（バッジ・フィルタ選択肢には出さない。並べ替え「開催日が早い順」の他、
+     'closed'＝会期終了はこの一覧自体から除外する判定に使用。削除可否は sstatus でなく confirmed で判定する＝
+     管理者確認後は削除不可、確認待ちの間のみ削除可・2026-08-16）。
      liaison＝confirmed が true になるまで設定不可（出展クリエイターは管理者確認を経て確定するため、確認待ち中は
      LIAISON/LIAISON+ を紐付けられない業務ルール。confirmed:false の項目は liaison を必ず空にする）。
-     reg/upd＝登録日・最終更新日。rs＝登録日の並べ替えキー。draft＝下書き（未完成・一覧の最上部固定）。 */
+     reg/upd＝登録日・最終更新日。rs＝登録日の並べ替えキー。pd＝会期開始日の並べ替えキー（YYYYMMDD）。
+     draft＝下書き（未完成・一覧の最上部固定）。 */
   var EXHIBITIONS = [
     { id:'x1', title:'光と影の間に（仮）', type:'other',
       venue:'', period:'', liaison:'', confirmed:false, published:false, publishMode:'now', publishDate:'', sstatus:'',
-      reg:'2026.7.28', upd:'2026.7.28', rs:20260728, draft:true, bg:'linear-gradient(155deg,#dcdcdc,#a8a8a8)' },
+      reg:'2026.7.28', upd:'2026.7.28', rs:20260728, pd:0, draft:true, bg:'linear-gradient(155deg,#dcdcdc,#a8a8a8)' },
     { id:'x2', title:'とおくの声、ちかくの気配', type:'solo',
       venue:'スペースYUI', period:'2026.9.5 - 2026.9.20', liaison:'', confirmed:false, published:false, publishMode:'scheduled', publishDate:'2026.8.20', sstatus:'',
-      reg:'2026.7.25', upd:'2026.7.26', rs:20260725, draft:false, bg:'linear-gradient(155deg,#d8c8e8,#a888cc)' },
+      reg:'2026.7.25', upd:'2026.7.26', rs:20260725, pd:20260905, draft:false, bg:'linear-gradient(155deg,#d8c8e8,#a888cc)' },
     /* x3＝非公開（管理者が取り下げ済み）のサンプル。非公開は管理者専用状態のためこの一覧には表示されない
-       （render()のeffStatus==='unpublished'除外フィルタで常に非表示になることを示すデータとして残す） */
+       （render()のpubStatus==='unpublished'除外フィルタで常に非表示になることを示すデータとして残す） */
     { id:'x3', title:'破片のかたち', type:'solo',
       venue:'渋谷アートラボ', period:'2026.9.1 - 2026.9.10', liaison:'', confirmed:true, published:false, publishMode:'now', publishDate:'', sstatus:'',
-      reg:'2026.6.10', upd:'2026.6.12', rs:20260610, draft:false, bg:'linear-gradient(155deg,#f0d0d0,#c88080)' },
+      reg:'2026.6.10', upd:'2026.6.12', rs:20260610, pd:20260901, draft:false, bg:'linear-gradient(155deg,#f0d0d0,#c88080)' },
     { id:'x8', title:'花と刃、静かな部屋', type:'solo',
       venue:'GALLERY X', period:'2026.9.12 - 2026.9.25', liaison:'li-plus', confirmed:true, published:false, publishMode:'scheduled', publishDate:'2026.9.1', sstatus:'',
-      reg:'2026.6.30', upd:'2026.7.20', rs:20260630, draft:false, bg:'linear-gradient(155deg,#e8d8c0,#c8a468)' },
+      reg:'2026.6.30', upd:'2026.7.20', rs:20260630, pd:20260912, draft:false, bg:'linear-gradient(155deg,#e8d8c0,#c8a468)' },
     { id:'x4', title:'水のうつわ、光のかけら', type:'solo',
       venue:'GALLERY X', period:'2026.7.20 - 2026.8.10', liaison:'li-plus', confirmed:true, published:true, publishMode:'now', publishDate:'', sstatus:'live',
-      reg:'2026.5.2', upd:'2026.7.18', rs:20260502, draft:false, bg:'linear-gradient(155deg,#b8d8cc,#6a9e8a)' },
+      reg:'2026.5.2', upd:'2026.7.18', rs:20260502, pd:20260720, draft:false, bg:'linear-gradient(155deg,#b8d8cc,#6a9e8a)' },
     { id:'x9', title:'透きとおる季節の輪郭', type:'solo',
       venue:'スペースYUI', period:'2026.8.8 - 2026.8.18', liaison:'', confirmed:true, published:true, publishMode:'now', publishDate:'', sstatus:'soon',
-      reg:'2026.6.5', upd:'2026.7.30', rs:20260605, draft:false, bg:'linear-gradient(155deg,#d0d8f0,#8090cc)' },
+      reg:'2026.6.5', upd:'2026.7.30', rs:20260605, pd:20260808, draft:false, bg:'linear-gradient(155deg,#d0d8f0,#8090cc)' },
     { id:'x5', title:'まなざしの重奏', type:'group',
       venue:'3331 Arts Chiyoda', period:'2026.7.25 - 2026.8.5', liaison:'', confirmed:true, published:true, publishMode:'now', publishDate:'', sstatus:'ending',
-      reg:'2026.5.20', upd:'2026.7.15', rs:20260520, draft:false, bg:'linear-gradient(155deg,#f0e8d0,#d4b896)' },
+      reg:'2026.5.20', upd:'2026.7.15', rs:20260520, pd:20260725, draft:false, bg:'linear-gradient(155deg,#f0e8d0,#d4b896)' },
     { id:'x6', title:'遠い記憶の輪郭', type:'solo',
       venue:'東京都現代美術館', period:'2026.10.1 - 2026.10.20', liaison:'li', confirmed:true, published:true, publishMode:'scheduled', publishDate:'2026.9.10', sstatus:'upcoming',
-      reg:'2026.6.25', upd:'2026.6.28', rs:20260625, draft:false, bg:'linear-gradient(155deg,#d0e8f0,#7ab4cc)' },
+      reg:'2026.6.25', upd:'2026.6.28', rs:20260625, pd:20261001, draft:false, bg:'linear-gradient(155deg,#d0e8f0,#7ab4cc)' },
     { id:'x7', title:'ことばの余白', type:'solo',
       venue:'渋谷アートラボ', period:'2025.12.1 - 2025.12.20', liaison:'', confirmed:true, published:true, publishMode:'now', publishDate:'', sstatus:'closed',
-      reg:'2025.10.5', upd:'2025.12.21', rs:20251005, draft:false, bg:'linear-gradient(155deg,#e0d4bc,#b8a884)' },
+      reg:'2025.10.5', upd:'2025.12.21', rs:20251005, pd:20251201, draft:false, bg:'linear-gradient(155deg,#e0d4bc,#b8a884)' },
   ];
 
   /* ── DOM ── */
@@ -11905,11 +11903,11 @@ KTN.pages['p3-18'] = function () {
 
   function isDraft(e) { return !!e.draft; }
 
-  /* 確認待ち／公開予定／非公開／時間軸ステータスの実効値（フィルタ・表示の両方で使用） */
-  function effStatus(e) {
+  /* 確認待ち／公開予定／非公開／公開中の実効値（フィルタ・バッジの両方で使用。開催期間は含まない） */
+  function pubStatus(e) {
     if (!e.confirmed) return 'pending';
     if (!e.published) return (e.publishMode === 'scheduled' && e.publishDate) ? 'scheduled' : 'unpublished';
-    return e.sstatus;
+    return 'published';
   }
 
   function p211Link(mode, id) {
@@ -11921,33 +11919,40 @@ KTN.pages['p3-18'] = function () {
     return (isDraft(e) || !e.confirmed || !e.published) ? null : 'kotennavi-p2.html';
   }
 
+  /* タイトル行バッジ＝公開中／公開前の2値のみ（開催期間ステータスは持たない） */
   function statusHtml(e) {
     if (isDraft(e)) return '';
-    if (!e.confirmed) {
-      /* オーナーが投稿時に「公開日時を指定する」を選んでいる場合、確認待ち中でも別バッジとして公開予定日を併記する */
-      var sub = (e.publishMode === 'scheduled' && e.publishDate)
-        ? '<span class="p318-status p318-status--scheduled">公開予定 ' + e.publishDate + '</span>'
-        : '';
-      return '<span class="p318-status p318-status--pending">確認待ち</span>' + sub;
+    var s = pubStatus(e);
+    if (s === 'unpublished') return ''; /* 非公開はrenderで一覧から除外されるためここには到達しない防御コード */
+    return s === 'published'
+      ? '<span class="p318-status p318-status--live">公開中</span>'
+      : '<span class="p318-status p318-status--pre">公開前</span>';
+  }
+
+  /* 公開日指定の補足テキスト＝公開設定で「公開日を指定する」（publishMode==='scheduled'＋publishDate）を
+     選んだ項目には確認待ち／公開済みを問わず常に表示する（2026-08-16 是正）。「公開日指定：日付が設定されて
+     いる」という事実そのものを示す注記であり、後述のステータスフィルタ「公開日前」（＝まだ公開日を迎えて
+     いない項目に絞る）とは目的が異なる別軸のため、表示件数とフィルタの絞り込み件数は一致しなくてよい
+     （公開済み後も設定日は履歴として注記に残るが、フィルタ「公開日前」からは外れる）。
+     確認待ちは下書きと同様に右肩リボンで表示するためここには出さない（2026-08-16 リボン化）。 */
+  function statusNoteHtml(e) {
+    if (isDraft(e)) return '';
+    if (e.publishMode === 'scheduled' && e.publishDate) {
+      return '<span class="p318-status-note p318-status-note--scheduled">公開日指定:' + e.publishDate + '</span>';
     }
-    if (!e.published) {
-      if (e.publishMode === 'scheduled' && e.publishDate) {
-        return '<span class="p318-status p318-status--scheduled">公開予定 ' + e.publishDate + '</span>';
-      }
-      return ''; /* 非公開はrenderで一覧から除外されるためここには到達しない防御コード */
-    }
-    var s = STATUS[e.sstatus];
-    if (!s) return '';
-    return '<span class="sb ' + s.cls + '">' + (s.pre || '') + s.label + '</span>';
+    return '';
   }
 
   /* ── アイテム生成 ── */
   function makeItem(e) {
     var draft = isDraft(e);
-    /* 会期終了後はオーナーでも編集・削除ができなくなる業務ルール（2026-08-02）。
-       一覧には記録として残すが、操作は「クローン →」のみ（新規の別展覧会を作るだけなので終了後も可） */
-    var ended = !draft && effStatus(e) === 'closed';
+    var pending = !draft && !e.confirmed;
     var el = exhLink(e);
+    /* 削除できるのは「確認待ち」の間だけ（管理者確認後は削除不可・2026-08-16）。
+       会期終了後の展覧会は render() のフィルタでこの一覧自体に出てこないため、編集リンクは
+       ended 判定を持たず常に表示してよい（確認待ちのまま会期を過ぎることは業務上想定しない）。 */
+    var deletable = draft || !e.confirmed;
+    var noteHtml = statusNoteHtml(e);
     /* confirmed になるまで出展クリエイターが確定しないため、確認待ち中は LIAISON/LIAISON+ を表示しない（業務ルール） */
     var liaisonHtml = (e.confirmed && e.liaison)
       ? '<span class="lb-dot ' + e.liaison + '"><span class="lb-dot-inner"></span>' + (e.liaison === 'li-plus' ? 'LIAISON+' : 'LIAISON') + '</span>'
@@ -11957,35 +11962,40 @@ KTN.pages['p3-18'] = function () {
     li.className = 'p319-item' + (draft ? ' p319-item--draft' : '');
     li.dataset.id = e.id;
     li.innerHTML =
-      (draft ? '<span class="p319-item__ribbon">下書き</span>' : '') +
+      (draft ? '<span class="p319-item__ribbon">下書き</span>' : (pending ? '<span class="p319-item__ribbon p319-item__ribbon--pending">確認待ち</span>' : '')) +
       '<div class="p319-item__main' + (el ? ' p319-item__main--link" title="クリックで展覧会ページを新しいタブで表示' : '') + '">' +
         '<div class="p319-item__thumb" style="background:' + e.bg + '"></div>' +
         '<div class="p319-item__body">' +
           '<div class="p319-item__title-row">' +
             '<span class="cb cb-content cb-exhibition">exhibition</span>' +
-            statusHtml(e) +
             liaisonHtml +
+            statusHtml(e) +
           '</div>' +
           '<div class="p319-item__title">' + e.title + '</div>' +
           '<div class="p319-item__dest">' + (e.venue || '会場未定') + '<span class="p319-item__dates-sep">·</span>' + (e.period || '会期未定') + '</div>' +
         '</div>' +
       '</div>' +
-      '<div class="p319-item__dates">登録 ' + e.reg + '<span class="p319-item__dates-sep">·</span>更新 ' + e.upd + '</div>' +
+      '<div class="p319-item__dates">' +
+        (noteHtml ? '<span class="p318-status-note-wrap">' + noteHtml + '</span>' : '') +
+        '<span class="p319-item__dates-text">登録 ' + e.reg + '<span class="p319-item__dates-sep">·</span>更新 ' + e.upd + '</span>' +
+      '</div>' +
       '<div class="p319-item__actions">' +
-        (ended ? '' : '<button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline p319-item__del">' + (draft ? '下書きを破棄' : '削除') + '</button>') +
+        (deletable ? '<button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline p319-item__del">' + (draft ? '下書きを破棄' : '削除') + '</button>' : '') +
         (draft
           ? '<a class="ktn-action-btn" href="' + p211Link('edit', e.id) + '">編集を再開 →</a>'
           : '<a class="ktn-action-btn" href="' + p211Link('clone', e.id) + '">クローン →</a>' +
-            (ended ? '' : '<a class="ktn-action-btn" href="' + p211Link('edit', e.id) + '">編集 →</a>')) +
+            '<a class="ktn-action-btn" href="' + p211Link('edit', e.id) + '">編集 →</a>') +
       '</div>';
     return li;
   }
 
   /* ── フィルタ・並べ替え描画 ── */
   var SORTS = {
-    'reg-desc': function (a, b) { return b.rs - a.rs; },
-    'reg-asc':  function (a, b) { return a.rs - b.rs; },
-    'title':    function (a, b) { return a.title.localeCompare(b.title, 'ja'); },
+    'reg-desc':    function (a, b) { return b.rs - a.rs; },
+    'reg-asc':     function (a, b) { return a.rs - b.rs; },
+    'title':       function (a, b) { return a.title.localeCompare(b.title, 'ja'); },
+    /* pd＝会期開始日（YYYYMMDD）の昇順＝開催開始日が早い順（2026-08-16 ラベルを「開催日順」→「開催日が早い順」に是正、ロジックは変更なし） */
+    'period-asc':  function (a, b) { return (a.pd || 0) - (b.pd || 0); },
   };
 
   function render() {
@@ -11995,9 +12005,18 @@ KTN.pages['p3-18'] = function () {
       /* 下書き＝別もの。種別・ステータスで絞り込む時は候補から外す（「すべて」表示時のみ最上部に固定） */
       if (isDraft(e)) return ft === '' && fs === '';
       /* 非公開＝管理者専用の状態遷移（オーナー操作の対象外）。この一覧には常に表示しない */
-      if (effStatus(e) === 'unpublished') return false;
+      if (pubStatus(e) === 'unpublished') return false;
+      /* 会期終了後の展覧会は編集・削除ができなくなるため、この一覧自体から除外する（2026-08-16） */
+      if (!isDraft(e) && e.sstatus === 'closed') return false;
       if (ft && e.type !== ft) return false;
-      if (fs && effStatus(e) !== fs) return false;
+      /* フィルタ「公開日前」＝公開日指定が設定済みだがまだ公開されていない項目のみ（pubStatus とは別軸の
+         判定。公開日指定の注記〔statusNoteHtml〕は公開済み後も履歴として残るため常に出るが、このフィルタは
+         「まだ公開日を迎えていない」に絞るので e.published を除外条件に持つ・2026-08-16） */
+      if (fs === 'scheduled') {
+        if (!(e.publishMode === 'scheduled' && e.publishDate && !e.published)) return false;
+      } else if (fs && pubStatus(e) !== fs) {
+        return false;
+      }
       return true;
     });
     rows.sort(SORTS[sortSel.value] || SORTS['reg-desc']);
@@ -12106,7 +12125,7 @@ KTN.pages['p3-18'] = function () {
   function dupCheckExhibitions() {
     return EXHIBITIONS.filter(function (e) {
       if (isDraft(e)) return false;
-      var s = effStatus(e);
+      var s = pubStatus(e);
       return s === 'pending' || s === 'scheduled';
     });
   }
@@ -12117,7 +12136,7 @@ KTN.pages['p3-18'] = function () {
         '<div class="p319-dup-modal__item-body">' +
           '<span class="p319-dup-modal__item-title">' + e.title + '</span>' +
           '<span class="p319-dup-modal__item-period">' + (e.period || '会期未定') + '</span>' +
-          '<div class="p319-dup-modal__item-badges">' + statusHtml(e) + '</div>' +
+          '<div class="p319-dup-modal__item-badges">' + statusHtml(e) + statusNoteHtml(e) + '</div>' +
         '</div>' +
         '<a class="ktn-action-btn" href="' + p211Link('edit', e.id) + '">編集する →</a>' +
       '</li>';
@@ -12145,50 +12164,41 @@ KTN.pages['p3-18'] = function () {
    ════════════════════════════════════════════════════ */
 KTN.pages['p4-18'] = function () {
 
-  /* ── 開催ステータス（sb-*・確認済＋公開の展覧会のみ算出済みの状態として持つ）── */
-  var STATUS = {
-    live:     { cls:'sb-live',     label:'開催中',       pre:'<span class="pulse"></span>' },
-    upcoming: { cls:'sb-upcoming', label:'開催前' },
-    soon:     { cls:'sb-soon',     label:'もうすぐ開始' },
-    ending:   { cls:'sb-ending',   label:'もうすぐ終了', pre:'<span class="ending-dot"></span>' },
-    closed:   { cls:'sb-closed',   label:'終了' },
-  };
-
   /* ── サンプルデータ（Gallery SOIL 渋谷が投稿者の展覧会）──
      ギャラリーは会場が自ギャラリー1つに固定のため、P3-18（クリエイター・会場が展覧会ごとに異なる）と異なり
      venue は全項目で 'Gallery SOIL 渋谷' に統一。同一会場のため確認済み（非終了）項目の会期は互いに重複しない
      ように設計（実在の会場予約として矛盾しないため）。フィールドの意味は P3-18 と同一（confirmed/published/
-     publishMode/publishDate/sstatus/liaison/draft の関係はそちらのコメント参照）。 */
+     publishMode/publishDate/sstatus/liaison/pd/draft の関係はそちらのコメント参照）。 */
   var EXHIBITIONS = [
     { id:'g1', title:'記憶の断片、再構成（仮）', type:'other',
       venue:'Gallery SOIL 渋谷', period:'', liaison:'', confirmed:false, published:false, publishMode:'now', publishDate:'', sstatus:'',
-      reg:'2026.7.30', upd:'2026.7.30', rs:20260730, draft:true, bg:'linear-gradient(155deg,#dcdcdc,#a8a8a8)' },
+      reg:'2026.7.30', upd:'2026.7.30', rs:20260730, pd:0, draft:true, bg:'linear-gradient(155deg,#dcdcdc,#a8a8a8)' },
     { id:'g2', title:'波のあとさき', type:'solo',
       venue:'Gallery SOIL 渋谷', period:'2026.11.10 - 2026.11.25', liaison:'', confirmed:false, published:false, publishMode:'scheduled', publishDate:'2026.10.25', sstatus:'',
-      reg:'2026.7.20', upd:'2026.7.29', rs:20260720, draft:false, bg:'linear-gradient(155deg,#d8c8e8,#a888cc)' },
+      reg:'2026.7.20', upd:'2026.7.29', rs:20260720, pd:20261110, draft:false, bg:'linear-gradient(155deg,#d8c8e8,#a888cc)' },
     /* g3＝非公開（管理者が取り下げ済み）のサンプル。非公開は管理者専用状態のためこの一覧には表示されない
-       （render()のeffStatus==='unpublished'除外フィルタで常に非表示になることを示すデータとして残す） */
+       （render()のpubStatus==='unpublished'除外フィルタで常に非表示になることを示すデータとして残す） */
     { id:'g3', title:'静物と光の対話', type:'solo',
       venue:'Gallery SOIL 渋谷', period:'2026.10.20 - 2026.11.5', liaison:'', confirmed:true, published:false, publishMode:'now', publishDate:'', sstatus:'',
-      reg:'2026.6.15', upd:'2026.6.18', rs:20260615, draft:false, bg:'linear-gradient(155deg,#f0d0d0,#c88080)' },
+      reg:'2026.6.15', upd:'2026.6.18', rs:20260615, pd:20261020, draft:false, bg:'linear-gradient(155deg,#f0d0d0,#c88080)' },
     { id:'g8', title:'硝子の向こう側', type:'solo',
       venue:'Gallery SOIL 渋谷', period:'2026.10.1 - 2026.10.15', liaison:'li-plus', confirmed:true, published:false, publishMode:'scheduled', publishDate:'2026.9.20', sstatus:'',
-      reg:'2026.6.5', upd:'2026.7.22', rs:20260605, draft:false, bg:'linear-gradient(155deg,#e8d8c0,#c8a468)' },
+      reg:'2026.6.5', upd:'2026.7.22', rs:20260605, pd:20261001, draft:false, bg:'linear-gradient(155deg,#e8d8c0,#c8a468)' },
     { id:'g6', title:'遠雷、まだ見ぬ景色', type:'solo',
       venue:'Gallery SOIL 渋谷', period:'2026.9.5 - 2026.9.25', liaison:'li', confirmed:true, published:true, publishMode:'scheduled', publishDate:'2026.8.20', sstatus:'upcoming',
-      reg:'2026.6.20', upd:'2026.6.25', rs:20260620, draft:false, bg:'linear-gradient(155deg,#d0e8f0,#7ab4cc)' },
+      reg:'2026.6.20', upd:'2026.6.25', rs:20260620, pd:20260905, draft:false, bg:'linear-gradient(155deg,#d0e8f0,#7ab4cc)' },
     { id:'g9', title:'影を纏う、朝の記憶', type:'solo',
       venue:'Gallery SOIL 渋谷', period:'2026.8.16 - 2026.8.30', liaison:'', confirmed:true, published:true, publishMode:'now', publishDate:'', sstatus:'soon',
-      reg:'2026.6.1', upd:'2026.7.28', rs:20260601, draft:false, bg:'linear-gradient(155deg,#d0d8f0,#8090cc)' },
+      reg:'2026.6.1', upd:'2026.7.28', rs:20260601, pd:20260816, draft:false, bg:'linear-gradient(155deg,#d0d8f0,#8090cc)' },
     { id:'g4', title:'色彩のかけら、その先へ', type:'solo',
       venue:'Gallery SOIL 渋谷', period:'2026.7.25 - 2026.8.15', liaison:'li-plus', confirmed:true, published:true, publishMode:'now', publishDate:'', sstatus:'live',
-      reg:'2026.5.10', upd:'2026.7.24', rs:20260510, draft:false, bg:'linear-gradient(155deg,#b8d8cc,#6a9e8a)' },
+      reg:'2026.5.10', upd:'2026.7.24', rs:20260510, pd:20260725, draft:false, bg:'linear-gradient(155deg,#b8d8cc,#6a9e8a)' },
     { id:'g5', title:'かたちなきものたちの声', type:'group',
       venue:'Gallery SOIL 渋谷', period:'2026.7.10 - 2026.7.24', liaison:'', confirmed:true, published:true, publishMode:'now', publishDate:'', sstatus:'ending',
-      reg:'2026.5.5', upd:'2026.7.9', rs:20260505, draft:false, bg:'linear-gradient(155deg,#f0e8d0,#d4b896)' },
+      reg:'2026.5.5', upd:'2026.7.9', rs:20260505, pd:20260710, draft:false, bg:'linear-gradient(155deg,#f0e8d0,#d4b896)' },
     { id:'g7', title:'路地裏の詩、冬の記録', type:'solo',
       venue:'Gallery SOIL 渋谷', period:'2025.12.1 - 2025.12.20', liaison:'', confirmed:true, published:true, publishMode:'now', publishDate:'', sstatus:'closed',
-      reg:'2025.10.1', upd:'2025.12.21', rs:20251001, draft:false, bg:'linear-gradient(155deg,#e0d4bc,#b8a884)' },
+      reg:'2025.10.1', upd:'2025.12.21', rs:20251001, pd:20251201, draft:false, bg:'linear-gradient(155deg,#e0d4bc,#b8a884)' },
   ];
 
   /* ── DOM ── */
@@ -12207,11 +12217,11 @@ KTN.pages['p4-18'] = function () {
 
   function isDraft(e) { return !!e.draft; }
 
-  /* 確認待ち／公開予定／非公開／時間軸ステータスの実効値（フィルタ・表示の両方で使用） */
-  function effStatus(e) {
+  /* 確認待ち／公開予定／非公開／公開中の実効値（フィルタ・バッジの両方で使用。開催期間は含まない） */
+  function pubStatus(e) {
     if (!e.confirmed) return 'pending';
     if (!e.published) return (e.publishMode === 'scheduled' && e.publishDate) ? 'scheduled' : 'unpublished';
-    return e.sstatus;
+    return 'published';
   }
 
   function p211Link(mode, id) {
@@ -12223,33 +12233,40 @@ KTN.pages['p4-18'] = function () {
     return (isDraft(e) || !e.confirmed || !e.published) ? null : 'kotennavi-p2.html';
   }
 
+  /* タイトル行バッジ＝公開中／公開前の2値のみ（開催期間ステータスは持たない） */
   function statusHtml(e) {
     if (isDraft(e)) return '';
-    if (!e.confirmed) {
-      /* オーナーが投稿時に「公開日時を指定する」を選んでいる場合、確認待ち中でも別バッジとして公開予定日を併記する */
-      var sub = (e.publishMode === 'scheduled' && e.publishDate)
-        ? '<span class="p318-status p318-status--scheduled">公開予定 ' + e.publishDate + '</span>'
-        : '';
-      return '<span class="p318-status p318-status--pending">確認待ち</span>' + sub;
+    var s = pubStatus(e);
+    if (s === 'unpublished') return ''; /* 非公開はrenderで一覧から除外されるためここには到達しない防御コード */
+    return s === 'published'
+      ? '<span class="p318-status p318-status--live">公開中</span>'
+      : '<span class="p318-status p318-status--pre">公開前</span>';
+  }
+
+  /* 公開日指定の補足テキスト＝公開設定で「公開日を指定する」（publishMode==='scheduled'＋publishDate）を
+     選んだ項目には確認待ち／公開済みを問わず常に表示する（2026-08-16 是正）。「公開日指定：日付が設定されて
+     いる」という事実そのものを示す注記であり、後述のステータスフィルタ「公開日前」（＝まだ公開日を迎えて
+     いない項目に絞る）とは目的が異なる別軸のため、表示件数とフィルタの絞り込み件数は一致しなくてよい
+     （公開済み後も設定日は履歴として注記に残るが、フィルタ「公開日前」からは外れる）。
+     確認待ちは下書きと同様に右肩リボンで表示するためここには出さない（2026-08-16 リボン化）。 */
+  function statusNoteHtml(e) {
+    if (isDraft(e)) return '';
+    if (e.publishMode === 'scheduled' && e.publishDate) {
+      return '<span class="p318-status-note p318-status-note--scheduled">公開日指定:' + e.publishDate + '</span>';
     }
-    if (!e.published) {
-      if (e.publishMode === 'scheduled' && e.publishDate) {
-        return '<span class="p318-status p318-status--scheduled">公開予定 ' + e.publishDate + '</span>';
-      }
-      return ''; /* 非公開はrenderで一覧から除外されるためここには到達しない防御コード */
-    }
-    var s = STATUS[e.sstatus];
-    if (!s) return '';
-    return '<span class="sb ' + s.cls + '">' + (s.pre || '') + s.label + '</span>';
+    return '';
   }
 
   /* ── アイテム生成 ── */
   function makeItem(e) {
     var draft = isDraft(e);
-    /* 会期終了後はオーナーでも編集・削除ができなくなる業務ルール（P3-18と同一・2026-08-02）。
-       一覧には記録として残すが、操作は「クローン →」のみ（新規の別展覧会を作るだけなので終了後も可） */
-    var ended = !draft && effStatus(e) === 'closed';
+    var pending = !draft && !e.confirmed;
     var el = exhLink(e);
+    /* 削除できるのは「確認待ち」の間だけ（管理者確認後は削除不可・P3-18と同一・2026-08-16）。
+       会期終了後の展覧会は render() のフィルタでこの一覧自体に出てこないため、編集リンクは
+       ended 判定を持たず常に表示してよい（確認待ちのまま会期を過ぎることは業務上想定しない）。 */
+    var deletable = draft || !e.confirmed;
+    var noteHtml = statusNoteHtml(e);
     /* confirmed になるまで出展クリエイターが確定しないため、確認待ち中は LIAISON/LIAISON+ を表示しない（業務ルール） */
     var liaisonHtml = (e.confirmed && e.liaison)
       ? '<span class="lb-dot ' + e.liaison + '"><span class="lb-dot-inner"></span>' + (e.liaison === 'li-plus' ? 'LIAISON+' : 'LIAISON') + '</span>'
@@ -12259,35 +12276,40 @@ KTN.pages['p4-18'] = function () {
     li.className = 'p319-item' + (draft ? ' p319-item--draft' : '');
     li.dataset.id = e.id;
     li.innerHTML =
-      (draft ? '<span class="p319-item__ribbon">下書き</span>' : '') +
+      (draft ? '<span class="p319-item__ribbon">下書き</span>' : (pending ? '<span class="p319-item__ribbon p319-item__ribbon--pending">確認待ち</span>' : '')) +
       '<div class="p319-item__main' + (el ? ' p319-item__main--link" title="クリックで展覧会ページを新しいタブで表示' : '') + '">' +
         '<div class="p319-item__thumb" style="background:' + e.bg + '"></div>' +
         '<div class="p319-item__body">' +
           '<div class="p319-item__title-row">' +
             '<span class="cb cb-content cb-exhibition">exhibition</span>' +
-            statusHtml(e) +
             liaisonHtml +
+            statusHtml(e) +
           '</div>' +
           '<div class="p319-item__title">' + e.title + '</div>' +
           '<div class="p319-item__dest">' + (e.venue || '会場未定') + '<span class="p319-item__dates-sep">·</span>' + (e.period || '会期未定') + '</div>' +
         '</div>' +
       '</div>' +
-      '<div class="p319-item__dates">登録 ' + e.reg + '<span class="p319-item__dates-sep">·</span>更新 ' + e.upd + '</div>' +
+      '<div class="p319-item__dates">' +
+        (noteHtml ? '<span class="p318-status-note-wrap">' + noteHtml + '</span>' : '') +
+        '<span class="p319-item__dates-text">登録 ' + e.reg + '<span class="p319-item__dates-sep">·</span>更新 ' + e.upd + '</span>' +
+      '</div>' +
       '<div class="p319-item__actions">' +
-        (ended ? '' : '<button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline p319-item__del">' + (draft ? '下書きを破棄' : '削除') + '</button>') +
+        (deletable ? '<button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline p319-item__del">' + (draft ? '下書きを破棄' : '削除') + '</button>' : '') +
         (draft
           ? '<a class="ktn-action-btn" href="' + p211Link('edit', e.id) + '">編集を再開 →</a>'
           : '<a class="ktn-action-btn" href="' + p211Link('clone', e.id) + '">クローン →</a>' +
-            (ended ? '' : '<a class="ktn-action-btn" href="' + p211Link('edit', e.id) + '">編集 →</a>')) +
+            '<a class="ktn-action-btn" href="' + p211Link('edit', e.id) + '">編集 →</a>') +
       '</div>';
     return li;
   }
 
   /* ── フィルタ・並べ替え描画 ── */
   var SORTS = {
-    'reg-desc': function (a, b) { return b.rs - a.rs; },
-    'reg-asc':  function (a, b) { return a.rs - b.rs; },
-    'title':    function (a, b) { return a.title.localeCompare(b.title, 'ja'); },
+    'reg-desc':    function (a, b) { return b.rs - a.rs; },
+    'reg-asc':     function (a, b) { return a.rs - b.rs; },
+    'title':       function (a, b) { return a.title.localeCompare(b.title, 'ja'); },
+    /* pd＝会期開始日（YYYYMMDD）の昇順＝開催開始日が早い順（2026-08-16 ラベルを「開催日順」→「開催日が早い順」に是正、ロジックは変更なし） */
+    'period-asc':  function (a, b) { return (a.pd || 0) - (b.pd || 0); },
   };
 
   function render() {
@@ -12297,9 +12319,18 @@ KTN.pages['p4-18'] = function () {
       /* 下書き＝別もの。種別・ステータスで絞り込む時は候補から外す（「すべて」表示時のみ最上部に固定） */
       if (isDraft(e)) return ft === '' && fs === '';
       /* 非公開＝管理者専用の状態遷移（オーナー操作の対象外）。この一覧には常に表示しない */
-      if (effStatus(e) === 'unpublished') return false;
+      if (pubStatus(e) === 'unpublished') return false;
+      /* 会期終了後の展覧会は編集・削除ができなくなるため、この一覧自体から除外する（2026-08-16） */
+      if (!isDraft(e) && e.sstatus === 'closed') return false;
       if (ft && e.type !== ft) return false;
-      if (fs && effStatus(e) !== fs) return false;
+      /* フィルタ「公開日前」＝公開日指定が設定済みだがまだ公開されていない項目のみ（pubStatus とは別軸の
+         判定。公開日指定の注記〔statusNoteHtml〕は公開済み後も履歴として残るため常に出るが、このフィルタは
+         「まだ公開日を迎えていない」に絞るので e.published を除外条件に持つ・2026-08-16） */
+      if (fs === 'scheduled') {
+        if (!(e.publishMode === 'scheduled' && e.publishDate && !e.published)) return false;
+      } else if (fs && pubStatus(e) !== fs) {
+        return false;
+      }
       return true;
     });
     rows.sort(SORTS[sortSel.value] || SORTS['reg-desc']);
@@ -12405,7 +12436,7 @@ KTN.pages['p4-18'] = function () {
   function dupCheckExhibitions() {
     return EXHIBITIONS.filter(function (e) {
       if (isDraft(e)) return false;
-      var s = effStatus(e);
+      var s = pubStatus(e);
       return s === 'pending' || s === 'scheduled';
     });
   }
@@ -12416,7 +12447,7 @@ KTN.pages['p4-18'] = function () {
         '<div class="p319-dup-modal__item-body">' +
           '<span class="p319-dup-modal__item-title">' + e.title + '</span>' +
           '<span class="p319-dup-modal__item-period">' + (e.period || '会期未定') + '</span>' +
-          '<div class="p319-dup-modal__item-badges">' + statusHtml(e) + '</div>' +
+          '<div class="p319-dup-modal__item-badges">' + statusHtml(e) + statusNoteHtml(e) + '</div>' +
         '</div>' +
         '<a class="ktn-action-btn" href="' + p211Link('edit', e.id) + '">編集する →</a>' +
       '</li>';

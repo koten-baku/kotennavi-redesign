@@ -4225,3 +4225,211 @@ React の条件レンダリングと Drupal のアクセス制御の共通の元
 - **検証**：全81ファイル（HTML80＋デモ1）で`id="ktnSidebar"`・`id="ktnFooter"`がそれぞれ過不足なく1個ずつ存在すること、`dev-ph--sidebar`/`dev-ph--footer`の残存が0件であること、`</html>`/`</body>`が各1個であることをgrepで全件確認。CSS側は既存の`.ktn-sidebar{position:fixed}`・`.content-wrap{margin-left:var(--sw)}`が新規追加ページにもそのまま整合することを確認（CSS変更なし）。
 - **保留事項**：ブラウザでの目視確認は未実施・ユーザー確認待ち。特にグループB/E（`.shell`構造を新規導入した12ページ）はレイアウト崩れの有無・モバイル幅での表示を含めて要確認。
 - **影響ファイル**：`kotennavi-common.js`（`renderFooter()`新設・`renderAll()`/`KTN.init`への配線）、`kotennavi-p*.html`（80ファイル・aside/footer挿入または`.shell`化）、`kotennavi_sidebar_footer.html`（デモ簡略化）、`docs/progress.md`。
+
+### 追補231（2026-08-16）：サイドバーロゴ下線を中央短線化＋管理ページのパンくず直下余白を撤去（前追補230の全ページ展開直後にユーザーが発見した2件の視覚調整）
+
+- **①サイドバーロゴ下線の中央短線化**
+  - **ユーザー指示（原文）**：「素晴らしいです！ありがとう。サイドナビの個展なびロゴの下の線がパンくずやtagbarの線とずれているのが気になるので、ロゴの線を無くすか幅いっぱいでなくて中央の仕切り線にするかに修正してください。」（追補230の全ページ展開完了報告を受けての確認過程で発見）。
+  - **原因**：`.ktn-sidebar__logo`の`border-bottom:1px solid var(--border)`はサイドバー幅いっぱいの罫線で、下に続くパンくず・tagbarの罫線（コンテンツ幅基準）と左右端が揃わず視覚的にずれて見えていた。
+  - **修正**：`border-bottom`を撤去し、既存の`.ktn-sidebar__divider`（ロールナビ区切り・`width:72%`中央揃え）と同じ比率の罫線を`::after`疑似要素（`position:absolute;left:50%;transform:translateX(-50%);width:72%;height:1px;background:var(--border)`）で追加。新規の値を作らず既存のサイドバー内罫線パターンに揃えた。`kotennavi-common.css`のcanonical1箇所のみの変更で全ページ（共通サイドバーマークアップを使う約80ページ）に自動反映。
+- **②管理ページのパンくず直下余白撤去**
+  - **ユーザー指示（原文）**：「管理・編集系ページのパンくずとヘッド帯(ページオーナーなど)の間の間隔が気になる。この間隔がない方がいいかな？p3-11で試しに修正してもらえますか？」→トライアル確認後「いい感じですね、全体へ横展開してください。」
+  - **経緯**：2026-07-09に32px→16pxへ既に一度縮小済みだった`body.mgmt-page .ktn-content:has(> .ktn-mgmt-context){padding-top:16px}`に対し、さらに詰めたいとの指摘。まず`body.p3-11-page.mgmt-page .ktn-content:has(> .ktn-mgmt-context){padding-top:0}`という追加ルール（p3-11の`.p3-11-page`クラスでセレクタ詳細度を上げてp3-11のみ上書き）でトライアルし、ユーザーが実機確認。
+  - **確定**：トライアルが好評だったため、トライアル用の限定セレクタは削除し、canonicalルール自体を`padding-top:0`に直接変更（`.ktn-mgmt-context`をコンテンツ先頭に持つ全ての管理・編集ページ＝CLAUDE.md「管理ページのidentity strip」表に列挙された17ページ全てに影響）。**単一ページでのCSSトライアル→確認→canonicalルールへ直接反映、というワークフローを踏襲**（新しいページ固有クラスやコメントアウトを残さず、確定後は元のルールを直接書き換える）。
+- **保留事項**：両件ともブラウザでの目視確認はユーザー確認待ち。
+- **影響ファイル**：`kotennavi-common.css`（`.ktn-sidebar__logo`／`.ktn-mgmt-context`直後の`padding-top`ルール）、`docs/progress.md`。
+
+### 追補232（2026-08-16）：サイドバーフッター（Follow us）の視認性改善＋SNSリンク先を実URLへ更新
+
+- **ユーザー指示（原文）**：「両方とも確認しました。ありがとう。サイドバーのfollow usのfacebookとxのロゴとコピーライトが小さく薄いので視認性が低いのを修正してほしい。facebookのリンク先はhttps://www.facebook.com/kotennavi xのリンク先はhttps://x.com/kotennavi」（追補231の2件の確認完了後、新たに発見・依頼）。
+- **原因**：`.ktn-sidebar__footer`は`font-size:0.52rem`・`color:#bbb`と非常に小さく、かつサイドバー背景`#fff`に対して`#bbb`はコントラスト比が低く視認しづらかった（デザイン初期のプレースホルダー値のまま未調整だった）。
+- **修正**：`kotennavi-common.css`の`.ktn-sidebar__footer`を`font-size:0.66rem`／`color:var(--muted)`／`line-height:1.8`／`letter-spacing:.02em`／`padding:10px 8px`に変更。リンク（`a`）は`font-weight:500`を追加、hover色を`var(--muted)`（ベースと同色で無意味だった）から`var(--accent)`（ブランド青）に変更しインタラクション性を明示。canonical CSS1箇所の変更で全ページ共通サイドバーに自動反映。
+- **リンク先の実URL化**：サイドバーフッターを持つ全82ファイル（本番ページ80＋デモ`kotennavi_sidebar_footer.html`）で、プレースホルダーのまま残っていた`https://www.facebook.com/`→`https://www.facebook.com/kotennavi`、`https://x.com/`→`https://x.com/kotennavi`に一括置換。
+- **検証**：置換後、全ファイルで旧URL（`facebook.com/" target`・`x.com/" target`）の残存が0件、新URL（`facebook.com/kotennavi`）が82件存在することをgrepで確認。
+- **保留事項**：ブラウザでの目視確認はユーザー確認待ち。
+- **影響ファイル**：`kotennavi-common.css`（`.ktn-sidebar__footer`）、`kotennavi-p*.html`（80ファイル）、`kotennavi_sidebar_footer.html`、`docs/progress.md`。
+
+### 追補233（2026-08-16）：サイドバーフッターに「Follow us」ラベル追加＋文字サイズ再拡大＋重複コピーライトを削除
+
+- **ユーザー指示（原文）**：「もう一回り大きく、上にfollow usを付けて下さい。コピーライトはフッターにあるようですね、2重に書かない方がいいでしょうか？」（追補232の確認直後）。
+- **重複調査**：`kotennavi-common.js`の`renderFooter()`（全ページ共通の大フッター・`renderAll()`から呼ばれる）を確認したところ、既に`.ktn-footer__copy`＝「©2010 kotennavi Co., Ltd. All rights reserved.」を出力していることを確認。サイドバーフッターの「©2010 kotennavi<br>Co., Ltd.」（HTML直書き・全82ファイル共通の静的マークアップ）はこれと完全に重複していたため、ユーザーの懸念どおり削除が妥当と判断。
+- **修正**：
+  - `kotennavi-common.css`の`.ktn-sidebar__footer`の`font-size`を`0.66rem`（追補232で調整済み）からさらに`0.76rem`へ拡大。
+  - 新設`.ktn-sidebar__footer-label`（`font-family:var(--font-en-label)`＝Cinzel／`.6rem`／`600`／`uppercase`／`letter-spacing:.14em`）＝CLAUDE.md「ラベル系（uppercase メタテキスト）」規約に準拠した英語機能ラベルとして「Follow us」をSNSリンクの直前に追加。
+  - サイドバーフッターを持つ全82ファイル（本番80＋デモ`kotennavi_sidebar_footer.html`）のHTMLマークアップを一括修正：`<p class="ktn-sidebar__footer-label">Follow us</p>`をFacebookリンク直前に追加、末尾のコピーライト行（`©2010 kotennavi<br>Co., Ltd.`）を削除。
+- **検証**：全82ファイルで`ktn-sidebar__footer-label">Follow us`の存在、および`.ktn-sidebar__footer`ブロック内から`©2010`が完全に消えていることをスクリプトで確認。
+- **保留事項**：ブラウザでの目視確認はユーザー確認待ち。
+- **影響ファイル**：`kotennavi-common.css`（`.ktn-sidebar__footer`／`.ktn-sidebar__footer-label`新設）、`kotennavi-p*.html`（80ファイル）、`kotennavi_sidebar_footer.html`、`docs/progress.md`。
+
+---
+
+### 追補234（2026-08-16）：サイドバーフッターのFacebook/Xをアイコン横並びへ変更（テキストリンクから丸型アイコンボタンへ）
+
+- **ユーザー質問（原文）**：「Follow usとfacebookとxを横に書くとカッコいい？」（追補233の完了直後）。探索的な意匠質問のため、即実装せず提案として回答：120px幅のサイドバーでは「Facebook」「X」のテキストを横並びにすると窮屈で折り返しやすいため、テキストではなくサイドバー既存の線画アイコン（`.ktn-sidebar__icon`＝44px円形・`border:1.5px solid var(--border)`）に揃えた丸型アイコンボタンの横並びを提案。ユーザーが「やってみて下さい」と承認したため実装。
+- **修正**：
+  - `kotennavi-common.css`の`.ktn-sidebar__footer`からテキストリンク用スタイル（`font-size`/`line-height`/`letter-spacing`/`a`要素のcolor・hover等）を撤去し、`margin-top:auto;text-align:center;padding:10px 8px;flex-shrink:0`のみに簡素化。
+  - 新設`.ktn-sidebar__sns`（`display:flex;justify-content:center;gap:10px`）＋`.ktn-sidebar__sns-link`（30×30px円形・`border:1.5px solid var(--border)`・背景`#fafafa`・内部アイコン14×14px・hoverで`var(--accent)`枠線＋文字色＋`background:#fff`＋`transform:scale(1.06)`）＝サイドバー本体の既存アイコンデザイン言語を踏襲した縮小版。
+  - SVGアイコンはFont Awesome Free（CC BY 4.0）の`facebook-f`（viewBox `0 0 320 512`）／`x-twitter`（viewBox `0 0 512 512`）パスを使用。サイト標準の線画（`stroke="currentColor"`）ではなく`fill="currentColor"`の塗りパス＝ブランドロゴのため意図的な例外。
+  - サイドバーフッターを持つ全82ファイル（本番80＋デモ`kotennavi_sidebar_footer.html`）のマークアップを、`Follow us`ラベル＋テキストリンク2行から「`Follow us`ラベル＋`.ktn-sidebar__sns`内にアイコンボタン2つ」の構成に一括置換。
+- **実装時の事故と復旧（記録）**：一括置換をPerlスクリプト（正規表現の後方参照`$1`をヒアドキュメント内に埋め込み`/e`フラグで評価）で行った際、`/e`が置換文字列（変数）自体を評価するだけで`$1`の後方参照展開は行わないため、全82ファイルで`<div class="ktn-sidebar__footer">`の開始タグが文字列`$1`に置き換わり消失する事故が発生。ユーザー報告前に発見し、正規表現による一括修復（開始タグを正しいインデントで復元）と、全82ファイルの`<div>`/`</div>`タグバランス検証・目視スポットチェックで復旧を確認済み（表示上・機能上の影響なし）。
+- **検証**：全82ファイルで新アイコン構成への置換完了、`$1`等の破損文字列が残っていないことをgrepで確認。タグバランス検証で構造破損なしを確認。
+- **保留事項**：ブラウザでの目視確認はユーザー確認待ち。
+- **影響ファイル**：`kotennavi-common.css`（`.ktn-sidebar__footer`簡素化／`.ktn-sidebar__sns`・`.ktn-sidebar__sns-link`新設）、`kotennavi-p*.html`（80ファイル）、`kotennavi_sidebar_footer.html`、`docs/progress.md`。
+
+---
+
+### 追補235（2026-08-16）：ページ下部フッター（`.ktn-footer`）の文字視認性を改善＋背景色は現状維持を提案
+
+- **ユーザー相談（原文）**：「フッターの背景色についての相談ですが、今の色もすごくいいと思いますが、サイトロゴの色にして統一感を持たせた方がいいのかで迷っています。ご提案は？文字については視認性を上げてほしいです。」（サイドバーフッター一式完了直後）。
+- **背景色の判断（提案どまり・実装せず）**：現行`#001f3f`は色相的に既に`--accent`（ロゴ色`#005da7`）と同じ青系統のダークネイビーであり、彩度だけを落とした統一デザインになっている。ロゴ色そのもの（`--accent`）を850px超の縦長フッター全面に敷くことは推奨しない：①CLAUDE.mdの「ブランド青の運用ルール」＝`--accent`は「リンク・実行ボタン」の意味を持つ色として温存し多用しない設計思想と衝突する、②高彩度色を大面積に使うと長尺フッターでの視認疲れ・圧迫感が出やすい。「現状のダークネイビー据え置き」を提案として回答し、背景色変更の実装は行っていない（ユーザー判断待ち）。
+- **文字視認性の修正（実装済み）**：`kotennavi-common.css`の`.ktn-footer`配下、白文字`rgba(255,255,255,x)`のopacityが軒並み低かった（`0.22`〜`0.52`）のを引き上げ：
+  - `.ktn-footer__copy`/`.ktn-footer__policy a`：`0.22→0.45`
+  - `.ktn-footer__col-title`：`0.3→0.5`（下罫線`0.07→0.12`）
+  - `.ktn-footer__sns-link`：`0.3→0.52`（border`0.1→0.18`）
+  - `.ktn-footer__links a`：`0.52→0.74`
+  - `.ktn-footer__tagline`：`0.38→0.58`
+  - `.ktn-footer__feature-tag`：`0.42→0.62`（border`0.12→0.2`）
+  - `.ktn-footer__liaison-desc`：`0.35→0.58`
+  - `.ktn-footer__liaison-link`：`0.45→0.68`（border`0.15→0.25`）
+  - 各hover色は薄い白（`0.55`〜`0.9`）から純白`#fff`に統一し、押下可能要素であることのフィードバックを明確化。
+- **保留事項**：背景色をロゴ色寄りに変えるかどうかはユーザー判断待ち（提案のみ）。ブラウザでの目視確認も未実施。
+- **影響ファイル**：`kotennavi-common.css`（`.ktn-footer`配下の色値のみ・構造変更なし）、`docs/progress.md`。
+
+---
+
+### 追補236（2026-08-16）：P3-18/P4-18の展覧会バッジを「公開中／公開前」の2値に簡素化・確認待ち/公開予定はアクション行へ・ステータスフィルターから開催期間を除去し並べ替えに開催日順を追加
+
+- **ユーザー提案（原文）**：「p3-18,p4-18のフィルターについて、前提：このページに表示される展覧会カードは会期終了前の展覧会です。会期が終了すると展覧会を編集・削除できなくなるため。管理者確認済の展覧会は削除できなくなる。管理者確認済&公開日指定なしor公開日指定日以降の展覧会がサイト内で他のユーザーに公開される。前提を考慮すると、バッジとしては公開中か公開前で、公開前の場合『確認待ち』『公開予定日付』をアクションボタン行に置くのはどうでしょうか？またステータスのフィルターに開催日のステータスと公開・確認が混ざっていますが、開催日に関するステータスは不要で公開と確認のステータスにするのはどうでしょうか？その代わり並べ替えに開催日順を追加する。」。具体的なバッジ状態・フィルター構成・並べ替え追加まで指定された実装レベルの提案のため、確認往復を挟まず直接実装。
+- **設計の要点（旧実装との違い）**：旧`.p318-status`は「確認待ち／公開予定／`sb-*`開催期間バッジ（開催前/もうすぐ開始/開催中/もうすぐ終了/終了）」を1つのタイトル行バッジ枠に混在させていた。これは「いつやるか（開催期間）」と「オーナー操作の観点で見えるか（公開・確認状態）」という**別軸の状態を1つのUI要素に押し込んでいた**のが根本原因（フィルターの選択肢が8択に膨れていたのも同じ理由）。今回、バッジ＝公開・確認軸のみに限定し、開催期間はページの目的（会期終了前の展覧会だけを一覧・管理する画面）に対して「並べ替えの軸」としてのみ意味を持たせる形に整理した。
+- **バッジ（`.p318-status`・タイトル行）**：2値化。`--live`＝「公開中」（緑`#2a8838`・`sb-live`と同系色で「見えている」を直感的に伝える）、`--pre`＝「公開前」（`var(--muted)`グレー・中立）。旧`--pending`/`--scheduled`のバッジ用ピルは削除。
+- **アクション行の補足テキスト（新設`.p318-status-note`）**：「公開前」の内訳（確認待ち／公開予定日）はバッジでなくアクション行の左端（`margin-right:auto`で削除/クローン/編集ボタン群と分離）にテキストとして表示。確認待ち中に公開予定日も設定済みの場合は「確認待ち・公開予定 [日付]」と1行に併記（旧実装は2つの別バッジを横並びにしていたが、行の役割が変わったため1つのテキストに統合）。色は旧バッジの色（`--pending`＝`#a06010`、`--scheduled`＝`#1a4a88`）をそのまま流用し、視覚的な連続性を保った。
+- **フィルター（`#p318FilterStatus`/`#p418FilterStatus`）**：8択（すべて/確認待ち/公開予定/開催前/もうすぐ開始/開催中/もうすぐ終了/終了）→4択（すべて/確認待ち/公開予定/公開中）に縮小。開催期間の選択肢を全て削除。
+- **並べ替え（`#p318Sort`/`#p418Sort`）**：新規`period-asc`（開催日順＝会期開始日が近い順）を追加。サンプルデータ全18件（P3-18＝x1〜x9／P4-18＝g1〜g9）に会期開始日の数値キー`pd`（`YYYYMMDD`・`period`文字列から手動算出、下書き（会期未定）は`0`）を新規付与。
+- **JS実装（`kotennavi-pages.js`・両ページ共通パターン）**：
+  - `effStatus(e)`を`pubStatus(e)`にリネームし、戻り値を`pending`/`scheduled`/`unpublished`/`published`の4値に純化（旧は`published`分岐で`e.sstatus`をそのまま返しておりバッジ描画側が開催期間まで見に行く設計だった＝これが軸混在の直接原因）。
+  - `statusHtml(e)`＝2値バッジ描画のみに全面書き換え。`statusNoteHtml(e)`を新設しアクション行のテキストを担当。
+  - 会期終了ロック（`ended`＝会期終了後は編集・削除不可という既存の業務ルール・CLAUDE.md/project memory「展覧会は会期終了後オーナーでも編集・削除不可」）は`pubStatus(e)==='closed'`という表現がそもそも存在しなくなったため、`e.sstatus==='closed'`を`makeItem()`内で直接参照する形に変更。**開催期間はUIの表示・フィルター軸からは退場したが、内部の業務ロジック（会期終了ロック・並べ替え）としては`sstatus`/`pd`フィールドに残したまま**＝表示の統合とデータモデルの温存を両立。
+  - 重複作成チェックモーダル（新規展覧会作成時に確認待ち／公開予定の既存展覧会を警告する`dupCheckExhibitions()`）も`pubStatus()`へ追随（`pending`/`scheduled`の判定ロジック自体は不変）。モーダル内のバッジ表示（`.p319-dup-modal__item-badges`）は`statusHtml(e) + statusNoteHtml(e)`を併記し、2値バッジだけでは失われる確認待ち/公開予定の詳細情報をモーダル内では維持（このモーダルの目的が「どの展覧会がまだ非公開状態か」を具体的に伝えることのため、詳細情報を落とすと注意喚起の意味が薄れる）。
+  - 旧`STATUS`（sb-*ルックアップの静的マップ）は両ページから削除（バッジ描画で参照されなくなったデッドコード）。
+- **CSS（`kotennavi-common.css`・`.p318-status`ブロック直前）**：`.p318-status--live`/`--pre`（バッジ・ピル型で維持）と`.p318-status-note`/`--pending`/`--scheduled`（アクション行テキスト・ピルでなくプレーンテキスト＋色のみ）を新設。canonical直前の説明コメントも新設計（2値バッジ＋アクション行ノート）に更新。
+- **対になるページの同時修正**：project memory「対になるページは同時修正する」に従い、p3-18/p4-18のHTML（フィルター・並べ替えoptionタグ）とJS（`KTN.pages['p3-18']`/`['p4-18']`の両関数）を同一ラウンドで修正。
+- **検証**：grepで`effStatus`の残存参照が無いこと（他ページの同名でない`STATUS`/`STATUS_BADGE`変数と混同していないこと）、`p318-status--pending`/`--scheduled`（旧バッジクラス）の残存参照がdocsログ以外に無いことを確認。
+- **保留事項**：ブラウザでの目視確認はユーザー確認待ち（project memory「ブラウザ目視確認はユーザーが行う」）。
+- **影響ファイル**：`kotennavi-common.css`（`.p318-status`ブロック）、`kotennavi-p3-18.html`／`kotennavi-p4-18.html`（フィルター・並べ替えoption）、`kotennavi-pages.js`（`KTN.pages['p3-18']`/`['p4-18']`）、`docs/progress.md`。
+
+### 追補237（2026-08-16）：P3-18/P4-18の削除可否は「会期終了」でなく「管理者確認」で判定・確認待ち+公開予定日は色分けした別スパンに分離・タイトル行バッジはLIAISON/LIAISON+バッジの後ろへ
+
+追補236（同日）の初回実装に対するユーザーフィードバック3件を反映。
+
+> 管理者確認後は削除不可にしてください。会期終了後の展覧会はこのページに表示しない。
+> 公開予定は正しく公開日指定です。確認待ちと「・」つながりでテキスト同色だと確認予定日と勘違いされる。
+> 公開日・公開前バッジはリエゾン・リエゾン+バッジの後ろにしてください。
+
+**1. 削除可否の判定軸を「会期終了（sstatus）」から「管理者確認（confirmed）」へ変更：**
+- 旧実装は「会期終了後（`ended`＝`e.sstatus==='closed'`）は削除ボタンを隠す・一覧には残しクローンのみ可」という設計だったが、これはCLAUDE.mdの元々の業務前提「管理者確認済の展覧会は削除できなくなる」を反映していなかった（会期終了は削除不可の副次条件に過ぎず、確認済みであれば会期中でも削除不可にすべきだった）。
+- `makeItem()`内で`var deletable = draft || !e.confirmed;`に変更。削除ボタンは「下書き」または「確認待ち（未確認）」の間のみ表示。確認済みになった時点（会期の前後を問わず）で削除不可。
+- 「会期終了後の展覧会はこのページに表示しない」という指示どおり、`render()`のフィルタに`if (!isDraft(e) && e.sstatus==='closed') return false;`を追加し、会期終了展覧会は一覧自体から除外するよう変更（旧「クローンのみ可の縮退表示で一覧に残す」設計は廃止）。
+- 結果、`makeItem()`内の`ended`変数・関連分岐（編集リンクの条件付き非表示等）は不要になり削除。一覧に出てくる項目は常に「編集 →」リンクを持つ（会期終了はそもそも表示されないため）。
+- **sstatusの残存用途**：バッジ・フィルタには出さないが、①一覧除外判定（`closed`）、②並べ替え「開催日順」の`pd`キー算出根拠、の2つに限定される内部専用フィールドという位置づけを維持（追補236の設計を踏襲、コメントを更新）。
+
+**2. 確認待ち＋公開予定日の同時表示を色分けした別スパンに分離：**
+- 旧実装は`statusNoteHtml(e)`が`pending`時に「確認待ち・公開予定 [日付]」を単一スパン（`--pending`アンバー1色）で出力しており、「・」で連結された同色テキストが「確認予定日（＝いつ確認されるかの予定日）」であるかのように誤読される懸念があった。実際の意味は「公開日として指定された日付」であり、確認待ちとは独立した別の状態情報。
+- `statusNoteHtml(e)`を書き換え、`pending`時は`確認待ち`（`--pending`アンバー）と`公開予定 [日付]`（`--scheduled`ブルー）を色の異なる2つの独立`<span class="p318-status-note">`として返すよう変更（連結の「・」テキストは廃止）。
+- レイアウト：`makeItem()`側で`statusNoteHtml(e)`の戻り値を`<span class="p318-status-note-wrap">`（新設・`display:flex;align-items:center;gap:10px;margin-right:auto`）でラップしてから`.p319-item__actions`へ挿入。旧`.p318-status-note`自身が持っていた`margin-right:auto`はラッパー側に移動（複数スパンが個別に`margin-right:auto`を持つとflexの余白配分が崩れるため）。重複チェックモーダル（`.p319-dup-modal__item-badges`）側は元々`flex;gap:7px`の行内に`statusHtml(e)+statusNoteHtml(e)`を裸で連結しているため、ラッパーなしでも複数スパンがそのまま並び、変更不要だった。
+
+**3. タイトル行バッジの並び順をLIAISON/LIAISON+バッジの後ろへ：**
+- `makeItem()`のタイトル行HTML生成順を`statusHtml(e) + liaisonHtml`から`liaisonHtml + statusHtml(e)`へ入れ替え（種別バッジ`cb-content`→LIAISON/LIAISON+バッジ→公開中/公開前バッジ、の順）。P3-18・P4-18両ページで同一テキストのため`Edit`の`replace_all`で1回の呼び出しで両方に適用。
+
+**影響ファイル**：`kotennavi-common.css`（`.p318-status-note-wrap`新設・`.p318-status-note`からmargin-right:auto除去・コメント更新）、`kotennavi-pages.js`（`KTN.pages['p3-18']`/`['p4-18']`の`statusNoteHtml`/`makeItem`/`render`の3関数・EXHIBITIONS配列直前のsstatus用途コメント）、`docs/progress.md`。
+
+**保留事項**：ブラウザでの目視確認はユーザー確認待ち。
+
+---
+
+### 追補238（2026-08-16）：P3-18/P4-18「確認待ち」を下書きと同じ右肩リボンで表示（アクション行のテキスト表示から変更）
+
+追補237の続き。ユーザーからの追加提案：
+
+> 確認待ちを下書と同じように短冊で右肩にかけた方がわかりやすいかもです
+
+**実装：**
+- 下書きの右肩リボン`.p319-item__ribbon`（`writing-mode:vertical-rl`＋`clip-path`の斜め短冊）と同じ構造を、非下書きの「確認待ち」（`!e.confirmed`）にも適用。新規モディファイア`.p319-item__ribbon--pending{background:#a06010}`（既存の`.p318-status-note--pending`アンバーと同色）を追加し、下書きのグレー`#5b6470`と区別。
+- `makeItem()`内に`var pending = !draft && !e.confirmed;`を追加し、リボンHTMLを`draft ? 下書きリボン : (pending ? 確認待ちリボン : '')`の3分岐に変更。下書きと確認待ちは`isDraft`/`confirmed`の関係上、同一カードで同時に真になることはないため、リボン表示枠（`top:0;right:16px`・1箇所のみ）を競合なく共有できる。
+- `statusNoteHtml(e)`から「確認待ち」テキスト（`.p318-status-note--pending`）を削除し、公開予定日のみを返す単純な関数に縮小（`pending`/`scheduled`の分岐が実質同じ処理になったため統合）。CSS側の`.p318-status-note--pending`ルールも未使用になったため削除。
+- アクション行は「確認待ち＋公開予定日」の2スパン表示から「（リボンで確認待ちを表示）＋公開予定日のみ」に変化。確認待ちで公開予定日も設定済みの場合、右肩に確認待ちリボン、アクション行に「公開予定 [日付]」の青文字が残る組み合わせになる。
+
+**影響ファイル**：`kotennavi-common.css`（`.p319-item__ribbon--pending`新設・`.p318-status-note--pending`削除・コメント更新）、`kotennavi-pages.js`（`KTN.pages['p3-18']`/`['p4-18']`の`statusNoteHtml`/`makeItem`の2関数）、`docs/progress.md`。
+
+**保留事項**：ブラウザでの目視確認はユーザー確認待ち。
+
+---
+
+### 追補239（2026-08-16）：P2-11の公開設定を「公開日時指定」から「公開日指定」へ修正（時刻入力を廃止）
+
+ユーザー指摘：
+
+> p2-11の公開設定は公開日指定に修正してください、公開日時ではない
+
+**実装：**
+- `kotennavi-p2-11.html`の公開設定ブロック：ラベル「公開日時を指定する」→「公開日を指定する」、説明文「指定した日時に自動公開」→「指定した日に自動公開」に修正。`#p211PublishDatetime`内の`<input type="time">`を削除し`<input type="date">`のみ残した（class/id名`p211-publish-datetime`/`p211PublishDatetime`自体はHTML内部実装のみで参照されるためリネームせず据え置き）。
+- `buildSummary()`の確認モーダル表示ロジックも「日時指定（日付 時刻）」→「日付指定（日付のみ）」に追随。
+- P3-18/P4-18の運用ガイド文言（`.p319-notice__body`）にあった「今すぐ公開する／公開日時を指定する」の言及も同様に「公開日を指定する」へ統一（P2-11の実際の選択肢ラベルと一致させるため）。
+
+**影響ファイル**：`kotennavi-p2-11.html`（公開設定ブロック・`buildSummary()`）、`kotennavi-p3-18.html`・`kotennavi-p4-18.html`（運用ガイド文言）、`docs/progress.md`。
+
+**保留事項**：ブラウザでの目視確認はユーザー確認待ち。
+
+---
+
+### 追補240（2026-08-16）：P3-18/P4-18「公開予定」注記の表示件数がステータスフィルタとズレる不具合を修正・文言を「公開設定：公開日指定」へ明示化・並べ替えラベルを是正
+
+ユーザー指摘：
+
+> p3-18の公開予定はわかりにくい、明示的に公開設定で公開日指定されていることがわかるようにした方がよい。フィルターのステータスの公開予定とも連動しているが、公開予定が3件あるのに、公開予定でフィルタリングすると1件のみ。
+> 並べ替えの開催日順を開催開始日の早い順にした方がわかりやすい。
+
+**原因（件数不一致）：** `statusNoteHtml(e)`が、フィルタが使う実効ステータス`pubStatus(e)`（`confirmed`/`published`/`publishMode`/`publishDate`を総合判定する4値関数）ではなく、生フィールド`e.publishMode==='scheduled' && e.publishDate`のみで注記表示の可否を判定していた。この結果、以下の3カテゴリすべてに注記が表示されていた：
+1. `pubStatus(e)==='pending'`（確認待ち）だが、オーナーが投稿時点で既に公開日を選択済みの項目
+2. `pubStatus(e)==='scheduled'`（確認済・未公開・公開日指定）＝フィルタが一致する唯一のカテゴリ
+3. `pubStatus(e)==='published'`（公開済み）だが、当時使っていた`publishMode`/`publishDate`の値が履歴としてオブジェクトに残っている項目
+
+一方フィルタ`#p318FilterStatus`/`#p418FilterStatus`の「公開予定」選択肢は`pubStatus(e)==='scheduled'`のみに一致するため②のみがヒットし、注記表示（3件）とフィルタ結果（1件）が乖離していた。
+
+**実装：**
+- `statusNoteHtml(e)`の表示条件を`e.publishMode==='scheduled' && e.publishDate`から`pubStatus(e)==='scheduled'`へ変更（`kotennavi-pages.js`のP3-18/P4-18双方）。これにより注記の表示件数は常にステータスフィルタ「公開予定」の絞り込み件数と一致する。
+- 注記テキストを曖昧な「公開予定 [日付]」から「公開設定：公開日指定（[日付]）」に変更。公開設定（P2-11）でオーナーが「公開日を指定する」を選んだ結果であることを明示し、ユーザー要望「明示的に公開設定で公開日指定されていることがわかるように」に対応。
+- 並べ替え「開催日順」（`period-asc`）のロジック自体（`(a.pd||0)-(b.pd||0)`＝`pd`昇順、`pd`は会期開始日のYYYYMMDD数値キー）は元から「開催開始日が早い順」で正しく動作していたため変更なし。選択肢ラベルのみ、他の並べ替え選択肢（「登録が新しい順」「登録が古い順」）と同様に方向を明示する形へ「開催日順」→「開催日が早い順」に変更（`kotennavi-p3-18.html`/`kotennavi-p4-18.html`）。
+- EXHIBITIONSサンプルデータのヘッダーコメント（P3-18側、`confirmed:false`でも公開日が入る旨の説明）と、`kotennavi-common.css`の`.p318-status-note`直前のcanonicalコメントを、新しい判定条件・新しい文言に合わせて更新。
+
+**影響ファイル**：`kotennavi-pages.js`（`KTN.pages['p3-18']`/`['p4-18']`の`statusNoteHtml()`・EXHIBITIONSヘッダーコメント・`SORTS`コメント）、`kotennavi-p3-18.html`・`kotennavi-p4-18.html`（並べ替えオプションラベル）、`kotennavi-common.css`（canonicalコメント）、`docs/progress.md`。
+
+**保留事項**：ブラウザでの目視確認はユーザー確認待ち。
+
+---
+
+### 追補241（2026-08-16）：P3-18/P4-18「公開日指定」注記の表示条件を元に戻し、フィルタ「公開日前」を別軸の独自判定として新設（追補240の一部を上書き）
+
+ユーザー指示：
+
+> 「公開設定：公開日指定(2026.9.1)」→「公開日指定:2026.9.1」にしてください。登録更新日付の行の左寄せにおいてください。
+> 2件目の確認待ちと4件目公開中も公開日指定にしてください。フィルターのステータスの「公開予定」→「公開日前」に変更してください、この場合は該当件数2件です。
+
+**設計転換：** 追補240では「注記の表示件数とフィルタの絞り込み件数を常に一致させる」ことを目的に`statusNoteHtml(e)`の判定を`pubStatus(e)==='scheduled'`へ厳密化したが、今回の指示はこれと逆方向＝**注記とフィルタを意図的に別軸の概念として切り離す**設計。
+- **注記＝永続的な事実**：「この項目には公開日指定が設定されている」。confirmed/published状態を問わず、`publishMode==='scheduled' && publishDate`であれば常に表示する（追補240以前の生フィールド判定に復帰）。公開済み後も設定日は履歴として注記に残り続ける。
+- **フィルタ「公開日前」（旧ラベル「公開予定」）＝時点の状態**：「まだ公開日を迎えていない」。`publishMode==='scheduled' && publishDate && !e.published`という独自条件（`pubStatus(e)`は使わない）。公開済みの項目はこのフィルタから除外される。
+- 結果、注記表示件数（3件：確認待ち1件＋確認済未公開1件＋公開済1件）とフィルタ絞り込み件数（2件：確認待ち1件＋確認済未公開1件、公開済は除外）は一致しない。**これは今回のユーザー指示による意図的な差分**（「2件目の確認待ちと4件目公開中も公開日指定にしてください」＝注記は常に出す／「フィルター…この場合は該当件数2件です」＝フィルタは公開済を除いた狭い定義）。
+
+**実装：**
+- `statusNoteHtml(e)`の表示条件を`pubStatus(e)==='scheduled'`から`e.publishMode==='scheduled' && e.publishDate`へ戻す（`kotennavi-pages.js`のP3-18/P4-18双方）。
+- 注記テキストを「公開設定：公開日指定（[日付]）」（全角コロン・括弧）から「公開日指定:[日付]」（半角コロンのみ）に簡素化。
+- 注記の表示位置を`.p319-item__actions`（削除/クローン/編集ボタン行）から`.p319-item__dates`（登録/更新日付行）へ移動し左寄せ配置。`.p319-item__dates`をflexコンテナ化（`display:flex;align-items:center`）、日付テキストは新設`.p319-item__dates-text`（旧`.p319-item__dates`の文字スタイルを継承＋`margin-left:auto`で右寄せ維持）でラップ。注記は既存`.p318-status-note-wrap`（`margin-right:auto`）でラップし、行の両端に分かれる構成にする。
+- `render()`のフィルタロジックに`fs==='scheduled'`の特別分岐を追加：`pubStatus(e) !== fs`ではなく`!(e.publishMode==='scheduled' && e.publishDate && !e.published)`で除外判定する（`kotennavi-pages.js`のP3-18/P4-18双方）。
+- フィルタのオプションラベルを「公開予定」→「公開日前」に変更（`value="scheduled"`自体は不変・`kotennavi-p3-18.html`/`kotennavi-p4-18.html`）。
+- `kotennavi-common.css`のcanonicalコメント（`.p318-status`直前）を新しい設計（注記＝常時表示、フィルタ＝別軸の`!published`条件、件数不一致は意図的）に合わせて更新。モバイル用に`.p319-item__dates{flex-wrap:wrap;row-gap:4px}`を追加（注記＋日付テキストが1行に収まらない場合の折返し）。
+- EXHIBITIONSサンプルデータのヘッダーコメント（P3-18側）を新設計の説明に更新。P4-18側は元々P3-18のコメントを参照する形のため個別更新不要。
+
+**検証：** Node.jsでP3-18（x2/x8/x6）・P4-18（g2/g8/g6）双方について注記件数=3・フィルタ件数=2を直接計算し確認。`node -c kotennavi-pages.js`で構文チェック済み。
+
+**影響ファイル**：`kotennavi-pages.js`（`KTN.pages['p3-18']`/`['p4-18']`の`statusNoteHtml()`・`makeItem()`・`render()`・EXHIBITIONSヘッダーコメント）、`kotennavi-common.css`（`.p319-item__dates`再構成・`.p319-item__dates-text`新設・canonicalコメント・モバイルメディアクエリ）、`kotennavi-p3-18.html`・`kotennavi-p4-18.html`（フィルタオプションラベル）、`docs/progress.md`。
+
+**保留事項**：ブラウザでの目視確認はユーザー確認待ち。

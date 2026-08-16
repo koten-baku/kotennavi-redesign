@@ -75,10 +75,17 @@
   <div id="ktnRoleNav" style="width:100%;display:flex;flex-direction:column;align-items:center"></div>
 
   <div class="ktn-sidebar__footer">
-    <a href="https://www.facebook.com/" target="_blank">Facebook</a><br>
-    <a href="https://x.com/" target="_blank">X</a><br><br>
-    ©2010 kotennavi<br>Co., Ltd.
+    <p class="ktn-sidebar__footer-label">Follow us</p>
+    <div class="ktn-sidebar__sns">
+      <a href="https://www.facebook.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="Facebook">
+        <svg viewBox="0 0 320 512" fill="currentColor"><path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/></svg>
+      </a>
+      <a href="https://x.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="X">
+        <svg viewBox="0 0 512 512" fill="currentColor"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg>
+      </a>
+    </div>
   </div>
+
 </aside>
 
 <div class="content-wrap" id="contentWrap">
@@ -136,7 +143,7 @@
         <div class="p319-notice">
           <svg class="p319-notice__icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="17" height="17" aria-hidden="true"><path d="M2 10s3-5.5 8-5.5S18 10 18 10s-3 5.5-8 5.5S2 10 2 10Z"/><circle cx="10" cy="10" r="2.3"/></svg>
           <div class="p319-notice__body">
-            <strong>作成時に公開日（今すぐ公開する／公開日時を指定する）を設定でき、作成後は管理者確認を経て掲載されます。</strong>
+            <strong>作成時に公開日（今すぐ公開する／公開日を指定する）を設定でき、作成後は管理者確認を経て掲載されます。</strong>
             確認待ち・公開日未到来の間は、この一覧上でのみ状態を確認できます。また、<strong>編集・削除ができるのは会期が終了していない展覧会のみです（開催前の展覧会を含みます）</strong>。会期を終了すると編集・削除はできなくなりますが、あなたのギャラリーページの展覧会一覧には終了後もそのまま表示され続けます。
           </div>
         </div>
@@ -167,12 +174,8 @@
               <select class="p319-filter__sel" id="p418FilterStatus">
                 <option value="">すべて</option>
                 <option value="pending">確認待ち</option>
-                <option value="scheduled">公開予定</option>
-                <option value="upcoming">開催前</option>
-                <option value="soon">もうすぐ開始</option>
-                <option value="live">開催中</option>
-                <option value="ending">もうすぐ終了</option>
-                <option value="closed">終了</option>
+                <option value="scheduled">公開日前</option>
+                <option value="published">公開中</option>
               </select>
             </label>
             <label class="p319-filter">
@@ -180,6 +183,7 @@
               <select class="p319-filter__sel" id="p418Sort">
                 <option value="reg-desc">登録が新しい順</option>
                 <option value="reg-asc">登録が古い順</option>
+                <option value="period-asc">開催日が早い順</option>
                 <option value="title">タイトル順</option>
               </select>
             </label>
