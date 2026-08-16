@@ -8,42 +8,36 @@
 <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=DM+Serif+Display:ital@0;1&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Cinzel:wght@400;600;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="./kotennavi-common.css">
-  <link rel="stylesheet" href="./kotennavi-components.css">
 </head>
 <body>
 
-<!-- DEMO BAR -->
-<div class="demo-bar">
-  <span>ロール切替：</span>
-  <button class="demo-btn active" onclick="setRole('guest', this)">未ログイン</button>
-  <button class="demo-btn" onclick="setRole('user', this)">ユーザー</button>
-  <button class="demo-btn" onclick="setRole('user+creator', this)">ユーザー＋クリエイター</button>
-  <button class="demo-btn" onclick="setRole('user+gallery', this)">ユーザー＋ギャラリー</button>
-  <span style="opacity:.25;margin:0 6px">|</span>
-  <span style="opacity:.45">広告エリア:</span>
-  <button class="demo-btn active" id="adBtnAds" onclick="toggleAd('ads')">AdSense</button>
-  <button class="demo-btn" id="adBtnPr" onclick="toggleAd('pr')">サイト内PR</button>
-  <button class="demo-btn" onclick="setRole('admin', this)">管理者</button>
-  <span style="margin-left:16px">ページ切替：</span>
-  <button class="demo-btn" onclick="setPage('p1')">ホーム</button>
-  <button class="demo-btn" onclick="setPage('p10-1')">検索</button>
-  <button class="demo-btn" onclick="setPage('p61')">お知らせ</button>
-  <button class="demo-btn" onclick="setPage('p5')">myページ(P5)</button>
-  <button class="demo-btn" onclick="setPage('p3')">myクリエイター(P3)</button>
-  <button class="demo-btn" onclick="setPage('p4')">myギャラリー(P4)</button>
-  <button class="demo-btn" onclick="setPage('p90-1')">管理者(P90-1)</button>
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- デモバー -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ロール：</span>
+  <button class="dbtn on" onclick="setR('guest',this)">ゲスト</button>
+  <button class="dbtn" onclick="setR('login',this)">ログイン</button>
+  <button class="dbtn" onclick="setR('user+creator',this)">creator本人</button>
+  <button class="dbtn" onclick="setR('user+gallery',this)">gallery本人</button>
+  <button class="dbtn" onclick="setR('admin',this)">管理者</button>
+  <span class="dbar-sep">広告エリア：</span>
+  <button class="dbtn on" id="adBtnAds" onclick="toggleAd('ads')">AdSense</button>
+  <button class="dbtn" id="adBtnPr" onclick="toggleAd('pr')">サイト内PR</button>
 </div>
 
-<!-- ═══════ SIDEBAR ═══════ -->
+<div class="shell">
+
+<!-- サイドバー（kotennavi-p1.html と同一マークアップ・#ktnRoleNav は renderSidebar() がJS注入） -->
 <aside class="ktn-sidebar" id="ktnSidebar">
 
   <!-- ロゴ (logo5-1) -->
-  <a href="/p1" class="ktn-sidebar__logo" data-page="p1" onclick="handleNav(event,'p1','/p1')">
-    <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIGlkPSJf44Os44Kk44Ok44O8XzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgdmlld0JveD0iMCAwIDE1NS44NyAxNTUuODciPjxkZWZzPjxzdHlsZT4uY2xzLTF7ZmlsbDojZmZmO30uY2xzLTJ7ZmlsbDojMDA1ZGE3O308L3N0eWxlPjwvZGVmcz48cGF0aCBjbGFzcz0iY2xzLTIiIGQ9Ik0wLDB2MTU1Ljg3czEzNC4xOCwwLDEzNC4xOCwwYy0xLjA1LS42OS0yLjIxLTIuNDctMi44Ny0zLjcyLTIuMTQtNS4wOS00LjE4LTEyLjI1LTExLjQ2LTE3LjM1LTEuNjQtMS4wNi0xLjc1LTEuNzMtMS42Ny0yLjE0LjA5LS43MS43MS0xLjMxLDEuOTgtMS4xMiw5LjU1LDEuNjgsMTMuMTEsMy40MSwxOC4xNCw2LjU1LDYuNzYsNC42Miw4LjI0LDkuMjYsOC4zMSwxMi4xMy4xMywxLjk4LS4xNiw0LjQtMi4yNSw1LjY1aDExLjUxVjBIMFoiLz48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0xMi40OCwzNi41MWMuOTMtMi4xNSwxLjc3LTQuMTUsMi41NS02LjAxLS4xOCwyLjIxLS4zMiw0LjI3LS4zMiw1LjM1djE4LjYxYzAsMS4wNS44NSwxLjkxLDEuOTEsMS45MXMxLjkxLS44NSwxLjkxLTEuOTFWMjEuNzVjMi4zMy02LjExLDMuMjYtOS4yNCwzLjMzLTkuNDQuMy0xLjAxLS4yOC0yLjA3LTEuMjktMi4zNy0xLjAxLS4zLTIuMDcuMjgtMi4zNywxLjI5LS4wMi4wOC0yLjQxLDguMDYtOS4yLDIzLjc3LS40Mi45Ny4wMywyLjA5Ljk5LDIuNTEuMjUuMTEuNS4xNi43Ni4xNi43NCwwLDEuNDQtLjQzLDEuNzUtMS4xNVoiLz48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0zMy4wNSwyNy41Nmg0LjE2czAsNi45NiwwLDYuOTZoLS4xOGMtMi45MiwwLTUuMjksMi4zNy01LjI5LDUuMjl2My40OGMwLDIuOTIsMi4zNyw1LjI5LDUuMjksNS4yOWg0LjM1YzIuODEsMCw1LjEtMi4yOSw1LjEtNS4xdi0zLjY3YzAtMi45Mi0yLjM3LTUuMjktNS4yOS01LjI5aC0uMTh2LTYuOTZoNC4xNmMxLjA1LDAsMS45MS0uODUsMS45MS0xLjkxcy0uODUtMS45MS0xLjkxLTEuOTFoLTQuMTZzMC0zLjYxLDAtMy42MWMwLTEuMDUtLjg1LTEuOTEtMS45MS0xLjkxcy0xLjkxLjg1LTEuOTEsMS45MXYzLjYxaC00LjE2Yy0xLjA1LDAtMS45MS44NS0xLjkxLDEuOTFzLjg1LDEuOTEsMS45MSwxLjkxWk00Mi42OCwzOS44MXYzLjY3YzAsLjctLjU5LDEuMjktMS4yOSwxLjI5aC00LjM1Yy0uODIsMC0xLjQ4LS42Ni0xLjQ4LTEuNDh2LTMuNDhjMC0uODIuNjYtMS40OCwxLjQ4LTEuNDhoNC4xNmMuODIsMCwxLjQ4LjY2LDEuNDgsMS40OFoiLz48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0zMC4zOCw1Ni4yNGgxNy40OGM0LjAxLDAsNy4yNy0zLjI2LDcuMjctNy4yN3YtMzEuMTdjMC00LjAxLTMuMjYtNy4yNy03LjI3LTcuMjdoLTE3LjQ4Yy00LjAxLDAtNy4yNywzLjI2LTcuMjcsNy4yN3YzMS4xN2MwLDQuMDEsMy4yNiw3LjI3LDcuMjcsNy4yN1pNMjYuOTMsMTcuODFjMC0xLjksMS41NS0zLjQ1LDMuNDUtMy40NWgxNy40OGMxLjksMCwzLjQ1LDEuNTUsMy40NSwzLjQ1djMxLjE3YzAsMS45LTEuNTUsMy40NS0zLjQ1LDMuNDVoLTE3LjQ4Yy0xLjksMC0zLjQ1LTEuNTUtMy40NS0zLjQ1di0zMS4xN1oiLz48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0xMDEuMDEsNjcuMjljMC0xLjM3LTEuMTItMi40OC0yLjQ4LTIuNDhzLTIuNDgsMS4xMi0yLjQ4LDIuNDgsMS4xMiwyLjQ4LDIuNDgsMi40OCwyLjQ4LTEuMTIsMi40OC0yLjQ4WiIvPjxwYXRoIGNsYXNzPSJjbHMtMSIgZD0iTTEwOC4wOCw2Ny4yOWMwLTEuMzctMS4xMi0yLjQ4LTIuNDgtMi40OHMtMi40OCwxLjEyLTIuNDgsMi40OCwxLjEyLDIuNDgsMi40OCwyLjQ4LDIuNDgtMS4xMiwyLjQ4LTIuNDhaIi8+PHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMzIsNzYuMTJjMS4xNywwLDIuMTItLjk1LDIuMTItMi4xMnMtLjk1LTIuMTItMi4xMi0yLjEyaC04LjM0Yy40Ni0yLjY4LjczLTQuNDMuNzYtNC42Ni4xNy0xLjE2LS42My0yLjIzLTEuNzgtMi40LTEuMTYtLjE4LTIuMjMuNjMtMi40LDEuNzgsMCwuMDYtLjMyLDIuMTItLjg4LDUuMjhoLTYuNTRjLTEuMTcsMC0yLjEyLjk1LTIuMTIsMi4xMnMuOTUsMi4xMiwyLjEyLDIuMTJoNS43NmMtMS4zMSw2Ljc4LTMuMzQsMTUuODktNS44OCwyMi44MS0uNCwxLjEuMTYsMi4zMSwxLjI2LDIuNzEuMjQuMDkuNDkuMTMuNzMuMTMuODYsMCwxLjY3LS41MywxLjk5LTEuMzksMi43Ni03LjUzLDQuOS0xNy4yOCw2LjIyLTI0LjI3aDkuMTFaIi8+PHBhdGggY2xhc3M9ImNscy0xIiBkPSJNNTEuOTMsOTUuMTVoLTUuNzN2LTEzLjA2YzAtMS4xNy0uOTUtMi4xMi0yLjEyLTIuMTJzLTIuMTIuOTUtMi4xMiwyLjEydjEzLjA2aC01Ljg5Yy00LjUsMC04LjE1LDMuNjYtOC4xNSw4LjE1di4xM2MwLDQuNSwzLjY2LDguMTUsOC4xNSw4LjE1aDEuOTdjNC4yNSwwLDcuNzQtMy4yNiw4LjEyLTcuNDEuMDItLjEyLjA0LTQuOC4wNC00LjhoNS43M2MxLjE3LDAsMi4xMi0uOTUsMi4xMi0yLjEycy0uOTUtMi4xMi0yLjEyLTIuMTJaTTQxLjk3LDEwMy40NGMwLDIuMTYtMS43NiwzLjkyLTMuOTIsMy45MmgtMS45N2MtMi4xNiwwLTMuOTItMS43Ni0zLjkyLTMuOTJ2LS4xM2MwLTIuMTYsMS43Ni0zLjkyLDMuOTItMy45Mmg1Ljg5djQuMDZaIi8+PHBhdGggY2xhc3M9ImNscy0xIiBkPSJNNTUuMjQsNzQuNTZsLTEwLjUxLTYuMWMtMS4wMS0uNTktMi4zMS0uMjQtMi44OS43Ny0uNTksMS4wMS0uMjQsMi4zLjc3LDIuODlsMTAuNSw2LjFjLjMzLjE5LjcuMjksMS4wNi4yOS43MywwLDEuNDQtLjM4LDEuODMtMS4wNS41OS0xLjAxLjI0LTIuMy0uNzctMi44OVoiLz48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0xMDYuMjgsNzIuODRoLTE1LjM5Yy0uMzksMC0uNjYuNC0uNTEuNzZsMS41MiwzLjYzYzIuOCw2LjY4LDUuOTcsMTQuMjUsNS44MSwxOC43NC0uMjYsNy4wOS02LjQxLDExLjMzLTEyLjIxLDExLjMzLTYuMzUsMC0xMS45NC01LjItMTIuMjEtMTEuMzUtLjI1LTUuNiwyLjMtMTEuMzIsNS0xNy4zOSwxLjEzLTIuNTMsMi4yOS01LjE1LDMuMjQtNy43N2wuNzYtMi4xYy4xMy0uMzYtLjE0LS43NC0uNTItLjc0aC0xNi44M2MtMS4yMSwwLTIuMTgsMS4wMS0yLjExLDIuMjMuMDYsMS4xNCwxLjA5LDIsMi4yMywyaDEwLjk3Yy4yLDAsLjMzLjIuMjYuMzgtLjYsMS40My0xLjI0LDIuODctMS44Niw0LjI3LTIuNzgsNi4yNC01LjY1LDEyLjctNS4zNiwxOS4zLjM3LDguMzQsNy45LDE1LjM5LDE2LjQ0LDE1LjM5czE2LjEzLTYuNzcsMTYuNDQtMTUuNDFjLjE4LTQuOTctMi41MS0xMS44NC01LjM2LTE4LjY3LS4wOC0uMTguMDYtLjM4LjI1LS4zOGg5LjU3YzEuMjEsMCwyLjE4LTEuMDEsMi4xMS0yLjIzLS4wNi0xLjE0LTEuMDktMi0yLjIzLTJaIi8+PHBhdGggY2xhc3M9ImNscy0xIiBkPSJNNjUuNCw1Ni41NmMuMjQuMS40OC4xNC43Mi4xNC44LDAsMS41NS0uNTEsMS44MS0xLjMyLDIuMDEtNi4yMiwxLjcxLTIyLjk1LDEuNy0yMy42M3YtMTUuNGMwLTEuMS45LTEuOTksMS45OS0xLjk5aDMxLjA3Yy45LDAsMS42NC43NCwxLjY0LDEuNjR2MS41MmMwLC45LS43NCwxLjY0LTEuNjQsMS42NGgtMjkuNDljLTEuMDksMC0xLjk2LjkxLTEuOSwyLjAxLjA1LDEuMDMuOTgsMS44LDIuMDEsMS44aDI5LjczYzIuNzMsMCw0Ljk0LTIuMjEsNC45NC00Ljk0di0yLjUzYzAtMi43My0yLjIxLTQuOTQtNC45NC00Ljk0aC0zMi41OGMtMi41NywwLTQuNjUsMi4wOC00LjY1LDQuNjV2MTYuNTljLjA5LDQuNjksMCwxNy41NS0xLjQ4LDIyLjMxLS4zLjk4LjExLDIuMDgsMS4wNiwyLjQ2WiIvPjxwYXRoIGNsYXNzPSJjbHMtMSIgZD0iTTEwNy4zNywzNi44MWgtNy41MXYtNS4zNmg1LjIzYzEuMDUsMCwxLjkxLS44NSwxLjkxLTEuOTFzLS44NS0xLjkxLTEuOTEtMS45MWgtNS4yM3YtMS42OGMwLTEuMDUtLjg1LTEuOTEtMS45MS0xLjkxcy0xLjkxLjg1LTEuOTEsMS45MXYxLjY4aC0xMS4yMXYtMS42OGMwLTEuMDUtLjg1LTEuOTEtMS45MS0xLjkxcy0xLjkxLjg1LTEuOTEsMS45MXYxLjY4aC01Ljg0Yy0xLjA1LDAtMS45MS44NS0xLjkxLDEuOTFzLjg1LDEuOTEsMS45MSwxLjkxaDUuODR2NS4zNmgtNy41MWMtMS4wNSwwLTEuOTEuODUtMS45MSwxLjkxcy44NSwxLjkxLDEuOTEsMS45MWgyLjk3djEwLjA4YzAsLjkyLS4wNiwyLjU4LDEuMjksNC4wNi42MS42NywxLjcyLDEuNDYsMy41NywxLjQ2aDQuMTZjMS4wNSwwLDEuOTEtLjg1LDEuOTEtMS45MXMtLjg1LTEuOTEtMS45MS0xLjkxaC0zLjY5Yy0uNTcsMC0xLjUzLS41NC0xLjUzLTIuMjd2LTkuNTJoNi42NmwxMS44NiwxMy45OWMuODgsMSwxLjk3LDEuNjIsNC4zNCwxLjYyaDMuMTdjMS4wMywwLDEuOTYtLjc3LDIuMDEtMS44LjA2LTEuMS0uODItMi4wMS0xLjktMi4wMWgtMy4xNGMtMS4zLDAtMS42My0uNTMtMi4zOS0xLjI5bC04Ljk0LTEwLjVoMTUuNDJjMS4wNSwwLDEuOTEtLjg1LDEuOTEtMS45MXMtLjg1LTEuOTEtMS45MS0xLjkxWk04NC44MywzMS40NWgxMS4yMXY1LjM2aC0xMS4yMXYtNS4zNloiLz48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0xMDQuNzgsNDIuOTFzLTEuNTguNzgtNC4zNCwyLjA0Yy0uOTYuNDQtMS4zOCwxLjU2LS45NSwyLjUyLjM5Ljg1LDEuMzIsMS4yOCwyLjIsMS4wNi4xMS0uMDMuMjItLjA3LjMyLS4xMSwyLjg2LTEuMyw0LjQ1LTIuMDksNC41MS0yLjEyLjk0LS40OCwxLjMtMS42My44Mi0yLjU3LS40OC0uOTQtMS42My0xLjMtMi41Ny0uODJaIi8+PC9zdmc+" alt="個展なび">
+  <a href="kotennavi-p1.html" class="ktn-sidebar__logo" data-page="p1">
+    <img src="./images/kotennavi-logo5-1.svg" alt="個展なび">
   </a>
 
-  <!-- 検索 → P10-1 -->
-  <a href="/p10-1" class="ktn-sidebar__item" data-page="p10-1" onclick="handleNav(event,'p10-1','/p10-1')">
+  <!-- 検索 → P10 検索ハブ -->
+  <a href="kotennavi-p10.html" class="ktn-sidebar__item" data-page="p10">
     <div class="ktn-sidebar__icon">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
         <circle cx="11" cy="11" r="7.5"/>
@@ -53,8 +47,8 @@
     <span class="ktn-sidebar__label">検索</span>
   </a>
 
-  <!-- お知らせ → P61 -->
-  <a href="/p61" class="ktn-sidebar__item" id="ktnSidebarNotice" data-page="p61" onclick="handleNav(event,'p61','/p61')">
+  <!-- お知らせ → P61（未制作） -->
+  <a href="kotennavi-p61.html" class="ktn-sidebar__item" id="ktnSidebarNotice" data-page="p61">
     <div class="ktn-sidebar__icon">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
         <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke-linecap="round" stroke-linejoin="round"/>
@@ -65,8 +59,8 @@
     <span class="ktn-sidebar__label">お知らせ</span>
   </a>
 
-  <!-- ガイド → P60 -->
-  <a href="/p60" class="ktn-sidebar__item" data-page="p60" onclick="handleNav(event,'p60','/p60')">
+  <!-- ガイド → P60（未制作） -->
+  <a href="kotennavi-p60.html" class="ktn-sidebar__item" data-page="p60">
     <div class="ktn-sidebar__icon">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" stroke-linecap="round"/>
@@ -160,119 +154,8 @@
     </div>
   </div>
 
-  <!-- ═══════ FOOTER ═══════ -->
-  <footer class="ktn-footer">
-    <div class="ktn-footer__inner">
-      <div class="ktn-footer__upper">
-
-        <!-- brand -->
-        <div class="ktn-footer__brand">
-          <a href="/p1" class="ktn-footer__logo">
-            <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIGlkPSJf44Os44Kk44Ok44O8XzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgdmlld0JveD0iMCAwIDM2Mi40MyA4NS4wNCI+PGRlZnM+PHN0eWxlPi5jbHMtMXtmaWxsOiMyMzE4MTU7fS5jbHMtMntmaWxsOiMwMDVkYTc7fTwvc3R5bGU+PC9kZWZzPjxwYXRoIGNsYXNzPSJjbHMtMiIgZD0iTTAsMHY4NC44MnM2Ni41NywwLDY2LjU3LDBjLTEuMDEtLjY2LTIuMTQtMi4zOS0yLjc3LTMuNi0yLjA2LTQuOTEtNC4wMy0xMS44My0xMS4wNi0xNi43NS0xLjU4LTEuMDItMS42OS0xLjY3LTEuNjEtMi4wNi4wOS0uNjkuNjgtMS4yNiwxLjkxLTEuMDgsOS4yMiwxLjYyLDEyLjY1LDMuMjksMTcuNTEsNi4zMiw2LjUzLDQuNDYsNy45NSw4Ljk0LDguMDIsMTEuNzEuMTMsMS45Mi0uMTUsNC4yNS0yLjE3LDUuNDVoOC40M1YwSDBaIi8+PHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMTA3LjM4LDcwLjhoMi4yM3Y4LjgxbDMuNDMtMy42OWgyLjg2bC0zLjgyLDQuMDQsNC4wNiw0Ljg2aC0yLjk1bC0zLjU0LTQuNTRoLS4wNHY0LjU0aC0yLjIzdi0xNC4wMloiLz48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0xMjIuNDcsNzUuNjljMi42OSwwLDQuODQsMS44Nyw0Ljg0LDQuNjdzLTIuMTUsNC42Ny00Ljg0LDQuNjctNC44NC0xLjg3LTQuODQtNC42NywyLjE1LTQuNjcsNC44NC00LjY3Wk0xMjIuNDcsODMuMDRjMS42MywwLDIuNjEtMS4yOCwyLjYxLTIuNjdzLS45OC0yLjY3LTIuNjEtMi42Ny0yLjYxLDEuMjgtMi42MSwyLjY3Ljk4LDIuNjcsMi42MSwyLjY3WiIvPjxwYXRoIGNsYXNzPSJjbHMtMSIgZD0iTTEyOS4zNyw3Ny44MXYtMS44OWgxLjg0di0yLjU4aDIuMjN2Mi41OGgyLjQ1djEuODloLTIuNDV2My45YzAsLjg5LjI2LDEuNDUsMS4yNCwxLjQ1LjM5LDAsLjkzLS4wNywxLjIxLS4yOHYxLjg3Yy0uNDYuMjItMS4yNC4zLTEuNzYuMy0yLjM1LDAtMi45MS0xLjA2LTIuOTEtMy4xNXYtNC4wOGgtMS44NFoiLz48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0xNDAuNTUsODEuMTVjLjE1LDEuMzIsMS4xNSwyLjExLDIuMzksMi4xMSwxLjExLDAsMS44NC0uNTIsMi4zOS0xLjJsMS42LDEuMmMtMS4wNCwxLjI4LTIuMzYsMS43OC0zLjc2LDEuNzgtMi42OSwwLTQuODQtMS44Ny00Ljg0LTQuNjdzMi4xNS00LjY3LDQuODQtNC42N2MyLjQ4LDAsNC4xNywxLjc0LDQuMTcsNC44NHYuNjFoLTYuNzlaTTE0NS4xMSw3OS40OGMtLjAyLTEuMy0uODctMi4xMS0yLjI2LTIuMTEtMS4zMiwwLTIuMTMuODMtMi4zLDIuMTFoNC41NloiLz48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0xNDkuOTcsNzUuOTJoMi4xMXYxLjQzaC4wNGMuNDEtLjg5LDEuMjQtMS42NSwyLjczLTEuNjUsMi4zOSwwLDMuMjUsMS42OSwzLjI1LDMuNXY1LjYyaC0yLjIzdi00LjUxYzAtLjk4LS4wNy0yLjYyLTEuNjMtMi42Mi0xLjQ3LDAtMi4wNCwxLjA4LTIuMDQsMi4yNnY0Ljg2aC0yLjIzdi04LjlaIi8+PHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMTY2LjY5LDgxLjJoLTQuNTh2LTEuODloNC41OHYxLjg5WiIvPjxwYXRoIGNsYXNzPSJjbHMtMSIgZD0iTTE3MC43Miw3NS45MmgyLjExdjEuNDNoLjA0Yy40MS0uODksMS4yNC0xLjY1LDIuNzMtMS42NSwyLjM5LDAsMy4yNSwxLjY5LDMuMjUsMy41djUuNjJoLTIuMjN2LTQuNTFjMC0uOTgtLjA3LTIuNjItMS42My0yLjYyLTEuNDcsMC0yLjA0LDEuMDgtMi4wNCwyLjI2djQuODZoLTIuMjN2LTguOVoiLz48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0xODcuNzYsODMuNTloLS4wNmMtLjYzLDEtMS42NywxLjQ1LTIuODYsMS40NS0xLjY1LDAtMy4yNS0uOTEtMy4yNS0yLjY3LDAtMi44OSwzLjM4LTMuMSw1LjYtMy4xaC41NnYtLjI0YzAtMS4wOS0uODUtMS42Ny0yLjA0LTEuNjctLjkzLDAtMS43OC4zNy0yLjM3LjkzbC0xLjE3LTEuMTdjLjk4LTEsMi4zNy0xLjQzLDMuNzgtMS40MywzLjgsMCwzLjgsMi43NCwzLjgsNC4wMXY1LjEyaC0ydi0xLjIyWk0xODcuNjMsODAuODNoLS40NmMtMS4yMiwwLTMuMzQuMDktMy4zNCwxLjM3LDAsLjgyLjgzLDEuMTcsMS41NiwxLjE3LDEuNTIsMCwyLjI0LS44LDIuMjQtMi4wNHYtLjVaIi8+PHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMTkxLjY5LDc1LjkyaDIuNDNsMi4zNyw2LjIzaC4wNGwyLjM5LTYuMjNoMi4yOGwtMy41LDguOWgtMi4zN2wtMy42My04LjlaIi8+PHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMjA0LjcxLDcxLjU2Yy44MiwwLDEuNDUuNTgsMS40NSwxLjM0cy0uNjMsMS4zNC0xLjQ1LDEuMzQtMS40MS0uNjMtMS40MS0xLjM0LjU5LTEuMzQsMS40MS0xLjM0Wk0yMDMuNjEsNzUuOTJoMi4yM3Y4LjloLTIuMjN2LTguOVoiLz48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0yMTEuOTIsODIuMDdjLjgsMCwxLjQ4LjYxLDEuNDgsMS40MXMtLjY3LDEuNDUtMS40OCwxLjQ1LTEuNDgtLjYxLTEuNDgtMS40MS42Ny0xLjQ1LDEuNDgtMS40NVoiLz48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0yMjMuODIsNzguNTljLS41Mi0uNTQtMS4wOS0uODktMS42OS0uODktMS42MywwLTIuNjEsMS4yOC0yLjYxLDIuNjdzLjk4LDIuNjcsMi42MSwyLjY3Yy42OSwwLDEuMzItLjMsMS43Mi0uODNsMS40OCwxLjZjLS45MS45MS0yLjQzLDEuMjQtMy4yMSwxLjI0LTIuNjksMC00Ljg0LTEuODctNC44NC00LjY3czIuMTUtNC42Nyw0Ljg0LTQuNjdjMS4xMywwLDIuMzcuNDEsMy4yMywxLjM1bC0xLjU0LDEuNTRaIi8+PHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMjMyLjM3LDc1LjY5YzIuNjksMCw0Ljg0LDEuODcsNC44NCw0LjY3cy0yLjE1LDQuNjctNC44NCw0LjY3LTQuODQtMS44Ny00Ljg0LTQuNjcsMi4xNS00LjY3LDQuODQtNC42N1pNMjMyLjM3LDgzLjA0YzEuNjMsMCwyLjYxLTEuMjgsMi42MS0yLjY3cy0uOTgtMi42Ny0yLjYxLTIuNjctMi42MSwxLjI4LTIuNjEsMi42Ny45OCwyLjY3LDIuNjEsMi42N1oiLz48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0yMzkuODEsNzUuOTJoMi4xMXYxLjM5aC4wNGMuMzktLjgzLDEuMjQtMS42MSwyLjczLTEuNjEsMS4zNywwLDIuMzIuNTQsMi43OCwxLjY1LjY1LTEuMTMsMS42LTEuNjUsMi45My0xLjY1LDIuMzcsMCwzLjIxLDEuNjksMy4yMSwzLjgydjUuM2gtMi4yM3YtNS4wNGMwLTEuMTEtLjMzLTIuMDgtMS42NS0yLjA4LTEuMzksMC0xLjkxLDEuMTUtMS45MSwyLjN2NC44MmgtMi4yM3YtNS4zYzAtMS4wOS0uNDUtMS44Mi0xLjUyLTEuODItMS40NywwLTIuMDQsMS4wOC0yLjA0LDIuMjZ2NC44NmgtMi4yM3YtOC45WiIvPjxwYXRoIGNsYXNzPSJjbHMtMSIgZD0iTTExNC44NC43Yy0xLjMxLS4zOS0yLjY5LjM2LTMuMDgsMS42Ny0uMDMuMS0zLjEzLDEwLjQ2LTExLjk2LDMwLjg3LS41NCwxLjI1LjAzLDIuNzEsMS4yOSwzLjI1LjMyLjE0LjY1LjIuOTguMi45NiwwLDEuODctLjU2LDIuMjctMS40OSwxLjIxLTIuNzksMi4zMS01LjM5LDMuMzEtNy44LS4yMywyLjg3LS40Miw1LjU1LS40Miw2Ljk1djI0LjE3YzAsMS4zNywxLjExLDIuNDgsMi40OCwyLjQ4czIuNDgtMS4xMSwyLjQ4LTIuNDhWMTYuMDRjMy4wMy03Ljk0LDQuMjQtMTIsNC4zMi0xMi4yNi4zOS0xLjMxLS4zNi0yLjY5LTEuNjctMy4wOFoiLz48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0xNDYuODQsMTguNjRoLTUuNDFzMC00LjY5LDAtNC42OWMwLTEuMzctMS4xMS0yLjQ4LTIuNDgtMi40OHMtMi40NywxLjExLTIuNDcsMi40OHY0LjY5aC01LjQxYy0xLjM3LDAtMi40OCwxLjExLTIuNDgsMi40OHMxLjExLDIuNDgsMi40OCwyLjQ4aDUuNDFzMCw5LjA0LDAsOS4wNGgtLjIzYy0zLjc5LDAtNi44NywzLjA4LTYuODcsNi44N3Y0LjUyYzAsMy43OSwzLjA4LDYuODcsNi44Nyw2Ljg3aDUuNjZjMy42NSwwLDYuNjItMi45Nyw2LjYyLTYuNjJ2LTQuNzdjMC0zLjc5LTMuMDgtNi44Ny02Ljg3LTYuODdoLS4yM3YtOS4wNGg1LjQxYzEuMzcsMCwyLjQ4LTEuMTEsMi40OC0yLjQ4cy0xLjExLTIuNDgtMi40OC0yLjQ4Wk0xNDMuNTgsMzkuNXY0Ljc3YzAsLjkxLS43NywxLjY3LTEuNjcsMS42N2gtNS42NmMtMS4wNiwwLTEuOTItLjg2LTEuOTItMS45MnYtNC41MmMwLTEuMDYuODYtMS45MiwxLjkyLTEuOTJoNS40MWMxLjA2LDAsMS45Mi44NiwxLjkyLDEuOTJaIi8+PHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMTUwLjMxLDEuNDloLTIyLjcxYy01LjIsMC05LjQ0LDQuMjMtOS40NCw5LjQ0djQwLjQ4YzAsNS4yLDQuMjMsOS40NCw5LjQ0LDkuNDRoMjIuNzFjNS4yLDAsOS40NC00LjIzLDkuNDQtOS40NFYxMC45MmMwLTUuMi00LjIzLTkuNDQtOS40NC05LjQ0Wk0xNTQuOCw1MS40MWMwLDIuNDctMi4wMSw0LjQ5LTQuNDksNC40OWgtMjIuNzFjLTIuNDcsMC00LjQ5LTIuMDEtNC40OS00LjQ5VjEwLjkyYzAtMi40NywyLjAxLTQuNDksNC40OS00LjQ5aDIyLjcxYzIuNDcsMCw0LjQ5LDIuMDEsNC40OSw0LjQ5djQwLjQ4WiIvPjxwYXRoIGNsYXNzPSJjbHMtMSIgZD0iTTM1MC4wMiw3LjA1YzEuNzcsMCwzLjIzLTEuNDUsMy4yMy0zLjIzcy0xLjQ1LTMuMjMtMy4yMy0zLjIzLTMuMjMsMS40NS0zLjIzLDMuMjMsMS40NSwzLjIzLDMuMjMsMy4yM1oiLz48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0zNTkuMiw3LjA1YzEuNzcsMCwzLjIzLTEuNDUsMy4yMy0zLjIzcy0xLjQ1LTMuMjMtMy4yMy0zLjIzLTMuMjMsMS40NS0zLjIzLDMuMjMsMS40NSwzLjIzLDMuMjMsMy4yM1oiLz48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0yNjUuNTMsMTUuNjdjMS41MiwwLDIuNzUtMS4yMywyLjc1LTIuNzVzLTEuMjMtMi43NS0yLjc1LTIuNzVoLTEwLjg0Yy42LTMuNDguOTQtNS43NS45OS02LjA2LjIyLTEuNS0uODItMi45LTIuMzItMy4xMi0xLjUxLS4yMy0yLjkuODItMy4xMiwyLjMyLS4wMS4wOC0uNDEsMi43NS0xLjE0LDYuODZoLTguNWMtMS41MiwwLTIuNzUsMS4yMy0yLjc1LDIuNzVzMS4yMywyLjc1LDIuNzUsMi43NWg3LjQ4Yy0xLjcsOC44MS00LjM0LDIwLjY0LTcuNjQsMjkuNjMtLjUyLDEuNDIuMjEsMywxLjYzLDMuNTMuMzEuMTEuNjMuMTcuOTUuMTcsMS4xMiwwLDIuMTctLjY5LDIuNTgtMS44LDMuNTktOS43OCw2LjM2LTIyLjQ1LDguMDgtMzEuNTJoMTEuODRaIi8+PHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMjkxLjQyLDQwLjAyaC03LjQ1di0xNi45N2MwLTEuNTItMS4yMy0yLjc1LTIuNzUtMi43NXMtMi43NSwxLjIzLTIuNzUsMi43NXYxNi45N2gtNy42NWMtNS44NCwwLTEwLjU5LDQuNzUtMTAuNTksMTAuNTl2LjE4YzAsNS44NCw0Ljc1LDEwLjU5LDEwLjU5LDEwLjU5aDIuNTVjNS41MSwwLDEwLjA1LTQuMjQsMTAuNTQtOS42My4wMy0uMTYuMDUtNi4yNC4wNS02LjI0aDcuNDVjMS41MiwwLDIuNzUtMS4yMywyLjc1LTIuNzVzLTEuMjMtMi43NS0yLjc1LTIuNzVaTTI3OC40OCw1MC43OWMwLDIuODEtMi4yOSw1LjEtNS4xLDUuMWgtMi41NWMtMi44MSwwLTUuMS0yLjI5LTUuMS01LjF2LS4xOGMwLTIuODEsMi4yOS01LjEsNS4xLTUuMWg3LjY1djUuMjdaIi8+PHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMjk1LjcxLDEzLjI3bC0xMy42NS03LjkzYy0xLjMxLS43Ni0yLjk5LS4zMi0zLjc2LDEtLjc2LDEuMzEtLjMyLDIuOTksMSwzLjc2bDEzLjY1LDcuOTNjLjQzLjI1LjkxLjM3LDEuMzguMzcuOTUsMCwxLjg3LS40OSwyLjM4LTEuMzcuNzYtMS4zMS4zMi0yLjk5LTEtMy43NloiLz48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0zNTkuMjUsMTEuMDRoLTE5Ljk5Yy0uNTEsMC0uODYuNTItLjY2Ljk5bDEuOTcsNC43MmMzLjY0LDguNjcsNy43NiwxOC41MSw3LjU1LDI0LjM0LS4zMyw5LjIxLTguMzMsMTQuNzEtMTUuODYsMTQuNzEtOC4yNSwwLTE1LjUxLTYuNzUtMTUuODctMTQuNzQtLjMyLTcuMjcsMi45OS0xNC43MSw2LjQ5LTIyLjU5LDEuNDYtMy4yOSwyLjk3LTYuNjgsNC4yMS0xMC4wOWwuOTktMi43MmMuMTctLjQ3LS4xOC0uOTYtLjY3LS45NmgtMjEuODZjLTEuNTcsMC0yLjgzLDEuMzEtMi43NCwyLjg5LjA4LDEuNDksMS40MSwyLjYsMi45LDIuNmgxNC4yNWMuMjYsMCwuNDMuMjYuMzMuNS0uNzgsMS44Ni0xLjYxLDMuNzItMi40Miw1LjU1LTMuNjEsOC4xMS03LjM0LDE2LjUtNi45NiwyNS4wNi40OCwxMC44MywxMC4yNiwxOS45OSwyMS4zNiwxOS45OXMyMC45NS04Ljc5LDIxLjM2LTIwLjAxYy4yMy02LjQ2LTMuMjYtMTUuMzgtNi45Ni0yNC4yNS0uMS0uMjQuMDctLjUuMzMtLjVoMTIuNDNjMS41NywwLDIuODMtMS4zMSwyLjc0LTIuODktLjA4LTEuNDktMS40MS0yLjYtMi45LTIuNloiLz48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0yMTkuODksMTIuNjhoLTM4LjNjLTEuNDEsMC0yLjU1LDEuMTgtMi40NywyLjYxLjA3LDEuMzQsMS4yNywyLjM0LDIuNjEsMi4zNGgzOC42MmMzLjU1LDAsNi40Mi0yLjg3LDYuNDItNi40MnYtMy4yOWMwLTMuNTUtMi44Ny02LjQyLTYuNDItNi40MmgtNDIuMzJjLTMuMzMsMC02LjA0LDIuNy02LjA0LDYuMDR2MjEuNTVjLjEyLDYuMDksMCwyMi44LTEuOTIsMjguOTgtLjM5LDEuMjcuMTUsMi43LDEuMzgsMy4xOS4zMS4xMi42Mi4xOC45My4xOCwxLjA0LDAsMi4wMi0uNjcsMi4zNS0xLjcxLDIuNjEtOC4wOCwyLjIyLTI5LjgxLDIuMi0zMC42OVY5LjA0YzAtMS40MiwxLjE2LTIuNTksMi41OS0yLjU5aDQwLjM2YzEuMTcsMCwyLjEzLjk2LDIuMTMsMi4xM3YxLjk4YzAsMS4xNy0uOTYsMi4xMy0yLjEzLDIuMTNaIi8+PHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMjI1Ljk3LDM1LjZoLTkuNzZ2LTYuOTZoNi43OWMxLjM3LDAsMi40Ny0xLjExLDIuNDctMi40OHMtMS4xMS0yLjQ4LTIuNDctMi40OGgtNi43OXYtMi4xOWMwLTEuMzctMS4xMS0yLjQ4LTIuNDgtMi40OHMtMi40OCwxLjExLTIuNDgsMi40OHYyLjE5aC0xNC41NnYtMi4xOWMwLTEuMzctMS4xMS0yLjQ4LTIuNDgtMi40OHMtMi40OCwxLjExLTIuNDgsMi40OHYyLjE5aC03LjU4Yy0xLjM3LDAtMi40OCwxLjExLTIuNDgsMi40OHMxLjExLDIuNDgsMi40OCwyLjQ4aDcuNTh2Ni45NmgtOS43NmMtMS4zNywwLTIuNDgsMS4xMS0yLjQ4LDIuNDhzMS4xMSwyLjQ4LDIuNDgsMi40OGgzLjg2djEzLjA5YzAsMS4yLS4wOCwzLjM1LDEuNjcsNS4yOC43OS44NywyLjIzLDEuOSw0LjY0LDEuOWg1LjRjMS4zNywwLDIuNDgtMS4xMSwyLjQ4LTIuNDhzLTEuMTEtMi40OC0yLjQ4LTIuNDhoLTQuNzljLS43NCwwLTEuOTgtLjctMS45OC0yLjk1di0xMi4zN2g4LjY1bDE1LjQsMTguMTdjMS4xNCwxLjMsMi41NiwyLjEsNS42NCwyLjFoNC4xMmMxLjM0LDAsMi41NC0xLDIuNjEtMi4zNC4wNy0xLjQzLTEuMDYtMi42MS0yLjQ3LTIuNjFoLTQuMDdjLTEuNjksMC0yLjExLS42OS0zLjEtMS42OGwtMTEuNjItMTMuNjRoMjAuMDNjMS4zNywwLDIuNDgtMS4xMSwyLjQ4LTIuNDhzLTEuMTEtMi40OC0yLjQ4LTIuNDhaTTE5Ni42OSwyOC42NGgxNC41NnY2Ljk2aC0xNC41NnYtNi45NloiLz48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0yMjIuNjEsNDMuNTJzLTIuMDUsMS4wMi01LjY0LDIuNjRjLTEuMjUuNTctMS44LDIuMDMtMS4yMywzLjI4LjUsMS4xMSwxLjcyLDEuNjcsMi44NiwxLjM4LjE0LS4wNC4yOC0uMDguNDItLjE1LDMuNzEtMS42OSw1Ljc3LTIuNzEsNS44NS0yLjc1LDEuMjEtLjYzLDEuNjktMi4xMiwxLjA3LTMuMzMtLjYzLTEuMjItMi4xMi0xLjY5LTMuMzMtMS4wN1oiLz48L3N2Zz4=" alt="個展なび">
-          </a>
-          <p class="ktn-footer__tagline">
-            展覧会を探すなら、個展なび。<br>
-            展覧会を発信するなら、個展なび。
-          </p>
-          <div class="ktn-footer__sns">
-            <a href="#" class="ktn-footer__sns-link">Facebook</a>
-            <a href="#" class="ktn-footer__sns-link">X (Twitter)</a>
-          </div>
-        </div>
-
-        <!-- col 展覧会 -->
-        <div class="ktn-footer__col">
-          <p class="ktn-footer__col-title">展覧会</p>
-          <ul class="ktn-footer__links">
-            <li><a href="/p2">展覧会を探す</a></li>
-            <li><a href="/liaison"><span class="badge-l badge-l--liaison">LIAISON</span>オンライン展示</a></li>
-          </ul>
-          <p class="ktn-footer__col-title" style="margin-top:20px">特集</p>
-          <div class="ktn-footer__feature-tags">
-            <a href="/feature/kyushu" class="ktn-footer__feature-tag">九州の展覧会</a>
-            <a href="/feature/this-weekend" class="ktn-footer__feature-tag">今週末開催</a>
-            <a href="/feature/tokyo-photo" class="ktn-footer__feature-tag">東京・写真展</a>
-            <a href="/feature/all" class="ktn-footer__feature-tag">特集一覧 →</a>
-          </div>
-        </div>
-
-        <!-- col ご利用について -->
-        <div class="ktn-footer__col">
-          <p class="ktn-footer__col-title">ご利用について</p>
-          <ul class="ktn-footer__links">
-            <li><a href="/p60">ご利用ガイド</a></li>
-            <li><a href="/p2-11">展覧会を掲載する</a></li>
-            <li><a href="/p61">お知らせ</a></li>
-          </ul>
-          <p class="ktn-footer__col-title" style="margin-top:20px">会員登録</p>
-          <ul class="ktn-footer__links">
-            <li><a href="/register">新規登録（無料）</a></li>
-            <li><a href="/login">ログイン</a></li>
-            <li><a href="/creator-apply">クリエイター申込</a></li>
-            <li><a href="/gallery-apply">ギャラリー申込</a></li>
-          </ul>
-        </div>
-
-        <!-- col 企業情報 -->
-        <div class="ktn-footer__col">
-          <p class="ktn-footer__col-title">企業情報</p>
-          <ul class="ktn-footer__links">
-            <li><a href="/about">会社概要</a></li>
-            <li><a href="/contact">お問い合わせ</a></li>
-          </ul>
-        </div>
-
-      </div><!-- /upper -->
-
-      <!-- LIAISON帯 -->
-      <div class="ktn-footer__liaison-band">
-        <div class="ktn-footer__liaison-logo">
-          <svg width="100px" height="53px" viewBox="0 0 420 220" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M 30 180 Q 210 30, 390 180" stroke="rgba(255,255,255,0.5)" stroke-width="4" fill="none" stroke-linecap="round"/>
-            <defs><path id="footLiArch" d="M 70 165 Q 210 45, 350 165"/></defs>
-            <text font-family="'Cinzel',serif" font-size="40" font-weight="700" letter-spacing="7" fill="rgba(255,255,255,0.7)">
-              <textPath href="#footLiArch" startOffset="50%" text-anchor="middle">LIAISON</textPath>
-            </text>
-            <text x="210" y="206" font-family="'Montserrat',sans-serif" font-size="10" font-weight="600" letter-spacing="4" fill="rgba(192,57,43,0.7)" text-anchor="middle">Now on View</text>
-          </svg>
-          <svg width="110px" height="58px" viewBox="0 0 480 240" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M 20 200 Q 240 33 460 200" stroke="rgba(180,140,20,0.5)" stroke-width="5" fill="none" stroke-linecap="round"/>
-            <defs>
-              <path id="footLpArch" d="M 80 184 Q 240 56 400 184"/>
-              <linearGradient id="footLpGrad" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stop-color="rgba(180,140,20,0.6)"/>
-                <stop offset="50%" stop-color="rgba(220,180,40,0.7)"/>
-                <stop offset="100%" stop-color="rgba(180,140,20,0.6)"/>
-              </linearGradient>
-            </defs>
-            <text font-family="'Bodoni Moda','DM Serif Display',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#footLpGrad)">
-              <textPath href="#footLpArch" startOffset="50%" text-anchor="middle">LIAISON</textPath>
-            </text>
-            <circle cx="432" cy="183" r="22" fill="rgba(180,140,20,0.5)"/>
-            <text x="432" y="183" font-family="serif" font-size="42" font-weight="900" fill="rgba(255,240,200,0.7)" text-anchor="middle" dominant-baseline="central">+</text>
-            <text x="240" y="228" font-family="'Montserrat',sans-serif" font-size="10" font-weight="600" letter-spacing="4" fill="rgba(180,140,20,0.6)" text-anchor="middle">Now on View + Shop</text>
-          </svg>
-        </div>
-        <p class="ktn-footer__liaison-desc">
-          オンラインで作品が見られる展覧会。会場の展示作品をそのままネットで鑑賞・購入できます。<br>
-          LIAISON+では会期後も作品の購入申込が可能です。
-        </p>
-        <a href="/liaison" class="ktn-footer__liaison-link">詳しく見る →</a>
-      </div>
-
-    </div><!-- /inner -->
-
-    <!-- bottom bar -->
-    <div class="ktn-footer__bottom">
-      <span class="ktn-footer__copy">©2010 kotennavi Co., Ltd. All rights reserved.</span>
-      <div class="ktn-footer__policy">
-        <a href="/privacy">プライバシーポリシー</a>
-        <a href="/terms">利用規約</a>
-        <a href="/contact">お問い合わせ</a>
-      </div>
-    </div>
-
-  </footer>
+  <!-- ═══════ FOOTER（renderFooter() がJS注入・kotennavi-common.js と同一ソース） ═══════ -->
+  <footer class="ktn-footer" id="ktnFooter"></footer>
 </main>
 
 <!-- ═══════ BOTTOM NAV ═══════ -->
@@ -280,203 +163,16 @@
   <div class="ktn-bottom-nav__inner" id="ktnBottomNavInner"></div>
 </nav>
 
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
 <script>
-/* ─── SVGアイコン定義 ─── */
-const ICONS = {
-  search: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="11" cy="11" r="7.5"/><path d="M21 21l-4.5-4.5" stroke-linecap="round"/></svg>`,
-  notice: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>`,
-  guide:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>`,
-  /* ホーム: 個展なびロゴの「額縁+縦ライン」をモチーフにしたオリジナルアイコン */
-  home:   `<?xml version="1.0" encoding="UTF-8"?><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 102.05 102.05" width="28" height="28"><defs><style>.cls-1{fill:currentColor;}</style></defs><path class="cls-1" d="M0,0v102.05h80.09c-1.22-.8-2.57-2.87-3.34-4.33-2.48-5.91-4.85-14.23-13.31-20.15-1.9-1.23-2.03-2-1.94-2.48.11-.83.82-1.52,2.3-1.3,11.09,1.95,15.22,3.96,21.07,7.61,7.85,5.36,9.57,10.76,9.65,14.09.15,2.3-.18,5.11-2.61,6.56h10.14V0H0Z"/></svg>`,
-  login:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>`,
-  register:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>`,
-};
-
-/* ─── ロール定義 ─── */
-const KTN_ROLES = {
-  user: {
-    label: 'myページ', url: '/p5', bg: '#e8a0c8', page: 'p5',
-    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.7" width="22" height="22"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`,
-    iconSm: `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" width="18" height="18"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`,
-  },
-  creator: {
-    label: 'myクリエイター', url: '/p3', bg: '#5a8fa8', page: 'p3',
-    /* フレーム（額縁）アイコン */
-    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.7" width="22" height="22"><rect x="3" y="3" width="18" height="18" rx="1"/><rect x="6" y="6" width="12" height="12" rx="0.5"/><line x1="3" y1="3" x2="6" y2="6"/><line x1="21" y1="3" x2="18" y2="6"/><line x1="3" y1="21" x2="6" y2="18"/><line x1="21" y1="21" x2="18" y2="18"/></svg>`,
-    iconSm: `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" width="18" height="18"><rect x="3" y="3" width="18" height="18" rx="1"/><rect x="6" y="6" width="12" height="12" rx="0.5"/><line x1="3" y1="3" x2="6" y2="6"/><line x1="21" y1="3" x2="18" y2="6"/><line x1="3" y1="21" x2="6" y2="18"/><line x1="21" y1="21" x2="18" y2="18"/></svg>`,
-  },
-  gallery: {
-    label: 'myギャラリー', url: '/p4', bg: '#b8895e', page: 'p4',
-    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.7" width="22" height="22"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`,
-    iconSm: `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" width="18" height="18"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`,
-  },
-  admin: {
-    label: '管理者', url: '/p90-1', bg: '#8888aa', page: 'p90-1',
-    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.7" width="22" height="22"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`,
-    iconSm: `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" width="18" height="18"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`,
-  },
-};
-
-/* ─── ページ→対応navアイテムのマップ ─── */
-const PAGE_NAV_MAP = {
-  'p1':    'p1',
-  'p10-1': 'p10-1',
-  'p60':   'p60',
-  'p61':   'p61',
-  'p5':    'p5',
-  'p3':    'p3',
-  'p4':    'p4',
-  'p90-1': 'p90-1',
-};
-
-let currentRole = 'guest';
-let currentPage = 'p1';
-
-function updateActiveState() {
-  // サイドバー（data-page属性で一致判定）
-  document.querySelectorAll('.ktn-sidebar__item[data-page]').forEach(el => {
-    el.classList.toggle('is-active', el.dataset.page === currentPage);
-  });
-  // ボトムナビ
-  document.querySelectorAll('.ktn-bottom-nav__item[data-page]').forEach(el => {
-    el.classList.toggle('is-active', el.dataset.page === currentPage);
-  });
-}
-
-function handleNav(e, page, url) {
-  e.preventDefault();
-  currentPage = page;
-  document.getElementById('mainPlaceholder').textContent =
-    `← サイドバー / フッター / ボトムナビ コンポーネントデモ（現在: ${url}）`;
-  updateActiveState();
-}
-
-function renderSidebar() {
-  const roleNav = document.getElementById('ktnRoleNav');
-  const noticeDot = document.getElementById('ktnNoticeDot');
-
-  if (currentRole === 'guest') {
-    roleNav.innerHTML = `
-      <a href="/login" class="ktn-sidebar__item" data-page="login" onclick="handleNav(event,'login','/login')">
-        <div class="ktn-sidebar__icon">${ICONS.login}</div>
-        <span class="ktn-sidebar__label">ログイン</span>
-      </a>
-      <a href="/register" class="ktn-sidebar__item" data-page="register" onclick="handleNav(event,'register','/register')">
-        <div class="ktn-sidebar__icon">${ICONS.register}</div>
-        <span class="ktn-sidebar__label">新規登録</span>
-      </a>
-    `;
-    noticeDot.style.display = 'none';
-  } else {
-    noticeDot.style.display = 'block';
-    const roles = ['user'];
-    if (currentRole === 'user+creator') roles.push('creator');
-    else if (currentRole === 'user+gallery') roles.push('gallery');
-    else if (currentRole === 'admin') roles.push('admin');
-
-    roleNav.innerHTML = roles.map(r => {
-      const rd = KTN_ROLES[r];
-      return `
-        <a href="${rd.url}" class="ktn-sidebar__item" data-page="${rd.page}" onclick="handleNav(event,'${rd.page}','${rd.url}')">
-          <div class="ktn-sidebar__role">
-            <div class="ktn-sidebar__role-fallback" style="background:${rd.bg}">${rd.icon}</div>
-          </div>
-          <span class="ktn-sidebar__role-label">${rd.label}</span>
-        </a>
-      `;
-    }).join('');
+  KTN.init({ page: 'sidebar-footer-demo', role: 'guest' });
+  function toggleAd(mode) {
+    document.getElementById('ktnAdBand').style.display   = mode === 'ads' ? '' : 'none';
+    document.getElementById('ktnAdBandPr').style.display = mode === 'pr'  ? '' : 'none';
+    document.getElementById('adBtnAds').classList.toggle('on', mode === 'ads');
+    document.getElementById('adBtnPr').classList.toggle('on',  mode === 'pr');
   }
-  // DOM更新後に確実にアクティブ状態を適用
-  requestAnimationFrame(() => updateActiveState());
-}
-
-function renderBottomNav() {
-  const inner = document.getElementById('ktnBottomNavInner');
-  let html = `
-    <a href="/p1" class="ktn-bottom-nav__item ktn-bottom-nav__item--home" data-page="p1" onclick="handleNav(event,'p1','/p1')">
-      <div class="ktn-bottom-nav__icon">${ICONS.home}</div>
-      <span class="ktn-bottom-nav__label">Top</span>
-    </a>
-    <a href="/p10-1" class="ktn-bottom-nav__item" data-page="p10-1" onclick="handleNav(event,'p10-1','/p10-1')">
-      <div class="ktn-bottom-nav__icon">${ICONS.search}</div>
-      <span class="ktn-bottom-nav__label">検索</span>
-    </a>
-    <div class="ktn-bottom-nav__divider"></div>
-  `;
-
-  if (currentRole === 'guest') {
-    html += `
-      <a href="/p61" class="ktn-bottom-nav__item" data-page="p61" onclick="handleNav(event,'p61','/p61')">
-        <div class="ktn-bottom-nav__icon">${ICONS.notice}</div>
-        <span class="ktn-bottom-nav__label">お知らせ</span>
-      </a>
-      <a href="/p60" class="ktn-bottom-nav__item" data-page="p60" onclick="handleNav(event,'p60','/p60')">
-        <div class="ktn-bottom-nav__icon">${ICONS.guide}</div>
-        <span class="ktn-bottom-nav__label">ガイド</span>
-      </a>
-      <a href="/login" class="ktn-bottom-nav__item" data-page="login" onclick="handleNav(event,'login','/login')">
-        <div class="ktn-bottom-nav__login-btn">${ICONS.login}</div>
-        <span class="ktn-bottom-nav__label">ログイン</span>
-      </a>
-    `;
-  } else {
-    html += `
-      <a href="/p61" class="ktn-bottom-nav__item" data-page="p61" onclick="handleNav(event,'p61','/p61')" style="position:relative">
-        <span class="ktn-bottom-nav__dot"></span>
-        <div class="ktn-bottom-nav__icon">${ICONS.notice}</div>
-        <span class="ktn-bottom-nav__label">お知らせ</span>
-      </a>
-    `;
-    const ur = KTN_ROLES['user'];
-    html += `
-      <a href="${ur.url}" class="ktn-bottom-nav__item" data-page="${ur.page}" onclick="handleNav(event,'${ur.page}','${ur.url}')">
-        <div class="ktn-bottom-nav__role" style="background:${ur.bg};border-radius:9px">${ur.iconSm}</div>
-        <span class="ktn-bottom-nav__label">myページ</span>
-      </a>
-    `;
-    let extraRole = null;
-    if (currentRole === 'user+creator') extraRole = 'creator';
-    else if (currentRole === 'user+gallery') extraRole = 'gallery';
-    else if (currentRole === 'admin') extraRole = 'admin';
-    if (extraRole) {
-      const er = KTN_ROLES[extraRole];
-      html += `
-        <a href="${er.url}" class="ktn-bottom-nav__item" data-page="${er.page}" onclick="handleNav(event,'${er.page}','${er.url}')">
-          <div class="ktn-bottom-nav__role" style="background:${er.bg};border-radius:9px">${er.iconSm}</div>
-          <span class="ktn-bottom-nav__label">${er.label}</span>
-        </a>
-      `;
-    }
-  }
-
-  inner.innerHTML = html;
-  requestAnimationFrame(() => updateActiveState());
-}
-
-function setRole(role, btn) {
-  currentRole = role;
-  document.querySelectorAll('.demo-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderSidebar();
-  renderBottomNav();
-}
-
-function setPage(page) {
-  currentPage = page;
-  document.getElementById('mainPlaceholder').textContent =
-    `← サイドバー / フッター / ボトムナビ コンポーネントデモ（現在: /${page}）`;
-  updateActiveState();
-}
-
-function toggleAd(mode) {
-  document.getElementById('ktnAdBand').style.display   = mode === 'ads' ? '' : 'none';
-  document.getElementById('ktnAdBandPr').style.display = mode === 'pr'  ? '' : 'none';
-  document.getElementById('adBtnAds').classList.toggle('active', mode === 'ads');
-  document.getElementById('adBtnPr').classList.toggle('active',  mode === 'pr');
-}
-
-renderSidebar();
-renderBottomNav();
 </script>
 </body>
 </html>
