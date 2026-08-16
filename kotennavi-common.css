@@ -211,7 +211,8 @@ button{font-family:inherit;cursor:pointer}
   font-size:.75rem;color:var(--muted);
   padding:3px 5px;border-radius:2px;
   transition:color .15s,background .15s;
-  white-space:nowrap;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  max-width:180px; /* 展覧会名・人名等の長い祖先リンクが後続の項目を押し出さないよう省略 */
 }
 .ktn-bc__link:hover{color:var(--accent);background:var(--paper)}
 .ktn-bc__sep{
@@ -326,6 +327,11 @@ button{font-family:inherit;cursor:pointer}
 .ktn-ddi--note{flex-direction:column;align-items:flex-start;gap:2px;padding-bottom:10px}
 .ktn-ddi--note .note-head{display:flex;align-items:center;gap:8px}
 .ktn-ddi--note .note-sub{font-size:.62rem;color:var(--accent);padding-left:21px;letter-spacing:.02em}
+/* 現在ページ自身を指す項目（自己参照リンク防止）：非活性・グレーアウト＋「現在のページ」タグ */
+.ktn-ddi--current{cursor:default;pointer-events:none;color:var(--muted);opacity:.6}
+.ktn-ddi--current svg{color:var(--muted)}
+.ktn-ddi__lbl{flex:1}
+.ktn-ddi__tag{font-size:.6rem;letter-spacing:.06em;color:var(--muted);white-space:nowrap}
 .ktn-dd-sep{height:1px;background:var(--border);margin:3px 0}
 
 /* ══════════════════════════════════
@@ -452,6 +458,7 @@ button{font-family:inherit;cursor:pointer}
   .ktn-header{top:var(--dh, 0)}
   .ktn-header__inner{padding:0 14px;padding-top:8px;padding-bottom:8px}
   .ktn-bc__current{max-width:150px}
+  .ktn-bc__link{max-width:130px}
   .ktn-tagbar__inner{padding:0 10px}
   .ktn-tagbar__label{display:none}
 }
@@ -459,6 +466,7 @@ button{font-family:inherit;cursor:pointer}
   .ktn-hib__lbl{display:none}
   .ktn-hdr-owbtn span{display:none}
   .ktn-bc__current{flex:1;min-width:0;max-width:none}
+  .ktn-bc__link{max-width:110px}
   /* パンくず先祖リンクを省略（親+現在のみ表示）*/
   .ktn-bc__link--anc{display:none}
   .ktn-bc__link--anc + .ktn-bc__sep{display:none}
@@ -910,6 +918,7 @@ button{font-family:inherit;cursor:pointer}
 }
 .ktn-bottom-nav__item:hover .ktn-bottom-nav__icon { background: #e8f2fa; }
 .ktn-bottom-nav__item svg { width: 24px; height: 24px; }
+.ktn-bottom-nav__item img { width: 24px; height: 24px; display: block; }
 
 .ktn-bottom-nav__label {
   font-size: 0.62rem;

@@ -550,7 +550,7 @@ function renderBottomNav() {
   if (!inner) return;
   let html = `
     <a href="/p1" class="ktn-bottom-nav__item ktn-bottom-nav__item--home" data-page="p1" onclick="handleNav(event,'p1','/p1')">
-      <div class="ktn-bottom-nav__icon">${ICONS.home}</div>
+      <div class="ktn-bottom-nav__icon"><img src="./images/kotennavi-logo3.svg" alt="" width="24" height="24"></div>
       <span class="ktn-bottom-nav__label">Top</span>
     </a>
     <a href="/p10-1" class="ktn-bottom-nav__item" data-page="p10-1" onclick="handleNav(event,'p10-1','/p10-1')">
@@ -613,7 +613,119 @@ function renderBottomNav() {
   requestAnimationFrame(() => updateActiveState());
 }
 
+/* ══════════════════════════════════
+   フッター（全ページ共通・単一ソース）
+   #ktnFooter を持つページにのみ描画（持たないページは null ガードで無視）
+══════════════════════════════════ */
+function renderFooter() {
+  const el = document.getElementById('ktnFooter');
+  if (!el) return;
+  el.innerHTML = `
+    <div class="ktn-footer__inner">
+      <div class="ktn-footer__upper">
 
+        <div class="ktn-footer__brand">
+          <a href="/p1" class="ktn-footer__logo" onclick="handleNav(event,'p1','/p1')">
+            <img src="./images/kotennavi-logo1.svg" alt="個展なび">
+          </a>
+          <p class="ktn-footer__tagline">
+            展覧会を探すなら、個展なび。<br>
+            展覧会を発信するなら、個展なび。
+          </p>
+          <div class="ktn-footer__sns">
+            <a href="https://www.facebook.com/" target="_blank" rel="noopener" class="ktn-footer__sns-link">Facebook</a>
+            <a href="https://x.com/" target="_blank" rel="noopener" class="ktn-footer__sns-link">X (Twitter)</a>
+          </div>
+        </div>
+
+        <div class="ktn-footer__col">
+          <p class="ktn-footer__col-title">展覧会</p>
+          <ul class="ktn-footer__links">
+            <li><a href="/p10" onclick="handleNav(event,'p10','/p10')">展覧会を探す</a></li>
+            <li><a href="/p70" onclick="handleNav(event,'p70','/p70')"><span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>オンライン展示</a></li>
+          </ul>
+          <p class="ktn-footer__col-title" style="margin-top:20px">特集</p>
+          <div class="ktn-footer__feature-tags">
+            <a href="/p10-4" class="ktn-footer__feature-tag" onclick="handleNav(event,'p10-4','/p10-4')">九州の展覧会</a>
+            <a href="/p10-4" class="ktn-footer__feature-tag" onclick="handleNav(event,'p10-4','/p10-4')">今週末開催</a>
+            <a href="/p10-4" class="ktn-footer__feature-tag" onclick="handleNav(event,'p10-4','/p10-4')">東京・写真展</a>
+            <a href="/p10-4" class="ktn-footer__feature-tag" onclick="handleNav(event,'p10-4','/p10-4')">特集一覧 →</a>
+          </div>
+        </div>
+
+        <div class="ktn-footer__col">
+          <p class="ktn-footer__col-title">ご利用について</p>
+          <ul class="ktn-footer__links">
+            <li><a href="/p60" onclick="handleNav(event,'p60','/p60')">ご利用ガイド</a></li>
+            <li><a href="/p60-2" onclick="handleNav(event,'p60-2','/p60-2')">展覧会を掲載する</a></li>
+            <li><a href="/p61" onclick="handleNav(event,'p61','/p61')">お知らせ</a></li>
+          </ul>
+          <p class="ktn-footer__col-title" style="margin-top:20px">会員登録</p>
+          <ul class="ktn-footer__links">
+            <li><a href="/register" onclick="handleNav(event,'register','/register')">新規登録（無料）</a></li>
+            <li><a href="/login" onclick="handleNav(event,'login','/login')">ログイン</a></li>
+            <li><a href="/p11-2" onclick="handleNav(event,'p11-2','/p11-2')">クリエイター申込</a></li>
+            <li><a href="/p11-3" onclick="handleNav(event,'p11-3','/p11-3')">ギャラリー申込</a></li>
+          </ul>
+        </div>
+
+        <div class="ktn-footer__col">
+          <p class="ktn-footer__col-title">企業情報</p>
+          <ul class="ktn-footer__links">
+            <li><a href="/p60-8" onclick="handleNav(event,'p60-8','/p60-8')">会社概要</a></li>
+            <li><a href="/p60-11" onclick="handleNav(event,'p60-11','/p60-11')">お問い合わせ</a></li>
+          </ul>
+        </div>
+
+      </div><!-- /upper -->
+
+      <div class="ktn-footer__liaison-band">
+        <div class="ktn-footer__liaison-logo">
+          <svg width="100px" height="53px" viewBox="0 0 420 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M 30 180 Q 210 30, 390 180" stroke="rgba(255,255,255,0.5)" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <defs><path id="footLiArch" d="M 70 165 Q 210 45, 350 165"/></defs>
+            <text font-family="'Cinzel',serif" font-size="40" font-weight="700" letter-spacing="7" fill="rgba(255,255,255,0.7)">
+              <textPath href="#footLiArch" startOffset="50%" text-anchor="middle">LIAISON</textPath>
+            </text>
+            <text x="210" y="206" font-family="'Montserrat',sans-serif" font-size="10" font-weight="600" letter-spacing="4" fill="rgba(192,57,43,0.7)" text-anchor="middle">Now on View</text>
+          </svg>
+          <svg width="110px" height="58px" viewBox="0 0 480 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M 20 200 Q 240 33 460 200" stroke="rgba(180,140,20,0.5)" stroke-width="5" fill="none" stroke-linecap="round"/>
+            <defs>
+              <path id="footLpArch" d="M 80 184 Q 240 56 400 184"/>
+              <linearGradient id="footLpGrad" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="rgba(180,140,20,0.6)"/>
+                <stop offset="50%" stop-color="rgba(220,180,40,0.7)"/>
+                <stop offset="100%" stop-color="rgba(180,140,20,0.6)"/>
+              </linearGradient>
+            </defs>
+            <text font-family="'Bodoni Moda','DM Serif Display',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#footLpGrad)">
+              <textPath href="#footLpArch" startOffset="50%" text-anchor="middle">LIAISON</textPath>
+            </text>
+            <circle cx="432" cy="183" r="22" fill="rgba(180,140,20,0.5)"/>
+            <text x="432" y="183" font-family="serif" font-size="42" font-weight="900" fill="rgba(255,240,200,0.7)" text-anchor="middle" dominant-baseline="central">+</text>
+            <text x="240" y="228" font-family="'Montserrat',sans-serif" font-size="10" font-weight="600" letter-spacing="4" fill="rgba(180,140,20,0.6)" text-anchor="middle">Now on View + Shop</text>
+          </svg>
+        </div>
+        <p class="ktn-footer__liaison-desc">
+          オンラインで作品が見られる展覧会。会場の展示作品をそのままネットで鑑賞・購入できます。<br>
+          LIAISON+では会期後も作品の購入申込が可能です。
+        </p>
+        <a href="/p70" class="ktn-footer__liaison-link" onclick="handleNav(event,'p70','/p70')">詳しく見る →</a>
+      </div>
+
+    </div><!-- /inner -->
+
+    <div class="ktn-footer__bottom">
+      <span class="ktn-footer__copy">©2010 kotennavi Co., Ltd. All rights reserved.</span>
+      <div class="ktn-footer__policy">
+        <a href="/p60-10" onclick="handleNav(event,'p60-10','/p60-10')">プライバシーポリシー</a>
+        <a href="/p60-9" onclick="handleNav(event,'p60-9','/p60-9')">利用規約</a>
+        <a href="/p60-11" onclick="handleNav(event,'p60-11','/p60-11')">お問い合わせ</a>
+      </div>
+    </div>
+  `;
+}
 
 
 
@@ -1027,6 +1139,7 @@ function renderAll() {
   if (typeof window.ktnRender === 'function') window.ktnRender();
   renderSidebar();
   renderBottomNav();
+  renderFooter();
   renderTagbar(window.ktnState.page);
   updateActiveState(window.ktnState.page);
   syncAdminNote();
@@ -1057,20 +1170,20 @@ const PAGES = {
   'p1': { n: '個展なびトップ', bc: [['Top', '/'], ['個展なびトップ', null]] },
   // P2 展覧会
   'p2': { n: '展覧会', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', null]] },
-  'p2-1': { n: '展覧会-スケジュール', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', '/p2'], ['スケジュール', null]] },
-  'p2-2': { n: '展覧会-開催場所', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', '/p2'], ['開催場所', null]] },
-  'p2-3': { n: '展覧会-記事・案内', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', '/p2'], ['記事・案内', null]] },
-  'p2-4': { n: '展覧会-出展者', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', '/p2'], ['出展者', null]] },
-  'p2-5': { n: '展覧会-リエゾン作品一覧', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', '/p2'], ['LIAISON作品一覧', null]] },
-  'p2-5-1': { n: '展覧会-リエゾンプラス作品一覧', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', '/p2'], ['LIAISON+ 作品一覧', null]] },
-  'p2-6': { n: '展覧会-作品リスト', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', '/p2'], ['作品リスト', null]] },
-  'p2-11': { n: '展覧会-新規/編集/クローン', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['松田啓佑展［仮称］', '/p2'], ['展覧会を編集', null]] },
-  'p2-12': { n: 'LIAISON 作品管理', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', '/p2'], ['LIAISON 作品管理', null]] },
-  'p2-121': { n: 'LIAISON+ 作品管理', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', '/p2'], ['LIAISON+ 作品管理', null]] },
-  'p2-13': { n: '展覧会-記事管理', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', '/p2'], ['記事管理', null]] },
-  'p2-14': { n: '展覧会-インサイト', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', '/p2'], ['インサイト', null]] },
-  'p2-15': { n: '展覧会-広告作成', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', '/p2'], ['広告作成', null]] },
-  'p2-16': { n: '展覧会-修正依頼', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', '/p2'], ['修正依頼', null]] },
+  'p2-1': { n: '展覧会-スケジュール', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', 'kotennavi-p2.html'], ['スケジュール', null]] },
+  'p2-2': { n: '展覧会-開催場所', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', 'kotennavi-p2.html'], ['開催場所', null]] },
+  'p2-3': { n: '展覧会-記事・案内', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', 'kotennavi-p2.html'], ['記事・案内', null]] },
+  'p2-4': { n: '展覧会-出展者', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', 'kotennavi-p2.html'], ['出展者', null]] },
+  'p2-5': { n: '展覧会-リエゾン作品一覧', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', 'kotennavi-p2.html'], ['LIAISON作品一覧', null]] },
+  'p2-5-1': { n: '展覧会-リエゾンプラス作品一覧', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', 'kotennavi-p2.html'], ['LIAISON+ 作品一覧', null]] },
+  'p2-6': { n: '展覧会-作品リスト', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', 'kotennavi-p2.html'], ['作品リスト', null]] },
+  'p2-11': { n: '展覧会-新規/編集/クローン', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['松田啓佑展［仮称］', 'kotennavi-p2.html'], ['展覧会を編集', null]] },
+  'p2-12': { n: 'LIAISON 作品管理', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', 'kotennavi-p2.html'], ['LIAISON 作品管理', null]] },
+  'p2-121': { n: 'LIAISON+ 作品管理', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', 'kotennavi-p2.html'], ['LIAISON+ 作品管理', null]] },
+  'p2-13': { n: '展覧会-記事管理', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', 'kotennavi-p2.html'], ['記事管理', null]] },
+  'p2-14': { n: '展覧会-インサイト', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', 'kotennavi-p2.html'], ['インサイト', null]] },
+  'p2-15': { n: '展覧会-広告作成', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', 'kotennavi-p2.html'], ['広告作成', null]] },
+  'p2-16': { n: '展覧会-修正依頼', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', 'kotennavi-p2.html'], ['修正依頼', null]] },
   // 旧「展覧会-報告」は全表示系共通の報告フォーム 'p60-13'「問題を報告する」に統合（2026-07-24）。
   // P3 クリエイター
   'p3': { n: 'クリエイター', bc: [['Top', '/'], ['クリエイター', '/p10-2'], ['田中 透', null]] },
@@ -1249,6 +1362,15 @@ function ddi(iconK, label, danger = false, onclick = '') {
   return `<button class="ktn-ddi${danger ? ' danger' : ''}"${oc}>${ic(iconK)}${label}</button>`;
 }
 function ddSep() { return `<div class="ktn-dd-sep"></div>`; }
+/* 今いるページ自身を指すメニュー項目（クリックしても無意味な自己参照リンク防止・単一ソース）。
+   通常のリンク付き ddi() の代わりに、非活性＋「現在のページ」タグ表示にする。 */
+function ddiCurrent(iconK, label) {
+  return `<button class="ktn-ddi ktn-ddi--current" disabled>${ic(iconK)}<span class="ktn-ddi__lbl">${label}</span><span class="ktn-ddi__tag">現在のページ</span></button>`;
+}
+/* オーナーメニュー項目生成の共通口：curPage が targetPage と一致する場合のみ ddiCurrent() に差し替える。 */
+function ddiP(curPage, targetPage, iconK, label, onclick) {
+  return curPage === targetPage ? ddiCurrent(iconK, label) : ddi(iconK, label, false, onclick);
+}
 
 /* 「問題を報告する」＝全表示系ページ共通の報告フォーム P60-13 へ from/type 文脈付きで遷移（単一ソース）。
    ページ固有の報告ページ（旧 p2-17 等）は作らず、対象種別を type で受け渡して p60-13 側で理由select を出し分ける。 */
@@ -1317,6 +1439,25 @@ function ktnSetExh(key, val, btn) {
 window.ktnExhState = ktnExhState;
 window.ktnSetExh = ktnSetExh;
 
+/* creator/gallery本人のLIAISON+申込状態（デモ用グローバル状態・P3/P4共通）。
+   本人確認・口座登録を伴うアカウント単位の申込（p11-4）で、展覧会単位のリエゾン設定（KTN.exh.liaison）とは別軸。
+   デモバーの「リエゾン+：申請済／未申請」ボタンが ktnSetLP() を呼ぶ。 */
+KTN.lp = { applied: true };
+function ktnLPApplied() {
+  return !!(KTN.lp && KTN.lp.applied);
+}
+function ktnSetLP(val, btn) {
+  KTN.lp.applied = (val === 'true');
+  if (btn) {
+    document.querySelectorAll('.dbtn-lp').forEach(function (b) {
+      b.classList.toggle('on', b === btn);
+    });
+  }
+  if (typeof ktnRender === 'function') ktnRender();
+}
+window.ktnLPApplied = ktnLPApplied;
+window.ktnSetLP = ktnSetLP;
+
 /* P2（展覧会）編集可否（ヘッダーのクイック「編集」ボタン・p2OwnerMenuItems()両方で共用）。
    確認済かつ会期終了後のみ編集不可。それ以外（確認前は会期段階問わず／確認済かつ会期終了前）は編集可。 */
 function p2CanEdit() {
@@ -1329,17 +1470,20 @@ function p2CanEdit() {
    - 確認前：会期状態に関わらず編集・記事管理・削除のみ（リエゾン/インサイト/QR/フライヤーは非表示）
    - 確認済かつ会期終了後：編集ボタンなし。記事管理＋（リエゾン+かつ販売期間内なら）リエゾン+項目＋インサイト
    - 確認済かつ会期終了前（会期前・会期中とも）：編集・記事管理・QR・フライヤーを表示。リエゾン/リエゾン+・インサイトは公開日到達済の場合のみ追加表示 */
-function p2OwnerMenuItems() {
+function p2OwnerMenuItems(curPage) {
   /* 並び順（確定）：展覧会編集・リエゾン/リエゾン+・記事・会場チェックインQR・フライヤー・インサイト・削除。
-     各項目の表示条件（confirmed/phase/publishArrived等）はこの並び順変更以前と同一。 */
+     各項目の表示条件（confirmed/phase/publishArrived等）はこの並び順変更以前と同一。
+     curPage＝現在開いている管理サブページID（p2-11等）。省略時（トップ/公開サブページからの呼び出し）は
+     どの項目とも一致しないため通常のリンクのまま（自己参照判定は無効）。 */
   var st = ktnExhState();
-  var edit = ddi('edit', '展覧会編集', false, "location.href='./kotennavi-p2-11.html'");
+  var edit = ddiP(curPage, 'p2-11', 'edit', '展覧会編集', "location.href='./kotennavi-p2-11.html'");
   var liaisonLabel = st.liaison === 'plus' ? 'リエゾン+ 展示設定・作品管理' : 'リエゾン 展示設定・作品管理';
-  var liaisonItem = st.liaison !== 'none' ? ddi('grid', liaisonLabel, false, 'p2GotoWorks()') : '';
-  var articles = ddi('file', '記事管理', false, "location.href='./kotennavi-p2-13.html'");
+  var liaisonTarget = st.liaison === 'plus' ? 'p2-121' : 'p2-12';
+  var liaisonItem = st.liaison !== 'none' ? ddiP(curPage, liaisonTarget, 'grid', liaisonLabel, 'p2GotoWorks()') : '';
+  var articles = ddiP(curPage, 'p2-13', 'file', '記事管理', "location.href='./kotennavi-p2-13.html'");
   var qr = ddi('qr', '会場チェックイン用QRコードを表示', false, "ktnListQr('venue')");
   var flyer = ddi('print', '会場フライヤーを作成', false, 'ktnVenueFlyer()');
-  var insight = ddi('chart', 'インサイト', false, "location.href='./kotennavi-p2-14.html'");
+  var insight = ddiP(curPage, 'p2-14', 'chart', 'インサイト', "location.href='./kotennavi-p2-14.html'");
   var del = ddi('trash', '削除', true);
 
   if (!st.confirmed) {
@@ -1363,45 +1507,54 @@ function p2OwnerMenuItems() {
 /* P2 管理者メニュー（オーナーメニューの全項目を含むスーパーセット＋管理者専用項目）。
    オーナーメニューが状態次第で非表示にしている項目（確認前/公開前で消えるインサイト、確認済で消える削除）を
    管理者は常時利用できるよう補完し、さらにクローンを追加する。 */
-function p2AdminMenuItems() {
+function p2AdminMenuItems(curPage) {
   var st = ktnExhState();
-  var items = p2OwnerMenuItems();
+  var items = p2OwnerMenuItems(curPage);
   var ended = st.phase === 'after';
   var hasInsight = st.confirmed && (ended || st.publishArrived);
-  if (!hasInsight) items += ddSep() + ddi('chart', 'インサイト', false, "location.href='./kotennavi-p2-14.html'");
+  if (!hasInsight) items += ddSep() + ddiP(curPage, 'p2-14', 'chart', 'インサイト', "location.href='./kotennavi-p2-14.html'");
   items += ddSep() + ddi('clone', 'クローン');
   var hasDel = !st.confirmed;
   if (!hasDel) items += ddSep() + ddi('trash', '削除', true);
   return items;
 }
 
-/* P3（クリエイター）オーナーメニュー（単一ソース・トップ〜全管理サブページ共通） */
-function p3OwnerMenuItems() {
-  return ddi('edit', 'プロフィール編集', false, "location.href='./kotennavi-p3-11.html'") + ddSep() +
-    ddi('grid', '展覧会を管理', false, "location.href='./kotennavi-p3-18.html'") +
-    ddi('frame', 'ポートフォリオ管理', false, "location.href='./kotennavi-p3-14.html'") +
-    ddi('file', '記事管理', false, "location.href='./kotennavi-p3-19.html'") + ddSep() +
-    ddi('shop', 'LIAISON+コンソール', false, "location.href='./kotennavi-p3-15.html'") +
-    ddi('desk', '取引デスク', false, "location.href='./kotennavi-p3-16.html'") +
-    ddi('sales', '販売代金管理', false, "location.href='./kotennavi-p3-17.html'") + ddSep() +
-    ddi('watch', 'オーディエンス管理', false, "location.href='./kotennavi-p3-13.html'") +
-    ddi('chart', 'インサイト', false, "location.href='./kotennavi-p3-12.html'") + ddSep() +
+/* P3（クリエイター）オーナーメニュー（単一ソース・トップ〜全管理サブページ共通）。
+   curPage＝現在開いている管理サブページID。省略時（トップ/公開サブページ）は自己参照判定が無効。
+   LIAISON+未申請時（ktnLPApplied()===false）はコンソール/取引デスク/販売代金管理をまとめて隠し、
+   「LIAISON+に申し込む」（p11-4）1項目に差し替える（未申請なら取引・入金も存在し得ないため）。 */
+function p3OwnerMenuItems(curPage) {
+  var lpBlock = ktnLPApplied()
+    ? ddiP(curPage, 'p3-15', 'shop', 'LIAISON+コンソール', "location.href='./kotennavi-p3-15.html'") +
+      ddiP(curPage, 'p3-16', 'desk', '取引デスク', "location.href='./kotennavi-p3-16.html'") +
+      ddiP(curPage, 'p3-17', 'sales', '販売代金管理', "location.href='./kotennavi-p3-17.html'")
+    : ddi('shop', 'LIAISON+に申し込む', false, "location.href='./kotennavi-p11-4.html'");
+  return ddiP(curPage, 'p3-11', 'edit', 'プロフィール編集', "location.href='./kotennavi-p3-11.html'") + ddSep() +
+    ddiP(curPage, 'p3-18', 'grid', '展覧会を管理', "location.href='./kotennavi-p3-18.html'") +
+    ddiP(curPage, 'p3-14', 'frame', 'ポートフォリオ管理', "location.href='./kotennavi-p3-14.html'") +
+    ddiP(curPage, 'p3-19', 'file', '記事管理', "location.href='./kotennavi-p3-19.html'") + ddSep() +
+    lpBlock + ddSep() +
+    ddiP(curPage, 'p3-13', 'watch', 'オーディエンス管理', "location.href='./kotennavi-p3-13.html'") +
+    ddiP(curPage, 'p3-12', 'chart', 'インサイト', "location.href='./kotennavi-p3-12.html'") + ddSep() +
     ddi('share', 'ページを共有する', false, "ktnPageShare('creator')") +
     ddi('qr', 'ウォッチ用QRコードを表示', false, "ktnListQr('creator')") + ddSep() +
     ddi('user', 'アカウント設定', false, "location.href='./kotennavi-p5.html'");
 }
 
 /* P4（ギャラリー）オーナーメニュー（単一ソース・p3と対称・インベントリー管理のみラベル差） */
-function p4OwnerMenuItems() {
-  return ddi('edit', 'ギャラリー情報編集', false, "location.href='./kotennavi-p4-11.html'") + ddSep() +
-    ddi('grid', '展覧会を管理', false, "location.href='./kotennavi-p4-18.html'") +
-    ddi('frame', 'インベントリー管理', false, "location.href='./kotennavi-p4-14.html'") +
-    ddi('file', '記事管理', false, "location.href='./kotennavi-p4-19.html'") + ddSep() +
-    ddi('shop', 'LIAISON+コンソール', false, "location.href='./kotennavi-p4-15.html'") +
-    ddi('desk', '取引デスク', false, "location.href='./kotennavi-p4-16.html'") +
-    ddi('sales', '販売代金管理', false, "location.href='./kotennavi-p4-17.html'") + ddSep() +
-    ddi('watch', 'オーディエンス管理', false, "location.href='./kotennavi-p4-13.html'") +
-    ddi('chart', 'インサイト', false, "location.href='./kotennavi-p4-12.html'") + ddSep() +
+function p4OwnerMenuItems(curPage) {
+  var lpBlock = ktnLPApplied()
+    ? ddiP(curPage, 'p4-15', 'shop', 'LIAISON+コンソール', "location.href='./kotennavi-p4-15.html'") +
+      ddiP(curPage, 'p4-16', 'desk', '取引デスク', "location.href='./kotennavi-p4-16.html'") +
+      ddiP(curPage, 'p4-17', 'sales', '販売代金管理', "location.href='./kotennavi-p4-17.html'")
+    : ddi('shop', 'LIAISON+に申し込む', false, "location.href='./kotennavi-p11-4.html'");
+  return ddiP(curPage, 'p4-11', 'edit', 'ギャラリー情報編集', "location.href='./kotennavi-p4-11.html'") + ddSep() +
+    ddiP(curPage, 'p4-18', 'grid', '展覧会を管理', "location.href='./kotennavi-p4-18.html'") +
+    ddiP(curPage, 'p4-14', 'frame', 'インベントリー管理', "location.href='./kotennavi-p4-14.html'") +
+    ddiP(curPage, 'p4-19', 'file', '記事管理', "location.href='./kotennavi-p4-19.html'") + ddSep() +
+    lpBlock + ddSep() +
+    ddiP(curPage, 'p4-13', 'watch', 'オーディエンス管理', "location.href='./kotennavi-p4-13.html'") +
+    ddiP(curPage, 'p4-12', 'chart', 'インサイト', "location.href='./kotennavi-p4-12.html'") + ddSep() +
     ddi('share', 'ページを共有する', false, "ktnPageShare('gallery')") +
     ddi('qr', 'ウォッチ用QRコードを表示', false, "ktnListQr('gallery')") + ddSep() +
     ddi('user', 'アカウント設定', false, "location.href='./kotennavi-p5.html'");
@@ -1462,9 +1615,9 @@ function getActions(page, role) {
     const guideAnchor = page === 'p2-11' ? '#exhibition-edit' : page === 'p2-13' ? '#article-edit' : '';
     const guideBtn = owbtn('info', 'ガイド', guideAnchor ? `window.open('${guideFile}${guideAnchor}','_blank')` : '');
     if (role === 'creator' || role === 'gallery')
-      return guideBtn + dd('オーナーメニュー', p2OwnerMenuItems());
+      return guideBtn + dd('オーナーメニュー', p2OwnerMenuItems(page));
     if (role === 'admin')
-      return guideBtn + dd('オーナーメニュー', p2OwnerMenuItems()) + dd('管理者', p2AdminMenuItems());
+      return guideBtn + dd('オーナーメニュー', p2OwnerMenuItems(page)) + dd('管理者', p2AdminMenuItems(page));
     return '';
   }
 
@@ -1482,8 +1635,8 @@ function getActions(page, role) {
 
   /* ── P3 管理サブページ群（プロフィール編集／各種管理ページ・共通オーナーメニュー） ── */
   if (['p3-11', 'p3-12', 'p3-13', 'p3-14', 'p3-15', 'p3-16', 'p3-17', 'p3-18', 'p3-19'].includes(page)) {
-    if (role === 'creator') return owbtn('info', 'ガイド') + dd('オーナーメニュー', p3OwnerMenuItems());
-    if (role === 'admin') return owbtn('info', 'ガイド') + dd('オーナーメニュー', p3OwnerMenuItems()) + dd('管理者', p3p4AdminItems());
+    if (role === 'creator') return owbtn('info', 'ガイド') + dd('オーナーメニュー', p3OwnerMenuItems(page));
+    if (role === 'admin') return owbtn('info', 'ガイド') + dd('オーナーメニュー', p3OwnerMenuItems(page)) + dd('管理者', p3p4AdminItems());
     return '';
   }
 
@@ -1501,8 +1654,8 @@ function getActions(page, role) {
 
   /* ── P4 管理サブページ群（ギャラリー情報編集／各種管理ページ・共通オーナーメニュー） ── */
   if (['p4-11', 'p4-12', 'p4-13', 'p4-14', 'p4-15', 'p4-16', 'p4-17', 'p4-18', 'p4-19'].includes(page)) {
-    if (role === 'gallery') return owbtn('info', 'ガイド') + dd('オーナーメニュー', p4OwnerMenuItems());
-    if (role === 'admin') return owbtn('info', 'ガイド') + dd('オーナーメニュー', p4OwnerMenuItems()) + dd('管理者', p3p4AdminItems());
+    if (role === 'gallery') return owbtn('info', 'ガイド') + dd('オーナーメニュー', p4OwnerMenuItems(page));
+    if (role === 'admin') return owbtn('info', 'ガイド') + dd('オーナーメニュー', p4OwnerMenuItems(page)) + dd('管理者', p3p4AdminItems());
     return '';
   }
 
@@ -1624,6 +1777,7 @@ function renderBc(page) {
   if (!p) return '';
   return p.bc.map((c, i) => {
     const isLast = i === p.bc.length - 1;
+    const isAnc = i === 0 && p.bc.length > 2; /* モバイルで省略するのはTopのみ。カテゴリ・エンティティ名は残す */
     const badge = c[2] === 'l'
       ? `<span class="ktn-bc__badge ktn-bc__badge--l">LIAISON</span>`
       : c[2] === 'lp'
@@ -1632,7 +1786,7 @@ function renderBc(page) {
     const sep = i > 0 ? `<span class="ktn-bc__sep">›</span>` : '';
     if (isLast || !c[1])
       return `${sep}<span class="ktn-bc__current">${c[0]}${badge}</span>`;
-    return `${sep}<a href="${c[1]}" class="ktn-bc__link">${c[0]}</a>`;
+    return `${sep}<a href="${c[1]}" class="ktn-bc__link${isAnc ? ' ktn-bc__link--anc' : ''}">${c[0]}</a>`;
   }).join('');
 }
 
@@ -1732,6 +1886,7 @@ KTN.init = function (opts) {
     }
     renderSidebar();
     renderBottomNav();
+    renderFooter();
     renderTagbar(window.ktnState.page);
     updateActiveState(window.ktnState.page);
     requestAnimationFrame(_scrollActiveSubnav);
