@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ギャラリーへの説明ガイド | 個展なび</title>
+  <meta name="description" content="クリエイターの方が展示先のギャラリーにリエゾン・リエゾンプラスを説明するためのガイドです。サービス概要、費用負担、ギャラリーへの依頼事項をまとめています。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@1,400;1,600&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<body data-w="article" class="p70-page p70-8-page">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- デモバー -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ガイドページ</span>
+  <button class="dbtn dbtn--active" id="dbarView">閲覧</button>
+</div>
+
+<!-- ヘッダー -->
+<div class="shell">
+
+<aside class="ktn-sidebar" id="ktnSidebar">
+  <a href="kotennavi-p1.html" class="ktn-sidebar__logo" data-page="p1">
+    <img src="./images/kotennavi-logo5-1.svg" alt="個展なび">
+  </a>
+  <a href="kotennavi-p10.html" class="ktn-sidebar__item" data-page="p10">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <circle cx="11" cy="11" r="7.5"/>
+        <path d="M21 21l-4.5-4.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">検索</span>
+  </a>
+  <a href="kotennavi-p61.html" class="ktn-sidebar__item" id="ktnSidebarNotice" data-page="p61">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__dot" id="ktnNoticeDot" style="display:none"></span>
+    <span class="ktn-sidebar__label">お知らせ</span>
+  </a>
+  <a href="kotennavi-p60.html" class="ktn-sidebar__item" data-page="p60">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" stroke-linecap="round"/>
+        <path d="M12 16v-4M12 8h.01" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">ガイド</span>
+  </a>
+  <div class="ktn-sidebar__divider"></div>
+  <div id="ktnRoleNav" style="width:100%;display:flex;flex-direction:column;align-items:center"></div>
+  <div class="ktn-sidebar__footer">
+    <p class="ktn-sidebar__footer-label">Follow us</p>
+    <div class="ktn-sidebar__sns">
+      <a href="https://www.facebook.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="Facebook">
+        <svg viewBox="0 0 320 512" fill="currentColor"><path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/></svg>
+      </a>
+      <a href="https://x.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="X">
+        <svg viewBox="0 0 512 512" fill="currentColor"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg>
+      </a>
+    </div>
+  </div>
+</aside>
+
+<div class="content-wrap" id="contentWrap">
+<header class="ktn-header" id="ktnHeader">
+  <div class="ktn-header__inner">
+    <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+    <div class="ktn-hdr-actions" id="ktnActs"></div>
+  </div>
+</header>
+
+<!-- タイトルバンド -->
+<div class="p70-title-band">
+  <div class="p70-title-band__inner">
+    <div class="p70-head__sub">
+      <span class="p70-head__updated">2026年8月 更新</span>
+    </div>
+    <h1 class="p70-head__title">ギャラリーへの説明ガイド</h1>
+    <p class="p70-head__en">Explaining LIAISON to your gallery</p>
+    <p class="p70-head__lead">個展を予定している会場（ギャラリー）に、リエゾン・リエゾンプラスの利用について説明する際にお使いいただけるガイドです。会場の方から質問を受けやすいポイントをまとめました。</p>
+  </div>
+</div>
+
+<main>
+  <div class="p70-wrap">
+
+    <!-- 目次 -->
+    <nav class="p70-toc" aria-label="目次">
+      <div class="p70-toc__title">目次 — Contents</div>
+      <ol class="p70-toc__list">
+        <li class="p70-toc__item"><span class="p70-toc__num">1</span><a class="p70-toc__link" href="#what">リエゾンとは何か</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">2</span><a class="p70-toc__link" href="#venue">会場優先の仕組み</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">3</span><a class="p70-toc__link" href="#ask">ギャラリーへお願いしたいこと</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">4</span><a class="p70-toc__link" href="#cost">費用について</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">5</span><a class="p70-toc__link" href="#faq">よくある質問（会場向け）</a></li>
+      </ol>
+    </nav>
+
+    <!-- 1. リエゾンとは何か -->
+    <section class="p70-section" id="what">
+      <div class="p70-section__head">
+        <span class="p70-section__num">1</span>
+        <h2 class="p70-section__title">リエゾンとは何か</h2>
+        <span class="p70-section__en">What is LIAISON</span>
+      </div>
+      <p class="p70-lead">リエゾンは、会場で開催中の展覧会の様子を、個展なび上でオンライン展示する機能です。来場できない方にも作品をご覧いただけます。リエゾンプラスは、これにオンライン販売機能を加えたものです。</p>
+      <p class="p70-body">会場での展示・販売の妨げにならないよう、以下の点を会場の方にご説明いただくとスムーズです。展示は会場の展示物をそのまま撮影・掲載するもので、会場の運営やレイアウトに変更を加えるものではありません。</p>
+    </section>
+
+    <!-- 2. 会場優先の仕組み -->
+    <section class="p70-section" id="venue">
+      <div class="p70-section__head">
+        <span class="p70-section__num">2</span>
+        <h2 class="p70-section__title">会場優先の仕組み</h2>
+        <span class="p70-section__en">Venue-priority sales</span>
+      </div>
+      <p class="p70-lead">リエゾンプラスは「会場優先型」の販売方式を採用しています。会期中は、現地での購入がオンライン申込よりも常に優先されます。</p>
+
+      <div class="p70-callout p70-callout--venue">
+        <div class="p70-callout__title">会場での販売が最優先です</div>
+        <div class="p70-callout__body">
+          会期中に会場で作品が売約となった場合は、クリエイター・ギャラリーいずれかが個展なび上で「会場売約済」の操作を行うだけで、オンライン申込者へは自動でキャンセル通知が届きます。会場側で個展なびの管理画面を操作いただく必要はありません。
+        </div>
+      </div>
+
+      <p class="p70-body">オンラインでの申込は「仮申込」の扱いで、会期中は決済されません。会期終了後、在庫（未売約の作品）についてクリエイター・ギャラリーが「購入確定」の操作を行った時点で、はじめてオンライン購入者への決済案内が送られます。</p>
+    </section>
+
+    <!-- 3. ギャラリーへお願いしたいこと -->
+    <section class="p70-section" id="ask">
+      <div class="p70-section__head">
+        <span class="p70-section__num">3</span>
+        <h2 class="p70-section__title">ギャラリーへお願いしたいこと</h2>
+        <span class="p70-section__en">What to ask your venue</span>
+      </div>
+      <p class="p70-lead">円滑にリエゾンをご利用いただくために、会場の方に以下をお伝えください。</p>
+
+      <div class="p70-dl p70-dl--ja">
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">会場での売約時のご連絡</dt>
+          <dd class="p70-dl__dd">会期中に作品が売約となった場合は、クリエイター（またはギャラリー自身）に一報いただき、個展なび上の「会場売約済」操作を行います</dd>
+        </div>
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">作品の撮影・掲載について</dt>
+          <dd class="p70-dl__dd">展示風景・作品画像の撮影と個展なびへの掲載について、事前にご了承をいただきます</dd>
+        </div>
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">会場からの操作は不要</dt>
+          <dd class="p70-dl__dd">個展なびの管理画面の操作はクリエイター・ギャラリー（登録ユーザー）が行うため、会場スタッフの方に専用の操作をお願いすることはありません</dd>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. 費用について -->
+    <section class="p70-section" id="cost">
+      <div class="p70-section__head">
+        <span class="p70-section__num">4</span>
+        <h2 class="p70-section__title">費用について</h2>
+        <span class="p70-section__en">Costs</span>
+      </div>
+      <p class="p70-lead">リエゾン・リエゾンプラスの掲載・出品はいずれも無料です。会場に費用が発生することはありません。</p>
+      <p class="p70-body">リエゾンプラスでオンラインの取引が成立した場合のみ、出展者（クリエイターまたはギャラリー）に対しサービス利用料が発生します（作品の販売価格帯により10%または8%）。会場としてブースや展示のみを提供している場合、この利用料の負担者になるかどうかは、クリエイターとギャラリーの間の個別の取り決めによります。詳しくは<a href="./kotennavi-p70-2.html">リエゾンプラス-作品販売ガイド</a>をご覧ください。</p>
+    </section>
+
+    <!-- 5. よくある質問（会場向け） -->
+    <section class="p70-section" id="faq">
+      <div class="p70-section__head">
+        <span class="p70-section__num">5</span>
+        <h2 class="p70-section__title">よくある質問（会場向け）</h2>
+        <span class="p70-section__en">FAQ for venues</span>
+      </div>
+
+      <div class="p70-faq">
+
+        <details class="p70-faq-item">
+          <summary>会場に個展なびのアカウントは必要ですか</summary>
+          <div class="p70-faq-item__body">
+            必要ありません。個展なびの操作はクリエイター（作家本人）またはギャラリー（会場を運営する登録ユーザー）が行います。会場スタッフの方に別途アカウントを作成いただく必要はありません。
+          </div>
+        </details>
+
+        <details class="p70-faq-item">
+          <summary>会場での販売とオンライン販売が重なることはありますか</summary>
+          <div class="p70-faq-item__body">
+            ありません。会場優先型の仕組みにより、会期中はオンラインでの決済は発生せず、会場での売約が常に優先されます。会場で売約となった作品は「会場売約済」の操作で申込者へ自動的にキャンセル通知が届くため、二重販売は起こりません。
+          </div>
+        </details>
+
+        <details class="p70-faq-item">
+          <summary>会場に展示していない作品もオンラインに掲載されますか</summary>
+          <div class="p70-faq-item__body">
+            リエゾン・リエゾンプラスは、実際の会場での展覧会と連動する機能のため、会場に展示されている作品を前提としています。会場に展示していない作品の扱いについては、クリエイターまたはギャラリーにご確認ください。
+          </div>
+        </details>
+
+        <details class="p70-faq-item">
+          <summary>配送や梱包を会場が対応する必要はありますか</summary>
+          <div class="p70-faq-item__body">
+            オンラインで購入が確定した作品の梱包・発送は、出展者（クリエイターまたはギャラリー）が行います。会場スタッフの方に配送作業をお願いすることはありません。
+          </div>
+        </details>
+
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<!-- フッター -->
+<footer class="ktn-footer" id="ktnFooter"></footer>
+</div><!-- /content-wrap -->
+</div><!-- /shell -->
+
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  KTN.init({ page: 'p70-8' });
+
+  var dbarView = document.getElementById('dbarView');
+  if (dbarView) {
+    dbarView.addEventListener('click', function() {
+      this.classList.add('dbtn--active');
+    });
+  }
+});
+</script>
+</body>
+</html>

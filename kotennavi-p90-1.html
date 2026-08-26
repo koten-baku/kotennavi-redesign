@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ユーザー新規/クローン/編集 — 管理者 | 個展なび</title>
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<body data-w="detail" class="p90-1-page mgmt-page">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- デモバー -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ロール：</span>
+  <button class="dbtn on" onclick="setR('admin',this)">管理者</button>
+  <span class="dbar-sep">モード：</span>
+  <button class="dbtn on" id="dbarNew" onclick="setDemoMode('new')">新規</button>
+  <button class="dbtn" id="dbarClone" onclick="setDemoMode('clone')">クローン</button>
+  <button class="dbtn" id="dbarEdit" onclick="setDemoMode('edit')">編集</button>
+</div>
+
+<div class="shell">
+
+<!-- サイドバー（kotennavi-p1.html と同一マークアップ・#ktnRoleNav は renderSidebar() がJS注入） -->
+<aside class="ktn-sidebar" id="ktnSidebar">
+
+  <!-- ロゴ (logo5-1) -->
+  <a href="kotennavi-p1.html" class="ktn-sidebar__logo" data-page="p1">
+    <img src="./images/kotennavi-logo5-1.svg" alt="個展なび">
+  </a>
+
+  <!-- 検索 → P10 検索ハブ -->
+  <a href="kotennavi-p10.html" class="ktn-sidebar__item" data-page="p10">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <circle cx="11" cy="11" r="7.5"/>
+        <path d="M21 21l-4.5-4.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">検索</span>
+  </a>
+
+  <!-- お知らせ → P61（未制作） -->
+  <a href="kotennavi-p61.html" class="ktn-sidebar__item" id="ktnSidebarNotice" data-page="p61">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__dot" id="ktnNoticeDot" style="display:none"></span>
+    <span class="ktn-sidebar__label">お知らせ</span>
+  </a>
+
+  <!-- ガイド → P60（未制作） -->
+  <a href="kotennavi-p60.html" class="ktn-sidebar__item" data-page="p60">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" stroke-linecap="round"/>
+        <path d="M12 16v-4M12 8h.01" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">ガイド</span>
+  </a>
+
+  <div class="ktn-sidebar__divider"></div>
+
+  <!-- ロール別アイコン（JS注入） -->
+  <div id="ktnRoleNav" style="width:100%;display:flex;flex-direction:column;align-items:center"></div>
+
+  <div class="ktn-sidebar__footer">
+    <p class="ktn-sidebar__footer-label">Follow us</p>
+    <div class="ktn-sidebar__sns">
+      <a href="https://www.facebook.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="Facebook">
+        <svg viewBox="0 0 320 512" fill="currentColor"><path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/></svg>
+      </a>
+      <a href="https://x.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="X">
+        <svg viewBox="0 0 512 512" fill="currentColor"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg>
+      </a>
+    </div>
+  </div>
+
+</aside>
+
+<div class="content-wrap" id="contentWrap">
+
+  <header class="ktn-header" id="ktnHeader">
+    <div class="ktn-header__inner">
+      <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+      <div class="ktn-hdr-actions" id="ktnActs"></div>
+    </div>
+  </header>
+
+  <main class="ktn-main" id="ktnMain">
+    <div class="ktn-content">
+
+      <!-- モード案内バナー（新規・クローン時のみ表示。編集は非表示） -->
+      <div class="p211-mode-banner" id="p901ModeBanner">
+        <span class="p211-mode-banner__icon">ℹ️</span>
+        <div class="p211-mode-banner__text" id="p901ModeBannerText"></div>
+      </div>
+
+      <!-- 管理ボックス -->
+      <div class="p901-wrap ktn-mgmt-wrap">
+
+        <!-- ページヘッド -->
+        <div class="ktn-mgmt-head">
+          <h2 class="ktn-mgmt-head__title" id="p901PageTitle">ユーザー新規/クローン/編集</h2>
+          <p class="ktn-mgmt-head__en">USER ACCOUNT</p>
+          <p class="ktn-mgmt-head__desc">ユーザーアカウントの新規作成・複製・編集を行います。クリエイター・ギャラリー機能の付与はこの画面では行わず、本人からの機能申込（P11-2 / P11-3）を経て有効化されます。</p>
+        </div>
+
+        <!-- ─── 基本情報 ─── -->
+        <div class="p211-block">
+          <div class="p211-block__head">
+            <div class="p211-block__title">基本情報 <span class="p211-block__title-en">Basic Info</span></div>
+          </div>
+          <div class="p211-block__body">
+
+            <div class="p211-field">
+              <label class="p211-label">メールアドレス<span class="ktn-req">必須</span></label>
+              <input class="p211-input" type="email" id="p901Email" placeholder="例：hanako.yamada@example.com" autocomplete="off">
+              <p class="p211-help">ログインIDおよび各種通知の送付先として使用されます。</p>
+            </div>
+
+            <div class="p211-field">
+              <label class="p211-label">氏名</label>
+              <input class="p211-input" type="text" id="p901Name" placeholder="例：山田 花子">
+            </div>
+
+            <div class="p211-field">
+              <label class="p211-label">フリガナ</label>
+              <input class="p211-input" type="text" id="p901Kana" placeholder="全角カタカナ　例：ヤマダ ハナコ">
+            </div>
+
+            <div class="p211-field">
+              <label class="p211-label">ロール</label>
+              <div style="display:flex;align-items:center;gap:8px;font-size:.85rem;color:var(--ink);padding:6px 0">
+                <span class="cb cb-person cb-user" style="font-size:.6rem">user</span>
+                <strong>USER（固定）</strong>
+              </div>
+              <p class="p211-help">クリエイター機能・ギャラリー機能はこの画面では付与できません。本人が <a class="ktn-guide-link" href="./kotennavi-p11-2.html">クリエイター機能を申し込む →</a> / <a class="ktn-guide-link" href="./kotennavi-p11-3.html">ギャラリー機能を申し込む →</a> から申込み、申込管理画面での審査を経て有効になります。</p>
+            </div>
+
+            <div class="p211-field">
+              <label class="p211-label">ステータス</label>
+              <select class="p211-select" id="p901Status" style="max-width:220px">
+                <option value="active">有効</option>
+                <option value="suspended">停止</option>
+              </select>
+              <p class="p211-help">「停止」にするとログインできなくなります。</p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 送信バー -->
+        <div class="p211-submit-bar">
+          <button class="p211-submit-bar__cancel ktn-op-btn" type="button" onclick="history.back()">キャンセル</button>
+          <button class="p211-submit-bar__submit ktn-op-btn ktn-op-btn--primary" type="button" id="p901SubmitBtn" onclick="p901Submit()">保存</button>
+          <span class="p211-submit-bar__note" id="p901SubmitNote"></span>
+        </div>
+
+      </div><!-- /.ktn-mgmt-wrap -->
+
+    </div><!-- /.ktn-content -->
+  </main>
+<footer class="ktn-footer" id="ktnFooter"></footer>
+
+
+</div><!-- /.content-wrap -->
+</div><!-- /.shell -->
+
+<nav class="ktn-bottom-nav" id="ktnBottomNav"><div class="ktn-bottom-nav__inner" id="ktnBottomNavInner"></div></nav>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Top","item":"https://koten-navi.com/"},{"@type":"ListItem","position":2,"name":"管理者メニュー","item":"https://koten-navi.com/p90"},{"@type":"ListItem","position":3,"name":"ユーザー新規/クローン/編集"}]}</script>
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+  KTN.init({ page: 'p90-1', role: 'admin' });
+  /* ロールボタンは common.js の setR()（[onclick^="setR"] のみ解除）をそのまま使用。
+     モードボタン（新規/クローン/編集）は setDemoMode() が独立して管理する。 */
+
+  /* ── デモ用の複製元/編集対象ユーザー（既存ユーザー「山田 花子」） ── */
+  var DEMO_USER = { email: 'hanako.yamada@example.com', name: '山田 花子', kana: 'ヤマダ ハナコ', status: 'active' };
+
+  var MODE_TITLES = {
+    new:   'ユーザーを新規作成',
+    clone: 'ユーザーをクローンで作成',
+    edit:  'ユーザーを編集'
+  };
+  var MODE_BANNER = {
+    new:   '新しいユーザーアカウントを作成します。保存するとログイン案内メールが登録アドレス宛に送信されます。',
+    clone: '既存ユーザー「<strong>' + DEMO_USER.name + '</strong>」の情報を元に新しいアカウントを作成します。メールアドレスは必ず新しいものに変更してください。',
+    edit:  ''
+  };
+
+  function setDemoMode(mode) {
+    ['New', 'Clone', 'Edit'].forEach(function (key) {
+      var btn = document.getElementById('dbar' + key);
+      if (btn) btn.classList.toggle('on', key.toLowerCase() === mode);
+    });
+
+    var titleEl = document.getElementById('p901PageTitle');
+    if (titleEl) titleEl.textContent = MODE_TITLES[mode];
+    document.title = MODE_TITLES[mode] + ' — 管理者 | 個展なび';
+
+    var banner = document.getElementById('p901ModeBanner');
+    var bannerText = document.getElementById('p901ModeBannerText');
+    if (banner && bannerText) {
+      if (MODE_BANNER[mode]) {
+        bannerText.innerHTML = MODE_BANNER[mode];
+        banner.hidden = false;
+      } else {
+        banner.hidden = true;
+      }
+    }
+
+    var emailEl  = document.getElementById('p901Email');
+    var nameEl   = document.getElementById('p901Name');
+    var kanaEl   = document.getElementById('p901Kana');
+    var statusEl = document.getElementById('p901Status');
+
+    if (mode === 'new') {
+      if (emailEl) emailEl.value = '';
+      if (nameEl)  nameEl.value = '';
+      if (kanaEl)  kanaEl.value = '';
+      if (statusEl) statusEl.value = 'active';
+    } else if (mode === 'clone') {
+      /* クローンはメールアドレスのみ空欄にし、新規のログインIDを入力させる */
+      if (emailEl) emailEl.value = '';
+      if (nameEl)  nameEl.value = DEMO_USER.name;
+      if (kanaEl)  kanaEl.value = DEMO_USER.kana;
+      if (statusEl) statusEl.value = 'active';
+    } else if (mode === 'edit') {
+      if (emailEl) emailEl.value = DEMO_USER.email;
+      if (nameEl)  nameEl.value = DEMO_USER.name;
+      if (kanaEl)  kanaEl.value = DEMO_USER.kana;
+      if (statusEl) statusEl.value = DEMO_USER.status;
+    }
+  }
+
+  function p901Submit() {
+    var emailEl = document.getElementById('p901Email');
+    var note = document.getElementById('p901SubmitNote');
+    if (!emailEl || !emailEl.value.trim()) {
+      if (note) note.textContent = 'メールアドレスを入力してください';
+      if (emailEl) emailEl.focus();
+      return;
+    }
+    if (note) note.textContent = '';
+    KTN.submitDone({
+      title: '保存しました',
+      message: 'ユーザー情報を保存しました。',
+      action: { label: '管理者メニューへ', href: './kotennavi-p90.html' }
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    setDemoMode('new');
+  });
+</script>
+</body>
+</html>

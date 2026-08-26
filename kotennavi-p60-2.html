@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>展覧会情報を掲載したい方 | 個展なび</title>
+  <meta name="description" content="個展なびに展覧会情報を掲載する流れをご紹介。クリエイター機能・ギャラリー機能の申込方法や、リエゾン・リエゾン+によるオンライン展示・販売についても説明します。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@1,400;1,600&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<body data-w="article" class="p70-page p60-page">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- デモバー -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ガイドページ</span>
+  <button class="dbtn dbtn--active" id="dbarView">閲覧</button>
+</div>
+
+<!-- ヘッダー -->
+<div class="shell">
+
+<!-- サイドバー（kotennavi-p1.html と同一マークアップ・#ktnRoleNav は renderSidebar() がJS注入） -->
+<aside class="ktn-sidebar" id="ktnSidebar">
+
+  <!-- ロゴ (logo5-1) -->
+  <a href="kotennavi-p1.html" class="ktn-sidebar__logo" data-page="p1">
+    <img src="./images/kotennavi-logo5-1.svg" alt="個展なび">
+  </a>
+
+  <!-- 検索 → P10 検索ハブ -->
+  <a href="kotennavi-p10.html" class="ktn-sidebar__item" data-page="p10">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <circle cx="11" cy="11" r="7.5"/>
+        <path d="M21 21l-4.5-4.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">検索</span>
+  </a>
+
+  <!-- お知らせ → P61（未制作） -->
+  <a href="kotennavi-p61.html" class="ktn-sidebar__item" id="ktnSidebarNotice" data-page="p61">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__dot" id="ktnNoticeDot" style="display:none"></span>
+    <span class="ktn-sidebar__label">お知らせ</span>
+  </a>
+
+  <!-- ガイド → P60（未制作） -->
+  <a href="kotennavi-p60.html" class="ktn-sidebar__item" data-page="p60">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" stroke-linecap="round"/>
+        <path d="M12 16v-4M12 8h.01" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">ガイド</span>
+  </a>
+
+  <div class="ktn-sidebar__divider"></div>
+
+  <!-- ロール別アイコン（JS注入） -->
+  <div id="ktnRoleNav" style="width:100%;display:flex;flex-direction:column;align-items:center"></div>
+
+  <div class="ktn-sidebar__footer">
+    <p class="ktn-sidebar__footer-label">Follow us</p>
+    <div class="ktn-sidebar__sns">
+      <a href="https://www.facebook.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="Facebook">
+        <svg viewBox="0 0 320 512" fill="currentColor"><path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/></svg>
+      </a>
+      <a href="https://x.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="X">
+        <svg viewBox="0 0 512 512" fill="currentColor"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg>
+      </a>
+    </div>
+  </div>
+
+</aside>
+
+<div class="content-wrap" id="contentWrap">
+<header class="ktn-header" id="ktnHeader">
+  <div class="ktn-header__inner">
+    <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+    <div class="ktn-hdr-actions" id="ktnActs"></div>
+  </div>
+</header>
+
+<!-- タイトルバンド -->
+<div class="p70-title-band">
+  <div class="p70-title-band__inner">
+    <div class="p70-head__sub">
+      <span class="p70-head__updated">利用ガイド</span>
+    </div>
+    <h1 class="p70-head__title">展覧会情報を掲載したい方へ</h1>
+    <p class="p70-head__en">Listing your exhibition</p>
+    <p class="p70-head__lead">ご自身の展覧会を個展なびに掲載するための流れをご紹介します。クリエイター・ギャラリーいずれの立場でもご利用いただけます。</p>
+  </div>
+</div>
+
+<main>
+  <div class="p70-wrap">
+
+    <!-- 目次 -->
+    <nav class="p70-toc" aria-label="目次">
+      <div class="p70-toc__title">目次 — Contents</div>
+      <ol class="p70-toc__list">
+        <li class="p70-toc__item"><span class="p70-toc__num">1</span><a class="p70-toc__link" href="#steps">掲載までの流れ</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">2</span><a class="p70-toc__link" href="#role">クリエイターとギャラリー</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">3</span><a class="p70-toc__link" href="#liaison">オンライン展示・販売（リエゾン）</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">4</span><a class="p70-toc__link" href="#more">さらに詳しく</a></li>
+      </ol>
+    </nav>
+
+    <!-- 1. 掲載までの流れ -->
+    <section class="p70-section" id="steps">
+      <div class="p70-section__head">
+        <span class="p70-section__num">1</span>
+        <h2 class="p70-section__title">掲載までの流れ</h2>
+        <span class="p70-section__en">Steps</span>
+      </div>
+      <p class="p70-lead">展覧会を掲載するには、アカウント登録のうえ、クリエイター機能またはギャラリー機能をお申込みいただく必要があります。</p>
+
+      <div class="p70-path-diagram">
+        <div class="p70-path-diagram__col p70-path-diagram__col--creator">
+          <div class="p70-path-diagram__role-head">
+            <span class="p70-path-diagram__role-tag">STEP</span>
+            <span class="p70-path-diagram__role-label">掲載までの3ステップ</span>
+          </div>
+          <ol class="p70-path-diagram__steps">
+            <li class="p70-path-diagram__step">ユーザー登録・ログイン</li>
+            <li class="p70-path-diagram__step">クリエイター機能 or ギャラリー機能を申込</li>
+            <li class="p70-path-diagram__step p70-path-diagram__step--goal">承認後、展覧会を新規作成</li>
+          </ol>
+        </div>
+      </div>
+
+      <p class="p70-body">機能のお申込みは、個展なびの運営がお申込み内容を確認したうえで承認されます。承認後は、マイページから展覧会の新規作成・編集が行えるようになります。</p>
+    </section>
+
+    <!-- 2. クリエイターとギャラリー -->
+    <section class="p70-section" id="role">
+      <div class="p70-section__head">
+        <span class="p70-section__num">2</span>
+        <h2 class="p70-section__title">クリエイターとギャラリー</h2>
+        <span class="p70-section__en">Creator or Gallery</span>
+      </div>
+      <p class="p70-body">個展なびには2種類の出展者ロールがあります。ご自身の活動に近い方をお選びください。</p>
+
+      <div class="p70-callout">
+        <div class="p70-callout__title">クリエイター機能</div>
+        <div class="p70-callout__body">
+          個人の作家・アーティストとして活動される方向けの機能です。ご自身の個展・グループ展の情報を掲載できます。
+        </div>
+      </div>
+      <div class="p70-callout p70-callout--venue">
+        <div class="p70-callout__title">ギャラリー機能</div>
+        <div class="p70-callout__body">
+          画廊・展示スペースなど、会場を運営する主体の方向けの機能です。会場で開催する展覧会の情報を掲載できます。
+        </div>
+      </div>
+
+      <h3 class="p70-subhead">機能のお申込み</h3>
+      <div class="ktn-guide-nav-cards">
+        <a class="ktn-guide-nav-card ktn-guide-nav-card--li" href="./kotennavi-p11-2.html">
+          <div class="ktn-guide-nav-card__icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="8" r="4"/>
+              <path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/>
+            </svg>
+          </div>
+          <div class="ktn-guide-nav-card__body">
+            <span class="ktn-guide-nav-card__tag">Creator</span>
+            <h4 class="ktn-guide-nav-card__title">クリエイター機能申込</h4>
+            <p class="ktn-guide-nav-card__desc">個人の作家・アーティストとして展覧会を掲載する</p>
+          </div>
+          <span class="ktn-guide-nav-card__arrow">→</span>
+        </a>
+        <a class="ktn-guide-nav-card ktn-guide-nav-card--lp" href="./kotennavi-p11-3.html">
+          <div class="ktn-guide-nav-card__icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/>
+            </svg>
+          </div>
+          <div class="ktn-guide-nav-card__body">
+            <span class="ktn-guide-nav-card__tag">Gallery</span>
+            <h4 class="ktn-guide-nav-card__title">ギャラリー機能申込</h4>
+            <p class="ktn-guide-nav-card__desc">会場を運営する主体として展覧会を掲載する</p>
+          </div>
+          <span class="ktn-guide-nav-card__arrow">→</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- 3. オンライン展示・販売（リエゾン） -->
+    <section class="p70-section" id="liaison">
+      <div class="p70-section__head">
+        <span class="p70-section__num">3</span>
+        <h2 class="p70-section__title">オンライン展示・販売（リエゾン）</h2>
+        <span class="p70-section__en">LIAISON & LIAISON+</span>
+      </div>
+      <p class="p70-body">展覧会の掲載に加えて、会場の展示と連動したオンライン展示・販売サービス「リエゾン」「リエゾン+」もご利用いただけます。展示のみなら無料の<strong>リエゾン</strong>、作品の販売まで行う場合は<strong>リエゾン+</strong>をご検討ください。</p>
+
+      <div class="p70-pullquote">
+        実空間の展覧会と、オンラインの場をひとつに。<br>
+        会期の短さや距離に阻まれてきた、作品との出会いをひらくために。
+        <span class="p70-pullquote__attr">— LIAISON Concept</span>
+      </div>
+
+      <p><a class="ktn-guide-link" href="./kotennavi-p70.html">リエゾン・リエゾン+とは →</a></p>
+    </section>
+
+    <!-- 4. さらに詳しく -->
+    <section class="p70-section" id="more">
+      <div class="p70-section__head">
+        <span class="p70-section__num">4</span>
+        <h2 class="p70-section__title">さらに詳しく</h2>
+        <span class="p70-section__en">More</span>
+      </div>
+      <p class="p70-body">クリエイター・ギャラリーそれぞれのよくある質問もあわせてご覧ください。</p>
+      <p><a class="ktn-guide-link" href="./kotennavi-p60-6.html">よくある質問-クリエイター編 →</a></p>
+      <p><a class="ktn-guide-link" href="./kotennavi-p60-7.html">よくある質問-ギャラリー編 →</a></p>
+    </section>
+
+  </div>
+</main>
+
+<!-- フッター -->
+<footer class="ktn-footer" id="ktnFooter"></footer>
+</div><!-- /content-wrap -->
+</div><!-- /shell -->
+
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  KTN.init({ page: 'p60-2' });
+
+  var dbarView = document.getElementById('dbarView');
+  if (dbarView) {
+    dbarView.addEventListener('click', function () {
+      this.classList.add('dbtn--active');
+    });
+  }
+});
+</script>
+</body>
+</html>

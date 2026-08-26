@@ -65,6 +65,10 @@
   <span class="dbar-sep">LIAISON+：</span>
   <button class="dbtn dbtn-lp on" onclick="ktnSetLP('true',this)">申請済</button>
   <button class="dbtn dbtn-lp" onclick="ktnSetLP('false',this)">未申請</button>
+  <span class="dbar-sep">LIAISON+要対応：</span>
+  <button class="dbtn on" data-txn-alert-role="gallery" onclick="ktnSetTxnAlert('gallery','lp',0,this)">0件</button>
+  <button class="dbtn" data-txn-alert-role="gallery" onclick="ktnSetTxnAlert('gallery','lp',2,this)">2件</button>
+  <button class="dbtn" data-txn-alert-role="gallery" onclick="ktnSetTxnAlert('gallery','lp',150,this)">99+件（重なり確認用）</button>
 </div>
 
 <div class="shell">
@@ -167,6 +171,10 @@
           <p class="p4-head__bio-text" id="p4HeadBioText">渋谷区松濤に位置する現代美術ギャラリー。国内外の若手・中堅アーティストによる個展・グループ展を年間15本開催。絵画を中心に写真・立体・インスタレーションまで幅広く扱う。</p>
           <button class="p4-head__bio-toggle" id="p4HeadBioToggle" type="button">もっと見る <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="6 9 12 15 18 9"/></svg></button>
           <a class="p4-head__bio-profile-link" id="p4HeadBioProfileLink" href="#p4-sec-profile">ギャラリー情報詳細 →</a>
+        </div>
+        <!-- 編集リンク（本人・管理者のみ。ウォッチ行の直前） -->
+        <div class="ktn-hero-edit-action ktn-role-owner-only">
+          <a class="ktn-hero-edit-btn" href="./kotennavi-p4-11.html">ギャラリー情報を編集</a>
         </div>
         <!-- アクション -->
         <div class="p4-head__action">

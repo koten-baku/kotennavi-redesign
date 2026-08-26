@@ -570,11 +570,11 @@ p2-5-1（LIAISON+作品一覧）・p2-12-1（LIAISON+作品管理）・p6-dark�
 
 サイトのページは大きく3系統に分かれる：〈読み物（p70 ガイド）〉〈**ロール所有コンテンツの編集**（`mgmt-page`）〉〈**入力フォーム**〉。**「申込・お問合わせ・要望」などユーザーが送信するフォームは3つ目の系統**で、`mgmt-page`（＝すでにそのロールを所有している人がコンテンツを編集する画面）とは別に扱う。
 
-**対象：** p11-2 / p11-3（機能申込＝**まだ creator/gallery ロールを持たない login ユーザー**）・p60-11 / p60-12 / p60-13 / p60-14（お問合わせ・要望等）。
+**対象：** p60-11 / p60-12 / p60-13 / p60-14（お問合わせ・要望等）。
 
-**p11-4（リエゾンプラス機能申込）は例外＝mgmt-page（p2-11 型・2026-07-24 確定）**：p11-4 の申込者は**すでに creator/gallery ロールを所有している人**（LIAISON+ という追加機能を申し込む）。ロールを持たない p11-2/p11-3 と違い「ロール chrome を先に出すと矛盾」しないため、**p2-11 と同じ mgmt-page フォーマット**（ベージュ地・ロール別トップバー・ロール色 `--page-accent`）にする。body＝`mgmt-page p11-4-page p3-page`（creator 既定）、`setR` が `p3-page`/`p4-page` を動的トグルしてトップバー色を切替（gallery＝`p4-page`＋`body.p114-role-gallery`）。**identity strip は p3-11 と同型の `.ktn-mgmt-context`**（ロール保有者本人を media＋バッジ＋名前リンク＋view で表示。`P114_CTX`＋`p114SyncContext(r)` がロール別 populate）＝申込アカウント抽象 strip `.p114-applicant` から変更（追補⑧・p3-11 との視覚統一）。**本文は p11-2 型〈目次 `.ktn-index` → About `.ktn-zone`（`.p114-guide` 冒頭に LIAISON+ サービスロゴ `.p114-about-logo`〔`kotennavi_liaison_logo.html` の LIAISON+ Light 版 SVG〕＋p70 ガイド部品で「リエゾンとの違い／料金／販売の流れ／本人確認・口座が必要な理由」を厚く説明）→ FAQ（`liaisonplus-apply` カテゴリ）→ 申込フォーム〉**に統一（ヘッドの `__desc`/`__guides` は撤去し説明を About ゾーンへ移した。旧 `.p114-service-banner`〔説明文＋手数料の帯〕は About 本文と重複するため廃止しロゴのみ残した）。※以前 追補④ で一時中立化したが、ロール所有者の追加申込という性質に合わせ mgmt-page へ戻した（CLAUDE.md「管理ページ視覚識別」適用表の p11-4 記載と整合）。
+**p11-4（リエゾンプラス機能申込）は例外＝mgmt-page（p2-11 型・2026-07-24 確定）**：p11-4 の申込者は**すでに creator/gallery ロールを所有している人**（LIAISON+ という追加機能を申し込む）。ロールを持たない申込と違い「ロール chrome を先に出すと矛盾」しないため、**p2-11 と同じ mgmt-page フォーマット**（ベージュ地・ロール別トップバー・ロール色 `--page-accent`）にする。body＝`mgmt-page p11-4-page p3-page`（creator 既定）、`setR` が `p3-page`/`p4-page` を動的トグルしてトップバー色を切替（gallery＝`p4-page`＋`body.p114-role-gallery`）。**identity strip は p3-11 と同型の `.ktn-mgmt-context`**（ロール保有者本人を media＋バッジ＋名前リンク＋view で表示。`P114_CTX`＋`p114SyncContext(r)` がロール別 populate）＝申込アカウント抽象 strip `.p114-applicant` から変更（追補⑧・p3-11 との視覚統一）。**本文は p11-2 型〈目次 `.ktn-index` → About `.ktn-zone`（`.p114-guide` 冒頭に LIAISON+ サービスロゴ `.p114-about-logo`〔`kotennavi_liaison_logo.html` の LIAISON+ Light 版 SVG〕＋p70 ガイド部品で「リエゾンとの違い／料金／販売の流れ／本人確認・口座が必要な理由」を厚く説明）→ FAQ（`liaisonplus-apply` カテゴリ）→ 申込フォーム〉**に統一（ヘッドの `__desc`/`__guides` は撤去し説明を About ゾーンへ移した。旧 `.p114-service-banner`〔説明文＋手数料の帯〕は About 本文と重複するため廃止しロゴのみ残した）。※以前 追補④ で一時中立化したが、ロール所有者の追加申込という性質に合わせ mgmt-page へ戻した（CLAUDE.md「管理ページ視覚識別」適用表の p11-4 記載と整合）。
 
-**なぜ p11-2/p11-3 は mgmt-page にしないか：** 申込者は**まだそのロール（creator/gallery）や機能を持っていない**（これから取得するために送る）。ロール所有者向けの chrome（ウォームベージュ地 `#eae6e0`・ロール別トップバー・ロール色 `--page-accent`）を先に出すのは意味的に矛盾する。creator/gallery どちら向けの申込かは、**ロール別トップバーではなくフォーム内容（ロール通知ブロック・専用セクション・申込アカウント表示名）で表現**する。
+**p11-2/p11-3（機能申込）も mgmt-page へ変更＝ユーザー指示により方針転換（2026-08-20・追46）**：旧方針は「申込者はまだそのロール（creator/gallery）を持っていないため、ロール所有者向け chrome を先に出すのは矛盾する」として中立 `p70-page p11-page` に留めていたが、**申込者は creator/gallery ロールこそ持たないものの、USER（login ユーザー）ロールは既に持っている**ため、そのUSERアイデンティティへ紐づける形で mgmt-page 化する指示を受け対応した。body＝`mgmt-page p11-2-page p5-page`（p11-2）／`mgmt-page p11-3-page p5-page`（p11-3）＝ユーザー役割の `.p5-page`（ピンク）で統一（creator/gallery どちらへの申込かはロール別トップバーでなく引き続きフォーム内容で表現）。**identity strip は `.p114-applicant` から `.ktn-mgmt-context`（`--user` バリアント）へ変更**：`cb cb-person cb-user` バッジ＋申込者名（P5.html の既存デモペルソナ「山田 花子」にリンク）＋メタ（利用開始日等）＋「マイページへ →」。p60系（p60-11〜14）は引き続き中立のまま（対象外）。
 
 **外枠・トークンの単一ソース：**
 
@@ -585,11 +585,11 @@ p2-5-1（LIAISON+作品一覧）・p2-12-1（LIAISON+作品管理）・p6-dark�
 | ヘッダー/コンテンツ幅 | 760px（`--w-detail`／`--w-article`） | `data-w="article"` で `--w-page`=760（`mgmt-page` の 760 強制は不要） |
 | indexable | noindex 継続（申込はログイン必須で送信目的のため）※SEO方針は別途判断 | `<meta robots noindex,nofollow>` |
 
-**中身は共通フォーム部品を再利用（新規フォームCSSを作らない）：** `.p211-block`／`.p211-field`＋`.ktn-req`／`.p211-input`・`.p211-select`・`.p211-textarea`・`.p211-help`、申込アカウント strip `.p114-applicant`（左罫線は `--page-accent`＝中立ブランド青）、保存エラーパネル `.ktn-form-error`、送信完了 `KTN.submitDone()`。長い申込フォームは `.ktn-mgmt-wrap`＋`.ktn-mgmt-stack`＋`.ktn-index`/`.ktn-zone`（白ボックス・アクセント線はブランド青）を、短いお問合わせ/要望は `.p70-title-band`＋`.p70-wrap` を使う（ボックスの有無は分量で選ぶ／どちらも中立 chrome ＋共通フォーム部品は同じ）。
+**中身は共通フォーム部品を再利用（新規フォームCSSを作らない）：** `.p211-block`／`.p211-field`＋`.ktn-req`／`.p211-input`・`.p211-select`・`.p211-textarea`・`.p211-help`、申込アカウント strip `.p114-applicant`（p60系で使用・左罫線は `--page-accent`＝中立ブランド青）、保存エラーパネル `.ktn-form-error`、送信完了 `KTN.submitDone()`。長い申込フォームは `.ktn-mgmt-wrap`＋`.ktn-mgmt-stack`＋`.ktn-index`/`.ktn-zone`（白ボックス・アクセント線は `--page-accent`）を、短いお問合わせ/要望は `.p70-title-band`＋`.p70-wrap` を使う（ボックスの有無は分量で選ぶ）。
 
-**ロールバーを出さない（p11-2/p11-3・p60系）：** これらは creator/gallery 兼用でも**ロール別トップバー・`p3-page`/`p4-page` の body 付与はしない**（中立）。ロール差は `body.p114-role-gallery`（専用セクション表示）＋ロール通知ブロック＋申込アカウント名で表現する。**identity strip は `.ktn-mgmt-context`（mgmt 用）でなく `.p114-applicant`（申込アカウント）に統一**。（p11-4 は上記のとおり例外＝mgmt-page でロールバーを出し、strip も `.p114-applicant` でなく p3-11 と同型の `.ktn-mgmt-context` を使う〔追補⑧〕。）
+**ロールバーを出さない（p60系のみ）：** p60-11〜14 は creator/gallery 兼用でも**ロール別トップバー・`p3-page`/`p4-page` の body 付与はしない**（中立）。ロール差は `body.p114-role-gallery`（専用セクション表示）＋ロール通知ブロック＋申込アカウント名で表現する。**identity strip は `.ktn-mgmt-context`（mgmt 用）でなく `.p114-applicant`（申込アカウント）に統一**。（p11-4／p11-2／p11-3 は上記のとおり例外＝mgmt-page でロールバーを出し、strip も `.p114-applicant` でなく `.ktn-mgmt-context` を使う〔追補⑧・追46〕。）
 
-**新規の申込・送信フォームは：** `<body data-w="article" class="p70-page p11-page">`（p60系は `p60-page`）＋共通フォーム部品をコピーするだけ。ページ個別の chrome CSS は追加しない。**ただしロール所有者が追加機能を申し込むフォーム（p11-4 型）は mgmt-page（`mgmt-page {pageid}-page p3-page`）＋ヘッドに `__desc`/`__guides`** を付ける。React 変換：中立系＝`<AppFormPage>`（p70 外枠＋中立 accent）／ロール所有者の追加申込＝`<MgmtFormPage role>`（mgmt chrome）。いずれも共通フォーム部品コンポーネントを共有。
+**新規の中立な申込・送信フォームは：** `<body data-w="article" class="p70-page p11-page">`（p60系は `p60-page`）＋共通フォーム部品をコピーするだけ。ページ個別の chrome CSS は追加しない。**ただしロール所有者が追加機能を申し込むフォーム（p11-4 型）や、申込者に既存の USER/ロール identity へのリンクを持たせたいフォーム（p11-2/p11-3 型）は mgmt-page（`mgmt-page {pageid}-page pN-page`）＋ `.ktn-mgmt-context` identity strip** を使う。React 変換：中立系＝`<AppFormPage>`（p70 外枠＋中立 accent）／ロール所有者の追加申込・identity 紐付け申込＝`<MgmtFormPage role>`（mgmt chrome）。いずれも共通フォーム部品コンポーネントを共有。
 
 **対象コンテキストボックス（`.ktn-refbox` / `.ktn-form-faqhint`・送信フォーム系共通）：** 「問い合わせ元」「報告対象」など**送信フォームが対象とするコンテキストを表示する枠**。`.ktn-refbox`（左罫線＝中立ブランド青 `--page-accent`）＋`__label`（Cinzel）／`__target`（対象名・明朝）／`__note`（補足）。`.ktn-form-faqhint` は FAQ/別フォームへの軽い誘導文。**p60-11（お問合わせ）・p60-13（問題を報告する）で共有**（旧 p60-11 固有 `.p6011-ref*` は 2026-07-24 に汎用リネーム）。
 
@@ -630,11 +630,16 @@ p2-5-1（LIAISON+作品一覧）・p2-12-1（LIAISON+作品管理）・p6-dark�
 | p5-15 | `p5-page p5-15-page mgmt-page` | |
 | p5-11〜13 | `p5-page p5-{id}-page mgmt-page` | |
 | p11-4 | `mgmt-page` + JSで `p3-page`/`p4-page` 動的付与 | creator/gallery共有 |
-| p7-11 | `mgmt-page p7-11-page` + JSで `p3-page`(creator)/`p4-page`(gallery) 動的付与 | 記事-新規/編集/クローン・creator/gallery共有・`.p211-*` フォーム部品を再利用 |
+| p11-2 | `mgmt-page p11-2-page p5-page` | クリエイター機能申込・申込者はUSERロールで統一（2026-08-20） |
+| p11-3 | `mgmt-page p11-3-page p5-page` | ギャラリー機能申込・申込者はUSERロールで統一（2026-08-20） |
+| p7-11 | `mgmt-page p7-11-page` + JSで `p3-page`(creator)/`p4-page`(gallery) 動的付与 | 記事-新規/編集・creator/gallery共有・`.p211-*` フォーム部品を再利用 |
 | p3-19 | `p3-19-page p3-page mgmt-page` | クリエイター-記事管理（全掲載先横断） |
 | p2-13 | `p2-13-page p3-page mgmt-page` | 展覧会-記事管理（この展覧会の記事のみ・掲載先フィルター無し） |
 | p4-19 | `p4-19-page p4-page mgmt-page` | ギャラリー-記事管理（全掲載先横断・p3-19とミラー） |
 | p6-15 | `p6-15-page p3-page mgmt-page` | 作品-記事管理（この作品の記事のみ・掲載先フィルター無し） |
+| p6-14 | `p6-14-page p3-page mgmt-page` | 作品-問合せへの回答（作家本人のみ・galleryは対象外） |
+| p5-100 | `p5-page p5-100-page mgmt-page` | ユーザー-退会 |
+| p61-11 | `p61-11-page mgmt-page` | お知らせ-新規/編集/クローン（admin専用・ロール切替なし） |
 
 ### ロール動的切替（creator/gallery共有ページ）
 `KTN.pages['p2-11']` / `KTN.pages['p11-4']` / `KTN.pages['p6-11']` / `KTN.pages['p7-11']` に `syncMgmtBar()` 関数を実装。`ktnRender` 内で `KTN.role` を読み取り `p3-page`/`p4-page` を付け外し。
@@ -779,8 +784,11 @@ p2-5-1（LIAISON+作品一覧）・p2-12-1（LIAISON+作品管理）・p6-dark�
 | P3 / P3下層 | Top → `/` | クリエイター → `/p10-2` | クリエイター名（`/p3`）→ 下位ページ名 |
 | P4 / P4下層 | Top → `/` | ギャラリー → `/p10-3` | ギャラリー名（`/p4`）→ 下位ページ名 |
 | P6 / P6下層 | Top → `/` | 作品 → `/p10-1` | 作品名（`/p6`）→ LIAISON / LIAISON+ |
+| P7（記事） | Top → `/` | 投稿者ロールの一覧経由（クリエイター→`/p10-2`／ギャラリー→`/p10-3`） | 投稿者名（`/p3`または`/p4`）→ 記事一覧（`/p3-2`または`/p4-2`）→ 記事名 |
+| P8（レビュー） | Top → `/` | 展覧会 → `/p10` | レビュー対象の展覧会名（`/p2`）→ レビュー名 |
 
-- P2-5 / P2-5-1 のパンくず末尾テキストには LIAISON/LIAISON+ バッジ（`'l'` / `'lp'`）を**付けない**（テキストのみ）
+- **P7/P8はP10系の専用カテゴリハブを持たないため、既存の別階層に接続する（2026-08-23確定）**：記事はP10系ではなく「投稿者（クリエイター/ギャラリー）の記事一覧」（既存のP3-2/P4-2）に接続する＝記事は常に誰かが発信する所有コンテンツのため。レビューは記事一覧に相当する一覧ページ自体が存在せず、ページ本文の文脈ストリップ・サイドカード・関連情報帯が一貫してレビュー対象の展覧会を強調している（投稿者は本人カードとして1箇所のみ）ため、投稿者ではなく対象展覧会（P2）を経由する＝P2-1等の展覧会サブページと同型。両者で経由ロジックが異なるのは意図的（記事＝所有コンテンツ、レビュー＝対象についての付随コンテンツという性質差）。
+- **パンくず末尾テキストには LIAISON/LIAISON+ バッジ（`'l'` / `'lp'`）を一切付けない（全ページ共通・テキストのみ・2026-08-21確定）**：`PAGES` の `bc` 配列に3要素目（バッジタグ）を追加しない。過去にP3-14/P3-16/P3-17/P4-16/P4-17/P5-14/P5-15/P5-16/P6-1/P6-2/P6-13/P6-14/P11-4/P90-11〜16で付与されていたが、ユーザー指示によりテキストのみへ統一済み
 - 新ページ追加時は必ず上表のリンク先に合わせて `PAGES` に登録すること
 
 #### ページ管理メニュー（オーナーメニュー/管理者ドロップダウン）

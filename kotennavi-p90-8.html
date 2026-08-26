@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ギャラリー新規/クローン — 管理者 | 個展なび</title>
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<body data-w="detail" class="p90-8-page mgmt-page">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- デモバー -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ロール：</span>
+  <button class="dbtn on" onclick="setR('admin',this)">管理者</button>
+  <span class="dbar-sep" style="margin-left:12px">モード：</span>
+  <button class="dbtn on" id="dbarNew" onclick="setDemoMode('new')">新規</button>
+  <button class="dbtn" id="dbarClone" onclick="setDemoMode('clone')">クローンして作成</button>
+</div>
+
+<div class="shell">
+
+<!-- サイドバー（kotennavi-p1.html と同一マークアップ・#ktnRoleNav は renderSidebar() がJS注入） -->
+<aside class="ktn-sidebar" id="ktnSidebar">
+
+  <!-- ロゴ (logo5-1) -->
+  <a href="kotennavi-p1.html" class="ktn-sidebar__logo" data-page="p1">
+    <img src="./images/kotennavi-logo5-1.svg" alt="個展なび">
+  </a>
+
+  <!-- 検索 → P10 検索ハブ -->
+  <a href="kotennavi-p10.html" class="ktn-sidebar__item" data-page="p10">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <circle cx="11" cy="11" r="7.5"/>
+        <path d="M21 21l-4.5-4.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">検索</span>
+  </a>
+
+  <!-- お知らせ → P61（未制作） -->
+  <a href="kotennavi-p61.html" class="ktn-sidebar__item" id="ktnSidebarNotice" data-page="p61">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__dot" id="ktnNoticeDot" style="display:none"></span>
+    <span class="ktn-sidebar__label">お知らせ</span>
+  </a>
+
+  <!-- ガイド → P60（未制作） -->
+  <a href="kotennavi-p60.html" class="ktn-sidebar__item" data-page="p60">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" stroke-linecap="round"/>
+        <path d="M12 16v-4M12 8h.01" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">ガイド</span>
+  </a>
+
+  <div class="ktn-sidebar__divider"></div>
+
+  <!-- ロール別アイコン（JS注入） -->
+  <div id="ktnRoleNav" style="width:100%;display:flex;flex-direction:column;align-items:center"></div>
+
+  <div class="ktn-sidebar__footer">
+    <p class="ktn-sidebar__footer-label">Follow us</p>
+    <div class="ktn-sidebar__sns">
+      <a href="https://www.facebook.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="Facebook">
+        <svg viewBox="0 0 320 512" fill="currentColor"><path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/></svg>
+      </a>
+      <a href="https://x.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="X">
+        <svg viewBox="0 0 512 512" fill="currentColor"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg>
+      </a>
+    </div>
+  </div>
+
+</aside>
+
+<div class="content-wrap" id="contentWrap">
+
+  <header class="ktn-header" id="ktnHeader">
+    <div class="ktn-header__inner">
+      <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+      <div class="ktn-hdr-actions" id="ktnActs"></div>
+    </div>
+  </header>
+
+  <main class="ktn-main" id="ktnMain">
+    <div class="ktn-content">
+
+      <!-- モードバナー（新規／クローンでテキストが切り替わる） -->
+      <div class="p211-mode-banner" id="p908ModeBanner">
+        <span class="p211-mode-banner__icon" id="p908ModeBannerIcon">🆕</span>
+        <div class="p211-mode-banner__text" id="p908ModeBannerText">
+          新規にギャラリーページを作成します。<strong>オーナーは「未割当」のまま作成できます</strong>。申込前の会場・掲載希望者向けにadmin管理のページを先行作成し、後日ご本人のギャラリー機能申込時に事務局がオーナーを引き継ぎます。
+        </div>
+      </div>
+
+      <!-- 管理ボックス -->
+      <div class="p908-wrap ktn-mgmt-wrap" id="p908Wrap">
+
+        <!-- ページタイトル -->
+        <div class="ktn-mgmt-head">
+          <h2 class="ktn-mgmt-head__title">ギャラリー新規/クローン</h2>
+          <p class="ktn-mgmt-head__en">GALLERY NEW / CLONE</p>
+          <p class="ktn-mgmt-head__desc">ギャラリーページを管理者が直接作成します。既存の他者投稿（展覧会の会場情報等）から先行作成する場合や、既存ページを複製して似た内容のページを作る場合に使用します。</p>
+        </div>
+
+        <!-- ブロック1: 基本情報 -->
+        <div class="p211-block">
+          <div class="p211-block__head">
+            <h3 class="p211-block__title">基本情報 <span class="p211-block__title-en">BASIC INFO</span></h3>
+          </div>
+          <div class="p211-block__body">
+
+            <!-- 複製元（クローンモードのみ表示） -->
+            <div class="p211-field" id="p908CloneField" hidden>
+              <label class="p211-label" for="p908CloneSource">複製元ギャラリーを選択<span class="ktn-req">必須</span></label>
+              <select class="p211-select" id="p908CloneSource">
+                <option value="">選択してください</option>
+                <option value="gl-1005">Gallery SOIL 渋谷（GL-1005）</option>
+                <option value="gl-2033">Art Space KITO（GL-2033）</option>
+                <option value="gl-3090">YUGEN Gallery（GL-3090）</option>
+              </select>
+              <p class="p211-help">選択したギャラリーページの内容（所在地・営業時間等）を引き継いだ状態でフォームに反映します（デモにつき実際の反映は省略しています）。<strong>ギャラリー名は必ず変更してください。</strong></p>
+            </div>
+
+            <!-- ギャラリー名 -->
+            <div class="p211-field">
+              <label class="p211-label" for="p908Name">ギャラリー名<span class="ktn-req">必須</span></label>
+              <input class="p211-input" id="p908Name" type="text" placeholder="例：Gallery MIZUNE">
+              <p class="p211-help">ギャラリーページの見出しに表示される名前です。</p>
+            </div>
+
+            <!-- フリガナ -->
+            <div class="p211-field">
+              <label class="p211-label" for="p908NameKana">フリガナ</label>
+              <input class="p211-input" id="p908NameKana" type="text" placeholder="例：ギャラリー ミズネ">
+            </div>
+
+            <!-- 所在地・アクセス -->
+            <div class="p211-field">
+              <label class="p211-label" for="p908Addr">所在地・アクセス</label>
+              <input class="p211-input" id="p908Addr" type="text" placeholder="例：東京都渋谷区神宮前1-2-3　JR渋谷駅より徒歩8分">
+              <p class="p211-help">住所と最寄駅からのアクセスをまとめて入力してください。</p>
+            </div>
+
+            <!-- 営業時間 -->
+            <div class="p211-field">
+              <label class="p211-label" for="p908Hours">営業時間</label>
+              <input class="p211-input" id="p908Hours" type="text" placeholder="例：11:00〜19:00（月曜休廊）">
+            </div>
+
+            <!-- 紹介文 -->
+            <div class="p211-field">
+              <label class="p211-label" for="p908Bio">紹介文</label>
+              <textarea class="p211-textarea" id="p908Bio" placeholder="ギャラリーの活動概要・特徴など"></textarea>
+              <p class="p211-help">ギャラリー情報セクションに表示されます。未入力でも作成できます。</p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ブロック2: オーナー割当 -->
+        <div class="p211-block">
+          <div class="p211-block__head">
+            <h3 class="p211-block__title">オーナー割当 <span class="p211-block__title-en">OWNER</span></h3>
+          </div>
+          <div class="p211-block__body">
+
+            <div class="p211-field">
+              <label class="p211-label" for="p908Owner">オーナー割当</label>
+              <select class="p211-select" id="p908Owner">
+                <option value="unassigned" selected>未割当（admin管理・後日本人へ引き継ぎ）</option>
+                <option value="uid-2091">山田 花子（UID:2091・user）</option>
+                <option value="uid-3350">佐藤 健一（UID:3350・user）</option>
+                <option value="uid-4108">鈴木 美咲（UID:4108・user）</option>
+              </select>
+              <p class="p211-help">既存ユーザーに割り当てる場合を除き「未割当」のまま作成してください。該当するギャラリーご担当者からギャラリー機能申込があった際、事務局が申込内容とこのページを照合しオーナーを引き継ぎます。</p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ブロック3: リンク -->
+        <div class="p211-block">
+          <div class="p211-block__head">
+            <h3 class="p211-block__title">リンク <span class="p211-block__title-en">LINKS</span></h3>
+          </div>
+          <div class="p211-block__body">
+            <div class="p211-field">
+              <label class="p211-label">SNSリンク（任意）</label>
+              <div class="p211-repeat" id="p908LinkList"></div>
+              <button class="ktn-op-btn ktn-op-btn--sm p211-repeat__add" type="button" data-target="p908LinkList" data-link="1">＋ リンクを追加</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 送信バー -->
+        <div class="p211-submit-bar">
+          <button class="p211-submit-bar__cancel ktn-op-btn" type="button" onclick="history.back()">キャンセル</button>
+          <button class="p211-submit-bar__submit ktn-op-btn ktn-op-btn--primary" type="button" id="p908SubmitBtn">作成する</button>
+        </div>
+
+      </div><!-- /.ktn-mgmt-wrap -->
+
+    </div><!-- /.ktn-content -->
+  </main>
+<footer class="ktn-footer" id="ktnFooter"></footer>
+
+
+</div><!-- /.content-wrap -->
+</div><!-- /.shell -->
+
+<nav class="ktn-bottom-nav" id="ktnBottomNav"><div class="ktn-bottom-nav__inner" id="ktnBottomNavInner"></div></nav>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Top","item":"https://koten-navi.com/"},{"@type":"ListItem","position":2,"name":"管理者","item":"https://koten-navi.com/p90"},{"@type":"ListItem","position":3,"name":"ギャラリー新規/クローン"}]}</script>
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+  KTN.init({ page: 'p90-8', role: 'admin' });
+  /* setR はロール切替の共通関数（kotennavi-common.js）をそのまま使用（.dbar [onclick^="setR"] のみを対象にするため、
+     同じデモバー内のモードボタン（setDemoMode）と混ざらない） */
+
+  /* ── デモモード切り替え（新規／クローン） ── */
+  var P908_TEXT = {
+    new: {
+      icon: '🆕',
+      html: '新規にギャラリーページを作成します。<strong>オーナーは「未割当」のまま作成できます</strong>。申込前の会場・掲載希望者向けにadmin管理のページを先行作成し、後日ご本人のギャラリー機能申込時に事務局がオーナーを引き継ぎます。'
+    },
+    clone: {
+      icon: '📋',
+      html: '既存のギャラリーページを複製して新規作成します。複製元の内容を引き継いだ状態でフォームに反映されます（デモにつき実際の反映は省略しています）。<strong>ギャラリー名・所在地は必ず変更してください。</strong>'
+    }
+  };
+
+  function setDemoMode(mode) {
+    ['New', 'Clone'].forEach(function (m) {
+      var btn = document.getElementById('dbar' + m);
+      if (btn) btn.classList.toggle('on', m.toLowerCase() === mode);
+    });
+    var t = P908_TEXT[mode];
+    document.getElementById('p908ModeBannerIcon').textContent = t.icon;
+    document.getElementById('p908ModeBannerText').innerHTML = t.html;
+    var cloneField = document.getElementById('p908CloneField');
+    if (cloneField) cloneField.hidden = (mode !== 'clone');
+    var submitBtn = document.getElementById('p908SubmitBtn');
+    if (submitBtn) submitBtn.textContent = mode === 'clone' ? 'クローンして作成する' : '作成する';
+  }
+
+  /* ── SNSリンク行の追加・削除 ── */
+  (function () {
+    function bindDel(row) {
+      var del = row.querySelector('.p211-repeat__del');
+      if (del) del.addEventListener('click', function () { row.remove(); });
+    }
+    document.querySelectorAll('.p211-repeat__row').forEach(bindDel);
+    document.querySelectorAll('.p211-repeat__add').forEach(function (addBtn) {
+      addBtn.addEventListener('click', function () {
+        var list = document.getElementById(addBtn.dataset.target);
+        if (!list) return;
+        var row = document.createElement('div');
+        row.className = 'p211-repeat__row p211-repeat__row--link';
+        row.innerHTML =
+          '<select class="p211-select">' +
+          '<option value="instagram">Instagram</option>' +
+          '<option value="x">X（Twitter）</option>' +
+          '<option value="facebook">Facebook</option>' +
+          '<option value="youtube">YouTube</option>' +
+          '<option value="website">公式サイト</option>' +
+          '<option value="other">その他</option></select>' +
+          '<input class="p211-input" type="url" placeholder="https://">' +
+          '<button class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline p211-repeat__del" type="button" aria-label="削除">✕</button>';
+        list.appendChild(row);
+        bindDel(row);
+      });
+    });
+  }());
+
+  /* ── 作成ボタン ── */
+  var p908SubmitBtn = document.getElementById('p908SubmitBtn');
+  if (p908SubmitBtn) {
+    p908SubmitBtn.addEventListener('click', function () {
+      var name = document.getElementById('p908Name').value.trim();
+      if (!name) {
+        KTN.toast('ギャラリー名を入力してください');
+        return;
+      }
+      KTN.toast('ギャラリーページを作成しました');
+    });
+  }
+</script>
+</body>
+</html>

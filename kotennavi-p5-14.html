@@ -64,9 +64,6 @@
   <button class="dbtn" onclick="setR('login',this)">ログイン</button>
   <button class="dbtn on" onclick="setR('user+',this)">user+</button>
   <button class="dbtn" onclick="setR('admin',this)">管理者</button>
-  <span class="dbar-sep">状態：</span>
-  <button class="dbtn on" id="dbarHasData" onclick="setHasData(true,this)">データあり</button>
-  <button class="dbtn" id="dbarEmpty" onclick="setHasData(false,this)">空状態</button>
 </div>
 
 <div class="shell">
@@ -606,32 +603,6 @@ KTN.renderQA('#p514QaConsole', { category: 'liaison-txn', side: 'buyer', style: 
 
 }());
 
-// デモ: データあり/空状態切替
-function setHasData(hasData) {
-  document.getElementById('dbarHasData').classList.toggle('on',  hasData);
-  document.getElementById('dbarEmpty').classList.toggle('on', !hasData);
-  var tabsEl   = document.getElementById('p514Tabs');
-  var banner   = document.getElementById('p514ActionBanner');
-  var empty    = document.getElementById('p514Empty');
-  if (tabsEl) tabsEl.hidden = !hasData;
-  if (empty)  empty.hidden  =  hasData;
-  document.querySelectorAll('.p514-pane').forEach(function (p) {
-    p.hidden = !hasData;
-    if (hasData) p.removeAttribute('hidden');
-  });
-  if (banner) {
-    var activeTab = document.querySelector('.p514-tab.is-active');
-    banner.hidden = !hasData || (activeTab && activeTab.dataset.tab !== 'p514PaneActive');
-  }
-  // データありに戻したらis-activeペインを再表示
-  if (hasData) {
-    var activePane = document.querySelector('.p514-tab.is-active');
-    if (activePane) {
-      var target = document.getElementById(activePane.dataset.tab);
-      if (target) target.classList.add('is-active');
-    }
-  }
-}
 </script>
 </body>
 </html>

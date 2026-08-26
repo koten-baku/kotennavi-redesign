@@ -233,7 +233,27 @@
       "Bash(sed -i '161,329d' kotennavi-p90-2.html)",
       "Bash(sed -n '150,168p' kotennavi-p90-2.html)",
       "Bash(awk 'NR==9900,NR==10289' kotennavi-pages.js)",
-      "Bash(awk *)"
+      "Bash(awk *)",
+      "Bash(grep -r \"addEventListener.*ktn-ddi\" .)",
+      "Bash(sort -t補 -k2 -n -u)",
+      "Bash(sed -n '1,20p' kotennavi-pages.js)",
+      "Bash(sed -n '40,170p' kotennavi-pages.js)",
+      "Bash(sed -n '595,625p' kotennavi-pages.js)",
+      "Bash(sed -n '700,725p' kotennavi-pages.js)",
+      "Bash(grep -rn \"wi-dark\" kotennavi-p3.html kotennavi-p3-1.html kotennavi-p3-2.html kotennavi-p3-3.html kotennavi-p4.html kotennavi-p4-1.html kotennavi-p4-2.html kotennavi-p6.html kotennavi-p6-1.html kotennavi-p6-2.html)",
+      "Bash(echo \"exit:$?\")",
+      "Bash(powershell.exe -NoProfile -Command \"Get-ChildItem -Path 'C:\\\\Users\\\\b\\\\AppData\\\\Roaming\\\\Code\\\\User\\\\History' -Recurse -ErrorAction SilentlyContinue | Select-Object -First 5 FullName\")",
+      "Bash(sed -n '385,400p' kotennavi-p70.html)",
+      "Bash(sed -n '1,45p' kotennavi-p60-6.html)",
+      "Bash(wslpath -w /tmp/common_js.diff)",
+      "Bash(sed -n '/class=\"ktn-sidebar__footer\"/,/<\\\\/div>/p' kotennavi-p3-16.html)",
+      "Bash(sed -n '/class=\"ktn-sidebar__footer\"/,/<\\\\/div>/p' kotennavi_sidebar_footer.html)",
+      "Bash(ls *.md)",
+      "Bash(ls .claude/worktrees/)",
+      "Bash(xargs -I{} sh -c 'grep -n \"ktn-ddmenu{\" \"{}\" 2>/dev/null && echo \"  in {}\"')",
+      "Bash(echo \"exit: $?\")",
+      "Bash(node -e \"console.log\\(require.resolve\\('jsdom'\\)\\)\")",
+      "Bash(sort -t: -k2 -n -u)"
     ]
   }
 }

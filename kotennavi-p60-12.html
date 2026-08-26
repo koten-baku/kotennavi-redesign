@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>サービス機能改善要望 | 個展なび</title>
+  <meta name="description" content="個展なびのサービス・機能改善に関するご要望フォーム。検索・展覧会掲載・リエゾン（作品展示・販売）・マイページなどへのご意見を事務局へお送りいただけます。">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@1,400;1,600&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<body data-w="article" class="p70-page p60-page">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- デモバー（送信者の状態切替） -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">送信者：</span>
+  <button class="dbtn on" id="dbarLogin" onclick="p6012SetRole('login')">ログイン中</button>
+  <button class="dbtn" id="dbarGuest" onclick="p6012SetRole('guest')">ゲスト</button>
+</div>
+
+<!-- ヘッダー -->
+<div class="shell">
+
+<!-- サイドバー（kotennavi-p1.html と同一マークアップ・#ktnRoleNav は renderSidebar() がJS注入） -->
+<aside class="ktn-sidebar" id="ktnSidebar">
+
+  <!-- ロゴ (logo5-1) -->
+  <a href="kotennavi-p1.html" class="ktn-sidebar__logo" data-page="p1">
+    <img src="./images/kotennavi-logo5-1.svg" alt="個展なび">
+  </a>
+
+  <!-- 検索 → P10 検索ハブ -->
+  <a href="kotennavi-p10.html" class="ktn-sidebar__item" data-page="p10">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <circle cx="11" cy="11" r="7.5"/>
+        <path d="M21 21l-4.5-4.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">検索</span>
+  </a>
+
+  <!-- お知らせ → P61（未制作） -->
+  <a href="kotennavi-p61.html" class="ktn-sidebar__item" id="ktnSidebarNotice" data-page="p61">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__dot" id="ktnNoticeDot" style="display:none"></span>
+    <span class="ktn-sidebar__label">お知らせ</span>
+  </a>
+
+  <!-- ガイド → P60（未制作） -->
+  <a href="kotennavi-p60.html" class="ktn-sidebar__item" data-page="p60">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" stroke-linecap="round"/>
+        <path d="M12 16v-4M12 8h.01" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">ガイド</span>
+  </a>
+
+  <div class="ktn-sidebar__divider"></div>
+
+  <!-- ロール別アイコン（JS注入） -->
+  <div id="ktnRoleNav" style="width:100%;display:flex;flex-direction:column;align-items:center"></div>
+
+  <div class="ktn-sidebar__footer">
+    <p class="ktn-sidebar__footer-label">Follow us</p>
+    <div class="ktn-sidebar__sns">
+      <a href="https://www.facebook.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="Facebook">
+        <svg viewBox="0 0 320 512" fill="currentColor"><path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/></svg>
+      </a>
+      <a href="https://x.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="X">
+        <svg viewBox="0 0 512 512" fill="currentColor"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg>
+      </a>
+    </div>
+  </div>
+
+</aside>
+
+<div class="content-wrap" id="contentWrap">
+<header class="ktn-header" id="ktnHeader">
+  <div class="ktn-header__inner">
+    <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+    <div class="ktn-hdr-actions" id="ktnActs"></div>
+  </div>
+</header>
+
+<!-- タイトルバンド -->
+<div class="p70-title-band">
+  <div class="p70-title-band__inner">
+    <div class="p70-head__sub"><span class="p70-head__updated">サポート</span></div>
+    <h1 class="p70-head__title">サービス機能改善要望</h1>
+    <p class="p70-head__en">Feature Request</p>
+    <p class="p70-head__lead">個展なびの機能・使い勝手についてのご意見・改善のご要望をお寄せください。<br>いただいたご要望は事務局で確認し、今後のサービス改善の参考にさせていただきます。</p>
+  </div>
+</div>
+
+<main>
+  <div class="p70-wrap">
+
+    <!-- FAQ 誘導（要望送信前に） -->
+    <div class="ktn-form-faqhint">
+      よくあるご質問は <a class="ktn-guide-link" href="./kotennavi-p60-6.html">よくある質問 — クリエイター編</a> ／ <a class="ktn-guide-link" href="./kotennavi-p60-7.html">ギャラリー編</a> にまとまっています。不具合のご報告は <a class="ktn-guide-link" href="./kotennavi-p60-13.html">問題を報告する</a> フォームをご利用ください。
+    </div>
+
+    <!-- フォーム本体 -->
+    <div class="p211-block">
+      <div class="p211-block__body">
+
+        <!-- 送信者アカウント（ログイン中のみ表示・後工程でセッションの実アカウントに差し替え） -->
+        <div class="p114-applicant" id="p6012Account" hidden>
+          <div class="p114-applicant__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+          </div>
+          <div class="p114-applicant__body">
+            <span class="p114-applicant__label">送信者アカウント</span>
+            <span class="p114-applicant__name" id="p6012AccountName">山田 花子 <small>1997sakura2022@gmail.com</small></span>
+          </div>
+        </div>
+
+        <div class="p211-field">
+          <label class="p211-label">お名前<span class="ktn-req">必須</span></label>
+          <input class="p211-input" type="text" id="p6012Name" placeholder="例：山田 花子">
+        </div>
+
+        <div class="p211-field" style="margin-top:12px">
+          <label class="p211-label">メールアドレス<span class="ktn-req">必須</span></label>
+          <input class="p211-input" type="email" id="p6012Email" placeholder="例：you@example.com">
+          <p class="p211-help">ご返信が必要な場合の連絡先です。お間違いのないようご確認ください。</p>
+        </div>
+
+        <div class="p211-field" style="margin-top:12px">
+          <label class="p211-label">要望カテゴリ<span class="ktn-req">必須</span></label>
+          <select class="p211-select" id="p6012Cat">
+            <option value="">選択してください</option>
+            <option>検索・発見のしやすさ</option>
+            <option>展覧会掲載・編集機能</option>
+            <option>リエゾン／リエゾンプラス（作品展示・販売）</option>
+            <option>マイページ・通知</option>
+            <option>その他</option>
+          </select>
+        </div>
+
+        <div class="p211-field" style="margin-top:12px">
+          <label class="p211-label">対象ページ・機能（任意）</label>
+          <input class="p211-input" type="text" id="p6012Target" placeholder="例：作品一覧ページの並び替え機能">
+          <p class="p211-help">具体的にどの画面・機能についてのご要望かをご記入いただくと、確認がスムーズです。</p>
+        </div>
+
+        <div class="p211-field" style="margin-top:12px">
+          <label class="p211-label">ご要望内容<span class="ktn-req">必須</span></label>
+          <textarea class="p211-textarea" id="p6012Body" rows="6" placeholder="どのような機能・改善があるとより使いやすくなるか、できるだけ具体的にご記入ください。現状お困りの点や、実現したいことをあわせてお知らせいただけると検討の参考になります。"></textarea>
+        </div>
+
+        <label class="p114-terms-agree" id="p6012AgreeLabel" style="margin-top:16px">
+          <input type="checkbox" id="p6012Agree" onchange="p6012UpdateSubmit()">
+          <span><a class="ktn-guide-link" href="./kotennavi-p60-10.html">プライバシーポリシー</a>に同意し、上記の内容で送信します</span>
+        </label>
+
+        <!-- 保存エラーパネル（共通 .ktn-form-error・送信時の必須チェックで表示） -->
+        <div class="ktn-form-error" id="p6012SaveError" role="alert" hidden style="margin-top:16px">
+          <div class="ktn-form-error__head">
+            <svg class="ktn-form-error__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <span class="ktn-form-error__title">送信できませんでした</span>
+          </div>
+          <ul class="ktn-form-error__list" id="p6012SaveErrorList"></ul>
+        </div>
+
+        <!-- hidden：後工程（Drupal）でセッションの実UIDを送信に含める -->
+        <input type="hidden" id="p6012Uid" name="uid" value="">
+
+        <div class="p114-submit-wrap" style="margin-top:8px">
+          <button class="ktn-op-btn ktn-op-btn--primary ktn-op-btn--lg" id="p6012SubmitBtn" disabled onclick="p6012Submit()">送信する</button>
+          <p class="p114-submit-note">いただいたご要望すべてに個別のご返信はいたしかねますが、内容は必ず確認し、今後のサービス改善の参考にさせていただきます。</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</main>
+<footer class="ktn-footer" id="ktnFooter"></footer>
+</div><!-- /content-wrap -->
+</div><!-- /shell -->
+
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+/* デモ用のログインアカウント。後工程でセッションの実ユーザー名・メール・UIDに差し替える。 */
+var P6012_DEMO = { name: '山田 花子', email: '1997sakura2022@gmail.com', uid: 'U-100482' };
+
+/* 送信者の状態切替（デモ）。ログイン中＝アカウント表示＋氏名/メール/UIDを自動セット、ゲスト＝空欄 */
+function p6012SetRole(role) {
+  var login = (role === 'login');
+  document.getElementById('dbarLogin').classList.toggle('on', login);
+  document.getElementById('dbarGuest').classList.toggle('on', !login);
+  document.getElementById('p6012Account').hidden = !login;
+
+  var name = document.getElementById('p6012Name');
+  var email = document.getElementById('p6012Email');
+  var uid = document.getElementById('p6012Uid');
+  if (login) {
+    name.value = P6012_DEMO.name;
+    email.value = P6012_DEMO.email;
+    uid.value = P6012_DEMO.uid;      /* ← 本番はセッションの実UID */
+  } else {
+    name.value = '';
+    email.value = '';
+    uid.value = '';
+  }
+  window.ktnState.role = login ? 'login' : 'guest';
+}
+
+function p6012UpdateSubmit() {
+  document.getElementById('p6012SubmitBtn').disabled = !document.getElementById('p6012Agree').checked;
+}
+
+/* 必須項目チェック（.ktn-req マーカーの .p211-field を走査・共通 .ktn-form-error パネルに表示。p60-11 と同型） */
+function p6012ValidateRequired() {
+  document.querySelectorAll('.p211-field.is-error').forEach(function (f) { f.classList.remove('is-error'); });
+  var errBox = document.getElementById('p6012SaveError');
+  var errList = document.getElementById('p6012SaveErrorList');
+  var missing = [];
+  document.querySelectorAll('.p211-block .p211-label .ktn-req').forEach(function (mark) {
+    var field = mark.closest('.p211-field');
+    if (!field || field.closest('[hidden]')) return;
+    var inputs = field.querySelectorAll('input:not([type=file]), select, textarea');
+    var filled = inputs.length > 0 && Array.prototype.every.call(inputs, function (el) { return el.value.trim() !== ''; });
+    if (!filled) {
+      field.classList.add('is-error');
+      var label = mark.closest('.p211-label');
+      var name = '必須項目';
+      if (label) {
+        var clone = label.cloneNode(true);
+        var req = clone.querySelector('.ktn-req');
+        if (req) req.parentNode.removeChild(req);
+        name = clone.textContent.trim() || name;
+      }
+      missing.push({ name: name, field: field });
+    }
+  });
+  if (missing.length) {
+    errList.innerHTML = '';
+    var sum = document.createElement('li');
+    sum.className = 'ktn-form-error__item';
+    sum.textContent = '必須項目に未入力が' + missing.length + '件あります。入力してから送信してください。';
+    errList.appendChild(sum);
+    missing.forEach(function (m) {
+      var li = document.createElement('li');
+      li.className = 'ktn-form-error__item';
+      li.appendChild(document.createTextNode('「' + m.name + '」が未入力です。 '));
+      var jump = document.createElement('button');
+      jump.type = 'button';
+      jump.className = 'ktn-form-error__jump';
+      jump.textContent = '該当箇所へ →';
+      jump.addEventListener('click', function () { m.field.scrollIntoView({ behavior: 'smooth', block: 'center' }); });
+      li.appendChild(jump);
+      errList.appendChild(li);
+    });
+    errBox.hidden = false;
+    errBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return false;
+  }
+  errBox.hidden = true;
+  return true;
+}
+
+function p6012Submit() {
+  if (!p6012ValidateRequired()) return;
+  KTN.submitDone({
+    title: 'ご要望を送信しました',
+    message: 'ご要望を受け付けました。内容を確認のうえ、今後のサービス改善の参考にさせていただきます。',
+    action: { label: 'トップページへ', href: './kotennavi-p1.html' }
+  });
+}
+
+KTN.init({ page: 'p60-12', role: 'login' });
+p6012SetRole('login');   /* 初期はログイン中＝デモ名・UIDを自動セット */
+</script>
+</body>
+</html>

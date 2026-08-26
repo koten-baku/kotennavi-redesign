@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>お知らせ新規/編集/クローン — 管理者 | 個展なび</title>
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<body data-w="detail" class="p61-11-page mgmt-page">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- デモバー -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ロール：</span>
+  <button class="dbtn on" onclick="setR('admin',this)">管理者</button>
+  <span class="dbar-sep" style="margin-left:12px">モード：</span>
+  <button class="dbtn on" id="dbarNew" onclick="setDemoMode('new')">新規</button>
+  <button class="dbtn" id="dbarEdit" onclick="setDemoMode('edit')">編集</button>
+  <button class="dbtn" id="dbarClone" onclick="setDemoMode('clone')">クローンして作成</button>
+</div>
+
+<div class="shell">
+
+<aside class="ktn-sidebar" id="ktnSidebar">
+  <a href="kotennavi-p1.html" class="ktn-sidebar__logo" data-page="p1">
+    <img src="./images/kotennavi-logo5-1.svg" alt="個展なび">
+  </a>
+  <a href="kotennavi-p10.html" class="ktn-sidebar__item" data-page="p10">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <circle cx="11" cy="11" r="7.5"/>
+        <path d="M21 21l-4.5-4.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">検索</span>
+  </a>
+  <a href="kotennavi-p61.html" class="ktn-sidebar__item" id="ktnSidebarNotice" data-page="p61">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__dot" id="ktnNoticeDot" style="display:none"></span>
+    <span class="ktn-sidebar__label">お知らせ</span>
+  </a>
+  <a href="kotennavi-p60.html" class="ktn-sidebar__item" data-page="p60">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" stroke-linecap="round"/>
+        <path d="M12 16v-4M12 8h.01" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">ガイド</span>
+  </a>
+  <div class="ktn-sidebar__divider"></div>
+  <div id="ktnRoleNav" style="width:100%;display:flex;flex-direction:column;align-items:center"></div>
+  <div class="ktn-sidebar__footer">
+    <p class="ktn-sidebar__footer-label">Follow us</p>
+    <div class="ktn-sidebar__sns">
+      <a href="https://www.facebook.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="Facebook">
+        <svg viewBox="0 0 320 512" fill="currentColor"><path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/></svg>
+      </a>
+      <a href="https://x.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="X">
+        <svg viewBox="0 0 512 512" fill="currentColor"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg>
+      </a>
+    </div>
+  </div>
+</aside>
+
+<div class="content-wrap" id="contentWrap">
+
+  <header class="ktn-header" id="ktnHeader">
+    <div class="ktn-header__inner">
+      <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+      <div class="ktn-hdr-actions" id="ktnActs"></div>
+    </div>
+  </header>
+
+  <main class="ktn-main" id="ktnMain">
+    <div class="ktn-content">
+
+      <!-- モードバナー -->
+      <div class="p211-mode-banner" id="p6111ModeBanner">
+        <span class="p211-mode-banner__icon" id="p6111ModeBannerIcon">🆕</span>
+        <div class="p211-mode-banner__text" id="p6111ModeBannerText">
+          新規にお知らせを作成します。公開日を指定すると、その日時からお知らせ一覧・サイドバーの通知バッジに表示されます。
+        </div>
+      </div>
+
+      <!-- 管理ボックス -->
+      <div class="p6111-wrap ktn-mgmt-wrap" id="p6111Wrap">
+
+        <div class="ktn-mgmt-head">
+          <h2 class="ktn-mgmt-head__title">お知らせ新規/編集/クローン</h2>
+          <p class="ktn-mgmt-head__en">NOTICE NEW / EDIT / CLONE</p>
+          <p class="ktn-mgmt-head__desc">個展なびからのお知らせ（アップデート・メンテナンス・重要なご案内）を作成・編集します。公開日以降、お知らせ一覧とサイドバーの通知バッジに反映されます。</p>
+        </div>
+
+        <div class="p211-block">
+          <div class="p211-block__head">
+            <h3 class="p211-block__title">基本情報 <span class="p211-block__title-en">BASIC INFO</span></h3>
+          </div>
+          <div class="p211-block__body">
+
+            <!-- 編集対象（編集モードのみ表示） -->
+            <div class="p211-field" id="p6111EditField" hidden>
+              <label class="p211-label" for="p6111EditSource">編集対象を選択<span class="ktn-req">必須</span></label>
+              <select class="p211-select" id="p6111EditSource">
+                <option value="">選択してください</option>
+                <option value="n-1">新機能「リエゾンプラス」提供開始のお知らせ（2026.08.20）</option>
+                <option value="n-2">システムメンテナンスのお知らせ（8月25日 深夜）（2026.08.15）</option>
+                <option value="n-3">利用規約改定のお知らせ（2026.08.02）</option>
+              </select>
+              <p class="p211-help">選択したお知らせの内容がフォームに反映されます（デモにつき実際の反映は省略しています）。</p>
+            </div>
+
+            <!-- 複製元（クローンモードのみ表示） -->
+            <div class="p211-field" id="p6111CloneField" hidden>
+              <label class="p211-label" for="p6111CloneSource">複製元を選択<span class="ktn-req">必須</span></label>
+              <select class="p211-select" id="p6111CloneSource">
+                <option value="">選択してください</option>
+                <option value="n-2">システムメンテナンスのお知らせ（8月25日 深夜）（2026.08.15）</option>
+                <option value="n-4">検索機能に「特集」タブを追加しました（2026.07.18）</option>
+              </select>
+              <p class="p211-help">選択したお知らせの内容を引き継いだ状態でフォームに反映します（デモにつき実際の反映は省略しています）。<strong>タイトル・公開日は必ず見直してください。</strong></p>
+            </div>
+
+            <!-- タイトル -->
+            <div class="p211-field">
+              <label class="p211-label" for="p6111Title">タイトル<span class="ktn-req">必須</span></label>
+              <input class="p211-input" id="p6111Title" type="text" placeholder="例：システムメンテナンスのお知らせ（◯月◯日 深夜）">
+            </div>
+
+            <!-- カテゴリ -->
+            <div class="p211-field">
+              <label class="p211-label" for="p6111Cat">カテゴリ<span class="ktn-req">必須</span></label>
+              <select class="p211-select" id="p6111Cat">
+                <option value="update">アップデート</option>
+                <option value="maintenance">メンテナンス</option>
+                <option value="important">重要</option>
+              </select>
+            </div>
+
+            <!-- 公開日 -->
+            <div class="p211-field">
+              <label class="p211-label" for="p6111Date">公開日<span class="ktn-req">必須</span></label>
+              <input class="p211-input" id="p6111Date" type="date">
+              <p class="p211-help">指定日時から一覧・通知に表示されます。</p>
+            </div>
+
+            <!-- 本文 -->
+            <div class="p211-field">
+              <label class="p211-label" for="p6111Body">本文<span class="ktn-req">必須</span></label>
+              <textarea class="p211-textarea" id="p6111Body" placeholder="お知らせの本文を入力してください"></textarea>
+            </div>
+
+            <!-- 新着バッジ -->
+            <div class="p211-field">
+              <label class="p211-check"><input type="checkbox" id="p6111NewBadge" checked> 一覧に「NEW」バッジを表示する</label>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 送信バー -->
+        <div class="p211-submit-bar">
+          <button class="p211-submit-bar__cancel ktn-op-btn" type="button" onclick="history.back()">キャンセル</button>
+          <button class="p211-submit-bar__submit ktn-op-btn ktn-op-btn--primary" type="button" id="p6111SubmitBtn">作成する</button>
+        </div>
+
+      </div><!-- /.ktn-mgmt-wrap -->
+
+    </div><!-- /.ktn-content -->
+  </main>
+<footer class="ktn-footer" id="ktnFooter"></footer>
+
+</div><!-- /.content-wrap -->
+</div><!-- /.shell -->
+
+<nav class="ktn-bottom-nav" id="ktnBottomNav"><div class="ktn-bottom-nav__inner" id="ktnBottomNavInner"></div></nav>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Top","item":"https://koten-navi.com/"},{"@type":"ListItem","position":2,"name":"お知らせ一覧","item":"https://koten-navi.com/p61"},{"@type":"ListItem","position":3,"name":"新規/編集/クローン"}]}</script>
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+  KTN.init({ page: 'p61-11', role: 'admin' });
+
+  /* ── デモモード切り替え（新規／編集／クローン） ── */
+  var P6111_TEXT = {
+    new: {
+      icon: '🆕',
+      html: '新規にお知らせを作成します。公開日を指定すると、その日時からお知らせ一覧・サイドバーの通知バッジに表示されます。'
+    },
+    edit: {
+      icon: '✏️',
+      html: '既存のお知らせを編集します。編集対象を選択すると、現在の内容がフォームに反映されます（デモにつき実際の反映は省略しています）。'
+    },
+    clone: {
+      icon: '📋',
+      html: '既存のお知らせを複製して新規作成します。複製元の内容を引き継いだ状態でフォームに反映されます（デモにつき実際の反映は省略しています）。<strong>タイトル・公開日は必ず見直してください。</strong>'
+    }
+  };
+
+  function setDemoMode(mode) {
+    ['New', 'Edit', 'Clone'].forEach(function (m) {
+      var btn = document.getElementById('dbar' + m);
+      if (btn) btn.classList.toggle('on', m.toLowerCase() === mode);
+    });
+    var t = P6111_TEXT[mode];
+    document.getElementById('p6111ModeBannerIcon').textContent = t.icon;
+    document.getElementById('p6111ModeBannerText').innerHTML = t.html;
+    var editField = document.getElementById('p6111EditField');
+    if (editField) editField.hidden = (mode !== 'edit');
+    var cloneField = document.getElementById('p6111CloneField');
+    if (cloneField) cloneField.hidden = (mode !== 'clone');
+    var submitBtn = document.getElementById('p6111SubmitBtn');
+    if (submitBtn) submitBtn.textContent = mode === 'edit' ? '更新する' : (mode === 'clone' ? 'クローンして作成する' : '作成する');
+  }
+
+  /* ── 作成/更新ボタン ── */
+  var p6111SubmitBtn = document.getElementById('p6111SubmitBtn');
+  if (p6111SubmitBtn) {
+    p6111SubmitBtn.addEventListener('click', function () {
+      var title = document.getElementById('p6111Title').value.trim();
+      if (!title) {
+        KTN.toast('タイトルを入力してください');
+        return;
+      }
+      KTN.toast('お知らせを保存しました');
+    });
+  }
+</script>
+</body>
+</html>

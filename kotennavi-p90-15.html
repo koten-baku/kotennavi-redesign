@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>リエゾンプラス申込者一覧 — 管理者 | 個展なび</title>
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<body data-w="detail" class="p90-15-page mgmt-page">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- デモバー -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ロール：</span>
+  <button class="dbtn on" onclick="setR('admin',this)">管理者</button>
+</div>
+
+<div class="shell">
+
+<!-- サイドバー（kotennavi-p1.html と同一マークアップ・#ktnRoleNav は renderSidebar() がJS注入） -->
+<aside class="ktn-sidebar" id="ktnSidebar">
+
+  <!-- ロゴ (logo5-1) -->
+  <a href="kotennavi-p1.html" class="ktn-sidebar__logo" data-page="p1">
+    <img src="./images/kotennavi-logo5-1.svg" alt="個展なび">
+  </a>
+
+  <!-- 検索 → P10 検索ハブ -->
+  <a href="kotennavi-p10.html" class="ktn-sidebar__item" data-page="p10">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <circle cx="11" cy="11" r="7.5"/>
+        <path d="M21 21l-4.5-4.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">検索</span>
+  </a>
+
+  <!-- お知らせ → P61（未制作） -->
+  <a href="kotennavi-p61.html" class="ktn-sidebar__item" id="ktnSidebarNotice" data-page="p61">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__dot" id="ktnNoticeDot" style="display:none"></span>
+    <span class="ktn-sidebar__label">お知らせ</span>
+  </a>
+
+  <!-- ガイド → P60（未制作） -->
+  <a href="kotennavi-p60.html" class="ktn-sidebar__item" data-page="p60">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" stroke-linecap="round"/>
+        <path d="M12 16v-4M12 8h.01" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">ガイド</span>
+  </a>
+
+  <div class="ktn-sidebar__divider"></div>
+
+  <!-- ロール別アイコン（JS注入） -->
+  <div id="ktnRoleNav" style="width:100%;display:flex;flex-direction:column;align-items:center"></div>
+
+  <div class="ktn-sidebar__footer">
+    <p class="ktn-sidebar__footer-label">Follow us</p>
+    <div class="ktn-sidebar__sns">
+      <a href="https://www.facebook.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="Facebook">
+        <svg viewBox="0 0 320 512" fill="currentColor"><path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/></svg>
+      </a>
+      <a href="https://x.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="X">
+        <svg viewBox="0 0 512 512" fill="currentColor"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg>
+      </a>
+    </div>
+  </div>
+
+</aside>
+
+<div class="content-wrap" id="contentWrap">
+
+  <header class="ktn-header" id="ktnHeader">
+    <div class="ktn-header__inner">
+      <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+      <div class="ktn-hdr-actions" id="ktnActs"></div>
+    </div>
+  </header>
+
+  <main class="ktn-main" id="ktnMain">
+    <div class="ktn-content">
+
+      <!-- 管理ボックス -->
+      <div class="p9015-wrap ktn-mgmt-wrap ktn-mgmt-stack">
+
+        <!-- ページタイトル -->
+        <div class="ktn-mgmt-head">
+          <h2 class="ktn-mgmt-head__title">リエゾンプラス申込者一覧</h2>
+          <p class="ktn-mgmt-head__en">LIAISON+ APPLICANTS</p>
+          <p class="ktn-mgmt-head__desc">LIAISON+機能の申込を受理したクリエイター・ギャラリーの一覧です。本人確認の状態、利用開始日、現在の出品数を確認できます。個別の対応が必要な場合は「詳細を見る」からリエゾンプラスコンソールへ進んでください。</p>
+        </div>
+
+        <!-- ツールバー：ロール・本人確認状態 -->
+        <div class="p319-toolbar">
+          <div class="p319-toolbar__filters">
+            <label class="p319-filter">
+              <span class="p319-filter__label">ロール</span>
+              <select class="p319-filter__sel" id="p9015FilterRole">
+                <option value="">すべて</option>
+                <option value="creator">クリエイター</option>
+                <option value="gallery">ギャラリー</option>
+              </select>
+            </label>
+            <label class="p319-filter">
+              <span class="p319-filter__label">本人確認状態</span>
+              <select class="p319-filter__sel" id="p9015FilterStatus">
+                <option value="">すべて</option>
+                <option value="granted">確認済み</option>
+                <option value="pending">確認中</option>
+              </select>
+            </label>
+          </div>
+          <p class="ktn-count ktn-count--result" id="p9015Count"></p>
+        </div>
+
+        <div class="p315-archive-table-wrap">
+          <table class="p315-archive-table" aria-label="リエゾンプラス申込者一覧">
+            <thead>
+              <tr>
+                <th>申込者名</th>
+                <th>ロール</th>
+                <th>申込日</th>
+                <th>利用開始日</th>
+                <th>本人確認状態</th>
+                <th>出品数</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="p9015List">
+              <tr data-role="creator" data-status="granted">
+                <td data-label="申込者名">田中 透</td>
+                <td data-label="ロール"><span class="cb cb-person cb-creator">creator</span></td>
+                <td data-label="申込日" class="p902-cell--muted">2026.04.20</td>
+                <td data-label="利用開始日" class="p902-cell--muted">2026.04.28</td>
+                <td data-label="本人確認状態"><span class="ktn-review-status ktn-review-status--granted">確認済み</span></td>
+                <td data-label="出品数">20点</td>
+                <td data-label="操作"><a class="ktn-action-btn" href="./kotennavi-p90-12.html">詳細を見る →</a></td>
+              </tr>
+              <tr data-role="gallery" data-status="granted">
+                <td data-label="申込者名">Gallery SOIL 渋谷</td>
+                <td data-label="ロール"><span class="cb cb-person cb-gallery">gallery</span></td>
+                <td data-label="申込日" class="p902-cell--muted">2026.05.18</td>
+                <td data-label="利用開始日" class="p902-cell--muted">2026.05.25</td>
+                <td data-label="本人確認状態"><span class="ktn-review-status ktn-review-status--granted">確認済み</span></td>
+                <td data-label="出品数">8点</td>
+                <td data-label="操作"><a class="ktn-action-btn" href="./kotennavi-p90-12.html">詳細を見る →</a></td>
+              </tr>
+              <tr data-role="creator" data-status="granted">
+                <td data-label="申込者名">佐藤 みなと</td>
+                <td data-label="ロール"><span class="cb cb-person cb-creator">creator</span></td>
+                <td data-label="申込日" class="p902-cell--muted">2026.07.01</td>
+                <td data-label="利用開始日" class="p902-cell--muted">2026.07.05</td>
+                <td data-label="本人確認状態"><span class="ktn-review-status ktn-review-status--granted">確認済み</span></td>
+                <td data-label="出品数">3点</td>
+                <td data-label="操作"><a class="ktn-action-btn" href="./kotennavi-p90-12.html">詳細を見る →</a></td>
+              </tr>
+              <tr data-role="gallery" data-status="pending">
+                <td data-label="申込者名">YUGEN Gallery</td>
+                <td data-label="ロール"><span class="cb cb-person cb-gallery">gallery</span></td>
+                <td data-label="申込日" class="p902-cell--muted">2026.08.10</td>
+                <td data-label="利用開始日" class="p902-cell--muted">—</td>
+                <td data-label="本人確認状態"><span class="ktn-review-status ktn-review-status--pending">確認中</span></td>
+                <td data-label="出品数">0点</td>
+                <td data-label="操作"><a class="ktn-action-btn" href="./kotennavi-p90-12.html">詳細を見る →</a></td>
+              </tr>
+              <tr data-role="creator" data-status="pending">
+                <td data-label="申込者名">高橋 信</td>
+                <td data-label="ロール"><span class="cb cb-person cb-creator">creator</span></td>
+                <td data-label="申込日" class="p902-cell--muted">2026.08.15</td>
+                <td data-label="利用開始日" class="p902-cell--muted">—</td>
+                <td data-label="本人確認状態"><span class="ktn-review-status ktn-review-status--pending">確認中</span></td>
+                <td data-label="出品数">0点</td>
+                <td data-label="操作"><a class="ktn-action-btn" href="./kotennavi-p90-12.html">詳細を見る →</a></td>
+              </tr>
+              <tr data-role="creator" data-status="granted">
+                <td data-label="申込者名">大野 藍</td>
+                <td data-label="ロール"><span class="cb cb-person cb-creator">creator</span></td>
+                <td data-label="申込日" class="p902-cell--muted">2026.03.02</td>
+                <td data-label="利用開始日" class="p902-cell--muted">2026.03.10</td>
+                <td data-label="本人確認状態"><span class="ktn-review-status ktn-review-status--granted">確認済み</span></td>
+                <td data-label="出品数">12点</td>
+                <td data-label="操作"><a class="ktn-action-btn" href="./kotennavi-p90-12.html">詳細を見る →</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- ゼロ状態 -->
+        <div class="p319-empty" id="p9015Empty" hidden>
+          <p class="p319-empty__msg">該当する申込者がいません。</p>
+        </div>
+
+      </div><!-- /.ktn-mgmt-wrap -->
+
+    </div><!-- /.ktn-content -->
+  </main>
+<footer class="ktn-footer" id="ktnFooter"></footer>
+
+
+</div><!-- /.content-wrap -->
+</div><!-- /.shell -->
+
+<nav class="ktn-bottom-nav" id="ktnBottomNav"><div class="ktn-bottom-nav__inner" id="ktnBottomNavInner"></div></nav>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Top","item":"https://koten-navi.com/"},{"@type":"ListItem","position":2,"name":"管理者","item":"https://koten-navi.com/p90"},{"@type":"ListItem","position":3,"name":"リエゾンプラス申込者一覧"}]}</script>
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+  KTN.init({ page: 'p90-15', role: 'admin' });
+  function setR(role, btn) {
+    document.querySelectorAll('.dbtn').forEach(function(b){ b.classList.remove('on'); });
+    btn.classList.add('on');
+    window.curRole = role;
+    if (window.ktnRender) ktnRender();
+  }
+
+  /* 一覧フィルタ（ロール・本人確認状態）：静的ダミー行を絞り込むだけの簡易実装 */
+  (function () {
+    var rows      = Array.prototype.slice.call(document.querySelectorAll('#p9015List tr'));
+    var roleSel   = document.getElementById('p9015FilterRole');
+    var statusSel = document.getElementById('p9015FilterStatus');
+    var countEl   = document.getElementById('p9015Count');
+    var emptyEl   = document.getElementById('p9015Empty');
+
+    function render() {
+      var fr = roleSel ? roleSel.value : '';
+      var fs = statusSel ? statusSel.value : '';
+      var visible = 0;
+      rows.forEach(function (tr) {
+        var match = (!fr || tr.dataset.role === fr) && (!fs || tr.dataset.status === fs);
+        tr.hidden = !match;
+        if (match) visible++;
+      });
+      if (countEl) countEl.innerHTML = '<strong>' + visible + '</strong>件該当';
+      if (emptyEl) emptyEl.hidden = visible !== 0;
+    }
+    if (roleSel) roleSel.addEventListener('change', render);
+    if (statusSel) statusSel.addEventListener('change', render);
+    render();
+  })();
+</script>
+</body>
+</html>

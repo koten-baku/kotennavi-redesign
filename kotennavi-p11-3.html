@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./kotennavi-common.css">
 </head>
-<body data-w="article" class="p70-page p11-page">
+<body data-w="article" class="mgmt-page p11-3-page p5-page">
 
 <div class="ktn-toast" id="ktnToast"></div>
 
@@ -97,14 +97,18 @@
   <main class="ktn-main" id="ktnMain">
     <div class="ktn-content">
 
-      <!-- 申込者ストリップ（ログイン中のユーザー＝申込アカウント） -->
-      <div class="p114-applicant">
-        <div class="p114-applicant__icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+      <!-- 申込者ストリップ（ログイン中のユーザー＝申込アカウント。マイページへリンク） -->
+      <div class="ktn-mgmt-context">
+        <a class="ktn-mgmt-context__media ktn-mgmt-context__media--user" href="kotennavi-p5.html" style="background:linear-gradient(135deg,#f0c0d8,#c87aaa)">花</a>
+        <div class="ktn-mgmt-context__body">
+          <div class="ktn-mgmt-context__badges">
+            <span class="cb cb-person cb-user">USER</span>
+          </div>
+          <div class="ktn-mgmt-context__name"><a href="kotennavi-p5.html">山田 花子</a></div>
+          <div class="ktn-mgmt-context__meta">利用開始 2022.04 · 1997sakura2022@gmail.com</div>
         </div>
-        <div class="p114-applicant__body">
-          <span class="p114-applicant__label">申込アカウント</span>
-          <span class="p114-applicant__name">鈴木 一郎 <small>1997sakura2022@gmail.com</small></span>
+        <div class="ktn-mgmt-context__actions">
+          <a class="ktn-mgmt-context__view" href="kotennavi-p5.html">マイページへ →</a>
         </div>
       </div>
 

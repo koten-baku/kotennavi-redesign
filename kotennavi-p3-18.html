@@ -247,12 +247,6 @@
 <script src="./kotennavi-pages.js"></script>
 <script>
   KTN.init({ page: 'p3-18', role: 'user+creator' });
-  function setR(role, btn) {
-    document.querySelectorAll('.dbtn').forEach(function(b){ b.classList.remove('on'); });
-    btn.classList.add('on');
-    window.curRole = role;
-    if (window.ktnRender) ktnRender();
-  }
 </script>
 </body>
 </html>

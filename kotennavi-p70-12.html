@@ -121,8 +121,10 @@
         <li class="p70-toc__item"><span class="p70-toc__num">6</span><a class="p70-toc__link" href="#phase-receipt">受取確認 — 購入者の受取を待つ</a></li>
         <li class="p70-toc__item"><span class="p70-toc__num">7</span><a class="p70-toc__link" href="#phase-complete">完了確認 — 取引完了を確認する</a></li>
         <li class="p70-toc__item"><span class="p70-toc__num">8</span><a class="p70-toc__link" href="#terminal">取引の終わり方（完了・キャンセル）</a></li>
-        <li class="p70-toc__item"><span class="p70-toc__num">9</span><a class="p70-toc__link" href="#trouble">こんなときは — 状況別インデックス</a></li>
-        <li class="p70-toc__item"><span class="p70-toc__num">10</span><a class="p70-toc__link" href="#faq">よくある質問</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">9</span><a class="p70-toc__link" href="#console">コンソールの使い方</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">10</span><a class="p70-toc__link" href="#settlement">代金の精算・振込</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">11</span><a class="p70-toc__link" href="#trouble">こんなときは — 状況別インデックス</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">12</span><a class="p70-toc__link" href="#faq">よくある質問</a></li>
       </ol>
     </nav>
 
@@ -495,10 +497,49 @@
       </div>
     </section>
 
-    <!-- 9. 状況別インデックス -->
-    <section class="p70-section" id="trouble">
+    <!-- 9. コンソールの使い方 -->
+    <section class="p70-section" id="console">
       <div class="p70-section__head">
         <span class="p70-section__num">9</span>
+        <h2 class="p70-section__title">コンソールの使い方</h2>
+        <span class="p70-section__en">Using the console</span>
+      </div>
+      <p class="p70-body">LIAISON+コンソールは、進行中の取引・申込を横断して確認できる一覧管理画面です。LIAISON+は<strong>会場優先</strong>の仕組みで、コンソールでは申込が入った作品への対応・会場売約済操作をまとめて行えます。作品ごとの個別の進行（購入確定・発送・受取確認・完了確認）は、コンソールから該当の取引を開いて<em>取引デスク</em>で行います。</p>
+
+      <div class="p70-dl p70-dl--ja">
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">コンソール（一覧管理）</dt>
+          <dd class="p70-dl__dd">すべての展覧会・作品の申込状況を横断して俯瞰します。要対応の取引がひと目でわかります。</dd>
+        </div>
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">取引デスク（個別進行）</dt>
+          <dd class="p70-dl__dd">1件の取引を進める画面です。このガイドのフェーズ解説（STEP 2〜6）は取引デスクでの操作に対応します。</dd>
+        </div>
+      </div>
+
+      <div class="p70-callout">
+        <div class="p70-callout__title">作品の状態・価格変更はコンソールでは行いません</div>
+        <div class="p70-callout__body">
+          作品の販売状態・価格の変更は、展覧会ページ →オーナーメニュー→「リエゾン+出品管理」から行います。コンソール・取引デスクは<em>すでに申込が入った取引の対応</em>に限定されています。
+        </div>
+      </div>
+    </section>
+
+    <!-- 10. 代金の精算・振込 -->
+    <section class="p70-section" id="settlement">
+      <div class="p70-section__head">
+        <span class="p70-section__num">10</span>
+        <h2 class="p70-section__title">代金の精算・振込</h2>
+        <span class="p70-section__en">Settlement &amp; payout</span>
+      </div>
+      <p class="p70-body">取引が完了すると、販売価格からサービス利用料を差し引いた額に送料を加えた金額が精算対象になります。精算履歴・振込先口座の設定は「販売代金管理」ページで確認・変更できます。</p>
+      <div id="p712QaSettlement"></div>
+    </section>
+
+    <!-- 11. 状況別インデックス -->
+    <section class="p70-section" id="trouble">
+      <div class="p70-section__head">
+        <span class="p70-section__num">11</span>
         <h2 class="p70-section__title">こんなときは — 状況別インデックス</h2>
         <span class="p70-section__en">Situation index</span>
       </div>
@@ -551,10 +592,10 @@
       </div>
     </section>
 
-    <!-- 10. よくある質問（KTN.QA から描画＝コンソール・取引デスクと単一ソースの統合セット。phase無しで全表示） -->
+    <!-- 12. よくある質問（KTN.QA から描画＝コンソール・取引デスクと単一ソースの統合セット。phase無しで全表示） -->
     <section class="p70-section" id="faq">
       <div class="p70-section__head">
-        <span class="p70-section__num">10</span>
+        <span class="p70-section__num">12</span>
         <h2 class="p70-section__title">よくある質問</h2>
         <span class="p70-section__en">FAQ</span>
       </div>
@@ -585,6 +626,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   /* よくある質問＝KTN.QA を単一ソースに描画（出品者の統合セット全件・phase無しで全表示） */
   KTN.renderQA('#p712QaTxn', { category: 'liaison-txn', side: 'seller', style: 'guide' });
+  KTN.renderQA('#p712QaSettlement', { category: 'liaison-settlement', side: 'seller', style: 'guide', hideGroup: true });
 
   var dbarView = document.getElementById('dbarView');
   if (dbarView) {

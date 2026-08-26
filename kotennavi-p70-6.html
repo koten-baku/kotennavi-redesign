@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>特定商取引法に基づく表示 | 個展なび</title>
+  <meta name="description" content="個展なびリエゾン+における特定商取引法に基づく表示です。事業者情報、商品代金・お支払い方法、引渡し時期、返品・キャンセルについて定めています。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@1,400;1,600&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<body data-w="article" class="p70-page p70-6-page">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- デモバー -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ガイドページ</span>
+  <button class="dbtn dbtn--active" id="dbarView">閲覧</button>
+</div>
+
+<!-- ヘッダー -->
+<div class="shell">
+
+<aside class="ktn-sidebar" id="ktnSidebar">
+  <a href="kotennavi-p1.html" class="ktn-sidebar__logo" data-page="p1">
+    <img src="./images/kotennavi-logo5-1.svg" alt="個展なび">
+  </a>
+  <a href="kotennavi-p10.html" class="ktn-sidebar__item" data-page="p10">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <circle cx="11" cy="11" r="7.5"/>
+        <path d="M21 21l-4.5-4.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">検索</span>
+  </a>
+  <a href="kotennavi-p61.html" class="ktn-sidebar__item" id="ktnSidebarNotice" data-page="p61">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__dot" id="ktnNoticeDot" style="display:none"></span>
+    <span class="ktn-sidebar__label">お知らせ</span>
+  </a>
+  <a href="kotennavi-p60.html" class="ktn-sidebar__item" data-page="p60">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" stroke-linecap="round"/>
+        <path d="M12 16v-4M12 8h.01" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">ガイド</span>
+  </a>
+  <div class="ktn-sidebar__divider"></div>
+  <div id="ktnRoleNav" style="width:100%;display:flex;flex-direction:column;align-items:center"></div>
+  <div class="ktn-sidebar__footer">
+    <p class="ktn-sidebar__footer-label">Follow us</p>
+    <div class="ktn-sidebar__sns">
+      <a href="https://www.facebook.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="Facebook">
+        <svg viewBox="0 0 320 512" fill="currentColor"><path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/></svg>
+      </a>
+      <a href="https://x.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="X">
+        <svg viewBox="0 0 512 512" fill="currentColor"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg>
+      </a>
+    </div>
+  </div>
+</aside>
+
+<div class="content-wrap" id="contentWrap">
+<header class="ktn-header" id="ktnHeader">
+  <div class="ktn-header__inner">
+    <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+    <div class="ktn-hdr-actions" id="ktnActs"></div>
+  </div>
+</header>
+
+<!-- タイトルバンド -->
+<div class="p70-title-band">
+  <div class="p70-title-band__inner">
+    <div class="p70-head__sub">
+      <span class="p70-head__updated">2026年8月 制定</span>
+    </div>
+    <h1 class="p70-head__title">特定商取引法に基づく表示</h1>
+    <p class="p70-head__en">Legal Notice (Specified Commercial Transactions Act)</p>
+    <p class="p70-head__lead">個展なびリエゾン+（LIAISON+）における作品の取引について、特定商取引法第11条に基づき、以下のとおり表示いたします。</p>
+  </div>
+</div>
+
+<main>
+  <div class="p70-wrap">
+
+    <!-- 目次 -->
+    <nav class="p70-toc" aria-label="目次">
+      <div class="p70-toc__title">目次 — Contents</div>
+      <ol class="p70-toc__list">
+        <li class="p70-toc__item"><span class="p70-toc__num">1</span><a class="p70-toc__link" href="#operator">事業者情報</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">2</span><a class="p70-toc__link" href="#price">販売価格・お支払いについて</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">3</span><a class="p70-toc__link" href="#delivery">引渡し時期</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">4</span><a class="p70-toc__link" href="#return">返品・キャンセルについて</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">5</span><a class="p70-toc__link" href="#other">その他</a></li>
+      </ol>
+    </nav>
+
+    <!-- 1. 事業者情報 -->
+    <section class="p70-section" id="operator">
+      <div class="p70-section__head">
+        <span class="p70-section__num">1</span>
+        <h2 class="p70-section__title">事業者情報</h2>
+        <span class="p70-section__en">Operator</span>
+      </div>
+      <p class="p70-lead">リエゾン+における作品の売買契約は、出展者（クリエイター・ギャラリー）と購入者の間で直接成立します。個展なび運営事務局は、取引の場と代金回収の代行を提供する立場です。</p>
+
+      <div class="p70-dl p70-dl--ja">
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">販売事業者</dt>
+          <dd class="p70-dl__dd">各作品の出展者（クリエイター・ギャラリー）。出展者名は各作品ページに表示しています</dd>
+        </div>
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">代金回収代行</dt>
+          <dd class="p70-dl__dd">個展なび運営事務局</dd>
+        </div>
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">運営統括責任者</dt>
+          <dd class="p70-dl__dd">個展なび運営事務局 代表者</dd>
+        </div>
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">所在地・電話番号</dt>
+          <dd class="p70-dl__dd">お客様からのご請求があった場合、遅滞なく開示いたします</dd>
+        </div>
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">メールアドレス</dt>
+          <dd class="p70-dl__dd"><a href="./kotennavi-p60-11.html">お問合せフォーム</a>よりご連絡ください</dd>
+        </div>
+      </div>
+
+      <div class="p70-callout p70-callout--venue">
+        <div class="p70-callout__title">個展なびの役割について</div>
+        <div class="p70-callout__body">
+          作品の売買契約の当事者は「出展者」と「購入者」です。個展なび運営事務局は、取引の場（LIAISON+）の提供、代金の回収代行、キュー（順番待ち）の管理を行いますが、売買契約そのものの当事者ではありません。
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. 販売価格・お支払いについて -->
+    <section class="p70-section" id="price">
+      <div class="p70-section__head">
+        <span class="p70-section__num">2</span>
+        <h2 class="p70-section__title">販売価格・お支払いについて</h2>
+        <span class="p70-section__en">Price &amp; payment</span>
+      </div>
+
+      <h3 class="p70-subhead">販売価格</h3>
+      <p class="p70-body">各作品ページに表示する価格（税込）によります。</p>
+
+      <h3 class="p70-subhead">商品代金以外に必要な料金</h3>
+      <p class="p70-body">送料・梱包費（作品ごとに出展者が設定し、購入確定時にご案内します）。詳しくは<a href="./kotennavi-p70-4.html">送料・配送について</a>をご覧ください。振込手数料など、出展者側に発生する費用は購入者のご負担ではありません。</p>
+
+      <h3 class="p70-subhead">お支払い方法</h3>
+      <p class="p70-body">クレジットカード決済（国内・海外発行カードに対応）。</p>
+
+      <h3 class="p70-subhead">お支払い時期</h3>
+      <p class="p70-body">出展者による購入確定後、取引ワークスペースからのお支払い手続き完了時。詳しい流れは<a href="./kotennavi-p70-3.html">作品購入までの流れ</a>をご覧ください。</p>
+
+      <h3 class="p70-subhead">サービス利用料（出展者負担）</h3>
+      <p class="p70-body">取引成立時、出展者に対し以下の料率によるサービス利用料が発生します（購入者の追加負担はありません）。</p>
+      <table class="p70-table">
+        <thead>
+          <tr><th>作品の販売価格</th><th>利用料率</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>〜29,999円</td><td>10%</td></tr>
+          <tr><td>30,000円〜</td><td>8%</td></tr>
+        </tbody>
+      </table>
+      <span class="p70-table__note">サービス利用料は税込の「作品の販売価格＋送料＋梱包費」の合計に対して計算し、決済にかかる手数料を含みます。</span>
+    </section>
+
+    <!-- 3. 引渡し時期 -->
+    <section class="p70-section" id="delivery">
+      <div class="p70-section__head">
+        <span class="p70-section__num">3</span>
+        <h2 class="p70-section__title">引渡し時期</h2>
+        <span class="p70-section__en">Delivery</span>
+      </div>
+      <p class="p70-lead">お支払い完了後、出展者が梱包・発送を行います。</p>
+
+      <div class="p70-dl p70-dl--ja">
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">発送時期</dt>
+          <dd class="p70-dl__dd">お支払い完了後、出展者が発送（発送期限は会期終了後7日または支払後7日の遅い方）</dd>
+        </div>
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">配送方法</dt>
+          <dd class="p70-dl__dd">出展者が作品に応じて選定（宅配便が中心）</dd>
+        </div>
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">配送状況の確認</dt>
+          <dd class="p70-dl__dd">発送登録後、取引ワークスペースに追跡番号を表示</dd>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. 返品・キャンセルについて -->
+    <section class="p70-section" id="return">
+      <div class="p70-section__head">
+        <span class="p70-section__num">4</span>
+        <h2 class="p70-section__title">返品・キャンセルについて</h2>
+        <span class="p70-section__en">Returns &amp; cancellation</span>
+      </div>
+
+      <h3 class="p70-subhead">商品の性質について</h3>
+      <p class="p70-body">リエゾン+で取り扱う作品は一点物の美術作品であり、いずれも数量に限りがあります。商品の性質上、お客様のご都合による返品・交換はお受けしておりません。</p>
+
+      <h3 class="p70-subhead">申込のキャンセル</h3>
+      <p class="p70-body">購入確定前の仮申込であれば、取引ワークスペースからキャンセルいただけます。購入確定後（お支払いのご案内後）のキャンセルについては、出展者へ直接ご相談ください。</p>
+
+      <h3 class="p70-subhead">不良品・配送事故について</h3>
+      <p class="p70-body">配送中の破損など、お受け取りになった作品に問題があった場合は、受取確認を行う前に取引ワークスペースのメッセージから出展者へご連絡ください。解決しない場合は<a href="./kotennavi-p60-13.html">問題を報告する</a>フォームからもご相談いただけます。</p>
+    </section>
+
+    <!-- 5. その他 -->
+    <section class="p70-section" id="other">
+      <div class="p70-section__head">
+        <span class="p70-section__num">5</span>
+        <h2 class="p70-section__title">その他</h2>
+        <span class="p70-section__en">Other</span>
+      </div>
+      <p class="p70-body">本表示に記載のない事項については、<a href="./kotennavi-p60-9.html">利用規約</a>の定めによります。</p>
+      <p class="p70-body">制定：2026年8月25日</p>
+      <p><a class="ktn-guide-link" href="./kotennavi-p70.html">リエゾンとは →</a></p>
+      <p><a class="ktn-guide-link" href="./kotennavi-p70-2.html">リエゾンプラス-作品販売ガイド →</a></p>
+      <p><a class="ktn-guide-link" href="./kotennavi-p60-11.html">お問合せフォームへ →</a></p>
+    </section>
+
+  </div>
+</main>
+
+<!-- フッター -->
+<footer class="ktn-footer" id="ktnFooter"></footer>
+</div><!-- /content-wrap -->
+</div><!-- /shell -->
+
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  KTN.init({ page: 'p70-6' });
+
+  var dbarView = document.getElementById('dbarView');
+  if (dbarView) {
+    dbarView.addEventListener('click', function() {
+      this.classList.add('dbtn--active');
+    });
+  }
+});
+</script>
+</body>
+</html>

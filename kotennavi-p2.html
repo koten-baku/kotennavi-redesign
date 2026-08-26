@@ -165,6 +165,7 @@
             <span id="p2CaptionText"></span>
           </div>
           <div class="p2-poster-thumbs" id="p2Thumbs"><!-- JSがサムネイル＋カウンターを生成 --></div>
+          <div class="p2-poster-print-list" id="p2PosterPrintList"><!-- 校正印刷専用：全画像のキャプションを一覧表示（JSが生成・画面表示なし） --></div>
         </div>
 
         <!-- ② タイトルバンド（会場・会期付き） -->
@@ -1175,6 +1176,27 @@
         if (thumbRow) thumbRow.style.display = 'none';
         if (prevBtn) prevBtn.style.display = 'none';
         if (nextBtn) nextBtn.style.display = 'none';
+      }
+
+      /* 校正印刷専用：スライダーでは1枚しか印字されない全画像キャプションを、印刷時だけ一覧化して差し込む */
+      var printList = document.getElementById('p2PosterPrintList');
+      if (printList) {
+        printList.innerHTML = '';
+        SLIDES.forEach(function (s, i) {
+          var item = document.createElement('div');
+          item.className = 'p2-poster-print-item';
+          var thumb = document.createElement('div');
+          thumb.className = 'p2-poster-print-item__thumb';
+          thumb.style.background = s.bg;
+          thumb.style.color = s.tc;
+          thumb.textContent = s.label.slice(0, 3);
+          var cap = document.createElement('p');
+          cap.className = 'p2-poster-print-item__cap';
+          cap.textContent = (i + 1) + '. ' + (s.caption || s.label || '');
+          item.appendChild(thumb);
+          item.appendChild(cap);
+          printList.appendChild(item);
+        });
       }
 
       function render() {

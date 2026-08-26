@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>作品購入までの流れ | 個展なび</title>
+  <meta name="description" content="個展なびリエゾン+での作品購入の流れをご案内。申込から購入確定、支払、受取確認までの手順、お支払い方法、キュー（順番待ち）の仕組みをまとめています。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@1,400;1,600&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<body data-w="article" class="p70-page p70-3-page">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- デモバー -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ガイドページ</span>
+  <button class="dbtn dbtn--active" id="dbarView">閲覧</button>
+</div>
+
+<!-- ヘッダー -->
+<div class="shell">
+
+<aside class="ktn-sidebar" id="ktnSidebar">
+  <a href="kotennavi-p1.html" class="ktn-sidebar__logo" data-page="p1">
+    <img src="./images/kotennavi-logo5-1.svg" alt="個展なび">
+  </a>
+  <a href="kotennavi-p10.html" class="ktn-sidebar__item" data-page="p10">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <circle cx="11" cy="11" r="7.5"/>
+        <path d="M21 21l-4.5-4.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">検索</span>
+  </a>
+  <a href="kotennavi-p61.html" class="ktn-sidebar__item" id="ktnSidebarNotice" data-page="p61">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__dot" id="ktnNoticeDot" style="display:none"></span>
+    <span class="ktn-sidebar__label">お知らせ</span>
+  </a>
+  <a href="kotennavi-p60.html" class="ktn-sidebar__item" data-page="p60">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" stroke-linecap="round"/>
+        <path d="M12 16v-4M12 8h.01" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">ガイド</span>
+  </a>
+  <div class="ktn-sidebar__divider"></div>
+  <div id="ktnRoleNav" style="width:100%;display:flex;flex-direction:column;align-items:center"></div>
+  <div class="ktn-sidebar__footer">
+    <p class="ktn-sidebar__footer-label">Follow us</p>
+    <div class="ktn-sidebar__sns">
+      <a href="https://www.facebook.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="Facebook">
+        <svg viewBox="0 0 320 512" fill="currentColor"><path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/></svg>
+      </a>
+      <a href="https://x.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="X">
+        <svg viewBox="0 0 512 512" fill="currentColor"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg>
+      </a>
+    </div>
+  </div>
+</aside>
+
+<div class="content-wrap" id="contentWrap">
+<header class="ktn-header" id="ktnHeader">
+  <div class="ktn-header__inner">
+    <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+    <div class="ktn-hdr-actions" id="ktnActs"></div>
+  </div>
+</header>
+
+<!-- タイトルバンド（LIAISON+ ダーク） -->
+<div class="p70-title-band p70-title-band--dark">
+  <div class="p70-title-band__inner">
+    <div class="p70-head__sub">
+      <span class="lb-dot-lp-hero"><span class="dot"></span>LIAISON+</span>
+      <span class="p70-head__updated">2026年8月 更新</span>
+    </div>
+    <h1 class="p70-head__title">作品購入までの流れ</h1>
+    <p class="p70-head__en">How to purchase an artwork</p>
+    <p class="p70-head__lead">リエゾン+では、実際の展覧会に呼応した作品をオンラインでご購入いただけます。<br>申込から作品が手元に届くまでの流れをご案内します。</p>
+  </div>
+</div>
+
+<main>
+  <div class="p70-wrap">
+
+    <!-- 目次 -->
+    <nav class="p70-toc" aria-label="目次">
+      <div class="p70-toc__title">目次 — Contents</div>
+      <ol class="p70-toc__list">
+        <li class="p70-toc__item"><span class="p70-toc__num">1</span><a class="p70-toc__link" href="#flow">購入までの流れ</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">2</span><a class="p70-toc__link" href="#apply">申込について</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">3</span><a class="p70-toc__link" href="#pay">お支払い方法</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">4</span><a class="p70-toc__link" href="#receive">受け取り後の確認</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">5</span><a class="p70-toc__link" href="#faq">よくある質問</a></li>
+      </ol>
+    </nav>
+
+    <!-- 1. 購入までの流れ -->
+    <section class="p70-section" id="flow">
+      <div class="p70-section__head">
+        <span class="p70-section__num">1</span>
+        <h2 class="p70-section__title">購入までの流れ</h2>
+        <span class="p70-section__en">Purchase flow</span>
+      </div>
+      <p class="p70-lead">作品ページから申込を行うと、出展者と購入者が交互に対応する6つのステップを経て取引が完了します。購入者としてご対応いただくのは、そのうち3つのステップです。</p>
+
+      <div class="p70-flow-diagram">
+        <div class="p70-flow-diagram__title">取引フロー — 全6ステップ</div>
+        <ol class="p70-flow-diagram__list">
+          <li class="p70-flow-diagram__item p70-flow-diagram__item--buyer">
+            <span class="p70-flow-diagram__actor">購入者</span>
+            <span class="p70-flow-diagram__num">STEP 1</span>
+            <span class="p70-flow-diagram__action">申込</span>
+          </li>
+          <li class="p70-flow-diagram__arrow">—</li>
+          <li class="p70-flow-diagram__item p70-flow-diagram__item--seller">
+            <span class="p70-flow-diagram__actor">出展者</span>
+            <span class="p70-flow-diagram__num">STEP 2</span>
+            <span class="p70-flow-diagram__action">購入確定</span>
+          </li>
+          <li class="p70-flow-diagram__arrow">—</li>
+          <li class="p70-flow-diagram__item p70-flow-diagram__item--buyer">
+            <span class="p70-flow-diagram__actor">購入者</span>
+            <span class="p70-flow-diagram__num">STEP 3</span>
+            <span class="p70-flow-diagram__action">支払</span>
+          </li>
+          <li class="p70-flow-diagram__arrow">—</li>
+          <li class="p70-flow-diagram__item p70-flow-diagram__item--seller">
+            <span class="p70-flow-diagram__actor">出展者</span>
+            <span class="p70-flow-diagram__num">STEP 4</span>
+            <span class="p70-flow-diagram__action">発送</span>
+          </li>
+          <li class="p70-flow-diagram__arrow">—</li>
+          <li class="p70-flow-diagram__item p70-flow-diagram__item--buyer">
+            <span class="p70-flow-diagram__actor">購入者</span>
+            <span class="p70-flow-diagram__num">STEP 5</span>
+            <span class="p70-flow-diagram__action">受取確認</span>
+          </li>
+          <li class="p70-flow-diagram__arrow">—</li>
+          <li class="p70-flow-diagram__item p70-flow-diagram__item--seller">
+            <span class="p70-flow-diagram__actor">出展者</span>
+            <span class="p70-flow-diagram__num">STEP 6</span>
+            <span class="p70-flow-diagram__action">完了確認</span>
+          </li>
+          <li class="p70-flow-diagram__arrow">—</li>
+          <li class="p70-flow-diagram__end">取引完了</li>
+        </ol>
+      </div>
+
+      <div class="p70-flow">
+
+        <div class="p70-flow__step p70-flow__step--buyer">
+          <div class="p70-flow__step-num">1</div>
+          <div class="p70-flow__step-main">
+            <span class="p70-flow__step-actor p70-flow__step-actor--buyer">購入者</span>
+            <div class="p70-flow__step-label-row">
+              <span class="p70-flow__step-label">申込</span>
+              <span class="p70-flow__step-state">→ 購入確定待ち</span>
+            </div>
+            <p class="p70-flow__step-body">作品ページの「購入を申し込む」から申込みます。複数の方が同時に申込める先着順のキュー方式です。この時点ではまだ「仮申込」で、決済は発生しません。</p>
+          </div>
+        </div>
+        <div class="p70-flow__connector"></div>
+
+        <div class="p70-flow__step p70-flow__step--seller">
+          <div class="p70-flow__step-num">2</div>
+          <div class="p70-flow__step-main">
+            <span class="p70-flow__step-actor p70-flow__step-actor--seller">出展者</span>
+            <div class="p70-flow__step-label-row">
+              <span class="p70-flow__step-label">購入確定 ＋ 送料確定</span>
+              <span class="p70-flow__step-state">→ 支払待ち</span>
+            </div>
+            <p class="p70-flow__step-body">出展者が会場の在庫を確認し「購入確定」を行うと、送料が確定してお支払いのご案内メールが届きます。この間、購入者側の操作は不要です。</p>
+          </div>
+        </div>
+        <div class="p70-flow__connector"></div>
+
+        <div class="p70-flow__step p70-flow__step--buyer">
+          <div class="p70-flow__step-num">3</div>
+          <div class="p70-flow__step-main">
+            <span class="p70-flow__step-actor p70-flow__step-actor--buyer">購入者</span>
+            <div class="p70-flow__step-label-row">
+              <span class="p70-flow__step-label">支払</span>
+              <span class="p70-flow__step-state">→ 発送待ち</span>
+            </div>
+            <p class="p70-flow__step-body">取引ワークスペースから、作品代金＋送料のお支払いを行います。決済が完了すると、出展者に発送依頼の通知が届きます。</p>
+          </div>
+        </div>
+        <div class="p70-flow__connector"></div>
+
+        <div class="p70-flow__step p70-flow__step--seller">
+          <div class="p70-flow__step-num">4</div>
+          <div class="p70-flow__step-main">
+            <span class="p70-flow__step-actor p70-flow__step-actor--seller">出展者</span>
+            <div class="p70-flow__step-label-row">
+              <span class="p70-flow__step-label">発送</span>
+              <span class="p70-flow__step-state">→ 受取確認待ち</span>
+            </div>
+            <p class="p70-flow__step-body">出展者が作品を梱包・発送し、追跡番号を登録します。この間、購入者側の操作は不要です。</p>
+          </div>
+        </div>
+        <div class="p70-flow__connector"></div>
+
+        <div class="p70-flow__step p70-flow__step--buyer">
+          <div class="p70-flow__step-num">5</div>
+          <div class="p70-flow__step-main">
+            <span class="p70-flow__step-actor p70-flow__step-actor--buyer">購入者</span>
+            <div class="p70-flow__step-label-row">
+              <span class="p70-flow__step-label">受取確認</span>
+              <span class="p70-flow__step-state">→ 完了確認待ち</span>
+            </div>
+            <p class="p70-flow__step-body">作品の到着を確認したら、取引ワークスペースで「受取確認」を行います。任意で出展者への評価コメントを残すこともできます。</p>
+          </div>
+        </div>
+        <div class="p70-flow__connector"></div>
+
+        <div class="p70-flow__step p70-flow__step--seller">
+          <div class="p70-flow__step-num">6</div>
+          <div class="p70-flow__step-main">
+            <span class="p70-flow__step-actor p70-flow__step-actor--seller">出展者</span>
+            <div class="p70-flow__step-label-row">
+              <span class="p70-flow__step-label">完了確認</span>
+              <span class="p70-flow__step-state">→ 取引完了</span>
+            </div>
+            <p class="p70-flow__step-body">出展者が完了確認を行うと取引は正式に完了します。購入者側の追加対応はありません。</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 2. 申込について -->
+    <section class="p70-section" id="apply">
+      <div class="p70-section__head">
+        <span class="p70-section__num">2</span>
+        <h2 class="p70-section__title">申込について</h2>
+        <span class="p70-section__en">Applying</span>
+      </div>
+      <p class="p70-lead">リエゾン+ は実空間の展覧会と連動するサービスのため、会場へ来場された方のご購入を最優先する設計になっています。オンラインでの申込は、その前提の上に成り立つ「仮申込」です。</p>
+
+      <div class="p70-callout p70-callout--venue">
+        <div class="p70-callout__title">申込＝購入確定ではありません</div>
+        <div class="p70-callout__body">
+          申込の時点では決済は発生せず、購入がまだ確定していません。出展者が会場の在庫を確認し「購入確定」を行った時点で、はじめてお支払いのご案内が届きます。会場で先に売約となった場合は、システムから自動でキャンセル通知が届きます。
+        </div>
+      </div>
+
+      <p class="p70-body">同じ作品に複数の申込があった場合は、申込順のキュー（順番待ち）で管理されます。先の申込者の対応が済むまで、後の申込者は待機の状態になります。1作品につきご購入いただけるのは1名のみです。</p>
+    </section>
+
+    <!-- 3. お支払い方法 -->
+    <section class="p70-section" id="pay">
+      <div class="p70-section__head">
+        <span class="p70-section__num">3</span>
+        <h2 class="p70-section__title">お支払い方法</h2>
+        <span class="p70-section__en">Payment</span>
+      </div>
+      <p class="p70-lead">お支払いは、購入確定後に届く案内に沿って取引ワークスペースからオンライン決済で行います。</p>
+
+      <div class="p70-dl p70-dl--ja">
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">決済手段</dt>
+          <dd class="p70-dl__dd">クレジットカード（国内・海外発行カードに対応）</dd>
+        </div>
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">お支払い時期</dt>
+          <dd class="p70-dl__dd">出展者の購入確定後、取引ワークスペースからのお支払い手続き完了時</dd>
+        </div>
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">お支払い金額</dt>
+          <dd class="p70-dl__dd">作品の販売価格＋送料（梱包費を含む場合あり・出展者が確定額をご案内）</dd>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. 受け取り後の確認 -->
+    <section class="p70-section" id="receive">
+      <div class="p70-section__head">
+        <span class="p70-section__num">4</span>
+        <h2 class="p70-section__title">受け取り後の確認</h2>
+        <span class="p70-section__en">After delivery</span>
+      </div>
+      <p class="p70-lead">作品が届いたら、状態をご確認のうえ取引ワークスペースから「受取確認」を行ってください。</p>
+      <p class="p70-body">配送中の破損など、お受け取りになった作品に問題があった場合は、受取確認を行う前に取引ワークスペースのメッセージから出展者へご連絡ください。解決しない場合は<a href="./kotennavi-p60-13.html">問題を報告する</a>フォームからもご相談いただけます。</p>
+    </section>
+
+    <!-- 5. よくある質問 -->
+    <section class="p70-section" id="faq">
+      <div class="p70-section__head">
+        <span class="p70-section__num">5</span>
+        <h2 class="p70-section__title">よくある質問</h2>
+        <span class="p70-section__en">FAQ</span>
+      </div>
+
+      <div class="p70-faq">
+
+        <details class="p70-faq-item">
+          <summary>申込むとすぐに決済されますか</summary>
+          <div class="p70-faq-item__body">
+            いいえ。申込は「仮申込」の状態で、決済は発生しません。出展者が会場の在庫を確認して「購入確定」を行った後、お支払いのご案内が届いてから決済へ進みます。
+          </div>
+        </details>
+
+        <details class="p70-faq-item">
+          <summary>申込んだ後、出展者からの連絡が来ません</summary>
+          <div class="p70-faq-item__body">
+            出展者は会期終了後にまとめて在庫確認を行う場合があり、確定までにお時間をいただくことがあります（確定期限は会期終了7日後または申込7日後の遅い方です）。期限を過ぎても連絡が無い場合は、その申込は自動的にキャンセル扱いとなり、通知が届きます。
+          </div>
+        </details>
+
+        <details class="p70-faq-item">
+          <summary>会場で先に売れてしまった場合はどうなりますか</summary>
+          <div class="p70-faq-item__body">
+            出展者が「会場売約済」の操作を行うと、申込者全員にシステムから自動でキャンセル通知メールが届きます。個別にご連絡いただく必要はありません。
+          </div>
+        </details>
+
+        <details class="p70-faq-item">
+          <summary>申込をキャンセルすることはできますか</summary>
+          <div class="p70-faq-item__body">
+            購入確定前の仮申込であれば、取引ワークスペースからキャンセルいただけます。購入確定後（お支払いのご案内後）のキャンセルについては、出展者へ直接ご相談ください。
+          </div>
+        </details>
+
+        <details class="p70-faq-item">
+          <summary>送料はいくらかかりますか</summary>
+          <div class="p70-faq-item__body">
+            送料は出展者が作品ごとに設定するため、購入確定時のご案内でご確認いただけます。詳しくは<a href="./kotennavi-p70-4.html">送料・配送について</a>もご覧ください。
+          </div>
+        </details>
+
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<!-- フッター -->
+<footer class="ktn-footer" id="ktnFooter"></footer>
+</div><!-- /content-wrap -->
+</div><!-- /shell -->
+
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  KTN.init({ page: 'p70-3' });
+
+  var dbarView = document.getElementById('dbarView');
+  if (dbarView) {
+    dbarView.addEventListener('click', function() {
+      this.classList.add('dbtn--active');
+    });
+  }
+});
+</script>
+</body>
+</html>

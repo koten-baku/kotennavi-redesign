@@ -936,12 +936,28 @@ var P7_CONTEXTS = {
   }
 };
 
+/* 投稿者（authorHref）はp3(クリエイター)かp4(ギャラリー)のいずれか＝パンくずStep2以降はこの投稿者チェーンに従う（掲載先leadHrefとは別軸） */
+function p7BreadcrumbFor(d) {
+  var isGallery = d.authorHref === 'kotennavi-p4.html';
+  return isGallery
+    ? [['Top', '/'], ['ギャラリー', 'kotennavi-p10-3.html'], ['Gallery SOIL 渋谷', 'kotennavi-p4.html'], ['記事一覧', 'kotennavi-p4-2.html'], [d.title, null]]
+    : [['Top', '/'], ['クリエイター', 'kotennavi-p10-2.html'], ['田中 透', 'kotennavi-p3.html'], ['記事一覧', 'kotennavi-p3-2.html'], [d.title, null]];
+}
+
+/* 現在選択中の掲載先デモ文脈（common.jsの_renderHeaderがロール切替等の再描画時にも
+   このキーを参照してパンくずを再構築する＝window.P7_CURRENT_CONTEXT として公開） */
+var P7_CURRENT_CONTEXT = 'artwork';
+
 function switchP7Context(key, btn) {
   var d = P7_CONTEXTS[key];
   if (!d) return;
+  P7_CURRENT_CONTEXT = key;
   var group = btn.parentElement.querySelectorAll('button[onclick^="switchP7Context"]');
   for (var i = 0; i < group.length; i++) group[i].classList.remove('on');
   btn.classList.add('on');
+
+  var bcEl = document.getElementById('ktnBc');
+  if (bcEl) bcEl.innerHTML = renderBc('p7', p7BreadcrumbFor(d));
 
   var leadLabel = document.getElementById('p7LeadLabel');
   if (leadLabel) leadLabel.textContent = d.leadLabel;
@@ -5701,7 +5717,6 @@ KTN.pages['p5'] = function () {
 
     // ── 定数・状態 ────────────────────────────────────────────────────────────
     var TODAY         = new Date(2026, 3, 29);
-    var curRole       = 'user+';
     var rangeStart    = null;   // 日付選択開始（Date）
     var rangeEnd      = null;   // 日付選択終了（Date）
     var activeFilters = new Set(['all']);
@@ -5914,22 +5929,6 @@ KTN.pages['p5'] = function () {
       updateExhTitle();
       updateDateFilterBar();
     }
-
-    // ── 1. ロール制御 ─────────────────────────────────────────────────────────
-    (function () {
-      var isPriv = (curRole === 'user+' || curRole === 'admin');
-      if (!isPriv) {
-        var fb = document.getElementById('p5FilterBar');
-        if (fb) fb.style.display = 'none';
-        var sl = document.getElementById('p5SideLinks');
-        if (sl) sl.style.display = 'none';
-        var eb = document.querySelector('.p5-head__edit-btn');
-        if (eb) eb.style.display = 'none';
-        document.querySelectorAll('.p5-exh-card__btn-interest, .p5-exh-card__btn-checkin').forEach(function (b) {
-          b.style.display = 'none';
-        });
-      }
-    }());
 
     // ── 2. 残日数の動的生成 ──────────────────────────────────────────────────
     (function () {
@@ -6840,17 +6839,32 @@ KTN.pages['p3-12'] = function () {
     observer.observe(hero);
   }
 
-  // 3. 期間セレクター（デモ：active切替のみ・データは静的）
+  // 3. 期間セレクター：折れ線チャートを実データ生成で再描画
   var periodBox = document.getElementById('p312Period');
   if (periodBox) {
+    KTN.renderTrend('p312Trend', '30', 296);
     periodBox.querySelectorAll('.ins-period__btn').forEach(function (btn) {
       btn.addEventListener('click', function () {
         periodBox.querySelectorAll('.ins-period__btn').forEach(function (b) { b.classList.remove('is-active'); });
         btn.classList.add('is-active');
-        if (typeof showToast === 'function') showToast('期間を変更しました（デモ）');
+        KTN.renderTrend('p312Trend', btn.dataset.period, 296);
       });
     });
   }
+
+  // 4. LIAISON+ファネル：未申請アカウントは実績データの代わりに案内文言を表示
+  function syncFunnel() {
+    var applied = typeof ktnLPApplied === 'function' && ktnLPApplied();
+    var funnel = document.getElementById('p312Funnel');
+    var note = document.getElementById('p312FunnelNote');
+    var notice = document.getElementById('p312FunnelNotice');
+    if (funnel) funnel.hidden = !applied;
+    if (note) note.hidden = !applied;
+    if (notice) notice.hidden = applied;
+  }
+  syncFunnel();
+  var _prevRenderP312 = window.ktnRender;
+  window.ktnRender = function () { if (typeof _prevRenderP312 === 'function') _prevRenderP312(); syncFunnel(); };
 
 };
 
@@ -6861,14 +6875,29 @@ KTN.pages['p4-12'] = function () {
 
   var periodBox = document.getElementById('p412Period');
   if (periodBox) {
+    KTN.renderTrend('p412Trend', '30', 247);
     periodBox.querySelectorAll('.ins-period__btn').forEach(function (btn) {
       btn.addEventListener('click', function () {
         periodBox.querySelectorAll('.ins-period__btn').forEach(function (b) { b.classList.remove('is-active'); });
         btn.classList.add('is-active');
-        if (typeof showToast === 'function') showToast('期間を変更しました（デモ）');
+        KTN.renderTrend('p412Trend', btn.dataset.period, 247);
       });
     });
   }
+
+  // LIAISON+ファネル：未申請アカウントは実績データの代わりに案内文言を表示
+  function syncFunnel() {
+    var applied = typeof ktnLPApplied === 'function' && ktnLPApplied();
+    var funnel = document.getElementById('p412Funnel');
+    var note = document.getElementById('p412FunnelNote');
+    var notice = document.getElementById('p412FunnelNotice');
+    if (funnel) funnel.hidden = !applied;
+    if (note) note.hidden = !applied;
+    if (notice) notice.hidden = applied;
+  }
+  syncFunnel();
+  var _prevRenderP412 = window.ktnRender;
+  window.ktnRender = function () { if (typeof _prevRenderP412 === 'function') _prevRenderP412(); syncFunnel(); };
 
 };
 
@@ -7079,8 +7108,6 @@ KTN.pages['p3-15'] = function () {
       });
     }
   })();
-
-  window.ktnRender = function () {};
 };
 
 /* ════════════════════════════════════════════════════
@@ -7473,8 +7500,6 @@ KTN.pages['p3-14'] = function () {
     render();
     if (KTN.toast) KTN.toast(wasDraft ? '下書きを破棄しました（デモ）' : '作品を削除しました（デモ）');
   });
-
-  window.ktnRender = function () {};
 };
 
 /* ════════════════════════════════════════════════════
@@ -7969,8 +7994,6 @@ KTN.pages['p4-14'] = function () {
       renderPickerList('');
     }
   }
-
-  window.ktnRender = function () {};
 };
 
 /* ════════════════════════════════════════════════════
@@ -8179,8 +8202,6 @@ KTN.pages['p4-15'] = function () {
       });
     }
   })();
-
-  window.ktnRender = function () {};
 };
 
 /* ════════════════════════════════════════════════════
@@ -8213,8 +8234,6 @@ KTN.pages['p3-16'] = function () {
   });
 
   _initTxnCommentAttach();
-
-  window.ktnRender = function () {};
 };
 
 /* ════════════════════════════════════════════════════
@@ -8243,8 +8262,6 @@ KTN.pages['p4-16'] = function () {
   });
 
   _initTxnCommentAttach();
-
-  window.ktnRender = function () {};
 };
 
 /* 非人系（コンテンツ）strip のオーナー表示をロール別に populate する共通ヘルパー。
@@ -8413,30 +8430,54 @@ KTN.pages['p6-12'] = function () {
 
   var periodBox = document.getElementById('p612Period');
   if (periodBox) {
+    KTN.renderTrend('p612Trend', '30', 61);
     periodBox.querySelectorAll('.ins-period__btn').forEach(function (btn) {
       btn.addEventListener('click', function () {
         periodBox.querySelectorAll('.ins-period__btn').forEach(function (b) { b.classList.remove('is-active'); });
         btn.classList.add('is-active');
-        if (typeof showToast === 'function') showToast('期間を変更しました（デモ）');
+        KTN.renderTrend('p612Trend', btn.dataset.period, 61);
       });
     });
   }
 
+  // LIAISON+ファネル：この作品がLIAISON+で販売中でない場合は実績データの代わりに案内文言を表示
+  function syncFunnel() {
+    var isPlus = !!(window.KTN && KTN.exh && KTN.exh.liaison === 'plus');
+    var funnel = document.getElementById('p612Funnel');
+    var note = document.getElementById('p612FunnelNote');
+    var notice = document.getElementById('p612FunnelNotice');
+    if (funnel) funnel.hidden = !isPlus;
+    if (note) note.hidden = !isPlus;
+    if (notice) notice.hidden = isPlus;
+  }
+  syncFunnel();
+
   var _prevRender = window.ktnRender;
-  window.ktnRender = function () { if (typeof _prevRender === 'function') _prevRender(); syncMgmtBar(); };
+  window.ktnRender = function () { if (typeof _prevRender === 'function') _prevRender(); syncMgmtBar(); syncFunnel(); };
 };
 
 /* ════════════════════════════════════════════════════
-   P7-11  記事 新規投稿・編集・クローン
+   P7-11  記事 新規投稿・編集
 ════════════════════════════════════════════════════ */
 KTN.pages['p7-11'] = function () {
   function syncMgmtBar() {
     const r = window.ktnState && window.ktnState.role || 'creator';
+    const isGallery = r === 'gallery';
     document.body.classList.remove('p3-page', 'p4-page', 'p5-page');
-    if (r === 'gallery')      document.body.classList.add('p4-page');
-    else                      document.body.classList.add('p3-page');
-    KTN.syncMgmtOwner('p711Owner', r === 'gallery' ? 'gallery' : 'creator');
+    if (isGallery)             document.body.classList.add('p4-page');
+    else                       document.body.classList.add('p3-page');
+    KTN.syncMgmtOwner('p711Owner', isGallery ? 'gallery' : 'creator');
     if (typeof window.p711RoleSync === 'function') window.p711RoleSync();
+
+    /* パンくずStep2/3（オーナー）もロール切替（＝掲載先デモ）に連動させる。
+       ktnRenderのラップで_prevRender（common.jsの既定描画）の後に呼ばれるため上書きでよい。 */
+    const bcEl = document.getElementById('ktnBc');
+    if (bcEl && typeof renderBc === 'function') {
+      const bc = isGallery
+        ? [['Top', '/'], ['ギャラリー', 'kotennavi-p10-3.html'], ['Gallery SOIL 渋谷', 'kotennavi-p4.html'], ['編集', null]]
+        : [['Top', '/'], ['クリエイター', 'kotennavi-p10-2.html'], ['田中 透', 'kotennavi-p3.html'], ['編集', null]];
+      bcEl.innerHTML = renderBc('p7-11', bc);
+    }
   }
   syncMgmtBar();
   var _prevRender = window.ktnRender;
@@ -8486,7 +8527,7 @@ KTN.pages['p3-19'] = function () {
     { id:'t6', title:'よくいただく質問と、その周辺のこと', type:'f',
       dest:'standalone', destLabel:'クリエイターページ', destName:'', destHref:'',
       reg:'2024.9.10', upd:'2024.9.10', rs:20240910, draft:false, bg:'linear-gradient(155deg,#d0e8f0,#7ab4cc)' },
-    { id:'t7', title:'《かさかさ》ができるまで（仮）', type:'c',
+    { id:'t7', title:'《かさかさ》ができるまで', type:'c',
       dest:'artwork', destLabel:'作品', destName:'《かさかさ》', destHref:'kotennavi-p6.html',
       reg:'2026.3.12', upd:'2026.3.12', rs:20260312, draft:true, bg:'linear-gradient(155deg,#e0d4bc,#b8a884)' },
   ];
@@ -8549,8 +8590,7 @@ KTN.pages['p3-19'] = function () {
         '<button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline p319-item__del">' + (draft ? '下書きを破棄' : '削除') + '</button>' +
         (draft
           ? '<a class="ktn-action-btn" href="' + p711Link('edit', a.id) + '">編集を再開 →</a>'
-          : '<a class="ktn-action-btn" href="' + p711Link('clone', a.id) + '">クローン →</a>' +
-            '<a class="ktn-action-btn" href="' + p711Link('edit', a.id) + '">編集 →</a>') +
+          : '<a class="ktn-action-btn" href="' + p711Link('edit', a.id) + '">編集 →</a>') +
       '</div>';
     return li;
   }
@@ -8661,8 +8701,6 @@ KTN.pages['p3-19'] = function () {
     render();
     if (KTN.toast) KTN.toast(wasDraft ? '下書きを破棄しました（デモ）' : '記事を削除しました（デモ）');
   });
-
-  window.ktnRender = function () {};
 };
 
 /* ════════════════════════════════════════════════════
@@ -9453,10 +9491,6 @@ KTN.pages['p90-2-1'] = function () {
   var grantMailBody      = document.getElementById('p902GrantMailBody');
   var grantMailCancelBtn = document.getElementById('p902GrantMailCancelBtn');
   var grantMailSendBtn   = document.getElementById('p902GrantMailSendBtn');
-
-  [inquiryFromEl, cancelFromEl, grantFromEl].forEach(function (sel) {
-    if (sel) sel.innerHTML = KTN.mailFromOptionsHtml();
-  });
 
   /* ── 操作パネルの相互排他（新規作成／既存リンクは同時に1つだけ開く） ── */
   function resetFlowPanels() {
@@ -10500,10 +10534,6 @@ KTN.pages['p90-11-1'] = function () {
   var inviteMailCancelBtn = document.getElementById('p9011InviteMailCancelBtn');
   var inviteMailSendBtn   = document.getElementById('p9011InviteMailSendBtn');
 
-  [inquiryFromEl, cancelFromEl, inviteFromEl].forEach(function (sel) {
-    if (sel) sel.innerHTML = KTN.mailFromOptionsHtml();
-  });
-
   if (!current) {
     if (titleEl) titleEl.textContent = '申込が見つかりません';
     if (metaEl) metaEl.textContent = '';
@@ -10754,7 +10784,7 @@ KTN.pages['p90-11-1'] = function () {
 ════════════════════════════════════════════════════ */
 KTN.pages['p90-9'] = function () {
 
-  var SCREEN_LABEL = { 'p90-2': 'クリエイター/ギャラリー機能申込管理', 'p90-11': 'リエゾンプラス機能申込管理' };
+  var SCREEN_LABEL = { 'p90-2': 'クリエイター/ギャラリー機能申込管理', 'p90-11': 'リエゾンプラス機能申込管理', 'p2-sns': '展覧会掲載依頼' };
   var PATTERN_LABEL = { normal: '正常系', abnormal: '非正常系' };
   var PATTERN_CLS   = { normal: 'cb-normal', abnormal: 'cb-abnormal' };
 
@@ -10771,6 +10801,9 @@ KTN.pages['p90-9'] = function () {
       { pattern: 'normal',   prefix: null,       label: '正常系（本人確認OKのご案内）' },
       { pattern: 'abnormal', prefix: 'confirm-', label: '非正常系・確認メール' },
       { pattern: 'abnormal', prefix: 'cancel-',  label: '非正常系・取消のご連絡' }
+    ],
+    'p2-sns': [
+      { pattern: 'normal',   prefix: null,       label: '正常系（掲載お知らせ）' }
     ]
   };
   function findCategory(t) {
@@ -10811,6 +10844,12 @@ KTN.pages['p90-9'] = function () {
     '{{userName}} 様\n\nご連絡いただきありがとうございました。\n' +
     'いただいたご返信内容を確認し、今回の{{roleName}}機能のお申込み（申込NID：{{applyId}}）は取消とさせていただきました。\n\n' +
     '改めてお申込みをご希望の場合は、お手数ですが再度お申込みフォームよりお手続きください。\n\n{{commonFooter}}';
+  var P2SNS_LISTING_BODY =
+    'いつもお世話になっております。\n' +
+    '****************************\n展覧会情報掲載のお知らせ\n****************************\n' +
+    '展覧会情報をご連絡頂きありがとうございます。\n個展なびに以下の内容で掲載いたしました。\n\n' +
+    '　展覧会名：{{pageName}}\n　{{pageUrl}}\n\n' +
+    '内容に相違がございましたら、お手数ですが下記までご連絡ください。\n　{{supportUrl}}\n\n{{commonFooter}}';
 
   /* ── デモデータ（P90-2側のMAIL_TEMPLATESと同内容だが、ページ間の実データ連携がないため個別配列として保持） ── */
   var TEMPLATES = [
@@ -10909,6 +10948,9 @@ KTN.pages['p90-9'] = function () {
     { id: 'mt-p9011-11', screenId: 'p90-11', pattern: 'abnormal', variantKey: 'cancel-other', from: 'liaison@koten-navi.com',
       name: 'その他', subject: '【個展なび】LIAISON+機能のお申込みの取消について', body: CANCEL_BODY_STD,
       status: 'active', usageNote: '上記に当てはまらない理由で取消を確定した時に送る（P90-11-1・送信は任意）。', updatedAt: '2026.8.11' },
+    { id: 'mt-p2sns-1', screenId: 'p2-sns', pattern: 'normal', variantKey: 'listing-notice', from: 'info@koten-navi.com',
+      name: '展覧会情報掲載のお知らせ', subject: '【個展なび】展覧会情報掲載のお知らせ', body: P2SNS_LISTING_BODY,
+      status: 'active', usageNote: '出展者から展覧会情報の登録連絡を受け、掲載完了を返信する時に送る（P2「SNSテキスト生成」から移設・旧「新着展覧会表示」ツール）。', updatedAt: '2026.8.21' },
   ];
 
   /* ── 自動送信メール（可視化＋文面編集）── データは docs/email-templates.md の
@@ -11609,8 +11651,6 @@ KTN.pages['p3-13'] = function () {
     ckSortSel.addEventListener('change', renderCkReset);
     renderCk();
   }
-
-  window.ktnRender = function () {};
 };
 
 /* ════════════════════════════════════════════════════
@@ -11825,8 +11865,6 @@ KTN.pages['p4-13'] = function () {
     ckSortSel.addEventListener('change', renderCkReset);
     renderCk();
   }
-
-  window.ktnRender = function () {};
 };
 
 /* ════════════════════════════════════════════════════
@@ -12155,8 +12193,6 @@ KTN.pages['p3-18'] = function () {
   }
   if (dupCancel) dupCancel.addEventListener('click', closeDupModal);
   if (dupBg)     dupBg.addEventListener('click', closeDupModal);
-
-  window.ktnRender = function () {};
 };
 
 /* ════════════════════════════════════════════════════
@@ -12466,8 +12502,6 @@ KTN.pages['p4-18'] = function () {
   }
   if (dupCancel) dupCancel.addEventListener('click', closeDupModal);
   if (dupBg)     dupBg.addEventListener('click', closeDupModal);
-
-  window.ktnRender = function () {};
 };
 
 /* ════════════════════════════════════════════════════
@@ -12494,7 +12528,7 @@ KTN.pages['p2-13'] = function () {
       reg:'2026.1.25', upd:'2026.2.1', rs:20260125, draft:false, bg:'linear-gradient(155deg,#f0d0d0,#c88080)' },
     { id:'e1', title:'会場インタビュー：来場者に聞く「オノマトペ」の読み方', type:'b',
       reg:'2026.2.20', upd:'2026.2.22', rs:20260220, draft:false, bg:'linear-gradient(155deg,#d8c8e8,#a888cc)' },
-    { id:'e2', title:'会期終了レポート（執筆中）', type:'f',
+    { id:'e2', title:'会期終了レポート', type:'f',
       reg:'2026.3.4', upd:'2026.3.4', rs:20260304, draft:true, bg:'linear-gradient(155deg,#d0e8f0,#7ab4cc)' },
   ];
 
@@ -12559,8 +12593,7 @@ KTN.pages['p2-13'] = function () {
         '<button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline p319-item__del">' + (draft ? '下書きを破棄' : '削除') + '</button>' +
         (draft
           ? '<a class="ktn-action-btn" href="' + p711Link('edit', a.id) + '">編集を再開 →</a>'
-          : '<a class="ktn-action-btn" href="' + p711Link('clone', a.id) + '">クローン →</a>' +
-            '<a class="ktn-action-btn" href="' + p711Link('edit', a.id) + '">編集 →</a>') +
+          : '<a class="ktn-action-btn" href="' + p711Link('edit', a.id) + '">編集 →</a>') +
       '</div>';
     return li;
   }
@@ -12665,8 +12698,6 @@ KTN.pages['p2-13'] = function () {
     render();
     if (KTN.toast) KTN.toast(wasDraft ? '下書きを破棄しました（デモ）' : '記事を削除しました（デモ）');
   });
-
-  window.ktnRender = function () {};
 };
 
 /* ════════════════════════════════════════════════════
@@ -12691,7 +12722,7 @@ KTN.pages['p6-15'] = function () {
       reg:'2026.3.15', upd:'2026.3.15', rs:20260315, draft:false, bg:'linear-gradient(155deg,#e0d4bc,#b8a884)' },
     { id:'f2', title:'《オノマトペの庭》原画展示に関するお知らせ', type:'d',
       reg:'2026.3.20', upd:'2026.3.20', rs:20260320, draft:false, bg:'linear-gradient(155deg,#f0e8d0,#d4b896)' },
-    { id:'f3', title:'《オノマトペの庭》その後（執筆中）', type:'c',
+    { id:'f3', title:'《オノマトペの庭》その後', type:'c',
       reg:'2026.3.25', upd:'2026.3.25', rs:20260325, draft:true, bg:'linear-gradient(155deg,#b8d8cc,#6a9e8a)' },
   ];
 
@@ -12756,8 +12787,7 @@ KTN.pages['p6-15'] = function () {
         '<button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline p319-item__del">' + (draft ? '下書きを破棄' : '削除') + '</button>' +
         (draft
           ? '<a class="ktn-action-btn" href="' + p711Link('edit', a.id) + '">編集を再開 →</a>'
-          : '<a class="ktn-action-btn" href="' + p711Link('clone', a.id) + '">クローン →</a>' +
-            '<a class="ktn-action-btn" href="' + p711Link('edit', a.id) + '">編集 →</a>') +
+          : '<a class="ktn-action-btn" href="' + p711Link('edit', a.id) + '">編集 →</a>') +
       '</div>';
     return li;
   }
@@ -12863,7 +12893,11 @@ KTN.pages['p6-15'] = function () {
     if (KTN.toast) KTN.toast(wasDraft ? '下書きを破棄しました（デモ）' : '記事を削除しました（デモ）');
   });
 
-  window.ktnRender = function () {};
+  /* ktnRenderを空関数で上書きすると、ヘッダーacts（getActions）がKTN.init初期表示のまま固まり、
+     デモバーでロールを切替えても「管理者」メニュー等が反映されないバグになるため、
+     既存のヘッダー再描画（KTN.initが設定した_renderHeader）を必ず呼び出す（2026-08-21修正）。 */
+  var _prevRender = window.ktnRender;
+  window.ktnRender = function () { if (typeof _prevRender === 'function') _prevRender(); };
 };
 
 /* ════════════════════════════════════════════════════
@@ -12873,14 +12907,143 @@ KTN.pages['p2-14'] = function () {
 
   var periodBox = document.getElementById('p214Period');
   if (periodBox) {
+    var P214_EXH_START = new Date(2026, 1, 18);
+    var P214_EXH_END = new Date(2026, 2, 5);
+    var breakdownBox = document.getElementById('p214DuringBreakdown');
+    var legendEl = document.getElementById('p214TrendLegend');
+    var fmtR = function (d) { return (d.getMonth() + 1) + '/' + d.getDate(); };
+    var buildKpiSegs = function (segs, res) {
+      return segs.filter(function (s) { return s.len > 0; }).map(function (s) {
+        var slice = res.vals.slice(s.from, s.from + s.len);
+        var sum = slice.reduce(function (a, b) { return a + b; }, 0);
+        var d1 = res.dates[s.from], d2 = res.dates[s.from + s.len - 1];
+        return '<div class="ins-kpi ins-kpi--sm"><p class="ins-kpi__label">' + s.label + '</p><p class="ins-kpi__val">' + sum + '<span class="unit">回</span></p><p class="ins-kpi__sub">' + fmtR(d1) + '〜' + fmtR(d2) + '</p></div>';
+      }).join('');
+    };
+    var renderPhase = function (phase) {
+      var res = KTN.renderExhTrend('p214Trend', phase, P214_EXH_START, P214_EXH_END, 99);
+      if (legendEl && res) {
+        if (phase === 'before') {
+          legendEl.textContent = '日別ページ閲覧数（会期前・開催14日前〜前日）';
+        } else if (phase === 'during') {
+          legendEl.textContent = '日別ページ閲覧数（会期中・' + fmtR(P214_EXH_START) + '〜' + fmtR(P214_EXH_END) + '・全' + res.dates.length + '日）';
+        } else if (phase === 'all') {
+          legendEl.textContent = '日別ページ閲覧数（全期間・' + fmtR(res.dates[0]) + '〜現在・会期前後を含む）';
+        } else {
+          legendEl.textContent = '日別ページ閲覧数（会期終了後・' + fmtR(res.dates[0]) + '〜現在）';
+        }
+      }
+      if (breakdownBox) {
+        if (res && res.segs && phase === 'all') {
+          breakdownBox.innerHTML = buildKpiSegs(res.segs, res);
+          breakdownBox.hidden = false;
+        } else {
+          breakdownBox.hidden = true;
+        }
+      }
+    };
+    renderPhase((window.KTN && KTN.exh && KTN.exh.phase) || 'during');
     periodBox.querySelectorAll('.ins-period__btn').forEach(function (btn) {
       btn.addEventListener('click', function () {
         periodBox.querySelectorAll('.ins-period__btn').forEach(function (b) { b.classList.remove('is-active'); });
         btn.classList.add('is-active');
-        if (typeof showToast === 'function') showToast('期間を変更しました（デモ）');
+        renderPhase(btn.dataset.phase);
       });
     });
   }
+
+  // 作品への関心：LIAISON+＝購入まで含む4段ファネル／LIAISON＝閲覧→興味あり！の2段／利用なし＝案内文言
+  function syncFunnel() {
+    var mode = (window.KTN && KTN.exh && KTN.exh.liaison) || 'none';
+    var phase = (window.KTN && KTN.exh && KTN.exh.phase) || 'during';
+    var locked = phase === 'after';
+    var funnel = document.getElementById('p214Funnel');
+    var note = document.getElementById('p214FunnelNote');
+    var lite = document.getElementById('p214FunnelLite');
+    var liteNote = document.getElementById('p214FunnelLiteNote');
+    var liteLockNote = document.getElementById('p214FunnelLiteLockNote');
+    var notice = document.getElementById('p214FunnelNotice');
+    var isPlus = mode === 'plus';
+    var isLiaison = mode === 'liaison';
+    if (funnel) funnel.hidden = !isPlus;
+    if (note) note.hidden = !isPlus;
+    if (lite) lite.hidden = !isLiaison;
+    // LIAISON+切替の申込導線は会期終了後は使えないため、案内文をロック済みメッセージに差し替える
+    if (liteNote) liteNote.hidden = !isLiaison || locked;
+    if (liteLockNote) liteLockNote.hidden = !(isLiaison && locked);
+    // 未投稿の案内は会期終了後は促さない（終了後に新規登録を勧めても意味が薄いため）
+    if (notice) notice.hidden = isPlus || isLiaison || locked;
+  }
+  syncFunnel();
+
+  // 記事・作品への関心 見出しカウンター＋記事未投稿の案内
+  function syncArticleResponse() {
+    var articles = (window.KTN && KTN.exh && KTN.exh.articles) || 'yes';
+    var mode = (window.KTN && KTN.exh && KTN.exh.liaison) || 'none';
+    var phase = (window.KTN && KTN.exh && KTN.exh.phase) || 'during';
+    var notOver = phase !== 'after';
+
+    var artVal = document.getElementById('p214ArticleInterestVal');
+    var artSub = document.getElementById('p214ArticleInterestSub');
+    var artNotice = document.getElementById('p214ArticleNotice');
+    var artTopList = document.getElementById('p214ArticleTopList');
+    if (articles === 'yes') {
+      if (artVal) artVal.innerHTML = '95<span class="unit">件</span>';
+      if (artSub) artSub.textContent = 'この展覧会に関する記事3本の「興味あり！」合計';
+      if (artNotice) artNotice.hidden = true;
+      if (artTopList) artTopList.hidden = false;
+    } else {
+      if (artVal) artVal.innerHTML = '0<span class="unit">件</span>';
+      if (artSub) artSub.textContent = 'この展覧会に関する記事はまだありません';
+      if (artNotice) artNotice.hidden = !notOver;
+      if (artTopList) artTopList.hidden = true;
+    }
+
+    var wVal = document.getElementById('p214ArtworkInterestVal');
+    var wSub = document.getElementById('p214ArtworkInterestSub');
+    if (wVal && wSub) {
+      if (mode === 'plus') {
+        wVal.innerHTML = '71<span class="unit">件</span>';
+        wSub.textContent = 'LIAISON+出品作品の「興味あり！」合計';
+      } else if (mode === 'liaison') {
+        wVal.innerHTML = '46<span class="unit">件</span>';
+        wSub.textContent = 'LIAISON出品作品の「興味あり！」合計';
+      } else {
+        wVal.innerHTML = '0<span class="unit">件</span>';
+        wSub.textContent = '作品はまだ登録されていません';
+      }
+    }
+    // LIAISON未利用（作品未登録）時は人気作品ランキングを表示しない
+    var artworkTopList = document.getElementById('p214ArtworkTopList');
+    if (artworkTopList) artworkTopList.hidden = mode === 'none';
+  }
+  syncArticleResponse();
+
+  // Section1「さらに活用したい場合は…」のQR/フライヤー作成導線。会期終了後は新規作成の意味が薄いためロック表示に切り替える
+  function syncGrowLinks() {
+    var phase = (window.KTN && KTN.exh && KTN.exh.phase) || 'during';
+    var locked = phase === 'after';
+    var note = document.getElementById('p214GrowNote');
+    var lockNote = document.getElementById('p214GrowLockNote');
+    if (note) note.hidden = locked;
+    if (lockNote) lockNote.hidden = !locked;
+  }
+  syncGrowLinks();
+
+  /* 公開日：会期開始2日後（序盤の閲覧数が伸び悩む理由の裏付けとして表示。デモ固定値） */
+  var P214_PUBLISH_DATE = '2026-02-20';
+  function syncPublishNote() {
+    var el = document.getElementById('p214PublishNote');
+    if (!el) return;
+    var arrived = !!(window.KTN && KTN.exh && KTN.exh.publishArrived);
+    el.textContent = arrived
+      ? '公開日：' + P214_PUBLISH_DATE + '（公開済み）'
+      : '公開日：' + P214_PUBLISH_DATE + '（未到達・現在は非公開）';
+  }
+  syncPublishNote();
+
+  var _prevRenderP214 = window.ktnRender;
+  window.ktnRender = function () { if (typeof _prevRenderP214 === 'function') _prevRenderP214(); syncFunnel(); syncArticleResponse(); syncPublishNote(); syncGrowLinks(); };
 
 };
 
@@ -12920,7 +13083,7 @@ KTN.pages['p4-19'] = function () {
     { id:'g-t6', title:'Gallery SOIL 渋谷 オーナーインタビュー：これまでとこれから', type:'b',
       dest:'standalone', destLabel:'ギャラリーページ', destName:'', destHref:'',
       reg:'2025.10.5', upd:'2025.10.10', rs:20251005, draft:false, bg:'linear-gradient(155deg,#d8c8e8,#a888cc)' },
-    { id:'g-t7', title:'佐藤みなと 新作について（執筆中）', type:'c',
+    { id:'g-t7', title:'佐藤みなと 新作について', type:'c',
       dest:'artwork', destLabel:'作品', destName:'佐藤みなと 新作', destHref:'kotennavi-p6.html',
       reg:'2026.3.18', upd:'2026.3.18', rs:20260318, draft:true, bg:'linear-gradient(155deg,#b8d8cc,#6a9e8a)' },
   ];
@@ -12983,8 +13146,7 @@ KTN.pages['p4-19'] = function () {
         '<button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline p319-item__del">' + (draft ? '下書きを破棄' : '削除') + '</button>' +
         (draft
           ? '<a class="ktn-action-btn" href="' + p711Link('edit', a.id) + '">編集を再開 →</a>'
-          : '<a class="ktn-action-btn" href="' + p711Link('clone', a.id) + '">クローン →</a>' +
-            '<a class="ktn-action-btn" href="' + p711Link('edit', a.id) + '">編集 →</a>') +
+          : '<a class="ktn-action-btn" href="' + p711Link('edit', a.id) + '">編集 →</a>') +
       '</div>';
     return li;
   }
@@ -13093,8 +13255,6 @@ KTN.pages['p4-19'] = function () {
     render();
     if (KTN.toast) KTN.toast(wasDraft ? '下書きを破棄しました（デモ）' : '記事を削除しました（デモ）');
   });
-
-  window.ktnRender = function () {};
 };
 
 /* ════════════════════════════════════════════════════
@@ -14598,6 +14758,12 @@ KTN.pages['p10-3'] = function () {
   window.ktnRender = function () {};
 };
 
+/* P10-4〜7＝特集ページ（P10/P10-1/P10-2/P10-3のプリセット着地ビューをSEO URLラッパーとして再利用・実体を持たない） */
+KTN.pages['p10-4'] = KTN.pages['p10'];
+KTN.pages['p10-5'] = KTN.pages['p10-1'];
+KTN.pages['p10-6'] = KTN.pages['p10-2'];
+KTN.pages['p10-7'] = KTN.pages['p10-3'];
+
 /* ════════════════════════════════════════════════════
    P1  個展なびトップ
    P1＝時間軸・パーソナルフィード＋入口（プレビュー棚＋P10送客）。
@@ -14826,4 +14992,57 @@ KTN.pages['p1'] = function () {
     if (typeof prevRender === 'function') prevRender();
     applyRole();
   };
+};
+
+/* ────────────────────────────────────────────────────
+   個展なびバッジ（P60-6/P60-7 よくある質問「個展なびバッジの設置」1項目内で使用）
+   ・生成ロジック（定数・HTML生成関数）は kotennavi-common.js の KTN_PSHARE_* / ktnPshareBadgeHtml
+   ・全パターンをグリッド表示し一覧比較しながら選べる方式（タブ切替は廃止・2026-08-17）
+   ・章立て（ktn-index/ktn-zone）は2026-08-18に廃止し通常のFAQ項目へ格納（関数名は据え置き）
+──────────────────────────────────────────────────── */
+function ktnEscapeHtml(str) {
+  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function ktnInitBadgeChapter(prefix, kind) {
+  var def = KTN_PSHARE_KINDS[kind];
+  var gridEl = document.getElementById(prefix + 'BadgeGrid');
+  if (!gridEl) return;
+
+  gridEl.innerHTML = KTN_PSHARE_PATTERNS.map(function (p) {
+    var previewCls = 'ktn-pshare-badge__preview' + (p.id === 'icon' ? ' ktn-pshare-badge__preview--compact' : '');
+    return '<div class="ktn-pshare-badge__card">'
+      + '<div class="ktn-pshare-badge__card-name">' + p.label + '</div>'
+      + '<div class="' + previewCls + '">' + ktnPshareBadgeHtml(p.id, def, KTN_PSHARE_IMG_REL) + '</div>'
+      + '<textarea class="ktn-pshare-badge__code" readonly rows="2">' + ktnEscapeHtml(ktnPshareBadgeHtml(p.id, def)) + '</textarea>'
+      + '<div class="ktn-pshare-badge__card-actions">'
+      + '<button type="button" class="ktn-op-btn" data-action="dl" data-pattern="' + p.id + '">画像をダウンロード</button>'
+      + '<button type="button" class="ktn-op-btn ktn-op-btn--primary" data-action="copy" data-pattern="' + p.id + '">コードをコピー</button>'
+      + '</div>'
+      + '</div>';
+  }).join('');
+
+  gridEl.querySelectorAll('[data-action="dl"]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var img = btn.closest('.ktn-pshare-badge__card').querySelector('img');
+      if (!img) return;
+      var a = document.createElement('a');
+      a.href = img.src;
+      a.download = 'kotennavi-badge-' + kind + '-' + btn.dataset.pattern + '.svg';
+      a.click();
+    });
+  });
+  gridEl.querySelectorAll('[data-action="copy"]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      ktnCopyText(ktnPshareBadgeHtml(btn.dataset.pattern, def), 'コードをコピーしました');
+    });
+  });
+}
+
+KTN.pages['p60-6'] = function () {
+  ktnInitBadgeChapter('p606', 'creator');
+};
+
+KTN.pages['p60-7'] = function () {
+  ktnInitBadgeChapter('p607', 'gallery');
 };

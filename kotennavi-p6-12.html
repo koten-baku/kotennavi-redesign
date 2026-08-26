@@ -132,9 +132,8 @@
             <div class="ins-target__thumb" style="background:linear-gradient(155deg,#b8d8cc,#6a9e8a)"></div>
             <div class="ins-target__body">
               <p class="ins-target__label">Target</p>
-              <p class="ins-target__name">作品ページ全体（オノマトペの庭）</p>
+              <p class="ins-target__name"><a href="kotennavi-p6.html">作品ページ全体（オノマトペの庭）</a></p>
             </div>
-            <a class="ins-target__link ktn-action-btn" href="kotennavi-p6.html">ページを見る →</a>
           </div>
           <div class="ins-period" id="p612Period">
             <span class="ins-period__label">Period</span>
@@ -193,21 +192,10 @@
             <h3 class="ktn-section__title">閲覧数の推移<span class="ktn-sec-en">Trend</span></h3>
           </div>
           <div class="ins-trend">
-            <div class="ins-bars" id="p612Bars">
-              <div class="ins-bars__col"><span class="ins-bars__val">14</span><span class="ins-bars__bar" style="height:23%"></span><span class="ins-bars__x">5/26</span></div>
-              <div class="ins-bars__col"><span class="ins-bars__val">19</span><span class="ins-bars__bar" style="height:31%"></span><span class="ins-bars__x">5/29</span></div>
-              <div class="ins-bars__col"><span class="ins-bars__val">17</span><span class="ins-bars__bar" style="height:28%"></span><span class="ins-bars__x">6/1</span></div>
-              <div class="ins-bars__col"><span class="ins-bars__val">26</span><span class="ins-bars__bar" style="height:43%"></span><span class="ins-bars__x">6/4</span></div>
-              <div class="ins-bars__col"><span class="ins-bars__val">38</span><span class="ins-bars__bar" style="height:63%"></span><span class="ins-bars__x">6/7</span></div>
-              <div class="ins-bars__col"><span class="ins-bars__val">61</span><span class="ins-bars__bar" style="height:100%"></span><span class="ins-bars__x">6/10</span></div>
-              <div class="ins-bars__col"><span class="ins-bars__val">49</span><span class="ins-bars__bar" style="height:80%"></span><span class="ins-bars__x">6/13</span></div>
-              <div class="ins-bars__col"><span class="ins-bars__val">33</span><span class="ins-bars__bar" style="height:54%"></span><span class="ins-bars__x">6/16</span></div>
-              <div class="ins-bars__col"><span class="ins-bars__val">27</span><span class="ins-bars__bar" style="height:44%"></span><span class="ins-bars__x">6/19</span></div>
-              <div class="ins-bars__col"><span class="ins-bars__val">21</span><span class="ins-bars__bar" style="height:34%"></span><span class="ins-bars__x">6/22</span></div>
-            </div>
+            <div class="ins-linechart" id="p612Trend"></div>
             <div class="ins-trend__foot">
               <span class="ins-trend__legend">日別ページ閲覧数</span>
-              <span class="ins-trend__legend" style="--page-accent:transparent">6/10「おとかたち」開催告知でピーク</span>
+              <span class="ins-trend__legend" id="p612TrendPeak" style="--page-accent:transparent"></span>
             </div>
           </div>
         </section>
@@ -241,7 +229,7 @@
           <div class="ktn-section__head">
             <h3 class="ktn-section__title">作品販売のうごき<span class="ktn-sec-en">LIAISON+ Funnel</span></h3>
           </div>
-          <div class="ins-funnel">
+          <div class="ins-funnel" id="p612Funnel">
             <div class="ins-funnel__row">
               <div class="ins-funnel__label"><span class="ins-funnel__stage">作品を見た</span><span class="ins-funnel__sub">作品ページ閲覧</span></div>
               <div class="ins-funnel__track"><div class="ins-funnel__bar" style="width:100%"><span class="ins-funnel__num">612</span></div></div>
@@ -263,7 +251,11 @@
               <span class="ins-funnel__rate">0.2%</span>
             </div>
           </div>
-          <p class="ins-note">「作品を見た人」から「購入につながった人」までの流れです。この作品がLIAISON+で販売中の期間が対象です。販売実績の詳細は<a href="kotennavi-p3-16.html">取引デスク</a>から確認できます。</p>
+          <p class="ins-note" id="p612FunnelNote">「作品を見た人」から「購入につながった人」までの流れです。この作品がLIAISON+で販売中の期間が対象です。販売実績の詳細は<a href="kotennavi-p3-16.html">取引デスク</a>から確認できます。</p>
+          <div class="ins-funnel-notice" id="p612FunnelNotice" hidden>
+            <svg class="ins-funnel-notice__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="6.5"/><path d="M8 5v3.5l2.2 2.2"/></svg>
+            <p class="ins-funnel-notice__text">この作品はLIAISON+で販売されていません。<a class="ktn-guide-link" href="kotennavi-p70-2.html">LIAISON+について →</a></p>
+          </div>
         </section>
 
       </div><!-- /.ktn-mgmt-wrap -->

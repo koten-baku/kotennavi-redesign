@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>作品画像撮影ガイド | 個展なび</title>
+  <meta name="description" content="リエゾン・リエゾンプラスに掲載する作品画像の撮影ガイド。撮影環境、構図、画像サイズ・形式の推奨設定、避けたい撮影方法をまとめています。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@1,400;1,600&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<body data-w="article" class="p70-page p70-9-page">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- デモバー -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ガイドページ</span>
+  <button class="dbtn dbtn--active" id="dbarView">閲覧</button>
+</div>
+
+<!-- ヘッダー -->
+<div class="shell">
+
+<aside class="ktn-sidebar" id="ktnSidebar">
+  <a href="kotennavi-p1.html" class="ktn-sidebar__logo" data-page="p1">
+    <img src="./images/kotennavi-logo5-1.svg" alt="個展なび">
+  </a>
+  <a href="kotennavi-p10.html" class="ktn-sidebar__item" data-page="p10">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <circle cx="11" cy="11" r="7.5"/>
+        <path d="M21 21l-4.5-4.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">検索</span>
+  </a>
+  <a href="kotennavi-p61.html" class="ktn-sidebar__item" id="ktnSidebarNotice" data-page="p61">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__dot" id="ktnNoticeDot" style="display:none"></span>
+    <span class="ktn-sidebar__label">お知らせ</span>
+  </a>
+  <a href="kotennavi-p60.html" class="ktn-sidebar__item" data-page="p60">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" stroke-linecap="round"/>
+        <path d="M12 16v-4M12 8h.01" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">ガイド</span>
+  </a>
+  <div class="ktn-sidebar__divider"></div>
+  <div id="ktnRoleNav" style="width:100%;display:flex;flex-direction:column;align-items:center"></div>
+  <div class="ktn-sidebar__footer">
+    <p class="ktn-sidebar__footer-label">Follow us</p>
+    <div class="ktn-sidebar__sns">
+      <a href="https://www.facebook.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="Facebook">
+        <svg viewBox="0 0 320 512" fill="currentColor"><path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/></svg>
+      </a>
+      <a href="https://x.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="X">
+        <svg viewBox="0 0 512 512" fill="currentColor"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg>
+      </a>
+    </div>
+  </div>
+</aside>
+
+<div class="content-wrap" id="contentWrap">
+<header class="ktn-header" id="ktnHeader">
+  <div class="ktn-header__inner">
+    <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+    <div class="ktn-hdr-actions" id="ktnActs"></div>
+  </div>
+</header>
+
+<!-- タイトルバンド -->
+<div class="p70-title-band">
+  <div class="p70-title-band__inner">
+    <div class="p70-head__sub">
+      <span class="p70-head__updated">2026年8月 更新</span>
+    </div>
+    <h1 class="p70-head__title">作品画像撮影ガイド</h1>
+    <p class="p70-head__en">Photographing your artwork</p>
+    <p class="p70-head__lead">個展なび・リエゾンに掲載する作品画像は、来場されない方が作品の魅力を知る唯一の手がかりです。特別な機材がなくても実践できる撮影のポイントをご紹介します。</p>
+  </div>
+</div>
+
+<main>
+  <div class="p70-wrap">
+
+    <!-- 目次 -->
+    <nav class="p70-toc" aria-label="目次">
+      <div class="p70-toc__title">目次 — Contents</div>
+      <ol class="p70-toc__list">
+        <li class="p70-toc__item"><span class="p70-toc__num">1</span><a class="p70-toc__link" href="#env">撮影環境</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">2</span><a class="p70-toc__link" href="#composition">構図・アングル</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">3</span><a class="p70-toc__link" href="#spec">画像サイズ・形式の推奨設定</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">4</span><a class="p70-toc__link" href="#avoid">避けたい撮影方法</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">5</span><a class="p70-toc__link" href="#faq">よくある質問</a></li>
+      </ol>
+    </nav>
+
+    <!-- 1. 撮影環境 -->
+    <section class="p70-section" id="env">
+      <div class="p70-section__head">
+        <span class="p70-section__num">1</span>
+        <h2 class="p70-section__title">撮影環境</h2>
+        <span class="p70-section__en">Setting</span>
+      </div>
+      <p class="p70-lead">最も色が正確に写るのは自然光（直射日光を避けた明るい日陰・窓辺の柔らかい光）です。会場での撮影が難しい場合は、白〜グレーの無地の壁・布を背景にすると作品が引き立ちます。</p>
+      <p class="p70-body">照明を使う場合は、色温度が偏らない昼白色〜昼光色（5000K前後）を選び、作品全体に均一に光が当たるようにします。片側からの強い光は影や色ムラの原因になるため、可能であれば左右2灯、または反射板で影をやわらげてください。</p>
+    </section>
+
+    <!-- 2. 構図・アングル -->
+    <section class="p70-section" id="composition">
+      <div class="p70-section__head">
+        <span class="p70-section__num">2</span>
+        <h2 class="p70-section__title">構図・アングル</h2>
+        <span class="p70-section__en">Composition</span>
+      </div>
+
+      <div class="p70-dl p70-dl--ja">
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">正対して撮影</dt>
+          <dd class="p70-dl__dd">平面作品はレンズを作品の中心に正対させ、台形に歪まないようにします</dd>
+        </div>
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">作品全体を収める</dt>
+          <dd class="p70-dl__dd">額装がある場合は額の縁までフレームに収め、周囲に少し余白を残します</dd>
+        </div>
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">ディテールカットも用意</dt>
+          <dd class="p70-dl__dd">全体像に加え、質感やサインなどが分かる部分アップを1〜2点用意すると購入検討の助けになります</dd>
+        </div>
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">立体作品は複数アングル</dt>
+          <dd class="p70-dl__dd">正面に加え、側面・背面など立体感が伝わるアングルを組み合わせます</dd>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. 画像サイズ・形式の推奨設定 -->
+    <section class="p70-section" id="spec">
+      <div class="p70-section__head">
+        <span class="p70-section__num">3</span>
+        <h2 class="p70-section__title">画像サイズ・形式の推奨設定</h2>
+        <span class="p70-section__en">Image specs</span>
+      </div>
+      <p class="p70-lead">アップロードした画像は自動的にサイトの表示サイズへ最適化されますが、元データは高精細なものをご用意いただくと、拡大表示時も美しく表示されます。</p>
+
+      <table class="p70-table">
+        <thead>
+          <tr><th>項目</th><th>推奨</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>形式</td><td>JPEG（sRGB）</td></tr>
+          <tr><td>長辺サイズ</td><td>2000px 以上</td></tr>
+          <tr><td>1点あたりのファイルサイズ</td><td>10MB 以下</td></tr>
+          <tr><td>アスペクト比</td><td>作品の実寸比に合わせる（トリミングしすぎない）</td></tr>
+        </tbody>
+      </table>
+      <span class="p70-table__note">対応形式・上限サイズは今後変更となる場合があります。アップロード画面の案内にあわせてご用意ください。</span>
+    </section>
+
+    <!-- 4. 避けたい撮影方法 -->
+    <section class="p70-section" id="avoid">
+      <div class="p70-section__head">
+        <span class="p70-section__num">4</span>
+        <h2 class="p70-section__title">避けたい撮影方法</h2>
+        <span class="p70-section__en">What to avoid</span>
+      </div>
+
+      <div class="p70-callout p70-callout--venue">
+        <div class="p70-callout__title">実物と印象が変わってしまう加工・撮影は避けてください</div>
+        <div class="p70-callout__body">
+          過度な彩度・明るさ補正やフィルター加工は、購入後に「掲載画像と実物の色味が違う」というトラブルの原因になります。色調整は実物に近づける範囲にとどめてください。フラッシュの直射、ガラス額装の反射や映り込み、斜めからの撮影による歪みも作品の印象を損なうため避けましょう。
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. よくある質問 -->
+    <section class="p70-section" id="faq">
+      <div class="p70-section__head">
+        <span class="p70-section__num">5</span>
+        <h2 class="p70-section__title">よくある質問</h2>
+        <span class="p70-section__en">FAQ</span>
+      </div>
+
+      <div class="p70-faq">
+
+        <details class="p70-faq-item">
+          <summary>スマートフォンのカメラでも大丈夫ですか</summary>
+          <div class="p70-faq-item__body">
+            問題ありません。近年のスマートフォンカメラは十分な解像度があります。三脚等で手ブレを防ぎ、自然光の下で正対して撮影すれば、専用機材がなくても良い作品画像になります。
+          </div>
+        </details>
+
+        <details class="p70-faq-item">
+          <summary>1作品につき何枚まで掲載できますか</summary>
+          <div class="p70-faq-item__body">
+            作品の登録・編集画面の案内枚数までアップロードいただけます。全体像1枚に加え、ディテールカットや別アングルをあわせて掲載することをおすすめします。
+          </div>
+        </details>
+
+        <details class="p70-faq-item">
+          <summary>会場の展示風景も撮影してよいですか</summary>
+          <div class="p70-faq-item__body">
+            会場の展示風景の撮影・掲載は歓迎ですが、事前に会場（ギャラリー）へご確認ください。会場への説明には<a href="./kotennavi-p70-8.html">ギャラリーへの説明ガイド</a>もあわせてご活用ください。
+          </div>
+        </details>
+
+        <details class="p70-faq-item">
+          <summary>掲載後に画像を差し替えることはできますか</summary>
+          <div class="p70-faq-item__body">
+            作品の編集画面からいつでも差し替え可能です。ただし、リエゾンプラスで申込・購入手続きが進行中の作品については、購入者との認識のズレを防ぐため、画像の大幅な変更は控えることをおすすめします。
+          </div>
+        </details>
+
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<!-- フッター -->
+<footer class="ktn-footer" id="ktnFooter"></footer>
+</div><!-- /content-wrap -->
+</div><!-- /shell -->
+
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  KTN.init({ page: 'p70-9' });
+
+  var dbarView = document.getElementById('dbarView');
+  if (dbarView) {
+    dbarView.addEventListener('click', function() {
+      this.classList.add('dbtn--active');
+    });
+  }
+});
+</script>
+</body>
+</html>

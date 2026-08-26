@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow">
+  <title>問合せ | オノマトペの庭 | 個展なび</title>
+  <meta name="description" content="作品「オノマトペの庭」についてのお問合わせフォームです。作家へ質問・ご相談を送信できます。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@1,400;1,600&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<body data-w="article" class="p70-page p60-page">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">送信者：</span>
+  <button class="dbtn on" id="dbarLogin" onclick="p613SetRole('login')">ログイン中</button>
+  <button class="dbtn" id="dbarGuest" onclick="p613SetRole('guest')">ゲスト（要ログイン）</button>
+</div>
+
+<div class="shell">
+<aside class="ktn-sidebar" id="ktnSidebar">
+  <a href="kotennavi-p1.html" class="ktn-sidebar__logo" data-page="p1">
+    <img src="./images/kotennavi-logo5-1.svg" alt="個展なび">
+  </a>
+  <a href="kotennavi-p10.html" class="ktn-sidebar__item" data-page="p10">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <circle cx="11" cy="11" r="7.5"/>
+        <path d="M21 21l-4.5-4.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">検索</span>
+  </a>
+  <a href="kotennavi-p61.html" class="ktn-sidebar__item" id="ktnSidebarNotice" data-page="p61">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__dot" id="ktnNoticeDot" style="display:none"></span>
+    <span class="ktn-sidebar__label">お知らせ</span>
+  </a>
+  <a href="kotennavi-p60.html" class="ktn-sidebar__item" data-page="p60">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" stroke-linecap="round"/>
+        <path d="M12 16v-4M12 8h.01" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">ガイド</span>
+  </a>
+  <div class="ktn-sidebar__divider"></div>
+  <div id="ktnRoleNav" style="width:100%;display:flex;flex-direction:column;align-items:center"></div>
+  <div class="ktn-sidebar__footer">
+    <p class="ktn-sidebar__footer-label">Follow us</p>
+    <div class="ktn-sidebar__sns">
+      <a href="https://www.facebook.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="Facebook">
+        <svg viewBox="0 0 320 512" fill="currentColor"><path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/></svg>
+      </a>
+      <a href="https://x.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="X">
+        <svg viewBox="0 0 512 512" fill="currentColor"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg>
+      </a>
+    </div>
+  </div>
+</aside>
+
+<div class="content-wrap" id="contentWrap">
+<header class="ktn-header" id="ktnHeader">
+  <div class="ktn-header__inner">
+    <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+    <div class="ktn-hdr-actions" id="ktnActs"></div>
+  </div>
+</header>
+
+<div class="p70-title-band">
+  <div class="p70-title-band__inner">
+    <div class="p70-head__sub"><span class="p70-head__updated">サポート</span></div>
+    <h1 class="p70-head__title">作品への問合せ</h1>
+    <p class="p70-head__en">Inquiry</p>
+    <p class="p70-head__lead">作品についてのご質問・ご相談を作家へ送信します。<br>スパム防止のため、送信にはログインが必要です。</p>
+  </div>
+</div>
+
+<main>
+  <div class="p70-wrap">
+
+    <div class="ktn-refbox">
+      <span class="ktn-refbox__label">問合せ対象の作品</span>
+      <p class="ktn-refbox__target"><a href="./kotennavi-p6.html" class="ktn-guide-link">オノマトペの庭</a></p>
+      <p class="ktn-refbox__note">作家 田中透 へのお問合わせとして送信されます</p>
+    </div>
+
+    <!-- 未ログイン時：フォームを隠しログイン誘導のみ表示 -->
+    <div id="p613GuestNotice" class="ktn-form-faqhint" hidden>
+      お問合わせの送信にはログインが必要です。<a class="ktn-guide-link" href="./kotennavi-p11.html">ログイン</a>／<a class="ktn-guide-link" href="./kotennavi-p11-1.html">新規登録</a>のうえ、もう一度お試しください。
+    </div>
+
+    <div class="p211-block" id="p613FormBlock">
+      <div class="p211-block__body">
+
+        <div class="p114-applicant" id="p613Account">
+          <div class="p114-applicant__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+          </div>
+          <div class="p114-applicant__body">
+            <span class="p114-applicant__label">送信者アカウント</span>
+            <span class="p114-applicant__name" id="p613AccountName">山田 花子 <small>1997sakura2022@gmail.com</small></span>
+          </div>
+        </div>
+
+        <div class="p211-field">
+          <label class="p211-label">お問合わせの種類<span class="ktn-req">必須</span></label>
+          <select class="p211-select" id="p613Reason">
+            <option value="">選択してください</option>
+            <option>作品について質問したい</option>
+            <option>購入・取引について相談したい</option>
+            <option>展示・貸出について相談したい</option>
+            <option>取材・掲載の依頼</option>
+            <option>その他</option>
+          </select>
+        </div>
+
+        <div class="p211-field" style="margin-top:12px">
+          <label class="p211-label">お問合わせ内容<span class="ktn-req">必須</span></label>
+          <textarea class="p211-textarea" id="p613Body" rows="7" placeholder="ご質問・ご相談内容をご記入ください。"></textarea>
+        </div>
+
+        <div class="ktn-form-error" id="p613SaveError" role="alert" hidden style="margin-top:16px">
+          <div class="ktn-form-error__head">
+            <svg class="ktn-form-error__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <span class="ktn-form-error__title">送信できませんでした</span>
+          </div>
+          <ul class="ktn-form-error__list" id="p613SaveErrorList"></ul>
+        </div>
+
+        <input type="hidden" id="p613Uid" name="uid" value="">
+
+        <div class="p114-submit-wrap" style="margin-top:8px">
+          <button class="ktn-op-btn ktn-op-btn--primary ktn-op-btn--lg" onclick="p613Submit()">送信する</button>
+          <p class="p114-submit-note">送信内容は作家に通知されます。返信の有無・時期は作家の判断によります。</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</main>
+<footer class="ktn-footer" id="ktnFooter"></footer>
+</div>
+</div>
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+var P613_DEMO = { name: '山田 花子', email: '1997sakura2022@gmail.com', uid: 'U-100482' };
+
+function p613SetRole(role) {
+  var login = (role === 'login');
+  document.getElementById('dbarLogin').classList.toggle('on', login);
+  document.getElementById('dbarGuest').classList.toggle('on', !login);
+  document.getElementById('p613GuestNotice').hidden = login;
+  document.getElementById('p613FormBlock').hidden = !login;
+  if (login) {
+    document.getElementById('p613AccountName').innerHTML = P613_DEMO.name + ' <small>' + P613_DEMO.email + '</small>';
+    document.getElementById('p613Uid').value = P613_DEMO.uid;
+  }
+  window.ktnState.role = login ? 'login' : 'guest';
+}
+
+function p613ValidateRequired() {
+  document.querySelectorAll('.p211-field.is-error').forEach(function (f) { f.classList.remove('is-error'); });
+  var errBox = document.getElementById('p613SaveError');
+  var errList = document.getElementById('p613SaveErrorList');
+  var missing = [];
+  document.querySelectorAll('#p613FormBlock .p211-label .ktn-req').forEach(function (mark) {
+    var field = mark.closest('.p211-field');
+    if (!field) return;
+    var inputs = field.querySelectorAll('input:not([type=file]), select, textarea');
+    var filled = inputs.length > 0 && Array.prototype.every.call(inputs, function (el) { return el.value.trim() !== ''; });
+    if (!filled) {
+      field.classList.add('is-error');
+      var label = mark.closest('.p211-label');
+      var name = '必須項目';
+      if (label) {
+        var clone = label.cloneNode(true);
+        var req = clone.querySelector('.ktn-req');
+        if (req) req.parentNode.removeChild(req);
+        name = clone.textContent.trim() || name;
+      }
+      missing.push({ name: name, field: field });
+    }
+  });
+  if (missing.length) {
+    errList.innerHTML = '';
+    var sum = document.createElement('li');
+    sum.className = 'ktn-form-error__item';
+    sum.textContent = '必須項目に未入力が' + missing.length + '件あります。入力してから送信してください。';
+    errList.appendChild(sum);
+    missing.forEach(function (m) {
+      var li = document.createElement('li');
+      li.className = 'ktn-form-error__item';
+      li.appendChild(document.createTextNode('「' + m.name + '」が未入力です。 '));
+      var jump = document.createElement('button');
+      jump.type = 'button';
+      jump.className = 'ktn-form-error__jump';
+      jump.textContent = '該当箇所へ →';
+      jump.addEventListener('click', function () { m.field.scrollIntoView({ behavior: 'smooth', block: 'center' }); });
+      li.appendChild(jump);
+      errList.appendChild(li);
+    });
+    errBox.hidden = false;
+    errBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return false;
+  }
+  errBox.hidden = true;
+  return true;
+}
+
+function p613Submit() {
+  if (!p613ValidateRequired()) return;
+  KTN.submitDone({
+    title: 'お問合わせを送信しました',
+    message: '作家へ通知されました。<br>ご返信までお待ちください。',
+    action: { label: '作品ページへ戻る', href: './kotennavi-p6.html' }
+  });
+}
+
+KTN.init({ page: 'p6-13', role: 'login' });
+p613SetRole('login');
+</script>
+</body>
+</html>

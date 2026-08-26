@@ -22,7 +22,6 @@
   <span class="dbar-sep">モード：</span>
   <button class="dbtn" id="dbarNew" onclick="setDemoMode('new')">新規</button>
   <button class="dbtn on" id="dbarEdit" onclick="setDemoMode('edit')">編集</button>
-  <button class="dbtn" id="dbarClone" onclick="setDemoMode('clone')">クローン</button>
   <span class="dbar-sep">作成元ページ（デモ用）：</span>
   <button class="dbtn on" id="dbarEntryArtwork" onclick="p711SetEntry('artwork')">作品</button>
   <button class="dbtn" id="dbarEntryExhibition" onclick="p711SetEntry('exhibition')">展覧会</button>
@@ -105,26 +104,25 @@
   <main class="ktn-main" id="ktnMain">
     <div class="ktn-content">
 
-      <!-- クローン元バナー（クローンモードのみ表示） -->
-      <div class="p211-mode-banner" id="p711CloneBanner" hidden>
-        <span class="p211-mode-banner__icon">📋</span>
-        <div class="p211-mode-banner__text">
-          <strong id="p711CloneOrigTitle">「オノマトペの庭 制作について」</strong>のクローンです。内容を確認・修正の上、公開してください。<strong>タイトルは必ず更新</strong>してください（他の項目は元記事の内容を引き継いでいます）。
-        </div>
-      </div>
-
-      <!-- 記事 文脈ストリップ（編集・クローンモードのみ表示・identity strip content variant） -->
+      <!-- 記事 文脈ストリップ（編集＝記事identity／新規＝掲載先+投稿者の帯） -->
       <div class="ktn-mgmt-context" id="p711ArticleBanner">
-        <a class="ktn-mgmt-context__media ktn-mgmt-context__media--content" href="kotennavi-p7.html" style="background:linear-gradient(155deg,#c8ddc9,#4f8f5c)"></a>
+        <!-- 編集：記事サムネ／新規：掲載先サムネ -->
+        <a class="ktn-mgmt-context__media ktn-mgmt-context__media--content ktn-mgmt-context__edit-only" href="kotennavi-p7.html" style="background:linear-gradient(155deg,#c8ddc9,#4f8f5c)"></a>
+        <a class="ktn-mgmt-context__media ktn-mgmt-context__media--content ktn-mgmt-context__new-only" id="p711NewMedia" href="kotennavi-p6.html" style="background:linear-gradient(155deg,#c8ddc9,#4f8f5c)"></a>
         <div class="ktn-mgmt-context__body">
-          <div class="ktn-mgmt-context__badges">
+          <div class="ktn-mgmt-context__badges ktn-mgmt-context__edit-only">
             <span class="cb cb-content cb-article">article</span>
             <span class="at at-c" id="p711TypeBadge">制作日記</span>
             <span class="ktn-mgmt-context__id" id="p711ArticleId">AT-C42-0031</span>
           </div>
-          <div class="ktn-mgmt-context__name"><a href="kotennavi-p7.html" id="p711ContextTitle">オノマトペの庭 制作について</a></div>
-          <div class="ktn-mgmt-context__meta" id="p711ContextMeta">掲載先：作品《オノマトペの庭》</div>
-          <div class="ktn-mgmt-context__meta" id="p711ContextDates">作成日：2026年3月2日 ／ 最終更新：2026年3月5日</div>
+          <div class="ktn-mgmt-context__badges ktn-mgmt-context__new-only">
+            <span class="cb cb-content cb-artwork" id="p711NewLinkageBadge">作品</span>
+          </div>
+          <div class="ktn-mgmt-context__name ktn-mgmt-context__edit-only"><a href="kotennavi-p7.html" id="p711ContextTitle">オノマトペの庭 制作について</a></div>
+          <div class="ktn-mgmt-context__name ktn-mgmt-context__new-only"><a href="kotennavi-p6.html" id="p711NewLinkageTarget">《オノマトペの庭》</a></div>
+          <div class="ktn-mgmt-context__meta ktn-mgmt-context__edit-only" id="p711ContextMeta">掲載先：作品《オノマトペの庭》</div>
+          <div class="ktn-mgmt-context__meta ktn-mgmt-context__edit-only" id="p711ContextDates">作成日：2026年3月2日 ／ 最終更新：2026年3月5日</div>
+          <div class="ktn-mgmt-context__meta ktn-mgmt-context__new-only">この記事の掲載先です。保存するとここに公開されます</div>
           <div class="ktn-mgmt-context__owner">
             <span class="ktn-mgmt-context__owner-label">Owner</span>
             <span class="cb cb-person" id="p711OwnerBadge"></span>
@@ -132,7 +130,8 @@
           </div>
         </div>
         <div class="ktn-mgmt-context__actions">
-          <a class="ktn-mgmt-context__view" href="kotennavi-p7.html">記事ページを見る →</a>
+          <a class="ktn-mgmt-context__view ktn-mgmt-context__edit-only" href="kotennavi-p7.html">記事ページを見る →</a>
+          <a class="ktn-mgmt-context__view ktn-mgmt-context__new-only" id="p711NewView" href="kotennavi-p6.html">掲載先を見る →</a>
         </div>
       </div>
 
@@ -146,6 +145,23 @@
         <p class="ktn-mgmt-head__desc"><strong style="color:var(--ink)">タイトルと本文だけで投稿できます</strong>（入力の目安：約5分）。テキスト・画像・動画のブロックを自由に組み合わせて記事を作成できます。保存後もいつでも追記・編集できます。入力を中断するときは下の「一時保存（下書き）」で途中まで保存できます。</p>
       </div>
 
+      <!-- ─── 0. 掲載先（基本情報より上に固定表示。編集不可のコンテキスト情報。投稿者はヘッド帯のOwner行と重複するため本文には置かない） ─── -->
+      <div class="p211-block">
+        <div class="p211-block__body">
+
+          <!-- 掲載先（この記事の掲載先・固定表示。記事を作成したページによって自動的に決まり、ここでは変更できない） -->
+          <div class="p211-field">
+            <label class="p211-label">この記事の掲載先</label>
+            <div class="p711-linkage" id="p711Linkage">
+              <span class="cb cb-content cb-artwork" id="p711LinkageBadge">作品</span>
+              <span class="p711-linkage__target" id="p711LinkageTarget"><a href="kotennavi-p6.html">《オノマトペの庭》</a></span>
+            </div>
+            <p class="p211-help" id="p711LinkageNote">掲載先は、この記事を作成したページによって自動的に決まります。ここでは変更できません。</p>
+          </div>
+
+        </div>
+      </div>
+
       <!-- ─── 1. 基本情報 ─── -->
       <div class="p211-block">
         <div class="p211-block__head">
@@ -157,26 +173,6 @@
           <div class="p211-field">
             <label class="p211-label">タイトル<span class="ktn-req">必須</span></label>
             <input class="p211-input" type="text" id="p711Title" value="オノマトペの庭 制作について" placeholder="例：展覧会レポート：初日の様子">
-          </div>
-
-          <!-- 投稿者（常に本人固定・記事は creator/gallery 本人としてのみ投稿できる） -->
-          <div class="p211-field">
-            <label class="p211-label">投稿者</label>
-            <div class="p711-author p711-author--fixed" id="p711AuthorFixed">
-              <span class="cb cb-person cb-creator" id="p711AuthorBadge">creator</span>
-              <strong class="p711-author__name">田中 透</strong>
-              <span class="p711-author__note">あなたの記事として投稿されます</span>
-            </div>
-          </div>
-
-          <!-- 掲載先（この記事の掲載先・固定表示。記事を作成したページによって自動的に決まり、ここでは変更できない） -->
-          <div class="p211-field">
-            <label class="p211-label">この記事の掲載先</label>
-            <div class="p711-linkage" id="p711Linkage">
-              <span class="cb cb-content cb-artwork" id="p711LinkageBadge">作品</span>
-              <span class="p711-linkage__target" id="p711LinkageTarget"><a href="kotennavi-p6.html">《オノマトペの庭》</a></span>
-            </div>
-            <p class="p211-help" id="p711LinkageNote">掲載先は、この記事を作成したページによって自動的に決まります。ここでは変更できません。</p>
           </div>
 
           <!-- 記事種別 -->
@@ -428,13 +424,13 @@
 KTN.init({ page: 'p7-11', role: 'creator' });
 
 /* ── デモモード切り替え ── */
-var MODE_TITLES = { new: '新規記事を投稿', edit: '記事を編集', clone: '記事をクローンで作成' };
-var MODE_SUBMIT = { new: '保存する', edit: '保存する', clone: '保存する' };
+var MODE_TITLES = { new: '新規記事を投稿', edit: '記事を編集' };
+var MODE_SUBMIT = { new: '保存する', edit: '保存する' };
 var P711_MODE = 'edit';
 
 function setDemoMode(mode) {
   P711_MODE = mode;
-  ['new', 'edit', 'clone'].forEach(function (m) {
+  ['new', 'edit'].forEach(function (m) {
     var btn = document.getElementById('dbar' + m.charAt(0).toUpperCase() + m.slice(1));
     if (btn) btn.classList.toggle('on', m === mode);
   });
@@ -443,15 +439,9 @@ function setDemoMode(mode) {
   document.getElementById('p711SubmitBtn').textContent = MODE_SUBMIT[mode];
   if (typeof syncDraftMode === 'function') syncDraftMode();
 
-  var cloneBanner = document.getElementById('p711CloneBanner');
   var articleBanner = document.getElementById('p711ArticleBanner');
-  if (cloneBanner) cloneBanner.hidden = (mode !== 'clone');
-  /* identity strip は「元記事（編集中／クローン元）」の文脈表示。新規＝参照する既存記事がないため隠す。
-     クローン時は「複製元の記事」の情報として表示し、クローンバナーの補足として機能日付を明示する。 */
-  if (articleBanner) articleBanner.hidden = (mode === 'new');
-
-  var articleId = document.getElementById('p711ArticleId');
-  if (articleId) articleId.hidden = (mode === 'new');
+  /* identity strip は常時表示。編集＝記事identity／新規＝掲載先+投稿者の帯（.ktn-mgmt-context--new が中身を出し分け）。 */
+  if (articleBanner) articleBanner.classList.toggle('ktn-mgmt-context--new', mode === 'new');
 
   if (mode === 'new') clearForm();
   else if (typeof p711SetEntry === 'function') p711SetEntry(P711_CURRENT_ENTRY);
@@ -550,14 +540,14 @@ var P711_ENTRY = {
   },
   creator: {
     role: 'creator', label: 'クリエイターページ', standalone: true,
-    standaloneText: 'クリエイターページの記事（単独掲載）',
+    standaloneText: 'クリエイターページの記事（単独掲載）', href: 'kotennavi-p3.html',
     articleTitle: '田中透インタビュー：言語と絵画のあいだで',
     typeDefault: 'b', typeBadgeText: 'インタビュー',
     articleId: 'AT-B05-0012', created: '2025年11月15日', updated: '2025年11月20日'
   },
   gallery: {
     role: 'gallery', label: 'ギャラリーページ', standalone: true,
-    standaloneText: 'ギャラリーページの記事（単独掲載）',
+    standaloneText: 'ギャラリーページの記事（単独掲載）', href: 'kotennavi-p4.html',
     articleTitle: 'Gallery SOIL 渋谷 ノート：展示替えの舞台裏',
     typeDefault: 'c', typeBadgeText: 'ギャラリーノート',
     articleId: 'AT-C09-0027', created: '2026年3月9日', updated: '2026年3月12日'
@@ -585,8 +575,23 @@ function p711SetEntry(key) {
     if (target) target.innerHTML = '<a href="' + e.href + '">' + e.name + '</a>';
   }
 
-  /* identity strip・クローンバナーは「元記事（編集中／クローン元）の情報」を映すため、
-     新規モードでは触れない（新規は参照する既存記事が無い）。 */
+  /* 文脈ストリップ「新規」帯の掲載先表示（常時同期・全モード共通） */
+  var newMedia = document.getElementById('p711NewMedia');
+  if (newMedia) newMedia.href = e.href;
+  var newBadge = document.getElementById('p711NewLinkageBadge');
+  var newTarget = document.getElementById('p711NewLinkageTarget');
+  if (e.standalone) {
+    if (newBadge) { newBadge.className = 'cb cb-person ' + (e.role === 'gallery' ? 'cb-gallery' : 'cb-creator'); newBadge.textContent = e.role === 'gallery' ? 'gallery' : 'creator'; }
+    if (newTarget) newTarget.innerHTML = '<a href="' + e.href + '">' + e.label + '</a>';
+  } else {
+    if (newBadge) { newBadge.className = 'cb cb-content ' + e.badgeCls; newBadge.textContent = e.badgeText; }
+    if (newTarget) newTarget.innerHTML = '<a href="' + e.href + '">' + e.name + '</a>';
+  }
+  var newView = document.getElementById('p711NewView');
+  if (newView) newView.href = e.href;
+
+  /* identity strip の編集内容（記事タイトル・種別・作成日等）は編集モードのみ。
+     新規モードでは参照する既存記事が無いため触れない。 */
   if (P711_MODE !== 'new') {
     var typeBadge = document.getElementById('p711TypeBadge');
     if (typeBadge) { typeBadge.className = 'at at-' + e.typeDefault; typeBadge.textContent = e.typeBadgeText; }
@@ -598,8 +603,6 @@ function p711SetEntry(key) {
     if (meta) meta.textContent = e.standalone ? e.standaloneText : e.linkageText;
     var dates = document.getElementById('p711ContextDates');
     if (dates) dates.textContent = '作成日：' + e.created + ' ／ 最終更新：' + e.updated;
-    var cloneTitle = document.getElementById('p711CloneOrigTitle');
-    if (cloneTitle) cloneTitle.textContent = '「' + e.articleTitle + '」';
     var titleField = document.getElementById('p711Title');
     if (titleField) titleField.value = e.articleTitle;
   }
@@ -651,19 +654,10 @@ function p711SyncRoleFields(role) {
   });
 })();
 
-/* ── 投稿者ブロック（常に本人固定・記事は creator/gallery 本人としてのみ投稿できる） ── */
+/* ── ロール別項目の同期（記事は creator/gallery 本人としてのみ投稿できる） ── */
 window.p711RoleSync = function () {
   var r = (window.ktnState && window.ktnState.role) || 'creator';
   var isGallery = (r === 'gallery');
-  var fixed = document.getElementById('p711AuthorFixed');
-  if (fixed) {
-    var badge  = document.getElementById('p711AuthorBadge');
-    var nameEl = fixed.querySelector('.p711-author__name');
-    var noteEl = fixed.querySelector('.p711-author__note');
-    if (badge)  { badge.className = 'cb cb-person ' + (isGallery ? 'cb-gallery' : 'cb-creator'); badge.textContent = isGallery ? 'gallery' : 'creator'; }
-    if (nameEl) nameEl.textContent = isGallery ? 'Gallery SOIL 渋谷' : '田中 透';
-    if (noteEl) noteEl.textContent = isGallery ? 'ギャラリーの記事として投稿されます' : 'あなたの記事として投稿されます';
-  }
   p711SyncRoleFields(isGallery ? 'gallery' : 'creator');
 };
 
@@ -671,7 +665,7 @@ window.p711RoleSync = function () {
 (function applyEntryParams() {
   var params = new URLSearchParams(location.search);
   var m = params.get('mode');
-  if ((m === 'new' || m === 'edit' || m === 'clone') && typeof setDemoMode === 'function') {
+  if ((m === 'new' || m === 'edit') && typeof setDemoMode === 'function') {
     setDemoMode(m);
   }
 })();

@@ -16,27 +16,20 @@
 <!-- デモバー -->
 <div class="dbar" id="dbar">
   <span class="dbar-sep">ロール：</span>
-  <button class="dbtn" onclick="setR('guest',this)">ゲスト</button>
-  <button class="dbtn" onclick="setR('login',this)">ログイン</button>
   <button class="dbtn on" onclick="setR('user+creator',this)">creator本人</button>
+  <button class="dbtn" onclick="setR('user+gallery',this)">gallery本人</button>
   <button class="dbtn" onclick="setR('admin',this)">管理者</button>
   <span class="dbar-sep" style="margin-left:8px">会期：</span>
   <button class="dbtn dbtn-exh" data-exh-key="phase" onclick="ktnSetExh('phase','before',this)">会期前</button>
   <button class="dbtn dbtn-exh on" data-exh-key="phase" onclick="ktnSetExh('phase','during',this)">会期中</button>
   <button class="dbtn dbtn-exh" data-exh-key="phase" onclick="ktnSetExh('phase','after',this)">終了後</button>
-  <span class="dbar-sep" style="margin-left:8px">確認：</span>
-  <button class="dbtn dbtn-exh on" data-exh-key="confirmed" onclick="ktnSetExh('confirmed','true',this)">確認済</button>
-  <button class="dbtn dbtn-exh" data-exh-key="confirmed" onclick="ktnSetExh('confirmed','false',this)">確認前</button>
-  <span class="dbar-sep" style="margin-left:8px">公開日：</span>
-  <button class="dbtn dbtn-exh on" data-exh-key="publishArrived" onclick="ktnSetExh('publishArrived','true',this)">到達済</button>
-  <button class="dbtn dbtn-exh" data-exh-key="publishArrived" onclick="ktnSetExh('publishArrived','false',this)">未到達</button>
   <span class="dbar-sep" style="margin-left:8px">LIAISON：</span>
   <button class="dbtn dbtn-exh" data-exh-key="liaison" onclick="ktnSetExh('liaison','none',this)">利用なし</button>
   <button class="dbtn dbtn-exh" data-exh-key="liaison" onclick="ktnSetExh('liaison','liaison',this)">LIAISON</button>
   <button class="dbtn dbtn-exh on" data-exh-key="liaison" onclick="ktnSetExh('liaison','plus',this)">LIAISON+</button>
-  <span class="dbar-sep" style="margin-left:8px">販売期間：</span>
-  <button class="dbtn dbtn-exh on" data-exh-key="salesOver" onclick="ktnSetExh('salesOver','false',this)">終了前</button>
-  <button class="dbtn dbtn-exh" data-exh-key="salesOver" onclick="ktnSetExh('salesOver','true',this)">終了済</button>
+  <span class="dbar-sep" style="margin-left:8px">記事：</span>
+  <button class="dbtn dbtn-exh on" data-exh-key="articles" onclick="ktnSetExh('articles','yes',this)">投稿あり</button>
+  <button class="dbtn dbtn-exh" data-exh-key="articles" onclick="ktnSetExh('articles','no',this)">投稿なし</button>
 </div>
 
 <div class="shell">
@@ -140,125 +133,278 @@
         <div class="ktn-mgmt-head">
           <h2 class="ktn-mgmt-head__title">インサイト</h2>
           <p class="ktn-mgmt-head__en">INSIGHTS</p>
-          <p class="ktn-mgmt-head__desc">この展覧会がどれだけ見られ、どんな反応を集めているかを確認できます。告知の効果を振り返り、会期中の展開や次の展覧会づくりに役立てましょう。</p>
+          <p class="ktn-mgmt-head__desc">この展覧会がどれだけ見られ、どんな関心を集めているかを確認できます。</p>
         </div>
 
-        <!-- ツールバー（集計対象＋期間） -->
+        <!-- ツールバー（集計対象） -->
         <div class="ins-toolbar">
           <div class="ins-target">
             <div class="ins-target__thumb" style="background:linear-gradient(135deg,#b8d8cc,#6a9e8a)"></div>
             <div class="ins-target__body">
               <p class="ins-target__label">Target</p>
-              <p class="ins-target__name">展覧会ページ全体（あなたが知らないオノマトペ）</p>
+              <p class="ins-target__name"><a href="kotennavi-p2.html">展覧会ページ全体（あなたが知らないオノマトペ）</a></p>
+              <p class="ins-target__meta" id="p214PublishNote"></p>
             </div>
-            <a class="ins-target__link ktn-action-btn" href="kotennavi-p2.html">ページを見る →</a>
-          </div>
-          <div class="ins-period" id="p214Period">
-            <span class="ins-period__label">Period</span>
-            <button class="ins-period__btn" type="button" data-period="7">過去7日</button>
-            <button class="ins-period__btn is-active" type="button" data-period="30">過去30日</button>
-            <button class="ins-period__btn" type="button" data-period="90">過去90日</button>
-            <button class="ins-period__btn" type="button" data-period="all">全期間</button>
           </div>
         </div>
 
-        <!-- 1. KPIサマリー -->
+        <!-- 1. KPIサマリー（全期間の実績。PERIODによる絞り込みはしない） -->
         <section class="ktn-section">
           <div class="ktn-section__head">
             <h3 class="ktn-section__title">サマリー<span class="ktn-sec-en">Overview</span></h3>
           </div>
-          <div class="ins-kpi-grid">
+          <div class="ins-kpi-grid ins-kpi-grid--eq3">
             <div class="ins-kpi">
               <p class="ins-kpi__label">
                 <svg class="ins-kpi__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z"/><circle cx="8" cy="8" r="2"/></svg>
                 ページ閲覧数
               </p>
-              <p class="ins-kpi__val">958<span class="unit">回</span></p>
-              <span class="ins-kpi__delta ins-kpi__delta--up">▲ 21%<span class="ins-kpi__delta-note">前期間比</span></span>
+              <p class="ins-kpi__val" id="p214SummaryViews">958<span class="unit">回</span></p>
             </div>
             <div class="ins-kpi">
               <p class="ins-kpi__label">
                 <svg class="ins-kpi__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 13.5C7.6 13.2 1.5 9.3 1.5 5.6A3.1 3.1 0 0 1 8 5a3.1 3.1 0 0 1 6.5.6C14.5 9.3 8.4 13.2 8 13.5z"/></svg>
                 興味あり！
               </p>
-              <p class="ins-kpi__val">16<span class="unit">件</span></p>
-              <span class="ins-kpi__delta ins-kpi__delta--up">▲ 14%<span class="ins-kpi__delta-note">前期間比</span></span>
+              <p class="ins-kpi__val" id="p214SummaryInterest">27<span class="unit">件</span></p>
             </div>
             <div class="ins-kpi">
               <p class="ins-kpi__label">
                 <svg class="ins-kpi__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="6" r="3"/><path d="M8 9c-3 0-5 2-5 4.5h10C13 11 11 9 8 9z"/></svg>
                 会場チェックイン
               </p>
-              <p class="ins-kpi__val">34<span class="unit">人</span></p>
-              <span class="ins-kpi__delta ins-kpi__delta--up">▲ 8%<span class="ins-kpi__delta-note">前期間比</span></span>
-            </div>
-            <div class="ins-kpi">
-              <p class="ins-kpi__label">
-                <svg class="ins-kpi__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 4h12v8H2z"/><path d="M2 4l6 5 6-5"/></svg>
-                お問い合わせ件数
-              </p>
-              <p class="ins-kpi__val">5<span class="unit">件</span></p>
-              <span class="ins-kpi__delta ins-kpi__delta--flat">― 増減なし<span class="ins-kpi__delta-note">前期間比</span></span>
+              <p class="ins-kpi__val" id="p214SummaryCheckin">34<span class="unit">人</span></p>
             </div>
           </div>
-          <p class="ins-note">「興味あり！」は来場を検討している人の数、「会場チェックイン」は実際に会場へ足を運んだ人の数です。会期前は「興味あり！」、会期中は「チェックイン」が伸びる傾向があります。</p>
+          <p class="ins-note">「興味あり！」は来場を検討している人の数、「会場チェックイン」は実際に会場へ足を運んだ人の数です。会期前〜終了後を通じた累計で、期間を絞った内訳は下の「閲覧数の推移」、経由元の内訳は「会場チェックインの傾向」で確認できます。</p>
+          <p class="ins-note" id="p214GrowNote">さらに活用したい場合は<a class="ktn-guide-link" href="javascript:void(0)" onclick="ktnListQr('venue')">QRコードを表示</a>・<a class="ktn-guide-link" href="javascript:void(0)" onclick="ktnVenueFlyer()">フライヤーを作成</a>できます。</p>
+          <p class="ins-note" id="p214GrowLockNote" hidden>会期が終了したため、QRコード・フライヤーの新規作成はできません。</p>
         </section>
 
-        <!-- 2. 閲覧数の推移 -->
+        <!-- 2. 閲覧数の推移（PERIODで表示期間を切り替えるのはこのセクションのみ） -->
         <section class="ktn-section">
           <div class="ktn-section__head">
             <h3 class="ktn-section__title">閲覧数の推移<span class="ktn-sec-en">Trend</span></h3>
           </div>
+          <div class="ins-period" id="p214Period">
+            <span class="ins-period__label">Period</span>
+            <button class="ins-period__btn" type="button" data-phase="before">会期前</button>
+            <button class="ins-period__btn is-active" type="button" data-phase="during">会期中</button>
+            <button class="ins-period__btn" type="button" data-phase="after">終了後</button>
+            <button class="ins-period__btn" type="button" data-phase="all">全期間</button>
+          </div>
           <div class="ins-trend">
-            <div class="ins-bars" id="p214Bars">
-              <div class="ins-bars__col"><span class="ins-bars__val">26</span><span class="ins-bars__bar" style="height:26%"></span><span class="ins-bars__x">5/26</span></div>
-              <div class="ins-bars__col"><span class="ins-bars__val">34</span><span class="ins-bars__bar" style="height:34%"></span><span class="ins-bars__x">5/29</span></div>
-              <div class="ins-bars__col"><span class="ins-bars__val">29</span><span class="ins-bars__bar" style="height:29%"></span><span class="ins-bars__x">6/1</span></div>
-              <div class="ins-bars__col"><span class="ins-bars__val">47</span><span class="ins-bars__bar" style="height:47%"></span><span class="ins-bars__x">6/4</span></div>
-              <div class="ins-bars__col"><span class="ins-bars__val">68</span><span class="ins-bars__bar" style="height:68%"></span><span class="ins-bars__x">6/7</span></div>
-              <div class="ins-bars__col"><span class="ins-bars__val">99</span><span class="ins-bars__bar" style="height:100%"></span><span class="ins-bars__x">6/10</span></div>
-              <div class="ins-bars__col"><span class="ins-bars__val">82</span><span class="ins-bars__bar" style="height:83%"></span><span class="ins-bars__x">6/13</span></div>
-              <div class="ins-bars__col"><span class="ins-bars__val">61</span><span class="ins-bars__bar" style="height:62%"></span><span class="ins-bars__x">6/16</span></div>
-              <div class="ins-bars__col"><span class="ins-bars__val">50</span><span class="ins-bars__bar" style="height:51%"></span><span class="ins-bars__x">6/19</span></div>
-              <div class="ins-bars__col"><span class="ins-bars__val">41</span><span class="ins-bars__bar" style="height:41%"></span><span class="ins-bars__x">6/22</span></div>
+            <div class="ins-linechart-head">
+              <span class="ins-linechart-head__label">期間合計</span>
+              <span class="ins-linechart-head__val" id="p214TrendTotal">0<span class="unit">回</span></span>
+            </div>
+            <div class="ins-linechart" id="p214Trend"></div>
+            <div class="ins-trend__foot">
+              <span class="ins-trend__legend" id="p214TrendLegend">日別ページ閲覧数</span>
+              <span class="ins-trend__legend" id="p214TrendPeak" style="--page-accent:transparent"></span>
+            </div>
+          </div>
+          <div class="ins-kpi-grid" id="p214DuringBreakdown" style="margin-top:14px" hidden></div>
+          <div class="ins-grow__card" style="margin-top:14px">
+            <svg class="ins-grow__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 13.5C7.6 13.2 1.5 9.3 1.5 5.6A3.1 3.1 0 0 1 8 5a3.1 3.1 0 0 1 6.5.6C14.5 9.3 8.4 13.2 8 13.5z"/></svg>
+            <div class="ins-grow__body">
+              <p class="ins-grow__msg">「興味あり！」が多いほど、会期直前の閲覧数が伸びる傾向があります。</p>
+              <p class="ins-grow__stat">「興味あり！」が多い展覧会ほど <strong>会期直前の閲覧数が増加</strong></p>
+            </div>
+          </div>
+        </section>
+
+        <!-- STEP1：会場チェックイン・来場者の内訳・ウォッチという「開催による成果」をまとめる -->
+        <div class="ins-phase-divider">
+          <p class="ins-phase-divider__title">開催による成果<span class="ktn-sec-en">Results of the Exhibition</span></p>
+          <p class="ins-phase-divider__lead">会場でのチェックインや来場者の傾向、この展覧会をきっかけに広がった関心を見ていきます。</p>
+        </div>
+
+        <!-- 3. 会場チェックインの傾向 -->
+        <section class="ktn-section">
+          <div class="ktn-section__head">
+            <h3 class="ktn-section__title">会場チェックインの傾向<span class="ktn-sec-en">Check-in by Day</span></h3>
+          </div>
+          <div class="ins-trend ins-trend--compact">
+            <div class="ins-trend--split">
+              <div class="ins-trend__main">
+                <div class="ins-linechart"><svg class="ins-linechart__svg" viewBox="0 0 700 190" role="img" aria-label="会期内チェックインの推移"><path class="ins-linechart__area" d="M50.0,80.9 L93.1,131.0 L136.1,105.9 L179.2,30.8 L222.3,55.8 L265.3,131.0 L308.4,105.9 L351.5,156.0 L394.5,131.0 L437.6,80.9 L480.7,55.8 L523.7,55.8 L566.8,131.0 L609.9,131.0 L652.9,156.0 L696.0,105.9 L696.0,156 L50.0,156 Z"></path><line class="ins-linechart__ygrid" x1="50" y1="30.8" x2="696" y2="30.8"></line><text class="ins-linechart__ylabel" x="44" y="33.8" text-anchor="end">5人</text><line class="ins-linechart__ygrid" x1="50" y1="80.9" x2="696" y2="80.9"></line><text class="ins-linechart__ylabel" x="44" y="83.9" text-anchor="end">3人</text><line class="ins-linechart__ygrid" x1="50" y1="156.0" x2="696" y2="156.0"></line><text class="ins-linechart__ylabel" x="44" y="159.0" text-anchor="end">0</text><path class="ins-linechart__line" d="M50.0,80.9 L93.1,131.0 L136.1,105.9 L179.2,30.8 L222.3,55.8 L265.3,131.0 L308.4,105.9 L351.5,156.0 L394.5,131.0 L437.6,80.9 L480.7,55.8 L523.7,55.8 L566.8,131.0 L609.9,131.0 L652.9,156.0 L696.0,105.9"></path><circle class="ins-linechart__dot" cx="50.0" cy="80.9" r="3.2"><title>2/18　3人</title></circle><circle class="ins-linechart__dot" cx="93.1" cy="131.0" r="3.2"><title>2/19　1人</title></circle><circle class="ins-linechart__dot" cx="136.1" cy="105.9" r="3.2"><title>2/20　2人</title></circle><circle class="ins-linechart__dot" cx="179.2" cy="30.8" r="3.2"><title>2/21　5人</title></circle><circle class="ins-linechart__dot" cx="222.3" cy="55.8" r="3.2"><title>2/22　4人</title></circle><circle class="ins-linechart__dot" cx="265.3" cy="131.0" r="3.2"><title>2/23　1人</title></circle><circle class="ins-linechart__dot" cx="308.4" cy="105.9" r="3.2"><title>2/24　2人</title></circle><circle class="ins-linechart__dot" cx="351.5" cy="156.0" r="3.2"><title>2/25　0人</title></circle><circle class="ins-linechart__dot" cx="394.5" cy="131.0" r="3.2"><title>2/26　1人</title></circle><circle class="ins-linechart__dot" cx="437.6" cy="80.9" r="3.2"><title>2/27　3人</title></circle><circle class="ins-linechart__dot" cx="480.7" cy="55.8" r="3.2"><title>2/28　4人</title></circle><circle class="ins-linechart__dot" cx="523.7" cy="55.8" r="3.2"><title>3/1　4人</title></circle><circle class="ins-linechart__dot" cx="566.8" cy="131.0" r="3.2"><title>3/2　1人</title></circle><circle class="ins-linechart__dot" cx="609.9" cy="131.0" r="3.2"><title>3/3　1人</title></circle><circle class="ins-linechart__dot" cx="652.9" cy="156.0" r="3.2"><title>3/4　0人</title></circle><circle class="ins-linechart__dot" cx="696.0" cy="105.9" r="3.2"><title>3/5　2人</title></circle><text class="ins-linechart__axis" x="50.0" y="182" text-anchor="start">2/18</text><text class="ins-linechart__axis" x="179.2" y="182" text-anchor="middle">2/21</text><text class="ins-linechart__axis" x="308.4" y="182" text-anchor="middle">2/24</text><text class="ins-linechart__axis" x="437.6" y="182" text-anchor="middle">2/27</text><text class="ins-linechart__axis" x="566.8" y="182" text-anchor="middle">3/2</text><text class="ins-linechart__axis" x="696.0" y="182" text-anchor="end">3/5</text></svg></div>
+              </div>
+              <div class="ins-trend__side">
+                <p class="ins-trend__side-label">曜日別 Day of Week</p>
+                <div class="ins-hbar ins-hbar--compact">
+                  <div class="ins-hbar__row"><span class="ins-hbar__label">日</span><span class="ins-hbar__track"><span class="ins-hbar__fill" style="width:89%"></span></span><span class="ins-hbar__val">8</span></div>
+                  <div class="ins-hbar__row"><span class="ins-hbar__label">月</span><span class="ins-hbar__track"><span class="ins-hbar__fill" style="width:22%"></span></span><span class="ins-hbar__val">2</span></div>
+                  <div class="ins-hbar__row"><span class="ins-hbar__label">火</span><span class="ins-hbar__track"><span class="ins-hbar__fill" style="width:33%"></span></span><span class="ins-hbar__val">3</span></div>
+                  <div class="ins-hbar__row"><span class="ins-hbar__label">水</span><span class="ins-hbar__track"><span class="ins-hbar__fill" style="width:33%"></span></span><span class="ins-hbar__val">3</span></div>
+                  <div class="ins-hbar__row"><span class="ins-hbar__label">木</span><span class="ins-hbar__track"><span class="ins-hbar__fill" style="width:44%"></span></span><span class="ins-hbar__val">4</span></div>
+                  <div class="ins-hbar__row"><span class="ins-hbar__label">金</span><span class="ins-hbar__track"><span class="ins-hbar__fill" style="width:56%"></span></span><span class="ins-hbar__val">5</span></div>
+                  <div class="ins-hbar__row"><span class="ins-hbar__label">土</span><span class="ins-hbar__track"><span class="ins-hbar__fill" style="width:100%"></span></span><span class="ins-hbar__val">9</span></div>
+                </div>
+              </div>
             </div>
             <div class="ins-trend__foot">
-              <span class="ins-trend__legend">日別ページ閲覧数</span>
-              <span class="ins-trend__legend" style="--page-accent:transparent">6/10 開催告知でピーク</span>
+              <span class="ins-trend__legend">会期内の日別・曜日別チェックイン数（2/18〜3/5・全16日／通算34人）</span>
             </div>
+          </div>
+          <div class="ins-trend ins-trend--compact" style="margin-top:14px">
+            <div class="ins-trend--split">
+              <div class="ins-trend__main">
+                <p class="ins-trend__side-label">経由元 Check-in Source</p>
+                <div class="ins-hbar">
+                  <div class="ins-hbar__row"><span class="ins-hbar__label ins-hbar__label--wide">QRコード</span><span class="ins-hbar__track"><span class="ins-hbar__fill" style="width:32%"></span></span><span class="ins-hbar__val">7</span></div>
+                  <div class="ins-hbar__row"><span class="ins-hbar__label ins-hbar__label--wide">フライヤー</span><span class="ins-hbar__track"><span class="ins-hbar__fill" style="width:23%"></span></span><span class="ins-hbar__val">5</span></div>
+                  <div class="ins-hbar__row"><span class="ins-hbar__label ins-hbar__label--wide">その他</span><span class="ins-hbar__track"><span class="ins-hbar__fill" style="width:100%"></span></span><span class="ins-hbar__val">22</span></div>
+                </div>
+              </div>
+              <div class="ins-trend__side">
+                <p class="ins-trend__side-label">
+                  <svg class="ins-kpi__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><path d="M8 1.6l1.85 3.9 4.3.6-3.1 3.05.75 4.3L8 11.35l-3.8 2.1.75-4.3-3.1-3.05 4.3-.6z"/></svg>
+                  チェックイン時の評価
+                </p>
+                <p class="ins-kpi__val">4.3<span class="unit">/5</span></p>
+                <p class="ins-kpi__sub">34件中21件でレビュー投稿</p>
+              </div>
+            </div>
+            <div class="ins-trend__foot">
+              <span class="ins-trend__legend">会場チェックインの経由元内訳（その他＝直接サイトアクセス等）</span>
+            </div>
+          </div>
+          <p class="ins-note">チェックインの経由元と、チェックイン時に投稿されたレビュー・評価をまとめています。レビュー本文は<a class="ktn-guide-link" href="kotennavi-p2.html">展覧会ページ</a>の「チェックイン＆レビュー」から確認できます。</p>
+        </section>
+
+        <!-- 4. 来場者の内訳 -->
+        <section class="ktn-section">
+          <div class="ktn-section__head">
+            <h3 class="ktn-section__title">来場者の内訳<span class="ktn-sec-en">Visitor Profile</span></h3>
+          </div>
+          <div class="ins-kpi-grid ins-kpi-grid--eq3">
+            <div class="ins-kpi">
+              <p class="ins-kpi__label">
+                <svg class="ins-kpi__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="6" cy="6" r="3"/><path d="M1 14c0-2.8 2.2-5 5-5s5 2.2 5 5"/><path d="M12 5h3M13.5 3.5v3" stroke-linecap="round"/></svg>
+                初めて来場した人
+              </p>
+              <p class="ins-kpi__val">62<span class="unit">%</span></p>
+              <p class="ins-kpi__sub">来場者34人中 <strong>21人</strong>が今回はじめて来場</p>
+            </div>
+            <div class="ins-kpi">
+              <p class="ins-kpi__label">
+                <svg class="ins-kpi__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="7" opacity=".3"/><circle cx="8" cy="8" r="2.6"/></svg>
+                ウォッチ→来場率
+              </p>
+              <p class="ins-kpi__val">26<span class="unit">%</span></p>
+              <p class="ins-kpi__sub">ウォッチャー34人中 <strong>9人</strong>が来場</p>
+            </div>
+            <div class="ins-kpi">
+              <p class="ins-kpi__label">
+                <svg class="ins-kpi__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="6.5" cy="6.5" r="4.5"/><path d="M13.5 13.5l-3.5-3.5" stroke-linecap="round"/></svg>
+                サイト経由の来場
+              </p>
+              <p class="ins-kpi__val">18<span class="unit">%</span></p>
+              <p class="ins-kpi__sub">サイトで見つけた52人中 <strong>9人</strong>が来場</p>
+            </div>
+          </div>
+          <p class="ins-note">「初めて来場した人」は、個展なびのチェックイン記録上で今回が田中透さんの展覧会への最初のチェックインとなった人の割合です（サイト外での実際の来場歴までは把握できません）。数字が高いほど新しい来場者への広がりを、低いほどリピーターの多さを示します。「ウォッチ→来場率」「サイト経由の来場」は、オンラインでの発見（ウォッチ・検索や関連枠経由）が実際の来場につながっているかを示します。ウォッチや検索経由の来場が多いほど、掲載が来場につながっている証拠になります。</p>
+        </section>
+
+        <!-- 5. 出展者・会場へのウォッチ -->
+        <section class="ktn-section">
+          <div class="ktn-section__head">
+            <h3 class="ktn-section__title">出展者・会場へのウォッチ<span class="ktn-sec-en">Watches via This Exhibition</span></h3>
+          </div>
+          <div class="ins-kpi-grid">
+            <div class="ins-kpi">
+              <p class="ins-kpi__label">
+                <svg class="ins-kpi__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="7" opacity=".3"/><circle cx="8" cy="8" r="2.6"/></svg>
+                クリエイターへのウォッチ
+              </p>
+              <p class="ins-kpi__val">24<span class="unit">件</span></p>
+              <p class="ins-kpi__sub">出展作家への新規ウォッチ</p>
+            </div>
+            <div class="ins-kpi">
+              <p class="ins-kpi__label">
+                <svg class="ins-kpi__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="7" opacity=".3"/><circle cx="8" cy="8" r="2.6"/></svg>
+                会場へのウォッチ
+              </p>
+              <p class="ins-kpi__val">11<span class="unit">件</span></p>
+              <p class="ins-kpi__sub">Gallery SOIL 渋谷を新たにウォッチ</p>
+            </div>
+          </div>
+          <p class="ins-note">この展覧会ページ・出展者プレビュー・<a href="kotennavi-p2-2.html">開催場所</a>・来場登録後のおすすめ表示など、この展覧会をきっかけに行われたウォッチ登録の件数です。展覧会をきっかけに、出展クリエイターや会場ギャラリーの次回展にも関心を持ってもらえた人数の目安になります。</p>
+        </section>
+
+        <!-- STEP2：来場者の行動ではなく、記事・作品というコンテンツ単位の関心に軸を変える -->
+        <div class="ins-phase-divider">
+          <p class="ins-phase-divider__title">記事・作品それぞれへの関心<span class="ktn-sec-en">Content Interest</span></p>
+          <p class="ins-phase-divider__lead">ここからは来場者の行動ではなく、記事・作品ページそれぞれに集まった関心を見ていきます。</p>
+        </div>
+
+        <!-- 6. 記事への関心（開催前〜終了後まで、展覧会と独立したタイミングで発信されるコンテンツ） -->
+        <section class="ktn-section">
+          <div class="ktn-section__head">
+            <h3 class="ktn-section__title">記事への関心<span class="ktn-sec-en">Article Interest</span></h3>
+          </div>
+          <div class="ins-kpi-grid">
+            <div class="ins-kpi">
+              <p class="ins-kpi__label">
+                <svg class="ins-kpi__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="2.5" width="12" height="11" rx="1"/><path d="M4.5 6h7M4.5 8.5h7M4.5 11h4.5"/></svg>
+                記事の興味あり数
+              </p>
+              <p class="ins-kpi__val" id="p214ArticleInterestVal">95<span class="unit">件</span></p>
+              <p class="ins-kpi__sub" id="p214ArticleInterestSub">この展覧会に関する記事の「興味あり！」合計</p>
+            </div>
+          </div>
+          <div class="ins-top-list" id="p214ArticleTopList">
+            <p class="ins-top-list__label">人気の記事 Top Articles</p>
+            <div class="ins-top-list__item">
+              <span class="ins-top-list__rank">1</span>
+              <a class="ins-top-list__title" href="#">オノマトペが絵画になるとき — 田中透の言語と絵の境界</a>
+              <span class="ktn-count"><strong>52</strong>件</span>
+            </div>
+            <div class="ins-top-list__item">
+              <span class="ins-top-list__rank">2</span>
+              <a class="ins-top-list__title" href="#">Gallery SOIL 渋谷 — 小規模ギャラリーが作る豊かな場</a>
+              <span class="ktn-count"><strong>29</strong>件</span>
+            </div>
+          </div>
+          <p class="ins-note">記事は、この展覧会が管理者確認された後に投稿できます。開催前の告知やイベント参加者の募集、展示風景、作品解説、閉幕後の報告・お礼など、会期の前後を通じて幅広い用途に使えます。</p>
+          <div class="ins-funnel-notice" id="p214ArticleNotice" hidden>
+            <svg class="ins-funnel-notice__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="6.5"/><path d="M8 5v3.5l2.2 2.2"/></svg>
+            <p class="ins-funnel-notice__text">この展覧会に関する記事がまだありません。会期が終わる前に記事を投稿すると、興味あり！や閲覧数につながります。<a class="ktn-guide-link" href="kotennavi-p2-13.html">記事を管理する →</a></p>
           </div>
         </section>
 
-        <!-- 3. ページを伸ばすヒント -->
+        <!-- 7. 作品への関心（LIAISON / LIAISON+ ファネル。作品は展覧会とともにあるコンテンツそのもの） -->
         <section class="ktn-section">
           <div class="ktn-section__head">
-            <h3 class="ktn-section__title">ページを伸ばすヒント<span class="ktn-sec-en">Grow Your Reach</span></h3>
+            <h3 class="ktn-section__title">作品への関心<span class="ktn-sec-en">Artwork Interest</span></h3>
           </div>
-          <div class="ins-grow">
-            <div class="ins-grow__card">
-              <svg class="ins-grow__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 13.5C7.6 13.2 1.5 9.3 1.5 5.6A3.1 3.1 0 0 1 8 5a3.1 3.1 0 0 1 6.5.6C14.5 9.3 8.4 13.2 8 13.5z"/></svg>
-              <div class="ins-grow__body">
-                <p class="ins-grow__msg">「興味あり！」が増えるほど、開催が近づくにつれて閲覧数も伸びる傾向があります。会期・会場情報や作品画像を充実させておくと、興味あり！が付きやすくなります。</p>
-                <p class="ins-grow__stat">「興味あり！」が多い展覧会ほど <strong>会期直前の閲覧数が増加</strong></p>
-              </div>
-            </div>
-            <div class="ins-grow__card">
-              <svg class="ins-grow__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="6" r="3"/><path d="M8 9c-3 0-5 2-5 4.5h10C13 11 11 9 8 9z"/></svg>
-              <div class="ins-grow__body">
-                <p class="ins-grow__msg">会場チェックインをした人は、あなたの次の展覧会にも関心を持ってくれる可能性が高いファンです。会場での案内やSNS投稿を活用しましょう。</p>
-                <p class="ins-grow__stat">チェックインした人の <strong>約半数</strong> が次の展覧会情報もチェック</p>
-              </div>
+          <div class="ins-kpi-grid">
+            <div class="ins-kpi">
+              <p class="ins-kpi__label">
+                <svg class="ins-kpi__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 13.5C7.6 13.2 1.5 9.3 1.5 5.6A3.1 3.1 0 0 1 8 5a3.1 3.1 0 0 1 6.5.6C14.5 9.3 8.4 13.2 8 13.5z"/></svg>
+                作品の興味あり数
+              </p>
+              <p class="ins-kpi__val" id="p214ArtworkInterestVal">71<span class="unit">件</span></p>
+              <p class="ins-kpi__sub" id="p214ArtworkInterestSub">LIAISON+出品作品の「興味あり！」合計</p>
             </div>
           </div>
-          <p class="ins-note">「興味あり！」やチェックインを増やすには、展覧会情報を充実させ、SNSでの発信を続けることが効果的です。</p>
-        </section>
+          <div class="ins-top-list" id="p214ArtworkTopList">
+            <p class="ins-top-list__label">人気の作品 Top Artworks</p>
+            <div class="ins-top-list__item">
+              <span class="ins-top-list__rank">1</span>
+              <a class="ins-top-list__title" href="#">《ドキドキ #3》</a>
+              <span class="ktn-count"><strong>24</strong>件</span>
+            </div>
+            <div class="ins-top-list__item">
+              <span class="ins-top-list__rank">2</span>
+              <a class="ins-top-list__title" href="#">《きらきら》</a>
+              <span class="ktn-count"><strong>21</strong>件</span>
+            </div>
+          </div>
+          <p class="ins-note">作品はLIAISON（オンライン展示）またはLIAISON+（オンライン展示＋販売）で掲載できます。会期のうちに出品作品を充実させておくと、そのぶん関心の入口が増えます。</p>
 
-        <!-- 4. LIAISON+ ファネル -->
-        <section class="ktn-section">
-          <div class="ktn-section__head">
-            <h3 class="ktn-section__title">作品販売のうごき<span class="ktn-sec-en">LIAISON+ Funnel</span></h3>
-          </div>
-          <div class="ins-funnel">
+          <div class="ins-funnel" id="p214Funnel">
             <div class="ins-funnel__row">
               <div class="ins-funnel__label"><span class="ins-funnel__stage">作品を見た</span><span class="ins-funnel__sub">作品ページ閲覧（合計）</span></div>
               <div class="ins-funnel__track"><div class="ins-funnel__bar" style="width:100%"><span class="ins-funnel__num">743</span></div></div>
@@ -280,7 +426,25 @@
               <span class="ins-funnel__rate">0.3%</span>
             </div>
           </div>
-          <p class="ins-note">「作品を見た人」から「購入につながった人」までの流れです。この展覧会でLIAISON+販売中の作品が対象です。販売実績の詳細は<a href="kotennavi-p3-16.html">取引デスク</a>から確認できます。</p>
+          <p class="ins-note" id="p214FunnelNote">「作品を見た人」から「購入につながった人」までの流れです。この展覧会でLIAISON+販売中の作品が対象です。販売実績の詳細は<a href="kotennavi-p3-16.html">取引デスク</a>から確認できます。</p>
+          <div class="ins-funnel" id="p214FunnelLite" hidden>
+            <div class="ins-funnel__row">
+              <div class="ins-funnel__label"><span class="ins-funnel__stage">作品を見た</span><span class="ins-funnel__sub">作品ページ閲覧（合計）</span></div>
+              <div class="ins-funnel__track"><div class="ins-funnel__bar" style="width:100%"><span class="ins-funnel__num">512</span></div></div>
+              <span class="ins-funnel__rate">100%</span>
+            </div>
+            <div class="ins-funnel__row">
+              <div class="ins-funnel__label"><span class="ins-funnel__stage">興味あり！</span><span class="ins-funnel__sub">気になる登録</span></div>
+              <div class="ins-funnel__track"><div class="ins-funnel__bar" style="width:9%"><span class="ins-funnel__num">46</span></div></div>
+              <span class="ins-funnel__rate">9.0%</span>
+            </div>
+          </div>
+          <p class="ins-note" id="p214FunnelLiteNote" hidden>「作品を見た人」から「興味あり！」までの流れです。この展覧会はLIAISON（購入機能なし）でオンライン展示中のため、購入・成約に関する指標はありません。関心の高い作品から販売を始めたい場合は<a href="kotennavi-p11-4.html">LIAISON+への切り替え</a>をご検討ください。</p>
+          <p class="ins-note" id="p214FunnelLiteLockNote" hidden>この展覧会は終了したため、LIAISON+への切り替え申込はできません。</p>
+          <div class="ins-funnel-notice" id="p214FunnelNotice" hidden>
+            <svg class="ins-funnel-notice__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="6.5"/><path d="M8 5v3.5l2.2 2.2"/></svg>
+            <p class="ins-funnel-notice__text">この展覧会にはLIAISON/LIAISON+で公開中の作品がありません。会期が終わる前に作品を登録すると、興味あり！や販売につなげられます。<a class="ktn-guide-link" href="kotennavi-p2-12.html">作品を管理する →</a></p>
+          </div>
         </section>
 
       </div><!-- /.ktn-mgmt-wrap -->

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ご利用ガイド | 個展なび</title>
+  <meta name="description" content="個展なびの使い方ガイド。展覧会を探す・掲載する・広告を出す方法やよくある質問、利用規約などをまとめています。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@1,400;1,600&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<body data-w="article" class="p70-page p60-page">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- デモバー -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ご利用ガイド</span>
+  <button class="dbtn dbtn--active" id="dbarView">閲覧</button>
+</div>
+
+<!-- ヘッダー -->
+<div class="shell">
+
+<!-- サイドバー（kotennavi-p1.html と同一マークアップ・#ktnRoleNav は renderSidebar() がJS注入） -->
+<aside class="ktn-sidebar" id="ktnSidebar">
+
+  <!-- ロゴ (logo5-1) -->
+  <a href="kotennavi-p1.html" class="ktn-sidebar__logo" data-page="p1">
+    <img src="./images/kotennavi-logo5-1.svg" alt="個展なび">
+  </a>
+
+  <!-- 検索 → P10 検索ハブ -->
+  <a href="kotennavi-p10.html" class="ktn-sidebar__item" data-page="p10">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <circle cx="11" cy="11" r="7.5"/>
+        <path d="M21 21l-4.5-4.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">検索</span>
+  </a>
+
+  <!-- お知らせ → P61（未制作） -->
+  <a href="kotennavi-p61.html" class="ktn-sidebar__item" id="ktnSidebarNotice" data-page="p61">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__dot" id="ktnNoticeDot" style="display:none"></span>
+    <span class="ktn-sidebar__label">お知らせ</span>
+  </a>
+
+  <!-- ガイド → P60 -->
+  <a href="kotennavi-p60.html" class="ktn-sidebar__item" data-page="p60">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" stroke-linecap="round"/>
+        <path d="M12 16v-4M12 8h.01" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">ガイド</span>
+  </a>
+
+  <div class="ktn-sidebar__divider"></div>
+
+  <!-- ロール別アイコン（JS注入） -->
+  <div id="ktnRoleNav" style="width:100%;display:flex;flex-direction:column;align-items:center"></div>
+
+  <div class="ktn-sidebar__footer">
+    <p class="ktn-sidebar__footer-label">Follow us</p>
+    <div class="ktn-sidebar__sns">
+      <a href="https://www.facebook.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="Facebook">
+        <svg viewBox="0 0 320 512" fill="currentColor"><path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/></svg>
+      </a>
+      <a href="https://x.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="X">
+        <svg viewBox="0 0 512 512" fill="currentColor"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg>
+      </a>
+    </div>
+  </div>
+
+</aside>
+
+<div class="content-wrap" id="contentWrap">
+<header class="ktn-header" id="ktnHeader">
+  <div class="ktn-header__inner">
+    <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+    <div class="ktn-hdr-actions" id="ktnActs"></div>
+  </div>
+</header>
+
+<!-- タイトルバンド -->
+<div class="p70-title-band">
+  <div class="p70-title-band__inner">
+    <div class="p70-head__sub"><span class="p70-head__updated">サポート</span></div>
+    <h1 class="p70-head__title">ご利用ガイド</h1>
+    <p class="p70-head__en">Guide</p>
+    <p class="p70-head__lead">個展なびの使い方を目的別にまとめました。<br>展覧会を探す・掲載する方法から、よくある質問、利用規約まで、こちらから探せます。</p>
+  </div>
+</div>
+
+<main>
+  <div class="p70-wrap">
+
+    <!-- 目的別ガイド -->
+    <h3 class="p70-subhead">目的別ガイド</h3>
+    <div class="ktn-guide-nav-cards">
+      <a class="ktn-guide-nav-card ktn-guide-nav-card--neutral" href="kotennavi-p60-1.html">
+        <div class="ktn-guide-nav-card__icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="7.5"/>
+            <path d="M21 21l-4.5-4.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="ktn-guide-nav-card__body">
+          <span class="ktn-guide-nav-card__tag">Search</span>
+          <h4 class="ktn-guide-nav-card__title">展覧会情報を探したい方</h4>
+          <p class="ktn-guide-nav-card__desc">展覧会の検索方法、ウォッチ・チェックインなどマイページ機能の使い方</p>
+        </div>
+        <span class="ktn-guide-nav-card__arrow">→</span>
+      </a>
+      <a class="ktn-guide-nav-card ktn-guide-nav-card--neutral" href="kotennavi-p60-2.html">
+        <div class="ktn-guide-nav-card__icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 5v14M5 12h14" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="ktn-guide-nav-card__body">
+          <span class="ktn-guide-nav-card__tag">Post</span>
+          <h4 class="ktn-guide-nav-card__title">展覧会情報を掲載したい方</h4>
+          <p class="ktn-guide-nav-card__desc">クリエイター・ギャラリーとしての登録方法、展覧会情報の掲載手順</p>
+        </div>
+        <span class="ktn-guide-nav-card__arrow">→</span>
+      </a>
+      <a class="ktn-guide-nav-card ktn-guide-nav-card--neutral" href="kotennavi-p60-3.html">
+        <div class="ktn-guide-nav-card__icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="16" rx="2"/>
+            <path d="M3 9h18M8 14h4"/>
+          </svg>
+        </div>
+        <div class="ktn-guide-nav-card__body">
+          <span class="ktn-guide-nav-card__tag">Advertise</span>
+          <h4 class="ktn-guide-nav-card__title">広告を出したい方</h4>
+          <p class="ktn-guide-nav-card__desc">個展なびへの広告掲載についてのご案内</p>
+        </div>
+        <span class="ktn-guide-nav-card__arrow">→</span>
+      </a>
+    </div>
+
+    <!-- よくある質問 -->
+    <h3 class="p70-subhead">よくある質問</h3>
+    <div class="ktn-guide-nav-cards">
+      <a class="ktn-guide-nav-card ktn-guide-nav-card--neutral" href="kotennavi-p60-4.html">
+        <div class="ktn-guide-nav-card__icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 2-3 4" stroke-linecap="round"/>
+            <path d="M12 17h.01" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="ktn-guide-nav-card__body">
+          <span class="ktn-guide-nav-card__tag">FAQ</span>
+          <h4 class="ktn-guide-nav-card__title">よくある質問 — 一般</h4>
+          <p class="ktn-guide-nav-card__desc">個展なび全体についてよくいただくご質問</p>
+        </div>
+        <span class="ktn-guide-nav-card__arrow">→</span>
+      </a>
+      <a class="ktn-guide-nav-card ktn-guide-nav-card--neutral" href="kotennavi-p60-5.html">
+        <div class="ktn-guide-nav-card__icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="8" r="4"/>
+            <path d="M4 20c0-4 4-6 8-6s8 2 8 6"/>
+          </svg>
+        </div>
+        <div class="ktn-guide-nav-card__body">
+          <span class="ktn-guide-nav-card__tag">FAQ</span>
+          <h4 class="ktn-guide-nav-card__title">よくある質問 — ユーザー編</h4>
+          <p class="ktn-guide-nav-card__desc">プロフィール編集、パスワード管理、メール通知設定などマイページの使い方</p>
+        </div>
+        <span class="ktn-guide-nav-card__arrow">→</span>
+      </a>
+      <a class="ktn-guide-nav-card ktn-guide-nav-card--neutral" href="kotennavi-p60-6.html">
+        <div class="ktn-guide-nav-card__icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 19l7-7 3 3-7 7-3-3z"/>
+            <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/>
+            <path d="M2 2l7.586 7.586"/>
+            <circle cx="11" cy="11" r="2"/>
+          </svg>
+        </div>
+        <div class="ktn-guide-nav-card__body">
+          <span class="ktn-guide-nav-card__tag">FAQ</span>
+          <h4 class="ktn-guide-nav-card__title">よくある質問 — クリエイター編</h4>
+          <p class="ktn-guide-nav-card__desc">クリエイター機能の申込・展覧会や作品の掲載についてのご質問</p>
+        </div>
+        <span class="ktn-guide-nav-card__arrow">→</span>
+      </a>
+      <a class="ktn-guide-nav-card ktn-guide-nav-card--neutral" href="kotennavi-p60-7.html">
+        <div class="ktn-guide-nav-card__icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 21V9l9-6 9 6v12"/>
+            <path d="M9 21v-8h6v8"/>
+          </svg>
+        </div>
+        <div class="ktn-guide-nav-card__body">
+          <span class="ktn-guide-nav-card__tag">FAQ</span>
+          <h4 class="ktn-guide-nav-card__title">よくある質問 — ギャラリー編</h4>
+          <p class="ktn-guide-nav-card__desc">ギャラリー機能の申込・展覧会や作品の掲載についてのご質問</p>
+        </div>
+        <span class="ktn-guide-nav-card__arrow">→</span>
+      </a>
+    </div>
+
+    <!-- 個展なびについて -->
+    <h3 class="p70-subhead">個展なびについて</h3>
+    <div class="ktn-guide-nav-cards">
+      <a class="ktn-guide-nav-card ktn-guide-nav-card--neutral" href="kotennavi-p60-8.html">
+        <div class="ktn-guide-nav-card__icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 16v-4M12 8h.01" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="ktn-guide-nav-card__body">
+          <span class="ktn-guide-nav-card__tag">About</span>
+          <h4 class="ktn-guide-nav-card__title">個展なびとは</h4>
+          <p class="ktn-guide-nav-card__desc">サービスの概要、運営会社についてのご案内</p>
+        </div>
+        <span class="ktn-guide-nav-card__arrow">→</span>
+      </a>
+      <a class="ktn-guide-nav-card ktn-guide-nav-card--neutral" href="kotennavi-p60-9.html">
+        <div class="ktn-guide-nav-card__icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <path d="M14 2v6h6M9 13h6M9 17h6"/>
+          </svg>
+        </div>
+        <div class="ktn-guide-nav-card__body">
+          <span class="ktn-guide-nav-card__tag">Terms</span>
+          <h4 class="ktn-guide-nav-card__title">利用規約</h4>
+          <p class="ktn-guide-nav-card__desc">個展なびのご利用にあたっての規約</p>
+        </div>
+        <span class="ktn-guide-nav-card__arrow">→</span>
+      </a>
+      <a class="ktn-guide-nav-card ktn-guide-nav-card--neutral" href="kotennavi-p60-10.html">
+        <div class="ktn-guide-nav-card__icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="11" width="16" height="10" rx="2"/>
+            <path d="M8 11V7a4 4 0 0 1 8 0v4"/>
+          </svg>
+        </div>
+        <div class="ktn-guide-nav-card__body">
+          <span class="ktn-guide-nav-card__tag">Privacy</span>
+          <h4 class="ktn-guide-nav-card__title">プライバシポリシー</h4>
+          <p class="ktn-guide-nav-card__desc">個人情報の取り扱いについて</p>
+        </div>
+        <span class="ktn-guide-nav-card__arrow">→</span>
+      </a>
+    </div>
+
+    <!-- お問合わせ・ご報告 -->
+    <h3 class="p70-subhead">お問合わせ・ご報告</h3>
+    <div class="ktn-guide-nav-cards">
+      <a class="ktn-guide-nav-card ktn-guide-nav-card--neutral" href="kotennavi-p60-11.html">
+        <div class="ktn-guide-nav-card__icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4h16v16H4z"/>
+            <path d="M4 6l8 7 8-7"/>
+          </svg>
+        </div>
+        <div class="ktn-guide-nav-card__body">
+          <span class="ktn-guide-nav-card__tag">Contact</span>
+          <h4 class="ktn-guide-nav-card__title">お問合わせ</h4>
+          <p class="ktn-guide-nav-card__desc">ご不明な点・不具合のご報告・ご要望などをお寄せください</p>
+        </div>
+        <span class="ktn-guide-nav-card__arrow">→</span>
+      </a>
+      <a class="ktn-guide-nav-card ktn-guide-nav-card--neutral" href="kotennavi-p60-12.html">
+        <div class="ktn-guide-nav-card__icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8-5.2-4.6 6.9-.6z"/>
+          </svg>
+        </div>
+        <div class="ktn-guide-nav-card__body">
+          <span class="ktn-guide-nav-card__tag">Request</span>
+          <h4 class="ktn-guide-nav-card__title">サービス機能改善要望</h4>
+          <p class="ktn-guide-nav-card__desc">機能追加・改善のご要望をお聞かせください</p>
+        </div>
+        <span class="ktn-guide-nav-card__arrow">→</span>
+      </a>
+      <a class="ktn-guide-nav-card ktn-guide-nav-card--neutral" href="kotennavi-p60-13.html">
+        <div class="ktn-guide-nav-card__icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/>
+            <line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+        </div>
+        <div class="ktn-guide-nav-card__body">
+          <span class="ktn-guide-nav-card__tag">Report</span>
+          <h4 class="ktn-guide-nav-card__title">問題を報告する</h4>
+          <p class="ktn-guide-nav-card__desc">掲載内容の誤りや不適切な表示など、コンテンツの問題をご報告ください</p>
+        </div>
+        <span class="ktn-guide-nav-card__arrow">→</span>
+      </a>
+    </div>
+
+  </div>
+</main>
+
+<!-- フッター -->
+<footer class="ktn-footer" id="ktnFooter"></footer>
+</div><!-- /content-wrap -->
+</div><!-- /shell -->
+
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  KTN.init({ page: 'p60' });
+
+  var dbarView = document.getElementById('dbarView');
+  if (dbarView) {
+    dbarView.addEventListener('click', function () {
+      this.classList.add('dbtn--active');
+    });
+  }
+});
+</script>
+</body>
+</html>

@@ -105,7 +105,6 @@
   <button class="dbtn" onclick="setR('admin',this)">管理者</button>
   <span class="dbar-sep">LIAISON+：</span>
   <button class="dbtn dbtn-lp on" onclick="ktnSetLP('true',this)">申請済</button>
-  <button class="dbtn dbtn-lp" onclick="ktnSetLP('false',this)">未申請</button>
 </div>
 
 <div class="shell">
@@ -240,6 +239,17 @@
 
         <!-- ══ Tab 1: 取引中 ══ -->
         <div class="p315-tab-panel" id="p315-panel-active" role="tabpanel">
+
+          <div class="p315-urgent-filter">
+            <div class="p315-urgent-filter__info">
+              <span class="p315-urgent-filter__icon" aria-hidden="true">●</span>
+              <span class="p315-urgent-filter__text">要対応の取引が<strong class="p315-urgent-filter__count">0</strong>件あります</span>
+            </div>
+            <label class="p315-urgent-filter__check">
+              <input type="checkbox" onchange="p315ToggleUrgentFilter(this)" title="要対応の取引のみ表示">
+              要対応のみ表示
+            </label>
+          </div>
 
           <div class="p315-ops-guide">
             <dl class="p315-ops-guide__items">
@@ -624,6 +634,8 @@
             </div>
           </section>
 
+          <p class="p315-urgent-filter__empty" hidden>現在、対応が必要な取引はありません。</p>
+
         </div><!-- /p315-panel-active -->
 
         <!-- ══ Tab 2: 終了 ══ -->
@@ -839,13 +851,6 @@
 
   /* FAQ本文は KTN.QA を単一ソースに描画（liaison-txn/seller の統合セット＝取引デスクと共通。ctx 軸は廃止済み） */
   KTN.renderQA('#p315QaConsole', { category: 'liaison-txn', side: 'seller', style: 'desk' });
-
-  function setR(role, btn) {
-    document.querySelectorAll('.dbtn').forEach(function(b){ b.classList.remove('on'); });
-    btn.classList.add('on');
-    window.curRole = role;
-    if (window.ktnRender) ktnRender();
-  }
 </script>
 </body>
 </html>

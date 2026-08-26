@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>展覧会特集 | 個展なび</title>
+  <meta name="description" content="個展なびが自動生成する展覧会特集。人気のエリア・ジャンル・開催時期の組み合わせから、いま注目の展覧会をまとめてご紹介します。">
+  <link rel="canonical" href="https://koten-navi.com/feature/event">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="展覧会特集 | 個展なび">
+  <meta property="og:url" content="https://koten-navi.com/feature/event">
+  <meta property="og:site_name" content="個展なび">
+  <meta name="twitter:card" content="summary">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<body data-w="index">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- デモバー（P10-4＝特集着地ビューのSEOラッパー・初期状態は特集着地） -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ロール：</span>
+  <button class="dbtn on" onclick="setR('guest',this)">ゲスト</button>
+  <button class="dbtn" onclick="setR('login',this)">ログイン</button>
+  <span class="dbar-sep">表示状態：</span>
+  <button class="dbtn" data-p10-view onclick="setP10View('disc',this)">ディスカバリー</button>
+  <button class="dbtn on" data-p10-view onclick="setP10View('preset',this)">特集着地</button>
+  <button class="dbtn" data-p10-view onclick="setP10View('result',this)">検索結果</button>
+  <button class="dbtn" data-p10-view onclick="setP10View('zero',this)">ゼロヒット</button>
+</div>
+
+<div class="shell">
+
+<!-- サイドバー（kotennavi-p1.html と同一マークアップ・#ktnRoleNav は renderSidebar() がJS注入） -->
+<aside class="ktn-sidebar" id="ktnSidebar">
+
+  <!-- ロゴ (logo5-1) -->
+  <a href="kotennavi-p1.html" class="ktn-sidebar__logo" data-page="p1">
+    <img src="./images/kotennavi-logo5-1.svg" alt="個展なび">
+  </a>
+
+  <!-- 検索 → P10 検索ハブ -->
+  <a href="kotennavi-p10.html" class="ktn-sidebar__item" data-page="p10">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <circle cx="11" cy="11" r="7.5"/>
+        <path d="M21 21l-4.5-4.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">検索</span>
+  </a>
+
+  <!-- お知らせ → P61 -->
+  <a href="kotennavi-p61.html" class="ktn-sidebar__item" id="ktnSidebarNotice" data-page="p61">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__dot" id="ktnNoticeDot" style="display:none"></span>
+    <span class="ktn-sidebar__label">お知らせ</span>
+  </a>
+
+  <!-- ガイド → P60 -->
+  <a href="kotennavi-p60.html" class="ktn-sidebar__item" data-page="p60">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" stroke-linecap="round"/>
+        <path d="M12 16v-4M12 8h.01" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">ガイド</span>
+  </a>
+
+  <div class="ktn-sidebar__divider"></div>
+
+  <!-- ロール別アイコン（JS注入） -->
+  <div id="ktnRoleNav" style="width:100%;display:flex;flex-direction:column;align-items:center"></div>
+
+  <div class="ktn-sidebar__footer">
+    <p class="ktn-sidebar__footer-label">Follow us</p>
+    <div class="ktn-sidebar__sns">
+      <a href="https://www.facebook.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="Facebook">
+        <svg viewBox="0 0 320 512" fill="currentColor"><path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/></svg>
+      </a>
+      <a href="https://x.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="X">
+        <svg viewBox="0 0 512 512" fill="currentColor"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg>
+      </a>
+    </div>
+  </div>
+
+</aside>
+
+<div class="content-wrap" id="contentWrap">
+
+  <header class="ktn-header" id="ktnHeader">
+    <div class="ktn-header__inner">
+      <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+      <div class="ktn-hdr-actions" id="ktnActs"></div>
+    </div>
+  </header>
+  <div class="ktn-tagbar" id="ktnTagbar">
+    <div class="ktn-tagbar__inner" id="ktnTagbarInner"></div>
+  </div>
+
+  <main class="ktn-main" id="ktnMain">
+
+    <!-- A. 検索ヘッド -->
+    <section class="p10-search">
+      <div class="p10-search__inner">
+        <div class="p10-search__title-row">
+          <h1 class="p10-search__title">展覧会を探す</h1>
+          <span class="p10-search__en">Exhibition Search</span>
+          <nav class="p10-search__types" aria-label="検索対象の切替">
+            <a class="p10-search__type is-active" href="#" onclick="event.preventDefault()">展覧会</a>
+            <a class="p10-search__type" href="kotennavi-p10-1.html">作品</a>
+            <a class="p10-search__type" href="kotennavi-p10-2.html">クリエイター</a>
+            <a class="p10-search__type" href="kotennavi-p10-3.html">ギャラリー</a>
+          </nav>
+        </div>
+
+        <div class="p10-search__box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+          <input class="p10-search__input" id="p10Keyword" type="search" placeholder="展覧会名・出展者名・会場名で検索" aria-label="キーワード検索">
+          <button class="p10-search__submit" id="p10SearchBtn" type="button">検索</button>
+        </div>
+
+        <div class="p10-quick-row">
+          <button class="p10-chip" data-f="st:live" type="button">開催中</button>
+          <button class="p10-chip" data-f="weekend:1" type="button">今週末</button>
+          <button class="p10-chip" data-f="near:1" type="button">近くで開催</button>
+          <button class="p10-chip" data-f="free:1" type="button">入場無料</button>
+          <span class="p10-quick-row__sep"></span>
+          <button class="p10-chip" data-f="liaison:li" type="button"><span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>オンライン展示あり</button>
+          <button class="p10-chip" data-f="liaison:lp" type="button"><span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span>オンラインで購入できる</button>
+          <span class="p10-quick-row__sep"></span>
+          <button class="p10-adv-toggle" id="p10AdvToggle" type="button" aria-expanded="false">
+            詳しい条件
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+        </div>
+
+        <!-- 詳細条件ドロワー -->
+        <div class="p10-adv" id="p10Adv">
+          <div class="p10-adv__group">
+            <div class="p10-adv__label">開催日</div>
+            <div class="p10-adv__opts">
+              <button class="p10-day" type="button"><span class="p10-day__dow">wed</span><span class="p10-day__num">08</span></button>
+              <button class="p10-day" type="button"><span class="p10-day__dow">thu</span><span class="p10-day__num">09</span></button>
+              <button class="p10-day" type="button"><span class="p10-day__dow">fri</span><span class="p10-day__num">10</span></button>
+              <button class="p10-day" type="button"><span class="p10-day__dow">sat</span><span class="p10-day__num">11</span></button>
+              <button class="p10-day" type="button"><span class="p10-day__dow">sun</span><span class="p10-day__num">12</span></button>
+              <button class="p10-day" type="button"><span class="p10-day__dow">mon</span><span class="p10-day__num">13</span></button>
+              <button class="p10-day" type="button"><span class="p10-day__dow">tue</span><span class="p10-day__num">14</span></button>
+              <button class="p10-chip" type="button">期間を指定する</button>
+            </div>
+          </div>
+          <div class="p10-adv__group">
+            <div class="p10-adv__label">作品ジャンル</div>
+            <div class="p10-adv__opts">
+              <button class="p10-chip" type="button">アート</button>
+              <button class="p10-chip" type="button">クラフト</button>
+              <button class="p10-chip" type="button">ファッション</button>
+              <button class="p10-chip" type="button">写真</button>
+              <button class="p10-chip" type="button">建築</button>
+              <button class="p10-chip" type="button">その他</button>
+            </div>
+          </div>
+          <div class="p10-adv__group">
+            <div class="p10-adv__label">タグ</div>
+            <div class="p10-adv__opts">
+              <button class="p10-chip" data-f="tag:絵画" type="button"># 絵画</button>
+              <button class="p10-chip" data-f="tag:現代美術" type="button"># 現代美術</button>
+              <button class="p10-chip" data-f="tag:写真" type="button"># 写真</button>
+              <button class="p10-chip" data-f="tag:書道" type="button"># 書道</button>
+              <button class="p10-chip" data-f="tag:版画" type="button"># 版画</button>
+              <button class="p10-chip" data-f="tag:陶芸" type="button"># 陶芸</button>
+              <button class="p10-chip" data-f="tag:クラフト" type="button"># クラフト</button>
+              <button class="p10-adv-toggle" type="button">タグをもっとみる ∨</button>
+            </div>
+          </div>
+          <div class="p10-adv__group">
+            <div class="p10-adv__label">開催場所</div>
+            <div class="p10-adv__opts">
+              <input class="p10-adv__near-input" type="text" placeholder="ギャラリー・美術館名から「〜の近く」で探す">
+              <span class="p10-quick-row__sep"></span>
+              <button class="p10-chip" data-f="area:東京" type="button">東京</button>
+              <button class="p10-chip" data-f="area:神奈川" type="button">神奈川</button>
+              <button class="p10-chip" data-f="area:愛知" type="button">愛知</button>
+              <button class="p10-chip" data-f="area:京都" type="button">京都</button>
+              <button class="p10-chip" data-f="area:大阪" type="button">大阪</button>
+              <button class="p10-chip" data-f="area:福岡" type="button">福岡</button>
+              <button class="p10-chip" type="button">すべての都道府県 ∨</button>
+              <span class="p10-adv__note">東京は都心部（銀座・丸の内）／東部（上野・谷根千）／西部（新宿・渋谷）などエリア単位でも指定できます</span>
+            </div>
+          </div>
+          <div class="p10-adv__group">
+            <div class="p10-adv__label">展覧会タイプ</div>
+            <div class="p10-adv__opts">
+              <button class="p10-chip" data-f="type:solo" type="button">個展</button>
+              <button class="p10-chip" data-f="type:group" type="button">グループ展</button>
+            </div>
+          </div>
+          <div class="p10-adv__group">
+            <div class="p10-adv__label">こだわり条件</div>
+            <div class="p10-adv__opts">
+              <button class="p10-chip" data-f="free:1" type="button">入場無料</button>
+              <button class="p10-chip" type="button">子連れ歓迎</button>
+              <button class="p10-chip" type="button">在廊あり</button>
+              <button class="p10-chip" type="button">バリアフリー</button>
+              <button class="p10-chip" type="button">駐車場あり</button>
+              <button class="p10-chip" type="button">クレジットカードOK</button>
+              <button class="p10-chip" type="button">来場者特典あり</button>
+              <button class="p10-chip" data-f="liaison:li" type="button"><span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>オンライン展示あり</button>
+              <button class="p10-chip" data-f="liaison:lp" type="button"><span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span>オンラインで購入できる</button>
+            </div>
+          </div>
+          <div class="p10-adv__foot">
+            <button class="ktn-op-btn" id="p10AdvClear" type="button">条件をクリア</button>
+            <button class="ktn-op-btn ktn-op-btn--primary" id="p10AdvSearch" type="button">この条件で検索</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- B. 特集チップレール（アルゴリズム生成プリセット） -->
+    <div class="p10-presets">
+      <div class="p10-presets__inner">
+        <span class="p10-presets__label">Picks</span>
+        <button class="p10-presets__arr p10-presets__arr--l is-hidden" id="p10PresetArrL" type="button" aria-label="左へスクロール">‹</button>
+        <div class="p10-presets__rail" id="p10PresetRail"></div>
+        <button class="p10-presets__arr p10-presets__arr--r" id="p10PresetArrR" type="button" aria-label="右へスクロール">›</button>
+      </div>
+    </div>
+
+    <!-- C. ディスカバリー状態（条件なしのデフォルト） -->
+    <div class="ktn-content p10-content" id="p10Discovery">
+
+      <section class="p10-shelf">
+        <div class="ktn-section__head">
+          <h2 class="ktn-section__title">もうすぐ終了<span class="ktn-sec-en">Ending Soon</span></h2>
+          <a href="#" class="ktn-section__more" data-preset="ending-all">もっと見る →</a>
+        </div>
+        <p class="p10-shelf__desc">会期残りわずか。見逃したくない展覧会からチェック。</p>
+        <div class="p10-shelf-grid" id="p10EndingGrid"></div>
+      </section>
+
+      <section class="p10-shelf">
+        <div class="ktn-section__head">
+          <h2 class="ktn-section__title">近くの展覧会<span class="ktn-sec-en">Nearby</span></h2>
+          <a href="#" class="ktn-section__more" data-preset="near-live">もっと見る →</a>
+        </div>
+        <p class="p10-shelf__desc">現在地から10km以内で開催中・開催予定の展覧会。</p>
+        <div class="p10-nearby-grid" id="p10NearbyGrid"></div>
+      </section>
+
+      <section class="p10-shelf">
+        <div class="ktn-section__head">
+          <h2 class="ktn-section__title">オンラインでも楽しめる<span class="ktn-sec-en">Liaison</span></h2>
+          <a href="#" class="ktn-section__more" data-preset="liaison">もっと見る →</a>
+        </div>
+        <p class="p10-shelf__desc">会場の展覧会と連動して、オンラインで作品を鑑賞・購入できる LIAISON・LIAISON+ 対応の展覧会。 <a class="ktn-guide-link" href="kotennavi-p70.html">LIAISONとは →</a></p>
+        <div class="p10-shelf-grid" id="p10LiaisonGrid"></div>
+      </section>
+
+      <section class="p10-shelf">
+        <div class="ktn-section__head">
+          <h2 class="ktn-section__title">今オンラインで買える作品<span class="ktn-sec-en">Buy Online</span></h2>
+          <a href="#" class="ktn-section__more" data-preset="liaison-plus">LIAISON+の展覧会を見る →</a>
+        </div>
+        <p class="p10-shelf__desc"><span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span> 対応の展覧会で、いまオンライン販売を受け付けている作品。会場に行けなくても購入できます。</p>
+        <div class="p2-5-grid" id="p10BuyGrid"></div>
+      </section>
+
+      <section class="p10-shelf ktn-cv-auto">
+        <div class="ktn-section__head">
+          <h2 class="ktn-section__title" id="p10Feat1Title">特集<span class="ktn-sec-en">Picks</span></h2>
+          <a href="#" class="ktn-section__more" id="p10Feat1More" data-preset="tokyo-gendai">この特集をすべて見る →</a>
+        </div>
+        <div class="p10-shelf-grid" id="p10Feat1Grid"></div>
+      </section>
+
+      <section class="p10-shelf ktn-cv-auto">
+        <div class="ktn-section__head">
+          <h2 class="ktn-section__title" id="p10Feat2Title">特集<span class="ktn-sec-en">Picks</span></h2>
+          <a href="#" class="ktn-section__more" id="p10Feat2More" data-preset="weekend">この特集をすべて見る →</a>
+        </div>
+        <div class="p10-shelf-grid" id="p10Feat2Grid"></div>
+      </section>
+
+      <section class="p10-shelf ktn-cv-auto">
+        <div class="ktn-section__head">
+          <h2 class="ktn-section__title" id="p10RecTitleLogin" hidden>あなたへのおすすめ<span class="ktn-sec-en">Picks for You</span></h2>
+          <h2 class="ktn-section__title" id="p10RecTitleGuest">いま注目の展覧会<span class="ktn-sec-en">Trending</span></h2>
+          <a href="#" class="ktn-section__more" data-preset="trending">もっと見る →</a>
+        </div>
+        <p class="p10-shelf__desc" id="p10RecDescLogin" hidden>ウォッチ中のクリエイター・興味あり！の傾向からのおすすめ。</p>
+        <p class="p10-shelf__desc" id="p10RecDescGuest">興味あり！とチェックインが集まっている展覧会。</p>
+        <div class="p10-shelf-grid" id="p10RecGrid"></div>
+      </section>
+
+      <section class="p10-shelf ktn-cv-auto">
+        <div class="ktn-section__head">
+          <h2 class="ktn-section__title">新着掲載<span class="ktn-sec-en">New Arrivals</span></h2>
+          <a href="#" class="ktn-section__more" data-preset="new-all">もっと見る →</a>
+        </div>
+        <p class="p10-shelf__desc">最近個展なびに掲載された展覧会。</p>
+        <div class="p10-shelf-grid" id="p10NewGrid"></div>
+      </section>
+
+    </div>
+
+    <!-- D. 結果状態（キーワード・フィルタ・特集） -->
+    <div class="ktn-content p10-content" id="p10Results" hidden>
+      <div class="p10-ctx">
+        <div class="p10-ctx__eyebrow" id="p10CtxEyebrow">Search Results</div>
+        <h2 class="p10-ctx__title" id="p10CtxTitle">検索結果</h2>
+        <p class="p10-ctx__desc" id="p10CtxDesc" hidden></p>
+        <div class="p10-fchips" id="p10Fchips" hidden></div>
+      </div>
+      <div class="p10-toolbar">
+        <span class="p10-toolbar__count" id="p10Count"><strong>0</strong>件</span>
+        <label class="p10-toolbar__sort">並び順
+          <select id="p10Sort">
+            <option value="end">会期終了が近い順</option>
+            <option value="pop">人気順</option>
+            <option value="new">新着順</option>
+          </select>
+        </label>
+      </div>
+      <div class="p10-shelf-grid" id="p10ResultGrid"></div>
+      <div class="p10-more-wrap">
+        <button class="ktn-op-btn" id="p10MoreBtn" type="button">さらに読み込む</button>
+      </div>
+    </div>
+
+    <!-- E. ゼロヒット状態 -->
+    <div class="ktn-content p10-content" id="p10Zero" hidden>
+      <div class="p10-zero-box">
+        <h2 class="p10-zero-box__title" id="p10ZeroTitle">条件に合う展覧会が見つかりませんでした</h2>
+        <p class="p10-zero-box__sub">キーワードを短くするか、条件を減らして探しなおしてみてください。<br>近いテーマの特集からも探せます。</p>
+        <div class="p10-zero-sugg" id="p10ZeroSugg"></div>
+        <div class="p10-more-wrap">
+          <button class="ktn-op-btn" type="button" onclick="setP10View('disc',document.querySelector('[data-p10-view]'))">条件をクリアして探しなおす</button>
+        </div>
+      </div>
+      <section class="p10-shelf">
+        <div class="ktn-section__head">
+          <h2 class="ktn-section__title">こちらもおすすめ<span class="ktn-sec-en">You May Like</span></h2>
+        </div>
+        <div class="p10-shelf-grid" id="p10ZeroGrid"></div>
+      </section>
+    </div>
+
+    <!-- 広告 -->
+    <div class="ktn-ad-band">
+      <div class="ktn-ad-band__inner">
+        <div class="ktn-ad-band__slot">広告エリア（728×90 / レスポンシブ）</div>
+      </div>
+    </div>
+
+  </main><!-- /ktn-main -->
+
+  <footer class="ktn-footer" id="ktnFooter"></footer>
+
+</div><!-- /content-wrap -->
+</div><!-- /shell -->
+
+<nav class="ktn-bottom-nav" id="ktnBottomNav">
+  <div class="ktn-bottom-nav__inner" id="ktnBottomNavInner"></div>
+</nav>
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    KTN.init({ page: 'p10-4', role: 'guest' });
+    var presetBtn = document.querySelectorAll('[data-p10-view]')[1];
+    if (typeof window.setP10View === 'function') window.setP10View('preset', presetBtn);
+  });
+</script>
+</body>
+</html>

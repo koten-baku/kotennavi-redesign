@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>退会 — 山田 花子 | 個展なび</title>
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<body data-w="article" class="p5-page p5-100-page mgmt-page">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- デモバー -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ロール：</span>
+  <button class="dbtn on" onclick="setR('user+',this)">user+</button>
+  <button class="dbtn" onclick="setR('admin',this)">管理者</button>
+  <span class="dbar-sep" style="margin-left:12px">未処理の取引：</span>
+  <button class="dbtn on" onclick="p5100SetTxn(false,this)">なし</button>
+  <button class="dbtn" onclick="p5100SetTxn(true,this)">あり</button>
+</div>
+
+<div class="shell">
+<aside class="ktn-sidebar" id="ktnSidebar">
+  <a href="kotennavi-p1.html" class="ktn-sidebar__logo" data-page="p1">
+    <img src="./images/kotennavi-logo5-1.svg" alt="個展なび">
+  </a>
+  <a href="kotennavi-p10.html" class="ktn-sidebar__item" data-page="p10">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <circle cx="11" cy="11" r="7.5"/>
+        <path d="M21 21l-4.5-4.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">検索</span>
+  </a>
+  <a href="kotennavi-p61.html" class="ktn-sidebar__item" id="ktnSidebarNotice" data-page="p61">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__dot" id="ktnNoticeDot" style="display:none"></span>
+    <span class="ktn-sidebar__label">お知らせ</span>
+  </a>
+  <a href="kotennavi-p60.html" class="ktn-sidebar__item" data-page="p60">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" stroke-linecap="round"/>
+        <path d="M12 16v-4M12 8h.01" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">ガイド</span>
+  </a>
+  <div class="ktn-sidebar__divider"></div>
+  <div id="ktnRoleNav" style="width:100%;display:flex;flex-direction:column;align-items:center"></div>
+  <div class="ktn-sidebar__footer">
+    <p class="ktn-sidebar__footer-label">Follow us</p>
+    <div class="ktn-sidebar__sns">
+      <a href="https://www.facebook.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="Facebook">
+        <svg viewBox="0 0 320 512" fill="currentColor"><path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/></svg>
+      </a>
+      <a href="https://x.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="X">
+        <svg viewBox="0 0 512 512" fill="currentColor"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg>
+      </a>
+    </div>
+  </div>
+</aside>
+
+<div class="content-wrap" id="contentWrap">
+
+  <header class="ktn-header" id="ktnHeader">
+    <div class="ktn-header__inner">
+      <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+      <div class="ktn-hdr-actions" id="ktnActs"></div>
+    </div>
+  </header>
+
+  <main class="ktn-main" id="ktnMain">
+    <div class="ktn-content">
+
+      <div class="ktn-mgmt-context">
+        <a class="ktn-mgmt-context__media ktn-mgmt-context__media--user" href="kotennavi-p5.html" style="background:linear-gradient(135deg,#f0c0d8,#c87aaa)">花</a>
+        <div class="ktn-mgmt-context__body">
+          <div class="ktn-mgmt-context__badges">
+            <span class="cb cb-person cb-user">user</span>
+          </div>
+          <div class="ktn-mgmt-context__name"><a href="kotennavi-p5.html">山田 花子</a></div>
+        </div>
+        <div class="ktn-mgmt-context__actions">
+          <a class="ktn-mgmt-context__view" href="kotennavi-p5.html">マイページへ →</a>
+        </div>
+      </div>
+
+      <div class="p5100-wrap ktn-mgmt-wrap ktn-mgmt-stack">
+
+        <div class="ktn-mgmt-head">
+          <h2 class="ktn-mgmt-head__title">退会</h2>
+          <p class="ktn-mgmt-head__en">DEACTIVATE ACCOUNT</p>
+          <p class="ktn-mgmt-head__desc">個展なびのアカウントを退会します。退会前に、以下の内容を必ずご確認ください。</p>
+        </div>
+
+        <!-- 未処理の取引がある場合のブロック通知 -->
+        <div class="ktn-txn-alert is-on" id="p5100TxnBlock" style="margin:0 20px" hidden>
+          未完了の取引（発送待ち・受取確認待ち等）があるため、退会できません。<a class="ktn-guide-link" href="./kotennavi-p5-15.html">取引ワークスペースで状況を確認する →</a>
+        </div>
+
+        <!-- 退会に伴う注意事項 -->
+        <div style="margin:0 20px;padding:18px 20px;background:var(--paper);border-radius:4px">
+          <p style="font-family:var(--fn);font-size:.82rem;font-weight:600;color:var(--ink);margin-bottom:8px">退会すると、以下のデータが削除されます</p>
+          <ul style="font-family:var(--fn);font-size:.82rem;line-height:2;color:var(--ink);padding-left:1.2em">
+            <li>プロフィール情報・アカウント情報</li>
+            <li>ウォッチリスト・興味あり！・チェックイン履歴</li>
+            <li>コレクションルームの登録内容</li>
+          </ul>
+          <p style="font-family:var(--fn);font-size:.78rem;line-height:1.9;color:var(--muted);margin-top:12px">creator／gallery機能をご利用中の場合、先に各機能の解約が必要です。掲載中の展覧会・作品・記事がある場合は退会前に整理してください。取引完了後の記録は、法令に基づき一定期間保持されます。</p>
+        </div>
+
+        <!-- 退会理由（任意） -->
+        <div class="p211-field" style="margin:0 20px">
+          <label class="p211-label">退会理由（任意）</label>
+          <select class="p211-select" id="p5100Reason">
+            <option value="">選択してください</option>
+            <option>利用する機会が少なかった</option>
+            <option>目的のコンテンツが見つからなかった</option>
+            <option>他のサービスを利用することにした</option>
+            <option>操作が分かりづらかった</option>
+            <option>その他</option>
+          </select>
+        </div>
+
+        <div class="p211-field" style="margin:12px 20px 0">
+          <label class="p211-label">ご意見・ご要望（任意）</label>
+          <textarea class="p211-textarea" id="p5100Feedback" rows="4" placeholder="今後のサービス改善のため、よろしければご意見をお聞かせください。"></textarea>
+        </div>
+
+        <label class="p114-terms-agree" id="p5100AgreeLabel" style="margin:16px 20px 0">
+          <input type="checkbox" id="p5100Agree" onchange="p5100UpdateSubmit()">
+          <span>上記の内容を理解したうえで、退会します</span>
+        </label>
+
+        <div style="margin:20px 20px 0;text-align:right">
+          <button class="ktn-op-btn ktn-op-btn--danger-outline ktn-op-btn--lg" id="p5100SubmitBtn" disabled onclick="p5100OpenModal()">退会する</button>
+        </div>
+
+      </div>
+
+      <!-- 確認モーダル -->
+      <div class="p515-modal-overlay" id="p5100Modal" hidden>
+        <div class="p515-modal">
+          <div class="p515-modal__head">
+            <span class="p515-modal__title">本当に退会しますか？</span>
+            <button class="p515-modal__close" id="p5100ModalClose">✕</button>
+          </div>
+          <div class="p515-modal__body">
+            <p class="p515-modal__desc">退会すると、アカウント情報・ウォッチリスト・興味あり！・チェックイン履歴等がすべて削除されます。<strong>この操作は取り消せません。</strong></p>
+          </div>
+          <div class="p515-modal__foot">
+            <button class="p515-modal__btn ktn-op-btn" id="p5100ModalCancel">キャンセル</button>
+            <button class="p515-modal__btn ktn-op-btn ktn-op-btn--danger" id="p5100ModalOk">退会する</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /.ktn-content -->
+  </main>
+<footer class="ktn-footer" id="ktnFooter"></footer>
+
+</div><!-- /.content-wrap -->
+</div><!-- /.shell -->
+
+<nav class="ktn-bottom-nav" id="ktnBottomNav"><div class="ktn-bottom-nav__inner" id="ktnBottomNavInner"></div></nav>
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+  KTN.init({ page: 'p5-100', role: 'user+' });
+  function setR(role, btn) {
+    document.querySelectorAll('.dbar .dbtn').forEach(function(b){ if(!b.hasAttribute('data-purchase-history-btn')) b.classList.remove('on'); });
+    btn.classList.add('on');
+    window.curRole = role;
+    if (window.ktnRender) ktnRender();
+  }
+
+  function p5100SetTxn(hasTxn, btn) {
+    document.querySelectorAll('.dbar .dbtn').forEach(function(b) {
+      if (b.getAttribute('onclick') && b.getAttribute('onclick').indexOf('p5100SetTxn') !== -1) b.classList.remove('on');
+    });
+    btn.classList.add('on');
+    document.getElementById('p5100TxnBlock').hidden = !hasTxn;
+    var submitBtn = document.getElementById('p5100SubmitBtn');
+    if (hasTxn) { submitBtn.disabled = true; }
+    else { submitBtn.disabled = !document.getElementById('p5100Agree').checked; }
+  }
+
+  function p5100UpdateSubmit() {
+    if (!document.getElementById('p5100TxnBlock').hidden) return;
+    document.getElementById('p5100SubmitBtn').disabled = !document.getElementById('p5100Agree').checked;
+  }
+
+  function p5100OpenModal() {
+    document.getElementById('p5100Modal').hidden = false;
+  }
+  document.getElementById('p5100ModalClose').addEventListener('click', function () { document.getElementById('p5100Modal').hidden = true; });
+  document.getElementById('p5100ModalCancel').addEventListener('click', function () { document.getElementById('p5100Modal').hidden = true; });
+  document.getElementById('p5100ModalOk').addEventListener('click', function () {
+    document.getElementById('p5100Modal').hidden = true;
+    KTN.submitDone({
+      title: '退会が完了しました',
+      message: 'ご利用ありがとうございました。<br>アカウント情報はすべて削除されました。',
+      action: { label: 'トップページへ', href: './kotennavi-p1.html' }
+    });
+  });
+</script>
+</body>
+</html>

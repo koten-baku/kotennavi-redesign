@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>リエゾンプラスコンソール — 管理者 | 個展なび</title>
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<body data-w="detail" class="p90-12-page mgmt-page">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- デモバー -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ロール：</span>
+  <button class="dbtn on" onclick="setR('admin',this)">管理者</button>
+</div>
+
+<div class="shell">
+
+<!-- サイドバー（kotennavi-p1.html と同一マークアップ・#ktnRoleNav は renderSidebar() がJS注入） -->
+<aside class="ktn-sidebar" id="ktnSidebar">
+
+  <!-- ロゴ (logo5-1) -->
+  <a href="kotennavi-p1.html" class="ktn-sidebar__logo" data-page="p1">
+    <img src="./images/kotennavi-logo5-1.svg" alt="個展なび">
+  </a>
+
+  <!-- 検索 → P10 検索ハブ -->
+  <a href="kotennavi-p10.html" class="ktn-sidebar__item" data-page="p10">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <circle cx="11" cy="11" r="7.5"/>
+        <path d="M21 21l-4.5-4.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">検索</span>
+  </a>
+
+  <!-- お知らせ → P61（未制作） -->
+  <a href="kotennavi-p61.html" class="ktn-sidebar__item" id="ktnSidebarNotice" data-page="p61">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__dot" id="ktnNoticeDot" style="display:none"></span>
+    <span class="ktn-sidebar__label">お知らせ</span>
+  </a>
+
+  <!-- ガイド → P60（未制作） -->
+  <a href="kotennavi-p60.html" class="ktn-sidebar__item" data-page="p60">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" stroke-linecap="round"/>
+        <path d="M12 16v-4M12 8h.01" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">ガイド</span>
+  </a>
+
+  <div class="ktn-sidebar__divider"></div>
+
+  <!-- ロール別アイコン（JS注入） -->
+  <div id="ktnRoleNav" style="width:100%;display:flex;flex-direction:column;align-items:center"></div>
+
+  <div class="ktn-sidebar__footer">
+    <p class="ktn-sidebar__footer-label">Follow us</p>
+    <div class="ktn-sidebar__sns">
+      <a href="https://www.facebook.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="Facebook">
+        <svg viewBox="0 0 320 512" fill="currentColor"><path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/></svg>
+      </a>
+      <a href="https://x.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="X">
+        <svg viewBox="0 0 512 512" fill="currentColor"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg>
+      </a>
+    </div>
+  </div>
+
+</aside>
+
+<div class="content-wrap" id="contentWrap">
+
+  <header class="ktn-header" id="ktnHeader">
+    <div class="ktn-header__inner">
+      <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+      <div class="ktn-hdr-actions" id="ktnActs"></div>
+    </div>
+  </header>
+
+  <main class="ktn-main" id="ktnMain">
+    <div class="ktn-content">
+
+      <!-- 管理ボックス -->
+      <div class="p9012-wrap ktn-mgmt-wrap ktn-mgmt-stack">
+
+        <!-- ページタイトル -->
+        <div class="ktn-mgmt-head">
+          <div class="ktn-mgmt-head__badge-row">
+            <span class="lb-dot li-plus">LIAISON+</span>
+          </div>
+          <h2 class="ktn-mgmt-head__title">リエゾンプラスコンソール</h2>
+          <p class="ktn-mgmt-head__en">LIAISON+ CONSOLE</p>
+          <p class="ktn-mgmt-head__desc">全出品者（クリエイター・ギャラリー）を横断してLIAISON+の出品作品を一覧できます。個別の出品内容・価格の変更はできません。取引の対応は<a class="ktn-guide-link" href="kotennavi-p90-13.html">取引デスク →</a>から行ってください。</p>
+        </div>
+
+        <div class="p319-toolbar">
+          <div class="p319-toolbar__filters">
+            <label class="p319-filter">
+              <span class="p319-filter__label">出品者ロール</span>
+              <select class="p319-filter__sel" id="p9012FilterRole">
+                <option value="">すべて</option>
+                <option value="creator">クリエイター</option>
+                <option value="gallery">ギャラリー</option>
+              </select>
+            </label>
+            <label class="p319-filter">
+              <span class="p319-filter__label">販売状態</span>
+              <select class="p319-filter__sel" id="p9012FilterStatus">
+                <option value="">すべて</option>
+                <option value="sale">販売中</option>
+                <option value="negot">商談中</option>
+                <option value="sold">売約済</option>
+                <option value="inquiry">要問合せ</option>
+                <option value="nsale">非売品</option>
+              </select>
+            </label>
+          </div>
+          <p class="ktn-count ktn-count--result" id="p9012Count">312件</p>
+        </div>
+
+        <div class="p315-archive-table-wrap">
+          <table class="p315-archive-table" aria-label="出品作品一覧">
+            <thead>
+              <tr>
+                <th>作品名</th>
+                <th>出品者</th>
+                <th>価格（税込）</th>
+                <th>販売状態</th>
+                <th>申込件数</th>
+                <th>登録日</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td data-label="作品名"><a class="ktn-guide-link" href="kotennavi-p6-2.html">流れる時間</a></td>
+                <td data-label="出品者"><span class="cb cb-person cb-creator">creator</span> <a class="ktn-guide-link" href="kotennavi-p3.html">田中 透</a></td>
+                <td data-label="価格（税込）">¥185,000</td>
+                <td data-label="販売状態"><span class="aws aws-sale">販売中</span></td>
+                <td data-label="申込件数">1件</td>
+                <td data-label="登録日">2026.02.10</td>
+              </tr>
+              <tr>
+                <td data-label="作品名"><a class="ktn-guide-link" href="kotennavi-p6-2.html">夜の静寂</a></td>
+                <td data-label="出品者"><span class="cb cb-person cb-creator">creator</span> <a class="ktn-guide-link" href="kotennavi-p3.html">田中 透</a></td>
+                <td data-label="価格（税込）">¥95,000</td>
+                <td data-label="販売状態"><span class="aws aws-sale">販売中</span></td>
+                <td data-label="申込件数">1件</td>
+                <td data-label="登録日">2026.02.10</td>
+              </tr>
+              <tr>
+                <td data-label="作品名"><a class="ktn-guide-link" href="kotennavi-p6-2.html">線の重なり</a></td>
+                <td data-label="出品者"><span class="cb cb-person cb-gallery">gallery</span> <a class="ktn-guide-link" href="kotennavi-p4.html">Gallery SOIL 渋谷</a></td>
+                <td data-label="価格（税込）">¥55,000</td>
+                <td data-label="販売状態"><span class="aws aws-negot">商談中</span></td>
+                <td data-label="申込件数">1件</td>
+                <td data-label="登録日">2026.02.18</td>
+              </tr>
+              <tr>
+                <td data-label="作品名"><a class="ktn-guide-link" href="kotennavi-p6-2.html">声の痕跡</a></td>
+                <td data-label="出品者"><span class="cb cb-person cb-gallery">gallery</span> <a class="ktn-guide-link" href="kotennavi-p4.html">Gallery SOIL 渋谷</a></td>
+                <td data-label="価格（税込）">¥38,000</td>
+                <td data-label="販売状態"><span class="aws aws-sold">売約済</span></td>
+                <td data-label="申込件数">1件</td>
+                <td data-label="登録日">2026.01.02</td>
+              </tr>
+              <tr>
+                <td data-label="作品名"><a class="ktn-guide-link" href="kotennavi-p6-2.html">堆積する声</a></td>
+                <td data-label="出品者"><span class="cb cb-person cb-creator">creator</span> <a class="ktn-guide-link" href="#">佐藤 舞</a></td>
+                <td data-label="価格（税込）">¥180,000</td>
+                <td data-label="販売状態"><span class="aws aws-inquiry">要問合せ</span></td>
+                <td data-label="申込件数">0件</td>
+                <td data-label="登録日">2026.01.05</td>
+              </tr>
+              <tr>
+                <td data-label="作品名"><a class="ktn-guide-link" href="kotennavi-p6-2.html">遠い光</a></td>
+                <td data-label="出品者"><span class="cb cb-person cb-gallery">gallery</span> <a class="ktn-guide-link" href="#">Gallery Nui 代官山</a></td>
+                <td data-label="価格（税込）">¥72,000</td>
+                <td data-label="販売状態"><span class="aws aws-nsale">非売品</span></td>
+                <td data-label="申込件数">0件</td>
+                <td data-label="登録日">2025.12.20</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="p319-empty" id="p9012Empty" hidden>
+          <p class="p319-empty__msg">該当する出品がありません。</p>
+        </div>
+
+        <nav class="ktn-pagination" id="p9012Pagination" aria-label="ページ送り" hidden></nav>
+
+      </div><!-- /.ktn-mgmt-wrap -->
+
+    </div><!-- /.ktn-content -->
+  </main>
+<footer class="ktn-footer" id="ktnFooter"></footer>
+
+
+</div><!-- /.content-wrap -->
+</div><!-- /.shell -->
+
+<nav class="ktn-bottom-nav" id="ktnBottomNav"><div class="ktn-bottom-nav__inner" id="ktnBottomNavInner"></div></nav>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Top","item":"https://koten-navi.com/"},{"@type":"ListItem","position":2,"name":"管理者","item":"https://koten-navi.com/p90"},{"@type":"ListItem","position":3,"name":"リエゾンプラスコンソール"}]}</script>
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+  KTN.init({ page: 'p90-12', role: 'admin' });
+  function setR(role, btn) {
+    document.querySelectorAll('.dbtn').forEach(function(b){ b.classList.remove('on'); });
+    btn.classList.add('on');
+    window.curRole = role;
+    if (window.ktnRender) ktnRender();
+  }
+</script>
+</body>
+</html>

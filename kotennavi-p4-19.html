@@ -122,7 +122,7 @@
         <div class="ktn-mgmt-head">
           <h2 class="ktn-mgmt-head__title">記事管理 - ギャラリー</h2>
           <p class="ktn-mgmt-head__en">ARTICLES</p>
-          <p class="ktn-mgmt-head__desc">「Gallery SOIL 渋谷」ギャラリーページに掲載される記事を作成・編集・削除します。<strong>展示スペースの紹介・イベントのお知らせ・レンタルギャラリーの利用案内・取り扱い作家やコレクションの紹介</strong>など、ギャラリーの魅力を伝える記事を作成できます。公開済みの記事はいつでも編集・クローンでの複製ができます。</p>
+          <p class="ktn-mgmt-head__desc">「Gallery SOIL 渋谷」ギャラリーページに掲載される記事を作成・編集・削除します。<strong>展示スペースの紹介・イベントのお知らせ・レンタルギャラリーの利用案内・取り扱い作家やコレクションの紹介</strong>など、ギャラリーの魅力を伝える記事を作成できます。公開済みの記事はいつでも編集できます。</p>
         </div>
 
         <!-- 新規作成（独立CTA） -->
@@ -225,12 +225,6 @@
 <script src="./kotennavi-pages.js"></script>
 <script>
   KTN.init({ page: 'p4-19', role: 'user+gallery' });
-  function setR(role, btn) {
-    document.querySelectorAll('.dbtn').forEach(function(b){ b.classList.remove('on'); });
-    btn.classList.add('on');
-    window.curRole = role;
-    if (window.ktnRender) ktnRender();
-  }
 </script>
 </body>
 </html>

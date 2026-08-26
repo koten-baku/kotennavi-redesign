@@ -53,6 +53,8 @@ const I = {
   clone: `<svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M10 4v4M14 4v4M2 8h20"/></svg>`,
   star: `<svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`,
   shop: `<svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>`,
+  badge: `<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M8.5 13.5L6 22l6-3 6 3-2.5-8.5"/></svg>`,
+  logout: `<svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>`,
   chev: `<polyline points="6 9 12 15 18 9"/>`,
 };
 
@@ -91,11 +93,34 @@ KTN.toast = showToast;
    ・.ktn-auth-overlay / .ktn-auth-modal のシェルを再利用
 ══════════════════════════════════ */
 const KTN_LISTQR_KINDS = {
-  list: { label: '作品リスト', url: 'https://koten-navi.com/p2-6', sub: 'スマホで読み取ると、会場配布用のリストが開きます。<br>画像を保存して会場ポスターやSNSにも掲示できます。' },
-  venue: { label: '会場チェックイン', url: 'https://koten-navi.com/p2', sub: 'スマホで読み取ると、この展覧会のページが開きます。<br>来場者はそのままチェックインやレビュー投稿ができます。画像を保存して受付・壁面に掲示できます。' },
-  creator: { label: '田中 透', url: 'https://koten-navi.com/p3', sub: 'スマホで読み取ると、あなたのクリエイターページが開きます。<br>SNS・DM・名刺等に掲示すると、ウォッチしてくれる人が増えやすくなります。' },
-  gallery: { label: 'Gallery SOIL 渋谷', url: 'https://koten-navi.com/p4', sub: 'スマホで読み取ると、ギャラリーページが開きます。<br>SNS・DM・名刺等に掲示すると、ウォッチしてくれる人が増えやすくなります。' }
+  list: { label: '作品リスト', title: '作品リストのQRコード', url: 'https://koten-navi.com/p2-6', sub: 'スマホで読み取ると、会場配布用のリストが開きます。<br>画像を保存して会場ポスターやSNSにも掲示できます。' },
+  /* url に ?src=venue-qr を付与し、この会場設置QR経由のアクセスを判別できるようにする（インサイトA-2） */
+  venue: { label: '会場チェックイン', title: '会場チェックインのQRコード', url: 'https://koten-navi.com/p2?src=venue-qr', sub: 'スマホで読み取ると、この展覧会のページが開きます。<br>来場者はそのままチェックインやレビュー投稿ができます。画像を保存して受付・壁面に掲示できます。' },
+  creator: { label: '田中 透', title: '田中 透 を共有', url: 'https://koten-navi.com/p3', sub: 'リンクをコピーしてSNS・DMで送ったり、QRコードを名刺・チラシ等に掲載すると、ウォッチしてくれる人が増えやすくなります。' },
+  gallery: { label: 'Gallery SOIL 渋谷', title: 'Gallery SOIL 渋谷 を共有', url: 'https://koten-navi.com/p4', sub: 'リンクをコピーしてSNS・DMで送ったり、QRコードを名刺・チラシ等に掲載すると、ウォッチしてくれる人が増えやすくなります。' }
 };
+/* 汎用テキストコピー（URLコピー等・textareaを介さない値のコピーに使う） */
+function ktnCopyText(text, msg) {
+  msg = msg || 'コピーしました';
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(function () { showToast(msg); }).catch(function () { _ktnCopyFallback(text, msg); });
+  } else {
+    _ktnCopyFallback(text, msg);
+  }
+}
+function _ktnCopyFallback(text, msg) {
+  var ta = document.createElement('textarea');
+  ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.select();
+  try { document.execCommand('copy'); showToast(msg); } catch (e) {}
+  document.body.removeChild(ta);
+}
+function ktnListQrCopyLink() {
+  var urlEl = document.getElementById('ktnListQrUrl');
+  if (!urlEl) return;
+  ktnCopyText(urlEl.textContent, 'リンクをコピーしました');
+}
+window.ktnListQrCopyLink = ktnListQrCopyLink;
 function ktnListQr(kind) {
   var def = KTN_LISTQR_KINDS[kind] || KTN_LISTQR_KINDS.list;
   var label = def.label;
@@ -124,14 +149,15 @@ function ktnListQr(kind) {
       + '</div>'
       + '<div class="ktn-listqr__url" id="ktnListQrUrl"></div>'
       + '<div class="ktn-auth-btns">'
-      + '<button class="ktn-auth-btn-primary" onclick="KTN.toast(\'QRコード画像の保存機能は準備中です\')">QRコード画像を保存</button>'
+      + '<button class="ktn-auth-btn-primary" onclick="ktnListQrCopyLink()">リンクをコピー</button>'
+      + '<button class="ktn-auth-btn-secondary" onclick="KTN.toast(\'QRコード画像の保存機能は準備中です\')">QRコード画像を保存</button>'
       + '<button class="ktn-auth-btn-secondary" onclick="ktnListQrClose()">閉じる</button>'
       + '</div>'
       + '</div>'
       + '</div>';
     document.body.appendChild(el);
   }
-  document.getElementById('ktnListQrTtl').textContent = label + 'のQRコード';
+  document.getElementById('ktnListQrTtl').textContent = def.title || (label + 'のQRコード');
   document.getElementById('ktnListQrSub').innerHTML = def.sub;
   document.getElementById('ktnListQrUrl').textContent = url;
   requestAnimationFrame(function () { el.classList.add('open'); });
@@ -145,80 +171,171 @@ window.ktnListQr = ktnListQr;
 window.ktnListQrClose = ktnListQrClose;
 
 /* ══════════════════════════════════
-   ページ共有モーダル（ktnPageShare・creator/gallery＝QR＋URL＋埋め込みバッジ）
-   ・.ktn-auth-overlay / .ktn-auth-modal のシェル＋.ktn-listqr__code/__url を再利用
-   ・独自ブロック：.ktn-pshare-badge（バッジプレビュー＋埋め込みコード）
+   SNSテキスト生成 モーダル（P2 管理者メニュー）
+   ・SNSテキスト／メール添付用URLは旧「新着展覧会表示」ツールの表示内容をそのまま踏襲
+   ・掲載完了メールはP90-9（メールテンプレート管理・screenId='p2-sns'＝「展覧会掲載依頼」グループ）のテンプレートを
+     もとに、P90-2-1（.p902-flow-panel）と同じ「テンプレート選択→送信元/件名/本文編集→送信」パターンで送信する。
+     P90-9側TEMPLATESとはスコープが別（ページ間の実データ連携がないため個別配列として保持＝P90-2/P90-11-1と同じ方針）
+   ・.ktn-auth-overlay / .ktn-auth-modal のシェルを再利用（ktnListQrと同型）
 ══════════════════════════════════ */
-const KTN_PSHARE_KINDS = {
-  creator: { label: '田中 透', url: 'https://koten-navi.com/p3', badgeLabel: '田中 透 - 個展なび' },
-  gallery: { label: 'Gallery SOIL 渋谷', url: 'https://koten-navi.com/p4', badgeLabel: 'Gallery SOIL 渋谷 - 個展なび' }
+const P2_SNS_TEXT_DATA = {
+  sns: '【個展なび新着情報】あなたが知らないオノマトペ 2026/02/18(wed)-2026/03/05(thu) @ Gallery SOIL 渋谷(東京都) https://koten-navi.com/p2 #個展 #個展なび #東京都の展覧会',
+  mailUrl: '展覧会名：あなたが知らないオノマトペ\nhttps://koten-navi.com/p2'
 };
-function ktnPageShare(kind) {
-  var def = KTN_PSHARE_KINDS[kind] || KTN_PSHARE_KINDS.creator;
-  var code = '<a href="' + def.url + '" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:#005da7;color:#fff;font-family:sans-serif;font-size:12px;text-decoration:none;">' + def.badgeLabel + '</a>';
-  var el = document.getElementById('ktnPageShareModal');
+const P2_SNS_MAIL_TEMPLATES = [
+  { key: 'listing-notice', name: '展覧会情報掲載のお知らせ', from: 'info@koten-navi.com',
+    subject: '【個展なび】展覧会情報掲載のお知らせ',
+    body: 'いつもお世話になっております。\n****************************\n展覧会情報掲載のお知らせ\n****************************\n展覧会情報をご連絡頂きありがとうございます。\n個展なびに以下の内容で掲載いたしました。\n\n　展覧会名：あなたが知らないオノマトペ\n　https://koten-navi.com/p2\n\n内容に相違がございましたら、お手数ですが下記までご連絡ください。\n　https://koten-navi.com/contact\n\nお問い合わせ：https://koten-navi.com/contact' }
+];
+function ktnP2SnsMailLoad(key) {
+  var t = null;
+  for (var i = 0; i < P2_SNS_MAIL_TEMPLATES.length; i++) { if (P2_SNS_MAIL_TEMPLATES[i].key === key) { t = P2_SNS_MAIL_TEMPLATES[i]; break; } }
+  if (!t) t = P2_SNS_MAIL_TEMPLATES[0];
+  var fromEl = document.getElementById('ktnP2SnsMailFrom');
+  var subjEl = document.getElementById('ktnP2SnsMailSubject');
+  var bodyEl = document.getElementById('ktnP2SnsMailBody');
+  if (fromEl) fromEl.value = t.from;
+  if (subjEl) subjEl.value = t.subject;
+  if (bodyEl) bodyEl.value = t.body;
+}
+function ktnP2SnsMailSend() {
+  if (KTN.toast) KTN.toast('掲載完了メールを送信しました（デモ）');
+}
+function ktnP2SnsText() {
+  var el = document.getElementById('ktnP2SnsModal');
   if (!el) {
     el = document.createElement('div');
     el.className = 'ktn-auth-overlay';
-    el.id = 'ktnPageShareModal';
-    el.setAttribute('onclick', 'ktnPageShareClose(event)');
+    el.id = 'ktnP2SnsModal';
+    el.setAttribute('onclick', 'ktnP2SnsTextClose(event)');
     el.innerHTML =
-      '<div class="ktn-auth-modal ktn-listqr">'
+      '<div class="ktn-auth-modal ktn-snstext">'
       + '<div class="ktn-auth-top">'
-      + '<button class="ktn-auth-close" onclick="ktnPageShareClose()">'
+      + '<button class="ktn-auth-close" onclick="ktnP2SnsTextClose()">'
       + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
       + '</button>'
-      + '<div class="ktn-auth-ttl" id="ktnPageShareTtl"></div>'
-      + '<div class="ktn-auth-sub" id="ktnPageShareSub"></div>'
+      + '<div class="ktn-auth-ttl">SNSテキスト生成</div>'
+      + '<div class="ktn-auth-sub">この展覧会のSNS投稿文・メール添付用URLを自動生成しました。コピーしてご利用ください。</div>'
       + '</div>'
       + '<div class="ktn-auth-body">'
-      + '<div class="ktn-listqr__code" aria-hidden="true">'
-      + '<svg viewBox="0 0 44 44" width="180" height="180" shape-rendering="crispEdges">'
-      + '<rect width="44" height="44" fill="#fff"/>'
-      + '<path fill="#231815" d="M4 4h7v7H4zM6 6v3h3V6zM13 4h2v2h-2zM17 4h2v4h-2zM21 4h2v2h-2zM25 4h2v2h2v2h-2v2h-2v-2h-2V6h2zM33 4h7v7h-7zM35 6v3h3V6zM15 6h2v2h-2zM13 8h2v2h-2zM4 13h7v7H4zM6 15v3h3v-3zM13 13h2v2h-2zM17 13h2v2h2v2h-2v2h-2v-2h-2v-2h2zM23 13h2v4h-2zM27 13h2v2h-2zM31 13h2v2h2v2h-2v2h-2v-2h-2v-2h2zM37 13h2v2h-2zM33 15h2v2h-2zM33 33h7v7h-7zM35 35v3h3v-3zM13 33h2v2h-2zM17 33h2v4h-2zM21 33h2v2h-2zM25 33h2v2h-2zM29 33h2v2h-2zM13 37h2v2h-2zM21 37h2v2h-2zM25 37h2v2h-2zM4 33h7v7H4zM6 35v3h3v-3zM4 22h2v2h-2zM8 22h2v2h-2zM12 22h2v2h-2zM16 22h2v2h-2zM20 22h2v2h-2zM24 22h2v2h-2zM28 22h2v2h-2zM32 22h2v2h-2zM36 22h2v2h-2zM40 22h2v2h-2zM4 26h2v2H4zM10 26h2v2h-2zM14 26h2v2h-2zM18 26h2v2h-2zM22 26h2v2h-2zM26 26h2v2h-2zM30 26h2v2h-2zM34 26h2v2h-2zM38 26h2v2h-2zM4 30h2v2H4zM8 30h2v2H8zM12 30h2v2h-2zM16 30h2v2h-2zM20 30h2v2h-2zM24 30h2v2h-2zM28 30h2v2h-2zM32 30h2v2h-2z"/>'
-      + '</svg>'
+      + '<div class="ktn-snstext__field">'
+      + '<div class="ktn-snstext__label"><span class="ktn-snstext__label-txt">SNSテキスト</span>'
+      + '<button type="button" class="ktn-snstext__copy" onclick="ktnCopyText(document.getElementById(\'ktnP2SnsTa1\').value,\'SNSテキストをコピーしました\')">コピー</button></div>'
+      + '<textarea class="ktn-snstext__ta" id="ktnP2SnsTa1" rows="4" readonly></textarea>'
       + '</div>'
-      + '<div class="ktn-listqr__url" id="ktnPageShareUrl"></div>'
-      + '<div class="ktn-pshare-badge">'
-      + '<div class="ktn-pshare-badge__label">埋め込みバッジ</div>'
-      + '<div class="ktn-pshare-badge__preview" id="ktnPageShareBadgePrev"></div>'
-      + '<textarea class="ktn-pshare-badge__code" id="ktnPageShareCode" readonly></textarea>'
-      + '<button class="ktn-auth-btn-secondary" onclick="ktnPageShareCopyBadge()">埋め込みコードをコピー</button>'
+      + '<div class="ktn-snstext__field">'
+      + '<div class="ktn-snstext__label"><span class="ktn-snstext__label-txt">メール添付用URL</span>'
+      + '<button type="button" class="ktn-snstext__copy" onclick="ktnCopyText(document.getElementById(\'ktnP2SnsTa2\').value,\'メール添付用URLをコピーしました\')">コピー</button></div>'
+      + '<textarea class="ktn-snstext__ta" id="ktnP2SnsTa2" rows="2" readonly></textarea>'
+      + '</div>'
+      + '<div class="p902-flow-panel">'
+      + '<p class="p902-flow-panel__title">掲載完了メールを送信</p>'
+      + '<label class="p902-flow-panel__label">テンプレート</label>'
+      + '<select class="p902-flow-panel__input" id="ktnP2SnsMailTpl" onchange="ktnP2SnsMailLoad(this.value)">'
+      + P2_SNS_MAIL_TEMPLATES.map(function (t) { return '<option value="' + t.key + '">' + t.name + '</option>'; }).join('')
+      + '</select>'
+      + '<label class="p902-flow-panel__label">送信元</label>'
+      + '<input type="text" class="p902-flow-panel__input" id="ktnP2SnsMailFrom" readonly>'
+      + '<label class="p902-flow-panel__label">件名</label>'
+      + '<input type="text" class="p902-flow-panel__input" id="ktnP2SnsMailSubject">'
+      + '<label class="p902-flow-panel__label">本文</label>'
+      + '<textarea class="p902-flow-panel__textarea" id="ktnP2SnsMailBody" rows="10"></textarea>'
+      + '<p class="p902-flow-panel__hint">出展者へ掲載完了をお知らせするメールです。内容を確認・編集のうえ送信してください。テンプレートは <a class="ktn-guide-link" href="./kotennavi-p90-9.html">メールテンプレート管理（P90-9）</a> の「展覧会掲載依頼」で管理しています。</p>'
+      + '<div class="p902-flow-panel__actions">'
+      + '<button class="ktn-op-btn ktn-op-btn--primary" id="ktnP2SnsMailSendBtn" onclick="ktnP2SnsMailSend()">このメールを送信する</button>'
+      + '</div>'
       + '</div>'
       + '<div class="ktn-auth-btns">'
-      + '<button class="ktn-auth-btn-primary" onclick="KTN.toast(\'QRコード画像の保存機能は準備中です\')">QRコード画像を保存</button>'
-      + '<button class="ktn-auth-btn-secondary" onclick="ktnPageShareClose()">閉じる</button>'
+      + '<button class="ktn-auth-btn-secondary" onclick="ktnP2SnsTextClose()">閉じる</button>'
       + '</div>'
       + '</div>'
       + '</div>';
     document.body.appendChild(el);
   }
-  document.getElementById('ktnPageShareTtl').textContent = def.label + 'のページを共有';
-  document.getElementById('ktnPageShareSub').innerHTML = 'スマホで読み取ると、' + def.label + 'のページが開きます。<br>埋め込みバッジをブログ・SNSプロフィール等に貼ると、そのままページへのリンクになります。';
-  document.getElementById('ktnPageShareUrl').textContent = def.url;
-  document.getElementById('ktnPageShareBadgePrev').innerHTML = code;
-  document.getElementById('ktnPageShareCode').value = code;
+  document.getElementById('ktnP2SnsTa1').value = P2_SNS_TEXT_DATA.sns;
+  document.getElementById('ktnP2SnsTa2').value = P2_SNS_TEXT_DATA.mailUrl;
+  ktnP2SnsMailLoad(P2_SNS_MAIL_TEMPLATES[0].key);
   requestAnimationFrame(function () { el.classList.add('open'); });
 }
-function ktnPageShareClose(e) {
-  if (e && e.target !== document.getElementById('ktnPageShareModal')) return;
-  var m = document.getElementById('ktnPageShareModal');
+function ktnP2SnsTextClose(e) {
+  if (e && e.target !== document.getElementById('ktnP2SnsModal')) return;
+  var m = document.getElementById('ktnP2SnsModal');
   if (m) m.classList.remove('open');
 }
-function ktnPageShareCopyBadge() {
-  var ta = document.getElementById('ktnPageShareCode');
-  if (!ta) return;
-  ta.select();
-  try {
-    document.execCommand('copy');
-    showToast('コピーしました');
-  } catch (e) {
-    navigator.clipboard && navigator.clipboard.writeText(ta.value).then(function () { showToast('コピーしました'); });
+window.ktnP2SnsText = ktnP2SnsText;
+window.ktnP2SnsTextClose = ktnP2SnsTextClose;
+window.ktnP2SnsMailLoad = ktnP2SnsMailLoad;
+window.ktnP2SnsMailSend = ktnP2SnsMailSend;
+
+/* ══════════════════════════════════
+   個展なびバッジ（.ktn-pshare-badge・P60-6「よくある質問-クリエイター編」/P60-7「よくある質問-ギャラリー編」の
+   1FAQ項目（#badge）内で使用）
+   ・旧ktnPageShareモーダル→2026-08-17にP3-13/P4-13へページ化→同日中にP60-6/P60-7の
+     チャプター（#badge）へ再移設→2026-08-18にP60-4〜7を「よくある質問」表記へ差し戻す方針変更に伴い、
+     章立て（ktn-index/ktn-zone）を廃止し通常のFAQ項目（.p70-faq-item）1つに格納。
+     ここには生成ロジック（定数・HTML生成関数）のみを置き、DOM結線は
+     KTN.pages['p60-6'] / KTN.pages['p60-7']（kotennavi-pages.js）側で行う。
+   ・ktnListQr（共有＝リンクコピー＋QR）とは対象ユーザーが別（本機能は埋め込み/DLを使いこなせる層向け）。
+══════════════════════════════════ */
+const KTN_PSHARE_KINDS = {
+  creator: { label: '田中 透', url: 'https://koten-navi.com/p3', badgeLabel: '田中 透 - 個展なび' },
+  gallery: { label: 'Gallery SOIL 渋谷', url: 'https://koten-navi.com/p4', badgeLabel: 'Gallery SOIL 渋谷 - 個展なび' }
+};
+/* バッジ画像アセット（ロゴ実ファイル準拠）
+   logo5-1＝角丸フレーム済みの単体マーク（サイドバー/会場フライヤーで実績あり）
+   logo3＝ブランド青の枠マーク単色（bottom-nav実績あり・#005da7の唯一の軸）
+   IMG＝外部サイトに貼る埋め込みコード用の絶対URL（本番ドメイン koten-navi.com 前提）。
+   IMG_REL＝このページ自身のライブプレビュー表示用の相対パス。絶対URLはローカル環境では解決できず
+   画像が表示されないため、プレビューは常にページと同一オリジンの相対パスで描画する。 */
+const KTN_PSHARE_IMG = {
+  frame: 'https://koten-navi.com/images/kotennavi-logo5-1.svg',
+  mark: 'https://koten-navi.com/images/kotennavi-logo3.svg'
+};
+const KTN_PSHARE_IMG_REL = {
+  frame: './images/kotennavi-logo5-1.svg',
+  mark: './images/kotennavi-logo3.svg'
+};
+const KTN_PSHARE_PATTERNS = [
+  { id: 'standard', label: 'スタンダード' },
+  { id: 'pill', label: 'ミニマル' },
+  { id: 'frame', label: 'フレーム' },
+  { id: 'outline', label: 'アウトライン' }
+];
+/* 'icon'（単体アイコン型・ktnPshareBadgeHtml側のcase自体は温存）は
+   P60-6/P60-7の「デザインを選ぶ」一覧からは2026-08-18に除外（P60-8「個展なびとは」の
+   ロゴ使用ポリシー文脈で別途出す方針にユーザーが決定・詳細はdocs/handoff-decisions.md追36）。 */
+/* imgs省略時は埋め込みコード用の絶対URL（KTN_PSHARE_IMG）。ライブプレビューは KTN_PSHARE_IMG_REL を渡す。 */
+function ktnPshareBadgeHtml(patternId, def, imgs) {
+  imgs = imgs || KTN_PSHARE_IMG;
+  switch (patternId) {
+    case 'pill':
+      return '<a href="' + def.url + '" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:7px;padding:6px 14px 6px 9px;border-radius:999px;background:#005da7;color:#fff;font-family:sans-serif;font-size:12px;font-weight:600;text-decoration:none;line-height:1;">'
+        + '<img src="' + imgs.mark + '" alt="" width="14" height="14" style="display:block;filter:brightness(0) invert(1);">'
+        + '<span>' + def.badgeLabel + '</span>'
+        + '</a>';
+    case 'frame':
+      return '<a href="' + def.url + '" target="_blank" rel="noopener" style="display:inline-flex;flex-direction:column;align-items:center;gap:8px;width:150px;padding:20px 14px 16px;background:#fff;border:1px solid #d8d2c8;border-top:3px solid #005da7;border-radius:4px;text-decoration:none;font-family:sans-serif;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,.06);">'
+        + '<img src="' + imgs.frame + '" alt="" width="34" height="34" style="display:block;">'
+        + '<span style="font-size:12.5px;font-weight:700;color:#231815;line-height:1.3;">' + def.label + '</span>'
+        + '<span style="font-size:8.5px;letter-spacing:.08em;color:#9a948a;text-transform:uppercase;">個展なび</span>'
+        + '</a>';
+    case 'outline':
+      return '<a href="' + def.url + '" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:7px;padding:6px 13px;border-radius:999px;background:transparent;border:1.5px solid #005da7;color:#005da7;font-family:sans-serif;font-size:12px;font-weight:600;text-decoration:none;line-height:1;">'
+        + '<img src="' + imgs.mark + '" alt="" width="13" height="13" style="display:block;">'
+        + '<span>' + def.badgeLabel + '</span>'
+        + '</a>';
+    case 'icon':
+      return '<a href="' + def.url + '" target="_blank" rel="noopener" style="display:inline-block;line-height:0;" title="' + def.badgeLabel + '">'
+        + '<img src="' + imgs.mark + '" alt="' + def.badgeLabel + '" width="18" height="18" style="display:inline-block;vertical-align:middle;">'
+        + '</a>';
+    case 'standard':
+    default:
+      return '<a href="' + def.url + '" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:10px;padding:8px 16px 8px 8px;background:#fff;border:1px solid #d8d2c8;border-radius:6px;text-decoration:none;font-family:sans-serif;box-shadow:0 1px 4px rgba(0,0,0,.05);">'
+        + '<img src="' + imgs.frame + '" alt="" width="26" height="26" style="display:block;">'
+        + '<span style="font-size:12.5px;font-weight:700;color:#231815;line-height:1.2;">' + def.label + '</span>'
+        + '</a>';
   }
 }
-window.ktnPageShare = ktnPageShare;
-window.ktnPageShareClose = ktnPageShareClose;
-window.ktnPageShareCopyBadge = ktnPageShareCopyBadge;
 
 /* ══════════════════════════════════
    会場フライヤー（A4印刷プレビュー・展覧会情報QR＋チェックインQRを1枚に配置）
@@ -228,6 +345,9 @@ window.ktnPageShareCopyBadge = ktnPageShareCopyBadge;
 function ktnVenueFlyer() {
   var el = document.getElementById('ktnVenueFlyerModal');
   if (!el) {
+    /* デモ用の静的プレースホルダーQR（実URLを持たない）。本番実装では情報QRに ?src=venue-flyer、
+       チェックインQRに ?src=venue-flyer&action=checkin を付与し、venue（掲示QR）と区別してインサイトA-2の
+       流入元判別に使う想定（kotennavi-p2-14.html の「QR/フライヤー経由」実績表示に対応）。 */
     var qrSvg = '<svg viewBox="0 0 44 44" width="180" height="180" shape-rendering="crispEdges">'
       + '<rect width="44" height="44" fill="#fff"/>'
       + '<path fill="#231815" d="M4 4h7v7H4zM6 6v3h3V6zM13 4h2v2h-2zM17 4h2v4h-2zM21 4h2v2h-2zM25 4h2v2h2v2h-2v2h-2v-2h-2V6h2zM33 4h7v7h-7zM35 6v3h3V6zM15 6h2v2h-2zM13 8h2v2h-2zM4 13h7v7H4zM6 15v3h3v-3zM13 13h2v2h-2zM17 13h2v2h2v2h-2v2h-2v-2h-2v-2h2zM23 13h2v4h-2zM27 13h2v2h-2zM31 13h2v2h2v2h-2v2h-2v-2h-2v-2h2zM37 13h2v2h-2zM33 15h2v2h-2zM33 33h7v7h-7zM35 35v3h3v-3zM13 33h2v2h-2zM17 33h2v4h-2zM21 33h2v2h-2zM25 33h2v2h-2zM29 33h2v2h-2zM13 37h2v2h-2zM21 37h2v2h-2zM25 37h2v2h-2zM4 33h7v7H4zM6 35v3h3v-3zM4 22h2v2h-2zM8 22h2v2h-2zM12 22h2v2h-2zM16 22h2v2h-2zM20 22h2v2h-2zM24 22h2v2h-2zM28 22h2v2h-2zM32 22h2v2h-2zM36 22h2v2h-2zM40 22h2v2h-2zM4 26h2v2H4zM10 26h2v2h-2zM14 26h2v2h-2zM18 26h2v2h-2zM22 26h2v2h-2zM26 26h2v2h-2zM30 26h2v2h-2zM34 26h2v2h-2zM38 26h2v2h-2zM4 30h2v2H4zM8 30h2v2H8zM12 30h2v2h-2zM16 30h2v2h-2zM20 30h2v2h-2zM24 30h2v2h-2zM28 30h2v2h-2zM32 30h2v2h-2z"/>'
@@ -302,6 +422,17 @@ window.ktnVenueFlyer = ktnVenueFlyer;
 window.ktnVenueFlyerClose = ktnVenueFlyerClose;
 window.ktnVenueFlyerPrint = ktnVenueFlyerPrint;
 
+/* 校正データの表示(印刷)（P2 管理者メニュー）：サイトchrome（ヘッダー/dbar/タグバー/ボトムナビ/フッター/トースト）を
+   隠して現在ページをそのまま印刷する。会場フライヤー印刷（ktnVenueFlyerPrint）と同じbodyクラス切替方式。 */
+function ktnP2ProofPrint() {
+  document.body.classList.add('ktn-printing-proof');
+  window.print();
+}
+window.addEventListener('afterprint', function () {
+  document.body.classList.remove('ktn-printing-proof');
+});
+window.ktnP2ProofPrint = ktnP2ProofPrint;
+
 /* ══════════════════════════════════
    送信完了モーダル（全ページ共通・申込/送信のsubmit後に表示）
    ・.ktn-auth-overlay / .ktn-auth-modal シェルを再利用（新規CSSなし）
@@ -351,6 +482,228 @@ function ktnSubmitDoneConfirm() {
 KTN.submitDone = ktnSubmitDone;
 window.ktnSubmitDone = ktnSubmitDone;
 window.ktnSubmitDoneConfirm = ktnSubmitDoneConfirm;
+
+/* ══════════════════════════════════
+   インサイト：推移ラインチャート（SVG）
+   7日〜全期間（最大365日＝1年開催を想定）まで
+   同一コンポーネントで描画。ページ再描画（ロール切替等）で
+   絵が変わらないよう Math.random は使わず種付き擬似乱数を使用。
+══════════════════════════════════ */
+KTN.TREND_TODAY = new Date(2026, 5, 22);
+function ktnTrendHash(str) {
+  var h = 2166136261;
+  for (var i = 0; i < str.length; i++) {
+    h ^= str.charCodeAt(i);
+    h = (h * 16777619) >>> 0;
+  }
+  return h >>> 0;
+}
+function ktnTrendRand(seed) {
+  var s = seed >>> 0;
+  return function () {
+    s |= 0; s = (s + 0x6D2B79F5) | 0;
+    var t = Math.imul(s ^ (s >>> 15), 1 | s);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+function ktnTrendValues(n, peakBase, rand) {
+  var numBumps = n <= 10 ? 1 : n <= 40 ? 2 : n <= 120 ? 3 : 5;
+  var bumps = [];
+  for (var b = 0; b < numBumps; b++) {
+    bumps.push({
+      center: rand() * (n - 1),
+      width: (n / numBumps) * (0.35 + rand() * 0.3),
+      amp: peakBase * (0.55 + rand() * 0.45) * (b === 0 ? 1 : (0.35 + rand() * 0.4))
+    });
+  }
+  var floor = peakBase * 0.12;
+  var vals = [];
+  for (var i = 0; i < n; i++) {
+    var v = floor;
+    for (var j = 0; j < bumps.length; j++) {
+      var d = (i - bumps[j].center) / bumps[j].width;
+      v += bumps[j].amp * Math.exp(-d * d);
+    }
+    v *= (0.88 + rand() * 0.24);
+    vals.push(Math.max(1, Math.round(v)));
+  }
+  return vals;
+}
+function ktnFmtMD(d) { return (d.getMonth() + 1) + '/' + d.getDate(); }
+function ktnTrendSvg(dates, vals, markers, segs) {
+  var W = 700, H = 190, PAD_T = 12, PAD_B = 34, PAD_L = 50, PAD_R = 4;
+  var n = vals.length;
+  var actualMax = Math.max.apply(null, vals);
+  var maxV = actualMax * 1.15;
+  var plotH = H - PAD_T - PAD_B;
+  function xAt(i) { return n === 1 ? PAD_L + (W - PAD_L - PAD_R) / 2 : PAD_L + (W - PAD_L - PAD_R) * i / (n - 1); }
+  function yAt(v) { return PAD_T + plotH * (1 - v / (maxV || 1)); }
+  var pts = [];
+  for (var i = 0; i < n; i++) pts.push(xAt(i).toFixed(1) + ',' + yAt(vals[i]).toFixed(1));
+  var lineD = 'M' + pts.join(' L');
+  var areaD = lineD + ' L' + xAt(n - 1).toFixed(1) + ',' + (H - PAD_B) + ' L' + xAt(0).toFixed(1) + ',' + (H - PAD_B) + ' Z';
+  var dots = '';
+  if (n <= 31) {
+    for (var k = 0; k < n; k++) {
+      dots += '<circle class="ins-linechart__dot" cx="' + xAt(k).toFixed(1) + '" cy="' + yAt(vals[k]).toFixed(1) + '" r="3.2"><title>' + ktnFmtMD(dates[k]) + '　' + vals[k] + '回</title></circle>';
+    }
+  }
+  var labelCount = Math.min(6, n);
+  var axis = '';
+  for (var m = 0; m < labelCount; m++) {
+    var idx = labelCount === 1 ? 0 : Math.round(m * (n - 1) / (labelCount - 1));
+    var anchor = idx === 0 ? 'start' : (idx === n - 1 ? 'end' : 'middle');
+    axis += '<text class="ins-linechart__axis" x="' + xAt(idx).toFixed(1) + '" y="' + (H - 8) + '" text-anchor="' + anchor + '">' + ktnFmtMD(dates[idx]) + '</text>';
+  }
+  /* 左に0/中間/最大の3段階y軸を常設（旧・最大値のみの浮きラベルは数字が乱立して見えたため統合） */
+  var midVal = Math.round(actualMax / 2);
+  var yTicks = [
+    { v: actualMax, label: actualMax + '回' },
+    { v: midVal, label: midVal + '回' },
+    { v: 0, label: '0' }
+  ];
+  var grid = '';
+  for (var yi = 0; yi < yTicks.length; yi++) {
+    var ty = yAt(yTicks[yi].v);
+    grid += '<line class="ins-linechart__ygrid" x1="' + PAD_L + '" y1="' + ty.toFixed(1) + '" x2="' + (W - PAD_R) + '" y2="' + ty.toFixed(1) + '"></line>'
+      + '<text class="ins-linechart__ylabel" x="' + (PAD_L - 6) + '" y="' + (ty + 3).toFixed(1) + '" text-anchor="end">' + yTicks[yi].label + '</text>';
+  }
+  var markSvg = '';
+  if (markers && markers.length) {
+    for (var mi = 0; mi < markers.length; mi++) {
+      var mk = markers[mi];
+      if (mk.index <= 0 || mk.index >= n) continue;
+      var mx = xAt(mk.index).toFixed(1);
+      markSvg += '<line class="ins-linechart__marker" x1="' + mx + '" y1="' + PAD_T + '" x2="' + mx + '" y2="' + (H - PAD_B) + '"></line>';
+      /* segs（区間合計）を表示する場合は境界線ラベルを出さない。区間ごとの中央ラベルと
+         内容が重複し、狭い上部スペースで文字が競合するため */
+      if (!segs) {
+        markSvg += '<text class="ins-linechart__markerlabel" x="' + mx + '" y="' + (PAD_T + 9) + '" text-anchor="middle">' + mk.label + '</text>';
+      }
+    }
+  }
+  var segSvg = '';
+  if (segs && segs.length) {
+    for (var si = 0; si < segs.length; si++) {
+      var sg = segs[si];
+      if (!sg.len || sg.len <= 0) continue;
+      var segCx = ((xAt(sg.from) + xAt(sg.from + sg.len - 1)) / 2).toFixed(1);
+      segSvg += '<text class="ins-linechart__segline" x="' + segCx + '" y="' + (PAD_T + 9) + '" text-anchor="middle">' + sg.label
+        + '<tspan class="ins-linechart__segline-val" dx="4">' + sg.sum + '回</tspan></text>';
+    }
+  }
+  return '<svg class="ins-linechart__svg" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="閲覧数の推移">'
+    + '<path class="ins-linechart__area" d="' + areaD + '"></path>'
+    + grid
+    + '<path class="ins-linechart__line" d="' + lineD + '"></path>'
+    + dots + axis + markSvg + segSvg
+    + '</svg>';
+}
+KTN.renderTrend = function (hostId, period, peakBase) {
+  var host = document.getElementById(hostId);
+  if (!host) return;
+  var n = period === '7' ? 7 : period === '90' ? 90 : period === 'all' ? 365 : 30;
+  var rand = ktnTrendRand(ktnTrendHash(hostId + '|' + period));
+  var vals = ktnTrendValues(n, peakBase, rand);
+  var today = KTN.TREND_TODAY;
+  var dates = [];
+  for (var i = 0; i < n; i++) dates.push(new Date(today.getTime() - (n - 1 - i) * 86400000));
+  host.innerHTML = ktnTrendSvg(dates, vals);
+  var peakEl = document.getElementById(hostId + 'Peak');
+  if (peakEl) {
+    var maxIdx = vals.indexOf(Math.max.apply(null, vals));
+    peakEl.textContent = ktnFmtMD(dates[maxIdx]) + ' 閲覧数ピーク';
+  }
+};
+
+/* ── 展覧会フェーズ連動トレンド（P2-14専用）：会期前/会期中/終了後の3フェーズを
+   実際の会期日程に固定して描画する。期間ローリング窓（renderTrend）と違い
+   「今日」からの相対日数ではなく会期の実日付を起点にするため別関数として分離。
+   dates/vals を返すのは、呼び出し側（会期中の序盤/中盤/終盤 内訳）が
+   同じ乱数系列から集計できるようにするため ── */
+function ktnExhTrendDates(phase, exhStart, exhEnd, today) {
+  var oneDay = 86400000;
+  var dates = [];
+  if (phase === 'before') {
+    var n = 14;
+    var end = new Date(exhStart.getTime() - oneDay);
+    for (var i = 0; i < n; i++) dates.push(new Date(end.getTime() - (n - 1 - i) * oneDay));
+    return dates;
+  }
+  if (phase === 'during') {
+    var n2 = Math.round((exhEnd.getTime() - exhStart.getTime()) / oneDay) + 1;
+    for (var j = 0; j < n2; j++) dates.push(new Date(exhStart.getTime() + j * oneDay));
+    return dates;
+  }
+  if (phase === 'all') {
+    var beforeStart = new Date(exhStart.getTime() - 14 * oneDay);
+    var n4 = Math.max(1, Math.round((today.getTime() - beforeStart.getTime()) / oneDay) + 1);
+    for (var p = 0; p < n4; p++) dates.push(new Date(beforeStart.getTime() + p * oneDay));
+    return dates;
+  }
+  var start = new Date(exhEnd.getTime() + oneDay);
+  var n3 = Math.max(1, Math.round((today.getTime() - start.getTime()) / oneDay) + 1);
+  for (var k = 0; k < n3; k++) dates.push(new Date(start.getTime() + k * oneDay));
+  return dates;
+}
+KTN.renderExhTrend = function (hostId, phase, exhStart, exhEnd, peakBase) {
+  var host = document.getElementById(hostId);
+  if (!host) return null;
+  var dates = ktnExhTrendDates(phase, exhStart, exhEnd, KTN.TREND_TODAY);
+  var rand = ktnTrendRand(ktnTrendHash(hostId + '|exh|' + phase));
+  var vals = ktnTrendValues(dates.length, peakBase, rand);
+  var markers = [];
+  var segs = null;
+  /* 内訳（segs）はチャート上のマーカーと下部KPIカードで同じ境界値を共有する単一ソース。
+     呼び出し側（pages.js）で境界を再計算すると数値がズレる恐れがあるためここで確定する */
+  if (phase === 'all') {
+    var beforeLen = 14;
+    var duringLen = Math.round((exhEnd.getTime() - exhStart.getTime()) / 86400000) + 1;
+    var afterLen = dates.length - beforeLen - duringLen;
+    markers.push({ index: beforeLen, label: '会期開始' });
+    markers.push({ index: beforeLen + duringLen, label: '会期終了' });
+    segs = [
+      { label: '会期前', from: 0, len: beforeLen },
+      { label: '会期中', from: beforeLen, len: duringLen },
+      { label: '終了後', from: beforeLen + duringLen, len: afterLen }
+    ];
+  } else if (phase === 'during') {
+    var n = dates.length;
+    var first = Math.ceil(n / 3);
+    var rest = n - first;
+    var second = Math.ceil(rest / 2);
+    var third = rest - second;
+    markers.push({ index: first, label: '中盤' });
+    markers.push({ index: first + second, label: '終盤' });
+    segs = [
+      { label: '序盤', from: 0, len: first },
+      { label: '中盤', from: first, len: second },
+      { label: '終盤', from: first + second, len: third }
+    ];
+  }
+  /* 序盤/中盤/終盤の区間合計はグラフ内にも表示する（下部KPIカードと同じ segs を再利用）。
+     「会期前/会期中/終了後」（全期間）は3区間の性質が均等な内訳ではない（会期前=固定14日等）ため
+     グラフ内表示は対象外とし、従来どおり境界マーカーのみに留める */
+  var chartSegs = null;
+  if (phase === 'during' && segs) {
+    chartSegs = segs.map(function (s) {
+      var slice = vals.slice(s.from, s.from + s.len);
+      var sum = slice.reduce(function (a, b) { return a + b; }, 0);
+      return { label: s.label, from: s.from, len: s.len, sum: sum };
+    });
+  }
+  var total = vals.reduce(function (a, b) { return a + b; }, 0);
+  var totalEl = document.getElementById(hostId + 'Total');
+  if (totalEl) totalEl.innerHTML = total + '<span class="unit">回</span>';
+  host.innerHTML = ktnTrendSvg(dates, vals, markers, chartSegs);
+  var peakEl = document.getElementById(hostId + 'Peak');
+  if (peakEl) {
+    var maxIdx = vals.indexOf(Math.max.apply(null, vals));
+    peakEl.textContent = ktnFmtMD(dates[maxIdx]) + ' 閲覧数ピーク';
+  }
+  return { dates: dates, vals: vals, segs: segs, total: total };
+};
 
 /* ══════════════════════════════════
    シェア機能
@@ -528,11 +881,16 @@ function renderSidebar() {
 
     if (roleNav) roleNav.innerHTML = roles.map(r => {
       const rd = KTN_ROLES[r];
+      /* myページ（user）の強調バッジはヘッダーのLIAISON+要対応ボタン（getActions内
+         txnAlertActionBtn）と同義の通知のため、サイドバーに重複表示しない（2026-08-21）。 */
+      const cnt = r === 'user' ? 0 : ktnTxnAlertCount(r);
+      const badge = cnt > 0 ? `<span class="ktn-sidebar__badge">${cnt > 99 ? '99+' : cnt}</span>` : '';
       return `
         <a href="${rd.url}" class="ktn-sidebar__item" data-page="${rd.page}" onclick="handleNav(event,'${rd.page}','${rd.url}')">
           <div class="ktn-sidebar__role">
             <div class="ktn-sidebar__role-fallback" style="background:${rd.bg}">${rd.icon}</div>
           </div>
+          ${badge}
           <span class="ktn-sidebar__role-label">${rd.label}</span>
         </a>
       `;
@@ -588,9 +946,12 @@ function renderBottomNav() {
       </a>
     `;
     const ur = KTN_ROLES['user'];
+    /* サイドバーと同じ理由でmyページの強調バッジは表示しない（2026-08-21）。 */
+    const urBadge = '';
     html += `
       <a href="${ur.url}" class="ktn-bottom-nav__item" data-page="${ur.page}" onclick="handleNav(event,'${ur.page}','${ur.url}')">
         <div class="ktn-bottom-nav__role" style="background:${ur.bg};border-radius:9px">${ur.iconSm}</div>
+        ${urBadge}
         <span class="ktn-bottom-nav__label">myページ</span>
       </a>
     `;
@@ -600,9 +961,12 @@ function renderBottomNav() {
     else if (curRole === 'admin') extraRole = 'admin';
     if (extraRole) {
       const er = KTN_ROLES[extraRole];
+      const erCnt = ktnTxnAlertCount(extraRole);
+      const erBadge = erCnt > 0 ? `<span class="ktn-bottom-nav__badge">${erCnt > 99 ? '99+' : erCnt}</span>` : '';
       html += `
         <a href="${er.url}" class="ktn-bottom-nav__item" data-page="${er.page}" onclick="handleNav(event,'${er.page}','${er.url}')">
           <div class="ktn-bottom-nav__role" style="background:${er.bg};border-radius:9px">${er.iconSm}</div>
+          ${erBadge}
           <span class="ktn-bottom-nav__label">${er.label}</span>
         </a>
       `;
@@ -927,8 +1291,6 @@ KTN.QA = [
   { id: 'EXH-37', cat: 'exhibition-edit', aud: 'common', grp: '編集・修正・クローン', q: '一部の項目が編集できなくなっています。', a: '管理者の確認が済んだ項目は、誤って変更されないようロックされます。ご自身での解除はできません。修正が必要な場合は{{contact}}よりご連絡ください。' },
   { id: 'EXH-38', cat: 'exhibition-edit', aud: 'common', grp: '編集・修正・クローン', q: '過去の展覧会をベースに新しく作れますか？', a: '「クローン」で過去の展覧会を複製し、内容を変えて新規登録できます。' },
   { id: 'EXH-39', cat: 'exhibition-edit', aud: 'common', grp: '編集・修正・クローン', q: '登録した展覧会を削除・非公開にしたい。', a: '管理者の確認が完了する前なら、展覧会管理ページから削除できます。確認が完了すると、ウォッチしている方への通知と個展なび公式SNSでの告知が行われるため、それ以降は削除・非公開はできません。' },
-  // J. 解決しないとき
-  { id: 'EXH-40', cat: 'exhibition-edit', aud: 'common', grp: '解決しないとき', q: 'ここで解決しない場合は？', a: 'ここで解決しない場合は、{{contact}}よりご連絡ください。' },
 
   /* ─── cat:'article-edit'（記事の登録・編集＝p2-13/p3-19/p4-19/p6-15/p7-11）───
      p60-6（クリエイター編）／p60-7（ギャラリー編）FAQの「記事の登録・編集」チャプターで描画。
@@ -938,15 +1300,66 @@ KTN.QA = [
   { id: 'ART-03', cat: 'article-edit', aud: 'common', grp: 'はじめに・基本', q: '記事はすぐ公開されますか？', a: 'はい。展覧会の登録と異なり管理者確認はなく、「下書き」を選ばずに保存すると即座に公開されます。' },
   { id: 'ART-04', cat: 'article-edit', aud: 'common', grp: '掲載先について', q: '記事の掲載先はどう決まりますか？', a: '記事を作成したページによって自動的に決まり、あとから変更はできません（例：展覧会の記事管理から作成した記事は、その展覧会に掲載されます）。' },
   { id: 'ART-05', cat: 'article-edit', aud: 'common', grp: '掲載先について', q: '1つの記事を複数の場所に掲載できますか？', a: 'いいえ。1記事につき掲載先は1つです。複数の場所に掲載したい場合は、それぞれのページの記事管理から個別に投稿してください。' },
+  { id: 'ART-12', cat: 'article-edit', aud: 'common', grp: '掲載先について', q: '作品の記事管理には、どの記事が表示されますか？', a: 'その作品の記事管理には、その作品から作成した記事のみが表示されます（展覧会やクリエイター/ギャラリーページから作成した記事は含まれません）。すべての掲載先を横断して記事を確認したい場合は、クリエイター/ギャラリーの記事管理をご利用ください。' },
   { id: 'ART-06', cat: 'article-edit', aud: 'creator', grp: '掲載先について', q: 'クリエイターページには、どんな記事を投稿できますか？', a: '制作ノート・出展予定の展覧会の予告・主宰する教室やワークショップの案内・制作にまつわる近況など、あなたの活動をファンに伝える記事を投稿できます。' },
   { id: 'ART-07', cat: 'article-edit', aud: 'gallery', grp: '掲載先について', q: 'ギャラリーページには、どんな記事を投稿できますか？', a: '会場からのお知らせ・展覧会レポート・取扱作家の紹介など、ギャラリーの活動を伝える記事を投稿できます。' },
   { id: 'ART-08', cat: 'article-edit', aud: 'common', grp: '記事種別', q: '記事種別は何を選べばいいですか？', a: 'レポート・インタビュー・お知らせなど、内容に近いものを選んでください。当てはまらない場合は「＋ その他」から自由入力できます。' },
   { id: 'ART-09', cat: 'article-edit', aud: 'creator', grp: '記事種別', q: '「制作日記」「ワークショップ」はクリエイター専用ですか？', a: 'はい。クリエイターのみ選べる種別です（ギャラリーには同じ位置に「ギャラリーノート」が表示されます）。' },
-  { id: 'ART-10', cat: 'article-edit', aud: 'common', grp: '下書き・編集・削除・クローン', q: '入力を途中でやめても大丈夫ですか？（下書き）', a: '「一時保存（下書き）」で保存できます。下書きは記事管理にのみ表示され、公開ページ・記事一覧・検索には出ません。あとから記事管理で仕上げると公開できます。' },
-  { id: 'ART-11', cat: 'article-edit', aud: 'common', grp: '下書き・編集・削除・クローン', q: '公開後に内容を修正できますか？', a: 'いつでも編集できます。展覧会と異なり管理者確認は不要で、保存すると即座に反映されます。' },
-  { id: 'ART-12', cat: 'article-edit', aud: 'common', grp: '下書き・編集・削除・クローン', q: '過去の記事をもとに新しく作れますか？', a: '「クローン」で過去の記事を複製し、内容を変えて新規投稿できます。クローン後はタイトルを必ず更新してください。' },
-  { id: 'ART-13', cat: 'article-edit', aud: 'common', grp: '下書き・編集・削除・クローン', q: '投稿した記事を削除したい。', a: '記事管理ページからいつでも削除できます（確認画面が表示されます）。展覧会と異なり、削除に制限はありません。' },
-  { id: 'ART-14', cat: 'article-edit', aud: 'common', grp: '解決しないとき', q: 'ここで解決しない場合は？', a: 'ここで解決しない場合は、{{contact}}よりご連絡ください。' },
+  { id: 'ART-10', cat: 'article-edit', aud: 'common', grp: '下書き・編集・削除', q: '入力を途中でやめても大丈夫ですか？（下書き）', a: '「一時保存（下書き）」で保存できます。下書きは記事管理にのみ表示され、公開ページ・記事一覧・検索には出ません。あとから記事管理で仕上げると公開できます。' },
+  { id: 'ART-11', cat: 'article-edit', aud: 'common', grp: '下書き・編集・削除', q: '公開後に内容を修正できますか？', a: 'いつでも編集できます。展覧会と異なり管理者確認は不要で、保存すると即座に反映されます。' },
+  { id: 'ART-13', cat: 'article-edit', aud: 'common', grp: '下書き・編集・削除', q: '投稿した記事を削除したい。', a: '記事管理ページからいつでも削除できます（確認画面が表示されます）。展覧会と異なり、削除に制限はありません。' },
+
+  /* ─── cat:'profile-edit'（プロフィール編集＝p3-11／ギャラリー情報編集＝p4-11・p60-6/p60-7 FAQ「プロフィール編集」章）
+     hideGroup で描画するため grp は表示に使わないが分類上そろえておく。 */
+  { id: 'PRO-01', cat: 'profile-edit', aud: 'common', grp: 'プロフィール編集', q: '公開ページにはどの情報が表示されますか？', a: '表示名・自己紹介・ジャンル・SNS等の公開プロフィール項目のみページに表示されます。住所・電話番号など「配送先」ブロックの項目は非公開です。' },
+  { id: 'PRO-02', cat: 'profile-edit', aud: 'common', grp: 'プロフィール編集', q: 'ID・URLはあとから変更できますか？', a: 'いつでも変更できます。変更後は旧URLでは表示されなくなるため、SNSやサイトに貼ったリンクは新しいURLに更新してください。' },
+  { id: 'PRO-03', cat: 'profile-edit', aud: 'creator', grp: 'プロフィール編集', q: '本名やフリガナ、住所は誰でも見られますか？', a: 'いいえ、非公開です。本人確認・作品の発送地・LIAISON+の代金精算のために使用する情報で、公開ページには表示されません。' },
+  { id: 'PRO-03G', cat: 'profile-edit', aud: 'gallery', grp: 'プロフィール編集', q: 'ご担当者のお名前や電話番号は誰でも見られますか？', a: 'いいえ、非公開です。ギャラリーとの取引・LIAISON+の代金精算のご連絡先として使用します。' },
+  { id: 'PRO-04', cat: 'profile-edit', aud: 'creator', grp: 'プロフィール編集', q: '「取扱ギャラリー・店舗」には何を入力しますか？', a: '作品を取り扱っている、または過去に取引のあったギャラリー・店舗があれば入力してください（任意項目です）。' },
+  { id: 'PRO-04G', cat: 'profile-edit', aud: 'gallery', grp: 'プロフィール編集', q: 'ご担当者の「ギャラリーとのご関係」は何を選べばよいですか？', a: '代表・スタッフなど、ギャラリーとの関わり方に近い選択肢をお選びください。LIAISON+の代金精算・連絡窓口の確認に使用します。' },
+  { id: 'PRO-05', cat: 'profile-edit', aud: 'common', grp: 'プロフィール編集', q: '「作品の発送地」は何に使われますか？', a: 'LIAISON+で作品が売れた際、配送料金の目安計算や発送手続きの基準地として使われます。実際の発送はご自身で手配してください。' },
+  { id: 'PRO-06', cat: 'profile-edit', aud: 'common', grp: 'プロフィール編集', q: 'ジャンルは複数選べますか？', a: 'はい、複数選択できます。該当するジャンルをすべて選んでください。' },
+  { id: 'PRO-07', cat: 'profile-edit', aud: 'common', grp: 'プロフィール編集', q: '事業者番号・インボイス制度の登録は必須ですか？', a: 'いいえ、任意です。登録されている場合のみご入力ください（LIAISON+の請求書発行等に使用します）。' },
+
+  /* ─── cat:'insight'（インサイト＝p3-12／p4-12・p60-6/p60-7 FAQ「インサイト」章） ─── */
+  { id: 'INS-01', cat: 'insight', aud: 'common', grp: 'インサイト', q: '「閲覧数」に含まれるのはどのページですか？', a: 'ご自身のページ本体、および出品している展覧会・作品・記事など、あなたに関連する全ページの閲覧数を合算しています。' },
+  { id: 'INS-02', cat: 'insight', aud: 'common', grp: 'インサイト', q: '集計期間や対象の展覧会・作品は変更できますか？', a: '画面上部の「Period」「Target」から集計期間・対象を切り替えられます。' },
+  { id: 'INS-03', cat: 'insight', aud: 'common', grp: 'インサイト', q: '「ページを伸ばすヒント」はどんな基準で表示されますか？', a: 'ウォッチャー数やチェックイン数の増加が閲覧数・継続率に与える傾向を、サイト全体の統計から算出して表示しています（個別の保証値ではありません）。' },
+  { id: 'INS-04', cat: 'insight', aud: 'common', grp: 'インサイト', q: '「作品販売のうごき」は何を表していますか？', a: '作品ページの閲覧から興味あり登録・購入申込・取引成立までの流れを、段階ごとの人数で表示するファネルです。LIAISON+の出品がある場合のみ表示されます。' },
+  { id: 'INS-06', cat: 'insight', aud: 'common', grp: 'インサイト', q: '作品ごとのインサイトと、クリエイター/ギャラリー全体のインサイトの違いは何ですか？', a: '作品のインサイトは、その作品1点の閲覧数・興味あり！・お問い合わせ・購入申込のみを集計します。クリエイター/ギャラリー全体のインサイトは、ご自身のページ本体と、出品しているすべての展覧会・作品・記事を横断して合算した数値です。特定の作品を伸ばしたいときは作品側のインサイトを、活動全体の傾向をつかみたいときは全体のインサイトをご覧ください。' },
+
+  /* ─── cat:'audience-mgmt'（オーディエンス管理＝p3-13／p4-13・p60-6/p60-7 FAQ「オーディエンス管理」章） ─── */
+  { id: 'AUD-01', cat: 'audience-mgmt', aud: 'common', grp: 'オーディエンス管理', q: '「ウォッチャー」「チェックイン」の一覧は何を表示していますか？', a: 'あなたをウォッチしているユーザー、あなたの展覧会にチェックインしたユーザーの一覧です。' },
+  { id: 'AUD-02', cat: 'audience-mgmt', aud: 'common', grp: 'オーディエンス管理', q: '通知をオフにするとどうなりますか？', a: '新しいウォッチ・チェックインが発生してもメール通知が届かなくなります。一覧はオン/オフに関わらずいつでも確認できます。' },
+  { id: 'AUD-03', cat: 'audience-mgmt', aud: 'common', grp: 'オーディエンス管理', q: '一覧の並べ替え・絞り込みは何ができますか？', a: 'ウォッチャーは登録日時順、チェックインは展覧会別・日時順などで並べ替え・絞り込みができます。' },
+  { id: 'AUD-04', cat: 'audience-mgmt', aud: 'common', grp: 'オーディエンス管理', q: '特定のユーザーのウォッチ・チェックインをこちらから解除できますか？', a: 'いいえ、ウォッチ・チェックインの解除はユーザー本人のみが行えます。' },
+
+  /* ─── cat:'portfolio-mgmt'（ポートフォリオ管理＝p3-14／作品インベントリー＝p4-14・p60-6/p60-7 FAQ「作品の管理」章） ─── */
+  { id: 'POR-01', cat: 'portfolio-mgmt', aud: 'common', grp: '作品の管理', q: '「掲載中」「売約済」タブの違いは何ですか？', a: '「掲載中」は現在サイトに表示されている作品、「売約済」はLIAISON+等で購入が成立し非公開・アーカイブされた作品です。' },
+  { id: 'POR-02', cat: 'portfolio-mgmt', aud: 'common', grp: '作品の管理', q: '販売中・商談中の作品は削除できますか？', a: '商談中・申込がある作品は削除できません。取り下げたい場合は、先に販売状態を変更するか、担当窓口へご相談ください。' },
+  { id: 'POR-03', cat: 'portfolio-mgmt', aud: 'creator', grp: '作品の管理', q: '新規作品はどこから登録しますか？', a: '「新規作品を作成 →」から登録できます。作者は自動的にご自身になります。' },
+  { id: 'POR-04', cat: 'portfolio-mgmt', aud: 'gallery', grp: '作品の管理', q: '新規作品を登録するとき、作者に選べないクリエイターがいるのはなぜですか？', a: '作者に指定できるのは、このギャラリーが作成した展覧会（管理者確認済み）に出展クリエイターとしてリンクされているクリエイターのみです。取り扱う作品の真正性を担保するためのルールで、未登録・出展実績のない作家の作品は登録できません。' },
+  { id: 'POR-05', cat: 'portfolio-mgmt', aud: 'common', grp: '作品の管理', q: '展覧会への出品設定やLIAISON設定はここで行いますか？', a: 'いいえ。作品そのものの情報（名称・仕様・画像など）はここで管理し、展覧会への出品やLIAISON設定は各展覧会の出品管理から行います。' },
+  { id: 'POR-07', cat: 'portfolio-mgmt', aud: 'common', grp: '作品の管理', q: '作品編集画面で作者欄が固定表示になっていて選べないのはなぜですか？', a: '作品の作者は、新規作品の作成に進んだ入口（ポートフォリオ管理／インベントリー管理、または展覧会のLIAISON・LIAISON+出品管理）に応じて自動的に決まり、作品編集画面内では変更できません。作者を変えたい場合は、正しい作者の入口からあらためて新規作成してください。' },
+  { id: 'POR-08', cat: 'portfolio-mgmt', aud: 'common', grp: '作品の管理', q: '「クローンで作成」を使うとどうなりますか？', a: '既存の作品の情報（画像・説明・仕様など）を引き継いだ新しい作品として複製されます。作品タイトルとメイン画像は複製後に必ず更新してください（他の項目は元の作品の内容をそのまま引き継ぎます）。複製後は元の作品とは別の作品として扱われ、独立して展覧会への出品やLIAISON設定ができます。' },
+
+  /* ─── cat:'account-profile'／'account-security'／'account-notify'（マイページ管理＝p5-11/p5-12/p5-13）
+     aud:'user'（ユーザー本人向け・p60-5「よくある質問-ユーザー編」の新設章で描画・2026-08-22新設）。
+     LIAISON+取引（購入確定・支払・発送・受取確認）に関するFAQはcat:'liaison-txn' side:'buyer'に既に集約済み
+     （p70-11「リエゾン+取引ガイド購入者編」）のため、ここでは重複させずアカウント設定固有の内容のみ扱う。
+     p5-14/p5-15/p5-16のガイドリンクはp70-11側の該当章へ直接結線する（p60-5には作らない）。 */
+  { id: 'ACC-P01', cat: 'account-profile', aud: 'user', grp: 'プロフィール編集', q: '公開マイページにはどの情報が表示されますか？', a: '表示名（姓名）・プロフィール画像・自己紹介文と、非公開にしていない場合は居住地が公開マイページに表示されます。メールアドレスは公開されません。' },
+  { id: 'ACC-P02', cat: 'account-profile', aud: 'user', grp: 'プロフィール編集', q: 'ユーザーID（URL）はあとから変更できますか？', a: 'いつでも変更できます。変更後は旧URLでは表示されなくなるため、SNS等に貼ったリンクは新しいURLに更新してください。' },
+  { id: 'ACC-P03', cat: 'account-profile', aud: 'user', grp: 'プロフィール編集', q: 'メールアドレスはこのページで変更できますか？', a: '「変更する →」のリンクから別途手続きします。変更後は新しいメールアドレス宛に確認メールが送信され、確認が完了するまでは元のメールアドレスが有効なままです。' },
+  { id: 'ACC-P04', cat: 'account-profile', aud: 'user', grp: 'プロフィール編集', q: '居住地を「非公開」にするとどうなりますか？', a: '公開マイページに居住地が表示されなくなります。ウォッチ・チェックイン・興味あり！などの機能はこれまで通りご利用いただけます。' },
+
+  { id: 'ACC-S01', cat: 'account-security', aud: 'user', grp: 'パスワード管理', q: 'パスワードの条件はありますか？', a: '8文字以上でご設定ください。英大文字・小文字・数字・記号を組み合わせると強度が上がります。' },
+  { id: 'ACC-S02', cat: 'account-security', aud: 'user', grp: 'パスワード管理', q: 'パスワードを忘れてしまいました。', a: 'ログイン画面の「パスワードをお忘れですか？」から、ご登録のメールアドレス宛にパスワード再設定用のリンクをお送りします。このページからパスワードを変更する場合は、現在のパスワードの入力が必要です。' },
+  { id: 'ACC-S03', cat: 'account-security', aud: 'user', grp: 'パスワード管理', q: 'パスワードを変更すると他の端末はログアウトされますか？', a: '安全のため、変更後は他の端末でログイン中のセッションが自動的にログアウトされることがあります。再度ログインしてご利用ください。' },
+
+  { id: 'ACC-N01', cat: 'account-notify', aud: 'user', grp: 'メール通知設定', q: '通知メールをすべて停止できますか？', a: '「重要なお知らせ」（利用規約の変更・セキュリティ情報等）と、LIAISON+取引に関する一部の通知（在庫確認・順番繰り上がり、支払い案内、発送、申込キャンセル・取引中止）は、安全な取引とサービス運営に必要なため停止できません。それ以外の展覧会通知・プロモーション等はオン/オフを自由に選べます。' },
+  { id: 'ACC-N02', cat: 'account-notify', aud: 'user', grp: 'メール通知設定', q: '設定はすぐに反映されますか？', a: 'はい。トグルを切り替えると自動的に保存されます。保存ボタンの操作は不要です。' },
+  { id: 'ACC-N03', cat: 'account-notify', aud: 'user', grp: 'メール通知設定', q: '取引完了の通知はオフにできますか？', a: 'はい。「取引完了」は在庫確認・支払い案内・発送・キャンセルと異なり必須通知ではないため、オフにできます。取引の状況はいつでも取引ワークスペースでご確認いただけます。' },
 
   /* ─── cat:'creator-apply'（クリエイター機能申込＝p11-2）／cat:'gallery-apply'（ギャラリー機能申込＝p11-3）───
      どちらも申込ページ下部にアコーディオンFAQとして描画（KTN.renderQA '#p112Faq' / '#p113Faq' guide）。
@@ -1143,6 +1556,7 @@ function renderAll() {
   renderTagbar(window.ktnState.page);
   updateActiveState(window.ktnState.page);
   syncAdminNote();
+  syncRoleOwnerOnly();
 }
 
 /* 管理者コメント欄（コンテンツ編集ページ共通）を role で表示切替。
@@ -1151,6 +1565,24 @@ function syncAdminNote() {
   var isAdmin = window.ktnState.role === 'admin';
   document.querySelectorAll('.ktn-admin-note').forEach(function (el) {
     el.hidden = !isAdmin;
+  });
+}
+
+/* 「本人・管理者のみ」表示する要素を role で表示切替（P3/P4/P5ヒーローの
+   「プロフィールを編集」等）。本人ロールはページ種別で異なる（P3=creator/P4=gallery/P5=user+）ため
+   body クラスから判定する。.p5-owner-only（本人/他のユーザー表示トグル）とは直交する
+   別軸のゲートで、.ktn-role-owner-only を持つ要素なら自動で効くためページ側の結線は不要。 */
+function syncRoleOwnerOnly() {
+  /* デモバーの役割ボタンは 'user+creator'/'user+gallery' を渡す（getActions()の正規化と同じ扱いが必要）。 */
+  var role = window.ktnState.role;
+  if (role === 'user+creator') role = 'creator';
+  else if (role === 'user+gallery') role = 'gallery';
+  var ownerRole = document.body.classList.contains('p3-page') ? 'creator'
+    : document.body.classList.contains('p4-page') ? 'gallery'
+    : 'user+';
+  var ok = role === ownerRole || role === 'admin';
+  document.querySelectorAll('.ktn-role-owner-only').forEach(function (el) {
+    el.hidden = !ok;
   });
 }
 
@@ -1186,66 +1618,63 @@ const PAGES = {
   'p2-16': { n: '展覧会-修正依頼', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', 'kotennavi-p2.html'], ['修正依頼', null]] },
   // 旧「展覧会-報告」は全表示系共通の報告フォーム 'p60-13'「問題を報告する」に統合（2026-07-24）。
   // P3 クリエイター
-  'p3': { n: 'クリエイター', bc: [['Top', '/'], ['クリエイター', '/p10-2'], ['田中 透', null]] },
-  'p3-1':  { n: '展覧会', bc: [['Top', '/'], ['クリエイター', '/p10-2'], ['田中 透', '/p3'], ['展覧会一覧', null]] },
-  'p3-2':  { n: 'クリエイター-記事',   w: '--w-index',   bc: [['Top', '/'], ['クリエイター', '/p10-2'], ['田中 透', '/p3'], ['記事一覧', null]] },
-  'p3-3':  { n: 'クリエイター-作品',   w: '--w-index',   bc: [['Top', '/'], ['クリエイター', '/p10-2'], ['田中 透', '/p3'], ['作品一覧', null]] },
-  'p3-11': { n: 'クリエイター-編集', bc: [['Top', '/'], ['クリエイター', '/p10-2'], ['田中 透', '/p3'], ['編集', null]] },
-  'p3-12': { n: 'クリエイター-インサイト', bc: [['Top', '/'], ['クリエイター', '/p10-2'], ['田中 透', '/p3'], ['インサイト', null]] },
-  'p3-13': { n: 'クリエイター-オーディエンス管理', bc: [['Top', '/'], ['クリエイター', '/p10-2'], ['田中 透', '/p3'], ['オーディエンス管理', null]] },
-  'p3-14': { n: 'クリエイター-ポートフォリオ管理', bc: [['Top', '/'], ['クリエイター', '/p10-2'], ['田中 透', '/p3'], ['ポートフォリオ管理', null, 'l']] },
-  'p3-15': { n: 'クリエイター-リエゾンコンソール', bc: [['Top', '/'], ['クリエイター', '/p10-2'], ['田中 透', '/p3'], ['リエゾン+コンソール', null]] },
-  'p3-16': { n: 'クリエイター-取引デスク', bc: [['Top', '/'], ['クリエイター', '/p10-2'], ['田中 透', '/p3'], ['取引デスク', null, 'lp']] },
-  'p3-17': { n: 'クリエイター販売代金管理', bc: [['Top', '/'], ['クリエイター', '/p10-2'], ['田中 透', '/p3'], ['販売代金管理', null, 'lp']] },
-  'p3-18': { n: 'クリエイター-展覧会管理', bc: [['Top', '/'], ['クリエイター', '/p10-2'], ['田中 透', '/p3'], ['展覧会管理', null]] },
-  'p3-19': { n: 'クリエイター-記事管理', bc: [['Top', '/'], ['クリエイター', '/p10-2'], ['田中 透', '/p3'], ['記事管理', null]] },
+  'p3': { n: 'クリエイター', bc: [['Top', '/'], ['クリエイター', 'kotennavi-p10-2.html'], ['田中 透', null]] },
+  'p3-1':  { n: '展覧会', bc: [['Top', '/'], ['クリエイター', 'kotennavi-p10-2.html'], ['田中 透', 'kotennavi-p3.html'], ['展覧会一覧', null]] },
+  'p3-2':  { n: 'クリエイター-記事',   w: '--w-index',   bc: [['Top', '/'], ['クリエイター', 'kotennavi-p10-2.html'], ['田中 透', 'kotennavi-p3.html'], ['記事一覧', null]] },
+  'p3-3':  { n: 'クリエイター-作品',   w: '--w-index',   bc: [['Top', '/'], ['クリエイター', 'kotennavi-p10-2.html'], ['田中 透', 'kotennavi-p3.html'], ['作品一覧', null]] },
+  'p3-11': { n: 'クリエイター-編集', bc: [['Top', '/'], ['クリエイター', 'kotennavi-p10-2.html'], ['田中 透', 'kotennavi-p3.html'], ['編集', null]] },
+  'p3-12': { n: 'クリエイター-インサイト', bc: [['Top', '/'], ['クリエイター', 'kotennavi-p10-2.html'], ['田中 透', 'kotennavi-p3.html'], ['インサイト', null]] },
+  'p3-13': { n: 'クリエイター-オーディエンス管理', bc: [['Top', '/'], ['クリエイター', 'kotennavi-p10-2.html'], ['田中 透', 'kotennavi-p3.html'], ['オーディエンス管理', null]] },
+  'p3-14': { n: 'クリエイター-ポートフォリオ管理', bc: [['Top', '/'], ['クリエイター', 'kotennavi-p10-2.html'], ['田中 透', 'kotennavi-p3.html'], ['ポートフォリオ管理', null]] },
+  'p3-15': { n: 'クリエイター-リエゾンコンソール', bc: [['Top', '/'], ['クリエイター', 'kotennavi-p10-2.html'], ['田中 透', 'kotennavi-p3.html'], ['リエゾン+コンソール', null]] },
+  'p3-16': { n: 'クリエイター-取引デスク', bc: [['Top', '/'], ['クリエイター', 'kotennavi-p10-2.html'], ['田中 透', 'kotennavi-p3.html'], ['取引デスク', null]] },
+  'p3-17': { n: 'クリエイター販売代金管理', bc: [['Top', '/'], ['クリエイター', 'kotennavi-p10-2.html'], ['田中 透', 'kotennavi-p3.html'], ['販売代金管理', null]] },
+  'p3-18': { n: 'クリエイター-展覧会管理', bc: [['Top', '/'], ['クリエイター', 'kotennavi-p10-2.html'], ['田中 透', 'kotennavi-p3.html'], ['展覧会管理', null]] },
+  'p3-19': { n: 'クリエイター-記事管理', bc: [['Top', '/'], ['クリエイター', 'kotennavi-p10-2.html'], ['田中 透', 'kotennavi-p3.html'], ['記事管理', null]] },
   // P4 ギャラリー
-  'p4': { n: 'ギャラリー', bc: [['Top', '/'], ['ギャラリー', '/p10-3'], ['Gallery SOIL 渋谷', null]] },
-  'p4-1': { n: 'ギャラリー-展覧会アーカイブ', bc: [['Top', '/'], ['ギャラリー', '/p10-3'], ['Gallery SOIL 渋谷', '/p4'], ['展覧会アーカイブ', null]] },
-  'p4-2': { n: 'ギャラリー-記事一覧', bc: [['Top', '/'], ['ギャラリー', '/p10-3'], ['Gallery SOIL 渋谷', '/p4'], ['記事一覧', null]] },
-  'p4-11': { n: 'ギャラリー-編集', bc: [['Top', '/'], ['ギャラリー', '/p10-3'], ['Gallery SOIL 渋谷', '/p4'], ['編集', null]] },
-  'p4-12': { n: 'ギャラリー-インサイト', bc: [['Top', '/'], ['ギャラリー', '/p10-3'], ['Gallery SOIL 渋谷', '/p4'], ['インサイト', null]] },
-  'p4-13': { n: 'ギャラリー-オーディエンス管理', bc: [['Top', '/'], ['ギャラリー', '/p10-3'], ['Gallery SOIL 渋谷', '/p4'], ['オーディエンス管理', null]] },
-  'p4-14': { n: 'ギャラリー-インベントリー管理', bc: [['Top', '/'], ['ギャラリー', '/p10-3'], ['Gallery SOIL 渋谷', '/p4'], ['インベントリー管理', null]] },
-  'p4-15': { n: 'ギャラリー-リエゾンコンソール', bc: [['Top', '/'], ['ギャラリー', '/p10-3'], ['Gallery SOIL 渋谷', '/p4'], ['リエゾン+コンソール', null]] },
-  'p4-16': { n: 'ギャラリー-取引デスク', bc: [['Top', '/'], ['ギャラリー', '/p10-3'], ['Gallery SOIL 渋谷', '/p4'], ['取引デスク', null, 'lp']] },
-  'p4-17': { n: 'ギャラリー-販売代金管理', bc: [['Top', '/'], ['ギャラリー', '/p10-3'], ['Gallery SOIL 渋谷', '/p4'], ['販売代金管理', null, 'lp']] },
-  'p4-18': { n: 'ギャラリー-展覧会管理', bc: [['Top', '/'], ['ギャラリー', '/p10-3'], ['Gallery SOIL 渋谷', '/p4'], ['展覧会管理', null]] },
-  'p4-19': { n: 'ギャラリー-記事管理', bc: [['Top', '/'], ['ギャラリー', '/p10-3'], ['Gallery SOIL 渋谷', '/p4'], ['記事管理', null]] },
+  'p4': { n: 'ギャラリー', bc: [['Top', '/'], ['ギャラリー', 'kotennavi-p10-3.html'], ['Gallery SOIL 渋谷', null]] },
+  'p4-1': { n: 'ギャラリー-展覧会アーカイブ', bc: [['Top', '/'], ['ギャラリー', 'kotennavi-p10-3.html'], ['Gallery SOIL 渋谷', 'kotennavi-p4.html'], ['展覧会アーカイブ', null]] },
+  'p4-2': { n: 'ギャラリー-記事一覧', bc: [['Top', '/'], ['ギャラリー', 'kotennavi-p10-3.html'], ['Gallery SOIL 渋谷', 'kotennavi-p4.html'], ['記事一覧', null]] },
+  'p4-11': { n: 'ギャラリー-編集', bc: [['Top', '/'], ['ギャラリー', 'kotennavi-p10-3.html'], ['Gallery SOIL 渋谷', 'kotennavi-p4.html'], ['編集', null]] },
+  'p4-12': { n: 'ギャラリー-インサイト', bc: [['Top', '/'], ['ギャラリー', 'kotennavi-p10-3.html'], ['Gallery SOIL 渋谷', 'kotennavi-p4.html'], ['インサイト', null]] },
+  'p4-13': { n: 'ギャラリー-オーディエンス管理', bc: [['Top', '/'], ['ギャラリー', 'kotennavi-p10-3.html'], ['Gallery SOIL 渋谷', 'kotennavi-p4.html'], ['オーディエンス管理', null]] },
+  'p4-14': { n: 'ギャラリー-インベントリー管理', bc: [['Top', '/'], ['ギャラリー', 'kotennavi-p10-3.html'], ['Gallery SOIL 渋谷', 'kotennavi-p4.html'], ['インベントリー管理', null]] },
+  'p4-15': { n: 'ギャラリー-リエゾンコンソール', bc: [['Top', '/'], ['ギャラリー', 'kotennavi-p10-3.html'], ['Gallery SOIL 渋谷', 'kotennavi-p4.html'], ['リエゾン+コンソール', null]] },
+  'p4-16': { n: 'ギャラリー-取引デスク', bc: [['Top', '/'], ['ギャラリー', 'kotennavi-p10-3.html'], ['Gallery SOIL 渋谷', 'kotennavi-p4.html'], ['取引デスク', null]] },
+  'p4-17': { n: 'ギャラリー-販売代金管理', bc: [['Top', '/'], ['ギャラリー', 'kotennavi-p10-3.html'], ['Gallery SOIL 渋谷', 'kotennavi-p4.html'], ['販売代金管理', null]] },
+  'p4-18': { n: 'ギャラリー-展覧会管理', bc: [['Top', '/'], ['ギャラリー', 'kotennavi-p10-3.html'], ['Gallery SOIL 渋谷', 'kotennavi-p4.html'], ['展覧会管理', null]] },
+  'p4-19': { n: 'ギャラリー-記事管理', bc: [['Top', '/'], ['ギャラリー', 'kotennavi-p10-3.html'], ['Gallery SOIL 渋谷', 'kotennavi-p4.html'], ['記事管理', null]] },
   // P5 ユーザー
   'p5': { n: 'ユーザー-展覧会カレンダー', bc: [['Top', '/'], ['山田花子 myページ', null]] },
-  'p5-1': { n: 'ユーザー-ウオッチリスト', bc: [['Top', '/'], ['myページ', '/p5'], ['ウオッチリスト', null]] },
-  'p5-2': { n: 'ユーザー-チェックイン記録', bc: [['Top', '/'], ['myページ', '/p5'], ['チェックイン記録', null]] },
-  'p5-3': { n: 'ユーザー-興味あり!リスト', bc: [['Top', '/'], ['myページ', '/p5'], ['興味あり!リスト', null]] },
-  'p5-4': { n: 'ユーザー-保存した検索条件', bc: [['Top', '/'], ['myページ', '/p5'], ['保存した検索条件', null]] },
-  'p5-11': { n: 'ユーザー-編集', bc: [['Top', '/'], ['myページ', '/p5'], ['編集', null]] },
-  'p5-12': { n: 'ユーザー-パスワード管理', bc: [['Top', '/'], ['myページ', '/p5'], ['パスワード管理', null]] },
-  'p5-13': { n: 'ユーザー-メール通知管理', bc: [['Top', '/'], ['myページ', '/p5'], ['メール通知管理', null]] },
-  'p5-14': { n: 'ユーザー-購入管理', bc: [['Top', '/'], ['myページ', '/p5'], ['購入管理', null, 'lp']] },
-  'p5-15': { n: 'ユーザー-取引ワークスペース', bc: [['Top', '/'], ['myページ', '/p5'], ['取引ワークスペース', null, 'lp']] },
-  'p5-16': { n: 'ユーザー-取引ワークスペース-支払', bc: [['Top', '/'], ['myページ', '/p5'], ['取引ワークスペース', '/p5-15'], ['支払', null, 'lp']] },
-  'p5-100': { n: 'ユーザー-退会', bc: [['Top', '/'], ['myページ', '/p5'], ['退会', null]] },
+  'p5-1': { n: 'ユーザー-ウオッチリスト', bc: [['Top', '/'], ['山田花子 myページ', '/p5'], ['ウオッチリスト', null]] },
+  'p5-2': { n: 'ユーザー-チェックイン記録', bc: [['Top', '/'], ['山田花子 myページ', '/p5'], ['チェックイン記録', null]] },
+  'p5-3': { n: 'ユーザー-興味あり!リスト', bc: [['Top', '/'], ['山田花子 myページ', '/p5'], ['興味あり!リスト', null]] },
+  'p5-4': { n: 'ユーザー-myコレクションルーム', bc: [['Top', '/'], ['山田花子 myページ', '/p5'], ['myコレクションルーム', null]] },
+  'p5-11': { n: 'ユーザー-編集', bc: [['Top', '/'], ['山田花子 myページ', '/p5'], ['編集', null]] },
+  'p5-12': { n: 'ユーザー-パスワード管理', bc: [['Top', '/'], ['山田花子 myページ', '/p5'], ['パスワード管理', null]] },
+  'p5-13': { n: 'ユーザー-メール通知管理', bc: [['Top', '/'], ['山田花子 myページ', '/p5'], ['メール通知管理', null]] },
+  'p5-14': { n: 'ユーザー-購入管理', bc: [['Top', '/'], ['山田花子 myページ', '/p5'], ['購入管理', null]] },
+  'p5-15': { n: 'ユーザー-取引ワークスペース', bc: [['Top', '/'], ['山田花子 myページ', '/p5'], ['取引ワークスペース', null]] },
+  'p5-16': { n: 'ユーザー-取引ワークスペース-支払', bc: [['Top', '/'], ['山田花子 myページ', '/p5'], ['取引ワークスペース', '/p5-15'], ['支払', null]] },
+  'p5-100': { n: 'ユーザー-退会', bc: [['Top', '/'], ['山田花子 myページ', '/p5'], ['退会', null]] },
   // P6 作品
   'p6':   { n: '作品詳細',
-    bc: [['Top', '/'], ['作品', '/p10-1'], ['オノマトペの庭', null]] },
+    bc: [['Top', '/'], ['作品', 'kotennavi-p10-1.html'], ['オノマトペの庭', null]] },
   'p6-1': { n: 'LIAISON作品',
-    bc: [['Top', '/'], ['作品', '/p10-1'], ['オノマトペの庭', '/p6'], ['LIAISON', null, 'l']] },
+    bc: [['Top', '/'], ['作品', 'kotennavi-p10-1.html'], ['オノマトペの庭', null]] },
   'p6-2': { n: 'LIAISON+作品',
-    bc: [['Top', '/'], ['作品', '/p10-1'], ['オノマトペの庭', '/p6'], ['LIAISON+', null, 'lp']] },
-  'p6-11': { n: '作品-新規/編集/クローン', bc: [['Top', '/'], ['作品', '/p10-1'], ['オノマトペの庭', '/p6'], ['新規/編集/クローン', null]] },
-  'p6-12': { n: '作品-インサイト', bc: [['Top', '/'], ['作品', '/p10-1'], ['春の記憶 #3', '/p6'], ['インサイト', null]] },
-  'p6-13': { n: '作品-問合せ', bc: [['Top', '/'], ['作品', '/p10-1'], ['春の記憶 #3', '/p6'], ['問合せ', null, 'l']] },
-  'p6-14': { n: '作品-問合せへの回答', bc: [['Top', '/'], ['作品', '/p10-1'], ['春の記憶 #3', '/p6'], ['問合せへの回答', null, 'l']] },
-  'p6-15': { n: '作品-記事管理', bc: [['Top', '/'], ['作品', '/p10-1'], ['オノマトペの庭', '/p6'], ['記事管理', null]] },
-  // P7 記事
-  'p7': { n: '記事', bc: [['Top', '/'], ['記事', '/p7-list'], ['『オノマトペの庭』制作について', null]] },
-  'p7-11': { n: '記事-新規/編集/クローン', bc: [['Top', '/'], ['『オノマトペの庭』制作について', '/p7'], ['編集', null]] },
-  // P8 レビュー
-  'p8': { n: 'レビュー', bc: [['Top', '/'], ['レビュー', '/p8-list'], ['あなたが知らないオノマトペ レビュー', null]] },
-  'p8-11': { n: 'レビュー-編集', bc: [['Top', '/'], ['レビュー', '/p8-list'], ['編集', null]] },
-  // P9 ニュース
-  'p9': { n: 'ニュース', bc: [['Top', '/'], ['ニュース', '/p9-list'], ['個展なびが新機能を発表', null]] },
-  'p9-11': { n: 'ニュース-新規/編集/クローン', bc: [['Top', '/'], ['ニュース', '/p9-list'], ['編集', null]] },
+    bc: [['Top', '/'], ['作品', 'kotennavi-p10-1.html'], ['オノマトペの庭', null]] },
+  'p6-11': { n: '作品-新規/編集/クローン', bc: [['Top', '/'], ['作品', 'kotennavi-p10-1.html'], ['オノマトペの庭', 'kotennavi-p6.html'], ['新規/編集/クローン', null]] },
+  'p6-12': { n: '作品-インサイト', bc: [['Top', '/'], ['作品', 'kotennavi-p10-1.html'], ['オノマトペの庭', 'kotennavi-p6.html'], ['インサイト', null]] },
+  'p6-13': { n: '作品-問合せ', bc: [['Top', '/'], ['作品', 'kotennavi-p10-1.html'], ['オノマトペの庭', 'kotennavi-p6.html'], ['問合せ', null]] },
+  'p6-14': { n: '作品-問合せへの回答', bc: [['Top', '/'], ['作品', 'kotennavi-p10-1.html'], ['オノマトペの庭', 'kotennavi-p6.html'], ['問合せへの回答', null]] },
+  'p6-15': { n: '作品-記事管理', bc: [['Top', '/'], ['作品', 'kotennavi-p10-1.html'], ['オノマトペの庭', 'kotennavi-p6.html'], ['記事管理', null]] },
+  // P7 記事（投稿者＝クリエイター/ギャラリーの記事一覧を経由。掲載先がgalleryの場合はcreator/田中透→gallery/Gallery SOIL 渋谷へ差し替え）
+  'p7': { n: '記事', bc: [['Top', '/'], ['クリエイター', 'kotennavi-p10-2.html'], ['田中 透', 'kotennavi-p3.html'], ['記事一覧', 'kotennavi-p3-2.html'], ['『オノマトペの庭』制作について', null]] },
+  'p7-11': { n: '記事-新規/編集', bc: [['Top', '/'], ['クリエイター', 'kotennavi-p10-2.html'], ['田中 透', 'kotennavi-p3.html'], ['編集', null]] },
+  // P8 レビュー（レビュー一覧が存在しないため、レビュー対象の展覧会を経由＝p2-1等のサブページと同型）
+  'p8': { n: 'レビュー', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', 'kotennavi-p2.html'], ['あなたが知らないオノマトペ レビュー', null]] },
+  'p8-11': { n: 'レビュー-編集', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', 'kotennavi-p2.html'], ['編集', null]] },
   // P10 検索・特集
   'p10': { n: '検索-展覧会', bc: [['Top', '/'], ['検索', null]] },
   'p10-1': { n: '検索-作品', bc: [['Top', '/'], ['検索', null]] },
@@ -1260,7 +1689,7 @@ const PAGES = {
   'p11-1': { n: 'ユーザー新規登録', bc: [['Top', '/'], ['ログイン', null]] },
   'p11-2': { n: 'クリエイター機能申込', bc: [['Top', '/'], ['クリエイター機能申込', null]] },
   'p11-3': { n: 'ギャラリー機能申込', bc: [['Top', '/'], ['ギャラリー機能申込', null]] },
-  'p11-4': { n: 'リエゾンプラス機能申込', bc: [['Top', '/'], ['リエゾンプラス機能申込', null, 'lp']] },
+  'p11-4': { n: 'リエゾンプラス機能申込', bc: [['Top', '/'], ['リエゾンプラス機能申込', null]] },
   'p11-11': { n: 'ログイン-パスワードを忘れた方', bc: [['Top', '/'], ['ログイン-パスワードを忘れた方', null]] },
   'p11-12': { n: 'ログインパスワード再設定', bc: [['Top', '/'], ['ログインパスワード再設定', null]] },
   'p11-21': { n: 'ユーザー新規登録-アカウント仮登録完了', bc: [['Top', '/'], ['ユーザー新規登録-アカウント仮登録完了', null]] },
@@ -1269,13 +1698,13 @@ const PAGES = {
   'p11-24': { n: 'ユーザー新規登録-ウオッチ対象の選択', bc: [['Top', '/'], ['ユーザー新規登録-ウオッチ対象の選択', null]] },
   // P60 ガイド・法的（番号は docs/sitemap.md を正とする）
   'p60': { n: 'ご利用ガイド', bc: [['Top', '/'], ['ガイド', null]] },
-  'p60-1': { n: '展覧会情報を探したい方', bc: [['Top', '/'], ['ガイド', '/p60'], ['展覧会情報を探したい方', null]] },
-  'p60-2': { n: '展覧会情報を掲載したい方', bc: [['Top', '/'], ['ガイド', '/p60'], ['展覧会情報を掲載したい方', null]] },
-  'p60-3': { n: '広告を出したい方', bc: [['Top', '/'], ['ガイド', '/p60'], ['広告を出したい方', null]] },
-  'p60-4': { n: 'よくある質問-一般', bc: [['Top', '/'], ['ガイド', '/p60'], ['よくある質問-一般', null]] },
-  'p60-5': { n: 'よくある質問-ユーザー編', bc: [['Top', '/'], ['ガイド', '/p60'], ['よくある質問-ユーザー編', null]] },
-  'p60-6': { n: 'よくある質問-クリエイター編', bc: [['Top', '/'], ['ガイド', '/p60'], ['よくある質問-クリエイター編', null]] },
-  'p60-7': { n: 'よくある質問-ギャラリー編', bc: [['Top', '/'], ['ガイド', '/p60'], ['よくある質問-ギャラリー編', null]] },
+  'p60-1': { n: '展覧会情報を探したい方', bc: [['Top', '/'], ['ガイド', 'kotennavi-p60.html'], ['展覧会情報を探したい方', null]] },
+  'p60-2': { n: '展覧会情報を掲載したい方', bc: [['Top', '/'], ['ガイド', 'kotennavi-p60.html'], ['展覧会情報を掲載したい方', null]] },
+  'p60-3': { n: '広告を出したい方', bc: [['Top', '/'], ['ガイド', 'kotennavi-p60.html'], ['広告を出したい方', null]] },
+  'p60-4': { n: 'よくある質問-一般', bc: [['Top', '/'], ['ガイド', 'kotennavi-p60.html'], ['よくある質問-一般', null]] },
+  'p60-5': { n: 'よくある質問-ユーザー編', bc: [['Top', '/'], ['ガイド', 'kotennavi-p60.html'], ['よくある質問-ユーザー編', null]] },
+  'p60-6': { n: 'よくある質問-クリエイター編', bc: [['Top', '/'], ['ガイド', 'kotennavi-p60.html'], ['よくある質問-クリエイター編', null]] },
+  'p60-7': { n: 'よくある質問-ギャラリー編', bc: [['Top', '/'], ['ガイド', 'kotennavi-p60.html'], ['よくある質問-ギャラリー編', null]] },
   'p60-8': { n: '個展なびとは', bc: [['Top', '/'], ['個展なびとは', null]] },
   'p60-9': { n: '利用規約', bc: [['Top', '/'], ['利用規約', null]] },
   'p60-10': { n: 'プライバシポリシー', bc: [['Top', '/'], ['プライバシポリシー', null]] },
@@ -1284,6 +1713,8 @@ const PAGES = {
   'p60-13': { n: '問題を報告する', bc: [['Top', '/'], ['問題を報告する', null]] },
   // P61 お知らせ
   'p61': { n: 'お知らせ一覧', bc: [['Top', '/'], ['お知らせ一覧', null]] },
+  'p61-1': { n: 'ニュース', bc: [['Top', '/'], ['お知らせ一覧', 'kotennavi-p61.html'], ['新機能「リエゾンプラス」提供開始のお知らせ', null]] },
+  'p61-11': { n: 'ニュース-新規/編集/クローン', bc: [['Top', '/'], ['お知らせ一覧', 'kotennavi-p61.html'], ['新規/編集/クローン', null]] },
   // P70 LIAISONガイド
   'p70': { n: 'リエゾンとは', bc: [['Top', '/'], ['LIAISONとは', null]] },
   'p70-1': { n: 'リエゾン-作品出品ガイド', bc: [['Top', '/'], ['LIAISON', '/p70'], ['リエゾン-作品出品ガイド', null]] },
@@ -1299,24 +1730,24 @@ const PAGES = {
   'p70-12': { n: 'リエゾンプラス-取引ガイド(出品者編)', bc: [['Top', '/'], ['LIAISON', '/p70'], ['取引ガイド 出品者編', null]] },
   // P90 管理者
   'p90': { n: '管理者メニュー', bc: [['Top', '/'], ['管理者メニュー', null]] },
-  'p90-1': { n: '管理者-ユーザー新規/クローン', bc: [['Top', '/'], ['管理者', '/p90'], ['ユーザー新規/クローン', null]] },
-  'p90-2': { n: '管理者-クリエイター/ギャラリー機能申込管理', bc: [['Top', '/'], ['管理者', '/p90'], ['クリエイター/ギャラリー機能申込管理', null]] },
-  'p90-2-1': { n: '管理者-クリエイター/ギャラリー機能申込審査', bc: [['Top', '/'], ['管理者', '/p90'], ['クリエイター/ギャラリー機能申込管理', '/p90-2'], ['審査', null]] },
-  'p90-3': { n: '管理者-展覧会新規', bc: [['Top', '/'], ['管理者', '/p90'], ['展覧会新規', null]] },
-  'p90-4': { n: '管理者-本日開催・公開の展覧会一覧', bc: [['Top', '/'], ['管理者', '/p90'], ['本日開催・公開の展覧会一覧', null]] },
-  'p90-5': { n: '管理者-未公開の展覧会一覧', bc: [['Top', '/'], ['管理者', '/p90'], ['未公開の展覧会一覧', null]] },
-  'p90-6': { n: '管理者-最新の展覧会一覧', bc: [['Top', '/'], ['管理者', '/p90'], ['最新の展覧会一覧', null]] },
-  'p90-7': { n: '管理者-クリエイター新規/クローン', bc: [['Top', '/'], ['管理者', '/p90'], ['クリエイター新規/クローン', null]] },
-  'p90-8': { n: '管理者-ギャラリー新規/クローン', bc: [['Top', '/'], ['管理者', '/p90'], ['ギャラリー新規/クローン', null]] },
-  'p90-9': { n: '管理者-メールテンプレート管理', bc: [['Top', '/'], ['管理者', '/p90'], ['メールテンプレート管理', null]] },
-  'p90-10': { n: '管理者-ダッシュボード', bc: [['Top', '/'], ['管理者', '/p90'], ['ダッシュボード', null]] },
-  'p90-11': { n: '管理者-リエゾンプラス機能申込管理', bc: [['Top', '/'], ['管理者', '/p90'], ['リエゾンプラス機能申込管理', null, 'lp']] },
-  'p90-11-1': { n: '管理者-リエゾンプラス機能申込審査', bc: [['Top', '/'], ['管理者', '/p90'], ['リエゾンプラス機能申込管理', '/p90-11'], ['審査', null]] },
-  'p90-12': { n: '管理者-リエゾンプラスコンソール', bc: [['Top', '/'], ['管理者', '/p90'], ['リエゾンプラスコンソール', null, 'lp']] },
-  'p90-13': { n: '管理者-取引デスク', bc: [['Top', '/'], ['管理者', '/p90'], ['取引デスク', null, 'lp']] },
-  'p90-14': { n: '管理者-販売代金管理', bc: [['Top', '/'], ['管理者', '/p90'], ['販売代金管理', null, 'lp']] },
-  'p90-15': { n: '管理者-リエゾンプラス申込者一覧', bc: [['Top', '/'], ['管理者', '/p90'], ['リエゾンプラス申込者一覧', null, 'lp']] },
-  'p90-16': { n: '管理者-作品購入ユーザー一覧', bc: [['Top', '/'], ['管理者', '/p90'], ['作品購入ユーザー一覧', null, 'lp']] },
+  'p90-1': { n: '管理者-ユーザー新規/クローン', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['ユーザー新規/クローン', null]] },
+  'p90-2': { n: '管理者-クリエイター/ギャラリー機能申込管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['クリエイター/ギャラリー機能申込管理', null]] },
+  'p90-2-1': { n: '管理者-クリエイター/ギャラリー機能申込審査', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['クリエイター/ギャラリー機能申込管理', 'kotennavi-p90-2.html'], ['審査', null]] },
+  'p90-3': { n: '管理者-展覧会新規', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['展覧会新規', null]] },
+  'p90-4': { n: '管理者-本日開催・公開の展覧会一覧', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['本日開催・公開の展覧会一覧', null]] },
+  'p90-5': { n: '管理者-未公開の展覧会一覧', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['未公開の展覧会一覧', null]] },
+  'p90-6': { n: '管理者-最新の展覧会一覧', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['最新の展覧会一覧', null]] },
+  'p90-7': { n: '管理者-クリエイター新規/クローン', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['クリエイター新規/クローン', null]] },
+  'p90-8': { n: '管理者-ギャラリー新規/クローン', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['ギャラリー新規/クローン', null]] },
+  'p90-9': { n: '管理者-メールテンプレート管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['メールテンプレート管理', null]] },
+  'p90-10': { n: '管理者-ダッシュボード', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['ダッシュボード', null]] },
+  'p90-11': { n: '管理者-リエゾンプラス機能申込管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['リエゾンプラス機能申込管理', null]] },
+  'p90-11-1': { n: '管理者-リエゾンプラス機能申込審査', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['リエゾンプラス機能申込管理', 'kotennavi-p90-11.html'], ['審査', null]] },
+  'p90-12': { n: '管理者-リエゾンプラスコンソール', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['リエゾンプラスコンソール', null]] },
+  'p90-13': { n: '管理者-取引デスク', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['取引デスク', null]] },
+  'p90-14': { n: '管理者-販売代金管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['販売代金管理', null]] },
+  'p90-15': { n: '管理者-リエゾンプラス申込者一覧', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['リエゾンプラス申込者一覧', null]] },
+  'p90-16': { n: '管理者-作品購入ユーザー一覧', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['作品購入ユーザー一覧', null]] },
 };
 
 /* ページID → 表示名（パンくず登録名）。外部（p60-11 の問い合わせ元表示等）から参照するための公開アクセサ。 */
@@ -1357,19 +1788,25 @@ function dd(label, items, noChevron = false) {
   return `<div class="ktn-ddw"><button class="ktn-ddbtn" onclick="toggleDD('${id}',this)">${label}${chv}</button><div class="ktn-ddmenu" id="${id}">${items}</div></div>`;
 }
 function ddMore(items) { return dd('…', items, true); }
-function ddi(iconK, label, danger = false, onclick = '') {
+function ddi(iconK, label, danger = false, onclick = '', extraCls = '') {
   const oc = onclick ? ` onclick="closeAllPanels();${onclick}"` : '';
-  return `<button class="ktn-ddi${danger ? ' danger' : ''}"${oc}>${ic(iconK)}${label}</button>`;
+  const cls = 'ktn-ddi' + (danger ? ' danger' : '') + (extraCls ? ' ' + extraCls : '');
+  return `<button class="${cls}"${oc}>${ic(iconK)}${label}</button>`;
 }
 function ddSep() { return `<div class="ktn-dd-sep"></div>`; }
+/* 管理者専用ブロックの見出しラベル（非クリック・セクション区切り。管理者メニュー＝オーナーメニューの
+   スーパーセット内で「ここから下は管理者専用」を明示する。項目自体は ktn-ddi--admin extraCls で識別）。 */
+function ddLabel(text) { return `<div class="ktn-dd-label">${text}</div>`; }
 /* 今いるページ自身を指すメニュー項目（クリックしても無意味な自己参照リンク防止・単一ソース）。
    通常のリンク付き ddi() の代わりに、非活性＋「現在のページ」タグ表示にする。 */
 function ddiCurrent(iconK, label) {
   return `<button class="ktn-ddi ktn-ddi--current" disabled>${ic(iconK)}<span class="ktn-ddi__lbl">${label}</span><span class="ktn-ddi__tag">現在のページ</span></button>`;
 }
-/* オーナーメニュー項目生成の共通口：curPage が targetPage と一致する場合のみ ddiCurrent() に差し替える。 */
-function ddiP(curPage, targetPage, iconK, label, onclick) {
-  return curPage === targetPage ? ddiCurrent(iconK, label) : ddi(iconK, label, false, onclick);
+/* オーナーメニュー項目生成の共通口：curPage が targetPage と一致する場合のみ ddiCurrent() に差し替える。
+   extraCls はサービス識別等の見た目モディファイア（例：ktn-ddi--lp）。自己参照時は ddiCurrent の
+   グレーアウト表示を優先し extraCls は付けない。 */
+function ddiP(curPage, targetPage, iconK, label, onclick, extraCls = '') {
+  return curPage === targetPage ? ddiCurrent(iconK, label) : ddi(iconK, label, false, onclick, extraCls);
 }
 
 /* 「問題を報告する」＝全表示系ページ共通の報告フォーム P60-13 へ from/type 文脈付きで遷移（単一ソース）。
@@ -1389,10 +1826,31 @@ function reportItem(page) {
 
 /* P5（マイページ）全サブページ共通「設定」dd（単一ソース） */
 function p5SettingsMenuItems() {
+  /* 購入管理（p5-14）は1回以上の購入歴があるユーザーにのみ出す（KTN.hasPurchaseHistory）。
+     ヘッダーの「LIAISON+要対応」ボタンは要対応件数=0だと出ないため、それだけがp5-14への
+     唯一の導線だと0件時に迷子になる。設定メニューに常設のルートを確保する（2026-08-21）。 */
+  var purchaseItem = KTN.hasPurchaseHistory ? ddi('shop', '購入管理', false, "location.href='./kotennavi-p5-14.html'") : '';
   return ddi('edit', 'プロフィール編集', false, "location.href='./kotennavi-p5-11.html'") +
-    ddi('key', 'パスワード', false, "location.href='./kotennavi-p5-12.html'") +
-    ddi('bell', 'メール通知設定', false, "location.href='./kotennavi-p5-13.html'") + ddSep() +
-    ddi('trash', '退会', true);
+    ddi('key', 'パスワード管理', false, "location.href='./kotennavi-p5-12.html'") +
+    ddi('bell', 'メール通知設定', false, "location.href='./kotennavi-p5-13.html'") +
+    purchaseItem + ddSep() +
+    ddi('trash', '退会', true, "location.href='./kotennavi-p5-100.html'") + ddSep() +
+    ddi('logout', 'ログアウト', false, "location.href='./kotennavi-p1.html'");
+}
+
+/* P5 管理者メニュー（設定メニューの全項目を含むスーパーセット＋管理者専用項目・p2/p3/p4と同一設計）。
+   設定メニューは「利用者に今見えているメニュー」を管理者が把握するための表示、実際の操作は
+   管理者専用ブロック（ktn-ddi--admin＝左アクセント＋「管理者専用」ラベル）から行う動線を維持する。
+   「強制退会」はP2/P3/P4/P6の「削除」と違い、設定メニュー（本人操作）側に対応する「退会」とは別物の
+   管理者専用アクション（本人の退会操作をバイパスする強制執行）のため、オーナー/設定メニュー項目の直後には
+   出さず、他の管理者専用項目と同じ ktn-ddi--admin ブロック内に留める（2026-08-21・ユーザー指摘
+   「p5の強制退会は管理者専用」により、削除の位置統一〔追74〕から本項目のみ除外・元の配置へ戻した）。 */
+function p5AdminMenuItems() {
+  /* 「編集」の遷移先はP90-1（管理者-ユーザー新規/クローン/編集・未作成）。P90一括制作まではonclick未結線のプレースホルダーとする（2026-08-21） */
+  var admin = ddi('edit', '編集', false, '', 'ktn-ddi--admin') +
+    ddi('user', 'なりすましログイン', false, '', 'ktn-ddi--admin') + ddSep() +
+    ddi('trash', '強制退会', true, '', 'ktn-ddi--admin');
+  return p5SettingsMenuItems() + ddSep() + ddLabel('管理者専用') + admin;
 }
 
 /* P2＝展覧会の「LIAISON 展示設定・作品管理」ルーティング。p2-11（編集フォーム）の選択中ラジオ→
@@ -1416,14 +1874,14 @@ window.p2GotoWorks = p2GotoWorks;
 
 /* 展覧会の会期・確認状態（デモ用グローバル状態）。setPeriod()/setLiaison()（p2.html）・
    setConfirmed()/toggleLiaisonMode()（p2-11.html）が直接プロパティを書き換えてから ktnRender() を呼ぶ。 */
-KTN.exh = { phase: 'during', confirmed: true, publishArrived: true, liaison: 'plus', salesOver: false };
+KTN.exh = { phase: 'during', confirmed: true, publishArrived: true, liaison: 'plus', salesOver: false, articles: 'yes' };
 function ktnExhState() {
   var e = KTN.exh || {};
   var num;
   if (e.phase === 'after') num = 3;
   else if (e.phase === 'before' && !e.confirmed) num = 1;
   else num = 2;
-  return { num: num, phase: e.phase, confirmed: e.confirmed, publishArrived: e.publishArrived, liaison: e.liaison, salesOver: e.salesOver };
+  return { num: num, phase: e.phase, confirmed: e.confirmed, publishArrived: e.publishArrived, liaison: e.liaison, salesOver: e.salesOver, articles: e.articles };
 }
 function ktnSetExh(key, val, btn) {
   if (val === 'true') val = true;
@@ -1457,6 +1915,172 @@ function ktnSetLP(val, btn) {
 }
 window.ktnLPApplied = ktnLPApplied;
 window.ktnSetLP = ktnSetLP;
+
+/* 取引の要アクション件数（デモ用グローバル状態）。ロール（creator/gallery/user＝出品者2種＋購入者）×
+   サービスID（現状は 'lp'＝LIAISON+ のみ）で保持する。1アカウントがcreator/gallery（出品者）と
+   user（購入者）を同時に持ちうるため、出品者側のmy-turn件数と購入者側のmy-turn件数は別枠で数える。
+   サービスIDをキーにしているのは、将来LIAISON+以外の類似サービスが増えた場合に内訳を追加できるようにするため
+   （ロールアイコンのバッジは合算件数のみを表示し、サービス別の内訳は各サービスのコンソールへの
+   メニュー項目側で出す想定＝アイコン側の見た目ルールを変えずに拡張できる）。 */
+KTN.txnAlerts = { creator: { lp: 0 }, gallery: { lp: 0 }, user: { lp: 0 } };
+/* 購入管理（p5-14）への導線用デモ状態（要対応件数=0でも過去に1回以上購入していればメニューに出す）。
+   txnAlertsは「今すぐ対応が必要な件数」で0になり得るため、これとは独立に「購入歴の有無」を持つ
+   （0件でも導線自体は消えないようにする＝p5-14へのルートが失われるバグの再発防止）。 */
+KTN.hasPurchaseHistory = true;
+function ktnSetPurchaseHistory(val, btn) {
+  KTN.hasPurchaseHistory = val;
+  if (btn) {
+    document.querySelectorAll('[data-purchase-history-btn]').forEach(function (b) {
+      b.classList.toggle('on', b === btn);
+    });
+  }
+  if (typeof renderAll === 'function') renderAll();
+}
+window.ktnSetPurchaseHistory = ktnSetPurchaseHistory;
+/* 要対応の取引プルダウンに出す実データ相当のサンプル一覧（デモ用固定データ）。
+   件数バッジ（KTN.txnAlerts）は数値のみでテストボタンから自由に変更できるが、
+   一覧の中身は各コンソール（p3-15/p4-15/p5-14）に実在するデモ取引と一致させ、
+   ボタン→プルダウン→コンソールで内容が食い違わないようにしている。 */
+KTN.txnAlertItems = {
+  creator: {
+    lp: [
+      { work: '音の輪郭 No.7', counterpart: '山田 花子さん', status: '購入を確定してください', deadline: '2026.03.08', href: './kotennavi-p3-16.html' },
+      { work: '夜の静寂', counterpart: '小林 誠さん', status: '作品を発送してください', deadline: '2026.03.07', href: './kotennavi-p3-16.html' },
+      { work: '流れる時間', counterpart: '高橋 麻衣さん', status: '取引完了を確認してください', deadline: '2026.03.06', href: './kotennavi-p3-16.html' },
+      { work: '風の記憶', counterpart: '田中 次郎さん', status: '購入を確定してください', deadline: '2026.03.10', href: './kotennavi-p3-16.html' },
+      { work: '線の重なり', counterpart: '中村 彩さん', status: '購入を確定してください', deadline: '2026.03.31', href: './kotennavi-p3-16.html' }
+    ]
+  },
+  gallery: {
+    lp: [
+      { work: '静かな水面', counterpart: '加藤 真紀さん', status: '取引完了を確認してください', deadline: '2026.03.10', href: './kotennavi-p4-16.html' },
+      { work: '光の堆積 No.2', counterpart: '伊藤 大輔さん', status: '購入を確定してください', deadline: '2026.03.18', href: './kotennavi-p4-16.html' },
+      { work: '燃える地平', counterpart: '渡辺 さくらさん', status: '作品を発送してください', deadline: '2026.03.22', href: './kotennavi-p4-16.html' },
+      { work: '影と光 No.5', counterpart: '林 浩二さん', status: '購入を確定してください', deadline: '2026.04.26', href: './kotennavi-p4-16.html' }
+    ]
+  },
+  user: {
+    lp: [
+      { work: '音の輪郭 No.7', counterpart: '田中 透（出品者）', status: 'お支払いにお進みください', deadline: '2026.03.02', href: './kotennavi-p5-15.html' },
+      { work: '声なき波紋', counterpart: '鈴木 一郎（出品者）', status: '受取を確認してください', deadline: '2026.03.20', href: './kotennavi-p5-15.html' }
+    ]
+  }
+};
+function ktnTxnAlertCount(role) {
+  var m = KTN.txnAlerts && KTN.txnAlerts[role];
+  if (!m) return 0;
+  var sum = 0;
+  for (var k in m) if (Object.prototype.hasOwnProperty.call(m, k)) sum += (m[k] || 0);
+  return sum;
+}
+function ktnSetTxnAlert(role, service, val, btn) {
+  if (!KTN.txnAlerts[role]) KTN.txnAlerts[role] = {};
+  KTN.txnAlerts[role][service] = val;
+  if (btn) {
+    document.querySelectorAll('[data-txn-alert-role="' + role + '"]').forEach(function (b) {
+      b.classList.toggle('on', b === btn);
+    });
+  }
+  /* サイドバー/ボトムナビのバッジだけでなく、ヘッダーの要対応ボタン（txnAlertActionBtn＝getActions()経由）
+     も同じ件数を参照するため、ヘッダーを含む renderAll() で一括更新する。 */
+  if (typeof renderAll === 'function') renderAll();
+}
+window.ktnTxnAlertCount = ktnTxnAlertCount;
+window.ktnSetTxnAlert = ktnSetTxnAlert;
+
+/* LIAISON+コンソール／取引ワークスペースへの要対応ナビ（getActions() のオーナーメニュー隣に設置）。
+   ロールアイコンのバッジ（気づく・全サービス合算）→ 自分のページ →本ボタン（見つける）→ コンソールで
+   個別取引へ（辿り着く）の導線。リンク先は特定サービスの一覧ページ（例：LIAISON+コンソール
+   p3-15/p4-15＝全展覧会横断の取引一覧。各行から個別展覧会の取引デスク p3-16/p4-16 へ進む）なので、
+   件数もアイコンの合算ではなくサービス単体の件数を出す
+   （将来サービスが増えた場合に備え、内訳はここで出す＝アイコン側は変えずに済む）。 */
+/* モバイル縮退時（.ktn-hdr-alert-btn__icon）に出す各サービスのロゴマーク。
+   kotennavi_liaison_logo.html の「+」ロゴバッジ（ゴールド円＋Bodoni Modaの+）をそのまま縮小流用。
+   ロゴが未定義のサービスは汎用ドット（CSS ::before）にフォールバックする。 */
+var TXN_ALERT_SERVICE_ICON = {
+  lp: '<svg viewBox="0 0 32 32" width="18" height="18" aria-hidden="true"><circle cx="16" cy="16" r="16" fill="#b87c10"/><text x="16" y="17" font-family="\'Bodoni Moda\',serif" font-size="22" font-weight="900" fill="#fff8e8" text-anchor="middle" dominant-baseline="central">+</text></svg>'
+};
+/* curPage/targetPage は任意（省略時は自己参照チェックをしない）。指定時は自分自身が
+   リンク先ページ（＝集約コンソール p3-15/p4-15/p5-14）に既にいる場合ボタンごと非表示にする
+   （ddiP/ddiCurrent と同じ「今いるページへの無意味なリンク防止」思想。ただしオーナーメニューの
+   ddiCurrent と違い横に並ぶ独立ボタンなので、非活性表示ではなく非表示にする）。
+   moreLabel はプルダウン下部の集約コンソールへのリンク文言（省略時「全て見る」）。
+   クリックで直接コンソールへ飛ぶのではなく dd() と同じ仕組みのプルダウンにし、
+   「要対応の取引」の中身（作品名・相手・状態・期限）をその場で見せた上で、
+   個別取引デスクへの直リンクと、集約コンソールへの導線（moreLabel）を両方残す
+   （p3-15等へ移動後に要対応対象を探す手間をなくすユーザー提案・2026-08-17）。 */
+function txnAlertActionBtn(role, service, label, deskUrl, curPage, targetPage, moreLabel) {
+  /* creator/gallery（出品者）はLIAISON+未申請なら取引自体が存在し得ないため、
+     デモの件数（KTN.txnAlerts）がたまたま0でなくても要対応ボタンごと出さない
+     （申込状態と件数は別々のデモボタンで独立操作できるため、表示側で矛盾を防ぐ）。
+     購入者側（role==='user'）はLIAISON+申込の対象外なのでこの判定を適用しない。 */
+  if (service === 'lp' && (role === 'creator' || role === 'gallery') && !ktnLPApplied()) return '';
+  var m = KTN.txnAlerts && KTN.txnAlerts[role];
+  var cnt = (m && m[service]) || 0;
+  if (!cnt) return '';
+  if (curPage && targetPage && curPage === targetPage) return '';
+  var badgeTxt = cnt > 99 ? '99+' : cnt;
+  var icon = TXN_ALERT_SERVICE_ICON[service] || '';
+  var iconCls = icon ? 'ktn-hdr-alert-btn__icon' : 'ktn-hdr-alert-btn__icon ktn-hdr-alert-btn__icon--dot';
+  var id = 'ddTxn' + (++ddSeq);
+  var items = (KTN.txnAlertItems && KTN.txnAlertItems[role] && KTN.txnAlertItems[role][service]) || [];
+  var shown = items.slice(0, Math.min(cnt, 5));
+  var rest = cnt - shown.length;
+  var itemsHtml = shown.map(function (it) {
+    return `<a class="ktn-txn-ddi" href="${it.href}" onclick="closeAllPanels()">` +
+      `<span class="ktn-txn-ddi__work">${it.work}</span>` +
+      `<span class="ktn-txn-ddi__cp">${it.counterpart}</span>` +
+      `<span class="ktn-txn-ddi__status">${it.status}　${it.deadline}</span>` +
+      `</a>`;
+  }).join('');
+  if (!itemsHtml) itemsHtml = `<p class="ktn-txn-ddi__empty">対応が必要な取引が${cnt}件あります。</p>`;
+  var restHtml = rest > 0 ? `<p class="ktn-txn-ddi__rest">ほか${rest}件</p>` : '';
+  var moreTxt = moreLabel || '全て見る';
+  return `<div class="ktn-ddw ktn-hdr-alert-ddw">` +
+    `<button type="button" class="ktn-action-btn ktn-action-btn--alert ktn-hdr-alert-btn" onclick="toggleDD('${id}',this)">` +
+    `<span class="ktn-hdr-alert-btn__label">${label} ${cnt}件 →</span>` +
+    `<span class="${iconCls}">${icon}</span>` +
+    `<span class="ktn-hdr-alert-btn__badge">${badgeTxt}</span>` +
+    `</button>` +
+    `<div class="ktn-ddmenu ktn-ddmenu--txn" id="${id}">` +
+    `<p class="ktn-ddmenu--txn__head">要対応の取引</p>` +
+    itemsHtml + restHtml +
+    `<a class="ktn-ddmenu--txn__more" href="${deskUrl}">${moreTxt} →</a>` +
+    `</div>` +
+    `</div>`;
+}
+
+/* LIAISON+コンソール（p3-15/p4-15）Tab1「期間中展覧会」の要対応フィルタ。
+   p3-15/p4-15 は取引セクションのクラス名が共通（.p315-*）なので、ページ固有JSを持たず
+   el.closest('.p315-tab-panel') でスコープする1関数を両ページで共有する
+   （出品者本人の要対応取引＝.p315-witem--yours のみ表示し、対応不要のwaiting行・
+   展覧会ブロックを畳む。取引プルダウン→p3-15遷移後に要対応対象を探す手間を減らす導線の一部）。
+   2026-08-17：操作子を .ktn-switch トグルから素のチェックボックス（p5-1/p5-2 の
+   .p5-filter-checkin-label と同じネイティブ input）へ変更したため、change イベントの
+   checkbox 要素（el）を受け取り el.checked を見るだけの実装に簡略化 */
+function p315ToggleUrgentFilter(el) {
+  var on = el.checked;
+  var panel = el.closest('.p315-tab-panel');
+  if (!panel) return;
+  panel.classList.toggle('p315-filter-urgent', on);
+  var empty = panel.querySelector('.p315-urgent-filter__empty');
+  if (empty) empty.hidden = !(on && !panel.querySelector('.p315-witem--yours'));
+}
+window.p315ToggleUrgentFilter = p315ToggleUrgentFilter;
+
+/* 要対応バーの動的件数表示（p3-15/p4-15共通。.p315-ws-badge--alert の合計と一致する
+   .p315-txn-row--active の件数を数えて .p315-urgent-filter__count に反映。
+   0件のページ/タブでは案内自体が無意味なためバーごと hidden にする） */
+function p315SyncUrgentCount() {
+  document.querySelectorAll('.p315-urgent-filter').forEach(function (bar) {
+    var panel = bar.closest('.p315-tab-panel');
+    var cnt = panel ? panel.querySelectorAll('.p315-txn-row--active').length : 0;
+    var countEl = bar.querySelector('.p315-urgent-filter__count');
+    if (countEl) countEl.textContent = String(cnt);
+    bar.hidden = cnt === 0;
+  });
+}
+window.p315SyncUrgentCount = p315SyncUrgentCount;
 
 /* P2（展覧会）編集可否（ヘッダーのクイック「編集」ボタン・p2OwnerMenuItems()両方で共用）。
    確認済かつ会期終了後のみ編集不可。それ以外（確認前は会期段階問わず／確認済かつ会期終了前）は編集可。 */
@@ -1506,17 +2130,25 @@ function p2OwnerMenuItems(curPage) {
 
 /* P2 管理者メニュー（オーナーメニューの全項目を含むスーパーセット＋管理者専用項目）。
    オーナーメニューが状態次第で非表示にしている項目（確認前/公開前で消えるインサイト、確認済で消える削除）を
-   管理者は常時利用できるよう補完し、さらにクローンを追加する。 */
+   管理者は常時利用できるよう補完し、さらにクローンを追加する。補完項目は ktn-ddi--admin
+   （管理者色の左アクセント）＋「管理者専用」ラベルでオーナーメニュー由来の項目と区別する（2026-08-19）。
+   「削除」は ktn-ddi--admin を付けない＝オーナーメニュー由来の項目と同じ見た目（p6の削除と同様）のため、
+   「管理者専用」ラベルより前＝オーナーメニュー項目の直後に置く（未確認時に items 自体が末尾に削除を
+   含む場合と同じ位置になるよう統一。確認済で items に削除が無い場合のみ、ここで補って同じ位置に出す。
+   2026-08-21・ユーザー指摘「p2/p3/p4/p5系では削除が最下行にある、オーナーメニューの位置に合わせて」対応）。 */
 function p2AdminMenuItems(curPage) {
   var st = ktnExhState();
   var items = p2OwnerMenuItems(curPage);
   var ended = st.phase === 'after';
   var hasInsight = st.confirmed && (ended || st.publishArrived);
-  if (!hasInsight) items += ddSep() + ddiP(curPage, 'p2-14', 'chart', 'インサイト', "location.href='./kotennavi-p2-14.html'");
-  items += ddSep() + ddi('clone', 'クローン');
+  var admin = [];
+  if (!hasInsight) admin.push(ddiP(curPage, 'p2-14', 'chart', 'インサイト', "location.href='./kotennavi-p2-14.html'", 'ktn-ddi--admin'));
+  admin.push(ddi('clone', 'クローン', false, '', 'ktn-ddi--admin'));
+  admin.push(ddi('send', 'SNSテキスト生成', false, 'ktnP2SnsText()', 'ktn-ddi--admin'));
+  admin.push(ddi('print', '校正データの表示(印刷)', false, 'ktnP2ProofPrint()', 'ktn-ddi--admin'));
   var hasDel = !st.confirmed;
-  if (!hasDel) items += ddSep() + ddi('trash', '削除', true);
-  return items;
+  var delPrefix = !hasDel ? ddSep() + ddi('trash', '削除', true) : '';
+  return items + delPrefix + ddSep() + ddLabel('管理者専用') + admin.join('');
 }
 
 /* P3（クリエイター）オーナーメニュー（単一ソース・トップ〜全管理サブページ共通）。
@@ -1524,11 +2156,14 @@ function p2AdminMenuItems(curPage) {
    LIAISON+未申請時（ktnLPApplied()===false）はコンソール/取引デスク/販売代金管理をまとめて隠し、
    「LIAISON+に申し込む」（p11-4）1項目に差し替える（未申請なら取引・入金も存在し得ないため）。 */
 function p3OwnerMenuItems(curPage) {
+  /* リエゾン+関連の3項目（申請済）／申込1項目（未申請）は他の項目と同じ ddi/ddiP だが、
+     extraCls 'ktn-ddi--lp' でLIAISONブランドのゴールド識別（アイコン色・左アクセント）を付与し、
+     申請済/未申請どちらの状態でも同じ見た目でひと目でLIAISON+関連とわかるようにする（2026-08-17）。 */
   var lpBlock = ktnLPApplied()
-    ? ddiP(curPage, 'p3-15', 'shop', 'LIAISON+コンソール', "location.href='./kotennavi-p3-15.html'") +
-      ddiP(curPage, 'p3-16', 'desk', '取引デスク', "location.href='./kotennavi-p3-16.html'") +
-      ddiP(curPage, 'p3-17', 'sales', '販売代金管理', "location.href='./kotennavi-p3-17.html'")
-    : ddi('shop', 'LIAISON+に申し込む', false, "location.href='./kotennavi-p11-4.html'");
+    ? ddiP(curPage, 'p3-15', 'shop', 'LIAISON+コンソール', "location.href='./kotennavi-p3-15.html'", 'ktn-ddi--lp') +
+      ddiP(curPage, 'p3-16', 'desk', '取引デスク', "location.href='./kotennavi-p3-16.html'", 'ktn-ddi--lp') +
+      ddiP(curPage, 'p3-17', 'sales', '販売代金管理', "location.href='./kotennavi-p3-17.html'", 'ktn-ddi--lp')
+    : ddi('shop', 'LIAISON+に申し込む', false, "location.href='./kotennavi-p11-4.html'", 'ktn-ddi--lp');
   return ddiP(curPage, 'p3-11', 'edit', 'プロフィール編集', "location.href='./kotennavi-p3-11.html'") + ddSep() +
     ddiP(curPage, 'p3-18', 'grid', '展覧会を管理', "location.href='./kotennavi-p3-18.html'") +
     ddiP(curPage, 'p3-14', 'frame', 'ポートフォリオ管理', "location.href='./kotennavi-p3-14.html'") +
@@ -1536,18 +2171,19 @@ function p3OwnerMenuItems(curPage) {
     lpBlock + ddSep() +
     ddiP(curPage, 'p3-13', 'watch', 'オーディエンス管理', "location.href='./kotennavi-p3-13.html'") +
     ddiP(curPage, 'p3-12', 'chart', 'インサイト', "location.href='./kotennavi-p3-12.html'") + ddSep() +
-    ddi('share', 'ページを共有する', false, "ktnPageShare('creator')") +
-    ddi('qr', 'ウォッチ用QRコードを表示', false, "ktnListQr('creator')") + ddSep() +
-    ddi('user', 'アカウント設定', false, "location.href='./kotennavi-p5.html'");
+    ddi('share', '共有する（SNS・名刺に）', false, "ktnListQr('creator')") +
+    ddi('badge', '個展なびバッジを設置する', false, "window.open('./kotennavi-p60-6.html#badge','_blank')") + ddSep() +
+    ddi('user', 'myページへ', false, "location.href='./kotennavi-p5.html'");
 }
 
 /* P4（ギャラリー）オーナーメニュー（単一ソース・p3と対称・インベントリー管理のみラベル差） */
 function p4OwnerMenuItems(curPage) {
+  /* p3と同一の見た目ルール（extraCls 'ktn-ddi--lp'）。詳細は p3OwnerMenuItems 側のコメント参照。 */
   var lpBlock = ktnLPApplied()
-    ? ddiP(curPage, 'p4-15', 'shop', 'LIAISON+コンソール', "location.href='./kotennavi-p4-15.html'") +
-      ddiP(curPage, 'p4-16', 'desk', '取引デスク', "location.href='./kotennavi-p4-16.html'") +
-      ddiP(curPage, 'p4-17', 'sales', '販売代金管理', "location.href='./kotennavi-p4-17.html'")
-    : ddi('shop', 'LIAISON+に申し込む', false, "location.href='./kotennavi-p11-4.html'");
+    ? ddiP(curPage, 'p4-15', 'shop', 'LIAISON+コンソール', "location.href='./kotennavi-p4-15.html'", 'ktn-ddi--lp') +
+      ddiP(curPage, 'p4-16', 'desk', '取引デスク', "location.href='./kotennavi-p4-16.html'", 'ktn-ddi--lp') +
+      ddiP(curPage, 'p4-17', 'sales', '販売代金管理', "location.href='./kotennavi-p4-17.html'", 'ktn-ddi--lp')
+    : ddi('shop', 'LIAISON+に申し込む', false, "location.href='./kotennavi-p11-4.html'", 'ktn-ddi--lp');
   return ddiP(curPage, 'p4-11', 'edit', 'ギャラリー情報編集', "location.href='./kotennavi-p4-11.html'") + ddSep() +
     ddiP(curPage, 'p4-18', 'grid', '展覧会を管理', "location.href='./kotennavi-p4-18.html'") +
     ddiP(curPage, 'p4-14', 'frame', 'インベントリー管理', "location.href='./kotennavi-p4-14.html'") +
@@ -1555,21 +2191,48 @@ function p4OwnerMenuItems(curPage) {
     lpBlock + ddSep() +
     ddiP(curPage, 'p4-13', 'watch', 'オーディエンス管理', "location.href='./kotennavi-p4-13.html'") +
     ddiP(curPage, 'p4-12', 'chart', 'インサイト', "location.href='./kotennavi-p4-12.html'") + ddSep() +
-    ddi('share', 'ページを共有する', false, "ktnPageShare('gallery')") +
-    ddi('qr', 'ウォッチ用QRコードを表示', false, "ktnListQr('gallery')") + ddSep() +
-    ddi('user', 'アカウント設定', false, "location.href='./kotennavi-p5.html'");
+    ddi('share', '共有する（SNS・名刺に）', false, "ktnListQr('gallery')") +
+    ddi('badge', '個展なびバッジを設置する', false, "window.open('./kotennavi-p60-7.html#badge','_blank')") + ddSep() +
+    ddi('user', 'myページへ', false, "location.href='./kotennavi-p5.html'");
 }
 
-/* P3/P4 共通・管理者専用メニュー（アカウントを持つロールページなので統計/精算/なりすまし/強制退会まで持つ） */
-function p3p4AdminItems() {
-  return ddi('chart', '統計') + ddi('sales', '精算') + ddSep() +
-    ddi('user', 'なりすましログイン') + ddi('clone', 'クローン') + ddSep() +
-    ddi('trash', '強制退会', true) + ddi('trash', '削除', true);
+/* P3 管理者メニュー（オーナーメニューの全項目を含むスーパーセット＋管理者専用項目・P2と同一設計・2026-08-19）。
+   オーナーメニューは「利用者に今見えているメニュー」を管理者が把握するための表示、実際の操作は
+   管理者専用ブロック（ktn-ddi--admin＝左アクセント＋「管理者専用」ラベル）から行う動線を維持する。
+   統計はインサイト（オーナーメニュー内に既存）と重複するため置かない。強制退会はクリエイター/ギャラリーが
+   必ず持つユーザーロール側（P5）でのみ行うためここには置かない。
+   「削除」は ktn-ddi--admin を付けず、p6の削除と同じ見た目（オーナーメニュー由来の項目扱い）で
+   オーナーメニュー項目の直後＝「管理者専用」ラベルより前に置く（2026-08-21・ユーザー指摘対応。
+   詳細は p2AdminMenuItems 側のコメント参照）。 */
+function p3AdminMenuItems(curPage) {
+  var admin = ddi('sales', '精算', false, "location.href='./kotennavi-p90-14.html'", 'ktn-ddi--admin') +
+    ddi('user', 'なりすましログイン', false, '', 'ktn-ddi--admin') +
+    ddi('clone', 'クローン', false, '', 'ktn-ddi--admin');
+  return p3OwnerMenuItems(curPage) + ddSep() + ddi('trash', '削除', true) + ddSep() + ddLabel('管理者専用') + admin;
 }
 
-/* P6（作品）オーナーメニュー（単一ソース） */
-function p6OwnerItems() {
-  return ddi('edit', '作品編集') + ddSep() + ddi('chart', 'インサイト') + ddSep() + ddi('trash', '削除', true);
+/* P4 管理者メニュー（p3と対称・設計理由は p3AdminMenuItems 側のコメント参照） */
+function p4AdminMenuItems(curPage) {
+  var admin = ddi('sales', '精算', false, "location.href='./kotennavi-p90-14.html'", 'ktn-ddi--admin') +
+    ddi('user', 'なりすましログイン', false, '', 'ktn-ddi--admin') +
+    ddi('clone', 'クローン', false, '', 'ktn-ddi--admin');
+  return p4OwnerMenuItems(curPage) + ddSep() + ddi('trash', '削除', true) + ddSep() + ddLabel('管理者専用') + admin;
+}
+
+/* P6（作品）オーナーメニュー（単一ソース）。curPage＝現在開いている管理サブページID（p6-11等）。
+   p6-11/p6-12/p6-15はcreator/gallery共有ページ（JSでバー色のみ切替）のため、本関数もロール分岐を持たない
+   ＝p6-1/p6-2のオーナーがgalleryでも同じ項目・同じ遷移先で成立する（2026-08-21）。
+   LIAISON+作品（p6-2）のみ「削除」を置かない：取引中の作品削除はハレーションが大きいため、
+   LIAISON+作品の削除はp3-15/p4-15（リエゾン+コンソール/取引デスク）側の操作に限定する。 */
+function p6OwnerItems(curPage, role) {
+  var edit = ddiP(curPage, 'p6-11', 'edit', '作品編集', "location.href='./kotennavi-p6-11.html'");
+  var insight = ddiP(curPage, 'p6-12', 'chart', 'インサイト', "location.href='./kotennavi-p6-12.html'");
+  var articles = ddiP(curPage, 'p6-15', 'file', '記事管理', "location.href='./kotennavi-p6-15.html'");
+  /* 問合せへの回答（p6-14）は作家本人のみ（sitemap: creator=R/W, gallery=blank）。
+     管理者はp6AdminItems経由でrole='admin'を渡し常に表示する（2026-08-24）。 */
+  var inquiries = (role === 'creator' || role === 'admin') ? ddSep() + ddiP(curPage, 'p6-14', 'send', '問合せへの回答', "location.href='./kotennavi-p6-14.html'") : '';
+  if (curPage === 'p6-2') return edit + ddSep() + insight + ddSep() + articles + inquiries;
+  return edit + ddSep() + insight + ddSep() + articles + inquiries + ddSep() + ddi('trash', '削除', true);
 }
 
 /* P7（記事）オーナーメニュー（単一ソース） */
@@ -1577,9 +2240,19 @@ function p7OwnerItems() {
   return ddi('edit', '編集') + ddSep() + ddi('trash', '削除', true);
 }
 
-/* P6/P7 共通・管理者専用メニュー（コンテンツのみのページ＝アカウント操作系は持たない） */
-function p6p7AdminItems() {
-  return ddi('clone', 'クローン') + ddSep() + ddi('trash', '削除', true);
+/* P6 管理者メニュー（オーナーメニューの全項目を含むスーパーセット＋管理者専用項目・P2/P3/P4と同一設計）。
+   p6-2はオーナーメニューの時点で「削除」を含まない（取引ハレーション防止のため通常のオーナー操作からは
+   隠す）が、管理者は例外的に「強制削除」を持つ（2026-08-21・ユーザー指示「p6-2で管理者は強制削除あり
+   です」）。通常の「削除」と区別するため専用ラベル＋ktn-ddi--adminアクセントで管理者専用ブロックに置く。 */
+function p6AdminItems(curPage) {
+  var admin = ddi('clone', 'クローン', false, '', 'ktn-ddi--admin');
+  if (curPage === 'p6-2') admin += ddSep() + ddi('trash', '強制削除', true, '', 'ktn-ddi--admin');
+  return p6OwnerItems(curPage, 'admin') + ddSep() + ddLabel('管理者専用') + admin;
+}
+
+/* P7 記事・管理者専用メニュー（記事はクローン不可のためP6と分離） */
+function p7AdminItems() {
+  return ddi('trash', '削除', true);
 }
 
 /* ══════════════════════════════════
@@ -1609,10 +2282,11 @@ function getActions(page, role) {
   /* ── P2 管理サブページ群（展覧会編集／LIAISON・LIAISON+作品管理／記事管理／インサイト） ── */
   if (['p2-11', 'p2-12', 'p2-121', 'p2-13', 'p2-14'].includes(page)) {
     /* ガイドボタンのリンク先：p60-6（クリエイター編）/ p60-7（ギャラリー編）FAQの該当チャプターへ。
-       p2-11=展覧会の登録・編集チャプター、p2-13=記事の登録・編集チャプター。
-       p2-12/p2-121/p2-14（LIAISON作品管理・インサイト）はまだ該当チャプターが無いため装飾のまま。 */
+       p2-11=展覧会の登録・編集チャプター、p2-13=記事の登録・編集チャプター、p2-14=インサイトチャプター
+       （p3-12/p4-12のガイドリンクと同じ#insightを参照）。p2-12/p2-121（LIAISON作品管理）は
+       まだ該当チャプターが無いため装飾のまま。 */
     const guideFile = role === 'gallery' ? './kotennavi-p60-7.html' : './kotennavi-p60-6.html';
-    const guideAnchor = page === 'p2-11' ? '#exhibition-edit' : page === 'p2-13' ? '#article-edit' : '';
+    const guideAnchor = page === 'p2-11' ? '#exhibition-edit' : page === 'p2-13' ? '#article-edit' : page === 'p2-14' ? '#insight' : '';
     const guideBtn = owbtn('info', 'ガイド', guideAnchor ? `window.open('${guideFile}${guideAnchor}','_blank')` : '');
     if (role === 'creator' || role === 'gallery')
       return guideBtn + dd('オーナーメニュー', p2OwnerMenuItems(page));
@@ -1627,16 +2301,33 @@ function getActions(page, role) {
     if (role === 'guest' || role === 'login')
       return cmn + ddMore(reportItem(page));
     if (role === 'creator')
-      return cmn + owbtn('edit', '編集', "location.href='./kotennavi-p3-11.html'") + dd('オーナーメニュー', p3OwnerMenuItems());
+      return cmn + txnAlertActionBtn('creator', 'lp', 'LIAISON+要対応', './kotennavi-p3-15.html', page, 'p3-15', 'リエゾン+コンソールで全て見る') + dd('オーナーメニュー', p3OwnerMenuItems());
     if (role === 'admin')
-      return cmn + dd('オーナーメニュー', p3OwnerMenuItems()) + dd('管理者', p3p4AdminItems());
+      return cmn + dd('オーナーメニュー', p3OwnerMenuItems()) + dd('管理者', p3AdminMenuItems());
     return cmn;
   }
 
   /* ── P3 管理サブページ群（プロフィール編集／各種管理ページ・共通オーナーメニュー） ── */
   if (['p3-11', 'p3-12', 'p3-13', 'p3-14', 'p3-15', 'p3-16', 'p3-17', 'p3-18', 'p3-19'].includes(page)) {
-    if (role === 'creator') return owbtn('info', 'ガイド') + dd('オーナーメニュー', p3OwnerMenuItems(page));
-    if (role === 'admin') return owbtn('info', 'ガイド') + dd('オーナーメニュー', p3OwnerMenuItems(page)) + dd('管理者', p3p4AdminItems());
+    /* ガイドリンク：各ページの操作対象に対応するFAQ/ガイド章へ直接結線（2026-08-19 全ページ結線完了）。
+       p3-11〜14はp60-6（よくある質問-クリエイター編）の新設章、p3-15〜17はp70-12（LIAISON+取引ガイド出品者編）の
+       新設章、p3-18〜19は既存のp60-6章へリンク。 */
+    const P3_GUIDE = {
+      'p3-11': './kotennavi-p60-6.html#profile-edit',
+      'p3-12': './kotennavi-p60-6.html#insight',
+      'p3-13': './kotennavi-p60-6.html#audience-mgmt',
+      'p3-14': './kotennavi-p60-6.html#portfolio-mgmt',
+      'p3-15': './kotennavi-p70-12.html#console',
+      'p3-16': './kotennavi-p70-12.html#trouble',
+      'p3-17': './kotennavi-p70-12.html#settlement',
+      'p3-18': './kotennavi-p60-6.html#exhibition-edit',
+      'p3-19': './kotennavi-p60-6.html#article-edit',
+    };
+    const guideUrl = P3_GUIDE[page] || '';
+    const guideBtn = owbtn('info', 'ガイド', guideUrl ? `window.open('${guideUrl}','_blank')` : '');
+    const alertBtn = txnAlertActionBtn('creator', 'lp', 'LIAISON+要対応', './kotennavi-p3-15.html', page, 'p3-15', 'リエゾン+コンソールで全て見る');
+    if (role === 'creator') return guideBtn + alertBtn + dd('オーナーメニュー', p3OwnerMenuItems(page));
+    if (role === 'admin') return guideBtn + alertBtn + dd('オーナーメニュー', p3OwnerMenuItems(page)) + dd('管理者', p3AdminMenuItems(page));
     return '';
   }
 
@@ -1646,16 +2337,33 @@ function getActions(page, role) {
     if (role === 'guest' || role === 'login')
       return cmn + ddMore(reportItem(page));
     if (role === 'gallery')
-      return cmn + owbtn('edit', '編集', "location.href='./kotennavi-p4-11.html'") + dd('オーナーメニュー', p4OwnerMenuItems());
+      return cmn + txnAlertActionBtn('gallery', 'lp', 'LIAISON+要対応', './kotennavi-p4-15.html', page, 'p4-15', 'リエゾン+コンソールで全て見る') + dd('オーナーメニュー', p4OwnerMenuItems());
     if (role === 'admin')
-      return cmn + dd('オーナーメニュー', p4OwnerMenuItems()) + dd('管理者', p3p4AdminItems());
+      return cmn + dd('オーナーメニュー', p4OwnerMenuItems()) + dd('管理者', p4AdminMenuItems());
     return cmn;
   }
 
   /* ── P4 管理サブページ群（ギャラリー情報編集／各種管理ページ・共通オーナーメニュー） ── */
   if (['p4-11', 'p4-12', 'p4-13', 'p4-14', 'p4-15', 'p4-16', 'p4-17', 'p4-18', 'p4-19'].includes(page)) {
-    if (role === 'gallery') return owbtn('info', 'ガイド') + dd('オーナーメニュー', p4OwnerMenuItems(page));
-    if (role === 'admin') return owbtn('info', 'ガイド') + dd('オーナーメニュー', p4OwnerMenuItems(page)) + dd('管理者', p3p4AdminItems());
+    /* ガイドリンク：各ページの操作対象に対応するFAQ/ガイド章へ直接結線（2026-08-19 全ページ結線完了）。
+       p4-11〜14はp60-7（よくある質問-ギャラリー編）の新設章、p4-15〜17はp70-12（LIAISON+取引ガイド出品者編）の
+       新設章、p4-18〜19は既存のp60-7章へリンク。 */
+    const P4_GUIDE = {
+      'p4-11': './kotennavi-p60-7.html#profile-edit',
+      'p4-12': './kotennavi-p60-7.html#insight',
+      'p4-13': './kotennavi-p60-7.html#audience-mgmt',
+      'p4-14': './kotennavi-p60-7.html#inventory-mgmt',
+      'p4-15': './kotennavi-p70-12.html#console',
+      'p4-16': './kotennavi-p70-12.html#trouble',
+      'p4-17': './kotennavi-p70-12.html#settlement',
+      'p4-18': './kotennavi-p60-7.html#exhibition-edit',
+      'p4-19': './kotennavi-p60-7.html#article-edit',
+    };
+    const guideUrl = P4_GUIDE[page] || '';
+    const guideBtn = owbtn('info', 'ガイド', guideUrl ? `window.open('${guideUrl}','_blank')` : '');
+    const alertBtn = txnAlertActionBtn('gallery', 'lp', 'LIAISON+要対応', './kotennavi-p4-15.html', page, 'p4-15', 'リエゾン+コンソールで全て見る');
+    if (role === 'gallery') return guideBtn + alertBtn + dd('オーナーメニュー', p4OwnerMenuItems(page));
+    if (role === 'admin') return guideBtn + alertBtn + dd('オーナーメニュー', p4OwnerMenuItems(page)) + dd('管理者', p4AdminMenuItems(page));
     return '';
   }
 
@@ -1663,29 +2371,75 @@ function getActions(page, role) {
   if (['p5', 'p5-1', 'p5-2', 'p5-3', 'p5-4', 'p5-11', 'p5-12', 'p5-13', 'p5-14', 'p5-15', 'p5-16'].includes(page)) {
     if (role === 'guest') return '';
     const cmn = page === 'p5' ? shareBtn() + sep() : '';
-    if (role === 'login' || role === 'creator' || role === 'gallery')
-      return cmn + dd('設定', p5SettingsMenuItems());
+    /* ガイドリンク：p5-11〜p5-16（マイページ管理サブページ）のみ、対応するFAQ/ガイド章へ直接結線
+       （P3_GUIDE/P4_GUIDE と同一パターン・2026-08-22）。p5/p5-1〜p5-4（マイページ本体・公開サブページ）は
+       p3/p4のトップページ同様ガイドボタンを出さない。p5-11〜13はp60-5（よくある質問-ユーザー編）の新設章、
+       p5-14〜16は既存p70-11（リエゾン+取引ガイド購入者編）の該当章へリンクする（購入・取引フローは
+       既にそちらで一元的に説明済みのため、p60-5側に重複作成しない）。 */
+    const P5_GUIDE = {
+      'p5-11': './kotennavi-p60-5.html#profile-edit',
+      'p5-12': './kotennavi-p60-5.html#password',
+      'p5-13': './kotennavi-p60-5.html#notification',
+      'p5-14': './kotennavi-p70-11.html#overview',
+      'p5-15': './kotennavi-p70-11.html#trouble',
+      'p5-16': './kotennavi-p70-11.html#phase-payment',
+    };
+    const guideUrl = P5_GUIDE[page] || '';
+    const guideBtn = guideUrl ? owbtn('info', 'ガイド', `window.open('${guideUrl}','_blank')`) : '';
+    /* 購入者側（KTN.txnAlerts.user）の要対応導線。creator/gallery本人もp5では「購入者としての自分」
+       なのでロールに関わらずuserキーを参照する（出品者側=creator/galleryキーとは別軸）。
+       p3/p4の管理サブページ群と同じく、トップページに限らず全サブページ共通で設置。 */
+    const alertBtn = txnAlertActionBtn('user', 'lp', 'LIAISON+要対応', './kotennavi-p5-14.html', page, 'p5-14', '購入管理で全て見る');
+    /* 'login'＝p5系デモバーでは「本人ではない、別の一般ログインユーザー」を表す
+       （CLAUDE.mdユーザー種別表：'user+'のみが「ページオーナー本人」）。
+       他人のmyページを見ている状態なので「設定」（本人の会員設定）ddは出さない。
+       自分自身の未対応取引に関する導線（alertBtn）はページ所有と無関係のため維持する。
+       ガイドは本人の管理サブページに紐づく導線のため、非オーナー閲覧時は出さない（p3/p4と同様）。 */
+    if (role === 'login') return cmn + alertBtn;
+    /* 'user+'＝p5系デモバーのページオーナー本人ロール（CLAUDE.mdユーザー種別表）。
+       'user+creator'/'user+gallery'と違い正規化ブロックの対象外だったため、
+       このブランチ内で直接一致条件に含める（p5専用の既存バグ・過去の横展開で発見・修正）。 */
+    if (role === 'user+' || role === 'creator' || role === 'gallery')
+      return cmn + guideBtn + alertBtn + dd('設定', p5SettingsMenuItems());
     if (role === 'admin')
-      return cmn + dd('設定', p5SettingsMenuItems()) + dd('管理者',
-        ddi('edit', '編集') + ddSep() + ddi('user', 'なりすましログイン') + ddSep() + ddi('trash', '強制退会', true));
+      return cmn + guideBtn + alertBtn + dd('設定', p5SettingsMenuItems()) + dd('管理者', p5AdminMenuItems());
     return '';
   }
 
   /* ── P6 作品 ── */
   if (['p6', 'p6-1', 'p6-2'].includes(page)) {
     const cmn = hib('heart', '興味あり', '', 'interest') + shareBtn() + sep();
-    if (role === 'guest' || role === 'login')
+    const editBtn = owbtn('edit', '編集', "location.href='./kotennavi-p6-11.html'");
+    /* 問合せする（p6-13）はguestは不可・loginのみ（sitemap: guest=blank, login=W）。 */
+    if (role === 'guest')
       return cmn + ddMore(reportItem(page));
+    if (role === 'login')
+      return cmn + ddMore(ddi('send', '問合せする', false, "location.href='./kotennavi-p6-13.html'") + ddSep() + reportItem(page));
     if (role === 'creator' || role === 'gallery')
-      return cmn + owbtn('edit', '編集') + dd('オーナーメニュー', p6OwnerItems());
+      return cmn + editBtn + dd('オーナーメニュー', p6OwnerItems(page, role));
     if (role === 'admin')
-      return cmn + owbtn('edit', '編集') + dd('オーナーメニュー', p6OwnerItems()) + dd('管理者', p6p7AdminItems());
+      return cmn + editBtn + dd('オーナーメニュー', p6OwnerItems(page, 'admin')) + dd('管理者', p6AdminItems(page));
     return cmn;
   }
 
-  if (['p6-11', 'p6-12', 'p6-13', 'p6-14'].includes(page)) {
-    if (role === 'creator' || role === 'gallery') return owbtn('info', 'ガイド');
-    if (role === 'admin') return owbtn('info', 'ガイド') + sep() + dd('管理者', ddi('chart', '統計'));
+  /* p6-11〜p6-15＝作品-管理サブページ群。オーナーメニュー/管理者メニューはp6/p6-1/p6-2トップと
+     同一内容（p6OwnerItems/p6AdminItems・単一ソース）を表示し、サブページを開いていても他の
+     管理ページ（編集・インサイト等）へすぐ移動できるようにする（2026-08-21）。
+     ガイドボタンのリンク先：creator/gallery共有ページのためロールでp60-6（クリエイター編）/
+     p60-7（ギャラリー編）を出し分ける。p6-11=作品の管理章（p60-6は#portfolio-mgmt、p60-7は
+     #inventory-mgmt＝章idがファイルで異なる）、p6-12=インサイト章、p6-15=記事の登録・編集章。
+     p6-13/p6-14（問合せ・回答）は該当章が無いため装飾のまま（2026-08-21）。 */
+  if (['p6-11', 'p6-12', 'p6-13', 'p6-14', 'p6-15'].includes(page)) {
+    const guideFile = role === 'gallery' ? './kotennavi-p60-7.html' : './kotennavi-p60-6.html';
+    const P6_GUIDE_ANCHOR = {
+      'p6-11': role === 'gallery' ? '#inventory-mgmt' : '#portfolio-mgmt',
+      'p6-12': '#insight',
+      'p6-15': '#article-edit',
+    };
+    const guideAnchor = P6_GUIDE_ANCHOR[page] || '';
+    const guideBtn = owbtn('info', 'ガイド', guideAnchor ? `window.open('${guideFile}${guideAnchor}','_blank')` : '');
+    if (role === 'creator' || role === 'gallery') return guideBtn + dd('オーナーメニュー', p6OwnerItems(page, role));
+    if (role === 'admin') return guideBtn + dd('オーナーメニュー', p6OwnerItems(page, 'admin')) + dd('管理者', p6AdminItems(page));
     return '';
   }
 
@@ -1697,7 +2451,7 @@ function getActions(page, role) {
     if (role === 'creator' || role === 'gallery')
       return cmn + owbtn('edit', '編集') + dd('オーナーメニュー', p7OwnerItems());
     if (role === 'admin')
-      return cmn + owbtn('edit', '編集') + dd('オーナーメニュー', p7OwnerItems()) + dd('管理者', p6p7AdminItems());
+      return cmn + owbtn('edit', '編集') + dd('オーナーメニュー', p7OwnerItems()) + dd('管理者', p7AdminItems());
     return cmn;
   }
 
@@ -1722,21 +2476,27 @@ function getActions(page, role) {
     return '';
   }
 
-  /* ── P9 ニュース ── */
-  if (page === 'p9') {
+  /* ── P61 お知らせ ── */
+  if (page === 'p61') {
+    if (role === 'admin')
+      return dd('管理者', ddi('plus', '新規作成', false, "location.href='./kotennavi-p61-11.html'"));
+    return '';
+  }
+
+  if (page === 'p61-1') {
     const cmn = shareBtn() + sep();
     if (role === 'admin')
-      return cmn + dd('管理者', ddi('edit', '編集') + ddSep() + ddi('trash', '削除', true));
+      return cmn + dd('管理者', ddi('edit', '編集', false, "location.href='./kotennavi-p61-11.html'") + ddSep() + ddi('trash', '削除', true));
     return cmn;
   }
 
-  if (page === 'p9-11') {
-    if (role === 'admin') return dd('管理者', ddi('edit', '編集') + ddSep() + ddi('trash', '削除', true));
+  if (page === 'p61-11') {
+    if (role === 'admin') return dd('管理者', ddi('trash', '削除', true));
     return '';
   }
 
   /* ── P10 特集 ── */
-  if (['p10-5', 'p10-6', 'p10-7', 'p10-8'].includes(page)) {
+  if (['p10-4', 'p10-5', 'p10-6', 'p10-7'].includes(page)) {
     if (role === 'admin') return dd('管理者', ddi('edit', '編集') + ddi('plus', '新規特集'));
     return '';
   }
@@ -1748,7 +2508,7 @@ function getActions(page, role) {
   }
 
   /* ── P70 LIAISONガイド ── */
-  if (['p70-1', 'p70-2', 'p70-4', 'p70-11', 'p70-12'].includes(page)) {
+  if (['p70-1', 'p70-2', 'p70-3', 'p70-4', 'p70-6', 'p70-8', 'p70-9', 'p70-11', 'p70-12'].includes(page)) {
     if (role === 'admin') return dd('管理者', ddi('edit', '編集'));
     return '';
   }
@@ -1772,12 +2532,13 @@ function getActions(page, role) {
 /* ══════════════════════════════════
    パンくず生成
 ══════════════════════════════════ */
-function renderBc(page) {
+function renderBc(page, bcOverride) {
   const p = PAGES[page];
-  if (!p) return '';
-  return p.bc.map((c, i) => {
-    const isLast = i === p.bc.length - 1;
-    const isAnc = i === 0 && p.bc.length > 2; /* モバイルで省略するのはTopのみ。カテゴリ・エンティティ名は残す */
+  const bc = bcOverride || (p && p.bc);
+  if (!bc) return '';
+  return bc.map((c, i) => {
+    const isLast = i === bc.length - 1;
+    const isAnc = i === 0 && bc.length > 2; /* モバイルで省略するのはTopのみ。カテゴリ・エンティティ名は残す */
     const badge = c[2] === 'l'
       ? `<span class="ktn-bc__badge ktn-bc__badge--l">LIAISON</span>`
       : c[2] === 'lp'
@@ -1844,7 +2605,14 @@ KTN.init = function (opts) {
     document.documentElement.style.setProperty('--w-page', getWidthVar());
     var bcEl = document.getElementById('ktnBc');
     var acEl = document.getElementById('ktnActs');
-    if (bcEl) bcEl.innerHTML = renderBc(page);
+    /* p7＝掲載先デモ切替（switchP7Context）中の文脈を、ロール切替等の再描画（renderAll）でも
+       保持する。デモバーのロールボタンはp7BreadcrumbForの判定材料ではないため、
+       常にP7_CURRENT_CONTEXT（掲載先の選択）側を優先する。 */
+    var bcOverride;
+    if (page === 'p7' && typeof window.p7BreadcrumbFor === 'function' && window.P7_CONTEXTS) {
+      bcOverride = window.p7BreadcrumbFor(window.P7_CONTEXTS[window.P7_CURRENT_CONTEXT || 'artwork']);
+    }
+    if (bcEl) bcEl.innerHTML = renderBc(page, bcOverride);
     if (acEl) acEl.innerHTML = getActions(page, role);
   }
 
@@ -1905,6 +2673,8 @@ KTN.init = function (opts) {
     if (window.KTN.cta && typeof window.KTN.cta.init === 'function') {
       window.KTN.cta.init();
     }
+    /* 要対応バーの件数表示（p3-15/p4-15限定。該当要素が無いページは no-op） */
+    p315SyncUrgentCount();
     /* 会場フライヤー・会場チェックインQR経由（?checkin=1）の自動チェックインモーダル起動（P2限定） */
     if (pageId === 'p2' && location.search.indexOf('checkin=1') !== -1 && typeof openCheckinModal === 'function') {
       requestAnimationFrame(function () { openCheckinModal(); });
@@ -2124,7 +2894,66 @@ function ktnSetStar(v) {
 
 function ktnSubmitCheckin() {
   showToast('\u6295\u7a3f\u3057\u307e\u3057\u305f\uff01');
-  closeCheckinModal();
+  ktnCheckinShowWatchStep();
+}
+
+/* \u30c1\u30a7\u30c3\u30af\u30a4\u30f3\u5b8c\u4e86\u5f8c\uff1a\u3053\u306e\u5c55\u89a7\u4f1a\u306e\u30af\u30ea\u30a8\u30a4\u30bf\u30fc\uff0b\u30ae\u30e3\u30e9\u30ea\u30fc\u306e\u30a6\u30a9\u30c3\u30c1\u63d0\u6848\u30b9\u30c6\u30c3\u30d7\u3002
+   \u6295\u7a3f\u8005\uff08\u63b2\u8f09\u4e3b\uff09\u3067\u306f\u306a\u304f\u6765\u5834\u8005\u304c\u5b9f\u969b\u306b\u4f53\u9a13\u3057\u305f\u5bfe\u8c61\uff1d\u30af\u30ea\u30a8\u30a4\u30bf\u30fc\u3092\u4e3b\u5f79\u306b\u3059\u308b\uff082026-08-24\uff09\u3002
+   \u30af\u30ea\u30a8\u30a4\u30bf\u30fc\uff0f\u30ae\u30e3\u30e9\u30ea\u30fc\u306f\u30b0\u30eb\u30fc\u30d7\u5206\u3051\u3057\u3066\u8868\u793a\uff08\u30ae\u30e3\u30e9\u30ea\u30fc\u540d\u304c\u9577\u3044\u5834\u5408\u306e\u6298\u308a\u8fd4\u3057\u30fb\u5207\u308c\u5bfe\u7b56\u30012026-08-24\uff09\u3002 */
+function ktnCheckinShowWatchStep() {
+  var modal = document.querySelector('#ktnCheckinModal .ktn-auth-modal');
+  if (!modal) { closeCheckinModal(); return; }
+  var CHECK_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+  var CLOSE_BTN = '<button class="ktn-auth-close" onclick="closeCheckinModal()" aria-label="\u9589\u3058\u308b"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>';
+  var WATCH_SVG = '<svg viewBox="0 0 16 16" fill="none" width="15" height="15"><circle cx="8" cy="8" r="7" fill="#7a8a99" opacity=".3"/><circle class="wi-inner" cx="8" cy="8" r="2.6"/></svg>';
+  /* \u30c7\u30e2\u7528\uff1a\u51fa\u5c55\u8005\u6570\u306e\u4e0a\u9650\u8868\u793a\uff08100\u4eba\u898f\u6a21\u306e\u5c55\u89a7\u4f1a\u3067\u3082\u7834\u7dbb\u3057\u306a\u3044\u3053\u3068\uff09\u3092\u30d6\u30e9\u30a6\u30b6\u4e0a\u3067\u78ba\u8a8d\u3067\u304d\u308b\u3088\u3046\u3001
+     \u5b9f\u30c7\u30fc\u30bf\uff08p2.html\u306e\u7530\u4e2d\u900f\u30fb\u5c71\u7530\u8475\u306e2\u540d\uff09\u3088\u308a\u591a\u30445\u540d\u3067\u691c\u8a3c\u7528\u306b\u6c34\u5897\u3057\u3057\u3066\u3044\u308b\u3002\u540d\u524d\u306e\u307f\u306e\u8efd\u91cf\u884c\u306e\u305f\u3081\u3001
+     \u30ab\u30fc\u30c9\u5f62\u5f0f\uff08.cc--h.cc--panel\uff09\u306f\u4f7f\u308f\u306a\u3044\uff1d\u591a\u4eba\u6570\u3067\u3082\u30b9\u30af\u30ed\u30fc\u30eb\u304c\u7834\u7dbb\u3057\u306a\u3044\u69cb\u6210\u3002 */
+  var creators = [
+    { href: 'kotennavi-p3.html', name: '\u7530\u4e2d \u900f' },
+    { href: 'kotennavi-p2-4.html', name: '\u5c71\u7530 \u8475' },
+    { href: 'kotennavi-p3.html', name: '\u6751\u4e0a \u73b2\u5b50' },
+    { href: 'kotennavi-p3.html', name: '\u4f0a\u85e4 \u6176\u5b50' },
+    { href: 'kotennavi-p3.html', name: '\u6a4b\u672c \u660e' }
+  ];
+  var venues = [
+    { href: 'kotennavi-p4.html', name: 'Gallery SOIL \u6e0b\u8c37' }
+  ];
+  var MAX_CI_WATCH_ITEMS = 3;
+  /* \u30ae\u30e3\u30e9\u30ea\u30fc\u540d\u3092\u6587\u306b\u57cb\u3081\u8fbc\u3080\u3068\uff08\u65e7\u300c\u3053\u306e\u4f1a\u5834\uff08...\uff09\u3082\u30a6\u30a9\u30c3\u30c1\u3059\u308b\u300d\u65b9\u5f0f\uff09\u3001
+     \u9577\u3044\u540d\u524d\u3067\u672b\u5c3e\u306e\u300c\u3092\u30a6\u30a9\u30c3\u30c1\u3059\u308b\u300d\u304c\u6298\u308a\u8fd4\u3055\u308c\u3066\u5207\u308c\u3066\u898b\u3048\u308b\u5371\u967a\u304c\u3042\u308b\u305f\u3081\u3001
+     \u30af\u30ea\u30a8\u30a4\u30bf\u30fc\u3068\u540c\u3058\u300c\u540d\u524d\uff0bwatch\u30dc\u30bf\u30f3\u300d\u306e\u884c\u5f62\u5f0f\u306b\u7d71\u4e00\u3057\u3001\u30b0\u30eb\u30fc\u30d7\u30e9\u30d9\u30eb\uff08\u30af\u30ea\u30a8\u30a4\u30bf\u30fc\uff0f\u30ae\u30e3\u30e9\u30ea\u30fc\uff09\u3067\u5206\u3051\u308b\uff082026-08-24\uff09\u3002 */
+  function buildCiWatchGroup(label, items) {
+    if (!items.length) return '';
+    var visible = items.slice(0, MAX_CI_WATCH_ITEMS);
+    var restCount = items.length - visible.length;
+    var rows = visible.map(function (c) {
+      return '<div class="ktn-ci-watch__row">' +
+        '<a class="ktn-ci-watch__name" href="' + c.href + '">' + c.name + '</a>' +
+        '<button class="ktn-btn ktn-ci-watch__wbtn" data-off="watch" data-on="watching" data-action="watch" onclick="handleAction(this,\'watch\');event.preventDefault()">' + WATCH_SVG + ' watch<span class="tip">\u30a6\u30a9\u30c3\u30c1\u3059\u308b</span></button>' +
+        '</div>';
+    }).join('');
+    if (restCount > 0) {
+      rows += '<a class="ktn-ci-watch__more ktn-guide-link" href="kotennavi-p2-4.html">\u307b\u304b' + restCount + '\u540d \u2192 \u51fa\u5c55\u8005\u4e00\u89a7</a>';
+    }
+    return '<div class="ktn-ci-watch__group">' +
+      '<p class="ktn-ci-watch__group-label">' + label + '</p>' +
+      '<div class="ktn-ci-watch__list">' + rows + '</div>' +
+      '</div>';
+  }
+
+  modal.innerHTML =
+    '<div class="ktn-auth-top ktn-auth-top--compact">' +
+    CLOSE_BTN +
+    '<div class="ktn-auth-icon">' + CHECK_ICON + '</div>' +
+    '<div class="ktn-auth-ttl">\u30c1\u30a7\u30c3\u30af\u30a4\u30f3\u304c\u5b8c\u4e86\u3057\u307e\u3057\u305f</div>' +
+    '</div>' +
+    '<div class="ktn-auth-body">' +
+    '<p class="ktn-ci-watch__lead">\u3053\u306e\u5c55\u89a7\u4f1a\u306e\u30af\u30ea\u30a8\u30a4\u30bf\u30fc\u3084\u30ae\u30e3\u30e9\u30ea\u30fc\u3092\u30a6\u30a9\u30c3\u30c1\u3059\u308b\u3068\u3001\u65b0\u4f5c\u3084\u6b21\u56de\u5c55\u306e\u60c5\u5831\u304c\u5c4a\u304d\u307e\u3059\u3002</p>' +
+    buildCiWatchGroup('\u30af\u30ea\u30a8\u30a4\u30bf\u30fc', creators) +
+    buildCiWatchGroup('\u30ae\u30e3\u30e9\u30ea\u30fc', venues) +
+    '<button class="ktn-auth-btn-primary" onclick="closeCheckinModal()">\u9589\u3058\u308b</button>' +
+    '</div>';
 }
 
 /* \u2500\u2500 \u30c1\u30a7\u30c3\u30af\u30a4\u30f3\uff06\u30ec\u30d3\u30e5\u30fc \u7de8\u96c6\u30e2\u30fc\u30c0\u30eb\uff08\u5171\u6709\uff1ap5-2\uff0f\u5c06\u6765 p2\u30fbp8-11 \u304c\u518d\u5229\u7528\uff09 \u2500\u2500

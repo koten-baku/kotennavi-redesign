@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>広告を出したい方 | 個展なび</title>
+  <meta name="description" content="個展なびへの広告出稿をご検討の事業者様向けページ。バナー広告・特集掲載などのメニューをご紹介。お問合わせフォームより詳細をご案内します。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@1,400;1,600&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<body data-w="article" class="p70-page p60-page">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- デモバー -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ガイドページ</span>
+  <button class="dbtn dbtn--active" id="dbarView">閲覧</button>
+</div>
+
+<!-- ヘッダー -->
+<div class="shell">
+
+<!-- サイドバー（kotennavi-p1.html と同一マークアップ・#ktnRoleNav は renderSidebar() がJS注入） -->
+<aside class="ktn-sidebar" id="ktnSidebar">
+
+  <!-- ロゴ (logo5-1) -->
+  <a href="kotennavi-p1.html" class="ktn-sidebar__logo" data-page="p1">
+    <img src="./images/kotennavi-logo5-1.svg" alt="個展なび">
+  </a>
+
+  <!-- 検索 → P10 検索ハブ -->
+  <a href="kotennavi-p10.html" class="ktn-sidebar__item" data-page="p10">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <circle cx="11" cy="11" r="7.5"/>
+        <path d="M21 21l-4.5-4.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">検索</span>
+  </a>
+
+  <!-- お知らせ → P61（未制作） -->
+  <a href="kotennavi-p61.html" class="ktn-sidebar__item" id="ktnSidebarNotice" data-page="p61">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__dot" id="ktnNoticeDot" style="display:none"></span>
+    <span class="ktn-sidebar__label">お知らせ</span>
+  </a>
+
+  <!-- ガイド → P60（未制作） -->
+  <a href="kotennavi-p60.html" class="ktn-sidebar__item" data-page="p60">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" stroke-linecap="round"/>
+        <path d="M12 16v-4M12 8h.01" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">ガイド</span>
+  </a>
+
+  <div class="ktn-sidebar__divider"></div>
+
+  <!-- ロール別アイコン（JS注入） -->
+  <div id="ktnRoleNav" style="width:100%;display:flex;flex-direction:column;align-items:center"></div>
+
+  <div class="ktn-sidebar__footer">
+    <p class="ktn-sidebar__footer-label">Follow us</p>
+    <div class="ktn-sidebar__sns">
+      <a href="https://www.facebook.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="Facebook">
+        <svg viewBox="0 0 320 512" fill="currentColor"><path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/></svg>
+      </a>
+      <a href="https://x.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="X">
+        <svg viewBox="0 0 512 512" fill="currentColor"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg>
+      </a>
+    </div>
+  </div>
+
+</aside>
+
+<div class="content-wrap" id="contentWrap">
+<header class="ktn-header" id="ktnHeader">
+  <div class="ktn-header__inner">
+    <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+    <div class="ktn-hdr-actions" id="ktnActs"></div>
+  </div>
+</header>
+
+<!-- タイトルバンド -->
+<div class="p70-title-band">
+  <div class="p70-title-band__inner">
+    <div class="p70-head__sub">
+      <span class="p70-head__updated">利用ガイド</span>
+    </div>
+    <h1 class="p70-head__title">広告を出したい方へ</h1>
+    <p class="p70-head__en">Advertising</p>
+    <p class="p70-head__lead">個展なびへの広告出稿をご検討の事業者様向けのご案内です。アートに関心の高いユーザー層へ向けた掲載メニューをご用意しています。</p>
+  </div>
+</div>
+
+<main>
+  <div class="p70-wrap">
+
+    <!-- 目次 -->
+    <nav class="p70-toc" aria-label="目次">
+      <div class="p70-toc__title">目次 — Contents</div>
+      <ol class="p70-toc__list">
+        <li class="p70-toc__item"><span class="p70-toc__num">1</span><a class="p70-toc__link" href="#menu">広告メニュー</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">2</span><a class="p70-toc__link" href="#flow">お問合わせの流れ</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">3</span><a class="p70-toc__link" href="#contact">お問合わせ</a></li>
+      </ol>
+    </nav>
+
+    <!-- 1. 広告メニュー -->
+    <section class="p70-section" id="menu">
+      <div class="p70-section__head">
+        <span class="p70-section__num">1</span>
+        <h2 class="p70-section__title">広告メニュー</h2>
+        <span class="p70-section__en">Menu</span>
+      </div>
+      <p class="p70-lead">個展なびでは、サイト内の各所に広告掲載メニューをご用意しています。掲載箇所・期間・目的に応じて組み合わせが可能です。</p>
+
+      <div class="p70-compare">
+        <div class="p70-compare__card">
+          <span class="p70-compare__tag">バナー広告</span>
+          <ul class="p70-compare__feats">
+            <li class="p70-compare__feat">トップページ・検索結果ページ等への画像バナー掲載</li>
+            <li class="p70-compare__feat">期間契約（週単位・月単位）</li>
+            <li class="p70-compare__feat">遷移先URLを自由に設定可能</li>
+          </ul>
+        </div>
+        <div class="p70-compare__card">
+          <span class="p70-compare__tag">特集掲載</span>
+          <ul class="p70-compare__feats">
+            <li class="p70-compare__feat">お知らせ・特集ページでの紹介記事掲載</li>
+            <li class="p70-compare__feat">展覧会・イベントとのタイアップに対応</li>
+            <li class="p70-compare__feat">掲載内容は個展なび編集部と相談のうえ決定</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="p70-callout">
+        <div class="p70-callout__title">掲載をご検討の方へ</div>
+        <div class="p70-callout__body">
+          掲載枠・料金・掲載可能な業種については、内容をおうかがいしたうえで個別にご案内しています。まずはお問合わせフォームよりご連絡ください。
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. お問合わせの流れ -->
+    <section class="p70-section" id="flow">
+      <div class="p70-section__head">
+        <span class="p70-section__num">2</span>
+        <h2 class="p70-section__title">お問合わせの流れ</h2>
+        <span class="p70-section__en">Flow</span>
+      </div>
+
+      <div class="p70-flow-diagram">
+        <div class="p70-flow-diagram__title">お問合わせから掲載まで — Overview</div>
+        <ol class="p70-flow-diagram__list">
+          <li class="p70-flow-diagram__item p70-flow-diagram__item--buyer">
+            <span class="p70-flow-diagram__actor">貴社</span>
+            <span class="p70-flow-diagram__num">STEP 1</span>
+            <span class="p70-flow-diagram__action">お問合わせ</span>
+          </li>
+          <li class="p70-flow-diagram__arrow">—</li>
+          <li class="p70-flow-diagram__item p70-flow-diagram__item--seller">
+            <span class="p70-flow-diagram__actor">個展なび</span>
+            <span class="p70-flow-diagram__num">STEP 2</span>
+            <span class="p70-flow-diagram__action">内容確認・ご案内</span>
+          </li>
+          <li class="p70-flow-diagram__arrow">—</li>
+          <li class="p70-flow-diagram__item p70-flow-diagram__item--buyer">
+            <span class="p70-flow-diagram__actor">貴社</span>
+            <span class="p70-flow-diagram__num">STEP 3</span>
+            <span class="p70-flow-diagram__action">掲載内容のご確認・お申込み</span>
+          </li>
+          <li class="p70-flow-diagram__arrow">—</li>
+          <li class="p70-flow-diagram__end">掲載開始</li>
+        </ol>
+      </div>
+
+      <p class="p70-body">お問合わせいただいた内容をもとに、掲載枠の空き状況・料金・掲載条件をご案内します。ご検討のうえお申込みいただければ、掲載開始日を調整いたします。</p>
+    </section>
+
+    <!-- 3. お問合わせ -->
+    <section class="p70-section" id="contact">
+      <div class="p70-section__head">
+        <span class="p70-section__num">3</span>
+        <h2 class="p70-section__title">お問合わせ</h2>
+        <span class="p70-section__en">Contact</span>
+      </div>
+      <p class="p70-body">広告掲載に関するご相談は、お問合わせフォームより承っております。掲載目的・ご希望の掲載箇所・時期などをご記入のうえご連絡ください。</p>
+      <p><a class="ktn-guide-link" href="./kotennavi-p60-11.html">お問合わせフォームへ →</a></p>
+    </section>
+
+  </div>
+</main>
+
+<!-- フッター -->
+<footer class="ktn-footer" id="ktnFooter"></footer>
+</div><!-- /content-wrap -->
+</div><!-- /shell -->
+
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  KTN.init({ page: 'p60-3' });
+
+  var dbarView = document.getElementById('dbarView');
+  if (dbarView) {
+    dbarView.addEventListener('click', function () {
+      this.classList.add('dbtn--active');
+    });
+  }
+});
+</script>
+</body>
+</html>

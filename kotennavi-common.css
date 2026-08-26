@@ -309,7 +309,14 @@ button{font-family:inherit;cursor:pointer}
   display:none;position:absolute;top:calc(100% + 5px);right:0;
   background:#fff;border:1px solid var(--border);border-radius:4px;
   box-shadow:0 8px 28px rgba(0,0,0,.11);
-  min-width:165px;z-index:600;overflow:hidden;
+  min-width:165px;z-index:600;
+  /* P3/P4管理者メニューがオーナーメニューのスーパーセット化で項目数が増えたため、
+     ヘッダーが sticky で位置固定される都合上、画面下端をはみ出すと従来は
+     はみ出た項目に到達する手段が無かった（ページ自体はスクロールしてもメニューは
+     ヘッダーに追従して動かない）。メニュー自身が画面内に収まる高さで自己スクロール
+     できるようにする（2026-08-19） */
+  max-height:calc(100vh - var(--dh, 0px) - var(--hh, 50px) - 24px);
+  overflow-x:hidden;overflow-y:auto;
 }
 .ktn-ddmenu.open{display:block}
 
@@ -327,12 +334,55 @@ button{font-family:inherit;cursor:pointer}
 .ktn-ddi--note{flex-direction:column;align-items:flex-start;gap:2px;padding-bottom:10px}
 .ktn-ddi--note .note-head{display:flex;align-items:center;gap:8px}
 .ktn-ddi--note .note-sub{font-size:.62rem;color:var(--accent);padding-left:21px;letter-spacing:.02em}
+/* LIAISON+関連のオーナーメニュー項目（申請済＝コンソール/取引デスク/販売代金管理、未申請＝申込1項目・
+   どちらも同じ見た目）。既存の LIAISON+ ゴールド（.lb-dot.li-plus 等と同色 #b87c10）で左アクセント＋
+   アイコン色を変え、他の項目と混在しても一目でLIAISONブランドの項目群とわかるようにする（2026-08-17） */
+.ktn-ddi--lp{border-left:2px solid #b87c10;padding-left:13px;color:#8a5c10}
+.ktn-ddi--lp svg{color:#b87c10}
+.ktn-ddi--lp:hover{background:rgba(184,124,16,.08)}
+/* 管理者専用項目（P2/P3/P4 管理者メニュー＝オーナーメニューのスーパーセット内で、管理者だけが
+   実行できる項目を区別する）。管理ページトップバーの管理者色（ダークスレート #3a4a5a）と同色で
+   左アクセント＋文字色を変え、.ktn-ddi--lp と同じ視覚言語（形は同じ・色でカテゴリを識別）にする（2026-08-19） */
+.ktn-ddi--admin{border-left:2px solid #3a4a5a;padding-left:13px;color:#3a4a5a}
+.ktn-ddi--admin svg{color:#3a4a5a}
+.ktn-ddi--admin:hover{background:rgba(58,74,90,.08)}
+/* 管理者専用ブロックの見出しラベル（非クリック・セクション区切り） */
+.ktn-dd-label{padding:6px 15px 2px;font-size:.6rem;letter-spacing:.08em;color:var(--muted);font-family:var(--fn)}
 /* 現在ページ自身を指す項目（自己参照リンク防止）：非活性・グレーアウト＋「現在のページ」タグ */
 .ktn-ddi--current{cursor:default;pointer-events:none;color:var(--muted);opacity:.6}
 .ktn-ddi--current svg{color:var(--muted)}
 .ktn-ddi__lbl{flex:1}
 .ktn-ddi__tag{font-size:.6rem;letter-spacing:.06em;color:var(--muted);white-space:nowrap}
 .ktn-dd-sep{height:1px;background:var(--border);margin:3px 0}
+
+/* 要対応取引プルダウン（ヘッダー .ktn-hdr-alert-btn のトリガーを dd() と同じ仕組みでプルダウン化。
+   件数だけでなく作品名・相手・状態・期限を直接見せ、個別取引デスクへの直リンク＋
+   集約コンソールへの導線（__more）を両方持たせる） */
+.ktn-hdr-alert-btn.open{background:#b43c14;border-color:#b43c14;color:#fff}
+.ktn-ddmenu--txn{min-width:280px;max-width:340px;right:0}
+.ktn-ddmenu--txn__head{
+  margin:0;padding:10px 15px 8px;font-family:var(--fn);font-size:.64rem;font-weight:600;
+  letter-spacing:.06em;color:var(--muted);border-bottom:1px solid var(--border);
+}
+.ktn-txn-ddi{
+  display:flex;flex-direction:column;gap:2px;
+  padding:9px 15px;text-decoration:none;color:var(--ink);
+  border-bottom:1px solid var(--border);
+  transition:background .12s;white-space:normal;
+}
+.ktn-txn-ddi:last-of-type{border-bottom:none}
+.ktn-txn-ddi:hover{background:var(--paper)}
+.ktn-txn-ddi__work{font-family:var(--fs);font-size:.85rem;font-weight:600;letter-spacing:.01em}
+.ktn-txn-ddi__cp{font-family:var(--fn);font-size:.7rem;color:var(--muted)}
+.ktn-txn-ddi__status{font-family:var(--fn);font-size:.72rem;font-weight:500;color:#b43c14}
+.ktn-txn-ddi__empty{margin:0;padding:12px 15px;font-family:var(--fn);font-size:.75rem;color:var(--muted)}
+.ktn-txn-ddi__rest{margin:0;padding:7px 15px;font-family:var(--fn);font-size:.7rem;color:var(--muted);border-bottom:1px solid var(--border)}
+.ktn-ddmenu--txn__more{
+  display:block;padding:10px 15px;font-family:var(--fn);font-size:.75rem;font-weight:600;
+  text-align:center;color:var(--accent);background:var(--paper);text-decoration:none;
+  transition:background .12s;
+}
+.ktn-ddmenu--txn__more:hover{background:#e2ecf5}
 
 /* ══════════════════════════════════
    ktn-tagbar（ヘッダー下のタグナビ）
@@ -611,6 +661,27 @@ button{font-family:inherit;cursor:pointer}
   background: #e0341e;
   border-radius: 50%;
   border: 2px solid #fff;
+}
+
+/* 取引の要アクション件数バッジ（ロールアイコン用）。お知らせドット（無地の丸）とは
+   「ドット＝読む通知」「数字バッジ＝期限付きの要対応」で形を分けて区別する（色は近似でよい）。 */
+.ktn-sidebar__badge {
+  position: absolute;
+  top: 5px;
+  left: calc(50% + 15px);
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: #b43c14;
+  border: 2px solid #fff;
+  color: #fff;
+  font-family: var(--fm);
+  font-size: .62rem;
+  font-weight: 700;
+  line-height: 13px;
+  text-align: center;
+  box-sizing: border-box;
 }
 
 /* divider */
@@ -975,6 +1046,27 @@ button{font-family:inherit;cursor:pointer}
   background: #e0341e;
   border-radius: 50%;
   border: 2px solid #fff;
+}
+
+/* 取引の要アクション件数バッジ（ボトムナビ用）。サイドバーの`.ktn-sidebar__badge`と桁数上限を
+   揃え（99超で「99+」）、狭いアイコン幅（36px）に収まるよう最小サイズをやや控えめにしている。 */
+.ktn-bottom-nav__badge {
+  position: absolute;
+  top: 3px;
+  right: calc(50% - 21px);
+  min-width: 16px;
+  height: 15px;
+  padding: 0 3px;
+  border-radius: 999px;
+  background: #b43c14;
+  border: 2px solid #fff;
+  color: #fff;
+  font-family: var(--fm);
+  font-size: .56rem;
+  font-weight: 700;
+  line-height: 11px;
+  text-align: center;
+  box-sizing: border-box;
 }
 
 /* role thumb */
@@ -1793,6 +1885,33 @@ body.guest .panel-light .ktn-icon-btn .tip::after{border-bottom-color:#431407}
 .ktn-action-btn--alert{border-color:#b43c14;background:#fff;color:#b43c14}
 .ktn-action-btn--alert::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
 .ktn-action-btn--alert:hover{background:#b43c14;border-color:#b43c14;color:#fff}
+/* ヘッダーactions行（.ktn-hdr-actions）専用の要対応ボタン。
+   デスクトップはテキスト全文表示。モバイル（≤540px）はボタン数増加でオーナーメニューが
+   はみ出すため「サービスのロゴマーク＋件数バッジ」表示に縮退させる（無地ドットより
+   どのサービスの要対応かが一目でわかる＝ユーザー提案「リエゾン+ロゴ使った方がわかりやすい」）。
+   ロゴ未定義のサービスは汎用ドット（__icon--dot）にフォールバック。 */
+.ktn-hdr-alert-btn__icon,.ktn-hdr-alert-btn__badge{display:none}
+@media (max-width:540px){
+  .ktn-hdr-actions .ktn-hdr-alert-btn{
+    width:28px;height:28px;padding:0;margin-right:6px;border:none;background:none;position:relative;justify-content:center;
+  }
+  .ktn-hdr-actions .ktn-hdr-alert-btn::before{display:none}
+  .ktn-hdr-actions .ktn-hdr-alert-btn__label{display:none}
+  .ktn-hdr-actions .ktn-hdr-alert-btn__icon{
+    display:flex;align-items:center;justify-content:center;width:22px;height:22px;
+  }
+  .ktn-hdr-actions .ktn-hdr-alert-btn__icon svg{display:block;width:100%;height:100%}
+  .ktn-hdr-actions .ktn-hdr-alert-btn__icon--dot{
+    width:14px;height:14px;border-radius:50%;background:#b43c14;
+  }
+  .ktn-hdr-actions .ktn-hdr-alert-btn__badge{
+    display:flex;align-items:center;justify-content:center;
+    position:absolute;top:-4px;right:-2px;box-sizing:border-box;line-height:1;
+    min-width:16px;height:16px;padding:0 3px;border-radius:8px;
+    background:#b43c14;color:#fff;font-family:var(--fm);font-size:.58rem;font-weight:700;
+    border:2px solid #fff;
+  }
+}
 /* ダーク背景上の要対応ナビ（p2-5-1等）— 明オレンジのアウトライン */
 .ktn-action-btn--alert-dark{border-color:#e8804c;background:rgba(232,128,76,.12);color:#f09468}
 .ktn-action-btn--alert-dark::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
@@ -4741,6 +4860,12 @@ a.p2-action-widget__btn{text-decoration:none}
   font-size:.62rem;
 }
 
+/* 校正印刷専用：全画像キャプション一覧（画面では非表示・.ktn-printing-proof 印刷時のみ表示） */
+.p2-poster-print-list{display:none}
+.p2-poster-print-item{display:flex;align-items:flex-start;gap:10px;padding:8px 14px;border-top:1px solid rgba(0,0,0,.07)}
+.p2-poster-print-item__thumb{width:44px;height:44px;flex-shrink:0;border-radius:3px;display:flex;align-items:center;justify-content:center;font-family:var(--fs);font-size:.56rem;font-weight:700;writing-mode:vertical-rl;letter-spacing:.06em}
+.p2-poster-print-item__cap{margin:0;padding-top:4px;font-size:.75rem;color:var(--ink);letter-spacing:.02em;line-height:1.55}
+
 /* レスポンシブ */
 @media(max-width:860px){ .p2-poster-main{aspect-ratio:3/2} }
 @media(max-width:520px){ .p2-poster-main{aspect-ratio:1/1} }
@@ -6524,7 +6649,7 @@ a.p2-action-widget__btn{text-decoration:none}
 .ktn-modal__textarea:focus { outline: none; border-color: var(--accent); }
 /* ── トースト通知 ── */
 /* デスクトップ＝右上コーナー（スティッキーヘッダー直下）／モバイル＝下中央（下部media参照） */
-.ktn-toast{position:fixed;top:calc(var(--dh,0px) + var(--hh,50px) + 12px);right:20px;left:auto;bottom:auto;max-width:min(340px,calc(100vw - 40px));background:rgba(30,30,30,.92);color:#fff;font-family:var(--fn);font-size:.8rem;line-height:1.55;padding:10px 16px;border-radius:8px;box-shadow:0 6px 24px rgba(0,0,0,.22);white-space:normal;opacity:0;pointer-events:none;transform:translateY(-12px);transition:opacity .2s,transform .2s;z-index:2000}
+.ktn-toast{position:fixed;top:calc(var(--dh,0px) + var(--hh,50px) + 12px);right:20px;left:auto;bottom:auto;max-width:min(340px,calc(100vw - 40px));background:rgba(30,30,30,.92);color:#fff;font-family:var(--fn);font-size:.8rem;line-height:1.55;padding:10px 16px;border-radius:8px;box-shadow:0 6px 24px rgba(0,0,0,.22);white-space:normal;opacity:0;pointer-events:none;transform:translateY(-12px);transition:opacity .2s,transform .2s;z-index:9999}
 .ktn-toast.is-visible{opacity:1;transform:translateY(0)}
 @media(max-width:540px){
   .ktn-toast{top:auto;right:auto;bottom:80px;left:50%;max-width:calc(100vw - 32px);transform:translateX(-50%) translateY(12px)}
@@ -9330,6 +9455,7 @@ a.p3-works-liaison-band__title:hover{text-decoration:underline;text-underline-of
   .p3-head__name{font-size:1.5rem}
   .p3-head__bio{padding-left:0;width:100%}
   .p3-head__action{padding-left:0;width:100%;justify-content:flex-start}
+  .p3-head__inner>.ktn-hero-edit-action{padding-left:0;width:100%}
   /* タブナビ */
   .p3-tabnav{overflow-x:auto;scrollbar-width:none}
   .p3-tabnav::-webkit-scrollbar{display:none}
@@ -9797,9 +9923,14 @@ body.p5-page{--page-accent:#b8608c;--page-accent-bg:rgba(184,96,140,.1);--page-a
 .p5-head__stats-item--link:hover{color:var(--page-accent,#b8608c)}
 .p5-head__stats-num{font-family:'DM Serif Display',serif;font-size:.9rem;color:var(--ink);line-height:1}
 .p5-head__stats-sep{color:var(--border);margin:0 1px}
-.p5-head__action{margin-top:14px}
-.p5-head__edit-btn{display:inline-flex;align-items:center;gap:6px;font-size:.75rem;padding:7px 14px;border:1px solid var(--page-accent,#b8608c);border-radius:4px;background:#fff;color:var(--page-accent,#b8608c);cursor:pointer;font-family:inherit;text-decoration:none;transition:background .15s,color .15s}
-.p5-head__edit-btn:hover{background:var(--page-accent-bg,rgba(184,96,140,.1))}
+/* ヒーロー内オーナー編集リンク（P3/P4/P5共通・.ktn-role-owner-only で本人/管理者のみ表示） */
+.ktn-hero-edit-action{margin-top:14px}
+.ktn-hero-edit-btn{display:inline-flex;align-items:center;gap:6px;font-size:.75rem;padding:7px 14px;border:1px solid var(--page-accent,#b8608c);border-radius:4px;background:#fff;color:var(--page-accent,#b8608c);cursor:pointer;font-family:inherit;text-decoration:none;transition:background .15s,color .15s}
+.ktn-hero-edit-btn:hover{background:var(--page-accent-bg,rgba(184,96,140,.1))}
+/* P3/P4は__infoの外側に置くため名前カラムとの左揃えをpadding-leftで補う（P5は__info内で既に揃うため対象外） */
+.p3-head__inner>.ktn-hero-edit-action,.p4-head__inner>.ktn-hero-edit-action{padding-left:100px}
+.p3-head--no-image .ktn-hero-edit-action,.p4-head--no-image .ktn-hero-edit-action{padding-left:0}
+.p3-head--compact .ktn-hero-edit-action{padding-left:68px}
 
 /* ── B. タブナビ ── */
 .p5-tabnav{position:sticky;top:calc(var(--dh,34px) + var(--hh,50px));z-index:90;background:#fff;border-bottom:1px solid var(--border);max-width:var(--w-entity);margin:0 auto}
@@ -9823,6 +9954,7 @@ body.p5-page .p5-tabnav__item.is-active{color:var(--page-accent);border-bottom-c
 .p5-filter-checkin-label input{cursor:pointer;accent-color:var(--page-accent)}
 /* フィルター in 展覧会セクションヘッド */
 .p5-exh-section__filters{display:flex;align-items:center;flex-wrap:wrap;gap:6px 10px;padding:7px 16px;border-top:1px solid var(--border)}
+.p5-exh-section__filters[hidden]{display:none}
 
 /* ── カレンダーウィジェット ── */
 .p5-calendar-widget{background:#fff;border:1px solid var(--border);border-radius:4px;padding:16px}
@@ -10053,7 +10185,7 @@ body.p5-other .p5-owner-only{display:none!important}
 .p5-head--compact .p5-head__name{font-size:1.3rem;margin:0}
 .p5-head--compact .p5-head__since,
 .p5-head--compact .p5-head__bio,
-.p5-head--compact .p5-head__action{display:none}
+.p5-head--compact .ktn-hero-edit-action{display:none}
 .p5-head--compact .p5-head__stats{margin-top:6px}
 /* フィルターバー */
 .p5-1-filter-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:24px;flex-wrap:wrap}
@@ -10239,11 +10371,30 @@ body.p3-3-page .aw--plus .aw__foot>.p33-console-wrap{order:3}
 .ktn-listqr__code svg{border:1px solid var(--border);border-radius:6px;padding:10px;background:#fff}
 .ktn-listqr__url{margin:12px 0 4px;text-align:center;font-family:var(--fm);font-size:.78rem;letter-spacing:.02em;color:var(--muted);word-break:break-all}
 
-/* ページ共有モーダル（ktnPageShare・.ktn-listqr の内側に追加するバッジ埋め込みブロック） */
-.ktn-pshare-badge{margin-top:16px;padding-top:16px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:8px}
+/* SNSテキスト生成 モーダル（P2 管理者専用・.ktn-auth-modal シェル再利用の内側。掲載完了メール送信パネル(.p902-flow-panel)を内包するため縦長になる想定でスクロール対応） */
+.ktn-snstext{width:min(480px,92vw);max-height:88vh;display:flex;flex-direction:column}
+.ktn-snstext .ktn-auth-body{overflow-y:auto}
+.ktn-snstext__field{margin-bottom:16px}
+.ktn-snstext__field:last-of-type{margin-bottom:0}
+.ktn-snstext__label{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.ktn-snstext__label-txt{font-family:var(--fn);font-size:.72rem;font-weight:600;color:var(--muted);letter-spacing:.04em}
+.ktn-snstext__copy{font-family:var(--fn);font-size:.7rem;font-weight:600;color:var(--accent);background:none;border:none;cursor:pointer;padding:0}
+.ktn-snstext__copy:hover{color:var(--accent-d)}
+.ktn-snstext__ta{width:100%;box-sizing:border-box;font-family:var(--fn);font-size:.8rem;line-height:1.6;color:var(--ink);padding:10px 12px;border:1px solid var(--border);border-radius:6px;resize:vertical;background:#faf9f7}
+
+/* 個展なびバッジ（P60-6/P60-7ガイド内チャプター・2026-08-17 モーダル→P3-13/P4-13ページ化を経てガイドへ再移設。
+   同日中に「タブで1つずつ切替」から「全パターンをグリッド表示して比較・選択」方式へ再設計（ユーザー指示）。
+   導入文は .p70-body（ガイド本文）を流用するため専用leadクラスは持たない） */
+.ktn-pshare-badge{display:flex;flex-direction:column;gap:10px}
 .ktn-pshare-badge__label{font-family:var(--fn);font-size:.74rem;font-weight:600;color:var(--muted)}
-.ktn-pshare-badge__preview{display:flex;justify-content:center;padding:10px;background:var(--paper);border-radius:6px}
-.ktn-pshare-badge__code{width:100%;resize:none;font-family:var(--fm);font-size:.72rem;color:var(--muted);background:#fff;border:1px solid var(--border);border-radius:4px;padding:8px 10px;line-height:1.5}
+/* flexのみで構成（CLAUDE.md規約）。カード幅は220px以上を保ちつつ折返しで2列→1列に自動調整 */
+.ktn-pshare-badge__grid{display:flex;flex-wrap:wrap;gap:16px}
+.ktn-pshare-badge__card{display:flex;flex-direction:column;gap:10px;flex:1 1 260px;min-width:220px;padding:16px;background:#fff;border:1px solid var(--border);border-radius:4px}
+.ktn-pshare-badge__card-name{font-family:var(--fn);font-size:.8rem;font-weight:600;color:var(--ink)}
+.ktn-pshare-badge__preview{display:flex;justify-content:center;align-items:center;min-height:96px;padding:18px 10px;background:var(--paper);border-radius:6px}
+.ktn-pshare-badge__preview--compact{min-height:44px;padding:10px}
+.ktn-pshare-badge__code{width:100%;resize:none;font-family:var(--fm);font-size:.7rem;color:var(--muted);background:var(--paper);border:1px solid var(--border);border-radius:4px;padding:7px 9px;line-height:1.5}
+.ktn-pshare-badge__card-actions{display:flex;gap:8px;flex-wrap:wrap}
 
 /* ── 会場フライヤー（A4）モーダル（ktnVenueFlyer・.ktn-auth-modal シェル再利用・2026-08-14 新設） ──
    展覧会情報QR＋チェックインQRを1枚に配置したA4プレビュー。印刷は @media print で .ktn-vflyer__sheet のみを
@@ -10967,6 +11118,38 @@ a.p514-aw__exh-name:hover{text-decoration:underline;color:var(--accent,#2a7fa8)}
   @page{margin:18mm}
 }
 
+/* 校正データの表示(印刷)（P2 管理者専用・ktnP2ProofPrint）：サイトchrome＋関連・回遊ゾーン（近くの展覧会/関連情報/タグ/おすすめ）・広告エリアを隠し、
+   校正対象＝この展覧会自体の入力済みデータ（サイドの各種factsを含む）のみを印刷する（2026-08-21） */
+@media print{
+  body.ktn-printing-proof .dbar,
+  body.ktn-printing-proof .ktn-header,
+  body.ktn-printing-proof .ktn-tagbar,
+  body.ktn-printing-proof .ktn-bottom-nav,
+  body.ktn-printing-proof .ktn-footer,
+  body.ktn-printing-proof .dev-ph,
+  body.ktn-printing-proof .ktn-toast,
+  body.ktn-printing-proof .p2-side-nearby,
+  body.ktn-printing-proof .p2-side-ad,
+  body.ktn-printing-proof .ktn-ad-band,
+  body.ktn-printing-proof .ktn-related-band,
+  body.ktn-printing-proof .ktn-sub-tags,
+  body.ktn-printing-proof .ktn-sub-rec,
+  body.ktn-printing-proof .p2-sticky-cta{display:none!important}
+  body.ktn-printing-proof{background:#fff}
+  /* 印刷時、幅900px相当のレスポンシブ崩れ（1カラム化）を無効化し、デスクトップと同じ2カラムを維持する */
+  body.ktn-printing-proof .p2-layout{grid-template-columns:1fr 300px!important}
+  body.ktn-printing-proof .p2-layout__side{display:flex!important;flex-direction:column!important;grid-template-columns:none!important;position:static!important}
+  body.ktn-printing-proof .p2-side-posted,
+  body.ktn-printing-proof .p2-side-inq{grid-column:auto!important}
+  /* sticky解除：ページ分割時の再出現（本文中への割り込み）を防ぐため印刷時は通常フローに戻す */
+  body.ktn-printing-proof .p2-subnav-wrap{position:static!important}
+  /* ヒーロースライダーは印刷時1枚しかキャプションが出ないため、操作系を隠し全画像キャプション一覧に差し替える */
+  body.ktn-printing-proof .p2-poster-nav,
+  body.ktn-printing-proof .p2-poster-thumbs,
+  body.ktn-printing-proof .p2-poster-caption{display:none!important}
+  body.ktn-printing-proof .p2-poster-print-list{display:block!important}
+}
+
 @media(max-width:540px){
   .p515-aw-card__thumb-wrap{width:60px;height:60px}
   .p515-aw-card{padding-left:4px;padding-right:4px}
@@ -11460,6 +11643,29 @@ body.p4-15-page{--page-accent:#8b5e3c}
 .p315-txn-row--active:has(.p315-apply-status--stock) .p315-txn-row__deadline,
 .p315-txn-row--active:has(.p315-apply-status--ship) .p315-txn-row__deadline,
 .p315-txn-row--active:has(.p315-apply-status--finish) .p315-txn-row__deadline{color:#b43c14;font-weight:600}
+/* 要対応のみフィルタ（Tab1「期間中展覧会」・p3-15/p4-15共通。JSは p315ToggleUrgentFilter が
+   .p315-tab-panel に .p315-filter-urgent を付け外しするのみで、表示制御は全てCSS側が担う。
+   2026-08-17：小型スイッチのみだと見落とされる懸念のため、.p315-ws-badge--alert と同じ
+   赤系アラート配色の全幅バー＋動的件数テキストに再設計（p315SyncUrgentCount が件数を書き込み・
+   0件時は bar 自体を hidden。フィルタON/OFFの表示制御ロジック自体は変更なし）。
+   同日、操作子を .ktn-switch トグルから素のチェックボックス（p5-1/p5-2 の
+   .p5-filter-checkin-label と同型・ネイティブ input なので機能が一目で伝わる）へ変更 */
+.p315-urgent-filter{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 0 18px;padding:13px 18px;background:#fbeae5;border:1px solid rgba(180,60,20,.4);border-left:4px solid #b43c14;border-radius:4px}
+.p315-urgent-filter[hidden]{display:none}
+.p315-urgent-filter__info{display:flex;align-items:center;gap:8px;min-width:0}
+.p315-urgent-filter__icon{flex-shrink:0;font-size:.55rem;color:#b43c14}
+.p315-urgent-filter__text{font-family:var(--fn);font-size:.85rem;font-weight:600;color:#7a1800}
+.p315-urgent-filter__count{font-family:var(--fm);font-size:1.05rem;font-weight:700;margin:0 2px}
+.p315-urgent-filter__check{display:flex;align-items:center;gap:7px;flex-shrink:0;cursor:pointer;font-family:var(--fn);font-size:.8rem;font-weight:600;color:#7a1800;white-space:nowrap}
+.p315-urgent-filter__check input{width:16px;height:16px;cursor:pointer;accent-color:#b43c14}
+@media (max-width:540px){
+  .p315-urgent-filter{flex-wrap:wrap;padding:12px 14px}
+  .p315-urgent-filter__text{font-size:.8rem}
+}
+.p315-tab-panel.p315-filter-urgent .p315-exh-block:not(:has(.p315-witem--yours)){display:none}
+.p315-tab-panel.p315-filter-urgent .p315-witem:not(.p315-witem--yours){display:none}
+.p315-tab-panel.p315-filter-urgent .p315-witem--yours .p315-txn-row:not(.p315-txn-row--active){display:none}
+.p315-urgent-filter__empty{margin:24px 0 0;padding:16px;text-align:center;font-family:var(--fn);font-size:.8rem;color:var(--muted);background:var(--paper);border-radius:4px}
 /* 展覧会タブ 作品リスト（簡略版） */
 .p315-exh-work-list{margin-top:8px}
 .p315-exh-work-item{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--border);flex-wrap:wrap}
@@ -12103,12 +12309,6 @@ label.p211-liaison-opt{cursor:pointer}
 .p611-author__note{font-size:.75rem;color:var(--muted)}
 
 /* ── p7-11 記事エディタ ── */
-/* 投稿者ブロック（p611-author と同型・記事は常に「自分＝creator/gallery本人」として投稿） */
-.p711-author{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:6px 0}
-.p711-author .cb{font-size:.6rem}
-.p711-author__name{font-size:.9rem;color:var(--ink)}
-.p711-author__note{font-size:.75rem;color:var(--muted)}
-
 /* 紐づけ先（固定表示・入口ページによって自動的に決まり編集不可） */
 .p711-linkage{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:6px 0}
 .p711-linkage .cb{font-size:.6rem}
@@ -12573,6 +12773,7 @@ a.p319-item__dest-name:hover{color:var(--page-accent)}
 .p902-flow-panel__row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .p902-flow-panel__row[hidden]{display:none}
 .p902-flow-panel__input{flex:1;min-width:160px;padding:9px 11px;font-family:var(--fm);font-size:.85rem;color:var(--ink);background:#fff;border:1px solid var(--border);border-radius:4px}
+.p902-flow-panel__input[readonly]{background:rgba(0,0,0,.04);color:var(--muted);cursor:default}
 .p902-flow-panel__label{display:block;margin:12px 0 4px;font-family:var(--fn);font-size:.72rem;font-weight:600;color:var(--muted)}
 .p902-flow-panel__label:first-child{margin-top:0}
 .p902-flow-panel__dup{margin:10px 0 0;padding:9px 11px;background:rgba(180,60,20,.06);border:1px solid rgba(180,60,20,.25);border-radius:4px;font-family:var(--fn);font-size:.78rem;color:#7a1800;line-height:1.7}
@@ -12691,10 +12892,9 @@ a.p319-item__dest-name:hover{color:var(--page-accent)}
 .ktn-mgmt-wrap:not(.ktn-mgmt-stack) > .p211-block > .p211-block__body{padding:16px 24px 22px}
 .ktn-mgmt-wrap > .p211-submit-bar{border-radius:0 0 4px 4px}
 
-/* インサイト：ツールバー（対象＋期間）とセクションを枠内に配置 */
+/* インサイト：ツールバー（対象）とセクションを枠内に配置 */
 .ktn-mgmt-wrap > .ins-toolbar{padding:16px 24px;border-bottom:1px solid var(--border)}
-.ktn-mgmt-wrap > .ins-toolbar .ins-target{margin:0 0 14px;border:none;border-radius:0;padding:0;background:none}
-.ktn-mgmt-wrap > .ins-toolbar .ins-period{margin:0}
+.ktn-mgmt-wrap > .ins-toolbar .ins-target{margin:0;border:none;border-radius:0;padding:0;background:none}
 .ktn-mgmt-wrap > .ktn-section{margin:0;padding:22px 24px}
 .ktn-mgmt-wrap > .ktn-section:not(:last-child){border-bottom:1px solid var(--border)}
 
@@ -12741,7 +12941,10 @@ a.p319-item__dest-name:hover{color:var(--page-accent)}
 .ins-target__body{flex:1;min-width:0}
 .ins-target__label{font-family:var(--font-en-label,'Cinzel',serif);font-size:.56rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 2px}
 .ins-target__name{font-family:var(--fs);font-size:.95rem;font-weight:600;color:var(--ink);margin:0;line-height:1.4}
-.ins-target__link{flex-shrink:0}
+.ins-target__name a{color:inherit;text-decoration:none}
+.ins-target__name a:hover{text-decoration:underline}
+.ins-target__meta{font-family:var(--fn);font-size:.72rem;color:var(--muted);margin:4px 0 0}
+.ins-target__meta strong{font-weight:600;color:var(--ink)}
 
 /* ── 期間セレクター ── */
 .ins-period{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:20px}
@@ -12749,6 +12952,15 @@ a.p319-item__dest-name:hover{color:var(--page-accent)}
 .ins-period__btn{background:#fff;border:1px solid var(--border);border-radius:4px;padding:6px 14px;font-family:var(--fm);font-size:.75rem;color:var(--muted);cursor:pointer;transition:all .12s}
 .ins-period__btn:hover{border-color:var(--page-accent,#2a5f7a);color:var(--page-accent,#2a5f7a)}
 .ins-period__btn.is-active{background:var(--page-accent,#2a5f7a);border-color:var(--page-accent,#2a5f7a);color:#fff;font-weight:600}
+
+/* ── フェーズ区切り（セクション群を「章」としてまとめ読む順序を明示） ── */
+.ins-phase-divider{display:flex;flex-direction:column;gap:3px;padding:16px 24px;background:var(--page-accent-bg,rgba(42,95,122,.06));border-bottom:1px solid var(--border)}
+.ins-phase-divider__title{font-family:var(--fs);font-size:.98rem;font-weight:700;color:var(--ink);margin:0}
+.ins-phase-divider__lead{font-family:var(--fn);font-size:.74rem;color:var(--muted);margin:2px 0 0}
+
+@media(max-width:540px){
+  .ins-phase-divider{padding:14px 16px}
+}
 
 /* ── KPI サマリーグリッド ── */
 .ins-kpi-grid{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:8px}
@@ -12762,18 +12974,67 @@ a.p319-item__dest-name:hover{color:var(--page-accent)}
 .ins-kpi__delta--down{color:#c0392b}
 .ins-kpi__delta--flat{color:var(--muted)}
 .ins-kpi__delta-note{font-family:var(--fn);font-size:.66rem;font-weight:400;color:var(--muted);margin-left:4px}
+.ins-kpi__sub{font-family:var(--fn);font-size:.7rem;color:var(--muted);margin:6px 0 0}
+.ins-kpi__sub strong{font-weight:700;color:var(--page-accent,#2a5f7a)}
 
-/* ── 推移バーチャート（日次・縦棒） ── */
+/* ── KPI 縮小版（推移チャート下の区間内訳カード＝サマリーと視覚的に競合しないよう抑える） ── */
+.ins-kpi--sm{padding:10px 14px 8px}
+.ins-kpi--sm .ins-kpi__label{font-size:.64rem;margin-bottom:4px}
+.ins-kpi--sm .ins-kpi__val{font-size:1.3rem;margin-bottom:2px}
+.ins-kpi--sm .ins-kpi__sub{font-size:.66rem;margin-top:4px}
+
+/* ── 推移ラインチャート（SVG・折れ線／短期〜1年の期間まで可変対応） ── */
 .ins-trend{background:#fff;border:1px solid var(--border);border-radius:4px;padding:20px 22px 16px}
-.ins-bars{display:flex;align-items:flex-end;gap:6px;height:160px;margin-bottom:10px}
-.ins-bars__col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:6px;height:100%;min-width:0}
-.ins-bars__bar{width:100%;max-width:34px;background:var(--page-accent-bg,rgba(42,95,122,.1));border-top:2px solid var(--page-accent,#2a5f7a);border-radius:2px 2px 0 0;transition:height .3s;position:relative}
-.ins-bars__col:hover .ins-bars__bar{background:var(--page-accent,#2a5f7a)}
-.ins-bars__val{font-family:var(--fm);font-size:.62rem;color:var(--muted);white-space:nowrap}
-.ins-bars__x{font-family:var(--fm);font-size:.6rem;color:var(--muted);white-space:nowrap}
+.ins-linechart-head{display:flex;align-items:baseline;gap:8px;margin-bottom:12px}
+.ins-linechart-head__label{font-family:var(--font-en-label,'Cinzel',serif);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.ins-linechart-head__val{font-family:'DM Serif Display',var(--fs);font-size:1.9rem;line-height:1;color:var(--ink)}
+.ins-linechart-head__val .unit{font-family:var(--fn);font-size:.8rem;font-weight:400;color:var(--muted);margin-left:3px}
+.ins-linechart{width:100%;margin-bottom:6px}
+.ins-linechart__svg{display:block;width:100%;height:auto;aspect-ratio:700/190}
+.ins-linechart__area{fill:var(--page-accent-bg,rgba(42,95,122,.12))}
+.ins-linechart__line{fill:none;stroke:var(--page-accent,#2a5f7a);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.ins-linechart__dot{fill:#fff;stroke:var(--page-accent,#2a5f7a);stroke-width:1.6;cursor:pointer}
+.ins-linechart__dot:hover{fill:var(--page-accent,#2a5f7a)}
+.ins-linechart__ygrid{stroke:var(--border);stroke-width:1;stroke-dasharray:3 3}
+.ins-linechart__ylabel{font-family:var(--fm);font-size:9px;fill:var(--muted)}
+.ins-linechart__axis{font-family:var(--fm);font-size:10px;fill:var(--muted)}
+.ins-linechart__marker{stroke:var(--page-accent,#2a5f7a);stroke-width:1;stroke-dasharray:2 3;opacity:.55}
+.ins-linechart__markerlabel{font-family:var(--fn);font-size:9px;fill:var(--page-accent,#2a5f7a);font-weight:600}
+.ins-linechart__segline{font-family:var(--fn);font-size:9px;fill:var(--page-accent,#2a5f7a);font-weight:600}
+.ins-linechart__segline-val{font-family:'DM Serif Display',var(--fs);font-size:11px;fill:var(--ink);font-weight:700}
 .ins-trend__foot{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding-top:10px;border-top:1px solid var(--border)}
 .ins-trend__legend{display:inline-flex;align-items:center;gap:5px;font-size:.68rem;color:var(--muted)}
 .ins-trend__legend::before{content:'';width:10px;height:10px;border-radius:2px;background:var(--page-accent,#2a5f7a)}
+
+/* ── 曜日別バーチャート（チェックイン等・カテゴリ集計／会期通算） ── */
+.ins-hbar{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
+.ins-hbar__row{display:flex;align-items:center;gap:10px}
+.ins-hbar__label{flex:0 0 26px;font-family:var(--fm);font-size:.72rem;color:var(--muted);text-align:center}
+.ins-hbar__track{flex:1;height:14px;background:var(--page-accent-bg,rgba(42,95,122,.1));border-radius:2px;overflow:hidden}
+.ins-hbar__fill{display:block;height:100%;background:var(--page-accent,#2a5f7a);border-radius:2px;transition:width .3s}
+.ins-hbar__val{flex:0 0 20px;font-family:var(--fm);font-size:.72rem;font-weight:600;color:var(--ink);text-align:right}
+.ins-hbar__label--lg{flex-basis:48px;text-align:left}
+.ins-hbar__label--wide{flex-basis:66px;text-align:left}
+.ins-trend+.ins-trend{margin-top:16px}
+.ins-trend__side-label{font-family:var(--font-en-label,'Cinzel',serif);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+
+/* ── ins-trend split（副次指標をチャート2枚→1枚の箱に横並び集約） ── */
+.ins-trend--split{display:flex;align-items:stretch;gap:22px}
+.ins-trend--split .ins-trend__main{flex:1 1 60%;min-width:0}
+.ins-trend--split .ins-trend__side{flex:1 1 34%;min-width:0;padding-left:22px;border-left:1px solid var(--border);display:flex;flex-direction:column;justify-content:center}
+.ins-trend--split .ins-linechart{margin-bottom:0}
+.ins-hbar--compact{gap:5px;margin-bottom:0}
+.ins-hbar--compact .ins-hbar__track{height:9px}
+.ins-hbar--compact .ins-hbar__label,.ins-hbar--compact .ins-hbar__val{font-size:.66rem}
+.ins-trend--compact{padding-bottom:14px}
+
+/* ── ins-top-list（記事/作品の人気上位2件を簡潔に示すミニランキング・2026-08-26） ── */
+.ins-top-list{margin-top:14px}
+.ins-top-list__label{font-family:var(--font-en-label,'Cinzel',serif);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+.ins-top-list__item{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--border)}
+.ins-top-list__rank{flex-shrink:0;width:1.3em;font-family:'DM Serif Display',var(--fs);font-size:1rem;color:var(--page-accent,#2a5f7a);text-align:center}
+.ins-top-list__title{flex:1;min-width:0;font-family:var(--fs);font-size:.85rem;color:var(--ink);text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ins-top-list__title:hover{text-decoration:underline}
 
 /* ── ページを伸ばすヒント（行動→反響の相関メッセージ） ── */
 .ins-grow{display:flex;flex-direction:column;gap:12px}
@@ -12786,6 +13047,7 @@ a.p319-item__dest-name:hover{color:var(--page-accent)}
 
 /* ── LIAISON+ ファネル ── */
 .ins-funnel{display:flex;flex-direction:column;gap:2px}
+.ins-funnel[hidden]{display:none}
 .ins-funnel__row{display:flex;align-items:center;gap:12px;padding:6px 0}
 .ins-funnel__label{flex:0 0 130px;display:flex;flex-direction:column;gap:1px}
 .ins-funnel__stage{font-size:.78rem;color:var(--ink);font-weight:500}
@@ -12799,15 +13061,59 @@ a.p319-item__dest-name:hover{color:var(--page-accent)}
 .ins-funnel__row:nth-child(3) .ins-funnel__bar{opacity:.7}
 .ins-funnel__row:nth-child(4) .ins-funnel__bar{opacity:.55}
 
+/* ── LIAISON+未導入時の代替案内（ins-funnelの代わりに表示・控えめ1行） ── */
+.ins-funnel-notice{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:14px 16px;background:var(--paper);border-radius:4px}
+.ins-funnel-notice[hidden]{display:none}
+.ins-funnel-notice__ico{flex-shrink:0;width:16px;height:16px;color:var(--muted)}
+.ins-funnel-notice__text{flex:1;min-width:200px;font-size:.78rem;color:var(--muted);line-height:1.6;margin:0}
+
 /* ── インサイト注記 ── */
 .ins-note{font-size:.72rem;color:var(--muted);line-height:1.7;margin:14px 0 0;padding:12px 14px;background:var(--paper);border-radius:4px}
+
+/* ── 次にやること（ページ全体の数字から導く優先アクション。既存の文脈内ヒント＝気づき／本コンポーネント＝次の一手、の役割分担） ── */
+.ins-next__list{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+.ins-next__item{display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--paper);border-radius:4px}
+.ins-next__num{flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--page-accent,#2a5f7a);color:#fff;font-family:var(--fm);font-size:.82rem;font-weight:600;display:flex;align-items:center;justify-content:center}
+.ins-next__body{flex:1;min-width:0}
+.ins-next__msg{font-size:.82rem;color:var(--ink);line-height:1.7;margin:0}
+.ins-next__item .ktn-action-btn{flex-shrink:0}
 
 @media(max-width:540px){
   .ins-kpi{flex:1 1 calc(50% - 12px);min-width:0}
   .ins-kpi__val{font-size:1.8rem}
+  .ins-kpi--sm .ins-kpi__val{font-size:1.15rem}
+  /* 3指標を同ウェイトで1行に収める専用モディファイア（ins-kpi-grid--eq3を付けたグリッドのみ・他ページの2+1/2+2折返しには影響しない） */
+  .ins-kpi-grid--eq3{flex-wrap:nowrap;gap:8px}
+  .ins-kpi-grid--eq3 .ins-kpi{flex:1 1 0;min-width:0;padding:12px 10px 10px}
+  .ins-kpi-grid--eq3 .ins-kpi__label{font-size:.62rem;gap:4px;margin-bottom:6px}
+  .ins-kpi-grid--eq3 .ins-kpi__ico{width:12px;height:12px}
+  .ins-kpi-grid--eq3 .ins-kpi__val{font-size:1.5rem}
+  .ins-kpi-grid--eq3 .ins-kpi__sub{font-size:.62rem;margin-top:4px}
   .ins-funnel__label{flex-basis:96px}
-  .ins-bars{gap:3px}
-  .ins-bars__val{display:none}
+  .ins-next__item{flex-wrap:wrap}
+  .ins-next__item .ktn-action-btn{margin-left:40px}
+  .ins-trend--split{flex-direction:column;gap:10px}
+  .ins-trend--split .ins-trend__side{padding-left:0;padding-top:10px;border-left:none;border-top:1px solid var(--border)}
+  .ins-trend--compact{padding:14px 16px 12px}
+  .ins-trend--compact .ins-trend__foot{gap:8px;padding-top:8px}
+  /* 曜日別バーは棒を消し数字のみにして7曜日を横一列に収める */
+  .ins-hbar--compact{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center}
+  .ins-hbar--compact .ins-hbar__row{flex-direction:column;gap:2px}
+  .ins-hbar--compact .ins-hbar__track{display:none}
+  .ins-hbar--compact .ins-hbar__label{flex:none;font-size:.68rem}
+  .ins-hbar--compact .ins-hbar__val{flex:none;font-size:.8rem;font-weight:700;color:var(--ink)}
+  .ins-linechart__axis{font-size:24px}
+  .ins-linechart__ylabel{font-size:16px}
+  .ins-linechart__markerlabel{font-size:20px}
+  /* segline系はDM Serif Displayにbold指定すると疑似太字(faux bold)で潰れて見えるため
+     モバイルではweightを落とし代わりにサイズを少し上げて可読性を確保 */
+  .ins-linechart__segline{font-size:21px;font-weight:500}
+  .ins-linechart__segline-val{font-size:23px;font-weight:400}
+  .ins-linechart-head__val{font-size:1.5rem}
+  /* PERIODラベルを単独行に落とし、4つの期間ボタンを1行に収める */
+  .ins-period{gap:6px}
+  .ins-period__label{flex:0 0 100%;margin:0 0 6px}
+  .ins-period__btn{padding:6px 10px;font-size:.7rem}
 }
 
 /* ─────────────────────────────────────────
@@ -13093,6 +13399,35 @@ body.mgmt-page .p5-tabnav{max-width:var(--w-detail)}
 .ktn-auth-top--compact{padding:20px 28px 22px}
 .ktn-auth-top--compact .ktn-auth-icon{width:40px;height:40px;margin-bottom:10px}
 .ktn-auth-top--compact .ktn-auth-icon svg{width:20px;height:20px}
+
+/* P11認証ページ共通：.ktn-auth-modal シェルを非モーダル（静的ページ内カード）として再利用 */
+.p11-auth-wrap{display:flex;flex-direction:column;align-items:center;padding:48px 20px 72px}
+.p11-auth-wrap .ktn-auth-modal{width:min(420px,100%);box-shadow:0 6px 32px rgba(0,0,0,.07);border:1px solid var(--border);transform:none}
+.p11-auth-wrap .ktn-auth-body{text-align:left}
+.p11-auth-wrap .p211-field{margin-top:14px}
+.p11-auth-wrap .p211-field:first-child{margin-top:0}
+.p11-auth-wrap .ktn-auth-btns{margin-top:18px}
+.p11-auth-wrap .ktn-form-error{margin-top:14px}
+.p11-auth-foot{width:min(420px,100%);margin:16px auto 0;text-align:center;font-family:var(--fn);font-size:.78rem;color:var(--muted)}
+.p11-auth-foot a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}
+
+/* P11-24 新規登録：ウォッチ対象の選択（オンボーディング）。cc--h.cc--panel / gc--h.gc--panel カードを流用 */
+.p1124-grid{display:flex;flex-wrap:wrap;gap:14px;margin-top:24px}
+.p1124-grid > .cc,.p1124-grid > .gc{flex:1 1 220px;max-width:260px}
+.p1124-submit-wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:32px;padding-top:24px;border-top:1px solid var(--border)}
+.p1124-submit-wrap .p114-submit-note{margin:0}
+@media(max-width:540px){.p1124-submit-wrap{flex-direction:column-reverse;align-items:stretch}}
+
+/* チェックイン完了：ウォッチ提案ステップ（クリエイター／ギャラリーをグループ分け表示） */
+.ktn-ci-watch__lead{font-family:var(--fn);font-size:.8rem;color:var(--muted);line-height:1.6;margin:0 0 14px}
+.ktn-ci-watch__group{margin-bottom:4px}
+.ktn-ci-watch__group-label{font-family:var(--fn);font-size:.68rem;font-weight:600;color:var(--muted);letter-spacing:.02em;margin:0 0 6px}
+.ktn-ci-watch__list{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.ktn-ci-watch__row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 12px;background:var(--tag-bg);border-radius:8px}
+.ktn-ci-watch__name{flex:1;min-width:0;font-family:var(--fs);font-size:.86rem;font-weight:600;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ktn-ci-watch__wbtn{padding:4px 10px;font-size:.62rem;flex-shrink:0}
+.ktn-ci-watch__wbtn svg{width:12px;height:12px}
+.ktn-ci-watch__more{display:block;text-align:center;padding:9px 12px;font-family:var(--fn);font-size:.76rem}
 
 /* ── ボタン ON状態 SVG（グローバル） ── */
 .ktn-btn[data-action="interest"].on svg path{fill:#3a90e0;fill-opacity:1;stroke:#3a90e0;stroke-opacity:1}
@@ -14394,7 +14729,7 @@ body.mgmt-page:not(.p3-page):not(.p4-page):not(.p5-page){
 .p54-edit-link:hover{color:var(--ink);border-color:rgba(0,0,0,.22)}
 
 /* ミュージアムウォール マソンリー（1カラム化でカード幅が約315→490pxに拡大したため、余白も16/14→20pxへ拡大） */
-.p54-section{background:#faf7f1;border-radius:4px;padding:20px}
+.p54-section{padding:20px}
 .p54-grid{columns:2;column-gap:20px}
 
 /* カード */

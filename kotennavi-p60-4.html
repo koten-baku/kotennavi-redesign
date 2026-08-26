@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>よくある質問 — 一般編 | 個展なび</title>
+  <meta name="description" content="個展なびの使い方全般に関するよくある質問。展覧会の探し方、会員登録の要否、掲載方法などをまとめました。アカウント・出展の詳細は各編もあわせてご確認ください。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@1,400;1,600&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<body data-w="article" class="p70-page p60-page">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- デモバー -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">FAQページ</span>
+  <button class="dbtn dbtn--active" id="dbarView">閲覧</button>
+</div>
+
+<!-- ヘッダー -->
+<div class="shell">
+
+<!-- サイドバー（kotennavi-p1.html と同一マークアップ・#ktnRoleNav は renderSidebar() がJS注入） -->
+<aside class="ktn-sidebar" id="ktnSidebar">
+
+  <!-- ロゴ (logo5-1) -->
+  <a href="kotennavi-p1.html" class="ktn-sidebar__logo" data-page="p1">
+    <img src="./images/kotennavi-logo5-1.svg" alt="個展なび">
+  </a>
+
+  <!-- 検索 → P10 検索ハブ -->
+  <a href="kotennavi-p10.html" class="ktn-sidebar__item" data-page="p10">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <circle cx="11" cy="11" r="7.5"/>
+        <path d="M21 21l-4.5-4.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">検索</span>
+  </a>
+
+  <!-- お知らせ → P61（未制作） -->
+  <a href="kotennavi-p61.html" class="ktn-sidebar__item" id="ktnSidebarNotice" data-page="p61">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__dot" id="ktnNoticeDot" style="display:none"></span>
+    <span class="ktn-sidebar__label">お知らせ</span>
+  </a>
+
+  <!-- ガイド → P60（未制作） -->
+  <a href="kotennavi-p60.html" class="ktn-sidebar__item" data-page="p60">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" stroke-linecap="round"/>
+        <path d="M12 16v-4M12 8h.01" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">ガイド</span>
+  </a>
+
+  <div class="ktn-sidebar__divider"></div>
+
+  <!-- ロール別アイコン（JS注入） -->
+  <div id="ktnRoleNav" style="width:100%;display:flex;flex-direction:column;align-items:center"></div>
+
+  <div class="ktn-sidebar__footer">
+    <p class="ktn-sidebar__footer-label">Follow us</p>
+    <div class="ktn-sidebar__sns">
+      <a href="https://www.facebook.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="Facebook">
+        <svg viewBox="0 0 320 512" fill="currentColor"><path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/></svg>
+      </a>
+      <a href="https://x.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="X">
+        <svg viewBox="0 0 512 512" fill="currentColor"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg>
+      </a>
+    </div>
+  </div>
+
+</aside>
+
+<div class="content-wrap" id="contentWrap">
+<header class="ktn-header" id="ktnHeader">
+  <div class="ktn-header__inner">
+    <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+    <div class="ktn-hdr-actions" id="ktnActs"></div>
+  </div>
+</header>
+
+<!-- タイトルバンド -->
+<div class="p70-title-band">
+  <div class="p70-title-band__inner">
+    <div class="p70-head__sub">
+      <span class="p70-head__updated">よくある質問</span>
+    </div>
+    <h1 class="p70-head__title">一般編</h1>
+    <p class="p70-head__en">FAQ — General</p>
+    <p class="p70-head__lead">個展なびの使い方全般についてよくいただくご質問をまとめました。<br>アカウントに関する詳しい内容はユーザー編、出展に関する内容はクリエイター編・ギャラリー編でご案内しています。</p>
+  </div>
+</div>
+
+<main>
+  <div class="p70-wrap">
+
+    <!-- 目次 -->
+    <nav class="p70-toc" aria-label="目次">
+      <div class="p70-toc__title">目次 — Contents</div>
+      <ol class="p70-toc__list">
+        <li class="p70-toc__item"><span class="p70-toc__num">1</span><a class="p70-toc__link" href="#about">個展なびとは</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">2</span><a class="p70-toc__link" href="#search">展覧会を探す</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">3</span><a class="p70-toc__link" href="#account">アカウント登録・ログイン</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">4</span><a class="p70-toc__link" href="#listing">展覧会を掲載する</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">5</span><a class="p70-toc__link" href="#contact">その他・お問合わせ</a></li>
+      </ol>
+    </nav>
+
+    <!-- 1. 個展なびとは -->
+    <section class="p70-section" id="about">
+      <div class="p70-section__head">
+        <span class="p70-section__num">1</span>
+        <h2 class="p70-section__title">個展なびとは</h2>
+        <span class="p70-section__en">About Kotennavi</span>
+      </div>
+      <p class="p70-body">サービス全体の位置づけについてのご質問です。</p>
+
+      <div class="p70-faq">
+
+        <details class="p70-faq-item">
+          <summary>個展なびとはどのようなサービスですか</summary>
+          <div class="p70-faq-item__body">
+            全国の展覧会情報を紹介するポータルサイトです。展覧会の検索・閲覧に加え、作家・ギャラリーによる情報発信、来場記録の管理、気になる展覧会のブックマークなど、鑑賞体験を広げるための機能を提供しています。
+          </div>
+        </details>
+
+        <details class="p70-faq-item">
+          <summary>利用に料金はかかりますか</summary>
+          <div class="p70-faq-item__body">
+            展覧会の検索・閲覧、会員登録、ウォッチ・興味あり！・チェックインなどの基本機能はすべて無料でご利用いただけます。作家・ギャラリーとして展覧会を掲載する場合も、掲載そのものは無料です。
+          </div>
+        </details>
+
+        <details class="p70-faq-item">
+          <summary>どのような展覧会が掲載されていますか</summary>
+          <div class="p70-faq-item__body">
+            全国のギャラリー・美術館で開催される個展を中心に、グループ展や企画展も含めて掲載しています。ジャンルは絵画・写真・彫刻・工芸・現代美術など多岐にわたります。
+          </div>
+        </details>
+
+        <details class="p70-faq-item">
+          <summary>掲載されている情報は誰が登録していますか</summary>
+          <div class="p70-faq-item__body">
+            展覧会を主催する作家・ギャラリーご自身が登録・更新しています。個展なびは登録内容を確認したうえで公開しており、内容の正確性は主催者側の情報に基づきます。
+          </div>
+        </details>
+
+        <details class="p70-faq-item">
+          <summary>スマートフォンでも利用できますか</summary>
+          <div class="p70-faq-item__body">
+            はい。個展なびはスマートフォン・タブレット・PCすべてに最適化されています。外出先での展覧会検索や、会場でのチェックインにもご利用いただけます。
+          </div>
+        </details>
+
+        <details class="p70-faq-item">
+          <summary>個展なびに掲載されていない展覧会もありますか</summary>
+          <div class="p70-faq-item__body">
+            掲載は作家・ギャラリーによる登録に基づくため、すべての展覧会を網羅しているわけではありません。ご自身の展覧会が未掲載の場合は、ぜひ登録をご検討ください。
+          </div>
+        </details>
+
+      </div>
+    </section>
+
+    <!-- 2. 展覧会を探す -->
+    <section class="p70-section" id="search">
+      <div class="p70-section__head">
+        <span class="p70-section__num">2</span>
+        <h2 class="p70-section__title">展覧会を探す</h2>
+        <span class="p70-section__en">Finding Exhibitions</span>
+      </div>
+      <p class="p70-body">検索やブックマークなど、展覧会を見つけて楽しむための機能についてのご質問です。詳しくは<a class="ktn-guide-link" href="./kotennavi-p10.html">検索ページ →</a>もご覧ください。</p>
+
+      <div class="p70-faq">
+
+        <details class="p70-faq-item">
+          <summary>展覧会はどうやって探せますか</summary>
+          <div class="p70-faq-item__body">
+            検索ページから、エリア・ジャンル・会期などの条件で展覧会を絞り込めます。キーワード検索や、注目の展覧会・もうすぐ終了する展覧会などの特集からも探せます。
+          </div>
+        </details>
+
+        <details class="p70-faq-item">
+          <summary>エリアや会期で絞り込むことはできますか</summary>
+          <div class="p70-faq-item__body">
+            はい。都道府県・エリア単位での絞り込みのほか、開催中・開催予定・もうすぐ終了などの時期での絞り込みにも対応しています。
+          </div>
+        </details>
+
+        <details class="p70-faq-item">
+          <summary>気になる展覧会をあとで見返すことはできますか</summary>
+          <div class="p70-faq-item__body">
+            展覧会に「興味あり！」を付けると、マイページの興味あり！リストにまとめて表示され、あとから見返すことができます。
+          </div>
+        </details>
+
+        <details class="p70-faq-item">
+          <summary>クリエイターやギャラリーをフォローするような機能はありますか</summary>
+          <div class="p70-faq-item__body">
+            「ウォッチ」機能で、気になるクリエイター・ギャラリーの活動を追いかけられます。ウォッチした相手が新しい展覧会や記事を公開すると、マイページで確認できます。
+          </div>
+        </details>
+
+        <details class="p70-faq-item">
+          <summary>展覧会に行った記録を残せますか</summary>
+          <div class="p70-faq-item__body">
+            チェックイン機能で来場記録を残せます。記録はマイページのチェックイン履歴からいつでも確認できます。
+          </div>
+        </details>
+
+        <details class="p70-faq-item">
+          <summary>終了した展覧会の情報も見られますか</summary>
+          <div class="p70-faq-item__body">
+            はい。過去に開催された展覧会もアーカイブとして閲覧できます。作家・ギャラリーページの展覧会一覧から確認いただけます。
+          </div>
+        </details>
+
+        <details class="p70-faq-item">
+          <summary>展覧会の情報に誤りを見つけた場合はどうすればいいですか</summary>
+          <div class="p70-faq-item__body">
+            該当ページの<a class="ktn-guide-link" href="./kotennavi-p60-13.html">「問題を報告する」→</a>から個展なびまでご連絡ください。内容を確認のうえ、主催者への確認等の対応をいたします。
+          </div>
+        </details>
+
+      </div>
+    </section>
+
+    <!-- 3. アカウント登録・ログイン -->
+    <section class="p70-section" id="account">
+      <div class="p70-section__head">
+        <span class="p70-section__num">3</span>
+        <h2 class="p70-section__title">アカウント登録・ログイン</h2>
+        <span class="p70-section__en">Account & Login</span>
+      </div>
+      <p class="p70-body">会員登録・ログインの概略についてのご質問です。プロフィール編集・パスワード管理・通知設定など、より詳しい内容は<a class="ktn-guide-link" href="./kotennavi-p60-5.html">よくある質問 — ユーザー編 →</a>でご案内しています。</p>
+
+      <div class="p70-faq">
+
+        <details class="p70-faq-item">
+          <summary>会員登録は必須ですか</summary>
+          <div class="p70-faq-item__body">
+            展覧会の検索・閲覧はご登録なしでもご利用いただけます。ウォッチ・興味あり！・チェックインなどの機能をお使いいただくには会員登録が必要です。
+          </div>
+        </details>
+
+        <details class="p70-faq-item">
+          <summary>会員登録するとできることは何ですか</summary>
+          <div class="p70-faq-item__body">
+            クリエイター・ギャラリーのウォッチ、展覧会への興味あり！、来場のチェックイン、記事へのコメントなどがご利用いただけます。さらにクリエイター機能・ギャラリー機能を申し込むと、ご自身の展覧会や作品を掲載できます。
+          </div>
+        </details>
+
+        <details class="p70-faq-item">
+          <summary>登録に費用はかかりますか</summary>
+          <div class="p70-faq-item__body">
+            会員登録は無料です。年会費・月会費などはいただいておりません。
+          </div>
+        </details>
+
+        <details class="p70-faq-item">
+          <summary>登録方法を教えてください</summary>
+          <div class="p70-faq-item__body">
+            サイドバーまたはヘッダーの登録メニューから、メールアドレスの登録のみで簡単に始められます。登録後、プロフィールを設定するとより充実してご利用いただけます。
+          </div>
+        </details>
+
+        <details class="p70-faq-item">
+          <summary>パスワードを忘れてしまいました</summary>
+          <div class="p70-faq-item__body">
+            ログイン画面のパスワード再設定リンクから、ご登録のメールアドレス宛に再設定用のリンクをお送りします。詳しい手順は<a class="ktn-guide-link" href="./kotennavi-p60-5.html">ユーザー編のパスワード管理 →</a>をご覧ください。
+          </div>
+        </details>
+
+        <details class="p70-faq-item">
+          <summary>退会はできますか</summary>
+          <div class="p70-faq-item__body">
+            マイページの設定から退会手続きができます。退会するとウォッチ・興味あり！・チェックインなどの記録はすべて削除されますのでご注意ください。
+          </div>
+        </details>
+
+      </div>
+    </section>
+
+    <!-- 4. 展覧会を掲載する -->
+    <section class="p70-section" id="listing">
+      <div class="p70-section__head">
+        <span class="p70-section__num">4</span>
+        <h2 class="p70-section__title">展覧会を掲載する</h2>
+        <span class="p70-section__en">Listing Exhibitions</span>
+      </div>
+      <p class="p70-body">ご自身の展覧会を掲載したい方向けの概略です。クリエイターとしての掲載は<a class="ktn-guide-link" href="./kotennavi-p60-6.html">よくある質問 — クリエイター編 →</a>、ギャラリーとしての掲載は<a class="ktn-guide-link" href="./kotennavi-p60-7.html">よくある質問 — ギャラリー編 →</a>で詳しくご案内しています。</p>
+
+      <div class="p70-faq">
+
+        <details class="p70-faq-item">
+          <summary>自分の展覧会を個展なびに掲載するにはどうすればいいですか</summary>
+          <div class="p70-faq-item__body">
+            会員登録のうえ、クリエイターまたはギャラリーとしての機能をお申込みください。承認後、マイページから展覧会を登録できるようになります。
+          </div>
+        </details>
+
+        <details class="p70-faq-item">
+          <summary>クリエイターとギャラリー、どちらの機能を申し込めばいいですか</summary>
+          <div class="p70-faq-item__body">
+            作家ご本人として活動される方はクリエイター機能、会場を運営・企画される方はギャラリー機能をお申込みください。両方の機能は排他的で、同時に持つことはできません。
+          </div>
+        </details>
+
+        <details class="p70-faq-item">
+          <summary>掲載に費用はかかりますか</summary>
+          <div class="p70-faq-item__body">
+            展覧会の掲載自体は無料です。オンラインでの作品展示・販売を行う付随サービス「リエゾン」「リエゾン+」も、展示は無料でご利用いただけます（リエゾン+は販売成立時のみサービス利用料が発生します）。
+          </div>
+        </details>
+
+        <details class="p70-faq-item">
+          <summary>展覧会は登録するとすぐに公開されますか</summary>
+          <div class="p70-faq-item__body">
+            登録後、個展なびが内容を確認したうえで公開します。内容に不備がなければ、公開までに数日いただく場合があります。
+          </div>
+        </details>
+
+        <details class="p70-faq-item">
+          <summary>オンラインで作品を展示・販売することはできますか</summary>
+          <div class="p70-faq-item__body">
+            会場の展覧会と連動したオンライン展示・販売サービス「リエゾン」「リエゾン+」をご利用いただけます。詳しくは各編のよくある質問をご覧ください。
+          </div>
+        </details>
+
+        <details class="p70-faq-item">
+          <summary>複数の展覧会を同時に掲載できますか</summary>
+          <div class="p70-faq-item__body">
+            はい。掲載できる展覧会数に上限はなく、複数の展覧会を並行して登録・管理いただけます。
+          </div>
+        </details>
+
+        <details class="p70-faq-item">
+          <summary>展覧会の内容を後から修正できますか</summary>
+          <div class="p70-faq-item__body">
+            はい。マイページの管理画面からいつでも編集できます。会期終了後は一部項目の編集ができなくなりますのでご了承ください。
+          </div>
+        </details>
+
+      </div>
+    </section>
+
+    <!-- 5. その他・お問合わせ -->
+    <section class="p70-section" id="contact">
+      <div class="p70-section__head">
+        <span class="p70-section__num">5</span>
+        <h2 class="p70-section__title">その他・お問合わせ</h2>
+        <span class="p70-section__en">Other Questions</span>
+      </div>
+
+      <div class="p70-faq">
+
+        <details class="p70-faq-item">
+          <summary>個展なびの利用規約・プライバシーポリシーはどこで確認できますか</summary>
+          <div class="p70-faq-item__body">
+            <a class="ktn-guide-link" href="./kotennavi-p60-9.html">利用規約</a>・<a class="ktn-guide-link" href="./kotennavi-p60-10.html">プライバシーポリシー</a>のページからそれぞれご確認いただけます。
+          </div>
+        </details>
+
+        <details class="p70-faq-item">
+          <summary>サイトの不具合を見つけた場合はどうすればいいですか</summary>
+          <div class="p70-faq-item__body">
+            <a class="ktn-guide-link" href="./kotennavi-p60-13.html">問題を報告する →</a>フォームからご連絡ください。発生状況を確認のうえ、対応いたします。
+          </div>
+        </details>
+
+        <details class="p70-faq-item">
+          <summary>ここに載っていない質問がある場合はどうすればいいですか</summary>
+          <div class="p70-faq-item__body">
+            お問合せフォームからご連絡ください。内容を確認のうえ、個別にご案内します。
+          </div>
+        </details>
+
+      </div>
+
+      <p class="p70-body">上記で解決しない場合は、お問合せフォームからご連絡ください。</p>
+      <p><a class="ktn-guide-link" href="./kotennavi-p60-11.html">お問合せフォームへ →</a></p>
+    </section>
+
+  </div>
+</main>
+
+<!-- フッター -->
+<footer class="ktn-footer" id="ktnFooter"></footer>
+</div><!-- /content-wrap -->
+</div><!-- /shell -->
+
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  KTN.init({ page: 'p60-4' });
+
+  var dbarView = document.getElementById('dbarView');
+  if (dbarView) {
+    dbarView.addEventListener('click', function () {
+      this.classList.add('dbtn--active');
+    });
+  }
+});
+</script>
+</body>
+</html>
