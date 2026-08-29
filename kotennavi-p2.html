@@ -43,7 +43,6 @@
     <span class="dbar-sep" style="margin-left:8px">LIAISON：</span>
     <button class="dbtn dbtn-liaison on" onclick="setLiaison('plus',this)">LIAISON+</button>
     <button class="dbtn dbtn-liaison" onclick="setLiaison('liaison',this)">LIAISON</button>
-    <button class="dbtn dbtn-liaison" onclick="setLiaison('none',this)">なし</button>
     <span class="dbar-sep" style="margin-left:8px">会期：</span>
     <button class="dbtn dbtn-period" onclick="setPeriod('before',this)">会期前</button>
     <button class="dbtn dbtn-period on" onclick="setPeriod('during',this)">会期中</button>
@@ -51,6 +50,9 @@
     <span class="dbar-sep" style="margin-left:8px">確認：</span>
     <button class="dbtn dbtn-exh on" data-exh-key="confirmed" onclick="ktnSetExh('confirmed','true',this)">確認済</button>
     <button class="dbtn dbtn-exh" data-exh-key="confirmed" onclick="ktnSetExh('confirmed','false',this)">確認前</button>
+    <span class="dbar-sep" style="margin-left:8px">下書き：</span>
+    <button class="dbtn dbtn-exh" data-exh-key="draft" onclick="ktnSetExh('draft','true',this)">下書き中</button>
+    <button class="dbtn dbtn-exh on" data-exh-key="draft" onclick="ktnSetExh('draft','false',this)">下書きでない</button>
     <span class="dbar-sep" style="margin-left:8px">公開日：</span>
     <button class="dbtn dbtn-exh on" data-exh-key="publishArrived" onclick="ktnSetExh('publishArrived','true',this)">到達済</button>
     <button class="dbtn dbtn-exh" data-exh-key="publishArrived" onclick="ktnSetExh('publishArrived','false',this)">未到達</button>
@@ -144,6 +146,15 @@
       </div>
 
       <main class="ktn-main" id="ktnMain">
+
+        <!-- ⓪ オーナー限定：下書き/確認依頼中の公開状態通知（p2SyncOwnerNotice()が表示制御。
+             画像より上＝ページ最上部に置くことで目立たせる） -->
+        <div class="ktn-content p2-owner-pub-wrap" id="p2OwnerPubWrap" hidden>
+          <div class="p211-mode-banner" id="p2OwnerPubNotice" hidden>
+            <span class="p211-mode-banner__icon">●</span>
+            <span class="p211-mode-banner__text" id="p2OwnerPubNoticeText"></span>
+          </div>
+        </div>
 
         <!-- ① ヒーロースライダー（exhibition_v6構造・0〜10枚・キャプション付き） -->
         <div class="p2-poster-area" id="p2Hero" oncontextmenu="return false">
@@ -1083,12 +1094,7 @@
 
       if (banner) banner.classList.toggle('is-plus', type === 'plus');
 
-      if (type === 'none') {
-        if (badge)      badge.style.display  = 'none';
-        if (subnav)     subnav.style.display = 'none';
-        if (banner)     banner.style.display = 'none';
-        if (sideWorks)  sideWorks.style.display = 'none';
-      } else if (type === 'liaison') {
+      if (type === 'liaison') {
         if (badge)      { badge.style.display = ''; badge.className = 'lb-dot li'; badge.innerHTML = 'LIAISON'; }
         if (subnav)     { subnav.style.display = ''; subnav.href = 'kotennavi-p2-5.html'; }
         if (navSvgLi)   navSvgLi.style.display   = '';
@@ -1134,6 +1140,52 @@
     setLiaison('plus', null); /* dbar デフォルト（LIAISON+）に合わせて初期化 */
     KTN.init({ page: 'p2', role: 'guest' });
     _p2ApplyStatus(); /* ヒーローの状態バッジ・本日休み・距離を初期反映 */
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       オーナー限定：公開状態通知（p2-11から遷移してきた場合）
+       p2-11 は保存後にこのページへ location.href で遷移する。QR/フライヤー・LIAISON利用の
+       案内は p2-11 の保存完了モーダル（KTN.submitDone）側に集約したため、ここは下書き/確認
+       依頼中の公開状態通知のみを扱う。クエリは初回表示後に消去する。
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    function p2IsOwnerRole() {
+      var role = (window.ktnState && window.ktnState.role) || 'guest';
+      if (role === 'user+creator') role = 'creator';
+      else if (role === 'user+gallery') role = 'gallery';
+      return role === 'creator' || role === 'gallery' || role === 'admin';
+    }
+    window.p2SyncOwnerNotice = function () {
+      var pubWrap  = document.getElementById('p2OwnerPubWrap');
+      var pubBox   = document.getElementById('p2OwnerPubNotice');
+      var pubText  = document.getElementById('p2OwnerPubNoticeText');
+      if (!pubWrap || !pubBox) return;
+      var isOwner = p2IsOwnerRole();
+      var st = (typeof ktnExhState === 'function') ? ktnExhState() : {};
+      var pubOn = false;
+      var editLink = '<a class="ktn-guide-link" href="./kotennavi-p2-11.html">展覧会情報を編集する →</a>';
+      if (isOwner && st.draft) {
+        pubText.innerHTML = '<strong>下書き</strong>　この展覧会はまだ下書きです。内容を入力し「保存して確認依頼」すると、個展なび事務局の確認後にサイトへ掲載されます。<br>' + editLink;
+        pubOn = true;
+      } else if (isOwner && !st.confirmed) {
+        pubText.innerHTML = '<strong>確認依頼中</strong>　この展覧会は現在、個展なび事務局が内容を確認しています。確認が完了すると、公開日の指定に従ってこのページが公開されます（確認完了はメールでお知らせします）。<br>' + editLink;
+        pubOn = true;
+      }
+      pubBox.hidden = !pubOn;
+      pubWrap.hidden = !pubOn;
+    };
+    (function () {
+      var qs  = new URLSearchParams(location.search);
+      var pub = qs.get('pub');
+      if (!pub) { if (window.p2SyncOwnerNotice) p2SyncOwnerNotice(); return; }
+      KTN.exh.draft = (pub === 'draft');
+      KTN.exh.confirmed = false;
+      var role = qs.get('role');
+      if (role === 'creator') role = 'user+creator';
+      else if (role === 'gallery') role = 'user+gallery';
+      var roleBtn = role ? document.querySelector('.dbar [onclick="setR(\'' + role + '\',this)"]') : null;
+      if (roleBtn && typeof setR === 'function') setR(role, roleBtn);
+      else if (window.ktnRender) ktnRender();
+      history.replaceState(null, '', location.pathname);
+    })();
 
     /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
        スライダー（自己完結・DOM確定後に実行）
@@ -1282,7 +1334,7 @@
       var own = {
         has: true, hasReview: true,
         ini: '山', name: '山田 花子', av: 'linear-gradient(135deg,#e8c8dc,#b8608c)', tc: '#fff',
-        date: '2026.02.21', stars: 5, checkinDate: '2026.02.21',
+        date: '2026.02.21', stars: 5, checkinDate: '2026.02.21', reason: 'sns',
         review: 'オノマトペが視覚化される体験がとても新鮮でした。特に「ふわふわ」の展示に惹かれ、時間を忘れて見入ってしまいました。'
       };
       window.p2Own = own;
@@ -1413,11 +1465,13 @@
         openCheckinEditModal({
           title: own.hasReview ? 'チェックイン&レビューを編集' : 'レビューを書く',
           date: own.checkinDate.replace(/\./g, '-'),
+          reason: own.reason,
           stars: own.stars,
           review: own.hasReview ? own.review : '',
           focusReview: !!focusReview,
           onSave: function (d) {
             if (d.date) { own.checkinDate = d.date.replace(/-/g, '.'); own.date = own.checkinDate; }
+            own.reason = d.reason;
             own.stars = d.stars;
             own.review = d.review;
             own.hasReview = !!(d.review && d.review.trim());

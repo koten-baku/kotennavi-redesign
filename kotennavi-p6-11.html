@@ -515,15 +515,137 @@ function clearForm() {
   document.querySelectorAll('.p211-tag').forEach(function (el) {
     el.remove();
   });
+  document.querySelectorAll('.p211-img-uploaded.is-added').forEach(function (el) { el.remove(); });   /* ユーザー追加分（サブ画像）は削除 */
   document.querySelectorAll('.p211-img-uploaded').forEach(function (el) {
     el.style.display = 'none';
   });
+  if (typeof syncSubImgCount === 'function') syncSubImgCount();
   var draft = document.getElementById('p611DraftChk');
   if (draft) draft.checked = false;
   if (typeof closeAllAcc === 'function') closeAllAcc();
   if (typeof syncDraftMode === 'function') syncDraftMode();
   if (typeof syncOptUI === 'function') syncOptUI();
 }
+
+/* ── メイン画像・サブ画像のアップロード（デモ：FileReaderでローカルプレビュー表示。p2-11と同型の修正） ──
+   file input の change・削除ボタンに結線が無く、画像を選択しても何も反映されない状態だった。 */
+var syncSubImgCount;
+(function () {
+  var mainDrop = document.getElementById('p611MainDrop');
+  var mainFile = document.getElementById('p611MainFile');
+  var mainField = mainDrop && mainDrop.closest('.p211-field');
+  var mainUp    = mainField && mainField.querySelector('.p211-img-uploaded');
+  var mainThumb = mainUp && mainUp.querySelector('.p211-img-uploaded__thumb');
+  var mainName  = mainUp && mainUp.querySelector('.p211-img-uploaded__name');
+  var mainCap   = mainUp && mainUp.querySelector('.p211-img-caption');
+
+  if (mainFile) {
+    mainFile.addEventListener('change', function () {
+      var f = mainFile.files && mainFile.files[0];
+      mainFile.value = '';
+      if (!f || !mainUp) return;
+      var reader = new FileReader();
+      reader.onload = function () {
+        if (mainThumb) mainThumb.style.background = 'center/cover no-repeat url("' + reader.result + '")';
+        if (mainName) mainName.textContent = f.name;
+        mainUp.style.display = '';
+        if (typeof syncOptUI === 'function') syncOptUI();
+      };
+      reader.readAsDataURL(f);
+    });
+  }
+  if (mainUp) {
+    var mainDel = mainUp.querySelector('.p211-img-uploaded__del');
+    if (mainDel) mainDel.addEventListener('click', function () {
+      mainUp.style.display = 'none';
+      if (mainThumb) mainThumb.setAttribute('style', '');
+      if (mainName) mainName.textContent = '';
+      if (mainCap) mainCap.value = '';
+      if (typeof syncOptUI === 'function') syncOptUI();
+    });
+  }
+
+  /* サブ画像（最大9枚・複数選択可・削除で行ごと除去・残り枚数を追従） */
+  var subList  = document.getElementById('p611SubList');
+  var subFile  = document.getElementById('p611SubFile');
+  var subCount = document.querySelector('#p611SubDrop .p211-img-count');
+  var SUB_MAX = 9;
+  syncSubImgCount = function () {
+    if (!subList || !subCount) return;
+    var n = 0;
+    subList.querySelectorAll('.p211-img-uploaded').forEach(function (el) { if (el.style.display !== 'none') n++; });
+    subCount.textContent = '残り ' + Math.max(0, SUB_MAX - n) + ' 枚';
+  };
+  function bindSubDelete(row) {
+    var del = row.querySelector('.p211-img-uploaded__del');
+    if (del) del.addEventListener('click', function () {
+      row.remove();
+      syncSubImgCount();
+      if (typeof syncOptUI === 'function') syncOptUI();
+    });
+  }
+  if (subList) subList.querySelectorAll('.p211-img-uploaded').forEach(bindSubDelete);
+  if (subFile) {
+    subFile.addEventListener('change', function () {
+      var files = Array.prototype.slice.call(subFile.files || []);
+      subFile.value = '';
+      if (!subList) return;
+      var used = subList.querySelectorAll('.p211-img-uploaded').length;
+      var remain = SUB_MAX - used;
+      files.slice(0, Math.max(0, remain)).forEach(function (f) {
+        var reader = new FileReader();
+        reader.onload = function () {
+          var row = document.createElement('div');
+          row.className = 'p211-img-uploaded is-added';
+
+          var handle = document.createElement('span');
+          handle.className = 'p211-img-uploaded__handle';
+          handle.draggable = true;
+          handle.title = 'ドラッグして並べ替え';
+          handle.setAttribute('aria-label', 'ドラッグして並べ替え');
+          handle.innerHTML = '<svg viewBox="0 0 12 12" width="12" height="12" fill="currentColor"><circle cx="3.5" cy="2.5" r="1"/><circle cx="8.5" cy="2.5" r="1"/><circle cx="3.5" cy="6" r="1"/><circle cx="8.5" cy="6" r="1"/><circle cx="3.5" cy="9.5" r="1"/><circle cx="8.5" cy="9.5" r="1"/></svg>';
+
+          var thumb = document.createElement('div');
+          thumb.className = 'p211-img-uploaded__thumb';
+          thumb.style.background = 'center/cover no-repeat url("' + reader.result + '")';
+
+          var body = document.createElement('div');
+          body.className = 'p211-img-uploaded__body';
+          var r = document.createElement('div');
+          r.className = 'p211-img-uploaded__row';
+          var name = document.createElement('span');
+          name.className = 'p211-img-uploaded__name';
+          name.textContent = f.name;
+          var del = document.createElement('button');
+          del.type = 'button';
+          del.className = 'p211-img-uploaded__del';
+          del.title = '削除';
+          del.innerHTML = '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" width="12" height="12"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg>';
+          r.appendChild(name);
+          r.appendChild(del);
+          var cap = document.createElement('input');
+          cap.type = 'text';
+          cap.className = 'p211-img-caption';
+          cap.maxLength = 60;
+          cap.placeholder = 'キャプション（任意）';
+          body.appendChild(r);
+          body.appendChild(cap);
+
+          row.appendChild(handle);
+          row.appendChild(thumb);
+          row.appendChild(body);
+
+          subList.appendChild(row);
+          bindSubDelete(row);
+          syncSubImgCount();
+          if (typeof syncOptUI === 'function') syncOptUI();
+        };
+        reader.readAsDataURL(f);
+      });
+    });
+  }
+  syncSubImgCount();
+})();
 
 /* ── ピル選択の active 切り替え ── */
 document.querySelectorAll('.p211-pill-group').forEach(function (group) {

@@ -159,11 +159,10 @@
           </div>
           <div class="p2-12-mode-bar__actions">
             <button class="p2-12-mode-switch" onclick="p2121OpenModal('switch')">LIAISON に切り替える</button>
-            <button class="p2-12-mode-none" onclick="p2121OpenModal('none')">LIAISON+ の利用をやめる</button>
           </div>
         </div>
         <!-- 会期開始ロック（2026-07-19 仕様＝モード切替は展覧会会期開始日以降は変更不可） -->
-        <p class="p2-12-mode-bar__locknote" id="p2121ModeLockNote" hidden>展覧会の会期開始日（2026.02.18）を過ぎているため、モード（利用しない／LIAISON／LIAISON+）は変更できません。</p>
+        <p class="p2-12-mode-bar__locknote" id="p2121ModeLockNote" hidden>展覧会の会期開始日（2026.02.18）を過ぎているため、モード（LIAISON／LIAISON+）は変更できません。</p>
       </div>
 
       <!-- 2. LIAISON+ 展示・販売設定（統合セクション） -->
@@ -410,22 +409,6 @@
           <div class="p2-12-modal__foot">
             <button class="p2-12-modal__cancel ktn-op-btn" onclick="p2121CloseModal('switch')">キャンセル</button>
             <button class="p2-12-modal__ok ktn-op-btn ktn-op-btn--danger" id="p2121SwitchOk" onclick="location.href='kotennavi-p2-12.html'">切り替える</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- 使用しない 切替確認モーダル -->
-      <div id="p2121-modal-none" class="p2-12-modal" hidden>
-        <div class="p2-12-modal__bg" onclick="p2121CloseModal('none')"></div>
-        <div class="p2-12-modal__box">
-          <h3 class="p2-12-modal__title">LIAISON+ の利用停止は編集ページで行います</h3>
-          <div class="p2-12-modal__warn">⚠️ 利用をやめて保存すると、LIAISON+ の設定（価格・販売期間）がすべて失われます。取り消せません。</div>
-          <ul class="p2-12-modal__notes">
-            <li>この画面では停止されません。展覧会の編集ページ「LIAISON設定」で「利用しない」を選択して保存した時点で利用停止となります。</li>
-          </ul>
-          <div class="p2-12-modal__foot">
-            <button class="p2-12-modal__cancel ktn-op-btn" onclick="p2121CloseModal('none')">キャンセル</button>
-            <button class="p2-12-modal__ok ktn-op-btn ktn-op-btn--primary" onclick="location.href='kotennavi-p2-11.html'">編集ページを開く →</button>
           </div>
         </div>
       </div>

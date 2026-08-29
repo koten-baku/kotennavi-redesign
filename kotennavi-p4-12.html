@@ -16,8 +16,6 @@
 <!-- デモバー -->
 <div class="dbar" id="dbar">
   <span class="dbar-sep">ロール：</span>
-  <button class="dbtn" onclick="setR('guest',this)">ゲスト</button>
-  <button class="dbtn" onclick="setR('login',this)">ログイン</button>
   <button class="dbtn on" onclick="setR('user+gallery',this)">gallery本人</button>
   <button class="dbtn" onclick="setR('admin',this)">管理者</button>
   <span class="dbar-sep">LIAISON+：</span>
@@ -124,10 +122,10 @@
           </div>
           <h2 class="ktn-mgmt-head__title">インサイト</h2>
           <p class="ktn-mgmt-head__en">INSIGHTS</p>
-          <p class="ktn-mgmt-head__desc">ギャラリーページ・展覧会・作品がどれだけ見られ、どんな反応を集めているかを確認できます。告知の効果を振り返り、次の展覧会企画に役立てましょう。</p>
+          <p class="ktn-mgmt-head__desc">ギャラリーページ・展覧会・作品がどれだけ見られ、どんな関心を集めているかを確認できます。告知の効果を振り返り、次の展覧会企画に役立てましょう。</p>
         </div>
 
-        <!-- ツールバー（集計対象＋期間） -->
+        <!-- ツールバー（集計対象） -->
         <div class="ins-toolbar">
           <div class="ins-target">
             <div class="ins-target__thumb">S</div>
@@ -136,16 +134,9 @@
               <p class="ins-target__name"><a href="kotennavi-p4.html">ギャラリーページ全体（Gallery SOIL 渋谷）</a></p>
             </div>
           </div>
-          <div class="ins-period" id="p412Period">
-            <span class="ins-period__label">Period</span>
-            <button class="ins-period__btn" type="button" data-period="7">過去7日</button>
-            <button class="ins-period__btn is-active" type="button" data-period="30">過去30日</button>
-            <button class="ins-period__btn" type="button" data-period="90">過去90日</button>
-            <button class="ins-period__btn" type="button" data-period="all">全期間</button>
-          </div>
         </div>
 
-        <!-- 1. KPIサマリー -->
+        <!-- 1. KPIサマリー（PERIODによる絞り込みはしない） -->
         <section class="ktn-section">
           <div class="ktn-section__head">
             <h3 class="ktn-section__title">サマリー<span class="ktn-sec-en">Overview</span></h3>
@@ -167,30 +158,21 @@
               <p class="ins-kpi__val">42<span class="unit">人</span></p>
               <span class="ins-kpi__delta ins-kpi__delta--up">▲ 18%<span class="ins-kpi__delta-note">前期間比</span></span>
             </div>
-            <div class="ins-kpi">
-              <p class="ins-kpi__label">
-                <svg class="ins-kpi__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 13.5C7.6 13.2 1.5 9.3 1.5 5.6A3.1 3.1 0 0 1 8 5a3.1 3.1 0 0 1 6.5.6C14.5 9.3 8.4 13.2 8 13.5z"/></svg>
-                興味あり！
-              </p>
-              <p class="ins-kpi__val">98<span class="unit">件</span></p>
-              <span class="ins-kpi__delta ins-kpi__delta--up">▲ 9%<span class="ins-kpi__delta-note">前期間比</span></span>
-            </div>
-            <div class="ins-kpi">
-              <p class="ins-kpi__label">
-                <svg class="ins-kpi__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="6" r="3"/><path d="M8 9c-3 0-5 2-5 4.5h10C13 11 11 9 8 9z"/></svg>
-                会場チェックイン
-              </p>
-              <p class="ins-kpi__val">21<span class="unit">人</span></p>
-              <span class="ins-kpi__delta ins-kpi__delta--flat">― 増減なし<span class="ins-kpi__delta-note">前期間比</span></span>
-            </div>
           </div>
-          <p class="ins-note">「興味あり！」は来場を検討している人の数、「会場チェックイン」は実際に会場へ足を運んだ人の数です。ウォッチャー・チェックインの一覧は<a href="kotennavi-p4-13.html">オーディエンス管理</a>から確認できます。</p>
+          <p class="ins-note">ページ閲覧数とウォッチャー数は、あなたのギャラリーページ自体がどれだけ見つけてもらえているかを示す指標です。ここでの数値は過去30日間の実績（前期間比は直前30日との比較）。展覧会・記事・作品それぞれが集めた関心は下の各セクションで、会場チェックインの詳細は<a class="ktn-guide-link" href="kotennavi-p4-13.html">オーディエンス管理 →</a>で確認できます。</p>
         </section>
 
         <!-- 2. 閲覧数の推移 -->
         <section class="ktn-section">
           <div class="ktn-section__head">
             <h3 class="ktn-section__title">閲覧数の推移<span class="ktn-sec-en">Trend</span></h3>
+          </div>
+          <div class="ins-period" id="p412Period">
+            <span class="ins-period__label">Period</span>
+            <button class="ins-period__btn" type="button" data-period="7">過去7日</button>
+            <button class="ins-period__btn is-active" type="button" data-period="30">過去30日</button>
+            <button class="ins-period__btn" type="button" data-period="90">過去90日</button>
+            <button class="ins-period__btn" type="button" data-period="all">全期間</button>
           </div>
           <div class="ins-trend">
             <div class="ins-linechart" id="p412Trend"></div>
@@ -199,9 +181,31 @@
               <span class="ins-trend__legend" id="p412TrendPeak" style="--page-accent:transparent"></span>
             </div>
           </div>
+          <div class="ins-grow__card" style="margin-top:14px">
+            <svg class="ins-grow__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="6.5"/><circle cx="8" cy="8" r="2.4"/></svg>
+            <div class="ins-grow__body">
+              <p class="ins-grow__msg">ウォッチしてくれる人が増えるほど、新しい展覧会を投稿したときに真っ先に届く人も増え、ギャラリーページはより多くの人に見られやすくなります。</p>
+              <p class="ins-grow__stat">ウォッチ数が10人増えると <strong>ページ閲覧数は平均+18%</strong></p>
+              <p class="ins-grow__cta"><a class="ktn-guide-link" href="kotennavi-p2-11.html?mode=new&amp;role=gallery&amp;self=1">新しい展覧会を投稿する →</a></p>
+            </div>
+          </div>
         </section>
 
-        <!-- 3. リピーターの可視化 -->
+        <!-- 3. ウォッチャーの推移（週次固定・期間セレクターなし） -->
+        <section class="ktn-section">
+          <div class="ktn-section__head">
+            <h3 class="ktn-section__title">ウォッチャーの推移<span class="ktn-sec-en">Watcher Trend</span></h3>
+          </div>
+          <div class="ins-trend">
+            <div class="ins-linechart" id="p412WatchTrend"></div>
+            <div class="ins-trend__foot">
+              <span class="ins-trend__legend">週別 新規ウォッチャー数（直近12週）</span>
+              <span class="ins-trend__legend" id="p412WatchTrendPeak" style="--page-accent:transparent"></span>
+            </div>
+          </div>
+        </section>
+
+        <!-- 4. リピーターの可視化 -->
         <section class="ktn-section">
           <div class="ktn-section__head">
             <h3 class="ktn-section__title">リピーターの可視化<span class="ktn-sec-en">Repeat Visitors</span></h3>
@@ -220,16 +224,8 @@
                 <svg class="ins-kpi__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2.5 8a5.5 5.5 0 0 1 9.5-3.9M13.5 8a5.5 5.5 0 0 1-9.5 3.9" stroke-linecap="round"/><path d="M12 2.5v2.4h-2.4M4 13.5v-2.4h2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 リピーター
               </p>
-              <p class="ins-kpi__val">39<span class="unit">人</span></p>
-              <p class="ins-kpi__sub">2回以上来場した人数</p>
-            </div>
-            <div class="ins-kpi">
-              <p class="ins-kpi__label">
-                <svg class="ins-kpi__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 13.5C7.6 13.2 1.5 9.3 1.5 5.6A3.1 3.1 0 0 1 8 5a3.1 3.1 0 0 1 6.5.6C14.5 9.3 8.4 13.2 8 13.5z"/></svg>
-                リピート率
-              </p>
-              <p class="ins-kpi__val">19<span class="unit">%</span></p>
-              <p class="ins-kpi__sub">来場者のうちリピーターの割合</p>
+              <p class="ins-kpi__val">39<span class="unit">人</span><span class="unit">（リピート率19%）</span></p>
+              <p class="ins-kpi__sub">2回以上来場した人数・来場者全体に占める割合</p>
             </div>
           </div>
           <div class="ins-hbar">
@@ -240,36 +236,117 @@
           <p class="ins-note">来場回数は、これまでに開催したすべての展覧会でのチェックインをもとに集計しています。何度も足を運んでくれる人は、次の展覧会企画でも力になってくれる可能性が高い大切なファンです。</p>
         </section>
 
-        <!-- 4. ページを伸ばすヒント -->
+        <!-- STEP：展覧会・記事・作品それぞれへの関心をまとめる -->
+        <div class="ins-phase-divider">
+          <p class="ins-phase-divider__title">展覧会・記事・作品それぞれへの関心<span class="ktn-sec-en">Content Interest</span></p>
+          <p class="ins-phase-divider__lead">ここからは、掲載した展覧会・記事・作品それぞれに集まった関心を見ていきます。</p>
+        </div>
+
+        <!-- 5. 人気コンテンツ（Top3サマリー） -->
         <section class="ktn-section">
           <div class="ktn-section__head">
-            <h3 class="ktn-section__title">ページを伸ばすヒント<span class="ktn-sec-en">Grow Your Reach</span></h3>
+            <h3 class="ktn-section__title">人気コンテンツ<span class="ktn-sec-en">Top Content</span></h3>
           </div>
-          <div class="ins-grow">
-            <div class="ins-grow__card">
-              <svg class="ins-grow__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="6.5"/><circle cx="8" cy="8" r="2.4"/></svg>
-              <div class="ins-grow__body">
-                <p class="ins-grow__msg">ウォッチしてくれる人が増えるほど、新しい展覧会を投稿したときに真っ先に届く人も増え、ギャラリーページはより多くの人に見られやすくなります。</p>
-                <p class="ins-grow__stat">ウォッチ数が10人増えると <strong>ページ閲覧数は平均+18%</strong></p>
-              </div>
+          <div class="ins-top-grid">
+            <div class="ins-top-list">
+              <p class="ins-top-list__label">展覧会 Top3</p>
+              <div class="ins-top-list__item"><span class="ins-top-list__rank">1</span><a class="ins-top-list__title" href="kotennavi-p2.html">あなたが知らないオノマトペ — 田中透 個展</a><span class="ktn-count"><strong>780</strong></span></div>
+              <div class="ins-top-list__item"><span class="ins-top-list__rank">2</span><a class="ins-top-list__title" href="kotennavi-p2.html">声と線 — 新作展</a><span class="ktn-count"><strong>560</strong></span></div>
+              <div class="ins-top-list__item"><span class="ins-top-list__rank">3</span><a class="ins-top-list__title" href="kotennavi-p2.html">色と音のあいだ 個展</a><span class="ktn-count"><strong>420</strong></span></div>
             </div>
-            <div class="ins-grow__card">
-              <svg class="ins-grow__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="6" r="3"/><path d="M8 9c-3 0-5 2-5 4.5h10C13 11 11 9 8 9z"/></svg>
-              <div class="ins-grow__body">
-                <p class="ins-grow__msg">会場に足を運んでチェックインしてくれた人は、ギャラリーの活動を継続的に見に来てくれる可能性が高い大切なファンです。</p>
-                <p class="ins-grow__stat">チェックインした人の <strong>約6割</strong> が、その後もページをウォッチ</p>
-              </div>
+            <div class="ins-top-list">
+              <p class="ins-top-list__label">記事 Top3</p>
+              <div class="ins-top-list__item"><span class="ins-top-list__rank">1</span><a class="ins-top-list__title" href="kotennavi-p4-2.html">ギャラリーが語る「素材と空間」— SOIL NOTES vol.3</a><span class="ktn-count"><strong>680</strong></span></div>
+              <div class="ins-top-list__item"><span class="ins-top-list__rank">2</span><a class="ins-top-list__title" href="kotennavi-p4-2.html">田中 透×Gallery SOIL 渋谷 制作インタビュー</a><span class="ktn-count"><strong>590</strong></span></div>
+              <div class="ins-top-list__item"><span class="ins-top-list__rank">3</span><a class="ins-top-list__title" href="kotennavi-p4-2.html">展示レポート — 音と色が交差する空間へ</a><span class="ktn-count"><strong>480</strong></span></div>
+            </div>
+            <div class="ins-top-list">
+              <p class="ins-top-list__label">作品 Top3</p>
+              <div class="ins-top-list__item"><span class="ins-top-list__rank">1</span><a class="ins-top-list__title" href="kotennavi-p4-14.html">《静かな水面》</a><span class="ktn-count"><strong>245</strong></span></div>
+              <div class="ins-top-list__item"><span class="ins-top-list__rank">2</span><a class="ins-top-list__title" href="kotennavi-p4-14.html">《余白のコンポジション》</a><span class="ktn-count"><strong>198</strong></span></div>
+              <div class="ins-top-list__item"><span class="ins-top-list__rank">3</span><a class="ins-top-list__title" href="kotennavi-p4-14.html">《朝の気配》</a><span class="ktn-count"><strong>164</strong></span></div>
             </div>
           </div>
-          <p class="ins-note">ウォッチやチェックインを増やすには、展覧会情報やギャラリーの活動を充実させ、SNSでの発信を続けることが効果的です。ウォッチャー・チェックインの一覧は<a href="kotennavi-p4-13.html">オーディエンス管理</a>から確認できます。</p>
         </section>
 
-        <!-- 5. LIAISON+ ファネル -->
+        <!-- 6. 展覧会・記事・作品それぞれへの関心（タブ切替・年別グループ＋ページング） -->
         <section class="ktn-section">
           <div class="ktn-section__head">
-            <h3 class="ktn-section__title">作品販売のうごき<span class="ktn-sec-en">LIAISON+ Funnel</span></h3>
+            <h3 class="ktn-section__title">展覧会・記事・作品への関心<span class="ktn-sec-en">Content Interest</span></h3>
           </div>
-          <div class="ins-funnel" id="p412Funnel">
+          <div class="p5-type-tabs" id="p412InsTabs">
+            <button type="button" class="p5-type-tab is-active" data-tab="exh">展覧会<span class="ktn-count ktn-count--pill is-idle">全6件</span></button>
+            <button type="button" class="p5-type-tab" data-tab="article">記事<span class="ktn-count ktn-count--pill is-idle">全8件</span></button>
+            <button type="button" class="p5-type-tab" data-tab="artwork">作品<span class="ktn-count ktn-count--pill is-idle">全6件</span></button>
+          </div>
+
+          <div class="p412-ins-panel" data-panel="exh">
+            <div class="ins-kpi-grid">
+              <div class="ins-kpi">
+                <p class="ins-kpi__label">
+                  <svg class="ins-kpi__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 13.5C7.6 13.2 1.5 9.3 1.5 5.6A3.1 3.1 0 0 1 8 5a3.1 3.1 0 0 1 6.5.6C14.5 9.3 8.4 13.2 8 13.5z"/></svg>
+                  展覧会の「興味あり！」合計
+                </p>
+                <p class="ins-kpi__val">176<span class="unit">件</span></p>
+                <p class="ins-kpi__sub">これまでに掲載した全展覧会の合計</p>
+              </div>
+            </div>
+            <div class="ins-item-list" id="p412ExhList">
+              <div class="ins-item-list__head" id="p412ExhHead">
+                <span class="ins-item-list__head-name"><button type="button" class="p315-buyers-sort-btn" data-sort="name">展覧会名<span class="p315-buyers-sort-btn__arrow"></span></button><button type="button" class="p315-buyers-sort-btn" data-sort="period">会期<span class="p315-buyers-sort-btn__arrow"></span></button></span>
+                <span class="ins-item-list__head-stat"><button type="button" class="p315-buyers-sort-btn" data-sort="stat0">閲覧数<span class="p315-buyers-sort-btn__arrow"></span></button></span>
+                <span class="ins-item-list__head-stat"><button type="button" class="p315-buyers-sort-btn" data-sort="stat1">チェックイン<span class="p315-buyers-sort-btn__arrow"></span></button></span>
+                <span class="ins-item-list__head-stat"><button type="button" class="p315-buyers-sort-btn" data-sort="stat2">興味あり<span class="p315-buyers-sort-btn__arrow"></span></button></span>
+              </div>
+            </div>
+            <div class="ktn-pagination" id="p412ExhPager"></div>
+            <p class="ins-note">チェックイン数はその展覧会での来場者数、興味あり数はLIAISON/LIAISON+ページでの反応です。会期終了後の展覧会は<a class="ktn-guide-link" href="kotennavi-p4-18.html">展覧会を管理する →</a>の一覧からは外れますが、この一覧では引き続き確認できます。</p>
+          </div>
+
+          <div class="p412-ins-panel" data-panel="article" hidden>
+            <div class="ins-kpi-grid">
+              <div class="ins-kpi">
+                <p class="ins-kpi__label">
+                  <svg class="ins-kpi__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="2.5" width="12" height="11" rx="1"/><path d="M4.5 6h7M4.5 8.5h7M4.5 11h4.5"/></svg>
+                  興味あり！
+                </p>
+                <p class="ins-kpi__val">64<span class="unit">件</span></p>
+                <p class="ins-kpi__sub">掲載した記事の「興味あり！」合計</p>
+              </div>
+            </div>
+            <div class="ins-item-list" id="p412ArticleList">
+              <div class="ins-item-list__head" id="p412ArticleHead">
+                <span class="ins-item-list__head-name"><button type="button" class="p315-buyers-sort-btn" data-sort="name">記事タイトル<span class="p315-buyers-sort-btn__arrow"></span></button><button type="button" class="p315-buyers-sort-btn" data-sort="linkTarget">リンク先<span class="p315-buyers-sort-btn__arrow"></span></button></span>
+                <span class="ins-item-list__head-stat"><button type="button" class="p315-buyers-sort-btn" data-sort="stat0">閲覧数<span class="p315-buyers-sort-btn__arrow"></span></button></span>
+                <span class="ins-item-list__head-stat"><button type="button" class="p315-buyers-sort-btn" data-sort="stat1">興味あり<span class="p315-buyers-sort-btn__arrow"></span></button></span>
+              </div>
+            </div>
+            <div class="ktn-pagination" id="p412ArticlePager"></div>
+            <p class="ins-note">記事は展覧会の告知・作家インタビュー・ギャラリーの活動紹介など、来場者以外にも活動を届けられる手段です。<a class="ktn-guide-link" href="kotennavi-p4-19.html">記事を管理する →</a></p>
+          </div>
+
+          <div class="p412-ins-panel" data-panel="artwork" hidden>
+            <div class="ins-kpi-grid">
+              <div class="ins-kpi">
+                <p class="ins-kpi__label">
+                  <svg class="ins-kpi__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 13.5C7.6 13.2 1.5 9.3 1.5 5.6A3.1 3.1 0 0 1 8 5a3.1 3.1 0 0 1 6.5.6C14.5 9.3 8.4 13.2 8 13.5z"/></svg>
+                  興味あり！
+                </p>
+                <p class="ins-kpi__val">361<span class="unit">件</span></p>
+                <p class="ins-kpi__sub">LIAISON+出品作品の「興味あり！」合計</p>
+              </div>
+            </div>
+            <div class="ins-item-list" id="p412ArtworkList">
+              <div class="ins-item-list__head" id="p412ArtworkHead">
+                <span class="ins-item-list__head-name"><button type="button" class="p315-buyers-sort-btn" data-sort="name">作品名<span class="p315-buyers-sort-btn__arrow"></span></button></span>
+                <span class="ins-item-list__head-stat"><button type="button" class="p315-buyers-sort-btn" data-sort="stat0">閲覧数<span class="p315-buyers-sort-btn__arrow"></span></button></span>
+                <span class="ins-item-list__head-stat"><button type="button" class="p315-buyers-sort-btn" data-sort="stat1">興味あり<span class="p315-buyers-sort-btn__arrow"></span></button></span>
+                <span class="ins-item-list__head-stat"><button type="button" class="p315-buyers-sort-btn" data-sort="stat2">出展回数<span class="p315-buyers-sort-btn__arrow"></span></button></span>
+              </div>
+            </div>
+            <div class="ktn-pagination" id="p412ArtworkPager"></div>
+            <p class="ins-note">作品はLIAISON（オンライン展示）またはLIAISON+（オンライン展示＋販売）で掲載できます。出品作品を充実させておくと、そのぶん関心の入口が増えます。</p>
+            <div class="ins-funnel" id="p412Funnel">
             <div class="ins-funnel__row">
               <div class="ins-funnel__label"><span class="ins-funnel__stage">作品を見た</span><span class="ins-funnel__sub">作品ページ閲覧</span></div>
               <div class="ins-funnel__track"><div class="ins-funnel__bar" style="width:100%"><span class="ins-funnel__num">876</span></div></div>
@@ -295,6 +372,7 @@
           <div class="ins-funnel-notice" id="p412FunnelNotice" hidden>
             <svg class="ins-funnel-notice__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="6.5"/><path d="M8 5v3.5l2.2 2.2"/></svg>
             <p class="ins-funnel-notice__text">LIAISON+に申し込むと、作品の販売状況もここで確認できるようになります。<a class="ktn-guide-link" href="kotennavi-p70-2.html">リエゾン+について →</a></p>
+          </div>
           </div>
         </section>
 

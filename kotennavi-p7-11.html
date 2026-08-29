@@ -263,7 +263,7 @@
                   <div class="p211-img-uploaded__body">
                     <div class="p211-img-uploaded__row">
                       <span class="p211-img-uploaded__name">sketch_early01.jpg</span>
-                      <button class="p211-img-uploaded__del" type="button" title="削除" onclick="this.closest('.p211-img-uploaded').remove();syncOptUI()">
+                      <button class="p211-img-uploaded__del" type="button" title="削除">
                         <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" width="12" height="12"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg>
                       </button>
                     </div>
@@ -334,7 +334,7 @@
                     <div class="p211-img-uploaded__body">
                       <div class="p211-img-uploaded__row">
                         <span class="p211-img-uploaded__name">rough_mid.jpg</span>
-                        <button class="p211-img-uploaded__del" type="button" title="削除" onclick="this.closest('.p211-img-uploaded').remove();syncOptUI()">
+                        <button class="p211-img-uploaded__del" type="button" title="削除">
                           <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" width="12" height="12"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg>
                         </button>
                       </div>
@@ -345,7 +345,7 @@
                     <div class="p211-img-uploaded__body">
                       <div class="p211-img-uploaded__row">
                         <span class="p211-img-uploaded__name">near_final.jpg</span>
-                        <button class="p211-img-uploaded__del" type="button" title="削除" onclick="this.closest('.p211-img-uploaded').remove();syncOptUI()">
+                        <button class="p211-img-uploaded__del" type="button" title="削除">
                           <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" width="12" height="12"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg>
                         </button>
                       </div>
@@ -776,6 +776,78 @@ p711SetEntry(P711_CURRENT_ENTRY);
 /* ── 本文ブロックエディタ（追加・削除・並べ替え） ── */
 var P711_BLOCK_LABEL = { text: 'テキスト', image: '画像', pair: '画像2枚', video: '動画' };
 
+/* ── 画像/画像2枚ブロックの選択・削除（イベント委譲・p711AddBlockで動的追加されるブロックにも対応） ──
+   「画像を選択」の drop 要素に file input・change/削除の結線が無く、クリックしても何も起きなかった。
+   ブロックは動的に追加/削除/並べ替えされるため個別bindでなく #p711Blocks への委譲で一括対応する。 */
+function p711MakeImgDrop(hint) {
+  var drop = document.createElement('div');
+  drop.className = 'p211-img-drop';
+  drop.innerHTML =
+    '<button class="p211-img-drop__btn" type="button">画像を選択</button>' +
+    '<div>' + (hint || 'または、画像をドラッグ＆ドロップ') + '</div>' +
+    '<input type="file" class="p711-img-file" accept="image/jpeg" hidden>';
+  return drop;
+}
+function p711MakeImgUploaded(name, dataUrl) {
+  var row = document.createElement('div');
+  row.className = 'p211-img-uploaded';
+  var thumb = document.createElement('div');
+  thumb.className = 'p211-img-uploaded__thumb';
+  thumb.style.background = 'center/cover no-repeat url("' + dataUrl + '")';
+  var body = document.createElement('div');
+  body.className = 'p211-img-uploaded__body';
+  var r = document.createElement('div');
+  r.className = 'p211-img-uploaded__row';
+  var nameEl = document.createElement('span');
+  nameEl.className = 'p211-img-uploaded__name';
+  nameEl.textContent = name;
+  var del = document.createElement('button');
+  del.type = 'button';
+  del.className = 'p211-img-uploaded__del';
+  del.title = '削除';
+  del.innerHTML = '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" width="12" height="12"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg>';
+  r.appendChild(nameEl);
+  r.appendChild(del);
+  body.appendChild(r);
+  row.appendChild(thumb);
+  row.appendChild(body);
+  return row;
+}
+(function () {
+  var blocks = document.getElementById('p711Blocks');
+  if (!blocks) return;
+  blocks.addEventListener('change', function (e) {
+    var input = e.target.closest && e.target.closest('.p711-img-file');
+    if (!input) return;
+    var f = input.files && input.files[0];
+    var dropEl = input.closest('.p211-img-drop');
+    input.value = '';
+    if (!f || !dropEl) return;
+    var reader = new FileReader();
+    reader.onload = function () {
+      dropEl.replaceWith(p711MakeImgUploaded(f.name, reader.result));
+      if (typeof syncOptUI === 'function') syncOptUI();
+    };
+    reader.readAsDataURL(f);
+  });
+  blocks.addEventListener('click', function (e) {
+    var del = e.target.closest && e.target.closest('.p211-img-uploaded__del');
+    if (del) {
+      var uploaded = del.closest('.p211-img-uploaded');
+      if (uploaded) {
+        uploaded.replaceWith(p711MakeImgDrop());
+        if (typeof syncOptUI === 'function') syncOptUI();
+      }
+      return;
+    }
+    var drop = e.target.closest && e.target.closest('.p211-img-drop');
+    if (drop) {
+      var input = drop.querySelector('.p711-img-file');
+      if (input) input.click();
+    }
+  });
+})();
+
 function p711MakeBlock(type) {
   var el = document.createElement('div');
   el.className = 'p711-block';
@@ -787,19 +859,22 @@ function p711MakeBlock(type) {
       '<textarea class="p211-textarea p211-textarea--tall" placeholder="本文を入力してください"></textarea>';
   } else if (type === 'image') {
     body =
-      '<div class="p211-img-drop" onclick="this.nextElementSibling && this.nextElementSibling.click && this.nextElementSibling.click()">' +
+      '<div class="p211-img-drop">' +
         '<button class="p211-img-drop__btn" type="button">画像を選択</button>' +
         '<div>または、画像をドラッグ＆ドロップ</div>' +
+        '<input type="file" class="p711-img-file" accept="image/jpeg" hidden>' +
       '</div>' +
       '<input type="text" class="p211-img-caption" maxlength="80" placeholder="キャプション（任意）" style="margin-top:8px">';
   } else if (type === 'pair') {
     body =
       '<div class="p711-pair-imgs">' +
-        '<div class="p211-img-drop" onclick="">' +
+        '<div class="p211-img-drop">' +
           '<button class="p211-img-drop__btn" type="button">画像を選択</button><div>1枚目</div>' +
+          '<input type="file" class="p711-img-file" accept="image/jpeg" hidden>' +
         '</div>' +
-        '<div class="p211-img-drop" onclick="">' +
+        '<div class="p211-img-drop">' +
           '<button class="p211-img-drop__btn" type="button">画像を選択</button><div>2枚目</div>' +
+          '<input type="file" class="p711-img-file" accept="image/jpeg" hidden>' +
         '</div>' +
       '</div>' +
       '<input type="text" class="p211-img-caption" maxlength="80" placeholder="キャプション（任意・2枚共通）">';

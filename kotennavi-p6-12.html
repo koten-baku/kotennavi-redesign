@@ -19,6 +19,9 @@
   <button class="dbtn on" onclick="setR('creator',this)">creator</button>
   <button class="dbtn" onclick="setR('gallery',this)">gallery</button>
   <button class="dbtn" onclick="setR('admin',this)">管理者</button>
+  <span class="dbar-sep" style="margin-left:8px">出展（creatorのみ）：</span>
+  <button class="dbtn dbtn-exh on" data-exh-key="exhibited" onclick="ktnSetExh('exhibited','true',this)">出展あり</button>
+  <button class="dbtn dbtn-exh" data-exh-key="exhibited" onclick="ktnSetExh('exhibited','false',this)">出展なし</button>
 </div>
 
 <div class="shell">
@@ -126,7 +129,7 @@
           <p class="ktn-mgmt-head__desc">この作品がどれだけ見られ、どんな反応を集めているかを確認できます。興味あり！や問い合わせの動きを振り返り、次の出品や告知に役立てましょう。</p>
         </div>
 
-        <!-- ツールバー（集計対象＋期間） -->
+        <!-- ツールバー（集計対象） -->
         <div class="ins-toolbar">
           <div class="ins-target">
             <div class="ins-target__thumb" style="background:linear-gradient(155deg,#b8d8cc,#6a9e8a)"></div>
@@ -134,13 +137,6 @@
               <p class="ins-target__label">Target</p>
               <p class="ins-target__name"><a href="kotennavi-p6.html">作品ページ全体（オノマトペの庭）</a></p>
             </div>
-          </div>
-          <div class="ins-period" id="p612Period">
-            <span class="ins-period__label">Period</span>
-            <button class="ins-period__btn" type="button" data-period="7">過去7日</button>
-            <button class="ins-period__btn is-active" type="button" data-period="30">過去30日</button>
-            <button class="ins-period__btn" type="button" data-period="90">過去90日</button>
-            <button class="ins-period__btn" type="button" data-period="all">全期間</button>
           </div>
         </div>
 
@@ -166,30 +162,21 @@
               <p class="ins-kpi__val">57<span class="unit">件</span></p>
               <span class="ins-kpi__delta ins-kpi__delta--up">▲ 9%<span class="ins-kpi__delta-note">前期間比</span></span>
             </div>
-            <div class="ins-kpi">
-              <p class="ins-kpi__label">
-                <svg class="ins-kpi__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 4h12v8H2z"/><path d="M2 4l6 5 6-5"/></svg>
-                お問い合わせ件数
-              </p>
-              <p class="ins-kpi__val">4<span class="unit">件</span></p>
-              <span class="ins-kpi__delta ins-kpi__delta--flat">― 増減なし<span class="ins-kpi__delta-note">前期間比</span></span>
-            </div>
-            <div class="ins-kpi">
-              <p class="ins-kpi__label">
-                <svg class="ins-kpi__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 2h6l6 6-6 6-6-6z"/><circle cx="5" cy="5" r="1"/></svg>
-                購入申込件数
-              </p>
-              <p class="ins-kpi__val">3<span class="unit">件</span></p>
-              <span class="ins-kpi__delta ins-kpi__delta--up">▲ 1件<span class="ins-kpi__delta-note">前期間比</span></span>
-            </div>
           </div>
-          <p class="ins-note">「興味あり！」は気になる作品として登録した人の数、「購入申込件数」はLIAISON+で購入を申し込んだ人の数です。取引の詳細は<a href="kotennavi-p3-16.html">取引デスク</a>から確認できます。</p>
+          <p class="ins-note">「興味あり！」は気になる作品として登録した人の数です。お問い合わせ・購入申込は出展した展覧会ごとに件数が異なるため、「展覧会ごとの問い合わせ・購入申込」でご確認ください。</p>
         </section>
 
-        <!-- 2. 閲覧数の推移 -->
+        <!-- 2. 閲覧数の推移（期間で絞り込めるのはこのセクションのみ） -->
         <section class="ktn-section">
           <div class="ktn-section__head">
             <h3 class="ktn-section__title">閲覧数の推移<span class="ktn-sec-en">Trend</span></h3>
+          </div>
+          <div class="ins-period" id="p612Period">
+            <span class="ins-period__label">Period</span>
+            <button class="ins-period__btn" type="button" data-period="7">過去7日</button>
+            <button class="ins-period__btn is-active" type="button" data-period="30">過去30日</button>
+            <button class="ins-period__btn" type="button" data-period="90">過去90日</button>
+            <button class="ins-period__btn" type="button" data-period="all">全期間</button>
           </div>
           <div class="ins-trend">
             <div class="ins-linechart" id="p612Trend"></div>
@@ -198,36 +185,83 @@
               <span class="ins-trend__legend" id="p612TrendPeak" style="--page-accent:transparent"></span>
             </div>
           </div>
+          <div class="ins-grow__card" style="margin-top:14px">
+            <svg class="ins-grow__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 13.5C7.6 13.2 1.5 9.3 1.5 5.6A3.1 3.1 0 0 1 8 5a3.1 3.1 0 0 1 6.5.6C14.5 9.3 8.4 13.2 8 13.5z"/></svg>
+            <div class="ins-grow__body">
+              <p class="ins-grow__msg">「興味あり！」が増えるほど、その作品や関連する展覧会・<span id="p612RoleWord1">クリエイターページ</span>も合わせて見てもらいやすくなります。作品説明やサイズ・技法などの情報を充実させておくと、興味あり！が付きやすくなります。</p>
+              <p class="ins-grow__stat">「興味あり！」が多い作品ほど <strong>閲覧数も増加</strong></p>
+              <p class="ins-grow__cta"><a class="ktn-guide-link" href="kotennavi-p6-11.html?mode=edit&amp;author=tanaka&amp;self=1">作品情報を編集する →</a></p>
+            </div>
+          </div>
         </section>
 
-        <!-- 3. ページを伸ばすヒント -->
+        <!-- 3. 興味あり！の推移（週次固定・期間セレクターなし・creatorのみ＝作品が常時掲載されるクリエイターページ限定） -->
+        <section class="ktn-section" id="p612InterestSection">
+          <div class="ktn-section__head">
+            <h3 class="ktn-section__title">興味あり！の推移<span class="ktn-sec-en">Interest Trend</span></h3>
+          </div>
+          <div class="ins-trend">
+            <div class="ins-linechart" id="p612InterestTrend"></div>
+            <div class="ins-trend__foot">
+              <span class="ins-trend__legend">週別 新規「興味あり！」件数（直近12週）</span>
+              <span class="ins-trend__legend" id="p612InterestTrendPeak" style="--page-accent:transparent"></span>
+            </div>
+          </div>
+          <p class="ins-note">この作品はクリエイターページに常時掲載されるため、展覧会の会期に関わらず「興味あり！」は継続的に集まります。</p>
+        </section>
+
+        <!-- 4. 展覧会ごとの問い合わせ・購入申込 -->
         <section class="ktn-section">
           <div class="ktn-section__head">
-            <h3 class="ktn-section__title">ページを伸ばすヒント<span class="ktn-sec-en">Grow Your Reach</span></h3>
+            <h3 class="ktn-section__title">展覧会ごとの問い合わせ・購入申込<span class="ktn-sec-en">By Exhibition</span></h3>
           </div>
-          <div class="ins-grow">
-            <div class="ins-grow__card">
-              <svg class="ins-grow__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 13.5C7.6 13.2 1.5 9.3 1.5 5.6A3.1 3.1 0 0 1 8 5a3.1 3.1 0 0 1 6.5.6C14.5 9.3 8.4 13.2 8 13.5z"/></svg>
-              <div class="ins-grow__body">
-                <p class="ins-grow__msg">「興味あり！」が増えるほど、その作品や関連する展覧会・クリエイターページも合わせて見てもらいやすくなります。作品説明やサイズ・技法などの情報を充実させておくと、興味あり！が付きやすくなります。</p>
-                <p class="ins-grow__stat">「興味あり！」が多い作品ほど <strong>閲覧数も増加</strong></p>
-              </div>
+          <div class="ins-item-list" id="p612ExhList">
+            <div class="ins-item-list__head">
+              <span class="ins-item-list__head-name">展覧会</span>
+              <span class="ins-item-list__head-stat">興味あり！</span>
+              <span class="ins-item-list__head-stat">問い合わせ</span>
+              <span class="ins-item-list__head-stat">購入申込</span>
             </div>
-            <div class="ins-grow__card">
-              <svg class="ins-grow__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 2h6l6 6-6 6-6-6z"/><circle cx="5" cy="5" r="1"/></svg>
-              <div class="ins-grow__body">
-                <p class="ins-grow__msg">「興味あり！」を付けた人の一部は、その後LIAISON+での購入申込にもつながります。価格や販売状態を最新に保つことで、機会を逃さず購入につなげやすくなります。</p>
-                <p class="ins-grow__stat">「興味あり！」から <strong>購入申込への転換</strong> が期待できます</p>
+            <div class="ins-item-list__row">
+              <div class="ins-item-list__main">
+                <div class="ins-item-list__name-row">
+                  <span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span>
+                  <a class="ins-item-list__name" href="kotennavi-p2.html">あなたが知らないオノマトペ — 田中透 個展</a>
+                </div>
+                <span class="ins-item-list__period">2026.02.18〜2026.03.05（開催中）</span>
               </div>
+              <span class="ins-item-list__stat">42<span class="unit">件</span></span>
+              <span class="ins-item-list__stat">4<span class="unit">件</span></span>
+              <span class="ins-item-list__stat">3<span class="unit">件</span></span>
+            </div>
+            <div class="ins-item-list__row">
+              <div class="ins-item-list__main">
+                <div class="ins-item-list__name-row">
+                  <span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>
+                  <a class="ins-item-list__name" href="kotennavi-p2.html">声と線 — 新作展</a>
+                </div>
+                <span class="ins-item-list__period">2025.09.12〜2025.10.03（終了）</span>
+              </div>
+              <span class="ins-item-list__stat">11<span class="unit">件</span></span>
+              <span class="ins-item-list__stat">1<span class="unit">件</span></span>
+              <span class="ins-item-list__stat">—</span>
             </div>
           </div>
-          <p class="ins-note">興味あり！を増やすには、作品説明・画像・タグを充実させ、展覧会やクリエイターページから作品への導線を意識することが効果的です。</p>
+          <div class="ins-funnel-notice" id="p612ExhZero" hidden>
+            <svg class="ins-funnel-notice__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="6.5"/><path d="M8 5v3.5l2.2 2.2"/></svg>
+            <p class="ins-funnel-notice__text">この作品はまだどの展覧会にも出展されていません。展覧会に出展すると、来場者からの問い合わせや購入申込をここで確認できるようになります。</p>
+          </div>
+          <p class="ins-note" id="p612ExhNote">「興味あり！」は各展覧会の会期中に登録された件数です（会期外に登録された分は含まないため、Section 1の累計とは一致しません）。問い合わせはLIAISON・LIAISON+どちらの出展でも受け付けられますが、購入申込はLIAISON+で出展した場合のみ発生します。</p>
         </section>
 
-        <!-- 4. LIAISON+ ファネル -->
-        <section class="ktn-section">
+        <!-- 5. LIAISON+ ファネル（出展したことがない場合はセクションごと非表示） -->
+        <section class="ktn-section" id="p612FunnelSection">
           <div class="ktn-section__head">
             <h3 class="ktn-section__title">作品販売のうごき<span class="ktn-sec-en">LIAISON+ Funnel</span></h3>
+          </div>
+          <div class="ins-funnel-notice" id="p612SoldNotice">
+            <span class="aws aws-sold">売約済</span>
+            <p class="ins-funnel-notice__text">「購入成立」の1件はオンライン取引が完了し、作品は購入者の所有となりました。<a class="ktn-guide-link" href="kotennavi-p5-4.html">購入者のコレクションルームで見る →</a></p>
           </div>
           <div class="ins-funnel" id="p612Funnel">
             <div class="ins-funnel__row">
@@ -251,7 +285,7 @@
               <span class="ins-funnel__rate">0.2%</span>
             </div>
           </div>
-          <p class="ins-note" id="p612FunnelNote">「作品を見た人」から「購入につながった人」までの流れです。この作品がLIAISON+で販売中の期間が対象です。販売実績の詳細は<a href="kotennavi-p3-16.html">取引デスク</a>から確認できます。</p>
+          <p class="ins-note" id="p612FunnelNote">「作品を見た人」から「購入につながった人」までの、この作品の累計転換率です（全出展を通算）。展覧会ごとの内訳はすぐ下の一覧をご覧ください。</p>
           <div class="ins-funnel-notice" id="p612FunnelNotice" hidden>
             <svg class="ins-funnel-notice__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="6.5"/><path d="M8 5v3.5l2.2 2.2"/></svg>
             <p class="ins-funnel-notice__text">この作品はLIAISON+で販売されていません。<a class="ktn-guide-link" href="kotennavi-p70-2.html">LIAISON+について →</a></p>

@@ -455,6 +455,7 @@ KTN.pages['p2'] = function () {
     if (typeof _prevRender === 'function') _prevRender();
     if (typeof window.syncP2Own === 'function') window.syncP2Own();
     if (typeof window.p2ApplyPeriodToTab === 'function') window.p2ApplyPeriodToTab();
+    if (typeof window.p2SyncOwnerNotice === 'function') window.p2SyncOwnerNotice();
   };
 
 };
@@ -6272,12 +6273,14 @@ KTN.pages['p5-2'] = function () {
         card.querySelectorAll('.rv-star').forEach(function (s) {
             if (!/opacity/.test(s.getAttribute('style') || '')) stars++;
         });
-        return { iso: iso, review: review, stars: stars };
+        var reason = card.getAttribute('data-reason') || '';
+        return { iso: iso, review: review, stars: stars, reason: reason };
     }
 
     function applyCardData(card, data) {
         var row = card.querySelector('.p5-exh-card__reason-row');
         if (!row) return;
+        if (data.reason) card.setAttribute('data-reason', data.reason);
         var display = (data.date || '').replace(/-/g, '.');
         var hasReview = !!(data.review && data.review.length);
         if (hasReview) {
@@ -6313,13 +6316,13 @@ KTN.pages['p5-2'] = function () {
         var hasReview = card.getAttribute('data-has-review') === '1';
         if (act === 'editDate') {
             openCheckinEditModal({
-                title: 'チェックインを編集', date: cur.iso, stars: cur.stars, review: cur.review,
+                title: 'チェックインを編集', date: cur.iso, reason: cur.reason, stars: cur.stars, review: cur.review,
                 onSave: function (d) { applyCardData(card, d); }
             });
         } else if (act === 'review') {
             openCheckinEditModal({
                 title: hasReview ? 'レビューを編集' : 'レビューを書く',
-                date: cur.iso, stars: cur.stars, review: cur.review, focusReview: true,
+                date: cur.iso, reason: cur.reason, stars: cur.stars, review: cur.review, focusReview: true,
                 onSave: function (d) { applyCardData(card, d); }
             });
         } else if (act === 'delReview') {
@@ -6852,6 +6855,9 @@ KTN.pages['p3-12'] = function () {
     });
   }
 
+  // 3.5 ウォッチャーの推移（週次・直近12週固定＝期間セレクターなし）
+  KTN.renderWeeklyTrend('p312WatchTrend', 12, 26, '人');
+
   // 4. LIAISON+ファネル：未申請アカウントは実績データの代わりに案内文言を表示
   function syncFunnel() {
     var applied = typeof ktnLPApplied === 'function' && ktnLPApplied();
@@ -6865,6 +6871,83 @@ KTN.pages['p3-12'] = function () {
   syncFunnel();
   var _prevRenderP312 = window.ktnRender;
   window.ktnRender = function () { if (typeof _prevRenderP312 === 'function') _prevRenderP312(); syncFunnel(); };
+
+  // 5. 展覧会・記事・作品への関心：タブ切替＋年別グループ・ページング・列ソート
+  var P312_INS = {
+    exh: [
+      { href: 'kotennavi-p2.html', name: '声と線 — 新作展', year: 2026, period: '2026.3.20–3.31', periodSort: 20260320, stats: ['654', '34<span class="unit">人</span>', '58<span class="unit">件</span>'] },
+      { href: 'kotennavi-p2.html', name: 'あなたが知らないオノマトペ — 田中透 個展', year: 2026, period: '2026.2.18–3.5', periodSort: 20260218, stats: ['892', '48<span class="unit">人</span>', '76<span class="unit">件</span>'] },
+      { href: 'kotennavi-p2.html', name: '色と音のあいだ 個展', year: 2025, period: '2025.11.10–11.20', periodSort: 20251110, stats: ['512', '28<span class="unit">人</span>', '44<span class="unit">件</span>'] },
+      { href: 'kotennavi-p2.html', name: '線と余白', year: 2025, period: '2025.6.1–6.10', periodSort: 20250601, stats: ['276', '14<span class="unit">人</span>', '18<span class="unit">件</span>'] },
+      { href: 'kotennavi-p2.html', name: 'ざわざわ — 田中透 新作展', year: 2024, period: '2024.10.12–10.27', periodSort: 20241012, stats: ['398', '22<span class="unit">人</span>', '32<span class="unit">件</span>'] },
+      { href: 'kotennavi-p2.html', name: 'ふわふわ — 春の新作', year: 2024, period: '2024.4.13–4.28', periodSort: 20240413, stats: ['198', '10<span class="unit">人</span>', '10<span class="unit">件</span>'] },
+    ],
+    article: [
+      { href: 'kotennavi-p3-2.html', name: 'オノマトペの庭 制作について', year: 2026, linkTarget: 'artwork', stats: ['720', '11<span class="unit">件</span>'] },
+      { href: 'kotennavi-p3-2.html', name: '展示の見どころ — 5つの版表現', year: 2026, linkTarget: 'exhibition', stats: ['260', '2<span class="unit">件</span>'] },
+      { href: 'kotennavi-p3-2.html', name: 'オノマトペと絵画のあいだ', year: 2026, stats: ['1,240', '18<span class="unit">件</span>'] },
+      { href: 'kotennavi-p3-2.html', name: '個展を終えて — 振り返りと感謝', year: 2025, linkTarget: 'exhibition', stats: ['540', '8<span class="unit">件</span>'] },
+      { href: 'kotennavi-p3-2.html', name: '音から生まれる色の話', year: 2025, stats: ['980', '14<span class="unit">件</span>'] },
+      { href: 'kotennavi-p3-2.html', name: '絵の具の混ぜ方と感情の話', year: 2025, stats: ['410', '5<span class="unit">件</span>'] },
+    ],
+    artwork: [
+      { href: 'kotennavi-p3-3.html', name: '《ふわふわ》', year: 2026, stats: ['320', '148<span class="unit">件</span>', '3<span class="unit">回</span>'] },
+      { href: 'kotennavi-p3-3.html', name: '《しんしん》', year: 2026, stats: ['198', '88<span class="unit">件</span>', '2<span class="unit">回</span>'] },
+      { href: 'kotennavi-p3-3.html', name: '《うきうき》', year: 2026, stats: ['164', '74<span class="unit">件</span>', '2<span class="unit">回</span>'] },
+      { href: 'kotennavi-p3-3.html', name: '《わくわく》', year: 2026, stats: ['128', '58<span class="unit">件</span>', '1<span class="unit">回</span>'] },
+      { href: 'kotennavi-p3-3.html', name: '《ドキドキ #3》', year: 2025, stats: ['245', '112<span class="unit">件</span>', '2<span class="unit">回</span>'] },
+      { href: 'kotennavi-p3-3.html', name: '《きらきら》', year: 2025, stats: ['77', '41<span class="unit">件</span>', '1<span class="unit">回</span>'] },
+    ],
+  };
+  var P312_PER_PAGE = 4;
+  var p312InsPage = { exh: 1, article: 1, artwork: 1 };
+  var p312InsGrouped = { exh: true, article: true, artwork: true };
+  var p312InsEls = {
+    exh: { list: document.getElementById('p312ExhList'), pager: document.getElementById('p312ExhPager'), head: document.getElementById('p312ExhHead') },
+    article: { list: document.getElementById('p312ArticleList'), pager: document.getElementById('p312ArticlePager'), head: document.getElementById('p312ArticleHead') },
+    artwork: { list: document.getElementById('p312ArtworkList'), pager: document.getElementById('p312ArtworkPager'), head: document.getElementById('p312ArtworkHead') },
+  };
+  function p312SortValue(it, key) {
+    if (key === 'name') return it.name;
+    if (key === 'period') return it.periodSort || 0;
+    if (key === 'linkTarget') return it.linkTarget || '';
+    if (key.indexOf('stat') === 0) return KTN.insightList.numFromHtml(it.stats[parseInt(key.replace('stat', ''), 10)]);
+    return 0;
+  }
+  function renderP312Ins(type) {
+    var els = p312InsEls[type];
+    if (!els.list) return;
+    p312InsPage[type] = KTN.insightList.render(els.list, els.pager, P312_INS[type], p312InsPage[type], P312_PER_PAGE, function (p) {
+      p312InsPage[type] = p;
+      renderP312Ins(type);
+    }, p312InsGrouped[type]);
+  }
+  ['exh', 'article', 'artwork'].forEach(renderP312Ins);
+  ['exh', 'article', 'artwork'].forEach(function (type) {
+    KTN.insightList.bindSort(p312InsEls[type].head, function (key, dir) {
+      P312_INS[type].sort(function (a, b) {
+        var av = p312SortValue(a, key), bv = p312SortValue(b, key);
+        if (typeof av === 'string') return av.localeCompare(bv, 'ja') * dir;
+        return (av - bv) * dir;
+      });
+      p312InsGrouped[type] = false;
+      p312InsPage[type] = 1;
+      renderP312Ins(type);
+    });
+  });
+
+  var p312InsTabs = document.getElementById('p312InsTabs');
+  if (p312InsTabs) {
+    p312InsTabs.querySelectorAll('.p5-type-tab').forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        p312InsTabs.querySelectorAll('.p5-type-tab').forEach(function (t) { t.classList.remove('is-active'); });
+        tab.classList.add('is-active');
+        document.querySelectorAll('.p312-ins-panel').forEach(function (panel) {
+          panel.hidden = panel.dataset.panel !== tab.dataset.tab;
+        });
+      });
+    });
+  }
 
 };
 
@@ -6885,6 +6968,9 @@ KTN.pages['p4-12'] = function () {
     });
   }
 
+  // ウォッチャーの推移（週次・直近12週固定＝期間セレクターなし）
+  KTN.renderWeeklyTrend('p412WatchTrend', 12, 14, '人');
+
   // LIAISON+ファネル：未申請アカウントは実績データの代わりに案内文言を表示
   function syncFunnel() {
     var applied = typeof ktnLPApplied === 'function' && ktnLPApplied();
@@ -6898,6 +6984,85 @@ KTN.pages['p4-12'] = function () {
   syncFunnel();
   var _prevRenderP412 = window.ktnRender;
   window.ktnRender = function () { if (typeof _prevRenderP412 === 'function') _prevRenderP412(); syncFunnel(); };
+
+  // 5. 展覧会・記事・作品への関心：タブ切替＋年別グループ・ページング・列ソート
+  var P412_INS = {
+    exh: [
+      { href: 'kotennavi-p2.html', name: '声と線 — 新作展', year: 2026, period: '2026.3.20–3.31', periodSort: 20260320, stats: ['560', '44<span class="unit">人</span>', '42<span class="unit">件</span>'] },
+      { href: 'kotennavi-p2.html', name: 'あなたが知らないオノマトペ — 田中透 個展', year: 2026, period: '2026.2.18–3.5', periodSort: 20260218, stats: ['780', '62<span class="unit">人</span>', '58<span class="unit">件</span>'] },
+      { href: 'kotennavi-p2.html', name: '色と音のあいだ 個展', year: 2025, period: '2025.11.10–11.20', periodSort: 20251110, stats: ['420', '36<span class="unit">人</span>', '32<span class="unit">件</span>'] },
+      { href: 'kotennavi-p2.html', name: '線と余白', year: 2025, period: '2025.6.1–6.10', periodSort: 20250601, stats: ['220', '20<span class="unit">人</span>', '14<span class="unit">件</span>'] },
+      { href: 'kotennavi-p2.html', name: 'ざわざわ — 田中透 新作展', year: 2024, period: '2024.10.12–10.27', periodSort: 20241012, stats: ['310', '28<span class="unit">人</span>', '24<span class="unit">件</span>'] },
+      { href: 'kotennavi-p2.html', name: '秋の個展 2023', year: 2023, period: '2023.10.7–10.22', periodSort: 20231007, stats: ['150', '13<span class="unit">人</span>', '6<span class="unit">件</span>'] },
+    ],
+    article: [
+      { href: 'kotennavi-p4-2.html', name: '《オノマトペの庭》について — ギャラリーノート', year: 2026, linkTarget: 'artwork', stats: ['410', '9<span class="unit">件</span>'] },
+      { href: 'kotennavi-p4-2.html', name: 'アーティストトーク開催のお知らせ', year: 2026, linkTarget: 'exhibition', stats: ['320', '7<span class="unit">件</span>'] },
+      { href: 'kotennavi-p4-2.html', name: '展示レポート — 音と色が交差する空間へ', year: 2026, linkTarget: 'exhibition', stats: ['480', '11<span class="unit">件</span>'] },
+      { href: 'kotennavi-p4-2.html', name: '田中 透×Gallery SOIL 渋谷 制作インタビュー「音が見えて、絵が聞こえる」', year: 2026, linkTarget: 'artwork', stats: ['590', '13<span class="unit">件</span>'] },
+      { href: 'kotennavi-p4-2.html', name: 'ギャラリーが語る「素材と空間」— SOIL NOTES vol.3', year: 2026, stats: ['680', '14<span class="unit">件</span>'] },
+      { href: 'kotennavi-p4-2.html', name: '渋谷で巡るアートスポット5選', year: 2026, stats: ['260', '5<span class="unit">件</span>'] },
+      { href: 'kotennavi-p4-2.html', name: '2025年 Gallery SOIL 渋谷 年間振り返り', year: 2025, stats: ['190', '3<span class="unit">件</span>'] },
+      { href: 'kotennavi-p4-2.html', name: 'Gallery SOIL 渋谷 個展なびへの掲載開始のお知らせ', year: 2025, stats: ['140', '2<span class="unit">件</span>'] },
+    ],
+    artwork: [
+      { href: 'kotennavi-p4-14.html', name: '《静かな水面》', year: 2025, stats: ['245', '98<span class="unit">件</span>', '2<span class="unit">回</span>'] },
+      { href: 'kotennavi-p4-14.html', name: '《余白のコンポジション》', year: 2025, stats: ['198', '82<span class="unit">件</span>', '2<span class="unit">回</span>'] },
+      { href: 'kotennavi-p4-14.html', name: '《朝の気配》', year: 2024, stats: ['164', '68<span class="unit">件</span>', '1<span class="unit">回</span>'] },
+      { href: 'kotennavi-p4-14.html', name: '《海の記憶》', year: 2024, stats: ['49', '21<span class="unit">件</span>', '1<span class="unit">回</span>'] },
+      { href: 'kotennavi-p4-14.html', name: '《庭の記憶》', year: 2023, stats: ['128', '54<span class="unit">件</span>', '1<span class="unit">回</span>'] },
+      { href: 'kotennavi-p4-14.html', name: '《光の粒》', year: 2023, stats: ['92', '38<span class="unit">件</span>', '1<span class="unit">回</span>'] },
+    ],
+  };
+  var P412_PER_PAGE = 4;
+  var p412InsPage = { exh: 1, article: 1, artwork: 1 };
+  var p412InsGrouped = { exh: true, article: true, artwork: true };
+  var p412InsEls = {
+    exh: { list: document.getElementById('p412ExhList'), pager: document.getElementById('p412ExhPager'), head: document.getElementById('p412ExhHead') },
+    article: { list: document.getElementById('p412ArticleList'), pager: document.getElementById('p412ArticlePager'), head: document.getElementById('p412ArticleHead') },
+    artwork: { list: document.getElementById('p412ArtworkList'), pager: document.getElementById('p412ArtworkPager'), head: document.getElementById('p412ArtworkHead') },
+  };
+  function p412SortValue(it, key) {
+    if (key === 'name') return it.name;
+    if (key === 'period') return it.periodSort || 0;
+    if (key === 'linkTarget') return it.linkTarget || '';
+    if (key.indexOf('stat') === 0) return KTN.insightList.numFromHtml(it.stats[parseInt(key.replace('stat', ''), 10)]);
+    return 0;
+  }
+  function renderP412Ins(type) {
+    var els = p412InsEls[type];
+    if (!els.list) return;
+    p412InsPage[type] = KTN.insightList.render(els.list, els.pager, P412_INS[type], p412InsPage[type], P412_PER_PAGE, function (p) {
+      p412InsPage[type] = p;
+      renderP412Ins(type);
+    }, p412InsGrouped[type]);
+  }
+  ['exh', 'article', 'artwork'].forEach(renderP412Ins);
+  ['exh', 'article', 'artwork'].forEach(function (type) {
+    KTN.insightList.bindSort(p412InsEls[type].head, function (key, dir) {
+      P412_INS[type].sort(function (a, b) {
+        var av = p412SortValue(a, key), bv = p412SortValue(b, key);
+        if (typeof av === 'string') return av.localeCompare(bv, 'ja') * dir;
+        return (av - bv) * dir;
+      });
+      p412InsGrouped[type] = false;
+      p412InsPage[type] = 1;
+      renderP412Ins(type);
+    });
+  });
+
+  var p412InsTabs = document.getElementById('p412InsTabs');
+  if (p412InsTabs) {
+    p412InsTabs.querySelectorAll('.p5-type-tab').forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        p412InsTabs.querySelectorAll('.p5-type-tab').forEach(function (t) { t.classList.remove('is-active'); });
+        tab.classList.add('is-active');
+        document.querySelectorAll('.p412-ins-panel').forEach(function (panel) {
+          panel.hidden = panel.dataset.panel !== tab.dataset.tab;
+        });
+      });
+    });
+  }
 
 };
 
@@ -8332,14 +8497,27 @@ KTN.initImgReorder = function (list) {
 };
 
 KTN.pages['p2-11'] = function () {
+  // window.p211RoleSync() は setConfirmed()/toggleLiaisonMode() を呼び、それらは
+  // 内部で ktnRender() を呼ぶ（KTN.exh 変更をヘッダー等へ反映するため）。
+  // ktnRender() の呼び先はこの syncMgmtBar を含むため、ガード無しだと
+  // syncMgmtBar → p211RoleSync → setConfirmed → ktnRender → syncMgmtBar … の無限再帰になり、
+  // スタックオーバーフローで setConfirmed 内のボタン.on切替コードまで到達できず
+  // 「確認前」ボタンが選択できなくなる（2026-08-27 発見・修正）。再入中は素通りさせる。
+  var _p211Syncing = false;
   function syncMgmtBar() {
-    const r = window.ktnState && window.ktnState.role || 'gallery';
-    document.body.classList.remove('p3-page', 'p4-page', 'p5-page');
-    if (r === 'creator')      document.body.classList.add('p3-page');
-    else if (r === 'gallery') document.body.classList.add('p4-page');
-    // オーナーは仮にギャラリー（YUGEN Gallery）固定＝HTML直書き。ロール切替では変えない
-    // 開催場所のロール別 default・ヘルプはページ内スクリプトが担当（未定義なら no-op）
-    if (typeof window.p211RoleSync === 'function') window.p211RoleSync();
+    if (_p211Syncing) return;
+    _p211Syncing = true;
+    try {
+      const r = window.ktnState && window.ktnState.role || 'gallery';
+      document.body.classList.remove('p3-page', 'p4-page', 'p5-page');
+      if (r === 'creator')      document.body.classList.add('p3-page');
+      else if (r === 'gallery') document.body.classList.add('p4-page');
+      // オーナーは仮にギャラリー（YUGEN Gallery）固定＝HTML直書き。ロール切替では変えない
+      // 開催場所のロール別 default・ヘルプはページ内スクリプトが担当（未定義なら no-op）
+      if (typeof window.p211RoleSync === 'function') window.p211RoleSync();
+    } finally {
+      _p211Syncing = false;
+    }
   }
   syncMgmtBar();
   KTN.initImgReorder(document.getElementById('p211SubList'));
@@ -8425,6 +8603,11 @@ KTN.pages['p6-12'] = function () {
     if (r === 'gallery')      document.body.classList.add('p4-page');
     else                      document.body.classList.add('p3-page');
     KTN.syncMgmtOwner('p612Owner', r === 'gallery' ? 'gallery' : 'creator');
+    const roleWord1 = document.getElementById('p612RoleWord1');
+    if (roleWord1) roleWord1.textContent = r === 'gallery' ? 'ギャラリーページ' : 'クリエイターページ';
+    // 興味あり！の推移：作品が常時掲載されるクリエイターページのみ対象（ギャラリーは展覧会単位の陳列のため非表示）
+    const interestSection = document.getElementById('p612InterestSection');
+    if (interestSection) interestSection.hidden = (r === 'gallery');
   }
   syncMgmtBar();
 
@@ -8440,20 +8623,47 @@ KTN.pages['p6-12'] = function () {
     });
   }
 
-  // LIAISON+ファネル：この作品がLIAISON+で販売中でない場合は実績データの代わりに案内文言を表示
+  KTN.renderWeeklyTrend('p612InterestTrend', 12, 19, '件');
+
+  // 出展したことがない作品（creatorのみ・galleryは展覧会単位でしか掲載されないため常に「出展あり」扱い）
+  function isNeverExhibited() {
+    var r = window.ktnState && window.ktnState.role || 'creator';
+    return r === 'creator' && !!(window.KTN && KTN.exh && KTN.exh.exhibited === false);
+  }
+
+  // 4. 展覧会ごとの問い合わせ・購入申込：出展実績がない場合は一覧を空にし案内文言のみ表示
+  function syncExhList() {
+    var neverExhibited = isNeverExhibited();
+    var list = document.getElementById('p612ExhList');
+    var zero = document.getElementById('p612ExhZero');
+    var note = document.getElementById('p612ExhNote');
+    if (list) list.hidden = neverExhibited;
+    if (zero) zero.hidden = !neverExhibited;
+    if (note) note.hidden = neverExhibited;
+  }
+  syncExhList();
+
+  // 5. LIAISON+ファネル：出展したことがない作品はセクションごと非表示（販売の動き自体が存在しないため）
   function syncFunnel() {
+    var neverExhibited = isNeverExhibited();
+    var section = document.getElementById('p612FunnelSection');
+    if (section) section.hidden = neverExhibited;
+    if (neverExhibited) return;
+
     var isPlus = !!(window.KTN && KTN.exh && KTN.exh.liaison === 'plus');
     var funnel = document.getElementById('p612Funnel');
+    var sold = document.getElementById('p612SoldNotice');
     var note = document.getElementById('p612FunnelNote');
     var notice = document.getElementById('p612FunnelNotice');
     if (funnel) funnel.hidden = !isPlus;
+    if (sold) sold.hidden = !isPlus;
     if (note) note.hidden = !isPlus;
     if (notice) notice.hidden = isPlus;
   }
   syncFunnel();
 
   var _prevRender = window.ktnRender;
-  window.ktnRender = function () { if (typeof _prevRender === 'function') _prevRender(); syncMgmtBar(); syncFunnel(); };
+  window.ktnRender = function () { if (typeof _prevRender === 'function') _prevRender(); syncMgmtBar(); syncExhList(); syncFunnel(); };
 };
 
 /* ════════════════════════════════════════════════════
@@ -10961,11 +11171,16 @@ KTN.pages['p90-9'] = function () {
      旧「起草進捗」列（起草済/未着手の自動判定バッジ）は2026-08-11に撤去済み：本番運用フェーズでは全件
      文面が確定済み（＝「未着手」が発生しない）状態を前提とするため、管理する意味を持たないとユーザー判断。
      件名列で入力有無（「—」＝未入力）がそのまま代替の目安になるため、別列としての状態表示は不要とした。 */
-  var AUTO_CATEGORY_LABEL = { apply: '機能申込系', txn: '取引系（LIAISON+）', activity: 'アクティビティ系（ウォッチ通知）' };
+  var AUTO_CATEGORY_LABEL = { apply: '機能申込系', txn: '取引系（LIAISON+）', activity: 'アクティビティ系（ウォッチ通知）', exhibition: '展覧会系' };
   var AUTO_BODY_M01 =
     '{{userName}} 様\n\nこのたびは個展なびのクリエイター機能にお申し込みいただき、\nありがとうございます。\n以下の内容でお申込みを受け付けました。\n\n' +
     '──────────────────────────────\n お申込み日：{{applyDate}}\n クリエイター名：{{creatorName}}\n──────────────────────────────\n\n' +
     '内容は個展なび事務局にて確認いたします。\n確認・設定が完了しましたら、あらためて\n「設定完了（ご利用開始）」のメールでお知らせします。\n（通常、数営業日以内にご連絡します）\n\n' +
+    '※本メールは送信専用です。ご不明な点は下記よりお問い合わせください。\n　{{supportUrl}}\n\n{{commonFooter}}';
+  var AUTO_BODY_E01 =
+    '{{userName}} 様\n\nご登録いただいた展覧会「{{exhibitionName}}」について、\n個展なび事務局にて内容を確認いたしました。\n\n' +
+    '開催場所・出展クリエイターページへのリンクを設定し、\nオーナーメニューに「LIAISON作品管理」が追加されました。\nLIAISON（無料のオンライン作品展示）をご利用いただけます。\n' +
+    'より進んだ販売機能「LIAISON+」への切り替えをご希望の場合も、\n同メニューからお申込みいただけます（会期開始後は切り替えできません）。\n\n　{{pageUrl}}\n\n' +
     '※本メールは送信専用です。ご不明な点は下記よりお問い合わせください。\n　{{supportUrl}}\n\n{{commonFooter}}';
   var AUTO_TRIGGERS = [
     { id: 'M-01', category: 'apply', event: 'クリエイター機能 申込受付', aud: '申込者', source: 'p11-2 submit', timing: '送信直後（自動）',
@@ -10984,8 +11199,10 @@ KTN.pages['p90-9'] = function () {
     { id: 'T-09', category: 'txn', event: '期限間近リマインド', aud: 'my-turn側', source: 'S1〜S5', timing: '期限接近時', subject: '', body: '', note: '', updatedAt: '2026.8.9' },
     { id: 'T-10', category: 'txn', event: '確定期限超過・出品自動取消', aud: '申込者全員', source: 'S1 超過', timing: '確定期限超過時', subject: '', body: '', note: '', updatedAt: '2026.8.9' },
     { id: 'A-01', category: 'activity', event: 'ウォッチ中のクリエイター/ギャラリーが新規掲載', aud: 'ウォッチ元ユーザー', source: '展覧会/作品/記事の公開', timing: '公開時（バッチ可）', subject: '', body: '', note: '', updatedAt: '2026.8.9' },
+    { id: 'E-01', category: 'exhibition', event: '管理者確認済のオーナーへ通知', aud: '展覧会オーナー（クリエイター/ギャラリー）', source: 'p2-11 admin confirm', timing: '確認完了時（自動）',
+      subject: '【個展なび】「{{exhibitionName}}」の内容を確認しました', body: AUTO_BODY_E01, note: 'docs/email-templates.md E-01 と同内容。', updatedAt: '2026.8.27' },
   ];
-  var AUTO_CATEGORY_ORDER = ['apply', 'txn', 'activity'];
+  var AUTO_CATEGORY_ORDER = ['apply', 'txn', 'activity', 'exhibition'];
   function findAuto(id) {
     for (var i = 0; i < AUTO_TRIGGERS.length; i++) if (AUTO_TRIGGERS[i].id === id) return AUTO_TRIGGERS[i];
     return null;
@@ -11425,93 +11642,233 @@ KTN.pages['p90-9'] = function () {
 
 /* ════════════════════════════════════════════════════
    P3-13  クリエイター-オーディエンス管理（p4-13=ギャラリー版と対）
-   「ウォッチャー」（自分をウォッチしているアカウント）と「チェックイン」（自分の展覧会＝
-   投稿・参加のいずれも対象にチェックインしたアカウント）をタブで切替表示する。
+   既定表示は「すべて」＝ウォッチャー・チェックインを横断した全オーディエンス（2026-08-28 追加）。
+   「ウォッチャー」（自分をウォッチしているアカウント）「チェックイン」（自分の展覧会＝
+   投稿・参加のいずれも対象にチェックインしたアカウント）「ウォッチャー×チェックイン」（両方）は
+   その「すべて」を絞り込むフィルタータブという位置づけ。
    ウォッチ元・チェックイン元は一般ユーザー・クリエイター・ギャラリーいずれもありうるが、
    watch/checkinはユーザー機能として定義しているため種別（ロール）の絞り込みUIは持たない
    （ウォッチ対象になれるのはクリエイター・ギャラリーのみだが、ウォッチ/チェックインする側の種別は意識させない）。
    一覧行はどちらのタブも .p2-watcher-item/.p2-watcher-list（p2ウォッチャーモーダルと同一部品）を流用。
-   カウンターはp2モーダルと同じ並び（ウォッチ数→チェックイン数→興味あり数）で揃え、
-   ウォッチ数＝このアカウントがサイト全体でウォッチしている先（クリエイター・ギャラリー）の総数。
    総ウォッチャー数・新規ウォッチャー・チェックイン人数（過去30日）の数値はp3-12インサイトの同項目と揃えている。
+
+   データは PEOPLE 1本（人物の重複を作らない・2026-08-28 統合）。旧実装はWATCHERS/CHECKINSを
+   別配列で持ち、同一人物でもタブごとに数値が食い違っていた（例：ウォッチ側「チェックイン3回」
+   なのにチェックイン側の来場履歴は1件、等）。統合により「ウォッチしていて、かつ来場歴もある」
+   人物が両タブで矛盾なく確認できる（ユーザー要望①）。
+   各人物 { watching（このオーナーをウォッチ中か）, since/ts（ウォッチ開始日・watching時のみ意味を持つ）,
+     visits[]（来場履歴：exh/exhName/period/date/ts。0件＝チェックインなし）, interest（このオーナーの
+     作品への興味あり数） }。すべてタブ＝watching||visits.length>0対象、ウォッチャータブ＝watching対象、
+     チェックインタブ＝visits.length>0対象を、このPEOPLEから抽出して表示するのみで、別データソースを持たない。
+   「エンゲージメントが多い順」＝ watching(+1) + 来場回数 + 興味あり数 の単純合計（このオーナーへの
+   行動のみで算出。旧実装はサイト全体の総ウォッチ数を含めていたが、それは「このオーナーへの関心」で
+   はなく「サイト全体でどれだけ活発なユーザーか」を測ってしまうため2026-08-28に除外）。
+   「最近アクティブな順」＝ ウォッチ開始日／直近の来場日のうち新しい方（ユーザー要望②）。
+   来場2回以上の人物には「リピーター」タグを表示（ユーザー要望③・p3-12のリピーター概念と接続）。
 ════════════════════════════════════════════════════ */
 KTN.pages['p3-13'] = function () {
 
-  /* ── タブ切替（ウォッチャー／チェックイン） ── */
-  var tabsEl = document.getElementById('p313Tabs');
-  if (tabsEl) {
-    var panels = { watch: document.getElementById('p313PanelWatch'), checkin: document.getElementById('p313PanelCheckin') };
-    tabsEl.querySelectorAll('.p313-tab').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        var key = btn.dataset.tab;
-        tabsEl.querySelectorAll('.p313-tab').forEach(function (b) { b.classList.toggle('is-active', b === btn); });
-        Object.keys(panels).forEach(function (k) { if (panels[k]) panels[k].hidden = (k !== key); });
-      });
-    });
-  }
+  var SVG_W   = '<svg viewBox="0 0 16 16" fill="none" width="11" height="11"><circle cx="8" cy="8" r="7" fill="#3a90e0"/><circle cx="8" cy="8" r="2.6" fill="#fff"/></svg>';
+  var SVG_C   = '<svg viewBox="0 0 16 16" fill="none" width="11" height="11"><circle cx="10" cy="5" r="4" fill="#3a90e0"/><circle cx="5" cy="11" r="2.4" fill="#3a90e0"/></svg>';
+  var SVG_I   = '<svg viewBox="0 0 16 16" fill="none" width="11" height="11"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6" stroke-linejoin="round"/></svg>';
+  var SVG_COL = '<svg viewBox="0 0 16 16" fill="none" width="11" height="11"><rect x="2" y="2" width="12" height="12" rx="1.5" stroke="#4da3f5" stroke-width="1.4"/><rect x="4.5" y="4.5" width="7" height="7" rx=".5" stroke="#4da3f5" stroke-width="1"/></svg>';
 
-  var SVG_W = '<svg viewBox="0 0 16 16" fill="none" width="11" height="11"><circle cx="8" cy="8" r="7" fill="#3a90e0"/><circle cx="8" cy="8" r="2.6" fill="#fff"/></svg>';
-  var SVG_C = '<svg viewBox="0 0 16 16" fill="none" width="11" height="11"><circle cx="10" cy="5" r="4" fill="#3a90e0"/><circle cx="5" cy="11" r="2.4" fill="#3a90e0"/></svg>';
-  var SVG_I = '<svg viewBox="0 0 16 16" fill="none" width="11" height="11"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6" stroke-linejoin="round"/></svg>';
-  var SVG_C_GRAY = '<svg viewBox="0 0 16 16" fill="none" width="10" height="10"><circle cx="10" cy="5" r="4" fill="#9aa3ac"/><circle cx="5" cy="11" r="2.4" fill="#9aa3ac"/></svg>';
-  var SVG_W_GRAY = '<svg viewBox="0 0 16 16" fill="none" width="10" height="10"><circle cx="8" cy="8" r="7" fill="#9aa3ac"/><circle cx="8" cy="8" r="2.6" fill="#fff"/></svg>';
-
-  /* ── サンプルデータ（田中透をウォッチしているアカウント）──
-     type＝user/creator/gallery（アカウント種別の参考情報。ウォッチ/チェックインはuserとしての機能のため、アバター形状は種別によらず常に .p2-watcher-item__avatar--user＝円形で統一）。
-     watch＝このアカウントがサイト全体でウォッチしている先（クリエイター・ギャラリー）の総数＝p2ウォッチャーモーダルと同じSVG_W。
-     checkin＝田中透の展覧会へのチェックイン回数、interest＝田中透の作品への興味あり！件数。
-     since＝ウォッチ開始日（表示用）、ts＝並べ替え用の数値キー。 */
-  var WATCHERS = [
-    { id:'w1',  name:'佐藤 美咲',        type:'user',    color:'linear-gradient(145deg,#a8b8c8,#6a8098)', watch:12, checkin:3, interest:5, since:'2026.5.20', ts:20260520 },
-    { id:'w2',  name:'高橋 陶子',        type:'creator', color:'linear-gradient(145deg,#6a9aaa,#2a6a8a)', watch:8,  checkin:1, interest:2, since:'2026.4.2',  ts:20260402 },
-    { id:'w3',  name:'Gallery MUKU',    type:'gallery', color:'linear-gradient(145deg,#c8b89a,#a09070)', watch:6,  checkin:2, interest:0, since:'2026.3.14', ts:20260314 },
-    { id:'w4',  name:'中村 拓也',        type:'user',    color:'linear-gradient(145deg,#c8a8b8,#986878)', watch:4,  checkin:0, interest:1, since:'2026.6.1',  ts:20260601 },
-    { id:'w5',  name:'木村 彩',          type:'user',    color:'linear-gradient(145deg,#b8c8a8,#789068)', watch:9,  checkin:1, interest:3, since:'2026.5.2',  ts:20260502 },
-    { id:'w6',  name:'渡辺 硝子',        type:'creator', color:'linear-gradient(145deg,#aa7a9a,#7a3a6a)', watch:15, checkin:0, interest:4, since:'2026.2.18', ts:20260218 },
-    { id:'w7',  name:'Gallery SOIL 渋谷', type:'gallery', color:'linear-gradient(145deg,#9ab8c8,#6a8898)', watch:11, checkin:4, interest:1, since:'2026.1.9',  ts:20260109 },
-    { id:'w8',  name:'小林 志保',        type:'user',    color:'linear-gradient(145deg,#8a9aaa,#4a5a7a)', watch:7,  checkin:2, interest:2, since:'2026.5.28', ts:20260528 },
-    { id:'w9',  name:'加藤 蒼',          type:'user',    color:'linear-gradient(145deg,#a8b8c8,#6a8098)', watch:2,  checkin:0, interest:0, since:'2026.6.10', ts:20260610 },
-    { id:'w10', name:'吉田 織部',        type:'creator', color:'linear-gradient(145deg,#8aaa6a,#4a7a2a)', watch:10, checkin:1, interest:1, since:'2026.3.30', ts:20260330 },
-    { id:'w11', name:'山本 結',          type:'user',    color:'linear-gradient(145deg,#c8a8b8,#986878)', watch:18, checkin:3, interest:6, since:'2026.4.25', ts:20260425 },
-    { id:'w12', name:'Gallery 灯',       type:'gallery', color:'linear-gradient(145deg,#b8a8c8,#8878a8)', watch:5,  checkin:1, interest:0, since:'2026.2.5',  ts:20260205 },
-    { id:'w13', name:'鈴木 遥',          type:'user',    color:'linear-gradient(145deg,#b8c8a8,#789068)', watch:3,  checkin:0, interest:2, since:'2026.6.15', ts:20260615 },
-    { id:'w14', name:'松本 版画',        type:'creator', color:'linear-gradient(145deg,#aaaa6a,#7a7a1a)', watch:13, checkin:2, interest:3, since:'2026.1.22', ts:20260122 },
+  /* ── サンプルデータ（田中透に関わるアカウント）── ウォッチ/チェックイン/興味あり/コレクションはユーザーロール専用の
+     サービス機能のため、オーディエンスリストに載るアカウントは常にユーザー種別（バッジ・アバター形状も常にuser）。
+     watchCount/checkinCount/interest/collectionCount＝サイト全体の活動量（.uc カード共通カウンターと同じ指標）。
+     watching/since/ts/visits＝この作家への関係（ウォッチ中か・この作家の展覧会への来場履歴）で別スコープ。
+     exh＝p3-18のEXHIBITIONSと同一id（x4/x5/x7）。 */
+  var PEOPLE = [
+    { id:'p1',  name:'佐藤 美咲', color:'linear-gradient(145deg,#a8b8c8,#6a8098)', watching:true,  since:'2026.5.20', ts:20260520, watchCount:12, checkinCount:6,  interest:5,
+      visits:[ { exh:'x4', exhName:'水のうつわ、光のかけら', period:'2026.7.20 - 2026.8.10', date:'2026.7.22', ts:20260722, reason:'sns' } ] },
+    { id:'p2',  name:'高橋 陶子', color:'linear-gradient(145deg,#6a9aaa,#2a6a8a)', watching:true,  since:'2026.4.2',  ts:20260402, watchCount:34, checkinCount:15, interest:2, collectionCount:3,
+      memo:'器の色味の系統（青灰色）が好みとのこと。初日と最終日近くに2回来場。次回は在廊日を事前にお伝えすると喜ばれそう。',
+      visits:[
+        { exh:'x4', exhName:'水のうつわ、光のかけら', period:'2026.7.20 - 2026.8.10', date:'2026.7.25', ts:20260725, reason:'know' },
+        { exh:'x4', exhName:'水のうつわ、光のかけら', period:'2026.7.20 - 2026.8.10', date:'2026.8.9',  ts:20260809, reason:'know' },
+      ] },
+    { id:'p3',  name:'村上 陽子', color:'linear-gradient(145deg,#c8b89a,#a09070)', watching:true,  since:'2026.3.14', ts:20260314, watchCount:5,  checkinCount:2,  interest:0, visits:[] },
+    { id:'p4',  name:'中村 拓也', color:'linear-gradient(145deg,#c8a8b8,#986878)', watching:true,  since:'2026.6.1',  ts:20260601, watchCount:8,  checkinCount:4,  interest:1,
+      visits:[ { exh:'x4', exhName:'水のうつわ、光のかけら', period:'2026.7.20 - 2026.8.10', date:'2026.7.30', ts:20260730, reason:'kotennavi' } ] },
+    { id:'p5',  name:'木村 彩', color:'linear-gradient(145deg,#b8c8a8,#789068)', watching:true,  since:'2026.5.2',  ts:20260502, watchCount:15, checkinCount:7,  interest:3,
+      visits:[ { exh:'x5', exhName:'まなざしの重奏', period:'2026.7.25 - 2026.8.5', date:'2026.7.28', ts:20260728, reason:'sns' } ] },
+    { id:'p6',  name:'渡辺 硝子', color:'linear-gradient(145deg,#aa7a9a,#7a3a6a)', watching:true,  since:'2026.2.18', ts:20260218, watchCount:28, checkinCount:11, interest:4, collectionCount:2,
+      visits:[ { exh:'x5', exhName:'まなざしの重奏', period:'2026.7.25 - 2026.8.5', date:'2026.7.29', ts:20260729, reason:'dm' } ] },
+    { id:'p7',  name:'橋本 尚美', color:'linear-gradient(145deg,#9ab8c8,#6a8898)', watching:true,  since:'2026.1.9',  ts:20260109, watchCount:9,  checkinCount:3,  interest:1,
+      visits:[ { exh:'x4', exhName:'水のうつわ、光のかけら', period:'2026.7.20 - 2026.8.10', date:'2026.7.27', ts:20260727, reason:'referral' } ] },
+    { id:'p8',  name:'小林 志保', color:'linear-gradient(145deg,#8a9aaa,#4a5a7a)', watching:true,  since:'2026.5.28', ts:20260528, watchCount:11, checkinCount:5,  interest:2,
+      visits:[ { exh:'x7', exhName:'ことばの余白', period:'2025.12.1 - 2025.12.20', date:'2025.12.10', ts:20251210, reason:'sns' } ] },
+    { id:'p9',  name:'加藤 蒼', color:'linear-gradient(145deg,#a8b8c8,#6a8098)', watching:true,  since:'2026.6.10', ts:20260610, watchCount:3,  checkinCount:1,  interest:0, visits:[] },
+    { id:'p10', name:'吉田 織部', color:'linear-gradient(145deg,#8aaa6a,#4a7a2a)', watching:true,  since:'2026.3.30', ts:20260330, watchCount:19, checkinCount:8,  interest:1,
+      visits:[ { exh:'x7', exhName:'ことばの余白', period:'2025.12.1 - 2025.12.20', date:'2025.12.18', ts:20251218, reason:'walkby' } ] },
+    { id:'p11', name:'山本 結', color:'linear-gradient(145deg,#c8a8b8,#986878)', watching:true,  since:'2026.4.25', ts:20260425, watchCount:48, checkinCount:23, interest:6, collectionCount:5,
+      visits:[
+        { exh:'x7', exhName:'ことばの余白', period:'2025.12.1 - 2025.12.20', date:'2025.12.19', ts:20251219, reason:'know' },
+        { exh:'x5', exhName:'まなざしの重奏', period:'2026.7.25 - 2026.8.5', date:'2026.7.31', ts:20260731, reason:'sns' },
+      ] },
+    { id:'p12', name:'石田 明里', color:'linear-gradient(145deg,#b8a8c8,#8878a8)', watching:true,  since:'2026.2.5',  ts:20260205, watchCount:6,  checkinCount:3,  interest:0,
+      visits:[ { exh:'x7', exhName:'ことばの余白', period:'2025.12.1 - 2025.12.20', date:'2025.12.14', ts:20251214, reason:'kotennavi' } ] },
+    { id:'p13', name:'鈴木 遥', color:'linear-gradient(145deg,#b8c8a8,#789068)', watching:true,  since:'2026.6.15', ts:20260615, watchCount:10, checkinCount:2,  interest:2, visits:[] },
+    { id:'p14', name:'松本 版画', color:'linear-gradient(145deg,#aaaa6a,#7a7a1a)', watching:true,  since:'2026.1.22', ts:20260122, watchCount:22, checkinCount:9,  interest:3, visits:[] },
+    { id:'p15', name:'岡田 陸', color:'linear-gradient(145deg,#9ab0c0,#5a7898)', watching:false, watchCount:7,  checkinCount:4,  interest:1,
+      visits:[ { exh:'x4', exhName:'水のうつわ、光のかけら', period:'2026.7.20 - 2026.8.10', date:'2026.7.24', ts:20260724, reason:'other' } ] },
+    { id:'p16', name:'福田 玲奈', color:'linear-gradient(145deg,#c8b0a0,#987860)', watching:false, watchCount:4,  checkinCount:2,  interest:0,
+      visits:[ { exh:'x5', exhName:'まなざしの重奏', period:'2026.7.25 - 2026.8.5', date:'2026.8.1',  ts:20260801, reason:'kotennavi' } ] },
   ];
 
-  var listEl  = document.getElementById('p313List');
-  var emptyEl = document.getElementById('p313Empty');
-  var sortSel = document.getElementById('p313Sort');
-  var countEl = document.getElementById('p313Count');
-  var pagerEl = document.getElementById('p313Pagination');
-  if (!listEl || !sortSel) return;
+  /* 注目のオーディエンス：常連のファン＝チェックイン回数上位／最近つながった人＝ウォッチ開始・来場のうち
+     最も新しい出来事順。一覧（PEOPLE）と同じデータソースだが、管理・検索でなく発見・称賛が目的の別コンポーネント。 */
+  (function renderSpotlight() {
+    var regularsEl = document.getElementById('p313SpotlightRegulars');
+    var recentEl   = document.getElementById('p313SpotlightRecent');
+    if (!regularsEl && !recentEl) return;
 
-  var page = 1;
-  var PER_PAGE = 8;
+    function chip(p, metaText) {
+      return '<a href="kotennavi-p5.html" class="p313-spotlight-chip">' +
+        '<span class="p313-spotlight-chip__avatar" style="background:' + p.color + '">' + p.name.charAt(0) + '</span>' +
+        '<span class="p313-spotlight-chip__body">' +
+          '<span class="p313-spotlight-chip__name">' + p.name + '</span>' +
+          '<span class="p313-spotlight-chip__meta">' + metaText + '</span>' +
+        '</span>' +
+      '</a>';
+    }
 
-  var SORTS = {
-    'since-desc':  function (a, b) { return b.ts - a.ts; },
-    'since-asc':   function (a, b) { return a.ts - b.ts; },
-    'name':        function (a, b) { return a.name.localeCompare(b.name, 'ja'); },
-    'engage-desc': function (a, b) { return (b.watch + b.checkin + b.interest) - (a.watch + a.checkin + a.interest); },
-  };
+    if (regularsEl) {
+      var regulars = PEOPLE.filter(function (p) { return p.visits.length > 0; })
+        .sort(function (a, b) { return b.visits.length - a.visits.length; })
+        .slice(0, 3);
+      regularsEl.innerHTML = regulars.length
+        ? regulars.map(function (p) { return chip(p, 'チェックイン ' + p.visits.length + '回'); }).join('')
+        : '<p class="p313-spotlight__empty">まだ来場記録がありません</p>';
+    }
 
-  function makeItem(w) {
+    if (recentEl) {
+      function recentInfo(p) {
+        var watchTs = p.watching ? p.ts : 0;
+        var latestVisit = p.visits.length ? p.visits.reduce(function (m, v) { return v.ts > m.ts ? v : m; }) : null;
+        var visitTs = latestVisit ? latestVisit.ts : 0;
+        if (visitTs > watchTs) return { ts: visitTs, label: 'チェックイン ' + latestVisit.date };
+        if (watchTs > 0)       return { ts: watchTs, label: 'ウォッチ開始 ' + p.since };
+        return { ts: 0, label: '' };
+      }
+      var recent = PEOPLE.map(function (p) { return { p: p, info: recentInfo(p) }; })
+        .filter(function (x) { return x.info.ts > 0; })
+        .sort(function (a, b) { return b.info.ts - a.info.ts; })
+        .slice(0, 3);
+      recentEl.innerHTML = recent.length
+        ? recent.map(function (x) { return chip(x.p, x.info.label); }).join('')
+        : '<p class="p313-spotlight__empty">まだつながりがありません</p>';
+    }
+  })();
+
+  function esc(s) { var d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+
+  function makeItem(p, idSuffix) {
+    var visitsSorted = p.visits.slice().sort(function (a, b) { return b.ts - a.ts; });
+    var ckId = 'p313ck-' + (idSuffix || p.id);
+    var memoId = 'p313memo-' + (idSuffix || p.id);
+    var visitsHtml = visitsSorted.length ? '<div class="p313-ck-visits" id="' + ckId + '" hidden>' + visitsSorted.map(function (v) {
+      return '<div class="p313-ck-visit">' +
+        '<span class="p313-ck-visit__date">' + v.date + '</span>' +
+        '<span class="p313-ck-visit__exh"><span class="ins-item-list__link-mark">展覧会</span><a class="p313-ck-visit__exh-link" href="kotennavi-p2.html">' + v.exhName + '</a> · ' + v.period + '</span>' +
+        (v.reason ? '<span class="p313-ck-visit__reason">来場のきっかけ：' + ktnCheckinReasonLabel(v.reason) + '</span>' : '') +
+      '</div>';
+    }).join('') + '</div>' : '';
+    /* トリガーは右カラム（.p313-rel）内・リスト本体は左右カラムの下に全幅で展開＝
+       position別のためnative<details>でなくJS制御（aria-expanded＋hidden）で連結 */
+    var toggleBtnHtml = visitsSorted.length ? '<button type="button" class="p313-ck-trigger" aria-expanded="false" aria-controls="' + ckId + '">来場履歴を見る（' + visitsSorted.length + '件）</button>' : '';
+    /* 非公開メモ：ウォッチ/チェックインの記録とは別スコープ（(オーナー,この人物)ペアに紐づく独立データ）＝
+       ウォッチ解除・チェックイン取消があっても消えない設計を想定（デモではPEOPLE配列上のp.memoに保持） */
+    var memoBtnHtml = '<button type="button" class="p313-memo-trigger" aria-expanded="false" aria-controls="' + memoId + '">' + (p.memo ? 'メモを見る・編集' : 'メモを追加') + '</button>';
+    var memoHtml = '<div class="p313-memo" id="' + memoId + '" data-pid="' + p.id + '" hidden>' +
+      '<textarea class="p313-memo__input" placeholder="この人についてのメモ（例：話した内容・好みの作風・対応の注意点など）">' + esc(p.memo) + '</textarea>' +
+      '<div class="p313-memo__foot">' +
+        '<span class="p313-memo__note">オーナーのみ閲覧できます</span>' +
+        '<button type="button" class="ktn-op-btn ktn-op-btn--primary ktn-op-btn--sm p313-memo__save">保存</button>' +
+      '</div>' +
+    '</div>';
     return '<div class="p2-watcher-item">' +
-      '<a href="#" class="p2-watcher-item__avatar p2-watcher-item__avatar--user" style="background:' + w.color + '">' + w.name.charAt(0) + '</a>' +
-      '<div class="p2-watcher-item__info">' +
-        '<a href="#" class="p2-watcher-item__name">' + w.name + '</a>' +
-        '<div class="p2-watcher-item__counts">' +
-          '<span class="p2-watcher-item__count">' + SVG_W + w.watch + '</span>' +
-          '<span class="p2-watcher-item__count">' + SVG_C + w.checkin + '</span>' +
-          '<span class="p2-watcher-item__count">' + SVG_I + w.interest + '</span>' +
+      '<a href="kotennavi-p5.html" class="p2-watcher-item__avatar p2-watcher-item__avatar--user" style="background:' + p.color + '">' + p.name.charAt(0) + '</a>' +
+      '<div class="p2-watcher-item__info p313-item-info">' +
+        '<div class="p313-item-main">' +
+          '<div class="uc__badge-row"><span class="cb cb-person cb-user">user</span></div>' +
+          '<a href="kotennavi-p5.html" class="p2-watcher-item__name">' + p.name + '</a>' +
+          '<div class="uc__counts">' +
+            '<span class="uc__count">' + SVG_W + p.watchCount + '</span>' +
+            '<span class="sep"></span>' +
+            '<span class="uc__count">' + SVG_C + p.checkinCount + '</span>' +
+            '<span class="sep"></span>' +
+            '<span class="uc__count">' + SVG_I + p.interest + '</span>' +
+            (p.collectionCount ? '<span class="sep"></span><span class="uc__count uc__count--collection">' + SVG_COL + p.collectionCount + '</span>' : '') +
+          '</div>' +
         '</div>' +
-        '<div class="p313-w-since">' + SVG_W_GRAY + w.since + '</div>' +
+        '<div class="p313-rel">' +
+          (p.watching ? '<p class="p313-rel__line">ウォッチ中<span class="p313-rel__since">・' + p.since + '〜</span></p>' : '') +
+          '<p class="p313-rel__line">チェックイン <strong>' + p.visits.length + '</strong>回</p>' +
+          toggleBtnHtml +
+          memoBtnHtml +
+        '</div>' +
+        visitsHtml +
+        memoHtml +
       '</div>' +
     '</div>';
   }
 
+  /* ── 一覧（PEOPLE全件を単一リストにし、フィルターチップで絞り込み） ── */
+  var listEl   = document.getElementById('p313List');
+  var emptyEl  = document.getElementById('p313Empty');
+  var sortSel  = document.getElementById('p313Sort');
+  var countEl  = document.getElementById('p313Count');
+  var pagerEl  = document.getElementById('p313Pagination');
+  var filterNav = document.getElementById('p313FilterTabs');
+  var exhWrap  = document.getElementById('p313ExhFilterWrap');
+  var exhSel   = document.getElementById('p313CkFilterExh');
+  if (!listEl || !sortSel || !filterNav) return;
+
+  var page = 1;
+  var PER_PAGE = 8;
+  var viewFilter = 'all';
+
+  function sinceTs(p) { return p.watching ? p.ts : null; }
+  function checkinLatestTs(p) { return p.visits.length ? Math.max.apply(null, p.visits.map(function (v) { return v.ts; })) : null; }
+
+  var SORTS = {
+    'since-desc': function (a, b) {
+      var at = sinceTs(a), bt = sinceTs(b);
+      if (at == null && bt == null) return 0;
+      if (at == null) return 1;
+      if (bt == null) return -1;
+      return bt - at;
+    },
+    'checkin-desc': function (a, b) {
+      var at = checkinLatestTs(a), bt = checkinLatestTs(b);
+      if (at == null && bt == null) return 0;
+      if (at == null) return 1;
+      if (bt == null) return -1;
+      return bt - at;
+    },
+    'count-desc': function (a, b) { return b.visits.length - a.visits.length; },
+    'name':       function (a, b) { return a.name.localeCompare(b.name, 'ja'); },
+  };
+
+  function matchesFilter(p) {
+    if (viewFilter === 'all')     return p.watching || p.visits.length > 0; /* ウォッチャー・チェックインを横断したすべて＝既定表示 */
+    if (viewFilter === 'watch')   return p.watching;
+    if (viewFilter === 'checkin') return p.visits.length > 0;
+    return p.watching && p.visits.length > 0; /* both */
+  }
+
+  function syncExhVisibility() {
+    if (exhWrap) exhWrap.hidden = (viewFilter === 'watch');
+  }
+
   function render() {
-    var rows = WATCHERS.slice();
+    var fe = (exhSel && exhWrap && !exhWrap.hidden) ? exhSel.value : '';
+    var rows = PEOPLE.filter(function (p) {
+      if (!matchesFilter(p)) return false;
+      if (fe && !p.visits.some(function (v) { return v.exh === fe; })) return false;
+      return true;
+    });
     rows.sort(SORTS[sortSel.value] || SORTS['since-desc']);
     if (countEl) countEl.textContent = rows.length + '件';
     if (emptyEl) emptyEl.hidden = rows.length !== 0;
@@ -11519,7 +11876,7 @@ KTN.pages['p3-13'] = function () {
     var totalPages = Math.max(1, Math.ceil(rows.length / PER_PAGE));
     if (page > totalPages) page = totalPages;
     var pageRows = rows.slice((page - 1) * PER_PAGE, page * PER_PAGE);
-    listEl.innerHTML = pageRows.map(makeItem).join('');
+    listEl.innerHTML = pageRows.map(function (p) { return makeItem(p); }).join('');
     KTN.pagination.render(pagerEl, {
       page: page,
       totalPages: totalPages,
@@ -11528,8 +11885,149 @@ KTN.pages['p3-13'] = function () {
   }
 
   function renderReset() { page = 1; render(); }
+
+  filterNav.querySelectorAll('.p313-tab').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      viewFilter = btn.dataset.filter;
+      filterNav.querySelectorAll('.p313-tab').forEach(function (b) { b.classList.toggle('is-active', b === btn); });
+      syncExhVisibility();
+      renderReset();
+    });
+  });
+  if (exhSel) exhSel.addEventListener('change', renderReset);
   sortSel.addEventListener('change', renderReset);
+
+  /* 来場履歴トグル・メモ開閉/保存：再描画のたびにDOMが差し替わるため委譲（listEl／exhCkListEl共通で使う） */
+  function handleAudienceItemClick(e) {
+    var ckBtn = e.target.closest('.p313-ck-trigger');
+    if (ckBtn) {
+      var target = document.getElementById(ckBtn.getAttribute('aria-controls'));
+      if (!target) return;
+      var open = ckBtn.getAttribute('aria-expanded') === 'true';
+      ckBtn.setAttribute('aria-expanded', String(!open));
+      target.hidden = open;
+      return;
+    }
+    var memoBtn = e.target.closest('.p313-memo-trigger');
+    if (memoBtn) {
+      var memoTarget = document.getElementById(memoBtn.getAttribute('aria-controls'));
+      if (!memoTarget) return;
+      var memoOpen = memoBtn.getAttribute('aria-expanded') === 'true';
+      memoBtn.setAttribute('aria-expanded', String(!memoOpen));
+      memoTarget.hidden = memoOpen;
+      if (!memoOpen) {
+        var ta = memoTarget.querySelector('.p313-memo__input');
+        if (ta) ta.focus();
+      }
+      return;
+    }
+    var saveBtn = e.target.closest('.p313-memo__save');
+    if (saveBtn) {
+      var panel = saveBtn.closest('.p313-memo');
+      if (!panel) return;
+      var pid = panel.dataset.pid;
+      var person = PEOPLE.filter(function (x) { return x.id === pid; })[0];
+      if (!person) return;
+      var input = panel.querySelector('.p313-memo__input');
+      person.memo = input ? input.value.trim() : '';
+      var trigger = document.querySelector('[aria-controls="' + panel.id + '"]');
+      if (trigger) trigger.textContent = person.memo ? 'メモを見る・編集' : 'メモを追加';
+      KTN.toast('メモを保存しました（自分のみ閲覧可）');
+    }
+  }
+
+  listEl.addEventListener('click', handleAudienceItemClick);
+
+  syncExhVisibility();
   render();
+
+  /* ── 展覧会別チェックインリスト：PEOPLEのvisitsを展覧会単位に集約（チェックインが1件もない展覧会は
+     マップに現れないため自然に除外される＝「チェックインのある展覧会だけを表示する」を満たす） ── */
+  function buildExhCheckins() {
+    var map = {};
+    PEOPLE.forEach(function (p) {
+      p.visits.forEach(function (v) {
+        if (!map[v.exh]) map[v.exh] = { exh: v.exh, exhName: v.exhName, period: v.period, people: [], reasonCounts: {} };
+        var g = map[v.exh];
+        var entry = g.people.filter(function (x) { return x.p.id === p.id; })[0];
+        if (!entry) { g.people.push({ p: p, ts: v.ts }); }
+        else if (v.ts > entry.ts) { entry.ts = v.ts; }
+        if (v.reason) g.reasonCounts[v.reason] = (g.reasonCounts[v.reason] || 0) + 1;
+      });
+    });
+    return Object.keys(map).map(function (k) { return map[k]; }).sort(function (a, b) {
+      var at = Math.max.apply(null, a.people.map(function (x) { return x.ts; }));
+      var bt = Math.max.apply(null, b.people.map(function (x) { return x.ts; }));
+      return bt - at;
+    });
+  }
+
+  /* 展覧会グループの「来場のきっかけ」内訳：件数降順・チェックイン時に必須化した2026-08-29以降のデータのみ集計対象 */
+  function reasonBreakdownHtml(reasonCounts) {
+    var ids = Object.keys(reasonCounts);
+    if (!ids.length) return '';
+    var sorted = ids.sort(function (a, b) { return reasonCounts[b] - reasonCounts[a]; });
+    var chips = sorted.map(function (id) {
+      return '<span class="p313-exh-ck-item__reason-chip">' + ktnCheckinReasonLabel(id) + ' ' + reasonCounts[id] + '</span>';
+    }).join('');
+    return '<div class="p313-exh-ck-item__reasons"><span class="p313-exh-ck-item__reasons-label">来場のきっかけ内訳</span>' + chips + '</div>';
+  }
+
+  function makeExhCkItem(group, idx) {
+    var peopleSorted = group.people.slice().sort(function (a, b) { return b.ts - a.ts; });
+    var bodyId = 'p313exhck-' + idx;
+    var cardsHtml = peopleSorted.map(function (entry) {
+      return makeItem(entry.p, entry.p.id + '-exh' + idx);
+    }).join('');
+    return '<div class="p313-exh-ck-item">' +
+      '<div class="p313-exh-ck-item__head" role="button" tabindex="0" aria-expanded="false" aria-controls="' + bodyId + '">' +
+        '<span class="p313-exh-ck-item__main">' +
+          '<a class="p313-exh-ck-item__name" href="kotennavi-p2.html" onclick="event.stopPropagation()">' + group.exhName + '</a>' +
+          '<span class="p313-exh-ck-item__period">' + group.period + '</span>' +
+        '</span>' +
+        '<span class="ktn-count">' + group.people.length + '人</span>' +
+      '</div>' +
+      reasonBreakdownHtml(group.reasonCounts) +
+      '<div class="p313-exh-ck-item__visitors" id="' + bodyId + '" hidden><div class="p2-watcher-list">' + cardsHtml + '</div></div>' +
+    '</div>';
+  }
+
+  var exhCkListEl  = document.getElementById('p313ExhCkList');
+  var exhCkEmptyEl = document.getElementById('p313ExhCkEmpty');
+  if (exhCkListEl) {
+    var exhCkGroups = buildExhCheckins();
+    exhCkListEl.innerHTML = exhCkGroups.map(makeExhCkItem).join('');
+    if (exhCkEmptyEl) exhCkEmptyEl.hidden = exhCkGroups.length !== 0;
+    exhCkListEl.addEventListener('click', function (e) {
+      if (e.target.closest('.p313-exh-ck-item__name')) return;
+      var headBtn = e.target.closest('.p313-exh-ck-item__head');
+      if (headBtn) {
+        var target = document.getElementById(headBtn.getAttribute('aria-controls'));
+        if (target) {
+          var open = headBtn.getAttribute('aria-expanded') === 'true';
+          headBtn.setAttribute('aria-expanded', String(!open));
+          target.hidden = open;
+        }
+        return;
+      }
+      handleAudienceItemClick(e);
+    });
+  }
+
+  /* ── ビュー切替：人にフォーカスするオーディエンスリスト／展覧会にフォーカスするチェックインリスト ── */
+  var viewTabsNav    = document.getElementById('p313ViewTabs');
+  var viewAudienceEl = document.getElementById('p313ViewAudience');
+  var viewExhEl      = document.getElementById('p313ViewExh');
+  if (viewTabsNav) {
+    viewTabsNav.querySelectorAll('.p313-view-tab').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var view = btn.dataset.view;
+        viewTabsNav.querySelectorAll('.p313-view-tab').forEach(function (b) { b.classList.toggle('is-active', b === btn); });
+        if (viewAudienceEl) viewAudienceEl.hidden = view !== 'audience';
+        if (viewExhEl) viewExhEl.hidden = view !== 'exhibition';
+      });
+    });
+  }
 
   /* ── 通知トグル（ウォッチャー・チェックイン共通の単一設定） ── */
   var notifySw = document.getElementById('p313NotifySw');
@@ -11542,115 +12040,6 @@ KTN.pages['p3-13'] = function () {
       if (KTN.toast) KTN.toast(on ? '新しいオーディエンスの通知をオンにしました' : '新しいオーディエンスの通知をオフにしました');
     });
   }
-
-  /* ── チェックイン一覧 ──
-     1行＝1人（人物の重複を作らない）。visits＝この人物がチェックインした履歴の配列
-     （exh＝p3-18のEXHIBITIONSと同一id・x4/x5/x7、exhName＝表示名、period＝会期、date/ts＝チェックイン日）。
-     同一人物が複数展覧会／複数回チェックインしていればvisitsが複数件になり、カード内に複数行で表示する
-     （カウンター行の下＝チェックイン日＋展覧会名・会期を1行、というユーザー指示に対応）。
-     watch/interest＝そのアカウントのサイト全体でのウォッチ数・興味あり数、checkin数はvisits.lengthから算出
-     （ウォッチャー一覧と同じ3アイコン・同じ順序＝ウォッチ→チェックイン→興味あり！）。 */
-  var CHECKINS = [
-    { id:'c1',  name:'佐藤 美咲',        type:'user',    color:'linear-gradient(145deg,#a8b8c8,#6a8098)', watch:12, interest:5,
-      visits:[ { exh:'x4', exhName:'水のうつわ、光のかけら', period:'2026.7.20 - 2026.8.10', date:'2026.7.22', ts:20260722 } ] },
-    { id:'c2',  name:'岡田 陸',          type:'user',    color:'linear-gradient(145deg,#9ab0c0,#5a7898)', watch:3,  interest:1,
-      visits:[ { exh:'x4', exhName:'水のうつわ、光のかけら', period:'2026.7.20 - 2026.8.10', date:'2026.7.24', ts:20260724 } ] },
-    { id:'c3',  name:'高橋 陶子',        type:'creator', color:'linear-gradient(145deg,#6a9aaa,#2a6a8a)', watch:8,  interest:2,
-      visits:[
-        { exh:'x4', exhName:'水のうつわ、光のかけら', period:'2026.7.20 - 2026.8.10', date:'2026.7.25', ts:20260725 },
-        { exh:'x4', exhName:'水のうつわ、光のかけら', period:'2026.7.20 - 2026.8.10', date:'2026.8.9',  ts:20260809 },
-      ] },
-    { id:'c4',  name:'Gallery SOIL 渋谷', type:'gallery', color:'linear-gradient(145deg,#9ab8c8,#6a8898)', watch:11, interest:1,
-      visits:[ { exh:'x4', exhName:'水のうつわ、光のかけら', period:'2026.7.20 - 2026.8.10', date:'2026.7.27', ts:20260727 } ] },
-    { id:'c5',  name:'中村 拓也',        type:'user',    color:'linear-gradient(145deg,#c8a8b8,#986878)', watch:4,  interest:1,
-      visits:[ { exh:'x4', exhName:'水のうつわ、光のかけら', period:'2026.7.20 - 2026.8.10', date:'2026.7.30', ts:20260730 } ] },
-    { id:'c6',  name:'木村 彩',          type:'user',    color:'linear-gradient(145deg,#b8c8a8,#789068)', watch:9,  interest:3,
-      visits:[ { exh:'x5', exhName:'まなざしの重奏', period:'2026.7.25 - 2026.8.5', date:'2026.7.28', ts:20260728 } ] },
-    { id:'c7',  name:'渡辺 硝子',        type:'creator', color:'linear-gradient(145deg,#aa7a9a,#7a3a6a)', watch:15, interest:4,
-      visits:[ { exh:'x5', exhName:'まなざしの重奏', period:'2026.7.25 - 2026.8.5', date:'2026.7.29', ts:20260729 } ] },
-    { id:'c8',  name:'福田 玲奈',        type:'user',    color:'linear-gradient(145deg,#c8b0a0,#987860)', watch:1,  interest:0,
-      visits:[ { exh:'x5', exhName:'まなざしの重奏', period:'2026.7.25 - 2026.8.5', date:'2026.8.1',  ts:20260801 } ] },
-    { id:'c9',  name:'小林 志保',        type:'user',    color:'linear-gradient(145deg,#8a9aaa,#4a5a7a)', watch:7,  interest:2,
-      visits:[ { exh:'x7', exhName:'ことばの余白', period:'2025.12.1 - 2025.12.20', date:'2025.12.10', ts:20251210 } ] },
-    { id:'c10', name:'Gallery 灯',       type:'gallery', color:'linear-gradient(145deg,#b8a8c8,#8878a8)', watch:5,  interest:0,
-      visits:[ { exh:'x7', exhName:'ことばの余白', period:'2025.12.1 - 2025.12.20', date:'2025.12.14', ts:20251214 } ] },
-    { id:'c11', name:'吉田 織部',        type:'creator', color:'linear-gradient(145deg,#8aaa6a,#4a7a2a)', watch:10, interest:1,
-      visits:[ { exh:'x7', exhName:'ことばの余白', period:'2025.12.1 - 2025.12.20', date:'2025.12.18', ts:20251218 } ] },
-    { id:'c12', name:'山本 結',          type:'user',    color:'linear-gradient(145deg,#c8a8b8,#986878)', watch:18, interest:6,
-      visits:[
-        { exh:'x7', exhName:'ことばの余白', period:'2025.12.1 - 2025.12.20', date:'2025.12.19', ts:20251219 },
-        { exh:'x5', exhName:'まなざしの重奏', period:'2026.7.25 - 2026.8.5', date:'2026.7.31', ts:20260731 },
-      ] },
-  ];
-
-  var ckListEl  = document.getElementById('p313CkList');
-  var ckEmptyEl = document.getElementById('p313CkEmpty');
-  var ckExhSel  = document.getElementById('p313CkFilterExh');
-  var ckSortSel = document.getElementById('p313CkSort');
-  var ckCountEl = document.getElementById('p313CkCount');
-  var ckPagerEl = document.getElementById('p313CkPagination');
-
-  if (ckListEl && ckExhSel && ckSortSel) {
-    var ckPage = 1;
-    var CK_PER_PAGE = 8;
-
-    function ckLatestTs(c) { return Math.max.apply(null, c.visits.map(function (v) { return v.ts; })); }
-    function ckEarliestTs(c) { return Math.min.apply(null, c.visits.map(function (v) { return v.ts; })); }
-
-    var CK_SORTS = {
-      'date-desc':   function (a, b) { return ckLatestTs(b) - ckLatestTs(a); },
-      'date-asc':    function (a, b) { return ckEarliestTs(a) - ckEarliestTs(b); },
-      'name':        function (a, b) { return a.name.localeCompare(b.name, 'ja'); },
-      'engage-desc': function (a, b) { return (b.watch + b.visits.length + b.interest) - (a.watch + a.visits.length + a.interest); },
-    };
-
-    var makeCkItem = function (c) {
-      var visitsSorted = c.visits.slice().sort(function (a, b) { return b.ts - a.ts; });
-      var visitsHtml = visitsSorted.map(function (v) {
-        return '<div class="p313-ck-visit">' +
-          '<span class="p313-ck-visit__date">' + SVG_C_GRAY + v.date + '</span>' +
-          '<span class="p313-ck-visit__exh"><span class="cb cb-content cb-exhibition">exhibition</span>' + v.exhName + ' · ' + v.period + '</span>' +
-        '</div>';
-      }).join('');
-      return '<div class="p2-watcher-item">' +
-        '<a href="#" class="p2-watcher-item__avatar p2-watcher-item__avatar--user" style="background:' + c.color + '">' + c.name.charAt(0) + '</a>' +
-        '<div class="p2-watcher-item__info">' +
-          '<a href="#" class="p2-watcher-item__name">' + c.name + '</a>' +
-          '<div class="p2-watcher-item__counts">' +
-            '<span class="p2-watcher-item__count">' + SVG_W + c.watch + '</span>' +
-            '<span class="p2-watcher-item__count">' + SVG_C + c.visits.length + '</span>' +
-            '<span class="p2-watcher-item__count">' + SVG_I + c.interest + '</span>' +
-          '</div>' +
-          '<div class="p313-ck-visits">' + visitsHtml + '</div>' +
-        '</div>' +
-      '</div>';
-    };
-
-    var renderCk = function () {
-      var fe = ckExhSel.value;
-      var rows = CHECKINS.filter(function (c) {
-        return !fe || c.visits.some(function (v) { return v.exh === fe; });
-      });
-      rows.sort(CK_SORTS[ckSortSel.value] || CK_SORTS['date-desc']);
-      if (ckCountEl) ckCountEl.textContent = rows.length + '件';
-      if (ckEmptyEl) ckEmptyEl.hidden = rows.length !== 0;
-
-      var totalPages = Math.max(1, Math.ceil(rows.length / CK_PER_PAGE));
-      if (ckPage > totalPages) ckPage = totalPages;
-      var pageRows = rows.slice((ckPage - 1) * CK_PER_PAGE, ckPage * CK_PER_PAGE);
-      ckListEl.innerHTML = pageRows.map(makeCkItem).join('');
-      KTN.pagination.render(ckPagerEl, {
-        page: ckPage,
-        totalPages: totalPages,
-        onGoto: function (p) { ckPage = p; renderCk(); },
-      });
-    };
-
-    var renderCkReset = function () { ckPage = 1; renderCk(); };
-    ckExhSel.addEventListener('change', renderCkReset);
-    ckSortSel.addEventListener('change', renderCkReset);
-    renderCk();
-  }
 };
 
 /* ════════════════════════════════════════════════════
@@ -11661,77 +12050,206 @@ KTN.pages['p3-13'] = function () {
 ════════════════════════════════════════════════════ */
 KTN.pages['p4-13'] = function () {
 
-  /* ── タブ切替（ウォッチャー／チェックイン） ── */
-  var tabsEl = document.getElementById('p413Tabs');
-  if (tabsEl) {
-    var panels = { watch: document.getElementById('p413PanelWatch'), checkin: document.getElementById('p413PanelCheckin') };
-    tabsEl.querySelectorAll('.p313-tab').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        var key = btn.dataset.tab;
-        tabsEl.querySelectorAll('.p313-tab').forEach(function (b) { b.classList.toggle('is-active', b === btn); });
-        Object.keys(panels).forEach(function (k) { if (panels[k]) panels[k].hidden = (k !== key); });
-      });
-    });
-  }
+  var SVG_W   = '<svg viewBox="0 0 16 16" fill="none" width="11" height="11"><circle cx="8" cy="8" r="7" fill="#3a90e0"/><circle cx="8" cy="8" r="2.6" fill="#fff"/></svg>';
+  var SVG_C   = '<svg viewBox="0 0 16 16" fill="none" width="11" height="11"><circle cx="10" cy="5" r="4" fill="#3a90e0"/><circle cx="5" cy="11" r="2.4" fill="#3a90e0"/></svg>';
+  var SVG_I   = '<svg viewBox="0 0 16 16" fill="none" width="11" height="11"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6" stroke-linejoin="round"/></svg>';
+  var SVG_COL = '<svg viewBox="0 0 16 16" fill="none" width="11" height="11"><rect x="2" y="2" width="12" height="12" rx="1.5" stroke="#4da3f5" stroke-width="1.4"/><rect x="4.5" y="4.5" width="7" height="7" rx=".5" stroke="#4da3f5" stroke-width="1"/></svg>';
 
-  var SVG_W = '<svg viewBox="0 0 16 16" fill="none" width="11" height="11"><circle cx="8" cy="8" r="7" fill="#3a90e0"/><circle cx="8" cy="8" r="2.6" fill="#fff"/></svg>';
-  var SVG_C = '<svg viewBox="0 0 16 16" fill="none" width="11" height="11"><circle cx="10" cy="5" r="4" fill="#3a90e0"/><circle cx="5" cy="11" r="2.4" fill="#3a90e0"/></svg>';
-  var SVG_I = '<svg viewBox="0 0 16 16" fill="none" width="11" height="11"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#3a90e0" stroke="#3a90e0" stroke-width=".6" stroke-linejoin="round"/></svg>';
-  var SVG_C_GRAY = '<svg viewBox="0 0 16 16" fill="none" width="10" height="10"><circle cx="10" cy="5" r="4" fill="#9aa3ac"/><circle cx="5" cy="11" r="2.4" fill="#9aa3ac"/></svg>';
-  var SVG_W_GRAY = '<svg viewBox="0 0 16 16" fill="none" width="10" height="10"><circle cx="8" cy="8" r="7" fill="#9aa3ac"/><circle cx="8" cy="8" r="2.6" fill="#fff"/></svg>';
-
-  /* ── サンプルデータ（Gallery SOIL 渋谷をウォッチしているアカウント）── p3-13と同じフィールド構成 */
-  var WATCHERS = [
-    { id:'w1',  name:'佐藤 美咲',        type:'user',    color:'linear-gradient(145deg,#a8b8c8,#6a8098)', watch:9,  checkin:2, interest:3, since:'2026.5.18', ts:20260518 },
-    { id:'w2',  name:'田中 透',          type:'creator', color:'linear-gradient(145deg,#7ab4cc,#4a8099)', watch:6,  checkin:1, interest:1, since:'2026.4.30', ts:20260430 },
-    { id:'w3',  name:'Gallery 灯',       type:'gallery', color:'linear-gradient(145deg,#b8a8c8,#8878a8)', watch:4,  checkin:0, interest:0, since:'2026.3.9',  ts:20260309 },
-    { id:'w4',  name:'中村 拓也',        type:'user',    color:'linear-gradient(145deg,#c8a8b8,#986878)', watch:3,  checkin:1, interest:2, since:'2026.6.3',  ts:20260603 },
-    { id:'w5',  name:'木村 彩',          type:'user',    color:'linear-gradient(145deg,#b8c8a8,#789068)', watch:7,  checkin:0, interest:1, since:'2026.5.6',  ts:20260506 },
-    { id:'w6',  name:'渡辺 硝子',        type:'creator', color:'linear-gradient(145deg,#aa7a9a,#7a3a6a)', watch:11, checkin:2, interest:3, since:'2026.2.20', ts:20260220 },
-    { id:'w7',  name:'Gallery MUKU',    type:'gallery', color:'linear-gradient(145deg,#c8b89a,#a09070)', watch:5,  checkin:1, interest:0, since:'2026.1.12', ts:20260112 },
-    { id:'w8',  name:'小林 志保',        type:'user',    color:'linear-gradient(145deg,#8a9aaa,#4a5a7a)', watch:6,  checkin:1, interest:2, since:'2026.5.25', ts:20260525 },
-    { id:'w9',  name:'加藤 蒼',          type:'user',    color:'linear-gradient(145deg,#a8b8c8,#6a8098)', watch:1,  checkin:0, interest:0, since:'2026.6.8',  ts:20260608 },
-    { id:'w10', name:'吉田 織部',        type:'creator', color:'linear-gradient(145deg,#8aaa6a,#4a7a2a)', watch:8,  checkin:1, interest:1, since:'2026.3.27', ts:20260327 },
-    { id:'w11', name:'山本 結',          type:'user',    color:'linear-gradient(145deg,#c8a8b8,#986878)', watch:13, checkin:2, interest:4, since:'2026.4.21', ts:20260421 },
-    { id:'w12', name:'岡田 陸',          type:'user',    color:'linear-gradient(145deg,#9ab0c0,#5a7898)', watch:2,  checkin:0, interest:1, since:'2026.2.2',  ts:20260202 },
-    { id:'w13', name:'鈴木 遥',          type:'user',    color:'linear-gradient(145deg,#b8c8a8,#789068)', watch:2,  checkin:0, interest:1, since:'2026.6.12', ts:20260612 },
-    { id:'w14', name:'松本 版画',        type:'creator', color:'linear-gradient(145deg,#aaaa6a,#7a7a1a)', watch:9,  checkin:1, interest:2, since:'2026.1.19', ts:20260119 },
+  /* ── サンプルデータ（Gallery SOIL 渋谷に関わるアカウント）── ウォッチ/チェックイン/興味あり/コレクションはユーザーロール専用の
+     サービス機能のため、オーディエンスリストに載るアカウントは常にユーザー種別（バッジ・アバター形状も常にuser）。
+     watchCount/checkinCount/interest/collectionCount＝サイト全体の活動量（.uc カード共通カウンターと同じ指標）。
+     watching/since/ts/visits＝このギャラリーへの関係（ウォッチ中か・この会場の展覧会への来場履歴）で別スコープ。
+     exh＝p4-18のEXHIBITIONSと同一id（g4/g5/g7）。 */
+  var PEOPLE = [
+    { id:'p1',  name:'佐藤 美咲', color:'linear-gradient(145deg,#a8b8c8,#6a8098)', watching:true,  since:'2026.5.18', ts:20260518, watchCount:14, checkinCount:6,  interest:3,
+      visits:[ { exh:'g4', exhName:'色彩のかけら、その先へ', period:'2026.7.25 - 2026.8.15', date:'2026.7.27', ts:20260727, reason:'sns' } ] },
+    { id:'p2',  name:'田中 透', color:'linear-gradient(145deg,#7ab4cc,#4a8099)', watching:true,  since:'2026.4.30', ts:20260430, watchCount:31, checkinCount:14, interest:1, collectionCount:2,
+      memo:'大型作品のコレクターとのこと。次回展の案内は在廊日を優先して個別にお知らせしたい。会話の中で新作の額装について質問あり。',
+      visits:[
+        { exh:'g4', exhName:'色彩のかけら、その先へ', period:'2026.7.25 - 2026.8.15', date:'2026.7.30', ts:20260730, reason:'know' },
+        { exh:'g4', exhName:'色彩のかけら、その先へ', period:'2026.7.25 - 2026.8.15', date:'2026.8.9',  ts:20260809, reason:'know' },
+      ] },
+    { id:'p3',  name:'西村 沙耶', color:'linear-gradient(145deg,#b8a8c8,#8878a8)', watching:true,  since:'2026.3.9',  ts:20260309, watchCount:6,  checkinCount:3,  interest:0,
+      visits:[ { exh:'g7', exhName:'路地裏の詩、冬の記録', period:'2025.12.1 - 2025.12.20', date:'2025.12.11', ts:20251211, reason:'walkby' } ] },
+    { id:'p4',  name:'中村 拓也', color:'linear-gradient(145deg,#c8a8b8,#986878)', watching:true,  since:'2026.6.3',  ts:20260603, watchCount:9,  checkinCount:4,  interest:2,
+      visits:[ { exh:'g4', exhName:'色彩のかけら、その先へ', period:'2026.7.25 - 2026.8.15', date:'2026.8.3',  ts:20260803, reason:'kotennavi' } ] },
+    { id:'p5',  name:'木村 彩', color:'linear-gradient(145deg,#b8c8a8,#789068)', watching:true,  since:'2026.5.6',  ts:20260506, watchCount:13, checkinCount:5,  interest:1,
+      visits:[ { exh:'g5', exhName:'かたちなきものたちの声', period:'2026.7.10 - 2026.7.24', date:'2026.7.13', ts:20260713, reason:'dm' } ] },
+    { id:'p6',  name:'渡辺 硝子', color:'linear-gradient(145deg,#aa7a9a,#7a3a6a)', watching:true,  since:'2026.2.20', ts:20260220, watchCount:25, checkinCount:10, interest:3, collectionCount:3,
+      visits:[ { exh:'g5', exhName:'かたちなきものたちの声', period:'2026.7.10 - 2026.7.24', date:'2026.7.15', ts:20260715, reason:'sns' } ] },
+    { id:'p7',  name:'村上 陽子', color:'linear-gradient(145deg,#c8b89a,#a09070)', watching:true,  since:'2026.1.12', ts:20260112, watchCount:8,  checkinCount:3,  interest:0,
+      visits:[ { exh:'g4', exhName:'色彩のかけら、その先へ', period:'2026.7.25 - 2026.8.15', date:'2026.8.1',  ts:20260801, reason:'referral' } ] },
+    { id:'p8',  name:'小林 志保', color:'linear-gradient(145deg,#8a9aaa,#4a5a7a)', watching:true,  since:'2026.5.25', ts:20260525, watchCount:12, checkinCount:5,  interest:2,
+      visits:[ { exh:'g7', exhName:'路地裏の詩、冬の記録', period:'2025.12.1 - 2025.12.20', date:'2025.12.6',  ts:20251206, reason:'sns' } ] },
+    { id:'p9',  name:'加藤 蒼', color:'linear-gradient(145deg,#a8b8c8,#6a8098)', watching:true,  since:'2026.6.8',  ts:20260608, watchCount:3,  checkinCount:1,  interest:0, visits:[] },
+    { id:'p10', name:'吉田 織部', color:'linear-gradient(145deg,#8aaa6a,#4a7a2a)', watching:true,  since:'2026.3.27', ts:20260327, watchCount:18, checkinCount:7,  interest:1,
+      visits:[ { exh:'g7', exhName:'路地裏の詩、冬の記録', period:'2025.12.1 - 2025.12.20', date:'2025.12.16', ts:20251216, reason:'kotennavi' } ] },
+    { id:'p11', name:'山本 結', color:'linear-gradient(145deg,#c8a8b8,#986878)', watching:true,  since:'2026.4.21', ts:20260421, watchCount:44, checkinCount:20, interest:4, collectionCount:4,
+      visits:[
+        { exh:'g7', exhName:'路地裏の詩、冬の記録', period:'2025.12.1 - 2025.12.20', date:'2025.12.17', ts:20251217, reason:'know' },
+        { exh:'g5', exhName:'かたちなきものたちの声', period:'2026.7.10 - 2026.7.24', date:'2026.7.22', ts:20260722, reason:'sns' },
+      ] },
+    { id:'p12', name:'岡田 陸', color:'linear-gradient(145deg,#9ab0c0,#5a7898)', watching:true,  since:'2026.2.2',  ts:20260202, watchCount:10, checkinCount:5,  interest:1,
+      visits:[ { exh:'g4', exhName:'色彩のかけら、その先へ', period:'2026.7.25 - 2026.8.15', date:'2026.7.29', ts:20260729, reason:'other' } ] },
+    { id:'p13', name:'鈴木 遥', color:'linear-gradient(145deg,#b8c8a8,#789068)', watching:true,  since:'2026.6.12', ts:20260612, watchCount:9,  checkinCount:2,  interest:1, visits:[] },
+    { id:'p14', name:'松本 版画', color:'linear-gradient(145deg,#aaaa6a,#7a7a1a)', watching:true,  since:'2026.1.19', ts:20260119, watchCount:20, checkinCount:8,  interest:2, visits:[] },
+    { id:'p15', name:'福田 玲奈', color:'linear-gradient(145deg,#c8b0a0,#987860)', watching:false, watchCount:5,  checkinCount:3,  interest:0,
+      visits:[ { exh:'g5', exhName:'かたちなきものたちの声', period:'2026.7.10 - 2026.7.24', date:'2026.7.20', ts:20260720, reason:'kotennavi' } ] },
   ];
 
-  var listEl  = document.getElementById('p413List');
-  var emptyEl = document.getElementById('p413Empty');
-  var sortSel = document.getElementById('p413Sort');
-  var countEl = document.getElementById('p413Count');
-  var pagerEl = document.getElementById('p413Pagination');
-  if (!listEl || !sortSel) return;
+  /* 注目のオーディエンス：常連のファン＝チェックイン回数上位／最近つながった人＝ウォッチ開始・来場のうち
+     最も新しい出来事順。一覧（PEOPLE）と同じデータソースだが、管理・検索でなく発見・称賛が目的の別コンポーネント。 */
+  (function renderSpotlight() {
+    var regularsEl = document.getElementById('p413SpotlightRegulars');
+    var recentEl   = document.getElementById('p413SpotlightRecent');
+    if (!regularsEl && !recentEl) return;
 
-  var page = 1;
-  var PER_PAGE = 8;
+    function chip(p, metaText) {
+      return '<a href="kotennavi-p5.html" class="p313-spotlight-chip">' +
+        '<span class="p313-spotlight-chip__avatar" style="background:' + p.color + '">' + p.name.charAt(0) + '</span>' +
+        '<span class="p313-spotlight-chip__body">' +
+          '<span class="p313-spotlight-chip__name">' + p.name + '</span>' +
+          '<span class="p313-spotlight-chip__meta">' + metaText + '</span>' +
+        '</span>' +
+      '</a>';
+    }
 
-  var SORTS = {
-    'since-desc':  function (a, b) { return b.ts - a.ts; },
-    'since-asc':   function (a, b) { return a.ts - b.ts; },
-    'name':        function (a, b) { return a.name.localeCompare(b.name, 'ja'); },
-    'engage-desc': function (a, b) { return (b.watch + b.checkin + b.interest) - (a.watch + a.checkin + a.interest); },
-  };
+    if (regularsEl) {
+      var regulars = PEOPLE.filter(function (p) { return p.visits.length > 0; })
+        .sort(function (a, b) { return b.visits.length - a.visits.length; })
+        .slice(0, 3);
+      regularsEl.innerHTML = regulars.length
+        ? regulars.map(function (p) { return chip(p, 'チェックイン ' + p.visits.length + '回'); }).join('')
+        : '<p class="p313-spotlight__empty">まだ来場記録がありません</p>';
+    }
 
-  function makeItem(w) {
+    if (recentEl) {
+      function recentInfo(p) {
+        var watchTs = p.watching ? p.ts : 0;
+        var latestVisit = p.visits.length ? p.visits.reduce(function (m, v) { return v.ts > m.ts ? v : m; }) : null;
+        var visitTs = latestVisit ? latestVisit.ts : 0;
+        if (visitTs > watchTs) return { ts: visitTs, label: 'チェックイン ' + latestVisit.date };
+        if (watchTs > 0)       return { ts: watchTs, label: 'ウォッチ開始 ' + p.since };
+        return { ts: 0, label: '' };
+      }
+      var recent = PEOPLE.map(function (p) { return { p: p, info: recentInfo(p) }; })
+        .filter(function (x) { return x.info.ts > 0; })
+        .sort(function (a, b) { return b.info.ts - a.info.ts; })
+        .slice(0, 3);
+      recentEl.innerHTML = recent.length
+        ? recent.map(function (x) { return chip(x.p, x.info.label); }).join('')
+        : '<p class="p313-spotlight__empty">まだつながりがありません</p>';
+    }
+  })();
+
+  function esc(s) { var d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+
+  function makeItem(p, idSuffix) {
+    var visitsSorted = p.visits.slice().sort(function (a, b) { return b.ts - a.ts; });
+    var ckId = 'p413ck-' + (idSuffix || p.id);
+    var memoId = 'p413memo-' + (idSuffix || p.id);
+    var visitsHtml = visitsSorted.length ? '<div class="p313-ck-visits" id="' + ckId + '" hidden>' + visitsSorted.map(function (v) {
+      return '<div class="p313-ck-visit">' +
+        '<span class="p313-ck-visit__date">' + v.date + '</span>' +
+        '<span class="p313-ck-visit__exh"><span class="ins-item-list__link-mark">展覧会</span><a class="p313-ck-visit__exh-link" href="kotennavi-p2.html">' + v.exhName + '</a> · ' + v.period + '</span>' +
+        (v.reason ? '<span class="p313-ck-visit__reason">来場のきっかけ：' + ktnCheckinReasonLabel(v.reason) + '</span>' : '') +
+      '</div>';
+    }).join('') + '</div>' : '';
+    /* トリガーは右カラム（.p313-rel）内・リスト本体は左右カラムの下に全幅で展開＝
+       position別のためnative<details>でなくJS制御（aria-expanded＋hidden）で連結 */
+    var toggleBtnHtml = visitsSorted.length ? '<button type="button" class="p313-ck-trigger" aria-expanded="false" aria-controls="' + ckId + '">来場履歴を見る（' + visitsSorted.length + '件）</button>' : '';
+    /* 非公開メモ：ウォッチ/チェックインの記録とは別スコープ（(オーナー,この人物)ペアに紐づく独立データ）＝
+       ウォッチ解除・チェックイン取消があっても消えない設計を想定（デモではPEOPLE配列上のp.memoに保持） */
+    var memoBtnHtml = '<button type="button" class="p313-memo-trigger" aria-expanded="false" aria-controls="' + memoId + '">' + (p.memo ? 'メモを見る・編集' : 'メモを追加') + '</button>';
+    var memoHtml = '<div class="p313-memo" id="' + memoId + '" data-pid="' + p.id + '" hidden>' +
+      '<textarea class="p313-memo__input" placeholder="この人についてのメモ（例：話した内容・好みの作風・対応の注意点など）">' + esc(p.memo) + '</textarea>' +
+      '<div class="p313-memo__foot">' +
+        '<span class="p313-memo__note">オーナーのみ閲覧できます</span>' +
+        '<button type="button" class="ktn-op-btn ktn-op-btn--primary ktn-op-btn--sm p313-memo__save">保存</button>' +
+      '</div>' +
+    '</div>';
     return '<div class="p2-watcher-item">' +
-      '<a href="#" class="p2-watcher-item__avatar p2-watcher-item__avatar--user" style="background:' + w.color + '">' + w.name.charAt(0) + '</a>' +
-      '<div class="p2-watcher-item__info">' +
-        '<a href="#" class="p2-watcher-item__name">' + w.name + '</a>' +
-        '<div class="p2-watcher-item__counts">' +
-          '<span class="p2-watcher-item__count">' + SVG_W + w.watch + '</span>' +
-          '<span class="p2-watcher-item__count">' + SVG_C + w.checkin + '</span>' +
-          '<span class="p2-watcher-item__count">' + SVG_I + w.interest + '</span>' +
+      '<a href="kotennavi-p5.html" class="p2-watcher-item__avatar p2-watcher-item__avatar--user" style="background:' + p.color + '">' + p.name.charAt(0) + '</a>' +
+      '<div class="p2-watcher-item__info p313-item-info">' +
+        '<div class="p313-item-main">' +
+          '<div class="uc__badge-row"><span class="cb cb-person cb-user">user</span></div>' +
+          '<a href="kotennavi-p5.html" class="p2-watcher-item__name">' + p.name + '</a>' +
+          '<div class="uc__counts">' +
+            '<span class="uc__count">' + SVG_W + p.watchCount + '</span>' +
+            '<span class="sep"></span>' +
+            '<span class="uc__count">' + SVG_C + p.checkinCount + '</span>' +
+            '<span class="sep"></span>' +
+            '<span class="uc__count">' + SVG_I + p.interest + '</span>' +
+            (p.collectionCount ? '<span class="sep"></span><span class="uc__count uc__count--collection">' + SVG_COL + p.collectionCount + '</span>' : '') +
+          '</div>' +
         '</div>' +
-        '<div class="p313-w-since">' + SVG_W_GRAY + w.since + '</div>' +
+        '<div class="p313-rel">' +
+          (p.watching ? '<p class="p313-rel__line">ウォッチ中<span class="p313-rel__since">・' + p.since + '〜</span></p>' : '') +
+          '<p class="p313-rel__line">チェックイン <strong>' + p.visits.length + '</strong>回</p>' +
+          toggleBtnHtml +
+          memoBtnHtml +
+        '</div>' +
+        visitsHtml +
+        memoHtml +
       '</div>' +
     '</div>';
   }
 
+  /* ── 一覧（PEOPLE全件を単一リストにし、フィルターチップで絞り込み） ── */
+  var listEl   = document.getElementById('p413List');
+  var emptyEl  = document.getElementById('p413Empty');
+  var sortSel  = document.getElementById('p413Sort');
+  var countEl  = document.getElementById('p413Count');
+  var pagerEl  = document.getElementById('p413Pagination');
+  var filterNav = document.getElementById('p413FilterTabs');
+  var exhWrap  = document.getElementById('p413ExhFilterWrap');
+  var exhSel   = document.getElementById('p413CkFilterExh');
+  if (!listEl || !sortSel || !filterNav) return;
+
+  var page = 1;
+  var PER_PAGE = 8;
+  var viewFilter = 'all';
+
+  function sinceTs(p) { return p.watching ? p.ts : null; }
+  function checkinLatestTs(p) { return p.visits.length ? Math.max.apply(null, p.visits.map(function (v) { return v.ts; })) : null; }
+
+  var SORTS = {
+    'since-desc': function (a, b) {
+      var at = sinceTs(a), bt = sinceTs(b);
+      if (at == null && bt == null) return 0;
+      if (at == null) return 1;
+      if (bt == null) return -1;
+      return bt - at;
+    },
+    'checkin-desc': function (a, b) {
+      var at = checkinLatestTs(a), bt = checkinLatestTs(b);
+      if (at == null && bt == null) return 0;
+      if (at == null) return 1;
+      if (bt == null) return -1;
+      return bt - at;
+    },
+    'count-desc': function (a, b) { return b.visits.length - a.visits.length; },
+    'name':       function (a, b) { return a.name.localeCompare(b.name, 'ja'); },
+  };
+
+  function matchesFilter(p) {
+    if (viewFilter === 'all')     return p.watching || p.visits.length > 0; /* ウォッチャー・チェックインを横断したすべて＝既定表示 */
+    if (viewFilter === 'watch')   return p.watching;
+    if (viewFilter === 'checkin') return p.visits.length > 0;
+    return p.watching && p.visits.length > 0; /* both */
+  }
+
+  function syncExhVisibility() {
+    if (exhWrap) exhWrap.hidden = (viewFilter === 'watch');
+  }
+
   function render() {
-    var rows = WATCHERS.slice();
+    var fe = (exhSel && exhWrap && !exhWrap.hidden) ? exhSel.value : '';
+    var rows = PEOPLE.filter(function (p) {
+      if (!matchesFilter(p)) return false;
+      if (fe && !p.visits.some(function (v) { return v.exh === fe; })) return false;
+      return true;
+    });
     rows.sort(SORTS[sortSel.value] || SORTS['since-desc']);
     if (countEl) countEl.textContent = rows.length + '件';
     if (emptyEl) emptyEl.hidden = rows.length !== 0;
@@ -11739,7 +12257,7 @@ KTN.pages['p4-13'] = function () {
     var totalPages = Math.max(1, Math.ceil(rows.length / PER_PAGE));
     if (page > totalPages) page = totalPages;
     var pageRows = rows.slice((page - 1) * PER_PAGE, page * PER_PAGE);
-    listEl.innerHTML = pageRows.map(makeItem).join('');
+    listEl.innerHTML = pageRows.map(function (p) { return makeItem(p); }).join('');
     KTN.pagination.render(pagerEl, {
       page: page,
       totalPages: totalPages,
@@ -11748,8 +12266,149 @@ KTN.pages['p4-13'] = function () {
   }
 
   function renderReset() { page = 1; render(); }
+
+  filterNav.querySelectorAll('.p313-tab').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      viewFilter = btn.dataset.filter;
+      filterNav.querySelectorAll('.p313-tab').forEach(function (b) { b.classList.toggle('is-active', b === btn); });
+      syncExhVisibility();
+      renderReset();
+    });
+  });
+  if (exhSel) exhSel.addEventListener('change', renderReset);
   sortSel.addEventListener('change', renderReset);
+
+  /* 来場履歴トグル・メモ開閉/保存：再描画のたびにDOMが差し替わるため委譲（listEl／exhCkListEl共通で使う） */
+  function handleAudienceItemClick(e) {
+    var ckBtn = e.target.closest('.p313-ck-trigger');
+    if (ckBtn) {
+      var target = document.getElementById(ckBtn.getAttribute('aria-controls'));
+      if (!target) return;
+      var open = ckBtn.getAttribute('aria-expanded') === 'true';
+      ckBtn.setAttribute('aria-expanded', String(!open));
+      target.hidden = open;
+      return;
+    }
+    var memoBtn = e.target.closest('.p313-memo-trigger');
+    if (memoBtn) {
+      var memoTarget = document.getElementById(memoBtn.getAttribute('aria-controls'));
+      if (!memoTarget) return;
+      var memoOpen = memoBtn.getAttribute('aria-expanded') === 'true';
+      memoBtn.setAttribute('aria-expanded', String(!memoOpen));
+      memoTarget.hidden = memoOpen;
+      if (!memoOpen) {
+        var ta = memoTarget.querySelector('.p313-memo__input');
+        if (ta) ta.focus();
+      }
+      return;
+    }
+    var saveBtn = e.target.closest('.p313-memo__save');
+    if (saveBtn) {
+      var panel = saveBtn.closest('.p313-memo');
+      if (!panel) return;
+      var pid = panel.dataset.pid;
+      var person = PEOPLE.filter(function (x) { return x.id === pid; })[0];
+      if (!person) return;
+      var input = panel.querySelector('.p313-memo__input');
+      person.memo = input ? input.value.trim() : '';
+      var trigger = document.querySelector('[aria-controls="' + panel.id + '"]');
+      if (trigger) trigger.textContent = person.memo ? 'メモを見る・編集' : 'メモを追加';
+      KTN.toast('メモを保存しました（自分のみ閲覧可）');
+    }
+  }
+
+  listEl.addEventListener('click', handleAudienceItemClick);
+
+  syncExhVisibility();
   render();
+
+  /* ── 展覧会別チェックインリスト：PEOPLEのvisitsを展覧会単位に集約（チェックインが1件もない展覧会は
+     マップに現れないため自然に除外される＝「チェックインのある展覧会だけを表示する」を満たす） ── */
+  function buildExhCheckins() {
+    var map = {};
+    PEOPLE.forEach(function (p) {
+      p.visits.forEach(function (v) {
+        if (!map[v.exh]) map[v.exh] = { exh: v.exh, exhName: v.exhName, period: v.period, people: [], reasonCounts: {} };
+        var g = map[v.exh];
+        var entry = g.people.filter(function (x) { return x.p.id === p.id; })[0];
+        if (!entry) { g.people.push({ p: p, ts: v.ts }); }
+        else if (v.ts > entry.ts) { entry.ts = v.ts; }
+        if (v.reason) g.reasonCounts[v.reason] = (g.reasonCounts[v.reason] || 0) + 1;
+      });
+    });
+    return Object.keys(map).map(function (k) { return map[k]; }).sort(function (a, b) {
+      var at = Math.max.apply(null, a.people.map(function (x) { return x.ts; }));
+      var bt = Math.max.apply(null, b.people.map(function (x) { return x.ts; }));
+      return bt - at;
+    });
+  }
+
+  /* 展覧会グループの「来場のきっかけ」内訳：件数降順・チェックイン時に必須化した2026-08-29以降のデータのみ集計対象 */
+  function reasonBreakdownHtml(reasonCounts) {
+    var ids = Object.keys(reasonCounts);
+    if (!ids.length) return '';
+    var sorted = ids.sort(function (a, b) { return reasonCounts[b] - reasonCounts[a]; });
+    var chips = sorted.map(function (id) {
+      return '<span class="p313-exh-ck-item__reason-chip">' + ktnCheckinReasonLabel(id) + ' ' + reasonCounts[id] + '</span>';
+    }).join('');
+    return '<div class="p313-exh-ck-item__reasons"><span class="p313-exh-ck-item__reasons-label">来場のきっかけ内訳</span>' + chips + '</div>';
+  }
+
+  function makeExhCkItem(group, idx) {
+    var peopleSorted = group.people.slice().sort(function (a, b) { return b.ts - a.ts; });
+    var bodyId = 'p413exhck-' + idx;
+    var cardsHtml = peopleSorted.map(function (entry) {
+      return makeItem(entry.p, entry.p.id + '-exh' + idx);
+    }).join('');
+    return '<div class="p313-exh-ck-item">' +
+      '<div class="p313-exh-ck-item__head" role="button" tabindex="0" aria-expanded="false" aria-controls="' + bodyId + '">' +
+        '<span class="p313-exh-ck-item__main">' +
+          '<a class="p313-exh-ck-item__name" href="kotennavi-p2.html" onclick="event.stopPropagation()">' + group.exhName + '</a>' +
+          '<span class="p313-exh-ck-item__period">' + group.period + '</span>' +
+        '</span>' +
+        '<span class="ktn-count">' + group.people.length + '人</span>' +
+      '</div>' +
+      reasonBreakdownHtml(group.reasonCounts) +
+      '<div class="p313-exh-ck-item__visitors" id="' + bodyId + '" hidden><div class="p2-watcher-list">' + cardsHtml + '</div></div>' +
+    '</div>';
+  }
+
+  var exhCkListEl  = document.getElementById('p413ExhCkList');
+  var exhCkEmptyEl = document.getElementById('p413ExhCkEmpty');
+  if (exhCkListEl) {
+    var exhCkGroups = buildExhCheckins();
+    exhCkListEl.innerHTML = exhCkGroups.map(makeExhCkItem).join('');
+    if (exhCkEmptyEl) exhCkEmptyEl.hidden = exhCkGroups.length !== 0;
+    exhCkListEl.addEventListener('click', function (e) {
+      if (e.target.closest('.p313-exh-ck-item__name')) return;
+      var headBtn = e.target.closest('.p313-exh-ck-item__head');
+      if (headBtn) {
+        var target = document.getElementById(headBtn.getAttribute('aria-controls'));
+        if (target) {
+          var open = headBtn.getAttribute('aria-expanded') === 'true';
+          headBtn.setAttribute('aria-expanded', String(!open));
+          target.hidden = open;
+        }
+        return;
+      }
+      handleAudienceItemClick(e);
+    });
+  }
+
+  /* ── ビュー切替：人にフォーカスするオーディエンスリスト／展覧会にフォーカスするチェックインリスト ── */
+  var viewTabsNav    = document.getElementById('p413ViewTabs');
+  var viewAudienceEl = document.getElementById('p413ViewAudience');
+  var viewExhEl      = document.getElementById('p413ViewExh');
+  if (viewTabsNav) {
+    viewTabsNav.querySelectorAll('.p313-view-tab').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var view = btn.dataset.view;
+        viewTabsNav.querySelectorAll('.p313-view-tab').forEach(function (b) { b.classList.toggle('is-active', b === btn); });
+        if (viewAudienceEl) viewAudienceEl.hidden = view !== 'audience';
+        if (viewExhEl) viewExhEl.hidden = view !== 'exhibition';
+      });
+    });
+  }
 
   /* ── 通知トグル（ウォッチャー・チェックイン共通の単一設定） ── */
   var notifySw = document.getElementById('p413NotifySw');
@@ -11761,109 +12420,6 @@ KTN.pages['p4-13'] = function () {
       notifySw.querySelector('.ktn-switch__label').textContent = on ? '受け取る' : '受け取らない';
       if (KTN.toast) KTN.toast(on ? '新しいオーディエンスの通知をオンにしました' : '新しいオーディエンスの通知をオフにしました');
     });
-  }
-
-  /* ── チェックイン一覧 ── exh＝p4-18のEXHIBITIONSと同一id（g4/g5/g7） */
-  var CHECKINS = [
-    { id:'c1',  name:'佐藤 美咲',        type:'user',    color:'linear-gradient(145deg,#a8b8c8,#6a8098)', watch:9,  interest:3,
-      visits:[ { exh:'g4', exhName:'色彩のかけら、その先へ', period:'2026.7.25 - 2026.8.15', date:'2026.7.27', ts:20260727 } ] },
-    { id:'c2',  name:'岡田 陸',          type:'user',    color:'linear-gradient(145deg,#9ab0c0,#5a7898)', watch:2,  interest:1,
-      visits:[ { exh:'g4', exhName:'色彩のかけら、その先へ', period:'2026.7.25 - 2026.8.15', date:'2026.7.29', ts:20260729 } ] },
-    { id:'c3',  name:'田中 透',          type:'creator', color:'linear-gradient(145deg,#7ab4cc,#4a8099)', watch:6,  interest:1,
-      visits:[
-        { exh:'g4', exhName:'色彩のかけら、その先へ', period:'2026.7.25 - 2026.8.15', date:'2026.7.30', ts:20260730 },
-        { exh:'g4', exhName:'色彩のかけら、その先へ', period:'2026.7.25 - 2026.8.15', date:'2026.8.9',  ts:20260809 },
-      ] },
-    { id:'c4',  name:'Gallery MUKU',    type:'gallery', color:'linear-gradient(145deg,#c8b89a,#a09070)', watch:5,  interest:0,
-      visits:[ { exh:'g4', exhName:'色彩のかけら、その先へ', period:'2026.7.25 - 2026.8.15', date:'2026.8.1',  ts:20260801 } ] },
-    { id:'c5',  name:'中村 拓也',        type:'user',    color:'linear-gradient(145deg,#c8a8b8,#986878)', watch:3,  interest:2,
-      visits:[ { exh:'g4', exhName:'色彩のかけら、その先へ', period:'2026.7.25 - 2026.8.15', date:'2026.8.3',  ts:20260803 } ] },
-    { id:'c6',  name:'木村 彩',          type:'user',    color:'linear-gradient(145deg,#b8c8a8,#789068)', watch:7,  interest:1,
-      visits:[ { exh:'g5', exhName:'かたちなきものたちの声', period:'2026.7.10 - 2026.7.24', date:'2026.7.13', ts:20260713 } ] },
-    { id:'c7',  name:'渡辺 硝子',        type:'creator', color:'linear-gradient(145deg,#aa7a9a,#7a3a6a)', watch:11, interest:3,
-      visits:[ { exh:'g5', exhName:'かたちなきものたちの声', period:'2026.7.10 - 2026.7.24', date:'2026.7.15', ts:20260715 } ] },
-    { id:'c8',  name:'福田 玲奈',        type:'user',    color:'linear-gradient(145deg,#c8b0a0,#987860)', watch:1,  interest:0,
-      visits:[ { exh:'g5', exhName:'かたちなきものたちの声', period:'2026.7.10 - 2026.7.24', date:'2026.7.20', ts:20260720 } ] },
-    { id:'c9',  name:'小林 志保',        type:'user',    color:'linear-gradient(145deg,#8a9aaa,#4a5a7a)', watch:6,  interest:2,
-      visits:[ { exh:'g7', exhName:'路地裏の詩、冬の記録', period:'2025.12.1 - 2025.12.20', date:'2025.12.6',  ts:20251206 } ] },
-    { id:'c10', name:'Gallery 灯',       type:'gallery', color:'linear-gradient(145deg,#b8a8c8,#8878a8)', watch:4,  interest:0,
-      visits:[ { exh:'g7', exhName:'路地裏の詩、冬の記録', period:'2025.12.1 - 2025.12.20', date:'2025.12.11', ts:20251211 } ] },
-    { id:'c11', name:'吉田 織部',        type:'creator', color:'linear-gradient(145deg,#8aaa6a,#4a7a2a)', watch:8,  interest:1,
-      visits:[ { exh:'g7', exhName:'路地裏の詩、冬の記録', period:'2025.12.1 - 2025.12.20', date:'2025.12.16', ts:20251216 } ] },
-    { id:'c12', name:'山本 結',          type:'user',    color:'linear-gradient(145deg,#c8a8b8,#986878)', watch:13, interest:4,
-      visits:[
-        { exh:'g7', exhName:'路地裏の詩、冬の記録', period:'2025.12.1 - 2025.12.20', date:'2025.12.17', ts:20251217 },
-        { exh:'g5', exhName:'かたちなきものたちの声', period:'2026.7.10 - 2026.7.24', date:'2026.7.22', ts:20260722 },
-      ] },
-  ];
-
-  var ckListEl  = document.getElementById('p413CkList');
-  var ckEmptyEl = document.getElementById('p413CkEmpty');
-  var ckExhSel  = document.getElementById('p413CkFilterExh');
-  var ckSortSel = document.getElementById('p413CkSort');
-  var ckCountEl = document.getElementById('p413CkCount');
-  var ckPagerEl = document.getElementById('p413CkPagination');
-
-  if (ckListEl && ckExhSel && ckSortSel) {
-    var ckPage = 1;
-    var CK_PER_PAGE = 8;
-
-    function ckLatestTs(c) { return Math.max.apply(null, c.visits.map(function (v) { return v.ts; })); }
-    function ckEarliestTs(c) { return Math.min.apply(null, c.visits.map(function (v) { return v.ts; })); }
-
-    var CK_SORTS = {
-      'date-desc':   function (a, b) { return ckLatestTs(b) - ckLatestTs(a); },
-      'date-asc':    function (a, b) { return ckEarliestTs(a) - ckEarliestTs(b); },
-      'name':        function (a, b) { return a.name.localeCompare(b.name, 'ja'); },
-      'engage-desc': function (a, b) { return (b.watch + b.visits.length + b.interest) - (a.watch + a.visits.length + a.interest); },
-    };
-
-    var makeCkItem = function (c) {
-      var visitsSorted = c.visits.slice().sort(function (a, b) { return b.ts - a.ts; });
-      var visitsHtml = visitsSorted.map(function (v) {
-        return '<div class="p313-ck-visit">' +
-          '<span class="p313-ck-visit__date">' + SVG_C_GRAY + v.date + '</span>' +
-          '<span class="p313-ck-visit__exh"><span class="cb cb-content cb-exhibition">exhibition</span>' + v.exhName + ' · ' + v.period + '</span>' +
-        '</div>';
-      }).join('');
-      return '<div class="p2-watcher-item">' +
-        '<a href="#" class="p2-watcher-item__avatar p2-watcher-item__avatar--user" style="background:' + c.color + '">' + c.name.charAt(0) + '</a>' +
-        '<div class="p2-watcher-item__info">' +
-          '<a href="#" class="p2-watcher-item__name">' + c.name + '</a>' +
-          '<div class="p2-watcher-item__counts">' +
-            '<span class="p2-watcher-item__count">' + SVG_W + c.watch + '</span>' +
-            '<span class="p2-watcher-item__count">' + SVG_C + c.visits.length + '</span>' +
-            '<span class="p2-watcher-item__count">' + SVG_I + c.interest + '</span>' +
-          '</div>' +
-          '<div class="p313-ck-visits">' + visitsHtml + '</div>' +
-        '</div>' +
-      '</div>';
-    };
-
-    var renderCk = function () {
-      var fe = ckExhSel.value;
-      var rows = CHECKINS.filter(function (c) {
-        return !fe || c.visits.some(function (v) { return v.exh === fe; });
-      });
-      rows.sort(CK_SORTS[ckSortSel.value] || CK_SORTS['date-desc']);
-      if (ckCountEl) ckCountEl.textContent = rows.length + '件';
-      if (ckEmptyEl) ckEmptyEl.hidden = rows.length !== 0;
-
-      var totalPages = Math.max(1, Math.ceil(rows.length / CK_PER_PAGE));
-      if (ckPage > totalPages) ckPage = totalPages;
-      var pageRows = rows.slice((ckPage - 1) * CK_PER_PAGE, ckPage * CK_PER_PAGE);
-      ckListEl.innerHTML = pageRows.map(makeCkItem).join('');
-      KTN.pagination.render(ckPagerEl, {
-        page: ckPage,
-        totalPages: totalPages,
-        onGoto: function (p) { ckPage = p; renderCk(); },
-      });
-    };
-
-    var renderCkReset = function () { ckPage = 1; renderCk(); };
-    ckExhSel.addEventListener('change', renderCkReset);
-    ckSortSel.addEventListener('change', renderCkReset);
-    renderCk();
   }
 };
 
@@ -12952,34 +13508,37 @@ KTN.pages['p2-14'] = function () {
     });
   }
 
-  // 作品への関心：LIAISON+＝購入まで含む4段ファネル／LIAISON＝閲覧→興味あり！の2段／利用なし＝案内文言
+  // 作品への関心：LIAISON+＝購入まで含む4段ファネル／LIAISON＝閲覧→興味あり！の2段／作品0件（未利用）＝利用開始プロンプト
+  // リエゾンは全展覧会のデフォルト（「利用しない」状態は存在しない・2026-08-26確定）のため、
+  // 案内表示の分岐は liaison mode（plus/liaison）ではなく作品登録の有無（KTN.exh.works）で行う。
   function syncFunnel() {
-    var mode = (window.KTN && KTN.exh && KTN.exh.liaison) || 'none';
+    var mode = (window.KTN && KTN.exh && KTN.exh.liaison) || 'liaison';
     var phase = (window.KTN && KTN.exh && KTN.exh.phase) || 'during';
     var locked = phase === 'after';
+    var hasWorks = !(window.KTN && KTN.exh && KTN.exh.works === 'no');
     var funnel = document.getElementById('p214Funnel');
     var note = document.getElementById('p214FunnelNote');
     var lite = document.getElementById('p214FunnelLite');
     var liteNote = document.getElementById('p214FunnelLiteNote');
-    var liteLockNote = document.getElementById('p214FunnelLiteLockNote');
     var notice = document.getElementById('p214FunnelNotice');
+    var noticeLink = document.getElementById('p214FunnelNoticeLink');
     var isPlus = mode === 'plus';
     var isLiaison = mode === 'liaison';
-    if (funnel) funnel.hidden = !isPlus;
-    if (note) note.hidden = !isPlus;
-    if (lite) lite.hidden = !isLiaison;
-    // LIAISON+切替の申込導線は会期終了後は使えないため、案内文をロック済みメッセージに差し替える
-    if (liteNote) liteNote.hidden = !isLiaison || locked;
-    if (liteLockNote) liteLockNote.hidden = !(isLiaison && locked);
-    // 未投稿の案内は会期終了後は促さない（終了後に新規登録を勧めても意味が薄いため）
-    if (notice) notice.hidden = isPlus || isLiaison || locked;
+    if (funnel) funnel.hidden = !(isPlus && hasWorks);
+    if (note) note.hidden = !(isPlus && hasWorks);
+    if (lite) lite.hidden = !(isLiaison && hasWorks);
+    if (liteNote) liteNote.hidden = !(isLiaison && hasWorks) || locked;
+    // 作品0件（未利用）の案内は会期終了後は促さない（終了後に新規登録を勧めても意味が薄いため）
+    if (notice) notice.hidden = hasWorks || locked;
+    if (noticeLink) noticeLink.setAttribute('href', isPlus ? 'kotennavi-p2-12-1.html' : 'kotennavi-p2-12.html');
   }
   syncFunnel();
 
   // 記事・作品への関心 見出しカウンター＋記事未投稿の案内
   function syncArticleResponse() {
     var articles = (window.KTN && KTN.exh && KTN.exh.articles) || 'yes';
-    var mode = (window.KTN && KTN.exh && KTN.exh.liaison) || 'none';
+    var mode = (window.KTN && KTN.exh && KTN.exh.liaison) || 'liaison';
+    var hasWorks = !(window.KTN && KTN.exh && KTN.exh.works === 'no');
     var phase = (window.KTN && KTN.exh && KTN.exh.phase) || 'during';
     var notOver = phase !== 'after';
 
@@ -13002,31 +13561,31 @@ KTN.pages['p2-14'] = function () {
     var wVal = document.getElementById('p214ArtworkInterestVal');
     var wSub = document.getElementById('p214ArtworkInterestSub');
     if (wVal && wSub) {
-      if (mode === 'plus') {
-        wVal.innerHTML = '71<span class="unit">件</span>';
-        wSub.textContent = 'LIAISON+出品作品の「興味あり！」合計';
-      } else if (mode === 'liaison') {
-        wVal.innerHTML = '46<span class="unit">件</span>';
-        wSub.textContent = 'LIAISON出品作品の「興味あり！」合計';
-      } else {
+      if (!hasWorks) {
         wVal.innerHTML = '0<span class="unit">件</span>';
         wSub.textContent = '作品はまだ登録されていません';
+      } else if (mode === 'plus') {
+        wVal.innerHTML = '71<span class="unit">件</span>';
+        wSub.textContent = 'LIAISON+出品作品の「興味あり！」合計';
+      } else {
+        wVal.innerHTML = '46<span class="unit">件</span>';
+        wSub.textContent = 'LIAISON出品作品の「興味あり！」合計';
       }
     }
-    // LIAISON未利用（作品未登録）時は人気作品ランキングを表示しない
+    // 作品未登録（0件）時は人気作品ランキングを表示しない
     var artworkTopList = document.getElementById('p214ArtworkTopList');
-    if (artworkTopList) artworkTopList.hidden = mode === 'none';
+    if (artworkTopList) artworkTopList.hidden = !hasWorks;
   }
   syncArticleResponse();
 
-  // Section1「さらに活用したい場合は…」のQR/フライヤー作成導線。会期終了後は新規作成の意味が薄いためロック表示に切り替える
+  // Section1「さらに活用したい場合は…」のQR/フライヤー作成導線。会期終了後は新規作成の意味が薄いため非表示にする
   function syncGrowLinks() {
     var phase = (window.KTN && KTN.exh && KTN.exh.phase) || 'during';
     var locked = phase === 'after';
     var note = document.getElementById('p214GrowNote');
-    var lockNote = document.getElementById('p214GrowLockNote');
+    var cta = document.getElementById('p214GrowCta');
     if (note) note.hidden = locked;
-    if (lockNote) lockNote.hidden = !locked;
+    if (cta) cta.hidden = locked;
   }
   syncGrowLinks();
 

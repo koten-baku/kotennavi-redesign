@@ -34,6 +34,9 @@
   <span class="dbar-sep">公開日：</span>
   <button class="dbtn dbtn-exh on" data-exh-key="publishArrived" onclick="ktnSetExh('publishArrived','true',this)">到達済</button>
   <button class="dbtn dbtn-exh" data-exh-key="publishArrived" onclick="ktnSetExh('publishArrived','false',this)">未到達</button>
+  <span class="dbar-sep">LIAISON：</span>
+  <button class="dbtn dbtn-exh" data-exh-key="liaison" onclick="ktnSetExh('liaison','liaison',this)">LIAISON</button>
+  <button class="dbtn dbtn-exh on" data-exh-key="liaison" onclick="ktnSetExh('liaison','plus',this)">LIAISON+</button>
   <span class="dbar-sep">販売期間：</span>
   <button class="dbtn dbtn-exh on" data-exh-key="salesOver" onclick="ktnSetExh('salesOver','false',this)">終了前</button>
   <button class="dbtn dbtn-exh" data-exh-key="salesOver" onclick="ktnSetExh('salesOver','true',this)">終了済</button>
@@ -894,57 +897,6 @@
         </div>
       </div>
 
-      <!-- ─── 8. LIAISON設定 ─── -->
-      <div class="p211-block">
-        <div class="p211-block__head">
-          <div class="p211-block__title">LIAISON設定 <span class="p211-block__title-en">LIAISON</span></div>
-        </div>
-        <div class="p211-block__body">
-
-          <!-- 会期開始ロック（2026-07-19 仕様＝モード切替は展覧会会期開始日以降は変更不可） -->
-          <p class="p211-liaison-locknote" id="p211LiaisonLockNote" hidden>
-            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14" style="flex-shrink:0;margin-top:2px"><rect x="3" y="7" width="10" height="7" rx="1"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></svg>
-            <span>展覧会の会期開始日（<span id="p211LiaisonLockDate"></span>）を過ぎているため、リエゾンモード（利用しない／LIAISON／LIAISON+）は変更できません。作品の出品・管理は引き続き行えます。</span>
-          </p>
-
-          <label class="p211-liaison-opt" id="p211LiaisonNoneOpt">
-            <input class="p211-liaison-opt__check" type="radio" name="p211liaison" value="none" onchange="toggleLiaisonMode()">
-            <div class="p211-liaison-opt__body">
-              <div class="p211-liaison-opt__title">利用しない</div>
-              <p class="p211-liaison-opt__desc">オンライン作品展示は行いません。通常の展覧会ページのみ公開されます。</p>
-            </div>
-          </label>
-
-          <label class="p211-liaison-opt" id="p211LiaisonOpt">
-            <input class="p211-liaison-opt__check" type="radio" name="p211liaison" value="liaison" onchange="toggleLiaisonMode()">
-            <div class="p211-liaison-opt__body">
-              <div class="p211-liaison-opt__title">LIAISON を利用する</div>
-              <p class="p211-liaison-opt__desc">オンライン作品展示機能を有効にします。出展クリエイターの作品を展覧会ページの LIAISON タブで公開できます。会場配布用の作品リスト（印刷・QR）も登録作品から自動作成できます。（無料）</p>
-              <p class="p211-liaison-opt__req">※ 作品の出品・管理は、管理者による展覧会の確認後にオーナーメニューの「LIAISON 展示設定・作品管理」から行えます。</p>
-              <a class="p211-liaison-opt__link" href="kotennavi-p2-12.html" id="p211LiaisonLink" hidden>
-                <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" width="10" height="10"><rect x="1" y="1" width="10" height="10" rx="1"/><line x1="4" y1="6" x2="8" y2="6"/></svg>
-                LIAISON 展示設定・作品管理 →
-              </a>
-            </div>
-          </label>
-
-          <label class="p211-liaison-opt" id="p211LiaisonPlusOpt">
-            <input class="p211-liaison-opt__check" type="radio" name="p211liaison" value="plus" checked onchange="toggleLiaisonMode()">
-            <div class="p211-liaison-opt__body">
-              <div class="p211-liaison-opt__title">LIAISON+ を利用する</div>
-              <p class="p211-liaison-opt__desc">オンライン作品展示＋販売機能を有効にします。出展クリエイターの作品を展覧会ページの LIAISON+ タブで公開・販売できます。会場配布用の作品リスト（印刷・QR）も登録作品から自動作成できます。（出品無料・販売成立時にサービス利用料）</p>
-              <p class="p211-liaison-opt__req">※ LIAISON+ の利用には、事前の利用申込と承認が必要です。 <a class="ktn-guide-link" href="kotennavi-p11-4.html">LIAISON+ 利用申込 →</a></p>
-              <p class="p211-liaison-opt__req">※ 作品の出品・管理は、管理者による展覧会の確認後にオーナーメニューの「LIAISON+ 展示設定・出品管理」から行えます。</p>
-              <a class="p211-liaison-opt__link" href="kotennavi-p2-12-1.html" id="p211LiaisonPlusLink">
-                <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" width="10" height="10"><rect x="1" y="1" width="10" height="10" rx="1"/><line x1="4" y1="6" x2="8" y2="6"/><line x1="6" y1="4" x2="6" y2="8"/></svg>
-                LIAISON+ 展示設定・出品管理 →
-              </a>
-            </div>
-          </label>
-
-        </div>
-      </div>
-
       <!-- ─── 9. 公開設定 ─── -->
       <div class="p211-block">
         <div class="p211-block__head">
@@ -994,6 +946,7 @@
             <input type="checkbox" id="p211Consent" onchange="syncConsent()">
             <span>個展なびで展覧会情報を公開することについて、展覧会の関係者の了解を得ています。</span>
           </label>
+          <p class="p211-help p211-presave__consent-note" id="p211ConsentLockNote" hidden>一度確認依頼済みの展覧会のため、了解済みとして扱われます（編集のたびに再確認は不要です）。</p>
 
         </div>
       </div>
@@ -1170,15 +1123,6 @@
         </div>
       </div>
 
-      <!-- 保存直後の会場QR/フライヤー誘導（確認済＝会期前or会期中のみ表示・confirmSave()がトグル） -->
-      <div class="p211-qr-nudge" id="p211QrNudge" hidden>
-        <span class="p211-qr-nudge__icon">✓</span>
-        <p class="p211-qr-nudge__text">保存しました。会場に掲示するQRコード・フライヤーは、オーナーメニューからいつでも発行できます。<a class="ktn-guide-link" href="javascript:void(0)" onclick="ktnVenueFlyer()">会場フライヤーを作成する →</a></p>
-        <button class="p211-qr-nudge__close" type="button" onclick="document.getElementById('p211QrNudge').hidden=true" aria-label="閉じる">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
-      </div>
-
       </div><!-- /.ktn-mgmt-wrap -->
 
       <!-- 保存確認モーダル（fixed のため wrap の外に置く） -->
@@ -1278,10 +1222,10 @@ function setDemoMode(mode) {
     }
   }
 
+  applyConsentLock(mode);
   setConfirmed(MODE_CONFIRMED[mode]);
   setBc(mode);
   applyVenueRole();
-  applyLiaisonDateLock();
   closeAllAcc();
   syncOptUI();
   syncDraftMode();   /* 下書きチェックはモード切替でリセット済み＝ボタン名/ノートを再同期 */
@@ -1320,7 +1264,6 @@ function setConfirmed(on) {
       if (p) p.hidden = true;
     });
   }
-  toggleLiaisonMode();
   checkVenueNew(false);   /* 確認済トグルで新規会場ノートの表示条件（!demoConfirmed）を更新 */
 }
 
@@ -1713,11 +1656,12 @@ function clearForm() {
     el.selectedIndex = 0;
   });
   ['Bonus', 'Photo', 'Attend', 'Entry', 'Sale', 'Child'].forEach(toggleFacility);
+  document.querySelectorAll('.p211-img-uploaded.is-added').forEach(function (el) { el.remove(); });   /* ユーザー追加分（サブ画像）は削除 */
   document.querySelectorAll('.p211-img-uploaded').forEach(function (el) {
     el.style.display = 'none';
   });
-  var liaisonNone = document.querySelector('input[name=p211liaison][value=none]');
-  if (liaisonNone) { liaisonNone.checked = true; toggleLiaisonMode(); }
+  if (typeof syncSubImgCount === 'function') syncSubImgCount();
+  if (typeof restoreMainImage === 'function') restoreMainImage();
   var publishNow = document.querySelector('input[name=p211publish][value=now]');
   if (publishNow) publishNow.checked = true;
   togglePublishDate();
@@ -1753,12 +1697,13 @@ function restoreDefaults() {
     var inp = pill.querySelector('input');
     if (inp) pill.classList.toggle('is-active', inp.checked);
   });
-  document.querySelectorAll('.p211-tag.is-added').forEach(function (el) { el.remove(); });   /* ユーザー追加分は削除（直書きタグのみ復元） */
+  document.querySelectorAll('.p211-tag.is-added, .p211-img-uploaded.is-added').forEach(function (el) { el.remove(); });   /* ユーザー追加分は削除（直書きタグ・画像のみ復元） */
   document.querySelectorAll('.p211-tag, .p211-img-uploaded').forEach(function (el) {
     el.style.display = '';
   });
+  if (typeof syncSubImgCount === 'function') syncSubImgCount();
+  if (typeof restoreMainImage === 'function') restoreMainImage();
   ['Bonus', 'Photo', 'Attend', 'Entry', 'Sale', 'Child'].forEach(toggleFacility);
-  toggleLiaisonMode();
   togglePublishDate();
   document.querySelectorAll('.p211-exc-row.is-added, .p211-event-item.is-added').forEach(function (el) { el.remove(); });
   document.querySelectorAll('.p211-exc-row, .p211-event-item').forEach(function (el) { el.style.display = ''; });
@@ -1824,40 +1769,6 @@ function toggleFacility(key) {
   }
 }
 
-/* ── LIAISON 利用トグル（利用しない / LIAISON / LIAISON+ の排他選択） ── */
-function toggleLiaisonMode() {
-  var sel = document.querySelector('input[name=p211liaison]:checked');
-  var v = sel ? sel.value : 'none';
-  var l  = document.getElementById('p211LiaisonLink');
-  var lp = document.getElementById('p211LiaisonPlusLink');
-  /* 作品管理ページへのリンクは「管理者確認済 かつ 該当プラン選択時」のみ表示 */
-  if (l)  l.hidden  = !(demoConfirmed && v === 'liaison');
-  if (lp) lp.hidden = !(demoConfirmed && v === 'plus');
-  KTN.exh.liaison = v;
-  if (window.ktnRender) ktnRender();
-}
-
-/* ── リエゾンモードの会期開始ロック（2026-07-19 仕様）──
-   モード切替（利用しない/LIAISON/LIAISON+）は展覧会会期開始日以降は変更不可。
-   新規・クローン＝これから作る展覧会のため対象外。編集モードのみ、会期開始日（デモ＝フォームの開始日値）と今日を比較。
-   本番（React CSR）は保存済み展覧会エンティティの会期開始日で判定（サーバー側でも拒否） */
-function applyLiaisonDateLock() {
-  var from = document.getElementById('p211DateFrom');
-  var note = document.getElementById('p211LiaisonLockNote');
-  var t = new Date();
-  var todayIso = t.getFullYear() + '-' + ('0' + (t.getMonth() + 1)).slice(-2) + '-' + ('0' + t.getDate()).slice(-2);
-  var locked = demoMode === 'edit' && !!(from && from.value) && from.value <= todayIso;
-  document.querySelectorAll('input[name=p211liaison]').forEach(function (r) { r.disabled = locked; });
-  document.querySelectorAll('.p211-liaison-opt').forEach(function (l) { l.classList.toggle('is-locked', locked); });
-  if (note) {
-    note.hidden = !locked;
-    if (locked) {
-      var el = document.getElementById('p211LiaisonLockDate');
-      if (el) el.textContent = from.value.replace(/-/g, '.');
-    }
-  }
-}
-
 /* ── 開催場所のロール別 default・ヘルプ文言 ──
    gallery＝自ギャラリーが default（変更可）／creator＝default なし。
    入力方法はどちらも同じ（過去展の会場を候補から選択 or 新規入力） */
@@ -1908,6 +1819,19 @@ window.p211RoleSync = function () {
 
 /* ── 保存前の関係者了承チェック → 送信ボタン活性 ──
    下書きモード（確認依頼しない保存）＝公開されないので関係者了承の gate 対象外＝常に活性。 */
+/* ── 了承チェックの固定（編集モード＝既に一度「保存して確認依頼」済みの展覧会は再確認不要） ── */
+function applyConsentLock(mode) {
+  var chk  = document.getElementById('p211Consent');
+  var note = document.getElementById('p211ConsentLockNote');
+  var locked = (mode === 'edit');
+  if (chk) {
+    chk.disabled = locked;
+    if (locked) chk.checked = true;
+  }
+  if (note) note.hidden = !locked;
+  syncConsent();
+}
+
 function syncConsent() {
   var chk   = document.getElementById('p211Consent');
   var btn   = document.getElementById('p211SubmitBtn');
@@ -1993,15 +1917,114 @@ initP211Combo({
 (function () {
   var venue = document.getElementById('p211Venue');
   if (venue) venue.addEventListener('change', function () { checkVenueNew(true); });
-  /* 会期開始日の変更＝リエゾンモードのロック判定を再計算（デモ用。本番は保存値で判定） */
-  var dateFrom = document.getElementById('p211DateFrom');
-  if (dateFrom) dateFrom.addEventListener('change', applyLiaisonDateLock);
+})();
+
+/* ── メイン画像・サブ画像のアップロード（デモ：FileReaderでローカルプレビュー表示） ──
+   file input の change・削除ボタンに結線が無く、画像を選択しても何も反映されない状態だった。
+   メイン画像は保存前必須チェックの対象のため、これが動かないと新規/クローンモード（clearForm()で
+   一旦非表示になる）で画像を追加できず「保存して確認依頼」の確認モーダルへ進めなかった。 */
+var restoreMainImage, syncSubImgCount;
+(function () {
+  var mainDrop = document.getElementById('p211MainDrop');
+  var mainFile = document.getElementById('p211MainFile');
+  var mainField = mainDrop && mainDrop.closest('.p211-field');
+  var mainUp    = mainField && mainField.querySelector('.p211-img-uploaded');
+  var mainThumb = mainUp && mainUp.querySelector('.p211-img-uploaded__thumb');
+  var mainName  = mainUp && mainUp.querySelector('.p211-img-uploaded__name');
+  var mainCap   = mainUp && mainUp.querySelector('.p211-img-caption');
+  var mainDefault = {
+    thumbStyle: mainThumb ? (mainThumb.getAttribute('style') || '') : '',
+    name: mainName ? mainName.textContent : '',
+    caption: mainCap ? mainCap.defaultValue : ''
+  };
+  restoreMainImage = function () {
+    if (mainThumb) mainThumb.setAttribute('style', mainDefault.thumbStyle);
+    if (mainName) mainName.textContent = mainDefault.name;
+    if (mainCap) mainCap.value = mainDefault.caption;
+  };
+  if (mainFile) {
+    mainFile.addEventListener('change', function () {
+      var f = mainFile.files && mainFile.files[0];
+      mainFile.value = '';
+      if (!f || !mainUp) return;
+      var reader = new FileReader();
+      reader.onload = function () {
+        if (mainThumb) mainThumb.style.background = 'center/cover no-repeat url("' + reader.result + '")';
+        if (mainName) mainName.textContent = f.name;
+        mainUp.style.display = '';
+        if (mainField) mainField.classList.remove('is-error');
+      };
+      reader.readAsDataURL(f);
+    });
+  }
+  if (mainUp) {
+    var mainDel = mainUp.querySelector('.p211-img-uploaded__del');
+    if (mainDel) mainDel.addEventListener('click', function () {
+      mainUp.style.display = 'none';
+      if (mainThumb) mainThumb.setAttribute('style', '');
+      if (mainName) mainName.textContent = '';
+      if (mainCap) mainCap.value = '';
+    });
+  }
+
+  /* サブ画像（最大9枚・複数選択可・削除で行ごと除去・残り枚数を追従） */
+  var subList  = document.getElementById('p211SubList');
+  var subFile  = document.getElementById('p211SubFile');
+  var subCount = document.querySelector('#p211SubDrop .p211-img-count');
+  var SUB_MAX = 9;
+  syncSubImgCount = function () {
+    if (!subList || !subCount) return;
+    var n = 0;
+    subList.querySelectorAll('.p211-img-uploaded').forEach(function (el) { if (el.style.display !== 'none') n++; });
+    subCount.textContent = '残り ' + Math.max(0, SUB_MAX - n) + ' 枚';
+  };
+  function bindSubDelete(row) {
+    var del = row.querySelector('.p211-img-uploaded__del');
+    if (del) del.addEventListener('click', function () {
+      row.remove();
+      syncSubImgCount();
+    });
+  }
+  if (subList) subList.querySelectorAll('.p211-img-uploaded').forEach(bindSubDelete);
+  if (subFile) {
+    subFile.addEventListener('change', function () {
+      var files = Array.prototype.slice.call(subFile.files || []);
+      subFile.value = '';
+      if (!subList) return;
+      var used = subList.querySelectorAll('.p211-img-uploaded').length;
+      var remain = SUB_MAX - used;
+      files.slice(0, Math.max(0, remain)).forEach(function (f) {
+        var reader = new FileReader();
+        reader.onload = function () {
+          var row = document.createElement('div');
+          row.className = 'p211-img-uploaded is-added';
+          row.innerHTML =
+            '<span class="p211-img-uploaded__handle" draggable="true" title="ドラッグして並べ替え" aria-label="ドラッグして並べ替え">' +
+              '<svg viewBox="0 0 12 12" width="12" height="12" fill="currentColor"><circle cx="3.5" cy="2.5" r="1"/><circle cx="8.5" cy="2.5" r="1"/><circle cx="3.5" cy="6" r="1"/><circle cx="8.5" cy="6" r="1"/><circle cx="3.5" cy="9.5" r="1"/><circle cx="8.5" cy="9.5" r="1"/></svg>' +
+            '</span>' +
+            '<div class="p211-img-uploaded__thumb" style="background:center/cover no-repeat url(&quot;' + reader.result + '&quot;)"></div>' +
+            '<div class="p211-img-uploaded__body">' +
+              '<div class="p211-img-uploaded__row">' +
+                '<span class="p211-img-uploaded__name">' + escHtml(f.name) + '</span>' +
+                '<button class="p211-img-uploaded__del" type="button" title="削除"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" width="12" height="12"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg></button>' +
+              '</div>' +
+              '<input type="text" class="p211-img-caption" maxlength="60" placeholder="キャプション（任意）">' +
+            '</div>';
+          subList.appendChild(row);
+          bindSubDelete(row);
+          syncSubImgCount();
+        };
+        reader.readAsDataURL(f);
+      });
+    });
+  }
+  syncSubImgCount();
 })();
 
 /* 初期状態（編集モード・確認済） */
 setConfirmed(true);
+applyConsentLock('edit');
 applyVenueRole();
-applyLiaisonDateLock();
 syncAdminPanels();
 renderArtists();
 syncDraftMode();
@@ -2028,8 +2051,6 @@ function buildSummary() {
   var from = fmtDate(val('p211DateFrom'));
   var to   = fmtDate(val('p211DateTo'));
   var term = (from || to) ? from + ' 〜 ' + to : '';
-  var liaisonSel = document.querySelector('input[name=p211liaison]:checked');
-  var liaison = { none: '利用しない', liaison: 'LIAISON を利用する', plus: 'LIAISON+ を利用する' }[liaisonSel ? liaisonSel.value : 'none'];
   var pubSel = document.querySelector('input[name=p211publish]:checked');
   var pub = '今すぐ公開（管理者確認後）';
   if (pubSel && pubSel.value === 'scheduled') {
@@ -2040,23 +2061,30 @@ function buildSummary() {
          row('会期', term) +
          row('開催場所', escHtml(val('p211Venue'))) +
          row('出展クリエイター', artistList.map(function (a) { return escHtml(a.name); }).join('、')) +
-         row('LIAISON', liaison) +
          row('公開設定', pub);
 }
 function closeConfirmModal() {
   var m = document.getElementById('p211ConfirmModal');
   if (m) m.hidden = true;
 }
+/* 保存後は展覧会ページ（p2）へ遷移する（本番仕様）。QR/フライヤー誘導・LIAISON利用案内は
+   p2-11 上には留まれない（遷移してしまう）ため、遷移前に完了モーダル（KTN.submitDone）で
+   その場で案内し、確認ボタンを押した時点でp2へ遷移する。 */
 function confirmSave() {
   closeConfirmModal();
-  if (typeof KTN !== 'undefined' && KTN.toast) {
-    KTN.toast('保存しました。管理者の確認後に掲載されます（デモ）');
+  var role = (typeof KTN !== 'undefined' && KTN.role) || 'gallery';
+  var msg = '個展なび事務局が内容を確認後、公開日の指定に従ってこのページが公開されます（確認完了はメールでお知らせします）。';
+  /* LIAISON利用案内＝新規・クローン投稿（未確認の展覧会エンティティ作成）時のみ表示。
+     編集モードは既に確認済でLIAISON状態も既知のため対象外。 */
+  if (demoMode === 'new' || demoMode === 'clone') {
+    msg += '<br><br>この展覧会ではLIAISON（オンライン作品展示・無料）をご利用いただけます。確認完了後、オーナーメニューに「LIAISON作品管理」が表示され、作品の掲載を始められます。販売機能付きの「LIAISON+」への切り替えをご希望の場合も、確認完了後に同メニューからお申込みいただけます。';
   }
-  var nudge = document.getElementById('p211QrNudge');
-  if (nudge) {
-    var st = typeof ktnExhState === 'function' ? ktnExhState() : null;
-    nudge.hidden = !(st && st.num === 2);
-  }
+  msg += '<br><br>会場に掲示するQRコード・フライヤーは、オーナーメニューからいつでも発行できます。<a class="ktn-guide-link" href="javascript:void(0)" onclick="ktnVenueFlyer()">会場フライヤーを作成する →</a>';
+  KTN.submitDone({
+    title: '保存して確認依頼しました',
+    message: msg,
+    action: { label: '展覧会ページを見る', href: 'kotennavi-p2.html?pub=pending&role=' + encodeURIComponent(role) }
+  });
 }
 
 /* ── 必須項目チェック（必須ラベルの .p211-field を走査） ── */
@@ -2214,11 +2242,12 @@ function syncOptUI() {
 })();
 syncOptUI();
 
-/* ── ③下書き保存（デモスタブ） ──
+/* ── ③下書き保存 ──
    本番＝「確認依頼フラグ OFF で保存」＝保存して確認依頼（flag ON）と同一の保存処理・同一ペイロード。
-   下書きは別ストアではなくフラグ違いなので、デモでは保存経路が2つある事だけ示す（トーストのみ）。 */
+   下書きは別ストアではなくフラグ違い。保存後は他の保存経路と同様に p2 へ遷移する。 */
 function saveDraft() {
-  if (typeof KTN !== 'undefined' && KTN.toast) KTN.toast('下書きを保存しました（デモ）');
+  var role = (typeof KTN !== 'undefined' && KTN.role) || 'gallery';
+  location.href = 'kotennavi-p2.html?pub=draft&role=' + encodeURIComponent(role);
 }
 </script>
 </body>

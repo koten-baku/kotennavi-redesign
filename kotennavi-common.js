@@ -95,7 +95,7 @@ KTN.toast = showToast;
 const KTN_LISTQR_KINDS = {
   list: { label: '作品リスト', title: '作品リストのQRコード', url: 'https://koten-navi.com/p2-6', sub: 'スマホで読み取ると、会場配布用のリストが開きます。<br>画像を保存して会場ポスターやSNSにも掲示できます。' },
   /* url に ?src=venue-qr を付与し、この会場設置QR経由のアクセスを判別できるようにする（インサイトA-2） */
-  venue: { label: '会場チェックイン', title: '会場チェックインのQRコード', url: 'https://koten-navi.com/p2?src=venue-qr', sub: 'スマホで読み取ると、この展覧会のページが開きます。<br>来場者はそのままチェックインやレビュー投稿ができます。画像を保存して受付・壁面に掲示できます。' },
+  venue: { label: '会場チェックイン', title: '会場チェックインのQRコード', url: 'https://koten-navi.com/p2?src=venue-qr', sub: 'スマホで読み取ると、この展覧会のページが開きます。<br>来場者はそのままチェックインやレビュー投稿ができます。あわせてウォッチしてもらえると、次回展の案内メールが届くようになります。画像を保存して受付・壁面に掲示できます。' },
   creator: { label: '田中 透', title: '田中 透 を共有', url: 'https://koten-navi.com/p3', sub: 'リンクをコピーしてSNS・DMで送ったり、QRコードを名刺・チラシ等に掲載すると、ウォッチしてくれる人が増えやすくなります。' },
   gallery: { label: 'Gallery SOIL 渋谷', title: 'Gallery SOIL 渋谷 を共有', url: 'https://koten-navi.com/p4', sub: 'リンクをコピーしてSNS・DMで送ったり、QRコードを名刺・チラシ等に掲載すると、ウォッチしてくれる人が増えやすくなります。' }
 };
@@ -390,7 +390,7 @@ function ktnVenueFlyer() {
       + '<div class="ktn-vflyer__qr-code" aria-hidden="true">' + qrSvg + '</div>'
       + '<div class="ktn-vflyer__checkin-body">'
       + '<p class="ktn-vflyer__checkin-ttl">チェックインのお願い</p>'
-      + '<p class="ktn-vflyer__checkin-desc">ご来場の記念に、QRからチェックインをお願いいたします。感想やレビューもぜひお聞かせください。</p>'
+      + '<p class="ktn-vflyer__checkin-desc">ご来場の記念に、QRからチェックインをお願いいたします。あわせて作家・ギャラリーをウォッチしていただくと、次回展の情報をメールでいち早くお届けします。感想やレビューもぜひお聞かせください。</p>'
       + '<p class="ktn-vflyer__checkin-note">※チェックインには個展なびのアカウントが必要です（その場で無料登録できます）</p>'
       + '</div>'
       + '</div>'
@@ -531,7 +531,8 @@ function ktnTrendValues(n, peakBase, rand) {
   return vals;
 }
 function ktnFmtMD(d) { return (d.getMonth() + 1) + '/' + d.getDate(); }
-function ktnTrendSvg(dates, vals, markers, segs) {
+function ktnTrendSvg(dates, vals, markers, segs, unit) {
+  unit = unit || '回';
   var W = 700, H = 190, PAD_T = 12, PAD_B = 34, PAD_L = 50, PAD_R = 4;
   var n = vals.length;
   var actualMax = Math.max.apply(null, vals);
@@ -546,7 +547,7 @@ function ktnTrendSvg(dates, vals, markers, segs) {
   var dots = '';
   if (n <= 31) {
     for (var k = 0; k < n; k++) {
-      dots += '<circle class="ins-linechart__dot" cx="' + xAt(k).toFixed(1) + '" cy="' + yAt(vals[k]).toFixed(1) + '" r="3.2"><title>' + ktnFmtMD(dates[k]) + '　' + vals[k] + '回</title></circle>';
+      dots += '<circle class="ins-linechart__dot" cx="' + xAt(k).toFixed(1) + '" cy="' + yAt(vals[k]).toFixed(1) + '" r="3.2"><title>' + ktnFmtMD(dates[k]) + '　' + vals[k] + unit + '</title></circle>';
     }
   }
   var labelCount = Math.min(6, n);
@@ -559,8 +560,8 @@ function ktnTrendSvg(dates, vals, markers, segs) {
   /* 左に0/中間/最大の3段階y軸を常設（旧・最大値のみの浮きラベルは数字が乱立して見えたため統合） */
   var midVal = Math.round(actualMax / 2);
   var yTicks = [
-    { v: actualMax, label: actualMax + '回' },
-    { v: midVal, label: midVal + '回' },
+    { v: actualMax, label: actualMax + unit },
+    { v: midVal, label: midVal + unit },
     { v: 0, label: '0' }
   ];
   var grid = '';
@@ -590,7 +591,7 @@ function ktnTrendSvg(dates, vals, markers, segs) {
       if (!sg.len || sg.len <= 0) continue;
       var segCx = ((xAt(sg.from) + xAt(sg.from + sg.len - 1)) / 2).toFixed(1);
       segSvg += '<text class="ins-linechart__segline" x="' + segCx + '" y="' + (PAD_T + 9) + '" text-anchor="middle">' + sg.label
-        + '<tspan class="ins-linechart__segline-val" dx="4">' + sg.sum + '回</tspan></text>';
+        + '<tspan class="ins-linechart__segline-val" dx="4">' + sg.sum + unit + '</tspan></text>';
     }
   }
   return '<svg class="ins-linechart__svg" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="閲覧数の推移">'
@@ -614,6 +615,25 @@ KTN.renderTrend = function (hostId, period, peakBase) {
   if (peakEl) {
     var maxIdx = vals.indexOf(Math.max.apply(null, vals));
     peakEl.textContent = ktnFmtMD(dates[maxIdx]) + ' 閲覧数ピーク';
+  }
+};
+
+/* ── 週間トレンド：renderTrendと同じ折れ線コンポーネントを流用し、
+   日次でなく週次（各点＝週の起算日）で集計した値を表示する。
+   ウォッチャー推移など「回数」でなく「人数」を扱う指標のため unit を渡せる ── */
+KTN.renderWeeklyTrend = function (hostId, weeks, peakBase, unit) {
+  var host = document.getElementById(hostId);
+  if (!host) return;
+  var rand = ktnTrendRand(ktnTrendHash(hostId + '|weekly'));
+  var vals = ktnTrendValues(weeks, peakBase, rand);
+  var today = KTN.TREND_TODAY;
+  var dates = [];
+  for (var i = 0; i < weeks; i++) dates.push(new Date(today.getTime() - (weeks - 1 - i) * 7 * 86400000));
+  host.innerHTML = ktnTrendSvg(dates, vals, null, null, unit);
+  var peakEl = document.getElementById(hostId + 'Peak');
+  if (peakEl) {
+    var maxIdx = vals.indexOf(Math.max.apply(null, vals));
+    peakEl.textContent = ktnFmtMD(dates[maxIdx]) + '週 ピーク';
   }
 };
 
@@ -1854,34 +1874,31 @@ function p5AdminMenuItems() {
 }
 
 /* P2＝展覧会の「LIAISON 展示設定・作品管理」ルーティング。p2-11（編集フォーム）の選択中ラジオ→
-   p2（トップ）のバッジ状態→どちらも無ければ liaison 扱いの順にフォールバックして振り分ける。 */
+   p2（トップ）のバッジ状態→どちらも無ければ liaison 扱いの順にフォールバックして振り分ける。
+   リエゾンは全展覧会のデフォルト（「利用しない」状態は存在しない・2026-08-26確定）。 */
 function p2GotoWorks() {
   var radio = document.querySelector('input[name="p211liaison"]:checked');
   var badge = document.getElementById('p2LiaisonBadge');
-  var state = null;
+  var state = 'liaison';
   if (radio) {
-    state = radio.value; // 'none' | 'liaison' | 'plus'
+    state = radio.value; // 'liaison' | 'plus'
   } else if (badge) {
-    state = (badge.style.display === 'none') ? 'none' : (badge.classList.contains('li-plus') ? 'plus' : 'liaison');
-  } else {
-    state = 'liaison';
+    state = badge.classList.contains('li-plus') ? 'plus' : 'liaison';
   }
-  if (state === 'plus') location.href = './kotennavi-p2-12-1.html';
-  else if (state === 'liaison') location.href = './kotennavi-p2-12.html';
-  else KTN.toast('この展覧会はLIAISON/LIAISON+が設定されていません');
+  location.href = state === 'plus' ? './kotennavi-p2-12-1.html' : './kotennavi-p2-12.html';
 }
 window.p2GotoWorks = p2GotoWorks;
 
 /* 展覧会の会期・確認状態（デモ用グローバル状態）。setPeriod()/setLiaison()（p2.html）・
    setConfirmed()/toggleLiaisonMode()（p2-11.html）が直接プロパティを書き換えてから ktnRender() を呼ぶ。 */
-KTN.exh = { phase: 'during', confirmed: true, publishArrived: true, liaison: 'plus', salesOver: false, articles: 'yes' };
+KTN.exh = { phase: 'during', confirmed: true, publishArrived: true, liaison: 'plus', salesOver: false, articles: 'yes', works: 'yes', draft: false, exhibited: true };
 function ktnExhState() {
   var e = KTN.exh || {};
   var num;
   if (e.phase === 'after') num = 3;
   else if (e.phase === 'before' && !e.confirmed) num = 1;
   else num = 2;
-  return { num: num, phase: e.phase, confirmed: e.confirmed, publishArrived: e.publishArrived, liaison: e.liaison, salesOver: e.salesOver, articles: e.articles };
+  return { num: num, phase: e.phase, confirmed: e.confirmed, publishArrived: e.publishArrived, liaison: e.liaison, salesOver: e.salesOver, articles: e.articles, works: e.works, draft: e.draft };
 }
 function ktnSetExh(key, val, btn) {
   if (val === 'true') val = true;
@@ -2090,20 +2107,27 @@ function p2CanEdit() {
 }
 
 /* P2（展覧会）オーナーメニュー（単一ソース・p2/p2-1〜p2-6/p2-11/p2-12/p2-12-1/p2-13/p2-14 共通）。
-   分岐の主軸は confirmed（管理者確認済かどうか）：
+   分岐の主軸は confirmed（管理者確認済かどうか）のみ。publishArrived（公開日到達済かどうか）は
+   表示条件に使わない（2026-08-26確定・旧仕様は「確認済かつ公開日到達済の場合のみ」リエゾン/インサイトを
+   追加表示していたが、公開日条件は誤りとして撤回。管理者確認が下りた時点で自動的に項目が出る）：
    - 確認前：会期状態に関わらず編集・記事管理・削除のみ（リエゾン/インサイト/QR/フライヤーは非表示）
-   - 確認済かつ会期終了後：編集ボタンなし。記事管理＋（リエゾン+かつ販売期間内なら）リエゾン+項目＋インサイト
-   - 確認済かつ会期終了前（会期前・会期中とも）：編集・記事管理・QR・フライヤーを表示。リエゾン/リエゾン+・インサイトは公開日到達済の場合のみ追加表示 */
+   - 確認済かつ会期終了後：編集ボタンなし。記事管理＋インサイトのみ（リエゾン/リエゾン+作品管理・QR・フライヤーは
+     販売期間内かどうかに関わらず非表示＝展覧会単位の運用行為は会期終了で締め切る）
+   - 確認済かつ会期終了前（会期前・会期中とも）：編集・リエゾン/リエゾン+・記事管理・QR・フライヤー・インサイトを
+     すべて表示 */
 function p2OwnerMenuItems(curPage) {
   /* 並び順（確定）：展覧会編集・リエゾン/リエゾン+・記事・会場チェックインQR・フライヤー・インサイト・削除。
-     各項目の表示条件（confirmed/phase/publishArrived等）はこの並び順変更以前と同一。
+     各項目の表示条件は confirmed（管理者確認済）と phase（会期状態）のみで決まる（publishArrived は不使用）。
+     リエゾン+作品管理のみ、会期終了前でも salesOver（LIAISON+販売期間終了済）なら追加で非表示にする
+     （販売期間終了後は出品作品を増やしても販売できないため・2026-08-27確定）。
      curPage＝現在開いている管理サブページID（p2-11等）。省略時（トップ/公開サブページからの呼び出し）は
      どの項目とも一致しないため通常のリンクのまま（自己参照判定は無効）。 */
   var st = ktnExhState();
   var edit = ddiP(curPage, 'p2-11', 'edit', '展覧会編集', "location.href='./kotennavi-p2-11.html'");
+  /* リエゾンは全展覧会のデフォルト（「利用しない」状態は存在しない・2026-08-26確定）のため無条件に生成 */
   var liaisonLabel = st.liaison === 'plus' ? 'リエゾン+ 展示設定・作品管理' : 'リエゾン 展示設定・作品管理';
   var liaisonTarget = st.liaison === 'plus' ? 'p2-121' : 'p2-12';
-  var liaisonItem = st.liaison !== 'none' ? ddiP(curPage, liaisonTarget, 'grid', liaisonLabel, 'p2GotoWorks()') : '';
+  var liaisonItem = ddiP(curPage, liaisonTarget, 'grid', liaisonLabel, 'p2GotoWorks()');
   var articles = ddiP(curPage, 'p2-13', 'file', '記事管理', "location.href='./kotennavi-p2-13.html'");
   var qr = ddi('qr', '会場チェックイン用QRコードを表示', false, "ktnListQr('venue')");
   var flyer = ddi('print', '会場フライヤーを作成', false, 'ktnVenueFlyer()');
@@ -2115,17 +2139,17 @@ function p2OwnerMenuItems(curPage) {
   }
 
   if (st.phase === 'after') {
-    var items3 = [];
-    if (st.liaison === 'plus' && !st.salesOver) items3.push(liaisonItem);
-    items3.push(articles, insight);
-    return items3.join(ddSep());
+    /* 会期終了後はリエゾン/リエゾン+作品管理・QR・フライヤーを一律非表示（販売期間内かどうかは問わない）。
+       販売継続中の取引対応はP3-15/P3-16等の作家側コンソールが担うため、展覧会単位のP2-12(1)は締め切ってよい。 */
+    return [articles, insight].join(ddSep());
   }
 
-  var items = [edit];
-  if (st.publishArrived && liaisonItem) items.push(liaisonItem);
-  items.push(articles, qr, flyer);
-  if (st.publishArrived) items.push(insight);
-  return items.join(ddSep());
+  /* 会期終了前でも、リエゾン+の販売期間が終了済みなら作品管理項目のみ非表示（LIAISON無料枠は影響なし） */
+  var showLiaisonItem = !(st.liaison === 'plus' && st.salesOver);
+  var mid = [edit];
+  if (showLiaisonItem) mid.push(liaisonItem);
+  mid.push(articles, qr, flyer, insight);
+  return mid.join(ddSep());
 }
 
 /* P2 管理者メニュー（オーナーメニューの全項目を含むスーパーセット＋管理者専用項目）。
@@ -2139,8 +2163,8 @@ function p2OwnerMenuItems(curPage) {
 function p2AdminMenuItems(curPage) {
   var st = ktnExhState();
   var items = p2OwnerMenuItems(curPage);
-  var ended = st.phase === 'after';
-  var hasInsight = st.confirmed && (ended || st.publishArrived);
+  /* p2OwnerMenuItems() は confirmed のみでインサイトを出す（publishArrived は不使用・2026-08-26） */
+  var hasInsight = st.confirmed;
   var admin = [];
   if (!hasInsight) admin.push(ddiP(curPage, 'p2-14', 'chart', 'インサイト', "location.href='./kotennavi-p2-14.html'", 'ktn-ddi--admin'));
   admin.push(ddi('clone', 'クローン', false, '', 'ktn-ddi--admin'));
@@ -2739,6 +2763,92 @@ KTN.pagination = (function () {
 }());
 
 /* ══════════════════════════════════
+   KTN.insightList — インサイト（p3-12/p4-12等）の
+   年別グループ表示＋ページング＋列ソート共通描画
+   items は呼び出し側で日付降順ソート・年グループ済みの配列
+   （各要素 { href, name, year, stats:['値<span class="unit">単位</span>', …],
+     period（任意・展覧会の会期テキスト）,
+     linkTarget（任意・記事の投稿元'exhibition'|'artwork'。文字マーク表示用でcb系バッジは使わない。
+       クリエイター/ギャラリーページへの直接投稿は値なし＝マーク非表示） }）
+   groupByYear=false のとき（ソート適用時）は年見出しを出さずフラットに表示する
+══════════════════════════════════ */
+KTN.insightList = (function () {
+  function render(listEl, pagerEl, items, page, perPage, onGoto, groupByYear) {
+    if (!listEl) return page;
+    if (groupByYear == null) groupByYear = true;
+    var totalPages = Math.max(1, Math.ceil(items.length / perPage));
+    if (page > totalPages) page = totalPages;
+    listEl.querySelectorAll('.ins-item-list__row,.ins-item-list__year').forEach(function (el) { el.remove(); });
+    var pageRows = items.slice((page - 1) * perPage, page * perPage);
+    var lastYear = null;
+    pageRows.forEach(function (it) {
+      if (groupByYear && it.year !== lastYear) {
+        var yh = document.createElement('div');
+        yh.className = 'ins-item-list__year';
+        yh.textContent = it.year + '年';
+        listEl.appendChild(yh);
+        lastYear = it.year;
+      }
+      var row = document.createElement('div');
+      row.className = 'ins-item-list__row';
+      var nameHtml = '<a class="ins-item-list__name" href="' + it.href + '">' + it.name + '</a>';
+      var main;
+      if (it.linkTarget) {
+        var mark = '<span class="ins-item-list__link-mark">' + (it.linkTarget === 'exhibition' ? '展覧会' : '作品') + '</span>';
+        main = '<div class="ins-item-list__name-row">' + mark + nameHtml + '</div>';
+      } else {
+        main = nameHtml;
+      }
+      if (it.period) {
+        main += '<span class="ins-item-list__period">' + it.period + '</span>';
+      }
+      var html = '<div class="ins-item-list__main">' + main + '</div>';
+      it.stats.forEach(function (s) { html += '<span class="ins-item-list__stat">' + s + '</span>'; });
+      row.innerHTML = html;
+      listEl.appendChild(row);
+    });
+    if (pagerEl) {
+      KTN.pagination.render(pagerEl, {
+        page: page,
+        totalPages: totalPages,
+        onGoto: onGoto,
+      });
+    }
+    return page;
+  }
+  // stats等のHTML断片（'654'／'34<span class="unit">人</span>'／'1,240'）から数値だけを取り出す（ソート用）
+  function numFromHtml(html) {
+    var n = parseInt(String(html).replace(/<[^>]+>/g, '').replace(/[^\d]/g, ''), 10);
+    return isNaN(n) ? 0 : n;
+  }
+  // 列見出しの並べ替えボタン（.p315-buyers-sort-btn・data-sort）を一括結線
+  function bindSort(headEl, applyFn) {
+    if (!headEl) return null;
+    var btns = headEl.querySelectorAll('.p315-buyers-sort-btn');
+    var curKey = null, curDir = 1;
+    function apply(key, dir) {
+      curKey = key; curDir = dir;
+      btns.forEach(function (b) { b.classList.remove('is-active', 'is-desc'); });
+      var m = headEl.querySelector('.p315-buyers-sort-btn[data-sort="' + key + '"]');
+      if (m) {
+        m.classList.add('is-active');
+        if (dir === -1) m.classList.add('is-desc');
+      }
+      applyFn(key, dir);
+    }
+    btns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var key = btn.dataset.sort;
+        var dir = (curKey === key) ? curDir * -1 : (key === 'name' ? 1 : -1);
+        apply(key, dir);
+      });
+    });
+    return { apply: apply };
+  }
+  return { render: render, numFromHtml: numFromHtml, bindSort: bindSort };
+}());
+
+/* ══════════════════════════════════
    チェックイン・レビュー モーダル
 ══════════════════════════════════ */
 function openCheckinModal() {
@@ -2821,6 +2931,21 @@ function closeCheckinModal() {
   if (m) m.remove();
 }
 
+/* 来場のきっかけ（チェックイン時必須・共通語彙）。id はオーディエンス側の集計キーとしても使う */
+const CHECKIN_REASONS = [
+  { id: 'sns',      label: 'SNS（Instagram・Xなど）' },
+  { id: 'kotennavi', label: '個展なびで見つけた' },
+  { id: 'dm',        label: 'DM・フライヤー' },
+  { id: 'referral',  label: '知人の紹介' },
+  { id: 'know',      label: '作家・ギャラリーを以前から知っている' },
+  { id: 'walkby',    label: '通りがかり' },
+  { id: 'other',     label: 'その他' },
+];
+function ktnCheckinReasonLabel(id) {
+  var r = CHECKIN_REASONS.filter(function (r) { return r.id === id; })[0];
+  return r ? r.label : '';
+}
+
 /* ── openCheckinModal（旧実装を上書き） ── */
 function openCheckinModal() {
   var role = (window.ktnState && window.ktnState.role) || 'guest';
@@ -2854,6 +2979,14 @@ function openCheckinModal() {
       '<div class="ktn-modal__form-row">' +
       '<div class="ktn-modal__label">チェックイン日時</div>' +
       '<input type="date" class="ktn-modal__input" id="ktnCiDate" value="' + defaultDate + '">' +
+    '</div>' +
+    '<div class="ktn-modal__form-row" id="ktnCiReasonRow">' +
+    '<div class="ktn-modal__label">来場のきっかけ<span class="ktn-req">必須</span></div>' +
+    '<select class="ktn-modal__input" id="ktnCiReason" onchange="this.closest(\'.ktn-modal__form-row\').classList.remove(\'is-error\');document.getElementById(\'ktnCiReasonErr\').hidden=true;">' +
+    '<option value="">選択してください</option>' +
+    CHECKIN_REASONS.map(function (r) { return '<option value="' + r.id + '">' + r.label + '</option>'; }).join('') +
+    '</select>' +
+    '<div class="ktn-modal__err-msg" id="ktnCiReasonErr" hidden>来場のきっかけを選択してください</div>' +
     '</div>' +
     '<div class="ktn-modal__form-row">' +
     '<div class="ktn-modal__label">評価</div>' +
@@ -2893,6 +3026,17 @@ function ktnSetStar(v) {
 }
 
 function ktnSubmitCheckin() {
+  var reasonSel = document.getElementById('ktnCiReason');
+  var reasonRow = document.getElementById('ktnCiReasonRow');
+  var reasonErr = document.getElementById('ktnCiReasonErr');
+  if (reasonSel && !reasonSel.value) {
+    if (reasonRow) reasonRow.classList.add('is-error');
+    if (reasonErr) reasonErr.hidden = false;
+    reasonSel.focus();
+    return;
+  }
+  if (reasonRow) reasonRow.classList.remove('is-error');
+  if (reasonErr) reasonErr.hidden = true;
   showToast('\u6295\u7a3f\u3057\u307e\u3057\u305f\uff01');
   ktnCheckinShowWatchStep();
 }
@@ -2957,7 +3101,7 @@ function ktnCheckinShowWatchStep() {
 }
 
 /* \u2500\u2500 \u30c1\u30a7\u30c3\u30af\u30a4\u30f3\uff06\u30ec\u30d3\u30e5\u30fc \u7de8\u96c6\u30e2\u30fc\u30c0\u30eb\uff08\u5171\u6709\uff1ap5-2\uff0f\u5c06\u6765 p2\u30fbp8-11 \u304c\u518d\u5229\u7528\uff09 \u2500\u2500
-   opts: { title, date(yyyy-mm-dd), stars(0-5), review, focusReview, onSave({date,stars,review}) } */
+   opts: { title, date(yyyy-mm-dd), reason(id), stars(0-5), review, focusReview, onSave({date,reason,stars,review}) } */
 function openCheckinEditModal(opts) {
   opts = opts || {};
   var existing = document.getElementById('ktnCheckinModal');
@@ -2982,6 +3126,14 @@ function openCheckinEditModal(opts) {
     '<div class="ktn-modal__label">\u30c1\u30a7\u30c3\u30af\u30a4\u30f3\u65e5</div>' +
     '<input type="date" class="ktn-modal__input" id="ktnCiDate" value="' + (opts.date || '') + '">' +
     '</div>' +
+    '<div class="ktn-modal__form-row" id="ktnCiReasonRow">' +
+    '<div class="ktn-modal__label">\u6765\u5834\u306e\u304d\u3063\u304b\u3051<span class="ktn-req">\u5fc5\u9808</span></div>' +
+    '<select class="ktn-modal__input" id="ktnCiReason" onchange="this.closest(\'.ktn-modal__form-row\').classList.remove(\'is-error\');document.getElementById(\'ktnCiReasonErr\').hidden=true;">' +
+    '<option value="">\u9078\u629e\u3057\u3066\u304f\u3060\u3055\u3044</option>' +
+    CHECKIN_REASONS.map(function (r) { return '<option value="' + r.id + '"' + (r.id === opts.reason ? ' selected' : '') + '>' + r.label + '</option>'; }).join('') +
+    '</select>' +
+    '<div class="ktn-modal__err-msg" id="ktnCiReasonErr" hidden>\u6765\u5834\u306e\u304d\u3063\u304b\u3051\u3092\u9078\u629e\u3057\u3066\u304f\u3060\u3055\u3044</div>' +
+    '</div>' +
     '<div class="ktn-modal__form-row">' +
     '<div class="ktn-modal__label">\u8a55\u4fa1</div>' +
     '<div class="ktn-modal__stars" id="ktnStars">' + starHtml + '</div>' +
@@ -3004,10 +3156,20 @@ function openCheckinEditModal(opts) {
   if (t) t.value = opts.review || '';
   var saveBtn = document.getElementById('ktnCiSaveBtn');
   if (saveBtn) saveBtn.addEventListener('click', function () {
+    var reasonSel = document.getElementById('ktnCiReason');
+    var reasonRow = document.getElementById('ktnCiReasonRow');
+    var reasonErr = document.getElementById('ktnCiReasonErr');
+    if (reasonSel && !reasonSel.value) {
+      if (reasonRow) reasonRow.classList.add('is-error');
+      if (reasonErr) reasonErr.hidden = false;
+      reasonSel.focus();
+      return;
+    }
     var d = (document.getElementById('ktnCiDate') || {}).value || '';
+    var rs = reasonSel ? reasonSel.value : (opts.reason || '');
     var s = document.querySelectorAll('.ktn-modal__star.on').length;
     var r = ((document.getElementById('ktnReviewText') || {}).value || '').trim();
-    if (typeof opts.onSave === 'function') opts.onSave({ date: d, stars: s, review: r });
+    if (typeof opts.onSave === 'function') opts.onSave({ date: d, reason: rs, stars: s, review: r });
     closeCheckinModal();
     showToast('\u4fdd\u5b58\u3057\u307e\u3057\u305f');
   });

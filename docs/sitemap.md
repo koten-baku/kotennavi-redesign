@@ -53,7 +53,7 @@
 | P2-12 | 展覧会-リエゾン作品管理 |  |  |  |  | W | W | W | --w-detail | kotennavi-p2-12.html | Fix済 |
 | P2-12-1 | 展覧会-リエゾン+作品管理 |  |  |  |  | W | W | W | --w-detail | kotennavi-p2-12-1.html | Fix済 |
 | P2-13 | 展覧会-記事管理 |  |  |  |  | W | W | W | --w-detail | kotennavi-p2-13.html | Fix済 |
-| P2-14 | 展覧会-インサイト |  |  |  |  | R | R | R | --w-article | kotennavi-p2-14.html | 調整中 |
+| P2-14 | 展覧会-インサイト |  |  |  |  | R | R | R | --w-article | kotennavi-p2-14.html | Fix済 |
 | P2-15 | 展覧会-広告作成 |  |  |  |  | W | W | W | --w-detail | # | 次期リリース |
 | P2-16 | 展覧会-修正依頼 |  | W | W | W |  |  |  | --w-detail | kotennavi-p2-16.html | 調整中 |
 <!-- 「展覧会-報告」は全表示系ページ共通の報告フォーム P60-13「問題を報告する」に統合（2026-07-24）。対象は ?from/?type で受け取るため展覧会固有ページは持たない。 -->
@@ -69,7 +69,7 @@
 | P3-2 | クリエイター-記事一覧 |  | R | R | R | R | R | R | --w-entity | kotennavi-p3-2.html | Fix済 |
 | P3-3 | クリエイター-作品一覧 |  | R | R | R | R | R | R | --w-entity| kotennavi-p3-3.html | Fix済 |
 | P3-11 | クリエイター-編集 |  |  |  |  | W |  | W | --w-detail | kotennavi-p3-11.html | Fix済 |
-| P3-12 | クリエイター-インサイト |  |  |  |  | R |  | R | --w-article | kotennavi-p3-12.html | 調整中 |
+| P3-12 | クリエイター-インサイト |  |  |  |  | R |  | R | --w-article | kotennavi-p3-12.html | Fix済 |
 | P3-13 | クリエイター-オーディエンス管理 |  |  |  |  | R/W |  | R/W | --w-detail | kotennavi-p3-13.html | Fix済 |
 | P3-14 | クリエイター-ポートフォリオ管理 | L |  |  |  | R/W |  | R/W | --w-detail | kotennavi-p3-14.html | Fix済 |
 | P3-15 | クリエイター-リエゾン+コンソール | L+ |  |  |  | R/W |  | R/W | --w-detail | kotennavi-p3-15.html | Fix済 |
@@ -88,7 +88,7 @@
 | P4-1 | ギャラリー-展覧会アーカイブ |  | R | R | R | R | R | R | --w-entity | kotennavi-p4-1.html | Fix済 |
 | P4-2 | ギャラリー-記事一覧 |  | R | R | R | R | R | R | --w-entity | kotennavi-p4-2.html | Fix済 |
 | P4-11 | ギャラリー-編集 | L,L+ |  |  |  |  | W | W | --w-detail | kotennavi-p4-11.html | Fix済 |
-| P4-12 | ギャラリー-インサイト |  |  |  |  |  | R | R | --w-article | kotennavi-p4-12.html | 調整中 |
+| P4-12 | ギャラリー-インサイト |  |  |  |  |  | R | R | --w-article | kotennavi-p4-12.html | Fix済 |
 | P4-13 | ギャラリー-オーディエンス管理 |  |  |  |  |  | R/W | R/W | --w-detail | kotennavi-p4-13.html | Fix済 |
 | P4-14 | ギャラリー-インベントリー管理 | L,L+ |  |  |  |  | R/W | R/W | --w-detail | kotennavi-p4-14.html | Fix済 |
 | P4-15 | ギャラリー-リエゾン+コンソール | L+ |  |  |  |  | R/W | R/W | --w-detail | kotennavi-p4-15.html | Fix済 |
@@ -125,7 +125,7 @@
 | P6-1 | 作品-リエゾン出品時 | L | R | R | R | R | R | R | --w-entity | kotennavi-p6-1.html | Fix済 |
 | P6-2 | 作品-リエゾンプラス出品時 | L+ | R | R | R | R | R | R | --w-entity | kotennavi-p6-2.html | Fix済 |
 | P6-11 | 作品-新規/編集/クローン |  |  |  |  | W | W | W | --w-detail | kotennavi-p6-11.html | Fix済 |
-| P6-12 | 作品-インサイト |  |  |  |  | R | R | R | --w-article | kotennavi-p6-12.html | 調整中 |
+| P6-12 | 作品-インサイト |  |  |  |  | R | R | R | --w-article | kotennavi-p6-12.html | Fix済 |
 | P6-13 | 作品-問合せ | L |  | W | W |  | W | R | --w-detail | kotennavi-p6-13.html | 調整中 |
 | P6-14 | 作品-問合せへの回答 | L |  |  |  | R/W |  | R/W | --w-detail | kotennavi-p6-14.html | 調整中 |
 | P6-15 | 作品-記事管理 |  |  |  |  | W | W | W | --w-detail | kotennavi-p6-15.html | Fix済 |

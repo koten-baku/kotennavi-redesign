@@ -21,6 +21,23 @@
 ## リリース履歴（ハンドオフ境界）
 後工程（React CSR / Drupal）に成果物を渡した区切りと、その回に含まれる変更の索引。**新しい回を上に積む。** 各行は該当の決定エントリ（追N）・commit を指すだけ＝詳細は本文を読む。
 
+### 2026-08-29 handoff ｜ 範囲 `handoff-2026-08-03..HEAD`（前回 2026-08-03 分以降）
+- **P90（審査・メールテンプレート管理）／P10-1〜3（検索）新設** → commit `d4a1e3a`
+- **kotennavi-common.js全面復旧＋P2/P3/P4/P6/P7オーナーメニュー本配線・管理者18分岐・会場フライヤー新設** → commit `b6faa5e`
+- **P11-2/P11-3/P11-4「取消」ステータス表示・ヘッダーCTA未配線是正・P2オーナー/管理者メニューの会期状態ロジック是正（複数回）・ガイド系リンク配線** → commit `6c89c67`〜`ba830e7`
+- **オーナーメニュー自己参照リンク非活性化・LIAISON+申込状態(KTN.lp)新設・サイドバー＋フッターのドッキングを全ページへ展開・P3-18/P4-18公開日指定注記分離** → commit `a54f8f3`〜`74d9e6a`
+- **P2-14インサイト：折れ線チャート化・会場チェックインの傾向・チェックイン後ウォッチ提案ステップ・A-2/B-1/A-1/B-2/C-1ロードマップ実装** → 追80〜94
+- **未作成24ページ一括作成（P10-4〜7はSEO URLラッパー）・チェックイン軽量ナッジ廃止・P2-14 PERIODを展覧会フェーズ軸へ変更・関心セクション/次にやることウィジェット等イテレーション** → 追95〜106
+- **P2オーナーメニュー：会期終了後のリエゾン(+)非表示・リエゾンを全展覧会デフォルト化・確認済条件へ統一・P2-11デモバー起因バグ2件修正・LIAISON設定UI廃止＋E-01メール追加** → 追107〜114
+- **P3-12/P4-12インサイト新設（P2-14設計を展開）・P3-14/18/19はCRUD専用に限定しインサイト数値をP3-12/P4-12へ集約・「展覧会/記事/作品への関心」「ウォッチャーの推移」実装** → 追115〜120, 追123
+- **P3-13/P4-13オーディエンス管理：データモデル統合・単一リスト＋3フィルタ化・正規USERカード形式・並べ替え/フィルタ調整（複数回）** → 追121, 追122, 追124〜132
+- **P6-12インサイト：P2-14/P3-12設計へ整合・LIAISON+ファネル（売約済導線・全出展累計スコープ）・展覧会別内訳・モバイル折返し修正** → 追133〜141
+- **インサイト4ページ＋オーディエンス2ページの回遊性・ロイヤルティ強化（フェーズ1）・P2-14ロック文言撤去・P6-12ゼロ状態・オーディエンス導線文言統一** → 追142〜145
+- **P3-13/P4-13：KPI delta基準変更・展覧会別チェックインリストビュー新設・新規ウォッチャー数値不整合是正・非公開メモ欄追加** → 追146〜149
+- **P2チェックインに「来場のきっかけ」必須選択を追加しP3-13/P4-13へ反映（`openCheckinEditModal()`でも編集可へ修正）** → 追150, 追151
+- **インサイト/オーディエンス系ページのエンティティ名にページリンクを付与・オーディエンス管理の自動メール通知訴求文言を追加後、ウォッチのみが対象と明確化し会場フライヤー/QRモーダルの導線を修正** → 追152〜154
+- **上記をもってP2-14/P3-12/P4-12/P6-12（インサイト）・P3-13/P4-13（オーディエンス管理）をFix確定**（保留2件＝追137〔展覧会別売約済区分〕・追121〔④共通ウォッチ対象表示〕は実装対象外として明示的にクローズ）
+
 ### 2026-08-03 handoff ｜ 範囲 `handoff-2026-07-22..HEAD`（前回 2026-07-22 分以降）
 - **P3-13／P4-13（クリエイター／ギャラリー-オーディエンス管理）新設** → 追補132〜134
 - **P3-15「購入者一覧」タブ新設＋ニックネーム化／完了日追記／5列ソート／モバイル2点修正、P4-15へ展開** → 追補135〜138
@@ -7094,3 +7111,1140 @@ Node+jsdomで`KTN.init`→`KTN.pages['p2-14']()`を実行し、before/during/aft
 
 ### 追記（同日）：デモバーに「記事：投稿あり／投稿なし」トグルを復帰
 上記追記で「記事0件の場合に空状態プロンプト（`#p214ArticleNotice`＝『記事がまだありません。会期が終わる前に記事を投稿すると…』＋`記事を管理する →`）が既に実装済みだが、デモバー簡素化（追105）で articles 切替ボタンが消えておりブラウザで再現不可」と記載した直後、ユーザーから「記事0件の場合に、記事追加のプロンプトを出してほしい」の指示。実装自体は既存（`syncArticleResponse()`の`articles==='no'`分岐）で満たしていたが、ブラウザで確認できないと「無い」のと同義のため、デモバーに`記事：投稿あり／投稿なし`の2ボタンのみ最小復帰（`data-exh-key="articles"`・`ktnSetExh('articles','yes'|'no',this)`）。追105で削除した4群（確認／公開日／記事／販売期間）のうち「記事」のみの部分復帰であり、確認・公開日・販売期間は引き続き削除済みのまま（今回の指示対象外）。`ktnSetExh`は既存の汎用関数（任意の`KTN.exh`キーを書き換えて`ktnRender()`を再実行）のため新規JSは不要だった。node --check・タグ開閉数（div 116/116・section 7/7・p 59/59・a 23/23・svg 20/20・button 15/15）すべて一致確認済み。
+
+## 追107. P2オーナーメニュー：会期終了後はリエゾン(+)作品管理・QR・フライヤーを一律非表示に変更（2026-08-26）
+
+### 背景
+ユーザーから「P2のオーナーメニューで会期終了後にリエゾン作品、QR、フライヤーはできないようにしてほしい」の指示。`kotennavi-common.js`の`p2OwnerMenuItems()`を確認したところ、QR（会場チェックイン用QR表示）・フライヤー作成は`phase==='after'`（会期終了後）分岐（`items3`）に元々含まれておらず既に非表示だったが、リエゾン(+)作品管理項目のみ「`liaison==='plus'`かつ`!salesOver`（販売期間内）」の条件で表示を継続する例外が残っていた。これは追補198で「LIAISON+は会期終了後も販売期間中は作品管理が必要」という理由で意図的に導入した仕様だったが、今回のユーザー指示はこの例外を認めない方向への明確な方針転換。
+
+### 決定・実装
+- `p2OwnerMenuItems()`の`st.phase === 'after'`分岐を`[articles, insight].join(ddSep())`のみに簡素化（`liaisonItem`の条件付き push を削除）。会期終了後はオーナーメニューから記事管理とインサイトのみが残る。
+- **販売継続中の取引対応（発送・入金確認等）はP3-15（LIAISON+コンソール）／P3-16（取引デスク）等、作家側の横断コンソールが担う設計のため、展覧会単位のP2-12/P2-12-1（この展覧会の作品表示設定・出品登録）へのアクセスは会期終了で締め切って問題ない**、という整理で撤回を正当化した（P2-12系とP3-15/16系はスコープが違う＝前者は「この展覧会の作品掲載」、後者は「クリエイター全体の取引管理」）。
+- 関数冒頭のコメント（分岐の説明）も新仕様に合わせて更新。QR・フライヤーの説明は変更なし（元々非表示だったため）。
+- `p2AdminMenuItems()`は`p2OwnerMenuItems()`の戻り値をそのまま使う設計で、リエゾン項目を明示的に補完するロジックを元々持っていなかったため、管理者側の見え方もオーナーと同様に変化する（意図的な変更ではなく既存の委譲構造に追従した結果）。
+
+### 検証
+`node -c kotennavi-common.js`で構文確認済み。**実ブラウザでの目視確認はユーザー確認待ち**（会期終了後・LIAISON+・販売期間内〔`salesOver`未到達〕のデモ状態でオーナーメニューを開き、リエゾン作品管理項目が表示されないことを確認する必要がある）。
+
+### 影響ファイル
+`kotennavi-common.js`（`p2OwnerMenuItems()`のみ）。
+
+## 追108. リエゾンを全展覧会のデフォルトに変更・「利用しない」状態を撤廃（2026-08-26）
+
+### 背景
+追107（P2オーナーメニューの会期終了後リエゾン項目非表示化）の続き。ユーザーから「p2-11の修正ですが、他にも波及があります。リエゾンはdefaultにしたい、つまりリエゾンなしという状態は存在しない、展覧会を新規追加して、管理者が確認した後、リエゾン作品管理メニューがオーナーメニュー出てくる。」という指示があり、これまで展覧会ごとに「利用しない／LIAISON／LIAISON+」の3択だったリエゾンモードから「利用しない」を廃止し、全展覧会は必ず LIAISON（無料の基本ティア）以上を持つ、という仕様に変更した。
+
+### 決定・実装
+- **`kotennavi-p2-11.html`**（展覧会編集フォーム＝唯一の入力元）
+  - LIAISON設定ブロックから「利用しない」ラジオオプション（`<label id="p211LiaisonNoneOpt">`、`value="none"`）を削除。選択肢は「LIAISON を利用する」「LIAISON+ を利用する」の2つのみに。
+  - 会期開始ロック注記の文言から「利用しない／」を削除（「リエゾンモード（LIAISON／LIAISON+）は変更できません」）。
+  - `clearAll()`（新規作成・クローン時の初期化関数）：`value=none`のラジオを checked にしていた処理を、`value=liaison`を checked にする処理へ変更。**これが今回の指示の核心**＝新規展覧会は必ず LIAISON からスタートする。
+  - `toggleLiaisonMode()`：選択中ラジオが取得できない場合のフォールバック値を`'none'`→`'liaison'`に変更。
+  - `buildSummary()`（確認モーダルのサマリ表示）：ラベル辞書`{none:'利用しない', liaison:'...', plus:'...'}`から`none`キーを削除し、フォールバックも`'liaison'`に変更。
+- **`kotennavi-common.js`**
+  - `p2GotoWorks()`（オーナーメニューの「リエゾン作品管理」クリック時の遷移先振り分け）：`state === 'none'`時に`KTN.toast('この展覧会はLIAISON/LIAISON+が設定されていません')`を出す分岐、およびバッジ`display:none`から`none`状態を判定するロジックを削除。デフォルト値を`'liaison'`とし、`plus`ならP2-12-1、それ以外は常にP2-12へ遷移する2分岐に簡素化。
+  - `p2OwnerMenuItems()`：`liaisonItem`の生成条件`st.liaison !== 'none' ? ddiP(...) : ''`から三項演算子を除去し、無条件で`ddiP(...)`を生成するよう変更（リエゾンは常に存在するため）。呼び出し側の`if (st.publishArrived && liaisonItem)`も`if (st.publishArrived)`に簡素化（`liaisonItem`が常に truthy になったため）。
+- **`kotennavi-p2.html`**（展覧会トップ＝独自の`setLiaison()`実装を持つページ）
+  - デモバーの「なし」ボタン（`setLiaison('none',this)`）を削除。
+  - `setLiaison()`内の`type === 'none'`分岐（バッジ・サブナビ・バナー・サイドリンクを`display:none`にする処理）を削除し、`if (type === 'liaison') {...} else /* plus */ {...}`の2分岐構造に整理。
+- **`kotennavi-p2-1.html` / `p2-2.html` / `p2-3.html` / `p2-4.html` / `p2-5.html` / `p2-5-1.html` / `p2-13.html` / `p2-14.html`**（計8ファイル）：共通デモバーパターン`<button class="dbtn dbtn-exh" data-exh-key="liaison" onclick="ktnSetExh('liaison','none',this)">利用なし</button>`を全ファイルから削除。
+
+### 対象外と判断したもの
+- `kotennavi-pages.js`のP2-14（インサイト）`syncFunnel()`/`syncArticleResponse()`内に残る`mode === 'none'`分岐（ファネル非表示・案内文言表示・関連記事リスト非表示のロジック）：デモバーから「なし」の選択肢が消えたことで`KTN.exh.liaison`は実質的に`'liaison'`または`'plus'`にしかならず、これらの分岐は到達不能だが無害（動作に影響しない）。今回はコード整理の範囲を「実際に到達しうる分岐・UIの削除」に絞り、この2関数のリファクタリングは見送った。将来インサイトページ（P2-14）に本格的に手を入れる際にまとめて整理する。
+- `KTN.exh`のグローバルデフォルト（`liaison: 'plus'`）：既存のリッチなデモ展覧会（「あなたが知らないオノマトペ」）の状態を表しており、「新規展覧会作成時のデフォルト」とは別の文脈（各ページを開いた時点の初期デモ状態）のため変更していない。新規作成デフォルトは`p2-11.html`の`clearAll()`が担う。
+- `kotennavi-p6-1.html` / `kotennavi-p6-2.html` / `kotennavi-p4-11.html`：grep で「none」がヒットしたが、SVGの`fill="none"`属性、駐車場有無セレクト、LIAISON+利用申込の別概念（未申請/申請済み）など無関係な一致であることを確認済み。スコープ外。
+
+### 検証
+`node -c kotennavi-common.js`で構文確認済み。**実ブラウザでの目視確認はユーザー確認待ち**：①`p2-11.html`で新規作成モードに入り、LIAISON設定が自動的に「LIAISON を利用する」選択状態になっていること、②「利用しない」の選択肢自体が表示されないこと、③管理者確認後にP2オーナーメニューへリエゾン項目が正しく表示されること、④p2〜p2-14系9ファイルのデモバーから「利用なし／なし」ボタンが消えていること、を確認する必要がある。
+
+### 影響ファイル
+`kotennavi-p2-11.html`、`kotennavi-common.js`、`kotennavi-p2.html`、`kotennavi-p2-1.html`、`kotennavi-p2-2.html`、`kotennavi-p2-3.html`、`kotennavi-p2-4.html`、`kotennavi-p2-5.html`、`kotennavi-p2-5-1.html`、`kotennavi-p2-13.html`、`kotennavi-p2-14.html`（計11ファイル）。
+
+## 追109. P2オーナーメニュー：リエゾン/インサイト表示条件から「公開日到達済」を撤廃・確認済のみに修正（2026-08-26）
+
+### 背景
+追108（リエゾンを全展覧会のデフォルトに変更）の直後、実装内容を確認したユーザーから追加の指摘があった。実装側は「管理者確認後に自動的にリエゾン・リエゾン+作品管理がオーナーメニューに出てくるようにしたい」という要望に対し、`p2OwnerMenuItems()`の既存ロジック（`st.confirmed && st.publishArrived`＝確認済**かつ**公開日到達済の場合のみリエゾン項目・インサイト項目を表示）をそのまま維持していたが、ユーザーから「確認済だけです、+『公開日到達済』の条件は間違いです。この仕様はp2-14だけでなく、p2-11,p2系のオーナーメニューに関係する仕様です。」との訂正が入った。`publishArrived`はオーナーメニューの表示条件としては不要（誤りだった）で、`confirmed`のみで判定すべき、という仕様確定。
+
+### 決定・実装
+- `kotennavi-common.js`の`p2OwnerMenuItems()`：会期終了前（会期前・会期中）ブロックを、`publishArrived`による条件付き push（`if (st.publishArrived) items.push(liaisonItem)` / `if (st.publishArrived) items.push(insight)`）から、`[edit, liaisonItem, articles, qr, flyer, insight].join(ddSep())`という無条件配列に簡素化。管理者確認（`confirmed`）が下りた時点で、会期終了前であればリエゾン/リエゾン+作品管理・インサイトを含む全項目が自動的にオーナーメニューへ表示される。
+- `p2AdminMenuItems()`内の`hasInsight`（＝オーナーメニュー由来の項目にインサイトが既に含まれているかどうかを判定し、含まれていなければ管理者専用枠で補完する変数）も、旧ロジック`st.confirmed && (ended || st.publishArrived)`から`st.confirmed`のみに修正。旧ロジックのままだと、修正後の`p2OwnerMenuItems()`が確認済であれば常にインサイトを含むにもかかわらず、`hasInsight`が`publishArrived`未到達時に`false`と誤判定し、インサイト項目が重複表示されるバグになるところだった。
+- 関数冒頭のコメントを新仕様（分岐の主軸は`confirmed`のみ、`publishArrived`は不使用）に合わせて全面更新。
+- **`publishArrived`自体は削除していない**：`KTN.exh`・`ktnExhState()`のプロパティとしては存置。公開ページ側（p2本体の公開前プレビュー表示等、`_applyPeriodToTab()`まわり）では引き続き使われている概念のため、オーナーメニューの表示条件からのみ外した。
+
+### 検証
+`node -c kotennavi-common.js`で構文確認済み。この関数はp2/p2-1〜p2-6/p2-11/p2-12/p2-12-1/p2-13/p2-14の全ページで共有される単一ソースのため、修正は個別ページを触らずに全ページへ自動的に波及する。**実ブラウザでの目視確認はユーザー確認待ち**（確認済・公開日未到達のデモ状態でP2系オーナーメニューを開き、リエゾン作品管理・インサイト項目が表示されること、確認前は従来どおり出ないことを確認する必要がある）。
+
+### 影響ファイル
+`kotennavi-common.js`（`p2OwnerMenuItems()` / `p2AdminMenuItems()`のみ）。
+
+## 追110. P2-14インサイト：「作品0件（未利用）」判定をLIAISON modeから独立させ利用開始プロンプトを実装（2026-08-26）
+
+### 背景
+追108（リエゾンを全展覧会のデフォルトに変更・「利用しない」状態を撤廃）の実装確認中、ユーザーから「p2-14の場合はこの変更によって作品0件(未利用)のリエゾン利用開始プロンプトが必要になる」との指摘。
+
+追108以前は、`kotennavi-pages.js`のP2-14 `syncFunnel()`/`syncArticleResponse()`が`KTN.exh.liaison === 'none'`をトリガーに「この展覧会にはLIAISON/LIAISON+で公開中の作品がありません」という案内（`#p214FunnelNotice`）・作品興味あり数0件表示・人気作品ランキング非表示を出していた。追108でリエゾンが常時有効になった結果、`liaison`が`'none'`を取り得なくなり、この一連のUIが到達不能な死コードになった（追108のprogress.md記載では「無害な死コードとして意図的に未修正のまま残置」と判断していた）。
+
+しかし、この死コード化には見落としがあった。「LIAISONが有効だが、まだ1件も作品が登録されていない」という状態（新規展覧会作成直後・管理者確認直後などに実際に起こる）は追108後も現実に存在し続ける。旧ロジックは「LIAISON未設定」と「作品未登録」を`liaison mode`という1つの変数で混同していたため、mode側の分岐を無害化した結果、本来必要な「作品0件」プロンプトまで一緒に道連れで失われていた。
+
+### 決定・実装
+判定軸を`liaison mode`（plus/liaison）から独立させ、新しいデモ状態`KTN.exh.works`（'yes'=作品登録あり／'no'=未登録・デフォルト'yes'）で「作品0件」を判定するよう変更。
+
+- **`kotennavi-common.js`**：`KTN.exh`初期値・`ktnExhState()`の戻り値に`works`プロパティを追加（`articles`と同型の追加）。
+- **`kotennavi-p2-14.html`**：デモバーに「作品：登録あり／未登録(0件)」のトグルを追加（`ktnSetExh('works','yes'|'no',this)`。既存の汎用`ktnSetExh`をそのまま再利用しており新規JSは不要）。`#p214FunnelNotice`内の案内リンクに`id="p214FunnelNoticeLink"`を付与し、テキストを「この展覧会にはまだ登録された作品がありません。LIAISONは自動的に利用開始されているので、作品を登録すると、興味あり！や販売につなげられます。作品を登録する →」に更新（旧文言「LIAISON/LIAISON+で公開中の作品がありません」はLIAISON自体が未設定であることを前提にした表現だったため、LIAISON常時有効を前提にした文言に書き換え）。
+- **`kotennavi-pages.js`**：
+  - `syncFunnel()`：`hasWorks = KTN.exh.works !== 'no'`を新設。4段ファネル（plus）・2段ファネル（liaison）の表示条件に`&& hasWorks`を追加。`#p214FunnelNotice`の表示条件を`isPlus || isLiaison || locked`（＝実質常にhidden）から`hasWorks || locked`に変更し、作品0件かつ会期終了前であれば mode に関わらず表示されるようにした。案内リンクの遷移先も、mode（liaison/plus）に応じて`kotennavi-p2-12.html`/`kotennavi-p2-12-1.html`へ動的に切り替えるよう追加（従来は`p2-12.html`固定だった）。
+  - `syncArticleResponse()`：作品の興味あり数KPI（`#p214ArtworkInterestVal`/`Sub`）の分岐を「`mode`が plus/liaison/none の3値」から「`hasWorks`が false なら0件表示、true なら mode（plus/liaison）に応じた実数表示」の構造に変更。人気作品ランキング（`#p214ArtworkTopList`）の非表示条件も`mode === 'none'`から`!hasWorks`に変更。
+  - 両関数のデフォルト値フォールバックも、もはや存在しない`'none'`から`'liaison'`に更新（p2GotoWorks()等、既に追108で更新済みの他関数と表記を統一）。
+
+### 検証
+`node -c kotennavi-common.js`・`node -c kotennavi-pages.js`通過。`kotennavi-p2-14.html`のインラインscriptもNodeでの構文チェック（`new Function()`）で確認済み。**実ブラウザでの目視確認はユーザー確認待ち**：デモバーの「作品：未登録(0件)」に切り替えた状態で、LIAISON・LIAISON+いずれのモードでも「作品0件」プロンプトが表示されること、会期終了後は表示されないこと、案内リンクの遷移先がモードに応じて正しく切り替わること、「作品：登録あり」に戻すと従来通りのファネル・件数表示に戻ることを確認する必要がある。
+
+### 影響ファイル
+`kotennavi-common.js`（`KTN.exh` / `ktnExhState()`）、`kotennavi-p2-14.html`（デモバー・`#p214FunnelNotice`）、`kotennavi-pages.js`（P2-14 `syncFunnel()` / `syncArticleResponse()`）。
+
+## 追111. P2オーナーメニュー：会期終了前でもリエゾン+販売期間終了後はリエゾン+作品管理を非表示に（2026-08-27）
+
+### 背景
+ユーザーから「p2系のオーナーメニューにリエゾン+販売期間終了後はリエゾン+作品管理を出さないでください」の指示。
+
+`p2OwnerMenuItems()`（追109時点）は、会期終了後（`phase==='after'`）でのみリエゾン(+)作品管理・QR・フライヤーを一律非表示にしていたが、会期終了前（会期前・会期中）は`salesOver`（LIAISON+の申込順販売キューが処理完了し販売期間自体が終了したかどうか）の状態に関わらず、リエゾン+作品管理項目を常に表示していた。会期自体は継続中でも、LIAISON+の販売期間だけ先に終了しているケース（申込順のキューが会期終了を待たずに捌き切られる等）では、これ以上作品を出品・編集しても販売につながらないため、作品管理への導線を残す意味がない。
+
+### 決定・実装
+`kotennavi-common.js`の`p2OwnerMenuItems()`、会期終了前ブロックの戻り値生成を以下のように変更：
+
+```js
+/* 会期終了前でも、リエゾン+の販売期間が終了済みなら作品管理項目のみ非表示（LIAISON無料枠は影響なし） */
+var showLiaisonItem = !(st.liaison === 'plus' && st.salesOver);
+var mid = [edit];
+if (showLiaisonItem) mid.push(liaisonItem);
+mid.push(articles, qr, flyer, insight);
+return mid.join(ddSep());
+```
+
+- **対象はリエゾン+（`liaison==='plus'`）のみ**：LIAISON（無料枠・販売機能を持たない）には「販売期間」という概念自体が存在しないため、`salesOver`の値に関わらず常に表示する。
+- QR・フライヤー・記事管理・インサイトは`salesOver`の影響を受けない（従来通り常に表示。これらは会場運営・広報・分析であり販売期間の終了と無関係なため）。
+- `p2AdminMenuItems()`の`hasInsight`判定（`st.confirmed`のみで決まる）は`liaisonItem`の有無に依存しない独立したロジックのため変更不要。
+
+### 検証
+`node -c kotennavi-common.js`で構文確認済み。単一ソース関数のため、修正は個別ページを触らずp2/p2-1〜p2-6/p2-11/p2-12/p2-12-1/p2-13/p2-14の全ページへ自動的に波及する。**実ブラウザでの目視確認はユーザー確認待ち**（会期終了前・LIAISON+・`salesOver=true`〔各ページのデモバー「終了済」ボタン〕の状態でP2系オーナーメニューを開き、リエゾン+作品管理のみが非表示で他項目は表示されたままであること、LIAISON（無料枠）では`salesOver`の値に関わらずリエゾン作品管理が表示され続けることを確認する必要がある）。
+
+### 影響ファイル
+`kotennavi-common.js`（`p2OwnerMenuItems()`のみ）。
+
+## 追112. P2-11：デモバー「確認前」が選択できないバグ修正（ktnRenderの無限相互再帰を解消・2026-08-27）
+
+### 背景
+ユーザーから「p2-11でデモバーの『確認前』が選択できない」の報告。
+
+`kotennavi-pages.js`の`KTN.pages['p2-11']`は、`window.ktnRender`を自ページの`syncMgmtBar()`込みでラップする（他の管理ページと共通のパターン）：
+
+```js
+var _prevRender = window.ktnRender;
+window.ktnRender = function () { if (typeof _prevRender === 'function') _prevRender(); syncMgmtBar(); };
+```
+
+`syncMgmtBar()`は毎回`window.p211RoleSync()`（`kotennavi-p2-11.html`定義）を呼ぶ。この`p211RoleSync()`は末尾で`setConfirmed(demoConfirmed)`を呼び直しており、これはロール切替（creator/gallery/admin）で変わる`isAdminRole()`依存のロック状態・管理者パネル表示等を再同期する目的の設計だった。ところが`setConfirmed(on)`自体が冒頭（`demoConfirmed`／`KTN.exh.confirmed`更新の直後）で`ktnRender()`を呼んでおり（KTN.exh変更をヘッダーの`getActions()`等へ即時反映するため）、これが以下の無限相互再帰を生んでいた：
+
+```
+setConfirmed(on)
+  → ktnRender()                       // wrapped
+    → syncMgmtBar()
+      → p211RoleSync()
+        → setConfirmed(demoConfirmed) // 再入
+          → ktnRender() → … （以下無限）
+```
+
+さらに`setConfirmed()`は末尾でも`toggleLiaisonMode()`を呼んでおり、`toggleLiaisonMode()`自体も末尾で`ktnRender()`を呼ぶため、同じ経路でもう一重の再帰ルートが存在した。この再帰は`on`の値（true/false）に関わらず無条件に発生する（`p211RoleSync`は常に現在の`demoConfirmed`を渡して`setConfirmed`を呼び直すだけで、値が変化したかどうかを見ていない）。
+
+再帰は最終的にスタックオーバーフロー例外を発生させるが、これは`setConfirmed()`冒頭の`ktnRender()`呼び出し（1287行目付近）の中で起きるため、**同関数の残りのコード（1288行目以降＝ボタンの`.on`/`.off`切替、確認済バナーの表示切替、開催場所/出展者のロック、`toggleLiaisonMode()`・`checkVenueNew()`呼び出し）が一度も実行されない**。
+
+症状が「確認前だけ選択できない」ように見えた理由：`kotennavi-p2-11.html`のデモバーHTMLでは`dbarConfOn`（確認済ボタン）に最初から`class="dbtn on"`が直書きされている。上記の理由で実際にはどちらのボタンをクリックしても内部状態・DOM更新は反映されないが、「確認済」はもともと見た目が`on`なので変化が無いように見えて気づかれず、「確認前」だけがクリックしても`on`にならないという非対称な症状として現れていた。
+
+### 決定・実装
+呼び出し元（`kotennavi-common.js`のgetActions等）や`kotennavi-p2-11.html`側の`setConfirmed()`/`toggleLiaisonMode()`/`p211RoleSync()`のロジックは変更せず、**ラップ側（`kotennavi-pages.js`の`KTN.pages['p2-11']`）に再入防止ガードを追加**する方式で修正した。これは「`ktnRender()`の呼び出し連鎖の中で、同じページの`syncMgmtBar`が二重に実行されるのを防ぐ」という単純な既存パターン（多重初期化防止のmutexフラグ）で、他ページの`setConfirmed`的な関数の設計自体を変える必要がない最小の修正となる。
+
+```js
+KTN.pages['p2-11'] = function () {
+  var _p211Syncing = false;
+  function syncMgmtBar() {
+    if (_p211Syncing) return;
+    _p211Syncing = true;
+    try {
+      // ...既存処理...
+      if (typeof window.p211RoleSync === 'function') window.p211RoleSync();
+    } finally {
+      _p211Syncing = false;
+    }
+  }
+  syncMgmtBar();
+  // ...
+};
+```
+
+これにより、`setConfirmed()`や`toggleLiaisonMode()`が内部で呼ぶ`ktnRender()`は、既に`syncMgmtBar`実行中であれば即座に素通り（`_prevRender()`＝ヘッダー再描画のみ実行され、`p211RoleSync()`は呼ばれない）するため、再帰が1段で止まる。最外側の`setConfirmed()`呼び出しは中断されることなく最後まで実行され、ボタンの`.on`/`.off`切替・ロック状態更新が正しく反映される。
+
+### 検証
+`node -c kotennavi-pages.js`で構文確認済み。`kotennavi-p2-11.html`内インラインscriptもNode `new Function()`抽出チェックで構文エラーなし。同種の`syncMgmtBar`／RoleSyncパターンを持つ他ページ（p6-11／p6-12／p7-11／p11-4）のRoleSync実装を確認し、いずれも`ktnRender()`を呼び返す関数（`setConfirmed`相当）を持たないことを確認済み＝この無限再帰バグはp2-11固有で、他ページへの横展開は不要。**実ブラウザでの目視確認はユーザー確認待ち**（デモバー「確認前」クリックでボタンが選択状態に切り替わり、確認前バナー表示・開催場所/出展者のロック解除・リエゾンリンク表示等の関連UIが正しく反映されることを確認。ロール切替（ゲスト/creator/gallery/管理者）でも同じ再帰経路を通るため、切替後の管理者パネル表示・ロック状態が正しく更新されることも合わせて確認する必要がある）。
+
+### 影響ファイル
+`kotennavi-pages.js`（`KTN.pages['p2-11']`の`syncMgmtBar()`のみ）。`kotennavi-p2-11.html`側のコードは無変更。
+
+## 追113. P2-11：デモバー「会期前」を選んでもLIAISON設定がロックされたままのバグ修正（2026-08-27）
+
+### 背景
+ユーザーから「会期前を選んでもLIAISONの設定ができない(会期開始日が過ぎていると表示される)」の報告。
+
+`kotennavi-p2-11.html`の`applyLiaisonDateLock()`（2026-07-19導入・LIAISON/LIAISON+モード切替を会期開始日以降は変更不可にするロック）は、以下のように**実際のシステム日付**とフォーム内の**ハードコードされた開始日**を比較する独立ロジックだった：
+
+```js
+var t = new Date();
+var todayIso = t.getFullYear() + '-' + ... ;
+var locked = demoMode === 'edit' && !!(from && from.value) && from.value <= todayIso;
+```
+
+`#p211DateFrom`の値は`2026-06-20`固定。このデモを開いた時点の実日付（2026-08-27時点）は既にこれより後のため、`locked`は常に`true`になる。一方、デモバーの「会期：会期前／会期中／終了後」トグルは`ktnSetExh('phase',...)`で`KTN.exh.phase`を変更するだけで、`applyLiaisonDateLock()`はこの値を一切参照していなかった。そのため「会期前」を選んでも実際の日付比較には何の影響も与えず、常にロックされたままになっていた。
+
+### 決定・実装
+デモにおける「会期開始日の到達」判定を、実日付比較ではなくデモの単一ソースである`KTN.exh.phase`ベースに変更した：
+
+```js
+var phase = (window.KTN && KTN.exh && KTN.exh.phase) || 'during';
+var locked = demoMode === 'edit' && phase !== 'before';
+```
+
+- 本番（React CSR）では引き続き「保存済み展覧会エンティティの会期開始日 と 実際の今日日付」で判定する想定（サーバー側でも拒否）。このデモ版のコメントにその旨を明記し、React変換時に実日付比較へ戻すことを示した。
+- ロックノートに表示する開始日文言（`#p211LiaisonLockDate`）は引き続き`#p211DateFrom`の値を表示する（ロック判定には使わず、表示用途のみに縮小）。
+- 新規・クローンモードは対象外のまま（`demoMode==='edit'`条件は維持）。
+- `window.p211RoleSync()`（`ktnRender()`のたびに呼ばれる・追112で無限再帰ガードを追加した関数）の末尾に`applyLiaisonDateLock()`呼び出しを追加。これにより、デモバーの「会期」トグルをクリックしただけ（`setDemoMode()`を経由しない操作）でも`ktnRender()`経由でロック状態が再評価されるようになった。
+
+### 検証
+Node `new Function()`によるインラインscript抽出構文チェック通過。他ページへの影響なし（`applyLiaisonDateLock()`はp2-11専用関数）。**実ブラウザでの目視確認はユーザー確認待ち**（デモバー「会期前」選択でLIAISON/LIAISON+ラジオボタンが操作可能になりロックノートが非表示になること、「会期中」「終了後」に戻すと再度ロックされ、ロックノートに開始日が表示されることを確認）。
+
+### 影響ファイル
+`kotennavi-p2-11.html`（`applyLiaisonDateLock()` / `window.p211RoleSync()`のみ）。
+
+## 追114. P2-11のLIAISON設定UI廃止・p2-12/p2-12-1「やめる」ボタン廃止・E-01メールテンプレート追加・保存後LIAISON案内（2026-08-27）
+
+### 背景
+追108でLIAISONが全展覧会のデフォルトになったことを受け、ユーザーから「p2-11にLIAISON設定は必要だろうか」という設計相談があった。提案フロー：新規作成（LIAISON自動デフォルト）→管理者確認（この時点でLIAISON作品管理がオーナーメニューに出現・メール通知）→オーナーメニューのLIAISON作品管理からLIAISON+へ切替可能（要申請）→会期開始で切替ロック。この方針に対して、既にp2-12/p2-12-1が独自にモード切替バー（LIAISON⇄LIAISON+の切替UI）を持っており重複することを確認。また、p2-12/p2-12-1の「やめる」ボタン（LIAISON/LIAISON+の利用そのものをやめる機能）は、追108でp2-11側の「利用しない」オプションが既に削除されていたため、リンク先が存在しない死んだ導線になっていた。
+
+ユーザーからの実装指示：「実装をお願いします。『やめる』ボタン廃止にしてください。『管理者確認済のオーナーへメール通知』のメールテンプレートをp90-9の自動送出に追加してください。」
+
+### 決定・実装
+
+**(A) p2-11.htmlのLIAISON設定UIを全廃**：モードの選択・変更は今後p2-12/p2-12-1のモード切替バーのみが担う。p2-11には確認用のデモバートグル（`LIAISON：LIAISON / LIAISON+`）のみ残し、フォーム上の「8. LIAISON設定」ブロック（ラジオ`p211LiaisonOpt`/`p211LiaisonPlusOpt`・ロックノート・リンク）、`toggleLiaisonMode()`関数、`applyLiaisonDateLock()`関数（追113で修正したばかりだったが、UI自体を削除したため不要に）、およびこれらの呼び出し元（`setDemoMode()`／`setConfirmed()`／`clearForm()`／`restoreDefaults()`／`window.p211RoleSync`／`dateFrom`のchangeリスナー／初期化コード／`buildSummary()`の該当行）を全て削除。
+
+**(B) p2-12.html／p2-12-1.htmlの「やめる」ボタンを廃止**：`.p2-12-mode-bar__actions`内の「LIAISON の利用をやめる」「LIAISON+ の利用をやめる」ボタンと、対応する確認モーダル（`#p2-12-modal-none`／`#p2121-modal-none`）を削除。ロックノート文言から「利用しない／」を除去し「モード（LIAISON／LIAISON+）は変更できません。」に修正（選択肢が2つに減ったため）。モード切替（LIAISON⇄LIAISON+）用のモーダル（`#p212-modal-switch-ok`/`--ng`、`#p2121-modal-switch`）は変更なしで維持。`p212DemoTerm()`内の`querySelectorAll`から`.p2-12-mode-none`を除去。
+
+- p2-12-1.htmlのdbarボタンが未定義関数（`p2121DemoTerm`/`p2121DemoApply`/`p2121DemoCands`）を参照している潜在バグを発見したが、今回のタスク範囲外のため意図的に未修正のまま残置。
+
+**(C) E-01メールテンプレートを追加**：p2-11の「管理者確認済」（`setConfirmed(true)`）は展覧会オーナーへの通知が必要という提案フローの一部だったため、`docs/email-templates.md`に新カテゴリ「展覧会系（p2-11）」を新設しE-01を追加。既存の3カテゴリ（機能申込系/取引系/アクティビティ系）はいずれも意味が異なる（機能申込系＝creator/gallery/LIAISON+の新規申込、取引系＝購入者-出品者間の売買フロー、アクティビティ系＝ウォッチ通知）ため、展覧会確認という性質の異なるイベントを無理に既存カテゴリへ押し込めず新カテゴリとした。
+
+```
+件名：【個展なび】「{{exhibitionName}}」の内容を確認しました
+（本文は docs/email-templates.md「文面 — E-01」参照）
+```
+
+`kotennavi-pages.js`の`KTN.pages['p90-9']`内`AUTO_TRIGGERS`配列に`E-01`エントリを追加し、`AUTO_CATEGORY_LABEL`に`exhibition: '展覧会系'`、`AUTO_CATEGORY_ORDER`に`'exhibition'`を追加（末尾）。`kotennavi-p90-9.html`のカテゴリフィルター（`#p909AutoFilterCategory`）と新規追加モーダルのカテゴリセレクト（`#p909AutoNewCategory`）にも「展覧会系」の`<option value="exhibition">`を追加。
+
+**(D) 「保存して確認依頼」押下後にLIAISON利用案内を表示（同日追記）**：ユーザーから「保存して確認依頼ボタン押下後にLIAISONの利用について案内を出してほしい」の追加指示。(A)でp2-11からLIAISON設定UIを削除したことで、投稿者が「この展覧会のLIAISONはどうなるのか」を保存時点で知る手がかりが無くなっていたため、保存直後にその場で案内する導線を追加した。既存の「保存直後の会場QR/フライヤー誘導」（`#p211QrNudge`・確認済状態でのみ表示）と同じ`.p211-qr-nudge`パターン（緑系の成功バナー・閉じるボタン付き）を流用し、新規バナー`#p211LiaisonNudge`をその直前に配置。文面は「LIAISONは自動適用される・事務局確認後にオーナーメニューへLIAISON作品管理が表示される（メール通知）・LIAISON+への切替も確認後に同メニューから申請できる」の3点を要約し、確認済バナー（`.p211-mode-banner--confirmed`）やE-01メール文面と表現を揃えた。表示条件は`demoMode==='new' || demoMode==='clone'`（新規・クローン＝未確認の展覧会エンティティを新たに作る操作のみ対象。編集モードは既存の確認済展覧会でLIAISON状態も既知のため対象外）。トグルは`confirmSave()`末尾（`#p211QrNudge`のnum===2判定のすぐ後）に追加。新規CSSは追加せず既存`.p211-qr-nudge`を再利用。
+
+**(E) (D)の訂正＝保存後の案内はp2-11でなくp2.htmlに置く・確認依頼の同意ロック・オーナー限定の公開状態通知を追加（同日追記）**：ユーザーから「p2-11で確認できませんでした。基本的にp2-11の保存後はp2に移動します」という指摘。(D)で`#p211LiaisonNudge`をp2-11.html上に実装したが、`confirmSave()`／`saveDraft()`は本番仕様として常に`location.href`でp2.htmlへ遷移するため、p2-11上のバナーは実際には一度も表示されず死んだ実装だった。あわせて次の2点も同時に指示された：①「保存して確認依頼」の同意チェック（`#p211Consent`＝関係者の了解を得ている旨）は、一度確認依頼済みの展覧会（＝編集モード）では毎回re-checkさせず固定する。②「下書き」「確認依頼中」のステータス表示はp2.htmlをオーナー（creator/gallery/admin）が開いたときのみ表示し、ゲスト・他ユーザーには見せない。
+
+実装：
+- **p2-11.html**：`#p211LiaisonNudge`／`#p211QrNudge`のHTMLブロックを削除（表示され得ないため）。`confirmSave()`／`saveDraft()`を、確認依頼＝`kotennavi-p2.html?pub=pending&qr=1&role=<role>`（新規/クローン時のみ`&liaison=1`を追加）、下書き保存＝`kotennavi-p2.html?pub=draft&role=<role>`への遷移に置き換え。QR/フライヤー・LIAISON利用案内はこのクエリを介してp2.html側へ引き継ぐ。同意チェックは新規関数`applyConsentLock(mode)`（`mode==='edit'`で`disabled=true`かつ`checked=true`に固定、チェックボックス直下に固定理由の注記`#p211ConsentLockNote`を表示）を追加し、`setDemoMode()`から呼ぶほか、初期ブート（`setConfirmed(true)`直後）でも`applyConsentLock('edit')`を呼び既定の編集モードでも固定される。
+- **common.js**：`KTN.exh`（`ktnExhState()`が返す共有デモ状態）に`draft`（真偽値）を追加。既定値`false`。
+- **p2.html**：`.p2-subnav-wrap`の直後に新規ブロック`#p2OwnerNotices`（`.p2-owner-notices`）を追加。中身は①公開状態通知`#p2OwnerPubNotice`（`.p211-mode-banner`を1080px content向けCSS上書きで再利用。`draft`なら「下書き」、`!confirmed`なら「確認依頼中」の文言、それ以外は非表示）、②LIAISON案内`#p2LiaisonNudge`、③QR/フライヤー案内`#p2QrNudge`（②③は`.p211-qr-nudge`を移設・再利用、閉じるボタンで`window.KTN_P2_SAVE_NUDGE`の該当フラグをfalse化）。表示可否はいずれも新関数`p2IsOwnerRole()`（`ktnState.role`が`creator`/`gallery`/`admin`＝`user+creator`/`user+gallery`を正規化した上で判定）でゲート。ページ読込時のIIFEがURLの`pub`/`qr`/`liaison`/`role`パラメータを読み取り、`KTN.exh.draft`・`KTN.exh.confirmed`・`window.KTN_P2_SAVE_NUDGE`を設定した上で`role`に応じ`setR()`を呼んでデモバー表示も同期させ、最後に`history.replaceState`でURLをクリーンにする（リロード時の再発火防止）。表示ロジック本体は`window.p2SyncOwnerNotice()`としてグローバル公開し、`kotennavi-pages.js`の`KTN.pages['p2']`の`window.ktnRender`ラップ末尾から毎回呼ぶことで、デモバー操作（ロール切替・確認トグル・下書きトグル等）のたびに再評価される。
+- **common.css**：`.p2-owner-notices`配下で`.p211-mode-banner`（本来760px mgmt向け・中央寄せ）を`max-width:none`に、`.p211-qr-nudge`のmarginを1080px content幅に合わせて上書き。
+- 検証用に、p2.htmlのデモバーへ「下書き：下書き中／下書きでない」トグル（`ktnSetExh('draft',...)`）を追加。
+
+**(F) 公開状態通知（下書き/確認依頼中）をヒーロー画像より前に移動・帯内に編集リンクを追加（同日追記）**：ユーザーから「下書き帯は画像の前の方が目立つと思う、帯の中に編集ページへのリンクを追加してください」の指示。(E)実装時点では`#p2OwnerPubNotice`（下書き/確認依頼中の帯）はQR/LIAISON案内と同じ`#p2OwnerNotices`にまとめてサブナビ直後（ヒーロー画像・タイトル帯より後）に配置していたが、画像より前に置いた方が目立つという判断を受け分離した。**実装**：`#p2OwnerPubNotice`を`#p2OwnerNotices`から切り出し、新規ラッパー`#p2OwnerPubWrap`（`.ktn-content.p2-owner-pub-wrap`）として`<main>`の最初の子要素（`.p2-poster-area`ヒーロー画像より前）に配置。QR/LIAISON案内2件は従来通り`#p2OwnerNotices`にサブナビ直後のまま残置（保存直後の一時的な案内であり、公開状態そのものを示す帯とは性質が違うため分離を維持）。`p2SyncOwnerNotice()`を`pubWrap`/`pubBox`と`wrap`（QR/LIAISON側）を別々に開閉するよう修正（`wrap.hidden`の判定から`pubOn`を除去）。帯のテキスト末尾に`<br>`＋`.ktn-guide-link`（「展覧会情報を編集する →」・`./kotennavi-p2-11.html`＝既存の`p2OwnerMenuItems()`編集リンクと同一URL、パラメータなし）を「下書き」「確認依頼中」の両文言に追加。common.cssは`.p2-owner-notices`ブロックのコメント・ルールを`.p2-owner-pub-wrap`（新規・上部固定）と`.p2-owner-notices`（QR/LIAISON用・従来位置）の2系統に分割。
+
+**(G) 「確認依頼中」の文言を公開日指定に整合させる（同日追記）**：ユーザーから「確認前の表示テキストに公開日の指定に従って公開されますと修正してください」の指示。旧文言「確認が完了すると、このページがサイトに公開されます」はp2-11.htmlの公開設定（「今すぐ公開」／「公開日を指定する」＝`管理者の確認完了後、指定した日に自動公開されます。`）と整合していなかった（確認完了＝即公開と誤読させる表現だった）ため、「確認が完了すると、公開日の指定に従ってこのページが公開されます（確認完了はメールでお知らせします）。」に修正。「下書き」文言・編集リンクは変更なし。
+
+### 検証
+`node -e "new Function(...)"`で`kotennavi-pages.js`／`kotennavi-common.js`の構文確認済み。p2-11.html／p2.htmlのインラインscriptもNode `new Function()`抽出チェックで構文エラーなし。両ファイルのdivタグ開閉数一致を確認済み（p2-11.html 270/270、p2.html 180/180）。grep で`p211LiaisonNudge`／`p211QrNudge`のID参照がp2-11.html側に残っていないことも確認済み。**実ブラウザでの目視確認はユーザー確認待ち**（p2-11で「保存して確認依頼」→p2.htmlへ遷移しLIAISON/QR案内が表示されること、編集モードで同意チェックが固定表示されること、p2.htmlをオーナーロールで開いたときのみ「下書き」「確認依頼中」通知が出てゲスト/他ロールでは出ないことを確認）。
+
+### 影響ファイル
+`kotennavi-p2-11.html`（(A)(D)(E)）／`kotennavi-p2-12.html`／`kotennavi-p2-12-1.html`／`kotennavi-common.css`（`.p2-12-mode-none`関連の死んだCSS削除、(E)で`.p2-owner-notices`追加）／`kotennavi-common.js`（(E)で`KTN.exh.draft`追加）／`kotennavi-pages.js`（`AUTO_TRIGGERS`／`AUTO_CATEGORY_LABEL`／`AUTO_CATEGORY_ORDER`、(E)で`KTN.pages['p2']`の`ktnRender`ラップに`p2SyncOwnerNotice`呼び出し追加）／`kotennavi-p90-9.html`（カテゴリセレクト2箇所）／`kotennavi-p2.html`（(E)で`#p2OwnerNotices`一式・デモバートグル追加）／`docs/email-templates.md`（E-01インベントリ行＋文面セクション新設）。
+
+**(H) QR/フライヤー・LIAISON利用案内をp2.htmlのバナーからp2-11の保存完了モーダルへ変更（同日追記）**：ユーザーから「先ほどのp2-11で『保存して確認依頼』押下後のQR・フライヤー・リエゾン作品管理のメッセージはどこに出ますか？」の質問を受け、(E)実装の`#p2OwnerNotices`（p2.html・サブナビ直後の緑バナー）の位置を回答したところ、「この表示をp2-11の保存したあとにモーダルで出すことに変更できますか？」との指示。p2-11の`confirmSave()`は本番仕様として必ずp2.htmlへ`location.href`遷移するため、遷移先での常設バナーよりも、遷移前のその場（p2-11上）でモーダル表示する方が「保存して確認依頼した直後に案内された」という体験として自然という判断。
+
+実装：
+- **p2-11.html**：`confirmSave()`を書き換え、`location.href`によるクエリ付き遷移（`qr=1`/`liaison=1`）をやめ、遷移前に共通コンポーネント`KTN.submitDone({title, message, action})`（CLAUDE.md「全ページ共通：送信完了モーダル」・`kotennavi-common.js`のｌ442-484）を呼ぶ方式に変更。メッセージは①確認依頼中の説明（公開日指定に従って公開される旨）、②新規/クローン時のみLIAISON自動適用案内（(D)の文面を踏襲）、③QR/フライヤー案内（`.ktn-guide-link`＋`onclick="ktnVenueFlyer()"`で会場フライヤーモーダルをその場で開ける）を`<br><br>`で連結して1つのHTMLメッセージにまとめた。モーダルの確認ボタン（1つ・primary）押下で`kotennavi-p2.html?pub=pending&role=<role>`へ遷移（`qr`/`liaison`パラメータは不要になったため削除）。`saveDraft()`（下書き保存）はQR/LIAISON案内の対象外だったため変更なし（従来通り`location.href`で`pub=draft&role=<role>`へ直接遷移）。
+- **p2.html**：QR/LIAISON案内を表示していた`#p2OwnerNotices`（`#p2LiaisonNudge`／`#p2QrNudge`を含むブロック全体）をHTML・JS双方から削除。`p2SyncOwnerNotice()`から`wrap`/`liaisonNudge`/`qrNudge`/`window.KTN_P2_SAVE_NUDGE`関連のコードを除去し、`#p2OwnerPubWrap`（下書き/確認依頼中の公開状態通知＝(F)でヒーロー画像より前に移動済み）のみを扱う関数に整理（ガード節から`!wrap`判定も削除）。ページ読込IIFEも`window.KTN_P2_SAVE_NUDGE`の設定行を削除。
+- **common.css**：`.p2-owner-notices`配下の3ルール（QR/LIAISONバナー用の1080px幅調整）を削除。残る`.p2-owner-pub-wrap`（公開状態通知用）のコメントを「保存直後のQR/LIAISON案内はp2-11の保存完了モーダルに集約済み」に更新。canonical `.p211-qr-nudge`クラス自体（他ページでも使う再利用可能な緑バナーコンポーネント）は削除せず維持。
+
+### 検証（H）
+`node -e "new Function(...)"`でp2-11.html／p2.htmlのインラインscript抽出チェック、両ファイルのdivタグ開閉数一致（p2-11.html 270/270、p2.html 178/178）、common.cssの中括弧数一致（7868/7868）をいずれも確認済み。**実ブラウザでの目視確認はユーザー確認待ち**（p2-11で「保存して確認依頼」押下時にモーダルが表示され、QRフライヤーリンクから`ktnVenueFlyer()`が開けること、確認ボタン押下でp2.htmlへ遷移し下書き/確認依頼中の公開状態通知が引き続き正しく表示されることを確認）。
+
+### 影響ファイル（H）
+`kotennavi-p2-11.html`（`confirmSave()`書き換え）／`kotennavi-p2.html`（`#p2OwnerNotices`一式削除、`p2SyncOwnerNotice()`簡素化）／`kotennavi-common.css`（`.p2-owner-notices`ルール削除・コメント更新）。
+
+**(I) メイン画像・サブ画像アップロードのJS未結線を修正（同日追記）**：ユーザーから「現在メイン画像の追加ができなく、『保存して確認依頼』の押下後の確認ができない」の不具合報告。調査の結果、この2つは同一原因だった：`#p211MainFile`（メイン画像のfile input）の`change`イベント・`.p211-img-uploaded__del`（削除ボタン）の`click`イベントがそもそもどこにも結線されておらず、画像を選択しても何も反映されない状態だった。加えて`clearForm()`（新規モード切替時に呼ばれる）はメイン画像プレビュー`.p211-img-uploaded`を`style.display='none'`で無条件に隠す一方、隠した画像を復元・再アップロードする手段が無かった。`validateRequired()`のメイン画像必須チェックは`up.style.display !== 'none'`で判定するため、新規／クローンモードでは非表示のまま画像を追加する手段がなく必須チェックが恒久的に失敗し、`handleSubmit()`が確認モーダルを開けなかった（＝ユーザー報告の2点は同一バグの2つの現れ）。
+
+**実装**：p2-11.htmlに画像アップロードのJS結線を新規追加（venue-comboのIIFE直後、初期化コード直前）。
+- メイン画像：`#p211MainFile`の`change`でFileReaderにより選択ファイルをローカルプレビュー化（`background:center/cover url(dataURL)`）し`.p211-img-uploaded__name`を更新、`.p211-img-uploaded`を再表示（`display=''`）、`.p211-field`から`is-error`を除去。削除ボタンで`display='none'`に戻しプレビュー内容をクリア。
+- サブ画像：`#p211SubFile`（`multiple`）の`change`で選択ファイル群をFileReaderでプレビュー化し、既存の1行分のHTML構造（ハンドル・サムネ・ファイル名・削除ボタン・キャプション入力）を`.p211-img-uploaded.is-added`として`#p211SubList`に追加（動的追加分の目印は既存の`.p211-tag.is-added`パターンを踏襲）。上限9枚を`used`件数から計算し超過分は無視。削除ボタンで行ごと`remove()`。残り枚数表示（`#p211SubDrop .p211-img-count`）を`syncSubImgCount()`で追従。
+- `clearForm()`：全画像を隠す処理は維持しつつ、動的追加行（`.is-added`）は`remove()`で完全削除し、`restoreMainImage()`でメイン画像のプレビュー内容を初期状態（デモの`portfolio_image.jpg`）へ戻した上で非表示にする（＝次回「編集」モードに戻したときに正しい初期値が復元されるようにするため）。`syncSubImgCount()`も呼び残り枚数表示を9枚に戻す。
+- `restoreDefaults()`（編集/クローンモード復帰時）：同様に動的追加行を削除し、直書きの画像を`display=''`で再表示、`restoreMainImage()`・`syncSubImgCount()`を呼ぶ。
+- `restoreMainImage`/`syncSubImgCount`は先頭で`var`宣言のみ行い、直後のIIFE内で実装を代入する形にした（`clearForm()`/`restoreDefaults()`は`setDemoMode()`経由でdbarボタンのクリック時にのみ呼ばれ、ページ初期実行時には呼ばれないため、スクリプト先頭から順に実行される通常のトップレベルコードの実行順で問題なし）。
+
+**スコープ**：この修正はkotennavi-p2-11.htmlのみを対象とした。grep調査で同一の`.p211-img-drop`／`.p211-img-uploaded`パターンが`kotennavi-p6-11.html`（作品編集・確認済）／`kotennavi-p7-11.html`（記事編集）／`kotennavi-p11-4.html`（LIAISON+申込）にも存在し、いずれも同じくJS未結線であることを確認したが、今回はユーザー報告のあったp2-11のみを修正し、他3ページは意図的に未修正のまま残置した（ユーザーへの報告時にスコープ拡大の要否を確認する）。
+
+### 検証（I）
+`node -e "new Function(...)"`でp2-11.htmlのインラインscript抽出チェックOK。divタグ開閉数一致を確認済み（273/273・追加した動的生成HTML文字列中の`<div`/`</div>`3組を含めても一致）。`setDemoMode(`の呼び出し元をgrepし、dbarボタンの`onclick`以外から呼ばれないこと（＝ページ読込時に自動実行されない）を確認し、新規追加した関数保持用`var`の実行順に問題がないことを確認。**実ブラウザでの目視確認はユーザー確認待ち**（新規／クローンモードでメイン画像・サブ画像を選択→プレビュー表示→「保存して確認依頼」で確認モーダルが開くこと、削除ボタンで画像がクリアされ再度必須チェックに引っかかること、編集モードに戻した際に直書きのデモ画像が正しく復元されることを確認）。
+
+### 影響ファイル（I）
+`kotennavi-p2-11.html`（`clearForm()`／`restoreDefaults()`の修正、画像アップロードJS新規追加）。**未修正（同一パターン・要フォローアップ判断）**：`kotennavi-p6-11.html`／`kotennavi-p7-11.html`／`kotennavi-p11-4.html`。
+
+**(J) (I)のフォローアップ：p6-11.html／p7-11.htmlにも同様の画像アップロードJS結線を追加（同日追記）**：ユーザーが(I)のp2-11修正を確認後「画像アップロードの同じ個所を同様に修正してください」と指示。(I)報告時に未修正としていた3ページのうち、実際にgrepベースの推定が正しかったのはp6-11.html／p7-11.htmlのみで、p11-4.htmlは調査の結果**既に完全に動作するアップローダーが実装済み**（本人確認書類アップロード`p114InidUploader()`／`#p114IdDocFile`／`#p114IdDocList`＝`URL.createObjectURL`方式でPDF/画像両対応・削除時`revokeObjectURL`まで実装済み）であることが判明した。(I)報告時の「同一パターン」推定はクラス名（`.p211-img-drop`）の grep 一致のみに基づく未検証の申告だったため誤りで、本エントリで訂正する。
+
+**実装：p6-11.html（p2-11と同型の静的フィールド構造）**
+- p2-11と同じくメイン画像`#p611MainDrop`/`#p611MainFile`＋サブ画像`#p611SubList`/`#p611SubFile`（`#p611SubDrop .p211-img-count`で残り枚数表示・上限9枚）にFileReaderベースの結線を追加。
+- p2-11との相違点：(a) p6-11には`escHtml()`が存在しないため、サブ画像行の生成は`innerHTML`文字列結合でなく`document.createElement`＋`textContent`でDOM組み立てする方式にした。(b) p6-11の`validateRequired()`相当（`collectMissing()`）は画像を必須チェック対象に含めていない（コード内コメント「画像はデモ簡略化でgate対象外」）ため、p2-11のような保存ブロッキングは発生しない＝純粋にUIが無反応だった不具合。(c) p6-11はサブ画像の枚数を`panelFilled()`/`syncOptUI()`（付帯情報の入力完了メーター）が参照しているため、画像の追加・削除のたびに`syncOptUI()`を呼ぶ必要がある（p2-11には無い呼び出し）。
+- `clearForm()`を修正：動的追加したサブ画像行（`.is-added`）を`remove()`、メイン/サブのプレビューを`display:none`に戻し`syncSubImgCount()`を呼ぶ。**p6-11の`setDemoMode()`には元々「編集/クローンへ戻す」復元パスが存在しない**（`new`モード時の`clearForm()`呼び出しのみで、他モードへの復元関数が無い＝画像に限らずテキスト項目も含めた既存の構造的な欠落）。今回はこの既存ギャップを拡張修正せず、画像機能追加のみに留めた（ユーザー指示は「同じ個所を同様に修正」でありスコープ外の構造改修は含まないと判断）。
+
+**実装：p7-11.html（動的ブロックエディタ構造・p2-11/p6-11と異なるアプローチが必要）**
+- p7-11は本文がブロック単位（text/image/pair/video）で`p711AddBlock()`により動的に追加・`p711RemoveBlock()`で削除・ドラッグで並べ替えされる構造で、画像を持つ静的DOM位置が存在しない。加えて修正前は`<input type="file">`要素自体がページ内に1つも存在しなかった（`.p211-img-drop`の「画像を選択」ボタンに`onclick`結線が無く押しても何も起きない状態）。
+- `p711MakeBlock(type)`の`'image'`/`'pair'`分岐に`<input type="file" class="p711-img-file" accept="image/jpeg" hidden>`を追加。静的デモブロック2箇所に残っていた壊れた`onclick="this.closest('.p211-img-uploaded').remove();syncOptUI()"`属性は削除。
+- 個別`addEventListener`ではなく、コンテナ`#p711Blocks`への**イベント委譲**（`change`/`click`）で全ブロック（静的デモ分・動的追加分の両方）を一括カバーする方式を新規採用。`change`で`.p711-img-file`から選択したファイルをFileReaderでプレビュー化し`.p211-img-drop`を`.p211-img-uploaded`へ`replaceWith()`、`click`で削除ボタンを検知した場合は逆に`.p211-img-uploaded`を新規の空`.p211-img-drop`へ`replaceWith()`（p2-11/p6-11のような表示/非表示トグルでなく、要素そのものを毎回作り直す方式＝ブロックがそもそも可変個存在するため）。新規ヘルパー`p711MakeImgDrop()`/`p711MakeImgUploaded()`を追加。
+- grepで`#p711Blocks`が静的デモブロックも含む全ブロックの共通親であること、また`P711_CURRENT_ENTRY`切替等の他コードが`#p711Blocks`のinnerHTMLを丸ごと差し替えていないことを確認済み＝イベント委譲が将来の動的ブロックにも継続して機能する。
+- p7-11の`collectMissing()`（必須項目チェック）は`.ktn-req`マーカーを持つ項目のみを対象とし画像/ペアブロックにはマーカーが無いため、こちらも保存ブロッキングは発生しない純粋なUI不具合だった。`syncOptUI()`（`p711AccBasicOpt`パネルのみ参照・画像は非対象）への呼び出しは念のため追加したが機能上必須ではない。
+
+**確認：p11-4.htmlは修正不要（(I)時点の推定を訂正）**
+- `p114InitIdUploader()`（本人確認書類アップロード）を実読して確認。file input・drag&drop・プレビュー（画像/PDF両対応）・削除ボタン（`URL.revokeObjectURL`込み）まで一式実装済みで、(I)報告時の「同一パターンで未結線」という推定は誤りだった。ページ内唯一の`.p211-img-drop`使用箇所がこれであり、他に未結線の画像UIは存在しない。
+
+### 検証（J）
+`node -e "new Function(...)"`でp6-11.html／p7-11.htmlのインラインscript抽出チェックいずれもOK。divタグ開閉数一致を確認済み（p6-11.html 97/97、p7-11.html 102/102）。p7-11.htmlは`#p711Blocks`のinnerHTML一括差し替え箇所が無いことをgrepで確認しイベント委譲の妥当性を担保。**実ブラウザでの目視確認はユーザー確認待ち**（p6-11：新規/クローンモードでメイン・サブ画像の追加/削除とプレビュー表示、付帯情報メーターへの反映を確認。p7-11：画像/画像2枚ブロックを追加し「画像を選択」からアップロード・削除ができること、既存の静的デモブロックの画像も同様に操作できることを確認）。
+
+### 影響ファイル（J）
+`kotennavi-p6-11.html`（`clearForm()`修正、画像アップロードJS新規追加）／`kotennavi-p7-11.html`（`p711MakeBlock()`のimage/pair分岐修正、画像アップロードJS新規追加・イベント委譲方式）。**修正不要と確認**：`kotennavi-p11-4.html`（既に実装済み）。
+
+## 追115. P3-12/P4-12インサイト：P2-14で確定した設計をクリエイター/ギャラリーページへ展開（2026-08-27）
+
+**背景**：ユーザーから「P2-14の修正・調整時にインサイトページの意味・目的をたくさん議論した。P3-12/P4-12にゆだねる内容も含まれていた。それらをもとにクリエイター・ギャラリーインサイトを見直してほしい」と指示。追99〜追106の一連の変更履歴をgrepで棚卸しし、明示的に「P3-12/P4-12へ展開予定」と記されていた項目を抽出して反映した（新規の設計判断は行わず、既に確定した方針の横展開）。
+
+**反映した項目：**
+1. **PERIODセレクタをツールバーから「閲覧数の推移」セクション内へ移設**（追102でP2-14が確定させた最終形。`.ins-period-scope`は追102で全廃済みのため使用しない）。ツールバーは集計対象（Target）のみを残す。
+2. **サマリーはPERIOD非依存**（追102の方針どおり、コメント`<!-- 1. KPIサマリー（PERIODによる絞り込みはしない） -->`を明記）。
+3. **「反応」→「関心」に統一**（追104でP2-14が全面置換した用語。両ページのヘッド説明文に残っていた「反応」を置換）。
+4. **P3-12のサマリー注記の事実誤り修正**：「会期前は『興味あり！』、会期中は『チェックイン』が伸びる傾向」という一文はP2-14（単発の会期を持つ展覧会ページ）からのコピペ残りで、継続的なアカウントであるクリエイターページには「会期」という単一の時間軸が存在せず意味が成立しないバグだった。両ページとも「ここでの数値は過去30日間の実績（前期間比は直前30日との比較）。期間を変えた推移は下の『閲覧数の推移』で確認できます」に置換し、サマリーとTrendの関係を明示。
+5. **独立セクション「ページを伸ばすヒント」を廃止し関連箇所へ分散配置**（追99の方針「ヒントは関係箇所に簡潔に」）。ウォッチ数と閲覧数の相関ヒント（`.ins-grow__card`）は「閲覧数の推移」セクション末尾へ移設。
+6. **チェックイン→ウォッチの因果ナラティブを削除**：「チェックインした人の約6割が、その後もページをウォッチ」というカードは、P2-14 Section 5で追106により削除された相関文と同型（記憶`project_watch_is_active_interest_signal`：ウォッチ件数KPI自体が能動的関心の指標であり、チェックインとの因果を結ぶ説明文は屋上屋）。両ページから削除。
+7. **`.ins-phase-divider`によるチャプター区切りを導入**（追100の章立て設計）。「リピーターの可視化」の後、新設の記事/作品関心チャプター前に1本のみ配置（P2-14は2本だが、区切る対象がP3-12/P4-12では1セクションのみのため過剰な抽象化を避けて1本に留めた）。
+8. **「記事への関心」セクションを新設**：P2-14 Section 7が確立した「KPI（興味あり！合計）→`.ins-top-list`人気上位2件→note」の型を流用（追105）。記事タイトルは実在のデモ記事（P3-12はkotennavi-p3-2.html、P4-12はkotennavi-p4-2.html）から採用し架空の名称を作らなかった。
+9. **旧「作品販売のうごき／LIAISON+ Funnel」を「作品への関心」へ改称し、KPI＋人気作品リストを追加**：KPI値（興味あり！件数）は既存ファネルのStage2（興味あり！）の値とあえて一致させた（P2-14自身がKPIとファネルStage2で同じ数値を共有する内部整合パターンを踏襲）。既存のファネル本体（`#p312Funnel`/`#p412Funnel`）・note・notice・関連JS（`syncFunnel()`、hiddenトグル対象のid）は一切変更していない。作品タイトルはP3-12はkotennavi-p3-3.html、P4-12はkotennavi-p4-2.html（ギャラリーノート記事で言及される《オノマトペの庭》）＋P3-12と共通のデモ作品《ドキドキ #3》から採用。
+
+**意図的にスコープ外とした項目**：
+- 曜日別チェックイン内訳（`.ins-hbar--compact`/`.ins-trend--split`）は追98以降複数回「P3-12/P4-12/P6-12はスコープ外」と明記されており追加しなかった。
+- P6-12（作品インサイト）はユーザーが今回「p3-12,p4-12」と明示的に指定した対象に含まれていないため、同種の展開を行っていない（別途着手時に本エントリと同じ方針を参照する）。
+
+### 検証
+`node -e "new Function(...)"`でp3-12.html／p4-12.htmlのインラインscript抽出チェックいずれもOK（両ページとも`KTN.init(...)`のみのインラインscriptで、共有`kotennavi-pages.js`側は無変更）。タグ開閉数一致を確認済み（p3-12.html：div 86/86・section 5/5・p 40/40・span 66/66・a 23/23・svg 22/22。p4-12.html：div 80/80・section 5/5・p 40/40・span 66/66・a 18/18・svg 16/16）。`KTN.pages['p3-12']`/`['p4-12']`が参照するid（`p312Period`/`p312Trend`/`p312Funnel`/`p312FunnelNote`/`p312FunnelNotice`とp412系）はすべてHTML内に維持されていることを確認済み（構造上の位置のみ移動、id自体は無変更）。**実ブラウザでの目視確認はユーザー確認待ち**（PERIODボタン切替でTrendチャートが再描画されること、両セクションの新規KPI/人気リンクのリンク先が正しいこと）。
+
+### 影響ファイル
+`kotennavi-p3-12.html`／`kotennavi-p4-12.html`（HTML構造の再編のみ、JS・CSSの新規追加なし＝既存の共通コンポーネント`.ins-period`/`.ins-grow__card`/`.ins-phase-divider`/`.ins-kpi-grid`/`.ins-top-list`を流用）。
+
+## 追116. P3-18/P4-18注記テキスト修正・P3-14/P3-18/P3-19（P4対応含む）はCRUD専用に限定しインサイト数値はP3-12/P4-12へ集約する方針を確定・P3-12/P4-12に「展覧会への関心」を新設（2026-08-27）
+
+**背景（1）：P3-18/P4-18の注記文言バグ**：ユーザーから「現在p3-18は会期終了後を取り扱っていないので、改修する必要がある」の指摘。調査の結果、コードのバグではなく**文言の更新漏れ**と判明した。2026-08-16（追補237）にユーザー指示で「会期終了後の展覧会はこのページに表示しない」仕様に変更済みで、`kotennavi-pages.js`の`KTN.pages['p3-18']`/`['p4-18']`の`render()`は`if (!isDraft(e) && e.sstatus === 'closed') return false;`により一覧から除外している（コメント「会期終了後の展覧会は編集・削除ができなくなるため、この一覧自体から除外する（2026-08-16）」も既に付与済み）。しかし`kotennavi-p3-18.html`／`kotennavi-p4-18.html`の`.p319-notice`第2ブロックの説明文だけは08-16以前の（旧・08-02由来の）設計を前提にした「会期を終了すると編集・削除はできなくなりますが、〜展覧会一覧には終了後もそのまま表示され続けます」という文言のまま取り残されていた。A案（現行の除外挙動に合わせて注記文言を更新）／B案（コードを表示継続の旧仕様へ差し戻す）を提示し、**ユーザーは「Aでお願いします」と明示選択**。
+
+**対応（1）**：`kotennavi-p3-18.html`／`kotennavi-p4-18.html`の該当文を「会期を終了した展覧会はこの一覧からは表示されなくなります。過去の展覧会は展覧会アーカイブ（`kotennavi-p3-1.html`／`kotennavi-p4-1.html`）→でご確認いただけます」に修正。公開アーカイブ（P3-1/P4-1）は08-02指示どおり会期終了後も恒久的に表示され続ける仕様は無変更（管理一覧からの除外と公開アーカイブでの永続表示は別軸のルールであることをメモリ`project_exhibition_ended_lock.md`に整理済み）。
+
+**背景（2）：新アーキテクチャ方針**：上記の確認とあわせてユーザーから方針転換の指示：「p3-14,p3-18,p3-19は管理ページの機能だけにして、インサイトの数字確認はp3-12にまとめます。理由は管理ページではそれぞれがカード形式で表示されているので、インサイトの数字を一覧で確認するのに適さないためです。」
+
+**確定した方針**：P3-14（ポートフォリオ管理）／P3-18（展覧会管理）／P3-19（記事管理）、およびP4の対になるページはCRUD操作（作成・編集・削除・公開設定）に専念し、閲覧数・興味あり数などのインサイト数値を持たせない。投稿済みコンテンツ（展覧会・記事・作品）の閲覧数／興味あり数の確認は種別ごとに集計してP3-12/P4-12（インサイト）にまとめる。カード形式のグリッド/リスト表示は数値の縦比較に向かないため、数値比較の役割はP3-12/P4-12側の`.ins-top-list`（上位N件のランキング＋管理ページへの注記リンク・P2-14で確立済みの重複回避パターン）が担う。この整理は2026-08-27に確定した「p3-12＝ページ機能フォーカス／p3-13＝人物フォーカス」の枠組みの一部（メモリ`project_insight_numbers_belong_in_p312.md`に保存）。
+
+**対応（2）**：P3-18/P4-18からは元々展覧会単位の数値を持たせておらず（Model B mgmt-wrapのCRUD専用ページ）追加修正は不要。ただし「展覧会の興味あり数をどこで確認できるか」という導線がP3-12/P4-12側に存在しなかったため、`kotennavi-p3-12.html`／`kotennavi-p4-12.html`のSummary（Section 1）を4KPIから2KPI（ページ閲覧数・新規ウォッチャーのみ。「興味あり！」「会場チェックイン」を削除）に整理し、直後に新規セクション「4. 展覧会への関心」を追加：
+- KPI「展覧会の『興味あり！』合計」（P3-12=238件／P4-12=176件）
+- `.ins-top-list`「人気の展覧会 Top Exhibitions」（Top2・実在デモ展覧会名を採用）
+- note文で会期終了後を含めた一覧の確認先として`kotennavi-p3-18.html`／`kotennavi-p4-18.html`（「展覧会を管理する →」）へリンク
+
+既存の「記事への関心」「作品への関心」セクションはそれぞれ5・6に繰り下げ、`.ins-phase-divider`の見出しも「展覧会・記事・作品それぞれへの関心」に更新。Summary直後の`.ins-note`は「ページ閲覧数とウォッチャー数はページ自体の到達度、展覧会・記事・作品それぞれが集めた関心は下の各セクションで、会場チェックインの詳細はP3-13/P4-13（ウォッチャー・チェックイン一覧）で確認できる」という役割分担の説明に更新。
+
+**背景（3）／対応（3）：P3-13/P4-13のガイドリンク文言バグ**：上記(2)のSummary再編作業中に、`kotennavi-p3-13.html`／`kotennavi-p4-13.html`のKPIサマリー内ガイドリンクが「ウォッチャー・チェックイン推移の詳細はインサイトで見る →」という、P3-12/P4-12上に実在しない推移チャートを予告する文言になっていたことを発見（P3-12/P4-12のSummaryはPERIOD非依存の固定値で「推移」チャートはTrendセクションのみ・チェックイン推移チャート自体が存在しない）。「ページ全体の関心・リピーターの傾向はインサイトで見る →」に修正し、実際にP3-12/P4-12が提供する内容（関心セクション群・リピーター可視化）と整合させた。
+
+### 検証
+`kotennavi-p3-18.html`／`kotennavi-p4-18.html`／`kotennavi-p3-13.html`／`kotennavi-p4-13.html`はテキストのみの変更（JS/構造変更なし）。`kotennavi-p3-12.html`／`kotennavi-p4-12.html`はタグ開閉数一致を確認済み（p3-12.html：div 90/90・section 6/6。p4-12.html：div 84/84・section 6/6）。**実ブラウザでの目視確認はユーザー確認待ち**（p3-18/p4-18の注記文言と展覧会アーカイブへのリンク、p3-12/p4-12のSummary2KPI化と新設「展覧会への関心」セクションの表示、p3-13/p4-13のガイドリンク文言）。
+
+### 影響ファイル
+`kotennavi-p3-18.html`／`kotennavi-p4-18.html`（`.p319-notice`文言修正）、`kotennavi-p3-12.html`／`kotennavi-p4-12.html`（Summary KPI削減、「展覧会への関心」セクション新規追加、`.ins-phase-divider`見出し更新）、`kotennavi-p3-13.html`／`kotennavi-p4-13.html`（ガイドリンク文言修正）。JS・CSSの新規追加なし（既存の`.ins-kpi-grid`/`.ins-top-list`/`.ins-phase-divider`/`.ktn-guide-link`を流用）。
+
+## 追117. P3-12/P4-12「展覧会・記事・作品への関心」をTop2ランキングから全件一覧表示（`.ins-item-list`新設）に変更（2026-08-27）
+
+**背景**：追116で導入したばかりの`.ins-top-list`（P2-14が確立した「上位N件のランキング・タイトルのみ」パターン）をP3-12/P4-12へ横展開した直後、ユーザーから明示的な上位方針の指示：「p3-12はクリエイターが投稿した展覧会・記事・作品の閲覧数・チェックイン数(展覧会のみ)・興味あり数の一覧が見えるページにしてください」。これはTop2ランキング（タイトルのみ・数値なし）では満たせない要求で、**投稿済み全アイテムについて複数の数値指標を横並びで比較できる一覧**を求めるもの。メモリ`project_insight_numbers_belong_in_p312.md`の既存ガイダンス「全件テーブルではなく`.ins-top-list`パターンを使う」は、この指示によりP3-12/P4-12に関しては上書き・修正が必要と判断（P2-14は単一展覧会スコープの補助的ランキングのままでよく、対象外）。
+
+**設計判断：新規共通コンポーネント`.ins-item-list`を追加（`.ins-top-list`を改造せず別コンポーネントとして共存）**。理由：`.ins-top-list`はP2-14で現役利用中（Top2ランキング・タイトルのみ・数値列なし）であり、ここに数値列を無理に足すと既存用途の見た目が変わってしまう。CLAUDE.mdの「flexのみで構成・複雑なgridは使わない」制約に従い、既存の`.ins-hbar__row`／`.ins-funnel__row`と同じ「固定`flex-basis`の列＋`flex:1`の可変列」パターンを踏襲：`.ins-item-list__row`は`__name`（flex:1・省略記号）＋`__stat`（flex:0 0 70px・右寄せ、モバイル540px以下は50px）を必要数だけ並べる。展覧会（3列＝閲覧数/チェックイン/興味あり）と記事・作品（2列＝閲覧数/興味あり）を同一クラスの列数違いだけで両対応でき、モディファイアクラスの分岐が不要。canonical定義は`kotennavi-common.css`の`.ins-top-list`ブロック直後。
+
+**内部数値の整合性**：一覧の各列合計は、同じページに既存する集計値（KPI・ファネル・Repeater）と完全一致するよう新規に数値を作成した（新しい矛盾を持ち込まないため）。
+- P3-12：チェックイン合計156人＝Repeater「のべ来場者数」と一致、展覧会興味あり合計238件、記事興味あり合計58件、作品閲覧数合計1,132＝ファネル「作品を見た」と一致、作品興味あり合計521件＝ファネル「興味あり！」と一致。
+- P4-12：チェックイン合計203人、展覧会興味あり合計176件、記事興味あり合計64件、作品閲覧数合計876＝ファネルと一致、作品興味あり合計361件＝ファネルと一致。
+- 各セクションのKPIカード・作品セクションの`.ins-funnel`（`#p312Funnel`/`#p412Funnel`）は数値・構造とも無変更。
+
+**副次的なデータ品質修正（今回のスコープで発見）**：
+1. 追116で導入された展覧会タイトル「水のうつわ、光のかけら」「まなざしの重奏」「遠雷、まだ見ぬ景色」はサイト内のどこにも実在しない架空名だった（追115/追116のP2-14横展開作業で仮置きされたまま実データ確認が漏れていたと推測）。`kotennavi-p3-1.html`／`kotennavi-p4-1.html`から実在するデモ展覧会名に差し替え。
+2. P4-12（ギャラリー）の作品Top2「《オノマトペの庭》《ドキドキ #3》」は、実際には田中透個人の作品（p3-12/p3-3.html側のデータ）が誤って流用されていた。ギャラリー（Gallery SOIL 渋谷）は複数作家の作品を委託販売する立場のため、`kotennavi-p4-14.html`（作品インベントリー管理・g1〜g11の複数作家データ）から実在するギャラリー所属の公開済み作品6点（《静かな水面》《余白のコンポジション》《朝の気配》《庭の記憶》《光の粒》《海の記憶》＝高橋信／佐藤みなと作）に差し替え。
+3. 「記事を管理する →」リンクが従来`kotennavi-p3-2.html`／`kotennavi-p4-2.html`（公開記事一覧ページ）を指していた誤りを発見。追116で確定した「記事管理はP3-19/P4-19（CRUD専用）に集約」の方針と整合させ、`kotennavi-p3-19.html`／`kotennavi-p4-19.html`へ修正。
+
+**各セクション見出し横に`.ktn-count`を追加**（例：「全6件」）。CLAUDE.mdのカウンター共通ルール「見出しの横に置く件数はbase `.ktn-count`」に準拠（見出しが既にアンカーのため`--strong`は使わない）。
+
+**メモリ更新**：`project_insight_numbers_belong_in_p312.md`の趣旨（インサイト数値はP3-12/P4-12に集約・管理ページはCRUD専用）自体は継続有効だが、その手段について「P2-14は単一展覧会スコープのTop-Nランキング（`.ins-top-list`）、P3-12/P4-12はクリエイター/ギャラリー全体を横断する全件一覧（`.ins-item-list`）」とスコープに応じて使い分ける、という補足を追記。
+
+### 検証
+`kotennavi-p3-12.html`：div 105/105・section 6/6一致。`kotennavi-p4-12.html`：div 101/101・section 6/6一致。両ファイルともNode `new Function()`抽出によるインラインscript構文チェック通過。**実ブラウザでの目視確認はユーザー確認待ち**（3セクションとも数値列の右寄せ表示、モバイル540px以下でのカラム幅縮小、各行のリンク先が正しいことを確認）。
+
+### 影響ファイル
+`kotennavi-common.css`（`.ins-item-list`系クラス新規追加・`.ins-top-list`直後、および`@media(max-width:540px)`ブロック内にモバイル上書きを追加）、`kotennavi-p3-12.html`／`kotennavi-p4-12.html`（Section4〜6の`.ins-top-list`ブロックを`.ins-item-list`全件一覧に置換、記事管理リンク先修正、`.ktn-count`追加）。
+
+## 追118. P3-12/P4-12「展覧会・記事・作品への関心」を人気Top3サマリー＋タブ切替・年別グループ・ページング一覧に再設計（2026-08-28）
+
+**背景**：追117で`.ins-item-list`（全件・検索なし・ページングなし・単純降順）を導入した直後、ユーザーから追加の明示指示：「年別(展覧会は会期、作品は制作年、記事は作成日)、ページネーションは必要でしょうが、検索は不要です。表示は日付(展覧会は会期、作品は制作年+投稿日、記事は作成日)の降順」。追117の全件一覧は件数が伸びると縦に長くなり続ける・時系列の塊が見えない、という課題があったため、①まず「人気コンテンツ」（閲覧数Top3）で概況を見せる、②詳細は年別グループ＋ページングで追える、という2段構成に変更。
+
+**設計判断：新規コンポーネントは作らず既存3点を組み合わせる（共通化徹底の原則）**：
+1. **Top3サマリー**＝`.ins-top-grid`（3列flexラッパー・追加のみ）＋既存`.ins-top-list`（P2-14で確立済みのTop-Nランキング表示）をそのまま3つ並べる。
+2. **タブ切替**＝P5系で確立済みの`.p5-type-tabs`/`.p5-type-tab`をそのまま流用（新規タブCSSを作らない）。
+3. **年別グループ＋ページング**＝追117の`.ins-item-list`はそのまま使い、年グループ見出し行`.ins-item-list__year`（新規・`.72rem/700/var(--ink)`）を追加し、`KTN.pagination`（既存の汎用ページネーションモジュール）を接続。両者を束ねる新規JSモジュール`KTN.insightList`（`kotennavi-common.js`・`KTN.pagination`直後）を追加：`render(listEl, pagerEl, items, page, perPage, onGoto)`が静的`__head`行を残したまま年グループ行・データ行だけを再構築し、`KTN.pagination.render()`を呼ぶ。P3-12/P4-12以外のページでも「年別グループ＋ページングの一覧」が必要になれば同モジュールを再利用できる。
+
+**年グループ化・ソート順の実データ再取得**：追117で確定済みの数値（閲覧数/チェックイン数/興味あり数）は一切変更せず、各アイテムの年・日付のみを実在ページから再取得して付与した。
+- 展覧会＝会期年（`kotennavi-p3-1.html`／`kotennavi-p4-1.html`の`.ec__datebar-dates`）、年内は会期開始日降順。
+- 記事＝作成年（`kotennavi-p3-2.html`／`kotennavi-p4-2.html`の`.lc__date`）、年内は作成日降順。
+- 作品＝制作年（`kotennavi-pages.js`のw1-w12／g1-g11配列の`year`フィールド）でグループ化、年内は投稿日（同配列の`reg`フィールド）降順（＝ユーザー指示「作品は制作年+投稿日」＝制作年でグループ、投稿日でソートの意）。
+
+**内部数値整合の再検証**：年・並び順を変えただけで各列の合計値は追117から不変のため、以下を再計算して一致を確認（新しい矛盾を持ち込まないための恒常チェック）：
+- P3-12：展覧会興味あり238件・記事興味あり58件・作品閲覧合計1,132（ファネル一致）・作品興味あり521件（ファネル一致）。
+- P4-12：展覧会興味あり176件・記事興味あり64件・作品閲覧合計876（ファネル一致）・作品興味あり361件（ファネル一致）。
+
+**HTML構造の変更点**：Section4「人気コンテンツ」（Top3グリッド）とSection5「展覧会・記事・作品への関心」（タブ＋各`.p{3|4}12-ins-panel[data-panel]`）の2セクション構成に整理。各パネルは既存の`.ins-kpi-grid`合計カードを維持したまま、`.ins-item-list`は静的head行のみをHTMLに残しJSでデータ行を描画する方式に変更（検索UIは追加しない＝ユーザー指示どおり不要）。作品パネルのみ、`.ins-funnel`（`#p312Funnel`/`#p412Funnel`）をパネル内末尾にそのまま保持。
+
+**実装上の注意点（後続作業の再発防止）**：Editツールでの大きな`old_string`/`new_string`置換時、新規に開いた`.p{3|4}12-ins-panel`ラッパーdivの閉じタグが置換範囲の境界外（ファネル終端の`</div></section>`付近）にあり両ページで各1箇所ずつ閉じ忘れが発生した。div/section開閉数の一致確認（Node.jsでの正規表現カウント）を編集直後に必ず行うことで検出・修正した。
+
+### 検証
+`kotennavi-p3-12.html`：div 106/106・section 5/5一致。`kotennavi-p4-12.html`：div 100/100・section 5/5一致。両ファイルとも`node --check`ではなくインラインscriptなしのためHTML側は目視+タグカウントで検証、`kotennavi-pages.js`は`node --check`構文チェック通過。**実ブラウザでの目視確認はユーザー確認待ち**（Top3サマリー表示、タブ切替の表示/非表示、年別グループ見出しの挿入位置、ページネーションの前後ボタン動作、1件しかない年グループでの表示崩れの有無）。
+
+### 影響ファイル
+`kotennavi-common.js`（`KTN.insightList`モジュール新規追加）、`kotennavi-common.css`（`.ins-top-grid`／`.ins-item-list__year`新規追加）、`kotennavi-p3-12.html`／`kotennavi-p4-12.html`（Section4〜5をTop3サマリー＋タブ＋年別ページング一覧に再構成）、`kotennavi-pages.js`（`KTN.pages['p3-12']`／`KTN.pages['p4-12']`にタブ切替・ページング描画ロジックを追加）。
+
+## 追119. P3-12/P4-12「リピーターの可視化」KPIを3枚→2枚に統合（2026-08-28）
+
+**背景**：追118のレビュー時、ユーザーから「リピート率はリピーター欄の中に併記してもいいと思います、そうすればスマホサイズ時に2段にならなくて済む」の指摘。`.ins-kpi-grid`は`@media(max-width:540px)`で`.ins-kpi{flex:1 1 calc(50% - 12px)}`（2列組み）のため、Section3「リピーターの可視化」の3枚のKPIカード（のべ来場者数／リピーター／リピート率）はモバイルで2枚+1枚の2段組みになっていた。
+
+**対応**：「リピート率」単独カードを削除し、「リピーター」カードの`.ins-kpi__val`に`<span class="unit">（リピート率N%）</span>`を追記して1カードに統合。新規CSSは追加せず既存の`.unit`（`.ins-kpi__val .unit`）クラスをそのまま2つ目のspanとして再利用（人数の単位「人」と同じ弱色副次テキストとして違和感なく並ぶ）。`__sub`説明文も「2回以上来場した人数・来場者全体に占める割合」に統合。これによりKPIグリッドが2枚になり、モバイルでも1行に収まる。
+
+**数値**：p3-12＝リピーター34人（リピート率22%）＝34/156来場者≈22%、p4-12＝リピーター39人（リピート率19%）＝39/203来場者≈19%。いずれも追117/追118から数値変更なし（統合前の2カードの値をそのまま1カードにまとめただけ）。
+
+### 検証
+`kotennavi-p3-12.html`：div 105/105・section 5/5一致。`kotennavi-p4-12.html`：div 99/99・section 5/5一致（カード1枚削除分、divペアが1減）。JS側の変更なし（`リピート率`はHTMLテキストのみで参照されておらずJS未結線を確認済み）。**実ブラウザでの目視確認はユーザー確認待ち**（モバイル幅でKPIグリッドが2枚1行に収まること、「（リピート率N%）」の折返し・可読性）。
+
+### 影響ファイル
+`kotennavi-p3-12.html`／`kotennavi-p4-12.html`（Section3のKPIカードを3枚→2枚に統合、新規CSS追加なし）。
+
+## 追120. P3-12/P4-12「展覧会・記事・作品への関心」全件一覧に会期／リンク先／出展回数を追加＋列ソート対応（2026-08-28）
+
+**背景**：ユーザーから「展覧会には会期、記事にはリンク先(「展覧会」か「作品」)、作品には出展回数をそれぞれ追加し、また全件表示のリストを項目ソートできるようにしてください。確認ですが、会期終了後は展覧会はインサイトのみ一覧を確認できる、展覧会管理ページでは表示されない。」との指示。
+
+**表示設計（新規フィールドの置き場所）**：`.ins-item-list`の統計カラムは`flex:0 0 70px`（モバイル50px）の固定幅で、閲覧数・チェックイン数などの短い数値専用。会期テキスト（例「2026.3.20–3.31」）やリンク先バッジは幅が可変・長めで、この固定幅カラムに収めるとモバイルで折返し・切れが発生する。そこで新規固定カラムを増やさず、名前列を`.ins-item-list__main`（flex-direction:column）でラップし、名前の下段（会期）／名前の左（バッジ、`.ins-item-list__name-row`）に2次情報として同居させる設計にした。作品の「出展回数」は既存の数値統計パターンにそのまま収まるため、素直に3列目の`.ins-item-list__stat`として追加。
+
+**列ソート実装**：新規`KTN.insightList.bindSort(headEl, applyFn)`（`kotennavi-common.js`）を追加。列見出しは`.p315-buyers-sort-btn`（p3-15/p4-15の購入者一覧ソートボタンをそのまま再利用・重複CSS定義なし、canonical直上のコメントに再利用先を追記）＋`data-sort`属性（`name`/`period`/`linkTarget`/`stat0`/`stat1`/`stat2`）で構成。クリック時は`pages.js`側の`p312SortValue`/`p412SortValue`ヘルパーが該当キーの値を取り出し（数値統計は`KTN.insightList.numFromHtml()`でHTMLタグ・カンマを除去して比較）、`P312_INS[type]`/`P412_INS[type]`配列を直接`.sort()`して再描画。初回クリックは`name`のみ昇順、それ以外（数値・会期・リンク先）は降順から開始。同じボタンを再クリックすると昇降反転。
+
+**年別グループとの整合**：列ソート適用時は`groupByYear=false`をrenderに渡し、年見出し（`.ins-item-list__year`）を非表示にする（ソート結果が年ごとに分断・再出現するのを防ぐため）。ソートが一度も行われていない初期状態は従来どおり年別グループ＋日付降順を維持。
+
+**データソース**：展覧会の会期は捏造せず`kotennavi-p3-1.html`／`kotennavi-p4-1.html`から展覧会名で突合して実データを復元（p3/p4は同一の実演デモ展覧会を共有しているため大半の会期は一致、p4-12のみに存在する「秋の個展2023」はp4-1.htmlから取得）。記事のリンク先（展覧会/作品）・作品の出展回数は、この回で初めて設けた属性で裏付けとなる実データソースが無いため、既存の記事タイトル・作品名の内容と矛盾しない範囲で合理的な値を設定した（デモデータである旨は明記）。
+
+**ユーザーの確認質問への回答**：会期終了後の展覧会がP3-18/P4-18（展覧会管理ページ）の一覧から除外され、P3-12/P4-12インサイトの一覧では引き続き確認できる、という理解で正しい（2026-08-16の変更で確定済み。管理ページでの編集・削除は会期終了後は不可という設計＝`project_exhibition_ended_lock`）。ただし、両ページの`.ins-note`文言が実際にはこれと逆の内容（「会期終了後の展覧会も含めた一覧は［展覧会を管理する →］で確認できます」）を示す誤記になっていたため、本ラウンドで「会期終了後の展覧会は［展覧会を管理する →］の一覧からは外れますが、この一覧では引き続き確認できます。」に修正した。
+
+### 検証
+`node --check kotennavi-pages.js`／`node --check kotennavi-common.js`通過。`kotennavi-p3-12.html`／`kotennavi-p4-12.html`ともdiv/section/span/button/p/aタグの開閉数一致を確認。**実ブラウザでの目視確認はユーザー確認待ち**（名前列下の会期テキスト・名前行左のバッジのモバイル表示、列見出しソートボタンの矢印アニメーション、クリックでのソート・年見出し非表示の切替動作）。
+
+### 影響ファイル
+`kotennavi-common.css`（`.ins-item-list__main`／`.ins-item-list__name-row`／`.ins-item-list__period`／列見出しソートボタンのレイアウト調整を新規追加）、`kotennavi-common.js`（`KTN.insightList`に`numFromHtml`・`bindSort`・`groupByYear`パラメータを追加）、`kotennavi-pages.js`（`P312_INS`/`P412_INS`データに`period`/`periodSort`/`linkTarget`/3列目統計を追加、`p312SortValue`/`p412SortValue`ヘルパーと`bindSort`結線を追加）、`kotennavi-p3-12.html`／`kotennavi-p4-12.html`（3パネルの列見出しをソートボタン化・IDを付与・`.ins-note`文言修正）。
+
+**訂正（同日）**：初回実装では記事のリンク先表示に`.cb.cb-exhibition`/`.cb.cb-artwork`バッジを流用したが、ユーザーから「EXHIBITION・ARTWORKのバッジは展覧会・作品のページタイトルやカードタイトルにつけるもの」であり記事のリンク先表現には不適切との指摘（バッジ設計原則「種別を示すバッジはタイトル前専用・記事とコンテンツの関係表示に転用しない」＝`feedback_badge_placement`と整合）。バッジではなく中立の枠のみラベル`.ins-item-list__link-mark`（色塗り・Cinzel大文字なし、`var(--muted)`文字＋ヘアライン枠のピル）に差し替え、テキストも英語「exhibition/artwork」から日本語「展覧会」「作品」に変更。あわせて記事データを見直し、クリエイター・ギャラリーページに直接投稿された（展覧会/作品に紐づかない）記事は`linkTarget`キー自体を持たせず、マークなしで表示されるようにした（p3-12：6件中3件を展覧会/作品紐づけなしに変更、p4-12：8件中4件を変更）。`KTN.insightList`のコメントも「リンク先バッジ」→「リンク先マーク（バッジ不使用）」に修正。`node --check`通過確認済み。
+## 追121. P3-13/P4-13 オーディエンス管理：ウォッチャー／チェックインのデータモデルを統合し①同一人物確認②最近アクティブ順③リピーター表示を追加（2026-08-28）
+
+**背景**：ユーザーから「p3-13,p4-13に進みましょう」の指示を受け、既存の「エンゲージメントが高い順」ソートが何を根拠に算出しているかを確認。調査の結果、旧実装は`WATCHERS`（ウォッチャー一覧用）と`CHECKINS`（チェックイン一覧用）という**別々の配列**を持ち、同一人物のデータが両者で矛盾していた（例：P3-13旧データで岡田陸はWATCHERS側`checkin:0`だがCHECKINS側には実際に1件の来場記録がある、等）。加えて旧`engage-desc`ソートは`watch`（そのアカウントが**サイト全体で**ウォッチしている件数）を合算しており、これは「このページのオーナーにどれだけ関心があるか」ではなく「そのユーザーがどれだけサイトに活発か」という無関係な指標だった。
+
+ユーザーへ「このページで利用者は何を確認したいか」を問い直したところ、以下4点の要望が挙がった：①ウォッチとチェックインの同一人物の確認、②直近のアクティブユーザー、③チェックインの回数と傾向、④ウォッチャーの中の共通するウォッチ対象のギャラリー・クリエイター（協調フィルタリング的な集計・現行データモデルでは重い）。④は「保留でいいです。他を進めて下さい」と明示的に優先度を下げる指示があり、①②③を今回実装、④は将来検討として据え置いた。
+
+**設計：WATCHERS+CHECKINSを単一PEOPLE配列に統合**。各人物は`{id, name, type, color, watching(true/false), since/ts(watchingがtrueの時のみ), interest, visits:[{exh,exhName,period,date,ts}]}`の1レコードで、ウォッチャー一覧（`watching===true`でフィルタ）とチェックイン一覧（`visits.length>0`でフィルタ）は**同じ配列の異なるビュー**になる。これにより①の「同一人物確認」はデータ構造上自明になった（同じidが両タブに出現しうる＝ウォッチだけの人・チェックインだけの人・両方の人が一覧上で自然に区別できる）。
+
+**②最近アクティブな順**：`lastActivityTs(p)`＝ウォッチ開始日のts（watching時）とチェックイン日時の最大tsのうち、より新しい方。両タブの並び替えセレクトに`activity-desc`（「最近アクティブな順」）を追加。
+
+**③チェックイン回数と傾向**：チェックイン件数はカウント表示に加え、`visits.length>=2`の人物に`リピーター`タグ（`.p313-repeat-tag`＝塗りピル・`var(--page-accent)`背景・白文字、`kotennavi-common.css`のP3-13/P4-13共有ブロックへ新規追加）を表示。トレンド分析グラフ等の重い可視化は今回のスコープ外（P3-12/P4-12インサイトが数値集計の集約先という既存方針＝`project_insight_numbers_belong_in_p312`と役割が競合するため、P3-13/P4-13は「個々の人物の状態が一覧で分かる」ことに留めた）。
+
+**④は保留**：ウォッチャー同士で共通するウォッチ対象（クリエイター/ギャラリー）の集計は、現行データモデルが「このページオーナーを起点にした人物リスト」のみを持ち、各ウォッチャー自身が他に何をウォッチしているかのデータを持たないため、協調フィルタリング的な集計には別途データモデルの拡張が必要。ユーザーの合意のもと今回は実装せず、将来の検討事項として残す。
+
+**エンゲージメント式の修正**：`engageScore(p) = (p.watching?1:0) + p.visits.length + p.interest`。旧式のサイト全体ウォッチ数を除外し、**このページオーナーに対する関与**（ウォッチしているか／チェックイン回数／興味あり数）のみで算出するよう訂正。
+
+**付随修正（バッジ誤用の是正）**：チェックイン来訪履歴の展覧会名表示に`<span class="cb cb-content cb-exhibition">exhibition</span>`が使われていたが、これは追120で是正した「バッジはタイトル前専用・他エンティティへの関係表示に転用しない」原則（`feedback_badge_placement`）の違反箇所の見落としだったため、同じく`.ins-item-list__link-mark`（中立の枠のみラベル、日本語「展覧会」）に差し替えた。P3-13を先に修正し完成形を確認した後、同じ変更をP4-13（Gallery SOIL 渋谷のオーディエンスデータ・展覧会id g4/g5/g7）にも展開（対ページ同時修正の原則＝`feedback_paired_page_edits`）。P4-13のPEOPLE統合では、旧WATCHERS(14件)とCHECKINS(12件)の名前を突合し、両方に存在する人物はウォッチ+来訪履歴を1レコードにマージ、CHECKINSのみに存在した福田玲奈は`watching:false`のチェックイン専用人物として保持（P3-13と同型の「ウォッチなしのチェックインのみ人物」パターン）。
+
+### 検証
+`node --check kotennavi-pages.js`通過。HTML側（`kotennavi-p3-13.html`／`kotennavi-p4-13.html`）はウォッチ・チェックイン両タブの並び替えセレクトに`activity-desc`オプションを追加した以外の構造変更なし（レンダリングは全てJS駆動）。**実ブラウザでの目視確認はユーザー確認待ち**（リピータータグの表示位置・折返し、ウォッチ中の人物のみに表示される「ウォッチ開始日」行の条件表示、チェックインタブでの複数来訪履歴の積み上げ表示、新しい並び替えオプションの動作）。
+
+### 影響ファイル
+`kotennavi-pages.js`（`KTN.pages['p3-13']`／`KTN.pages['p4-13']`を`PEOPLE`統合データモデルへ全面書き換え、`lastActivityTs`/`engageScore`ヘルパー追加、`makeItem`を両タブ共通化）、`kotennavi-common.css`（`.p313-repeat-tag`新規追加）、`kotennavi-p3-13.html`／`kotennavi-p4-13.html`（`activity-desc`ソートオプションをウォッチ・チェックイン両タブに追加）。
+
+**訂正（同日）**：追121で「エンゲージメントが高い順」の算出式をページオーナーへの関与のみ（`(watching?1:0)+チェックイン数+興味あり数`）に絞って残したが、ユーザーから「エンゲージメントは直接このクリエイター・ギャラリーに関係ないカウントも含まれるということでしたので、エンゲージメントの実装はやめます」との指摘。`interest`（興味あり数）フィールド自体がこのページオーナー固有の関与を表す値として保証されておらず、式を絞ってもなお「このクリエイター・ギャラリーに直接関係しない値を合成している」という性質が残るため、修正でなく**機能ごと削除**する方針に転換。`engageScore()`関数と`SORTS`/`CK_SORTS`の`engage-desc`エントリをP3-13/P4-13のJSモジュールから削除し、`kotennavi-p3-13.html`／`kotennavi-p4-13.html`の並び替えセレクト4箇所（ウォッチ・チェックイン各タブ）から「エンゲージメントが多い順」の`<option>`を削除。残る並び替えは「ウォッチが新しい/古い順」「名前順」「最近アクティブな順」（②）＋チェックインタブは「チェックインが新しい/古い順」。`interest`データ自体（`PEOPLE`配列内の`interest`フィールド、カウント表示）は削除せず維持（表示用の実データとしては引き続き有効・ソート根拠としてのみ不適切だった）。`node --check`通過確認済み。
+
+## 追122. P3-13/P4-13 オーディエンス管理：サマリーKPI「新規ウォッチャー」「新規チェックイン」を削除、チェックインタブのソートを「チェックイン回数が多い順」に変更（2026-08-28）
+
+**背景**：追121で残していた「新規ウォッチャー」「新規チェックイン」KPIカードと、チェックインタブの日付ベースソート（「チェックインが新しい/古い順」）について、ユーザーから以下の指摘：「チェックインは展覧会ごとなので、展覧会開催はクリエイター・ギャラリーによって周期が異なるため、新規チェックインはあまり意味がないので、廃止したいです。チェックインで見たいのは、チェックイン回数、チェックイン回数順のユーザー。新規ウオッチャーはp3-12で表示しているのと重複するので、ここでは廃止したい。」
+
+**「新規チェックイン」廃止の理由**：チェックインは「ウォッチ」のような継続的な状態ではなく、展覧会という離散イベントに紐づく一回性の行動。クリエイター・ギャラリーごとに展覧会の開催頻度・周期が大きく異なるため（年1回の作家もいれば月次で個展を打つギャラリーもいる）、「直近30日の新規チェックイン数」という時間窓での増減比較は、展覧会が無い期間はゼロが続き、開催中だけ跳ねるノイズの多い指標になり実用的な意味を持たない。同じ理由は「新規ウォッチャー」には当てはまらない（ウォッチは展覧会の有無と独立して発生しうる継続的関心のシグナル）ため区別して扱う。
+
+**「新規ウォッチャー」廃止の理由**：このKPIが示す情報（一定期間のウォッチャー増減）は既にP3-12/P4-12インサイトページのサマリーで表示済み（`project_insight_numbers_belong_in_p312`＝閲覧数・興味あり数等の集計数値はP3-12/P4-12に集約する既定方針と整合）。P3-13/P4-13は個々の人物の状態を一覧で確認する管理ページという役割のため、同じ数値をここでも重複表示する必要はない。
+
+**対応**：
+1. `kotennavi-p3-13.html`／`kotennavi-p4-13.html`のサマリー`.ins-kpi-grid`を4枚→2枚（総ウォッチャー数・チェックイン人数のみ）に削減。「新規ウォッチャー」「新規チェックイン」カード（前期間比の増減矢印付き）を削除。2枚になったことでモバイル2カラムグリッド（`@media(max-width:540px)`の`flex:1 1 calc(50% - 12px)`）が1行にきれいに収まる（P3-12/P4-12の追119「リピーターKPI3→2枚統合」と同じ理由・パターン）。
+2. チェックインタブの並び替えセレクト（`#p313CkSort`/`#p413CkSort`）から`date-desc`（チェックインが新しい順）・`date-asc`（チェックインが古い順）を削除し、新規`count-desc`（チェックイン回数が多い順＝`visits.length`降順）を先頭オプションとして追加。「名前順」「最近アクティブな順」は維持（ユーザーの指摘はチェックイン**日付**ソートの廃止のみで、この2つは対象外）。
+3. `kotennavi-pages.js`：`KTN.pages['p3-13']`／`KTN.pages['p4-13']`双方の`CK_SORTS`から`date-desc`/`date-asc`エントリを削除、`count-desc`（`function(a,b){return b.visits.length - a.visits.length;}`）を追加。日付ソートのみに使われていた`ckLatestTs()`/`ckEarliestTs()`ヘルパー関数（`Math.max`/`Math.min`で`visits`のtsを集計）は他に参照がなくなったため削除。`renderCk`内のフォールバック既定値`CK_SORTS[ckSortSel.value] || CK_SORTS['date-desc']`を`|| CK_SORTS['count-desc']`に変更（削除したキーへの参照が残るとフォールバックが`undefined`になり`rows.sort(undefined)`で意図しない挙動になるため）。
+
+### 検証
+`node --check kotennavi-pages.js`通過。`ckLatestTs`/`ckEarliestTs`/`date-desc`/`date-asc`の残存参照が無いことをgrepで確認済み。**実ブラウザでの目視確認はユーザー確認待ち**（サマリーKPIグリッドがモバイルで2枚1行に収まること、チェックインタブの新ソート「チェックイン回数が多い順」の動作、初期表示のデフォルトソート）。
+
+### 影響ファイル
+`kotennavi-p3-13.html`／`kotennavi-p4-13.html`（`.ins-kpi-grid`を4枚→2枚に削減、チェックインタブソートセレクトの`<option>`差し替え）、`kotennavi-pages.js`（`KTN.pages['p3-13']`／`KTN.pages['p4-13']`の`CK_SORTS`・`renderCk`フォールバック・`ckLatestTs`/`ckEarliestTs`ヘルパー削除）。
+
+## 追123. P3-12/P4-12インサイト：「ウォッチャーの推移」週間トレンドグラフを新設（2026-08-28）
+
+**背景**：ユーザーから「p3-12,p4-12でウオッチャーの推移の週間グラフを追加してください」の指示。従来P3-12/P4-12にはウォッチャーの時系列可視化が存在せず、サマリーKPI「新規ウォッチャー（直近30日）」の静的な単一数値と、閲覧数の日次推移グラフ（`KTN.renderTrend`）のみだった。ウォッチャーがどう推移しているか（増加傾向か・イベント（展覧会）に連動した山があるか）を時系列で見る手段が無かったため新設。
+
+**設計：既存の日次トレンド描画コンポーネントを単位パラメータ付きで汎用化**。新規にSVG描画ロジックを複製すると`ktnTrendSvg`が唯一のトレンドチャートcanonicalという原則（`feedback_css_commonize`と同じ思想＝共通化徹底）に反するため、既存`ktnTrendSvg(dates, vals, markers, segs)`に5番目の引数`unit`（省略時`'回'`＝既存3呼び出し元と後方互換）を追加し、ツールチップ・y軸目盛・区間合計ラベルの単位文字列をこの変数で差し替え可能にした。ウォッチャーは回数でなく人数なので`'人'`を渡す。
+
+新規`KTN.renderWeeklyTrend(hostId, weeks, peakBase, unit)`（`kotennavi-common.js`・`KTN.renderTrend`直後）を追加。`KTN.renderTrend`と同型の構造（`ktnTrendHash`/`ktnTrendRand`による決定論的疑似乱数、`ktnTrendValues`でバンプ状の時系列生成、`ktnFmtMD`でピーク週ラベル生成）だが、日付間隔が7日刻み（週次）である点が異なる。ホスト要素IDのシード文字列に`'|weekly'`サフィックスを付け、同じ`hostId`でも日次トレンドと異なる乱数列になるようにした。
+
+**期間セレクターは意図的に付けない**：ユーザーの指示が文字通り「週間グラフ」（単一の週次グラフ）であり、期間切替可能なグラフを求めていないと判断。直近12週固定で表示する（過剰実装を避ける方針＝CLAUDE.mdの「タスクが要求する以上の機能を追加しない」原則）。
+
+**配置**：P3-12/P4-12とも既存「2. 閲覧数の推移」セクションの直後に新規「3. ウォッチャーの推移」セクションを挿入し、以降のセクション番号を1つずつ繰り下げ（旧3→4／旧4→5／旧5→6）。マークアップは`.ins-trend`＋`.ins-linechart`＋`.ins-trend__foot`（凡例＋ピーク週ラベル、ピーク週spanは`style="--page-accent:transparent"`でJS描画前は凡例ドットを非表示にする既存パターンを踏襲）で、閲覧数推移セクションと完全に同一の骨格を再利用。
+
+**peakBase値**：サマリーKPIの「新規ウォッチャー（直近30日）」実績値から週あたり平均を逆算し、山のピーク付近の目安として設定（P3-12＝86人/30日≈週20人→ピーク見込み26、P4-12＝42人/30日≈週10人→ピーク見込み14）。`ktnTrendValues`はこの値を中心にバンプを生成する乱数ベースの演出値であり、実データの厳密な再現ではない（既存の日次トレンドグラフも同様にpeakBase起点の疑似データ）。
+
+**JS呼び出し**：`KTN.pages['p3-12']`／`KTN.pages['p4-12']`のLIAISON+ファネルブロック直前に`KTN.renderWeeklyTrend('p312WatchTrend', 12, 26, '人')`／`KTN.renderWeeklyTrend('p412WatchTrend', 12, 14, '人')`を追加。
+
+### 検証
+`node --check kotennavi-common.js`／`node --check kotennavi-pages.js`通過。`kotennavi-p3-12.html`（div109/109・section6/6）・`kotennavi-p4-12.html`（div103/103・section6/6）ともタグ開閉数一致を確認。`ktnTrendSvg`の既存3呼び出し元（`KTN.renderTrend`／`KTN.renderExhTrend`／他）は`unit`未指定のため従来どおり「回」表示のまま変化なし。**実ブラウザでの目視確認はユーザー確認待ち**（グラフの描画・ツールチップの「人」単位表示、ピーク週ラベルの文言、モバイル幅でのレイアウト崩れ有無）。
+
+### 影響ファイル
+`kotennavi-common.js`（`ktnTrendSvg`に`unit`引数追加、`KTN.renderWeeklyTrend`新設）、`kotennavi-pages.js`（`KTN.pages['p3-12']`／`KTN.pages['p4-12']`に`renderWeeklyTrend`呼び出し追加）、`kotennavi-p3-12.html`／`kotennavi-p4-12.html`（新規セクション3「ウォッチャーの推移」追加・以降セクション番号繰り下げ）。
+
+## 追124. P3-13/P4-13（オーディエンス管理）ウォッチャー／チェックインを単一リスト＋3フィルターへ統合（2026-08-28）
+
+### 背景
+ユーザーより：「p3-13,p4-13がまだすっきりしません。AUDENCE LISTでウオッチャーとチェックインを一つのリストにして、フィルターで『ウオッチャー、チェックイン、ウオッチャーxチェックイン』選択でき、それぞれのユーザーカードに自分をウオッチしているかチェックイン回数が0~の回数のわかるようにするのはどうでしょうか？今の表示はウオッチャーとチェックインで同じような内容を表示していて冗長的、片方を開くと片方の状況がわからなくなる、同じユーザーが自分に対してどのようなアクションをしているのかが直感的にとらえにくい。」
+
+旧UIは「ウォッチャー」「チェックイン」の2タブがそれぞれ独立したツールバー・ソート・一覧・ページングを持つ構成だった。カード自体（`makeItem`）は既にウォッチ中since表示＋チェックイン回数＋来場履歴を両方出す設計だったため、タブを分けても内容が重複し、片方のタブを見ている間もう片方の状況が分からないという指摘は妥当と判断。
+
+### 設計判断
+1. **フィルターは3択・排他選択（タブ形式のまま流用）**：「ウォッチャー」「チェックイン」「ウォッチャー×チェックイン」を`.p313-tabs`＋`.p313-tab`（既存クラス）で表現。旧2タブ切替のクラス・見た目をそのまま3択に拡張し、新規CSSは追加していない。
+2. **「ウォッチャー×チェックイン」はAND条件**（ユーザー確認済み＝「1.yes」）。OR（いずれか）ではなく両方を満たす人のみ表示。
+3. **カードは無改修**：`makeItem(p)`は元々ウォッチ中since行・チェックイン回数・来場履歴を条件付きで両方出す実装だったため、フィルターがどれであってもカードの中身（両シグナル）は常に見える。今回の変更はリスト側の絞り込みロジックのみで、カード表示ロジックは一切変更していない。
+4. **ソート項目の整理**：ユーザーより「ソート項目はそのままでよいが、最近アクティブ順が意味を持たなくなる気がする」との指摘を受け、「最近アクティブ順（`activity-desc`／`lastActivityTs()`ヘルパー）」を完全に削除。理由＝両シグナルがカードに常時可視化される以上、複合的な最終アクティブ日時という指標は分析価値が薄く、既存の他ソート（ウォッチが新しい/古い順・チェックイン回数順・名前順）で十分カバーできるとユーザーに提案し承認を得た（「はい」）。
+5. **チェックイン専用の展覧会フィルター（`p313CkFilterExh`/`p413CkFilterExh`）は維持**しつつ、`viewFilter==='watch'`の時のみ`hidden`属性で非表示化（`.p313-filter[hidden]{display:none}`をcommon.cssに追加＝既存`.p313-filter{display:flex;...}`がネイティブ`[hidden]`を上書きするため明示ガードが必要だった。他コンポーネントの`[hidden]`パターン（`.ktn-op-btn[hidden]`等）を踏襲）。
+6. **通知トグル（`p313NotifySw`/`p413NotifySw`）はウォッチャー・チェックイン共通の単一設定のまま変更なし**（元々1つしかなかったため統合対象外）。
+
+### 実装詳細
+- HTML：`kotennavi-p3-13.html`／`kotennavi-p4-13.html`とも、旧2枚の`.p313-tab-panel`（`#p313PanelWatch`/`#p313PanelCheckin`）を撤去し、単一の`.p313-toolbar`＋単一リスト（`#p313List`/`#p413List`）＋単一件数（`#p313Count`/`#p413Count`）＋単一空表示（`#p313Empty`/`#p413Empty`）＋単一ページング（`#p313Pagination`/`#p413Pagination`）に統合。フィルターチップは`id="p313FilterTabs"`/`id="p413FilterTabs"`（`data-filter="watch"|"checkin"|"both"`）。
+- JS：`KTN.pages['p3-13']`／`KTN.pages['p4-13']`とも、`PEOPLE`データ配列（サンプルデータ）自体は無改修。`lastActivityTs()`削除。新設`sinceTs(p)`（`p.watching`がfalseの人は`null`を返しnull-safeにソート末尾へ落とす）。`matchesFilter(p)`が3種のフィルター条件を判定。`render()`は1系統に統合し、フィルター切替時・ソート切替時・展覧会サブフィルター切替時いずれも`renderReset()`（1ページ目に戻す）を呼ぶ。
+- CSS：`kotennavi-common.css`の`.p313-filter{display:flex;flex-direction:column;gap:4px}`直後に`.p313-filter[hidden]{display:none}`を追加。
+
+### 検証
+`node --check kotennavi-pages.js`通過。`p313CkList`/`p313CkEmpty`/`p313CkSort`/`p313CkCount`/`p313CkPagination`（および`p413`版）・`p313PanelWatch`/`p313PanelCheckin`（`p413`版）・`lastActivityTs`への参照が全ファイル（`kotennavi-pages.js`/`kotennavi-p3-13.html`/`kotennavi-p4-13.html`）に残っていないことを確認済み。HTML側`id`（`p313FilterTabs`/`p313ExhFilterWrap`/`p313CkFilterExh`/`p313Sort`/`p313Count`/`p313List`/`p313Empty`/`p313Pagination`/`p313NotifySw`、`p413`版も同様）とJS側`getElementById`呼び出しの対応を突合し一致を確認。**実ブラウザでの目視確認はユーザー確認待ち**（3フィルター切替の見た目・件数表示・展覧会サブフィルターの表示/非表示切替・カード内両シグナル表示・モバイル幅でのレイアウト崩れ有無）。
+
+### 影響ファイル
+`kotennavi-p3-13.html`／`kotennavi-p4-13.html`（HTML構造統合：2タブパネル→単一リスト＋3フィルターチップ）、`kotennavi-pages.js`（`KTN.pages['p3-13']`／`KTN.pages['p4-13']`のリスト・フィルター・ソートロジック全面書き換え）、`kotennavi-common.css`（`.p313-filter[hidden]`ガード追加）。
+
+## 追125. P3-13/P4-13 オーディエンスカードを正規USERカード形式へ・ウォッチ/来場履歴をテキスト＋折りたたみ化（2026-08-28）
+
+### 背景
+追124でリスト統合後、ユーザーより「ウオッチ日やチェックインリスト（日付展覧会リスト）がもともとユーザーカードにあるカウンターと似ているのでわかりにくい」との指摘。さらに「ユーザーのカードはUSERのバッジが必要。カウンターも4つある（`kotennavi_cards_person.html`参照）。まずカードを正しい形にしてから、ウオッチと来場履歴の整理」「テキストでウオッチ中・チェックインxx回、履歴は折りたたみに」と方向付け。
+
+最終確定の核心ルール（**新規プラットフォーム前提として重要**）：**ウォッチ・チェックイン・興味あり・コレクションは「ユーザー」ロール専用のサービス機能であり、クリエイター・ギャラリーロールでは利用できない。そのためオーディエンスリスト（この作家/ギャラリーをウォッチ・来場している人の一覧）に載るアカウントは常にユーザーロールのみ**（旧実装は`PEOPLE`データに`type:'creator'|'gallery'`を混在させ、アバター形状だけ強制的に`--user`にする実装上のバグでたまたま辻褄が合っていたに過ぎなかった）。
+
+### 設計判断
+1. **カードは`.uc`（canonical USERカード・`kotennavi-common.css` L2975〜／`kotennavi_cards_person.html`参照）の構成に合わせる**：`cb cb-person cb-user`バッジ行→名前→4カウンター（ウォッチ／チェックイン／興味あり／コレクション、コレクションは値がある場合のみ表示＝3または4個）。カウンターは**サイト全体の活動量**（このオーナーとの関係とは別スコープ＝「このユーザーがサイト内でアクティブかどうか」を示す一般指標）。
+2. **オーナー固有の関係情報は下部にテキストで分離**：「ウォッチ中・{since}〜」（ウォッチしていない場合は非表示）、「来場履歴：チェックイン{N}回」＋2回以上で`.p313-repeat-tag`。個別の来場記録（日付＋展覧会名＋会期）は`<details class="p313-ck-toggle">`で折りたたみ（`.p317-hero__more`と同じ視覚言語＝chevron回転＋accent色summary）。**アイコンの重複使用（旧`SVG_W_GRAY`/`SVG_C_GRAY`）はここでは廃止**し、上部カウンター行のアイコン（ウォッチ＝青丸／チェックイン＝青二重丸／興味あり＝ハート／コレクション＝四角）とスコープが被らないようにした。
+3. **サンプルデータの`type`フィールドは撤去**（アバター形状・バッジは常にuser固定のため不要）。組織名で入っていたサンプル（`Gallery MUKU`→村上陽子、`Gallery SOIL 渋谷`→橋本尚美、`Gallery 灯`→石田明里／西村沙耶）はユーザーロールとして矛盾するため個人名にリネーム。既存の`interest`フィールドはそのままサイト全体の興味あり件数として再解釈（値は変更せず流用）。新規`watchCount`（サイト全体のウォッチ数）・`checkinCount`（サイト全体のチェックイン数）・任意`collectionCount`を全レコードに追加。
+4. **`.p2-watcher-item`（カード外枠）の`align-items`を`center`→`flex-start`に変更**：情報ブロックが4カウンター＋関係テキスト＋折りたたみで縦に伸びるため、アバターを上端揃えにした方が自然。この基底クラスは静的HTMLでは未使用（`class="p2-watcher-item"`はp3-13/p4-13のJS生成のみ）と確認済みのため他ページへの影響なし。**ただし`.p2-watcher-item__counts`/`.p2-watcher-item__count`はp7.html/p8.html（著者カードの内訳行）が個別に再利用しているため、この2クラス自体は変更していない**（新カードは代わりに`.uc__counts`/`.uc__count`を使用）。
+
+### 実装詳細
+- JS：`KTN.pages['p3-13']`／`KTN.pages['p4-13']`の`makeItem(p)`を全面書き換え。SVG定数を`SVG_W`（青ウォッチ）・`SVG_C`（青チェックイン）・`SVG_I`（青ハート）・`SVG_COL`（コレクション角丸四角、参考ファイル準拠の`#4da3f5`）に統一（`SVG_C_GRAY`/`SVG_W_GRAY`は削除）。`PEOPLE`配列（各16件/15件）に`watchCount`/`checkinCount`/任意`collectionCount`を追加し`type`を削除、組織名3件を個人名にリネーム。
+- CSS：`kotennavi-common.css`に`.p313-rel`/`.p313-rel__line`/`.p313-rel__since`（関係テキスト）、`.p313-ck-toggle`系（折りたたみ・`.p317-hero__more`を参考に新規、ページ共有名前空間`.p313-*`に統一）を追加。旧`.p313-w-since`（アイコン付き行）は削除。`.p313-ck-visit__date`からアイコン関連プロパティを削除（テキストのみ・太字）。`.p313-repeat-tag`に`margin-left:6px`追加（インライン配置に伴う調整）。カードのバッジ・カウンター表示自体は新規CSSを追加せず`.uc__badge-row`/`.uc__counts`/`.uc__count`/`.uc__count--collection`（既存canonical、これまで本番ページ未採用）をそのまま再利用。
+- `.p2-watcher-item{align-items:center→flex-start}`（上記4参照）。
+
+### 検証
+`node --check kotennavi-pages.js`通過。`.p2-watcher-item`の静的HTML利用が無いこと、`.p2-watcher-item__counts`/`.p2-watcher-item__count`のp7/p8での利用を変更していないことをgrepで確認。**実ブラウザでの目視確認はユーザー確認待ち**（4カウンターの折返し・折りたたみのアニメーション・モバイル幅でのレイアウト）。
+
+### 影響ファイル
+`kotennavi-pages.js`（`KTN.pages['p3-13']`／`KTN.pages['p4-13']`の`makeItem`・`PEOPLE`データ）、`kotennavi-common.css`（`.p313-rel*`/`.p313-ck-toggle*`新設、`.p313-w-since`削除、`.p2-watcher-item`のalign-items変更）。
+
+## 追126. P3-13/P4-13 フィルタータブに「すべて」を追加し既定表示に（2026-08-28）
+
+### 背景
+追124で「ウォッチャー／チェックイン／ウォッチャー×チェックイン」の3タブに統合したが、既定タブは「ウォッチャー」のままだった。ユーザーより「ウオッチャー・チェックイン・ウオッチャーxチェックインがフィルターと言っていたのはdefaultで表示するのはこれらを横断で見れるすべてのリストのことです」と明確化：この3つは、既定で表示される「すべて（ウォッチャー・チェックインを横断した全オーディエンス）」を絞り込むためのフィルターであり、3つのうちどれかが既定であってはならない。
+
+### 設計判断
+- **「すべて」タブを新設し先頭・既定activeに**：`data-filter="all"`、条件は`p.watching || p.visits.length > 0`（ウォッチ中または来場履歴がある＝オーディエンスとして成立する全員の和集合）。現状のサンプルデータでは全員がこの条件を満たす（PEOPLEに載る時点でウォッチ or 来場のどちらかを持つ）が、将来データが増えても矛盾しないよう論理和で定義した。
+- **既存3タブは変更なし**：「ウォッチャー」（`watching`）／「チェックイン」（`visits.length>0`）／「ウォッチャー×チェックイン」（両方のAND）は従来どおり絞り込みフィルターとして残す。並び順は「すべて→ウォッチャー→チェックイン→ウォッチャー×チェックイン」。
+- **件数ピルは概算値**：「すべて」＝ウォッチャー数＋チェックイン数−重複（ウォッチャー×チェックイン）の包除で算出（p3-13: 342+128-96=374／p4-13: 218+96-72=242）。他の3タブの数値は変更なし。
+- **展覧会フィルタ（`exhWrap`）の表示条件は変更せず**：`viewFilter==='watch'`のときのみ非表示、それ以外（`all`含む）は表示のまま。「すべて」表示中に展覧会を選ぶと、来場履歴のない人（ウォッチのみ）は自然に絞り込まれて消える＝既存ロジックのまま矛盾なく機能する。
+
+### 実装詳細
+- HTML：`kotennavi-p3-13.html`／`kotennavi-p4-13.html`の`.p313-tabs`に`<button data-filter="all">すべて</button>`を先頭に追加し`is-active`を付与、既存3タブから`is-active`を外す。
+- JS：`KTN.pages['p3-13']`／`KTN.pages['p4-13']`ともに`viewFilter`の初期値を`'watch'`→`'all'`に変更、`matchesFilter`に`viewFilter==='all'`の分岐を追加。
+
+### 検証
+`node --check kotennavi-pages.js`通過。**実ブラウザでの目視確認はユーザー確認待ち**（既定表示件数・タブ切替アニメーション）。
+
+### 影響ファイル
+`kotennavi-p3-13.html`／`kotennavi-p4-13.html`（`.p313-tabs`マークアップ）、`kotennavi-pages.js`（`KTN.pages['p3-13']`／`KTN.pages['p4-13']`の`viewFilter`初期値・`matchesFilter`）。
+
+## 追127. P3-13/P4-13 並べ替えに「チェックインが新しい順」を追加（2026-08-28）
+
+### 背景
+追122でチェックインタブの並べ替えを日付系（新しい/古い順）から「チェックイン回数が多い順」に置き換えていたが、ユーザーより「並べ替えにチェックインの新しい順も追加してください」と指示。回数順とは別に、直近チェックインした人物を確認したいニーズがあるため、削除ではなく追加として対応。
+
+### 設計判断
+- 「チェックインが新しい順」（`checkin-desc`）を新設。各人物の来場履歴のうち最新の`ts`（`Math.max`で算出）で降順ソートし、来場履歴が0件（ウォッチのみ）の人物は末尾に回す（`since-desc`と同じnull-last方式）。
+- 並べ替えセレクトの並び順は「ウォッチが新しい順→ウォッチが古い順→チェックインが新しい順→チェックイン回数が多い順→名前順」。日付系2種＋回数系1種＋名前、という既存グルーピングに沿わせた。
+
+### 実装詳細
+- HTML：`kotennavi-p3-13.html`／`kotennavi-p4-13.html`の並べ替え`<select>`に`<option value="checkin-desc">チェックインが新しい順</option>`を追加。
+- JS：`KTN.pages['p3-13']`／`KTN.pages['p4-13']`に`checkinLatestTs(p)`ヘルパー（`p.visits`のtsの最大値、0件はnull）と`SORTS['checkin-desc']`を追加。
+
+### 検証
+`node --check kotennavi-pages.js`通過。
+
+### 影響ファイル
+`kotennavi-p3-13.html`／`kotennavi-p4-13.html`（並べ替えselect）、`kotennavi-pages.js`（`KTN.pages['p3-13']`／`KTN.pages['p4-13']`の`checkinLatestTs`・`SORTS`）。
+
+## 追128. P3-13/P4-13 並べ替えから「ウォッチが古い順」を削除（2026-08-28）
+
+### 背景
+ユーザーより「ウオッチが古い順いらないでしょうね」との指摘。追127で「チェックインが新しい順」を追加した並びを見て、直近の動きを追う実務上「古い順」は使う場面がないと判断されたため削除。
+
+### 設計判断
+- `since-asc`（ウォッチが古い順）を並べ替えオプションから削除。「ウォッチが新しい順」（`since-desc`）のみ残し、日付系は「ウォッチが新しい順」「チェックインが新しい順」の新しい順2種に整理。
+- コード側もオプションだけでなく`SORTS['since-asc']`関数自体を削除（他に参照箇所なしをgrepで確認済み・死にコードを残さない）。
+
+### 実装詳細
+- HTML：`kotennavi-p3-13.html`／`kotennavi-p4-13.html`の並べ替え`<select>`から`<option value="since-asc">`を削除。
+- JS：`KTN.pages['p3-13']`／`KTN.pages['p4-13']`の`SORTS`から`since-asc`エントリを削除。
+
+### 検証
+`node --check kotennavi-pages.js`通過。`since-asc`の残存参照なしをgrepで確認。
+
+### 影響ファイル
+`kotennavi-p3-13.html`／`kotennavi-p4-13.html`（並べ替えselect）、`kotennavi-pages.js`（`KTN.pages['p3-13']`／`KTN.pages['p4-13']`の`SORTS`）。
+
+## 追129. P3-13/P4-13 関係テキストの「来場履歴：チェックイン」を「チェックイン」に短縮（2026-08-28）
+
+ユーザー指示「『来場履歴：チェックイン』→『チェックイン』にしてください」に対応。カード下部の関係テキスト行（`.p313-rel__line`）を「来場履歴：チェックインN回」→「チェックインN回」に短縮（折りたたみの`<summary>`側に既に「来場履歴を見る」の文言があり重複気味だったため）。`kotennavi-pages.js`の`KTN.pages['p3-13']`／`KTN.pages['p4-13']`の`makeItem`を修正、`node --check`通過確認済み。
+
+## 追130. P3-13/P4-13 オーディエンスカードをバッジ/名前/カウンターとウォッチ/チェックインの横並び2カラムへ（カード高さ圧縮・2026-08-28）
+
+### 背景
+ユーザーより相談：「今はカードの高さが結構高いが、ユーザーアバター・バッジ・名前・カウンターの横にウオッチとチェックインを配置することはできますか？」。追125以降、カードは「バッジ→名前→4カウンター→ウォッチ状態→チェックイン回数→折りたたみ」と縦積みで5〜6行の高さになっていた。左＝バッジ/名前/カウンター、右＝ウォッチ/チェックイン関係テキストの横2カラムにすることで高さを圧縮する提案を行い、了承を得て実装。
+
+### 設計判断
+- **カードを2カラム化**：`.p2-watcher-item__info`の直接子を`.p313-item-main`（バッジ行・名前・4カウンター）と`.p313-rel`（ウォッチ中/チェックイン回数のテキスト）の2ブロックに分け、横並びにする。折りたたみ`<details class="p313-ck-toggle">`は2カラムの外＝`.p2-watcher-item__info`の直接子として配置し、開いたときは全幅（`flex:0 0 100%`）で下に展開する（来場履歴の日付・展覧会名・会期は情報量が多く、狭い右カラムに収めると窮屈なため）。
+- **`.p2-watcher-item__info`には触れず、新規`.p313-item-info`を併記してflexレイアウトを適用**：`.p2-watcher-item__info`は`kotennavi-common.js`のウォッチャーモーダル（複数ページから開かれる共有モーダル・名前→カウンターの縦積み前提）でも再利用されているクラスのため、直接flexレイアウトを当てるとモーダル側の表示が壊れる。ページ専用の`.p313-item-info`を併記クラスとして追加し、flex-wrap以下のレイアウトはそちらにのみ適用することで他ページへの影響をゼロにした（`feedback_css_commonize`：共通クラスを不用意に上書きしない）。
+- **モバイル（≤540px）は縦積みにフォールバック**：`.p313-item-info{flex-direction:column}`を追加。2カラムは760/1080px幅のコンテンツ領域では十分収まるが、スマホ幅ではバッジ/名前/カウンターとウォッチ/チェックインを横に並べる余白がないため。
+
+### 実装詳細
+- JS：`KTN.pages['p3-13']`／`KTN.pages['p4-13']`の`makeItem`で、`.p2-watcher-item__info`のclassに`p313-item-info`を併記。バッジ行・名前・カウンターを新規`<div class="p313-item-main">`でラップ。`toggleHtml`を`.p313-rel`の外（`.p2-watcher-item__info`の直接子）に移動。
+- CSS：`kotennavi-common.css`に`.p313-item-info{display:flex;flex-wrap:wrap;align-items:flex-start;column-gap:20px;row-gap:4px}`／`.p313-item-main{flex:1 1 200px;min-width:0}`を新設。`.p313-rel`に`flex:0 0 auto;min-width:150px`を追加し`margin-top:6px`を削除（親のrow-gapで間隔を確保）。`.p313-ck-toggle`に`flex:0 0 100%`を追加（全幅で下段展開）。540pxメディアクエリに`.p313-item-info{flex-direction:column}`／`.p313-rel{min-width:0}`を追加。
+
+### 検証
+`node --check kotennavi-pages.js`通過。`.p2-watcher-item__info`を使う他の呼び出し元（`kotennavi-common.js`のウォッチャーモーダル）にレイアウトクラスを追加していないことを確認済み。**実ブラウザでの見た目確認が必要**（2カラムの折返し・モバイルでの縦積みフォールバック・折りたたみ展開時の全幅表示）。
+
+### 影響ファイル
+`kotennavi-pages.js`（`KTN.pages['p3-13']`／`KTN.pages['p4-13']`の`makeItem`）、`kotennavi-common.css`（`.p313-item-info`/`.p313-item-main`新設、`.p313-rel`/`.p313-ck-toggle`調整、540pxメディアクエリ追加）。
+
+## 追131. P3-13/P4-13「来場履歴を見る」トリガーを右カラム（チェックイン行の下）へ移動（2026-08-28）
+
+### 背景
+追130の2カラム化直後、ユーザーから「『来場履歴を見る』を右側のチェックインの下に置くことはできますか？難しいよね」と相談。可否と実装方針（トリガーとリスト本体をDOM上分離しJS制御化する必要がある旨）を回答し、了承を得て実装。
+
+### 設計判断
+- **トリガーとリスト本体の位置を分離**：native `<details><summary>`は開閉トリガーとコンテンツが同一要素内にあり位置を分けられないため、`<button class="p313-ck-trigger">`（トリガー・`.p313-rel`内チェックイン行の下に配置）と`<div class="p313-ck-visits" hidden>`（リスト本体・`.p313-item-main`/`.p313-rel`の外＝`.p2-watcher-item__info`の直接子として全幅表示）に分離。両者は`id`（`p313ck-{id}`/`p413ck-{id}`）と`aria-controls`で紐付け。
+- **開閉はJS制御**：`aria-expanded`属性と`hidden`属性をトグルする方式に変更（`.p313-ck-visits[hidden]{display:none}`を明示追加し、class側の`display:flex`と衝突しないようにした＝`.ktn-form-error`と同じ既存パターンを踏襲）。矢印アイコンは`.p313-ck-trigger::before`（`›`）＋`[aria-expanded="true"]`での回転に変更。
+- **イベント委譲**：一覧は`render()`のたびに`listEl.innerHTML`ごと再構築されるため、個別ボタンへの`addEventListener`ではなく`listEl`への委譲（`e.target.closest('.p313-ck-trigger')`）で常に有効な状態を維持。
+
+### 実装詳細
+- JS：`kotennavi-pages.js`の`makeItem`（p3-13/p4-13両モジュール）で`toggleHtml`（`<details>`）を`toggleBtnHtml`（`<button>`、`.p313-rel`内に配置）と`visitsHtml`（`.p313-item-info`直下・全幅）に分割。各モジュールの初期化処理に`listEl.addEventListener('click', …)`の委譲ハンドラを追加。
+- CSS：`.p313-ck-toggle`（summary系スタイル）を`.p313-ck-trigger`（button系スタイル）に置き換え、`.p313-ck-visits`に`flex:0 0 100%`と`[hidden]{display:none}`を追加。
+
+### 検証
+`node --check kotennavi-pages.js`通過。旧`.p313-ck-toggle`参照が残っていないことをgrepで確認済み。**実ブラウザでの見た目確認が必要**（トリガー位置・矢印回転アニメーション・展開時の全幅表示・再描画後もクリックが効くこと）。
+
+### 影響ファイル
+`kotennavi-pages.js`（`KTN.pages['p3-13']`／`KTN.pages['p4-13']`の`makeItem`＋イベント委譲）、`kotennavi-common.css`（`.p313-ck-toggle`→`.p313-ck-trigger`置換、`.p313-ck-visits`調整）。
+
+## 追132. P3-13/P4-13 チェックイン行の「リピーター」バッジを削除（2026-08-28）
+
+### 背景
+ユーザーから「リピーターバッジを取ってください」の指示。
+
+### 対応
+チェックイン2回以上の人物に付与していた塗りピル`<span class="p313-repeat-tag">リピーター</span>`（追121で新設）を`.p313-rel__line`から削除。チェックイン行は「チェックイン N回」のテキストのみに戻した。使用箇所が無くなった`.p313-repeat-tag`のCSS定義（`kotennavi-common.css`）も削除（死にCSS化を避けるため）。
+
+### 検証
+`node --check kotennavi-pages.js`通過。`p313-repeat-tag`の残存参照なしをgrepで確認済み。
+
+### 影響ファイル
+`kotennavi-pages.js`（`KTN.pages['p3-13']`／`KTN.pages['p4-13']`の`makeItem`）、`kotennavi-common.css`（`.p313-repeat-tag`削除）。
+
+## 追133. P6-12インサイト：P2-14/P3-12で確定した設計へ整合（Period配置・ページを伸ばすヒント統合、2026-08-28）
+
+### 背景
+ユーザーから「次はp6-12の調整に行きましょう。まず、p2-14の調整した内容に合わせて整合してもらえますか？」の指示。P6-12は追80でSVG折れ線チャート（`.ins-linechart`／`KTN.renderTrend()`）導入までは他3ページと同時対応していたが、その後の追97〜追132（P2-14のphase化・KPI整理、P3-12/P4-12への展開）は一貫して「P3-12/P4-12/P6-12は対象外（P2-14限定）」または「P3-12/P4-12」のみが対象で、P6-12は一度も追随していなかった（handoff-decisions.mdを追97以降grepし確認）。
+
+### 設計判断（P2-14でなくP3-12を主な参照先にした理由）
+P6-12（作品＝単体コンテンツ・子エンティティなし）はP2-14（展覧会＝会期という離散フェーズを持つ集約エンティティ）よりも、P3-12（クリエイター＝ローリング期間・delta比較を維持する集約エンティティではあるが会期のような離散フェーズを持たない）の設計により近い。判断軸：
+- **KPIサマリーのdelta比較チップ（`.ins-kpi__delta`）**：CLAUDE.mdに明記の通りP3-12/P4-12/P3-13/P4-13/P6-12は維持対象（P2-14のみ全期間集計化でdelta廃止）。P6-12はそのまま維持。
+- **「お問い合わせ件数」KPI**：P2-14は展覧会の問い合わせがmailtoリンクのみで送信・追跡の仕組みがないため追80で削除したが、作品はP6-13（作品-問合せ・実フォーム）／P6-14（作品-問合せへの回答）という実在の追跡可能な問い合わせフローを持つため、P6-12では削除せず維持するのが妥当と判断（sitemap.mdでP6-13/P6-14の存在を確認済み）。
+- 以上2点から、P2-14の「フェーズボタン化・KPI全期間集計化・お問い合わせ件数削除」はP6-12には適用しない。今回整合したのは**P2-14→P3-12へ展開済みの構造パターン**（Period配置・ページを伸ばすヒントの統合）で、これはP3-12がP6-12と共有するローリング期間モデルの範囲。
+
+### 対応
+`kotennavi-p6-12.html`を編集：
+1. **Period（期間セレクター）をツールバーからTrendセクション内へ移動**：`.ins-toolbar`から`.ins-period`（id`p612Period`）を削除し`.ins-target`のみに整理。同じ`.ins-period`ブロックをSection2「閲覧数の推移」の見出し直後・チャートの前に配置（P2-14/P3-12と同じ「期間で絞り込めるのはこのセクションのみ」パターン）。
+2. **「ページを伸ばすヒント」を独立セクションからTrend内の単一カードへ統合**：旧Section3（見出し＋`.ins-grow__card`2枚＋`.ins-note`）を削除し、うち1枚目（興味あり！→閲覧数の相関メッセージ）のみをSection2のトレンドチャート直後に`style="margin-top:14px"`で残置。2枚目（興味あり！→購入申込の転換メッセージ）と末尾の`.ins-note`は削除。以降のFunnelセクションのHTMLコメント番号を「4.」→「3.」に繰り下げ。
+3. JS（`kotennavi-pages.js`の`KTN.pages['p6-12']`）はid（`p612Period`／`p612Trend`）ベースの要素取得のみのため**無改修**（DOM上の移動先に影響されない）。
+
+### 検証
+HTML構造のみの変更（インラインscriptなし）。編集後にファイルを再読込し、ツールバー→Section1サマリー（4KPI・delta維持）→Section2閲覧数の推移（Period＋チャート＋grow card1枚）→Section3ファネル、の構造を目視確認済み。**実ブラウザでの見た目確認はユーザーが行う（feedback_browser_check方針）**。
+
+### 影響ファイル
+`kotennavi-p6-12.html`のみ（JS/CSS変更なし）。
+
+## 追134. P6-12インサイト：問い合わせ・購入申込を展覧会単位の内訳へ、興味あり！に週次推移を追加（2026-08-28）
+
+### 背景
+追133のP2-14/P3-12整合に続けて、ユーザーから作品特有のデータ構造に関する指摘：
+1. 「作品の場合、LIAISON・LIAISON+に出展した場合に問合せが入ったり、LIAISON+に出展した場合に購入申込が入ったりします。そのため、問合せ件数は購入申込件数は出展した展覧会に合わせて表示する必要がある。」
+2. 「オーナーがクリエイターの場合、作品は常時クリエイターページ内に表示されるので、興味あり！件数はp3-12のウオッチャーのように週ごとの推移を表示した方がいいでしょう」
+
+CLAUDE.mdの「作品はニュートラルな存在にする」原則（作品はニュートラルで、展覧会紐づけ・LIAISON設定・価格・販売状態は作品でなく出品(listing)層＝文脈が持つ）、およびリエゾンサービス仕様書第7章「売約済（取引完了）作品のその後の扱い」（同一作品が複数の展覧会に出品されうる＝再出品／別レコード化の記述）と整合する指摘。旧UIは「お問い合わせ件数」「購入申込件数」を作品ページ全体の単一集計KPIとして表示していたが、これは実態と合わない：問い合わせ・購入申込はその都度の出展（LIAISON／LIAISON+）に紐づいて発生する取引文脈のイベントであり、複数回出展歴のある作品では単一の集計値では「どの展覧会での反応か」が失われる。
+
+### 対応
+`kotennavi-p6-12.html`を編集：
+1. **サマリーKPIから「お問い合わせ件数」「購入申込件数」を削除**（残るのは「ページ閲覧数」「興味あり！」の2枚のみ＝いずれも出展先を問わない作品ページ自体の一般指標）。サマリー注記文を「問い合わせ・購入申込は出展した展覧会ごとに件数が異なるため、下記の『展覧会ごとの問い合わせ・購入申込』でご確認ください」に変更。
+2. **新設セクション「展覧会ごとの問い合わせ・購入申込」**（`.ins-item-list`を流用）：出展した展覧会ごとに1行＝展覧会名＋会期＋出展形式（LIAISON／LIAISON+、`.ins-item-list__link-mark`のテキストタグで表現。バッジ`.cb`は使わない＝feedback_badge_placementの原則どおり「関係表示は中立テキストマーク」）＋問い合わせ件数＋購入申込件数（LIAISON出展は購入申込不可のため「—」）。デモは2件：現在出展中の「あなたが知らないオノマトペ」（LIAISON+・問い合わせ4／購入申込3＝旧KPIの数値をそのまま移設）と過去の「声と線 — 新作展」（LIAISON・問い合わせ1／購入申込—）。
+3. **新設セクション「興味あり！の推移」**（週次固定・期間セレクターなし）を「閲覧数の推移」の直後に追加。P3-12の「ウォッチャーの推移」（追123）と同型：`KTN.renderWeeklyTrend('p612InterestTrend', 12, 19, '件')`を呼び出し（peakBaseはサマリーの興味あり！30日実績57件から追123と同じ比率＝約1/3で逆算）。注記で「作品はクリエイターページに常時掲載されるため会期に関わらず継続的に集まる」ことを明示。
+4. **LIAISON+ファネルのセクション番号を4→5に繰り下げ**、注記文に「直近の出展（あなたが知らないオノマトペ — 田中透 個展・LIAISON+）が対象」と具体的な出展名を明記（新設の展覧会別リストとの対応関係を明確化するため）。ファネル自体の構造・数値は変更なし（現在出展中のLIAISON+のみを深掘りする詳細ビューとして残置、上の展覧会別リストが全出展の概要ビュー）。
+
+`kotennavi-pages.js`の`KTN.pages['p6-12']`に`KTN.renderWeeklyTrend('p612InterestTrend', 12, 19, '件');`を1行追加（Period初期化の直後）。他のJS（`syncMgmtBar`／`syncFunnel`）は無改修。
+
+### 検証
+`node --check kotennavi-pages.js`通過。HTML編集後に該当範囲を再読込し、div/section開閉・セクション番号順（1〜5）を目視確認済み。**実ブラウザでの見た目確認はユーザーが行う（feedback_browser_check方針）**。
+
+### 影響ファイル
+`kotennavi-p6-12.html`、`kotennavi-pages.js`（CSS変更なし＝既存の`.ins-item-list`／`.ins-trend`／`KTN.renderWeeklyTrend`を再利用）。
+
+## 追135. P6-12インサイト：ロール＝ギャラリー時の「クリエイターページ」固定表記を修正（2026-08-28）
+
+### 背景
+ユーザーから「ロール=ギャラリーの時にクリエイターページの興味ありはおかしい」の指摘。P6-12はcreator/gallery共有ページ（`syncMgmtBar()`がロールに応じ`p3-page`/`p4-page`とオーナーバッジ/名前を動的切替）だが、追134で追加した「興味あり！の推移」注記と、元から存在していた「閲覧数の推移」グロウカードの本文が「クリエイターページ」という語をHTMLに直書きしており、ギャラリーロールでも常に「クリエイターページ」と表示される不整合があった。
+
+### 対応
+該当2箇所（グロウカード本文の「関連する展覧会・クリエイターページ」、興味あり！推移セクション注記の「クリエイターページに常時掲載」）の「クリエイターページ」を`<span id="p612RoleWord1">`／`<span id="p612RoleWord2">`で囲み、`kotennavi-pages.js`の`KTN.pages['p6-12']`の`syncMgmtBar()`内でロールに応じ`textContent`を「クリエイターページ」／「ギャラリーページ」に切替。既存の`KTN.syncMgmtOwner`呼び出し（オーナーバッジ/名前の切替）と同じ`syncMgmtBar()`内・同じロール判定変数`r`を再利用したため新規ロール判定ロジックは追加していない。
+
+### 検証
+`node --check kotennavi-pages.js`通過。デモバーのロール切替ボタン（creator/gallery）で`syncMgmtBar()`が呼ばれるたびに両span idが更新されることをコードレビューで確認。**実ブラウザでの見た目確認（ロール切替→即時テキスト反映）はユーザーが行う**。
+
+### 影響ファイル
+`kotennavi-p6-12.html`、`kotennavi-pages.js`（CSS変更なし）。
+
+## 追136. P6-12インサイト：「興味あり！の推移」週次グラフをcreator限定に（gallery非表示・2026-08-29）
+
+### 背景
+ユーザーから「ギャラリーの場合はこの推移グラフは不要です」の指摘。追134で追加した「興味あり！の推移」セクションの根拠は「作品はクリエイターページに常時掲載され続けるため、会期に関わらず継続的に興味あり！が集まる」という点だったが、この前提はcreatorロール（作家本人のポートフォリオとして作品ページが自身のクリエイターページに恒常的に掲載される）にのみ成立し、galleryロールには当てはまらないとの指摘。galleryは会場としての性質上、作品が「常時」ではなく展覧会単位でしか掲載されないため、週次の推移グラフという見せ方自体が成立しない（追135で修正した「クリエイターページ」/「ギャラリーページ」の文言swapでは対応しきれない、グラフの存在自体の是非の問題）。
+
+### 対応
+`kotennavi-p6-12.html`：「興味あり！の推移」セクションに`id="p612InterestSection"`を付与（HTMLコメントに「creatorのみ＝作品が常時掲載されるクリエイターページ限定」と明記）。注記文は追135で導入した`p612RoleWord2`のロール別swapを撤回し、"クリエイターページ"の静的テキストに戻した（galleryには表示されなくなるため動的swapが不要になったため）。
+`kotennavi-pages.js`の`KTN.pages['p6-12']`の`syncMgmtBar()`：`document.getElementById('p612InterestSection').hidden = (r === 'gallery')`をロール判定に追加。`p612RoleWord1`（グロウカード内の「クリエイターページ/ギャラリーページ」swap・こちらは常時表示のセクション内なので両ロールとも表示され続ける）のswapロジックは維持し、`p612RoleWord2`関連のループ処理は削除（対象spanがHTMLから無くなったため）。
+
+### 検証
+`node --check kotennavi-pages.js`通過。デモバーのロール切替でcreator時のみ「興味あり！の推移」セクションが表示され、gallery切替時は`hidden`になることをコードレビューで確認。**実ブラウザでの見た目確認はユーザーが行う**。
+
+### 影響ファイル
+`kotennavi-p6-12.html`、`kotennavi-pages.js`（CSS変更なし）。
+
+## 追137. P6-12インサイト：LIAISON+ファネル「購入成立」に売約済バッジ＋コレクションルーム導線を追加（2026-08-29）
+
+### 背景
+ユーザーから「作品はオンラインで販売済の場合のそのステータスを表示してユーザーのコレクションルームにリンクしてほしい」の指摘。公開作品ページ（`kotennavi-p6.html`）には既に`#p6Provenance`（`w.soldOnline && w.collection.public`で表示切替・`.ktn-guide-link`で`kotennavi-p5-4.html`へ導線）という確立済みパターンがあり、リエゾンサービス仕様書第17章にも「購入者のコレクションルーム経由の表示は所有者の権利として維持（作品の公開状態フィールドとは独立）」と明記されている。P6-12のLIAISON+ファネル（5.セクション）は既に「購入成立 1」を表示しており、この作品（AW-C42-1847）の現在の出展（あなたが知らないオノマトペ・LIAISON+）で1件の取引が完了している旨のデータが既に存在していた。
+
+公開ページ側の`collection.public`ゲートは「不特定多数の来訪者に対する購入者のプライバシー保護」が目的だが、P6-12はオーナー本人専用のインサイトページであり、オーナーは取引デスク（P3-16）経由で既に取引・購入者情報にアクセス済みのため、同じプライバシーゲートを再現する必要はないと判断（オーナー自身がリンクを踏んでP5-4に遷移した際の表示可否はP5-4側の既存ロジックに委ねる）。
+
+### 対応
+`kotennavi-p6-12.html`：ファネルの`.ins-funnel`直後・注記`#p612FunnelNote`の前に、`.ins-funnel-notice`を流用した新規ブロック`#p612SoldNotice`を追加（新規CSSなし）。中身は`<span class="aws aws-sold">売約済</span>`＋説明文＋`.ktn-guide-link`で`kotennavi-p5-4.html`（購入者のコレクションルーム）へのリンク。
+
+`kotennavi-pages.js`の`KTN.pages['p6-12']`の`syncFunnel()`：`p612SoldNotice`要素を取得し、既存の`funnel`/`note`と同じ`isPlus`条件で`hidden`をトグル（LIAISON+以外の出展をデモ表示している間は売約済ブロックも連動して隠れる）。
+
+**Part B（別セクション化の要否）は保留**：ユーザーから「作品販売の動きを展覧会ごとに区分けした別セクションを設けるか」という趣旨の質問も受けたが、現状ファネル（現在出展のみを深掘り）と追134の「展覧会ごとの問い合わせ・購入申込」（全出展の概要）で役割分担が既に成立しているため、全く新しいセクションを作るより追134のリストに売約済フラグを載せる拡張の方が重複が少ないと回答済み（実装はユーザーの合意待ち）。
+
+### 検証
+`node --check kotennavi-pages.js`通過。**実ブラウザでの見た目確認はユーザーが行う**。
+
+### 影響ファイル
+`kotennavi-p6-12.html`、`kotennavi-pages.js`（CSS変更なし＝既存の`.ins-funnel-notice`／`.aws-sold`／`.ktn-guide-link`を再利用）。
+
+## 追138. P6-12インサイト：LIAISON+ファネルのスコープを「直近の出展のみ」から「全出展累計」へ修正・売約済帯をセクション先頭へ移動（2026-08-29）
+
+### 背景
+追137実装後、ユーザーとの間で「作品が販売成立するまではある展覧会の中の出来事だと思うが、全体的な数字をまとめてファネルとするのは意味があるか」という設計上の疑問が提起された。検証の結果、ファネルの上2段（作品を見た612・興味あり！57）はSection 1のKPIカードと同一の作品全体（全期間）の集計値であるのに対し、下2段（購入を申込3・購入成立1）の注記は「直近の出展（あなたが知らないオノマトペ）が対象」と明記されており、スコープが不揃いなまま単一の転換率カスケード（100%→9.3%→0.5%→0.2%）として提示されていた。
+
+さらにユーザーから「リエゾンプラスの展覧会に出展して購入申込が入り結果的にキャンセルで売れ残り、それを次のリエゾンプラスの展覧会に出展することはある」という実際の運用シナリオが提示された。リエゾンサービス仕様書第16章（790行）「出品取消→申込者全員へキャンセル通知」により、こうした再出品は別レコード・別キューとして扱われ、1件の購入申込が複数展覧会にまたがることはないと確認できた一方、この作品が生涯で複数展覧会にリエゾンプラス出品される可能性自体は普通にあり得ることが分かった。
+
+この前提で「ファネル下2段を"直近の出展のみ"にスコープを絞る」という当初の代替案（追137時点で検討していたもの）を検証したところ、Section 4「展覧会ごとの問い合わせ・購入申込」の該当行と全く同じ数字を％表示に変えるだけになり、ファネルの存在意義が失われるという指摘をユーザーから受けた。
+
+### 対応（設計方針の確定）
+ファネルの役割を「入口（閲覧）から成約までの一気通貫の転換率ストーリーを見せること」と再定義し、4段構成を維持したまま**スコープを両端とも「この作品の全出展累計」に統一**した。Section 4（展覧会ごとの内訳）とは重複せず、「全体で何%が購入に至ったか」という視点を提供するマクロなKPIナラティブ／Section 4は「どの出展で何件あったか」という詳細テーブル、という役割分担にした。
+
+`kotennavi-p6-12.html`：
+- 注記`#p612FunnelNote`の文言を「「作品を見た人」から「購入につながった人」までの、この作品の累計転換率です（全出展を通算）。展覧会ごとの内訳はすぐ下の一覧をご覧ください。」に変更（旧文言の「直近の出展（あなたが知らないオノマトペ...）が対象です」というスコープ限定表現を撤去）。
+- `#p612SoldNotice`（追137で追加した売約済バッジ＋コレクションルーム導線）を、ファネル本体（`.ins-funnel`）の後ろからセクションヘッド（`.ktn-section__head`）の直下・ファネル本体の前へ移動（ユーザー指示）。「このセクションが今どういう結果を伴っているか」を先に示してからファネルの推移を見せる順序に変更。
+
+`kotennavi-pages.js`の`syncFunnel()`は変更なし（`getElementById`ベースのためDOM順序に依存しない）。
+
+### 検証
+`node --check kotennavi-pages.js`通過（変更なしのため影響なし）。**実ブラウザでの見た目確認はユーザーが行う**。
+
+### 影響ファイル
+`kotennavi-p6-12.html`のみ（CSS変更なし・JS変更なし）。
+
+## 追139. P6-12インサイト：「展覧会ごとの問い合わせ・購入申込」にLIAISON D-2バッジ・yyyy.mm.dd会期表記・興味あり！列を追加（2026-08-29）
+
+### 背景
+ユーザーから3点の指摘：①Section 4の各行にあった独自バッジ`.ins-item-list__link-mark`（枠線のみの中立ラベル）ではなく、`kotennavi_liaison_badges.html`のD-2（`.lb-dot.li`/`.lb-dot.li-plus`＝点滅ドット付きLIAISON識別バッジ・カード左上等で既に全ページ共通利用中の正式ブランドバッジ）を展覧会名のすぐ右横に使うこと、②会期表記「2026.2〜3」のような省略形をyyyy.mm.dd表記にすること、③Section 4に「興味あり！」の展覧会別内訳列を追加すること。
+
+### 対応
+`kotennavi-p6-12.html`：
+- `.ins-item-list__link-mark`（2箇所）を`.lb-dot li`/`.lb-dot li-plus`＋内部`.lb-dot-inner`（点滅ドット）に置換。実際の会期日は`kotennavi-p2.html`（あなたが知らないオノマトペ＝2026年2月18日〜3月5日）に合わせ`2026.02.18〜2026.03.05（開催中）`、声と線は`2025.09.12〜2025.10.03（終了）`とyyyy.mm.dd表記に統一。
+- ヘッド行・各行に「興味あり！」列を新規追加（`興味あり！ / 問い合わせ / 購入申込`の順）。`.ins-item-list`はflexベースで列数に依存しない構造のため新規CSS不要。デモ値はあなたが知らないオノマトペ=42件・声と線=11件（Section 1の累計57件とは一致しない設計＝直前セクション3の注記「作品はクリエイターページに常時掲載されるため会期に関わらず興味あり！は継続的に集まる」と整合させ、本表の値は「その展覧会の会期中に登録された件数」に限定する注記を追加）。
+- 注記文を「「興味あり！」は各展覧会の会期中に登録された件数です（会期外に登録された分は含まないため、Section 1の累計とは一致しません）。問い合わせは...」に拡張。
+
+`kotennavi-common.css`：使用箇所が0になった`.ins-item-list__link-mark`定義を削除（単一ソース・死にCSS排除）。
+
+### 検証
+実ブラウザでの見た目確認はユーザーが行う。
+
+### 影響ファイル
+`kotennavi-p6-12.html`、`kotennavi-common.css`。
+
+## 追140. P6-12インサイト：Section 4のバッジ位置とヘッド列見出しの右寄せを是正（2026-08-29）
+
+### 背景
+追139実装後、ユーザーから2点の指摘。①バッジ（`.lb-dot`）がタイトルのすぐ横に見えない。②各列の数値（`.ins-item-list__stat`）は右寄せなのに、列見出しラベル（`.ins-item-list__head-stat`＝興味あり！／問い合わせ／購入申込）が左寄りに見え、数値との対応が視覚的にずれている。
+
+原因調査：①`.ins-item-list__name-row`はflex行で、`.ins-item-list__name`（タイトル）がDOM順で先・`flex:1`のため、タイトルのボックス自体が行の幅いっぱいに伸び、テキストはボックス左端（＝行の先頭）に表示される一方、後続のバッジ（`flex:none`）はそのボックスの直後＝行の右端に配置されていた（テキストとバッジの間に大きな空白ができる）。②`.ins-item-list__head-stat`は`text-align:right`を持つが、別ブロック（p3-15由来の並べ替えボタン共通化）で追加された`display:flex`が同セレクタで後勝ちし、`text-align`がflexコンテナには効かなくなっていた（flexの子要素配置は`justify-content`が担う）。p3-12/p4-12はこのクラスに`.p315-buyers-sort-btn`（`width:100%`）を必ず内包するため実害が出ていなかったが、p6-12は素のテキストを直接入れているため症状が表面化した。
+
+### 対応
+`kotennavi-p6-12.html`：Section 4の2行で`.lb-dot`バッジを`.ins-item-list__name`（タイトルリンク）より**前**に配置（p3-15の`.p315-exh-head__main`と同じDOM順パターン＝固定幅要素を先に置き、`flex:1`のタイトルが直後から続くことでテキストがバッジに密着する）。
+
+`kotennavi-common.css`：`.ins-item-list__head-stat{display:flex}`に`justify-content:flex-end`を追加（`.p315-buyers-sort-btn`は`width:100%`のため実質的に無影響・p3-12/p4-12の見た目は変化しない）。
+
+### 検証
+実ブラウザでの見た目確認はユーザーが行う。
+
+### 影響ファイル
+`kotennavi-p6-12.html`、`kotennavi-common.css`（`.ins-item-list__head-stat`を使う全ページ＝p3-12/p4-12/p6-12に影響するが、上記の理由により見た目の変化はp6-12のみ）。
+
+## 追141. P6-12インサイト：モバイル幅でSection 4のLIAISONバッジを単独行に折返し、展覧会タイトルへ全幅を渡す（2026-08-29）
+
+### 背景
+ユーザーがモバイル幅で確認したところ、Section 4「展覧会ごとの問い合わせ・購入申込」の展覧会タイトルがバッジ分の幅を取られてほぼ全て省略記号(…)で切れてしまう状態だった。ユーザー提案「リエゾンバッジ改行してタイトル表示した方がいいのでは」を採用。
+
+### 対応
+`kotennavi-common.css`の`@media(max-width:540px)`ブロック（`.ins-item-list__period{font-size:.68rem}`直後）に追記：
+```css
+.ins-item-list__name-row{flex-wrap:wrap;row-gap:4px}
+.ins-item-list__name-row .ins-item-list__name{flex:1 1 100%;min-width:0}
+```
+バッジ（`.lb-dot`・flex:none固定幅）は行1に残り、タイトル（`flex-basis:100%`）は残り幅に収まらないため自動的に行2へ折返し、行2ではコンテナ全幅まで広がる。結果としてバッジは単独行・タイトルは行の全幅（省略記号は残すが打ち切り位置がバッジ分後退する）で表示される。デスクトップ幅（541px〜）は追140の横並び配置のまま変更なし。
+
+### 検証
+実ブラウザでの見た目確認はユーザーが行う。
+
+### 影響ファイル
+`kotennavi-common.css`のみ（`.ins-item-list__name-row`を使う全ページに影響するが、現状この構造を持つのはp6-12のみ）。
+
+## 追142. インサイト4ページ＋オーディエンス2ページの回遊性・ロイヤルティ強化フェーズ1（A/C/B/D）＋`.ins-item-list__link-mark`自己修正（2026-08-29）
+
+### 背景
+P2-14/P3-12/P4-12/P6-12（インサイト）とP3-13/P4-13（オーディエンス管理）が完成した時点で、ユーザーから「提供している情報・動機付け・期待値・ロイヤルティ構築」の観点で6ページを横断評価するよう依頼された。評価の結果、(1)グロウスヒント（成長のヒント）が相関の提示に留まり次の行動へのCTAが無い、(2)P2-14はKPIにトレンド比較が無い唯一のインサイトページ、(3)P3-13/P4-13は在庫的な数値・フィルター・検索の「管理」機能に終始し「関係を実感できる」称賛・発見の要素が無い、という3点のギャップを指摘。ユーザーへ改善案A〜Eを提示したところ「ありがとう、良い提案です。できればかんたんな形でDも実装してほしいです」の承認を得て、A→C→B→Dの順で実装した。
+
+### 対応
+**A（グロウスヒントにCTAリンクを追加）**：`.ins-grow__card`末尾に`.ins-grow__cta`（`.ktn-guide-link`使用）を追加し、相関の提示から次の行動への導線に変換。
+- P3-12／P4-12：「新しい展覧会を投稿する →」（`kotennavi-p2-11.html?mode=new&author=tanaka&self=1`／`?mode=new&role=gallery&self=1`）
+- P6-12：「作品情報を編集する →」（`kotennavi-p6-11.html?mode=edit&author=tanaka&self=1`。既存URL規約に無かった`mode=edit`パラメータを新規に踏襲）
+- P2-14：「フライヤーを作成する →」（既存`ktnVenueFlyer()`を呼ぶボタン）。会期終了後（`KTN.exh.phase==='after'`）は既存の`syncGrowLinks()`関数を拡張し`#p214GrowCta`ごと非表示化（フライヤー作成は会期中のみ意味を持つため）。
+CSS：`.ins-grow__cta{margin:8px 0 0;font-size:.78rem}`をcommon.cssに追加。
+
+**C（KPIに期間比較を追加）**：P2-14／P3-13／P4-13のサマリーKPIは既存の`.ins-kpi__delta`（P3-12/P4-12/P6-12は実装済み）が無く、絶対値だけでトレンドが読めなかった。
+- P2-14：KPIが「全期間の実績」（累計）であるため、他ページの「前期間比（直近30日比）」ではなく**「前回展比」**（自分の前回展覧会の最終累計との比較）を採用。閲覧数▲24%／興味あり件数▲12%／チェックイン人数▲8%。注記文にも「前回展比」の定義を追記。
+- P3-13／P4-13：総ウォッチャー数・チェックイン人数も累計（ストック）指標のため、%ではなく**絶対値の「+N 今月の新規」**を採用（P3-13＝+18／+9、P4-13＝+11／+6）。
+
+**B（「注目のオーディエンス」Spotlightミニセクション新設）**：P3-13/P4-13のサマリー直後（通知設定の前）に新規セクションを追加し、「常連のファン」（チェックイン回数上位3名）・「最近つながった人」（ウォッチ開始/チェックインのうち最新の出来事順に3名）を人物チップで表示。既存の`PEOPLE`データ配列（一覧・並べ替え用）をそのまま再利用し、管理・検索目的の一覧とは別に発見・称賛目的の軽量コンポーネントとして分離。
+- HTML：`.p313-spotlight`＞`.p313-spotlight__group`×2＞`.p313-spotlight__list`（`#p313SpotlightRegulars`/`#p313SpotlightRecent`、P4-13は`p413*`）。
+- CSS：`.p313-spotlight*`（common.css・`.p313-kpi-guide`直後）。チップはアバター（`.p2-watcher-item__avatar--user`と同系統だが32px縮小版）＋名前＋メタテキスト。
+- JS：`kotennavi-pages.js`の`KTN.pages['p3-13']`／`['p4-13']`各関数内にIIFE`renderSpotlight()`を追加（`PEOPLE`定義直後・`makeItem`の前）。「常連」＝`visits.length`降順上位3、「最近」＝`recentInfo(p)`ヘルパー（ウォッチ開始tsと最新チェックインtsのうち新しい方を採用しラベルも動的に切替）で算出したts降順上位3。0件時は`.p313-spotlight__empty`のプレースホルダー文言。
+
+**D（マイルストーンバッジ・簡易版）**：総ウォッチャー数KPIの横に、節目突破を示す小ピル`.ins-kpi__milestone`を追加（P3-13＝342人→「300人突破」、P4-13＝218人→「200人突破」）。閾値判定ロジックは実装せず、現在値に対応する固定文言を静的HTMLに直書きする最小実装（本番実装時はDrupal側で閾値配列を持たせ超過判定するイメージ）。CSS：`.ins-kpi__milestone{display:flex;width:fit-content;...}`（`display:flex`によりdeltaの後で自然に改行、`<br>`等の見た目ハックを使わない）。
+
+**自己修正（`.ins-item-list__link-mark`の復元）**：Bの調査中、`kotennavi-common.js:2797`・`kotennavi-pages.js`のP3-13/P4-13来場履歴描画（旧11699/11900行付近）が参照する`.ins-item-list__link-mark`のCSS定義がcommon.cssに存在しないことを発見。追139でP6-12用に導入された同名クラスをLIAISONブランドバッジ（`.lb-dot`）へ置き換えた際、**P6-12専用の死にCSSと誤認して削除**していたが、実際は別の汎用リスト描画（P3-12/P4-12のコンテンツ一覧・P3-13/P4-13の来場履歴）が独立して使い続けていたregression。`.ins-item-list__link-mark{flex-shrink:0;font-family:var(--fn);font-size:.6rem;font-weight:600;color:var(--muted);padding:1px 5px;border:1px solid var(--border);border-radius:3px;line-height:1.5}`をcommon.cssに復元。
+
+### 検証
+`node --check kotennavi-pages.js`通過。P3-13/P4-13のsection/div開閉タグ数一致確認済み（各section 4/4、div 42/42）。実ブラウザでの見た目確認はユーザーが行う。
+
+### 影響ファイル
+`kotennavi-common.css`／`kotennavi-pages.js`／`kotennavi-p2-14.html`／`kotennavi-p3-12.html`／`kotennavi-p4-12.html`／`kotennavi-p6-12.html`／`kotennavi-p3-13.html`／`kotennavi-p4-13.html`。
+
+## 追143. P2-14：会期終了後の「〜はできません」ロック文言を撤去（2026-08-29）
+
+### 背景
+追142でP2-14のグロウスヒントCTA（フライヤー作成）に会期終了後の非表示切替を実装した際、既存踏襲で「会期が終了したため、QRコード・フライヤーの新規作成はできません。」「この展覧会は終了したため、LIAISON+への切り替え申込はできません。」という**禁止・否定形の案内文**を会期終了後に表示する作りにしていた。ユーザーから「p2-14会期終了後作成できないコメントは不要です。このようなできませんという文言は撤去してください」との指示。
+
+### 対応
+両ロック文言を**代替メッセージなしで単純に非表示**にする方式に変更（「できません」の説明自体を無くす。会期終了後はそもそも導線自体が消えるため、なぜ消えたかの否定形の補足は不要という判断）。
+- `#p214GrowLockNote`（QR/フライヤー作成不可の案内）：HTML要素ごと削除。`syncGrowLinks()`から`lockNote`変数・トグルを削除（`note`／`cta`を`locked`時に`hidden`にする処理のみ残置）。
+- `#p214FunnelLiteLockNote`（LIAISON+切替申込不可の案内）：HTML要素ごと削除。`syncFunnel()`から`liteLockNote`変数・トグルを削除（`liteNote`を`locked`時に`hidden`にする処理のみ残置）。
+
+### 検証
+`node --check kotennavi-pages.js`通過。`kotennavi-p2-14.html`のタグ開閉数一致確認済み（`<p>`58/58、section 7/7、div 116/116）。削除したid（`GrowLockNote`／`FunnelLiteLockNote`）への残存参照なしをgrepで確認。実ブラウザでの見た目確認はユーザーが行う。
+
+### 影響ファイル
+`kotennavi-p2-14.html`／`kotennavi-pages.js`。
+
+## 追144. P6-12インサイト：作品が出展したことがない場合（creatorのみ）のゼロ状態表示を追加（2026-08-29）
+
+### 背景
+ユーザーから「p6-12のデモ(creatorのみ)に作品が出展したことがない場合の表示を追加してください」との指示。P6-12はSection 4「展覧会ごとの問い合わせ・購入申込」・Section 5「作品販売のうごき（LIAISON+ファネル）」が常にデータ入り一覧を表示する作りだったが、実際にはまだどの展覧会にも出展していない作品も存在しうる。CLAUDE.mdの既存決定（`project_watch_targets`系ではなく、`p612InterestSection`のコメントに明記済みの「creator作品は常時掲載・galleryは展覧会単位でしか掲載されない」）により、**この状態はcreator作品でのみ起こりうる**（gallery作品は必ず何らかの展覧会に紐づく）。
+
+### 対応
+- **デモ切替を追加**：`kotennavi-p6-12.html`のdbarに「出展（creatorのみ）：出展あり／出展なし」トグル（`ktnSetExh('exhibited','true'/'false',this)`・既存のP2-14と同じ`data-exh-key`パターン）を追加。`KTN.exh`のグローバル既定値（`kotennavi-common.js`）に`exhibited: true`を追加（既存キーと同じ共有デモ状態オブジェクトに追加、ページ固有の別オブジェクトは作らない）。
+- **判定はcreatorロールに限定**：`kotennavi-pages.js`の`KTN.pages['p6-12']`に`isNeverExhibited()`ヘルパーを追加。`role==='creator' && KTN.exh.exhibited===false`の場合のみゼロ状態化する（galleryロールではトグルの値に関わらず常に出展ありの表示のまま＝「creatorのみ」の指示を反映）。
+- **Section 4**：`.ins-item-list`（一覧本体）とその下の`.ins-note`（件数の説明文）を`#p612ExhList`／`#p612ExhNote`としてid化し、ゼロ状態では非表示に。代わりに`.ins-funnel-notice`パターン（このページのSection 5で既に使われている案内ボックスの共通見た目）を再利用した`#p612ExhZero`（「この作品はまだどの展覧会にも出展されていません。展覧会に出展すると、来場者からの問い合わせや購入申込をここで確認できるようになります。」）を表示。
+- **Section 5**：`syncFunnel()`を拡張し、`isNeverExhibited()`が真の場合はfunnel本体・売約済通知・転換率の注記をすべて非表示にし、新設の`#p612FunnelZero`（「この作品はまだどの展覧会にも出展されていないため、販売の動きはありません。」＋LIAISON+ガイドへのリンク）を表示。既存の「LIAISON+で販売されていません」通知（`#p612FunnelNotice`）とは文言・意味が異なるため別要素として分離し、両者が同時に出ないよう相互排他で制御。
+- Section 1（サマリー）・Section 2（閲覧数の推移）・Section 3（興味あり！の推移）は変更なし：作品はcreatorページに常時掲載されるため、出展実績の有無に関わらず閲覧数・興味あり！は発生しうるという既存の設計方針と整合させた。
+
+### 追記（同日・ユーザー確認後の2点修正）
+ユーザーから「出展なしの場合、展覧会ごとの問合せ・購入申込は空にしてください(現在展覧会2つが表示されている)。作品販売の動きはセクションごと撤去してください」とのフィードバック。
+1. **Section 4のバグ修正**：`#p612ExhList`（`.ins-item-list`）は`list.hidden=true`にしていたが、CSS側に`.ins-item-list{display:flex}`はあっても`[hidden]{display:none}`の上書きが無く、`hidden`属性のUA既定スタイルが同specificityの author `display:flex`に負けて効いていなかった（実際に展覧会2件が表示され続けていたバグ）。`.ins-funnel`・`.ins-funnel-notice`には既に`[hidden]{display:none}`があったため気づきにくかった。`kotennavi-common.css`に`.ins-item-list[hidden]{display:none}`を追加して修正。
+2. **Section 5の設計変更**：インライン案内文（`#p612FunnelZero`）ではなく**セクションごと非表示**に変更（「販売の動き」自体が出展ゼロでは意味を持たないコンテンツのため、注記を残すより章ごと無くす方が適切という判断）。Section 5の`<section>`に`id="p612FunnelSection"`を付与し、`syncFunnel()`は`isNeverExhibited()`が真なら`section.hidden=true`にして即returnする形に単純化。新設していた`#p612FunnelZero`要素は不要になったため削除。
+
+### 検証（追記分）
+`node --check`通過。タグ開閉数一致確認済み（div 72/72、p 19/19、section 5/5、span 65/65）。削除した`#p612FunnelZero`への残存参照なし（grep確認・docsの記録のみ残存）。
+
+### 検証
+`node --check kotennavi-pages.js`・`node --check kotennavi-common.js`通過。`kotennavi-p6-12.html`のタグ開閉数一致確認済み（div 73/73、p 20/20、section 5/5、span 65/65）。実ブラウザでの見た目確認はユーザーが行う。
+
+### 影響ファイル
+`kotennavi-p6-12.html`／`kotennavi-pages.js`／`kotennavi-common.js`。
+
+## 追145. P3-12/P4-12：オーディエンスへの導線リンク文言を「オーディエンス管理」へ修正（2026-08-29）
+
+### 背景
+P3-12/P4-12のSection 1「サマリー」注記に「会場チェックインの詳細は<a>ウォッチャー・チェックイン一覧 →</a>で確認できます。」というリンクがあったが、リンク先P3-13/P4-13の実際のページ名は「オーディエンス管理」（追125以降の再設計でウォッチャー・チェックインを横断する単一リストへ統合済み）。リンクテキストが旧称のまま残っていた。ユーザーから「p3-12,p4-12の『チェックインの詳細はウォッチャー・チェックイン一覧 →で確認できます。』はオーディエンス管理に変更してください」との指示。
+
+### 対応
+両ページの`.ins-note`内リンクテキストを「ウォッチャー・チェックイン一覧 →」から「オーディエンス管理 →」に変更（リンク先href・文脈は変更なし）。
+
+### 検証
+文言のみの変更でHTML構造に変更なし。
+
+### 影響ファイル
+`kotennavi-p3-12.html`／`kotennavi-p4-12.html`。
+
+## 追146. P3-13/P4-13：KPI delta「今月の新規」を「過去30日の新規」に変更（2026-08-29）
+
+### 背景
+追142で総ウォッチャー数・チェックイン人数のdeltaに「+N 今月の新規」（暦月＝カレンダーマンス基準）を追加したが、ユーザーから「今月の新規は日によって集計にばらつきが出るので、過去30日にしてください」との指摘。暦月基準だと月初は経過日数が少なく新規数が少なく見え、月末に近いほど増える見かけ上のばらつきが生じるため、固定長の**過去30日ローリングウィンドウ**に変更する方が指標として安定する。
+
+### 対応
+`kotennavi-p3-13.html`／`kotennavi-p4-13.html`のKPI delta注記（`.ins-kpi__delta-note`）を「今月の新規」から「過去30日の新規」に変更（総ウォッチャー数・チェックイン人数の両方、計4箇所）。数値（+18/+9・+11/+6）はデモ用固定値のため変更なし。
+
+### 検証
+文言のみの変更でHTML構造に変更なし。
+
+### 影響ファイル
+`kotennavi-p3-13.html`／`kotennavi-p4-13.html`。
+
+---
+
+## 追147. P3-13/P4-13：「展覧会別チェックインリスト」ビューを新設（オーディエンスリストとタブ切替・2026-08-29）
+
+### 背景
+「ご芳名帳（紙）にできず、デジタルだからできることは？」という発展的な議論から、ユーザーより「展覧会ごとのチェックインリストを一気に見えるのはどうでしょう？AudienceListとクロスの関係になり、デジタルでないと手作業では難しいかも」という提案があった。既存の「一覧」セクションは人（オーディエンス）を主語にした単一リストで、展覧会での絞り込みは`#p313CkFilterExh`の単一選択ドロップダウン（1展覧会ずつ切替）のみだった。ユーザーはこれとは別に、**展覧会を主語にして複数の展覧会のチェックイン状況を並べて見られるビュー**を望んでいる。さらに「展覧会が多い人もいるので、チェックインのある展覧会だけを表示する」という絞り込み条件も指定された。
+
+### 対応
+「一覧」セクション内に**ビュー切替タブ**（`.p313-view-tabs`）を新設し、「オーディエンスリスト」（既存の人中心リスト＝そのままの構造でパネル化）と「展覧会別チェックイン」（新規＝展覧会中心リスト）を切り替えられるようにした。
+- 新規ビュー「展覧会別チェックイン」（`#p313ViewExh`）：既存`PEOPLE`配列の`visits[]`を展覧会（`exh`）単位に集約して構築（`buildExhCheckins()`）。チェックインが1件もない展覧会はマップに現れないため自然に除外される＝ユーザー指定の絞り込み条件を満たす。
+- 各展覧会行（`.p313-exh-ck-item`）は「展覧会名＋会期＋チェックイン人数（`.ktn-count`）」をヘッダーに表示し、クリックで来場者リスト（アバター＋名前＋チェックイン日）を展開する開閉式（p3-13の既存「来場履歴を見る」トリガーと同じaria-expanded＋hidden方式）。
+- 「AudienceListとクロスの関係」の実現：来場者名は既存`makeItem()`の人物名リンクと同じ`href="#"`のプレースホルダーリンクとし、同一の`PEOPLE`データソース・同一の人物表現（アバター色・名前）を使うことで、2つのビューが同じ人物を指していると視覚的に対応付く。実際のプロフィール遷移・相互ナビゲーションは本デモの範囲外（他ページの人物リンクも同様に`#`のまま）。
+- p3-13/p4-13両方に同時実装（対ページの同時修正ルールに従う）。CSSは`.p313-*`を両ページ共有（p4-13は`p413`のid接頭辞のみ差し替え、既存の命名パターンを踏襲）。
+
+### 検証
+`node --check kotennavi-pages.js`でJS構文OK。両HTMLのタグバランス確認（div/section/nav/button全て開閉一致）。CSSは中括弧の数が一致（7951/7951）。ブラウザでの実見た目確認はユーザー側で実施予定。
+
+### 影響ファイル
+`kotennavi-p3-13.html`／`kotennavi-p4-13.html`／`kotennavi-common.css`／`kotennavi-pages.js`（`KTN.pages['p3-13']`／`KTN.pages['p4-13']`）。
+
+### 追記（同日訂正・2026-08-29）
+ユーザーより「展覧会別チェックインのユーザーカードはオーディエンスリストのユーザーカードと同じにしてください」と指摘。初回実装は独自の簡易行（アバター＋名前＋日付のみ＝`.p313-exh-ck-visitor`）だったが、これを廃止しオーディエンスリストと**完全に同一の`makeItem()`カード**（`.p2-watcher-item`＝バッジ・4種カウンター・関係性テキスト・来場履歴トグル込み）を再利用する形に変更。
+- `makeItem(p)`に`idSuffix`引数を追加（`makeItem(p, idSuffix)`）。オーディエンスリストと展覧会別ビューは同一DOM内に同時存在（`hidden`切替のみ）し、同一人物が両方に現れうるため、来場履歴トグルの`id`重複を避ける目的。展覧会別ビューでは`entry.p.id + '-exh' + idx`を渡す。
+- `buildExhCheckins()`を人物単位に重複排除するよう変更（同一人物が同一展覧会に複数回チェックインしているデータがあるため、素朴に`visits[]`単位で集約するとカードが同じ人物分だけ重複表示されてしまう）。展覧会内の人数表示・並び順は人物ごとの最新チェックイン日時を基準にする。
+- `makeExhCkItem()`は来場者HTMLを独自マークアップでなく`makeItem()`の戻り値をそのまま`.p2-watcher-list`でラップして描画。
+- クリック委譲ハンドラ（`exhCkListEl`）に、展覧会見出しの開閉（`.p313-exh-ck-item__head`）に加えて、カード内にネストされた来場履歴トグル（`.p313-ck-trigger`）のクリックも処理するよう分岐を追加。
+- 旧`.p313-exh-ck-visitor`系CSSは削除し、`.p2-watcher-list`を展覧会別ビュー内でも余白ゼロで使うための最小限のCSSに置き換えた。
+- p3-13/p4-13両方に同時適用。`node --check kotennavi-pages.js`で構文OK。
+
+### 追記②（同日訂正・2026-08-29）
+ユーザー指摘「一覧AUDIENCE LISTの下にタブが2つでオーディエンスリストと展覧会チェックインとオーディエンスリストがかぶりですね」。セクション見出し「一覧」の英語サブ`.ktn-sec-en`が`Audience List`のままで、直下のビュータブ「オーディエンスリスト」と表現が重複していた（ビュー切替導入前＝タブがまだ無かった頃の見出しが残っていた）。セクションは今や人物中心／展覧会中心の2ビューを持つため、見出しの英語サブを片方のビュー名に偏らない`List`に変更（日本語見出し「一覧」の直訳のみ・タブ名は変更なし）。p3-13/p4-13両方に同時適用。
+
+## 追148. P3-12/P4-12とP3-13/P4-13：「新規ウォッチャー」数値の不整合を是正（2026-08-29）
+
+### 背景
+P3-13/P4-13のオーディエンス管理ページとP3-12/P4-12のインサイトページの連携状況をレビュー中に発見。`kotennavi-pages.js`のP3-13コメント（L11651）には「総ウォッチャー数・新規ウォッチャー・チェックイン人数（過去30日）の数値はp3-12インサイトの同項目と揃えている」と明記されているが、実際のデモ数値は揃っていなかった：
+- P3-12「新規ウォッチャー」86人（過去30日）　←→　P3-13「総ウォッチャー数」のdelta「+18（過去30日の新規）」
+- P4-12「新規ウォッチャー」42人（過去30日）　←→　P4-13「総ウォッチャー数」のdelta「+11（過去30日の新規）」
+
+両ページとも「このクリエイター/ギャラリーページを過去30日間で新たにウォッチし始めた人数」という同一定義の指標であり、桁が違う数値が隣接する相互リンクページに並んでいるのは矛盾。追142でP3-13/P4-13にKPIトレンド比較（delta表示）を新設した際、既存のP3-12/P4-12の数値と照合せずに新規の値を設定したことが原因と推測される。
+
+### 対応
+P3-12/P4-12の「新規ウォッチャー」数値を正とし、P3-13/P4-13側のdeltaをそれに揃えた。
+- P3-13：`+18` → `+86`（`ins-kpi__milestone`「300人突破」は総数342人に対する表示のため変更不要）
+- P4-13：`+11` → `+42`（`ins-kpi__milestone`「200人突破」も変更不要）
+
+「チェックイン人数」側のdelta（P3-13 `+9`／P4-13 `+6`）は対象外：P3-12/P4-12には「過去30日の新規チェックイン人数」に相当する指標が存在せず（P3-12/P4-12のチェックイン関連数値は「これまでの全展覧会の合計チェックイン数」＝生涯累計のみ）、揃える対象そのものがないため据え置き。
+
+### 検証
+該当4ファイルのテキスト差し替えのみ（構造変更なし）。目視で該当箇所のみ確認。
+
+### 影響ファイル
+`kotennavi-p3-13.html`／`kotennavi-p4-13.html`。
+
+---
+
+## 追149. P3-13/P4-13：オーディエンスカードに非公開メモ欄を追加（ご芳名帳の代替機能・2026-08-29）
+
+### 背景
+「このページをご芳名帳の代わりにするなら、オーディエンスにページオーナーがコメントを書けるようにした方がいいですか？」という相談から着手。検討の結果、双方向コメント（相手に通知される）ではなく、**オーナーだけが見られる非公開メモ**（紙のご芳名帳の余白に書き込む備考に相当）が適切と合意。ユーザーからは実装面の懸念として「クリエイター・ギャラリーに紐づくデータでオーディエンスが多いとデータ量が増える」「ウォッチ解除・チェックイン取消でメモが消えないか」という指摘があり、**メモはウォッチ／チェックインの記録に従属させず、`(オーナー, この人物)` ペアに紐づく独立データとして持つ**方針で合意した（ウォッチ解除・チェックイン取消の影響を受けずに残る。データ量はオプトイン＝メモを書いた人の分だけ増える性質のため自然に有界）。
+
+### 対応
+`makeItem()`が生成する各オーディエンスカード（`.p2-watcher-item`）に、来場履歴トグルと同じ配置パターンでメモ機能を追加。
+- トリガー`.p313-memo-trigger`（`.p313-rel`内・来場履歴トリガーの直下）：メモ未記入時「メモを追加」、記入済み時「メモを見る・編集」（追加済みは肯定ラベルで示す既存方針を踏襲）。
+- パネル`.p313-memo`（`.p313-ck-visits`と同じ`flex:0 0 100%`で左右カラム下に全幅展開）：`textarea`＋「オーナーのみ閲覧できます」という非公開の明記＋保存ボタン（`.ktn-op-btn--primary --sm`共通ボタン再利用）。
+- 保存時は`PEOPLE`配列の該当人物エントリに`memo`フィールドとして直接格納（デモ実装。本番ではウォッチ/チェックインテーブルでなく`(owner_id, person_id)`をキーにした独立テーブルを想定）、トリガーのラベルを更新、`KTN.toast('メモを保存しました（自分のみ閲覧可）')`で完了通知。
+- カードはオーディエンスリスト（`#p313List`）と展覧会別チェックインビュー（`#p313ExhCkList`）の両方に同一`makeItem()`から描画されるため（追147で統合済み）、メモ機能も自動的に両ビューへ反映される。両ビューとも同一`PEOPLE`配列を単一データソースとするため、保存内容はビューをまたいで一貫する（同一人物が両ビューに同時表示されている場合、他方のインスタンスのラベルは次回描画まで更新されない＝デモの制約として許容）。
+- クリック委譲：`listEl`・`exhCkListEl`共通の`handleAudienceItemClick()`に集約し、`.p313-ck-trigger`（来場履歴開閉・既存）／`.p313-memo-trigger`（メモ開閉・新規）／`.p313-memo__save`（メモ保存・新規）を1関数で処理。`exhCkListEl`側の来場履歴トグル処理は重複コードだったため、この共通関数呼び出しに統合し削除した。
+- CSS（`.p313-memo*`）は`kotennavi-common.css`に新規追加、p3-13/p4-13で共有（既存の`.p313-*`共有クラス命名規則を踏襲）。
+- p3-13/p4-13両方に同時実装。
+
+### 検証
+`node --check kotennavi-pages.js`でJS構文OK。ブラウザでの実見た目・操作確認はユーザー側で実施予定。
+
+### 影響ファイル
+`kotennavi-pages.js`（`KTN.pages['p3-13']`／`KTN.pages['p4-13']`）／`kotennavi-common.css`。
+
+### 追記（同日・2026-08-29）
+「すでにメモを書いたでもを一つ作ってください」との依頼を受け、`PEOPLE`配列にサンプルの`memo`テキストを1件ずつ追加（未記入と記入済みの両方の見え方をデモで確認できるようにする目的）。
+- P3-13：p2「高橋 陶子」（複数回チェックインのリピーター）に記入。
+- P4-13：p2「田中 透」（複数回チェックインのリピーター）に記入。
+- いずれもトリガーの初期表示が「メモを見る・編集」になり、パネルを開くとサンプル本文が入っている状態を確認できる。パネル自体は他のオーディエンスと同様に初期は閉じたまま（挙動を統一するため自動展開はしない）。
+
+## 追150. P2チェックインに「来場のきっかけ」必須選択を追加し、P3-13/P4-13オーディエンスへ反映（2026-08-29）
+
+### 背景
+「p2のチェックインボタンに来場のきっかけの選択肢(必須)を追加してほしい。それをオーディエンスに反映してほしい。」との依頼。チェックイン自体はP2の`openCheckinModal()`（`kotennavi-common.js`）が起点で、全ページ共通の単一モーダルのため、追加した選択肢はP2に限らずチェックインを呼び出す全箇所（P2本文CTA・スティッキーCTA等）に自動的に反映される。
+
+### 対応
+1. **語彙の新設**：`kotennavi-common.js`にトップレベル定数`CHECKIN_REASONS`（id/labelの配列）を新設。値＝`sns`（SNS（Instagram・Xなど））／`kotennavi`（個展なびで見つけた）／`dm`（DM・フライヤー）／`referral`（知人の紹介）／`know`（作家・ギャラリーを以前から知っている）／`walkby`（通りがかり）／`other`（その他）。ラベル逆引き用に`ktnCheckinReasonLabel(id)`も同ファイルに追加。両ページ（P3-13/P4-13）の`kotennavi-pages.js`側からもグローバルとして参照する（classic scriptの仕様上、`kotennavi-common.js`のトップレベル`const`は後続`<script>`から素の識別子で参照可能。既存の`TAGBAR_DEFS`等と同じパターン）。P60-13の`REPORT_REASONS`（HTML内ローカル変数・種別ごとに出し分け）とは性質が異なる（今回は種別分岐が無い単一語彙のため共通ファイルに1つだけ定義）。
+2. **モーダルへのフィールド追加**：`openCheckinModal()`の実装（2つある同名定義のうち、旧実装を上書きする**後方の定義**＝実際に呼ばれる方）に、日時フィールド直後へ`<select id="ktnCiReason">`を追加。ラベルには全ページ共通の必須マーカー`.ktn-req`を付与（新規の必須表現を作らずCLAUDE.md既定の書式を踏襲）。スタイルは既存の`.ktn-modal__input`（date/textareaと共通）をそのまま流用し新規CSSクラスは追加していない。
+3. **バリデーション**：モーダルに`<form>`要素が無く送信ボタンが`onclick`起動のため、HTML5の`required`は効かない。`ktnSubmitCheckin()`冒頭で未選択なら`.ktn-modal__form-row.is-error`（赤枠＋赤ラベル、新規CSS）とインラインエラー文（`.ktn-modal__err-msg`、新規CSS）を出し送信を止める。selectの`onchange`でエラー状態を解除。
+4. **オーディエンスへの反映（2箇所・P3-13/P4-13共通実装）**：
+   - **来場履歴パネル（`.p313-ck-visit`）**：各来場行に「来場のきっかけ：{ラベル}」を追記（`v.reason`があるときのみ表示）。個人単位の記録。
+   - **展覧会別チェックインリスト（`buildExhCheckins()`/`makeExhCkItem()`）**：展覧会グループ単位で`reasonCounts`を集計し、ヘッダー直下に件数降順のチップ列（`.p313-exh-ck-item__reasons`）として「来場のきっかけ内訳」を表示。個人の来場理由でなく、その展覧会に来た人たちの傾向を一目で見せる集計ビュー（個人記録とは別スコープの新規表示）。
+   - どちらも`ktnCheckinReasonLabel()`でid→ラベルに変換して表示（idはそのまま`PEOPLE[].visits[].reason`に格納）。
+5. **デモデータ**：両ページの既存`visits[]`サンプル全件（P3-13：15件、P4-13：15件）に`reason`を後付け（実際のチェックインは今回の必須化以降のみ理由を持つ想定だが、デモの見え方確認のため既存データにも遡及的に付与）。
+6. `openCheckinEditModal()`（p5-2等からの編集モーダル・別実装）は対象外（初回チェックイン時にのみ理由を確定させる設計とし、事後編集フローには追加していない）。
+
+### 検証
+`node --check kotennavi-common.js`／`node --check kotennavi-pages.js`でJS構文OK。ブラウザでの実見た目・操作確認はユーザー側で実施予定。
+
+### 影響ファイル
+`kotennavi-common.js`（`CHECKIN_REASONS`／`ktnCheckinReasonLabel`／`openCheckinModal`／`ktnSubmitCheckin`）／`kotennavi-pages.js`（`KTN.pages['p3-13']`／`KTN.pages['p4-13']`の`PEOPLE`・`makeItem`・`buildExhCheckins`・`makeExhCkItem`）／`kotennavi-common.css`（`.ktn-modal__err-msg`・`.ktn-modal__form-row.is-error`・`.p313-ck-visit__reason`・`.p313-exh-ck-item__reasons*`）。
+
+## 追151. 「来場のきっかけ」を`openCheckinEditModal()`でも編集可能に変更（追150 点6を撤回・2026-08-29）
+
+### 背景
+追150では「来場のきっかけは初回チェックイン時にのみ確定し、事後編集フローには追加しない」と決めていたが、ユーザーからP2画面を見ながら「これは評価と同じように変更・編集できないもの？」との指摘。`openCheckinEditModal()`は日付・評価（星）・レビュー本文を事後編集できる共有モーダル（コード内コメントで「共有：p5-2／将来 p2・p8-11 が再利用」と明記された設計）であり、来場のきっかけだけを編集不可にする理由が薄い（初回入力の誤りや複数回目の来場理由の変化に対応できない）。追150 点6の判断を撤回し、他の項目と同じ扱いに揃えた。
+
+### 対応
+1. **`openCheckinEditModal(opts)`（`kotennavi-common.js`）**：`openCheckinModal()`と同じ`<select id="ktnCiReason">`＋`.ktn-req`必須マーカーを日付フィールド直後に追加（`CHECKIN_REASONS`を共用、`opts.reason`で初期選択）。保存ボタンのクリックハンドラに`openCheckinModal()`と同じ未選択バリデーション（`.is-error`＋`#ktnCiReasonErr`）を追加し、`opts.onSave(...)`のペイロードに`reason`を含めるよう変更（`{date,stars,review}` → `{date,reason,stars,review}`）。関数冒頭のdocコメントも更新。
+2. **P2（`kotennavi-p2.html`）**：本人のチェックイン状態を保持するデモ変数`own`に`reason`フィールドを追加（初期値`'sns'`）。`window.p2OwnEdit()`が`openCheckinEditModal()`呼び出し時に`reason: own.reason`を渡し、`onSave`で`own.reason = d.reason`を反映するよう変更。
+3. **P5-2（`kotennavi-pages.js`）**：カード側は理由を可視表示していない（P2側も同様＝来場のきっかけはオーナー向け内部データであり、公開レビュー欄には出さない設計。追150時点から変更なし）ため、表示UIは追加せず**サイレントな永続化のみ**を実装。`readCard(card)`が`card.getAttribute('data-reason')`を読み取って返し、`applyCardData(card,data)`が保存時に`card.setAttribute('data-reason', data.reason)`で書き戻す。`cardAction('editDate'|'review', card)`が`reason: cur.reason`をモーダルへ渡す。既存デモカード（静的HTML）には`data-reason`属性が無いため、初回編集時は未選択状態からの選択を求められる（データ移行時の自然な挙動として許容）。
+4. P3-13/P4-13（オーディエンス集計）側の実装は変更なし（追150のまま）。今回の変更はP2・P5-2側の「事後編集の可否」のみが対象。
+
+### 検証
+`node --check kotennavi-common.js`／`node --check kotennavi-pages.js`でJS構文OK。`kotennavi-p2.html`はインラインscriptのため目視確認のみ。ブラウザでの実見た目・操作確認はユーザー側で実施予定。
+
+### 影響ファイル
+`kotennavi-common.js`（`openCheckinEditModal`）／`kotennavi-p2.html`（`own`初期値・`p2OwnEdit`）／`kotennavi-pages.js`（P5-2の`readCard`・`applyCardData`・`cardAction`）。
+
+## 追152. インサイト系・オーディエンス系ページのユーザー／展覧会／作品・記事タイトルへページリンクを付与（2026-08-29）
+
+### 背景
+「インサイト系ページやオーディエンスページのユーザーカード、展覧会、作品・記事はそれぞれタイトルにページリンクを付けて下さい。（デモデータですので、ユーザーは一律p5のように実際のページタイトルと不一致で構わない）」との依頼。対象6ページ（P2-14／P3-12／P4-12／P6-12／P3-13／P4-13）を調査した結果、P3-12・P4-12・P6-12は既存の`KTN.insightList.render()`（`.ins-item-list__name`）等で実リンク済みで対応不要。P2-14とP3-13/P4-13にプレースホルダー（`href="#"`）または未リンクのタイトルが残っていたため、その箇所のみ対応した。
+
+### 対応
+1. **P2-14（`kotennavi-p2-14.html`）**：「人気の記事 Top Articles」2件の`href="#"`を`kotennavi-p7.html`へ、「人気の作品 Top Artworks」2件の`href="#"`を`kotennavi-p6.html`へ変更（静的HTML内の`<a class="ins-top-list__title">`、タグ自体は既存）。
+2. **P3-13/P4-13（`kotennavi-pages.js`、共通ロジックのため両ページ同時対応）**：
+   - `chip()`（注目のオーディエンス＝常連のファン／最近つながった人カード）：カード全体を包む`<a href="#">`を`<a href="kotennavi-p5.html">`へ。
+   - `makeItem()`（メインのオーディエンス一覧カード）：アバター`<a>`・名前`<a>`の`href="#"`を`kotennavi-p5.html`へ（ユーザーは個別の公開プロフィールページを持たないため、デモでは一律P5を指す＝依頼文の指定どおり）。
+   - `makeItem()`内・チェックイン履歴展開部分の`v.exhName`（展覧会名）：従来プレーンテキストだった`<span class="p313-ck-visit__exh">`内に`<a class="p313-ck-visit__exh-link" href="kotennavi-p2.html">`を新設して包んだ。
+   - `makeExhCkItem()`（展覧会別チェックインリストの見出し）：展覧会名`group.exhName`が開閉トグルの`<button>`要素内にネストされており`<a>`を追加できない構造だったため、**`<button>`を`<div role="button" tabindex="0">`へ変更**し、名前部分だけ`<a class="p313-exh-ck-item__name" href="kotennavi-p2.html" onclick="event.stopPropagation()">`として分離。クリック時はリンク側で伝播を止め通常の遷移、それ以外の行クリックは従来どおり開閉トグルとして機能（デリゲートされたクリックハンドラ側にも`.p313-exh-ck-item__name`除外の防御コードを追加）。
+3. **`kotennavi-common.css`**：`.p313-ck-visit__exh-link`（`color:inherit`＋hover下線）・`.p313-exh-ck-item__name`へ`text-decoration:none`＋hover下線を追加（新規リンク化に伴う最小限のスタイル調整のみ、新規デザインは作らず既存の文字色・サイズを維持）。
+
+### 検証
+`node --check kotennavi-common.js`／`node --check kotennavi-pages.js`でJS構文OK。ブラウザでの実見た目・操作確認はユーザー側で実施予定。
+
+### 影響ファイル
+`kotennavi-p2-14.html`／`kotennavi-pages.js`（P3-13/P4-13の`chip`・`makeItem`・`makeExhCkItem`とそのクリックハンドラ）／`kotennavi-common.css`（`.p313-ck-visit__exh-link`・`.p313-exh-ck-item__name`）。
+
+---
+
+## 追153. オーディエンス管理ページに「次回展公開で自動メール通知」を訴求する説明文を追加（2026-08-29）
+
+### 背景
+オーディエンス管理（P3-13/P4-13）は実質「会場の芳名帳・名刺管理の代替」として使われる想定だが、「ウォッチ／チェックインした人は、オーナーが次の展覧会を登録・公開すると自動的にメール通知を受け取る」という設計（インサイト機能ロードマップの最優先軸＝A-3〔チェックイン→ウォッチ連動〕に直結）が、ページ上で一切訴求されていなかった。ユーザーから「オーディエンス管理はご芳名帳の代わりに使ってもらえそうだが、これを訴求した方がいいか」との相談があり、`project_insights_core_purpose_fan_migration`（インサイトの核心目的＝アナログファン管理からの移行を後押し・小さく分かりやすい数字/文言で行動変容を狙う）に沿って**訴求すべき**と回答。合わせて「メール通知時にオーナーへ送るウォッチャーリストの送信履歴をオーディエンスページで管理すべきか」という2点目の相談もあったが、これは送信履歴＝メール配信ドメイン（`docs/email-templates.md`）の管轄でありオーディエンスCRMの責務外と判断し不採用を提案。ユーザーの最終回答は「①だけでいいです」＝自動通知の訴求のみ実装、送信履歴機能は実装しない。
+
+### 対応
+P3-13・P4-13の`.ktn-mgmt-head__desc`直後に、既存の`.ins-note`パターン（P2-14で使用中の説明文ボックス）を流用して1文追加：
+「ここに集まったオーディエンスは、あなたが次の展覧会を登録・公開すると自動的にメールで通知を受け取ります。会場での芳名帳や名刺の管理に代わり、来場のきっかけとつながりを絶やさず次回展へ案内できます。」
+新規CSSは追加せず既存`.ins-note`をそのまま再利用。JSは変更なし（静的HTML）。
+
+### 検証
+静的HTMLのみの変更のためJS構文チェック対象なし。ブラウザでの実見た目確認はユーザー側で実施予定。
+
+### 影響ファイル
+`kotennavi-p3-13.html`／`kotennavi-p4-13.html`（`.ktn-mgmt-head`直下に`.ins-note`を1行追加）。
+
+---
+
+## 追154. 自動メール通知は「ウォッチのみ」対象と明確化＋会場チェックイン導線でウォッチを併せて促すよう修正（2026-08-29）
+
+### 背景
+追153の説明文「ここに集まったオーディエンスは…自動的にメールで通知を受け取ります」は、チェックインのみの人も含めて通知対象であるかのように読めた。ユーザーより「基本的にウォッチャーにしかメール通知しません。チェックインだけだとメール送信対象外です」と訂正があり、①追153の文言修正、②会場でチェックインを促す導線（会場フライヤー・会場チェックインQRモーダル）でも合わせてウォッチを促すよう修正、の2点を実施。なお展覧会ページのチェックイン投稿後には既存の`ktnCheckinShowWatchStep()`（2026-08-24実装）がクリエイター／ギャラリーのウォッチを個別提案する導線が既にあり、これは変更不要（本人確認済み・正しく機能）。
+
+### 対応
+1. **P3-13/P4-13（`kotennavi-p3-13.html`／`kotennavi-p4-13.html`）**：`.ins-note`の文言を「あなたをウォッチしている人には、次の展覧会を登録・公開すると自動的にメールで通知が届きます（チェックインのみの人は通知対象外です）。会場での芳名帳や名刺の管理に代わり、来場のきっかけとつながりを絶やさず次回展へ案内できます。」に修正。
+2. **会場フライヤー（`kotennavi-common.js` `ktnVenueFlyer()`）**：`.ktn-vflyer__checkin-desc`に「あわせて作家・ギャラリーをウォッチしていただくと、次回展の情報をメールでいち早くお届けします。」を追記（チェックインのお願いに加えてウォッチも促す）。
+3. **会場チェックインQRモーダル（`kotennavi-common.js` `KTN_LISTQR_KINDS.venue`）**：subテキストに「あわせてウォッチしてもらえると、次回展の案内メールが届くようになります。」を追記。
+
+### 検証
+`node --check kotennavi-common.js`でJS構文OK。ブラウザでの実見た目確認はユーザー側で実施予定。
+
+### 影響ファイル
+`kotennavi-p3-13.html`／`kotennavi-p4-13.html`（`.ins-note`文言修正）／`kotennavi-common.js`（`ktnVenueFlyer()`の`.ktn-vflyer__checkin-desc`・`KTN_LISTQR_KINDS.venue.sub`）。

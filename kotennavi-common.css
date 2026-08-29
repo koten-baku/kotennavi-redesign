@@ -4494,6 +4494,14 @@ line-clamp:2;}
 .p2-subnav__item--preview .p2-subnav__item-tag{display:inline-block}
 .p2-subnav__item[data-liaison-tag="preview"] .p2-subnav__item-tag{background:var(--ink);color:#c8a96e}
 
+/* ── オーナー限定：公開状態通知（下書き/確認依頼中）＝1080px content 内でmgmt向け.p211-mode-banner
+   （760px想定）の幅・余白を上書きして揃える（p2SyncOwnerNotice()が表示制御）。
+   ヒーロー画像より目立たせるため単独wrapでページ最上部に配置（2026-08-27）。
+   保存直後のQR/LIAISON案内はp2-11の保存完了モーダル（KTN.submitDone）に集約済み ── */
+.p2-owner-pub-wrap{padding-top:16px;padding-bottom:0}
+.p2-owner-pub-wrap .p211-mode-banner{max-width:none;margin:0}
+.p2-owner-pub-wrap .p211-mode-banner__text a.ktn-guide-link{display:inline-block;margin-top:4px}
+
 /* ── 2カラムレイアウト ── */
 .p2-layout-wrap{padding-top:0 !important;padding-bottom:0 !important}
 .p2-layout{display:grid;grid-template-columns:1fr 300px;gap:0 var(--col-gap);align-items:start;padding-top:var(--hero-gap)}
@@ -4540,7 +4548,7 @@ a.p2-action-widget__btn{text-decoration:none}
 .p2-watcher-modal__title{font-family:var(--fn);font-size:.9rem;font-weight:700;color:var(--ink)}
 .p2-watcher-modal__count{font-family:var(--fm);font-size:.82rem;font-weight:600;color:var(--accent)}
 .p2-watcher-list{display:flex;flex-direction:column;padding-left:4px}
-.p2-watcher-item{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--border)}
+.p2-watcher-item{display:flex;align-items:flex-start;gap:12px;padding:9px 0;border-bottom:1px solid var(--border)}
 .p2-watcher-item:last-child{border-bottom:none}
 .p2-watcher-item__avatar{width:40px;height:40px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:.75rem;font-weight:600;color:#fff;text-decoration:none;border:2px solid #fff}
 .p2-watcher-item__avatar--user{border-radius:50%;outline:2px solid rgba(184,96,140,.45);outline-offset:2px}
@@ -6638,6 +6646,9 @@ a.p2-action-widget__btn{text-decoration:none}
   font-family: inherit;
 }
 .ktn-modal__input:focus { outline: none; border-color: var(--accent); }
+.ktn-modal__err-msg { margin-top: 5px; font-size: .68rem; color: #b43c14; }
+.ktn-modal__form-row.is-error .ktn-modal__label { color: #b43c14; }
+.ktn-modal__form-row.is-error .ktn-modal__input { border-color: #b43c14; }
 .ktn-modal__stars { display: flex; gap: 5px; font-size: 1.5rem; cursor: pointer; }
 .ktn-modal__star { color: var(--border); transition: color .1s; user-select: none; }
 .ktn-modal__star.on { color: #f4b400; }
@@ -8747,10 +8758,8 @@ body.p6-dark.p6-plus{
 .p2-12-mode-switch:hover{border-color:var(--accent);color:var(--accent)}
 .p2-12-mode-release{font-size:.75rem;color:var(--muted);text-decoration:none;margin-left:10px}
 .p2-12-mode-release:hover{color:var(--danger);text-decoration:underline}
-.p2-12-mode-none{font-size:.75rem;color:var(--muted);background:none;border:none;cursor:pointer;padding:4px 6px;margin-left:6px;text-decoration:underline}
-.p2-12-mode-none:hover{color:var(--danger)}
 /* 会期開始ロック（2026-07-19 仕様＝会期開始日以降はモード切替・販売期間が変更不可） */
-.p2-12-mode-switch:disabled,.p2-12-mode-none:disabled{opacity:.45;cursor:default;pointer-events:none}
+.p2-12-mode-switch:disabled{opacity:.45;cursor:default;pointer-events:none}
 .p2-12-mode-bar__locknote{display:block;margin:0;padding:8px 12px;background:rgba(180,60,20,.06);border:1px solid rgba(180,60,20,.3);border-radius:4px;font-family:var(--fn);font-size:.76rem;line-height:1.6;color:#7a1800}
 .p2-12-mode-bar__locknote[hidden]{display:none}
 .p2-121-period-block.is-locked .p2-121-period-opt{opacity:.55;pointer-events:none}
@@ -11422,7 +11431,7 @@ a.p514-aw__exh-name:hover{text-decoration:underline;color:var(--accent,#2a7fa8)}
 .p315-archive-table--grouped thead tr:last-child th:nth-child(2),
 .p315-archive-table--grouped tbody td:nth-child(2){border-right:1px solid var(--border)}
 
-/* 購入者一覧（p3-15/p4-15）：列ソートボタン・購入者リンク */
+/* 購入者一覧（p3-15/p4-15）：列ソートボタン・購入者リンク（.p315-buyers-sort-btnはp3-12/p4-12インサイトのins-item-listでも再利用・単一ソース） */
 .p315-buyers-sort-btn{display:flex;align-items:center;gap:4px;width:100%;font-family:inherit;font-size:inherit;font-weight:500;color:var(--muted);background:none;border:none;padding:0;cursor:pointer;text-align:left;white-space:nowrap}
 .p315-buyers-sort-btn:hover{color:var(--ink)}
 .p315-buyers-sort-btn.is-active{color:var(--page-accent)}
@@ -12840,6 +12849,22 @@ a.p319-item__dest-name:hover{color:var(--page-accent)}
    ロールを意識させない設計のため）。アバター形状も同じ理由で種別によらず常に
    .p2-watcher-item__avatar--user（円形）で統一する＝typeフィールドは参考情報にとどめる。 ── */
 .p313-kpi-guide{margin:10px 0 0;font-size:.82rem}
+/* 注目のオーディエンス（Spotlight）＝サマリーの数値をロイヤルティ文脈に翻訳する小コーナー。
+   「常連のファン」＝チェックイン回数上位、「最近つながった人」＝直近の関係開始/来訪。
+   一覧（p313List）とはデータソース同一だが目的が違う（発見・称賛 vs 管理・検索）ため別コンポーネント。 */
+.p313-spotlight{display:flex;flex-wrap:wrap;gap:24px}
+.p313-spotlight__group{flex:1 1 260px;min-width:220px}
+.p313-spotlight__label{font-family:var(--fn);font-size:.78rem;font-weight:600;color:var(--ink);margin:0 0 10px}
+.p313-spotlight__list{display:flex;flex-direction:column;gap:2px}
+.p313-spotlight__empty{font-family:var(--fn);font-size:.76rem;color:var(--muted);margin:0}
+.p313-spotlight-chip{display:flex;align-items:center;gap:10px;padding:7px 4px;text-decoration:none;border-radius:4px;transition:background .12s}
+.p313-spotlight-chip:hover{background:var(--page-accent-bg,rgba(184,96,140,.08))}
+.p313-spotlight-chip__avatar{width:32px;height:32px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:.66rem;font-weight:600;color:#fff;border:2px solid #fff;border-radius:50%;outline:2px solid rgba(184,96,140,.45);outline-offset:1px}
+.p313-spotlight-chip__body{min-width:0}
+.p313-spotlight-chip__name{display:block;font-family:var(--fn);font-size:.82rem;font-weight:600;color:var(--ink)}
+.p313-spotlight-chip__meta{display:block;font-family:var(--fn);font-size:.68rem;color:var(--muted);margin-top:1px}
+/* KPI マイルストーン（累計値が節目を超えたときだけ表示・JSで閾値判定） */
+.ins-kpi__milestone{display:flex;width:fit-content;align-items:center;gap:4px;margin-top:6px;padding:2px 9px;background:var(--page-accent-bg,rgba(42,95,122,.1));border-radius:10px;font-family:var(--fn);font-size:.66rem;font-weight:600;color:var(--page-accent,#2a5f7a)}
 .p313-notify-list{display:flex;flex-direction:column;gap:10px}
 .p313-notify-row{display:flex;align-items:center;justify-content:space-between;gap:16px;background:#fff;border:1px solid var(--border);border-radius:4px;padding:16px 18px}
 .p313-notify-row__title{font-family:var(--fn);font-size:.86rem;font-weight:600;color:var(--ink);margin:0 0 4px}
@@ -12853,15 +12878,69 @@ a.p319-item__dest-name:hover{color:var(--page-accent)}
 .p313-toolbar{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:14px}
 .p313-toolbar__filters{display:flex;gap:14px;flex-wrap:wrap}
 .p313-filter{display:flex;flex-direction:column;gap:4px}
+.p313-filter[hidden]{display:none}
 .p313-filter__label{font-family:var(--fm);font-size:.58rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .p313-filter__sel{font-family:var(--fn);font-size:.82rem;padding:7px 10px;border:1px solid var(--border);border-radius:4px;background:#fff;color:var(--ink);min-width:140px}
-.p313-w-since{display:inline-flex;align-items:center;gap:4px;font-family:var(--fn);font-size:.74rem;color:var(--muted);margin-top:5px}
-.p313-ck-visits{display:flex;flex-direction:column;gap:4px;margin-top:5px}
+/* カード内訳を横並びに（左＝バッジ/名前/カウンター、右＝ウォッチ/チェックイン関係テキスト）＝カード高さの圧縮
+   .p2-watcher-item__infoは他ページのウォッチャーモーダル（kotennavi-common.js）とも共有のため、
+   ここでは併記クラス.p313-item-infoにだけflexレイアウトを適用し他ページへ影響させない */
+.p313-item-info{display:flex;flex-wrap:wrap;align-items:flex-start;column-gap:20px;row-gap:4px}
+.p313-item-main{flex:1 1 200px;min-width:0}
+/* 関係情報ブロック（このオーナーへのウォッチ状態・来場履歴＝サイト全体の活動量カウンターとは別スコープなのでテキストで表現） */
+.p313-rel{flex:0 0 auto;min-width:150px;display:flex;flex-direction:column;gap:2px}
+.p313-rel__line{font-family:var(--fn);font-size:.74rem;color:var(--muted)}
+.p313-rel__line strong{color:var(--ink);font-weight:600}
+.p313-rel__since{color:var(--muted)}
+/* 来場履歴トグル：トリガーは右カラム（.p313-rel）内・リスト本体は左右カラムの下に全幅で展開＝
+   トリガーとリストの位置を分離する必要があるためnative<details>でなくbutton+hidden属性のJS制御 */
+.p313-ck-trigger{display:flex;align-items:center;gap:4px;margin-top:2px;padding:0;border:0;background:none;font-family:var(--fn);font-size:.72rem;color:var(--accent);cursor:pointer;user-select:none}
+.p313-ck-trigger::before{content:'›';display:inline-block;transition:transform .2s;color:var(--accent)}
+.p313-ck-trigger[aria-expanded="true"]::before{transform:rotate(90deg)}
+.p313-ck-visits{flex:0 0 100%;display:flex;flex-direction:column;gap:4px;margin-top:4px;padding-left:14px}
+.p313-ck-visits[hidden]{display:none}
 .p313-ck-visit{display:flex;flex-direction:column;gap:3px;font-family:var(--fn);font-size:.74rem;color:var(--muted);line-height:1.5}
-.p313-ck-visit__date{flex-shrink:0;display:inline-flex;align-items:center;gap:4px;color:var(--ink);font-weight:600}
+.p313-ck-visit__date{color:var(--ink);font-weight:600}
 .p313-ck-visit__exh{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;color:var(--muted)}
+.p313-ck-visit__exh-link{color:inherit;text-decoration:none}
+.p313-ck-visit__exh-link:hover{text-decoration:underline}
+.p313-ck-visit__reason{color:var(--muted);font-size:.7rem}
+/* 非公開メモ：来場履歴トグルと同じ位置関係（トリガーは.p313-rel内・パネルは左右カラム下に全幅展開）。
+   ウォッチ/チェックインとは別スコープの独立データ（(オーナー,この人物)ペアに紐づく想定）のため見た目も別トーンにする */
+.p313-memo-trigger{display:flex;align-items:center;gap:4px;margin-top:2px;padding:0;border:0;background:none;font-family:var(--fn);font-size:.72rem;color:var(--muted);cursor:pointer;user-select:none}
+.p313-memo-trigger::before{content:'✎';display:inline-block;font-size:.68rem;color:var(--muted)}
+.p313-memo-trigger:hover{color:var(--ink)}
+.p313-memo{flex:0 0 100%;display:flex;flex-direction:column;gap:8px;margin-top:6px;padding:12px 14px;background:var(--paper);border-radius:4px}
+.p313-memo[hidden]{display:none}
+.p313-memo__input{width:100%;min-height:64px;padding:8px 10px;border:1px solid var(--border);border-radius:4px;background:#fff;font-family:var(--fn);font-size:.78rem;line-height:1.6;color:var(--ink);resize:vertical}
+.p313-memo__foot{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.p313-memo__note{font-family:var(--fn);font-size:.66rem;color:var(--muted)}
 .p313-empty{padding:36px 20px;text-align:center}
 .p313-empty__msg{font-size:.85rem;color:var(--muted)}
+/* ビュー切替（人にフォーカスするオーディエンスリスト／展覧会にフォーカスするチェックインリスト）
+   下段の.p313-tabs（フィルター）とは階層が違うため、色反転の独立したセグメントで視覚的に上位を示す */
+.p313-view-tabs{display:flex;gap:8px;margin-bottom:16px}
+.p313-view-tab{font-family:var(--fn);font-size:.8rem;font-weight:600;padding:8px 18px;border:1px solid var(--border);border-radius:20px;background:#fff;color:var(--muted);cursor:pointer;transition:background .15s,border-color .15s,color .15s}
+.p313-view-tab:hover:not(.is-active){color:var(--ink);border-color:rgba(0,0,0,.18)}
+.p313-view-tab.is-active{background:var(--page-accent);border-color:var(--page-accent);color:#fff}
+.p313-view-panel[hidden]{display:none}
+/* 展覧会別チェックインリスト（チェックインが1件もない展覧会はJS側で自然に除外） */
+.p313-exh-ck-list{display:flex;flex-direction:column;gap:10px}
+.p313-exh-ck-item{border:1px solid var(--border);border-radius:4px;background:#fff;overflow:hidden}
+.p313-exh-ck-item__head{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;padding:14px 16px;border:0;background:none;cursor:pointer;text-align:left;font-family:inherit}
+.p313-exh-ck-item__head::after{content:'›';flex-shrink:0;color:var(--muted);transition:transform .2s;margin-left:8px}
+.p313-exh-ck-item__head[aria-expanded="true"]::after{transform:rotate(90deg)}
+.p313-exh-ck-item__main{display:flex;flex-direction:column;gap:2px;min-width:0}
+.p313-exh-ck-item__name{font-family:var(--fs);font-size:.93rem;font-weight:600;color:var(--ink);text-decoration:none}
+.p313-exh-ck-item__name:hover{text-decoration:underline}
+.p313-exh-ck-item__period{font-family:var(--fn);font-size:.72rem;color:var(--muted)}
+/* 展覧会単位の「来場のきっかけ」内訳（件数降順のチップ列）。個々の来場履歴（.p313-ck-visit__reason）とは別スコープの集計表示 */
+.p313-exh-ck-item__reasons{display:flex;align-items:center;flex-wrap:wrap;gap:6px;padding:0 16px 12px}
+.p313-exh-ck-item__reasons-label{font-family:var(--fn);font-size:.66rem;color:var(--muted);letter-spacing:.02em;margin-right:2px}
+.p313-exh-ck-item__reason-chip{font-family:var(--fn);font-size:.68rem;color:var(--page-accent);background:var(--page-accent-bg);border-radius:12px;padding:3px 9px}
+/* 来場者カードはオーディエンスリストと同一の.p2-watcher-item/.p313-item-infoをそのまま再利用（別デザインを作らない） */
+.p313-exh-ck-item__visitors{border-top:1px solid var(--border);padding:0 16px}
+.p313-exh-ck-item__visitors[hidden]{display:none}
+.p313-exh-ck-item__visitors .p2-watcher-list{padding-left:0}
 @media(max-width:540px){
   .p313-notify-row{flex-direction:column;align-items:flex-start}
   .p313-tab{padding:9px 12px}
@@ -12869,6 +12948,11 @@ a.p319-item__dest-name:hover{color:var(--page-accent)}
   .p313-toolbar__filters{flex-direction:column}
   .p313-filter__sel{min-width:0;width:100%}
   .p313-toolbar .ktn-count--result{margin-left:0}
+  .p313-item-info{flex-direction:column}
+  .p313-rel{min-width:0}
+  .p313-view-tabs{flex-wrap:wrap}
+  .p313-view-tab{flex:1 1 auto;text-align:center;padding:8px 10px;font-size:.76rem}
+  .p313-exh-ck-item__visitors{padding:0 12px}
 }
 
 @media(max-width:540px){
@@ -13036,6 +13120,39 @@ a.p319-item__dest-name:hover{color:var(--page-accent)}
 .ins-top-list__title{flex:1;min-width:0;font-family:var(--fs);font-size:.85rem;color:var(--ink);text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ins-top-list__title:hover{text-decoration:underline}
 
+/* ── ins-top-grid（展覧会/記事/作品Top3を横並びで示すサマリー・.ins-top-listを3列並置・2026-08-28） ── */
+.ins-top-grid{display:flex;gap:24px}
+.ins-top-grid .ins-top-list{flex:1;min-width:0;margin-top:0}
+@media (max-width:720px){
+  .ins-top-grid{flex-direction:column;gap:20px}
+}
+
+/* ── ins-item-list（投稿済み展覧会/記事/作品の全件を一覧表示し、閲覧数・チェックイン数（展覧会のみ）・興味あり数を横並びで比較する・2026-08-27） ── */
+.ins-item-list{margin-top:14px;display:flex;flex-direction:column}
+.ins-item-list[hidden]{display:none}
+.ins-item-list__head{display:flex;align-items:flex-end;gap:10px;padding-bottom:8px;border-bottom:1px solid var(--ink)}
+.ins-item-list__head-name{flex:1;min-width:0;font-family:var(--fn);font-size:.62rem;font-weight:600;color:var(--muted)}
+.ins-item-list__head-stat{flex:0 0 70px;text-align:right;font-family:var(--fn);font-size:.62rem;font-weight:600;color:var(--muted)}
+.ins-item-list__year{padding:14px 0 4px;font-family:var(--fn);font-size:.72rem;font-weight:700;color:var(--ink)}
+.ins-item-list__year:first-child{padding-top:2px}
+.ins-item-list__row{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--border)}
+.ins-item-list__row:last-child{border-bottom:none}
+.ins-item-list__name{flex:1;min-width:0;font-family:var(--fs);font-size:.85rem;color:var(--ink);text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ins-item-list__name:hover{text-decoration:underline}
+.ins-item-list__stat{flex:0 0 70px;text-align:right;font-family:var(--fm);font-size:.82rem;font-weight:600;color:var(--ink)}
+.ins-item-list__stat .unit{margin-left:2px;font-size:.68rem;font-weight:400;color:var(--muted)}
+/* 名前列に付随する2次情報（会期／リンク先マーク）：列を増やさず名前の下段・左に積む（2026-08-28） */
+.ins-item-list__link-mark{flex-shrink:0;font-family:var(--fn);font-size:.6rem;font-weight:600;color:var(--muted);padding:1px 5px;border:1px solid var(--border);border-radius:3px;line-height:1.5}
+.ins-item-list__main{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.ins-item-list__main .ins-item-list__name{flex:none}
+.ins-item-list__name-row{display:flex;align-items:center;gap:6px;min-width:0}
+.ins-item-list__name-row .ins-item-list__name{flex:1;min-width:0}
+.ins-item-list__period{font-family:var(--fn);font-size:.72rem;color:var(--muted)}
+/* 列見出しの並べ替えボタン（.p315-buyers-sort-btnを再利用・単一ソース） */
+.ins-item-list__head-name{display:flex;flex-direction:column;align-items:flex-start;gap:2px}
+.ins-item-list__head-stat{display:flex;justify-content:flex-end}
+.ins-item-list__head-stat .p315-buyers-sort-btn{justify-content:flex-end}
+
 /* ── ページを伸ばすヒント（行動→反響の相関メッセージ） ── */
 .ins-grow{display:flex;flex-direction:column;gap:12px}
 .ins-grow__card{display:flex;align-items:flex-start;gap:14px;padding:16px 18px;background:var(--page-accent-bg,rgba(42,95,122,.06));border-radius:4px}
@@ -13044,6 +13161,7 @@ a.p319-item__dest-name:hover{color:var(--page-accent)}
 .ins-grow__msg{font-size:.85rem;color:var(--ink);line-height:1.7;margin:0 0 6px}
 .ins-grow__stat{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-family:var(--fm);font-size:.76rem;color:var(--muted)}
 .ins-grow__stat strong{font-size:.86rem;font-weight:700;color:var(--page-accent,#2a5f7a)}
+.ins-grow__cta{margin:8px 0 0;font-size:.78rem}
 
 /* ── LIAISON+ ファネル ── */
 .ins-funnel{display:flex;flex-direction:column;gap:2px}
@@ -13114,6 +13232,14 @@ a.p319-item__dest-name:hover{color:var(--page-accent)}
   .ins-period{gap:6px}
   .ins-period__label{flex:0 0 100%;margin:0 0 6px}
   .ins-period__btn{padding:6px 10px;font-size:.7rem}
+  .ins-item-list__head-stat,.ins-item-list__stat{flex-basis:50px}
+  .ins-item-list__head-stat{font-size:.58rem}
+  .ins-item-list__stat{font-size:.76rem}
+  .ins-item-list__name{font-size:.8rem}
+  .ins-item-list__period{font-size:.68rem}
+  /* バッジがタイトルの表示幅を圧迫するため、バッジを単独行にしタイトルへ全幅を渡す */
+  .ins-item-list__name-row{flex-wrap:wrap;row-gap:4px}
+  .ins-item-list__name-row .ins-item-list__name{flex:1 1 100%;min-width:0}
 }
 
 /* ─────────────────────────────────────────

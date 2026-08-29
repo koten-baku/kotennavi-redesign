@@ -160,10 +160,9 @@
           </div>
           <div class="p2-12-mode-bar__actions">
             <button class="p2-12-mode-switch" onclick="p212OpenModal('switch')">LIAISON+ に切り替える</button>
-            <button class="p2-12-mode-none" onclick="p212OpenModal('none')">LIAISON の利用をやめる</button>
           </div>
         </div>
-        <p class="p2-12-mode-bar__locknote" id="p212ModeLockNote" hidden>展覧会の会期開始日（2026.02.18）を過ぎているため、モード（利用しない／LIAISON／LIAISON+）は変更できません。</p>
+        <p class="p2-12-mode-bar__locknote" id="p212ModeLockNote" hidden>展覧会の会期開始日（2026.02.18）を過ぎているため、モード（LIAISON／LIAISON+）は変更できません。</p>
       </div>
 
       <!-- 展示設定セクション -->
@@ -271,22 +270,6 @@
         </div>
       </div>
 
-      <!-- 使用しない 切替確認モーダル -->
-      <div id="p212-modal-none" class="p2-12-modal" hidden>
-        <div class="p2-12-modal__bg" onclick="p212CloseModal('none')"></div>
-        <div class="p2-12-modal__box">
-          <h3 class="p2-12-modal__title">LIAISON の利用停止は編集ページで行います</h3>
-          <ul class="p2-12-modal__notes">
-            <li>この画面では停止されません。展覧会の編集ページ「LIAISON設定」で「利用しない」を選択して保存した時点で利用停止となります。</li>
-            <li>利用をやめて保存すると、LIAISON の設定と登録作品の設定がすべて削除されます。</li>
-          </ul>
-          <div class="p2-12-modal__foot">
-            <button class="p2-12-modal__cancel ktn-op-btn" onclick="p212CloseModal('none')">キャンセル</button>
-            <button class="p2-12-modal__ok ktn-op-btn ktn-op-btn--primary" onclick="location.href='kotennavi-p2-11.html'">編集ページを開く →</button>
-          </div>
-        </div>
-      </div>
-
     </div><!-- /.ktn-content -->
   </main>
 <footer class="ktn-footer" id="ktnFooter"></footer>
@@ -318,7 +301,7 @@ function p212CloseModal(type) {
 /* 2026-07-19 仕様：リエゾンモード切替は展覧会会期開始日以降は変更不可。
    本番＝会期開始日と当日をサーバー側でも比較して拒否。デモは dbar トグルで再現 */
 function p212DemoTerm(started, btn) {
-  document.querySelectorAll('.p2-12-mode-switch, .p2-12-mode-none').forEach(function (b) { b.disabled = !!started; });
+  document.querySelectorAll('.p2-12-mode-switch').forEach(function (b) { b.disabled = !!started; });
   var note = document.getElementById('p212ModeLockNote');
   if (note) note.hidden = !started;
   if (btn) {
