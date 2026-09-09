@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>軸ページ管理 — 管理者 | 個展なび</title>
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<body data-w="detail" class="p90-17-page mgmt-page">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- デモバー -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ロール：</span>
+  <button class="dbtn on" onclick="setR('admin',this)">管理者</button>
+</div>
+
+<div class="shell">
+
+<!-- サイドバー（kotennavi-p1.html と同一マークアップ・#ktnRoleNav は renderSidebar() がJS注入） -->
+<aside class="ktn-sidebar" id="ktnSidebar">
+
+  <!-- ロゴ (logo5-1) -->
+  <a href="kotennavi-p1.html" class="ktn-sidebar__logo" data-page="p1">
+    <img src="./images/kotennavi-logo5-1.svg" alt="個展なび">
+  </a>
+
+  <!-- 検索 → P10 検索ハブ -->
+  <a href="kotennavi-p10.html" class="ktn-sidebar__item" data-page="p10">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <circle cx="11" cy="11" r="7.5"/>
+        <path d="M21 21l-4.5-4.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">検索</span>
+  </a>
+
+  <!-- お知らせ → P61 -->
+  <a href="kotennavi-p61.html" class="ktn-sidebar__item" id="ktnSidebarNotice" data-page="p61">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__dot" id="ktnNoticeDot" style="display:none"></span>
+    <span class="ktn-sidebar__label">お知らせ</span>
+  </a>
+
+  <!-- ガイド → P60 -->
+  <a href="kotennavi-p60.html" class="ktn-sidebar__item" data-page="p60">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" stroke-linecap="round"/>
+        <path d="M12 16v-4M12 8h.01" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">ガイド</span>
+  </a>
+
+  <div class="ktn-sidebar__divider"></div>
+
+  <!-- ロール別アイコン（JS注入） -->
+  <div id="ktnRoleNav" style="width:100%;display:flex;flex-direction:column;align-items:center"></div>
+
+  <div class="ktn-sidebar__footer">
+    <p class="ktn-sidebar__footer-label">Follow us</p>
+    <div class="ktn-sidebar__sns">
+      <a href="https://www.facebook.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="Facebook">
+        <svg viewBox="0 0 320 512" fill="currentColor"><path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/></svg>
+      </a>
+      <a href="https://x.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="X">
+        <svg viewBox="0 0 512 512" fill="currentColor"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg>
+      </a>
+    </div>
+  </div>
+
+</aside>
+
+<div class="content-wrap" id="contentWrap">
+
+  <header class="ktn-header" id="ktnHeader">
+    <div class="ktn-header__inner">
+      <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+      <div class="ktn-hdr-actions" id="ktnActs"></div>
+    </div>
+  </header>
+
+  <main class="ktn-main" id="ktnMain">
+    <div class="ktn-content">
+
+      <!-- 管理ボックス -->
+      <div class="p9017-wrap ktn-mgmt-wrap ktn-mgmt-stack">
+
+        <!-- ページタイトル -->
+        <div class="ktn-mgmt-head">
+          <h2 class="ktn-mgmt-head__title">軸ページ管理</h2>
+          <p class="ktn-mgmt-head__en">AXIS PAGES</p>
+          <p class="ktn-mgmt-head__desc">エリア・ジャンル・行きやすさ・年鑑・アーカイブの軸ページは、掲載中の展覧会データから自動で生成されます。ページを1枚ずつ作る画面ではないため、ここで扱うのは各軸ページの導入文と、ハブ「展覧会を探す」の注目枠への掲載、そして検索ページの PICKS に出る季節の言葉です。</p>
+          <div class="ktn-mgmt-head__guides">
+            <a class="ktn-guide-link" href="./kotennavi-p10-4.html">展覧会を探す（ハブ）を見る →</a>
+          </div>
+        </div>
+
+        <!-- 運用ノート。この画面に「削除」も「公開/非公開」も無い理由を先に置く（追174-46③） -->
+        <div class="p315-ops-guide">
+          <p class="p315-ops-guide__lead">軸ページに<strong>公開／非公開の切替はありません</strong>。同じURLを出したり消したりすると検索側の評価が落ちるため、露出の調整はページの公開状態ではなく注目枠への掲載で行います。</p>
+          <dl class="p315-ops-guide__items">
+            <div class="p315-ops-guide__item">
+              <dt class="p315-ops-guide__term">導入文</dt>
+              <dd class="p315-ops-guide__desc">運営が書き下ろす地の文です。未記入の軸には自動生成の文が出るため、空欄のままでもページは成立します。件数・日付・「最新」のように時間で古びる語は書きません。</dd>
+            </div>
+            <div class="p315-ops-guide__item">
+              <dt class="p315-ops-guide__term">注目枠</dt>
+              <dd class="p315-ops-guide__desc">ハブ上部の「注目のエリア」に出る枠です。毎日必ず出る固定枠と、しきい値を超えたエリアを日替わりで回すローテーション枠からなります。</dd>
+            </div>
+            <div class="p315-ops-guide__item">
+              <dt class="p315-ops-guide__term">掲載0件の軸</dt>
+              <dd class="p315-ops-guide__desc">注目枠には出ませんが、ハブの「エリアから探す」からは常にたどれます。URLは残したまま、入口の重みだけを下げる扱いです。</dd>
+            </div>
+          </dl>
+          <p class="p315-ops-guide__note">軸そのもの（都道府県・ジャンル・行きやすさの条件）の追加・統合はタクソノミ側の変更になるため、この画面では行いません。</p>
+        </div>
+
+        <!-- ① 軸ページの仕組み（読み取り専用）。この画面の操作がサイトのどこに効くのかを先に置く。
+             数字は KTN.axis / KTN.arc から埋める＝ジャンルや年が増えたときに文だけが古びない（追174-70）。
+             表は p70 ガイドの .p70-table、地の文は運用ノートの .p315-ops-guide__lead を借りている。 -->
+        <div class="p211-block ktn-index-target" id="p9017-about">
+          <div class="p211-block__head">
+            <h3 class="p211-block__title">軸ページの仕組み<span class="p211-block__title-en">How It Works</span></h3>
+          </div>
+          <div class="p211-block__body">
+
+            <p class="p315-ops-guide__lead">軸ページは掲載中の展覧会データから自動で生成されます。いま軸は5つあり、合わせて<strong id="p9017AxTotal">—</strong>のURLが常に存在します。5つは「ページの型」で、1枚ずつ作るものではありません。この画面でページを増やしたり減らしたりすることはできません。</p>
+
+            <table class="p70-table" aria-label="軸の種類とURL数">
+              <thead>
+                <tr><th>軸</th><th>ページ</th><th>内訳</th><th>URL数</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>エリア</td><td>P10-4-1</td><td id="p9017AxAreaNote">—</td><td id="p9017AxArea">—</td></tr>
+                <tr><td>ジャンル</td><td>P10-4-4</td><td>展覧会に登録されたジャンル</td><td id="p9017AxGenre">—</td></tr>
+                <tr><td>行きやすさ</td><td>P10-4-5</td><td>お子さまと行ける／クリエイターが在廊する</td><td id="p9017AxAccess">—</td></tr>
+                <tr><td>年鑑</td><td>P10-4-2</td><td id="p9017AxYearNote">—</td><td id="p9017AxYear">—</td></tr>
+                <tr><td>アーカイブ</td><td>P10-4-3</td><td>エリアごとの、会期を終えた展覧会の記録</td><td id="p9017AxArchive">—</td></tr>
+              </tbody>
+            </table>
+
+            <p class="p315-ops-guide__lead">これらのURLへ張られる内部リンクには2種類あります。ひとつは<strong>索引</strong>で、ハブ「展覧会を探す」（P10-4）が全件を毎日リンクします。掲載0件のエリアも外さないため、どのURLにも必ず張られた状態が続きます。もうひとつが<strong>注目枠</strong>で、こちらは日替わりで入れ替わるので、どのURLへ張られるかは日によって変わります。すべてのURLを検索側に見つけてもらう役目は索引が持ち、注目枠は人の目に触れる回数を配る役目を持ちます。露出を下げたいときにURLを消さないのはこのためです。</p>
+
+            <table class="p70-table" aria-label="注目枠が出る場所">
+              <thead>
+                <tr><th>注目枠が出る場所</th><th>対象の軸</th><th>使う枠数</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>トップ（P1）</td><td>エリアのみ</td><td>3</td></tr>
+                <tr><td>展覧会を探す（P10）</td><td>エリアのみ</td><td>4</td></tr>
+                <tr><td>展覧会を探す ハブ（P10-4）</td><td>エリアのみ</td><td id="p9017AxSlots">—</td></tr>
+              </tbody>
+            </table>
+            <p class="p211-help">3つの入口は同じ並び（固定枠 → しきい値を超えたエリアを日付から決まる順）を共有し、その先頭から必要な数だけ使います。同じ日はどの入口から入っても同じエリアが出ます。固定枠が3件あるとトップの3枠は固定枠だけで埋まるため、固定枠の数は下の「枠の数」だけでなくトップの見え方にも効きます。</p>
+
+            <p class="p315-ops-guide__lead">注目枠を持つのは<strong>エリア軸だけ</strong>です。ジャンル・行きやすさ・年鑑・アーカイブには運営が露出を選ぶ枠がなく、ハブの索引とタグバーからたどる形になります。下の「注目のエリアの選定」と、一覧の「注目枠」の列がエリアのタブでしか出ないのはこのためです。</p>
+
+            <p class="p315-ops-guide__lead">この画面で決めるのは、上の表のURLに出る<strong>導入文</strong>（5軸すべて）と、<strong>注目枠への掲載</strong>（エリア軸のみ）の2つです。軸そのものの増減はデータ側で決まります。これに加えて、軸ページではありませんが「展覧会を探す」（P10）の PICKS に出る<strong>季節の言葉</strong>もこの画面で編集します（同じ「運営が書く言葉」なので置き場を分けていません）。</p>
+
+          </div>
+        </div>
+
+        <!-- ② ハブの導入文（P10-4 自身） -->
+        <div class="p211-block ktn-index-target" id="p9017-hub">
+          <div class="p211-block__head">
+            <h3 class="p211-block__title">ハブの導入文<span class="p211-block__title-en">Hub Lead</span></h3>
+          </div>
+          <div class="p211-block__body">
+            <div class="p211-field">
+              <label class="p211-label" for="p9017HubLead">展覧会を探す（P10-4）の導入文</label>
+              <textarea class="p211-textarea" id="p9017HubLead">エリア・ジャンル・行きやすさから、いま足を運べる展覧会を探せます。それぞれの入口はひとつのページとして残り続けるので、気になった軸はブックマークしてお使いください。</textarea>
+              <p class="p211-help">個々の軸の説明ではなく、ここがどういう探し方のできる場所なのかを書きます。1行1段落です。</p>
+            </div>
+            <div class="p9017-actions">
+              <button type="button" class="ktn-op-btn ktn-op-btn--primary ktn-op-btn--sm" id="p9017HubSave">保存する</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ③ 注目のエリアの選定 -->
+        <div class="p211-block ktn-index-target" id="p9017-feat">
+          <div class="p211-block__head">
+            <h3 class="p211-block__title">注目のエリアの選定<span class="p211-block__title-en">Featured Areas</span></h3>
+          </div>
+          <div class="p211-block__body">
+            <p class="p211-help p9017-blocknote">固定枠は毎日必ず出ます。残りの枠は、しきい値を超えたエリアを日付から決まる順で回すため、時間をかければどのエリアにも順番が回ります。個別に「今日はこれを出す」と指定する枠は設けていません。</p>
+            <div class="p9017-grid">
+              <div class="p211-field">
+                <label class="p211-label" for="p9017Min">ローテーションのしきい値<span class="p211-label__unit">掲載件数</span></label>
+                <input type="number" class="p211-input p211-input--sm" id="p9017Min" value="5" min="0" step="1">
+                <p class="p211-help">これを下回るエリアはローテーションに入りません。ハブの「エリアから探す」からは引き続きたどれます。</p>
+              </div>
+              <div class="p211-field">
+                <label class="p211-label" for="p9017Slots">枠の数</label>
+                <select class="p211-select" id="p9017Slots">
+                  <option value="4">4</option>
+                  <option value="6" selected>6</option>
+                  <option value="8">8</option>
+                </select>
+                <p class="p211-help">固定枠を含めた合計です。固定枠を増やしすぎるとローテーションの席が無くなります。</p>
+              </div>
+            </div>
+            <div class="p211-field">
+              <span class="p211-label">固定枠</span>
+              <div class="p9017-chips" id="p9017Fixed"></div>
+              <div class="p9017-addrow">
+                <select class="p211-select p9017-addsel" id="p9017FixedAdd"></select>
+                <button type="button" class="ktn-op-btn ktn-op-btn--sm" id="p9017FixedAddBtn">固定枠に追加</button>
+              </div>
+              <p class="p211-help">掲載が集中するエリアを常設し、主要な入口が日によって消えないようにします。</p>
+            </div>
+            <div class="p9017-preview">
+              <span class="p9017-preview__label">本日の表示</span>
+              <div class="p9017-chips" id="p9017Preview"></div>
+              <p class="p211-help" id="p9017PreviewNote"></p>
+            </div>
+            <div class="p9017-actions">
+              <button type="button" class="ktn-op-btn ktn-op-btn--primary ktn-op-btn--sm" id="p9017FeatSave">保存する</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ④ 季節の言葉（P10 の Picks 枠③）。軸ページではなく P10 の検索へ着地する言葉なので、
+             「どこで使われるか」のルールを操作欄より先に置く（追174-74）。 -->
+        <div class="p211-block ktn-index-target" id="p9017-season">
+          <div class="p211-block__head">
+            <h3 class="p211-block__title">季節の言葉<span class="p211-block__title-en">Seasonal Themes</span></h3>
+          </div>
+          <div class="p211-block__body">
+
+            <p class="p315-ops-guide__lead">サイトの中で<strong>「今月」「季節」の言い回しを名乗ってよいのはここだけ</strong>です。軸ページの導入文や他の特集の名前に時間の語を書かないのは、中身が入れ替わらないのに周期を約束することになるためでした。この枠は月が替われば必ず言葉も対象も替わるので、季節を名乗れます。</p>
+
+            <dl class="p315-ops-guide__items">
+              <div class="p315-ops-guide__item">
+                <dt class="p315-ops-guide__term">出る場所</dt>
+                <dd class="p315-ops-guide__desc">「展覧会を探す」（P10）の検索窓の下、PICKS の3番目の枠にひとつだけ出ます。1か月に1つで、月が替わると自動で次の行に切り替わります。ほかのページには出ません。</dd>
+              </div>
+              <div class="p315-ops-guide__item">
+                <dt class="p315-ops-guide__term">押した先</dt>
+                <dd class="p315-ops-guide__desc">選んだ対象で絞り込んだ<strong>検索結果</strong>が出ます（開催中・開催予定のみ）。軸ページのような固有のURLは持ちません。季節の言い回しは時間が経つと古びるので、残り続けるURLには入れない扱いです。</dd>
+              </div>
+              <div class="p315-ops-guide__item">
+                <dt class="p315-ops-guide__term">対象の選び方</dt>
+                <dd class="p315-ops-guide__desc">季節の入口は「何の展覧会か」だけでは作れないので、<strong>4つの軸</strong>から選べます。<strong>タグ</strong>＝技法・素材・主題（絵画・書道・版画など）／<strong>ジャンル</strong>＝登録時に必ず選ぶ6区分（アート・クラフト・ファッション・写真・建築・その他）／<strong>エリア</strong>＝都道府県と東京のエリア／<strong>行きやすさ</strong>＝お子さまと行ける・クリエイター在廊。たとえば8月は「夏休み、子どもと出かける」を〈行きやすさ〉で、秋は「古都の秋をあるく」を〈エリア〉で作れます。4つは下の表に並べてあり、<strong>組み合わせて指定できます</strong>（「京都」×「写真」のように、指定したすべてにあてはまる展覧会へ着地します）。ただし<strong>掛けるほど該当は少なくなります</strong>。何件になるかは行の右端「状態」がその場で返すので、そこを見ながら決めてください（しきい値に届かない月は枠ごと出ません）。1つも指定しない月も枠を出しません。<strong>タグだけは一覧から選ぶほかに直接書くこともできます</strong>（タグは登録側が自由に付ける言葉で、決まった一覧がないためです）。ただし登録で使われていない言葉を書くと0件になります。「避暑地」「古都」のような通称はデータにないので、県・エリアで指して季節感は言葉の側で出します。</dd>
+              </div>
+              <div class="p315-ops-guide__item">
+                <dt class="p315-ops-guide__term">言葉の書き方</dt>
+                <dd class="p315-ops-guide__desc">年は書きません（毎年そのまま使い回します）。件数・展覧会名・会場名のように入れ替わるものも書きません。季節と、その月に見てほしいものの気配だけを書きます。20字程度までが目安です。</dd>
+              </div>
+              <div class="p315-ops-guide__item">
+                <dt class="p315-ops-guide__term">出ない月</dt>
+                <dd class="p315-ops-guide__desc">選んだ対象の掲載がしきい値を下回る月は、<strong>枠ごと出しません</strong>（残りの枠が前に詰まります）。言葉で誘っておいて着地先がほとんど無い、という状態を作らないための扱いです。</dd>
+              </div>
+            </dl>
+
+            <div class="p9017-grid">
+              <div class="p211-field">
+                <label class="p211-label" for="p9017SeasonMin">枠を出すしきい値<span class="p211-label__unit">掲載件数</span></label>
+                <input type="number" class="p211-input p211-input--sm" id="p9017SeasonMin" value="3" min="0" step="1">
+                <p class="p211-help">その月の対象に、開催中・開催予定の展覧会がこの数だけあるときに枠を出します。</p>
+              </div>
+            </div>
+
+            <div class="p315-archive-table-wrap">
+              <table class="p70-table p9017-season-table" aria-label="季節の言葉（12か月）">
+                <thead>
+                  <tr><th>月</th><th>言葉</th><th>対象（4つの軸・組み合わせ可）</th><th>状態</th></tr>
+                </thead>
+                <tbody id="p9017SeasonList"></tbody>
+              </table>
+              <datalist id="p9017TagList"></datalist>
+            </div>
+
+            <div class="p9017-preview">
+              <span class="p9017-preview__label">今月の表示</span>
+              <div class="p9017-chips" id="p9017SeasonPreview"></div>
+              <p class="p211-help" id="p9017SeasonNote"></p>
+            </div>
+
+            <div class="p9017-actions">
+              <button type="button" class="ktn-op-btn ktn-op-btn--primary ktn-op-btn--sm" id="p9017SeasonSave">保存する</button>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ⑤ 軸ページ一覧（導入文の記入状況を横断で見る） -->
+        <div class="p211-block ktn-index-target" id="p9017-list">
+          <div class="p211-block__head">
+            <h3 class="p211-block__title">軸ページ一覧<span class="p211-block__title-en">Axis Pages</span></h3>
+          </div>
+          <div class="p211-block__body p9017-listbody">
+
+            <div class="p902-tab-nav" role="tablist" id="p9017Tabs"></div>
+
+            <div class="p319-toolbar">
+              <div class="p319-toolbar__filters">
+                <label class="p319-filter">
+                  <span class="p319-filter__label">導入文</span>
+                  <select class="p319-filter__sel" id="p9017FilterLead">
+                    <option value="">すべて</option>
+                    <option value="written">記入済み</option>
+                    <option value="auto">自動生成のまま</option>
+                  </select>
+                </label>
+                <label class="p319-filter" id="p9017FilterFeatWrap">
+                  <span class="p319-filter__label">注目枠</span>
+                  <select class="p319-filter__sel" id="p9017FilterFeat">
+                    <option value="">すべて</option>
+                    <option value="fixed">固定枠</option>
+                    <option value="rot">ローテーション対象</option>
+                    <option value="off">対象外</option>
+                  </select>
+                </label>
+              </div>
+              <p class="ktn-count ktn-count--result" id="p9017Count"></p>
+            </div>
+
+            <div class="p315-archive-table-wrap">
+              <table class="p315-archive-table p9017-table" aria-label="軸ページ一覧">
+                <thead id="p9017Thead"></thead>
+                <tbody id="p9017List"></tbody>
+              </table>
+            </div>
+
+            <div class="p319-empty" id="p9017Empty" hidden>
+              <p class="p319-empty__msg">該当する軸ページがありません。</p>
+            </div>
+
+            <p class="p9017-tabnote" id="p9017TabNote"></p>
+
+          </div>
+        </div>
+
+      </div><!-- /.ktn-mgmt-wrap -->
+
+      <!-- 導入文編集モーダル（fixed オーバーレイなので .ktn-mgmt-wrap の外に置く） -->
+      <div class="p319-del-modal p9017-lead-modal" id="p9017LeadModal" hidden>
+        <div class="p319-del-modal__bg" id="p9017LeadModalBg"></div>
+        <div class="p319-del-modal__panel" role="dialog" aria-modal="true" aria-labelledby="p9017LeadModalTitle">
+          <h3 class="p319-del-modal__title" id="p9017LeadModalTitle">導入文を編集</h3>
+          <div class="p9017-lead-ctx">
+            <span class="p9017-lead-ctx__kind" id="p9017LeadKind"></span>
+            <span class="p9017-lead-ctx__name" id="p9017LeadName"></span>
+            <a class="ktn-guide-link" id="p9017LeadView" href="./kotennavi-p10-4.html" target="_blank" rel="noopener">ページを見る →</a>
+          </div>
+          <div class="p211-field">
+            <label class="p211-label" for="p9017LeadText">導入文</label>
+            <textarea class="p211-textarea p211-textarea--tall" id="p9017LeadText" placeholder="未記入のままにすると、下の自動生成の文が表示されます"></textarea>
+            <p class="p211-help">1行が1段落になります。件数・日付・「最新」など時間で古びる語は書かないでください（URLは恒久なので、文だけが先に古びます）。空にすると自動生成の文に戻ります。</p>
+          </div>
+          <div class="p9017-lead-auto">
+            <span class="p9017-lead-auto__label">未記入のときに出る文</span>
+            <p class="p9017-lead-auto__body" id="p9017LeadAuto"></p>
+          </div>
+          <div class="p319-del-modal__actions">
+            <button type="button" class="ktn-op-btn" id="p9017LeadCancel">キャンセル</button>
+            <button type="button" class="ktn-op-btn ktn-op-btn--primary" id="p9017LeadSave">保存する</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /.ktn-content -->
+  </main>
+<footer class="ktn-footer" id="ktnFooter"></footer>
+
+
+</div><!-- /.content-wrap -->
+</div><!-- /.shell -->
+
+<nav class="ktn-bottom-nav" id="ktnBottomNav"><div class="ktn-bottom-nav__inner" id="ktnBottomNavInner"></div></nav>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Top","item":"https://koten-navi.com/"},{"@type":"ListItem","position":2,"name":"管理者","item":"https://koten-navi.com/p90"},{"@type":"ListItem","position":3,"name":"軸ページ管理"}]}</script>
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+  KTN.init({ page: 'p90-17', role: 'admin' });
+  function setR(role, btn) {
+    document.querySelectorAll('.dbtn').forEach(function(b){ b.classList.remove('on'); });
+    btn.classList.add('on');
+    window.curRole = role;
+    if (window.ktnRender) ktnRender();
+  }
+</script>
+</body>
+</html>

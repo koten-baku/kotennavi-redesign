@@ -29,6 +29,12 @@
   <button class="dbtn" data-p10-view onclick="setP10View('preset',this)">特集着地</button>
   <button class="dbtn" data-p10-view onclick="setP10View('result',this)">検索結果</button>
   <button class="dbtn" data-p10-view onclick="setP10View('zero',this)">ゼロヒット</button>
+  <span class="dbar-sep">日替わり（Picks／エリアから探す）：</span>
+  <button class="dbtn on" data-axis-day onclick="setAxisDay(0,this)">今日</button>
+  <button class="dbtn" data-axis-day onclick="setAxisDay(1,this)">明日</button>
+  <button class="dbtn" data-axis-day onclick="setAxisDay(2,this)">明後日</button>
+  <button class="dbtn" data-axis-day onclick="setAxisDay(7,this)">1週間後</button>
+  <button class="dbtn" data-axis-day onclick="setAxisDay(31,this)">1か月後</button>
 </div>
 
 <div class="shell">
@@ -114,13 +120,15 @@
         <div class="p10-search__title-row">
           <h1 class="p10-search__title">展覧会を探す</h1>
           <span class="p10-search__en">Exhibition Search</span>
-          <nav class="p10-search__types" aria-label="検索対象の切替">
-            <a class="p10-search__type is-active" href="#" onclick="event.preventDefault()">展覧会</a>
-            <a class="p10-search__type" href="kotennavi-p10-1.html">作品</a>
-            <a class="p10-search__type" href="kotennavi-p10-2.html">クリエイター</a>
-            <a class="p10-search__type" href="kotennavi-p10-3.html">ギャラリー</a>
-          </nav>
         </div>
+        <!-- 検索対象の切替。タイトル行の右端に小さく置くと「展覧会しか検索できない」と読まれるため、
+             タイトル直下の独立したタブ列にしている（他コンテンツも検索できることを一目で示す） -->
+        <nav class="p10-search__types" aria-label="検索対象の切替">
+          <a class="p10-search__type is-active" data-guest="ok" href="#" onclick="event.preventDefault()">展覧会</a>
+          <a class="p10-search__type" href="kotennavi-p10-1.html">作品</a>
+          <a class="p10-search__type" href="kotennavi-p10-2.html">クリエイター</a>
+          <a class="p10-search__type" href="kotennavi-p10-3.html">ギャラリー</a>
+        </nav>
 
         <div class="p10-search__box">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
@@ -130,6 +138,7 @@
 
         <div class="p10-quick-row">
           <button class="p10-chip" data-f="st:live" type="button">開催中</button>
+          <button class="p10-chip" data-f="new:1" type="button">新着掲載</button>
           <button class="p10-chip" data-f="weekend:1" type="button">今週末</button>
           <button class="p10-chip" data-f="near:1" type="button">近くで開催</button>
           <button class="p10-chip" data-f="free:1" type="button">入場無料</button>
@@ -148,14 +157,20 @@
           <div class="p10-adv__group">
             <div class="p10-adv__label">開催日</div>
             <div class="p10-adv__opts">
-              <button class="p10-day" type="button"><span class="p10-day__dow">wed</span><span class="p10-day__num">08</span></button>
-              <button class="p10-day" type="button"><span class="p10-day__dow">thu</span><span class="p10-day__num">09</span></button>
-              <button class="p10-day" type="button"><span class="p10-day__dow">fri</span><span class="p10-day__num">10</span></button>
-              <button class="p10-day" type="button"><span class="p10-day__dow">sat</span><span class="p10-day__num">11</span></button>
-              <button class="p10-day" type="button"><span class="p10-day__dow">sun</span><span class="p10-day__num">12</span></button>
-              <button class="p10-day" type="button"><span class="p10-day__dow">mon</span><span class="p10-day__num">13</span></button>
-              <button class="p10-day" type="button"><span class="p10-day__dow">tue</span><span class="p10-day__num">14</span></button>
-              <button class="p10-chip" type="button">期間を指定する</button>
+              <div class="p10-adv__daypreset">
+                <button class="p10-chip" data-f="when:opentoday" type="button">今日から開催</button>
+                <button class="p10-chip" data-f="when:opensoon" type="button">もうすぐ開催</button>
+                <button class="p10-chip" data-f="when:endsoon" type="button">もうすぐ終了</button>
+                <button class="p10-chip" data-f="weekend:1" type="button">今週末</button>
+              </div>
+              <button class="p10-day" data-f="day:07.08" type="button"><span class="p10-day__dow">wed</span><span class="p10-day__num">08</span></button>
+              <button class="p10-day" data-f="day:07.09" type="button"><span class="p10-day__dow">thu</span><span class="p10-day__num">09</span></button>
+              <button class="p10-day" data-f="day:07.10" type="button"><span class="p10-day__dow">fri</span><span class="p10-day__num">10</span></button>
+              <button class="p10-day" data-f="day:07.11" type="button"><span class="p10-day__dow">sat</span><span class="p10-day__num">11</span></button>
+              <button class="p10-day" data-f="day:07.12" type="button"><span class="p10-day__dow">sun</span><span class="p10-day__num">12</span></button>
+              <button class="p10-day" data-f="day:07.13" type="button"><span class="p10-day__dow">mon</span><span class="p10-day__num">13</span></button>
+              <button class="p10-day" data-f="day:07.14" type="button"><span class="p10-day__dow">tue</span><span class="p10-day__num">14</span></button>
+              <button class="p10-chip" type="button" data-toggle="range" aria-expanded="false">期間を指定する<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="6 9 12 15 18 9"/></svg></button>
             </div>
           </div>
           <div class="p10-adv__group">
@@ -179,7 +194,7 @@
               <button class="p10-chip" data-f="tag:版画" type="button"># 版画</button>
               <button class="p10-chip" data-f="tag:陶芸" type="button"># 陶芸</button>
               <button class="p10-chip" data-f="tag:クラフト" type="button"># クラフト</button>
-              <button class="p10-adv-toggle" type="button">タグをもっとみる ∨</button>
+              <button class="p10-adv-toggle" type="button" data-toggle="tags" aria-expanded="false">タグをもっとみる<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="6 9 12 15 18 9"/></svg></button>
             </div>
           </div>
           <div class="p10-adv__group">
@@ -193,8 +208,9 @@
               <button class="p10-chip" data-f="area:京都" type="button">京都</button>
               <button class="p10-chip" data-f="area:大阪" type="button">大阪</button>
               <button class="p10-chip" data-f="area:福岡" type="button">福岡</button>
-              <button class="p10-chip" type="button">すべての都道府県 ∨</button>
-              <span class="p10-adv__note">東京は都心部（銀座・丸の内）／東部（上野・谷根千）／西部（新宿・渋谷）などエリア単位でも指定できます</span>
+              <button class="p10-chip" type="button" data-toggle="prefs" aria-expanded="false">すべての都道府県<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="6 9 12 15 18 9"/></svg></button>
+              <button class="p10-chip" type="button" data-toggle="tokyo" aria-expanded="false">東京のエリアで絞る<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="6 9 12 15 18 9"/></svg></button>
+              <span class="p10-adv__note">東京は掲載数が多いため、都心部（銀座・丸の内）や南部（自由が丘・二子玉川）のようにエリア単位でも絞り込めます。6つのエリアで東京都全体をカバーしています</span>
             </div>
           </div>
           <div class="p10-adv__group">
@@ -207,15 +223,26 @@
           <div class="p10-adv__group">
             <div class="p10-adv__label">こだわり条件</div>
             <div class="p10-adv__opts">
+              <button class="p10-chip" data-f="new:1" type="button">新着掲載</button>
               <button class="p10-chip" data-f="free:1" type="button">入場無料</button>
-              <button class="p10-chip" type="button">子連れ歓迎</button>
-              <button class="p10-chip" type="button">在廊あり</button>
-              <button class="p10-chip" type="button">バリアフリー</button>
-              <button class="p10-chip" type="button">駐車場あり</button>
-              <button class="p10-chip" type="button">クレジットカードOK</button>
-              <button class="p10-chip" type="button">来場者特典あり</button>
+              <button class="p10-chip" data-f="onsite:1" type="button">会場での作品販売あり</button>
+              <!-- この2つはアクセシビリティ軸ページ（/exhibitions/access/{slug}＝P10-4-5）と同じフィールドを見る。
+                   チップで絞った結果と軸ページの中身が食い違わないようにするため（追174-54） -->
+              <button class="p10-chip" data-f="kids:1" type="button">お子さまと行ける</button>
+              <button class="p10-chip" data-f="attend:1" type="button">在廊あり</button>
+              <!-- この3つは展覧会ではなく会場が持つ事実なので、pages.js の VENUES（＝p4-11「利用案内」の入力）を引く。
+                   会場ページが紐付いていない展覧会は出ない＝確認できた事実だけで絞る（下の注記で断る）。
+                   ラベルを「段差なし」でなく「バリアフリー」にしたのは、入力欄が同じ括りで6項目のチェックを
+                   まとめて受けており、既存の入力が特定の1項目に割れているとは限らないため＝**絞り込みの粒度は
+                   入力の粒度に合わせる**。どの事実で当たったかは会場ページ側に事実が並ぶのでそこで確認できる -->
+              <button class="p10-chip" data-f="barrierfree:1" type="button">バリアフリー</button>
+              <button class="p10-chip" data-f="parking:1" type="button">駐車場あり</button>
+              <button class="p10-chip" data-f="card:1" type="button">クレジットカードOK</button>
+              <!-- 特典だけは会期ごとに変わるので展覧会が持つ（p2-11「会場利用案内」の特典） -->
+              <button class="p10-chip" data-f="bonus:1" type="button">来場者特典あり</button>
               <button class="p10-chip" data-f="liaison:li" type="button"><span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>オンライン展示あり</button>
               <button class="p10-chip" data-f="liaison:lp" type="button"><span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span>オンラインで購入できる</button>
+              <span class="p10-adv__note">バリアフリー・駐車場あり・クレジットカードOK は会場の設備です。会場ページに情報が登録されている展覧会から絞り込むため、当てはまる会場でも登録がなければ結果に出ません</span>
             </div>
           </div>
           <div class="p10-adv__foot">
@@ -223,6 +250,8 @@
             <button class="ktn-op-btn ktn-op-btn--primary" id="p10AdvSearch" type="button">この条件で検索</button>
           </div>
         </div>
+        <!-- 適用中の条件。ドロワーを閉じても指定内容が見え、×で1つずつ外せる -->
+        <div class="p10-fchips p10-fchips--band" id="p10Fchips" hidden></div>
       </div>
     </section>
 
@@ -241,75 +270,125 @@
 
       <section class="p10-shelf">
         <div class="ktn-section__head">
-          <h2 class="ktn-section__title">もうすぐ終了<span class="ktn-sec-en">Ending Soon</span></h2>
-          <a href="#" class="ktn-section__more" data-preset="ending-all">もっと見る →</a>
-        </div>
-        <p class="p10-shelf__desc">会期残りわずか。見逃したくない展覧会からチェック。</p>
-        <div class="p10-shelf-grid" id="p10EndingGrid"></div>
-      </section>
-
-      <section class="p10-shelf">
-        <div class="ktn-section__head">
           <h2 class="ktn-section__title">近くの展覧会<span class="ktn-sec-en">Nearby</span></h2>
           <a href="#" class="ktn-section__more" data-preset="near-live">もっと見る →</a>
         </div>
-        <p class="p10-shelf__desc">現在地から10km以内で開催中・開催予定の展覧会。</p>
+        <p class="p10-shelf__desc">現在地から近い順に、開催中・開催予定の展覧会。</p>
         <div class="p10-nearby-grid" id="p10NearbyGrid"></div>
       </section>
 
-      <section class="p10-shelf">
-        <div class="ktn-section__head">
-          <h2 class="ktn-section__title">オンラインでも楽しめる<span class="ktn-sec-en">Liaison</span></h2>
-          <a href="#" class="ktn-section__more" data-preset="liaison">もっと見る →</a>
-        </div>
-        <p class="p10-shelf__desc">会場の展覧会と連動して、オンラインで作品を鑑賞・購入できる LIAISON・LIAISON+ 対応の展覧会。 <a class="ktn-guide-link" href="kotennavi-p70.html">LIAISONとは →</a></p>
-        <div class="p10-shelf-grid" id="p10LiaisonGrid"></div>
-      </section>
+      <div class="p10-layout">
+        <div class="p10-layout__main">
 
-      <section class="p10-shelf">
-        <div class="ktn-section__head">
-          <h2 class="ktn-section__title">今オンラインで買える作品<span class="ktn-sec-en">Buy Online</span></h2>
-          <a href="#" class="ktn-section__more" data-preset="liaison-plus">LIAISON+の展覧会を見る →</a>
-        </div>
-        <p class="p10-shelf__desc"><span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span> 対応の展覧会で、いまオンライン販売を受け付けている作品。会場に行けなくても購入できます。</p>
-        <div class="p2-5-grid" id="p10BuyGrid"></div>
-      </section>
+          <section class="p10-shelf">
+            <div class="ktn-section__head">
+              <h2 class="ktn-section__title">もうすぐ終了<span class="ktn-sec-en">Ending Soon</span></h2>
+              <a href="#" class="ktn-section__more" data-preset="ending-all">もっと見る →</a>
+            </div>
+            <p class="p10-shelf__desc">会期残りわずか。見逃したくない展覧会からチェック。</p>
+            <div class="p10-shelf-grid" id="p10EndingGrid"></div>
+          </section>
 
-      <section class="p10-shelf ktn-cv-auto">
-        <div class="ktn-section__head">
-          <h2 class="ktn-section__title" id="p10Feat1Title">特集<span class="ktn-sec-en">Picks</span></h2>
-          <a href="#" class="ktn-section__more" id="p10Feat1More" data-preset="tokyo-gendai">この特集をすべて見る →</a>
-        </div>
-        <div class="p10-shelf-grid" id="p10Feat1Grid"></div>
-      </section>
+          <section class="p10-shelf">
+            <div class="ktn-section__head">
+              <h2 class="ktn-section__title">オンラインでも楽しめる<span class="ktn-sec-en">Liaison</span></h2>
+              <a href="#" class="ktn-section__more" data-preset="liaison">もっと見る →</a>
+            </div>
+            <p class="p10-shelf__desc">会場の展覧会と連動して、オンラインで作品を鑑賞・購入できる LIAISON・LIAISON+ 対応の展覧会。 <a class="ktn-guide-link" href="kotennavi-p70.html">LIAISONとは →</a></p>
+            <div class="p10-shelf-grid" id="p10LiaisonGrid"></div>
+            <!-- 作品単位のディスカバリーは作品検索（P10-1）に委ねる。ここは展覧会検索なので棚は展覧会だけで揃え、
+                 「買える作品」への入口は送りリンク1本で渡す（旧「今オンラインで買える作品」棚＝#p10BuyGrid は撤去・2026-09-03） -->
+            <a href="./kotennavi-p10-1.html" class="ktn-more-link">オンラインで買える作品を見る →</a>
+          </section>
 
-      <section class="p10-shelf ktn-cv-auto">
-        <div class="ktn-section__head">
-          <h2 class="ktn-section__title" id="p10Feat2Title">特集<span class="ktn-sec-en">Picks</span></h2>
-          <a href="#" class="ktn-section__more" id="p10Feat2More" data-preset="weekend">この特集をすべて見る →</a>
-        </div>
-        <div class="p10-shelf-grid" id="p10Feat2Grid"></div>
-      </section>
+          <section class="p10-shelf ktn-cv-auto">
+            <div class="ktn-section__head">
+              <h2 class="ktn-section__title" id="p10Feat1Title">特集<span class="ktn-sec-en">Picks</span></h2>
+              <a href="#" class="ktn-section__more" id="p10Feat1More" data-preset="tokyo-gendai">この特集をすべて見る →</a>
+            </div>
+            <div class="p10-shelf-grid" id="p10Feat1Grid"></div>
+          </section>
 
-      <section class="p10-shelf ktn-cv-auto">
-        <div class="ktn-section__head">
-          <h2 class="ktn-section__title" id="p10RecTitleLogin" hidden>あなたへのおすすめ<span class="ktn-sec-en">Picks for You</span></h2>
-          <h2 class="ktn-section__title" id="p10RecTitleGuest">いま注目の展覧会<span class="ktn-sec-en">Trending</span></h2>
-          <a href="#" class="ktn-section__more" data-preset="trending">もっと見る →</a>
-        </div>
-        <p class="p10-shelf__desc" id="p10RecDescLogin" hidden>ウォッチ中のクリエイター・興味あり！の傾向からのおすすめ。</p>
-        <p class="p10-shelf__desc" id="p10RecDescGuest">興味あり！とチェックインが集まっている展覧会。</p>
-        <div class="p10-shelf-grid" id="p10RecGrid"></div>
-      </section>
+          <section class="p10-shelf ktn-cv-auto">
+            <div class="ktn-section__head">
+              <h2 class="ktn-section__title" id="p10Feat2Title">特集<span class="ktn-sec-en">Picks</span></h2>
+              <a href="#" class="ktn-section__more" id="p10Feat2More" data-preset="weekend">この特集をすべて見る →</a>
+            </div>
+            <div class="p10-shelf-grid" id="p10Feat2Grid"></div>
+          </section>
 
-      <section class="p10-shelf ktn-cv-auto">
-        <div class="ktn-section__head">
-          <h2 class="ktn-section__title">新着掲載<span class="ktn-sec-en">New Arrivals</span></h2>
-          <a href="#" class="ktn-section__more" data-preset="new-all">もっと見る →</a>
-        </div>
-        <p class="p10-shelf__desc">最近個展なびに掲載された展覧会。</p>
-        <div class="p10-shelf-grid" id="p10NewGrid"></div>
-      </section>
+          <section class="p10-shelf ktn-cv-auto">
+            <div class="ktn-section__head">
+              <h2 class="ktn-section__title">今日から開催<span class="ktn-sec-en">Opening Today</span></h2>
+              <a href="#" class="ktn-section__more" data-preset="opening-today">もっと見る →</a>
+            </div>
+            <p class="p10-shelf__desc">今日が会期の初日の展覧会。いちばん早いタイミングで見に行けます。</p>
+            <div class="p10-shelf-grid" id="p10OpenTodayGrid"></div>
+          </section>
+
+          <section class="p10-shelf ktn-cv-auto" id="p10RecSection" hidden>
+            <div class="ktn-section__head">
+              <h2 class="ktn-section__title">あなたへのおすすめ<span class="ktn-sec-en">Picks for You</span></h2>
+              <a href="#" class="ktn-section__more" data-preset="for-you">もっと見る →</a>
+            </div>
+            <p class="p10-shelf__desc">ウォッチ中のクリエイター・興味あり！の傾向からのおすすめ。</p>
+            <div class="p10-shelf-grid" id="p10RecGrid"></div>
+          </section>
+
+          <section class="p10-shelf ktn-cv-auto">
+            <div class="ktn-section__head">
+              <h2 class="ktn-section__title">新着掲載<span class="ktn-sec-en">New Arrivals</span></h2>
+              <a href="#" class="ktn-section__more" data-preset="new-all">もっと見る →</a>
+            </div>
+            <p class="p10-shelf__desc">最近個展なびに掲載された展覧会。</p>
+            <div class="p10-shelf-grid" id="p10NewGrid"></div>
+          </section>
+
+          <!-- エリアから探す＝軸ページ（P10-4-1）への入口。ここだけ展覧会カードではなく軸カード
+               （.ktn-axis-card）を並べるのは、「いま何をやっているか」ではなく「どこで探すか」の棚だから。
+               他の棚と同じ .ec を使うと、行き先がページではなく1件の展覧会だと誤読される（追174-49）。
+               選定は KTN.axis.pick()＝P10-4 の索引・P1 と同じ固定枠＋日替わりローテを共有する。 -->
+          <section class="p10-shelf ktn-cv-auto">
+            <div class="ktn-section__head">
+              <h2 class="ktn-section__title">エリアから探す<span class="ktn-sec-en">Browse by Area</span></h2>
+              <!-- 飛び先（P10-4）は47都道府県だけの索引ではなく軸インデックス全体（エリア／ジャンル／
+                   行きやすさ／年鑑）なので、旧「47都道府県の索引 →」はリンク名が飛び先より狭かった。
+                   P1 の同セクションと同文言に統一（2026-09-09）。見出しの繰り返しになるが、
+                   同じ棚が2ページに出るときは文言の一致を優先する＝別名だと別の行き先に見える。 -->
+              <a href="./kotennavi-p10-4.html" class="ktn-section__more">エリアから探す →</a>
+            </div>
+            <p class="p10-shelf__desc">都道府県ごとに、開催中・開催予定の展覧会と、そのエリアに会場を持つギャラリーをまとめています。</p>
+            <div class="ktn-axis-cards" id="p10AxisCards"></div>
+          </section>
+
+        </div><!-- /p10-layout__main -->
+
+        <div class="p10-layout__side">
+
+          <div class="p2-side-card p10-side-widget">
+            <div class="p2-side-nearby__head">
+              <span class="p2-side-nearby__title">クロスジャンル<span class="ktn-sec-en">Cross Genre</span></span>
+            </div>
+            <p class="p10-shelf__desc">普段あまり見ないジャンルの展覧会。新しい好みに出会うきっかけに。</p>
+            <div class="p10-side-list" id="p10CrossGrid"></div>
+          </div>
+
+          <div class="p2-side-card p10-side-widget">
+            <div class="p2-side-nearby__head">
+              <span class="p2-side-nearby__title">ランキング<span class="ktn-sec-en">Rankings</span></span>
+            </div>
+            <p class="p10-shelf__desc">開催中・開催予定の展覧会が対象。</p>
+            <div class="p10-rank-tabs" role="tablist">
+              <button type="button" class="p10-rank-tab is-active" data-rank="want" role="tab">行きたい</button>
+              <button type="button" class="p10-rank-tab" data-rank="visited" role="tab">行った</button>
+              <button type="button" class="p10-rank-tab" data-rank="rising" role="tab">急上昇</button>
+            </div>
+            <div class="p10-side-list p10-side-list--rank" id="p10RankGrid"></div>
+            <a href="./kotennavi-p10-4-2.html" class="ktn-more-link" id="p10RankMore">2026年の行きたいランキング →</a>
+          </div>
+
+        </div><!-- /p10-layout__side -->
+      </div><!-- /p10-layout -->
 
     </div>
 
@@ -319,22 +398,37 @@
         <div class="p10-ctx__eyebrow" id="p10CtxEyebrow">Search Results</div>
         <h2 class="p10-ctx__title" id="p10CtxTitle">検索結果</h2>
         <p class="p10-ctx__desc" id="p10CtxDesc" hidden></p>
-        <div class="p10-fchips" id="p10Fchips" hidden></div>
       </div>
       <div class="p10-toolbar">
         <span class="p10-toolbar__count" id="p10Count"><strong>0</strong>件</span>
         <label class="p10-toolbar__sort">並び順
           <select id="p10Sort">
+            <option value="rec">おすすめ順</option>
             <option value="end">会期終了が近い順</option>
             <option value="pop">人気順</option>
             <option value="new">新着順</option>
           </select>
         </label>
       </div>
+      <!-- Featured＝「おすすめ順」のときだけ出る巻頭型クラスタ（共通 .ktn-cl）。
+           会期終了/人気/新着を選ぶと消えて通常カードだけになる＝並び順の約束を壊さない -->
+      <section class="p10-feat" id="p10Feat" hidden>
+        <span class="p10-feat__ttl">注目の展覧会<span class="ktn-sec-en">Featured</span></span>
+        <div class="p10-feat__row" id="p10FeatRow"></div>
+      </section>
       <div class="p10-shelf-grid" id="p10ResultGrid"></div>
       <div class="p10-more-wrap">
         <button class="ktn-op-btn" id="p10MoreBtn" type="button">さらに読み込む</button>
       </div>
+      <!-- 今日の特集＝検索したが意中のものが無かったときの受け皿。人気軸のカードを足すのでなく
+           「別の軸の検索」＝特集を差し出す（適用中の特集は除外・日替わりで入れ替わる） -->
+      <section class="p10-refeed" id="p10Refeed">
+        <div class="ktn-section__head">
+          <h2 class="ktn-section__title">今日の特集<span class="ktn-sec-en">Today’s Features</span></h2>
+        </div>
+        <p class="p10-shelf__desc">条件を変えると、出会える展覧会も変わります。</p>
+        <div class="p10-refeed__grid" id="p10RefeedGrid"></div>
+      </section>
     </div>
 
     <!-- E. ゼロヒット状態 -->

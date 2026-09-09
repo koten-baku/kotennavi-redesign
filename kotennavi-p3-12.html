@@ -184,19 +184,19 @@
                 <svg class="ins-kpi__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z"/><circle cx="8" cy="8" r="2"/></svg>
                 ページ閲覧数
               </p>
-              <p class="ins-kpi__val">3,248<span class="unit">回</span></p>
-              <span class="ins-kpi__delta ins-kpi__delta--up">▲ 18%<span class="ins-kpi__delta-note">前期間比</span></span>
+              <p class="ins-kpi__val">26,480<span class="unit">回</span></p>
+              <span class="ins-kpi__delta ins-kpi__delta--up">+3,248<span class="ins-kpi__delta-note">過去30日の閲覧</span></span>
             </div>
             <div class="ins-kpi">
               <p class="ins-kpi__label">
                 <svg class="ins-kpi__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="6.5"/><circle cx="8" cy="8" r="2.4"/></svg>
-                新規ウォッチャー
+                ウォッチャー数
               </p>
-              <p class="ins-kpi__val">86<span class="unit">人</span></p>
-              <span class="ins-kpi__delta ins-kpi__delta--up">▲ 24%<span class="ins-kpi__delta-note">前期間比</span></span>
+              <p class="ins-kpi__val">342<span class="unit">人</span></p>
+              <span class="ins-kpi__delta ins-kpi__delta--up">+86<span class="ins-kpi__delta-note">過去30日の新規</span></span>
             </div>
           </div>
-          <p class="ins-note">ページ閲覧数とウォッチャー数は、あなたのクリエイターページ自体がどれだけ見つけてもらえているかを示す指標です。ここでの数値は過去30日間の実績（前期間比は直前30日との比較）。展覧会・記事・作品それぞれが集めた関心は下の各セクションで、会場チェックインの詳細は<a class="ktn-guide-link" href="kotennavi-p3-13.html">オーディエンス管理 →</a>で確認できます。</p>
+          <p class="ins-note">ページ閲覧数・ウォッチャー数はいずれも現在までの累計です。直近の増減はカード下部でご確認いただけます。展覧会・記事・作品それぞれが集めた関心は下の各セクションで、会場チェックインの詳細は<a class="ktn-guide-link" href="kotennavi-p3-13.html">オーディエンス管理 →</a>で確認できます。</p>
         </section>
 
         <!-- 2. 閲覧数の推移（期間で絞り込めるのはこのセクションのみ） -->
@@ -212,6 +212,10 @@
             <button class="ins-period__btn" type="button" data-period="all">全期間</button>
           </div>
           <div class="ins-trend">
+            <div class="ins-linechart-head">
+              <span class="ins-linechart-head__label">期間合計</span>
+              <span class="ins-linechart-head__val" id="p312TrendTotal">0<span class="unit">回</span></span>
+            </div>
             <div class="ins-linechart" id="p312Trend"></div>
             <div class="ins-trend__foot">
               <span class="ins-trend__legend">日別ページ閲覧数</span>
@@ -221,8 +225,7 @@
           <div class="ins-grow__card" style="margin-top:14px">
             <svg class="ins-grow__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="6.5"/><circle cx="8" cy="8" r="2.4"/></svg>
             <div class="ins-grow__body">
-              <p class="ins-grow__msg">ウォッチしてくれる人が増えるほど、新しい展覧会を投稿したときに真っ先に届く人も増え、ページはより多くの人に見られやすくなります。</p>
-              <p class="ins-grow__stat">ウォッチ数が10人増えると <strong>ページ閲覧数は平均+20%</strong></p>
+              <p class="ins-grow__msg"><strong>ヒント：</strong>ウォッチしてくれている人には新しい展覧会の投稿が通知で届くため、早めに投稿しておくと閲覧数が伸びやすくなる傾向があります。</p>
               <p class="ins-grow__cta"><a class="ktn-guide-link" href="kotennavi-p2-11.html?mode=new&amp;author=tanaka&amp;self=1">新しい展覧会を投稿する →</a></p>
             </div>
           </div>
@@ -312,9 +315,9 @@
             <h3 class="ktn-section__title">展覧会・記事・作品への関心<span class="ktn-sec-en">Content Interest</span></h3>
           </div>
           <div class="p5-type-tabs" id="p312InsTabs">
-            <button type="button" class="p5-type-tab is-active" data-tab="exh">展覧会<span class="ktn-count ktn-count--pill is-idle">全6件</span></button>
-            <button type="button" class="p5-type-tab" data-tab="article">記事<span class="ktn-count ktn-count--pill is-idle">全6件</span></button>
-            <button type="button" class="p5-type-tab" data-tab="artwork">作品<span class="ktn-count ktn-count--pill is-idle">全6件</span></button>
+            <button type="button" class="p5-type-tab is-active" data-tab="exh">展覧会<span class="ktn-count ktn-count--pill is-idle">6件</span></button>
+            <button type="button" class="p5-type-tab" data-tab="article">記事<span class="ktn-count ktn-count--pill is-idle">6件</span></button>
+            <button type="button" class="p5-type-tab" data-tab="artwork">作品<span class="ktn-count ktn-count--pill is-idle">6件</span></button>
           </div>
 
           <div class="p312-ins-panel" data-panel="exh">
@@ -353,13 +356,14 @@
             </div>
             <div class="ins-item-list" id="p312ArticleList">
               <div class="ins-item-list__head" id="p312ArticleHead">
-                <span class="ins-item-list__head-name"><button type="button" class="p315-buyers-sort-btn" data-sort="name">記事タイトル<span class="p315-buyers-sort-btn__arrow"></span></button><button type="button" class="p315-buyers-sort-btn" data-sort="linkTarget">リンク先<span class="p315-buyers-sort-btn__arrow"></span></button></span>
+                <span class="ins-item-list__head-target"><button type="button" class="p315-buyers-sort-btn" data-sort="linkTarget">投稿先<span class="p315-buyers-sort-btn__arrow"></span></button></span>
+                <span class="ins-item-list__head-name"><button type="button" class="p315-buyers-sort-btn" data-sort="name">記事タイトル<span class="p315-buyers-sort-btn__arrow"></span></button></span>
                 <span class="ins-item-list__head-stat"><button type="button" class="p315-buyers-sort-btn" data-sort="stat0">閲覧数<span class="p315-buyers-sort-btn__arrow"></span></button></span>
                 <span class="ins-item-list__head-stat"><button type="button" class="p315-buyers-sort-btn" data-sort="stat1">興味あり<span class="p315-buyers-sort-btn__arrow"></span></button></span>
               </div>
             </div>
             <div class="ktn-pagination" id="p312ArticlePager"></div>
-            <p class="ins-note">記事は展覧会の告知・制作の裏側・個展を終えての振り返りなど、来場者以外にも活動を届けられる手段です。<a class="ktn-guide-link" href="kotennavi-p3-19.html">記事を管理する →</a></p>
+            <p class="ins-note">記事は展覧会の告知・制作の裏側・個展を終えての振り返りなど、来場者以外にも活動を届けられる手段です。展覧会に記事を添えておくと展覧会まわりの情報が厚くなり、トップページや検索結果にも出やすくなります。<a class="ktn-guide-link" href="kotennavi-p3-19.html">記事を管理する →</a></p>
           </div>
 
           <div class="p312-ins-panel" data-panel="artwork" hidden>
@@ -382,7 +386,7 @@
               </div>
             </div>
             <div class="ktn-pagination" id="p312ArtworkPager"></div>
-            <p class="ins-note">作品はLIAISON（オンライン展示）またはLIAISON+（オンライン展示＋販売）で掲載できます。出品作品を充実させておくと、そのぶん関心の入口が増えます。</p>
+            <p class="ins-note">作品はLIAISON（オンライン展示）またはLIAISON+（オンライン展示＋販売）で掲載できます。出品作品を充実させておくと、そのぶん関心の入口が増えます。記事とあわせて展覧会まわりの情報が充実するほど、まだあなたを知らない人の目にも触れやすくなります。</p>
             <div class="ins-funnel" id="p312Funnel">
             <div class="ins-funnel__row">
               <div class="ins-funnel__label"><span class="ins-funnel__stage">作品を見た</span><span class="ins-funnel__sub">作品ページ閲覧</span></div>

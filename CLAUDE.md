@@ -63,6 +63,8 @@ docs/                     仕様・設計ドキュメント
 
 ## 後工程引き継ぎログのルール（`docs/handoff-decisions.md`）
 - 後工程（React CSR / Drupal 改修）のための **追記式（append-only）決定ログ**。**捕捉は決定時、構造化は後**の原則で、完成後にまとめて作らない（抜け漏れ防止）。
+- **読むときは必ず冒頭の「主題別索引」から入る**（2026-09-07 新設）。本文は1万行超・127万字で通読できない。索引で〈テーマ → 現在の結論 → まず読むエントリ番号〉と降り、必要な範囲だけ本文を開く。同じテーマは**後のエントリが前を上書きする**ので、記述が食い違ったら番号の大きい方（日付の新しい方）を正とする。番号体系は時期で変わる（`（追N）` / `追補N` / `追N` / `追174-N`）ため、検索時の注意も索引の対応表にある。
+- **索引を肥大させない**：新しいエントリを追記しても、そのテーマの「現在の結論」か「まず読む」が変わるときだけ索引を直す（全エントリは載せない）。
 - `progress.md` を更新するのと同じタイミングで、関連する決定を `docs/handoff-decisions.md` にも追記する。
 - 特に **コードに残らない判断**（UI廃止・方針転換・なぜその値か）は同ファイル「7. 決定の理由メモ」に必ず残す。
 - 新しい共通コンポーネント確定時は「3. コンポーネント → React」に1行追加する。
@@ -939,6 +941,17 @@ on/off の2状態を切り替える汎用トグルスイッチ。canonical は `
 - **適用済み**：p2-11（必須未入力＝件数サマリ行＋項目別「該当箇所へ →」）／p2-12-1（販売期間×他展覧会出品の重複＝クロスフィールド検証の実装例）。
 - React 変換：`<FormErrorPanel items>`（items=[{message, details[], hint, jumpTarget}]）。
 
+### 全ページ共通：未入力リマインドパネル（`.ktn-form-remind`）
+
+**任意項目のうち「検索・軸ページの絞り込みに使われる属性」が未入力のときだけ**出す非ブロッキングの気づき。canonical は `kotennavi-common.css`（`.ktn-form-error` の inset ルール直後・2026-09-05 新設）。
+
+- **`.ktn-form-error` と役割・色を分ける**：赤＝**保存できない**（必須未入力）／リマインド＝**保存できるが機会を逃す**（任意だが検索に効く項目）。リマインドで保存を止めない・`role="alert"` も付けない。色は関連・回遊ゾーンと同じ warm cream `#faf7f1` ＋ 左4px `var(--page-accent)`。
+- **配置**：送信バー直上、`.ktn-form-error` の**さらに上**（`.ktn-mgmt-wrap > .ktn-form-remind{margin:20px 20px 0}` が common 済み・ページ側CSS不要）。
+- **構造**：`__head`（虫めがねSVG＋`__title`）＋`__desc`（「未入力でも保存できる」を必ず明記）＋`__list`＞`__item`（`__label` 項目名／`__hint` 入力すると誰に届くか／`__jump`「入力する →」）。
+- **文言の原則＝入力を促す理由を「利用者の得」で書く**（「未入力です」だけで終えず「この条件で探している来場者に届く」まで書く）。`__jump` は**アコーディオンを開いてから** `scrollIntoView` する（畳まれた中の項目が入力されない構造的原因を動線で解消する）。
+- **適用済み**：p2-11（子連れ・クリエイター在廊＝`REMIND_ITEMS`／`syncRemindUI()`。どちらもアクセシビリティ軸ページ `/exhibitions/access/…` の母数になる項目）。
+- React 変換：`<FormRemindPanel items>`（items=[{label, hint, jumpTarget}]・空なら描画しない）。
+
 ### 全ページ共通：送信完了モーダル（`KTN.submitDone()`）
 
 申込・送信フォームの**submit成功後**に出す完了モーダル。canonical JS は `kotennavi-common.js`（`ktnListQrClose` 直後・`ktnSubmitDone`）。**新規CSSなし**＝既存の `.ktn-auth-*` モーダルシェル（`.ktn-auth-overlay`／`.ktn-auth-modal`／`.ktn-auth-top--compact`＋チェックアイコン `.ktn-auth-icon`／`.ktn-auth-ttl`／`.ktn-auth-sub`／`.ktn-auth-btn-primary`）を再利用する。
@@ -1020,6 +1033,7 @@ SVG の `font-family` 属性は CSS 変数に非対応のため `font-family="'M
 ```
 - セパレーターなし・同一行インライン（ダッシュは使わない）
 - `DM Serif Display` は `common.css` の `@import` で全ページ読込済み
+- **「サマリー」系見出しの英語サブは必ず `Overview`（`Summary` は使わない・2026-08-30確定）**：指標を俯瞰するセクション（インサイト系6ページ＋P90-10運用サマリ）は表記を統一。日本語見出し自体（「サマリー」「運用サマリ」等）は変更不要、英語サブのみ揃える。
 
 **新パターン確定時の手順：** typography.html でルールを決めたら、同様に CLAUDE.md のこのセクションに追記する。これにより将来のセッションでも一貫して適用される。
 - 旧クラス `.p2-ic__head-en` / `.p2-1-section__en` 等は `ktn-sec-en` に統一済み（common.css に `/* → .ktn-sec-en に統一済み */` コメントあり）

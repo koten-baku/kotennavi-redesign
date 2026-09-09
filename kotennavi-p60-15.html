@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ページを表示できません | 個展なび</title>
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@1,400;1,600&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<!-- data-w は index（1080）＝②の回遊ゾーンがコンテンツ幅を使うため。
+     状態パネル側は `.ktn-content--article`（760）のまま＝パネル自体は 520 中央寄せなので見え方は変わらない。 -->
+<body data-w="index" class="p60-page">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- デモバー：切り替えるのは「結果の状態」ではなく**到達状況**（URLの種類×セッション）。
+     本番はサーバー／ルーターが同じ判定をするので、ここで確認したいのは*対応そのもの*＝
+     「本人のセッション切れは①」「他人IDとリンク切れは見分けがつかない②」（追174-25）。 -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">到達状況：</span>
+  <button class="dbtn on" data-p6015-case onclick="p6015Case('own-expired',this)">未ログイン×自分の編集画面</button>
+  <button class="dbtn" data-p6015-case onclick="p6015Case('other-guest',this)">未ログイン×他人の取引URL</button>
+  <button class="dbtn" data-p6015-case onclick="p6015Case('other-login',this)">ログイン済み×他人の編集URL</button>
+  <button class="dbtn" data-p6015-case onclick="p6015Case('gone',this)">存在しないURL</button>
+  <span class="dbar-sep">|</span>
+  <span id="p6015Ctx"></span>
+</div>
+
+<div class="shell">
+
+<!-- サイドバー（kotennavi-p1.html と同一マークアップ・#ktnRoleNav は renderSidebar() がJS注入） -->
+<aside class="ktn-sidebar" id="ktnSidebar">
+
+  <!-- ロゴ (logo5-1) -->
+  <a href="kotennavi-p1.html" class="ktn-sidebar__logo" data-page="p1">
+    <img src="./images/kotennavi-logo5-1.svg" alt="個展なび">
+  </a>
+
+  <!-- 検索 → P10 検索ハブ -->
+  <a href="kotennavi-p10.html" class="ktn-sidebar__item" data-page="p10">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <circle cx="11" cy="11" r="7.5"/>
+        <path d="M21 21l-4.5-4.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">検索</span>
+  </a>
+
+  <!-- お知らせ → P61（未制作） -->
+  <a href="kotennavi-p61.html" class="ktn-sidebar__item" id="ktnSidebarNotice" data-page="p61">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__dot" id="ktnNoticeDot" style="display:none"></span>
+    <span class="ktn-sidebar__label">お知らせ</span>
+  </a>
+
+  <!-- ガイド → P60（未制作） -->
+  <a href="kotennavi-p60.html" class="ktn-sidebar__item" data-page="p60">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" stroke-linecap="round"/>
+        <path d="M12 16v-4M12 8h.01" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">ガイド</span>
+  </a>
+
+  <div class="ktn-sidebar__divider"></div>
+
+  <!-- ロール別アイコン（JS注入） -->
+  <div id="ktnRoleNav" style="width:100%;display:flex;flex-direction:column;align-items:center"></div>
+
+  <div class="ktn-sidebar__footer">
+    <p class="ktn-sidebar__footer-label">Follow us</p>
+    <div class="ktn-sidebar__sns">
+      <a href="https://www.facebook.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="Facebook">
+        <svg viewBox="0 0 320 512" fill="currentColor"><path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/></svg>
+      </a>
+      <a href="https://x.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="X">
+        <svg viewBox="0 0 512 512" fill="currentColor"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg>
+      </a>
+    </div>
+  </div>
+
+</aside>
+
+<div class="content-wrap" id="contentWrap">
+<header class="ktn-header" id="ktnHeader">
+  <div class="ktn-header__inner">
+    <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+    <div class="ktn-hdr-actions" id="ktnActs"></div>
+  </div>
+</header>
+
+<main>
+  <div class="ktn-content ktn-content--article">
+
+    <!-- ① 要ログイン：**未ログインで**保護ページに到達した場合はすべてこれ（追174-24）。
+         自分専用の固定URL（マイページ編集・購入履歴 等）だけでなく、他人の識別子を含むURL
+         （/exhibition/{id}/edit・/txn/{id} 等）でも未ログインなら①を返す。判定がセッションだけで決まり
+         IDの存在に依存しないので、404に落とさなくても存在は漏れない。むしろ実際に多い
+         「編集中にログインが切れた」を404で突き放さずに済む。
+         新規登録は出さない：ここは「そのアカウント本人だけ」のページで、登録しても目的のページには入れないため
+         （＝誰でも使える機能を出す層Aの認証ウォールとの違い。追174-23）。 -->
+    <div class="ktn-statepanel ktn-statepanel--page" id="p6015Login">
+      <p class="ktn-statepanel__en">Login Required</p>
+      <p class="ktn-statepanel__ttl">このページはログインすると表示できます</p>
+      <p class="ktn-statepanel__desc">このページはアカウントをお持ちのご本人のみ表示できます。<br>しばらく操作がないとログイン状態が解除されることがあります。ログイン後、元のページへ戻ります。</p>
+      <div class="ktn-statepanel__btns">
+        <button class="ktn-op-btn ktn-op-btn--primary" type="button" onclick="location.href='kotennavi-p11.html'">ログイン</button>
+      </div>
+      <div class="ktn-statepanel__alt">
+        <a class="ktn-action-btn" href="kotennavi-p1.html">トップページへ →</a>
+        <p class="ktn-statepanel__alt-note">パスワードをお忘れの場合は <a class="ktn-guide-link" href="./kotennavi-p11-11.html">パスワードの再設定</a> をご利用ください。</p>
+      </div>
+    </div>
+
+    <!-- ② 見つかりません：**ログイン済みだが非オーナー**で他人の識別子を含むURL（/exhibition/{id}/edit・
+         /txn/{id} 等）に来た場合と、P90管理者系。「権限がありません」と返すと *そのIDが存在すること* を
+         教えてしまうため、存在の有無を区別せず一律この文面にする（追174-22）。理由を書き分けないのが要件。
+         **これはサイト共通の404そのもの**：URLの打ち間違い・削除済みコンテンツも同じ画面・同じ HTTP 404 を返す。
+         別画面にすると本物の404と見比べられて存在が分かるため、区別しないこと自体が要件（追174-24）。 -->
+    <div class="ktn-statepanel ktn-statepanel--page" id="p6015Notfound" hidden>
+      <p class="ktn-statepanel__en">Not Found</p>
+      <p class="ktn-statepanel__ttl">ページが見つかりません</p>
+      <p class="ktn-statepanel__desc">お探しのページは削除されたか、URLが変更された可能性があります。<br>URLに誤りがないかご確認ください。</p>
+      <!-- 「展覧会を探す →」はこの下の回遊ゾーン末尾に置いたので、ここには重ねない（追174-26） -->
+      <div class="ktn-statepanel__btns">
+        <a class="ktn-action-btn" href="kotennavi-p1.html">トップページへ →</a>
+      </div>
+      <div class="ktn-statepanel__alt">
+        <p class="ktn-statepanel__alt-note">リンクをたどってこのページに来た場合は <a class="ktn-guide-link" href="./kotennavi-p60-13.html">問題を報告する</a> からお知らせいただけると助かります。</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ③ 回遊ゾーン：**②「見つかりません」のときだけ**表示する（追174-26）。
+       404 を行き止まりにせず、サイトの説明1〜2行 → 展覧会を数枚 → 展覧会検索、の順で送り出す。
+       ①要ログインには付けない（自分のページへ戻りたい人の邪魔になるため）。
+       ここに出すカードは**来たURLと無関係な汎用ピック**であることが必須。「お探しのページに近い展覧会」の
+       ように関連付けると *そのIDが存在したこと* が漏れて②の隠蔽が意味を失う。 -->
+  <div class="ktn-content p6015-discover" id="p6015Discover" hidden>
+    <p class="p6015-discover__en">About Kotennavi</p>
+    <h2 class="p6015-discover__ttl">いま開催されている展覧会を、探せます</h2>
+    <p class="p6015-discover__desc">個展なびは、全国のギャラリーで開催中の個展・グループ展をまとめたポータルサイトです。会期・エリア・ジャンルから探せるほか、LIAISON に対応した展覧会なら会場に行かなくてもオンラインで作品を見られます。</p>
+    <div class="p6015-picks" id="p6015Picks"></div>
+    <a class="ktn-more-link" href="kotennavi-p10.html">展覧会を探す →</a>
+  </div>
+
+</main>
+<footer class="ktn-footer" id="ktnFooter"></footer>
+</div><!-- /content-wrap -->
+</div><!-- /shell -->
+
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+/* 到達状況 → 表示する状態の対応表（追174-24）。**本番はサーバー／ルーターがこの判定を行い**、
+   このページは結果を映すだけ。デモバーで状況を切り替えられるようにしてあるのは、
+   静的HTMLだとルーティングが無く「どの状況でどちらが出るか」を確認できないため（追174-25）。
+   ・未ログイン（URLの種類・IDの有無を問わず） → 'login'
+   ・ログイン済み × 非オーナー（他人の識別子を含む編集・取引系）／P90管理者系 → 'notfound'
+   ・存在しないURL・削除済みコンテンツ → 'notfound'（＝サイト共通の404。上と同一画面・同一ステータス）
+   ・ログイン済みだがロールが足りない場合はここへ来ない（機能申込 P11-2／P11-3／P11-4 へ誘導する）。
+     ただし**他人の識別子を含むURL**でのロール不足は誘導せず 'notfound'（IDの存在が漏れるため） */
+var P6015_CASES = {
+  'own-expired': { url: '/mypage/edit',             session: '未ログイン（セッション切れ）',       role: 'guest', state: 'login' },
+  'other-guest': { url: '/txn/T-2041',              session: '未ログイン',                         role: 'guest', state: 'login' },
+  'other-login': { url: '/exhibition/E-2041/edit',  session: 'ログイン済み（このページの持ち主ではない）', role: 'login', state: 'notfound' },
+  'gone':        { url: '/exhibition/E-9999',       session: 'ログイン状態を問わない',             role: 'login', state: 'notfound' }
+};
+
+/* ── ③ 回遊ゾーンの展覧会ピック（追174-26）
+   選定ロジック＝**P1「最新の展覧会」と同じ母集団（開催中＆これから開催）からのランダム3件**。
+   本番は同じAPI（会期が終わっていない展覧会）を叩いてランダムに3件返すだけ。
+   **来たURLと関連付けない**のが要件なので、リクエストされたIDは選定に一切使わない。
+   デモデータは P1 の `EX` から会期が終わっていないものを写したもの（`imgH` は横1行に並べるため統一、
+   距離 `dist` は 404 に位置情報の文脈が無いので持たせない）。 ── */
+var P6015_EX = [
+  { title: '静寂のかたち — 田中透 油彩展', venue: '白日ギャラリー', area: '東京', s: '06.28', e: '07.13', hours: '11:00–19:00', status: 'live',   remain: '残り5日',      int: 214, ci: 56, imgH: 190, liaison: 'li',      bg: 'linear-gradient(135deg,#5a6b80,#2e3a4a)', thumbs: ['linear-gradient(135deg,#7a8ba0,#4e5a6a)', 'linear-gradient(135deg,#8a7a60,#5e4a3a)', 'linear-gradient(135deg,#6a8a7a,#3e5a4a)'] },
+  { title: '光を編む — 篠原恵 写真展',     venue: 'ギャラリー日向',   area: '東京', s: '07.01', e: '07.17', hours: '12:00–19:00', status: 'live',   remain: '残り9日',      int: 98,  ci: 24, imgH: 190, liaison: '',        bg: 'linear-gradient(135deg,#c0a880,#8a6e4a)' },
+  { title: '彫りと摺り — 木版画の現在',     venue: '京都版画舎',       area: '京都', s: '06.25', e: '07.20', hours: '10:00–17:00', status: 'live',   remain: '残り12日',     int: 156, ci: 42, imgH: 190, liaison: '',        bg: 'linear-gradient(135deg,#7a6a8a,#4a3e5a)' },
+  { title: 'マチエールの実験',             venue: 'gallery TRACE',    area: '東京', s: '06.30', e: '07.16', hours: '11:00–20:00', status: 'live',   remain: '残り8日',      int: 188, ci: 61, imgH: 190, liaison: 'li',      bg: 'linear-gradient(135deg,#a05a4a,#6a3428)', thumbs: ['linear-gradient(135deg,#b07a6a,#7a4838)', 'linear-gradient(135deg,#c09a8a,#8a5e4e)', 'linear-gradient(135deg,#906a5a,#5a3a2e)'] },
+  { title: '海と孤影 — 山根拓 写真展',     venue: 'フォトスペース博多', area: '福岡', s: '07.18', e: '08.02', hours: '11:00–18:00', status: 'soon',   remain: '10日後に開催', int: 74,  ci: 0,  imgH: 190, liaison: '',        bg: 'linear-gradient(135deg,#3a5a7a,#1e3448)' },
+  { title: '陶と土のリズム',               venue: '瀬戸クラフト館',   area: '愛知', s: '06.27', e: '07.23', hours: '10:00–17:00', status: 'live',   remain: '残り15日',     int: 53,  ci: 12, imgH: 190, liaison: '',        bg: 'linear-gradient(135deg,#9a8a6a,#5e5238)' },
+  { title: '銅版のミクロコスモス — 早瀬涼', venue: 'ギャラリー刻',     area: '東京', s: '07.04', e: '07.18', hours: '12:00–19:00', status: 'live',   remain: '残り10日',     int: 112, ci: 27, imgH: 190, liaison: 'li',      bg: 'linear-gradient(135deg,#5a7a6a,#2e4638)', thumbs: ['linear-gradient(135deg,#7a9a8a,#4a6a58)', 'linear-gradient(135deg,#6a8a7a,#3a5a48)', 'linear-gradient(135deg,#8aaa9a,#5a7a68)'] },
+  { title: 'ガラスのなかの庭 — 三好文乃',   venue: '天神ガラス工房',   area: '福岡', s: '06.29', e: '07.19', hours: '11:00–18:00', status: 'live',   remain: '残り11日',     int: 91,  ci: 22, imgH: 190, liaison: '',        bg: 'linear-gradient(135deg,#7ab0a8,#3e6e66)' },
+  { title: 'セルフポートレイトの練習',     venue: 'studio hue',       area: '東京', s: '07.11', e: '07.26', hours: '13:00–20:00', status: 'soon',   remain: '3日後に開催',  int: 143, ci: 0,  imgH: 190, liaison: 'li-plus', bg: 'linear-gradient(135deg,#b08aa0,#7a4e68)' }
+];
+
+function p6015RenderPicks() {
+  var pool = P6015_EX.slice();
+  for (var i = pool.length - 1; i > 0; i--) {   /* Fisher-Yates */
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = pool[i]; pool[i] = pool[j]; pool[j] = t;
+  }
+  document.getElementById('p6015Picks').innerHTML = pool.slice(0, 3).map(buildGridEcCard).join('');
+}
+
+function p6015Case(key, btn) {
+  var c = P6015_CASES[key] || P6015_CASES['own-expired'];
+  var login = (c.state === 'login');
+  document.getElementById('p6015Login').hidden = !login;
+  document.getElementById('p6015Notfound').hidden = login;
+  document.getElementById('p6015Discover').hidden = login;   /* 回遊ゾーンは②のときだけ */
+
+  document.querySelectorAll('.dbar [data-p6015-case]').forEach(function (b) { b.classList.remove('on'); });
+  if (btn) btn.classList.add('on');
+  else {
+    var el = document.querySelector('.dbar [onclick^="p6015Case(\'' + key + '\'"]');
+    if (el) el.classList.add('on');
+  }
+
+  document.getElementById('p6015Ctx').textContent =
+    '想定URL：' + c.url + '　セッション：' + c.session + '　→ ' + (login ? '①要ログイン' : '②見つかりません（404）');
+
+  /* ヘッダー・サイドバーも状況に合わせる（ログイン済みの②でも同じ404が出ることを確認するため） */
+  window.ktnState.role = c.role;
+  renderAll();
+}
+
+KTN.init({ page: 'p60-15', role: 'guest' });
+
+/* ピックは読み込み時に1回だけ抽選する（状態を切り替えるたびに入れ替わると落ち着かないため） */
+p6015RenderPicks();
+
+/* ?case=other-login のように直接開けるようにしておく（後工程の遷移確認用） */
+p6015Case(new URLSearchParams(location.search).get('case') || 'own-expired');
+</script>
+</body>
+</html>

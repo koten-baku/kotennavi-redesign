@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- 年鑑はサイトで唯一「タイトルに年を入れてよい」ページ（追174-48）。
+       追174-46④で title/h1 に時制語を禁じたのは「タイトルが鮮度を主張しているのに中身が入れ替わる」状態を
+       避けるためで、年鑑はその年が過ぎれば内容が凍結する＝年は鮮度の主張ではなく識別子になる。
+       year は1年1URL（/exhibitions/year/{y}）。このプロトタイプはデモバー・?y= で年を差し替える。 -->
+  <title>2026年の展覧会 年間の記録｜個展なび</title>
+  <meta name="description" id="p1042Desc" content="2026年に会期を終えた展覧会の記録です。行きたい・行った の反応が多かった展覧会と、いまも活動しているクリエイター・ギャラリーをたどれます。">
+  <link rel="canonical" id="p1042Canonical" href="https://koten-navi.com/exhibitions/year/2026">
+  <meta property="og:type" content="website">
+  <meta property="og:title" id="p1042OgTitle" content="2026年の展覧会 年間の記録｜個展なび">
+  <meta property="og:url" id="p1042OgUrl" content="https://koten-navi.com/exhibitions/year/2026">
+  <meta property="og:site_name" content="個展なび">
+  <meta name="twitter:card" content="summary">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<body data-w="index">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- デモバー（年鑑＝年ごとに別URL。本番は /exhibitions/year/{y} が年を決めるのでこの切替は消える）
+     2026年＝当年（集計中の注記が出る）／2025年＝確定年 -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ロール：</span>
+  <button class="dbtn on" onclick="setR('guest',this)">ゲスト</button>
+  <button class="dbtn" onclick="setR('login',this)">ログイン</button>
+  <button class="dbtn" onclick="setR('admin',this)">管理者</button>
+  <span class="dbar-sep">年：</span>
+  <button class="dbtn on" data-y="2026" onclick="setArcYear(2026,this)">2026年（集計中）</button>
+  <button class="dbtn" data-y="2025" onclick="setArcYear(2025,this)">2025年</button>
+</div>
+
+<div class="shell">
+
+<!-- サイドバー（kotennavi-p1.html と同一マークアップ・#ktnRoleNav は renderSidebar() がJS注入） -->
+<aside class="ktn-sidebar" id="ktnSidebar">
+
+  <!-- ロゴ (logo5-1) -->
+  <a href="kotennavi-p1.html" class="ktn-sidebar__logo" data-page="p1">
+    <img src="./images/kotennavi-logo5-1.svg" alt="個展なび">
+  </a>
+
+  <!-- 検索 → P10 検索ハブ -->
+  <a href="kotennavi-p10.html" class="ktn-sidebar__item" data-page="p10">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <circle cx="11" cy="11" r="7.5"/>
+        <path d="M21 21l-4.5-4.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">検索</span>
+  </a>
+
+  <!-- お知らせ → P61 -->
+  <a href="kotennavi-p61.html" class="ktn-sidebar__item" id="ktnSidebarNotice" data-page="p61">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__dot" id="ktnNoticeDot" style="display:none"></span>
+    <span class="ktn-sidebar__label">お知らせ</span>
+  </a>
+
+  <!-- ガイド → P60 -->
+  <a href="kotennavi-p60.html" class="ktn-sidebar__item" data-page="p60">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" stroke-linecap="round"/>
+        <path d="M12 16v-4M12 8h.01" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">ガイド</span>
+  </a>
+
+  <div class="ktn-sidebar__divider"></div>
+
+  <!-- ロール別アイコン（JS注入） -->
+  <div id="ktnRoleNav" style="width:100%;display:flex;flex-direction:column;align-items:center"></div>
+
+  <div class="ktn-sidebar__footer">
+    <p class="ktn-sidebar__footer-label">Follow us</p>
+    <div class="ktn-sidebar__sns">
+      <a href="https://www.facebook.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="Facebook">
+        <svg viewBox="0 0 320 512" fill="currentColor"><path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/></svg>
+      </a>
+      <a href="https://x.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="X">
+        <svg viewBox="0 0 512 512" fill="currentColor"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg>
+      </a>
+    </div>
+  </div>
+
+</aside>
+
+<div class="content-wrap" id="contentWrap">
+
+  <header class="ktn-header" id="ktnHeader">
+    <div class="ktn-header__inner">
+      <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+      <div class="ktn-hdr-actions" id="ktnActs"></div>
+    </div>
+  </header>
+  <div class="ktn-tagbar" id="ktnTagbar">
+    <div class="ktn-tagbar__inner" id="ktnTagbarInner"></div>
+  </div>
+
+  <main class="ktn-main" id="ktnMain">
+
+    <!-- A. 軸ヘッド（P10-4-1 と同じ .ktn-axis-head を共有＝軸ページ共通の外枠）。
+         年別ナビは select ではなくリンク（.p10-preset の a）。年ごとに別URLにして初めて年鑑が積み上がる。
+         リード文は運営が年ごとに書き足す枠＝自動生成の一覧が「並べただけ」に見えないための地の文。 -->
+    <section class="ktn-axis-head">
+      <div class="ktn-axis-head__inner">
+        <div class="ktn-axis-head__eyebrow">
+          <span class="ktn-axis-head__eyebrow-en">Annual Records</span>
+          <span class="ktn-axis-head__eyebrow-line"></span>
+        </div>
+        <div class="ktn-axis-head__title-row">
+          <h1 class="ktn-axis-head__title" id="p1042Title">2026年の展覧会</h1>
+          <span class="ktn-axis-head__en" id="p1042En">Exhibitions of 2026</span>
+        </div>
+        <div class="ktn-axis-head__lead" id="p1042Lead"></div>
+        <div class="ktn-axis-head__links" id="p1042YearNav"></div>
+      </div>
+    </section>
+
+    <div class="ktn-content p10-content">
+
+      <!-- B. 番付リスト（1カラム）。タブは .p10-rank-tabs / .p10-rank-tab を再利用（軸の切替という役割が同じ）。
+           行の主眼は「作り手のいま」への出口＝会期の終わった展覧会を行き止まりにしない。 -->
+      <section class="p104-arc p104-arc--page">
+        <div class="ktn-section__head">
+          <h2 class="ktn-section__title">反応が多かった展覧会<span class="ktn-sec-en">Most Responded</span></h2>
+        </div>
+        <div class="p104-arc__ctrl">
+          <div class="p10-rank-tabs" role="tablist">
+            <button class="p10-rank-tab is-active" data-arc="want" role="tab">行きたい</button>
+            <button class="p10-rank-tab" data-arc="visited" role="tab">行った</button>
+          </div>
+        </div>
+        <p class="p104-arc__note" id="p1042Note" hidden></p>
+        <ol class="p104-arc__list" id="p1042List"></ol>
+      </section>
+
+      <!-- C. 下段：他の年と、いま開催中の展覧会への出口。
+           前年カードは「その年のページが存在するときだけ」出す＝行き止まりのリンクを作らない（JSが hidden を制御）。 -->
+      <div class="ktn-axis-cards">
+        <a class="ktn-axis-card" id="p1042PrevCard" href="?y=2025" hidden>
+          <span class="ktn-axis-card__label">Previous Year</span>
+          <span class="ktn-axis-card__ttl" id="p1042PrevTtl">2025年の展覧会</span>
+          <span class="ktn-axis-card__desc">前の年に会期を終えた展覧会の記録。年ごとに独立したページとして残ります。</span>
+        </a>
+        <a class="ktn-axis-card" href="./kotennavi-p10-4.html">
+          <span class="ktn-axis-card__label">Now &amp; Upcoming</span>
+          <span class="ktn-axis-card__ttl">いま見られる展覧会</span>
+          <span class="ktn-axis-card__desc">開催中・開催予定の展覧会は特集ページから。エリア・ジャンルの軸ページへもここからたどれます。</span>
+        </a>
+      </div>
+
+    </div>
+
+    <!-- 広告 -->
+    <div class="ktn-ad-band">
+      <div class="ktn-ad-band__inner">
+        <div class="ktn-ad-band__slot">広告エリア（728×90 / レスポンシブ）</div>
+      </div>
+    </div>
+
+  </main><!-- /ktn-main -->
+
+  <footer class="ktn-footer" id="ktnFooter"></footer>
+
+</div><!-- /content-wrap -->
+</div><!-- /shell -->
+
+<nav class="ktn-bottom-nav" id="ktnBottomNav">
+  <div class="ktn-bottom-nav__inner" id="ktnBottomNavInner"></div>
+</nav>
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    KTN.init({ page: 'p10-4-2', role: 'guest' });
+  });
+</script>
+</body>
+</html>

@@ -14,8 +14,11 @@
 
 <div class="ktn-toast" id="ktnToast"></div>
 
-<!-- デモバー（ログイン限定ページのためロール切替なし・表示状態のみ） -->
+<!-- デモバー（ロール＝ゲストで認証ウォール表示・ログインで通常表示） -->
 <div class="dbar" id="dbar">
+  <span class="dbar-sep">ロール：</span>
+  <button class="dbtn" onclick="setR('guest',this)">ゲスト</button>
+  <button class="dbtn on" onclick="setR('login',this)">ログイン</button>
   <span class="dbar-sep">表示状態：</span>
   <button class="dbtn on" data-p101-view onclick="setP101View('disc',this)">ディスカバリー</button>
   <button class="dbtn" data-p101-view onclick="setP101View('preset',this)">特集着地</button>
@@ -106,13 +109,15 @@
         <div class="p10-search__title-row">
           <h1 class="p10-search__title">作品を探す</h1>
           <span class="p10-search__en">Artwork Search</span>
-          <nav class="p10-search__types" aria-label="検索対象の切替">
-            <a class="p10-search__type" href="kotennavi-p10.html">展覧会</a>
-            <a class="p10-search__type is-active" href="#" onclick="event.preventDefault()">作品</a>
-            <a class="p10-search__type" href="kotennavi-p10-2.html">クリエイター</a>
-            <a class="p10-search__type" href="kotennavi-p10-3.html">ギャラリー</a>
-          </nav>
         </div>
+        <!-- 検索対象の切替。タイトル行の右端に小さく置くと「展覧会しか検索できない」と読まれるため、
+             タイトル直下の独立したタブ列にしている（他コンテンツも検索できることを一目で示す） -->
+        <nav class="p10-search__types" aria-label="検索対象の切替">
+          <a class="p10-search__type" data-guest="ok" href="kotennavi-p10.html">展覧会</a>
+          <a class="p10-search__type is-active" href="#" onclick="event.preventDefault()">作品</a>
+          <a class="p10-search__type" href="kotennavi-p10-2.html">クリエイター</a>
+          <a class="p10-search__type" href="kotennavi-p10-3.html">ギャラリー</a>
+        </nav>
 
         <div class="p10-search__box">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
@@ -166,7 +171,7 @@
               <button class="p10-chip" data-f="area:京都" type="button">京都</button>
               <button class="p10-chip" data-f="area:大阪" type="button">大阪</button>
               <button class="p10-chip" data-f="area:福岡" type="button">福岡</button>
-              <button class="p10-chip" type="button">すべての都道府県 ∨</button>
+              <button class="p10-chip" type="button" data-toggle="prefs" aria-expanded="false">すべての都道府県<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="6 9 12 15 18 9"/></svg></button>
             </div>
           </div>
           <div class="p10-adv__group">
@@ -192,8 +197,28 @@
             <button class="ktn-op-btn ktn-op-btn--primary" id="p101AdvSearch" type="button">この条件で検索</button>
           </div>
         </div>
+        <!-- 適用中の条件。ドロワーを閉じても指定内容が見え、×で1つずつ外せる -->
+        <div class="p10-fchips p10-fchips--band" id="p101Fchips" hidden></div>
       </div>
     </section>
+
+    <!-- A'. 認証ウォール（ゲスト時のみ表示・common.js の syncAuthWall が制御）。
+         ゲストが使えるのは展覧会検索のみのため、器（タイトル＋検索対象タブ）は残して
+         検索ボックス以降をログイン案内に差し替える（エラーページへ飛ばさない）。 -->
+    <div class="ktn-content ktn-authwall" id="ktnAuthWall" hidden>
+      <div class="ktn-statepanel">
+        <p class="ktn-statepanel__en">Login Required</p>
+        <p class="ktn-statepanel__ttl">作品検索はログインすると使えます</p>
+        <p class="ktn-statepanel__desc">ログインすると、作品を価格帯・技法・エリアなどで絞り込んで探せます。<br>展覧会の検索はログインなしでご利用いただけます。</p>
+        <div class="ktn-statepanel__btns">
+          <button class="ktn-op-btn ktn-op-btn--primary" type="button" onclick="location.href='kotennavi-p11.html'">ログイン</button>
+          <button class="ktn-op-btn" type="button" onclick="location.href='kotennavi-p11-1.html'">新規ユーザー登録（無料）</button>
+        </div>
+        <div class="ktn-statepanel__alt">
+          <a class="ktn-action-btn" href="kotennavi-p10.html">展覧会を探す →</a>
+        </div>
+      </div>
+    </div>
 
     <!-- B. 特集チップレール（アルゴリズム生成プリセット） -->
     <div class="p10-presets">
@@ -261,12 +286,12 @@
         <div class="p10-ctx__eyebrow" id="p101CtxEyebrow">Search Results</div>
         <h2 class="p10-ctx__title" id="p101CtxTitle">検索結果</h2>
         <p class="p10-ctx__desc" id="p101CtxDesc" hidden></p>
-        <div class="p10-fchips" id="p101Fchips" hidden></div>
       </div>
       <div class="p10-toolbar">
         <span class="p10-toolbar__count" id="p101Count"><strong>0</strong>件</span>
         <label class="p10-toolbar__sort">並び順
           <select id="p101Sort">
+            <option value="rec">おすすめ順</option>
             <option value="pop">人気順</option>
             <option value="new">新着順</option>
             <option value="price-asc">価格が安い順</option>
@@ -274,10 +299,25 @@
           </select>
         </label>
       </div>
+      <!-- Featured＝「おすすめ順」のときだけ出る巻頭型クラスタ（共通 .ktn-cl）。
+           人気/新着/価格を選ぶと消えて通常カードだけになる＝並び順の約束を壊さない -->
+      <section class="p10-feat" id="p10Feat" hidden>
+        <span class="p10-feat__ttl">注目の作品<span class="ktn-sec-en">Featured</span></span>
+        <div class="p10-feat__row" id="p10FeatRow"></div>
+      </section>
       <div class="p2-5-grid" id="p101ResultGrid"></div>
       <div class="p10-more-wrap">
         <button class="ktn-op-btn" id="p101MoreBtn" type="button">さらに読み込む</button>
       </div>
+      <!-- 今日の特集＝検索したが意中のものが無かったときの受け皿。人気軸のカードを足すのでなく
+           「別の軸の検索」＝特集を差し出す（適用中の特集は除外・日替わりで入れ替わる） -->
+      <section class="p10-refeed" id="p101Refeed">
+        <div class="ktn-section__head">
+          <h2 class="ktn-section__title">今日の特集<span class="ktn-sec-en">Today’s Features</span></h2>
+        </div>
+        <p class="p10-shelf__desc">条件を変えると、出会える作品も変わります。</p>
+        <div class="p10-refeed__grid" id="p101RefeedGrid"></div>
+      </section>
     </div>
 
     <!-- E. ゼロヒット状態 -->

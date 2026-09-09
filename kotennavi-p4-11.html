@@ -298,20 +298,30 @@
               </div>
             </div>
 
-            <!-- バリアフリー -->
+            <!-- バリアフリー。「対応／非対応」の2択をやめ、建物の事実を選ぶチェックに変えた（追174-56）。
+                 「車いす」「ベビーカー」と人の属性で項目を割らないのは、ギャラリー側が
+                 「うちは車いす対応か」を判定できず（安全側に倒すか過大申告になる）、
+                 来場者も判定の根拠が見えないため。事実なら書く側は見ればわかり、読む側は自分で判断できる。
+                 行を増やすと入力率が落ちる（未入力リマインドを作った理由）ので、1行の中に畳む。 -->
             <div class="p211-facility-item">
               <div class="p211-facility-row">
                 <span class="p211-facility-row__label">バリアフリー</span>
                 <div class="p211-facility-row__ctrl">
-                  <select class="p211-select" id="p411FacAccessible" onchange="p411ToggleFacility('Accessible')">
-                    <option value="">— なし —</option>
-                    <option value="yes" selected>対応</option>
-                    <option value="no">非対応</option>
-                  </select>
+                  <p class="p211-facility-row__note">当てはまるものを選んでください。選んだ内容がそのままギャラリーページに表示されます。</p>
                 </div>
               </div>
+              <div class="p211-facility-checks">
+                <label class="p211-check"><input type="checkbox" value="step-free" checked><span>入口に段差なし（スロープあり含む）</span></label>
+                <label class="p211-check"><input type="checkbox" value="ground-floor"><span>展示室は1階</span></label>
+                <label class="p211-check"><input type="checkbox" value="elevator" checked><span>エレベーターあり</span></label>
+                <label class="p211-check"><input type="checkbox" value="accessible-toilet" checked><span>多目的トイレあり</span></label>
+                <label class="p211-check"><input type="checkbox" value="stroller" checked><span>ベビーカーのまま入場できる</span></label>
+                <label class="p211-check"><input type="checkbox" value="wheelchair-rental"><span>車いすの貸出あり</span></label>
+              </div>
+              <!-- 上の選択肢は事実の「ある」だけを並べる（チェックなし＝未申告であって「非対応」ではない）。
+                   段差がある等の伝えるべきことは、この補足欄が受ける。だから常に開いておく。 -->
               <div class="p211-facility-detail" id="p411FacAccessibleDetail">
-                <textarea class="p211-textarea" style="min-height:60px" placeholder="段差・エレベーター・車椅子対応などをご記入ください。">段差なし・エレベーター完備。車椅子でのご来場が可能です。</textarea>
+                <textarea class="p211-textarea" style="min-height:60px" placeholder="上で選べない設備や、ご注意いただきたいことをご記入ください（例：展示室は2階で階段のみです／入口の幅は75cmです）。">入口の幅は80cmです。お手伝いが必要なときは、遠慮なくお声がけください。</textarea>
               </div>
             </div>
 
@@ -596,7 +606,8 @@ function p411ToggleFacility(key) {
   if (!sel || !detail) return;
   detail.hidden = (sel.value === '');
 }
-['Entry', 'Parking', 'Accessible', 'Payment', 'Wifi', 'Rental'].forEach(p411ToggleFacility);
+/* Accessible はチェック方式で select を持たず、補足欄も常時表示なので対象外（追174-56） */
+['Entry', 'Parking', 'Payment', 'Wifi', 'Rental'].forEach(p411ToggleFacility);
 </script>
 </body>
 </html>

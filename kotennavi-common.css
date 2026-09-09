@@ -2579,6 +2579,12 @@ line-clamp:2;}
 /* 取引デスクへボタン（出品者×申込者あり時のみ・row2フル幅） */
 .aw__foot .p33-console-wrap{grid-column:1 / -1}
 
+/* 取引ワークスペース/購入申込へボタン（row2フル幅・常時表示。p33/p25c版と違いJS非管理・静的カード用） */
+.aw-console-wrap{grid-column:1 / -1;display:flex;justify-content:flex-end;padding-top:3px}
+
+/* aw-console-wrapとペアになる価格/申込状況ブロック（row2ボタンと同じくフル幅化してから右寄せ・列境界でなくカード右端に揃える） */
+.aw-console-meta{grid-column:1 / -1;text-align:right}
+
 /* ポートフォリオ: 販売状態バッジ非表示 */
 .aw--portfolio .aws{display:none}
 /* ポートフォリオ: リエゾンアイコン非表示 */
@@ -2926,6 +2932,7 @@ line-clamp:2;}
   font-size:.62rem;color:var(--muted);letter-spacing:.02em;
   text-align:center;line-height:1.5;
 }
+.gc__dist{color:var(--page-accent);font-weight:500}
 .gc__hours{
   display:flex;align-items:center;justify-content:center;gap:3px;
   font-size:.62rem;color:var(--muted);letter-spacing:.02em;margin-top:3px;
@@ -3504,6 +3511,12 @@ line-clamp:2;}
   letter-spacing:.02em;
   line-height:1.3;
 }
+/* 章タイトル自体をリンクにする場合（追174-61）。**同じ章のより完全な版が別ページにあるときだけ**使う
+   ＝軸ページ下段の「エリアから探す／ジャンルから探す／行きやすさから探す」は P10-4（索引）の同名セクションの写しなので、
+   見出しからそこへ戻れるようにする。中身がすべて並びきっている章（＝行き先が無い章）には付けない。
+   末尾に「→」は付けない（矢印は明示のテキストCTA専用で、名前・見出しのリンクは hover で示す）。 */
+.ktn-section__link{color:inherit;text-decoration:none;transition:color .16s}
+.ktn-section__link:hover,.ktn-section__link:hover .ktn-sec-en{color:var(--page-accent,#005da7)}
 .ktn-section__more{
   margin-left:auto;
   font-family:'Cinzel',serif;font-size:.6rem;
@@ -4656,6 +4669,7 @@ a.p2-action-widget__btn{text-decoration:none}
 /* 関連ゾーン共通のブロック型遷移リンク（「もっと見る →」「展覧会を探す →」等）：コンテンツ下のブロックリンク（2026-07-07 全ページ統一・旧 head内「すべて →」廃止。2026-07-08 .p2-side-nearby__more から共通名化） */
 .ktn-more-link{display:block;font-family:var(--fn);font-size:.75rem;color:var(--page-accent,var(--accent));text-decoration:none;padding:10px 0 0}
 .ktn-more-link:hover{text-decoration:underline}
+.ktn-more-link[hidden]{display:none} /* display:block が UA の [hidden] を上書きするためのガード */
 .p2-side-ec{display:flex;gap:10px;align-items:flex-start;padding:9px 0 9px 0;border-bottom:1px solid var(--border);text-decoration:none;color:var(--ink);transition:opacity .15s;position:relative}
 /* 興味ありボタン（右上絶対配置） */
 .p2-side-ec .ktn-icon-btn{position:absolute;top:9px;right:0;width:26px;height:26px;border-color:var(--border);color:var(--muted)}
@@ -10483,6 +10497,26 @@ body.p3-3-page .aw--plus .aw__foot>.p33-console-wrap{order:3}
 /* Model A（.ktn-mgmt-wrap フラットフォーム型）＝sticky 送信バー直上に直接子として置く場合の inset（p2-11 等） */
 .ktn-mgmt-wrap > .ktn-form-error{margin:20px 20px 16px}
 
+/* ── 未入力リマインドパネル（.ktn-form-remind）＝編集・管理ページ共通（2026-09-05 新設・確定） ──
+   「任意項目だが検索・軸ページの絞り込みに使われる属性」が未入力のときだけ、送信バー直上に出す非ブロッキングの気づき。
+   .ktn-form-error（赤＝保存できない）とは役割・色を分ける：こちらは保存を止めず、入力すると誰に届くかを示す。
+   色は関連・回遊ゾーンと同じ warm cream ＋ 左4px の page-accent。実装例：p2-11（子連れ・クリエイター在廊） */
+.ktn-form-remind{display:flex;flex-direction:column;gap:9px;background:#faf7f1;border:1px solid var(--border);border-left:4px solid var(--page-accent,#2a5f7a);border-radius:4px;padding:14px 16px}
+.ktn-form-remind[hidden]{display:none}
+.ktn-form-remind__head{display:flex;align-items:center;gap:8px}
+.ktn-form-remind__icon{flex-shrink:0;width:17px;height:17px;color:var(--page-accent,#2a5f7a)}
+.ktn-form-remind__title{font-family:var(--fn);font-weight:700;font-size:.86rem;color:var(--ink);letter-spacing:.01em}
+.ktn-form-remind__desc{margin:0;font-family:var(--fn);font-size:.76rem;line-height:1.75;color:var(--muted)}
+.ktn-form-remind__list{display:flex;flex-direction:column;gap:9px;margin:0;padding:0;list-style:none}
+.ktn-form-remind__item{position:relative;padding-left:13px;font-family:var(--fn);font-size:.78rem;line-height:1.7;color:var(--ink)}
+.ktn-form-remind__item::before{content:'';position:absolute;left:0;top:.6em;width:5px;height:5px;border-radius:50%;background:var(--page-accent,#2a5f7a)}
+.ktn-form-remind__label{font-weight:600}
+.ktn-form-remind__hint{display:block;margin-top:4px;font-size:.74rem;line-height:1.65;color:var(--muted)}
+.ktn-form-remind__jump{display:inline-block;margin-top:6px;background:none;border:0;padding:0;font-family:var(--fn);font-size:.74rem;font-weight:600;color:var(--page-accent,#2a5f7a);text-decoration:underline;text-underline-offset:2px;cursor:pointer}
+.ktn-form-remind__jump:hover{opacity:.72}
+/* リマインド → 保存エラー の順に積む（inset は error と同じ左右20px） */
+.ktn-mgmt-wrap > .ktn-form-remind{margin:20px 20px 0}
+
 /* ── 管理者コメント欄（コンテンツ編集ページ共通・role=admin のときのみ表示・canonical）──
    展覧会編集(p2-11)・作品編集(p6-11) 等のコンテンツ編集ページに設置。管理者スレート #3a4a5a を軸に
    一般フォーム欄と視覚的に分離する。既定は hidden で、renderAll → syncAdminNote() が role で表示切替。
@@ -10530,6 +10564,14 @@ body.p3-3-page .aw--plus .aw__foot>.p33-console-wrap{order:3}
 /* 共通ガイドリンク（補足の参照リンク・色はブランド青 --accent #005da7 ＝ロゴ kotennavi-logo3.svg と同色）。サイズは文脈継承。末尾「 →」はテキストで付与 */
 .ktn-guide-link{color:var(--accent);text-decoration:underline;text-underline-offset:2px}
 .ktn-guide-link:hover{color:var(--accent-d)}
+
+/* 事実リスト（バリアフリー等の設備表示・全ページ共通／追174-56）。
+   「対応／非対応」の1語にまとめず、会場が見て確認できる事実だけを並べる。
+   **未申告と「非対応」は別物**なので否定形の行は作らない（伝えるべき制約は隣の説明文が受ける）。
+   チェック記号は回転ボーダーで描く＝フォント依存を持たせない。色は --page-accent（未設定時ブランド青）。 */
+.ktn-facts{list-style:none;margin:0 0 6px;padding:0;display:flex;flex-wrap:wrap;gap:3px 16px}
+.ktn-facts__item{position:relative;padding-left:15px;font-family:var(--fn);font-size:.75rem;line-height:1.7;color:var(--ink)}
+.ktn-facts__item::before{content:'';position:absolute;left:0;top:.52em;width:8px;height:4px;border-left:1.5px solid var(--page-accent,#005da7);border-bottom:1.5px solid var(--page-accent,#005da7);transform:rotate(-45deg)}
 
 /* ── 管理・編集ページ共通：親エンティティ文脈ストリップ（identity strip・全17管理ページ標準 2026-07-09） ──
    管理/編集ページのヘッダー統一。旧「親ヒーロー継承（.pN-head--compact＋.pN-tabnav）」と
@@ -12227,6 +12269,11 @@ body.p4-15-page{--page-accent:#8b5e3c}
 .p211-facility-price{display:flex;align-items:center;gap:8px;margin-top:8px;padding-left:114px;font-size:.75rem;color:var(--muted)}
 .p211-facility-price input{width:100px;padding:5px 8px;border:1px solid var(--border);border-radius:4px;font-size:.82rem;font-family:var(--fm);text-align:right;background:#fff;color:var(--ink)}
 .p211-facility-price input:focus{outline:none;border-color:#2a7fa8}
+/* 事実チェック行（バリアフリー等）。可否を1つ選ばせるのではなく、建物の事実を選ばせる列（追174-56）。
+   行を増やさず1行の中に畳むので、他の利用案内と同じ「1項目＝1行」の入力コストに収まる。 */
+.p211-facility-row__note{margin:0;font-family:var(--fn);font-size:.7rem;line-height:1.6;color:var(--muted)}
+.p211-facility-checks{display:flex;flex-wrap:wrap;gap:9px 20px;margin-top:10px;padding-left:114px}
+.p211-facility-checks .p211-check{flex:0 0 calc(50% - 10px);min-width:190px;font-size:.8rem}
 
 /* ── LIAISON設定 ── */
 .p211-liaison-opt{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
@@ -12840,6 +12887,101 @@ a.p319-item__dest-name:hover{color:var(--page-accent)}
   .p902-review-actions__group .ktn-op-btn{flex:1 1 auto}
 }
 
+/* ── P90-17 軸ページ管理（管理者専用） ──
+   軸ページ（P10-4-1〜5）は掲載データから自動生成されるので、ページ単位の新規作成・削除が無い。
+   管理者が触るのは①各軸ページの導入文と②ハブ P10-4 の注目枠だけ（追174-46③）。
+   公開/非公開のトグルを置かないのは、同じURLの出し入れが検索側の評価を落とすため。
+   タブ・テーブル・フィルタ・モーダルは P90-2 / P3-15 / P3-19 の既存部品をそのまま借り、
+   ここで新設するのは固定枠チップ・記入状況マーク・自動文プレビューだけに留める。 */
+.p9017-blocknote{margin:0 0 16px}
+.p9017-grid{display:flex;flex-wrap:wrap;gap:0 16px}
+.p9017-grid > .p211-field{flex:1 1 210px}
+.p9017-actions{display:flex;justify-content:flex-end;margin-top:18px;padding-top:14px;border-top:1px solid var(--border)}
+.p9017-chips{display:flex;flex-wrap:wrap;gap:7px}
+.p9017-chip{display:inline-flex;align-items:center;gap:7px;padding:4px 10px;background:var(--tag-bg,#f5f3ef);border:1px solid var(--border);border-radius:3px;font-family:var(--fn);font-size:.76rem;color:var(--ink)}
+.p9017-chip--fixed{background:var(--page-accent-bg);border-color:var(--page-accent)}
+.p9017-chip__n{font-family:var(--fm);font-size:.66rem;color:var(--muted)}
+.p9017-chip__x{border:none;background:none;padding:0;font-family:var(--fm);font-size:.82rem;line-height:1;color:var(--muted);cursor:pointer}
+.p9017-chip__x:hover{color:#b43c14}
+.p9017-addrow{display:flex;gap:8px;align-items:center;margin-top:9px}
+.p9017-addsel{max-width:220px}
+.p9017-preview{margin-top:18px;padding-top:14px;border-top:1px solid var(--border)}
+.p9017-preview__label{display:block;margin-bottom:8px;font-family:var(--fm);font-size:.58rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.p9017-preview .p211-help{margin-top:9px}
+/* 一覧ブロックだけ本文の左右paddingを外し、表を枠いっぱいに使う（セル側が16pxを持つ） */
+.p9017-listbody{padding:14px 0 0}
+.p9017-listbody > .p902-tab-nav,
+.p9017-listbody > .p319-toolbar,
+.p9017-listbody > .p9017-tabnote{margin-left:18px;margin-right:18px}
+.p9017-listbody > .p319-toolbar{margin-bottom:12px}
+.p9017-tabnote{margin:12px 18px 4px;font-family:var(--fn);font-size:.72rem;color:var(--muted);line-height:1.75}
+.p9017-tabnote[hidden]{display:none}
+.p9017-table td a{color:var(--ink);text-decoration:none}
+.p9017-table td a:hover{color:var(--page-accent);text-decoration:underline;text-underline-offset:2px}
+.p9017-table td:nth-child(2){font-family:var(--fm);font-size:.72rem;color:var(--muted)}
+.p9017-table td:last-child{text-align:right;white-space:nowrap}
+.p9017-mark{font-family:var(--fn);font-size:.74rem;color:var(--muted)}
+.p9017-mark--on{color:var(--ink);font-weight:600}
+.p9017-num{font-family:var(--fm);font-size:.78rem}
+.p9017-num--zero{color:var(--muted)}
+.p9017-lead-modal .p319-del-modal__panel{max-width:620px;max-height:88vh;overflow-y:auto}
+.p9017-lead-ctx{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;margin:0 0 16px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.p9017-lead-ctx__kind{font-family:var(--fm);font-size:.6rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.p9017-lead-ctx__name{font-family:var(--fs);font-size:.95rem;font-weight:600;color:var(--ink)}
+.p9017-lead-auto{margin-top:14px;padding:11px 13px;background:var(--tag-bg,#f5f3ef);border-radius:4px}
+.p9017-lead-auto__label{display:block;margin-bottom:5px;font-family:var(--fm);font-size:.58rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.p9017-lead-auto__body{margin:0;font-family:var(--fn);font-size:.76rem;color:var(--muted);line-height:1.8}
+/* 季節の言葉（P10 Picks 枠③）。12か月ぶんを一画面で見比べるので、入力欄は行に埋め込む。
+   表の器は .p70-table を借り、ここでは列幅と現在月の強調だけを持つ。 */
+.p9017-season-table{table-layout:fixed}
+.p9017-season-table th:first-child,.p9017-season-table td:first-child{width:52px;font-family:var(--fm);font-size:.74rem;color:var(--muted);white-space:nowrap}
+.p9017-season-table th:nth-child(3),.p9017-season-table td:nth-child(3){width:300px}  /* 対象＝4軸ぶんのドロップを2列で折り返す */
+.p9017-season-table th:last-child,.p9017-season-table td:last-child{width:96px}
+.p9017-season-table .p211-input,.p9017-season-table .p211-select{width:100%;font-size:.78rem;padding:6px 8px}
+/* 対象は4軸ぶんの欄を開いた状態で並べる（種類を先に選ばせない）。4軸は同時に指定できるので、
+   値の入っている軸だけラベルと枠にアクセント色を付けて「今どこに着地しているか」を読めるようにする。 */
+.p9017-axes{display:flex;flex-wrap:wrap;gap:8px}
+.p9017-axis{display:flex;flex-direction:column;gap:3px;flex:1 1 120px;min-width:0}
+.p9017-axis__lb{font-family:var(--fn);font-size:.66rem;color:var(--muted)}
+/* タグの欄だけは候補つきの自由入力（datalist）なので select ではなく input。見た目は他の3軸と揃える。 */
+.p9017-season-table .p9017-axis .p211-select,
+.p9017-season-table .p9017-axis .p211-input{font-size:.74rem;padding:5px 6px}
+.p9017-axis.is-on .p9017-axis__lb{color:var(--page-accent);font-weight:600}
+.p9017-axis.is-on .p211-select,
+.p9017-axis.is-on .p211-input{border-color:var(--page-accent);color:var(--ink);font-weight:600}
+.p9017-season-table tr.is-now td{background:var(--page-accent-bg)}
+.p9017-season-table tr.is-now td:first-child{color:var(--ink);font-weight:600}
+@media(max-width:540px){
+  .p9017-listbody > .p902-tab-nav,
+  .p9017-listbody > .p319-toolbar,
+  .p9017-listbody > .p9017-tabnote{margin-left:8px;margin-right:8px}
+  .p9017-addsel{max-width:none;flex:1}
+  /* 横に並べたままだと1列60px前後になり、言葉も選択肢も読めず操作もできない。
+     スマホでは見出し行を隠して1か月＝1枚のカードに畳み、項目名は data-label で各行に出す
+     （.p315-archive-table と同型のパターン）。行をまたいでも今の設定が読めることを優先する。 */
+  .p9017-season-table,
+  .p9017-season-table tbody,
+  .p9017-season-table tr,
+  .p9017-season-table td{display:block;width:auto;min-width:0}
+  .p9017-season-table thead{display:none}
+  .p9017-season-table tr{border:1px solid var(--border);border-radius:4px;padding:2px 12px 8px;margin-bottom:10px}
+  .p9017-season-table tr:last-child{margin-bottom:0}
+  .p9017-season-table td{border:none;padding:7px 0}
+  .p9017-season-table td:first-child{width:auto;padding:9px 0 8px;border-bottom:1px solid var(--border);font-family:var(--fn);font-size:.8rem;font-weight:600;color:var(--ink)}
+  .p9017-season-table td:nth-child(3),
+  .p9017-season-table td:last-child{width:auto}
+  .p9017-season-table td[data-label]{display:flex;align-items:center;gap:12px}
+  .p9017-season-table td[data-label]::before{content:attr(data-label);flex:0 0 46px;font-family:var(--fn);font-size:.7rem;font-weight:400;color:var(--muted)}
+  /* 直下の子だけ（対象セルの中＝.p9017-axis の入力欄は縦積みなので flex 子にしない）。 */
+  .p9017-season-table td[data-label] > .p211-input,
+  .p9017-season-table td[data-label] > .p211-select{flex:1;width:auto;min-width:0}
+  /* 対象だけは4軸ぶんの高さがあるので、項目名を横ではなく上に置いてカード幅いっぱいを使う。 */
+  .p9017-season-table td[data-label="対象"]{display:block}
+  .p9017-season-table td[data-label="対象"]::before{display:block;margin-bottom:6px}
+  .p9017-season-table tr.is-now{background:var(--page-accent-bg);border-color:var(--page-accent)}
+  .p9017-season-table tr.is-now td{background:none}
+}
+
 /* ── P3-13/P4-13 オーディエンス管理（.p313-* を共有ネームスペースとしてP4-13も再利用）
    ウォッチャー・チェックインの2タブ構成。一覧行はどちらも .p2-watcher-item/.p2-watcher-list
    （p2ウォッチャーモーダルと同一部品）を流用するため、ここでは KPIガイドリンク・通知トグル行・
@@ -12958,7 +13100,8 @@ a.p319-item__dest-name:hover{color:var(--page-accent)}
 @media(max-width:540px){
   .p211-row{flex-direction:column}
   .p211-facility-row__label{width:auto}
-  .p211-facility-detail,.p211-facility-price{padding-left:0}
+  .p211-facility-detail,.p211-facility-price,.p211-facility-checks{padding-left:0}
+  .p211-facility-checks .p211-check{flex:1 1 100%}
   .p211-datetime-pair{flex-wrap:wrap}
   .p211-submit-bar{flex-wrap:wrap}   /* 下書き保存＋充実度メーターが加わり4要素のため折返し許可 */
   .p211-submit-bar__row{flex-wrap:wrap}   /* 2段レイアウトの下段（ボタン＋メーター）も折返し許可 */
@@ -13115,10 +13258,16 @@ a.p319-item__dest-name:hover{color:var(--page-accent)}
 /* ── ins-top-list（記事/作品の人気上位2件を簡潔に示すミニランキング・2026-08-26） ── */
 .ins-top-list{margin-top:14px}
 .ins-top-list__label{font-family:var(--font-en-label,'Cinzel',serif);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+.ins-top-list__note{font-family:var(--fn);font-size:.62rem;letter-spacing:0;text-transform:none;color:var(--muted);margin-left:6px}
+.ins-top-list__headrow{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.ins-top-list__headrow .ins-top-list__label{flex:1;min-width:0}
+.ins-top-list__cols{display:flex;gap:10px;flex-shrink:0}
+.ins-top-list__col-label{flex-shrink:0;min-width:46px;font-family:var(--fn);font-size:.62rem;color:var(--muted);text-align:right}
 .ins-top-list__item{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--border)}
 .ins-top-list__rank{flex-shrink:0;width:1.3em;font-family:'DM Serif Display',var(--fs);font-size:1rem;color:var(--page-accent,#2a5f7a);text-align:center}
 .ins-top-list__title{flex:1;min-width:0;font-family:var(--fs);font-size:.85rem;color:var(--ink);text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ins-top-list__title:hover{text-decoration:underline}
+.ins-top-list__metric{flex-shrink:0;min-width:46px;text-align:right}
 
 /* ── ins-top-grid（展覧会/記事/作品Top3を横並びで示すサマリー・.ins-top-listを3列並置・2026-08-28） ── */
 .ins-top-grid{display:flex;gap:24px}
@@ -13133,6 +13282,9 @@ a.p319-item__dest-name:hover{color:var(--page-accent)}
 .ins-item-list__head{display:flex;align-items:flex-end;gap:10px;padding-bottom:8px;border-bottom:1px solid var(--ink)}
 .ins-item-list__head-name{flex:1;min-width:0;font-family:var(--fn);font-size:.62rem;font-weight:600;color:var(--muted)}
 .ins-item-list__head-stat{flex:0 0 70px;text-align:right;font-family:var(--fn);font-size:.62rem;font-weight:600;color:var(--muted)}
+/* 投稿先列（記事リスト専用・名前列の前）。creator/gallery はノーマークで中身が空でも列幅は保つ */
+.ins-item-list__head-target{flex:0 0 62px;font-family:var(--fn);font-size:.62rem;font-weight:600;color:var(--muted)}
+.ins-item-list__target{flex:0 0 62px;display:flex;align-items:center}
 .ins-item-list__year{padding:14px 0 4px;font-family:var(--fn);font-size:.72rem;font-weight:700;color:var(--ink)}
 .ins-item-list__year:first-child{padding-top:2px}
 .ins-item-list__row{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--border)}
@@ -13141,7 +13293,8 @@ a.p319-item__dest-name:hover{color:var(--page-accent)}
 .ins-item-list__name:hover{text-decoration:underline}
 .ins-item-list__stat{flex:0 0 70px;text-align:right;font-family:var(--fm);font-size:.82rem;font-weight:600;color:var(--ink)}
 .ins-item-list__stat .unit{margin-left:2px;font-size:.68rem;font-weight:400;color:var(--muted)}
-/* 名前列に付随する2次情報（会期／リンク先マーク）：列を増やさず名前の下段・左に積む（2026-08-28） */
+/* 名前列に付随する2次情報（会期／リンク先マーク）：列を増やさず名前の下段・左に積む（2026-08-28。
+   会期は 2026-09-02 に一度独立列へ出したが、狭幅で展覧会名が読めなくなるため下段へ差し戻し） */
 .ins-item-list__link-mark{flex-shrink:0;font-family:var(--fn);font-size:.6rem;font-weight:600;color:var(--muted);padding:1px 5px;border:1px solid var(--border);border-radius:3px;line-height:1.5}
 .ins-item-list__main{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
 .ins-item-list__main .ins-item-list__name{flex:none}
@@ -13149,6 +13302,7 @@ a.p319-item__dest-name:hover{color:var(--page-accent)}
 .ins-item-list__name-row .ins-item-list__name{flex:1;min-width:0}
 .ins-item-list__period{font-family:var(--fn);font-size:.72rem;color:var(--muted)}
 /* 列見出しの並べ替えボタン（.p315-buyers-sort-btnを再利用・単一ソース） */
+/* 展覧会リストは「展覧会名／会期」を縦積み（記事リストは投稿先が独立列なので子は1つ） */
 .ins-item-list__head-name{display:flex;flex-direction:column;align-items:flex-start;gap:2px}
 .ins-item-list__head-stat{display:flex;justify-content:flex-end}
 .ins-item-list__head-stat .p315-buyers-sort-btn{justify-content:flex-end}
@@ -13233,6 +13387,8 @@ a.p319-item__dest-name:hover{color:var(--page-accent)}
   .ins-period__label{flex:0 0 100%;margin:0 0 6px}
   .ins-period__btn{padding:6px 10px;font-size:.7rem}
   .ins-item-list__head-stat,.ins-item-list__stat{flex-basis:50px}
+  .ins-item-list__head-target,.ins-item-list__target{flex-basis:48px}
+  .ins-item-list__head-target{font-size:.58rem}
   .ins-item-list__head-stat{font-size:.58rem}
   .ins-item-list__stat{font-size:.76rem}
   .ins-item-list__name{font-size:.8rem}
@@ -13548,12 +13704,11 @@ body.mgmt-page .p5-tabnav{max-width:var(--w-detail)}
 .ktn-ci-watch__lead{font-family:var(--fn);font-size:.8rem;color:var(--muted);line-height:1.6;margin:0 0 14px}
 .ktn-ci-watch__group{margin-bottom:4px}
 .ktn-ci-watch__group-label{font-family:var(--fn);font-size:.68rem;font-weight:600;color:var(--muted);letter-spacing:.02em;margin:0 0 6px}
-.ktn-ci-watch__list{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.ktn-ci-watch__list{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;max-height:216px;overflow-y:auto}
 .ktn-ci-watch__row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 12px;background:var(--tag-bg);border-radius:8px}
 .ktn-ci-watch__name{flex:1;min-width:0;font-family:var(--fs);font-size:.86rem;font-weight:600;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ktn-ci-watch__wbtn{padding:4px 10px;font-size:.62rem;flex-shrink:0}
 .ktn-ci-watch__wbtn svg{width:12px;height:12px}
-.ktn-ci-watch__more{display:block;text-align:center;padding:9px 12px;font-family:var(--fn);font-size:.76rem}
 
 /* ── ボタン ON状態 SVG（グローバル） ── */
 .ktn-btn[data-action="interest"].on svg path{fill:#3a90e0;fill-opacity:1;stroke:#3a90e0;stroke-opacity:1}
@@ -14262,7 +14417,8 @@ body.mgmt-page:not(.p3-page):not(.p4-page):not(.p5-page){
 .p3-prof-side,
 .p4-prof-side,
 .p5-layout__side,
-.p6-col-side{
+.p6-col-side,
+.p10-layout__side{
   position:sticky;
   top:calc(var(--dh,34px) + var(--hh,50px) + 16px);
   align-self:start;
@@ -14281,7 +14437,8 @@ body.mgmt-page:not(.p3-page):not(.p4-page):not(.p5-page){
   .p3-prof-side,
   .p4-prof-side,
   .p5-layout__side,
-  .p6-col-side{
+  .p6-col-side,
+  .p10-layout__side{
     position:static;top:auto;
   }
 }
@@ -14945,14 +15102,19 @@ body.p5-coll-zero.p5-other .p5-tabnav__coll{display:none}
 /* ── A. 検索ヘッド（全幅白バンド・inner 1080） ── */
 .p10-search{background:#fff}
 .p10-search__inner{max-width:var(--w-index);margin:0 auto;padding:26px var(--hero-pad-x) 18px}
-.p10-search__title-row{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.p10-search__title-row{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:10px}
 .p10-search__title{font-family:var(--fs);font-size:1.55rem;font-weight:600;letter-spacing:.005em;color:var(--ink);margin:0;line-height:1.2}
 .p10-search__en{font-family:var(--font-en-label);font-size:.62rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
-/* 検索対象スイッチ（展覧会|作品|クリエイター|ギャラリー） */
-.p10-search__types{display:flex;gap:2px;margin-left:auto}
-.p10-search__type{font-family:var(--fn);font-size:.76rem;color:var(--muted);text-decoration:none;padding:4px 10px 6px;border-bottom:2px solid transparent;transition:color .15s}
-.p10-search__type:hover{color:var(--ink)}
-.p10-search__type.is-active{color:var(--ink);font-weight:600;border-bottom-color:var(--page-accent,#005da7)}
+/* 検索対象スイッチ（展覧会|作品|クリエイター|ギャラリー）
+   旧＝タイトル行の右端に .76rem muted の小さなリンク列。「展覧会以外も検索できる」ことが伝わらなかったため、
+   タイトル直下の独立したタブ列に格上げした（2026-09-01）。幅いっぱいのヘアラインを敷いて「4つのうち1つを選んでいる」
+   状態を作り、active は 3px page-accent＝サイト共通のサブナビ（.pN-tabnav）と同じ見分け方に揃える。
+   先頭タブの左paddingを0にしてタイトル・検索ボックスと左端を合わせる（20pxグリッドは __inner が持つ）。 */
+.p10-search__types{display:flex;flex-wrap:wrap;margin:0 0 18px;border-bottom:1px solid var(--border)}
+.p10-search__type{font-family:var(--fn);font-size:.88rem;font-weight:500;color:var(--muted);text-decoration:none;padding:9px 18px 10px;margin-bottom:-1px;border-bottom:3px solid transparent;white-space:nowrap;transition:color .15s,border-color .15s}
+.p10-search__type:first-child{padding-left:0}
+.p10-search__type:hover{color:var(--ink);border-bottom-color:var(--border)}
+.p10-search__type.is-active{color:var(--ink);font-weight:700;border-bottom-color:var(--page-accent,#005da7)}
 /* 検索ボックス */
 .p10-search__box{display:flex;align-items:stretch;max-width:640px;border:1px solid var(--ink);border-radius:4px;overflow:hidden;background:#fff}
 .p10-search__box svg{width:16px;height:16px;align-self:center;margin-left:13px;flex-shrink:0;color:var(--muted)}
@@ -14960,6 +15122,51 @@ body.p5-coll-zero.p5-other .p5-tabnav__coll{display:none}
 .p10-search__input::placeholder{color:var(--muted);opacity:.7}
 .p10-search__submit{border:none;background:var(--accent);color:#fff;font-family:var(--fn);font-weight:600;font-size:.82rem;letter-spacing:.1em;padding:0 24px;cursor:pointer;transition:background .15s}
 .p10-search__submit:hover{background:var(--accent-d)}
+
+/* ── 状態パネル（`.ktn-statepanel`・canonical）
+   「今このページで先へ進めない理由」と「代わりにどこへ行けるか」だけを出す中央寄せの縦積みパネル。
+   ①層Aのインライン認証ウォール（`.ktn-authwall` の中身）と ②P60-15「ページを表示できません」の
+   両方が同じ見た目を共有する（handoff 追174-22）。新しい状態は文言を差し替えるだけで足せる。
+   構成：`__en`（Cinzel英ラベル）／`__ttl`／`__desc`／`__btns`（主導線）／`__alt`（罫線で仕切った代替導線）。 ── */
+.ktn-statepanel{display:flex;flex-direction:column;align-items:center;text-align:center;max-width:520px;margin:0 auto;padding:44px 0 36px}
+.ktn-statepanel[hidden]{display:none} /* display:flex が UA の [hidden] を上書きするためのガード（追174-19） */
+.ktn-statepanel--page{padding:76px 0 96px} /* ページ全体が状態表示のとき（P60-15）は上下を広く取る */
+.ktn-statepanel__en{font-family:var(--font-en-label);font-size:.62rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.ktn-statepanel__ttl{font-family:var(--fs);font-size:1.25rem;font-weight:700;letter-spacing:-.005em;line-height:1.5;color:var(--ink);margin:0 0 14px}
+.ktn-statepanel__desc{font-family:var(--fn);font-size:.84rem;line-height:2;color:var(--ink);margin:0 0 24px}
+.ktn-statepanel__btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.ktn-statepanel__alt{width:100%;margin-top:26px;padding-top:22px;border-top:1px solid var(--border);display:flex;flex-direction:column;align-items:center;gap:10px}
+.ktn-statepanel__alt-note{font-family:var(--fn);font-size:.78rem;line-height:1.9;color:var(--muted);margin:0}
+
+/* ── 認証ウォール（層A・ログイン必須ページ／canonical）
+   エラーページへ飛ばさず、**器（タイトル＋検索対象タブ）は出したまま中身だけログイン案内に差し替える**。
+   使いどころは「ログインすれば誰でも使える」機能に限る＝本人でないと永久に使えない管理・編集系や
+   他人の識別子を含むURLは P60-15（要ログイン／見つかりません）側で扱う（handoff 追174-22）。
+   `body.ktn-gated` は common.js の `syncAuthWall()` が role='guest' のとき付ける。
+   新しく認証ウォールを付けるページは、下の「隠す要素」リストに自分のセレクタを足すだけでよい。
+   `.ktn-authwall` 自体には display を持たせない（`hidden` 属性がそのまま効くようにするため・追174-19）。 ── */
+body.ktn-gated .p10-search__box,
+body.ktn-gated .p10-quick-row,
+body.ktn-gated .p10-adv,
+body.ktn-gated .p10-presets,
+body.ktn-gated .p10-content{display:none}
+
+/* ── P60-15 ②「見つかりません」の回遊ゾーン（`.p6015-discover`・追174-26）
+   404 で行き止まりにせず、サイトを1〜2行で紹介 → 開催中/これから開催の展覧会を数枚見せる → 展覧会検索へ送る。
+   **②のときだけ出す**（①要ログインは自分のページへ戻りたい人なので回遊で邪魔しない）。
+   カードは「来たURLと無関係な汎用ピック」に限る（関連付けるとそのIDの存在が漏れ、隠蔽の意味が無くなる）。 ── */
+.p6015-discover{border-top:1px solid var(--border);padding-top:30px}
+.p6015-discover__en{font-family:var(--font-en-label);font-size:.62rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+.p6015-discover__ttl{font-family:var(--fs);font-size:1.25rem;font-weight:700;letter-spacing:-.005em;line-height:1.5;color:var(--ink);margin:0 0 10px}
+.p6015-discover__desc{font-family:var(--fs);font-size:var(--rt-size);line-height:var(--rt-lh);letter-spacing:var(--rt-ls);color:var(--ink);margin:0 0 22px;max-width:720px}
+/* カードは buildGridEcCard（`.masonry-item`）をそのまま使うが、ここは段組みでなく3枚横並びの1行 */
+.p6015-picks{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.p6015-picks .masonry-item{flex:1 1 240px;min-width:0;margin-bottom:0}
+@media (max-width:540px){
+  .p6015-picks{gap:12px}
+  .p6015-picks .masonry-item{flex:1 1 100%}
+}
+
 /* クイックチップ行 */
 .p10-quick-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:13px}
 .p10-quick-row__sep{width:1px;height:16px;background:var(--border);flex-shrink:0}
@@ -14981,6 +15188,29 @@ body.p5-coll-zero.p5-other .p5-tabnav__coll{display:none}
 .p10-adv__near-input{border:1px solid var(--border);border-radius:4px;padding:6px 10px;font-family:var(--fn);font-size:.78rem;min-width:230px;color:var(--ink)}
 .p10-adv__near-input::placeholder{color:var(--muted);opacity:.7}
 .p10-adv__note{flex-basis:100%;font-size:.7rem;color:var(--muted);font-family:var(--fn)}
+/* 展開パネル（期間を指定する／タグをもっとみる／すべての都道府県）。
+   中身は common.js の _p10AdvInit がボタン直後に生成する（p10〜p10-7 共通） */
+.p10-adv__panel{display:none;flex-basis:100%;padding:8px 0 2px}
+.p10-adv__panel.is-open{display:block}
+.p10-adv__panel-chips{display:flex;flex-wrap:wrap;gap:7px;flex:1;min-width:0}
+.p10-adv__pref-group{display:flex;align-items:flex-start;gap:12px;padding:5px 0}
+.p10-adv__pref-label{flex:0 0 84px;font-family:var(--fn);font-size:.68rem;font-weight:600;color:var(--muted);padding-top:6px;line-height:1.4}
+.p10-adv__range{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.p10-adv__date{border:1px solid var(--border);border-radius:4px;padding:6px 10px;font-family:var(--fn);font-size:.78rem;color:var(--ink)}
+.p10-adv__range-sep{font-family:var(--fn);font-size:.78rem;color:var(--muted)}
+.p10-chip svg{width:11px;height:11px;transition:transform .18s}
+.p10-chip.is-open svg{transform:rotate(180deg)}
+/* 東京エリアチップ＝エリア名＋含まれる区の2段。名前が主・区名は補助（狭幅でも区名で名前が潰れない縦積み） */
+.p10-chip--area{flex-direction:column;align-items:flex-start;gap:3px;white-space:normal;text-align:left;max-width:250px;border-radius:4px;padding:8px 12px}
+.p10-chip__area-name{font-weight:600}
+.p10-chip__area-alias{font-weight:400;color:var(--muted)}
+/* 括弧は表示側で付ける（マスタは素の語だけを持ち、同じ通称をカード・レール・チップで書式違いに使う） */
+.p10-chip__area-alias::before{content:'（'}
+.p10-chip__area-alias::after{content:'）'}
+.p10-chip__area-wards{font-size:.66rem;line-height:1.5;color:var(--muted)}
+.p10-chip--area.is-on .p10-chip__area-alias,.p10-chip--area.is-on .p10-chip__area-wards{color:#fff;opacity:.8}
+/* 開催日クイック指定（今日・今週末など）＝日付チップの前段 */
+.p10-adv__daypreset{display:flex;flex-wrap:wrap;gap:7px;flex-basis:100%;align-items:center}
 .p10-adv__foot{display:flex;justify-content:flex-end;gap:10px;padding:14px 0 4px}
 /* 開催日チップ */
 .p10-day{display:flex;flex-direction:column;align-items:center;gap:1px;border:1px solid var(--border);border-radius:4px;padding:5px 10px;cursor:pointer;background:#fff;font-family:var(--fm);line-height:1.15;transition:border-color .15s,background .15s}
@@ -15001,14 +15231,124 @@ body.p5-coll-zero.p5-other .p5-tabnav__coll{display:none}
 .p10-preset:hover{border-color:var(--page-accent,#005da7);color:var(--page-accent,#005da7)}
 .p10-preset.is-on{border-color:var(--page-accent,#005da7);background:var(--page-accent-bg,rgba(0,93,167,.08));color:var(--page-accent,#005da7);font-weight:600}
 .p10-preset svg{width:12px;height:12px;flex-shrink:0;opacity:.75}
+/* 年鑑（P10-4-2）の年別ナビは button ではなく a＝年ごとに別URLでクローラから全年が見える（追174-48）。
+   チップの見た目は共通のまま下線だけ外す */
+a.p10-preset{text-decoration:none}
+/* 交差チップの件数。素の .ktn-count は muted 固定なので、active チップだけ親の色を継承させる（タブ件数と同じ親コンテキスト駆動） */
+.p10-preset.is-on .ktn-count{color:inherit}
+/* 東京エリアの通称（銀座・丸の内…）。チップの主語は方角名（東京都心部）で、通称は場所を思い浮かべる
+   ための手がかりなので括弧＋濃度を落として添える。括弧をCSSで持つのはマスタ側を素の語だけに保つため
+   （同じ通称を軸カード・レール・ドロワーの別書式で使い回す）。 */
+.p10-preset__alias{color:var(--muted);font-size:.7rem}
+.p10-preset__alias::before{content:'（'}
+.p10-preset__alias::after{content:'）'}
+.p10-preset.is-on .p10-preset__alias{color:inherit}
+/* 通称エリア（銀座・谷中・清澄白河…）のチップ。URLでは都道府県と対等（/exhibitions/ginza）だが、
+   47県の並びに同じ強さで混ぜると「銀座がどこの街か」が読めなくなるので、親県チップの直後に
+   一段落として続ける（追174-67）。別色にはしない＝場所軸として同じものだから。地と文字の濃度だけ下げる */
+.p10-preset--area{background:#faf7f1;color:var(--muted);font-size:.72rem;padding:5px 10px}
+.p10-preset--area.is-on{background:var(--page-accent-bg,rgba(0,93,167,.08));color:var(--page-accent,#005da7)}
 /* ── C. 棚（ディスカバリー状態） ── */
 .p10-content{padding-top:26px}
 .p10-shelf{margin-bottom:38px}
 .p10-shelf__desc{font-size:.78rem;color:var(--muted);font-family:var(--fn);margin:5px 0 0}
 /* マソンリー（cards_exhibition.html 標準準拠・.masonry と同じ columns 方式） */
 .p10-shelf-grid{columns:4 220px;column-gap:16px;margin-top:16px}
+/* ── 左カラムの棚は「3件」で組む（2026-09-03・旧「4件描画して3列の帯だけ4件目を隠す」方式を置換）──
+   3列の帯＝1行3件。2列の帯＝先頭カードを全幅リードにした非対称組み（1件＋2件）。
+   .p10-shelf-grid は CSS multi-column なので、先頭の .masonry-item に column-span:all を当てると
+   そこで段が切れ、残り2件が下段の2列へ流れる＝どの幅でも半端な1件が余らない。
+   2列並びが延々と続く単調さを避け、雑誌のリード写真のようなリズムを作るのが狙い（特にスマホ幅）。
+   列数を columns:N 220px の自動決定に任せると幅によって3列/2列が入れ替わるため、左カラムの棚は列数を明示する。
+   3列にするのはカード幅が220pxを割らない帯だけ＝右カラムがある幅（≥1060px：主カラム692px〜）と、
+   右カラムが消えて本文が全幅になる帯（732〜860px）。
+   ちょうど3件の棚だけを対象にするため :has(> :nth-child(3):last-child) で限定する
+   ＝検索結果（#p10ResultGrid）やゼロ状態の多件数グリッドを巻き込まない。
+   リード下の余白は .masonry-item の margin-bottom:16px がそのまま効くので追加指定は不要。 */
+.p10-layout__main .p10-shelf-grid{columns:2}
+.p10-layout__main .p10-shelf-grid:has(> :nth-child(3):last-child) > :first-child{column-span:all}
+@media(min-width:1060px){
+  .p10-layout__main .p10-shelf-grid{columns:3}
+  .p10-layout__main .p10-shelf-grid:has(> :nth-child(3):last-child) > :first-child{column-span:none}
+}
+@media(min-width:732px) and (max-width:860px){
+  .p10-layout__main .p10-shelf-grid{columns:3}
+  .p10-layout__main .p10-shelf-grid:has(> :nth-child(3):last-child) > :first-child{column-span:none}
+}
+/* 作品の棚（P10-1/P10-5）は .p2-5-grid＝3列(≥861px)/2列(561〜860px)/1列(≤560px)。
+   2列・1列の帯は4件でも割り切れるので、3列になる帯でだけ4件目を隠す。
+   ※スマホ(≤560px)を2列にする案は撤回（2026-09-03）。展覧会の棚が同じ幅で2列のため、
+     作品も2列にするとカードが同サイズになり「展覧会か作品か」がひと目で区別できなくなる。
+     狭幅では作品＝1列の大きいカード／展覧会＝2列の小さいカードという幅の差を種別のサインとして残す。 */
+@media(min-width:861px){
+  .p10-shelf .p2-5-grid:has(> :nth-child(4):last-child) > :nth-child(4){display:none}
+}
 .p10-nearby-grid{display:flex;flex-wrap:wrap;column-gap:28px;margin-top:8px}
 .p10-nearby-grid .p2-side-ec{width:calc(33.333% - 19px)}
+/* ── 右カラム（クロスジャンル＋ランキング）── 常設の「回遊ツール」ウィジェットのため
+   メインの棚から右カラムへ移し、常に同じ場所・同じカード形式（.p2-side-card + .p2-side-ec）で
+   見つけられるようにする（2026-08-30リファイン）。.p2-layout と同じ grid+sticky パターンを再利用。 */
+.p10-layout{display:grid;grid-template-columns:1fr 300px;gap:0 28px;align-items:start}
+.p10-layout__main{min-width:0}
+.p10-layout__side{min-width:0;display:flex;flex-direction:column;gap:20px}
+.p10-side-widget .p10-shelf__desc{margin-top:2px}
+/* ── ランキング3軸タブ（行きたい/行った/急上昇）──
+   ピル型ボタン列から「バーの上にタブが乗る」形式へ（2026-09-02）。行の下端に1pxの罫線を通し、
+   active はその罫線に接する2pxの page-accent 下線＋濃色＋600で示す（タブ自身の margin-bottom:-1px で
+   下線が罫線に重なる）。サブナビ（.p2-subnav-bar / .pN-tabnav）と同じ「太字＋下罫線」の語彙に揃え、
+   塗りつぶしは「その場で実行される操作」に予約しているボタン系と混同されないようにする。 */
+.p10-rank-tabs{display:flex;flex-wrap:wrap;margin-top:14px;border-bottom:1px solid var(--border)}
+.p10-rank-tab{font-family:var(--fn);font-size:.78rem;font-weight:500;color:var(--muted);background:none;border:0;border-bottom:2px solid transparent;margin-bottom:-1px;padding:7px 14px;cursor:pointer;white-space:nowrap;transition:color .15s,border-color .15s}
+.p10-rank-tab:hover{color:var(--page-accent,#005da7)}
+.p10-rank-tab.is-active{color:var(--page-accent,#005da7);border-bottom-color:var(--page-accent,#005da7);font-weight:600}
+/* 右カラム（300px）内は幅が狭いため、タブをやや小さく詰める */
+.p10-side-widget .p10-rank-tab{font-size:.72rem;padding:6px 10px}
+/* 右カラムウィジェットのカードリスト（クロスジャンル／ランキング）。
+   .p2-side-ec の上下padding（9px）だけだと直上の説明文・タブに貼り付いて見えるため、
+   リスト全体に余白を持たせて「説明 → 一覧」の段落を分ける */
+.p10-side-list{margin-top:14px}
+/* ランキングの順位。カードは共通の buildSideEcCard（p2/p3/p4/p6…で共有）なので描画側には手を入れず、
+   ランキングのリストにだけ CSS counter で番号を出す。狭い右カラム（300px）で番号列を作ると
+   展覧会名の幅を削るため、サムネイル左上に小さく重ねる。年間の記録（.p104-arc__rank）は1カラムで
+   幅に余裕があるので大きなセリフ数字＝別扱いにしている。 */
+.p10-side-list--rank{counter-reset:p10rank}
+.p10-side-list--rank .p2-side-ec{counter-increment:p10rank}
+.p10-side-list--rank .p2-side-ec__poster::before{content:counter(p10rank);position:absolute;top:0;left:0;min-width:16px;height:16px;padding:0 3px;display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:.62rem;font-weight:600;line-height:1;color:#fff;background:rgba(35,24,21,.72);border-radius:0 0 3px 0}
+/* ── 年間の記録（Annual Records）——
+   P10-4 の下段＝最新年の上位3件ダイジェスト、P10-4-2＝年ごとの独立ページ（本体）で共有する。
+   上段（いまの特集）と役割が違うため、右カラムのカード型ランキングではなく1カラムの番付リストにする。
+   各行の主眼は「作り手のいま」への出口なので、行内で最後まで捨てないのは作り手行（.p104-arc__host）。
+   タブは .p10-rank-tabs / .p10-rank-tab をそのまま再利用（軸の切替という役割が同じ）。
+   年の切替は select（クライアント状態）ではなくリンク（.p104-arc__years / a.p10-preset）＝年ごとに別URL。 */
+.p104-arc{margin-top:40px;padding-top:28px;border-top:2px solid var(--ink)}
+/* P10-4-2（年鑑の独立ページ）ではこのセクションがページ本体＝上段との区切りが要らないので分離線を外す */
+.p104-arc--page{margin-top:0;padding-top:0;border-top:0}
+.p104-arc__ctrl{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:14px}
+.p104-arc__ctrl .p10-rank-tabs{margin-top:0;flex:1 1 auto}
+.p104-arc__note{font-family:var(--fn);font-size:.75rem;color:var(--muted);margin:12px 0 0}
+.p104-arc__years{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.p104-arc__list{list-style:none;margin:8px 0 0;padding:0}
+.p104-arc__row{display:flex;align-items:flex-start;gap:14px;padding:16px 0;border-bottom:1px solid var(--border)}
+.p104-arc__rank{flex:0 0 auto;width:28px;font-family:var(--fb);font-size:1.5rem;line-height:1.1;color:var(--page-accent,#005da7);text-align:center}
+.p104-arc__thumb{flex:0 0 auto;width:76px;height:56px;border-radius:3px}
+.p104-arc__body{flex:1 1 auto;min-width:0}
+.p104-arc__title{display:block;font-family:var(--fs);font-size:.93rem;font-weight:600;letter-spacing:.01em;line-height:1.45;color:var(--ink);text-decoration:none}
+.p104-arc__title:hover{text-decoration:underline}
+.p104-arc__meta{font-family:var(--fn);font-size:.75rem;color:var(--muted);margin-top:3px}
+.p104-arc__nums{display:flex;gap:14px;font-family:var(--fn);font-size:.75rem;color:var(--muted);margin-top:5px}
+.p104-arc__nums strong{font-family:var(--fm);font-weight:600;color:var(--ink)}
+/* 作り手への出口。関係の表示なので人物バッジ（.cb-person）は使わず中立のCinzelマイクロラベルで役割だけ示す */
+.p104-arc__host{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-top:9px;padding-top:9px;border-top:1px dotted var(--border)}
+.p104-arc__host-label{font-family:var(--font-en-label);font-size:.58rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.p104-arc__host-name{font-family:var(--fs);font-size:.85rem;font-weight:600;color:var(--ink);text-decoration:none}
+.p104-arc__host-name:hover{text-decoration:underline}
+.p104-arc__now{font-family:var(--fn);font-size:.73rem;color:var(--page-accent,#005da7);text-decoration:none;margin-left:auto}
+.p104-arc__now:hover{text-decoration:underline}
+@media(max-width:540px){
+  .p104-arc__rank{width:20px;font-size:1.2rem}
+  .p104-arc__thumb{width:60px;height:46px}
+  .p104-arc__now{margin-left:0}
+}
 /* 人物カード（.cc--h/.gc--h）グリッド — p10-2/p10-3（クリエイター/ギャラリー検索）の棚・結果グリッド共通。1行4枚＝スクショ準拠でカードを縮小
    カード内は独自の並び（1行目バッジ / 2行目サムネイル+名前+ジャンル改行 / 下部カウンター+ウォッチ）にするため、
    共通 --h（横並び）レイアウトを .p10-person-grid スコープ内のみ display:contents で解いて内部グリッドへ再配置する */
@@ -15062,6 +15402,10 @@ body.p5-coll-zero.p5-other .p5-tabnav__coll{display:none}
 .p10-ctx__title{font-family:var(--fs);font-size:clamp(1.4rem,3vw,2rem);font-weight:600;letter-spacing:.005em;color:var(--ink);line-height:1.25;margin:3px 0 6px}
 .p10-ctx__desc{font-size:.82rem;color:var(--muted);font-family:var(--fn);margin:0}
 .p10-fchips{display:flex;flex-wrap:wrap;gap:7px;align-items:center;margin-top:12px}
+/* 適用中の条件は検索バンド側（ドロワーの直後）に置く＝ドロワーを閉じても指定内容が見え、×で1つずつ外せる。
+   結果ヘッド内だけに置くとゼロヒット時に見えず「条件を減らして探しなおす」ができなかった（2026-09-02 移設） */
+.p10-fchips--band{margin-top:0;padding:12px 0 2px;border-top:1px solid var(--border)}
+.p10-fchips__label{font-family:var(--fn);font-size:.72rem;font-weight:600;color:var(--muted)}
 .p10-fchip{display:inline-flex;align-items:center;gap:4px;font-family:var(--fn);font-size:.74rem;font-weight:600;color:var(--page-accent,#005da7);background:var(--page-accent-bg,rgba(0,93,167,.08));border:1px solid var(--page-accent,#005da7);border-radius:999px;padding:4px 6px 4px 12px;line-height:1.3}
 .p10-fchip__x{border:none;background:none;color:inherit;font-size:.82rem;line-height:1;padding:0 4px;cursor:pointer}
 .p10-fclear{border:none;background:none;font-family:var(--fn);font-size:.72rem;color:var(--muted);text-decoration:underline;text-underline-offset:2px;cursor:pointer;padding:4px 6px}
@@ -15072,6 +15416,32 @@ body.p5-coll-zero.p5-other .p5-tabnav__coll{display:none}
 .p10-toolbar__sort{margin-left:auto;display:flex;align-items:center;gap:6px;font-family:var(--fn);font-size:.72rem;color:var(--muted)}
 .p10-toolbar__sort select{border:1px solid var(--border);border-radius:4px;padding:5px 8px;font-family:var(--fn);font-size:.76rem;color:var(--ink);background:#fff}
 .p10-more-wrap{display:flex;justify-content:center;margin-top:24px}
+/* ── D-b. Featured（「おすすめ順」のときだけ出る巻頭型クラスタ枠）──
+   中身は共通コンポーネント `.ktn-cl`（P1巻頭と同一）。ここは並べ方＝2カラムの外枠だけを持つ。
+   `.ktn-cl` の既定 `flex:1 1 300px` がそのまま2等分になるので寸法モディファイアは付けない。
+   下の通常カード群との境目は 1px ヘアラインで示す（クラスタ上端の 2px ink 罫線と濃さで区別）。 */
+.p10-feat{display:flex;flex-direction:column;gap:18px;margin-bottom:30px;padding-bottom:28px;border-bottom:1px solid var(--border)}
+.p10-feat[hidden]{display:none} /* display:flex が UA の [hidden] を上書きするためのガード＝資格者が足りない条件で見出しだけ残るのを防ぐ */
+.p10-feat__ttl{font-family:var(--fs);font-size:1.1rem;font-weight:600;letter-spacing:.02em;color:var(--ink)}
+.p10-feat__row{display:flex;flex-wrap:wrap;gap:26px;align-items:flex-start}
+@media(max-width:700px){
+  .p10-feat__row{gap:22px}
+}
+/* ── D-c. 今日の特集（検索結果末尾の再回遊枠）──
+   検索したが意中のものが無かった人への受け皿。人気軸のカードを足しても「同じ土俵の別カード」にしかならないので、
+   **別の軸の検索そのもの**＝特集を差し出して軸の乗り換えを促す。中身が想像できるよう代表サムネを3枚積む。
+   選定は日替わり固定（doyシード）＝「ランダム」「引き直し」を前面に出さず今日の誌面として置く（2026-09-02）。 */
+.p10-refeed{margin-top:44px;padding-top:28px;border-top:1px solid var(--border)}
+.p10-refeed[hidden]{display:none}
+.p10-refeed__grid{display:flex;flex-wrap:wrap;gap:14px;margin-top:16px}
+.p10-refeed__card{flex:1 1 200px;display:flex;flex-direction:column;gap:9px;padding:12px;background:#fff;border:1px solid var(--border);border-radius:4px;cursor:pointer;text-align:left;font:inherit;transition:transform .2s,box-shadow .2s,border-color .18s}
+.p10-refeed__card:hover{transform:translateY(-1px);box-shadow:0 4px 18px rgba(0,0,0,.06);border-color:rgba(0,0,0,.18)}
+.p10-refeed__thumbs{display:flex;gap:4px}
+.p10-refeed__thumb{flex:1;height:58px;border-radius:2px;display:flex;align-items:center;justify-content:center;font-family:var(--fs);font-size:.95rem;font-weight:600;color:rgba(255,255,255,.92)}
+.p10-refeed__thumb--creator{border-radius:8px}
+.p10-refeed__label{display:flex;align-items:center;gap:5px;font-family:var(--fn);font-size:.82rem;font-weight:600;color:var(--ink);line-height:1.5}
+.p10-refeed__label svg{width:13px;height:13px;flex-shrink:0;opacity:.75}
+.p10-refeed__card:hover .p10-refeed__label{color:var(--page-accent,#005da7)}
 /* ── E. ゼロヒット状態 ── */
 .p10-zero-box{text-align:center;padding:46px 20px 40px;border:1px solid var(--border);border-radius:4px;background:#fff;margin-bottom:38px}
 .p10-zero-box__title{font-family:var(--fs);font-size:1.05rem;font-weight:600;color:var(--ink);margin:0 0 8px}
@@ -15080,16 +15450,147 @@ body.p5-coll-zero.p5-other .p5-tabnav__coll{display:none}
 /* ── レスポンシブ ── */
 @media(max-width:860px){
   .p10-nearby-grid .p2-side-ec{width:calc(50% - 14px)}
-  .p10-search__types{margin-left:0;flex-basis:100%;order:9}
   .p10-person-grid{grid-template-columns:repeat(2,1fr)}
+  .p10-layout{grid-template-columns:1fr}
+  .p10-layout__main{margin-bottom:24px}
 }
 @media(max-width:540px){
   .p10-shelf-grid{columns:2 140px;column-gap:12px}
   .p10-nearby-grid .p2-side-ec{width:100%}
   .p10-person-grid{grid-template-columns:repeat(2,1fr)}
+  .p10-rank-tab{font-size:.72rem;padding:6px 10px}
   .p10-adv__group{flex-direction:column;gap:7px}
   .p10-adv__label{flex-basis:auto;padding-top:0}
+  .p10-adv__pref-group{flex-direction:column;gap:4px}
+  .p10-adv__pref-label{flex-basis:auto;padding-top:0}
+  .p10-adv__date{flex:1;min-width:0}
+  .p10-chip--area{max-width:none;width:100%}
   .p10-search__submit{padding:0 16px}
+  /* 4タブが折り返すと「1行目＝展覧会だけ」に見えるため、狭幅では折り返さず横スクロールさせる（.ktn-tagbar と同じ扱い） */
+  .p10-search__types{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+  .p10-search__types::-webkit-scrollbar{display:none}
+  .p10-search__type{padding:9px 13px 10px;font-size:.84rem}
+  .p10-search__type:first-child{padding-left:0}
+}
+/* 検索ボックスのプレースホルダー右切れ対策（追174-44）。最長は18文字「ギャラリー名・エリア・ジャンルで検索」で、
+   .9rem・アイコン余白13px・入力padding12px・検索ボタン(0 16px)のままだと約415px幅から右端が切れる。
+   文言は変えずアイコン／入力／ボタンの寸法だけを詰める（サイズ調整のみ） */
+@media(max-width:430px){
+  .p10-search__box svg{width:15px;height:15px;margin-left:10px}
+  .p10-search__input{font-size:.76rem;padding:11px 8px}
+  .p10-search__submit{padding:0 13px;font-size:.76rem;letter-spacing:.04em}
+}
+
+/* ════════════════════════════════════════════════════════════════
+   P10-4-1 特集-展覧会-軸（軸ページ）
+   展覧会の個別ページは会期で寿命が尽きるため、サイトで唯一SEO資産を積めるのは
+   「URLとタイトルが永続し中身だけ入れ替わる」軸ページ（追174-46）。
+   リンクチップは P10 の .p10-preset / .p10-adv__pref-* をそのまま流用し、
+   ここでは軸ページ固有の外枠（ヘッド／0件補完／下段カード）だけを持つ。
+   ──────────────────────────────────────────── */
+/* ── A. 軸ページ共通の外枠（P10-4 ハブ / P10-4-1 軸ページ / P10-4-2 年鑑 が共有） ──
+   .ktn-axis-head＝見出し帯、.ktn-axis-nav＝47都道府県＋ジャンルのリンク網、.ktn-axis-cards＝軸ページへのカード列。
+   旧名 .ktn-axis-foot（下段）は位置の名前だったが、P10-4 ハブの「注目のエリア」でも同じカードを中段で使うため
+   役割の名前（.ktn-axis-card＝軸への入口カード）へ改名した（追174-49）。 */
+.ktn-axis-head{background:#fff;border-bottom:1px solid var(--border)}
+.ktn-axis-head__inner{max-width:var(--w-index);margin:0 auto;padding:34px var(--hero-pad-x) 28px}
+.ktn-axis-head__eyebrow{display:flex;align-items:center;gap:14px}
+.ktn-axis-head__eyebrow-en{font-family:var(--font-en-label);font-size:.62rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--ink);flex-shrink:0}
+.ktn-axis-head__eyebrow-line{flex:1;height:1px;background:var(--border)}
+.ktn-axis-head__title-row{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 14px;margin-top:14px}
+/* ティア①（editorial ヒーロー）。検索ハブ（.p10-search__title＝600）は機能ページの見出しだが、
+   軸ページのh1は「そのURLの恒久的な名前」＝ページの主役なので700・負字間で扱う */
+.ktn-axis-head__title{font-family:var(--fs);font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:700;letter-spacing:-.005em;line-height:1.2;color:var(--ink);margin:0}
+.ktn-axis-head__en{font-family:var(--font-en-name);font-style:italic;font-size:1.15rem;font-weight:500;letter-spacing:.03em;color:var(--muted)}
+/* 運営が軸ごとに書き足す導入文＝自動生成ページが薄く見えることへの最大の対策。読ませる文章なので明朝＋読み物変数 */
+.ktn-axis-head__lead{margin-top:16px;max-width:720px;font-family:var(--fs);font-size:var(--rt-size);line-height:var(--rt-lh);letter-spacing:var(--rt-ls);color:var(--ink)}
+.ktn-axis-head__lead p{margin:0 0 .5em}
+.ktn-axis-head__lead p:last-child{margin-bottom:0}
+/* adminにだけ出る注記。軸ページの主機能は公開/非公開の反復ではなくテキスト編集（追174-46③） */
+.ktn-axis-head__lead-note{display:block;margin-top:12px;padding-left:10px;border-left:2px solid var(--border);font-family:var(--fn);font-size:.7rem;line-height:1.7;color:var(--muted)}
+/* 〈軸 × エンティティ〉の相互リンク。軸ページ同士をつなぐ層でSEO上いちばん効く */
+.ktn-axis-head__links{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+
+/* ── B. 一覧の0件メッセージ ──
+   0件は異常ではなく通常状態。404にもnoindexにもせず、次の行き先だけを示す（追174-46⑤） */
+.ktn-axis-empty{margin:0 0 18px;font-family:var(--fn);font-size:.82rem;line-height:1.95;color:var(--ink)}
+
+/* ── B-2. 絞り込みバー（`.ktn-axis-facet`・追174-60／文法統一 追174-61／全軸ページ共有 追174-63）──
+   第2軸のチップは「この一覧を絞る操作」なので一覧の直上に置く。
+   下段D（47都道府県）は「別の軸ページへ移る」内部リンク層で役割が違うため同居させない。
+   P10-4-1（場所軸）＝第2軸はジャンル／行きやすさ。P10-4-4（ジャンル軸）・P10-4-5（行きやすさ軸）
+   ＝第2軸はエリアで、押すと場所軸ページ側へ着地する（追174-59）ため「絞り込み中」行は持たない。
+   ページ内の上下＝〈上：この一覧を絞る／下：別の軸へ移る〉で読めるようにするのが狙い。
+   **行の文法は詳細条件ドロワーと共有する**（`.p10-adv__group` / `__label` / `__opts` をHTMLで直接使う）。
+   サイト内で「絞り込み」の見た目は1つにするため、ここ専用の枠・角丸・地色は持たない。
+   （旧案は目次 `.ktn-index` と同じ warm cream の囲みボックスにしていたが、`#faf7f1` は
+   関連・回遊ゾーン＝「別ページへの誘導」に予約された色で、絞り込みとは役割が逆のサインになるため撤回。） */
+.ktn-axis-facet{margin-bottom:14px;border-top:1px solid var(--border)}
+.ktn-axis-facet[hidden]{display:none}
+/* 行は共有文法。最終行の罫線も残してブロックの下端を閉じる（`.p10-adv__group:last-of-type` の解除を上書き）＝
+   行きやすさ行が hidden のときに罫線が消える／残るで下端の位置が動くのを防ぐ */
+.ktn-axis-facet .p10-adv__group{border-bottom:1px solid var(--border)}
+.ktn-axis-facet .p10-adv__group[hidden]{display:none}
+/* 適用中の条件。エリアのチップはこのバーに無い（エリアは下段Dで変える）ので、
+   2つの条件が一緒に見えるのはこの行だけ＝直下のC「条件を1つ外して見る」の指す先になる */
+.ktn-axis-facet__tag{display:inline-flex;align-items:center;gap:7px;padding:3px 9px;background:var(--tag-bg);border-radius:3px}
+.ktn-axis-facet__tag-k{font-family:var(--fn);font-size:.66rem;color:var(--muted)}
+.ktn-axis-facet__tag-v{font-family:var(--fs);font-size:.84rem;font-weight:600;color:var(--ink)}
+/* 2つの条件の掛け合わせを示す記号（操作ではない） */
+.ktn-axis-facet__x{font-family:var(--fm);font-size:.78rem;color:var(--muted)}
+/* 解除はアイコン単独にせずテキストラベルで出す（何が起きるかを推測させない） */
+.ktn-axis-facet__drop{font-family:var(--fn);font-size:.7rem;color:var(--accent);text-decoration:underline;text-underline-offset:2px;line-height:1.6;align-self:center}
+.ktn-axis-facet__drop:hover{color:var(--accent-d)}
+/* 適用中のチップはこのバーの主役なので淡tintではなくソリッドで塗る（状態が色の濃淡だけにならないように） */
+.ktn-axis-facet .p10-preset.is-on{background:var(--page-accent,#005da7);border-color:var(--page-accent,#005da7);color:#fff}
+
+/* ── C. 補完ブロック（0件・少件数のとき積む） ──
+   順序＝①同一場所のアーカイブ →②同一場所のクリエイター・ギャラリー →③同じ地方ブロック →④全国。
+   各ブロックに「なぜ出しているか」の理由ラベルを必ず添える。
+   区切り線は 1px＝上のBの続き（この一覧が薄いので足す棚）。D の 2px はページ内容とサイトのリンク網の境界で、
+   同色のまま太さだけ落として階層を下げる（関連・回遊ゾーンのブロック区切りと同じ作法）。 */
+.ktn-axis-fill{margin-bottom:38px;padding-top:26px;border-top:1px solid var(--ink)}
+.ktn-axis-fill__title{font-family:var(--fs);font-size:1.1rem;font-weight:600;letter-spacing:.02em;color:var(--ink);margin:0}
+.ktn-axis-fill__desc{margin:10px 0 0;font-family:var(--fn);font-size:.8rem;line-height:1.85;color:var(--muted)}
+.ktn-axis-fill-block{margin-top:28px}
+.ktn-axis-fill-block__head{padding-bottom:8px;border-bottom:1px solid var(--border)}
+.ktn-axis-fill-block__ttl{display:block;font-family:var(--fs);font-size:.95rem;font-weight:600;letter-spacing:.01em;color:var(--ink)}
+.ktn-axis-fill-block__why{display:block;margin-top:4px;font-family:var(--fn);font-size:.72rem;line-height:1.7;color:var(--muted)}
+.ktn-axis-fill-block__body{margin-top:14px}
+.ktn-axis-fill-cards{display:flex;flex-wrap:wrap;gap:12px}
+.ktn-axis-fill-cards>*{flex:1 1 300px;min-width:0}
+.ktn-axis-fill-chips{display:flex;flex-wrap:wrap;gap:7px}
+
+/* ── D. 軸ネットワーク（内部リンク層） ── */
+.ktn-axis-nav{margin-bottom:38px;padding-top:26px;border-top:2px solid var(--ink)}
+.ktn-axis-nav__head2{margin-top:30px}
+.ktn-axis-nav__prefs{margin-top:10px}
+.ktn-axis-nav__row{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
+.ktn-axis-nav .p10-adv__pref-group{border-bottom:1px solid var(--border);padding:9px 0}
+.ktn-axis-nav .p10-adv__pref-group:last-child{border-bottom:none}
+
+/* ── E. 下段（過去側への導線） ──
+   地方で現在0件になってもアーカイブが残る＝ページが空にならないための生命線 */
+.ktn-axis-cards{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:12px}
+.ktn-axis-card{flex:1 1 300px;display:flex;flex-direction:column;background:#fff;border:1px solid var(--border);border-radius:4px;padding:20px;text-decoration:none;color:var(--ink);transition:transform .2s,box-shadow .2s,border-color .18s}
+.ktn-axis-card:hover{transform:translateY(-1px);box-shadow:0 4px 18px rgba(0,0,0,.06);border-color:rgba(0,0,0,.18)}
+.ktn-axis-card__label{font-family:var(--font-en-label);font-size:.6rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.ktn-axis-card__ttl{margin-top:9px;font-family:var(--fs);font-size:1rem;font-weight:600;letter-spacing:.01em;color:var(--ink)}
+/* 東京エリアの通称。タイトル（東京南部の展覧会）の直下に一段落として置く＝主語は方角名のまま */
+.ktn-axis-card__alias{margin-top:4px;font-family:var(--fn);font-size:.72rem;line-height:1.6;color:var(--muted)}
+.ktn-axis-card__desc{margin-top:9px;font-family:var(--fn);font-size:.74rem;line-height:1.85;color:var(--muted)}
+/* 件数行（P10-4 ハブの注目エリアカードのみ）。軸に入る前に「いま何があるか」を見せる */
+.ktn-axis-card__n{margin-top:9px;font-family:var(--fn);font-size:.74rem;line-height:1.85;color:var(--muted)}
+.ktn-axis-card__n strong{margin-right:3px;font-family:var(--fm);font-size:1.05rem;font-weight:600;color:var(--page-accent,#005da7)}
+/* 47都道府県チップの件数。掲載が無い県もリンクを外さず0と出す（軸ページはURLを消さない） */
+.ktn-axis-prefchip__n{margin-left:6px;font-family:var(--fm);font-size:.62rem;font-weight:600;color:var(--muted)}
+
+@media(max-width:640px){
+  .ktn-axis-head__inner{padding:26px 16px 22px}
+  .ktn-axis-head__en{font-size:1rem}
+  .ktn-axis-head__lead{margin-top:14px}
+  .ktn-axis-nav .p10-adv__pref-group{display:block}
+  .ktn-axis-nav .p10-adv__pref-label{padding-top:0;padding-bottom:6px}
 }
 
 /* ════════════════════════════════════════════════════════════════
@@ -15142,6 +15643,247 @@ body.p5-coll-zero.p5-other .p5-tabnav__coll{display:none}
 .p1-ticker__tag--ending{color:#c8501c}
 .p1-ticker__tag--liaison{color:var(--accent)}
 @media(prefers-reduced-motion:reduce){.p1-ticker__item{transition:none}}
+/* ── D2. 巻頭（Opening）── 既存カード（.ec/.aw/.cc…）を流用せず専用のエディトリアル項目にするのは、
+   カードが「一覧の中の1件」の見え方＝並列・機能的で、大小のリズムで読ませる誌面にならないため（案B）。
+   サイズは意図的に**サイト内の通常カード（masonry 220px〜）より小さく**し、幅・高さ・上端位置を1点ずつ
+   ずらしてコラージュにする（雑誌の巻頭は本編より小さい図版で構成されるため・2026-08-30リファイン）。
+   1スロット＝`.p1-op-unit`（コンテンツ `.p1-op-item` ＋ 紐づく展覧会 `.p1-op-exh` の対）。作品・記事・
+   レビュー・人はすべて展覧会に紐づくため、対で見せて「展覧会が中心・周辺コンテンツが厚い」を誌面で示す
+   （2026-08-30・案1）。幅・段差は unit が持ち、item は width:100% で従う。 */
+.p1-op{background:#fff;border-bottom:1px solid var(--border)}
+.p1-op__inner{max-width:var(--w-index);margin:0 auto;padding:38px var(--hero-pad-x) 44px}
+/* セクション柱＝雑誌のマストヘッド：部門名（Cinzel）＋罫線＋日付を1行に組み、その下に明朝の大見出し、
+   さらに欧文サブタイトル（Cormorant italic）を重ねる3段。下罫線は3px＝クラスタ/対の2pxより太くして
+   「章の柱 ＞ 記事の見切り」の階層を作る（2026-08-31） */
+.p1-op__head{border-bottom:3px solid var(--ink);padding-bottom:14px;margin-bottom:30px}
+.p1-op__masthead{display:flex;align-items:center;gap:14px}
+.p1-op__eyebrow{font-family:var(--font-en-label,'Cinzel',serif);font-size:.7rem;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:var(--ink);margin:0}
+.p1-op__rule{flex:1 1 auto;height:1px;background:var(--ink);opacity:.35}
+.p1-op__issue{font-family:'Bodoni Moda',serif;font-style:italic;font-size:.78rem;letter-spacing:.04em;color:var(--muted);margin:0;white-space:nowrap}
+.p1-op__title{font-family:var(--fs);font-size:clamp(1.6rem,3.4vw,2.4rem);font-weight:700;letter-spacing:-.01em;line-height:1.22;color:var(--ink);margin:12px 0 0}
+.p1-op__en{font-family:var(--font-en-name);font-style:italic;font-size:1.05rem;font-weight:500;letter-spacing:.03em;line-height:1.35;color:var(--ink);margin:5px 0 0}
+.p1-op__lead{font-family:var(--fn);font-size:.78rem;line-height:1.8;color:var(--muted);margin:9px 0 0}
+/* 誌面＝2段のコラージュ。1点ずつ幅・図版高さが違い、2段目は左を字下げして段差を作る */
+.p1-op__mosaic{display:flex;flex-direction:column;gap:26px}
+.p1-op__row{display:flex;flex-wrap:wrap;align-items:flex-start;column-gap:22px;row-gap:24px}
+.p1-op__row--2{padding-left:8%}
+.p1-op-unit{flex:0 0 auto;width:170px;display:flex;flex-direction:column}
+.p1-op-item{display:flex;flex-direction:column;text-decoration:none;color:var(--ink);position:relative}
+.p1-op-item__num{font-family:'Bodoni Moda',serif;font-size:.92rem;font-style:italic;line-height:1;color:var(--muted);margin-bottom:6px}
+.p1-op-item__visual{display:block;width:100%;height:120px;border-radius:2px;background-size:cover;background-position:center;position:relative;overflow:hidden}
+.p1-op-item__ini{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--fs);font-size:1.7rem;font-weight:700;color:rgba(255,255,255,.9)}
+.p1-op-item__body{display:flex;flex-direction:column;gap:5px;padding-top:10px}
+.p1-op-item__badges{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.p1-op-item__ttl{font-family:var(--fs);font-size:.84rem;font-weight:600;letter-spacing:.01em;line-height:1.5;color:var(--ink)}
+.p1-op-item__meta{font-family:var(--fn);font-size:.7rem;color:var(--muted);line-height:1.6}
+.p1-op-item__cap{font-family:var(--fs);font-size:.78rem;line-height:1.85;letter-spacing:var(--rt-ls);color:var(--ink);margin-top:1px}
+.p1-op-item:hover .p1-op-item__ttl{text-decoration:underline;text-underline-offset:3px}
+.p1-op-item:hover .p1-op-item__visual{opacity:.9}
+/* 対になる展覧会プレート。上端の 2px ink 罫線が「この2つは対」の見切り（バッジは使わず関係はテキストで示す）。
+   展覧会はサイトの主コンテンツなので、対の中で**添え物に見えない重み**を持たせる：罫線を2pxにし、サムネを
+   52px（n1は64px）、展覧会名を .88rem/700＝コンテンツ側タイトル（.84rem/600）より強くする（2026-08-30）。 */
+.p1-op-exh{display:flex;align-items:flex-start;gap:10px;margin-top:13px;padding-top:12px;border-top:2px solid var(--ink);text-decoration:none;color:var(--ink)}
+.p1-op-exh__thumb{flex:0 0 auto;width:52px;height:52px;border-radius:2px;background-size:cover;background-position:center}
+.p1-op-exh__body{min-width:0;display:flex;flex-direction:column;gap:3px}
+.p1-op-exh__label{font-family:var(--fn);font-size:.62rem;letter-spacing:.08em;color:var(--muted);line-height:1.3}
+.p1-op-exh__ttl{font-family:var(--fs);font-size:.88rem;font-weight:700;letter-spacing:-.005em;line-height:1.45;color:var(--ink)}
+.p1-op-exh__meta{font-family:var(--fn);font-size:.66rem;color:var(--muted);line-height:1.5}
+.p1-op-exh__status{font-family:var(--fn);font-size:.64rem;font-weight:600;letter-spacing:.02em;color:var(--accent);line-height:1.4}
+.p1-op-exh__status--soon{color:var(--muted)}
+.p1-op-exh:hover .p1-op-exh__ttl{text-decoration:underline;text-underline-offset:2px}
+.p1-op-exh:hover .p1-op-exh__thumb{opacity:.9}
+/* スロット別サイズ・段差（右端をあえて揃えず不揃いの余白を残す＝コラージュのリズム） */
+.p1-op-unit--n1{width:256px}
+.p1-op-unit--n1 .p1-op-item__num{font-size:1.2rem}
+.p1-op-unit--n1 .p1-op-item__visual{height:196px}
+.p1-op-unit--n1 .p1-op-item__ttl{font-size:1rem;font-weight:700;line-height:1.4}
+.p1-op-unit--n1 .p1-op-item__ini{font-size:2.4rem}
+.p1-op-unit--n1 .p1-op-exh__thumb{width:64px;height:64px}
+.p1-op-unit--n1 .p1-op-exh__ttl{font-size:1rem}
+.p1-op-unit--n2{width:190px;margin-top:30px}
+.p1-op-unit--n2 .p1-op-item__visual{height:114px}
+.p1-op-unit--n3{width:162px;margin-top:8px}
+.p1-op-unit--n3 .p1-op-item__visual{height:148px}
+.p1-op-unit--n4{width:168px}
+.p1-op-unit--n4 .p1-op-item__visual{height:96px}
+.p1-op-unit--n5{width:200px;margin-top:24px}
+.p1-op-unit--n5 .p1-op-item__visual{height:128px}
+.p1-op-unit--n6{width:156px;margin-top:6px}
+.p1-op-unit--n6 .p1-op-item__visual{height:86px}
+/* 折衷案（01＝クラスタ／02〜06＝ペア）専用のスロット寸法（2026-08-31）。案1の px 幅をそのまま流用すると、
+   全幅のクラスタの下に 3＋2 の段組みが並び、デスクトップ幅1040pxの半分ほどしか埋まらず右が大きく空いた。
+   折衷では **5枠を1段に並べ % で幅を使い切る**（`26/17/21/15/21`＝計100%。`- 18px` は列gap 22px×4本を
+   5枠で分担した値）。あわせて最大253px:最小138px（約1.8倍・案1は256:150で1.7倍）と比を広げ、図版高さも
+   200/100/150/84/132px と差を付けて大小をはっきりさせる。スロット番号と役割が案1と別なので `--nN` は
+   上書きせず `--hyN` を後置して勝たせる（≤640 の一括リセットは後方にあるためモバイルではそちらが勝つ）。 */
+.p1-op__row--hy{row-gap:26px}
+.p1-op-unit--hy2{width:auto;flex:0 0 calc(26% - 18px);margin-top:0}
+.p1-op-unit--hy2 .p1-op-item__num{font-size:1.1rem}
+.p1-op-unit--hy2 .p1-op-item__visual{height:200px}
+.p1-op-unit--hy2 .p1-op-item__ttl{font-size:.94rem;font-weight:700;line-height:1.42}
+.p1-op-unit--hy2 .p1-op-item__ini{font-size:2.1rem}
+.p1-op-unit--hy2 .p1-op-exh__thumb{width:58px;height:58px}
+.p1-op-unit--hy2 .p1-op-exh__ttl{font-size:.94rem}
+.p1-op-unit--hy3{width:auto;flex:0 0 calc(17% - 18px);margin-top:30px}
+.p1-op-unit--hy3 .p1-op-item__visual{height:100px}
+.p1-op-unit--hy4{width:auto;flex:0 0 calc(21% - 18px);margin-top:10px}
+.p1-op-unit--hy4 .p1-op-item__visual{height:150px}
+.p1-op-unit--hy5{width:auto;flex:0 0 calc(15% - 18px);margin-top:48px}
+.p1-op-unit--hy5 .p1-op-item__visual{height:84px}
+.p1-op-unit--hy6{width:auto;flex:0 0 calc(21% - 18px);margin-top:22px}
+.p1-op-unit--hy6 .p1-op-item__visual{height:132px}
+/* 最小の2枠（03・05＝約140〜160px）は展覧会プレートを縦積みにする。52px角サムネのままだと文字に残る幅が
+   80px弱になり展覧会名が4〜5行に折れるため、サムネを帯にして横幅を文字へ譲る（主役性は2px罫線で維持）。 */
+.p1-op-unit--hy3 .p1-op-exh,.p1-op-unit--hy5 .p1-op-exh{flex-direction:column;gap:8px}
+.p1-op-unit--hy3 .p1-op-exh__thumb,.p1-op-unit--hy5 .p1-op-exh__thumb{width:100%;height:52px}
+.p1-op-unit--hy3 .p1-op-item__ttl,.p1-op-unit--hy5 .p1-op-item__ttl{font-size:.78rem}
+.p1-op-unit--hy3 .p1-op-exh__ttl,.p1-op-unit--hy5 .p1-op-exh__ttl{font-size:.8rem}
+@media(max-width:860px){
+  .p1-op__row--2{padding-left:0}
+  /* タブレット幅では5枠1段だと最小枠が110px以下になるため 3＋2 に折り返す。各段とも%の合計を100にして
+     幅は使い切ったまま（1段目 40/27/33・2段目 42/58）＝空きを作らずに大小だけ残す。 */
+  .p1-op-unit--hy2{flex:0 0 calc(40% - 15px)}
+  .p1-op-unit--hy3{flex:0 0 calc(27% - 15px);margin-top:24px}
+  .p1-op-unit--hy3 .p1-op-item__visual{height:118px}
+  .p1-op-unit--hy4{flex:0 0 calc(33% - 15px)}
+  .p1-op-unit--hy5{flex:0 0 calc(42% - 15px);margin-top:0}
+  .p1-op-unit--hy5 .p1-op-item__visual{height:112px}
+  .p1-op-unit--hy6{flex:0 0 calc(58% - 15px);margin-top:26px}
+  .p1-op-unit--hy6 .p1-op-item__visual{height:148px}
+  .p1-op-unit--hy5 .p1-op-exh{flex-direction:row;gap:10px}
+  .p1-op-unit--hy5 .p1-op-exh__thumb{width:52px;height:52px}
+}
+@media(max-width:640px){
+  /* スマホでもコラージュを保つ（2026-08-31 改訂）。旧版は全スロットを `flex:1 1 145px` の等幅2列＋
+     段差解除に落としていたため、誌面が「同じ幅のカードが並ぶ普通のリスト」に見えていた。狭幅でも
+     ①幅を不均等（54% / 46%）②図版高さを不揃い ③上端の段差（margin-top）を残す、の3点を維持し、
+     さらに **行の最後の1点を `margin-left:auto` で右へ寄せて左右を非対称に**する。
+     px固定をやめ % で折り返し位置を作るのは、画面幅が変わってもこの組みが崩れないようにするため。 */
+  .p1-op__inner{padding:30px 16px 34px}
+  .p1-op__row{column-gap:14px;row-gap:20px}
+  .p1-op-unit{width:auto}
+  .p1-op-unit--n1{flex:0 0 100%;width:auto;margin-top:0}
+  .p1-op-unit--n1 .p1-op-item__visual{height:172px}
+  .p1-op-unit--n2{flex:0 0 54%;width:auto;margin-top:0}
+  .p1-op-unit--n2 .p1-op-item__visual{height:106px}
+  .p1-op-unit--n3{flex:0 0 calc(46% - 14px);width:auto;margin-top:20px}
+  .p1-op-unit--n3 .p1-op-item__visual{height:140px}
+  .p1-op-unit--n4{flex:0 0 calc(46% - 14px);width:auto;margin-top:0}
+  .p1-op-unit--n4 .p1-op-item__visual{height:92px}
+  .p1-op-unit--n5{flex:0 0 54%;width:auto;margin-top:26px}
+  .p1-op-unit--n5 .p1-op-item__visual{height:124px}
+  .p1-op-unit--n6{flex:0 0 66%;width:auto;margin-top:4px;margin-left:auto}
+  .p1-op-unit--n6 .p1-op-item__visual{height:98px}
+  /* 狭い枠に入る展覧会プレートはサムネと文字だけ詰める（主役性は2px罫線と700のタイトルで維持） */
+  /* スマホでは折衷案も案1と同じ2列の組み（`--nN` が後勝ちで効く）に戻るため、
+     デスクトップ用に縦積みしていた最小2枠の展覧会プレートも横並びへ戻す（サムネ寸法は下の :not 側が供給） */
+  .p1-op-unit--hy3 .p1-op-exh,.p1-op-unit--hy5 .p1-op-exh{flex-direction:row}
+  .p1-op-unit:not(.p1-op-unit--n1) .p1-op-exh{gap:8px;margin-top:11px;padding-top:10px}
+  .p1-op-unit:not(.p1-op-unit--n1) .p1-op-exh__thumb{width:40px;height:40px}
+  .p1-op-unit:not(.p1-op-unit--n1) .p1-op-exh__ttl{font-size:.82rem}
+}
+/* ── D2-b. クラスタ `.ktn-cl`（全ページ共通コンポーネント・canonical）──
+   1クラスタ＝**核となるコンテンツ1件＋その周辺コンテンツ**（作品・記事・レビュー・人）。「中心と
+   まわりに話題が集まっている」という構図を1ブロックで言い切る誌面装置。
+   - P1 巻頭Opening（案2・採用）＝核は展覧会。3クラスタを `.p1-op__clusters` / `.p1-op__crow` に並べ、
+     スロット寸法は `--n1`（主役・全幅）／`--n2`（準主役）／`--n3`（小）で分ける（この3つは**巻頭の
+     組版専用**モディファイア＝他ページでは使わない）。
+   - P10系 検索結果「おすすめ順」の Featured 枠＝核は展覧会/作品/クリエイター/ギャラリー。
+     モディファイアなしの素の `.ktn-cl`（`flex:1 1 300px`）を `.p10-feat__row` に2つ並べる。
+   命名を `.p1-op-cl*`／`.p1-op-sat*` から共通化（2026-09-01）。新規ページはこのクラスをそのまま使い、
+   ページ側には外枠（並べ方）だけを書く。React 変換：`<Cluster core around size>`。 */
+.p1-op__clusters{display:flex;flex-direction:column;gap:34px}
+.p1-op__crow{display:flex;flex-wrap:wrap;gap:26px;align-items:flex-start}
+.ktn-cl{flex:1 1 300px;min-width:0;display:flex;flex-direction:column;gap:12px;padding-top:13px;border-top:2px solid var(--ink)}
+.ktn-cl__num{font-family:'Bodoni Moda',serif;font-size:.92rem;font-style:italic;line-height:1;color:var(--muted)}
+.ktn-cl__main{display:flex;flex-direction:column;gap:16px;min-width:0}
+.ktn-cl__exh{display:flex;gap:14px;min-width:0;text-decoration:none;color:var(--ink)}
+.ktn-cl__poster{flex:0 0 auto;width:104px;height:104px;border-radius:2px;background-size:cover;background-position:center;position:relative;overflow:hidden}
+/* 核が人（クリエイター／ギャラリー）のとき＝P10-2/P10-3。画像でなくイニシャルを置く。
+   角丸はロール識別ルール準拠（creator 12px／gallery 4px）＝一覧カードのアバターと同じ形で見分ける */
+.ktn-cl__ini{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--fs);font-size:2.2rem;font-weight:700;color:rgba(255,255,255,.9)}
+.ktn-cl__poster--creator{border-radius:12px}
+.ktn-cl__poster--gallery{border-radius:4px}
+.ktn-cl__exh-body{min-width:0;display:flex;flex-direction:column;gap:5px}
+.ktn-cl__badges{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.ktn-cl__ttl{font-family:var(--fs);font-size:.98rem;font-weight:700;letter-spacing:-.005em;line-height:1.4;color:var(--ink)}
+.ktn-cl__meta{font-family:var(--fn);font-size:.68rem;color:var(--muted);line-height:1.6}
+/* 周辺の総量（作品N点・記事N本・レビューN件）＝canonical .ktn-count を使い、ページ側は位置のみ調整 */
+.ktn-cl__counts{margin-top:2px}
+.ktn-cl__lead{font-family:var(--fs);font-size:.8rem;line-height:1.9;letter-spacing:var(--rt-ls);color:var(--ink);margin-top:2px}
+.ktn-cl__exh:hover .ktn-cl__ttl{text-decoration:underline;text-underline-offset:3px}
+.ktn-cl__exh:hover .ktn-cl__poster{opacity:.9}
+/* 周辺コンテンツ＝展覧会の下に連なる小さな行。種別は cb バッジで示す（関係は入れ子＝クラスタ自体が示す） */
+.ktn-cl__sat{display:flex;flex-direction:column;min-width:0}
+.ktn-cl__satlabel{font-family:var(--font-en-label,'Cinzel',serif);font-size:.56rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);padding-bottom:7px}
+.ktn-cl-sat{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-top:1px solid var(--border);min-width:0;text-decoration:none;color:var(--ink)}
+.ktn-cl-sat:first-of-type{border-top:0;padding-top:0}
+.ktn-cl-sat__thumb{flex:0 0 auto;width:46px;height:46px;border-radius:2px;background-size:cover;background-position:center;position:relative;overflow:hidden}
+.ktn-cl-sat__ini{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--fs);font-size:1.05rem;font-weight:700;color:rgba(255,255,255,.9)}
+.ktn-cl-sat__body{min-width:0;display:flex;flex-direction:column;gap:3px}
+.ktn-cl-sat__ttl{font-family:var(--fs);font-size:.78rem;font-weight:600;line-height:1.45;color:var(--ink)}
+.ktn-cl-sat__meta{font-family:var(--fn);font-size:.64rem;color:var(--muted);line-height:1.5}
+.ktn-cl-sat:hover .ktn-cl-sat__ttl{text-decoration:underline;text-underline-offset:2px}
+/* 主役クラスタ＝展覧会を大きい図版で立て、周辺コンテンツを右に寄せる */
+.ktn-cl--n1{flex:1 1 100%}
+.ktn-cl--n1 .ktn-cl__main{flex-direction:row;gap:30px}
+.ktn-cl--n1 .ktn-cl__exh{flex:1 1 420px;flex-direction:column;gap:13px}
+.ktn-cl--n1 .ktn-cl__poster{width:100%;height:230px}
+.ktn-cl--n1 .ktn-cl__ttl{font-size:clamp(1.2rem,2.2vw,1.5rem);letter-spacing:-.01em}
+.ktn-cl--n1 .ktn-cl__num{font-size:1.2rem}
+.ktn-cl--n1 .ktn-cl__sat{flex:0 0 300px}
+/* ③ 主役クラスタの周辺カラムに内部階層を作る（2026-08-31）。同寸の行が3本並ぶと「リスト」に見え、
+   周辺ぜんぶが同じ重さで平板になる。**1件目だけ図版を大きくして抜粋（`__cap`）まで出し、残り2件は
+   罫線と文字だけの細い行に落とす**＝周辺の中にも主従を作る。これで視線は 展覧会 → 周辺の1件目 →
+   残りの見出し、の順に流れる。抜粋は表示系の読ませる文章なので明朝（`--fs`）。 */
+.ktn-cl--n1 .ktn-cl-sat--lead{padding-bottom:13px}
+.ktn-cl--n1 .ktn-cl-sat--lead .ktn-cl-sat__thumb{width:104px;height:78px}
+.ktn-cl--n1 .ktn-cl-sat--lead .ktn-cl-sat__ini{font-size:1.5rem}
+.ktn-cl--n1 .ktn-cl-sat--lead .ktn-cl-sat__ttl{font-size:.88rem;font-weight:700;line-height:1.4}
+.ktn-cl-sat__cap{font-family:var(--fs);font-size:.74rem;line-height:1.8;letter-spacing:var(--rt-ls);color:var(--ink);margin-top:2px}
+.ktn-cl--n1 .ktn-cl-sat:not(.ktn-cl-sat--lead){padding:8px 0}
+.ktn-cl--n1 .ktn-cl-sat:not(.ktn-cl-sat--lead) .ktn-cl-sat__thumb{display:none}
+.ktn-cl--n1 .ktn-cl-sat:not(.ktn-cl-sat--lead) .ktn-cl-sat__ttl{font-size:.76rem}
+/* ④ 02・03の双子対称を崩す（2026-08-31）。`flex:1 1 300px` の等分だと同じ大きさの箱が2つ並び、
+   01の下に「同格の2枚」ができてページ全体の主従が3段（大・中・小）でなく2段に見えていた。
+   幅60:40・ポスター148px:88px・上端34pxの段差で中と小に分け、リード文は02にだけ出す（JS側 size='md'）。 */
+.ktn-cl--n2{flex:0 0 calc(60% - 13px)}
+.ktn-cl--n3{flex:0 0 calc(40% - 13px);margin-top:34px}
+.ktn-cl--n2 .ktn-cl__poster{width:148px;height:148px}
+.ktn-cl--n2 .ktn-cl__ttl{font-size:1.12rem}
+.ktn-cl--n3 .ktn-cl__poster{width:88px;height:88px}
+.ktn-cl--n3 .ktn-cl__ttl{font-size:.9rem}
+@media(max-width:860px){
+  /* 横並び（左＝展覧会／右＝周辺）を解いて縦積みにするとき、gap:30px は横の"カラム間"としては適正でも
+     縦では展覧会とAROUND THIS SHOWが切り離れて見えるため18pxへ詰める（中心と周辺は近接させる） */
+  .ktn-cl--n1 .ktn-cl__main{flex-direction:column;gap:18px}
+  /* ★ flex-basis は主軸のサイズ＝column では「高さ」になる。desktop の `flex:1 1 420px`（＝横並び時の
+     カラム幅）をそのままにすると、縦積みで展覧会ブロックが最低420pxの高さを持ち、中身の下に大きな空白が
+     でき AROUND THIS SHOW が離れて見える。縦積みでは basis を auto に戻す（伸長もさせない）。 */
+  .ktn-cl--n1 .ktn-cl__exh{flex:0 0 auto}
+  .ktn-cl--n1 .ktn-cl__sat{flex:0 0 auto}
+}
+@media(max-width:640px){
+  /* 案2もスマホで1列に積むと縦長のリストに見えるため、02/03 は**縦積みの小カード2列**に組み替えて
+     誌面の粒を作る（ポスターを上・テキストを下／高さを112pxと86pxで不揃いにし、03に段差を付ける）。 */
+  .p1-op__clusters{gap:26px}
+  .p1-op__crow{gap:14px}
+  .ktn-cl--n1 .ktn-cl__main{gap:16px}
+  .ktn-cl__poster{width:84px;height:84px}
+  .ktn-cl--n1 .ktn-cl__poster{width:100%;height:180px}
+  /* スマホでも02:03の非対称は残す（2列は保ったまま56:44）。デスクトップの60:40だと狭幅で03が細くなりすぎる */
+  .ktn-cl--n2{flex:0 0 calc(56% - 7px);min-width:0}
+  .ktn-cl--n3{flex:0 0 calc(44% - 7px);min-width:0;margin-top:20px}
+  .ktn-cl--n2 .ktn-cl__exh,.ktn-cl--n3 .ktn-cl__exh{flex-direction:column;gap:9px}
+  .ktn-cl--n2 .ktn-cl__poster{width:100%;height:112px}
+  .ktn-cl--n3 .ktn-cl__poster{width:100%;height:86px}
+  .ktn-cl--n2 .ktn-cl__ttl,.ktn-cl--n3 .ktn-cl__ttl{font-size:.88rem}
+  .ktn-cl--n2 .ktn-cl__meta,.ktn-cl--n3 .ktn-cl__meta{font-size:.64rem}
+  .ktn-cl-sat__thumb{width:40px;height:40px}
+  /* 周辺カラム1件目の階層はスマホでも残すが、図版は狭幅に合わせて縮める（104×78→80×60） */
+  .ktn-cl--n1 .ktn-cl-sat--lead .ktn-cl-sat__thumb{width:80px;height:60px}
+  .ktn-cl-sat__ttl{font-size:.74rem}
+}
 /* ── C. 検索送客（→ P10） ── */
 .p1-search-lead{background:#fff;border-bottom:1px solid var(--border)}
 .p1-search-lead__inner{max-width:var(--w-index);margin:0 auto;padding:20px var(--hero-pad-x) 18px;display:flex;flex-direction:column;gap:12px}
@@ -15155,9 +15897,13 @@ body.p5-coll-zero.p5-other .p5-tabnav__coll{display:none}
 .p1-search-chips__sep{width:1px;height:16px;background:var(--border);flex-shrink:0}
 .p1-chip{display:inline-flex;align-items:center;gap:5px;font-family:var(--fn);font-size:.76rem;color:var(--ink);background:#fff;border:1px solid var(--border);border-radius:999px;padding:5px 13px;text-decoration:none;transition:border-color .15s;line-height:1.3;white-space:nowrap}
 .p1-chip:hover{border-color:rgba(0,0,0,.32)}
-/* ── C2. 近くの展覧会（ゲスト回遊フック・位置情報） ── */
-.p1-nearby{background:#fff;border-bottom:1px solid var(--border)}
-.p1-nearby__inner{max-width:var(--w-index);margin:0 auto;padding:26px var(--hero-pad-x) 28px}
+/* ── C2. 近くの展覧会（ゲスト回遊フック・位置情報） / C3. エリアから探す（軸ページ入口・追174-49） ──
+   帯の外枠は同値なのでセレクタをまとめる。C3 は位置情報を許可しない人にとっての C2 の代替でもあるため、
+   同じ幅・同じ余白で連続させて「探す」のかたまりとして読ませる。 */
+.p1-nearby,.p1-axis{background:#fff;border-bottom:1px solid var(--border)}
+.p1-nearby__inner,.p1-axis__inner{max-width:var(--w-index);margin:0 auto;padding:26px var(--hero-pad-x) 28px}
+.p1-axis__desc{margin-top:6px;font-family:var(--fn);font-size:.8rem;line-height:1.9;color:var(--muted)}
+.p1-axis .ktn-axis-cards{margin-top:16px;margin-bottom:0}
 .p1-nearby__prompt{display:flex;align-items:center;gap:16px;background:var(--paper);border:1px solid var(--border);border-radius:6px;padding:18px 20px;margin-top:14px;flex-wrap:wrap}
 .p1-nearby__prompt-icon{flex-shrink:0;width:40px;height:40px;border-radius:999px;background:#fff;border:1px solid var(--border);color:var(--accent);display:flex;align-items:center;justify-content:center}
 .p1-nearby__prompt-icon svg{width:20px;height:20px;display:block}

@@ -106,8 +106,8 @@
 | P5 | ユーザー-my展覧会カレンダー |  | R | R | R | R | R | R | --w-entity | kotennavi-p5.html | Fix済 |
 | P5-1 | ユーザー-myウオッチ |  | R | R | R | R | R | R | --w-entity | kotennavi-p5-1.html | Fix済 |
 | P5-2 | ユーザー-myチェックイン |  | R | R | R | R | R | R | --w-entity | kotennavi-p5-2.html | Fix済 |
-| P5-3 | ユーザー-my興味あり! |  |  | R | R | R | R | R | --w-entity | kotennavi-p5-3.html | Fix済 |
-| P5-4 | ユーザー-myコレクションルーム |  |  | R | R | R | R | R | --w-entity | kotennavi-p5-4.html | Fix済 |
+| P5-3 | ユーザー-my興味あり! |  | R | R | R | R | R | R | --w-entity | kotennavi-p5-3.html | Fix済 |
+| P5-4 | ユーザー-myコレクションルーム |  | R | R | R | R | R | R | --w-entity | kotennavi-p5-4.html | Fix済 |
 | P5-11 | ユーザー-編集 |  |  |  | W |  |  | W | --w-detail | kotennavi-p5-11.html | 調整中 |
 | P5-12 | ユーザー-パスワード管理 |  |  |  | R/W |  |  | R/W | --w-detail | kotennavi-p5-12.html | 調整中 |
 | P5-13 | ユーザー-メール通知管理 |  |  |  | R/W |  |  | R/W | --w-detail | kotennavi-p5-13.html | 調整中 |
@@ -155,11 +155,16 @@
 
 | ID | ページ名 | L/L+ | guest | login | user+ | creator | gallery | admin | max-width | html-file | 進捗 |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| P10 | 検索-展覧会 |  | R | R | R | R | R | R | --w-index | kotennavi-p10.html | プロトタイプ |
+| P10 | 検索-展覧会 |  | R | R | R | R | R | R | --w-index | kotennavi-p10.html | Fix |
 | P10-1 | 検索-作品 |  |  | R | R | R | R | R | --w-index | kotennavi-p10-1.html | プロトタイプ |
 | P10-2 | 検索-クリエイター |  |  | R | R | R | R | R | --w-index | kotennavi-p10-2.html | プロトタイプ |
 | P10-3 | 検索-ギャラリー |  |  | R | R | R | R | R | --w-index | kotennavi-p10-3.html | プロトタイプ |
-| P10-4 | 特集-展覧会 |  | R | R | R | R | R | R/W | --w-index | kotennavi-p10-4.html | 調整中 |
+| P10-4 | 特集-展覧会（軸インデックス） |  | R | R | R | R | R | R/W | --w-index | kotennavi-p10-4.html | Fix |
+| P10-4-1 | 特集-展覧会-軸 |  | R | R | R | R | R | R/W | --w-index | kotennavi-p10-4-1.html | Fix |
+| P10-4-2 | 特集-展覧会-年鑑 |  | R | R | R | R | R | R/W | --w-index | kotennavi-p10-4-2.html | Fix |
+| P10-4-3 | 特集-展覧会-軸アーカイブ |  | R | R | R | R | R | R/W | --w-index | kotennavi-p10-4-3.html | Fix |
+| P10-4-4 | 特集-展覧会-ジャンル軸 |  | R | R | R | R | R | R/W | --w-index | kotennavi-p10-4-4.html | Fix |
+| P10-4-5 | 特集-展覧会-アクセシビリティ軸 |  | R | R | R | R | R | R/W | --w-index | kotennavi-p10-4-5.html | Fix |
 | P10-5 | 特集-作品 |  | R | R | R | R | R | R/W | --w-index | kotennavi-p10-5.html | 調整中 |
 | P10-6 | 特集-クリエイター |  | R | R | R | R | R | R/W | --w-index | kotennavi-p10-6.html | 調整中 |
 | P10-7 | 特集-ギャラリー |  | R | R | R | R | R | R/W | --w-index | kotennavi-p10-7.html | 調整中 |
@@ -202,6 +207,9 @@
 | P60-11 | お問合わせ |  | W | W | W | W | W |  | --w-detail | kotennavi-p60-11.html | 未確認 |
 | P60-12 | サービス機能改善要望 |  | W | W | W | W | W |  | --w-detail | kotennavi-p60-12.html | 調整中 |
 | P60-13 | 問題を報告する |  | W | W | W | W | W |  | --w-detail | kotennavi-p60-13.html | 整合性のみ |
+| P60-15 | ページを表示できません |  | R | R | R | R | R | R | --w-article | kotennavi-p60-15.html | 調整中 |
+
+- **P60-15 はアクセス制御の受け皿（noindex・状態は2つ）**：①**要ログイン**＝**未ログインで保護ページに来た場合すべて**（自分専用の固定URL〔マイページ編集・パスワード管理・LIAISON+コンソール・購入履歴 等〕に加え、他人の識別子を含むURLでも未ログインならこちら。判定がセッションだけで決まりIDの存在に依存しないので漏れない＝「編集中にログインが切れた」を404で突き放さない）。②**見つかりません**＝**ログイン済み×非オーナー**で他人の識別子を含むURL（`/exhibition/{id}/edit`・`/txn/{id}` 等の編集・取引系）に来た場合と P90 管理者系。「権限がありません」は**そのIDが存在することを教えてしまう**ため使わない。**②はサイト共通の404そのもの**＝存在しないURL・削除済みコンテンツも同じ画面・同じ HTTP 404 を返す（別画面にすると本物の404と見比べて存在が分かるため。汎用404ページは別途作らない）。なお「ログイン済みだがロールが足りない」（一般ユーザーが LIAISON+コンソールを開く等）はエラーにせず**機能申込（P11-2／P11-3／P11-4）へ誘導**する。ただし誘導してよいのは**識別子を含まない自分専用の機能URL**（`/liaison-plus/console` 等）だけで、`/exhibition/{id}/edit` のように**他人の識別子を含むURL**はロール不足でも②404（誘導するとそのIDの存在が漏れるため）。検索ハブ P10-1〜3 は P60-15 を使わず**ページ内の認証ウォール**で処理（器＝タイトル＋検索対象タブは出す）。**②のときだけ回遊ゾーン**（サイト紹介1〜2行＋開催中/これから開催の展覧会3枚ランダム＋「展覧会を探す →」）を出し、404を行き止まりにしない（①には出さない。カードは**来たURLと無関係な汎用ピック**に限る＝関連付けるとそのIDの存在が漏れるため）。詳細は `docs/handoff-decisions.md` 追174-22／追174-24／追174-25／追174-26。
 
 ---
 
@@ -255,3 +263,4 @@
 | P90-14 | 管理者-販売代金管理 | L+ |  |  |  |  |  | R/W | --w-detail | kotennavi-p90-14.html | 調整中 |
 | P90-15 | 管理者-リエゾンプラス申込者一覧 | L+ |  |  |  |  |  | R/W | --w-article | kotennavi-p90-15.html | 調整中 |
 | P90-16 | 管理者-作品購入ユーザー一覧 | L+ |  |  |  |  |  | R/W | --w-article | kotennavi-p90-16.html | 調整中 |
+| P90-17 | 管理者-軸ページ管理 |  |  |  |  |  |  | R/W | --w-detail | kotennavi-p90-17.html | 調整中 |

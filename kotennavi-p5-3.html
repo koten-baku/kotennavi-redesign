@@ -7,7 +7,7 @@
   <meta name="description" content="山田 花子の興味あり！リスト。気になる展覧会を一覧表示します。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./kotennavi-common.css?v=3">
+  <link rel="stylesheet" href="./kotennavi-common.css">
 </head>
 <body data-w="entity" class="p5-page p5-3-page">
 
@@ -677,20 +677,86 @@
                 <div class="p5-3-interest-date p5-owner-only">2026.04.12</div>
               </div>
               <div class="aw__foot">
-                <div>
+                <div class="aw-console-meta">
                   <div class="aw__price"><span class="currency">¥</span>68,000<span class="tax">税込</span></div>
-                  <div class="aw__queue">3人が申込中（追加申込可）</div>
+                  <div class="aw__queue p5-owner-only">申込済</div>
                 </div>
-                <button class="aw__apply-btn ktn-action-btn p5-owner-only" onclick="event.preventDefault();event.stopPropagation();location.href='kotennavi-p5-15.html'">申込済 — 取引ワークスペースへ</button>
+                <div class="aw-console-wrap p5-owner-only">
+                  <button class="ktn-action-btn" onclick="event.preventDefault();event.stopPropagation();location.href='kotennavi-p5-15.html'">取引ワークスペースへ →</button>
+                </div>
               </div>
             </a>
           </div>
 
-          <!-- リエゾン 2 -->
+          <!-- リエゾン+ 1-1（例：申込中・追加申込可＝自分も追加で購入申込できる） -->
           <div class="masonry-item">
-            <a class="aw aw--nsale" href="#">
+            <a class="aw aw--plus" href="#">
               <div class="aw__img">
-                <div class="aw__lb"><span class="lb-dot li">LIAISON</span></div>
+                <div class="aw__lb"><span class="lb-dot li-plus">LIAISON+</span></div>
+                <div class="aw__img-ph t-cool"></div>
+              </div>
+              <div class="aw__body">
+                <div class="aw__badge-row">
+                  <span class="cb cb-content cb-artwork">artwork</span>
+                  <span class="aws aws-sale">販売中</span>
+                </div>
+                <div class="aw__title-row"><div class="aw__title">陶の断片 — 群青</div></div>
+                <div class="aw__creator">田中 礼子</div>
+                <div class="aw__spec">2024 / 陶磁器 / H 18.0 × φ 12.0 cm</div>
+                <div class="aw__action-row">
+                  <span class="aw__counter"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>9</span>
+                  <button class="ktn-icon-btn on" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault()"><svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg><span class="tip">興味あり！を解除する</span></button>
+                </div>
+                <div class="p5-3-interest-date p5-owner-only">2026.04.20</div>
+              </div>
+              <div class="aw__foot">
+                <div class="aw-console-meta">
+                  <div class="aw__price"><span class="currency">¥</span>52,000<span class="tax">税込</span></div>
+                  <div class="aw__queue">3人が申込中（追加申込可）</div>
+                </div>
+                <div class="aw-console-wrap">
+                  <button class="ktn-action-btn" onclick="event.preventDefault();event.stopPropagation();location.href='kotennavi-p6-2.html'">購入申込へ →</button>
+                </div>
+              </div>
+            </a>
+          </div>
+
+          <!-- リエゾン+ 1-2（例：未申込・購入申込ボタンは作品ページの申込フローへ） -->
+          <div class="masonry-item">
+            <a class="aw aw--plus" href="#">
+              <div class="aw__img">
+                <div class="aw__lb"><span class="lb-dot li-plus">LIAISON+</span></div>
+                <div class="aw__img-ph t-warm"></div>
+              </div>
+              <div class="aw__body">
+                <div class="aw__badge-row">
+                  <span class="cb cb-content cb-artwork">artwork</span>
+                  <span class="aws aws-sale">販売中</span>
+                </div>
+                <div class="aw__title-row"><div class="aw__title">灰の庭、朝の光</div></div>
+                <div class="aw__creator">高橋 一朗</div>
+                <div class="aw__spec">2025 / 油彩・キャンバス / 45.5 × 38.0 cm</div>
+                <div class="aw__action-row">
+                  <span class="aw__counter"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>5</span>
+                  <button class="ktn-icon-btn on" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault()"><svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg><span class="tip">興味あり！を解除する</span></button>
+                </div>
+                <div class="p5-3-interest-date p5-owner-only">2026.04.25</div>
+              </div>
+              <div class="aw__foot">
+                <div class="aw-console-meta">
+                  <div class="aw__price"><span class="currency">¥</span>38,000<span class="tax">税込</span></div>
+                </div>
+                <div class="aw-console-wrap">
+                  <button class="ktn-action-btn" onclick="event.preventDefault();event.stopPropagation();location.href='kotennavi-p6-2.html'">購入申込へ →</button>
+                </div>
+              </div>
+            </a>
+          </div>
+
+          <!-- リエゾン 2（例：ギャラリー出展作品・会期外はクリックしても作品ページへ遷移せずトースト表示） -->
+          <div class="masonry-item">
+            <a class="aw aw--nsale" href="#" onclick="event.preventDefault();KTN.toast('現在出展していないため、作品の詳細はご覧いただけません');">
+              <div class="aw__img">
                 <div class="aw__img-ph t-warm"></div>
               </div>
               <div class="aw__body">
@@ -700,10 +766,11 @@
                 </div>
                 <div class="aw__title-row"><div class="aw__title">白磁花器「春曙」</div></div>
                 <div class="aw__creator">村上 玲子</div>
+                <div class="aw__spec">Gallery SOIL 渋谷の展覧会に出展／会期終了</div>
                 <div class="aw__spec">2025 / 陶磁器 / H 28.0 × φ 14.0 cm</div>
                 <div class="aw__action-row">
                   <span class="aw__counter"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>8</span>
-                  <button class="ktn-icon-btn on" data-action="interest" onclick="handleAction(this,'interest');event.preventDefault()"><svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg><span class="tip">興味あり！を解除する</span></button>
+                  <button class="ktn-icon-btn on" data-action="interest" onclick="event.stopPropagation();handleAction(this,'interest');event.preventDefault()"><svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg><span class="tip">興味あり！を解除する</span></button>
                 </div>
                 <div class="p5-3-interest-date p5-owner-only">2026.03.30</div>
               </div>

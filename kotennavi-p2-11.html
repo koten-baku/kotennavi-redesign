@@ -817,20 +817,20 @@
             </div>
           </div>
 
-          <!-- 子連れ -->
+          <!-- お子さま連れ -->
           <div class="p211-facility-item">
             <div class="p211-facility-row">
-              <span class="p211-facility-row__label">子連れ</span>
+              <span class="p211-facility-row__label">お子さま連れ</span>
               <div class="p211-facility-row__ctrl">
                 <select class="p211-select" id="p211FacChild" onchange="toggleFacility('Child')">
                   <option value="">— なし —</option>
-                  <option value="ok">可</option>
-                  <option value="no">不可</option>
+                  <option value="ok">できます</option>
+                  <option value="no">できません</option>
                 </select>
               </div>
             </div>
             <div class="p211-facility-detail" id="p211FacChildDetail" hidden>
-              <textarea class="p211-textarea" style="min-height:60px" placeholder="子連れのご来場者にお伝えすることをご記入ください。"></textarea>
+              <textarea class="p211-textarea" style="min-height:60px" placeholder="お子さま連れのご来場者にお伝えすることをご記入ください。"></textarea>
             </div>
           </div>
 
@@ -1087,6 +1087,17 @@
         </div>
       </div>
 
+      <!-- 未入力リマインド（共通 .ktn-form-remind）＝検索・まとめページの絞り込みに使う任意項目が
+           未入力のときだけ出る。保存は止めない（赤の .ktn-form-error とは役割が別）。中身は syncRemindUI() が生成 -->
+      <div class="ktn-form-remind" id="p211Remind" hidden>
+        <div class="ktn-form-remind__head">
+          <svg class="ktn-form-remind__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7.5"/><path d="M21 21l-4.5-4.5"/></svg>
+          <span class="ktn-form-remind__title">検索で見つけてもらえる項目が未入力です</span>
+        </div>
+        <p class="ktn-form-remind__desc">未入力のままでも保存できます。選んでおくと、この条件で展覧会を探している来場者の検索結果とまとめページに掲載されます。</p>
+        <ul class="ktn-form-remind__list" id="p211RemindList"></ul>
+      </div>
+
       <!-- 保存エラーパネル（共通 .ktn-form-error・保存時バリデーションで表示。送信バー直上の固定位置） -->
       <div class="ktn-form-error" id="p211SaveError" role="alert" hidden>
         <div class="ktn-form-error__head">
@@ -1228,6 +1239,7 @@ function setDemoMode(mode) {
   applyVenueRole();
   closeAllAcc();
   syncOptUI();
+  syncRemindUI();
   syncDraftMode();   /* 下書きチェックはモード切替でリセット済み＝ボタン名/ノートを再同期 */
   if (typeof schedCloseEditor === 'function') schedCloseEditor();   /* モードの会期・上書きでカレンダー再描画 */
 }
@@ -1809,6 +1821,7 @@ function syncAdminPanels() {
 window.p211RoleSync = function () {
   applyVenueRole();
   syncOptUI();
+  syncRemindUI();
   /* 管理者管理セクションは admin ロールのみ表示 */
   var adminBlock = document.getElementById('p211AdminBlock');
   if (adminBlock) adminBlock.hidden = !isAdminRole();
@@ -2236,11 +2249,49 @@ function syncOptUI() {
   var raf = null;
   function queueSync() {
     if (raf) return;
-    raf = requestAnimationFrame(function () { raf = null; syncOptUI(); });
+    raf = requestAnimationFrame(function () { raf = null; syncOptUI(); syncRemindUI(); });
   }
   ['input', 'change', 'click', 'keyup'].forEach(function (ev) { wrap.addEventListener(ev, queueSync); });
 })();
 syncOptUI();
+
+/* ── 未入力リマインド（検索・まとめページの絞り込みに使う属性） ──
+   お子さま連れ・クリエイター在廊は個展なびの特徴で、軸ページ（/exhibitions/access/…）の母数にもなる。
+   どちらも「会場利用案内」アコーディオンの中にあり気づかれにくいため、送信バー直上で未入力だけを名指しし、
+   「入力する →」でアコーディオンを開いて該当行までスクロールする。任意項目なので保存は止めない。 */
+var REMIND_ITEMS = [
+  { sel: 'p211FacChild',  label: 'お子さま連れ',     hint: '「お子さまと行ける」で絞り込む来場者に届きます。同じ条件のまとめページにも掲載されます。' },
+  { sel: 'p211FacAttend', label: 'クリエイター在廊', hint: '作家に会えることは強い来場動機です。「在廊あり」で探している来場者に届きます。' }
+];
+function remindJump(selId) {
+  var panel = document.getElementById('p211AccFacility');
+  if (panel && panel.hidden) {
+    var link = panel.previousElementSibling;
+    toggleAcc('p211AccFacility', (link && link.classList.contains('p211-sub-link')) ? link : null);
+  }
+  var el = document.getElementById(selId);
+  if (!el) return;
+  (el.closest('.p211-facility-item') || el).scrollIntoView({ behavior: 'smooth', block: 'center' });
+  setTimeout(function () { el.focus(); }, 420);
+}
+function syncRemindUI() {
+  var box  = document.getElementById('p211Remind');
+  var list = document.getElementById('p211RemindList');
+  if (!box || !list) return;
+  var html = '';
+  REMIND_ITEMS.forEach(function (it) {
+    var sel = document.getElementById(it.sel);
+    if (!sel || sel.value !== '') return;
+    html += '<li class="ktn-form-remind__item">'
+          +   '<span class="ktn-form-remind__label">' + it.label + '</span>が未選択です。'
+          +   '<span class="ktn-form-remind__hint">' + it.hint + '</span>'
+          +   '<button class="ktn-form-remind__jump" type="button" onclick="remindJump(\'' + it.sel + '\')">入力する →</button>'
+          + '</li>';
+  });
+  list.innerHTML = html;
+  box.hidden = (html === '');
+}
+syncRemindUI();
 
 /* ── ③下書き保存 ──
    本番＝「確認依頼フラグ OFF で保存」＝保存して確認依頼（flag ON）と同一の保存処理・同一ペイロード。

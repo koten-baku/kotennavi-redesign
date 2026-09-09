@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- title / h1 / canonical は軸ごとに固定（追174-46④）。日付・年・件数・「最新」等の時制語は入れない。
+       このプロトタイプは場所軸の代表として東京都で着地し、デモバー・?ax= で軸を差し替える。 -->
+  <title>東京都で開催中の展覧会・個展｜個展なび</title>
+  <meta name="description" id="p1041Desc" content="東京都で開催中・開催予定の展覧会・個展の一覧です。ギャラリー・美術館の展示情報を、作家・アーティスト別、ジャンル別に探せます。">
+  <link rel="canonical" id="p1041Canonical" href="https://koten-navi.com/exhibitions/tokyo">
+  <!-- 単独軸は index。エリア×ジャンルの交差は昇格制で、未昇格の組み合わせだけ JS が noindex,follow に落とす（追174-58）。 -->
+  <meta name="robots" id="p1041Robots" content="index,follow">
+  <meta property="og:type" content="website">
+  <meta property="og:title" id="p1041OgTitle" content="東京都で開催中の展覧会・個展｜個展なび">
+  <meta property="og:url" id="p1041OgUrl" content="https://koten-navi.com/exhibitions/tokyo">
+  <meta property="og:site_name" content="個展なび">
+  <meta name="twitter:card" content="summary">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<body data-w="index">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- デモバー（軸ページ＝場所軸の代表プロトタイプ。件数の3パターンを切り替えて確認する）
+     東京都＝潤沢（8件）／京都府＝少件数（2件・補完ブロックが積まれる）／鳥取県＝0件（補完ブロックのみ） -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ロール：</span>
+  <button class="dbtn on" onclick="setR('guest',this)">ゲスト</button>
+  <button class="dbtn" onclick="setR('login',this)">ログイン</button>
+  <button class="dbtn" onclick="setR('admin',this)">管理者</button>
+  <span class="dbar-sep">軸：</span>
+  <button class="dbtn on" data-ax onclick="setAxis('tokyo',this)">東京都（8件）</button>
+  <button class="dbtn" data-ax onclick="setAxis('kyoto',this)">京都府（2件）</button>
+  <button class="dbtn" data-ax onclick="setAxis('tottori',this)">鳥取県（0件）</button>
+  <span class="dbar-sep">東京エリア：</span>
+  <button class="dbtn" data-ax onclick="setAxis('tokyo-central',this)">東京都心部（1件・導入文あり）</button>
+  <button class="dbtn" data-ax onclick="setAxis('tokyo-east',this)">東京東部（2件）</button>
+  <span class="dbar-sep">交差：</span>
+  <span class="dbar-note">一覧の上「ジャンルで絞る」のチップから（管理者ロールで昇格状態が出ます）</span>
+</div>
+
+<div class="shell">
+
+<!-- サイドバー（kotennavi-p1.html と同一マークアップ・#ktnRoleNav は renderSidebar() がJS注入） -->
+<aside class="ktn-sidebar" id="ktnSidebar">
+
+  <!-- ロゴ (logo5-1) -->
+  <a href="kotennavi-p1.html" class="ktn-sidebar__logo" data-page="p1">
+    <img src="./images/kotennavi-logo5-1.svg" alt="個展なび">
+  </a>
+
+  <!-- 検索 → P10 検索ハブ -->
+  <a href="kotennavi-p10.html" class="ktn-sidebar__item" data-page="p10">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <circle cx="11" cy="11" r="7.5"/>
+        <path d="M21 21l-4.5-4.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">検索</span>
+  </a>
+
+  <!-- お知らせ → P61 -->
+  <a href="kotennavi-p61.html" class="ktn-sidebar__item" id="ktnSidebarNotice" data-page="p61">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__dot" id="ktnNoticeDot" style="display:none"></span>
+    <span class="ktn-sidebar__label">お知らせ</span>
+  </a>
+
+  <!-- ガイド → P60 -->
+  <a href="kotennavi-p60.html" class="ktn-sidebar__item" data-page="p60">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" stroke-linecap="round"/>
+        <path d="M12 16v-4M12 8h.01" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">ガイド</span>
+  </a>
+
+  <div class="ktn-sidebar__divider"></div>
+
+  <!-- ロール別アイコン（JS注入） -->
+  <div id="ktnRoleNav" style="width:100%;display:flex;flex-direction:column;align-items:center"></div>
+
+  <div class="ktn-sidebar__footer">
+    <p class="ktn-sidebar__footer-label">Follow us</p>
+    <div class="ktn-sidebar__sns">
+      <a href="https://www.facebook.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="Facebook">
+        <svg viewBox="0 0 320 512" fill="currentColor"><path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/></svg>
+      </a>
+      <a href="https://x.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="X">
+        <svg viewBox="0 0 512 512" fill="currentColor"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg>
+      </a>
+    </div>
+  </div>
+
+</aside>
+
+<div class="content-wrap" id="contentWrap">
+
+  <header class="ktn-header" id="ktnHeader">
+    <div class="ktn-header__inner">
+      <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+      <div class="ktn-hdr-actions" id="ktnActs"></div>
+    </div>
+  </header>
+  <div class="ktn-tagbar" id="ktnTagbar">
+    <div class="ktn-tagbar__inner" id="ktnTagbarInner"></div>
+  </div>
+
+  <main class="ktn-main" id="ktnMain">
+
+    <!-- A. 軸ヘッド。h1 は title の短縮形（完全一致させない）。
+         リード文は運営が県ごとに書き足す枠＝自動生成ページが薄く見えることへの最大の対策（追174-46③）。 -->
+    <section class="ktn-axis-head">
+      <div class="ktn-axis-head__inner">
+        <div class="ktn-axis-head__eyebrow">
+          <span class="ktn-axis-head__eyebrow-en" id="p1041Eyebrow">Area</span>
+          <span class="ktn-axis-head__eyebrow-line"></span>
+        </div>
+        <div class="ktn-axis-head__title-row">
+          <h1 class="ktn-axis-head__title" id="p1041Title">東京都の展覧会</h1>
+          <span class="ktn-axis-head__en" id="p1041En">Exhibitions in Tokyo</span>
+        </div>
+        <div class="ktn-axis-head__lead" id="p1041Lead"></div>
+        <!-- 〈軸 × エンティティ〉の内部リンク。軸ページ同士をつなぐ層で、SEO上いちばん効く -->
+        <div class="ktn-axis-head__links" id="p1041HeadLinks"></div>
+      </div>
+    </section>
+
+    <div class="ktn-content p10-content">
+
+      <!-- B. 一覧（DISC＝開催中・開催予定のみ。過去は下段のアーカイブが受ける＝追174-45の母数分離をURLにした形） -->
+      <section class="p10-shelf">
+        <div class="ktn-section__head">
+          <h2 class="ktn-section__title">開催中・開催予定<span class="ktn-sec-en">Now &amp; Upcoming</span></h2>
+        </div>
+        <!-- B-2. 絞り込みバー（追174-60）。第2軸のチップは「この一覧を絞る操作」なので一覧の直上に置く。
+             下段Dの47都道府県は「別の軸ページへ移る」内部リンク層で役割が違うため同居させない。
+             行の文法は詳細条件ドロワーと共有する（.p10-adv__group / __label / __opts）＝サイト内で「絞り込み」の
+             見た目を1つに保つため、ここ専用の枠・地色は作らない（追174-61）。
+             エリアが0件のときはバーごと出さない（絞る対象が無い）＝そのときだけDに全国ジャンル軸への出口を出す。 -->
+        <div class="ktn-axis-facet" id="p1041Facet" hidden>
+          <!-- 適用中の条件。エリアのチップはこのバーに無い（エリアは下段Dで変える）ので、
+               2つの条件が一緒に見えるのはこの行だけ＝直下のC「条件を1つ外して見る」の指す先になる -->
+          <div class="p10-adv__group" id="p1041FacetNow" hidden>
+            <span class="p10-adv__label">絞り込み中</span>
+            <div class="p10-adv__opts">
+              <span class="ktn-axis-facet__tag">
+                <span class="ktn-axis-facet__tag-k">エリア</span>
+                <span class="ktn-axis-facet__tag-v" id="p1041FacetArea">東京都</span>
+              </span>
+              <span class="ktn-axis-facet__x">×</span>
+              <span class="ktn-axis-facet__tag">
+                <span class="ktn-axis-facet__tag-k" id="p1041FacetKind">ジャンル</span>
+                <span class="ktn-axis-facet__tag-v" id="p1041FacetVal">アート</span>
+              </span>
+              <a class="ktn-axis-facet__drop" id="p1041FacetDrop" href="?ax=tokyo">解除</a>
+            </div>
+          </div>
+          <div class="p10-adv__group">
+            <span class="p10-adv__label">ジャンルで絞る</span>
+            <div class="p10-adv__opts" id="p1041GenreNav"></div>
+          </div>
+          <div class="p10-adv__group" id="p1041AccessRow" hidden>
+            <span class="p10-adv__label">行きやすさで絞る</span>
+            <div class="p10-adv__opts" id="p1041AccessNav"></div>
+          </div>
+        </div>
+
+        <div class="p10-toolbar">
+          <span class="p10-toolbar__count" id="p1041Count"><strong>0</strong>件</span>
+          <label class="p10-toolbar__sort">並び順
+            <select id="p1041Sort">
+              <option value="rec">おすすめ順</option>
+              <option value="end">会期終了が近い順</option>
+              <option value="pop">人気順</option>
+              <option value="new">新着順</option>
+            </select>
+          </label>
+        </div>
+        <p class="ktn-axis-empty" id="p1041Empty" hidden></p>
+        <div class="p10-shelf-grid" id="p1041Grid"></div>
+        <a class="ktn-more-link" id="p1041SearchLink" href="./kotennavi-p10.html">条件を足して絞り込む →</a>
+      </section>
+
+      <!-- C. 補完ブロック（0件・少件数のとき積む）。
+           順序＝①同一場所のアーカイブ →②同一場所のギャラリー・クリエイター →③同じ地方ブロックの県 →④全国。
+           各ブロックに「なぜ出しているか」のラベルを必ず付ける（追174-46⑤）。
+           **操作の案内ではない**（条件の変更は上の絞り込みバーが受け持つ・追174-62）。ここは薄いページを
+           空にしないための内容の棚なので、見出しは中身を名指し、まとめの説明文は置かない。 -->
+      <section class="ktn-axis-fill" id="p1041Fill" hidden>
+        <div class="ktn-section__head">
+          <h2 class="ktn-axis-fill__title" id="p1041FillTitle">あわせて見る</h2>
+        </div>
+        <p class="ktn-axis-fill__desc" id="p1041FillDesc"></p>
+        <div id="p1041FillBlocks"></div>
+      </section>
+
+      <!-- D. 軸ネットワーク（内部リンク層）。47都道府県をすべて出す＝地方こそ競合が薄く記録として代替が効かない。
+           ここは「別の軸ページへ移る」層に徹する。「この一覧を絞る」第2軸のチップは上のB-2へ移した（追174-60）＝
+           操作の対象（すぐ上の一覧）と操作を隣り合わせにし、上下で役割を分けるため。 -->
+      <section class="ktn-axis-nav">
+        <div class="ktn-section__head">
+          <h2 class="ktn-section__title"><a class="ktn-section__link" href="./kotennavi-p10-4.html#area">エリアから探す<span class="ktn-sec-en">Browse by Area</span></a></h2>
+        </div>
+        <div id="p1041PrefNav"></div>
+        <!-- エリアが0件のときだけ出る出口。絞る対象が無いので「絞る」ではなく「移る」＝上のバーではなくここに出す -->
+        <div class="ktn-section__head ktn-axis-nav__head2" id="p1041GenreExitHead" hidden>
+          <h2 class="ktn-section__title"><a class="ktn-section__link" href="./kotennavi-p10-4.html#genre">ジャンルから探す<span class="ktn-sec-en">Browse by Genre</span></a></h2>
+        </div>
+        <div class="ktn-axis-nav__row" id="p1041GenreExit" hidden></div>
+      </section>
+
+      <!-- E. 下段：過去側への導線。地方で現在0件になってもアーカイブが残る＝ページが空にならないための生命線 -->
+      <div class="ktn-axis-cards">
+        <a class="ktn-axis-card" id="p1041ArcCard" href="./kotennavi-p10-4-3.html?ax=tokyo">
+          <span class="ktn-axis-card__label">Archive</span>
+          <span class="ktn-axis-card__ttl" id="p1041ArcTtl">東京都の展覧会アーカイブ</span>
+          <span class="ktn-axis-card__desc" id="p1041ArcDesc">このエリアで会期を終えた展覧会の記録。会期は終わっていますが、クリエイター・ギャラリーはいまも活動しています。</span>
+        </a>
+        <!-- 年鑑は軸で絞らない全国の記録。エリア軸・ジャンル軸のページに置くと、隣のカード（東京都の展覧会アーカイブ 等）
+             に引かれて「そのエリア／そのジャンルの年間記録」と読まれるので、タイトルで全国と名乗る（2026-09-08） -->
+        <a class="ktn-axis-card" href="./kotennavi-p10-4-2.html">
+          <span class="ktn-axis-card__label">Annual Records</span>
+          <span class="ktn-axis-card__ttl">全国の展覧会 年間の記録</span>
+          <span class="ktn-axis-card__desc">その年に会期を終えた展覧会を、行きたい・行った の反応でまとめた年ごとの記録。エリアやジャンルで絞らず全国が対象です。</span>
+        </a>
+      </div>
+
+    </div>
+
+    <!-- 広告 -->
+    <div class="ktn-ad-band">
+      <div class="ktn-ad-band__inner">
+        <div class="ktn-ad-band__slot">広告エリア（728×90 / レスポンシブ）</div>
+      </div>
+    </div>
+
+  </main><!-- /ktn-main -->
+
+  <footer class="ktn-footer" id="ktnFooter"></footer>
+
+</div><!-- /content-wrap -->
+</div><!-- /shell -->
+
+<nav class="ktn-bottom-nav" id="ktnBottomNav">
+  <div class="ktn-bottom-nav__inner" id="ktnBottomNavInner"></div>
+</nav>
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    KTN.init({ page: 'p10-4-1', role: 'guest' });
+  });
+</script>
+</body>
+</html>

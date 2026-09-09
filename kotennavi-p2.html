@@ -505,6 +505,10 @@
                         <dt>電話</dt>
                         <dd>03-XXXX-XXXX</dd>
                       </dl>
+                      <!-- 設備の要約チップ行なので括りの名前で出す（項目の列挙は p2-2「バリアフリー」の
+                           ktn-facts が持つ）。「段差なし」だと6項目のうち1つだけを指してしまい、
+                           P10 の絞り込みチップ（barrierfree）とも粒度がずれる。
+                           「エレベーターあり」は括りに含まれるので要約行では重ねない -->
                       <div class="p2-venue__utils"><span class="p2-venue__util">無料入場</span><span
                           class="p2-venue__util">Wi-Fi</span><span class="p2-venue__util">バリアフリー</span></div>
                     </div>
@@ -996,7 +1000,16 @@
     function _applyPeriodToTab() {
       var isBefore = (_p2Period === 'before');
       var isAfter  = (_p2Period === 'after');
-      var isOut    = isBefore || isAfter;
+      /* LIAISONは会期のみ閲覧可（会期後は即アクセス不可）。LIAISON+は会期後も
+         販売期間が続く限り閲覧可能（デモバー「販売期間：終了済」＝salesOverになるまで）。
+         アクセス可否の判定はこのisAccessAfterに一本化し、バッジ・スケジュール表示用の
+         生のisAfter（純粋な会期後フラグ）とは分離する。 */
+      var isPlus = !!(KTN.exh && KTN.exh.liaison === 'plus');
+      var salesOver = !!(KTN.exh && KTN.exh.salesOver);
+      var isAccessAfter = isPlus ? (isAfter && salesOver) : isAfter;
+      var isOut = isBefore || isAccessAfter;
+      var endedLabel = isPlus ? '販売終了' : '展示終了';
+      var endedLabelEn = isPlus ? 'SALES ENDED' : 'EXHIBITION ENDED';
       /* 出品者（creator/gallery 本人）と管理者は公開期間外でも p2-5/p2-5-1（公開前プレビュー）へ入れる */
       var role = (window.ktnState && window.ktnState.role) || 'guest';
       var canPreview = (role === 'user+creator' || role === 'user+gallery' || role === 'admin');
@@ -1014,9 +1027,9 @@
         } else if (isBefore) {
           subnav.dataset.liaisonTag = 'soon';
           if (tag) tag.textContent = 'まもなく公開';
-        } else if (isAfter) {
+        } else if (isAccessAfter) {
           subnav.dataset.liaisonTag = 'ended';
-          if (tag) tag.textContent = '展示終了';
+          if (tag) tag.textContent = endedLabel;
         } else {
           delete subnav.dataset.liaisonTag;
           if (tag) tag.textContent = '';
@@ -1035,9 +1048,9 @@
         } else if (isBefore) {
           sideWorks2.dataset.liaisonTag = 'soon';
           if (sideTag) sideTag.textContent = 'まもなく公開';
-        } else if (isAfter) {
+        } else if (isAccessAfter) {
           sideWorks2.dataset.liaisonTag = 'ended';
-          if (sideTag) sideTag.textContent = '展示終了';
+          if (sideTag) sideTag.textContent = endedLabel;
         } else {
           delete sideWorks2.dataset.liaisonTag;
           if (sideTag) sideTag.textContent = '';
@@ -1053,8 +1066,8 @@
         if (periodMsg) {
           periodMsg.innerHTML = isBefore
             ? '近日中 <span class="p2-liaison-banner__period-en">COMING SOON</span>'
-            : isAfter
-              ? '展示終了 <span class="p2-liaison-banner__period-en">EXHIBITION ENDED</span>'
+            : isAccessAfter
+              ? endedLabel + ' <span class="p2-liaison-banner__period-en">' + endedLabelEn + '</span>'
               : '';
         }
       }
@@ -1125,8 +1138,8 @@
         if (sideLiSvg)     sideLiSvg.style.display = 'none';
         if (sideLiPlusSvg) sideLiPlusSvg.style.display = '';
       }
-      _applyPeriodToTab();
       KTN.exh.liaison = type;
+      _applyPeriodToTab();
       if (window.ktnRender) ktnRender();
     }
 

@@ -24,6 +24,26 @@
   <span class="dbar-sep">ロール：</span>
   <button class="dbtn on" onclick="setR('guest',this)">ゲスト</button>
   <button class="dbtn" onclick="setR('login',this)">ログイン</button>
+  <!-- 巻頭Openingの構成案（Fix時に採用案へ畳んで削除） -->
+  <span class="dbar-sep">巻頭：</span>
+  <button class="dbtn" data-opvar="1" onclick="KTN.opVariant(1,this)">案1ペア</button>
+  <button class="dbtn on" data-opvar="2" onclick="KTN.opVariant(2,this)">案2クラスタ</button>
+  <button class="dbtn" data-opvar="3" onclick="KTN.opVariant(3,this)">折衷</button>
+  <!-- 巻頭Openingは1日1回更新＝同じ日は柱の文言も展覧会クラスタも固定（リロードで変わらない）。
+       01〜06＝日替わり6パターンの紙面をその場で差し替える（タイトルと中身が対で変わる）。Fix時に削除 -->
+  <span class="dbar-sep">巻頭の日替わり：</span>
+  <button class="dbtn on" data-opday="0" onclick="KTN.opDay(0,this)">本日</button>
+  <button class="dbtn" data-opday="1" onclick="KTN.opDay(1,this)">01</button>
+  <button class="dbtn" data-opday="2" onclick="KTN.opDay(2,this)">02</button>
+  <button class="dbtn" data-opday="3" onclick="KTN.opDay(3,this)">03</button>
+  <button class="dbtn" data-opday="4" onclick="KTN.opDay(4,this)">04</button>
+  <button class="dbtn" data-opday="5" onclick="KTN.opDay(5,this)">05</button>
+  <button class="dbtn" data-opday="6" onclick="KTN.opDay(6,this)">06</button>
+  <!-- エリアから探す（C3）＝軸ページの入口。固定枠＋日替わりローテなので日付を送って確認する -->
+  <span class="dbar-sep">エリアから探す：</span>
+  <button class="dbtn on" data-axis-day onclick="setAxisDay(0,this)">今日</button>
+  <button class="dbtn" data-axis-day onclick="setAxisDay(1,this)">明日</button>
+  <button class="dbtn" data-axis-day onclick="setAxisDay(2,this)">明後日</button>
 </div>
 
 <div class="shell">
@@ -159,7 +179,6 @@
       <div class="p1-nearby__inner">
         <div class="ktn-section__head">
           <h2 class="ktn-section__title">近くの展覧会<span class="ktn-sec-en">Near You</span></h2>
-          <a href="kotennavi-p10.html" class="ktn-section__more">エリアから探す →</a>
         </div>
         <!-- 状態1：位置情報の許可プロンプト -->
         <div class="p1-nearby__prompt" id="p1NearbyPrompt">
@@ -178,6 +197,22 @@
           <div class="p1-nearby__grid" id="p1NearbyGrid"></div>
           <a class="ktn-more-link" href="kotennavi-p10.html">近くの展覧会をすべて見る →</a>
         </div>
+      </div>
+    </section>
+
+    <!-- C3. エリアから探す＝軸ページ（P10-4-1）への入口。位置情報を許可しない／できない人にとっての
+         C2 の代わりであり、同時にトップから軸ページへ張る内部リンクでもある（追174-49）。
+         3枠しか出さないのは、トップに47県を並べても選べないから。残りは索引（P10-4）へ送る。
+         選定は KTN.axis.pick()＝P10・P10-4 索引と同じ固定枠＋日替わりローテを共有し、
+         同じ日はどの入口から入っても同じ軸が出る。本番（Drupal）ではサーバ側で選び初期HTMLに焼く。 -->
+    <section class="p1-axis" aria-label="エリアから探す">
+      <div class="p1-axis__inner">
+        <div class="ktn-section__head">
+          <h2 class="ktn-section__title">エリアから探す<span class="ktn-sec-en">Browse by Area</span></h2>
+          <a href="kotennavi-p10-4.html" class="ktn-section__more">エリアから探す →</a>
+        </div>
+        <p class="p1-axis__desc">都道府県ごとに、開催中・開催予定の展覧会と、そのエリアに会場を持つギャラリーをまとめています。</p>
+        <div class="ktn-axis-cards" id="p1AxisCards"></div>
       </div>
     </section>
 
@@ -216,6 +251,28 @@
           <a class="ktn-guide-link" href="kotennavi-p70.html">個展なびの使い方 →</a>
           <a class="ktn-guide-link" href="kotennavi-p70.html#for-sellers">展覧会の掲載を希望する方へ →</a>
         </div>
+      </div>
+    </section>
+
+    <!-- D2. 巻頭（Opening）＝サイト紹介の直後に置くコラージュ。展覧会を核に、その周辺のコンテンツ
+         （作品・記事・レビュー・人）を束ねて並べる。**1日1回更新＝同じ日は柱の文言も中身も固定**
+         （日付シード。リロードでは変わらない）。一覧へのリンクは置かず各詳細ページへ直接送る
+         （＝ログインゲートを跨がない） -->
+    <section class="p1-op" aria-labelledby="p1OpTitle">
+      <div class="p1-op__inner">
+        <div class="p1-op__head">
+          <div class="p1-op__masthead">
+            <p class="p1-op__eyebrow">Opening</p>
+            <span class="p1-op__rule"></span>
+            <p class="p1-op__issue" id="p1OpIssue"></p>
+          </div>
+          <!-- 見出し・欧文サブは日替わり（JSが TITLES から当日分を差し替える）。ここに書いてあるのは
+               パターン01＝JS未実行時のフォールバック -->
+          <h2 class="p1-op__title" id="p1OpTitle">話題は、展覧会のまわりに</h2>
+          <p class="p1-op__en" id="p1OpEn">Exhibitions and Everything Around Them</p>
+          <p class="p1-op__lead">作品も、記事も、レビューも、人も。ひとつの展覧会からはじまっています。</p>
+        </div>
+        <div class="p1-op__mosaic" id="p1OpMosaic"></div>
       </div>
     </section>
 

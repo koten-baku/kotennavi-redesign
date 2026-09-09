@@ -531,6 +531,9 @@ function ktnTrendValues(n, peakBase, rand) {
   return vals;
 }
 function ktnFmtMD(d) { return (d.getMonth() + 1) + '/' + d.getDate(); }
+/* 数字表示の千単位カンマは静的HTML（26,480 等）とJS生成値（トレンド合計等）で
+   統一するための共通フォーマッタ。4桁以上でのみカンマが入る toLocaleString と同じ挙動 */
+function ktnFmtNum(n) { return Math.round(n).toLocaleString('en-US'); }
 function ktnTrendSvg(dates, vals, markers, segs, unit) {
   unit = unit || '回';
   var W = 700, H = 190, PAD_T = 12, PAD_B = 34, PAD_L = 50, PAD_R = 4;
@@ -547,7 +550,7 @@ function ktnTrendSvg(dates, vals, markers, segs, unit) {
   var dots = '';
   if (n <= 31) {
     for (var k = 0; k < n; k++) {
-      dots += '<circle class="ins-linechart__dot" cx="' + xAt(k).toFixed(1) + '" cy="' + yAt(vals[k]).toFixed(1) + '" r="3.2"><title>' + ktnFmtMD(dates[k]) + '　' + vals[k] + unit + '</title></circle>';
+      dots += '<circle class="ins-linechart__dot" cx="' + xAt(k).toFixed(1) + '" cy="' + yAt(vals[k]).toFixed(1) + '" r="3.2"><title>' + ktnFmtMD(dates[k]) + '　' + ktnFmtNum(vals[k]) + unit + '</title></circle>';
     }
   }
   var labelCount = Math.min(6, n);
@@ -560,8 +563,8 @@ function ktnTrendSvg(dates, vals, markers, segs, unit) {
   /* 左に0/中間/最大の3段階y軸を常設（旧・最大値のみの浮きラベルは数字が乱立して見えたため統合） */
   var midVal = Math.round(actualMax / 2);
   var yTicks = [
-    { v: actualMax, label: actualMax + unit },
-    { v: midVal, label: midVal + unit },
+    { v: actualMax, label: ktnFmtNum(actualMax) + unit },
+    { v: midVal, label: ktnFmtNum(midVal) + unit },
     { v: 0, label: '0' }
   ];
   var grid = '';
@@ -591,7 +594,7 @@ function ktnTrendSvg(dates, vals, markers, segs, unit) {
       if (!sg.len || sg.len <= 0) continue;
       var segCx = ((xAt(sg.from) + xAt(sg.from + sg.len - 1)) / 2).toFixed(1);
       segSvg += '<text class="ins-linechart__segline" x="' + segCx + '" y="' + (PAD_T + 9) + '" text-anchor="middle">' + sg.label
-        + '<tspan class="ins-linechart__segline-val" dx="4">' + sg.sum + unit + '</tspan></text>';
+        + '<tspan class="ins-linechart__segline-val" dx="4">' + ktnFmtNum(sg.sum) + unit + '</tspan></text>';
     }
   }
   return '<svg class="ins-linechart__svg" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="閲覧数の推移">'
@@ -610,12 +613,18 @@ KTN.renderTrend = function (hostId, period, peakBase) {
   var today = KTN.TREND_TODAY;
   var dates = [];
   for (var i = 0; i < n; i++) dates.push(new Date(today.getTime() - (n - 1 - i) * 86400000));
+  /* サマリーのページ閲覧数を総数（累計）表示にしたため、期間ごとの合計は
+     グラフエリア上部（.ins-linechart-head）に退避する（P2-14のrenderExhTrendと同じ扱い） */
+  var total = vals.reduce(function (a, b) { return a + b; }, 0);
+  var totalEl = document.getElementById(hostId + 'Total');
+  if (totalEl) totalEl.innerHTML = ktnFmtNum(total) + '<span class="unit">回</span>';
   host.innerHTML = ktnTrendSvg(dates, vals);
   var peakEl = document.getElementById(hostId + 'Peak');
   if (peakEl) {
     var maxIdx = vals.indexOf(Math.max.apply(null, vals));
     peakEl.textContent = ktnFmtMD(dates[maxIdx]) + ' 閲覧数ピーク';
   }
+  return { dates: dates, vals: vals, total: total };
 };
 
 /* ── 週間トレンド：renderTrendと同じ折れ線コンポーネントを流用し、
@@ -715,7 +724,7 @@ KTN.renderExhTrend = function (hostId, phase, exhStart, exhEnd, peakBase) {
   }
   var total = vals.reduce(function (a, b) { return a + b; }, 0);
   var totalEl = document.getElementById(hostId + 'Total');
-  if (totalEl) totalEl.innerHTML = total + '<span class="unit">回</span>';
+  if (totalEl) totalEl.innerHTML = ktnFmtNum(total) + '<span class="unit">回</span>';
   host.innerHTML = ktnTrendSvg(dates, vals, markers, chartSegs);
   var peakEl = document.getElementById(hostId + 'Peak');
   if (peakEl) {
@@ -865,7 +874,8 @@ function handleNav(e, page, url) {
      ローカルHTMLファイルへ実遷移する（未制作ページは404になる） */
   if (!document.getElementById('mainPlaceholder')) {
     e.preventDefault();
-    location.href = 'kotennavi-' + page + '.html';
+    var hash = (url || '').indexOf('#') >= 0 ? url.slice(url.indexOf('#')) : '';
+    location.href = 'kotennavi-' + page + '.html' + hash;
     return;
   }
   e.preventDefault();
@@ -1030,10 +1040,9 @@ function renderFooter() {
           </ul>
           <p class="ktn-footer__col-title" style="margin-top:20px">特集</p>
           <div class="ktn-footer__feature-tags">
-            <a href="/p10-4" class="ktn-footer__feature-tag" onclick="handleNav(event,'p10-4','/p10-4')">九州の展覧会</a>
-            <a href="/p10-4" class="ktn-footer__feature-tag" onclick="handleNav(event,'p10-4','/p10-4')">今週末開催</a>
-            <a href="/p10-4" class="ktn-footer__feature-tag" onclick="handleNav(event,'p10-4','/p10-4')">東京・写真展</a>
-            <a href="/p10-4" class="ktn-footer__feature-tag" onclick="handleNav(event,'p10-4','/p10-4')">特集一覧 →</a>
+            <a href="/p10-4#area" class="ktn-footer__feature-tag" onclick="handleNav(event,'p10-4','/p10-4#area')">エリアから探す</a>
+            <a href="/p10-4#genre" class="ktn-footer__feature-tag" onclick="handleNav(event,'p10-4','/p10-4#genre')">ジャンルから探す</a>
+            <a href="/p10-4-2" class="ktn-footer__feature-tag" onclick="handleNav(event,'p10-4-2','/p10-4-2')">年間の記録</a>
           </div>
         </div>
 
@@ -1577,6 +1586,18 @@ function renderAll() {
   updateActiveState(window.ktnState.page);
   syncAdminNote();
   syncRoleOwnerOnly();
+  syncAuthWall();
+}
+
+/* 認証ウォール（層A）：`.ktn-authwall` を持つページで、ゲストのとき器だけ残して中身をログイン案内へ差し替える。
+   隠す要素の指定は common.css 側（`body.ktn-gated` のセレクタリスト）が持つので、ページ側の結線は不要。
+   「ログインすれば誰でも使える」機能限定。本人でないと永久に使えないページは P60-15 へ（handoff 追174-22）。 */
+function syncAuthWall() {
+  var wall = document.querySelector('.ktn-authwall');
+  if (!wall) return;
+  var gated = (window.ktnState.role === 'guest');
+  document.body.classList.toggle('ktn-gated', gated);
+  wall.hidden = !gated;
 }
 
 /* 管理者コメント欄（コンテンツ編集ページ共通）を role で表示切替。
@@ -1701,6 +1722,17 @@ const PAGES = {
   'p10-2': { n: '検索-クリエイター', bc: [['Top', '/'], ['検索', null]] },
   'p10-3': { n: '検索-ギャラリー', bc: [['Top', '/'], ['検索', null]] },
   'p10-4': { n: '特集-展覧会', bc: [['Top', '/'], ['特集', '/feature'], ['展覧会', null]] },
+  /* 軸ページ。末尾は軸名（例「東京都の展覧会」）なので pages.js が軸切替のたびに書き換える */
+  'p10-4-1': { n: '特集-展覧会-軸', bc: [['Top', '/'], ['特集', '/feature'], ['展覧会', 'kotennavi-p10-4.html'], ['東京都の展覧会', null]] },
+  /* 年鑑。末尾は年（例「2026年の展覧会」）なので pages.js が年切替のたびに書き換える */
+  'p10-4-2': { n: '特集-展覧会-年鑑', bc: [['Top', '/'], ['特集', '/feature'], ['展覧会', 'kotennavi-p10-4.html'], ['2026年の展覧会', null]] },
+  /* 場所×アーカイブ。親の軸ページ（/exhibitions/{slug}）を経由する4階層。
+     末尾「アーカイブ」は固定で、3つ目の軸名だけ pages.js が書き換える */
+  'p10-4-3': { n: '特集-展覧会-軸アーカイブ', bc: [['Top', '/'], ['特集', '/feature'], ['展覧会', 'kotennavi-p10-4.html'], ['東京都の展覧会', 'kotennavi-p10-4-1.html'], ['アーカイブ', null]] },
+  /* ジャンル軸。末尾はジャンル名（例「写真の展覧会」）なので pages.js が軸切替のたびに書き換える */
+  'p10-4-4': { n: '特集-展覧会-ジャンル軸', bc: [['Top', '/'], ['特集', '/feature'], ['展覧会', 'kotennavi-p10-4.html'], ['写真の展覧会', null]] },
+  /* 行きやすさ軸。末尾は軸名（例「お子さまと行ける展覧会」）なので pages.js が軸切替のたびに書き換える */
+  'p10-4-5': { n: '特集-展覧会-アクセシビリティ軸', bc: [['Top', '/'], ['特集', '/feature'], ['展覧会', 'kotennavi-p10-4.html'], ['お子さまと行ける展覧会', null]] },
   'p10-5': { n: '特集-作品', bc: [['Top', '/'], ['特集', '/feature'], ['作品', null]] },
   'p10-6': { n: '特集-クリエイター', bc: [['Top', '/'], ['特集', '/feature'], ['クリエイター', null]] },
   'p10-7': { n: '特集-ギャラリー', bc: [['Top', '/'], ['特集', '/feature'], ['ギャラリー', null]] },
@@ -1731,6 +1763,8 @@ const PAGES = {
   'p60-11': { n: 'お問合わせ', bc: [['Top', '/'], ['お問合わせ', null]] },
   'p60-12': { n: 'サービス機能改善要望', bc: [['Top', '/'], ['サービス機能改善要望', null]] },
   'p60-13': { n: '問題を報告する', bc: [['Top', '/'], ['問題を報告する', null]] },
+  // アクセス制御の受け皿（層B/C）。「要ログイン」「見つかりません」の2状態を1ページで返す（追174-22）
+  'p60-15': { n: 'ページを表示できません', bc: [['Top', '/'], ['ページを表示できません', null]] },
   // P61 お知らせ
   'p61': { n: 'お知らせ一覧', bc: [['Top', '/'], ['お知らせ一覧', null]] },
   'p61-1': { n: 'ニュース', bc: [['Top', '/'], ['お知らせ一覧', 'kotennavi-p61.html'], ['新機能「リエゾンプラス」提供開始のお知らせ', null]] },
@@ -1768,6 +1802,7 @@ const PAGES = {
   'p90-14': { n: '管理者-販売代金管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['販売代金管理', null]] },
   'p90-15': { n: '管理者-リエゾンプラス申込者一覧', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['リエゾンプラス申込者一覧', null]] },
   'p90-16': { n: '管理者-作品購入ユーザー一覧', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['作品購入ユーザー一覧', null]] },
+  'p90-17': { n: '管理者-軸ページ管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['軸ページ管理', null]] },
 };
 
 /* ページID → 表示名（パンくず登録名）。外部（p60-11 の問い合わせ元表示等）から参照するための公開アクセサ。 */
@@ -2111,8 +2146,10 @@ function p2CanEdit() {
    表示条件に使わない（2026-08-26確定・旧仕様は「確認済かつ公開日到達済の場合のみ」リエゾン/インサイトを
    追加表示していたが、公開日条件は誤りとして撤回。管理者確認が下りた時点で自動的に項目が出る）：
    - 確認前：会期状態に関わらず編集・記事管理・削除のみ（リエゾン/インサイト/QR/フライヤーは非表示）
-   - 確認済かつ会期終了後：編集ボタンなし。記事管理＋インサイトのみ（リエゾン/リエゾン+作品管理・QR・フライヤーは
-     販売期間内かどうかに関わらず非表示＝展覧会単位の運用行為は会期終了で締め切る）
+   - 確認済かつ会期終了後：編集ボタンなし。記事管理＋インサイトのみ（リエゾン作品管理・QR・フライヤーは
+     販売期間内かどうかに関わらず非表示＝展覧会単位の運用行為は会期終了で締め切る）。
+     例外＝リエゾン+作品管理のみ、salesOver（LIAISON+販売期間終了済）が未成立の間は会期終了後も表示を継続する
+     （販売期間が会期後まで続く設計のため・2026-08-30確定）
    - 確認済かつ会期終了前（会期前・会期中とも）：編集・リエゾン/リエゾン+・記事管理・QR・フライヤー・インサイトを
      すべて表示 */
 function p2OwnerMenuItems(curPage) {
@@ -2139,9 +2176,14 @@ function p2OwnerMenuItems(curPage) {
   }
 
   if (st.phase === 'after') {
-    /* 会期終了後はリエゾン/リエゾン+作品管理・QR・フライヤーを一律非表示（販売期間内かどうかは問わない）。
-       販売継続中の取引対応はP3-15/P3-16等の作家側コンソールが担うため、展覧会単位のP2-12(1)は締め切ってよい。 */
-    return [articles, insight].join(ddSep());
+    /* 会期終了後はリエゾン作品管理・QR・フライヤーを一律非表示（販売期間内かどうかは問わない）。
+       ただしリエゾン+のみ例外：販売期間が会期終了後まで続く設計のため、salesOverが未成立の間は
+       リエゾン+作品管理を残す（会期終了後も出品作品の在庫・申込対応が必要なため・2026-08-30確定）。
+       販売期間終了後の取引対応自体はP3-15/P3-16等の作家側コンソールが担う。 */
+    var afterItems = [];
+    if (st.liaison === 'plus' && !st.salesOver) afterItems.push(liaisonItem);
+    afterItems.push(articles, insight);
+    return afterItems.join(ddSep());
   }
 
   /* 会期終了前でも、リエゾン+の販売期間が終了済みなら作品管理項目のみ非表示（LIAISON無料枠は影響なし） */
@@ -2519,8 +2561,33 @@ function getActions(page, role) {
     return '';
   }
 
+  /* ── P10-4-1〜5 軸ページ（場所・年鑑・アーカイブ・ジャンル・行きやすさで共通） ──
+     軸ページは自動生成なので admin の主機能は削除ではなく導入文のテキスト編集。
+     公開/非公開の反復はURLの評価を落とすため、非公開ではなくハブ露出の調整で扱う（追174-46③）。
+     **p10-4-5（行きやすさ軸）が配列から漏れていて管理者メニューごと出ていなかった（追174-64で是正）。**
+     遷移先は軸ごとの編集画面ではなく、軸の一覧から導入文とハブ露出をまとめて編集する P90-17（追174-65）。
+     軸は自動生成の集合（47都道府県×2＋ジャンル＋行きやすさ＋年）なので、ページ単位の編集画面を持たせると
+     100枚以上の管理URLができてしまう。?ax= でその軸のタブを開いた状態で着地させる。 */
+  var AXKIND = { 'p10-4-1': 'area', 'p10-4-2': 'year', 'p10-4-3': 'archive', 'p10-4-4': 'genre', 'p10-4-5': 'access' };
+  if (AXKIND[page]) {
+    if (role === 'admin') return dd('管理者',
+      ddi('edit', '導入文を編集', false, "location.href='./kotennavi-p90-17.html?ax=" + AXKIND[page] + "'") +
+      ddi('grid', 'ハブへの掲載設定', false, "location.href='./kotennavi-p90-17.html#p9017-feat'"));
+    return '';
+  }
+
+  /* ── P10-4 軸インデックス ──
+     注目枠は自動選定（固定枠＋日替わりローテーション）なので、admin の操作は個別の編集ではなく
+     「どの軸を枠に載せるか」＝露出の調整。軸ページ自体は非公開にしない（追174-46③・追174-49）。 */
+  if (page === 'p10-4') {
+    if (role === 'admin') return dd('管理者',
+      ddi('edit', '導入文を編集', false, "location.href='./kotennavi-p90-17.html#p9017-hub'") +
+      ddi('grid', '注目のエリアの選定設定', false, "location.href='./kotennavi-p90-17.html#p9017-feat'"));
+    return '';
+  }
+
   /* ── P10 特集 ── */
-  if (['p10-4', 'p10-5', 'p10-6', 'p10-7'].includes(page)) {
+  if (['p10-5', 'p10-6', 'p10-7'].includes(page)) {
     if (role === 'admin') return dd('管理者', ddi('edit', '編集') + ddi('plus', '新規特集'));
     return '';
   }
@@ -2545,7 +2612,7 @@ function getActions(page, role) {
     return '';
   }
 
-  if (['p90-2', 'p90-2-1', 'p90-4', 'p90-9', 'p90-10', 'p90-11', 'p90-11-1', 'p90-13', 'p90-14'].includes(page)) {
+  if (['p90-2', 'p90-2-1', 'p90-4', 'p90-9', 'p90-10', 'p90-11', 'p90-11-1', 'p90-13', 'p90-14', 'p90-17'].includes(page)) {
     if (role === 'admin') return owbtn('info', 'ガイド');
     return '';
   }
@@ -2611,6 +2678,54 @@ function setP(v, btn) {
 ══════════════════════════════════ */
 window.KTN = window.KTN || {};
 
+/* ── 場所（都道府県）のマスタ＝サイト全体の単一ソース ──
+   P10系の検索ドロワー（下の _p10PrefPanelHtml）と、軸ページ側（pages.js の KTN.axis）が
+   同じ47都道府県を二重に持たないよう、ここ1箇所だけが持つ。
+   **KTN.init の中に置かないこと（追174-69）**：pages.js の KTN.axis は
+   「スクリプト読み込み時」に KTN.P10_PREF_GROUPS / KTN.P10_PREF_SLUGS を読んで
+   PREFS を組み立てる。init は DOMContentLoaded で走るので、init の中で代入すると
+   pages.js が読む時点ではまだ空で、P10-4 の「エリアから探す」が0件・チップ0個になる。
+   マスタ（データ）は init（画面初期化）と寿命が違う＝読み込み時に確定させる。 */
+var P10_PREF_GROUPS = [
+  ['北海道・東北', ['北海道', '青森', '岩手', '宮城', '秋田', '山形', '福島']],
+  ['関東', ['茨城', '栃木', '群馬', '埼玉', '千葉', '東京', '神奈川']],
+  ['中部', ['新潟', '富山', '石川', '福井', '山梨', '長野', '岐阜', '静岡', '愛知']],
+  ['近畿', ['三重', '滋賀', '京都', '大阪', '兵庫', '奈良', '和歌山']],
+  ['中国・四国', ['鳥取', '島根', '岡山', '広島', '山口', '徳島', '香川', '愛媛', '高知']],
+  ['九州・沖縄', ['福岡', '佐賀', '長崎', '熊本', '大分', '宮崎', '鹿児島', '沖縄']]
+];
+/* クイック行に出していない追加タグ。data-f 付き＝実フィルタ（該当0件ならゼロヒット表示になる） */
+var P10_MORE_TAGS = ['日本画', '水彩', '彫刻', '立体', 'インスタレーション', 'メディアアート', 'イラスト', 'デザイン', '染織', 'ガラス', '漆芸', '金工', '木工', 'ドローイング'];
+/* 東京のエリア区分（[フィルタ値=表示名, 通称, 含まれる区]）。
+   東京だけ掲載数が突出するため都道府県より細かい単位を持たせる（他県は市区町村単位を持たない）。
+   区の並びは代表例＝本番では Drupal 側の市区町村マスタから引く。
+   通称（2列目）は方角名だけでは土地勘のない人に場所が伝わらないための手がかり。**6件すべてに入れる**
+   （2026-09-08・旧は都心部/東部/西部の3件だけ）＝一部だけ通称があると「通称のあるエリアが特別」に見え、
+   欠けている行は情報が足りないまま残る。括弧は表示側で付ける＝通称だけを他の場所で使い回せるようにする。
+   **通称は補助で、主表示は方角名のまま**：6区分は東京都を余さず分割しているが通称は区の一部しか
+   指さないので、通称を主にすると「銀座を選んだのに丸の内が出る」ように読めてしまう。
+   pages.js の KTN.axis.AREAS が同じ通称を alias として持つ（本番は同じマスタ）。片方だけ直さない。 */
+var P10_TOKYO_AREAS = [
+  ['東京都心部', '銀座・丸の内', '千代田区、中央区、港区'],
+  ['東京東部', '上野・谷根千', '江東区、台東区、墨田区、荒川区、足立区、葛飾区、江戸川区'],
+  ['東京西部', '新宿・渋谷', '新宿区、渋谷区、中野区、杉並区、練馬区'],
+  ['東京南部', '自由が丘・二子玉川', '品川区、目黒区、世田谷区、大田区'],
+  ['東京北部', '池袋・巣鴨', '文京区、豊島区、北区、板橋区'],
+  ['東京23区以外', '立川・八王子', '市部・島しょ']
+];
+/* 都道府県スラッグ（軸ページのURL）。小文字ヘボン式・長音なし・都道府県サフィックスなし。
+   47件で凍結する＝一度公開したURLは変えない（追174-46②）。
+   軸ページ（p10-4-1）が同じ都道府県リストを二重に持たないよう、グループ表と一緒に KTN へ出す。 */
+KTN.P10_PREF_GROUPS = P10_PREF_GROUPS;
+KTN.P10_PREF_SLUGS = {
+  '北海道': 'hokkaido', '青森': 'aomori', '岩手': 'iwate', '宮城': 'miyagi', '秋田': 'akita', '山形': 'yamagata', '福島': 'fukushima',
+  '茨城': 'ibaraki', '栃木': 'tochigi', '群馬': 'gunma', '埼玉': 'saitama', '千葉': 'chiba', '東京': 'tokyo', '神奈川': 'kanagawa',
+  '新潟': 'niigata', '富山': 'toyama', '石川': 'ishikawa', '福井': 'fukui', '山梨': 'yamanashi', '長野': 'nagano', '岐阜': 'gifu', '静岡': 'shizuoka', '愛知': 'aichi',
+  '三重': 'mie', '滋賀': 'shiga', '京都': 'kyoto', '大阪': 'osaka', '兵庫': 'hyogo', '奈良': 'nara', '和歌山': 'wakayama',
+  '鳥取': 'tottori', '島根': 'shimane', '岡山': 'okayama', '広島': 'hiroshima', '山口': 'yamaguchi', '徳島': 'tokushima', '香川': 'kagawa', '愛媛': 'ehime', '高知': 'kochi',
+  '福岡': 'fukuoka', '佐賀': 'saga', '長崎': 'nagasaki', '熊本': 'kumamoto', '大分': 'oita', '宮崎': 'miyazaki', '鹿児島': 'kagoshima', '沖縄': 'okinawa'
+};
+
 KTN.init = function (opts) {
   opts = opts || {};
   if (opts.page) window.ktnState.page = opts.page;
@@ -2666,6 +2781,67 @@ KTN.init = function (opts) {
     else if (actRect.left < barRect.left) bar.scrollLeft -= barRect.left - actRect.left + 12;
   }
 
+  /* ── P10系「詳しい条件」ドロワーの展開パネル（p10 / p10-1〜p10-7 共通） ──
+     HTML側は開くボタンに data-toggle="range|tags|prefs" を付けるだけ。パネル本体はここで生成して
+     ボタンの直後へ挿入する（8ページのHTML重複と47都道府県の直書きを避けるため）。
+     pages.js のチップ結線より前に呼ぶこと＝生成した .p10-chip[data-f] がそのまま実フィルタになる。 */
+  function _p10Chips(items, prefix, label) {
+    return '<div class="p10-adv__panel-chips">' + items.map(function (v) {
+      return '<button class="p10-chip" data-f="' + prefix + v + '" type="button">' + (label ? label(v) : v) + '</button>';
+    }).join('') + '</div>';
+  }
+  function _p10PanelHtml(kind) {
+    if (kind === 'range') {
+      return '<div class="p10-adv__panel"><div class="p10-adv__range">'
+        + '<input class="p10-adv__date" type="date" aria-label="開始日">'
+        + '<span class="p10-adv__range-sep">〜</span>'
+        + '<input class="p10-adv__date" type="date" aria-label="終了日" disabled>'
+        + '<span class="p10-adv__note">会期がこの期間に1日でも重なる展覧会を探します。1日だけ見たいときは、開始日と終了日に同じ日付を入れてください。</span>'
+        + '<span class="p10-adv__note">開始日だけの指定もできます（＝その日以降に会期がかかる展覧会）。終了日は開始日を入れると選べます。</span>'
+        + '</div></div>';
+    }
+    if (kind === 'tags') {
+      return '<div class="p10-adv__panel">'
+        + _p10Chips(P10_MORE_TAGS, 'tag:', function (t) { return '# ' + t; }) + '</div>';
+    }
+    if (kind === 'tokyo') {
+      return '<div class="p10-adv__panel"><div class="p10-adv__panel-chips">'
+        + P10_TOKYO_AREAS.map(function (a) {
+          return '<button class="p10-chip p10-chip--area" data-f="tarea:' + a[0] + '" type="button">'
+            + '<span class="p10-chip__area-name">' + a[0]
+            + (a[1] ? '<span class="p10-chip__area-alias">' + a[1] + '</span>' : '') + '</span>'
+            + '<span class="p10-chip__area-wards">' + a[2] + '</span></button>';
+        }).join('') + '</div></div>';
+    }
+    return '<div class="p10-adv__panel">' + P10_PREF_GROUPS.map(function (g) {
+      return '<div class="p10-adv__pref-group"><span class="p10-adv__pref-label">' + g[0] + '</span>'
+        + _p10Chips(g[1], 'area:') + '</div>';
+    }).join('') + '</div>';
+  }
+  function _p10AdvInit() {
+    var drawer = document.querySelector('.p10-adv');
+    if (!drawer) return;
+    drawer.querySelectorAll('[data-toggle]').forEach(function (btn) {
+      btn.insertAdjacentHTML('afterend', _p10PanelHtml(btn.dataset.toggle));
+      var panel = btn.nextElementSibling;
+      btn.addEventListener('click', function () {
+        var open = !panel.classList.contains('is-open');
+        panel.classList.toggle('is-open', open);
+        btn.classList.toggle('is-open', open);
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+    });
+    /* 「条件をクリア」で日付欄も空に戻す（チップの解除は pages.js 側が担当）。
+       終了日は開始日が空のあいだ無効＝クリア後も初期状態（disabled）へ戻す（追174-45） */
+    var clr = drawer.querySelector('[id$="AdvClear"]');
+    if (clr) clr.addEventListener('click', function () {
+      drawer.querySelectorAll('.p10-adv__date').forEach(function (d, i) {
+        d.value = '';
+        if (i > 0) { d.disabled = true; d.min = ''; }
+      });
+    });
+  }
+
   function _runPage() {
     _renderHeader();
     requestAnimationFrame(_syncHH); /* ヘッダーレンダリング直後に --hh を実測更新 */
@@ -2688,6 +2864,8 @@ KTN.init = function (opts) {
     }
     _prevInnerW = window.innerWidth;
     window.addEventListener('resize', _onResize, { passive: true });
+    /* P10系ドロワーの展開パネルを先に生成（pages.js のチップ結線対象に含めるため） */
+    _p10AdvInit();
     /* ページ固有関数を実行（kotennavi-pages.js で定義） */
     var pageId = window.ktnState.page;
     if (window.KTN.pages && typeof window.KTN.pages[pageId] === 'function') {
@@ -2697,6 +2875,8 @@ KTN.init = function (opts) {
     if (window.KTN.cta && typeof window.KTN.cta.init === 'function') {
       window.KTN.cta.init();
     }
+    /* 認証ウォール（該当要素が無いページは no-op）。ページ固有処理の後＝初期表示の確定後に判定する */
+    syncAuthWall();
     /* 要対応バーの件数表示（p3-15/p4-15限定。該当要素が無いページは no-op） */
     p315SyncUrgentCount();
     /* 会場フライヤー・会場チェックインQR経由（?checkin=1）の自動チェックインモーダル起動（P2限定） */
@@ -2767,9 +2947,13 @@ KTN.pagination = (function () {
    年別グループ表示＋ページング＋列ソート共通描画
    items は呼び出し側で日付降順ソート・年グループ済みの配列
    （各要素 { href, name, year, stats:['値<span class="unit">単位</span>', …],
-     period（任意・展覧会の会期テキスト）,
-     linkTarget（任意・記事の投稿元'exhibition'|'artwork'。文字マーク表示用でcb系バッジは使わない。
-       クリエイター/ギャラリーページへの直接投稿は値なし＝マーク非表示） }）
+     period（任意・展覧会の会期テキスト。名前の下段に積む＝独立列にしない。
+       列にすると狭幅で展覧会名の表示幅が足りなくなるため・2026-09-02）,
+     linkTarget（任意・記事の**投稿先**'exhibition'|'artwork'|'creator'|'gallery'。
+       これを持つ item は名前列の前に**投稿先列**（`.ins-item-list__target`）を出す＝ラベルが横一列に並ぶ。
+       'exhibition'/'artwork' は文字マーク（cb系バッジは使わない）、
+       **'creator'/'gallery'（自分のページへの直接投稿）はノーマーク＝空セル**で列だけ揃える。
+       linkTarget を持たないリスト〔展覧会・作品〕では投稿先列そのものを出さない） }）
    groupByYear=false のとき（ソート適用時）は年見出しを出さずフラットに表示する
 ══════════════════════════════════ */
 KTN.insightList = (function () {
@@ -2791,18 +2975,17 @@ KTN.insightList = (function () {
       }
       var row = document.createElement('div');
       row.className = 'ins-item-list__row';
-      var nameHtml = '<a class="ins-item-list__name" href="' + it.href + '">' + it.name + '</a>';
-      var main;
-      if (it.linkTarget) {
-        var mark = '<span class="ins-item-list__link-mark">' + (it.linkTarget === 'exhibition' ? '展覧会' : '作品') + '</span>';
-        main = '<div class="ins-item-list__name-row">' + mark + nameHtml + '</div>';
-      } else {
-        main = nameHtml;
-      }
+      var main = '<a class="ins-item-list__name" href="' + it.href + '">' + it.name + '</a>';
+      /* 投稿先列（linkTarget を持つリストのみ）。creator/gallery はノーマーク＝空セルで列だけ揃える */
+      var lbl = targetLabel(it.linkTarget);
+      var targetCell = it.linkTarget
+        ? '<span class="ins-item-list__target">' + (lbl ? '<span class="ins-item-list__link-mark">' + lbl + '</span>' : '') + '</span>'
+        : '';
+      /* 会期は独立列にせず名前の下段に積む（スマホで展覧会名の表示幅を確保するため・2026-09-02 差し戻し） */
       if (it.period) {
         main += '<span class="ins-item-list__period">' + it.period + '</span>';
       }
-      var html = '<div class="ins-item-list__main">' + main + '</div>';
+      var html = targetCell + '<div class="ins-item-list__main">' + main + '</div>';
       it.stats.forEach(function (s) { html += '<span class="ins-item-list__stat">' + s + '</span>'; });
       row.innerHTML = html;
       listEl.appendChild(row);
@@ -2815,6 +2998,10 @@ KTN.insightList = (function () {
       });
     }
     return page;
+  }
+  // 投稿先（linkTarget）→ 表示ラベル。creator/gallery は '' ＝ノーマーク。描画とソートで同じ値を使う（単一ソース）
+  function targetLabel(v) {
+    return v === 'exhibition' ? '展覧会' : v === 'artwork' ? '作品' : '';
   }
   // stats等のHTML断片（'654'／'34<span class="unit">人</span>'／'1,240'）から数値だけを取り出す（ソート用）
   function numFromHtml(html) {
@@ -2845,7 +3032,7 @@ KTN.insightList = (function () {
     });
     return { apply: apply };
   }
-  return { render: render, numFromHtml: numFromHtml, bindSort: bindSort };
+  return { render: render, numFromHtml: numFromHtml, bindSort: bindSort, targetLabel: targetLabel };
 }());
 
 /* ══════════════════════════════════
@@ -3063,23 +3250,15 @@ function ktnCheckinShowWatchStep() {
   var venues = [
     { href: 'kotennavi-p4.html', name: 'Gallery SOIL \u6e0b\u8c37' }
   ];
-  var MAX_CI_WATCH_ITEMS = 3;
-  /* \u30ae\u30e3\u30e9\u30ea\u30fc\u540d\u3092\u6587\u306b\u57cb\u3081\u8fbc\u3080\u3068\uff08\u65e7\u300c\u3053\u306e\u4f1a\u5834\uff08...\uff09\u3082\u30a6\u30a9\u30c3\u30c1\u3059\u308b\u300d\u65b9\u5f0f\uff09\u3001
-     \u9577\u3044\u540d\u524d\u3067\u672b\u5c3e\u306e\u300c\u3092\u30a6\u30a9\u30c3\u30c1\u3059\u308b\u300d\u304c\u6298\u308a\u8fd4\u3055\u308c\u3066\u5207\u308c\u3066\u898b\u3048\u308b\u5371\u967a\u304c\u3042\u308b\u305f\u3081\u3001
-     \u30af\u30ea\u30a8\u30a4\u30bf\u30fc\u3068\u540c\u3058\u300c\u540d\u524d\uff0bwatch\u30dc\u30bf\u30f3\u300d\u306e\u884c\u5f62\u5f0f\u306b\u7d71\u4e00\u3057\u3001\u30b0\u30eb\u30fc\u30d7\u30e9\u30d9\u30eb\uff08\u30af\u30ea\u30a8\u30a4\u30bf\u30fc\uff0f\u30ae\u30e3\u30e9\u30ea\u30fc\uff09\u3067\u5206\u3051\u308b\uff082026-08-24\uff09\u3002 */
+  /* \u30a6\u30a9\u30c3\u30c1\u5024\u3092\u3053\u306e\u30e2\u30fc\u30c0\u30eb\u3067\u78ba\u5b9f\u306b\u53d6\u5f97\u3059\u308b\u305f\u3081\u3001\u5168\u51fa\u5c55\u8005\u30fb\u4f1a\u5834\u3092\u30e2\u30fc\u30c0\u30eb\u5185\u3067\u5b8c\u7d50\u3055\u305b\u308b\uff08\u4ee5\u524d\u306f4\u4eba\u76ee\u4ee5\u964d\u304c\u300c\u307b\u304b\uff0e\u540d \u2192 \u51fa\u5c55\u8005\u4e00\u89a7\u300d\u306e\u5916\u90e8\u30ea\u30f3\u30af\u306b\u306a\u3063\u3066\u304a\u308a\u3001\u305d\u306e\u5206\u306e\u30a6\u30a9\u30c3\u30c1\u304c\u30e2\u30fc\u30c0\u30eb\u5185\u3067\u53d6\u308c\u306a\u304b\u3063\u305f\u3002\u4eba\u6570\u304c\u591a\u3044\u5c55\u89a7\u4f1a\u3067\u306f`.ktn-ci-watch__list`\u306eCSS\u304c\u30b9\u30af\u30ed\u30fc\u30eb\u3092\u4ed8\u3051\u308b\u30012026-08-30\uff09\u3002 */
   function buildCiWatchGroup(label, items) {
     if (!items.length) return '';
-    var visible = items.slice(0, MAX_CI_WATCH_ITEMS);
-    var restCount = items.length - visible.length;
-    var rows = visible.map(function (c) {
+    var rows = items.map(function (c) {
       return '<div class="ktn-ci-watch__row">' +
         '<a class="ktn-ci-watch__name" href="' + c.href + '">' + c.name + '</a>' +
         '<button class="ktn-btn ktn-ci-watch__wbtn" data-off="watch" data-on="watching" data-action="watch" onclick="handleAction(this,\'watch\');event.preventDefault()">' + WATCH_SVG + ' watch<span class="tip">\u30a6\u30a9\u30c3\u30c1\u3059\u308b</span></button>' +
         '</div>';
     }).join('');
-    if (restCount > 0) {
-      rows += '<a class="ktn-ci-watch__more ktn-guide-link" href="kotennavi-p2-4.html">\u307b\u304b' + restCount + '\u540d \u2192 \u51fa\u5c55\u8005\u4e00\u89a7</a>';
-    }
     return '<div class="ktn-ci-watch__group">' +
       '<p class="ktn-ci-watch__group-label">' + label + '</p>' +
       '<div class="ktn-ci-watch__list">' + rows + '</div>' +
@@ -3562,6 +3741,7 @@ KTN.action = (function () {
     interest: '<svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#fff" stroke="#fff" stroke-width=".6"/></svg>',
     checkin:  '<svg viewBox="0 0 16 16" fill="none"><circle cx="10" cy="5" r="4" fill="#fff" opacity=".9"/><circle cx="5" cy="11" r="2.4" fill="#fff" opacity=".75"/></svg>',
     apply:    '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>',
+    search:   '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>',
   };
 
   /* モーダル見出し・説明文（action 別）。未定義の action は DEFAULT_AUTH を使う */
@@ -3573,6 +3753,10 @@ KTN.action = (function () {
     apply: {
       ttl: '購入申込にはログインが必要です',
       sub: 'ログインすると作品の購入申込や<br>出品者とのやり取りができるようになります',
+    },
+    search: {
+      ttl: 'この検索にはログインが必要です',
+      sub: 'ログインすると作品・クリエイター・ギャラリーも<br>検索できるようになります',
     },
   };
 
@@ -3669,6 +3853,33 @@ KTN.action = (function () {
 
 window.handleAction   = function (btn, action) { KTN.action.handle(btn, action); };
 window.closeAuthModal = function (e)            { KTN.action.close(e); };
+
+/* ══════════════════════════════════════════════════════
+   ログイン必須の検索・一覧へ向かうリンクのゲスト制御（サイト共通）
+   ゲストが使えるのは展覧会検索のみ（作品／クリエイター／ギャラリー検索・一覧はログイン必須）。
+   同じ見た目のまま出したうえで、ゲストが押したら遷移させずログインモーダルを出す
+   ＝「押すとログインを促す」動線。注記や非活性は付けない（何を探せるかを先に伝えるのが目的のため）。
+   ロールはデモバーでリロードなしに切り替わるので、bind時ではなくクリック時に読む。
+
+   2系統を1つのリスナーで扱う：
+   ① 検索対象スイッチ `.p10-search__type`（P10系）＝**既定が制限**。ゲスト可のタブだけ
+      HTML 側の data-guest="ok" で除外する（判定をURLに依存させない）。
+   ② `data-guest="login"` を持つ任意のリンク＝**制限先への個別導線**。軸ページ（P10-4-1／P10-4-3）の
+      チップ「◯◯のギャラリー」→ P10-7 のように、**ゲストにも見せる回遊ページから**ログイン必須ページへ
+      張る箇所で使う。素通りさせると認証ウォールのページまで1ページ飛ばされ、戻るのに操作が要る。
+      ここで止めればゲストは軸ページに留まったままログインを促され、閉じれば元の文脈に戻れる。 */
+document.addEventListener('click', function (e) {
+  var t = e.target;
+  if (!t || !t.closest) return;
+  var gated = t.closest('[data-guest="login"]');
+  if (!gated) {
+    var tab = t.closest('.p10-search__type');
+    if (!tab || tab.dataset.guest === 'ok' || tab.classList.contains('is-active')) return;
+  }
+  if (window.ktnState.role !== 'guest') return;
+  e.preventDefault();
+  KTN.action.show('search');
+});
 
 /* ── デモバー高さ同期：モバイルで折り返すと高さが変わるため --dh を実測更新 ── */
 (function () {
