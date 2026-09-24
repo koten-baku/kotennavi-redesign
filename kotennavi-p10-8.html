@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- 4種のランキング（展覧会／作品／クリエイター／ギャラリー）を横断するハブ。
+       P10-4〜P10-7 が「検索の対になる特集」なのに対し、こちらは種別をまたぐ層なので
+       どの種別の下にも置かず /rankings を名乗る。title/h1 に年を入れない（追174-46④）＝
+       年が入るのは中身が凍結する本体側（P10-4-2／P10-5-1／P10-6-1／P10-7-1）だけ。 -->
+  <title>年間ランキング｜個展なび</title>
+  <meta name="description" content="その年に多くの人が見にいった展覧会・作品・クリエイター・ギャラリーを、1年ごとに並べた年間ランキング。過ぎた年の分も残しているので、前の年に何が見られていたのかをあとからたどれます。">
+  <link rel="canonical" href="https://koten-navi.com/rankings">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="年間ランキング｜個展なび">
+  <meta property="og:url" content="https://koten-navi.com/rankings">
+  <meta property="og:site_name" content="個展なび">
+  <meta name="twitter:card" content="summary">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<body data-w="index">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- デモバー（P10-8＝ランキングのハブ）。ランキングは4種ともゲストに開くので、
+     ロール切替は表示の確認用（ヘッダーのメニューが変わるだけ）。 -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ロール：</span>
+  <button class="dbtn on" onclick="setR('guest',this)">ゲスト</button>
+  <button class="dbtn" onclick="setR('login',this)">ログイン</button>
+  <button class="dbtn" onclick="setR('admin',this)">管理者</button>
+</div>
+
+<div class="shell">
+
+<!-- サイドバー（kotennavi-p1.html と同一マークアップ・#ktnRoleNav は renderSidebar() がJS注入） -->
+<aside class="ktn-sidebar" id="ktnSidebar">
+
+  <!-- ロゴ (logo5-1) -->
+  <a href="kotennavi-p1.html" class="ktn-sidebar__logo" data-page="p1">
+    <img src="./images/kotennavi-logo5-1.svg" alt="個展なび">
+  </a>
+
+  <!-- 検索 → P10 検索ハブ -->
+  <a href="kotennavi-p10.html" class="ktn-sidebar__item" data-page="p10">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <circle cx="11" cy="11" r="7.5"/>
+        <path d="M21 21l-4.5-4.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">検索</span>
+  </a>
+
+  <!-- お知らせ → P61 -->
+  <a href="kotennavi-p61.html" class="ktn-sidebar__item" id="ktnSidebarNotice" data-page="p61">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__dot" id="ktnNoticeDot" style="display:none"></span>
+    <span class="ktn-sidebar__label">お知らせ</span>
+  </a>
+
+  <!-- ガイド → P60 -->
+  <a href="kotennavi-p60.html" class="ktn-sidebar__item" data-page="p60">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" stroke-linecap="round"/>
+        <path d="M12 16v-4M12 8h.01" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">ガイド</span>
+  </a>
+
+  <div class="ktn-sidebar__divider"></div>
+
+  <!-- ロール別アイコン（JS注入） -->
+  <div id="ktnRoleNav" style="width:100%;display:flex;flex-direction:column;align-items:center"></div>
+
+  <div class="ktn-sidebar__footer">
+    <p class="ktn-sidebar__footer-label">Follow us</p>
+    <div class="ktn-sidebar__sns">
+      <a href="https://www.facebook.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="Facebook">
+        <svg viewBox="0 0 320 512" fill="currentColor"><path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/></svg>
+      </a>
+      <a href="https://x.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="X">
+        <svg viewBox="0 0 512 512" fill="currentColor"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg>
+      </a>
+    </div>
+  </div>
+
+</aside>
+
+<div class="content-wrap" id="contentWrap">
+
+  <header class="ktn-header" id="ktnHeader">
+    <div class="ktn-header__inner">
+      <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+      <div class="ktn-hdr-actions" id="ktnActs"></div>
+    </div>
+  </header>
+  <div class="ktn-tagbar" id="ktnTagbar">
+    <div class="ktn-tagbar__inner" id="ktnTagbarInner"></div>
+  </div>
+
+  <main class="ktn-main" id="ktnMain">
+
+    <!-- A. 軸ヘッド（P10-4／P10-4-2 と同じ .ktn-axis-head を共有）。
+         指標（興味あり！/チェックイン/ウォッチ…）の説明は各ブロックと「ランキングの見方」に置き、
+         ヘッドでは仕組みを説明せず「ここで何が見られるか」だけを利用者の言葉で書く
+         （ユーザー指摘「導入文が仕様書っぽい」・2026-09-18）。
+         リード2段目で「数年さかのぼって」と年数の厚みを言わないこと＝KTN.arc.YEARS は
+         いま2年（2026/2025）しかなく、年チップも2つしか出ないため文と画面が食い違う。
+         年が積み上がっても腐らないよう「過ぎた年の分も消さずに残す」という性質だけを書く。 -->
+    <section class="ktn-axis-head">
+      <div class="ktn-axis-head__inner">
+        <div class="ktn-axis-head__eyebrow">
+          <span class="ktn-axis-head__eyebrow-en">Rankings</span>
+          <span class="ktn-axis-head__eyebrow-line"></span>
+        </div>
+        <div class="ktn-axis-head__title-row">
+          <h1 class="ktn-axis-head__title">年間ランキング</h1>
+          <span class="ktn-axis-head__en">Annual Rankings</span>
+        </div>
+        <div class="ktn-axis-head__lead">
+          <p>去年はどんな展覧会に人が集まっていたのか。いま多くの人が見ている作品はどれか。展覧会・作品・クリエイター・ギャラリーを、1年ごとに並べています。</p>
+          <p>ランキングは年ごとに分かれています。過ぎた年の分も消さずに残すので、前の年に何が見られていたのかをあとからたどれます。</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="ktn-content p10-content">
+
+      <!-- B. 4種のダイジェスト。行のHTMLは KTN.arc（展覧会）／KTN.arcx（作品・人）が持つ
+           .p104-arc__* をそのまま使う＝ランキングの行はサイトに1種類しかない。
+           各ブロックの年チップが〈年 × 種別〉の索引を兼ねる（本体4枚 × 年数ぶんの内部リンク）。
+           同じURLへ「すべて見る →」を重ねて置かない（追174-83）。 -->
+      <section class="p104-arc ktn-index-target" id="exhibitions">
+        <div class="ktn-section__head">
+          <h2 class="ktn-section__title">展覧会の年間ランキング<span class="ktn-sec-en">Exhibitions</span></h2>
+        </div>
+        <p class="p10-shelf__desc">その年に会期を終えた展覧会を、興味あり！とチェックインが多かった順に並べています。会期は終わっていますが、クリエイター・ギャラリーはいまも活動しています。</p>
+        <ol class="p104-arc__list" id="p108ExhList"></ol>
+        <div class="p104-arc__years" id="p108ExhYears"></div>
+      </section>
+
+      <section class="p104-arc ktn-index-target" id="artworks">
+        <div class="ktn-section__head">
+          <h2 class="ktn-section__title">作品の年間ランキング<span class="ktn-sec-en">Artworks</span></h2>
+        </div>
+        <p class="p10-shelf__desc">その年に興味あり！と閲覧数が多かった作品を並べています。掲載開始の早い作品ほど有利にならないように、累計ではなく年ごとの増分で見ています。</p>
+        <ol class="p104-arc__list" id="p108WorkList"></ol>
+        <div class="p104-arc__years" id="p108WorkYears"></div>
+      </section>
+
+      <section class="p104-arc ktn-index-target" id="creators">
+        <div class="ktn-section__head">
+          <h2 class="ktn-section__title">クリエイターの年間ランキング<span class="ktn-sec-en">Creators</span></h2>
+        </div>
+        <p class="p10-shelf__desc">その年にウォッチと展覧会数が多かったクリエイターを並べています。登録の早いクリエイターほど有利にならないように、累計ではなく年ごとの増分で見ています。</p>
+        <ol class="p104-arc__list" id="p108CreatorList"></ol>
+        <div class="p104-arc__years" id="p108CreatorYears"></div>
+      </section>
+
+      <section class="p104-arc ktn-index-target" id="galleries">
+        <div class="ktn-section__head">
+          <h2 class="ktn-section__title">ギャラリーの年間ランキング<span class="ktn-sec-en">Galleries</span></h2>
+        </div>
+        <p class="p10-shelf__desc">その年にウォッチと展覧会数が多かったギャラリーを並べています。開設の早いギャラリーほど有利にならないように、累計ではなく年ごとの増分で見ています。</p>
+        <ol class="p104-arc__list" id="p108GalleryList"></ol>
+        <div class="p104-arc__years" id="p108GalleryYears"></div>
+      </section>
+
+      <!-- C. 読み方。指標の名前がサイトのCTAと同じ語であることを明示する＝投稿者が
+           「どのCTAを取れば載るのか」を読めるようにするため（追174-83）。
+           .ktn-axis-related＝直前のギャラリー番付（.p104-arc）とのくっつき防止の区切り線（追174-132）。 -->
+      <section class="p10-shelf ktn-axis-related ktn-index-target" id="about">
+        <div class="ktn-section__head">
+          <h2 class="ktn-section__title">ランキングの見方<span class="ktn-sec-en">How It Works</span></h2>
+        </div>
+        <p class="p10-shelf__desc">並べ替えに使っている数字は、サイトの中でみなさんが押しているボタンそのものです。展覧会は<strong>興味あり！</strong>（行きたい）と<strong>チェックイン</strong>（実際に行った）、作品は<strong>興味あり！</strong>と<strong>閲覧数</strong>、クリエイターとギャラリーは<strong>ウォッチ</strong>と<strong>展覧会数</strong>で見ています。</p>
+        <p class="p10-shelf__desc">いずれも累計ではなく<strong>その年に増えた分</strong>で見ています。長く続けている人ばかりが並んでしまうと、今年はじめて展覧会をひらいた人に出会えなくなるためです。今年のランキングは日々動きます。年が明けると、その年の顔ぶれとして残ります。</p>
+      </section>
+
+      <!-- D. 関連ページ。ランキングは「反応の多さ」の入口なので、
+           分類（エリア・ジャンル・タグ）から入りたい人をそれぞれの特集へ渡す。 -->
+      <!-- 作品(p10-5)・クリエイター(p10-6)は追174-130でクロスリンク網から除外
+           （P10-1/P10-2自身の絞り込みチップと内容が重複するnoindexページで、送客すると
+           かえって利用者を混乱させるという判断）。展覧会(p10-4)・ギャラリー(p10-7)のみ据え置き。
+           .ktn-axis-related＝直前の「ランキングの見方」とのくっつき防止の区切り線（追174-132）。 -->
+      <section class="p10-shelf ktn-axis-related">
+        <div class="ktn-section__head">
+          <h2 class="ktn-section__title">関連ページ<span class="ktn-sec-en">Related Pages</span></h2>
+        </div>
+        <div class="ktn-axis-cards">
+          <a class="ktn-axis-card" href="./kotennavi-p10-4.html">
+            <span class="ktn-axis-card__label">Exhibitions</span>
+            <span class="ktn-axis-card__ttl">展覧会の特集</span>
+            <span class="ktn-axis-card__desc">47都道府県のエリア別・ジャンル別の索引。開催中・開催予定の展覧会をたどれます。</span>
+          </a>
+          <a class="ktn-axis-card" href="./kotennavi-p10-7.html">
+            <span class="ktn-axis-card__label">Galleries</span>
+            <span class="ktn-axis-card__ttl">ギャラリーの特集</span>
+            <span class="ktn-axis-card__desc">エリアごとのギャラリー・美術館。会場のほうから展覧会をたどりたいときに。</span>
+          </a>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- 広告 -->
+    <div class="ktn-ad-band">
+      <div class="ktn-ad-band__inner">
+        <div class="ktn-ad-band__slot">広告エリア（728×90 / レスポンシブ）</div>
+      </div>
+    </div>
+
+  </main><!-- /ktn-main -->
+
+  <footer class="ktn-footer" id="ktnFooter"></footer>
+
+</div><!-- /content-wrap -->
+</div><!-- /shell -->
+
+<nav class="ktn-bottom-nav" id="ktnBottomNav">
+  <div class="ktn-bottom-nav__inner" id="ktnBottomNavInner"></div>
+</nav>
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    KTN.init({ page: 'p10-8', role: 'guest' });
+  });
+</script>
+</body>
+</html>

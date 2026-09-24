@@ -127,12 +127,12 @@
           <span class="ktn-axis-head__en">Browse Exhibitions</span>
         </div>
         <div class="ktn-axis-head__lead" id="p104Lead">
-          <p>個展なびに掲載されている展覧会を、開催エリアとジャンルの軸でまとめた索引です。47都道府県それぞれにページがあり、いま開催中・開催予定の展覧会と、そのエリアに会場を持つギャラリーをたどれます。ジャンルの軸ページからは、そのジャンルのクリエイターと作品へ広げられます。</p>
-          <p>会期が終わった展覧会は年ごとの記録に残ります。展覧会そのものは終わっても、つくった人の活動は続いていきます。</p>
+          <p>個展なびに掲載されている展覧会を、開催エリア別・ジャンル別にまとめた索引です。47都道府県それぞれにページがあり、いま開催中・開催予定の展覧会と、そのエリアに会場を持つギャラリーをたどれます。ジャンル別の特集ページからは、そのジャンルのクリエイターと作品へ広げられます（クリエイターは活動場所が一か所に決まらないため、エリア別の特集ページから広がるのは会場を持つギャラリーです）。</p>
+          <p>会期が終わった展覧会は年ごとのランキングに残ります。展覧会そのものは終わっても、つくった人の活動は続いていきます。</p>
         </div>
         <div class="ktn-axis-head__links">
           <a class="p10-preset" href="./kotennavi-p10.html">条件を指定して探す</a>
-          <a class="p10-preset" href="./kotennavi-p10-4-2.html">年間の記録</a>
+          <a class="p10-preset" href="./kotennavi-p10-4-2.html">展覧会の年間ランキング</a>
         </div>
       </div>
     </section>
@@ -144,10 +144,10 @@
            カードは .ktn-axis-card（P10-4-1／P10-4-2 の下段カードと同じ部品）を中段で再利用している。 -->
       <section class="p10-shelf">
         <div class="ktn-section__head">
-          <h2 class="ktn-section__title">注目のエリア<span class="ktn-sec-en">Featured Areas</span></h2>
+          <h2 class="ktn-section__title">注目のエリア<span class="ktn-sec-en">Area Highlights</span></h2>
         </div>
         <p class="p10-shelf__desc">掲載の多いエリアと、日替わりで入れ替わるエリア。</p>
-        <div class="ktn-axis-cards" id="p104Featured"></div>
+        <div class="ktn-axis-cards" id="p104Hl"></div>
       </section>
 
       <!-- C. 軸ネットワーク（内部リンク層）。47都道府県をすべて出す＝地方こそ競合が薄く、
@@ -180,39 +180,34 @@
         <div class="ktn-axis-nav__row" id="p104AccessNav"></div>
       </section>
 
-      <!-- D. 年間の記録ダイジェスト。本体は P10-4-2（年ごとの独立URL）へ切り出してある（追174-48）。
+      <!-- D. 年間ランキングのダイジェスト。本体は P10-4-2（年ごとの独立URL）へ切り出してある（追174-48）。
            年の切替を select で持つと 2026年と2025年が同じURLに同居してクローラから片方しか見えないため、
-           年別ナビはリンク。ここは最新年の上位3件だけを見せて年鑑へ送る。 -->
+           年別ナビはリンク。ここは最新年の上位3件だけを見せてランキングへ送る。 -->
       <section class="p104-arc ktn-index-target" id="p10Archive">
         <div class="ktn-section__head">
-          <h2 class="ktn-section__title">年間の記録<span class="ktn-sec-en">Annual Records</span></h2>
+          <h2 class="ktn-section__title">展覧会の年間ランキング<span class="ktn-sec-en">Annual Ranking</span></h2>
         </div>
-        <p class="p10-shelf__desc">その年に会期を終えた展覧会の記録です。会期は終わっていますが、クリエイター・ギャラリーはいまも活動しています。</p>
+        <p class="p10-shelf__desc">その年に会期を終えた展覧会を、興味あり！とチェックインが多かった順に並べています。会期は終わっていますが、クリエイター・ギャラリーはいまも活動しています。</p>
         <ol class="p104-arc__list" id="p10ArchiveList"></ol>
+        <!-- 年チップは「2026年の展覧会ランキング」と年ごとに名乗る＝どの年のどのランキングへ行くかが
+             チップ単体で読めるようにするため。以前ここに置いていた「すべて見る →」は最新年のチップと
+             同じURL（?y=最新年）への重複リンクだったので外した（追174-83）。 -->
         <div class="p104-arc__years" id="p10ArcYears"></div>
-        <a class="ktn-more-link" id="p10ArcMore" href="./kotennavi-p10-4-2.html">年間の記録をすべて見る →</a>
       </section>
 
-      <!-- E. 他の特集へ。タグバーにも同じ4本があるが、あちらはナビ chrome で、
-           こちらは何が見られるかを説明できる本文リンク（アンカーテキストが意味を持つ）。 -->
-      <section class="p10-shelf">
+      <!-- E. 関連ページへ。タグバーにも同じ本数があるが、あちらはナビ chrome で、
+           こちらは何が見られるかを説明できる本文リンク（アンカーテキストが意味を持つ）。
+           作品(p10-5)・クリエイター(p10-6)は追174-130でクロスリンク網から除外
+           （P10-1/P10-2自身の絞り込みチップと内容が重複するnoindexページで、送客すると
+           かえって利用者を混乱させるという判断）。ギャラリー(p10-7)のみ据え置き。 -->
+      <section class="p10-shelf p104-other">
         <div class="ktn-section__head">
-          <h2 class="ktn-section__title">他の特集<span class="ktn-sec-en">Other Features</span></h2>
+          <h2 class="ktn-section__title">関連ページ<span class="ktn-sec-en">Related Pages</span></h2>
         </div>
         <div class="ktn-axis-cards">
-          <a class="ktn-axis-card" href="./kotennavi-p10-5.html">
-            <span class="ktn-axis-card__label">Artworks</span>
-            <span class="ktn-axis-card__ttl">作品の特集</span>
-            <span class="ktn-axis-card__desc">会場の展覧会と連動してオンラインでも見られる作品、購入できる作品をまとめています。</span>
-          </a>
-          <a class="ktn-axis-card" href="./kotennavi-p10-6.html">
-            <span class="ktn-axis-card__label">Creators</span>
-            <span class="ktn-axis-card__ttl">クリエイターの特集</span>
-            <span class="ktn-axis-card__desc">いま展覧会を開いているクリエイター、これから展示を予定しているクリエイター。</span>
-          </a>
           <a class="ktn-axis-card" href="./kotennavi-p10-7.html">
             <span class="ktn-axis-card__label">Galleries</span>
-            <span class="ktn-axis-card__ttl">ギャラリーの特集</span>
+            <span class="ktn-axis-card__ttl">ギャラリーをエリア・開催状況から探す</span>
             <span class="ktn-axis-card__desc">エリアごとのギャラリー・美術館。会場のほうから展覧会をたどりたいときに。</span>
           </a>
         </div>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 480 240" fill="none" role="img" aria-labelledby="liaison-logo-title">
+  <title id="liaison-logo-title">LIAISON — Now on View</title>
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@400;600&amp;family=Montserrat:wght@400;600;800&amp;display=swap');
+    </style>
+    <linearGradient id="liaison-grad" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0%"   stop-color="#ffffff"/>
+      <stop offset="55%"  stop-color="#005da7"/>
+      <stop offset="100%" stop-color="#003f80"/>
+    </linearGradient>
+    <path id="liaison-arc-text" d="M 80 184 Q 240 56 400 184"/>
+  </defs>
+  <path d="M 20 200 Q 240 33 460 200" stroke="url(#liaison-grad)" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <text font-family="'Bodoni Moda',serif" font-size="58" font-weight="600" letter-spacing="8" fill="url(#liaison-grad)">
+    <textPath href="#liaison-arc-text" xlink:href="#liaison-arc-text" startOffset="50%" text-anchor="middle">LIAISON</textPath>
+  </text>
+  <text x="240" y="220" font-family="'Montserrat',sans-serif" font-size="26" font-weight="800" letter-spacing="2" fill="#005da7" text-anchor="middle">Now on View</text>
+</svg>

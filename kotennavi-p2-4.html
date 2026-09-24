@@ -547,12 +547,15 @@
 /* ── 出展者リスト（3件以下：プロフィール形式 / 4件以上：グリッド形式） ── */
 /* 4人以上の場合はグリッド形式に自動切替 */
 
-/* デモ用：4人全員のデータ（dbarの「4人」ボタンで切替確認用） */
+/* デモ用：4人全員のデータ（dbarの「4人」ボタンで切替確認用）。
+   ジャンル・タグはP10-2と同じ形（genres＝サイト正式6区分／genreTags＝技法・素材の自由ワード）に
+   揃えた（2026-09-22 ユーザー指示）。旧 genre（連結済み文字列）は initP2CreatorList が
+   もう読まないため削除。 */
 window.P2_CREATORS_ALL = [
-  { ini:'\u900f', name:'\u7530\u4e2d \u900f',     genre:'\u6cb9\u5f69\u30fb\u73fe\u4ee3\u7f8e\u8853\u30fb\u30df\u30af\u30b9\u30c8\u30e1\u30c7\u30a3\u30a2', av:'av-c1', exh:12, watch:247, url:'kotennavi-p3.html' },
-  { ini:'\u8475', name:'\u5c71\u7530 \u8475',     genre:'\u5199\u771f\u30fb\u30df\u30af\u30b9\u30c8\u30e1\u30c7\u30a3\u30a2',                                  av:'av-c3', exh:18, watch:89,  url:'#' },
-  { ini:'\u73b2', name:'\u6751\u4e0a \u73b2\u5b50', genre:'\u9676\u82b8\u30fb\u7acb\u4f53\u9020\u5f62',                                                      av:'av-c5', exh:5,  watch:67,  url:'#' },
-  { ini:'\u4e00', name:'\u9ad8\u6a4b \u4e00\u6717', genre:'\u6728\u5f6b\u30fb\u30a4\u30e9\u30b9\u30c8\u30ec\u30fc\u30b7\u30e7\u30f3',                          av:'av-c2', exh:3,  watch:52,  url:'#' },
+  { ini:'透', name:'田中 透',   genres:['アート'],         genreTags:['油彩', '現代美術', 'ミクストメディア'], av:'av-c1', exh:12, watch:247, url:'kotennavi-p3.html' },
+  { ini:'葵', name:'山田 葵',   genres:['写真', 'アート'], genreTags:['写真', 'ミクストメディア'],              av:'av-c3', exh:18, watch:89,  url:'#' },
+  { ini:'玲', name:'村上 玲子', genres:['クラフト'],       genreTags:['陶芸', '立体造形'],                      av:'av-c5', exh:5,  watch:67,  url:'#' },
+  { ini:'一', name:'高橋 一朗', genres:['アート'],         genreTags:['木彫', 'イラストレーション'],            av:'av-c2', exh:3,  watch:52,  url:'#' },
 ];
 
 /* プロフィール形式のHTMLをキャプチャしてから initP2CreatorList を呼ぶ */

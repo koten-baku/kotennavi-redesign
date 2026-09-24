@@ -201,6 +201,12 @@ button{font-family:inherit;cursor:pointer}
   padding-top:8px;
   padding-bottom:8px;
 }
+/* 中身が何も無いヘッダーは帯ごと消す（2026-09-22）。トップ（P1）はパンくずを持たず、
+   ヘッダーアクションも未定義なので、min-height:50px の空の帯だけが残ってしまう。
+   条件は〈パンくずが無い〉かつ〈アクションが空〉＝アクションが定義されれば自動で帯が戻る
+   （ヘッダーアクションは全ページ分をまとめて確定する別工程。それまでの暫定ではなく恒久ルール
+   として置ける＝「出すものが何も無い帯は出さない」はページを問わず正しい）。 */
+.ktn-header__inner:not(:has(> .ktn-bc)):has(> .ktn-hdr-actions:empty){display:none}
 
 /* ── パンくず ── */
 .ktn-bc{
@@ -884,26 +890,6 @@ button{font-family:inherit;cursor:pointer}
 }
 .badge-l--liaison { background: rgba(0,93,167,0.5); color: #a0c8e8; }
 
-/* 特集タグ */
-.ktn-footer__feature-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 7px;
-  margin-top: 4px;
-}
-.ktn-footer__feature-tag {
-  font-size: 0.75rem;
-  color: rgba(255,255,255,0.62);
-  text-decoration: none;
-  border: 1px solid rgba(255,255,255,0.2);
-  padding: 3px 9px;
-  border-radius: 2px;
-  transition: color 0.18s, border-color 0.18s;
-  letter-spacing: 0.03em;
-  white-space: nowrap;
-}
-.ktn-footer__feature-tag:hover { color: #fff; border-color: rgba(255,255,255,0.5); }
-
 /* ── LIAISON帯 ── */
 .ktn-footer__liaison-band {
   display: flex;
@@ -1497,6 +1483,13 @@ body.dark-mode .sb-ending{background:linear-gradient(135deg,#c47808,#d68a10);box
 .sb-ending{color:#c8501c}
 .sb-ending::before{animation:sb-pulse 1.2s ease-in-out infinite}
 .sb-closed{color:var(--muted)}
+/* クリエイター・ギャラリーカードの開催ステータス（buildPersonCard）専用の追加モディファイア
+   （2026-09-22）。矢印案は却下し「行動を待っている」サインとして既存の pulse を流用した
+   （末尾に→を足すとカード全体のリンクと二重のCTAに見える・矢印は明示テキストCTA専用という
+   サイト共通ルールに反するため）。色は付けない＝この badge は live/upcoming を1つの表記
+   「開催中/予定」に畳んでいて特定の状態色を持たないため、動きだけで注意を引く。
+   `.sb-live`/`.sb-ending` と同じ @keyframes sb-pulse を共有する。 */
+.sb-notice::before{animation:sb-pulse 1.8s ease-in-out infinite}
 
 @keyframes sb-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.65)}}
 
@@ -2861,7 +2854,7 @@ line-clamp:2;}
 .cc--h .cc__foot{display:none}
 .cc--h .cc__main{flex:1;display:flex;flex-direction:column;min-width:0}
 .cc--h .cc__info{padding:9px 12px 5px}
-.cc--h .cc__info .cc__badge-row{display:flex;justify-content:flex-start;margin-bottom:4px}
+.cc--h .cc__info .cc__badge-row{display:flex;flex-wrap:wrap;gap:4px;justify-content:flex-start;margin-bottom:4px}
 .cc--h .cc__info .cc__name{display:block;text-align:left;font-size:.82rem;margin-bottom:1px}
 .cc--h .cc__info .cc__genre{display:block;text-align:left;font-size:.62rem}
 .cc--h .cc__hfoot{
@@ -2872,19 +2865,24 @@ line-clamp:2;}
 .cc--h .cc__hfoot .ktn-btn svg{width:12px;height:12px}
 .cc--h .cc__hfoot .pc-count{font-size:.56rem;white-space:nowrap;flex-shrink:0}
 .cc--h .cc__hfoot .exh-icon{width:11px;height:11px}
-/* panel バリアント（サイドパネル用）: アバター上寄せ・カウンター非表示・ウォッチボタン中央 */
+/* panel バリアント（サイドパネル用）: アバター上寄せ。
+   カウンター（出展数・ウォッチ数）は2026-09-22までは非表示にしていたが、ユーザー指示で復活＝
+   hfoot は既定（非panel）と同じ flex 横並びのまま使う＝ここでの上書きをやめる
+   （P2投稿者カード・P10-2/3右カラムとも同じ .cc--panel/.gc--panel を共有するため、
+   両方に反映される）。 */
 .cc--h.cc--panel .cc__top,
 .gc--h.gc--panel .gc__top{align-self:flex-start}
 .cc--h.cc--panel .cc__info,
 .gc--h.gc--panel .gc__info{padding-bottom:1px}
-.cc--h.cc--panel .cc__hfoot,
-.gc--h.gc--panel .gc__hfoot{display:block!important;padding:0 12px 12px;margin-top:0!important;border-top:none!important}
-.cc--h.cc--panel .cc__hfoot .pc-count,
-.cc--h.cc--panel .cc__hfoot .sep,
-.gc--h.gc--panel .gc__hfoot .pc-count,
-.gc--h.gc--panel .gc__hfoot .sep{display:none!important}
-.cc--h.cc--panel .cc__hfoot .ktn-btn,
-.gc--h.gc--panel .gc__hfoot .ktn-btn{display:inline-flex!important;width:fit-content;margin:5px 0 0!important}
+/* panel はアバターと横並びで info 列が狭く、種別バッジ＋開催ステータスバッジの2つが
+   既定サイズ（.58rem）だと1行に収まらず折り返していた（2026-09-22・スクリーンショットで確認）。
+   .p10-person-grid と同じ縮尺に揃えて1行に収める。 */
+.cc--h.cc--panel .cc__badge-row .cb-person,
+.gc--h.gc--panel .gc__badge-row .cb-person{font-size:.5rem;padding:2px 6px}
+.cc--h.cc--panel .cc__badge-row .sb,
+.gc--h.gc--panel .gc__badge-row .sb{font-size:.56rem;gap:4px}
+.cc--h.cc--panel .cc__badge-row .sb::before,
+.gc--h.gc--panel .gc__badge-row .sb::before{width:5px;height:5px}
 
 
 /* ════════════════════════════════════════════════════
@@ -2932,16 +2930,6 @@ line-clamp:2;}
   font-size:.62rem;color:var(--muted);letter-spacing:.02em;
   text-align:center;line-height:1.5;
 }
-.gc__dist{color:var(--page-accent);font-weight:500}
-.gc__hours{
-  display:flex;align-items:center;justify-content:center;gap:3px;
-  font-size:.62rem;color:var(--muted);letter-spacing:.02em;margin-top:3px;
-}
-.gc__hours svg{width:10px;height:10px;flex-shrink:0;opacity:.45}
-.gc__hours--empty{
-  font-size:.62rem;color:var(--muted);opacity:.55;
-  text-align:center;margin-top:3px;letter-spacing:.01em;font-style:italic;
-}
 .gc__watch{
   display:flex;justify-content:center;
   padding:10px 0 12px;
@@ -2960,15 +2948,15 @@ line-clamp:2;}
 }
 .gc--h .gc__avatar{width:52px;height:52px;margin-bottom:0;box-shadow:0 1px 8px rgba(0,0,0,.1)}
 .gc--h .gc__badge-row,.gc--h .gc__name,.gc--h .gc__location,
-.gc--h .gc__hours,.gc--h .gc__hours--empty,.gc--h .gc__watch{display:none}
+.gc--h .gc__watch{display:none}
 .gc--h .gc__foot{display:none}
 .gc--h .gc__main{flex:1;display:flex;flex-direction:column;min-width:0}
 .gc--h .gc__info{padding:9px 12px 5px}
-.gc--h .gc__info .gc__badge-row{display:flex;justify-content:flex-start;margin-bottom:4px}
+.gc--h .gc__info .gc__badge-row{display:flex;flex-wrap:wrap;gap:4px;justify-content:flex-start;margin-bottom:4px}
 .gc--h .gc__info .gc__name{display:block;text-align:left;font-size:.82rem;margin-bottom:1px}
-.gc--h .gc__info .gc__location{display:block;text-align:left;font-size:.62rem}
-.gc--h .gc__info .gc__hours{justify-content:flex-start;margin-top:2px;display:flex}
-.gc--h .gc__info .gc__hours--empty{display:block;text-align:left;margin-top:2px}
+/* 住所全体を表示（2026-09-22）。1行に収まらない分は ellipsis で切る＝
+   区切りの判断（どこまでが「区」か）を実装がしなくて済む（追174-100の裏返し）。 */
+.gc--h .gc__info .gc__location{display:block;text-align:left;font-size:.62rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .gc--h .gc__hfoot{
   display:flex;align-items:center;gap:7px;
   padding:5px 12px 9px;border-top:1px solid rgba(0,0,0,.05);margin-top:auto;
@@ -3505,6 +3493,11 @@ line-clamp:2;}
   border-bottom:1px solid var(--border);
   padding-bottom:12px;
 }
+/* display:flex が UA の [hidden] を上書きするためのガード（.ktn-op-btn[hidden] 等と同じ理由・2026-09-22）。
+   P10-4-1「ジャンルから探す」出口見出し（0件のときだけ出す）が、掲載がある通常時にも
+   hidden 属性を無視して表示され続けていたのはこれが原因＝タイトルだけが残って中身の
+   ktn-axis-nav__row（同じ理由で空のまま可視化）が空欄に見えるバグだった。 */
+.ktn-section__head[hidden]{display:none}
 .ktn-section__title{
   font-family:var(--fs);
   font-size:1.1rem;font-weight:600;
@@ -7405,8 +7398,6 @@ a.p2-action-widget__btn{text-decoration:none}
 .p251-dark .gc--h:hover { background: #4a6278; }
 .p251-dark .gc__name { color: var(--dk-text); }
 .p251-dark .gc__location { color: var(--dk-sub); }
-.p251-dark .gc__hours { color: rgba(255,255,255,.38); }
-.p251-dark .gc__hours svg { opacity: .3; }
 .p251-dark .pc-count { color: rgba(255,255,255,.62) !important; }
 .p251-dark .pc-counts .sep { background: rgba(255,255,255,.15); }
 
@@ -7609,8 +7600,6 @@ a.p2-action-widget__btn{text-decoration:none}
 .p251-dark .gc--h .gc__name{color:rgba(255,255,255,.92)!important}
 .p251-dark .cc--h .cc__genre,
 .p251-dark .gc--h .gc__location{color:rgba(255,255,255,.72)!important}
-.p251-dark .gc--h .gc__hours{color:rgba(255,255,255,.55)!important}
-.p251-dark .gc--h .gc__hours svg{opacity:.48!important}
 
 /* ════════════════════════════════
    p2-5-1 ご購入についてセクション
@@ -12904,6 +12893,46 @@ a.p319-item__dest-name:hover{color:var(--page-accent)}
 .p9017-chip__x{border:none;background:none;padding:0;font-family:var(--fm);font-size:.82rem;line-height:1;color:var(--muted);cursor:pointer}
 .p9017-chip__x:hover{color:#b43c14}
 .p9017-addrow{display:flex;gap:8px;align-items:center;margin-top:9px}
+/* 注目のエリアの優先順位リスト（P90-17・2026-09-20）。常設エリアの並べ替えと、
+   その日の順位プレビューで**同じ行コンポーネント**を使う＝「並び順＝優先順位」が
+   2箇所で同じ見え方になる。__cut は「このページはここまで」の区切り。 */
+.p9017-prio{display:flex;flex-direction:column;border:1px solid var(--border);border-radius:3px;background:#fff}
+.p9017-prio__row{display:flex;align-items:center;gap:10px;padding:7px 10px;border-bottom:1px solid var(--border)}
+.p9017-prio__row:last-child{border-bottom:none}
+.p9017-prio__row.is-fixed{background:var(--page-accent-bg)}
+.p9017-prio__rank{flex:0 0 auto;min-width:19px;font-family:var(--fm);font-size:.7rem;font-weight:600;color:var(--muted);text-align:right}
+.p9017-prio__name{flex:1 1 auto;font-family:var(--fn);font-size:.78rem;color:var(--ink)}
+.p9017-prio__tag{flex:0 0 auto;font-family:var(--fn);font-size:.64rem;color:var(--page-accent)}
+/* 枠数を超えた常設＝設定には残るがどのページにも出ない行。**消さずに警告する**
+   （黙って効かないより、外すか順位を上げるかを運営が選べるほうがよい・2026-09-20） */
+.p9017-prio__tag--over{color:#b43c14}
+.p9017-prio__row.is-over{background:#fbeae5}
+.p9017-prio__row.is-over .p9017-prio__name{color:var(--muted)}
+.p9017-prio__n{flex:0 0 auto;font-family:var(--fm);font-size:.66rem;color:var(--muted)}
+.p9017-prio__ops{flex:0 0 auto;display:flex;gap:4px}
+.p9017-prio__op{border:1px solid var(--border);background:#fff;border-radius:3px;padding:2px 7px;font-family:var(--fn);font-size:.66rem;color:var(--muted);cursor:pointer}
+.p9017-prio__op:hover:not(:disabled){border-color:var(--page-accent);color:var(--page-accent)}
+.p9017-prio__op:disabled{opacity:.35;cursor:default}
+.p9017-prio__op--rm:hover{border-color:#b43c14;color:#b43c14}
+.p9017-prio__cut{display:flex;align-items:center;gap:8px;padding:5px 10px;border-bottom:1px solid var(--border);background:#faf7f1;font-family:var(--fn);font-size:.68rem;color:var(--muted)}
+.p9017-prio__cut::before{content:'';flex:0 0 14px;height:1px;background:var(--muted)}
+.p9017-prio__empty{padding:9px 10px;font-family:var(--fn);font-size:.74rem;color:var(--muted)}
+/* ローテーションがどこに効くかの小表（P90-17・2026-09-20）。設定値のすぐ下に置いて、
+   常設の件数を変えたときに届く範囲が変わることをその場で見せる。 */
+.p9017-rot{display:flex;flex-direction:column;margin-top:8px;border-top:1px solid var(--border)}
+.p9017-rot__row{display:flex;gap:10px;padding:5px 0;border-bottom:1px solid var(--border)}
+.p9017-rot__place{flex:0 0 40%;font-family:var(--fn);font-size:.74rem;color:var(--ink)}
+.p9017-rot__val{flex:1 1 auto;font-family:var(--fn);font-size:.74rem;color:var(--muted)}
+.p9017-rot__val--off{color:#b43c14}
+.p9017-rot__lead{margin-top:10px}
+@media (max-width:540px){
+  .p9017-rot__row{flex-direction:column;gap:2px}
+  .p9017-rot__place{flex:1 1 auto}
+}
+@media (max-width:540px){
+  .p9017-prio__row{flex-wrap:wrap;gap:6px}
+  .p9017-prio__name{flex:1 1 100%;order:-1}
+}
 .p9017-addsel{max-width:220px}
 .p9017-preview{margin-top:18px;padding-top:14px;border-top:1px solid var(--border)}
 .p9017-preview__label{display:block;margin-bottom:8px;font-family:var(--fm);font-size:.58rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
@@ -12951,6 +12980,82 @@ a.p319-item__dest-name:hover{color:var(--page-accent)}
 .p9017-axis.is-on .p211-input{border-color:var(--page-accent);color:var(--ink);font-weight:600}
 .p9017-season-table tr.is-now td{background:var(--page-accent-bg)}
 .p9017-season-table tr.is-now td:first-child{color:var(--ink);font-weight:600}
+
+/* ── P90-17 ページタブ（外側・2階層タブの上段）＝追174-90 ──
+   この画面は〈検索の設定〉〈特集（軸）の設定〉の2タブで、特集タブの中の「軸ページ一覧」が
+   さらに内部タブ（.p902-tab-nav＝エリア／ジャンル／…）を持つ。**タブが2階層になるので、
+   外側は下線タブ（.p902-tab-nav / .p315-tab-nav と同じ見た目）を使わない**＝同じ形だと
+   どちらがページの切替でどちらが一覧の絞り込みか読めなくなる。外側はセグメント（囲み）にする。 */
+.p9017-maintab{display:flex;gap:4px;padding:4px;background:var(--tag-bg);border:1px solid var(--border);border-radius:4px}
+.p9017-maintab__btn{flex:1 1 0;background:none;border:none;border-radius:3px;padding:10px 14px;font-family:var(--fn);font-size:.84rem;font-weight:500;color:var(--muted);cursor:pointer;transition:background .15s,color .15s;white-space:nowrap}
+.p9017-maintab__btn:hover:not(.is-active){color:var(--ink)}
+.p9017-maintab__btn.is-active{background:#fff;color:var(--page-accent);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+
+/* 種別セレクタ（検索の設定タブの中・展覧会／作品／クリエイター／ギャラリー）。
+   こちらは一覧の切替ではなく「どの検索の設定を見るか」なので下線タブを使う（内部タブと同列の粒度）。 */
+.p9017-kind{display:flex;border-bottom:2px solid var(--border);overflow-x:auto;scrollbar-width:none}
+.p9017-kind::-webkit-scrollbar{display:none}
+.p9017-kind__btn{background:none;border:none;border-bottom:2px solid transparent;padding:9px 16px;font-family:var(--fn);font-size:.82rem;font-weight:400;color:var(--muted);cursor:pointer;margin-bottom:-2px;transition:color .15s;white-space:nowrap}
+.p9017-kind__btn:hover:not(.is-active){color:var(--ink)}
+.p9017-kind__btn.is-active{color:var(--page-accent);border-bottom-color:var(--page-accent);font-weight:600}
+
+
+
+/* ピックアップマスタの一覧（P90-17 検索の設定タブ）＝追174-90 追記2 */
+.p9017-picks-table th,.p9017-picks-table td{vertical-align:top}
+/* 一覧の列幅（2026-09-19 追記7）。
+   **横スクロールは許す**（ユーザー判断）。そのうえで判定の列を「最長の文が4行に収まる」幅で
+   固定する＝判定は読ませる欄なので、狭めて8行にも広げて1行にもしない。
+   最長は軸ページ重複の文で57字（ラベル5字＋52字）。font-size .74rem＝全角1字 11.84px、
+   セルの左右 padding 14px×2 を引いた内容幅が 16字ぶん（190px）あれば 57/16＝3.6→4行に収まる。
+   **.p70-table より後に書けないので親クラスで勝たせる**＝.p70-table は 13880行台にあり、
+   同じスペシフィシティ（0,1,0）だと後勝ちで width:auto / max-width:100% が効いてしまう。
+   max-width:100% が効くと表が枠幅へ圧縮され、fixed の列幅ごと縮んで判定が細くなる（実際そうなった）。
+   width は列幅の合計（130+180+150+110+218=788）＋罫線ぶん。table-layout:fixed は
+   確定した table 幅を必要とするので auto にしない。 */
+.p9017-picks-wrap .p9017-picks-table{table-layout:fixed;width:792px;max-width:none;min-width:0}
+.p9017-picks-wrap .p9017-picks-table th:nth-child(1),.p9017-picks-wrap .p9017-picks-table td:nth-child(1){width:130px}
+.p9017-picks-wrap .p9017-picks-table th:nth-child(2),.p9017-picks-wrap .p9017-picks-table td:nth-child(2){width:180px}
+.p9017-picks-wrap .p9017-picks-table th:nth-child(3),.p9017-picks-wrap .p9017-picks-table td:nth-child(3){width:150px}
+.p9017-picks-wrap .p9017-picks-table th:nth-child(4),.p9017-picks-wrap .p9017-picks-table td:nth-child(4){width:110px}
+.p9017-picks-wrap .p9017-picks-table th:nth-child(5),.p9017-picks-wrap .p9017-picks-table td:nth-child(5){width:218px}
+.p9017-picks-table td{word-break:break-word;overflow-wrap:anywhere}
+/* 掲載期間：2つの日付を縦に積む（横並びだと列が広がる） */
+.p9017-dates{display:flex;flex-direction:column;gap:4px;margin-bottom:6px}
+.p9017-dates .p9017-date{width:100%;min-width:0}
+/* 掲載：順と「出す／出さない」を縦に積んで1列にまとめる */
+.p9017-ordfield{display:flex;align-items:center;gap:6px;margin-bottom:8px}
+.p9017-ordfield__lb{font-size:.72rem;color:var(--muted);white-space:nowrap}
+.p9017-ordfield .p9017-order{width:52px}
+/* 判定は折り返して全文を出す（1行に詰めない） */
+.p9017-picks-table__verdict .p9017-verdict{white-space:normal}
+.p9017-picks-table__verdict .p9017-verdict + .p9017-verdict{margin-top:6px}
+/* 小さいトグル（表の中で使う） */
+.ktn-switch--sm .ktn-switch__track{transform:scale(.82);transform-origin:left center}
+.ktn-switch--sm .ktn-switch__label{font-size:.72rem}
+.p9017-picks-table__label{font-family:var(--fs);font-weight:600;color:var(--ink);line-height:1.5}
+.p9017-term{width:68px;display:inline-block}
+/* 日付入力（掲載期間・期間条件）。年は保存しないが <input type="date"> は年を要求するので
+   表示のときだけ今年を足している（pages.js の mdToDate/dateToMd）。 */
+.p9017-date{width:auto;min-width:130px;display:inline-block}
+.p9017-period{display:flex;flex-direction:column;gap:4px}
+.p9017-period .p9017-date{width:100%;min-width:0}
+/* 条件エディタの補足。ツールチップでなく画面に出す（追174-90 追記6） */
+.p9017-axis__note{display:block;margin-top:4px;font-size:.7rem;line-height:1.6;color:var(--muted)}
+.p9017-axis{flex:1 1 180px}
+.p9017-term__sep{margin:0 4px;color:var(--muted);font-size:.75rem}
+.p9017-order{width:56px}
+/* 判定は「助言」であって禁止ではないので、赤の塗りつぶしにせず文字色だけで出す
+   （エラーパネル .ktn-form-error と混同させない＝あちらは保存できない状態のサイン）。 */
+.p9017-verdict{display:block;font-size:.74rem;line-height:1.7}
+.p9017-verdict.is-ok{color:var(--muted)}
+.p9017-verdict.is-warn{color:#b43c14}
+/* 条件エディタ（導入文モーダルと同じ殻・11種の条件欄を並べるので同じ幅を与える） */
+.p9017-cond-modal .p319-del-modal__panel{max-width:620px;max-height:88vh;overflow-y:auto}
+.p9017-cond-edit{margin-top:6px}
+.p9017-cond-verdict{margin:14px 0 4px;padding:12px 14px;background:#faf7f1;border:1px solid var(--border);border-radius:4px}
+.p9017-cond-verdict .p9017-verdict + .p9017-verdict{margin-top:6px}
+.p9017-picks-legend{margin:14px 0 18px}
 @media(max-width:540px){
   .p9017-listbody > .p902-tab-nav,
   .p9017-listbody > .p319-toolbar,
@@ -13828,6 +13933,32 @@ body.p60-page,body.p11-page{--page-accent:#005da7;--page-accent-bg:rgba(0,93,167
 .p70-table tbody td:last-child{font-family:var(--fm);font-weight:600;color:var(--ink);white-space:nowrap}
 .p70-table__note{display:block;margin-top:3px;font-family:var(--fn);font-size:.68rem;font-weight:400;color:var(--muted);letter-spacing:0;white-space:normal}
 .p70-table__band{font-family:var(--fn);font-weight:400;color:var(--muted);margin-right:8px}
+/* P90-17 の**説明用**の表（2026-09-20）。一覧の表のクラスとは別名にする＝
+   あちらは「最後の列は右寄せ nowrap」の一覧で、同じ名前だと列レイアウトが混ざる。
+   .p70-table の「最後の列＝数値」前提を打ち消し、
+   読ませる列に幅を配る。table-layout:fixed で列幅を宣言どおりに効かせる。 */
+.p9017-exp{width:100%;table-layout:fixed}
+.p9017-exp tbody td:last-child{font-family:var(--fn);font-weight:400;color:var(--ink);white-space:normal}
+.p9017-exp__num{font-family:var(--fm);font-weight:600;color:var(--ink);text-align:center;white-space:nowrap}
+.p9017-exp--outlets col:nth-child(1){width:22%}
+.p9017-exp--outlets col:nth-child(2){width:14%}
+.p9017-exp--outlets col:nth-child(3){width:12%}
+.p9017-exp--outlets col:nth-child(4){width:52%}
+.p9017-exp--axes col:nth-child(1){width:18%}
+.p9017-exp--axes col:nth-child(2){width:30%}
+.p9017-exp--axes col:nth-child(3){width:42%}
+.p9017-exp--axes col:nth-child(4){width:10%}
+.p9017-exp code{font-size:.74rem;word-break:break-all}
+@media (max-width:640px){
+  .p9017-exp{font-size:.76rem}
+  .p9017-exp th,.p9017-exp td{padding:7px 8px}
+  .p9017-exp--outlets col:nth-child(1){width:24%}
+  .p9017-exp--outlets col:nth-child(2){width:0}
+  .p9017-exp--outlets col:nth-child(3){width:14%}
+  .p9017-exp--outlets col:nth-child(4){width:62%}
+  /* 「対象の軸」列はどの行も同じ値なので、狭い画面では畳む */
+  .p9017-exp--outlets th:nth-child(2),.p9017-exp--outlets td:nth-child(2){display:none}
+}
 .p70-flow-diagram{background:#f8f7f5;border:1px solid var(--border);border-radius:6px;padding:14px 16px;margin:16px 0}
 .p70-flow-diagram__title{font-family:var(--fn);font-size:.7rem;font-weight:600;color:var(--muted);letter-spacing:.04em;text-align:center;margin-bottom:10px}
 .p70-flow-diagram__list{display:flex;flex-wrap:wrap;align-items:stretch;justify-content:center;gap:4px;list-style:none;padding:0;margin:0}
@@ -15185,9 +15316,34 @@ body.ktn-gated .p10-content{display:none}
 .p10-adv__group:last-of-type{border-bottom:none}
 .p10-adv__label{flex:0 0 110px;font-family:var(--fn);font-size:.74rem;font-weight:600;color:var(--ink);padding-top:6px;line-height:1.4}
 .p10-adv__opts{display:flex;flex-wrap:wrap;gap:7px;align-items:center;flex:1;min-width:0}
+/* タグ行（追174-142・追174-143）。タグ付け数が多い順にJSが並べ替えて描画し、既定は1行分だけ
+   見せてはみ出しは overflow:hidden で隠す（何個で1行に収まるかは画面幅・文字数で変わるため、
+   固定件数で切らずCSSの高さで切る）。本番は数百件を想定するため「もっと見る」は残り全部を
+   一度に出さず1行ずつ増やす＝JSが実測（getBoundingClientRect）した行の高さを
+   インラインstyle.maxHeightに都度書き込む（class切替ではない）。ここの30pxは
+   ドロワーがdisplay:noneの間（実測できない）だけ効く暫定フォールバック。 */
+.p10-adv__tagbox{display:flex;flex-direction:column;gap:6px;flex:1;min-width:0}
+.p10-adv__opts--tags{max-height:30px;overflow:hidden}
+.p10-adv__tagbox > .p10-adv-toggle{align-self:flex-start}
+.p10-adv__near-wrap{position:relative}
 .p10-adv__near-input{border:1px solid var(--border);border-radius:4px;padding:6px 10px;font-family:var(--fn);font-size:.78rem;min-width:230px;color:var(--ink)}
 .p10-adv__near-input::placeholder{color:var(--muted);opacity:.7}
+/* 「の近く」は入力欄の外側に固定テキストで置く（追174-146・入力中も意味が消えないように） */
+.p10-adv__near-suffix{font-family:var(--fn);font-size:.78rem;color:var(--ink);white-space:nowrap}
+/* 会場名の候補一覧（追174-147）。実在する会場名から選んで確定するための最小限のドロップダウン。 */
+.p10-adv__near-sugg{position:absolute;top:calc(100% + 4px);left:0;z-index:20;min-width:230px;max-width:320px;background:#fff;border:1px solid var(--border);border-radius:4px;box-shadow:0 4px 18px rgba(0,0,0,.1);overflow:hidden}
+.p10-adv__near-sugg[hidden]{display:none}
+.p10-adv__near-sugg-item{display:block;width:100%;text-align:left;padding:8px 12px;border:none;background:#fff;font-family:var(--fn);font-size:.78rem;color:var(--ink);cursor:pointer}
+.p10-adv__near-sugg-item:hover{background:var(--paper)}
+/* 確定後は他のチップと全く同じ .is-on 見た目にする（追174-148／174-149）。他のエリア・タグ
+   チップは選択状態でも×を付けずチップ自体の再クリックで解除するため、これも同じ形に揃える
+   （×を付けると他の選択状態と見た目が食い違う・ユーザー指摘）。.p10-chip は display:inline-flex
+   を持つため [hidden] がUA既定を上書きされる＝ガードが必要（.ktn-statepanel等と同じパターン）。 */
+.p10-adv__near-chip[hidden]{display:none}
 .p10-adv__note{flex-basis:100%;font-size:.7rem;color:var(--muted);font-family:var(--fn)}
+/* 既定の検索範囲の注記。パネルを開く前から見せる地の文なので p 要素の余白だけ整える（2026-09-21） */
+.p10-adv__note--scope{margin:7px 0 0;line-height:1.6}
+.p10-adv__note--scope strong{color:var(--ink);font-weight:600}
 /* 展開パネル（期間を指定する／タグをもっとみる／すべての都道府県）。
    中身は common.js の _p10AdvInit がボタン直後に生成する（p10〜p10-7 共通） */
 .p10-adv__panel{display:none;flex-basis:100%;padding:8px 0 2px}
@@ -15254,6 +15410,22 @@ a.p10-preset{text-decoration:none}
 .p10-shelf__desc{font-size:.78rem;color:var(--muted);font-family:var(--fn);margin:5px 0 0}
 /* マソンリー（cards_exhibition.html 標準準拠・.masonry と同じ columns 方式） */
 .p10-shelf-grid{columns:4 220px;column-gap:16px;margin-top:16px}
+/* ── 並び順を持つ結果グリッドは masonry にしない（2026-09-22 ユーザー指摘）──
+   CSS の columns（マソンリー）は先頭から**1列目を上から下まで埋めてから2列目へ**流すため、
+   並べ替え（人気順・新着順・会期終了が近い順…）の結果を「左から順」に読めない
+   （2位が1位の右隣ではなく下に来る）。**並び順そのものに意味がある結果一覧**
+   （#p10ResultGrid・#p1041Grid・#p1043Grid・#p1044Grid・#p1045Grid）だけ、
+   `display:grid` に切り替えて左→右・上→下のDOM順で敷く。カードの高さが不揃いでも
+   （マソンリーのような）段の詰め直しはせず、行ごとに自然な高さで進む＝この方が
+   「並び順の意図」を裏切らない。列数は columns:N Wpx の見た目を再現するため
+   auto-fill/minmax で近似する（デスクトップ4列相当・モバイル2列相当）。
+   **並び順を持たない棚（Picks・注目のエリア等）は対象外**＝そちらは masonry のまま。 */
+.p10-shelf-grid--ordered{
+  columns:unset;
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:16px;
+}
 /* ── 左カラムの棚は「3件」で組む（2026-09-03・旧「4件描画して3列の帯だけ4件目を隠す」方式を置換）──
    3列の帯＝1行3件。2列の帯＝先頭カードを全幅リードにした非対称組み（1件＋2件）。
    .p10-shelf-grid は CSS multi-column なので、先頭の .masonry-item に column-span:all を当てると
@@ -15283,6 +15455,10 @@ a.p10-preset{text-decoration:none}
 @media(min-width:861px){
   .p10-shelf .p2-5-grid:has(> :nth-child(4):last-child) > :nth-child(4){display:none}
 }
+/* .p2-5-grid 自体は margin-top を持たないため、.p10-shelf 内で使うと直前の .p10-shelf__desc に
+   くっついて見える（きょうだいの .p10-shelf-grid / .p10-person-grid / .p10-side-list はいずれも
+   margin-top:14〜16px を持つのに、これだけ抜けていた・2026-09-23 ユーザー指摘）。値をそろえる。 */
+.p10-shelf .p2-5-grid{margin-top:16px}
 .p10-nearby-grid{display:flex;flex-wrap:wrap;column-gap:28px;margin-top:8px}
 .p10-nearby-grid .p2-side-ec{width:calc(33.333% - 19px)}
 /* ── 右カラム（クロスジャンル＋ランキング）── 常設の「回遊ツール」ウィジェットのため
@@ -15309,20 +15485,50 @@ a.p10-preset{text-decoration:none}
 .p10-side-list{margin-top:14px}
 /* ランキングの順位。カードは共通の buildSideEcCard（p2/p3/p4/p6…で共有）なので描画側には手を入れず、
    ランキングのリストにだけ CSS counter で番号を出す。狭い右カラム（300px）で番号列を作ると
-   展覧会名の幅を削るため、サムネイル左上に小さく重ねる。年間の記録（.p104-arc__rank）は1カラムで
+   展覧会名の幅を削るため、サムネイル左上に小さく重ねる。年間ランキング（.p104-arc__rank）は1カラムで
    幅に余裕があるので大きなセリフ数字＝別扱いにしている。 */
 .p10-side-list--rank{counter-reset:p10rank}
-.p10-side-list--rank .p2-side-ec{counter-increment:p10rank}
-.p10-side-list--rank .p2-side-ec__poster::before{content:counter(p10rank);position:absolute;top:0;left:0;min-width:16px;height:16px;padding:0 3px;display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:.62rem;font-weight:600;line-height:1;color:#fff;background:rgba(35,24,21,.72);border-radius:0 0 3px 0}
-/* ── 年間の記録（Annual Records）——
+.p10-side-list--rank .p2-side-ec,
+.p10-side-list--rank .aw,
+.p10-side-list--rank .cc,
+.p10-side-list--rank .gc{counter-increment:p10rank}
+/* 番号のアンカーはカードごとに違う（展覧会＝サムネ／作品＝サムネ／人物＝アバター列）が、
+   見た目（左上に小さく重ねる）は共通。P10-1/2/3 のランキングも同じ番号表現を使う。 */
+.p10-side-list--rank .aw--h .aw__img,
+.p10-side-list--rank .cc--h .cc__top,
+.p10-side-list--rank .gc--h .gc__top{position:relative}
+.p10-side-list--rank .p2-side-ec__poster::before,
+.p10-side-list--rank .aw--h .aw__img::before,
+.p10-side-list--rank .cc--h .cc__top::before,
+.p10-side-list--rank .gc--h .gc__top::before{content:counter(p10rank);position:absolute;top:0;left:0;min-width:16px;height:16px;padding:0 3px;display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:.62rem;font-weight:600;line-height:1;color:#fff;background:rgba(35,24,21,.72);border-radius:0 0 3px 0;z-index:1}
+/* 枠を持つカード（.aw / .cc / .gc）を縦に積むリスト。.p2-side-ec は行区切りの罫線で
+   繋がって見せる設計なので gap を持たせず、こちらだけカード間の間隔を取る。 */
+.p10-side-list--stack{display:flex;flex-direction:column;gap:10px}
+/* チップ内の件数は従属メタ。指定中（is-on＝ソリッド塗り）のときだけ白地に合わせて色を起こす */
+.p10-chip .ktn-count{font-size:.68rem}
+.p10-chip.is-on .ktn-count{color:#fff}
+/* ── 年間ランキング（Annual Ranking）——
    P10-4 の下段＝最新年の上位3件ダイジェスト、P10-4-2＝年ごとの独立ページ（本体）で共有する。
    上段（いまの特集）と役割が違うため、右カラムのカード型ランキングではなく1カラムの番付リストにする。
    各行の主眼は「作り手のいま」への出口なので、行内で最後まで捨てないのは作り手行（.p104-arc__host）。
    タブは .p10-rank-tabs / .p10-rank-tab をそのまま再利用（軸の切替という役割が同じ）。
    年の切替は select（クライアント状態）ではなくリンク（.p104-arc__years / a.p10-preset）＝年ごとに別URL。 */
 .p104-arc{margin-top:40px;padding-top:28px;border-top:2px solid var(--ink)}
+/* p10-4 末尾「他の特集」＝上2つのセクション（.ktn-axis-nav／.p104-arc）と同じ ink 罫線で区切る。
+   .p10-shelf は7ページ60箇所以上で使う素の箱（margin-bottom のみ）なので、この1セクションだけに
+   罫線を足したいときは全体を変えず併記クラスで対応する（2026-09-22）。 */
+.p104-other{margin-top:40px;padding-top:28px;border-top:2px solid var(--ink)}
 /* P10-4-2（年鑑の独立ページ）ではこのセクションがページ本体＝上段との区切りが要らないので分離線を外す */
 .p104-arc--page{margin-top:0;padding-top:0;border-top:0}
+/* 軸ページ（P10-4-1/4-3/4-4/4-5）末尾「関連ページ」＝上と同じ ink 罫線。4ページで同一構造・
+   同一クラス名を共有する（.p104-other は P10-4 ハブ専用の1ページ限定命名だったため、この4ページ
+   共通のものは page-id を持たない中立名にする・2026-09-22 ユーザー指摘で追加）。
+   2026-09-23：P10-8「ランキングの見方／分類から探す」で同種の問題（.p10-shelf は素の箱で
+   区切り線を持たず、直前のリスト/グリッド濃度の高いセクションと視覚的にくっつく）が見つかり、
+   同じ理由で P10-5/6/7「年間ランキングへの出口／他の特集」・P10-5-1/6-1/7-1「ほかのたどり方」
+   にも横展開。page-id を持たない中立名のまま「.p10-shelf の後続セクション区切り線」の
+   共有ユーティリティとして使う（追174-132）。 */
+.ktn-axis-related{margin-top:40px;padding-top:28px;border-top:2px solid var(--ink)}
 .p104-arc__ctrl{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:14px}
 .p104-arc__ctrl .p10-rank-tabs{margin-top:0;flex:1 1 auto}
 .p104-arc__note{font-family:var(--fn);font-size:.75rem;color:var(--muted);margin:12px 0 0}
@@ -15331,14 +15537,27 @@ a.p10-preset{text-decoration:none}
 .p104-arc__row{display:flex;align-items:flex-start;gap:14px;padding:16px 0;border-bottom:1px solid var(--border)}
 .p104-arc__rank{flex:0 0 auto;width:28px;font-family:var(--fb);font-size:1.5rem;line-height:1.1;color:var(--page-accent,#005da7);text-align:center}
 .p104-arc__thumb{flex:0 0 auto;width:76px;height:56px;border-radius:3px}
+/* 人物（P10-6/P10-7 の番付）はサムネイルの代わりにアバター。形状はサイト共通のユーザー種別ルール
+   （creator＝角丸中12px／gallery＝角丸小4px）に従う＝一覧のどこで見ても種別が形で分かる。
+   カード（.cc__avatar 等）と違い outline のロール色枠は付けない：番付の行は1列に creator と gallery が
+   混ざらず、ページ自体が種別を宣言しているので枠を足すと形の差が読みにくくなるだけ。 */
+.p104-arc__thumb--av{width:56px;height:56px;display:flex;align-items:center;justify-content:center;font-family:var(--fs);font-size:1.05rem;font-weight:700;color:#fff}
+.p104-arc__thumb--creator{border-radius:12px}
+.p104-arc__thumb--gallery{border-radius:4px}
 .p104-arc__body{flex:1 1 auto;min-width:0}
 .p104-arc__title{display:block;font-family:var(--fs);font-size:.93rem;font-weight:600;letter-spacing:.01em;line-height:1.45;color:var(--ink);text-decoration:none}
 .p104-arc__title:hover{text-decoration:underline}
 .p104-arc__meta{font-family:var(--fn);font-size:.75rem;color:var(--muted);margin-top:3px}
 .p104-arc__nums{display:flex;gap:14px;font-family:var(--fn);font-size:.75rem;color:var(--muted);margin-top:5px}
 .p104-arc__nums strong{font-family:var(--fm);font-weight:600;color:var(--ink)}
-/* 作り手への出口。関係の表示なので人物バッジ（.cb-person）は使わず中立のCinzelマイクロラベルで役割だけ示す */
+/* 作り手への出口。「posted by」ラベル＋人物バッジ（.cb-person）＋名前（2026-09-22 ユーザー指示）。
+   管理ページのidentity strip（オーナー行）と同じ語法＝「誰が投稿したか」を示す。
+   flex-wrap で万一1行に収まらなくても崩れないようにしてある。 */
 .p104-arc__host{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-top:9px;padding-top:9px;border-top:1px dotted var(--border)}
+/* バッジ＋名前のグループ。デスクトップでは display:contents で解除し、直接の子（バッジ・名前）が
+   .p104-arc__host の flex 行にそのまま並ぶ＝今までの見た目のまま（2026-09-22・スマホ改行のために
+   HTML側だけ先にグルーピングした。「posted by」ラベルはこのグループの外＝単独で改行させる対象）。 */
+.p104-arc__host-who{display:contents}
 .p104-arc__host-label{font-family:var(--font-en-label);font-size:.58rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 .p104-arc__host-name{font-family:var(--fs);font-size:.85rem;font-weight:600;color:var(--ink);text-decoration:none}
 .p104-arc__host-name:hover{text-decoration:underline}
@@ -15347,53 +15566,113 @@ a.p10-preset{text-decoration:none}
 @media(max-width:540px){
   .p104-arc__rank{width:20px;font-size:1.2rem}
   .p104-arc__thumb{width:60px;height:46px}
+  .p104-arc__thumb--av{width:46px;height:46px;font-size:.92rem}
   .p104-arc__now{margin-left:0}
+  /* スマホ幅では「posted by」を単独の行に、「バッジ＋名前」を次の行に分ける
+     （2026-09-22 ユーザー指示・再是正＝前回はグルーピングの相手が逆だった）。
+     .p104-arc__host 自体を縦積みにし、直前で display:contents にしていたグループを
+     ここだけ実体の flex 行に戻す＝「バッジ＋名前」は常に1つのブロックとして動く。
+     「posted by」ラベルはこのグループの外の直接の子のままなので、単独で1行を占める。 */
+  .p104-arc__host{flex-direction:column;align-items:flex-start;gap:4px}
+  .p104-arc__host-who{display:flex;align-items:center;gap:8px}
 }
 /* 人物カード（.cc--h/.gc--h）グリッド — p10-2/p10-3（クリエイター/ギャラリー検索）の棚・結果グリッド共通。1行4枚＝スクショ準拠でカードを縮小
    カード内は独自の並び（1行目バッジ / 2行目サムネイル+名前+ジャンル改行 / 下部カウンター+ウォッチ）にするため、
    共通 --h（横並び）レイアウトを .p10-person-grid スコープ内のみ display:contents で解いて内部グリッドへ再配置する */
 .p10-person-grid{display:grid;grid-template-columns:repeat(4,1fr);column-gap:8px;row-gap:14px;margin-top:16px;align-items:start}
+/* 2カラムの外＝全幅に置く棚（P10-3「近くで開催中」）。広くなった分はカードを大きくするのではなく
+   列を増やして件数を稼ぐ＝同じギャラリーカードがページ内で2つの大きさに割れないようにする
+   （1040/6 と 712/4 でカード幅がほぼ一致する）。モバイルの2列はメディアクエリ側が後勝ちで効く。 */
+.p10-person-grid--wide{grid-template-columns:repeat(6,1fr)}
 .p10-person-grid .cc--h,.p10-person-grid .gc--h{
   border-radius:6px;display:grid;
-  grid-template-columns:46px minmax(0,1fr);
+  grid-template-columns:minmax(0,1fr);
   grid-template-rows:auto auto auto 1fr auto;
+  /* アバター列を持たない1カラム構成（2026-09-21）。名前が幅いっぱいを使えるので省略も減る。 */
   grid-template-areas:
-    "badges badges"
-    "avatar name"
-    "avatar genre"
-    ".      .     "
-    "foot   foot";
-  column-gap:12px;
+    "badges"
+    "name"
+    "genre"
+    "."
+    "foot";
 }
 .p10-person-grid .cc--h .cc__main,.p10-person-grid .gc--h .gc__main,
 .p10-person-grid .cc--h .cc__info,.p10-person-grid .gc--h .gc__info{display:contents}
 
-.p10-person-grid .cc--h .cc__top,.p10-person-grid .gc--h .gc__top{
-  grid-area:avatar;display:flex;align-items:center;
-  padding:10px 0 8px 12px;background:none;border-right:none;
-}
+/* アバターは出さない。markup は残すので、戻すときはこの display:none を外して
+   grid-template-areas に avatar 列を戻すだけでよい。 */
+.p10-person-grid .cc--h .cc__top,.p10-person-grid .gc--h .gc__top{display:none}
 .p10-person-grid .cc--h .cc__avatar,.p10-person-grid .gc--h .gc__avatar{width:34px;height:34px}
+/* ── 未設定アバター（2026-09-21・実情として9割が未設定）──
+   既定のプレースホルダは〈ロール色のグラデ＋白の頭文字＋白2px枠＋ロール色のアウトライン〉で、
+   **未設定であることをいちばん目立つ形で出していた**。頭文字は名前の1文字目そのもので情報も無い。
+   無地の淡い面へ落とし、枠線とアウトラインを外し、28px へ詰める。
+   **設定した人のカードだけが色と枠を持って際立つ**＝設定する動機にもなる。
+   ロール識別（形・枠色）は設定済みのアバターとバッジが引き続き担う。 */
+.cc__avatar--unset,.gc__avatar--unset{
+  background:var(--tag-bg);border:none;outline:none;box-shadow:none;
+}
+.cc__avatar--unset .cc__avatar-ph,.gc__avatar--unset .gc__avatar-ph{
+  color:var(--muted);opacity:.55;font-weight:500;
+}
+.p10-person-grid .cc--h .cc__avatar--unset,.p10-person-grid .gc--h .gc__avatar--unset{width:28px;height:28px}
+.p10-person-grid .cc--h .cc__avatar--unset .cc__avatar-ph,
+.p10-person-grid .gc--h .gc__avatar--unset .gc__avatar-ph{font-size:.62rem}
 
 .p10-person-grid .cc--h .cc__info .cc__badge-row,.p10-person-grid .gc--h .gc__info .gc__badge-row{
-  grid-area:badges;display:flex;justify-content:flex-start;flex-wrap:nowrap;gap:5px;
-  margin:10px 12px 0;
+  /* 右カラムは幅が狭いので折り返す。開催ステータスは**左詰めのまま次の行へ送る**
+     （中央寄せにすると名前の左端と揃わない・2026-09-21）。 */
+  grid-area:badges;display:flex;justify-content:flex-start;flex-wrap:wrap;gap:4px 4px;
+  /* 左は 0＝名前・ジャンルと同じ左端から始める。上はアバター列の padding-top と同じ値にして
+     バッジとアバターの頭を揃える（2026-09-21）。 */
+  /* 下の 6px がバッジ行と名前のあいだ。0 だと名前がバッジに貼り付いて見える（2026-09-21） */
+  margin:14px 14px 6px 16px;min-height:0;
 }
-.p10-person-grid .cc--h .cc__info .cc__badge-row .cb-person,.p10-person-grid .gc--h .gc__info .gc__badge-row .cb-person{font-size:.54rem;padding:3px 7px}
-.p10-person-grid .cc--h .cc__info .cc__badge-row .sb,.p10-person-grid .gc--h .gc__info .gc__badge-row .sb{font-size:.54rem;gap:5px}
-.p10-person-grid .cc--h .cc__info .cc__badge-row .sb::before,.p10-person-grid .gc--h .gc__info .gc__badge-row .sb::before{width:6px;height:6px}
+/* 人物バッジは仕様どおり**ソリッド塗り**（形でコンテンツバッジと区別する・badge-system）。
+   ただしこのカードは検索4ページでいちばん小さい面で、同じ寸法だと**塗りの面が名前より強く**なる。
+   形は変えず、寸法だけ一段落として主従を名前に戻す（2026-09-21・.54→.5rem／3px 7px→2px 6px）。
+   字間 .14em は共通仕様なので触らない。 */
+.p10-person-grid .cc--h .cc__info .cc__badge-row .cb-person,.p10-person-grid .gc--h .gc__info .gc__badge-row .cb-person{font-size:.5rem;padding:2px 6px}
+/* 開催ステータス（.sb）復活分（2026-09-22）。種別バッジと同じ縮尺に揃える。
+   badge-row は既に flex-wrap:wrap を持つ＝万一2つが1行に収まらない幅でも折り返すだけで
+   崩れない（2026-09-21 時点で用意済みの設計）。
+   ── 1行に収める幅の計算（2026-09-22 ユーザー指摘＝スマホは1行、デスクトップは2行）──
+   このグリッドは `.p10-layout{1fr 300px}` の右サイドバーを差し引いた主カラム内にあるため、
+   **デスクトップの4列もモバイルの2列も1カード ≒170〜180pxで実はほぼ同じ幅**（common.css の
+   別コメント「1040/6 と 712/4 でカード幅がほぼ一致する」と同じ理由）。スマホで1行に収まって
+   デスクトップで折り返すのは、この僅差の中でテキスト＋余白が閾値をまたいでいたため。
+   `.sb` の文言を「開催中/開催予定」→「開催中/予定」に短縮（JS側）した上で、ここでも
+   バッジ間の隙間・ドットのサイズを種別バッジより一段締めて幅を稼ぐ。 */
+.p10-person-grid .cc--h .cc__info .cc__badge-row .sb,.p10-person-grid .gc--h .gc__info .gc__badge-row .sb{font-size:.5rem;gap:4px}
+.p10-person-grid .cc--h .cc__info .cc__badge-row .sb::before,.p10-person-grid .gc--h .gc__info .gc__badge-row .sb::before{width:5px;height:5px}
 
 .p10-person-grid .cc--h .cc__info .cc__name,.p10-person-grid .gc--h .gc__info .gc__name{
-  grid-area:name;font-size:.74rem;margin:0 12px 0 0;align-self:end;
+  /* 名前はカードの主キーなので他より一段大きく（2026-09-21 ユーザー指示で .74→.8rem）。
+     nowrap＋省略のままなので、長い名前は右端で切れる（狭幅での可読性は名前を優先する方針）。 */
+  grid-area:name;font-size:.8rem;margin:0 14px 0 16px;align-self:end;
   min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
 }
 .p10-person-grid .cc--h .cc__info .cc__genre,.p10-person-grid .gc--h .gc__info .gc__location{
-  grid-area:genre;font-size:.58rem;margin:0 12px 0 0;align-self:start;
+  grid-area:genre;font-size:.58rem;margin:0 14px 0 16px;align-self:start;
   min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
 }
-.p10-person-grid .gc--h .gc__hours{display:none}
+/* 左上の距離（P10-3「近くで開催中」棚専用・buildGalleryCard の distTL・2026-09-22）。
+   カード左上コーナーに重ねる。塗りつぶしのピルは廃止し（2026-09-22 ユーザー指示）、
+   .p2-side-ec__dist と同じ「色付きテキスト＋ピンSVG・背景なし」の形に揃えた
+   （ピンSVGは .p2-side-ec__dist と同じものを共有）。バッジの有無自体を判定材料にして
+   :has() で「持つカードだけ」上に余白を足す＝新しいモディファイアクラスを増やさない。 */
+.gc__dist-badge{
+  position:absolute;top:8px;left:8px;z-index:1;
+  display:flex;align-items:center;gap:2px;
+  font-family:var(--fm);font-size:.64rem;font-weight:700;letter-spacing:.02em;
+  color:var(--ink); /* 名前（.gc__name）と同じ色に揃える（2026-09-22・旧ページアクセント色から変更） */
+  line-height:1;
+}
+.gc__dist-badge svg{width:9px;height:9px;flex-shrink:0}
+.p10-person-grid .gc--h:has(> .gc__dist-badge){position:relative;padding-top:20px}
 
 .p10-person-grid .cc--h .cc__hfoot,.p10-person-grid .gc--h .gc__hfoot{
-  grid-area:foot;padding:3px 12px 7px;margin-top:0;
+  grid-area:foot;padding:3px 14px 9px 16px;margin-top:0;
 }
 .p10-person-grid .cc--h .cc__hfoot .ktn-btn,.p10-person-grid .gc--h .gc__hfoot .ktn-btn{padding:3px 6px;font-size:.5rem}
 /* ── D. 結果状態 ── */
@@ -15402,6 +15681,7 @@ a.p10-preset{text-decoration:none}
 .p10-ctx__title{font-family:var(--fs);font-size:clamp(1.4rem,3vw,2rem);font-weight:600;letter-spacing:.005em;color:var(--ink);line-height:1.25;margin:3px 0 6px}
 .p10-ctx__desc{font-size:.82rem;color:var(--muted);font-family:var(--fn);margin:0}
 .p10-fchips{display:flex;flex-wrap:wrap;gap:7px;align-items:center;margin-top:12px}
+.p10-fchips[hidden]{display:none} /* display:flex が UA の [hidden] を上書きするためのガード（追174-139） */
 /* 適用中の条件は検索バンド側（ドロワーの直後）に置く＝ドロワーを閉じても指定内容が見え、×で1つずつ外せる。
    結果ヘッド内だけに置くとゼロヒット時に見えず「条件を減らして探しなおす」ができなかった（2026-09-02 移設） */
 .p10-fchips--band{margin-top:0;padding:12px 0 2px;border-top:1px solid var(--border)}
@@ -15411,21 +15691,26 @@ a.p10-preset{text-decoration:none}
 .p10-fclear{border:none;background:none;font-family:var(--fn);font-size:.72rem;color:var(--muted);text-decoration:underline;text-underline-offset:2px;cursor:pointer;padding:4px 6px}
 .p10-fclear:hover{color:var(--ink)}
 .p10-toolbar{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.p10-toolbar[hidden]{display:none}
+.p10-toolbar__count[hidden]{display:none}
 .p10-toolbar__count{font-family:var(--fn);font-size:.8rem;color:var(--muted)}
 .p10-toolbar__count strong{font-family:var(--fm);font-size:1.05rem;font-weight:600;color:var(--ink);margin-right:2px}
 .p10-toolbar__sort{margin-left:auto;display:flex;align-items:center;gap:6px;font-family:var(--fn);font-size:.72rem;color:var(--muted)}
+/* display:flex は UA の [hidden] を上書きするのでガードを置く（.p10-hl と同じ理由）。
+   ピックアップ着地は件数を決めて差し出す面なので並べ替えを出さない（追174-94）。 */
+.p10-toolbar__sort[hidden]{display:none}
 .p10-toolbar__sort select{border:1px solid var(--border);border-radius:4px;padding:5px 8px;font-family:var(--fn);font-size:.76rem;color:var(--ink);background:#fff}
 .p10-more-wrap{display:flex;justify-content:center;margin-top:24px}
-/* ── D-b. Featured（「おすすめ順」のときだけ出る巻頭型クラスタ枠）──
+/* ── D-b. 注目 Highlights（「おすすめ順」のときだけ出る巻頭型クラスタ枠）──
    中身は共通コンポーネント `.ktn-cl`（P1巻頭と同一）。ここは並べ方＝2カラムの外枠だけを持つ。
    `.ktn-cl` の既定 `flex:1 1 300px` がそのまま2等分になるので寸法モディファイアは付けない。
    下の通常カード群との境目は 1px ヘアラインで示す（クラスタ上端の 2px ink 罫線と濃さで区別）。 */
-.p10-feat{display:flex;flex-direction:column;gap:18px;margin-bottom:30px;padding-bottom:28px;border-bottom:1px solid var(--border)}
-.p10-feat[hidden]{display:none} /* display:flex が UA の [hidden] を上書きするためのガード＝資格者が足りない条件で見出しだけ残るのを防ぐ */
-.p10-feat__ttl{font-family:var(--fs);font-size:1.1rem;font-weight:600;letter-spacing:.02em;color:var(--ink)}
-.p10-feat__row{display:flex;flex-wrap:wrap;gap:26px;align-items:flex-start}
+.p10-hl{display:flex;flex-direction:column;gap:18px;margin-bottom:30px;padding-bottom:28px;border-bottom:1px solid var(--border)}
+.p10-hl[hidden]{display:none} /* display:flex が UA の [hidden] を上書きするためのガード＝資格者が足りない条件で見出しだけ残るのを防ぐ */
+.p10-hl__ttl{font-family:var(--fs);font-size:1.1rem;font-weight:600;letter-spacing:.02em;color:var(--ink)}
+.p10-hl__row{display:flex;flex-wrap:wrap;gap:26px;align-items:flex-start}
 @media(max-width:700px){
-  .p10-feat__row{gap:22px}
+  .p10-hl__row{gap:22px}
 }
 /* ── D-c. 今日の特集（検索結果末尾の再回遊枠）──
    検索したが意中のものが無かった人への受け皿。人気軸のカードを足しても「同じ土俵の別カード」にしかならないので、
@@ -15456,6 +15741,7 @@ a.p10-preset{text-decoration:none}
 }
 @media(max-width:540px){
   .p10-shelf-grid{columns:2 140px;column-gap:12px}
+  .p10-shelf-grid--ordered{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px}
   .p10-nearby-grid .p2-side-ec{width:100%}
   .p10-person-grid{grid-template-columns:repeat(2,1fr)}
   .p10-rank-tab{font-size:.72rem;padding:6px 10px}
@@ -15525,7 +15811,10 @@ a.p10-preset{text-decoration:none}
    サイト内で「絞り込み」の見た目は1つにするため、ここ専用の枠・角丸・地色は持たない。
    （旧案は目次 `.ktn-index` と同じ warm cream の囲みボックスにしていたが、`#faf7f1` は
    関連・回遊ゾーン＝「別ページへの誘導」に予約された色で、絞り込みとは役割が逆のサインになるため撤回。） */
-.ktn-axis-facet{margin-bottom:14px;border-top:1px solid var(--border)}
+/* border-top は持たない（2026-09-22 是正）＝直前に必ず .ktn-section__head（border-bottom）が
+   あるので、ここで border-top を足すと2本並んで見える。この段差は .ktn-section__head の
+   下線1本だけで十分＝ヘッダー→バーの区切りをコンポーネント側で二重に持たない。 */
+.ktn-axis-facet{margin-bottom:14px}
 .ktn-axis-facet[hidden]{display:none}
 /* 行は共有文法。最終行の罫線も残してブロックの下端を閉じる（`.p10-adv__group:last-of-type` の解除を上書き）＝
    行きやすさ行が hidden のときに罫線が消える／残るで下端の位置が動くのを防ぐ */
@@ -15543,6 +15832,10 @@ a.p10-preset{text-decoration:none}
 .ktn-axis-facet__drop:hover{color:var(--accent-d)}
 /* 適用中のチップはこのバーの主役なので淡tintではなくソリッドで塗る（状態が色の濃淡だけにならないように） */
 .ktn-axis-facet .p10-preset.is-on{background:var(--page-accent,#005da7);border-color:var(--page-accent,#005da7);color:#fff}
+/* 絞り込みバーの選択肢は検索チップ（.p10-chip）と同じ角丸（999pxの丸ピル）に揃える（追174-155・
+   ユーザー指摘）。.p10-presetの素の角丸（4px）はPICKSレール等の別用途と共有しているため、
+   .p10-preset自体は変えずここだけ上書きする。 */
+.ktn-axis-facet .p10-preset{border-radius:999px}
 
 /* ── C. 補完ブロック（0件・少件数のとき積む） ──
    順序＝①同一場所のアーカイブ →②同一場所のクリエイター・ギャラリー →③同じ地方ブロック →④全国。
@@ -15566,6 +15859,7 @@ a.p10-preset{text-decoration:none}
 .ktn-axis-nav__head2{margin-top:30px}
 .ktn-axis-nav__prefs{margin-top:10px}
 .ktn-axis-nav__row{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
+.ktn-axis-nav__row[hidden]{display:none} /* 上と同じ理由（2026-09-22） */
 .ktn-axis-nav .p10-adv__pref-group{border-bottom:1px solid var(--border);padding:9px 0}
 .ktn-axis-nav .p10-adv__pref-group:last-child{border-bottom:none}
 
@@ -15582,6 +15876,16 @@ a.p10-preset{text-decoration:none}
 /* 件数行（P10-4 ハブの注目エリアカードのみ）。軸に入る前に「いま何があるか」を見せる */
 .ktn-axis-card__n{margin-top:9px;font-family:var(--fn);font-size:.74rem;line-height:1.85;color:var(--muted)}
 .ktn-axis-card__n strong{margin-right:3px;font-family:var(--fm);font-size:1.05rem;font-weight:600;color:var(--page-accent,#005da7)}
+/* 「関連ページ」ゾーン（.p104-other＝P10-4／.ktn-axis-related＝他11ページ・追174-132〜135）のカードは
+   本来2枚組の設計。flex-grow:1のままだとカードが1枚（P10-4／P10-7）や奇数枚の余りだけになったとき、
+   そのカードだけ行全体まで間延びして伸びる。デスクトップ幅（>540px＝2列が成立する幅）でのみ
+   「2列に並んだときの幅」を上限にし、1枚でも2列目が空くだけで間延びしないようにする
+   （モバイルは1カラム積みが正しい見た目なので上限を掛けない・2026-09-23）。
+   「注目のエリア」（#p104Hl・6枚固定）はこのラッパー配下ではないため対象外。 */
+@media(min-width:541px){
+  .p104-other .ktn-axis-card,
+  .ktn-axis-related .ktn-axis-card{max-width:calc(50% - 8px)}
+}
 /* 47都道府県チップの件数。掲載が無い県もリンクを外さず0と出す（軸ページはURLを消さない） */
 .ktn-axis-prefchip__n{margin-left:6px;font-family:var(--fm);font-size:.62rem;font-weight:600;color:var(--muted)}
 
@@ -15788,8 +16092,8 @@ a.p10-preset{text-decoration:none}
    - P1 巻頭Opening（案2・採用）＝核は展覧会。3クラスタを `.p1-op__clusters` / `.p1-op__crow` に並べ、
      スロット寸法は `--n1`（主役・全幅）／`--n2`（準主役）／`--n3`（小）で分ける（この3つは**巻頭の
      組版専用**モディファイア＝他ページでは使わない）。
-   - P10系 検索結果「おすすめ順」の Featured 枠＝核は展覧会/作品/クリエイター/ギャラリー。
-     モディファイアなしの素の `.ktn-cl`（`flex:1 1 300px`）を `.p10-feat__row` に2つ並べる。
+   - P10系 検索結果「おすすめ順」の 注目 Highlights 枠＝核は展覧会/作品/クリエイター/ギャラリー。
+     モディファイアなしの素の `.ktn-cl`（`flex:1 1 300px`）を `.p10-hl__row` に2つ並べる。
    命名を `.p1-op-cl*`／`.p1-op-sat*` から共通化（2026-09-01）。新規ページはこのクラスをそのまま使い、
    ページ側には外枠（並べ方）だけを書く。React 変換：`<Cluster core around size>`。 */
 .p1-op__clusters{display:flex;flex-direction:column;gap:34px}

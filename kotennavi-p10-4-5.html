@@ -30,7 +30,7 @@
   <button class="dbtn on" onclick="setR('guest',this)">ゲスト</button>
   <button class="dbtn" onclick="setR('login',this)">ログイン</button>
   <button class="dbtn" onclick="setR('admin',this)">管理者</button>
-  <span class="dbar-sep">軸：</span>
+  <span class="dbar-sep">行きやすさ：</span>
   <button class="dbtn on" data-ac onclick="setAccess('with-children',this)">お子さまと行ける（6件）</button>
   <button class="dbtn" data-ac onclick="setAccess('artist-present',this)">在廊あり（3件）</button>
 </div>
@@ -162,7 +162,7 @@
           </label>
         </div>
         <p class="ktn-axis-empty" id="p1045Empty" hidden></p>
-        <div class="p10-shelf-grid" id="p1045Grid"></div>
+        <div class="p10-shelf-grid p10-shelf-grid--ordered" id="p1045Grid"></div>
         <a class="ktn-more-link" id="p1045SearchLink" href="./kotennavi-p10.html">条件を足して絞り込む →</a>
       </section>
 
@@ -170,7 +170,7 @@
            この軸には「近いジャンル」に当たる隣接が無いので、②はもう一方の行きやすさ軸を出す。 -->
       <section class="ktn-axis-fill" id="p1045Fill" hidden>
         <div class="ktn-section__head">
-          <h2 class="ktn-axis-fill__title" id="p1045FillTitle">あわせて見る</h2>
+          <h2 class="ktn-axis-fill__title" id="p1045FillTitle">ほかに見られるもの</h2>
         </div>
         <p class="ktn-axis-fill__desc" id="p1045FillDesc"></p>
         <div id="p1045FillBlocks"></div>
@@ -192,20 +192,25 @@
       </section>
 
       <!-- E. 下段：特集ハブ・年鑑への導線 -->
-      <div class="ktn-axis-cards">
-        <a class="ktn-axis-card" href="./kotennavi-p10-4.html">
-          <span class="ktn-axis-card__label">Index</span>
-          <span class="ktn-axis-card__ttl">展覧会をまとめて見る</span>
-          <span class="ktn-axis-card__desc">エリア・ジャンル・年ごとのまとめページの索引。ここから他の軸へ移れます。</span>
-        </a>
-        <!-- 年鑑は軸で絞らない全国の記録。エリア軸・ジャンル軸のページに置くと、隣のカード（東京都の展覧会アーカイブ 等）
+      <section class="p10-shelf ktn-axis-related">
+        <div class="ktn-section__head">
+          <h2 class="ktn-section__title">関連ページ<span class="ktn-sec-en">Related Pages</span></h2>
+        </div>
+        <div class="ktn-axis-cards">
+          <a class="ktn-axis-card" href="./kotennavi-p10-4.html">
+            <span class="ktn-axis-card__label">Index</span>
+            <span class="ktn-axis-card__ttl">展覧会をまとめて見る</span>
+            <span class="ktn-axis-card__desc">エリア・ジャンル・年ごとの特集ページの索引。ここから別の特集ページへ移れます。</span>
+          </a>
+          <!-- 年鑑は軸で絞らない全国の記録。エリア軸・ジャンル軸のページに置くと、隣のカード（東京都の展覧会アーカイブ 等）
              に引かれて「そのエリア／そのジャンルの年間記録」と読まれるので、タイトルで全国と名乗る（2026-09-08） -->
-        <a class="ktn-axis-card" href="./kotennavi-p10-4-2.html">
-          <span class="ktn-axis-card__label">Annual Records</span>
-          <span class="ktn-axis-card__ttl">全国の展覧会 年間の記録</span>
-          <span class="ktn-axis-card__desc">その年に会期を終えた展覧会を、行きたい・行った の反応でまとめた年ごとの記録。エリアやジャンルで絞らず全国が対象です。</span>
-        </a>
-      </div>
+          <a class="ktn-axis-card" href="./kotennavi-p10-4-2.html">
+            <span class="ktn-axis-card__label">Annual Ranking</span>
+            <span class="ktn-axis-card__ttl">全国の展覧会 年間ランキング</span>
+            <span class="ktn-axis-card__desc">その年に会期を終えた展覧会を、興味あり！とチェックインが多かった順に並べた年ごとのランキング。エリアやジャンルで絞らず全国が対象です。</span>
+          </a>
+        </div>
+      </section>
 
     </div>
 

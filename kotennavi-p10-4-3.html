@@ -29,7 +29,7 @@
   <button class="dbtn on" onclick="setR('guest',this)">ゲスト</button>
   <button class="dbtn" onclick="setR('login',this)">ログイン</button>
   <button class="dbtn" onclick="setR('admin',this)">管理者</button>
-  <span class="dbar-sep">軸：</span>
+  <span class="dbar-sep">都道府県：</span>
   <button class="dbtn on" data-ax onclick="setAxis('tokyo',this)">東京都（1件）</button>
   <button class="dbtn" data-ax onclick="setAxis('kyoto',this)">京都府（2件）</button>
   <button class="dbtn" data-ax onclick="setAxis('tottori',this)">鳥取県（0件）</button>
@@ -144,13 +144,13 @@
           <label class="p10-toolbar__sort">並び順
             <select id="p1043Sort">
               <option value="last">終了が新しい順</option>
-              <option value="pop">反応が多い順</option>
+              <option value="pop">人気順</option>
               <option value="end">会期が古い順</option>
             </select>
           </label>
         </div>
         <p class="ktn-axis-empty" id="p1043Empty" hidden></p>
-        <div class="p10-shelf-grid" id="p1043Grid"></div>
+        <div class="p10-shelf-grid p10-shelf-grid--ordered" id="p1043Grid"></div>
       </section>
 
       <!-- C. 補完ブロック（記録が少ない・無いとき積む）。
@@ -158,7 +158,7 @@
            各ブロックに「なぜ出しているか」のラベルを必ず付ける（追174-46⑤）。 -->
       <section class="ktn-axis-fill" id="p1043Fill" hidden>
         <div class="ktn-section__head">
-          <h2 class="ktn-axis-fill__title" id="p1043FillTitle">あわせて見る</h2>
+          <h2 class="ktn-axis-fill__title" id="p1043FillTitle">ほかに見られるもの</h2>
         </div>
         <p class="ktn-axis-fill__desc" id="p1043FillDesc"></p>
         <div id="p1043FillBlocks"></div>
@@ -174,20 +174,25 @@
       </section>
 
       <!-- E. 下段：現在側・年鑑への導線 -->
-      <div class="ktn-axis-cards">
-        <a class="ktn-axis-card" id="p1043LiveCard" href="./kotennavi-p10-4-1.html?ax=tokyo">
-          <span class="ktn-axis-card__label">Now &amp; Upcoming</span>
-          <span class="ktn-axis-card__ttl" id="p1043LiveTtl">東京都の展覧会</span>
-          <span class="ktn-axis-card__desc" id="p1043LiveDesc">東京都でいま開催中・開催予定の展覧会。会期が終わったものはこのアーカイブに移ります。</span>
-        </a>
-        <!-- 年鑑は軸で絞らない全国の記録。エリア軸・ジャンル軸のページに置くと、隣のカード（東京都の展覧会アーカイブ 等）
+      <section class="p10-shelf ktn-axis-related">
+        <div class="ktn-section__head">
+          <h2 class="ktn-section__title">関連ページ<span class="ktn-sec-en">Related Pages</span></h2>
+        </div>
+        <div class="ktn-axis-cards">
+          <a class="ktn-axis-card" id="p1043LiveCard" href="./kotennavi-p10-4-1.html?ax=tokyo">
+            <span class="ktn-axis-card__label">Now &amp; Upcoming</span>
+            <span class="ktn-axis-card__ttl" id="p1043LiveTtl">東京都の展覧会</span>
+            <span class="ktn-axis-card__desc" id="p1043LiveDesc">東京都でいま開催中・開催予定の展覧会。会期が終わったものはこのアーカイブに移ります。</span>
+          </a>
+          <!-- 年鑑は軸で絞らない全国の記録。エリア軸・ジャンル軸のページに置くと、隣のカード（東京都の展覧会アーカイブ 等）
              に引かれて「そのエリア／そのジャンルの年間記録」と読まれるので、タイトルで全国と名乗る（2026-09-08） -->
-        <a class="ktn-axis-card" href="./kotennavi-p10-4-2.html">
-          <span class="ktn-axis-card__label">Annual Records</span>
-          <span class="ktn-axis-card__ttl">全国の展覧会 年間の記録</span>
-          <span class="ktn-axis-card__desc">その年に会期を終えた展覧会を、行きたい・行った の反応でまとめた年ごとの記録。エリアやジャンルで絞らず全国が対象です。</span>
-        </a>
-      </div>
+          <a class="ktn-axis-card" href="./kotennavi-p10-4-2.html">
+            <span class="ktn-axis-card__label">Annual Ranking</span>
+            <span class="ktn-axis-card__ttl">全国の展覧会 年間ランキング</span>
+            <span class="ktn-axis-card__desc">その年に会期を終えた展覧会を、興味あり！とチェックインが多かった順に並べた年ごとのランキング。エリアやジャンルで絞らず全国が対象です。</span>
+          </a>
+        </div>
+      </section>
 
     </div>
 

@@ -3,7 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>軸ページ管理 — 管理者 | 個展なび</title>
+  <title>検索・特集管理 — 管理者 | 個展なび</title>
+  <!-- TODO（このページの画面設計を確定するとき必ず一緒に片付ける・2026-09-18 / handoff 追174-80 追記1・追174-81）：
+       P10-5/6/7（分類索引）と P10-5-1/6-1/7-1（年間ランキング）にも
+       軸ページと同じ導入文（.ktn-axis-head__lead の2段落）がある。この6ページの admin 操作を
+       P10-4-1〜5 と同じ「導入文を編集 → P90-17」に揃え、ここにその受け口（タブ or アンカー）を作る。
+       common.js の getActions は雛形（編集／新規特集）を削除して保留中＝着地先が決まり次第
+       6ページ分の分岐を書き、各ページの dbar に〈管理者〉ボタンを追加する。
+       ランキング3枚は年鑑（P10-4-2）と同じく年が終われば凍結する層なので、導入文の編集も
+       「年ごとに1本」になる＝受け口を年鑑と同じ形にしてよいか合わせて判断する。 -->
   <meta name="robots" content="noindex,nofollow">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
@@ -97,144 +105,121 @@
       <!-- 管理ボックス -->
       <div class="p9017-wrap ktn-mgmt-wrap ktn-mgmt-stack">
 
-        <!-- ページタイトル -->
+        <!-- ページタイトル。旧「軸ページ管理 / AXIS PAGES」から改称（追174-90）＝この画面は
+             軸ページだけでなく検索面の設定（ピックアップマスタ・季節の言葉）も持つため。 -->
         <div class="ktn-mgmt-head">
-          <h2 class="ktn-mgmt-head__title">軸ページ管理</h2>
-          <p class="ktn-mgmt-head__en">AXIS PAGES</p>
-          <p class="ktn-mgmt-head__desc">エリア・ジャンル・行きやすさ・年鑑・アーカイブの軸ページは、掲載中の展覧会データから自動で生成されます。ページを1枚ずつ作る画面ではないため、ここで扱うのは各軸ページの導入文と、ハブ「展覧会を探す」の注目枠への掲載、そして検索ページの PICKS に出る季節の言葉です。</p>
+          <h2 class="ktn-mgmt-head__title">検索・特集管理</h2>
+          <p class="ktn-mgmt-head__en">SEARCH &amp; FEATURES</p>
+          <p class="ktn-mgmt-head__desc">展覧会の検索ページと特集ページの、運営が決める部分をまとめた画面です。<strong>検索の設定</strong>では、棚の差し込み枠とレールに出す条件（ピックアップマスタ）と、PICKS の季節の言葉を扱います。<strong>特集（軸）の設定</strong>では、軸ページの導入文と、ハブ「展覧会を探す」の注目枠への掲載を扱います。</p>
           <div class="ktn-mgmt-head__guides">
+            <a class="ktn-guide-link" href="./kotennavi-p10.html">展覧会を探す（検索）を見る →</a>
             <a class="ktn-guide-link" href="./kotennavi-p10-4.html">展覧会を探す（ハブ）を見る →</a>
           </div>
         </div>
 
-        <!-- 運用ノート。この画面に「削除」も「公開/非公開」も無い理由を先に置く（追174-46③） -->
-        <div class="p315-ops-guide">
-          <p class="p315-ops-guide__lead">軸ページに<strong>公開／非公開の切替はありません</strong>。同じURLを出したり消したりすると検索側の評価が落ちるため、露出の調整はページの公開状態ではなく注目枠への掲載で行います。</p>
-          <dl class="p315-ops-guide__items">
-            <div class="p315-ops-guide__item">
-              <dt class="p315-ops-guide__term">導入文</dt>
-              <dd class="p315-ops-guide__desc">運営が書き下ろす地の文です。未記入の軸には自動生成の文が出るため、空欄のままでもページは成立します。件数・日付・「最新」のように時間で古びる語は書きません。</dd>
-            </div>
-            <div class="p315-ops-guide__item">
-              <dt class="p315-ops-guide__term">注目枠</dt>
-              <dd class="p315-ops-guide__desc">ハブ上部の「注目のエリア」に出る枠です。毎日必ず出る固定枠と、しきい値を超えたエリアを日替わりで回すローテーション枠からなります。</dd>
-            </div>
-            <div class="p315-ops-guide__item">
-              <dt class="p315-ops-guide__term">掲載0件の軸</dt>
-              <dd class="p315-ops-guide__desc">注目枠には出ませんが、ハブの「エリアから探す」からは常にたどれます。URLは残したまま、入口の重みだけを下げる扱いです。</dd>
-            </div>
-          </dl>
-          <p class="p315-ops-guide__note">軸そのもの（都道府県・ジャンル・行きやすさの条件）の追加・統合はタクソノミ側の変更になるため、この画面では行いません。</p>
+        <!-- ページタブ（外側）。内側の「軸ページ一覧」が下線タブを持つので、
+             ここはセグメント型にして2階層を見分けられるようにする（追174-90）。 -->
+        <div class="p9017-maintab" role="tablist" id="p9017MainTab">
+          <button type="button" class="p9017-maintab__btn is-active" role="tab" aria-selected="true" data-pane="search">検索の設定</button>
+          <button type="button" class="p9017-maintab__btn" role="tab" aria-selected="false" data-pane="axis">特集（軸）の設定</button>
         </div>
 
-        <!-- ① 軸ページの仕組み（読み取り専用）。この画面の操作がサイトのどこに効くのかを先に置く。
-             数字は KTN.axis / KTN.arc から埋める＝ジャンルや年が増えたときに文だけが古びない（追174-70）。
-             表は p70 ガイドの .p70-table、地の文は運用ノートの .p315-ops-guide__lead を借りている。 -->
-        <div class="p211-block ktn-index-target" id="p9017-about">
-          <div class="p211-block__head">
-            <h3 class="p211-block__title">軸ページの仕組み<span class="p211-block__title-en">How It Works</span></h3>
-          </div>
-          <div class="p211-block__body">
+        <!-- ══════ タブA：検索の設定 ══════ -->
 
-            <p class="p315-ops-guide__lead">軸ページは掲載中の展覧会データから自動で生成されます。いま軸は5つあり、合わせて<strong id="p9017AxTotal">—</strong>のURLが常に存在します。5つは「ページの型」で、1枚ずつ作るものではありません。この画面でページを増やしたり減らしたりすることはできません。</p>
-
-            <table class="p70-table" aria-label="軸の種類とURL数">
-              <thead>
-                <tr><th>軸</th><th>ページ</th><th>内訳</th><th>URL数</th></tr>
-              </thead>
-              <tbody>
-                <tr><td>エリア</td><td>P10-4-1</td><td id="p9017AxAreaNote">—</td><td id="p9017AxArea">—</td></tr>
-                <tr><td>ジャンル</td><td>P10-4-4</td><td>展覧会に登録されたジャンル</td><td id="p9017AxGenre">—</td></tr>
-                <tr><td>行きやすさ</td><td>P10-4-5</td><td>お子さまと行ける／クリエイターが在廊する</td><td id="p9017AxAccess">—</td></tr>
-                <tr><td>年鑑</td><td>P10-4-2</td><td id="p9017AxYearNote">—</td><td id="p9017AxYear">—</td></tr>
-                <tr><td>アーカイブ</td><td>P10-4-3</td><td>エリアごとの、会期を終えた展覧会の記録</td><td id="p9017AxArchive">—</td></tr>
-              </tbody>
-            </table>
-
-            <p class="p315-ops-guide__lead">これらのURLへ張られる内部リンクには2種類あります。ひとつは<strong>索引</strong>で、ハブ「展覧会を探す」（P10-4）が全件を毎日リンクします。掲載0件のエリアも外さないため、どのURLにも必ず張られた状態が続きます。もうひとつが<strong>注目枠</strong>で、こちらは日替わりで入れ替わるので、どのURLへ張られるかは日によって変わります。すべてのURLを検索側に見つけてもらう役目は索引が持ち、注目枠は人の目に触れる回数を配る役目を持ちます。露出を下げたいときにURLを消さないのはこのためです。</p>
-
-            <table class="p70-table" aria-label="注目枠が出る場所">
-              <thead>
-                <tr><th>注目枠が出る場所</th><th>対象の軸</th><th>使う枠数</th></tr>
-              </thead>
-              <tbody>
-                <tr><td>トップ（P1）</td><td>エリアのみ</td><td>3</td></tr>
-                <tr><td>展覧会を探す（P10）</td><td>エリアのみ</td><td>4</td></tr>
-                <tr><td>展覧会を探す ハブ（P10-4）</td><td>エリアのみ</td><td id="p9017AxSlots">—</td></tr>
-              </tbody>
-            </table>
-            <p class="p211-help">3つの入口は同じ並び（固定枠 → しきい値を超えたエリアを日付から決まる順）を共有し、その先頭から必要な数だけ使います。同じ日はどの入口から入っても同じエリアが出ます。固定枠が3件あるとトップの3枠は固定枠だけで埋まるため、固定枠の数は下の「枠の数」だけでなくトップの見え方にも効きます。</p>
-
-            <p class="p315-ops-guide__lead">注目枠を持つのは<strong>エリア軸だけ</strong>です。ジャンル・行きやすさ・年鑑・アーカイブには運営が露出を選ぶ枠がなく、ハブの索引とタグバーからたどる形になります。下の「注目のエリアの選定」と、一覧の「注目枠」の列がエリアのタブでしか出ないのはこのためです。</p>
-
-            <p class="p315-ops-guide__lead">この画面で決めるのは、上の表のURLに出る<strong>導入文</strong>（5軸すべて）と、<strong>注目枠への掲載</strong>（エリア軸のみ）の2つです。軸そのものの増減はデータ側で決まります。これに加えて、軸ページではありませんが「展覧会を探す」（P10）の PICKS に出る<strong>季節の言葉</strong>もこの画面で編集します（同じ「運営が書く言葉」なので置き場を分けていません）。</p>
-
-          </div>
+        <!-- 種別。検索は4種類（展覧会／作品／クリエイター／ギャラリー）あるので横断で持つ。
+             実体があるのは展覧会だけで、他3種は検索・特集ページ自体が未調整（追174-90 ③a）。 -->
+        <div class="p9017-kind" role="tablist" id="p9017Kind" data-pane="search">
+          <button type="button" class="p9017-kind__btn is-active" role="tab" aria-selected="true" data-kind="exh">展覧会</button>
+          <button type="button" class="p9017-kind__btn" role="tab" aria-selected="false" data-kind="work">作品</button>
+          <button type="button" class="p9017-kind__btn" role="tab" aria-selected="false" data-kind="creator">クリエイター</button>
+          <button type="button" class="p9017-kind__btn" role="tab" aria-selected="false" data-kind="gallery">ギャラリー</button>
         </div>
 
-        <!-- ② ハブの導入文（P10-4 自身） -->
-        <div class="p211-block ktn-index-target" id="p9017-hub">
+        <!-- ピックアップマスタ（設計中・未実装）。棚の差し込み枠とレールが引く候補集合。
+             いまは pages.js の PRESETS が直書きで、掲載期間・掲載順・最小件数・shelf を持たない。
+             登録の資格（どんな条件を登録してよいか）も未確定のため、**入力UIを先に作らない**。 -->
+        <div class="p211-block ktn-index-target" id="p9017-picks" data-pane="search" data-kind="exh">
           <div class="p211-block__head">
-            <h3 class="p211-block__title">ハブの導入文<span class="p211-block__title-en">Hub Lead</span></h3>
+            <h3 class="p211-block__title">ピックアップマスタ<span class="p211-block__title-en">Pick Master</span></h3>
           </div>
           <div class="p211-block__body">
-            <div class="p211-field">
-              <label class="p211-label" for="p9017HubLead">展覧会を探す（P10-4）の導入文</label>
-              <textarea class="p211-textarea" id="p9017HubLead">エリア・ジャンル・行きやすさから、いま足を運べる展覧会を探せます。それぞれの入口はひとつのページとして残り続けるので、気になった軸はブックマークしてお使いください。</textarea>
-              <p class="p211-help">個々の軸の説明ではなく、ここがどういう探し方のできる場所なのかを書きます。1行1段落です。</p>
-            </div>
-            <div class="p9017-actions">
-              <button type="button" class="ktn-op-btn ktn-op-btn--primary ktn-op-btn--sm" id="p9017HubSave">保存する</button>
-            </div>
-          </div>
-        </div>
+            <p class="p315-ops-guide__lead">ここは「おすすめの展覧会を選ぶ場所」ではなく、<strong>検索条件のレシピ集</strong>です。1件＝1つの絞り込み条件で、中身は毎回データから引き直されます。決めるのは「どの展覧会を載せるか」ではなく<strong>どの条件を差し出すか</strong>です。</p>
 
-        <!-- ③ 注目のエリアの選定 -->
-        <div class="p211-block ktn-index-target" id="p9017-feat">
-          <div class="p211-block__head">
-            <h3 class="p211-block__title">注目のエリアの選定<span class="p211-block__title-en">Featured Areas</span></h3>
-          </div>
-          <div class="p211-block__body">
-            <p class="p211-help p9017-blocknote">固定枠は毎日必ず出ます。残りの枠は、しきい値を超えたエリアを日付から決まる順で回すため、時間をかければどのエリアにも順番が回ります。個別に「今日はこれを出す」と指定する枠は設けていません。</p>
+            <dl class="p315-ops-guide__items">
+              <div class="p315-ops-guide__item">
+                <dt class="p315-ops-guide__term">出る場所</dt>
+                <dd class="p315-ops-guide__desc">「展覧会を探す」の棚のうち<strong>差し込み枠2つ</strong>と、検索窓の下の PICKS、検索結果末尾の「今日のピックアップ」です。差し込み枠以外の棚（近くの展覧会・もうすぐ終了など）は見出しも条件も固定で、ここでは扱いません。</dd>
+              </div>
+              <div class="p315-ops-guide__item">
+                <dt class="p315-ops-guide__term">登録してよい条件</dt>
+                <dd class="p315-ops-guide__desc"><strong>軸ページにできない条件だけ</strong>です。エリア・ジャンル・行きやすさには恒久URLの軸ページがあり、ハブの索引が入口を持っています。同じ集合をここにも置くと、同じものが2つの見た目で出て内部リンクも分散します。登録できるのは、2つ以上の軸の掛け合わせ（東京×現代美術）か、軸ページを持たない属性（タグ・入場無料・出展形式・会期の条件）です。</dd>
+              </div>
+              <div class="p315-ops-guide__item">
+                <dt class="p315-ops-guide__term">条件の書き方</dt>
+                <dd class="p315-ops-guide__desc">検索の絞り込みキーで書きます。手で選んだ展覧会のリストは登録できません（押しても同じ検索を再現できず、棚の下に出す条件チップも作れないためです）。</dd>
+              </div>
+              <div class="p315-ops-guide__item">
+                <dt class="p315-ops-guide__term">回し方</dt>
+                <dd class="p315-ops-guide__desc">差し込み枠は2つで、掲載期間の中にあるものを掲載順の上から入れます。自動抽選は既定にしません。中身が最小件数に満たない枠は、枠ごと出しません。</dd>
+              </div>
+            </dl>
+
+            <p class="p211-help p9017-blocknote">条件そのものは行の<strong>「条件を編集」</strong>から直します。この表で直接変えられるのは掲載期間・掲載順・差し込み枠の3つです。</p>
+
+            <dl class="p315-ops-guide__items p9017-picks-legend">
+              <div class="p315-ops-guide__item">
+                <dt class="p315-ops-guide__term">掲載期間</dt>
+                <dd class="p315-ops-guide__desc">カレンダーから選びます。右の切替で<strong>「毎年」か「この年だけ」</strong>を決めます。<strong>毎年</strong>は年を見ないので、同じ月日で毎年くり返します（クリスマス・お盆など）。<strong>この年だけ</strong>は年まで一致したときだけ出ます（ゴールデンウィーク・シルバーウィークのように<strong>年によって日が動く時期</strong>はこちらです）。両方を空にすると<strong>通年</strong>で、終わりが始まりより前なら年をまたぐ指定として扱います。</dd>
+              </div>
+              <div class="p315-ops-guide__item">
+                <dt class="p315-ops-guide__term">順</dt>
+                <dd class="p315-ops-guide__desc">「順」は掲載期間内に候補が複数あるときの<strong>優先度</strong>です（表示順ではありません）。<strong>差し込み枠は2つ</strong>なので、期間内で「出す」になっているもののうち<strong>上から2件だけ</strong>が棚に入り、3件目以降は枠が空くまで待機します。上の「選び方」を<strong>日替わり</strong>にすると、順ではなく日付で決まる並びになり、候補に順番が回ります。</dd>
+              </div>
+              <div class="p315-ops-guide__item">
+                <dt class="p315-ops-guide__term">掲載（順・出す）</dt>
+                <dd class="p315-ops-guide__desc">「出す」にしたものだけが候補になります。ここを「出さない」にしても、検索結果末尾の「今日のピックアップ」には引き続き出ます（別の枠です）。</dd>
+              </div>
+              <div class="p315-ops-guide__item">
+                <dt class="p315-ops-guide__term">判定</dt>
+                <dd class="p315-ops-guide__desc"><strong>条件を保存したときに自動で付きます</strong>（人が審査するものではありません）。判定はどれも<strong>条件の形を見るだけ</strong>で、文章の意味は読みません。〈指定した条件が軸ページ1本と同じになっていないか〉〈固定の棚が既に持っている条件と同じでないか〉〈人気の指標だけで絞っていないか〉の3つはデータの形を見ます。〈会期で動かないのに時制の語を名乗っていないか〉は<strong>決まった語のリスト</strong>（今月・今週・今日・今年・最新・季節・今シーズン）が見出しに入っているかを見るだけで、入っていて会期の条件が無ければ知らせます。<strong>引っかかっても保存はできます</strong>＝差し出すかどうかは運営の判断で、機械が止める種類の間違いではないためです。該当件数は判定に含みません。メッセージは4種類の固定文で、条件に応じて出し分けているだけです（本番では運営が編集できる設定として持ちます）。</dd>
+              </div>
+            </dl>
+
             <div class="p9017-grid">
               <div class="p211-field">
-                <label class="p211-label" for="p9017Min">ローテーションのしきい値<span class="p211-label__unit">掲載件数</span></label>
-                <input type="number" class="p211-input p211-input--sm" id="p9017Min" value="5" min="0" step="1">
-                <p class="p211-help">これを下回るエリアはローテーションに入りません。ハブの「エリアから探す」からは引き続きたどれます。</p>
-              </div>
-              <div class="p211-field">
-                <label class="p211-label" for="p9017Slots">枠の数</label>
-                <select class="p211-select" id="p9017Slots">
-                  <option value="4">4</option>
-                  <option value="6" selected>6</option>
-                  <option value="8">8</option>
+                <label class="p211-label" for="p9017PickRotate">候補が枠より多いときの選び方</label>
+                <select class="p211-select" id="p9017PickRotate">
+                  <option value="0" selected>掲載順の上から（固定）</option>
+                  <option value="1">日替わりで入れ替える</option>
                 </select>
-                <p class="p211-help">固定枠を含めた合計です。固定枠を増やしすぎるとローテーションの席が無くなります。</p>
+                <p class="p211-help"><strong>日替わりは「その日1日は同じ顔ぶれ」</strong>です。開くたびに変わるランダムにはしません＝検索エンジンが見るたび棚の中身が変わると内部リンクが安定せず、同じ人が再訪したときに前に見たものを同じ場所で探せなくなるためです。日付で決まる並びなら、その2つは壊れないまま候補に順番が回ります。</p>
               </div>
             </div>
-            <div class="p211-field">
-              <span class="p211-label">固定枠</span>
-              <div class="p9017-chips" id="p9017Fixed"></div>
-              <div class="p9017-addrow">
-                <select class="p211-select p9017-addsel" id="p9017FixedAdd"></select>
-                <button type="button" class="ktn-op-btn ktn-op-btn--sm" id="p9017FixedAddBtn">固定枠に追加</button>
-              </div>
-              <p class="p211-help">掲載が集中するエリアを常設し、主要な入口が日によって消えないようにします。</p>
+            <div class="p315-archive-table-wrap p9017-picks-wrap">
+              <table class="p70-table p9017-picks-table" aria-label="ピックアップマスタ">
+                <thead>
+                  <tr><th>ラベル</th><th>条件</th><th>掲載期間</th><th>掲載</th><th>判定</th></tr>
+                </thead>
+                <tbody id="p9017PickList"></tbody>
+              </table>
             </div>
+
             <div class="p9017-preview">
-              <span class="p9017-preview__label">本日の表示</span>
-              <div class="p9017-chips" id="p9017Preview"></div>
-              <p class="p211-help" id="p9017PreviewNote"></p>
+              <span class="p9017-preview__label">本日の差し込み枠</span>
+              <div class="p9017-chips" id="p9017PickPreview"></div>
+              <p class="p211-help" id="p9017PickNote"></p>
             </div>
+
             <div class="p9017-actions">
-              <button type="button" class="ktn-op-btn ktn-op-btn--primary ktn-op-btn--sm" id="p9017FeatSave">保存する</button>
+              <button type="button" class="ktn-op-btn ktn-op-btn--primary ktn-op-btn--sm" id="p9017PickSave">保存する</button>
             </div>
+
+            <p class="p211-help">最小件数の判定は<strong>表示時</strong>に行います。該当が足りない枠はその日だけ出ません（残りの棚が前に詰まります）。</p>
           </div>
         </div>
-
         <!-- ④ 季節の言葉（P10 の Picks 枠③）。軸ページではなく P10 の検索へ着地する言葉なので、
              「どこで使われるか」のルールを操作欄より先に置く（追174-74）。 -->
-        <div class="p211-block ktn-index-target" id="p9017-season">
+        <div class="p211-block ktn-index-target" id="p9017-season" data-pane="search" data-kind="exh">
           <div class="p211-block__head">
             <h3 class="p211-block__title">季節の言葉<span class="p211-block__title-en">Seasonal Themes</span></h3>
           </div>
@@ -245,7 +230,7 @@
             <dl class="p315-ops-guide__items">
               <div class="p315-ops-guide__item">
                 <dt class="p315-ops-guide__term">出る場所</dt>
-                <dd class="p315-ops-guide__desc">「展覧会を探す」（P10）の検索窓の下、PICKS の3番目の枠にひとつだけ出ます。1か月に1つで、月が替わると自動で次の行に切り替わります。ほかのページには出ません。</dd>
+                <dd class="p315-ops-guide__desc">「展覧会を探す」の検索窓の下、PICKS の3番目の枠にひとつだけ出ます。1か月に1つで、月が替わると自動で次の行に切り替わります。ほかのページには出ません。</dd>
               </div>
               <div class="p315-ops-guide__item">
                 <dt class="p315-ops-guide__term">押した先</dt>
@@ -296,8 +281,147 @@
           </div>
         </div>
 
+        <!-- 作品・クリエイター・ギャラリーのピックアップマスタ（簡易版・2026-09-23／追174-166）。
+             展覧会版（掲載期間・軸ページ重複の判定・日替わり抽選つき）をそのまま複製せず範囲を絞った：
+             この3種別は恒久URLの軸ページをほぼ持たず（年間ランキング1枚ずつのみ）季節性の強い訴求も
+             無いため、掲載期間カレンダー・重複判定・抽選トグルは持たない。持つのは
+             〈ラベル・条件・再回遊帯に出すか・該当件数〉のみ。**棚の差し込み枠はまだ無い**ため
+             （この3ページの棚は全て見出し固定）、ここで編集した条件がつながる先は検索結果末尾の
+             「今日のピックアップ」だけ（P10-1/2/3 の renderRefeed）。差し込み枠を作る回で拡張する。 -->
+        <div class="p211-block ktn-index-target" id="p9017-picks-lite" data-pane="search" data-kind="work creator gallery">
+          <div class="p211-block__head">
+            <h3 class="p211-block__title">ピックアップマスタ<span class="p211-block__title-en" id="p9017LiteTitleEn">Pick Master — Work</span></h3>
+          </div>
+          <div class="p211-block__body">
+            <p class="p315-ops-guide__lead">展覧会のピックアップマスタと同じく<strong>検索条件のレシピ集</strong>です。1件＝1つの絞り込み条件で、中身は毎回データから引き直されます。</p>
+
+            <dl class="p315-ops-guide__items">
+              <div class="p315-ops-guide__item">
+                <dt class="p315-ops-guide__term">出る場所</dt>
+                <dd class="p315-ops-guide__desc">検索結果末尾の「今日のピックアップ」だけです。この種別の棚はまだ全て見出し固定で、運営が入れ替えられる差し込み枠がありません（作る回は別途）。</dd>
+              </div>
+              <div class="p315-ops-guide__item">
+                <dt class="p315-ops-guide__term">展覧会版との違い</dt>
+                <dd class="p315-ops-guide__desc">この種別は軸ページをほぼ持たない（年間ランキング1枚のみ）ため<strong>「軸ページと重複していないか」の判定は行いません</strong>。掲載期間（毎年／この年だけ）のカレンダーと、候補が枠より多いときの日替わり抽選も持ちません＝該当件数がしきい値以上の条件は、開かれるたびランダムに選ばれます。</dd>
+              </div>
+              <div class="p315-ops-guide__item">
+                <dt class="p315-ops-guide__term">該当件数</dt>
+                <dd class="p315-ops-guide__desc">その場で自動計算します（編集不可）。<strong id="p9017LiteMinText">3件</strong>未満の条件はその日だけ「今日のピックアップ」に出ません。</dd>
+              </div>
+            </dl>
+
+            <div class="p315-archive-table-wrap p9017-picks-wrap">
+              <table class="p70-table p9017-picks-table" aria-label="ピックアップマスタ（簡易版）">
+                <thead>
+                  <tr><th>ラベル</th><th>条件</th><th>該当件数</th><th>再回遊帯に出す</th></tr>
+                </thead>
+                <tbody id="p9017PickListLite"></tbody>
+              </table>
+            </div>
+
+            <p class="p211-help">条件そのものは行の<strong>「条件を編集」</strong>から直します。この表で直接変えられるのは「再回遊帯に出す」の1つです。</p>
+
+            <div class="p9017-actions">
+              <button type="button" class="ktn-op-btn ktn-op-btn--primary ktn-op-btn--sm" id="p9017PickLiteSave">保存する</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ① 軸ページの仕組み（読み取り専用）。この画面の操作がサイトのどこに効くのかを先に置く。
+             数字は KTN.axis / KTN.arc から埋める＝ジャンルや年が増えたときに文だけが古びない（追174-70）。
+             表は p70 ガイドの .p70-table、地の文は運用ノートの .p315-ops-guide__lead を借りている。 -->
+        <div class="p211-block ktn-index-target" id="p9017-about" data-pane="axis">
+          <div class="p211-block__head">
+            <h3 class="p211-block__title">軸ページの仕組み<span class="p211-block__title-en">How It Works</span></h3>
+          </div>
+          <div class="p211-block__body">
+
+            <p class="p315-ops-guide__lead"><strong>軸ページは SEO のために建てています。</strong>展覧会を探す人が検索に打ち込む言葉は「<strong>エリア</strong>」と「<strong>ジャンル</strong>」に集中します。検索ページ1枚ではこの言葉ごとの受け皿を作れないので、<strong>言葉ごとに恒久URLを用意して</strong>、検索結果から直接その一覧へ入ってもらう作りにしています。この画面は、そのURL群への<strong>内部リンクの配り方</strong>を決める場所です。</p>
+
+            <p class="p315-ops-guide__lead">軸ページは掲載中の展覧会データから自動で生成されます。いま軸は5つあり、合わせて<strong id="p9017AxTotal">—</strong>のURLが常に存在します。5つは「ページの型」で、1枚ずつ作るものではありません。</p>
+
+            <table class="p70-table p9017-exp p9017-exp--axes" aria-label="軸の種類とURL数">
+              <colgroup><col><col><col><col></colgroup>
+              <thead>
+                <tr><th>軸</th><th>URL の形</th><th>内訳</th><th>URL数</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>エリア</td><td><code id="p9017AxUrl-area">—</code></td><td id="p9017AxAreaNote">—</td><td id="p9017AxArea">—</td></tr>
+                <tr><td>ジャンル</td><td><code id="p9017AxUrl-genre">—</code></td><td>展覧会に登録されたジャンル</td><td id="p9017AxGenre">—</td></tr>
+                <tr><td>行きやすさ</td><td><code id="p9017AxUrl-access">—</code></td><td>お子さまと行ける／クリエイターが在廊する</td><td id="p9017AxAccess">—</td></tr>
+                <tr><td>年間ランキング</td><td><code id="p9017AxUrl-year">—</code></td><td id="p9017AxYearNote">—</td><td id="p9017AxYear">—</td></tr>
+                <tr><td>アーカイブ</td><td><code id="p9017AxUrl-archive">—</code></td><td>エリアごとの、会期を終えた展覧会の記録</td><td id="p9017AxArchive">—</td></tr>
+              </tbody>
+            </table>
+
+            <p class="p315-ops-guide__lead">これらのURLへ張られる内部リンクには2種類あります。ひとつは<strong>索引</strong>で、ハブ「展覧会を探す」が全件を毎日リンクします。掲載0件のエリアも外さないため、どのURLにも必ず張られた状態が続きます。もうひとつが<strong>注目枠</strong>で、こちらは日替わりで入れ替わるので、どのURLへ張られるかは日によって変わります。すべてのURLをクローラに見つけてもらう役目は<strong>索引</strong>が持ち、<strong>注目枠</strong>は人の目に触れる回数を配る役目を持ちます。</p>
+
+            <table class="p70-table p9017-exp p9017-exp--outlets" aria-label="注目枠が出る場所">
+              <colgroup><col><col><col><col></colgroup>
+              <thead>
+                <tr><th>注目枠が出る場所</th><th>対象の軸</th><th>使う枠数</th><th>枠の役割</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>トップ</td><td>エリアのみ</td><td class="p9017-exp__num">3</td><td>いちばん強い入口を毎日同じ場所に置く。いまは常設3件で埋まり、日替わりは入らない</td></tr>
+                <tr><td>展覧会を探す</td><td>エリアのみ</td><td class="p9017-exp__num">4</td><td>常設に1枠だけ日替わりを足す。主要な入口を動かさずに、他のエリアへも順番を回す</td></tr>
+                <tr><td>展覧会を探す ハブ</td><td>エリアのみ</td><td class="p9017-exp__num">6</td><td>索引が全URLを毎日リンクしているので、注目枠は多めに日替わりへ回せる</td></tr>
+              </tbody>
+            </table>
+            <p class="p211-help">3つの入口は<strong>同じ並びを共有</strong>し、その先頭から自分の枠数だけ使います。同じ日はどの入口から入っても同じエリアが同じ順で出ます。枠数はそれぞれのページのレイアウトで決まるもので、この画面からは変えません。</p>
+
+            <p class="p315-ops-guide__lead"><strong>開くたびに変わるランダムにはしません。</strong>内部リンクの張り先が表示のたびに変われば、クローラから見てどのURLにも評価が積み上がらず、<strong>SEO の効果が出ません</strong>。前に見たエリアを同じ場所で探せない、という使いにくさも出ます。<strong>日付で決まる並び</strong>なら、1日のあいだリンクは動かないまま、日をまたげば候補に順番が回るので、その2つを壊さずに露出を配れます。<strong>常設を置くのは</strong>、主要な入口だけは日によっても動かさないためです。本番では、この並びはページを組み立てる時点で確定させます（表示してから差し替えると、クローラに内部リンクとして数えてもらえません）。</p>
+
+            <p class="p315-ops-guide__lead"><strong>SEO 上、この4つが揃っていることが効きます。</strong>① <strong>URLが消えない</strong>＝掲載0件になってもページは残るので、いったん付いた評価を捨てずに済みます。②&nbsp;<strong>孤立したページを作らない</strong>＝索引が全URLを毎日リンクするので、どのページにも必ず入口があります。③&nbsp;<strong>リンクが実際にたどられる</strong>＝注目枠が人の導線も配るので、「リンクは張ってあるが誰も通らない」状態になりません。④&nbsp;<strong>構造が日単位で安定する</strong>＝並びが日で固定なので、クローラが来るたびに内部リンクが組み替わることがありません。<strong>4つ揃って初めて、URLの数が SEO の資産になります。</strong>どれか1つを崩すと残りも効かなくなります（0件のページを消せば①、索引から外せば②、全部を常設にすれば③、ランダム表示にすれば④が崩れます）。</p>
+
+            <p class="p315-ops-guide__lead">注目枠を持つのは<strong>エリア軸だけ</strong>です。ジャンル・行きやすさ・年間ランキング・アーカイブには運営が露出を選ぶ枠がなく、ハブの索引とタグバーからたどる形になります。下の「注目のエリアの選定」と、一覧の「注目枠」の列がエリアのタブでしか出ないのはこのためです。</p>
+
+            <p class="p315-ops-guide__lead">軸ページに<strong>公開／非公開の切替はありません</strong>。同じURLを出したり消したりすると、それまで積んだ SEO の評価が落ちます。露出の調整はページの公開状態ではなく<strong>注目枠への掲載</strong>で行ってください。</p>
+
+            <p class="p315-ops-guide__lead">この画面から変えられないもの＝<strong>軸そのものの増減</strong>（都道府県・ジャンル・行きやすさの条件はタクソノミ側の変更です）と、<strong>ハブ「展覧会を探す」自身の導入文</strong>（固定文。作品・クリエイター・ギャラリーの索引も同じです）。</p>
+
+          </div>
+        </div>
+
+
+        <!-- ③ 注目のエリアの選定 -->
+        <div class="p211-block ktn-index-target" id="p9017-hl" data-pane="axis">
+          <div class="p211-block__head">
+            <h3 class="p211-block__title">注目のエリアの選定<span class="p211-block__title-en">Area Highlights</span></h3>
+          </div>
+          <div class="p211-block__body">
+            <p class="p211-help p9017-blocknote">常設したエリアは毎日必ず出ます。<strong>残りの枠はローテーション</strong>が埋め、しきい値を超えたエリアに日付から決まる順で回ります。時間をかければどのエリアにも順番が回るので、個別に「今日はこれを出す」と指定する枠は設けていません。<strong>常設にしたエリアはローテーションの対象から外れます</strong>＝同じエリアが二重に出ることはありません。</p>
+            <div class="p211-field">
+              <span class="p211-label">常設するエリア<span class="p211-label__unit">上から優先</span></span>
+              <div class="p9017-prio" id="p9017Fixed"></div>
+              <div class="p9017-addrow">
+                <select class="p211-select p9017-addsel" id="p9017FixedAdd"></select>
+                <button type="button" class="ktn-op-btn ktn-op-btn--sm" id="p9017FixedAddBtn">常設に追加</button>
+              </div>
+              <p class="p211-help">掲載が集中するエリアを常設し、主要な入口が日によって消えないようにします。<span id="p9017FixedOutlets"></span><strong>並び順がそのまま優先順位</strong>です。</p>
+            </div>
+            <div class="p211-field">
+              <label class="p211-label" for="p9017Min">ローテーションのしきい値<span class="p211-label__unit">掲載件数</span></label>
+              <input type="number" class="p211-input p211-input--sm" id="p9017Min" value="5" min="0" step="1">
+              <p class="p211-help">これを下回るエリアはローテーションに入りません。ハブの「エリアから探す」からは引き続きたどれます。<span id="p9017RotPool"></span></p>
+              <p class="p211-help p9017-rot__lead" id="p9017RotLead"></p>
+              <div class="p9017-rot" id="p9017Rot"></div>
+              <p class="p211-help" id="p9017RotNote"></p>
+            </div>
+            <div class="p9017-preview">
+              <span class="p9017-preview__label">本日の優先順位</span>
+              <p class="p211-help" id="p9017PreviewLead"></p>
+              <div class="p9017-prio p9017-prio--preview" id="p9017Preview"></div>
+              <p class="p211-help" id="p9017PreviewNote"></p>
+            </div>
+            <div class="p9017-actions">
+              <button type="button" class="ktn-op-btn ktn-op-btn--primary ktn-op-btn--sm" id="p9017HlSave">保存する</button>
+            </div>
+          </div>
+        </div>
+
+
         <!-- ⑤ 軸ページ一覧（導入文の記入状況を横断で見る） -->
-        <div class="p211-block ktn-index-target" id="p9017-list">
+        <div class="p211-block ktn-index-target" id="p9017-list" data-pane="axis">
           <div class="p211-block__head">
             <h3 class="p211-block__title">軸ページ一覧<span class="p211-block__title-en">Axis Pages</span></h3>
           </div>
@@ -315,11 +439,11 @@
                     <option value="auto">自動生成のまま</option>
                   </select>
                 </label>
-                <label class="p319-filter" id="p9017FilterFeatWrap">
+                <label class="p319-filter" id="p9017FilterHlWrap">
                   <span class="p319-filter__label">注目枠</span>
-                  <select class="p319-filter__sel" id="p9017FilterFeat">
+                  <select class="p319-filter__sel" id="p9017FilterHl">
                     <option value="">すべて</option>
-                    <option value="fixed">固定枠</option>
+                    <option value="fixed">常設</option>
                     <option value="rot">ローテーション対象</option>
                     <option value="off">対象外</option>
                   </select>
@@ -346,6 +470,46 @@
 
       </div><!-- /.ktn-mgmt-wrap -->
 
+
+      <!-- 条件エディタ。導入文の編集（下の p9017LeadModal）と同じモーダルの殻を使う＝
+           この画面の「行を開いて直す」操作を1つの形に揃える（追174-90 追記3）。
+           .ktn-mgmt-wrap の外に置く＝stack の子マージンが fixed オーバーレイを縮めるため。 -->
+      <div class="p319-del-modal p9017-cond-modal" id="p9017CondModal" hidden>
+        <div class="p319-del-modal__bg" id="p9017CondModalBg"></div>
+        <div class="p319-del-modal__panel" role="dialog" aria-modal="true" aria-labelledby="p9017CondTitle">
+          <h3 class="p319-del-modal__title" id="p9017CondTitle">条件を編集</h3>
+          <div class="p9017-lead-ctx">
+            <span class="p9017-lead-ctx__kind">ピックアップ</span>
+            <span class="p9017-lead-ctx__name" id="p9017CondName"></span>
+          </div>
+
+          <div class="p211-field">
+            <label class="p211-label" for="p9017CondLabel">棚に出す見出し</label>
+            <input type="text" class="p211-input" id="p9017CondLabel" maxlength="30">
+            <p class="p211-help">条件の羅列（東京・現代美術）でも文（福岡で行くべき展覧会）でもよいですが、<strong>マスタ全体で語り口を揃えてください</strong>。条件の羅列だけだと軸ページと見分けがつきません。時制の語は使いません。</p>
+          </div>
+
+          <div class="p211-field">
+            <label class="p211-label" for="p9017CondDesc">着地したときの説明文</label>
+            <textarea class="p211-textarea" id="p9017CondDesc" rows="2" maxlength="90"></textarea>
+            <p class="p211-help">ピックアップを押した先の見出しの下に出る文です。<strong>条件から機械で書ける文ではないので運営が書きます</strong>（見出しと同じ扱い）。「自動生成」「条件」「タグ」のような<strong>運営側の言葉は使わず</strong>、〈何が集まっているか〉と〈そこで何ができるか・実物で何が分かるか〉の2文で書きます。空のままにすると説明行は出ません。</p>
+          </div>
+
+          <div class="p211-field">
+            <span class="p211-label">条件<span class="ktn-req">必須</span></span>
+            <p class="p211-help p9017-blocknote">指定した条件を<strong>すべて満たす</strong>ものへ着地します（AND）。掛けるほど該当は少なくなり、最小件数に届かない日は枠が出ません。指定なしの欄は条件に入りません。</p>
+            <div class="p9017-axes" id="p9017CondAxes"></div>
+            <datalist id="p9017PickTagList"></datalist>
+          </div>
+
+          <div class="p9017-cond-verdict" id="p9017CondVerdict"></div>
+
+          <div class="p319-del-modal__actions">
+            <button type="button" class="ktn-op-btn" id="p9017CondCancel">キャンセル</button>
+            <button type="button" class="ktn-op-btn ktn-op-btn--primary" id="p9017CondSave">保存する</button>
+          </div>
+        </div>
+      </div>
       <!-- 導入文編集モーダル（fixed オーバーレイなので .ktn-mgmt-wrap の外に置く） -->
       <div class="p319-del-modal p9017-lead-modal" id="p9017LeadModal" hidden>
         <div class="p319-del-modal__bg" id="p9017LeadModalBg"></div>
@@ -382,7 +546,7 @@
 
 <nav class="ktn-bottom-nav" id="ktnBottomNav"><div class="ktn-bottom-nav__inner" id="ktnBottomNavInner"></div></nav>
 
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Top","item":"https://koten-navi.com/"},{"@type":"ListItem","position":2,"name":"管理者","item":"https://koten-navi.com/p90"},{"@type":"ListItem","position":3,"name":"軸ページ管理"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Top","item":"https://koten-navi.com/"},{"@type":"ListItem","position":2,"name":"管理者","item":"https://koten-navi.com/p90"},{"@type":"ListItem","position":3,"name":"検索・特集管理"}]}</script>
 
 <script src="./kotennavi-common.js"></script>
 <script src="./kotennavi-pages.js"></script>

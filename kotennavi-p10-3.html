@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ギャラリーを探す | 個展なび</title>
-  <meta name="description" content="個展なびに登録するギャラリーを検索。ジャンル・エリア・開催状況・LIAISON対応で絞り込み、特集やおすすめから気になるギャラリーに出会えます。">
+  <meta name="description" content="個展なびに登録するギャラリーを検索。ジャンル・エリア・開催状況・LIAISON対応で絞り込み、ピックアップやおすすめから気になるギャラリーに出会えます。">
   <meta name="robots" content="noindex,nofollow">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
@@ -32,9 +32,10 @@
   <span class="dbar-sep">ロール：</span>
   <button class="dbtn" onclick="setR('guest',this)">ゲスト</button>
   <button class="dbtn on" onclick="setR('login',this)">ログイン</button>
+  <button class="dbtn" onclick="setR('admin',this)">管理者</button>
   <span class="dbar-sep">表示状態：</span>
   <button class="dbtn on" data-p103-view onclick="setP103View('disc',this)">ディスカバリー</button>
-  <button class="dbtn" data-p103-view onclick="setP103View('preset',this)">特集着地</button>
+  <button class="dbtn" data-p103-view onclick="setP103View('preset',this)">ピックアップ着地</button>
   <button class="dbtn" data-p103-view onclick="setP103View('result',this)">検索結果</button>
   <button class="dbtn" data-p103-view onclick="setP103View('zero',this)">ゼロヒット</button>
 </div>
@@ -142,9 +143,6 @@
           <button class="p10-chip" data-f="st:live" type="button">開催中の展覧会あり</button>
           <button class="p10-chip" data-f="new:1" type="button">新着</button>
           <span class="p10-quick-row__sep"></span>
-          <button class="p10-chip" data-f="liaison:li" type="button"><span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>オンライン展示あり</button>
-          <button class="p10-chip" data-f="liaison:lp" type="button"><span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span>オンラインで購入できる</button>
-          <span class="p10-quick-row__sep"></span>
           <button class="p10-adv-toggle" id="p103AdvToggle" type="button" aria-expanded="false">
             詳しい条件
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="6 9 12 15 18 9"/></svg>
@@ -158,19 +156,27 @@
             <div class="p10-adv__opts">
               <button class="p10-chip" data-f="st:live" type="button">開催中</button>
               <button class="p10-chip" data-f="st:upcoming" type="button">開催予定</button>
-              <button class="p10-chip" data-f="st:none" type="button">現在開催なし</button>
             </div>
           </div>
           <div class="p10-adv__group">
             <div class="p10-adv__label">取り扱いジャンル</div>
             <div class="p10-adv__opts">
-              <button class="p10-chip" data-f="tag:絵画" type="button"># 絵画</button>
-              <button class="p10-chip" data-f="tag:現代美術" type="button"># 現代美術</button>
-              <button class="p10-chip" data-f="tag:写真" type="button"># 写真</button>
-              <button class="p10-chip" data-f="tag:書道" type="button"># 書道</button>
-              <button class="p10-chip" data-f="tag:版画" type="button"># 版画</button>
-              <button class="p10-chip" data-f="tag:陶芸" type="button"># 陶芸</button>
-              <button class="p10-chip" data-f="tag:クラフト" type="button"># クラフト</button>
+              <button class="p10-chip" data-f="genre:アート" type="button">アート</button>
+              <button class="p10-chip" data-f="genre:写真" type="button">写真</button>
+              <button class="p10-chip" data-f="genre:クラフト" type="button">クラフト</button>
+              <button class="p10-chip" data-f="genre:建築" type="button">建築</button>
+              <button class="p10-chip" data-f="genre:ファッション" type="button">ファッション</button>
+              <button class="p10-chip" data-f="genre:その他" type="button">その他</button>
+            </div>
+          </div>
+          <!-- タグ（技法・素材）はジャンルより細かい自由ワード。別の軸なのでグループを分ける（追174-76）。 -->
+          <div class="p10-adv__group">
+            <div class="p10-adv__label">タグ（技法・素材）</div>
+            <!-- タグ付け数が多い順にJSが並べ替えて描画する（追174-142）。1行に収まる分だけ見せ、
+                 はみ出す分は「もっと見る」で展開する（.p10-adv__opts--tagsのmax-heightをJSがトグル）。 -->
+            <div class="p10-adv__tagbox">
+              <div class="p10-adv__opts p10-adv__opts--tags" id="p103TagOpts"></div>
+              <button class="p10-adv-toggle" type="button" id="p103TagMoreBtn" aria-expanded="false"><span>もっと見る</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="6 9 12 15 18 9"/></svg></button>
             </div>
           </div>
           <div class="p10-adv__group">
@@ -189,8 +195,12 @@
             <div class="p10-adv__label">こだわり条件</div>
             <div class="p10-adv__opts">
               <button class="p10-chip" data-f="new:1" type="button">新着</button>
-              <button class="p10-chip" data-f="liaison:li" type="button"><span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>オンライン展示あり</button>
-              <button class="p10-chip" data-f="liaison:lp" type="button"><span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span>オンラインで購入できる</button>
+              <!-- ギャラリー自身が会場なので、P4「利用案内」の入力をそのまま検索条件にできる
+                   （P10の同名チップと違い会場を別引きする必要が無い・追174-150）。 -->
+              <button class="p10-chip" data-f="barrierfree:1" type="button">バリアフリー</button>
+              <button class="p10-chip" data-f="parking:1" type="button">駐車場あり</button>
+              <button class="p10-chip" data-f="card:1" type="button">クレジットカードOK</button>
+              <button class="p10-chip" data-f="rental:1" type="button">レンタルギャラリー</button>
             </div>
           </div>
           <div class="p10-adv__foot">
@@ -221,7 +231,7 @@
       </div>
     </div>
 
-    <!-- B. 特集チップレール（アルゴリズム生成プリセット） -->
+    <!-- B. ピックアップのチップレール（保存済み検索）。「特集」は P10-4〜P10-7（検索ごとの特集ページ）の語なので、検索側では使わない -->
     <div class="p10-presets">
       <div class="p10-presets__inner">
         <span class="p10-presets__label">Picks</span>
@@ -234,21 +244,26 @@
     <!-- C. ディスカバリー状態（条件なしのデフォルト） -->
     <div class="ktn-content p10-content" id="p103Discovery">
 
+      <!-- 近く × 開催中＝このページで最初に見せる棚なので2カラムの外に出して全幅で置く（P10 の「近くの展覧会」と同型）。
+           「近く」だけだと今行っても展示が無いギャラリーが混ざり、いちばん上の棚が「行ける場所」にならない。 -->
+      <section class="p10-shelf">
+        <div class="ktn-section__head">
+          <h2 class="ktn-section__title">近くで開催中<span class="ktn-sec-en">Nearby Now Showing</span></h2>
+          <a href="#" class="ktn-section__more" data-preset="near-live">もっと見る →</a>
+        </div>
+        <p class="p10-shelf__desc">現在地から近い順に、いま展覧会を開催中のギャラリー。</p>
+        <div class="p10-person-grid p10-person-grid--wide" id="p103NearGrid"></div>
+      </section>
+
+      <div class="p10-layout">
+        <div class="p10-layout__main">
+
       <section class="p10-shelf">
         <div class="ktn-section__head">
           <h2 class="ktn-section__title">開催中の展覧会があるギャラリー<span class="ktn-sec-en">Now Showing</span></h2>
           <a href="#" class="ktn-section__more" data-preset="exh-live">もっと見る →</a>
         </div>
         <div class="p10-person-grid" id="p103LiveGrid"></div>
-      </section>
-
-      <section class="p10-shelf">
-        <div class="ktn-section__head">
-          <h2 class="ktn-section__title">近くのギャラリー<span class="ktn-sec-en">Nearby</span></h2>
-          <a href="#" class="ktn-section__more" data-preset="near">もっと見る →</a>
-        </div>
-        <p class="p10-shelf__desc">現在地から近い順に、活動しているギャラリー。</p>
-        <div class="p10-person-grid" id="p103NearGrid"></div>
       </section>
 
       <section class="p10-shelf">
@@ -283,9 +298,50 @@
         <div class="p10-person-grid" id="p103PicksGrid"></div>
       </section>
 
+        </div><!-- /p10-layout__main -->
+
+        <div class="p10-layout__side">
+
+          <!-- 全国のギャラリー＝作品・クリエイター側の「クロスジャンル」と同じ役割（追174-157／174-158）。
+               旧「都道府県から探す」はエリアチップの一覧で、詳しい条件のエリア行と中身が重複する
+               ただのショートカットになっていた＝他の検索ページの右カラムが担う「発見のプリセット」
+               （単一指標に依存しない低露出枠の保証）という役割から外れていた。ギャラリーは会場を持つ＝
+               場所が恒久的な属性なので、「クロスジャンル」に相当する軸を（好みでなく）エリアに充てる：
+               掲載の多い主要エリア（東京）の外側で、いま開催中・開催予定のギャラリーを、反応の少ない
+               順に出す＝地方のギャラリーが埋もれない低露出枠。本番は主要エリアを掲載数から動的に算出する
+               想定（現状は東京固定）。
+               見出しは「クロスエリア」から改称（追174-158・ユーザー指摘＝日本語として不自然）。
+               説明文も「普段あまり見ない地域」（対象の地域自体を暗にネガティブに言う表現）をやめ、
+               「全国各地からピックアップ」という利用者の得（新しい出会い）だけを語る言い方にした。 -->
+          <div class="p2-side-card p10-side-widget">
+            <div class="p2-side-nearby__head">
+              <span class="p2-side-nearby__title">全国のギャラリー<span class="ktn-sec-en">Nationwide</span></span>
+            </div>
+            <p class="p10-shelf__desc">いま開催中・開催予定のギャラリーを、全国各地からピックアップ。新しい出会いのきっかけに。</p>
+            <div class="p10-side-list p10-side-list--stack" id="p103CrossGrid"></div>
+          </div>
+
+          <!-- 年間ランキング（P10-7）への入口。ギャラリーは年をまたいで存在し続けるため、
+               年間側は累計ウォッチ数でなく「その年に増えた分」＝年間増分で並べる（P10-7 側で算出）。 -->
+          <div class="p2-side-card p10-side-widget">
+            <div class="p2-side-nearby__head">
+              <span class="p2-side-nearby__title">ランキング<span class="ktn-sec-en">Rankings</span></span>
+            </div>
+            <p class="p10-shelf__desc">掲載中のギャラリーが対象。</p>
+            <div class="p10-rank-tabs" role="tablist">
+              <button type="button" class="p10-rank-tab is-active" data-rank="watch" role="tab">ウォッチ</button>
+              <button type="button" class="p10-rank-tab" data-rank="exh" role="tab">展覧会数</button>
+            </div>
+            <div class="p10-side-list p10-side-list--rank p10-side-list--stack" id="p103RankGrid"></div>
+            <a href="./kotennavi-p10-7-1.html" class="ktn-more-link" id="p103RankMore">2026年のギャラリーランキング →</a>
+          </div>
+
+        </div><!-- /p10-layout__side -->
+      </div><!-- /p10-layout -->
+
     </div>
 
-    <!-- D. 結果状態（キーワード・フィルタ・特集） -->
+    <!-- D. 結果状態（キーワード・フィルタ・ピックアップ） -->
     <div class="ktn-content p10-content" id="p103Results" hidden>
       <div class="p10-ctx">
         <div class="p10-ctx__eyebrow" id="p103CtxEyebrow">Search Results</div>
@@ -303,21 +359,38 @@
           </select>
         </label>
       </div>
-      <!-- Featured＝「おすすめ順」のときだけ出る巻頭型クラスタ（共通 .ktn-cl）。
+      <!-- LIAISON/LIAISON+は「開催中・開催予定の展覧会」に付随する状態であって、検索チップや
+           詳しい条件のような独立した絞り込み軸ではない。開催中・開催予定で検索された結果に
+           対してのみ意味を持つため、検索条件からは外し、その検索結果に対する絞込として
+           ここ（結果の直上）に置く。開催中・開催予定を含まない検索結果では出さない
+           （JSが表示/非表示を切り替える・追174-153）。
+           行の文法は詳細条件ドロワー・軸ページの絞り込みバーと共有する（.ktn-axis-facet／
+           .p10-adv__group／__label／__opts）＝サイト内で「絞り込み」の見た目を1つに保つため、
+           ここ専用の枠・ラベルスタイルは作らない（追174-61と同じ考え方・追174-154）。 -->
+      <div class="ktn-axis-facet" id="p103Refine" hidden>
+        <div class="p10-adv__group">
+          <span class="p10-adv__label">この中から絞り込む</span>
+          <div class="p10-adv__opts">
+            <button class="p10-chip" data-f="liaison:li" type="button"><span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>オンライン展示あり</button>
+            <button class="p10-chip" data-f="liaison:lp" type="button"><span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span>オンラインで購入できる</button>
+          </div>
+        </div>
+      </div>
+      <!-- 注目 Highlights＝「おすすめ順」のときだけ出る巻頭型クラスタ（共通 .ktn-cl）。
            人気/新着/展覧会数を選ぶと消えて通常カードだけになる＝並び順の約束を壊さない -->
-      <section class="p10-feat" id="p10Feat" hidden>
-        <span class="p10-feat__ttl">注目のギャラリー<span class="ktn-sec-en">Featured</span></span>
-        <div class="p10-feat__row" id="p10FeatRow"></div>
+      <section class="p10-hl" id="p10Hl" hidden>
+        <span class="p10-hl__ttl">注目のギャラリー<span class="ktn-sec-en">Highlights</span></span>
+        <div class="p10-hl__row" id="p10HlRow"></div>
       </section>
       <div class="p10-person-grid" id="p103ResultGrid"></div>
       <div class="p10-more-wrap">
         <button class="ktn-op-btn" id="p103MoreBtn" type="button">さらに読み込む</button>
       </div>
-      <!-- 今日の特集＝検索したが意中のものが無かったときの受け皿。人気軸のカードを足すのでなく
-           「別の軸の検索」＝特集を差し出す（適用中の特集は除外・日替わりで入れ替わる） -->
+      <!-- 今日のピックアップ＝検索したが意中のものが無かったときの受け皿。人気軸のカードを足すのでなく
+           「別の軸の検索」を差し出す（適用中のものは除外・日替わりで入れ替わる） -->
       <section class="p10-refeed" id="p103Refeed">
         <div class="ktn-section__head">
-          <h2 class="ktn-section__title">今日の特集<span class="ktn-sec-en">Today’s Features</span></h2>
+          <h2 class="ktn-section__title">今日のピックアップ<span class="ktn-sec-en">Today’s Picks</span></h2>
         </div>
         <p class="p10-shelf__desc">条件を変えると、出会えるギャラリーも変わります。</p>
         <div class="p10-refeed__grid" id="p103RefeedGrid"></div>
@@ -328,7 +401,7 @@
     <div class="ktn-content p10-content" id="p103Zero" hidden>
       <div class="p10-zero-box">
         <h2 class="p10-zero-box__title" id="p103ZeroTitle">条件に合うギャラリーが見つかりませんでした</h2>
-        <p class="p10-zero-box__sub">キーワードを短くするか、条件を減らして探しなおしてみてください。<br>近いテーマの特集からも探せます。</p>
+        <p class="p10-zero-box__sub">キーワードを短くするか、条件を減らして探しなおしてみてください。<br>近いテーマのピックアップからも探せます。</p>
         <div class="p10-zero-sugg" id="p103ZeroSugg"></div>
         <div class="p10-more-wrap">
           <button class="ktn-op-btn" type="button" onclick="setP103View('disc',document.querySelector('[data-p103-view]'))">条件をクリアして探しなおす</button>

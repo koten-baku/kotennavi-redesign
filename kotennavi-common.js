@@ -240,7 +240,7 @@ function ktnP2SnsText() {
       + '<input type="text" class="p902-flow-panel__input" id="ktnP2SnsMailSubject">'
       + '<label class="p902-flow-panel__label">本文</label>'
       + '<textarea class="p902-flow-panel__textarea" id="ktnP2SnsMailBody" rows="10"></textarea>'
-      + '<p class="p902-flow-panel__hint">出展者へ掲載完了をお知らせするメールです。内容を確認・編集のうえ送信してください。テンプレートは <a class="ktn-guide-link" href="./kotennavi-p90-9.html">メールテンプレート管理（P90-9）</a> の「展覧会掲載依頼」で管理しています。</p>'
+      + '<p class="p902-flow-panel__hint">出展者へ掲載完了をお知らせするメールです。内容を確認・編集のうえ送信してください。テンプレートは <a class="ktn-guide-link" href="./kotennavi-p90-9.html">メールテンプレート管理</a> の「展覧会掲載依頼」で管理しています。</p>'
       + '<div class="p902-flow-panel__actions">'
       + '<button class="ktn-op-btn ktn-op-btn--primary" id="ktnP2SnsMailSendBtn" onclick="ktnP2SnsMailSend()">このメールを送信する</button>'
       + '</div>'
@@ -1033,17 +1033,18 @@ function renderFooter() {
         </div>
 
         <div class="ktn-footer__col">
-          <p class="ktn-footer__col-title">展覧会</p>
+          <!-- 列名は「展覧会」でなく「さがす」＝ランキング（P10-8）は展覧会だけでなく
+               作品・クリエイター・ギャラリーも含む横断ハブで、展覧会の列に置くと
+               他3種のランキングがそこにある理由が読めないため（追174-84）。
+               このフッターは全ページ共通なので、この1行がランキング本体4枚への
+               唯一の follow される入口になる（本体は index,follow だが、従来の入口
+               ＝P10-1〜3・P10-5〜7 はすべて noindex,nofollow だった）。 -->
+          <p class="ktn-footer__col-title">さがす</p>
           <ul class="ktn-footer__links">
             <li><a href="/p10" onclick="handleNav(event,'p10','/p10')">展覧会を探す</a></li>
+            <li><a href="/p10-8" onclick="handleNav(event,'p10-8','/p10-8')">年間ランキング</a></li>
             <li><a href="/p70" onclick="handleNav(event,'p70','/p70')"><span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>オンライン展示</a></li>
           </ul>
-          <p class="ktn-footer__col-title" style="margin-top:20px">特集</p>
-          <div class="ktn-footer__feature-tags">
-            <a href="/p10-4#area" class="ktn-footer__feature-tag" onclick="handleNav(event,'p10-4','/p10-4#area')">エリアから探す</a>
-            <a href="/p10-4#genre" class="ktn-footer__feature-tag" onclick="handleNav(event,'p10-4','/p10-4#genre')">ジャンルから探す</a>
-            <a href="/p10-4-2" class="ktn-footer__feature-tag" onclick="handleNav(event,'p10-4-2','/p10-4-2')">年間の記録</a>
-          </div>
         </div>
 
         <div class="ktn-footer__col">
@@ -1128,17 +1129,10 @@ function renderFooter() {
    mod: 'feature' | 'liaison' | undefined
 ══════════════════════════════════ */
 const TAGBAR_DEFS = {
-  'p1': [
-    { label: '展覧会を探す', href: '/p2' },
-    { label: '今週末開催', href: '/p2?filter=weekend', icon: 'calendar' },
-    { label: '近くの展覧会', href: '/p2?filter=near', icon: 'pin' },
-    { sep: true },
-    { label: '特集一覧', href: '/feature', mod: 'feature' },
-    { label: '九州の展覧会', href: '/feature/kyushu', mod: 'feature' },
-    { label: '今月注目', href: '/feature/monthly', mod: 'feature' },
-    { sep: true },
-    { label: 'LIAISON作品を見る', href: '/p2?liaison=1', mod: 'liaison', icon: 'liaison' },
-  ],
+  /* 'p1'（トップ）は定義を持たない＝タグバーを出さない（2026-09-22 ユーザー指示）。
+     トップは本文そのものが入口の集合で、上部にもう一列入口を並べると同じ行き先が二重になる。
+     定義が無ければ renderTagbar が非表示にするので、再び出したくなったらここに足すだけでよい
+     （p1 には -N の下位ページが無いため、この削除で継承が壊れるページも無い）。 */
   'p2': [
     { label: 'すべて', href: '/p2', active: true },
     { label: '今日・明日開催', href: '/p2?filter=today', icon: 'calendar' },
@@ -1182,29 +1176,28 @@ const TAGBAR_DEFS = {
     { label: '同シリーズ', href: '#series' },
     { label: 'このクリエイターの他の作品', href: '#creator-works' },
   ],
+  /* p10-5・p10-6（作品/クリエイターの分類索引）は追174-130でクロスリンク網から除外した
+     （P10-1/P10-2自身の絞り込みチップと内容が重複するnoindexページで、送客するとかえって
+     利用者を混乱させるという判断）。'p10-4'はp10-4-1〜5が継承する単一ソースなので、
+     ここから2件外すだけでp10-4系6ページ分が一括で直る。 */
   'p10-4': [
     { label: '展覧会特集', href: '/p10-4', mod: 'feature', active: true },
-    { label: '作品特集', href: '/p10-5', mod: 'feature' },
-    { label: 'クリエイター特集', href: '/p10-6', mod: 'feature' },
-    { label: 'ギャラリー特集', href: '/p10-7', mod: 'feature' },
-  ],
-  'p10-5': [
-    { label: '展覧会特集', href: '/p10-4', mod: 'feature' },
-    { label: '作品特集', href: '/p10-5', mod: 'feature', active: true },
-    { label: 'クリエイター特集', href: '/p10-6', mod: 'feature' },
-    { label: 'ギャラリー特集', href: '/p10-7', mod: 'feature' },
-  ],
-  'p10-6': [
-    { label: '展覧会特集', href: '/p10-4', mod: 'feature' },
-    { label: '作品特集', href: '/p10-5', mod: 'feature' },
-    { label: 'クリエイター特集', href: '/p10-6', mod: 'feature', active: true },
     { label: 'ギャラリー特集', href: '/p10-7', mod: 'feature' },
   ],
   'p10-7': [
     { label: '展覧会特集', href: '/p10-4', mod: 'feature' },
-    { label: '作品特集', href: '/p10-5', mod: 'feature' },
-    { label: 'クリエイター特集', href: '/p10-6', mod: 'feature' },
     { label: 'ギャラリー特集', href: '/p10-7', mod: 'feature', active: true },
+  ],
+  /* p10-5-1・p10-6-1（作品/クリエイターの年間ランキング＝index,follow）は専用定義を持たせる。
+     親'p10-5'/'p10-6'は削除済みなので継承に頼ると空になってしまうため（追174-130）。
+     p10-7-1はp10-7を継承するので専用定義は不要。 */
+  'p10-5-1': [
+    { label: '展覧会特集', href: '/p10-4', mod: 'feature' },
+    { label: 'ギャラリー特集', href: '/p10-7', mod: 'feature' },
+  ],
+  'p10-6-1': [
+    { label: '展覧会特集', href: '/p10-4', mod: 'feature' },
+    { label: 'ギャラリー特集', href: '/p10-7', mod: 'feature' },
   ],
   'p70': [
     { label: 'LIAISONとは', href: '/p70', mod: 'liaison', active: true },
@@ -1423,7 +1416,7 @@ KTN.QA = [
   { id: 'LIA-02', cat: 'liaison', aud: 'common', grp: 'リエゾン / リエゾン+', q: '会期の途中から公開することはできますか', a: '可能です。「公開する」を実行したタイミングから展示が始まります。ただしリエゾンは展覧会と連動する性質のため、会期初日からの公開を推奨いたします。' },
   { id: 'LIA-03', cat: 'liaison', aud: 'common', grp: 'リエゾン / リエゾン+', q: '作品画像はどんなサイズが適していますか', a: '長辺2,000px以上、JPEG（品質80以上）またはPNG形式、ファイルサイズ10MB以下を推奨します。アップロード後は自動的に長辺1,200pxにリサイズされ、ウォーターマークが付与されます。' },
   { id: 'LIA-04', cat: 'liaison', aud: 'common', grp: 'リエゾン / リエゾン+', q: '画像の著作権はどうなりますか', a: '著作権はクリエイターに帰属します。個展なびは展示目的での利用のみ行います。アップロード時の自動ウォーターマーク付与と長辺1,200pxへのリサイズにより、二次利用への対策を行っています。' },
-  { id: 'LIA-05', cat: 'liaison', aud: 'common', grp: 'リエゾン / リエゾン+', q: 'あとからリエゾン+（販売あり）に切り替えられますか', a: '可能です。リエゾン+の利用申請（P11-4）が承認されると、展覧会編集画面で切り替えができます。すでに公開中の作品は一度非公開にしてから、販売情報（価格・送料設定）をご入力ください。' },
+  { id: 'LIA-05', cat: 'liaison', aud: 'common', grp: 'リエゾン / リエゾン+', q: 'あとからリエゾン+（販売あり）に切り替えられますか', a: '可能です。リエゾン+の利用申請が承認されると、展覧会編集画面で切り替えができます。すでに公開中の作品は一度非公開にしてから、販売情報（価格・送料設定）をご入力ください。' },
 
   /* ─── cat:'liaisonplus-apply'（リエゾンプラス機能申込＝p11-4）───
      申込ページ（p11-4）下部にアコーディオンFAQとして描画（KTN.renderQA '#p114Faq' guide）。
@@ -1640,7 +1633,9 @@ document.addEventListener('DOMContentLoaded', function () {
 ══════════════════════════════════ */
 const PAGES = {
   // P1 トップ
-  'p1': { n: '個展なびトップ', bc: [['Top', '/'], ['個展なびトップ', null]] },
+  /* トップはパンくずを持たない（2026-09-22）＝階層の起点で示す上位が無い。
+     旧 [Top › 個展なびトップ] は自分を2回名乗っていた。bc なし＝renderBc が '' を返す。 */
+  'p1': { n: '個展なびトップ', bc: null },
   // P2 展覧会
   'p2': { n: '展覧会', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', null]] },
   'p2-1': { n: '展覧会-スケジュール', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', 'kotennavi-p2.html'], ['スケジュール', null]] },
@@ -1721,21 +1716,39 @@ const PAGES = {
   'p10-1': { n: '検索-作品', bc: [['Top', '/'], ['検索', null]] },
   'p10-2': { n: '検索-クリエイター', bc: [['Top', '/'], ['検索', null]] },
   'p10-3': { n: '検索-ギャラリー', bc: [['Top', '/'], ['検索', null]] },
-  'p10-4': { n: '特集-展覧会', bc: [['Top', '/'], ['特集', '/feature'], ['展覧会', null]] },
+  /* P10-4〜P10-7 は P10〜P10-3 それぞれの特集（追174-80）。パンくずも〈Top › {対象} › 特集〉＝
+     親は検索ハブ（展覧会=/p10・作品=/p10-1・クリエイター=/p10-2・ギャラリー=/p10-3）で、
+     P2/P3/P4/P6 のカテゴリリンクと同じ先を指す。旧「Top › 特集(/feature) › 展覧会」は廃止した
+     ＝/feature は実体のないURLで、4系をまとめるハブページも作らないため。 */
+  'p10-4': { n: '特集-展覧会', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['特集', null]] },
   /* 軸ページ。末尾は軸名（例「東京都の展覧会」）なので pages.js が軸切替のたびに書き換える */
-  'p10-4-1': { n: '特集-展覧会-軸', bc: [['Top', '/'], ['特集', '/feature'], ['展覧会', 'kotennavi-p10-4.html'], ['東京都の展覧会', null]] },
-  /* 年鑑。末尾は年（例「2026年の展覧会」）なので pages.js が年切替のたびに書き換える */
-  'p10-4-2': { n: '特集-展覧会-年鑑', bc: [['Top', '/'], ['特集', '/feature'], ['展覧会', 'kotennavi-p10-4.html'], ['2026年の展覧会', null]] },
-  /* 場所×アーカイブ。親の軸ページ（/exhibitions/{slug}）を経由する4階層。
-     末尾「アーカイブ」は固定で、3つ目の軸名だけ pages.js が書き換える */
-  'p10-4-3': { n: '特集-展覧会-軸アーカイブ', bc: [['Top', '/'], ['特集', '/feature'], ['展覧会', 'kotennavi-p10-4.html'], ['東京都の展覧会', 'kotennavi-p10-4-1.html'], ['アーカイブ', null]] },
+  'p10-4-1': { n: '特集-展覧会-軸', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['特集', 'kotennavi-p10-4.html'], ['東京都の展覧会', null]] },
+  /* 年間ランキング（展覧会）。末尾は年（例「2026年のランキング」）なので pages.js が年切替のたびに書き換える。
+     中間層はp10-8（種別横断のランキングハブ）＝追174-131でp10-4-2/5-1/6-1/7-1の4枚とも
+     ここに統一（旧・追174-84は「所属先の種別ハブを経由させる」方針だったが、p10-5/p10-6が
+     クロスリンク網から除外され（追174-130）参照先として不適切になったため、4枚とも
+     symmetryを優先してp10-8に統一する判断に変更） */
+  'p10-4-2': { n: '特集-展覧会-年間ランキング', bc: [['Top', '/'], ['ランキング', 'kotennavi-p10-8.html'], ['2026年のランキング', null]] },
+  /* 場所×アーカイブ。親の軸ページ（/exhibitions/{slug}）を経由する5階層。
+     末尾「アーカイブ」は固定で、4つ目の軸名だけ pages.js が書き換える */
+  'p10-4-3': { n: '特集-展覧会-軸アーカイブ', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['特集', 'kotennavi-p10-4.html'], ['東京都の展覧会', 'kotennavi-p10-4-1.html'], ['アーカイブ', null]] },
   /* ジャンル軸。末尾はジャンル名（例「写真の展覧会」）なので pages.js が軸切替のたびに書き換える */
-  'p10-4-4': { n: '特集-展覧会-ジャンル軸', bc: [['Top', '/'], ['特集', '/feature'], ['展覧会', 'kotennavi-p10-4.html'], ['写真の展覧会', null]] },
+  'p10-4-4': { n: '特集-展覧会-ジャンル軸', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['特集', 'kotennavi-p10-4.html'], ['写真の展覧会', null]] },
   /* 行きやすさ軸。末尾は軸名（例「お子さまと行ける展覧会」）なので pages.js が軸切替のたびに書き換える */
-  'p10-4-5': { n: '特集-展覧会-アクセシビリティ軸', bc: [['Top', '/'], ['特集', '/feature'], ['展覧会', 'kotennavi-p10-4.html'], ['お子さまと行ける展覧会', null]] },
-  'p10-5': { n: '特集-作品', bc: [['Top', '/'], ['特集', '/feature'], ['作品', null]] },
-  'p10-6': { n: '特集-クリエイター', bc: [['Top', '/'], ['特集', '/feature'], ['クリエイター', null]] },
-  'p10-7': { n: '特集-ギャラリー', bc: [['Top', '/'], ['特集', '/feature'], ['ギャラリー', null]] },
+  'p10-4-5': { n: '特集-展覧会-アクセシビリティ軸', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['特集', 'kotennavi-p10-4.html'], ['お子さまと行ける展覧会', null]] },
+  'p10-5': { n: '特集-作品', bc: [['Top', '/'], ['作品', 'kotennavi-p10-1.html'], ['特集', null]] },
+  'p10-6': { n: '特集-クリエイター', bc: [['Top', '/'], ['クリエイター', 'kotennavi-p10-2.html'], ['特集', null]] },
+  'p10-7': { n: '特集-ギャラリー', bc: [['Top', '/'], ['ギャラリー', 'kotennavi-p10-3.html'], ['特集', null]] },
+  /* 年間ランキング（追174-81 で索引から切り出した3枚）。中間層はp10-8に統一（追174-131・
+     理由はp10-4-2のコメント参照）。末尾は年（例「2026年のランキング」）なので pages.js が
+     年切替のたびに書き換える */
+  'p10-5-1': { n: '特集-作品-年間ランキング', bc: [['Top', '/'], ['ランキング', 'kotennavi-p10-8.html'], ['2026年のランキング', null]] },
+  'p10-6-1': { n: '特集-クリエイター-年間ランキング', bc: [['Top', '/'], ['ランキング', 'kotennavi-p10-8.html'], ['2026年のランキング', null]] },
+  'p10-7-1': { n: '特集-ギャラリー-年間ランキング', bc: [['Top', '/'], ['ランキング', 'kotennavi-p10-8.html'], ['2026年のランキング', null]] },
+  /* ランキングのハブ（種別横断）。パンくずは Top › ランキングの2階層。
+     旧・追174-84は本体4枚（p10-4-2/5-1/6-1/7-1）のパンくずにこのハブを経由させない方針
+     だったが、追174-131でその方針を撤回し4枚とも中間層をこのハブに統一した。 */
+  'p10-8': { n: 'ランキング', bc: [['Top', '/'], ['ランキング', null]] },
   // P11 認証・申込
   'p11': { n: 'ログイン', bc: [['Top', '/'], ['ログイン', null]] },
   'p11-1': { n: 'ユーザー新規登録', bc: [['Top', '/'], ['ログイン', null]] },
@@ -1802,7 +1815,7 @@ const PAGES = {
   'p90-14': { n: '管理者-販売代金管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['販売代金管理', null]] },
   'p90-15': { n: '管理者-リエゾンプラス申込者一覧', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['リエゾンプラス申込者一覧', null]] },
   'p90-16': { n: '管理者-作品購入ユーザー一覧', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['作品購入ユーザー一覧', null]] },
-  'p90-17': { n: '管理者-軸ページ管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['軸ページ管理', null]] },
+  'p90-17': { n: '管理者-検索・特集管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['検索・特集管理', null]] },
 };
 
 /* ページID → 表示名（パンくず登録名）。外部（p60-11 の問い合わせ元表示等）から参照するための公開アクセサ。 */
@@ -2561,6 +2574,34 @@ function getActions(page, role) {
     return '';
   }
 
+  /* ── P10 展覧会検索（ディスカバリー面）── 2026-09-19
+     admin が触れるのは**運営が決める枠の中身**だけ＝〈ピックアップ〉（棚の差し込み枠2つ・
+     PICKS レール・結果末尾の「今日のピックアップ」が引く条件）と〈季節の言葉〉（PICKS 枠③）。
+     どちらも P90-17「検索・特集管理」の**検索の設定タブ**にあり、そのアンカーへ直接降ろす。
+     **棚そのものは編集対象ではない**（近くの展覧会・今日から開催・もうすぐ終了…は見出しも条件も
+     固定で、並び順も意味の階層で決まっている＝追174-79 ②③）。だからここに「棚を編集」は出さない。
+     軸ページ側の設定（導入文・注目のエリア）は P10-4 系のメニューが持つので重複させない。 */
+  if (page === 'p10') {
+    if (role === 'admin') return dd('管理者',
+      ddi('grid', 'ピックアップを編集', false, "location.href='./kotennavi-p90-17.html#p9017-picks'") +
+      ddi('edit', '季節の言葉を編集', false, "location.href='./kotennavi-p90-17.html#p9017-season'"));
+    return '';
+  }
+
+  /* P10-1/2/3（作品・クリエイター・ギャラリーの検索）＋ P10-5/6/7（分類索引・追174-169で追加）。
+     設定の実体（簡易ピックアップマスタ）は P90-17 の種別タブに実装済み（追174-166）。
+     索引ページ（P10-5/6/7）は導入文が固定文で編集対象を持たない（P90-17「軸ページの仕組み」も
+     明記）ため、search（検索）側と同じ「検索・特集管理をひらく」リンク1本に揃える＝
+     索引を見ている admin も、同じドメインのピックアップマスタへ同じ入口から辿れるようにする
+     （2026-09-23・ユーザー指示）。 */
+  var P10_KIND = { 'p10-1': 'work', 'p10-2': 'creator', 'p10-3': 'gallery', 'p10-5': 'work', 'p10-6': 'creator', 'p10-7': 'gallery' };
+  if (P10_KIND[page]) {
+    if (role === 'admin') return dd('管理者',
+      ddi('grid', '検索・特集管理をひらく', false,
+        "location.href='./kotennavi-p90-17.html?kind=" + P10_KIND[page] + "'"));
+    return '';
+  }
+
   /* ── P10-4-1〜5 軸ページ（場所・年鑑・アーカイブ・ジャンル・行きやすさで共通） ──
      軸ページは自動生成なので admin の主機能は削除ではなく導入文のテキスト編集。
      公開/非公開の反復はURLの評価を落とすため、非公開ではなくハブ露出の調整で扱う（追174-46③）。
@@ -2572,25 +2613,25 @@ function getActions(page, role) {
   if (AXKIND[page]) {
     if (role === 'admin') return dd('管理者',
       ddi('edit', '導入文を編集', false, "location.href='./kotennavi-p90-17.html?ax=" + AXKIND[page] + "'") +
-      ddi('grid', 'ハブへの掲載設定', false, "location.href='./kotennavi-p90-17.html#p9017-feat'"));
+      ddi('grid', 'ハブへの掲載設定', false, "location.href='./kotennavi-p90-17.html#p9017-hl'"));
     return '';
   }
 
   /* ── P10-4 軸インデックス ──
      注目枠は自動選定（固定枠＋日替わりローテーション）なので、admin の操作は個別の編集ではなく
-     「どの軸を枠に載せるか」＝露出の調整。軸ページ自体は非公開にしない（追174-46③・追174-49）。 */
+     「どの軸を枠に載せるか」＝露出の調整。軸ページ自体は非公開にしない（追174-46③・追174-49）。
+     P10-4 自身の導入文は HTML 直書きの固定文なので、ここに「導入文を編集」は出さない（追174-90）。
+     編集できる導入文は軸ページ（P10-4-1〜5）の分だけで、そちらは P90-17 の「軸ページ一覧」が持つ。 */
   if (page === 'p10-4') {
     if (role === 'admin') return dd('管理者',
-      ddi('edit', '導入文を編集', false, "location.href='./kotennavi-p90-17.html#p9017-hub'") +
-      ddi('grid', '注目のエリアの選定設定', false, "location.href='./kotennavi-p90-17.html#p9017-feat'"));
+      ddi('grid', '注目のエリアの選定設定', false, "location.href='./kotennavi-p90-17.html#p9017-hl'"));
     return '';
   }
 
-  /* ── P10 特集 ── */
-  if (['p10-5', 'p10-6', 'p10-7'].includes(page)) {
-    if (role === 'admin') return dd('管理者', ddi('edit', '編集') + ddi('plus', '新規特集'));
-    return '';
-  }
+  /* ── P10-5-1/6-1/7-1（年間ランキング） ──
+     管理者メニューは未着手（別ラウンド判断）。ランキング3枚は年鑑（P10-4-2）と同じく
+     年が終われば凍結する層なので、admin操作を設けるならP90-17の受け口も年鑑と同じ形でよいか
+     合わせて判断する。P10-5/6/7（分類索引）は上のP10_KINDに合流済み（追174-169）。 */
 
   /* ── P60 ガイド・法的ページ ── */
   if (['p60', 'p60-4', 'p60-8', 'p60-9', 'p60-10'].includes(page)) {
@@ -2709,9 +2750,9 @@ var P10_TOKYO_AREAS = [
   ['東京都心部', '銀座・丸の内', '千代田区、中央区、港区'],
   ['東京東部', '上野・谷根千', '江東区、台東区、墨田区、荒川区、足立区、葛飾区、江戸川区'],
   ['東京西部', '新宿・渋谷', '新宿区、渋谷区、中野区、杉並区、練馬区'],
-  ['東京南部', '自由が丘・二子玉川', '品川区、目黒区、世田谷区、大田区'],
-  ['東京北部', '池袋・巣鴨', '文京区、豊島区、北区、板橋区'],
-  ['東京23区以外', '立川・八王子', '市部・島しょ']
+  ['東京南部', '天王洲・自由が丘', '品川区、目黒区、世田谷区、大田区'],
+  ['東京北部', '池袋・本郷', '文京区、豊島区、北区、板橋区'],
+  ['東京23区以外', '吉祥寺・国立', '市部・島しょ']
 ];
 /* 都道府県スラッグ（軸ページのURL）。小文字ヘボン式・長音なし・都道府県サフィックスなし。
    47件で凍結する＝一度公開したURLは変えない（追174-46②）。
@@ -2798,11 +2839,13 @@ KTN.init = function (opts) {
         + '<input class="p10-adv__date" type="date" aria-label="終了日" disabled>'
         + '<span class="p10-adv__note">会期がこの期間に1日でも重なる展覧会を探します。1日だけ見たいときは、開始日と終了日に同じ日付を入れてください。</span>'
         + '<span class="p10-adv__note">開始日だけの指定もできます（＝その日以降に会期がかかる展覧会）。終了日は開始日を入れると選べます。</span>'
+        /* **過去日付の効果は展覧会検索（P10）だけの話**（2026-09-21・追174-98 ③）。
+           既定では開催中・これから開催だけを出し、日付を明示したときに限って終了済みも対象に入る。
+           作品・クリエイター・ギャラリーの検索は母集団の性質が違うのでこの注記を出さない。 */
+        + (window.ktnState && window.ktnState.page === 'p10'
+          ? '<span class="p10-adv__note"><strong>過去の日付を指定すると、会期を終えた展覧会も検索結果に入ります。</strong></span>'
+          : '')
         + '</div></div>';
-    }
-    if (kind === 'tags') {
-      return '<div class="p10-adv__panel">'
-        + _p10Chips(P10_MORE_TAGS, 'tag:', function (t) { return '# ' + t; }) + '</div>';
     }
     if (kind === 'tokyo') {
       return '<div class="p10-adv__panel"><div class="p10-adv__panel-chips">'
@@ -2821,7 +2864,10 @@ KTN.init = function (opts) {
   function _p10AdvInit() {
     var drawer = document.querySelector('.p10-adv');
     if (!drawer) return;
-    drawer.querySelectorAll('[data-toggle]').forEach(function (btn) {
+    /* [data-toggle] はドロワーの外（結果直上の絞込バー・追174-159）にも置かれるようになったため、
+       document全体から拾う（data-toggleはこのパネル展開の仕組み専用の属性で他用途に使われていない
+       ため、スコープを広げても既存の動作は変わらない）。 */
+    document.querySelectorAll('[data-toggle]').forEach(function (btn) {
       btn.insertAdjacentHTML('afterend', _p10PanelHtml(btn.dataset.toggle));
       var panel = btn.nextElementSibling;
       btn.addEventListener('click', function () {
@@ -2849,7 +2895,9 @@ KTN.init = function (opts) {
     if (window.ResizeObserver) {
       var _hdrEl = document.getElementById('ktnHeader');
       if (_hdrEl) new ResizeObserver(_syncHH).observe(_hdrEl);
-    } else {
+    } else if (document.fonts && document.fonts.ready) {
+      /* ResizeObserver が無い環境向けの代替。document.fonts も無い環境があるので同じ行で守る
+         （下の _scrollActiveSubnav 側は既にガード済みだった・2026-09-21） */
       document.fonts.ready.then(function(){ requestAnimationFrame(_syncHH); });
     }
     renderSidebar();
@@ -3426,35 +3474,25 @@ function initP2CreatorList(creators) {
   var container = document.getElementById('p2CreatorList');
   if (!container) return;
   if (creators.length <= 3) return; /* 3件以下：プロフィール形式を維持 */
-  /* 4件以上：cc--h グリッドに切替 */
+  /* 4件以上：cc--h グリッドに切替。カードは共通 buildPersonCard を使う（2026-09-22 是正）＝
+     以前はここだけ手書きのマークアップで .cc__genre に c.genre（連結済み文字列）をそのまま
+     出しており、P10-2の「ジャンル（6区分）＋タグ」表示と食い違っていた。ジャンル名と同じタグを
+     落とす dedupe も buildCreatorCard 側と同じロジックをここでも踏む（単一ソースに寄せるのが
+     理想だが、データ形が P2 側の c.av（クラスの直指定）で異なるため、組み立てだけ複製する）。 */
   container.innerHTML =
     '<div class="p2-creator-grid">' +
-    creators.map(function(c) {
-      return '<a class="cc cc--h" href="' + (c.url || '#') + '">' +
-        '<div class="cc__top">' +
-          '<div class="cc__avatar ' + c.av + '"><div class="cc__avatar-ph">' + c.ini + '</div></div>' +
-        '</div>' +
-        '<div class="cc__main">' +
-          '<div class="cc__info">' +
-            '<div class="cc__badge-row"><span class="cb cb-person cb-creator">creator</span><span class="sb">開催中/開催予定</span></div>' +
-            '<div class="cc__name">' + c.name + '</div>' +
-            '<div class="cc__genre">' + c.genre + '</div>' +
-          '</div>' +
-          '<div class="cc__hfoot">' +
-            '<span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>' + c.exh + '</span>' +
-            '<span class="sep"></span>' +
-            '<span class="pc-count pc-count--watch"><svg width="11" height="11"><use href="#icon-watch" color="#7a8a99"/></svg>' + c.watch + '</span>' +
-            '<button class="ktn-btn" onclick="this.classList.toggle(\'on\');event.preventDefault()" data-off="watch" data-on="watching" data-action="watch">' +
-              '<svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" fill="#7a8a99" opacity=".45"/><circle class="wi-inner" cx="8" cy="8" r="2.6"/></svg>' +
-              'watch<span class="tip">\u30a6\u30a9\u30c3\u30c1\u3059\u308b</span>' +
-            '</button>' +
-          '</div>' +
-        '</div>' +
-      '</a>';
+    creators.map(function (c) {
+      var gs = c.genres || [];
+      var ts = (c.genreTags || []).filter(function (t) { return gs.indexOf(t) === -1; });
+      var sub = gs.join('・');
+      if (ts.length) sub = sub ? sub + ' · ' + ts.join('・') : ts.join('・');
+      return buildPersonCard({
+        type: 'creator', avClass: c.av, ini: c.ini, name: c.name, genre: sub,
+        exh: c.exh, watch: c.watch, status: 'live', panel: false, href: c.url || '#'
+      });
     }).join('') +
     '</div>';
 }
-
 /* ── 出展者表示切替（デモバー用） ── */
 function setCreatorView(n, btn) {
   document.querySelectorAll('.dbtn-creator').forEach(function(b) { b.classList.remove('on'); });

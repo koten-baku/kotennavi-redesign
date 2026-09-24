@@ -3,16 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- 年鑑はサイトで唯一「タイトルに年を入れてよい」ページ（追174-48）。
-       追174-46④で title/h1 に時制語を禁じたのは「タイトルが鮮度を主張しているのに中身が入れ替わる」状態を
-       避けるためで、年鑑はその年が過ぎれば内容が凍結する＝年は鮮度の主張ではなく識別子になる。
-       year は1年1URL（/exhibitions/year/{y}）。このプロトタイプはデモバー・?y= で年を差し替える。 -->
-  <title>2026年の展覧会ランキング｜個展なび</title>
-  <meta name="description" id="p1042Desc" content="2026年の展覧会ランキングです。その年に会期を終えた展覧会を、興味あり！とチェックインが多かった順に並べています。出品したクリエイター・ギャラリーのいまの活動もたどれます。">
-  <link rel="canonical" id="p1042Canonical" href="https://koten-navi.com/exhibitions/year/2026">
+  <!-- 作品の年間ランキング（P10-5 の分類索引から切り出した・追174-81）。
+       索引（P10-5）は noindex だが、ここは index する。理由は一本＝索引のチップは全て
+       ログイン必須の検索（?f=）へ飛ぶのでクローラが辿れないのに対し、ランキングの行は
+       公開ページ（P6 作品・P3 クリエイター）へ飛ぶので内部リンクハブとして働くため。
+       年ごとに内容が凍結するので年鑑（P10-4-2）と同じく1年1URL（/artworks/ranking/{y}）＝
+       タイトルに年を入れてよい例外（追174-48）。?m= は同じ顔ぶれの並べ替えなので canonical は落とす。 -->
+  <title>2026年の作品ランキング｜個展なび</title>
+  <meta name="description" id="p1051Desc" content="2026年の作品ランキングです。興味あり！と閲覧数がその年にどれだけ増えたかで並べています。累計ではなくその年の増分なので、最近発表された作品も上位に入ります。">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" id="p1051Canonical" href="https://koten-navi.com/artworks/ranking/2026">
   <meta property="og:type" content="website">
-  <meta property="og:title" id="p1042OgTitle" content="2026年の展覧会ランキング｜個展なび">
-  <meta property="og:url" id="p1042OgUrl" content="https://koten-navi.com/exhibitions/year/2026">
+  <meta property="og:title" id="p1051OgTitle" content="2026年の作品ランキング｜個展なび">
+  <meta property="og:url" id="p1051OgUrl" content="https://koten-navi.com/artworks/ranking/2026">
   <meta property="og:site_name" content="個展なび">
   <meta name="twitter:card" content="summary">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,13 +26,11 @@
 
 <div class="ktn-toast" id="ktnToast"></div>
 
-<!-- デモバー（年鑑＝年ごとに別URL。本番は /exhibitions/year/{y} が年を決めるのでこの切替は消える）
-     2026年＝当年（集計中の注記が出る）／2025年＝確定年 -->
+<!-- デモバー（年はランキングの集計年。本番は /artworks/ranking/{y} がURLで年を決める） -->
 <div class="dbar" id="dbar">
   <span class="dbar-sep">ロール：</span>
   <button class="dbtn on" onclick="setR('guest',this)">ゲスト</button>
   <button class="dbtn" onclick="setR('login',this)">ログイン</button>
-  <button class="dbtn" onclick="setR('admin',this)">管理者</button>
   <span class="dbar-sep">年：</span>
   <button class="dbtn on" data-y="2026" onclick="setArcYear(2026,this)">2026年（集計中）</button>
   <button class="dbtn" data-y="2025" onclick="setArcYear(2025,this)">2025年</button>
@@ -112,56 +113,66 @@
 
   <main class="ktn-main" id="ktnMain">
 
-    <!-- A. 軸ヘッド（P10-4-1 と同じ .ktn-axis-head を共有＝軸ページ共通の外枠）。
-         年別ナビは select ではなくリンク（.p10-preset の a）。年ごとに別URLにして初めて年鑑が積み上がる。
-         リード文は運営が年ごとに書き足す枠＝自動生成の一覧が「並べただけ」に見えないための地の文。 -->
+    <!-- A. 軸ヘッド（年鑑 P10-4-2 と同じ外枠）。年別ナビは select ではなくリンク（.p10-preset の a）＝
+         年ごとに別URLにして初めて記録として積み上がる。 -->
     <section class="ktn-axis-head">
       <div class="ktn-axis-head__inner">
         <div class="ktn-axis-head__eyebrow">
-          <span class="ktn-axis-head__eyebrow-en">Annual Ranking</span>
+          <span class="ktn-axis-head__eyebrow-en">Artwork Ranking</span>
           <span class="ktn-axis-head__eyebrow-line"></span>
         </div>
         <div class="ktn-axis-head__title-row">
-          <h1 class="ktn-axis-head__title" id="p1042Title">2026年の展覧会ランキング</h1>
-          <span class="ktn-axis-head__en" id="p1042En">Exhibition Ranking 2026</span>
+          <h1 class="ktn-axis-head__title" id="p1051Title">2026年の作品ランキング</h1>
+          <span class="ktn-axis-head__en" id="p1051En">Artwork Ranking 2026</span>
         </div>
-        <div class="ktn-axis-head__lead" id="p1042Lead"></div>
-        <div class="ktn-axis-head__links" id="p1042YearNav"></div>
+        <div class="ktn-axis-head__lead">
+          <p>個展なびに掲載されている作品を、<span id="p1051LeadYear">2026</span>年に<strong>興味あり！</strong>と<strong>閲覧数</strong>がどれだけ増えたかで並べています。累計の多さではなく<strong>その年に増えた分</strong>で順位が付くので、最近発表された作品も上位に入ります。</p>
+          <p>作品名を選ぶとその作品のページへ、クリエイター名を選ぶとそのクリエイターのページへ移ります。ジャンルやタグから探すときは「作品をジャンル・LIAISONから探す」から降りてください。</p>
+        </div>
+        <div class="ktn-axis-head__links" id="p1051YearNav"></div>
       </div>
     </section>
 
     <div class="ktn-content p10-content">
 
       <!-- B. 番付リスト（1カラム）。タブは .p10-rank-tabs / .p10-rank-tab を再利用（軸の切替という役割が同じ）。
-           行の主眼は「作り手のいま」への出口＝会期の終わった展覧会を行き止まりにしない。 -->
+           作品は会期を持たず掲載が続くので日割り正規化はせず、その年に増えた実数で並べる。 -->
       <section class="p104-arc p104-arc--page">
         <div class="ktn-section__head">
-          <h2 class="ktn-section__title">興味あり！・チェックインが多かった展覧会<span class="ktn-sec-en">Most Responded</span></h2>
+          <h2 class="ktn-section__title">興味あり！・閲覧数が増えた作品<span class="ktn-sec-en">Most Responded</span></h2>
         </div>
+        <p class="p10-shelf__desc">その年に増えた興味あり！・閲覧数で並べています。掲載の早い作品ほど有利にならないように、累計ではなく年ごとの増分で見ています。</p>
         <div class="p104-arc__ctrl">
           <div class="p10-rank-tabs" role="tablist">
-            <button class="p10-rank-tab is-active" data-arc="want" role="tab">興味あり！</button>
-            <button class="p10-rank-tab" data-arc="visited" role="tab">チェックイン</button>
+            <button class="p10-rank-tab is-active" data-arc="interest" role="tab">興味あり！</button>
+            <button class="p10-rank-tab" data-arc="views" role="tab">閲覧数</button>
           </div>
         </div>
-        <p class="p104-arc__note" id="p1042Note" hidden></p>
-        <ol class="p104-arc__list" id="p1042List"></ol>
+        <p class="p104-arc__note" id="p1051Note" hidden></p>
+        <ol class="p104-arc__list" id="p1051List"></ol>
       </section>
 
-      <!-- C. 下段：他の年と、いま開催中の展覧会への出口。
-           前年カードは「その年のページが存在するときだけ」出す＝行き止まりのリンクを作らない（JSが hidden を制御）。 -->
-      <div class="ktn-axis-cards">
-        <a class="ktn-axis-card" id="p1042PrevCard" href="?y=2025" hidden>
-          <span class="ktn-axis-card__label">Previous Year</span>
-          <span class="ktn-axis-card__ttl" id="p1042PrevTtl">2025年の展覧会ランキング</span>
-          <span class="ktn-axis-card__desc">前の年に会期を終えた展覧会の番付。年ごとに独立したページとして残ります。</span>
-        </a>
-        <a class="ktn-axis-card" href="./kotennavi-p10-4.html">
-          <span class="ktn-axis-card__label">Now &amp; Upcoming</span>
-          <span class="ktn-axis-card__ttl">いま見られる展覧会</span>
-          <span class="ktn-axis-card__desc">開催中・開催予定の展覧会はこちらから。エリア別・ジャンル別の特集ページへもここからたどれます。</span>
-        </a>
-      </div>
+      <!-- C. 下段：他の種別のランキングへの出口。自分の分類索引(p10-5)へ戻るカードは
+           追174-130で撤去（P10-1自身の絞り込みチップと内容が重複するnoindexページで、
+           送客するとかえって利用者を混乱させるという判断）。
+           .ktn-axis-related＝直前のランキング本体とのくっつき防止の区切り線（追174-132）。 -->
+      <section class="p10-shelf ktn-axis-related">
+        <div class="ktn-section__head">
+          <h2 class="ktn-section__title">関連ページ<span class="ktn-sec-en">Related Pages</span></h2>
+        </div>
+        <div class="ktn-axis-cards">
+          <a class="ktn-axis-card" href="./kotennavi-p10-6-1.html">
+            <span class="ktn-axis-card__label">Creator Ranking</span>
+            <span class="ktn-axis-card__ttl">クリエイターの年間ランキング</span>
+            <span class="ktn-axis-card__desc">その年にウォッチと展覧会数が増えたクリエイターの番付です。</span>
+          </a>
+          <a class="ktn-axis-card" href="./kotennavi-p10-7-1.html">
+            <span class="ktn-axis-card__label">Gallery Ranking</span>
+            <span class="ktn-axis-card__ttl">ギャラリーの年間ランキング</span>
+            <span class="ktn-axis-card__desc">その年にウォッチと展覧会数が増えたギャラリーの番付です。</span>
+          </a>
+        </div>
+      </section>
 
     </div>
 
@@ -187,7 +198,7 @@
 <script src="./kotennavi-pages.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-    KTN.init({ page: 'p10-4-2', role: 'guest' });
+    KTN.init({ page: 'p10-5-1', role: 'guest' });
   });
 </script>
 </body>

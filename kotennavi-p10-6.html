@@ -3,8 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>クリエイター特集 | 個展なび</title>
-  <meta name="description" content="個展なびが自動生成するクリエイター特集。ジャンル・エリア・開催状況などの人気の組み合わせから、注目のクリエイターをまとめてご紹介します。">
+  <!-- クリエイター特集のページ（P10-2 の索引）。ページ自体はゲストにも開くが noindex。
+       理由は、ここに並ぶチップが全てログイン必須の検索（P10-2 の ?f=key:value）へ飛ぶので
+       クローラが先へ辿れず、索引が index されても内部リンクハブとして働かないため（追174-81）。
+       索引のリンク先＝P10-2（クリエイター検索）の絞り込み状態が、ログインの境目になる。
+       年間ランキングは公開ページ（P3）へ飛ぶので P10-6-1 へ切り出し、そちらを index する。
+       ページ名は P10-4 と同じ「{種別}を{軸}・{軸}から探す」形式（追174-85）。
+       「特集」は P10-4〜7 という層を指すナビ語彙で、h1/title には出さない（追174-82）。
+       エリア軸は持たない（追174-86）＝クリエイターは固定の活動場所を持たない。 -->
+  <title>クリエイターをジャンル・開催状況から探す | 個展なび</title>
+  <meta name="description" content="個展なびに掲載されているクリエイターを、ジャンル・タグ・開催状況・LIAISON対応から探せる特集ページです。">
   <meta name="robots" content="noindex,nofollow">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
@@ -12,31 +20,14 @@
 </head>
 <body data-w="index">
 
-<!-- SVGシンボル -->
-<svg width="0" height="0" style="position:absolute;overflow:hidden">
-  <defs>
-    <symbol id="icon-exh" viewBox="40 47 54 54">
-      <path d="M80.09 102.05c-1.22-.8,-2.57-2.87,-3.34-4.33c-2.48-5.91,-4.85-14.23,-13.31-20.15c-1.9-1.23,-2.03-2,-1.94-2.48c.11-.83,.82-1.52,2.3-1.3c11.09,1.95,15.22,3.96,21.07,7.61c7.85,5.36,9.57,10.76,9.65,14.09c.15,2.3,-.18,5.11,-2.61,6.56Z" fill="currentColor"/>
-    </symbol>
-    <symbol id="icon-watch" viewBox="0 0 16 16">
-      <circle cx="8" cy="8" r="7" fill="currentColor"/>
-      <circle cx="8" cy="8" r="2.6" fill="white"/>
-    </symbol>
-  </defs>
-</svg>
-
 <div class="ktn-toast" id="ktnToast"></div>
 
-<!-- デモバー（P10-2のエイリアス・ロール＝ゲストで認証ウォール表示・ログインで通常表示） -->
+<!-- デモバー（索引はゲストにも開く。年の切替はランキング側 P10-6-1 へ移した） -->
 <div class="dbar" id="dbar">
   <span class="dbar-sep">ロール：</span>
   <button class="dbtn" onclick="setR('guest',this)">ゲスト</button>
   <button class="dbtn on" onclick="setR('login',this)">ログイン</button>
-  <span class="dbar-sep">表示状態：</span>
-  <button class="dbtn" data-p102-view onclick="setP102View('disc',this)">ディスカバリー</button>
-  <button class="dbtn on" data-p102-view onclick="setP102View('preset',this)">特集着地</button>
-  <button class="dbtn" data-p102-view onclick="setP102View('result',this)">検索結果</button>
-  <button class="dbtn" data-p102-view onclick="setP102View('zero',this)">ゼロヒット</button>
+  <button class="dbtn" onclick="setR('admin',this)">管理者</button>
 </div>
 
 <div class="shell">
@@ -60,7 +51,7 @@
     <span class="ktn-sidebar__label">検索</span>
   </a>
 
-  <!-- お知らせ → P61（未制作） -->
+  <!-- お知らせ → P61 -->
   <a href="kotennavi-p61.html" class="ktn-sidebar__item" id="ktnSidebarNotice" data-page="p61">
     <div class="ktn-sidebar__icon">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
@@ -72,7 +63,7 @@
     <span class="ktn-sidebar__label">お知らせ</span>
   </a>
 
-  <!-- ガイド → P60（未制作） -->
+  <!-- ガイド → P60 -->
   <a href="kotennavi-p60.html" class="ktn-sidebar__item" data-page="p60">
     <div class="ktn-sidebar__icon">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
@@ -116,221 +107,105 @@
 
   <main class="ktn-main" id="ktnMain">
 
-    <!-- A. 検索ヘッド -->
-    <section class="p10-search">
-      <div class="p10-search__inner">
-        <div class="p10-search__title-row">
-          <h1 class="p10-search__title">クリエイターを探す</h1>
-          <span class="p10-search__en">Creator Search</span>
+    <!-- A. 軸ヘッド（認証ウォールの外＝ゲストにも何のページかは見せる） -->
+    <section class="ktn-axis-head">
+      <div class="ktn-axis-head__inner">
+        <div class="ktn-axis-head__eyebrow">
+          <span class="ktn-axis-head__eyebrow-en">Creator Features</span>
+          <span class="ktn-axis-head__eyebrow-line"></span>
         </div>
-        <!-- 検索対象の切替。タイトル行の右端に小さく置くと「展覧会しか検索できない」と読まれるため、
-             タイトル直下の独立したタブ列にしている（他コンテンツも検索できることを一目で示す） -->
-        <nav class="p10-search__types" aria-label="検索対象の切替">
-          <a class="p10-search__type" data-guest="ok" href="kotennavi-p10.html">展覧会</a>
-          <a class="p10-search__type" href="kotennavi-p10-1.html">作品</a>
-          <a class="p10-search__type is-active" href="#" onclick="event.preventDefault()">クリエイター</a>
-          <a class="p10-search__type" href="kotennavi-p10-3.html">ギャラリー</a>
-        </nav>
-
-        <div class="p10-search__box">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
-          <input class="p10-search__input" id="p102Keyword" type="search" placeholder="クリエイター名・ジャンルで検索" aria-label="キーワード検索">
-          <button class="p10-search__submit" id="p102SearchBtn" type="button">検索</button>
+        <div class="ktn-axis-head__title-row">
+          <h1 class="ktn-axis-head__title">クリエイターをジャンル・開催状況から探す</h1>
+          <span class="ktn-axis-head__en">Browse Creators</span>
         </div>
-
-        <div class="p10-quick-row">
-          <button class="p10-chip" data-f="st:live" type="button">開催中の展覧会あり</button>
-          <button class="p10-chip" data-f="new:1" type="button">新着</button>
-          <span class="p10-quick-row__sep"></span>
-          <button class="p10-chip" data-f="liaison:li" type="button"><span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>オンライン展示あり</button>
-          <button class="p10-chip" data-f="liaison:lp" type="button"><span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span>オンラインで購入できる</button>
-          <span class="p10-quick-row__sep"></span>
-          <button class="p10-adv-toggle" id="p102AdvToggle" type="button" aria-expanded="false">
-            詳しい条件
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="6 9 12 15 18 9"/></svg>
-          </button>
+        <div class="ktn-axis-head__lead">
+          <p>どんなものをつくる人か、いま会いに行けるか。個展なびに載っているクリエイターを、ジャンルとタグ、開催中かどうか、LIAISONを使っているかからたどれます。名前の横の数字は、いま載っている人数です。</p>
+          <p>並び順で選ぶなら<strong>クリエイターの年間ランキング</strong>（その年にウォッチと展覧会数が多かったクリエイター）もあります。</p>
         </div>
-
-        <!-- 詳細条件ドロワー -->
-        <div class="p10-adv" id="p102Adv">
-          <div class="p10-adv__group">
-            <div class="p10-adv__label">開催状況</div>
-            <div class="p10-adv__opts">
-              <button class="p10-chip" data-f="st:live" type="button">開催中</button>
-              <button class="p10-chip" data-f="st:upcoming" type="button">開催予定</button>
-              <button class="p10-chip" data-f="st:none" type="button">現在開催なし</button>
-            </div>
-          </div>
-          <div class="p10-adv__group">
-            <div class="p10-adv__label">ジャンル</div>
-            <div class="p10-adv__opts">
-              <button class="p10-chip" data-f="tag:絵画" type="button"># 絵画</button>
-              <button class="p10-chip" data-f="tag:現代美術" type="button"># 現代美術</button>
-              <button class="p10-chip" data-f="tag:写真" type="button"># 写真</button>
-              <button class="p10-chip" data-f="tag:書道" type="button"># 書道</button>
-              <button class="p10-chip" data-f="tag:版画" type="button"># 版画</button>
-              <button class="p10-chip" data-f="tag:陶芸" type="button"># 陶芸</button>
-              <button class="p10-chip" data-f="tag:クラフト" type="button"># クラフト</button>
-            </div>
-          </div>
-          <div class="p10-adv__group">
-            <div class="p10-adv__label">エリア</div>
-            <div class="p10-adv__opts">
-              <button class="p10-chip" data-f="area:東京" type="button">東京</button>
-              <button class="p10-chip" data-f="area:神奈川" type="button">神奈川</button>
-              <button class="p10-chip" data-f="area:愛知" type="button">愛知</button>
-              <button class="p10-chip" data-f="area:京都" type="button">京都</button>
-              <button class="p10-chip" data-f="area:大阪" type="button">大阪</button>
-              <button class="p10-chip" data-f="area:福岡" type="button">福岡</button>
-              <button class="p10-chip" type="button" data-toggle="prefs" aria-expanded="false">すべての都道府県<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="6 9 12 15 18 9"/></svg></button>
-            </div>
-          </div>
-          <div class="p10-adv__group">
-            <div class="p10-adv__label">こだわり条件</div>
-            <div class="p10-adv__opts">
-              <button class="p10-chip" data-f="new:1" type="button">新着</button>
-              <button class="p10-chip" data-f="liaison:li" type="button"><span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>オンライン展示あり</button>
-              <button class="p10-chip" data-f="liaison:lp" type="button"><span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span>オンラインで購入できる</button>
-            </div>
-          </div>
-          <div class="p10-adv__foot">
-            <button class="ktn-op-btn" id="p102AdvClear" type="button">条件をクリア</button>
-            <button class="ktn-op-btn ktn-op-btn--primary" id="p102AdvSearch" type="button">この条件で検索</button>
-          </div>
+        <div class="ktn-axis-head__links">
+          <a class="p10-preset" data-guest="login" href="./kotennavi-p10-2.html">条件を指定して探す</a>
+          <a class="p10-preset" href="./kotennavi-p10-6-1.html">クリエイターの年間ランキング</a>
+          <a class="p10-preset" href="./kotennavi-p10-5.html">作品をジャンル・LIAISONから探す</a>
+          <a class="p10-preset" href="./kotennavi-p10-7.html">ギャラリーをエリア・開催状況から探す</a>
         </div>
-        <!-- 適用中の条件。ドロワーを閉じても指定内容が見え、×で1つずつ外せる -->
-        <div class="p10-fchips p10-fchips--band" id="p102Fchips" hidden></div>
       </div>
     </section>
 
-    <!-- A'. 認証ウォール（ゲスト時のみ表示・common.js の syncAuthWall が制御）。
-         ゲストが使えるのは展覧会検索のみのため、器（タイトル＋検索対象タブ）は残して
-         検索ボックス以降をログイン案内に差し替える（エラーページへ飛ばさない）。 -->
-    <div class="ktn-content ktn-authwall" id="ktnAuthWall" hidden>
-      <div class="ktn-statepanel">
-        <p class="ktn-statepanel__en">Login Required</p>
-        <p class="ktn-statepanel__ttl">クリエイター検索はログインすると使えます</p>
-        <p class="ktn-statepanel__desc">ログインすると、クリエイターをジャンル・エリア・活動状況などで絞り込んで探せます。<br>展覧会の検索はログインなしでご利用いただけます。</p>
-        <div class="ktn-statepanel__btns">
-          <button class="ktn-op-btn ktn-op-btn--primary" type="button" onclick="location.href='kotennavi-p11.html'">ログイン</button>
-          <button class="ktn-op-btn" type="button" onclick="location.href='kotennavi-p11-1.html'">新規ユーザー登録（無料）</button>
-        </div>
-        <div class="ktn-statepanel__alt">
-          <a class="ktn-action-btn" href="kotennavi-p10.html">展覧会を探す →</a>
-        </div>
-      </div>
-    </div>
+    <!-- 本体はゲストにも出す。ログインを求めるのは検索ツール（P10-2）側で、
+         分類索引そのものは列挙手段にならないため制限しない（handoff 追174-80）。 -->
+    <div class="ktn-content p10-content">
 
-    <!-- B. 特集チップレール（アルゴリズム生成プリセット） -->
-    <div class="p10-presets">
-      <div class="p10-presets__inner">
-        <span class="p10-presets__label">Picks</span>
-        <button class="p10-presets__arr p10-presets__arr--l is-hidden" id="p102PresetArrL" type="button" aria-label="左へスクロール">‹</button>
-        <div class="p10-presets__rail" id="p102PresetRail"></div>
-        <button class="p10-presets__arr p10-presets__arr--r" id="p102PresetArrR" type="button" aria-label="右へスクロール">›</button>
-      </div>
-    </div>
-
-    <!-- C. ディスカバリー状態（条件なしのデフォルト） -->
-    <div class="ktn-content p10-content" id="p102Discovery">
-
-      <section class="p10-shelf">
+      <!-- B. 分類索引。件数は KTN.p10data（検索ページと同じ配列）から数える。
+           リンク先は P10-2 の絞り込み状態で、分類ごとの独立URLは作らない。 -->
+      <section class="ktn-axis-nav ktn-index-target" id="index">
         <div class="ktn-section__head">
-          <h2 class="ktn-section__title">開催中の展覧会があるクリエイター<span class="ktn-sec-en">Now Showing</span></h2>
-          <a href="#" class="ktn-section__more" data-preset="exh-live">もっと見る →</a>
+          <h2 class="ktn-section__title">ジャンルから探す<span class="ktn-sec-en">Browse by Genre</span></h2>
+          <span class="ktn-count" id="p106Total"></span>
         </div>
-        <div class="p10-person-grid" id="p102LiveGrid"></div>
+        <p class="p10-shelf__desc">ジャンルは登録時に選ぶ6つの区分です。</p>
+        <div class="ktn-axis-nav__row" id="p106GenreNav"></div>
+
+        <div class="ktn-section__head ktn-axis-nav__head2 ktn-index-target" id="tag">
+          <h2 class="ktn-section__title">タグから探す<span class="ktn-sec-en">Browse by Tag</span></h2>
+        </div>
+        <p class="p10-shelf__desc">技法や素材のタグです。ジャンルより細かく、1人のクリエイターにいくつも付きます。</p>
+        <div class="ktn-axis-nav__row" id="p106TagNav"></div>
+
+        <!-- エリアの軸は置かない（2026-09-19・追174-86）。クリエイターは固定の活動場所を持たず、
+             展覧会ごとに会場の県が変わる。会場の県を借りて「その人のエリア」と呼ぶと、巡回や
+             他県での開催で破綻する（場所軸の補完に人を出さないのと同じ理由＝追174-50）。
+             場所から人へ降りたい人は、エリア軸ページ → ギャラリー（P10-7）／展覧会（P10-4）をたどる。 -->
+
+        <div class="ktn-section__head ktn-axis-nav__head2 ktn-index-target" id="status">
+          <h2 class="ktn-section__title">開催状況から探す<span class="ktn-sec-en">Browse by Status</span></h2>
+        </div>
+        <p class="p10-shelf__desc">いま会いに行けるかどうかで絞り込めます。開催なしのクリエイターも、作品や記事から活動をたどれます。</p>
+        <div class="ktn-axis-nav__row" id="p106StNav"></div>
+
+        <div class="ktn-section__head ktn-axis-nav__head2 ktn-index-target" id="liaison">
+          <h2 class="ktn-section__title">LIAISONから探す<span class="ktn-sec-en">Browse by LIAISON</span></h2>
+        </div>
+        <p class="p10-shelf__desc">LIAISONはオンライン展示、LIAISON+はオンラインでの購入申込もできる作品を出しているクリエイターです。</p>
+        <div class="ktn-axis-nav__row" id="p106LiNav"></div>
       </section>
 
-      <section class="p10-shelf">
+      <!-- C. 年間ランキングへの出口（本体は P10-6-1 へ切り出した・追174-81）。
+           見出しは「{種別}の年間ランキング」、英サブは Annual Ranking、送りリンクは
+           着地先のページ名（年は JS が入れる）で4枚とも同形にした（追174-83／追174-84）。
+           .ktn-axis-related＝直前の分類索引とのくっつき防止の区切り線（追174-132）。 -->
+      <section class="p10-shelf ktn-axis-related ktn-index-target" id="rank">
         <div class="ktn-section__head">
-          <h2 class="ktn-section__title">開催予定の展覧会があるクリエイター<span class="ktn-sec-en">Coming Soon</span></h2>
-          <a href="#" class="ktn-section__more" data-preset="upcoming-all">もっと見る →</a>
+          <h2 class="ktn-section__title">クリエイターの年間ランキング<span class="ktn-sec-en">Annual Ranking</span></h2>
         </div>
-        <div class="p10-person-grid" id="p102UpcomingGrid"></div>
+        <p class="p10-shelf__desc">その年にウォッチと展覧会数が多かったクリエイターを並べています。登録の早いクリエイターほど有利にならないように、累計ではなく年ごとの増分で見ています。年ごとに別のページとして残ります。</p>
+        <a class="ktn-more-link" id="p106RankMore" href="./kotennavi-p10-6-1.html">2026年のクリエイターランキング →</a>
       </section>
 
-      <section class="p10-shelf ktn-cv-auto">
+      <!-- D. 関連ページへ（カードの文言＝着地先のページ名＝各ページの h1・追174-83／追174-85）。
+           .ktn-axis-related＝直前のランキング出口とのくっつき防止の区切り線（追174-132）。 -->
+      <section class="p10-shelf ktn-axis-related">
         <div class="ktn-section__head">
-          <h2 class="ktn-section__title">新着クリエイター<span class="ktn-sec-en">New Arrivals</span></h2>
-          <a href="#" class="ktn-section__more" data-preset="new-all">もっと見る →</a>
+          <h2 class="ktn-section__title">関連ページ<span class="ktn-sec-en">Related Pages</span></h2>
         </div>
-        <div class="p10-person-grid" id="p102NewGrid"></div>
+        <div class="ktn-axis-cards">
+          <a class="ktn-axis-card" href="./kotennavi-p10-4.html">
+            <span class="ktn-axis-card__label">Exhibitions</span>
+            <span class="ktn-axis-card__ttl">展覧会をエリア・ジャンルから探す</span>
+            <span class="ktn-axis-card__desc">開催中・開催予定の展覧会は、エリアとジャンルの特集ページからたどれます。</span>
+          </a>
+          <a class="ktn-axis-card" href="./kotennavi-p10-5.html">
+            <span class="ktn-axis-card__label">Artworks</span>
+            <span class="ktn-axis-card__ttl">作品をジャンル・LIAISONから探す</span>
+            <span class="ktn-axis-card__desc">ジャンル・タグから、オンラインで見られる作品をたどれます。</span>
+          </a>
+          <a class="ktn-axis-card" href="./kotennavi-p10-7.html">
+            <span class="ktn-axis-card__label">Galleries</span>
+            <span class="ktn-axis-card__ttl">ギャラリーをエリア・開催状況から探す</span>
+            <span class="ktn-axis-card__desc">エリア・開催状況・扱うジャンルから、展覧会をひらくギャラリーをたどれます。</span>
+          </a>
+        </div>
       </section>
 
-      <section class="p10-shelf ktn-cv-auto">
-        <div class="ktn-section__head">
-          <h2 class="ktn-section__title">人気のクリエイター<span class="ktn-sec-en">Popular</span></h2>
-          <a href="#" class="ktn-section__more" data-preset="popular">もっと見る →</a>
-        </div>
-        <div class="p10-person-grid" id="p102PopularGrid"></div>
-      </section>
-
-      <section class="p10-shelf ktn-cv-auto">
-        <div class="ktn-section__head">
-          <h2 class="ktn-section__title">あなたへのおすすめ<span class="ktn-sec-en">Picks for You</span></h2>
-          <a href="#" class="ktn-section__more" data-preset="trending">もっと見る →</a>
-        </div>
-        <div class="p10-person-grid" id="p102PicksGrid"></div>
-      </section>
-
-    </div>
-
-    <!-- D. 結果状態（キーワード・フィルタ・特集） -->
-    <div class="ktn-content p10-content" id="p102Results" hidden>
-      <div class="p10-ctx">
-        <div class="p10-ctx__eyebrow" id="p102CtxEyebrow">Search Results</div>
-        <h2 class="p10-ctx__title" id="p102CtxTitle">検索結果</h2>
-        <p class="p10-ctx__desc" id="p102CtxDesc" hidden></p>
-      </div>
-      <div class="p10-toolbar">
-        <span class="p10-toolbar__count" id="p102Count"><strong>0</strong>件</span>
-        <label class="p10-toolbar__sort">並び順
-          <select id="p102Sort">
-            <option value="rec">おすすめ順</option>
-            <option value="pop">人気順</option>
-            <option value="new">新着順</option>
-            <option value="exh">展覧会数順</option>
-          </select>
-        </label>
-      </div>
-      <!-- Featured＝「おすすめ順」のときだけ出る巻頭型クラスタ（共通 .ktn-cl）。
-           人気/新着/展覧会数を選ぶと消えて通常カードだけになる＝並び順の約束を壊さない -->
-      <section class="p10-feat" id="p10Feat" hidden>
-        <span class="p10-feat__ttl">注目のクリエイター<span class="ktn-sec-en">Featured</span></span>
-        <div class="p10-feat__row" id="p10FeatRow"></div>
-      </section>
-      <div class="p10-person-grid" id="p102ResultGrid"></div>
-      <div class="p10-more-wrap">
-        <button class="ktn-op-btn" id="p102MoreBtn" type="button">さらに読み込む</button>
-      </div>
-      <!-- 今日の特集＝検索したが意中のものが無かったときの受け皿。人気軸のカードを足すのでなく
-           「別の軸の検索」＝特集を差し出す（適用中の特集は除外・日替わりで入れ替わる） -->
-      <section class="p10-refeed" id="p102Refeed">
-        <div class="ktn-section__head">
-          <h2 class="ktn-section__title">今日の特集<span class="ktn-sec-en">Today’s Features</span></h2>
-        </div>
-        <p class="p10-shelf__desc">条件を変えると、出会えるクリエイターも変わります。</p>
-        <div class="p10-refeed__grid" id="p102RefeedGrid"></div>
-      </section>
-    </div>
-
-    <!-- E. ゼロヒット状態 -->
-    <div class="ktn-content p10-content" id="p102Zero" hidden>
-      <div class="p10-zero-box">
-        <h2 class="p10-zero-box__title" id="p102ZeroTitle">条件に合うクリエイターが見つかりませんでした</h2>
-        <p class="p10-zero-box__sub">キーワードを短くするか、条件を減らして探しなおしてみてください。<br>近いテーマの特集からも探せます。</p>
-        <div class="p10-zero-sugg" id="p102ZeroSugg"></div>
-        <div class="p10-more-wrap">
-          <button class="ktn-op-btn" type="button" onclick="setP102View('disc',document.querySelector('[data-p102-view]'))">条件をクリアして探しなおす</button>
-        </div>
-      </div>
-      <section class="p10-shelf">
-        <div class="ktn-section__head">
-          <h2 class="ktn-section__title">こちらもおすすめ<span class="ktn-sec-en">You May Like</span></h2>
-        </div>
-        <div class="p10-person-grid" id="p102ZeroGrid"></div>
-      </section>
     </div>
 
     <!-- 広告 -->
@@ -356,8 +231,6 @@
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     KTN.init({ page: 'p10-6', role: 'login' });
-    var presetBtn = document.querySelectorAll('[data-p102-view]')[1];
-    if (typeof window.setP102View === 'function') window.setP102View('preset', presetBtn);
   });
 </script>
 </body>

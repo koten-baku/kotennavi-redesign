@@ -113,13 +113,13 @@
 
   <header class="ktn-header" id="ktnHeader">
     <div class="ktn-header__inner">
-      <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+      <!-- パンくずは置かない：トップは階層の起点で、示す上位が無い（2026-09-22）。
+           #ktnBc が無ければ renderBc の結果は捨てられる（common.js 側は null-safe）。 -->
       <div class="ktn-hdr-actions" id="ktnActs"></div>
     </div>
   </header>
-  <div class="ktn-tagbar" id="ktnTagbar">
-    <div class="ktn-tagbar__inner" id="ktnTagbarInner"></div>
-  </div>
+  <!-- タグバーも置かない：トップは本文（ヒーロー・棚・特集）そのものが入口の集合で、
+       上部にもう一列入口を並べると同じ行き先が二重になる（2026-09-22）。 -->
 
   <main class="ktn-main" id="ktnMain">
 

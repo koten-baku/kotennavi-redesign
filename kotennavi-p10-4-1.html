@@ -30,7 +30,7 @@
   <button class="dbtn on" onclick="setR('guest',this)">ゲスト</button>
   <button class="dbtn" onclick="setR('login',this)">ログイン</button>
   <button class="dbtn" onclick="setR('admin',this)">管理者</button>
-  <span class="dbar-sep">軸：</span>
+  <span class="dbar-sep">都道府県：</span>
   <button class="dbtn on" data-ax onclick="setAxis('tokyo',this)">東京都（8件）</button>
   <button class="dbtn" data-ax onclick="setAxis('kyoto',this)">京都府（2件）</button>
   <button class="dbtn" data-ax onclick="setAxis('tottori',this)">鳥取県（0件）</button>
@@ -166,7 +166,10 @@
               <a class="ktn-axis-facet__drop" id="p1041FacetDrop" href="?ax=tokyo">解除</a>
             </div>
           </div>
-          <div class="p10-adv__group">
+          <!-- ジャンル・行きやすさは同じ第2軸スロットを奪い合う関係。片方が既に交差中のときは
+               もう片方の行ごと隠す＝「今のBに加えてAでも絞れそう」という誤読を避ける
+               （解除してから選び直す動線に一本化・追174-156）。 -->
+          <div class="p10-adv__group" id="p1041GenreRow">
             <span class="p10-adv__label">ジャンルで絞る</span>
             <div class="p10-adv__opts" id="p1041GenreNav"></div>
           </div>
@@ -188,7 +191,10 @@
           </label>
         </div>
         <p class="ktn-axis-empty" id="p1041Empty" hidden></p>
-        <div class="p10-shelf-grid" id="p1041Grid"></div>
+        <div class="p10-shelf-grid p10-shelf-grid--ordered" id="p1041Grid"></div>
+        <!-- ページング（共通 KTN.pagination・P10検索と同じ部品）。件数が多いエリアで
+             一覧が際限なく伸びるのを防ぐ（2026-09-22） -->
+        <div class="ktn-pagination" id="p1041Pager" hidden></div>
         <a class="ktn-more-link" id="p1041SearchLink" href="./kotennavi-p10.html">条件を足して絞り込む →</a>
       </section>
 
@@ -199,7 +205,7 @@
            空にしないための内容の棚なので、見出しは中身を名指し、まとめの説明文は置かない。 -->
       <section class="ktn-axis-fill" id="p1041Fill" hidden>
         <div class="ktn-section__head">
-          <h2 class="ktn-axis-fill__title" id="p1041FillTitle">あわせて見る</h2>
+          <h2 class="ktn-axis-fill__title" id="p1041FillTitle">ほかに見られるもの</h2>
         </div>
         <p class="ktn-axis-fill__desc" id="p1041FillDesc"></p>
         <div id="p1041FillBlocks"></div>
@@ -213,28 +219,34 @@
           <h2 class="ktn-section__title"><a class="ktn-section__link" href="./kotennavi-p10-4.html#area">エリアから探す<span class="ktn-sec-en">Browse by Area</span></a></h2>
         </div>
         <div id="p1041PrefNav"></div>
-        <!-- エリアが0件のときだけ出る出口。絞る対象が無いので「絞る」ではなく「移る」＝上のバーではなくここに出す -->
-        <div class="ktn-section__head ktn-axis-nav__head2" id="p1041GenreExitHead" hidden>
+        <!-- 件数に関わらず常設（2026-09-22 ユーザー指示）。全国のジャンル別ページへ「移る」層＝
+             エリアの絞り込みバー「ジャンルで絞る」（この一覧を絞る操作）とは役割が別。 -->
+        <div class="ktn-section__head ktn-axis-nav__head2" id="p1041GenreExitHead">
           <h2 class="ktn-section__title"><a class="ktn-section__link" href="./kotennavi-p10-4.html#genre">ジャンルから探す<span class="ktn-sec-en">Browse by Genre</span></a></h2>
         </div>
-        <div class="ktn-axis-nav__row" id="p1041GenreExit" hidden></div>
+        <div class="ktn-axis-nav__row" id="p1041GenreExit"></div>
       </section>
 
       <!-- E. 下段：過去側への導線。地方で現在0件になってもアーカイブが残る＝ページが空にならないための生命線 -->
-      <div class="ktn-axis-cards">
-        <a class="ktn-axis-card" id="p1041ArcCard" href="./kotennavi-p10-4-3.html?ax=tokyo">
-          <span class="ktn-axis-card__label">Archive</span>
-          <span class="ktn-axis-card__ttl" id="p1041ArcTtl">東京都の展覧会アーカイブ</span>
-          <span class="ktn-axis-card__desc" id="p1041ArcDesc">このエリアで会期を終えた展覧会の記録。会期は終わっていますが、クリエイター・ギャラリーはいまも活動しています。</span>
-        </a>
-        <!-- 年鑑は軸で絞らない全国の記録。エリア軸・ジャンル軸のページに置くと、隣のカード（東京都の展覧会アーカイブ 等）
+      <section class="p10-shelf ktn-axis-related">
+        <div class="ktn-section__head">
+          <h2 class="ktn-section__title">関連ページ<span class="ktn-sec-en">Related Pages</span></h2>
+        </div>
+        <div class="ktn-axis-cards">
+          <a class="ktn-axis-card" id="p1041ArcCard" href="./kotennavi-p10-4-3.html?ax=tokyo">
+            <span class="ktn-axis-card__label">Archive</span>
+            <span class="ktn-axis-card__ttl" id="p1041ArcTtl">東京都の展覧会アーカイブ</span>
+            <span class="ktn-axis-card__desc" id="p1041ArcDesc">このエリアで会期を終えた展覧会の記録。会期は終わっていますが、クリエイター・ギャラリーはいまも活動しています。</span>
+          </a>
+          <!-- 年鑑は軸で絞らない全国の記録。エリア軸・ジャンル軸のページに置くと、隣のカード（東京都の展覧会アーカイブ 等）
              に引かれて「そのエリア／そのジャンルの年間記録」と読まれるので、タイトルで全国と名乗る（2026-09-08） -->
-        <a class="ktn-axis-card" href="./kotennavi-p10-4-2.html">
-          <span class="ktn-axis-card__label">Annual Records</span>
-          <span class="ktn-axis-card__ttl">全国の展覧会 年間の記録</span>
-          <span class="ktn-axis-card__desc">その年に会期を終えた展覧会を、行きたい・行った の反応でまとめた年ごとの記録。エリアやジャンルで絞らず全国が対象です。</span>
-        </a>
-      </div>
+          <a class="ktn-axis-card" href="./kotennavi-p10-4-2.html">
+            <span class="ktn-axis-card__label">Annual Ranking</span>
+            <span class="ktn-axis-card__ttl">全国の展覧会 年間ランキング</span>
+            <span class="ktn-axis-card__desc">その年に会期を終えた展覧会を、興味あり！とチェックインが多かった順に並べた年ごとのランキング。エリアやジャンルで絞らず全国が対象です。</span>
+          </a>
+        </div>
+      </section>
 
     </div>
 

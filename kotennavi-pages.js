@@ -15,16 +15,27 @@ function buildPersonCard(d) {
   var ns = d.type === 'creator' ? 'cc' : 'gc';
   var label = d.type === 'creator' ? 'creator' : 'gallery';
   var cbCls = 'cb cb-person cb-' + label;
-  var statusBadge = (!d.panel && (d.status === 'live' || d.status === 'upcoming'))
-    ? '<span class="sb">開催中/開催予定</span>' : '';
-  var av = d.avClass
-    ? '<div class="' + ns + '__avatar ' + d.avClass + '"><div class="' + ns + '__avatar-ph" style="font-size:' + (d.iniStyle || '1rem') + '">' + d.ini + '</div></div>'
-    : '<div class="' + ns + '__avatar" style="background:' + d.avStyle + ';color:rgba(255,255,255,.85)"><div class="' + ns + '__avatar-ph" style="font-size:' + (d.iniStyle || '1rem') + '">' + d.ini + '</div></div>';
+  var statusBadge = (d.status === 'live' || d.status === 'upcoming')
+    ? '<span class="sb sb-notice">開催中/予定</span>' : '';
+  /* avUnset＝本人が画像を設定していない状態。**インラインの色を一切出さない**ので、
+     見た目は CSS（--unset）だけで決まる＝沈めたいときに !important が要らない。 */
+  var av = d.avUnset
+    ? '<div class="' + ns + '__avatar ' + ns + '__avatar--unset"><div class="' + ns + '__avatar-ph">' + d.ini + '</div></div>'
+    : d.avClass
+      ? '<div class="' + ns + '__avatar ' + d.avClass + '"><div class="' + ns + '__avatar-ph" style="font-size:' + (d.iniStyle || '1rem') + '">' + d.ini + '</div></div>'
+      : '<div class="' + ns + '__avatar" style="background:' + d.avStyle + ';color:rgba(255,255,255,.85)"><div class="' + ns + '__avatar-ph" style="font-size:' + (d.iniStyle || '1rem') + '">' + d.ini + '</div></div>';
   var info = d.type === 'creator'
     ? '<div class="cc__name">' + d.name + '</div>' + (d.genre ? '<div class="cc__genre">' + d.genre + '</div>' : '')
     : '<div class="gc__name">' + d.name + '</div>'
-      + (d.location ? '<div class="gc__location">' + d.location + (d.dist ? '<span class="gc__dist"> · ' + d.dist + '</span>' : '') + '</div>' : '')
-      + (d.hours ? '<div class="gc__hours"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.4"/><path d="M8 5v3.5l2.5 1.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>' + d.hours + '</div>' : '');
+      + (d.location ? '<div class="gc__location">' + d.location + '</div>' : '');
+  /* 左上の距離バッジ（d.distTL があるときだけ）。呼び出し側が明示的に渡した場合のみ描く＝
+     「p10-3の近くで開催中」棚など、距離そのものが棚の主旨のときだけ使う特別扱い（他の棚には出さない）。
+     ピンSVGは .p2-side-ec__dist と同じもの（距離表示アイコンの単一ソース）。 */
+  var distBadge = d.distTL
+    ? '<span class="gc__dist-badge"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M8 1.6c-2.4 0-4.3 1.9-4.3 4.3 0 3 4.3 7.5 4.3 7.5s4.3-4.5 4.3-7.5c0-2.4-1.9-4.3-4.3-4.3z"/><circle cx="8" cy="5.9" r="1.5"/></svg>' + d.distTL + '</span>'
+    : '';
+  /* 営業時間・定休日はカードから撤去（2026-09-22 ユーザー指示）。d.hours は呼び出し元に残しても
+     ここで読まなくなるだけ＝呼び出し側の引き渡しは撤去しない（無害な未使用フィールド）。 */
   var wId = d.watchId ? ' id="' + d.watchId + '"' : '';
   var wOn = d.watchOn ? ' on' : '';
   var wLbl = d.watchOn ? 'watching' : 'watch';
@@ -35,16 +46,22 @@ function buildPersonCard(d) {
     + '<svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" fill="#7a8a99" opacity=".3"/><circle class="wi-inner" cx="8" cy="8" r="2.6"/></svg>'
     + ' ' + wLbl + '<span class="tip">' + wTip + '</span></button>';
   var panelCls = d.panel ? ' ' + ns + '--panel' : '';
-  return '<a class="' + ns + ' ' + ns + '--h' + panelCls + '" href="' + d.href + '">'
+  /* cls＝呼び出し側が足すモディファイア。共通カードの見た目を書き換えずに、ページ固有の
+     調整を1クラスで受ける口（2026-09-21 新設・現在の利用者は無し）。 */
+  var extraCls = d.cls ? ' ' + d.cls : '';
+  return '<a class="' + ns + ' ' + ns + '--h' + panelCls + extraCls + '" href="' + d.href + '">'
+    + distBadge
     + '<div class="' + ns + '__top">' + av + '</div>'
     + '<div class="' + ns + '__main"><div class="' + ns + '__info">'
     + '<div class="' + ns + '__badge-row"><span class="' + cbCls + '">' + label + '</span>' + statusBadge + '</div>'
     + info + '</div>'
+    /* カウンター（出展数・ウォッチ数）は panel でも出す（2026-09-22 ユーザー指示）。
+       以前は d.panel で丸ごと省いていたが、狭い場所向けの簡略化は avatar 位置・
+       badge サイズ（CSS側）だけに限定し、情報量そのものは削らない方針に変更。 */
     + '<div class="' + ns + '__hfoot">'
-    + (d.panel ? '' :
-        '<span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>' + (d.exh || 0) + '</span>'
-      + '<span class="sep"></span>'
-      + '<span class="pc-count pc-count--watch"><svg width="11" height="11"><use href="#icon-watch" color="#7a8a99"/></svg>' + (d.watch || 0) + '</span>')
+    + '<span class="pc-count pc-count--exh"><span class="exh-icon"><svg width="13" height="13"><use href="#icon-exh"/></svg></span>' + (d.exh || 0) + '</span>'
+    + '<span class="sep"></span>'
+    + '<span class="pc-count pc-count--watch"><svg width="11" height="11"><use href="#icon-watch" color="#7a8a99"/></svg>' + (d.watch || 0) + '</span>'
     + btn + '</div></div></a>';
 }
 
@@ -194,7 +211,7 @@ function buildGridEcCard(e) {
 }
 
 /* ────────────────────────────────────────────────────
-   クラスタ `.ktn-cl` 共通ビルダ（P1 巻頭Opening／P10系 検索結果Featured 共用）
+   クラスタ `.ktn-cl` 共通ビルダ（P1 巻頭Opening／P10系 検索結果の注目 Highlights 共用）
 
    1クラスタ＝**核となるコンテンツ1件＋その周辺コンテンツ**（作品・記事・レビュー・人）。
    「中心のまわりに話題が集まっている」構図を1ブロックで言い切る誌面装置で、
@@ -427,7 +444,7 @@ KTN.cl = (function () {
     return pickVaried(satsFor(cx, { skipTtl: ttl }), n, rnd);
   }
 
-  /* 展覧会を核にしたクラスタ（P1巻頭・P10 Featured 共通の呼び口） */
+  /* 展覧会を核にしたクラスタ（P1巻頭・P10 注目 Highlights 共通の呼び口） */
   function exhCluster(x, o) {
     o = o || {};
     return build({
@@ -9442,7 +9459,7 @@ function P902Data() {
     var t = {
       id: 'mt-custom-' + Date.now(), screenId: 'p90-2', screenLabel: 'クリエイター/ギャラリー機能申込管理',
       pattern: pattern, variantKey: prefix + '-' + Date.now(), name: name, subject: subject, body: body,
-      status: 'active', usageNote: '管理者がP90-2の送信パネルからその場で追加', updatedAt: todayLabel(),
+      status: 'active', usageNote: '管理者が申込管理の送信パネルからその場で追加', updatedAt: todayLabel(),
     };
     MAIL_TEMPLATES.push(t);
     CANCEL_REASON_LABEL[bareReasonKey(t.variantKey)] = name;
@@ -10587,7 +10604,7 @@ function P9011Data() {
     var t = {
       id: 'mt-p9011-custom-' + Date.now(), screenId: 'p90-11', screenLabel: 'リエゾンプラス機能申込管理',
       pattern: pattern, variantKey: prefix + '-' + Date.now(), name: name, subject: subject, body: body,
-      status: 'active', usageNote: '管理者がP90-11-1の送信パネルからその場で追加', updatedAt: todayLabel(),
+      status: 'active', usageNote: '管理者が申込審査の送信パネルからその場で追加', updatedAt: todayLabel(),
     };
     MAIL_TEMPLATES.push(t);
     return t;
@@ -10733,7 +10750,7 @@ function P9011Data() {
           ['価格帯（目安）', a.priceRange], ['展覧会規模（年間）', a.exhibitionScale], ['理由・目的', a.purpose], ['作品の発送地', a.shipPref],
         ]) + '</div>';
       html += '<div class="p902-review-section"><h4 class="p902-review-section__title">非公開・本人確認のための情報</h4>' +
-        '<p class="p902-review-section__note">クリエイター基本情報（P3-11）から読み込んだ内容です。申込時点では申込者側で変更できません。</p>' +
+        '<p class="p902-review-section__note">クリエイター基本情報から読み込んだ内容です。申込時点では申込者側で変更できません。</p>' +
         fieldsHtml([
           ['本名', a.kyc.realName], ['本名フリガナ', a.kyc.realNameKana], ['生年月日', a.kyc.birth],
           ['住所', '〒' + a.kyc.zip + ' ' + a.kyc.pref + a.kyc.addr], ['電話番号', a.kyc.tel],
@@ -11421,56 +11438,56 @@ KTN.pages['p90-9'] = function () {
         'ご提出いただいた本人確認書類の内容を確認いたしました。\n\n' +
         '引き続き、Stripeでの本人確認手続き（Step2）にお進みください。\n　{{pageUrl}}\n\n' +
         'Step2の手続きが完了すると、LIAISON+のご利用（作品販売）が開始されます。\n\n{{commonFooter}}',
-      status: 'active', usageNote: '本人確認OKにした後、処理結果エリアのボタンから任意タイミングで送る（P90-11-1）。', updatedAt: '2026.8.10' },
+      status: 'active', usageNote: '本人確認OKにした後、処理結果エリアのボタンから任意タイミングで送る（申込審査の画面）。', updatedAt: '2026.8.10' },
     { id: 'mt-p9011-2', screenId: 'p90-11', pattern: 'abnormal', variantKey: 'confirm-document-unclear', from: 'inquiry@koten-navi.com',
       name: '本人確認書類が不鮮明', subject: '【個展なび】本人確認書類について確認のお願い（LIAISON+機能お申込み）',
       body: '{{userName}} 様\n\n個展なび事務局です。\n{{roleName}}機能のお申込み（申込NID：{{applyId}}）について、\n' +
         'ご提出いただいた本人確認書類の内容を確認したところ、画像が不鮮明なため氏名・住所・生年月日を確認できませんでした。\n\n' +
         'お手数をおかけいたしますが、本メールへの返信にて、鮮明な画像を再度ご提出いただけますと幸いです。\nご提出いただき次第、あらためて内容を確認いたします。\n\n{{commonFooter}}',
-      status: 'active', usageNote: '本人確認書類の画像が不鮮明で内容を確認できない時に送る（P90-11-1）。', updatedAt: '2026.8.11' },
+      status: 'active', usageNote: '本人確認書類の画像が不鮮明で内容を確認できない時に送る（申込審査の画面）。', updatedAt: '2026.8.11' },
     { id: 'mt-p9011-3', screenId: 'p90-11', pattern: 'abnormal', variantKey: 'confirm-info-mismatch', from: 'inquiry@koten-navi.com',
       name: '登録情報と書類の不一致', subject: '【個展なび】ご登録情報と本人確認書類について確認のお願い（LIAISON+機能お申込み）',
       body: '{{userName}} 様\n\n個展なび事務局です。\n{{roleName}}機能のお申込み（申込NID：{{applyId}}）について、\n' +
         'ご登録いただいた情報と、ご提出いただいた本人確認書類に記載の内容が一致しない箇所がございました。\n\n' +
         'お手数をおかけいたしますが、本メールへの返信にて、現在の情報が確認できる書類とあわせてご回答いただけますと幸いです。\n\n{{commonFooter}}',
-      status: 'active', usageNote: '登録情報と本人確認書類の記載内容が一致しない時に送る（P90-11-1）。', updatedAt: '2026.8.11' },
+      status: 'active', usageNote: '登録情報と本人確認書類の記載内容が一致しない時に送る（申込審査の画面）。', updatedAt: '2026.8.11' },
     { id: 'mt-p9011-4', screenId: 'p90-11', pattern: 'abnormal', variantKey: 'confirm-resp-info', from: 'inquiry@koten-navi.com',
       name: '責任者情報の不備（ギャラリーのみ）', subject: '【個展なび】責任者情報について確認のお願い（LIAISON+機能お申込み）',
       body: '{{userName}} 様\n\n個展なび事務局です。\n{{roleName}}機能のお申込み（申込NID：{{applyId}}）について、\n' +
         'ご登録いただいた責任者情報の内容に不備があり、本人確認を進められない状態です。\n\n' +
         'お手数をおかけいたしますが、本メールへの返信にて、責任者情報の不足箇所についてご回答いただけますと幸いです。\n\n{{commonFooter}}',
-      status: 'active', usageNote: 'ギャラリーの責任者情報に不備がある時に送る（P90-11-1）。', updatedAt: '2026.8.11' },
+      status: 'active', usageNote: 'ギャラリーの責任者情報に不備がある時に送る（申込審査の画面）。', updatedAt: '2026.8.11' },
     { id: 'mt-p9011-5', screenId: 'p90-11', pattern: 'abnormal', variantKey: 'confirm-missing-fields', from: 'inquiry@koten-navi.com',
       name: '必須項目の未入力・記載不足', subject: '【個展なび】お申込み内容について確認のお願い（LIAISON+機能お申込み）',
       body: '{{userName}} 様\n\n個展なび事務局です。\n{{roleName}}機能のお申込み（申込NID：{{applyId}}）について、\n' +
         '必須項目に未入力・記載不足の箇所があり、本人確認を進められない状態です。\n\n' +
         'お手数をおかけいたしますが、本メールへの返信にて、不足箇所についてご回答いただけますと幸いです。\n\n{{commonFooter}}',
-      status: 'active', usageNote: '必須項目の未入力・記載不足がある時に送る（P90-11-1）。', updatedAt: '2026.8.11' },
+      status: 'active', usageNote: '必須項目の未入力・記載不足がある時に送る（申込審査の画面）。', updatedAt: '2026.8.11' },
     { id: 'mt-p9011-6', screenId: 'p90-11', pattern: 'abnormal', variantKey: 'confirm-other', from: 'inquiry@koten-navi.com',
       name: 'その他', subject: '【個展なび】お申込み内容について確認のお願い（LIAISON+機能お申込み）',
       body: '{{userName}} 様\n\n個展なび事務局です。\n{{roleName}}機能のお申込み（申込NID：{{applyId}}）について、\n' +
         '下記の点についてご確認をお願いしたく、ご連絡いたしました。\n\n' +
         '──────────────────────────────\n 確認事項：（ここに具体的な内容を記載してください）\n──────────────────────────────\n\n' +
         'お手数をおかけいたしますが、本メールへの返信にてご回答いただけますと幸いです。\n\n{{commonFooter}}',
-      status: 'active', usageNote: '上記に当てはまらない理由で確認する時に送る（P90-11-1）。', updatedAt: '2026.8.11' },
+      status: 'active', usageNote: '上記に当てはまらない理由で確認する時に送る（申込審査の画面）。', updatedAt: '2026.8.11' },
     { id: 'mt-p9011-7', screenId: 'p90-11', pattern: 'abnormal', variantKey: 'cancel-document-unclear', from: 'liaison@koten-navi.com',
       name: '本人確認書類が不鮮明', subject: '【個展なび】LIAISON+機能のお申込みの取消について', body: CANCEL_BODY_STD,
-      status: 'active', usageNote: '確認メールへの返信が無い、または書類を再提出できない旨の連絡をもとに取消を確定した時に送る（P90-11-1・送信は任意）。', updatedAt: '2026.8.11' },
+      status: 'active', usageNote: '確認メールへの返信が無い、または書類を再提出できない旨の連絡をもとに取消を確定した時に送る（申込審査の画面・送信は任意）。', updatedAt: '2026.8.11' },
     { id: 'mt-p9011-8', screenId: 'p90-11', pattern: 'abnormal', variantKey: 'cancel-info-mismatch', from: 'liaison@koten-navi.com',
       name: '登録情報との不一致', subject: '【個展なび】LIAISON+機能のお申込みの取消について', body: CANCEL_BODY_STD,
-      status: 'active', usageNote: '登録情報と本人確認書類の不一致が解消しなかった時に取消を確定した時に送る（P90-11-1・送信は任意）。', updatedAt: '2026.8.11' },
+      status: 'active', usageNote: '登録情報と本人確認書類の不一致が解消しなかった時に取消を確定した時に送る（申込審査の画面・送信は任意）。', updatedAt: '2026.8.11' },
     { id: 'mt-p9011-9', screenId: 'p90-11', pattern: 'abnormal', variantKey: 'cancel-resp-info', from: 'liaison@koten-navi.com',
       name: '責任者情報の不備', subject: '【個展なび】LIAISON+機能のお申込みの取消について', body: CANCEL_BODY_STD,
-      status: 'active', usageNote: 'ギャラリーの責任者情報の不備が解消しなかった時に取消を確定した時に送る（P90-11-1・送信は任意）。', updatedAt: '2026.8.11' },
+      status: 'active', usageNote: 'ギャラリーの責任者情報の不備が解消しなかった時に取消を確定した時に送る（申込審査の画面・送信は任意）。', updatedAt: '2026.8.11' },
     { id: 'mt-p9011-10', screenId: 'p90-11', pattern: 'abnormal', variantKey: 'cancel-missing-fields', from: 'liaison@koten-navi.com',
       name: '必須項目の不足', subject: '【個展なび】LIAISON+機能のお申込みの取消について', body: CANCEL_BODY_STD,
-      status: 'active', usageNote: '必須項目の不足が解消しなかった時に取消を確定した時に送る（P90-11-1・送信は任意）。', updatedAt: '2026.8.11' },
+      status: 'active', usageNote: '必須項目の不足が解消しなかった時に取消を確定した時に送る（申込審査の画面・送信は任意）。', updatedAt: '2026.8.11' },
     { id: 'mt-p9011-11', screenId: 'p90-11', pattern: 'abnormal', variantKey: 'cancel-other', from: 'liaison@koten-navi.com',
       name: 'その他', subject: '【個展なび】LIAISON+機能のお申込みの取消について', body: CANCEL_BODY_STD,
-      status: 'active', usageNote: '上記に当てはまらない理由で取消を確定した時に送る（P90-11-1・送信は任意）。', updatedAt: '2026.8.11' },
+      status: 'active', usageNote: '上記に当てはまらない理由で取消を確定した時に送る（申込審査の画面・送信は任意）。', updatedAt: '2026.8.11' },
     { id: 'mt-p2sns-1', screenId: 'p2-sns', pattern: 'normal', variantKey: 'listing-notice', from: 'info@koten-navi.com',
       name: '展覧会情報掲載のお知らせ', subject: '【個展なび】展覧会情報掲載のお知らせ', body: P2SNS_LISTING_BODY,
-      status: 'active', usageNote: '出展者から展覧会情報の登録連絡を受け、掲載完了を返信する時に送る（P2「SNSテキスト生成」から移設・旧「新着展覧会表示」ツール）。', updatedAt: '2026.8.21' },
+      status: 'active', usageNote: '出展者から展覧会情報の登録連絡を受け、掲載完了を返信する時に送る（展覧会ページの「SNSテキスト生成」から移設・旧「新着展覧会表示」ツール）。', updatedAt: '2026.8.21' },
   ];
 
   /* ── 自動送信メール（可視化＋文面編集）── データは docs/email-templates.md の
@@ -11951,7 +11968,7 @@ KTN.pages['p90-9'] = function () {
 };
 
 /* ════════════════════════════════════════════════════
-   P90-17  管理者-軸ページ管理
+   P90-17  管理者-検索・特集管理
 
    軸ページ（P10-4-1〜5）は掲載中の展覧会データから自動生成される集合なので、
    「1枚ずつ作って消す」対象ではない。47都道府県×2（エリア／アーカイブ）＋ジャンル5＋
@@ -11983,12 +12000,16 @@ KTN.pages['p90-17'] = function () {
     return ls.length ? '<p>' + ls.join('</p><p>') + '</p>' : '';
   }
 
+  /* url＝そのURLの形。**P番号は持たない**（制作時の呼び名で運営の画面に出す名前ではない・
+     2026-09-20 ユーザー指示）。旧 page フィールドはどこからも読まれていなかったので差し替えた。 */
   var AXES = [
-    { key: 'area',    ja: 'エリア',     page: 'P10-4-1', unit: '掲載' },
-    { key: 'genre',   ja: 'ジャンル',   page: 'P10-4-4', unit: '掲載' },
-    { key: 'access',  ja: '行きやすさ', page: 'P10-4-5', unit: '掲載' },
-    { key: 'year',    ja: '年鑑',       page: 'P10-4-2', unit: '掲載' },
-    { key: 'archive', ja: 'アーカイブ', page: 'P10-4-3', unit: '記録' }
+    { key: 'area',    ja: 'エリア',     url: '/exhibitions/{エリア}', unit: '掲載' },
+    { key: 'genre',   ja: 'ジャンル',   url: '/exhibitions/genre/{ジャンル}', unit: '掲載' },
+    { key: 'access',  ja: '行きやすさ', url: '/exhibitions/access/{条件}', unit: '掲載' },
+    /* 軸名は利用者側の呼称に合わせる＝管理画面のラベルと、飛び先のページ名（{年}年の展覧会ランキング）が
+       食い違うと運営が「どのページの話か」を照合できないため（追174-83で「年鑑」から改称）。 */
+    { key: 'year',    ja: '年間ランキング', url: '/exhibitions/ranking/{年}', unit: '掲載' },
+    { key: 'archive', ja: 'アーカイブ', url: '/exhibitions/{エリア}/archive', unit: '記録' }
   ];
   var AXBY = {};
   AXES.forEach(function (a) { AXBY[a.key] = a; });
@@ -11998,7 +12019,7 @@ KTN.pages['p90-17'] = function () {
     area:    'エリア軸は47都道府県と、東京都をさらに分けた6エリア（東京都心部・東京東部…）ぶんが常に存在します。東京のエリアのURLは都道府県と対等で、東京都の下にはぶら下がりません。掲載0件のエリアもURLは残り、ハブの「エリアから探す」「東京をエリアで探す」からたどれます。',
     genre:   'ジャンルは展覧会の登録内容から集計されます。ジャンルそのものの追加・統合はタクソノミ側の変更になるため、この画面では行いません。',
     access:  '行きやすさの軸は、展覧会の登録内容（お子さまの同伴・クリエイターの在廊）から自動で集まります。条件そのものの追加もタクソノミ側の変更です。',
-    year:    '年鑑は各年に会期を終えた展覧会の上位' + ((ARC && ARC.LIMIT) || 10) + '件を自動で掲載します。どの展覧会を載せるかを運営が選ぶ枠ではありません。',
+    year:    '年間ランキングは各年に会期を終えた展覧会を、興味あり！とチェックインが多かった順に上位' + ((ARC && ARC.LIMIT) || 10) + '件まで自動で掲載します。どの展覧会を載せるかを運営が選ぶ枠ではありません。',
     archive: 'アーカイブはエリアごとの「会期を終えた展覧会」の記録です。エリア軸とはURLも導入文も別に持ちます。'
   };
 
@@ -12016,22 +12037,34 @@ KTN.pages['p90-17'] = function () {
       return { slug: a.slug, name: a.ttl, n: a.n, href: AX.accessHref(a.slug) };
     });
     return ((ARC && ARC.YEARS) || []).map(function (y) {
-      return { slug: String(y), name: y + '年の展覧会 年間の記録', n: ARC.rows(y).length, href: './kotennavi-p10-4-2.html?y=' + y };
+      return { slug: String(y), name: y + '年の展覧会ランキング', n: ARC.rows(y).length, href: './kotennavi-p10-4-2.html?y=' + y };
     });
   }
 
   /* ── 状態（保存はデモなのでこの画面の中だけ） ── */
   var fixed = AX.FIXED.slice();
   var minv  = AX.minCount();
-  var slots = 6;
+  /* 注目枠を出すページと、その枠数。**枠数はレイアウトが決める事実**なので設定ではなく
+     ここに書く（2026-09-20）。プレビューはこの数で「ここまで出る」の区切りを引く。
+     ページを増やしたらこの表に1行足す＝画面の説明と実ページがずれない。 */
+  /* name＝画面に出すページ名。**P番号は書かない**（制作時の便宜上の呼び名で、運営の画面に
+     出す名前ではない・2026-09-20 ユーザー指示）。対応は「トップ」＝P1／「展覧会を探す」＝P10／
+     「展覧会を探す ハブ」＝P10-4 で、開発側の対応表はこのコメントに置く。 */
+  var OUTLETS = [
+    { n: 3, name: 'トップ' },
+    { n: 4, name: '展覧会を探す' },
+    { n: 6, name: '展覧会を探す ハブ' }
+  ];
+  var MAX_SLOTS = OUTLETS[OUTLETS.length - 1].n;
   var tab   = 'area';
   var editing = null;
 
   var m = location.search.match(/[?&]ax=([a-z-]+)/);
   if (m && AXBY[m[1]]) tab = m[1];
 
-  var FEAT_LABEL = { fixed: '固定枠', rot: 'ローテーション', off: '対象外' };
-  function featOf(slug) {
+  /* 旧称「固定枠」→「常設」（2026-09-20 設定欄の名前に合わせた） */
+  var FEAT_LABEL = { fixed: '常設', rot: 'ローテーション', off: '対象外' };
+  function hlOf(slug) {
     if (fixed.indexOf(slug) >= 0) return 'fixed';
     return AX.count(slug) >= minv ? 'rot' : 'off';
   }
@@ -12054,18 +12087,18 @@ KTN.pages['p90-17'] = function () {
 
   function renderList() {
     var fLead = $('p9017FilterLead') ? $('p9017FilterLead').value : '';
-    var fFeat = (tab === 'area' && $('p9017FilterFeat')) ? $('p9017FilterFeat').value : '';
+    var fHl = (tab === 'area' && $('p9017FilterHl')) ? $('p9017FilterHl').value : '';
     var all = rowsOf(tab);
     var rows = all.filter(function (r) {
       var w = !!AX.leadRaw(tab, r.slug);
       if (fLead === 'written' && !w) return false;
       if (fLead === 'auto' && w) return false;
-      if (fFeat && featOf(r.slug) !== fFeat) return false;
+      if (fHl && hlOf(r.slug) !== fHl) return false;
       return true;
     });
     elList.innerHTML = rows.map(function (r) {
       var w = !!AX.leadRaw(tab, r.slug);
-      var f = featOf(r.slug);
+      var f = hlOf(r.slug);
       return '<tr>'
         + '<td><a href="' + r.href + '" target="_blank" rel="noopener">' + esc(r.name) + '</a></td>'
         + '<td><span class="p9017-num' + (r.n ? '' : ' p9017-num--zero') + '">' + r.n + '</span></td>'
@@ -12078,35 +12111,97 @@ KTN.pages['p90-17'] = function () {
     if (cnt) cnt.textContent = rows.length === all.length ? all.length + '件' : rows.length + ' / ' + all.length + '件';
     var emp = $('p9017Empty'); if (emp) emp.hidden = rows.length > 0;
     var nt  = $('p9017TabNote'); if (nt) nt.textContent = NOTE[tab] || '';
-    var fw  = $('p9017FilterFeatWrap'); if (fw) fw.hidden = tab !== 'area';
+    var fw  = $('p9017FilterHlWrap'); if (fw) fw.hidden = tab !== 'area';
   }
 
+  /* 行コンポーネントは常設リストとプレビューで共有する＝「並び順＝優先順位」が同じ見え方になる。
+     操作ボタンは**アイコン単独にせずテキストラベル**（省スペースより明示性を優先）。 */
+  function prioRow(slug, rank, opsHtml, isFixed, isOver) {
+    return '<div class="p9017-prio__row' + (isFixed ? ' is-fixed' : '') + (isOver ? ' is-over' : '') + '">'
+      + '<span class="p9017-prio__rank">' + rank + '</span>'
+      + '<span class="p9017-prio__name">' + esc(AX.fullOf(slug)) + '</span>'
+      + (isOver ? '<span class="p9017-prio__tag p9017-prio__tag--over">どのページにも出ません</span>'
+                : isFixed ? '<span class="p9017-prio__tag">常設</span>' : '')
+      + '<span class="p9017-prio__n">' + AX.count(slug) + '件</span>'
+      + (opsHtml || '') + '</div>';
+  }
   function renderFixed() {
     var el = $('p9017Fixed'); if (!el) return;
     el.innerHTML = fixed.length
-      ? fixed.map(function (s) {
-          return '<span class="p9017-chip p9017-chip--fixed">' + esc(AX.fullOf(s))
-            + '<span class="p9017-chip__n">' + AX.count(s) + '</span>'
-            + '<button type="button" class="p9017-chip__x" data-unfix="' + s + '" aria-label="' + esc(AX.fullOf(s)) + 'を固定枠から外す">×</button></span>';
+      ? fixed.map(function (s, i) {
+          var ops = '<span class="p9017-prio__ops">'
+            + '<button type="button" class="p9017-prio__op" data-up="' + s + '"' + (i === 0 ? ' disabled' : '')
+            + ' aria-label="' + esc(AX.fullOf(s)) + 'の順位を上げる">上へ</button>'
+            + '<button type="button" class="p9017-prio__op" data-down="' + s + '"' + (i === fixed.length - 1 ? ' disabled' : '')
+            + ' aria-label="' + esc(AX.fullOf(s)) + 'の順位を下げる">下へ</button>'
+            + '<button type="button" class="p9017-prio__op p9017-prio__op--rm" data-unfix="' + s + '"'
+            + ' aria-label="' + esc(AX.fullOf(s)) + 'を常設から外す">外す</button>'
+            + '</span>';
+          /* MAX_SLOTS を超えた順位の常設は、いちばん枠の多いページにも入らない＝どこにも出ない */
+          return prioRow(s, i + 1, ops, true, i >= MAX_SLOTS);
         }).join('')
-      : '<span class="p9017-mark">固定枠はありません。すべての枠を日替わりのローテーションが使います。</span>';
+      : '<p class="p9017-prio__empty">常設するエリアはありません。すべての枠を日替わりのローテーションが使います。</p>';
     var sel = $('p9017FixedAdd');
     if (sel) sel.innerHTML = '<option value="">エリアを選ぶ</option>'
       + AX.ALL.filter(function (s) { return fixed.indexOf(s) < 0; })
         .map(function (s) { return '<option value="' + s + '">' + esc(AX.fullOf(s)) + '（' + AX.count(s) + '）</option>'; }).join('');
   }
 
+  /* **ローテーションがどのページまで届くか**を設定値のすぐ下に出す（2026-09-20 ユーザー指示）。
+     常設で埋まらなかった枠だけがローテーションなので、常設を増やすと届く範囲が縮む。
+     この関係は文章で書くより「場所ごとに何枠回るか」を並べたほうが早い。
+     数値は OUTLETS と現在の設定から計算する＝説明だけが古びることがない。 */
+  function renderRot() {
+    var pool = AX.rotatable().length;
+    var gpool = AX.AXIS_GENRES.filter(function (g) { return g.n >= minv; }).length;
+    var put2 = function (id, v) { var el = $(id); if (el) el.textContent = v; };
+    put2('p9017PreviewLead', 'いちばん枠の多い' + OUTLETS[OUTLETS.length - 1].name
+      + '（' + MAX_SLOTS + '枠）まで出しています。上から順に、各ページが自分の枠数だけ使います。');
+    put2('p9017RotPool', 'いまの候補は' + pool + '／' + AX.ALL.length + 'エリアです。');
+    put2('p9017RotLead', '常設の件数を変えると、ローテーションが届く範囲も変わります。');
+    var box = $('p9017Rot');
+    if (box) {
+      var rows = OUTLETS.map(function (o) {
+        var n = Math.max(0, o.n - fixed.length);
+        return '<div class="p9017-rot__row"><span class="p9017-rot__place">' + esc(o.name) + ' ' + o.n + '枠</span>'
+          + '<span class="p9017-rot__val' + (n ? '' : ' p9017-rot__val--off') + '">'
+          + (n ? n + '枠が日替わり' : '効かない（常設' + fixed.length + '件で埋まる）') + '</span></div>';
+      });
+      /* PICKS の2枠は常設を含めない別の列から取るので、常設の件数に関係なく毎日回る */
+      rows.push('<div class="p9017-rot__row"><span class="p9017-rot__place">'
+        + esc(OUTLETS[1].name) + ' のPICKS</span>'
+        + '<span class="p9017-rot__val">エリア1枠＋ジャンル1枠が常に日替わり</span></div>');
+      box.innerHTML = rows.join('');
+    }
+    put2('p9017RotNote', 'PICKSの2枠は常設を含めない列から取るので、常設の件数に関係なく毎日入れ替わります。'
+      + 'エリア枠は同じページの「エリアから探す」と重ならないよう1つ送って選びます。'
+      + 'ジャンル枠は同じしきい値で絞ったジャンル軸（' + gpool + '／' + AX.AXIS_GENRES.length + '区分）から回します。');
+  }
+
   function renderPreview() {
-    AX.setFeatured(fixed, minv);
+    AX.setHighlights(fixed, minv);
     var el = $('p9017Preview');
-    if (el) el.innerHTML = AX.pick(slots).map(function (s) {
-      return '<span class="p9017-chip' + (fixed.indexOf(s) >= 0 ? ' p9017-chip--fixed' : '') + '">'
-        + esc(AX.fullOf(s)) + '<span class="p9017-chip__n">' + AX.count(s) + '</span></span>';
-    }).join('');
+    if (el) {
+      var order = AX.pick(MAX_SLOTS), html = [];
+      order.forEach(function (s, i) {
+        html.push(prioRow(s, i + 1, '', fixed.indexOf(s) >= 0));
+        /* この順位までで枠が尽きるページを、行の下に区切りとして示す */
+        OUTLETS.forEach(function (o) {
+          if (o.n === i + 1) html.push('<div class="p9017-prio__cut">ここまでが ' + esc(o.name) + ' の' + o.n + '枠</div>');
+        });
+      });
+      el.innerHTML = html.join('');
+    }
     var note = $('p9017PreviewNote');
-    if (note) note.textContent = '固定枠' + fixed.length + '件＋ローテーション' + Math.max(0, slots - fixed.length) + '枠。'
-      + 'ローテーションの対象は' + AX.rotatable().length + 'エリアで、日付から決まる順に入れ替わります。'
-      + (fixed.length >= slots ? '固定枠が枠数に達しているため、いまの設定ではローテーションの席がありません。' : '');
+    /* ここは**目の前の並びの読み方**だけを言う。どのページにどれだけ届くかは上の表が示す。 */
+    if (note) note.textContent = fixed.length > MAX_SLOTS
+      ? '常設が' + MAX_SLOTS + '件を超えています。' + (MAX_SLOTS + 1) + '件目以降（'
+        + fixed.slice(MAX_SLOTS).map(function (s) { return AX.fullOf(s); }).join('・')
+        + '）はどのページにも出ません。外すか、順位を上げてください。'
+      : fixed.length === MAX_SLOTS
+        ? '常設が' + MAX_SLOTS + '件に達しているため、いまの設定ではローテーションの席がありません。'
+        : '常設より下は日替わりです。明日は別のエリアが入ります。';
+    renderRot();
   }
 
   /* 「軸ページの仕組み」の表。件数は一覧と同じ rowsOf() から数える＝説明と一覧が食い違わない。
@@ -12121,9 +12216,20 @@ KTN.pages['p90-17'] = function () {
     put('p9017AxAccess',  rowsOf('access').length);
     put('p9017AxYear',    rowsOf('year').length);
     put('p9017AxArchive', rowsOf('archive').length);
+    /* **常設したエリアがどのページに出るか**を OUTLETS から書き起こす（2026-09-20 ユーザー指示）。
+       地の文に直書きすると、入口や枠数が変わったとき説明だけが古びる（追174-70 と同じ考え方）。 */
+    /* URL の形は AXES が単一ソース（軸が増えたら配列に足すだけで表が追従する） */
+    AXES.forEach(function (ax) {
+      var el = $('p9017AxUrl-' + ax.key);
+      if (el) el.textContent = ax.url;
+    });
+    put('p9017FixedOutlets',
+      '常設したエリアが出るのは' + OUTLETS.map(function (o) { return o.name + '＝' + o.n + '枠'; }).join('／')
+      + ' の' + OUTLETS.length + 'か所で、優先順位の上から各ページの枠数ぶんだけ出ます（'
+      + (OUTLETS[0].n + 1) + '番目以降は' + OUTLETS[0].name + 'には出ません）。'
+      + '常設が効くのは' + MAX_SLOTS + '件までで、' + (MAX_SLOTS + 1) + '件目以降はどのページにも出ません。');
     put('p9017AxAreaNote', AX.PREFS.length + '都道府県と、東京都を分けた' + AX.AREAS.length + 'エリア');
     put('p9017AxYearNote', ((ARC && ARC.YEARS) || []).join('・') + '年（年が変わると増えます）');
-    put('p9017AxSlots',   slots);
   }
 
   /* ── 季節の言葉（P10 の Picks 枠③・追174-74／追174-76 で4軸へ）──
@@ -12234,15 +12340,26 @@ KTN.pages['p90-17'] = function () {
     openLead(b.getAttribute('data-edit'));
   });
 
-  ['p9017FilterLead', 'p9017FilterFeat'].forEach(function (id) {
+  ['p9017FilterLead', 'p9017FilterHl'].forEach(function (id) {
     var el = $(id); if (el) el.addEventListener('change', renderList);
   });
 
   var fx = $('p9017Fixed');
   if (fx) fx.addEventListener('click', function (e) {
-    var b = e.target.closest('[data-unfix]'); if (!b) return;
-    var s = b.getAttribute('data-unfix');
-    fixed = fixed.filter(function (x) { return x !== s; });
+    var rm = e.target.closest('[data-unfix]');
+    if (rm) {
+      var s = rm.getAttribute('data-unfix');
+      fixed = fixed.filter(function (x) { return x !== s; });
+      renderFixed(); renderPreview(); renderList();
+      return;
+    }
+    /* 並び順がそのまま優先順位なので、入れ替えは隣と交換するだけでよい */
+    var mv = e.target.closest('[data-up],[data-down]'); if (!mv) return;
+    var up = mv.hasAttribute('data-up');
+    var slug = mv.getAttribute(up ? 'data-up' : 'data-down');
+    var i = fixed.indexOf(slug), j = up ? i - 1 : i + 1;
+    if (i < 0 || j < 0 || j >= fixed.length) return;
+    var t = fixed[i]; fixed[i] = fixed[j]; fixed[j] = t;
     renderFixed(); renderPreview(); renderList();
   });
 
@@ -12260,20 +12377,360 @@ KTN.pages['p90-17'] = function () {
     renderPreview(); renderList();
   });
 
-  var elSlots = $('p9017Slots');
-  if (elSlots) elSlots.addEventListener('change', function () {
-    slots = parseInt(elSlots.value, 10) || 6;
-    renderPreview(); renderAbout();
+
+  /* 旧 hubSave（ハブの導入文の保存）は撤去した＝P10-4 の導入文は HTML 直書きの固定文で、
+     この画面から編集する対象ではない（追174-90）。P10-5/6/7 の導入文も同じく固定。 */
+
+
+  /* ── ページタブ（検索の設定／特集（軸）の設定）＋ 種別（展覧会／作品／クリエイター／ギャラリー）── 追174-90
+     ブロックを pane ごとの入れ物で包まず、**各ブロックに data-pane / data-kind を持たせて hidden を切る**。
+     理由＝この画面は .ktn-mgmt-stack の直下に平らにブロックを並べる作りで、stack が
+     「子を左右20px inset・縦20px gap」の単一ソースを持っている（CLAUDE.md）。入れ物で包むと
+     その2つをページ側に再定義することになるため、平らなまま出し分ける。
+     data-kind は空白区切りの複数値を許す（未調整3種は1つの空状態ブロックを共有する）。 */
+  /* 初期タブは URL が決める。**外から来る導線は必ずどちらかのタブの中を指す**ので、
+     既定タブのまま開くと「リンクを踏んだのに目的の欄が出ない」ことになる（2タブ化で一度そうなった）。
+       #アンカー … その要素が属する data-pane を開く（例 #p9017-hl は特集タブ）
+       ?ax=…     … 軸ページ一覧を見に来ているので特集タブを開く */
+  function paneFromUrl() {
+    if (/[?&]ax=/.test(location.search)) return 'axis';
+    if (location.hash) {
+      var t = null;
+      try { t = document.querySelector(location.hash); } catch (err) { t = null; }
+      var host = t && t.closest('[data-pane]');
+      if (host) return host.getAttribute('data-pane');
+    }
+    return 'search';
+  }
+  /* 種別も URL から決める（2026-09-21）。P10-1/2/3 の管理者メニューが ?kind=work などで
+     飛んでくるので、既定の「展覧会」で開くと「設定が見当たらない」と探させることになる。 */
+  function kindFromUrl() {
+    var m = location.search.match(/[?&]kind=(exh|work|creator|gallery)/);
+    return m ? m[1] : 'exh';
+  }
+  var pane = paneFromUrl(), kind = kindFromUrl();
+
+  function syncPane() {
+    /* 「特集（軸）の設定」タブは展覧会専用（追174-170）＝軸ページの仕組み・注目のエリアの選定・
+       軸ページ一覧はいずれも47都道府県×ジャンル×行きやすさの恒久URL軸ページを前提にした内容で、
+       作品・クリエイター・ギャラリーはこの規模の軸ページを持たない（年間ランキング1枚ずつのみ・
+       追174-81/85/86）。設定対象が無い種別ではタブごと隠し、選べないようにする（ブロックの
+       表示判定より前に pane を補正しないと、タブ表示とブロック表示が食い違うため先頭で行う）。 */
+    if (kind !== 'exh' && pane === 'axis') pane = 'search';
+    var all = document.querySelectorAll('.p9017-wrap > [data-pane]');
+    Array.prototype.forEach.call(all, function (el) {
+      var okPane = el.getAttribute('data-pane') === pane;
+      var k = el.getAttribute('data-kind');
+      var okKind = !k || k.split(' ').indexOf(kind) !== -1;
+      el.hidden = !(okPane && okKind);
+    });
+    var mt = $('p9017MainTab');
+    if (mt) {
+      var axisTabBtn = mt.querySelector('[data-pane="axis"]');
+      if (axisTabBtn) axisTabBtn.hidden = kind !== 'exh';
+      Array.prototype.forEach.call(mt.querySelectorAll('[data-pane]'), function (b) {
+        var on = b.getAttribute('data-pane') === pane;
+        b.classList.toggle('is-active', on);
+        b.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+    }
+    var kn = $('p9017Kind');
+    if (kn) Array.prototype.forEach.call(kn.querySelectorAll('[data-kind]'), function (b) {
+      var on = b.getAttribute('data-kind') === kind;
+      b.classList.toggle('is-active', on);
+      b.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+  }
+
+
+  /* ── ピックアップマスタ（KTN.picks）の一覧と本日の差し込み枠 ── 追174-90 追記2
+     表示（P10 の棚）と編集（この画面）が同じ配列を見る＝条件を管理画面に複製しない。
+     この画面で変えられるのは shelf（差し込み枠に出すか）／掲載期間／掲載順の3つで、
+     条件そのものの編集UIは未実装（資格の判定基準は qualify が助言として返す）。 */
+  var PK = KTN.picks;
+  /* 作品・クリエイター・ギャラリーの簡易ピックアップマスタ（追174-166）。KINDS/targets/qualifyの
+     形が展覧会版（PK＝KTN.picks）と一部違う（qualifyを持たない等）ため、条件エディタは
+     「いま開いているのがどのモジュールか」を condEditingPK に保持して汎用に動かす。 */
+  var PK_LITE = { work: KTN.picksWork, creator: KTN.picksCreator, gallery: KTN.picksGallery };
+
+  /* ── 日付入力 ── 追174-90 追記6
+     値は常に YYYY-MM-DD で持ち、年を見るかどうかは `annual` フラグが決める（KTN.picks 参照）。
+     旧実装は月日だけで持っていたが、**年によって日が動く時期**（ゴールデンウィーク・
+     シルバーウィーク）を指定できなかったため年つきへ変えた。 */
+  function dateInput(attrs, v) {
+    return '<input type="date" class="p211-input p211-input--sm p9017-date" ' + attrs
+      + ' value="' + esc(v || '') + '">';
+  }
+  function annualSw(on, attrs) {
+    return '<button type="button" class="ktn-switch ktn-switch--sm' + (on ? ' is-on' : '') + ' p9017-annual" role="switch"'
+      + ' aria-checked="' + (on ? 'true' : 'false') + '" ' + attrs + '>'
+      + '<span class="ktn-switch__track"><span class="ktn-switch__knob"></span></span>'
+      + '<span class="ktn-switch__label">' + (on ? '毎年' : 'この年だけ') + '</span></button>';
+  }
+
+  /* 行の作り。列は〈ラベル／条件／掲載期間／掲載（順＋出す）／判定〉の5つ。
+     **順と「出す／出さない」を1列に縦積みした**（2026-09-19 ユーザー指摘）＝6列だと 760px の
+     管理幅に収まらず、いちばん読みたい判定が横スクロールの外へ出ていた。
+     掲載期間の2つの日付も縦に積む。判定は折り返して全文を出す。 */
+  function pickRow(e) {
+    var q = PK.qualify(e);
+    var verdict = q.ok
+      ? '<span class="p9017-verdict is-ok">問題なし</span>'
+      : q.issues.map(function (i) { return '<span class="p9017-verdict is-warn">' + esc(i.text) + '</span>'; }).join('');
+    return '<tr data-slug="' + esc(e.slug) + '">'
+      + '<td class="p9017-picks-table__label">' + esc(e.label) + '</td>'
+      + '<td class="p9017-picks-table__cond">' + esc(PK.condText(e))
+      + '<button type="button" class="p315-archive-table__detail-btn p9017-cond-edit" data-cond-edit="' + esc(e.slug) + '">条件を編集</button></td>'
+      + '<td class="p9017-picks-table__term"><span class="p9017-dates">'
+      + dateInput('data-f="from"', e.from)
+      + dateInput('data-f="to"', e.to)
+      + '</span>' + annualSw(e.annual, 'data-annual') + '</td>'
+      + '<td class="p9017-picks-table__pub"><label class="p9017-ordfield"><span class="p9017-ordfield__lb">順</span>'
+      + '<input type="number" class="p211-input p211-input--sm p9017-order" value="' + (e.order || 0) + '" min="0" step="1"></label>'
+      + '<button type="button" class="ktn-switch ktn-switch--sm' + (e.shelf ? ' is-on' : '') + ' p9017-shelf-sw" role="switch" aria-checked="' + (e.shelf ? 'true' : 'false') + '">'
+      + '<span class="ktn-switch__track"><span class="ktn-switch__knob"></span></span>'
+      + '<span class="ktn-switch__label">' + (e.shelf ? '出す' : '出さない') + '</span></button></td>'
+      + '<td class="p9017-picks-table__verdict">' + verdict + '</td></tr>';
+  }
+
+  function renderPicks() {
+    var tb = $('p9017PickList'); if (!tb || !PK) return;
+    tb.innerHTML = PK.all().slice().sort(function (a, b) { return (a.order || 0) - (b.order || 0); }).map(pickRow).join('');
+    var pv = $('p9017PickPreview'), note = $('p9017PickNote');
+    var cur = PK.shelf();
+    if (pv) pv.innerHTML = cur.length
+      ? cur.map(function (e) { return '<span class="p9017-chip">' + esc(e.label) + '</span>'; }).join('')
+      : '<span class="p9017-chip p9017-chip--off">なし</span>';
+    if (note) note.textContent = cur.length
+      ? '掲載期間内の ' + cur.length + ' 件を掲載順の上から入れています（枠は ' + PK.SLOTS + ' つ）。'
+      : '掲載期間内で差し込み枠に出す指定のものがありません。枠は出ず、下の棚が前に詰まります。';
+  }
+
+  var pickList = $('p9017PickList');
+  if (pickList) {
+    pickList.addEventListener('click', function (e) {
+      var an = e.target.closest('[data-annual]');
+      if (an) {
+        var sl = an.closest('tr').getAttribute('data-slug');
+        PK.set(sl, { annual: PK.get(sl).annual ? 0 : 1 });
+        renderPicks(); return;
+      }
+      var ed = e.target.closest('[data-cond-edit]');
+      if (ed) { openCond(PK, ed.getAttribute('data-cond-edit')); return; }
+      var sw = e.target.closest('.p9017-shelf-sw'); if (!sw) return;
+      var slug = sw.closest('tr').getAttribute('data-slug');
+      var ent = PK.get(slug); if (!ent) return;
+      PK.set(slug, { shelf: ent.shelf ? 0 : 1 });
+      renderPicks();
+    });
+    pickList.addEventListener('change', function (e) {
+      var tr = e.target.closest('tr'); if (!tr) return;
+      var slug = tr.getAttribute('data-slug');
+      if (e.target.classList.contains('p9017-date') && e.target.getAttribute('data-f')) {
+        var patch = {}; patch[e.target.getAttribute('data-f')] = dateToMd(e.target.value);
+        PK.set(slug, patch);
+      } else if (e.target.classList.contains('p9017-order')) {
+        PK.set(slug, { order: parseInt(e.target.value, 10) || 0 });
+      }
+      renderPicks();
+    });
+  }
+
+  /* ── 簡易ピックアップマスタ（作品・クリエイター・ギャラリー・追174-166）──
+     展覧会版と違い掲載期間・判定・抽選を持たないので行は〈ラベル／条件／該当件数／再回遊帯に出す〉の4列。
+     KTN.picks と同じ条件エディタモーダル（#p9017CondModal）を condEditingPK 経由で共有する。 */
+  function curLitePK() { return PK_LITE[kind] || null; }
+  function liteRow(pk, e) {
+    var n = pk.count(e);
+    var short = n < pk.minCount();
+    return '<tr data-slug="' + esc(e.slug) + '">'
+      + '<td class="p9017-picks-table__label">' + esc(e.label) + '</td>'
+      + '<td class="p9017-picks-table__cond">' + esc(pk.condText(e))
+      + '<button type="button" class="p315-archive-table__detail-btn p9017-cond-edit" data-cond-edit="' + esc(e.slug) + '">条件を編集</button></td>'
+      + '<td class="p9017-picks-table__verdict"><span class="p9017-verdict ' + (short ? 'is-warn' : 'is-ok') + '">' + n + '件' + (short ? '（しきい値未満）' : '') + '</span></td>'
+      + '<td class="p9017-picks-table__pub">'
+      + '<button type="button" class="ktn-switch ktn-switch--sm' + (e.refeed ? ' is-on' : '') + ' p9017-refeed-sw" role="switch" aria-checked="' + (e.refeed ? 'true' : 'false') + '">'
+      + '<span class="ktn-switch__track"><span class="ktn-switch__knob"></span></span>'
+      + '<span class="ktn-switch__label">' + (e.refeed ? '出す' : '出さない') + '</span></button></td></tr>';
+  }
+  function renderPicksLite() {
+    var tb = $('p9017PickListLite'), pk = curLitePK();
+    if (!tb || !pk) return;
+    tb.innerHTML = pk.all().map(function (e) { return liteRow(pk, e); }).join('');
+    var en = $('p9017LiteTitleEn');
+    if (en) en.textContent = 'Pick Master — ' + (kind === 'work' ? 'Work' : kind === 'creator' ? 'Creator' : 'Gallery');
+    var mt = $('p9017LiteMinText');
+    if (mt) mt.textContent = pk.minCount() + '件';
+  }
+  var pickListLite = $('p9017PickListLite');
+  if (pickListLite) {
+    pickListLite.addEventListener('click', function (e) {
+      var pk = curLitePK(); if (!pk) return;
+      var ed = e.target.closest('[data-cond-edit]');
+      if (ed) { openCond(pk, ed.getAttribute('data-cond-edit')); return; }
+      var sw = e.target.closest('.p9017-refeed-sw'); if (!sw) return;
+      var slug = sw.closest('tr').getAttribute('data-slug');
+      var ent = pk.get(slug); if (!ent) return;
+      pk.set(slug, { refeed: ent.refeed ? 0 : 1 });
+      renderPicksLite();
+    });
+  }
+  var pickLiteSave = $('p9017PickLiteSave');
+  if (pickLiteSave) pickLiteSave.addEventListener('click', function () {
+    if (KTN.toast) KTN.toast('ピックアップマスタを保存しました（デモ）');
+  });
+  renderPicksLite();
+
+  /* ── 条件エディタ（追174-90 追記3）──
+     ここで直した条件が**そのまま棚に効く**＝P10 側の selPred が sel から述語を作り直すため。
+     11種の条件を1行に並べると読めないので、一覧は条件をテキストで見せ、編集はモーダルで開く
+     （導入文の編集と同じ殻＝この画面の「行を開いて直す」操作を1つの形に揃える）。 */
+  var condEditing = null;      /* 編集中の slug */
+  var condEditingPK = null;    /* 編集中の条件が属するモジュール（KTN.picks／KTN.picksWork 等） */
+  var condDraft = null;        /* 未保存の sel（キャンセルで捨てる） */
+
+  var NUM_KINDS = { interest: 1, checkin: 1, pop: 1 };
+  /* 各条件の補足（KINDS の note）を**画面に出す**（2026-09-19 ユーザー指摘）。
+     もとは title 属性のツールチップだけで、注目度スコアの算出式のように
+     「読まないと指定できない」情報が隠れていた。 */
+  function condRow(k, v) {
+    var has = v !== undefined && v !== '';
+    var head = '<label class="p9017-axis' + (has ? ' is-on' : '') + '">'
+      + '<span class="p9017-axis__lb">' + esc(k.label) + '</span>';
+    var note = k.note ? '<span class="p9017-axis__note">' + esc(k.note) + '</span>' : '';
+    if (k.key === 'tag') {
+      return head + '<input type="text" class="p211-input" list="p9017PickTagList" data-cond="tag"'
+        + ' value="' + esc(v || '') + '" placeholder="指定なし" maxlength="20">' + note + '</label>';
+    }
+    /* 期間は開始・終了の2つの日付入力＋「毎年くり返す／この年だけ」の切替。
+       ゴールデンウィーク・シルバーウィークは年によって日が動くので**年まで指定できる**必要がある。
+       毎年同じ月日でよい時期（クリスマス・お盆）は「毎年」にすれば年を見ない。 */
+    if (k.key === 'period') {
+      var r = condEditingPK.periodRange(v) || ['', ''];
+      return head + '<span class="p9017-period">'
+        + dateInput('data-cond="period" data-pp="from"', r[0])
+        + dateInput('data-cond="period" data-pp="to"', r[1])
+        + '</span>'
+        + annualSw(condDraft.periodAnnual, 'data-cond-annual')
+        + note + '</label>';
+    }
+    if (NUM_KINDS[k.key]) {
+      return head + '<input type="number" class="p211-input" data-cond="' + k.key + '" min="0" step="' + (k.key === 'pop' ? 5 : 10) + '"'
+        + (k.key === 'pop' ? ' max="100"' : '')
+        + ' value="' + (has ? v : '') + '" placeholder="指定なし">' + note + '</label>';
+    }
+    return head + '<select class="p211-select" data-cond="' + k.key + '">'
+      + '<option value="">指定なし</option>'
+      + condEditingPK.targets(k.key).map(function (t) {
+        return '<option value="' + esc(String(t.value)) + '"' + (String(t.value) === String(v) ? ' selected' : '') + '>' + esc(t.name) + '</option>';
+      }).join('') + '</select>' + note + '</label>';
+  }
+
+  function renderCondAxes() {
+    var box = $('p9017CondAxes'); if (!box) return;
+    box.innerHTML = condEditingPK.KINDS.map(function (k) { return condRow(k, condDraft[k.key]); }).join('');
+    /* 判定はモーダルの中でも出す＝保存する前に「なぜ引っかかるか」が読める。
+       **保存は止めない**（判定は助言・追174-90 追記2）。
+       簡易版（作品/クリエイター/ギャラリー）は qualify を持たないため判定欄は空のまま出す。 */
+    var v = $('p9017CondVerdict');
+    if (v) {
+      if (condEditingPK.qualify) {
+        var q = condEditingPK.qualify({ slug: condEditing, label: ($('p9017CondLabel') || {}).value || '', sel: condDraft });
+        v.innerHTML = q.ok
+          ? '<span class="p9017-verdict is-ok">この条件は差し出す語彙として問題ありません。</span>'
+          : q.issues.map(function (i) { return '<span class="p9017-verdict is-warn">' + esc(i.text) + '</span>'; }).join('');
+      } else {
+        v.innerHTML = '';
+      }
+    }
+  }
+
+  function openCond(pk, slug) {
+    var e = pk.get(slug); if (!e) return;
+    condEditingPK = pk;
+    condEditing = slug;
+    condDraft = {};
+    Object.keys(e.sel || {}).forEach(function (k) { condDraft[k] = e.sel[k]; });
+    var nm = $('p9017CondName'); if (nm) nm.textContent = e.label;
+    var lb = $('p9017CondLabel'); if (lb) lb.value = e.label;
+    var dc = $('p9017CondDesc'); if (dc) dc.value = e.desc || '';
+    var dl = $('p9017PickTagList');
+    if (dl) dl.innerHTML = pk.targets('tag').map(function (t) { return '<option value="' + esc(t.name) + '"></option>'; }).join('');
+    renderCondAxes();
+    var m = $('p9017CondModal'); if (m) m.hidden = false;
+    if (lb) lb.focus();
+  }
+  function closeCond() {
+    condEditing = null; condEditingPK = null; condDraft = null;
+    var m = $('p9017CondModal'); if (m) m.hidden = true;
+  }
+
+  var condAxes = $('p9017CondAxes');
+  if (condAxes) condAxes.addEventListener('click', function (ev) {
+    var b = ev.target.closest('[data-cond-annual]'); if (!b || !condDraft) return;
+    condDraft.periodAnnual = condDraft.periodAnnual ? 0 : 1;
+    renderCondAxes();
+  });
+  if (condAxes) condAxes.addEventListener('change', function (ev) {
+    var f = ev.target.getAttribute('data-cond'); if (!f || !condDraft) return;
+    /* 期間は2入力で1つの値。両方そろったときだけ条件にする（片方だけでは範囲にならない）。 */
+    if (f === 'period') {
+      var box = ev.target.closest('.p9017-period');
+      var a = box.querySelector('[data-pp="from"]').value, b = box.querySelector('[data-pp="to"]').value;
+      var ma = dateToMd(a), mb = dateToMd(b);
+      if (ma && mb) condDraft.period = ma + '~' + mb; else delete condDraft.period;
+      renderCondAxes(); return;
+    }
+    var raw = ev.target.value.trim();
+    if (raw === '') delete condDraft[f];
+    else if (NUM_KINDS[f]) condDraft[f] = parseInt(raw, 10) || 0;
+    else if (f === 'free' || f === 'near' || f === 'live') condDraft[f] = 1;
+    else condDraft[f] = raw;
+    renderCondAxes();
+  });
+  var condLabelEl = $('p9017CondLabel');
+  if (condLabelEl) condLabelEl.addEventListener('input', renderCondAxes);
+  var condSave = $('p9017CondSave');
+  if (condSave) condSave.addEventListener('click', function () {
+    if (!condEditing || !condEditingPK) return;
+    var wasExh = condEditingPK === PK;
+    condEditingPK.set(condEditing, { desc: (($('p9017CondDesc') || {}).value || '').trim(), label: ($('p9017CondLabel').value || '').trim() || condEditingPK.get(condEditing).label, sel: condDraft });
+    closeCond();
+    if (wasExh) renderPicks(); else renderPicksLite();
+    if (KTN.toast) KTN.toast('条件を保存しました（デモ）');
+  });
+  ['p9017CondCancel', 'p9017CondModalBg'].forEach(function (id) {
+    var el = $(id); if (el) el.addEventListener('click', closeCond);
   });
 
-  var hubSave = $('p9017HubSave');
-  if (hubSave) hubSave.addEventListener('click', function () {
-    if (KTN.toast) KTN.toast('ハブの導入文を保存しました（デモ）');
+  var rotSel = $('p9017PickRotate');
+  if (rotSel) rotSel.addEventListener('change', function () {
+    PK.rotate(rotSel.value === '1');
+    renderPicks();
   });
 
-  var featSave = $('p9017FeatSave');
-  if (featSave) featSave.addEventListener('click', function () {
-    AX.setFeatured(fixed, minv);
+  var pickSave = $('p9017PickSave');
+  if (pickSave) pickSave.addEventListener('click', function () {
+    if (KTN.toast) KTN.toast('ピックアップマスタを保存しました（デモ）');
+  });
+  renderPicks();
+
+  var mainTab = $('p9017MainTab');
+  if (mainTab) mainTab.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-pane]'); if (!b) return;
+    pane = b.getAttribute('data-pane'); syncPane();
+  });
+  var kindTab = $('p9017Kind');
+  if (kindTab) kindTab.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-kind]'); if (!b) return;
+    kind = b.getAttribute('data-kind'); syncPane();
+    renderPicksLite();
+  });
+  syncPane();
+
+  var hlSave = $('p9017HlSave');
+  if (hlSave) hlSave.addEventListener('click', function () {
+    AX.setHighlights(fixed, minv);
     if (KTN.toast) KTN.toast('注目枠の設定を保存しました（デモ）');
   });
 
@@ -12328,7 +12785,7 @@ KTN.pages['p90-17'] = function () {
 
   renderAll();
 
-  /* 一覧・注目枠は描画後に高さが決まるので、#p9017-feat 等のアンカーはここで合わせ直す */
+  /* 一覧・注目枠は描画後に高さが決まるので、#p9017-hl 等のアンカーはここで合わせ直す */
   if (location.hash) {
     var t = null;
     try { t = document.querySelector(location.hash); } catch (err) { t = null; }
@@ -14529,7 +14986,324 @@ KTN.pages['p4-19'] = function () {
 };
 
 /* ════════════════════════════════════════════════════
-   年間の記録（Annual Records）— 共有データ＋行ビルダー
+   P10 共有デモデータ（作品・クリエイター・ギャラリー）
+
+   元は KTN.pages['p10-1'/'p10-2'/'p10-3'] の各クロージャ内に置いていたが、
+   P10-5/6/7（分類索引＋年間ランキング）が同じ母集団の件数を出す必要が出たため
+   トップレベルへ引き上げた。索引側に件数を別で持たせると、検索結果とリンク先の件数が
+   ずれた瞬間にどちらが正か分からなくなるので、データは1本にして両方がここを読む
+   （KTN.axis が軸ページの件数を1本で持つのと同じ考え方）。
+   本番（React CSR / Drupal）は API 応答に差し替わる想定。
+════════════════════════════════════════════════════ */
+KTN.p10data = (function () {
+
+  /* ── 作品 ──
+     cx＝その作品が出品されている展覧会の文脈（EX id）。おすすめ順の資格判定と
+     クラスタの周辺コンテンツ収集に使う（本番はDBの出品〔listing〕リレーション）。 */
+  var WORKS = [
+    { id:1,  title:'静寂 I',                  name:'田中透',     creatorUrl:'kotennavi-p3.html', year:'2026', medium:'油彩・キャンバス',   size:'727×606mm',       price:180000, status:'sale',    liaison:'li-plus', tags:['絵画','現代美術'],     area:'東京',   pop:88, interest:48,  queue:2, cx: 1, isNew:0, bg:'linear-gradient(135deg,#5a6b80,#2e3a4a)' },
+    { id:2,  title:'墨の余白',                name:'高橋蒼',     creatorUrl:'#',                 year:'2026', medium:'紙本墨画',           size:'半切',            price:96000,  status:'sale',    liaison:'li-plus', tags:['書道'],                area:'東京',   pop:70, interest:71,  queue:0, cx: 2, isNew:0, bg:'linear-gradient(135deg,#2e2a28,#5a5450)' },
+    { id:3,  title:'Self / 03',              name:'studio hue', creatorUrl:'#',                 year:'2025', medium:'ジークレー',         size:'A2 ed.5',         price:42000,  status:'sale',    liaison:'li-plus', tags:['写真','現代美術'],     area:'東京',   pop:55, interest:33,  queue:1, cx:11, isNew:1, bg:'linear-gradient(135deg,#b08aa0,#7a4e68)' },
+    { id:4,  title:'銅版の庭',                name:'早瀬涼',     creatorUrl:'#',                 year:'2026', medium:'銅版画',             size:'300×400mm ed.10', price:55000,  status:'negot',   liaison:'li-plus', tags:['版画'],                area:'東京',   pop:60, interest:62,  queue:3, cx:10, isNew:0, bg:'linear-gradient(135deg,#5a7a6a,#2e4638)' },
+    { id:5,  title:'マチエール断章',          name:'結城玲',     creatorUrl:'#',                 year:'2026', medium:'ミクストメディア',   size:'500×500mm',       price:128000, status:'sale',    liaison:'li-plus', tags:['絵画','現代美術'],     area:'大阪',   pop:77, interest:27,  queue:0, cx: 5, isNew:1, bg:'linear-gradient(135deg,#a05a4a,#6a3428)' },
+    { id:6,  title:'筆勢 — 二',               name:'大西澄',     creatorUrl:'#',                 year:'2025', medium:'紙本墨書',           size:'額装',            price:74000,  status:'sold',    liaison:'li-plus', tags:['書道'],                area:'京都',   pop:50, interest:55,  queue:0, cx: 7, isNew:0, bg:'linear-gradient(135deg,#4a4a4a,#1e1e1e)' },
+    { id:7,  title:'陶花器 III',              name:'桐生藍',     creatorUrl:'#',                 year:'2026', medium:'陶芸',               size:'H180mm',          price:38000,  status:'sale',    liaison:'li-plus', tags:['陶芸','クラフト'],     area:'愛知',   pop:45, interest:40,  queue:0, cx: 9, isNew:1, bg:'linear-gradient(135deg,#9a8a6a,#5e5238)' },
+    { id:8,  title:'光の断面',                name:'篠原恵',     creatorUrl:'#',                 year:'2026', medium:'写真 ed.8',          size:'A1',              price:65000,  status:'sale',    liaison:'li-plus', tags:['写真'],                area:'東京',   pop:82, interest:98,  queue:1, cx: 3, isNew:0, bg:'linear-gradient(135deg,#c0a880,#8a6e4a)' },
+    { id:9,  title:'街の輪郭',                name:'岡島みのり', creatorUrl:'#',                 year:'2025', medium:'水彩紙本',           size:'F6',              price:null,   status:'nsale',   liaison:'li',      tags:['絵画'],                area:'神奈川', pop:40, interest:20,  queue:0, cx: 8, isNew:0, bg:'linear-gradient(135deg,#6a9ab0,#3a5e74)' },
+    { id:10, title:'硝子の庭',                name:'三好文乃',   creatorUrl:'#',                 year:'2026', medium:'ガラス工芸',         size:'H220mm',          price:88000,  status:'inquiry', liaison:'li-plus', tags:['クラフト'],            area:'福岡',   pop:58, interest:44,  queue:0, cx:12, isNew:1, bg:'linear-gradient(135deg,#7ab0a8,#3e6e66)' },
+    { id:11, title:'静物 — 器と光',           name:'高橋蒼',     creatorUrl:'#',                 year:'2026', medium:'油彩・キャンバス',   size:'F20',             price:210000, status:'sale',    liaison:'li-plus', tags:['絵画'],                area:'東京',   pop:72, interest:66,  queue:0, cx: 5, isNew:0, bg:'linear-gradient(135deg,#7a6a8a,#4a3e5a)' },
+    { id:12, title:'木版譚',                  name:'早瀬涼',     creatorUrl:'#',                 year:'2025', medium:'木版画 ed.10',       size:'350×450mm',       price:33000,  status:'sale',    liaison:'li-plus', tags:['版画'],                area:'京都',   pop:63, interest:58,  queue:1, cx: 4, isNew:0, bg:'linear-gradient(135deg,#c07040,#7a3e18)' },
+    { id:13, title:'セルフポートレイトの練習', name:'studio hue', creatorUrl:'#',                 year:'2025', medium:'ジークレー',         size:'A2 ed.5',         price:null,   status:'nsale',   liaison:'li',      tags:['写真','現代美術'],     area:'東京',   pop:68, interest:90,  queue:0, cx:11, isNew:1, bg:'linear-gradient(135deg,#b08aa0,#7a4e68)' },
+    { id:14, title:'陰影の記憶',              name:'田中透',     creatorUrl:'kotennavi-p3.html', year:'2025', medium:'油彩・キャンバス',   size:'F30',             price:152000, status:'sold',    liaison:'li-plus', tags:['絵画'],                area:'東京',   pop:85, interest:120, queue:0, cx: 1, isNew:0, bg:'linear-gradient(135deg,#5a6b80,#2e3a4a)' },
+    { id:15, title:'布と刻',                  name:'結城玲',     creatorUrl:'#',                 year:'2026', medium:'染色',               size:'M',               price:47000,  status:'sale',    liaison:'li-plus', tags:['クラフト','現代美術'], area:'大阪',   pop:52, interest:36,  queue:0, cx: 5, isNew:1, bg:'linear-gradient(135deg,#a05a4a,#6a3428)' },
+    { id:16, title:'墨韻',                    name:'大西澄',     creatorUrl:'#',                 year:'2026', medium:'書',                 size:'半切',            price:61000,  status:'negot',   liaison:'li-plus', tags:['書道'],                area:'京都',   pop:58, interest:41,  queue:2, cx: 7, isNew:0, bg:'linear-gradient(135deg,#4a4a4a,#1e1e1e)' },
+  ];
+
+  function priceBand(p) {
+    if (p == null) return null;
+    if (p <= 50000) return '~5';
+    if (p <= 100000) return '5-10';
+    if (p <= 300000) return '10-30';
+    return '30-';
+  }
+
+  /* ── クリエイター。avStyle は p10-1/p1 の同名人物と同一グラデーションで統一 ──
+     `status` は `cx`（その人が属する展覧会）の開催状況に合わせる。高橋蒼（cx2＝墨聲／会期終了間近）と
+     早瀬涼（cx10＝銅版のミクロコスモス＝本人の個展）は展覧会が開催中なのに `''`（開催なし）になっていたため是正。
+     残る4人（結城玲・大西澄・森田一葉ほか）は「現在開催なし」の見え方を残すため意図的に据え置き。
+     **`area` は持たない（2026-09-19・追174-86）**＝クリエイターは固定の活動場所を持たず、展覧会ごとに
+     会場が変わる。会場の県を借りて「その人のエリア」と呼ぶと、巡回や他県での開催で破綻する
+     （場所軸の補完に人を出さないのと同じ理由＝追174-50）。場所から人へ降りる経路は
+     「エリア → その会場のギャラリー（P10-3）／その会期の展覧会（P10）」を正とする。 */
+  var CREATORS = [
+    { id: 1,  name: '田中透',       href: 'kotennavi-p3.html', av: 1, genres: ['アート'], genreTags: ['絵画', '現代美術'],   genre: '絵画・現代美術',   status: 'live',     exh: 3, watch: 214, pop: 88, cx:  1, isNew: 0, liaison: 'li-plus', avStyle: 'linear-gradient(135deg,#5a6b80,#2e3a4a)', ini: '田' },
+    { id: 2,  name: '高橋蒼',       href: '#',                 genres: ['アート'], genreTags: ['書道'],                genre: '書道',              status: 'live',     exh: 2, watch: 71,  pop: 70, cx:  2, isNew: 0, liaison: 'li-plus', avStyle: 'linear-gradient(135deg,#2e2a28,#5a5450)', ini: '高' },
+    { id: 3,  name: 'studio hue',  href: '#',                 genres: ['写真', 'アート'], genreTags: ['写真', '現代美術'],   genre: '写真・現代美術',   status: 'upcoming', exh: 2, watch: 143, pop: 79, cx: 11, isNew: 1, liaison: 'li-plus', avStyle: 'linear-gradient(135deg,#b08aa0,#7a4e68)', ini: 'S' },
+    { id: 4,  name: '早瀬涼',       href: '#',                 genres: ['アート'], genreTags: ['版画'],                genre: '版画',              status: 'live',     exh: 2, watch: 112, pop: 67, cx: 10, isNew: 0, liaison: 'li',      avStyle: 'linear-gradient(135deg,#5a7a6a,#2e4638)', ini: '早' },
+    { id: 5,  name: '結城玲',       href: '#',                 genres: ['アート', 'クラフト'], genreTags: ['絵画', 'クラフト'],   genre: '絵画・クラフト',   status: '',         exh: 1, watch: 36,  pop: 52, cx:  5, isNew: 1, liaison: 'li-plus', avStyle: 'linear-gradient(135deg,#a05a4a,#6a3428)', ini: '結' },
+    { id: 6,  name: '大西澄',       href: '#',                 genres: ['アート'], genreTags: ['書道'],                genre: '書道',              status: '',         exh: 1, watch: 41,  pop: 58, cx:  7, isNew: 0, liaison: 'li-plus', avStyle: 'linear-gradient(135deg,#4a4a4a,#1e1e1e)', ini: '大' },
+    { id: 7,  name: '桐生藍',       href: '#',                 genres: ['クラフト'], genreTags: ['陶芸', 'クラフト'],   genre: '陶芸・クラフト',   status: 'live',     exh: 1, watch: 40,  pop: 45, cx:  9, isNew: 1, liaison: 'li-plus', avStyle: 'linear-gradient(135deg,#9a8a6a,#5e5238)', ini: '桐' },
+    { id: 8,  name: '篠原恵',       href: '#',                 genres: ['写真'], genreTags: ['写真'],                genre: '写真',              status: 'live',     exh: 1, watch: 98,  pop: 82, cx:  3, isNew: 0, liaison: 'li-plus', avStyle: 'linear-gradient(135deg,#c0a880,#8a6e4a)', ini: '篠' },
+    { id: 9,  name: '岡島みのり',   href: '#',                 genres: ['アート'], genreTags: ['絵画'],                genre: '絵画',              status: 'live',     exh: 1, watch: 87,  pop: 58, cx:  8, isNew: 0, liaison: 'li',      avStyle: 'linear-gradient(135deg,#6a9ab0,#3a5e74)', ini: '岡' },
+    { id: 10, name: '三好文乃',     href: '#',                 genres: ['クラフト'], genreTags: ['クラフト'],            genre: 'クラフト',          status: 'live',     exh: 1, watch: 91,  pop: 66, cx: 12, isNew: 0, liaison: 'li-plus', avStyle: 'linear-gradient(135deg,#7ab0a8,#3e6e66)', ini: '三' },
+    { id: 11, name: '山根拓',       href: '#',                 genres: ['写真'], genreTags: ['写真'],                genre: '写真',              status: 'upcoming', exh: 1, watch: 74,  pop: 62, cx:  6, isNew: 1, liaison: '',         avStyle: 'linear-gradient(135deg,#3a5a7a,#1e3448)', ini: '山' },
+    { id: 12, name: '森田一葉',     href: '#',                 genres: ['クラフト'], genreTags: ['陶芸'],                genre: '陶芸',              status: '',         exh: 1, watch: 28,  pop: 38, cx: 14, isNew: 0, liaison: '',         avStyle: 'linear-gradient(135deg,#8a8a70,#4e4e38)', ini: '森' },
+  ];
+
+  /* ── ギャラリー。avStyle は p1（EX）の同名会場と同一グラデーションで統一 ──
+     barrierFree/parking/card/rental は P4「利用案内」の入力を検索条件に持ち込んだもの
+     （追174-150／174-151）。ギャラリー自身が会場なので、P10（展覧会検索）のようにVENUESで
+     別引きする必要はなくGALLERIESに直接持たせる。id:12（Gallery SOIL 渋谷）はp4.htmlの実データに
+     合わせた（バリアフリー○・駐車場×・クレカ○・レンタル○）。他の11件はP10のVENUES（同名会場は
+     barrierFree/parking/cardの値を再利用。rentalはP10側に無い項目なのでデモ用に新規設定）＋
+     デモ用の適度なばらつきで埋めた。 */
+  var GALLERIES = [
+    { id: 1,  name: '白日ギャラリー',       av: 1, href: 'kotennavi-p4.html', genreTags: ['絵画', '現代美術'], area: '東京',   location: '東京都渋谷区神南1-19-8',   hours: '11:00–19:00', status: 'live',     exh: 4, watch: 180, pop: 85, cx:  1, isNew: 0, liaison: 'li',      dist: '1.2km', barrierFree: 1, card: 1,               avStyle: 'linear-gradient(135deg,#5a6b80,#2e3a4a)', ini: '白' },
+    { id: 2,  name: '東京書芸館',           href: '#',                 genreTags: ['書道'],              area: '東京',   location: '東京都千代田区神田神保町2-3', hours: '10:00–18:00', status: 'live',     exh: 2, watch: 220, pop: 90, cx:  2, isNew: 0, liaison: 'li-plus', dist: '2.6km', barrierFree: 1, parking: 1, rental: 1, avStyle: 'linear-gradient(135deg,#2e2a28,#5a5450)', ini: '東' },
+    { id: 3,  name: 'ギャラリー日向',       href: '#',                 genreTags: ['写真'],              area: '東京',   location: '東京都目黒区青葉台3-6-15',   hours: '12:00–19:00', status: 'live',     exh: 2, watch: 75,  pop: 66, cx:  3, isNew: 1, liaison: '',         dist: '3.4km', rental: 1,                             avStyle: 'linear-gradient(135deg,#c0a880,#8a6e4a)', ini: '日' },
+    { id: 4,  name: '京都版画舎',           href: '#',                 genreTags: ['版画'],              area: '京都',   location: '京都府京都市左京区岡崎円勝寺町6',   hours: '10:00–17:00', status: 'live',     exh: 3, watch: 98,  pop: 70, cx:  4, isNew: 0, liaison: '',         dist: null,    parking: 1,                            avStyle: 'linear-gradient(135deg,#7a6a8a,#4a3e5a)', ini: '京' },
+    { id: 5,  name: 'gallery TRACE',       href: '#',                 genreTags: ['絵画', '現代美術'], area: '東京',   location: '東京都台東区谷中3-2-10',   hours: '11:00–20:00', status: 'live',     exh: 2, watch: 130, pop: 78, cx:  5, isNew: 0, liaison: 'li',      dist: '4.8km', barrierFree: 1, card: 1,               avStyle: 'linear-gradient(135deg,#a05a4a,#6a3428)', ini: 'T' },
+    { id: 6,  name: 'フォトスペース博多',   href: '#',                 genreTags: ['写真'],              area: '福岡',   location: '福岡県福岡市博多区中洲2-4-6',   hours: '11:00–18:00', status: 'upcoming', exh: 1, watch: 40,  pop: 55, cx:  6, isNew: 1, liaison: '',         dist: null,    barrierFree: 1, parking: 1, card: 1,  avStyle: 'linear-gradient(135deg,#3a5a7a,#1e3448)', ini: '博' },
+    { id: 7,  name: '大阪墨美堂',           href: '#',                 genreTags: ['書道'],              area: '大阪',   location: '大阪府大阪市中央区北浜2-1-14',   hours: '10:00–18:00', status: 'live',     exh: 2, watch: 50,  pop: 52, cx:  7, isNew: 0, liaison: '',         dist: null,    parking: 1, rental: 1,                 avStyle: 'linear-gradient(135deg,#4a4a4a,#1e1e1e)', ini: '大' },
+    { id: 8,  name: '横浜アートポート',     href: '#',                 genreTags: ['絵画'],              area: '神奈川', location: '神奈川県横浜市西区みなとみらい3-4-1',     hours: '11:00–19:00', status: 'live',     exh: 1, watch: 64,  pop: 56, cx:  8, isNew: 0, liaison: '',         dist: '9.1km', barrierFree: 1, parking: 1, card: 1,  avStyle: 'linear-gradient(135deg,#6a9ab0,#3a5e74)', ini: '横' },
+    { id: 9,  name: '瀬戸クラフト館',       href: '#',                 genreTags: ['陶芸', 'クラフト'], area: '愛知',   location: '愛知県瀬戸市西窯町1-30',   hours: '10:00–17:00', status: 'live',     exh: 1, watch: 35,  pop: 47, cx:  9, isNew: 0, liaison: '',         dist: null,    barrierFree: 1, parking: 1,            avStyle: 'linear-gradient(135deg,#9a8a6a,#5e5238)', ini: '瀬' },
+    { id: 10, name: 'ギャラリー刻',         href: '#',                 genreTags: ['版画'],              area: '東京',   location: '東京都文京区根津1-22-5',   hours: '12:00–19:00', status: 'live',     exh: 2, watch: 88,  pop: 64, cx: 10, isNew: 1, liaison: 'li',      dist: '5.7km', barrierFree: 1,                        avStyle: 'linear-gradient(135deg,#5a7a6a,#2e4638)', ini: '刻' },
+    { id: 11, name: 'YUGEN Gallery',       href: '#',                 genreTags: ['現代美術'],          area: '東京',   location: '東京都中央区京橋2-6-18',   hours: '11:00–19:00', status: '',         exh: 1, watch: 22,  pop: 33, cx: 11, isNew: 0, liaison: '',         dist: '3.9km', card: 1, rental: 1,                    avStyle: 'linear-gradient(135deg,#4a5a6a,#26323e)', ini: 'Y' },
+    { id: 12, name: 'Gallery SOIL 渋谷',   href: '#',                 genreTags: ['クラフト', '現代美術'], area: '東京', location: '東京都渋谷区神宮前4-3-2',   hours: '11:00–20:00', status: '',         exh: 2, watch: 45,  pop: 48, cx:  0, isNew: 1, liaison: 'li-plus', dist: '1.8km', barrierFree: 1, card: 1, rental: 1,   avStyle: 'linear-gradient(135deg,#7a9a8a,#3e5a4a)', ini: 'S' },
+  ];
+
+  /* ── ジャンル（サイト正式の6区分）をタグから派生させる ──
+     **ジャンルとタグは別の軸**（追174-76）。ジャンル＝登録フォーム（p2-11／p6-11／p3-11）が
+     必須で持つ6区分で、軸ページ（/exhibitions/genre/{slug}）の母集団になる。タグ＝絵画・版画・
+     陶芸…の技法名で、管理された語彙ではないので恒久URLには焼かない。
+     このデモデータはタグ（`tags` / `genreTags`）しか持っておらず、検索ページ側にジャンルの
+     絞り込みが無かった＝**ジャンル軸ページ（P10-4-4）から人・作品へ渡す条件が作れなかった**。
+     本番は登録データが genre を直接持つのでこの派生は消えるが、デモで6区分を手入力すると
+     タグと食い違うので、**タグ→ジャンルの対応表1本から導出**して語彙のずれを構造的に防ぐ。
+     対応は追174-76 の是正と同じ（絵画・現代美術・版画・書道→アート／写真→写真／陶芸・クラフト→クラフト）。 */
+  var TAG2GENRE = {
+    '絵画': 'アート', '現代美術': 'アート', '版画': 'アート', '書道': 'アート', '日本画': 'アート',
+    '彫刻': 'アート', '立体': 'アート', 'インスタレーション': 'アート', 'メディアアート': 'アート',
+    'イラスト': 'アート', 'ドローイング': 'アート', '水彩': 'アート',
+    '写真': '写真',
+    '陶芸': 'クラフト', 'クラフト': 'クラフト', '染織': 'クラフト', 'ガラス': 'クラフト',
+    '漆芸': 'クラフト', '金工': 'クラフト', '木工': 'クラフト',
+    'デザイン': 'その他'
+  };
+  /* 1件が複数ジャンルを持つことはある（クリエイター・ギャラリーは複数可）ので配列で持つ。
+     作品は登録上は単一だが、扱いを分けると絞り込み側で分岐が増えるだけなので同じ形にそろえる。 */
+  function deriveGenres(list, tagKey) {
+    list.forEach(function (x) {
+      var out = [];
+      (x[tagKey] || []).forEach(function (t) {
+        var g = TAG2GENRE[t] || 'その他';
+        if (out.indexOf(g) === -1) out.push(g);
+      });
+      x.genres = out.length ? out : ['その他'];
+    });
+  }
+  deriveGenres(WORKS, 'tags');
+  deriveGenres(CREATORS, 'genreTags');
+  deriveGenres(GALLERIES, 'genreTags');
+
+  return { WORKS: WORKS, CREATORS: CREATORS, GALLERIES: GALLERIES, priceBand: priceBand, TAG2GENRE: TAG2GENRE };
+}());
+
+/* ════════════════════════════════════════════════════
+   KTN.picksLite  作品・クリエイター・ギャラリーの簡易ピックアップマスタ
+   （2026-09-23・追174-166／P90-17「検索・特集管理」の作品/クリエイター/ギャラリー版）
+   ── 展覧会の KTN.picks（掲載期間・軸ページ重複判定・日替わり抽選つきのフル機能版）を
+   そのまま複製せず範囲を絞った軽量版。この3種別は展覧会と違い恒久URLの軸ページを
+   ほぼ持たない（追174-81/85/86で索引を撤去済み・残るのは年間ランキング1枚ずつ）ため
+   「軸ページと重複していないか」を判定する意味が薄く、季節性の強い訴求も無いため掲載期間の
+   カレンダーも不要（ユーザー判断・2026-09-23）。
+   持つのは〈ラベル・説明文・条件（sel）・再回遊帯に出すか（refeed）〉のみ。
+   **棚の差し込み枠は今回対象外**＝この3ページの棚はまだ全て見出し固定で、運営が入れ替え
+   られる枠自体が無い（差し込み枠を作る回は別途）。今回つながるのは結果末尾の
+   「今日のピックアップ」（renderRefeed）だけ。編集口は P90-17 の種別タブ。
+   `sel` の判定は展覧会版と同じく **宣言（sel）で持ち、使う側（matchKind）が自分のデータ形で
+   組み立てる**（フィールド名がページごとに違うため。KTN.picks の設計方針と同じ）。 */
+KTN.picksLite = (function () {
+  var MIN = 3;
+  function make(cfg) {
+    var KINDS = cfg.kinds, KIND_BY = {};
+    KINDS.forEach(function (k) { KIND_BY[k.key] = k; });
+    var LIST = cfg.list;
+    var BY = {};
+    LIST.forEach(function (e) { BY[e.slug] = e; });
+    function parts(e) {
+      var s = e.sel || {};
+      return KINDS.filter(function (k) { return s[k.key] !== undefined && s[k.key] !== ''; })
+        .map(function (k) { return { kind: k.key, label: k.label, value: s[k.key] }; });
+    }
+    function valueName(kind, v) { return cfg.valueName ? cfg.valueName(kind, v) : v; }
+    function condText(e) {
+      return parts(e).map(function (p) { return p.label + '＝' + valueName(p.kind, p.value); }).join(' × ') || '（条件なし）';
+    }
+    function targets(kind) { return cfg.targets ? (cfg.targets(kind) || []) : []; }
+    function filterFn(e) {
+      var ps = parts(e);
+      return function (x) { return ps.every(function (p) { return cfg.matchKind(x, p.kind, p.value); }); };
+    }
+    function count(e) { return cfg.dataset().filter(filterFn(e)).length; }
+    function all() { return LIST.slice(); }
+    function get(slug) { return BY[slug] || null; }
+    /* 管理画面（P90-17）からの書き換え口。本番は Drupal の設定を書くのでこのセッターは消える。 */
+    function set(slug, patch) {
+      var e = BY[slug]; if (!e || !patch) return null;
+      Object.keys(patch).forEach(function (k) { e[k] = patch[k]; });
+      return e;
+    }
+    return {
+      KINDS: KINDS, all: all, get: get, set: set,
+      parts: parts, condText: condText, count: count, targets: targets, valueName: valueName,
+      filterFn: filterFn, minCount: function () { return cfg.min || MIN; }
+    };
+  }
+  return { make: make };
+}());
+
+var KTN_PICKS_GENRES = ['アート', '写真', 'クラフト', '建築', 'ファッション', 'その他'];
+function ktnPicksTagTargets() { return Object.keys(KTN.p10data.TAG2GENRE).map(function (t) { return { value: t, name: t }; }); }
+function ktnPicksGenreTargets() { return KTN_PICKS_GENRES.map(function (g) { return { value: g, name: g }; }); }
+
+KTN.picksWork = KTN.picksLite.make({
+  min: 2,
+  dataset: function () { return KTN.p10data.WORKS; },
+  kinds: [
+    { key: 'tag',     label: 'タグ',     note: '技法・素材・主題（絵画・書道・版画など）。登録側の自由ワードです。' },
+    { key: 'genre',   label: 'ジャンル', note: '登録時に必ず選ぶ6区分。' },
+    { key: 'liaison', label: 'LIAISON', note: 'オンライン展示・購入の有無。' },
+    { key: 'new',     label: '新着',     note: '最近掲載された作品だけに絞ります。' }
+  ],
+  valueName: function (kind, v) {
+    if (kind === 'liaison') return v === 'lp' ? 'LIAISON+' : 'LIAISON';
+    if (kind === 'new') return '新着のみ';
+    return v;
+  },
+  targets: function (kind) {
+    if (kind === 'tag') return ktnPicksTagTargets();
+    if (kind === 'genre') return ktnPicksGenreTargets();
+    if (kind === 'liaison') return [{ value: 'li', name: 'LIAISON（展示あり）' }, { value: 'lp', name: 'LIAISON+（購入できる）' }];
+    if (kind === 'new') return [{ value: 1, name: '新着のみ' }];
+    return [];
+  },
+  matchKind: function (x, kind, v) {
+    if (kind === 'tag') return x.tags.indexOf(v) !== -1;
+    if (kind === 'genre') return x.genres.indexOf(v) !== -1;
+    if (kind === 'liaison') return v === 'lp' ? x.liaison === 'li-plus' : x.liaison === 'li';
+    if (kind === 'new') return !!x.isNew;
+    return false;
+  },
+  list: [
+    { slug: 'paint-online-buy',  label: '絵画をオンラインで購入',   desc: '絵画のLIAISON+作品です。オンラインでそのまま購入できます。', refeed: 1, sel: { tag: '絵画', liaison: 'lp' } },
+    { slug: 'craft-new-works',   label: '新着のクラフト作品',       desc: '最近掲載されたクラフトの作品です。',                         refeed: 1, sel: { genre: 'クラフト', new: 1 } },
+    { slug: 'calligraphy-works', label: '書のしごとを見る',         desc: '書道の作品です。筆致や墨のにじみは、実物で見ると印象が変わります。', refeed: 1, sel: { tag: '書道' } },
+    { slug: 'gendai-works',      label: '現代美術の作品を見る',     desc: '現代美術の作品です。', refeed: 1, sel: { tag: '現代美術' } }
+  ]
+});
+
+KTN.picksCreator = KTN.picksLite.make({
+  min: 2,
+  dataset: function () { return KTN.p10data.CREATORS; },
+  kinds: [
+    { key: 'tag',     label: 'タグ',     note: '技法・主題（絵画・書道・写真など）。登録側の自由ワードです。' },
+    { key: 'genre',   label: 'ジャンル', note: '登録時に必ず選ぶ6区分。' },
+    { key: 'liaison', label: 'LIAISON', note: '開催中・開催予定の展覧会で、オンライン展示・購入ができるか。' },
+    { key: 'st',      label: '開催状況', note: '展覧会が開催中か開催予定か。' },
+    { key: 'new',     label: '新着',     note: '最近登録されたクリエイターだけに絞ります。' }
+  ],
+  valueName: function (kind, v) {
+    if (kind === 'liaison') return v === 'lp' ? 'LIAISON+' : 'LIAISON';
+    if (kind === 'st') return v === 'live' ? '開催中' : '開催予定';
+    if (kind === 'new') return '新着のみ';
+    return v;
+  },
+  targets: function (kind) {
+    if (kind === 'tag') return ktnPicksTagTargets();
+    if (kind === 'genre') return ktnPicksGenreTargets();
+    if (kind === 'liaison') return [{ value: 'li', name: 'LIAISON（展示あり）' }, { value: 'lp', name: 'LIAISON+（購入できる）' }];
+    if (kind === 'st') return [{ value: 'live', name: '開催中' }, { value: 'upcoming', name: '開催予定' }];
+    if (kind === 'new') return [{ value: 1, name: '新着のみ' }];
+    return [];
+  },
+  matchKind: function (x, kind, v) {
+    if (kind === 'tag') return x.genreTags.indexOf(v) !== -1;
+    if (kind === 'genre') return x.genres.indexOf(v) !== -1;
+    if (kind === 'liaison') return (x.status === 'live' || x.status === 'upcoming') && (v === 'lp' ? x.liaison === 'li-plus' : x.liaison === 'li');
+    if (kind === 'st') return x.status === v;
+    if (kind === 'new') return !!x.isNew;
+    return false;
+  },
+  list: [
+    { slug: 'craft-creators',       label: 'クラフトのクリエイター',              desc: 'クラフトを手がけるクリエイターです。',                           refeed: 1, sel: { genre: 'クラフト' } },
+    { slug: 'buy-online-creators',  label: 'オンラインで作品を買えるクリエイター', desc: 'LIAISON+対応で、作品をオンラインで購入できるクリエイターです。', refeed: 1, sel: { liaison: 'lp' } },
+    { slug: 'photo-creators',       label: '写真のクリエイター',                  desc: '写真を手がけるクリエイターです。',                               refeed: 1, sel: { genre: '写真' } },
+    { slug: 'art-live-creators',    label: 'いま活動中のアート系クリエイター',    desc: 'アートのジャンルで、いま展覧会を開いているクリエイターです。',   refeed: 1, sel: { genre: 'アート', st: 'live' } }
+  ]
+});
+
+KTN.picksGallery = KTN.picksLite.make({
+  min: 2,
+  dataset: function () { return KTN.p10data.GALLERIES; },
+  kinds: [
+    { key: 'area',    label: 'エリア',     note: '47都道府県と東京の6エリア。会場のある場所です。' },
+    { key: 'tag',     label: 'タグ',       note: '扱うジャンル（絵画・書道・写真など）。登録側の自由ワードです。' },
+    { key: 'genre',   label: 'ジャンル',   note: '登録時に必ず選ぶ6区分。' },
+    { key: 'liaison', label: 'LIAISON',   note: '開催中・開催予定の展覧会で、オンライン展示・購入ができるか。' },
+    { key: 'st',      label: '開催状況',   note: '展覧会が開催中か開催予定か。' },
+    { key: 'venue',   label: '会場の設備', note: 'バリアフリー・駐車場・クレジットカード・レンタルの4種。会場ページに登録が無ければ当たりません。' },
+    { key: 'new',     label: '新着',       note: '最近登録されたギャラリーだけに絞ります。' }
+  ],
+  valueName: function (kind, v) {
+    if (kind === 'area') return (KTN.axis && KTN.axis.fullOf(v)) || v;
+    if (kind === 'liaison') return v === 'lp' ? 'LIAISON+' : 'LIAISON';
+    if (kind === 'st') return v === 'live' ? '開催中' : '開催予定';
+    if (kind === 'venue') return { barrierfree: 'バリアフリー対応', parking: '駐車場あり', card: 'クレジットカードOK', rental: 'レンタルギャラリー' }[v] || v;
+    if (kind === 'new') return '新着のみ';
+    return v;
+  },
+  /* エリアは他の軸ページ・ピックアップマスタ（展覧会版）と同じ「47都道府県＋東京6エリア」の
+     登録簿（KTN.axis.ALL）から選べるようにする（2026-09-23・ユーザー指示）。GALLERIES.area は
+     都道府県の素の名前（例「東京」）しか持たないため、都道府県スラッグは SLUG2PREF で素の名前に
+     戻して照合する。東京の6エリア（例「東京都心部」）はこのデモデータの粒度を超えるため現状は
+     0件になるが、語彙としては他ページと揃える（該当が増えたときにそのまま拾える）。 */
+  targets: function (kind) {
+    if (kind === 'area') {
+      var A = KTN.axis; if (!A) return [];
+      return A.ALL.map(function (s) { return { value: s, name: A.fullOf(s) }; });
+    }
+    if (kind === 'tag') return ktnPicksTagTargets();
+    if (kind === 'genre') return ktnPicksGenreTargets();
+    if (kind === 'liaison') return [{ value: 'li', name: 'LIAISON（展示あり）' }, { value: 'lp', name: 'LIAISON+（購入できる）' }];
+    if (kind === 'st') return [{ value: 'live', name: '開催中' }, { value: 'upcoming', name: '開催予定' }];
+    if (kind === 'venue') return [{ value: 'barrierfree', name: 'バリアフリー対応' }, { value: 'parking', name: '駐車場あり' }, { value: 'card', name: 'クレジットカードOK' }, { value: 'rental', name: 'レンタルギャラリー' }];
+    if (kind === 'new') return [{ value: 1, name: '新着のみ' }];
+    return [];
+  },
+  matchKind: function (x, kind, v) {
+    if (kind === 'area') {
+      var A = KTN.axis; if (!A) return x.area === v;
+      return A.isArea(v) ? x.area === A.fullOf(v) : x.area === A.SLUG2PREF[v];
+    }
+    if (kind === 'tag') return x.genreTags.indexOf(v) !== -1;
+    if (kind === 'genre') return x.genres.indexOf(v) !== -1;
+    if (kind === 'liaison') return (x.status === 'live' || x.status === 'upcoming') && (v === 'lp' ? x.liaison === 'li-plus' : x.liaison === 'li');
+    if (kind === 'st') return x.status === v;
+    if (kind === 'venue') return v === 'barrierfree' ? !!x.barrierFree : !!x[v];
+    if (kind === 'new') return !!x.isNew;
+    return false;
+  },
+  list: [
+    { slug: 'barrierfree-galleries', label: 'バリアフリー対応のギャラリー',           desc: 'バリアフリー対応の会場を持つギャラリーです。',     refeed: 1, sel: { venue: 'barrierfree' } },
+    { slug: 'rental-galleries',      label: 'レンタルできるギャラリー',               desc: 'スペースをレンタルできるギャラリーです。',         refeed: 1, sel: { venue: 'rental' } },
+    { slug: 'tokyo-card-galleries',  label: '東京でクレジットカードが使えるギャラリー', desc: '東京にあり、クレジットカードで支払えるギャラリーです。', refeed: 1, sel: { area: 'tokyo', venue: 'card' } },
+    { slug: 'gendai-galleries',      label: '現代美術を扱うギャラリー',               desc: '現代美術を扱うギャラリーです。',                   refeed: 1, sel: { tag: '現代美術' } }
+  ]
+});
+
+/* ════════════════════════════════════════════════════
+   年間ランキング（Annual Ranking）— 共有データ＋行ビルダー
 
    P10-4 は「最新年のダイジェスト（上位3件）」、P10-4-2 は「年ごとの独立ページ」として
    同じ材料を使うが、両者は pageId が違って別モジュールで走るためトップレベルに置く。
@@ -14598,19 +15372,26 @@ KTN.arc = (function () {
 
   /* 会期が終わった展覧会そのものは訪問者にとって行き止まりなので、各行に必ず
      「作り手のいま」＝いまも活動しているクリエイター/ギャラリーへの出口を持たせる。
-     作り手の役割表示は関係の表示なので人物バッジ（.cb-person）ではなく中立のマイクロラベルで示す。 */
+     ラベルは「posted by」＋人物バッジ（.cb-person）に変更（2026-09-22 ユーザー指示）。
+     管理ページのidentity strip（オーナー行＝Cinzelラベル＋人物バッジ＋名前）と同じ語法＝
+     「誰がこの展覧会を投稿したか」を示す構造は前例がある（旧「Artist/Gallery」の
+     中立マイクロラベルは廃止・バッジ自体がcreator/galleryを名乗るため重複を避けた）。 */
   function build(x, i) {
     var hostHref = x.role === 'gallery' ? './kotennavi-p4.html' : './kotennavi-p3.html';
+    var hostCb = '<span class="cb cb-person cb-' + x.role + '">' + x.role + '</span>';
     return '<li class="p104-arc__row">'
       + '<span class="p104-arc__rank">' + (i + 1) + '</span>'
       + '<span class="p104-arc__thumb" style="background:' + x.bg + '"></span>'
       + '<div class="p104-arc__body">'
       + '<a class="p104-arc__title" href="./kotennavi-p2.html">' + esc(x.t) + '</a>'
       + '<div class="p104-arc__meta">' + esc(x.v) + '　' + esc(x.y + '.' + x.s) + '–' + esc(x.e) + '</div>'
-      + '<div class="p104-arc__nums"><span>行きたい <strong>' + x.int + '</strong></span><span>行った <strong>' + x.ci + '</strong></span></div>'
+      + '<div class="p104-arc__nums"><span>興味あり！ <strong>' + x.int + '</strong></span><span>チェックイン <strong>' + x.ci + '</strong></span></div>'
       + '<div class="p104-arc__host">'
-      + '<span class="p104-arc__host-label">' + (x.role === 'gallery' ? 'Gallery' : 'Artist') + '</span>'
+      + '<span class="p104-arc__host-label">posted by</span>'
+      + '<span class="p104-arc__host-who">'
+      + hostCb
       + '<a class="p104-arc__host-name" href="' + hostHref + '">' + esc(x.host) + '</a>'
+      + '</span>'
       + (x.now ? '<a class="p104-arc__now" href="./kotennavi-p2.html">' + esc(x.now) + ' →</a>' : '')
       + '</div>'
       + '</div>'
@@ -14618,6 +15399,123 @@ KTN.arc = (function () {
   }
 
   return { TODAY: TODAY, YEARS: YEARS, SWITCH_MONTH: SWITCH_MONTH, LIMIT: LIMIT, defaultYear: defaultYear, isCurrent: isCurrent, note: note, ROWS: ROWS, rows: rows, build: build };
+}());
+
+/* ════════════════════════════════════════════════════
+   年間ランキング（作品・クリエイター・ギャラリー）— P10-5/6/7 の下半分
+
+   展覧会の年鑑（KTN.arc）と違い、作品・人は「会期が終わる」という区切りを持たない。
+   そのまま累計で並べると古参が居座り続けて新しい作り手が一生上がれないので、
+   **その年に増えた分（年間増分）だけ**で順位を付ける（ユーザー確定・2026-09-09）。
+   ＝去年はじめた人でも、今年よく見られれば今年の番付に載る。
+
+   基準日・切替月・「集計中」の注記は KTN.arc と共有する（年の扱いがページごとに
+   ずれると、同じ年を見ているのに片方だけ前年を開くといった事故になるため）。
+   デモの増分は決定的PRNG（KTN.cl.rng）で累計値から配分する＝リロードしても順位が動かない。
+   本番（Drupal）は年単位の集計テーブルを引くのでこの配分は消える。
+════════════════════════════════════════════════════ */
+KTN.arcx = (function () {
+  function esc(s) { var d = document.createElement('div'); d.textContent = s == null ? '' : s; return d.innerHTML; }
+
+  var A = KTN.arc;
+
+  /* 累計値 base のうち year 中に付いた分。当年は年の途中までしか積み上がっていないので月割りする。 */
+  function delta(kind, id, year, base) {
+    if (!base) return 0;
+    var r = KTN.cl.rng(KTN.cl.strSeed(kind + ':' + id + ':' + year));
+    var v = Math.round(base * (0.22 + r() * 0.26));
+    if (A.isCurrent(year)) v = Math.round(v * (A.TODAY.getMonth() + 1) / 12);
+    return Math.max(base >= 3 ? 1 : 0, v);
+  }
+
+  /* 種別ごとの差分＝母集団・指標の軸・行の中身。データは KTN.p10data（検索ページと共通）を読む。
+     作品の軸に「申込」を使わないのは、申込が LIAISON+ の作品にしか発生せず、母数が偏って
+     ランキングが「販売中の作品の順位」に化けるため（P10-1 右カラムと同じ理由）。 */
+  var KINDS = {
+    work: {
+      label: '作品', en: 'Artworks',
+      modes: { interest: { label: '興味あり！', base: 'interest' }, views: { label: '閲覧数', base: 'pop' } },
+      pool: function () { return KTN.p10data.WORKS; },
+      row: function (x, n) {
+        var href = x.creatorUrl && x.creatorUrl !== '#' ? './' + x.creatorUrl : './kotennavi-p3.html';
+        return { title: x.title, href: './kotennavi-p6.html', thumb: '<span class="p104-arc__thumb" style="background:' + x.bg + '"></span>',
+          meta: [x.medium, x.size, x.area].filter(Boolean).join('　'),
+          nums: '<span>興味あり！ <strong>+' + n.interest + '</strong></span><span>閲覧 <strong>+' + n.views + '</strong></span>',
+          hostLabel: 'Artist', hostName: x.name, hostHref: href, now: '' };
+      }
+    },
+    creator: {
+      label: 'クリエイター', en: 'Creators',
+      modes: { watch: { label: 'ウォッチ', base: 'watch' }, exh: { label: '展覧会数', base: 'exh' } },
+      pool: function () { return KTN.p10data.CREATORS; },
+      row: function (x, n) {
+        return { title: x.name, href: x.href && x.href !== '#' ? './' + x.href : './kotennavi-p3.html',
+          thumb: '<span class="p104-arc__thumb p104-arc__thumb--av p104-arc__thumb--creator" style="background:' + x.avStyle + '">' + esc(x.ini) + '</span>',
+          /* エリアは出さない（追174-86）＝クリエイターは活動場所を持たない */
+          meta: x.genre,
+          nums: '<span>ウォッチ <strong>+' + n.watch + '</strong></span><span>展覧会 <strong>+' + n.exh + '</strong></span>',
+          hostLabel: '', hostName: '', hostHref: '',
+          now: x.status === 'live' ? '開催中の展覧会' : (x.status === 'upcoming' ? '開催予定の展覧会' : '') };
+      }
+    },
+    gallery: {
+      label: 'ギャラリー', en: 'Galleries',
+      modes: { watch: { label: 'ウォッチ', base: 'watch' }, exh: { label: '展覧会数', base: 'exh' } },
+      pool: function () { return KTN.p10data.GALLERIES; },
+      row: function (x, n) {
+        return { title: x.name, href: x.href && x.href !== '#' ? './' + x.href : './kotennavi-p4.html',
+          thumb: '<span class="p104-arc__thumb p104-arc__thumb--av p104-arc__thumb--gallery" style="background:' + x.avStyle + '">' + esc(x.ini) + '</span>',
+          meta: [(KTN.axis && KTN.axis.fullName ? KTN.axis.fullName(x.area) : x.area), x.hours].filter(Boolean).join('　'),
+          nums: '<span>ウォッチ <strong>+' + n.watch + '</strong></span><span>展覧会 <strong>+' + n.exh + '</strong></span>',
+          hostLabel: '', hostName: '', hostHref: '',
+          now: x.status === 'live' ? '開催中の展覧会' : (x.status === 'upcoming' ? '開催予定の展覧会' : '') };
+      }
+    }
+  };
+
+  /* その年の増分を全モード分まとめて付けた行を返す（表示は2軸とも出し、並べ替えだけ mode で切る）。 */
+  function rows(kind, year, mode, limit) {
+    var K = KINDS[kind];
+    if (!K) return [];
+    if (!K.modes[mode]) mode = Object.keys(K.modes)[0];
+    return K.pool().map(function (x) {
+      var n = {};
+      Object.keys(K.modes).forEach(function (m) { n[m] = delta(kind, x.id, year, x[K.modes[m].base]); });
+      return { src: x, n: n };
+    }).sort(function (a, b) { return b.n[mode] - a.n[mode]; }).slice(0, limit || A.LIMIT);
+  }
+
+  function build(kind) {
+    var K = KINDS[kind];
+    return function (r, i) {
+      var d = K.row(r.src, r.n);
+      var foot = '';
+      if (d.hostName) {
+        foot = '<span class="p104-arc__host-label">' + d.hostLabel + '</span>'
+          + '<a class="p104-arc__host-name" href="' + d.hostHref + '">' + esc(d.hostName) + '</a>';
+      }
+      if (d.now) foot += '<a class="p104-arc__now" href="' + d.href + '">' + esc(d.now) + ' →</a>';
+      return '<li class="p104-arc__row">'
+        + '<span class="p104-arc__rank">' + (i + 1) + '</span>'
+        + d.thumb
+        + '<div class="p104-arc__body">'
+        + '<a class="p104-arc__title" href="' + d.href + '">' + esc(d.title) + '</a>'
+        + '<div class="p104-arc__meta">' + esc(d.meta) + '</div>'
+        + '<div class="p104-arc__nums">' + d.nums + '</div>'
+        + (foot ? '<div class="p104-arc__host">' + foot + '</div>' : '')
+        + '</div>'
+        + '</li>';
+    };
+  }
+
+  /* 展覧会の年間ランキング（P10-4-2）と同じ「集計中」注記だが、対象の言い方を種別に合わせる
+     （会期の終了でなく、その年に増えた興味あり！・ウォッチ等が対象のため）。 */
+  function note(kind, year) {
+    if (!A.isCurrent(year)) return '';
+    return year + '年は集計中です（1月〜' + (A.TODAY.getMonth() + 1) + '月に増えた分が対象）。';
+  }
+
+  return { KINDS: KINDS, rows: rows, build: build, note: note, delta: delta };
 }());
 
 /* ════════════════════════════════════════════════════
@@ -14668,9 +15566,9 @@ KTN.axis = (function () {
     { slug: 'tokyo-central', name: '東京都心部',   alias: '銀座・丸の内',       pref: 'tokyo', en: 'Central Tokyo', n: 44 },
     { slug: 'tokyo-east',    name: '東京東部',     alias: '上野・谷根千',       pref: 'tokyo', en: 'East Tokyo',    n: 26 },
     { slug: 'tokyo-west',    name: '東京西部',     alias: '新宿・渋谷',         pref: 'tokyo', en: 'West Tokyo',    n: 24 },
-    { slug: 'tokyo-south',   name: '東京南部',     alias: '自由が丘・二子玉川', pref: 'tokyo', en: 'South Tokyo',   n: 18 },
-    { slug: 'tokyo-north',   name: '東京北部',     alias: '池袋・巣鴨',         pref: 'tokyo', en: 'North Tokyo',   n: 12 },
-    { slug: 'tokyo-outer',   name: '東京23区以外', alias: '立川・八王子',       pref: 'tokyo', en: 'Outer Tokyo',   n:  4 }
+    { slug: 'tokyo-south',   name: '東京南部',     alias: '天王洲・自由が丘', pref: 'tokyo', en: 'South Tokyo',   n: 18 },
+    { slug: 'tokyo-north',   name: '東京北部',     alias: '池袋・本郷',         pref: 'tokyo', en: 'North Tokyo',   n: 12 },
+    { slug: 'tokyo-outer',   name: '東京23区以外', alias: '吉祥寺・国立',       pref: 'tokyo', en: 'Outer Tokyo',   n:  4 }
   ];
   var AREA_BY_SLUG = {};
   AREAS.forEach(function (a) { AREA_BY_SLUG[a.slug] = a; });
@@ -14684,6 +15582,18 @@ KTN.axis = (function () {
   function areaOf(slug)   { return AREA_BY_SLUG[slug] || null; }
   /* 通称。都道府県には無いので空文字が返る＝呼ぶ側は「あれば添える」だけでよく、場所の種類で分岐しない */
   function aliasOf(slug)  { var a = AREA_BY_SLUG[slug]; return (a && a.alias) || ''; }
+  /* 通称込みの表示名（2026-09-20・追174-93 改訂）。「東京南部（天王洲・自由が丘）」を返す。
+     **これを h1・title・description で使う。** 理由＝軸ページの主な役割はSEOで、
+     「東京南部」はサイトが作った区分名で**誰も検索しない**。実際に検索されるのは
+     「自由が丘 展覧会」「銀座 ギャラリー」のような街の名前の方で、通称を外すと
+     その需要をまるごと取りこぼす（当初は「検索語を長くしない」として外していたが、
+     短さより**その語で探されるか**が先。ユーザー指摘により2026-09-20に転換）。
+     通称を持つのは東京の6エリアだけ。都道府県は名前だけで場所が特定できるので付けない。
+     一覧・カード・パンくずなどの短いラベルは従来どおり fullOf（方角名のみ）を使う。 */
+  function fullAlias(slug) {
+    var a = aliasOf(slug);
+    return a ? fullOf(slug) + '（' + a + '）' : fullOf(slug);
+  }
   function areasOf(pref)  { return AREAS.filter(function (a) { return a.pref === pref; }); }
   function parentOf(slug) { var a = AREA_BY_SLUG[slug]; return a ? a.pref : ''; }
   /* 表示名に親県を括弧で添えるかどうか。「銀座」は名前だけでは場所が伝わらないので「銀座（東京都）」と
@@ -14695,6 +15605,12 @@ KTN.axis = (function () {
     return fullOf(slug).indexOf(full.replace(/[都道府県]$/, '')) >= 0 ? '' : '（' + full + '）';
   }
   function has(slug)      { return !!SLUG2PREF[slug] || isArea(slug); }
+  /* 検索ページ（P10／P10-1／P10-3）の area フィルタ値。クリエイター検索（P10-2）は
+     エリアを持たないので渡す先に含まない（追174-86）。検索が持つ場所の粒度は都道府県だけなので、
+     エリア軸（東京都心部…）は親県へ寄せる。返す語彙は common.js の P10_PREF_GROUPS＝
+     ドロワーの「すべての都道府県」が生成する .p10-chip[data-f="area:◯◯"] と同じ短縮名
+     （軸ページの表示名「東京都」ではない）。軸ページから人・ギャラリー・作品へ渡す唯一の経路。 */
+  function searchArea(slug) { var p = isArea(slug) ? parentOf(slug) : slug; return SLUG2PREF[p] || ''; }
   /* 地方ブロック（関東・近畿…）。エリアは親県のブロックを継承する＝補完で使う母数を県と揃える */
   function blockOf(slug)  { var p = isArea(slug) ? parentOf(slug) : slug; return PREF2BLOCK[SLUG2PREF[p]] || ''; }
 
@@ -14820,6 +15736,9 @@ KTN.axis = (function () {
     { pref: 'tokyo', title: '記憶の稜線 — 佐倉ゆき 絵画展', venue: 'アートスペース青', area: '東京南部', varea: 'tokyo-south', kids: 1, attend: 1, s: '2026.04.10', e: '2026.04.26', hours: '11:00–19:00', status: 'ended', rd: -73,  nd: 110, pop: 76, int: 168, ci: 52, genre: 'アート', tags: ['絵画'], liaison: 'li',      imgH: 205, bg: 'linear-gradient(135deg,#8a7a9a,#4e4260)', thumbs: ['linear-gradient(135deg,#a294b0,#6a5e78)', 'linear-gradient(135deg,#9284a0,#5a4e68)', 'linear-gradient(135deg,#b2a4c0,#7a6e88)'] },
     { pref: 'kyoto', title: '古紙と拓 — 拓本の技法展', venue: '京都版画舎', area: '', attend: 1, s: '2026.02.14', e: '2026.03.08', hours: '10:00–17:00', status: 'ended', rd: -122, nd: 150, pop: 61, int: 94,  ci: 33, genre: 'アート', tags: ['版画'], liaison: '',        imgH: 185, bg: 'linear-gradient(135deg,#9a8e7a,#5e5444)' },
     { pref: 'kyoto', title: '冬の白磁 — 三村奏 個展', venue: '京都陶々庵', area: '', kids: 1, s: '2025.12.05', e: '2025.12.21', hours: '10:00–17:00', status: 'ended', rd: -199, nd: 240, pop: 83, int: 205, ci: 71, genre: 'クラフト', tags: ['陶芸', 'クラフト'], liaison: 'li-plus', imgH: 215, light: 1, bg: 'linear-gradient(135deg,#cfd4d8,#8e969e)' },
+    { pref: 'kyoto', title: '写しと写す — 複製技法の系譜', venue: '京都版画舎', area: '', s: '2025.10.10', e: '2025.10.26', hours: '10:00–17:00', status: 'ended', rd: -260, nd: 300, pop: 38, int: 52,  ci: 14, genre: 'アート', tags: ['版画'], liaison: '', imgH: 190, bg: 'linear-gradient(135deg,#8a7a6a,#4e4438)' },
+    { pref: 'kyoto', title: '掌の風景 — 小品陶展', venue: '京都陶々庵', area: '', s: '2025.09.03', e: '2025.09.19', hours: '10:00–17:00', status: 'ended', rd: -297, nd: 340, pop: 29, int: 33,  ci: 8,  genre: 'クラフト', tags: ['陶芸'], liaison: '', imgH: 180, bg: 'linear-gradient(135deg,#a89a86,#645848)' },
+    { pref: 'kyoto', title: '刷りの間 — 木版画二人展', venue: '京都版画舎', area: '', s: '2025.07.18', e: '2025.08.03', hours: '10:00–17:00', status: 'ended', rd: -344, nd: 380, pop: 22, int: 18,  ci: 5,  genre: 'アート', tags: ['版画'], liaison: '', imgH: 175, bg: 'linear-gradient(135deg,#726458,#3e352c)' },
   ];
 
   /* ── 場所軸の補完に出せるのはギャラリーだけ（追174-50）──
@@ -14827,10 +15746,12 @@ KTN.axis = (function () {
      作品も場所を特定できない（関連・回遊ゾーンで作品ページに距離を出さないのと同じ理由）。
      「そのエリアのクリエイター」はデータとして取れないので、場所軸から人の軸へは張らない。 */
   var GALLERY = {
-    tokyo:   [{ type: 'gallery', name: 'YUGEN Gallery',       location: '東京都心部', varea: 'tokyo-central', hours: '11:00–19:00 / 月休',   ini: 'Y', avStyle: 'linear-gradient(135deg,#8b5e3c,#5a3a22)', href: './kotennavi-p4.html' }],
-    kyoto:   [{ type: 'gallery', name: '京都陶々庵',           location: '京都府',     hours: '10:00–17:00 / 水休',   ini: '陶', iniStyle: '.85rem', avStyle: 'linear-gradient(135deg,#9a8e7a,#5e5444)', href: './kotennavi-p4.html' },
-              { type: 'gallery', name: '京都版画舎',           location: '京都府',     hours: '10:00–17:00 / 月休',   ini: '版', iniStyle: '.85rem', avStyle: 'linear-gradient(135deg,#7a6a8a,#4a3e5a)', href: './kotennavi-p4.html' }],
-    tottori: [{ type: 'gallery', name: 'ギャラリー砂丘の窓',   location: '鳥取県',     hours: '11:00–17:00 / 火水休', ini: '砂', iniStyle: '.85rem', avStyle: 'linear-gradient(135deg,#c8b48a,#8a7a52)', href: './kotennavi-p4.html' }]
+    tokyo:   [{ type: 'gallery', name: 'YUGEN Gallery',       location: '東京都中央区京橋2-6-18', varea: 'tokyo-central', hours: '11:00–19:00 / 月休',   exh: 1, watch: 22, status: 'live',     ini: 'Y', avStyle: 'linear-gradient(135deg,#8b5e3c,#5a3a22)', href: './kotennavi-p4.html' }],
+    kyoto:   [{ type: 'gallery', name: '京都陶々庵',           location: '京都府京都市東山区清水4-15-1',     hours: '10:00–17:00 / 水休',   exh: 3, watch: 98, status: 'live',     ini: '陶', iniStyle: '.85rem', avStyle: 'linear-gradient(135deg,#9a8e7a,#5e5444)', href: './kotennavi-p4.html' },
+              { type: 'gallery', name: '京都版画舎',           location: '京都府京都市左京区岡崎円勝寺町6',     hours: '10:00–17:00 / 月休',   exh: 2, watch: 54, status: 'upcoming', ini: '版', iniStyle: '.85rem', avStyle: 'linear-gradient(135deg,#7a6a8a,#4a3e5a)', href: './kotennavi-p4.html' },
+              { type: 'gallery', name: '町家画廊 縁',           location: '京都府京都市中京区姉小路通麩屋町東入ル',     hours: '11:00–18:00 / 火休',   exh: 1, watch: 15, status: '',         ini: '縁', iniStyle: '.85rem', avStyle: 'linear-gradient(135deg,#b09a7a,#6e5c42)', href: './kotennavi-p4.html' },
+              { type: 'gallery', name: '祇園小画廊',           location: '京都府京都市東山区祇園町南側5-6',     hours: '12:00–19:00 / 木休',   exh: 2, watch: 41, status: 'live',     ini: '祇', iniStyle: '.85rem', avStyle: 'linear-gradient(135deg,#9a7a8a,#5c3e4c)', href: './kotennavi-p4.html' }],
+    tottori: [{ type: 'gallery', name: 'ギャラリー砂丘の窓',   location: '鳥取県鳥取市浜坂4-1-1',     hours: '11:00–17:00 / 火水休', exh: 1, watch: 19, status: '',         ini: '砂', iniStyle: '.85rem', avStyle: 'linear-gradient(135deg,#c8b48a,#8a7a52)', href: './kotennavi-p4.html' }]
   };
   /* エリアで引かれたら親県のリストをエリア属性で絞る。県のものへフォールバックはしない＝
      「このエリアに会場を持つギャラリー」という補完ブロックのラベルが嘘になるため（追174-67） */
@@ -14886,13 +15807,17 @@ KTN.axis = (function () {
 
   /* 補完ブロックの器。「順序」と「なぜ出しているか」のラベルは追174-46⑤の規約なので、
      器を共通化して各ページは blocks 配列の中身だけを決める。 */
+  /* b.more（任意）＝1行に収まらない分の逃がし先。{label, href, guest}。
+     guest:true は data-guest="login" を付ける（ギャラリー等ログイン必須の着地・2026-09-22 追加）。 */
   function fillHtml(blocks) {
     return blocks.map(function (b) {
       return '<div class="ktn-axis-fill-block">'
         + '<div class="ktn-axis-fill-block__head">'
         + '<span class="ktn-axis-fill-block__ttl">' + b.ttl + '</span>'
         + '<span class="ktn-axis-fill-block__why">' + b.why + '</span>'
-        + '</div><div class="ktn-axis-fill-block__body">' + b.body + '</div></div>';
+        + '</div><div class="ktn-axis-fill-block__body">' + b.body + '</div>'
+        + (b.more ? '<a class="ktn-more-link"' + (b.more.guest ? ' data-guest="login"' : '') + ' href="' + b.more.href + '">' + b.more.label + ' →</a>' : '')
+        + '</div>';
     }).join('');
   }
   function grid(list) { return '<div class="p10-shelf-grid">' + list.map(buildGridEcCard).join('') + '</div>'; }
@@ -14905,6 +15830,10 @@ KTN.axis = (function () {
      0件の軸ページも索引（エリアから探す）からは必ずたどれるので、リンクを消したわけではない。 */
   var FIXED = ['tokyo', 'kyoto', 'osaka'];
   var MIN = 5;
+  /* **枠数はここに持たない**（2026-09-20 ユーザー判断で撤回）＝何枠入るかはそのページの
+     レイアウトが決める事実で、管理画面から見えない。6枠のグリッドに8を指定すれば行が崩れる。
+     運営が決めるのは〈どのエリアを常設するか〉〈その優先順位〉〈ローテーションのしきい値〉の3つ。
+     各ページは自分の枠数を直書きし（P1=3／P10=4／P10-4=6）、pick(n) が同じ並びの先頭から取る。 */
   var dayShift = 0;
   /* 「今日」の単一ソース。日替わりで動くものは全部ここを見る＝デモバーの日送り（setDayShift）が
      日付そのものを動かすので、月替わりで替わるもの（P10 Picks の枠③）も同じ操作で確認できる。 */
@@ -14971,7 +15900,7 @@ KTN.axis = (function () {
       ibaraki: '<p>茨城県は、五浦で岡倉天心らが日本美術院を営んだ土地であり、水戸芸術館が現代美術の企画を続けてきたエリアです。笠間焼の窯元とギャラリーが同じ通りに並ぶ一帯もあり、うつわの展覧会を目当てに出かける習慣が根づいています。</p>',
       tochigi: '<p>栃木県は、益子の窯元とギャラリーが集まり、大谷石の蔵を改装した会場が街のなかに残るエリアです。宇都宮美術館のような公立の会場から、自分の工房の一角で開く小さな展示まで、規模の幅が大きいのが特徴です。</p>',
       gunma: '<p>群馬県は、群馬県立近代美術館や高崎の文化施設が建築としても知られ、桐生の織物という産地の技が続くエリアです。都心から日帰りできる距離にありながら会場どうしの間隔はあいているので、見たい展覧会を決めてから出かける形になります。</p>',
-      saitama: '<p>埼玉県は、北浦和の県立近代美術館を軸に、川越の蔵造りの町並みや小川の和紙といった仕事の場所が県内に散らばるエリアです。都心の会場に比べて天井や床の余裕がある空間が多く、大きな作品を並べた展覧会に出会えます。</p>',
+      saitama: '<p>埼玉県は、北浦和の県立近代美術館を中心に、川越の蔵造りの町並みや小川の和紙といった仕事の場所が県内に散らばるエリアです。都心の会場に比べて天井や床の余裕がある空間が多く、大きな作品を並べた展覧会に出会えます。</p>',
       chiba: '<p>千葉県は、浮世絵の蒐集で知られる千葉市美術館や、林のなかに建つDIC川村記念美術館のように、性格のはっきりした会場を持つエリアです。房総の側には古い建物を使ったギャラリーも点在し、その建物ごと味わうような展覧会が開かれます。</p>',
       tokyo: '<p>東京都は、ギャラリーの数も展覧会の数も国内でもっとも多いエリアです。大きな美術館の企画展だけでなく、駅から少し歩いた場所にある小さなギャラリーで、その会期にしか見られない展覧会がいくつも開かれています。</p><p>個展なびでは、会期・入場条件・オンライン展示の有無まで含めて、いま足を運べる展覧会をまとめています。</p>',
       kanagawa: '<p>神奈川県は、横浜の関内・馬車道あたりに画廊が集まり、鎌倉や箱根には彫刻を屋外で見せる会場があるエリアです。港町として海外の美術を早くから受け入れてきた土地で、いまも現代美術の展覧会が続けて開かれています。</p>',
@@ -14990,11 +15919,11 @@ KTN.axis = (function () {
       shiga: '<p>滋賀県は、山のなかのMIHO MUSEUMや、琵琶湖を望む滋賀県立美術館のように、行くまでの道のりごと体験になる会場を持つエリアです。信楽の窯場には住み込みで制作する場所もあり、その成果を見せる展覧会が開かれます。</p>',
       kyoto: '<p>京都府の展覧会は、現代美術のギャラリーと、陶芸・版画・染織といった手仕事の系譜が近い距離で並んでいるのが特徴です。町家を改装した小さな会場も多く、展示そのものと同じくらい、その場所に足を運ぶ体験が記憶に残ります。</p>',
       osaka: '<p>大阪府は、中之島に美術館が集まる一方で、北浜や本町の古いビルの一室に小さなギャラリーが入っているエリアです。東洋陶磁の蒐集で知られる会場もあり、現代美術の展覧会とうつわの展覧会を同じ日に続けて見られます。</p>',
-      hyogo: '<p>兵庫県は、神戸の海側に建つ兵庫県立美術館を軸に、旧居留地や元町の路面ギャラリーが続くエリアです。丹波の窯や播州の織物といった産地も県内にあり、都市のギャラリーと産地の展覧会を一日でつなげて回れます。</p>',
+      hyogo: '<p>兵庫県は、神戸の海側に建つ兵庫県立美術館を中心に、旧居留地や元町の路面ギャラリーが続くエリアです。丹波の窯や播州の織物といった産地も県内にあり、都市のギャラリーと産地の展覧会を一日でつなげて回れます。</p>',
       nara: '<p>奈良県は、寺社の造形が日常の風景としてある土地で、赤膚焼や奈良墨といった仕事がいまも続いているエリアです。古い町家を改装した会場が奈良町に点在し、建物の記憶ごと味わうような展覧会が開かれます。</p>',
       wakayama: '<p>和歌山県は、黒江の紀州漆器という産地を持ち、和歌山県立近代美術館が近代以降の作品を見せてきたエリアです。熊野へ向かう道沿いには、移り住んだクリエイターが古い家を会場にして展覧会を開く例もあります。</p>',
       /* ── 中国・四国 ── */
-      tottori: '<p>鳥取県は、吉田璋也が興した新作民藝の流れをくむ土地で、鳥取民藝美術館や牛ノ戸焼の仕事がその系譜を伝えているエリアです。因州和紙の産地も近く、紙や器といった手の仕事を軸にした展覧会が開かれます。</p>',
+      tottori: '<p>鳥取県は、吉田璋也が興した新作民藝の流れをくむ土地で、鳥取民藝美術館や牛ノ戸焼の仕事がその系譜を伝えているエリアです。因州和紙の産地も近く、紙や器といった手の仕事を主題にした展覧会が開かれます。</p>',
       shimane: '<p>島根県は、宍道湖に面した島根県立美術館や、庭園で知られる足立美術館のように、外の景色と一体で見せる会場を持つエリアです。石見焼の甕や石州和紙といった暮らしの道具の系譜も続き、その延長にある展覧会が開かれます。</p>',
       okayama: '<p>岡山県は、倉敷の大原美術館が早くから西洋美術を集めてきた土地であり、備前焼の窯がいまも焚かれているエリアです。瀬戸内の島にも会場があるので、街なかの展覧会と島の展示を組み合わせて見て回る計画が立てられます。</p>',
       hiroshima: '<p>広島県は、市内に美術館が集まり、熊野の筆や宮島の細工といった道具づくりの技が県内に残るエリアです。尾道や竹原のように古い建物を使った会場が点在する町もあり、街歩きの途中で展覧会に出会う形になります。</p>',
@@ -15018,7 +15947,7 @@ KTN.axis = (function () {
       'tokyo-west': '<p>東京西部（新宿区・渋谷区・中野区・杉並区など）は、初台や渋谷の大きな会場と、中野・高円寺あたりの小さなスペースが混ざり合うエリアです。はじめての展覧会がこの一帯で開かれることも多く、会期は短めに設定される傾向があります。</p>',
       'tokyo-south': '<p>東京南部（品川区・目黒区・大田区・世田谷区など）は、庭園美術館や区立の美術館のように、建物と庭ごと見る会場が点在するエリアです。住宅街のなかに構えたギャラリーも多く、静かな環境でゆっくり見られる展覧会に出会えます。</p>',
       'tokyo-north': '<p>東京北部（文京区・豊島区・北区・板橋区など）は、区立美術館が独自の企画を続け、大学や出版に近い文化の層が重なるエリアです。池袋周辺には貸しギャラリーもまとまっていて、はじめての展覧会の会場に選ばれることがあります。</p>',
-      'tokyo-outer': '<p>東京23区以外（多摩地域）は、府中や八王子の市立美術館と、美術大学のある環境が重なるエリアです。制作の場所を郊外に構えている人が多く、都心では置ききれない大きさの作品を見せる展覧会が開かれます。</p>'
+      'tokyo-outer': '<p>東京23区以外（多摩地域）は、吉祥寺や国立のように街なかに小さなギャラリーが点在する一方、府中市美術館のような市立の館も構えるエリアです。美術大学が近く郊外にアトリエを持つ人が多いので、都心では置ききれない大きさの作品に出会えます。</p>'
     },
     /* ── アーカイブ軸の導入文（53件・エリア軸とは別主題で書く）──
        エリア軸（LEADS.area）の題材＝その土地の美術の系譜（美術館・窯場・産地）を
@@ -15117,7 +16046,7 @@ KTN.axis = (function () {
       + 'でこれまでに会期を終えた展覧会の記録です。展示そのものは終わっていますが、出品したクリエイターとギャラリーのページから当時の内容を辿ることができます。</p>';
     if (kind === 'genre')   { var g = genre(key); return '<p>' + (g ? g.name : '') + 'の展覧会・個展を全国からまとめています。会場で実物と向き合ってはじめて分かることが多いジャンルなので、会期のあるうちに足を運べるものから並べています。</p>'; }
     if (kind === 'access')  { var a = access(key); return '<p>' + (a ? a.ttl : '') + 'を全国からまとめています。</p>'; }
-    if (kind === 'year')    return '<p>' + key + '年に会期を終えた展覧会の記録です。会期中に集まった「行きたい」「行った」の反応をもとに、それぞれ上位' + ((KTN.arc && KTN.arc.LIMIT) || 10) + '件を掲載しています。</p>'
+    if (kind === 'year')    return '<p>' + key + '年に会期を終えた展覧会のランキングです。会期中に集まった<strong>興味あり！</strong>（行きたい）と<strong>チェックイン</strong>（実際に行った）の数をもとに、それぞれ上位' + ((KTN.arc && KTN.arc.LIMIT) || 10) + '件を掲載しています。</p>'
       + '<p>会期は終わっていますが、展示をつくったクリエイター・ギャラリーはいまも活動しています。各行から「いまの活動」へたどれるようにしてあります。</p>';
     return '';
   }
@@ -15195,7 +16124,7 @@ KTN.axis = (function () {
     'tokyo-west': '初台・渋谷の大きな会場から中野・高円寺の小さなスペースまで、',
     'tokyo-south': '庭園美術館や区立美術館から住宅街のギャラリーまで、',
     'tokyo-north': '独自の企画を続ける区立美術館から池袋周辺の貸しギャラリーまで、',
-    'tokyo-outer': '府中・八王子の市立美術館から美術大学に近いアトリエまで、'
+    'tokyo-outer': '市立美術館から街なかのギャラリー、美術大学に近いアトリエまで、'
   };
   /* 未登録の軸でも文が壊れないように、従来の共通句をフォールバックに残す。 */
   function descMid(key) { return DESCS[key] || 'ギャラリー・美術館の展示情報を、'; }
@@ -15203,7 +16132,7 @@ KTN.axis = (function () {
   /* 固定枠・しきい値の変更口。選定ロジック（pick）を管理画面 P90-17 側へ複製しないために置く。
      FIXED は配列の中身だけ入れ替える（参照を差し替えると pick 側の束縛が切れる）。
      本番は Drupal の設定値を読むのでこのセッターは消える。 */
-  function setFeatured(fixedList, min) {
+  function setHighlights(fixedList, min) {
     if (fixedList) { FIXED.length = 0; fixedList.forEach(function (x) { FIXED.push(x); }); }
     if (typeof min === 'number' && min === min) MIN = min;
   }
@@ -15212,9 +16141,9 @@ KTN.axis = (function () {
   return {
     GROUPS: GROUPS, SLUGS: SLUGS, SLUG2PREF: SLUG2PREF, PREF2BLOCK: PREF2BLOCK, ALL: ALL, PREFS: PREFS,
     AREAS: AREAS, isArea: isArea, areaOf: areaOf, aliasOf: aliasOf, areasOf: areasOf, parentOf: parentOf, prefNote: prefNote,
-    has: has, blockOf: blockOf,
+    has: has, blockOf: blockOf, searchArea: searchArea,
     GENRES: GENRES, AXIS_GENRES: AXIS_GENRES, ACCESS: ACCESS, COUNT: COUNT, FIXED: FIXED, MIN: MIN, EX: EX, SORTS: SORTS,
-    fullName: fullName, fullOf: fullOf, enName: enName, href: href,
+    fullName: fullName, fullOf: fullOf, fullAlias: fullAlias, enName: enName, href: href,
     genre: genre, genreHref: genreHref, genreTotal: genreTotal, archiveHref: archiveHref,
     access: access, accessHref: accessHref, byAccess: byAccess,
     tags: tags, byTag: byTag,
@@ -15223,20 +16152,20 @@ KTN.axis = (function () {
     today: today, pickArea: pickArea, pickGenre: pickGenre,
     LEADS: LEADS, leadOf: leadOf, leadRaw: leadRaw, leadAuto: leadAuto, setLead: setLead,
     DESCS: DESCS, descMid: descMid,
-    setFeatured: setFeatured, minCount: minCount
+    setHighlights: setHighlights, minCount: minCount
   };
 }());
 
 /* ════════════════════════════════════════════════════
    KTN.season  季節の言葉（P10 Picks 枠③の文言・2026-09-07 新設／追174-74）
    ── サイトで唯一「今月」「季節」を名乗ってよい言葉の置き場。
-   ここ以外の特集ラベル・軸ページの導入文には時制の語を書かない（静的な条件に時制語を
+   ここ以外のピックアップラベル・軸ページの導入文には時制の語を書かない（静的な条件に時制語を
    付けると、中身が変わらないのに周期を約束することになる）。この枠だけは月が替われば
    必ず言葉も対象も替わるので、時制の語を名乗れる。
    使い先は P10 の Picks 枠③ ひとつだけで、着地は P10 の検索。恒久URLを持つ軸ページには
    しない＝季節の言い回しは古びるので URL には焼かない（追174-46④と同じ理由）。
    年を書かないので毎年そのまま使い回せる（12か月ぶんのカレンダーを1本持つ）。
-   編集口は P90-17「軸ページ管理」。表示（P10）と編集（P90-17）が同じ配列を見るために
+   編集口は P90-17「検索・特集管理」。表示（P10）と編集（P90-17）が同じ配列を見るために
    ここへ出した＝管理画面に文言を複製しない（KTN.axis の LEADS と同じ方針）。
    本番は Drupal の設定として持ち、この配列は初期値になる。
 ════════════════════════════════════════════════════ */
@@ -15253,6 +16182,8 @@ KTN.season = (function () {
        area   ＝47都道府県＋東京の6エリア。「避暑地」「古都」のような通称はデータに無いので
                 県・エリアで指し、季節感は言葉の側（「古都の秋をあるく」）が担う。
        access ＝行きやすさ（お子さまと行ける／クリエイター在廊）。 */
+  /* 季節の言葉が指定できる4軸。**KTN.picks の KINDS（ピックアップの15条件）とは別物**で、
+     同名だが中身も所有モジュールも違う（2026-09-20 に誤って重複と判断し削除→復旧）。 */
   var KINDS = [
     { key: 'tag',    label: 'タグ',       note: '技法・素材・主題（絵画・書道・版画など）' },
     { key: 'genre',  label: 'ジャンル',   note: 'サイト共通の6区分（登録時の必須項目）' },
@@ -15350,6 +16281,361 @@ KTN.season = (function () {
 }());
 
 /* ════════════════════════════════════════════════════
+   KTN.picks  ピックアップマスタ（2026-09-19 新設／追174-79 ④・追174-90）
+   ── 棚の差し込み枠2つと PICKS レール・再回遊帯が引く「差し出してよい検索条件」の登録簿。
+   **おすすめ展覧会のリストではない**＝1件＝1つの絞り込み条件で、中身は毎回データから
+   引き直される。決めるのは「どの展覧会を載せるか」ではなく「どの条件を差し出すか」。
+   編集口は P90-17「検索・特集管理」。表示（P10）と編集（P90-17）が同じ配列を見るために
+   ここへ出した＝管理画面に条件を複製しない（KTN.season・KTN.axis の LEADS と同じ方針）。
+   本番は Drupal の設定エンティティとして持ち、この配列は初期値になる。
+
+   条件は**宣言（sel）で持ち、判定は使う側が自分のデータ形で組み立てる**。
+   理由＝P10 の母集団（area は県の表示名・tarea が東京のエリア）と KTN.axis.EX
+   （pref / varea のスラッグ）でフィールド名が違う。関数を配列に焼くと片方でしか動かない。
+════════════════════════════════════════════════════ */
+KTN.picks = (function () {
+  var SLOTS = 2;   /* 棚の差し込み枠の数。増やすと棚の総数（8〜10・追174-79 ②）を超える */
+  var MIN   = 3;   /* 既定の最小件数。これを割った枠は出さない（REFEED_MIN と同じしきい値） */
+
+  /* 条件の種類。
+     axis:1 ＝**恒久URLの軸ページを持つ軸**（エリア53・ジャンル5・行きやすさ2）。
+       この軸だけを1つ指定した条件は軸ページと同じ集合になるので、資格判定で助言を出す
+       （同じ集合が2つの見た目で出て、内部リンクも分散するため・追174-73 ③）。
+     shelf:1 ＝**固定の棚が既に持っている条件**。差し込み枠に置くと同じ棚が二度出る。
+     count:0 ＝KTN.axis.EX に項目が無く、**管理画面では件数を数えられない**条件。
+     note   ＝条件エディタに出す補足。**何を指すかが一語で読めない条件には必ず書く**
+       （2026-09-19 ユーザー指摘「反応の多さは具体的にどの反応のことでしょうか？」）。 */
+  var KINDS = [
+    { key: 'area',     label: 'エリア',       axis: 1, note: '47都道府県と東京の6エリア。会場のある場所です。' },
+    { key: 'genre',    label: 'ジャンル',     axis: 1, note: '登録時に必ず選ぶ6区分。' },
+    { key: 'access',   label: '行きやすさ',   axis: 1, note: '展覧会そのものに登録される条件（お子さま連れ・クリエイター在廊）。' },
+    /* 会場の設備は**展覧会ではなく会場（venue）に登録される**ので「行きやすさ」と分けた。
+       軸ページも持たない＝会場ページに登録が無ければ当たらない属性で、母数の全員が値を
+       持たないため軸にしない（追174-85 の基準）。ピックアップの条件としてはむしろ適任。 */
+    { key: 'venue',    label: '会場の設備',   count: 0, note: '会場ページに登録された設備。登録の無い会場は当たりません。' },
+    { key: 'tag',      label: 'タグ',         note: '技法・素材・主題（絵画・書道・版画など）。登録側の自由ワードです。' },
+    { key: 'liaison',  label: 'LIAISON',      shelf: 1, note: 'オンライン展示・販売の有無。' },
+    { key: 'near',     label: '現在地から近い', shelf: 1, count: 0, note: '見ている人の現在地から近い順。' },
+    { key: 'free',     label: '入場料',       count: 0, note: '入場無料の展覧会だけに絞ります。' },
+    { key: 'form',     label: '出展形式',     count: 0, note: '出展者がひとりか複数か。' },
+    { key: 'when',     label: '会期',         count: 0, note: '今日を起点に動く条件。日によって該当が入れ替わります。' },
+    /* 期間指定（MM-DD〜MM-DD）。ゴールデンウィーク・クリスマスのような**名前のある時期**は
+       ここで期間を指定し、**名前は label の側で付ける**（「ゴールデンウィークに行く」）。
+       期間そのものを条件にすれば毎年そのまま使い回せる＝年をデータに焼かない（追174-74 と同じ考え方）。 */
+    { key: 'period',   label: '会期が重なる期間', note: '会期がこの期間に少しでもかかる展覧会。例：04-29〜05-05（ゴールデンウィーク）、12-01〜12-25（クリスマス）。' },
+    /* 開催状態。境界は P10 の SOON_DAYS（3日）が単一ソースで、開催ステータスのバッジ
+       （もうすぐ開催／もうすぐ終了）と同じ日数を見る＝検索から入っても棚から入っても同じ集合。
+       管理画面では数えない（count:0）＝「今日」と SOON_DAYS はページ側の計算で、
+       軸の集計に持ち込むと2か所で境界がずれるため。 */
+    { key: 'status',   label: '開催状態',     count: 0, note: '開催中・もうすぐ開催（3日前から）・もうすぐ終了（終了3日前から）・今日から開催。境界はサイトの開催ステータスのバッジと同じ日数です。' },
+    /* 反応は**どの反応かを名前で言う**（追174-83＝指標名はサイトのCTA語に揃える）。
+       旧「反応の多さ」は pop（複数の反応を合わせた 0〜100 の内部スコア）を指していたが、
+       画面上どの反応か読めなかった。興味あり！とチェックインを別々に出し、
+       合成スコアは名前を変えて残す（**算出式は本番で確定する**＝プロトタイプでは未定義）。 */
+    { key: 'interest', label: '興味あり！の数', note: 'その展覧会に付いた「興味あり！」の累計。' },
+    { key: 'checkin',  label: 'チェックインの数', note: '会場で記録されたチェックインの累計。' },
+    { key: 'pop',      label: '人気スコア',   note: '閲覧数×1 ＋ 興味あり！×10 ＋ チェックイン×20 で算出します（重みは実装時に確定）。並び替えの「人気順」と同じ指標です。' }
+  ];
+  var KIND_BY = {};
+  KINDS.forEach(function (k) { KIND_BY[k.key] = k; });
+
+  /* 登録簿。order＝掲載順（期間内に候補が複数あるときの優先度）／from,to＝掲載期間（MM-DD・
+     年を持たないので毎年そのまま回る。空なら通年）／shelf＝差し込み枠に出してよいか／
+     refeed＝再回遊帯に出してよいか／min＝この件数を割ったら出さない（省略時 MIN）。
+     **shelf:0 は「資格が無い」ではなく「差し込み枠には出さない」という運営の指定**。
+     資格の判定（qualify）は助言として管理画面に出すだけで、自動で消さない。 */
+  var LIST = [
+    {
+      slug: 'tokyo-gendai', order: 1, from: '', to: '', shelf: 1, refeed: 1,
+      label: '東京・現代美術',
+      desc: '東京で開かれている現代美術の展覧会です。都内をまとめて回る日の下見にも。',
+      sel: { area: 'tokyo', tag: '現代美術' }
+    },
+    {
+      slug: 'weekend', order: 2, from: '', to: '', shelf: 1, refeed: 1,
+      label: 'この週末に行きたい',
+      desc: 'この土日に開いている展覧会です。予定を決めてから出かけられます。',
+      sel: { when: 'weekend' }
+    },
+    {
+      slug: 'free', order: 3, from: '', to: '', shelf: 1, refeed: 1,
+      label: '無料で楽しめる展示',
+      desc: '入場無料で見られる展覧会です。通りがかりに立ち寄って、合わなければ出ても構いません。',
+      sel: { free: 1 }
+    },
+    {
+      slug: 'solo-all', order: 4, from: '', to: '', shelf: 1, refeed: 1,
+      label: 'ひとりの作家をじっくり',
+      desc: '出展者がひとりの展覧会です。ひとつの仕事をまとめて見られます。',
+      sel: { form: 'solo', pop: 60 }
+    },
+    {
+      slug: 'shodo', order: 5, from: '', to: '', shelf: 1, refeed: 1,
+      label: '話題の書道展',
+      desc: 'いま多くの人が見にいっている書の展覧会です。筆と墨のしごとをまとめて見られます。',
+      sel: { tag: '書道' }
+    },
+    {
+      slug: 'hanga', order: 6, from: '', to: '', shelf: 1, refeed: 1,
+      label: '版画の世界',
+      desc: '版画の展覧会です。刷りの重なりや紙の質感は、実物で見ると印象が変わります。',
+      sel: { tag: '版画' }
+    },
+    {
+      slug: 'fukuoka', order: 7, from: '', to: '', shelf: 0, refeed: 1,
+      label: '福岡で行くべき展覧会',
+      desc: '福岡で開かれている展覧会です。市内の美術館から小さなギャラリーまで並んでいます。',
+      sel: { area: 'fukuoka' }
+    },
+    {
+      slug: 'photo', order: 8, from: '', to: '', shelf: 0, refeed: 1,
+      label: '写真展セレクション',
+      desc: '写真の展覧会です。プリントの大きさや紙の選び方まで、会場でしか分からないものがあります。',
+      sel: { tag: '写真' }
+    },
+    {
+      slug: 'near-live', order: 9, from: '', to: '', shelf: 0, refeed: 1,
+      label: '近くで開催中',
+      desc: 'いまいる場所から近い、開催中の展覧会です。思い立った日に寄れます。',
+      sel: { near: 1, status: 'live' }
+    },
+    {
+      slug: 'liaison', order: 10, from: '', to: '', shelf: 0, refeed: 1,
+      label: 'オンラインで楽しめる',
+      desc: '会場に行かなくても、作品をオンラインで見られる展覧会です。気になったら会期中に足を運ぶこともできます。',
+      sel: { liaison: 'any' }
+    },
+    {
+      slug: 'liaison-plus', order: 11, from: '', to: '', shelf: 0, refeed: 1,
+      label: 'オンラインで購入できる',
+      desc: 'オンラインで作品を見て、そのまま購入できる展覧会です。会場が遠くても手元に迎えられます。',
+      sel: { liaison: 'li-plus' }
+    },
+    {
+      slug: 'week-picks', order: 12, from: '', to: '', shelf: 0, refeed: 1,
+      label: '人気の展覧会',
+      desc: 'いま多くの人が「興味あり！」を付け、会場に足を運んでいる展覧会です。',
+      sel: { pop: 80, status: 'live' }
+    }
+  ];
+  var BY = {};
+  LIST.forEach(function (e) { BY[e.slug] = e; });
+
+  /* ── 条件の読み方（表示・判定・件数で同じ規則を見る）── */
+  function parts(e) {
+    var s = e.sel || {};
+    return KINDS.filter(function (k) { return s[k.key] !== undefined && s[k.key] !== ''; })
+      .map(function (k) { return { kind: k.key, label: k.label, value: s[k.key] }; });
+  }
+  /* 表示名は軸API（KTN.axis）が単一ソース。スラッグのまま画面に出さない。 */
+  function valueName(kind, v) {
+    var A = KTN.axis;
+    if (kind === 'area')    return (A && A.fullOf(v)) || v;
+    if (kind === 'genre')   { var g = A && A.genre(v); return g ? g.name : v; }
+    if (kind === 'access')  { var a = A && A.access(v); return a ? a.chip : v; }
+    if (kind === 'venue')   return v === 'parking' ? '駐車場あり' : 'バリアフリー対応';
+    if (kind === 'liaison') return v === 'li-plus' ? 'LIAISON+' : 'LIAISON';
+    if (kind === 'form')    return v === 'solo' ? '個展' : 'グループ展';
+    if (kind === 'when')    return v === 'weekend' ? '今週末に開催' : '今月中に開催';
+    if (kind === 'status')  return { live: '開催中', opensoon: 'もうすぐ開催', endsoon: 'もうすぐ終了', opentoday: '今日から開催' }[v] || v;
+    return v;
+  }
+  function condText(e) {
+    return parts(e).map(function (p) {
+      if (p.kind === 'interest') return '興味あり！ ' + p.value + ' 以上';
+      if (p.kind === 'checkin')  return 'チェックイン ' + p.value + ' 以上';
+      if (p.kind === 'pop')      return '人気 ' + p.value + ' 以上';
+      if (p.kind === 'status')   return valueName('status', p.value);
+      if (p.kind === 'free')     return '入場無料';
+      if (p.kind === 'near')     return '現在地から近い';
+      if (p.kind === 'period')   return '会期が ' + String(p.value).replace('~', '〜') + ' にかかる';
+      if (p.kind === 'when' || p.kind === 'form' || p.kind === 'liaison' || p.kind === 'venue') return valueName(p.kind, p.value);
+      return p.label + '＝' + valueName(p.kind, p.value);
+    }).join(' × ') || '（条件なし）';
+  }
+  /* 選択肢。管理画面の条件エディタが読む＝**語彙を管理画面に複製しない**（KTN.season.targets と同型）。
+     tag と period は一覧で閉じない＝tag は登録側の自由ワード、period は任意の日付範囲のため。 */
+  function targets(kind) {
+    var A = KTN.axis; if (!A) return [];
+    if (kind === 'area')     return A.ALL.map(function (s) { return { value: s, name: A.fullOf(s) }; });
+    if (kind === 'genre')    return A.AXIS_GENRES.map(function (g) { return { value: g.slug, name: g.name }; });
+    if (kind === 'access')   return A.ACCESS.map(function (a) { return { value: a.slug, name: a.chip }; });
+    if (kind === 'venue')    return [{ value: 'parking', name: '駐車場あり' }, { value: 'barrierFree', name: 'バリアフリー対応' }];
+    if (kind === 'tag')      return A.tags(false).map(function (t) { return { value: t.name, name: t.name }; });
+    if (kind === 'liaison')  return [{ value: 'any', name: 'LIAISON（展示あり）' }, { value: 'li-plus', name: 'LIAISON+（販売あり）' }];
+    if (kind === 'form')     return [{ value: 'solo', name: '個展' }, { value: 'group', name: 'グループ展' }];
+    if (kind === 'when')     return [{ value: 'weekend', name: '今週末に開催' }, { value: 'thismonth', name: '今月中に開催' }];
+    if (kind === 'free')     return [{ value: 1, name: '入場無料のみ' }];
+    if (kind === 'near')     return [{ value: 1, name: '現在地から近い' }];
+    if (kind === 'status')   return [{ value: 'live', name: '開催中' }, { value: 'opensoon', name: 'もうすぐ開催' }, { value: 'endsoon', name: 'もうすぐ終了' }, { value: 'opentoday', name: '今日から開催' }];
+    return [];
+  }
+
+  /* ── 日付の持ち方（2026-09-19 追記6 で年ありへ変更）──
+     当初は月日だけ（MM-DD）で持ち「毎年そのまま回る」としたが、**年によって日が動く時期がある**
+     （ユーザー指摘：ゴールデンウィーク・シルバーウィーク。シルバーウィークは敬老の日＝9月第3月曜と
+     秋分の日の並びで毎年ずれる）。そこで**値は常に YYYY-MM-DD で持ち、`annual` フラグで
+     「年を見るかどうか」を切り替える**。2つの書式を使い分けるより、値は1つで判定を変える方が
+     入力も移行も壊れにくい。
+       annual:1 ＝毎年くり返す（年を無視して月日だけで判定）… 通年の棚・季節の条件
+       annual:0 ＝その年だけ（年まで一致で判定）………………… GW・シルバーウィーク・企画連動 */
+  function pad(n) { return ('0' + n).slice(-2); }
+  function isoOf(d) { return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
+  function today() { return (KTN.axis && KTN.axis.today) ? KTN.axis.today() : new Date(); }
+  function mdOf(v) { v = String(v || ''); return v.length === 10 ? v.slice(5) : v; }
+  function segs(from, to) { return from <= to ? [[from, to]] : [[from, '12-31'], ['01-01', to]]; }
+  /* 会期（'06.28' 形式・年を持たない）と指定期間の重なり。会期が年をまたぐ展覧会
+     （12.20–01.10）と、年をまたぐ指定（12-20〜01-05）の両方を2区間に割って見る。
+     **この1関数を P10 と管理画面で共有する**＝棚の中身と件数が別の規則で数えられないように。 */
+  function toMd(v) { return String(v || '').replace('.', '-').replace('/', '-'); }
+  function overlaps(s, e, from, to) {
+    var a = segs(toMd(s), toMd(e)), b = segs(toMd(from), toMd(to));
+    return a.some(function (x) { return b.some(function (y) { return x[0] <= y[1] && y[0] <= x[1]; }); });
+  }
+  function inTerm(e, d) {
+    if (!e.from && !e.to) return true;
+    var t = d || today();
+    if (e.annual) {
+      var md = isoOf(t).slice(5), f = mdOf(e.from) || '01-01', o = mdOf(e.to) || '12-31';
+      return f <= o ? (md >= f && md <= o) : (md >= f || md <= o);
+    }
+    var iso = isoOf(t);
+    return iso >= (e.from || '0000-01-01') && iso <= (e.to || '9999-12-31');
+  }
+  function termText(e) {
+    if (!e.from && !e.to) return '通年';
+    var f = e.from || '', o = e.to || '';
+    return (e.annual ? mdOf(f) + ' 〜 ' + mdOf(o) + '（毎年）' : f + ' 〜 ' + o);
+  }
+  /* 期間条件（会期が重なる期間）。'YYYY-MM-DD~YYYY-MM-DD' で持ち、
+     sel.periodAnnual が立っていれば年を見ない。 */
+  function periodRange(v) {
+    var p = String(v || '').split(/[~〜]/);
+    return p.length === 2 && p[0].trim() && p[1].trim() ? [p[0].trim(), p[1].trim()] : null;
+  }
+  function periodHit(x, sel) {
+    var r = periodRange(sel.period); if (!r) return false;
+    /* その年だけの指定は、別の年には当たらない（GW 2026 の枠が 2027 に出ない）。
+       会期データ側が年を持たない前提なので、年の一致は「今年かどうか」で見る。
+       本番は会期も年を持つので、ここは会期の年と期間の年の比較になる。 */
+    if (!sel.periodAnnual && r[0].length === 10) {
+      if (r[0].slice(0, 4) !== String(today().getFullYear())) return false;
+    }
+    return overlaps(x.s, x.e, mdOf(r[0]), mdOf(r[1]));
+  }
+  /* 「今月中」の期間。KTN.axis.today() を見るのでデモバーの日送りに追従する。 */
+  function thisMonth() {
+    var d = today(), m = pad(d.getMonth() + 1);
+    return [m + '-01', m + '-' + pad(new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate())];
+  }
+
+  /* 件数を管理画面で数えられるか。KTN.axis.EX に項目が無い条件を含むと数えられない。 */
+  function countable(e) {
+    return parts(e).every(function (p) { return KIND_BY[p.kind].count !== 0; });
+  }
+  /* KTN.axis.EX（軸の集計母集団）で数える。数えられない条件は null を返す＝
+     管理画面は「—」を出す。**概算を出さない**＝数えた数と実際に出る数が食い違うと
+     「出る／出ない」の判断が狂うため（KTN.season の resolve と同じ考え方）。 */
+  function count(e) {
+    var A = KTN.axis;
+    if (!A || !countable(e)) return null;
+    var ps = parts(e);
+    if (!ps.length) return 0;
+    return A.EX.filter(function (x) {
+      if (x.status === 'ended') return false;
+      return ps.every(function (p) {
+        var v = p.value;
+        if (p.kind === 'area')    return A.isArea(v) ? x.varea === v : x.pref === v;
+        if (p.kind === 'genre')   { var g = A.genre(v); return x.genre === (g ? g.name : v); }
+        if (p.kind === 'access')  { var a = A.access(v); return !!a && !!x[a.field]; }
+        if (p.kind === 'tag')     return (x.tags || []).indexOf(v) !== -1;
+        if (p.kind === 'liaison') return v === 'li-plus' ? x.liaison === 'li-plus' : !!x.liaison;
+        if (p.kind === 'interest') return x.int >= v;
+        if (p.kind === 'checkin')  return x.ci >= v;
+        if (p.kind === 'pop')      return x.pop >= v;
+        if (p.kind === 'period')   return periodHit(x, e.sel || {});
+        return true;
+      });
+    }).length;
+  }
+
+  /* ── 資格の判定（助言）。**自動で消さない**＝運営が見て shelf を決める材料にする。 ── */
+  var TENSE = ['今月', '今週', '今日', '今年', '最新', '季節', '今シーズン'];
+  function qualify(e) {
+    var ps = parts(e), issues = [];
+    var A = KTN.axis;
+    var axisNames = (A && A.AXIS_GENRES) ? A.AXIS_GENRES.map(function (g) { return g.name; }) : [];
+    if (!ps.length) issues.push({ code: 'empty', text: '条件が空です。1つ以上の絞り込みを指定してください。' });
+    if (ps.length === 1) {
+      var p0 = ps[0];
+      if (KIND_BY[p0.kind].axis) issues.push({ code: 'axis', text: p0.label + 'だけの指定は軸ページと同じ集合です。軸ページへの内部リンクが分散するので、別の軸と掛け合わせてください。' });
+      else if (p0.kind === 'tag' && axisNames.indexOf(p0.value) !== -1) issues.push({ code: 'axis', text: '「' + p0.value + '」はジャンル6区分と同名で、ジャンル軸ページと同じ集合になります。' });
+    }
+    if (ps.length && ps.every(function (p) { return KIND_BY[p.kind].shelf || p.kind === 'status'; }) && ps.some(function (p) { return KIND_BY[p.kind].shelf; }))
+      issues.push({ code: 'shelf', text: '固定の棚（近くの展覧会・オンラインでも楽しめる）と同じ条件です。差し込み枠に置くと同じ棚が二度出ます。' });
+    if (ps.length && ps.every(function (p) { return p.kind === 'pop' || p.kind === 'status'; }) && ps.some(function (p) { return p.kind === 'pop'; }))
+      issues.push({ code: 'rank', text: '人気の指標だけで絞った条件は、右カラムのランキングと役割が重なります。' });
+    /* **件数は qualify で見ない**（2026-09-19）。qualify は「条件の設計として妥当か」の
+       構造的な判定で、今日のデータの多少とは別軸。最小件数のガードは**表示時にページが
+       自分の母集団で行う**（fillPick の entry.min 判定）。ここで数えると、管理画面（KTN.axis.EX で
+       集計）と棚（P10 が持つ母集団）で数が食い違ったとき「足りない」と言いながら棚は出る、
+       という矛盾が起きる。count() は本番（両者が同じ Drupal データを見る）のために残す。 */
+    if (!(e.sel && e.sel.when) && TENSE.some(function (w) { return (e.label || '').indexOf(w) !== -1; }))
+      issues.push({ code: 'tense', text: '時制の語を含むラベルですが、条件が会期で動きません。季節を名乗れるのは PICKS の季節の言葉だけです。' });
+    return { ok: !issues.length, issues: issues };
+  }
+
+
+  /* ── 差し込み枠に入れる候補 ──
+     候補が枠数を超えたときの選び方は2つ。既定は**掲載順の上から**（運営が期間で回す）。
+     `ROTATE` を立てると**日替わり**で入れ替える（追174-79 ④ が認めていた決定的抽選）。
+
+     **ページを開くたびのランダムにはしない。** クローラが見るたび中身が変わると棚の内部リンクが
+     安定せず、同じ人が再訪したとき「前に見たあれ」を同じ場所で探せなくなる（追174-79 ③ の (b)(c)）。
+     日付をシードにすれば1日の中では必ず同じ顔ぶれになるので、その2つは壊れない。
+
+     **回し方はシャッフルでなく順送り**（slug 昇順に並べ、日ごとに開始位置を1つずらして k 件取る）。
+     注目のエリア（KTN.axis.pick）は hash 順のシャッフルだが、あちらは母数が53本あって偏りが
+     散るのに対し、ここは候補が数本しかない。実際シャッフルで試すと30日で6件中1件が3回
+     （理想10回）しか出なかった。順送りなら len 日で全件がちょうど k 回ずつ出るので、
+     **露出を配るという枠の目的**（低露出枠の保証と同じ思想）に対して確実になる。
+     slug 昇順を土台にするのは、配列に行を足しても既存の並びが動かないようにするため。 */
+  var ROTATE = 0;
+  function byOrder(a, b) { return (a.order || 0) - (b.order || 0) || (a.slug < b.slug ? -1 : 1); }
+  function bySlug(a, b) { return a.slug < b.slug ? -1 : a.slug > b.slug ? 1 : 0; }
+  function shelf(n) {
+    var k = typeof n === 'number' ? n : SLOTS;
+    var c = LIST.filter(function (e) { return e.shelf && inTerm(e); });
+    if (ROTATE && c.length > k) {
+      var d = (KTN.axis && KTN.axis.dayNo) ? KTN.axis.dayNo() : 0;
+      var s = c.slice().sort(bySlug), out = [];
+      var start = ((d % s.length) + s.length) % s.length;
+      for (var i = 0; i < k; i++) out.push(s[(start + i) % s.length]);
+      return out;
+    }
+    return c.sort(byOrder).slice(0, k);
+  }
+  function rotate(v) { if (v !== undefined) ROTATE = v ? 1 : 0; return ROTATE; }
+  function all() { return LIST.slice(); }
+  function get(slug) { return BY[slug] || null; }
+  /* 管理画面（P90-17）からの書き換え口。本番は Drupal の設定を書くのでこのセッターは消える。 */
+  function set(slug, patch) {
+    var e = BY[slug]; if (!e || !patch) return null;
+    Object.keys(patch).forEach(function (k) { e[k] = patch[k]; });
+    return e;
+  }
+
+  return {
+    SLOTS: SLOTS, MIN: MIN, KINDS: KINDS,
+    all: all, get: get, set: set, shelf: shelf,
+    parts: parts, condText: condText, count: count, countable: countable,
+    qualify: qualify, inTerm: inTerm, termText: termText,
+    targets: targets, valueName: valueName,
+    overlaps: overlaps, periodRange: periodRange, periodHit: periodHit, thisMonth: thisMonth, rotate: rotate
+  };
+}());
+
+/* ════════════════════════════════════════════════════
    P10  検索-展覧会（ディスカバリーハブ）
 ════════════════════════════════════════════════════ */
 KTN.pages['p10'] = function () {
@@ -15385,7 +16671,7 @@ KTN.pages['p10'] = function () {
     { id: 14, title: '白の器展', venue: '京都陶々庵', area: '京都', onsite: 1, s: '07.08', e: '07.28', hours: '10:00–17:00', status: 'live',   remain: '残り20日', rd: 20, tags: ['陶芸'], genre: 'クラフト', type: 'group', free: 0, liaison: '',        pop: 47, int: 44,  ci: 9,  dist: null,    wk: 0, nd: 20,   elapsed: 0,  growth: .02,   imgH: 185, light: 1, bg: 'linear-gradient(135deg,#b0aca0,#6e6a5e)' },
     { id: 15, title: '路地と光 — 街歩き写真部', venue: 'コートギャラリー谷中', area: '東京', tarea: '東京東部', kids: 1, bonus: 1, s: '07.03', e: '07.15', hours: '11:00–18:00', status: 'live',   remain: '残り7日',  rd: 7,  tags: ['写真'], genre: '写真', type: 'group', free: 1, liaison: '',        pop: 71, int: 104, ci: 38, dist: '1.8km', wk: 1, nd: 5,    elapsed: 5,  growth: .22,   imgH: 220, bg: 'linear-gradient(135deg,#8a8a70,#4e4e38)' },
     { id: 16, title: 'えんぴつと余白 — 西尾栞', venue: '鎌倉小町ギャラリー', area: '神奈川', onsite: 1, attend: 1, s: '07.20', e: '08.04', hours: '10:00–17:00', status: 'soon',   remain: '12日後に開催', rd: 97, tags: ['絵画'], genre: 'アート', type: 'solo',  free: 1, liaison: '',        pop: 40, int: 31,  ci: 0,  dist: null,    wk: 0, nd: 2,    elapsed: 0,  growth: 0,    imgH: 175, light: 1, bg: 'linear-gradient(135deg,#d0c8a0,#8a8258)' },
-    /* ── 終了済み（status:'ended'）＝検索でのみ出る母数。棚・レール・右カラム・特集は DISC（notEnded）を見るので入らない ── */
+    /* ── 終了済み（status:'ended'）＝検索でのみ出る母数。棚・レール・右カラム・ピックアップは DISC（notEnded）を見るので入らない ── */
     { id: 17, title: '記憶の稜線 — 佐倉ゆき 絵画展', venue: 'アートスペース青', area: '東京', tarea: '東京南部', kids: 1, attend: 1, s: '2026.04.10', e: '2026.04.26', hours: '11:00–19:00', status: 'ended', rd: -73,  tags: ['絵画', '現代美術'], genre: 'アート', type: 'solo',  free: 0, liaison: 'li',      pop: 76, int: 168, ci: 52, dist: '2.9km', wk: 0, nd: 110, elapsed: 16, growth: 0, imgH: 205, bg: 'linear-gradient(135deg,#8a7a9a,#4e4260)' },
     { id: 18, title: '古紙と拓 — 拓本の技法展', venue: '京都版画舎', area: '京都', onsite: 1, attend: 1, s: '2026.02.14', e: '2026.03.08', hours: '10:00–17:00', status: 'ended', rd: -122, tags: ['版画'], genre: 'アート', type: 'group', free: 1, liaison: '',        pop: 61, int: 94,  ci: 33, dist: null,    wk: 0, nd: 150, elapsed: 22, growth: 0, imgH: 185, bg: 'linear-gradient(135deg,#9a8e7a,#5e5444)' },
     { id: 19, title: '冬の白磁 — 三村奏 個展', venue: '京都陶々庵', area: '京都', onsite: 1, kids: 1, s: '2025.12.05', e: '2025.12.21', hours: '10:00–17:00', status: 'ended', rd: -199, tags: ['陶芸'], genre: 'クラフト', type: 'solo',  free: 0, liaison: 'li-plus', pop: 83, int: 205, ci: 71, dist: null,    wk: 0, nd: 240, elapsed: 16, growth: 0, imgH: 215, light: 1, bg: 'linear-gradient(135deg,#cfd4d8,#8e969e)' },
@@ -15422,7 +16708,7 @@ KTN.pages['p10'] = function () {
   function venueFact(x, f) { var v = VENUES[x.venue]; return !!(v && v[f]); }
 
   /* 新着＝掲載からの経過日数 nd が NEW_DAYS 以内。手打ちの isNew フラグを廃し1本のしきい値から導出する。
-     これでチップ new:1・棚「新着掲載」・並べ替え「新着順」・特集 new-all が同じ定義を見る（SOON_DAYS と同じ考え方・2026-09-03）。
+     これでチップ new:1・棚「新着掲載」・並べ替え「新着順」・ピックアップ new-all が同じ定義を見る（SOON_DAYS と同じ考え方・2026-09-03）。
      本番は Drupal の掲載日から nd を算出する。 */
   var NEW_DAYS = 14;
   EX.forEach(function (x) { x.isNew = x.nd <= NEW_DAYS; });
@@ -15433,7 +16719,7 @@ KTN.pages['p10'] = function () {
   function notEnded(x) { return x.status !== 'ended'; }
 
   /* ── 母数の分離（2026-09-03 確定・追174-45）──
-     棚・レール・右カラム・特集は「これから行ける展覧会」の面なので DISC（＝終了済みを除いた母数）だけを見る。
+     棚・レール・右カラム・ピックアップは「これから行ける展覧会」の面なので DISC（＝終了済みを除いた母数）だけを見る。
      過去の展覧会を扱うのは検索だけ（runFilter の EX.filter）＝会期の記録を辿る用途は検索の役割として切り分ける。
      新しい棚・レールを足すときも必ず DISC を母数にする（EX を直接 filter しない）。 ── */
   var DISC = EX.filter(notEnded);
@@ -15471,7 +16757,24 @@ KTN.pages['p10'] = function () {
     return false;
   }
 
-  /* ── 特集プリセット（アルゴリズム生成の保存済み検索）
+  /* ==================================================================
+     P10系の語彙規約（canonical・追174-89）2026-09-19 確定
+     似た3つの概念が同じ feat / Feature の語を共用していたため、日本語・英語・識別子の
+     3つとも重ならない語へ分けた。**新規のP10系UIは必ずこの表の語を使う**。
+
+       概念                      日本語        英ラベル      識別子
+       ────────────────────────────────────────────────────
+       P10-4〜P10-7 という層        特集          Features     feature
+       検索面の保存済み検索・差し込み枠  ピックアップ    Picks        pick / preset
+       おすすめ順の巻頭クラスタ・注目のエリア  注目          Highlights   hl
+
+     ・「特集」はナビ語彙（パンくず中間項・タグバー・サイトマップ・内部識別子）限定で、title/h1 には入れない（追174-80・追174-82）。
+     ・検索面（P10・P10-1〜3）の棚・再回遊帯・ゼロヒット提案はすべて「ピックアップ」。ここに「特集」を書かない。
+     ・旧 Featured（注目クラスタ）は Features（特集）と1文字違いで並んでいたため Highlights へ改称した。
+     ・運営が登録する候補集合の呼称は「**ピックアップマスタ**」（旧「特集マスタ」・追174-79 ④）。
+       下の PRESETS がそのプロトタイプ相当で、shelf / 掲載期間 / 掲載順 / 最小件数 は未実装。編集口は P90-17。
+     ================================================================== */
+  /* ── ピックアッププリセット（アルゴリズム生成の保存済み検索）
      アイコンはプリセットの主ファセット軸（axis）から決定的にマッピング（2026-07-08 確定）：
        area=ピン / date=カレンダー / price=チケット / pop=星 / tag=タグ
      自動生成でも「生成条件の主軸 → アイコン」が一意に決まる（恣意的な絵文字は使わない）。
@@ -15485,14 +16788,16 @@ KTN.pages['p10'] = function () {
   };
 
   /* ノーマーク（まだ多くの人の目に触れていない）の境目。興味あり！の数がこれ未満を低露出とみなす。
-     本番は絶対数ではなく分布（下位N%）で決める＝母数が増えると固定値は意味を失うため。 */
-  var QUIET_MAX = 80;
+     **本番は絶対数ではなく分布（下位N%）で決める**＝母数が増えると固定値は意味を失うため。
+     デモの値は「未終了16件のうち下位半分」に当たる100に置いた（2026-09-20・旧80は下位5件で、
+     着地したときに2行ぶん並ばなかった）。分布で決めるという本番の方針に、デモの数字も寄せてある。 */
+  var QUIET_MAX = 100;
   /* 枠⑤に1回あたり何件出すか。該当する展覧会を全部並べると「反応の少ない展覧会の一覧」＝
      人気順の裏返しになり、結局そこでも同じ顔ぶれが並び続ける。少数を選び直すことで、
      同じ母集団から毎回ちがう展覧会が表に出る（＝母集団は静的・見える面だけが動く）。
-     デモは母集団が5件しかないので、開き直すと顔ぶれが替わるのが見えるよう4に置いている。
-     本番は母集団が桁違いに大きいので十数件が妥当（Drupal 側の設定値になる）。 */
-  var QUIET_SHOW = 4;
+     **着地したときの2行8件（CURATED_N）に合わせて8**。母集団がこれを下回る日は並ぶ数も減る。
+     本番は母集団が桁違いに大きいので、枠の数はそのままで母集団の側が広がる。 */
+  var QUIET_SHOW = 8;
   var quietCache = null;
   /* この枠だけは日替わりではなく**ページを開くたびに選び直す**（2026-09-08 ユーザー指示）。
      他の4枠は「今日の誌面」＝1日固定だが、⑤は面そのものが〈たまたま出会う〉ための枠なので、
@@ -15515,23 +16820,37 @@ KTN.pages['p10'] = function () {
     return set;
   }
 
-  /* feat＝「今日の特集」として差し出してよい保存済み検索（結果末尾の再回遊カード・ゼロヒットの提案）。
-     旧 rail フラグ（Picks レールに定義順で全部出す）から改名した（2026-09-07・追174-73）。
-     レールは12個を並べる場所ではなく5枠しか持たなくなったので、「特集の語彙」と「レールに出す枠」を
-     別の概念として分けた＝ここに特集を足してもレールは太らない。 */
+  /* refeed＝「今日のピックアップ」として差し出してよい保存済み検索（結果末尾の再回遊カード・ゼロヒットの提案）。
+     旧 rail フラグ（Picks レールに定義順で全部出す）→ feat → refeed と2度改名している。
+     1度目（2026-09-07・追174-73）＝レールは12個を並べる場所ではなく5枠しか持たなくなったので、
+     「差し出してよい語彙」と「レールに出す枠」を別の概念に分けた＝ここに足してもレールは太らない。
+     2度目（2026-09-18・追174-80）＝feat は feature＝特集の略で、「特集」は P10-4〜P10-7
+     （検索ごとの特集ページ）に予約した語。このフラグが効くのは再回遊帯（renderRefeed）だけなので、
+     REFEED_N / REFEED_MIN と同じ語幹に揃えた。棚に出すかどうかのフラグではない点に注意
+     （棚は現状 fillPick がキー直書きで、ピックアップマスタ駆動化は後工程・追174-79 ⑥）。 */
   var PRESETS = {
-    'week-picks':   { feat: 1, axis: 'pop',   label: '反応の多い展覧会',      desc: '興味あり！・チェックインの反応が多い、開催中の展覧会です。', f: function (x) { return x.pop >= 80 && isOn(x); } },
-    'liaison':      { feat: 1, label: 'オンラインで楽しめる',  html: '<span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>オンラインで楽しめる', desc: '「LIAISON・LIAISON+ オンライン展示あり」条件から自動生成した特集です。', f: function (x) { return !!x.liaison; } },
-    'liaison-plus': { feat: 1, label: 'オンラインで購入できる', html: '<span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span>オンラインで購入できる', desc: '「LIAISON+（オンライン販売あり）」条件から自動生成した特集です。会場に行けなくても作品を購入できます。', f: function (x) { return x.liaison === 'li-plus'; } },
-    'fukuoka':      { feat: 1, axis: 'area',  label: '福岡で行くべき展覧会',  desc: '「福岡」エリアの掲載展覧会から自動生成した特集です。', f: function (x) { return x.area === '福岡'; } },
-    'shodo':        { feat: 1, axis: 'tag',   label: '話題の書道展',          desc: '「書道」タグ × 人気シグナルの組み合わせで自動生成した特集です。', f: function (x) { return x.tags.indexOf('書道') !== -1; } },
-    'weekend':      { feat: 1, axis: 'date',  label: 'この週末に行きたい',    desc: '「今週末に開催」条件から自動生成した特集です。', f: function (x) { return !!x.wk; } },
-    'tokyo-gendai': { feat: 1, axis: 'area',  label: '東京・現代美術',        desc: '「東京」エリア × 「現代美術」タグの組み合わせで自動生成した特集です。', f: function (x) { return x.area === '東京' && x.tags.indexOf('現代美術') !== -1; } },
-    'hanga':        { feat: 1, axis: 'tag',   label: '版画の世界',            desc: '「版画」タグの掲載展覧会から自動生成した特集です。', f: function (x) { return x.tags.indexOf('版画') !== -1; } },
-    'photo':        { feat: 1, axis: 'tag',   label: '写真展セレクション',    desc: '「写真」タグの掲載展覧会から自動生成した特集です。', f: function (x) { return x.tags.indexOf('写真') !== -1; } },
-    'near-live':    { feat: 1, axis: 'area',  label: '近くで開催中',          desc: '「現在地から近い順」×「開催中」の条件から自動生成した特集です。', f: function (x) { return !!x.dist && isOn(x); } },
-    'free':         { feat: 1, axis: 'price', label: '無料で楽しめる展示',    desc: '「入場無料」条件から自動生成した特集です。', f: function (x) { return !!x.free; } },
-    'solo-all':     { feat: 1, axis: 'pop',   label: 'ひとりの作家をじっくり', desc: '出展者がひとりの展覧会です。ひとつの仕事をまとめて見られます。', f: function (x) { return x.type === 'solo' && x.pop >= 60; } },
+    'week-picks':   { refeed: 1, axis: 'pop',   label: '人気の展覧会',          desc: 'いま多くの人が「興味あり！」を付け、会場に足を運んでいる展覧会です。', f: function (x) { return x.pop >= 80 && isOn(x); } },
+    'liaison':      { refeed: 1, label: 'オンラインで楽しめる',  html: '<span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>オンラインで楽しめる', desc: '会場に行かなくても、作品をオンラインで見られる展覧会です。気になったら会期中に足を運ぶこともできます。', f: function (x) { return !!x.liaison; } },
+    'liaison-plus': { refeed: 1, label: 'オンラインで購入できる', html: '<span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span>オンラインで購入できる', desc: 'オンラインで作品を見て、そのまま購入できる展覧会です。会場が遠くても手元に迎えられます。', f: function (x) { return x.liaison === 'li-plus'; } },
+    'fukuoka':      { refeed: 1, axis: 'area',  label: '福岡で行くべき展覧会',  desc: '福岡で開かれている展覧会です。市内の美術館から小さなギャラリーまで並んでいます。', f: function (x) { return x.area === '福岡'; } },
+    'shodo':        { refeed: 1, axis: 'tag',   label: '話題の書道展',          desc: 'いま多くの人が見にいっている書の展覧会です。筆と墨のしごとをまとめて見られます。', f: function (x) { return x.tags.indexOf('書道') !== -1; } },
+    'weekend':      { refeed: 1, axis: 'date',  label: 'この週末に行きたい',    desc: 'この土日に開いている展覧会です。予定を決めてから出かけられます。', f: function (x) { return !!x.wk; } },
+    'tokyo-gendai': { refeed: 1, axis: 'area',  label: '東京・現代美術',        desc: '東京で開かれている現代美術の展覧会です。都内をまとめて回る日の下見にも。', f: function (x) { return x.area === '東京' && x.tags.indexOf('現代美術') !== -1; } },
+    'hanga':        { refeed: 1, axis: 'tag',   label: '版画の世界',            desc: '版画の展覧会です。刷りの重なりや紙の質感は、実物で見ると印象が変わります。', f: function (x) { return x.tags.indexOf('版画') !== -1; } },
+    'photo':        { refeed: 1, axis: 'tag',   label: '写真展セレクション',    desc: '写真の展覧会です。プリントの大きさや紙の選び方まで、会場でしか分からないものがあります。', f: function (x) { return x.tags.indexOf('写真') !== -1; } },
+    'near-live':    { refeed: 1, axis: 'area',  label: '近くで開催中',          desc: 'いまいる場所から近い、開催中の展覧会です。思い立った日に寄れます。', f: function (x) { return !!x.dist && isOn(x); } },
+    /* ── 棚（検索）専用のプリセット。**マスタのスラッグと共有しない**（2026-09-20・追174-97）──
+       マスタに載っている 12 本は P10 に出た時点ですべてピックアップ＝件数固定・並べ替えなし。
+       一方コールドスタートの棚「近くの展覧会」「オンラインでも楽しめる」は検索側で、もっと見ると
+       検索結果（並べ替え＋ページング）へ着地する。1つのキーに両方の表示形式は持たせられないので、
+       棚側に別キーを立てた。条件が同じでも役割が違う＝キーを分ける。 */
+    /* noTools＝件数と並べ替えを出さない検索面（2026-09-20）。**並びが距離で固定**されていて
+       利用者が選ぶ余地が無く、「近い」は総数を数えて意味のある集合でもないため。ページングと
+       追加絞込・注目2枠は通常の検索と同じ＝端から端まで見たい面であることは変わらない。 */
+    'near':         { axis: 'area', sort: 'dist', noTools: 1, label: '近くで開催中',          desc: '現在地から近い順に、いま開催中の展覧会を並べています。思い立った日に寄れます。', f: function (x) { return !!x.dist && isOn(x); } },
+    'liaison-all':  { label: 'オンラインでも楽しめる', html: '<span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>オンラインでも楽しめる', desc: '会場に行かなくても作品をオンラインで見られる展覧会です。', f: function (x) { return !!x.liaison; } },
+    'free':         { refeed: 1, axis: 'price', label: '無料で楽しめる展示',    desc: '入場無料で見られる展覧会です。通りがかりに立ち寄って、合わなければ出ても構いません。', f: function (x) { return !!x.free; } },
+    'solo-all':     { refeed: 1, axis: 'pop',   label: 'ひとりの作家をじっくり', desc: '出展者がひとりの展覧会です。ひとつの仕事をまとめて見られます。', f: function (x) { return x.type === 'solo' && x.pop >= 60; } },
     /* ── 発見のある展覧会（Picks レール枠⑤・2026-09-07 新設／2026-09-08 日替わりピックアップ化）──
        反応の多い順に並べると、母数の大きい展覧会が上位を占め続けて入れ替わらない。
        反応がしきい値未満（ノーマーク）のものだけを別に拾い、順位とは無関係の入口を1つ確保する
@@ -15545,27 +16864,120 @@ KTN.pages['p10'] = function () {
        残すのは〈偶然の出会い〉と〈見に行ける〉の2つだけ。
        **展覧会そのものを定義しない**（「偶然の出会いを楽しむための展覧会です」は、運営が勝手に
        性格を決めた断定になる＝出品者の意図と関係ない）。主語は展覧会ではなく読み手の体験に置き、
-       起きるかもしれないこととして書く。 */
-    'quiet':        { feat: 0, axis: 'pop',   label: '発見のある展覧会', desc: '思いがけない一つに出会えるかもしれません。気になったら、会期のうちに足を運んでみてください。', f: function (x) { return notEnded(x) && x.int < QUIET_MAX && quietPick()[x.id] === 1; } },
-    /* sort＝その特集を開いたときの既定の並び順。説明文で並び順を約束している特集だけに持たせる
+       起きるかもしれないこととして書く。
+       **この枠だけラベルも説明文もここに直書きのまま置く（2026-09-20 ユーザー確定）。**
+       他のピックアップは KTN.picks（マスタ）が文言を持ち P90-17 で運営が書き換えるが、
+       ⑤は条件が実行時の抽選（quietPick）で宣言 sel に落とせず、マスタの形に入らない。
+       加えて文言が枠の性格そのもの（母集団の弱さを書かない・体験を主語にする）と一体で、
+       運営が自由に書き換える種類の文ではない＝**固定でよい**と判断した。 */
+    'quiet':        { refeed: 0, curated: 1, axis: 'pop',   label: '発見のある展覧会', desc: '思いがけない一つに出会えるかもしれません。気になったら、会期のうちに足を運んでみてください。', f: function (x) { return notEnded(x) && x.int < QUIET_MAX && quietPick()[x.id] === 1; } },
+    /* sort＝そのピックアップを開いたときの既定の並び順。説明文で並び順を約束しているピックアップだけに持たせる
        （既定の「おすすめ順」のままだと説明文と実際の並びが食い違うため・2026-09-01） */
-    'ending-all':   { feat: 0, axis: 'date',  sort: 'end', label: 'もうすぐ終了の展覧会',  desc: '会期終了が近い順に表示しています。', f: function (x) { return whenHit(x, 'endsoon'); } },
-    'new-all':      { feat: 0, axis: 'date',  sort: 'new', label: '新着掲載の展覧会',      desc: '最近個展なびに掲載された展覧会です。', f: function (x) { return !!x.isNew; } },
-    'for-you':      { feat: 0, axis: 'pop',   label: 'あなたへのおすすめ',    desc: 'ウォッチ中のクリエイター・興味あり！の傾向からのおすすめです。', f: function (x) { return notEnded(x); } },
-    /* ランキング3軸（行きたい／行った／急上昇）＝いずれも「開催中・開催予定」限定。
+    'ending-all':   { refeed: 0, axis: 'date',  sort: 'end', label: 'もうすぐ終了の展覧会',  desc: '会期終了が近い順に表示しています。', f: function (x) { return whenHit(x, 'endsoon'); } },
+    'new-all':      { refeed: 0, axis: 'date',  sort: 'new', label: '新着掲載の展覧会',      desc: '最近個展なびに掲載された展覧会です。', f: function (x) { return !!x.isNew; } },
+    /* ランキング3軸（興味あり！／チェックイン／急上昇）＝いずれも「開催中・開催予定」限定。
        軸は「意志（興味あり！）」「行動（チェックイン）」「変化（前週比）」の3種類で、量の変種を並べない。
        want/visited は経過日数で正規化＝単一の絶対数（旧trending）だと会期の長い展覧会が居座り続けるため。
        旧「今週の人気」「実際に行った人が多い」からの改称（2026-09-02）＝意志と行動の対比が名前で読めるようにした。
+       さらに「行きたい／行った」からサイトのCTA語そのもの（興味あり！／チェックイン）へ改称（追174-83）
+       ＝ランキングの軸名が投稿者にとって「どのCTAを取れば載るのか」の説明になるため。
        ③低露出枠の混在は廃止（buildRanking のコメント参照）。 */
-    'want':         { feat: 0, axis: 'pop',   sort: 'pop', label: '行きたい',              desc: '興味あり！の反応を会期の経過日数で正規化した、行きたい人の多さランキングです。', f: function (x) { return notEnded(x); } },
-    'visited':      { feat: 0, axis: 'pop',   sort: 'pop', label: '行った',                desc: 'チェックイン数を会期の経過日数で正規化した、実際に行った人の多さランキングです。', f: function (x) { return notEnded(x); } },
-    'rising':       { feat: 0, axis: 'pop',   sort: 'pop', label: '急上昇',                desc: '直近1週間の伸び率が高い展覧会です（開催中・開催予定のみ）。', f: function (x) { return notEnded(x); } },
+    'want':         { refeed: 0, axis: 'pop',   sort: 'pop', label: '興味あり！が多い展覧会',   desc: '興味あり！の数を会期の経過日数で正規化したランキングです。', f: function (x) { return notEnded(x); } },
+    'visited':      { refeed: 0, axis: 'pop',   sort: 'pop', label: 'チェックインが多い展覧会', desc: 'チェックインの数を会期の経過日数で正規化したランキングです。', f: function (x) { return notEnded(x); } },
+    'rising':       { refeed: 0, axis: 'pop',   sort: 'pop', label: '急上昇',                desc: '直近1週間の伸び率が高い展覧会です（開催中・開催予定のみ）。', f: function (x) { return notEnded(x); } },
     /* 今日から開催＝チップ（when:opentoday）と同じ whenHit を共有する時間軸の棚。
        旧「注目のクリエイター・ギャラリーの新着」（host-buzz）がここを占めていたが、母集団が新着掲載棚と同じ isNew で
        3枠中2枠が重複し、並びの根拠もクリエイター・ギャラリーの蓄積ウォッチ数＝既に人気のホストを上位に固定する軸だったため、
        裾野を広げる方針と噛み合わず廃止（2026-09-03）。新着は「新着掲載」1棚に集約し、空いた枠を時間軸に充てた。 */
-    'opening-today': { feat: 0, axis: 'date',  label: '今日から開催の展覧会', desc: '今日が会期の初日の展覧会です。', f: function (x) { return whenHit(x, 'opentoday'); } },
+    'opening-today': { refeed: 0, axis: 'date',  label: '今日から開催の展覧会', desc: '今日が会期の初日の展覧会です。', f: function (x) { return whenHit(x, 'opentoday'); } },
   };
+
+  /* ── 棚・PICKS 枠④とチップが同じ条件のもの（2026-09-20 ユーザー確定・案①）──
+     この4つは PRESETS[key].f とチップの判定式が**まったく同じ**（例：new-all＝x.isNew と
+     チップ new:1＝x.isNew）。両方が別々に指定できると「指定中の条件」に同じものが二度並び、
+     件数も変わらないという状態になる。そこで**着地はチップ側に寄せる**＝棚の「もっと見る」と
+     PICKS 枠④を押したら、プリセットではなく**同じ意味のチップを点ける**。
+     **なぜチップ側か**＝プリセットは一度に1つしか持てないので「新着掲載」と「もうすぐ終了」を
+     同時に指定できないが、チップなら組み合わせられる。プリセットの形のほうが機能的に劣っていた。
+     見出し（「新着掲載の展覧会」）は失うが、その役割は「指定中の条件」が担う。
+     **「近くで開催中」は対象外**＝あちらは件数を出さず距離順に固定する専用の面（noTools）を
+     持つので、チップに寄せると見せ方ごと失われる。だからあちらはチップ→プリセットに寄せた。
+     PRESETS 側の定義は**棚のカードを組む母集団として引き続き使う**ので消さない。
+     sort＝着地したときの既定の並び順（説明文で並びを約束していたものを保つ）。 */
+  var PRESET_AS_CHIP = {
+    'new-all':       { f: 'new:1',           sort: 'new' },
+    'ending-all':    { f: 'when:endsoon',    sort: 'end' },
+    'opening-today': { f: 'when:opentoday' }
+    /* 'liaison-all'（オンラインでも楽しめる＝LIAISON・LIAISON+のどちらも含む広い意味）は
+       追174-140でチップ側の「LIAISON展示あり」がLIAISON限定（LIAISON+を含まない）へ変更されたため、
+       ここに寄せると「もっと見る」の結果が棚のプレビューより狭くなってしまう。単一チップに寄せる
+       手段が無くなったので対応から外し、PRESETS['liaison-all'].f（従来どおり広い判定）を
+       そのまま使う通常のプリセット扱いに戻した＝この1件だけ他の条件と組み合わせられない（元の設計の losses）。 */
+  };
+
+  /* ── ピックアップマスタの条件（sel）を、このページの母集団の形の述語へ組み立てる ──
+     追174-90 追記3。**これを入れるまで sel は説明文でしかなかった**＝実際に効いていたのは
+     下の PRESETS[slug].f（手書き）で、管理画面で条件を直しても棚は変わらなかった。
+     ここで f を sel から作り直すことで、マスタが条件の単一ソースになる。
+     マッピングが必要なのは語彙が違う3つだけ：
+       area   ＝マスタは軸のスラッグ（tokyo / fukuoka / tokyo-central）。このページは
+                x.area に県の短縮名（東京）、x.tarea に東京のエリア名（東京都心部）を持つ。
+       genre  ＝マスタはスラッグ（art / photo）、このページは表示名（アート）。
+       access ＝マスタは軸のスラッグ（with-children）、このページはフィールド名（kids）。 */
+  function selPred(sel) {
+    var A = KTN.axis, P = KTN.picks;
+    return function (x) {
+      if (sel.area) {
+        if (A && A.isArea(sel.area)) { if (x.tarea !== A.fullOf(sel.area)) return false; }
+        else { var pr = (A && A.SLUG2PREF && A.SLUG2PREF[sel.area]) || sel.area; if (x.area !== pr) return false; }
+      }
+      if (sel.genre) { var g = A && A.genre(sel.genre); if (x.genre !== (g ? g.name : sel.genre)) return false; }
+      if (sel.access) { var a = A && A.access(sel.access); if (!a || !x[a.field]) return false; }
+      /* 会場の設備は展覧会ではなく会場に登録される＝VENUES を引く。
+         会場ページが無い／項目が未申告ならどちらも当たらない（検索の詳細条件と同じ扱い）。 */
+      if (sel.venue && !venueFact(x, sel.venue)) return false;
+      if (sel.tag && (x.tags || []).indexOf(sel.tag) === -1) return false;
+      if (sel.liaison === 'any' && !x.liaison) return false;
+      if (sel.liaison === 'li-plus' && x.liaison !== 'li-plus') return false;
+      if (sel.near && !x.dist) return false;
+      if (sel.free && !x.free) return false;
+      if (sel.form && x.type !== sel.form) return false;
+      if (sel.when === 'weekend' && !x.wk) return false;
+      if (sel.when === 'thismonth') { var tm = P && P.thisMonth(); if (!tm || !P.overlaps(x.s, x.e, tm[0], tm[1])) return false; }
+      /* 期間指定（ゴールデンウィーク等）＝会期がその期間に少しでもかかるか。
+         判定は KTN.picks.overlaps を共有する＝管理画面の件数と棚の中身が別の規則で数えられない。 */
+      if (sel.period) { if (!P || !P.periodHit(x, sel)) return false; }
+      /* 開催状態。もうすぐ開催／もうすぐ終了／今日から開催は whenHit が判定する＝
+         境界（SOON_DAYS）を検索チップ・棚・開催ステータスのバッジと共有する。 */
+      if (sel.status === 'live' && !isOn(x)) return false;
+      if (sel.status && sel.status !== 'live' && !whenHit(x, sel.status)) return false;
+      if (sel.interest && !(x.int >= sel.interest)) return false;
+      if (sel.checkin && !(x.ci >= sel.checkin)) return false;
+      if (sel.pop && !(x.pop >= sel.pop)) return false;
+      return true;
+    };
+  }
+  /* マスタの12件は label も条件も KTN.picks が正。PRESETS 側の literal は
+     マスタが読めなかったときのフォールバックとして残す（追174-90 追記2・追記3）。
+     **再評価が要る**＝管理画面で条件を変えたら述語も作り直す。renderShelves から呼ぶ。 */
+  function syncPicks() {
+    if (!KTN.picks) return;
+    KTN.picks.all().forEach(function (e) {
+      var p = PRESETS[e.slug]; if (!p) return;
+      p.label = e.label;
+      /* 見出しと同じく**説明文もマスタが持つ**（2026-09-20）。条件から機械で書ける文ではないので、
+         運営が P90-17 で書く。空のままなら着地の説明行は出さない。 */
+      p.desc = e.desc || '';
+      /* **マスタの項目に paged / sort は持たせない**（2026-09-20・追174-97）＝マスタに載っている
+         ものは P10 に出た時点ですべてピックアップで、着地は件数固定・並べ替えなしと決まっている。
+         連続した順序で端から端まで見せたい条件（近く・もうすぐ終了など）は検索側の棚が持つ。 */
+      p.f = selPred(e.sel || {});
+      /* ピックアップは**編集された束**で、検索結果のような全件一覧ではない。
+         着地したときは2行8件で止め、並び替えも出さない（2026-09-20）。 */
+      p.curated = 1;
+    });
+  }
+  syncPicks();
   function presetInner(key) {
     var p = PRESETS[key];
     return p.html || ((P10_ICONS[p.axis] || '') + esc(p.label));
@@ -15580,8 +16992,6 @@ KTN.pages['p10'] = function () {
 
   /* ── 状態 ── */
   var activePreset = null;
-  var shownCount = 8;
-  var PAGE_SIZE = 8;
 
   var elDisc    = document.getElementById('p10Discovery');
   var elResults = document.getElementById('p10Results');
@@ -15610,6 +17020,10 @@ KTN.pages['p10'] = function () {
        （追174-44 では下限を今日に固定したが、過去を検索したいという要件と両立しないので開始日必須に変更・追174-45）。 */
     var ds = document.querySelectorAll('#p10Adv .p10-adv__date');
     if (ds.length === 2 && ds[0].value) m.range = [ds[0].value + '_' + ds[1].value];
+    /* 「〜の近く」（会場名）はチップでなく自由入力なので個別に拾う（追174-145／174-147）。
+       候補（実在する会場名）から選んで確定した場合のみ有効＝サイトに登録されている
+       ギャラリー名が前提のため、確定していない生の入力はフィルタに含めない（nearConfirmed）。 */
+    if (nearConfirmed && nearInputEl && nearInputEl.value.trim()) m.venueNear = [nearInputEl.value.trim()];
     return m;
   }
 
@@ -15630,8 +17044,13 @@ KTN.pages['p10'] = function () {
   }
 
   function matches(x, filters, kw) {
-    /* 特集は棚と同じ「面」なので終了済みを含めない（過去を出すのは期間指定・キーワードの側の役割・追174-45） */
-    if (activePreset && (!PRESETS[activePreset].f(x) || !notEnded(x))) return false;
+    /* **既定の対象は開催中・これから開催**（2026-09-20 ユーザー確定）。終了済みが入るのは
+       〈詳しい検索条件で利用者が日付を明示した〉ときだけ＝日付の指定そのものが「過去を見たい」
+       という意思表示になる。追174-45 は「過去を出すのは期間指定・キーワードの側の役割」と
+       していたが、**キーワードは過去を見たいかどうかを表さない**ので外した（終了した展覧会を
+       指すチップも無く、過去への入口は特集の軸のアーカイブが持つ）。 */
+    if (!(filters.range || filters.day) && !notEnded(x)) return false;
+    if (activePreset && !PRESETS[activePreset].f(x)) return false;
     for (var k in filters) {
       var vals = filters[k], ok = false;
       for (var i = 0; i < vals.length; i++) {
@@ -15667,7 +17086,11 @@ KTN.pages['p10'] = function () {
         else if (k === 'tarea' && x.tarea === v) ok = true;
         else if (k === 'tag' && x.tags.indexOf(v) !== -1) ok = true;
         else if (k === 'type' && x.type === v) ok = true;
-        else if (k === 'liaison' && (v === 'lp' ? x.liaison === 'li-plus' : !!x.liaison)) ok = true;
+        else if (k === 'liaison' && (v === 'lp' ? x.liaison === 'li-plus' : x.liaison === 'li')) ok = true;
+        /* 「〜の近く」簡易実装（追174-145／174-147）＝実距離ではなく会場名の完全一致。
+           候補から選んだ確定済みの値（＝実在する会場名そのもの）が入るため部分一致は不要。
+           本物の近接検索（座標データ）は本番実装まで持ち越し（docs/handoff-decisions.md 追174-31）。 */
+        else if (k === 'venueNear' && x.venue === v) ok = true;
       }
       if (!ok) return false;
     }
@@ -15678,7 +17101,7 @@ KTN.pages['p10'] = function () {
     return true;
   }
 
-  /* ── おすすめ順（既定）と Featured クラスタ ──────────────────────────────
+  /* ── おすすめ順（既定）と 注目 Highlights クラスタ ──────────────────────────────
      検索結果の**並び順そのもの**を、出品側への誘因として設計する（2026-09-01 確定）。
      「一番上が一番見られる」ので、そこに出る条件を分かりやすくしておけば
      「作品を登録する・記事を書く・来場者にレビューしてもらう」動機になる。
@@ -15695,8 +17118,15 @@ KTN.pages['p10'] = function () {
   function qualifies(x) { return KTN.cl.qualifies('exhibition', x.id, x.title); }
   function sortResults(list) {
     var mode = elSort ? elSort.value : 'rec';
+    /* 距離は文字列（'2.3km'）なので数値に直して比較し、距離を持たない展覧会は末尾へ回す
+       ＝「近い順」を選んだのに距離不明が上位に混ざると順序の約束が崩れる。 */
+    function byDist(a, b) {
+      var da = a.dist ? parseFloat(a.dist) : Infinity, db = b.dist ? parseFloat(b.dist) : Infinity;
+      return da - db;
+    }
     var cmp;
-    if (mode === 'pop')      cmp = function (a, b) { return b.pop - a.pop; };
+    if (mode === 'dist')     cmp = byDist;
+    else if (mode === 'pop') cmp = function (a, b) { return b.pop - a.pop; };
     else if (mode === 'new') cmp = function (a, b) { return a.nd - b.nd; };
     else if (mode === 'end') cmp = function (a, b) { return a.rd - b.rd; };
     else                     cmp = function (a, b) { return (qualifies(b) - qualifies(a)) || (a.rd - b.rd); };
@@ -15711,21 +17141,23 @@ KTN.pages['p10'] = function () {
   var FEAT_MIN_HITS = 6;  /* 結果がこれ未満なら出さない（全部が「注目」では選んだことにならない） */
   var FEAT_MIN_QUAL = 3;  /* 資格者がこれ未満でも同じ理由で出さない */
   /* シード＝その日 × 検索条件。条件が違えば別の紙面、同じ条件なら1日中同じ紙面 */
-  function featSeed() {
+  function hlSeed() {
     var key = (activePreset || '') + '|' + (elKeyword ? elKeyword.value.trim() : '')
       + '|' + JSON.stringify(activeChipFilters()) + '|' + (elSort ? elSort.value : '');
     return (KTN.cl.strSeed(key) ^ Math.imul(KTN.cl.doy(), 0x9E3779B1)) | 0;
   }
-  function pickFeatured(list, seed) {
-    if (!elSort || elSort.value !== 'rec') return [];
+  function pickHl(list, seed, fixedOrder) {
+    /* fixedOrder＝並べ替えUIを出さない面（近く）。順序はページが決めているので、
+       「おすすめ順のときだけ」の条件を課さない（2026-09-20）。 */
+    if (!fixedOrder && (!elSort || elSort.value !== 'rec')) return [];
     if (list.length < FEAT_MIN_HITS) return [];
     var q = list.filter(qualifies);
     if (q.length < FEAT_MIN_QUAL) return [];
     return KTN.cl.shuffle(q.slice(), KTN.cl.rng(seed)).slice(0, FEAT_N);
   }
-  function renderFeatured(items, seed) {
-    var wrap = document.getElementById('p10Feat');
-    var row = document.getElementById('p10FeatRow');
+  function renderHl(items, seed) {
+    var wrap = document.getElementById('p10Hl');
+    var row = document.getElementById('p10HlRow');
     if (!wrap || !row) return;
     if (!items.length) { wrap.hidden = true; row.innerHTML = ''; return; }
     var rnd = KTN.cl.rng(seed + 7);
@@ -15763,6 +17195,7 @@ KTN.pages['p10'] = function () {
       if (r[0] && r[1]) return isoLabel(r[0]) + '〜' + isoLabel(r[1]);
       return isoLabel(r[0]) + '以降';
     }
+    if (k === 'venueNear') return '「' + v + '」の近く';
     return v;
   }
 
@@ -15771,7 +17204,7 @@ KTN.pages['p10'] = function () {
     var html = [];
     if (activePreset) {
       html.push('<span class="p10-fchip">' + esc(PRESETS[activePreset].label)
-        + '<button class="p10-fchip__x" type="button" data-rm="preset" aria-label="この特集を外す">×</button></span>');
+        + '<button class="p10-fchip__x" type="button" data-rm="preset" aria-label="この条件を外す">×</button></span>');
     }
     for (var k in filters) {
       filters[k].forEach(function (v) {
@@ -15790,11 +17223,13 @@ KTN.pages['p10'] = function () {
     box.querySelectorAll('[data-rm]').forEach(function (btn) {
       btn.addEventListener('click', function () {
         var rm = btn.dataset.rm;
-        if (rm === 'all') { clearAll(); showView('disc'); return; }
+        if (rm === 'all') { clearAll(); runFilter(); return; }
         if (rm === 'preset') { setPreset(null); }
         else if (rm === 'kw') { elKeyword.value = ''; }
         /* 期間指定はチップでなく日付入力なので、外すときは入力欄を空に戻す */
         else if (rm.indexOf('range:') === 0) { clearRangeInputs(); }
+        /* 「〜の近く」もチップでなく自由入力なので、外すときは入力欄を空に戻す（追174-145） */
+        else if (rm.indexOf('venueNear:') === 0) { clearNear(); }
         else { document.querySelectorAll('.p10-chip[data-f="' + rm + '"],.p10-day[data-f="' + rm + '"]').forEach(function (c) { c.classList.remove('is-on'); }); }
         runFilter();
       });
@@ -15802,17 +17237,61 @@ KTN.pages['p10'] = function () {
   }
 
   /* ── 結果描画 ──
-     Featured に出した2件は下のグリッドから除外して重複させない。ただし**件数（全N件）には含める**
+     注目 Highlights に出した2件は下のグリッドから除外して重複させない。ただし**件数（全N件）には含める**
      ＝ヒット件数は検索条件の答えなので、表示方法の都合で減らさない。 */
+  /* ピックアップ着地は「編集された束」なので**2行8件で止める**（CURATED_N）。
+     並び替えと ページングも出さない＝並べ替えられる一覧ではなく、運営が差し出した
+     ひとまとまりとして読ませる。
+     **例外は無い**（2026-09-20・追174-97）＝マスタに載っているものは P10 に出た時点ですべて
+     ピックアップなので、着地は必ず束になる。連続した順序で端から端まで見せたい面（近く・もうすぐ終了・
+     新着掲載など）は検索側の棚が別キーで持ち、そちらは従来どおり検索結果＝並べ替え＋ページング。 */
+  var CURATED_N = 8;
+  var PER_PAGE = 12;   /* 1ページの件数＝4列×3行。棚（8件2行）より1段深い面なので少し多く出す */
+  var curPage = 1;
+  function isCurated() {
+    var p = activePreset && PRESETS[activePreset];
+    return !!(p && p.curated);
+  }
   function renderResultGrid(list) {
-    var seed = featSeed();
-    var feat = pickFeatured(list, seed);
-    renderFeatured(feat, seed);
-    var rest = feat.length ? list.filter(function (x) { return feat.indexOf(x) === -1; }) : list;
+    var cur = isCurated();
+    var seed = hlSeed();
+    /* 束として見せる面では巻頭クラスタを出さない＝8件のうち2件が別の形で抜けると、
+       ひとまとまりに見えなくなる。 */
+    /* 並びが固定の面（近く＝距離順）でも注目2枠は出す＝並べ替えのUIが無いだけで、
+       端から端まで見る検索であることは変わらない（2026-09-20 ユーザー確定）。 */
+    var pre = activePreset && PRESETS[activePreset];
+    var fixedOrder = !!(pre && pre.noTools);
+    var hl = cur ? [] : pickHl(list, seed, fixedOrder);
+    renderHl(hl, seed);
+    var rest = hl.length ? list.filter(function (x) { return hl.indexOf(x) === -1; }) : list;
     var grid = document.getElementById('p10ResultGrid');
-    grid.innerHTML = rest.slice(0, shownCount).map(buildEc).join('');
-    var moreBtn = document.getElementById('p10MoreBtn');
-    moreBtn.parentElement.style.display = rest.length > shownCount ? '' : 'none';
+    var pager = document.getElementById('p10Pager');
+    if (cur) {
+      grid.innerHTML = rest.slice(0, CURATED_N).map(buildEc).join('');
+      if (pager) { pager.innerHTML = ''; pager.hidden = true; }
+    } else {
+      /* ページングは共通部品（KTN.pagination）。ページ番号で位置が読めるので、
+         「さらに読み込む」より端から端まで見る面に合う。 */
+      var total = Math.max(1, Math.ceil(rest.length / PER_PAGE));
+      if (curPage > total) curPage = total;
+      grid.innerHTML = rest.slice((curPage - 1) * PER_PAGE, curPage * PER_PAGE).map(buildEc).join('');
+      if (pager && KTN.pagination) KTN.pagination.render(pager, {
+        page: curPage, totalPages: total,
+        onGoto: function (n) {
+          curPage = n;
+          renderResultGrid(renderResultGrid._last);
+          /* ページを変えたら結果の先頭へ戻す＝下端のページャを押したあと途中から読み始めないように */
+          var top = document.getElementById('p10Results');
+          if (top) top.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    }
+    var sortWrap = document.querySelector('.p10-toolbar__sort');
+    if (sortWrap) sortWrap.hidden = cur || fixedOrder;
+    /* 件数と並べ替えは同じ条件で消えるので、両方消える面ではツールバーごと畳む
+       （空の行が14pxの余白として残らないように）。 */
+    var bar = document.querySelector('.p10-toolbar');
+    if (bar) bar.hidden = cur || fixedOrder;
     renderResultGrid._last = list;
   }
 
@@ -15836,14 +17315,22 @@ KTN.pages['p10'] = function () {
     }
 
     var p = activePreset ? PRESETS[activePreset] : null;
-    document.getElementById('p10CtxEyebrow').textContent = p ? 'Feature' : 'Search Results';
+    /* **眉ラベルは区分を名乗る**＝Picks はピックアップ（束）だけ。プリセットでも「近くで開催中」の
+       ような検索面は Search Results（2026-09-20）。見出しの文言は p.label のままでよい。 */
+    document.getElementById('p10CtxEyebrow').textContent = isCurated() ? 'Picks' : 'Search Results';
     document.getElementById('p10CtxTitle').textContent = p ? p.label : (kw ? '「' + kw + '」の検索結果' : '検索結果');
     var descEl = document.getElementById('p10CtxDesc');
-    descEl.textContent = p ? p.desc : '';
-    descEl.hidden = !p;
+    var dtx = p ? (p.desc || '') : '';
+    descEl.textContent = dtx;
+    /* 説明文が無いピックアップは行ごと畳む＝空の段落で見出しと結果のあいだが空かない。 */
+    descEl.hidden = !dtx;
     renderFchips(filters, kw);
-    document.getElementById('p10Count').innerHTML = '<strong>' + list.length + '</strong>件';
-    shownCount = PAGE_SIZE;
+    /* 件数を出すのは検索だけ。**ピックアップは束＝8件で止めるので総数を出すと嘘になる**し、
+       近く（noTools）は距離で並ぶ面で総数に意味が無い（2026-09-20）。 */
+    var cntEl = document.getElementById('p10Count');
+    cntEl.hidden = isCurated() || !!(p && p.noTools);
+    cntEl.innerHTML = '<strong>' + list.length + '</strong>件';
+    curPage = 1;   /* 条件が変わったら1ページ目へ戻す */
     renderResultGrid(sortResults(list));
     renderRefeed();
     showView('results');
@@ -15856,24 +17343,64 @@ KTN.pages['p10'] = function () {
   }
   function syncRail() {
     document.querySelectorAll('.p10-preset[data-key]').forEach(function (b) {
-      b.classList.toggle('is-on', b.dataset.key === activePreset);
+      /* チップに寄せたものは**チップの状態**で点灯を決める（activePreset には入らないため） */
+      var ac = PRESET_AS_CHIP[b.dataset.key];
+      b.classList.toggle('is-on', ac
+        ? !!document.querySelector('[data-f="' + ac.f + '"].is-on')
+        : b.dataset.key === activePreset);
+    });
+    /* チップ側（近くで開催中）も同じ状態を映す＝棚・チップ・適用中バッジで表示が割れないように */
+    document.querySelectorAll('.p10-chip[data-preset]').forEach(function (c) {
+      c.classList.toggle('is-on', c.dataset.preset === activePreset);
     });
   }
+  /* プリセットがピックアップ（束）かどうか。検索のプリセット（もうすぐ終了・新着掲載・
+     近くで開催中 等）と区別するのに使う。 */
+  function isPickup(key) { return !!(key && PRESETS[key] && PRESETS[key].curated); }
+  /* 検索の操作をしたときに**ピックアップだけ**を外す。clearAll と違いチップ・キーワードは残す。
+     **検索のプリセットは外さない**（2026-09-20 ユーザー指定）＝「もうすぐ終了」に東京都を足す
+     ような絞り込みは検索の仕様どおりできるべきで、ここで外すと棚から降りた条件が消えてしまう。
+     外すのは束（ピックアップ）のときだけ＝8件で止める面に条件を足す操作は意味を持たない。 */
+  function dropPreset() {
+    if (!isPickup(activePreset)) return;
+    activePreset = null;
+    if (elSort) elSort.value = 'rec';
+    syncRail();
+  }
   function applyPreset(key) {
-    clearAll();
+    /* チップと同じ条件のものは**チップとして**適用する（PRESET_AS_CHIP 参照）。
+       棚の「もっと見る」・PICKS 枠④・ゼロヒットの差し出しは全部ここを通るので、
+       入口ごとに書き分けなくてよい。 */
+    var asChip = PRESET_AS_CHIP[key];
+    if (asChip) {
+      dropPreset();   /* ピックアップが出ていたら外す＝これは検索の操作 */
+      document.querySelectorAll('[data-f="' + asChip.f + '"]').forEach(function (c) { c.classList.add('is-on'); });
+      if (elSort) elSort.value = asChip.sort || 'rec';
+      runFilter();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    /* **検索条件を消すのはピックアップに入るときだけ**（2026-09-20 ユーザー確定の表どおり）。
+       検索のプリセットは条件を積める面なので、いま指定中のチップ・キーワードを残したまま入る。
+       「近くで開催中」がチップ列の中に並んでいるのに押すと他のチップが消える、というちぐはぐも
+       同時に解消する。 */
+    if (isPickup(key)) clearAll();
     activePreset = key;
-    /* 説明文で並び順を約束している特集はその並びで開く（持たない特集は既定の「おすすめ順」） */
+    /* 説明文で並び順を約束しているピックアップはその並びで開く（持たないピックアップは既定の「おすすめ順」） */
     if (elSort) elSort.value = PRESETS[key].sort || 'rec';
     runFilter();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  /* **clearAll は状態を消すだけで画面を描き直さない**（「指定中の条件」の行もそのまま）。
+     条件を全部外して入口へ戻すときは **clearAll() のあと runFilter() を呼ぶ**こと＝条件が
+     空なら runFilter が renderFchips({},'') → showView('disc') → syncRail() までやる。
+     showView('disc') を直に呼ぶと、前の条件の行だけが画面に残る（2026-09-20 の不具合）。 */
   function clearAll() {
     activePreset = null;
     elKeyword.value = '';
     document.querySelectorAll('.p10-chip.is-on,.p10-day.is-on').forEach(function (c) { c.classList.remove('is-on'); });
-    var near = document.querySelector('.p10-adv__near-input');
-    if (near) near.value = '';
+    clearNear();
     clearRangeInputs();
     if (elSort) elSort.value = 'rec';
     syncRail();
@@ -15885,7 +17412,7 @@ KTN.pages['p10'] = function () {
   var DAY_HOOKS = [];
 
   /* ── Picks レール（枠の役割は固定・中身は日替わり／2026-09-07 全面改訂・追174-73）──
-     旧実装は rail:1 の特集12個を定義順に並べる完全な静的リストで、次の3つが同時に壊れていた。
+     旧実装は rail:1 のピックアップ12個を定義順に並べる完全な静的リストで、次の3つが同時に壊れていた。
        ① クイックボタン行（開催中／今週末／近くで開催／入場無料／LIAISON 2つ）と5個が同じ条件で、
           検索ボックスのすぐ下に同じものが二度出ていた。
        ② 「今週のおすすめ」「今月注目の個展」は静的フィルタなのに時制の語で周期を約束していた。
@@ -15894,12 +17421,14 @@ KTN.pages['p10'] = function () {
      作り替えの原則＝**枠の役割は固定し、中身だけ入れ替える**（雑誌の連載枠と同じ）。
      毎日同じ位置に同じ性格のものが載るので、日によって性格が変わるくじ引きにはならない。
      「引き直し」ボタン・ドロー回数のようなランダムの記号は出さない（今日の誌面として置く）。
-       枠① 特集（場所）  → 軸ページ  <a>  恒久URL・内部リンク
-       枠② 特集（ジャンル）→ 軸ページ  <a>  恒久URL・内部リンク
+       枠① 軸ページ（場所）  → 軸ページ  <a>  恒久URL・内部リンク
+       枠② 軸ページ（ジャンル）→ 軸ページ  <a>  恒久URL・内部リンク
        枠③ いまの言葉     → P10検索   月替わり（KTN.season＝P90-17 で編集する）
        枠④ 時間で動く棚   → P10検索   日替わり（もうすぐ終了／今日から開催／新着掲載）
        枠⑤ 発見           → P10検索   開くたび（ノーマークの母集団から少数を選ぶ・順位と無関係）
-     ①②が「特集へのもう一つの入り口」、③④⑤が discovery の担当。 ── */
+     ①②が特集層（P10-4系の軸ページ）への内部リンク、③④⑤が discovery の担当。
+     **枠①②の役割名に「特集」と書かない**＝ここで指すのは着地先の軸ページ1枚であって
+     P10-4〜P10-7 という層そのものではない（語彙規約は PRESETS 冒頭のコメント・追174-89）。 ── */
   var PICK_MIN = 3;                                              /* 中身がこれ未満の枠は出さない（開いてスカスカだと逆効果） */
   var PICK_TIME = ['ending-all', 'opening-today', 'new-all'];     /* 枠④の候補。空の日があるので実体のあるものだけを回す */
 
@@ -15932,6 +17461,10 @@ KTN.pages['p10'] = function () {
     var r = (S && S.resolve) ? S.resolve(e) : { parts: [], names: [] };
     var ns = r.names;
     PRESETS['season'] = {
+      /* **季節の言葉はピックアップ**（追174-97 の3語の定義・PICKS 枠③）。ここは毎回その場で
+         組み立てるプリセットで syncPicks()（マスタの12本に curated を配る）を通らないので、
+         **curated を自分で持つ**。持たないと件数・並べ替え・ページングの出る検索面になる。 */
+      curated: 1,
       /* axis はチップのアイコン選択用（場所を含むテーマだけピン・他は札） */
       axis: (e.sel && e.sel.area) ? 'area' : 'tag', label: e.label,
       desc: (ns.length > 1
@@ -15977,7 +17510,7 @@ KTN.pages['p10'] = function () {
       }).join('');
       rail.querySelectorAll('.p10-preset[data-key]').forEach(function (b) {
         b.addEventListener('click', function () {
-          if (activePreset === b.dataset.key) { clearAll(); showView('disc'); }
+          if (activePreset === b.dataset.key) { clearAll(); runFilter(); }
           else applyPreset(b.dataset.key);
         });
       });
@@ -16000,27 +17533,75 @@ KTN.pages['p10'] = function () {
     renderRail();
   })();
 
-  /* ── ディスカバリー棚 ── */
+  /* ── ディスカバリー棚 ──
+     **この関数群の並びは棚のDOM順（＝追174-79 ③ の意味の階層）と一致させてある。**
+     理由は差し込み枠（ピックアップ①②）の重複除外が「自分より上の棚に既に出たもの」を見るため＝
+     コード順と表示順が食い違うと、画面では下にある棚を既出と判定してしまう。棚を足すときも位置を揃える。 */
   (function () {
+    var SHELF_MIN = 3;   /* 中身がこれ未満の棚は枠ごと出さない（追174-79 ②・REFEED_MIN と同じしきい値） */
+    function byPop(a, b) { return b.pop - a.pop; }
+
+    /* 上の棚に出した展覧会の id。差し込み枠はここに無いものを優先して出す（追174-88）。
+       母数が小さいうちは同じ展覧会が複数の棚に出るため、**可変枠だけ重複を避ける**＝固定の棚どうしは
+       意味が違えば重複してよい（そもそも「もうすぐ終了」と「今日から開催」は両立しない）。
+       既出として数えるのは**常に出ている層1の棚だけ**で、ログイン限定の「あなたへのおすすめ」は数えない
+       ＝数えるとピックアップの中身がログイン状態で変わり、追174-79 ③ の (b) クロール上の安定
+       ・(c) 再訪時に同じものが同じ場所にある、が崩れるため。 */
+    var shown = [];
+    function mark(list) {
+      list.forEach(function (x) { if (shown.indexOf(x.id) === -1) shown.push(x.id); });
+      return list;
+    }
+    /* 既出を**捨てずに後ろへ回す**（順位を下げるだけ）。捨てる実装にしたら母数18件のデモで
+       両方の枠が3件を割って消えた＝層1の3棚だけで9件を使うので、5件規模のピックアップは
+       全部が既出とぶつかる。本番初期の掲載数も同じ規模なので「重複するくらいなら枠を落とす」は
+       成立しない。未出のものを優先して埋め、足りないぶんだけ既出から補う。 */
+    function demote(list) {
+      var fresh = [], dup = [];
+      list.forEach(function (x) { (shown.indexOf(x.id) === -1 ? fresh : dup).push(x); });
+      return fresh.concat(dup);
+    }
+
+    /* ── 層1：いま動ける（時間と距離＝好みの情報がまだ無い人でも決められる） ── */
     /* 「近くの展覧会」＝入力ゼロで使える最も摩擦の無いブラウズ起点のため冒頭ヒーロー段へ昇格（2026-08-29）。 */
-    var nearby = DISC.filter(PRESETS['near-live'].f).sort(function (a, b) { return parseFloat(a.dist) - parseFloat(b.dist); });
-    document.getElementById('p10NearbyGrid').innerHTML = nearby.slice(0, 3).map(toSideEc).map(buildSideEcCard).join('');
+    var nearby = DISC.filter(PRESETS['near'].f).sort(function (a, b) { return parseFloat(a.dist) - parseFloat(b.dist); });
+    document.getElementById('p10NearbyGrid').innerHTML = mark(nearby.slice(0, 3)).map(toSideEc).map(buildSideEcCard).join('');
+
+    var openToday = DISC.filter(PRESETS['opening-today'].f).sort(byPop);
+    document.getElementById('p10OpenTodayGrid').innerHTML = mark(openToday.slice(0, 3)).map(buildEc).join('');
 
     var ending = DISC.filter(PRESETS['ending-all'].f).sort(function (a, b) { return a.rd - b.rd; });
-    document.getElementById('p10EndingGrid').innerHTML = ending.slice(0, 3).map(buildEc).join('');
+    document.getElementById('p10EndingGrid').innerHTML = mark(ending.slice(0, 3)).map(buildEc).join('');
 
-    var liaison = DISC.filter(PRESETS['liaison'].f).sort(function (a, b) { return b.pop - a.pop; });
-    document.getElementById('p10LiaisonGrid').innerHTML = liaison.slice(0, 3).map(buildEc).join('');
+    /* 層2「自分向け」は置かない（2026-09-20・追174-97）＝パーソナルは P1 の担当。
+       P10 は目的軸のディスカバリーと検索ハブで、推定した「傾向」を出す層は持たない。 */
 
-    function fillFeature(num, key) {
-      var p = PRESETS[key];
-      document.getElementById('p10Feat' + num + 'Title').innerHTML = esc(p.label) + '<span class="ktn-sec-en">Feature</span>';
-      document.getElementById('p10Feat' + num + 'More').dataset.preset = key;
-      document.getElementById('p10Feat' + num + 'Grid').innerHTML =
-        DISC.filter(p.f).sort(function (a, b) { return b.pop - a.pop; }).slice(0, 3).map(buildEc).join('');
+    /* ── 層3：発見。先頭2枠が差し込み枠＝運営が掲載期間で回す唯一の可変部分 ──
+       **どの条件を入れるかは KTN.picks（ピックアップマスタ）が決める**＝キー直書きをやめた
+       （追174-79 ⑥ の穴を解消・追174-90 追記2）。マスタは掲載期間内のものを掲載順の上から
+       SLOTS 件返す。条件の中身（PRESETS[slug].f）は引き続きこのページが持つ＝母集団の
+       フィールド名がページごとに違うため（KTN.picks 冒頭のコメント参照）。 */
+    function fillPick(num, entry) {
+      var sec = document.getElementById('p10Pick' + num);
+      if (!sec) return;
+      var p = entry && PRESETS[entry.slug];
+      if (!p) { sec.hidden = true; return; }
+      var list = demote(DISC.filter(p.f).sort(byPop)).slice(0, 3);
+      /* 中身が最小件数に満たない枠は出さない（空・1件の棚を出すより良い）。判定はピックアップ自身の
+         件数に対して行う＝重複を理由に枠を消さない。しきい値はマスタ1件ごとに持てる（既定は SHELF_MIN）。 */
+      if (list.length < (entry.min || SHELF_MIN)) { sec.hidden = true; return; }
+      sec.hidden = false;
+      document.getElementById('p10Pick' + num + 'Title').innerHTML = esc(entry.label || p.label) + '<span class="ktn-sec-en">Picks</span>';
+      document.getElementById('p10Pick' + num + 'More').dataset.preset = entry.slug;
+      document.getElementById('p10Pick' + num + 'Grid').innerHTML = mark(list).map(buildEc).join('');
     }
-    fillFeature(1, 'tokyo-gendai');
-    fillFeature(2, 'weekend');
+    /* 枠の数は HTML 側の #p10Pick1 / #p10Pick2 と揃える。マスタが SLOTS より少ない数しか
+       返さない日は、余った枠を hidden にする（fillPick が entry 無しで畳む）。 */
+    (KTN.picks ? KTN.picks.shelf() : []).slice(0, 2).forEach(function (e, i) { fillPick(i + 1, e); });
+    for (var pi = (KTN.picks ? KTN.picks.shelf().length : 0); pi < 2; pi++) fillPick(pi + 1, null);
+
+    var liaison = DISC.filter(PRESETS['liaison-all'].f).sort(byPop);
+    document.getElementById('p10LiaisonGrid').innerHTML = liaison.slice(0, 3).map(buildEc).join('');
 
     /* 「クロスジャンル」＝普段のジャンル（MY_TAGS）と重ならない棚を1本混ぜる。
        選定は「人気」でなく「未接触」＝MY_TAGS外のタグを持つものの中から pop が低い順（デモ：本来はLayer2の
@@ -16036,11 +17617,11 @@ KTN.pages['p10'] = function () {
     }
     renderCrossGenre();
 
-    /* 年間の記録の対象年・データ・行ビルダーは KTN.arc（pages.js トップレベル）に移した。
+    /* 年間ランキングの対象年・データ・行ビルダーは KTN.arc（pages.js トップレベル）に移した。
        P10-4-2（年ごとの独立ページ）と材料を共有するため。ここではランキング下の送りリンクの
        文言・リンク先を既定年に追随させるのに使う。 */
 
-    /* ── ランキング3軸（行きたい／行った／急上昇） ──
+    /* ── ランキング3軸（興味あり！／チェックイン／急上昇） ──
        候補は notEnded（開催中・開催予定）のみ。上位3件（右カラムの狭い枠では4件だと縦に伸びて
        下の要素を押し下げるうえ、ランキングとして見せたいのは頂点の顔ぶれなので3件で足りる・2026-09-03）。
        軸は「意志（興味あり！）」「行動（チェックイン）」「変化（前週比）」の3種類で、量の変種を並べない。
@@ -16049,7 +17630,7 @@ KTN.pages['p10'] = function () {
        値が異常膨張するのを抑えるため。P10は「いまの勢い」＝日割り、P10-4の年間版は「累計」で役割を分ける。
        **低露出枠（pop最小を1件混ぜる）は廃止（2026-09-02）**：ランキングという「測って並べた」体裁の中に
        測定外の1件を混ぜると、明記すれば「1件は下駄を履いている」と読めて全体の信頼を下げ、明記しなければ
-       順位の意味が濁る。裾野拡大の役割はクロスジャンル（pop昇順で抽出）・新着掲載の棚・今日の特集（日替わりローテ）が
+       順位の意味が濁る。裾野拡大の役割はクロスジャンル（pop昇順で抽出）・新着掲載の棚・今日のピックアップ（日替わりローテ）が
        すでに担っているため、ランキングから外しても方針は損なわれない。
        右カラムに常設するため、カードはクロスジャンルと同じ .p2-side-ec を使う（2026-08-30リファイン）。 */
     function rankRate(x, field) { return x[field] / Math.max(x.elapsed, 7); }
@@ -16063,7 +17644,7 @@ KTN.pages['p10'] = function () {
     }
     var rankMode = 'want';
     function renderRanking() {
-      /* タブのセレクタは [data-rank] で限定する。P10-4の「年間の記録」が同じ .p10-rank-tab を
+      /* タブのセレクタは [data-rank] で限定する。年間ランキング（P10-4-2）が同じ .p10-rank-tab を
          [data-arc] で再利用しており、限定しないと両者のタブが互いの状態を潰し合うため。 */
       document.querySelectorAll('.p10-rank-tab[data-rank]').forEach(function (b) {
         b.classList.toggle('is-active', b.dataset.rank === rankMode);
@@ -16076,9 +17657,10 @@ KTN.pages['p10'] = function () {
         if (rankMode === 'rising') { more.hidden = true; }
         else {
           more.hidden = false;
-          /* 年鑑側のタブ（行きたい/行った）まで引き継ぐ＝押した軸のまま着地させる */
+          /* 押した軸（興味あり！／チェックイン）は ?m= で引き継ぐが、文言は着地先のページ名に揃える
+             ＝リンクテキストと遷移先の h1 が一致しないと何のランキングか読めないため（追174-83）。 */
           more.href = './kotennavi-p10-4-2.html?y=' + KTN.arc.defaultYear() + '&m=' + rankMode;
-          more.textContent = KTN.arc.defaultYear() + '年の' + (rankMode === 'visited' ? '行った' : '行きたい') + 'ランキング →';
+          more.textContent = KTN.arc.defaultYear() + '年の展覧会ランキング →';
         }
       }
     }
@@ -16087,13 +17669,8 @@ KTN.pages['p10'] = function () {
     });
     renderRanking();
 
-    /* ── 時間軸の棚：今日から開催（会期の初日が今日・並びは pop 降順） ── */
-    var openToday = DISC.filter(PRESETS['opening-today'].f).sort(function (a, b) { return b.pop - a.pop; });
-    document.getElementById('p10OpenTodayGrid').innerHTML = openToday.slice(0, 3).map(buildEc).join('');
-
-    /* あなたへのおすすめ（ログイン限定・Layer2の協調フィルタ実装までの暫定は pop 降順） */
-    var forYou = DISC.filter(PRESETS['for-you'].f).sort(function (a, b) { return b.pop - a.pop; });
-    document.getElementById('p10RecGrid').innerHTML = forYou.slice(0, 3).map(buildEc).join('');
+    /* 「今日から開催」「あなたへのおすすめ」はDOM順に合わせて上（層1・層2）へ移した。
+       ここに残すと差し込み枠より後に走り、重複除外が上の棚を見られない。 */
 
     var news = DISC.filter(function (x) { return x.isNew; }).sort(function (a, b) { return a.nd - b.nd; });
     document.getElementById('p10NewGrid').innerHTML = news.slice(0, 3).map(buildEc).join('');
@@ -16136,8 +17713,10 @@ KTN.pages['p10'] = function () {
     }
   };
 
-  /* 棚の「もっと見る」→ プリセット着地 */
-  document.querySelectorAll('[data-preset]').forEach(function (a) {
+  /* 棚の「もっと見る」→ プリセット着地。**チップは除く**＝チップは上のチップ用ハンドラが
+     トグル（2回目で解除）まで含めて面倒を見るので、ここで拾うと1クリックに2つのハンドラが
+     走り、着地した直後に自分で解除して何も起きていないように見える（2026-09-20 の不具合）。 */
+  document.querySelectorAll('[data-preset]:not(.p10-chip)').forEach(function (a) {
     a.addEventListener('click', function (ev) {
       ev.preventDefault();
       applyPreset(a.dataset.preset);
@@ -16145,24 +17724,19 @@ KTN.pages['p10'] = function () {
   });
 
   /* ── ゼロヒット ── */
-  function renderZeroSugg() {
-    var sugg = document.getElementById('p10ZeroSugg');
-    sugg.innerHTML = ['near-live', 'liaison', 'free', 'weekend', 'week-picks'].map(function (key) {
-      return '<button class="p10-preset" type="button" data-zero-preset="' + key + '">' + presetInner(key) + '</button>';
-    }).join('');
-    sugg.querySelectorAll('[data-zero-preset]').forEach(function (b) {
-      b.addEventListener('click', function () { applyPreset(b.dataset.zeroPreset); });
-    });
-    var trending = DISC.slice().sort(function (a, b) { return b.pop - a.pop; });
-    document.getElementById('p10ZeroGrid').innerHTML = trending.slice(0, 4).map(buildEc).join('');
-  }
+  /* ── ゼロヒット ──
+     受け皿は結果画面の「今日のピックアップ」と同じ関数（追174-92）。
+     旧実装は固定5件のチップ＋注目度スコア上位4件のグリッドで、(a) マスタを増やしても出ない
+     (b) いま0件だったピックアップを同じ画面で勧めてしまう (c) 人気順は「同じ土俵の別カード」
+     にしかならない（追174-34 がまさに否定した形）、の3点が同時に起きていた。 */
+  function renderZeroSugg() { fillRefeed('p10ZeroRefeedGrid'); }
 
-  /* ── 今日の特集（結果末尾の再回遊）──
+  /* ── 今日のピックアップ（結果末尾の再回遊）──
      検索したが意中のものが無かった人に、人気軸のカードを足しても「同じ土俵の別カード」にしかならない。
-     1枚が**別の軸の検索そのもの**になる特集を差し出して、軸の乗り換えを促す（中身が想像できるよう代表サムネ3枚つき）。
+     1枚が**別の軸の検索そのもの**になるピックアップを差し出して、軸の乗り換えを促す（中身が想像できるよう代表サムネ3枚つき）。
      選定は日替わり固定（doyシード）＝「ランダム」「引き直し」は前面に出さず、今日の誌面として置く（2026-09-02）。 */
-  var REFEED_N = 3;    /* 出す特集の数 */
-  var REFEED_MIN = 3;  /* 中身がこれ未満の特集は出さない（開いてスカスカだと逆効果） */
+  var REFEED_N = 3;    /* 出すピックアップの数 */
+  var REFEED_MIN = 3;  /* 中身がこれ未満のピックアップは出さない（開いてスカスカだと逆効果） */
   function refeedCard(key) {
     var p = PRESETS[key], hits = DISC.filter(p.f);
     var thumbs = hits.slice(0, 3).map(function (x) {
@@ -16173,28 +17747,99 @@ KTN.pages['p10'] = function () {
       + '<span class="p10-refeed__label">' + presetInner(key) + '</span>'
       + '<span class="ktn-count">' + hits.length + '件</span></button>';
   }
-  function renderRefeed() {
-    var box = document.getElementById('p10RefeedGrid');
-    if (!box) return;
+  /* ── 差し出す候補の選び方（結果末尾とゼロヒットで共有）── 2026-09-20・追174-92
+     **候補はピックアップマスタから引く**（`refeed` フラグ＝差し出してよい語彙）。
+     もとはこの関数だけが `for...in PRESETS` で拾っていて、ゼロヒット側は別に固定5件を
+     直書きしていた＝同じ「別の条件を差し出す」役割が2つの規則で動いていた。
+
+     あわせて 追174-79 ⑥ が挙げていた2つの穴を塞いだ：
+       (a) `for...in` の列挙順に依存していた → **マスタの配列順＋slug 昇順の安定ソート**にした。
+           オブジェクトの列挙順は言語移植で保証されないので、並びの根拠をデータ側に置く。
+       (b) シードが `KTN.cl.doy()`＝年内通し番号で、**年をまたぐと巻き戻りうるう年でずれた**
+           → `KTN.axis.dayNo()`（エポックからの通日）へ。単調に増えるので巻き戻らない。
+           棚の差し込み枠の日替わりと同じ時計を見る＝デモバーの日送りにも一緒に追従する。 */
+  function refeedKeys(n) {
     var keys = [];
-    for (var k in PRESETS) {
-      if (!PRESETS[k].feat || k === activePreset) continue;
-      if (DISC.filter(PRESETS[k].f).length < REFEED_MIN) continue;
-      keys.push(k);
-    }
-    keys = KTN.cl.shuffle(keys, KTN.cl.rng(KTN.cl.doy())).slice(0, REFEED_N);
-    box.innerHTML = keys.map(function (key) { return refeedCard(key); }).join('');
+    (KTN.picks ? KTN.picks.all() : []).forEach(function (e) {
+      if (!e.refeed || e.slug === activePreset) return;      /* 適用中のものは差し出さない */
+      var p = PRESETS[e.slug]; if (!p) return;
+      if (DISC.filter(p.f).length < REFEED_MIN) return;      /* 開いてスカスカなら出さない */
+      keys.push(e.slug);
+    });
+    keys.sort();
+    var d = (KTN.axis && KTN.axis.dayNo) ? KTN.axis.dayNo() : 0;
+    return KTN.cl.shuffle(keys, KTN.cl.rng(d)).slice(0, n || REFEED_N);
+  }
+  /* 差し出しカードの描画も1か所。box の id だけ差し替えて結果末尾とゼロヒットで使い回す。 */
+  function fillRefeed(boxId, n) {
+    var box = document.getElementById(boxId);
+    if (!box) return;
+    box.innerHTML = refeedKeys(n).map(refeedCard).join('');
     box.querySelectorAll('[data-refeed]').forEach(function (b) {
       b.addEventListener('click', function () { applyPreset(b.dataset.refeed); });
     });
   }
+  function renderRefeed() { fillRefeed('p10RefeedGrid'); }
+
+  /* ── タグ行（追174-142・追174-143で1行ずつ展開に変更）──
+     タグ付け数（このページの母集団=EXでの出現数）が多い順に並べ替えて描画する。
+     .p10-chip の結線（下の「チップ」ブロック）より前に描画すること＝この関数が生成した
+     ボタンも結線対象に含めるため（_p10AdvInit と同じ順序制約）。
+     本番は数百件を想定（追174-143・ユーザー指摘）＝「もっと見る」は残り全部を一度に開かず
+     1行ずつ増やす。行の高さは文字数・画面幅で変わるため固定件数でなく実測（getBoundingClientRect）
+     で行の境界を切る。ドロワーは開くまで display:none で高さゼロのため、初回の実測は
+     ドロワーを開いたとき（advToggle）に行う。 */
+  var ALL_TAGS = ['絵画', '現代美術', '写真', '書道', '版画', '陶芸', 'クラフト'].concat(window.P10_MORE_TAGS || []);
+  var tagRowH = null, tagVisibleRows = 1;
+  function renderTagChips() {
+    var box = document.getElementById('p10TagOpts');
+    if (!box) return;
+    var counts = {};
+    ALL_TAGS.forEach(function (t) { counts[t] = 0; });
+    EX.forEach(function (x) { (x.tags || []).forEach(function (t) { if (counts[t] != null) counts[t]++; }); });
+    var sorted = ALL_TAGS.slice().sort(function (a, b) { return counts[b] - counts[a]; });
+    box.innerHTML = sorted.map(function (t) {
+      return '<button class="p10-chip" data-f="tag:' + esc(t) + '" type="button"># ' + esc(t) + '</button>';
+    }).join('');
+  }
+  renderTagChips();
+  function measureTagRows() {
+    var box = document.getElementById('p10TagOpts');
+    if (!box) return [];
+    var boxTop = box.getBoundingClientRect().top;
+    var rows = [], curTop = null;
+    box.querySelectorAll('.p10-chip').forEach(function (c) {
+      var r = c.getBoundingClientRect();
+      var top = r.top - boxTop;
+      if (curTop === null || Math.abs(top - curTop) > 1) { curTop = top; rows.push(0); }
+      rows[rows.length - 1] = Math.max(rows[rows.length - 1], top + r.height);
+    });
+    return rows;
+  }
+  function applyTagRowCap(remeasure) {
+    var box = document.getElementById('p10TagOpts');
+    var btn = document.getElementById('p10TagMoreBtn');
+    if (!box || !btn) return;
+    if (remeasure || !tagRowH) tagRowH = measureTagRows();
+    if (!tagRowH.length) return;   /* ドロワーが閉じていて未表示のうちは何もしない */
+    if (tagVisibleRows >= tagRowH.length) { box.style.maxHeight = 'none'; btn.hidden = true; return; }
+    btn.hidden = false;
+    box.style.maxHeight = tagRowH[tagVisibleRows - 1] + 'px';
+  }
+  var tagMoreBtn = document.getElementById('p10TagMoreBtn');
+  if (tagMoreBtn) tagMoreBtn.addEventListener('click', function () {
+    tagVisibleRows++;
+    applyTagRowCap(false);
+  });
+
   /* ── 検索操作 ── */
   document.getElementById('p10SearchBtn').addEventListener('click', runFilter);
   elKeyword.addEventListener('keydown', function (ev) {
-    if (ev.key === 'Enter') { ev.preventDefault(); runFilter(); }
+    if (ev.key === 'Enter') { ev.preventDefault(); dropPreset(); runFilter(); }   /* キーワードも検索の操作 */
   });
 
-  /* チップ（data-f あり＝実フィルタ／なし＝視覚デモ） */
+  /* チップ（data-f あり＝実フィルタ／なし＝視覚デモ）。クイック行はクリックで即検索、
+     詳細条件ドロワー内（#p10Adv）はトグルのみで「この条件で検索」を押すまで確定しない（追174-138）。 */
   document.querySelectorAll('.p10-chip,.p10-day').forEach(function (c) {
     c.addEventListener('click', function () {
       /* data-toggle は展開パネルを開くボタン（期間を指定する／すべての都道府県）＝フィルタチップではない */
@@ -16202,17 +17847,79 @@ KTN.pages['p10'] = function () {
       var on = !c.classList.contains('is-on');
       if (c.dataset.f) {
         document.querySelectorAll('[data-f="' + c.dataset.f + '"]').forEach(function (s) { s.classList.toggle('is-on', on); });
-        if (!c.closest('#p10Adv')) runFilter();
+        /* 「エリア」と「〜の近く」は開催場所の指定方法として排他（追174-147）。
+           エリアを選んだら「〜の近く」の確定を解除する（逆方向はclearNearで行う）。 */
+        if (on && (c.dataset.f.indexOf('area:') === 0 || c.dataset.f.indexOf('tarea:') === 0)) clearNear();
+        if (!c.closest('#p10Adv')) { dropPreset(); runFilter(); }
       } else {
         c.classList.toggle('is-on', on);
       }
     });
   });
 
+  /* ── 「〜の近く」（会場名・追174-145／174-147／174-148）──
+     現行の検索は「サイトに登録されているギャラリー名」が前提なので、自由入力の部分一致ではなく
+     ①候補（このページの母集団=EXに実在する会場名）から検索して②候補を選んで初めて確定する
+     ＝未確定（候補から選んでいない）の入力はフィルタに反映しない。確定後は入力欄を隠し、
+     他のチップと同じ .p10-chip.is-on の見た目（#p10NearChip）に切り替える＝「選択状態」が
+     他の条件と揃って見えるようにする（追174-148・ユーザー指摘）。
+     「エリア」チップとは排他＝どちらか一方でしか開催場所を絞れない（両方効くと「エリアA×会場Bの近く」
+     という意味不明な交差になるため）。エリアを選んだときの解除は上のチップハンドラで行う。 */
+  var nearWrapEl = document.querySelector('.p10-adv__near-wrap');
+  var nearInputEl = document.querySelector('.p10-adv__near-input');
+  var nearSuggEl = document.getElementById('p10NearSugg');
+  var nearChipEl = document.getElementById('p10NearChip');
+  var nearConfirmed = false;
+  function venueNames() {
+    var seen = {}, list = [];
+    EX.forEach(function (x) { if (x.venue && !seen[x.venue]) { seen[x.venue] = 1; list.push(x.venue); } });
+    return list;
+  }
+  function clearNear() {
+    if (nearInputEl) nearInputEl.value = '';
+    if (nearSuggEl) { nearSuggEl.hidden = true; nearSuggEl.innerHTML = ''; }
+    if (nearChipEl) { nearChipEl.hidden = true; nearChipEl.textContent = ''; }
+    if (nearWrapEl) nearWrapEl.hidden = false;
+    nearConfirmed = false;
+  }
+  function confirmNear(name) {
+    if (nearInputEl) nearInputEl.value = name;
+    nearConfirmed = true;
+    if (nearSuggEl) { nearSuggEl.hidden = true; nearSuggEl.innerHTML = ''; }
+    if (nearChipEl) { nearChipEl.textContent = name; nearChipEl.hidden = false; }
+    if (nearWrapEl) nearWrapEl.hidden = true;
+    /* エリアと排他：会場名の近くを確定したらエリア側のチップを解除する */
+    document.querySelectorAll('.p10-chip[data-f^="area:"].is-on,.p10-chip[data-f^="tarea:"].is-on').forEach(function (c) { c.classList.remove('is-on'); });
+  }
+  if (nearChipEl) nearChipEl.addEventListener('click', function () { clearNear(); });   /* 他のチップと同じく再クリックで解除 */
+  if (nearInputEl && nearSuggEl) {
+    nearInputEl.addEventListener('input', function () {
+      nearConfirmed = false;
+      var q = nearInputEl.value.trim();
+      if (!q) { nearSuggEl.hidden = true; nearSuggEl.innerHTML = ''; return; }
+      var list = venueNames().filter(function (v) { return v.indexOf(q) !== -1; }).slice(0, 8);
+      if (!list.length) { nearSuggEl.hidden = true; nearSuggEl.innerHTML = ''; return; }
+      nearSuggEl.innerHTML = list.map(function (v) {
+        return '<button type="button" class="p10-adv__near-sugg-item">' + esc(v) + '</button>';
+      }).join('');
+      nearSuggEl.hidden = false;
+    });
+    nearSuggEl.addEventListener('click', function (ev) {
+      var btn = ev.target.closest('.p10-adv__near-sugg-item');
+      if (!btn) return;
+      confirmNear(btn.textContent);
+    });
+    document.addEventListener('click', function (ev) {
+      if (!nearInputEl.contains(ev.target) && !nearSuggEl.contains(ev.target)) nearSuggEl.hidden = true;
+    });
+  }
+
   /* 詳細条件ドロワー */
   var advToggle = document.getElementById('p10AdvToggle');
   var adv = document.getElementById('p10Adv');
-  /* 期間指定は過去日も指定できる（＝終了した展覧会を検索で辿れる）。母数の下限は「開始日必須」で担保する（追174-45） */
+  /* 期間指定は過去日も指定できる（＝終了した展覧会を検索で辿れる）。母数の下限は「開始日必須」で担保する（追174-45）。
+     入力欄は common.js の _p10AdvInit が生成するので、ここで引けるのは init の順番（パネル生成→ページ固有処理）が
+     保証されているため。**この順番に依存していることを忘れない**（2026-09-21）。 */
   var rangeStart = adv.querySelector('.p10-adv__date');
   if (rangeStart) rangeStart.addEventListener('change', syncRangeEnd);
   syncRangeEnd();
@@ -16221,42 +17928,45 @@ KTN.pages['p10'] = function () {
     adv.classList.toggle('is-open', open);
     advToggle.classList.toggle('is-open', open);
     advToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (open) { tagVisibleRows = 1; applyTagRowCap(true); }
   });
   document.getElementById('p10AdvClear').addEventListener('click', function () {
     document.querySelectorAll('.p10-chip.is-on,.p10-day.is-on').forEach(function (c) { c.classList.remove('is-on'); });
-    var near = document.querySelector('.p10-adv__near-input');
-    if (near) near.value = '';
+    clearNear();
     clearRangeInputs();
   });
   document.getElementById('p10AdvSearch').addEventListener('click', function () {
     adv.classList.remove('is-open');
     advToggle.classList.remove('is-open');
     advToggle.setAttribute('aria-expanded', 'false');
+    dropPreset();   /* 詳しい検索条件も検索の操作＝ピックアップを解除する */
     runFilter();
   });
 
   /* 並び替え・さらに読み込む */
   if (elSort) elSort.addEventListener('change', function () {
     if (!elResults.hidden && renderResultGrid._last) {
-      shownCount = PAGE_SIZE;
+      curPage = 1;   /* 条件が変わったら1ページ目へ戻す */
       renderResultGrid(sortResults(renderResultGrid._last));
     }
   });
-  document.getElementById('p10MoreBtn').addEventListener('click', function () {
-    if (!renderResultGrid._last) return;
-    shownCount = renderResultGrid._last.length;
-    renderResultGrid(renderResultGrid._last);
-  });
+  /* 「さらに読み込む」は共通ページング（KTN.pagination）へ置き換えたのでハンドラごと撤去（2026-09-20）。 */
 
   /* ── デモバー：表示状態切替 ── */
   window.setP10View = function (view, btn) {
     document.querySelectorAll('[data-p10-view]').forEach(function (b) { b.classList.remove('on'); });
     if (btn && btn.hasAttribute('data-p10-view')) btn.classList.add('on');
     clearAll();
-    if (view === 'disc') { showView('disc'); }
-    else if (view === 'preset') { applyPreset('tokyo-gendai'); }
+    if (view === 'disc') { runFilter(); }
+    /* ピックアップ着地＝ピックアップを押したあとの状態。**いま棚に出ている先頭のもの**を使う
+       （2026-09-20）＝slug 直書きだと、運営がマスタで条件やラベルを変えたときに
+       このボタンだけ古い指定のまま残る。マスタが空の日はディスカバリーのままにする。 */
+    else if (view === 'preset') {
+      var top = (KTN.picks ? KTN.picks.shelf() : [])[0];
+      if (top) applyPreset(top.slug); else showView('disc');
+    }
     else if (view === 'result') {
-      /* 条件は1つだけ＝既定の「おすすめ順」で Featured クラスタが出るヒット数を確保するため
+      /* 条件は1つだけ＝既定の「おすすめ順」で 注目 Highlights クラスタが出るヒット数を確保するため
          （条件を重ねると数件まで絞られ、クラスタが出ない状態しかデモできない・2026-09-01） */
       ['st:live'].forEach(function (f) {
         document.querySelectorAll('.p10-chip[data-f="' + f + '"]').forEach(function (c) { c.classList.add('is-on'); });
@@ -16266,18 +17976,8 @@ KTN.pages['p10'] = function () {
     else if (view === 'zero') { elKeyword.value = '深夜の青騎士'; runFilter(); }
   };
 
-  /* ── ロール反映（guest では「あなたへのおすすめ」棚を非表示） ── */
-  function applyRole() {
-    var login = (window.curRole || 'guest') !== 'guest';
-    var sec = document.getElementById('p10RecSection');
-    if (sec) sec.hidden = !login;
-  }
-  applyRole();
-  var prevRender = window.ktnRender;
-  window.ktnRender = function () {
-    if (typeof prevRender === 'function') prevRender();
-    applyRole();
-  };
+  /* ロール別の出し分けは持たない（2026-09-20・追174-97）＝「あなたへのおすすめ」棚を外したことで、
+     P10 の本文はゲストとログインで同じになった。ヘッダーの管理者メニューは common.js の getActions が担当。 */
 };
 
 /* ════════════════════════════════════════════════════
@@ -16294,37 +17994,12 @@ KTN.pages['p10-1'] = function () {
     });
   }
 
-  /* ── デモデータ（作品） ──
-     cx＝その作品が出品されている展覧会の文脈（EX id）。おすすめ順の資格判定と
-     クラスタの周辺コンテンツ収集に使う（本番はDBの出品〔listing〕リレーション）。 */
-  var WORKS = [
-    { id:1,  title:'静寂 I',                  name:'田中透',     creatorUrl:'kotennavi-p3.html', year:'2026', medium:'油彩・キャンバス',   size:'727×606mm',       price:180000, status:'sale',    liaison:'li-plus', tags:['絵画','現代美術'],     area:'東京',   pop:88, interest:48,  queue:2, cx: 1, isNew:0, bg:'linear-gradient(135deg,#5a6b80,#2e3a4a)' },
-    { id:2,  title:'墨の余白',                name:'高橋蒼',     creatorUrl:'#',                 year:'2026', medium:'紙本墨画',           size:'半切',            price:96000,  status:'sale',    liaison:'li-plus', tags:['書道'],                area:'東京',   pop:70, interest:71,  queue:0, cx: 2, isNew:0, bg:'linear-gradient(135deg,#2e2a28,#5a5450)' },
-    { id:3,  title:'Self / 03',              name:'studio hue', creatorUrl:'#',                 year:'2025', medium:'ジークレー',         size:'A2 ed.5',         price:42000,  status:'sale',    liaison:'li-plus', tags:['写真','現代美術'],     area:'東京',   pop:55, interest:33,  queue:1, cx:11, isNew:1, bg:'linear-gradient(135deg,#b08aa0,#7a4e68)' },
-    { id:4,  title:'銅版の庭',                name:'早瀬涼',     creatorUrl:'#',                 year:'2026', medium:'銅版画',             size:'300×400mm ed.10', price:55000,  status:'negot',   liaison:'li-plus', tags:['版画'],                area:'東京',   pop:60, interest:62,  queue:3, cx:10, isNew:0, bg:'linear-gradient(135deg,#5a7a6a,#2e4638)' },
-    { id:5,  title:'マチエール断章',          name:'結城玲',     creatorUrl:'#',                 year:'2026', medium:'ミクストメディア',   size:'500×500mm',       price:128000, status:'sale',    liaison:'li-plus', tags:['絵画','現代美術'],     area:'大阪',   pop:77, interest:27,  queue:0, cx: 5, isNew:1, bg:'linear-gradient(135deg,#a05a4a,#6a3428)' },
-    { id:6,  title:'筆勢 — 二',               name:'大西澄',     creatorUrl:'#',                 year:'2025', medium:'紙本墨書',           size:'額装',            price:74000,  status:'sold',    liaison:'li-plus', tags:['書道'],                area:'京都',   pop:50, interest:55,  queue:0, cx: 7, isNew:0, bg:'linear-gradient(135deg,#4a4a4a,#1e1e1e)' },
-    { id:7,  title:'陶花器 III',              name:'桐生藍',     creatorUrl:'#',                 year:'2026', medium:'陶芸',               size:'H180mm',          price:38000,  status:'sale',    liaison:'li-plus', tags:['陶芸','クラフト'],     area:'愛知',   pop:45, interest:40,  queue:0, cx: 9, isNew:1, bg:'linear-gradient(135deg,#9a8a6a,#5e5238)' },
-    { id:8,  title:'光の断面',                name:'篠原恵',     creatorUrl:'#',                 year:'2026', medium:'写真 ed.8',          size:'A1',              price:65000,  status:'sale',    liaison:'li-plus', tags:['写真'],                area:'東京',   pop:82, interest:98,  queue:1, cx: 3, isNew:0, bg:'linear-gradient(135deg,#c0a880,#8a6e4a)' },
-    { id:9,  title:'街の輪郭',                name:'岡島みのり', creatorUrl:'#',                 year:'2025', medium:'水彩紙本',           size:'F6',              price:null,   status:'nsale',   liaison:'li',      tags:['絵画'],                area:'神奈川', pop:40, interest:20,  queue:0, cx: 8, isNew:0, bg:'linear-gradient(135deg,#6a9ab0,#3a5e74)' },
-    { id:10, title:'硝子の庭',                name:'三好文乃',   creatorUrl:'#',                 year:'2026', medium:'ガラス工芸',         size:'H220mm',          price:88000,  status:'inquiry', liaison:'li-plus', tags:['クラフト'],            area:'福岡',   pop:58, interest:44,  queue:0, cx:12, isNew:1, bg:'linear-gradient(135deg,#7ab0a8,#3e6e66)' },
-    { id:11, title:'静物 — 器と光',           name:'高橋蒼',     creatorUrl:'#',                 year:'2026', medium:'油彩・キャンバス',   size:'F20',             price:210000, status:'sale',    liaison:'li-plus', tags:['絵画'],                area:'東京',   pop:72, interest:66,  queue:0, cx: 5, isNew:0, bg:'linear-gradient(135deg,#7a6a8a,#4a3e5a)' },
-    { id:12, title:'木版譚',                  name:'早瀬涼',     creatorUrl:'#',                 year:'2025', medium:'木版画 ed.10',       size:'350×450mm',       price:33000,  status:'sale',    liaison:'li-plus', tags:['版画'],                area:'京都',   pop:63, interest:58,  queue:1, cx: 4, isNew:0, bg:'linear-gradient(135deg,#c07040,#7a3e18)' },
-    { id:13, title:'セルフポートレイトの練習', name:'studio hue', creatorUrl:'#',                 year:'2025', medium:'ジークレー',         size:'A2 ed.5',         price:null,   status:'nsale',   liaison:'li',      tags:['写真','現代美術'],     area:'東京',   pop:68, interest:90,  queue:0, cx:11, isNew:1, bg:'linear-gradient(135deg,#b08aa0,#7a4e68)' },
-    { id:14, title:'陰影の記憶',              name:'田中透',     creatorUrl:'kotennavi-p3.html', year:'2025', medium:'油彩・キャンバス',   size:'F30',             price:152000, status:'sold',    liaison:'li-plus', tags:['絵画'],                area:'東京',   pop:85, interest:120, queue:0, cx: 1, isNew:0, bg:'linear-gradient(135deg,#5a6b80,#2e3a4a)' },
-    { id:15, title:'布と刻',                  name:'結城玲',     creatorUrl:'#',                 year:'2026', medium:'染色',               size:'M',               price:47000,  status:'sale',    liaison:'li-plus', tags:['クラフト','現代美術'], area:'大阪',   pop:52, interest:36,  queue:0, cx: 5, isNew:1, bg:'linear-gradient(135deg,#a05a4a,#6a3428)' },
-    { id:16, title:'墨韻',                    name:'大西澄',     creatorUrl:'#',                 year:'2026', medium:'書',                 size:'半切',            price:61000,  status:'negot',   liaison:'li-plus', tags:['書道'],                area:'京都',   pop:58, interest:41,  queue:2, cx: 7, isNew:0, bg:'linear-gradient(135deg,#4a4a4a,#1e1e1e)' },
-  ];
+  /* ── デモデータは KTN.p10data（トップレベル）から読む。
+     P10-5（作品の分類索引）が同じ母集団の件数を出すため、データは1本に集約した。 */
+  var WORKS = KTN.p10data.WORKS;
+  var priceBand = KTN.p10data.priceBand;
 
-  function priceBand(p) {
-    if (p == null) return null;
-    if (p <= 50000) return '~5';
-    if (p <= 100000) return '5-10';
-    if (p <= 300000) return '10-30';
-    return '30-';
-  }
-
-  /* ── 特集プリセット（アルゴリズム生成の保存済み検索） ── */
+  /* ── ピックアッププリセット（アルゴリズム生成の保存済み検索） ── */
   var P10_ICONS = {
     area:  '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M13 6.5c0 3.2-5 7.5-5 7.5S3 9.7 3 6.5a5 5 0 0 1 10 0z"/><circle cx="8" cy="6.5" r="1.8"/></svg>',
     date:  '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="3.5" width="11" height="10" rx="1"/><path d="M2.5 6.8h11M5.5 2v2.5M10.5 2v2.5"/></svg>',
@@ -16332,19 +18007,28 @@ KTN.pages['p10-1'] = function () {
     pop:   '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"><path d="M8 2.4l1.7 3.5 3.9.6-2.8 2.7.7 3.9L8 11.2l-3.5 1.9.7-3.9-2.8-2.7 3.9-.6L8 2.4z"/></svg>',
     tag:   '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"><path d="M2.5 8V3.5a1 1 0 0 1 1-1H8a1 1 0 0 1 .7.3l4.8 4.8a1 1 0 0 1 0 1.4l-4.5 4.5a1 1 0 0 1-1.4 0L2.8 8.7a1 1 0 0 1-.3-.7z"/><circle cx="5.6" cy="5.6" r="1"/></svg>',
   };
-  /* sort＝その特集を開いたときの既定の並び順。説明文で並び順を約束している特集だけに持たせる
+  /* sort＝そのピックアップを開いたときの既定の並び順。説明文で並び順を約束しているピックアップだけに持たせる
      （既定の「おすすめ順」のままだと説明文と実際の並びが食い違うため・2026-09-01） */
   var PRESETS = {
-    'sale-now':      { rail: 1, axis: 'price', label: '今すぐ購入できる',   desc: '「販売中 × LIAISON+」条件から自動生成した特集です。会場に行けなくても購入できます。', f: function (x) { return x.status === 'sale' && x.liaison === 'li-plus'; } },
-    'new-arrival':   { rail: 1, axis: 'date',  label: '新着作品',          desc: '「新着掲載」条件から自動生成した特集です。', sort: 'new', f: function (x) { return !!x.isNew; } },
-    'under-50k':     { rail: 1, axis: 'price', label: '5万円以下で探す',   desc: '「価格帯 〜5万円」条件から自動生成した特集です。', sort: 'price-asc', f: function (x) { return priceBand(x.price) === '~5'; } },
-    'tokyo-works':   { rail: 1, axis: 'area',  label: '東京の作品',        desc: '「東京」エリアの掲載作品から自動生成した特集です。', f: function (x) { return x.area === '東京'; } },
-    'popular':       { rail: 1, axis: 'pop',   label: '人気の作品',        desc: '「興味あり！」シグナル上位から自動生成した特集です。', sort: 'pop', f: function (x) { return x.pop >= 70; } },
-    'genre-paint':   { rail: 1, axis: 'tag',   label: '絵画作品を探す',    desc: '「絵画」ジャンルの掲載作品から自動生成した特集です。', f: function (x) { return x.tags.indexOf('絵画') !== -1; } },
-    'negot-all':     { rail: 0, axis: 'price', label: '商談受付中の作品',  desc: '出品者と条件を相談できる「商談中」の作品です。', f: function (x) { return x.status === 'negot'; } },
+    'sale-now':      { axis: 'price', label: '今すぐ購入できる',   desc: 'いま購入できる作品です。会場が遠くても、オンラインでそのまま手元に迎えられます。', f: function (x) { return x.status === 'sale' && x.liaison === 'li-plus'; } },
+    'new-arrival':   { axis: 'date',  label: '新着作品',          desc: '最近このサイトに載ったものです。まだ多くの人の目に触れていません。', sort: 'new', f: function (x) { return !!x.isNew; } },
+    'under-50k':     { axis: 'price', label: '5万円以下で探す',   desc: '5万円までで買える作品です。はじめの1点を探すときに。', sort: 'price-asc', f: function (x) { return priceBand(x.price) === '~5'; } },
+    'tokyo-works':   { axis: 'area',  label: '東京の作品',        desc: '東京で見られる作品です。会場に足を運べば、実物の大きさや質感まで確かめられます。', f: function (x) { return x.area === '東京'; } },
+    'popular':       { axis: 'pop',   label: '人気の作品',        desc: 'いま多くの人が気に留めているものです。', sort: 'pop', f: function (x) { return x.pop >= 70; } },
+    'genre-paint':   { axis: 'tag',   label: '絵画作品を探す',    desc: '絵画の作品です。筆づかいや絵具の厚みは、実物で見ると印象が変わります。', f: function (x) { return x.tags.indexOf('絵画') !== -1; } },
+    'liaison-view':  { rail: 0, axis: 'pop',   label: '今見れるオンライン展示', desc: 'LIAISON 対応で、会場の展示がそのままオンラインで見られます。', f: function (x) { return x.liaison === 'li'; } },
     'new-all':       { rail: 0, axis: 'date',  label: '新着作品',          desc: '最近個展なびに掲載された作品です。', sort: 'new', f: function (x) { return !!x.isNew; } },
     'trending':      { rail: 0, axis: 'pop',   label: 'あなたへのおすすめ', desc: 'ウォッチ中のクリエイター・興味あり！の傾向からのおすすめです。', f: function (x) { return true; } },
   };
+  /* ピックアップマスタ（KTN.picksWork・P90-17「検索・特集管理」作品タブで編集）の条件を、
+     このページのローカル PRESETS へ合流させる（追174-166）。同じ辞書に載せることで、
+     applyPreset/matches/refeed 等の既存ロジックを一切変更せず picks 由来の条件も動く。
+     スラッグは picksWork 側で固有のものを使っているため既存キーと衝突しない。 */
+  if (KTN.picksWork) {
+    KTN.picksWork.all().forEach(function (e) {
+      PRESETS[e.slug] = { label: e.label, desc: e.desc, refeed: e.refeed, f: KTN.picksWork.filterFn(e) };
+    });
+  }
   function presetInner(key) {
     var p = PRESETS[key];
     return (P10_ICONS[p.axis] || '') + esc(p.label);
@@ -16358,7 +18042,6 @@ KTN.pages['p10-1'] = function () {
   /* ── 状態 ── */
   var activePreset = null;
   var shownCount = 8;
-  var PAGE_SIZE = 8;
 
   var elDisc    = document.getElementById('p101Discovery');
   var elResults = document.getElementById('p101Results');
@@ -16390,11 +18073,14 @@ KTN.pages['p10-1'] = function () {
       for (var i = 0; i < vals.length; i++) {
         var v = vals[i];
         if (k === 'st' && x.status === v) ok = true;
+        /* genre＝サイト正式の6区分（登録フォームの必須項目）／tag＝技法名の自由ワード。
+           別の軸なので別キーで持つ＝ジャンル軸ページ（P10-4-4）からの着地条件になる（追174-76） */
+        else if (k === 'genre' && x.genres.indexOf(v) !== -1) ok = true;
         else if (k === 'tag' && x.tags.indexOf(v) !== -1) ok = true;
         else if (k === 'area' && x.area === v) ok = true;
         else if (k === 'new' && x.isNew) ok = true;
         else if (k === 'price' && priceBand(x.price) === v) ok = true;
-        else if (k === 'liaison' && (v === 'lp' ? x.liaison === 'li-plus' : !!x.liaison)) ok = true;
+        else if (k === 'liaison' && (v === 'lp' ? x.liaison === 'li-plus' : x.liaison === 'li')) ok = true;
       }
       if (!ok) return false;
     }
@@ -16405,7 +18091,7 @@ KTN.pages['p10-1'] = function () {
     return true;
   }
 
-  /* ── おすすめ順（既定）と Featured クラスタ ──────────────────────────────
+  /* ── おすすめ順（既定）と 注目 Highlights クラスタ ──────────────────────────────
      設計はP10（展覧会検索）と同じ＝**並び順そのものを出品側への誘因にする**（2026-09-01）。
      核が作品なので、資格＝**まわりに展覧会・記事・レビューがそろっていること**
      （＝ただ作品を1点上げただけでは上に来ない／量では順位を付けない）。 */
@@ -16425,12 +18111,12 @@ KTN.pages['p10-1'] = function () {
   var FEAT_MIN_HITS = 6;  /* 結果がこれ未満なら出さない（全部が「注目」では選んだことにならない） */
   var FEAT_MIN_QUAL = 3;  /* 資格者がこれ未満でも同じ理由で出さない */
   /* シード＝その日 × 検索条件。条件が違えば別の紙面、同じ条件なら1日中同じ紙面 */
-  function featSeed() {
+  function hlSeed() {
     var key = (activePreset || '') + '|' + (elKeyword ? elKeyword.value.trim() : '')
       + '|' + JSON.stringify(activeChipFilters()) + '|' + (elSort ? elSort.value : '');
     return (KTN.cl.strSeed(key) ^ Math.imul(KTN.cl.doy(), 0x9E3779B1)) | 0;
   }
-  function pickFeatured(list, seed) {
+  function pickHl(list, seed) {
     if (!elSort || elSort.value !== 'rec') return [];
     if (list.length < FEAT_MIN_HITS) return [];
     var q = list.filter(qualifies);
@@ -16438,10 +18124,10 @@ KTN.pages['p10-1'] = function () {
     return KTN.cl.shuffle(q.slice(), KTN.cl.rng(seed)).slice(0, FEAT_N);
   }
   /* 作品カードの本文（作家・素材・寸法）はクラスタの meta に、周辺の総量は counts に出す */
-  function featMeta(x) {
+  function hlMeta(x) {
     return x.name + '｜' + x.medium + '・' + x.size + '｜' + x.year;
   }
-  function featCounts(x) {
+  function hlCounts(x) {
     var t = KTN.cl.satTypes(x.cx, { skipTtl: x.title });
     var parts = [];
     if (t.article) parts.push('記事<strong>' + t.article + '</strong>本');
@@ -16449,9 +18135,9 @@ KTN.pages['p10-1'] = function () {
     parts.push('興味あり！<strong>' + x.interest + '</strong>');
     return KTN.cl.countsHtml(parts);
   }
-  function renderFeatured(items, seed) {
-    var wrap = document.getElementById('p10Feat');
-    var row = document.getElementById('p10FeatRow');
+  function renderHl(items, seed) {
+    var wrap = document.getElementById('p10Hl');
+    var row = document.getElementById('p10HlRow');
     if (!wrap || !row) return;
     if (!items.length) { wrap.hidden = true; row.innerHTML = ''; return; }
     var rnd = KTN.cl.rng(seed + 7);
@@ -16459,8 +18145,8 @@ KTN.pages['p10-1'] = function () {
       /* 販売状態バッジ（.aws-*）はカードと同じ語彙をクラスタでも見せる */
       return KTN.cl.workCluster(x, {
         badges: awsBadge(x),
-        meta: featMeta(x),
-        counts: featCounts(x),
+        meta: hlMeta(x),
+        counts: hlCounts(x),
         sats: KTN.cl.pick('artwork', x.cx, x.title, 3, rnd)
       });
     }).join('');
@@ -16489,7 +18175,7 @@ KTN.pages['p10-1'] = function () {
     var html = [];
     if (activePreset) {
       html.push('<span class="p10-fchip">' + esc(PRESETS[activePreset].label)
-        + '<button class="p10-fchip__x" type="button" data-rm="preset" aria-label="この特集を外す">×</button></span>');
+        + '<button class="p10-fchip__x" type="button" data-rm="preset" aria-label="このピックアップを外す">×</button></span>');
     }
     for (var k in filters) {
       filters[k].forEach(function (v) {
@@ -16508,7 +18194,7 @@ KTN.pages['p10-1'] = function () {
     box.querySelectorAll('[data-rm]').forEach(function (btn) {
       btn.addEventListener('click', function () {
         var rm = btn.dataset.rm;
-        if (rm === 'all') { clearAll(); showView('disc'); return; }
+        if (rm === 'all') { clearAll(); runFilter(); return; }
         if (rm === 'preset') { setPreset(null); }
         else if (rm === 'kw') { elKeyword.value = ''; }
         else { document.querySelectorAll('.p10-chip[data-f="' + rm + '"]').forEach(function (c) { c.classList.remove('is-on'); }); }
@@ -16517,13 +18203,13 @@ KTN.pages['p10-1'] = function () {
     });
   }
 
-  /* Featured に出した2件は下のグリッドから除外して重複させない。ただし**件数（全N件）には含める**
+  /* 注目 Highlights に出した2件は下のグリッドから除外して重複させない。ただし**件数（全N件）には含める**
      ＝ヒット件数は検索条件の答えなので、表示方法の都合で減らさない。 */
   function renderResultGrid(list) {
-    var seed = featSeed();
-    var feat = pickFeatured(list, seed);
-    renderFeatured(feat, seed);
-    var rest = feat.length ? list.filter(function (x) { return feat.indexOf(x) === -1; }) : list;
+    var seed = hlSeed();
+    var hl = pickHl(list, seed);
+    renderHl(hl, seed);
+    var rest = hl.length ? list.filter(function (x) { return hl.indexOf(x) === -1; }) : list;
     var grid = document.getElementById('p101ResultGrid');
     grid.innerHTML = rest.slice(0, shownCount).map(buildWorkCard).join('');
     var moreBtn = document.getElementById('p101MoreBtn');
@@ -16533,6 +18219,44 @@ KTN.pages['p10-1'] = function () {
 
   function runFilter() {
     var filters = activeChipFilters();
+    /* エリア・販売状態・価格帯はLIAISON/LIAISON+の出品に付随する情報で、検索条件ではなく
+       LIAISON/LIAISON+で検索された結果に対する絞込（追174-159）。liaisonの指定が無ければ
+       絞込UI自体を出さず、見えない条件が裏で効き続けないよう選択も黙って外す。
+       価格帯はLIAISON+（lp）のときだけさらに表示する＝LIAISON（無印）の出品は非売品なので
+       価格を持たない。 */
+    var showLiaisonRefine = !!(filters.liaison && filters.liaison.length);
+    var showPriceRow = !!(filters.liaison && filters.liaison.indexOf('lp') !== -1);
+    if (!showLiaisonRefine) {
+      delete filters.area;
+      delete filters.st;
+      delete filters.price;
+    } else if (!showPriceRow) {
+      delete filters.price;
+    }
+    var refineEl = document.getElementById('p101Refine');
+    if (refineEl) {
+      refineEl.hidden = !showLiaisonRefine;
+      if (!showLiaisonRefine) refineEl.querySelectorAll('.p10-chip.is-on').forEach(function (c) { c.classList.remove('is-on'); });
+    }
+    var priceRowEl = document.getElementById('p101PriceRow');
+    if (priceRowEl) {
+      priceRowEl.hidden = !showPriceRow;
+      if (!showPriceRow) priceRowEl.querySelectorAll('.p10-chip.is-on').forEach(function (c) { c.classList.remove('is-on'); });
+    }
+    /* 価格順ソートも価格帯フィルタと同じ理由（追174-159）で、LIAISON+が明示的に選択されている
+       ときだけ意味を持つ（非plusの出品は価格を持たない）。選べないよう disabled にする（hidden にすると
+       「under-50k」プリセット適用時に選択中の値が一覧から消えて見た目が崩れるため・下記参照）。
+       ただし「5万円以下で探す」プリセット（`under-50k`）はチップでLIAISON+を選ばせず、
+       priceBandそのもので絞り込んで価格順を約束する既存の動線なので、そのプリセットが
+       アクティブな間は例外的に選べる状態のまま維持する。 */
+    var priceAscOpt = elSort ? elSort.querySelector('option[value="price-asc"]') : null;
+    var priceDescOpt = elSort ? elSort.querySelector('option[value="price-desc"]') : null;
+    var presetOwnsPriceSort = !!(activePreset && PRESETS[activePreset] && (PRESETS[activePreset].sort === 'price-asc' || PRESETS[activePreset].sort === 'price-desc'));
+    if (priceAscOpt) priceAscOpt.disabled = !showPriceRow && !presetOwnsPriceSort;
+    if (priceDescOpt) priceDescOpt.disabled = !showPriceRow && !presetOwnsPriceSort;
+    if (elSort && !showPriceRow && !presetOwnsPriceSort && (elSort.value === 'price-asc' || elSort.value === 'price-desc')) {
+      elSort.value = 'rec';
+    }
     var kw = elKeyword.value.trim();
     var hasAny = activePreset || kw || Object.keys(filters).length;
     if (!hasAny) { renderFchips({}, ''); showView('disc'); syncRail(); return; }
@@ -16551,14 +18275,14 @@ KTN.pages['p10-1'] = function () {
     }
 
     var p = activePreset ? PRESETS[activePreset] : null;
-    document.getElementById('p101CtxEyebrow').textContent = p ? 'Feature' : 'Search Results';
+    document.getElementById('p101CtxEyebrow').textContent = p ? 'Picks' : 'Search Results';
     document.getElementById('p101CtxTitle').textContent = p ? p.label : (kw ? '「' + kw + '」の検索結果' : '検索結果');
     var descEl = document.getElementById('p101CtxDesc');
     descEl.textContent = p ? p.desc : '';
     descEl.hidden = !p;
     renderFchips(filters, kw);
     document.getElementById('p101Count').innerHTML = '<strong>' + list.length + '</strong>件';
-    shownCount = PAGE_SIZE;
+    curPage = 1;   /* 条件が変わったら1ページ目へ戻す */
     renderResultGrid(sortResults(list));
     renderRefeed();
     showView('results');
@@ -16576,7 +18300,7 @@ KTN.pages['p10-1'] = function () {
   function applyPreset(key) {
     clearAll();
     activePreset = key;
-    /* 説明文で並び順を約束している特集はその並びで開く（持たない特集は既定の「おすすめ順」） */
+    /* 説明文で並び順を約束しているピックアップはその並びで開く（持たないピックアップは既定の「おすすめ順」） */
     if (elSort) elSort.value = PRESETS[key].sort || 'rec';
     runFilter();
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -16590,20 +18314,67 @@ KTN.pages['p10-1'] = function () {
     syncRail();
   }
 
+  /* ── レール＝役割を固定した2枠（2026-09-23・追174-130で①索引枠を廃止）──
+     旧実装は rail:1 のプリセットを全部横に並べるだけで、**役割の重複した枠が並んでいた**
+     （「人気の作品」＝右カラムのランキングと重複／「絵画の作品」＝6ジャンルのうち1つを
+     直書き／「東京の作品」＝エリアのうち1つを直書き）。P10 と同じく**枠ごとに役割を決め、
+     中身だけを日替わりで回す**形にする。**枠数が P10 の5枠と違って2枠**なのは、この3ページが
+     季節の言葉（展覧会だけの仕組み）と場所の軸ページを持たないため。
+       枠① ジャンル（日替わり）… 6区分を日付シードで回す。回転列は KTN.axis が単一ソース
+       枠② 条件（日替わり）    … そのページの検索条件を日付シードで回す
+     旧・枠①索引（固定・遷移＝種別の特集ハブP10-5へ送る）は廃止した。P10-5はP10-1自身の
+     絞り込みチップと内容が重複するnoindexページで、送客するとかえって利用者を混乱させる
+     という判断（ユーザー指示・追174-130）。P10-2→P10-6も同様に廃止。P10-3→P10-7のみ
+     据え置き＝理由は追174-130参照。
+     レールから外したプリセット（人気・絵画・東京）は**定義としては残す**＝ゼロヒットの提案で使う。 */
+  var RAIL_ROT = ['sale-now', 'under-50k', 'new-arrival'];
+  var RAIL_MIN = 3;   /* 中身がこれ未満の枠は出さない（開いてスカスカだと逆効果・追174-79 ② と同じ値） */
+  /* ジャンル枠の実体はその日のぶんだけ組み立てる（P10 の季節の言葉と同じ作り）＝
+     6区分ぶんのプリセットを静的に持たない。 */
+  function railGenreKey() {
+    var A = KTN.axis; if (!A || !A.pickGenre) return null;
+    var slug = A.pickGenre(1)[0], g = slug && A.genre(slug);
+    if (!g) return null;
+    PRESETS['genre-rot'] = {
+      axis: 'tag',
+      label: g.name + 'の作品',
+      desc: '「' + g.name + '」のジャンルに登録された作品です。',
+      f: function (x) { return !!x.genres && x.genres.indexOf(g.name) !== -1; }
+    };
+    return 'genre-rot';
+  }
+  function railSlots() {
+    var out = [];
+    var gk = railGenreKey();
+    if (gk && WORKS.filter(PRESETS[gk].f).length >= RAIL_MIN) out.push({ key: gk });
+    var live = RAIL_ROT.filter(function (k) {
+      return PRESETS[k] && WORKS.filter(PRESETS[k].f).length >= RAIL_MIN;
+    });
+    if (live.length) {
+      var d = (KTN.axis && KTN.axis.dayNo) ? KTN.axis.dayNo() : 0;
+      out.push({ key: live[((d % live.length) + live.length) % live.length] });
+    }
+    return out;
+  }
+
   (function () {
     var rail = document.getElementById('p101PresetRail');
-    var html = '';
-    for (var key in PRESETS) {
-      if (!PRESETS[key].rail) continue;
-      html += '<button class="p10-preset" type="button" data-key="' + key + '">' + presetInner(key) + '</button>';
-    }
-    rail.innerHTML = html;
-    rail.querySelectorAll('.p10-preset').forEach(function (b) {
-      b.addEventListener('click', function () {
-        if (activePreset === b.dataset.key) { clearAll(); showView('disc'); }
-        else applyPreset(b.dataset.key);
+    function renderRail() {
+      rail.innerHTML = railSlots().map(function (sl) {
+        /* 索引枠だけリンク＝末尾の「 →」はページが変わることの明示（検索を実行する枠には付けない） */
+        if (sl.href) return '<a class="p10-preset" href="' + sl.href + '">'
+          + (P10_ICONS[sl.icon] || '') + esc(sl.label) + ' →</a>';
+        return '<button class="p10-preset" type="button" data-key="' + sl.key + '">' + presetInner(sl.key) + '</button>';
+      }).join('');
+      rail.querySelectorAll('.p10-preset[data-key]').forEach(function (b) {
+        b.addEventListener('click', function () {
+          if (activePreset === b.dataset.key) { clearAll(); runFilter(); }
+          else applyPreset(b.dataset.key);
+        });
       });
-    });
+      syncRail();
+    }
+    renderRail();
     var arrL = document.getElementById('p101PresetArrL');
     var arrR = document.getElementById('p101PresetArrR');
     function syncArr() {
@@ -16622,8 +18393,8 @@ KTN.pages['p10-1'] = function () {
     var saleNow = WORKS.filter(PRESETS['sale-now'].f).sort(function (a, b) { return b.pop - a.pop; });
     document.getElementById('p101SaleGrid').innerHTML = saleNow.slice(0, 4).map(buildWorkCard).join('');
 
-    var negot = WORKS.filter(PRESETS['negot-all'].f).sort(function (a, b) { return b.pop - a.pop; });
-    document.getElementById('p101NegotGrid').innerHTML = negot.slice(0, 4).map(buildWorkCard).join('');
+    var liaisonView = WORKS.filter(PRESETS['liaison-view'].f).sort(function (a, b) { return b.pop - a.pop; });
+    document.getElementById('p101LiaisonGrid').innerHTML = liaisonView.slice(0, 4).map(buildWorkCard).join('');
 
     var news = WORKS.filter(function (x) { return x.isNew; }).sort(function (a, b) { return b.pop - a.pop; });
     document.getElementById('p101NewGrid').innerHTML = news.slice(0, 4).map(buildWorkCard).join('');
@@ -16633,6 +18404,69 @@ KTN.pages['p10-1'] = function () {
 
     var picks = WORKS.slice().sort(function (a, b) { return b.interest - a.interest; });
     document.getElementById('p101PicksGrid').innerHTML = picks.slice(0, 4).map(buildWorkCard).join('');
+  })();
+
+  /* 右カラム（300px）用の作品カード。メインの棚は .p25c だが、縦長サムネの p25c は 300px で縦に伸びすぎて
+     3件が画面に収まらないため、水平バリアント .aw--h を使う。クロスジャンル・ランキングで共有する。 */
+  function buildSideAwCard(w) {
+    var intBtn = '<div class="ec-actions-group">'
+      + '<button class="ktn-icon-btn" data-action="interest" onclick="handleAction(this,\'interest\');event.stopPropagation();event.preventDefault()">'
+      + '<svg viewBox="0 0 16 16" fill="none"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z" fill="#7a8a99" fill-opacity=".3" stroke="#7a8a99" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></svg>'
+      + '<span class="tip">興味あり！に追加する</span></button></div>';
+    return '<a class="aw aw--h" href="kotennavi-p6.html">'
+      + '<div class="aw__img"><div class="aw__img-ph" style="background:' + w.bg + '"></div></div>'
+      + '<div class="aw__main"><div class="aw__body">'
+      + '<div class="aw__badge-row"><span class="cb cb-content cb-artwork">artwork</span>' + intBtn + '</div>'
+      + '<div class="aw__title-row"><div class="aw__title">' + esc(w.title) + '</div></div>'
+      + '<div class="aw__creator">' + esc(w.name) + '</div>'
+      + '</div></div></a>';
+  }
+
+  /* ── 右カラム：クロスジャンル ── P10（展覧会検索）の同名ウィジェットと同じ選び方。
+     「人気」ではなく「未接触」＝いまウォッチ・興味あり！が集まっているジャンル（MY_TAGS）の**外側**の
+     タグを持つものだけを母集団にし、その中で反応の少ない順に出す＝順位の裏返しにならない低露出枠。
+     本番は閲覧履歴・興味あり！の傾向から MY_TAGS を算出する。 */
+  (function () {
+    var el = document.getElementById('p101CrossGrid');
+    if (!el) return;
+    var MY_TAGS = ['絵画', '現代美術'];
+    var pool = WORKS.filter(function (x) {
+      return x.tags.some(function (t) { return MY_TAGS.indexOf(t) === -1; });
+    });
+    el.innerHTML = pool.sort(function (a, b) { return a.pop - b.pop; }).slice(0, 3).map(buildSideAwCard).join('');
+  })();
+
+  /* ── 右カラム：ランキング（興味あり！／閲覧数）── 年間ランキング（P10-5-1）への入口。
+     P10 の側カラムと同型だが、指標の扱いが違う：展覧会は会期＝有限期間なので経過日数で日割り正規化して
+     「いまの勢い」を出すが、作品は会期を持たず掲載が続く（＝elapsed に相当する分母が無い）ので実数で並べる。
+     軸は「意志（興味あり！）」「関心の広さ（閲覧数）」の2種類。**申込は使わない**＝LIAISON+ の作品にしか
+     発生せず、母数が LIAISON+ に偏ってランキングが「販売中の作品の順位」に化けるため（2026-09-09）。 */
+  (function () {
+    var el = document.getElementById('p101RankGrid');
+    if (!el) return;
+    var more = document.getElementById('p101RankMore');
+    var RANK_FIELD = { interest: 'interest', views: 'pop' };
+    var rankMode = 'interest';
+
+    function renderRanking() {
+      /* タブのセレクタは [data-rank] で限定する（P10-4系が同じ .p10-rank-tab を [data-arc] で使うため） */
+      document.querySelectorAll('.p10-rank-tab[data-rank]').forEach(function (b) {
+        b.classList.toggle('is-active', b.dataset.rank === rankMode);
+      });
+      var field = RANK_FIELD[rankMode];
+      el.innerHTML = WORKS.slice().sort(function (a, b) { return b[field] - a[field]; })
+        .slice(0, 3).map(buildSideAwCard).join('');
+      if (more) {
+        /* 押した軸（興味あり！／閲覧数）は ?m= で引き継ぐが、文言は着地先のページ名に揃える
+           ＝リンクテキストと遷移先の h1 が一致しないと何のランキングか読めないため（追174-83）。 */
+        more.href = './kotennavi-p10-5-1.html?y=' + KTN.arc.defaultYear() + '&m=' + rankMode;
+        more.textContent = KTN.arc.defaultYear() + '年の作品ランキング →';
+      }
+    }
+    document.querySelectorAll('.p10-rank-tab[data-rank]').forEach(function (b) {
+      b.addEventListener('click', function () { rankMode = b.dataset.rank; renderRanking(); });
+    });
+    renderRanking();
   })();
 
   document.querySelectorAll('[data-preset]').forEach(function (a) {
@@ -16654,12 +18488,12 @@ KTN.pages['p10-1'] = function () {
     document.getElementById('p101ZeroGrid').innerHTML = popular.slice(0, 4).map(buildWorkCard).join('');
   }
 
-  /* ── 今日の特集（結果末尾の再回遊）──
+  /* ── 今日のピックアップ（結果末尾の再回遊）──
      検索したが意中のものが無かった人に、人気軸のカードを足しても「同じ土俵の別カード」にしかならない。
-     1枚が**別の軸の検索そのもの**になる特集を差し出して、軸の乗り換えを促す（中身が想像できるよう代表サムネ3枚つき）。
+     1枚が**別の軸の検索そのもの**になるピックアップを差し出して、軸の乗り換えを促す（中身が想像できるよう代表サムネ3枚つき）。
      選定は日替わり固定（doyシード）＝「ランダム」「引き直し」は前面に出さず、今日の誌面として置く（2026-09-02）。 */
-  var REFEED_N = 3;    /* 出す特集の数 */
-  var REFEED_MIN = 3;  /* 中身がこれ未満の特集は出さない（開いてスカスカだと逆効果） */
+  var REFEED_N = 3;    /* 出すピックアップの数 */
+  var REFEED_MIN = 3;  /* 中身がこれ未満のピックアップは出さない（開いてスカスカだと逆効果） */
   function refeedCard(key) {
     var p = PRESETS[key], hits = WORKS.filter(p.f);
     var thumbs = hits.slice(0, 3).map(function (x) {
@@ -16675,7 +18509,14 @@ KTN.pages['p10-1'] = function () {
     if (!box) return;
     var keys = [];
     for (var k in PRESETS) {
-      if (!PRESETS[k].rail || k === activePreset) continue;
+      /* .rail は「棚として常時表示済み」の印（追174-130）。それ以外の全プリセットが
+         差し出し候補＝ここを `!PRESETS[k].rail` にすると rail:0 も未指定(undefined)も
+         同じ偽値として扱われ、常時全プリセットが弾かれて空になる不具合があった
+         （2026-09-23 ユーザー指摘・追174-165）。`.rail` が**定義されているかどうか**で見る。 */
+      if (PRESETS[k].rail !== undefined || k === activePreset) continue;
+      /* picksWork 由来の条件は refeed:0 なら明示的に除外（追174-166）。ローカル直書きの
+         プリセットは refeed フィールドを持たないので undefined のままいつも通り対象。 */
+      if (PRESETS[k].refeed === 0) continue;
       if (WORKS.filter(PRESETS[k].f).length < REFEED_MIN) continue;
       keys.push(k);
     }
@@ -16685,6 +18526,52 @@ KTN.pages['p10-1'] = function () {
       b.addEventListener('click', function () { applyPreset(b.dataset.refeed); });
     });
   }
+  /* ── タグ行（追174-142・追174-143で1行ずつ展開に変更）── タグ付け数（このページの母集団=WORKSでの
+     出現数）が多い順に並べ替えて描画する。.p10-chip の結線より前に描画すること（下記と同じ順序制約）。
+     本番は数百件を想定（追174-143）＝「もっと見る」は1行ずつ増やす（詳細はP10側のコメント参照）。 */
+  var ALL_TAGS = ['絵画', '現代美術', '写真', '書道', '版画', '陶芸', 'クラフト'].concat(window.P10_MORE_TAGS || []);
+  var tagRowH = null, tagVisibleRows = 1;
+  function renderTagChips() {
+    var box = document.getElementById('p101TagOpts');
+    if (!box) return;
+    var counts = {};
+    ALL_TAGS.forEach(function (t) { counts[t] = 0; });
+    WORKS.forEach(function (x) { (x.tags || []).forEach(function (t) { if (counts[t] != null) counts[t]++; }); });
+    var sorted = ALL_TAGS.slice().sort(function (a, b) { return counts[b] - counts[a]; });
+    box.innerHTML = sorted.map(function (t) {
+      return '<button class="p10-chip" data-f="tag:' + esc(t) + '" type="button"># ' + esc(t) + '</button>';
+    }).join('');
+  }
+  renderTagChips();
+  function measureTagRows() {
+    var box = document.getElementById('p101TagOpts');
+    if (!box) return [];
+    var boxTop = box.getBoundingClientRect().top;
+    var rows = [], curTop = null;
+    box.querySelectorAll('.p10-chip').forEach(function (c) {
+      var r = c.getBoundingClientRect();
+      var top = r.top - boxTop;
+      if (curTop === null || Math.abs(top - curTop) > 1) { curTop = top; rows.push(0); }
+      rows[rows.length - 1] = Math.max(rows[rows.length - 1], top + r.height);
+    });
+    return rows;
+  }
+  function applyTagRowCap(remeasure) {
+    var box = document.getElementById('p101TagOpts');
+    var btn = document.getElementById('p101TagMoreBtn');
+    if (!box || !btn) return;
+    if (remeasure || !tagRowH) tagRowH = measureTagRows();
+    if (!tagRowH.length) return;
+    if (tagVisibleRows >= tagRowH.length) { box.style.maxHeight = 'none'; btn.hidden = true; return; }
+    btn.hidden = false;
+    box.style.maxHeight = tagRowH[tagVisibleRows - 1] + 'px';
+  }
+  var tagMoreBtn = document.getElementById('p101TagMoreBtn');
+  if (tagMoreBtn) tagMoreBtn.addEventListener('click', function () {
+    tagVisibleRows++;
+    applyTagRowCap(false);
+  });
+
   document.getElementById('p101SearchBtn').addEventListener('click', runFilter);
   elKeyword.addEventListener('keydown', function (ev) {
     if (ev.key === 'Enter') { ev.preventDefault(); runFilter(); }
@@ -16711,6 +18598,7 @@ KTN.pages['p10-1'] = function () {
     adv.classList.toggle('is-open', open);
     advToggle.classList.toggle('is-open', open);
     advToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (open) { tagVisibleRows = 1; applyTagRowCap(true); }
   });
   document.getElementById('p101AdvClear').addEventListener('click', function () {
     document.querySelectorAll('.p10-chip.is-on').forEach(function (c) { c.classList.remove('is-on'); });
@@ -16724,7 +18612,7 @@ KTN.pages['p10-1'] = function () {
 
   if (elSort) elSort.addEventListener('change', function () {
     if (!elResults.hidden && renderResultGrid._last) {
-      shownCount = PAGE_SIZE;
+      curPage = 1;   /* 条件が変わったら1ページ目へ戻す */
       renderResultGrid(sortResults(renderResultGrid._last));
     }
   });
@@ -16740,9 +18628,13 @@ KTN.pages['p10-1'] = function () {
     if (btn && btn.hasAttribute('data-p101-view')) btn.classList.add('on');
     clearAll();
     if (view === 'disc') { showView('disc'); }
-    else if (view === 'preset') { applyPreset('tokyo-works'); }
+    /* スラッグ直書きをやめ、**いまレールに出ている検索枠の先頭**を使う（追174-98 ⑧ と同じ理由）。 */
+    else if (view === 'preset') {
+      var top = railSlots().filter(function (sl) { return sl.key; })[0];
+      if (top) applyPreset(top.key); else showView('disc');
+    }
     else if (view === 'result') {
-      /* 条件は1つだけ＝既定の「おすすめ順」で Featured クラスタが出るヒット数を確保するため */
+      /* 条件は1つだけ＝既定の「おすすめ順」で 注目 Highlights クラスタが出るヒット数を確保するため */
       ['st:sale'].forEach(function (f) {
         document.querySelectorAll('.p10-chip[data-f="' + f + '"]').forEach(function (c) { c.classList.add('is-on'); });
       });
@@ -16751,7 +18643,29 @@ KTN.pages['p10-1'] = function () {
     else if (view === 'zero') { elKeyword.value = '深夜の青騎士'; runFilter(); }
   };
 
-  window.ktnRender = function () {};
+  /* ── URLから条件を受ける（?f=key:value を複数可・?p=プリセット）──
+     P10-5（分類索引）のチップがここへ着地する。索引側に独立URLの軸ページを作らず
+     検索のフィルタ状態へ渡す設計なので、この受け口が無いと索引が機能しない。
+     チップの data-f を属性セレクタに組み立てず値で突き合わせる＝URL文字列がセレクタに入らない。 */
+  (function () {
+    var q = new URLSearchParams(location.search);
+    var p = q.get('p'), fs = q.getAll('f'), hitAny = false;
+    if (p && PRESETS[p]) { applyPreset(p); return; }
+    if (!fs.length) return;
+    document.querySelectorAll('.p10-chip[data-f]').forEach(function (c) {
+      if (fs.indexOf(c.dataset.f) === -1) return;
+      c.classList.add('is-on'); hitAny = true;
+      /* 47都道府県・追加タグのチップは畳まれたパネルの中にある。URLで点いた条件がドロワーを
+         開いても見えないままだと「どこで指定された条件か」が分からないので、当たったチップを
+         含むパネルだけ開いておく（外すのは適用中チップの×でもできる）。 */
+      var panel = c.closest('.p10-adv__panel');
+      if (!panel) return;
+      panel.classList.add('is-open');
+      var btn = panel.previousElementSibling;
+      if (btn && btn.dataset.toggle) { btn.classList.add('is-open'); btn.setAttribute('aria-expanded', 'true'); }
+    });
+    if (hitAny) runFilter();
+  }());
 };
 
 /* ════════════════════════════════════════════════════
@@ -16768,45 +18682,37 @@ KTN.pages['p10-2'] = function () {
     });
   }
 
-  /* ── デモデータ（クリエイター）。avStyle は p10-1/p1 の同名人物と同一グラデーションで統一 ──
-     `status` は `cx`（その人が属する展覧会）の開催状況に合わせる。高橋蒼（cx2＝墨聲／会期終了間近）と
-     早瀬涼（cx10＝銅版のミクロコスモス＝本人の個展）は展覧会が開催中なのに `''`（開催なし）になっていたため是正。
-     残る4人（結城玲・大西澄・森田一葉ほか）は「現在開催なし」の見え方を残すため意図的に据え置き。 */
-  var CREATORS = [
-    { id: 1,  name: '田中透',       href: 'kotennavi-p3.html', genreTags: ['絵画', '現代美術'],   genre: '絵画・現代美術',   area: '東京',   status: 'live',     exh: 3, watch: 214, pop: 88, cx:  1, isNew: 0, liaison: 'li-plus', avStyle: 'linear-gradient(135deg,#5a6b80,#2e3a4a)', ini: '田' },
-    { id: 2,  name: '高橋蒼',       href: '#',                 genreTags: ['書道'],                genre: '書道',              area: '東京',   status: 'live',     exh: 2, watch: 71,  pop: 70, cx:  2, isNew: 0, liaison: 'li-plus', avStyle: 'linear-gradient(135deg,#2e2a28,#5a5450)', ini: '高' },
-    { id: 3,  name: 'studio hue',  href: '#',                 genreTags: ['写真', '現代美術'],   genre: '写真・現代美術',   area: '東京',   status: 'upcoming', exh: 2, watch: 143, pop: 79, cx: 11, isNew: 1, liaison: 'li-plus', avStyle: 'linear-gradient(135deg,#b08aa0,#7a4e68)', ini: 'S' },
-    { id: 4,  name: '早瀬涼',       href: '#',                 genreTags: ['版画'],                genre: '版画',              area: '京都',   status: 'live',     exh: 2, watch: 112, pop: 67, cx: 10, isNew: 0, liaison: 'li',      avStyle: 'linear-gradient(135deg,#5a7a6a,#2e4638)', ini: '早' },
-    { id: 5,  name: '結城玲',       href: '#',                 genreTags: ['絵画', 'クラフト'],   genre: '絵画・クラフト',   area: '大阪',   status: '',         exh: 1, watch: 36,  pop: 52, cx:  5, isNew: 1, liaison: 'li-plus', avStyle: 'linear-gradient(135deg,#a05a4a,#6a3428)', ini: '結' },
-    { id: 6,  name: '大西澄',       href: '#',                 genreTags: ['書道'],                genre: '書道',              area: '京都',   status: '',         exh: 1, watch: 41,  pop: 58, cx:  7, isNew: 0, liaison: 'li-plus', avStyle: 'linear-gradient(135deg,#4a4a4a,#1e1e1e)', ini: '大' },
-    { id: 7,  name: '桐生藍',       href: '#',                 genreTags: ['陶芸', 'クラフト'],   genre: '陶芸・クラフト',   area: '愛知',   status: 'live',     exh: 1, watch: 40,  pop: 45, cx:  9, isNew: 1, liaison: 'li-plus', avStyle: 'linear-gradient(135deg,#9a8a6a,#5e5238)', ini: '桐' },
-    { id: 8,  name: '篠原恵',       href: '#',                 genreTags: ['写真'],                genre: '写真',              area: '東京',   status: 'live',     exh: 1, watch: 98,  pop: 82, cx:  3, isNew: 0, liaison: 'li-plus', avStyle: 'linear-gradient(135deg,#c0a880,#8a6e4a)', ini: '篠' },
-    { id: 9,  name: '岡島みのり',   href: '#',                 genreTags: ['絵画'],                genre: '絵画',              area: '神奈川', status: 'live',     exh: 1, watch: 87,  pop: 58, cx:  8, isNew: 0, liaison: 'li',      avStyle: 'linear-gradient(135deg,#6a9ab0,#3a5e74)', ini: '岡' },
-    { id: 10, name: '三好文乃',     href: '#',                 genreTags: ['クラフト'],            genre: 'クラフト',          area: '福岡',   status: 'live',     exh: 1, watch: 91,  pop: 66, cx: 12, isNew: 0, liaison: 'li-plus', avStyle: 'linear-gradient(135deg,#7ab0a8,#3e6e66)', ini: '三' },
-    { id: 11, name: '山根拓',       href: '#',                 genreTags: ['写真'],                genre: '写真',              area: '福岡',   status: 'upcoming', exh: 1, watch: 74,  pop: 62, cx:  6, isNew: 1, liaison: '',         avStyle: 'linear-gradient(135deg,#3a5a7a,#1e3448)', ini: '山' },
-    { id: 12, name: '森田一葉',     href: '#',                 genreTags: ['陶芸'],                genre: '陶芸',              area: '京都',   status: '',         exh: 1, watch: 28,  pop: 38, cx: 14, isNew: 0, liaison: '',         avStyle: 'linear-gradient(135deg,#8a8a70,#4e4e38)', ini: '森' },
-  ];
+  /* ── デモデータは KTN.p10data（トップレベル）から読む。P10-6（クリエイターの分類索引）と共有。 */
+  var CREATORS = KTN.p10data.CREATORS;
 
-  /* ── 特集プリセット（アルゴリズム生成の保存済み検索） ── */
+  /* ── ピックアッププリセット（アルゴリズム生成の保存済み検索） ──
+     場所（ピン）アイコンは持たない＝クリエイターはエリアを持たないので場所軸のピックアップが無い（追174-86） */
   var P10_ICONS = {
-    area: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M13 6.5c0 3.2-5 7.5-5 7.5S3 9.7 3 6.5a5 5 0 0 1 10 0z"/><circle cx="8" cy="6.5" r="1.8"/></svg>',
     date: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="3.5" width="11" height="10" rx="1"/><path d="M2.5 6.8h11M5.5 2v2.5M10.5 2v2.5"/></svg>',
     pop:  '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"><path d="M8 2.4l1.7 3.5 3.9.6-2.8 2.7.7 3.9L8 11.2l-3.5 1.9.7-3.9-2.8-2.7 3.9-.6L8 2.4z"/></svg>',
     tag:  '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"><path d="M2.5 8V3.5a1 1 0 0 1 1-1H8a1 1 0 0 1 .7.3l4.8 4.8a1 1 0 0 1 0 1.4l-4.5 4.5a1 1 0 0 1-1.4 0L2.8 8.7a1 1 0 0 1-.3-.7z"/><circle cx="5.6" cy="5.6" r="1"/></svg>',
   };
-  /* sort＝その特集を開いたときの既定の並び順。説明文で並び順を約束している特集だけに持たせる
-     （持たない特集は 'rec'＝おすすめ順のまま＝Featured クラスタが出る） */
+  /* sort＝そのピックアップを開いたときの既定の並び順。説明文で並び順を約束しているピックアップだけに持たせる
+     （持たないピックアップは 'rec'＝おすすめ順のまま＝注目 Highlights クラスタが出る） */
   var PRESETS = {
-    'exh-live':      { rail: 1, axis: 'date', label: '開催中の展覧会があるクリエイター', desc: '「開催中」条件から自動生成した特集です。いま会場・LIAISONで作品を見られます。', f: function (x) { return x.status === 'live'; } },
-    'new-arrival':   { rail: 1, axis: 'date', label: '新着クリエイター',                 desc: '「新着掲載」条件から自動生成した特集です。', sort: 'new', f: function (x) { return !!x.isNew; } },
-    'liaison-plus':  { rail: 1, axis: 'tag',  label: 'LIAISON+作品があるクリエイター',   desc: '「LIAISON+」条件から自動生成した特集です。会場に行けなくても作品を購入できます。', f: function (x) { return x.liaison === 'li-plus'; } },
-    'tokyo-creators':{ rail: 1, axis: 'area', label: '東京のクリエイター',               desc: '「東京」エリアで活動するクリエイターから自動生成した特集です。', f: function (x) { return x.area === '東京'; } },
-    'popular':       { rail: 1, axis: 'pop',  label: '人気のクリエイター',               desc: '「興味あり！」シグナル上位から自動生成した特集です。', sort: 'pop', f: function (x) { return x.pop >= 70; } },
-    'genre-paint':   { rail: 1, axis: 'tag',  label: '絵画のクリエイター',               desc: '「絵画」ジャンルのクリエイターから自動生成した特集です。', f: function (x) { return x.genreTags.indexOf('絵画') !== -1; } },
+    'exh-live':      { axis: 'date', label: '開催中の展覧会があるクリエイター', desc: 'いま展覧会を開いています。会場でもオンラインでも作品を見られます。', f: function (x) { return x.status === 'live'; } },
+    'new-arrival':   { axis: 'date', label: '新着クリエイター',                 desc: '最近このサイトに登録したクリエイターです。これから展覧会や作品が増えていきます。', sort: 'new', f: function (x) { return !!x.isNew; } },
+    'liaison-plus':  { axis: 'tag',  label: 'LIAISON+作品があるクリエイター',   desc: 'オンラインで作品を購入できます。会場が遠くても手元に迎えられます。', f: function (x) { return x.liaison === 'li-plus'; } },
+    /* 「東京のクリエイター」は置かない（追174-86）＝クリエイターはエリアを持たない。
+       場所で絞りたい人はエリア軸ページからギャラリー（P10-3）・展覧会（P10）へ降りる。 */
+    'popular':       { axis: 'pop',  label: '人気のクリエイター',               desc: 'いま多くの人がウォッチしているクリエイターです。', sort: 'pop', f: function (x) { return x.pop >= 70; } },
+    'genre-paint':   { axis: 'tag',  label: '絵画のクリエイター',               desc: '絵画を手がけるクリエイターです。', f: function (x) { return x.genreTags.indexOf('絵画') !== -1; } },
     'upcoming-all':  { rail: 0, axis: 'date', label: '開催予定の展覧会があるクリエイター', desc: 'まもなく展覧会が始まるクリエイターです。', f: function (x) { return x.status === 'upcoming'; } },
     'new-all':       { rail: 0, axis: 'date', label: '新着クリエイター',                 desc: '最近個展なびに掲載されたクリエイターです。', sort: 'new', f: function (x) { return !!x.isNew; } },
     'trending':      { rail: 0, axis: 'pop',  label: 'あなたへのおすすめ',               desc: 'ウォッチ中のクリエイター・興味あり！の傾向からのおすすめです。', f: function (x) { return true; } },
   };
+  /* ピックアップマスタ（KTN.picksCreator・P90-17「検索・特集管理」クリエイタータブで編集）を
+     ローカル PRESETS へ合流（追174-166）。詳細はP10-1側の同型コメントを参照。 */
+  if (KTN.picksCreator) {
+    KTN.picksCreator.all().forEach(function (e) {
+      PRESETS[e.slug] = { label: e.label, desc: e.desc, refeed: e.refeed, f: KTN.picksCreator.filterFn(e) };
+    });
+  }
   function presetInner(key) {
     var p = PRESETS[key];
     return (P10_ICONS[p.axis] || '') + esc(p.label);
@@ -16814,13 +18720,22 @@ KTN.pages['p10-2'] = function () {
 
   /* ── カード描画は共通 buildPersonCard（cc--h）を使用 ── */
   function buildCreatorCard(x) {
-    return buildPersonCard({ type: 'creator', avStyle: x.avStyle, ini: x.ini, name: x.name, genre: x.genre, exh: x.exh, watch: x.watch, panel: false, href: x.href, status: x.status });
+    /* 実情として**9割は未設定**（2026-09-21 ユーザー）。av を持つ数件だけ色付きで出す＝
+       設定した人のカードが際立ち、設定する動機になる。 */
+    /* ジャンル（6区分）＋タグ（技法・素材の自由ワード）。x.genre は**タグを連結しただけ**の
+       旧フィールドで6区分を含まないため使わない。 */
+    var gs = x.genres || [];
+    /* ジャンル名と同じタグは落とす＝「写真 · 写真」のような重複を出さない
+       （6区分の名前と技法タグに同じ語がある・2026-09-21） */
+    var ts = (x.genreTags || []).filter(function (t) { return gs.indexOf(t) === -1; });
+    var sub = gs.join('・');
+    if (ts.length) sub = sub ? sub + ' · ' + ts.join('・') : ts.join('・');
+    return buildPersonCard({ type: 'creator', avUnset: !x.av, avStyle: x.avStyle, ini: x.ini, name: x.name, genre: sub, exh: x.exh, watch: x.watch, panel: false, href: x.href, status: x.status });
   }
 
   /* ── 状態 ── */
   var activePreset = null;
   var shownCount = 8;
-  var PAGE_SIZE = 8;
 
   var elDisc    = document.getElementById('p102Discovery');
   var elResults = document.getElementById('p102Results');
@@ -16851,22 +18766,29 @@ KTN.pages['p10-2'] = function () {
       var vals = filters[k], ok = false;
       for (var i = 0; i < vals.length; i++) {
         var v = vals[i];
-        if (k === 'st' && (v === 'none' ? !x.status : x.status === v)) ok = true;
+        if (k === 'st' && x.status === v) ok = true;
+        /* genre＝サイト正式の6区分（登録フォームの必須項目）／tag＝技法名の自由ワード。
+           別の軸なので別キーで持つ＝ジャンル軸ページ（P10-4-4）からの着地条件になる（追174-76） */
+        else if (k === 'genre' && x.genres.indexOf(v) !== -1) ok = true;
         else if (k === 'tag' && x.genreTags.indexOf(v) !== -1) ok = true;
-        else if (k === 'area' && x.area === v) ok = true;
+        /* area キーは受け取らない（追174-86）＝クリエイターはエリアを持たない */
         else if (k === 'new' && x.isNew) ok = true;
-        else if (k === 'liaison' && (v === 'lp' ? x.liaison === 'li-plus' : !!x.liaison)) ok = true;
+        /* LIAISON/LIAISON+は「開催中・開催予定の展覧会」に対して付く状態で、クリエイターの
+           恒常的な特性ではない（会期が終わればもう成立しない）。会期を終えたクリエイターに
+           古いliaisonの値が残っていても拾わないよう、開催中・開催予定であることも同時に見る
+           （追174-152・ユーザー指摘）。 */
+        else if (k === 'liaison' && (x.status === 'live' || x.status === 'upcoming') && (v === 'lp' ? x.liaison === 'li-plus' : x.liaison === 'li')) ok = true;
       }
       if (!ok) return false;
     }
     if (kw) {
-      var hay = (x.name + ' ' + x.genreTags.join(' ') + ' ' + x.area).toLowerCase();
+      var hay = (x.name + ' ' + x.genreTags.join(' ')).toLowerCase();
       if (hay.indexOf(kw.toLowerCase()) === -1) return false;
     }
     return true;
   }
 
-  /* ── おすすめ順（既定）と Featured クラスタ ──
+  /* ── おすすめ順（既定）と 注目 Highlights クラスタ ──
      設計はP10（展覧会検索）と同じ＝**並び順そのものを出品側への誘因にする**（2026-09-01）。
      核がクリエイターなので、資格＝**まわりに作品・記事・レビューがそろっていること**
      （量では順位を付けない＝記事量産・大手の居座りを避ける）。 */
@@ -16885,20 +18807,20 @@ KTN.pages['p10-2'] = function () {
   var FEAT_N = 2, FEAT_MIN_HITS = 6, FEAT_MIN_QUAL = 3;
   /* シード＝日付＋検索条件。同じ日に同じ条件なら同じ2件（リロードで入れ替わらない）、
      日が変わる／条件が変わると別の2件になる＝特定アカウントの居座りを防ぐ */
-  function featSeed() {
+  function hlSeed() {
     var key = (activePreset || '') + '|' + (elKeyword ? elKeyword.value.trim() : '')
       + '|' + JSON.stringify(activeChipFilters()) + '|' + (elSort ? elSort.value : '');
     return (KTN.cl.strSeed(key) ^ Math.imul(KTN.cl.doy(), 0x9E3779B1)) | 0;
   }
-  function pickFeatured(list, seed) {
+  function pickHl(list, seed) {
     if (!elSort || elSort.value !== 'rec') return [];   /* 並び順の約束を壊さない */
     if (list.length < FEAT_MIN_HITS) return [];
     var q = list.filter(qualifies);
     if (q.length < FEAT_MIN_QUAL) return [];
     return KTN.cl.shuffle(q.slice(), KTN.cl.rng(seed)).slice(0, FEAT_N);
   }
-  function featMeta(x) { return x.genre + '｜' + x.area; }
-  function featCounts(x) {
+  function hlMeta(x) { return x.genre; }
+  function hlCounts(x) {
     /* 出す数字は資格そのもの（作品・記事・レビューがそろっているか）＝
        「何をすれば上に出るか」が数字を見れば分かるようにする。
        作品はデモ用の概算（周辺プールは各文脈1点の代表サンプルしか持たないため）。 */
@@ -16908,23 +18830,23 @@ KTN.pages['p10-2'] = function () {
     if (t.review)  parts.push('レビュー<strong>' + t.review + '</strong>件');
     return KTN.cl.countsHtml(parts);
   }
-  function featSb(x) {
+  function hlSb(x) {
     if (x.status === 'live')     return '<span class="sb sb-live"><span class="pulse"></span>開催中</span>';
     if (x.status === 'upcoming') return '<span class="sb sb-soon">開催予定</span>';
     return '';
   }
-  function renderFeatured(items, seed) {
-    var wrap = document.getElementById('p10Feat');
-    var row  = document.getElementById('p10FeatRow');
+  function renderHl(items, seed) {
+    var wrap = document.getElementById('p10Hl');
+    var row  = document.getElementById('p10HlRow');
     if (!wrap || !row) return;
     if (!items.length) { wrap.hidden = true; row.innerHTML = ''; return; }
     var rnd = KTN.cl.rng(seed + 7);
     row.innerHTML = items.map(function (x) {
       return KTN.cl.personCluster('creator', x, {
         href: x.href,
-        badges: featSb(x),
-        meta: featMeta(x),
-        counts: featCounts(x),
+        badges: hlSb(x),
+        meta: hlMeta(x),
+        counts: hlCounts(x),
         sats: KTN.cl.pick('creator', x.cx, x.name, 3, rnd)
       });
     }).join('');
@@ -16932,7 +18854,7 @@ KTN.pages['p10-2'] = function () {
   }
 
   var FLABEL = {
-    'st:live': '開催中', 'st:upcoming': '開催予定', 'st:none': '現在開催なし',
+    'st:live': '開催中', 'st:upcoming': '開催予定',
     'new:1': '新着', 'liaison:li': 'LIAISON', 'liaison:lp': 'LIAISON+',
   };
   function fchipLabel(k, v) {
@@ -16947,7 +18869,7 @@ KTN.pages['p10-2'] = function () {
     var html = [];
     if (activePreset) {
       html.push('<span class="p10-fchip">' + esc(PRESETS[activePreset].label)
-        + '<button class="p10-fchip__x" type="button" data-rm="preset" aria-label="この特集を外す">×</button></span>');
+        + '<button class="p10-fchip__x" type="button" data-rm="preset" aria-label="このピックアップを外す">×</button></span>');
     }
     for (var k in filters) {
       filters[k].forEach(function (v) {
@@ -16966,7 +18888,7 @@ KTN.pages['p10-2'] = function () {
     box.querySelectorAll('[data-rm]').forEach(function (btn) {
       btn.addEventListener('click', function () {
         var rm = btn.dataset.rm;
-        if (rm === 'all') { clearAll(); showView('disc'); return; }
+        if (rm === 'all') { clearAll(); runFilter(); return; }
         if (rm === 'preset') { setPreset(null); }
         else if (rm === 'kw') { elKeyword.value = ''; }
         else { document.querySelectorAll('.p10-chip[data-f="' + rm + '"]').forEach(function (c) { c.classList.remove('is-on'); }); }
@@ -16975,13 +18897,13 @@ KTN.pages['p10-2'] = function () {
     });
   }
 
-  /* Featured に出した2件は下のグリッドから除外して重複させない。ただし**件数（全N件）には含める**
+  /* 注目 Highlights に出した2件は下のグリッドから除外して重複させない。ただし**件数（全N件）には含める**
      ＝ヒット件数は検索条件の答えなので、表示方法の都合で減らさない。 */
   function renderResultGrid(list) {
-    var seed = featSeed();
-    var feat = pickFeatured(list, seed);
-    renderFeatured(feat, seed);
-    var rest = feat.length ? list.filter(function (x) { return feat.indexOf(x) === -1; }) : list;
+    var seed = hlSeed();
+    var hl = pickHl(list, seed);
+    renderHl(hl, seed);
+    var rest = hl.length ? list.filter(function (x) { return hl.indexOf(x) === -1; }) : list;
     var grid = document.getElementById('p102ResultGrid');
     grid.innerHTML = rest.slice(0, shownCount).map(buildCreatorCard).join('');
     var moreBtn = document.getElementById('p102MoreBtn');
@@ -16991,6 +18913,16 @@ KTN.pages['p10-2'] = function () {
 
   function runFilter() {
     var filters = activeChipFilters();
+    /* LIAISON/LIAISON+は検索条件ではなく、開催中・開催予定で出た検索結果に対する絞込
+       （追174-153）。その状態でなければ絞込UI自体を出さず、見えない条件が裏で効き続けない
+       よう選択も黙って外す。 */
+    var showLiaisonRefine = !!(filters.st && (filters.st.indexOf('live') !== -1 || filters.st.indexOf('upcoming') !== -1));
+    if (!showLiaisonRefine && filters.liaison) delete filters.liaison;
+    var refineEl = document.getElementById('p102Refine');
+    if (refineEl) {
+      refineEl.hidden = !showLiaisonRefine;
+      if (!showLiaisonRefine) refineEl.querySelectorAll('.p10-chip.is-on').forEach(function (c) { c.classList.remove('is-on'); });
+    }
     var kw = elKeyword.value.trim();
     var hasAny = activePreset || kw || Object.keys(filters).length;
     if (!hasAny) { renderFchips({}, ''); showView('disc'); syncRail(); return; }
@@ -17009,14 +18941,14 @@ KTN.pages['p10-2'] = function () {
     }
 
     var p = activePreset ? PRESETS[activePreset] : null;
-    document.getElementById('p102CtxEyebrow').textContent = p ? 'Feature' : 'Search Results';
+    document.getElementById('p102CtxEyebrow').textContent = p ? 'Picks' : 'Search Results';
     document.getElementById('p102CtxTitle').textContent = p ? p.label : (kw ? '「' + kw + '」の検索結果' : '検索結果');
     var descEl = document.getElementById('p102CtxDesc');
     descEl.textContent = p ? p.desc : '';
     descEl.hidden = !p;
     renderFchips(filters, kw);
     document.getElementById('p102Count').innerHTML = '<strong>' + list.length + '</strong>件';
-    shownCount = PAGE_SIZE;
+    curPage = 1;   /* 条件が変わったら1ページ目へ戻す */
     renderResultGrid(sortResults(list));
     renderRefeed();
     showView('results');
@@ -17047,20 +18979,67 @@ KTN.pages['p10-2'] = function () {
     syncRail();
   }
 
+  /* ── レール＝役割を固定した2枠（2026-09-23・追174-130で①索引枠を廃止）──
+     旧実装は rail:1 のプリセットを全部横に並べるだけで、**役割の重複した枠が並んでいた**
+     （「人気のクリエイター」＝右カラムのランキングと重複／「絵画のクリエイター」＝6ジャンルのうち1つを
+     直書き／「東京のクリエイター」＝エリアのうち1つを直書き）。P10 と同じく**枠ごとに役割を決め、
+     中身だけを日替わりで回す**形にする。**枠数が P10 の5枠と違って2枠**なのは、この3ページが
+     季節の言葉（展覧会だけの仕組み）と場所の軸ページを持たないため。
+       枠① ジャンル（日替わり）… 6区分を日付シードで回す。回転列は KTN.axis が単一ソース
+       枠② 条件（日替わり）    … そのページの検索条件を日付シードで回す
+     旧・枠①索引（固定・遷移＝種別の特集ハブP10-6へ送る）は廃止した。P10-6はP10-2自身の
+     絞り込みチップと内容が重複するnoindexページで、送客するとかえって利用者を混乱させる
+     という判断（ユーザー指示・追174-130）。P10-1→P10-5も同様に廃止。P10-3→P10-7のみ
+     据え置き＝理由は追174-130参照。
+     レールから外したプリセット（人気・絵画・東京）は**定義としては残す**＝ゼロヒットの提案で使う。 */
+  var RAIL_ROT = ['exh-live', 'liaison-plus', 'new-arrival'];
+  var RAIL_MIN = 3;   /* 中身がこれ未満の枠は出さない（開いてスカスカだと逆効果・追174-79 ② と同じ値） */
+  /* ジャンル枠の実体はその日のぶんだけ組み立てる（P10 の季節の言葉と同じ作り）＝
+     6区分ぶんのプリセットを静的に持たない。 */
+  function railGenreKey() {
+    var A = KTN.axis; if (!A || !A.pickGenre) return null;
+    var slug = A.pickGenre(1)[0], g = slug && A.genre(slug);
+    if (!g) return null;
+    PRESETS['genre-rot'] = {
+      axis: 'tag',
+      label: g.name + 'のクリエイター',
+      desc: '「' + g.name + '」のジャンルで活動するクリエイターです。',
+      f: function (x) { return !!x.genres && x.genres.indexOf(g.name) !== -1; }
+    };
+    return 'genre-rot';
+  }
+  function railSlots() {
+    var out = [];
+    var gk = railGenreKey();
+    if (gk && CREATORS.filter(PRESETS[gk].f).length >= RAIL_MIN) out.push({ key: gk });
+    var live = RAIL_ROT.filter(function (k) {
+      return PRESETS[k] && CREATORS.filter(PRESETS[k].f).length >= RAIL_MIN;
+    });
+    if (live.length) {
+      var d = (KTN.axis && KTN.axis.dayNo) ? KTN.axis.dayNo() : 0;
+      out.push({ key: live[((d % live.length) + live.length) % live.length] });
+    }
+    return out;
+  }
+
   (function () {
     var rail = document.getElementById('p102PresetRail');
-    var html = '';
-    for (var key in PRESETS) {
-      if (!PRESETS[key].rail) continue;
-      html += '<button class="p10-preset" type="button" data-key="' + key + '">' + presetInner(key) + '</button>';
-    }
-    rail.innerHTML = html;
-    rail.querySelectorAll('.p10-preset').forEach(function (b) {
-      b.addEventListener('click', function () {
-        if (activePreset === b.dataset.key) { clearAll(); showView('disc'); }
-        else applyPreset(b.dataset.key);
+    function renderRail() {
+      rail.innerHTML = railSlots().map(function (sl) {
+        /* 索引枠だけリンク＝末尾の「 →」はページが変わることの明示（検索を実行する枠には付けない） */
+        if (sl.href) return '<a class="p10-preset" href="' + sl.href + '">'
+          + (P10_ICONS[sl.icon] || '') + esc(sl.label) + ' →</a>';
+        return '<button class="p10-preset" type="button" data-key="' + sl.key + '">' + presetInner(sl.key) + '</button>';
+      }).join('');
+      rail.querySelectorAll('.p10-preset[data-key]').forEach(function (b) {
+        b.addEventListener('click', function () {
+          if (activePreset === b.dataset.key) { clearAll(); runFilter(); }
+          else applyPreset(b.dataset.key);
+        });
       });
-    });
+      syncRail();
+    }
+    renderRail();
     var arrL = document.getElementById('p102PresetArrL');
     var arrR = document.getElementById('p102PresetArrR');
     function syncArr() {
@@ -17092,6 +19071,56 @@ KTN.pages['p10-2'] = function () {
     document.getElementById('p102PicksGrid').innerHTML = picks.slice(0, 4).map(buildCreatorCard).join('');
   })();
 
+  /* 右カラム（300px）用の人物カード＝.cc--h.cc--panel（人物水平・カウンター非表示）。
+     クロスジャンル・ランキングで共有する。 */
+  function buildSidePersonCard(x) {
+    return buildPersonCard({
+      type: 'creator', avStyle: x.avStyle, ini: x.ini, name: x.name, genre: x.genre,
+      exh: x.exh, watch: x.watch, panel: true, href: x.href, status: x.status,
+    });
+  }
+
+  /* ── 右カラム：クロスジャンル ── P10（展覧会検索）の同名ウィジェットと同じ選び方。
+     「人気」ではなく「未接触」＝いま見ているジャンル（MY_TAGS）の**外側**を扱うクリエイターだけを
+     母集団にし、その中で反応の少ない順に出す＝人気順の裏返しにならない低露出枠。
+     本番はウォッチ・興味あり！の傾向から MY_TAGS を算出する。 */
+  (function () {
+    var el = document.getElementById('p102CrossGrid');
+    if (!el) return;
+    var MY_TAGS = ['絵画', '現代美術'];
+    var pool = CREATORS.filter(function (x) {
+      return x.genreTags.some(function (t) { return MY_TAGS.indexOf(t) === -1; });
+    });
+    el.innerHTML = pool.sort(function (a, b) { return a.pop - b.pop; }).slice(0, 3).map(buildSidePersonCard).join('');
+  })();
+
+  /* ── 右カラム：ランキング（ウォッチ／展覧会数）── 年間ランキング（P10-6-1）への入口。
+     軸は「関心（ウォッチ）」と「活動量（展覧会数）」。人は展覧会と違って会期を持たず在籍が続くので
+     日割り正規化はせず実数で並べる（P10 の rankRate は展覧会専用）。 */
+  (function () {
+    var el = document.getElementById('p102RankGrid');
+    if (!el) return;
+    var more = document.getElementById('p102RankMore');
+    var rankMode = 'watch';
+
+    function renderRanking() {
+      document.querySelectorAll('.p10-rank-tab[data-rank]').forEach(function (b) {
+        b.classList.toggle('is-active', b.dataset.rank === rankMode);
+      });
+      el.innerHTML = CREATORS.slice().sort(function (a, b) { return b[rankMode] - a[rankMode]; })
+        .slice(0, 3).map(buildSidePersonCard).join('');
+      if (more) {
+        /* 押した軸（ウォッチ／展覧会数）は ?m= で引き継ぐが、文言は着地先のページ名に揃える（追174-83） */
+        more.href = './kotennavi-p10-6-1.html?y=' + KTN.arc.defaultYear() + '&m=' + rankMode;
+        more.textContent = KTN.arc.defaultYear() + '年のクリエイターランキング →';
+      }
+    }
+    document.querySelectorAll('.p10-rank-tab[data-rank]').forEach(function (b) {
+      b.addEventListener('click', function () { rankMode = b.dataset.rank; renderRanking(); });
+    });
+    renderRanking();
+  })();
+
   document.querySelectorAll('[data-preset]').forEach(function (a) {
     a.addEventListener('click', function (ev) {
       ev.preventDefault();
@@ -17101,7 +19130,7 @@ KTN.pages['p10-2'] = function () {
 
   function renderZeroSugg() {
     var sugg = document.getElementById('p102ZeroSugg');
-    sugg.innerHTML = ['exh-live', 'liaison-plus', 'new-arrival', 'popular', 'tokyo-creators'].map(function (key) {
+    sugg.innerHTML = ['exh-live', 'liaison-plus', 'new-arrival', 'popular', 'genre-paint'].map(function (key) {
       return '<button class="p10-preset" type="button" data-zero-preset="' + key + '">' + presetInner(key) + '</button>';
     }).join('');
     sugg.querySelectorAll('[data-zero-preset]').forEach(function (b) {
@@ -17111,12 +19140,12 @@ KTN.pages['p10-2'] = function () {
     document.getElementById('p102ZeroGrid').innerHTML = popular.slice(0, 4).map(buildCreatorCard).join('');
   }
 
-  /* ── 今日の特集（結果末尾の再回遊）──
+  /* ── 今日のピックアップ（結果末尾の再回遊）──
      検索したが意中のものが無かった人に、人気軸のカードを足しても「同じ土俵の別カード」にしかならない。
-     1枚が**別の軸の検索そのもの**になる特集を差し出して、軸の乗り換えを促す（中身が想像できるよう代表サムネ3枚つき）。
+     1枚が**別の軸の検索そのもの**になるピックアップを差し出して、軸の乗り換えを促す（中身が想像できるよう代表サムネ3枚つき）。
      選定は日替わり固定（doyシード）＝「ランダム」「引き直し」は前面に出さず、今日の誌面として置く（2026-09-02）。 */
-  var REFEED_N = 3;    /* 出す特集の数 */
-  var REFEED_MIN = 3;  /* 中身がこれ未満の特集は出さない（開いてスカスカだと逆効果） */
+  var REFEED_N = 3;    /* 出すピックアップの数 */
+  var REFEED_MIN = 3;  /* 中身がこれ未満のピックアップは出さない（開いてスカスカだと逆効果） */
   function refeedCard(key) {
     var p = PRESETS[key], hits = CREATORS.filter(p.f);
     var thumbs = hits.slice(0, 3).map(function (x) {
@@ -17132,7 +19161,10 @@ KTN.pages['p10-2'] = function () {
     if (!box) return;
     var keys = [];
     for (var k in PRESETS) {
-      if (!PRESETS[k].rail || k === activePreset) continue;
+      /* .rail は「棚として常時表示済み」の印。undefined と rail:0 を同じ偽値として弾くと
+         常に空になる不具合があったため、`.rail` の定義有無で判定する（追174-165）。 */
+      if (PRESETS[k].rail !== undefined || k === activePreset) continue;
+      if (PRESETS[k].refeed === 0) continue;
       if (CREATORS.filter(PRESETS[k].f).length < REFEED_MIN) continue;
       keys.push(k);
     }
@@ -17142,6 +19174,53 @@ KTN.pages['p10-2'] = function () {
       b.addEventListener('click', function () { applyPreset(b.dataset.refeed); });
     });
   }
+  /* ── タグ行（追174-142・追174-143で1行ずつ展開に変更）── タグ付け数（このページの母集団=
+     CREATORS.genreTagsでの出現数）が多い順に並べ替えて描画する。.p10-chip の結線より前に
+     描画すること（下記と同じ順序制約）。本番は数百件を想定（追174-143）＝「もっと見る」は
+     1行ずつ増やす（詳細はP10側のコメント参照）。 */
+  var ALL_TAGS = ['絵画', '現代美術', '写真', '書道', '版画', '陶芸', 'クラフト'].concat(window.P10_MORE_TAGS || []);
+  var tagRowH = null, tagVisibleRows = 1;
+  function renderTagChips() {
+    var box = document.getElementById('p102TagOpts');
+    if (!box) return;
+    var counts = {};
+    ALL_TAGS.forEach(function (t) { counts[t] = 0; });
+    CREATORS.forEach(function (x) { (x.genreTags || []).forEach(function (t) { if (counts[t] != null) counts[t]++; }); });
+    var sorted = ALL_TAGS.slice().sort(function (a, b) { return counts[b] - counts[a]; });
+    box.innerHTML = sorted.map(function (t) {
+      return '<button class="p10-chip" data-f="tag:' + esc(t) + '" type="button"># ' + esc(t) + '</button>';
+    }).join('');
+  }
+  renderTagChips();
+  function measureTagRows() {
+    var box = document.getElementById('p102TagOpts');
+    if (!box) return [];
+    var boxTop = box.getBoundingClientRect().top;
+    var rows = [], curTop = null;
+    box.querySelectorAll('.p10-chip').forEach(function (c) {
+      var r = c.getBoundingClientRect();
+      var top = r.top - boxTop;
+      if (curTop === null || Math.abs(top - curTop) > 1) { curTop = top; rows.push(0); }
+      rows[rows.length - 1] = Math.max(rows[rows.length - 1], top + r.height);
+    });
+    return rows;
+  }
+  function applyTagRowCap(remeasure) {
+    var box = document.getElementById('p102TagOpts');
+    var btn = document.getElementById('p102TagMoreBtn');
+    if (!box || !btn) return;
+    if (remeasure || !tagRowH) tagRowH = measureTagRows();
+    if (!tagRowH.length) return;
+    if (tagVisibleRows >= tagRowH.length) { box.style.maxHeight = 'none'; btn.hidden = true; return; }
+    btn.hidden = false;
+    box.style.maxHeight = tagRowH[tagVisibleRows - 1] + 'px';
+  }
+  var tagMoreBtn = document.getElementById('p102TagMoreBtn');
+  if (tagMoreBtn) tagMoreBtn.addEventListener('click', function () {
+    tagVisibleRows++;
+    applyTagRowCap(false);
+  });
+
   document.getElementById('p102SearchBtn').addEventListener('click', runFilter);
   elKeyword.addEventListener('keydown', function (ev) {
     if (ev.key === 'Enter') { ev.preventDefault(); runFilter(); }
@@ -17168,6 +19247,7 @@ KTN.pages['p10-2'] = function () {
     adv.classList.toggle('is-open', open);
     advToggle.classList.toggle('is-open', open);
     advToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (open) { tagVisibleRows = 1; applyTagRowCap(true); }
   });
   document.getElementById('p102AdvClear').addEventListener('click', function () {
     document.querySelectorAll('.p10-chip.is-on').forEach(function (c) { c.classList.remove('is-on'); });
@@ -17181,7 +19261,7 @@ KTN.pages['p10-2'] = function () {
 
   if (elSort) elSort.addEventListener('change', function () {
     if (!elResults.hidden && renderResultGrid._last) {
-      shownCount = PAGE_SIZE;
+      curPage = 1;   /* 条件が変わったら1ページ目へ戻す */
       renderResultGrid(sortResults(renderResultGrid._last));
     }
   });
@@ -17197,9 +19277,13 @@ KTN.pages['p10-2'] = function () {
     if (btn && btn.hasAttribute('data-p102-view')) btn.classList.add('on');
     clearAll();
     if (view === 'disc') { showView('disc'); }
-    else if (view === 'preset') { applyPreset('tokyo-creators'); }
+    /* スラッグ直書きをやめ、**いまレールに出ている検索枠の先頭**を使う（追174-98 ⑧ と同じ理由）。 */
+    else if (view === 'preset') {
+      var top = railSlots().filter(function (sl) { return sl.key; })[0];
+      if (top) applyPreset(top.key); else showView('disc');
+    }
     else if (view === 'result') {
-      /* 条件は1つだけ＝既定の「おすすめ順」で Featured クラスタが出るヒット数を確保するため
+      /* 条件は1つだけ＝既定の「おすすめ順」で 注目 Highlights クラスタが出るヒット数を確保するため
          （条件を重ねると数件まで絞られ、クラスタが出ない状態しかデモできない・2026-09-01） */
       ['liaison:li'].forEach(function (f) {
         document.querySelectorAll('.p10-chip[data-f="' + f + '"]').forEach(function (c) { c.classList.add('is-on'); });
@@ -17209,7 +19293,26 @@ KTN.pages['p10-2'] = function () {
     else if (view === 'zero') { elKeyword.value = '深夜の青騎士'; runFilter(); }
   };
 
-  window.ktnRender = function () {};
+  /* ── URLから条件を受ける（?f=key:value を複数可・?p=プリセット）＝P10-6 の分類索引の着地先 ── */
+  (function () {
+    var q = new URLSearchParams(location.search);
+    var p = q.get('p'), fs = q.getAll('f'), hitAny = false;
+    if (p && PRESETS[p]) { applyPreset(p); return; }
+    if (!fs.length) return;
+    document.querySelectorAll('.p10-chip[data-f]').forEach(function (c) {
+      if (fs.indexOf(c.dataset.f) === -1) return;
+      c.classList.add('is-on'); hitAny = true;
+      /* 47都道府県・追加タグのチップは畳まれたパネルの中にある。URLで点いた条件がドロワーを
+         開いても見えないままだと「どこで指定された条件か」が分からないので、当たったチップを
+         含むパネルだけ開いておく（外すのは適用中チップの×でもできる）。 */
+      var panel = c.closest('.p10-adv__panel');
+      if (!panel) return;
+      panel.classList.add('is-open');
+      var btn = panel.previousElementSibling;
+      if (btn && btn.dataset.toggle) { btn.classList.add('is-open'); btn.setAttribute('aria-expanded', 'true'); }
+    });
+    if (hitAny) runFilter();
+  }());
 };
 
 /* ════════════════════════════════════════════════════
@@ -17226,57 +19329,57 @@ KTN.pages['p10-3'] = function () {
     });
   }
 
-  /* ── デモデータ（ギャラリー）。avStyle は p1（EX）の同名会場と同一グラデーションで統一 ── */
-  var GALLERIES = [
-    { id: 1,  name: '白日ギャラリー',       href: 'kotennavi-p4.html', genreTags: ['絵画', '現代美術'], area: '東京',   location: '渋谷区',   hours: '11:00–19:00', status: 'live',     exh: 4, watch: 180, pop: 85, cx:  1, isNew: 0, liaison: 'li',      dist: '1.2km', avStyle: 'linear-gradient(135deg,#5a6b80,#2e3a4a)', ini: '白' },
-    { id: 2,  name: '東京書芸館',           href: '#',                 genreTags: ['書道'],              area: '東京',   location: '千代田区', hours: '10:00–18:00', status: 'live',     exh: 2, watch: 220, pop: 90, cx:  2, isNew: 0, liaison: 'li-plus', dist: '2.6km', avStyle: 'linear-gradient(135deg,#2e2a28,#5a5450)', ini: '東' },
-    { id: 3,  name: 'ギャラリー日向',       href: '#',                 genreTags: ['写真'],              area: '東京',   location: '目黒区',   hours: '12:00–19:00', status: 'live',     exh: 2, watch: 75,  pop: 66, cx:  3, isNew: 1, liaison: '',         dist: '3.4km', avStyle: 'linear-gradient(135deg,#c0a880,#8a6e4a)', ini: '日' },
-    { id: 4,  name: '京都版画舎',           href: '#',                 genreTags: ['版画'],              area: '京都',   location: '左京区',   hours: '10:00–17:00', status: 'live',     exh: 3, watch: 98,  pop: 70, cx:  4, isNew: 0, liaison: '',         dist: null,    avStyle: 'linear-gradient(135deg,#7a6a8a,#4a3e5a)', ini: '京' },
-    { id: 5,  name: 'gallery TRACE',       href: '#',                 genreTags: ['絵画', '現代美術'], area: '東京',   location: '台東区',   hours: '11:00–20:00', status: 'live',     exh: 2, watch: 130, pop: 78, cx:  5, isNew: 0, liaison: 'li',      dist: '4.8km', avStyle: 'linear-gradient(135deg,#a05a4a,#6a3428)', ini: 'T' },
-    { id: 6,  name: 'フォトスペース博多',   href: '#',                 genreTags: ['写真'],              area: '福岡',   location: '博多区',   hours: '11:00–18:00', status: 'upcoming', exh: 1, watch: 40,  pop: 55, cx:  6, isNew: 1, liaison: '',         dist: null,    avStyle: 'linear-gradient(135deg,#3a5a7a,#1e3448)', ini: '博' },
-    { id: 7,  name: '大阪墨美堂',           href: '#',                 genreTags: ['書道'],              area: '大阪',   location: '中央区',   hours: '10:00–18:00', status: 'live',     exh: 2, watch: 50,  pop: 52, cx:  7, isNew: 0, liaison: '',         dist: null,    avStyle: 'linear-gradient(135deg,#4a4a4a,#1e1e1e)', ini: '大' },
-    { id: 8,  name: '横浜アートポート',     href: '#',                 genreTags: ['絵画'],              area: '神奈川', location: '西区',     hours: '11:00–19:00', status: 'live',     exh: 1, watch: 64,  pop: 56, cx:  8, isNew: 0, liaison: '',         dist: '9.1km', avStyle: 'linear-gradient(135deg,#6a9ab0,#3a5e74)', ini: '横' },
-    { id: 9,  name: '瀬戸クラフト館',       href: '#',                 genreTags: ['陶芸', 'クラフト'], area: '愛知',   location: '瀬戸市',   hours: '10:00–17:00', status: 'live',     exh: 1, watch: 35,  pop: 47, cx:  9, isNew: 0, liaison: '',         dist: null,    avStyle: 'linear-gradient(135deg,#9a8a6a,#5e5238)', ini: '瀬' },
-    { id: 10, name: 'ギャラリー刻',         href: '#',                 genreTags: ['版画'],              area: '東京',   location: '文京区',   hours: '12:00–19:00', status: 'live',     exh: 2, watch: 88,  pop: 64, cx: 10, isNew: 1, liaison: 'li',      dist: '5.7km', avStyle: 'linear-gradient(135deg,#5a7a6a,#2e4638)', ini: '刻' },
-    { id: 11, name: 'YUGEN Gallery',       href: '#',                 genreTags: ['現代美術'],          area: '東京',   location: '中央区',   hours: '11:00–19:00', status: '',         exh: 1, watch: 22,  pop: 33, cx: 11, isNew: 0, liaison: '',         dist: '3.9km', avStyle: 'linear-gradient(135deg,#4a5a6a,#26323e)', ini: 'Y' },
-    { id: 12, name: 'Gallery SOIL 渋谷',   href: '#',                 genreTags: ['クラフト', '現代美術'], area: '東京', location: '渋谷区',   hours: '11:00–20:00', status: '',         exh: 2, watch: 45,  pop: 48, cx:  0, isNew: 1, liaison: 'li-plus', dist: '1.8km', avStyle: 'linear-gradient(135deg,#7a9a8a,#3e5a4a)', ini: 'S' },
-  ];
+  /* ── デモデータは KTN.p10data（トップレベル）から読む。P10-7（ギャラリーの分類索引）と共有。 */
+  var GALLERIES = KTN.p10data.GALLERIES;
 
-  /* ── 特集プリセット（アルゴリズム生成の保存済み検索） ── */
+  /* ── ピックアッププリセット（アルゴリズム生成の保存済み検索） ── */
   var P10_ICONS = {
     area: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M13 6.5c0 3.2-5 7.5-5 7.5S3 9.7 3 6.5a5 5 0 0 1 10 0z"/><circle cx="8" cy="6.5" r="1.8"/></svg>',
     date: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="3.5" width="11" height="10" rx="1"/><path d="M2.5 6.8h11M5.5 2v2.5M10.5 2v2.5"/></svg>',
     pop:  '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"><path d="M8 2.4l1.7 3.5 3.9.6-2.8 2.7.7 3.9L8 11.2l-3.5 1.9.7-3.9-2.8-2.7 3.9-.6L8 2.4z"/></svg>',
     tag:  '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"><path d="M2.5 8V3.5a1 1 0 0 1 1-1H8a1 1 0 0 1 .7.3l4.8 4.8a1 1 0 0 1 0 1.4l-4.5 4.5a1 1 0 0 1-1.4 0L2.8 8.7a1 1 0 0 1-.3-.7z"/><circle cx="5.6" cy="5.6" r="1"/></svg>',
   };
-  /* sort＝その特集を開いたときの既定の並び順。説明文で並び順を約束している特集だけに持たせる
-     （持たない特集は 'rec'＝おすすめ順のまま＝Featured クラスタが出る） */
+  /* sort＝そのピックアップを開いたときの既定の並び順。説明文で並び順を約束しているピックアップだけに持たせる
+     （持たないピックアップは 'rec'＝おすすめ順のまま＝注目 Highlights クラスタが出る） */
   var PRESETS = {
-    'exh-live':        { rail: 1, axis: 'date', label: '開催中の展覧会があるギャラリー', desc: '「開催中」条件から自動生成した特集です。いま会場・LIAISONで作品を見られます。', f: function (x) { return x.status === 'live'; } },
-    'near':            { rail: 1, axis: 'area', label: '近くのギャラリー',               desc: '「現在地から近い順」の条件から自動生成した特集です。', f: function (x) { return !!x.dist; } },
-    'new-arrival':     { rail: 1, axis: 'date', label: '新着ギャラリー',                 desc: '「新着掲載」条件から自動生成した特集です。', sort: 'new', f: function (x) { return !!x.isNew; } },
-    'liaison-plus':    { rail: 1, axis: 'tag',  label: 'LIAISON+作品があるギャラリー',   desc: '「LIAISON+」条件から自動生成した特集です。会場に行けなくても作品を購入できます。', f: function (x) { return x.liaison === 'li-plus'; } },
-    'tokyo-galleries': { rail: 1, axis: 'area', label: '東京のギャラリー',               desc: '「東京」エリアで活動するギャラリーから自動生成した特集です。', f: function (x) { return x.area === '東京'; } },
-    'popular':         { rail: 1, axis: 'pop',  label: '人気のギャラリー',               desc: '「興味あり！」シグナル上位から自動生成した特集です。', sort: 'pop', f: function (x) { return x.pop >= 70; } },
-    'genre-paint':     { rail: 1, axis: 'tag',  label: '絵画を扱うギャラリー',           desc: '「絵画」ジャンルを扱うギャラリーから自動生成した特集です。', f: function (x) { return x.genreTags.indexOf('絵画') !== -1; } },
+    'exh-live':        { axis: 'date', label: '開催中の展覧会があるギャラリー', desc: 'いま展覧会を開いています。会場でもオンラインでも作品を見られます。', f: function (x) { return x.status === 'live'; } },
+    /* 「近く」単体ではなく「近く × 開催中」。距離だけで絞ると、いま行っても展示が無いギャラリーが
+       トップの棚に混ざる＝「行ける場所」の棚にならないため（2026-09-12・P10 の near-live と同じ条件設計）。 */
+    'near-live':       { axis: 'area', label: '近くで開催中',                   desc: 'いまいる場所から近い、開催中のギャラリーです。思い立った日に寄れます。', f: function (x) { return !!x.dist && x.status === 'live'; } },
+    'new-arrival':     { axis: 'date', label: '新着ギャラリー',                 desc: '最近このサイトに登録したギャラリーです。', sort: 'new', f: function (x) { return !!x.isNew; } },
+    'liaison-plus':    { axis: 'tag',  label: 'LIAISON+作品があるギャラリー',   desc: 'オンラインで作品を購入できます。会場が遠くても手元に迎えられます。', f: function (x) { return x.liaison === 'li-plus'; } },
+    'tokyo-galleries': { axis: 'area', label: '東京のギャラリー',               desc: '東京に会場を持つギャラリーです。都内をまとめて回る日の下見にも。', f: function (x) { return x.area === '東京'; } },
+    'popular':         { axis: 'pop',  label: '人気のギャラリー',               desc: 'いま多くの人がウォッチしているギャラリーです。', sort: 'pop', f: function (x) { return x.pop >= 70; } },
+    'genre-paint':     { axis: 'tag',  label: '絵画を扱うギャラリー',           desc: '絵画を扱うギャラリーです。', f: function (x) { return x.genreTags.indexOf('絵画') !== -1; } },
     'upcoming-all':    { rail: 0, axis: 'date', label: '開催予定の展覧会があるギャラリー', desc: 'まもなく展覧会が始まるギャラリーです。', f: function (x) { return x.status === 'upcoming'; } },
     'new-all':         { rail: 0, axis: 'date', label: '新着ギャラリー',                 desc: '最近個展なびに掲載されたギャラリーです。', sort: 'new', f: function (x) { return !!x.isNew; } },
     'trending':        { rail: 0, axis: 'pop',  label: 'あなたへのおすすめ',             desc: 'ウォッチ中のギャラリー・興味あり！の傾向からのおすすめです。', f: function (x) { return true; } },
   };
+  /* ピックアップマスタ（KTN.picksGallery・P90-17「検索・特集管理」ギャラリータブで編集）を
+     ローカル PRESETS へ合流（追174-166）。詳細はP10-1側の同型コメントを参照。 */
+  if (KTN.picksGallery) {
+    KTN.picksGallery.all().forEach(function (e) {
+      PRESETS[e.slug] = { label: e.label, desc: e.desc, refeed: e.refeed, f: KTN.picksGallery.filterFn(e) };
+    });
+  }
   function presetInner(key) {
     var p = PRESETS[key];
     return (P10_ICONS[p.axis] || '') + esc(p.label);
   }
 
   /* ── カード描画は共通 buildPersonCard（gc--h）を使用 ── */
-  function buildGalleryCard(x) {
-    return buildPersonCard({ type: 'gallery', avStyle: x.avStyle, ini: x.ini, name: x.name, location: x.location, dist: x.dist, hours: x.hours, exh: x.exh, watch: x.watch, panel: false, href: x.href, status: x.status });
+  /* 所在地は住所全体をそのまま表示する（2026-09-22 ユーザー指示）。区だけを取り出さないのは、
+     県の後が市／区／町／村／郡と揃っておらず「どこまでが区か」を実装が判断できないため
+     （追174-100 で区名撤去した理由そのもの）。住所は必ず最後まで入っているので、全体を出せば
+     区切りの判断自体が要らない。はみ出す分は .gc__location の ellipsis に任せる。
+     distTL＝「p10-3の近くで開催中」棚だけ渡す左上の距離バッジ（他の棚には出さない）。 */
+  function buildGalleryCard(x, distTL) {
+    return buildPersonCard({ type: 'gallery', avUnset: !x.av, avStyle: x.avStyle, ini: x.ini, name: x.name, location: x.location, distTL: distTL ? x.dist : null, hours: x.hours, exh: x.exh, watch: x.watch, panel: false, href: x.href, status: x.status });
   }
 
   /* ── 状態 ── */
   var activePreset = null;
   var shownCount = 8;
-  var PAGE_SIZE = 8;
 
   var elDisc    = document.getElementById('p103Discovery');
   var elResults = document.getElementById('p103Results');
@@ -17307,22 +19410,37 @@ KTN.pages['p10-3'] = function () {
       var vals = filters[k], ok = false;
       for (var i = 0; i < vals.length; i++) {
         var v = vals[i];
-        if (k === 'st' && (v === 'none' ? !x.status : x.status === v)) ok = true;
+        if (k === 'st' && x.status === v) ok = true;
+        /* genre＝サイト正式の6区分（登録フォームの必須項目）／tag＝技法名の自由ワード。
+           別の軸なので別キーで持つ＝ジャンル軸ページ（P10-4-4）からの着地条件になる（追174-76） */
+        else if (k === 'genre' && x.genres.indexOf(v) !== -1) ok = true;
         else if (k === 'tag' && x.genreTags.indexOf(v) !== -1) ok = true;
         else if (k === 'area' && x.area === v) ok = true;
         else if (k === 'new' && x.isNew) ok = true;
-        else if (k === 'liaison' && (v === 'lp' ? x.liaison === 'li-plus' : !!x.liaison)) ok = true;
+        /* LIAISON/LIAISON+は「開催中・開催予定の展覧会」に対して付く状態で、ギャラリーの
+           恒常的な特性ではない（会期が終わればもう成立しない）。会期を終えたギャラリーに
+           古いliaisonの値が残っていても拾わないよう、開催中・開催予定であることも同時に見る
+           （追174-152・ユーザー指摘）。 */
+        else if (k === 'liaison' && (x.status === 'live' || x.status === 'upcoming') && (v === 'lp' ? x.liaison === 'li-plus' : x.liaison === 'li')) ok = true;
+        /* ギャラリー自身が会場なので、P4「利用案内」の入力（バリアフリー・駐車場・クレカ・レンタル）を
+           GALLERIESに直接持たせてそのまま判定する（P10のように別のVENUES引きは不要・追174-150／174-151）。 */
+        else if (k === 'barrierfree' && x.barrierFree) ok = true;
+        else if (k === 'parking' && x.parking) ok = true;
+        else if (k === 'card' && x.card) ok = true;
+        else if (k === 'rental' && x.rental) ok = true;
       }
       if (!ok) return false;
     }
     if (kw) {
-      var hay = (x.name + ' ' + x.genreTags.join(' ') + ' ' + x.area + ' ' + x.location).toLowerCase();
+      /* 区名は照合からも外す（2026-09-21）＝画面に出していない粒度で当たると、
+         デモでは見つかるのに本番では見つからない、という食い違いが出る。 */
+      var hay = (x.name + ' ' + x.genreTags.join(' ') + ' ' + x.area).toLowerCase();
       if (hay.indexOf(kw.toLowerCase()) === -1) return false;
     }
     return true;
   }
 
-  /* ── おすすめ順（既定）と Featured クラスタ ──
+  /* ── おすすめ順（既定）と 注目 Highlights クラスタ ──
      設計はP10（展覧会検索）と同じ＝**並び順そのものを出品側への誘因にする**（2026-09-01）。
      核がギャラリーなので、資格＝**まわりに展覧会・記事・レビューがそろっていること**
      （量では順位を付けない＝箱が大きいギャラリーの居座りを避ける）。 */
@@ -17341,21 +19459,22 @@ KTN.pages['p10-3'] = function () {
   var FEAT_N = 2, FEAT_MIN_HITS = 6, FEAT_MIN_QUAL = 3;
   /* シード＝日付＋検索条件。同じ日に同じ条件なら同じ2件（リロードで入れ替わらない）、
      日が変わる／条件が変わると別の2件になる＝特定アカウントの居座りを防ぐ */
-  function featSeed() {
+  function hlSeed() {
     var key = (activePreset || '') + '|' + (elKeyword ? elKeyword.value.trim() : '')
       + '|' + JSON.stringify(activeChipFilters()) + '|' + (elSort ? elSort.value : '');
     return (KTN.cl.strSeed(key) ^ Math.imul(KTN.cl.doy(), 0x9E3779B1)) | 0;
   }
-  function pickFeatured(list, seed) {
+  function pickHl(list, seed) {
     if (!elSort || elSort.value !== 'rec') return [];   /* 並び順の約束を壊さない */
     if (list.length < FEAT_MIN_HITS) return [];
     var q = list.filter(qualifies);
     if (q.length < FEAT_MIN_QUAL) return [];
     return KTN.cl.shuffle(q.slice(), KTN.cl.rng(seed)).slice(0, FEAT_N);
   }
-  /* 営業時間はクラスタでは出さない（誌面の紹介枠なので所在地まで・2026-09-01） */
-  function featMeta(x) { return x.area + '・' + x.location; }
-  function featCounts(x) {
+  /* 営業時間はクラスタでは出さない（誌面の紹介枠なので所在地まで・2026-09-01）。
+     所在地は**都道府県まで**＝区は持たないデータ粒度（2026-09-21）。 */
+  function hlMeta(x) { return (KTN.axis && KTN.axis.fullName ? KTN.axis.fullName(x.area) : x.area); }
+  function hlCounts(x) {
     /* 出す数字は資格そのもの（展覧会・記事・レビューがそろっているか）＝
        「何をすれば上に出るか」が数字を見れば分かるようにする。
        展覧会だけはギャラリー自身の掲載件数（x.exh）を使う（周辺プールの件数より実態に近い） */
@@ -17365,23 +19484,23 @@ KTN.pages['p10-3'] = function () {
     if (t.review)  parts.push('レビュー<strong>' + t.review + '</strong>件');
     return KTN.cl.countsHtml(parts);
   }
-  function featSb(x) {
+  function hlSb(x) {
     if (x.status === 'live')     return '<span class="sb sb-live"><span class="pulse"></span>開催中</span>';
     if (x.status === 'upcoming') return '<span class="sb sb-soon">開催予定</span>';
     return '';
   }
-  function renderFeatured(items, seed) {
-    var wrap = document.getElementById('p10Feat');
-    var row  = document.getElementById('p10FeatRow');
+  function renderHl(items, seed) {
+    var wrap = document.getElementById('p10Hl');
+    var row  = document.getElementById('p10HlRow');
     if (!wrap || !row) return;
     if (!items.length) { wrap.hidden = true; row.innerHTML = ''; return; }
     var rnd = KTN.cl.rng(seed + 7);
     row.innerHTML = items.map(function (x) {
       return KTN.cl.personCluster('gallery', x, {
         href: x.href,
-        badges: featSb(x),
-        meta: featMeta(x),
-        counts: featCounts(x),
+        badges: hlSb(x),
+        meta: hlMeta(x),
+        counts: hlCounts(x),
         sats: KTN.cl.pick('gallery', x.cx, x.name, 3, rnd)
       });
     }).join('');
@@ -17389,8 +19508,9 @@ KTN.pages['p10-3'] = function () {
   }
 
   var FLABEL = {
-    'st:live': '開催中', 'st:upcoming': '開催予定', 'st:none': '現在開催なし',
+    'st:live': '開催中', 'st:upcoming': '開催予定',
     'new:1': '新着', 'liaison:li': 'LIAISON', 'liaison:lp': 'LIAISON+',
+    'barrierfree:1': 'バリアフリー', 'parking:1': '駐車場あり', 'card:1': 'クレジットカードOK', 'rental:1': 'レンタルギャラリー',
   };
   function fchipLabel(k, v) {
     var key = k + ':' + v;
@@ -17404,7 +19524,7 @@ KTN.pages['p10-3'] = function () {
     var html = [];
     if (activePreset) {
       html.push('<span class="p10-fchip">' + esc(PRESETS[activePreset].label)
-        + '<button class="p10-fchip__x" type="button" data-rm="preset" aria-label="この特集を外す">×</button></span>');
+        + '<button class="p10-fchip__x" type="button" data-rm="preset" aria-label="このピックアップを外す">×</button></span>');
     }
     for (var k in filters) {
       filters[k].forEach(function (v) {
@@ -17423,7 +19543,7 @@ KTN.pages['p10-3'] = function () {
     box.querySelectorAll('[data-rm]').forEach(function (btn) {
       btn.addEventListener('click', function () {
         var rm = btn.dataset.rm;
-        if (rm === 'all') { clearAll(); showView('disc'); return; }
+        if (rm === 'all') { clearAll(); runFilter(); return; }
         if (rm === 'preset') { setPreset(null); }
         else if (rm === 'kw') { elKeyword.value = ''; }
         else { document.querySelectorAll('.p10-chip[data-f="' + rm + '"]').forEach(function (c) { c.classList.remove('is-on'); }); }
@@ -17432,15 +19552,15 @@ KTN.pages['p10-3'] = function () {
     });
   }
 
-  /* Featured に出した2件は下のグリッドから除外して重複させない。ただし**件数（全N件）には含める**
+  /* 注目 Highlights に出した2件は下のグリッドから除外して重複させない。ただし**件数（全N件）には含める**
      ＝ヒット件数は検索条件の答えなので、表示方法の都合で減らさない。 */
   function renderResultGrid(list) {
-    var seed = featSeed();
-    var feat = pickFeatured(list, seed);
-    renderFeatured(feat, seed);
-    var rest = feat.length ? list.filter(function (x) { return feat.indexOf(x) === -1; }) : list;
+    var seed = hlSeed();
+    var hl = pickHl(list, seed);
+    renderHl(hl, seed);
+    var rest = hl.length ? list.filter(function (x) { return hl.indexOf(x) === -1; }) : list;
     var grid = document.getElementById('p103ResultGrid');
-    grid.innerHTML = rest.slice(0, shownCount).map(buildGalleryCard).join('');
+    grid.innerHTML = rest.slice(0, shownCount).map(function (x) { return buildGalleryCard(x); }).join('');
     var moreBtn = document.getElementById('p103MoreBtn');
     moreBtn.parentElement.style.display = rest.length > shownCount ? '' : 'none';
     renderResultGrid._last = list;
@@ -17448,6 +19568,16 @@ KTN.pages['p10-3'] = function () {
 
   function runFilter() {
     var filters = activeChipFilters();
+    /* LIAISON/LIAISON+は検索条件ではなく、開催中・開催予定で出た検索結果に対する絞込
+       （追174-153）。その状態でなければ絞込UI自体を出さず、見えない条件が裏で効き続けない
+       よう選択も黙って外す。 */
+    var showLiaisonRefine = !!(filters.st && (filters.st.indexOf('live') !== -1 || filters.st.indexOf('upcoming') !== -1));
+    if (!showLiaisonRefine && filters.liaison) delete filters.liaison;
+    var refineEl = document.getElementById('p103Refine');
+    if (refineEl) {
+      refineEl.hidden = !showLiaisonRefine;
+      if (!showLiaisonRefine) refineEl.querySelectorAll('.p10-chip.is-on').forEach(function (c) { c.classList.remove('is-on'); });
+    }
     var kw = elKeyword.value.trim();
     var hasAny = activePreset || kw || Object.keys(filters).length;
     if (!hasAny) { renderFchips({}, ''); showView('disc'); syncRail(); return; }
@@ -17466,14 +19596,14 @@ KTN.pages['p10-3'] = function () {
     }
 
     var p = activePreset ? PRESETS[activePreset] : null;
-    document.getElementById('p103CtxEyebrow').textContent = p ? 'Feature' : 'Search Results';
+    document.getElementById('p103CtxEyebrow').textContent = p ? 'Picks' : 'Search Results';
     document.getElementById('p103CtxTitle').textContent = p ? p.label : (kw ? '「' + kw + '」の検索結果' : '検索結果');
     var descEl = document.getElementById('p103CtxDesc');
     descEl.textContent = p ? p.desc : '';
     descEl.hidden = !p;
     renderFchips(filters, kw);
     document.getElementById('p103Count').innerHTML = '<strong>' + list.length + '</strong>件';
-    shownCount = PAGE_SIZE;
+    curPage = 1;   /* 条件が変わったら1ページ目へ戻す */
     renderResultGrid(sortResults(list));
     renderRefeed();
     showView('results');
@@ -17504,20 +19634,65 @@ KTN.pages['p10-3'] = function () {
     syncRail();
   }
 
+  /* ── レール＝役割を固定した3枠（2026-09-21・追174-73 の5枠モデルを種別ページへ）──
+     旧実装は rail:1 のプリセットを全部横に並べるだけで、**役割の重複した枠が並んでいた**
+     （「人気のギャラリー」＝右カラムのランキングと重複／「絵画のギャラリー」＝6ジャンルのうち1つを
+     直書き／「東京のギャラリー」＝エリアのうち1つを直書き）。P10 と同じく**枠ごとに役割を決め、
+     中身だけを日替わりで回す**形にする。**枠数が P10 の5枠と違って3枠**なのは、この3ページが
+     季節の言葉（展覧会だけの仕組み）と場所の軸ページを持たないため。
+       枠① 索引（固定・遷移）  … 種別の特集ハブへ送る
+       枠② ジャンル（日替わり）… 6区分を日付シードで回す。回転列は KTN.axis が単一ソース
+       枠③ 条件（日替わり）    … そのページの検索条件を日付シードで回す
+     レールから外したプリセット（人気・絵画・東京）は**定義としては残す**＝ゼロヒットの提案で使う。 */
+  var RAIL_HUB = { href: './kotennavi-p10-7.html', icon: 'tag', label: 'ギャラリーをエリア・開催状況から探す' };
+  var RAIL_ROT = ['exh-live', 'near-live', 'liaison-plus', 'new-arrival'];
+  var RAIL_MIN = 3;   /* 中身がこれ未満の枠は出さない（開いてスカスカだと逆効果・追174-79 ② と同じ値） */
+  /* ジャンル枠の実体はその日のぶんだけ組み立てる（P10 の季節の言葉と同じ作り）＝
+     6区分ぶんのプリセットを静的に持たない。 */
+  function railGenreKey() {
+    var A = KTN.axis; if (!A || !A.pickGenre) return null;
+    var slug = A.pickGenre(1)[0], g = slug && A.genre(slug);
+    if (!g) return null;
+    PRESETS['genre-rot'] = {
+      axis: 'tag',
+      label: g.name + 'を扱うギャラリー',
+      desc: '「' + g.name + '」のジャンルを扱うギャラリーです。',
+      f: function (x) { return !!x.genres && x.genres.indexOf(g.name) !== -1; }
+    };
+    return 'genre-rot';
+  }
+  function railSlots() {
+    var out = [RAIL_HUB];
+    var gk = railGenreKey();
+    if (gk && GALLERIES.filter(PRESETS[gk].f).length >= RAIL_MIN) out.push({ key: gk });
+    var live = RAIL_ROT.filter(function (k) {
+      return PRESETS[k] && GALLERIES.filter(PRESETS[k].f).length >= RAIL_MIN;
+    });
+    if (live.length) {
+      var d = (KTN.axis && KTN.axis.dayNo) ? KTN.axis.dayNo() : 0;
+      out.push({ key: live[((d % live.length) + live.length) % live.length] });
+    }
+    return out;
+  }
+
   (function () {
     var rail = document.getElementById('p103PresetRail');
-    var html = '';
-    for (var key in PRESETS) {
-      if (!PRESETS[key].rail) continue;
-      html += '<button class="p10-preset" type="button" data-key="' + key + '">' + presetInner(key) + '</button>';
-    }
-    rail.innerHTML = html;
-    rail.querySelectorAll('.p10-preset').forEach(function (b) {
-      b.addEventListener('click', function () {
-        if (activePreset === b.dataset.key) { clearAll(); showView('disc'); }
-        else applyPreset(b.dataset.key);
+    function renderRail() {
+      rail.innerHTML = railSlots().map(function (sl) {
+        /* 索引枠だけリンク＝末尾の「 →」はページが変わることの明示（検索を実行する枠には付けない） */
+        if (sl.href) return '<a class="p10-preset" href="' + sl.href + '">'
+          + (P10_ICONS[sl.icon] || '') + esc(sl.label) + ' →</a>';
+        return '<button class="p10-preset" type="button" data-key="' + sl.key + '">' + presetInner(sl.key) + '</button>';
+      }).join('');
+      rail.querySelectorAll('.p10-preset[data-key]').forEach(function (b) {
+        b.addEventListener('click', function () {
+          if (activePreset === b.dataset.key) { clearAll(); runFilter(); }
+          else applyPreset(b.dataset.key);
+        });
       });
-    });
+      syncRail();
+    }
+    renderRail();
     var arrL = document.getElementById('p103PresetArrL');
     var arrR = document.getElementById('p103PresetArrR');
     function syncArr() {
@@ -17534,22 +19709,86 @@ KTN.pages['p10-3'] = function () {
 
   (function () {
     var live = GALLERIES.filter(PRESETS['exh-live'].f).sort(function (a, b) { return b.pop - a.pop; });
-    document.getElementById('p103LiveGrid').innerHTML = live.slice(0, 4).map(buildGalleryCard).join('');
+    document.getElementById('p103LiveGrid').innerHTML = live.slice(0, 4).map(function (x) { return buildGalleryCard(x); }).join('');
 
-    var near = GALLERIES.filter(PRESETS['near'].f).sort(function (a, b) { return parseFloat(a.dist) - parseFloat(b.dist); });
-    document.getElementById('p103NearGrid').innerHTML = near.slice(0, 4).map(buildGalleryCard).join('');
+    /* 全幅の棚なので6件（1行6列）。他の棚は2カラム内の4件 */
+    var near = GALLERIES.filter(PRESETS['near-live'].f).sort(function (a, b) { return parseFloat(a.dist) - parseFloat(b.dist); });
+    document.getElementById('p103NearGrid').innerHTML = near.slice(0, 6).map(function (x) { return buildGalleryCard(x, true); }).join('');
 
     var upcoming = GALLERIES.filter(PRESETS['upcoming-all'].f).sort(function (a, b) { return b.pop - a.pop; });
-    document.getElementById('p103UpcomingGrid').innerHTML = upcoming.slice(0, 4).map(buildGalleryCard).join('');
+    document.getElementById('p103UpcomingGrid').innerHTML = upcoming.slice(0, 4).map(function (x) { return buildGalleryCard(x); }).join('');
 
     var news = GALLERIES.filter(function (x) { return x.isNew; }).sort(function (a, b) { return b.pop - a.pop; });
-    document.getElementById('p103NewGrid').innerHTML = news.slice(0, 4).map(buildGalleryCard).join('');
+    document.getElementById('p103NewGrid').innerHTML = news.slice(0, 4).map(function (x) { return buildGalleryCard(x); }).join('');
 
     var popular = GALLERIES.slice().sort(function (a, b) { return b.pop - a.pop; });
-    document.getElementById('p103PopularGrid').innerHTML = popular.slice(0, 4).map(buildGalleryCard).join('');
+    document.getElementById('p103PopularGrid').innerHTML = popular.slice(0, 4).map(function (x) { return buildGalleryCard(x); }).join('');
 
     var picks = GALLERIES.slice().sort(function (a, b) { return b.watch - a.watch; });
-    document.getElementById('p103PicksGrid').innerHTML = picks.slice(0, 4).map(buildGalleryCard).join('');
+    document.getElementById('p103PicksGrid').innerHTML = picks.slice(0, 4).map(function (x) { return buildGalleryCard(x); }).join('');
+  })();
+
+  /* ── 右カラム：全国のギャラリー（追174-157・ユーザー指摘で「都道府県から探す」から差し替え／
+     追174-158で見出しを「クロスエリア」から改称）──
+     旧実装は詳しい条件のエリア行と中身が重複するチップ一覧に過ぎず、他の検索ページ（P10-1/P10-2）の
+     右カラムが担う「発見のプリセット」の役割から外れていた。作品・クリエイター側の「クロスジャンル」
+     （普段あまり見ないジャンル＝MY_TAGSの外側を低露出順に出す）と同じ考え方で、ギャラリーは場所が
+     恒久的な属性なので軸をエリアに充てる：掲載の多い主要エリアの外側で、いま開催中・開催予定の
+     ギャラリーを、反応の少ない順に出す＝地方のギャラリーが埋もれない低露出枠。
+     本番は掲載数から動的に主要エリアを算出する想定（今は東京固定）。
+     見出し・説明文は「普段あまり見ない地域」という対象地域を暗にネガティブに言う表現を避け、
+     「全国各地からピックアップ」という利用者の得だけを語る言い方にした（追174-158）。 */
+  (function () {
+    var el = document.getElementById('p103CrossGrid');
+    if (!el) return;
+    var MAJOR_AREA = '東京';
+    function buildSideGcCard(x) {
+      return buildPersonCard({
+        type: 'gallery', avStyle: x.avStyle, ini: x.ini, name: x.name,
+        location: x.location, hours: x.hours, exh: x.exh, watch: x.watch,
+        panel: true, href: x.href, status: x.status,
+      });
+    }
+    var pool = GALLERIES.filter(function (x) {
+      return x.area !== MAJOR_AREA && (x.status === 'live' || x.status === 'upcoming');
+    });
+    el.innerHTML = pool.sort(function (a, b) { return a.pop - b.pop; }).slice(0, 3).map(buildSideGcCard).join('');
+  })();
+
+  /* ── 右カラム：ランキング（ウォッチ／展覧会数）── 年間ランキング（P10-7-1）への入口。P10-2 と同型。
+     距離（dist）はここでは渡さない＝ランキングは会場からの近さでなく関心・活動量の順位なので、
+     距離が混ざると「近い順」と誤読されるため。 */
+  (function () {
+    var el = document.getElementById('p103RankGrid');
+    if (!el) return;
+    var more = document.getElementById('p103RankMore');
+    var rankMode = 'watch';
+
+    function buildSidePersonCard(x) {
+      /* 所在地は住所全体（x.location）をそのまま使う（2026-09-22）。GALLERIES 側が既に
+         住所全体で持っているので、ここで KTN.axis.fullName（都道府県への丸め）を挟まない。 */
+      return buildPersonCard({
+        type: 'gallery', avStyle: x.avStyle, ini: x.ini, name: x.name,
+        location: x.location,
+        hours: x.hours, exh: x.exh, watch: x.watch, panel: true, href: x.href, status: x.status,
+      });
+    }
+    function renderRanking() {
+      document.querySelectorAll('.p10-rank-tab[data-rank]').forEach(function (b) {
+        b.classList.toggle('is-active', b.dataset.rank === rankMode);
+      });
+      el.innerHTML = GALLERIES.slice().sort(function (a, b) { return b[rankMode] - a[rankMode]; })
+        .slice(0, 3).map(buildSidePersonCard).join('');
+      if (more) {
+        /* 押した軸（ウォッチ／展覧会数）は ?m= で引き継ぐが、文言は着地先のページ名に揃える（追174-83） */
+        more.href = './kotennavi-p10-7-1.html?y=' + KTN.arc.defaultYear() + '&m=' + rankMode;
+        more.textContent = KTN.arc.defaultYear() + '年のギャラリーランキング →';
+      }
+    }
+    document.querySelectorAll('.p10-rank-tab[data-rank]').forEach(function (b) {
+      b.addEventListener('click', function () { rankMode = b.dataset.rank; renderRanking(); });
+    });
+    renderRanking();
   })();
 
   document.querySelectorAll('[data-preset]').forEach(function (a) {
@@ -17568,15 +19807,15 @@ KTN.pages['p10-3'] = function () {
       b.addEventListener('click', function () { applyPreset(b.dataset.zeroPreset); });
     });
     var popular = GALLERIES.slice().sort(function (a, b) { return b.pop - a.pop; });
-    document.getElementById('p103ZeroGrid').innerHTML = popular.slice(0, 4).map(buildGalleryCard).join('');
+    document.getElementById('p103ZeroGrid').innerHTML = popular.slice(0, 4).map(function (x) { return buildGalleryCard(x); }).join('');
   }
 
-  /* ── 今日の特集（結果末尾の再回遊）──
+  /* ── 今日のピックアップ（結果末尾の再回遊）──
      検索したが意中のものが無かった人に、人気軸のカードを足しても「同じ土俵の別カード」にしかならない。
-     1枚が**別の軸の検索そのもの**になる特集を差し出して、軸の乗り換えを促す（中身が想像できるよう代表サムネ3枚つき）。
+     1枚が**別の軸の検索そのもの**になるピックアップを差し出して、軸の乗り換えを促す（中身が想像できるよう代表サムネ3枚つき）。
      選定は日替わり固定（doyシード）＝「ランダム」「引き直し」は前面に出さず、今日の誌面として置く（2026-09-02）。 */
-  var REFEED_N = 3;    /* 出す特集の数 */
-  var REFEED_MIN = 3;  /* 中身がこれ未満の特集は出さない（開いてスカスカだと逆効果） */
+  var REFEED_N = 3;    /* 出すピックアップの数 */
+  var REFEED_MIN = 3;  /* 中身がこれ未満のピックアップは出さない（開いてスカスカだと逆効果） */
   function refeedCard(key) {
     var p = PRESETS[key], hits = GALLERIES.filter(p.f);
     var thumbs = hits.slice(0, 3).map(function (x) {
@@ -17592,7 +19831,10 @@ KTN.pages['p10-3'] = function () {
     if (!box) return;
     var keys = [];
     for (var k in PRESETS) {
-      if (!PRESETS[k].rail || k === activePreset) continue;
+      /* .rail は「棚として常時表示済み」の印。undefined と rail:0 を同じ偽値として弾くと
+         常に空になる不具合があったため、`.rail` の定義有無で判定する（追174-165）。 */
+      if (PRESETS[k].rail !== undefined || k === activePreset) continue;
+      if (PRESETS[k].refeed === 0) continue;
       if (GALLERIES.filter(PRESETS[k].f).length < REFEED_MIN) continue;
       keys.push(k);
     }
@@ -17602,6 +19844,53 @@ KTN.pages['p10-3'] = function () {
       b.addEventListener('click', function () { applyPreset(b.dataset.refeed); });
     });
   }
+  /* ── タグ行（追174-142・追174-143で1行ずつ展開に変更）── タグ付け数（このページの母集団=
+     GALLERIES.genreTagsでの出現数）が多い順に並べ替えて描画する。.p10-chip の結線より前に
+     描画すること（下記と同じ順序制約）。本番は数百件を想定（追174-143）＝「もっと見る」は
+     1行ずつ増やす（詳細はP10側のコメント参照）。 */
+  var ALL_TAGS = ['絵画', '現代美術', '写真', '書道', '版画', '陶芸', 'クラフト'].concat(window.P10_MORE_TAGS || []);
+  var tagRowH = null, tagVisibleRows = 1;
+  function renderTagChips() {
+    var box = document.getElementById('p103TagOpts');
+    if (!box) return;
+    var counts = {};
+    ALL_TAGS.forEach(function (t) { counts[t] = 0; });
+    GALLERIES.forEach(function (x) { (x.genreTags || []).forEach(function (t) { if (counts[t] != null) counts[t]++; }); });
+    var sorted = ALL_TAGS.slice().sort(function (a, b) { return counts[b] - counts[a]; });
+    box.innerHTML = sorted.map(function (t) {
+      return '<button class="p10-chip" data-f="tag:' + esc(t) + '" type="button"># ' + esc(t) + '</button>';
+    }).join('');
+  }
+  renderTagChips();
+  function measureTagRows() {
+    var box = document.getElementById('p103TagOpts');
+    if (!box) return [];
+    var boxTop = box.getBoundingClientRect().top;
+    var rows = [], curTop = null;
+    box.querySelectorAll('.p10-chip').forEach(function (c) {
+      var r = c.getBoundingClientRect();
+      var top = r.top - boxTop;
+      if (curTop === null || Math.abs(top - curTop) > 1) { curTop = top; rows.push(0); }
+      rows[rows.length - 1] = Math.max(rows[rows.length - 1], top + r.height);
+    });
+    return rows;
+  }
+  function applyTagRowCap(remeasure) {
+    var box = document.getElementById('p103TagOpts');
+    var btn = document.getElementById('p103TagMoreBtn');
+    if (!box || !btn) return;
+    if (remeasure || !tagRowH) tagRowH = measureTagRows();
+    if (!tagRowH.length) return;
+    if (tagVisibleRows >= tagRowH.length) { box.style.maxHeight = 'none'; btn.hidden = true; return; }
+    btn.hidden = false;
+    box.style.maxHeight = tagRowH[tagVisibleRows - 1] + 'px';
+  }
+  var tagMoreBtn = document.getElementById('p103TagMoreBtn');
+  if (tagMoreBtn) tagMoreBtn.addEventListener('click', function () {
+    tagVisibleRows++;
+    applyTagRowCap(false);
+  });
+
   document.getElementById('p103SearchBtn').addEventListener('click', runFilter);
   elKeyword.addEventListener('keydown', function (ev) {
     if (ev.key === 'Enter') { ev.preventDefault(); runFilter(); }
@@ -17628,6 +19917,7 @@ KTN.pages['p10-3'] = function () {
     adv.classList.toggle('is-open', open);
     advToggle.classList.toggle('is-open', open);
     advToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (open) { tagVisibleRows = 1; applyTagRowCap(true); }
   });
   document.getElementById('p103AdvClear').addEventListener('click', function () {
     document.querySelectorAll('.p10-chip.is-on').forEach(function (c) { c.classList.remove('is-on'); });
@@ -17641,7 +19931,7 @@ KTN.pages['p10-3'] = function () {
 
   if (elSort) elSort.addEventListener('change', function () {
     if (!elResults.hidden && renderResultGrid._last) {
-      shownCount = PAGE_SIZE;
+      curPage = 1;   /* 条件が変わったら1ページ目へ戻す */
       renderResultGrid(sortResults(renderResultGrid._last));
     }
   });
@@ -17657,9 +19947,13 @@ KTN.pages['p10-3'] = function () {
     if (btn && btn.hasAttribute('data-p103-view')) btn.classList.add('on');
     clearAll();
     if (view === 'disc') { showView('disc'); }
-    else if (view === 'preset') { applyPreset('tokyo-galleries'); }
+    /* スラッグ直書きをやめ、**いまレールに出ている検索枠の先頭**を使う（追174-98 ⑧ と同じ理由）。 */
+    else if (view === 'preset') {
+      var top = railSlots().filter(function (sl) { return sl.key; })[0];
+      if (top) applyPreset(top.key); else showView('disc');
+    }
     else if (view === 'result') {
-      /* 条件は1つだけ＝既定の「おすすめ順」で Featured クラスタが出るヒット数を確保するため
+      /* 条件は1つだけ＝既定の「おすすめ順」で 注目 Highlights クラスタが出るヒット数を確保するため
          （条件を重ねると数件まで絞られ、クラスタが出ない状態しかデモできない・2026-09-01） */
       ['st:live'].forEach(function (f) {
         document.querySelectorAll('.p10-chip[data-f="' + f + '"]').forEach(function (c) { c.classList.add('is-on'); });
@@ -17669,16 +19963,321 @@ KTN.pages['p10-3'] = function () {
     else if (view === 'zero') { elKeyword.value = '深夜の青騎士'; runFilter(); }
   };
 
-  window.ktnRender = function () {};
+  /* ── URLから条件を受ける（?f=key:value を複数可・?p=プリセット）＝P10-7 の分類索引の着地先 ── */
+  (function () {
+    var q = new URLSearchParams(location.search);
+    var p = q.get('p'), fs = q.getAll('f'), hitAny = false;
+    if (p && PRESETS[p]) { applyPreset(p); return; }
+    if (!fs.length) return;
+    document.querySelectorAll('.p10-chip[data-f]').forEach(function (c) {
+      if (fs.indexOf(c.dataset.f) === -1) return;
+      c.classList.add('is-on'); hitAny = true;
+      /* 47都道府県・追加タグのチップは畳まれたパネルの中にある。URLで点いた条件がドロワーを
+         開いても見えないままだと「どこで指定された条件か」が分からないので、当たったチップを
+         含むパネルだけ開いておく（外すのは適用中チップの×でもできる）。 */
+      var panel = c.closest('.p10-adv__panel');
+      if (!panel) return;
+      panel.classList.add('is-open');
+      var btn = panel.previousElementSibling;
+      if (btn && btn.dataset.toggle) { btn.classList.add('is-open'); btn.setAttribute('aria-expanded', 'true'); }
+    });
+    if (hitAny) runFilter();
+  }());
 };
 
-/* P10-5〜7＝特集ページ（P10-1/P10-2/P10-3のプリセット着地ビューをSEO URLラッパーとして再利用・実体を持たない）。
-   P10-4 だけはこの構造から外し、軸ページの索引として実体を持たせた（追174-49・下の KTN.pages['p10-4']）。
-   理由：P10 と同じ棚をもう1枚のURLで出しても新しい情報が無く、一方で軸ページ（P10-4-1）へ
-   降りる内部リンクがサイトのどこにも無かった＝P10-4-1 のパンくずが宣言している親子関係が実在しなかった。 */
-KTN.pages['p10-5'] = KTN.pages['p10-1'];
-KTN.pages['p10-6'] = KTN.pages['p10-2'];
-KTN.pages['p10-7'] = KTN.pages['p10-3'];
+/* ════════════════════════════════════════════════════
+   P10-5／P10-6／P10-7      分類索引（作品／クリエイター／ギャラリー）
+   P10-5-1／P10-6-1／P10-7-1  年間ランキング
+
+   もとは P10-1/2/3 のプリセット着地ビューをそのまま指すエイリアスだった（＝実体なし）。
+   P10-4（展覧会）と同じ「軸ページの索引」にはできない：作品・クリエイター・ギャラリーの
+   検索はログイン必須（ゲストが使えるのは展覧会検索だけ）なので、noindex のこのページに
+   SEOの集客資産としての役割を持たせても入口が閉じている。そこで役割を
+   **会員向けの分類インデックス＋年間ランキング**に振り直した（2026-09-09 ユーザー確定）。
+
+   ・軸の下位ページ（/artworks/genre/{slug} のような独立URL）は作らない。
+     ログイン必須の領域にURLを増やしてもクローラから見えず、内部リンクだけが増える。
+     索引のリンクは検索ページ（P10-1/2/3）のフィルタ状態へ着地させる（?f=key:value）。
+   ・年間ランキングは累計でなく**年間増分**（KTN.arcx）＝古参が居座らず、
+     去年はじめた作り手も今年の反応で番付に載る。
+
+   **2026-09-18・追174-81：索引と年間ランキングを別URLへ分けた（旧「1ページに同居（③）」を撤回）。**
+   同居させた当初の理由は「分類で降りる人と、今年よく見られたものから入る人が同じ画面で行き先を
+   選べた方が早い」だったが、この2ブロックは**リンク先の性質が正反対**だった。索引のチップは
+   すべてログイン必須の検索（?f=）へ飛ぶのでクローラが辿れず、ランキングは公開ページ
+   （P6／P3／P4）へ飛ぶので内部リンクハブとして働く。同じURLに置く限り noindex か index かを
+   1枚で決められず、ギャラリー（P10-7）だけ index という非対称も説明できなかった。
+   分けた結果、**索引3枚＝noindex／ランキング3枚＝index** が一本の理由で揃う。
+   ランキングは年が終われば内容が凍結するので年鑑（P10-4-2）と同じく1年1URL
+   （/artworks/ranking/{y}・/creators/ranking/{y}・/galleries/ranking/{y}）。
+   プロトタイプは ?y= で年を、?m= で軸を受ける（P10-1/2/3 右カラムの入口が押した軸のまま着地する）。
+   ?m= は同じ顔ぶれの並べ替えでしかないので canonical は ?m= を落とした年のURLへ寄せる。
+
+   索引の件数は KTN.p10data（検索ページと同じ配列）から数える＝索引と検索結果で件数がずれない。
+════════════════════════════════════════════════════ */
+(function () {
+  function esc(s) { var d = document.createElement('div'); d.textContent = s == null ? '' : s; return d.innerHTML; }
+
+  /* 検索ページの matches() と同じ判定を件数用に持つ。key は .p10-chip[data-f] の左辺と同じ。 */
+  function hit(x, k, v) {
+    if (k === 'genre') return (x.genres || []).indexOf(v) !== -1;
+    if (k === 'tag')   return (x.tags || x.genreTags || []).indexOf(v) !== -1;
+    if (k === 'area')  return x.area === v;
+    if (k === 'st')    return x.status === v;
+    if (k === 'new')   return !!x.isNew;
+    if (k === 'price') return KTN.p10data.priceBand(x.price) === v;
+    if (k === 'liaison') return v === 'lp' ? x.liaison === 'li-plus' : x.liaison === 'li';
+    return false;
+  }
+
+  /* 索引の1セクション＝見出し＋チップ列。チップは軸ページ（P10-4系）と同じ a.p10-preset ＋件数。
+     0件の分類もリンクを外さない（検索側のゼロヒット画面が代替候補を出すので行き止まりにならない）。
+     data-guest="login" ＝リンク先が検索ツール（P10-1〜3）なのでゲストは遷移させずログインモーダルへ。
+     索引ページ自体はゲストにも開く（制限の目的は無許可の全件取得の抑止で、固定の分類索引は
+     列挙手段にならないため）。チップを消さないのは、件数を見せたうえで「ログインすれば絞り込める」
+     と分かるようにするため＝追記13 でゲート付きチップを出したままにしたのと同じ理由。 */
+  function chips(pool, search, key, items) {
+    return items.map(function (it) {
+      var n = pool.filter(function (x) { return hit(x, key, it.v); }).length;
+      return '<a class="p10-preset" data-guest="login" href="' + search + '?f=' + encodeURIComponent(key + ':' + it.v) + '">'
+        + esc(it.t) + '<span class="ktn-axis-prefchip__n">' + n + '</span></a>';
+    }).join('');
+  }
+
+  /* ジャンル＝サイト正式の6区分（KTN.axis.GENRES と同じ語彙＝登録フォームが持つ必須項目）。
+     索引の先頭に置くのはこちらで、技法名（絵画・版画…）は別セクションの「タグ」に降ろす。
+     旧実装はここへ技法名7件を「ジャンル」として並べていた＝軸ページ側で追174-76 が是正したのと
+     同じ誤りが検索側に残っていた。「その他」も絞り込みとしては成立するので索引には出す
+     （軸ページ〔恒久URL〕を建てないだけ＝KTN.axis.AXIS_GENRES との違いはそこ）。 */
+  var GENRES = (KTN.axis && KTN.axis.GENRES ? KTN.axis.GENRES.map(function (g) { return g.name; })
+    : ['アート', '写真', 'クラフト', '建築', 'ファッション', 'その他']);
+  var TAGS   = ['絵画', '現代美術', '写真', '書道', '版画', '陶芸', 'クラフト'];
+  var AREAS  = ['東京', '神奈川', '京都', '大阪', '愛知', '福岡'];
+
+  /* 種別ごとの索引の軸。人は「いま開催しているか」「どこで活動しているか」で降りる人が多いので
+     エリア・開催状況を持つが、作品は持たない（下記 p10-5 の理由）。 */
+  var INDEX = {
+    /* 作品はジャンル・タグ・LIAISON の3軸だけ（2026-09-18・追174-85）。
+       エリア＝作品そのものは場所を持たない（展覧会の会場を借りると、巡回で複数エリアに
+       出た作品が破綻する）。価格帯・販売状態＝LIAISON+ の出品にしか無い属性なので
+       作品全体の母数に対する軸にならず、LIAISON+ の作品は liaison 軸で拾える。 */
+    'p10-5': {
+      kind: 'work', search: './kotennavi-p10-1.html', pool: function () { return KTN.p10data.WORKS; },
+      secs: [
+        { id: 'p105GenreNav', key: 'genre',   items: GENRES.map(function (g) { return { v: g, t: g }; }) },
+        { id: 'p105TagNav',   key: 'tag',     items: TAGS.map(function (g) { return { v: g, t: '# ' + g }; }) },
+        { id: 'p105LiNav',    key: 'liaison', items: [{ v: 'li', t: 'LIAISON 展示あり' }, { v: 'lp', t: 'LIAISON+ 販売あり' }] }
+      ]
+    },
+    /* クリエイターはエリア軸を持たない（2026-09-19・追174-86）＝活動場所が固定されず、展覧会ごとに
+       会場の県が変わる。会場の県を借りて「その人のエリア」と呼ぶと巡回で破綻する（追174-50 と同じ理由）。
+       場所から人へ降りたい人は、エリア軸ページ → ギャラリー（P10-7）／展覧会（P10-4）をたどる。 */
+    'p10-6': {
+      kind: 'creator', search: './kotennavi-p10-2.html', pool: function () { return KTN.p10data.CREATORS; },
+      secs: [
+        { id: 'p106GenreNav', key: 'genre',   items: GENRES.map(function (g) { return { v: g, t: g }; }) },
+        { id: 'p106TagNav',   key: 'tag',     items: TAGS.map(function (g) { return { v: g, t: '# ' + g }; }) },
+        { id: 'p106StNav',    key: 'st',      items: [{ v: 'live', t: '開催中' }, { v: 'upcoming', t: '開催予定' }, { v: 'none', t: '開催なし' }] },
+        { id: 'p106LiNav',    key: 'liaison', items: [{ v: 'li', t: 'LIAISON 利用中' }, { v: 'lp', t: 'LIAISON+ 利用中' }] }
+      ]
+    },
+    'p10-7': {
+      kind: 'gallery', search: './kotennavi-p10-3.html', pool: function () { return KTN.p10data.GALLERIES; },
+      secs: [
+        { id: 'p107GenreNav', key: 'genre',   items: GENRES.map(function (g) { return { v: g, t: g }; }) },
+        { id: 'p107TagNav',   key: 'tag',     items: TAGS.map(function (g) { return { v: g, t: '# ' + g }; }) },
+        { id: 'p107AreaNav',  key: 'area',    items: AREAS.map(function (a) { return { v: a, t: a }; }) },
+        { id: 'p107StNav',    key: 'st',      items: [{ v: 'live', t: '開催中' }, { v: 'upcoming', t: '開催予定' }, { v: 'none', t: '開催なし' }] },
+        { id: 'p107LiNav',    key: 'liaison', items: [{ v: 'li', t: 'LIAISON 利用中' }, { v: 'lp', t: 'LIAISON+ 利用中' }] }
+      ]
+    }
+  };
+
+  /* ── 分類索引（P10-5／P10-6／P10-7）── 件数は検索ページと同じ配列から数える。
+     年間ランキングは P10-5-1／P10-6-1／P10-7-1 へ切り出したのでここには無い（追174-81）。 */
+  function makeIndexPage(pageId, prefix) {
+    return function () {
+      var cfg = INDEX[pageId];
+      var pool = cfg.pool();
+      cfg.secs.forEach(function (s) {
+        var el = document.getElementById(s.id);
+        if (el) el.innerHTML = chips(pool, cfg.search, s.key, s.items);
+      });
+      var elTotal = document.getElementById(prefix + 'Total');
+      if (elTotal) elTotal.innerHTML = '<strong>' + pool.length + '</strong>件';
+
+      /* ランキングへの送りリンクは文言＝着地先のページ名（{年}年の{種別}ランキング）で、
+         年は最新年を JS が入れる＝HTMLに年を焼くと年明けに全ページ直す羽目になるため（追174-83）。 */
+      var more = document.getElementById(prefix + 'RankMore');
+      if (more && KTN.arc && KTN.arcx) {
+        var y = KTN.arc.defaultYear();
+        more.href = './kotennavi-' + pageId + '-1.html?y=' + y;
+        more.textContent = y + '年の' + KTN.arcx.KINDS[cfg.kind].label + 'ランキング →';
+      }
+    };
+  }
+
+  /* ── 年間ランキング（P10-5-1／P10-6-1／P10-7-1）──
+     年鑑（P10-4-2）と同じ「1年1URL・年が終われば凍結する」層。だからここは索引と違って
+     index,follow で、タイトルにも年を入れてよい（追174-48の例外条件＝年が鮮度の主張ではなく
+     識別子になるページ）。desc は種別ごとに「何の反応か」を書き分ける。 */
+  var RANK = {
+    'p10-5-1': {
+      kind: 'work', prefix: 'p1051', path: 'artworks', en: 'Artwork Ranking',
+      desc: function (y) { return y + '年の作品ランキングです。興味あり！と閲覧数がその年にどれだけ増えたかで並べています。累計ではなくその年の増分なので、最近発表された作品も上位に入ります。'; }
+    },
+    'p10-6-1': {
+      kind: 'creator', prefix: 'p1061', path: 'creators', en: 'Creator Ranking',
+      desc: function (y) { return y + '年のクリエイターランキングです。ウォッチと展覧会数がその年にどれだけ増えたかで並べています。累計ではなくその年の増分なので、活動を始めたばかりの人も上位に入ります。'; }
+    },
+    'p10-7-1': {
+      kind: 'gallery', prefix: 'p1071', path: 'galleries', en: 'Gallery Ranking',
+      desc: function (y) { return y + '年のギャラリーランキングです。ウォッチと展覧会数がその年にどれだけ増えたかで並べています。累計ではなくその年の増分なので、新しく開いた場所も上位に入ります。'; }
+    }
+  };
+
+  function makeRankPage(pageId) {
+    return function () {
+      var cfg = RANK[pageId], X = KTN.arcx, A = KTN.arc, K = X.KINDS[cfg.kind], p = cfg.prefix;
+      var elList = document.getElementById(p + 'List');
+      if (!elList) return;
+
+      var elTitle = document.getElementById(p + 'Title');
+      var elEn    = document.getElementById(p + 'En');
+      var elLeadY = document.getElementById(p + 'LeadYear');
+      var elNote  = document.getElementById(p + 'Note');
+      var elYears = document.getElementById(p + 'YearNav');
+
+      var modes = Object.keys(K.modes);
+      var year = A.defaultYear();
+      var mode = modes[0];
+
+      function setMeta(id, attr, val) { var el = document.getElementById(id); if (el) el.setAttribute(attr, val); }
+      function url(y) { return 'https://koten-navi.com/' + cfg.path + '/ranking/' + y; }
+
+      function syncHead() {
+        /* タイトルは〈{年}年の{種別}ランキング〉で4ページ（P10-4-2／P10-5-1／P10-6-1／P10-7-1）とも同形。
+           「反応が増えた」のような言い換えを使わない＝何のランキングか一目で分かること、そして
+           指標名をサイトのCTA語（興味あり！／チェックイン／ウォッチ）に揃えることで、
+           投稿者が「どのCTAを取れば載るのか」を読み取れるようにするため（追174-83）。 */
+        var h1 = year + '年の' + K.label + 'ランキング';
+        var t  = h1 + '｜個展なび';
+        document.title = t;
+        if (elTitle) elTitle.textContent = h1;
+        if (elEn)    elEn.textContent = cfg.en + ' ' + year;
+        if (elLeadY) elLeadY.textContent = year;
+        setMeta(p + 'Desc', 'content', cfg.desc(year));
+        /* canonical は ?m= を落とした年のURL＝軸違いは同じ顔ぶれの並べ替えでしかないので別ページにしない */
+        setMeta(p + 'Canonical', 'href', url(year));
+        setMeta(p + 'OgTitle', 'content', t);
+        setMeta(p + 'OgUrl', 'content', url(year));
+        if (typeof PAGES !== 'undefined' && PAGES[pageId]) PAGES[pageId].bc[2][0] = year + '年のランキング';
+      }
+
+      function renderList() {
+        document.querySelectorAll('.p10-rank-tab[data-arc]').forEach(function (b) {
+          b.classList.toggle('is-active', b.dataset.arc === mode);
+        });
+        if (elNote) {
+          var n = X.note(cfg.kind, year);
+          elNote.hidden = !n;
+          elNote.textContent = n;
+        }
+        elList.innerHTML = X.rows(cfg.kind, year, mode).map(X.build(cfg.kind)).join('');
+      }
+
+      /* 年の切替はリンク（?y=）。クライアント状態で持つと同じURLに複数年が同居して
+         「去年の番付を見せる」共有リンクが作れなくなる＝年鑑（P10-4-2）と同じ扱い。
+         軸（?m=）は引き継ぐ＝年を変えても押していた軸のまま見られる。 */
+      function renderYears() {
+        if (!elYears) return;
+        elYears.innerHTML = A.YEARS.map(function (v) {
+          return '<a class="p10-preset' + (v === year ? ' is-on' : '') + '" href="?y=' + v + '&m=' + mode + '">' + v + '年</a>';
+        }).join('');
+      }
+
+      document.querySelectorAll('.p10-rank-tab[data-arc]').forEach(function (b) {
+        b.addEventListener('click', function () { mode = b.dataset.arc; renderList(); renderYears(); });
+      });
+
+      var q = new URLSearchParams(location.search);
+      var qy = +q.get('y'), qm = q.get('m');
+      if (modes.indexOf(qm) > -1) mode = qm;
+      if (A.YEARS.indexOf(qy) > -1) year = qy;
+
+      var _baseRender = window.ktnRender;
+      window.ktnRender = function () {
+        if (typeof PAGES !== 'undefined' && PAGES[pageId]) PAGES[pageId].bc[2][0] = year + '年のランキング';
+        if (typeof _baseRender === 'function') _baseRender();
+      };
+
+      /* デモバーの年切替。本番はURL（/{path}/ranking/{y}）が年を決めるのでこの関数は消える */
+      window.setArcYear = function (y, btn) {
+        if (btn) {
+          document.querySelectorAll('.dbar [data-y]').forEach(function (b) { b.classList.remove('on'); });
+          btn.classList.add('on');
+        }
+        if (A.YEARS.indexOf(+y) > -1) year = +y;
+        syncHead();
+        renderList();
+        renderYears();
+        if (typeof _baseRender === 'function') _baseRender();
+      };
+      document.querySelectorAll('.dbar [data-y]').forEach(function (b) {
+        b.classList.toggle('on', +b.getAttribute('data-y') === year);
+      });
+
+      syncHead();
+      renderList();
+      renderYears();
+    };
+  }
+
+  KTN.pages['p10-5'] = makeIndexPage('p10-5', 'p105');
+  KTN.pages['p10-6'] = makeIndexPage('p10-6', 'p106');
+  KTN.pages['p10-7'] = makeIndexPage('p10-7', 'p107');
+  KTN.pages['p10-5-1'] = makeRankPage('p10-5-1');
+  KTN.pages['p10-6-1'] = makeRankPage('p10-6-1');
+  KTN.pages['p10-7-1'] = makeRankPage('p10-7-1');
+
+  /* ── P10-8  年間ランキングのハブ（種別横断・追174-84）──
+     本体4枚（P10-4-2／P10-5-1／P10-6-1／P10-7-1）は index,follow だが、そこへ入る
+     リンクは検索（P10-1〜3）と索引（P10-5〜7）にしか無く、どちらも noindex,nofollow
+     ＝作品・クリエイター・ギャラリーのランキングは辿れる入口を1本も持っていなかった。
+     このハブをフッター（全ページ共通）から張ることで、4種 × 年数ぶんのURLに
+     follow される経路を1箇所で供給する。
+
+     年チップが〈年 × 種別〉の索引を兼ねる＝同じURLへ「すべて見る →」を重ねない（追174-83）。 */
+  var HUB = [
+    { key: 'Exh',     label: '展覧会',       href: 'kotennavi-p10-4-2.html' },
+    { key: 'Work',    label: '作品',         href: 'kotennavi-p10-5-1.html', kind: 'work',    mode: 'interest' },
+    { key: 'Creator', label: 'クリエイター', href: 'kotennavi-p10-6-1.html', kind: 'creator', mode: 'watch' },
+    { key: 'Gallery', label: 'ギャラリー',   href: 'kotennavi-p10-7-1.html', kind: 'gallery', mode: 'watch' }
+  ];
+
+  KTN.pages['p10-8'] = function () {
+    var A = KTN.arc, X = KTN.arcx;
+    if (!A || !X) return;
+    var year = A.defaultYear();
+
+    HUB.forEach(function (h) {
+      var list = document.getElementById('p108' + h.key + 'List');
+      if (list) {
+        /* 展覧会だけ母集団が違う（会期を終えた展覧会）ので KTN.arc、他3種は年間増分の KTN.arcx。
+           行のHTMLはどちらも .p104-arc__* で同じ＝ランキングの行はサイトに1種類しかない。 */
+        list.innerHTML = h.kind
+          ? X.rows(h.kind, year, h.mode, 3).map(X.build(h.kind)).join('')
+          : A.rows(year, 'want', 3).map(A.build).join('');
+      }
+      var years = document.getElementById('p108' + h.key + 'Years');
+      if (years) {
+        years.innerHTML = A.YEARS.map(function (v) {
+          return '<a class="p10-preset" href="./' + h.href + '?y=' + v + '">' + v + '年の' + h.label + 'ランキング</a>';
+        }).join('');
+      }
+    });
+  };
+}());
 
 /* ════════════════════════════════════════════════════
    P10-4  特集-展覧会（軸ページのインデックス／追174-49）
@@ -17692,12 +20291,12 @@ KTN.pages['p10-7'] = KTN.pages['p10-3'];
      A. 注目のエリア＝固定枠＋日替わりローテーション（KTN.axis.pick）
      B. エリアから探す＝47都道府県（掲載0件の県もリンクを外さない）
      C. ジャンルから探す（ジャンル軸ページの実装までは検索へ流す）
-     D. 年間の記録ダイジェスト → P10-4-2
+     D. 年間ランキングのダイジェスト → P10-4-2
      E. 作品/クリエイター/ギャラリーの特集（P10-5/6/7）へ横断
 ════════════════════════════════════════════════════ */
 KTN.pages['p10-4'] = function () {
   var A = KTN.axis;
-  var elFeat  = document.getElementById('p104Featured');
+  var elHl  = document.getElementById('p104Hl');
   var elPref  = document.getElementById('p104PrefNav');
   var elArea  = document.getElementById('p104AreaNav');
   var elGenre = document.getElementById('p104GenreNav');
@@ -17710,9 +20309,12 @@ KTN.pages['p10-4'] = function () {
   /* ── A. 注目のエリア ──
      件数を添えるのは「入る前に何があるか分かる」ようにするため。カードは軸ページへの入口なので
      .ktn-axis-card（P10-4-1/P10-4-2 の下段カードと同じ部品）を中段で再利用する。 */
-  function renderFeatured() {
-    if (!elFeat) return;
-    elFeat.innerHTML = A.pick(6).map(function (s) {
+  function renderHl() {
+    if (!elHl) return;
+    /* 6＝このページのレイアウトが持てる枠数。**枠数はページ固有の事実**なので直書きでよい
+       （P1=3／P10=4 と同じ扱い・2026-09-20）。運営が決めるのは並び順としきい値で、それは
+       KTN.axis が持ち pick() の返す順に反映される。 */
+    elHl.innerHTML = A.pick(6).map(function (s) {
       var al = A.aliasOf(s);
       return '<a class="ktn-axis-card" href="' + A.href(s) + '">'
         + '<span class="ktn-axis-card__label">' + esc(A.enName(s)) + '</span>'
@@ -17793,7 +20395,7 @@ KTN.pages['p10-4'] = function () {
     }).join('');
   }
 
-  /* ── D. 年間の記録ダイジェスト（本体は P10-4-2）──
+  /* ── D. 年間ランキングのダイジェスト（本体は P10-4-2）──
      年の切替を select（クライアント状態）で持つと 2026年と2025年が同じURLに同居して
      クローラからは片方しか見えない。年別ナビは必ずリンクにする（追174-48）。 */
   function renderArcDigest() {
@@ -17803,14 +20405,12 @@ KTN.pages['p10-4'] = function () {
     list.innerHTML = R.rows(y, 'want', 3).map(R.build).join('');
     var years = document.getElementById('p10ArcYears');
     if (years) {
+      /* チップは着地先のページ名をそのまま名乗る（{年}年の展覧会ランキング）＝チップ単体で
+         「どの年の・何のランキングか」が読めるようにするため。最新年のチップがダイジェストの
+         続き＝かつての「すべて見る →」を兼ねるので、同じURLへの送りリンクは置かない（追174-83）。 */
       years.innerHTML = R.YEARS.map(function (v) {
-        return '<a class="p10-preset" href="./kotennavi-p10-4-2.html?y=' + v + '">' + v + '年の記録</a>';
+        return '<a class="p10-preset" href="./kotennavi-p10-4-2.html?y=' + v + '">' + v + '年の展覧会ランキング</a>';
       }).join('');
-    }
-    var more = document.getElementById('p10ArcMore');
-    if (more) {
-      more.href = './kotennavi-p10-4-2.html?y=' + y;
-      more.textContent = y + '年の記録をすべて見る →';
     }
   }
 
@@ -17823,7 +20423,7 @@ KTN.pages['p10-4'] = function () {
     if (isAdmin && !note) {
       var s = document.createElement('span');
       s.className = 'ktn-axis-head__lead-note';
-      s.textContent = '管理者：注目のエリアは掲載件数のしきい値を超えた軸から自動で選ばれます（固定枠＋日替わり）。個別の軸ページは非公開にせず、この枠への掲載で露出を調整します。';
+      s.textContent = '管理者：注目のエリアは掲載件数のしきい値を超えたエリア・ジャンルから自動で選ばれます（固定枠＋日替わり）。個別の特集ページは非公開にせず、この枠への掲載で露出を調整します。';
       lead.appendChild(s);
     } else if (!isAdmin && note) {
       note.remove();
@@ -17839,14 +20439,14 @@ KTN.pages['p10-4'] = function () {
      本番にはこの切替は無い（Drupal 側が当日分を初期HTMLに焼く）。 */
   window.setAxisDay = function (shift, btn) {
     A.setDayShift(shift);
-    renderFeatured();
+    renderHl();
     if (btn && btn.parentNode) {
       btn.parentNode.querySelectorAll('[data-axis-day]').forEach(function (b) { b.classList.remove('on'); });
       btn.classList.add('on');
     }
   };
 
-  renderFeatured();
+  renderHl();
   renderPref();
   renderArea();
   renderGenre();
@@ -17947,17 +20547,21 @@ KTN.pages['p10-4-1'] = function () {
   var elNowKind = document.getElementById('p1041FacetKind');
   var elNowVal  = document.getElementById('p1041FacetVal');
   var elNowDrop = document.getElementById('p1041FacetDrop');
-  var elGenre   = document.getElementById('p1041GenreNav');
-  var elAcc     = document.getElementById('p1041AccessNav');
-  var elAccRow  = document.getElementById('p1041AccessRow');
+  var elGenre    = document.getElementById('p1041GenreNav');
+  var elGenreRow = document.getElementById('p1041GenreRow');
+  var elAcc      = document.getElementById('p1041AccessNav');
+  var elAccRow   = document.getElementById('p1041AccessRow');
   var elGxHead  = document.getElementById('p1041GenreExitHead');
   var elGxNav   = document.getElementById('p1041GenreExit');
   var elArcCard = document.getElementById('p1041ArcCard');
   var elArcTtl  = document.getElementById('p1041ArcTtl');
   var elArcDesc = document.getElementById('p1041ArcDesc');
   var elToolbar = document.querySelector('.p10-toolbar');
+  var elPager   = document.getElementById('p1041Pager');
   if (!elGrid) return;
 
+  var PER_PAGE = 12;   /* 4列×3行＝P10検索の1ページと同じ考え方（2026-09-22） */
+  var page = 1;
   var axis = 'tokyo';
   var X = null;                /* 交差中の第2軸（crossOf の戻り値）。null＝単独軸 */
   function promoted() { return !!X && curOf(axis).length >= CROSS_MIN; }
@@ -17974,22 +20578,36 @@ KTN.pages['p10-4-1'] = function () {
   }
   function endedOf(slug) { return AX.byPref(slug, true); }
 
-  /* ── B. 一覧 ── */
+  /* ── B. 一覧（ページング付き・2026-09-22）── */
   function renderList() {
     var list = curOf(axis).slice().sort(SORTS[elSort && elSort.value || 'rec'] || SORTS.rec);
-    elGrid.innerHTML = list.map(buildGridEcCard).join('');
+    var totalPages = Math.max(1, Math.ceil(list.length / PER_PAGE));
+    if (page > totalPages) page = totalPages;
+    elGrid.innerHTML = list.slice((page - 1) * PER_PAGE, page * PER_PAGE).map(buildGridEcCard).join('');
     elCount.innerHTML = '<strong>' + list.length + '</strong>件';
     /* 0件のときは並べ替えを出さない（対象が無いのに操作だけ残るのを避ける） */
     if (elToolbar) elToolbar.style.display = list.length ? '' : 'none';
     if (elSearch) elSearch.textContent = list.length ? '条件を足して絞り込む →' : '全国の展覧会を検索する →';
+    if (elPager && KTN.pagination) KTN.pagination.render(elPager, {
+      page: page, totalPages: totalPages,
+      onGoto: function (n) {
+        page = n;
+        renderList();
+        /* ページを変えたら一覧の先頭へ戻す（P10検索の renderResultGrid と同じ挙動） */
+        elGrid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
   }
 
   /* ── C. 補完（0件・少件数）──
      0件は異常ではなく通常状態。ページを消さず、次の行き先だけを示す（追174-46⑤）。
      「ありません」で終わらせないため、各ブロックに理由ラベルを必ず添える。 */
   var FILL_MIN = 4;
+  var FILL_ROW_EX  = 4;  /* 展覧会カード1行分（.p10-shelf-grid の4列と同じ） */
+  var FILL_ROW_PPL = 3;  /* 人物カード1行分（.ktn-axis-fill-cards は flex-basis:300px で3枚） */
   function renderFill() {
     var full = fullOf(axis), block = AX.blockOf(axis), par = AX.parentOf(axis);
+    var fullA = AX.fullAlias(axis);   /* 見出し・ボタンは通称込み（追174-93 改訂） */
     var cur = curOf(axis);
     if (cur.length >= FILL_MIN) { elFill.hidden = true; if (elEmpty) elEmpty.hidden = true; return; }
 
@@ -18000,9 +20618,11 @@ KTN.pages['p10-4-1'] = function () {
     if (X) {
       var oth = AX.byPref(axis, false).filter(function (x) { return !X.hit(x); });
       if (oth.length) blocks.push({
-        ttl: X.rest(full),
+        ttl: X.rest(fullA),
         why: X.ja + 'の条件を外すと、同じ' + full + 'でこれだけの展覧会が開かれています。',
-        body: grid(oth.slice().sort(SORTS.end))
+        body: grid(oth.slice().sort(SORTS.end).slice(0, FILL_ROW_EX)),
+        /* 逃がし先はこのページ自身（第2軸を外した状態）＝同じ内容を新しいページに作らない */
+        more: oth.length > FILL_ROW_EX ? { label: X.rest(fullA) + 'をすべて見る', href: '?ax=' + axis } : null
       });
       var wide = AX.EX.filter(function (x) {
         return x.status !== 'ended' && x.pref !== axis && X.hit(x);
@@ -18010,13 +20630,14 @@ KTN.pages['p10-4-1'] = function () {
       if (wide.length) blocks.push({
         ttl: X.wide,
         why: 'エリアの条件を外して、全国から集めた結果です。',
-        body: grid(wide.slice().sort(SORTS.end))
+        body: grid(wide.slice().sort(SORTS.end).slice(0, FILL_ROW_EX)),
+        more: wide.length > FILL_ROW_EX ? { label: X.wide + 'をすべて見る', href: X.wideHref } : null
       });
       /* ここは「条件を外す操作」の案内ではない（操作は上の絞り込みバーが受け持つ・追174-62）。
          役割は〈2軸で薄くなったページを空にしない内容の棚〉なので、タイトルは操作ではなく中身を名指す。
          いま何で絞っているかはバーの「絞り込み中」行が言い、なぜこの棚が出ているかは各ブロックの
          why ラベルが個別に言う。まとめの説明文はその二重になるので置かない。 */
-      elFillTtl.textContent = cur.length ? 'あわせて見る' : 'ほかに見られるもの';
+      elFillTtl.textContent = 'ほかに見られるもの';
       if (elFillDsc) { elFillDsc.textContent = ''; elFillDsc.hidden = true; }
       elFillBlk.innerHTML = AX.fillHtml(blocks);
       elFill.hidden = !blocks.length;
@@ -18037,20 +20658,27 @@ KTN.pages['p10-4-1'] = function () {
     /* ① 同一場所のアーカイブ */
     var arc = endedOf(axis);
     if (arc.length) blocks.push({
-      ttl: full + 'で会期を終えた展覧会',
+      ttl: fullA + 'で会期を終えた展覧会',
       why: '会期は終わっていますが、出品したクリエイターとギャラリーはいまも活動しています。',
-      body: grid(arc.slice().sort(function (a, b) { return b.rd - a.rd; }))
+      body: grid(arc.slice().sort(function (a, b) { return b.rd - a.rd; }).slice(0, FILL_ROW_EX)),
+      /* 逃がし先はこのエリアの展覧会アーカイブそのもの（P10-4-3）。検索は既定で終了展を
+         対象外にするため、過去の記録を全部見せるページとして検索より正確 */
+      more: arc.length > FILL_ROW_EX ? { label: fullA + 'の展覧会アーカイブをすべて見る', href: AX.archiveHref(axis) } : null
     });
     /* ② 同一場所のギャラリー。
        クリエイターは場所情報を持たないのでここには出せない（追174-50）。場所で確実に絞れる
        エンティティはギャラリー（固定会場を持つ）と展覧会（会場を持つ）だけ。 */
     var ppl = AX.galleryOf(axis);
     if (ppl.length) blocks.push({
-      ttl: full + 'のギャラリー',
-      why: 'このエリアに会場を持つギャラリーです。次の展覧会はここから告知されます。',
-      body: '<div class="ktn-axis-fill-cards">' + ppl.map(function (p) {
-        return buildPersonCard(Object.assign({ panel: 1 }, p));
-      }).join('') + '</div>'
+      ttl: fullA + 'のギャラリー',
+      why: 'このエリアに会場を持つギャラリーです。次の展覧会もこのページからたどれます。',
+      body: '<div class="ktn-axis-fill-cards">' + ppl.slice(0, FILL_ROW_PPL).map(function (p) {
+        return buildPersonCard(Object.assign({ panel: false }, p));
+      }).join('') + '</div>',
+      /* ギャラリー検索はログイン必須＝ヘッドの内部リンクと同じ着地（追174-50） */
+      more: ppl.length > FILL_ROW_PPL
+        ? { label: fullOf(par || axis) + 'のギャラリーをすべて見る', href: './kotennavi-p10-3.html?f=' + encodeURIComponent('area:' + AX.searchArea(axis)), guest: true }
+        : null
     });
     /* ③ 近いところへ寄せる。県とエリアで「近い」の意味が変わるので寄せ先を切り替える：
        　 県（東京都）→ 同じ地方ブロックの他県／エリア（東京都心部）→ 親の都道府県のほかの展覧会。
@@ -18061,7 +20689,9 @@ KTN.pages['p10-4-1'] = function () {
       if (nb.length) blocks.push({
         ttl: fullOf(par) + 'のほかの展覧会',
         why: full + 'と同じ' + fullOf(par) + 'で開催中の展覧会です。同じ日に続けて回れる距離にあります。',
-        body: grid(nb.slice().sort(SORTS.end))
+        body: grid(nb.slice().sort(SORTS.end).slice(0, FILL_ROW_EX)),
+        /* 都道府県までは検索の絞り込み粒度と一致するので検索ページへ逃がせる */
+        more: nb.length > FILL_ROW_EX ? { label: fullOf(par) + 'の展覧会を検索する', href: './kotennavi-p10.html?f=' + encodeURIComponent('area:' + AX.searchArea(axis)) } : null
       });
     } else {
       nb = AX.EX.filter(function (x) {
@@ -18070,23 +20700,40 @@ KTN.pages['p10-4-1'] = function () {
       if (nb.length) blocks.push({
         ttl: block + 'で開催中の展覧会',
         why: full + 'と同じ' + block + 'のエリアから。足をのばせる距離にある展覧会です。',
-        body: grid(nb.slice().sort(SORTS.end))
+        body: grid(nb.slice().sort(SORTS.end).slice(0, FILL_ROW_EX))
+        /* 「地方ブロック」で絞る手段が検索側に無いため、この分岐だけ検索への逃がし場を持たない
+           （47都道府県のうちどれか1件を選ばせるのは block 全体の代わりにならない・2026-09-22）。 */
       });
     }
     /* ④ 全国（③まででも足りないとき） */
+    var natShown = false;
     if (!nb.length) {
-      var nat = AX.EX.filter(function (x) { return x.status !== 'ended' && x.pref !== (par || axis); })
-        .sort(SORTS.pop).slice(0, 3);
-      if (nat.length) blocks.push({
-        ttl: '全国の展覧会',
-        why: '近いエリアにも会期中の展覧会がないため、全国から反応の多いものを表示しています。',
-        body: grid(nat)
-      });
+      var natAll = AX.EX.filter(function (x) { return x.status !== 'ended' && x.pref !== (par || axis); })
+        .sort(SORTS.pop);
+      var nat = natAll.slice(0, FILL_ROW_EX);
+      if (nat.length) {
+        natShown = true;
+        blocks.push({
+          ttl: '全国の展覧会',
+          why: '近いエリアにも会期中の展覧会がないため、全国から人気の高いものを表示しています。',
+          body: grid(nat),
+          more: natAll.length > FILL_ROW_EX ? { label: '全国の展覧会を検索する', href: './kotennavi-p10.html' } : null
+        });
+      }
     }
 
-    elFillTtl.textContent = cur.length ? full + 'とあわせて見る' : full + 'から見られるもの';
-    elFillDsc.textContent = full + 'に関わるページと、近いエリアで開催中の展覧会です。';
-    elFillDsc.hidden = false;
+    elFillTtl.textContent = 'ほかに見られるもの';
+    /* 要約文は実際に出ているブロックだけを言う（追174-127と同じ是正をエリア軸にも横展開・2026-09-22）。
+       ①②が無いのに「{エリア}に関わるページ」と言い切らない／③④が無いのに「近いエリアで開催中」と
+       言い切らない。 */
+    (function () {
+      var parts = [];
+      if (arc.length || ppl.length) parts.push(fullA + 'に関わるページ');
+      if (nb.length) parts.push('近いエリアで開催中の展覧会');
+      else if (natShown) parts.push('全国で人気の高い展覧会');
+      elFillDsc.textContent = parts.length ? parts.join('と、') + 'です。' : '';
+      elFillDsc.hidden = !parts.length;
+    })();
     elFillBlk.innerHTML = AX.fillHtml(blocks);
     elFill.hidden = false;
 
@@ -18134,13 +20781,15 @@ KTN.pages['p10-4-1'] = function () {
 
     var gbase = AX.byPref(axis, false), gfull = fullOf(axis);
 
-    /* エリアが0件＝絞る対象が無いのでバーごと出さない。代わりにD（移る層）へ全国ジャンル軸の出口を置く。
-       「絞る」と「移る」を上下で分けたので、成立しない方は片方ずつ消える（追174-60）。 */
+    /* エリアが0件＝絞る対象が無いのでバーごと出さない（絞り込みバーだけの話）。
+       「ジャンルから探す」はエリアの件数に関わらず常に出す＝ユーザー指示（2026-09-22）。
+       0件のときの唯一の出口だった時期の名残りで hidden 切替をしていたが、掲載があっても
+       全国のジャンル別ページへ移る動線自体は有用なので、常設の「移る」層として残す。 */
     if (elFacet) elFacet.hidden = !gbase.length;
-    if (elGxHead) elGxHead.hidden = !!gbase.length;
+    if (elGxHead) elGxHead.hidden = false;
     if (elGxNav) {
-      elGxNav.hidden = !!gbase.length;
-      if (!gbase.length) elGxNav.innerHTML = AX.AXIS_GENRES.map(function (g) {
+      elGxNav.hidden = false;
+      elGxNav.innerHTML = AX.AXIS_GENRES.map(function (g) {
         return chip(g.name + 'の展覧会', AX.genreHref(g.slug));
       }).join('');
     }
@@ -18161,8 +20810,16 @@ KTN.pages['p10-4-1'] = function () {
     /* 掲載がある値だけをチップにする＝押した先が0件になる経路をUIの段階で塞ぐ。
        「すべて」チップは置かない：第2軸のスロットは1つなので、ジャンル行の「すべて」が
        行きやすさの絞り込みまで解除してしまい、どの行の操作なのかが読めなくなるため。
-       解除は __now 行の「解除」1箇所＋適用中チップの再クリックに集約する。 */
-    if (elGenre) {
+       解除は __now 行の「解除」1箇所＋適用中チップの再クリックに集約する。
+       ジャンル・行きやすさは同じ第2軸スロットを奪い合う関係なので、片方が既に交差中のときは
+       もう片方の行ごと隠す（追174-156・ユーザー指摘「東京都でお子さまと行ける展覧会のときに
+       ジャンルの絞込が出てくるのはおかしい」）。「すべて」チップが無い設計と同じ理由＝
+       他方の行が見えたままだと「今の行きやすさに加えてジャンルでも絞れそう」と誤読される。
+       切り替えたいときは __now 行の「解除」から選び直す。 */
+    var isAccessCross = !!X && X.path.indexOf('access/') === 0;
+    var isGenreCross  = !!X && X.path.indexOf('genre/') === 0;
+    if (elGenreRow) elGenreRow.hidden = isAccessCross;
+    if (elGenre && !isAccessCross) {
       var gcnt = {};
       gbase.forEach(function (x) { gcnt[x.genre] = (gcnt[x.genre] || 0) + 1; });
       elGenre.innerHTML = AX.GENRES.filter(function (g) { return gcnt[g.name]; }).map(function (g) {
@@ -18175,10 +20832,10 @@ KTN.pages['p10-4-1'] = function () {
        この軸の母数は展覧会側の任意入力なので、まだ申告が無いエリアでは行ごと出さない＝
        「0件かもしれない条件」を提示して空振りさせない。 */
     if (elAcc) {
-      var acs = AX.ACCESS.filter(function (a) {
+      var acs = isGenreCross ? [] : AX.ACCESS.filter(function (a) {
         return gbase.some(function (x) { return !!x[a.field]; });
       });
-      if (elAccRow) elAccRow.hidden = !acs.length;
+      if (elAccRow) elAccRow.hidden = !acs.length || isGenreCross;
       if (acs.length) elAcc.innerHTML = acs.map(function (a) {
         var n = gbase.filter(function (x) { return !!x[a.field]; }).length,
             on = !!X && X.path === 'access/' + a.slug;
@@ -18194,7 +20851,7 @@ KTN.pages['p10-4-1'] = function () {
   function syncBc(full) {
     if (typeof PAGES === 'undefined' || !PAGES['p10-4-1']) return;
     /* 交差時は場所軸を親として1段深くする＝URLの階層（/exhibitions/{pref}/genre/{g}）と一致させる */
-    var bc = [['Top', '/'], ['特集', '/feature'], ['展覧会', 'kotennavi-p10-4.html']];
+    var bc = [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['特集', 'kotennavi-p10-4.html']];
     if (X) { bc.push([full + 'の展覧会', '?ax=' + axis], [X.label, null]); }
     else { bc.push([full + 'の展覧会', null]); }
     PAGES['p10-4-1'].bc = bc;
@@ -18203,11 +20860,15 @@ KTN.pages['p10-4-1'] = function () {
 
   function syncHead() {
     var full = fullOf(axis), en = enName(axis), par = AX.parentOf(axis);
+    /* 通称込みの表示名。h1・title・description はこちらを使う＝実際に検索されるのは
+       「自由が丘 展覧会」のような街の名前で、「東京南部」だけでは需要を拾えない（追174-93 改訂）。
+       通称を持たない都道府県では fullOf と同じ文字列が返るので分岐は要らない。 */
+    var fullA = AX.fullAlias(axis);
     var url = 'https://koten-navi.com/exhibitions/' + axis;
-    var h1 = full + 'の展覧会', title = full + 'で開催中の展覧会・個展｜個展なび';
+    var h1 = fullA + 'の展覧会', title = fullA + 'で開催中の展覧会・個展｜個展なび';
 
     if (X) {
-      h1 = X.h1(full);
+      h1 = X.h1(fullA);
       title = h1 + '・個展｜個展なび';
       /* 昇格していない組み合わせはパスを発行しない＝クエリのまま noindex,follow にし、
          canonical は軸を1つ落とした単独軸へ寄せる（パスかクエリかで index を決める・追174-46②）。 */
@@ -18229,7 +20890,7 @@ KTN.pages['p10-4-1'] = function () {
          h1・title には入れない＝「東京都心部 展覧会」で検索する人が見る文言を長くしないため。 */
       /* 中間の一句だけ土地ごとに差し替える（AX.descMid）＝53本の description が
          県名違いの同一文になるのを避ける。前半は検索語、後半は機能の説明なので共通。 */
-      setMeta('p1041Desc', 'content', full + AX.prefNote(axis)
+      setMeta('p1041Desc', 'content', fullA + AX.prefNote(axis)
         + 'で開催中・開催予定の展覧会・個展の一覧です。' + AX.descMid(axis) + '会期順・ジャンル別に探せます。');
       if (elEyebrow) elEyebrow.textContent = 'Area';
       if (elEn) elEn.textContent = 'Exhibitions in ' + en;
@@ -18248,16 +20909,22 @@ KTN.pages['p10-4-1'] = function () {
     if (elLinks) {
       elLinks.innerHTML = X
         /* 交差ページからは「軸を1つ落とした先」を必ず出す。行き止まりにしないための最短の戻り道 */
-        ? chip(full + 'のすべての展覧会', '?ax=' + axis)
+        ? chip(fullA + 'のすべての展覧会', '?ax=' + axis)
           + chip(X.wide, X.wideHref)
-          + chip(full + 'の展覧会アーカイブ', AX.archiveHref(axis))
+          + chip(fullA + 'の展覧会アーカイブ', AX.archiveHref(axis))
         /* エリアの軸ページからは親県への戻り道を先頭に置く。エリアは県の内訳なので、もっと広く見たいときの
            行き先が県で確定する（交差ページで「軸を1つ落とした先」を必ず出すのと同じ発想）。 */
         : (par ? chip(fullOf(par) + 'のすべての展覧会', '?ax=' + par) : '')
-          + chip(full + 'のギャラリー', './kotennavi-p10-7.html', 0, 0, ' data-guest="login"')
-          + chip(full + 'の展覧会アーカイブ', AX.archiveHref(axis));
+          /* 着地は索引（P10-7）ではなく検索（P10-3）の絞り込み状態。索引は「どの分類で降りるか」を
+             選ぶ入口で、ここは既に場所という分類が決まっているため、もう一度分類を選ばせない
+             （2026-09-12・索引のチップが検索へ着地するのと同じ向き）。
+             エリア軸（東京都心部…）は親県へ寄せる＝検索が持つ場所の粒度は都道府県までなので、
+             ラベルも親県名にして「東京都心部で絞った結果」と誤読されないようにする。 */
+          + chip(fullOf(par || axis) + 'のギャラリー',
+              './kotennavi-p10-3.html?f=' + encodeURIComponent('area:' + AX.searchArea(axis)), 0, 0, ' data-guest="login"')
+          + chip(fullA + 'の展覧会アーカイブ', AX.archiveHref(axis));
     }
-    if (elArcTtl) elArcTtl.textContent = full + 'の展覧会アーカイブ';
+    if (elArcTtl) elArcTtl.textContent = fullA + 'の展覧会アーカイブ';
     if (elArcCard) elArcCard.href = AX.archiveHref(axis);
     if (elArcDesc) elArcDesc.textContent = full + 'で会期を終えた展覧会の記録です。会期は終わっていますが、出品したクリエイターとギャラリーはいまも活動しています。';
     syncBc(full);
@@ -18277,7 +20944,7 @@ KTN.pages['p10-4-1'] = function () {
     /* 交差ページは「昇格したか＝固定URLを発行したか」が画面から見えないと運営が判断できないので、
        admin にだけ状態を出す。利用者には昇格・未昇格の区別を見せない（どちらも同じページとして使える）。 */
     note.textContent = !X
-      ? '管理者：この導入文は軸ごとに編集できます。軸ページ自体の公開/非公開は切り替えず、ハブへの掲載だけで露出を調整します。'
+      ? '管理者：この導入文はエリアごとに編集できます。このページ自体の公開/非公開は切り替えず、索引ページへの掲載だけで露出を調整します。'
       : promoted()
         ? '管理者：この組み合わせは昇格済みです。/exhibitions/' + axis + '/' + X.path + ' を固定URLとして発行し、検索エンジンに載せています。一度発行したURLは件数が減っても取り下げません。'
         : '管理者：この組み合わせはまだ昇格していません。ページは表示できますが固定URLは発行せず、検索エンジンには出していません（掲載が続けば自動で昇格します）。';
@@ -18296,6 +20963,7 @@ KTN.pages['p10-4-1'] = function () {
     if (!AX.has(slug)) slug = 'tokyo';
     axis = slug;
     X = crossOf(g, a);
+    page = 1;   /* 軸・第2軸が変わったら1ページ目へ戻す（P10検索と同じ挙動） */
     syncHead();
     renderList();
     renderFill();
@@ -18314,7 +20982,7 @@ KTN.pages['p10-4-1'] = function () {
     apply(slug, null, null);
   };
 
-  if (elSort) elSort.addEventListener('change', renderList);
+  if (elSort) elSort.addEventListener('change', function () { page = 1; renderList(); });
 
   var qs = new URLSearchParams(location.search), q = qs.get('ax');
   if (q && AX.has(q)) {
@@ -18326,7 +20994,7 @@ KTN.pages['p10-4-1'] = function () {
 };
 
 /* ════════════════════════════════════════════════════
-   P10-4-2  特集-展覧会-年鑑（年間の記録／年ごとの独立URL）
+   P10-4-2  特集-展覧会-年間ランキング（年ごとの独立URL）
 
    もとは P10-4 の下段セクションで、年の切替が select（クライアント状態）だった。
    その形だと 2026年と2025年が同じURLに同居し、クローラからは既定年しか見えない＝
@@ -18358,12 +21026,15 @@ KTN.pages['p10-4-2'] = function () {
   function leadOf(y) { return KTN.axis.leadOf('year', y); }
 
   function syncHead() {
-    var t = year + '年の展覧会 年間の記録｜個展なび';
+    /* 「年間の記録」から「展覧会ランキング」へ改称（追174-83）。中身はもともと
+       興味あり！／チェックインで並べた番付なので、名前を中身に合わせた。
+       P10-5-1／P10-6-1／P10-7-1 と同じ〈{年}年の{種別}ランキング〉の形。 */
+    var t = year + '年の展覧会ランキング｜個展なび';
     document.title = t;
-    if (elTitle) elTitle.textContent = year + '年の展覧会';
-    if (elEn)    elEn.textContent = 'Exhibitions of ' + year;
+    if (elTitle) elTitle.textContent = year + '年の展覧会ランキング';
+    if (elEn)    elEn.textContent = 'Exhibition Ranking ' + year;
     if (elLead)  elLead.innerHTML = leadOf(year);
-    setMeta('p1042Desc', 'content', year + '年に会期を終えた展覧会の記録です。行きたい・行った の反応が多かった展覧会と、いまも活動しているクリエイター・ギャラリーをたどれます。');
+    setMeta('p1042Desc', 'content', year + '年の展覧会ランキングです。その年に会期を終えた展覧会を、興味あり！とチェックインが多かった順に並べています。出品したクリエイター・ギャラリーのいまの活動もたどれます。');
     setMeta('p1042Canonical', 'href', 'https://koten-navi.com/exhibitions/year/' + year);
     setMeta('p1042OgTitle', 'content', t);
     setMeta('p1042OgUrl', 'href', 'https://koten-navi.com/exhibitions/year/' + year);
@@ -18382,12 +21053,12 @@ KTN.pages['p10-4-2'] = function () {
       elPrev.hidden = !has;
       if (has) {
         elPrev.href = '?y=' + (year - 1);
-        if (elPrevT) elPrevT.textContent = (year - 1) + '年の展覧会';
+        if (elPrevT) elPrevT.textContent = (year - 1) + '年の展覧会ランキング';
       }
     }
 
     /* パンくず末尾＝年（PAGES は common.js のトップレベルなのでここから書き換えられる） */
-    if (typeof PAGES !== 'undefined' && PAGES['p10-4-2']) PAGES['p10-4-2'].bc[3][0] = year + '年の展覧会';
+    if (typeof PAGES !== 'undefined' && PAGES['p10-4-2']) PAGES['p10-4-2'].bc[2][0] = year + '年のランキング';
   }
 
   function renderList() {
@@ -18410,7 +21081,7 @@ KTN.pages['p10-4-2'] = function () {
     if (isAdmin && !note) {
       var s = document.createElement('span');
       s.className = 'ktn-axis-head__lead-note';
-      s.textContent = '管理者：この年の導入文は編集できます。年鑑は年が終わると内容が固定されるため、公開後にURLを変更したり非公開にしたりしません。';
+      s.textContent = '管理者：この年の導入文は編集できます。年間ランキングは年が終わると内容が固定されるため、公開後にURLを変更したり非公開にしたりしません。';
       elLead.appendChild(s);
     } else if (!isAdmin && note) {
       note.remove();
@@ -18419,7 +21090,7 @@ KTN.pages['p10-4-2'] = function () {
 
   var _baseRender = window.ktnRender;
   window.ktnRender = function () {
-    if (typeof PAGES !== 'undefined' && PAGES['p10-4-2']) PAGES['p10-4-2'].bc[3][0] = year + '年の展覧会';
+    if (typeof PAGES !== 'undefined' && PAGES['p10-4-2']) PAGES['p10-4-2'].bc[2][0] = year + '年のランキング';
     if (typeof _baseRender === 'function') _baseRender();
     syncRole();
   };
@@ -18522,27 +21193,34 @@ KTN.pages['p10-4-3'] = function () {
      アーカイブが0件でもページは残す（会期が終わるたびに中身が増える器なので、
      今日0件でも来月には入る＝URLを消すと積み上がらない）。 */
   var FILL_MIN = 3;
+  var FILL_ROW_EX  = 4;  /* 展覧会カード1行分（.p10-shelf-grid の4列・追174-106と同じ基準） */
+  var FILL_ROW_PPL = 3;  /* 人物カード1行分（.ktn-axis-fill-cards は flex-basis:300px で3枚） */
   function renderFill() {
     var full = fullOf(axis), block = AX.blockOf(axis), par = AX.parentOf(axis);
+    var fullA = AX.fullAlias(axis);   /* 見出し・ボタンは通称込み（追174-93 改訂） */
     var arc = AX.byPref(axis, true);
     if (arc.length >= FILL_MIN) { elFill.hidden = true; if (elEmpty) elEmpty.hidden = true; return; }
 
     var blocks = [];
     /* ① 同一場所でいま開催中（アーカイブに来た人が次に行けるのは現在の展覧会） */
-    var cur = AX.byPref(axis, false);
-    if (cur.length) blocks.push({
-      ttl: full + 'で開催中・開催予定の展覧会',
+    var curAll = AX.byPref(axis, false);
+    if (curAll.length) blocks.push({
+      ttl: fullA + 'で開催中・開催予定の展覧会',
       why: 'いま会場で見られる展覧会です。記録ではなく、これから記録になるもの。',
-      body: grid(cur.slice().sort(SORTS.end))
+      body: grid(curAll.slice().sort(SORTS.end).slice(0, FILL_ROW_EX)),
+      more: curAll.length > FILL_ROW_EX ? { label: fullA + 'の展覧会をすべて見る', href: './kotennavi-p10-4-1.html?ax=' + axis } : null
     });
     /* ② 同一場所のギャラリー（場所で絞れるのはギャラリーだけ＝追174-50） */
-    var gal = AX.galleryOf(axis);
-    if (gal.length) blocks.push({
-      ttl: full + 'のギャラリー',
+    var galAll = AX.galleryOf(axis);
+    if (galAll.length) blocks.push({
+      ttl: fullA + 'のギャラリー',
       why: 'このエリアに会場を持つギャラリーです。過去の展示はギャラリーのページにも残っています。',
-      body: '<div class="ktn-axis-fill-cards">' + gal.map(function (p) {
-        return buildPersonCard(Object.assign({ panel: 1 }, p));
-      }).join('') + '</div>'
+      body: '<div class="ktn-axis-fill-cards">' + galAll.slice(0, FILL_ROW_PPL).map(function (p) {
+        return buildPersonCard(Object.assign({ panel: false }, p));
+      }).join('') + '</div>',
+      more: galAll.length > FILL_ROW_PPL
+        ? { label: fullOf(par || axis) + 'のギャラリーをすべて見る', href: './kotennavi-p10-3.html?f=' + encodeURIComponent('area:' + AX.searchArea(axis)), guest: true }
+        : null
     });
     /* ③ 街なら親県のアーカイブ、県なら同じ地方ブロックのアーカイブ（P10-4-1 と同じ寄せ方） */
     var nb;
@@ -18551,7 +21229,8 @@ KTN.pages['p10-4-3'] = function () {
       if (nb.length) blocks.push({
         ttl: fullOf(par) + 'の展覧会アーカイブ',
         why: full + 'と同じ' + fullOf(par) + 'で会期を終えた展覧会です。',
-        body: grid(nb.slice().sort(SORTS.last))
+        body: grid(nb.slice().sort(SORTS.last).slice(0, FILL_ROW_EX)),
+        more: nb.length > FILL_ROW_EX ? { label: fullOf(par) + 'の展覧会アーカイブをすべて見る', href: AX.archiveHref(par) } : null
       });
     } else {
       nb = AX.EX.filter(function (x) {
@@ -18560,30 +21239,49 @@ KTN.pages['p10-4-3'] = function () {
       if (nb.length) blocks.push({
         ttl: block + 'の展覧会アーカイブ',
         why: full + 'と同じ' + block + 'のエリアで会期を終えた展覧会です。',
-        body: grid(nb.slice().sort(SORTS.last))
+        body: grid(nb.slice().sort(SORTS.last).slice(0, FILL_ROW_EX))
+        /* 「地方ブロック」で絞る手段が検索側に無いため、この分岐だけ逃がし場を持たない
+           （P10-4-1 の③と同じ理由・2026-09-22） */
       });
     }
     /* ④ 全国（③まででも足りないとき） */
+    var natShown = false;
     if (!nb.length) {
-      var nat = AX.EX.filter(function (x) { return x.status === 'ended' && x.pref !== (par || axis); })
-        .sort(SORTS.last).slice(0, 3);
-      if (nat.length) blocks.push({
-        ttl: '全国の展覧会アーカイブ',
-        why: '近いエリアに記録がまだ無いため、全国から直近で会期を終えた展覧会を表示しています。',
-        body: grid(nat)
-      });
+      var natAll = AX.EX.filter(function (x) { return x.status === 'ended' && x.pref !== (par || axis); })
+        .sort(SORTS.last);
+      var nat = natAll.slice(0, FILL_ROW_EX);
+      if (nat.length) {
+        natShown = true;
+        blocks.push({
+          ttl: '全国の展覧会アーカイブ',
+          why: '近いエリアに記録がまだ無いため、全国から直近で会期を終えた展覧会を表示しています。',
+          body: grid(nat),
+          /* 検索は既定で終了展を対象外にするため、全国アーカイブの逃がし先は年間ランキング
+             （ランキングは終了済み展覧会を対象にした恒久ページ・追174-106と同じ考え方） */
+          more: natAll.length > FILL_ROW_EX ? { label: '全国の展覧会年間ランキングを見る', href: './kotennavi-p10-4-2.html' } : null
+        });
+      }
     }
 
-    elFillTtl.textContent = arc.length ? full + 'とあわせて見る' : full + 'から見られるもの';
-    elFillDsc.textContent = full + 'に関わるページと、近いエリアの記録です。';
+    elFillTtl.textContent = 'ほかに見られるもの';
+    /* 要約文は実際に出ているブロックだけを言う（追174-127と同じ是正・2026-09-22） */
+    (function () {
+      var parts = [];
+      if (curAll.length || galAll.length) parts.push(fullA + 'に関わるページ');
+      if (nb.length) parts.push('近いエリアの記録');
+      else if (natShown) parts.push('全国の記録');
+      elFillDsc.textContent = parts.length ? parts.join('と、') + 'です。' : '';
+      elFillDsc.hidden = !parts.length;
+    })();
     elFillBlk.innerHTML = AX.fillHtml(blocks);
     elFill.hidden = false;
+
 
     if (elEmpty) {
       if (arc.length) { elEmpty.hidden = true; }
       else {
         elEmpty.textContent = full + 'では、個展なびに掲載したあとに会期を終えた展覧会がまだありません。'
-          + (cur.length ? 'いま開催中の展覧会が終われば、この記録に加わります。' : '掲載された展覧会が会期を終えると、この記録に加わります。');
+          + (curAll.length ? 'いま開催中の展覧会が終われば、この記録に加わります。' : '掲載された展覧会が会期を終えると、この記録に加わります。');
         elEmpty.hidden = false;
       }
     }
@@ -18619,12 +21317,14 @@ KTN.pages['p10-4-3'] = function () {
 
   function syncHead() {
     var full = fullOf(axis), en = enName(axis), par = AX.parentOf(axis);
+    /* 通称込みの表示名。軸ページと同じ理由で h1・title・description に使う（追174-93 改訂）。 */
+    var fullA = AX.fullAlias(axis);
     var url = 'https://koten-navi.com/exhibitions/' + axis + '/archive';
-    var title = full + 'の展覧会アーカイブ 過去の開催記録｜個展なび';
+    var title = fullA + 'の展覧会アーカイブ 過去の開催記録｜個展なび';
     document.title = title;
-    if (elTitle) elTitle.textContent = full + 'の展覧会アーカイブ';
+    if (elTitle) elTitle.textContent = fullA + 'の展覧会アーカイブ';
     if (elEn) elEn.textContent = 'Past Exhibitions in ' + en;
-    setMeta('p1043Desc', 'content', full + AX.prefNote(axis)
+    setMeta('p1043Desc', 'content', fullA + AX.prefNote(axis)
       + 'でこれまでに開催された展覧会・個展の記録です。会期を終えた展示を、会場別・ジャンル別にさかのぼって見られます。');
     /* 自己参照 canonical。親（軸ページ）へ寄せると、この記録の層が検索結果から消える（追174-46②） */
     setMeta('p1043Canonical', 'href', url);
@@ -18633,15 +21333,17 @@ KTN.pages['p10-4-3'] = function () {
     if (elLead) elLead.innerHTML = leadOf(axis);
     if (elLinks) {
       elLinks.innerHTML =
-          chip(full + 'で開催中の展覧会', AX.href(axis))
+          chip(fullA + 'で開催中の展覧会', AX.href(axis))
         + (par ? chip(fullOf(par) + 'の展覧会アーカイブ', AX.archiveHref(par)) : '')
-        + chip(full + 'のギャラリー', './kotennavi-p10-7.html', 0, 0, ' data-guest="login"')
-        /* 年鑑チップだけ「全国」と名乗る＝両隣が「東京都の…」なので、素の『年間の記録』だと
-           このエリアの年間記録と読まれる（軸で絞らない全国の記録・2026-09-08） */
-        + chip('全国の展覧会 年間の記録', './kotennavi-p10-4-2.html');
+        /* 着地は索引（P10-7）ではなく検索（P10-3）の絞り込み状態・エリア軸は親県へ寄せる（P10-4-1 と同じ） */
+        + chip(fullOf(par || axis) + 'のギャラリー',
+            './kotennavi-p10-3.html?f=' + encodeURIComponent('area:' + AX.searchArea(axis)), 0, 0, ' data-guest="login"')
+        /* 年間ランキングのチップだけ「全国」と名乗る＝両隣が「東京都の…」なので、素の『展覧会ランキング』だと
+           このエリアのランキングと読まれる（実際は軸で絞らない全国が対象・2026-09-08） */
+        + chip('全国の展覧会 年間ランキング', './kotennavi-p10-4-2.html');
     }
     if (elLiveCard) elLiveCard.href = AX.href(axis);
-    if (elLiveTtl) elLiveTtl.textContent = full + 'の展覧会';
+    if (elLiveTtl) elLiveTtl.textContent = fullA + 'の展覧会';
     if (elLiveDesc) elLiveDesc.textContent = full + 'でいま開催中・開催予定の展覧会。会期が終わったものはこのアーカイブに移ります。';
     syncBc(full);
   }
@@ -18653,7 +21355,7 @@ KTN.pages['p10-4-3'] = function () {
     if (isAdmin && !note) {
       var el = document.createElement('span');
       el.className = 'ktn-axis-head__lead-note';
-      el.textContent = '管理者：この導入文は軸ごとに編集できます。アーカイブは会期終了で自動的に積み上がる層なので、掲載の取り下げは行いません。';
+      el.textContent = '管理者：この導入文はエリアごとに編集できます。アーカイブは会期終了で自動的に積み上がるので、掲載の取り下げは行いません。';
       elLead.appendChild(el);
     } else if (!isAdmin && note) {
       note.remove();
@@ -18741,8 +21443,10 @@ KTN.pages['p10-4-4'] = function () {
 
   var gn = AX.genre('art');
 
-  function chip(label, href, on, mod) {
-    return '<a class="p10-preset' + (mod ? ' ' + mod : '') + (on ? ' is-on' : '') + '" href="' + href + '">' + label + '</a>';
+  /* att＝追加属性（data-guest="login" 等）。ログイン限定ページへ送るチップに付ける
+     ＝ゲストには共通の導線制御が効く（P10-4-1／P10-4-3 の chip と同じ形にそろえた） */
+  function chip(label, href, on, mod, att) {
+    return '<a class="p10-preset' + (mod ? ' ' + mod : '') + (on ? ' is-on' : '') + '"' + (att || '') + ' href="' + href + '">' + label + '</a>';
   }
 
   function renderList() {
@@ -18755,52 +21459,62 @@ KTN.pages['p10-4-4'] = function () {
 
   /* ── 補完（0件・少件数）。場所軸と同じ規約（追174-46⑤）だが、ジャンル軸には
      「同じ地方ブロック」に当たる近さの概念が無いので、②を〈同ジャンルのアーカイブ〉、
-     ③を〈近い性格の他ジャンル〉に置き換える。 */
+     ③を〈人気のあるジャンル〉に置き換える。 */
   var FILL_MIN = 4;
-  /* 近さは6区分どうしの関係で持つ（「その他」は中身が雑多で近さを名乗れないので入れない）。
-     技法（絵画・版画・陶芸…）はジャンルではなくタグなのでここには来ない（追174-76）。 */
-  var NEIGHBOR = {
-    art:     ['photo', 'craft'],
-    photo:   ['art', 'arch'],
-    craft:   ['art', 'fashion'],
-    arch:    ['photo', 'craft'],
-    fashion: ['craft', 'art']
-  };
+  var FILL_ROW_EX = 4;  /* 展覧会カード1行分（.p10-shelf-grid の4列と同じ・追174-106と同じ基準） */
+  /* 「近いジャンル」は撤去（2026-09-22 ユーザー指摘）＝技法・見え方の近さに客観的な基準が無く、
+     NEIGHBORマップは恣意的だった。代わりに最も母数の多い「アート」を固定で出す＝
+     「必ず何か見つかる」前提が成立する唯一のジャンル。今見ているジャンル自身がアートの
+     ときだけ次点の「写真」に差し替える（自己参照を避ける）。 */
+  function popularGenre() { return gn.slug === 'art' ? AX.genre('photo') : AX.genre('art'); }
   function renderFill() {
     var cur = AX.byGenre(gn.name, false);
     if (cur.length >= FILL_MIN) { elFill.hidden = true; if (elEmpty) elEmpty.hidden = true; return; }
 
     var blocks = [];
     /* ① 同ジャンルのアーカイブ */
-    var arc = AX.byGenre(gn.name, true);
-    if (arc.length) blocks.push({
+    var arcAll = AX.byGenre(gn.name, true);
+    if (arcAll.length) blocks.push({
       ttl: gn.name + 'で会期を終えた展覧会',
       why: '会期は終わっていますが、出品したクリエイターとギャラリーはいまも活動しています。',
-      body: grid(arc.slice().sort(SORTS.last))
+      body: grid(arcAll.slice().sort(SORTS.last).slice(0, FILL_ROW_EX)),
+      more: arcAll.length > FILL_ROW_EX ? { label: gn.name + 'の展覧会アーカイブをすべて見る', href: AX.genreHref(gn.slug) } : null
     });
-    /* ② 近い性格の他ジャンル */
-    var near = (NEIGHBOR[gn.slug] || []).map(AX.genre).filter(Boolean);
-    var nb = AX.EX.filter(function (x) {
-      return x.status !== 'ended' && near.some(function (g) { return g.name === x.genre; });
-    });
-    if (nb.length) blocks.push({
-      ttl: near.map(function (g) { return g.name; }).join('・') + 'の展覧会',
-      why: gn.name + 'と技法や見え方が近いジャンルです。' + near.map(function (g) { return g.name; }).join('・') + 'から探すこともできます。',
-      body: grid(nb.slice().sort(SORTS.end))
+    /* ② 人気のあるジャンル（固定・NEIGHBOR撤去） */
+    var pg = popularGenre();
+    var nbAll = pg ? AX.EX.filter(function (x) { return x.status !== 'ended' && x.genre === pg.name; }) : [];
+    if (nbAll.length) blocks.push({
+      ttl: pg.name + 'の展覧会',
+      why: '人気のあるジャンルです。' + pg.name + 'から探すこともできます。',
+      body: grid(nbAll.slice().sort(SORTS.end).slice(0, FILL_ROW_EX)),
+      more: nbAll.length > FILL_ROW_EX ? { label: pg.name + 'の展覧会を検索する', href: AX.genreHref(pg.slug) } : null
     });
     /* ③ 全国（②まででも足りないとき） */
-    if (!nb.length) {
-      var nat = AX.EX.filter(function (x) { return x.status !== 'ended' && x.genre !== gn.name; })
-        .sort(SORTS.pop).slice(0, 3);
-      if (nat.length) blocks.push({
-        ttl: '全国の展覧会',
-        why: '近いジャンルにも会期中の展覧会がないため、全国から反応の多いものを表示しています。',
-        body: grid(nat)
-      });
+    var natShown = false;
+    if (!nbAll.length) {
+      var natAll = AX.EX.filter(function (x) { return x.status !== 'ended' && x.genre !== gn.name; }).sort(SORTS.pop);
+      var nat = natAll.slice(0, FILL_ROW_EX);
+      if (nat.length) {
+        natShown = true;
+        blocks.push({
+          ttl: '全国の展覧会',
+          why: '人気のあるジャンルにも会期中の展覧会がないため、全国から人気の高いものを表示しています。',
+          body: grid(nat),
+          more: natAll.length > FILL_ROW_EX ? { label: '全国の展覧会を検索する', href: './kotennavi-p10.html' } : null
+        });
+      }
     }
 
-    elFillTtl.textContent = cur.length ? gn.name + 'とあわせて見る' : gn.name + 'から見られるもの';
-    elFillDsc.textContent = gn.name + 'に関わるページと、近いジャンルで開催中の展覧会です。';
+    elFillTtl.textContent = 'ほかに見られるもの';
+    /* 見出し直下の要約文は実際に出ているブロックだけを言う（2026-09-22 ユーザー指摘）。
+       ファッション（掲載0件）のように①同ジャンルのアーカイブが無いジャンルでは、
+       固定文言「{ジャンル名}に関わるページと〜」が実在しないページを指してしまっていた。 */
+    var descParts = [];
+    if (arcAll.length) descParts.push(gn.name + 'に関わるページ');
+    if (nbAll.length) descParts.push('人気のあるジャンルで開催中の展覧会');
+    else if (natShown) descParts.push('全国で人気の高い展覧会');
+    elFillDsc.textContent = descParts.length ? descParts.join('と、') + 'です。' : '';
+    elFillDsc.hidden = !descParts.length;
     elFillBlk.innerHTML = AX.fillHtml(blocks);
     elFill.hidden = false;
 
@@ -18808,8 +21522,8 @@ KTN.pages['p10-4-4'] = function () {
       if (cur.length) { elEmpty.hidden = true; }
       else {
         elEmpty.textContent = gn.name + 'では現在、開催中・開催予定の展覧会がありません。'
-          + (arc.length ? '直近で会期を終えた' + gn.name + 'の展覧会と、近いジャンルで開催中の展覧会をご覧いただけます。'
-                        : '近いジャンルで開催中の展覧会をご覧いただけます。');
+          + (arcAll.length ? '直近で会期を終えた' + gn.name + 'の展覧会と、人気のあるジャンルで開催中の展覧会をご覧いただけます。'
+                           : '人気のあるジャンルで開催中の展覧会をご覧いただけます。');
         elEmpty.hidden = false;
       }
     }
@@ -18874,8 +21588,13 @@ KTN.pages['p10-4-4'] = function () {
         /* 出すのは〈このジャンル × エンティティ〉だけ。旧「エリアから探す」チップは2026-09-09に削除＝
            一覧直上の「エリアで絞る」バーと下段Dの47県グリッドが同じ行き先をすぐ下に持っており、
            押しても結局スクロールで届く位置の重複だったため（P10-4-1 と同じ判断） */
-          chip(gn.name + 'のクリエイター', './kotennavi-p10-6.html')
-        + chip(gn.name + 'の作品', './kotennavi-p10-5.html');
+        /* 着地は索引（P10-6／P10-5）ではなく検索の絞り込み状態。ここは既にジャンルが決まっている
+           ので、もう一度分類を選ばせない（P10-4-1 の「◯◯のギャラリー」と同じ向き・2026-09-12）。
+           渡す値はサイト正式の6区分＝登録フォームと同じ語彙で、検索側の `genre` キーが受ける。
+           技法名タグ（絵画・版画…）に展開して渡さない＝建築・ファッションのように技法名を
+           持たないジャンルが素通り（＝絞り込み無し）になるため（追174-76）。 */
+          chip(gn.name + 'のクリエイター', './kotennavi-p10-2.html?f=' + encodeURIComponent('genre:' + gn.name), 0, 0, ' data-guest="login"')
+        + chip(gn.name + 'の作品', './kotennavi-p10-1.html?f=' + encodeURIComponent('genre:' + gn.name), 0, 0, ' data-guest="login"');
     }
     syncBc();
   }
@@ -18887,7 +21606,7 @@ KTN.pages['p10-4-4'] = function () {
     if (isAdmin && !note) {
       var el = document.createElement('span');
       el.className = 'ktn-axis-head__lead-note';
-      el.textContent = '管理者：この導入文はジャンルごとに編集できます。軸ページ自体の公開/非公開は切り替えず、ハブへの掲載だけで露出を調整します。';
+      el.textContent = '管理者：この導入文はジャンルごとに編集できます。このページ自体の公開/非公開は切り替えず、索引ページへの掲載だけで露出を調整します。';
       elLead.appendChild(el);
     } else if (!isAdmin && note) {
       note.remove();
@@ -18995,6 +21714,7 @@ KTN.pages['p10-4-5'] = function () {
      この軸には「近いジャンル」に当たる隣接が無いので、②はもう一方の行きやすさ軸を出す。
      どちらも「行けるかどうか」で探している人なので、条件を横に移す提案として成立する。 */
   var FILL_MIN = 4;
+  var FILL_ROW_EX = 4;  /* 展覧会カード1行分（.p10-shelf-grid の4列・追174-106と同じ基準） */
   var OTHER = { 'with-children': 'artist-present', 'artist-present': 'with-children' };
   var OTHER_WHY = {
     'with-children': 'お子さまとご一緒にご来場いただける展覧会です。',
@@ -19006,40 +21726,58 @@ KTN.pages['p10-4-5'] = function () {
 
     var blocks = [];
     /* ① 同じ条件で会期を終えたもの */
-    var arc = AX.byAccess(ac.slug, true);
-    if (arc.length) blocks.push({
+    var arcAll = AX.byAccess(ac.slug, true);
+    if (arcAll.length) blocks.push({
       ttl: ac.ttl + 'の記録',
       why: '会期は終わっていますが、出品したクリエイターとギャラリーはいまも活動しています。',
-      body: grid(arc.slice().sort(SORTS.last))
+      body: grid(arcAll.slice().sort(SORTS.last).slice(0, FILL_ROW_EX))
+      /* 行きやすさ条件の記録だけを集めた専用アーカイブページが無いため、この分岐は逃がし場を
+         持たない（地方ブロックと同じ理由・2026-09-22） */
     });
     /* ② もう一方の行きやすさ軸 */
     var oth = AX.access(OTHER[ac.slug]);
-    var ob = oth ? AX.byAccess(oth.slug, false) : [];
-    if (ob.length) blocks.push({
+    var obAll = oth ? AX.byAccess(oth.slug, false) : [];
+    if (obAll.length) blocks.push({
       ttl: oth.ttl,
       why: OTHER_WHY[oth.slug] || '',
-      body: grid(ob.slice().sort(SORTS.end))
+      body: grid(obAll.slice().sort(SORTS.end).slice(0, FILL_ROW_EX)),
+      more: obAll.length > FILL_ROW_EX ? { label: oth.ttl + 'をすべて見る', href: AX.accessHref(oth.slug) } : null
     });
     /* ③ 全国（②まででも足りないとき） */
-    if (!ob.length) {
-      var nat = AX.EX.filter(function (x) { return x.status !== 'ended'; }).sort(SORTS.pop).slice(0, 3);
-      if (nat.length) blocks.push({
-        ttl: '全国の展覧会',
-        why: 'いまはこの条件で会期中のものが少ないため、全国から反応の多い展覧会を表示しています。',
-        body: grid(nat)
-      });
+    var natShown = false;
+    if (!obAll.length) {
+      var natAll = AX.EX.filter(function (x) { return x.status !== 'ended'; }).sort(SORTS.pop);
+      var nat = natAll.slice(0, FILL_ROW_EX);
+      if (nat.length) {
+        natShown = true;
+        blocks.push({
+          ttl: '全国の展覧会',
+          why: 'いまはこの条件で会期中のものが少ないため、全国から人気の高い展覧会を表示しています。',
+          body: grid(nat),
+          more: natAll.length > FILL_ROW_EX ? { label: '全国の展覧会を検索する', href: './kotennavi-p10.html' } : null
+        });
+      }
     }
 
-    elFillTtl.textContent = cur.length ? ac.ttl + 'とあわせて見る' : 'ほかに見られるもの';
-    elFillDsc.textContent = 'この条件に近い展覧会と、会期を終えた記録です。';
+    elFillTtl.textContent = 'ほかに見られるもの';
+    /* 要約文は実際に出ているブロックだけを言う（追174-127と同じ是正・2026-09-22） */
+    (function () {
+      var parts = [];
+      if (obAll.length) parts.push('この条件に近い展覧会');
+      else if (natShown) parts.push('全国の展覧会');
+      if (arcAll.length) parts.push('会期を終えた記録');
+      elFillDsc.textContent = parts.length ? parts.join('と、') + 'です。' : '';
+      elFillDsc.hidden = !parts.length;
+    })();
     elFillBlk.innerHTML = AX.fillHtml(blocks);
+
     elFill.hidden = false;
 
     if (elEmpty) {
       if (cur.length) { elEmpty.hidden = true; }
       else {
         elEmpty.textContent = '現在、開催中・開催予定の' + ac.ttl + 'はありません。'
-          + (arc.length ? '直近で会期を終えたものと、近い条件で開催中の展覧会をご覧いただけます。'
+          + (arcAll.length ? '直近で会期を終えたものと、近い条件で開催中の展覧会をご覧いただけます。'
                         : '近い条件で開催中の展覧会をご覧いただけます。');
         elEmpty.hidden = false;
       }
@@ -19120,7 +21858,7 @@ KTN.pages['p10-4-5'] = function () {
     if (isAdmin && !note) {
       var el = document.createElement('span');
       el.className = 'ktn-axis-head__lead-note';
-      el.textContent = '管理者：この軸の母数は展覧会側の入力（お子さま連れ・クリエイター在廊）です。件数が伸びないときはページを直すより、主催者向けの未入力リマインドで母数を増やします。';
+      el.textContent = '管理者：このページの母数は展覧会側の入力（お子さま連れ・クリエイター在廊）です。件数が伸びないときはページを直すより、主催者向けの未入力リマインドで母数を増やします。';
       elLead.appendChild(el);
     } else if (!isAdmin && note) {
       note.remove();
@@ -19167,7 +21905,7 @@ KTN.pages['p10-4-5'] = function () {
 /* ════════════════════════════════════════════════════
    P1  個展なびトップ
    P1＝時間軸・パーソナルフィード＋入口（プレビュー棚＋P10送客）。
-   棚はP10（もうすぐ終了/近く/Liaison/特集/おすすめ/新着掲載）と重複させない。
+   棚はP10（もうすぐ終了/近く/Liaison/ピックアップ/おすすめ/新着掲載）と重複させない。
 ════════════════════════════════════════════════════ */
 KTN.pages['p1'] = function () {
   document.body.classList.add('p1-page');
@@ -19415,7 +22153,7 @@ KTN.pages['p1'] = function () {
        1クラスタ＝展覧会1件（主役）＋その展覧会に紐づく周辺コンテンツ。POOL の exh をそのまま逆引き
        して周辺を集めるので、データ構造は案1と共有できる。トレードオフ＝「中心と周辺」の読みは強いが、
        1画面に出せる展覧会は3件（案1は6件）。
-       描画本体・抽選・リード文は共通ビルダ KTN.cl（P10系 検索結果 Featured と共用）へ移設済み。 */
+       描画本体・抽選・リード文は共通ビルダ KTN.cl（P10系 検索結果の注目 Highlights と共用）へ移設済み。 */
     var CL_NOTE = KTN.cl.NOTE;
     function shuffle(a) { return KTN.cl.shuffle(a, rnd); }
     /* 核が展覧会なので、周辺から同じ展覧会自身（POOL.exhibition の同名データ）を外す */
