@@ -103,7 +103,7 @@ docs/                     仕様・設計ドキュメント
 | 変数 | 初期値 | 用途 |
 |---|---|---|
 | `--hh` | `50px` | ktn-header の高さ。**`_syncHH()` が実測値に上書きする** |
-| `--dh` | `34px` | dbar（デモバー）の高さ。本番環境では `0` に変更 |
+| `--dh` | `34px` | dbar（デモバー）の高さ。**`syncDH()` が実測値に上書きし、デモバーが無い／非表示なら `0`**（本番で手動変更は不要・2026-09-26） |
 
 - **`--hh` は動的**: `KTN.init` 内の `_syncHH()` が `ktnHeader.getBoundingClientRect().height` を計測し `--hh` を上書き
   - タイミング：`requestAnimationFrame` (ヘッダーレンダリング直後) + `resize` イベント
@@ -848,6 +848,7 @@ z-index: 90;
   - ライトパネルの SVG は **必ず `opacity=".3"` + `class="wi-inner"`**（`.45` / `wi-dark` はダーク専用）。`<use href=… color=…>` は CSS を上書きするため禁止
   - check-in は `openCheckinModal()`、CTAピルの interest は id `p{ページID}InterestBtn`
   - Auth modal は `common.js` の `_inject()` が自動注入（各HTMLへの記述不要）
+  - **ゲストが押した操作はログイン／新規登録後に元のページで自動実行される**（2026-09-26・旧P11-24廃止の代案）。`KTN.action.show(action)` が直前に押したボタンを覚え、戻った先の `KTN.init` が押し直す。**ゲストにログインを促すときは必ず `KTN.action.show` を使う**（独自モーダルや直接 P11 へ遷移させると、この自動実行が効かない）。詳細は `docs/handoff-decisions.md` 追174-210
   - **完了トーストは共有 `KTN.action.handle` が `ACTION_TOAST`（action→{on,off} 汎用文言）で自動発火する。ページ個別に `KTN.toast(...)` を書かない**（固有名入りトーストも禁止＝共有 handle は対象を判定しないため全パス汎用文言に統一）。ヒーロー等 inline onclick を付けない同期ハンドラは自前で `KTN.toast` を呼ぶが、文言は `ACTION_TOAST` と同一にする。`showToast` は同一メッセージ400ms以内の重複を無視する。ウォッチ同期セレクタ（`[data-action="watch"]`）は関連人物カード（`.cc`/`.gc`/`.uc`）を `.closest()` で除外し、別エンティティのウォッチをページオーナーと同期させない
 
 ---
@@ -915,6 +916,15 @@ on/off の2状態を切り替える汎用トグルスイッチ。canonical は `
 - **適用済み：** p3-14（作品の公開/非公開 `.p314-pub-sw`）／p5-4（コレクションルームの公開/非公開 `.p54-vis-sw`）。ページ側フッククラスは位置調整（`flex-shrink` 等）のみに使い、**見た目のCSSをページ側に再定義しない**。
 - 新規ページはHTMLをコピーするだけでよい（ページ個別CSS不要）。「その場で実行される操作」だが押しボタンではなく**状態の切替**である場合にこれを使う（実行系は `.ktn-op-btn`）。
 - React 変換：`<Switch checked onChange label={{on,off}}>`。
+
+### 全ページ共通：パスワード表示/非表示トグル（`.ktn-pw-wrap` / `.ktn-pw-toggle`）
+
+パスワード入力欄の右端に置く目アイコンの表示切替。canonical は `kotennavi-common.css`（2026-09-26 に `.p512-pw-*` から昇格）、クリック処理は `kotennavi-common.js` の委譲リスナー（ページ個別JS不要）。
+
+- **構造：** `div.ktn-pw-wrap > input.p211-input[type=password][id] ＋ button.ktn-pw-toggle[type=button][data-target=入力id][aria-label="パスワードを表示"][aria-pressed=false] > svg.icon-show ＋ svg.icon-hide`。
+- 押下で `type` を password⇄text に切替え、`.is-visible`・`aria-pressed`・`aria-label`（表示／隠す）を同期。
+- **パスワード欄を置くページは必ずこれを付ける**（適用済み：P11・P11-12・P11-23・P5-12）。
+- React 変換：`<PasswordInput>`（表示トグル内蔵）。
 
 ### 全ページ共通：ページ内目次＋ゾーンヘッダー（`.ktn-index` / `.ktn-zone`）
 

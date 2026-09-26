@@ -14,6 +14,16 @@
 
 <div class="ktn-toast" id="ktnToast"></div>
 
+<!-- デモバー（登録の入口＝完了後の戻り先の4パターン。ページは仮定。後工程への説明用・2026-09-26）
+     パスワードを入れて「設定して登録を完了する」を押すと、パターンごとの完了メッセージと戻り先を確認できる -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">登録の入口：</span>
+  <button class="dbtn" data-demo-entry="watch" onclick="p1123Demo('watch')">ウォッチを押した（作家ページ）</button>
+  <button class="dbtn" data-demo-entry="checkin" onclick="p1123Demo('checkin')">チェックインを押した（展覧会ページ）</button>
+  <button class="dbtn" data-demo-entry="return" onclick="p1123Demo('return')">検索の入口（作品検索へ）</button>
+  <button class="dbtn" data-demo-entry="none" onclick="p1123Demo('none')">サイドバーから（戻り先なし）</button>
+</div>
+
 <div class="shell">
 <aside class="ktn-sidebar" id="ktnSidebar">
   <a href="kotennavi-p1.html" class="ktn-sidebar__logo" data-page="p1">
@@ -84,12 +94,24 @@
 
         <div class="p211-field">
           <label class="p211-label">パスワード<span class="ktn-req">必須</span></label>
-          <input class="p211-input" type="password" id="p1123Pw1" placeholder="8文字以上">
+          <div class="ktn-pw-wrap">
+            <input class="p211-input" type="password" id="p1123Pw1" placeholder="8文字以上">
+            <button class="ktn-pw-toggle" type="button" aria-label="パスワードを表示" aria-pressed="false" data-target="p1123Pw1">
+              <svg class="icon-show" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z"/><circle cx="8" cy="8" r="2"/></svg>
+              <svg class="icon-hide" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z"/><circle cx="8" cy="8" r="2"/><line x1="2" y1="2" x2="14" y2="14"/></svg>
+            </button>
+          </div>
         </div>
 
         <div class="p211-field" style="margin-top:12px">
           <label class="p211-label">パスワード（確認用）<span class="ktn-req">必須</span></label>
-          <input class="p211-input" type="password" id="p1123Pw2" placeholder="もう一度入力してください">
+          <div class="ktn-pw-wrap">
+            <input class="p211-input" type="password" id="p1123Pw2" placeholder="もう一度入力してください">
+            <button class="ktn-pw-toggle" type="button" aria-label="パスワードを表示" aria-pressed="false" data-target="p1123Pw2">
+              <svg class="icon-show" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z"/><circle cx="8" cy="8" r="2"/></svg>
+              <svg class="icon-hide" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z"/><circle cx="8" cy="8" r="2"/><line x1="2" y1="2" x2="14" y2="14"/></svg>
+            </button>
+          </div>
         </div>
 
         <div class="ktn-form-error" id="p1123SaveError" role="alert" hidden style="margin-top:14px">
@@ -101,7 +123,7 @@
         </div>
 
         <div class="ktn-auth-btns">
-          <button class="ktn-auth-btn-primary" onclick="p1123Submit()">設定して次へ →</button>
+          <button class="ktn-auth-btn-primary" onclick="p1123Submit()">設定して登録を完了する</button>
         </div>
 
       </div>
@@ -140,8 +162,53 @@ function p1123Submit() {
     return;
   }
   errBox.hidden = true;
-  location.href = './kotennavi-p11-24.html';
+  /* 新規登録はここで完了（旧P11-24「ウオッチ対象の選択」は2026-09-26廃止）。
+     ポップアップ経由（?return= あり）なら元のページへ戻り、押していた操作（ウォッチ等）を自動で実行する。
+     戻り先が無ければマイページへ（新規ユーザーはゼロ状態＝ウォッチの案内が出る）。 */
+  /* 完了メッセージは戻った先で起きることに合わせる：
+     ・ウォッチ／興味あり！＝戻ると自動で済んでいる ・チェックイン／購入申込＝戻ると続きの画面が開く
+     ・戻り先だけ（ログイン壁・検索ゲート）＝そのページから続けられる ・戻り先なし＝マイページのウォッチ案内へ */
+  var ACT_DONE = { watch: 'ウォッチ', interest: '興味あり！' };
+  var ACT_NEXT = { checkin: 'チェックイン', apply: '購入申込' };
+  var act = KTN.pendingAction();
+  var msg = '個展なびへのご登録が完了しました。<br>';
+  if (ACT_DONE[act])      msg += '元のページに戻ると、先ほどの「' + ACT_DONE[act] + '」が完了した状態になっています。';
+  else if (ACT_NEXT[act]) msg += '元のページに戻り、先ほどの「' + ACT_NEXT[act] + '」の続きから進められます。';
+  /* 戻り先だけのとき、検索ゲート経由は「元のページ」でなく行こうとしていた検索ページへ進むため「元の」と言わない */
+  else if (KTN.hasReturn()) msg += 'ご覧になろうとしていたページで、続きをご利用いただけます。';
+  else msg += 'マイページで、気になるクリエイター・ギャラリーをウォッチしてみましょう。<br>新しい展覧会・作品・記事をメールでお知らせします。';
+  KTN.submitDone({
+    title: 'ご登録ありがとうございます',
+    message: msg,
+    action: KTN.hasReturn()
+      ? { label: (ACT_DONE[act] || ACT_NEXT[act]) ? '元のページへ戻る' : '続きへ進む', href: KTN.returnTo() }
+      : { label: 'マイページへ', href: './kotennavi-p5.html?state=zero' }
+  });
 }
+/* デモバー：登録の入口を再現する。本来はログイン誘導ポップアップ（KTN.action.show → KTN.authUrl）が
+   sessionStorage の保留操作と ?return= を作るが、ここではその状態を直接作ってページを開き直す。 */
+var P1123_DEMO = {
+  watch:   { ret: 'kotennavi-p3.html',    pending: { action: 'watch',   loc: { q: '[data-action="watch"]', i: 0 } } },
+  checkin: { ret: 'kotennavi-p2.html',    pending: { action: 'checkin', loc: { q: '#p2RvBtn', i: 0 } } },
+  return:  { ret: 'kotennavi-p10-1.html', pending: null },
+  none:    { ret: null,                   pending: null }
+};
+function p1123Demo(kind) {
+  var d = P1123_DEMO[kind];
+  try {
+    if (d.pending) sessionStorage.setItem('ktnPendingAction', JSON.stringify({ ret: d.ret, action: d.pending.action, loc: d.pending.loc }));
+    else sessionStorage.removeItem('ktnPendingAction');
+  } catch (e) {}
+  var q = new URLSearchParams();
+  if (d.ret) q.set('return', d.ret);
+  q.set('demo', kind);
+  location.search = '?' + q.toString();
+}
+(function () {
+  var cur = new URLSearchParams(location.search).get('demo') || (KTN.hasReturn() ? '' : 'none');
+  var b = document.querySelector('[data-demo-entry="' + cur + '"]');
+  if (b) b.classList.add('on');
+}());
 KTN.init({ page: 'p11-23', role: 'guest' });
 </script>
 </body>

@@ -187,6 +187,19 @@
       <!-- 左メイン -->
       <div class="p5-main">
 
+        <!-- ゼロ状態のウォッチ案内（新規登録直後など・本人のみ）。旧P11-24「ウオッチ対象の選択」を登録フローから外してここへ移設（2026-09-26） -->
+        <section class="p5-watch-onboard" aria-labelledby="p5WatchOnboardTtl">
+          <div class="ktn-tab-head">
+            <span class="ktn-tab-head__title" id="p5WatchOnboardTtl">ウォッチしてみませんか<span class="ktn-sec-en">Watch</span></span>
+          </div>
+          <p class="p5-watch-onboard__lead">ウォッチしたクリエイター・ギャラリーの新しい展覧会・作品・記事を、メールでお知らせします。気になる名前があればウォッチしてみましょう。あとからいつでも解除できます。</p>
+          <div class="p5-watch-onboard__grid" id="p5WatchOnboardGrid"></div>
+          <div class="p5-watch-onboard__more">
+            <a class="ktn-more-link" href="kotennavi-p10-2.html">クリエイターを探す →</a>
+            <a class="ktn-more-link" href="kotennavi-p10-3.html">ギャラリーを探す →</a>
+          </div>
+        </section>
+
         <div class="ktn-tab-head">
           <span class="ktn-tab-head__title">my カレンダー<span class="ktn-sec-en">Calendar</span></span>
         </div>
@@ -868,6 +881,11 @@
     document.body.classList.toggle('p5-zero', state === 'zero');
     document.querySelectorAll('[data-side-btn]').forEach(function(b){ b.classList.remove('on'); });
     btn.classList.add('on');
+  }
+  /* 新規登録完了（P11-23）からの着地＝ゼロ状態で表示（?state=zero・デモ用。本番はデータの有無で決まる） */
+  if (new URLSearchParams(location.search).get('state') === 'zero') {
+    var zeroBtn = document.querySelector('[data-side-btn][onclick*="\'zero\'"]');
+    if (zeroBtn) setSideState('zero', zeroBtn);
   }
   KTN.init({ page: 'p5', role: 'user+' });
 </script>

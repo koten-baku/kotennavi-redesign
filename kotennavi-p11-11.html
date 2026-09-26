@@ -102,7 +102,7 @@
         <div class="ktn-auth-divider">または</div>
 
         <div class="ktn-auth-btns">
-          <button class="ktn-auth-btn-secondary" onclick="location.href='kotennavi-p11.html'">ログインへ戻る</button>
+          <button class="ktn-auth-btn-secondary" onclick="location.href=KTN.authUrl('kotennavi-p11.html')">ログインへ戻る</button>
         </div>
 
       </div>
@@ -135,7 +135,7 @@ function p1111Submit() {
   KTN.submitDone({
     title: 'メールを送信しました',
     message: 'ご入力のメールアドレス宛にパスワード再設定用のリンクをお送りしました。<br>メール内のリンクから新しいパスワードを設定してください。',
-    action: { label: 'ログインへ戻る', href: './kotennavi-p11.html' }
+    action: { label: 'ログインへ戻る', href: KTN.authUrl('./kotennavi-p11.html') }
   });
 }
 KTN.init({ page: 'p11-11', role: 'guest' });

@@ -13734,14 +13734,16 @@ body.mgmt-page .p5-tabnav{max-width:var(--w-detail)}
 .p511-email-change{font-size:.75rem;color:var(--page-accent,#b8608c);text-decoration:none;white-space:nowrap;flex-shrink:0}
 .p511-email-change:hover{text-decoration:underline}
 
-/* ── p512 パスワード入力ラッパー（表示トグル） ── */
-.p512-pw-wrap{position:relative}
-.p512-pw-wrap .p211-input{padding-right:42px}
-.p512-pw-toggle{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--muted);padding:5px;display:flex;align-items:center;justify-content:center;transition:color .12s;border-radius:3px}
-.p512-pw-toggle:hover{color:var(--ink)}
-.p512-pw-toggle .icon-hide{display:none}
-.p512-pw-toggle.is-visible .icon-show{display:none}
-.p512-pw-toggle.is-visible .icon-hide{display:block}
+/* ── パスワード表示/非表示トグル（canonical・全ページ共通・2026-09-26 に p512 から昇格）
+   HTML：div.ktn-pw-wrap > input[type=password] ＋ button.ktn-pw-toggle[data-target=入力id]。
+   クリック処理は common.js の委譲リスナー（ページ個別JS不要）。 ── */
+.ktn-pw-wrap{position:relative}
+.ktn-pw-wrap .p211-input{padding-right:42px}
+.ktn-pw-toggle{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--muted);padding:5px;display:flex;align-items:center;justify-content:center;transition:color .12s;border-radius:3px}
+.ktn-pw-toggle:hover{color:var(--ink)}
+.ktn-pw-toggle .icon-hide{display:none}
+.ktn-pw-toggle.is-visible .icon-show{display:none}
+.ktn-pw-toggle.is-visible .icon-hide{display:block}
 
 /* ── p512 パスワード強度インジケーター ── */
 .p512-strength{display:flex;align-items:center;gap:8px;margin-top:5px}
@@ -13802,12 +13804,15 @@ body.mgmt-page .p5-tabnav{max-width:var(--w-detail)}
 .p11-auth-foot{width:min(420px,100%);margin:16px auto 0;text-align:center;font-family:var(--fn);font-size:.78rem;color:var(--muted)}
 .p11-auth-foot a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}
 
-/* P11-24 新規登録：ウォッチ対象の選択（オンボーディング）。cc--h.cc--panel / gc--h.gc--panel カードを流用 */
-.p1124-grid{display:flex;flex-wrap:wrap;gap:14px;margin-top:24px}
-.p1124-grid > .cc,.p1124-grid > .gc{flex:1 1 220px;max-width:260px}
-.p1124-submit-wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:32px;padding-top:24px;border-top:1px solid var(--border)}
-.p1124-submit-wrap .p114-submit-note{margin:0}
-@media(max-width:540px){.p1124-submit-wrap{flex-direction:column-reverse;align-items:stretch}}
+/* ── P5 ゼロ状態のウォッチ案内（旧P11-24から移設・2026-09-26）。本人のゼロ状態のときだけ表示 ── */
+.p5-watch-onboard{display:none;margin-bottom:32px}
+body.p5-zero:not(.p5-other) .p5-watch-onboard{display:block}
+.p5-watch-onboard__lead{font-family:var(--fn);font-size:.85rem;line-height:1.8;color:var(--ink);margin:10px 0 0}
+.p5-watch-onboard__grid{display:flex;flex-wrap:wrap;gap:14px;margin-top:18px}
+/* 最小幅260px＝.cc--panel/.gc--panel が収まる幅（本来は300px右カラム＝中身約260px向けの部品）。
+   220pxだと3列（約237px）になり、カウンター＋ウォッチボタンの下段がカードからはみ出した（2026-09-26）。 */
+.p5-watch-onboard__grid > .cc,.p5-watch-onboard__grid > .gc{flex:1 1 260px;max-width:340px}
+.p5-watch-onboard__more{display:flex;flex-wrap:wrap;gap:4px 20px}
 
 /* チェックイン完了：ウォッチ提案ステップ（クリエイター／ギャラリーをグループ分け表示） */
 .ktn-ci-watch__lead{font-family:var(--fn);font-size:.8rem;color:var(--muted);line-height:1.6;margin:0 0 14px}

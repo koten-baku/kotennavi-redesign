@@ -83,11 +83,6 @@
       <div class="ktn-auth-body">
 
         <div class="p211-field">
-          <label class="p211-label">お名前<span class="ktn-req">必須</span></label>
-          <input class="p211-input" type="text" id="p111Name" placeholder="例：山田 花子">
-        </div>
-
-        <div class="p211-field" style="margin-top:12px">
           <label class="p211-label">メールアドレス<span class="ktn-req">必須</span></label>
           <input class="p211-input" type="email" id="p111Email" placeholder="例：you@example.com">
           <p class="p211-help">このメールアドレス宛に確認メールをお送りします。パスワードはメール確認後に設定します。</p>
@@ -113,12 +108,12 @@
         <div class="ktn-auth-divider">または</div>
 
         <div class="ktn-auth-btns">
-          <button class="ktn-auth-btn-secondary" onclick="location.href='kotennavi-p11.html'">ログインはこちら</button>
+          <button class="ktn-auth-btn-secondary" onclick="location.href=KTN.authUrl('kotennavi-p11.html')">ログインはこちら</button>
         </div>
 
       </div>
     </div>
-    <p class="p11-auth-foot">クリエイター・ギャラリーとしての登録は <a href="./kotennavi-p11-2.html">クリエイター機能申込</a> ／ <a href="./kotennavi-p11-3.html">ギャラリー機能申込</a> から行えます。</p>
+    <p class="p11-auth-foot">展覧会情報を掲載したい方は、まずこのユーザー登録を済ませてください。登録後にログインしてクリエイター機能またはギャラリー機能を申し込み、承認されると展覧会情報を掲載できるようになります。詳しくは <a href="./kotennavi-p60-2.html">展覧会情報を掲載したい方へ</a> をご覧ください。</p>
   </div>
 </main>
 <footer class="ktn-footer" id="ktnFooter"></footer>
@@ -166,7 +161,7 @@ function p111ValidateRequired() {
 }
 function p111Register() {
   if (!p111ValidateRequired()) return;
-  location.href = './kotennavi-p11-21.html';
+  location.href = KTN.authUrl('./kotennavi-p11-21.html');   /* 戻り先（?return=）を引き継ぐ */
 }
 KTN.init({ page: 'p11-1', role: 'guest' });
 </script>

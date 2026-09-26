@@ -89,7 +89,13 @@
 
         <div class="p211-field" style="margin-top:12px">
           <label class="p211-label">パスワード<span class="ktn-req">必須</span></label>
-          <input class="p211-input" type="password" id="p11Password" placeholder="パスワードを入力">
+          <div class="ktn-pw-wrap">
+            <input class="p211-input" type="password" id="p11Password" placeholder="パスワードを入力">
+            <button class="ktn-pw-toggle" type="button" aria-label="パスワードを表示" aria-pressed="false" data-target="p11Password">
+              <svg class="icon-show" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z"/><circle cx="8" cy="8" r="2"/></svg>
+              <svg class="icon-hide" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z"/><circle cx="8" cy="8" r="2"/><line x1="2" y1="2" x2="14" y2="14"/></svg>
+            </button>
+          </div>
           <p class="p211-help"><a class="ktn-guide-link" href="./kotennavi-p11-11.html">パスワードをお忘れですか？</a></p>
         </div>
 
@@ -108,12 +114,12 @@
         <div class="ktn-auth-divider">または</div>
 
         <div class="ktn-auth-btns">
-          <button class="ktn-auth-btn-secondary" onclick="location.href='kotennavi-p11-1.html'">新規ユーザー登録（無料）</button>
+          <button class="ktn-auth-btn-secondary" onclick="location.href=KTN.authUrl('kotennavi-p11-1.html')">新規ユーザー登録（無料）</button>
         </div>
 
       </div>
     </div>
-    <p class="p11-auth-foot">個展なびについては <a href="./kotennavi-p60.html">ガイド</a> をご覧ください。</p>
+    <p class="p11-auth-foot">個展なびの利用方法については <a href="./kotennavi-p60.html">ガイド</a> をご覧ください。</p>
   </div>
 </main>
 <footer class="ktn-footer" id="ktnFooter"></footer>
@@ -158,7 +164,7 @@ function p11ValidateRequired() {
 }
 function p11Login() {
   if (!p11ValidateRequired()) return;
-  location.href = './kotennavi-p1.html';
+  location.href = KTN.returnTo('./kotennavi-p1.html');   /* ポップアップ経由なら元のページへ戻る */
 }
 KTN.init({ page: 'p11', role: 'guest' });
 </script>

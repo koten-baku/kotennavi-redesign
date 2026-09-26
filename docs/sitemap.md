@@ -171,7 +171,7 @@
 | P10-6-1 | 特集-クリエイター-年間ランキング |  | R | R | R | R | R | R/W | --w-index | kotennavi-p10-6-1.html | Fix済 |
 | P10-7 | 特集-ギャラリー（ギャラリーをエリアから探す） |  | R | R | R | R | R | R/W | --w-index | kotennavi-p10-7.html | Fix済 |
 | P10-7-1 | 特集-ギャラリー-年間ランキング |  | R | R | R | R | R | R/W | --w-index | kotennavi-p10-7-1.html | Fix済 |
-| P10-7-2 | 特集-ギャラリー-軸（エリア軸） |  | R | R | R | R | R | R/W | --w-index | kotennavi-p10-7-2.html | 調整中 |
+| P10-7-2 | 特集-ギャラリー-軸（エリア軸） |  | R | R | R | R | R | R/W | --w-index | kotennavi-p10-7-2.html | Fix済 |
 | P10-8 | ランキング（種別横断ハブ） |  | R | R | R | R | R | R/W | --w-index | kotennavi-p10-8.html | Fix済 |
 
 - **P10-4〜P10-7 は P10〜P10-3 それぞれの「特集」**（2026-09-18 確定・handoff 追174-80）。P10〜P10-3＝検索、P10-4系＝展覧会の特集、P10-5＝作品、P10-6＝クリエイター、P10-7＝ギャラリーの特集。ただし**「特集」はナビ語彙に留め、各ページの title／h1 には入れない**。
@@ -206,17 +206,16 @@
 
 | ID | ページ名 | L/L+ | guest | login | user+ | creator | gallery | admin | max-width | html-file | 進捗 |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| P11 | ログイン |  | W |  |  |  |  |  | --w-detail | kotennavi-p11.html | 調整中 |
-| P11-1 | ユーザー新規登録 |  | W |  |  |  |  |  | --w-detail | kotennavi-p11-1.html | 調整中 |
+| P11 | ログイン |  | W |  |  |  |  |  | --w-detail | kotennavi-p11.html | Fix済 |
+| P11-1 | ユーザー新規登録 |  | W |  |  |  |  |  | --w-detail | kotennavi-p11-1.html | Fix済 |
 | P11-2 | クリエイター機能申込 |  |  | W |  |  |  |  | --w-detail | kotennavi-p11-2.html | Fix済 |
 | P11-3 | ギャラリー機能申込 |  |  | W |  |  |  |  | --w-detail | kotennavi-p11-3.html | Fix済 |
 | P11-4 | リエゾンプラス機能申込 |  |  |  |  | W | W |  | --w-detail | kotennavi-p11-4.html | Fix済 |
-| P11-11 | ログイン-パスワードを忘れた方 |  | W |  |  |  |  |  | --w-detail | kotennavi-p11-11.html | 調整中 |
-| P11-12 | ログインパスワード再設定 |  | W |  |  |  |  |  | --w-detail | kotennavi-p11-12.html | 調整中 |
-| P11-21 | ユーザー新規登録-アカウント仮登録完了 |  | R |  |  |  |  |  | --w-detail | kotennavi-p11-21.html | 調整中 |
-| P11-22 | ユーザー新規登録-メールアドレス確認完了 |  | R |  |  |  |  |  | --w-detail | kotennavi-p11-22.html | 調整中 |
-| P11-23 | ユーザー新規登録-パスワード設定 |  | W |  |  |  |  |  | --w-detail | kotennavi-p11-23.html | 調整中 |
-| P11-24 | ユーザー新規登録-ウオッチ対象の選択 |  | W |  |  |  |  |  | --w-detail | kotennavi-p11-24.html | 調整中 |
+| P11-11 | ログイン-パスワードを忘れた方 |  | W |  |  |  |  |  | --w-detail | kotennavi-p11-11.html | Fix済 |
+| P11-12 | ログインパスワード再設定 |  | W |  |  |  |  |  | --w-detail | kotennavi-p11-12.html | Fix済 |
+| P11-21 | ユーザー新規登録-アカウント仮登録完了 |  | R |  |  |  |  |  | --w-detail | kotennavi-p11-21.html | Fix済 |
+| P11-22 | ユーザー新規登録-メールアドレス確認完了 |  | R |  |  |  |  |  | --w-detail | kotennavi-p11-22.html | Fix済 |
+| P11-23 | ユーザー新規登録-パスワード設定 |  | W |  |  |  |  |  | --w-detail | kotennavi-p11-23.html | Fix済 |
 
 ---
 

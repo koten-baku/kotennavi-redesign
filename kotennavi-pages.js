@@ -6099,7 +6099,23 @@ KTN.pages['p4-2'] = function () {
 /* =========================================================
    P5 ユーザー – 展覧会カレンダー
    ========================================================= */
+/* P5 ゼロ状態のウォッチ案内（.p5-watch-onboard）の候補（旧P11-24から移設・2026-09-26）。
+   人物カード共通の buildPersonCard で描画＝出展数・ウォッチ数のカウンター付き（数字が見えるとウォッチの後押しになる）。 */
+var P5_WATCH_ONBOARD = [
+  { type: 'creator', name: '田中 透',          genre: '油彩・現代美術',          avClass: 'av-c1', ini: '田', iniStyle: '.9rem', href: 'kotennavi-p3.html',   exh: 12, watch: 348 },
+  { type: 'gallery', name: 'Gallery SOIL 渋谷', location: '東京・渋谷 · 現代美術',  avStyle: 'linear-gradient(135deg,#4a6878,#2a4858)', ini: 'SG', iniStyle: '.8rem', href: 'kotennavi-p4.html', exh: 86, watch: 1204 },
+  { type: 'creator', name: '山田 蕗',          genre: '陶芸・立体',              avStyle: 'linear-gradient(135deg,#5a4858,#3a2838)', ini: '山', iniStyle: '.9rem', href: 'kotennavi-p2-4.html', exh: 7, watch: 156 },
+  { type: 'creator', name: '村上 玲子',        genre: '写真・インスタレーション', avClass: 'av-c3', ini: '村', iniStyle: '.9rem', href: 'kotennavi-p3.html',   exh: 9, watch: 212 },
+  { type: 'gallery', name: 'Art Space 光 銀座', location: '東京・銀座 · アート',    avStyle: 'linear-gradient(135deg,#7a5a3a,#4a3822)', ini: 'AS', iniStyle: '.8rem', href: 'kotennavi-p4.html', exh: 54, watch: 687 },
+  { type: 'creator', name: '橋本 明',          genre: '水彩・素描',              avClass: 'av-c2', ini: '橋', iniStyle: '.9rem', href: 'kotennavi-p3.html',   exh: 5, watch: 94 }
+];
+
 KTN.pages['p5'] = function () {
+    var onboard = document.getElementById('p5WatchOnboardGrid');
+    if (onboard) onboard.innerHTML = P5_WATCH_ONBOARD.map(function (d) {
+      return buildPersonCard(Object.assign({ panel: true }, d));
+    }).join('');
+
     document.body.classList.add('p5-page');
     document.body.style.setProperty('--page-accent', '#b8608c');
     document.body.style.setProperty('--page-accent-bg', 'rgba(184,96,140,.1)');

@@ -483,6 +483,135 @@ KTN.submitDone = ktnSubmitDone;
 window.ktnSubmitDone = ktnSubmitDone;
 window.ktnSubmitDoneConfirm = ktnSubmitDoneConfirm;
 
+/* ══════════════════════════════════════════════════════
+   ログイン後に元のページへ戻す（?return=・2026-09-26 確定）
+   ・ログイン誘導ポップアップ／ページ内のログイン壁（ktn-statepanel 等）から P11/P11-1 へ行くときは
+     KTN.authUrl() で「いまのページ」を ?return= に載せる。ログイン・新規登録の完了時に KTN.returnTo() で戻す。
+   ・サイドバー／ボトムナビ／フッターの「ログイン」「新規登録」は**戻り先を持たない**（自分の意思でログインしに来た
+     ＝戻る文脈が無い）。完了時は既定の遷移先（ログイン＝トップ／登録＝マイページ）。
+   ・認証ページ間（P11 ⇄ P11-1 ⇄ P11-11 …）の移動では受け取った return をそのまま引き継ぐ。
+     メール確認リンク（P11-21 → P11-22）を跨ぐ分は本番ではバックエンドが確認トークンに戻り先を保持する（後工程）。
+   ・オープンリダイレクト防止：戻り先は同一サイト内の相対ページ（kotennavi-*.html）のみ許可し、認証ページ自身は除外。
+   ══════════════════════════════════════════════════════ */
+/* ── ログイン前に押した操作を、ログイン・登録後に元のページで実行し直す（2026-09-26・P11-24廃止の代案①）
+   ・ゲストがウォッチ／興味あり！／チェックイン等を押してログイン誘導ポップアップが出たとき、押したボタンを
+     覚えておく（KTN.action.show が KTN._authPrepare を呼ぶ）。ポップアップの「ログイン」「新規登録」で
+     認証ページへ出るときに sessionStorage へ保存し、ログイン／登録完了で元のページへ戻ったら
+     KTN._replayPending（KTN.init の最後）がそのボタンを押し直す＝「ウォッチしました」まで自動で済む。
+   ・検索ゲート（作品／クリエイター／ギャラリー検索へのリンク）は「押し直す」のでなく、
+     戻り先そのものをリンク先にする（ログイン後に行きたかった検索ページへ直接着く）。
+   ・プロトタイプではデモバーの「ログイン」ボタンを押してログイン状態を再現する。
+     本番（Drupal/React）ではボタン位置でなく〈操作種別＋対象エンティティID〉をサーバー側で保持し、
+     ログイン後に実行する（メール確認リンクを跨ぐ新規登録も同様・後工程）。 ── */
+(function () {
+  var AUTH_RE = /^kotennavi-p11(-1|-11|-12|-2[1-3])?\.html$/i;
+  var SAFE_RE = /^kotennavi-[a-z0-9-]+\.html(\?[^#]*)?(#.*)?$/i;
+  var PENDING_KEY = 'ktnPendingAction', DONE_KEY = 'ktnAuthDone';
+  function fileOf(path) { return (path || '').replace(/^\.\//, '').split(/[?#]/)[0].split('/').pop(); }
+  function isAuthFile(f) { return AUTH_RE.test(fileOf(f)); }
+  function safe(r) { return r && SAFE_RE.test(r) && !isAuthFile(r) ? r : null; }
+  function currentReturn() {
+    var p = new URLSearchParams(location.search).get('return');
+    return safe(p);
+  }
+  function here() { return fileOf(location.pathname) + location.search + location.hash; }
+  function ss(fn) { try { return fn(window.sessionStorage); } catch (e) { return null; } }
+
+  /* 直前に押されたボタン／リンク（ポップアップ内のクリックは除外） */
+  var lastEl = null;
+  document.addEventListener('click', function (e) {
+    var el = e.target && e.target.closest && e.target.closest('button,a');
+    if (el && !el.closest('#ktnAuthModal')) lastEl = el;
+  }, true);
+  /* ボタンを後で見つけ直すための位置情報：data-action があれば同種の中の順番、無ければ id を持つ祖先の中の順番 */
+  function locate(el) {
+    var q = null;
+    if (el.dataset && el.dataset.action) q = '[data-action="' + el.dataset.action + '"]';
+    else if (el.id) q = '#' + el.id;
+    else {
+      var anc = el.parentElement && el.parentElement.closest('[id]');
+      if (!anc) return null;
+      q = '#' + anc.id + ' ' + el.tagName.toLowerCase();
+    }
+    var i = Array.prototype.indexOf.call(document.querySelectorAll(q), el);
+    return i < 0 ? null : { q: q, i: i };
+  }
+  var pending = null;      /* { action, loc } ＝押し直すボタン */
+  var pendingHref = null;  /* 検索ゲート＝ログイン後の行き先 */
+  KTN._authPrepare = function (action, href) {
+    pending = null; pendingHref = null;
+    if (href) { pendingHref = safe(href); return; }
+    var loc = lastEl && locate(lastEl);
+    if (loc) pending = { action: action, loc: loc };
+  };
+  KTN._authClear = function () { pending = null; pendingHref = null; };
+
+  /* 認証ページへのURLを作る：認証ページ上なら受け取った return を引き継ぎ、それ以外なら現在地（検索ゲートならリンク先）を return にする */
+  KTN.authUrl = function (file) {
+    var onAuth = isAuthFile(location.pathname);
+    var r = onAuth ? currentReturn() : (pendingHref || safe(here()));
+    if (!onAuth) ss(function (s) {
+      if (pending && r && !pendingHref) s.setItem(PENDING_KEY, JSON.stringify({ ret: r, action: pending.action, loc: pending.loc }));
+      else s.removeItem(PENDING_KEY);
+    });
+    return r ? file + (file.indexOf('?') >= 0 ? '&' : '?') + 'return=' + encodeURIComponent(r) : file;
+  };
+  /* 認証完了時の遷移先：return があればそこへ（＝戻った先で保留中の操作を実行する印を立てる）、無ければ fallback */
+  KTN.returnTo = function (fallback) {
+    var r = currentReturn();
+    if (r) ss(function (s) { s.setItem(DONE_KEY, '1'); });
+    return r || fallback;
+  };
+  KTN.hasReturn = function () { return !!currentReturn(); };
+  /* 戻った先で自動実行される操作の種類（watch / interest / checkin / apply 等）。無ければ null */
+  KTN.pendingAction = function () {
+    var r = currentReturn();
+    var p = ss(function (s) { return JSON.parse(s.getItem(PENDING_KEY) || 'null'); });
+    return r && p && p.ret === r ? p.action : null;
+  };
+
+  /* 戻った先で：ログイン状態にして（デモ）、保留中の操作があれば押し直す。KTN.init の最後に呼ぶ */
+  KTN._replayPending = function () {
+    if (!ss(function (s) { return s.getItem(DONE_KEY); })) return;
+    var p = ss(function (s) { return JSON.parse(s.getItem(PENDING_KEY) || 'null'); });
+    ss(function (s) { s.removeItem(DONE_KEY); s.removeItem(PENDING_KEY); });
+    if ((window.ktnState || {}).role === 'guest') {
+      var db = document.querySelector('.dbar [onclick*="\'login\'"]');
+      if (db) db.click();
+      else { window.ktnState.role = 'login'; if (typeof renderAll === 'function') renderAll(); }
+    }
+    if (!p || p.ret !== here() || !p.loc) return;
+    setTimeout(function () {
+      var el = document.querySelectorAll(p.loc.q)[p.loc.i];
+      if (!el) return;
+      if (el.scrollIntoView) el.scrollIntoView({ block: 'center' });
+      el.click();
+    }, 0);
+  };
+  /* 本文中の <a href="…p11….html"> も自動で return を付ける（ナビ・フッターの入口は除外） */
+  document.addEventListener('click', function (e) {
+    var a = e.target && e.target.closest && e.target.closest('a[href]');
+    if (!a || a.closest('.ktn-sidebar, .ktn-bottom-nav, .ktn-footer')) return;
+    var href = a.getAttribute('href');
+    if (!isAuthFile(href) || /[?&]return=/.test(href)) return;
+    a.setAttribute('href', KTN.authUrl(href.replace(/^\.\//, '')));
+  }, true);
+}());
+
+/* ── パスワード表示/非表示トグル（.ktn-pw-toggle・全ページ共通の委譲リスナー・2026-09-26）
+   button.ktn-pw-toggle[data-target=入力id] を押すと type を password⇄text に切り替え、
+   .is-visible（アイコン切替）と aria-pressed／aria-label を同期する。 ── */
+document.addEventListener('click', function (e) {
+  var btn = e.target && e.target.closest && e.target.closest('.ktn-pw-toggle');
+  if (!btn) return;
+  var input = document.getElementById(btn.dataset.target);
+  if (!input) return;
+  var visible = btn.classList.toggle('is-visible');
+  input.type = visible ? 'text' : 'password';
+  btn.setAttribute('aria-pressed', visible ? 'true' : 'false');
+  btn.setAttribute('aria-label', visible ? 'パスワードを隠す' : 'パスワードを表示');
+});
+
 /* ══════════════════════════════════
    インサイト：推移ラインチャート（SVG）
    7日〜全期間（最大365日＝1年開催を想定）まで
@@ -892,11 +1021,11 @@ function renderSidebar() {
 
   if (curRole === 'guest') {
     if (roleNav) roleNav.innerHTML = `
-      <a href="/login" class="ktn-sidebar__item" data-page="login" onclick="handleNav(event,'login','/login')">
+      <a href="kotennavi-p11.html" class="ktn-sidebar__item" data-page="p11" onclick="handleNav(event,'p11','kotennavi-p11.html')">
         <div class="ktn-sidebar__icon">${ICONS.login}</div>
         <span class="ktn-sidebar__label">ログイン</span>
       </a>
-      <a href="/register" class="ktn-sidebar__item" data-page="register" onclick="handleNav(event,'register','/register')">
+      <a href="kotennavi-p11-1.html" class="ktn-sidebar__item" data-page="p11-1" onclick="handleNav(event,'p11-1','kotennavi-p11-1.html')">
         <div class="ktn-sidebar__icon">${ICONS.register}</div>
         <span class="ktn-sidebar__label">新規登録</span>
       </a>
@@ -958,7 +1087,7 @@ function renderBottomNav() {
         <div class="ktn-bottom-nav__icon">${ICONS.guide}</div>
         <span class="ktn-bottom-nav__label">ガイド</span>
       </a>
-      <a href="/login" class="ktn-bottom-nav__item" data-page="login" onclick="handleNav(event,'login','/login')">
+      <a href="kotennavi-p11.html" class="ktn-bottom-nav__item" data-page="p11" onclick="handleNav(event,'p11','kotennavi-p11.html')">
         <div class="ktn-bottom-nav__login-btn">${ICONS.login}</div>
         <span class="ktn-bottom-nav__label">ログイン</span>
       </a>
@@ -1056,8 +1185,8 @@ function renderFooter() {
           </ul>
           <p class="ktn-footer__col-title" style="margin-top:20px">会員登録</p>
           <ul class="ktn-footer__links">
-            <li><a href="/register" onclick="handleNav(event,'register','/register')">新規登録（無料）</a></li>
-            <li><a href="/login" onclick="handleNav(event,'login','/login')">ログイン</a></li>
+            <li><a href="kotennavi-p11-1.html" onclick="handleNav(event,'p11-1','kotennavi-p11-1.html')">新規登録（無料）</a></li>
+            <li><a href="kotennavi-p11.html" onclick="handleNav(event,'p11','kotennavi-p11.html')">ログイン</a></li>
             <li><a href="/p11-2" onclick="handleNav(event,'p11-2','/p11-2')">クリエイター申込</a></li>
             <li><a href="/p11-3" onclick="handleNav(event,'p11-3','/p11-3')">ギャラリー申込</a></li>
           </ul>
@@ -1763,7 +1892,6 @@ const PAGES = {
   'p11-21': { n: 'ユーザー新規登録-アカウント仮登録完了', bc: [['Top', '/'], ['ユーザー新規登録-アカウント仮登録完了', null]] },
   'p11-22': { n: 'ユーザー新規登録-メールアドレス確認完了', bc: [['Top', '/'], ['ユーザー新規登録-メールアドレス確認完了', null]] },
   'p11-23': { n: 'ユーザー新規登録-パスワード設定', bc: [['Top', '/'], ['ユーザー新規登録-パスワード設定', null]] },
-  'p11-24': { n: 'ユーザー新規登録-ウオッチ対象の選択', bc: [['Top', '/'], ['ユーザー新規登録-ウオッチ対象の選択', null]] },
   // P60 ガイド・法的（番号は docs/sitemap.md を正とする）
   'p60': { n: 'ご利用ガイド', bc: [['Top', '/'], ['ガイド', null]] },
   'p60-1': { n: '展覧会情報を探したい方', bc: [['Top', '/'], ['ガイド', 'kotennavi-p60.html'], ['展覧会情報を探したい方', null]] },
@@ -2930,6 +3058,8 @@ KTN.init = function (opts) {
     syncAuthWall();
     /* 要対応バーの件数表示（p3-15/p4-15限定。該当要素が無いページは no-op） */
     p315SyncUrgentCount();
+    /* ログイン／新規登録から戻ったとき：ログイン状態にして、ログイン前に押した操作を実行し直す（代案①） */
+    if (KTN._replayPending) KTN._replayPending();
     /* 会場フライヤー・会場チェックインQR経由（?checkin=1）の自動チェックインモーダル起動（P2限定） */
     if (pageId === 'p2' && location.search.indexOf('checkin=1') !== -1 && typeof openCheckinModal === 'function') {
       requestAnimationFrame(function () { openCheckinModal(); });
@@ -3110,8 +3240,8 @@ function openCheckinModal() {
       '<div class="ktn-auth-ttl">ログインが必要です</div>' +
             '<div class="ktn-auth-sub">ウォッチ・興味あり！・チェックインなどの<br>My機能が使えるようになります</div>' +
             '<div class="ktn-modal__btn-col">' +
-              '<a href="/login" class="ktn-btn ktn-btn--primary">ログイン</a>' +
-              '<a href="/register" class="ktn-btn">新規ユーザー登録（無料）</a>' +
+              '<a href="' + KTN.authUrl('kotennavi-p11.html') + '" class="ktn-btn ktn-btn--primary">ログイン</a>' +
+              '<a href="' + KTN.authUrl('kotennavi-p11-1.html') + '" class="ktn-btn">新規ユーザー登録（無料）</a>' +
             '</div>' +
             '<div class="ktn-modal__note">登録は無料です。<a href="/terms">利用規約</a>・<a href="/privacy">プライバシーポリシー</a>に<br>同意のうえご利用ください。</div>' +
           '</div>' +
@@ -3839,6 +3969,10 @@ KTN.action = (function () {
   function show(action) {
     var modal = document.getElementById('ktnAuthModal');
     if (!modal) return;
+    /* ログイン後に押し直す操作を覚える（検索ゲートは呼び出し側が行き先を渡す／signup は操作ではないので対象外） */
+    if (KTN._authPrepare && action !== 'search') {
+      if (action === 'signup') KTN._authClear(); else KTN._authPrepare(action);
+    }
     var icon = document.getElementById('ktnAuthIcon');
     if (icon) icon.innerHTML = ACTION_ICONS[action] || '';
     var cfg = ACTION_AUTH[action] || DEFAULT_AUTH;
@@ -3853,6 +3987,7 @@ KTN.action = (function () {
     if (e && e.target !== document.getElementById('ktnAuthModal')) return;
     var modal = document.getElementById('ktnAuthModal');
     if (modal) modal.classList.remove('open');
+    if (KTN._authClear) KTN._authClear();
   }
 
   function _inject() {
@@ -3872,9 +4007,9 @@ KTN.action = (function () {
       + '</div>'
       + '<div class="ktn-auth-body">'
       + '<div class="ktn-auth-btns">'
-      + '<button class="ktn-auth-btn-primary" onclick="location.href=\'kotennavi-p11.html\'">ログイン</button>'
+      + '<button class="ktn-auth-btn-primary" onclick="location.href=KTN.authUrl(\'kotennavi-p11.html\')">ログイン</button>'
       + '<div class="ktn-auth-divider">または</div>'
-      + '<button class="ktn-auth-btn-secondary" onclick="location.href=\'kotennavi-p11-1.html\'">新規ユーザー登録（無料）</button>'
+      + '<button class="ktn-auth-btn-secondary" onclick="location.href=KTN.authUrl(\'kotennavi-p11-1.html\')">新規ユーザー登録（無料）</button>'
       + '</div>'
       + '<div class="ktn-auth-note">登録は無料です。<a href="#">利用規約</a>・<a href="#">プライバシーポリシー</a>に同意のうえご利用ください。</div>'
       + '</div>'
@@ -3919,16 +4054,22 @@ document.addEventListener('click', function (e) {
   }
   if (window.ktnState.role !== 'guest') return;
   e.preventDefault();
+  /* ログイン後はこのリンク先（行きたかった検索ページ）へ直接戻す */
+  var link = gated || t.closest('.p10-search__type');
+  var u = link && link.href ? new URL(link.href, location.href) : null;
+  if (KTN._authPrepare) KTN._authPrepare('search', u ? u.pathname.split('/').pop() + u.search + u.hash : null);
   KTN.action.show('search');
 });
 
 /* ── デモバー高さ同期：モバイルで折り返すと高さが変わるため --dh を実測更新 ── */
 (function () {
+  /* デモバーが無い（本番・デモバーを置かないページ）／非表示なら --dh を 0 にする。
+     :root の既定値 34px のまま残すと、ヘッダー上に空白が1段できる（P11系で発覚・2026-09-26）。
+     ＝本番でデモバーを外しても CSS 変数を手で 0 に直す必要はない。 */
   function syncDH() {
     var dbar = document.querySelector('.dbar');
-    if (!dbar) return;
-    var h = dbar.offsetHeight;
-    if (h > 0) document.documentElement.style.setProperty('--dh', h + 'px');
+    var h = dbar ? dbar.offsetHeight : 0;
+    document.documentElement.style.setProperty('--dh', h + 'px');
   }
   function init() {
     syncDH();

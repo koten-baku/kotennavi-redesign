@@ -167,9 +167,9 @@
             <!-- 現在のパスワード -->
             <div class="p211-field">
               <label class="p211-label" for="p512CurrentPw">現在のパスワード<span class="ktn-req">必須</span></label>
-              <div class="p512-pw-wrap">
+              <div class="ktn-pw-wrap">
                 <input class="p211-input" id="p512CurrentPw" type="password" autocomplete="current-password" placeholder="現在のパスワード">
-                <button class="p512-pw-toggle" type="button" aria-label="パスワードを表示" data-target="p512CurrentPw">
+                <button class="ktn-pw-toggle" type="button" aria-label="パスワードを表示" aria-pressed="false" data-target="p512CurrentPw">
                   <svg class="icon-show" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z"/><circle cx="8" cy="8" r="2"/></svg>
                   <svg class="icon-hide" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z"/><circle cx="8" cy="8" r="2"/><line x1="2" y1="2" x2="14" y2="14"/></svg>
                 </button>
@@ -179,9 +179,9 @@
             <!-- 新しいパスワード -->
             <div class="p211-field">
               <label class="p211-label" for="p512NewPw">新しいパスワード<span class="ktn-req">必須</span></label>
-              <div class="p512-pw-wrap">
+              <div class="ktn-pw-wrap">
                 <input class="p211-input" id="p512NewPw" type="password" autocomplete="new-password" placeholder="8文字以上" oninput="p512UpdateStrength(this.value)">
-                <button class="p512-pw-toggle" type="button" aria-label="パスワードを表示" data-target="p512NewPw">
+                <button class="ktn-pw-toggle" type="button" aria-label="パスワードを表示" aria-pressed="false" data-target="p512NewPw">
                   <svg class="icon-show" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z"/><circle cx="8" cy="8" r="2"/></svg>
                   <svg class="icon-hide" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z"/><circle cx="8" cy="8" r="2"/><line x1="2" y1="2" x2="14" y2="14"/></svg>
                 </button>
@@ -201,9 +201,9 @@
             <!-- 新しいパスワード（確認） -->
             <div class="p211-field">
               <label class="p211-label" for="p512ConfirmPw">新しいパスワード（確認）<span class="ktn-req">必須</span></label>
-              <div class="p512-pw-wrap">
+              <div class="ktn-pw-wrap">
                 <input class="p211-input" id="p512ConfirmPw" type="password" autocomplete="new-password" placeholder="もう一度入力">
-                <button class="p512-pw-toggle" type="button" aria-label="パスワードを表示" data-target="p512ConfirmPw">
+                <button class="ktn-pw-toggle" type="button" aria-label="パスワードを表示" aria-pressed="false" data-target="p512ConfirmPw">
                   <svg class="icon-show" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z"/><circle cx="8" cy="8" r="2"/></svg>
                   <svg class="icon-hide" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z"/><circle cx="8" cy="8" r="2"/><line x1="2" y1="2" x2="14" y2="14"/></svg>
                 </button>
@@ -251,15 +251,7 @@ KTN.init({ page: 'p5-12', role: 'user+' });
   if (dOver)   dOver.addEventListener('click', closeDrawer);
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeDrawer(); });
 
-  // パスワード表示トグル
-  document.querySelectorAll('.p512-pw-toggle').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      var input = document.getElementById(btn.dataset.target);
-      if (!input) return;
-      var isVisible = btn.classList.toggle('is-visible');
-      input.type = isVisible ? 'text' : 'password';
-    });
-  });
+  // パスワード表示トグルは common.js の共通リスナー（.ktn-pw-toggle）が処理
 
   // 保存ボタン
   var saveBtn = document.getElementById('p512SaveBtn');
