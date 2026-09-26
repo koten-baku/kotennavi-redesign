@@ -128,7 +128,12 @@
 
         <!-- 種別。検索は4種類（展覧会／作品／クリエイター／ギャラリー）あるので横断で持つ。
              実体があるのは展覧会だけで、他3種は検索・特集ページ自体が未調整（追174-90 ③a）。 -->
-        <div class="p9017-kind" role="tablist" id="p9017Kind" data-pane="search">
+        <!-- 種別タブは両方のメインタブ（検索の設定／特集（軸）の設定）で常に表示する（2026-09-25・
+             handoff 追174-194）。以前は data-pane="search" で特集タブ表示中は種別タブごと消えており、
+             ギャラリーの特集設定（追174-182）へ切り替える見える手段が無かった（URLパラメータでしか
+             届かなかった）。作品／クリエイターは特集（軸）の設定を持たないため、特集タブ表示中は
+             syncPane() がこの2つのボタンをdisabledにする（展覧会／ギャラリーは常に選べる）。 -->
+        <div class="p9017-kind" role="tablist" id="p9017Kind">
           <button type="button" class="p9017-kind__btn is-active" role="tab" aria-selected="true" data-kind="exh">展覧会</button>
           <button type="button" class="p9017-kind__btn" role="tab" aria-selected="false" data-kind="work">作品</button>
           <button type="button" class="p9017-kind__btn" role="tab" aria-selected="false" data-kind="creator">クリエイター</button>
@@ -330,7 +335,7 @@
         <!-- ① 軸ページの仕組み（読み取り専用）。この画面の操作がサイトのどこに効くのかを先に置く。
              数字は KTN.axis / KTN.arc から埋める＝ジャンルや年が増えたときに文だけが古びない（追174-70）。
              表は p70 ガイドの .p70-table、地の文は運用ノートの .p315-ops-guide__lead を借りている。 -->
-        <div class="p211-block ktn-index-target" id="p9017-about" data-pane="axis">
+        <div class="p211-block ktn-index-target" id="p9017-about" data-pane="axis" data-kind="exh">
           <div class="p211-block__head">
             <h3 class="p211-block__title">軸ページの仕組み<span class="p211-block__title-en">How It Works</span></h3>
           </div>
@@ -384,7 +389,7 @@
 
 
         <!-- ③ 注目のエリアの選定 -->
-        <div class="p211-block ktn-index-target" id="p9017-hl" data-pane="axis">
+        <div class="p211-block ktn-index-target" id="p9017-hl" data-pane="axis" data-kind="exh">
           <div class="p211-block__head">
             <h3 class="p211-block__title">注目のエリアの選定<span class="p211-block__title-en">Area Highlights</span></h3>
           </div>
@@ -421,7 +426,7 @@
 
 
         <!-- ⑤ 軸ページ一覧（導入文の記入状況を横断で見る） -->
-        <div class="p211-block ktn-index-target" id="p9017-list" data-pane="axis">
+        <div class="p211-block ktn-index-target" id="p9017-list" data-pane="axis" data-kind="exh">
           <div class="p211-block__head">
             <h3 class="p211-block__title">軸ページ一覧<span class="p211-block__title-en">Axis Pages</span></h3>
           </div>
@@ -465,6 +470,118 @@
 
             <p class="p9017-tabnote" id="p9017TabNote"></p>
 
+          </div>
+        </div>
+
+
+        <!-- ══════ ギャラリーの軸ページ設定（2026-09-25・handoff 追174-182）══════
+             ギャラリーはエリアだけを軸に持つ（ジャンル・行きやすさ・年間ランキング・アーカイブに
+             相当する軸ページは無い）ため、展覧会のような5軸タブ構造は複製せず、常にエリア1本の
+             テーブルを出す。導入文編集は展覧会と同じ共有モーダル（#p9017LeadModal）を使う。 -->
+
+        <!-- ①-G ギャラリー軸ページの仕組み（読み取り専用・展覧会版①の簡略版） -->
+        <div class="p211-block ktn-index-target" id="p9017-gabout" data-pane="axis" data-kind="gallery">
+          <div class="p211-block__head">
+            <h3 class="p211-block__title">ギャラリー軸ページの仕組み<span class="p211-block__title-en">How It Works — Galleries</span></h3>
+          </div>
+          <div class="p211-block__body">
+            <p class="p315-ops-guide__lead">考え方は展覧会の軸ページと同じです（詳しくは上の「軸ページの仕組み」を参照してください）。ギャラリーは固定の会場を持つため、<strong>エリア</strong>だけが恒久URLの軸ページ（P10-7-2）を持ちます。都道府県47件＋東京都の6エリアで、合わせて<strong id="p9017GAxTotal">—</strong>のURLが常に存在します。ジャンル・行きやすさ・年間ランキングのような他の軸は持ちません＝ギャラリーの分類索引（P10-7）はこのエリア軸だけで構成されています。</p>
+            <table class="p70-table p9017-exp p9017-exp--outlets" aria-label="注目枠が出る場所（ギャラリー）">
+              <colgroup><col><col><col><col></colgroup>
+              <thead>
+                <tr><th>注目枠が出る場所</th><th>対象の軸</th><th>使う枠数</th><th>枠の役割</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>ギャラリーを探す ハブ</td><td>エリアのみ</td><td class="p9017-exp__num">6</td><td>索引が全URLを毎日リンクしているので、注目枠は日替わりへ回せる</td></tr>
+              </tbody>
+            </table>
+            <p class="p211-help">出口は「ギャラリーを探す ハブ」（P10-7）の1か所だけです（展覧会のようにトップ・検索ハブへは配りません）。</p>
+            <p class="p315-ops-guide__lead">掲載データが少ないエリアが多いため（デモでは12件中7件が東京都に集中）、ローテーションのしきい値は展覧会（5件）より低い値を既定にしています。件数が増えるにつれて調整してください。</p>
+          </div>
+        </div>
+
+        <!-- ③-G 注目のギャラリーエリアの選定 -->
+        <div class="p211-block ktn-index-target" id="p9017-ghl" data-pane="axis" data-kind="gallery">
+          <div class="p211-block__head">
+            <h3 class="p211-block__title">注目のギャラリーエリアの選定<span class="p211-block__title-en">Area Highlights — Galleries</span></h3>
+          </div>
+          <div class="p211-block__body">
+            <p class="p211-help p9017-blocknote">常設したエリアは毎日必ず出ます。<strong>残りの枠はローテーション</strong>が埋め、しきい値を超えたエリアに日付から決まる順で回ります。<strong>常設にしたエリアはローテーションの対象から外れます</strong>＝同じエリアが二重に出ることはありません。</p>
+            <div class="p211-field">
+              <span class="p211-label">常設するエリア<span class="p211-label__unit">上から優先</span></span>
+              <div class="p9017-prio" id="p9017GFixed"></div>
+              <div class="p9017-addrow">
+                <select class="p211-select p9017-addsel" id="p9017GFixedAdd"></select>
+                <button type="button" class="ktn-op-btn ktn-op-btn--sm" id="p9017GFixedAddBtn">常設に追加</button>
+              </div>
+              <p class="p211-help">「ギャラリーを探す ハブ」の6枠のうち、上から優先して使われます。<strong>並び順がそのまま優先順位</strong>です。</p>
+            </div>
+            <div class="p211-field">
+              <label class="p211-label" for="p9017GMin">ローテーションのしきい値<span class="p211-label__unit">掲載件数</span></label>
+              <input type="number" class="p211-input p211-input--sm" id="p9017GMin" value="1" min="0" step="1">
+              <p class="p211-help">これを下回るエリアはローテーションに入りません。ハブの「エリアから探す」からは引き続きたどれます。<span id="p9017GRotPool"></span></p>
+            </div>
+            <div class="p9017-preview">
+              <span class="p9017-preview__label">本日の優先順位</span>
+              <p class="p211-help" id="p9017GPreviewNote"></p>
+              <div class="p9017-prio p9017-prio--preview" id="p9017GPreview"></div>
+            </div>
+            <div class="p9017-actions">
+              <button type="button" class="ktn-op-btn ktn-op-btn--primary ktn-op-btn--sm" id="p9017GHlSave">保存する</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ⑤-G ギャラリー軸ページ一覧（軸が1本のみなのでサブタブは持たず常に53行のテーブル） -->
+        <div class="p211-block ktn-index-target" id="p9017-glist" data-pane="axis" data-kind="gallery">
+          <div class="p211-block__head">
+            <h3 class="p211-block__title">ギャラリー軸ページ一覧<span class="p211-block__title-en">Gallery Axis Pages</span></h3>
+          </div>
+          <div class="p211-block__body p9017-listbody">
+            <div class="p319-toolbar">
+              <div class="p319-toolbar__filters">
+                <label class="p319-filter">
+                  <span class="p319-filter__label">導入文</span>
+                  <select class="p319-filter__sel" id="p9017GFilterLead">
+                    <option value="">すべて</option>
+                    <option value="written">記入済み</option>
+                    <option value="auto">自動生成のまま</option>
+                  </select>
+                </label>
+                <label class="p319-filter">
+                  <span class="p319-filter__label">注目枠</span>
+                  <select class="p319-filter__sel" id="p9017GFilterHl">
+                    <option value="">すべて</option>
+                    <option value="fixed">常設</option>
+                    <option value="rot">ローテーション対象</option>
+                    <option value="off">対象外</option>
+                  </select>
+                </label>
+              </div>
+              <p class="ktn-count ktn-count--result" id="p9017GCount"></p>
+            </div>
+            <div class="p315-archive-table-wrap">
+              <table class="p315-archive-table p9017-table" aria-label="ギャラリー軸ページ一覧">
+                <thead>
+                  <tr><th>軸ページ</th><th>掲載</th><th>導入文</th><th>注目枠</th><th>操作</th></tr>
+                </thead>
+                <tbody id="p9017GList"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- 作品／クリエイターの空状態（2026-09-25・handoff 追174-196・ユーザー指示「p90-17検索設定で
+             作品・クリエイターのとき、特集(軸)の設定タブを表示(選べるように)してください」）。
+             この2種別はタブ自体は選べるが、軸ページを持たない（年間ランキング1枚ずつのみ・
+             追174-81/85/86）ため中身は「まだ無い」ことを示すだけの空状態にする（追174-90の当初設計
+             「作品・クリエイター・ギャラリーは空状態で、レール改訂とセットで埋める」に対応）。 -->
+        <div class="p211-block ktn-index-target" id="p9017-noaxis" data-pane="axis" data-kind="work creator">
+          <div class="p211-block__head">
+            <h3 class="p211-block__title">特集（軸）の設定<span class="p211-block__title-en" id="p9017NoAxisTitleEn">Axis Settings — Work</span></h3>
+          </div>
+          <div class="p211-block__body">
+            <p class="p315-ops-guide__lead" id="p9017NoAxisLead">作品には、恒久URLを持つ特集（軸）ページがまだありません。年間ランキング（P10-5-1）だけを掲載しています。エリア・ジャンルなどの分類は、検索の設定にあるピックアップマスタから絞り込み条件を用意できます。</p>
           </div>
         </div>
 

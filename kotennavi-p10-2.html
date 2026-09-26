@@ -118,7 +118,7 @@
   <main class="ktn-main" id="ktnMain">
 
     <!-- A. 検索ヘッド -->
-    <section class="p10-search">
+    <section class="p10-search" id="p102Search">
       <div class="p10-search__inner">
         <div class="p10-search__title-row">
           <h1 class="p10-search__title">クリエイターを探す</h1>
@@ -142,6 +142,7 @@
         <div class="p10-quick-row">
           <button class="p10-chip" data-f="st:live" type="button">開催中の展覧会あり</button>
           <button class="p10-chip" data-f="new:1" type="button">新着</button>
+          <button class="p10-chip" data-f="pop:1" type="button">人気のクリエイター</button>
           <span class="p10-quick-row__sep"></span>
           <button class="p10-adv-toggle" id="p102AdvToggle" type="button" aria-expanded="false">
             詳しい条件
@@ -187,6 +188,7 @@
             <div class="p10-adv__label">こだわり条件</div>
             <div class="p10-adv__opts">
               <button class="p10-chip" data-f="new:1" type="button">新着</button>
+              <button class="p10-chip" data-f="pop:1" type="button">人気のクリエイター</button>
             </div>
           </div>
           <div class="p10-adv__foot">
@@ -217,15 +219,7 @@
       </div>
     </div>
 
-    <!-- B. ピックアップのチップレール（保存済み検索）。「特集」は P10-4〜P10-7（検索ごとの特集ページ）の語なので、検索側では使わない -->
-    <div class="p10-presets">
-      <div class="p10-presets__inner">
-        <span class="p10-presets__label">Picks</span>
-        <button class="p10-presets__arr p10-presets__arr--l is-hidden" id="p102PresetArrL" type="button" aria-label="左へスクロール">‹</button>
-        <div class="p10-presets__rail" id="p102PresetRail"></div>
-        <button class="p10-presets__arr p10-presets__arr--r" id="p102PresetArrR" type="button" aria-label="右へスクロール">›</button>
-      </div>
-    </div>
+    <!-- Picksレールは2026-09-24廃止（handoff 追174-176）。クリエイターには特集がなく、新着枠は検索クイックチップと重複していたため -->
 
     <!-- C. ディスカバリー状態（条件なしのデフォルト） -->
     <div class="ktn-content p10-content" id="p102Discovery">
@@ -267,9 +261,9 @@
 
       <section class="p10-shelf ktn-cv-auto">
         <div class="ktn-section__head">
-          <h2 class="ktn-section__title">あなたへのおすすめ<span class="ktn-sec-en">Picks for You</span></h2>
-          <a href="#" class="ktn-section__more" data-preset="trending">もっと見る →</a>
+          <h2 class="ktn-section__title">最近ウォッチされたクリエイター<span class="ktn-sec-en">Recently Watched</span></h2>
         </div>
+        <p class="p10-shelf__desc">あなたが最近ウォッチしたクリエイターです。</p>
         <div class="p10-person-grid" id="p102PicksGrid"></div>
       </section>
 
@@ -294,11 +288,7 @@
             <div class="p2-side-nearby__head">
               <span class="p2-side-nearby__title">ランキング<span class="ktn-sec-en">Rankings</span></span>
             </div>
-            <p class="p10-shelf__desc">掲載中のクリエイターが対象。</p>
-            <div class="p10-rank-tabs" role="tablist">
-              <button type="button" class="p10-rank-tab is-active" data-rank="watch" role="tab">ウォッチ</button>
-              <button type="button" class="p10-rank-tab" data-rank="exh" role="tab">展覧会数</button>
-            </div>
+            <p class="p10-shelf__desc">掲載中のクリエイターの中から、直近30日のウォッチが多いトップ3です。</p>
             <div class="p10-side-list p10-side-list--rank p10-side-list--stack" id="p102RankGrid"></div>
             <a href="./kotennavi-p10-6-1.html" class="ktn-more-link" id="p102RankMore">2026年のクリエイターランキング →</a>
           </div>

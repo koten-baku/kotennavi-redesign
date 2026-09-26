@@ -139,7 +139,7 @@
 
         <div class="p10-quick-row">
           <button class="p10-chip" data-f="st:live" type="button">開催中</button>
-          <button class="p10-chip" data-f="new:1" type="button">新着掲載</button>
+          <button class="p10-chip" data-f="pop:1" type="button">人気の展覧会</button>
           <button class="p10-chip" data-f="weekend:1" type="button">今週末</button>
           <button class="p10-chip" data-preset="near" type="button">近くで開催中</button>
           <button class="p10-chip" data-f="free:1" type="button">入場無料</button>
@@ -198,6 +198,8 @@
           <div class="p10-adv__group">
             <div class="p10-adv__label">開催場所</div>
             <div class="p10-adv__opts">
+              <button class="p10-chip" data-f="near:1" type="button">現在地の近く</button>
+              <span class="p10-quick-row__sep"></span>
               <!-- 「の近く」は入力欄の外に固定テキストとして置く（入力中もplaceholderのように消えず、
                    常に「◯◯の近く」という意味が読める・追174-146）。
                    この検索はサイトに登録されている会場名が前提なので自由入力の部分一致にせず、
@@ -210,7 +212,7 @@
                    クリックすれば他のチップと同じく解除できる（is-onを外すのと同じ操作感）。 -->
               <button type="button" class="p10-chip p10-adv__near-chip is-on" id="p10NearChip" hidden></button>
               <span class="p10-adv__near-suffix">の近く</span>
-              <span class="p10-quick-row__sep"></span>
+              <span class="p10-adv__break"></span>
               <button class="p10-chip" data-f="area:東京" type="button">東京</button>
               <button class="p10-chip" data-f="area:神奈川" type="button">神奈川</button>
               <button class="p10-chip" data-f="area:愛知" type="button">愛知</button>
@@ -230,9 +232,21 @@
             </div>
           </div>
           <div class="p10-adv__group">
-            <div class="p10-adv__label">こだわり条件</div>
+            <div class="p10-adv__label">LIAISON</div>
             <div class="p10-adv__opts">
-              <button class="p10-chip" data-f="new:1" type="button">新着掲載</button>
+              <button class="p10-chip" data-f="liaison:li" type="button"><span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>オンライン展示あり</button>
+              <button class="p10-chip" data-f="liaison:lp" type="button"><span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span>オンラインで購入できる</button>
+            </div>
+          </div>
+          <div class="p10-adv__group">
+            <div class="p10-adv__label">こだわり条件</div>
+            <!-- このグループは「展覧会・会場が満たす事実」の掛け合わせ＝キーが全部別なのでAND検索になる
+                 （駐車場あり×バリアフリーのように複数を同時に満たしてほしい条件のため・2026-09-24再整理）。
+                 新着掲載・LIAISON/LIAISON+はこの性質と異なる（コンテンツの種別・新しさを表すフラグで、
+                 会場の事実と掛け合わせる「こだわり」ではない）ためグループから外した。どちらもクイック行に
+                 常設済みで単独チップとして選べる。LIAISON/LIAISON+は2026-09-26に専用グループ「LIAISON」として詳しい条件にも置いた（追174-200）。 -->
+            <div class="p10-adv__opts">
+              <button class="p10-chip" data-f="pop:1" type="button">人気の展覧会</button>
               <button class="p10-chip" data-f="free:1" type="button">入場無料</button>
               <button class="p10-chip" data-f="onsite:1" type="button">会場での作品販売あり</button>
               <!-- この2つはアクセシビリティ軸ページ（/exhibitions/access/{slug}＝P10-4-5）と同じフィールドを見る。
@@ -249,8 +263,6 @@
               <button class="p10-chip" data-f="card:1" type="button">クレジットカードOK</button>
               <!-- 特典だけは会期ごとに変わるので展覧会が持つ（p2-11「会場利用案内」の特典） -->
               <button class="p10-chip" data-f="bonus:1" type="button">来場者特典あり</button>
-              <button class="p10-chip" data-f="liaison:li" type="button"><span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>オンライン展示あり</button>
-              <button class="p10-chip" data-f="liaison:lp" type="button"><span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span>オンラインで購入できる</button>
             </div>
           </div>
           <div class="p10-adv__foot">
@@ -358,7 +370,7 @@
           </section>
 
           <!-- 層4：探し方 ─────────────────────────────
-               エリアから探す＝軸ページ（P10-4-1）への入口。ここだけ展覧会カードではなく軸カード
+               エリアから探す＝軸ページ（P10-4-2）への入口。ここだけ展覧会カードではなく軸カード
                （.ktn-axis-card）を並べるのは、「いま何をやっているか」ではなく「どこで探すか」の棚だから。
                他の棚と同じ .ec を使うと、行き先がページではなく1件の展覧会だと誤読される（追174-49）。
                選定は KTN.axis.pick()＝P10-4 の索引・P1 と同じ固定枠＋日替わりローテを共有する。 -->
@@ -391,14 +403,13 @@
             <div class="p2-side-nearby__head">
               <span class="p2-side-nearby__title">ランキング<span class="ktn-sec-en">Rankings</span></span>
             </div>
-            <p class="p10-shelf__desc">開催中・開催予定の展覧会が対象。</p>
+            <p class="p10-shelf__desc">開催中・開催予定の展覧会の中から、直近30日のトップ3です。</p>
             <div class="p10-rank-tabs" role="tablist">
               <button type="button" class="p10-rank-tab is-active" data-rank="want" role="tab">興味あり！</button>
               <button type="button" class="p10-rank-tab" data-rank="visited" role="tab">チェックイン</button>
-              <button type="button" class="p10-rank-tab" data-rank="rising" role="tab">急上昇</button>
             </div>
             <div class="p10-side-list p10-side-list--rank" id="p10RankGrid"></div>
-            <a href="./kotennavi-p10-4-2.html" class="ktn-more-link" id="p10RankMore">2026年の展覧会ランキング →</a>
+            <a href="./kotennavi-p10-4-1.html" class="ktn-more-link" id="p10RankMore">2026年の展覧会ランキング →</a>
           </div>
 
         </div><!-- /p10-layout__side -->

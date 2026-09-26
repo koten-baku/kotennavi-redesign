@@ -105,7 +105,7 @@
   <main class="ktn-main" id="ktnMain">
 
     <!-- A. 検索ヘッド -->
-    <section class="p10-search">
+    <section class="p10-search" id="p101Search">
       <div class="p10-search__inner">
         <div class="p10-search__title-row">
           <h1 class="p10-search__title">作品を探す</h1>
@@ -128,6 +128,7 @@
 
         <div class="p10-quick-row">
           <button class="p10-chip" data-f="new:1" type="button">新着</button>
+          <button class="p10-chip" data-f="pop:1" type="button">人気の作品</button>
           <span class="p10-quick-row__sep"></span>
           <button class="p10-chip" data-f="liaison:li" type="button"><span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>オンライン展示あり</button>
           <button class="p10-chip" data-f="liaison:lp" type="button"><span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span>オンラインで購入できる</button>
@@ -164,11 +165,17 @@
             </div>
           </div>
           <div class="p10-adv__group">
+            <div class="p10-adv__label">LIAISON</div>
+            <div class="p10-adv__opts">
+              <button class="p10-chip" data-f="liaison:li" type="button"><span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>オンライン展示あり</button>
+              <button class="p10-chip" data-f="liaison:lp" type="button"><span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span>オンラインで購入できる</button>
+            </div>
+          </div>
+          <div class="p10-adv__group">
             <div class="p10-adv__label">こだわり条件</div>
             <div class="p10-adv__opts">
               <button class="p10-chip" data-f="new:1" type="button">新着</button>
-              <button class="p10-chip" data-f="liaison:li" type="button"><span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>オンライン展示あり</button>
-              <button class="p10-chip" data-f="liaison:lp" type="button"><span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span>オンラインで購入できる</button>
+              <button class="p10-chip" data-f="pop:1" type="button">人気の作品</button>
             </div>
           </div>
           <div class="p10-adv__foot">
@@ -199,15 +206,7 @@
       </div>
     </div>
 
-    <!-- B. ピックアップのチップレール（保存済み検索）。「特集」は P10-4〜P10-7（検索ごとの特集ページ）の語なので、検索側では使わない -->
-    <div class="p10-presets">
-      <div class="p10-presets__inner">
-        <span class="p10-presets__label">Picks</span>
-        <button class="p10-presets__arr p10-presets__arr--l is-hidden" id="p101PresetArrL" type="button" aria-label="左へスクロール">‹</button>
-        <div class="p10-presets__rail" id="p101PresetRail"></div>
-        <button class="p10-presets__arr p10-presets__arr--r" id="p101PresetArrR" type="button" aria-label="右へスクロール">›</button>
-      </div>
-    </div>
+    <!-- Picksレールは2026-09-24廃止（handoff 追174-176）。作品には特集がなく、新着枠は検索クイックチップと重複していたため -->
 
     <!-- C. ディスカバリー状態（条件なしのデフォルト） -->
     <div class="ktn-content p10-content" id="p101Discovery">
@@ -221,7 +220,7 @@
           <a href="#" class="ktn-section__more" data-preset="sale-now">もっと見る →</a>
         </div>
         <p class="p10-shelf__desc">リエゾン+展覧会に出品中で、いまオンライン販売を受け付けている作品です。会場に行けなくても購入できます。</p>
-        <div class="p2-5-grid" id="p101SaleGrid"></div>
+        <div class="p101-work-grid" id="p101SaleGrid"></div>
       </section>
 
       <section class="p10-shelf">
@@ -230,7 +229,7 @@
           <a href="#" class="ktn-section__more" data-preset="liaison-view">もっと見る →</a>
         </div>
         <p class="p10-shelf__desc">リエゾン展覧会に出品中の作品です。会場の展示が、そのままオンラインで見られます。</p>
-        <div class="p2-5-grid" id="p101LiaisonGrid"></div>
+        <div class="p101-work-grid" id="p101LiaisonGrid"></div>
       </section>
 
       <section class="p10-shelf ktn-cv-auto">
@@ -239,7 +238,7 @@
           <a href="#" class="ktn-section__more" data-preset="new-all">もっと見る →</a>
         </div>
         <p class="p10-shelf__desc">最近個展なびに掲載された作品。</p>
-        <div class="p2-5-grid" id="p101NewGrid"></div>
+        <div class="p101-work-grid" id="p101NewGrid"></div>
       </section>
 
       <section class="p10-shelf ktn-cv-auto">
@@ -248,7 +247,7 @@
           <a href="#" class="ktn-section__more" data-preset="popular">もっと見る →</a>
         </div>
         <p class="p10-shelf__desc">「興味あり！」シグナル上位の作品。</p>
-        <div class="p2-5-grid" id="p101PopularGrid"></div>
+        <div class="p101-work-grid" id="p101PopularGrid"></div>
       </section>
 
       <section class="p10-shelf ktn-cv-auto">
@@ -257,7 +256,7 @@
           <a href="#" class="ktn-section__more" data-preset="trending">もっと見る →</a>
         </div>
         <p class="p10-shelf__desc">ウォッチ中のクリエイター・興味あり！の傾向からのおすすめ。</p>
-        <div class="p2-5-grid" id="p101PicksGrid"></div>
+        <div class="p101-work-grid" id="p101PicksGrid"></div>
       </section>
 
         </div><!-- /p10-layout__main -->
@@ -281,11 +280,7 @@
             <div class="p2-side-nearby__head">
               <span class="p2-side-nearby__title">ランキング<span class="ktn-sec-en">Rankings</span></span>
             </div>
-            <p class="p10-shelf__desc">掲載中の作品が対象。</p>
-            <div class="p10-rank-tabs" role="tablist">
-              <button type="button" class="p10-rank-tab is-active" data-rank="interest" role="tab">興味あり！</button>
-              <button type="button" class="p10-rank-tab" data-rank="views" role="tab">閲覧数</button>
-            </div>
+            <p class="p10-shelf__desc">掲載中の作品の中から、直近30日の興味あり！が多いトップ3です。</p>
             <div class="p10-side-list p10-side-list--rank p10-side-list--stack" id="p101RankGrid"></div>
             <a href="./kotennavi-p10-5-1.html" class="ktn-more-link" id="p101RankMore">2026年の作品ランキング →</a>
           </div>
@@ -360,7 +355,7 @@
         <span class="p10-hl__ttl">注目の作品<span class="ktn-sec-en">Highlights</span></span>
         <div class="p10-hl__row" id="p10HlRow"></div>
       </section>
-      <div class="p2-5-grid" id="p101ResultGrid"></div>
+      <div class="p101-work-grid p101-work-grid--4" id="p101ResultGrid"></div>
       <div class="p10-more-wrap">
         <button class="ktn-op-btn" id="p101MoreBtn" type="button">さらに読み込む</button>
       </div>
@@ -389,7 +384,7 @@
         <div class="ktn-section__head">
           <h2 class="ktn-section__title">こちらもおすすめ<span class="ktn-sec-en">You May Like</span></h2>
         </div>
-        <div class="p2-5-grid" id="p101ZeroGrid"></div>
+        <div class="p101-work-grid" id="p101ZeroGrid"></div>
       </section>
     </div>
 

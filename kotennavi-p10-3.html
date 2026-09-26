@@ -142,6 +142,7 @@
         <div class="p10-quick-row">
           <button class="p10-chip" data-f="st:live" type="button">開催中の展覧会あり</button>
           <button class="p10-chip" data-f="new:1" type="button">新着</button>
+          <button class="p10-chip" data-f="pop:1" type="button">人気のギャラリー</button>
           <span class="p10-quick-row__sep"></span>
           <button class="p10-adv-toggle" id="p103AdvToggle" type="button" aria-expanded="false">
             詳しい条件
@@ -180,8 +181,23 @@
             </div>
           </div>
           <div class="p10-adv__group">
-            <div class="p10-adv__label">エリア</div>
+            <div class="p10-adv__label">開催場所</div>
             <div class="p10-adv__opts">
+              <button class="p10-chip" data-f="near:1" type="button">現在地の近く</button>
+              <span class="p10-quick-row__sep"></span>
+              <!-- 「の近く」（P10と同じ実装・2026-09-25・handoff 追174-184・ユーザー指示
+                   「p10-3にp10の～の近くを同じように実装して下さい」）。入力欄の外に固定テキストとして
+                   「の近く」を置く（追174-146）。サイトに登録されているギャラリー・美術館名が前提なので
+                   自由入力の部分一致にせず、候補から選んで確定する（追174-147）。エリアチップとは排他。
+                   P10の会場名版（x.venue）と違い、ギャラリー自身の名前（x.name）で完全一致させる簡易実装
+                   ＝実距離ではなく名称一致（本物の近接検索は本番実装まで持ち越し・P10と同じ前提）。 -->
+              <div class="p10-adv__near-wrap">
+                <input class="p10-adv__near-input" type="text" placeholder="ギャラリー・美術館名" autocomplete="off">
+                <div class="p10-adv__near-sugg" id="p103NearSugg" hidden></div>
+              </div>
+              <button type="button" class="p10-chip p10-adv__near-chip is-on" id="p103NearChip" hidden></button>
+              <span class="p10-adv__near-suffix">の近く</span>
+              <span class="p10-adv__break"></span>
               <button class="p10-chip" data-f="area:東京" type="button">東京</button>
               <button class="p10-chip" data-f="area:神奈川" type="button">神奈川</button>
               <button class="p10-chip" data-f="area:愛知" type="button">愛知</button>
@@ -189,12 +205,19 @@
               <button class="p10-chip" data-f="area:大阪" type="button">大阪</button>
               <button class="p10-chip" data-f="area:福岡" type="button">福岡</button>
               <button class="p10-chip" type="button" data-toggle="prefs" aria-expanded="false">すべての都道府県<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="6 9 12 15 18 9"/></svg></button>
+              <!-- 東京のエリアで絞る（P10と同じ_p10PanelHtml('tokyo')を共有・2026-09-25・handoff 追174-183・
+                   ユーザー指示「p10-7系とp10-3のエリアはp10と同様に47都道府県+6東京エリアにしてください」）。
+                   GALLERIESは都道府県単位でしかareaを持たないため、tarea:チップはmatches()側で
+                   親県（東京）へ寄せて判定する（KTN.axis.searchArea()と同じ考え方）。 -->
+              <button class="p10-chip" type="button" data-toggle="tokyo" aria-expanded="false">東京のエリアで絞る<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="6 9 12 15 18 9"/></svg></button>
+              <span class="p10-adv__note">東京は掲載数が多いため、都内を6つのエリアに分けています。ギャラリーの住所は都道府県単位でしか集計していないため、どのエリアを選んでも東京都全体のギャラリーが対象になります</span>
             </div>
           </div>
           <div class="p10-adv__group">
             <div class="p10-adv__label">こだわり条件</div>
             <div class="p10-adv__opts">
               <button class="p10-chip" data-f="new:1" type="button">新着</button>
+              <button class="p10-chip" data-f="pop:1" type="button">人気のギャラリー</button>
               <!-- ギャラリー自身が会場なので、P4「利用案内」の入力をそのまま検索条件にできる
                    （P10の同名チップと違い会場を別引きする必要が無い・追174-150）。 -->
               <button class="p10-chip" data-f="barrierfree:1" type="button">バリアフリー</button>
@@ -292,9 +315,9 @@
 
       <section class="p10-shelf ktn-cv-auto">
         <div class="ktn-section__head">
-          <h2 class="ktn-section__title">あなたへのおすすめ<span class="ktn-sec-en">Picks for You</span></h2>
-          <a href="#" class="ktn-section__more" data-preset="trending">もっと見る →</a>
+          <h2 class="ktn-section__title">最近ウォッチされたギャラリー<span class="ktn-sec-en">Recently Watched</span></h2>
         </div>
+        <p class="p10-shelf__desc">あなたが最近ウォッチしたギャラリーです。</p>
         <div class="p10-person-grid" id="p103PicksGrid"></div>
       </section>
 
@@ -327,11 +350,7 @@
             <div class="p2-side-nearby__head">
               <span class="p2-side-nearby__title">ランキング<span class="ktn-sec-en">Rankings</span></span>
             </div>
-            <p class="p10-shelf__desc">掲載中のギャラリーが対象。</p>
-            <div class="p10-rank-tabs" role="tablist">
-              <button type="button" class="p10-rank-tab is-active" data-rank="watch" role="tab">ウォッチ</button>
-              <button type="button" class="p10-rank-tab" data-rank="exh" role="tab">展覧会数</button>
-            </div>
+            <p class="p10-shelf__desc">掲載中のギャラリーの中から、直近30日のウォッチが多いトップ3です。</p>
             <div class="p10-side-list p10-side-list--rank p10-side-list--stack" id="p103RankGrid"></div>
             <a href="./kotennavi-p10-7-1.html" class="ktn-more-link" id="p103RankMore">2026年のギャラリーランキング →</a>
           </div>

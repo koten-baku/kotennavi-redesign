@@ -3,20 +3,41 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- ギャラリー特集のページ（P10-3 の索引）。ページ自体はゲストにも開くが noindex とする（追174-81）。
-       理由は、ここに並ぶチップが全てログイン必須の検索（P10-3 の ?f=）へ飛ぶのでクローラが先へ辿れず、
-       索引だけが index されても内部リンクハブとして働かないため。以前はギャラリーだけ index していたが、
-       年間ランキングを P10-7-1 へ切り出したことで、index する価値はそちら（公開ページ P4 へ飛ぶ）に移り、
-       索引3枚（P10-5／P10-6／P10-7）は noindex で揃った。
+  <!-- ギャラリー特集のページ（もとは P10-3 の索引）。
+       旧・追174-81の理由＝「ここに並ぶチップが全てログイン必須の検索（P10-3 の ?f=）へ飛ぶので
+       クローラが先へ辿れず、索引だけが index されても内部リンクハブとして働かない」は、
+       2026-09-25にジャンル/タグ/開催状況/LIAISONの4セクションを撤去した時点で成立しなくなった
+       （追174-179）。残るエリアから探すは実ページ（P10-7-2・index,follow・47都道府県）へ着地する
+       ため、P10-4がそうであるように内部リンクハブとして機能する。**P10-4と同じ index,follow へ
+       変更**（2026-09-25・handoff 追174-180）。P10-5／P10-6は依然チップが全てログイン必須検索へ
+       飛ぶだけの索引のままなので noindex,nofollow を維持＝この非対称はギャラリーだけ固定会場という
+       構造的属性を持つため正当（クリエイター・作品との違いは追174-50／追174-86、P10-7のみ
+       クロスリンク網に残した追174-130と同じ理由）。
        ゲストに開いておくのは変えない＝固定の分類なので列挙手段にならず制限する必要がない（追174-80）。
-       ページ名は P10-4 と同じ「{種別}を{軸}・{軸}から探す」形式（追174-85）。代表2軸は
-       「エリア・開催状況」＝P10-6（クリエイターをジャンル・開催状況から探す）と対にする（追174-87）。
-       ジャンルとタグは近い軸なので代表には並べず、「いま行けるか」を second axis に採る。
-       エリアはギャラリー固有の正当な軸＝固定会場を持つため（クリエイターとの違いは追174-86）。
-       「特集」は P10-4〜7 という層を指すナビ語彙で、h1/title には出さない（追174-82）。 -->
-  <title>ギャラリーをエリア・開催状況から探す | 個展なび</title>
-  <meta name="description" content="個展なびに掲載されているギャラリーを、エリア・開催状況・扱うジャンル・LIAISON対応から探せる特集ページです。">
-  <meta name="robots" content="noindex,nofollow">
+
+       【2026-09-25追記・handoff 追174-179】本文の「〜から探す」セクションはP10-4に揃え、
+       実ページ（index,follow）を持つ軸＝エリア（P10-7-2）だけに限定した（旧ジャンル/タグ/
+       開催状況/LIAISONの4セクションは撤去＝P10-3への絞り込みチップに過ぎず実ページを持たなかった）。
+
+       【2026-09-25追記・handoff 追174-181】title/h1は「ギャラリーをエリアから探す」の単一軸表記へ
+       修正した。旧「ギャラリーをエリア・開催状況から探す」（追174-87で確定した代表2軸表記）は、
+       直前の追174-179で本文からジャンル/タグ/開催状況/LIAISONの4セクションを撤去した後も
+       「本文構成とは別レイヤーのマーケティング的要約」として維持していたが、ユーザー指摘により
+       誤りと判定＝title/h1は実際にそのページから辿れる軸だけを名乗るべきで、存在しないセクションを
+       示唆する見出しは（indexするページであればなおさら）利用者とクローラの双方を誤導する。
+       P10-4（展覧会をエリア・ジャンルから探す）も本文に実在する軸だけをtitleに挙げている先例で、
+       これに揃えた。開催状況・扱うジャンルで絞りたい場合は本文の「条件を指定して探す」（→P10-3）を
+       案内する（追174-83のリンク文言＝着地先h1と同一にする規約に従い、他ページから本ページへの
+       送りリンク・カード文言も全てこのtitleに合わせて更新済み）。 -->
+  <title>ギャラリーをエリアから探す | 個展なび</title>
+  <meta name="description" content="個展なびに掲載されているギャラリーをエリア別にまとめた索引です。開催中の展覧会・ジャンル・LIAISON対応などの条件で絞り込みたいときは検索から探せます。">
+  <link rel="canonical" href="https://koten-navi.com/galleries">
+  <meta name="robots" content="index,follow">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="ギャラリーをエリアから探す | 個展なび">
+  <meta property="og:url" content="https://koten-navi.com/galleries">
+  <meta property="og:site_name" content="個展なび">
+  <meta name="twitter:card" content="summary">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./kotennavi-common.css">
@@ -25,12 +46,21 @@
 
 <div class="ktn-toast" id="ktnToast"></div>
 
-<!-- デモバー（索引はゲストにも開く。年の切替はランキング側 P10-7-1 へ移した） -->
+<!-- デモバー（索引はゲストにも開く。年の切替はランキング側 P10-7-1 へ移した。
+     残る「エリアから探す」は実ページ（P10-7-2）のみでゲスト公開のため、既定ロールをP10-4と
+     同じ guest にした・2026-09-25・handoff 追174-180）。
+     「注目のエリア」の日送りはP10-4と同じ仕組み（handoff 追174-182）。デモは12件・6エリアしか
+     ギャラリーが無いため、常設1＋ローテーション対象5＝ちょうど6枠で「顔ぶれ」は変わらず「並び順」
+     だけが日替わりで変わる（データ量の制約であり実装の不備ではない）。 -->
 <div class="dbar" id="dbar">
   <span class="dbar-sep">ロール：</span>
-  <button class="dbtn" onclick="setR('guest',this)">ゲスト</button>
-  <button class="dbtn on" onclick="setR('login',this)">ログイン</button>
+  <button class="dbtn on" onclick="setR('guest',this)">ゲスト</button>
+  <button class="dbtn" onclick="setR('login',this)">ログイン</button>
   <button class="dbtn" onclick="setR('admin',this)">管理者</button>
+  <span class="dbar-sep">注目のエリア：</span>
+  <button class="dbtn on" data-axis-day onclick="setAxisDay(0,this)">今日</button>
+  <button class="dbtn" data-axis-day onclick="setAxisDay(1,this)">明日</button>
+  <button class="dbtn" data-axis-day onclick="setAxisDay(2,this)">明後日</button>
 </div>
 
 <div class="shell">
@@ -118,11 +148,11 @@
           <span class="ktn-axis-head__eyebrow-line"></span>
         </div>
         <div class="ktn-axis-head__title-row">
-          <h1 class="ktn-axis-head__title">ギャラリーをエリア・開催状況から探す</h1>
+          <h1 class="ktn-axis-head__title">ギャラリーをエリアから探す</h1>
           <span class="ktn-axis-head__en">Browse Galleries</span>
         </div>
         <div class="ktn-axis-head__lead">
-          <p>行ける範囲に、いま行ける場所があるか。個展なびに載っているギャラリーを、エリアと、いま展覧会をひらいているかどうか、扱うジャンルからたどれます。名前の横の数字は、いま載っている件数です。</p>
+          <p>行ける範囲に、いま行ける場所があるか。個展なびに載っているギャラリーをエリア別にまとめた索引です。47都道府県それぞれにページがあり、そのエリアに会場を持つギャラリーと、いま開催中・開催予定の展覧会をたどれます。ジャンル・開催状況・LIAISON対応で絞り込みたいときは、条件を指定して探すからお進みください。</p>
           <p>並び順で選ぶなら<strong>ギャラリーの年間ランキング</strong>（その年にウォッチと展覧会数が多かったギャラリー）もあります。</p>
         </div>
         <div class="ktn-axis-head__links">
@@ -136,8 +166,24 @@
          分類索引そのものは列挙手段にならないため制限しない（handoff 追174-80）。 -->
     <div class="ktn-content p10-content">
 
-      <!-- B. 分類索引。件数は KTN.p10data（検索ページと同じ配列）から数える。
-           リンク先は P10-3 の絞り込み状態で、分類ごとの独立URLは作らない。 -->
+      <!-- B. 注目のエリア＝固定枠（掲載の多い主要エリア）＋日替わりのローテーション枠。P10-4の
+           renderHl()／KTN.axis.pick() と同じ仕組みを並行実装（handoff 追174-182・ユーザー指示
+           「p10-4のように注目のエリアの設置をした方がいいでしょうか」への回答として実装）。
+           選定は KTN.axis.galleryPick()（展覧会の COUNT/FIXED/MIN とは別のギャラリー専用の状態・
+           P90-17「特集（軸）の設定」→種別タブ「ギャラリー」から調整可）。カードは .ktn-axis-card
+           （P10-4／P10-7-2 と同じ部品）を再利用＝新規CSSなし。 -->
+      <section class="p10-shelf">
+        <div class="ktn-section__head">
+          <h2 class="ktn-section__title">注目のエリア<span class="ktn-sec-en">Area Highlights</span></h2>
+        </div>
+        <p class="p10-shelf__desc">ギャラリーが集まっているエリアと、日替わりで入れ替わるエリア。</p>
+        <div class="ktn-axis-cards" id="p107Hl"></div>
+      </section>
+
+      <!-- C. 軸ネットワーク（内部リンク層）。P10-4に揃え「〜から探す」は実ページ（index,follow）を
+           持つ軸だけに限定＝エリア（P10-7-2）のみ（2026-09-25・handoff 追174-177）。旧ジャンル/タグ/
+           開催状況/LIAISONの4セクション（P10-3検索へ着地するだけの絞り込みチップ）は撤去した。
+           47都道府県をすべて出す＝掲載0件の県もリンクを外さない（P10-7-2側の補完ブロックが受ける）。 -->
       <section class="ktn-axis-nav ktn-index-target" id="index">
         <div class="ktn-section__head">
           <h2 class="ktn-section__title">エリアから探す<span class="ktn-sec-en">Browse by Area</span></h2>
@@ -145,45 +191,37 @@
         </div>
         <p class="p10-shelf__desc">ギャラリーが構えている場所です。</p>
         <div class="ktn-axis-nav__row" id="p107AreaNav"></div>
-
-        <div class="ktn-section__head ktn-axis-nav__head2 ktn-index-target" id="genre">
-          <h2 class="ktn-section__title">ジャンルから探す<span class="ktn-sec-en">Browse by Genre</span></h2>
+        <!-- 東京をエリアで探す（P10-4のC節と同型・2026-09-25・handoff 追174-183・ユーザー指示
+             「p10-7系とp10-3のエリアはp10と同様に47都道府県+6東京エリアにしてください」）。
+             KTN.p10data.GALLERIES は都道府県単位（'東京'）でしか area を持たず、展覧会のような
+             varea（区分ごとの実データ）が無いため、6エリアの数字は分けられない＝件数は出さず、
+             どのエリアを選んでも東京都全体のギャラリーへ着地する旨を注記する。 -->
+        <div class="ktn-section__head ktn-axis-nav__head2 ktn-index-target" id="tokyo-area">
+          <h2 class="ktn-section__title">東京をエリアで探す<span class="ktn-sec-en">Tokyo by Area</span></h2>
         </div>
-        <p class="p10-shelf__desc">そのギャラリーが多く扱っているジャンル（登録時に選ぶ6つの区分）です。1つのギャラリーが複数のジャンルに入ることがあります。</p>
-        <div class="ktn-axis-nav__row" id="p107GenreNav"></div>
-
-        <div class="ktn-section__head ktn-axis-nav__head2 ktn-index-target" id="tag">
-          <h2 class="ktn-section__title">タグから探す<span class="ktn-sec-en">Browse by Tag</span></h2>
-        </div>
-        <p class="p10-shelf__desc">技法や素材のタグです。ジャンルより細かく、1つのギャラリーにいくつも付きます。</p>
-        <div class="ktn-axis-nav__row" id="p107TagNav"></div>
-
-        <div class="ktn-section__head ktn-axis-nav__head2 ktn-index-target" id="status">
-          <h2 class="ktn-section__title">開催状況から探す<span class="ktn-sec-en">Browse by Status</span></h2>
-        </div>
-        <p class="p10-shelf__desc">いま展覧会を見に行けるかどうかで絞り込めます。</p>
-        <div class="ktn-axis-nav__row" id="p107StNav"></div>
-
-        <div class="ktn-section__head ktn-axis-nav__head2 ktn-index-target" id="liaison">
-          <h2 class="ktn-section__title">LIAISONから探す<span class="ktn-sec-en">Browse by LIAISON</span></h2>
-        </div>
-        <p class="p10-shelf__desc">LIAISONはオンライン展示、LIAISON+はオンラインでの購入申込もできる作品を出しているギャラリーです。</p>
-        <div class="ktn-axis-nav__row" id="p107LiNav"></div>
+        <p class="p10-shelf__desc">東京都は掲載数が多いため、都内を6つのエリアに分けています。ギャラリーの住所は都道府県単位でしか集計していないため、どのエリアを選んでも東京都全体のギャラリーが表示されます。</p>
+        <div id="p107TokyoNav"></div>
       </section>
 
-      <!-- C. 年間ランキングへの出口（本体は P10-7-1 へ切り出した・追174-81）。
-           見出しは「{種別}の年間ランキング」、英サブは Annual Ranking、送りリンクは
-           着地先のページ名（年は JS が入れる）で4枚とも同形にした（追174-83／追174-84）。
-           .ktn-axis-related＝直前の分類索引とのくっつき防止の区切り線（追174-132）。 -->
-      <section class="p10-shelf ktn-axis-related ktn-index-target" id="rank">
+      <!-- D. 年間ランキングのダイジェスト（本体は P10-7-1 へ切り出してある・追174-81）。
+           P10-4（renderArcDigest・id="p10Archive"）と同じ「上位3件＋年チップ」形式に統一
+           （2026-09-25・handoff 追174-181）。ユーザー指示「ランキングの表示はp10-4に合わせて」＝
+           旧「もっと見るリンク1本だけ」はP10-5/P10-6と横並びにするための簡略版だったが、
+           P10-7はもう死にページではなくP10-4と同じindex,followの軸ハブなので、実際の内部リンク網
+           （上位3件のギャラリー詳細ページへのリンク）を持つP10-4型のほうが内部リンクハブとしての
+           機能が強い。年の切替を select にしないのはP10-4と同じ理由＝2026年と2025年が同じURLに
+           同居するとクローラから片方しか見えないため（追174-48）。
+           .p104-arc 自体が上罫線を持つため .ktn-axis-related は付けない（P10-4のD節と同型）。 -->
+      <section class="p104-arc ktn-index-target" id="rank">
         <div class="ktn-section__head">
           <h2 class="ktn-section__title">ギャラリーの年間ランキング<span class="ktn-sec-en">Annual Ranking</span></h2>
         </div>
-        <p class="p10-shelf__desc">その年にウォッチと展覧会数が多かったギャラリーを並べています。開設の早いギャラリーほど有利にならないように、累計ではなく年ごとの増分で見ています。年ごとに別のページとして残ります。</p>
-        <a class="ktn-more-link" id="p107RankMore" href="./kotennavi-p10-7-1.html">2026年のギャラリーランキング →</a>
+        <p class="p10-shelf__desc">その年にウォッチが増えたギャラリーを並べています。開設の早いギャラリーほど有利にならないように、累計ではなく年ごとの増分で見ています。</p>
+        <ol class="p104-arc__list" id="p107ArchiveList"></ol>
+        <div class="p104-arc__years" id="p107ArcYears"></div>
       </section>
 
-      <!-- D. 関連ページへ（カードの文言＝着地先のページ名＝各ページの h1・追174-83／追174-85）。
+      <!-- E. 関連ページへ（カードの文言＝着地先のページ名＝各ページの h1・追174-83／追174-85）。
            作品(p10-5)・クリエイター(p10-6)は追174-130でクロスリンク網から除外
            （P10-1/P10-2自身の絞り込みチップと内容が重複するnoindexページで、送客すると
            かえって利用者を混乱させるという判断）。展覧会(p10-4)のみ据え置き。
@@ -225,7 +263,7 @@
 <script src="./kotennavi-pages.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-    KTN.init({ page: 'p10-7', role: 'login' });
+    KTN.init({ page: 'p10-7', role: 'guest' });
   });
 </script>
 </body>

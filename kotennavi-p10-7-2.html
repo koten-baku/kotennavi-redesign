@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- 場所 × アーカイブ（/exhibitions/{slug}/archive）。
-       canonical は自己参照＝親の軸ページへ寄せない。会期を終えた展覧会の記録は、その土地について
-       他のどこにも無い唯一の層で、親へ寄せるとこの層ごと検索結果から消える（追174-46②）。
-       title/h1 は軸ごとに固定し、日付・年・件数・時制語を入れない（追174-46④）。 -->
-  <title>東京都の展覧会アーカイブ 過去の開催記録｜個展なび</title>
-  <meta name="description" id="p1043Desc" content="東京都でこれまでに開催された展覧会・個展の記録です。会期を終えた展示を、会場別・ジャンル別にさかのぼって見られます。">
-  <link rel="canonical" id="p1043Canonical" href="https://koten-navi.com/exhibitions/tokyo/archive">
+  <!-- ギャラリーのエリア軸ページ（P10-4-2の対・2026-09-25新設・handoff 追174-177）。
+       単独軸のみ（ジャンル/行きやすさのクロス軸は作らない）・47都道府県単位（東京6エリアの細分化は無し）。
+       このプロトタイプは東京都で着地し、デモバー・?ax= で県を差し替える。 -->
+  <title>東京都のギャラリー｜個展なび</title>
+  <meta name="description" id="p1072Desc" content="東京都のギャラリー一覧です。住所・営業時間・いまの展覧会をまとめています。会期・地域から探せます。">
+  <link rel="canonical" id="p1072Canonical" href="https://koten-navi.com/galleries/tokyo">
+  <meta name="robots" id="p1072Robots" content="index,follow">
   <meta property="og:type" content="website">
-  <meta property="og:title" id="p1043OgTitle" content="東京都の展覧会アーカイブ 過去の開催記録｜個展なび">
-  <meta property="og:url" id="p1043OgUrl" content="https://koten-navi.com/exhibitions/tokyo/archive">
+  <meta property="og:title" id="p1072OgTitle" content="東京都のギャラリー｜個展なび">
+  <meta property="og:url" id="p1072OgUrl" content="https://koten-navi.com/galleries/tokyo">
   <meta property="og:site_name" content="個展なび">
   <meta name="twitter:card" content="summary">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,19 +23,22 @@
 
 <div class="ktn-toast" id="ktnToast"></div>
 
-<!-- デモバー（東京＝記録3件／京都＝2件で補完が出る／鳥取＝0件で補完のみ） -->
+<!-- デモバー（軸ページ＝場所軸の代表プロトタイプ。件数の3パターンを切り替えて確認する）
+     東京都＝充実（7件・上限6件を超えるため日替わりの並びが効く）／京都府＝少数（1件・補完ブロックが併記される）／鳥取県＝0件（補完ブロックのみ）。
+     「並びは日替わり」の日送りはP10-4／P10-7と同じ仕組み（2026-09-25・handoff 追174-187）。 -->
 <div class="dbar" id="dbar">
   <span class="dbar-sep">ロール：</span>
   <button class="dbtn on" onclick="setR('guest',this)">ゲスト</button>
   <button class="dbtn" onclick="setR('login',this)">ログイン</button>
   <button class="dbtn" onclick="setR('admin',this)">管理者</button>
   <span class="dbar-sep">都道府県：</span>
-  <button class="dbtn on" data-ax onclick="setAxis('tokyo',this)">東京都（1件）</button>
-  <button class="dbtn" data-ax onclick="setAxis('kyoto',this)">京都府（2件）</button>
+  <button class="dbtn on" data-ax onclick="setAxis('tokyo',this)">東京都（7件）</button>
+  <button class="dbtn" data-ax onclick="setAxis('kyoto',this)">京都府（1件）</button>
   <button class="dbtn" data-ax onclick="setAxis('tottori',this)">鳥取県（0件）</button>
-  <span class="dbar-sep">東京エリア：</span>
-  <button class="dbtn" data-ax onclick="setAxis('tokyo-south',this)">東京南部（1件）</button>
-  <button class="dbtn" data-ax onclick="setAxis('tokyo-central',this)">東京都心部（0件）</button>
+  <span class="dbar-sep">一覧の並び：</span>
+  <button class="dbtn on" data-axis-day onclick="setAxisDay(0,this)">今日</button>
+  <button class="dbtn" data-axis-day onclick="setAxisDay(1,this)">明日</button>
+  <button class="dbtn" data-axis-day onclick="setAxisDay(2,this)">明後日</button>
 </div>
 
 <div class="shell">
@@ -115,81 +118,84 @@
 
   <main class="ktn-main" id="ktnMain">
 
-    <!-- A. 軸ヘッド。h1 は title の短縮形（完全一致させない）。 -->
+    <!-- A. 軸ヘッド。h1 は title の短縮形。リードは KTN.axis.leadOf('gallery', slug) の自動生成文
+         （P90-17連携は今回のスコープ外・handoff 追174-177）。 -->
     <section class="ktn-axis-head">
       <div class="ktn-axis-head__inner">
         <div class="ktn-axis-head__eyebrow">
-          <span class="ktn-axis-head__eyebrow-en">Archive</span>
+          <span class="ktn-axis-head__eyebrow-en" id="p1072Eyebrow">Area</span>
           <span class="ktn-axis-head__eyebrow-line"></span>
         </div>
         <div class="ktn-axis-head__title-row">
-          <h1 class="ktn-axis-head__title" id="p1043Title">東京都の展覧会アーカイブ</h1>
-          <span class="ktn-axis-head__en" id="p1043En">Past Exhibitions in Tokyo</span>
+          <h1 class="ktn-axis-head__title" id="p1072Title">東京都のギャラリー</h1>
+          <span class="ktn-axis-head__en" id="p1072En">Galleries in Tokyo</span>
         </div>
-        <div class="ktn-axis-head__lead" id="p1043Lead"></div>
-        <div class="ktn-axis-head__links" id="p1043HeadLinks"></div>
+        <div class="ktn-axis-head__lead" id="p1072Lead"></div>
+        <!-- 〈軸 × エンティティ〉の内部リンク -->
+        <div class="ktn-axis-head__links" id="p1072HeadLinks"></div>
       </div>
     </section>
 
     <div class="ktn-content p10-content">
 
-      <!-- B. 一覧（会期を終えたもののみ）。既定は「終了が新しい順」＝
-           アーカイブで最初に見たいのは直近で見逃した展覧会なので、人気順を既定にしない。 -->
+      <!-- B. 一覧。ページング・並び替えは無し（追174-177）。
+           最大6件（3列×2行）で打ち切り、超える分は件数を出さずP10-3検索へ誘導する（2026-09-25・
+           handoff 追174-185／追174-186で8件→6件に訂正）。P10-3はログイン必須で「無許可の全件取得の
+           抑止」を目的にしているが、P10-7-2は47都道府県ぶんゲスト公開のindex,followページのため、
+           そのまま全件出すと53ページを巡回するだけでP10-3のログイン要件を回避した全件取得が
+           成立してしまう。上限以内（表示件数＝実件数）ならこのページを見ればわかる数なので
+           件数表示を出してよいが、上限を超えたときは正確な総数を開示しない
+           （「あと何件あるか」も新たな情報になるため）。 -->
       <section class="p10-shelf">
         <div class="ktn-section__head">
-          <h2 class="ktn-section__title">会期を終えた展覧会<span class="ktn-sec-en">Past Exhibitions</span></h2>
+          <h2 class="ktn-section__title">ギャラリー一覧<span class="ktn-sec-en">Galleries</span></h2>
         </div>
-        <div class="p10-toolbar">
-          <span class="p10-toolbar__count" id="p1043Count"><strong>0</strong>件</span>
-          <label class="p10-toolbar__sort">並び順
-            <select id="p1043Sort">
-              <option value="last">終了が新しい順</option>
-              <option value="pop">人気順</option>
-              <option value="end">会期が古い順</option>
-            </select>
-          </label>
+        <p class="p10-toolbar__count" id="p1072Count"><strong>0</strong>件</p>
+        <p class="ktn-axis-empty" id="p1072Empty" hidden></p>
+        <div id="p1072Grid"></div>
+        <div id="p1072More" hidden>
+          <p class="p10-shelf__desc">ここでは一部のみを表示しています。すべて見るには検索をご利用ください。</p>
+          <!-- リンクの書き方はP10-4-2の「条件を足して絞り込む →」（#p1042SearchLink）に合わせる
+               （2026-09-25・handoff 追174-185訂正・ユーザー指示「リンクの書き方をp10-4-1に合わせて下さい」）：
+               .ktn-more-link クラス＋{prefix}SearchLinkのid命名。 -->
+          <a class="ktn-more-link" id="p1072SearchLink" data-guest="login" href="./kotennavi-p10-3.html">ギャラリーを検索で見る →</a>
         </div>
-        <p class="ktn-axis-empty" id="p1043Empty" hidden></p>
-        <div class="p10-shelf-grid p10-shelf-grid--ordered" id="p1043Grid"></div>
       </section>
 
-      <!-- C. 補完ブロック（記録が少ない・無いとき積む）。
-           順序＝①同一場所で開催中 →②同一場所のギャラリー →③同じ地方ブロックのアーカイブ →④全国。
-           各ブロックに「なぜ出しているか」のラベルを必ず付ける（追174-46⑤）。 -->
-      <section class="ktn-axis-fill" id="p1043Fill" hidden>
+      <!-- C. 補完ブロック（ギャラリーが3件未満のとき、そのエリアの展覧会情報を併記する＝
+           P10-4-2↔P10-7-2の双方向リンク・追174-177）。 -->
+      <section class="ktn-axis-fill" id="p1072Fill" hidden>
         <div class="ktn-section__head">
-          <h2 class="ktn-axis-fill__title" id="p1043FillTitle">ほかに見られるもの</h2>
+          <h2 class="ktn-axis-fill__title" id="p1072FillTitle">ほかに見られるもの</h2>
         </div>
-        <p class="ktn-axis-fill__desc" id="p1043FillDesc"></p>
-        <div id="p1043FillBlocks"></div>
+        <p class="ktn-axis-fill__desc" id="p1072FillDesc"></p>
+        <div id="p1072FillBlocks"></div>
       </section>
 
-      <!-- D. 軸ネットワーク。アーカイブ同士を47都道府県で横につなぐ層。
-           現在0件の県でも記録は残るので、軸ページ本体よりリンクが死ににくい。 -->
+      <!-- D. 軸ネットワーク（内部リンク層）。47都道府県をすべて出す＝掲載0件の県もリンクを外さない。
+           このページ群のSEO価値の本体（追174-177）。 -->
       <section class="ktn-axis-nav">
         <div class="ktn-section__head">
-          <h2 class="ktn-section__title">エリアの記録から探す<span class="ktn-sec-en">Archives by Area</span></h2>
+          <h2 class="ktn-section__title"><a class="ktn-section__link" href="./kotennavi-p10-7.html">エリアから探す<span class="ktn-sec-en">Browse by Area</span></a></h2>
         </div>
-        <div id="p1043PrefNav"></div>
+        <div id="p1072PrefNav"></div>
       </section>
 
-      <!-- E. 下段：現在側・年鑑への導線 -->
+      <!-- E. 関連ページ -->
       <section class="p10-shelf ktn-axis-related">
         <div class="ktn-section__head">
           <h2 class="ktn-section__title">関連ページ<span class="ktn-sec-en">Related Pages</span></h2>
         </div>
         <div class="ktn-axis-cards">
-          <a class="ktn-axis-card" id="p1043LiveCard" href="./kotennavi-p10-4-2.html?ax=tokyo">
-            <span class="ktn-axis-card__label">Now &amp; Upcoming</span>
-            <span class="ktn-axis-card__ttl" id="p1043LiveTtl">東京都の展覧会</span>
-            <span class="ktn-axis-card__desc" id="p1043LiveDesc">東京都でいま開催中・開催予定の展覧会。会期が終わったものはこのアーカイブに移ります。</span>
+          <a class="ktn-axis-card" id="p1072ExhCard" href="./kotennavi-p10-4-2.html?ax=tokyo">
+            <span class="ktn-axis-card__label">Exhibitions</span>
+            <span class="ktn-axis-card__ttl" id="p1072ExhTtl">東京都の展覧会</span>
+            <span class="ktn-axis-card__desc">このエリアで開催中・開催予定の展覧会です。</span>
           </a>
-          <!-- 年鑑は軸で絞らない全国の記録。エリア軸・ジャンル軸のページに置くと、隣のカード（東京都の展覧会アーカイブ 等）
-             に引かれて「そのエリア／そのジャンルの年間記録」と読まれるので、タイトルで全国と名乗る（2026-09-08） -->
-          <a class="ktn-axis-card" href="./kotennavi-p10-4-1.html">
+          <a class="ktn-axis-card" href="./kotennavi-p10-7-1.html">
             <span class="ktn-axis-card__label">Annual Ranking</span>
-            <span class="ktn-axis-card__ttl">全国の展覧会 年間ランキング</span>
-            <span class="ktn-axis-card__desc">その年に会期を終えた展覧会を、興味あり！とチェックインが多かった順に並べた年ごとのランキング。エリアやジャンルで絞らず全国が対象です。</span>
+            <span class="ktn-axis-card__ttl">全国のギャラリー 年間ランキング</span>
+            <span class="ktn-axis-card__desc">その年にウォッチが多かったギャラリーを並べた年ごとのランキング。エリアで絞らず全国が対象です。</span>
           </a>
         </div>
       </section>
@@ -218,7 +224,7 @@
 <script src="./kotennavi-pages.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-    KTN.init({ page: 'p10-4-3', role: 'guest' });
+    KTN.init({ page: 'p10-7-2', role: 'guest' });
   });
 </script>
 </body>

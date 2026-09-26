@@ -112,10 +112,10 @@
 
   <main class="ktn-main" id="ktnMain">
 
-    <!-- A. 軸ヘッド（P10-4-1／P10-4-2 と同じ .ktn-axis-head＝軸ページ系共通の外枠）。
+    <!-- A. 軸ヘッド（P10-4-2／P10-4-1 と同じ .ktn-axis-head＝軸ページ系共通の外枠）。
          このページは「探すための索引」なので検索フォームは持たず、条件指定は検索ハブ（P10）へ渡す。
          もともとここは P10 と同じ検索ハブをもう1枚のURLで描いていたが、同じ棚が2つ並ぶだけで
-         新しい情報が無く、一方で軸ページ（P10-4-1）へ降りるリンクがサイトのどこにも無かった（追174-49）。 -->
+         新しい情報が無く、一方で軸ページ（P10-4-2）へ降りるリンクがサイトのどこにも無かった（追174-49）。 -->
     <section class="ktn-axis-head">
       <div class="ktn-axis-head__inner">
         <div class="ktn-axis-head__eyebrow">
@@ -132,7 +132,7 @@
         </div>
         <div class="ktn-axis-head__links">
           <a class="p10-preset" href="./kotennavi-p10.html">条件を指定して探す</a>
-          <a class="p10-preset" href="./kotennavi-p10-4-2.html">展覧会の年間ランキング</a>
+          <a class="p10-preset" href="./kotennavi-p10-4-1.html">展覧会の年間ランキング</a>
         </div>
       </div>
     </section>
@@ -141,7 +141,7 @@
 
       <!-- B. 注目のエリア＝固定枠（掲載の多い主要エリア）＋日替わりのローテーション枠。
            完全ランダムにしないのは、主要導線を安定させたまま、しきい値を超えた軸に必ず順番を回すため。
-           カードは .ktn-axis-card（P10-4-1／P10-4-2 の下段カードと同じ部品）を中段で再利用している。 -->
+           カードは .ktn-axis-card（P10-4-2／P10-4-1 の下段カードと同じ部品）を中段で再利用している。 -->
       <section class="p10-shelf">
         <div class="ktn-section__head">
           <h2 class="ktn-section__title">注目のエリア<span class="ktn-sec-en">Area Highlights</span></h2>
@@ -160,7 +160,7 @@
         </div>
         <p class="p10-shelf__desc">エリア名の横の数字は、開催中・開催予定の展覧会の件数です。</p>
         <div id="p104PrefNav"></div>
-        <!-- 東京をエリアで探す（/exhibitions/tokyo-central ＝P10-4-1 の別スラッグ）。都道府県の粒度は
+        <!-- 東京をエリアで探す（/exhibitions/tokyo-central ＝P10-4-2 の別スラッグ）。都道府県の粒度は
              「東京都128件」で入口としては大きすぎるので、東京だけもう一段細かい単位を持つ。
              URLは県と対等のフラットな名前空間に置き、並びだけ親県ごとにまとめる（追174-67／追174-68）。 -->
         <div class="ktn-section__head ktn-axis-nav__head2 ktn-index-target" id="city">
@@ -180,7 +180,7 @@
         <div class="ktn-axis-nav__row" id="p104AccessNav"></div>
       </section>
 
-      <!-- D. 年間ランキングのダイジェスト。本体は P10-4-2（年ごとの独立URL）へ切り出してある（追174-48）。
+      <!-- D. 年間ランキングのダイジェスト。本体は P10-4-1（年ごとの独立URL）へ切り出してある（追174-48）。
            年の切替を select で持つと 2026年と2025年が同じURLに同居してクローラから片方しか見えないため、
            年別ナビはリンク。ここは最新年の上位3件だけを見せてランキングへ送る。 -->
       <section class="p104-arc ktn-index-target" id="p10Archive">
@@ -207,7 +207,7 @@
         <div class="ktn-axis-cards">
           <a class="ktn-axis-card" href="./kotennavi-p10-7.html">
             <span class="ktn-axis-card__label">Galleries</span>
-            <span class="ktn-axis-card__ttl">ギャラリーをエリア・開催状況から探す</span>
+            <span class="ktn-axis-card__ttl">ギャラリーをエリアから探す</span>
             <span class="ktn-axis-card__desc">エリアごとのギャラリー・美術館。会場のほうから展覧会をたどりたいときに。</span>
           </a>
         </div>
