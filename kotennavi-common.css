@@ -10592,6 +10592,28 @@ body.mgmt-page .ktn-content:has(> .ktn-mgmt-context){padding-top:0}
 .ktn-mgmt-context__name .p8-head__title-suffix{font-size:.68em}
 .ktn-mgmt-context__name a:hover{text-decoration:underline}
 .ktn-mgmt-context__meta{font-family:var(--fn);font-size:.75rem;color:var(--muted);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* 人系 strip の機能申込の状況行（P5-11・2026-09-26）：micro-label＋「機能名＋審査チップ（.ktn-review-status）」の並び。
+   申込の無い項目は出さない（行ごと hidden）。 */
+.ktn-mgmt-context__apps{display:flex;align-items:center;flex-wrap:wrap;gap:6px 12px;margin-top:6px}
+.ktn-mgmt-context__apps[hidden],.ktn-mgmt-context__app[hidden]{display:none}
+.ktn-mgmt-context__apps-label{font-family:var(--font-en-label);font-size:.54rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.ktn-mgmt-context__app{display:inline-flex;align-items:center;gap:6px}
+.ktn-mgmt-context__app-name{font-family:var(--fn);font-size:.75rem;color:var(--ink)}
+/* 人系 user strip の「紐づくページ」段（P5-1**・2026-09-27）：ユーザー（主役）の下に点線で区切って一段小さく。
+   アバター形状・outline は人物カードのルール（creator＝角丸／gallery＝四角・ロール色）を縮小して踏襲 */
+.ktn-mgmt-context__linked{display:flex;align-items:center;flex-wrap:wrap;gap:6px 10px;margin-top:8px;padding-top:8px;border-top:1px dashed var(--border)}
+.ktn-mgmt-context__linked[hidden]{display:none}
+.ktn-mgmt-context__linked-media{flex-shrink:0;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-family:var(--fs);font-size:.68rem;font-weight:700;color:#fff;border:2px solid #fff}
+.ktn-mgmt-context__linked-media--creator{border-radius:7px;outline:2px solid rgba(42,95,122,.45);outline-offset:1px}
+.ktn-mgmt-context__linked-media--gallery{border-radius:3px;outline:2px solid rgba(139,94,60,.45);outline-offset:1px}
+.ktn-mgmt-context__linked-body{display:flex;flex-direction:column;gap:1px;min-width:0;flex:1}
+.ktn-mgmt-context__linked-name{display:flex;align-items:center;gap:6px;min-width:0}
+.ktn-mgmt-context__linked-name .cb{font-size:.5rem;padding:2px 6px}
+.ktn-mgmt-context__linked-name a{font-family:var(--fs);font-size:.82rem;font-weight:600;color:var(--ink);text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ktn-mgmt-context__linked-name a:hover{text-decoration:underline}
+.ktn-mgmt-context__linked-meta{font-family:var(--fn);font-size:.7rem;color:var(--muted)}
+.ktn-mgmt-context__linked-view{font-family:var(--fn);font-size:.75rem;color:var(--accent);text-decoration:none;white-space:nowrap;flex-shrink:0}
+.ktn-mgmt-context__linked-view:hover{text-decoration:underline}
 /* 非人系（コンテンツ）strip のオーナー表示行：micro-label＋人物バッジ＋オーナー名（p3/p4リンク） */
 .ktn-mgmt-context__owner{display:flex;align-items:center;gap:6px;margin-top:5px;min-width:0}
 .ktn-mgmt-context__owner-label{font-family:var(--font-en-label);font-size:.54rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);flex-shrink:0}
@@ -10599,6 +10621,10 @@ body.mgmt-page .ktn-content:has(> .ktn-mgmt-context){padding-top:0}
 .ktn-mgmt-context__owner a:hover{text-decoration:underline}
 .p8-11-page .ktn-mgmt-context__owner a{color:var(--accent)}
 .ktn-mgmt-context__actions{flex-shrink:0;display:flex;align-items:center;gap:10px}
+/* 紐づくページ・Applications の段が出てカードが縦に伸びたときは上揃えにし、右端のリンクをアバター（46px）の高さの中央＝
+   名前の行にそろえる（中央揃えのままだと、リンクが点線の段より下へずれる・2026-09-27） */
+.ktn-mgmt-context:has(> .ktn-mgmt-context__body > .ktn-mgmt-context__linked:not([hidden]), > .ktn-mgmt-context__body > .ktn-mgmt-context__apps:not([hidden])){align-items:flex-start}
+.ktn-mgmt-context:has(> .ktn-mgmt-context__body > .ktn-mgmt-context__linked:not([hidden]), > .ktn-mgmt-context__body > .ktn-mgmt-context__apps:not([hidden])) > .ktn-mgmt-context__actions{min-height:46px}
 .ktn-mgmt-context__view{font-family:var(--fn);font-size:.75rem;color:var(--accent);text-decoration:none;white-space:nowrap}
 .ktn-mgmt-context__view:hover{text-decoration:underline}
 /* 新規作成モードの strip はオーナー（ギャラリー）のみ表示（展覧会名がまだ無いため）。
@@ -13093,9 +13119,9 @@ a.p319-item__dest-name:hover{color:var(--page-accent)}
 
 /* ── P3-13/P4-13 オーディエンス管理（.p313-* を共有ネームスペースとしてP4-13も再利用）
    ウォッチャー・チェックインの2タブ構成。一覧行はどちらも .p2-watcher-item/.p2-watcher-list
-   （p2ウォッチャーモーダルと同一部品）を流用するため、ここでは KPIガイドリンク・通知トグル行・
+   （p2ウォッチャーモーダルと同一部品）を流用するため、ここでは KPIガイドリンク・通知案内行・
    タブ切替・ツールバー（.p319-toolbar系と同型）・チェックイン訪問履歴・ゼロ状態のみ定義。
-   通知はウォッチャー／チェックインを分けず共通の単一トグル（.p313-notify-sw）。
+   通知の設定は P5-13（メール通知設定）に一本化＝ここは説明＋リンク（.p313-notify-link）だけ（2026-09-26。旧 .p313-notify-sw トグルは撤去）。
    種別（user/creator/gallery）の絞り込みUIは持たない（watch/checkinはユーザー機能として
    ロールを意識させない設計のため）。アバター形状も同じ理由で種別によらず常に
    .p2-watcher-item__avatar--user（円形）で統一する＝typeフィールドは参考情報にとどめる。 ── */
@@ -13120,7 +13146,7 @@ a.p319-item__dest-name:hover{color:var(--page-accent)}
 .p313-notify-row{display:flex;align-items:center;justify-content:space-between;gap:16px;background:#fff;border:1px solid var(--border);border-radius:4px;padding:16px 18px}
 .p313-notify-row__title{font-family:var(--fn);font-size:.86rem;font-weight:600;color:var(--ink);margin:0 0 4px}
 .p313-notify-row__desc{font-family:var(--fn);font-size:.78rem;color:var(--muted);margin:0;line-height:1.6}
-.p313-notify-sw{flex-shrink:0}
+.p313-notify-link{flex-shrink:0;font-size:.78rem;white-space:nowrap}
 .p313-tabs{display:flex;border-bottom:2px solid var(--border);margin-bottom:14px}
 .p313-tab{display:inline-flex;align-items:center;gap:6px;font-family:var(--fn);font-size:.82rem;font-weight:400;padding:9px 16px;border:none;background:none;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-2px;transition:color .15s;white-space:nowrap}
 .p313-tab:hover:not(.is-active){color:var(--ink)}
@@ -13227,6 +13253,13 @@ a.p319-item__dest-name:hover{color:var(--page-accent)}
 .ktn-mgmt-wrap:not(.ktn-mgmt-stack) > .p211-block > .p211-block__head{padding:20px 24px 0}
 .ktn-mgmt-wrap:not(.ktn-mgmt-stack) > .p211-block > .p211-block__body{padding:16px 24px 22px}
 .ktn-mgmt-wrap > .p211-submit-bar{border-radius:0 0 4px 4px}
+/* Model A（フォーム型）の直下に置くページレベルの赤い帯（退会できない理由など・P5-100） */
+.ktn-mgmt-wrap:not(.ktn-mgmt-stack) > .ktn-txn-alert{margin:16px 24px 0}
+.ktn-mgmt-wrap:not(.ktn-mgmt-stack) > .p211-block .p114-notice + .p114-terms-agree{margin-top:14px}
+.p5100-wrap #p5100RoleBox{margin-top:16px}
+.p5100-wrap #p5100RoleBox + .p114-terms-agree{margin-top:10px}
+/* 退会できないとき（.is-blocked）は入力部分を出さない（押せないボタンの手前で入力させない） */
+.p5100-wrap.is-blocked .p5100-input{display:none}
 
 /* インサイト：ツールバー（対象）とセクションを枠内に配置 */
 .ktn-mgmt-wrap > .ins-toolbar{padding:16px 24px;border-bottom:1px solid var(--border)}
@@ -13724,15 +13757,23 @@ body.mgmt-page .p5-tabnav{max-width:var(--w-detail)}
 .p511-avatar-hint{font-size:.75rem;color:var(--muted);line-height:1.55}
 
 /* ── p511 ユーザーIDプレビュー ── */
-.p511-id-preview{display:flex;align-items:center;padding:7px 11px;background:var(--paper);border:1px solid var(--border);border-radius:4px;font-size:.82rem;margin-top:2px}
-.p511-id-preview__base{color:var(--muted);font-size:.75rem;flex-shrink:0}
-.p511-id-preview__val{font-family:var(--fm);color:var(--ink);font-weight:500;font-size:.82rem}
+
 
 /* ── p511 メールアドレス表示 ── */
-.p511-email-display{display:flex;align-items:center;gap:12px;padding:8px 11px;border:1px solid var(--border);border-radius:4px;background:var(--paper);flex-wrap:wrap}
-.p511-email-val{font-size:.9rem;color:var(--ink);flex:1}
-.p511-email-change{font-size:.75rem;color:var(--page-accent,#b8608c);text-decoration:none;white-space:nowrap;flex-shrink:0}
-.p511-email-change:hover{text-decoration:underline}
+/* ログインID（メールアドレス）：保存バーでは保存されず確認メールで変更する項目なので、
+   白いフォームブロックと分けて paper 地の別枠にする（2026-09-26） */
+.p511-login{margin:24px 20px 0;padding:18px 20px;background:var(--paper);border:1px solid var(--border);border-radius:4px}
+.p511-login__head{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.p511-login__title{font-family:var(--fn);font-size:.9rem;font-weight:700;color:var(--ink)}
+.p511-login__en{font-family:var(--font-en-label);font-size:.58rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.p511-login__desc{font-family:var(--fn);font-size:.78rem;line-height:1.7;color:var(--ink);margin:6px 0 12px}
+.p511-login__current{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:9px 12px;background:#fff;border:1px solid var(--border);border-radius:4px}
+.p511-login__current[hidden],.p511-login__form[hidden],.p511-login__sent[hidden]{display:none}
+.p511-login__val{font-family:var(--fm);font-size:.88rem;color:var(--ink);flex:1;min-width:0;overflow-wrap:anywhere}
+.p511-login__actions{display:flex;justify-content:flex-end;gap:8px;margin-top:10px}
+.p511-login__sent{font-family:var(--fn);font-size:.78rem;line-height:1.7;color:#1a7a42;margin:10px 0 0}
+.p511-login__note{font-family:var(--fn);font-size:.72rem;color:var(--muted);margin:10px 0 0}
+@media(max-width:540px){.p511-login{margin:20px 8px 0;padding:16px 14px}}
 
 /* ── パスワード表示/非表示トグル（canonical・全ページ共通・2026-09-26 に p512 から昇格）
    HTML：div.ktn-pw-wrap > input[type=password] ＋ button.ktn-pw-toggle[data-target=入力id]。
@@ -13755,9 +13796,6 @@ body.mgmt-page .p5-tabnav{max-width:var(--w-detail)}
 .p512-strength__label{font-size:.75rem;color:var(--muted);transition:color .2s}
 
 /* ── p512 パスワードを忘れた方 ── */
-.p512-forgot{font-size:.82rem;color:var(--page-accent,#b8608c);text-decoration:none}
-.ktn-mgmt-wrap > .p512-forgot{display:block;margin:16px 24px}
-.p512-forgot:hover{text-decoration:underline}
 
 /* ══════════════════════════════════════════
    KTN Auth Modal
@@ -13781,6 +13819,7 @@ body.mgmt-page .p5-tabnav{max-width:var(--w-detail)}
 .ktn-auth-btn-primary{width:100%;padding:13px;border-radius:10px;background:var(--accent);border:none;color:#fff;font-family:var(--fn);font-size:.88rem;font-weight:500;cursor:pointer;transition:opacity .15s,transform .12s}
 .ktn-auth-btn-primary:hover{opacity:.9}
 .ktn-auth-btn-primary:active{transform:scale(.98)}
+.ktn-auth-btn-primary:disabled{opacity:.4;cursor:not-allowed;transform:none}
 .ktn-auth-btn-secondary{width:100%;padding:13px;border-radius:10px;background:none;border:1.5px solid #d8e2ec;color:#3d4a5c;font-family:var(--fn);font-size:.88rem;cursor:pointer;transition:border-color .15s,background .15s}
 .ktn-auth-btn-secondary:hover{border-color:var(--accent);background:rgba(0,93,167,.06)}
 .ktn-auth-divider{display:flex;align-items:center;gap:10px;font-size:.6rem;font-family:var(--fm);color:#bbb;letter-spacing:.08em;margin:2px 0}
@@ -13848,14 +13887,11 @@ body.p5-zero:not(.p5-other) .p5-watch-onboard{display:block}
 .p513-row__desc{font-size:.75rem;color:var(--muted);margin-top:2px;line-height:1.5}
 .p513-row__mandatory{font-size:.75rem;color:var(--muted);padding:2px 8px;background:var(--paper);border-radius:10px;border:1px solid var(--border);white-space:nowrap;flex-shrink:0}
 
-/* ── p513 トグルスイッチ ── */
-.p513-toggle{position:relative;width:38px;height:22px;flex-shrink:0}
-.p513-toggle input{opacity:0;width:0;height:0;position:absolute;pointer-events:none}
-.p513-toggle__track{display:block;width:38px;height:22px;border-radius:11px;background:var(--border);cursor:pointer;transition:background .15s;position:relative}
-.p513-toggle input:checked + .p513-toggle__track{background:var(--page-accent,#b8608c)}
-.p513-toggle input:disabled + .p513-toggle__track{opacity:.5;cursor:not-allowed}
-.p513-toggle__track::after{content:'';position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .15s;box-shadow:0 1px 2px rgba(0,0,0,.2)}
-.p513-toggle input:checked + .p513-toggle__track::after{transform:translateX(16px)}
+/* 切替は共通 .ktn-switch（旧 .p513-toggle は 2026-09-26 撤去） */
+.p513-row[hidden],.p513-section[hidden]{display:none}
+.p513-row .ktn-switch{flex-shrink:0}
+/* 配信タイミング（1日1回・随時・月1回）。項目名の横に小さく添えて「どのくらい届くか」を示す */
+.p513-row__freq{display:inline-block;margin-left:8px;padding:1px 7px;font-size:.66rem;font-weight:500;color:var(--muted);background:var(--paper);border:1px solid var(--border);border-radius:10px;vertical-align:1px;white-space:nowrap}
 
 /* 送信バーは共通 .p211-submit-bar を使用（旧 .p511-submit-bar / .p512-submit-bar 削除済み） */
 

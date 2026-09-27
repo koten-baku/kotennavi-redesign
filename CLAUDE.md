@@ -123,6 +123,8 @@ docs/                     仕様・設計ドキュメント
 | gallery | ユーザー＋ギャラリー（ページオーナー本人） |
 | admin | 管理者 |
 
+- **ユーザー個人のページ（P5 系）の呼称は「myページ」**（「マイページ」は使わない・2026-09-27 全ページ統一）。サイドナビ・オーナーメニュー・リンク文言・タイトル・説明文・FAQ・メール文面すべて同じ。
+
 ---
 
 ## サイトカラー共通定義（ブランド青を1本の軸に）
@@ -578,7 +580,7 @@ p2-5-1（LIAISON+作品一覧）・p2-12-1（LIAISON+作品管理）・p6-dark�
 
 **p11-4（リエゾンプラス機能申込）は例外＝mgmt-page（p2-11 型・2026-07-24 確定）**：p11-4 の申込者は**すでに creator/gallery ロールを所有している人**（LIAISON+ という追加機能を申し込む）。ロールを持たない申込と違い「ロール chrome を先に出すと矛盾」しないため、**p2-11 と同じ mgmt-page フォーマット**（ベージュ地・ロール別トップバー・ロール色 `--page-accent`）にする。body＝`mgmt-page p11-4-page p3-page`（creator 既定）、`setR` が `p3-page`/`p4-page` を動的トグルしてトップバー色を切替（gallery＝`p4-page`＋`body.p114-role-gallery`）。**identity strip は p3-11 と同型の `.ktn-mgmt-context`**（ロール保有者本人を media＋バッジ＋名前リンク＋view で表示。`P114_CTX`＋`p114SyncContext(r)` がロール別 populate）＝申込アカウント抽象 strip `.p114-applicant` から変更（追補⑧・p3-11 との視覚統一）。**本文は p11-2 型〈目次 `.ktn-index` → About `.ktn-zone`（`.p114-guide` 冒頭に LIAISON+ サービスロゴ `.p114-about-logo`〔`kotennavi_liaison_logo.html` の LIAISON+ Light 版 SVG〕＋p70 ガイド部品で「リエゾンとの違い／料金／販売の流れ／本人確認・口座が必要な理由」を厚く説明）→ FAQ（`liaisonplus-apply` カテゴリ）→ 申込フォーム〉**に統一（ヘッドの `__desc`/`__guides` は撤去し説明を About ゾーンへ移した。旧 `.p114-service-banner`〔説明文＋手数料の帯〕は About 本文と重複するため廃止しロゴのみ残した）。※以前 追補④ で一時中立化したが、ロール所有者の追加申込という性質に合わせ mgmt-page へ戻した（CLAUDE.md「管理ページ視覚識別」適用表の p11-4 記載と整合）。
 
-**p11-2/p11-3（機能申込）も mgmt-page へ変更＝ユーザー指示により方針転換（2026-08-20・追46）**：旧方針は「申込者はまだそのロール（creator/gallery）を持っていないため、ロール所有者向け chrome を先に出すのは矛盾する」として中立 `p70-page p11-page` に留めていたが、**申込者は creator/gallery ロールこそ持たないものの、USER（login ユーザー）ロールは既に持っている**ため、そのUSERアイデンティティへ紐づける形で mgmt-page 化する指示を受け対応した。body＝`mgmt-page p11-2-page p5-page`（p11-2）／`mgmt-page p11-3-page p5-page`（p11-3）＝ユーザー役割の `.p5-page`（ピンク）で統一（creator/gallery どちらへの申込かはロール別トップバーでなく引き続きフォーム内容で表現）。**identity strip は `.p114-applicant` から `.ktn-mgmt-context`（`--user` バリアント）へ変更**：`cb cb-person cb-user` バッジ＋申込者名（P5.html の既存デモペルソナ「山田 花子」にリンク）＋メタ（利用開始日等）＋「マイページへ →」。p60系（p60-11〜14）は引き続き中立のまま（対象外）。
+**p11-2/p11-3（機能申込）も mgmt-page へ変更＝ユーザー指示により方針転換（2026-08-20・追46）**：旧方針は「申込者はまだそのロール（creator/gallery）を持っていないため、ロール所有者向け chrome を先に出すのは矛盾する」として中立 `p70-page p11-page` に留めていたが、**申込者は creator/gallery ロールこそ持たないものの、USER（login ユーザー）ロールは既に持っている**ため、そのUSERアイデンティティへ紐づける形で mgmt-page 化する指示を受け対応した。body＝`mgmt-page p11-2-page p5-page`（p11-2）／`mgmt-page p11-3-page p5-page`（p11-3）＝ユーザー役割の `.p5-page`（ピンク）で統一（creator/gallery どちらへの申込かはロール別トップバーでなく引き続きフォーム内容で表現）。**identity strip は `.p114-applicant` から `.ktn-mgmt-context`（`--user` バリアント）へ変更**：`cb cb-person cb-user` バッジ＋申込者名（P5.html の既存デモペルソナ「山田 花子」にリンク）＋メタ（利用開始日等）＋「myページへ →」。p60系（p60-11〜14）は引き続き中立のまま（対象外）。
 
 **外枠・トークンの単一ソース：**
 
@@ -597,7 +599,7 @@ p2-5-1（LIAISON+作品一覧）・p2-12-1（LIAISON+作品管理）・p6-dark�
 
 **対象コンテキストボックス（`.ktn-refbox` / `.ktn-form-faqhint`・送信フォーム系共通）：** 「問い合わせ元」「報告対象」など**送信フォームが対象とするコンテキストを表示する枠**。`.ktn-refbox`（左罫線＝中立ブランド青 `--page-accent`）＋`__label`（Cinzel）／`__target`（対象名・明朝）／`__note`（補足）。`.ktn-form-faqhint` は FAQ/別フォームへの軽い誘導文。**p60-11（お問合わせ）・p60-13（問題を報告する）で共有**（旧 p60-11 固有 `.p6011-ref*` は 2026-07-24 に汎用リネーム）。
 
-**問題報告フロー（`p60-13`「問題を報告する」＝コンテンツ報告の単一集約先・2026-07-24 確定）：** 表示系コンテンツ（展覧会/クリエイター/ギャラリー/作品/記事/レビュー）の問題報告は**コンテンツ種別ごとにページを作らず**、単一の中立フォーム `p60-13` に `?from=<pageId>&type=<contentType>` で文脈を渡す。理由 select は type で出し分け（`REPORT_REASONS`）。**ヘッダーの「問題を報告する」メニューは common.js `reportItem(page)`＋`REPORT_TYPE` マップ**（p2*→exhibition／p3→creator／p4→gallery／p6*→artwork／p7→article／p8→review）が生成。**p5（マイページ）は他者の公開コンテンツでないため報告対象外**。旧 sitemap の P2-17 は P60-13 へ集約済み。
+**問題報告フロー（`p60-13`「問題を報告する」＝コンテンツ報告の単一集約先・2026-07-24 確定）：** 表示系コンテンツ（展覧会/クリエイター/ギャラリー/作品/記事/レビュー）の問題報告は**コンテンツ種別ごとにページを作らず**、単一の中立フォーム `p60-13` に `?from=<pageId>&type=<contentType>` で文脈を渡す。理由 select は type で出し分け（`REPORT_REASONS`）。**ヘッダーの「問題を報告する」メニューは common.js `reportItem(page)`＋`REPORT_TYPE` マップ**（p2*→exhibition／p3→creator／p4→gallery／p6*→artwork／p7→article／p8→review）が生成。**p5（myページ）は他者の公開コンテンツでないため報告対象外**。旧 sitemap の P2-17 は P60-13 へ集約済み。
 
 ---
 
@@ -672,6 +674,7 @@ p2-5-1（LIAISON+作品一覧）・p2-12-1（LIAISON+作品管理）・p6-dark�
 - **構造**：`[media][body: badges / name(親リンク) / meta / (非人系のみ)owner行][actions: 「○○ページへ →」view リンク]`。自前で 760px 中央寄せ（wrap外要素）。`.ktn-content` 直下に置くと `:has(> .ktn-mgmt-context){padding-top:16px}` で上余白が詰まる。
 - **media バリアント**：人物＝`--creator`/`--gallery`/`--user`（アバター形状ルール準拠の角丸＋ロール色 outline）。コンテンツ＝`--content`（outline無し・薄フレームの矩形サムネ）。badges も人物＝`cb-person`／コンテンツ＝`cb-content` で対応。
 - **非人系（コンテンツ）strip はオーナー行 `.ktn-mgmt-context__owner` を持つ（2026-07-09 確定）**：`__meta` の下に「`Owner`（Cinzel micro-label）＋人物バッジ（`cb cb-person cb-creator`/`cb-gallery`）＋オーナー名（p3/p4リンク・`--fs`）」を出し、**このコンテンツの操作主体が誰か**を明示する（人系 strip は identity 自体がオーナーなので不要）。**オーナーはコンテンツ固有の所有者に合わせる**（ページ横断の汎用デモペア〔田中透／Gallery SOIL 渋谷〕を機械的に流用しない＝会場・作家と食い違うため）。p2-12・p2-12-1（creator 田中透→p3）と**p2-11（展覧会 松田啓佑展／会場 YUGEN Gallery＝仮にギャラリー所有・`gallery` YUGEN Gallery→p4）はHTML直書き固定**（p2-11 はロール切替でオーナーを変えない＝この展覧会は gallery 所有と確定）。**role別 populate が要るのは p6-11・p7-11**：作品《オノマトペの庭》＝作家 田中透（p7-11 のデモ記事も同一の作家・ギャラリーのペアデータを流用）のデモデータが共通ペアと一致するため、`KTN.syncMgmtOwner('p611Owner', role)`／`KTN.syncMgmtOwner('p711Owner', role)`（共通ヘルパー・`KTN.MGMT_OWNER` マップ）が `#p611OwnerBadge`／`#p611OwnerName`・`#p711OwnerBadge`／`#p711OwnerName` をロール別 populate。p7-11 の strip も media は `--content`（記事はコンテンツ・非人系）で p6-11 と同型。p11-4 は人系 strip なので対象外。
+- **人系 user strip（P5-1** の6ページ）は機能申込の状況行 `.ktn-mgmt-context__apps` を持つ（2026-09-26）**：`__meta`（利用開始・メール）の下に「Applications」＋〈クリエイター機能／ギャラリー機能・LIAISON+ ＋審査チップ `.ktn-review-status`〉。**申込の無い項目は出さない**。切替は common.js の `KTN.setUserApps(key)`（`[data-user-apps]` を探す＝HTMLコピーのみでページ個別JS不要）。状態名は管理者側 P90-2／P90-11 と同じ。さらに、ロールが「利用開始」のときは meta 行の下に**紐づくページの段 `.ktn-mgmt-context__linked`（Your Page）**を一段小さく出す（小アバター＋バッジ＋名前＋ウォッチャー数・展覧会数＋「ページへ →」・編集ボタンは置かない＝主役はユーザー。2026-09-27）。
 - **公開タブナビは管理画面に出さない**（編集集中・誤操作離脱防止。identity/親リンク機能は strip が継承）。
 - **管理メニュー＝strip には置かない（2026-07-09 確定）**：strip の actions は view リンクのみ。旧「strip のみ」方式で移設した `.p3-mgmt-btn`（`管理`）は**全ページ撤去済み**（ユーザー指示「管理ボタンは不要」）。管理メニューはヘッダー `getActions()` へ寄せる想定で、その正式化は p1/p10 と同じく後続の一括作業へ後回し。**既存の管理ドロワー（`.p3-mgmt-drawer`）＋JS結線（null-safe）は残置**するが、開くトリガー（管理ボタン）が無いため現状は休眠。getActions 一括化のバッチでドロワー廃止 or getActions 結線を確定する。**例外＝p3-11 のみ**は先行して `getActions('p3-11','creator')` の `dd('オーナーメニュー')` に集約済み（ドロワーも撤去・横展開しない）。
 - **非人系（コンテンツ編集・管理）ページも同じ扱い（2026-07-09 確定・案A）**：p2-11・p6-11・p2-12・p2-12-1・p11-4・p7-11 も strip は identity＋view リンクのみ。オーナーメニューは**人系と共通のヘッダー getActions 1本**に寄せる（編集対象はコンテンツでも操作主体は creator/gallery 本人で、開くメニュー内容は人系と同一のため別立てにしない）。**creator/gallery 兼用ページ（p2-11・p6-11・p11-4・p7-11）は getActions もロール別に出し分ける**（p11-4 の `CTX` と同発想）。実装は p1/p10 デザインFixと同じ後続の一括バッチで人系・非人系まとめて行う（今は未実装＝17ページ全て strip 確定状態）。
@@ -755,7 +758,7 @@ p2-5-1（LIAISON+作品一覧）・p2-12-1（LIAISON+作品管理）・p6-dark�
 | P4（ギャラリートップ） | `{ギャラリー名}のギャラリーページ。{ジャンル・活動概要}。{コンテンツ列挙}を掲載中` |
 | P4-1（展覧会アーカイブ） | `{ギャラリー名}の展覧会アーカイブ。{説明}` |
 | P4-2（記事一覧） | `{ギャラリー名}の記事一覧。{コンテンツ種類}` |
-| P5（マイページ） | `{ユーザー名}のマイページ。{機能一覧}` |
+| P5（myページ） | `{ユーザー名}のmyページ。{機能一覧}` |
 | P5-1（ウォッチリスト） | `{ユーザー名}のウォッチリスト。{説明}` |
 | P5-2（チェックイン） | `{ユーザー名}のチェックイン記録。{説明}` |
 | P5-3（興味あり！） | `{ユーザー名}の興味あり！リスト。{説明}` |

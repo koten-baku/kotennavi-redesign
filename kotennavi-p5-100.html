@@ -21,6 +21,16 @@
   <span class="dbar-sep" style="margin-left:12px">未処理の取引：</span>
   <button class="dbtn on" onclick="p5100SetTxn(false,this)">なし</button>
   <button class="dbtn" onclick="p5100SetTxn(true,this)">あり</button>
+  <span class="dbar-sep" style="margin-left:12px">LIAISON+の展覧会：</span>
+  <button class="dbtn on" onclick="p5100SetLp(false,this)">なし</button>
+  <button class="dbtn" onclick="p5100SetLp(true,this)">予定・期間中・終了2週間以内</button>
+  <span class="dbar-sep" style="margin-left:12px">機能申込：</span>
+  <button class="dbtn on" data-user-apps-btn="none" onclick="KTN.setUserApps('none')">未申込</button>
+  <button class="dbtn" data-user-apps-btn="cr-pending" onclick="KTN.setUserApps('cr-pending')">クリエイター確認中</button>
+  <button class="dbtn" data-user-apps-btn="cr-granted" onclick="KTN.setUserApps('cr-granted')">クリエイター利用開始</button>
+  <button class="dbtn" data-user-apps-btn="cr-lp-pending" onclick="KTN.setUserApps('cr-lp-pending')">クリエイター＋LIAISON+確認中</button>
+  <button class="dbtn" data-user-apps-btn="ga-lp-granted" onclick="KTN.setUserApps('ga-lp-granted')">ギャラリー＋LIAISON+利用開始</button>
+  <button class="dbtn" data-user-apps-btn="ga-cancelled" onclick="KTN.setUserApps('ga-cancelled')">ギャラリー取消</button>
 </div>
 
 <div class="shell">
@@ -83,68 +93,143 @@
   <main class="ktn-main" id="ktnMain">
     <div class="ktn-content">
 
+      <!-- 親エンティティ文脈ストリップ（identity strip）＝P5-1** 共通（P11-2/P11-3 と同型の meta 行）
+           ＋機能申込の状況行（.ktn-mgmt-context__apps・申込の無い項目は非表示・KTN.setUserApps が切替） -->
       <div class="ktn-mgmt-context">
         <a class="ktn-mgmt-context__media ktn-mgmt-context__media--user" href="kotennavi-p5.html" style="background:linear-gradient(135deg,#f0c0d8,#c87aaa)">花</a>
         <div class="ktn-mgmt-context__body">
           <div class="ktn-mgmt-context__badges">
-            <span class="cb cb-person cb-user">user</span>
+            <span class="cb cb-person cb-user">USER</span>
           </div>
           <div class="ktn-mgmt-context__name"><a href="kotennavi-p5.html">山田 花子</a></div>
+          <div class="ktn-mgmt-context__meta">利用開始 2022.04 · hanako.yamada@example.com</div>
+          <!-- このアカウントに紐づくページ（クリエイター／ギャラリー機能が「利用開始」の人だけ・KTN.setUserApps が表示を切替）。
+               主役はユーザー＝表示とリンクだけで編集はさせない（ページの設定はそれぞれの管理ページ）。card全体はリンクにせず名前と「ページへ →」だけ -->
+          <div class="ktn-mgmt-context__linked" data-user-linked hidden>
+            <span class="ktn-mgmt-context__apps-label">Your Page</span>
+            <span class="ktn-mgmt-context__linked-media" data-linked-media></span>
+            <span class="ktn-mgmt-context__linked-body">
+              <span class="ktn-mgmt-context__linked-name"><span class="cb cb-person" data-linked-badge></span><a data-linked-name href="#"></a></span>
+              <span class="ktn-mgmt-context__linked-meta" data-linked-meta></span>
+            </span>
+            <a class="ktn-mgmt-context__linked-view" data-linked-view href="#">クリエイターページへ →</a>
+          </div>
+          <div class="ktn-mgmt-context__apps" data-user-apps hidden>
+            <span class="ktn-mgmt-context__apps-label">Applications</span>
+            <span class="ktn-mgmt-context__app" data-user-app="role" hidden><span class="ktn-mgmt-context__app-name">クリエイター機能</span><span class="ktn-review-status"></span></span>
+            <span class="ktn-mgmt-context__app" data-user-app="lp" hidden><span class="ktn-mgmt-context__app-name">LIAISON+</span><span class="ktn-review-status"></span></span>
+          </div>
         </div>
         <div class="ktn-mgmt-context__actions">
-          <a class="ktn-mgmt-context__view" href="kotennavi-p5.html">マイページへ →</a>
+          <a class="ktn-mgmt-context__view" href="kotennavi-p5.html">myページへ →</a>
         </div>
       </div>
 
-      <div class="p5100-wrap ktn-mgmt-wrap ktn-mgmt-stack">
+      <!-- P5-11／P5-12 と同じフォーム型（Model A＝.ktn-mgmt-wrap ＋ .p211-block ＋ 共通送信バー）。インラインの見た目指定は持たない（2026-09-27 組み直し） -->
+      <div class="p5100-wrap ktn-mgmt-wrap">
 
         <div class="ktn-mgmt-head">
           <h2 class="ktn-mgmt-head__title">退会</h2>
           <p class="ktn-mgmt-head__en">DEACTIVATE ACCOUNT</p>
-          <p class="ktn-mgmt-head__desc">個展なびのアカウントを退会します。退会前に、以下の内容を必ずご確認ください。</p>
+          <p class="ktn-mgmt-head__desc">個展なびのアカウントを退会します。退会の前に、以下の内容を必ずご確認ください。</p>
         </div>
 
-        <!-- 未処理の取引がある場合のブロック通知 -->
-        <div class="ktn-txn-alert is-on" id="p5100TxnBlock" style="margin:0 20px" hidden>
-          未完了の取引（発送待ち・受取確認待ち等）があるため、退会できません。<a class="ktn-guide-link" href="./kotennavi-p5-15.html">取引ワークスペースで状況を確認する →</a>
+        <!-- 退会できない理由の帯（.ktn-txn-alert は .is-on で表示を切り替える部品＝hidden 属性は使わない）＝未処理の取引があるとき（デモバー「未処理の取引」）。
+             クリエイター／ギャラリー機能の利用中は退会できる（ページと掲載内容が残ることを了承してもらう＝下のブロック1） -->
+        <!-- クリエイター／ギャラリーで、LIAISON+ の展覧会が「開催予定・期間中・終了から2週間以内」なら退会できない（2026-09-27 仕様）。
+             機能を利用中の人だけが対象（デモバー「機能申込」の利用開始 × 「LIAISON+の展覧会」） -->
+        <div class="ktn-txn-alert" id="p5100LpBlock">
+          <span>開催予定・期間中、または終了から2週間以内の LIAISON+ の展覧会があるため、退会できません。すべての LIAISON+ の展覧会が終了して2週間が過ぎてから、あらためて手続きしてください。<a class="ktn-guide-link" id="p5100LpLink" href="./kotennavi-p3-15.html">LIAISON+ コンソールで確認する →</a></span>
+        </div>
+        <div class="ktn-txn-alert" id="p5100TxnBlock">
+          <span>未完了の取引（発送待ち・受取確認待ちなど）があるため、退会できません。取引が完了してから、あらためて手続きしてください。<a class="ktn-guide-link" href="./kotennavi-p5-15.html">取引ワークスペースで状況を確認する →</a></span>
         </div>
 
-        <!-- 退会に伴う注意事項 -->
-        <div style="margin:0 20px;padding:18px 20px;background:var(--paper);border-radius:4px">
-          <p style="font-family:var(--fn);font-size:.82rem;font-weight:600;color:var(--ink);margin-bottom:8px">退会すると、以下のデータが削除されます</p>
-          <ul style="font-family:var(--fn);font-size:.82rem;line-height:2;color:var(--ink);padding-left:1.2em">
-            <li>プロフィール情報・アカウント情報</li>
-            <li>ウォッチリスト・興味あり！・チェックイン履歴</li>
-            <li>コレクションルームの登録内容</li>
-          </ul>
-          <p style="font-family:var(--fn);font-size:.78rem;line-height:1.9;color:var(--muted);margin-top:12px">creator／gallery機能をご利用中の場合、先に各機能の解約が必要です。掲載中の展覧会・作品・記事がある場合は退会前に整理してください。取引完了後の記録は、法令に基づき一定期間保持されます。</p>
+        <!-- ブロック1：退会前の確認（共通の注意リスト .p114-notice ＋同意） -->
+        <div class="p211-block">
+          <div class="p211-block__head">
+            <h3 class="p211-block__title">退会前にご確認ください <span class="p211-block__title-en">BEFORE YOU LEAVE</span></h3>
+          </div>
+          <div class="p211-block__body">
+            <div class="p114-notice">
+              <p class="p114-notice__title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3 2.5 20h19L12 3z"/><line x1="12" y1="10" x2="12" y2="14"/><circle cx="12" cy="17" r=".6" fill="currentColor"/></svg>
+                退会すると、次のデータが削除されます
+              </p>
+              <ul class="p114-notice__list">
+                <li class="p114-notice__item">プロフィール情報・アカウント情報</li>
+                <li class="p114-notice__item">ウォッチ・興味あり！・チェックインの記録</li>
+                <li class="p114-notice__item">コレクションルームの登録内容</li>
+                <li class="p114-notice__item"><strong>削除したデータは元に戻せません。</strong>取引が完了した記録は、法令に基づき一定期間保持されます。</li>
+              </ul>
+            </div>
+            <!-- クリエイター／ギャラリー機能を利用中の人だけ（デモバー「機能申込」の利用開始と連動）：
+                 退会してもページと、機能で登録した展覧会はサイトに残り、記事・作品は非公開になる＝それを了承してもらう（2026-09-27 仕様） -->
+            <div id="p5100RoleBox" hidden>
+              <div class="p114-notice">
+                <p class="p114-notice__title">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3 2.5 20h19L12 3z"/><line x1="12" y1="10" x2="12" y2="14"/><circle cx="12" cy="17" r=".6" fill="currentColor"/></svg>
+                  <span id="p5100RoleTitle">クリエイターページと掲載内容は残ります</span>
+                </p>
+                <ul class="p114-notice__list">
+                  <li class="p114-notice__item"><span id="p5100RolePage">クリエイターページ</span>は、退会後もサイトに残ります。<a class="ktn-guide-link" id="p5100RoleLink" href="./kotennavi-p3.html">クリエイターページを確認する →</a></li>
+                  <li class="p114-notice__item"><span id="p5100RoleFeature">クリエイター機能</span>で登録した展覧会は、そのまま掲載されます。</li>
+                  <li class="p114-notice__item">登録した記事・作品は、<strong>非公開</strong>になります。</li>
+                  <li class="p114-notice__item">退会後は、あなたがこれらを編集・削除することはできなくなります。</li>
+                </ul>
+              </div>
+              <label class="p114-terms-agree p5100-input" id="p5100RoleAgreeLabel">
+                <input type="checkbox" id="p5100RoleAgree" onchange="p5100UpdateSubmit()">
+                <span id="p5100RoleAgreeText">クリエイターページと展覧会がサイトに残り、記事・作品が非公開になることを了承します</span>
+              </label>
+            </div>
+            <label class="p114-terms-agree p5100-input" id="p5100AgreeLabel">
+              <input type="checkbox" id="p5100Agree" onchange="p5100UpdateSubmit()">
+              <span>上記の内容を理解したうえで、退会します</span>
+            </label>
+          </div>
         </div>
 
-        <!-- 退会理由（任意） -->
-        <div class="p211-field" style="margin:0 20px">
-          <label class="p211-label">退会理由（任意）</label>
-          <select class="p211-select" id="p5100Reason">
-            <option value="">選択してください</option>
-            <option>利用する機会が少なかった</option>
-            <option>目的のコンテンツが見つからなかった</option>
-            <option>他のサービスを利用することにした</option>
-            <option>操作が分かりづらかった</option>
-            <option>その他</option>
-          </select>
+        <!-- ブロック2：退会の理由（理由の選択は必須・ご意見は任意＝2026-09-27） -->
+        <div class="p211-block p5100-input">
+          <div class="p211-block__head">
+            <h3 class="p211-block__title">退会の理由 <span class="p211-block__title-en">FEEDBACK</span></h3>
+          </div>
+          <div class="p211-block__body">
+            <div class="p211-field" id="p5100ReasonField">
+              <label class="p211-label" for="p5100Reason">退会の理由<span class="ktn-req">必須</span></label>
+              <select class="p211-select" id="p5100Reason">
+                <option value="">選択してください</option>
+                <option>利用する機会が少なかった</option>
+                <option>目的のコンテンツが見つからなかった</option>
+                <option>他のサービスを利用することにした</option>
+                <option>操作が分かりづらかった</option>
+                <option value="mail">メールが多かった</option>
+                <option>その他</option>
+              </select>
+              <!-- 「メールが多かった」を選んだときだけ：退会しなくてもメールは止められることを案内（退会は妨げない） -->
+              <p class="p211-help" id="p5100MailHint" hidden>メールは、退会しなくても myページの「メール通知設定」で止められます。<a class="ktn-guide-link" href="./kotennavi-p5-13.html">メール通知設定を開く →</a></p>
+            </div>
+            <div class="p211-field">
+              <label class="p211-label" for="p5100Feedback">ご意見・ご要望（任意）</label>
+              <textarea class="p211-textarea" id="p5100Feedback" rows="4" placeholder="今後のサービス改善のため、よろしければご意見をお聞かせください。"></textarea>
+            </div>
+          </div>
         </div>
 
-        <div class="p211-field" style="margin:12px 20px 0">
-          <label class="p211-label">ご意見・ご要望（任意）</label>
-          <textarea class="p211-textarea" id="p5100Feedback" rows="4" placeholder="今後のサービス改善のため、よろしければご意見をお聞かせください。"></textarea>
+        <!-- 保存エラーパネル（共通 .ktn-form-error・送信バー直上） -->
+        <div class="ktn-form-error p5100-input" id="p5100Error" role="alert" hidden>
+          <div class="ktn-form-error__head">
+            <svg class="ktn-form-error__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <span class="ktn-form-error__title">退会の手続きを進められません</span>
+          </div>
+          <ul class="ktn-form-error__list"><li class="ktn-form-error__item">「退会の理由」が選択されていません。<button class="ktn-form-error__jump" type="button" onclick="document.getElementById('p5100ReasonField').scrollIntoView({behavior:'smooth',block:'center'});document.getElementById('p5100Reason').focus()">該当箇所へ →</button></li></ul>
         </div>
 
-        <label class="p114-terms-agree" id="p5100AgreeLabel" style="margin:16px 20px 0">
-          <input type="checkbox" id="p5100Agree" onchange="p5100UpdateSubmit()">
-          <span>上記の内容を理解したうえで、退会します</span>
-        </label>
-
-        <div style="margin:20px 20px 0;text-align:right">
-          <button class="ktn-op-btn ktn-op-btn--danger-outline ktn-op-btn--lg" id="p5100SubmitBtn" disabled onclick="p5100OpenModal()">退会する</button>
+        <!-- 送信バー（共通 .p211-submit-bar）：主アクションを右端。破壊操作のソフトトリガー＝赤枠（確定は確認モーダルの solid 赤） -->
+        <div class="p211-submit-bar">
+          <button class="p211-submit-bar__cancel ktn-op-btn" type="button" id="p5100CancelBtn" onclick="history.back()">キャンセル</button>
+          <button class="p211-submit-bar__submit ktn-op-btn ktn-op-btn--danger-outline p5100-input" type="button" id="p5100SubmitBtn" disabled onclick="p5100OpenModal()">退会する</button>
         </div>
 
       </div>
@@ -180,31 +265,73 @@
 <script>
   KTN.init({ page: 'p5-100', role: 'user+' });
   function setR(role, btn) {
-    document.querySelectorAll('.dbar .dbtn').forEach(function(b){ if(!b.hasAttribute('data-purchase-history-btn')) b.classList.remove('on'); });
+    /* ロールのボタンだけ on を付け替える（未処理の取引・機能申込のボタンの選択状態は触らない） */
+    document.querySelectorAll('.dbar [onclick^="setR"]').forEach(function(b){ b.classList.remove('on'); });
     btn.classList.add('on');
     window.curRole = role;
     if (window.ktnRender) ktnRender();
   }
 
+  /* 「退会する」を押せる条件：未処理の取引が無い ＋（機能を利用中なら）LIAISON+ の展覧会が予定・期間中・終了2週間以内でない ＋ 同意 ＋（機能を利用中なら）了承 */
+  var p5100State = { txn: false, role: null, lp: false };
+  function p5100Sync() {
+    document.getElementById('p5100TxnBlock').classList.toggle('is-on', p5100State.txn);
+    var lpBlocked = !!p5100State.role && p5100State.lp;
+    document.getElementById('p5100LpBlock').classList.toggle('is-on', lpBlocked);
+    document.getElementById('p5100LpLink').href = p5100State.role === 'gallery' ? './kotennavi-p4-15.html' : './kotennavi-p3-15.html';
+    var box = document.getElementById('p5100RoleBox');
+    box.hidden = !p5100State.role;
+    if (p5100State.role) {
+      var nm = p5100State.role === 'gallery' ? 'ギャラリー' : 'クリエイター';
+      document.getElementById('p5100RoleTitle').textContent = nm + 'ページと掲載内容は残ります';
+      document.getElementById('p5100RolePage').textContent = nm + 'ページ';
+      document.getElementById('p5100RoleFeature').textContent = nm + '機能';
+      document.getElementById('p5100RoleAgreeText').textContent = nm + 'ページと展覧会がサイトに残り、記事・作品が非公開になることを了承します';
+      var link = document.getElementById('p5100RoleLink');
+      link.href = p5100State.role === 'gallery' ? './kotennavi-p4.html' : './kotennavi-p3.html';
+      link.textContent = nm + 'ページを確認する →';
+    }
+    /* 退会できないとき（未処理の取引／LIAISON+ の展覧会）は入力部分（同意・了承・退会の理由・退会ボタン）を出さない。
+       注意リストは「退会するとどうなるか」を先に知っておけるよう残す。送信バーは「戻る」だけ */
+    var blocked = p5100State.txn || lpBlocked;
+    document.querySelector('.p5100-wrap').classList.toggle('is-blocked', blocked);
+    document.getElementById('p5100CancelBtn').textContent = blocked ? '戻る' : 'キャンセル';
+    var ok = !p5100State.txn && !lpBlocked && document.getElementById('p5100Agree').checked
+      && (!p5100State.role || document.getElementById('p5100RoleAgree').checked);
+    document.getElementById('p5100SubmitBtn').disabled = !ok;
+  }
   function p5100SetTxn(hasTxn, btn) {
-    document.querySelectorAll('.dbar .dbtn').forEach(function(b) {
-      if (b.getAttribute('onclick') && b.getAttribute('onclick').indexOf('p5100SetTxn') !== -1) b.classList.remove('on');
-    });
+    document.querySelectorAll('.dbar [onclick^="p5100SetTxn"]').forEach(function(b) { b.classList.remove('on'); });
     btn.classList.add('on');
-    document.getElementById('p5100TxnBlock').hidden = !hasTxn;
-    var submitBtn = document.getElementById('p5100SubmitBtn');
-    if (hasTxn) { submitBtn.disabled = true; }
-    else { submitBtn.disabled = !document.getElementById('p5100Agree').checked; }
+    p5100State.txn = hasTxn;
+    p5100Sync();
   }
-
-  function p5100UpdateSubmit() {
-    if (!document.getElementById('p5100TxnBlock').hidden) return;
-    document.getElementById('p5100SubmitBtn').disabled = !document.getElementById('p5100Agree').checked;
+  function p5100UpdateSubmit() { p5100Sync(); }
+  function p5100SetLp(has, btn) {
+    document.querySelectorAll('.dbar [onclick^="p5100SetLp"]').forEach(function(b) { b.classList.remove('on'); });
+    btn.classList.add('on');
+    p5100State.lp = has;
+    p5100Sync();
   }
+  /* クリエイター／ギャラリー機能が「利用開始」のときだけ「ページと掲載内容は残ります」＋了承チェックを出す（確認中・取消は対象外）＝デモバー「機能申込」と連動 */
+  document.addEventListener('ktn:userapps', function (e) {
+    var d = e.detail || {};
+    p5100State.role = (d.role && d.role[1] === 'granted') ? d.role[0] : null;
+    p5100Sync();
+  });
 
+  /* 「退会する」：退会の理由（必須）が未選択なら保存エラーパネル＋赤枠を出して止める。選択済みなら確認モーダルへ */
   function p5100OpenModal() {
+    var ng = !document.getElementById('p5100Reason').value;
+    document.getElementById('p5100ReasonField').classList.toggle('is-error', ng);
+    document.getElementById('p5100Error').hidden = !ng;
+    if (ng) return;
     document.getElementById('p5100Modal').hidden = false;
   }
+  document.getElementById('p5100Reason').addEventListener('change', function () {
+    document.getElementById('p5100MailHint').hidden = this.value !== 'mail';
+    if (this.value) { document.getElementById('p5100ReasonField').classList.remove('is-error'); document.getElementById('p5100Error').hidden = true; }
+  });
   document.getElementById('p5100ModalClose').addEventListener('click', function () { document.getElementById('p5100Modal').hidden = true; });
   document.getElementById('p5100ModalCancel').addEventListener('click', function () { document.getElementById('p5100Modal').hidden = true; });
   document.getElementById('p5100ModalOk').addEventListener('click', function () {

@@ -144,6 +144,18 @@
                 <option value="maintenance">メンテナンス</option>
                 <option value="important">重要</option>
               </select>
+              <p class="p211-help">メールで送る場合、「重要」は停止できないお知らせとして、それ以外は「ニュース・キャンペーン」として扱います。</p>
+            </div>
+
+            <!-- 対象（ゲストにはメールを送れないため、全員・ユーザーはどちらも全登録ユーザーに届く） -->
+            <div class="p211-field">
+              <label class="p211-label" for="p6111Target">対象<span class="ktn-req">必須</span></label>
+              <select class="p211-select" id="p6111Target">
+                <option value="all">全員</option>
+                <option value="user">ユーザー</option>
+                <option value="cg">クリエイター・ギャラリー</option>
+              </select>
+              <p class="p211-help">「全員」はゲストを含むサイトの全利用者向け、「ユーザー」は登録ユーザー向けです。メールはゲストには送れないため、どちらも登録ユーザー全員（クリエイター・ギャラリーを含む）に届きます。「クリエイター・ギャラリー」はその機能を利用中の人だけに届きます。</p>
             </div>
 
             <!-- 公開日 -->
@@ -164,7 +176,22 @@
               <label class="p211-check"><input type="checkbox" id="p6111NewBadge" checked> 一覧に「NEW」バッジを表示する</label>
             </div>
 
+            <!-- メール配信（メール A-04「個展なびからの重要なお知らせ」・docs/email-templates.md） -->
+            <div class="p211-field">
+              <label class="p211-check"><input type="checkbox" id="p6111SendMail"> 登録ユーザーにメールでも送る</label>
+              <p class="p211-help" id="p6111MailHelp"></p>
+            </div>
+
           </div>
+        </div>
+
+        <!-- 保存エラーパネル（共通 .ktn-form-error・送信バー直上に常設・次の保存まで残る） -->
+        <div class="ktn-form-error" id="p6111SaveError" role="alert" hidden>
+          <div class="ktn-form-error__head">
+            <svg class="ktn-form-error__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <span class="ktn-form-error__title">保存できませんでした</span>
+          </div>
+          <ul class="ktn-form-error__list" id="p6111SaveErrorList"></ul>
         </div>
 
         <!-- 送信バー -->
@@ -223,15 +250,61 @@
     if (submitBtn) submitBtn.textContent = mode === 'edit' ? '更新する' : (mode === 'clone' ? 'クローンして作成する' : '作成する');
   }
 
+  /* ── メール配信の説明：カテゴリ（重要／それ以外）と対象の組み合わせで、誰に届くかを示す ── */
+  function p6111SyncMailHelp() {
+    var imp = document.getElementById('p6111Cat').value === 'important';
+    var cg = document.getElementById('p6111Target').value === 'cg';
+    var who = cg ? 'クリエイター・ギャラリー機能を利用中の人' : '登録ユーザー全員（クリエイター・ギャラリーを含む）';
+    document.getElementById('p6111MailHelp').textContent = imp
+      ? '公開日に、' + who + 'へメールでお送りします。重要なお知らせは、受け取る人が停止できないメールです。'
+      : '公開日に、' + who + 'のうち、メール通知設定で「ニュース・キャンペーン」を受け取る設定にしている人へお送りします。';
+    document.getElementById('p6111MailHelp').textContent += 'メールは公開時に1回だけ送られ、公開後に編集しても再送されません。すべてのお知らせをメールで送る必要はありません。';
+  }
+  ['p6111Cat', 'p6111Target'].forEach(function (id) { document.getElementById(id).addEventListener('change', p6111SyncMailHelp); });
+  p6111SyncMailHelp();
+
   /* ── 作成/更新ボタン ── */
   var p6111SubmitBtn = document.getElementById('p6111SubmitBtn');
   if (p6111SubmitBtn) {
+    /* 必須チェック：必須マーク（.ktn-req）の付いた欄のうち、いま表示されている欄だけを見る
+       （編集対象・複製元はモードによって hidden）。エラーはトーストでなく共通の保存エラーパネル＋赤枠。 */
     p6111SubmitBtn.addEventListener('click', function () {
-      var title = document.getElementById('p6111Title').value.trim();
-      if (!title) {
-        KTN.toast('タイトルを入力してください');
+      var errs = [];
+      document.querySelectorAll('#p6111Wrap .p211-field').forEach(function (f) {
+        var req = f.querySelector('.p211-label .ktn-req');
+        var inp = f.querySelector('input,select,textarea');
+        var ng = !!(req && !f.hidden && inp && !inp.value.trim());
+        f.classList.toggle('is-error', ng);
+        if (ng) {
+          var lbl = f.querySelector('.p211-label').cloneNode(true);
+          lbl.querySelector('.ktn-req').remove();
+          /* 選択式（編集対象・複製元）は「〜が選択されていません」、入力式は「〜が未入力です」 */
+          var isSel = inp.tagName === 'SELECT';
+          var nm = lbl.textContent.trim().replace(/を選択$/, '');
+          errs.push({ field: f, msg: '「' + nm + '」' + (isSel ? 'が選択されていません。' : 'が未入力です。') });
+        }
+      });
+      var box = document.getElementById('p6111SaveError');
+      var list = document.getElementById('p6111SaveErrorList');
+      if (errs.length) {
+        list.innerHTML = '';
+        errs.forEach(function (e) {
+          var li = document.createElement('li');
+          li.className = 'ktn-form-error__item';
+          li.textContent = e.msg;
+          var b = document.createElement('button');
+          b.type = 'button'; b.className = 'ktn-form-error__jump'; b.textContent = '該当箇所へ →';
+          b.addEventListener('click', function () {
+            e.field.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            var i = e.field.querySelector('input,select,textarea'); if (i) i.focus();
+          });
+          li.appendChild(b);
+          list.appendChild(li);
+        });
+        box.hidden = false;
         return;
       }
+      box.hidden = true;
       KTN.toast('お知らせを保存しました');
     });
   }

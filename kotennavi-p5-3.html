@@ -167,7 +167,7 @@
     </div>
 
     <!-- B. タブナビ -->
-    <nav class="p5-tabnav" id="p5Tabnav" aria-label="マイページ内ナビ">
+    <nav class="p5-tabnav" id="p5Tabnav" aria-label="myページ内ナビ">
       <div class="p5-tabnav__inner">
         <a class="p5-tabnav__item" href="kotennavi-p5.html">カレンダー</a>
         <a class="p5-tabnav__item p5-tabnav__item--zero-off" href="kotennavi-p5-1.html">ウォッチ</a>
@@ -187,6 +187,11 @@
       </div>
 
       <!-- 軸①: タイプタブ -->
+      <!-- 表示から外す規則（2026-09-27 仕様・後工程向け／プロトタイプの静的データでは再現していない）：
+           興味あり！した「作品」「記事」のうち、オーナー（クリエイター／ギャラリー）が非公開・削除にしたもの、
+           またはオーナーが退会したもの（退会で記事・作品は非公開になる＝追174-219）は、一覧に出さない。タブの件数もそれを除いた数。
+           利用者側の「興味あり！」の登録自体は消さず、オーナーが再公開すれば再び表示される（非公開のみ。削除・退会は戻らない）。
+           展覧会は対象外（退会後も展覧会は掲載され続ける）。詳細は docs/page-specs.md「P5-3／P5-4：オーナー側の事情で見られなくなったコンテンツ」 -->
       <div class="p5-type-tabs" id="p53TypeTabs">
         <button class="p5-type-tab is-active" data-type="exh">展覧会<span class="ktn-count ktn-count--pill is-idle p5-list-tab__count">10</span></button>
         <button class="p5-type-tab" data-type="artwork">作品<span class="ktn-count ktn-count--pill is-idle p5-list-tab__count">9</span></button>

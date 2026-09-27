@@ -24,7 +24,7 @@
     <nav class="p3-mgmt-drawer__nav">
       <a class="p3-mgmt-nav-item" href="kotennavi-p5.html">
         <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><circle cx="8" cy="5" r="3"/><path d="M2 13.5c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>
-        マイページ
+        myページ
       </a>
       <div class="p3-mgmt-drawer__sep"></div>
       <a class="p3-mgmt-nav-item" href="kotennavi-p5-11.html">
@@ -58,6 +58,13 @@
   <span class="dbar-sep" style="margin-left:12px">購入歴：</span>
   <button class="dbtn on" data-purchase-history-btn onclick="ktnSetPurchaseHistory(true,this)">あり</button>
   <button class="dbtn" data-purchase-history-btn onclick="ktnSetPurchaseHistory(false,this)">なし</button>
+  <span class="dbar-sep" style="margin-left:12px">機能申込：</span>
+  <button class="dbtn on" data-user-apps-btn="none" onclick="KTN.setUserApps('none')">未申込</button>
+  <button class="dbtn" data-user-apps-btn="cr-pending" onclick="KTN.setUserApps('cr-pending')">クリエイター確認中</button>
+  <button class="dbtn" data-user-apps-btn="cr-granted" onclick="KTN.setUserApps('cr-granted')">クリエイター利用開始</button>
+  <button class="dbtn" data-user-apps-btn="cr-lp-pending" onclick="KTN.setUserApps('cr-lp-pending')">クリエイター＋LIAISON+確認中</button>
+  <button class="dbtn" data-user-apps-btn="ga-lp-granted" onclick="KTN.setUserApps('ga-lp-granted')">ギャラリー＋LIAISON+利用開始</button>
+  <button class="dbtn" data-user-apps-btn="ga-cancelled" onclick="KTN.setUserApps('ga-cancelled')">ギャラリー取消</button>
 </div>
 
 <div class="shell">
@@ -136,17 +143,36 @@
 
     <!-- C. メインコンテンツ -->
     <div class="ktn-content">
-      <!-- 親エンティティ文脈ストリップ（identity strip） -->
+      <!-- 親エンティティ文脈ストリップ（identity strip）＝P5-1** 共通（P11-2/P11-3 と同型の meta 行）
+           ＋機能申込の状況行（.ktn-mgmt-context__apps・申込の無い項目は非表示・KTN.setUserApps が切替） -->
       <div class="ktn-mgmt-context">
         <a class="ktn-mgmt-context__media ktn-mgmt-context__media--user" href="kotennavi-p5.html" style="background:linear-gradient(135deg,#f0c0d8,#c87aaa)">花</a>
         <div class="ktn-mgmt-context__body">
           <div class="ktn-mgmt-context__badges">
-            <span class="cb cb-person cb-user">user</span>
+            <span class="cb cb-person cb-user">USER</span>
           </div>
           <div class="ktn-mgmt-context__name"><a href="kotennavi-p5.html">山田 花子</a></div>
+          <div class="ktn-mgmt-context__meta">利用開始 2022.04 · hanako.yamada@example.com</div>
+          <!-- このアカウントに紐づくページ（クリエイター／ギャラリー機能が「利用開始」の人だけ・KTN.setUserApps が表示を切替）。
+               主役はユーザー＝表示とリンクだけで編集はさせない（ページの設定はそれぞれの管理ページ）。card全体はリンクにせず名前と「ページへ →」だけ -->
+          <div class="ktn-mgmt-context__linked" data-user-linked hidden>
+            <span class="ktn-mgmt-context__apps-label">Your Page</span>
+            <span class="ktn-mgmt-context__linked-media" data-linked-media></span>
+            <span class="ktn-mgmt-context__linked-body">
+              <span class="ktn-mgmt-context__linked-name"><span class="cb cb-person" data-linked-badge></span><a data-linked-name href="#"></a></span>
+              <span class="ktn-mgmt-context__linked-meta" data-linked-meta></span>
+            </span>
+            <a class="ktn-mgmt-context__linked-view" data-linked-view href="#">クリエイターページへ →</a>
+          </div>
+          <div class="ktn-mgmt-context__apps" data-user-apps hidden>
+            <span class="ktn-mgmt-context__apps-label">Applications</span>
+            <span class="ktn-mgmt-context__app" data-user-app="role" hidden><span class="ktn-mgmt-context__app-name">クリエイター機能</span><span class="ktn-review-status"></span></span>
+            <span class="ktn-mgmt-context__app" data-user-app="lp" hidden><span class="ktn-mgmt-context__app-name">LIAISON+</span><span class="ktn-review-status"></span></span>
+          </div>
         </div>
         <div class="ktn-mgmt-context__actions">
-          <a class="ktn-mgmt-context__view" href="kotennavi-p5.html">マイページへ →</a>        </div>
+          <a class="ktn-mgmt-context__view" href="kotennavi-p5.html">myページへ →</a>
+        </div>
       </div>
       <div class="p513-wrap ktn-mgmt-wrap ktn-mgmt-stack" id="p513Wrap">
 
@@ -154,159 +180,120 @@
         <div class="ktn-mgmt-head">
           <h2 class="ktn-mgmt-head__title">メール通知設定</h2>
           <p class="ktn-mgmt-head__en">NOTIFICATION SETTINGS</p>
-          <p class="ktn-mgmt-head__desc">受け取るメール通知の種類をカテゴリごとに設定できます。変更は即時に反映されます。</p>
+          <p class="ktn-mgmt-head__desc">お知らせメールを受け取るかどうかを設定できます。切り替えはすぐに反映されます。</p>
         </div>
 
-        <!-- セクション1: 展覧会通知 -->
+        <!-- セクション1：ユーザーとして受け取るメール（全ユーザー）。仕様＝docs/email-templates.md「ユーザーが選べるメール（P5-13）」R-01/A-01/N-01 -->
         <div class="p513-section">
           <div class="p513-section__head">
-            <div class="p513-section__title">展覧会通知</div>
-            <div class="p513-section__desc">ウォッチ中のクリエイター・ギャラリーの展覧会情報をお知らせします。</div>
+            <div class="p513-section__title">ユーザーとして受け取るメール</div>
+            <div class="p513-section__desc">項目ごとに受け取りを切り替えられます。</div>
           </div>
 
           <div class="p513-row">
             <div class="p513-row__body">
-              <div class="p513-row__label">新規展覧会（クリエイター）</div>
-              <div class="p513-row__desc">ウォッチ中のクリエイターが新しい展覧会を登録したときに通知</div>
+              <div class="p513-row__label">リマインダー<span class="p513-row__freq">1日1回・朝</span></div>
+              <div class="p513-row__desc">ウォッチしているクリエイター・ギャラリーの展覧会と、「興味あり！」に追加した展覧会が、今日から開催・もうすぐ終了・もうすぐ開催になったときにお知らせします。「興味あり！」に追加した作品が展覧会に出品されるときもお知らせします。該当するものがない日は届きません。</div>
             </div>
-            <label class="p513-toggle">
-              <input type="checkbox" checked onchange="p513AutoSave(this)">
-              <span class="p513-toggle__track"></span>
-            </label>
+            <button type="button" class="ktn-switch is-on" role="switch" aria-checked="true" data-p513-key="reminder" aria-label="リマインダー">
+              <span class="ktn-switch__track"><span class="ktn-switch__knob"></span></span>
+              <span class="ktn-switch__label">受け取る</span>
+            </button>
           </div>
 
           <div class="p513-row">
             <div class="p513-row__body">
-              <div class="p513-row__label">新規展覧会（ギャラリー）</div>
-              <div class="p513-row__desc">ウォッチ中のギャラリーが新しい展覧会を登録したときに通知</div>
+              <div class="p513-row__label">ウォッチ新着<span class="p513-row__freq">随時</span></div>
+              <div class="p513-row__desc">ウォッチしているクリエイターやギャラリーが、新しい展覧会や記事を公開したときにお知らせします。</div>
             </div>
-            <label class="p513-toggle">
-              <input type="checkbox" checked onchange="p513AutoSave(this)">
-              <span class="p513-toggle__track"></span>
-            </label>
+            <button type="button" class="ktn-switch is-on" role="switch" aria-checked="true" data-p513-key="watch" aria-label="ウォッチ新着">
+              <span class="ktn-switch__track"><span class="ktn-switch__knob"></span></span>
+              <span class="ktn-switch__label">受け取る</span>
+            </button>
           </div>
 
           <div class="p513-row">
             <div class="p513-row__body">
-              <div class="p513-row__label">開催日前リマインダー</div>
-              <div class="p513-row__desc">「興味あり！」に追加した展覧会の開催日3日前にリマインダーをお送りします</div>
+              <div class="p513-row__label">ニュース・キャンペーン<span class="p513-row__freq">随時</span></div>
+              <div class="p513-row__desc">新しい機能やキャンペーン・特集など、個展なびからのお知らせをお送りします。</div>
             </div>
-            <label class="p513-toggle">
-              <input type="checkbox" onchange="p513AutoSave(this)">
-              <span class="p513-toggle__track"></span>
-            </label>
-          </div>
-
-        </div>
-
-        <!-- セクション2: LIAISON+通知 -->
-        <div class="p513-section">
-          <div class="p513-section__head">
-            <div class="p513-section__title">LIAISON+ 取引通知</div>
-            <div class="p513-section__desc">購入申込や取引の進捗に関するお知らせです。重要な通知はOFFにできません。</div>
-          </div>
-
-          <div class="p513-row">
-            <div class="p513-row__body">
-              <div class="p513-row__label">在庫確認完了・順番繰り上がり</div>
-              <div class="p513-row__desc">申込の順番が変わったときや在庫確認が完了したときに通知</div>
-            </div>
-            <label class="p513-toggle">
-              <input type="checkbox" checked disabled onchange="p513AutoSave(this)">
-              <span class="p513-toggle__track"></span>
-            </label>
-          </div>
-
-          <div class="p513-row">
-            <div class="p513-row__body">
-              <div class="p513-row__label">支払い案内・期限</div>
-              <div class="p513-row__desc">支払い手続きが必要なタイミングと期限をお知らせします</div>
-            </div>
-            <label class="p513-toggle">
-              <input type="checkbox" checked disabled onchange="p513AutoSave(this)">
-              <span class="p513-toggle__track"></span>
-            </label>
-          </div>
-
-          <div class="p513-row">
-            <div class="p513-row__body">
-              <div class="p513-row__label">発送通知</div>
-              <div class="p513-row__desc">作品が発送されたときに追跡番号と合わせてお知らせします</div>
-            </div>
-            <label class="p513-toggle">
-              <input type="checkbox" checked disabled onchange="p513AutoSave(this)">
-              <span class="p513-toggle__track"></span>
-            </label>
-          </div>
-
-          <div class="p513-row">
-            <div class="p513-row__body">
-              <div class="p513-row__label">取引完了</div>
-              <div class="p513-row__desc">取引が正常に完了したときに確認のお知らせをします</div>
-            </div>
-            <label class="p513-toggle">
-              <input type="checkbox" checked onchange="p513AutoSave(this)">
-              <span class="p513-toggle__track"></span>
-            </label>
-          </div>
-
-          <div class="p513-row">
-            <div class="p513-row__body">
-              <div class="p513-row__label">申込キャンセル・取引中止</div>
-              <div class="p513-row__desc">申込がキャンセルされた場合や取引が中止になった場合に通知</div>
-            </div>
-            <label class="p513-toggle">
-              <input type="checkbox" checked disabled onchange="p513AutoSave(this)">
-              <span class="p513-toggle__track"></span>
-            </label>
+            <button type="button" class="ktn-switch" role="switch" aria-checked="false" data-p513-key="news" aria-label="ニュース・キャンペーン">
+              <span class="ktn-switch__track"><span class="ktn-switch__knob"></span></span>
+              <span class="ktn-switch__label">受け取らない</span>
+            </button>
           </div>
 
         </div>
 
-        <!-- セクション3: 重要なお知らせ -->
-        <div class="p513-section">
+        <!-- セクション2：クリエイター／ギャラリーとして受け取るメール（機能を利用中の人だけ表示・デモバー「機能申込」の利用開始と連動）。
+             P3-13／P4-13 のオーディエンス画面は設定を持たず、ここへのリンクだけ（設定の置き場所は P5-13 に一本化）。A-03/I-01 -->
+        <div class="p513-section" data-p513-owner-only hidden>
           <div class="p513-section__head">
-            <div class="p513-section__title">重要なお知らせ</div>
-            <div class="p513-section__desc">サービスの運営に関わる重要な通知です。変更できません。</div>
+            <div class="p513-section__title">クリエイター／ギャラリーとして受け取るメール</div>
+            <div class="p513-section__desc">クリエイター機能・ギャラリー機能をご利用中の方に届くメールです。</div>
           </div>
 
           <div class="p513-row">
             <div class="p513-row__body">
-              <div class="p513-row__label">個展なびからの重要なお知らせ</div>
-              <div class="p513-row__desc">利用規約の変更・セキュリティ情報・アカウントに関する重要な通知</div>
+              <div class="p513-row__label">ウォッチ・チェックインのお知らせ<span class="p513-row__freq">1日1回・公開時</span></div>
+              <div class="p513-row__desc">その日に新しくウォッチしてくれた人や、あなたの展覧会にチェックインした人をお知らせします。0件の日は届きません。また、展覧会を公開したときには、お知らせを送ったウォッチャーの一覧をお送りします。</div>
             </div>
-            <span class="p513-row__mandatory">変更不可</span>
+            <button type="button" class="ktn-switch is-on" role="switch" aria-checked="true" data-p513-key="audience" aria-label="ウォッチ・チェックインのお知らせ">
+              <span class="ktn-switch__track"><span class="ktn-switch__knob"></span></span>
+              <span class="ktn-switch__label">受け取る</span>
+            </button>
+          </div>
+
+          <div class="p513-row">
+            <div class="p513-row__body">
+              <div class="p513-row__label">インサイトの月次レポート<span class="p513-row__freq">月1回</span></div>
+              <div class="p513-row__desc">あなたのページと展覧会の閲覧数や、ウォッチャー数の推移を毎月お知らせします。</div>
+            </div>
+            <button type="button" class="ktn-switch is-on" role="switch" aria-checked="true" data-p513-key="insight" aria-label="インサイトの月次レポート">
+              <span class="ktn-switch__track"><span class="ktn-switch__knob"></span></span>
+              <span class="ktn-switch__label">受け取る</span>
+            </button>
           </div>
 
         </div>
 
-        <!-- セクション4: プロモーション -->
+        <!-- セクション3：必ずお届けするメール（設定なし） -->
         <div class="p513-section">
           <div class="p513-section__head">
-            <div class="p513-section__title">プロモーション</div>
-            <div class="p513-section__desc">個展なびからのお得な情報や新機能のご案内です。</div>
+            <div class="p513-section__title">必ずお届けするメール</div>
+            <div class="p513-section__desc">アカウントの安全を守り、取引を滞りなく進めるために、次のメールは停止できません。</div>
           </div>
 
           <div class="p513-row">
             <div class="p513-row__body">
-              <div class="p513-row__label">新機能・サービス情報</div>
-              <div class="p513-row__desc">個展なびの新機能リリースやサービス改善のご案内</div>
+              <div class="p513-row__label">アカウント・セキュリティ</div>
+              <div class="p513-row__desc">新規登録、パスワードやメールアドレスの変更、退会など、アカウントの手続きに関するメールです。</div>
             </div>
-            <label class="p513-toggle">
-              <input type="checkbox" checked onchange="p513AutoSave(this)">
-              <span class="p513-toggle__track"></span>
-            </label>
+            <span class="p513-row__mandatory">常に受け取る</span>
           </div>
 
           <div class="p513-row">
             <div class="p513-row__body">
-              <div class="p513-row__label">キャンペーン・特集</div>
-              <div class="p513-row__desc">期間限定のキャンペーンや、展覧会特集のお知らせメール</div>
+              <div class="p513-row__label">取引の連絡（LIAISON+）</div>
+              <div class="p513-row__desc">購入の申込から取引の完了まで、各段階のご案内や期限のお知らせ、キャンセルのご連絡をお送りします。</div>
             </div>
-            <label class="p513-toggle">
-              <input type="checkbox" onchange="p513AutoSave(this)">
-              <span class="p513-toggle__track"></span>
-            </label>
+            <span class="p513-row__mandatory">常に受け取る</span>
+          </div>
+
+          <div class="p513-row">
+            <div class="p513-row__body">
+              <div class="p513-row__label">お問合わせへの返信</div>
+              <div class="p513-row__desc">お問合わせを受け付けたことのご連絡と、作品へのお問合わせに返信があったときのお知らせです。</div>
+            </div>
+            <span class="p513-row__mandatory">常に受け取る</span>
+          </div>
+
+          <div class="p513-row">
+            <div class="p513-row__body">
+              <div class="p513-row__label">重要なお知らせ</div>
+              <div class="p513-row__desc">利用規約の変更や障害の発生など、すべての方にお伝えする必要があるご連絡です。</div>
+            </div>
+            <span class="p513-row__mandatory">常に受け取る</span>
           </div>
 
         </div>
@@ -341,11 +328,22 @@ KTN.init({ page: 'p5-13', role: 'user+' });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeDrawer(); });
 }());
 
-function p513AutoSave(input) {
-  var label = input.closest('.p513-row').querySelector('.p513-row__label');
-  var name  = label ? label.textContent.trim() : '設定';
-  KTN.toast((input.checked ? 'ON: ' : 'OFF: ') + name);
-}
+/* 受け取るかを選べるメール：共通 .ktn-switch（is-on・aria-checked・状態ラベルを同時に切替）。変更は即時反映 */
+document.addEventListener('click', function (e) {
+  var sw = e.target.closest && e.target.closest('#p513Wrap .ktn-switch[data-p513-key]');
+  if (!sw) return;
+  var on = !sw.classList.contains('is-on');
+  sw.classList.toggle('is-on', on);
+  sw.setAttribute('aria-checked', on ? 'true' : 'false');
+  sw.querySelector('.ktn-switch__label').textContent = on ? '受け取る' : '受け取らない';
+  KTN.toast('「' + sw.getAttribute('aria-label') + '」を' + (on ? '受け取る' : '受け取らない') + '設定にしました');
+});
+/* 「クリエイター／ギャラリーとして受け取るメール」は機能を利用中の人だけ（デモバー「機能申込」と連動） */
+document.addEventListener('ktn:userapps', function (e) {
+  var d = e.detail || {};
+  var owner = !!(d.role && d.role[1] === 'granted');
+  document.querySelectorAll('[data-p513-owner-only]').forEach(function (el) { el.hidden = !owner; });
+});
 </script>
 </body>
 </html>

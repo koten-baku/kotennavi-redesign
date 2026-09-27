@@ -88,8 +88,34 @@
           <p class="p211-help">このメールアドレス宛に確認メールをお送りします。パスワードはメール確認後に設定します。</p>
         </div>
 
+        <!-- 個展なびを知ったきっかけ（必須・集客経路の把握用・2026-09-27）。選択式1問。「覚えていない」は適当な選択で集計が偏るのを防ぐ逃げ道 -->
+        <div class="p211-field" style="margin-top:12px">
+          <label class="p211-label" for="p111Source">個展なびを知ったきっかけ<span class="ktn-req">必須</span></label>
+          <select class="p211-select" id="p111Source">
+            <option value="">選択してください</option>
+            <option value="search">検索エンジン（Google など）</option>
+            <option value="sns">SNS（Facebook・X など）</option>
+            <option value="venue">展覧会の会場・フライヤー</option>
+            <option value="creator">クリエイター・ギャラリーの紹介</option>
+            <option value="friend">知人・友人の紹介</option>
+            <option value="media">雑誌・Webメディアの記事</option>
+            <option value="other">その他</option>
+            <option value="unknown">覚えていない</option>
+          </select>
+          <!-- 「その他」を選んだときだけ記述欄（任意） -->
+          <input class="p211-input" id="p111SourceOther" type="text" maxlength="100" placeholder="よろしければ具体的にお書きください" style="margin-top:8px" hidden>
+        </div>
+
+        <!-- ニュース・キャンペーンの受信（任意・既定オフ）。広告にあたるメールは事前の同意が必要なため、登録時に本人が選ぶ。
+             利用規約の同意（押さないと進めない関門＝囲み付き .p114-terms-agree）と役割が違うので、囲みのない通常のチェック（.p211-check）にして見分ける。
+             P5-13 と同じスイッチ案は、登録フォームの幅が狭く文字が読みにくいため不採用（2026-09-27） -->
+        <label class="p211-check" style="margin-top:14px">
+          <input type="checkbox" id="p111News">
+          <span>個展なびからのニュース・キャンペーンのメールを受け取る（任意・あとから変更できます）</span>
+        </label>
+
         <label class="p114-terms-agree" id="p111AgreeLabel" style="margin-top:14px">
-          <input type="checkbox" id="p111Agree">
+          <input type="checkbox" id="p111Agree" onchange="p111SyncSubmit()">
           <span><a class="ktn-guide-link" href="./kotennavi-p60-9.html">利用規約</a>・<a class="ktn-guide-link" href="./kotennavi-p60-10.html">プライバシーポリシー</a>に同意して登録します</span>
         </label>
 
@@ -102,7 +128,7 @@
         </div>
 
         <div class="ktn-auth-btns">
-          <button class="ktn-auth-btn-primary" onclick="p111Register()">仮登録する</button>
+          <button class="ktn-auth-btn-primary" id="p111SubmitBtn" onclick="p111Register()" disabled>仮登録する</button>
         </div>
 
         <div class="ktn-auth-divider">または</div>
@@ -139,18 +165,15 @@ function p111ValidateRequired() {
       field.classList.add('is-error');
       var clone = mark.closest('.p211-label').cloneNode(true);
       var req = clone.querySelector('.ktn-req'); if (req) req.parentNode.removeChild(req);
-      missing.push({ name: clone.textContent.trim(), field: field });
+      missing.push({ name: clone.textContent.trim(), field: field, select: input && input.tagName === 'SELECT' });
     }
   });
-  if (!document.getElementById('p111Agree').checked) {
-    missing.push({ name: '利用規約への同意', field: document.getElementById('p111AgreeLabel') });
-  }
   if (missing.length) {
     errList.innerHTML = '';
     missing.forEach(function (m) {
       var li = document.createElement('li');
       li.className = 'ktn-form-error__item';
-      li.textContent = '「' + m.name + '」が未入力です。';
+      li.textContent = '「' + m.name + '」' + (m.select ? 'が選択されていません。' : 'が未入力です。');
       errList.appendChild(li);
     });
     errBox.hidden = false;
@@ -159,6 +182,16 @@ function p111ValidateRequired() {
   errBox.hidden = true;
   return true;
 }
+/* 利用規約・プライバシーポリシーに同意するまで「仮登録する」は押せない（他の編集・管理ページの同意チェックと同じ） */
+function p111SyncSubmit() {
+  document.getElementById('p111SubmitBtn').disabled = !document.getElementById('p111Agree').checked;
+}
+/* 知ったきっかけ：「その他」のときだけ記述欄を出す */
+document.getElementById('p111Source').addEventListener('change', function () {
+  var other = document.getElementById('p111SourceOther');
+  other.hidden = this.value !== 'other';
+  if (!other.hidden) other.focus();
+});
 function p111Register() {
   if (!p111ValidateRequired()) return;
   location.href = KTN.authUrl('./kotennavi-p11-21.html');   /* 戻り先（?return=）を引き継ぐ */

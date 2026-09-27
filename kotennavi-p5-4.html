@@ -44,9 +44,9 @@
   <span class="dbar-sep" style="margin-left:12px">コレクション：</span>
   <button class="dbtn on" data-coll-btn onclick="setCollState('normal',this)">通常</button>
   <button class="dbtn" data-coll-btn onclick="setCollState('zero',this)">ゼロ</button>
-  <span class="dbar-sep" style="margin-left:12px">購入歴：</span>
-  <button class="dbtn on" data-purchase-history-btn onclick="ktnSetPurchaseHistory(true,this)">あり</button>
-  <button class="dbtn" data-purchase-history-btn onclick="ktnSetPurchaseHistory(false,this)">なし</button>
+  <span class="dbar-sep" style="margin-left:12px">作品ページ：</span>
+  <button class="dbtn on" data-work-na-btn onclick="p54SetWorkNa(false,this)">すべて表示できる</button>
+  <button class="dbtn" data-work-na-btn onclick="p54SetWorkNa(true,this)">表示できない作品あり</button>
 </div>
 
 <div class="shell">
@@ -162,7 +162,7 @@
     </div>
 
     <!-- B. タブナビ -->
-    <nav class="p5-tabnav" id="p5Tabnav" aria-label="マイページ内ナビ">
+    <nav class="p5-tabnav" id="p5Tabnav" aria-label="myページ内ナビ">
       <div class="p5-tabnav__inner">
         <a class="p5-tabnav__item" href="kotennavi-p5.html">カレンダー</a>
         <a class="p5-tabnav__item p5-tabnav__item--zero-off" href="kotennavi-p5-1.html">ウォッチ</a>
@@ -208,8 +208,8 @@
               </a>
             </div>
 
-            <!-- カード②（公開・横長ランドスケープ） -->
-            <div class="p54c">
+            <!-- カード②（公開・横長ランドスケープ）＝デモ「表示できない作品あり」で〈作者が非公開〉 -->
+            <div class="p54c" data-work-na-demo="unpublished">
               <a class="p54c__link" href="kotennavi-p6-2.html">
                 <div class="p54c__img" style="background:linear-gradient(145deg,#4a3060,#2a1840);aspect-ratio:4/3"></div>
                 <div class="p54c__body">
@@ -238,8 +238,8 @@
               </a>
             </div>
 
-            <!-- カード④（公開・縦長ポートレート） -->
-            <div class="p54c">
+            <!-- カード④（公開・縦長ポートレート）＝デモ「表示できない作品あり」で〈作者が退会〉 -->
+            <div class="p54c" data-work-na-demo="withdrawn">
               <a class="p54c__link" href="kotennavi-p6-2.html">
                 <div class="p54c__img" style="background:linear-gradient(145deg,#3a5a4a,#1a3a2a);aspect-ratio:3/4"></div>
                 <div class="p54c__body">
@@ -253,8 +253,8 @@
               </a>
             </div>
 
-            <!-- カード⑤（非公開・横長） -->
-            <div class="p54c p54c--private">
+            <!-- カード⑤（非公開・横長）＝デモ「表示できない作品あり」で〈ギャラリーが非出品〉 -->
+            <div class="p54c p54c--private" data-work-na-demo="unlisted">
               <a class="p54c__link" href="kotennavi-p6-2.html">
                 <div class="p54c__img" style="background:linear-gradient(145deg,#4a4a2a,#2a2a0a);aspect-ratio:5/3"></div>
                 <div class="p54c__body">
@@ -533,6 +533,33 @@
     btn.classList.add('on');
     document.body.classList.toggle('p5-other', v === 'other');
   }
+  /* ── 作品ページを表示できない作品（2026-09-27 仕様）──
+     コレクションは購入した作品の記録なので、作者側の事情で作品ページが見られなくなってもカードは消さない。
+     カードを押したときは作品ページへ遷移させず、見られない理由をトーストで知らせる。
+       unpublished：作品のオーナー（クリエイター／ギャラリー）が作品を非公開にした
+       unlisted   ：オーナーがギャラリーで、その作品が非出品になった
+       withdrawn  ：オーナー（クリエイター／ギャラリー）が退会した（退会すると作品は非公開になる＝追174-219）
+     本番（Drupal/React）：作品の公開状態・出品状態・オーナーの在籍状態から data-work-status を付けて描画する。
+     デモ：data-work-na-demo の値を、デモバー「作品ページ：表示できない作品あり」のときだけ data-work-status に写す。 */
+  /* 理由は知らせず、すべて同じ文言（2026-09-27）：退会を知らせない（入退会を繰り返す人がいる）ため退会も非公開と同じにし、
+     それに合わせて非出品も同じにそろえた。主語は「出品者」＝作者・ギャラリーのどちらにも当てはまり、退会かどうかは分からない（ユーザー指定の文言）。理由の区別（data-work-status）は内部の記録・集計用に残す */
+  var P54_NA_TEXT = 'この作品は現在出品者が非公開にしたため、作品ページを表示できません。';
+  var P54_NA_MSG = { unpublished: P54_NA_TEXT, unlisted: P54_NA_TEXT, withdrawn: P54_NA_TEXT };
+  function p54SetWorkNa(on, btn) {
+    document.querySelectorAll('[data-work-na-btn]').forEach(function (b) { b.classList.toggle('on', b === btn); });
+    document.querySelectorAll('.p54c[data-work-na-demo]').forEach(function (c) {
+      if (on) c.setAttribute('data-work-status', c.getAttribute('data-work-na-demo'));
+      else c.removeAttribute('data-work-status');
+    });
+  }
+  document.addEventListener('click', function (e) {
+    var link = e.target.closest && e.target.closest('.p54c__link');
+    if (!link) return;
+    var st = link.closest('.p54c').getAttribute('data-work-status');
+    if (!st || !P54_NA_MSG[st]) return;
+    e.preventDefault();
+    KTN.toast(P54_NA_MSG[st]);
+  });
   function setCollState(state, btn) {
     document.querySelectorAll('[data-coll-btn]').forEach(function(b){ b.classList.remove('on'); });
     btn.classList.add('on');

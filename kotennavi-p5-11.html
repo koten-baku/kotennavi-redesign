@@ -24,7 +24,7 @@
     <nav class="p3-mgmt-drawer__nav">
       <a class="p3-mgmt-nav-item" href="kotennavi-p5.html">
         <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><circle cx="8" cy="5" r="3"/><path d="M2 13.5c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>
-        マイページ
+        myページ
       </a>
       <div class="p3-mgmt-drawer__sep"></div>
       <a class="p3-mgmt-nav-item p3-mgmt-nav-item--active" href="kotennavi-p5-11.html">
@@ -58,6 +58,13 @@
   <span class="dbar-sep" style="margin-left:12px">購入歴：</span>
   <button class="dbtn on" data-purchase-history-btn onclick="ktnSetPurchaseHistory(true,this)">あり</button>
   <button class="dbtn" data-purchase-history-btn onclick="ktnSetPurchaseHistory(false,this)">なし</button>
+  <span class="dbar-sep" style="margin-left:12px">機能申込：</span>
+  <button class="dbtn on" data-user-apps-btn="none" onclick="KTN.setUserApps('none')">未申込</button>
+  <button class="dbtn" data-user-apps-btn="cr-pending" onclick="KTN.setUserApps('cr-pending')">クリエイター確認中</button>
+  <button class="dbtn" data-user-apps-btn="cr-granted" onclick="KTN.setUserApps('cr-granted')">クリエイター利用開始</button>
+  <button class="dbtn" data-user-apps-btn="cr-lp-pending" onclick="KTN.setUserApps('cr-lp-pending')">クリエイター＋LIAISON+確認中</button>
+  <button class="dbtn" data-user-apps-btn="ga-lp-granted" onclick="KTN.setUserApps('ga-lp-granted')">ギャラリー＋LIAISON+利用開始</button>
+  <button class="dbtn" data-user-apps-btn="ga-cancelled" onclick="KTN.setUserApps('ga-cancelled')">ギャラリー取消</button>
 </div>
 
 <div class="shell">
@@ -136,17 +143,36 @@
 
     <!-- C. メインコンテンツ -->
     <div class="ktn-content">
-      <!-- 親エンティティ文脈ストリップ（identity strip） -->
+      <!-- 親エンティティ文脈ストリップ（identity strip）＝P5-1** 共通（P11-2/P11-3 と同型の meta 行）
+           ＋機能申込の状況行（.ktn-mgmt-context__apps・申込の無い項目は非表示・KTN.setUserApps が切替） -->
       <div class="ktn-mgmt-context">
         <a class="ktn-mgmt-context__media ktn-mgmt-context__media--user" href="kotennavi-p5.html" style="background:linear-gradient(135deg,#f0c0d8,#c87aaa)">花</a>
         <div class="ktn-mgmt-context__body">
           <div class="ktn-mgmt-context__badges">
-            <span class="cb cb-person cb-user">user</span>
+            <span class="cb cb-person cb-user">USER</span>
           </div>
           <div class="ktn-mgmt-context__name"><a href="kotennavi-p5.html">山田 花子</a></div>
+          <div class="ktn-mgmt-context__meta">利用開始 2022.04 · hanako.yamada@example.com</div>
+          <!-- このアカウントに紐づくページ（クリエイター／ギャラリー機能が「利用開始」の人だけ・KTN.setUserApps が表示を切替）。
+               主役はユーザー＝表示とリンクだけで編集はさせない（ページの設定はそれぞれの管理ページ）。card全体はリンクにせず名前と「ページへ →」だけ -->
+          <div class="ktn-mgmt-context__linked" data-user-linked hidden>
+            <span class="ktn-mgmt-context__apps-label">Your Page</span>
+            <span class="ktn-mgmt-context__linked-media" data-linked-media></span>
+            <span class="ktn-mgmt-context__linked-body">
+              <span class="ktn-mgmt-context__linked-name"><span class="cb cb-person" data-linked-badge></span><a data-linked-name href="#"></a></span>
+              <span class="ktn-mgmt-context__linked-meta" data-linked-meta></span>
+            </span>
+            <a class="ktn-mgmt-context__linked-view" data-linked-view href="#">クリエイターページへ →</a>
+          </div>
+          <div class="ktn-mgmt-context__apps" data-user-apps hidden>
+            <span class="ktn-mgmt-context__apps-label">Applications</span>
+            <span class="ktn-mgmt-context__app" data-user-app="role" hidden><span class="ktn-mgmt-context__app-name">クリエイター機能</span><span class="ktn-review-status"></span></span>
+            <span class="ktn-mgmt-context__app" data-user-app="lp" hidden><span class="ktn-mgmt-context__app-name">LIAISON+</span><span class="ktn-review-status"></span></span>
+          </div>
         </div>
         <div class="ktn-mgmt-context__actions">
-          <a class="ktn-mgmt-context__view" href="kotennavi-p5.html">マイページへ →</a>        </div>
+          <a class="ktn-mgmt-context__view" href="kotennavi-p5.html">myページへ →</a>
+        </div>
       </div>
       <div class="p511-wrap ktn-mgmt-wrap" id="p511Wrap">
 
@@ -154,15 +180,22 @@
         <div class="ktn-mgmt-head">
           <h2 class="ktn-mgmt-head__title">プロフィール編集</h2>
           <p class="ktn-mgmt-head__en">PROFILE SETTINGS</p>
-          <p class="ktn-mgmt-head__desc">表示名・アバター・自己紹介文などを編集できます。クリエイター・ギャラリーとしてのプロフィールはそれぞれの管理ページから編集してください。</p>
+          <p class="ktn-mgmt-head__desc">ニックネーム・プロフィール画像・自己紹介を編集できます。</p>
         </div>
 
-        <!-- ブロック1: 基本情報 -->
+        <!-- ブロック1: プロフィール（サイト内で公開される情報） -->
         <div class="p211-block">
           <div class="p211-block__head">
-            <h3 class="p211-block__title">基本情報 <span class="p211-block__title-en">BASIC INFO</span></h3>
+            <h3 class="p211-block__title">プロフィール <span class="p211-block__title-en">PROFILE</span></h3>
           </div>
           <div class="p211-block__body">
+
+            <!-- ニックネーム -->
+            <div class="p211-field" id="p511NicknameField">
+              <label class="p211-label" for="p511Nickname">ニックネーム<span class="ktn-req">必須</span></label>
+              <input class="p211-input" id="p511Nickname" type="text" value="山田 花子" maxlength="30" autocomplete="nickname">
+              <p class="p211-help">サイト内のユーザーカードやユーザーページに表示されます。最大30文字。ユーザー新規登録時はメールアドレスの@より前が入っています。</p>
+            </div>
 
             <!-- アバター -->
             <div class="p211-field">
@@ -181,113 +214,49 @@
               </div>
             </div>
 
-            <!-- 氏名 -->
-            <div class="p211-row">
-              <div class="p211-field">
-                <label class="p211-label" for="p511LastName">姓<span class="ktn-req">必須</span></label>
-                <input class="p211-input" id="p511LastName" type="text" value="山田" autocomplete="family-name">
-              </div>
-              <div class="p211-field">
-                <label class="p211-label" for="p511FirstName">名<span class="ktn-req">必須</span></label>
-                <input class="p211-input" id="p511FirstName" type="text" value="花子" autocomplete="given-name">
-              </div>
-            </div>
-
-            <!-- ユーザーID -->
+            <!-- 自己紹介 -->
             <div class="p211-field">
-              <label class="p211-label" for="p511UserId">ユーザーID（URL）<span class="ktn-req">必須</span></label>
-              <input class="p211-input" id="p511UserId" type="text" value="hanako_yamada" pattern="[a-zA-Z0-9_-]+" autocomplete="off">
-              <div class="p511-id-preview">
-                <span class="p511-id-preview__base">kotennavi.jp/user/</span><span class="p511-id-preview__val" id="p511IdPreview">hanako_yamada</span>
-              </div>
-              <p class="p211-help">半角英数字・アンダースコア・ハイフンのみ。変更すると旧URLは無効になります。</p>
-            </div>
-
-            <!-- メールアドレス -->
-            <div class="p211-field">
-              <div class="p211-label">メールアドレス</div>
-              <div class="p511-email-display">
-                <span class="p511-email-val">hanako.yamada@example.com</span>
-                <a class="p511-email-change" href="#">変更する →</a>
-              </div>
-              <p class="p211-help">メールアドレスの変更は確認メールが送信されます。</p>
+              <label class="p211-label" for="p511Bio">自己紹介</label>
+              <textarea class="p211-textarea" id="p511Bio">展覧会めぐりが趣味で、特に現代アートと写真展が好きです。いつか作家さんを支援できるようになりたいと思っています。</textarea>
+              <p class="p211-help">最大400文字。ユーザーページに表示されます。</p>
             </div>
 
           </div>
         </div>
 
-        <!-- ブロック2: プロフィール詳細 -->
-        <div class="p211-block">
-          <div class="p211-block__head">
-            <h3 class="p211-block__title">プロフィール詳細 <span class="p211-block__title-en">PROFILE DETAIL</span></h3>
+        <!-- ブロック2: ログインID（メールアドレス）。他の項目と違い「変更を保存する」では保存されない＝
+             確認メールのリンクを開くと変更が完了する。見た目も paper 地の別枠にして区別する。 -->
+        <div class="p511-login">
+          <div class="p511-login__head">
+            <span class="p511-login__title">ログインID（メールアドレス）</span>
+            <span class="p511-login__en">LOGIN ID</span>
           </div>
-          <div class="p211-block__body">
-
-            <!-- 自己紹介 -->
-            <div class="p211-field">
-              <label class="p211-label" for="p511Bio">自己紹介文</label>
-              <textarea class="p211-textarea" id="p511Bio">展覧会めぐりが趣味で、特に現代アートと写真展が好きです。いつか作家さんを支援できるようになりたいと思っています。</textarea>
-              <p class="p211-help">最大400文字。公開プロフィールに表示されます。</p>
-            </div>
-
-            <!-- 居住地 -->
-            <div class="p211-field">
-              <label class="p211-label" for="p511Prefecture">居住地</label>
-              <select class="p211-select" id="p511Prefecture">
-                <option value="">非公開</option>
-                <option value="hokkaido">北海道</option>
-                <option value="aomori">青森県</option>
-                <option value="iwate">岩手県</option>
-                <option value="miyagi">宮城県</option>
-                <option value="akita">秋田県</option>
-                <option value="yamagata">山形県</option>
-                <option value="fukushima">福島県</option>
-                <option value="ibaraki">茨城県</option>
-                <option value="tochigi">栃木県</option>
-                <option value="gunma">群馬県</option>
-                <option value="saitama">埼玉県</option>
-                <option value="chiba">千葉県</option>
-                <option value="tokyo" selected>東京都</option>
-                <option value="kanagawa">神奈川県</option>
-                <option value="niigata">新潟県</option>
-                <option value="toyama">富山県</option>
-                <option value="ishikawa">石川県</option>
-                <option value="fukui">福井県</option>
-                <option value="yamanashi">山梨県</option>
-                <option value="nagano">長野県</option>
-                <option value="gifu">岐阜県</option>
-                <option value="shizuoka">静岡県</option>
-                <option value="aichi">愛知県</option>
-                <option value="mie">三重県</option>
-                <option value="shiga">滋賀県</option>
-                <option value="kyoto">京都府</option>
-                <option value="osaka">大阪府</option>
-                <option value="hyogo">兵庫県</option>
-                <option value="nara">奈良県</option>
-                <option value="wakayama">和歌山県</option>
-                <option value="tottori">鳥取県</option>
-                <option value="shimane">島根県</option>
-                <option value="okayama">岡山県</option>
-                <option value="hiroshima">広島県</option>
-                <option value="yamaguchi">山口県</option>
-                <option value="tokushima">徳島県</option>
-                <option value="kagawa">香川県</option>
-                <option value="ehime">愛媛県</option>
-                <option value="kochi">高知県</option>
-                <option value="fukuoka">福岡県</option>
-                <option value="saga">佐賀県</option>
-                <option value="nagasaki">長崎県</option>
-                <option value="kumamoto">熊本県</option>
-                <option value="oita">大分県</option>
-                <option value="miyazaki">宮崎県</option>
-                <option value="kagoshima">鹿児島県</option>
-                <option value="okinawa">沖縄県</option>
-                <option value="overseas">海外</option>
-              </select>
-              <p class="p211-help">「非公開」を選択すると居住地は表示されません。</p>
-            </div>
-
+          <p class="p511-login__desc">ログインに使うメールアドレスです。サイト内には公開されません。変更すると新しいアドレスに確認メールが届き、メール内のリンクを開くと変更が完了します。あわせて、変更前のアドレスにも変更手続きがあったことをお知らせします。</p>
+          <div class="p511-login__current" id="p511EmailCurrent">
+            <span class="p511-login__val">hanako.yamada@example.com</span>
+            <button class="ktn-op-btn ktn-op-btn--sm" type="button" id="p511EmailEditBtn">変更する</button>
           </div>
+          <div class="p511-login__form" id="p511EmailForm" hidden>
+            <div class="p211-field">
+              <label class="p211-label" for="p511NewEmail">新しいメールアドレス<span class="ktn-req">必須</span></label>
+              <input class="p211-input" id="p511NewEmail" type="email" placeholder="例：you@example.com" autocomplete="email">
+            </div>
+            <div class="p511-login__actions">
+              <button class="ktn-op-btn ktn-op-btn--sm" type="button" id="p511EmailCancelBtn">やめる</button>
+              <button class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--primary" type="button" id="p511EmailSendBtn">確認メールを送る</button>
+            </div>
+          </div>
+          <p class="p511-login__sent" id="p511EmailSent" hidden></p>
+          <p class="p511-login__note">※ この欄は下の「変更を保存する」では保存されません。</p>
+        </div>
+
+        <!-- 保存エラーパネル（共通 .ktn-form-error） -->
+        <div class="ktn-form-error" id="p511SaveError" role="alert" hidden>
+          <div class="ktn-form-error__head">
+            <svg class="ktn-form-error__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <span class="ktn-form-error__title">保存できませんでした</span>
+          </div>
+          <ul class="ktn-form-error__list"><li class="ktn-form-error__item">「ニックネーム」が未入力です。<button class="ktn-form-error__jump" type="button" onclick="document.getElementById('p511NicknameField').scrollIntoView({behavior:'smooth',block:'center'});document.getElementById('p511Nickname').focus()">該当箇所へ →</button></li></ul>
         </div>
 
         <!-- 管理者コメント欄（role=admin のときのみ表示・共通 syncAdminNote が切替） -->
@@ -335,23 +304,39 @@ KTN.init({ page: 'p5-11', role: 'user+' });
   if (dOver)   dOver.addEventListener('click', closeDrawer);
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeDrawer(); });
 
-  // ユーザーIDリアルタイムプレビュー
-  var idInput   = document.getElementById('p511UserId');
-  var idPreview = document.getElementById('p511IdPreview');
-  if (idInput && idPreview) {
-    idInput.addEventListener('input', function () {
-      idPreview.textContent = idInput.value || '（未入力）';
+  // 保存ボタン：ニックネームは必須（空なら共通の保存エラーパネル）
+  var saveBtn = document.getElementById('p511SaveBtn');
+  var nick    = document.getElementById('p511Nickname');
+  var errBox  = document.getElementById('p511SaveError');
+  if (saveBtn) {
+    saveBtn.addEventListener('click', function () {
+      var ng = !nick.value.trim();
+      document.getElementById('p511NicknameField').classList.toggle('is-error', ng);
+      errBox.hidden = !ng;
+      if (!ng) KTN.toast('プロフィールを保存しました');
     });
   }
 
-  // 保存ボタン
-  var saveBtn = document.getElementById('p511SaveBtn');
-  if (saveBtn) {
-    saveBtn.addEventListener('click', function () {
-      KTN.toast('プロフィールを保存しました');
-    });
-  }
+  // ログインID（メールアドレス）の変更：保存バーとは別に、確認メールの送信で進める
+  var cur = document.getElementById('p511EmailCurrent');
+  var form = document.getElementById('p511EmailForm');
+  var sent = document.getElementById('p511EmailSent');
+  var newEmail = document.getElementById('p511NewEmail');
+  document.getElementById('p511EmailEditBtn').addEventListener('click', function () {
+    cur.hidden = true; form.hidden = false; sent.hidden = true; newEmail.focus();
+  });
+  document.getElementById('p511EmailCancelBtn').addEventListener('click', function () {
+    form.hidden = true; cur.hidden = false; newEmail.value = '';
+  });
+  document.getElementById('p511EmailSendBtn').addEventListener('click', function () {
+    var v = newEmail.value.trim();
+    if (!v || v.indexOf('@') < 1) { newEmail.closest('.p211-field').classList.add('is-error'); newEmail.focus(); return; }
+    newEmail.closest('.p211-field').classList.remove('is-error');
+    sent.textContent = v + ' に確認メールを送りました。メール内のリンクを開くと変更が完了します（それまでは現在のアドレスでログインできます）。現在のアドレスにも、変更手続きのお知らせを送りました。';
+    form.hidden = true; cur.hidden = false; sent.hidden = false; newEmail.value = '';
+  });
 }());
+
 </script>
 </body>
 </html>

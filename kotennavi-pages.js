@@ -6779,6 +6779,8 @@ KTN.pages['p5-2'] = function () {
 /* =========================================================
    P5-3 ユーザー – 興味あり！リスト
    ========================================================= */
+/* P5-3 の作品・記事一覧：オーナーが非公開・削除・退会したものは表示しない（件数も除外）。
+   本番はサーバー側で除外して返す。詳細は docs/page-specs.md「P5-3／P5-4：オーナー側の事情で見られなくなったコンテンツ」 */
 KTN.pages['p5-3'] = function () {
     document.body.classList.add('p5-page', 'p5-3-page');
     document.body.style.setProperty('--page-accent', '#b8608c');
@@ -13543,17 +13545,7 @@ KTN.pages['p3-13'] = function () {
     });
   }
 
-  /* ── 通知トグル（ウォッチャー・チェックイン共通の単一設定） ── */
-  var notifySw = document.getElementById('p313NotifySw');
-  if (notifySw) {
-    notifySw.addEventListener('click', function () {
-      var on = !notifySw.classList.contains('is-on');
-      notifySw.classList.toggle('is-on', on);
-      notifySw.setAttribute('aria-checked', on);
-      notifySw.querySelector('.ktn-switch__label').textContent = on ? '受け取る' : '受け取らない';
-      if (KTN.toast) KTN.toast(on ? '新しいオーディエンスの通知をオンにしました' : '新しいオーディエンスの通知をオフにしました');
-    });
-  }
+  /* 通知の設定は P5-13（メール通知設定）に一本化したため、ここにはスイッチを持たない（2026-09-26） */
 };
 
 /* ════════════════════════════════════════════════════
@@ -13924,17 +13916,7 @@ KTN.pages['p4-13'] = function () {
     });
   }
 
-  /* ── 通知トグル（ウォッチャー・チェックイン共通の単一設定） ── */
-  var notifySw = document.getElementById('p413NotifySw');
-  if (notifySw) {
-    notifySw.addEventListener('click', function () {
-      var on = !notifySw.classList.contains('is-on');
-      notifySw.classList.toggle('is-on', on);
-      notifySw.setAttribute('aria-checked', on);
-      notifySw.querySelector('.ktn-switch__label').textContent = on ? '受け取る' : '受け取らない';
-      if (KTN.toast) KTN.toast(on ? '新しいオーディエンスの通知をオンにしました' : '新しいオーディエンスの通知をオフにしました');
-    });
-  }
+  /* 通知の設定は P5-13（メール通知設定）に一本化したため、ここにはスイッチを持たない（2026-09-26） */
 };
 
 /* ════════════════════════════════════════════════════
