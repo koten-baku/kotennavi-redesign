@@ -113,7 +113,8 @@
         <li class="p70-toc__item"><span class="p70-toc__num">1</span><a class="p70-toc__link" href="#profile-edit">プロフィール編集</a></li>
         <li class="p70-toc__item"><span class="p70-toc__num">2</span><a class="p70-toc__link" href="#password">パスワード管理</a></li>
         <li class="p70-toc__item"><span class="p70-toc__num">3</span><a class="p70-toc__link" href="#notification">メール通知設定</a></li>
-        <li class="p70-toc__item"><span class="p70-toc__num">4</span><a class="p70-toc__link" href="#contact">解決しない場合</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">4</span><a class="p70-toc__link" href="#inquiry">作品へのお問合わせ</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">5</span><a class="p70-toc__link" href="#contact">解決しない場合</a></li>
       </ol>
     </nav>
 
@@ -147,10 +148,20 @@
       <div id="p605QaNotify"></div>
     </section>
 
-    <!-- 4. 解決しない場合 -->
-    <section class="p70-section" id="contact">
+    <!-- 4. 作品へのお問合わせ（KTN.QA から描画・2026-09-28） -->
+    <section class="p70-section" id="inquiry">
       <div class="p70-section__head">
         <span class="p70-section__num">4</span>
+        <h2 class="p70-section__title">作品へのお問合わせ</h2>
+        <span class="p70-section__en">Inquiries</span>
+      </div>
+      <div id="p605QaInquiry"></div>
+    </section>
+
+    <!-- 5. 解決しない場合 -->
+    <section class="p70-section" id="contact">
+      <div class="p70-section__head">
+        <span class="p70-section__num">5</span>
         <h2 class="p70-section__title">解決しない場合</h2>
         <span class="p70-section__en">Still need help?</span>
       </div>
@@ -181,6 +192,7 @@ document.addEventListener('DOMContentLoaded', function () {
   KTN.renderQA('#p605QaProfile', { audience: 'user', category: 'account-profile', hideGroup: true });
   KTN.renderQA('#p605QaSecurity', { audience: 'user', category: 'account-security', hideGroup: true });
   KTN.renderQA('#p605QaNotify', { audience: 'user', category: 'account-notify', hideGroup: true });
+  KTN.renderQA('#p605QaInquiry', { audience: 'user', category: 'inquiry-send', hideGroup: true });
 
   var dbarView = document.getElementById('dbarView');
   if (dbarView) {

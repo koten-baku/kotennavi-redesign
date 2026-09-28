@@ -116,8 +116,9 @@
         <li class="p70-toc__item"><span class="p70-toc__num">4</span><a class="p70-toc__link" href="#insight">インサイト</a></li>
         <li class="p70-toc__item"><span class="p70-toc__num">5</span><a class="p70-toc__link" href="#audience-mgmt">オーディエンス管理</a></li>
         <li class="p70-toc__item"><span class="p70-toc__num">6</span><a class="p70-toc__link" href="#portfolio-mgmt">ポートフォリオ管理</a></li>
-        <li class="p70-toc__item"><span class="p70-toc__num">7</span><a class="p70-toc__link" href="#badge">個展なびバッジの設置</a></li>
-        <li class="p70-toc__item"><span class="p70-toc__num">8</span><a class="p70-toc__link" href="#contact">解決しない場合</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">7</span><a class="p70-toc__link" href="#inquiry">作品へのお問合わせ</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">8</span><a class="p70-toc__link" href="#badge">個展なびバッジの設置</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">9</span><a class="p70-toc__link" href="#contact">解決しない場合</a></li>
       </ol>
     </nav>
 
@@ -181,10 +182,20 @@
       <div id="p606QaPortfolio"></div>
     </section>
 
-    <!-- 7. 個展なびバッジの設置 -->
-    <section class="p70-section" id="badge">
+    <!-- 7. 作品へのお問合わせ（KTN.QA から描画・2026-09-28） -->
+    <section class="p70-section" id="inquiry">
       <div class="p70-section__head">
         <span class="p70-section__num">7</span>
+        <h2 class="p70-section__title">作品へのお問合わせ</h2>
+        <span class="p70-section__en">Inquiries</span>
+      </div>
+      <div id="p606QaInquiry"></div>
+    </section>
+
+    <!-- 8. 個展なびバッジの設置 -->
+    <section class="p70-section" id="badge">
+      <div class="p70-section__head">
+        <span class="p70-section__num">8</span>
         <h2 class="p70-section__title">個展なびバッジの設置</h2>
         <span class="p70-section__en">Official Badge</span>
       </div>
@@ -202,10 +213,10 @@
       </div>
     </section>
 
-    <!-- 8. 解決しない場合 -->
+    <!-- 9. 解決しない場合 -->
     <section class="p70-section" id="contact">
       <div class="p70-section__head">
-        <span class="p70-section__num">8</span>
+        <span class="p70-section__num">9</span>
         <h2 class="p70-section__title">解決しない場合</h2>
         <span class="p70-section__en">Still need help?</span>
       </div>
@@ -239,6 +250,7 @@ document.addEventListener('DOMContentLoaded', function () {
   KTN.renderQA('#p606QaInsight', { audience: 'creator', category: 'insight', hideGroup: true });
   KTN.renderQA('#p606QaAudience', { audience: 'creator', category: 'audience-mgmt', hideGroup: true });
   KTN.renderQA('#p606QaPortfolio', { audience: 'creator', category: 'portfolio-mgmt', hideGroup: true });
+  KTN.renderQA('#p606QaInquiry', { audience: 'creator', category: 'inquiry', hideGroup: true });
 
   var dbarView = document.getElementById('dbarView');
   if (dbarView) {
