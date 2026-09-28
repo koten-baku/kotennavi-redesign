@@ -16622,8 +16622,7 @@ KTN.axis = (function () {
       + 'でこれまでに会期を終えた展覧会の記録です。展示そのものは終わっていますが、出品したクリエイターとギャラリーのページから当時の内容を辿ることができます。</p>';
     if (kind === 'genre')   { var g = genre(key); return '<p>' + (g ? g.name : '') + 'の展覧会・個展を全国からまとめています。会場で実物と向き合ってはじめて分かることが多いジャンルなので、会期のあるうちに足を運べるものから並べています。</p>'; }
     if (kind === 'access')  { var a = access(key); return '<p>' + (a ? a.ttl : '') + 'を全国からまとめています。</p>'; }
-    if (kind === 'year')    return '<p>' + key + '年に会期を終えた展覧会のランキングです。会期中に集まった<strong>興味あり！</strong>（行きたい）と<strong>チェックイン</strong>（実際に行った）の数をもとに、それぞれ上位' + ((KTN.arc && KTN.arc.LIMIT) || 10) + '件を掲載しています。</p>'
-      + '<p>会期は終わっていますが、展示をつくったクリエイター・ギャラリーはいまも活動しています。各行から「いまの活動」へたどれるようにしてあります。</p>';
+    if (kind === 'year')    return '<p>' + key + '年に会期を終えた、全国の展覧会・個展のランキングです。個展なびで<strong>興味あり！</strong>と<strong>チェックイン</strong>を多く集めた人気の展覧会を、それぞれ上位' + ((KTN.arc && KTN.arc.LIMIT) || 10) + '件紹介します。</p>';
     if (kind === 'gallery') return '<p>' + fullOf(key) + prefNote(key)
       + 'のギャラリーをまとめています。掲載のないエリアでは、近くの展覧会情報から探せます。</p>';
     return '';
@@ -20989,15 +20988,15 @@ KTN.pages['p10-3'] = function () {
   var RANK = {
     'p10-5-1': {
       kind: 'work', prefix: 'p1051', path: 'artworks', en: 'Artwork Ranking',
-      desc: function (y) { return y + '年の作品ランキングです。興味あり！がその年にどれだけ増えたかで並べています。累計ではなくその年の増分なので、最近発表された作品も上位に入ります。'; }
+      desc: function (y) { return y + '年の作品ランキング。個展なびで興味あり！を多く集めた、人気のアート作品を紹介します。'; }
     },
     'p10-6-1': {
       kind: 'creator', prefix: 'p1061', path: 'creators', en: 'Creator Ranking',
-      desc: function (y) { return y + '年のクリエイターランキングです。ウォッチがその年にどれだけ増えたかで並べています。累計ではなくその年の増分なので、活動を始めたばかりの人も上位に入ります。'; }
+      desc: function (y) { return y + '年のクリエイターランキング。個展なびでウォッチを多く集めた、注目の作家・アーティストを紹介します。'; }
     },
     'p10-7-1': {
       kind: 'gallery', prefix: 'p1071', path: 'galleries', en: 'Gallery Ranking',
-      desc: function (y) { return y + '年のギャラリーランキングです。ウォッチがその年にどれだけ増えたかで並べています。累計ではなくその年の増分なので、新しく開いた場所も上位に入ります。'; }
+      desc: function (y) { return y + '年のギャラリーランキング。個展なびでウォッチを多く集めた、全国の人気ギャラリー・画廊を紹介します。'; }
     }
   };
 
@@ -22188,7 +22187,7 @@ KTN.pages['p10-4-1'] = function () {
     if (elTitle) elTitle.textContent = year + '年の展覧会ランキング';
     if (elEn)    elEn.textContent = 'Exhibition Ranking ' + year;
     if (elLead)  elLead.innerHTML = leadOf(year);
-    setMeta('p1041Desc', 'content', year + '年の展覧会ランキングです。その年に会期を終えた展覧会を、興味あり！とチェックインが多かった順に並べています。出品したクリエイター・ギャラリーのいまの活動もたどれます。');
+    setMeta('p1041Desc', 'content', year + '年に会期を終えた全国の展覧会・個展のランキング。興味あり！とチェックインを多く集めた人気の展覧会を紹介します。');
     setMeta('p1041Canonical', 'href', 'https://koten-navi.com/exhibitions/year/' + year);
     setMeta('p1041OgTitle', 'content', t);
     setMeta('p1041OgUrl', 'href', 'https://koten-navi.com/exhibitions/year/' + year);

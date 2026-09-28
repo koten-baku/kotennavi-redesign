@@ -21,9 +21,10 @@
   <span class="dbar-sep" style="margin-left:12px">未処理の取引：</span>
   <button class="dbtn on" onclick="p5100SetTxn(false,this)">なし</button>
   <button class="dbtn" onclick="p5100SetTxn(true,this)">あり</button>
-  <span class="dbar-sep" style="margin-left:12px">LIAISON+の展覧会：</span>
+  <span class="dbar-sep" style="margin-left:12px">LIAISON+：</span>
   <button class="dbtn on" onclick="p5100SetLp(false,this)">なし</button>
-  <button class="dbtn" onclick="p5100SetLp(true,this)">予定・期間中・終了2週間以内</button>
+  <button class="dbtn" onclick="p5100SetLp('exh',this)">展覧会が開催予定・開催中</button>
+  <button class="dbtn" onclick="p5100SetLp('recent',this)">取引の終了から2週間以内</button>
   <span class="dbar-sep" style="margin-left:12px">機能申込：</span>
   <button class="dbtn on" data-user-apps-btn="none" onclick="KTN.setUserApps('none')">未申込</button>
   <button class="dbtn" data-user-apps-btn="cr-pending" onclick="KTN.setUserApps('cr-pending')">クリエイター確認中</button>
@@ -136,10 +137,14 @@
 
         <!-- 退会できない理由の帯（.ktn-txn-alert は .is-on で表示を切り替える部品＝hidden 属性は使わない）＝未処理の取引があるとき（デモバー「未処理の取引」）。
              クリエイター／ギャラリー機能の利用中は退会できる（ページと掲載内容が残ることを了承してもらう＝下のブロック1） -->
-        <!-- クリエイター／ギャラリーで、LIAISON+ の展覧会が「開催予定・期間中・終了から2週間以内」なら退会できない（2026-09-27 仕様）。
-             機能を利用中の人だけが対象（デモバー「機能申込」の利用開始 × 「LIAISON+の展覧会」） -->
+        <!-- クリエイター／ギャラリーが退会できないのは、①LIAISON+ の展覧会が終わっていない（開催予定・開催中）、
+             ②LIAISON+ の取引の終了（完了またはキャンセル）から2週間以内、のどちらかのとき（2026-09-28 訂正・旧＝展覧会の終了から2週間）。
+             機能を利用中の人だけが対象（デモバー「機能申込」の利用開始 × 「LIAISON+」） -->
         <div class="ktn-txn-alert" id="p5100LpBlock">
-          <span>開催予定・期間中、または終了から2週間以内の LIAISON+ の展覧会があるため、退会できません。すべての LIAISON+ の展覧会が終了して2週間が過ぎてから、あらためて手続きしてください。<a class="ktn-guide-link" id="p5100LpLink" href="./kotennavi-p3-15.html">LIAISON+ コンソールで確認する →</a></span>
+          <span>開催予定・開催中の LIAISON+ の展覧会があるため、退会できません。すべての LIAISON+ の展覧会の会期が終わってから、あらためて手続きしてください。<a class="ktn-guide-link" id="p5100LpLink" href="./kotennavi-p3-15.html">LIAISON+ コンソールで確認する →</a></span>
+        </div>
+        <div class="ktn-txn-alert" id="p5100RecentBlock">
+          <span>LIAISON+ の取引が終わってから2週間が過ぎていないため、退会できません。最後の取引が完了（またはキャンセル）してから2週間が過ぎたら、あらためて手続きしてください。<a class="ktn-guide-link" id="p5100RecentLink" href="./kotennavi-p3-16.html">取引デスクで確認する →</a></span>
         </div>
         <div class="ktn-txn-alert" id="p5100TxnBlock">
           <span>未完了の取引（発送待ち・受取確認待ちなど）があるため、退会できません。取引が完了してから、あらためて手続きしてください。<a class="ktn-guide-link" href="./kotennavi-p5-15.html">取引ワークスペースで状況を確認する →</a></span>
@@ -272,13 +277,15 @@
     if (window.ktnRender) ktnRender();
   }
 
-  /* 「退会する」を押せる条件：未処理の取引が無い ＋（機能を利用中なら）LIAISON+ の展覧会が予定・期間中・終了2週間以内でない ＋ 同意 ＋（機能を利用中なら）了承 */
+  /* 「退会する」を押せる条件：未処理の取引が無い ＋（機能を利用中なら）LIAISON+ の展覧会が開催予定・開催中でなく、LIAISON+ の取引の終了から2週間が過ぎている ＋ 同意 ＋（機能を利用中なら）了承 */
   var p5100State = { txn: false, role: null, lp: false };
   function p5100Sync() {
     document.getElementById('p5100TxnBlock').classList.toggle('is-on', p5100State.txn);
-    var lpBlocked = !!p5100State.role && p5100State.lp;
-    document.getElementById('p5100LpBlock').classList.toggle('is-on', lpBlocked);
+    var lpBlocked = !!p5100State.role && !!p5100State.lp;
+    document.getElementById('p5100LpBlock').classList.toggle('is-on', lpBlocked && p5100State.lp === 'exh');
+    document.getElementById('p5100RecentBlock').classList.toggle('is-on', lpBlocked && p5100State.lp === 'recent');
     document.getElementById('p5100LpLink').href = p5100State.role === 'gallery' ? './kotennavi-p4-15.html' : './kotennavi-p3-15.html';
+    document.getElementById('p5100RecentLink').href = p5100State.role === 'gallery' ? './kotennavi-p4-16.html' : './kotennavi-p3-16.html';
     var box = document.getElementById('p5100RoleBox');
     box.hidden = !p5100State.role;
     if (p5100State.role) {
@@ -291,7 +298,7 @@
       link.href = p5100State.role === 'gallery' ? './kotennavi-p4.html' : './kotennavi-p3.html';
       link.textContent = nm + 'ページを確認する →';
     }
-    /* 退会できないとき（未処理の取引／LIAISON+ の展覧会）は入力部分（同意・了承・退会の理由・退会ボタン）を出さない。
+    /* 退会できないとき（未処理の取引／LIAISON+ の展覧会・取引の終了から2週間）は入力部分（同意・了承・退会の理由・退会ボタン）を出さない。
        注意リストは「退会するとどうなるか」を先に知っておけるよう残す。送信バーは「戻る」だけ */
     var blocked = p5100State.txn || lpBlocked;
     document.querySelector('.p5100-wrap').classList.toggle('is-blocked', blocked);
