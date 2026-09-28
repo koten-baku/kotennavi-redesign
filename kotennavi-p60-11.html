@@ -20,7 +20,7 @@
   <button class="dbtn" id="dbarGuest" onclick="p6011SetRole('guest')">ゲスト</button>
   <span class="dbar-sep">問合せ元：</span>
   <button class="dbtn on" id="dbarRefNone" onclick="p6011SetRef('','')">なし（直接）</button>
-  <button class="dbtn" id="dbarRefQa" onclick="p6011SetRef('p6','CAP-08')">QA経由（作品/CAP-08）</button>
+  <button class="dbtn" id="dbarRefQa" onclick="p6011SetRef('p11-2','CAP-08')">QA経由（クリエイター機能申込/CAP-08）</button>
 </div>
 
 <!-- ヘッダー -->
@@ -101,7 +101,7 @@
     <div class="p70-head__sub"><span class="p70-head__updated">サポート</span></div>
     <h1 class="p70-head__title">お問合わせ</h1>
     <p class="p70-head__en">Contact</p>
-    <p class="p70-head__lead">ご不明な点・不具合のご報告・ご要望などをお寄せください。<br>いただいた内容は個展なび事務局で確認し、順次ご返信します。</p>
+    <p class="p70-head__lead">ご不明な点や、アカウント・機能に関するご質問、サイトの不具合をお寄せください。<br>いただいた内容は個展なび事務局で確認し、順次ご返信します。</p>
   </div>
 </div>
 
@@ -113,9 +113,14 @@
       よくあるご質問は <a class="ktn-guide-link" href="./kotennavi-p60-6.html">よくある質問 — クリエイター編</a> ／ <a class="ktn-guide-link" href="./kotennavi-p60-7.html">ギャラリー編</a> にまとまっています。お問い合わせの前にあわせてご確認ください。
     </div>
 
+    <!-- 窓口の使い分け（返信するのはお問合わせだけ＝要望・掲載内容への苦情や削除要求がここへ集まらないように・2026-09-27） -->
+    <div class="ktn-form-faqhint">
+      サービスへのご要望は <a class="ktn-guide-link" href="./kotennavi-p60-12.html">サービス機能改善要望</a>、掲載内容の誤りや問題は、各ページの「…」メニューの「修正を依頼する」「問題を報告する」からお知らせください（<a class="ktn-guide-link" href="./kotennavi-p60-16.html#window">ご連絡方法について</a>）。
+    </div>
+
     <!-- お問い合わせ元（?from / ?qa から自動セット・該当時のみ表示） -->
     <div class="ktn-refbox" id="p6011Ref" hidden>
-      <span class="ktn-refbox__label">お問い合わせ元</span>
+      <span class="ktn-refbox__label" id="p6011RefLabel">ご覧になっていたよくある質問</span>
       <p class="ktn-refbox__target" id="p6011RefPage"></p>
       <p class="ktn-refbox__note" id="p6011RefQa" hidden></p>
     </div>
@@ -131,13 +136,14 @@
           </div>
           <div class="p114-applicant__body">
             <span class="p114-applicant__label">送信者アカウント</span>
-            <span class="p114-applicant__name" id="p6011AccountName">山田 花子 <small>1997sakura2022@gmail.com</small></span>
+            <span class="p114-applicant__name" id="p6011AccountName">山田 花子 <small>hanako.yamada@example.com</small></span>
           </div>
         </div>
 
         <div class="p211-field">
           <label class="p211-label">お名前<span class="ktn-req">必須</span></label>
           <input class="p211-input" type="text" id="p6011Name" placeholder="例：山田 花子">
+          <p class="p211-help">サイト内のニックネームではなく、本名をご入力ください。</p>
         </div>
 
         <div class="p211-field" style="margin-top:12px">
@@ -156,7 +162,6 @@
             <option>リエゾン（作品展示・販売）について</option>
             <option>取引について</option>
             <option>不具合の報告</option>
-            <option>ご意見・ご要望</option>
             <option>その他</option>
           </select>
         </div>
@@ -192,7 +197,7 @@
 
         <div class="p114-submit-wrap" style="margin-top:8px">
           <button class="ktn-op-btn ktn-op-btn--primary ktn-op-btn--lg" id="p6011SubmitBtn" disabled onclick="p6011Submit()">送信する</button>
-          <p class="p114-submit-note">通常、数営業日以内にご入力のメールアドレス宛へご返信します。混雑時はお時間をいただく場合があります。</p>
+          <p class="p114-submit-note">内容を確認のうえ、ご入力のメールアドレス宛にご返信します。お問い合わせが集中する時期は、ご返信までにお時間をいただく場合があります。</p>
         </div>
 
       </div>
@@ -212,7 +217,7 @@
 <script src="./kotennavi-pages.js"></script>
 <script>
 /* デモ用のログインアカウント。後工程でセッションの実ユーザー名・メール・UIDに差し替える。 */
-var P6011_DEMO = { name: '山田 花子', email: '1997sakura2022@gmail.com', uid: 'U-100482' };
+var P6011_DEMO = { name: '山田 花子', email: 'hanako.yamada@example.com', uid: 'U-100482' };
 
 /* 送信者の状態切替（デモ）。ログイン中＝アカウント表示＋氏名/メール/UIDを自動セット、ゲスト＝空欄 */
 function p6011SetRole(role) {
@@ -225,7 +230,7 @@ function p6011SetRole(role) {
   var email = document.getElementById('p6011Email');
   var uid = document.getElementById('p6011Uid');
   if (login) {
-    name.value = P6011_DEMO.name;
+    name.value = '';   /* お名前は自動で入れない：アカウントの名前はサイト内のニックネームのため。お問合わせ等は本名で送ってもらう（2026-09-27） */
     email.value = P6011_DEMO.email;
     uid.value = P6011_DEMO.uid;      /* ← 本番はセッションの実UID */
   } else {
@@ -244,15 +249,15 @@ function p6011ApplyContext(from, qa) {
   var refQa = document.getElementById('p6011RefQa');
   document.getElementById('p6011FromPage').value = from;
   document.getElementById('p6011FromQa').value = qa;
-  if (from) {
-    var pname = (typeof KTN.pageName === 'function') ? KTN.pageName(from) : from;
-    refPage.textContent = pname + '（' + from + '）';
-  } else {
-    refPage.textContent = '';
-  }
+  /* FAQ の「お問合わせフォーム」リンクから来たとき：読んでいた質問を主役に、ページ名は補足に回す（2026-09-28）。
+     「お問い合わせ元：〇〇（ページ）」だと、そのページ〔例：作品〕について問い合わせているように読めてしまうため。
+     ページ番号（p11-2 等）は利用者に見せない（hidden の from_page で事務局に渡す） */
+  var pname = from ? ((typeof KTN.pageName === 'function') ? KTN.pageName(from) : from) : '';
   var item = qa ? (KTN.QA || []).filter(function (x) { return x.id === qa; })[0] : null;
-  refQa.textContent = item ? '「' + item.q + '」に関するお問い合わせ' : '';
-  refQa.hidden = !item;
+  document.getElementById('p6011RefLabel').textContent = item ? 'ご覧になっていたよくある質問' : 'お問い合わせ元';
+  refPage.textContent = item ? '「' + item.q + '」' : pname;
+  refQa.textContent = item && pname ? '（' + pname + 'のページ）' : '';
+  refQa.hidden = !(item && pname);
   document.getElementById('p6011Ref').hidden = !from;
 }
 

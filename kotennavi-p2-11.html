@@ -1545,7 +1545,7 @@ var VENUE_POOL = [
 var CREATOR_POOL = [
   { name: '松田 啓佑', meta: 'アート／絵画・セラミック',           url: 'kotennavi-p3.html?c=matsuda' },
   { name: '田中 透',   meta: 'アート／油彩',                       url: 'kotennavi-p3.html?c=tanaka-1' },
-  { name: '田中 透',   meta: 'アート／油彩（同姓同名・別の作家）', url: 'kotennavi-p3.html?c=tanaka-2' },   /* 同姓同名同ジャンルのデモ */
+  { name: '田中 透',   meta: 'アート／油彩（同姓同名・別のクリエイター）', url: 'kotennavi-p3.html?c=tanaka-2' },   /* 同姓同名同ジャンルのデモ */
   { name: '木梨 アイネ', meta: 'クラフト／テキスタイル',           url: 'kotennavi-p3.html?c=kinashi' }
 ];
 function initP211Combo(cfg) {
@@ -2265,7 +2265,7 @@ syncOptUI();
    「入力する →」でアコーディオンを開いて該当行までスクロールする。任意項目なので保存は止めない。 */
 var REMIND_ITEMS = [
   { sel: 'p211FacChild',  label: 'お子さま連れ',     hint: '「お子さまと行ける」で絞り込む来場者に届きます。同じ条件の特集ページにも掲載されます。' },
-  { sel: 'p211FacAttend', label: 'クリエイター在廊', hint: '作家に会えることは強い来場動機です。「在廊あり」で探している来場者に届きます。' }
+  { sel: 'p211FacAttend', label: 'クリエイター在廊', hint: 'クリエイターに会えることは強い来場動機です。「在廊あり」で探している来場者に届きます。' }
 ];
 function remindJump(selId) {
   var panel = document.getElementById('p211AccFacility');

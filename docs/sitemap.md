@@ -55,7 +55,6 @@
 | P2-13 | 展覧会-記事管理 |  |  |  |  | W | W | W | --w-detail | kotennavi-p2-13.html | Fix済 |
 | P2-14 | 展覧会-インサイト |  |  |  |  | R | R | R | --w-article | kotennavi-p2-14.html | Fix済 |
 | P2-15 | 展覧会-広告作成 |  |  |  |  | W | W | W | --w-detail | # | 次期リリース |
-| P2-16 | 展覧会-修正依頼 |  | W | W | W |  |  |  | --w-detail | kotennavi-p2-16.html | 調整中 |
 <!-- 「展覧会-報告」は全表示系ページ共通の報告フォーム P60-13「問題を報告する」に統合（2026-07-24）。対象は ?from/?type で受け取るため展覧会固有ページは持たない。 -->
 
 ---
@@ -77,6 +76,7 @@
 | P3-17 | クリエイター販売代金管理 | L+ |  |  |  | R/W |  | R/W | --w-detail | kotennavi-p3-17.html | Fix済 |
 | P3-18 | クリエイター-展覧会管理 |  |  |  |  | R/W |  | R/W | --w-detail | kotennavi-p3-18.html | Fix済 |
 | P3-19 | クリエイター-記事管理 |  |  |  |  | R/W |  | R/W | --w-detail | kotennavi-p3-19.html | Fix済 |
+| P3-20 | クリエイター-作品へのお問合わせ | L |  |  |  | R/W |  | R/W | --w-detail | kotennavi-p3-20.html | Fix済 |
 
 ---
 
@@ -96,6 +96,7 @@
 | P4-17 | ギャラリー-販売代金管理 | L+ |  |  |  |  | R/W | R/W | --w-detail | kotennavi-p4-17.html | Fix済 |
 | P4-18 | ギャラリー-展覧会管理 |  |  |  |  |  | R/W | R/W | --w-detail | kotennavi-p4-18.html | Fix済 |
 | P4-19 | ギャラリー-記事管理 |  |  |  |  |  | R/W | R/W | --w-detail | kotennavi-p4-19.html | Fix済 |
+| P4-20 | ギャラリー-作品へのお問合わせ | L |  |  |  |  | R/W | R/W | --w-detail | kotennavi-p4-20.html | Fix済 |
 
 ---
 
@@ -113,6 +114,7 @@
 | P5-13 | ユーザー-メール通知管理 |  |  |  | R/W |  |  | R/W | --w-detail | kotennavi-p5-13.html | Fix済 |
 | P5-14 | ユーザー-購入履歴 | L+ |  |  | R/W |  |  | R/W | --w-detail | kotennavi-p5-14.html | Fix済 |
 | P5-15 | ユーザー-取引ワークスペース | L+ |  |  | R/W |  |  | R/W | --w-detail | kotennavi-p5-15.html | Fix済 |
+| P5-16 | ユーザー-問合せ履歴 | L |  |  | R |  |  | R | --w-detail | kotennavi-p5-16.html | Fix済 |
 | P5-100 | ユーザー-退会 |  |  |  | R/W |  |  | R/W | --w-detail | kotennavi-p5-100.html | Fix済 |
 
 ---
@@ -126,8 +128,8 @@
 | P6-2 | 作品-リエゾンプラス出品時 | L+ | R | R | R | R | R | R | --w-entity | kotennavi-p6-2.html | Fix済 |
 | P6-11 | 作品-新規/編集/クローン |  |  |  |  | W | W | W | --w-detail | kotennavi-p6-11.html | Fix済 |
 | P6-12 | 作品-インサイト |  |  |  |  | R | R | R | --w-article | kotennavi-p6-12.html | Fix済 |
-| P6-13 | 作品-問合せ | L |  | W | W |  | W | R | --w-detail | kotennavi-p6-13.html | 調整中 |
-| P6-14 | 作品-問合せへの回答 | L |  |  |  | R/W |  | R/W | --w-detail | kotennavi-p6-14.html | 調整中 |
+| P6-13 | 作品-問合せ | L |  | W | W |  | W | R | --w-detail | kotennavi-p6-13.html | Fix済 |
+| P6-14 | 作品-問合せ管理（この作品へのお問合わせ） | L |  |  |  | R/W | R/W | R/W | --w-detail | kotennavi-p6-14.html | Fix済 |
 | P6-15 | 作品-記事管理 |  |  |  |  | W | W | W | --w-detail | kotennavi-p6-15.html | Fix済 |
 
 ---
@@ -234,10 +236,12 @@
 | P60-8 | 個展なびとは |  | R | R | R | R | R | R/W | --w-article | kotennavi-p60-8.html | 調整中 |
 | P60-9 | 利用規約 |  | R | R | R | R | R | R/W | --w-article | kotennavi-p60-9.html | 調整中 |
 | P60-10 | プライバシポリシー |  | R | R | R | R | R | R/W | --w-article | kotennavi-p60-10.html | 調整中 |
-| P60-11 | お問合わせ |  | W | W | W | W | W |  | --w-detail | kotennavi-p60-11.html | 未確認 |
-| P60-12 | サービス機能改善要望 |  | W | W | W | W | W |  | --w-detail | kotennavi-p60-12.html | 調整中 |
-| P60-13 | 問題を報告する |  | W | W | W | W | W |  | --w-detail | kotennavi-p60-13.html | 整合性のみ |
+| P60-11 | お問合わせ |  | W | W | W | W | W |  | --w-detail | kotennavi-p60-11.html | Fix済 |
+| P60-12 | サービス機能改善要望 |  | W | W | W | W | W |  | --w-detail | kotennavi-p60-12.html | Fix済 |
+| P60-13 | 問題を報告する |  | W | W | W | W | W |  | --w-detail | kotennavi-p60-13.html | Fix済 |
+| P60-14 | 修正依頼 |  | W | W | W | W | W |  | --w-detail | kotennavi-p60-14.html | Fix済 |
 | P60-15 | ページを表示できません |  | R | R | R | R | R | R | --w-article | kotennavi-p60-15.html | 調整中 |
+| P60-16 | 掲載内容に関する対応方針 |  | R | R | R | R | R | R/W | --w-article | kotennavi-p60-16.html | 調整中 |
 
 - **P60-15 はアクセス制御の受け皿（noindex・状態は2つ）**：①**要ログイン**＝**未ログインで保護ページに来た場合すべて**（自分専用の固定URL〔myページ編集・パスワード管理・LIAISON+コンソール・購入履歴 等〕に加え、他人の識別子を含むURLでも未ログインならこちら。判定がセッションだけで決まりIDの存在に依存しないので漏れない＝「編集中にログインが切れた」を404で突き放さない）。②**見つかりません**＝**ログイン済み×非オーナー**で他人の識別子を含むURL（`/exhibition/{id}/edit`・`/txn/{id}` 等の編集・取引系）に来た場合と P90 管理者系。「権限がありません」は**そのIDが存在することを教えてしまう**ため使わない。**②はサイト共通の404そのもの**＝存在しないURL・削除済みコンテンツも同じ画面・同じ HTTP 404 を返す（別画面にすると本物の404と見比べて存在が分かるため。汎用404ページは別途作らない）。なお「ログイン済みだがロールが足りない」（一般ユーザーが LIAISON+コンソールを開く等）はエラーにせず**機能申込（P11-2／P11-3／P11-4）へ誘導**する。ただし誘導してよいのは**識別子を含まない自分専用の機能URL**（`/liaison-plus/console` 等）だけで、`/exhibition/{id}/edit` のように**他人の識別子を含むURL**はロール不足でも②404（誘導するとそのIDの存在が漏れるため）。検索ハブ P10-1〜3 は P60-15 を使わず**ページ内の認証ウォール**で処理（器＝タイトル＋検索対象タブは出す）。**②のときだけ回遊ゾーン**（サイト紹介1〜2行＋開催中/これから開催の展覧会3枚ランダム＋「展覧会を探す →」）を出し、404を行き止まりにしない（①には出さない。カードは**来たURLと無関係な汎用ピック**に限る＝関連付けるとそのIDの存在が漏れるため）。詳細は `docs/handoff-decisions.md` 追174-22／追174-24／追174-25／追174-26。
 

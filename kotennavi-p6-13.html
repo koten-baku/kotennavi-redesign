@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex,nofollow">
   <title>問合せ | オノマトペの庭 | 個展なび</title>
-  <meta name="description" content="作品「オノマトペの庭」についてのお問合わせフォームです。作家へ質問・ご相談を送信できます。">
+  <meta name="description" content="作品「オノマトペの庭」についてのお問合わせフォームです。出品者（クリエイター・ギャラリー）へ質問・ご相談を送信できます。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@1,400;1,600&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./kotennavi-common.css">
@@ -18,6 +18,11 @@
   <span class="dbar-sep">送信者：</span>
   <button class="dbtn on" id="dbarLogin" onclick="p613SetRole('login')">ログイン中</button>
   <button class="dbtn" id="dbarGuest" onclick="p613SetRole('guest')">ゲスト（要ログイン）</button>
+  <span class="dbar-sep" style="margin-left:12px">作品：</span>
+  <button class="dbtn" data-p613-ctx="n-creator" onclick="p613SetCtx('n-creator')">通常の作品</button>
+  <button class="dbtn" data-p613-ctx="l-creator" onclick="p613SetCtx('l-creator')">リエゾン・クリエイター出品</button>
+  <button class="dbtn on" data-p613-ctx="lp-creator" onclick="p613SetCtx('lp-creator')">リエゾンプラス・クリエイター出品</button>
+  <button class="dbtn" data-p613-ctx="lp-gallery" onclick="p613SetCtx('lp-gallery')">リエゾンプラス・ギャラリー出品</button>
 </div>
 
 <div class="shell">
@@ -81,17 +86,26 @@
     <div class="p70-head__sub"><span class="p70-head__updated">サポート</span></div>
     <h1 class="p70-head__title">作品への問合せ</h1>
     <p class="p70-head__en">Inquiry</p>
-    <p class="p70-head__lead">作品についてのご質問・ご相談を作家へ送信します。<br>スパム防止のため、送信にはログインが必要です。</p>
+    <p class="p70-head__lead">作品についてのご質問・ご相談を<span data-p613-recv>クリエイター</span>へお送りします。<br>お問合わせは公開されず、<span data-p613-recv>クリエイター</span>とあなただけのやり取りになります。</p>
   </div>
 </div>
 
 <main>
   <div class="p70-wrap">
 
-    <div class="ktn-refbox">
-      <span class="ktn-refbox__label">問合せ対象の作品</span>
-      <p class="ktn-refbox__target"><a href="./kotennavi-p6.html" class="ktn-guide-link">オノマトペの庭</a></p>
-      <p class="ktn-refbox__note">作家 田中透 へのお問合わせとして送信されます</p>
+    <!-- 親ページ（問合せ対象の作品）＝P7/P8 と同じ文脈ストリップ .ktn-content-lead（サムネイル付きカード・親ページへ戻れる・2026-09-27） -->
+    <div class="ktn-content-lead">
+      <p class="ktn-content-lead__label">問合せ対象の作品</p>
+      <a class="ktn-content-lead__card" id="p613LeadCard" href="kotennavi-p6-2.html">
+        <span class="ktn-content-lead__thumb" style="background:linear-gradient(155deg,#b8d8cc,#6a9e8a)"></span>
+        <span class="ktn-content-lead__body">
+          <span class="ktn-content-lead__name"><span class="cb cb-content cb-artwork">artwork</span>オノマトペの庭</span>
+          <span class="ktn-content-lead__row"><span class="ktn-content-lead__key">展覧会</span><span class="ktn-content-lead__val">個展「あなたが知らないオノマトペ」</span></span>
+          <span class="ktn-content-lead__row"><span class="ktn-content-lead__key">会期</span><span class="ktn-content-lead__val">2026.02.18–03.05</span></span>
+          <span class="ktn-content-lead__row"><span class="ktn-content-lead__key">出品者</span><span class="ktn-content-lead__val" id="p613Seller"><span class="cb cb-person cb-creator">creator</span>田中 透</span></span>
+        </span>
+      </a>
+      <p class="ktn-content-lead__note" id="p613LeadNote">クリエイター 田中 透 へのお問合わせとして送信されます。</p>
     </div>
 
     <!-- 未ログイン時：フォームを隠しログイン誘導のみ表示 -->
@@ -108,13 +122,13 @@
           </div>
           <div class="p114-applicant__body">
             <span class="p114-applicant__label">送信者アカウント</span>
-            <span class="p114-applicant__name" id="p613AccountName">山田 花子 <small>1997sakura2022@gmail.com</small></span>
+            <span class="p114-applicant__name" id="p613AccountName">山田 花子 <small>hanako.yamada@example.com</small></span>
           </div>
         </div>
 
         <div class="p211-field">
           <label class="p211-label">お問合わせの種類<span class="ktn-req">必須</span></label>
-          <select class="p211-select" id="p613Reason">
+          <select class="p211-select" id="p613Reason" onchange="p613SyncReason()">
             <option value="">選択してください</option>
             <option>作品について質問したい</option>
             <option>購入・取引について相談したい</option>
@@ -124,7 +138,16 @@
           </select>
         </div>
 
-        <div class="p211-field" style="margin-top:12px">
+        <!-- リエゾンプラス作品で「購入・取引について相談したい」を選んだとき：購入申込へ振り戻し、送信は止める（2026-09-28） -->
+        <div class="ktn-refbox" id="p613LpGuide" hidden style="margin:12px 0 0">
+          <span class="ktn-refbox__label">For Buyers</span>
+          <p class="ktn-refbox__target">この作品は、作品ページからご購入を申し込めます</p>
+          <p class="ktn-refbox__note">この作品はリエゾンプラスでオンライン販売しています。ご購入は作品ページの「購入申込をする」からお申し込みください。お申し込みの順番で購入の手続きが進み、お支払い・発送などのご相談は、申込後の取引ワークスペースで出品者とやり取りできます。</p>
+          <p class="ktn-refbox__note">サイズや状態など、申し込む前に作品について確かめたいことは、お問合わせの種類で「作品について質問したい」を選んでお送りください。</p>
+          <p class="ktn-refbox__note" style="margin-top:10px"><a class="ktn-action-btn" href="./kotennavi-p6-2.html#p62ApplyBtn">作品ページで購入を申し込む →</a></p>
+        </div>
+
+        <div class="p211-field" id="p613BodyField" style="margin-top:12px">
           <label class="p211-label">お問合わせ内容<span class="ktn-req">必須</span></label>
           <textarea class="p211-textarea" id="p613Body" rows="7" placeholder="ご質問・ご相談内容をご記入ください。"></textarea>
         </div>
@@ -140,8 +163,8 @@
         <input type="hidden" id="p613Uid" name="uid" value="">
 
         <div class="p114-submit-wrap" style="margin-top:8px">
-          <button class="ktn-op-btn ktn-op-btn--primary ktn-op-btn--lg" onclick="p613Submit()">送信する</button>
-          <p class="p114-submit-note">送信内容は作家に通知されます。返信の有無・時期は作家の判断によります。</p>
+          <button class="ktn-op-btn ktn-op-btn--primary ktn-op-btn--lg" id="p613SubmitBtn" onclick="p613Submit()">送信する</button>
+          <p class="p114-submit-note">送信内容は<span data-p613-recv>クリエイター</span>に通知されます。返信は1回で、返信の有無・時期は<span data-p613-recv>クリエイター</span>の判断によります。送ったお問合わせと返信は、myページの「問合せ履歴」で確認できます。</p>
         </div>
 
       </div>
@@ -159,7 +182,7 @@
 <script src="./kotennavi-common.js"></script>
 <script src="./kotennavi-pages.js"></script>
 <script>
-var P613_DEMO = { name: '山田 花子', email: '1997sakura2022@gmail.com', uid: 'U-100482' };
+var P613_DEMO = { name: '山田 花子', email: 'hanako.yamada@example.com', uid: 'U-100482' };
 
 function p613SetRole(role) {
   var login = (role === 'login');
@@ -174,6 +197,33 @@ function p613SetRole(role) {
   window.ktnState.role = login ? 'login' : 'guest';
 }
 
+/* 問合せ先の出し分け（デモ）：クリエイターが出品した作品はクリエイターへ、ギャラリーが P6-1／P6-2 に出品した作品はギャラリーへ届く。
+   リエゾンプラス（lp）の作品は「購入・取引について相談したい」を購入申込へ振り戻す。
+   本番：作品の出品者（オーナー）とプランから決める。?ctx= で初期値を受ける（作品ページのリンクから）。 */
+var P613_CTX = {
+  'n-creator':  { plan: 'n',  owner: 'creator', recv: 'クリエイター', name: '田中 透',          href: './kotennavi-p6.html' },
+  'l-creator':  { plan: 'l',  owner: 'creator', recv: 'クリエイター', name: '田中 透',          href: './kotennavi-p6-1.html' },
+  'lp-creator': { plan: 'lp', owner: 'creator', recv: 'クリエイター', name: '田中 透',          href: './kotennavi-p6-2.html' },
+  'lp-gallery': { plan: 'lp', owner: 'gallery', recv: 'ギャラリー', name: 'Gallery SOIL 渋谷', href: './kotennavi-p6-2.html' }
+};
+var p613Ctx = P613_CTX[new URLSearchParams(location.search).get('ctx')] ? new URLSearchParams(location.search).get('ctx') : 'lp-creator';
+function p613SetCtx(key) {
+  p613Ctx = key;
+  var c = P613_CTX[key];
+  document.querySelectorAll('[data-p613-ctx]').forEach(function (b) { b.classList.toggle('on', b.getAttribute('data-p613-ctx') === key); });
+  document.querySelectorAll('[data-p613-recv]').forEach(function (s) { s.textContent = c.recv; });
+  document.getElementById('p613LeadCard').href = c.href;
+  document.getElementById('p613Seller').innerHTML = '<span class="cb cb-person cb-' + c.owner + '">' + c.owner + '</span>' + c.name;
+  document.getElementById('p613LeadNote').textContent = c.recv + ' ' + c.name + ' へのお問合わせとして送信されます。';
+  p613SyncReason();
+}
+function p613SyncReason() {
+  var c = P613_CTX[p613Ctx];
+  var buy = c.plan === 'lp' && document.getElementById('p613Reason').value === '購入・取引について相談したい';
+  document.getElementById('p613LpGuide').hidden = !buy;
+  document.getElementById('p613BodyField').hidden = buy;
+  document.getElementById('p613SubmitBtn').disabled = buy;
+}
 function p613ValidateRequired() {
   document.querySelectorAll('.p211-field.is-error').forEach(function (f) { f.classList.remove('is-error'); });
   var errBox = document.getElementById('p613SaveError');
@@ -227,12 +277,13 @@ function p613Submit() {
   if (!p613ValidateRequired()) return;
   KTN.submitDone({
     title: 'お問合わせを送信しました',
-    message: '作家へ通知されました。<br>ご返信までお待ちください。',
-    action: { label: '作品ページへ戻る', href: './kotennavi-p6.html' }
+    message: P613_CTX[p613Ctx].recv + 'へ通知されました。<br>返信が届くと、メールでお知らせします。<br>送ったお問合わせは、myページの「問合せ履歴」でも確認できます。',
+    action: { label: '作品ページへ戻る', href: P613_CTX[p613Ctx].href }
   });
 }
 
 KTN.init({ page: 'p6-13', role: 'login' });
+p613SetCtx(p613Ctx);
 p613SetRole('login');
 </script>
 </body>

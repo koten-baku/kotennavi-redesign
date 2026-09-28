@@ -106,23 +106,34 @@
     <div class="p70-head__sub"><span class="p70-head__updated">サポート</span></div>
     <h1 class="p70-head__title">問題を報告する</h1>
     <p class="p70-head__en">Report</p>
-    <p class="p70-head__lead">権利侵害・不適切な内容・虚偽の情報など、コンテンツに関する問題を個展なび事務局へご報告いただけます。<br>いただいた報告は内容を確認し、必要に応じて対応します。</p>
+    <p class="p70-head__lead" id="p6013HeadLead">権利侵害・不適切な内容・虚偽の情報など、コンテンツに関する問題を個展なび事務局へご報告いただけます。<br>いただいた報告は内容を確認し、必要に応じて対応します。</p>
   </div>
 </div>
 
 <main>
   <div class="p70-wrap">
 
-    <!-- 補足（緊急性の高い内容の案内） -->
-    <div class="ktn-form-faqhint">
+    <!-- 報告対象＝P60-14 と同じ親ページのカード（.ktn-content-lead）。?from / ?type から JS（p6013ApplyContext）が描画・該当時のみ表示（2026-09-27 そろえ） -->
+    <div class="ktn-content-lead" id="p6013Lead" hidden></div>
+
+    <!-- このページのご本人の方へ（クリエイター・ギャラリーのときだけ・オーナーの有無に関係なく同じように出す）＝ページの管理（オーナー）申込へ案内。
+         自分から修正依頼・報告に来た人にしか見えないので、閲覧者にページの出どころの印象を与えない（2026-09-27） -->
+    <div class="ktn-refbox" id="p6013ClaimBox" hidden>
+      <span class="ktn-refbox__label" id="p6013ClaimTo">このページのご本人の方へ</span>
+      <p class="ktn-refbox__note"><span id="p6013ClaimRole">クリエイター</span>機能をお申し込みいただくと、このページをご自身で管理できます。紹介文や写真を直せるほか、展覧会情報もご自身で掲載できるようになります。 <a class="ktn-guide-link" id="p6013ClaimLink" data-claim-link href="#">管理を申し込む →</a></p>
+    </div>
+
+    <!-- 補足（お問合わせへの案内・緊急性の高い内容の案内）＝特定のページからでない入口（フッター等）のときだけ出す。
+         ページのメニューから来た報告は対象と目的がはっきりしているので出さない（2026-09-27） -->
+    <div class="ktn-form-faqhint" id="p6013GeneralHint">
       アカウントや機能に関する一般的なご質問は <a class="ktn-guide-link" href="./kotennavi-p60-11.html">お問合わせ</a> をご利用ください。緊急性の高い権利侵害等はその旨を詳細欄にご記入ください。
     </div>
 
-    <!-- 報告対象（?from / ?type から自動セット・該当時のみ表示） -->
-    <div class="ktn-refbox" id="p6013Ref" hidden>
-      <span class="ktn-refbox__label">報告対象</span>
-      <p class="ktn-refbox__target" id="p6013RefTarget"></p>
-      <p class="ktn-refbox__note" id="p6013RefNote" hidden></p>
+    <!-- 展覧会・クリエイター・ギャラリーのときだけ：掲載情報の誤りは修正依頼（P60-14）へ案内（報告＝規約に反する内容への対処／修正依頼＝情報の訂正、と役割を分ける）。
+         報告の窓口は乱用を避けたいので、修正依頼へ逃がす案内をここにだけ置く（P2-16 側に逆向きの案内は置かない・2026-09-27）。
+         本番のリンク先は、報告元（?from）の展覧会の修正依頼ページ -->
+    <div class="ktn-form-faqhint" id="p6013FixHint" hidden>
+      <span id="p6013FixWhat">掲載情報（会期・会場・プロフィール・所在地など）</span>の誤りは、この報告ではなく <a class="ktn-guide-link" id="p6013FixLink" href="./kotennavi-p60-14.html">修正依頼</a> からお知らせください。
     </div>
 
     <!-- フォーム本体 -->
@@ -136,13 +147,14 @@
           </div>
           <div class="p114-applicant__body">
             <span class="p114-applicant__label">送信者アカウント</span>
-            <span class="p114-applicant__name" id="p6013AccountName">山田 花子 <small>1997sakura2022@gmail.com</small></span>
+            <span class="p114-applicant__name" id="p6013AccountName">山田 花子 <small>hanako.yamada@example.com</small></span>
           </div>
         </div>
 
         <div class="p211-field">
           <label class="p211-label">お名前<span class="ktn-req">必須</span></label>
           <input class="p211-input" type="text" id="p6013Name" placeholder="例：山田 花子">
+          <p class="p211-help">サイト内のニックネームではなく、本名をご入力ください。</p>
         </div>
 
         <div class="p211-field" style="margin-top:12px">
@@ -185,7 +197,7 @@
 
         <div class="p114-submit-wrap" style="margin-top:8px">
           <button class="ktn-op-btn ktn-op-btn--primary ktn-op-btn--lg" id="p6013SubmitBtn" disabled onclick="p6013Submit()">報告する</button>
-          <p class="p114-submit-note">ご報告いただいた内容は事務局で確認します。個別の対応結果についてはご返信できない場合があります。</p>
+          <p class="p114-submit-note">ご報告いただいた内容は事務局で確認し、利用規約に基づいて対応します。事実関係の調査はできない場合があります。また、対応の内容や結果についてはお知らせできない場合があります。対応の考え方は <a class="ktn-guide-link" href="./kotennavi-p60-16.html">掲載内容に関する対応方針</a> をご覧ください。</p>
         </div>
 
       </div>
@@ -196,7 +208,6 @@
 </div><!-- /content-wrap -->
 </div><!-- /shell -->
 
-
 <nav class="ktn-bottom-nav" id="ktnBottomNav">
   <div class="ktn-bottom-nav__inner" id="ktnBottomNavInner"></div>
 </nav>
@@ -205,13 +216,16 @@
 <script src="./kotennavi-pages.js"></script>
 <script>
 /* デモ用のログインアカウント。後工程でセッションの実ユーザー名・メール・UIDに差し替える。 */
-var P6013_DEMO = { name: '山田 花子', email: '1997sakura2022@gmail.com', uid: 'U-100482' };
+var P6013_DEMO = { name: '山田 花子', email: 'hanako.yamada@example.com', uid: 'U-100482' };
 
 /* 報告対象の種別（?type）ごとに理由選択肢を出し分ける。common.js の REPORT_TYPE と対の関係 */
 var REPORT_REASONS = {
-  exhibition: ['会期・内容が事実と異なる', '無断掲載・権利侵害', '不適切な表現・画像', 'スパム・宣伝目的', 'その他'],
-  creator: ['なりすまし・虚偽のプロフィール', '無断掲載・権利侵害', '不適切な表現・画像', 'スパム・宣伝目的', 'その他'],
-  gallery: ['なりすまし・虚偽の情報', '無断掲載・権利侵害', '不適切な表現・画像', 'スパム・宣伝目的', 'その他'],
+  /* 展覧会：掲載情報の誤り（会期・会場・出展者など）は修正依頼（P60-14）の役割なので、報告の理由には入れない（2026-09-27） */
+  exhibition: ['無断掲載・権利侵害', '不適切な表現・画像', 'スパム・宣伝目的', 'その他'],
+  /* クリエイター・ギャラリー：「プライバシーに関わる」＝本人が掲載をやめてほしい事情（ストーカー被害など）の受け口。
+     事務局は事実を確かめられなくても至急の案件として扱う（2026-09-27）。P60-14 の注記「プライバシーに関わる事情がある場合は問題を報告する」と対応 */
+  creator: ['なりすまし・虚偽のプロフィール', '無断掲載・権利侵害', 'プライバシーに関わる', '不適切な表現・画像', 'スパム・宣伝目的', 'その他'],
+  gallery: ['なりすまし・虚偽の情報', '無断掲載・権利侵害', 'プライバシーに関わる', '不適切な表現・画像', 'スパム・宣伝目的', 'その他'],
   artwork: ['権利侵害（無断転載・盗用）', '不適切な表現・画像', '情報が事実と異なる', 'スパム・宣伝目的', 'その他'],
   article: ['不適切な表現', '権利侵害（無断転載）', '情報が事実と異なる', 'スパム・宣伝目的', 'その他'],
   review: ['誹謗中傷・攻撃的な内容', '事実と異なる内容', '個人情報の掲載', 'スパム・宣伝目的', 'その他'],
@@ -230,7 +244,7 @@ function p6013SetRole(role) {
   var email = document.getElementById('p6013Email');
   var uid = document.getElementById('p6013Uid');
   if (login) {
-    name.value = P6013_DEMO.name;
+    name.value = '';   /* お名前は自動で入れない：アカウントの名前はサイト内のニックネームのため。お問合わせ等は本名で送ってもらう（2026-09-27） */
     email.value = P6013_DEMO.email;
     uid.value = P6013_DEMO.uid;      /* ← 本番はセッションの実UID */
   } else {
@@ -253,6 +267,48 @@ function p6013FillReasons(type) {
   });
 }
 
+/* 報告対象のカード（P60-14 と同じ形・2026-09-27）。本番は ?from から対象のレコードを引いて描画する。以下はデモデータ。
+   rows の項目名が null の行は、項目名なしの補足行（ジャンル・所在地など見れば分かるもの） */
+var P6013_TARGETS = {
+  exhibition: { href: 'kotennavi-p2.html', thumb: 'linear-gradient(155deg,#b8d8cc,#6a9e8a)', badge: 'cb-content cb-exhibition', badgeText: 'exhibition', name: '個展「あなたが知らないオノマトペ」',
+    rows: [['会期', '2026.02.18–03.05'], ['会場', '東京 Gallery SOIL 渋谷'], ['投稿者', '<span class="cb cb-person cb-gallery">gallery</span>Gallery SOIL 渋谷']] },
+  creator: { href: 'kotennavi-p3.html', thumb: 'linear-gradient(145deg,#8aaa6a,#4a7a2a)', shape: 'creator', badge: 'cb-person cb-creator', badgeText: 'creator', name: '田中 透',
+    rows: [[null, '油彩・現代美術']] },
+  gallery: { href: 'kotennavi-p4.html', thumb: 'linear-gradient(135deg,#4a6878,#2a4858)', shape: 'gallery', badge: 'cb-person cb-gallery', badgeText: 'gallery', name: 'Gallery SOIL 渋谷',
+    rows: [[null, '東京・渋谷']] },
+  artwork: { href: 'kotennavi-p6.html', thumb: 'linear-gradient(155deg,#b8d8cc,#6a9e8a)', badge: 'cb-content cb-artwork', badgeText: 'artwork', name: 'オノマトペの庭',
+    rows: [['展覧会', '個展「あなたが知らないオノマトペ」'], ['会期', '2026.02.18–03.05'], ['出品者', '<span class="cb cb-person cb-creator">creator</span>田中 透']] },
+  article: { href: 'kotennavi-p7.html', thumb: 'linear-gradient(155deg,#e8d8c8,#b09878)', badge: 'cb-content cb-article', badgeText: 'article', name: '『オノマトペの庭』制作について —— 音のかたちを探して',
+    rows: [['公開', '2026.03.05'], ['投稿者', '<span class="cb cb-person cb-creator">creator</span>田中 透']] },
+  review: { href: 'kotennavi-p8.html', thumb: 'linear-gradient(155deg,#b8d8cc,#6a9e8a)', badge: 'cb-content cb-review', badgeText: 'review', name: 'あなたが知らないオノマトペ レビュー',
+    rows: [['展覧会', '個展「あなたが知らないオノマトペ」'], ['投稿者', '<span class="cb cb-person cb-user">user</span>A.K.']] }
+};
+var P6013_LEAD_DEFAULT = "権利侵害・不適切な内容・虚偽の情報など、コンテンツに関する問題を個展なび事務局へご報告いただけます。<br>いただいた報告は内容を確認し、必要に応じて対応します。";
+function p6013RenderLead(type) {
+  var box = document.getElementById('p6013Lead');
+  var head = document.getElementById('p6013HeadLead');
+  var t = P6013_TARGETS[type];
+  if (!t) { box.hidden = true; box.innerHTML = ''; head.innerHTML = P6013_LEAD_DEFAULT; return; }
+  /* 導入文・カード下の一文では、クリエイター・ギャラリーは「〜ページ」と呼ぶ（人そのものを指すと読めてしまうため・2026-09-27） */
+  var label = { creator: 'クリエイターページ', gallery: 'ギャラリーページ' }[type] || REPORT_TYPE_LABEL[type];
+  /* タイトル帯の説明文も入口の種類に合わせる（P60-14 と同じ） */
+  head.innerHTML = 'この' + label + 'について、権利侵害・不適切な内容など規約に反する問題がある場合は、こちらからお知らせください。<br>個展なび事務局で内容を確認し、必要に応じて対応します。';
+  var rows = t.rows.map(function (r) {
+    if (!r[0]) return '<span class="ktn-content-lead__meta">' + r[1] + '</span>';
+    return '<span class="ktn-content-lead__row"><span class="ktn-content-lead__key">' + r[0] + '</span><span class="ktn-content-lead__val">' + r[1] + '</span></span>';
+  }).join('');
+  box.innerHTML =
+    '<p class="ktn-content-lead__label">報告対象</p>' +
+    '<a class="ktn-content-lead__card" href="' + t.href + '">' +
+      '<span class="ktn-content-lead__thumb' + (t.shape ? ' ktn-content-lead__thumb--' + t.shape : '') + '" style="background:' + t.thumb + '"></span>' +
+      '<span class="ktn-content-lead__body">' +
+        '<span class="ktn-content-lead__name"><span class="cb ' + t.badge + '">' + t.badgeText + '</span>' + t.name + '</span>' + rows +
+      '</span>' +
+    '</a>' +
+    '<p class="ktn-content-lead__note">この' + label + 'に関する報告として、個展なび事務局に送信されます。</p>';
+  box.hidden = false;
+}
+
 /* 報告対象コンテキストの表示＋hidden 格納＋理由の出し分け。URL・デモバー双方から呼ぶ単一ソース */
 function p6013ApplyContext(from, type) {
   from = from || '';
@@ -260,20 +316,27 @@ function p6013ApplyContext(from, type) {
   document.getElementById('p6013FromPage').value = from;
   document.getElementById('p6013TargetType').value = type;
 
-  var refTarget = document.getElementById('p6013RefTarget');
-  var refNote = document.getElementById('p6013RefNote');
-  if (from) {
-    var pname = (typeof KTN.pageName === 'function') ? KTN.pageName(from) : from;
-    refTarget.textContent = pname + '（' + from + '）';
-    var label = REPORT_TYPE_LABEL[type] || REPORT_TYPE_LABEL.other;
-    refNote.textContent = '「' + label + '」に関する報告として送信されます';
-    refNote.hidden = false;
-  } else {
-    refTarget.textContent = '';
-    refNote.textContent = '';
-    refNote.hidden = true;
+  p6013RenderLead(from ? type : '');
+  /* このページのご本人の方へ（クリエイター・ギャラリーのとき）＝削除を考える本人にも、ページの管理という道を案内する */
+  var claimable = !!from && (type === 'creator' || type === 'gallery');
+  document.getElementById('p6013ClaimBox').hidden = !claimable;
+  if (claimable) {
+    document.getElementById('p6013ClaimRole').textContent = KTN.CLAIM_PAGES[type].label;
+    /* 呼びかけは種類ごと（ギャラリーに「ご本人」はおかしい＝運営者） */
+    document.getElementById('p6013ClaimTo').textContent = KTN.CLAIM_PAGES[type].to;
+    document.getElementById('p6013ClaimLink').href = KTN.claimUrl(from, type, 'report');
   }
-  document.getElementById('p6013Ref').hidden = !from;
+  document.getElementById('p6013GeneralHint').hidden = !!from;
+  /* 修正依頼の対象（展覧会・クリエイター・ギャラリー）のときだけ、同じ文脈で P60-14 へ案内する */
+  var fixable = ['exhibition', 'creator', 'gallery'].indexOf(type) >= 0;
+  document.getElementById('p6013FixHint').hidden = !fixable;
+  if (fixable) document.getElementById('p6013FixLink').href = './kotennavi-p60-14.html?from=' + encodeURIComponent(from) + '&type=' + type;
+  /* 「何の誤りか」を種類に合わせる（括弧内の例は P60-14 の導入文・修正箇所の選択肢と同じ） */
+  if (fixable) document.getElementById('p6013FixWhat').textContent = {
+    exhibition: '展覧会の掲載情報（会期・会場・紹介文など）',
+    creator: 'クリエイターページの掲載情報（プロフィール・活動ジャンル・リンクなど）',
+    gallery: 'ギャラリーページの掲載情報（所在地・営業時間・連絡先など）'
+  }[type];
   p6013FillReasons(type || 'other');
 }
 

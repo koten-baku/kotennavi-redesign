@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>掲載内容に関する対応方針 | 個展なび</title>
+  <meta name="description" content="個展なびの掲載内容に関する対応方針です。修正依頼・問題のご報告・掲載の削除のご依頼・法令に基づくご請求に、個展なび事務局がどのように対応するかをご案内します。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@1,400;1,600&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<body data-w="article" class="p70-page p60-page">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- デモバー -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">掲載内容に関する対応方針ページ</span>
+  <button class="dbtn dbtn--active" id="dbarView">閲覧</button>
+</div>
+
+<!-- ヘッダー -->
+<div class="shell">
+
+<!-- サイドバー（kotennavi-p1.html と同一マークアップ・#ktnRoleNav は renderSidebar() がJS注入） -->
+<aside class="ktn-sidebar" id="ktnSidebar">
+
+  <!-- ロゴ (logo5-1) -->
+  <a href="kotennavi-p1.html" class="ktn-sidebar__logo" data-page="p1">
+    <img src="./images/kotennavi-logo5-1.svg" alt="個展なび">
+  </a>
+
+  <!-- 検索 → P10 検索ハブ -->
+  <a href="kotennavi-p10.html" class="ktn-sidebar__item" data-page="p10">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <circle cx="11" cy="11" r="7.5"/>
+        <path d="M21 21l-4.5-4.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">検索</span>
+  </a>
+
+  <!-- お知らせ → P61（未制作） -->
+  <a href="kotennavi-p61.html" class="ktn-sidebar__item" id="ktnSidebarNotice" data-page="p61">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__dot" id="ktnNoticeDot" style="display:none"></span>
+    <span class="ktn-sidebar__label">お知らせ</span>
+  </a>
+
+  <!-- ガイド → P60（未制作） -->
+  <a href="kotennavi-p60.html" class="ktn-sidebar__item" data-page="p60">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" stroke-linecap="round"/>
+        <path d="M12 16v-4M12 8h.01" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">ガイド</span>
+  </a>
+
+  <div class="ktn-sidebar__divider"></div>
+
+  <!-- ロール別アイコン（JS注入） -->
+  <div id="ktnRoleNav" style="width:100%;display:flex;flex-direction:column;align-items:center"></div>
+
+  <div class="ktn-sidebar__footer">
+    <p class="ktn-sidebar__footer-label">Follow us</p>
+    <div class="ktn-sidebar__sns">
+      <a href="https://www.facebook.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="Facebook">
+        <svg viewBox="0 0 320 512" fill="currentColor"><path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/></svg>
+      </a>
+      <a href="https://x.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="X">
+        <svg viewBox="0 0 512 512" fill="currentColor"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg>
+      </a>
+    </div>
+  </div>
+
+</aside>
+
+<div class="content-wrap" id="contentWrap">
+<header class="ktn-header" id="ktnHeader">
+  <div class="ktn-header__inner">
+    <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+    <div class="ktn-hdr-actions" id="ktnActs"></div>
+  </div>
+</header>
+
+<!-- タイトルバンド -->
+<div class="p70-title-band">
+  <div class="p70-title-band__inner">
+    <div class="p70-head__sub">
+      <span class="p70-head__updated">2026年9月 制定</span>
+    </div>
+    <h1 class="p70-head__title">掲載内容に関する対応方針</h1>
+    <p class="p70-head__en">Content Policy</p>
+    <p class="p70-head__lead">個展なびに掲載されている内容について、修正のご依頼や問題のご報告をいただいたときに、個展なび事務局がどのように対応するかをご案内します。</p>
+  </div>
+</div>
+
+<main>
+  <div class="p70-wrap">
+
+    <!-- 目次 -->
+    <nav class="p70-toc" aria-label="目次">
+      <div class="p70-toc__title">目次 — Contents</div>
+      <ol class="p70-toc__list">
+        <li class="p70-toc__item"><span class="p70-toc__num">1</span><a class="p70-toc__link" href="#basic">基本の考え方</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">2</span><a class="p70-toc__link" href="#window">ご連絡方法</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">3</span><a class="p70-toc__link" href="#report">問題のご報告への対応</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">4</span><a class="p70-toc__link" href="#delete">掲載の削除について</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">5</span><a class="p70-toc__link" href="#legal">法令に基づくご請求</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">6</span><a class="p70-toc__link" href="#contact">お問合せ</a></li>
+      </ol>
+    </nav>
+
+    <!-- 1. 基本の考え方 -->
+    <section class="p70-section" id="basic">
+      <div class="p70-section__head">
+        <span class="p70-section__num">1</span>
+        <h2 class="p70-section__title">基本の考え方</h2>
+        <span class="p70-section__en">Our Approach</span>
+      </div>
+      <p class="p70-body">いただいたご依頼・ご報告は、個展なび事務局で内容を確認し、利用規約とこの方針に基づいて対応します。すべてのご連絡に、同じ基準で対応することを大切にしています。</p>
+      <p class="p70-body">なお、掲載内容をめぐる事実関係の調査はできない場合があります。また、対応の内容や結果について、個別にお知らせできない場合があります。あらかじめご了承ください。</p>
+    </section>
+
+    <!-- 2. ご連絡方法 -->
+    <section class="p70-section" id="window">
+      <div class="p70-section__head">
+        <span class="p70-section__num">2</span>
+        <h2 class="p70-section__title">ご連絡方法</h2>
+        <span class="p70-section__en">Where to Contact Us</span>
+      </div>
+      <p class="p70-body">ご連絡の内容に応じて、次のフォームをご利用ください。展覧会・作品などの各ページの「…」メニューからも開けます。</p>
+      <div class="p70-dl p70-dl--ja">
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">修正依頼</dt>
+          <dd class="p70-dl__dd">展覧会・クリエイター・ギャラリーの掲載情報（会期・会場・プロフィール・所在地など）の誤りをお知らせいただくためのフォームです。</dd>
+        </div>
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">問題を報告する</dt>
+          <dd class="p70-dl__dd">権利侵害・不適切な内容・なりすまし・スパムなど、利用規約に反する問題をお知らせいただくためのフォームです。</dd>
+        </div>
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">お問合わせ</dt>
+          <dd class="p70-dl__dd">アカウントや機能に関するご質問など、上記以外のご連絡のためのフォームです。</dd>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. 問題のご報告への対応 -->
+    <section class="p70-section" id="report">
+      <div class="p70-section__head">
+        <span class="p70-section__num">3</span>
+        <h2 class="p70-section__title">問題のご報告への対応</h2>
+        <span class="p70-section__en">Handling Reports</span>
+      </div>
+      <p class="p70-body">ご報告の理由ごとに、次のように対応します。対応の順番は、ご報告の理由によって決めています。</p>
+      <div class="p70-dl p70-dl--ja">
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">プライバシーに関わるもの</dt>
+          <dd class="p70-dl__dd">速やかに対応します。必要に応じて、確認の前に掲載を一時的に非公開にします。</dd>
+        </div>
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">無断掲載・権利侵害</dt>
+          <dd class="p70-dl__dd">掲載者に確認し、反論の機会を設けたうえで、掲載の継続や非公開を判断します。</dd>
+        </div>
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">なりすまし・個人情報の掲載・誹謗中傷</dt>
+          <dd class="p70-dl__dd">内容を確認し、利用規約に反する場合は非公開にします。</dd>
+        </div>
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">不適切な表現・スパム</dt>
+          <dd class="p70-dl__dd">利用規約に明らかに反する場合は、非公開または削除にします。</dd>
+        </div>
+      </div>
+      <p class="p70-body">ご報告いただいた方の個人情報を、掲載者にお伝えすることはありません。</p>
+    </section>
+
+    <!-- 4. 掲載の削除について -->
+    <section class="p70-section" id="delete">
+      <div class="p70-section__head">
+        <span class="p70-section__num">4</span>
+        <h2 class="p70-section__title">掲載の削除について</h2>
+        <span class="p70-section__en">Removal Requests</span>
+      </div>
+      <p class="p70-body">個展なびは、展覧会の開催など、公開された事実を記録として掲載しています。そのため、<strong>掲載の削除のご依頼は、原則としてお受けしていません</strong>。</p>
+      <p class="p70-body">ただし、次の場合はご相談に応じます。</p>
+      <div class="p70-dl p70-dl--ja">
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">ご本人の画像・紹介文・連絡先</dt>
+          <dd class="p70-dl__dd">掲載されているご本人（クリエイター・ギャラリー）から、ご自身のロゴ・写真・紹介文・連絡先などを外してほしいとお申し出があった場合は、対応します。</dd>
+        </div>
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">ページの管理をご希望の場合</dt>
+          <dd class="p70-dl__dd">ご自身のクリエイター・ギャラリーページを、クリエイター機能・ギャラリー機能のお申込みにより、ご自身で管理していただけます。紹介文や写真などは、ご自身で直していただけます（開催された展覧会の記録は残ります）。</dd>
+        </div>
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">無断掲載・プライバシーに関わる事情</dt>
+          <dd class="p70-dl__dd">「問題を報告する」からお知らせください。3. の方針に沿って対応します。</dd>
+        </div>
+      </div>
+      <p class="p70-body">レビューは来場者の方の感想です。内容への異論のみを理由とした削除のご依頼はお受けしていません。誹謗中傷や個人情報の掲載など、利用規約に反する場合は「問題を報告する」からお知らせください。</p>
+      <p class="p70-body">掲載者と掲載されている方の間の事情については、個展なびが判断や仲介をすることはできません。掲載内容が事実かどうか、利用規約に反していないかに基づいて対応します。</p>
+    </section>
+
+    <!-- 5. 法令に基づくご請求 -->
+    <section class="p70-section" id="legal">
+      <div class="p70-section__head">
+        <span class="p70-section__num">5</span>
+        <h2 class="p70-section__title">法令に基づくご請求</h2>
+        <span class="p70-section__en">Legal Requests</span>
+      </div>
+      <p class="p70-body">権利侵害を理由とする送信防止措置のご依頼や、発信者情報の開示のご請求は、法令に定められた手続きに沿って対応します。ご希望の場合は、お問合せフォームからご連絡ください。手続きをご案内します。</p>
+    </section>
+
+    <!-- 6. お問合せ -->
+    <section class="p70-section" id="contact">
+      <div class="p70-section__head">
+        <span class="p70-section__num">6</span>
+        <h2 class="p70-section__title">お問合せ</h2>
+        <span class="p70-section__en">Contact</span>
+      </div>
+      <p class="p70-body">この方針に関するお問合せは、以下のお問合せフォームよりご連絡ください。</p>
+      <p><a class="ktn-guide-link" href="./kotennavi-p60-11.html">お問合せフォームへ →</a></p>
+      <p class="p70-body">制定：2026年9月27日</p>
+      <p><a class="ktn-guide-link" href="./kotennavi-p60-9.html">利用規約はこちら →</a></p>
+    </section>
+
+  </div>
+</main>
+
+<!-- フッター -->
+<footer class="ktn-footer" id="ktnFooter"></footer>
+</div><!-- /content-wrap -->
+</div><!-- /shell -->
+
+
+<nav class="ktn-bottom-nav" id="ktnBottomNav">
+  <div class="ktn-bottom-nav__inner" id="ktnBottomNavInner"></div>
+</nav>
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  KTN.init({ page: 'p60-16' });
+
+  var dbarView = document.getElementById('dbarView');
+  if (dbarView) {
+    dbarView.addEventListener('click', function () {
+      this.classList.add('dbtn--active');
+    });
+  }
+});
+</script>
+</body>
+</html>

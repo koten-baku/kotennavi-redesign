@@ -5045,6 +5045,20 @@ a.p2-action-widget__btn{text-decoration:none}
 .ktn-content-lead__body{display:flex;flex-direction:column;gap:2px;min-width:0}
 .ktn-content-lead__name{display:flex;align-items:center;gap:8px;font-family:var(--fs);font-weight:600;font-size:.95rem;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ktn-content-lead__meta{font-family:var(--fm);font-size:.72rem;color:var(--muted)}
+/* 送信フォームの親ページ表示（P2-16／P6-13）：会期・会場・投稿者／出品者をラベル付きの行で明記する（2026-09-27）。
+   人物バッジは P10 ランキングの posted by と同じく小さめ */
+.ktn-content-lead__row{display:flex;align-items:center;gap:8px;min-width:0;font-size:.72rem;line-height:1.6}
+.ktn-content-lead__key{flex-shrink:0;width:3.6em;font-family:var(--fn);color:var(--muted)}
+.ktn-content-lead__val{display:flex;align-items:center;gap:6px;min-width:0;font-family:var(--fn);color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ktn-content-lead__val .cb{font-size:.5rem;padding:2px 6px}
+.ktn-content-lead:has(.ktn-content-lead__row) .ktn-content-lead__thumb{width:64px;height:64px;align-self:flex-start}
+/* 対象が人物（クリエイター／ギャラリー）のときはアバターの形のルールに合わせる（creator＝角丸中／gallery＝角丸小・P60-14） */
+.ktn-content-lead__thumb--creator{border-radius:12px}
+.ktn-content-lead__thumb--gallery{border-radius:4px}
+/* 送信フォーム（p70-wrap）内では、カードを下のフォームのブロックと同じ全幅にそろえる（中身の幅だと左端しかそろわず浮いて見える） */
+.p70-wrap > .ktn-content-lead .ktn-content-lead__card{display:flex;width:100%}
+/* 補足（送信フォームの親ページ表示で「どこに送られるか」を添える・P2-16／P6-13・2026-09-27） */
+.ktn-content-lead__note{font-family:var(--fn);font-size:.75rem;line-height:1.6;color:var(--muted);margin:8px 0 0}
 @media (max-width:540px){
   .ktn-content-lead__card{width:100%}
   .ktn-content-lead__thumb{width:44px;height:44px}
@@ -7920,6 +7934,13 @@ a.p2-action-widget__btn{text-decoration:none}
 .cmt-inner{max-width:960px;margin:0 auto}
 .cmt-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:10px}
 .cmt-eyebrow{font-family:var(--fm);font-size:.54rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:4px}
+/* 公開欄はコメント（感想・評価）だけ。質問・相談は P6-13 の1対1のお問合わせへ案内する（2026-09-28） */
+.cmt-inq-note{margin:-12px 0 20px;font-family:var(--fn);font-size:.78rem;line-height:1.8;color:var(--muted)}
+.p6-dark .cmt-inq-note{color:var(--lmuted)}
+.cmt-inq-note--owner p{margin:0}
+.cmt-inq-note__preview{margin:6px 0 8px!important;padding:8px 12px;border-left:2px solid var(--border);background:rgba(0,0,0,.025);color:var(--ink)}
+.p6-dark .cmt-inq-note__preview{border-left-color:var(--lborder);background:rgba(255,255,255,.04);color:var(--ltext)}
+.p6-dark .cmt-inq-note .ktn-guide-link{color:var(--lgold)}
 .cmt-ttl{font-family:'DM Serif Display',serif;font-style:italic;font-size:1rem;color:var(--ink)}
 .cmt-summary{display:flex;align-items:center;gap:14px}
 .cmt-avg{font-family:var(--fm);font-size:2rem;font-weight:600;color:var(--accent);line-height:1}
@@ -7959,20 +7980,9 @@ a.p2-action-widget__btn{text-decoration:none}
 .cmt-login-prompt p{font-size:.75rem;color:var(--lmuted);margin-bottom:10px}
 .cmt-login-link{display:inline-flex;align-items:center;gap:6px;padding:7px 16px;border:1px solid var(--border);border-radius:20px;color:var(--accent);font-size:.75rem;cursor:pointer;transition:background .15s;background:none;font-family:inherit}
 .cmt-login-link:hover{background:rgba(0,93,167,.06)}
-/* コメントタイプバッジ */
-.cmt-type-badge{font-family:var(--fm);font-size:.46rem;letter-spacing:.06em;padding:1px 6px;border-radius:8px;white-space:nowrap;flex-shrink:0}
-.cmt-type-badge--inquiry{background:rgba(180,100,20,.08);border:1px solid rgba(180,100,20,.25);color:#b46414}
-.cmt-type-badge--reply{background:rgba(42,95,122,.08);border:1px solid rgba(42,95,122,.25);color:#2a5f7a}
-/* カードバリアント */
-.cmt-card--inquiry{border-left:3px solid rgba(180,100,20,.35)}
-.cmt-card--reply{border-left:3px solid rgba(42,95,122,.35);background:#f7fafc}
 /* 折りたたみ */
 .cmt-more-btn{display:block;width:100%;padding:9px;margin:8px 0 0;background:none;border:1px dashed var(--border);border-radius:4px;color:var(--accent);font-size:.75rem;cursor:pointer;transition:background .15s;font-family:inherit}
 .cmt-more-btn:hover{background:rgba(0,93,167,.05)}
-/* 投稿タブ */
-.cmt-post-tabs{display:flex;gap:2px;margin-bottom:14px;border-bottom:1px solid var(--border);padding-bottom:0}
-.cmt-post-tab{padding:6px 14px;background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-size:.75rem;cursor:pointer;font-family:inherit;transition:color .15s,border-color .15s;margin-bottom:-1px}
-.cmt-post-tab.is-active{color:var(--accent);border-bottom-color:var(--accent);font-weight:500}
 .cmt-delete-btn{margin-left:auto;background:none;border:none;color:var(--muted);cursor:pointer;font-size:.75rem;padding:2px 5px;border-radius:3px;opacity:.45;transition:opacity .15s,background .15s,color .15s;line-height:1;flex-shrink:0}
 .cmt-delete-btn:hover{opacity:1;background:rgba(200,50,50,.1);color:#c03030}
 
@@ -8015,23 +8025,6 @@ a.p2-action-widget__btn{text-decoration:none}
 .back-ex-meta{font-size:.62rem;color:var(--muted);text-align:left}
 .back-ex-arrow{color:var(--accent);flex-shrink:0;margin-left:4px}
 
-/* ─── ログインモーダル ─── */
-.lm-overlay{display:none;position:fixed;inset:0;z-index:9100;background:rgba(0,0,0,.72);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:20px}
-.lm-overlay.open{display:flex}
-.lm-box{background:#1c1c1e;border:1px solid rgba(201,169,110,.2);border-radius:12px;padding:34px 26px 24px;max-width:340px;width:100%;text-align:center;animation:lmIn .2s ease-out}
-@keyframes lmIn{from{opacity:0;transform:translateY(12px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
-.lm-icon{width:52px;height:52px;border-radius:50%;background:rgba(192,57,43,.13);border:1px solid rgba(192,57,43,.35);display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
-.lm-icon svg{width:24px;height:24px;stroke:#c0392b;fill:none}
-.lm-ttl{font-family:var(--fs);font-size:.9rem;font-weight:600;color:#e8e0d4;margin-bottom:8px}
-.lm-body{font-size:.75rem;color:#8a9aa8;line-height:1.8;margin-bottom:20px}
-.lm-btns{display:flex;flex-direction:column;gap:7px}
-.lm-btn-login{display:flex;align-items:center;justify-content:center;gap:8px;padding:12px;border-radius:4px;background:#005da7;color:#fff;font-family:var(--fs);font-size:.82rem;letter-spacing:.06em;border:none;cursor:pointer;transition:opacity .15s}
-.lm-btn-login:hover{opacity:.85}
-.lm-btn-login svg{width:13px;height:13px;stroke:#fff;fill:none}
-.lm-btn-reg{display:flex;align-items:center;justify-content:center;gap:8px;padding:12px;border-radius:4px;background:rgba(255,255,255,.05);border:1px solid rgba(201,169,110,.25);color:#c9a96e;font-family:var(--fs);font-size:.82rem;letter-spacing:.06em;cursor:pointer;transition:background .15s}
-.lm-btn-reg:hover{background:rgba(201,169,110,.1)}
-.lm-cancel{margin-top:6px;font-size:.75rem;color:#5a6a78;background:none;border:none;cursor:pointer;letter-spacing:.04em;transition:color .15s}
-.lm-cancel:hover{color:#8a9aa8}
 
 /* ─── 申込モーダル ─── */
 .am-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9000;align-items:center;justify-content:center}
@@ -8192,14 +8185,8 @@ body.p6-dark.p6-plus{
 .p6-dark .cmt-login-link{border-color:var(--lborder2);color:var(--lgold)}
 .p6-dark .cmt-login-link:hover{background:rgba(201,169,110,.1)}
 /* 新要素ダーク対応 */
-.p6-dark .cmt-card--reply{background:var(--lbg3);border-left-color:rgba(95,160,200,.45)}
-.p6-dark .cmt-type-badge--inquiry{background:rgba(220,160,60,.1);border-color:rgba(220,160,60,.3);color:#e0b060}
-.p6-dark .cmt-type-badge--reply{background:rgba(95,160,200,.1);border-color:rgba(95,160,200,.3);color:#7ab4cc}
 .p6-dark .cmt-more-btn{color:rgba(255,255,255,.55);border-color:var(--lborder)}
 .p6-dark .cmt-more-btn:hover{background:rgba(255,255,255,.05)}
-.p6-dark .cmt-post-tabs{border-bottom-color:var(--lborder)}
-.p6-dark .cmt-post-tab{color:var(--lmuted)}
-.p6-dark .cmt-post-tab.is-active{color:var(--lgold);border-bottom-color:var(--lgold)}
 .p6-dark .cmt-delete-btn{color:rgba(255,255,255,.35)}
 .p6-dark .cmt-delete-btn:hover{background:rgba(255,100,100,.15);color:rgba(255,120,120,.9)}
 .p6-dark .share-section{background:var(--lbg);border-top-color:var(--lborder)}
@@ -12040,6 +12027,7 @@ body.p4-15-page{--page-accent:#8b5e3c}
 
 /* ── フィールド ── */
 .p211-field{display:flex;flex-direction:column;gap:5px;margin-bottom:16px}
+.p211-field[hidden]{display:none}
 .p211-field:last-child{margin-bottom:0}
 .p211-label{font-size:.75rem;font-weight:600;color:var(--ink);display:flex;align-items:center;gap:4px}
 .p211-label__unit{font-family:var(--fm);font-size:.7rem;font-weight:500;color:var(--muted);letter-spacing:.04em}
@@ -12783,9 +12771,9 @@ a.p319-item__dest-name:hover{color:var(--page-accent)}
 /* P90-9 自動送信タブ（可視化・読み取り専用テーブル。カテゴリごとにグルーピング・表本体は手動送信タブと
    同じ .p315-archive-table / .p909-cell--* を共有） */
 .p909-auto-intro{font-size:.78rem;color:var(--muted);line-height:1.7;margin:0 0 16px}
-.p909-auto-group{margin-bottom:22px}
-.p909-auto-group:last-child{margin-bottom:0}
-.p909-auto-group__title{display:flex;align-items:center;gap:8px;font-family:var(--fn);font-size:.84rem;font-weight:600;color:var(--ink);margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.p909-group{margin-bottom:22px}
+.p909-group:last-child{margin-bottom:0}
+.p909-group__title{display:flex;align-items:center;gap:8px;font-family:var(--fn);font-size:.84rem;font-weight:600;color:var(--ink);margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
 
 /* P90-9 自動送信・文面編集モーダルの発火点コンテキスト表示（読み取り専用） */
 .p909-auto-edit-ctx{background:var(--tag-bg,#f5f3ef);border:1px solid var(--border);border-radius:4px;padding:10px 12px;margin-bottom:16px;font-size:.74rem;color:var(--muted);line-height:1.8}
@@ -13555,6 +13543,8 @@ a.p319-item__dest-name:hover{color:var(--page-accent)}
 /* 申込者ストリップ（p11-2/p11-3＝申込者はログインユーザー本人＝リンク先エンティティを持たない。
    p11-4 の .ktn-mgmt-context〔既存クリエイター/ギャラリーへリンク〕とは別＝まだ creator/gallery でない申込者を表す） */
 .p114-applicant{max-width:var(--w-detail);margin:0 auto 16px;display:flex;align-items:center;gap:12px;padding:12px 16px;background:#fff;border:1px solid var(--border);border-left:3px solid var(--page-accent,#2a5f7a);border-radius:4px}
+/* ゲスト時に hidden で隠す（display:flex が hidden 属性に勝つため明示・P60-11〜14 で発覚 2026-09-27） */
+.p114-applicant[hidden]{display:none}
 .p114-applicant__icon{flex-shrink:0;width:36px;height:36px;border-radius:50%;background:var(--page-accent-bg,rgba(42,95,122,.1));color:var(--page-accent,#2a5f7a);display:flex;align-items:center;justify-content:center}
 .p114-applicant__icon svg{width:18px;height:18px}
 .p114-applicant__body{display:flex;flex-direction:column;gap:2px;min-width:0}
@@ -13651,6 +13641,8 @@ body.p114-role-gallery .p114-gallery-section{display:block}
 .p114-submit-wrap{margin-top:24px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px}
 /* 送信ボタンは共通 .ktn-op-btn --primary --lg を使用（視覚定義は共通側・disabled も共通） */
 .p114-submit-note{font-size:.75rem;color:var(--muted);line-height:1.55}
+/* 中立の送信フォーム（P60-11〜14・P6-13＝body.p60-page）では、注記を左寄せの読み物にする（抑止・回答の根拠になる文なので読ませる。2026-09-27） */
+body.p60-page .p114-submit-note{align-self:stretch;text-align:left}
 
 /* ステップインジケーター（wrap外要素なので自前で760幅・中央寄せ。中身は共通 .ktn-steps/.ktn-step を使用） */
 #p114Steps{max-width:var(--w-detail);margin:0 auto 20px}
@@ -16370,3 +16362,55 @@ a.p10-preset{text-decoration:none}
 .ktn-sub-tags{content-visibility:auto;contain-intrinsic-size:auto 160px}
 .ktn-footer{content-visibility:auto;contain-intrinsic-size:auto 420px}
 
+/* ══ 問合せ（1問1答）の一覧 .ktn-inq-table（P6-14・P3-20・P4-20・P5-16・2026-09-28）══
+   1行＝1件（<details>）。行を開くと種類・内容・返信と、出品者側は返信欄・操作が出る。
+   状態チップは .ktn-review-status（未返信＝pending／返信済＝granted／対応済＝cancelled／返信待ち＝new）。 */
+.ktn-inq-table{border:1px solid var(--border);border-radius:4px;background:#fff;overflow:hidden}
+.ktn-inq-table__head,.ktn-inq-row__sum{display:flex;align-items:center;gap:12px;padding:10px 14px}
+.ktn-inq-table__head{background:#faf7f1;border-bottom:1px solid var(--border);font-family:var(--fn);font-size:.7rem;font-weight:600;color:var(--muted)}
+.ktn-inq-table__c{min-width:0;font-family:var(--fn);font-size:.8rem;color:var(--ink)}
+.ktn-inq-table__c--target{flex:1 1 auto}
+.ktn-inq-table__c--party{flex:0 0 150px;display:flex;align-items:center;gap:6px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.ktn-inq-table__c--party .cb{font-size:.5rem;padding:2px 6px;flex-shrink:0}
+.ktn-inq-table__c--date{flex:0 0 118px;font-family:var(--fm);font-size:.74rem;color:var(--muted)}
+.ktn-inq-table__c--status{flex:0 0 118px}
+.ktn-inq-table__head .ktn-inq-table__c{font-size:.7rem;color:var(--muted);font-family:var(--fn)}
+.ktn-inq-table__target{display:flex;align-items:center;gap:10px;min-width:0;text-decoration:none;color:inherit}
+.ktn-inq-table__thumb{width:32px;height:32px;border-radius:3px;flex-shrink:0;border:1px solid var(--border)}
+.ktn-inq-table__name{display:flex;align-items:center;gap:6px;min-width:0;font-family:var(--fs);font-size:.86rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ktn-inq-table__name .cb{font-size:.5rem;padding:2px 6px;flex-shrink:0}
+.ktn-inq-table__target:hover .ktn-inq-table__name{text-decoration:underline}
+.ktn-inq-row{border-top:1px solid var(--border);scroll-margin-top:calc(var(--dh,0px) + var(--hh,50px) + 16px)}
+.ktn-inq-table__head + .ktn-inq-row{border-top:none}
+.ktn-inq-row__sum{list-style:none;cursor:pointer}
+.ktn-inq-row__sum::-webkit-details-marker{display:none}
+.ktn-inq-row__sum:hover{background:var(--paper)}
+.ktn-inq-row.is-unreplied > .ktn-inq-row__sum{box-shadow:inset 3px 0 0 var(--page-accent)}
+.ktn-inq-row__chev{flex:0 0 14px;width:14px;height:14px;position:relative}
+.ktn-inq-row__sum .ktn-inq-row__chev::before{content:'';position:absolute;left:3px;top:2px;width:6px;height:6px;border-right:1.5px solid var(--muted);border-bottom:1.5px solid var(--muted);transform:rotate(45deg);transition:transform .18s}
+.ktn-inq-row[open] > .ktn-inq-row__sum .ktn-inq-row__chev::before{transform:translateY(4px) rotate(-135deg)}
+.ktn-inq-row[open] > .ktn-inq-row__sum{background:#faf7f1}
+.ktn-inq-row__body{padding:4px 14px 16px}
+.ktn-inq-row__dl{display:flex;flex-direction:column;margin:0}
+.ktn-inq-row__dl dt{margin:12px 0 4px;font-family:var(--fn);font-size:.72rem;font-weight:600;color:var(--muted)}
+.ktn-inq-row__dl dd{margin:0;font-family:var(--fn);font-size:.86rem;line-height:1.8;color:var(--ink)}
+.ktn-inq-row__none{color:var(--muted)!important;font-size:.8rem!important}
+.ktn-inq__body{margin:0;padding:12px 14px;background:var(--paper);border-radius:4px;font-family:var(--fn);font-size:.86rem;line-height:1.8;color:var(--ink)}
+.ktn-inq__reply{padding-left:14px;border-left:2px solid var(--page-accent)}
+.ktn-inq__reply-label{margin:0;font-family:var(--fm);font-size:.72rem;color:var(--muted)}
+.ktn-inq__reply-body{margin:4px 0 0;font-family:var(--fn);font-size:.86rem;line-height:1.8;color:var(--ink)}
+.ktn-inq__form{margin-top:14px}
+.ktn-inq__actions{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;margin-top:10px}
+.ktn-inq-empty{margin:0;padding:24px;text-align:center;font-family:var(--fn);font-size:.84rem;color:var(--muted);background:#fff;border:1px dashed var(--border);border-radius:4px}
+/* 狭幅：見出し行を隠し、1行目に対象（名前が主キー）、2行目に相手・日時・状態を積む */
+@media(max-width:600px){
+  .ktn-inq-table__head{display:none}
+  .ktn-inq-row__sum{flex-wrap:wrap;gap:6px 10px;position:relative;padding-right:34px}
+  .ktn-inq-table__c--target{flex:0 0 100%}
+  .ktn-inq-table__c--party,.ktn-inq-table__c--date,.ktn-inq-table__c--status{flex:0 0 auto}
+  .ktn-inq-table__c--party{max-width:100%}
+  .ktn-inq-row__chev{position:absolute;right:12px;top:16px}
+}
+/* オーナーメニューの件数（作品への問合せの未返信件数）：メニュー項目とメニューボタン */
+.ktn-ddi__count,.ktn-ddbtn__count{margin-left:auto;padding:1px 7px;border-radius:999px;background:var(--page-accent,#2a5f7a);color:#fff;font-family:var(--fm);font-size:.62rem;font-weight:600;line-height:1.5}
+.ktn-ddbtn__count{margin-left:6px}

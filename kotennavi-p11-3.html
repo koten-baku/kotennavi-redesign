@@ -105,7 +105,7 @@
             <span class="cb cb-person cb-user">USER</span>
           </div>
           <div class="ktn-mgmt-context__name"><a href="kotennavi-p5.html">山田 花子</a></div>
-          <div class="ktn-mgmt-context__meta">利用開始 2022.04 · 1997sakura2022@gmail.com</div>
+          <div class="ktn-mgmt-context__meta">利用開始 2022.04 · hanako.yamada@example.com</div>
         </div>
         <div class="ktn-mgmt-context__actions">
           <a class="ktn-mgmt-context__view" href="kotennavi-p5.html">myページへ →</a>
@@ -374,6 +374,8 @@
             <div class="p211-block__title">既存の掲載ページ <span class="ktn-sec-en">Existing Page</span></div>
           </div>
           <div class="p211-block__body">
+            <!-- 修正依頼・問題報告の「このページのご本人の方へ」から来たとき（?claim=）だけ、元のページのカードを出す（KTN.applyClaim） -->
+            <div class="ktn-content-lead" id="p113ClaimLead" hidden></div>
             <div class="p211-field">
               <label class="p211-label">すでに個展なびに掲載されているページ（任意）</label>
               <input class="p211-input" id="p113ExistingPage" type="text" placeholder="ページのURL、またはギャラリー名">
@@ -653,6 +655,8 @@ document.addEventListener('click', function(e) {
   }
 });
 
+/* ?claim（修正依頼・問題報告から引き継いだページ）を既存の掲載ページ欄に入れる。送信時は申込の内容として事務局あて通知（M-01A／M-03A）に載る */
+KTN.applyClaim('p113ClaimLead', 'p113ExistingPage', 'gallery');
 KTN.init({ page: 'p11-3', role: 'gallery' });
 
 // 申込FAQ（アコーディオン・閉じた状態で描画＝縦に伸びない）

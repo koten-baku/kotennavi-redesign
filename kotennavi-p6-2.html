@@ -385,9 +385,15 @@
               <div class="cmt-inner">
                 <div class="cmt-header">
                   <div>
-                    <div class="cmt-eyebrow">Comments &amp; Inquiries</div>
-                    <div class="cmt-ttl">コメント・お問い合わせ</div>
+                    <div class="cmt-eyebrow">Comments</div>
+                    <div class="cmt-ttl">コメント</div>
                   </div>
+                </div>
+                <p class="cmt-inq-note" data-inq-link>作品についてのご質問・ご相談は、コメントではなく出品者へ直接お送りいただけます。<a class="ktn-guide-link" href="./kotennavi-p6-13.html?ctx=lp-creator">作品について問い合わせる →</a></p>
+                <div class="cmt-inq-note cmt-inq-note--owner" data-inq-owner hidden>
+                  <p class="cmt-inq-note__lead">ほかのユーザーには、ここに次の案内が表示されます。</p>
+                  <p class="cmt-inq-note__preview" data-inq-owner-preview></p>
+                  <p class="cmt-inq-note__lead">届いたお問合わせは「<a class="ktn-guide-link" href="./kotennavi-p6-14.html" data-inq-owner-link>この作品へのお問合わせ<span data-inq-owner-count></span> →</a>」で確認できます。</p>
                 </div>
                 <div id="commentsList"></div>
                 <div id="commentPostArea"></div>
@@ -584,24 +590,6 @@
 
       </div><!-- /.p6-layout -->
     </div><!-- /.ktn-content -->
-
-    <!-- ログインモーダル -->
-    <div class="lm-overlay" id="loginModal">
-      <div class="lm-box">
-        <div class="lm-icon"><svg viewBox="0 0 24 24" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
-        <div class="lm-ttl">ログインが必要です</div>
-        <div class="lm-body">この機能はログインユーザー限定です。<br>個展なびに登録・ログインしてください。</div>
-        <div class="lm-btns">
-          <button class="lm-btn-login" onclick="alert('ログインページへ')">
-            <svg viewBox="0 0 24 24" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>ログイン
-          </button>
-          <button class="lm-btn-reg" onclick="alert('ユーザー登録ページへ')">
-            <svg viewBox="0 0 24 24" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>新規ユーザー登録（無料）
-          </button>
-          <button class="lm-cancel" onclick="closeModal('loginModal')">キャンセル</button>
-        </div>
-      </div>
-    </div>
 
     <!-- 購入申込モーダル -->
     <div class="am-overlay" id="applyModal">

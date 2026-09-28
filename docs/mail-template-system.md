@@ -65,10 +65,10 @@ P90-2側は、申込の`role`＋`processType`から`variantKey`（`{role}-{proce
 
 | `variantKey` | `name` | 対応するM番号 |
 |---|---|---|
-| `cancel-input-error` | 入力不足・入力誤り | M-07 パターン①（共通文） |
-| `cancel-duplicate` | 以前に別アカウントで申込済み | M-07 パターン①（共通文） |
-| `cancel-role-switch` | 希望ロールの変更 | M-07 パターン② |
-| `cancel-other` | その他 | M-07 パターン①（共通文） |
+| `cancel-input-error` | 入力不足・入力誤り | M-07 パターン①（①②④共通文） |
+| `cancel-duplicate` | 以前に別アカウントで申込済み | M-07 パターン②（①②④共通文） |
+| `cancel-role-switch` | 希望ロールの変更 | M-07 パターン③ |
+| `cancel-other` | その他 | M-07 パターン④（①②④共通文） |
 
 `input-error`／`duplicate`／`other`は現状すべて同じ文面（今回の移行では文面の新規作成は行わず、現行コードの出力をそのままテンプレート化する）。バリアントとして分けておくことで、将来それぞれの文言を個別に調整できるようにする（分割の目的そのもの）。
 

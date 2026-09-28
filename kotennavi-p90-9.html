@@ -125,7 +125,7 @@
           <div class="p319-toolbar">
             <div class="p319-toolbar__filters">
               <label class="p319-filter">
-                <span class="p319-filter__label">使用画面</span>
+                <span class="p319-filter__label">ページ</span>
                 <select class="p319-filter__sel" id="p909FilterScreen">
                   <option value="">すべて</option>
                 </select>
@@ -149,30 +149,13 @@
             <p class="ktn-count ktn-count--result" id="p909Count"></p>
           </div>
 
-          <!-- テンプレート一覧（表形式） -->
-          <div class="p315-archive-table-wrap">
-            <table class="p315-archive-table p909-table" aria-label="テンプレート一覧">
-              <thead>
-                <tr>
-                  <th>パターン</th>
-                  <th>使用画面 / 識別キー</th>
-                  <th>テンプレート名</th>
-                  <th>更新日</th>
-                  <th>状態</th>
-                  <th>操作</th>
-                </tr>
-              </thead>
-              <tbody id="p909List"></tbody>
-            </table>
-          </div>
+          <!-- テンプレート一覧（ページ＝使用画面ごとの見出し＋表・JS が描画） -->
+          <div id="p909List"></div>
 
           <!-- ゼロ状態 -->
           <div class="p319-empty" id="p909Empty" hidden>
             <p class="p319-empty__msg">該当するテンプレートがありません。</p>
           </div>
-
-          <!-- ページング -->
-          <nav class="ktn-pagination" id="p909Pagination" aria-label="ページ送り" hidden></nav>
 
         </div><!-- /#p909PanelManual -->
 
@@ -184,17 +167,13 @@
             <button type="button" class="ktn-op-btn ktn-op-btn--primary ktn-op-btn--sm" id="p909AutoNewBtn">＋ 発火点を追加</button>
           </div>
 
-          <!-- ツールバー：カテゴリ -->
+          <!-- ツールバー：ページ（トリガー元）。選択肢は JS がデータから作る -->
           <div class="p319-toolbar">
             <div class="p319-toolbar__filters">
               <label class="p319-filter">
-                <span class="p319-filter__label">カテゴリ</span>
+                <span class="p319-filter__label">ページ</span>
                 <select class="p319-filter__sel" id="p909AutoFilterCategory">
                   <option value="">すべて</option>
-                  <option value="apply">機能申込系</option>
-                  <option value="txn">取引系（LIAISON+）</option>
-                  <option value="activity">アクティビティ系（ウォッチ通知）</option>
-                  <option value="exhibition">展覧会系</option>
                 </select>
               </label>
             </div>
@@ -224,6 +203,10 @@
               <option value="p90-2">クリエイター/ギャラリー機能申込管理</option>
               <option value="p90-11">リエゾンプラス機能申込管理</option>
               <option value="p2-sns">展覧会掲載依頼</option>
+              <option value="p60-11">お問い合わせ</option>
+              <option value="p60-12">ご要望</option>
+              <option value="p60-13">問題報告</option>
+              <option value="p60-14">修正依頼</option>
             </select>
           </div>
 
@@ -320,9 +303,11 @@
           <div class="p211-field">
             <label class="p211-label">カテゴリ<span class="ktn-req">必須</span></label>
             <select class="p211-select" id="p909AutoNewCategory">
+              <option value="account">アカウント系</option>
+              <option value="form">送信フォーム系</option>
               <option value="apply">機能申込系</option>
               <option value="txn">取引系（LIAISON+）</option>
-              <option value="activity">アクティビティ系（ウォッチ通知）</option>
+              <option value="activity">アクティビティ・お知らせ系</option>
               <option value="exhibition">展覧会系</option>
             </select>
           </div>

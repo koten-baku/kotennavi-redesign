@@ -2250,14 +2250,6 @@ var _p6Works = [
 
 var _p6DemoComments = {
   1:[
-    { user:'R.S', type:'inquiry', bg:'linear-gradient(135deg,#f0d8e0,#c89aac)', date:'2026.02.20',
-      body:'会場に実物を見に行きたいのですが、在廊予定はありますか？' },
-    { user:'田中 透', type:'reply', isCreator:true, bg:'linear-gradient(135deg,#2a5f7a,#1a3f5a)', date:'2026.02.21',
-      body:'2月25日（土）は終日在廊予定です。ぜひお越しいただければ嬉しいです。' },
-    { user:'A.T', type:'inquiry', bg:'linear-gradient(135deg,#f0e0c0,#c8a070)', date:'2026.02.25',
-      body:'この作品は額装なしでご提供いただくことはできますか？' },
-    { user:'田中 透', type:'reply', isCreator:true, bg:'linear-gradient(135deg,#2a5f7a,#1a3f5a)', date:'2026.02.26',
-      body:'申し訳ありませんが、今回は木製フローティングフレーム込みでのご提供となっております。' },
     { user:'T.K', type:'comment', bg:'linear-gradient(135deg,#d0d8f0,#8899cc)', date:'2026.03.15',
       purchased:false, stars:4,
       body:'会場で拝見しました。緑の色が穏やかで、ずっと見ていられる作品です。次回作も楽しみにしています。' },
@@ -2302,13 +2294,13 @@ function _p6Init(opts) {
   var relFavSet   = new Set();
   var _localComments = {};
   var _selectedStars = 0;
-  var _postType = 'comment';
   var _deletedCids = {};
   var _cidCounter = 0;
 
-  function isLoggedIn() { return KTN.role !== 'guest'; }
-  function isOwner()    { return KTN.role === 'user+creator'; }
-  function isAdmin()    { return KTN.role === 'admin'; }
+  function curRole()    { return KTN.role || (window.ktnState && window.ktnState.role) || 'guest'; }
+  function isLoggedIn() { return curRole() !== 'guest'; }
+  function isOwner()    { return curRole() === 'user+creator'; }
+  function isAdmin()    { return curRole() === 'admin'; }
 
   function dbtnGroup(fn) {
     document.querySelectorAll('.dbar .dbtn').forEach(function(b) {
@@ -2368,7 +2360,7 @@ function _p6Init(opts) {
     }
     var rows = [
       { lbl:'出品番号',   val: w.no ? 'No.' + w.no : null },
-      { lbl:'作家',       val: w.creator + '（' + w.creatorEn + '）', always:true },
+      { lbl:'クリエイター', val: w.creator + '（' + w.creatorEn + '）', always:true },
       { lbl:'制作年',     val: w.year ? w.year + '年' : null },
       { lbl:'素材・技法', val: w.medium },
       { lbl:'サイズ',     val: w.size },
@@ -2419,7 +2411,7 @@ function _p6Init(opts) {
   }
 
   function toggleInterest() {
-    if (KTN.role === 'guest') { openModal('loginModal'); return; }
+    if ((KTN.role || window.ktnState.role) === 'guest') { KTN.action.show('interest'); return; }
     mainFaved = !mainFaved;
     renderActionArea();
   }
@@ -2438,7 +2430,7 @@ function _p6Init(opts) {
   }
 
   function toggleMainFav() {
-    if (!isLoggedIn()) { openModal('loginModal'); return; }
+    if (!isLoggedIn()) { KTN.action.show('interest'); return; }
     mainFaved = !mainFaved;
     renderActionArea();
   }
@@ -2467,7 +2459,7 @@ function _p6Init(opts) {
 
   function toggleRelFav(e, id) {
     e.preventDefault(); e.stopPropagation();
-    if (!isLoggedIn()) { openModal('loginModal'); return; }
+    if (!isLoggedIn()) { KTN.action.show('interest'); return; }
     var btn = e.currentTarget;
     var svg = btn.querySelector('svg');
     if (relFavSet.has(id)) {
@@ -2503,7 +2495,7 @@ function _p6Init(opts) {
   function openModal(id) { var el = document.getElementById(id); if (el) el.classList.add('open'); }
   function closeModal(id) { var el = document.getElementById(id); if (el) el.classList.remove('open'); }
   document.addEventListener('click', function(e) {
-    ['loginModal','applyModal'].forEach(function(id) {
+    ['applyModal'].forEach(function(id) {
       var el = document.getElementById(id);
       if (el && e.target === el) closeModal(id);
     });
@@ -2530,6 +2522,7 @@ function _p6Init(opts) {
   }
 
   function renderComments() {
+    if (typeof syncInqLinks === 'function') syncInqLinks();
     var SHOW = 3;
     var raw = (_p6DemoComments[WORK.id] || []).concat(_localComments[WORK.id] || []);
     raw.forEach(function(c) { if (c._cid === undefined) c._cid = _cidCounter++; });
@@ -2541,31 +2534,20 @@ function _p6Init(opts) {
     if (el) {
       if (!all.length) {
         el.innerHTML = '<div class="cmt-empty"><div class="cmt-empty-icon">💬</div>' +
-          '<div class="cmt-empty-txt">まだコメント・お問い合わせはありません。<br>ログインして最初のコメントを投稿しましょう。</div></div>';
+          '<div class="cmt-empty-txt">まだコメントはありません。<br>ログインして最初のコメントを投稿しましょう。</div></div>';
       } else {
+        /* 公開欄はコメント（感想・評価）だけ。質問・相談は P6-13 の1対1のお問合わせ（2026-09-28） */
         var cardHtml = function(c) {
-          var isInq   = c.type === 'inquiry';
-          var isReply = !!(c.isCreator || c.type === 'reply');
-          var cardCls = isInq ? ' cmt-card--inquiry' : isReply ? ' cmt-card--reply' : '';
-          var badge   = isInq
-            ? '<span class="cmt-type-badge cmt-type-badge--inquiry">お問い合わせ</span>'
-            : isReply
-              ? '<span class="cmt-type-badge cmt-type-badge--reply">出品者の回答</span>'
-              : '';
-          var roleBadge = c.isCreator
-            ? '<span class="cb cb-creator">creator</span>'
-            : '<span class="cb cb-user">user</span>';
-          return '<div class="cmt-card' + cardCls + '">' +
+          return '<div class="cmt-card">' +
             '<div class="cmt-card-header">' +
             '<div class="cmt-avatar" style="background:' + (c.bg || 'var(--lbg3)') + '">' + c.user.slice(0,1) + '</div>' +
             '<div class="cmt-user"><div class="cmt-user-row">' +
-            badge +
-            roleBadge +
+            '<span class="cb cb-user">user</span>' +
             '<span class="cmt-user-name">' + c.user + '</span>' +
             '<span class="cmt-user-date">' + c.date + '</span>' +
             ((isOwner() || isAdmin()) ? '<button class="cmt-delete-btn" onclick="deleteCmt(' + c._cid + ')" title="削除">✕</button>' : '') +
             '</div>' +
-            (opts.noRating || isInq || isReply ? '' : '<div class="cmt-stars">' + starsHtml(c.stars) + '</div>') +
+            (opts.noRating ? '' : '<div class="cmt-stars">' + starsHtml(c.stars) + '</div>') +
             '</div></div>' +
             '<div class="cmt-body">' + c.body + '</div></div>';
         };
@@ -2584,20 +2566,15 @@ function _p6Init(opts) {
     el = document.getElementById('commentPostArea');
     if (el) {
       if (!isLoggedIn()) {
-        el.innerHTML = '<div class="cmt-login-prompt"><p>コメント・お問い合わせの投稿にはログインが必要です</p>' +
-          '<button class="cmt-login-link" onclick="openModal(\'loginModal\')">' +
+        el.innerHTML = '<div class="cmt-login-prompt"><p>コメントの投稿にはログインが必要です</p>' +
+          '<button class="cmt-login-link" onclick="KTN.action.show(\'comment\')">' +
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>' +
           'ログインする</button></div>';
         _selectedStars = 0;
         return;
       }
-      var isInqTab = _postType === 'inquiry';
-      var tabsHtml = '<div class="cmt-post-tabs">' +
-        '<button class="cmt-post-tab' + (!isInqTab ? ' is-active' : '') + '" onclick="selectCmtType(\'comment\',this)">コメント</button>' +
-        '<button class="cmt-post-tab' + (isInqTab ? ' is-active' : '') + '" onclick="selectCmtType(\'inquiry\',this)">お問い合わせ</button>' +
-        '</div>';
       var starHtml = '';
-      if (!opts.noRating && !isInqTab) {
+      if (!opts.noRating) {
         starHtml = '<div class="cmt-star-input"><span class="cmt-star-input-lbl">評価：</span>' +
           '<div class="cmt-star-row" id="starInputRow">' +
           [1,2,3,4,5].map(function(n) {
@@ -2606,15 +2583,12 @@ function _p6Init(opts) {
           '</div><span class="cmt-star-selected-lbl" id="starLabel">' +
           (_selectedStars ? STAR_LABELS[_selectedStars] : '') + '</span></div>';
       }
-      var placeholder = isInqTab
-        ? '作品についての質問や問い合わせ内容を入力してください。出品者に通知されます。'
-        : 'この作品への感想をお書きください…';
-      el.innerHTML = '<div class="cmt-post-box">' + tabsHtml + starHtml +
-        '<textarea class="cmt-textarea" id="cmtInput" placeholder="' + placeholder + '"></textarea>' +
+      el.innerHTML = '<div class="cmt-post-box">' + starHtml +
+        '<textarea class="cmt-textarea" id="cmtInput" placeholder="この作品への感想をお書きください…"></textarea>' +
         '<div class="cmt-post-footer">' +
-        '<button class="cmt-submit" onclick="submitComment()">' + (isInqTab ? '送る' : '投稿する') + '</button>' +
+        '<button class="cmt-submit" onclick="submitComment()">投稿する</button>' +
         '</div></div>';
-      if (!opts.noRating && !isInqTab) updateStarUI(_selectedStars);
+      if (!opts.noRating) updateStarUI(_selectedStars);
     }
   }
 
@@ -2631,15 +2605,14 @@ function _p6Init(opts) {
   function submitComment() {
     var inp = document.getElementById('cmtInput');
     var txt = inp ? inp.value.trim() : '';
-    var isInq = _postType === 'inquiry';
-    if (!opts.noRating && !isInq && !_selectedStars) { alert('星評価を選んでください'); return; }
-    if (!txt) { alert(isInq ? '内容を入力してください' : 'コメントを入力してください'); return; }
+    if (!opts.noRating && !_selectedStars) { alert('星評価を選んでください'); return; }
+    if (!txt) { alert('コメントを入力してください'); return; }
     var id = WORK.id;
     if (!_localComments[id]) _localComments[id] = [];
     _localComments[id].push({
       user:'あなた', bg:'linear-gradient(135deg,#ddeeff,#88aadd)',
       date: new Date().toLocaleDateString('ja-JP',{year:'numeric',month:'2-digit',day:'2-digit'}).replace(/\//g,'.'),
-      type: isInq ? 'inquiry' : 'comment',
+      type: 'comment',
       purchased: _applyState === 'applied', stars: _selectedStars, body: txt,
     });
     _selectedStars = 0;
@@ -2722,10 +2695,6 @@ function _p6Init(opts) {
     btn.textContent = opening
       ? '折りたたむ ▲'
       : '過去のコメントを見る（' + older.querySelectorAll('.cmt-card').length + '件）';
-  };
-  window.selectCmtType      = function(type) {
-    _postType = type;
-    renderComments();
   };
   window.deleteCmt          = function(cid) {
     if (!confirm('このコメントを削除しますか？')) return;
@@ -2839,7 +2808,7 @@ KTN.pages['p2-6'] = function () {
         '<th class="p26-list__th p26-list__th--no">No.</th>' +
         '<th class="p26-list__th p26-list__th--thumb" aria-label="図版"></th>' +
         '<th class="p26-list__th p26-list__th--title">作品名</th>' +
-        '<th class="p26-list__th p26-list__th--artist">作家</th>' +
+        '<th class="p26-list__th p26-list__th--artist">クリエイター</th>' +
         '<th class="p26-list__th p26-list__th--spec">技法・サイズ</th>' +
         '<th class="p26-list__th p26-list__th--year">制作年</th>' +
         priceHead +
@@ -2855,7 +2824,7 @@ KTN.pages['p2-6'] = function () {
           '<td class="p26-list__td p26-list__td--no" data-label="No.">' + noCell + '</td>' +
           '<td class="p26-list__td p26-list__td--thumb">' + thumbCell(w) + '</td>' +
           '<td class="p26-list__td p26-list__td--title" data-label="作品名">' + w.title + '</td>' +
-          '<td class="p26-list__td p26-list__td--artist" data-label="作家">' + w.name + '</td>' +
+          '<td class="p26-list__td p26-list__td--artist" data-label="クリエイター">' + w.name + '</td>' +
           '<td class="p26-list__td p26-list__td--spec" data-label="技法・サイズ">' + w.spec + '</td>' +
           '<td class="p26-list__td p26-list__td--year" data-label="制作年">' + w.year + '</td>' +
           priceCol +
@@ -3032,7 +3001,7 @@ KTN.pages['p6'] = function() {
     renderActionArea: function() {},
   });
   window.toggleInterest = function(btn) {
-    if (KTN.role === 'guest') { openModal('loginModal'); return; }
+    if ((KTN.role || window.ktnState.role) === 'guest') { KTN.action.show('interest'); return; }
     btn.classList.toggle('is-active');
   };
   window.doShare = function() { shareWork(); };
@@ -3244,7 +3213,7 @@ KTN.pages['p2-12'] = function() {
       : 'またはあなたの既存の作品から選ぶ';
     var hintEl = document.getElementById('p212AddHint');
     if (hintEl) hintEl.textContent = isGallery
-      ? '出展クリエイターの登録作品のみ追加できます。取扱いのある他の作家の作品は、この展覧会の出展クリエイターではないため表示されません。'
+      ? '出展クリエイターの登録作品のみ追加できます。取扱いのある他のクリエイターの作品は、この展覧会の出展クリエイターではないため表示されません。'
       : 'あなたがこれまでに登録した作品から選んで追加できます。';
   }
 
@@ -3751,7 +3720,7 @@ KTN.pages['p2-121'] = function() {
       : 'またはあなたの既存の作品から選ぶ';
     var hintEl = document.getElementById('p212AddHint');
     if (hintEl) hintEl.textContent = isGallery
-      ? '出展クリエイターの登録作品のみ追加できます。取扱いのある他の作家の作品は、この展覧会の出展クリエイターではないため表示されません。'
+      ? '出展クリエイターの登録作品のみ追加できます。取扱いのある他のクリエイターの作品は、この展覧会の出展クリエイターではないため表示されません。'
       : 'あなたがこれまでに登録した作品から選んで追加できます。';
   }
 
@@ -8967,8 +8936,8 @@ KTN.pages['p11-4'] = function () {
   // 申込アカウント（申込者）のロール別デモ表示名。中立化のためロールバー/ロール色は付けず、
   // creator/gallery の違いは申込アカウント名＋フォーム内容（ロール通知・専用セクション）で表現。
   const ACC = {
-    creator: '田中 透 <small>1997sakura2022@gmail.com</small>',
-    gallery: 'Gallery SOIL 渋谷 <small>1997sakura2022@gmail.com</small>'
+    creator: '田中 透 <small>toru.tanaka@example.com</small>',
+    gallery: 'Gallery SOIL 渋谷 <small>info@gallery-soil.example.com</small>'
   };
   function syncApplicant() {
     const r = (window.ktnState && window.ktnState.role) || 'creator';
@@ -9412,6 +9381,7 @@ function P902Data() {
   var CANCEL_REASON_LABEL = {
     'input-error': '入力不足・入力誤り',
     'duplicate':   '以前に別アカウントで申込済み',
+    'claim':       '既存の掲載ページの確認',
     'role-switch': '希望ロールの変更（申込者からの連絡による）',
     'other':       'その他',
   };
@@ -9480,21 +9450,24 @@ function P902Data() {
         'お手数をおかけいたしますが、本メールへの返信にて、以前にお申込みいただいたアカウント（メールアドレス等）についてご確認いただけますと幸いです。\n\n' +
         '※ご返信内容を確認のうえ、重複が確認できた場合は、今回のお申込みを取消とさせていただきます。\n\n{{commonFooter}}',
       status: 'active', usageNote: '以前に別アカウントで同様の申込がある疑いがある時に事情を確認する1通（M-06パターン②）。', updatedAt: '2026.8.8' },
+    { id: 'mt-6c', screenId: 'p90-2', screenLabel: 'クリエイター/ギャラリー機能申込管理', pattern: 'abnormal', variantKey: 'confirm-claim', from: 'inquiry@koten-navi.com',
+      name: '既存の掲載ページの管理についての確認', subject: "【個展なび】{{roleName}}機能のお申込みについて確認のお願い（既存の掲載ページ）", body: "{{userName}} 様\n\nこのたびは個展なびの{{roleName}}機能にお申し込みいただき、ありがとうございます。\nお申込みの際にお知らせいただいた掲載ページについて、\nこのページを引き継げるかどうかを確認しております。\n\n──────────────────────────────\n 申込NID：{{applyId}}\n お知らせいただいたページ：{{claimPageName}}\n 　{{claimPageUrl}}\n──────────────────────────────\n\nお手数をおかけいたしますが、このページがご自身のもの\n（{{roleName}}ご本人・運営者の方）であることが分かる情報\n（公式サイトやSNSのアカウントなど）を、本メールへの返信でお知らせいただけますと幸いです。\n\nお申込みの際にご案内しておりますとおり、確認の結果、すでに別の方が管理しているページの場合など、\nご希望に沿えないことがございます。あらかじめご了承ください。\n\n※本メールへの返信がない場合、恐れ入りますがページの引き継ぎは見送らせていただく場合がございます\n（{{roleName}}機能のお申込みそのものは、あらためて確認のうえ対応いたします）。\n\n{{supportUrl}}\n\n{{commonFooter}}",
+      status: 'active', usageNote: '申込者が「既存の掲載ページ」を申告したとき、そのページを引き継げるかどうかを確かめる1通（M-06パターン③・2026-09-28）。オーナーの有無は書かない。返信がなければページの引き継ぎだけを見送る。', updatedAt: '2026.9.28' },
     { id: 'mt-7', screenId: 'p90-2', screenLabel: 'クリエイター/ギャラリー機能申込管理', pattern: 'abnormal', variantKey: 'cancel-input-error', from: 'register@koten-navi.com',
       name: '入力不足・入力誤り', subject: '【個展なび】{{roleName}}機能のお申込みの取消について', body: MAIL_CANCEL_BODY_STD,
       status: 'active', usageNote: '確認メールへの返信・入力不足を理由に取消を確定した時に送る（M-07パターン①・送信は任意）。', updatedAt: '2026.8.8' },
     { id: 'mt-8', screenId: 'p90-2', screenLabel: 'クリエイター/ギャラリー機能申込管理', pattern: 'abnormal', variantKey: 'cancel-duplicate', from: 'register@koten-navi.com',
       name: '以前に別アカウントで申込済み', subject: '【個展なび】{{roleName}}機能のお申込みの取消について', body: MAIL_CANCEL_BODY_STD,
-      status: 'active', usageNote: '重複申込が確認できたことを理由に取消を確定した時に送る（M-07パターン①・送信は任意）。', updatedAt: '2026.8.8' },
+      status: 'active', usageNote: '重複申込が確認できたことを理由に取消を確定した時に送る（M-07パターン②・送信は任意）。', updatedAt: '2026.8.8' },
     { id: 'mt-9', screenId: 'p90-2', screenLabel: 'クリエイター/ギャラリー機能申込管理', pattern: 'abnormal', variantKey: 'cancel-role-switch', from: 'register@koten-navi.com',
       name: '希望ロールの変更', subject: '【個展なび】{{roleName}}機能のお申込みの取消について',
       body: '{{userName}} 様\n\nご連絡いただきありがとうございました。\n' +
         'ご希望のとおり、今回の{{roleName}}機能のお申込み（申込NID：{{applyId}}）は取消とさせていただきました。\n\n' +
         'あらためて別の機能でお申込みをご希望の場合は、お手数ですが再度お申込みフォームよりお手続きください。\n\n{{commonFooter}}',
-      status: 'active', usageNote: '申込者本人からの希望ロール変更の連絡をもとに取消を確定した時に送る（M-07パターン②・送信は任意）。', updatedAt: '2026.8.8' },
+      status: 'active', usageNote: '申込者本人からの希望ロール変更の連絡をもとに取消を確定した時に送る（M-07パターン③・送信は任意）。', updatedAt: '2026.8.8' },
     { id: 'mt-10', screenId: 'p90-2', screenLabel: 'クリエイター/ギャラリー機能申込管理', pattern: 'abnormal', variantKey: 'cancel-other', from: 'register@koten-navi.com',
       name: 'その他', subject: '【個展なび】{{roleName}}機能のお申込みの取消について', body: MAIL_CANCEL_BODY_STD,
-      status: 'active', usageNote: '上記に当てはまらない理由で取消を確定した時に送る（M-07パターン①・送信は任意）。', updatedAt: '2026.8.8' },
+      status: 'active', usageNote: '上記に当てはまらない理由で取消を確定した時に送る（M-07パターン④・送信は任意）。', updatedAt: '2026.8.8' },
   ];
 
   /* ── トークン展開・テンプレート検索ヘルパー（P90-9共通仕様・docs/mail-template-system.md 7章）── */
@@ -11405,7 +11378,7 @@ KTN.pages['p90-11-1'] = function () {
 ════════════════════════════════════════════════════ */
 KTN.pages['p90-9'] = function () {
 
-  var SCREEN_LABEL = { 'p90-2': 'クリエイター/ギャラリー機能申込管理', 'p90-11': 'リエゾンプラス機能申込管理', 'p2-sns': '展覧会掲載依頼' };
+  var SCREEN_LABEL = { 'p90-2': 'クリエイター/ギャラリー機能申込管理', 'p90-11': 'リエゾンプラス機能申込管理', 'p2-sns': '展覧会掲載依頼', 'p60-11': 'お問い合わせ', 'p60-12': 'ご要望', 'p60-13': '問題報告', 'p60-14': '修正依頼' };
   var PATTERN_LABEL = { normal: '正常系', abnormal: '非正常系' };
   var PATTERN_CLS   = { normal: 'cb-normal', abnormal: 'cb-abnormal' };
 
@@ -11425,6 +11398,30 @@ KTN.pages['p90-9'] = function () {
     ],
     'p2-sns': [
       { pattern: 'normal',   prefix: null,       label: '正常系（掲載お知らせ）' }
+    ],
+    /* お問い合わせ（P60-11）への回答。届いたお問い合わせは F-01A（事務局あて自動通知）で受け、ここから選んで送る（2026-09-28） */
+    'p60-11': [
+      { pattern: 'normal',   prefix: 'answer-',   label: '正常系・ご回答' },
+      { pattern: 'normal',   prefix: 'done-',     label: '正常系・不具合の修正のご連絡' },
+      { pattern: 'abnormal', prefix: 'confirm-',  label: '非正常系・確認のお願い' },
+      { pattern: 'abnormal', prefix: 'redirect-', label: '非正常系・ほかのフォームのご案内' },
+      { pattern: 'abnormal', prefix: 'decline-',  label: '非正常系・ご回答いたしかねる旨' }
+    ],
+    /* ご要望（P60-12）：原則として個別に返信しない。反映したとき・内容を確認したいときだけ送る（任意・2026-09-28） */
+    'p60-12': [
+      { pattern: 'normal',   prefix: 'done-',     label: '正常系・反映のご連絡' },
+      { pattern: 'abnormal', prefix: 'confirm-',  label: '非正常系・確認のお願い' }
+    ],
+    /* 問題報告（P60-13）・掲載の対象者からの削除依頼への回答（2026-09-27・docs/moderation-policy.md） */
+    'p60-13': [
+      { pattern: 'abnormal', prefix: 'decline-', label: '非正常系・掲載の削除のご依頼へのご回答' }
+    ],
+    /* 修正依頼（P60-14）への回答。届いた依頼は F-04A（事務局あて自動通知）で受け、ここから選んで送る（2026-09-27） */
+    'p60-14': [
+      { pattern: 'normal',   prefix: 'done-',    label: '正常系・修正完了のご連絡' },
+      { pattern: 'normal',   prefix: 'owner-',   label: '正常系・掲載者への修正のお願い' },
+      { pattern: 'abnormal', prefix: 'confirm-', label: '非正常系・確認のお願い' },
+      { pattern: 'abnormal', prefix: 'decline-', label: '非正常系・ご依頼に沿えない／削除のご依頼' }
     ]
   };
   function findCategory(t) {
@@ -11467,9 +11464,8 @@ KTN.pages['p90-9'] = function () {
     '改めてお申込みをご希望の場合は、お手数ですが再度お申込みフォームよりお手続きください。\n\n{{commonFooter}}';
   var P2SNS_LISTING_BODY =
     'いつもお世話になっております。\n' +
-    '****************************\n展覧会情報掲載のお知らせ\n****************************\n' +
-    '展覧会情報をご連絡頂きありがとうございます。\n個展なびに以下の内容で掲載いたしました。\n\n' +
-    '　展覧会名：{{pageName}}\n　{{pageUrl}}\n\n' +
+    '展覧会情報をご連絡いただきありがとうございます。\n個展なびに以下の内容で掲載いたしました。\n\n' +
+    '──────────────────────────────\n 展覧会名：{{pageName}}\n 　{{pageUrl}}\n──────────────────────────────\n\n' +
     '内容に相違がございましたら、お手数ですが下記までご連絡ください。\n　{{supportUrl}}\n\n{{commonFooter}}';
 
   /* ── デモデータ（P90-2側のMAIL_TEMPLATESと同内容だが、ページ間の実データ連携がないため個別配列として保持） ── */
@@ -11501,21 +11497,24 @@ KTN.pages['p90-9'] = function () {
         'お手数をおかけいたしますが、本メールへの返信にて、以前にお申込みいただいたアカウント（メールアドレス等）についてご確認いただけますと幸いです。\n\n' +
         '※ご返信内容を確認のうえ、重複が確認できた場合は、今回のお申込みを取消とさせていただきます。\n\n{{commonFooter}}',
       status: 'active', usageNote: '以前に別アカウントで同様の申込がある疑いがある時に事情を確認する1通（M-06パターン②）。', updatedAt: '2026.8.8' },
+    { id: 'mt-6c', screenId: 'p90-2', pattern: 'abnormal', variantKey: 'confirm-claim', from: 'inquiry@koten-navi.com',
+      name: '既存の掲載ページの管理についての確認', subject: "【個展なび】{{roleName}}機能のお申込みについて確認のお願い（既存の掲載ページ）", body: "{{userName}} 様\n\nこのたびは個展なびの{{roleName}}機能にお申し込みいただき、ありがとうございます。\nお申込みの際にお知らせいただいた掲載ページについて、\nこのページを引き継げるかどうかを確認しております。\n\n──────────────────────────────\n 申込NID：{{applyId}}\n お知らせいただいたページ：{{claimPageName}}\n 　{{claimPageUrl}}\n──────────────────────────────\n\nお手数をおかけいたしますが、このページがご自身のもの\n（{{roleName}}ご本人・運営者の方）であることが分かる情報\n（公式サイトやSNSのアカウントなど）を、本メールへの返信でお知らせいただけますと幸いです。\n\nお申込みの際にご案内しておりますとおり、確認の結果、すでに別の方が管理しているページの場合など、\nご希望に沿えないことがございます。あらかじめご了承ください。\n\n※本メールへの返信がない場合、恐れ入りますがページの引き継ぎは見送らせていただく場合がございます\n（{{roleName}}機能のお申込みそのものは、あらためて確認のうえ対応いたします）。\n\n{{supportUrl}}\n\n{{commonFooter}}",
+      status: 'active', usageNote: '申込者が「既存の掲載ページ」を申告したとき、そのページを引き継げるかどうかを確かめる1通（M-06パターン③）。オーナーの有無は書かない。返信がなければページの引き継ぎだけを見送る。', updatedAt: '2026.9.27' },
     { id: 'mt-7', screenId: 'p90-2', pattern: 'abnormal', variantKey: 'cancel-input-error', from: 'register@koten-navi.com',
       name: '入力不足・入力誤り', subject: '【個展なび】{{roleName}}機能のお申込みの取消について', body: CANCEL_BODY_STD,
       status: 'active', usageNote: '確認メールへの返信・入力不足を理由に取消を確定した時に送る（M-07パターン①・送信は任意）。', updatedAt: '2026.8.8' },
     { id: 'mt-8', screenId: 'p90-2', pattern: 'abnormal', variantKey: 'cancel-duplicate', from: 'register@koten-navi.com',
       name: '以前に別アカウントで申込済み', subject: '【個展なび】{{roleName}}機能のお申込みの取消について', body: CANCEL_BODY_STD,
-      status: 'active', usageNote: '重複申込が確認できたことを理由に取消を確定した時に送る（M-07パターン①・送信は任意）。', updatedAt: '2026.8.8' },
+      status: 'active', usageNote: '重複申込が確認できたことを理由に取消を確定した時に送る（M-07パターン②・送信は任意）。', updatedAt: '2026.8.8' },
     { id: 'mt-9', screenId: 'p90-2', pattern: 'abnormal', variantKey: 'cancel-role-switch', from: 'register@koten-navi.com',
       name: '希望ロールの変更', subject: '【個展なび】{{roleName}}機能のお申込みの取消について',
       body: '{{userName}} 様\n\nご連絡いただきありがとうございました。\n' +
         'ご希望のとおり、今回の{{roleName}}機能のお申込み（申込NID：{{applyId}}）は取消とさせていただきました。\n\n' +
         'あらためて別の機能でお申込みをご希望の場合は、お手数ですが再度お申込みフォームよりお手続きください。\n\n{{commonFooter}}',
-      status: 'active', usageNote: '申込者本人からの希望ロール変更の連絡をもとに取消を確定した時に送る（M-07パターン②・送信は任意）。', updatedAt: '2026.8.8' },
+      status: 'active', usageNote: '申込者本人からの希望ロール変更の連絡をもとに取消を確定した時に送る（M-07パターン③・送信は任意）。', updatedAt: '2026.8.8' },
     { id: 'mt-10', screenId: 'p90-2', pattern: 'abnormal', variantKey: 'cancel-other', from: 'register@koten-navi.com',
       name: 'その他', subject: '【個展なび】{{roleName}}機能のお申込みの取消について', body: CANCEL_BODY_STD,
-      status: 'active', usageNote: '上記に当てはまらない理由で取消を確定した時に送る（M-07パターン①・送信は任意）。', updatedAt: '2026.8.8' },
+      status: 'active', usageNote: '上記に当てはまらない理由で取消を確定した時に送る（M-07パターン④・送信は任意）。', updatedAt: '2026.8.8' },
     { id: 'mt-p9011-1', screenId: 'p90-11', pattern: 'normal', variantKey: 'invite', from: 'liaison@koten-navi.com',
       name: '本人確認OKのご案内（Step2へ）', subject: '【個展なび】LIAISON+のご利用にあたり、本人確認の続きをお願いします',
       body: '{{userName}} 様\n\n個展なび事務局です。\n{{roleName}}機能のお申込み（申込NID：{{applyId}}）について、\n' +
@@ -11569,20 +11568,66 @@ KTN.pages['p90-9'] = function () {
     { id: 'mt-p9011-11', screenId: 'p90-11', pattern: 'abnormal', variantKey: 'cancel-other', from: 'liaison@koten-navi.com',
       name: 'その他', subject: '【個展なび】LIAISON+機能のお申込みの取消について', body: CANCEL_BODY_STD,
       status: 'active', usageNote: '上記に当てはまらない理由で取消を確定した時に送る（申込審査の画面・送信は任意）。', updatedAt: '2026.8.11' },
+    { id: 'mt-p6011-1', screenId: 'p60-11', pattern: 'normal', variantKey: 'answer-general', from: 'inquiry@koten-navi.com',
+      name: "お問い合わせへのご回答", subject: "【個展なび】お問い合わせへのご回答（受付番号：{{requestId}}）", body: "{{userName}} 様\n\nこのたびは個展なびにお問い合わせいただき、ありがとうございます。\nお問い合わせの件について、下記のとおりご回答いたします。\n\n──────────────────────────────\n 受付番号：{{requestId}}\n 件名：{{contactSubject}}\n──────────────────────────────\n\n（ここに回答を記載してください）\n\nほかにご不明な点がございましたら、お手数ですが、\n受付番号を添えてお問い合わせフォームからお送りください。\n　{{contactUrl}}\n\n今後とも個展なびをよろしくお願いいたします。\n\n{{commonFooter}}",
+      status: 'active', usageNote: "届いたお問い合わせへの基本の回答（CT-01）。回答の本文は事務局が書く。返信の時期には触れない。", updatedAt: '2026.9.28' },
+    { id: 'mt-p6011-2', screenId: 'p60-11', pattern: 'normal', variantKey: 'answer-faq', from: 'inquiry@koten-navi.com',
+      name: "よくある質問でのご案内", subject: "【個展なび】お問い合わせへのご回答（受付番号：{{requestId}}）", body: "{{userName}} 様\n\nこのたびは個展なびにお問い合わせいただき、ありがとうございます。\n\n（ここに回答の要点を1〜2行で記載してください）\n\n詳しい手順は、下記のご案内ページにまとめております。\n　{{faqUrl}}\n\nご案内の内容で解決しない場合は、どの手順でお困りかを添えて、\n受付番号とともにお問い合わせフォームからお送りください。\n　{{contactUrl}}\n\n{{commonFooter}}",
+      status: 'active', usageNote: "よくある質問・ガイドの回答で足りるとき（CT-02）。要点を1〜2行書いてからリンク先を案内する（リンクだけで終えない）。", updatedAt: '2026.9.28' },
+    { id: 'mt-p6011-3', screenId: 'p60-11', pattern: 'normal', variantKey: 'done-bugfix', from: 'inquiry@koten-navi.com',
+      name: "不具合の修正のご連絡", subject: "【個展なび】ご報告いただいた不具合について（受付番号：{{requestId}}）", body: "{{userName}} 様\n\n先日は、個展なびの不具合をお知らせいただき、ありがとうございました。\nご報告いただいた内容を確認し、修正いたしました。\n\n──────────────────────────────\n 受付番号：{{requestId}}\n 内容：（ここに修正した内容を簡潔に記載してください）\n──────────────────────────────\n\nお手数をおかけいたしました。\n同じ症状が続く場合は、お手数ですが、受付番号を添えて\nお問い合わせフォームからお知らせください。\n　{{contactUrl}}\n\n{{commonFooter}}",
+      status: 'active', usageNote: "「不具合の報告」で届いたお問い合わせについて、修正が終わったとき（CT-03）。", updatedAt: '2026.9.28' },
+    { id: 'mt-p6011-4', screenId: 'p60-11', pattern: 'abnormal', variantKey: 'confirm-detail', from: 'inquiry@koten-navi.com',
+      name: "お問い合わせの内容について確認のお願い", subject: "【個展なび】お問い合わせの内容について確認のお願い（受付番号：{{requestId}}）", body: "{{userName}} 様\n\nこのたびは個展なびにお問い合わせいただき、ありがとうございます。\nいただいた内容を確認したところ、ご回答にあたって、\n下記の点についてご確認をお願いしたく、ご連絡いたしました。\n\n──────────────────────────────\n 受付番号：{{requestId}}\n 確認事項：（ここに確認したい内容を記載してください）\n──────────────────────────────\n\nお手数をおかけいたしますが、本メールへの返信にてお知らせいただけますと幸いです。\n\n{{commonFooter}}",
+      status: 'active', usageNote: "内容だけでは回答できないとき（CT-04）。不具合なら端末・ブラウザ・操作の手順を確かめる。", updatedAt: '2026.9.28' },
+    { id: 'mt-p6011-5', screenId: 'p60-11', pattern: 'abnormal', variantKey: 'redirect-other', from: 'inquiry@koten-navi.com',
+      name: "ほかのフォームのご案内", subject: "【個展なび】お問い合わせへのご回答（受付番号：{{requestId}}）", body: "{{userName}} 様\n\nこのたびは個展なびにお問い合わせいただき、ありがとうございます。\nいただいた内容は、下記からお送りいただくと、よりスムーズにご対応できます。\nお手数をおかけいたしますが、あらためてお送りいただけますと幸いです。\n\n・取引についてのご相談：取引ワークスペース（購入された方）／取引デスク（出品された方）\n　のメッセージから、取引の相手の方とやり取りいただけます。\n・掲載情報の誤り：対象のページの「…」メニューの「修正を依頼する」\n・規約に反する内容：対象のページの「…」メニューの「問題を報告する」\n・作品についてのご質問：作品ページの「作品について問い合わせる」\n\n{{commonFooter}}",
+      status: 'active', usageNote: "お問い合わせフォームで扱わない内容だったとき（CT-05）。案内先は内容に合う1つだけ残し、ほかの行は消して送る。", updatedAt: '2026.9.28' },
+    { id: 'mt-p6011-6', screenId: 'p60-11', pattern: 'abnormal', variantKey: 'decline-question', from: 'inquiry@koten-navi.com',
+      name: "ご回答いたしかねる旨のご連絡", subject: "【個展なび】お問い合わせへのご回答（受付番号：{{requestId}}）", body: "{{userName}} 様\n\nこのたびは個展なびにお問い合わせいただき、ありがとうございます。\n恐れ入りますが、お問い合わせいただいた内容については、\n個展なび事務局からはお答えいたしかねます。\nご期待に沿えず申し訳ございませんが、何卒ご了承ください。\n\n{{commonFooter}}",
+      status: 'active', usageNote: "ほかの利用者の個人情報・当事者間の取引の是非・法的な判断など、事務局がお答えできない内容のとき（CT-06）。理由の詳細は書かない。", updatedAt: '2026.9.28' },
+    { id: 'mt-p6012-1', screenId: 'p60-12', pattern: 'normal', variantKey: 'done-adopted', from: 'inquiry@koten-navi.com',
+      name: "ご要望の反映のご連絡", subject: "【個展なび】お寄せいただいたご要望について", body: "{{userName}} 様\n\n先日は、個展なびにご要望をお寄せいただき、ありがとうございました。\nいただいたご要望を参考に、下記のとおり改善いたしました。\n\n──────────────────────────────\n 受付番号：{{requestId}}\n 改善した内容：（ここに改善した内容を簡潔に記載してください）\n──────────────────────────────\n\nこれからも、より使いやすいサービスを目指してまいります。\n今後とも個展なびをよろしくお願いいたします。\n\n{{commonFooter}}",
+      status: 'active', usageNote: "ご要望をもとに機能を追加・改善したときに限り、送りたい場合に送る（WS-01・任意）。ご要望には原則として個別に返信しない。", updatedAt: '2026.9.28' },
+    { id: 'mt-p6012-2', screenId: 'p60-12', pattern: 'abnormal', variantKey: 'confirm-detail', from: 'inquiry@koten-navi.com',
+      name: "ご要望の内容について確認のお願い", subject: "【個展なび】お寄せいただいたご要望について確認のお願い", body: "{{userName}} 様\n\n先日は、個展なびにご要望をお寄せいただき、ありがとうございました。\n今後の改善の参考にさせていただくにあたり、\n下記の点について詳しくお聞かせいただけますと幸いです。\n\n──────────────────────────────\n 受付番号：{{requestId}}\n お聞きしたいこと：（ここに確認したい内容を記載してください）\n──────────────────────────────\n\nお手数をおかけいたしますが、本メールへの返信にてお知らせください。\nなお、ご要望の実現をお約束するものではありません。あらかじめご了承ください。\n\n{{commonFooter}}",
+      status: 'active', usageNote: "改善の検討にあたって詳しく伺いたいときだけ（WS-02・任意）。実現を約束しない旨を明記している。", updatedAt: '2026.9.28' },
+    { id: 'mt-p6013-1', screenId: 'p60-13', pattern: 'abnormal', variantKey: 'decline-subject-delete', from: 'inquiry@koten-navi.com',
+      name: '掲載の削除のご依頼について（掲載の対象者の方へ）', subject: "【個展なび】掲載内容についてのご依頼へのご回答", body: "{{userName}} 様\n\n個展なびをご利用いただきありがとうございます。\n{{targetType}}「{{targetName}}」の掲載について、ご連絡をいただきました。\n\n個展なびは、展覧会の開催など、公開された事実を記録として掲載しています。\nそのため、恐れ入りますが、掲載の削除のご依頼は原則としてお受けしておりません。\n\n一方で、次の点についてはご対応いたします。\n\n・ご本人のロゴ・写真・紹介文・連絡先など、ご自身が管理される情報の掲載を\n　外してほしい場合は、該当する箇所を本メールへの返信でお知らせください。\n・ご自身のページを、ギャラリー機能（クリエイター機能）のお申込みにより\n　ご自身で管理していただくことができます。紹介文や写真などは、\n　ご自身で直していただけます（開催された展覧会の記録は残ります）。\n　　{{applyUrl}}\n\nなお、権利侵害を理由とする法令に基づく手続き（送信防止措置のご依頼など）を\nご希望の場合は、所定の手続きをご案内いたします。その場合は、法令に沿って対応いたします。\n\n対応の考え方は、下記の「掲載内容に関する対応方針」をご覧ください。\n　{{policyUrl}}\n\n{{commonFooter}}",
+      status: 'active', usageNote: "会場・ギャラリー・クリエイター本人から掲載の削除を求められたとき（RP-01・経路を問わない）。公開の事実は残す／本人の持ち物は外せる／ページの管理権を案内／法令の手続きを案内。返信は一度。脅し文句があっても扱いは変えず、同じ主張の繰り返しにはこの1通で返信を打ち切ってよい。当事者間の事情には触れない。", updatedAt: '2026.9.27' },
+    { id: 'mt-p6014-1', screenId: 'p60-14', pattern: 'normal', variantKey: 'done-fixed', from: 'inquiry@koten-navi.com',
+      name: "修正完了のご連絡", subject: "【個展なび】修正依頼への対応について", body: "{{userName}} 様\n\n先日は、{{targetType}}「{{targetName}}」の掲載情報について\n修正依頼をお寄せいただき、ありがとうございました。\nご指摘の内容を確認し、掲載情報を修正いたしました。\n\n　{{targetUrl}}\n\n今後とも個展なびをよろしくお願いいたします。\n\n{{commonFooter}}",
+      status: 'active', usageNote: "掲載情報を修正したあと、依頼者へ送る（FX-01）。", updatedAt: '2026.9.27' },
+    { id: 'mt-p6014-2', screenId: 'p60-14', pattern: 'normal', variantKey: 'owner-request', from: 'inquiry@koten-navi.com',
+      name: "掲載者への修正のお願い", subject: "【個展なび】「{{targetName}}」の掲載情報について確認のお願い", body: "{{ownerName}} 様\n\nいつも個展なびをご利用いただきありがとうございます。\nご掲載いただいている{{targetType}}「{{targetName}}」について、\n閲覧者の方から掲載情報の修正のご依頼が届きました。\n\n──────────────────────────────\n 対象：{{targetType}}「{{targetName}}」\n 　{{targetUrl}}\n 修正してほしい箇所：{{fixField}}\n ご依頼の内容：{{fixDetail}}\n──────────────────────────────\n\n内容をご確認のうえ、誤りがある場合は掲載情報の修正をお願いいたします。\nご依頼の内容が正しくない場合は、そのままで差し支えありません。\n（ご依頼者の個人情報はお伝えしておりません）\n\n{{commonFooter}}",
+      status: 'active', usageNote: "掲載者がいて連絡がつく場合に、掲載者へ修正をお願いする（FX-02）。依頼者の個人情報は伝えない。", updatedAt: '2026.9.27' },
+    { id: 'mt-p6014-3', screenId: 'p60-14', pattern: 'abnormal', variantKey: 'confirm-detail', from: 'inquiry@koten-navi.com',
+      name: "修正依頼の内容について確認のお願い", subject: "【個展なび】修正依頼の内容について確認のお願い", body: "{{userName}} 様\n\n{{targetType}}「{{targetName}}」の掲載情報について、\n修正依頼をお寄せいただきありがとうございます。\nいただいた内容を確認したところ、下記の点についてご確認をお願いしたく、ご連絡いたしました。\n\n──────────────────────────────\n 受付番号：{{requestId}}\n 確認事項：（ここに確認したい内容を記載してください）\n──────────────────────────────\n\nお手数をおかけいたしますが、本メールへの返信にてご回答いただけますと幸いです。\n※ご返信がない場合、恐れ入りますがご依頼への対応を見送らせていただく場合がございます。\n\n{{commonFooter}}",
+      status: 'active', usageNote: "依頼の内容だけでは判断できないときに、依頼者へ確認する（FX-03）。", updatedAt: '2026.9.27' },
+    { id: 'mt-p6014-4', screenId: 'p60-14', pattern: 'abnormal', variantKey: 'decline-content', from: 'inquiry@koten-navi.com',
+      name: "ご依頼に沿えない旨のご連絡", subject: "【個展なび】修正依頼へのご回答", body: "{{userName}} 様\n\n{{targetType}}「{{targetName}}」の掲載情報について、\n修正依頼をお寄せいただきありがとうございました。\nご指摘の内容を確認いたしましたが、恐れ入りますが、\n今回はご依頼に沿った修正を見送らせていただきます。\n\nご依頼いただく際にご案内しておりますとおり、\n内容によってはご依頼に沿えない場合がございます。\n何卒ご理解いただけますと幸いです。\n\n{{commonFooter}}",
+      status: 'active', usageNote: "確認の結果、修正を見送るとき（FX-04）。見送る理由の詳細は書かない。", updatedAt: '2026.9.27' },
+    { id: 'mt-p6014-5', screenId: 'p60-14', pattern: 'abnormal', variantKey: 'decline-delete', from: 'inquiry@koten-navi.com',
+      name: "掲載の削除のご依頼について", subject: "【個展なび】掲載の削除のご依頼について", body: "{{userName}} 様\n\n{{targetType}}「{{targetName}}」について、ご連絡いただきありがとうございました。\n恐れ入りますが、掲載の削除のご依頼は、原則としてお受けしておりません。\n\nただし、無断で掲載されている場合や、プライバシーに関わる事情がある場合は、\n下記の「問題を報告する」から、その旨をお知らせください。\n　{{reportUrl}}\n\n{{commonFooter}}",
+      status: 'active', usageNote: "削除を求める内容だったとき（FX-05）。原則お受けしない旨＋無断掲載・プライバシーは問題報告へ案内。展覧会への依頼のときは「ただし〜」の段落を削って送る（展覧会ではこの例外を案内しない）。", updatedAt: '2026.9.27' },
     { id: 'mt-p2sns-1', screenId: 'p2-sns', pattern: 'normal', variantKey: 'listing-notice', from: 'info@koten-navi.com',
       name: '展覧会情報掲載のお知らせ', subject: '【個展なび】展覧会情報掲載のお知らせ', body: P2SNS_LISTING_BODY,
-      status: 'active', usageNote: '出展者から展覧会情報の登録連絡を受け、掲載完了を返信する時に送る（展覧会ページの「SNSテキスト生成」から移設・旧「新着展覧会表示」ツール）。', updatedAt: '2026.8.21' },
+      status: 'active', usageNote: '出展者から展覧会情報の登録連絡を受け、掲載完了を返信する時に送る（E-02・展覧会ページの「SNSテキスト生成」から移設・旧「新着展覧会表示」ツール）。', updatedAt: '2026.8.21' },
   ];
 
   /* ── 自動送信メール（可視化＋文面編集）── データは docs/email-templates.md の
      発火点インベントリ（M-01/M-03/M-05・T-01〜T-10・A-01＝Drupalが状態変化で自動送出するもの）を構造化。
-     M-02/M-04/M-06/M-07 は事務局がP90-2で選択・編集して送る「手動」のためここには含めない（TEMPLATESが正）。
+     M-02/M-04/M-06/M-07（P90-2）・M-08/M-09/M-10（P90-11-1）は事務局が選択・編集して送る「手動」のためここには含めない（TEMPLATESが正・2026-09-28 に M-08/M-09 もこちらから外した）。
      送信画面のピックリスト（screenId/variantKey）は持たない＝「管理」対象ではないため一覧性が主目的だが、
      件名・本文はDrupal実装フェーズへの入力仕様として起草・編集できる。
      旧「起草進捗」列（起草済/未着手の自動判定バッジ）は2026-08-11に撤去済み：本番運用フェーズでは全件
      文面が確定済み（＝「未着手」が発生しない）状態を前提とするため、管理する意味を持たないとユーザー判断。
      件名列で入力有無（「—」＝未入力）がそのまま代替の目安になるため、別列としての状態表示は不要とした。 */
-  var AUTO_CATEGORY_LABEL = { apply: '機能申込系', txn: '取引系（LIAISON+）', activity: 'アクティビティ系（ウォッチ通知）', exhibition: '展覧会系' };
+  /* カテゴリ・並び順は docs/email-templates.md の発火点の棚卸しと同じ（2026-09-27 そろえ直し：アカウント系・送信フォーム系を追加、
+     activity は「ユーザーが選べるメール（P5-13）」＋停止できない重要なお知らせ A-04 をまとめる） */
+  var AUTO_CATEGORY_LABEL = { account: 'アカウント系', form: '送信フォーム系', apply: '機能申込系', txn: '取引系（LIAISON+）', activity: 'アクティビティ・お知らせ系', exhibition: '展覧会系' };
+  var AUTO_BODY_U05 = "{{userName}} 様\n\n個展なびのアカウントのパスワードが変更されました。\n\n──────────────────────────────\n 変更日時：{{changedAt}}\n──────────────────────────────\n\nご本人による変更であれば、このメールへの対応は不要です。\n\n■ この変更に心当たりがない場合\n第三者がアカウントにログインしている可能性があります。\nすぐに下記からパスワードを再設定してください。\n　{{resetUrl}}\n\n再設定できない場合は、下記よりお問い合わせください。\n　{{supportUrl}}\n\n※本メールは送信専用です。\n\n{{commonFooter}}";
+  var AUTO_BODY_U07 = "{{userName}} 様\n\n個展なびのアカウントで、ログインに使うメールアドレスの\n変更手続きがありました。\n\n──────────────────────────────\n 手続き日時：{{changedAt}}\n 変更先：{{maskedNewEmail}}\n──────────────────────────────\n\n変更先のアドレスに届く確認メールのリンクが開かれると、\n変更が完了します。完了するまでは、このアドレスで\nこれまでどおりログインできます。\n\nご本人による手続きであれば、このメールへの対応は不要です。\n\n■ この手続きに心当たりがない場合\n第三者がアカウントにログインしている可能性があります。\n変更が完了する前に、すぐに下記からパスワードを再設定し、\nお問い合わせください。\n　パスワードの再設定：{{resetUrl}}\n　お問い合わせ：{{supportUrl}}\n\n※本メールは送信専用です。\n\n{{commonFooter}}";
   var AUTO_BODY_M01 =
     '{{userName}} 様\n\nこのたびは個展なびのクリエイター機能にお申し込みいただき、\nありがとうございます。\n以下の内容でお申込みを受け付けました。\n\n' +
     '──────────────────────────────\n お申込み日：{{applyDate}}\n クリエイター名：{{creatorName}}\n──────────────────────────────\n\n' +
@@ -11594,8 +11639,29 @@ KTN.pages['p90-9'] = function () {
     'より進んだ販売機能「LIAISON+」への切り替えをご希望の場合も、\n同メニューからお申込みいただけます（会期開始後は切り替えできません）。\n\n　{{pageUrl}}\n\n' +
     '※本メールは送信専用です。ご不明な点は下記よりお問い合わせください。\n　{{supportUrl}}\n\n{{commonFooter}}';
   var AUTO_TRIGGERS = [
+    { id: 'U-01', category: 'account', event: "新規登録の確認メール（仮登録）", aud: "登録者（入力アドレス）", source: "p11-1 submit", timing: "送信直後（自動）", subject: '', body: '', note: "リンク先＝P11-22。有効期限を明記", updatedAt: '2026.9.27' },
+    { id: 'U-02', category: 'account', event: "新規登録完了（ようこそ）", aud: "登録者", source: "p11-23 完了", timing: "完了直後（自動）", subject: '', body: '', note: "登録の控え＋ログインIDの明示＋ウォッチの案内", updatedAt: '2026.9.27' },
+    { id: 'U-03', category: 'account', event: "パスワード再設定メール", aud: "入力アドレスの利用者", source: "p11-11 submit", timing: "送信直後（自動）", subject: '', body: '', note: "リンク先＝P11-12。未登録アドレスでも画面の反応は同じ（登録有無を漏らさない）", updatedAt: '2026.9.27' },
+    { id: 'U-04', category: 'account', event: "パスワード再設定の完了通知", aud: "本人", source: "p11-12 完了", timing: "完了直後（自動）", subject: '', body: '', note: "U-05 と本文を共有（操作名だけ「再設定」）", updatedAt: '2026.9.27' },
+    { id: 'U-05', category: 'account', event: "パスワードが変更されました", aud: "本人（登録アドレス）", source: "p5-12 変更", timing: "変更直後（自動）", subject: "【個展なび】パスワードが変更されました", body: AUTO_BODY_U05, note: "docs/email-templates.md U-05 と同内容。配信停止の対象外", updatedAt: '2026.9.27' },
+    { id: 'U-06', category: 'account', event: "メールアドレス変更の確認メール", aud: "本人（新アドレス）", source: "p5-11「確認メールを送る」", timing: "送信直後（自動）", subject: '', body: '', note: "リンクを開くと変更完了。有効期限を明記", updatedAt: '2026.9.27' },
+    { id: 'U-07', category: 'account', event: "メールアドレス変更手続きのお知らせ", aud: "本人（旧アドレス）", source: "p5-11「確認メールを送る」", timing: "送信直後（自動）", subject: "【個展なび】メールアドレスの変更手続きがありました", body: AUTO_BODY_U07, note: "docs/email-templates.md U-07 と同内容。新アドレスは伏せ字", updatedAt: '2026.9.27' },
+    { id: 'U-08', category: 'account', event: "退会手続きの完了", aud: "本人", source: "p5-100 退会", timing: "完了直後（自動）", subject: '', body: '', note: "", updatedAt: '2026.9.27' },
+    { id: 'F-01', category: 'form', event: "お問い合わせ受付（自動返信・控え）", aud: "送信者", source: "p60-11 submit", timing: "送信直後（自動）", subject: "【個展なび】お問い合わせを受け付けました", body: "{{userName}} 様\n\n個展なびをご利用いただきありがとうございます。\n以下の内容でお問い合わせを受け付けました。\n\n──────────────────────────────\n 受付番号：{{requestId}}\n お問い合わせ種別：{{contactCategory}}\n 件名：{{contactSubject}}\n──────────────────────────────\n\n■ お問い合わせ内容\n{{contactBody}}\n\n内容を確認のうえ、ご入力のメールアドレス宛にご返信します。\nお問い合わせが集中する時期は、ご返信までにお時間をいただく場合があります。\nあらかじめご了承ください。\n\n※本メールは送信専用です。追加でお伝えいただきたいことがある場合は、\n　お手数ですが、受付番号を添えてお問い合わせフォームからお送りください。\n　{{contactUrl}}\n\n{{commonFooter}}", note: "docs/email-templates.md F-01 と同内容。返信の目安（日数）は書かない（集中する時期があるため）。", updatedAt: '2026.9.28' },
+    { id: 'F-01A', category: 'form', event: "お問い合わせの受付通知（事務局あて）", aud: "事務局", source: "p60-11 submit", timing: "送信直後（自動）", subject: "【お問い合わせ】{{contactCategory}}：{{contactSubject}}（{{requestId}}）", body: "お問い合わせが届きました。\n\n──────────────────────────────\n 受付番号：{{requestId}}\n 受付日時：{{requestDate}}\n お問い合わせ種別：{{contactCategory}}\n 件名：{{contactSubject}}\n ご覧になっていたよくある質問：{{faqRef}}\n 送信者：{{senderName}}（{{senderEmail}}／{{senderUid}}）\n──────────────────────────────\n\n■ お問い合わせ内容\n{{contactBody}}\n\n■ 対応の目安\n・返信は送信者のメールアドレス宛てに事務局から送る（返信の時期は約束していない）\n・「ご覧になっていたよくある質問」がある場合：その回答で足りなかった点を確かめて返す\n・取引について：取引の当事者（購入者・出品者）かを確かめ、取引ワークスペース／取引デスクで\n　やり取りできる内容はそちらを案内する\n・不具合の報告：端末・ブラウザ・操作の手順が分からなければ確かめる\n・掲載情報の誤り → 修正依頼（P60-14）、規約に反する内容 → 問題報告（P60-13）の扱い\n　（送信者にフォームを案内するか、事務局で振り替える）", note: "docs/email-templates.md F-01A と同内容。種別ごとの振り分けの目安付き。", updatedAt: '2026.9.28' },
+    { id: 'F-02', category: 'form', event: "ご要望受付（自動返信・控え）", aud: "送信者", source: "p60-12 submit", timing: "送信直後（自動）", subject: "【個展なび】ご要望を受け付けました", body: "{{userName}} 様\n\n個展なびをご利用いただきありがとうございます。\n以下の内容でご要望を受け付けました。\n\n──────────────────────────────\n 受付番号：{{requestId}}\n 要望カテゴリ：{{wishCategory}}\n 対象ページ・機能：{{wishTarget}}\n──────────────────────────────\n\n■ ご要望内容\n{{wishBody}}\n\nいただいたご要望は必ず確認し、今後のサービス改善の参考にさせていただきます。\nすべてのご要望に個別のご返信はいたしかねます。あらかじめご了承ください。\n\n※本メールは送信専用です。\n\n{{commonFooter}}", note: "docs/email-templates.md F-02 と同内容。個別の返信はしない旨を明記。", updatedAt: '2026.9.28' },
+    { id: 'F-02A', category: 'form', event: "ご要望の受付通知（事務局あて）", aud: "事務局", source: "p60-12 submit", timing: "送信直後（自動）", subject: "【ご要望】{{wishCategory}}（{{requestId}}）", body: "ご要望が届きました。\n\n──────────────────────────────\n 受付番号：{{requestId}}\n 受付日時：{{requestDate}}\n 要望カテゴリ：{{wishCategory}}\n 対象ページ・機能：{{wishTarget}}\n 送信者：{{senderName}}（{{senderEmail}}／{{senderUid}}）\n──────────────────────────────\n\n■ ご要望内容\n{{wishBody}}\n\n■ 扱い\n・個別の返信はしない（送信者には受付の控え F-02 で伝えている）\n・不具合の報告や、返信が必要な質問が含まれている場合は、お問い合わせとして個別に対応する\n・掲載情報の誤りが含まれている場合は、修正依頼として扱う", note: "docs/email-templates.md F-02A と同内容。個別の返信はしない。", updatedAt: '2026.9.28' },
+    { id: 'F-03', category: 'form', event: "問題の報告受付（自動返信・控え）", aud: "送信者", source: "p60-13 submit", timing: "送信直後（自動）", subject: "【個展なび】問題のご報告を受け付けました", body: "{{userName}} 様\n\n個展なびをご利用いただきありがとうございます。\n以下の内容で問題のご報告を受け付けました。\n\n──────────────────────────────\n 受付番号：{{requestId}}\n 対象：{{targetType}}「{{targetName}}」\n 理由：{{reportReason}}\n──────────────────────────────\n\nご報告の内容は個展なび事務局で確認し、利用規約に基づいて対応します。\n事実関係の調査はできない場合があります。\nまた、対応の内容や結果についてはお知らせできない場合があります。\n\n対応の考え方は、下記の「掲載内容に関する対応方針」をご覧ください。\n　{{policyUrl}}\n\n※本メールは送信専用です。\n\n{{commonFooter}}", note: "docs/email-templates.md F-03 と同内容。期待値（調査できない場合・結果を知らせられない場合）を先に伝える。", updatedAt: '2026.9.27' },
+    { id: 'F-03A', category: 'form', event: "問題の報告の受付通知（事務局あて）", aud: "事務局", source: "p60-13 submit", timing: "送信直後（自動）", subject: "【問題報告】{{priorityMark}}{{targetType}}「{{targetName}}」（{{requestId}}）", body: "問題の報告が届きました。\n\n──────────────────────────────\n 受付番号：{{requestId}}\n 受付日時：{{requestDate}}\n 対象：{{targetType}}「{{targetName}}」\n 　{{targetUrl}}\n 掲載者：{{ownerName}}\n 理由：{{reportReason}}\n 送信者：{{senderName}}（{{senderEmail}}／{{senderUid}}）\n──────────────────────────────\n\n■ 詳細\n{{fixDetail}}\n\n■ 対応の目安（理由ごと・docs/moderation-policy.md の判断表）\n・プライバシーに関わる：至急。確認より先に一時非公開にし、そのあと掲載者に連絡\n・無断掲載・権利侵害：掲載者に照会。期限内（原則7日）に反論がなければ非公開\n・なりすまし・虚偽：手がかりと照らし、明らかなら非公開。判断できなければ照会\n・誹謗中傷・個人情報の掲載：規約の例に当たれば非公開（個人情報は確認より先に非公開）\n・不適切な表現・画像：明らかに当たる場合のみ非公開。判断が分かれるものは掲載を続けて記録\n・スパム・宣伝目的：削除\n・事実と異なる：掲載者に確認を依頼\n・その他・あいまい：記録のみ（同じ対象への報告が重なったら見直す）\n※「至急」と書かれていても、優先度は理由で決める。報告者の個人情報は掲載者に伝えない。", note: "docs/email-templates.md F-03A と同内容。件名の{{priorityMark}}は理由で決める（プライバシーに関わる＝【至急】）。判断表＝docs/moderation-policy.md。", updatedAt: '2026.9.27' },
+    { id: 'F-04', category: 'form', event: "修正依頼受付（自動返信・控え）", aud: "送信者", source: "p60-14 submit", timing: "送信直後（自動）", subject: "【個展なび】修正依頼を受け付けました", body: "{{userName}} 様\n\n個展なびをご利用いただきありがとうございます。\n以下の内容で修正依頼を受け付けました。\n\n──────────────────────────────\n 受付番号：{{requestId}}\n 対象：{{targetType}}「{{targetName}}」\n 修正してほしい箇所：{{fixField}}\n──────────────────────────────\n\n内容は個展なび事務局で確認し、対応します。\n内容によっては、ご依頼に沿えない場合があります。\n個別の対応結果についてはご返信できない場合があります。\n\n※本メールは送信専用です。\n\n{{commonFooter}}", note: "docs/email-templates.md F-04 と同内容。", updatedAt: '2026.9.27' },
+    { id: 'F-04A', category: 'form', event: "修正依頼の受付通知（事務局あて）", aud: "事務局", source: "p60-14 submit", timing: "送信直後（自動）", subject: "【修正依頼】{{targetType}}「{{targetName}}」（{{requestId}}）", body: "修正依頼が届きました。\n\n──────────────────────────────\n 受付番号：{{requestId}}\n 受付日時：{{requestDate}}\n 対象：{{targetType}}「{{targetName}}」\n 　{{targetUrl}}\n 掲載者：{{ownerName}}\n 修正してほしい箇所：{{fixField}}\n 送信者：{{senderName}}（{{senderEmail}}／{{senderUid}}）\n──────────────────────────────\n\n■ 詳細\n{{fixDetail}}\n\n■ 対応の目安\n・掲載者がいて連絡がつく場合：掲載者へ修正をお願いする（テンプレート「掲載者への修正のお願い」）\n・掲載者がいない、または連絡がつかない場合：事務局で直接修正する\n・削除の依頼が含まれる場合：原則お受けしない（テンプレート「掲載の削除のご依頼について」）。\n　無断掲載やプライバシーに関わる事情の場合は、問題報告として扱う", note: "docs/email-templates.md F-04A と同内容。回答はテンプレート（使用画面＝修正依頼）から。", updatedAt: '2026.9.27' },
+    { id: 'F-05', category: 'form', event: "作品へのお問合わせ（出品者への通知）", aud: "出品者（クリエイター・ギャラリー）", source: "p6-13 submit", timing: "送信直後（自動）", subject: "【個展なび】作品「{{artworkName}}」にお問合わせが届きました", body: "{{ownerName}} 様\n\nいつも個展なびをご利用いただきありがとうございます。\n作品「{{artworkName}}」について、お問合わせが届きました。\n\n──────────────────────────────\n お問合わせの種類：{{inquiryType}}\n 送信者：{{senderNickname}}\n 受付日時：{{requestDate}}\n──────────────────────────────\n\n■ お問合わせ内容\n{{inquiryBody}}\n\n内容のご確認とご返信は、下記のページから行えます。\n　{{replyUrl}}\n\n返信は1回です。返信の内容は、送信者にメールでお知らせします。\n返信しない場合は、同じページで「返信せずに終える」を選ぶと\n対応済みになります（送信者には通知されません）。\n\nほかの作品へのお問合わせも含めて、まとめて確認できます。\n　{{inboxUrl}}\n\n※送信者のメールアドレスはお伝えしていません。ご返信は上記のページからお願いします。\n\n{{commonFooter}}", note: "docs/email-templates.md F-05 と同内容。宛先は作品の出品者（クリエイター・ギャラリー）。送信者のメールアドレス・本名は伝えない。", updatedAt: '2026.9.28' },
+    { id: 'F-06', category: 'form', event: "作品へのお問合わせ受付（送信者の控え）", aud: "送信者", source: "p6-13 submit", timing: "送信直後（自動）", subject: "【個展なび】作品「{{artworkName}}」へのお問合わせを送信しました", body: "{{userName}} 様\n\n個展なびをご利用いただきありがとうございます。\n作品「{{artworkName}}」について、{{ownerKind}} {{ownerName}} さんへ\n以下の内容でお問合わせを送信しました。\n\n──────────────────────────────\n お問合わせの種類：{{inquiryType}}\n──────────────────────────────\n\n■ お問合わせ内容\n{{inquiryBody}}\n\n{{ownerKind}}から返信があると、メールでお知らせします。\n{{ownerKind}}の事情により、返信までにお時間がかかる場合や、\nご返信できない場合があります。あらかじめご了承ください。\n\n送ったお問合わせは、myページの「問合せ履歴」でも確認できます。\n　{{sentUrl}}\n\n※本メールは送信専用です。\n\n{{commonFooter}}", note: "docs/email-templates.md F-06 と同内容。返信の時期や有無は約束しない。", updatedAt: '2026.9.28' },
+    { id: 'F-07', category: 'form', event: "お問合わせへの返信が届きました", aud: "問合せの送信者", source: "p6-14 返信送信", timing: "送信直後（自動）", subject: "【個展なび】作品「{{artworkName}}」へのお問合わせに返信が届きました", body: "{{userName}} 様\n\n作品「{{artworkName}}」へのお問合わせに、\n{{ownerKind}} {{ownerName}} さんから返信が届きました。\n\n──────────────────────────────\n 作品：{{artworkName}}\n　{{pageUrl}}\n──────────────────────────────\n\n■ {{ownerKind}}からの返信\n{{replyBody}}\n\nお問合わせへの返信は1回です。続けてお問合わせをされる場合は、\n作品ページからあらためてお送りください。\nこれまでのお問合わせと返信は、myページの「問合せ履歴」で確認できます。\n　{{sentUrl}}\n\n※本メールは送信専用です。このメールに返信しても{{ownerKind}}には届きません。\n\n{{commonFooter}}", note: "docs/email-templates.md F-07 と同内容。返信の内容を載せる・返信は1回。出品者のメールアドレスは伝えない。「返信せずに終える」では送らない。", updatedAt: '2026.9.28' },
     { id: 'M-01', category: 'apply', event: 'クリエイター機能 申込受付', aud: '申込者', source: 'p11-2 submit', timing: '送信直後（自動）',
       subject: '【個展なび】クリエイター機能のお申込みを受け付けました', body: AUTO_BODY_M01, note: 'docs/email-templates.md M-01 と同内容。', updatedAt: '2026.8.9' },
+    { id: 'M-01A', category: 'apply', event: "クリエイター機能 申込の受付通知（事務局あて・既存の掲載ページのURL付き）", aud: "事務局", source: "p11-2 submit", timing: "送信直後（自動）", subject: "【機能申込】{{roleName}}機能：{{userName}}（{{applyId}}）", body: "{{roleName}}機能の申込が届きました。\n\n──────────────────────────────\n 申込番号：{{applyId}}\n 申込日時：{{applyDate}}\n 申込者：{{userName}}（{{senderEmail}}／{{senderUid}}）\n {{roleName}}名：{{pageName}}\n──────────────────────────────\n\n■ 既存の掲載ページ（申込者の申告）\n {{claimPageName}}\n 　{{claimPageUrl}}\n 申込の入口：{{claimVia}}\n\n■ 対応の目安\n・既存のページの申告がある場合：そのページとの名寄せを確認し、オーナーの有無を確かめる。\n　オーナーがいない → 確認のうえ、申込者をオーナーに差し替える（M-02／M-04 の「既存ページのリンク付け」）\n　オーナーがいる → なりすまし、または本人の二重登録の可能性。申込者にはオーナーの有無を伝えずに確認する（M-06）\n・申告がない場合も、同名のページが無いか確認する（オーナー未設定ページの引き継ぎ）", note: "docs/email-templates.md M-01A と同内容。修正依頼・問題報告の「このページのご本人の方へ」から来た申込は既存の掲載ページが自動で入る（?claim）。申告であり、事務局の確認後に差し替える。", updatedAt: '2026.9.27' },
+    { id: 'M-03A', category: 'apply', event: "ギャラリー機能 申込の受付通知（事務局あて・既存の掲載ページのURL付き）", aud: "事務局", source: "p11-3 submit", timing: "送信直後（自動）", subject: "【機能申込】{{roleName}}機能：{{userName}}（{{applyId}}）", body: "{{roleName}}機能の申込が届きました。\n\n──────────────────────────────\n 申込番号：{{applyId}}\n 申込日時：{{applyDate}}\n 申込者：{{userName}}（{{senderEmail}}／{{senderUid}}）\n {{roleName}}名：{{pageName}}\n──────────────────────────────\n\n■ 既存の掲載ページ（申込者の申告）\n {{claimPageName}}\n 　{{claimPageUrl}}\n 申込の入口：{{claimVia}}\n\n■ 対応の目安\n・既存のページの申告がある場合：そのページとの名寄せを確認し、オーナーの有無を確かめる。\n　オーナーがいない → 確認のうえ、申込者をオーナーに差し替える（M-02／M-04 の「既存ページのリンク付け」）\n　オーナーがいる → なりすまし、または本人の二重登録の可能性。申込者にはオーナーの有無を伝えずに確認する（M-06）\n・申告がない場合も、同名のページが無いか確認する（オーナー未設定ページの引き継ぎ）", note: "M-01A と本文を {{roleName}} で共有。", updatedAt: '2026.9.27' },
     { id: 'M-03', category: 'apply', event: 'ギャラリー機能 申込受付', aud: '申込者', source: 'p11-3 submit', timing: '送信直後（自動）',
       subject: '', body: '', note: 'M-01と同文面を{{roleName}}差替で共有予定。', updatedAt: '2026.8.9' },
     { id: 'M-05', category: 'apply', event: 'LIAISON+ 申込受付／利用開始', aud: '申込者', source: 'p11-4 submit / admin', timing: '送信直後 / 承認後', subject: '', body: '', note: '', updatedAt: '2026.8.9' },
@@ -11609,11 +11675,18 @@ KTN.pages['p90-9'] = function () {
     { id: 'T-08', category: 'txn', event: '取引キャンセル', aud: '双方', source: 'F2 キャンセル済', timing: '中断時', subject: '', body: '', note: '', updatedAt: '2026.8.9' },
     { id: 'T-09', category: 'txn', event: '期限間近リマインド', aud: 'my-turn側', source: 'S1〜S5', timing: '期限接近時', subject: '', body: '', note: '', updatedAt: '2026.8.9' },
     { id: 'T-10', category: 'txn', event: '確定期限超過・出品自動取消', aud: '申込者全員', source: 'S1 超過', timing: '確定期限超過時', subject: '', body: '', note: '', updatedAt: '2026.8.9' },
-    { id: 'A-01', category: 'activity', event: 'ウォッチ中のクリエイター/ギャラリーが新規掲載', aud: 'ウォッチ元ユーザー', source: '展覧会/作品/記事の公開', timing: '公開時（バッチ可）', subject: '', body: '', note: '', updatedAt: '2026.8.9' },
+    { id: 'T-11', category: 'txn', event: "会場で売約済・お申込みのキャンセル", aud: "申込者全員", source: "出品者が p3-15／p4-15 で「会場売約済」", timing: "操作時", subject: '', body: '', note: "", updatedAt: '2026.9.27' },
+    { id: 'T-12', category: 'txn', event: "販売代金のお振込みのお知らせ", aud: "出品者", source: "月末締め・翌月20日払い（P90-14）", timing: "振込実行時", subject: '', body: '', note: "振込額と内訳（対象取引・サービス利用料・振込手数料）", updatedAt: '2026.9.27' },
+    { id: 'A-01', category: 'activity', event: "② ウォッチ新着（ウォッチ中のクリエイター・ギャラリーが展覧会・記事を公開）", aud: "全ユーザー（P5-13 で停止可）", source: "展覧会・記事の公開", timing: "随時（短時間の連続公開は1通にまとめる）", subject: '', body: '', note: "作品は対象外。記事は会期に関係なく通知、会期後に登録した展覧会自体は通知しない。docs/email-templates.md「ユーザーが選べるメール」", updatedAt: '2026.9.27' },
+    { id: 'R-01', category: 'activity', event: "① リマインダー（今日から開催／もうすぐ終了／もうすぐ開催＋興味あり！の作品の出品）", aud: "全ユーザー（P5-13 で停止可）", source: "ウォッチ・興味あり！の展覧会と作品", timing: "1日1回・朝（該当が無い日は送らない）", subject: '', body: '', note: "旧 daily mail＋旧 興味あり！を統合。同じ展覧会が複数日届いてよい。移行＝旧どちらかがオンならオン", updatedAt: '2026.9.27' },
+    { id: 'N-01', category: 'activity', event: "③ ニュース・キャンペーン", aud: "対象＝全員・ユーザー→登録ユーザー全員／クリエイター・ギャラリー→その機能の利用者（P5-13 で停止可・既定オフ）", source: "P61-11 で「メールでも送る」をチェックして公開（カテゴリ＝重要以外）", timing: "お知らせの公開時", subject: '', body: '', note: "送るかは事務局が1件ずつ選ぶ。広告にあたるため既定オフ・P11-1 の任意チェックで同意", updatedAt: '2026.9.27' },
+    { id: 'A-03', category: 'activity', event: "④ ウォッチ・チェックインのお知らせ", aud: "クリエイター・ギャラリー機能の利用者（P5-13 で停止可）", source: "ウォッチ・チェックイン／展覧会の公開", timing: "1日1回（0件の日は送らない）＋展覧会の公開時", subject: '', body: '', note: "公開時はお知らせを送ったウォッチャーの一覧", updatedAt: '2026.9.27' },
+    { id: 'I-01', category: 'activity', event: "⑤ インサイトの月次レポート", aud: "クリエイター・ギャラリー機能の利用者（P5-13 で停止可）", source: "月次集計", timing: "月1回", subject: '', body: '', note: "ページ・展覧会の閲覧数、ウォッチャー数（P3-12／P4-12 へのリンク）", updatedAt: '2026.9.27' },
+    { id: 'A-04', category: 'activity', event: "重要なお知らせ", aud: "対象の全ユーザー（停止できない）", source: "P61-11 で「メールでも送る」をチェックして公開（カテゴリ＝重要）", timing: "お知らせの公開時（1回だけ・編集しても再送しない）", subject: '', body: '', note: "", updatedAt: '2026.9.27' },
     { id: 'E-01', category: 'exhibition', event: '管理者確認済のオーナーへ通知', aud: '展覧会オーナー（クリエイター/ギャラリー）', source: 'p2-11 admin confirm', timing: '確認完了時（自動）',
       subject: '【個展なび】「{{exhibitionName}}」の内容を確認しました', body: AUTO_BODY_E01, note: 'docs/email-templates.md E-01 と同内容。', updatedAt: '2026.8.27' },
   ];
-  var AUTO_CATEGORY_ORDER = ['apply', 'txn', 'activity', 'exhibition'];
+  var AUTO_CATEGORY_ORDER = ['account', 'form', 'apply', 'txn', 'activity', 'exhibition'];
   function findAuto(id) {
     for (var i = 0; i < AUTO_TRIGGERS.length; i++) if (AUTO_TRIGGERS[i].id === id) return AUTO_TRIGGERS[i];
     return null;
@@ -11626,12 +11699,9 @@ KTN.pages['p90-9'] = function () {
   var patSel    = document.getElementById('p909FilterPattern');
   var statSel   = document.getElementById('p909FilterStatus');
   var countEl   = document.getElementById('p909Count');
-  var pagerEl   = document.getElementById('p909Pagination');
   var newBtn    = document.getElementById('p909NewBtn');
   if (!listEl || !screenSel || !patSel || !statSel) return;
 
-  var page = 1;
-  var PER_PAGE = 20;
 
   /* ── タブ切替（手動送信／自動送信） ── */
   var tabsEl        = document.getElementById('p909Tabs');
@@ -11657,22 +11727,57 @@ KTN.pages['p90-9'] = function () {
   var autoCountEl     = document.getElementById('p909AutoCount');
   var autoFilterCatSel = document.getElementById('p909AutoFilterCategory');
 
+  /* 自動送信を「どのページの操作で送られるか」で分類する（手動送信の使用画面と同じ軸・2026-09-28）。
+     ページの操作によらないもの（取引の状態の変化・定期送信）はまとめる。新しく追加した発火点はページ未設定＝「その他」 */
+  var AUTO_PAGE_GROUPS = [
+    ['p11-1', '新規登録（P11-1）'], ['p11-23', '新規登録の完了（P11-23）'], ['p11-11', 'パスワード再設定（P11-11）'], ['p11-12', 'パスワード再設定の完了（P11-12）'],
+    ['p11-2', 'クリエイター機能申込（P11-2）'], ['p11-3', 'ギャラリー機能申込（P11-3）'], ['p11-4', 'リエゾンプラス機能申込（P11-4）'],
+    ['p5-11', 'プロフィール編集（P5-11）'], ['p5-12', 'パスワード管理（P5-12）'], ['p5-100', '退会（P5-100）'],
+    ['p2-11', '展覧会の新規・編集（P2-11）'],
+    ['p6-13', '作品へのお問合わせ（P6-13）'], ['p6-14', 'この作品へのお問合わせ（P6-14）'],
+    ['p60-11', 'お問い合わせ（P60-11）'], ['p60-12', 'ご要望（P60-12）'], ['p60-13', '問題報告（P60-13）'], ['p60-14', '修正依頼（P60-14）'],
+    ['p61-11', 'お知らせの新規・編集（P61-11）'],
+    ['txn', '取引（P6-2 購入申込・P3-16／P4-16 取引デスク・P5-15 取引ワークスペースの状態の変化）'],
+    ['p3-15', 'リエゾンプラスコンソール（P3-15／P4-15）'],
+    ['p90-11-1', 'リエゾンプラス機能申込の詳細（P90-11-1）'], ['p90-14', '販売代金管理（P90-14）'],
+    ['batch', '定期送信・ほかの利用者の操作による送信（特定のページによらない）'],
+    ['other', 'その他（ページ未設定）']
+  ];
+  var AUTO_PAGE = {
+    'U-01': 'p11-1', 'U-02': 'p11-23', 'U-03': 'p11-11', 'U-04': 'p11-12', 'U-05': 'p5-12', 'U-06': 'p5-11', 'U-07': 'p5-11', 'U-08': 'p5-100',
+    'F-01': 'p60-11', 'F-01A': 'p60-11', 'F-02': 'p60-12', 'F-02A': 'p60-12', 'F-03': 'p60-13', 'F-03A': 'p60-13', 'F-04': 'p60-14', 'F-04A': 'p60-14',
+    'F-05': 'p6-13', 'F-06': 'p6-13', 'F-07': 'p6-14',
+    'M-01': 'p11-2', 'M-01A': 'p11-2', 'M-03': 'p11-3', 'M-03A': 'p11-3', 'M-05': 'p11-4',
+    'T-01': 'txn', 'T-02': 'txn', 'T-03': 'txn', 'T-04': 'txn', 'T-05': 'txn', 'T-06': 'txn', 'T-07': 'txn', 'T-08': 'txn', 'T-09': 'txn', 'T-10': 'txn',
+    'T-11': 'p3-15', 'T-12': 'p90-14',
+    'A-01': 'batch', 'R-01': 'batch', 'A-03': 'batch', 'I-01': 'batch', 'N-01': 'p61-11', 'A-04': 'p61-11', 'E-01': 'p2-11'
+  };
+  function autoPage(a) { return AUTO_PAGE[a.id] || 'other'; }
+  (function buildAutoPageOptions() {
+    if (!autoFilterCatSel) return;
+    AUTO_PAGE_GROUPS.forEach(function (g) {
+      if (!AUTO_TRIGGERS.some(function (a) { return autoPage(a) === g[0]; })) return;
+      var opt = document.createElement('option');
+      opt.value = g[0]; opt.textContent = g[1];
+      autoFilterCatSel.appendChild(opt);
+    });
+  })();
+
   function renderAuto() {
     if (tabCountAuto) tabCountAuto.textContent = AUTO_TRIGGERS.length + '件';
     if (!autoListEl) return;
-    var fcat = autoFilterCatSel ? autoFilterCatSel.value : '';
-    var filtered = AUTO_TRIGGERS.filter(function (a) { return !fcat || a.category === fcat; });
+    var fpage = autoFilterCatSel ? autoFilterCatSel.value : '';
+    var filtered = AUTO_TRIGGERS.filter(function (a) { return !fpage || autoPage(a) === fpage; });
     if (autoCountEl) autoCountEl.innerHTML = '<strong>' + filtered.length + '</strong>件該当';
     if (autoEmptyEl) autoEmptyEl.hidden = filtered.length !== 0;
     var html = '';
-    AUTO_CATEGORY_ORDER.forEach(function (cat) {
-      if (fcat && cat !== fcat) return;
-      var rows = filtered.filter(function (a) { return a.category === cat; });
+    AUTO_PAGE_GROUPS.forEach(function (g) {
+      var rows = filtered.filter(function (a) { return autoPage(a) === g[0]; });
       if (!rows.length) return;
-      html += '<div class="p909-auto-group">' +
-        '<h4 class="p909-auto-group__title">' + AUTO_CATEGORY_LABEL[cat] + '<span class="ktn-count ktn-count--pill is-idle">' + rows.length + '件</span></h4>' +
+      html += '<div class="p909-group">' +
+        '<h4 class="p909-group__title">' + g[1] + '<span class="ktn-count ktn-count--pill is-idle">' + rows.length + '件</span></h4>' +
         '<div class="p315-archive-table-wrap">' +
-        '<table class="p315-archive-table p909-table p909-auto-table" aria-label="' + AUTO_CATEGORY_LABEL[cat] + 'の自動送信一覧">' +
+        '<table class="p315-archive-table p909-table p909-auto-table" aria-label="' + g[1] + 'の自動送信一覧">' +
           '<thead><tr>' +
             '<th>ID</th><th>発火イベント</th><th>対象 / トリガー元 / タイミング</th><th>件名</th><th>更新日</th><th>操作</th>' +
           '</tr></thead>' +
@@ -11781,7 +11886,7 @@ KTN.pages['p90-9'] = function () {
   function openAutoNewModal() {
     if (!autoNewModal) return;
     if (autoNewId)       autoNewId.value = '';
-    if (autoNewCategory) autoNewCategory.value = (autoFilterCatSel && autoFilterCatSel.value) || 'apply';
+    if (autoNewCategory) autoNewCategory.value = 'form';
     if (autoNewEvent)    autoNewEvent.value = '';
     if (autoNewAud)      autoNewAud.value = '';
     if (autoNewSource)   autoNewSource.value = '';
@@ -11838,6 +11943,22 @@ KTN.pages['p90-9'] = function () {
     });
   })();
 
+  /* メール番号（docs/email-templates.md の番号）。仕様書の番号でテンプレートを探せるよう一覧に出す（2026-09-28）。
+     1テンプレート＝1番号：同じ種類に複数のテンプレートがあるときは「種類の番号＋①②…」（仕様書のパターン番号と一致）。
+     新しく追加したテンプレートは番号なし（—）。本番ではテンプレートの項目として持つ */
+  var TEMPLATE_MAIL_ID = {
+    'mt-1': 'M-02①', 'mt-2': 'M-02②', 'mt-3': 'M-04①', 'mt-4': 'M-04②',
+    'mt-5': 'M-06①', 'mt-6': 'M-06②', 'mt-6c': 'M-06③',
+    'mt-7': 'M-07①', 'mt-8': 'M-07②', 'mt-9': 'M-07③', 'mt-10': 'M-07④',
+    'mt-p9011-1': 'M-08',
+    'mt-p9011-2': 'M-09①', 'mt-p9011-3': 'M-09②', 'mt-p9011-4': 'M-09③', 'mt-p9011-5': 'M-09④', 'mt-p9011-6': 'M-09⑤',
+    'mt-p9011-7': 'M-10①', 'mt-p9011-8': 'M-10②', 'mt-p9011-9': 'M-10③', 'mt-p9011-10': 'M-10④', 'mt-p9011-11': 'M-10⑤',
+    'mt-p2sns-1': 'E-02',
+    'mt-p6011-1': 'CT-01', 'mt-p6011-2': 'CT-02', 'mt-p6011-3': 'CT-03', 'mt-p6011-4': 'CT-04', 'mt-p6011-5': 'CT-05', 'mt-p6011-6': 'CT-06',
+    'mt-p6012-1': 'WS-01', 'mt-p6012-2': 'WS-02',
+    'mt-p6013-1': 'RP-01',
+    'mt-p6014-1': 'FX-01', 'mt-p6014-2': 'FX-02', 'mt-p6014-3': 'FX-03', 'mt-p6014-4': 'FX-04', 'mt-p6014-5': 'FX-05'
+  };
   function findTpl(id) {
     for (var i = 0; i < TEMPLATES.length; i++) if (TEMPLATES[i].id === id) return TEMPLATES[i];
     return null;
@@ -11848,11 +11969,9 @@ KTN.pages['p90-9'] = function () {
     tr.className = 'p909-row';
     tr.dataset.id = t.id;
     tr.innerHTML =
+      '<td data-label="番号" class="p909-cell--muted">' + (TEMPLATE_MAIL_ID[t.id] || '—') + '</td>' +
       '<td data-label="パターン"><span class="cb cb-content ' + PATTERN_CLS[t.pattern] + '">' + PATTERN_LABEL[t.pattern] + '</span></td>' +
-      '<td data-label="使用画面 / 識別キー" class="p909-cell--meta">' +
-        '<div class="p909-cell__screen">' + (SCREEN_LABEL[t.screenId] || t.screenId) + '</div>' +
-        '<div class="p909-cell__key">' + t.variantKey + '</div>' +
-      '</td>' +
+      '<td data-label="識別キー" class="p909-cell--meta"><div class="p909-cell__key">' + t.variantKey + '</div></td>' +
       '<td data-label="テンプレート名" class="p909-cell--title">' + t.name + '</td>' +
       '<td data-label="更新日" class="p909-cell--muted">' + t.updatedAt + '</td>' +
       '<td data-label="状態">' + (t.status === 'archived' ? '<span class="ktn-review-status ktn-review-status--returned">廃止</span>' : '<span class="ktn-review-status ktn-review-status--granted">有効</span>') + '</td>' +
@@ -11863,6 +11982,9 @@ KTN.pages['p90-9'] = function () {
     return tr;
   }
 
+  /* 手動送信も自動送信と同じく「ページごとの見出し＋表」で並べる（2026-09-28・旧：1つの表＋ページャ）。
+     見出しの順は SCREEN_LABEL の並び（新しい使用画面は末尾） */
+  var MANUAL_THEAD = '<thead><tr><th>番号</th><th>パターン</th><th>識別キー</th><th>テンプレート名</th><th>更新日</th><th>状態</th><th>操作</th></tr></thead>';
   function render() {
     var fscr = screenSel.value, fpat = patSel.value, fstat = statSel.value;
     var rows = TEMPLATES.filter(function (t) {
@@ -11874,20 +11996,20 @@ KTN.pages['p90-9'] = function () {
     if (emptyEl) emptyEl.hidden = rows.length !== 0;
     if (countEl) countEl.innerHTML = '<strong>' + rows.length + '</strong>件該当';
     if (tabCountManual) tabCountManual.textContent = TEMPLATES.filter(function (t) { return t.status === 'active'; }).length + '件';
-
-    var totalPages = Math.max(1, Math.ceil(rows.length / PER_PAGE));
-    if (page > totalPages) page = totalPages;
-    var pageRows = rows.slice((page - 1) * PER_PAGE, page * PER_PAGE);
-    listEl.innerHTML = '';
-    pageRows.forEach(function (t) { listEl.appendChild(makeItem(t)); });
-    KTN.pagination.render(pagerEl, {
-      page: page,
-      totalPages: totalPages,
-      onGoto: function (p) { page = p; render(); },
-    });
+    var ids = Object.keys(SCREEN_LABEL);
+    rows.forEach(function (t) { if (ids.indexOf(t.screenId) < 0) ids.push(t.screenId); });
+    listEl.innerHTML = ids.map(function (id) {
+      var g = rows.filter(function (t) { return t.screenId === id; });
+      if (!g.length) return '';
+      var label = (SCREEN_LABEL[id] || id) + '（' + id.toUpperCase() + '）';
+      return '<div class="p909-group">' +
+        '<h4 class="p909-group__title">' + label + '<span class="ktn-count ktn-count--pill is-idle">' + g.length + '件</span></h4>' +
+        '<div class="p315-archive-table-wrap"><table class="p315-archive-table p909-table" aria-label="' + label + 'のテンプレート一覧">' + MANUAL_THEAD +
+        '<tbody>' + g.map(function (t) { return makeItem(t).outerHTML; }).join('') + '</tbody></table></div></div>';
+    }).join('');
   }
 
-  function renderReset() { page = 1; render(); }
+  function renderReset() { render(); }
   screenSel.addEventListener('change', renderReset);
   patSel.addEventListener('change', renderReset);
   statSel.addEventListener('change', renderReset);
@@ -16853,7 +16975,7 @@ KTN.picks = (function () {
     },
     {
       slug: 'solo-all', order: 4, from: '', to: '', shelf: 1, refeed: 1,
-      label: 'ひとりの作家をじっくり',
+      label: 'ひとりのクリエイターをじっくり',
       desc: '出展者がひとりの展覧会です。ひとつの仕事をまとめて見られます。',
       sel: { form: 'solo', pop: 60 }
     },
@@ -17342,7 +17464,7 @@ KTN.pages['p10'] = function () {
     'near':         { axis: 'area', sort: 'dist', noTools: 1, label: '近くで開催中',          desc: '現在地から近い順に、いま開催中の展覧会を並べています。思い立った日に寄れます。', f: function (x) { return !!x.dist && isOn(x); } },
     'liaison-all':  { label: 'オンラインでも楽しめる', html: '<span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>オンラインでも楽しめる', desc: '会場に行かなくても作品をオンラインで見られる展覧会です。', f: function (x) { return !!x.liaison; } },
     'free':         { refeed: 1, axis: 'price', label: '無料で楽しめる展示',    desc: '入場無料で見られる展覧会です。通りがかりに立ち寄って、合わなければ出ても構いません。', f: function (x) { return !!x.free; } },
-    'solo-all':     { refeed: 1, axis: 'pop',   label: 'ひとりの作家をじっくり', desc: '出展者がひとりの展覧会です。ひとつの仕事をまとめて見られます。', f: function (x) { return x.type === 'solo' && x.pop >= 60; } },
+    'solo-all':     { refeed: 1, axis: 'pop',   label: 'ひとりのクリエイターをじっくり', desc: '出展者がひとりの展覧会です。ひとつの仕事をまとめて見られます。', f: function (x) { return x.type === 'solo' && x.pop >= 60; } },
     /* ── 発見のある展覧会（Picks レール枠⑤・2026-09-07 新設／2026-09-08 日替わりピックアップ化）──
        反応の多い順に並べると、母数の大きい展覧会が上位を占め続けて入れ替わらない。
        反応がしきい値未満（ノーマーク）のものだけを別に拾い、順位とは無関係の入口を1つ確保する
@@ -23478,4 +23600,252 @@ KTN.pages['p60-6'] = function () {
 
 KTN.pages['p60-7'] = function () {
   ktnInitBadgeChapter('p607', 'gallery');
+};
+
+/* ════════════════════════════════════════════════════
+   問合せ（1問1答）の一覧：P6-14（この作品）・P3-20／P4-20（全作品）・P5-16（問合せ履歴）共通（2026-09-28）
+   ・表形式（.ktn-inq-table）：1行＝1件。行を開くと〈種類・内容・返信〉と操作（出品者側）が出る。
+   ・スレッドにしない：1件＝問合せ1つ＋受信者の返信1回。続けて聞くときは送信者があらためて問い合わせる。
+   ・状態：未返信 unreplied／返信済 replied／対応済（返信なし）closed。closed は送信者に通知しない（送信者側では「返信待ち」のまま）。
+   ・受信者＝作品の出品者（クリエイター／ギャラリー。ギャラリーは P6-1／P6-2 に出品している作品）。
+   ・双方にニックネームだけを見せる（メールアドレス・本名は出さない）。
+   ・P5-16 は「問合せ履歴」：いまは作品への問合せだけだが、将来ほかの種類の問合せもここにまとめる前提で、
+     対象を target（kind＝content種別）として持つ。
+   本番：サーバーの問合せデータから描画する。以下はデモデータ。
+════════════════════════════════════════════════════ */
+KTN.INQ_WORKS = {
+  w1: { kind: 'artwork', name: 'オノマトペの庭', href: 'kotennavi-p6-2.html', thumb: 'linear-gradient(155deg,#b8d8cc,#6a9e8a)', owner: 'creator', ownerName: '田中 透', meta: '2026年 · キャンバスに油彩' },
+  w2: { kind: 'artwork', name: '音の輪郭 No.7', href: 'kotennavi-p6-1.html', thumb: 'linear-gradient(145deg,#2a3a5a,#1a2a4a)', owner: 'creator', ownerName: '田中 透', meta: '2025年 · 紙にアクリル' },
+  w3: { kind: 'artwork', name: '光の堆積 No.2', href: 'kotennavi-p6-2.html', thumb: 'linear-gradient(145deg,#5a4a3a,#2a1a0a)', owner: 'gallery', ownerName: 'Gallery SOIL 渋谷', meta: '中村 海 · 2026年 · 油彩・麻布' },
+  w4: { kind: 'artwork', name: '静かな水面', href: 'kotennavi-p6-1.html', thumb: 'linear-gradient(145deg,#3a5a6a,#1a2a3a)', owner: 'gallery', ownerName: 'Gallery SOIL 渋谷', meta: '中村 海 · 2025年 · 写真・ジクレープリント' }
+};
+KTN.INQ_ITEMS = [
+  { id: 'iq1', work: 'w1', sender: '山田 花子', date: '2026.08.20 14:12', type: '作品について質問したい', status: 'unreplied',
+    body: 'こちらの作品はキャンバスの側面にも絵の具が塗られていますか？額装なしで飾りたいと考えています。' },
+  { id: 'iq2', work: 'w1', sender: 'I.S.', date: '2026.08.18 09:40', type: '取材・掲載の依頼', status: 'unreplied',
+    body: 'アート系ウェブメディアで、オノマトペをテーマにした作品の特集を企画しています。作品画像の掲載についてご相談させてください。' },
+  { id: 'iq3', work: 'w1', sender: 'M.S.', date: '2026.08.10 20:03', type: '作品について質問したい', status: 'replied',
+    body: '制作に使われている絵の具の種類を教えていただけますか？',
+    reply: { date: '2026.08.11 08:22', body: 'ご連絡ありがとうございます。油絵の具を中心に、一部にアクリルを重ねています。' } },
+  { id: 'iq4', work: 'w2', sender: '山田 花子', date: '2026.08.05 18:30', type: '展示・貸出について相談したい', status: 'replied',
+    body: 'カフェでの小さな展示で、こちらの作品をお借りすることはできますか？',
+    reply: { date: '2026.08.07 10:15', body: 'お問合わせありがとうございます。期間と場所をお知らせいただければ検討いたします。作品ページから、あらためてご連絡ください。' } },
+  { id: 'iq5', work: 'w2', sender: 'K.T.', date: '2026.07.28 11:02', type: 'その他', status: 'closed',
+    body: 'ほかの作家さんの作品も扱っていますか？' },
+  { id: 'iq6', work: 'w3', sender: '山田 花子', date: '2026.08.22 16:48', type: '作品について質問したい', status: 'unreplied',
+    body: '作品のサイズ感を知りたいので、展示風景の写真があれば見せていただけますか？' },
+  { id: 'iq7', work: 'w3', sender: 'Y.A.', date: '2026.08.14 13:20', type: '展示・貸出について相談したい', status: 'replied',
+    body: '企業のロビーでの展示にお借りできるか相談させてください。',
+    reply: { date: '2026.08.16 09:00', body: 'ご相談ありがとうございます。貸出の条件をご案内しますので、ギャラリーまでお電話ください。' } },
+  { id: 'iq8', work: 'w4', sender: 'N.O.', date: '2026.08.02 19:11', type: '作品について質問したい', status: 'unreplied',
+    body: '作品の額はどのような素材ですか？' }
+];
+KTN.INQ_ME = '山田 花子';          /* P5-16（問合せ履歴）のデモの送信者 */
+KTN.INQ_STATUS = {
+  unreplied: { label: '未返信', cls: 'ktn-review-status--pending' },
+  replied:   { label: '返信済', cls: 'ktn-review-status--granted' },
+  closed:    { label: '対応済（返信なし）', cls: 'ktn-review-status--cancelled' },
+  waiting:   { label: '返信待ち', cls: 'ktn-review-status--new' }      /* 送信者側の見え方（未返信・対応済とも） */
+};
+KTN.INQ_KIND = { artwork: '作品' };  /* 問合せの対象の種別（問合せ履歴の「対象ページ」に出す・将来追加） */
+(function () {
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function chip(st) { var s = KTN.INQ_STATUS[st]; return '<span class="ktn-review-status ' + s.cls + '">' + s.label + '</span>'; }
+  function target(w) {
+    return '<a class="ktn-inq-table__target" href="' + w.href + '"><span class="ktn-inq-table__thumb" style="background:' + w.thumb + '"></span>' +
+      '<span class="ktn-inq-table__name"><span class="cb cb-content cb-' + w.kind + '">' + w.kind + '</span>' + esc(w.name) + '</span></a>';
+  }
+  /* 列の定義（mode ごと）。head＝見出し、cell(it,w)＝セルの中身、cls＝幅の型 */
+  var COLS = {
+    sender: [
+      { head: '対象ページ', cls: 'target', cell: function (it, w) { return target(w); } },
+      { head: '問合せ先', cls: 'party', cell: function (it, w) { return '<span class="cb cb-person cb-' + w.owner + '">' + w.owner + '</span>' + esc(w.ownerName); } },
+      { head: '問合せ日時', cls: 'date', cell: function (it) { return it.date; } },
+      { head: '状態', cls: 'status', cell: function (it) { return chip(it.status === 'replied' ? 'replied' : 'waiting'); } }
+    ],
+    owner: [
+      { head: '作品', cls: 'target', cell: function (it, w) { return target(w); } },
+      { head: '送信者', cls: 'party', cell: function (it) { return esc(it.sender); } },
+      { head: '受付日時', cls: 'date', cell: function (it) { return it.date; } },
+      { head: '状態', cls: 'status', cell: function (it) { return chip(it.status); } }
+    ],
+    work: [
+      { head: '送信者', cls: 'party', cell: function (it) { return esc(it.sender); } },
+      { head: '種類', cls: 'target', cell: function (it) { return esc(it.type); } },
+      { head: '受付日時', cls: 'date', cell: function (it) { return it.date; } },
+      { head: '状態', cls: 'status', cell: function (it) { return chip(it.status); } }
+    ]
+  };
+  function row(it, mode) {
+    var w = KTN.INQ_WORKS[it.work];
+    var mgr = mode !== 'sender';
+    var h = '<details class="ktn-inq-row' + (it.status === 'unreplied' && mgr ? ' is-unreplied' : '') + '" id="inq-' + it.id + '" data-inq="' + it.id + '">';
+    h += '<summary class="ktn-inq-row__sum">' + COLS[mode].map(function (c) {
+      return '<span class="ktn-inq-table__c ktn-inq-table__c--' + c.cls + '" data-head="' + c.head + '">' + c.cell(it, w) + '</span>';
+    }).join('') + '<span class="ktn-inq-row__chev" aria-hidden="true"></span></summary>';
+    h += '<div class="ktn-inq-row__body"><dl class="ktn-inq-row__dl">';
+    if (mode !== 'work') h += '<dt>お問合わせの種類</dt><dd>' + esc(it.type) + '</dd>';
+    h += '<dt>お問合わせ内容</dt><dd><p class="ktn-inq__body">' + esc(it.body) + '</p></dd>';
+    if (it.status === 'replied') {
+      h += '<dt>' + (mgr ? 'あなたの返信' : esc(w.ownerName) + 'からの返信') + '</dt><dd><div class="ktn-inq__reply"><p class="ktn-inq__reply-label">' + it.reply.date + '</p>' +
+        '<p class="ktn-inq__reply-body">' + esc(it.reply.body) + '</p></div></dd>';
+    } else if (!mgr) {
+      h += '<dt>返信</dt><dd class="ktn-inq-row__none">返信はまだありません。</dd>';
+    } else if (it.status === 'closed') {
+      h += '<dt>返信</dt><dd class="ktn-inq-row__none">返信せずに終えました（送信者には通知していません）。</dd>';
+    }
+    h += '</dl>';
+    if (mgr && it.status === 'unreplied') {
+      h += '<div class="p211-field ktn-inq__form"><label class="p211-label" for="inqReply-' + it.id + '">返信内容</label>' +
+        '<textarea class="p211-textarea" id="inqReply-' + it.id + '" rows="4" placeholder="返信内容をご記入ください（返信は1回です）"></textarea></div>' +
+        '<div class="ktn-inq__actions">' +
+          '<button type="button" class="ktn-op-btn ktn-op-btn--sm" data-inq-close="' + it.id + '">返信せずに終える</button>' +
+          '<button type="button" class="ktn-op-btn ktn-op-btn--primary" data-inq-reply="' + it.id + '">返信を送信</button>' +
+        '</div>';
+    }
+    return h + '</div></details>';
+  }
+  function table(el, items, mode, empty) {
+    if (!el) return;
+    /* 描き直しでも開いている行を保つ（返信・操作のあと行が閉じないように） */
+    var open = {};
+    el.querySelectorAll('details[open]').forEach(function (d) { open[d.id] = true; });
+    if (!items.length) { el.innerHTML = '<p class="ktn-inq-empty">' + empty + '</p>'; return; }
+    el.innerHTML = '<div class="ktn-inq-table">' +
+      '<div class="ktn-inq-table__head" aria-hidden="true">' + COLS[mode].map(function (c) {
+        return '<span class="ktn-inq-table__c ktn-inq-table__c--' + c.cls + '">' + c.head + '</span>';
+      }).join('') + '<span class="ktn-inq-row__chev"></span></div>' +
+      items.map(function (it) { return row(it, mode); }).join('') + '</div>';
+    el.querySelectorAll('details').forEach(function (d) { if (open[d.id]) d.open = true; });
+    /* #inq-<id> で来たら、その行を開いて見せる */
+    var hash = location.hash && location.hash.slice(1);
+    if (hash && !table._jumped) {
+      var t = document.getElementById(hash);
+      if (t && t.tagName === 'DETAILS') { table._jumped = true; t.open = true; setTimeout(function () { t.scrollIntoView({ block: 'start' }); }, 0); }
+    }
+  }
+  var ORDER = { unreplied: 0, replied: 1, closed: 2 };
+  function byDate(a, b) { return a.date < b.date ? 1 : -1; }
+  KTN.inq = {
+    /* P6-14：この作品の問合せ（未返信を上に） */
+    renderWork: function (elId, workId) {
+      var items = KTN.INQ_ITEMS.filter(function (it) { return it.work === workId; }).sort(function (a, b) { return ORDER[a.status] - ORDER[b.status] || byDate(a, b); });
+      table(document.getElementById(elId), items, 'work', 'この作品へのお問合わせはまだありません。');
+      return items;
+    },
+    /* P3-20／P4-20：受信者の全作品の問合せ（未返信を上に） */
+    renderOwner: function (elId, owner, opt) {
+      opt = opt || {};
+      var items = KTN.INQ_ITEMS.filter(function (it) {
+        var w = KTN.INQ_WORKS[it.work];
+        return w.owner === owner && (!opt.work || it.work === opt.work) && (!opt.status || it.status === opt.status);
+      }).sort(function (a, b) { return ORDER[a.status] - ORDER[b.status] || byDate(a, b); });
+      table(document.getElementById(elId), items, 'owner', opt.work || opt.status ? '条件に合うお問合わせはありません。' : 'お問合わせはまだありません。');
+      return items;
+    },
+    /* P5-16：問合せ履歴（新しい順）。closed も送信者には「返信待ち」で見せる */
+    renderSender: function (elId, me) {
+      var items = KTN.INQ_ITEMS.filter(function (it) { return it.sender === me; }).sort(byDate);
+      table(document.getElementById(elId), items, 'sender', 'まだお問合わせを送っていません。');
+      return items;
+    },
+    unrepliedCount: function (owner, workId) {
+      return KTN.INQ_ITEMS.filter(function (it) {
+        return KTN.INQ_WORKS[it.work].owner === owner && (!workId || it.work === workId) && it.status === 'unreplied';
+      }).length;
+    }
+  };
+  /* 返信・返信せずに終える（デモ：データを書き換えて描き直し。rerender はページが設定） */
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest && e.target.closest('[data-inq-reply],[data-inq-close]');
+    if (!t) return;
+    var id = t.getAttribute('data-inq-reply') || t.getAttribute('data-inq-close');
+    var it = KTN.INQ_ITEMS.filter(function (x) { return x.id === id; })[0];
+    if (!it) return;
+    if (t.hasAttribute('data-inq-reply')) {
+      var ta = document.getElementById('inqReply-' + id);
+      if (!ta.value.trim()) { ta.focus(); ta.closest('.p211-field').classList.add('is-error'); return; }
+      it.status = 'replied';
+      it.reply = { date: '2026.09.28 10:00', body: ta.value.trim() };
+      KTN.toast('返信を送信しました。送信者にメールでお知らせします');
+    } else {
+      it.status = 'closed';
+      KTN.toast('返信せずに終えました（送信者には通知されません）');
+    }
+    if (typeof KTN.inqRerender === 'function') KTN.inqRerender();
+  });
+}());
+
+/* P6-14 作品-問合せ管理（この作品への問合せ）。creator/gallery 共有（出品者＝受信者）。
+   ?work=w1〜w4 で作品を指定（P3-20／P4-20・作品ページのオーナーメニューから）。無ければロールの既定作品（creator＝w1／gallery＝w3）。 */
+KTN.pages['p6-14'] = function () {
+  var fixed = new URLSearchParams(location.search).get('work');
+  function role() { return ((window.ktnState && window.ktnState.role) || 'creator').replace(/^user\+/, ''); }
+  function curWork() {
+    var r = role();
+    if (fixed && KTN.INQ_WORKS[fixed] && (r === 'admin' || KTN.INQ_WORKS[fixed].owner === r)) return fixed;
+    return r === 'gallery' ? 'w3' : 'w1';
+  }
+  function set(id, fn) { var el = document.getElementById(id); if (el) fn(el); }
+  function sync() {
+    var id = curWork(), w = KTN.INQ_WORKS[id];
+    document.body.classList.remove('p3-page', 'p4-page');
+    document.body.classList.add(w.owner === 'gallery' ? 'p4-page' : 'p3-page');
+    set('p614Media', function (el) { el.style.background = w.thumb; el.href = w.href; });
+    set('p614Name', function (el) { el.innerHTML = '<a href="' + w.href + '">《' + w.name + '》</a>'; });
+    set('p614Meta', function (el) { el.textContent = w.meta; });
+    set('p614OwnerBadge', function (el) { el.className = 'cb cb-person cb-' + w.owner; el.textContent = w.owner; });
+    set('p614OwnerName', function (el) { el.textContent = w.ownerName; el.href = w.owner === 'gallery' ? 'kotennavi-p4.html' : 'kotennavi-p3.html'; });
+    set('p614View', function (el) { el.href = w.href; });
+    set('p614AllLink', function (el) { el.href = w.owner === 'gallery' ? './kotennavi-p4-20.html' : './kotennavi-p3-20.html'; });
+    var items = KTN.inq.renderWork('p614List', id);
+    var un = items.filter(function (it) { return it.status === 'unreplied'; }).length;
+    set('p614Count', function (el) { el.innerHTML = '問合せ <strong>' + items.length + '件</strong>（未返信 ' + un + '件）'; });
+    /* パンくずの作品名を表示中の作品に合わせる（PAGES の既定は《オノマトペの庭》） */
+    document.querySelectorAll('#ktnBc a').forEach(function (a) {
+      if (/kotennavi-p6(-\d)?\.html$/.test(a.getAttribute('href') || '')) { a.textContent = w.name; a.href = w.href; }
+    });
+  }
+  var prev = window.ktnRender;
+  window.ktnRender = function () { if (typeof prev === 'function') prev(); sync(); };
+  KTN.inqRerender = function () { window.ktnRender(); };   /* ヘッダー（メニューの未返信件数）も描き直す */
+  sync();
+};
+
+/* P3-20／P4-20 作品への問合せ（出品者の全作品を横断・未返信を上に） */
+function ktnInqOwnerPage(owner) {
+  return function () {
+    var fw = document.getElementById('inqFilterWork');
+    var fs = document.getElementById('inqFilterStatus');
+    if (fw && fw.options.length <= 1) {
+      Object.keys(KTN.INQ_WORKS).forEach(function (k) {
+        var w = KTN.INQ_WORKS[k];
+        if (w.owner !== owner) return;
+        var o = document.createElement('option'); o.value = k; o.textContent = w.name; fw.appendChild(o);
+      });
+    }
+    function sync() {
+      KTN.inq.renderOwner('inqList', owner, { work: fw ? fw.value : '', status: fs ? fs.value : '' });
+      var un = KTN.inq.unrepliedCount(owner);
+      var all = KTN.INQ_ITEMS.filter(function (it) { return KTN.INQ_WORKS[it.work].owner === owner; }).length;
+      var c = document.getElementById('inqCount');
+      if (c) c.innerHTML = '問合せ <strong>' + all + '件</strong>（未返信 ' + un + '件）';
+    }
+    [fw, fs].forEach(function (el) { if (el) el.addEventListener('change', sync); });
+    KTN.inqRerender = function () { if (window.ktnRender) window.ktnRender(); sync(); };  /* ヘッダー（メニューの未返信件数）も描き直す */
+    sync();
+  };
+}
+KTN.pages['p3-20'] = ktnInqOwnerPage('creator');
+KTN.pages['p4-20'] = ktnInqOwnerPage('gallery');
+
+/* P5-16 問合せ履歴（送信者の履歴・読み取り専用） */
+KTN.pages['p5-16'] = function () {
+  function sync() {
+    var items = KTN.inq.renderSender('inqList', KTN.INQ_ME);
+    var c = document.getElementById('inqCount');
+    if (c) c.innerHTML = '問合せ <strong>' + items.length + '件</strong>';
+  }
+  KTN.inqRerender = sync;
+  sync();
 };

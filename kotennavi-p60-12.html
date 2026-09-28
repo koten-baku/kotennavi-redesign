@@ -122,13 +122,14 @@
           </div>
           <div class="p114-applicant__body">
             <span class="p114-applicant__label">送信者アカウント</span>
-            <span class="p114-applicant__name" id="p6012AccountName">山田 花子 <small>1997sakura2022@gmail.com</small></span>
+            <span class="p114-applicant__name" id="p6012AccountName">山田 花子 <small>hanako.yamada@example.com</small></span>
           </div>
         </div>
 
         <div class="p211-field">
           <label class="p211-label">お名前<span class="ktn-req">必須</span></label>
           <input class="p211-input" type="text" id="p6012Name" placeholder="例：山田 花子">
+          <p class="p211-help">サイト内のニックネームではなく、本名をご入力ください。</p>
         </div>
 
         <div class="p211-field" style="margin-top:12px">
@@ -142,11 +143,16 @@
           <select class="p211-select" id="p6012Cat">
             <option value="">選択してください</option>
             <option>検索・発見のしやすさ</option>
+            <option>展覧会・作品の掲載情報（載せてほしい項目など）</option>
+            <option>ウォッチ・チェックイン・興味あり！</option>
             <option>展覧会掲載・編集機能</option>
             <option>リエゾン／リエゾンプラス（作品展示・販売）</option>
             <option>myページ・通知</option>
             <option>その他</option>
           </select>
+          <!-- 掲載情報の項目は、実際の声を反映して追加してきたもの（子連れで行けるか・販売作品の価格など）。
+               個展なび独自の機能（ウォッチ・チェックイン・興味あり！）とあわせて、意見を集めたい分野を選択肢に出す（2026-09-27） -->
+          <p class="p211-help">「掲載情報」は、展覧会や作品について載せてほしい項目のご意見です（例：お子さま連れで行けるか、販売作品の価格の表示など）。</p>
         </div>
 
         <div class="p211-field" style="margin-top:12px">
@@ -199,7 +205,7 @@
 <script src="./kotennavi-pages.js"></script>
 <script>
 /* デモ用のログインアカウント。後工程でセッションの実ユーザー名・メール・UIDに差し替える。 */
-var P6012_DEMO = { name: '山田 花子', email: '1997sakura2022@gmail.com', uid: 'U-100482' };
+var P6012_DEMO = { name: '山田 花子', email: 'hanako.yamada@example.com', uid: 'U-100482' };
 
 /* 送信者の状態切替（デモ）。ログイン中＝アカウント表示＋氏名/メール/UIDを自動セット、ゲスト＝空欄 */
 function p6012SetRole(role) {
@@ -212,7 +218,7 @@ function p6012SetRole(role) {
   var email = document.getElementById('p6012Email');
   var uid = document.getElementById('p6012Uid');
   if (login) {
-    name.value = P6012_DEMO.name;
+    name.value = '';   /* お名前は自動で入れない：アカウントの名前はサイト内のニックネームのため。お問合わせ等は本名で送ってもらう（2026-09-27） */
     email.value = P6012_DEMO.email;
     uid.value = P6012_DEMO.uid;      /* ← 本番はセッションの実UID */
   } else {

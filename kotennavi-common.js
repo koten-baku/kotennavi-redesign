@@ -49,6 +49,7 @@ const I = {
   user: `<svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`,
   key: `<svg viewBox="0 0 24 24"><circle cx="7.5" cy="15.5" r="5.5"/><path d="M21 2l-9.6 9.6M15.5 7.5l3 3"/></svg>`,
   bell: `<svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>`,
+  msg: `<svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`,
   send: `<svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>`,
   clone: `<svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M10 4v4M14 4v4M2 8h20"/></svg>`,
   star: `<svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`,
@@ -390,7 +391,7 @@ function ktnVenueFlyer() {
       + '<div class="ktn-vflyer__qr-code" aria-hidden="true">' + qrSvg + '</div>'
       + '<div class="ktn-vflyer__checkin-body">'
       + '<p class="ktn-vflyer__checkin-ttl">チェックインのお願い</p>'
-      + '<p class="ktn-vflyer__checkin-desc">ご来場の記念に、QRからチェックインをお願いいたします。あわせて作家・ギャラリーをウォッチしていただくと、次回展の情報をメールでいち早くお届けします。感想やレビューもぜひお聞かせください。</p>'
+      + '<p class="ktn-vflyer__checkin-desc">ご来場の記念に、QRからチェックインをお願いいたします。あわせてクリエイター・ギャラリーをウォッチしていただくと、次回展の情報をメールでいち早くお届けします。感想やレビューもぜひお聞かせください。</p>'
       + '<p class="ktn-vflyer__checkin-note">※チェックインには個展なびのアカウントが必要です（その場で無料登録できます）</p>'
       + '</div>'
       + '</div>'
@@ -1475,7 +1476,7 @@ KTN.QA = [
   { id: 'EXH-14', cat: 'exhibition-edit', aud: 'common', grp: '会場について', q: '会場のアクセス・地図はどこで入力しますか？', a: '「開催場所の詳細情報」（＋ 追加項目）で入力します。新規会場ではここが会場ページの内容になります。' },
   // D. 出展クリエイター
   { id: 'EXH-15', cat: 'exhibition-edit', aud: 'common', grp: '出展クリエイター', q: '出展クリエイターは必須ですか？', a: 'はい、必須です。' },
-  { id: 'EXH-16', cat: 'exhibition-edit', aud: 'common', grp: '出展クリエイター', q: '登録されていない作家を出展者にできますか？', a: 'いいえ。登録済みのクリエイターのみ選択できます（自由入力はできません）。未登録の場合は、先にクリエイター登録が必要です。' },
+  { id: 'EXH-16', cat: 'exhibition-edit', aud: 'common', grp: '出展クリエイター', q: '登録されていないクリエイターを出展者にできますか？', a: 'いいえ。登録済みのクリエイターのみ選択できます（自由入力はできません）。未登録の場合は、先にクリエイター登録が必要です。' },
   { id: 'EXH-17', cat: 'exhibition-edit', aud: 'common', grp: '出展クリエイター', q: '同姓同名・同ジャンルのクリエイターがいて選び分けられません。', a: '候補の「確認 ↗」からクリエイターページを開いて確認し、正しい方を選んでください。' },
   { id: 'EXH-18', cat: 'exhibition-edit', aud: 'gallery', grp: '出展クリエイター', q: 'ギャラリーは誰でも出展クリエイターに指定できますか？', a: '取扱い関係のある登録済みクリエイターのみ指定できます。これは掲載する作品・展覧会の真正性を担保するためのルールです。' },
   { id: 'EXH-19', cat: 'exhibition-edit', aud: 'creator', grp: '出展クリエイター', q: 'グループ展など、自分以外も出展者に追加できますか？', a: 'できます。登録済みのクリエイターから複数選択して追加してください。' },
@@ -1488,7 +1489,7 @@ KTN.QA = [
   // F. 関連イベント
   { id: 'EXH-25', cat: 'exhibition-edit', aud: 'common', grp: '関連イベント', q: 'トークやワークショップを掲載したい。', a: '「関連イベント」で追加します。タイトル・日時・詳細/申込URLを入力してください。' },
   { id: 'EXH-26', cat: 'exhibition-edit', aud: 'common', grp: '関連イベント', q: '1日に複数回あるイベントはどう入力しますか？', a: '時間欄にまとめて記入してください（例：①11:00〜 ②14:00〜）。内容の異なるイベントは分けて追加します。' },
-  { id: 'EXH-27', cat: 'exhibition-edit', aud: 'common', grp: '関連イベント', q: 'イベントに担当作家を紐付けできますか？', a: 'イベント入力に担当クリエイター欄はありません。イベントは展覧会単位の情報として登録します。' },
+  { id: 'EXH-27', cat: 'exhibition-edit', aud: 'common', grp: '関連イベント', q: 'イベントに担当クリエイターを紐付けできますか？', a: 'イベント入力に担当クリエイター欄はありません。イベントは展覧会単位の情報として登録します。' },
   // G. 画像・タグ・任意項目
   { id: 'EXH-28', cat: 'exhibition-edit', aud: 'common', grp: '画像・タグ・任意項目', q: '「＋ 追加項目」とは何ですか？', a: '任意で入力できる欄です。開いて入力すると展覧会ページが充実します。未入力でも公開できます。' },
   { id: 'EXH-29', cat: 'exhibition-edit', aud: 'common', grp: '画像・タグ・任意項目', q: '画像は複数枚載せられますか？', a: 'メイン画像に加え、サブ画像（＋ 追加項目）で複数枚を掲載できます。' },
@@ -1594,7 +1595,7 @@ KTN.QA = [
   { id: 'GAP-04', cat: 'gallery-apply', aud: 'common', grp: 'よくあるご質問', q: '複数のギャラリースペースを運営しています。それぞれ掲載できますか？', a: 'はい、可能です。ギャラリーページは1スペースにつき1ページとなります。複数のギャラリースペースを運営されている場合は、スペースごとに別のメールアドレスでユーザー登録のうえ、それぞれお申込みください。' },
   { id: 'GAP-05', cat: 'gallery-apply', aud: 'common', grp: 'よくあるご質問', q: '誰を「ご担当者」として登録すればよいですか？', a: 'ギャラリーページの管理・展覧会の掲載を担当し、掲載内容について個展なびからの連絡・確認に対応いただける方をご担当者としてご登録ください。' },
   { id: 'GAP-06', cat: 'gallery-apply', aud: 'common', grp: 'よくあるご質問', q: '作品の展示・販売（リエゾン／リエゾンプラス）はすぐ使えますか？', a: 'リエゾン（無料のオンライン展示）は、ギャラリー機能のご利用開始後、申込不要でそのままお使いいただけます。販売もできるリエゾンプラスは、別途お申込みが必要です。' },
-  { id: 'CAP-12', cat: ['creator-apply', 'gallery-apply'], aud: 'common', grp: 'よくあるご質問', q: '自分の展覧会情報をもとに、すでにクリエイター・ギャラリーページができているようです。このページを引き継ぐことはできますか？', a: 'はい、引き継げます。個展なびでは、他の方が投稿された展覧会情報をもとに、事務局があらかじめクリエイター・ギャラリーのページを作成している場合があります（この時点ではまだオーナーは設定されていません）。この機能にお申込みいただく際、心当たりのあるページがあれば「既存の掲載ページ」欄にURLや名称をご記入ください。事務局で確認のうえ、そのページのオーナーをご本人に切り替え、これまでの展覧会情報を引き継ぎます。ご記入がなくても事務局が名寄せして引き継げる場合があり、その結果は設定完了メールでお知らせします。' },
+  { id: 'CAP-12', cat: ['creator-apply', 'gallery-apply'], aud: 'common', grp: 'よくあるご質問', q: '自分の展覧会情報をもとに、すでにクリエイター・ギャラリーページができているようです。このページを引き継ぐことはできますか？', a: 'はい、引き継げます。個展なびでは、他の方が投稿された展覧会情報をもとに、事務局があらかじめクリエイター・ギャラリーのページを作成している場合があります（この時点ではまだオーナーは設定されていません）。この機能にお申込みいただく際、心当たりのあるページがあれば「既存の掲載ページ」欄にURLや名称をご記入ください。事務局で確認のうえ、そのページのオーナーをご本人に切り替え、これまでの展覧会情報を引き継ぎます。ご記入がなくても事務局が名寄せして引き継げる場合があり、その結果は設定完了メールでお知らせします。なお、お申込みの内容を事務局で確認のうえ、ページを引き継げるかどうかを判断します。すでに別の方が管理しているページの場合など、ご希望に沿えないことがあります。' },
   { id: 'CAP-13', cat: ['creator-apply', 'gallery-apply'], aud: 'common', grp: 'よくあるご質問', q: '以前この機能を申し込んだのですが、ログイン方法が分からなくなりました。', a: 'クリエイター・ギャラリー機能は、お申込み時のユーザーアカウントに紐づいています。もう一度お申込みいただく必要はありません。ログイン方法が分からない場合は、ログイン画面の「パスワードをお忘れの方」から、ご登録のメールアドレスでパスワードを再設定してログインしてください。ログインすると、これまでのクリエイター・ギャラリーページや機能をそのままご利用いただけます。ご登録のメールアドレスもご不明な場合は、お手数ですが{{contact}}より事務局までご連絡ください。' },
   { id: 'CAP-02', cat: ['creator-apply', 'gallery-apply'], aud: 'common', grp: 'よくあるご質問', q: '申し込んでから、いつ使えるようになりますか？', a: 'お申込み後、個展なび事務局が申込内容を確認し、設定作業を行います。少々お時間をいただき、設定が完了しましたら設定完了メールでお知らせします。確認にかかる日数はお約束していないため、お早めのお申込みをおすすめします。' },
   { id: 'CAP-10', cat: ['creator-apply', 'gallery-apply', 'watch'], aud: 'common', grp: 'よくあるご質問', q: '「ウォッチ」とは何ですか？', a: '個展なびのユーザーが、気になるクリエイター・ギャラリーを登録しておけるサイトの機能です（フォローのようなもの）。ウォッチしておくと、そのクリエイター・ギャラリーが新しい展覧会・記事を公開したときに、メールでお知らせが届きます。クリエイター・ギャラリーにとっては、掲載を続けるほど活動が届きやすくなる仕組みです。' },
@@ -1771,6 +1772,25 @@ function renderAll() {
   syncAdminNote();
   syncRoleOwnerOnly();
   syncAuthWall();
+  syncInqLinks();
+}
+
+/* 作品への問合せ（P6-13）への案内［data-inq-link］はログインユーザーにだけ出す（ゲストは送信にログインが必要）。
+   出品者本人・管理者には代わりに［data-inq-owner］＝「ほかのユーザーにはここに次の案内が表示されます」＋案内の見本（文言は
+   ほかのユーザー向けの段落から写す・リンクにはしない）＋「届いたお問合わせは P6-14 で確認」（未返信件数つき）を出す＝入口の場所を知ってもらいつつ、本人が押しても意味のないリンクは見せない（2026-09-28）。 */
+function syncInqLinks() {
+  var r = ((window.KTN && KTN.role) || window.ktnState.role || 'guest').replace(/^user\+/, '');
+  var visitor = r === 'login', owner = r === 'creator' || r === 'gallery' || r === 'admin';
+  document.querySelectorAll('[data-inq-link]').forEach(function (el) { el.hidden = !visitor; });
+  document.querySelectorAll('[data-inq-owner]').forEach(function (el) {
+    el.hidden = !owner;
+    if (!owner) return;
+    var n = p6InqCount(r), a = el.querySelector('[data-inq-owner-link]'), c = el.querySelector('[data-inq-owner-count]');
+    var pv = el.querySelector('[data-inq-owner-preview]'), src = el.parentNode.querySelector('.cmt-inq-note[data-inq-link]');
+    if (pv && src) pv.textContent = src.textContent;
+    if (a) a.href = './kotennavi-p6-14.html?work=' + p6InqWork(r);
+    if (c) c.textContent = n ? '（未返信' + n + '件）' : '';
+  });
 }
 
 /* 認証ウォール（層A）：`.ktn-authwall` を持つページで、ゲストのとき器だけ残して中身をログイン案内へ差し替える。
@@ -1842,7 +1862,6 @@ const PAGES = {
   'p2-13': { n: '展覧会-記事管理', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', 'kotennavi-p2.html'], ['記事管理', null]] },
   'p2-14': { n: '展覧会-インサイト', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', 'kotennavi-p2.html'], ['インサイト', null]] },
   'p2-15': { n: '展覧会-広告作成', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', 'kotennavi-p2.html'], ['広告作成', null]] },
-  'p2-16': { n: '展覧会-修正依頼', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', 'kotennavi-p2.html'], ['修正依頼', null]] },
   // 旧「展覧会-報告」は全表示系共通の報告フォーム 'p60-13'「問題を報告する」に統合（2026-07-24）。
   // P3 クリエイター
   'p3': { n: 'クリエイター', bc: [['Top', '/'], ['クリエイター', 'kotennavi-p10-2.html'], ['田中 透', null]] },
@@ -1858,6 +1877,7 @@ const PAGES = {
   'p3-17': { n: 'クリエイター販売代金管理', bc: [['Top', '/'], ['クリエイター', 'kotennavi-p10-2.html'], ['田中 透', 'kotennavi-p3.html'], ['販売代金管理', null]] },
   'p3-18': { n: 'クリエイター-展覧会管理', bc: [['Top', '/'], ['クリエイター', 'kotennavi-p10-2.html'], ['田中 透', 'kotennavi-p3.html'], ['展覧会管理', null]] },
   'p3-19': { n: 'クリエイター-記事管理', bc: [['Top', '/'], ['クリエイター', 'kotennavi-p10-2.html'], ['田中 透', 'kotennavi-p3.html'], ['記事管理', null]] },
+  'p3-20': { n: 'クリエイター-作品へのお問合わせ', bc: [['Top', '/'], ['クリエイター', 'kotennavi-p10-2.html'], ['田中 透', 'kotennavi-p3.html'], ['作品へのお問合わせ', null]] },
   // P4 ギャラリー
   'p4': { n: 'ギャラリー', bc: [['Top', '/'], ['ギャラリー', 'kotennavi-p10-3.html'], ['Gallery SOIL 渋谷', null]] },
   'p4-1': { n: 'ギャラリー-展覧会アーカイブ', bc: [['Top', '/'], ['ギャラリー', 'kotennavi-p10-3.html'], ['Gallery SOIL 渋谷', 'kotennavi-p4.html'], ['展覧会アーカイブ', null]] },
@@ -1871,6 +1891,7 @@ const PAGES = {
   'p4-17': { n: 'ギャラリー-販売代金管理', bc: [['Top', '/'], ['ギャラリー', 'kotennavi-p10-3.html'], ['Gallery SOIL 渋谷', 'kotennavi-p4.html'], ['販売代金管理', null]] },
   'p4-18': { n: 'ギャラリー-展覧会管理', bc: [['Top', '/'], ['ギャラリー', 'kotennavi-p10-3.html'], ['Gallery SOIL 渋谷', 'kotennavi-p4.html'], ['展覧会管理', null]] },
   'p4-19': { n: 'ギャラリー-記事管理', bc: [['Top', '/'], ['ギャラリー', 'kotennavi-p10-3.html'], ['Gallery SOIL 渋谷', 'kotennavi-p4.html'], ['記事管理', null]] },
+  'p4-20': { n: 'ギャラリー-作品へのお問合わせ', bc: [['Top', '/'], ['ギャラリー', 'kotennavi-p10-3.html'], ['Gallery SOIL 渋谷', 'kotennavi-p4.html'], ['作品へのお問合わせ', null]] },
   // P5 ユーザー
   'p5': { n: 'ユーザー-展覧会カレンダー', bc: [['Top', '/'], ['山田花子 myページ', null]] },
   'p5-1': { n: 'ユーザー-ウオッチリスト', bc: [['Top', '/'], ['山田花子 myページ', '/p5'], ['ウオッチリスト', null]] },
@@ -1882,7 +1903,7 @@ const PAGES = {
   'p5-13': { n: 'ユーザー-メール通知管理', bc: [['Top', '/'], ['山田花子 myページ', '/p5'], ['メール通知管理', null]] },
   'p5-14': { n: 'ユーザー-購入管理', bc: [['Top', '/'], ['山田花子 myページ', '/p5'], ['購入管理', null]] },
   'p5-15': { n: 'ユーザー-取引ワークスペース', bc: [['Top', '/'], ['山田花子 myページ', '/p5'], ['取引ワークスペース', null]] },
-  'p5-16': { n: 'ユーザー-取引ワークスペース-支払', bc: [['Top', '/'], ['山田花子 myページ', '/p5'], ['取引ワークスペース', '/p5-15'], ['支払', null]] },
+  'p5-16': { n: 'ユーザー-問合せ履歴', bc: [['Top', '/'], ['山田花子 myページ', '/p5'], ['問合せ履歴', null]] },
   'p5-100': { n: 'ユーザー-退会', bc: [['Top', '/'], ['山田花子 myページ', '/p5'], ['退会', null]] },
   // P6 作品
   'p6':   { n: '作品詳細',
@@ -1894,7 +1915,7 @@ const PAGES = {
   'p6-11': { n: '作品-新規/編集/クローン', bc: [['Top', '/'], ['作品', 'kotennavi-p10-1.html'], ['オノマトペの庭', 'kotennavi-p6.html'], ['新規/編集/クローン', null]] },
   'p6-12': { n: '作品-インサイト', bc: [['Top', '/'], ['作品', 'kotennavi-p10-1.html'], ['オノマトペの庭', 'kotennavi-p6.html'], ['インサイト', null]] },
   'p6-13': { n: '作品-問合せ', bc: [['Top', '/'], ['作品', 'kotennavi-p10-1.html'], ['オノマトペの庭', 'kotennavi-p6.html'], ['問合せ', null]] },
-  'p6-14': { n: '作品-問合せへの回答', bc: [['Top', '/'], ['作品', 'kotennavi-p10-1.html'], ['オノマトペの庭', 'kotennavi-p6.html'], ['問合せへの回答', null]] },
+  'p6-14': { n: '作品-問合せ管理', bc: [['Top', '/'], ['作品', 'kotennavi-p10-1.html'], ['オノマトペの庭', 'kotennavi-p6-2.html'], ['この作品へのお問合わせ', null]] },
   'p6-15': { n: '作品-記事管理', bc: [['Top', '/'], ['作品', 'kotennavi-p10-1.html'], ['オノマトペの庭', 'kotennavi-p6.html'], ['記事管理', null]] },
   // P7 記事（投稿者＝クリエイター/ギャラリーの記事一覧を経由。掲載先がgalleryの場合はcreator/田中透→gallery/Gallery SOIL 渋谷へ差し替え）
   'p7': { n: '記事', bc: [['Top', '/'], ['クリエイター', 'kotennavi-p10-2.html'], ['田中 透', 'kotennavi-p3.html'], ['記事一覧', 'kotennavi-p3-2.html'], ['『オノマトペの庭』制作について', null]] },
@@ -1966,9 +1987,13 @@ const PAGES = {
   'p60-8': { n: '個展なびとは', bc: [['Top', '/'], ['個展なびとは', null]] },
   'p60-9': { n: '利用規約', bc: [['Top', '/'], ['利用規約', null]] },
   'p60-10': { n: 'プライバシポリシー', bc: [['Top', '/'], ['プライバシポリシー', null]] },
+  // 掲載内容に関する対応方針（公開用・docs/moderation-policy.md の要約・2026-09-27）
+  'p60-16': { n: '掲載内容に関する対応方針', bc: [['Top', '/'], ['掲載内容に関する対応方針', null]] },
   'p60-11': { n: 'お問合わせ', bc: [['Top', '/'], ['お問合わせ', null]] },
   'p60-12': { n: 'サービス機能改善要望', bc: [['Top', '/'], ['サービス機能改善要望', null]] },
   'p60-13': { n: '問題を報告する', bc: [['Top', '/'], ['問題を報告する', null]] },
+  // 修正依頼＝展覧会・クリエイター・ギャラリー共通の中立フォーム（旧 p2-16 を 2026-09-27 に移設・統合）
+  'p60-14': { n: '修正依頼', bc: [['Top', '/'], ['修正依頼', null]] },
   // アクセス制御の受け皿（層B/C）。「要ログイン」「見つかりません」の2状態を1ページで返す（追174-22）
   'p60-15': { n: 'ページを表示できません', bc: [['Top', '/'], ['ページを表示できません', null]] },
   // P61 お知らせ
@@ -2079,6 +2104,67 @@ const REPORT_TYPE = {
   p6: 'artwork', 'p6-1': 'artwork', 'p6-2': 'artwork',
   p7: 'article', p8: 'review'
 };
+/* ── ページの管理（オーナー）申込への受け渡し（2026-09-27）──
+   修正依頼（P60-14）・問題報告（P60-13）の中で、クリエイター・ギャラリーのときだけ「このページのご本人の方へ」を出し、
+   クリエイター機能（P11-2）／ギャラリー機能（P11-3）の申込へ ?claim=<元のページ>&via=<fix|report> で渡す。
+   申込フォームは「既存の掲載ページ」欄に元のページを入れた状態で開く（ゲストはログイン・登録を挟んでも ?return= で戻る）。
+   オーナーの有無に関係なく同じように出す（有無は閲覧者にも申込者にも見せない）。
+   本番：?claim にはクリエイター・ギャラリーの固有IDを渡し、申込者の「申告」として扱う（事務局の確認後に差し替え）。 */
+KTN.CLAIM_PAGES = {
+  creator: { label: 'クリエイター', to: 'このページのご本人の方へ', apply: 'kotennavi-p11-2.html', href: 'kotennavi-p3.html', url: 'https://koten-navi.com/p3', name: '田中 透', meta: '油彩・現代美術', thumb: 'linear-gradient(145deg,#8aaa6a,#4a7a2a)' },
+  gallery: { label: 'ギャラリー', to: 'このギャラリーの運営者の方へ', apply: 'kotennavi-p11-3.html', href: 'kotennavi-p4.html', url: 'https://koten-navi.com/p4', name: 'Gallery SOIL 渋谷', meta: '東京・渋谷', thumb: 'linear-gradient(135deg,#4a6878,#2a4858)' }
+};
+KTN.claimUrl = function (from, type, via) {
+  var c = KTN.CLAIM_PAGES[type];
+  return c ? './' + c.apply + '?claim=' + encodeURIComponent(from || '') + '&via=' + (via || '') : '';
+};
+/* ゲストが「管理を申し込む」を押したとき：機能申込はログインが必要なので、申込フォームへは行かず
+   ログインの案内（KTN.action.show('claim')）を出す。ログイン・新規登録のあとは、元のページを引き継いだ申込フォームへ直接進む
+   （検索ゲートと同じ＝戻り先そのものを申込フォームにする）。 */
+document.addEventListener('click', function (e) {
+  var a = e.target && e.target.closest && e.target.closest('[data-claim-link]');
+  if (!a || (window.ktnState || {}).role !== 'guest') return;
+  e.preventDefault();
+  var u = new URL(a.href, location.href);
+  if (KTN._authPrepare) KTN._authPrepare('claim', u.pathname.split('/').pop() + u.search);
+  KTN.action.show('claim');
+});
+/* 申込フォーム側：?claim を読み、既存の掲載ページ欄にカードと値を入れる。expectType＝そのフォームのロール */
+KTN.applyClaim = function (leadId, inputId, expectType) {
+  var q = new URLSearchParams(location.search);
+  var from = q.get('claim');
+  if (!from) return null;
+  var type = (typeof REPORT_TYPE !== 'undefined' && REPORT_TYPE[from]) || '';
+  if (type !== expectType) return null;
+  var c = KTN.CLAIM_PAGES[type];
+  var lead = document.getElementById(leadId);
+  if (lead) {
+    lead.innerHTML = '<p class="ktn-content-lead__label">管理を申し込むページ</p>' +
+      '<a class="ktn-content-lead__card" href="' + c.href + '" target="_blank" rel="noopener">' +
+        '<span class="ktn-content-lead__thumb ktn-content-lead__thumb--' + type + '" style="background:' + c.thumb + '"></span>' +
+        '<span class="ktn-content-lead__body">' +
+          '<span class="ktn-content-lead__name"><span class="cb cb-person cb-' + type + '">' + type + '</span>' + c.name + '</span>' +
+          '<span class="ktn-content-lead__meta">' + c.meta + '</span>' +
+        '</span>' +
+      '</a>' +
+      '<p class="ktn-content-lead__note">' + ({ fix: '修正依頼', report: '問題の報告' }[q.get('via')] || '掲載ページ') + 'から引き継いだページです。別のページの場合は、下の欄を書き換えてください。</p>' +
+      /* 判断の前提を先に伝える（どのページにも同じ一般的な書き方＝オーナーの有無は分からない・2026-09-27） */
+      '<p class="ktn-content-lead__note">お申込みの内容を事務局で確認のうえ、このページを引き継げるかどうかを判断します。すでに別の方が管理しているページの場合など、ご希望に沿えないことがあります。</p>';
+    lead.hidden = false;
+  }
+  var input = document.getElementById(inputId);
+  if (input) input.value = c.url + '（' + c.name + '）';
+  return { from: from, type: type, via: q.get('via') || '' };
+};
+
+/* 「修正を依頼する」＝展覧会・クリエイター・ギャラリーのみ（作品・記事は対象外）。P60-14 に ?from&type で文脈を渡す（2026-09-27） */
+const FIX_TYPES = ['exhibition', 'creator', 'gallery'];
+function fixItem(page) {
+  const type = REPORT_TYPE[page];
+  if (FIX_TYPES.indexOf(type) < 0) return '';
+  const href = './kotennavi-p60-14.html?from=' + encodeURIComponent(page) + '&type=' + type;
+  return ddi('fix', '修正を依頼する', false, "location.href='" + href + "'") + ddSep();
+}
 function reportItem(page) {
   const type = REPORT_TYPE[page] || 'other';
   const href = './kotennavi-p60-13.html?from=' + encodeURIComponent(page) + '&type=' + type;
@@ -2094,7 +2180,8 @@ function p5SettingsMenuItems() {
   return ddi('edit', 'プロフィール編集', false, "location.href='./kotennavi-p5-11.html'") +
     ddi('key', 'パスワード管理', false, "location.href='./kotennavi-p5-12.html'") +
     ddi('bell', 'メール通知設定', false, "location.href='./kotennavi-p5-13.html'") +
-    purchaseItem + ddSep() +
+    purchaseItem +
+    ddi('msg', '問合せ履歴', false, "location.href='./kotennavi-p5-16.html'") + ddSep() +
     ddi('trash', '退会', true, "location.href='./kotennavi-p5-100.html'") + ddSep() +
     ddi('logout', 'ログアウト', false, "location.href='./kotennavi-p1.html'");
 }
@@ -2423,6 +2510,19 @@ function p2AdminMenuItems(curPage) {
   return items + delPrefix + ddSep() + ddLabel('管理者専用') + admin.join('');
 }
 
+/* 「作品へのお問合わせ」メニュー項目のラベル（未返信件数つき・P3/P4 オーナーメニュー共通）。
+   件数は pages.js の KTN.inq（作品への問合せのデモデータ）から数える。0件なら件数を出さない。 */
+function inqUnreplied(owner, workId) { return (window.KTN && KTN.inq) ? KTN.inq.unrepliedCount(owner, workId) : 0; }
+/* オーナーメニューのボタンにも未返信の問合せ件数を出す（メニューを開く前に「届いている」とわかるように・2026-09-28） */
+function ownerDdLabel(n) { return 'オーナーメニュー' + (n ? '<span class="ktn-ddbtn__count" title="未返信の問合せ">' + n + '</span>' : ''); }
+/* 作品ページ（P6/P6-1/P6-2）で表示中の作品＝デモでは creator→w1《オノマトペの庭》／gallery→w3（本番は表示中の作品ID） */
+function p6InqWork(role) { return role === 'gallery' ? 'w3' : 'w1'; }
+function p6InqCount(role) { return inqUnreplied(role === 'gallery' ? 'gallery' : 'creator', p6InqWork(role)); }
+function inqMenuLabel(owner) {
+  var n = (window.KTN && KTN.inq) ? KTN.inq.unrepliedCount(owner) : 0;
+  return '作品へのお問合わせ' + (n ? '<span class="ktn-ddi__count" title="未返信">' + n + '</span>' : '');
+}
+
 /* P3（クリエイター）オーナーメニュー（単一ソース・トップ〜全管理サブページ共通）。
    curPage＝現在開いている管理サブページID。省略時（トップ/公開サブページ）は自己参照判定が無効。
    LIAISON+未申請時（ktnLPApplied()===false）はコンソール/取引デスク/販売代金管理をまとめて隠し、
@@ -2439,7 +2539,8 @@ function p3OwnerMenuItems(curPage) {
   return ddiP(curPage, 'p3-11', 'edit', 'プロフィール編集', "location.href='./kotennavi-p3-11.html'") + ddSep() +
     ddiP(curPage, 'p3-18', 'grid', '展覧会を管理', "location.href='./kotennavi-p3-18.html'") +
     ddiP(curPage, 'p3-14', 'frame', 'ポートフォリオ管理', "location.href='./kotennavi-p3-14.html'") +
-    ddiP(curPage, 'p3-19', 'file', '記事管理', "location.href='./kotennavi-p3-19.html'") + ddSep() +
+    ddiP(curPage, 'p3-19', 'file', '記事管理', "location.href='./kotennavi-p3-19.html'") +
+    ddiP(curPage, 'p3-20', 'msg', inqMenuLabel('creator'), "location.href='./kotennavi-p3-20.html'") + ddSep() +
     lpBlock + ddSep() +
     ddiP(curPage, 'p3-13', 'watch', 'オーディエンス管理', "location.href='./kotennavi-p3-13.html'") +
     ddiP(curPage, 'p3-12', 'chart', 'インサイト', "location.href='./kotennavi-p3-12.html'") + ddSep() +
@@ -2459,7 +2560,8 @@ function p4OwnerMenuItems(curPage) {
   return ddiP(curPage, 'p4-11', 'edit', 'ギャラリー情報編集', "location.href='./kotennavi-p4-11.html'") + ddSep() +
     ddiP(curPage, 'p4-18', 'grid', '展覧会を管理', "location.href='./kotennavi-p4-18.html'") +
     ddiP(curPage, 'p4-14', 'frame', 'インベントリー管理', "location.href='./kotennavi-p4-14.html'") +
-    ddiP(curPage, 'p4-19', 'file', '記事管理', "location.href='./kotennavi-p4-19.html'") + ddSep() +
+    ddiP(curPage, 'p4-19', 'file', '記事管理', "location.href='./kotennavi-p4-19.html'") +
+    ddiP(curPage, 'p4-20', 'msg', inqMenuLabel('gallery'), "location.href='./kotennavi-p4-20.html'") + ddSep() +
     lpBlock + ddSep() +
     ddiP(curPage, 'p4-13', 'watch', 'オーディエンス管理', "location.href='./kotennavi-p4-13.html'") +
     ddiP(curPage, 'p4-12', 'chart', 'インサイト', "location.href='./kotennavi-p4-12.html'") + ddSep() +
@@ -2500,9 +2602,11 @@ function p6OwnerItems(curPage, role) {
   var edit = ddiP(curPage, 'p6-11', 'edit', '作品編集', "location.href='./kotennavi-p6-11.html'");
   var insight = ddiP(curPage, 'p6-12', 'chart', 'インサイト', "location.href='./kotennavi-p6-12.html'");
   var articles = ddiP(curPage, 'p6-15', 'file', '記事管理', "location.href='./kotennavi-p6-15.html'");
-  /* 問合せへの回答（p6-14）は作家本人のみ（sitemap: creator=R/W, gallery=blank）。
-     管理者はp6AdminItems経由でrole='admin'を渡し常に表示する（2026-08-24）。 */
-  var inquiries = (role === 'creator' || role === 'admin') ? ddSep() + ddiP(curPage, 'p6-14', 'send', '問合せへの回答', "location.href='./kotennavi-p6-14.html'") : '';
+  /* この作品への問合せ（p6-14）は出品者＝問合せの受信者が使う。ギャラリーが P6-1／P6-2 に出品している作品は
+     問合せがギャラリーに届くため、creator／gallery とも表示する（2026-09-28・旧「作家本人のみ」を変更）。 */
+  /* 未返信件数のピル付き。行き先は P6-14＝この作品への問合せの一覧（表形式・行を開いて返信）。 */
+  var n = p6InqCount(role);
+  var inquiries = ddSep() + ddiP(curPage, 'p6-14', 'msg', 'この作品へのお問合わせ' + (n ? '<span class="ktn-ddi__count" title="未返信">' + n + '</span>' : ''), "location.href='./kotennavi-p6-14.html?work=" + p6InqWork(role) + "'");
   if (curPage === 'p6-2') return edit + ddSep() + insight + ddSep() + articles + inquiries;
   return edit + ddSep() + insight + ddSep() + articles + inquiries + ddSep() + ddi('trash', '削除', true);
 }
@@ -2543,7 +2647,7 @@ function getActions(page, role) {
     const cmn = hib('heart', '興味あり', '', 'interest') + shareBtn() + sep();
     const editBtn = p2CanEdit() ? owbtn('edit', '編集', "location.href='./kotennavi-p2-11.html'") : '';
     if (role === 'guest' || role === 'login')
-      return cmn + ddMore(ddi('fix', '修正を依頼する', false, "location.href='./kotennavi-p2-16.html'") + ddSep() + reportItem(page));
+      return cmn + ddMore(fixItem(page) + reportItem(page));
     if (role === 'creator' || role === 'gallery')
       return cmn + editBtn + dd('オーナーメニュー', p2OwnerMenuItems());
     if (role === 'admin')
@@ -2571,16 +2675,16 @@ function getActions(page, role) {
   if (['p3', 'p3-1', 'p3-2', 'p3-3'].includes(page)) {
     const cmn = hib('watch', 'ウォッチ', page === 'p3' ? 'ktnP3WatchHib' : '', 'watch') + shareBtn() + sep();
     if (role === 'guest' || role === 'login')
-      return cmn + ddMore(reportItem(page));
+      return cmn + ddMore(fixItem(page) + reportItem(page));
     if (role === 'creator')
-      return cmn + txnAlertActionBtn('creator', 'lp', 'LIAISON+要対応', './kotennavi-p3-15.html', page, 'p3-15', 'リエゾン+コンソールで全て見る') + dd('オーナーメニュー', p3OwnerMenuItems());
+      return cmn + txnAlertActionBtn('creator', 'lp', 'LIAISON+要対応', './kotennavi-p3-15.html', page, 'p3-15', 'リエゾン+コンソールで全て見る') + dd(ownerDdLabel(inqUnreplied('creator')), p3OwnerMenuItems());
     if (role === 'admin')
-      return cmn + dd('オーナーメニュー', p3OwnerMenuItems()) + dd('管理者', p3AdminMenuItems());
+      return cmn + dd(ownerDdLabel(inqUnreplied('creator')), p3OwnerMenuItems()) + dd('管理者', p3AdminMenuItems());
     return cmn;
   }
 
   /* ── P3 管理サブページ群（プロフィール編集／各種管理ページ・共通オーナーメニュー） ── */
-  if (['p3-11', 'p3-12', 'p3-13', 'p3-14', 'p3-15', 'p3-16', 'p3-17', 'p3-18', 'p3-19'].includes(page)) {
+  if (['p3-11', 'p3-12', 'p3-13', 'p3-14', 'p3-15', 'p3-16', 'p3-17', 'p3-18', 'p3-19', 'p3-20'].includes(page)) {
     /* ガイドリンク：各ページの操作対象に対応するFAQ/ガイド章へ直接結線（2026-08-19 全ページ結線完了）。
        p3-11〜14はp60-6（よくある質問-クリエイター編）の新設章、p3-15〜17はp70-12（LIAISON+取引ガイド出品者編）の
        新設章、p3-18〜19は既存のp60-6章へリンク。 */
@@ -2598,8 +2702,8 @@ function getActions(page, role) {
     const guideUrl = P3_GUIDE[page] || '';
     const guideBtn = owbtn('info', 'ガイド', guideUrl ? `window.open('${guideUrl}','_blank')` : '');
     const alertBtn = txnAlertActionBtn('creator', 'lp', 'LIAISON+要対応', './kotennavi-p3-15.html', page, 'p3-15', 'リエゾン+コンソールで全て見る');
-    if (role === 'creator') return guideBtn + alertBtn + dd('オーナーメニュー', p3OwnerMenuItems(page));
-    if (role === 'admin') return guideBtn + alertBtn + dd('オーナーメニュー', p3OwnerMenuItems(page)) + dd('管理者', p3AdminMenuItems(page));
+    if (role === 'creator') return guideBtn + alertBtn + dd(ownerDdLabel(inqUnreplied('creator')), p3OwnerMenuItems(page));
+    if (role === 'admin') return guideBtn + alertBtn + dd(ownerDdLabel(inqUnreplied('creator')), p3OwnerMenuItems(page)) + dd('管理者', p3AdminMenuItems(page));
     return '';
   }
 
@@ -2607,16 +2711,16 @@ function getActions(page, role) {
   if (['p4', 'p4-1', 'p4-2'].includes(page)) {
     const cmn = hib('watch', 'ウォッチ', '', 'watch') + shareBtn() + sep();
     if (role === 'guest' || role === 'login')
-      return cmn + ddMore(reportItem(page));
+      return cmn + ddMore(fixItem(page) + reportItem(page));
     if (role === 'gallery')
-      return cmn + txnAlertActionBtn('gallery', 'lp', 'LIAISON+要対応', './kotennavi-p4-15.html', page, 'p4-15', 'リエゾン+コンソールで全て見る') + dd('オーナーメニュー', p4OwnerMenuItems());
+      return cmn + txnAlertActionBtn('gallery', 'lp', 'LIAISON+要対応', './kotennavi-p4-15.html', page, 'p4-15', 'リエゾン+コンソールで全て見る') + dd(ownerDdLabel(inqUnreplied('gallery')), p4OwnerMenuItems());
     if (role === 'admin')
-      return cmn + dd('オーナーメニュー', p4OwnerMenuItems()) + dd('管理者', p4AdminMenuItems());
+      return cmn + dd(ownerDdLabel(inqUnreplied('gallery')), p4OwnerMenuItems()) + dd('管理者', p4AdminMenuItems());
     return cmn;
   }
 
   /* ── P4 管理サブページ群（ギャラリー情報編集／各種管理ページ・共通オーナーメニュー） ── */
-  if (['p4-11', 'p4-12', 'p4-13', 'p4-14', 'p4-15', 'p4-16', 'p4-17', 'p4-18', 'p4-19'].includes(page)) {
+  if (['p4-11', 'p4-12', 'p4-13', 'p4-14', 'p4-15', 'p4-16', 'p4-17', 'p4-18', 'p4-19', 'p4-20'].includes(page)) {
     /* ガイドリンク：各ページの操作対象に対応するFAQ/ガイド章へ直接結線（2026-08-19 全ページ結線完了）。
        p4-11〜14はp60-7（よくある質問-ギャラリー編）の新設章、p4-15〜17はp70-12（LIAISON+取引ガイド出品者編）の
        新設章、p4-18〜19は既存のp60-7章へリンク。 */
@@ -2634,8 +2738,8 @@ function getActions(page, role) {
     const guideUrl = P4_GUIDE[page] || '';
     const guideBtn = owbtn('info', 'ガイド', guideUrl ? `window.open('${guideUrl}','_blank')` : '');
     const alertBtn = txnAlertActionBtn('gallery', 'lp', 'LIAISON+要対応', './kotennavi-p4-15.html', page, 'p4-15', 'リエゾン+コンソールで全て見る');
-    if (role === 'gallery') return guideBtn + alertBtn + dd('オーナーメニュー', p4OwnerMenuItems(page));
-    if (role === 'admin') return guideBtn + alertBtn + dd('オーナーメニュー', p4OwnerMenuItems(page)) + dd('管理者', p4AdminMenuItems(page));
+    if (role === 'gallery') return guideBtn + alertBtn + dd(ownerDdLabel(inqUnreplied('gallery')), p4OwnerMenuItems(page));
+    if (role === 'admin') return guideBtn + alertBtn + dd(ownerDdLabel(inqUnreplied('gallery')), p4OwnerMenuItems(page)) + dd('管理者', p4AdminMenuItems(page));
     return '';
   }
 
@@ -2654,7 +2758,6 @@ function getActions(page, role) {
       'p5-13': './kotennavi-p60-5.html#notification',
       'p5-14': './kotennavi-p70-11.html#overview',
       'p5-15': './kotennavi-p70-11.html#trouble',
-      'p5-16': './kotennavi-p70-11.html#phase-payment',
     };
     const guideUrl = P5_GUIDE[page] || '';
     const guideBtn = guideUrl ? owbtn('info', 'ガイド', `window.open('${guideUrl}','_blank')`) : '';
@@ -2686,11 +2789,11 @@ function getActions(page, role) {
     if (role === 'guest')
       return cmn + ddMore(reportItem(page));
     if (role === 'login')
-      return cmn + ddMore(ddi('send', '問合せする', false, "location.href='./kotennavi-p6-13.html'") + ddSep() + reportItem(page));
+      return cmn + ddMore(ddi('send', '問合せする', false, "location.href='./kotennavi-p6-13.html?ctx=" + ({ 'p6-1': 'l-creator', 'p6-2': 'lp-creator' }[page] || 'n-creator') + "'") + ddSep() + reportItem(page));
     if (role === 'creator' || role === 'gallery')
-      return cmn + editBtn + dd('オーナーメニュー', p6OwnerItems(page, role));
+      return cmn + editBtn + dd(ownerDdLabel(p6InqCount(role)), p6OwnerItems(page, role));
     if (role === 'admin')
-      return cmn + editBtn + dd('オーナーメニュー', p6OwnerItems(page, 'admin')) + dd('管理者', p6AdminItems(page));
+      return cmn + editBtn + dd(ownerDdLabel(p6InqCount('admin')), p6OwnerItems(page, 'admin')) + dd('管理者', p6AdminItems(page));
     return cmn;
   }
 
@@ -2710,8 +2813,8 @@ function getActions(page, role) {
     };
     const guideAnchor = P6_GUIDE_ANCHOR[page] || '';
     const guideBtn = owbtn('info', 'ガイド', guideAnchor ? `window.open('${guideFile}${guideAnchor}','_blank')` : '');
-    if (role === 'creator' || role === 'gallery') return guideBtn + dd('オーナーメニュー', p6OwnerItems(page, role));
-    if (role === 'admin') return guideBtn + dd('オーナーメニュー', p6OwnerItems(page, 'admin')) + dd('管理者', p6AdminItems(page));
+    if (role === 'creator' || role === 'gallery') return guideBtn + dd(ownerDdLabel(p6InqCount(role)), p6OwnerItems(page, role));
+    if (role === 'admin') return guideBtn + dd(ownerDdLabel(p6InqCount('admin')), p6OwnerItems(page, 'admin')) + dd('管理者', p6AdminItems(page));
     return '';
   }
 
@@ -2827,7 +2930,7 @@ function getActions(page, role) {
      合わせて判断する。P10-5/6/7（分類索引）は上のP10_KINDに合流済み（追174-169）。 */
 
   /* ── P60 ガイド・法的ページ ── */
-  if (['p60', 'p60-4', 'p60-8', 'p60-9', 'p60-10'].includes(page)) {
+  if (['p60', 'p60-4', 'p60-8', 'p60-9', 'p60-10', 'p60-16'].includes(page)) {
     if (role === 'admin') return dd('管理者', ddi('edit', '編集'));
     return '';
   }
@@ -3367,7 +3470,7 @@ const CHECKIN_REASONS = [
   { id: 'kotennavi', label: '個展なびで見つけた' },
   { id: 'dm',        label: 'DM・フライヤー' },
   { id: 'referral',  label: '知人の紹介' },
-  { id: 'know',      label: '作家・ギャラリーを以前から知っている' },
+  { id: 'know',      label: 'クリエイター・ギャラリーを以前から知っている' },
   { id: 'walkby',    label: '通りがかり' },
   { id: 'other',     label: 'その他' },
 ];
@@ -3987,6 +4090,14 @@ KTN.action = (function () {
       ttl: '購入申込にはログインが必要です',
       sub: 'ログインすると作品の購入申込や<br>出品者とのやり取りができるようになります',
     },
+    claim: {
+      ttl: 'ページの管理のお申込みにはログインが必要です',
+      sub: 'ログイン（または無料の新規登録）のあと、<br>このページを引き継いだ申込フォームに進みます',
+    },
+    comment: {
+      ttl: 'コメントの投稿にはログインが必要です',
+      sub: 'ログインすると、作品へのコメントや<br>クリエイター・ギャラリーへのお問合わせができるようになります',
+    },
     search: {
       ttl: 'この検索にはログインが必要です',
       sub: 'ログインすると作品・クリエイター・ギャラリーも<br>検索できるようになります',
@@ -4032,7 +4143,7 @@ KTN.action = (function () {
     var modal = document.getElementById('ktnAuthModal');
     if (!modal) return;
     /* ログイン後に押し直す操作を覚える（検索ゲートは呼び出し側が行き先を渡す／signup は操作ではないので対象外） */
-    if (KTN._authPrepare && action !== 'search') {
+    if (KTN._authPrepare && action !== 'search' && action !== 'claim' && action !== 'comment') {
       if (action === 'signup') KTN._authClear(); else KTN._authPrepare(action);
     }
     var icon = document.getElementById('ktnAuthIcon');
