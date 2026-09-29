@@ -11680,7 +11680,8 @@ KTN.pages['p90-9'] = function () {
     { id: 'A-01', category: 'activity', event: "② ウォッチ新着（ウォッチ中のクリエイター・ギャラリーが展覧会・記事を公開）", aud: "全ユーザー（P5-13 で停止可）", source: "展覧会・記事の公開", timing: "随時（短時間の連続公開は1通にまとめる）", subject: '', body: '', note: "作品は対象外。記事は会期に関係なく通知、会期後に登録した展覧会自体は通知しない。docs/email-templates.md「ユーザーが選べるメール」", updatedAt: '2026.9.27' },
     { id: 'R-01', category: 'activity', event: "① リマインダー（今日から開催／もうすぐ終了／もうすぐ開催＋興味あり！の作品の出品）", aud: "全ユーザー（P5-13 で停止可）", source: "ウォッチ・興味あり！の展覧会と作品", timing: "1日1回・朝（該当が無い日は送らない）", subject: '', body: '', note: "旧 daily mail＋旧 興味あり！を統合。同じ展覧会が複数日届いてよい。移行＝旧どちらかがオンならオン", updatedAt: '2026.9.27' },
     { id: 'N-01', category: 'activity', event: "③ ニュース・キャンペーン", aud: "対象＝全員・ユーザー→登録ユーザー全員／クリエイター・ギャラリー→その機能の利用者（P5-13 で停止可・既定オフ）", source: "P61-11 で「メールでも送る」をチェックして公開（カテゴリ＝重要以外）", timing: "お知らせの公開時", subject: '', body: '', note: "送るかは事務局が1件ずつ選ぶ。広告にあたるため既定オフ・P11-1 の任意チェックで同意", updatedAt: '2026.9.27' },
-    { id: 'A-03', category: 'activity', event: "④ ウォッチ・チェックインのお知らせ", aud: "クリエイター・ギャラリー機能の利用者（P5-13 で停止可）", source: "ウォッチ・チェックイン／展覧会の公開", timing: "1日1回（0件の日は送らない）＋展覧会の公開時", subject: '', body: '', note: "公開時はお知らせを送ったウォッチャーの一覧", updatedAt: '2026.9.27' },
+    { id: 'A-03', category: 'activity', event: "④ ウォッチ・チェックイン・コメントのお知らせ", aud: "クリエイター・ギャラリー機能の利用者（P5-13 で停止可）", source: "ウォッチ・チェックイン／展覧会の公開", timing: "1日1回（0件の日は送らない）＋展覧会の公開時", subject: '', body: '', note: "公開時はお知らせを送ったウォッチャーの一覧", updatedAt: '2026.9.27' },
+    { id: 'A-05', category: 'activity', event: "作品にコメントが届きました", aud: "作品の出品者（クリエイター・ギャラリー・P5-13 の④で停止可）", source: "作品（P6・P6-1・P6-2）へのコメントの投稿", timing: "随時（短時間に続いたら1通にまとめる）", subject: "【個展なび】作品「{{artworkName}}」にコメントが届きました", body: "{{userName}} 様\n\n作品「{{artworkName}}」に、コメントが届きました。\n\n──────────────────────────────\n 作品：{{artworkName}}\n 　{{pageUrl}}\n コメントした方：{{senderNickname}}\n──────────────────────────────\n\n■ コメント\n{{commentBody}}\n\nコメントは作品ページに公開されています。\n\n※このメールは、myページの「メール通知設定」の\n　「ウォッチ・チェックイン・コメントのお知らせ」で止められます。\n\n{{commonFooter}}", note: "docs/email-templates.md A-05 と同内容。サイト内ではお知らせ（あなた宛 NT-06）にも出る。", updatedAt: '2026.9.28' },
     { id: 'I-01', category: 'activity', event: "⑤ インサイトの月次レポート", aud: "クリエイター・ギャラリー機能の利用者（P5-13 で停止可）", source: "月次集計", timing: "月1回", subject: '', body: '', note: "ページ・展覧会の閲覧数、ウォッチャー数（P3-12／P4-12 へのリンク）", updatedAt: '2026.9.27' },
     { id: 'A-04', category: 'activity', event: "重要なお知らせ", aud: "対象の全ユーザー（停止できない）", source: "P61-11 で「メールでも送る」をチェックして公開（カテゴリ＝重要）", timing: "お知らせの公開時（1回だけ・編集しても再送しない）", subject: '', body: '', note: "", updatedAt: '2026.9.27' },
     { id: 'E-01', category: 'exhibition', event: '管理者確認済のオーナーへ通知', aud: '展覧会オーナー（クリエイター/ギャラリー）', source: 'p2-11 admin confirm', timing: '確認完了時（自動）',
@@ -11750,7 +11751,7 @@ KTN.pages['p90-9'] = function () {
     'M-01': 'p11-2', 'M-01A': 'p11-2', 'M-03': 'p11-3', 'M-03A': 'p11-3', 'M-05': 'p11-4',
     'T-01': 'txn', 'T-02': 'txn', 'T-03': 'txn', 'T-04': 'txn', 'T-05': 'txn', 'T-06': 'txn', 'T-07': 'txn', 'T-08': 'txn', 'T-09': 'txn', 'T-10': 'txn',
     'T-11': 'p3-15', 'T-12': 'p90-14',
-    'A-01': 'batch', 'R-01': 'batch', 'A-03': 'batch', 'I-01': 'batch', 'N-01': 'p61-11', 'A-04': 'p61-11', 'E-01': 'p2-11'
+    'A-01': 'batch', 'R-01': 'batch', 'A-03': 'batch', 'A-05': 'batch', 'I-01': 'batch', 'N-01': 'p61-11', 'A-04': 'p61-11', 'E-01': 'p2-11'
   };
   function autoPage(a) { return AUTO_PAGE[a.id] || 'other'; }
   (function buildAutoPageOptions() {
@@ -23847,4 +23848,222 @@ KTN.pages['p5-16'] = function () {
   }
   KTN.inqRerender = sync;
   sync();
+};
+
+/* ════════════════════════════════════════════════════
+   お知らせ（あなた宛／ニュース）と「最後に見た日時」（2026-09-28・定義は docs/notifications.md）
+   ・あなた宛＝自分に関係する出来事（NT-01〜04）。ロールで分けず1つにまとめ、項目ごとに「クリエイターとして」などを付ける。
+     ユーザーとしての項目はログインしていれば全員、クリエイター／ギャラリーとしての項目はそのロールのときだけ。
+   ・ニュース＝サイトからの一斉のお知らせ（NT-05＝P61-11 で作るもの）。
+   ・既読は1件ずつ持たない：利用者ごとに「あなた宛のタブを最後に開いた日時」「ニュースのタブを最後に開いた日時」の2つだけ。
+     それより新しいお知らせがあればサイドバー・下部ナビの青い点／タブの件数を出し、タブを開いたら全部見たことにする。
+     一覧では、前回開いたとき以降に届いたものに NEW を付ける（開いた時点の表示では付いたまま、次に開くと消える）。
+     1件ずつの既読（特に全員向けニュースの「利用者×お知らせ」の記録）が本番で重いため（ユーザー判断）。
+   本番：お知らせはサーバーの通知データ＋利用者ごとの最後に見た日時2つ。以下はデモ（日時は sessionStorage）。
+════════════════════════════════════════════════════ */
+KTN.NOTICES = {
+  /* あなた宛（docs/notifications.md NT-01〜NT-09）。for＝どの立場のお知らせか（P61 はこの見出しで分けて並べる） */
+  mine: [
+    { id: 'm1', for: 'creator', def: 'NT-01',  vars: { artworkName: 'オノマトペの庭' }, date: '2026.09.28', href: 'kotennavi-p3-20.html' },
+    { id: 'k1', for: 'creator', def: 'NT-08',  vars: { watch: 3, checkin: 2, interest: 5 }, date: '2026.09.28', href: 'kotennavi-p3-12.html' },
+    { id: 'k2', for: 'gallery', def: 'NT-08',  vars: { watch: 4, checkin: 6, interest: 3 }, date: '2026.09.28', href: 'kotennavi-p4-12.html' },
+    { id: 'm2', for: 'user',    def: 'NT-02',  vars: { artworkName: '光の堆積 No.2' }, date: '2026.09.27', href: 'kotennavi-p5-16.html' },
+    { id: 'c1', for: 'creator', def: 'NT-06',  vars: { artworkName: 'オノマトペの庭' }, date: '2026.09.27', href: 'kotennavi-p6-2.html' },
+    { id: 'm3', for: 'gallery', def: 'NT-01',  vars: { artworkName: '光の堆積 No.2' }, date: '2026.09.26', href: 'kotennavi-p4-20.html' },
+    { id: 'w1', for: 'user',    def: 'NT-05',  vars: { personName: '田中 透さん', contentKind: '展覧会', contentName: '音のかたち IV' }, date: '2026.09.25', href: 'kotennavi-p2.html' },
+    { id: 'r1', for: 'creator', def: 'NT-07',  vars: { exhibitionName: 'あなたが知らないオノマトペ' }, date: '2026.09.24', href: 'kotennavi-p8.html' },
+    { id: 'i1', for: 'user',    def: 'NT-09',  vars: { artworkName: '静けさの輪郭' }, date: '2026.09.22', href: 'kotennavi-p6-1.html' },
+    { id: 'm4', for: 'creator', def: 'NT-04',  vars: { exhibitionName: 'あなたが知らないオノマトペ' }, date: '2026.09.20', href: 'kotennavi-p2.html' },
+    { id: 'm5', for: 'gallery', def: 'NT-04',  vars: { exhibitionName: '余白と重力' }, date: '2026.09.18', href: 'kotennavi-p2.html' },
+    { id: 'w2', for: 'user',    def: 'NT-05',  vars: { personName: 'Gallery SOIL 渋谷', contentKind: '記事', contentName: '秋の企画展のお知らせ' }, date: '2026.09.12', href: 'kotennavi-p7.html' },
+    { id: 'm6', for: 'creator', def: 'NT-03①', vars: { applyName: 'リエゾンプラス機能' }, date: '2026.09.10', href: 'kotennavi-p3-15.html' },
+    { id: 'm7', for: 'user',    def: 'NT-02',  vars: { artworkName: '音の輪郭 No.7' }, date: '2026.08.07', href: 'kotennavi-p5-16.html' }
+  ],
+  news: [
+    { id: 'n1', tag: 'アップデート', cls: 'at-a', title: '新機能「リエゾンプラス」提供開始のお知らせ', date: '2026.08.20', href: 'kotennavi-p61-1.html' },
+    { id: 'n2', tag: 'メンテナンス', cls: 'at-e', title: 'システムメンテナンスのお知らせ（8月25日 深夜）', date: '2026.08.15', href: 'kotennavi-p61-1.html' },
+    { id: 'n3', tag: '重要',         cls: 'at-d', title: '利用規約改定のお知らせ', date: '2026.08.02', href: 'kotennavi-p61-1.html' },
+    { id: 'n4', tag: 'アップデート', cls: 'at-a', title: 'エリア・ジャンルから探せる展覧会特集を公開しました', date: '2026.07.18', href: 'kotennavi-p61-1.html' },
+    { id: 'n5', tag: 'メンテナンス', cls: 'at-e', title: 'システムメンテナンスのお知らせ（7月10日 深夜）', date: '2026.07.05', href: 'kotennavi-p61-1.html' },
+    { id: 'n6', tag: 'アップデート', cls: 'at-a', title: '個展なびをリニューアルオープンしました', date: '2026.06.01', href: 'kotennavi-p61-1.html' }
+  ],
+  /* デモ：今日と、最初の「最後に見た日時」（これより新しいものが NEW） */
+  today: '2026.09.28',
+  initialSeen: { mine: '2026.09.15', news: '2026.08.10' }
+};
+KTN.notice = (function () {
+  var KEY = 'ktnDemoNoticeSeen';
+  var ROLE_LABEL = { user: 'ユーザー', creator: 'クリエイター', gallery: 'ギャラリー' };
+  function seen() {
+    try { var v = JSON.parse(window.sessionStorage.getItem(KEY) || 'null'); if (v) return v; } catch (e) {}
+    return { mine: KTN.NOTICES.initialSeen.mine, news: KTN.NOTICES.initialSeen.news };
+  }
+  function role() { return (window.ktnState && window.ktnState.role) || 'guest'; }
+  function loggedIn(r) { return (r || role()) !== 'guest'; }
+  /* あなた宛に出す項目：ユーザーとしての項目は全ログインユーザー、クリエイター／ギャラリーはそのロールのときだけ */
+  function mine(r) {
+    r = r || role();
+    if (!loggedIn(r)) return [];
+    return KTN.NOTICES.mine.filter(function (it) {
+      return it.for === 'user' || (it.for === 'creator' && r === 'user+creator') || (it.for === 'gallery' && r === 'user+gallery');
+    });
+  }
+  function list(tab, r) { return tab === 'mine' ? mine(r) : KTN.NOTICES.news; }
+  /* 最後に見た日時より新しい件数（日付は YYYY.MM.DD なので文字列で比べられる） */
+  function newCount(tab, r) { var t = seen()[tab]; return list(tab, r).filter(function (it) { return it.date > t; }).length; }
+  function lastSeen(tab) { return seen()[tab]; }
+  function markSeen(tab) { var s = seen(); s[tab] = KTN.NOTICES.today; try { window.sessionStorage.setItem(KEY, JSON.stringify(s)); } catch (e) {} }
+  function reset() { try { window.sessionStorage.removeItem(KEY); } catch (e) {} }
+  /* サイドバー・下部ナビの青い点：ログイン中で、あなた宛またはニュースに最後に見た日時より新しいものがあるとき */
+  function hasUnread(r) { r = r || role(); return loggedIn(r) && (newCount('mine', r) + newCount('news', r)) > 0; }
+  return { ROLE_LABEL: ROLE_LABEL, mine: mine, list: list, newCount: newCount, lastSeen: lastSeen, markSeen: markSeen, reset: reset, hasUnread: hasUnread, loggedIn: loggedIn };
+}());
+
+/* P61 お知らせ一覧：あなた宛（ログイン時）／ニュースの2タブ */
+KTN.pages['p61'] = function () {
+  var N = KTN.notice;
+  var tabsEl = document.getElementById('p61Tabs');
+  var listEl = document.getElementById('p61List');
+  var countEl = document.getElementById('p61Count');
+  if (!listEl) return;
+  var q = new URLSearchParams(location.search).get('tab');
+  var tab = q === 'news' ? 'news' : 'mine';
+  /* このページを開いている間の NEW の基準＝タブを初めて開く直前の「最後に見た日時」（開いた瞬間に更新しても NEW は消さない） */
+  var shownSince = {};
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function card(it, kind, since) {
+    var isNew = !!since && it.date > since;
+    return '<a class="nc nc--h nc--text p61-item' + (isNew ? ' is-new' : '') + '" href="' + it.href + '">' +
+      '<div class="nc__body"><div class="nc__badge-row">' +
+        (isNew ? '<span class="nb">NEW</span>' : '') +
+        (kind === 'mine' ? '<span class="p61-role-chip p61-role-chip--' + it.for + '">' + N.ROLE_LABEL[it.for] + '</span>'
+                         : '<span class="at ' + (it.cls || 'at-f') + '">' + esc(it.tag) + '</span>') +
+      '</div><h3 class="nc__title">' + esc(it.def ? KTN.nt(it.def, it.vars) : it.title) + '</h3><span class="nc__date">' + it.date + '</span></div></a>';
+  }
+  function render() {
+    var logged = N.loggedIn();
+    /* ゲストはニュースだけ・NEW も付けない（最後に見た日時を持たない）。選んでいたタブ（tab）は書き換えない */
+    var cur = logged ? tab : 'news';
+    if (logged) {
+      if (!(cur in shownSince)) shownSince[cur] = N.lastSeen(cur);
+      N.markSeen(cur);   /* タブを開いたら、そのタブは全部見たことにする */
+    }
+    if (tabsEl) {
+      tabsEl.hidden = !logged;
+      tabsEl.querySelectorAll('[data-tab]').forEach(function (b) {
+        var k = b.dataset.tab, n = N.newCount(k);
+        b.classList.toggle('is-active', k === cur);
+        b.setAttribute('aria-selected', k === cur ? 'true' : 'false');
+        var c = b.querySelector('.ktn-count');
+        if (c) { c.textContent = n; c.hidden = !n; }
+      });
+    }
+    var items = N.list(cur);
+    var since = logged ? shownSince[cur] : null;
+    if (!items.length) {
+      listEl.innerHTML = '<p class="p61-empty">' + (cur === 'mine' ? 'あなた宛のお知らせはありません。' : 'お知らせはありません。') + '</p>';
+    } else {
+      /* あなた宛も新しい順に1本で並べ、各項目の左上のチップで立場（ユーザー／クリエイター／ギャラリー）を示す
+         （見出しで分けると、クリエイターとしての新しいお知らせがユーザーの下に回って見落としやすいため・ユーザー提案） */
+      listEl.innerHTML = items.map(function (it) { return card(it, cur, since); }).join('');
+    }
+    if (countEl) countEl.innerHTML = '<strong>' + items.length + '</strong>件';
+    /* サイドバー・下部ナビの点を描き直す（renderAll は ktnRender→render を呼ぶので使わない＝無限に呼び合わないように） */
+    if (typeof renderSidebar === 'function') renderSidebar();
+    if (typeof renderBottomNav === 'function') renderBottomNav();
+  }
+  if (tabsEl) tabsEl.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-tab]'); if (!b) return;
+    tab = b.dataset.tab; render();
+  });
+  var prev = window.ktnRender;
+  window.ktnRender = function () { if (typeof prev === 'function') prev(); render(); };
+  window.p61DemoReset = function () { N.reset(); shownSince = {}; render(); KTN.toast('最後に見た日時を最初の状態に戻しました（デモ）'); };
+  render();
+};
+
+/* ════════════════════════════════════════════════════
+   P90-18 お知らせ・やることの文言管理（2026-09-28）
+   KTN.NOTICE_DEFS（common.js・文言の単一ソース）を一覧で表示し、1件ずつ編集する（メールの P90-9 と対になる）。
+   タブ：お知らせ（あなた宛＝NT）／やること（LIAISON+＝TD）。見出し・ボタン名などの画面の固定文言は扱わない（コードに置く・ユーザー判断「細かすぎる」）。定義の正は docs/notifications.md。
+   デモ：保存はこのページの中だけ（本番は文言データを保存し、P61・ロールアイコンの一覧が読む）。
+════════════════════════════════════════════════════ */
+KTN.pages['p90-18'] = function () {
+  var D = KTN.NOTICE_DEFS;
+  var listEl = document.getElementById('p9018List');
+  var tabsEl = document.getElementById('p9018Tabs');
+  var introEl = document.getElementById('p9018Intro');
+  if (!listEl || !D) return;
+  var tab = 'mine';
+  var WHO = { seller: '出品者', buyer: '購入者', both: '出品者・購入者' };
+  var ROLE = { user: 'ユーザー', creator: 'クリエイター', gallery: 'ギャラリー' };
+  /* 見本の差し込み値（{{…}} をそれらしい値にして見せる） */
+  var SAMPLE = { artworkName: 'オノマトペの庭', exhibitionName: 'あなたが知らないオノマトペ', applyName: 'クリエイター機能', personName: '田中 透さん', contentKind: '展覧会', contentName: '音のかたち IV', watch: 3, checkin: 2, interest: 5, n: 2 };
+  var INTRO = {
+    mine: 'お知らせ一覧（P61）の「あなた宛」に出す文言です。左上のチップ（ユーザー／クリエイター／ギャラリー）は「立場」の列で決まります。ニュース（サイトからの一斉のお知らせ）は <a class="ktn-guide-link" href="./kotennavi-p61-11.html">お知らせの新規作成</a> で1件ずつ作ります。',
+    todo: 'サイドバーのロールアイコンから開く「やること」の一覧に出す文言です（LIAISON+ の取引）。自分の番の状態文と、取引の結果の文があります。状態名そのもの（購入確定待ち など）は変えず、利用者に向けた呼びかけの文をここで管理します。'
+  };
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function fill(t) { return t.replace(/\{\{(\w+)\}\}/g, function (m, k) { return SAMPLE[k] != null ? SAMPLE[k] : m; }); }
+  function tokens(t) { var m = t.match(/\{\{\w+\}\}/g); return m ? m.join(' ') : '（差し込みなし）'; }
+  function roleCell(r) { return r.split('・').map(function (x) { return '<span class="p61-role-chip p61-role-chip--' + x + '">' + ROLE[x] + '</span>'; }).join(' '); }
+  function table(title, rows, cols) {
+    return '<div class="p909-group"><h4 class="p909-group__title">' + title + '<span class="ktn-count ktn-count--pill is-idle">' + rows.length + '件</span></h4>' +
+      '<div class="p315-archive-table-wrap"><table class="p315-archive-table p909-table" aria-label="' + title + '">' +
+      '<thead><tr>' + cols.map(function (c) { return '<th class="' + (c.col || '') + '">' + c.h + '</th>'; }).join('') + '<th class="p9018-col--act">操作</th></tr></thead><tbody>' +
+      rows.map(function (r) {
+        return '<tr data-id="' + r.id + '">' + cols.map(function (c) { return '<td data-label="' + c.h + '" class="' + (c.cls || '') + ' ' + (c.col || '') + '">' + c.v(r) + '</td>'; }).join('') +
+          '<td data-label="操作" class="p909-cell--actions p9018-col--act"><button type="button" class="ktn-op-btn ktn-op-btn--sm" data-edit="' + r.id + '">編集</button></td></tr>';
+      }).join('') + '</tbody></table></div></div>';
+  }
+  var C_ID = { h: 'ID', cls: 'p909-cell--muted', col: 'p9018-col--id', v: function (r) { return r.id; } };
+  var C_TEXT = { h: '表示する文言', cls: 'p9018-cell--text', v: function (r) { return esc(r.text); } };
+  var C_MAIL = { h: 'メール', cls: 'p909-cell--muted', col: 'p9018-col--mail', v: function (r) { return r.mail || '—'; } };
+  function render() {
+    tabsEl.querySelectorAll('[data-panel]').forEach(function (b) {
+      var on = b.dataset.panel === tab;
+      b.classList.toggle('is-active', on); b.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+    tabsEl.querySelector('[data-count="mine"]').textContent = D.mine.length + '件';
+    tabsEl.querySelector('[data-count="todo"]').textContent = (D.todoTurn.length + D.todoResult.length) + '件';
+    introEl.innerHTML = INTRO[tab];
+    if (tab === 'mine') {
+      listEl.innerHTML = table('お知らせ（あなた宛）', D.mine, [C_ID,
+        { h: '立場', col: 'p9018-col--who', v: function (r) { return roleCell(r.role); } },
+        { h: 'いつ', cls: 'p909-cell--meta', v: function (r) { return esc(r.when) + '<div class="p9018-dest">行き先：' + esc(r.dest) + '</div>'; } },
+        C_TEXT, C_MAIL]);
+    } else {
+      var cols = [C_ID, { h: '誰に', col: 'p9018-col--who', v: function (r) { return WHO[r.who]; } }, { h: 'いつ', cls: 'p909-cell--meta', v: function (r) { return esc(r.when); } }, C_TEXT, C_MAIL];
+      listEl.innerHTML = table('自分の番（状態文）', D.todoTurn, cols) + table('取引の結果', D.todoResult, cols);
+    }
+  }
+  tabsEl.addEventListener('click', function (e) { var b = e.target.closest('[data-panel]'); if (b) { tab = b.dataset.panel; render(); } });
+
+  /* 編集モーダル */
+  var modal = document.getElementById('p9018EditModal'), ctx = document.getElementById('p9018EditCtx');
+  var ta = document.getElementById('p9018EditText'), help = document.getElementById('p9018EditHelp'), pv = document.getElementById('p9018EditPreview');
+  var editing = null;
+  function find(id) { var all = [].concat(D.todoTurn, D.todoResult, D.mine); for (var i = 0; i < all.length; i++) if (all[i].id === id) return all[i]; return null; }
+  function preview() { pv.textContent = fill(ta.value); }
+  listEl.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-edit]'); if (!b) return;
+    editing = find(b.dataset.edit); if (!editing) return;
+    ctx.innerHTML = '<strong>' + editing.id + '</strong>' + esc(editing.when);
+    ta.value = editing.text;
+    help.textContent = '差し込み：' + tokens(editing.text) + '（差し込みの名前は変えないでください）';
+    preview();
+    modal.hidden = false; ta.focus();
+  });
+  ta.addEventListener('input', preview);
+  function close() { modal.hidden = true; editing = null; }
+  document.getElementById('p9018EditCancel').addEventListener('click', close);
+  document.getElementById('p9018EditBg').addEventListener('click', close);
+  document.getElementById('p9018EditSave').addEventListener('click', function () {
+    if (!editing) return;
+    if (!ta.value.trim()) { ta.focus(); ta.closest('.p211-field').classList.add('is-error'); return; }
+    editing.text = ta.value.trim();
+    close(); render();
+    KTN.toast('文言を保存しました（デモ）');
+  });
+  render();
 };

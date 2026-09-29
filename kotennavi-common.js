@@ -1095,7 +1095,8 @@ function renderSidebar() {
     `;
     if (noticeDot) noticeDot.style.display = 'none';
   } else {
-    if (noticeDot) noticeDot.style.display = 'block';
+    /* お知らせの青い点：ログイン中で、あなた宛またはニュースに未読があるときだけ（KTN.notice・docs/notifications.md） */
+    if (noticeDot) noticeDot.style.display = (window.KTN && KTN.notice && KTN.notice.hasUnread(curRole)) ? 'block' : 'none';
     const roles = ['user'];
     if (curRole === 'user+creator') roles.push('creator');
     else if (curRole === 'user+gallery') roles.push('gallery');
@@ -1103,12 +1104,12 @@ function renderSidebar() {
 
     if (roleNav) roleNav.innerHTML = roles.map(r => {
       const rd = KTN_ROLES[r];
-      /* myページ（user）の強調バッジはヘッダーのLIAISON+要対応ボタン（getActions内
-         txnAlertActionBtn）と同義の通知のため、サイドバーに重複表示しない（2026-08-21）。 */
-      const cnt = r === 'user' ? 0 : ktnTxnAlertCount(r);
-      const badge = cnt > 0 ? `<span class="ktn-sidebar__badge">${cnt > 99 ? '99+' : cnt}</span>` : '';
+      /* やること（LIAISON+ の取引で自分の番）の数字。myページ＝購入者として、クリエイター・ギャラリー＝出品者として
+         （docs/notifications.md）。数字があるとき押すと一覧が開く（ktnRoleNavClick）。旧ヘッダーの赤いボタンは廃止したので
+         myページのアイコンにも出す（2026-09-28・旧：ヘッダーと重複するため myページには出さない） */
+      const badge = ktnTodoBadge(r, 'ktn-sidebar__badge');
       return `
-        <a href="${rd.url}" class="ktn-sidebar__item" data-page="${rd.page}" onclick="handleNav(event,'${rd.page}','${rd.url}')">
+        <a href="${rd.url}" class="ktn-sidebar__item" data-page="${rd.page}" data-todo-role="${r}" onclick="ktnRoleNavClick(event,'${r}','${rd.page}','${rd.url}')">
           <div class="ktn-sidebar__role">
             <div class="ktn-sidebar__role-fallback" style="background:${rd.bg}">${rd.icon}</div>
           </div>
@@ -1158,7 +1159,7 @@ function renderBottomNav() {
   } else {
     html += `
       <a href="/p61" class="ktn-bottom-nav__item" data-page="p61" onclick="handleNav(event,'p61','/p61')" style="position:relative">
-        <span class="ktn-bottom-nav__dot"></span>
+        ${(window.KTN && KTN.notice && KTN.notice.hasUnread(curRole)) ? '<span class="ktn-bottom-nav__dot"></span>' : ''}
         <div class="ktn-bottom-nav__icon">${ICONS.notice}</div>
         <span class="ktn-bottom-nav__label">お知らせ</span>
       </a>
@@ -1168,10 +1169,10 @@ function renderBottomNav() {
       </a>
     `;
     const ur = KTN_ROLES['user'];
-    /* サイドバーと同じ理由でmyページの強調バッジは表示しない（2026-08-21）。 */
-    const urBadge = '';
+    /* やること（購入者として）の数字。サイドバーと同じ（docs/notifications.md） */
+    const urBadge = ktnTodoBadge('user', 'ktn-bottom-nav__badge');
     html += `
-      <a href="${ur.url}" class="ktn-bottom-nav__item" data-page="${ur.page}" onclick="handleNav(event,'${ur.page}','${ur.url}')">
+      <a href="${ur.url}" class="ktn-bottom-nav__item" data-page="${ur.page}" data-todo-role="user" onclick="ktnRoleNavClick(event,'user','${ur.page}','${ur.url}')">
         <div class="ktn-bottom-nav__role" style="background:${ur.bg};border-radius:9px">${ur.iconSm}</div>
         ${urBadge}
         <span class="ktn-bottom-nav__label">myページ</span>
@@ -1183,10 +1184,9 @@ function renderBottomNav() {
     else if (curRole === 'admin') extraRole = 'admin';
     if (extraRole) {
       const er = KTN_ROLES[extraRole];
-      const erCnt = ktnTxnAlertCount(extraRole);
-      const erBadge = erCnt > 0 ? `<span class="ktn-bottom-nav__badge">${erCnt > 99 ? '99+' : erCnt}</span>` : '';
+      const erBadge = ktnTodoBadge(extraRole, 'ktn-bottom-nav__badge');
       html += `
-        <a href="${er.url}" class="ktn-bottom-nav__item" data-page="${er.page}" onclick="handleNav(event,'${er.page}','${er.url}')">
+        <a href="${er.url}" class="ktn-bottom-nav__item" data-page="${er.page}" data-todo-role="${extraRole}" onclick="ktnRoleNavClick(event,'${extraRole}','${er.page}','${er.url}')">
           <div class="ktn-bottom-nav__role" style="background:${er.bg};border-radius:9px">${er.iconSm}</div>
           ${erBadge}
           <span class="ktn-bottom-nav__label">${er.label}</span>
@@ -1544,7 +1544,7 @@ KTN.QA = [
 
   /* ─── cat:'audience-mgmt'（オーディエンス管理＝p3-13／p4-13・p60-6/p60-7 FAQ「オーディエンス管理」章） ─── */
   { id: 'AUD-01', cat: 'audience-mgmt', aud: 'common', grp: 'オーディエンス管理', q: '「ウォッチャー」「チェックイン」の一覧は何を表示していますか？', a: 'あなたをウォッチしているユーザー、あなたの展覧会にチェックインしたユーザーの一覧です。' },
-  { id: 'AUD-02', cat: 'audience-mgmt', aud: 'common', grp: 'オーディエンス管理', q: '新しいウォッチ・チェックインの通知はどこで止められますか？', a: 'myページの「メール通知設定」の「ウォッチ・チェックインのお知らせ」で切り替えられます。オフにしてもオーディエンスの一覧はいつでも確認できます。' },
+  { id: 'AUD-02', cat: 'audience-mgmt', aud: 'common', grp: 'オーディエンス管理', q: '新しいウォッチ・チェックインの通知はどこで止められますか？', a: 'myページの「メール通知設定」の「ウォッチ・チェックイン・コメントのお知らせ」で切り替えられます。オフにしてもオーディエンスの一覧はいつでも確認できます。' },
   { id: 'AUD-03', cat: 'audience-mgmt', aud: 'common', grp: 'オーディエンス管理', q: '一覧の並べ替え・絞り込みは何ができますか？', a: 'ウォッチャーは登録日時順、チェックインは展覧会別・日時順などで並べ替え・絞り込みができます。' },
   { id: 'AUD-04', cat: 'audience-mgmt', aud: 'common', grp: 'オーディエンス管理', q: '特定のユーザーのウォッチ・チェックインをこちらから解除できますか？', a: 'いいえ、ウォッチ・チェックインの解除はユーザー本人のみが行えます。' },
 
@@ -1591,7 +1591,7 @@ KTN.QA = [
   { id: 'ACC-S02', cat: 'account-security', aud: 'user', grp: 'パスワード管理', q: 'パスワードを忘れてしまいました。', a: 'ログイン画面の「パスワードをお忘れですか？」から、ご登録のメールアドレス宛にパスワード再設定用のリンクをお送りします。このページからパスワードを変更する場合は、現在のパスワードの入力が必要です。' },
   { id: 'ACC-S03', cat: 'account-security', aud: 'user', grp: 'パスワード管理', q: 'パスワードを変更すると他の端末はログアウトされますか？', a: '安全のため、変更後は他の端末でログイン中のセッションが自動的にログアウトされることがあります。再度ログインしてご利用ください。' },
 
-  { id: 'ACC-N01', cat: 'account-notify', aud: 'user', grp: 'メール通知設定', q: '通知メールをすべて停止できますか？', a: 'アカウント・セキュリティ（登録・パスワードやメールアドレスの変更・退会）、LIAISON+の取引の連絡、お問合わせへの返信、個展なびからの重要なお知らせ（利用規約の変更・障害など）は、安全な利用と取引に欠かせないため停止できません。リマインダー、ウォッチ新着、ニュース・キャンペーン、クリエイター・ギャラリー向けのウォッチ・チェックインのお知らせとインサイトの月次レポートは、メール通知設定でオン・オフを選べます。' },
+  { id: 'ACC-N01', cat: 'account-notify', aud: 'user', grp: 'メール通知設定', q: '通知メールをすべて停止できますか？', a: 'アカウント・セキュリティ（登録・パスワードやメールアドレスの変更・退会）、LIAISON+の取引の連絡、お問合わせへの返信、個展なびからの重要なお知らせ（利用規約の変更・障害など）は、安全な利用と取引に欠かせないため停止できません。リマインダー、ウォッチ新着、ニュース・キャンペーン、クリエイター・ギャラリー向けのウォッチ・チェックイン・コメントのお知らせとインサイトの月次レポートは、メール通知設定でオン・オフを選べます。' },
   { id: 'ACC-N02', cat: 'account-notify', aud: 'user', grp: 'メール通知設定', q: '設定はすぐに反映されますか？', a: 'はい。トグルを切り替えると自動的に保存されます。保存ボタンの操作は不要です。' },
   { id: 'ACC-N03', cat: 'account-notify', aud: 'user', grp: 'メール通知設定', q: '取引の連絡メールはオフにできますか？', a: 'いいえ。LIAISON+の取引の連絡（購入確定・お支払い・発送・受取確認・取引完了・キャンセルなど）は、相手のいる取引で期限を過ぎないようにするため、すべて停止できません。取引の状況はいつでも取引ワークスペースでもご確認いただけます。' },
 
@@ -2053,6 +2053,7 @@ const PAGES = {
   'p90-14': { n: '管理者-販売代金管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['販売代金管理', null]] },
   'p90-15': { n: '管理者-リエゾンプラス申込者一覧', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['リエゾンプラス申込者一覧', null]] },
   'p90-16': { n: '管理者-作品購入ユーザー一覧', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['作品購入ユーザー一覧', null]] },
+  'p90-18': { n: '管理者-お知らせ・やることの文言管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['お知らせ・やることの文言管理', null]] },
   'p90-17': { n: '管理者-検索・特集管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['検索・特集管理', null]] },
 };
 
@@ -2276,7 +2277,9 @@ function ktnSetLP(val, btn) {
       b.classList.toggle('on', b === btn);
     });
   }
-  if (typeof ktnRender === 'function') ktnRender();
+  /* 申込の有無でロールアイコンの「やること」の数字も変わるので、サイドバーを含めて描き直す */
+  if (typeof renderAll === 'function') renderAll();
+  else if (typeof ktnRender === 'function') ktnRender();
 }
 window.ktnLPApplied = ktnLPApplied;
 window.ktnSetLP = ktnSetLP;
@@ -2288,6 +2291,24 @@ window.ktnSetLP = ktnSetLP;
    （ロールアイコンのバッジは合算件数のみを表示し、サービス別の内訳は各サービスのコンソールへの
    メニュー項目側で出す想定＝アイコン側の見た目ルールを変えずに拡張できる）。 */
 KTN.txnAlerts = { creator: { lp: 0 }, gallery: { lp: 0 }, user: { lp: 0 } };
+/* デモ：件数はページをまたいで保つ（sessionStorage）。件数ボタンは P3（クリエイター）・P4（ギャラリー）・P5（購入者）に
+   分かれてあるので、保たないと別のページのロールアイコンの数字が 0 に戻り、デモバーと連動していないように見える（2026-09-28） */
+(function () {
+  try {
+    var saved = JSON.parse(window.sessionStorage.getItem('ktnDemoTxnAlerts') || 'null');
+    if (saved) Object.keys(saved).forEach(function (r) { KTN.txnAlerts[r] = saved[r]; });
+  } catch (e) {}
+})();
+/* デモバーの件数ボタンの選択表示を、保っている件数に合わせる（onclick の第3引数と一致するものを on） */
+function ktnSyncTxnAlertButtons() {
+  document.querySelectorAll('[data-txn-alert-role]').forEach(function (b) {
+    var m = (b.getAttribute('onclick') || '').match(/ktnSetTxnAlert\('(\w+)','(\w+)',(\d+)/);
+    if (!m) return;
+    var cur = (KTN.txnAlerts[m[1]] && KTN.txnAlerts[m[1]][m[2]]) || 0;
+    b.classList.toggle('on', cur === Number(m[3]));
+  });
+}
+document.addEventListener('DOMContentLoaded', ktnSyncTxnAlertButtons);
 /* 購入管理（p5-14）への導線用デモ状態（要対応件数=0でも過去に1回以上購入していればメニューに出す）。
    txnAlertsは「今すぐ対応が必要な件数」で0になり得るため、これとは独立に「購入歴の有無」を持つ
    （0件でも導線自体は消えないようにする＝p5-14へのルートが失われるバグの再発防止）。 */
@@ -2309,25 +2330,25 @@ window.ktnSetPurchaseHistory = ktnSetPurchaseHistory;
 KTN.txnAlertItems = {
   creator: {
     lp: [
-      { work: '音の輪郭 No.7', counterpart: '山田 花子さん', status: '購入を確定してください', deadline: '2026.03.08', href: './kotennavi-p3-16.html' },
-      { work: '夜の静寂', counterpart: '小林 誠さん', status: '作品を発送してください', deadline: '2026.03.07', href: './kotennavi-p3-16.html' },
-      { work: '流れる時間', counterpart: '高橋 麻衣さん', status: '取引完了を確認してください', deadline: '2026.03.06', href: './kotennavi-p3-16.html' },
-      { work: '風の記憶', counterpart: '田中 次郎さん', status: '購入を確定してください', deadline: '2026.03.10', href: './kotennavi-p3-16.html' },
-      { work: '線の重なり', counterpart: '中村 彩さん', status: '購入を確定してください', deadline: '2026.03.31', href: './kotennavi-p3-16.html' }
+      { work: '音の輪郭 No.7', counterpart: '山田 花子さん', def: 'TD-S1', deadline: '2026.03.08', href: './kotennavi-p3-16.html' },
+      { work: '夜の静寂', counterpart: '小林 誠さん', def: 'TD-S3', deadline: '2026.03.07', href: './kotennavi-p3-16.html' },
+      { work: '流れる時間', counterpart: '高橋 麻衣さん', def: 'TD-S5', deadline: '2026.03.06', href: './kotennavi-p3-16.html' },
+      { work: '風の記憶', counterpart: '田中 次郎さん', def: 'TD-S1', deadline: '2026.03.10', href: './kotennavi-p3-16.html' },
+      { work: '線の重なり', counterpart: '中村 彩さん', def: 'TD-S1', deadline: '2026.03.31', href: './kotennavi-p3-16.html' }
     ]
   },
   gallery: {
     lp: [
-      { work: '静かな水面', counterpart: '加藤 真紀さん', status: '取引完了を確認してください', deadline: '2026.03.10', href: './kotennavi-p4-16.html' },
-      { work: '光の堆積 No.2', counterpart: '伊藤 大輔さん', status: '購入を確定してください', deadline: '2026.03.18', href: './kotennavi-p4-16.html' },
-      { work: '燃える地平', counterpart: '渡辺 さくらさん', status: '作品を発送してください', deadline: '2026.03.22', href: './kotennavi-p4-16.html' },
-      { work: '影と光 No.5', counterpart: '林 浩二さん', status: '購入を確定してください', deadline: '2026.04.26', href: './kotennavi-p4-16.html' }
+      { work: '静かな水面', counterpart: '加藤 真紀さん', def: 'TD-S5', deadline: '2026.03.10', href: './kotennavi-p4-16.html' },
+      { work: '光の堆積 No.2', counterpart: '伊藤 大輔さん', def: 'TD-S1', deadline: '2026.03.18', href: './kotennavi-p4-16.html' },
+      { work: '燃える地平', counterpart: '渡辺 さくらさん', def: 'TD-S3', deadline: '2026.03.22', href: './kotennavi-p4-16.html' },
+      { work: '影と光 No.5', counterpart: '林 浩二さん', def: 'TD-S1', deadline: '2026.04.26', href: './kotennavi-p4-16.html' }
     ]
   },
   user: {
     lp: [
-      { work: '音の輪郭 No.7', counterpart: '田中 透（出品者）', status: 'お支払いにお進みください', deadline: '2026.03.02', href: './kotennavi-p5-15.html' },
-      { work: '声なき波紋', counterpart: '鈴木 一郎（出品者）', status: '受取を確認してください', deadline: '2026.03.20', href: './kotennavi-p5-15.html' }
+      { work: '音の輪郭 No.7', counterpart: '田中 透（出品者）', def: 'TD-S2', deadline: '2026.03.02', href: './kotennavi-p5-15.html' },
+      { work: '声なき波紋', counterpart: '鈴木 一郎（出品者）', def: 'TD-S4', deadline: '2026.03.20', href: './kotennavi-p5-15.html' }
     ]
   }
 };
@@ -2341,79 +2362,186 @@ function ktnTxnAlertCount(role) {
 function ktnSetTxnAlert(role, service, val, btn) {
   if (!KTN.txnAlerts[role]) KTN.txnAlerts[role] = {};
   KTN.txnAlerts[role][service] = val;
+  try { window.sessionStorage.setItem('ktnDemoTxnAlerts', JSON.stringify(KTN.txnAlerts)); } catch (e) {}
   if (btn) {
     document.querySelectorAll('[data-txn-alert-role="' + role + '"]').forEach(function (b) {
       b.classList.toggle('on', b === btn);
     });
   }
-  /* サイドバー/ボトムナビのバッジだけでなく、ヘッダーの要対応ボタン（txnAlertActionBtn＝getActions()経由）
-     も同じ件数を参照するため、ヘッダーを含む renderAll() で一括更新する。 */
+  /* サイドバー／ボトムナビのロールアイコンの数字（やること）を描き直す。開いている一覧は閉じる */
+  if (typeof ktnTodoClose === 'function') ktnTodoClose();
   if (typeof renderAll === 'function') renderAll();
 }
 window.ktnTxnAlertCount = ktnTxnAlertCount;
 window.ktnSetTxnAlert = ktnSetTxnAlert;
 
-/* LIAISON+コンソール／取引ワークスペースへの要対応ナビ（getActions() のオーナーメニュー隣に設置）。
-   ロールアイコンのバッジ（気づく・全サービス合算）→ 自分のページ →本ボタン（見つける）→ コンソールで
-   個別取引へ（辿り着く）の導線。リンク先は特定サービスの一覧ページ（例：LIAISON+コンソール
-   p3-15/p4-15＝全展覧会横断の取引一覧。各行から個別展覧会の取引デスク p3-16/p4-16 へ進む）なので、
-   件数もアイコンの合算ではなくサービス単体の件数を出す
-   （将来サービスが増えた場合に備え、内訳はここで出す＝アイコン側は変えずに済む）。 */
-/* モバイル縮退時（.ktn-hdr-alert-btn__icon）に出す各サービスのロゴマーク。
-   kotennavi_liaison_logo.html の「+」ロゴバッジ（ゴールド円＋Bodoni Modaの+）をそのまま縮小流用。
-   ロゴが未定義のサービスは汎用ドット（CSS ::before）にフォールバックする。 */
-var TXN_ALERT_SERVICE_ICON = {
-  lp: '<svg viewBox="0 0 32 32" width="18" height="18" aria-hidden="true"><circle cx="16" cy="16" r="16" fill="#b87c10"/><text x="16" y="17" font-family="\'Bodoni Moda\',serif" font-size="22" font-weight="900" fill="#fff8e8" text-anchor="middle" dominant-baseline="central">+</text></svg>'
+/* ══ お知らせ・やることの文言（単一ソース・2026-09-28）══
+   ロールアイコンの「やること」の一覧（下の ktnTodoOpen）と、お知らせ一覧 P61 のあなた宛は、ここから文言を読む。
+   管理画面 P90-18「お知らせ・やることの文言管理」がこの一覧を表示・編集する（メールの P90-9 と対になる）。
+   見出し・ボタン名・空のときの文などの画面の固定文言は、ほかの画面と同じくコードに書く（管理画面では扱わない・ユーザー判断）。
+   定義の正は docs/notifications.md（ID は同ファイルの TD／NT と一致）。{{…}} は差し込み（KTN.nt で置き換える）。
+   ニュース（サイトからの一斉のお知らせ）は P61-11 で1件ずつ作るのでここには持たない。 */
+KTN.NOTICE_DEFS = {
+  /* やること：自分の番の状態文（TD-01／TD-02） */
+  todoTurn: [
+    { id: 'TD-S1', who: 'seller', when: 'S1 購入確定待ち',   text: '購入を確定してください',     mail: 'T-02' },
+    { id: 'TD-S2', who: 'buyer',  when: 'S2 支払待ち',       text: 'お支払いにお進みください',   mail: 'T-03' },
+    { id: 'TD-S3', who: 'seller', when: 'S3 発送待ち',       text: '作品を発送してください',     mail: 'T-04' },
+    { id: 'TD-S4', who: 'buyer',  when: 'S4 受取確認待ち',   text: '受取を確認してください',     mail: 'T-05' },
+    { id: 'TD-S5', who: 'seller', when: 'S5 完了確認待ち',   text: '取引完了を確認してください', mail: 'T-06' }
+  ],
+  /* やること：取引の結果（TD-03／TD-04） */
+  todoResult: [
+    { id: 'TD-R1', who: 'both',   when: '取引完了（F1）',                         text: '取引が完了しました',                                   mail: 'T-07' },
+    { id: 'TD-R2', who: 'both',   when: 'キャンセル（F2）',                       text: '取引がキャンセルになりました',                         mail: 'T-08' },
+    { id: 'TD-R3', who: 'buyer',  when: '確定期限を過ぎて自動取消（購入者側）',   text: '確定期限を過ぎたため、お申込みが自動で取り消されました', mail: 'T-10' },
+    { id: 'TD-R4', who: 'seller', when: '確定期限を過ぎて自動取消（出品者側）',   text: '確定期限を過ぎたため、出品が自動で取り消されました',   mail: 'T-10' },
+    { id: 'TD-R5', who: 'buyer',  when: '会場で売約済になり申込が取消',           text: '会場で売約済になったため、お申込みが取り消されました', mail: 'T-11' }
+  ],
+  /* お知らせ（あなた宛）：NT-01〜NT-09。role＝どの立場のお知らせか（P61 の左上のチップ） */
+  mine: [
+    { id: 'NT-01',  role: 'creator・gallery', when: '作品にお問合わせが届いた',                     text: '作品《{{artworkName}}》にお問合わせが届きました',                 dest: 'P3-20／P4-20・P6-14', mail: 'F-05' },
+    { id: 'NT-02',  role: 'user',             when: '問合せへの返信が届いた',                       text: '作品《{{artworkName}}》へのお問合わせに返信が届きました',         dest: 'P5-16',               mail: 'F-07' },
+    { id: 'NT-03①', role: 'user・creator・gallery', when: '機能申込の確認が完了した（利用開始・LIAISON+ の審査通過）', text: '{{applyName}}のお申込みの確認が完了しました', dest: '各ロールのページ', mail: 'M-02・M-04・M-08' },
+    { id: 'NT-03②', role: 'user・creator・gallery', when: '機能申込の内容について確認のお願い',   text: '{{applyName}}のお申込み内容について、確認をお願いします',          dest: 'メール（返信で回答）', mail: 'M-06・M-09' },
+    { id: 'NT-03③', role: 'user・creator・gallery', when: '機能申込を取り消した',                 text: '{{applyName}}のお申込みを取り消しました',                        dest: 'P11 系',              mail: 'M-07・M-10' },
+    { id: 'NT-04',  role: 'creator・gallery', when: '展覧会の内容を確認した（確認済み）',           text: '展覧会「{{exhibitionName}}」の内容を確認しました',                dest: 'P2',                  mail: 'E-01' },
+    { id: 'NT-05',  role: 'user',             when: 'ウォッチ中のクリエイター・ギャラリーが公開した', text: 'ウォッチ中の{{personName}}が、{{contentKind}}「{{contentName}}」を公開しました', dest: 'その展覧会・記事のページ', mail: 'A-01' },
+    { id: 'NT-06',  role: 'creator・gallery', when: '作品にコメントが付いた',                       text: '作品《{{artworkName}}》にコメントが付きました',                   dest: 'その作品のページ',    mail: 'A-05' },
+    { id: 'NT-07',  role: 'creator・gallery', when: '展覧会にレビューが付いた',                     text: '展覧会「{{exhibitionName}}」にレビューが付きました',              dest: 'そのレビューのページ（P8）', mail: '—' },
+    { id: 'NT-08',  role: 'creator・gallery', when: '1日のまとめ（前日のウォッチ・チェックイン・興味あり！）', text: '昨日のまとめ：ウォッチ {{watch}}人・チェックイン {{checkin}}人・興味あり！ {{interest}}件', dest: 'インサイト（P3-12／P4-12）', mail: 'A-03（ウォッチ・チェックイン）' },
+    { id: 'NT-09',  role: 'user',             when: '興味あり！した作品が展覧会に出品された',       text: '興味あり！した作品《{{artworkName}}》が、展覧会に出品されました', dest: 'その作品のページ',    mail: 'R-01' }
+  ]
 };
-/* curPage/targetPage は任意（省略時は自己参照チェックをしない）。指定時は自分自身が
-   リンク先ページ（＝集約コンソール p3-15/p4-15/p5-14）に既にいる場合ボタンごと非表示にする
-   （ddiP/ddiCurrent と同じ「今いるページへの無意味なリンク防止」思想。ただしオーナーメニューの
-   ddiCurrent と違い横に並ぶ独立ボタンなので、非活性表示ではなく非表示にする）。
-   moreLabel はプルダウン下部の集約コンソールへのリンク文言（省略時「全て見る」）。
-   クリックで直接コンソールへ飛ぶのではなく dd() と同じ仕組みのプルダウンにし、
-   「要対応の取引」の中身（作品名・相手・状態・期限）をその場で見せた上で、
-   個別取引デスクへの直リンクと、集約コンソールへの導線（moreLabel）を両方残す
-   （p3-15等へ移動後に要対応対象を探す手間をなくすユーザー提案・2026-08-17）。 */
-function txnAlertActionBtn(role, service, label, deskUrl, curPage, targetPage, moreLabel) {
-  /* creator/gallery（出品者）はLIAISON+未申請なら取引自体が存在し得ないため、
-     デモの件数（KTN.txnAlerts）がたまたま0でなくても要対応ボタンごと出さない
-     （申込状態と件数は別々のデモボタンで独立操作できるため、表示側で矛盾を防ぐ）。
-     購入者側（role==='user'）はLIAISON+申込の対象外なのでこの判定を適用しない。 */
-  if (service === 'lp' && (role === 'creator' || role === 'gallery') && !ktnLPApplied()) return '';
-  var m = KTN.txnAlerts && KTN.txnAlerts[role];
-  var cnt = (m && m[service]) || 0;
-  if (!cnt) return '';
-  if (curPage && targetPage && curPage === targetPage) return '';
-  var badgeTxt = cnt > 99 ? '99+' : cnt;
-  var icon = TXN_ALERT_SERVICE_ICON[service] || '';
-  var iconCls = icon ? 'ktn-hdr-alert-btn__icon' : 'ktn-hdr-alert-btn__icon ktn-hdr-alert-btn__icon--dot';
-  var id = 'ddTxn' + (++ddSeq);
-  var items = (KTN.txnAlertItems && KTN.txnAlertItems[role] && KTN.txnAlertItems[role][service]) || [];
-  var shown = items.slice(0, Math.min(cnt, 5));
-  var rest = cnt - shown.length;
-  var itemsHtml = shown.map(function (it) {
-    return `<a class="ktn-txn-ddi" href="${it.href}" onclick="closeAllPanels()">` +
-      `<span class="ktn-txn-ddi__work">${it.work}</span>` +
-      `<span class="ktn-txn-ddi__cp">${it.counterpart}</span>` +
-      `<span class="ktn-txn-ddi__status">${it.status}　${it.deadline}</span>` +
-      `</a>`;
-  }).join('');
-  if (!itemsHtml) itemsHtml = `<p class="ktn-txn-ddi__empty">対応が必要な取引が${cnt}件あります。</p>`;
-  var restHtml = rest > 0 ? `<p class="ktn-txn-ddi__rest">ほか${rest}件</p>` : '';
-  var moreTxt = moreLabel || '全て見る';
-  return `<div class="ktn-ddw ktn-hdr-alert-ddw">` +
-    `<button type="button" class="ktn-action-btn ktn-action-btn--alert ktn-hdr-alert-btn" onclick="toggleDD('${id}',this)">` +
-    `<span class="ktn-hdr-alert-btn__label">${label} ${cnt}件 →</span>` +
-    `<span class="${iconCls}">${icon}</span>` +
-    `<span class="ktn-hdr-alert-btn__badge">${badgeTxt}</span>` +
-    `</button>` +
-    `<div class="ktn-ddmenu ktn-ddmenu--txn" id="${id}">` +
-    `<p class="ktn-ddmenu--txn__head">要対応の取引</p>` +
-    itemsHtml + restHtml +
-    `<a class="ktn-ddmenu--txn__more" href="${deskUrl}">${moreTxt} →</a>` +
-    `</div>` +
-    `</div>`;
+/* 文言を ID で引き、{{…}} を差し込む */
+KTN.nt = function (id, vars) {
+  var d = KTN.NOTICE_DEFS, all = [].concat(d.todoTurn, d.todoResult, d.mine), t = '';
+  for (var i = 0; i < all.length; i++) if (all[i].id === id) { t = all[i].text; break; }
+  return t.replace(/\{\{(\w+)\}\}/g, function (m, k) { return vars && vars[k] != null ? vars[k] : m; });
+};
+
+/* ══ やること（TODO）＝LIAISON+ の取引で自分の番が来たもの（2026-09-28・定義は docs/notifications.md）══
+   ロールごとに分ける：購入者として（user）＝myページのアイコン／出品者として（creator・gallery）＝そのロールのアイコン。
+   サイドバー・下部ナビのロールアイコンに件数の数字を出し、数字があるときに押すと一覧（最大5件＋すべて見る＋ロールのページへ）が
+   その場で開く。0件のときはアイコンは従来どおりロールのページへ移る。
+   旧ヘッダーの赤いボタン「LIAISON+要対応」（txnAlertActionBtn）は廃止＝ヘッダーは各ページの操作だけにする（ユーザー判断）。 */
+var KTN_TODO_ROLE = {
+  user:    { head: '購入者として', more: './kotennavi-p5-14.html', moreLabel: '購入管理ですべて見る', page: './kotennavi-p5.html', pageLabel: 'myページへ' },
+  creator: { head: '出品者として', more: './kotennavi-p3-15.html', moreLabel: 'リエゾンプラスコンソールですべて見る', page: './kotennavi-p3.html', pageLabel: 'クリエイターページへ' },
+  gallery: { head: '出品者として', more: './kotennavi-p4-15.html', moreLabel: 'リエゾンプラスコンソールですべて見る', page: './kotennavi-p4.html', pageLabel: 'ギャラリーページへ' }
+};
+/* 一覧の見出しに付ける LIAISON+ の「+」マーク（kotennavi_liaison_logo.html のロールバッジの縮小・旧ヘッダーボタンのモバイル表示と同じ）。
+   数字の色は「要対応」の赤茶のまま、LIAISON+ らしさは一覧の見出しで出す（2026-09-28・ユーザー判断） */
+var KTN_LP_MARK = '<svg class="ktn-todo-pop__mark" viewBox="0 0 32 32" width="16" height="16" aria-hidden="true"><circle cx="16" cy="16" r="16" fill="#b87c10"/><text x="16" y="17" font-family="\'Bodoni Moda\',serif" font-size="22" font-weight="900" fill="#fff8e8" text-anchor="middle" dominant-baseline="central">+</text></svg>';
+/* 取引の結果（完了・キャンセル・自動取消・会場売約による取消）もやることに入れる（TD-03／TD-04・2026-09-28 ユーザー判断）。
+   結果は「確認したら消える」＝ロールアイコンの一覧を開いたら確認したことにする（ロールごとの「最後に確認した日時」方式）。
+   数字＝自分の番の件数＋まだ確認していない結果の件数。以下はデモデータ（本番は取引データ＋ロールごとの最後に確認した日時） */
+KTN.txnResultItems = {
+  user: [
+    { work: '風の記憶', counterpart: '田中 透（出品者）', def: 'TD-R1', date: '2026.09.26', href: './kotennavi-p5-15.html' },
+    { work: '線の重なり', counterpart: 'Gallery SOIL 渋谷（出品者）', def: 'TD-R5', date: '2026.09.24', href: './kotennavi-p5-14.html' },
+    { work: '夜の静寂', counterpart: '田中 透（出品者）', def: 'TD-R1', date: '2026.09.02', href: './kotennavi-p5-15.html' }
+  ],
+  creator: [
+    { work: '流れる時間', counterpart: '高橋 麻衣さん', def: 'TD-R1', date: '2026.09.25', href: './kotennavi-p3-16.html' },
+    { work: '音の輪郭 No.3', counterpart: '中村 彩さん', def: 'TD-R4', date: '2026.09.22', href: './kotennavi-p3-15.html' },
+    { work: '余白のかたち', counterpart: '佐藤 葵さん', def: 'TD-R2', date: '2026.09.03', href: './kotennavi-p3-16.html' }
+  ],
+  gallery: [
+    { work: '静かな水面', counterpart: '加藤 真紀さん', def: 'TD-R2', date: '2026.09.23', href: './kotennavi-p4-16.html' },
+    { work: '光の堆積 No.1', counterpart: '森 裕子さん', def: 'TD-R1', date: '2026.09.05', href: './kotennavi-p4-16.html' }
+  ]
+};
+KTN.TODO_TODAY = '2026.09.28';
+function ktnTodoSeen() {
+  try { var v = JSON.parse(window.sessionStorage.getItem('ktnDemoTodoSeen') || 'null'); if (v) return v; } catch (e) {}
+  return { user: '2026.09.20', creator: '2026.09.20', gallery: '2026.09.20' };
 }
+function ktnTodoMarkSeen(role) {
+  var s = ktnTodoSeen(); s[role] = KTN.TODO_TODAY;
+  try { window.sessionStorage.setItem('ktnDemoTodoSeen', JSON.stringify(s)); } catch (e) {}
+}
+function ktnTodoNewResults(role) {
+  var since = ktnTodoSeen()[role];
+  return ((KTN.txnResultItems && KTN.txnResultItems[role]) || []).filter(function (it) { return it.date > since; });
+}
+/* LIAISON+ を申し込んでいない出品者には、出品者としてのやることは存在しない（デモの件数が残っていても出さない） */
+function ktnTodoCount(role) {
+  if (!KTN_TODO_ROLE[role]) return 0;
+  if ((role === 'creator' || role === 'gallery') && !ktnLPApplied()) return 0;
+  return ktnTxnAlertCount(role) + ktnTodoNewResults(role).length;
+}
+function ktnTodoBadge(role, cls) {
+  var n = ktnTodoCount(role);
+  var t = 'LIAISON+ のやること ' + n + '件';
+  return n ? '<span class="' + cls + '" title="' + t + '" aria-label="' + t + '">' + (n > 99 ? '99+' : n) + '</span>' : '';
+}
+/* ロールアイコンの onclick：やることがあれば一覧を開き、無ければ従来どおりロールのページへ */
+function ktnRoleNavClick(e, role, page, url) {
+  if (ktnTodoCount(role)) { e.preventDefault(); ktnTodoOpen(role, e.currentTarget); return; }
+  handleNav(e, page, url);
+}
+function ktnTodoOpen(role, anchor) {
+  var pop = document.getElementById('ktnTodoPop');
+  if (!pop) {
+    pop = document.createElement('div');
+    pop.id = 'ktnTodoPop'; pop.className = 'ktn-todo-pop'; pop.hidden = true;
+    pop.setAttribute('role', 'dialog'); pop.setAttribute('aria-label', 'やること');
+    document.body.appendChild(pop);
+  }
+  if (!pop.hidden && pop.dataset.role === role) { ktnTodoClose(); return; }
+  var c = KTN_TODO_ROLE[role], n = ktnTodoCount(role);
+  var turn = ktnTxnAlertCount(role);
+  var items = (KTN.txnAlertItems && KTN.txnAlertItems[role] && KTN.txnAlertItems[role].lp) || [];
+  var shown = items.slice(0, Math.min(turn, 5)), rest = turn - shown.length;
+  var since = ktnTodoSeen()[role];
+  var results = ((KTN.txnResultItems && KTN.txnResultItems[role]) || []).slice(0, 5);
+  pop.innerHTML = '<p class="ktn-ddmenu--txn__head ktn-todo-pop__head">' + KTN_LP_MARK + '<span class="ktn-todo-pop__ttl">LIAISON+ のやること</span>' +
+    '<span class="ktn-todo-pop__n">' + (n > 99 ? '99+' : n) + '件</span><span class="ktn-todo-pop__role">' + c.head + '</span></p>' +
+    '<p class="ktn-todo-pop__sec">対応が必要<span class="ktn-todo-pop__sec-n">' + turn + '件</span></p>' +
+    (turn ? (shown.length ? shown.map(function (it) {
+      return '<a class="ktn-txn-ddi" href="' + it.href + '">' +
+        '<span class="ktn-txn-ddi__work">' + it.work + '</span>' +
+        '<span class="ktn-txn-ddi__cp">' + it.counterpart + '</span>' +
+        '<span class="ktn-txn-ddi__status">' + (it.def ? KTN.nt(it.def) : it.status) + '　' + it.deadline + '</span></a>';
+    }).join('') : '<p class="ktn-txn-ddi__empty">対応が必要な取引が' + turn + '件あります。</p>') : '<p class="ktn-txn-ddi__empty">いま対応が必要な取引はありません。</p>') +
+    (rest > 0 ? '<p class="ktn-txn-ddi__rest">ほか' + rest + '件</p>' : '') +
+    (results.length ? '<p class="ktn-todo-pop__sec">取引の結果</p>' + results.map(function (it) {
+      var isNew = it.date > since;
+      return '<a class="ktn-txn-ddi ktn-txn-ddi--result' + (isNew ? ' is-new' : '') + '" href="' + it.href + '">' +
+        '<span class="ktn-txn-ddi__work">' + (isNew ? '<span class="nb">NEW</span>' : '') + it.work + '</span>' +
+        '<span class="ktn-txn-ddi__cp">' + it.counterpart + '</span>' +
+        '<span class="ktn-txn-ddi__result">' + (it.def ? KTN.nt(it.def) : it.result) + '　' + it.date + '</span></a>';
+    }).join('') : '') +
+    '<a class="ktn-ddmenu--txn__more" href="' + c.more + '">' + c.moreLabel + ' →</a>' +
+    '<a class="ktn-todo-pop__page" href="' + c.page + '">' + c.pageLabel + ' →</a>';
+  pop.dataset.role = role;
+  /* 位置：サイドバー＝アイコンの右隣／スマホ下部ナビ＝ナビの上に左右いっぱいのシート */
+  var inBottom = !!anchor.closest('.ktn-bottom-nav');
+  var r = anchor.getBoundingClientRect();
+  pop.classList.toggle('ktn-todo-pop--sheet', inBottom);
+  pop.hidden = false;
+  if (inBottom) {
+    pop.style.left = ''; pop.style.top = '';
+    pop.style.bottom = (window.innerHeight - r.top + 8) + 'px';
+  } else {
+    pop.style.bottom = '';
+    pop.style.left = (r.right + 8) + 'px';
+    pop.style.top = Math.max(8, Math.min(r.top, window.innerHeight - pop.offsetHeight - 8)) + 'px';
+  }
+  /* 一覧を開いたら、取引の結果は確認したことにする（NEW はこの表示のあいだは残す）→ アイコンの数字を描き直す */
+  ktnTodoMarkSeen(role);
+  if (typeof renderSidebar === 'function') renderSidebar();
+  if (typeof renderBottomNav === 'function') renderBottomNav();
+}
+function ktnTodoClose() { var pop = document.getElementById('ktnTodoPop'); if (pop) pop.hidden = true; }
+document.addEventListener('click', function (e) {
+  if (e.target.closest && (e.target.closest('#ktnTodoPop') || e.target.closest('[data-todo-role]'))) return;
+  ktnTodoClose();
+});
+document.addEventListener('keydown', function (e) { if (e.key === 'Escape') ktnTodoClose(); });
+window.ktnRoleNavClick = ktnRoleNavClick;
+window.ktnTodoOpen = ktnTodoOpen;
 
 /* LIAISON+コンソール（p3-15/p4-15）Tab1「期間中展覧会」の要対応フィルタ。
    p3-15/p4-15 は取引セクションのクラス名が共通（.p315-*）なので、ページ固有JSを持たず
@@ -2533,14 +2661,13 @@ function p2AdminMenuItems(curPage) {
 /* 「作品へのお問合わせ」メニュー項目のラベル（未返信件数つき・P3/P4 オーナーメニュー共通）。
    件数は pages.js の KTN.inq（作品への問合せのデモデータ）から数える。0件なら件数を出さない。 */
 function inqUnreplied(owner, workId) { return (window.KTN && KTN.inq) ? KTN.inq.unrepliedCount(owner, workId) : 0; }
-/* オーナーメニューのボタンにも未返信の問合せ件数を出す（メニューを開く前に「届いている」とわかるように・2026-09-28） */
-function ownerDdLabel(n) { return 'オーナーメニュー' + (n ? '<span class="ktn-ddbtn__count" title="未返信の問合せ">' + n + '</span>' : ''); }
 /* 作品ページ（P6/P6-1/P6-2）で表示中の作品＝デモでは creator→w1《オノマトペの庭》／gallery→w3（本番は表示中の作品ID） */
 function p6InqWork(role) { return role === 'gallery' ? 'w3' : 'w1'; }
 function p6InqCount(role) { return inqUnreplied(role === 'gallery' ? 'gallery' : 'creator', p6InqWork(role)); }
 function inqMenuLabel(owner) {
   var n = (window.KTN && KTN.inq) ? KTN.inq.unrepliedCount(owner) : 0;
-  return '作品へのお問合わせ' + (n ? '<span class="ktn-ddi__count" title="未返信">' + n + '</span>' : '');
+  /* 項目の件数は通知ではなく「このページで残っている件数」の表示（控えめなグレー・docs/notifications.md） */
+  return '作品へのお問合わせ' + (n ? '<span class="ktn-ddi__count" title="未返信 ' + n + '件">' + n + '</span>' : '');
 }
 
 /* P3（クリエイター）オーナーメニュー（単一ソース・トップ〜全管理サブページ共通）。
@@ -2626,7 +2753,7 @@ function p6OwnerItems(curPage, role) {
      問合せがギャラリーに届くため、creator／gallery とも表示する（2026-09-28・旧「作家本人のみ」を変更）。 */
   /* 未返信件数のピル付き。行き先は P6-14＝この作品への問合せの一覧（表形式・行を開いて返信）。 */
   var n = p6InqCount(role);
-  var inquiries = ddSep() + ddiP(curPage, 'p6-14', 'msg', 'この作品へのお問合わせ' + (n ? '<span class="ktn-ddi__count" title="未返信">' + n + '</span>' : ''), "location.href='./kotennavi-p6-14.html?work=" + p6InqWork(role) + "'");
+  var inquiries = ddSep() + ddiP(curPage, 'p6-14', 'msg', 'この作品へのお問合わせ' + (n ? '<span class="ktn-ddi__count" title="未返信 ' + n + '件">' + n + '</span>' : ''), "location.href='./kotennavi-p6-14.html?work=" + p6InqWork(role) + "'");
   if (curPage === 'p6-2') return edit + ddSep() + insight + ddSep() + articles + inquiries;
   return edit + ddSep() + insight + ddSep() + articles + inquiries + ddSep() + ddi('trash', '削除', true);
 }
@@ -2697,9 +2824,9 @@ function getActions(page, role) {
     if (role === 'guest' || role === 'login')
       return cmn + ddMore(fixItem(page) + reportItem(page));
     if (role === 'creator')
-      return cmn + txnAlertActionBtn('creator', 'lp', 'LIAISON+要対応', './kotennavi-p3-15.html', page, 'p3-15', 'リエゾン+コンソールで全て見る') + dd(ownerDdLabel(inqUnreplied('creator')), p3OwnerMenuItems());
+      return cmn + dd('オーナーメニュー', p3OwnerMenuItems());
     if (role === 'admin')
-      return cmn + dd(ownerDdLabel(inqUnreplied('creator')), p3OwnerMenuItems()) + dd('管理者', p3AdminMenuItems());
+      return cmn + dd('オーナーメニュー', p3OwnerMenuItems()) + dd('管理者', p3AdminMenuItems());
     return cmn;
   }
 
@@ -2722,9 +2849,8 @@ function getActions(page, role) {
     };
     const guideUrl = P3_GUIDE[page] || '';
     const guideBtn = owbtn('info', 'ガイド', guideUrl ? `window.open('${guideUrl}','_blank')` : '');
-    const alertBtn = txnAlertActionBtn('creator', 'lp', 'LIAISON+要対応', './kotennavi-p3-15.html', page, 'p3-15', 'リエゾン+コンソールで全て見る');
-    if (role === 'creator') return guideBtn + alertBtn + dd(ownerDdLabel(inqUnreplied('creator')), p3OwnerMenuItems(page));
-    if (role === 'admin') return guideBtn + alertBtn + dd(ownerDdLabel(inqUnreplied('creator')), p3OwnerMenuItems(page)) + dd('管理者', p3AdminMenuItems(page));
+    if (role === 'creator') return guideBtn + dd('オーナーメニュー', p3OwnerMenuItems(page));
+    if (role === 'admin') return guideBtn + dd('オーナーメニュー', p3OwnerMenuItems(page)) + dd('管理者', p3AdminMenuItems(page));
     return '';
   }
 
@@ -2734,9 +2860,9 @@ function getActions(page, role) {
     if (role === 'guest' || role === 'login')
       return cmn + ddMore(fixItem(page) + reportItem(page));
     if (role === 'gallery')
-      return cmn + txnAlertActionBtn('gallery', 'lp', 'LIAISON+要対応', './kotennavi-p4-15.html', page, 'p4-15', 'リエゾン+コンソールで全て見る') + dd(ownerDdLabel(inqUnreplied('gallery')), p4OwnerMenuItems());
+      return cmn + dd('オーナーメニュー', p4OwnerMenuItems());
     if (role === 'admin')
-      return cmn + dd(ownerDdLabel(inqUnreplied('gallery')), p4OwnerMenuItems()) + dd('管理者', p4AdminMenuItems());
+      return cmn + dd('オーナーメニュー', p4OwnerMenuItems()) + dd('管理者', p4AdminMenuItems());
     return cmn;
   }
 
@@ -2759,9 +2885,8 @@ function getActions(page, role) {
     };
     const guideUrl = P4_GUIDE[page] || '';
     const guideBtn = owbtn('info', 'ガイド', guideUrl ? `window.open('${guideUrl}','_blank')` : '');
-    const alertBtn = txnAlertActionBtn('gallery', 'lp', 'LIAISON+要対応', './kotennavi-p4-15.html', page, 'p4-15', 'リエゾン+コンソールで全て見る');
-    if (role === 'gallery') return guideBtn + alertBtn + dd(ownerDdLabel(inqUnreplied('gallery')), p4OwnerMenuItems(page));
-    if (role === 'admin') return guideBtn + alertBtn + dd(ownerDdLabel(inqUnreplied('gallery')), p4OwnerMenuItems(page)) + dd('管理者', p4AdminMenuItems(page));
+    if (role === 'gallery') return guideBtn + dd('オーナーメニュー', p4OwnerMenuItems(page));
+    if (role === 'admin') return guideBtn + dd('オーナーメニュー', p4OwnerMenuItems(page)) + dd('管理者', p4AdminMenuItems(page));
     return '';
   }
 
@@ -2784,23 +2909,19 @@ function getActions(page, role) {
     };
     const guideUrl = P5_GUIDE[page] || '';
     const guideBtn = guideUrl ? owbtn('info', 'ガイド', `window.open('${guideUrl}','_blank')`) : '';
-    /* 購入者側（KTN.txnAlerts.user）の要対応導線。creator/gallery本人もp5では「購入者としての自分」
-       なのでロールに関わらずuserキーを参照する（出品者側=creator/galleryキーとは別軸）。
-       p3/p4の管理サブページ群と同じく、トップページに限らず全サブページ共通で設置。 */
-    const alertBtn = txnAlertActionBtn('user', 'lp', 'LIAISON+要対応', './kotennavi-p5-14.html', page, 'p5-14', '購入管理で全て見る');
     /* 'login'＝p5系デモバーでは「本人ではない、別の一般ログインユーザー」を表す
        （CLAUDE.mdユーザー種別表：'user+'のみが「ページオーナー本人」）。
        他人のmyページを見ている状態なので「設定」（本人の会員設定）ddは出さない。
-       自分自身の未対応取引に関する導線（alertBtn）はページ所有と無関係のため維持する。
+       自分自身のやること（取引）はサイドバーの myページアイコンで知らせる（docs/notifications.md）。
        ガイドは本人の管理サブページに紐づく導線のため、非オーナー閲覧時は出さない（p3/p4と同様）。 */
-    if (role === 'login') return cmn + alertBtn;
+    if (role === 'login') return cmn;
     /* 'user+'＝p5系デモバーのページオーナー本人ロール（CLAUDE.mdユーザー種別表）。
        'user+creator'/'user+gallery'と違い正規化ブロックの対象外だったため、
        このブランチ内で直接一致条件に含める（p5専用の既存バグ・過去の横展開で発見・修正）。 */
     if (role === 'user+' || role === 'creator' || role === 'gallery')
-      return cmn + guideBtn + alertBtn + dd('設定', p5SettingsMenuItems());
+      return cmn + guideBtn + dd('設定', p5SettingsMenuItems());
     if (role === 'admin')
-      return cmn + guideBtn + alertBtn + dd('設定', p5SettingsMenuItems()) + dd('管理者', p5AdminMenuItems());
+      return cmn + guideBtn + dd('設定', p5SettingsMenuItems()) + dd('管理者', p5AdminMenuItems());
     return '';
   }
 
@@ -2814,9 +2935,9 @@ function getActions(page, role) {
     if (role === 'login')
       return cmn + ddMore(ddi('send', '問合せする', false, "location.href='./kotennavi-p6-13.html?ctx=" + ({ 'p6-1': 'l-creator', 'p6-2': 'lp-creator' }[page] || 'n-creator') + "'") + ddSep() + reportItem(page));
     if (role === 'creator' || role === 'gallery')
-      return cmn + editBtn + dd(ownerDdLabel(p6InqCount(role)), p6OwnerItems(page, role));
+      return cmn + editBtn + dd('オーナーメニュー', p6OwnerItems(page, role));
     if (role === 'admin')
-      return cmn + editBtn + dd(ownerDdLabel(p6InqCount('admin')), p6OwnerItems(page, 'admin')) + dd('管理者', p6AdminItems(page));
+      return cmn + editBtn + dd('オーナーメニュー', p6OwnerItems(page, 'admin')) + dd('管理者', p6AdminItems(page));
     return cmn;
   }
 
@@ -2837,8 +2958,8 @@ function getActions(page, role) {
     };
     const guideAnchor = P6_GUIDE_ANCHOR[page] || '';
     const guideBtn = owbtn('info', 'ガイド', guideAnchor ? `window.open('${guideFile}${guideAnchor}','_blank')` : '');
-    if (role === 'creator' || role === 'gallery') return guideBtn + dd(ownerDdLabel(p6InqCount(role)), p6OwnerItems(page, role));
-    if (role === 'admin') return guideBtn + dd(ownerDdLabel(p6InqCount('admin')), p6OwnerItems(page, 'admin')) + dd('管理者', p6AdminItems(page));
+    if (role === 'creator' || role === 'gallery') return guideBtn + dd('オーナーメニュー', p6OwnerItems(page, role));
+    if (role === 'admin') return guideBtn + dd('オーナーメニュー', p6OwnerItems(page, 'admin')) + dd('管理者', p6AdminItems(page));
     return '';
   }
 
@@ -2973,7 +3094,7 @@ function getActions(page, role) {
     return '';
   }
 
-  if (['p90-2', 'p90-2-1', 'p90-4', 'p90-9', 'p90-10', 'p90-11', 'p90-11-1', 'p90-13', 'p90-14', 'p90-17'].includes(page)) {
+  if (['p90-2', 'p90-2-1', 'p90-4', 'p90-9', 'p90-10', 'p90-11', 'p90-11-1', 'p90-13', 'p90-14', 'p90-17', 'p90-18'].includes(page)) {
     if (role === 'admin') return owbtn('info', 'ガイド');
     return '';
   }

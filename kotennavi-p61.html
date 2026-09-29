@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>お知らせ | 個展なび</title>
-  <meta name="description" content="個展なびからのお知らせ一覧。新機能・アップデート情報、メンテナンス予定、重要なご案内をまとめています。">
+  <meta name="description" content="個展なびからのお知らせ一覧。新機能・アップデート情報、メンテナンス予定、重要なご案内をまとめています。ログインすると、あなた宛のお知らせも確認できます。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@1,400;1,600&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./kotennavi-common.css">
@@ -16,8 +16,13 @@
 <!-- デモバー -->
 <div class="dbar" id="dbar">
   <span class="dbar-sep">ロール：</span>
-  <button class="dbtn on" onclick="setR('guest',this)">ゲスト</button>
+  <button class="dbtn" onclick="setR('guest',this)">ゲスト</button>
+  <button class="dbtn" onclick="setR('login',this)">ログイン</button>
+  <button class="dbtn on" onclick="setR('user+creator',this)">creator本人</button>
+  <button class="dbtn" onclick="setR('user+gallery',this)">gallery本人</button>
   <button class="dbtn" onclick="setR('admin',this)">管理者</button>
+  <span class="dbar-sep" style="margin-left:12px">最後に見た日時：</span>
+  <button class="dbtn" onclick="p61DemoReset()">最初の状態に戻す</button>
 </div>
 
 <div class="shell">
@@ -81,81 +86,25 @@
     <div class="p70-head__sub"><span class="p70-head__updated">Notice</span></div>
     <h1 class="p70-head__title">お知らせ</h1>
     <p class="p70-head__en">News &amp; Announcements</p>
-    <p class="p70-head__lead">個展なびからの新機能・アップデート情報、メンテナンス予定、重要なご案内をお届けします。</p>
+    <p class="p70-head__lead">あなたに関係するお知らせと、個展なびからの新機能・メンテナンス・重要なご案内をお届けします。</p>
   </div>
 </div>
 
 <main>
   <div class="p70-wrap">
 
-    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:16px">
-      <span class="ktn-count"><strong>6</strong>件</span>
+    <!-- あなた宛（ログイン時）／ニュースのタブ＋件数（KTN.pages['p61'] が描画・docs/notifications.md） -->
+    <div class="p61-bar">
+      <div class="p61-tabs" id="p61Tabs" role="tablist" hidden>
+        <button type="button" class="p61-tab" role="tab" data-tab="mine">あなた宛 <span class="ktn-count ktn-count--pill is-idle" hidden></span></button>
+        <button type="button" class="p61-tab" role="tab" data-tab="news">ニュース <span class="ktn-count ktn-count--pill is-idle" hidden></span></button>
+      </div>
+      <div class="p61-bar__right">
+        <span class="ktn-count" id="p61Count"></span>
+      </div>
     </div>
 
-    <div style="display:flex;flex-direction:column;gap:14px">
-
-      <a class="nc nc--h nc--text" href="./kotennavi-p61-1.html">
-        <div class="nc__body">
-          <div class="nc__badge-row">
-            <span class="at at-a">アップデート</span>
-            <span class="nb">NEW</span>
-          </div>
-          <h3 class="nc__title">新機能「リエゾンプラス」提供開始のお知らせ</h3>
-          <span class="nc__date">2026.08.20</span>
-        </div>
-      </a>
-
-      <a class="nc nc--h nc--text" href="./kotennavi-p61-1.html">
-        <div class="nc__body">
-          <div class="nc__badge-row">
-            <span class="at at-e">メンテナンス</span>
-          </div>
-          <h3 class="nc__title">システムメンテナンスのお知らせ（8月25日 深夜）</h3>
-          <span class="nc__date">2026.08.15</span>
-        </div>
-      </a>
-
-      <a class="nc nc--h nc--text" href="./kotennavi-p61-1.html">
-        <div class="nc__body">
-          <div class="nc__badge-row">
-            <span class="at at-d">重要</span>
-          </div>
-          <h3 class="nc__title">利用規約改定のお知らせ</h3>
-          <span class="nc__date">2026.08.02</span>
-        </div>
-      </a>
-
-      <a class="nc nc--h nc--text" href="./kotennavi-p61-1.html">
-        <div class="nc__body">
-          <div class="nc__badge-row">
-            <span class="at at-a">アップデート</span>
-          </div>
-          <h3 class="nc__title">エリア・ジャンルから探せる展覧会特集を公開しました</h3>
-          <span class="nc__date">2026.07.18</span>
-        </div>
-      </a>
-
-      <a class="nc nc--h nc--text" href="./kotennavi-p61-1.html">
-        <div class="nc__body">
-          <div class="nc__badge-row">
-            <span class="at at-e">メンテナンス</span>
-          </div>
-          <h3 class="nc__title">システムメンテナンスのお知らせ（7月10日 深夜）</h3>
-          <span class="nc__date">2026.07.05</span>
-        </div>
-      </a>
-
-      <a class="nc nc--h nc--text" href="./kotennavi-p61-1.html">
-        <div class="nc__body">
-          <div class="nc__badge-row">
-            <span class="at at-a">アップデート</span>
-          </div>
-          <h3 class="nc__title">個展なびをリニューアルオープンしました</h3>
-          <span class="nc__date">2026.06.01</span>
-        </div>
-      </a>
-
-    </div>
+    <div class="p61-list" id="p61List"></div>
 
   </div>
 </main>
@@ -168,7 +117,7 @@
 <script src="./kotennavi-common.js"></script>
 <script src="./kotennavi-pages.js"></script>
 <script>
-KTN.init({ page: 'p61', role: 'guest' });
+KTN.init({ page: 'p61', role: 'user+creator' });
 </script>
 </body>
 </html>
