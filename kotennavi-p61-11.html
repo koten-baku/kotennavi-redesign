@@ -88,7 +88,7 @@
       <div class="p211-mode-banner" id="p6111ModeBanner">
         <span class="p211-mode-banner__icon" id="p6111ModeBannerIcon">🆕</span>
         <div class="p211-mode-banner__text" id="p6111ModeBannerText">
-          新規にお知らせを作成します。公開日を指定すると、その日時からお知らせ一覧・サイドバーの通知バッジに表示されます。
+          新規にお知らせを作成します。公開日を指定すると、その日時から対象の人のお知らせ一覧（ニュース）に表示され、サイドバーの「お知らせ」に点が付きます。
         </div>
       </div>
 
@@ -134,28 +134,30 @@
             <div class="p211-field">
               <label class="p211-label" for="p6111Title">タイトル<span class="ktn-req">必須</span></label>
               <input class="p211-input" id="p6111Title" type="text" placeholder="例：システムメンテナンスのお知らせ（◯月◯日 深夜）">
+              <p class="p211-help">特に大切なお知らせは、タイトルの先頭に「【重要】」を付けてください（メールの件名にもそのまま入ります）。</p>
             </div>
 
             <!-- カテゴリ -->
             <div class="p211-field">
               <label class="p211-label" for="p6111Cat">カテゴリ<span class="ktn-req">必須</span></label>
               <select class="p211-select" id="p6111Cat">
-                <option value="update">アップデート</option>
-                <option value="maintenance">メンテナンス</option>
-                <option value="important">重要</option>
+                <option value="news">ニュース</option>
+                <option value="recommend">おすすめ</option>
               </select>
-              <p class="p211-help">メールで送る場合、「重要」は停止できないお知らせとして、それ以外は「ニュース・キャンペーン」として扱います。</p>
+              <p class="p211-help">ニュース＝メンテナンス・障害・利用規約の変更、新機能の公開・仕様の変更など、サービスを使ううえで必要なお知らせ（メールで送ると、受け取る人は止められません）。おすすめ＝特集・キャンペーン・クーポン・招待券・機能の使い方の紹介など、読みに来てもらう・使ってもらうための案内（メールは受け取る設定にしている人だけに届きます）。新機能は「公開しました」という事実の知らせはニュース、「こう使うと便利です」という紹介はおすすめにしてください。</p>
             </div>
 
             <!-- 対象（ゲストにはメールを送れないため、全員・ユーザーはどちらも全登録ユーザーに届く） -->
             <div class="p211-field">
               <label class="p211-label" for="p6111Target">対象<span class="ktn-req">必須</span></label>
               <select class="p211-select" id="p6111Target">
-                <option value="all">全員</option>
-                <option value="user">ユーザー</option>
+                <option value="all">サイト利用者全員（ゲストを含む）</option>
+                <option value="user">ユーザー全員</option>
                 <option value="cg">クリエイター・ギャラリー</option>
+                <option value="creator">クリエイター</option>
+                <option value="gallery">ギャラリー</option>
               </select>
-              <p class="p211-help">「全員」はゲストを含むサイトの全利用者向け、「ユーザー」は登録ユーザー向けです。メールはゲストには送れないため、どちらも登録ユーザー全員（クリエイター・ギャラリーを含む）に届きます。「クリエイター・ギャラリー」はその機能を利用中の人だけに届きます。</p>
+              <p class="p211-help" id="p6111TargetHelp"></p>
             </div>
 
             <!-- 公開日 -->
@@ -171,15 +173,52 @@
               <textarea class="p211-textarea" id="p6111Body" placeholder="お知らせの本文を入力してください"></textarea>
             </div>
 
-            <!-- 新着バッジ -->
-            <div class="p211-field">
-              <label class="p211-check"><input type="checkbox" id="p6111NewBadge" checked> 一覧に「NEW」バッジを表示する</label>
+
+            <!-- 表示期限（必須）＝この日を過ぎると一覧から外れる（トップの帯も同じ日まで・docs/notifications.md） -->
+            <div class="p211-field" id="p6111TopUntilField">
+              <label class="p211-label" for="p6111TopUntil">表示期限<span class="ktn-req">必須</span></label>
+              <input class="p211-input" id="p6111TopUntil" type="date">
+              <p class="p211-help">この日を過ぎると、お知らせ一覧から外れ、記事を開くと「掲載期間が終わりました」と表示されます。過ぎると意味がなくなる日を入れてください（メンテナンスなら実施日、キャンペーン・クーポンなら終了日、利用規約の変更なら施行日、新機能の公開なら1年後など）。</p>
             </div>
 
-            <!-- メール配信（メール A-04「個展なびからの重要なお知らせ」・docs/email-templates.md） -->
+            <!-- トップ（P1）の「News」帯に出す（対象が全員のときだけ） -->
+            <div class="p211-field" id="p6111TopCheckField">
+              <label class="p211-check"><input type="checkbox" id="p6111Top"> トップページの「News」帯にも出す</label>
+              <p class="p211-help">トップページのすぐ上の帯に、公開日から表示期限の日まで出ます。帯は3件までで、【重要】のニュース、ほかのニュース、おすすめの順に入ります（おすすめは、ニュースが3件未満のときに空いた枠に出ます）。</p>
+            </div>
+
+            <!-- メール配信（ニュース＝A-04 停止できない／おすすめ＝N-01 受け取る設定の人だけ・docs/email-templates.md） -->
             <div class="p211-field">
               <label class="p211-check"><input type="checkbox" id="p6111SendMail"> 登録ユーザーにメールでも送る</label>
               <p class="p211-help" id="p6111MailHelp"></p>
+              <!-- 送るメール：チェックするとカテゴリのテンプレート（A-04／N-01＝KTN.NOTICE_MAIL）を読み込み、件名・本文を編集できる。
+                   送信ボタンは置かない＝このお知らせを保存すると一緒に保存され、公開日に送られる（P90-2 の送信パネルと同じ部品） -->
+              <div class="p902-flow-panel" id="p6111MailPanel" hidden>
+                <p class="p902-flow-panel__title" id="p6111MailTplName"></p>
+                <label class="p902-flow-panel__label" for="p6111MailFrom">送信元</label>
+                <div class="p902-flow-panel__row">
+                  <input type="text" class="p902-flow-panel__input" id="p6111MailFrom" readonly>
+                </div>
+                <label class="p902-flow-panel__label" for="p6111MailSubject">件名</label>
+                <div class="p902-flow-panel__row">
+                  <input type="text" class="p902-flow-panel__input" id="p6111MailSubject">
+                </div>
+                <label class="p902-flow-panel__label" for="p6111MailBody">本文</label>
+                <textarea class="p902-flow-panel__textarea" id="p6111MailBody" rows="14"></textarea>
+                <p class="p902-flow-panel__hint">{{userName}}（宛先の人の名前）・{{noticeTitle}}（タイトル）・{{noticeBody}}（本文）・{{noticeUrl}}（このお知らせのページ）は、送るときに置き換わります。{{commonFooter}} は全メール共通のフッターです。編集した内容はこのお知らせを保存すると一緒に保存され、テンプレートそのもの（メールテンプレート管理）は変わりません。</p>
+
+                <!-- 送られるメールのプレビュー（{{トークン}} を例の値に置き換えて表示・KTN.mailPreview） -->
+                <div class="ktn-mail-preview" id="p6111MailPreview">
+                  <p class="ktn-mail-preview__label">送られるメールのプレビュー</p>
+                  <p class="ktn-mail-preview__subject"></p>
+                  <pre class="ktn-mail-preview__body"></pre>
+                  <p class="ktn-mail-preview__note">いま入力しているタイトル・本文を入れて表示しています。宛先の名前・記事の URL は例です。置き換わらずに残っている {{…}} は、使えない記号です。</p>
+                </div>
+                <p class="p902-flow-panel__hint" id="p6111MailCatNote" hidden>カテゴリを変えました。編集中の文面はそのままです。新しいカテゴリのテンプレートにするには「テンプレートに戻す」を押してください。</p>
+                <div class="p902-flow-panel__actions">
+                  <button type="button" class="ktn-op-btn ktn-op-btn--sm" id="p6111MailResetBtn">テンプレートに戻す</button>
+                </div>
+              </div>
             </div>
 
           </div>
@@ -197,6 +236,8 @@
         <!-- 送信バー -->
         <div class="p211-submit-bar">
           <button class="p211-submit-bar__cancel ktn-op-btn" type="button" onclick="history.back()">キャンセル</button>
+          <!-- 入力中の内容で記事（P61-1）を別タブに開く＝公開前の確認（保存はしない） -->
+          <button class="ktn-op-btn" type="button" id="p6111PreviewBtn">プレビュー</button>
           <button class="p211-submit-bar__submit ktn-op-btn ktn-op-btn--primary" type="button" id="p6111SubmitBtn">作成する</button>
         </div>
 
@@ -222,7 +263,7 @@
   var P6111_TEXT = {
     new: {
       icon: '🆕',
-      html: '新規にお知らせを作成します。公開日を指定すると、その日時からお知らせ一覧・サイドバーの通知バッジに表示されます。'
+      html: '新規にお知らせを作成します。公開日を指定すると、その日時から対象の人のお知らせ一覧（ニュース）に表示され、サイドバーの「お知らせ」に点が付きます。'
     },
     edit: {
       icon: '✏️',
@@ -230,7 +271,7 @@
     },
     clone: {
       icon: '📋',
-      html: '既存のお知らせを複製して新規作成します。複製元の内容を引き継いだ状態でフォームに反映されます（デモにつき実際の反映は省略しています）。<strong>タイトル・公開日は必ず見直してください。</strong>'
+      html: '既存のお知らせを複製して新規作成します。複製元の内容を引き継いだ状態でフォームに反映されます（デモにつき実際の反映は省略しています）。<strong>タイトル・公開日・表示期限は必ず見直してください。</strong>'
     }
   };
 
@@ -250,18 +291,82 @@
     if (submitBtn) submitBtn.textContent = mode === 'edit' ? '更新する' : (mode === 'clone' ? 'クローンして作成する' : '作成する');
   }
 
-  /* ── メール配信の説明：カテゴリ（重要／それ以外）と対象の組み合わせで、誰に届くかを示す ── */
+  /* ── 対象の説明：誰のお知らせ一覧（ニュース）に表示されるか（docs/notifications.md・2026-09-29 に5種類へ） ── */
+  var P6111_TARGET = {
+    all:     { show: 'ゲストを含む、サイトを見るすべての人の「ニュース」のタブに表示されます。', mail: '登録ユーザー全員（クリエイター・ギャラリーを含む）' },
+    user:    { show: '登録ユーザー全員（クリエイター・ギャラリーを含む）の「あなた宛」のタブに、「ユーザー」の印を付けて表示されます。ゲストには表示されません。', mail: '登録ユーザー全員（クリエイター・ギャラリーを含む）' },
+    cg:      { show: 'クリエイター機能・ギャラリー機能を利用中の人の「あなた宛」のタブに、見る人のロールで「クリエイター」「ギャラリー」の印を付けて表示されます。', mail: 'クリエイター・ギャラリー機能を利用中の人' },
+    creator: { show: 'クリエイター機能を利用中の人の「あなた宛」のタブに、「クリエイター」の印を付けて表示されます。', mail: 'クリエイター機能を利用中の人' },
+    gallery: { show: 'ギャラリー機能を利用中の人の「あなた宛」のタブに、「ギャラリー」の印を付けて表示されます。', mail: 'ギャラリー機能を利用中の人' }
+  };
+  function p6111SyncTargetHelp() {
+    document.getElementById('p6111TargetHelp').textContent = P6111_TARGET[document.getElementById('p6111Target').value].show;
+  }
+  /* ── メール配信の説明：カテゴリ（重要／それ以外）と対象の組み合わせで、誰に届くかを示す（メールはゲストに送れない） ── */
   function p6111SyncMailHelp() {
-    var imp = document.getElementById('p6111Cat').value === 'important';
-    var cg = document.getElementById('p6111Target').value === 'cg';
-    var who = cg ? 'クリエイター・ギャラリー機能を利用中の人' : '登録ユーザー全員（クリエイター・ギャラリーを含む）';
+    var imp = document.getElementById('p6111Cat').value === 'news';   /* ニュースは止められないメール（A-04）・おすすめは設定で選べる（N-01） */
+    var who = P6111_TARGET[document.getElementById('p6111Target').value].mail;
+    p6111SyncTargetHelp();
     document.getElementById('p6111MailHelp').textContent = imp
-      ? '公開日に、' + who + 'へメールでお送りします。重要なお知らせは、受け取る人が停止できないメールです。'
-      : '公開日に、' + who + 'のうち、メール通知設定で「ニュース・キャンペーン」を受け取る設定にしている人へお送りします。';
+      ? '公開日に、' + who + 'へメールでお送りします。ニュースは、受け取る人が停止できないメールです。'
+      : '公開日に、' + who + 'のうち、メール通知設定で「個展なびからのおすすめ」を受け取る設定にしている人へお送りします。';
     document.getElementById('p6111MailHelp').textContent += 'メールは公開時に1回だけ送られ、公開後に編集しても再送されません。すべてのお知らせをメールで送る必要はありません。';
   }
   ['p6111Cat', 'p6111Target'].forEach(function (id) { document.getElementById(id).addEventListener('change', p6111SyncMailHelp); });
   p6111SyncMailHelp();
+
+  /* ── 送るメール：チェックしたらカテゴリのテンプレートを読み込む。編集したあとにカテゴリを変えても上書きしない（「テンプレートに戻す」で入れ替え） ── */
+  var p6111MailDirty = false;
+  /* プレビュー：タイトル・本文はいま入力している内容を入れる（未入力なら記号の説明） */
+  var p6111MailPreview = KTN.mailPreview.bind(document.getElementById('p6111MailSubject'), document.getElementById('p6111MailBody'), document.getElementById('p6111MailPreview'), function () {
+    var t = document.getElementById('p6111Title').value.trim(), b = document.getElementById('p6111Body').value.trim();
+    return { noticeTitle: t || '（タイトル未入力）', noticeBody: b || '（本文未入力）' };
+  });
+  ['p6111Title', 'p6111Body'].forEach(function (id) { document.getElementById(id).addEventListener('input', function () { p6111MailPreview(); }); });
+  function p6111LoadMailTpl() {
+    var t = KTN.NOTICE_MAIL[document.getElementById('p6111Cat').value === 'news' ? 'news' : 'recommend'];
+    document.getElementById('p6111MailTplName').textContent = '送るメール（' + t.id + '　' + t.name + '）';
+    document.getElementById('p6111MailFrom').value = t.from;
+    document.getElementById('p6111MailSubject').value = t.subject;
+    document.getElementById('p6111MailBody').value = t.body;
+    p6111MailDirty = false;
+    p6111MailPreview();
+    document.getElementById('p6111MailCatNote').hidden = true;
+  }
+  function p6111SyncMailPanel() {
+    var on = document.getElementById('p6111SendMail').checked;
+    document.getElementById('p6111MailPanel').hidden = !on;
+    if (on && !document.getElementById('p6111MailBody').value) p6111LoadMailTpl();
+  }
+  document.getElementById('p6111SendMail').addEventListener('change', p6111SyncMailPanel);
+  ['p6111MailSubject', 'p6111MailBody'].forEach(function (id) { document.getElementById(id).addEventListener('input', function () { p6111MailDirty = true; }); });
+  document.getElementById('p6111MailResetBtn').addEventListener('click', p6111LoadMailTpl);
+  document.getElementById('p6111Cat').addEventListener('change', function () {
+    if (!document.getElementById('p6111MailBody').value) return;
+    if (p6111MailDirty) document.getElementById('p6111MailCatNote').hidden = false;
+    else p6111LoadMailTpl();
+  });
+  p6111SyncMailPanel();
+
+  /* ── プレビュー：入力中の内容を渡して記事のページ（P61-1）を別タブで開く。保存はしない ── */
+  document.getElementById('p6111PreviewBtn').addEventListener('click', function () {
+    var cat = document.getElementById('p6111Cat').value;
+    var dt = function (v) { return v ? v.replace(/-/g, '.') : ''; };
+    var data = {
+      title: document.getElementById('p6111Title').value, body: document.getElementById('p6111Body').value,
+      tag: cat === 'news' ? 'ニュース' : 'おすすめ', cls: cat === 'news' ? 'at-a' : 'at-b',
+      date: dt(document.getElementById('p6111Date').value), until: dt(document.getElementById('p6111TopUntil').value)
+    };
+    try { window.sessionStorage.setItem('ktnNoticePreview', JSON.stringify(data)); } catch (e) {}
+    window.open('kotennavi-p61-1.html?preview=form', '_blank');
+  });
+
+  /* ── トップの帯：対象が全員のときだけ選べる（ほかは「あなた宛」に入り、トップには出ない）。表示期限はいつも必須 ── */
+  function p6111SyncTop() {
+    document.getElementById('p6111TopCheckField').hidden = document.getElementById('p6111Target').value !== 'all';
+  }
+  document.getElementById('p6111Target').addEventListener('change', p6111SyncTop);
+  p6111SyncTop();
 
   /* ── 作成/更新ボタン ── */
   var p6111SubmitBtn = document.getElementById('p6111SubmitBtn');
@@ -284,6 +389,19 @@
           errs.push({ field: f, msg: '「' + nm + '」' + (isSel ? 'が選択されていません。' : 'が未入力です。') });
         }
       });
+      /* メールを送るときは件名・本文が必須 */
+      if (document.getElementById('p6111SendMail').checked) {
+        var mp = document.getElementById('p6111MailPanel');
+        if (!document.getElementById('p6111MailSubject').value.trim() || !document.getElementById('p6111MailBody').value.trim()) {
+          errs.push({ field: mp, msg: '「送るメール」の件名または本文が未入力です。' });
+        }
+      }
+      /* 表示期限は公開日より前にできない */
+      var tf = document.getElementById('p6111TopUntilField'), tu = document.getElementById('p6111TopUntil').value, pd = document.getElementById('p6111Date').value;
+      if (!tf.hidden && tu && pd && tu < pd) {
+        tf.classList.add('is-error');
+        errs.push({ field: tf, msg: '「表示期限」が公開日より前になっています。' });
+      }
       var box = document.getElementById('p6111SaveError');
       var list = document.getElementById('p6111SaveErrorList');
       if (errs.length) {

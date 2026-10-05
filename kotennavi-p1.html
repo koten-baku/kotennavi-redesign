@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>個展なび | 個展・グループ展の展覧会情報ポータル</title>
+  <title>個展なび | 全国の個展・グループ展の展覧会情報ポータル</title>
   <meta name="description" content="全国の個展・グループ展を探せる展覧会情報ポータル「個展なび」。開催中・近くの展覧会から、オンラインで作品を鑑賞・購入できるLIAISON連動の展覧会まで、いまのアートシーンに出会えます。">
   <link rel="canonical" href="https://koten-navi.com/">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="個展なび | 個展・グループ展の展覧会情報ポータル">
+  <meta property="og:title" content="個展なび | 全国の個展・グループ展の展覧会情報ポータル">
   <meta property="og:url" content="https://koten-navi.com/">
   <meta property="og:site_name" content="個展なび">
   <meta name="twitter:card" content="summary">
@@ -44,6 +44,12 @@
   <button class="dbtn on" data-axis-day onclick="setAxisDay(0,this)">今日</button>
   <button class="dbtn" data-axis-day onclick="setAxisDay(1,this)">明日</button>
   <button class="dbtn" data-axis-day onclick="setAxisDay(2,this)">明後日</button>
+  <!-- News 帯の場合分け（後工程への説明用）：並び＝【重要】→ニュース→おすすめ・最大3件・期限内が無ければ隠す -->
+  <span class="dbar-sep">News 帯：</span>
+  <button class="dbtn on" data-news-case onclick="p1NewsCase('std',this)">標準</button>
+  <button class="dbtn" data-news-case onclick="p1NewsCase('many',this)">ニュース3件以上</button>
+  <button class="dbtn" data-news-case onclick="p1NewsCase('rec',this)">おすすめだけ</button>
+  <button class="dbtn" data-news-case onclick="p1NewsCase('none',this)">0件</button>
 </div>
 
 <div class="shell">
@@ -123,6 +129,9 @@
 
   <main class="ktn-main" id="ktnMain">
 
+    <!-- H1＝サイト自身（固定・画面には出さず読み上げと検索向け）。ピックアップの展覧会名は切り替わるので H2（2026-09-30） -->
+    <h1 class="ktn-vh">個展なび — 全国の個展・グループ展の展覧会情報</h1>
+
     <!-- A. ヒーロー（ピックアップ） -->
     <section class="p1-hero" aria-label="ピックアップ展覧会">
       <div class="p1-hero__inner">
@@ -132,7 +141,7 @@
         <div class="p1-hero__text">
           <div class="p1-hero__eyebrow"><span class="p1-hero__eyebrow-en">Pick Up</span><span class="p1-hero__eyebrow-line"></span></div>
           <div class="p1-hero__badge-row" id="p1HeroBadges"></div>
-          <h1 class="p1-hero__title" id="p1HeroTitle"></h1>
+          <h2 class="p1-hero__title" id="p1HeroTitle"></h2>
           <p class="p1-hero__en" id="p1HeroEn"></p>
           <div class="p1-hero__meta" id="p1HeroMeta"></div>
           <p class="p1-hero__lead" id="p1HeroLead"></p>
@@ -141,16 +150,20 @@
           </div>
           <div class="p1-hero__dots" id="p1HeroDots" role="tablist" aria-label="ピックアップ切替"></div>
         </div>
+        <!-- 手動の切り替え（PC＝マウスのある端末だけ表示。スマホはスワイプ） -->
+        <button class="p1-hero__arrow p1-hero__arrow--prev" type="button" id="p1HeroPrev" aria-label="前のピックアップ">‹</button>
+        <button class="p1-hero__arrow p1-hero__arrow--next" type="button" id="p1HeroNext" aria-label="次のピックアップ">›</button>
       </div>
     </section>
 
-    <!-- B. 新着ティッカー -->
-    <div class="p1-ticker" aria-label="最新の動き">
+    <!-- B. News 帯＝個展なびからのニュース（P61 のニュースのうち、P61-11 で決めた表示期限が過ぎていないもの・無ければ隠す） -->
+    <div class="p1-ticker" aria-label="個展なびからのお知らせ">
       <div class="p1-ticker__inner">
         <span class="p1-ticker__label">News</span>
         <div class="p1-ticker__viewport">
           <div class="p1-ticker__track" id="p1TickerTrack"></div>
         </div>
+        <a class="p1-ticker__more" href="kotennavi-p61.html?tab=news">お知らせ一覧 →</a>
       </div>
     </div>
 

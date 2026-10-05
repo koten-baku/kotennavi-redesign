@@ -244,6 +244,13 @@
             <label class="p211-label">本文<span class="ktn-req">必須</span></label>
             <textarea class="p211-textarea p211-textarea--tall" id="p909FormBody" rows="12" placeholder="本文を入力してください"></textarea>
             <p class="p211-help">使用できるトークン：<code>{{userName}}</code> <code>{{roleName}}</code> <code>{{applyId}}</code> <code>{{pageName}}</code> <code>{{pageUrl}}</code> <code>{{supportUrl}}</code> <code>{{commonFooter}}</code></p>
+            <!-- 送られるメールのプレビュー（{{トークン}} を例の値に置き換えて表示・KTN.mailPreview） -->
+            <div class="ktn-mail-preview" id="p909FormPreview">
+              <p class="ktn-mail-preview__label">送られるメールのプレビュー（例）</p>
+              <p class="ktn-mail-preview__subject"></p>
+              <pre class="ktn-mail-preview__body"></pre>
+              <p class="ktn-mail-preview__note">{{…}} を例の値に置き換えて表示しています。実際には宛先・対象ごとの値が入ります。置き換わらずに残っている {{…}} は、使えない記号です。</p>
+            </div>
           </div>
 
           <div class="p211-field">
@@ -274,6 +281,13 @@
             <label class="p211-label">本文<span class="ktn-req">必須</span></label>
             <textarea class="p211-textarea p211-textarea--tall" id="p909AutoFormBody" rows="12" placeholder="本文を入力してください"></textarea>
             <p class="p211-help">状態名・期限呼称・ページ呼称は CLAUDE.md / docs/transaction-states.md に合わせてください（メール独自の言い換えをしない）。末尾に <code>{{commonFooter}}</code> を置く共通フッターは記載不要です。</p>
+            <!-- 送られるメールのプレビュー（{{トークン}} を例の値に置き換えて表示・KTN.mailPreview） -->
+            <div class="ktn-mail-preview" id="p909AutoFormPreview">
+              <p class="ktn-mail-preview__label">送られるメールのプレビュー（例）</p>
+              <p class="ktn-mail-preview__subject"></p>
+              <pre class="ktn-mail-preview__body"></pre>
+              <p class="ktn-mail-preview__note">{{…}} を例の値に置き換えて表示しています。実際には宛先・対象ごとの値が入ります。置き換わらずに残っている {{…}} は、使えない記号です。</p>
+            </div>
           </div>
 
           <div class="p211-field">
@@ -340,6 +354,13 @@
           <div class="p211-field">
             <label class="p211-label">本文</label>
             <textarea class="p211-textarea p211-textarea--tall" id="p909AutoNewBody" rows="10" placeholder="本文を入力してください（後からでも編集可）"></textarea>
+            <!-- 送られるメールのプレビュー（{{トークン}} を例の値に置き換えて表示・KTN.mailPreview） -->
+            <div class="ktn-mail-preview" id="p909AutoNewPreview">
+              <p class="ktn-mail-preview__label">送られるメールのプレビュー（例）</p>
+              <p class="ktn-mail-preview__subject"></p>
+              <pre class="ktn-mail-preview__body"></pre>
+              <p class="ktn-mail-preview__note">{{…}} を例の値に置き換えて表示しています。実際には宛先・対象ごとの値が入ります。置き換わらずに残っている {{…}} は、使えない記号です。</p>
+            </div>
           </div>
 
           <div class="p211-field">

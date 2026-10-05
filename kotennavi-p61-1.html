@@ -18,6 +18,10 @@
   <span class="dbar-sep">ロール：</span>
   <button class="dbtn on" onclick="setR('guest',this)">ゲスト</button>
   <button class="dbtn" onclick="setR('admin',this)">管理者</button>
+  <!-- 表示期限（P61-11 で必須）を過ぎたときの見え方 -->
+  <span class="dbar-sep" style="margin-left:12px">掲載：</span>
+  <button class="dbtn on" data-p611-ended onclick="p611Ended(false,this)">掲載中</button>
+  <button class="dbtn" data-p611-ended onclick="p611Ended(true,this)">表示期限を過ぎた</button>
 </div>
 
 <div class="shell">
@@ -76,10 +80,18 @@
   </div>
 </header>
 
+<!-- プレビュー（公開前の確認・?preview=… のときだけ出る・KTN.pages['p61-1']） -->
+<div class="p61-preview-band" id="p611Preview" hidden>
+  <div class="p61-preview-band__inner">
+    <span class="p61-preview-band__label">プレビュー</span>
+    <span class="p61-preview-band__text">このお知らせはまだ公開されていません。<span id="p611PreviewMeta"></span></span>
+  </div>
+</div>
+
 <div class="p70-title-band">
   <div class="p70-title-band__inner">
     <div class="p70-head__sub">
-      <span class="at at-a">アップデート</span>
+      <span class="at at-a">ニュース</span>
       <span class="p70-head__updated">2026.08.20</span>
     </div>
     <h1 class="p70-head__title">新機能「リエゾンプラス」提供開始のお知らせ</h1>
@@ -90,17 +102,25 @@
 <main>
   <div class="p70-wrap">
 
+    <!-- 表示期限を過ぎたとき：本文の代わりに出す（本番は期限後に noindex） -->
+    <div class="p61-ended" id="p611Ended" hidden>
+      <p class="p61-ended__msg">このお知らせは掲載期間が終わりました。</p>
+      <a class="ktn-action-btn" href="kotennavi-p61.html?tab=news">お知らせ一覧へ →</a>
+    </div>
+
+    <div id="p611Body">
     <div class="wd-body">
       <p>平素より「個展なび」をご利用いただき、誠にありがとうございます。</p>
       <p>このたび個展なびでは、実スペースの展覧会と連動したオンライン作品販売サービス「リエゾンプラス（LIAISON+）」の提供を開始いたしましたのでお知らせいたします。</p>
       <p>これまでご提供してきた「リエゾン（LIAISON）」は、会期中の作品をオンライン上に展示し、来場できない方にも展覧会の様子をお届けする無料の機能でした。新たに始まる「リエゾンプラス」では、これに加えて作品の<strong>オンライン販売</strong>までを行えるようになります。</p>
       <p>販売は「会場優先型」の仕組みを採用しており、会期中は現地でのご購入を優先し、販売期間中は申込順にご案内する購入プロセスとなります。掲載・出品は無料で、サービス利用料は取引が成立した際にのみ、作品代金・送料・梱包費の合計額に対して発生します（30,000円未満の作品は10%、30,000円以上の作品は8%）。</p>
-      <p>クリエイター・ギャラリーの皆さまは、myページの「リエゾンプラス機能申込」からお申し込みいただけます。詳しいサービス内容やご利用方法は、ガイドページをあわせてご覧ください。</p>
+      <p>クリエイター・ギャラリーの皆さまは、ご自身のクリエイター・ギャラリーのページのオーナーメニューにある「LIAISON+に申し込む」からお申し込みいただけます。詳しいサービス内容やご利用方法は、ガイドページをあわせてご覧ください。</p>
     </div>
 
     <p><a class="ktn-guide-link" href="./kotennavi-p70.html">リエゾンとは →</a></p>
     <p><a class="ktn-guide-link" href="./kotennavi-p70-2.html">リエゾンプラス-作品販売ガイド →</a></p>
     <p><a class="ktn-guide-link" href="./kotennavi-p11-4.html">リエゾンプラス機能申込へ →</a></p>
+    </div>
 
     <div style="margin-top:32px">
       <a class="ktn-action-btn" href="kotennavi-p61.html">お知らせ一覧へ戻る →</a>

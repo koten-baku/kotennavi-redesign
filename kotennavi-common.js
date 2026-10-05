@@ -1591,7 +1591,7 @@ KTN.QA = [
   { id: 'ACC-S02', cat: 'account-security', aud: 'user', grp: 'パスワード管理', q: 'パスワードを忘れてしまいました。', a: 'ログイン画面の「パスワードをお忘れですか？」から、ご登録のメールアドレス宛にパスワード再設定用のリンクをお送りします。このページからパスワードを変更する場合は、現在のパスワードの入力が必要です。' },
   { id: 'ACC-S03', cat: 'account-security', aud: 'user', grp: 'パスワード管理', q: 'パスワードを変更すると他の端末はログアウトされますか？', a: '安全のため、変更後は他の端末でログイン中のセッションが自動的にログアウトされることがあります。再度ログインしてご利用ください。' },
 
-  { id: 'ACC-N01', cat: 'account-notify', aud: 'user', grp: 'メール通知設定', q: '通知メールをすべて停止できますか？', a: 'アカウント・セキュリティ（登録・パスワードやメールアドレスの変更・退会）、LIAISON+の取引の連絡、お問合わせへの返信、個展なびからの重要なお知らせ（利用規約の変更・障害など）は、安全な利用と取引に欠かせないため停止できません。リマインダー、ウォッチ新着、ニュース・キャンペーン、クリエイター・ギャラリー向けのウォッチ・チェックイン・コメントのお知らせとインサイトの月次レポートは、メール通知設定でオン・オフを選べます。' },
+  { id: 'ACC-N01', cat: 'account-notify', aud: 'user', grp: 'メール通知設定', q: '通知メールをすべて停止できますか？', a: 'アカウント・セキュリティ（登録・パスワードやメールアドレスの変更・退会）、LIAISON+の取引の連絡、お問合わせへの返信、個展なびからのお知らせ（ニュース＝メンテナンス・障害・利用規約の変更など）は、安全な利用と取引に欠かせないため停止できません。リマインダー、ウォッチ新着、個展なびからのおすすめ、クリエイター・ギャラリー向けのウォッチ・チェックイン・コメントのお知らせとインサイトの月次レポートは、メール通知設定でオン・オフを選べます。' },
   { id: 'ACC-N02', cat: 'account-notify', aud: 'user', grp: 'メール通知設定', q: '設定はすぐに反映されますか？', a: 'はい。トグルを切り替えると自動的に保存されます。保存ボタンの操作は不要です。' },
   { id: 'ACC-N03', cat: 'account-notify', aud: 'user', grp: 'メール通知設定', q: '取引の連絡メールはオフにできますか？', a: 'いいえ。LIAISON+の取引の連絡（購入確定・お支払い・発送・受取確認・取引完了・キャンセルなど）は、相手のいる取引で期限を過ぎないようにするため、すべて停止できません。取引の状況はいつでも取引ワークスペースでもご確認いただけます。' },
 
@@ -2363,6 +2363,8 @@ function ktnSetTxnAlert(role, service, val, btn) {
   if (!KTN.txnAlerts[role]) KTN.txnAlerts[role] = {};
   KTN.txnAlerts[role][service] = val;
   try { window.sessionStorage.setItem('ktnDemoTxnAlerts', JSON.stringify(KTN.txnAlerts)); } catch (e) {}
+  /* デモ：「0件」は取引の結果も確認済みにする（数字＝自分の番＋未確認の結果なので、そうしないと0件の表示が確認できない） */
+  if (!val && typeof ktnTodoMarkSeen === 'function') ktnTodoMarkSeen(role);
   if (btn) {
     document.querySelectorAll('[data-txn-alert-role="' + role + '"]').forEach(function (b) {
       b.classList.toggle('on', b === btn);
@@ -2471,16 +2473,26 @@ function ktnTodoCount(role) {
   if ((role === 'creator' || role === 'gallery') && !ktnLPApplied()) return 0;
   return ktnTxnAlertCount(role) + ktnTodoNewResults(role).length;
 }
+/* やることの数字の先頭に LIAISON+ の「+」マーク（一覧の見出しのマーク KTN_LP_MARK と同じ形）を付ける＝押して開いた一覧と一体に見せる
+   （2026-09-29・ユーザー判断。チェック／リストの記号と見比べて決定。色は数字の丸＝要対応の赤茶のまま） */
+var KTN_TODO_BADGE_MARK = '<svg class="ktn-todo-mark" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="16" fill="#b87c10"/><text x="16" y="17" font-family="\'Bodoni Moda\',serif" font-size="24" font-weight="900" fill="#fff8e8" text-anchor="middle" dominant-baseline="central">+</text></svg>';
 function ktnTodoBadge(role, cls) {
   var n = ktnTodoCount(role);
   var t = 'LIAISON+ のやること ' + n + '件';
-  return n ? '<span class="' + cls + '" title="' + t + '" aria-label="' + t + '">' + (n > 99 ? '99+' : n) + '</span>' : '';
+  /* 数字の丸を押すと一覧が開く（アイコン本体はいつもロールのページへ＝押し分け・2026-09-29） */
+  var on = "ktnTodoBadgeClick(event,'" + role + "')";
+  return n ? '<span class="' + cls + ' ' + cls + '--mark" role="button" tabindex="0" title="' + t + '（押すと一覧）" aria-label="' + t + '" onclick="' + on + '" onkeydown="if(event.key===\'Enter\'||event.key===\' \')' + on + '">' + KTN_TODO_BADGE_MARK + (n > 99 ? '99+' : n) + '</span>' : '';
 }
-/* ロールアイコンの onclick：やることがあれば一覧を開き、無ければ従来どおりロールのページへ */
-function ktnRoleNavClick(e, role, page, url) {
-  if (ktnTodoCount(role)) { e.preventDefault(); ktnTodoOpen(role, e.currentTarget); return; }
-  handleNav(e, page, url);
+/* ロールアイコン本体を押したとき：いつもロールのページへ（数字の有無で動きを変えない＝ふつうのリンクとして迷わず使える）。
+   やることの一覧は数字の丸（ktnTodoBadgeClick）で開く（2026-09-29・ユーザー判断＝押し分け案A。旧：数字があるとアイコンを押しても一覧が開いた） */
+function ktnRoleNavClick(e, role, page, url) { handleNav(e, page, url); }
+/* 数字の丸を押したとき：親のリンク（ロールのページへ）を止めて、一覧を開く */
+function ktnTodoBadgeClick(e, role) {
+  e.preventDefault(); e.stopPropagation();
+  var a = (e.currentTarget.closest && e.currentTarget.closest('[data-todo-role]')) || e.currentTarget;
+  ktnTodoOpen(role, a);
 }
+window.ktnTodoBadgeClick = ktnTodoBadgeClick;
 function ktnTodoOpen(role, anchor) {
   var pop = document.getElementById('ktnTodoPop');
   if (!pop) {

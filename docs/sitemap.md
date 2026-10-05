@@ -252,9 +252,9 @@
 
 | ID | ページ名 | L/L+ | guest | login | user+ | creator | gallery | admin | max-width | html-file | 進捗 |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| P61 | お知らせ一覧 |  | R | R | R | R | R | R | --w-article | kotennavi-p61.html | 調整中 |
-| P61-1 | ニュース |  | R | R | R | R | R | R | --w-article | kotennavi-p61-1.html | 調整中 |
-| P61-11 | ニュース-新規/編集/クローン |  |  |  |  |  |  | W | --w-detail | kotennavi-p61-11.html | 調整中 |
+| P61 | お知らせ一覧 |  | R | R | R | R | R | R | --w-article | kotennavi-p61.html | Fix済 |
+| P61-1 | ニュース |  | R | R | R | R | R | R | --w-article | kotennavi-p61-1.html | Fix済 |
+| P61-11 | ニュース-新規/編集/クローン |  |  |  |  |  |  | W | --w-detail | kotennavi-p61-11.html | Fix済 |
 
 ---
 
