@@ -112,6 +112,9 @@
           <button type="button" class="p909-tab-btn" role="tab" data-panel="p909PanelAuto" aria-selected="false">
             自動送信（可視化） <span class="ktn-count ktn-count--pill is-idle" id="p909TabCountAuto"></span>
           </button>
+          <button type="button" class="p909-tab-btn" role="tab" data-panel="p909PanelAll" aria-selected="false">
+            全メール一覧 <span class="ktn-count ktn-count--pill is-idle" id="p909TabCountAll"></span>
+          </button>
         </div>
 
         <!-- 手動送信タブ -->
@@ -188,6 +191,35 @@
           </div>
 
         </div><!-- /#p909PanelAuto -->
+
+        <!-- 全メール一覧（読み取り専用・2026-10-05）：サイトで送るメールを自動・手動あわせて、分類ごとに1種類1行で並べる。
+             中身は自動送信・手動送信のデータから毎回作る（別に持たない）。番号を押すと、そのタブの該当行へ移る -->
+        <div class="p909-tab-panel" id="p909PanelAll" role="tabpanel" hidden>
+          <p class="p909-auto-intro">サイトで送るメールの全体の一覧です（読み取り専用）。<strong>自動</strong>＝システムの状態の変化で送る（文面は「自動送信」タブ）、<strong>手動</strong>＝事務局が管理画面で選んで送る（文面は「手動送信」タブのテンプレート）、<strong>公開時に自動</strong>＝お知らせを公開すると送る（文面は作成時に P61-11 で編集・元は「手動送信」タブ）。番号を押すと、そのタブの該当する行へ移ります。番号の付け方と細則は <a class="ktn-guide-link" href="docs/email-templates.md" target="_blank" rel="noopener">メール文面の仕様</a>。</p>
+          <p class="p909-all-summary" id="p909AllSummary"></p>
+          <div class="p319-toolbar">
+            <div class="p319-toolbar__filters">
+              <label class="p319-filter">
+                <span class="p319-filter__label">送り方</span>
+                <select class="p319-filter__sel" id="p909AllFilterHow">
+                  <option value="">すべて</option>
+                  <option value="auto">自動</option>
+                  <option value="manual">手動</option>
+                  <option value="publish">公開時に自動</option>
+                </select>
+              </label>
+              <label class="p319-filter">
+                <span class="p319-filter__label">文面</span>
+                <select class="p319-filter__sel" id="p909AllFilterBody">
+                  <option value="">すべて</option>
+                  <option value="none">未起草のみ</option>
+                </select>
+              </label>
+            </div>
+            <p class="ktn-count ktn-count--result" id="p909AllCount"></p>
+          </div>
+          <div id="p909AllList"></div>
+        </div><!-- /#p909PanelAll -->
 
       </div><!-- /.ktn-mgmt-wrap -->
 

@@ -85,7 +85,7 @@ P90-11-1（本人確認審査）は、P90-2と違い正常系・非正常系と�
 
 | `variantKey` | `pattern` | `name` |
 |---|---|---|
-| `invite` | `normal` | 本人確認OKのご案内（Step2へ） |
+| `invite` | `normal` | LIAISON+ 審査通過・続きのお手続きのご案内（旧名「本人確認OKのご案内（Step2へ）」・2026-10-05 に仕様書の名前へそろえた） |
 | `return` | `abnormal` | 差し戻しのご連絡 |
 
 ### `variantKey`命名規約（P90-11）
