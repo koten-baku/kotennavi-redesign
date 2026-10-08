@@ -485,7 +485,7 @@ Stripe決済手数料-実質マージンは利用者には非公開。
 
 ### カードタイトル統一値
 
-全カードタイトル（`.ec__title` `.aw__title` `.cc__name` `.gc__name` `.mc__title` `.lc__title` `.nc__title`）：※2026-10-08 時点で `.mc__title`（`.9rem`）・`.lc__title`（`.84rem`）は字間 `.03em` で下の統一値からずれている（デザイン確定時に直す対象）
+全カードタイトル（`.ec__title` `.aw__title` `.cc__name` `.gc__name` `.mc__title` `.lc__title` `.nc__title`）：※**例外＝`.lc__title`（横長のリストのカード）は `.84rem`・字間 `.03em`**（サムネイルが小さく行が詰まった形なので一段小さくする・2026-10-08 ユーザー判断）。`.mc__title` は 2026-10-08 に統一値へそろえた
 
 - font-family：`var(--fs)` Shippori Mincho
 - font-weight：`600`

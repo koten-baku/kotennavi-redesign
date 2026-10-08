@@ -2930,7 +2930,7 @@ line-clamp:2;}
 .ph-n2{background:linear-gradient(145deg,#9a7a8a,#603050)}
 .mc__body{padding:12px 14px 0}
 .mc__badge-row{display:flex;align-items:center;gap:5px;margin-bottom:8px;flex-wrap:wrap}
-.mc__title{font-family:var(--fs);font-weight:600;font-size:.9rem;line-height:1.5;letter-spacing:.03em;margin-bottom:5px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.mc__title{font-family:var(--fs);font-weight:600;font-size:.93rem;line-height:1.5;letter-spacing:.01em;margin-bottom:5px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
 .mc__lead{font-size:.65rem;color:var(--muted);line-height:1.7;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;margin-bottom:9px;letter-spacing:.02em}
 .mc__byline{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:.6rem;color:var(--muted);letter-spacing:.02em;padding-bottom:10px;row-gap:3px}
 .mc__byline-sep{opacity:.4;flex-shrink:0}
