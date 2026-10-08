@@ -300,3 +300,4 @@
 | P90-16 | 管理者-作品購入ユーザー一覧 | L+ |  |  |  |  |  | R/W | --w-article | kotennavi-p90-16.html | 調整中 |
 | P90-17 | 管理者-検索・特集管理 |  |  |  |  |  |  | R/W | --w-detail | kotennavi-p90-17.html | 調整中 |
 | P90-18 | 管理者-お知らせ・やることの文言管理 |  |  |  |  |  |  | R/W | --w-detail | kotennavi-p90-18.html | 調整中 |
+| P90-19 | 管理者-トップページの管理 |  |  |  |  |  |  | R/W | --w-detail | kotennavi-p90-19.html | 調整中 |

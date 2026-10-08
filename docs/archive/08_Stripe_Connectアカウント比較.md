@@ -1,3 +1,5 @@
+> **【過去の資料・正本ではない】**（2026-10-08 に docs/archive へ移動）方式を決めるときに作った比較資料。結論（Express・Hosted Onboarding）は `docs/handoff-decisions.md` に記録済み。
+
 # Stripe Connect アカウント種別比較（社内資料）
 
 LIAISON+ の代金回収・精算（Stripe Connect）実装にあたり検討した3つのアカウント種別（Standard / Express / Custom）の比較資料。**結論＝Express採用確定**（2026-07-27・詳細は `docs/handoff-decisions.md` 追補㉞）。本ファイルは判断の前提となった比較内容を独立した参照資料としてまとめたもの。

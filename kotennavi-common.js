@@ -14,6 +14,30 @@
 ══════════════════════════════════ */
 window.ktnState = window.ktnState || { page: 'p1', role: 'guest' };
 
+/* ══ 新着と NEW の印（サイト共通のルール・2026-10-07 確定・CLAUDE.md「新着と NEW の印」）══
+   新着＝**公開日から14日以内**（作成日ではない＝下書き・公開日の予約があるため）。展覧会・作品・記事・レビュー・
+   クリエイター・ギャラリーの全種類で同じ（クリエイター・ギャラリーはページが公開された日）。
+   検索の「新着」の絞り込み・棚・並べ替えと、カードの NEW の印は、この1つの基準から決める。
+   NEW の印（.nb）を付けるのは**作品・記事・レビューのカードだけ**（展覧会は開催状態の印が新しさを伝える／
+   クリエイター・ギャラリーは新しく登録したこと自体の価値が低い＝検索の「新着」で足りる）。
+   お知らせ一覧・やることの一覧の NEW は「あなたが前回見たあと」という**未読の印**で、別のルール（docs/notifications.md）。
+   運用での参照先：P90-17「検索・特集管理」の「新着と NEW の印」 */
+window.KTN = window.KTN || {};
+KTN.NEW_DAYS = 14;
+/* x.nd＝公開からの経過日数（あれば優先）／x.published＝公開日 YYYY.MM.DD／どちらも無いデモデータは x.isNew（手で付けた印） */
+KTN.isNewItem = function (x, today) {
+  if (!x) return false;
+  if (x.nd != null) return x.nd <= KTN.NEW_DAYS;
+  if (x.published) {
+    var p = String(x.published).split('.'), t = today || new Date();
+    var d = (new Date(t.getFullYear(), t.getMonth(), t.getDate()) - new Date(+p[0], +p[1] - 1, +p[2])) / 86400000;
+    return d >= 0 && d <= KTN.NEW_DAYS;
+  }
+  return !!x.isNew;
+};
+/* 作品・記事・レビューのカードのバッジ行の先頭に置く（バッジはタイトルの前だけ＝既存の原則どおり） */
+KTN.newBadge = function (x) { return KTN.isNewItem(x) ? '<span class="nb">NEW</span>' : ''; };
+
 /* curRole / curPage は ktnState のプロキシ */
 Object.defineProperty(window, 'curRole', {
   get() { return window.ktnState.role; },
@@ -2053,6 +2077,7 @@ const PAGES = {
   'p90-14': { n: '管理者-販売代金管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['販売代金管理', null]] },
   'p90-15': { n: '管理者-リエゾンプラス申込者一覧', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['リエゾンプラス申込者一覧', null]] },
   'p90-16': { n: '管理者-作品購入ユーザー一覧', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['作品購入ユーザー一覧', null]] },
+  'p90-19': { n: '管理者-トップページの管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['トップページの管理', null]] },
   'p90-18': { n: '管理者-お知らせ・やることの文言管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['お知らせ・やることの文言管理', null]] },
   'p90-17': { n: '管理者-検索・特集管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['検索・特集管理', null]] },
 };
@@ -3034,6 +3059,13 @@ function getActions(page, role) {
      **棚そのものは編集対象ではない**（近くの展覧会・今日から開催・もうすぐ終了…は見出しも条件も
      固定で、並び順も意味の階層で決まっている＝追174-79 ②③）。だからここに「棚を編集」は出さない。
      軸ページ側の設定（導入文・注目のエリア）は P10-4 系のメニューが持つので重複させない。 */
+  /* ── P1 トップ：運営が決める部分（巻頭の見出し・PICK UP）は P90-19「トップページの管理」（2026-10-07） ── */
+  if (page === 'p1') {
+    if (role === 'admin') return dd('管理者',
+      ddi('grid', 'PICK UP を編集', false, "location.href='./kotennavi-p90-19.html#pickup'") +
+      ddi('edit', '巻頭の見出しを編集', false, "location.href='./kotennavi-p90-19.html'"));
+    return '';
+  }
   if (page === 'p10') {
     if (role === 'admin') return dd('管理者',
       ddi('grid', 'ピックアップを編集', false, "location.href='./kotennavi-p90-17.html#p9017-picks'") +

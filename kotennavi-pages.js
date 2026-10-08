@@ -145,12 +145,12 @@ function buildP25cCard(w, liaisonType) {
     sale:    '<span class="aws aws-sale">販売中</span>',
     negot:   '<span class="aws aws-negot">商談中</span>',
     inquiry: '<span class="aws aws-inquiry">要問合せ</span>',
-    sold:    '<span class="aws aws-sold">SOLD</span>',
+    sold:    '<span class="aws aws-sold">売約済</span>',
     nsale:   '<span class="aws aws-nsale">非売品</span>',
   };
   var soldRibbon  = w.status === 'sold' ? '<div class="p25c__sold-ribbon"><div class="p25c__sold-ribbon-inner">SOLD</div></div>' : '';
   var artworkBadge = '<span class="cb cb-content cb-artwork">artwork</span>';
-  var badgeRow   = '<div class="aw__badge-row">'+artworkBadge+(liaisonType ? (STATUS_BADGE[w.status]||'') : '')+'</div>';
+  var badgeRow   = '<div class="aw__badge-row">'+KTN.newBadge(w)+artworkBadge+(liaisonType ? (STATUS_BADGE[w.status]||'') : '')+'</div>';
   var titleHtml  = '<div class="aw__title-row"><div class="aw__title">'+(w.title||'')+'</div></div>';
   var creatorUrl  = w.creatorUrl || '#';
   var creatorHtml = w.name
@@ -1795,7 +1795,7 @@ KTN.pages['p2-5'] = function () {
     sale:    '<span class="aws aws-sale">販売中</span>',
     negot:   '<span class="aws aws-negot">商談中</span>',
     inquiry: '<span class="aws aws-inquiry">要問合せ</span>',
-    sold:    '<span class="aws aws-sold">SOLD</span>',
+    sold:    '<span class="aws aws-sold">売約済</span>',
     nsale:   '<span class="aws aws-nsale">非売品</span>',
   };
 
@@ -1975,7 +1975,7 @@ KTN.pages['p2-5-1'] = function () {
     sale:    '<span class="aws aws-sale">\u8ca9\u58f2\u4e2d</span>',
     negot:   '<span class="aws aws-negot">\u5546\u8ac7\u4e2d</span>',
     inquiry: '<span class="aws aws-inquiry">\u8981\u554f\u5408\u305b</span>',
-    sold:    '<span class="aws aws-sold">SOLD</span>',
+    sold:    '<span class="aws aws-sold">売約済</span>',
     nsale:   '<span class="aws aws-nsale">\u975e\u58f2\u54c1</span>',
   };
 
@@ -4584,7 +4584,7 @@ KTN.pages['p3'] = function () {
           + thumb
           + '<div class="lc__body">'
           + '<div class="lc__badge-row">'
-          + (a.isNew ? '<span class="nb">new</span>' : '')
+          + KTN.newBadge(a)
           + '<span class="cb cb-content cb-article">article</span>'
           + '</div>'
           + '<div class="lc__title">' + a.title + '</div>'
@@ -4662,7 +4662,7 @@ KTN.pages['p3'] = function () {
     sale:    '<span class="aws aws-sale">販売中</span>',
     nsale:   '<span class="aws aws-nsale">非売品</span>',
     inquiry: '<span class="aws aws-inquiry">要問合せ</span>',
-    sold:    '<span class="aws aws-sold">売却済</span>'
+    sold:    '<span class="aws aws-sold">売約済</span>'
   };
   var worksTotalImgSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="20" height="20">'
     +'<rect x="3" y="3" width="18" height="18" rx="2"/>'
@@ -5600,7 +5600,7 @@ KTN.pages['p4'] = function () {
       return '<a class="lc lc--article' + (a.hasImg ? '' : ' lc--noimg') + '" href="#">'
         + thumb + '<div class="lc__body">'
         + '<div class="lc__badge-row">'
-        + (a.isNew ? '<span class="nb">new</span>' : '')
+        + KTN.newBadge(a)
         + '<span class="cb cb-content cb-article">article</span>'
         + '</div>'
         + '<div class="lc__title">' + a.title + '</div>'
@@ -16066,7 +16066,7 @@ KTN.picksWork = KTN.picksLite.make({
     if (kind === 'tag') return x.tags.indexOf(v) !== -1;
     if (kind === 'genre') return x.genres.indexOf(v) !== -1;
     if (kind === 'liaison') return v === 'lp' ? x.liaison === 'li-plus' : x.liaison === 'li';
-    if (kind === 'new') return !!x.isNew;
+    if (kind === 'new') return KTN.isNewItem(x);
     return false;
   },
   /* 2026-09-25・handoff 追174-195：ユーザー指示によりマスタの登録件数を4→10件に拡張。
@@ -16114,7 +16114,7 @@ KTN.picksCreator = KTN.picksLite.make({
     if (kind === 'genre') return x.genres.indexOf(v) !== -1;
     if (kind === 'liaison') return (x.status === 'live' || x.status === 'upcoming') && (v === 'lp' ? x.liaison === 'li-plus' : x.liaison === 'li');
     if (kind === 'st') return x.status === v;
-    if (kind === 'new') return !!x.isNew;
+    if (kind === 'new') return KTN.isNewItem(x);
     return false;
   },
   /* 2026-09-25・handoff 追174-195：マスタの登録件数を4→10件に拡張（作品版と同じ理由・全件事前検証済み）。 */
@@ -16180,7 +16180,7 @@ KTN.picksGallery = KTN.picksLite.make({
     if (kind === 'liaison') return (x.status === 'live' || x.status === 'upcoming') && (v === 'lp' ? x.liaison === 'li-plus' : x.liaison === 'li');
     if (kind === 'st') return x.status === v;
     if (kind === 'venue') return v === 'barrierfree' ? !!x.barrierFree : !!x[v];
-    if (kind === 'new') return !!x.isNew;
+    if (kind === 'new') return KTN.isNewItem(x);
     return false;
   },
   /* 2026-09-25・handoff 追174-195：マスタの登録件数を4→10件に拡張（作品版と同じ理由・全件事前検証済み。
@@ -17730,7 +17730,7 @@ KTN.pages['p10'] = function () {
   /* 新着＝掲載からの経過日数 nd が NEW_DAYS 以内。手打ちの isNew フラグを廃し1本のしきい値から導出する。
      これでチップ new:1・棚「新着掲載」・並べ替え「新着順」・ピックアップ new-all が同じ定義を見る（SOON_DAYS と同じ考え方・2026-09-03）。
      本番は Drupal の掲載日から nd を算出する。 */
-  var NEW_DAYS = 14;
+  var NEW_DAYS = KTN.NEW_DAYS;   /* サイト共通のルール（common.js・公開から14日以内） */
   EX.forEach(function (x) { x.isNew = x.nd <= NEW_DAYS; });
 
   function isOn(x) { return x.status === 'live' || x.status === 'ending'; }
@@ -17933,7 +17933,9 @@ KTN.pages['p10'] = function () {
   var PRESET_AS_CHIP = {
     'ending-all':    { fs: ['when:endsoon'],    sort: 'end' },
     'opening-today': { fs: ['when:opentoday'] },
-    'liaison-all':   { fs: ['liaison:li', 'liaison:lp'] }
+    'liaison-all':   { fs: ['liaison:li', 'liaison:lp'] },
+    /* 2026-10-08（追174-289）：詳しい条件に「新着」チップを戻したので、棚「新着掲載」の「もっと見る」もチップに着地させる */
+    'new-all':       { fs: ['new:1'],           sort: 'new' }
   };
   /* マスタの条件（sel）／季節の言葉の条件（parts）→チップ。チップで表せない条件（人気しきい値・
      近く・期間・月）を含むときは null（＝従来どおり不透明なプリセット1チップ）。 */
@@ -18127,7 +18129,7 @@ KTN.pages['p10'] = function () {
           var rt = rr[1] ? new Date(+rr[1].slice(0, 4), +rr[1].slice(5, 7) - 1, +rr[1].slice(8, 10)) : new Date(2999, 11, 31);
           if (spanHits(x, rf, rt)) ok = true;
         }
-        else if (k === 'new' && x.isNew) ok = true;
+        else if (k === 'new' && KTN.isNewItem(x)) ok = true;
         else if (k === 'pop' && x.pop >= 80) ok = true;   /* 人気の展覧会＝マスタ week-picks（pop:80）と同じしきい値 */
         else if (k === 'near' && x.dist) ok = true;
         else if (k === 'free' && x.free) ok = true;
@@ -19144,7 +19146,7 @@ KTN.pages['p10-1'] = function () {
     sale:    '<span class="aws aws-sale">販売中</span>',
     negot:   '<span class="aws aws-negot">商談中</span>',
     inquiry: '<span class="aws aws-inquiry">要問合せ</span>',
-    sold:    '<span class="aws aws-sold">SOLD</span>',
+    sold:    '<span class="aws aws-sold">売約済</span>',
     nsale:   '<span class="aws aws-nsale">非売品</span>',
   };
   var WORK_SVG_HEART = '<svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 13.2C7.6 12.9 1.5 9 1.5 5.5a3.1 3.1 0 0 1 6.5-.55 3.1 3.1 0 0 1 6.5.55C14.5 9 8.4 12.9 8 13.2z"/></svg>';
@@ -19160,7 +19162,7 @@ KTN.pages['p10-1'] = function () {
     var imgHtml = '<div class="aw__img">' + lbHtml
       + '<div class="aw__img-ph" style="background:' + w.bg + ';min-height:' + minH + 'px"><div class="aw__img-ph-text">' + esc(w.title || '') + '</div></div>'
       + '</div>';
-    var badgeRow = '<div class="aw__badge-row"><span class="cb cb-content cb-artwork">artwork</span>' + (WORK_STATUS_BADGE[w.status] || '') + '</div>';
+    var badgeRow = '<div class="aw__badge-row">' + KTN.newBadge(w) + '<span class="cb cb-content cb-artwork">artwork</span>' + (WORK_STATUS_BADGE[w.status] || '') + '</div>';
     var titleHtml = '<div class="aw__title-row"><div class="aw__title">《' + esc(w.title || '') + '》</div></div>';
     var creatorUrl = w.creatorUrl || '#';
     var creatorHtml = w.name
@@ -19226,7 +19228,7 @@ KTN.pages['p10-1'] = function () {
         else if (k === 'genre' && x.genres.indexOf(v) !== -1) ok = true;
         else if (k === 'tag' && x.tags.indexOf(v) !== -1) ok = true;
         else if (k === 'area' && x.area === v) ok = true;
-        else if (k === 'new' && x.isNew) ok = true;
+        else if (k === 'new' && KTN.isNewItem(x)) ok = true;
         else if (k === 'pop' && x.pop >= 70) ok = true;
         else if (k === 'price' && priceBand(x.price) === v) ok = true;
         else if (k === 'liaison' && (v === 'lp' ? x.liaison === 'li-plus' : x.liaison === 'li')) ok = true;
@@ -19872,7 +19874,7 @@ KTN.pages['p10-2'] = function () {
         else if (k === 'genre' && x.genres.indexOf(v) !== -1) ok = true;
         else if (k === 'tag' && x.genreTags.indexOf(v) !== -1) ok = true;
         /* area キーは受け取らない（追174-86）＝クリエイターはエリアを持たない */
-        else if (k === 'new' && x.isNew) ok = true;
+        else if (k === 'new' && KTN.isNewItem(x)) ok = true;
         else if (k === 'pop' && x.pop >= 70) ok = true;
         /* LIAISON/LIAISON+は「開催中・開催予定の展覧会」に対して付く状態で、クリエイターの
            恒常的な特性ではない（会期が終わればもう成立しない）。会期を終えたクリエイターに
@@ -20485,7 +20487,7 @@ KTN.pages['p10-3'] = function () {
            2026-09-25・handoff 追174-183）。P10_TOKYO_AREAS は東京都の内訳しか持たないため v の値は
            見ない。 */
         else if (k === 'tarea' && x.area === '東京') ok = true;
-        else if (k === 'new' && x.isNew) ok = true;
+        else if (k === 'new' && KTN.isNewItem(x)) ok = true;
         else if (k === 'pop' && x.pop >= 70) ok = true;
         else if (k === 'near' && x.dist) ok = true;   /* 現在地の近く＝距離データを持つギャラリー */
         /* LIAISON/LIAISON+は「開催中・開催予定の展覧会」に対して付く状態で、ギャラリーの
@@ -23468,13 +23470,13 @@ KTN.pages['p10-4-5'] = function () {
    P1＝時間軸・パーソナルフィード＋入口（プレビュー棚＋P10送客）。
    棚はP10（もうすぐ終了/近く/Liaison/ピックアップ/おすすめ/新着掲載）と重複させない。
 ════════════════════════════════════════════════════ */
-KTN.pages['p1'] = function () {
-  document.body.classList.add('p1-page');
-  document.body.style.setProperty('--page-accent', '#005da7');
-  document.body.style.setProperty('--page-accent-bg', 'rgba(0,93,167,.08)');
-
-  /* ── デモデータ（p10 と同一の世界観。watched=ウォッチ中の投稿者 / mine=興味あり！済） ── */
-  var EX = [
+/* ════════════════════════════════════════════════════
+   トップページ（P1）の運営データ（2026-10-07・管理画面 P90-19「トップページの管理」）
+   ・巻頭（Opening）の見出し：曜日ごとの7本（毎週くり返し）＋日付を指定した見出し（その日だけ優先）
+   ・PICK UP：ヒーローで切り替える展覧会（最大5件・順番・欧文サブ・リード文）
+   デモの保存は sessionStorage 'ktnDemoTop'（P90-19 で保存すると、このブラウザの P1 に反映）。本番は Drupal の設定値。
+════════════════════════════════════════════════════ */
+KTN.P1_EX = [
     { id: 1,  title: '静寂のかたち — 田中透 油彩展', venue: '白日ギャラリー', area: '東京', s: '06.28', e: '07.13', hours: '11:00–19:00', status: 'live',   remain: '残り5日',  rd: 5,  tags: ['絵画', '現代美術'], liaison: 'li',      pop: 88, int: 214, ci: 56, dist: '1.2km', isNew: 0, watched: 1, mine: 1, imgH: 200, bg: 'linear-gradient(135deg,#5a6b80,#2e3a4a)', thumbs: ['linear-gradient(135deg,#7a8ba0,#4e5a6a)', 'linear-gradient(135deg,#8a7a60,#5e4a3a)', 'linear-gradient(135deg,#6a8a7a,#3e5a4a)'] },
     { id: 2,  title: '墨聲 — 現代書道の地平', venue: '東京書芸館', area: '東京', s: '06.20', e: '07.10', hours: '10:00–18:00', status: 'ending', remain: '残り2日',  rd: 2,  tags: ['書道'], liaison: 'li-plus', pop: 92, int: 342, ci: 128, dist: '2.4km', isNew: 0, mine: 1, imgH: 165, bg: 'linear-gradient(135deg,#2e2a28,#5a5450)', thumbs: ['linear-gradient(135deg,#4a4440,#2a2624)', 'linear-gradient(135deg,#6a6058,#3a342e)', 'linear-gradient(135deg,#8a8078,#5a544e)'] },
     { id: 3,  title: '光を編む — 篠原恵 写真展', venue: 'ギャラリー日向', area: '東京', s: '07.01', e: '07.17', hours: '12:00–19:00', status: 'live',   remain: '残り9日',  rd: 9,  tags: ['写真'], liaison: '',        pop: 65, int: 98,  ci: 24, dist: '3.1km', isNew: 1, watched: 1, imgH: 250, bg: 'linear-gradient(135deg,#c0a880,#8a6e4a)' },
@@ -23489,17 +23491,67 @@ KTN.pages['p1'] = function () {
     { id: 12, title: 'ガラスのなかの庭 — 三好文乃', venue: '天神ガラス工房', area: '福岡', s: '06.29', e: '07.19', hours: '11:00–18:00', status: 'live',   remain: '残り11日', rd: 11, tags: ['クラフト'], liaison: '',        pop: 66, int: 91,  ci: 22, dist: null,    isNew: 0, imgH: 205, bg: 'linear-gradient(135deg,#7ab0a8,#3e6e66)' },
     { id: 13, title: '抽象の温度', venue: 'アートスペース青', area: '東京', s: '06.18', e: '07.10', hours: '11:00–19:00', status: 'ending', remain: '残り2日',  rd: 2,  tags: ['現代美術'], liaison: '',        pop: 90, int: 276, ci: 94, dist: '2.9km', isNew: 0, mine: 1, imgH: 240, bg: 'linear-gradient(135deg,#c07040,#7a3e18)' },
     { id: 14, title: '路地と光 — 街歩き写真部', venue: 'コートギャラリー谷中', area: '東京', s: '07.03', e: '07.15', hours: '11:00–18:00', status: 'live',   remain: '残り7日',  rd: 7,  tags: ['写真'], liaison: '',        pop: 71, int: 104, ci: 38, dist: '1.8km', isNew: 1, imgH: 220, bg: 'linear-gradient(135deg,#8a8a70,#4e4e38)' },
-  ];
+];
+KTN.TOP = (function () {
+  var KEY = 'ktnDemoTop';
+  var WEEK = ['月', '火', '水', '木', '金', '土', '日'];
+  var DEF = {
+    /* 曜日ごとの見出し（0＝月曜 … 6＝日曜） */
+    opWeek: [
+      { ja: '話題は、展覧会のまわりに', en: 'Exhibitions and Everything Around Them' },
+      { ja: 'いま、話題のはじまり',     en: 'Where the Conversation Starts' },
+      { ja: '話題のありか',             en: 'Places Worth Talking About' },
+      { ja: '展覧会と、その話題',       en: 'Exhibitions and Their Stories' },
+      { ja: '話題の中心には、展覧会',   en: 'Always an Exhibition at the Center' },
+      { ja: '週末の行き先を、ひとつ',   en: 'One Place to Go This Weekend' },
+      { ja: '今日の話題を、ひとつ',     en: 'One Thing Worth Seeing Today' }
+    ],
+    /* 日付を指定した見出し（その日だけ曜日の見出しより優先）。date＝YYYY-MM-DD */
+    opDated: [
+      { date: '2026-11-03', ja: '文化の日の、展覧会', en: 'A Culture Day Edition' }
+    ],
+    /* PICK UP（id＝KTN.P1_EX の展覧会） */
+    pickup: [
+      { id: 1,  en: 'Shapes of Silence — Toru Tanaka',  lead: '日常の光と影を静謐な色面に還元する田中透、3年ぶりの個展。近作の油彩24点を、LIAISONオンライン展示とあわせて公開しています。' },
+      { id: 2,  en: 'Voices of Ink — Contemporary Sho', lead: '筆と墨のいまを問う気鋭6名によるグループ展。会期はまもなく終了、LIAISON+でのオンライン購入は販売期間中も受け付けます。' },
+      { id: 5,  en: 'Experiments in Matiere',           lead: '絵肌＝マチエールの物質感を主題に、支持体と画材の実験を重ねる4名の共同展示。ギャラリーの壁一面を使ったインスタレーションも。' },
+      { id: 13, en: 'Temperature of Abstraction',       lead: '抽象絵画の「温度」をテーマにした注目のグループ展。興味あり！とチェックインがいま最も集まっています。会期は残りわずか。' },
+      { id: 11, en: 'Practicing Self-Portraits',        lead: 'セルフポートレイトという営みを見つめ直す写真と映像の個展。開催前からLIAISON+のオンライン展示・販売が話題です。' }
+    ]
+  };
+  function copy(o) { return JSON.parse(JSON.stringify(o)); }
+  function load() {
+    var d = copy(DEF);
+    try { var v = JSON.parse(window.sessionStorage.getItem(KEY) || 'null'); if (v) { ['opWeek', 'opDated', 'pickup'].forEach(function (k) { if (v[k]) d[k] = v[k]; }); } } catch (e) {}
+    return d;
+  }
+  function save(d) { try { window.sessionStorage.setItem(KEY, JSON.stringify(d)); } catch (e) {} }
+  function reset() { try { window.sessionStorage.removeItem(KEY); } catch (e) {} }
+  function ymd(dt) { function z(v) { return (v < 10 ? '0' : '') + v; } return dt.getFullYear() + '-' + z(dt.getMonth() + 1) + '-' + z(dt.getDate()); }
+  function weekIdx(dt) { return (dt.getDay() + 6) % 7; }   /* 月曜＝0 */
+  /* その日の見出し：日付を指定したものがあればそれ、無ければ曜日の見出し */
+  function titleFor(dt, d) {
+    d = d || load();
+    var key = ymd(dt), hit = null;
+    d.opDated.forEach(function (x) { if (x.date === key) hit = x; });
+    return hit ? { ja: hit.ja, en: hit.en, dated: true } : { ja: d.opWeek[weekIdx(dt)].ja, en: d.opWeek[weekIdx(dt)].en, dated: false };
+  }
+  return { WEEK: WEEK, DEF: DEF, load: load, save: save, reset: reset, ymd: ymd, weekIdx: weekIdx, titleFor: titleFor };
+}());
+
+KTN.pages['p1'] = function () {
+  document.body.classList.add('p1-page');
+  document.body.style.setProperty('--page-accent', '#005da7');
+  document.body.style.setProperty('--page-accent-bg', 'rgba(0,93,167,.08)');
+
+  /* ── デモデータ（p10 と同一の世界観。watched=ウォッチ中の投稿者 / mine=興味あり！済） ── */
+  var EX = KTN.P1_EX;   /* デモの展覧会（P90-19 の PICK UP の選択肢と共有） */
   function exById(id) { for (var i = 0; i < EX.length; i++) if (EX[i].id === id) return EX[i]; return null; }
 
   /* ── A. ヒーロー（ピックアップ・自動ローテーション） ── */
-  var HERO = [
-    { id: 1,  artist: '田中透',   en: 'Shapes of Silence — Toru Tanaka',  lead: '日常の光と影を静謐な色面に還元する田中透、3年ぶりの個展。近作の油彩24点を、LIAISONオンライン展示とあわせて公開しています。' },
-    { id: 2,  artist: 'グループ展', en: 'Voices of Ink — Contemporary Sho', lead: '筆と墨のいまを問う気鋭6名によるグループ展。会期はまもなく終了、LIAISON+でのオンライン購入は販売期間中も受け付けます。' },
-    { id: 5,  artist: 'グループ展', en: 'Experiments in Matiere',           lead: '絵肌＝マチエールの物質感を主題に、支持体と画材の実験を重ねる4名の共同展示。ギャラリーの壁一面を使ったインスタレーションも。' },
-    { id: 13, artist: 'グループ展', en: 'Temperature of Abstraction',       lead: '抽象絵画の「温度」をテーマにした注目のグループ展。興味あり！とチェックインがいま最も集まっています。会期は残りわずか。' },
-    { id: 11, artist: 'studio hue', en: 'Practicing Self-Portraits',        lead: 'セルフポートレイトという営みを見つめ直す写真と映像の個展。開催前からLIAISON+のオンライン展示・販売が話題です。' },
-  ];
+  /* PICK UP の展覧会・順番・欧文サブ・リード文は P90-19「トップページの管理」で決める（KTN.TOP・2026-10-07） */
+  var HERO = KTN.TOP.load().pickup.filter(function (h) { return exById(h.id); });
+  if (!HERO.length) HERO = KTN.TOP.DEF.pickup;
   var heroIdx = 0, heroTimer = null;
 
   function renderHero(i) {
@@ -23662,22 +23714,14 @@ KTN.pages['p1'] = function () {
       issue.textContent = now.getFullYear() + '.' + pad(now.getMonth() + 1) + '.' + pad(now.getDate());
     }
 
-    /* 柱（見出し＋欧文サブ）は日替わり＝雑誌の号ごとに柱の言い回しが変わるイメージ。
-       選択は日付（通算日）で決めるので **同じ日は何度リロードしても同じ文言**（リロードで文言まで
-       変わると「引き直し」に見えるため。ランダムに変えてよいのは中身の並びだけ）。
-       日本語と欧文サブは対で差し替える（意味がずれないよう1組で管理）。 */
-    var TITLES = [
-      { ja: '話題は、展覧会のまわりに', en: 'Exhibitions and Everything Around Them' },
-      { ja: 'いま、話題のはじまり',     en: 'Where the Conversation Starts' },
-      { ja: '話題のありか',             en: 'Places Worth Talking About' },
-      { ja: '展覧会と、その話題',       en: 'Exhibitions and Their Stories' },
-      { ja: '話題の中心には、展覧会',   en: 'Always an Exhibition at the Center' },
-      { ja: '今日の話題を、ひとつ',     en: 'One Thing Worth Seeing Today' }
-    ];
+    /* 柱（見出し＋欧文サブ）＝**その日のあいだは固定**（2026-10-07・ユーザー判断で変更）。
+       曜日ごとの7本（毎週くり返し）と、日付を指定した見出し（祝日・特別号など・その日だけ優先）を
+       P90-19「トップページの管理」で決める（KTN.TOP.titleFor）。日本語と欧文サブは対で差し替える。
+       旧：通算日 % 6 の6本をコードに直書き。 */
     var ttlEl = document.getElementById('p1OpTitle');
     var enEl = document.getElementById('p1OpEn');
-    function applyOpTitle(i) {
-      var t = TITLES[i] || TITLES[0];
+    function applyOpTitle(dt) {
+      var t = KTN.TOP.titleFor(dt);
       if (ttlEl) ttlEl.textContent = t.ja;
       if (enEl) enEl.textContent = t.en;
       return t.ja;
@@ -23690,12 +23734,23 @@ KTN.pages['p1'] = function () {
        任意の日の紙面に差し替えられる。デザインFix時にこの上書き（デモバー行を含む）は削除する。
        本番（React CSR）はシードを6パターンでなく日付そのもの（YYYYMMDD）にし、柱は %6、
        中身は全展覧会プールから抽選する＝日ごとに違う紙面になる。 */
-    var doy = KTN.cl.doy(now);
-    function normSeed(i) { i = i | 0; return ((i % TITLES.length) + TITLES.length) % TITLES.length; }
-    var q = (location.search.match(/[?&]op=(\d+)/) || [])[1];
-    var OP_SEED = normSeed(q ? parseInt(q, 10) - 1 : doy);
-    applyOpTitle(OP_SEED);
-    KTN.opTitles = TITLES;
+    /* ★ 並び＝**開くたびに選び直す**（2026-10-07・ユーザー判断で変更。旧＝1日1回の日付シード固定）。
+       会期の短い展覧会をできるだけ多く露出させるため。見出し（柱）だけはその日のあいだ固定＝「今日の号」らしさは保つ。
+       選び方は**出た回数の少ない展覧会を優先**（同じ回数どうしはランダム）＝P10 の「露出の少ないものを保証する」と同じ考え方。
+       デモは出た回数を sessionStorage 'ktnDemoOpExposure' に数える（本番はサーバーで全訪問の表示回数を数える）。
+       SEO には効かない（クローラの訪問間隔は1日以上空くので、固定でもランダムでも入れ替わって見える）＝固定をやめても失うものは無い。
+       デモバー「巻頭の見出し」＝曜日（または日付指定）の見出しを確かめる／「開き直す」＝もう一度トップを開いたときの並び。 */
+    var opDate = now;
+    applyOpTitle(opDate);
+    var EXPO_KEY = 'ktnDemoOpExposure';
+    function expo() { try { return JSON.parse(window.sessionStorage.getItem(EXPO_KEY) || '{}'); } catch (e) { return {}; } }
+    function addExpo(ids) { var e = expo(); ids.forEach(function (id) { e[id] = (e[id] || 0) + 1; }); try { window.sessionStorage.setItem(EXPO_KEY, JSON.stringify(e)); } catch (er) {} }
+    /* 出た回数の少ない順（同じ回数はランダム） */
+    function byExposure(ids) {
+      var e = expo();
+      return ids.map(function (id) { return { id: id, n: e[id] || 0, r: rnd() }; })
+        .sort(function (a, b) { return a.n - b.n || a.r - b.r; }).map(function (x) { return x.id; });
+    }
 
     var BADGE = KTN.cl.BADGE;
     /* 対の関係ラベル（開催状態を断定しない中立表現にする＝soon の会場も同じ書式で出せる） */
@@ -23711,9 +23766,7 @@ KTN.pages['p1'] = function () {
        exh＝紐づく展覧会の EX id（対の相手・exById で解決） */
     var POOL = KTN.cl.POOL;
 
-    /* 抽選はすべて `rnd()`＝OP_SEED から作る疑似乱数で行う（`Math.random()` は使わない）。
-       同じ日・同じ案なら何度描き直しても同じ紙面になるようにするため（→ OP_SEED のコメント）。
-       PRNG本体は共通ビルダ `KTN.cl.rng()`（mulberry32＋シード散らし）。 */
+    /* 抽選の乱数。開くたびに選び直すので描画ごとに新しい種をまく（共通ビルダ KTN.cl.rng） */
     var rnd = KTN.cl.rng(0);
 
     /* 同じ展覧会が2スロットに出ないよう、既出の exh を候補から外して選ぶ（候補が尽きたら全体から） */
@@ -23790,8 +23843,10 @@ KTN.pages['p1'] = function () {
          誘因になる枠なので「順番に回す」ほうが趣旨に合う。02・03はシード付き抽選のまま。 */
       var cand = Object.keys(CL_NOTE).map(Number).filter(function (id) { return satsFor(id).length >= 2; });
       var bigCand = cand.filter(function (id) { return satsFor(id).length >= 3; });
-      var big = bigCand[OP_SEED % bigCand.length] || cand[0];
-      var rest = shuffle(cand.filter(function (id) { return id !== big; })).slice(0, 2);
+      /* 主役（周辺3件を持てる展覧会）も残り2枠も、出た回数の少ない順に選ぶ（2026-10-07） */
+      var big = byExposure(bigCand)[0] || cand[0];
+      var rest = byExposure(cand.filter(function (id) { return id !== big; })).slice(0, 2);
+      addExpo([big].concat(rest));
       return '<div class="p1-op__clusters">'
         + '<div class="p1-op__crow">' + cluster(big, 1, 'lg') + '</div>'
         + '<div class="p1-op__crow">' + cluster(rest[0], 2, 'md') + cluster(rest[1], 3, 'sm') + '</div>'
@@ -23814,7 +23869,7 @@ KTN.pages['p1'] = function () {
        クラスタの展覧会は cluster() 内で usedEx に登録済み＝続くペアには出てこない。 */
     function renderHybrid() {
       var cand = Object.keys(CL_NOTE).map(Number).filter(function (id) { return satsFor(id).length >= 3; });
-      var big = cand[OP_SEED % cand.length];  /* 主役は案2と同じく日替わりローテーション */
+      var big = byExposure(cand)[0];  /* 主役は案2と同じく出た回数の少ない順 */
       return '<div class="p1-op__clusters"><div class="p1-op__crow">' + cluster(big, 1, 'lg') + '</div></div>'
         /* 02〜06は案1の3＋2段組みでなく**1段のコラージュ帯**に並べる（2026-08-31）。案1のスロット幅
            （190/162/168/200/156px）のままだと、全幅のクラスタの下で1段目3枠・2段目2枠がデスクトップ幅
@@ -23840,8 +23895,8 @@ KTN.pages['p1'] = function () {
     var OP_VARIANT = 2;
     function renderOp(v) {
       usedEx = {};
-      /* 描画のたびにシードをまき直す＝同じ日・同じ案なら何度描き直しても同じ紙面 */
-      rnd = KTN.cl.rng(OP_SEED + 1);
+      /* 開くたびに選び直す＝描画のたびに新しい種 */
+      rnd = KTN.cl.rng(Math.floor(Math.random() * 2147483647));
       return v === 2 ? renderClusters() : v === 3 ? renderHybrid() : renderPairs();
     }
     mosaic.innerHTML = renderOp(OP_VARIANT);
@@ -23853,18 +23908,20 @@ KTN.pages['p1'] = function () {
         btn.classList.add('on');
       }
     };
-    /* デモバー「巻頭の日替わり」＝その日の紙面ごと差し替える（柱の文言と中身は同じ OP_SEED で動くので
-       必ず対で変わる）。n 省略＝本日に戻す。デザインFix時にデモバー行ごと削除する */
+    /* デモバー「巻頭の見出し」＝曜日（0＝月 … 6＝日）か日付指定の日の見出しにする。n 省略＝今日。
+       「開き直す」＝もう一度トップを開いたとき（並びを選び直す）。デザインFix時にデモバー行ごと削除する */
     KTN.opDay = function (n, btn) {
-      OP_SEED = normSeed(n ? (n | 0) - 1 : doy);
-      applyOpTitle(OP_SEED);
-      mosaic.innerHTML = renderOp(OP_VARIANT);
+      if (n === 'dated') { var dd = KTN.TOP.load().opDated[0]; opDate = dd ? new Date(dd.date + 'T00:00:00') : now; }
+      else if (n === undefined || n === null || n === '') opDate = now;
+      else { opDate = new Date(now); opDate.setDate(now.getDate() - KTN.TOP.weekIdx(now) + (n | 0)); }
+      var t = applyOpTitle(opDate);
       if (btn) {
         [].forEach.call(document.querySelectorAll('#dbar [data-opday]'), function (b) { b.classList.remove('on'); });
         btn.classList.add('on');
       }
-      return TITLES[OP_SEED].ja;
+      return t;
     };
+    KTN.opReopen = function () { mosaic.innerHTML = renderOp(OP_VARIANT); };
   })();
 
   /* ── C2. 近くの展覧会（ゲスト・位置情報フック） ──
@@ -23952,7 +24009,7 @@ KTN.pages['p1'] = function () {
 
   /* ── F. 最新の展覧会（メインフィード・ジャンル絞り込み） ── */
   var feedGenre = '';
-  var feedShown = 8;
+  /* 8件まで。続きは「もっと見る →」（展覧会検索 P10）に任せる（2026-10-07・旧「さらに読み込む」は廃止） */
   var FEED_PAGE = 8;
   var GENRE_MAP = { '絵画': 'アート', '油彩': 'アート', 'アクリル': 'アート', '現代美術': 'アート', '版画': 'アート', '書道': 'アート', '写真': '写真', '陶芸': 'クラフト', 'クラフト': 'クラフト', 'ガラス': 'クラフト' };
   function exGenre(x) {
@@ -23965,21 +24022,15 @@ KTN.pages['p1'] = function () {
   }
   function renderFeed() {
     var list = feedList();
-    document.getElementById('p1FeedGrid').innerHTML = list.slice(0, feedShown).map(buildGridEcCard).join('');
-    document.getElementById('p1MoreWrap').style.display = list.length > feedShown ? '' : 'none';
+    document.getElementById('p1FeedGrid').innerHTML = list.slice(0, FEED_PAGE).map(buildGridEcCard).join('');
   }
   document.querySelectorAll('.p1-genre').forEach(function (b) {
     b.addEventListener('click', function () {
       document.querySelectorAll('.p1-genre').forEach(function (o) { o.classList.remove('is-on'); });
       b.classList.add('is-on');
       feedGenre = b.dataset.genre || '';
-      feedShown = FEED_PAGE;
       renderFeed();
     });
-  });
-  document.getElementById('p1MoreBtn').addEventListener('click', function () {
-    feedShown = feedList().length;
-    renderFeed();
   });
   renderFeed();
 
@@ -24701,6 +24752,120 @@ KTN.pages['p61'] = function () {
   window.ktnRender = function () { if (typeof prev === 'function') prev(); render(); };
   window.p61DemoReset = function () { N.reset(); shownSince = {}; render(); KTN.toast('最後に見た日時を最初の状態に戻しました（デモ）'); };
   render();
+};
+
+/* ════════════════════════════════════════════════════
+   P90-19 トップページの管理（2026-10-07）
+   タブ：巻頭の見出し（曜日ごとの7本＋日付を指定した見出し）／PICK UP（最大5件・順番・欧文サブ・リード文）。
+   データは KTN.TOP（P1 と共有）。デモの保存は sessionStorage（このブラウザの P1 に反映）。
+════════════════════════════════════════════════════ */
+KTN.pages['p90-19'] = function () {
+  var T = KTN.TOP;
+  var data = T.load();
+  var MAX = 5;
+  function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  function exName(id) { var x = null; KTN.P1_EX.forEach(function (e) { if (e.id === id) x = e; }); return x; }
+  var weekEl = document.getElementById('p9019Week'), datedEl = document.getElementById('p9019Dated'), pickEl = document.getElementById('p9019Pick');
+  if (!weekEl) return;
+
+  /* タブ */
+  var tabs = document.getElementById('p9019Tabs');
+  function showTab(k) {
+    tabs.querySelectorAll('[data-panel]').forEach(function (b) { var on = b.dataset.panel === k; b.classList.toggle('is-active', on); b.setAttribute('aria-selected', on ? 'true' : 'false'); });
+    document.querySelectorAll('.p9019-panel').forEach(function (p) { p.hidden = p.id !== 'p9019Panel-' + k; });
+  }
+  tabs.addEventListener('click', function (e) { var b = e.target.closest('[data-panel]'); if (b) showTab(b.dataset.panel); });
+  if (location.hash === '#pickup') showTab('pickup');
+
+  /* 巻頭の見出し：曜日ごと */
+  function renderWeek() {
+    var today = T.weekIdx(new Date());
+    weekEl.innerHTML = data.opWeek.map(function (w, i) {
+      return '<tr' + (i === today ? ' class="is-today"' : '') + '>' +
+        '<td data-label="曜日" class="p9019-day">' + T.WEEK[i] + (i === today ? '<span class="p9019-today">今日</span>' : '') + '</td>' +
+        '<td data-label="見出し"><input class="p211-input" type="text" data-week="' + i + '" data-k="ja" value="' + esc(w.ja) + '" placeholder="例：話題は、展覧会のまわりに"></td>' +
+        '<td data-label="欧文サブ"><input class="p211-input" type="text" data-week="' + i + '" data-k="en" value="' + esc(w.en) + '" placeholder="例：Exhibitions and Everything Around Them"></td>' +
+      '</tr>';
+    }).join('');
+  }
+  weekEl.addEventListener('input', function (e) { var i = e.target.dataset.week; if (i != null) { data.opWeek[i][e.target.dataset.k] = e.target.value; renderToday(); } });
+
+  /* 巻頭の見出し：日付を指定 */
+  function renderDated() {
+    datedEl.innerHTML = data.opDated.length ? data.opDated.map(function (d, i) {
+      return '<tr>' +
+        '<td data-label="日付"><input class="p211-input" type="date" data-dated="' + i + '" data-k="date" value="' + esc(d.date) + '"></td>' +
+        '<td data-label="見出し"><input class="p211-input" type="text" data-dated="' + i + '" data-k="ja" value="' + esc(d.ja) + '"></td>' +
+        '<td data-label="欧文サブ"><input class="p211-input" type="text" data-dated="' + i + '" data-k="en" value="' + esc(d.en) + '"></td>' +
+        '<td data-label="操作"><button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline" data-del-dated="' + i + '">外す</button></td>' +
+      '</tr>';
+    }).join('') : '<tr><td colspan="4" class="p9019-empty">日付を指定した見出しはありません。</td></tr>';
+  }
+  datedEl.addEventListener('input', function (e) { var i = e.target.dataset.dated; if (i != null) { data.opDated[i][e.target.dataset.k] = e.target.value; renderToday(); } });
+  datedEl.addEventListener('click', function (e) { var b = e.target.closest('[data-del-dated]'); if (b) { data.opDated.splice(+b.dataset.delDated, 1); renderDated(); renderToday(); } });
+  document.getElementById('p9019AddDated').addEventListener('click', function () { data.opDated.push({ date: '', ja: '', en: '' }); renderDated(); });
+  function renderToday() {
+    var t = T.titleFor(new Date(), data);
+    document.getElementById('p9019Today').innerHTML = '今日のトップの見出し：<strong>' + esc(t.ja || '（未入力）') + '</strong>　' + esc(t.en) + (t.dated ? '（日付を指定した見出し）' : '（' + T.WEEK[T.weekIdx(new Date())] + '曜日の見出し）');
+  }
+
+  /* PICK UP */
+  function renderPick() {
+    var opts = function (sel) {
+      return KTN.P1_EX.map(function (x) { return '<option value="' + x.id + '"' + (x.id === sel ? ' selected' : '') + '>' + esc(x.title) + '（' + esc(x.venue) + '）</option>'; }).join('');
+    };
+    pickEl.innerHTML = data.pickup.map(function (p, i) {
+      var x = exName(p.id);
+      return '<div class="p9019-pick">' +
+        '<div class="p9019-pick__head"><span class="p9019-pick__no">' + (i + 1) + '</span>' +
+          '<select class="p211-select" data-pick="' + i + '" data-k="id">' + opts(p.id) + '</select>' +
+          '<span class="p9019-pick__ops">' +
+            '<button type="button" class="ktn-op-btn ktn-op-btn--sm" data-move="' + i + '" data-dir="-1"' + (i === 0 ? ' disabled' : '') + '>上へ</button>' +
+            '<button type="button" class="ktn-op-btn ktn-op-btn--sm" data-move="' + i + '" data-dir="1"' + (i === data.pickup.length - 1 ? ' disabled' : '') + '>下へ</button>' +
+            '<button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline" data-del-pick="' + i + '">外す</button>' +
+          '</span></div>' +
+        (x ? '<p class="p9019-pick__meta">' + esc(x.area + '｜' + x.venue + '｜2026.' + x.s + '—' + x.e) + '</p>' : '') +
+        '<label class="p211-label">欧文サブ</label><input class="p211-input" type="text" data-pick="' + i + '" data-k="en" value="' + esc(p.en) + '">' +
+        '<label class="p211-label">リード文</label><textarea class="p211-textarea" rows="3" data-pick="' + i + '" data-k="lead">' + esc(p.lead) + '</textarea>' +
+      '</div>';
+    }).join('') || '<p class="p9019-empty">PICK UP に出す展覧会がありません。</p>';
+    var add = document.getElementById('p9019AddPick');
+    add.disabled = data.pickup.length >= MAX;
+    document.getElementById('p9019PickCount').textContent = data.pickup.length + ' / ' + MAX + '件';
+  }
+  pickEl.addEventListener('input', function (e) { var i = e.target.dataset.pick; if (i != null) data.pickup[i][e.target.dataset.k] = e.target.dataset.k === 'id' ? +e.target.value : e.target.value; });
+  pickEl.addEventListener('change', function (e) { if (e.target.dataset.k === 'id') { data.pickup[e.target.dataset.pick].id = +e.target.value; renderPick(); } });
+  pickEl.addEventListener('click', function (e) {
+    var m = e.target.closest('[data-move]'), d = e.target.closest('[data-del-pick]');
+    if (m) { var i = +m.dataset.move, j = i + (+m.dataset.dir), a = data.pickup; var t = a[i]; a[i] = a[j]; a[j] = t; renderPick(); }
+    if (d) { data.pickup.splice(+d.dataset.delPick, 1); renderPick(); }
+  });
+  document.getElementById('p9019AddPick').addEventListener('click', function () {
+    if (data.pickup.length >= MAX) return;
+    var used = data.pickup.map(function (p) { return p.id; });
+    var next = KTN.P1_EX.filter(function (x) { return used.indexOf(x.id) < 0; })[0];
+    data.pickup.push({ id: next ? next.id : KTN.P1_EX[0].id, en: '', lead: '' });
+    renderPick();
+  });
+
+  /* 保存：必須＝曜日の見出し（日本語）・日付指定の日付と見出し・PICK UP 1件以上・同じ展覧会の重複なし */
+  document.getElementById('p9019Save').addEventListener('click', function () {
+    var errs = [];
+    data.opWeek.forEach(function (w, i) { if (!String(w.ja).trim()) errs.push(T.WEEK[i] + '曜日の見出しが未入力です。'); });
+    data.opDated.forEach(function (d, i) { if (!d.date || !String(d.ja).trim()) errs.push('日付を指定した見出し（' + (i + 1) + '行目）の日付または見出しが未入力です。'); });
+    if (!data.pickup.length) errs.push('PICK UP に展覧会を1件以上入れてください。');
+    var ids = data.pickup.map(function (p) { return p.id; });
+    if (ids.some(function (id, i) { return ids.indexOf(id) !== i; })) errs.push('PICK UP に同じ展覧会が2回入っています。');
+    var box = document.getElementById('p9019Error'), list = document.getElementById('p9019ErrorList');
+    if (errs.length) { list.innerHTML = errs.map(function (m) { return '<li class="ktn-form-error__item">' + esc(m) + '</li>'; }).join(''); box.hidden = false; return; }
+    box.hidden = true;
+    T.save(data);
+    KTN.toast('保存しました。トップページに反映されます');
+  });
+  document.getElementById('p9019Reset').addEventListener('click', function () { T.reset(); data = T.load(); renderAll(); KTN.toast('最初の状態に戻しました（デモ）'); });
+
+  function renderAll() { renderWeek(); renderDated(); renderToday(); renderPick(); }
+  renderAll();
 };
 
 /* ════════════════════════════════════════════════════

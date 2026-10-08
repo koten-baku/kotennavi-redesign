@@ -29,16 +29,19 @@
   <button class="dbtn" data-opvar="1" onclick="KTN.opVariant(1,this)">案1ペア</button>
   <button class="dbtn on" data-opvar="2" onclick="KTN.opVariant(2,this)">案2クラスタ</button>
   <button class="dbtn" data-opvar="3" onclick="KTN.opVariant(3,this)">折衷</button>
-  <!-- 巻頭Openingは1日1回更新＝同じ日は柱の文言も展覧会クラスタも固定（リロードで変わらない）。
-       01〜06＝日替わり6パターンの紙面をその場で差し替える（タイトルと中身が対で変わる）。Fix時に削除 -->
-  <span class="dbar-sep">巻頭の日替わり：</span>
-  <button class="dbtn on" data-opday="0" onclick="KTN.opDay(0,this)">本日</button>
-  <button class="dbtn" data-opday="1" onclick="KTN.opDay(1,this)">01</button>
-  <button class="dbtn" data-opday="2" onclick="KTN.opDay(2,this)">02</button>
-  <button class="dbtn" data-opday="3" onclick="KTN.opDay(3,this)">03</button>
-  <button class="dbtn" data-opday="4" onclick="KTN.opDay(4,this)">04</button>
-  <button class="dbtn" data-opday="5" onclick="KTN.opDay(5,this)">05</button>
-  <button class="dbtn" data-opday="6" onclick="KTN.opDay(6,this)">06</button>
+  <!-- 巻頭の見出しは曜日ごと（P90-19 で設定・その日のあいだ固定）。並びは開くたびに選び直す（出た回数の少ない展覧会を優先）。
+       見出し＝曜日・日付指定の見出しを確かめる／開き直す＝もう一度トップを開いたときの並び。Fix時に削除 -->
+  <span class="dbar-sep">巻頭の見出し：</span>
+  <button class="dbtn on" data-opday onclick="KTN.opDay('',this)">今日</button>
+  <button class="dbtn" data-opday onclick="KTN.opDay(0,this)">月</button>
+  <button class="dbtn" data-opday onclick="KTN.opDay(1,this)">火</button>
+  <button class="dbtn" data-opday onclick="KTN.opDay(2,this)">水</button>
+  <button class="dbtn" data-opday onclick="KTN.opDay(3,this)">木</button>
+  <button class="dbtn" data-opday onclick="KTN.opDay(4,this)">金</button>
+  <button class="dbtn" data-opday onclick="KTN.opDay(5,this)">土</button>
+  <button class="dbtn" data-opday onclick="KTN.opDay(6,this)">日</button>
+  <button class="dbtn" data-opday onclick="KTN.opDay('dated',this)">日付指定</button>
+  <button class="dbtn" onclick="KTN.opReopen()">開き直す</button>
   <!-- エリアから探す（C3）＝軸ページの入口。固定枠＋日替わりローテなので日付を送って確認する -->
   <span class="dbar-sep">エリアから探す：</span>
   <button class="dbtn on" data-axis-day onclick="setAxisDay(0,this)">今日</button>
@@ -325,11 +328,8 @@
           <button class="p1-genre" type="button" data-genre="建築">建築</button>
           <button class="p1-genre" type="button" data-genre="その他">その他</button>
         </div>
+        <!-- 8件まで。続きと条件での絞り込みは、見出し右の「もっと見る →」で行く展覧会検索（P10）に任せる（2026-10-07・旧「さらに読み込む」「条件をしぼって探す →」は廃止） -->
         <div class="p1-feed-grid" id="p1FeedGrid"></div>
-        <div class="p1-more-wrap" id="p1MoreWrap">
-          <button class="ktn-op-btn" id="p1MoreBtn" type="button">さらに読み込む</button>
-        </div>
-        <a class="ktn-more-link" href="kotennavi-p10.html">条件をしぼって探す →</a>
       </section>
     </div>
 

@@ -1756,18 +1756,10 @@ body.dark-mode .sb-ending{background:linear-gradient(135deg,#c47808,#d68a10);box
 /* ══════════════════════════════
    PILL BUTTON
 ══════════════════════════════ */
-.ktn-btn{
-  display:inline-flex;align-items:center;gap:7px;
-  padding:7px 16px;border-radius:100px;border:1.5px solid;
-  background:none;
-  font-family:var(--fm);font-size:.75rem;font-weight:400;letter-spacing:.03em;
-  cursor:pointer;outline:none;-webkit-tap-highlight-color:transparent;
-  transition:background .16s,border-color .16s,color .16s;
-  position:relative;
-}
-.ktn-btn:active{transform:scale(.96)}
-.ktn-btn svg{width:15px;height:15px;flex-shrink:0;transition:transform .18s cubic-bezier(.34,1.4,.64,1)}
-.ktn-btn.on svg{transform:scale(1.08)}
+
+
+
+
 /* LG — 日本語CTA向け大型ピルボタン */
 .ktn-btn.ktn-btn--lg{font-family:var(--fn);font-size:1.1rem;font-weight:500;letter-spacing:.02em;padding:14px 28px;border-radius:6px;gap:9px}
 .ktn-btn.ktn-btn--lg svg{width:20px;height:20px}
@@ -1779,12 +1771,12 @@ body.dark-mode .sb-ending{background:linear-gradient(135deg,#c47808,#d68a10);box
 /* DARK ON  — 同上 */
 
 /* LIGHT OFF（デフォルト・ライトパネル） */
-.ktn-btn{color:rgba(0,0,0,.45);border-color:rgba(0,0,0,.18);background:#fff}
-.ktn-btn:hover{color:rgba(0,0,0,.7);border-color:rgba(0,0,0,.32);background:#fafafa}
+
+
 /* LIGHT ON（watch ON: テキスト・枠・SVG外円を #3a90e0 に） */
-.ktn-btn.on{color:var(--watch-on);border-color:var(--watch-on);background:rgba(58,144,224,.08)}
-.ktn-btn.on:hover{background:rgba(58,144,224,.14)}
-.ktn-btn.on svg circle:first-child{fill:#3a90e0;opacity:1}
+
+
+
 /* <use href="#icon-watch"> を使う場合: 属性の color="" より CSS が優先されるよう直接指定
    継承値は <use> の属性値に負けるため、このセレクターで直接上書きが必要 */
 .ktn-btn svg use[href="#icon-watch"]{color:#7a8a99}
@@ -1793,16 +1785,21 @@ body.dark-mode .sb-ending{background:linear-gradient(135deg,#c47808,#d68a10);box
 /* ══════════════════════════════
    ICON-ONLY ROUND BUTTON
 ══════════════════════════════ */
-.ktn-icon-btn{
-  width:38px;height:38px;border-radius:50%;border:1.5px solid;
-  background:none;display:flex;align-items:center;justify-content:center;
-  cursor:pointer;outline:none;-webkit-tap-highlight-color:transparent;
-  transition:background .16s,border-color .16s;flex-shrink:0;
-  position:relative;
+
+
+
+
+/* スマホ幅：ウォッチ・興味あり！の押せる範囲を 44px に広げる（見た目は変えない・2026-10-08・追174-291）。
+   透明な ::before をボタンの中心に重ね、ボタンより小さい向きだけ 44px まで広げる（ピルの横幅はそのまま）。
+   ボタン自身が position:relative/absolute を持つので、::before の位置の基準はボタン。 */
+@media (max-width:860px){
+  .ktn-icon-btn::before,
+  .ktn-btn[data-action="watch"]::before,
+  .ktn-btn[data-action="interest"]::before{
+    content:"";position:absolute;top:50%;left:50%;
+    width:max(100%,44px);height:max(100%,44px);transform:translate(-50%,-50%);
+  }
 }
-.ktn-icon-btn:active{transform:scale(.92)}
-.ktn-icon-btn svg{width:18px;height:18px;flex-shrink:0;transition:transform .18s cubic-bezier(.34,1.4,.64,1)}
-.ktn-icon-btn.on svg{transform:scale(1.08)}
 
 /* DARK icon OFF */
 /* DARK icon ON */
@@ -1827,21 +1824,11 @@ body.dark-mode .sb-ending{background:linear-gradient(135deg,#c47808,#d68a10);box
   z-index:100;
 }
 /* pill: 上に出す */
-.ktn-btn .tip{
-  bottom:calc(100% + 7px);
-  transform:translateX(-50%) translateY(4px);
-}
+
 /* icon: 上に出す・右揃え（カード内右端ボタンで下がクリップされるため） */
-.ktn-icon-btn .tip{
-  bottom:calc(100% + 7px);top:auto;
-  left:auto;right:0;
-  transform:translateY(4px);
-}
+
 /* 矢印 */
-.ktn-btn .tip::after{
-  content:'';position:absolute;left:50%;transform:translateX(-50%);
-  top:100%;border:4px solid transparent;
-}
+
 .ktn-icon-btn .tip::after{
   content:'';position:absolute;right:8px;
   top:100%;border:4px solid transparent;
@@ -1853,8 +1840,8 @@ body.dark-mode .sb-ending{background:linear-gradient(135deg,#c47808,#d68a10);box
 .ktn-icon-btn:hover .tip{
   opacity:1;
 }
-.ktn-btn:hover .tip{transform:translateX(-50%) translateY(0)}
-.ktn-icon-btn:hover .tip{transform:translateY(0)}
+
+
 /* クリック直後はtooltipを消す（マウスが離れるまで） */
 .ktn-btn.is-just-clicked .tip,
 .ktn-icon-btn.is-just-clicked .tip{opacity:0!important}
@@ -1999,28 +1986,15 @@ body.guest .panel-light .ktn-icon-btn .tip::after{border-bottom-color:#431407}
 /* ══════════════════════════════════════════
    アクションボタン .ktn-icon-btn（ライト背景用）
    ══════════════════════════════════════════ */
-.ktn-icon-btn{
-  width:32px;height:32px;border-radius:50%;border:1.5px solid rgba(0,0,0,.18);
-  background:#fff;display:flex;align-items:center;justify-content:center;
-  cursor:pointer;outline:none;-webkit-tap-highlight-color:transparent;
-  transition:background .16s,border-color .16s;flex-shrink:0;position:relative;
-}
-.ktn-icon-btn:hover{border-color:rgba(0,0,0,.3);background:#f5f5f5}
-.ktn-icon-btn.on{border-color:#3a90e0;background:rgba(58,144,224,.08)}
-.ktn-icon-btn.on:hover{background:rgba(58,144,224,.16)}
-.ktn-icon-btn:active{transform:scale(.92)}
-.ktn-icon-btn svg{width:15px;height:15px;flex-shrink:0;transition:transform .18s cubic-bezier(.34,1.4,.64,1)}
-.ktn-icon-btn.on svg{transform:scale(1.08)}
-.ktn-icon-btn .tip{
-  position:absolute;bottom:calc(100% + 7px);top:auto;
-  left:auto;right:0;
-  transform:translateY(4px);
-  white-space:nowrap;font-family:var(--fm);font-size:.5rem;letter-spacing:.07em;
-  padding:4px 9px;pointer-events:none;opacity:0;
-  transition:opacity .15s,transform .15s;z-index:100;
-  background:#3e5670;color:rgba(255,255,255,.88);box-shadow:0 2px 10px rgba(0,0,0,.22);
-}
-.ktn-icon-btn:hover .tip{opacity:1;transform:translateY(0)}
+
+
+
+
+
+
+
+
+
 
 
 /* ══════════════════════════════════════════
@@ -2449,14 +2423,7 @@ line-clamp:2;}
 /* ══════════════════════════════════════════
    アクションボタン .ktn-icon-btn（buttons-4 丸ボタン準拠・32px）
    ══════════════════════════════════════════ */
-.ktn-icon-btn{
-  width:32px;height:32px;border-radius:50%;
-  border:1.5px solid rgba(0,0,0,.18);background:#fff;
-  display:inline-flex;align-items:center;justify-content:center;
-  cursor:pointer;outline:none;-webkit-tap-highlight-color:transparent;
-  transition:background .16s,border-color .16s;
-  flex-shrink:0;position:relative;
-}
+.ktn-icon-btn{width:32px;height:32px;border-radius:50%;border:1.5px solid rgba(0,0,0,.18);background:#fff;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;outline:none;-webkit-tap-highlight-color:transparent;transition:background .16s,border-color .16s;flex-shrink:0;position:relative}
 .ktn-icon-btn svg{width:15px;height:15px;flex-shrink:0;transition:transform .18s cubic-bezier(.34,1.4,.64,1)}
 .ktn-icon-btn.on svg{transform:scale(1.08)}
 .ktn-icon-btn:hover{border-color:rgba(0,0,0,.3);background:#f5f5f5}
@@ -2464,15 +2431,7 @@ line-clamp:2;}
 .ktn-icon-btn.on:hover{background:rgba(58,144,224,.16)}
 .ktn-icon-btn:active{transform:scale(.92)}
 /* Tooltip */
-.ktn-icon-btn .tip{
-  position:absolute;bottom:calc(100% + 7px);top:auto;
-  left:auto;right:0;
-  transform:translateY(4px);
-  white-space:nowrap;font-family:var(--fm);font-size:.5rem;letter-spacing:.07em;
-  padding:4px 9px;pointer-events:none;opacity:0;
-  transition:opacity .15s,transform .15s;z-index:100;
-  background:#3e5670;color:rgba(255,255,255,.88);box-shadow:0 2px 10px rgba(0,0,0,.22);
-}
+.ktn-icon-btn .tip{position:absolute;bottom:calc(100% + 7px);top:auto;left:auto;right:0;transform:translateY(4px);white-space:nowrap;font-family:var(--fm);font-size:.5rem;letter-spacing:.07em;padding:4px 9px;pointer-events:none;opacity:0;transition:opacity .15s,transform .15s;z-index:100;background:#3e5670;color:rgba(255,255,255,.88);box-shadow:0 2px 10px rgba(0,0,0,.22)}
 .ktn-icon-btn:hover .tip{opacity:1;transform:translateY(0)}
 
 
@@ -2740,36 +2699,17 @@ line-clamp:2;}
 /* ══════════════════════════════════════════
    watch pill ボタン .ktn-btn（buttons-4準拠）
    ══════════════════════════════════════════ */
-.ktn-btn{
-  display:inline-flex;align-items:center;gap:5px;
-  padding:5px 13px;border-radius:100px;border:1.5px solid;
-  font-family:var(--fm);font-size:.62rem;font-weight:500;letter-spacing:.05em;
-  cursor:pointer;outline:none;-webkit-tap-highlight-color:transparent;
-  background:none;position:relative;white-space:nowrap;flex-shrink:0;
-  transition:background .16s,border-color .16s,color .16s;
-}
+
 .ktn-btn:active{transform:scale(.96)}
 .ktn-btn svg{width:14px;height:14px;flex-shrink:0;transition:transform .18s cubic-bezier(.34,1.4,.64,1)}
 .ktn-btn.on svg{transform:scale(1.08)}
-.ktn-btn{color:rgba(0,0,0,.45);border-color:rgba(0,0,0,.18);background:#fff}
+.ktn-btn{display:inline-flex;align-items:center;gap:5px;padding:5px 13px;border-radius:100px;border:1.5px solid;font-family:var(--fm);font-size:.62rem;font-weight:500;letter-spacing:.05em;cursor:pointer;outline:none;-webkit-tap-highlight-color:transparent;position:relative;white-space:nowrap;flex-shrink:0;transition:background .16s,border-color .16s,color .16s;color:rgba(0,0,0,.45);border-color:rgba(0,0,0,.18);background:#fff}
 .ktn-btn:hover{color:rgba(0,0,0,.7);border-color:rgba(0,0,0,.32);background:#fafafa}
 .ktn-btn.on{color:var(--watch-on);border-color:var(--watch-on);background:rgba(58,144,224,.08)}
 .ktn-btn.on:hover{background:rgba(58,144,224,.14)}
 .ktn-btn.on svg circle:first-child{fill:#3a90e0;opacity:1}
-.ktn-btn .tip{
-  position:absolute;left:50%;bottom:calc(100% + 8px);
-  transform:translateX(-50%) translateY(4px);
-  white-space:nowrap;font-size:.5rem;letter-spacing:.07em;
-  padding:4px 9px;pointer-events:none;opacity:0;
-  transition:opacity .15s,transform .15s;z-index:100;
-  background:#3e5670;color:rgba(255,255,255,.88);
-  box-shadow:0 2px 10px rgba(0,0,0,.22);border-radius:3px;
-}
-.ktn-btn .tip::after{
-  content:'';position:absolute;left:50%;top:100%;
-  transform:translateX(-50%);
-  border:5px solid transparent;border-top-color:#3e5670;
-}
+.ktn-btn .tip{position:absolute;left:50%;bottom:calc(100% + 8px);transform:translateX(-50%) translateY(4px);white-space:nowrap;font-size:.5rem;letter-spacing:.07em;padding:4px 9px;pointer-events:none;opacity:0;transition:opacity .15s,transform .15s;z-index:100;background:#3e5670;color:rgba(255,255,255,.88);box-shadow:0 2px 10px rgba(0,0,0,.22);border-radius:3px}
+.ktn-btn .tip::after{content:'';position:absolute;left:50%;top:100%;transform:translateX(-50%);border:5px solid transparent;border-top-color:#3e5670}
 .ktn-btn:hover .tip{opacity:1;transform:translateX(-50%) translateY(0)}
 
 
@@ -3065,32 +3005,20 @@ line-clamp:2;}
    ── 記事・ニュースカードで使用
    ══════════════════════════════════════════ */
 .nb{
-  display:inline-flex;align-items:center;gap:3px;
+  display:inline-flex;align-items:center;
   font-family:var(--fm);font-size:.44rem;font-weight:700;
   letter-spacing:.1em;text-transform:uppercase;
   padding:2px 7px;border-radius:2px;
   white-space:nowrap;flex-shrink:0;line-height:1;
   color:#fff;background:#e8462a;
 }
-.nb::before{
-  content:'';width:5px;height:5px;border-radius:50%;
-  background:rgba(255,255,255,.8);flex-shrink:0;
-  animation:nb-pulse 1.6s ease-in-out infinite;
-}
-@keyframes nb-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.5)}}
+/* NEW の印は点滅させず、点も付けない（2026-10-07・バッジ設計の原則＝アニメーションは利用者の行動を待つときだけ。点は点滅の目印だったので、止めたら要らない＝文字だけ） */
 
 
 /* ══════════════════════════════════════════
    チェックインバッジ .ci-badge（レビュー用）
    ══════════════════════════════════════════ */
-.ci-badge{
-  display:inline-flex;align-items:center;gap:4px;
-  font-family:var(--fm);font-size:.48rem;font-weight:600;
-  letter-spacing:.08em;padding:2px 8px 2px 6px;
-  border-radius:3px;white-space:nowrap;flex-shrink:0;line-height:1;
-  color:#2060a8;background:rgba(32,96,168,.08);
-  border:1px solid rgba(32,96,168,.22);
-}
+
 .ci-badge svg{width:10px;height:10px;flex-shrink:0}
 
 
@@ -4175,7 +4103,7 @@ line-clamp:2;}
 .rv-star{font-size:.75rem;color:#f0c040}
 .rv-date{font-size:.62rem;color:var(--muted);margin-left:auto}
 .rv-body{font-family:var(--fs);font-size:var(--rt-pre-size);line-height:var(--rt-lh);letter-spacing:var(--rt-ls);color:var(--ink)}
-.ci-badge{display:inline-flex;align-items:center;gap:3px;font-size:.54rem;color:var(--accent);opacity:.72;margin-left:5px;letter-spacing:.04em}
+
 .rv-checkin-date{display:inline-flex;align-items:center;gap:3px;font-size:.54rem;color:var(--accent);opacity:.72;letter-spacing:.04em}
 .p2-visitor__action{padding:13px 18px;border-top:1px solid var(--border);text-align:center}
 .p2-visitor__checkin-btn{display:inline-flex;max-width:100%;white-space:normal;text-align:center;justify-content:center}
@@ -5006,11 +4934,7 @@ a.p2-action-widget__btn{text-decoration:none}
 .rv-stars{display:flex;gap:1px;margin-top:3px}
 .rv-star{font-size:.75rem;color:#f0c040}
 .rv-body{font-family:var(--fs);font-size:var(--rt-pre-size);line-height:var(--rt-lh);letter-spacing:var(--rt-ls);color:var(--ink)}
-.ci-badge{
-  display:inline-flex;align-items:center;gap:3px;
-  font-size:.54rem;font-weight:400;color:var(--accent);
-  opacity:.72;margin-left:4px;letter-spacing:.04em;
-}
+.ci-badge{font-family:var(--fm);padding:2px 8px 2px 6px;border-radius:3px;white-space:nowrap;flex-shrink:0;line-height:1;background:rgba(32,96,168,.08);border:1px solid rgba(32,96,168,.22);display:inline-flex;align-items:center;gap:3px;font-size:.54rem;font-weight:400;color:var(--accent);opacity:.72;margin-left:4px;letter-spacing:.04em}
 .p2-rv-more{display:none}
 .p2-rv-toggle{display:block;width:100%;background:none;border:none;border-top:1px solid var(--border);padding:8px 0;font-size:.65rem;color:var(--accent);cursor:pointer;text-align:center;font-family:var(--fn)}
 .p2-rv-toggle:hover{opacity:.7}
@@ -9151,8 +9075,8 @@ body.p3-page .p3-head__bio-toggle{color:var(--page-accent)}
 .p3-main > section{scroll-margin-top:130px}
 
 /* ── 共通ボックス ── */
-/* .p3-box 箱の見た目・padding は editorial v2 末尾（.p3-box,.p4-box{padding:28px}）が単一ソース */
-.p3-box .ktn-section__head{margin-bottom:24px}
+/* P3 トップのセクションは .p2-ic.ktn-csec（旧 .p3-box は 2026-10-08 に CSS も削除・追174-296） */
+
 
 /* ── 2カラムレイアウト ── */
 .p3-layout-wrap{padding-top:0 !important;padding-bottom:0 !important}
@@ -9406,27 +9330,27 @@ a.p3-works-liaison-band__title:hover{text-decoration:underline;text-underline-of
 
 /* F. プロフィール2カラム */
 .p3-prof-layout{display:flex;gap:32px;align-items:flex-start}
-.p3-prof-main{flex:1;min-width:0;background:var(--paper)}
-.p3-prof-side{width:280px;flex-shrink:0;display:flex;flex-direction:column;gap:14px;position:sticky;top:calc(var(--dh,34px) + var(--hh,50px) + 16px)}
+
+
 
 /* G. おすすめクリエイター */
-.p3-recommended{background:var(--warm,#fafaf8);padding:48px 0}
-.p3-recommended__inner{max-width:var(--w-entity);margin:0 auto;padding:0 24px}
-.p3-recommended .ktn-sub-tags{padding-left:0}
-.p3-recommended__grid{columns:4 200px;column-gap:16px;margin-top:20px}
+
+
+
+
 
 /* ── タブレット（860px以下） ── */
 @media(max-width:860px){
   /* メイン */
   .p3-main{padding:16px 16px 40px}
   /* ボックスのパディングを縮小 */
-  .p3-box{padding:16px}
+  
   /* 2カラム → 1カラム */
   .p3-layout{grid-template-columns:1fr;row-gap:var(--hero-gap,20px)}
   .p3-layout__side{position:static}
   /* プロフィール 2カラム → 1カラム（旧） */
   .p3-prof-layout{flex-direction:column;gap:16px}
-  .p3-prof-side{width:100%;position:static;flex-direction:column}
+  
   /* CTAウォッチボタン：1カラム時はピル型・テキストあり */
   .p3-side-cta .p3-action-watch-btn{width:100%;max-width:300px;padding:13px 20px;font-size:.75rem}
   .p3-side-cta .p3-action-watch-btn svg{width:17px;height:17px}
@@ -9438,7 +9362,7 @@ a.p3-works-liaison-band__title:hover{text-decoration:underline;text-underline-of
   /* 作品マソンリー 4列 → 3列 */
   .p3-works-masonry{columns:3}
   /* おすすめ 4列 → 2列 */
-  .p3-recommended__grid{columns:2 180px}
+  
   /* 旧パーツ */
   .p3-links-info-grid{grid-template-columns:1fr}
   .p3-dealer-grid{grid-template-columns:1fr 1fr}
@@ -9450,7 +9374,6 @@ a.p3-works-liaison-band__title:hover{text-decoration:underline;text-underline-of
   /* ヒーロー */
   .p3-head__inner{padding:20px 16px}
   .p3-head__top{flex-wrap:wrap}
-  .p3-head__avatar{width:56px;height:56px;font-size:1.3rem}
   .p3-head__name{font-size:1.5rem}
   .p3-head__bio{padding-left:0;width:100%}
   .p3-head__action{padding-left:0;width:100%;justify-content:flex-start}
@@ -9547,10 +9470,10 @@ a.p3-works-liaison-band__title:hover{text-decoration:underline;text-underline-of
 .ec__remain-lt--ended{color:var(--muted);font-size:.75rem}
 
 /* p3-1 幅：p3-head・p3-tabnav・ktn-content はデフォルト(--w-entity)を使用 */
-body.p3-1-page .p3-recommended__inner{max-width:var(--w-entity);padding:0 24px}
-body.p3-1-page .p3-recommended .masonry{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-body.p3-1-page .p3-recommended .masonry-item{margin-bottom:0}
-@media(max-width:540px){body.p3-1-page .p3-recommended .masonry{grid-template-columns:repeat(2,1fr)}}
+
+
+
+
 
 /* ════════════════════════════════════════
    p3-2  記事一覧ページ
@@ -9593,10 +9516,10 @@ body.p3-1-page .p3-recommended .masonry-item{margin-bottom:0}
 .p3-2-empty.is-visible{display:block}
 
 /* p3-2 幅：p3-head・p3-tabnav・ktn-content はデフォルト(--w-entity)を使用 */
-body.p3-2-page .p3-recommended__inner{max-width:var(--w-entity);padding:0 24px}
-body.p3-2-page .p3-recommended .masonry{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-body.p3-2-page .p3-recommended .masonry-item{margin-bottom:0}
-@media(max-width:540px){body.p3-2-page .p3-recommended .masonry{grid-template-columns:repeat(2,1fr)}}
+
+
+
+
 
 /* ════════════════════════════════════════
    p3-3  作品一覧ページ
@@ -9683,7 +9606,7 @@ body.p4-page .p3-tabnav__item.is-active{color:var(--page-accent);border-bottom-c
 /* ── メインコンテンツ ── */
 .p4-main{width:100%;max-width:var(--w-entity);margin:0 auto;padding:20px 20px 80px;display:flex;flex-direction:column;gap:16px}
 .p4-main > section{scroll-margin-top:130px}
-/* .p4-box 箱の見た目・padding は editorial v2 末尾（.p3-box,.p4-box{padding:28px}）が単一ソース */
+/* .p4-box 箱の見た目・padding は editorial v2 末尾（.p4-box{padding:28px}）が単一ソース */
 .p4-box .ktn-section__head{margin-bottom:24px}
 
 /* プロフィール(F)セクション背景 = paper（p3と統一） */
@@ -9840,8 +9763,8 @@ body.p4-page .p4-prof-facility-badge--on{background:var(--page-accent-bg,rgba(13
 
 /* F. プロフィール2カラム */
 .p4-prof-layout{display:flex;gap:32px;align-items:flex-start}
-.p4-prof-main{flex:1;min-width:0;background:var(--paper)}
-.p4-prof-side{width:280px;flex-shrink:0;display:flex;flex-direction:column;gap:14px;position:sticky;top:calc(var(--dh,34px) + var(--hh,50px) + 16px)}
+
+
 
 /* ── ウォッチャーモーダル ── */
 .p4-watcher-modal{position:fixed;inset:0;z-index:1100;display:none;align-items:center;justify-content:center}
@@ -9859,17 +9782,17 @@ body.p4-page .p4-prof-facility-badge--on{background:var(--page-accent-bg,rgba(13
 .p4-watcher-item__name{font-size:.9rem;color:var(--ink)}
 
 /* ── G. おすすめのギャラリー ── */
-.p4-recommended{background:var(--warm,#fafaf8);padding:48px 0}
-.p4-recommended__inner{max-width:var(--w-entity);margin:0 auto;padding:0 24px}
-.p4-recommended .ktn-sub-tags{padding-left:0}
-.p4-recommended .cc__avatar{border-radius:4px}
+
+
+
+
 
 /* ── タブレット（860px以下） ── */
 @media(max-width:860px){
   .p4-main{padding:16px 16px 40px}
   .p4-exh-item{width:calc(50% - 8px)}
   .p4-prof-layout{flex-direction:column}
-  .p4-prof-side{width:100%;position:static}
+  
   .p4-prof-bio-wrap{float:none;width:100%}
   .p4-prof-media{float:none;width:100%;margin-left:0}
 }
@@ -9877,17 +9800,17 @@ body.p4-page .p4-prof-facility-badge--on{background:var(--page-accent-bg,rgba(13
   .p4-exh-item{width:100%}
 }
 @media(max-width:540px){
-  .p4-recommended .masonry{columns:2}
+  
   .p4-tabnav{overflow-x:auto;scrollbar-width:none}
   .p4-tabnav::-webkit-scrollbar{display:none}
   .p4-tabnav__name{display:none}
 }
 
 /* p4-1・p4-2 幅：p3-head・p3-tabnav・ktn-content はデフォルト(--w-entity)を使用 */
-body.p4-1-page .p3-recommended__inner,body.p4-2-page .p3-recommended__inner{max-width:var(--w-entity);padding:0 24px}
-body.p4-1-page .p3-recommended .masonry,body.p4-2-page .p3-recommended .masonry{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-body.p4-1-page .p3-recommended .masonry-item,body.p4-2-page .p3-recommended .masonry-item{margin-bottom:0}
-@media(max-width:540px){body.p4-1-page .p3-recommended .masonry,body.p4-2-page .p3-recommended .masonry{grid-template-columns:repeat(2,1fr)}}
+
+
+
+
 
 /* ════════════════════════════════════════
    P5 ユーザーページ
@@ -9907,6 +9830,8 @@ body.p5-page{--page-accent:#b8608c;--page-accent-bg:rgba(184,96,140,.1);--page-a
 .p5-head__top{display:flex;gap:20px;align-items:flex-start}
 .p5-head__avatar-wrap{flex-shrink:0}
 .p5-head__avatar{width:80px;height:80px;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center;font-family:var(--fs);font-size:1.8rem;color:rgba(255,255,255,.9);font-weight:600;border:3px solid #fff;box-shadow:0 2px 12px rgba(0,0,0,.12)}
+/* スマホ幅（680px 以下）は 56px（2026-10-08 ユーザー判断＝P5 は 80px だと大きい。P3・P4 は 84px のまま・追174-297） */
+@media(max-width:680px){.p5-head__avatar{width:56px;height:56px;font-size:1.3rem}}
 .p5-head__info{flex:1;min-width:0}
 .p5-head__badge-row{display:flex;align-items:center;gap:6px;margin-bottom:8px;flex-wrap:wrap}
 .p5-head__name{font-family:var(--fs);font-size:1.8rem;font-weight:600;letter-spacing:.04em;margin:0 0 2px}
@@ -13875,11 +13800,11 @@ body.p5-zero:not(.p5-other) .p5-watch-onboard{display:block}
 .ktn-btn[data-action="interest"].on svg path{fill:#3a90e0;fill-opacity:1;stroke:#3a90e0;stroke-opacity:1}
 .ktn-icon-btn[data-action="interest"].on svg path{fill:#3a90e0;fill-opacity:1;stroke:#3a90e0;stroke-opacity:1}
 /* watch icon-btn ON（外円を青に） */
-.ktn-icon-btn[data-action="watch"].on svg circle:first-child{fill:#3a90e0;opacity:1}
+
 /* checkin pill/icon ON（2つの円すべて青に） */
 .ktn-btn[data-action="checkin"].on svg circle,.ktn-icon-btn[data-action="checkin"].on svg circle{fill:#3a90e0;opacity:1}
 /* dark panel ON SVG overrides */
-.panel-dark .ktn-btn.on svg circle:first-child,.panel-dark .ktn-icon-btn[data-action="watch"].on svg circle:first-child{fill:#4da3f5;opacity:1}
+.panel-dark .ktn-btn.on svg circle:first-child{fill:#4da3f5;opacity:1}
 .panel-dark .ktn-btn[data-action="checkin"].on svg circle,.panel-dark .ktn-icon-btn[data-action="checkin"].on svg circle{fill:#4da3f5;opacity:1}
 .panel-dark .ktn-btn[data-action="interest"].on svg path,.panel-dark .ktn-icon-btn[data-action="interest"].on svg path{fill:#4da3f5;fill-opacity:1;stroke:#4da3f5;stroke-opacity:1}
 
@@ -14583,7 +14508,7 @@ body.mgmt-page:not(.p3-page):not(.p4-page):not(.p5-page){
    右カラム sticky スクロール（共通）
    対象クラス：全ページ系統の右カラム
      - p2: .p2-layout__side
-     - p3: .p3-layout__side / .p3-prof-side
+     - p3: .p3-layout__side（P4 も同じクラス）
      - p4: .p4-prof-side
      - p5: .p5-layout__side（HTML 追加時）
      - p6: .p6-side-inner
@@ -14591,18 +14516,7 @@ body.mgmt-page:not(.p3-page):not(.p4-page):not(.p5-page){
    動作：左コンテンツが長い場合、右カラムは画面内に固定され続け、
         左コンテンツが下端まで来たら一緒にスクロールアウトする
    ──────────────────────────────────────────────────────────── */
-.p2-layout__side,
-.p2-1-side,
-.p2-2-side,
-.p2-3-side,
-.p2-4-side,
-.p25-side-col,
-.p3-layout__side,
-.p3-prof-side,
-.p4-prof-side,
-.p5-layout__side,
-.p6-col-side,
-.p10-layout__side{
+.p2-layout__side,.p2-1-side,.p2-2-side,.p2-3-side,.p2-4-side,.p25-side-col,.p3-layout__side,.p5-layout__side,.p6-col-side,.p10-layout__side{
   position:sticky;
   top:calc(var(--dh,34px) + var(--hh,50px) + 16px);
   align-self:start;
@@ -14611,18 +14525,7 @@ body.mgmt-page:not(.p3-page):not(.p4-page):not(.p5-page){
    含まれるブロックは grid コンテナ（.p6-layout）全体 → 左カラムが長くても追従。 */
 
 @media(max-width:860px){
-  .p2-layout__side,
-  .p2-1-side,
-  .p2-2-side,
-  .p2-3-side,
-  .p2-4-side,
-  .p25-side-col,
-  .p3-layout__side,
-  .p3-prof-side,
-  .p4-prof-side,
-  .p5-layout__side,
-  .p6-col-side,
-  .p10-layout__side{
+  .p2-layout__side,.p2-1-side,.p2-2-side,.p2-3-side,.p2-4-side,.p25-side-col,.p3-layout__side,.p5-layout__side,.p6-col-side,.p10-layout__side{
     position:static;top:auto;
   }
 }
@@ -14995,8 +14898,8 @@ body.mgmt-page:not(.p3-page):not(.p4-page):not(.p5-page){
 }
 
 /* セクションボックス：呼吸感ある padding */
-.p3-box,.p4-box{background:#fff;border:1px solid var(--border);border-radius:4px;padding:28px}
-.p3-box .ktn-section__head,.p4-box .ktn-section__head{margin-bottom:26px}
+.p4-box{background:#fff;border:1px solid var(--border);border-radius:4px;padding:28px}
+.p4-box .ktn-section__head{margin-bottom:26px}
 
 /* プロフィール情報セクション内のタイトル */
 .p3-prof-name,.p4-prof-name{
@@ -16342,7 +16245,6 @@ a.p10-preset{text-decoration:none}
 .p1-genre:hover{border-color:rgba(0,0,0,.32)}
 .p1-genre.is-on{background:var(--page-accent,#005da7);border-color:var(--page-accent,#005da7);color:#fff;font-weight:600}
 .p1-feed-grid{columns:4 220px;column-gap:16px;margin-top:18px}
-.p1-more-wrap{display:flex;justify-content:center;margin-top:24px}
 .p1-feed .ktn-more-link{margin-top:26px}
 /* ── G. LIAISON ブランド帯（ダークスレート・P10のカード棚と役割分離） ── */
 .p1-liaison{background:#2e3a4a;color:#fff}
@@ -16518,6 +16420,33 @@ a.p10-preset{text-decoration:none}
 .p61-ended[hidden]{display:none}
 .p61-ended__msg{margin:0;font-family:var(--fn);font-size:.9rem;color:var(--ink)}
 .p61-empty{margin:0;padding:28px;text-align:center;font-family:var(--fn);font-size:.84rem;color:var(--muted);background:#fff;border:1px dashed var(--border);border-radius:4px}
+
+/* P90-17：サイト共通のルール（新着と NEW の印）＝運用で参照する説明の枠 */
+.p9017-rule .p211-block__body{background:#faf7f1}
+.p9017-rule__dl{margin:0;font-family:var(--fn);font-size:.8rem;line-height:1.8;color:var(--ink)}
+.p9017-rule__dl dt{margin-top:10px;font-weight:700}
+.p9017-rule__dl dt:first-child{margin-top:0}
+.p9017-rule__dl dd{margin:2px 0 0}
+
+/* ══ P90-19 トップページの管理（2026-10-07）══ */
+.p9019-today-line{margin:0 0 14px;padding:10px 12px;background:#faf7f1;border-left:3px solid var(--page-accent,var(--accent));font-family:var(--fn);font-size:.8rem;color:var(--ink)}
+.p9019-today-line strong{font-family:var(--fs);font-weight:600}
+.p9019-sub{display:flex;align-items:baseline;gap:8px;margin:20px 0 8px;font-family:var(--fn);font-size:.9rem;font-weight:700;color:var(--ink)}
+.p9019-table td{vertical-align:middle}
+.p9019-table .p211-input{width:100%;box-sizing:border-box}
+.p9019-day{white-space:nowrap;font-weight:600}
+.p9019-today{margin-left:6px;padding:1px 6px;border-radius:2px;background:var(--accent);color:#fff;font-size:.6rem;font-weight:600}
+.p9019-table tr.is-today td{background:rgba(0,93,167,.04)}
+.p9019-empty{color:var(--muted);font-size:.78rem;text-align:center;padding:14px}
+.p9019-count{margin:0 0 8px}
+.p9019-pick{padding:14px 16px;margin-bottom:12px;background:#fff;border:1px solid var(--border);border-radius:4px}
+.p9019-pick__head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.p9019-pick__head .p211-select{flex:1;min-width:200px}
+.p9019-pick__no{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--ink);color:#fff;font-family:var(--fm);font-size:.72rem;font-weight:600;flex-shrink:0}
+.p9019-pick__ops{display:flex;gap:6px;margin-left:auto}
+.p9019-pick__meta{margin:6px 0 4px 34px;font-family:var(--fn);font-size:.72rem;color:var(--muted)}
+.p9019-pick .p211-label{margin-top:10px}
+.p9019-pick .p211-input,.p9019-pick .p211-textarea{width:100%;box-sizing:border-box}
 
 /* ══ P90-18 お知らせ・やることの文言管理（P90-9 の表・タブ・編集モーダルの部品を再利用）══ */
 /* 列幅：ID・立場（誰に）・メール・操作は固定で狭く、残りを「いつ」と「表示する文言」で分ける（表示の見やすさ・ユーザー指示） */
