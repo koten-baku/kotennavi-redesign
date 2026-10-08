@@ -89,7 +89,7 @@ docs/                     仕様・設計ドキュメント（各ファイルの
 - **ガターを0にして最大幅までフル使い（edge-to-edge）にしない。** 過去に共通変数 `--pad-x:0` でヒーローを端まで広げたが、ヒーロー内テキストが左壁に密着して不可となり撤回済み。**「幅を揃える」＝「paddingを等しくする（20px）」であって「0にする」ことではない**（20pxでも両者1080幅・内側20pxで左端は既に一致している）。
 - 対象ヒーロー `__inner`（`--compact` 含む）：`.p2-title-band__inner`／`.p3-head__inner`／`.p4-head__inner`／`.p5-head__inner`。いずれも左右20pxを base 値として直書きし、`.ktn-content`（左右20px）と揃える。
 - **p6系ヒーロー（`.p6-hero`）は白背景＋枠線の「カード」型**で、他ページの全幅カラー帯と違い枠線自体が幅の見切りになる。`.ktn-content` に包まれるため素のままだと1040に収まり、下の帯（p2/p3/p4/p5 のカラー帯＝1080）や本来のページ最大幅と揃わない。そこで**ヒーローを包む `.ktn-content` に `.ktn-content--flush-x`（左右padding `var(--flush-pad)`＝外側に余白がある幅では0）を付けて枠線を1080まで広げる**。文字の余白は帯内側の `.p6-hero__stage`（左右40px）・`.p6-hero__meta`（左右24px）が持つため左壁に密着しない。2カラム部分は通常の `.ktn-content`（20px）のまま＝カードは1040に inset。
-- **p2-5／p2-5-1** は色付きフルブリード帯（`var(--warm)`／`--paper` 等）を持つ設計で、`.p2-5-*__inner`・`.p25-layout`・`.p25-fullwidth` の左右20pxは**「帯の内部余白」**として同じ20px。`.p2-5-wrap` 自身は `padding:0`（帯はフルブリード）で、ガターは内側セクション `__inner` が担う。
+- **p2-5／p2-5-1** は色付きフルブリード帯（`var(--warm)`／`--paper` 等）を持つ設計で、`.p2-5-*__inner`・`.p25-layout` の左右20pxは**「帯の内部余白」**として同じ20px。`.p2-5-wrap` 自身は `padding:0`（帯はフルブリード）で、ガターは内側セクション `__inner` が担う。
 - **ネストする wrap（`.p114-wrap` 等、`.ktn-content` の内側）** も左右20pxを持ち、内容が外側 content と同じ位置に来るよう揃える。
 - **パンくず・タブナビ/サブナビの左端も20pxグリッドに揃える（2026-07-05 確定）**：帯の max-width は元から全て1080（パンくず `.ktn-header__inner`＝`--w-page`→display系1080／`.p2-subnav-bar`・`.p3-tabnav`・`.p5-tabnav`＝`--w-entity` 1080）で幅は一致済み。左端テキスト位置だけをヒーロー/コンテンツと同じ20pxへ合わせる。
   - パンくず `.ktn-header__inner` の左右paddingは **20px**（旧24pxから是正・グローバル。mobile 14pxは別グリッドで据え置き）。
@@ -184,12 +184,12 @@ docs/                     仕様・設計ドキュメント（各ファイルの
 |---|---|---|
 | **サブナビ** | `.p2-subnav-bar` / `.p3-tabnav` / `.p4-tabnav` / `.p5-tabnav` | 上下 1px の page-accent 罫線、active は太字＋下罫線 3px |
 | **サブナビアイテム** | `.p2-subnav__item` / `.p3-tabnav__item` / `.p4-tabnav__item` / `.p5-tabnav__item` | Shippori Mincho 1.02rem、hover/active で page-accent 化 |
-| **サイドカード** | `.p2-side-card` / `.p3-side-card` / `.p4-side-card` / `.p5-side-card` | 白背景＋ヘアライン枠、padding 24px |
-| **サイドカード見出し** | `.p2-side-card .p2-ic__head-title` / `.p3-side-card__title` / etc. | Shippori Mincho .95rem + Cinzel .58rem 英サブ |
+| **サイドカード** | `.p2-side-card`（P2・P3・P4・P6 で共通に使う。ページの事情は `.p3-side-cta`・`.p4-side-rel-exh` などを併記。P5 の右カラムは独自の `.p5-side-*`） | 白背景＋ヘアライン枠、padding 24px |
+| **サイドカード見出し** | `.p2-side-card .p2-ic__head-title` / `.p2-side-nearby__title` | Shippori Mincho .95rem + Cinzel .58rem 英サブ |
 | **CTA ウィジェット** | `.p2-action-widget`（全ページ再利用） | paper bg、Bodoni Moda 3rem 数値、Cinzel ラベル |
 | **関連・回遊ゾーン** | 右カラム末尾：`.p2-side-nearby`（p2＝「近くの展覧会」Nearby・会場基準で距離あり）/ `.p3-side-rel-exh`（p3系＝クリエイターページ。**このクリエイターの作品と同カテゴリー（同ジャンル）の展覧会**を出すディスカバリー枠＝「アートの展覧会 Related」。会場基準ではないので距離は出さない。※p6の「作家自身の展覧会」とは別物なので混同しない＝クリエイター自身の展覧会に置き換えないこと）/ `.p4-side-rel-exh`（p4系 表示ページ＝ギャラリーは固定会場を持つため「近くの展覧会」Nearby・距離あり）/ **`.p6-side-rel-exh`（p6系＝「作家の他の展覧会」・作品ページは会場基準点を持たないため距離を出さない）** / **`.p5-side-rel`（p5〜p5-4＝「最近のウォッチ Recently Watched」＋「最近の興味あり！ Recent Interests」。ウォッチしたクリエイター・ギャラリーをウォッチ日降順で最大3件〔`.p5-side-wl-cards` 縦積み＝**p2/p2-5 の投稿者カードと同型の人物カード `.cc--h.cc--panel`／`.gc--h.gc--panel`**・badge-row に `cb-creator`/`cb-gallery`・watch ボタン（on）付き。**日付（ウォッチ日）は表示しない**（並び順にのみ使用）。旧 `.p5-side-wl` 行リストは2026-07-07廃止〕、興味あり！展覧会を最大3件〔`.p2-side-ec`・`cb-exhibition` バッジ・interest ボタン付き〕。**関連・回遊ゾーンに表示するコンテンツカードは基本CTAボタン付き**（展覧会カード＝interest／人物カード＝watch・2026-07-07 確定）。**ゾーン内のブロック間は 1px solid var(--ink) 罫線＋広め間隔（padding 28px/margin 30px）で区切る**（`.p5-side-rel__head2` border-top／`.p5-side-rel-pickup` border-bottom。ゾーン開始線〔2px solid var(--ink)〕と同色で太さだけ落とした線＝階層を色で揃え太さで下げる。ブロック内タイトル下線〔1px solid var(--border) ヘアライン〕とは色の濃さで区別。solid var(--border)・dotted 案は「タイトル下線と区別できない」ため不採用・2026-07-07）。先頭に「ピックアップ Picks for You」〔`.p5-side-rel-pickup`・カードは「最近の興味あり！」と同型の `.p2-side-ec`（`cb-exhibition`＋interest ボタン=off）〕＝**ゼロ・他ユーザー表示時のみ** CSSで表示（`body.p5-zero`/`body.p5-other`。同時にウィジェット②「もうすぐ終了」を `:has(.p5-side-ending-hd)` で非表示）。ゼロ状態＝アクティビティが無いオーナー：タブナビのカレンダー以外を `p5-tabnav__item--zero-off` で disable・カウンター下リンク〔`.p5-side-act__links`〕非表示。デモバー「休止中」（stale）は2026-07-07廃止。旧「ウォッチからの展覧会」ウィジェット〔`.p5-side-watch-*`〕は2026-07-07廃止）**　＋　ページ下部：`.ktn-related-band` / `.ktn-sub-tags` / `.ktn-sub-rec`。**「近くの展覧会」カード（`.p2-side-ec`）のみ距離を表示**：左カラムを `.p2-side-ec__media`（縦スタック）にし、サムネイル（`.p2-side-ec__poster`）の**真上**に `.p2-side-ec__dist`〔ピン＋距離・`var(--page-accent)`〕を積む（オーバーレイではなく画像の上部）。p2 は `buildSideEcCard`（pages.js）が `e.dist` を出力（`dist` があれば表示）、p4系は静的HTMLに直書き。**p6系は距離を持たない**（作品は場所を特定できない＝「近く」概念が成立しないため、`.p2-side-nearby` ではなく `.p6-side-rel-exh`＝作家の他の展覧会） | **背景は transparent・上部 2px ink アクセントラインで識別**（2026-07-07 一時 #faf7f1 化したが「ゾーン内ブロック区切りがあれば背景色不要」のユーザー判断で復帰）。ゾーン内に複数ブロックがある場合（p5系）はゾーン開始線と同色の 1px solid var(--ink)＋広め間隔で区切る（タイトル下線のヘアラインと色の濃さで区別）。**「もっと見る →」は head 内でなくコンテンツ下のブロック型 `.ktn-more-link` で全ページ統一**（2026-07-08 旧 `.p2-side-nearby__more` から共通名化。旧「すべて →」「すべて見る」は廃止・既存 href は維持。p5ゼロ状態メッセージの「展覧会を探す →」も同クラス＝関連ゾーン系のブロック型遷移リンクは全てこれを使う） |
-| **右カラム sticky スクロール** | `.p2-layout__side` / `.p2-1〜4-side` / `.p25-side-col` / `.p3-layout__side` / `.p3-prof-side` / `.p4-prof-side` / `.p5-layout__side` / `.p6-side-inner` | 左コンテンツが長い場合、右カラムは画面内に固定。左コンテンツが下端まで来たら追従。`top: calc(--dh + --hh + 16px)` / `align-self: start` / モバイル時は `position: static` |
-| **本文色強化** | `.ec__venue` / `.aw__spec` / `.ac__lead` 等 | `var(--ink)` に統一、opacity フェード排除 |
+| **右カラム sticky スクロール** | `.ktn-2col__side`（共通）／`.p2-layout__side`（P2・P7・P8） / `.p2-1〜4-side` / `.p25-side-col` / `.p3-layout__side`（P3・P4） / `.p5-side` / `.p6-col-side` / `.p10-layout__side` | 左コンテンツが長い場合、右カラムは画面内に固定。左コンテンツが下端まで来たら追従。`top: calc(--dh + --hh + 16px)` / `align-self: start` / モバイル時は `position: static` |
+| **本文色強化** | `.ec__venue` / `.aw__spec` / `.lc__lead` 等 | `var(--ink)` に統一、opacity フェード排除 |
 | **コンテンツ余白** | `.ktn-content` | 32px 20px 48px（呼吸感UP） |
 
 ### サブセクションラベル（共通定義・サイト全体）
@@ -250,10 +250,11 @@ docs/                     仕様・設計ドキュメント（各ファイルの
 
 1. body にロール識別クラスを付与（`.p3-page` / `.p4-page` / `.p5-page` 等）— `--page-accent` が自動設定される
 2. サブナビには `.pN-tabnav` 命名規則を踏襲 → 自動的に共通スタイルが適用
-3. サイドカードには `.pN-side-card` 命名規則を踏襲
+3. サイドカードは `.p2-side-card` を使い回し、ページ固有の事情は `.pN-side-xxx` を併記（`.pN-side-card` を新しく作らない＝P3・P4・P6 もこの形・2026-10-08）
 4. 「関連情報」系の右カラム末尾セクションは `.p2-side-nearby` を再利用または同等の class 命名（要追加時相談）
 5. CTA は `.p2-action-widget` を流用
 6. 章タイトル・サブラベルは `.ktn-section__head` `.ktn-sec-en` を使用（独自定義禁止）
+7. 2カラムは共通の骨組み **`.ktn-2col`**（`__main`／`__side`）をページのクラスと併記して使う（2026-10-08・handoff 追174-300）。右 300px・860px 以下で1カラム（そのときの本文と右カラムの間 20px）は共通クラスが持つ。**左の中身が箱なしなら `.ktn-2col--flat`**（カラム間隔 28px＝`--col-gap-flat`、箱ありは 20px＝`--col-gap`）。ページのクラスには上の余白・色帯・並び順などページの事情だけを書き、grid・幅・間隔・切り替わる幅は書かない。右カラムのカード・ブロックどうしの間隔は 12px
 
 ---
 
@@ -299,9 +300,9 @@ docs/                     仕様・設計ドキュメント（各ファイルの
 
 **`font-weight: 800` は装飾的用途（ポスタープレースホルダー、アバターイニシャル、SOLDリボン等）のみで使用。見出し系は ティア①＝700／ティア②＝600 の2値に集約する（中間の 650 等は使わない）。本文系は 600 まで。**
 
-### サイドカードラベル
+### サイドカード見出し
 
-`.p3-side-card__title` などサイドカラムのラベルは `Cinzel` セリフを採用（`.66rem font-weight:600 letter-spacing:.14em uppercase`）。
+右カラムの見出し（`.p2-side-card .p2-ic__head-title`・`.p2-side-nearby__title`）は明朝 `.95rem`・600、英サブ（`.ktn-sec-en`）は Cinzel `.58rem` 大文字（editorial v2）。数値・ボタンの上の小さいラベル（`.p2-action-widget__lbl`・`.p2-contact__sublabel`）は Cinzel 大文字。
 
 ---
 
@@ -426,7 +427,7 @@ Stripe決済手数料-実質マージンは利用者には非公開。
 
 ### 対象外（役割が別なので統合しない）
 
-- `.p315-summary__count`（E系＝大数値統計）／`.p315-ws-sales`（金額サマリ）／`.p315-archive-result__val`（色状態付き結果値）／`.p10-toolbar__count`（strong が大数値）
+- `.p315-ws-sales`（金額サマリ）／`.p315-archive-result__val`（色状態付き結果値）／`.p10-toolbar__count`（strong が大数値）
 - 文字数カウンタ（`.p2-12-desc-block__count` 0/200 等）
 - Cinzel大文字ラベル（英ラベルは件数ではない）
 
@@ -442,7 +443,7 @@ Stripe決済手数料-実質マージンは利用者には非公開。
 
 ## カード共通ルール（全カードベース）
 
-サイト全体のカード（`.ec` / `.aw` / `.cc` / `.gc` / `.uc` / `.ac` / `.rc` / `.nc` / `.p25c` 等）はエディトリアル方向に統一する。
+サイト全体のカード（`.ec` / `.aw` / `.cc` / `.gc` / `.uc` / `.mc` / `.lc` / `.nc` / `.p25c` 等。記事・レビューは `.mc`〔石垣状〕と `.lc`〔横長のリスト〕の `--article`／`--review`。旧 `.ac`／`.rc` は 2026-10-08 に廃止）はエディトリアル方向に統一する。
 
 ### 共通ベース仕様
 
@@ -476,15 +477,15 @@ Stripe決済手数料-実質マージンは利用者には非公開。
 |---|---|
 | `.ec__body` | `13px 16px 11px` |
 | `.aw__body` | `12px 14px 10px` |
-| `.ac__body` | `14px 16px 0` |
-| `.rc__body` | `14px 16px 0` |
+| `.mc__body` | `12px 14px 0` |
+| `.lc__body` | `10px 14px 0` |
 | `.nc__body` | `14px 16px 13px` |
 
 横方向 14-16px、縦方向 12-14px を基準。狭すぎず、広すぎない。
 
 ### カードタイトル統一値
 
-全カードタイトル（`.ec__title` `.aw__title` `.cc__name` `.gc__name` `.ac__title` `.rc__title` `.nc__title`）：
+全カードタイトル（`.ec__title` `.aw__title` `.cc__name` `.gc__name` `.mc__title` `.lc__title` `.nc__title`）：※2026-10-08 時点で `.mc__title`（`.9rem`）・`.lc__title`（`.84rem`）は字間 `.03em` で下の統一値からずれている（デザイン確定時に直す対象）
 
 - font-family：`var(--fs)` Shippori Mincho
 - font-weight：`600`
@@ -545,21 +546,19 @@ p2-5-1（LIAISON+作品一覧）・p2-12-1（LIAISON+作品管理）・p6-dark�
 ### サイドカード基本
 | クラス | background | border | radius | padding |
 |---|---|---|---|---|
-| `.p2-side-card` / `.p3-side-card` / `.p4-side-card` | `#fff` | `1px solid var(--border)` | `4px` | `18px 20px` |
+| `.p2-side-card`（P2・P3・P4・P6 共通） | `#fff` | `1px solid var(--border)` | `4px` | `24px`（editorial v2） |
 
 ### ラベル系（uppercase メタテキスト）
 以下のラベルは **Cinzel + uppercase + letter-spacing .14em** で統一：
-- `.p2-side-posted__label`
-- `.p2-side-inq__label`
 - `.p2-contact__sublabel`
-- `.p2-side-facts__dl dt`
 - `.p2-action-widget__lbl`
-- `.p3-side-card__title` / `.p4-side-card__title`
+
+（旧 `.p2-side-posted__label`・`.p2-side-inq__label`・`.p2-side-facts__dl dt`・`.p3-side-card__title` は、右カラムの作り直しで使われなくなり 2026-10-08 に CSS も削除。右カラムの見出しは上の「サイドカード見出し」）
 
 サイズ目安：`.6rem`（メタラベル）〜 `.66rem`（カードタイトル）、color `var(--muted)`
 
 ### アバター系
-`font-weight: 800` は廃止し **700** に統一（`.p2-side-posted__avatar` 等）。サイズは 38–64px、`outline` でロール色枠線を表現。
+`font-weight: 800` は廃止し **700** に統一（右カラムの人物アバター等）。サイズは 38–64px、`outline` でロール色枠線を表現。
 
 ### CTA ウィジェット
 `.p2-action-widget` は p2 / p3 / p4 / p6 で共通使用。数値表示は `DM Serif Display` 2.4rem を維持。`p6` は `.p2-side-*` ウィジェットを丸ごと再利用するため、p2 側の変更が自動反映される。
@@ -1027,7 +1026,7 @@ on/off の2状態を切り替える汎用トグルスイッチ。canonical は `
 
 **使い分けの原則：**
 - 表示系ページ（展覧会・作品・クリエイター・ギャラリー・記事）の読ませる文章 → `--fs`（Shippori Mincho）
-  - 対象クラス：`.p2-about__body` `.wd-body` `.p3-head__bio-text` `.p3-prof-bio` `.p4-prof-bio` `.p6-article__excerpt` `.ac__lead` `.p2-benefit__body` `.p2-1-sched-item__desc`
+  - 対象クラス：`.p2-about__body` `.wd-body` `.p3-head__bio-text` `.p3-prof-bio` `.p4-prof-bio` `.p6-article__excerpt` `.p2-benefit__body` `.p2-1-sched-item__desc`
 - コンテンツタイトル・見出し・人名 → `--fs`（Shippori Mincho）
 - UI・操作・情報・メタ・管理系全般 → `--fn`（Zen Kaku Gothic New）
 - 英数値・識別子・英語ラベル → `--fm`（Montserrat）
@@ -1079,7 +1078,7 @@ SVG の `font-family` 属性は CSS 変数に非対応のため `font-family="'M
 - CSS変数は `:root` に定義済み。フォント変更は変数1箇所を変えるだけで全ページに反映される
 - `Cormorant Garamond` は common.css 先頭の `@import` で全ページに読込済み
 - `Cinzel` は各 HTML の Google Fonts `<link>` で読込済み
-- 既存の `.p3-head__en` `.p4-head__en` `.p2-title-band__sub` `.p6-hero__title-en` `.p315-page-head__en` もすべて変数参照に統一済み
+- 既存の `.p3-head__en` `.p4-head__en` `.p2-title-band__sub` `.p6-hero__title-en` もすべて変数参照に統一済み
 
 ---
 
@@ -1107,7 +1106,8 @@ CSS 変数として `:root` に定義済み。他ページ整備時は `var()` �
 
 | 変数 | 値 | 意味 | 適用済みページ |
 |---|---|---|---|
-| `--col-gap` | `20px` | 2カラムレイアウトのカラム間隔 | p2・p2-1〜4 |
+| `--col-gap` | `20px` | 2カラムのカラム間隔：**左カラムの中身が箱（枠つき）**のページ（箱の枠が境目になるので狭くてよい） | P2・P2-1〜5・P3・P4・P5・P7・P8 |
+| `--col-gap-flat` | `28px` | 2カラムのカラム間隔：**左カラムの中身が箱なし**（平らな棚・本文）のページ（端まで来る中身と右の箱の間を広めに取る） | P6 系・P10 系 |
 | `--hero-gap` | `20px` | ヒーロー下端→コンテンツエリア上端の間隔 | p2 |
 
 **未変数化（全ページ完成後に検討）**
