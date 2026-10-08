@@ -14,7 +14,7 @@
 
 ## 仕様の詳細（CLAUDE.md から参照している正本）
 
-**page-specs・component-html・badge-system・transaction-states は 2026-10-08 に今の実装と突き合わせ済み。** ほかの4本（axis-highlights・notifications・moderation-policy・email-templates／mail-template-system）は最近の作業で書いたもので、まだ突き合わせていない。
+**下のうち html-baseline.md を除く9本は 2026-10-08 に今の実装と突き合わせ済み**（html-baseline は5月時点の基準で、全ページとの突き合わせはまだ）（各ファイルの冒頭に何を直したかを書いた）。古い日付のものほどずれが大きかった（page-specs・component-html は全面的に書き直し、mail-template-system は P90-11 の作りとテンプレート一覧を更新、axis-highlights はギャラリー側を追加。notifications・moderation-policy・email-templates はほぼ実装どおり）。
 
 | ファイル | 中身 | 最終更新 |
 |---|---|---|
@@ -22,11 +22,11 @@
 | `component-html.md` | 部品の HTML（カード・watch／interest／check-in ボタン・ボタン2系統・トグル・エラーパネル） | 2026-10-08（**全体を実装と突き合わせて書き直し済み**） |
 | `badge-system.md` | バッジの形・色・各カテゴリの HTML（4原則とカテゴリ一覧は CLAUDE.md が正） | 2026-10-08（**全体を実装と突き合わせて書き直し済み**） |
 | `transaction-states.md` | 取引の状態の付随ルール・状態表示の書式・期限アラート（状態名の表は CLAUDE.md が正） | 2026-10-08（**実装と突き合わせ済み**・2点だけ修正） |
-| `axis-highlights.md` | 注目のエリア（特集ページの露出）。P90-17 の説明文の元 | 2026-09-24 |
-| `notifications.md` | サイト内の通知（お知らせ／やること）の定義と一覧 | 2026-10-08 |
-| `moderation-policy.md` | 問題報告・修正依頼・削除依頼への事務局の対応方針（内部用） | 2026-10-06 |
-| `email-templates.md` | 自動で送るメールの文面（いつ・誰に・本文）。Drupal へ渡す仕様 | 2026-10-06 |
-| `mail-template-system.md` | メール文面を管理画面（P90-9）で編集する仕組みの仕様。文面そのものは email-templates.md | 2026-10-06 |
+| `axis-highlights.md` | 注目のエリア（特集ページの露出）。P90-17 の説明文の元 | 2026-10-08（突き合わせ・ギャラリー側を追加） |
+| `notifications.md` | サイト内の通知（お知らせ／やること）の定義と一覧 | 2026-10-08（突き合わせ済み） |
+| `moderation-policy.md` | 問題報告・修正依頼・削除依頼への事務局の対応方針（内部用） | 2026-10-08（突き合わせ済み） |
+| `email-templates.md` | 自動で送るメールの文面（いつ・誰に・本文）。Drupal へ渡す仕様 | 2026-10-08（突き合わせ済み） |
+| `mail-template-system.md` | メール文面を管理画面（P90-9）で編集する仕組みの仕様。文面そのものは email-templates.md | 2026-10-08（突き合わせ・一覧を更新） |
 | `html-baseline.md` | HTML の基準（SEO の head・構造化データ・意味のある HTML・スマホの入力）。旧制作指示書から移した | 2026-10-08（中身は 2026-05 時点の基準） |
 
 ## サービス・後工程の資料
