@@ -309,7 +309,7 @@
     p6111SyncTargetHelp();
     document.getElementById('p6111MailHelp').textContent = imp
       ? '公開日に、' + who + 'へメールでお送りします。ニュースは、受け取る人が停止できないメールです。'
-      : '公開日に、' + who + 'のうち、メール通知設定で「個展なびからのおすすめ」を受け取る設定にしている人へお送りします。';
+      : '公開日に、' + who + 'のうち、通知設定で「個展なびからのおすすめ」を受け取る設定にしている人へお送りします。';
     document.getElementById('p6111MailHelp').textContent += 'メールは公開時に1回だけ送られ、公開後に編集しても再送されません。すべてのお知らせをメールで送る必要はありません。';
   }
   ['p6111Cat', 'p6111Target'].forEach(function (id) { document.getElementById(id).addEventListener('change', p6111SyncMailHelp); });

@@ -112,7 +112,7 @@
 | P5-4 | ユーザー-myコレクションルーム |  | R | R | R | R | R | R | --w-entity | kotennavi-p5-4.html | Fix済 |
 | P5-11 | ユーザー-編集 |  |  |  | W |  |  | W | --w-detail | kotennavi-p5-11.html | Fix済 |
 | P5-12 | ユーザー-パスワード管理 |  |  |  | R/W |  |  | R/W | --w-detail | kotennavi-p5-12.html | Fix済 |
-| P5-13 | ユーザー-メール通知管理 |  |  |  | R/W |  |  | R/W | --w-detail | kotennavi-p5-13.html | Fix済 |
+| P5-13 | ユーザー-通知設定 |  |  |  | R/W |  |  | R/W | --w-detail | kotennavi-p5-13.html | Fix済 |
 | P5-14 | ユーザー-購入履歴 | L+ |  |  | R/W |  |  | R/W | --w-detail | kotennavi-p5-14.html | Fix済 |
 | P5-15 | ユーザー-取引ワークスペース | L+ |  |  | R/W |  |  | R/W | --w-detail | kotennavi-p5-15.html | Fix済 |
 | P5-16 | ユーザー-問合せ履歴 | L |  |  | R |  |  | R | --w-detail | kotennavi-p5-16.html | Fix済 |

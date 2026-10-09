@@ -1,4 +1,4 @@
-> **状態（2026-10-09）**：まだどのページにも入れていない（manifest・Service Worker・アイコンなし＝React 化で作る）。PWA が必須であることは `docs/06_リエゾン_サービス仕様書.md` 第9章。**2026-10-09 に今の仕様へ合わせて直した**：プッシュで送る範囲と許可の求め方（notifications.md 3.5 が正）、iPhone への対応（11 章）、オフラインで取引の操作を止める方針（9 章）、個人の情報を含むページはキャッシュしない（5 章）。利用者向けの使い方の案内は P60-17「スマホで個展なびを使う」。
+> **状態（2026-10-09）**：まだどのページにも入れていない（manifest・Service Worker なし＝React 化で作る。アイコンは 2026-10-09 に `icons/` へ作成＝12 章）。PWA が必須であることは `docs/06_リエゾン_サービス仕様書.md` 第9章。**2026-10-09 に今の仕様へ合わせて直した**：プッシュで送る範囲と許可の求め方（notifications.md 3.5 が正）、iPhone への対応（11 章）、オフラインで取引の操作を止める方針（9 章）、個人の情報を含むページはキャッシュしない（5 章）。利用者向けの使い方の案内は P60-17「スマホで個展なびを使う」。
 
 # 個展なび PWA 設計ガイド
 
@@ -34,7 +34,8 @@
 ├── icons/
 │   ├── icon-192.png       ← ホーム画面アイコン（192×192px）
 │   ├── icon-512.png       ← スプラッシュ・インストール用（512×512px）
-│   └── icon-maskable.png  ← Android Adaptive Icon 用（512×512px）
+│   ├── icon-maskable.png  ← Android Adaptive Icon 用（512×512px）
+│   └── apple-touch-icon.png ← iPhone のホーム画面用（180×180px）
 └── kotennavi-common.js    ← SW登録・インストールプロンプト処理を含む
 ```
 
@@ -103,7 +104,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="個展なび">
-<link rel="apple-touch-icon" href="/icons/icon-192.png">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 ```
 
 ---
@@ -394,6 +395,15 @@ function KTN_triggerInstall() {
 | プッシュ通知 | iOS 16.4 以降で、**ホーム画面に追加した個展なびから開いたときだけ**受け取れる | Safari のまま開いているときは、P5-13 のスイッチの代わりに「ホーム画面に追加すると受け取れます」と P60-17 へ案内 |
 | アイコン | `apple-touch-icon`（180×180px 推奨） | 下の 12 章 |
 
-## 12. アイコン（未作成）
+## 12. アイコン（2026-10-09 作成）
 
-ロゴ（`images/kotennavi-logo*.svg`）はあるが、**正方形のアプリのアイコンが無い**。作るもの：192px・512px・端を切られても大丈夫な版（maskable＝中心 80% に収める）・`apple-touch-icon` 180px。デザインの確定が必要。
+元＝`images/kotennavi-logo5-1.svg`（正方形・ブランド青 #005da7 の地に白の「個展なび」・ユーザー指定）。リポジトリの `icons/` に PNG を書き出した（Edge のヘッドレスで SVG を描画）。
+
+| ファイル | 大きさ | 用途 | 作り方 |
+|---|---|---|---|
+| `icons/icon-192.png` | 192×192 | ホーム画面（manifest） | ロゴをそのまま |
+| `icons/icon-512.png` | 512×512 | インストール・起動画面（manifest） | ロゴをそのまま |
+| `icons/icon-maskable.png` | 512×512 | Android の切り抜き用（manifest の `purpose: maskable`） | ロゴを **62%** に縮めて中央に置き、まわりを同じ青で埋めた（文字が中心から半径 40% の円＝切り抜かれても残る範囲に収まる大きさ）。元のロゴの構図のまま縮めたので、文字は少し左上寄り |
+| `icons/apple-touch-icon.png` | 180×180 | iPhone のホーム画面（`<link rel="apple-touch-icon">`）。角の丸めは iPhone がする | ロゴをそのまま |
+
+- 本番の配置場所・URL は後工程で決める（manifest の `icons` と `<head>` の指定をそれに合わせる）。ロゴを差し替えたら、同じ大きさで書き出し直す。
