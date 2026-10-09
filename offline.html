@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>オフラインです | 個展なび</title>
+  <meta name="robots" content="noindex,nofollow">
+  <!-- PWA（docs/PWA設計ガイド.md 4 章） -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#231815">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="個展なび">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<!-- オフラインのときに Service Worker が代わりに出すページ（docs/PWA設計ガイド.md 9 章・2026-10-09）。
+     sw.js のインストール時にこのページ・common.css・アプリのアイコンを端末に保存しておく（後工程）。
+     サイドバー・ヘッダーは置かない（通信できないあいだはどのリンクも開けないため）。common.js も読まない。
+     Google Fonts は通信できないと読めないので、文字は端末のフォントで出る（common.css の --fn・--fs の後ろの候補）。 -->
+<body class="ktn-offline-page">
+  <main class="ktn-offline">
+    <img class="ktn-offline__icon" src="icons/icon-192.png" alt="" width="64" height="64">
+    <h1 class="ktn-offline__title">オフラインです</h1>
+    <p class="ktn-offline__desc">インターネットにつながっていません。通信できる場所で、もう一度お試しください。一度ご覧になったページは、オフラインでも見られることがあります。</p>
+    <p class="ktn-offline__note">LIAISON+ の取引の操作（購入の確定・会場売約済・発送の登録・お支払い・受取の確認など）は、通信できるときにだけ行えます。会場で作品が売れたときは、通信が戻ったらすぐに「会場売約済」にしてください。</p>
+    <button type="button" class="ktn-op-btn ktn-op-btn--primary" onclick="location.reload()">再読み込み</button>
+  </main>
+</body>
+</html>

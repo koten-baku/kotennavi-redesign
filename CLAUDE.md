@@ -28,6 +28,7 @@ kotennavi-components.css  コンポーネントデモ用CSS（※下記注意事
 kotennavi-common.js       共通JS
 kotennavi-pages.js        ページ別JS
 kotennavi-*.html          各ページ
+manifest.json / offline.html / icons/   PWA（docs/PWA設計ガイド.md。sw.js は後工程）
 docs/progress.md          進捗状況（★こまめに更新・このファイルのみを正として使う）
 docs/                     仕様・設計ドキュメント（各ファイルの役割は docs/README.md。docs/archive/ は過去の資料で正本ではない）
 ```

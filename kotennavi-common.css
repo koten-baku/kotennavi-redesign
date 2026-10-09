@@ -8048,6 +8048,15 @@ body.p3-3-page .aw--plus .aw__foot>.p33-console-wrap{order:3}
 .ktn-pwa-card:not(.is-ios) [data-pwa-ios],.ktn-pwa-card.is-ios [data-pwa-std]{display:none}
 @media(max-width:540px){.ktn-pwa-card__icon{width:34px;height:34px;border-radius:8px}}
 
+/* ── オフラインのページ（offline.html・.ktn-offline）＝通信できないときに Service Worker が出す（2026-10-09・PWA設計ガイド 9 章）── */
+body.ktn-offline-page{background:var(--paper)}
+.ktn-offline{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;min-height:100svh;max-width:480px;margin:0 auto;padding:24px 20px;text-align:center}
+.ktn-offline__icon{width:64px;height:64px;border-radius:14px;box-shadow:0 1px 4px rgba(0,0,0,.12)}
+.ktn-offline__title{margin:6px 0 0;font-family:var(--fs);font-size:1.3rem;font-weight:700;color:var(--ink)}
+.ktn-offline__desc{margin:0;font-size:.86rem;line-height:1.9;color:var(--ink)}
+.ktn-offline__note{margin:0;padding:12px 14px;background:#faf7f1;border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:4px;font-size:.78rem;line-height:1.75;color:var(--muted);text-align:left}
+.ktn-offline .ktn-op-btn{margin-top:6px}
+
 /* ── 管理者コメント欄（コンテンツ編集ページ共通・role=admin のときのみ表示・canonical）──
    展覧会編集(p2-11)・作品編集(p6-11) 等のコンテンツ編集ページに設置。管理者スレート #3a4a5a を軸に
    一般フォーム欄と視覚的に分離する。既定は hidden で、renderAll → syncAdminNote() が role で表示切替。

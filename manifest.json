@@ -1,0 +1,24 @@
+{
+  "id": "./",
+  "name": "個展なび",
+  "short_name": "個展なび",
+  "description": "全国の個展・グループ展を探せる展覧会情報ポータル。LIAISON+ の取引の通知も受け取れます。",
+  "start_url": "./kotennavi-p1.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f0f4f8",
+  "theme_color": "#231815",
+  "orientation": "portrait-primary",
+  "lang": "ja",
+  "dir": "ltr",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "展覧会を探す", "url": "./kotennavi-p10.html", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" }] },
+    { "name": "myページ", "url": "./kotennavi-p5.html", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" }] }
+  ],
+  "categories": ["lifestyle", "entertainment"]
+}
