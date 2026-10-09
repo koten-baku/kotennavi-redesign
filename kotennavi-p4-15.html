@@ -108,7 +108,7 @@
   <span class="dbar-sep" style="margin-left:12px">スマホの案内：</span>
   <button class="dbtn on" data-pwa-demo-btn onclick="ktnPwaCard('std',this)">Android など</button>
   <button class="dbtn" data-pwa-demo-btn onclick="ktnPwaCard('ios',this)">iPhone（Safari）</button>
-  <button class="dbtn" data-pwa-demo-btn onclick="ktnPwaCard('off',this)">出さない</button>
+  <button class="dbtn" data-pwa-demo-btn onclick="ktnPwaCard('off',this)">出さない（オン済み・PC など）</button>
 </div>
 
 <div class="shell">
@@ -224,6 +224,7 @@
 
         <!-- スマホで受け取る案内（.ktn-pwa-card・2026-10-09）。出す・出さないの決まりは common.js ktnPwaCard の説明 -->
         <div class="ktn-pwa-card" data-pwa-card>
+          <button type="button" class="ktn-pwa-card__close" data-pwa-close aria-label="閉じる（30日間は表示しません）"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
           <img class="ktn-pwa-card__icon" src="icons/icon-192.png" alt="" width="40" height="40">
           <div class="ktn-pwa-card__body">
             <div class="ktn-pwa-card__title">取引の通知を、スマホですぐに受け取れます</div>
@@ -232,7 +233,6 @@
             <div class="ktn-pwa-card__actions">
               <a class="ktn-action-btn" data-pwa-std href="kotennavi-p5-13.html">通知設定でオンにする →</a>
               <a class="ktn-action-btn" data-pwa-ios href="kotennavi-p60-17.html#home">ホーム画面に追加する手順 →</a>
-              <button type="button" class="ktn-pwa-card__close" data-pwa-close>今は閉じる</button>
             </div>
           </div>
         </div>

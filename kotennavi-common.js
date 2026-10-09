@@ -2350,11 +2350,11 @@ function ktnSetPurchaseHistory(val, btn) {
 }
 window.ktnSetPurchaseHistory = ktnSetPurchaseHistory;
 /* スマホで受け取る案内カード（.ktn-pwa-card・2026-10-09）。取引の画面（P3-15/P4-15/P5-14）に置く。
-   デモバー「スマホの案内」で 'std'（Android など）／'ios'（iPhone の Safari のまま）／'off'（出さない）を切り替える。
+   デモバー「スマホの案内」で 'std'（Android など）／'ios'（iPhone の Safari のまま）／'off'（出さない＝下の「出さない」の場合をまとめて見せる）を切り替える。
    本番の出し分け（React CSR）：
    - 出さない：この端末でプッシュがオン（PushManager の購読あり）・PC・プッシュ非対応の端末
    - 'ios'：iPhone で、ホーム画面から開いていない（display-mode: standalone でない）とき
-   - 「今は閉じる」：30日間は出さない（端末ごと。localStorage の閉じた日時で判定。読めない環境では毎回出してよい）
+   - 右肩の ×（閉じる）：30日間は出さない（端末ごと。localStorage の閉じた日時で判定。読めない環境では毎回出してよい）
    プロトタイプでは閉じても記録しない（確認のたびに消えたままになるため）。 */
 function ktnPwaCard(state, btn) {
   document.querySelectorAll('[data-pwa-card]').forEach(function (c) {

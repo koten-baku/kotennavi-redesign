@@ -8032,18 +8032,19 @@ body.p3-3-page .aw--plus .aw__foot>.p33-console-wrap{order:3}
 
 /* ── スマホで受け取る案内カード（.ktn-pwa-card）＝ホーム画面への追加・プッシュ通知をすすめる（2026-10-09 新設）──
    置く場所は取引の画面だけ：出品者＝LIAISON+ コンソール（P3-15/P4-15）、購入者＝購入管理（P5-14）。ページの中に置き、作業の邪魔をする帯・ポップアップにはしない。
-   出さない人（本番）：この端末でプッシュがオン・PC・非対応の端末。「今は閉じる」で30日出さない（端末ごと・common.js ktnPwaCard）。
+   出さない人（本番）：この端末でプッシュがオン・PC・非対応の端末。右肩の × で閉じると30日出さない（端末ごと・common.js ktnPwaCard）。
    iPhone の Safari のまま開いているときは、先に「ホーム画面に追加」をすすめる文言に替える（data-pwa-ios）。
    見た目は未入力リマインド（.ktn-form-remind）と同じ「気づき」の系統＝warm cream＋左4px のロール色。 */
-.ktn-pwa-card{display:flex;align-items:flex-start;gap:14px;background:#faf7f1;border:1px solid var(--border);border-left:4px solid var(--page-accent,#2a5f7a);border-radius:4px;padding:14px 16px}
+.ktn-pwa-card{position:relative;display:flex;align-items:flex-start;gap:14px;background:#faf7f1;border:1px solid var(--border);border-left:4px solid var(--page-accent,#2a5f7a);border-radius:4px;padding:14px 40px 14px 16px}
 .ktn-pwa-card[hidden]{display:none}
 .ktn-pwa-card__icon{flex-shrink:0;width:40px;height:40px;border-radius:9px;box-shadow:0 1px 4px rgba(0,0,0,.12)}
 .ktn-pwa-card__body{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
 .ktn-pwa-card__title{font-family:var(--fn);font-weight:700;font-size:.86rem;color:var(--ink);letter-spacing:.01em}
 .ktn-pwa-card__desc{margin:0;font-family:var(--fn);font-size:.76rem;line-height:1.75;color:var(--muted)}
 .ktn-pwa-card__actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;margin-top:4px}
-.ktn-pwa-card__close{background:none;border:0;padding:0;font-family:var(--fn);font-size:.74rem;color:var(--muted);text-decoration:underline;text-underline-offset:2px;cursor:pointer}
-.ktn-pwa-card__close:hover{color:var(--ink)}
+.ktn-pwa-card__close{position:absolute;top:6px;right:6px;display:flex;align-items:center;justify-content:center;width:32px;height:32px;background:none;border:0;border-radius:50%;padding:0;color:var(--muted);cursor:pointer}
+.ktn-pwa-card__close svg{width:16px;height:16px}
+.ktn-pwa-card__close:hover{color:var(--ink);background:rgba(0,0,0,.05)}
 .ktn-pwa-card:not(.is-ios) [data-pwa-ios],.ktn-pwa-card.is-ios [data-pwa-std]{display:none}
 @media(max-width:540px){.ktn-pwa-card__icon{width:34px;height:34px;border-radius:8px}}
 
