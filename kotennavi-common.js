@@ -2474,6 +2474,7 @@ KTN.nt = function (id, vars) {
 /* プッシュ通知の中身（2026-10-09・docs/notifications.md 3.5）。やることの一覧（ktnTodoOpen）と同じデータから作る＝文言は P90-18 が管理する
    KTN.NOTICE_DEFS（自分の番 TD-S1〜S5）を KTN.nt で引き、押したときに開くページはやることの項目と同じ href（取引デスク／取引ワークスペース）。
    題名＝状態文、本文＝《作品名》相手・期限、アイコン＝アプリのアイコン、tag＝取引ごと（同じ取引の通知は新しいもので置き換える）。
+   renotify＝true（置き換えるときも、もう一度知らせる。false だと2回目以降は画面に出ず、通知の一覧の中身が黙って入れ替わるだけになる）。
    本番はサーバーが同じ形の中身を送り、Service Worker が showNotification で出す。 */
 KTN.pushPayload = function (it) {
   return {
@@ -2481,6 +2482,7 @@ KTN.pushPayload = function (it) {
     body: '《' + it.work + '》' + it.counterpart + '　期限 ' + it.deadline,
     icon: 'icons/icon-192.png',
     tag: 'txn-' + it.def + '-' + it.work,
+    renotify: true,
     url: it.href
   };
 };
@@ -2496,7 +2498,8 @@ KTN.pushPreview = function (role) {
     return;
   }
   function show() {
-    var n = new Notification(p.title, { body: p.body, icon: p.icon, tag: p.tag });
+    /* 試しに出すときは毎回別の通知にする（同じ tag だと、ブラウザによっては2回目以降が画面に出ない） */
+    var n = new Notification(p.title, { body: p.body, icon: p.icon, tag: p.tag + '-' + Date.now() });
     n.onclick = function () { window.focus(); location.href = p.url; n.close(); };
   }
   if (Notification.permission === 'granted') { show(); return; }
