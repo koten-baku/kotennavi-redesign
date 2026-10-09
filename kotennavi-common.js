@@ -2471,6 +2471,43 @@ KTN.nt = function (id, vars) {
   for (var i = 0; i < all.length; i++) if (all[i].id === id) { t = all[i].text; break; }
   return t.replace(/\{\{(\w+)\}\}/g, function (m, k) { return vars && vars[k] != null ? vars[k] : m; });
 };
+/* プッシュ通知の中身（2026-10-09・docs/notifications.md 3.5）。やることの一覧（ktnTodoOpen）と同じデータから作る＝文言は P90-18 が管理する
+   KTN.NOTICE_DEFS（自分の番 TD-S1〜S5）を KTN.nt で引き、押したときに開くページはやることの項目と同じ href（取引デスク／取引ワークスペース）。
+   題名＝状態文、本文＝《作品名》相手・期限、アイコン＝アプリのアイコン、tag＝取引ごと（同じ取引の通知は新しいもので置き換える）。
+   本番はサーバーが同じ形の中身を送り、Service Worker が showNotification で出す。 */
+KTN.pushPayload = function (it) {
+  return {
+    title: KTN.nt(it.def),
+    body: '《' + it.work + '》' + it.counterpart + '　期限 ' + it.deadline,
+    icon: 'icons/icon-192.png',
+    tag: 'txn-' + it.def + '-' + it.work,
+    url: it.href
+  };
+};
+/* プロトタイプ用：パソコンのブラウザに本物の通知を1回出す（P5-13 のデモバー「試しに通知を出す」）。
+   role＝'creator'（出品者として）／'user'（購入者として）。やることのデモデータの先頭の項目を使う。
+   通知は安全な接続（Live Server の localhost・https）でだけ出せる。ファイルを直接開いたときは出せない。 */
+KTN.pushPreview = function (role) {
+  var items = (KTN.txnAlertItems && KTN.txnAlertItems[role] && KTN.txnAlertItems[role].lp) || [];
+  if (!items.length) return;
+  var p = KTN.pushPayload(items[0]);
+  if (!('Notification' in window) || !window.isSecureContext) {
+    KTN.toast('このブラウザ・開き方では通知を出せません（Live Server で開いてください）');
+    return;
+  }
+  function show() {
+    var n = new Notification(p.title, { body: p.body, icon: p.icon, tag: p.tag });
+    n.onclick = function () { window.focus(); location.href = p.url; n.close(); };
+  }
+  if (Notification.permission === 'granted') { show(); return; }
+  if (Notification.permission === 'denied') {
+    KTN.toast('このブラウザで通知が「ブロック」になっています。アドレスバーの左のアイコンから許可してください');
+    return;
+  }
+  Notification.requestPermission().then(function (r) {
+    if (r === 'granted') show(); else KTN.toast('通知が許可されなかったので、出せませんでした');
+  });
+};
 
 /* ══ やること（TODO）＝LIAISON+ の取引で自分の番が来たもの（2026-09-28・定義は docs/notifications.md）══
    ロールごとに分ける：購入者として（user）＝myページのアイコン／出品者として（creator・gallery）＝そのロールのアイコン。

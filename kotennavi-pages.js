@@ -24888,7 +24888,7 @@ KTN.pages['p90-18'] = function () {
   var SAMPLE = { artworkName: 'オノマトペの庭', exhibitionName: 'あなたが知らないオノマトペ', applyName: 'クリエイター機能', personName: '田中 透さん', contentKind: '展覧会', contentName: '音のかたち IV', watch: 3, checkin: 2, interest: 5, n: 2 };
   var INTRO = {
     mine: 'お知らせ一覧（P61）の「あなた宛」に出す文言です。左上のチップ（ユーザー／クリエイター／ギャラリー）は「立場」の列で決まります。ニュース（サイトからの一斉のお知らせ）は <a class="ktn-guide-link" href="./kotennavi-p61-11.html">お知らせの新規作成</a> で1件ずつ作ります。',
-    todo: 'サイドバーのロールアイコンから開く「やること」の一覧に出す文言です（LIAISON+ の取引）。自分の番の状態文と、取引の結果の文があります。状態名そのもの（購入確定待ち など）は変えず、利用者に向けた呼びかけの文をここで管理します。'
+    todo: 'サイドバーのロールアイコンから開く「やること」の一覧に出す文言です（LIAISON+ の取引）。自分の番の状態文と、取引の結果の文があります。状態名そのもの（購入確定待ち など）は変えず、利用者に向けた呼びかけの文をここで管理します。自分の番の文は、スマホなどへのプッシュ通知の題名にもそのまま使います。'
   };
   function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
   function fill(t) { return t.replace(/\{\{(\w+)\}\}/g, function (m, k) { return SAMPLE[k] != null ? SAMPLE[k] : m; }); }
