@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>スマホで個展なびを使う | 個展なび</title>
+  <meta name="description" content="個展なびをスマホで使う方法です。アプリのダウンロードは不要で、ホーム画面に追加するとアプリのように開けます。お知らせ・メール・プッシュ通知の受け取り方と、LIAISON+ の出品者・購入者としての取引の通知をご案内します。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@1,400;1,600&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<body data-w="article" class="p70-page p60-page">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- デモバー -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">スマホで個展なびを使う</span>
+  <button class="dbtn dbtn--active" id="dbarView">閲覧</button>
+</div>
+
+<!-- ヘッダー -->
+<div class="shell">
+
+<!-- サイドバー（kotennavi-p1.html と同一マークアップ・#ktnRoleNav は renderSidebar() がJS注入） -->
+<aside class="ktn-sidebar" id="ktnSidebar">
+
+  <!-- ロゴ (logo5-1) -->
+  <a href="kotennavi-p1.html" class="ktn-sidebar__logo" data-page="p1">
+    <img src="./images/kotennavi-logo5-1.svg" alt="個展なび">
+  </a>
+
+  <!-- 検索 → P10 検索ハブ -->
+  <a href="kotennavi-p10.html" class="ktn-sidebar__item" data-page="p10">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <circle cx="11" cy="11" r="7.5"/>
+        <path d="M21 21l-4.5-4.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">検索</span>
+  </a>
+
+  <!-- お知らせ → P61（未制作） -->
+  <a href="kotennavi-p61.html" class="ktn-sidebar__item" id="ktnSidebarNotice" data-page="p61">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__dot" id="ktnNoticeDot" style="display:none"></span>
+    <span class="ktn-sidebar__label">お知らせ</span>
+  </a>
+
+  <!-- ガイド → P60（未制作） -->
+  <a href="kotennavi-p60.html" class="ktn-sidebar__item" data-page="p60">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" stroke-linecap="round"/>
+        <path d="M12 16v-4M12 8h.01" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">ガイド</span>
+  </a>
+
+  <div class="ktn-sidebar__divider"></div>
+
+  <!-- ロール別アイコン（JS注入） -->
+  <div id="ktnRoleNav" style="width:100%;display:flex;flex-direction:column;align-items:center"></div>
+
+  <div class="ktn-sidebar__footer">
+    <p class="ktn-sidebar__footer-label">Follow us</p>
+    <div class="ktn-sidebar__sns">
+      <a href="https://www.facebook.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="Facebook">
+        <svg viewBox="0 0 320 512" fill="currentColor"><path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/></svg>
+      </a>
+      <a href="https://x.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="X">
+        <svg viewBox="0 0 512 512" fill="currentColor"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg>
+      </a>
+    </div>
+  </div>
+
+</aside>
+
+<div class="content-wrap" id="contentWrap">
+<header class="ktn-header" id="ktnHeader">
+  <div class="ktn-header__inner">
+    <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+    <div class="ktn-hdr-actions" id="ktnActs"></div>
+  </div>
+</header>
+
+<!-- タイトルバンド -->
+<div class="p70-title-band">
+  <div class="p70-title-band__inner">
+    <div class="p70-head__sub">
+      <span class="p70-head__updated">2026年10月 制定</span>
+    </div>
+    <h1 class="p70-head__title">スマホで個展なびを使う</h1>
+    <p class="p70-head__en">Using Kotennavi on Your Phone</p>
+    <p class="p70-head__lead">個展なびはアプリのダウンロードは不要です。スマホのブラウザでそのまま使えます。ホーム画面に追加すると、アプリのように開けて、LIAISON+ の取引の通知も受け取れます。</p>
+  </div>
+</div>
+
+<main>
+  <div class="p70-wrap">
+
+    <!-- 目次 -->
+    <nav class="p70-toc" aria-label="目次">
+      <div class="p70-toc__title">目次 — Contents</div>
+      <ol class="p70-toc__list">
+        <li class="p70-toc__item"><span class="p70-toc__num">1</span><a class="p70-toc__link" href="#home">ホーム画面に追加する</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">2</span><a class="p70-toc__link" href="#notice">お知らせの受け取り方</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">3</span><a class="p70-toc__link" href="#liaison">LIAISON+ の取引の通知</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">4</span><a class="p70-toc__link" href="#push">プッシュ通知をオンにする</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">5</span><a class="p70-toc__link" href="#trouble">通知が届かないとき</a></li>
+      </ol>
+    </nav>
+
+    <!-- 1. ホーム画面に追加する -->
+    <section class="p70-section" id="home">
+      <div class="p70-section__head">
+        <span class="p70-section__num">1</span>
+        <h2 class="p70-section__title">ホーム画面に追加する</h2>
+        <span class="p70-section__en">Add to Home Screen</span>
+      </div>
+      <p class="p70-body">ホーム画面に追加すると、個展なびのアイコンから1回で開けます。画面いっぱいに表示され、アプリと同じように使えます。追加しなくても、ブラウザからすべての機能を使えます。</p>
+      <h3 class="p70-subhead">iPhone（Safari）</h3>
+      <ol class="p70-step-list">
+        <li class="p70-step-list__item">Safari で個展なびを開きます</li>
+        <li class="p70-step-list__item">画面の下（または上）にある共有ボタン（四角から上向きの矢印）を押します</li>
+        <li class="p70-step-list__item">メニューの中から「ホーム画面に追加」を選び、右上の「追加」を押します</li>
+        <li class="p70-step-list__item">ホーム画面に個展なびのアイコンが追加されます。次からはこのアイコンから開いてください</li>
+      </ol>
+      <h3 class="p70-subhead">Android（Chrome）</h3>
+      <ol class="p70-step-list">
+        <li class="p70-step-list__item">Chrome で個展なびを開きます</li>
+        <li class="p70-step-list__item">画面に「ホーム画面に追加」の案内が出たときは、それを押します</li>
+        <li class="p70-step-list__item">案内が出ないときは、右上のメニュー（縦に並んだ3つの点）から「アプリをインストール」または「ホーム画面に追加」を選びます</li>
+      </ol>
+      <div class="p70-callout">
+        <div class="p70-callout__title">iPhone でプッシュ通知を受け取るには</div>
+        <div class="p70-callout__body">iPhone では、<strong>ホーム画面に追加した個展なびから開いたときだけ</strong>プッシュ通知を受け取れます（iOS 16.4 以降）。Safari のまま開いているときは受け取れません。</div>
+      </div>
+    </section>
+
+    <!-- 2. お知らせの受け取り方 -->
+    <section class="p70-section" id="notice">
+      <div class="p70-section__head">
+        <span class="p70-section__num">2</span>
+        <h2 class="p70-section__title">お知らせの受け取り方</h2>
+        <span class="p70-section__en">How You Are Notified</span>
+      </div>
+      <p class="p70-body">個展なびからのお知らせは、次の3つの方法で届きます。</p>
+      <div class="p70-dl p70-dl--ja">
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">サイトの中</dt>
+          <dd class="p70-dl__dd">サイドバー（スマホは画面の下）の「お知らせ」に青い点が付きます。LIAISON+ の取引で対応が必要なものは、ロールのアイコン（myページ・クリエイター・ギャラリー）に数字で表示されます。</dd>
+        </div>
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">メール</dt>
+          <dd class="p70-dl__dd">取引の連絡やアカウントに関するメールは、必ずお届けします。そのほかのメール（リマインダー・ウォッチ新着など）は、myページの<a href="./kotennavi-p5-13.html">メール通知設定</a>で受け取るかを選べます。</dd>
+        </div>
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">プッシュ通知</dt>
+          <dd class="p70-dl__dd">LIAISON+ の取引で、あなたの対応が必要になったときに、スマホの画面にお知らせします。使う端末ごとに、ご自身でオンにしたときだけ届きます（<a href="#push">4. プッシュ通知をオンにする</a>）。</dd>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. LIAISON+ の取引の通知 -->
+    <section class="p70-section" id="liaison">
+      <div class="p70-section__head">
+        <span class="p70-section__num">3</span>
+        <h2 class="p70-section__title">LIAISON+ の取引の通知</h2>
+        <span class="p70-section__en">LIAISON+ Notifications</span>
+      </div>
+      <p class="p70-body">LIAISON+ の取引では、<strong>あなたの対応が必要になったとき</strong>に、メールとサイトの中でお知らせします。プッシュ通知をオンにしておくと、スマホの画面でもすぐに気づけます。会期中は、会場で作品が売れたときの「会場売約済」の操作や、購入の確定など、早めの対応が必要な場面があります。</p>
+      <div class="p70-dl p70-dl--ja">
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">出品者として（クリエイター・ギャラリー）</dt>
+          <dd class="p70-dl__dd">購入の確定・作品の発送・取引の完了の確認が必要になったとき。お知らせを押すと、その取引の取引デスクが開きます。</dd>
+        </div>
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">購入者として</dt>
+          <dd class="p70-dl__dd">お支払い・作品の受取の確認が必要になったとき。お知らせを押すと、その取引の取引ワークスペースが開きます。</dd>
+        </div>
+      </div>
+      <p class="p70-body">取引の連絡のメールは止められません。プッシュ通知は、メールより早く気づくための追加の方法です。</p>
+      <div class="p70-callout">
+        <div class="p70-callout__title">電波の弱い会場では</div>
+        <div class="p70-callout__body">購入の確定や「会場売約済」など、取引の状態を変える操作は、通信ができるときにだけ行えます。オフラインのあいだは操作できないので、通信が戻ったらすぐに行ってください（同じ作品が会場とオンラインの両方で売れてしまうのを防ぐためです）。</div>
+      </div>
+    </section>
+
+    <!-- 4. プッシュ通知をオンにする -->
+    <section class="p70-section" id="push">
+      <div class="p70-section__head">
+        <span class="p70-section__num">4</span>
+        <h2 class="p70-section__title">プッシュ通知をオンにする</h2>
+        <span class="p70-section__en">Turn On Push Notifications</span>
+      </div>
+      <ol class="p70-step-list">
+        <li class="p70-step-list__item">iPhone の場合は、先に<a href="#home">ホーム画面に追加</a>し、ホーム画面の個展なびのアイコンから開きます</li>
+        <li class="p70-step-list__item">ログインして、myページの<a href="./kotennavi-p5-13.html">メール通知設定</a>を開きます</li>
+        <li class="p70-step-list__item">「プッシュ通知（この端末）」のスイッチをオンにします</li>
+        <li class="p70-step-list__item">「通知を許可しますか」と表示されたら、「許可」を押します</li>
+      </ol>
+      <p class="p70-body">設定は端末ごとです。スマホとパソコンの両方で受け取りたいときは、それぞれでオンにしてください。</p>
+    </section>
+
+    <!-- 5. 通知が届かないとき -->
+    <section class="p70-section" id="trouble">
+      <div class="p70-section__head">
+        <span class="p70-section__num">5</span>
+        <h2 class="p70-section__title">通知が届かないとき</h2>
+        <span class="p70-section__en">Troubleshooting</span>
+      </div>
+      <div class="p70-dl p70-dl--ja">
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">iPhone で届かない</dt>
+          <dd class="p70-dl__dd">ホーム画面に追加した個展なびのアイコンから開いて、プッシュ通知をオンにしているかをご確認ください。Safari のまま開いたときの設定では届きません。</dd>
+        </div>
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">「許可しない」を押してしまった</dt>
+          <dd class="p70-dl__dd">端末の設定（iPhone は「設定」→「通知」→「個展なび」、Android は Chrome のサイトの設定）で、通知を許可してください。</dd>
+        </div>
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">急に届かなくなった</dt>
+          <dd class="p70-dl__dd">端末の集中モード・おやすみモードや、通知の設定をご確認ください。取引の連絡はメールでも届いています。</dd>
+        </div>
+        <div class="p70-dl__item">
+          <dt class="p70-dl__dt">メールが届かない</dt>
+          <dd class="p70-dl__dd">迷惑メールのフォルダをご確認ください。koten-navi.com からのメールを受け取れるように設定してください。</dd>
+        </div>
+      </div>
+      <p><a class="ktn-guide-link" href="./kotennavi-p60-11.html">解決しないときはお問合わせへ →</a></p>
+    </section>
+
+  </div>
+</main>
+
+<!-- フッター -->
+<footer class="ktn-footer" id="ktnFooter"></footer>
+</div><!-- /content-wrap -->
+</div><!-- /shell -->
+
+
+<nav class="ktn-bottom-nav" id="ktnBottomNav">
+  <div class="ktn-bottom-nav__inner" id="ktnBottomNavInner"></div>
+</nav>
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  KTN.init({ page: 'p60-17' });
+
+  var dbarView = document.getElementById('dbarView');
+  if (dbarView) {
+    dbarView.addEventListener('click', function () {
+      this.classList.add('dbtn--active');
+    });
+  }
+});
+</script>
+</body>
+</html>

@@ -257,6 +257,27 @@
 
         </div>
 
+        <!-- プッシュ通知（この端末・2026-10-09・PWA）。送る範囲は LIAISON+ の取引で自分の番が来たときだけ（docs/notifications.md 3.5）。
+             端末（ブラウザ）ごとの設定。既定はオフ＝オンにしたときにだけ、ブラウザの通知の許可を求める（本番）。
+             iPhone はホーム画面に追加した個展なびから開いたときだけオンにできる（本番は Safari のままならスイッチの代わりに案内を出す）。 -->
+        <div class="p513-section">
+          <div class="p513-section__head">
+            <div class="p513-section__title">プッシュ通知（この端末）</div>
+            <div class="p513-section__desc">スマホやパソコンの画面に、すぐにお知らせします。使う端末ごとの設定です。</div>
+          </div>
+
+          <div class="p513-row">
+            <div class="p513-row__body">
+              <div class="p513-row__label">取引で対応が必要になったとき（LIAISON+）<span class="p513-row__freq">随時</span></div>
+              <div class="p513-row__desc">出品者として：購入の確定・作品の発送・取引の完了の確認が必要になったとき。購入者として：お支払い・作品の受取の確認が必要になったとき。取引の連絡のメールは、この設定に関係なく必ずお届けします。<br>iPhone では、個展なびをホーム画面に追加し、そこから開いたときにオンにできます。<a class="ktn-guide-link" href="./kotennavi-p60-17.html#push">くわしい手順 →</a></div>
+            </div>
+            <button type="button" class="ktn-switch" role="switch" aria-checked="false" data-p513-key="push" aria-label="プッシュ通知（取引で対応が必要になったとき）">
+              <span class="ktn-switch__track"><span class="ktn-switch__knob"></span></span>
+              <span class="ktn-switch__label">受け取らない</span>
+            </button>
+          </div>
+        </div>
+
         <!-- セクション3：必ずお届けするメール（設定なし） -->
         <div class="p513-section">
           <div class="p513-section__head">
