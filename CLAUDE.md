@@ -943,6 +943,15 @@ on/off の2状態を切り替える汎用トグルスイッチ。canonical は `
 - 新規ページはHTMLをコピーするだけでよい（ページ個別CSS不要）。「その場で実行される操作」だが押しボタンではなく**状態の切替**である場合にこれを使う（実行系は `.ktn-op-btn`）。
 - React 変換：`<Switch checked onChange label={{on,off}}>`。
 
+### 全ページ共通：プッシュ通知をすすめる案内カード（`.ktn-pwa-card`・2026-10-09）
+
+取引の通知をスマホで受け取るよう、ページの中ですすめるカード。canonical は `kotennavi-common.css`（`.ktn-form-remind` 直後）、切替は common.js `ktnPwaCard`。決まりの正本は `docs/notifications.md` 3.5。
+
+- **置くのは取引の画面だけ**（P3-15／P4-15＝出品者、P5-14＝購入者・ヘッドの直後）。下から出る帯・ポップアップにはしない。
+- 行き先は P5-13（設定の場所は1つ）。iPhone の Safari のままなら `is-ios` で文言と行き先（P60-17#home）を替える（`data-pwa-std` / `data-pwa-ios`）。
+- 本番では、この端末でプッシュがオン・PC・非対応の端末には出さない。「今は閉じる」で30日出さない。
+- HTML は P3-15 のものをコピーし、説明文（出品者／購入者）だけ替える。React 変換：`<PushPromptCard who>`。
+
 ### 全ページ共通：パスワード表示/非表示トグル（`.ktn-pw-wrap` / `.ktn-pw-toggle`）
 
 パスワード入力欄の右端に置く目アイコンの表示切替。canonical は `kotennavi-common.css`（2026-09-26 に `.p512-pw-*` から昇格）、クリック処理は `kotennavi-common.js` の委譲リスナー（ページ個別JS不要）。

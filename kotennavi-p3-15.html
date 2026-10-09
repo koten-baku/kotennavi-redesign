@@ -105,6 +105,10 @@
   <button class="dbtn" onclick="setR('admin',this)">管理者</button>
   <span class="dbar-sep">LIAISON+：</span>
   <button class="dbtn dbtn-lp on" onclick="ktnSetLP('true',this)">申請済</button>
+  <span class="dbar-sep" style="margin-left:12px">スマホの案内：</span>
+  <button class="dbtn on" data-pwa-demo-btn onclick="ktnPwaCard('std',this)">Android など</button>
+  <button class="dbtn" data-pwa-demo-btn onclick="ktnPwaCard('ios',this)">iPhone（Safari）</button>
+  <button class="dbtn" data-pwa-demo-btn onclick="ktnPwaCard('off',this)">出さない</button>
 </div>
 
 <div class="shell">
@@ -214,6 +218,21 @@
             <div class="ktn-mgmt-head__guides">
               <a class="ktn-guide-link" href="kotennavi-p70-2.html" target="_blank" rel="noopener">LIAISON+の会場優先について →</a>
               <a class="ktn-guide-link" href="kotennavi-p70-12.html" target="_blank" rel="noopener">取引の進め方・困ったとき →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- スマホで受け取る案内（.ktn-pwa-card・2026-10-09）。出す・出さないの決まりは common.js ktnPwaCard の説明 -->
+        <div class="ktn-pwa-card" data-pwa-card>
+          <img class="ktn-pwa-card__icon" src="icons/icon-192.png" alt="" width="40" height="40">
+          <div class="ktn-pwa-card__body">
+            <div class="ktn-pwa-card__title">取引の通知を、スマホですぐに受け取れます</div>
+            <p class="ktn-pwa-card__desc" data-pwa-std>購入の確定・作品の発送など、あなたの対応が必要になったときに、スマホの画面ですぐにお知らせします。会期中に会場で作品が売れたときの「会場売約済」のように、早めの対応が必要な場面で役立ちます。</p>
+            <p class="ktn-pwa-card__desc" data-pwa-ios>購入の確定・作品の発送など、あなたの対応が必要になったときに、スマホの画面ですぐにお知らせします。iPhone では、個展なびをホーム画面に追加し、そこから開くと通知をオンにできます。</p>
+            <div class="ktn-pwa-card__actions">
+              <a class="ktn-action-btn" data-pwa-std href="kotennavi-p5-13.html">通知設定でオンにする →</a>
+              <a class="ktn-action-btn" data-pwa-ios href="kotennavi-p60-17.html#home">ホーム画面に追加する手順 →</a>
+              <button type="button" class="ktn-pwa-card__close" data-pwa-close>今は閉じる</button>
             </div>
           </div>
         </div>

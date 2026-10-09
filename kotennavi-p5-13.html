@@ -65,6 +65,11 @@
   <button class="dbtn" data-user-apps-btn="cr-lp-pending" onclick="KTN.setUserApps('cr-lp-pending')">クリエイター＋LIAISON+確認中</button>
   <button class="dbtn" data-user-apps-btn="ga-lp-granted" onclick="KTN.setUserApps('ga-lp-granted')">ギャラリー＋LIAISON+利用開始</button>
   <button class="dbtn" data-user-apps-btn="ga-cancelled" onclick="KTN.setUserApps('ga-cancelled')">ギャラリー取消</button>
+  <span class="dbar-sep" style="margin-left:12px">この端末：</span>
+  <button class="dbtn on" data-p513-push-btn onclick="p513SetPush('ok',this)">受け取れる</button>
+  <button class="dbtn" data-p513-push-btn onclick="p513SetPush('ios',this)">iPhone（Safari）</button>
+  <button class="dbtn" data-p513-push-btn onclick="p513SetPush('denied',this)">許可しない</button>
+  <button class="dbtn" data-p513-push-btn onclick="p513SetPush('unsupported',this)">非対応</button>
 </div>
 
 <div class="shell">
@@ -259,7 +264,9 @@
 
         <!-- プッシュ通知（この端末・2026-10-09・PWA）。送る範囲は LIAISON+ の取引で自分の番が来たときだけ（docs/notifications.md 3.5）。
              端末（ブラウザ）ごとの設定。既定はオフ＝オンにしたときにだけ、ブラウザの通知の許可を求める（本番）。
-             iPhone はホーム画面に追加した個展なびから開いたときだけオンにできる（本番は Safari のままならスイッチの代わりに案内を出す）。 -->
+             端末の状態で4通りに出し分ける（data-p513-push）：①受け取れる＝スイッチ ②iPhone の Safari のまま＝スイッチの代わりにホーム画面への追加の案内
+             ③通知を「許可しない」にした＝スイッチを押せなくして許可の手順 ④非対応の端末・ブラウザ＝スイッチの代わりに「メールでお届けします」。
+             ②〜④でスイッチを押せると「設定したのに届かない」になるため。本番の判定：② iPhone かつ display-mode: standalone でない／③ Notification.permission === 'denied'／④ PushManager が無い。 -->
         <div class="p513-section">
           <div class="p513-section__head">
             <div class="p513-section__title">プッシュ通知（この端末）</div>
@@ -269,7 +276,10 @@
           <div class="p513-row">
             <div class="p513-row__body">
               <div class="p513-row__label">取引で対応が必要になったとき（LIAISON+）<span class="p513-row__freq">随時</span></div>
-              <div class="p513-row__desc">出品者として：購入の確定・作品の発送・取引の完了の確認が必要になったとき。購入者として：お支払い・作品の受取の確認が必要になったとき。取引の連絡のメールは、この設定に関係なく必ずお届けします。<br>iPhone では、個展なびをホーム画面に追加し、そこから開いたときにオンにできます。<a class="ktn-guide-link" href="./kotennavi-p60-17.html#push">くわしい手順 →</a></div>
+              <div class="p513-row__desc">出品者として：購入の確定・作品の発送・取引の完了の確認が必要になったとき。購入者として：お支払い・作品の受取の確認が必要になったとき。取引の連絡のメールは、この設定に関係なく必ずお届けします。<a class="ktn-guide-link" href="./kotennavi-p60-17.html#push">くわしい手順 →</a></div>
+              <div class="p513-push-note" data-p513-push-note="ios" hidden>iPhone では、個展なびをホーム画面に追加し、そこから開くとオンにできます。<a class="ktn-guide-link" href="./kotennavi-p60-17.html#home">ホーム画面に追加する手順 →</a></div>
+              <div class="p513-push-note" data-p513-push-note="denied" hidden>この端末では、個展なびからの通知が「許可しない」になっています。端末の設定で、通知を許可してください。<a class="ktn-guide-link" href="./kotennavi-p60-17.html#trouble">許可する手順 →</a></div>
+              <div class="p513-push-note" data-p513-push-note="unsupported" hidden>この端末・ブラウザでは、プッシュ通知を受け取れません。取引の連絡はメールでお届けします。</div>
             </div>
             <button type="button" class="ktn-switch" role="switch" aria-checked="false" data-p513-key="push" aria-label="プッシュ通知（取引で対応が必要になったとき）">
               <span class="ktn-switch__track"><span class="ktn-switch__knob"></span></span>
@@ -359,6 +369,21 @@ document.addEventListener('click', function (e) {
   sw.querySelector('.ktn-switch__label').textContent = on ? '受け取る' : '受け取らない';
   KTN.toast('「' + sw.getAttribute('aria-label') + '」を' + (on ? '受け取る' : '受け取らない') + '設定にしました');
 });
+/* プッシュ通知の行：端末の状態ごとの表示（デモバー「この端末」）。ok＝スイッチ／ios・unsupported＝スイッチを隠して案内／denied＝スイッチをオフで押せなくして案内 */
+function p513SetPush(state, btn) {
+  var sw = document.querySelector('.ktn-switch[data-p513-key="push"]');
+  document.querySelectorAll('[data-p513-push-note]').forEach(function (n) { n.hidden = n.getAttribute('data-p513-push-note') !== state; });
+  if (sw) {
+    sw.hidden = (state === 'ios' || state === 'unsupported');
+    sw.disabled = (state === 'denied');
+    if (state !== 'ok') {
+      sw.classList.remove('is-on');
+      sw.setAttribute('aria-checked', 'false');
+      sw.querySelector('.ktn-switch__label').textContent = '受け取らない';
+    }
+  }
+  document.querySelectorAll('[data-p513-push-btn]').forEach(function (b) { b.classList.toggle('on', b === btn); });
+}
 /* 「クリエイター／ギャラリーとして受け取るメール」は機能を利用中の人だけ（デモバー「機能申込」と連動） */
 document.addEventListener('ktn:userapps', function (e) {
   var d = e.detail || {};

@@ -2349,6 +2349,30 @@ function ktnSetPurchaseHistory(val, btn) {
   if (typeof renderAll === 'function') renderAll();
 }
 window.ktnSetPurchaseHistory = ktnSetPurchaseHistory;
+/* スマホで受け取る案内カード（.ktn-pwa-card・2026-10-09）。取引の画面（P3-15/P4-15/P5-14）に置く。
+   デモバー「スマホの案内」で 'std'（Android など）／'ios'（iPhone の Safari のまま）／'off'（出さない）を切り替える。
+   本番の出し分け（React CSR）：
+   - 出さない：この端末でプッシュがオン（PushManager の購読あり）・PC・プッシュ非対応の端末
+   - 'ios'：iPhone で、ホーム画面から開いていない（display-mode: standalone でない）とき
+   - 「今は閉じる」：30日間は出さない（端末ごと。localStorage の閉じた日時で判定。読めない環境では毎回出してよい）
+   プロトタイプでは閉じても記録しない（確認のたびに消えたままになるため）。 */
+function ktnPwaCard(state, btn) {
+  document.querySelectorAll('[data-pwa-card]').forEach(function (c) {
+    c.hidden = (state === 'off');
+    c.classList.toggle('is-ios', state === 'ios');
+  });
+  if (btn) {
+    document.querySelectorAll('[data-pwa-demo-btn]').forEach(function (b) { b.classList.toggle('on', b === btn); });
+  }
+}
+window.ktnPwaCard = ktnPwaCard;
+document.addEventListener('click', function (e) {
+  var b = e.target.closest && e.target.closest('[data-pwa-close]');
+  if (!b) return;
+  var c = b.closest('[data-pwa-card]');
+  if (c) c.hidden = true;
+  KTN.toast('案内を閉じました。通知の設定は、myページの「通知設定」からいつでも変えられます');
+});
 /* 要対応の取引プルダウンに出す実データ相当のサンプル一覧（デモ用固定データ）。
    件数バッジ（KTN.txnAlerts）は数値のみでテストボタンから自由に変更できるが、
    一覧の中身は各コンソール（p3-15/p4-15/p5-14）に実在するデモ取引と一致させ、
