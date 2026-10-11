@@ -24888,7 +24888,7 @@ KTN.pages['p90-18'] = function () {
   var SAMPLE = { artworkName: 'オノマトペの庭', exhibitionName: 'あなたが知らないオノマトペ', applyName: 'クリエイター機能', personName: '田中 透さん', contentKind: '展覧会', contentName: '音のかたち IV', deadlineLabel: '支払期限', watch: 3, checkin: 2, interest: 5, n: 2 };
   var INTRO = {
     mine: 'お知らせ一覧（P61）の「あなた宛」に出す文言です。左上のチップ（ユーザー／クリエイター／ギャラリー）は「立場」の列で決まります。ニュース（サイトからの一斉のお知らせ）は <a class="ktn-guide-link" href="./kotennavi-p61-11.html">お知らせの新規作成</a> で1件ずつ作ります。',
-    todo: 'サイドバーのロールアイコンから開く「やること」の一覧に出す文言です（LIAISON+ の取引）。自分の番の状態文と、取引の結果の文があります。状態名そのもの（購入確定待ち など）は変えず、利用者に向けた呼びかけの文をここで管理します。自分の番の文は、スマホなどへのプッシュ通知の題名にもそのまま使います。「プッシュ通知だけで使う文」は、期限が近づいても操作がまだのときに送り直す通知の題名です。'
+    todo: 'サイドバーのロールアイコンから開く「やること」の一覧に出す文言です（LIAISON+ の取引）。自分の番の状態文と、取引の結果の文があります。状態名そのもの（購入確定待ち など）は変えず、利用者に向けた呼びかけの文をここで管理します。自分の番の文は、スマホなどへのプッシュ通知の題名にもそのまま使います。「プッシュ通知だけで使う文」は、期限が近づいても操作がまだのときに送り直す通知の題名です。プッシュ通知の本文（作品名・相手・期限の日付）は取引ごとに自動で入るので、ここでは題名だけを管理します（編集すると通知の見本が出ます）。'
   };
   function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
   function fill(t) { return t.replace(/\{\{(\w+)\}\}/g, function (m, k) { return SAMPLE[k] != null ? SAMPLE[k] : m; }); }
@@ -24929,9 +24929,20 @@ KTN.pages['p90-18'] = function () {
   /* 編集モーダル */
   var modal = document.getElementById('p9018EditModal'), ctx = document.getElementById('p9018EditCtx');
   var ta = document.getElementById('p9018EditText'), help = document.getElementById('p9018EditHelp'), pv = document.getElementById('p9018EditPreview');
+  var pushField = document.getElementById('p9018PushField'), pushTitle = document.getElementById('p9018PushTitle'), pushBody = document.getElementById('p9018PushBody');
+  /* プッシュ通知の見本（自分の番の文・プッシュ通知だけで使う文）。本文は取引のデータから自動で入る部分の見本 */
+  var PUSH_BODY = '《オノマトペの庭》田中 透さん　期限 2026.03.08';
+  function isPush(r) { return D.todoTurn.indexOf(r) >= 0 || D.push.indexOf(r) >= 0; }
   var editing = null;
   function find(id) { var all = [].concat(D.todoTurn, D.todoResult, D.push, D.mine); for (var i = 0; i < all.length; i++) if (all[i].id === id) return all[i]; return null; }
-  function preview() { pv.textContent = fill(ta.value); }
+  function preview() {
+    pv.textContent = fill(ta.value);
+    var on = !!(editing && isPush(editing));
+    pushField.hidden = !on;
+    if (!on) return;
+    pushTitle.textContent = fill(ta.value);
+    pushBody.innerHTML = esc(PUSH_BODY) + (D.push.indexOf(editing) >= 0 ? '<br>' + esc(KTN.nt('TD-S2')) : '');
+  }
   listEl.addEventListener('click', function (e) {
     var b = e.target.closest('[data-edit]'); if (!b) return;
     editing = find(b.dataset.edit); if (!editing) return;

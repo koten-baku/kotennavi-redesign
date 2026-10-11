@@ -140,6 +140,17 @@
             <label class="p211-label">表示の見本</label>
             <p class="p9018-preview" id="p9018EditPreview"></p>
           </div>
+          <!-- プッシュ通知の見本（自分の番の文・プッシュ通知だけで使う文のときだけ出す・2026-10-11）。
+               本文の作品名・相手・期限の日付は取引のデータから自動で入る（common.js KTN.pushPayload）＝ここでは編集しない -->
+          <div class="p211-field" id="p9018PushField" hidden>
+            <label class="p211-label">プッシュ通知の見本</label>
+            <div class="p9018-push" aria-hidden="true">
+              <div class="p9018-push__head"><img src="icons/icon-192.png" alt="" width="16" height="16">個展なび・今</div>
+              <div class="p9018-push__title" id="p9018PushTitle"></div>
+              <div class="p9018-push__body" id="p9018PushBody"></div>
+            </div>
+            <p class="p211-help">題名がこの文です。本文の作品名・相手・期限の日付は、取引ごとに自動で入ります（ここでは編集しません）。</p>
+          </div>
           <div class="p319-del-modal__actions">
             <button type="button" class="ktn-op-btn" id="p9018EditCancel">キャンセル</button>
             <button type="button" class="ktn-op-btn ktn-op-btn--primary" id="p9018EditSave">保存する</button>
