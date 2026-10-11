@@ -36,7 +36,10 @@
 │   ├── icon-512.png       ← インストール・起動画面（512×512）
 │   ├── icon-maskable.png  ← Android の切り抜き用（512×512）
 │   ├── apple-touch-icon.png ← iPhone のホーム画面（180×180）
-│   └── badge-96.png       ← Android の通知バー（白一色・96×96）
+│   ├── badge-96.png       ← Android の通知バー（logo3 の形を白一色・96×96）
+│   ├── favicon.svg        ← ファビコン（logo3）
+│   └── favicon-32／48／96.png ← ファビコンの PNG
+├── favicon.ico            ← ファビコン（32・48px。サイトの一番上に置く）
 └── 共通の初期化（React）  ← Service Worker の登録（6 章）
 ```
 
@@ -107,7 +110,11 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="個展なび">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
 ```
+
+- **ファビコン**（2026-10-11）：`images/kotennavi-logo3.svg`（ブランド青の枠マーク）を使う。Google の検索結果にも出る（48px の倍数を求められる）ので `favicon.ico`（32・48px）をサイトの一番上（`/favicon.ico`）に置き、SVG も併記する。全148ファイル（147ページ＋offline.html）に入れ済み。
 
 ---
 
@@ -363,7 +370,8 @@ function urlBase64ToUint8Array(base64String) {
 ### プロトタイプで作成済み（2026-10-09）
 - [x] `manifest.json`（パスは相対＝本番の URL に直す）
 - [x] 全ページの `<head>` の指定（manifest・theme-color・iPhone 用・apple-touch-icon）
-- [x] アイコン：192・512・maskable・apple-touch-icon・通知バー用の白一色 `badge-96`（12 章）
+- [x] アイコン：192・512・maskable・apple-touch-icon・通知バー用の白一色 `badge-96`（logo3 の形）・ファビコン（12 章）
+- [x] 小さいアイコンの見比べ：デモページ `kotennavi_app_icons.html`（タブ・検索結果・通知バーの見本）
 - [x] `offline.html`（`.ktn-offline`）
 - [x] P5-13 のプッシュの行（端末の状態で4通り）・案内カード `.ktn-pwa-card`（P3-15・P4-15・P5-14）・P60-17・メールの文面（U-02・M-11）
 - [x] 通知の中身の組み立て `KTN.pushPayload`（期限が近いときの送り直しを含む）・試しに出す `KTN.pushPreview`
@@ -390,7 +398,8 @@ function urlBase64ToUint8Array(base64String) {
 
 ### 確かめ方（実機）
 - [ ] Chrome の開発者ツール「Application」で、manifest・Service Worker・インストールできるかを確認（※ Lighthouse の「PWA」の項目は 2024 年に廃止されたので使えない）
-- [ ] Android（Chrome）：ホーム画面に追加して開く・P5-13 でオン・取引の状態を変えて通知が届く・押して取引のページが開く・通知バーのアイコン
+- [ ] Android（Chrome）：ホーム画面に追加して開く・P5-13 でオン・取引の状態を変えて通知が届く・押して取引のページが開く・通知バーのアイコン（logo3 の形）が白く出る
+- [ ] ファビコン：タブに出る・本番公開後に Google の検索結果に出る
 - [ ] iPhone（iOS 16.4 以降）：Safari のままでは P5-13 が②になる・ホーム画面から開くとオンにできる・通知が届く
 - [ ] 機内モードで：offline.html が出る・一度見た公開のページが出る・取引のボタンが押せない
 - [ ] ログアウト後に通知が届かない
@@ -416,7 +425,8 @@ function urlBase64ToUint8Array(base64String) {
 | `icons/icon-maskable.png` | 512×512 | Android の切り抜き用（manifest の `purpose: maskable`） | ロゴを **62%** に縮めて中央に置き、まわりを同じ青で埋めた（文字が中心から半径 40% の円＝切り抜かれても残る範囲に収まる大きさ）。元のロゴの構図のまま縮めたので、文字は少し左上寄り |
 | `icons/apple-touch-icon.png` | 180×180 | iPhone のホーム画面（`<link rel="apple-touch-icon">`）。角の丸めは iPhone がする | ロゴをそのまま |
 
-| `icons/badge-96.png` | 96×96 | Android の通知バーに出す小さいアイコン（通知の `badge`）。**白一色＋透明**でなければならない（色は端末が付ける） | ロゴの青い地を消し、白い文字だけを書き出した（2026-10-11）。仮のもの＝13 章 |
+| `icons/badge-96.png` | 96×96 | Android の通知バーに出す小さいアイコン（通知の `badge`）。**白一色＋透明**でなければならない（色は端末が付ける） | **`images/kotennavi-logo3.svg` の形を白一色にした**（2026-10-11・ユーザー確認＝ファビコンと同じ形にそろえる。前の仮のもの〔ロゴの4文字〕は小さいと文字が潰れるため差し替え） |
+| `icons/favicon.svg`・`favicon-32/48/96.png`・`/favicon.ico` | 32〜96 | ファビコン（タブ・ブックマーク・検索結果） | `images/kotennavi-logo3.svg` をそのまま（ICO は 32・48px の PNG を入れたもの） |
 
 - 本番の配置場所・URL は後工程で決める（manifest の `icons` と `<head>` の指定をそれに合わせる）。ロゴを差し替えたら、同じ大きさで書き出し直す。
 
@@ -437,7 +447,7 @@ function urlBase64ToUint8Array(base64String) {
 ### 残っていること
 | 項目 | 内容 | 今の扱い |
 |---|---|---|
-| 通知バーのアイコン | `badge-96` はロゴの文字をそのまま白一色にした仮のもの。24dp 程度で表示されるので文字は読めない | デザイナーが単純な形の記号を作るなら差し替え |
+
 | インストール時の画面の見本 | manifest の `screenshots`（Android のインストール画面を豊かにする） | 入れていない（任意） |
 
 ### 引き継ぎで特に気をつけること

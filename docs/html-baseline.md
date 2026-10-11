@@ -6,6 +6,8 @@
 
 ---
 
+
+> **ファビコン・PWA の head（2026-10-11）**：全ページに `favicon.ico`（48px）＋`icons/favicon.svg`（logo3）と、manifest・theme-color・apple-touch-icon を入れ済み。書き方の正本は `docs/PWA設計ガイド.md` 4 章。
 ## 1. `<head>` に入れるもの
 
 ```html
