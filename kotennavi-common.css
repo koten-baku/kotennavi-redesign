@@ -11179,6 +11179,18 @@ body.p5-zero:not(.p5-other) .p5-watch-onboard{display:block}
 /* 配信タイミング（1日1回・随時・月1回）。項目名の横に小さく添えて「どのくらい届くか」を示す */
 .p513-row__freq{display:inline-block;margin-left:8px;padding:1px 7px;font-size:.66rem;font-weight:500;color:var(--muted);background:var(--paper);border:1px solid var(--border);border-radius:10px;vertical-align:1px;white-space:nowrap}
 /* P5-13 プッシュ通知の行：端末の状態ごとの案内（2026-10-09）。②iPhone の Safari ③許可しない ④非対応 は、スイッチを差し替える／押せなくする */
+.p513-devices{padding:12px 18px 14px;background:#fff}
+.p513-devices__head{display:flex;align-items:baseline;gap:8px;font-size:.78rem;font-weight:700;color:var(--ink)}
+.p513-devices__list{margin:8px 0 0;padding:0;list-style:none;border-top:1px solid var(--border)}
+.p513-devices__list[hidden]{display:none}
+.p513-dev{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--border)}
+.p513-dev[hidden]{display:none}
+.p513-dev__body{flex:1;min-width:0}
+.p513-dev__name{font-size:.8rem;color:var(--ink)}
+.p513-dev__this{display:inline-block;margin-left:8px;padding:1px 7px;font-size:.66rem;font-weight:600;color:#fff;background:var(--page-accent);border-radius:10px;vertical-align:1px}
+.p513-dev__meta{margin-top:2px;font-size:.72rem;color:var(--muted)}
+.p513-devices__empty{margin:8px 0 0;font-size:.75rem;color:var(--muted)}
+.p513-devices__empty[hidden]{display:none}
 .p513-push-note{margin-top:8px;padding:8px 12px;background:var(--paper);border-radius:4px;font-size:.75rem;line-height:1.6;color:var(--ink)}
 .p513-push-note[hidden]{display:none}
 .p513-push-note .ktn-guide-link{white-space:nowrap}

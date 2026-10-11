@@ -81,6 +81,7 @@
   <span class="dbar-sep" style="margin-left:12px">試しに通知を出す：</span>
   <button class="dbtn" onclick="KTN.pushPreview('creator')">出品者として</button>
   <button class="dbtn" onclick="KTN.pushPreview('user')">購入者として</button>
+  <button class="dbtn" onclick="KTN.pushPreview('creator',true)">期限が近いとき</button>
 </div>
 
 <div class="shell">
@@ -287,7 +288,7 @@
           <div class="p513-row">
             <div class="p513-row__body">
               <div class="p513-row__label">取引で対応が必要になったとき（LIAISON+）<span class="p513-row__freq">随時</span></div>
-              <div class="p513-row__desc">出品者として：購入の確定・作品の発送・取引の完了の確認が必要になったとき。購入者として：お支払い・作品の受取の確認が必要になったとき。取引の連絡のメールは、この設定に関係なく必ずお届けします。<a class="ktn-guide-link" href="./kotennavi-p60-17.html#push">くわしい手順 →</a></div>
+              <div class="p513-row__desc">出品者として：購入の確定・作品の発送・取引の完了の確認が必要になったとき。購入者として：お支払い・作品の受取の確認が必要になったとき。期限が近づいても操作がまだのときは、もう一度お知らせします。夜（22時〜翌8時）は送らず、朝8時にお届けします。取引の連絡のメールは、この設定に関係なく必ずお届けします。<a class="ktn-guide-link" href="./kotennavi-p60-17.html#push">くわしい手順 →</a></div>
               <div class="p513-push-note" data-p513-push-note="ios" hidden>iPhone では、個展なびをホーム画面に追加し、そこから開くとオンにできます。<a class="ktn-guide-link" href="./kotennavi-p60-17.html#home">ホーム画面に追加する手順 →</a></div>
               <div class="p513-push-note" data-p513-push-note="denied" hidden>この端末では、個展なびからの通知が「許可しない」になっています。端末の設定で、通知を許可してください。<a class="ktn-guide-link" href="./kotennavi-p60-17.html#trouble">許可する手順 →</a></div>
               <div class="p513-push-note" data-p513-push-note="unsupported" hidden>この端末・ブラウザでは、プッシュ通知を受け取れません。取引の連絡はメールでお届けします。</div>
@@ -296,6 +297,36 @@
               <span class="ktn-switch__track"><span class="ktn-switch__knob"></span></span>
               <span class="ktn-switch__label">受け取らない</span>
             </button>
+          </div>
+
+          <!-- 通知を受け取っている端末（2026-10-11）。この利用者の購読の一覧（docs/PWA設計ガイド.md 7-3）。
+               「この端末」は上のスイッチと連動（オンなら一覧に出る）。ほかの端末は「外す」でその端末への通知を止める（その端末で再びオンにすれば戻る）。
+               端末の名前は登録したときの User-Agent から作る。以下はデモデータ。 -->
+          <div class="p513-devices" id="p513Devices">
+            <div class="p513-devices__head">通知を受け取っている端末<span class="ktn-count" id="p513DevCount"></span></div>
+            <ul class="p513-devices__list" id="p513DevList">
+              <li class="p513-dev" data-p513-dev="this" hidden>
+                <div class="p513-dev__body">
+                  <div class="p513-dev__name">iPhone（ホーム画面の個展なび）<span class="p513-dev__this">この端末</span></div>
+                  <div class="p513-dev__meta">登録 2026.10.11</div>
+                </div>
+              </li>
+              <li class="p513-dev" data-p513-dev="android">
+                <div class="p513-dev__body">
+                  <div class="p513-dev__name">Android（Chrome）</div>
+                  <div class="p513-dev__meta">登録 2026.09.12・最後に届いた日 2026.10.08</div>
+                </div>
+                <button type="button" class="ktn-op-btn ktn-op-btn--sm" data-p513-dev-remove>外す</button>
+              </li>
+              <li class="p513-dev" data-p513-dev="pc">
+                <div class="p513-dev__body">
+                  <div class="p513-dev__name">Windows（Edge）</div>
+                  <div class="p513-dev__meta">登録 2026.08.30・最後に届いた日 2026.09.21</div>
+                </div>
+                <button type="button" class="ktn-op-btn ktn-op-btn--sm" data-p513-dev-remove>外す</button>
+              </li>
+            </ul>
+            <p class="p513-devices__empty" id="p513DevEmpty" hidden>通知を受け取っている端末はありません。</p>
           </div>
         </div>
 
@@ -379,7 +410,27 @@ document.addEventListener('click', function (e) {
   sw.setAttribute('aria-checked', on ? 'true' : 'false');
   sw.querySelector('.ktn-switch__label').textContent = on ? '受け取る' : '受け取らない';
   KTN.toast('「' + sw.getAttribute('aria-label') + '」を' + (on ? '受け取る' : '受け取らない') + '設定にしました');
+  if (sw.getAttribute('data-p513-key') === 'push') p513SyncDevices();
 });
+/* 通知を受け取っている端末：この端末の行はプッシュのスイッチと連動。ほかの端末は「外す」で一覧から消す */
+function p513SyncDevices() {
+  var sw = document.querySelector('.ktn-switch[data-p513-key="push"]');
+  var me = document.querySelector('[data-p513-dev="this"]');
+  if (me) me.hidden = !(sw && sw.classList.contains('is-on'));
+  var n = document.querySelectorAll('#p513DevList .p513-dev:not([hidden])').length;
+  document.getElementById('p513DevCount').textContent = n + '台';
+  document.getElementById('p513DevList').hidden = !n;
+  document.getElementById('p513DevEmpty').hidden = !!n;
+}
+document.addEventListener('click', function (e) {
+  var b = e.target.closest && e.target.closest('[data-p513-dev-remove]');
+  if (!b) return;
+  var li = b.closest('.p513-dev'), name = li.querySelector('.p513-dev__name').textContent;
+  li.remove();
+  p513SyncDevices();
+  KTN.toast(name + 'への通知を止めました（その端末でオンにすると、また届きます）');
+});
+p513SyncDevices();
 /* プッシュ通知の行：端末の状態ごとの表示（デモバー「この端末」）。ok＝スイッチ／ios・unsupported＝スイッチを隠して案内／denied＝スイッチをオフで押せなくして案内 */
 function p513SetPush(state, btn) {
   var sw = document.querySelector('.ktn-switch[data-p513-key="push"]');
@@ -394,6 +445,7 @@ function p513SetPush(state, btn) {
     }
   }
   document.querySelectorAll('[data-p513-push-btn]').forEach(function (b) { b.classList.toggle('on', b === btn); });
+  p513SyncDevices();
 }
 /* 「クリエイター／ギャラリーとして受け取るメール」は機能を利用中の人だけ（デモバー「機能申込」と連動） */
 document.addEventListener('ktn:userapps', function (e) {

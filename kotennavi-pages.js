@@ -24885,10 +24885,10 @@ KTN.pages['p90-18'] = function () {
   var WHO = { seller: '出品者', buyer: '購入者', both: '出品者・購入者' };
   var ROLE = { user: 'ユーザー', creator: 'クリエイター', gallery: 'ギャラリー' };
   /* 見本の差し込み値（{{…}} をそれらしい値にして見せる） */
-  var SAMPLE = { artworkName: 'オノマトペの庭', exhibitionName: 'あなたが知らないオノマトペ', applyName: 'クリエイター機能', personName: '田中 透さん', contentKind: '展覧会', contentName: '音のかたち IV', watch: 3, checkin: 2, interest: 5, n: 2 };
+  var SAMPLE = { artworkName: 'オノマトペの庭', exhibitionName: 'あなたが知らないオノマトペ', applyName: 'クリエイター機能', personName: '田中 透さん', contentKind: '展覧会', contentName: '音のかたち IV', deadlineLabel: '支払期限', watch: 3, checkin: 2, interest: 5, n: 2 };
   var INTRO = {
     mine: 'お知らせ一覧（P61）の「あなた宛」に出す文言です。左上のチップ（ユーザー／クリエイター／ギャラリー）は「立場」の列で決まります。ニュース（サイトからの一斉のお知らせ）は <a class="ktn-guide-link" href="./kotennavi-p61-11.html">お知らせの新規作成</a> で1件ずつ作ります。',
-    todo: 'サイドバーのロールアイコンから開く「やること」の一覧に出す文言です（LIAISON+ の取引）。自分の番の状態文と、取引の結果の文があります。状態名そのもの（購入確定待ち など）は変えず、利用者に向けた呼びかけの文をここで管理します。自分の番の文は、スマホなどへのプッシュ通知の題名にもそのまま使います。'
+    todo: 'サイドバーのロールアイコンから開く「やること」の一覧に出す文言です（LIAISON+ の取引）。自分の番の状態文と、取引の結果の文があります。状態名そのもの（購入確定待ち など）は変えず、利用者に向けた呼びかけの文をここで管理します。自分の番の文は、スマホなどへのプッシュ通知の題名にもそのまま使います。「プッシュ通知だけで使う文」は、期限が近づいても操作がまだのときに送り直す通知の題名です。'
   };
   function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
   function fill(t) { return t.replace(/\{\{(\w+)\}\}/g, function (m, k) { return SAMPLE[k] != null ? SAMPLE[k] : m; }); }
@@ -24912,7 +24912,7 @@ KTN.pages['p90-18'] = function () {
       b.classList.toggle('is-active', on); b.setAttribute('aria-selected', on ? 'true' : 'false');
     });
     tabsEl.querySelector('[data-count="mine"]').textContent = D.mine.length + '件';
-    tabsEl.querySelector('[data-count="todo"]').textContent = (D.todoTurn.length + D.todoResult.length) + '件';
+    tabsEl.querySelector('[data-count="todo"]').textContent = (D.todoTurn.length + D.todoResult.length + D.push.length) + '件';
     introEl.innerHTML = INTRO[tab];
     if (tab === 'mine') {
       listEl.innerHTML = table('お知らせ（あなた宛）', D.mine, [C_ID,
@@ -24921,7 +24921,7 @@ KTN.pages['p90-18'] = function () {
         C_TEXT, C_MAIL]);
     } else {
       var cols = [C_ID, { h: '誰に', col: 'p9018-col--who', v: function (r) { return WHO[r.who]; } }, { h: 'いつ', cls: 'p909-cell--meta', v: function (r) { return esc(r.when); } }, C_TEXT, C_MAIL];
-      listEl.innerHTML = table('自分の番（状態文）', D.todoTurn, cols) + table('取引の結果', D.todoResult, cols);
+      listEl.innerHTML = table('自分の番（状態文）', D.todoTurn, cols) + table('取引の結果', D.todoResult, cols) + table('プッシュ通知だけで使う文', D.push, cols);
     }
   }
   tabsEl.addEventListener('click', function (e) { var b = e.target.closest('[data-panel]'); if (b) { tab = b.dataset.panel; render(); } });
@@ -24930,7 +24930,7 @@ KTN.pages['p90-18'] = function () {
   var modal = document.getElementById('p9018EditModal'), ctx = document.getElementById('p9018EditCtx');
   var ta = document.getElementById('p9018EditText'), help = document.getElementById('p9018EditHelp'), pv = document.getElementById('p9018EditPreview');
   var editing = null;
-  function find(id) { var all = [].concat(D.todoTurn, D.todoResult, D.mine); for (var i = 0; i < all.length; i++) if (all[i].id === id) return all[i]; return null; }
+  function find(id) { var all = [].concat(D.todoTurn, D.todoResult, D.push, D.mine); for (var i = 0; i < all.length; i++) if (all[i].id === id) return all[i]; return null; }
   function preview() { pv.textContent = fill(ta.value); }
   listEl.addEventListener('click', function (e) {
     var b = e.target.closest('[data-edit]'); if (!b) return;

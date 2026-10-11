@@ -2450,6 +2450,10 @@ KTN.NOTICE_DEFS = {
     { id: 'TD-R4', who: 'seller', when: '確定期限を過ぎて自動取消（出品者側）',   text: '確定期限を過ぎたため、出品が自動で取り消されました',   mail: 'T-10' },
     { id: 'TD-R5', who: 'buyer',  when: '会場で売約済になり申込が取消',           text: '会場で売約済になったため、お申込みが取り消されました', mail: 'T-11' }
   ],
+  /* プッシュ通知だけで使う文（2026-10-11）：期限が近づいても操作がまだのときの送り直し。メール T-09 と同じ時点（画面の「期限間近」と同じ基準） */
+  push: [
+    { id: 'PU-01', who: 'both', when: '期限間近（S1〜S5・操作がまだのとき。メール T-09 と同時。夜は朝8時に）', text: '{{deadlineLabel}}が近づいています', mail: 'T-09' }
+  ],
   /* お知らせ（あなた宛）：NT-01〜NT-09。role＝どの立場のお知らせか（P61 の左上のチップ） */
   mine: [
     { id: 'NT-01',  role: 'creator・gallery', when: '作品にお問合わせが届いた',                     text: '作品《{{artworkName}}》にお問合わせが届きました',                 dest: 'P3-20／P4-20・P6-14', mail: 'F-05' },
@@ -2467,7 +2471,7 @@ KTN.NOTICE_DEFS = {
 };
 /* 文言を ID で引き、{{…}} を差し込む */
 KTN.nt = function (id, vars) {
-  var d = KTN.NOTICE_DEFS, all = [].concat(d.todoTurn, d.todoResult, d.mine), t = '';
+  var d = KTN.NOTICE_DEFS, all = [].concat(d.todoTurn, d.todoResult, d.push, d.mine), t = '';
   for (var i = 0; i < all.length; i++) if (all[i].id === id) { t = all[i].text; break; }
   return t.replace(/\{\{(\w+)\}\}/g, function (m, k) { return vars && vars[k] != null ? vars[k] : m; });
 };
@@ -2476,10 +2480,14 @@ KTN.nt = function (id, vars) {
    題名＝状態文、本文＝《作品名》相手・期限、アイコン＝アプリのアイコン、tag＝取引ごと（同じ取引の通知は新しいもので置き換える）。
    renotify＝true（置き換えるときも、もう一度知らせる。false だと2回目以降は画面に出ず、通知の一覧の中身が黙って入れ替わるだけになる）。
    本番はサーバーが同じ形の中身を送り、Service Worker が showNotification で出す。 */
-KTN.pushPayload = function (it) {
+/* 期限の呼び方（transaction-states.md）。期限が近いときの送り直し（PU-01）の題名に差し込む */
+KTN.DEADLINE_LABEL = { 'TD-S1': '確定期限', 'TD-S2': '支払期限', 'TD-S3': '発送期限', 'TD-S4': '確認期限', 'TD-S5': '確認期限' };
+/* reminder＝true で期限が近いときの送り直し：題名＝「○○期限が近づいています」、本文の末尾に自分の番の文。
+   同じ取引の tag なので、前の通知を置き換えて知らせ直す。夜（22時〜翌8時）に送る時点が来たら朝8時まで待つ（サーバー側） */
+KTN.pushPayload = function (it, reminder) {
   return {
-    title: KTN.nt(it.def),
-    body: '《' + it.work + '》' + it.counterpart + '　期限 ' + it.deadline,
+    title: reminder ? KTN.nt('PU-01', { deadlineLabel: KTN.DEADLINE_LABEL[it.def] }) : KTN.nt(it.def),
+    body: '《' + it.work + '》' + it.counterpart + '　期限 ' + it.deadline + (reminder ? '\n' + KTN.nt(it.def) : ''),
     icon: 'icons/icon-192.png',
     badge: 'icons/badge-96.png',
     tag: 'txn-' + it.def + '-' + it.work,
@@ -2490,10 +2498,10 @@ KTN.pushPayload = function (it) {
 /* プロトタイプ用：パソコンのブラウザに本物の通知を1回出す（P5-13 のデモバー「試しに通知を出す」）。
    role＝'creator'（出品者として）／'user'（購入者として）。やることのデモデータの先頭の項目を使う。
    通知は安全な接続（Live Server の localhost・https）でだけ出せる。ファイルを直接開いたときは出せない。 */
-KTN.pushPreview = function (role) {
+KTN.pushPreview = function (role, reminder) {
   var items = (KTN.txnAlertItems && KTN.txnAlertItems[role] && KTN.txnAlertItems[role].lp) || [];
   if (!items.length) return;
-  var p = KTN.pushPayload(items[0]);
+  var p = KTN.pushPayload(items[0], reminder);
   if (!('Notification' in window) || !window.isSecureContext) {
     KTN.toast('このブラウザ・開き方では通知を出せません（Live Server で開いてください）');
     return;
