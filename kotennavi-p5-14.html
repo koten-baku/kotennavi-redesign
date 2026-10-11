@@ -85,6 +85,9 @@
   <button class="dbtn on" data-pwa-demo-btn onclick="ktnPwaCard('std',this)">Android など</button>
   <button class="dbtn" data-pwa-demo-btn onclick="ktnPwaCard('ios',this)">iPhone（Safari）</button>
   <button class="dbtn" data-pwa-demo-btn onclick="ktnPwaCard('off',this)">出さない（オン済み・PC など）</button>
+  <span class="dbar-sep" style="margin-left:12px">通信：</span>
+  <button class="dbtn on" data-offline-demo-btn="on" onclick="ktnDemoOffline(false)">オンライン</button>
+  <button class="dbtn" data-offline-demo-btn="off" onclick="ktnDemoOffline(true)">オフライン</button>
 </div>
 
 <div class="shell">
@@ -386,7 +389,7 @@
             <div class="p514-aw__strip p514-aw__strip--pending">
               <span class="p514-aw__strip-label">申込済　申込ID#2（全2件） 2026.02.28</span>
               <div class="p514-aw__strip-actions">
-                <button class="p514-cancel-apply-btn ktn-op-btn ktn-op-btn--danger-outline ktn-op-btn--sm" type="button" data-name="夕暮れの記憶" data-apply="#2">申込をキャンセル</button>
+                <button data-txn-op class="p514-cancel-apply-btn ktn-op-btn ktn-op-btn--danger-outline ktn-op-btn--sm" type="button" data-name="夕暮れの記憶" data-apply="#2">申込をキャンセル</button>
               </div>
             </div>
           </div>
@@ -587,7 +590,7 @@
     </div>
     <div class="p514-modal__foot">
       <button class="p514-modal__btn ktn-op-btn" id="p514CancelApplyModalBack">戻る</button>
-      <button class="p514-modal__btn ktn-op-btn ktn-op-btn--danger" id="p514CancelApplyModalOk">申込をキャンセルする</button>
+      <button class="p514-modal__btn ktn-op-btn ktn-op-btn--danger" id="p514CancelApplyModalOk" data-txn-op>申込をキャンセルする</button>
     </div>
   </div>
 </div>
