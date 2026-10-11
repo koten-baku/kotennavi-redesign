@@ -54,6 +54,10 @@
   <span class="dbar-sep" style="margin-left:12px">通信：</span>
   <button class="dbtn on" data-offline-demo-btn="on" onclick="ktnDemoOffline(false)">オンライン</button>
   <button class="dbtn" data-offline-demo-btn="off" onclick="ktnDemoOffline(true)">オフライン</button>
+  <span class="dbar-sep" style="margin-left:12px">特典：</span>
+  <button class="dbtn on" data-terms-demo="seller" onclick="ktnTermsDemo('seller','active',this)">適用中</button>
+  <button class="dbtn" data-terms-demo="seller" onclick="ktnTermsDemo('seller','progress',this)">条件の達成前</button>
+  <button class="dbtn" data-terms-demo="seller" onclick="ktnTermsDemo('seller','none',this)">なし</button>
 </div>
 <div class="shell">
 
@@ -161,6 +165,9 @@
         <p class="ktn-mgmt-head__desc">展示作品のオンライン販売設定を行います。作品と販売情報は展覧会ページの LIAISON タブで公開されます。</p>
         <p class="ktn-mgmt-head__guides">公開期間（会期開始日〜販売終了日または会期終了日の遅い方）の外でも、出品者と管理者は展覧会ページの作品タブから実際の表示を確認できます（公開前プレビュー）。詳しくは <a class="ktn-guide-link" href="kotennavi-p70-2.html" target="_blank" rel="noopener">リエゾン+ 作品販売ガイド →</a></p>
       </div>
+
+      <!-- 利用料と特典の要約。利用料の帯の中に、特典の帯（期間つき）を入れ子で出す。詳しいカードは P3-17／P4-17。中身は pages.js KTN.CAMPAIGN が描く（2026-10-11） -->
+      <div class="ktn-terms-line" data-terms-line="seller"></div>
 
       <!-- モード切替バー -->
       <div class="p2-12-mode-bar">

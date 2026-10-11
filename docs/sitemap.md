@@ -269,7 +269,7 @@
 | P70-3 | 作品購入までの流れ | L+ | R | R | R | R | R | R/W | --w-article | kotennavi-p70-3.html | 調整中 |
 | P70-4 | 送料・配送について | L+ | R | R | R | R | R | R/W | --w-article | kotennavi-p70-4.html | 調整中 |
 | P70-6 | 特定商取引法に基づく表示 | L+ | R | R | R | R | R | R/W | --w-article | kotennavi-p70-6.html | 調整中 |
-| P70-7 | リエゾンプラスのサービス利用料について | L+ |  |  | R | R | R | R/W | --w-article | kotennavi-p70-7.html | 整合性のみ、リリース対象外 |
+| P70-7 | リエゾンプラスのサービス利用料について | L+ |  |  |  |  |  | R/W | --w-article | kotennavi-p70-7.html | **公開しない（中身の参照用・2026-10-11）**。ほかのページからリンクしない |
 | P70-8 | ギャラリーへの説明ガイド | L,L+ |  |  | R | R |  | R/W | --w-article | kotennavi-p70-8.html | 調整中 |
 | P70-9 | 作品画像撮影ガイド | L,L+ |  |  | R | R | R | R/W | --w-article | kotennavi-p70-9.html | 調整中 |
 | P70-11 | リエゾンプラス-取引ガイド(購入者編) | L+ |  | R | R | R | R | R/W | --w-article | kotennavi-p70-11.html | 整合性のみ |
@@ -302,3 +302,4 @@
 | P90-17 | 管理者-検索・特集管理 |  |  |  |  |  |  | R/W | --w-detail | kotennavi-p90-17.html | 調整中 |
 | P90-18 | 管理者-お知らせ・やることの文言管理 |  |  |  |  |  |  | R/W | --w-detail | kotennavi-p90-18.html | 調整中 |
 | P90-19 | 管理者-トップページの管理 |  |  |  |  |  |  | R/W | --w-detail | kotennavi-p90-19.html | 調整中 |
+| P90-20 | 管理者-料率・キャンペーン管理 | L+ |  |  |  |  |  | R/W | --w-detail | kotennavi-p90-20.html | 調整中 |

@@ -269,6 +269,8 @@
           <ul class="ktn-form-error__list"><li class="ktn-form-error__item">「ニックネーム」が未入力です。<button class="ktn-form-error__jump" type="button" onclick="document.getElementById('p511NicknameField').scrollIntoView({behavior:'smooth',block:'center'});document.getElementById('p511Nickname').focus()">該当箇所へ →</button></li></ul>
         </div>
 
+        <!-- キャンペーンの適用状況（管理者のみ・.ktn-admin-note なので syncAdminNote が切替。中身は pages.js KTN.CAMPAIGN が描く・2026-10-11） -->
+        <div class="ktn-admin-note" data-admin-camp="buyer" hidden></div>
         <!-- 管理者コメント欄（role=admin のときのみ表示・共通 syncAdminNote が切替） -->
         <div class="ktn-admin-note" id="p511AdminNote" hidden>
           <div class="ktn-admin-note__head">

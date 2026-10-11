@@ -36,6 +36,10 @@
   <span class="dbar-sep">Stripe連携：</span>
   <button class="dbtn on" id="dbarStripeOn" onclick="setStripeConn('connected')">連携済み</button>
   <button class="dbtn" id="dbarStripeOff" onclick="setStripeConn('unconnected')">未連携</button>
+  <span class="dbar-sep">特典：</span>
+  <button class="dbtn on" data-terms-demo="seller" onclick="ktnTermsDemo('seller','active',this)">適用中</button>
+  <button class="dbtn" data-terms-demo="seller" onclick="ktnTermsDemo('seller','progress',this)">条件の達成前</button>
+  <button class="dbtn" data-terms-demo="seller" onclick="ktnTermsDemo('seller','none',this)">なし</button>
 </div>
 
 <div class="shell">
@@ -160,6 +164,9 @@
           <span class="p317-stripe-status__label">決済パートナー（Stripe）連携済み</span>
           <span class="p317-stripe-status__date">最終確認：2026年6月2日</span>
         </div>
+
+        <!-- 現在の利用条件（.ktn-terms・2026-10-11）。中身は pages.js KTN.CAMPAIGN が描く＝料率・特典の数字は管理者の設定 P90-20 から -->
+        <div class="p211-block ktn-terms" data-terms="seller"></div>
 
         <!-- C-2. 次回振込予定（未精算残高より「次にいくら・いつ振り込まれるか」を主役に統合） -->
         <div class="p211-block">
@@ -294,19 +301,19 @@
                 <tbody>
                   <tr>
                     <td data-label="締め日">2026.06.30</td>
-                    <td data-label="当月精算金額">¥152,650</td>
+                    <td data-label="当月精算金額">¥152,820</td>
                     <td data-label="振込日">2026.07.20</td>
                     <td data-label="振込手数料">¥250</td>
-                    <td data-label="振込金額">¥152,400</td>
+                    <td data-label="振込金額">¥152,570</td>
                     <td data-label="状態"><span class="p315-archive-table__status--done">振込完了</span></td>
                     <td><button type="button" class="p315-archive-table__detail-btn" data-payout="2026-07-20">明細を見る</button></td>
                   </tr>
                   <tr>
                     <td data-label="締め日">2026.05.31</td>
-                    <td data-label="当月精算金額">¥95,700</td>
+                    <td data-label="当月精算金額">¥98,280</td>
                     <td data-label="振込日">2026.06.20</td>
                     <td data-label="振込手数料">¥250</td>
-                    <td data-label="振込金額">¥98,600</td>
+                    <td data-label="振込金額">¥101,180</td>
                     <td data-label="状態"><span class="p315-archive-table__status--done">振込完了</span></td>
                     <td><button type="button" class="p315-archive-table__detail-btn" data-payout="2026-06-20">明細を見る</button></td>
                   </tr>
@@ -474,10 +481,10 @@ document.querySelectorAll('.p317-setup-checklist__toggle').forEach(function (tog
         ['作品代金合計', '¥165,000'],
         ['送料合計', '¥3,600'],
         ['梱包費合計', '¥1,200'],
-        ['サービス利用料', '−¥17,150'],
+        ['サービス利用料', '−¥16,980'],
         ['振込手数料', '−¥250']
       ],
-      total: '¥152,400'
+      total: '¥152,570'
     },
     '2026-06-20': {
       date: '2026.06.20', cutoff: '2026.05.31', count: '2件',
@@ -485,10 +492,11 @@ document.querySelectorAll('.p317-setup-checklist__toggle').forEach(function (tog
         ['作品代金合計', '¥106,000'],
         ['送料合計', '¥2,400'],
         ['梱包費合計', '¥800'],
-        ['サービス利用料', '−¥10,350'],
+        ['サービス利用料', '−¥10,920'],
+        ['前月からの繰越', '¥3,150'],
         ['振込手数料', '−¥250']
       ],
-      total: '¥98,600'
+      total: '¥101,180'
     }
   };
 
