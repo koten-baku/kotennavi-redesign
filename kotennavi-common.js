@@ -2366,6 +2366,45 @@ function ktnPwaCard(state, btn) {
   }
 }
 window.ktnPwaCard = ktnPwaCard;
+/* オフラインのとき、取引の状態を変える操作を止める（2026-10-11・PWA設計ガイド 9 章）。
+   対象のボタンに data-txn-op を付ける（購入の確定・会場売約済・出品取消・発送・完了の確認・お支払い・受取の確認・購入の申込・取引のキャンセル・LIAISON+ 作品の保存）。
+   オフラインの間は body.is-offline で薄く表示し、押しても動かさず（クリックを捕まえて止める）、画面の上に「通信できません」の帯を出す。
+   disabled 属性は使わない（各ページの JS が disabled を別の目的〔確認のチェック待ちなど〕で付け外しするため、ぶつからないようにする）。
+   本物の通信の状態（online／offline のイベント）に従う。プロトタイプではデモバー「通信」で切り替えて確かめる。
+   ※画面で止めるのは補助。二重に売れないことはサーバーが守る（状態を変える API は受け取った時点の状態を確かめる）。 */
+KTN.OFFLINE_MSG = '通信できません。取引の操作は、通信できる場所で行ってください';
+KTN.setOffline = function (off) {
+  document.body.classList.toggle('is-offline', !!off);
+  document.querySelectorAll('[data-txn-op]').forEach(function (b) {
+    if (off) b.setAttribute('aria-disabled', 'true'); else b.removeAttribute('aria-disabled');
+  });
+  var bar = document.getElementById('ktnOfflineBar');
+  if (off && !bar) {
+    bar = document.createElement('div');
+    bar.id = 'ktnOfflineBar';
+    bar.className = 'ktn-offline-bar';
+    bar.setAttribute('role', 'status');
+    bar.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="2" y1="2" x2="22" y2="22"/><path d="M8.5 16.5a5 5 0 0 1 7 0"/><path d="M2 8.82a15 15 0 0 1 4.17-2.65"/><path d="M10.66 5c4.01-.36 8.14.9 11.34 3.76"/><path d="M16.85 11.25a10 10 0 0 1 2.22 1.68"/><path d="M5 13a10 10 0 0 1 5.24-2.76"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>' +
+      '<span>' + KTN.OFFLINE_MSG + '</span>';
+    document.body.appendChild(bar);
+  }
+  if (bar) bar.hidden = !off;
+  document.querySelectorAll('[data-offline-demo-btn]').forEach(function (b) {
+    b.classList.toggle('on', (b.getAttribute('data-offline-demo-btn') === 'off') === !!off);
+  });
+};
+window.ktnDemoOffline = function (off) { KTN.setOffline(off); };
+document.addEventListener('click', function (e) {
+  if (!document.body.classList.contains('is-offline')) return;
+  var b = e.target.closest && e.target.closest('[data-txn-op]');
+  if (!b) return;
+  e.preventDefault();
+  e.stopImmediatePropagation();
+  KTN.toast(KTN.OFFLINE_MSG);
+}, true);
+window.addEventListener('offline', function () { KTN.setOffline(true); });
+window.addEventListener('online', function () { KTN.setOffline(false); });
+document.addEventListener('DOMContentLoaded', function () { if (navigator.onLine === false) KTN.setOffline(true); });
 document.addEventListener('click', function (e) {
   var b = e.target.closest && e.target.closest('[data-pwa-close]');
   if (!b) return;

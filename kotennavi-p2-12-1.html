@@ -51,6 +51,9 @@
   <span class="dbar-sep" style="margin-left:8px">販売期間：</span>
   <button class="dbtn dbtn-exh on" data-exh-key="salesOver" onclick="ktnSetExh('salesOver','false',this)">終了前</button>
   <button class="dbtn dbtn-exh" data-exh-key="salesOver" onclick="ktnSetExh('salesOver','true',this)">終了済</button>
+  <span class="dbar-sep" style="margin-left:12px">通信：</span>
+  <button class="dbtn on" data-offline-demo-btn="on" onclick="ktnDemoOffline(false)">オンライン</button>
+  <button class="dbtn" data-offline-demo-btn="off" onclick="ktnDemoOffline(true)">オフライン</button>
 </div>
 <div class="shell">
 
@@ -397,7 +400,7 @@
         <!-- フォームアクション -->
         <div class="p2-12-form-actions">
           <button class="p2-12-form-actions__cancel ktn-op-btn" type="button" onclick="history.back()">キャンセル</button>
-          <button class="p2-12-form-actions__save ktn-op-btn ktn-op-btn--primary" type="button" id="p212SaveAll">保存する</button>
+          <button class="p2-12-form-actions__save ktn-op-btn ktn-op-btn--primary" type="button" id="p212SaveAll" data-txn-op>保存する</button>
         </div>
 
       </section>

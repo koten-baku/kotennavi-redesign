@@ -35,7 +35,7 @@
     </label>
     <div class="p315-modal__foot">
       <button class="p315-modal__cancel ktn-op-btn" type="button" id="p315VenueModalCancel">キャンセル</button>
-      <button class="p315-modal__ok ktn-op-btn ktn-op-btn--danger" type="button" id="p315VenueModalOk">売約済にする</button>
+      <button class="p315-modal__ok ktn-op-btn ktn-op-btn--danger" type="button" id="p315VenueModalOk" data-txn-op>売約済にする</button>
     </div>
   </div>
 </div>
@@ -59,7 +59,7 @@
     </label>
     <div class="p315-modal__foot">
       <button class="p315-modal__cancel ktn-op-btn" type="button" id="p315TakedownModalCancel">戻る</button>
-      <button class="p315-modal__ok ktn-op-btn ktn-op-btn--danger" type="button" id="p315TakedownModalOk" disabled>出品取消を実行する</button>
+      <button class="p315-modal__ok ktn-op-btn ktn-op-btn--danger" type="button" id="p315TakedownModalOk" data-txn-op disabled>出品取消を実行する</button>
     </div>
   </div>
 </div>
@@ -119,6 +119,9 @@
   <button class="dbtn on" data-pwa-demo-btn onclick="ktnPwaCard('std',this)">Android など</button>
   <button class="dbtn" data-pwa-demo-btn onclick="ktnPwaCard('ios',this)">iPhone（Safari）</button>
   <button class="dbtn" data-pwa-demo-btn onclick="ktnPwaCard('off',this)">出さない（オン済み・PC など）</button>
+  <span class="dbar-sep" style="margin-left:12px">通信：</span>
+  <button class="dbtn on" data-offline-demo-btn="on" onclick="ktnDemoOffline(false)">オンライン</button>
+  <button class="dbtn" data-offline-demo-btn="off" onclick="ktnDemoOffline(true)">オフライン</button>
 </div>
 
 <div class="shell">
@@ -331,9 +334,9 @@
                     <div class="p315-witem__title-row">
                       <span class="p315-witem__title">流れる時間</span>
                       <div class="p315-witem__ops-inline">
-                        <button class="p315-venue-btn p315-witem__ops-link" type="button" data-work="流れる時間" data-count="1">会場売約済にする</button>
+                        <button data-txn-op class="p315-venue-btn p315-witem__ops-link" type="button" data-work="流れる時間" data-count="1">会場売約済にする</button>
                         <span class="p315-witem__ops-sep">·</span>
-                        <button class="p315-takedown-btn p315-witem__ops-link" type="button" data-work="流れる時間" data-count="1">出品取消</button>
+                        <button data-txn-op class="p315-takedown-btn p315-witem__ops-link" type="button" data-work="流れる時間" data-count="1">出品取消</button>
                       </div>
                     </div>
                   </div>
@@ -359,9 +362,9 @@
                     <div class="p315-witem__title-row">
                       <span class="p315-witem__title">夜の静寂</span>
                       <div class="p315-witem__ops-inline">
-                        <button class="p315-venue-btn p315-witem__ops-link" type="button" data-work="夜の静寂" data-count="1">会場売約済にする</button>
+                        <button data-txn-op class="p315-venue-btn p315-witem__ops-link" type="button" data-work="夜の静寂" data-count="1">会場売約済にする</button>
                         <span class="p315-witem__ops-sep">·</span>
-                        <button class="p315-takedown-btn p315-witem__ops-link" type="button" data-work="夜の静寂" data-count="1">出品取消</button>
+                        <button data-txn-op class="p315-takedown-btn p315-witem__ops-link" type="button" data-work="夜の静寂" data-count="1">出品取消</button>
                       </div>
                     </div>
                   </div>
@@ -387,9 +390,9 @@
                     <div class="p315-witem__title-row">
                       <span class="p315-witem__title">音の輪郭 No.7</span>
                       <div class="p315-witem__ops-inline">
-                        <button class="p315-venue-btn p315-witem__ops-link" type="button" data-work="音の輪郭 No.7" data-count="2">会場売約済にする</button>
+                        <button data-txn-op class="p315-venue-btn p315-witem__ops-link" type="button" data-work="音の輪郭 No.7" data-count="2">会場売約済にする</button>
                         <span class="p315-witem__ops-sep">·</span>
-                        <button class="p315-takedown-btn p315-witem__ops-link" type="button" data-work="音の輪郭 No.7" data-count="2">出品取消</button>
+                        <button data-txn-op class="p315-takedown-btn p315-witem__ops-link" type="button" data-work="音の輪郭 No.7" data-count="2">出品取消</button>
                       </div>
                     </div>
                   </div>
@@ -420,9 +423,9 @@
                     <div class="p315-witem__title-row">
                       <span class="p315-witem__title">言葉の重力 No.3</span>
                       <div class="p315-witem__ops-inline">
-                        <button class="p315-venue-btn p315-witem__ops-link" type="button" data-work="言葉の重力 No.3" data-count="1">会場売約済にする</button>
+                        <button data-txn-op class="p315-venue-btn p315-witem__ops-link" type="button" data-work="言葉の重力 No.3" data-count="1">会場売約済にする</button>
                         <span class="p315-witem__ops-sep">·</span>
-                        <button class="p315-takedown-btn p315-witem__ops-link" type="button" data-work="言葉の重力 No.3" data-count="1">出品取消</button>
+                        <button data-txn-op class="p315-takedown-btn p315-witem__ops-link" type="button" data-work="言葉の重力 No.3" data-count="1">出品取消</button>
                       </div>
                     </div>
                   </div>
@@ -448,9 +451,9 @@
                     <div class="p315-witem__title-row">
                       <span class="p315-witem__title">透明な午後</span>
                       <div class="p315-witem__ops-inline">
-                        <button class="p315-venue-btn p315-witem__ops-link" type="button" data-work="透明な午後" data-count="1">会場売約済にする</button>
+                        <button data-txn-op class="p315-venue-btn p315-witem__ops-link" type="button" data-work="透明な午後" data-count="1">会場売約済にする</button>
                         <span class="p315-witem__ops-sep">·</span>
-                        <button class="p315-takedown-btn p315-witem__ops-link" type="button" data-work="透明な午後" data-count="1">出品取消</button>
+                        <button data-txn-op class="p315-takedown-btn p315-witem__ops-link" type="button" data-work="透明な午後" data-count="1">出品取消</button>
                       </div>
                     </div>
                   </div>
@@ -476,9 +479,9 @@
                     <div class="p315-witem__title-row">
                       <span class="p315-witem__title">風の記憶</span>
                       <div class="p315-witem__ops-inline">
-                        <button class="p315-venue-btn p315-witem__ops-link" type="button" data-work="風の記憶" data-count="1">会場売約済にする</button>
+                        <button data-txn-op class="p315-venue-btn p315-witem__ops-link" type="button" data-work="風の記憶" data-count="1">会場売約済にする</button>
                         <span class="p315-witem__ops-sep">·</span>
-                        <button class="p315-takedown-btn p315-witem__ops-link" type="button" data-work="風の記憶" data-count="1">出品取消</button>
+                        <button data-txn-op class="p315-takedown-btn p315-witem__ops-link" type="button" data-work="風の記憶" data-count="1">出品取消</button>
                       </div>
                     </div>
                   </div>
@@ -590,9 +593,9 @@
                     <div class="p315-witem__title-row">
                       <span class="p315-witem__title">線の重なり</span>
                       <div class="p315-witem__ops-inline">
-                        <button class="p315-venue-btn p315-witem__ops-link" type="button" data-work="線の重なり" data-count="1">会場売約済にする</button>
+                        <button data-txn-op class="p315-venue-btn p315-witem__ops-link" type="button" data-work="線の重なり" data-count="1">会場売約済にする</button>
                         <span class="p315-witem__ops-sep">·</span>
-                        <button class="p315-takedown-btn p315-witem__ops-link" type="button" data-work="線の重なり" data-count="1">出品取消</button>
+                        <button data-txn-op class="p315-takedown-btn p315-witem__ops-link" type="button" data-work="線の重なり" data-count="1">出品取消</button>
                       </div>
                     </div>
                   </div>

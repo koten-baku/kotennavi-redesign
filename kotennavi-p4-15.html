@@ -35,7 +35,7 @@
     </label>
     <div class="p315-modal__foot">
       <button class="p315-modal__cancel ktn-op-btn" type="button" id="p415VenueModalCancel">キャンセル</button>
-      <button class="p315-modal__ok ktn-op-btn ktn-op-btn--danger" type="button" id="p415VenueModalOk">売約済にする</button>
+      <button class="p315-modal__ok ktn-op-btn ktn-op-btn--danger" type="button" id="p415VenueModalOk" data-txn-op>売約済にする</button>
     </div>
   </div>
 </div>
@@ -59,7 +59,7 @@
     </label>
     <div class="p315-modal__foot">
       <button class="p315-modal__cancel ktn-op-btn" type="button" id="p415TakedownModalCancel">戻る</button>
-      <button class="p315-modal__ok ktn-op-btn ktn-op-btn--danger" type="button" id="p415TakedownModalOk" disabled>出品取消を実行する</button>
+      <button class="p315-modal__ok ktn-op-btn ktn-op-btn--danger" type="button" id="p415TakedownModalOk" data-txn-op disabled>出品取消を実行する</button>
     </div>
   </div>
 </div>
@@ -119,6 +119,9 @@
   <button class="dbtn on" data-pwa-demo-btn onclick="ktnPwaCard('std',this)">Android など</button>
   <button class="dbtn" data-pwa-demo-btn onclick="ktnPwaCard('ios',this)">iPhone（Safari）</button>
   <button class="dbtn" data-pwa-demo-btn onclick="ktnPwaCard('off',this)">出さない（オン済み・PC など）</button>
+  <span class="dbar-sep" style="margin-left:12px">通信：</span>
+  <button class="dbtn on" data-offline-demo-btn="on" onclick="ktnDemoOffline(false)">オンライン</button>
+  <button class="dbtn" data-offline-demo-btn="off" onclick="ktnDemoOffline(true)">オフライン</button>
 </div>
 
 <div class="shell">
@@ -330,9 +333,9 @@
                     <div class="p315-witem__title-row">
                       <span class="p315-witem__title">静かな水面</span>
                       <div class="p315-witem__ops-inline">
-                        <button class="p315-venue-btn p315-witem__ops-link" type="button" data-work="静かな水面" data-count="1">会場売約済にする</button>
+                        <button data-txn-op class="p315-venue-btn p315-witem__ops-link" type="button" data-work="静かな水面" data-count="1">会場売約済にする</button>
                         <span class="p315-witem__ops-sep">·</span>
-                        <button class="p315-takedown-btn p315-witem__ops-link" type="button" data-work="静かな水面" data-count="1">出品取消</button>
+                        <button data-txn-op class="p315-takedown-btn p315-witem__ops-link" type="button" data-work="静かな水面" data-count="1">出品取消</button>
                       </div>
                     </div>
                     <span class="p315-witem__artist">高橋 信</span>
@@ -360,9 +363,9 @@
                     <div class="p315-witem__title-row">
                       <span class="p315-witem__title">光の堆積 No.2</span>
                       <div class="p315-witem__ops-inline">
-                        <button class="p315-venue-btn p315-witem__ops-link" type="button" data-work="光の堆積 No.2" data-count="1">会場売約済にする</button>
+                        <button data-txn-op class="p315-venue-btn p315-witem__ops-link" type="button" data-work="光の堆積 No.2" data-count="1">会場売約済にする</button>
                         <span class="p315-witem__ops-sep">·</span>
-                        <button class="p315-takedown-btn p315-witem__ops-link" type="button" data-work="光の堆積 No.2" data-count="1">出品取消</button>
+                        <button data-txn-op class="p315-takedown-btn p315-witem__ops-link" type="button" data-work="光の堆積 No.2" data-count="1">出品取消</button>
                       </div>
                     </div>
                     <span class="p315-witem__artist">木村 亮</span>
@@ -390,9 +393,9 @@
                     <div class="p315-witem__title-row">
                       <span class="p315-witem__title">燃える地平</span>
                       <div class="p315-witem__ops-inline">
-                        <button class="p315-venue-btn p315-witem__ops-link" type="button" data-work="燃える地平" data-count="1">会場売約済にする</button>
+                        <button data-txn-op class="p315-venue-btn p315-witem__ops-link" type="button" data-work="燃える地平" data-count="1">会場売約済にする</button>
                         <span class="p315-witem__ops-sep">·</span>
-                        <button class="p315-takedown-btn p315-witem__ops-link" type="button" data-work="燃える地平" data-count="1">出品取消</button>
+                        <button data-txn-op class="p315-takedown-btn p315-witem__ops-link" type="button" data-work="燃える地平" data-count="1">出品取消</button>
                       </div>
                     </div>
                     <span class="p315-witem__artist">山田 花</span>
@@ -420,9 +423,9 @@
                     <div class="p315-witem__title-row">
                       <span class="p315-witem__title">朝の余白</span>
                       <div class="p315-witem__ops-inline">
-                        <button class="p315-venue-btn p315-witem__ops-link" type="button" data-work="朝の余白" data-count="1">会場売約済にする</button>
+                        <button data-txn-op class="p315-venue-btn p315-witem__ops-link" type="button" data-work="朝の余白" data-count="1">会場売約済にする</button>
                         <span class="p315-witem__ops-sep">·</span>
-                        <button class="p315-takedown-btn p315-witem__ops-link" type="button" data-work="朝の余白" data-count="1">出品取消</button>
+                        <button data-txn-op class="p315-takedown-btn p315-witem__ops-link" type="button" data-work="朝の余白" data-count="1">出品取消</button>
                       </div>
                     </div>
                     <span class="p315-witem__artist">山田 花</span>
@@ -450,9 +453,9 @@
                     <div class="p315-witem__title-row">
                       <span class="p315-witem__title">境界に咲く</span>
                       <div class="p315-witem__ops-inline">
-                        <button class="p315-venue-btn p315-witem__ops-link" type="button" data-work="境界に咲く" data-count="1">会場売約済にする</button>
+                        <button data-txn-op class="p315-venue-btn p315-witem__ops-link" type="button" data-work="境界に咲く" data-count="1">会場売約済にする</button>
                         <span class="p315-witem__ops-sep">·</span>
-                        <button class="p315-takedown-btn p315-witem__ops-link" type="button" data-work="境界に咲く" data-count="1">出品取消</button>
+                        <button data-txn-op class="p315-takedown-btn p315-witem__ops-link" type="button" data-work="境界に咲く" data-count="1">出品取消</button>
                       </div>
                     </div>
                     <span class="p315-witem__artist">田中 透</span>
@@ -508,9 +511,9 @@
                     <div class="p315-witem__title-row">
                       <span class="p315-witem__title">影と光 No.5</span>
                       <div class="p315-witem__ops-inline">
-                        <button class="p315-venue-btn p315-witem__ops-link" type="button" data-work="影と光 No.5" data-count="1">会場売約済にする</button>
+                        <button data-txn-op class="p315-venue-btn p315-witem__ops-link" type="button" data-work="影と光 No.5" data-count="1">会場売約済にする</button>
                         <span class="p315-witem__ops-sep">·</span>
-                        <button class="p315-takedown-btn p315-witem__ops-link" type="button" data-work="影と光 No.5" data-count="1">出品取消</button>
+                        <button data-txn-op class="p315-takedown-btn p315-witem__ops-link" type="button" data-work="影と光 No.5" data-count="1">出品取消</button>
                       </div>
                     </div>
                     <span class="p315-witem__artist">松本 りさ</span>

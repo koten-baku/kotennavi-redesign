@@ -8048,6 +8048,13 @@ body.p3-3-page .aw--plus .aw__foot>.p33-console-wrap{order:3}
 .ktn-pwa-card:not(.is-ios) [data-pwa-ios],.ktn-pwa-card.is-ios [data-pwa-std]{display:none}
 @media(max-width:540px){.ktn-pwa-card__icon{width:34px;height:34px;border-radius:8px}}
 
+/* ── オフラインのとき（body.is-offline・2026-10-11）＝取引の状態を変える操作 [data-txn-op] を薄くし、上に帯を出す（common.js KTN.setOffline）── */
+body.is-offline [data-txn-op]{opacity:.4;cursor:not-allowed;filter:grayscale(.6)}
+body.is-offline [data-txn-op]:hover{transform:none;box-shadow:none}
+.ktn-offline-bar{position:fixed;top:calc(var(--dh,0px) + var(--hh,50px) + 10px);left:50%;transform:translateX(-50%);z-index:300;display:flex;align-items:center;gap:8px;max-width:calc(100vw - 32px);padding:9px 16px;background:var(--ink);color:#fff;border-radius:20px;box-shadow:0 4px 18px rgba(0,0,0,.18);font-family:var(--fn);font-size:.78rem;line-height:1.5}
+.ktn-offline-bar[hidden]{display:none}
+.ktn-offline-bar svg{width:16px;height:16px;flex-shrink:0}
+
 /* ── オフラインのページ（offline.html・.ktn-offline）＝通信できないときに Service Worker が出す（2026-10-09・PWA設計ガイド 9 章）── */
 body.ktn-offline-page{background:var(--paper)}
 .ktn-offline{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;min-height:100svh;max-width:480px;margin:0 auto;padding:24px 20px;text-align:center}

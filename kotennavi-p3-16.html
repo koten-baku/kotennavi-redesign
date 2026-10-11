@@ -42,7 +42,7 @@
     </div>
     <div class="p515-modal__foot">
       <button class="p515-modal__btn ktn-op-btn" id="p316ConfirmModalBack">戻る</button>
-      <button class="p515-modal__btn ktn-op-btn ktn-op-btn--primary" id="p316ConfirmModalOk">購入を確定する</button>
+      <button class="p515-modal__btn ktn-op-btn ktn-op-btn--primary" id="p316ConfirmModalOk" data-txn-op>購入を確定する</button>
     </div>
   </div>
 </div>
@@ -64,7 +64,7 @@
     </div>
     <div class="p515-modal__foot">
       <button class="p515-modal__btn ktn-op-btn" id="p316ShipModalBack">戻る</button>
-      <button class="p515-modal__btn ktn-op-btn ktn-op-btn--primary" id="p316ShipModalOk">発送完了を通知する</button>
+      <button class="p515-modal__btn ktn-op-btn ktn-op-btn--primary" id="p316ShipModalOk" data-txn-op>発送完了を通知する</button>
     </div>
   </div>
 </div>
@@ -82,7 +82,7 @@
     </div>
     <div class="p515-modal__foot">
       <button class="p515-modal__btn ktn-op-btn" id="p316DoneModalBack">もう一度確認する</button>
-      <button class="p515-modal__btn ktn-op-btn ktn-op-btn--primary" id="p316DoneModalOk">完了を確認する</button>
+      <button class="p515-modal__btn ktn-op-btn ktn-op-btn--primary" id="p316DoneModalOk" data-txn-op>完了を確認する</button>
     </div>
   </div>
 </div>
@@ -244,6 +244,9 @@
   <button class="dbtn on" id="dbarUrgNormal" onclick="setUrgency('normal')">通常</button>
   <button class="dbtn" id="dbarUrgNear" onclick="setUrgency('near')">間近</button>
   <button class="dbtn" id="dbarUrgOver" onclick="setUrgency('overdue')">超過</button>
+  <span class="dbar-sep" style="margin-left:12px">通信：</span>
+  <button class="dbtn on" data-offline-demo-btn="on" onclick="ktnDemoOffline(false)">オンライン</button>
+  <button class="dbtn" data-offline-demo-btn="off" onclick="ktnDemoOffline(true)">オフライン</button>
 </div>
 
 <div class="shell">
@@ -571,7 +574,7 @@
               </div>
             </div>
 
-            <button class="ktn-op-btn ktn-op-btn--primary ktn-op-btn--lg ktn-op-btn--full" id="p316ConfirmBtn" style="margin-top:4px">
+            <button class="ktn-op-btn ktn-op-btn--primary ktn-op-btn--lg ktn-op-btn--full" id="p316ConfirmBtn" data-txn-op style="margin-top:4px">
               この申込者の購入を確定する
             </button>
           </div>
@@ -679,7 +682,7 @@
               </div>
             </div>
 
-            <button class="ktn-op-btn ktn-op-btn--primary ktn-op-btn--lg ktn-op-btn--full" id="p316ShipBtn">
+            <button class="ktn-op-btn ktn-op-btn--primary ktn-op-btn--lg ktn-op-btn--full" id="p316ShipBtn" data-txn-op>
               発送完了を通知する
               <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" width="10" height="10"><polyline points="2,6 5,9 10,3"/></svg>
             </button>
@@ -784,7 +787,7 @@
               <textarea class="p515-review__text" id="p316CompleteMsg" placeholder="コメント（任意）" rows="3">この度はご購入いただきありがとうございました。作品を大切にしていただけると幸いです。</textarea>
             </div>
 
-            <button class="ktn-op-btn ktn-op-btn--primary ktn-op-btn--lg ktn-op-btn--full" id="p316DoneBtn">
+            <button class="ktn-op-btn ktn-op-btn--primary ktn-op-btn--lg ktn-op-btn--full" id="p316DoneBtn" data-txn-op>
               取引完了を確認する
               <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" width="10" height="10"><polyline points="2,6 5,9 10,3"/></svg>
             </button>

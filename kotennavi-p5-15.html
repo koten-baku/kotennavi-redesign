@@ -36,7 +36,7 @@
     </div>
     <div class="p515-modal__foot">
       <button class="p515-modal__btn ktn-op-btn" id="p515ReceiptModalCancel">もう一度確認する</button>
-      <button class="p515-modal__btn ktn-op-btn ktn-op-btn--primary" id="p515ReceiptModalOk">受け取りました</button>
+      <button class="p515-modal__btn ktn-op-btn ktn-op-btn--primary" id="p515ReceiptModalOk" data-txn-op>受け取りました</button>
     </div>
   </div>
 </div>
@@ -54,7 +54,7 @@
     </div>
     <div class="p515-modal__foot">
       <button class="p515-modal__btn ktn-op-btn" id="p515CancelModalBack">戻る</button>
-      <button class="p515-modal__btn ktn-op-btn ktn-op-btn--danger" id="p515CancelModalOk">購入をキャンセルする</button>
+      <button class="p515-modal__btn ktn-op-btn ktn-op-btn--danger" id="p515CancelModalOk" data-txn-op>購入をキャンセルする</button>
     </div>
   </div>
 </div>
@@ -242,6 +242,9 @@
   <button class="dbtn" data-user-apps-btn="cr-lp-pending" onclick="KTN.setUserApps('cr-lp-pending')">クリエイター＋LIAISON+確認中</button>
   <button class="dbtn" data-user-apps-btn="ga-lp-granted" onclick="KTN.setUserApps('ga-lp-granted')">ギャラリー＋LIAISON+利用開始</button>
   <button class="dbtn" data-user-apps-btn="ga-cancelled" onclick="KTN.setUserApps('ga-cancelled')">ギャラリー取消</button>
+  <span class="dbar-sep" style="margin-left:12px">通信：</span>
+  <button class="dbtn on" data-offline-demo-btn="on" onclick="ktnDemoOffline(false)">オンライン</button>
+  <button class="dbtn" data-offline-demo-btn="off" onclick="ktnDemoOffline(true)">オフライン</button>
 </div>
 
 <div class="shell">
@@ -622,7 +625,7 @@
               <span class="p515-deadline-banner__note">期限を過ぎると申込は自動的にキャンセルされます</span>
             </div>
 
-            <button class="p515-pay-btn ktn-op-btn ktn-op-btn--primary ktn-op-btn--lg" id="p515PayBtn" type="button">
+            <button class="p515-pay-btn ktn-op-btn ktn-op-btn--primary ktn-op-btn--lg" id="p515PayBtn" data-txn-op type="button">
               支払いへ進む
             </button>
           </div>
@@ -725,7 +728,7 @@
               <textarea class="p515-review__text" placeholder="コメント（任意）" rows="3"></textarea>
             </div>
 
-            <button class="p515-receipt-btn ktn-op-btn ktn-op-btn--primary ktn-op-btn--lg" id="p515ReceiptBtn">
+            <button class="p515-receipt-btn ktn-op-btn ktn-op-btn--primary ktn-op-btn--lg" id="p515ReceiptBtn" data-txn-op>
               受け取りを確認しました
               <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" width="10" height="10"><polyline points="2,6 5,9 10,3"/></svg>
             </button>
@@ -823,7 +826,7 @@
           </div>
           <!-- 支払い前のみ：購入者の自己完結キャンセル（返金なし・管理者不要） -->
           <div class="ktn-txn-help__cancel" id="p515CancelRow" hidden>
-            <button class="ktn-op-btn ktn-op-btn--danger-outline ktn-op-btn--sm" id="p515CancelLink" type="button">購入をキャンセルする</button>
+            <button class="ktn-op-btn ktn-op-btn--danger-outline ktn-op-btn--sm" id="p515CancelLink" data-txn-op type="button">購入をキャンセルする</button>
           </div>
         </div>
 

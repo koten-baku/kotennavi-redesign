@@ -48,6 +48,9 @@
   <button class="dbtn" onclick="switchWork(2,this)">id=2 ふわふわ</button>
   <button class="dbtn" onclick="switchWork(3,this)">id=3 ドキドキ</button>
   <button class="dbtn" onclick="switchWork(4,this)">id=4 ざわざわ</button>
+  <span class="dbar-sep" style="margin-left:12px">通信：</span>
+  <button class="dbtn on" data-offline-demo-btn="on" onclick="ktnDemoOffline(false)">オンライン</button>
+  <button class="dbtn" data-offline-demo-btn="off" onclick="ktnDemoOffline(true)">オフライン</button>
 </div>
 
 
@@ -289,7 +292,7 @@
               </a>
             </div>
             <div class="p6-liaison__apply-queue" id="p62ApplyQueue">3人が申込中</div>
-            <button class="p6-liaison__btn-apply" id="p62ApplyBtn" onclick="openApplyModal()">
+            <button class="p6-liaison__btn-apply" id="p62ApplyBtn" data-txn-op onclick="openApplyModal()">
               <span class="p6-liaison__btn-apply-inner">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
                   <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
@@ -299,7 +302,7 @@
                 購入申込をする
               </span>
             </button>
-            <button class="p6-liaison__btn-cancel-apply" id="p62CancelApplyBtn"
+            <button class="p6-liaison__btn-cancel-apply" id="p62CancelApplyBtn" data-txn-op
                     style="display:none" onclick="openCancelApplyModal()">申込をキャンセル</button>
             <button class="ktn-action-btn ktn-action-btn--dark p6-liaison__btn-desk" id="p62DeskBtn"
                     style="display:none" onclick="window.location.href='kotennavi-p3-16.html'">取引デスクへ →</button>
@@ -631,7 +634,7 @@
             ・申込順に購入可否が案内されること
           </div>
         </label>
-        <button class="am-submit" onclick="submitApply()">申込を確定する</button>
+        <button class="am-submit" data-txn-op onclick="submitApply()">申込を確定する</button>
         <button class="am-cancel" onclick="closeModal('applyModal')">キャンセル</button>
       </div>
     </div>
@@ -644,7 +647,7 @@
           この作品の購入申込を取り消します。出品者が購入を確定する前のため、料金は発生しません。
           キャンセル後、販売期間中であれば再申込できますが、申込順の最後になります。
         </div>
-        <button class="am-submit am-submit--danger" onclick="confirmCancelApply()">申込をキャンセルする</button>
+        <button class="am-submit am-submit--danger" data-txn-op onclick="confirmCancelApply()">申込をキャンセルする</button>
         <button class="am-cancel" onclick="closeModal('cancelApplyModal')">戻る</button>
       </div>
     </div>
