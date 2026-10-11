@@ -2481,6 +2481,7 @@ KTN.pushPayload = function (it) {
     title: KTN.nt(it.def),
     body: '《' + it.work + '》' + it.counterpart + '　期限 ' + it.deadline,
     icon: 'icons/icon-192.png',
+    badge: 'icons/badge-96.png',
     tag: 'txn-' + it.def + '-' + it.work,
     renotify: true,
     url: it.href
@@ -2499,7 +2500,7 @@ KTN.pushPreview = function (role) {
   }
   function show() {
     /* 試しに出すときは毎回別の通知にする（同じ tag だと、ブラウザによっては2回目以降が画面に出ない） */
-    var n = new Notification(p.title, { body: p.body, icon: p.icon, tag: p.tag + '-' + Date.now() });
+    var n = new Notification(p.title, { body: p.body, icon: p.icon, badge: p.badge, tag: p.tag + '-' + Date.now() });
     n.onclick = function () { window.focus(); location.href = p.url; n.close(); };
   }
   if (Notification.permission === 'granted') { show(); return; }
