@@ -54,6 +54,9 @@
   <span class="dbar-sep" style="margin-left:12px">クーポン：</span>
   <button class="dbtn on" data-terms-demo="buyer" onclick="ktnTermsDemo('buyer','has',this)">あり</button>
   <button class="dbtn" data-terms-demo="buyer" onclick="ktnTermsDemo('buyer','none',this)">なし</button>
+  <span class="dbar-sep" style="margin-left:12px">受付：</span>
+  <button class="dbtn on" data-camp-full onclick="ktnCampFullDemo(false,this)">受付中</button>
+  <button class="dbtn" data-camp-full onclick="ktnCampFullDemo(true,this)">上限に達した</button>
 </div>
 
 
@@ -245,6 +248,8 @@
               <span class="p6-liaison__price-num" id="p62PriceNum">¥580,000</span>
               <span class="p6-liaison__price-tax">税込</span>
             </div>
+            <!-- クーポンの1行（持っている人＝使えるクーポンと値引き後の金額／持っていない人＝受け取り方）。中身は pages.js KTN.CAMPAIGN（2026-10-12） -->
+            <div class="ktn-coupon-hint" data-coupon-hint data-price="580000" data-price-from="#p62PriceNum" data-venue="on" hidden></div>
             <div class="p6-liaison__price-note">+ 送料・梱包費は購入確定時に別途ご案内します</div>
             <div class="p6-liaison__period">
               <span class="p6-liaison__period-lbl">オンライン販売期間</span>
@@ -628,7 +633,7 @@
           <textarea class="am-textarea" placeholder="この作品に興味を持った理由など（任意）"></textarea>
         </div>
         <!-- 使えるクーポンと値引きのあとの作品代金（持っていて、金額の条件に合うときだけ出る・2026-10-12）。中身は pages.js KTN.CAMPAIGN が描く -->
-        <div class="ktn-apply-coupon" data-apply-coupon data-price="580000" data-price-from="#p62PriceNum" hidden></div>
+        <div class="ktn-apply-coupon" data-apply-coupon data-price="580000" data-price-from="#p62PriceNum" data-venue="on" hidden></div>
         <label class="am-agree">
           <input type="checkbox" id="amAgreeCheck">
           <div class="am-agree-txt">

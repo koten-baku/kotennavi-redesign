@@ -76,6 +76,12 @@
     <button class="dbtn dbtn-p2own" onclick="setP2Own('none',this)">未投稿</button>
     <button class="dbtn dbtn-p2own" onclick="setP2Own('checkin',this)">チェックインのみ</button>
     <button class="dbtn dbtn-p2own on" onclick="setP2Own('review',this)">レビュー済</button>
+    <span class="dbar-sep" style="margin-left:8px">会場のクーポン：</span>
+    <button class="dbtn" data-terms-demo="buyer" onclick="ktnTermsDemo('buyer','has',this)">受け取り済み</button>
+    <button class="dbtn on" data-terms-demo="buyer" onclick="ktnTermsDemo('buyer','none',this)">まだ</button>
+    <span class="dbar-sep" style="margin-left:8px">受付：</span>
+    <button class="dbtn on" data-camp-full onclick="ktnCampFullDemo(false,this)">受付中</button>
+    <button class="dbtn" data-camp-full onclick="ktnCampFullDemo(true,this)">上限に達した</button>
   </div>
 
 
@@ -951,6 +957,7 @@
   <script src="./kotennavi-common.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="./kotennavi-pages.js"></script>
+  <script>/* デモ：このページでは、会場のクーポンを「まだ受け取っていない」状態から始める（チェックインで受け取る流れを確かめるため） */ if (window.KTN && KTN.CAMPAIGN) KTN.CAMPAIGN.DEMO.buyer.state = 'none';</script>
   <script>
     /* データ定義 → KTN.init() の順 */
     window.P2_SLIDES = [

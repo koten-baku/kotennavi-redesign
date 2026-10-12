@@ -1587,7 +1587,7 @@ KTN.QA = [
   { id: 'INQ-S02', cat: 'inquiry-send', aud: 'user', grp: '作品へのお問合わせ', q: 'お問合わせは誰に届きますか？', a: '作品の出品者に届きます。クリエイターが出品した作品はクリエイターへ、ギャラリーがリエゾン・リエゾンプラスで出品した作品はギャラリーへ届きます。' },
   { id: 'INQ-S03', cat: 'inquiry-send', aud: 'user', grp: '作品へのお問合わせ', q: '返信はいつ届きますか？', a: '返信があると、メールでお知らせします。返信するかどうかや返信の時期は出品者の判断によるため、お時間がかかる場合や、ご返信できない場合があります。' },
   { id: 'INQ-S04', cat: 'inquiry-send', aud: 'user', grp: '作品へのお問合わせ', q: '返信に続けて質問できますか？', a: 'お問合わせへの返信は1回です。続けて質問したいときは、作品ページからあらためてお問合わせをお送りください。' },
-  { id: 'INQ-S05', cat: 'inquiry-send', aud: 'user', grp: '作品へのお問合わせ', q: '送ったお問合わせはどこで確認できますか？', a: 'myページの設定メニューの「問合せ履歴」で、送ったお問合わせと届いた返信を確認できます。' },
+  { id: 'INQ-S05', cat: 'inquiry-send', aud: 'user', grp: '作品へのお問合わせ', q: '送ったお問合わせはどこで確認できますか？', a: 'myページの myメニューの「問合せ履歴」で、送ったお問合わせと届いた返信を確認できます。' },
   { id: 'INQ-S06', cat: 'inquiry-send', aud: 'user', grp: '作品へのお問合わせ', q: 'リエゾンプラスの作品を購入したいときは？', a: 'お問合わせではなく、作品ページの「購入申込をする」からお申し込みください。サイズや状態など、申し込む前に確かめたいことは、お問合わせの種類で「作品について質問したい」を選んでお送りいただけます。' },
   { id: 'INQ-S07', cat: 'inquiry-send', aud: 'user', grp: '作品へのお問合わせ', q: '私のメールアドレスは相手に伝わりますか？', a: 'いいえ。出品者には、あなたのニックネームだけが表示されます。メールアドレスや本名は伝わりません。' },
   { id: 'INQ-S08', cat: 'inquiry-send', aud: 'user', grp: '作品へのお問合わせ', q: 'コメントとお問合わせは何が違いますか？', a: 'コメントは作品ページに公開される感想です。作品についてのご質問・ご相談は、公開されないお問合わせでお送りください。' },
@@ -1922,6 +1922,7 @@ const PAGES = {
   'p3-18': { n: 'クリエイター-展覧会管理', bc: [['Top', '/'], ['クリエイター', 'kotennavi-p10-2.html'], ['田中 透', 'kotennavi-p3.html'], ['展覧会管理', null]] },
   'p3-19': { n: 'クリエイター-記事管理', bc: [['Top', '/'], ['クリエイター', 'kotennavi-p10-2.html'], ['田中 透', 'kotennavi-p3.html'], ['記事管理', null]] },
   'p3-20': { n: 'クリエイター-作品へのお問合わせ', bc: [['Top', '/'], ['クリエイター', 'kotennavi-p10-2.html'], ['田中 透', 'kotennavi-p3.html'], ['作品へのお問合わせ', null]] },
+  'p3-21': { n: 'クリエイター-キャンペーン・特典', bc: [['Top', '/'], ['クリエイター', 'kotennavi-p10-2.html'], ['田中 透', 'kotennavi-p3.html'], ['キャンペーン・特典', null]] },
   // P4 ギャラリー
   'p4': { n: 'ギャラリー', bc: [['Top', '/'], ['ギャラリー', 'kotennavi-p10-3.html'], ['Gallery SOIL 渋谷', null]] },
   'p4-1': { n: 'ギャラリー-展覧会アーカイブ', bc: [['Top', '/'], ['ギャラリー', 'kotennavi-p10-3.html'], ['Gallery SOIL 渋谷', 'kotennavi-p4.html'], ['展覧会アーカイブ', null]] },
@@ -1936,6 +1937,7 @@ const PAGES = {
   'p4-18': { n: 'ギャラリー-展覧会管理', bc: [['Top', '/'], ['ギャラリー', 'kotennavi-p10-3.html'], ['Gallery SOIL 渋谷', 'kotennavi-p4.html'], ['展覧会管理', null]] },
   'p4-19': { n: 'ギャラリー-記事管理', bc: [['Top', '/'], ['ギャラリー', 'kotennavi-p10-3.html'], ['Gallery SOIL 渋谷', 'kotennavi-p4.html'], ['記事管理', null]] },
   'p4-20': { n: 'ギャラリー-作品へのお問合わせ', bc: [['Top', '/'], ['ギャラリー', 'kotennavi-p10-3.html'], ['Gallery SOIL 渋谷', 'kotennavi-p4.html'], ['作品へのお問合わせ', null]] },
+  'p4-21': { n: 'ギャラリー-キャンペーン・特典', bc: [['Top', '/'], ['ギャラリー', 'kotennavi-p10-3.html'], ['Gallery SOIL 渋谷', 'kotennavi-p4.html'], ['キャンペーン・特典', null]] },
   // P5 ユーザー
   'p5': { n: 'ユーザー-展覧会カレンダー', bc: [['Top', '/'], ['山田花子 myページ', null]] },
   'p5-1': { n: 'ユーザー-ウオッチリスト', bc: [['Top', '/'], ['山田花子 myページ', '/p5'], ['ウオッチリスト', null]] },
@@ -1948,6 +1950,7 @@ const PAGES = {
   'p5-14': { n: 'ユーザー-購入管理', bc: [['Top', '/'], ['山田花子 myページ', '/p5'], ['購入管理', null]] },
   'p5-15': { n: 'ユーザー-取引ワークスペース', bc: [['Top', '/'], ['山田花子 myページ', '/p5'], ['取引ワークスペース', null]] },
   'p5-16': { n: 'ユーザー-問合せ履歴', bc: [['Top', '/'], ['山田花子 myページ', '/p5'], ['問合せ履歴', null]] },
+  'p5-17': { n: 'ユーザー-キャンペーン・クーポン', bc: [['Top', '/'], ['山田花子 myページ', '/p5'], ['キャンペーン・クーポン', null]] },
   'p5-100': { n: 'ユーザー-退会', bc: [['Top', '/'], ['山田花子 myページ', '/p5'], ['退会', null]] },
   // P6 作品
   'p6':   { n: '作品詳細',
@@ -2220,6 +2223,7 @@ function reportItem(page) {
 }
 
 /* P5（myページ）全サブページ共通「設定」dd（単一ソース） */
+/* myメニュー（旧「設定」メニュー・2026-10-12 改名）。myページの本人の操作をまとめる */
 function p5SettingsMenuItems() {
   /* 購入管理（p5-14）は1回以上の購入歴があるユーザーにのみ出す（KTN.hasPurchaseHistory）。
      ヘッダーの「LIAISON+要対応」ボタンは要対応件数=0だと出ないため、それだけがp5-14への
@@ -2229,6 +2233,7 @@ function p5SettingsMenuItems() {
     ddi('key', 'パスワード管理', false, "location.href='./kotennavi-p5-12.html'") +
     ddi('bell', '通知設定', false, "location.href='./kotennavi-p5-13.html'") +
     purchaseItem +
+    ddi('sales', 'キャンペーン・クーポン', false, "location.href='./kotennavi-p5-17.html'") +
     ddi('msg', '問合せ履歴', false, "location.href='./kotennavi-p5-16.html'") + ddSep() +
     ddi('trash', '退会', true, "location.href='./kotennavi-p5-100.html'") + ddSep() +
     ddi('logout', 'ログアウト', false, "location.href='./kotennavi-p1.html'");
@@ -2508,9 +2513,8 @@ KTN.NOTICE_DEFS = {
     { id: 'NT-08',  role: 'creator・gallery', when: '1日のまとめ（前日のウォッチ・チェックイン・興味あり！）', text: '昨日のまとめ：ウォッチ {{watch}}人・チェックイン {{checkin}}人・興味あり！ {{interest}}件', dest: 'インサイト（P3-12／P4-12）', mail: 'A-03（ウォッチ・チェックイン）' },
     { id: 'NT-09',  role: 'user',             when: '興味あり！した作品が展覧会に出品された',       text: '興味あり！した作品《{{artworkName}}》が、展覧会に出品されました', dest: 'その作品のページ',    mail: 'R-01' },
     { id: 'NT-11',  role: 'user',             when: '興味あり！した作品の販売期間がもうすぐ終わる（P90-20 で決めた日数の前）', text: '興味あり！した作品《{{artworkName}}》の販売期間が、あと{{days}}日で終わります', dest: 'その作品のページ', mail: 'R-01（リマインダーの一部）' },
-    { id: 'NT-12',  role: 'creator・gallery', when: '特典が適用された（条件を満たした・管理者が個別に適用した）',       text: '特典「{{campaignName}}」が適用されました',                       dest: 'P3-17／P4-17',        mail: 'CP-01' },
-    { id: 'NT-13',  role: 'user',             when: 'クーポンを受け取った',                                           text: 'クーポン「{{campaignName}}」を受け取りました',                   dest: 'P5-14',               mail: 'CP-02' },
-    { id: 'NT-14',  role: 'user・creator・gallery', when: '特典・クーポンの使用期限が近い（P90-20 で決めた日数の前）', text: '「{{campaignName}}」の使用期限が、あと{{days}}日です',           dest: 'P3-17／P4-17／P5-14', mail: 'CP-03／R-01（リマインダーの一部）' }
+    { id: 'NT-12',  role: 'creator・gallery', when: '先行特典が適用された（条件を満たした操作の直後。その場の表示とあわせて、すぐに出す）',       text: '特典「{{campaignName}}」が適用されました',                       dest: 'P3-21／P4-21',        mail: 'CP-01' },
+    { id: 'NT-13',  role: 'user',             when: 'クーポンを受け取った（興味あり！に入れた直後・会場でチェックインした直後。その場の表示とあわせて、すぐに出す）',                                           text: 'クーポン「{{campaignName}}」を受け取りました',                   dest: 'P5-17',               mail: 'R-01（興味あり！のクーポン・翌朝のリマインダーの項目）／CP-02（会場のクーポン・会期が終わった日）' }
   ]
 };
 /* 文言を ID で引き、{{…}} を差し込む */
@@ -2843,7 +2847,8 @@ function p3OwnerMenuItems(curPage) {
     ddiP(curPage, 'p3-14', 'frame', 'ポートフォリオ管理', "location.href='./kotennavi-p3-14.html'") +
     ddiP(curPage, 'p3-19', 'file', '記事管理', "location.href='./kotennavi-p3-19.html'") +
     ddiP(curPage, 'p3-20', 'msg', inqMenuLabel('creator'), "location.href='./kotennavi-p3-20.html'") + ddSep() +
-    lpBlock + ddSep() +
+    lpBlock +
+    ddiP(curPage, 'p3-21', 'sales', 'キャンペーン・特典', "location.href='./kotennavi-p3-21.html'", 'ktn-ddi--lp') + ddSep() +
     ddiP(curPage, 'p3-13', 'watch', 'オーディエンス管理', "location.href='./kotennavi-p3-13.html'") +
     ddiP(curPage, 'p3-12', 'chart', 'インサイト', "location.href='./kotennavi-p3-12.html'") + ddSep() +
     ddi('share', '共有する（SNS・名刺に）', false, "ktnListQr('creator')") +
@@ -2864,7 +2869,8 @@ function p4OwnerMenuItems(curPage) {
     ddiP(curPage, 'p4-14', 'frame', 'インベントリー管理', "location.href='./kotennavi-p4-14.html'") +
     ddiP(curPage, 'p4-19', 'file', '記事管理', "location.href='./kotennavi-p4-19.html'") +
     ddiP(curPage, 'p4-20', 'msg', inqMenuLabel('gallery'), "location.href='./kotennavi-p4-20.html'") + ddSep() +
-    lpBlock + ddSep() +
+    lpBlock +
+    ddiP(curPage, 'p4-21', 'sales', 'キャンペーン・特典', "location.href='./kotennavi-p4-21.html'", 'ktn-ddi--lp') + ddSep() +
     ddiP(curPage, 'p4-13', 'watch', 'オーディエンス管理', "location.href='./kotennavi-p4-13.html'") +
     ddiP(curPage, 'p4-12', 'chart', 'インサイト', "location.href='./kotennavi-p4-12.html'") + ddSep() +
     ddi('share', '共有する（SNS・名刺に）', false, "ktnListQr('gallery')") +
@@ -2986,7 +2992,7 @@ function getActions(page, role) {
   }
 
   /* ── P3 管理サブページ群（プロフィール編集／各種管理ページ・共通オーナーメニュー） ── */
-  if (['p3-11', 'p3-12', 'p3-13', 'p3-14', 'p3-15', 'p3-16', 'p3-17', 'p3-18', 'p3-19', 'p3-20'].includes(page)) {
+  if (['p3-11', 'p3-12', 'p3-13', 'p3-14', 'p3-15', 'p3-16', 'p3-17', 'p3-18', 'p3-19', 'p3-20', 'p3-21'].includes(page)) {
     /* ガイドリンク：各ページの操作対象に対応するFAQ/ガイド章へ直接結線（2026-08-19 全ページ結線完了）。
        p3-11〜14はp60-6（よくある質問-クリエイター編）の新設章、p3-15〜17はp70-12（LIAISON+取引ガイド出品者編）の
        新設章、p3-18〜19は既存のp60-6章へリンク。 */
@@ -3022,7 +3028,7 @@ function getActions(page, role) {
   }
 
   /* ── P4 管理サブページ群（ギャラリー情報編集／各種管理ページ・共通オーナーメニュー） ── */
-  if (['p4-11', 'p4-12', 'p4-13', 'p4-14', 'p4-15', 'p4-16', 'p4-17', 'p4-18', 'p4-19', 'p4-20'].includes(page)) {
+  if (['p4-11', 'p4-12', 'p4-13', 'p4-14', 'p4-15', 'p4-16', 'p4-17', 'p4-18', 'p4-19', 'p4-20', 'p4-21'].includes(page)) {
     /* ガイドリンク：各ページの操作対象に対応するFAQ/ガイド章へ直接結線（2026-08-19 全ページ結線完了）。
        p4-11〜14はp60-7（よくある質問-ギャラリー編）の新設章、p4-15〜17はp70-12（LIAISON+取引ガイド出品者編）の
        新設章、p4-18〜19は既存のp60-7章へリンク。 */
@@ -3046,7 +3052,7 @@ function getActions(page, role) {
   }
 
   /* ── P5 myページ＋サブ（p5-1/p5-2含む全サブページ共通「設定」dd・2026-08-14 統合） ── */
-  if (['p5', 'p5-1', 'p5-2', 'p5-3', 'p5-4', 'p5-11', 'p5-12', 'p5-13', 'p5-14', 'p5-15', 'p5-16'].includes(page)) {
+  if (['p5', 'p5-1', 'p5-2', 'p5-3', 'p5-4', 'p5-11', 'p5-12', 'p5-13', 'p5-14', 'p5-15', 'p5-16', 'p5-17'].includes(page)) {
     if (role === 'guest') return '';
     const cmn = page === 'p5' ? shareBtn() + sep() : '';
     /* ガイドリンク：p5-11〜p5-16（myページ管理サブページ）のみ、対応するFAQ/ガイド章へ直接結線
@@ -3074,9 +3080,9 @@ function getActions(page, role) {
        'user+creator'/'user+gallery'と違い正規化ブロックの対象外だったため、
        このブランチ内で直接一致条件に含める（p5専用の既存バグ・過去の横展開で発見・修正）。 */
     if (role === 'user+' || role === 'creator' || role === 'gallery')
-      return cmn + guideBtn + dd('設定', p5SettingsMenuItems());
+      return cmn + guideBtn + dd('myメニュー', p5SettingsMenuItems());
     if (role === 'admin')
-      return cmn + guideBtn + dd('設定', p5SettingsMenuItems()) + dd('管理者', p5AdminMenuItems());
+      return cmn + guideBtn + dd('myメニュー', p5SettingsMenuItems()) + dd('管理者', p5AdminMenuItems());
     return '';
   }
 
@@ -3918,6 +3924,8 @@ function ktnCheckinShowWatchStep() {
       '</div>';
   }
 
+  /* キャンペーンの会場のクーポン（2026-10-12）：チェックインの完了の画面で、渡せたときだけ知らせる。判定は pages.js KTN.CAMPAIGN.grant */
+  var ciCoupon = KTN.CAMPAIGN && KTN.CAMPAIGN.grant ? KTN.CAMPAIGN.grant('checkin') : '';
   modal.innerHTML =
     '<div class="ktn-auth-top ktn-auth-top--compact">' +
     CLOSE_BTN +
@@ -3925,6 +3933,7 @@ function ktnCheckinShowWatchStep() {
     '<div class="ktn-auth-ttl">\u30c1\u30a7\u30c3\u30af\u30a4\u30f3\u304c\u5b8c\u4e86\u3057\u307e\u3057\u305f</div>' +
     '</div>' +
     '<div class="ktn-auth-body">' +
+    (ciCoupon ? '<div class="ktn-ci-coupon"><span class="ktn-ci-coupon__tag">クーポン</span>' + ciCoupon + '　<a class="ktn-guide-link" href="./kotennavi-p5-17.html">クーポンを見る →</a></div>' : '') +
     '<p class="ktn-ci-watch__lead">\u3053\u306e\u5c55\u89a7\u4f1a\u306e\u30af\u30ea\u30a8\u30a4\u30bf\u30fc\u3084\u30ae\u30e3\u30e9\u30ea\u30fc\u3092\u30a6\u30a9\u30c3\u30c1\u3059\u308b\u3068\u3001\u65b0\u4f5c\u3084\u6b21\u56de\u5c55\u306e\u60c5\u5831\u304c\u5c4a\u304d\u307e\u3059\u3002</p>' +
     buildCiWatchGroup('\u30af\u30ea\u30a8\u30a4\u30bf\u30fc', creators) +
     buildCiWatchGroup('\u30ae\u30e3\u30e9\u30ea\u30fc', venues) +
@@ -4436,7 +4445,9 @@ KTN.action = (function () {
       tip.textContent = isOn ? (isIcon ? lbl.iconOn : lbl.on) : (isIcon ? lbl.iconOff : lbl.off);
     }
     if (KTN.toast && ACTION_TOAST[action]) {
-      KTN.toast(isOn ? ACTION_TOAST[action].on : ACTION_TOAST[action].off);
+      /* キャンペーンのクーポン（2026-10-12）：興味あり！に入れた直後に、渡せたときだけ完了の文に足す（渡せないときは何も足さない＝期待させない）。判定は pages.js KTN.CAMPAIGN.grant */
+      var got = isOn && action === 'interest' && KTN.CAMPAIGN && KTN.CAMPAIGN.grant ? KTN.CAMPAIGN.grant('interest') : '';
+      KTN.toast((isOn ? ACTION_TOAST[action].on : ACTION_TOAST[action].off) + (got ? '。' + got : ''));
     }
     btn.blur();
     btn.classList.add('is-just-clicked');

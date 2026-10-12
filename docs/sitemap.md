@@ -78,6 +78,7 @@
 | P3-18 | クリエイター-展覧会管理 |  |  |  |  | R/W |  | R/W | --w-detail | kotennavi-p3-18.html | Fix済 |
 | P3-19 | クリエイター-記事管理 |  |  |  |  | R/W |  | R/W | --w-detail | kotennavi-p3-19.html | Fix済 |
 | P3-20 | クリエイター-作品へのお問合わせ | L |  |  |  | R/W |  | R/W | --w-detail | kotennavi-p3-20.html | Fix済 |
+| P3-21 | クリエイター-キャンペーン・特典 | L+ |  |  |  | R |  | R | --w-detail | kotennavi-p3-21.html | 調整中 |
 
 ---
 
@@ -98,6 +99,7 @@
 | P4-18 | ギャラリー-展覧会管理 |  |  |  |  |  | R/W | R/W | --w-detail | kotennavi-p4-18.html | Fix済 |
 | P4-19 | ギャラリー-記事管理 |  |  |  |  |  | R/W | R/W | --w-detail | kotennavi-p4-19.html | Fix済 |
 | P4-20 | ギャラリー-作品へのお問合わせ | L |  |  |  |  | R/W | R/W | --w-detail | kotennavi-p4-20.html | Fix済 |
+| P4-21 | ギャラリー-キャンペーン・特典 | L+ |  |  |  |  | R | R | --w-detail | kotennavi-p4-21.html | 調整中 |
 
 ---
 
@@ -116,6 +118,7 @@
 | P5-14 | ユーザー-購入履歴 | L+ |  |  | R/W |  |  | R/W | --w-detail | kotennavi-p5-14.html | Fix済 |
 | P5-15 | ユーザー-取引ワークスペース | L+ |  |  | R/W |  |  | R/W | --w-detail | kotennavi-p5-15.html | Fix済 |
 | P5-16 | ユーザー-問合せ履歴 | L |  |  | R |  |  | R | --w-detail | kotennavi-p5-16.html | Fix済 |
+| P5-17 | ユーザー-キャンペーン・クーポン | L+ |  |  | R |  |  | R | --w-detail | kotennavi-p5-17.html | 調整中 |
 | P5-100 | ユーザー-退会 |  |  |  | R/W |  |  | R/W | --w-detail | kotennavi-p5-100.html | Fix済 |
 
 ---

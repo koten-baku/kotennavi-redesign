@@ -33,6 +33,9 @@
   <span class="dbar-sep">閲覧者：</span>
   <button class="dbtn on" onclick="p26SetViewer('owner',this)">出品者（オーナー）</button>
   <button class="dbtn" onclick="p26SetViewer('visitor',this)">来場者（QR）</button>
+  <span class="dbar-sep" style="margin-left:12px">受付：</span>
+  <button class="dbtn on" data-camp-full onclick="ktnCampFullDemo(false,this)">受付中</button>
+  <button class="dbtn" data-camp-full onclick="ktnCampFullDemo(true,this)">上限に達した</button>
 </div>
 
 <div class="shell">
@@ -121,7 +124,7 @@
         </button>
       </div>
 
-      <!-- 会場の QR から来た人への案内（来場者の表示のときだけ・印刷しない）。中身は pages.js KTN.CAMPAIGN が描く（2026-10-12） -->
+      <!-- 会場のクーポンの案内（来場者の表示のときだけ・印刷しない）。チェックインするとこの展覧会の作品に使えるクーポン。中身は pages.js KTN.CAMPAIGN（2026-10-12） -->
       <div class="ktn-camp-banner" data-qr-banner hidden></div>
 
       <!-- 印刷される本体シート -->
@@ -215,7 +218,7 @@
     if (tb) tb.style.display = (kind === 'owner') ? '' : 'none';
     /* キャンペーンの案内は来場者にだけ出す（対象のキャンペーンが無いときは、中身が空なので出さない） */
     var bn = document.querySelector('[data-qr-banner]');
-    if (bn) bn.hidden = kind === 'owner' || !bn.innerHTML;
+    if (bn) { bn.dataset.viewer = kind; bn.hidden = kind === 'owner' || !bn.innerHTML; }
     if (btn) {
       btn.parentNode.querySelectorAll('[onclick^="p26SetViewer"]').forEach(function (b) { b.classList.remove('on'); });
       btn.classList.add('on');

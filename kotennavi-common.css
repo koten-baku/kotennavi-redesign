@@ -13726,55 +13726,89 @@ a.p10-preset{text-decoration:none}
 .p9018-dest{margin-top:4px;font-size:.7rem;color:var(--muted)}
 .p9018-preview{margin:0;padding:10px 12px;background:var(--paper);border-radius:4px;font-family:var(--fs);font-size:.9rem;font-weight:600;color:var(--ink)}
 
-/* ===== 現在の利用条件（.ktn-terms・2026-10-11）：出品者＝P3-17／P4-17、購入者＝P5-14 のカード。出品のページ P2-12-1 は1行（.ktn-terms-line）。
-   外枠は .p211-block を併記して使う。中身は pages.js KTN.CAMPAIGN が描く（料率・特典・クーポンの数字は管理者の設定 P90-20 から） ===== */
+/* ===== 料率・キャンペーン（2026-10-11／2026-10-12 に固定の3つへ作り直し）。中身は pages.js KTN.CAMPAIGN が描く＝数字は管理者の設定 P90-20 から =====
+   利用者に見せる場所：専用のページ（.ktn-terms＝P3-21／P4-21・P5-17）／気づくための1行（.ktn-terms-line＝P3-15／P4-15・P3-17／P4-17・P2-12-1）／
+   作品の価格のそば（.ktn-coupon-hint＝P6-2）／購入の申込（.ktn-apply-coupon）／取引の内訳（.ktn-txn-net・.ktn-pay-coupon） */
+/* 専用のページ：外枠は .p211-block。行＝項目名（左）と中身（右） */
+.ktn-terms{display:flex;flex-direction:column;gap:28px}
+/* 出どころごとのブロック（いまは LIAISON+ の1つ。将来、クリエイター・ギャラリーが発行するクーポンなどのブロックを下に足す） */
+.ktn-terms-group__head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding-bottom:8px;border-bottom:2px solid var(--ink)}
+.ktn-terms-group__title{margin:0;font-family:var(--fn);font-size:1rem;font-weight:700;color:var(--ink)}
+.ktn-terms-group__desc{margin:8px 0 14px;font-size:.78rem;line-height:1.7;color:var(--muted)}
+.ktn-terms-group__body{display:flex;flex-direction:column;gap:14px}
+.ktn-terms-group__body > .p211-block{margin-bottom:0}
+.ktn-terms__issuer{margin-left:10px;font-size:.7rem;color:var(--muted)}
+.ktn-terms__cap{margin-left:10px;font-size:.74rem;color:var(--ink)}
+.ktn-terms__sub{margin-top:8px;font-size:.72rem;font-weight:700;color:var(--muted)}
 .ktn-terms__list{display:flex;flex-direction:column;margin-bottom:10px}
 .ktn-terms__row{display:flex;gap:16px;padding:10px 0;border-bottom:1px solid var(--border)}
 .ktn-terms__row:first-child{padding-top:0}
 .ktn-terms__k{flex:0 0 128px;font-size:.75rem;color:var(--muted);line-height:1.7}
 .ktn-terms__v{flex:1;min-width:0;font-size:.84rem;color:var(--ink);line-height:1.7}
 .ktn-terms__v strong{font-family:var(--fm);font-weight:600}
-.ktn-terms__name{font-weight:700}
+.ktn-terms__line{margin-top:4px}
 .ktn-terms__note{margin-top:2px;font-size:.72rem;color:var(--muted);line-height:1.6}
 .ktn-terms__bar{display:block;max-width:260px;height:6px;margin-top:6px;background:var(--tag-bg);border-radius:3px;overflow:hidden}
 .ktn-terms__bar > span{display:block;height:100%;background:var(--page-accent,var(--accent))}
 .ktn-terms__cond{margin-top:6px;padding-left:18px;position:relative}
+.ktn-terms__cond:first-child{margin-top:0}
 .ktn-terms__cond::before{content:"";position:absolute;left:2px;top:.55em;width:8px;height:8px;border-radius:50%;border:1.5px solid var(--muted)}
 .ktn-terms__cond.is-done::before{background:var(--page-accent,var(--accent));border-color:var(--page-accent,var(--accent))}
-/* 出品のページの要約：利用料の帯（外）の中に、特典の帯（内）を入れ子で置く。特典の帯には期間（使用期限・締切）を右肩に出す */
-.ktn-terms__url{font-family:var(--fm);font-size:.78rem;word-break:break-all}
-.ktn-terms__ops{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:6px}
-.p9010-stages .ins-funnel__label{flex-basis:170px}
-.p9010-stages .ins-funnel__rate{flex-basis:84px}
-.p9010-stages .ins-funnel__bar{background:var(--accent)}
-.p9010-stages__amount{margin:12px 0 0;font-family:var(--fn);font-size:.8rem;color:var(--ink)}
-.p9010-stages__amount strong{font-family:var(--fm);font-size:1rem;font-weight:600}
-.p9010-stages__amount span{font-size:.72rem;color:var(--muted)}
-.p9010-monthly__title{display:flex;align-items:baseline;gap:8px;margin:22px 0 6px;padding-top:16px;border-top:1px solid var(--border);font-family:var(--fn);font-size:.86rem;font-weight:700;color:var(--ink)}
-@media (min-width:641px){.p9010-monthly{min-width:1080px}}
-.p9010-monthly th,.p9010-monthly td{padding-left:10px;padding-right:10px;white-space:nowrap}
-.p9010-monthly td{font-family:var(--fm);font-size:.78rem;text-align:right}
-.p9010-monthly th:not(:first-child){text-align:right}
-.p9010-monthly thead tr:first-child th.p315-archive-table__grp{text-align:center}
-.p9010-monthly td:first-child{text-align:left;font-weight:600}
-.p9010-monthly tr.is-now td{background:rgba(0,93,167,.04)}
-.p9010-monthly__now{margin-left:6px;padding:1px 6px;border-radius:2px;background:var(--accent);color:#fff;font-family:var(--fn);font-size:.6rem;font-weight:600}
-@media (max-width:540px){.p9010-stages .ins-funnel__label{flex-basis:110px}.p9010-stages .ins-funnel__rate{flex-basis:64px}}
-/* キャンペーンの案内（会場の QR から来た人へ・P2-6 の来場者の表示）と、登録のページの入口の知らせ（P11-1） */
+.ktn-terms__page{display:inline-block;margin-top:4px}
+@media (max-width:540px){
+  .ktn-terms__row{flex-direction:column;gap:2px}
+  .ktn-terms__k{flex:none}
+}
+/* 気づくための1行：どのページでも同じ内容（利用料・特典の状態・専用のページへのリンク）。詳しい説明は専用のページだけに置く */
+.ktn-terms-line{display:flex;align-items:center;gap:4px 10px;flex-wrap:wrap;margin:0;padding:8px 12px;background:#faf7f1;border-left:3px solid var(--page-accent,var(--accent));font-size:.78rem;line-height:1.7;color:var(--ink)}
+.ktn-terms-line__label{font-weight:700}
+.ktn-terms-line__rate{font-family:var(--fm);font-size:.95rem;font-weight:600}
+.ktn-terms-line__tag{margin-left:6px;padding:2px 8px;border-radius:2px;background:var(--page-accent,var(--accent));color:#fff;font-size:.66rem;font-weight:600;line-height:1.5;white-space:nowrap}
+.ktn-terms-line__tag.is-outline{background:none;color:var(--page-accent,var(--accent));box-shadow:inset 0 0 0 1px var(--page-accent,var(--accent))}
+.ktn-terms-line__name{font-weight:700}
+.ktn-terms-line__note{color:var(--muted);font-size:.72rem}
+.ktn-terms-line .ktn-guide-link{margin-left:auto}
+.p315-wrap > .ktn-terms-line{margin-top:16px}
+/* 作品の価格のそばの1行（P6-2＝ダークのページ。色は自分で持つ。段落 p は使わない） */
+.ktn-coupon-hint{margin-top:8px;font-size:.78rem;line-height:1.6;color:var(--lgold,#c9a96e)}
+.ktn-coupon-hint[hidden]{display:none}
+.ktn-coupon-hint strong{font-family:var(--fm);font-size:.92rem;font-weight:600}
+.ktn-coupon-hint.is-off{color:var(--lmuted,rgba(255,255,255,.62))}
+.ktn-coupon-hint__link{margin-left:10px;color:inherit;text-decoration:underline;text-underline-offset:2px;white-space:nowrap}
+.ktn-coupon-hint__tag{margin-right:8px;padding:1px 7px;border:1px solid currentColor;border-radius:2px;font-size:.64rem;font-weight:600;white-space:nowrap}
+/* 購入の申込のクーポン（P6-2 のモーダル）：使うクーポンを選ぶ。段落 p は使わない */
+.ktn-apply-coupon{display:flex;flex-direction:column;gap:4px;padding:8px 12px;background:#faf7f1;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:4px}
+.ktn-apply-coupon[hidden]{display:none}
+.ktn-apply-coupon__title{font-size:.72rem;font-weight:700;color:var(--muted)}
+.ktn-apply-coupon__check{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:.82rem;line-height:1.5;color:var(--ink)}
+.ktn-apply-coupon__check input{flex-shrink:0;margin:0}
+.ktn-apply-coupon__name{flex:1;min-width:0}
+.ktn-apply-coupon__off{font-family:var(--fm);font-weight:600;color:var(--accent);white-space:nowrap}
+.ktn-apply-coupon__sum{margin-top:4px;padding-top:6px;border-top:1px solid var(--border);font-size:.76rem;line-height:1.5;color:var(--ink)}
+.ktn-apply-coupon__sum strong{font-family:var(--fm);font-size:.88rem;font-weight:600}
+.ktn-apply-coupon__note{margin-left:8px;font-size:.68rem;color:var(--muted)}
+.am-input.is-error{border-color:#b43c14;background:#fdf6f3}
+/* 購入申込のモーダルの中の保存エラーパネル（共通 .ktn-form-error）。モーダルは縦に gap で並べるので外側の余白は 0 */
+.am-box > .ktn-form-error{margin:0}
+/* 取引ごとの内訳：出品者の受取金額（P3-16／P4-16）・購入者のクーポンの行（P5-15） */
+.ktn-txn-net__title{margin:0 0 2px;font-family:var(--fn);font-size:.82rem;font-weight:700;color:var(--ink)}
+.ktn-txn-net .p211-help{margin:8px 0 0}
+.ktn-txn-net--modal{margin-top:12px}
+.ktn-txn-net__perk .p316-ship-total-label,.ktn-txn-net__perk .p316-ship-total-amount{color:var(--page-accent,var(--accent))}
+.ktn-pay-coupon > span{color:var(--page-accent,var(--accent))}
+/* 会場のクーポンの案内（P2-6 の来場者の表示・印刷しない） */
 .ktn-camp-banner{display:flex;align-items:center;gap:12px 16px;flex-wrap:wrap;margin:0 0 16px;padding:12px 14px;background:#faf7f1;border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:4px}
 .ktn-camp-banner[hidden]{display:none}
+.ktn-camp-banner.is-off{border-left-color:var(--border)}
+.ktn-camp-banner.is-off .ktn-camp-banner__title{color:var(--muted)}
+/* チェックインの完了の画面に出す、クーポンを受け取った知らせ */
+.ktn-ci-coupon{margin:0 0 14px;padding:10px 12px;background:#faf7f1;border-left:3px solid var(--accent);font-family:var(--fn);font-size:.8rem;line-height:1.7;color:var(--ink)}
+.ktn-ci-coupon__tag{margin-right:8px;padding:1px 7px;border-radius:2px;background:var(--accent);color:#fff;font-size:.64rem;font-weight:600;white-space:nowrap}
 .ktn-camp-banner__body{flex:1 1 260px;min-width:0}
 .ktn-camp-banner__title{font-family:var(--fn);font-size:.86rem;font-weight:700;color:var(--ink)}
 .ktn-camp-banner__desc{margin:2px 0 0;font-size:.76rem;line-height:1.7;color:var(--ink)}
 @media print{.ktn-camp-banner{display:none}}
-.ktn-entry-note{margin:0 0 14px;padding:10px 12px;background:#faf7f1;border-left:3px solid var(--accent);font-size:.76rem;line-height:1.7;color:var(--ink)}
-.ktn-entry-note[hidden]{display:none}
-.p9020-notify__name{flex:1 1 220px;font-family:var(--fn);font-size:.86rem;font-weight:700;color:var(--ink)}
-.ktn-terms-line{margin:0;padding:10px 12px;background:#faf7f1;border-left:3px solid var(--page-accent,var(--accent));font-size:.78rem;line-height:1.7;color:var(--ink)}
-.ktn-terms-line__title{display:flex;align-items:baseline;gap:8px;margin-bottom:6px;font-family:var(--fn);font-size:.82rem;font-weight:700;color:var(--ink)}
-.ktn-terms__page{display:inline-block;margin-top:4px}
-.ktn-terms-line__text .ktn-terms__page{margin-top:0}
-/* ニュース（P61-1）に出す「キャンペーンの内容」（キャンペーンの設定から自動で出す） */
+/* ニュース（P61-1）に出す「キャンペーンの内容」（設定から自動で出す。連携の確認は保留中） */
 .ktn-camp-box{margin:0 0 24px;padding:16px 18px;background:#faf7f1;border:1px solid var(--border);border-top:3px solid var(--accent);border-radius:4px}
 .ktn-camp-box[hidden]{display:none}
 .ktn-camp-box__head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
@@ -13785,86 +13819,22 @@ a.p10-preset{text-decoration:none}
 .ktn-camp-box__row dt{flex:0 0 84px;color:var(--muted);font-size:.76rem}
 .ktn-camp-box__row dd{flex:1;min-width:0;margin:0;color:var(--ink)}
 .ktn-camp-box__note{margin:8px 0 0;font-family:var(--fn);font-size:.7rem;color:var(--muted)}
-.p9020-page{display:flex;align-items:center;gap:8px 14px;flex-wrap:wrap}
-.p9020-page .p211-select{flex:1 1 260px;width:auto}
-/* P90-10：キャンペーンの表・月ごとの表 */
-@media (min-width:641px){.p9010-camp{min-width:820px}}
-.p9010-camp th,.p9010-camp td{padding-left:10px;padding-right:10px;white-space:nowrap}
-.p9010-camp td:nth-child(2){white-space:normal;min-width:150px}
-.p9010-camp b{font-family:var(--fm);font-weight:600}
-.p9010-camp__num.is-near,.p9010-camp__num.is-near b{color:#b43c14}
-.p9010-monthly-wrap{max-height:232px;overflow:auto;border:1px solid var(--border);border-radius:4px}
-.p9010-monthly thead{position:sticky;top:0;z-index:1}
-.p9010-monthly thead th{background:var(--paper)}
-.p9010-monthly .p9010-monthly__sum{font-weight:600;color:var(--ink)}
-/* スマホ（表が1件ずつのカードになる幅）：項目名の右に数字を出す。月ごとの表はカードが縦に長いので、箱の高さを広げて中をスクロールする */
-@media (max-width:640px){
-  .p9010-monthly-wrap{max-height:70vh;padding:8px;border:1px solid var(--border)}
-  .p9010-monthly td,.p9010-camp td{white-space:normal}
-  .p9010-monthly td:first-child{font-size:.86rem}
-  .p9010-camp td:nth-child(2){min-width:0}
-}
-.ktn-terms-line__main{display:flex;align-items:baseline;gap:4px 10px;flex-wrap:wrap}
-.ktn-terms-line__label{font-weight:700}
-.ktn-terms-line__rate{font-family:var(--fm);font-size:1rem;font-weight:600}
-.ktn-terms-line__note{color:var(--muted);font-size:.72rem}
-.ktn-terms-line__main .ktn-guide-link{margin-left:auto}
-.ktn-terms-line__perk{margin-top:8px;padding:8px 12px;background:#fff;border:1px solid var(--border);border-radius:4px}
-.ktn-terms-line__perk-head{display:flex;align-items:center;gap:6px 10px;flex-wrap:wrap}
-.ktn-terms-line__tag{padding:2px 8px;border-radius:2px;background:var(--page-accent,var(--accent));color:#fff;font-size:.66rem;font-weight:600;line-height:1.5;white-space:nowrap}
-.ktn-terms-line__perk.is-progress .ktn-terms-line__tag{background:none;color:var(--page-accent,var(--accent));box-shadow:inset 0 0 0 1px var(--page-accent,var(--accent))}
-.ktn-terms-line__name{font-weight:700}
-.ktn-terms-line__term{margin-left:auto;font-family:var(--fm);font-size:.72rem;font-weight:500;color:var(--ink);white-space:nowrap}
-.ktn-terms-line__text{margin:4px 0 0}
-.ktn-terms-line strong{font-family:var(--fm);font-weight:600}
-/* 取引ごとの内訳：出品者の受取金額（P3-16／P4-16）・購入者のクーポンの行（P5-15）・購入の申込のクーポン（P6-2） */
-.ktn-txn-net{margin-top:0}
-.ktn-txn-net__title{margin:0 0 2px;font-family:var(--fn);font-size:.82rem;font-weight:700;color:var(--ink)}
-.ktn-txn-net .p211-help{margin:8px 0 0}
-.ktn-txn-net--modal{margin-top:12px}
-.am-input.is-error{border-color:#b43c14;background:#fdf6f3}
-/* 購入申込のモーダルの中の保存エラーパネル（共通 .ktn-form-error）。モーダルは縦に gap で並べるので外側の余白は 0 */
-.am-box > .ktn-form-error{margin:0}
-.ktn-txn-net__perk .p316-ship-total-label,.ktn-txn-net__perk .p316-ship-total-amount{color:var(--page-accent,var(--accent))}
-.ktn-pay-coupon > span{color:var(--page-accent,var(--accent))}
-.ktn-apply-coupon{padding:8px 12px;background:#faf7f1;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:4px}
-.ktn-apply-coupon[hidden]{display:none}
-.ktn-apply-coupon__check{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:.82rem;line-height:1.5;color:var(--ink)}
-.ktn-apply-coupon__check input{flex-shrink:0;margin:0}
-.ktn-apply-coupon__name{flex:1;min-width:0;font-weight:700}
-.ktn-apply-coupon__off{font-family:var(--fm);font-weight:600;color:var(--accent);white-space:nowrap}
-.ktn-apply-coupon__sum{margin:4px 0 0 21px;font-size:.76rem;line-height:1.5;color:var(--ink)}
-.ktn-apply-coupon__sum strong{font-family:var(--fm);font-size:.88rem;font-weight:600}
-.ktn-apply-coupon__note{margin-left:8px;font-size:.68rem;color:var(--muted)}
-.p315-wrap > .ktn-terms-line{margin-top:16px}
-/* 管理者が見る「キャンペーンの適用状況」（P3-11／P4-11／P5-11・外枠は .ktn-admin-note＝管理者にだけ出る） */
+/* 管理者が見る「キャンペーンの適用状況」（P3-11／P4-11／P5-11・外枠は .ktn-admin-note＝管理者にだけ出る）。見るだけ＋対象から外す */
 .ktn-admin-camp__item{padding:12px 14px;background:#fff;border:1px solid #d3d8de;border-radius:4px}
 .ktn-admin-camp__head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .ktn-admin-camp__id{font-family:var(--fm);font-size:.7rem;font-weight:600;color:var(--muted)}
 .ktn-admin-camp__name{font-family:var(--fn);font-size:.86rem;font-weight:700;color:var(--ink)}
-.ktn-admin-camp__desc{margin:4px 0 0;font-family:var(--fn);font-size:.75rem;line-height:1.7;color:var(--ink)}
-.ktn-admin-camp__set{display:flex;gap:10px 16px;flex-wrap:wrap;margin-top:10px;padding-top:10px;border-top:1px solid #e4e7eb}
-.ktn-admin-camp__field{display:flex;flex-direction:column;gap:4px;flex:1 1 180px;min-width:0;font-family:var(--fn);font-size:.72rem;color:var(--muted)}
-.ktn-admin-camp__field .p211-select,.ktn-admin-camp__field .p211-input{width:100%;box-sizing:border-box}
-.ktn-admin-camp__body{margin-top:10px;padding-top:10px;border-top:1px solid #e4e7eb}
-.ktn-admin-camp__body .p211-select{width:100%;box-sizing:border-box}
-.ktn-admin-camp__sub{margin:0 0 8px;font-family:var(--fn);font-size:.74rem;font-weight:700;color:var(--ink)}
 .ktn-admin-camp__common{margin-top:10px;padding:10px 12px;background:#f4f5f7;border-radius:4px}
 .ktn-admin-camp__ro{display:flex;gap:12px;font-family:var(--fn);font-size:.76rem;line-height:1.7}
 .ktn-admin-camp__ro-k{flex:0 0 132px;color:var(--muted)}
 .ktn-admin-camp__ro-v{flex:1;min-width:0;color:var(--ink)}
-.ktn-admin-camp__body .p211-input[type="text"]{width:100%;box-sizing:border-box}
-.ktn-admin-camp__body .p211-input[readonly]{background:#f4f5f7;color:var(--muted)}
+.ktn-admin-camp__set{display:flex;gap:10px 16px;flex-wrap:wrap;margin-top:10px}
+.ktn-admin-camp__field{display:flex;flex-direction:column;gap:4px;flex:0 1 320px;min-width:0;font-family:var(--fn);font-size:.72rem;color:var(--muted)}
+.ktn-admin-camp__field .p211-select{width:100%;box-sizing:border-box}
+.ktn-admin-camp__item > .p211-help{margin:8px 0 0}
+.ktn-admin-camp__actions{display:flex;justify-content:flex-end}
 @media (max-width:540px){.ktn-admin-camp__ro{flex-direction:column;gap:0}.ktn-admin-camp__ro-k{flex:none}}
-.ktn-admin-camp__tag{padding:2px 8px;border-radius:2px;background:#3a4a5a;color:#fff;font-size:.64rem;font-weight:600;white-space:nowrap}
-.ktn-admin-camp__nameinput{flex:1 1 180px;min-width:0}
-.ktn-admin-camp__actions{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap}
-.ktn-admin-camp__actions[hidden]{display:none}
-@media (max-width:540px){
-  .ktn-terms__row{flex-direction:column;gap:2px}
-  .ktn-terms__k{flex:none}
-}
-/* ===== P90-20 料率・キャンペーン管理（2026-10-11）。タブ・表・小見出しは P90-9／P90-19 の部品を再利用 ===== */
+/* ===== P90-20 料率・キャンペーン管理。タブ・表・小見出しは P90-9／P90-19 の部品を再利用 ===== */
 .p9020-grid{display:flex;flex-wrap:wrap;gap:0 20px}
 .p9020-grid > .p211-field{flex:1 1 240px;min-width:0}
 .p9020-unit{display:inline-flex;align-items:center;gap:6px;font-size:.8rem;color:var(--ink);white-space:nowrap}
@@ -13872,12 +13842,10 @@ a.p10-preset{text-decoration:none}
 .p9020-range{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:.8rem;color:var(--muted)}
 .p9020-range .p211-input{width:auto;flex:1 1 130px;min-width:0}
 .p9020-sub{display:flex;align-items:baseline;gap:8px;margin:18px 0 10px;padding-top:14px;border-top:1px solid var(--border);font-family:var(--fn);font-size:.86rem;font-weight:700;color:var(--ink)}
+.p9020-page{display:flex;align-items:center;gap:8px 14px;flex-wrap:wrap}
+.p9020-page .p211-select{flex:1 1 260px;width:auto}
 .p9020-camp{margin-bottom:12px;background:#fff;border:1px solid var(--border);border-radius:4px}
 .p9020-camp[open]{border-color:rgba(0,0,0,.18)}
-/* P90-10 のダッシュボードに並べる行（押すと P90-20 へ） */
-.p9020-camp--link{display:block;text-decoration:none;color:inherit;transition:border-color .18s}
-.p9020-camp--link:hover{border-color:rgba(0,0,0,.18)}
-.p9020-camp--link .p9020-camp__sum::after{display:none}
 .p9020-camp__sum{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 16px;cursor:pointer;list-style:none}
 .p9020-camp__sum::-webkit-details-marker{display:none}
 .p9020-camp__sum::after{content:"";margin-left:4px;width:7px;height:7px;border-right:1.5px solid var(--muted);border-bottom:1.5px solid var(--muted);transform:rotate(45deg);transition:transform .18s}
@@ -13886,20 +13854,19 @@ a.p10-preset{text-decoration:none}
 .p9020-camp__name{flex:1;min-width:140px;font-family:var(--fn);font-size:.9rem;font-weight:700;color:var(--ink)}
 .p9020-camp__term{font-family:var(--fm);font-size:.74rem;font-weight:500;color:var(--ink);white-space:nowrap}
 .p9020-camp__who{font-size:.72rem;color:var(--muted)}
-.p9020-camp__body{padding:4px 16px 16px;border-top:1px solid var(--border)}
+.p9020-camp__body{padding:12px 16px 16px;border-top:1px solid var(--border)}
 .p9020-camp__body .p211-select,.p9020-camp__body .p211-input[type="text"]{width:100%;box-sizing:border-box}
+.p9020-camp__body .p211-input[readonly]{background:var(--paper);color:var(--muted)}
+/* お知らせの時期の1項目（名前・対象・送る／送らない・日数） */
 .p9020-cond{padding:10px 12px;margin-bottom:8px;background:var(--paper);border-radius:4px}
 .p9020-cond__main{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.p9020-cond__main .p211-select{flex:1 1 220px;width:auto}
 .p9020-cond__period{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:8px}
-.p9020-cond__period .p9020-range{flex:0 1 330px}
-.p9020-cond__none{font-size:.72rem;color:var(--muted)}
 .p9020-cond .p211-help{margin:6px 0 0}
+.p9020-notify__name{flex:1 1 220px;font-family:var(--fn);font-size:.86rem;font-weight:700;color:var(--ink)}
 .p9020-read{margin-top:18px;padding:12px 14px;background:#faf7f1;border-left:3px solid var(--accent)}
 .p9020-read__label{font-family:var(--font-en-label,'Cinzel',serif);font-size:.6rem;font-weight:600;letter-spacing:.14em;color:var(--muted)}
 .p9020-read__text{margin:4px 0 0;font-size:.84rem;line-height:1.8;color:var(--ink)}
 .p9020-read__warn{margin:6px 0 0;font-size:.76rem;line-height:1.6;color:#b43c14}
-.p9020-stat{display:flex;align-items:center;margin-top:14px}
 /* 一覧の行に出す今の数字（上限に対して）。上限の 80% を超えたら赤で知らせる */
 .p9020-mon{flex:0 0 100%;display:flex;gap:6px 20px;flex-wrap:wrap;font-family:var(--fn);font-size:.72rem;color:var(--muted)}
 .p9020-mon__item{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
@@ -13908,4 +13875,35 @@ a.p10-preset{text-decoration:none}
 .p9020-mon__bar > span{display:block;height:100%;background:var(--accent)}
 .p9020-mon__item.is-near,.p9020-mon__item.is-near b{color:#b43c14}
 .p9020-mon__item.is-near .p9020-mon__bar > span{background:#b43c14}
-.p9020-stat__ops{display:flex;gap:6px;margin-left:auto}
+/* ===== P90-10：段階ごとの集計・月ごとの表・キャンペーンの表 ===== */
+.p9010-stages .ins-funnel__label{flex-basis:170px}
+.p9010-stages .ins-funnel__rate{flex-basis:84px}
+.p9010-stages .ins-funnel__bar{background:var(--accent)}
+.p9010-stages__amount{margin:12px 0 0;font-family:var(--fn);font-size:.8rem;color:var(--ink)}
+.p9010-stages__amount strong{font-family:var(--fm);font-size:1rem;font-weight:600}
+.p9010-stages__amount span{font-size:.72rem;color:var(--muted)}
+.p9010-monthly__title{display:flex;align-items:baseline;gap:8px;margin:22px 0 6px;padding-top:16px;border-top:1px solid var(--border);font-family:var(--fn);font-size:.86rem;font-weight:700;color:var(--ink)}
+.p9010-monthly-wrap{max-height:232px;overflow:auto;border:1px solid var(--border);border-radius:4px}
+.p9010-monthly th,.p9010-monthly td{padding-left:10px;padding-right:10px;white-space:nowrap}
+.p9010-monthly td{font-family:var(--fm);font-size:.78rem;text-align:right}
+.p9010-monthly th:not(:first-child){text-align:right}
+.p9010-monthly thead{position:sticky;top:0;z-index:1}
+.p9010-monthly thead th{background:var(--paper)}
+.p9010-monthly thead tr:first-child th.p315-archive-table__grp{text-align:center}
+.p9010-monthly td:first-child{text-align:left;font-weight:600}
+.p9010-monthly .p9010-monthly__sum{font-weight:600;color:var(--ink)}
+.p9010-monthly tr.is-now td{background:rgba(0,93,167,.04)}
+.p9010-monthly__now{margin-left:6px;padding:1px 6px;border-radius:2px;background:var(--accent);color:#fff;font-family:var(--fn);font-size:.6rem;font-weight:600}
+.p9010-camp th,.p9010-camp td{padding-left:10px;padding-right:10px;white-space:nowrap}
+.p9010-camp td:nth-child(2){white-space:normal;min-width:150px}
+.p9010-camp b{font-family:var(--fm);font-weight:600}
+.p9010-camp__num.is-near,.p9010-camp__num.is-near b{color:#b43c14}
+/* 横幅の指定は、表の形のとき（641px 以上）だけ。スマホでは1件ずつのカードになるので指定しない（指定すると数字がカードの外へ出る） */
+@media (min-width:641px){.p9010-monthly{min-width:1080px}.p9010-camp{min-width:940px}}
+@media (max-width:640px){
+  .p9010-monthly-wrap{max-height:70vh;padding:8px}
+  .p9010-monthly td,.p9010-camp td{white-space:normal}
+  .p9010-monthly td:first-child{font-size:.86rem}
+  .p9010-camp td:nth-child(2){min-width:0}
+}
+@media (max-width:540px){.p9010-stages .ins-funnel__label{flex-basis:110px}.p9010-stages .ins-funnel__rate{flex-basis:64px}}
