@@ -158,12 +158,72 @@
           </div>
         </section>
 
+        <!-- 段階ごとの集計（作品数＋申込数 → 利用 → 購入 → 2回目以降の循環を、段階ごとに見る・2026-10-12）。デモの数字。本番は集計値 -->
+        <section class="ktn-section p9010-stages">
+          <div class="ktn-section__head">
+            <h3 class="ktn-section__title">段階ごとの集計<span class="ktn-sec-en">Stages</span></h3>
+          </div>
+          <p class="p211-help" style="margin:0 0 12px">作品が増え、申込が増え、出品され、購入され、もう一度使われるまでの流れを、段階ごとに並べています。どの段階で止まっているかを見て、キャンペーンの対象と条件を決めるのに使います。上の3つは、クリエイターとギャラリーの内訳を出しています。棒の長さは目安です（段階ごとに数える対象が違うため）。</p>
+          <div class="ins-funnel">
+            <div class="ins-funnel__row">
+              <div class="ins-funnel__label"><span class="ins-funnel__stage">公開中の作品</span><span class="ins-funnel__sub">クリエイター 3,420・ギャラリー 1,440</span></div>
+              <div class="ins-funnel__track"><div class="ins-funnel__bar" style="width:100%"><span class="ins-funnel__num">4,860</span></div></div>
+              <span class="ins-funnel__rate">先月 4,512</span>
+            </div>
+            <div class="ins-funnel__row">
+              <div class="ins-funnel__label"><span class="ins-funnel__stage">LIAISON+ の申込</span><span class="ins-funnel__sub">クリエイター 96・ギャラリー 42</span></div>
+              <div class="ins-funnel__track"><div class="ins-funnel__bar" style="width:64%"><span class="ins-funnel__num">138</span></div></div>
+              <span class="ins-funnel__rate">先月 121</span>
+            </div>
+            <div class="ins-funnel__row">
+              <div class="ins-funnel__label"><span class="ins-funnel__stage">LIAISON+ で出品</span><span class="ins-funnel__sub">クリエイター 63・ギャラリー 29（1点以上出品）</span></div>
+              <div class="ins-funnel__track"><div class="ins-funnel__bar" style="width:46%"><span class="ins-funnel__num">92</span></div></div>
+              <span class="ins-funnel__rate">申込の 67%</span>
+            </div>
+            <div class="ins-funnel__row">
+              <div class="ins-funnel__label"><span class="ins-funnel__stage">購入の申込</span><span class="ins-funnel__sub">今月・ユーザーからの申込</span></div>
+              <div class="ins-funnel__track"><div class="ins-funnel__bar" style="width:34%"><span class="ins-funnel__num">74</span></div></div>
+              <span class="ins-funnel__rate">先月 61</span>
+            </div>
+            <div class="ins-funnel__row">
+              <div class="ins-funnel__label"><span class="ins-funnel__stage">取引完了</span><span class="ins-funnel__sub">今月・完了した取引</span></div>
+              <div class="ins-funnel__track"><div class="ins-funnel__bar" style="width:27%"><span class="ins-funnel__num">58</span></div></div>
+              <span class="ins-funnel__rate">申込の 78%</span>
+            </div>
+            <div class="ins-funnel__row">
+              <div class="ins-funnel__label"><span class="ins-funnel__stage">2回目以降の利用</span><span class="ins-funnel__sub">今月の取引完了のうち、買うのが2回目以上の人</span></div>
+              <div class="ins-funnel__track"><div class="ins-funnel__bar" style="width:8%"><span class="ins-funnel__num">9</span></div></div>
+              <span class="ins-funnel__rate">完了の 16%</span>
+            </div>
+          </div>
+          <p class="p9010-stages__amount">今月の購入金額（取引完了・税込）　<strong>¥4,862,000</strong>　<span>先月 ¥3,940,000</span></p>
+          <!-- 月ごとの数字（時系列・2026-10-12）。キャンペーンの前後を機械で比べるのではなく、月の並びを管理者が見て判断する（ユーザー判断）。デモの数字 -->
+          <h4 class="p9010-monthly__title">月ごとの数字<span class="ktn-sec-en">Monthly</span></h4>
+          <p class="p211-help" style="margin:0 0 10px">左の3つ（公開中の作品・LIAISON+ の申込・LIAISON+ で出品）は、その月の終わりの時点の数です。右の4つ（購入の申込・取引完了・購入金額・2回目以降の利用）は、その月の合計です。新しい月が上です。月が増えたら、表の中を縦にスクロールして見られます。キャンペーンの実施期間は、下の「キャンペーン」の表と見比べてください。</p>
+          <div class="p315-archive-table-wrap p9010-monthly-wrap">
+            <table class="p315-archive-table p315-archive-table--grouped p9010-monthly">
+              <thead>
+                <tr><th rowspan="2">月</th><th colspan="3" class="p315-archive-table__grp">公開中の作品</th><th colspan="3" class="p315-archive-table__grp">LIAISON+ の申込</th><th colspan="3" class="p315-archive-table__grp">LIAISON+ で出品</th><th rowspan="2">購入の申込</th><th rowspan="2">取引完了</th><th rowspan="2">購入金額（税込）</th><th rowspan="2">2回目以降</th></tr>
+                <tr><th>合計</th><th>クリエイター</th><th>ギャラリー</th><th>合計</th><th>クリエイター</th><th>ギャラリー</th><th>合計</th><th>クリエイター</th><th>ギャラリー</th></tr>
+              </thead>
+              <tbody>
+                <tr class="is-now"><td data-label="月">2026.10<span class="p9010-monthly__now">今月</span></td><td data-label="公開中の作品：合計" class="p9010-monthly__sum">4,860</td><td data-label="公開中の作品：クリエイター">3,420</td><td data-label="公開中の作品：ギャラリー">1,440</td><td data-label="LIAISON+ の申込：合計" class="p9010-monthly__sum">138</td><td data-label="LIAISON+ の申込：クリエイター">96</td><td data-label="LIAISON+ の申込：ギャラリー">42</td><td data-label="LIAISON+ で出品：合計" class="p9010-monthly__sum">92</td><td data-label="LIAISON+ で出品：クリエイター">63</td><td data-label="LIAISON+ で出品：ギャラリー">29</td><td data-label="購入の申込">74</td><td data-label="取引完了">58</td><td data-label="購入金額">¥4,862,000</td><td data-label="2回目以降の利用">9</td></tr>
+                <tr><td data-label="月">2026.09</td><td data-label="公開中の作品：合計" class="p9010-monthly__sum">4,512</td><td data-label="公開中の作品：クリエイター">3,190</td><td data-label="公開中の作品：ギャラリー">1,322</td><td data-label="LIAISON+ の申込：合計" class="p9010-monthly__sum">121</td><td data-label="LIAISON+ の申込：クリエイター">84</td><td data-label="LIAISON+ の申込：ギャラリー">37</td><td data-label="LIAISON+ で出品：合計" class="p9010-monthly__sum">80</td><td data-label="LIAISON+ で出品：クリエイター">55</td><td data-label="LIAISON+ で出品：ギャラリー">25</td><td data-label="購入の申込">61</td><td data-label="取引完了">49</td><td data-label="購入金額">¥3,940,000</td><td data-label="2回目以降の利用">7</td></tr>
+                <tr><td data-label="月">2026.08</td><td data-label="公開中の作品：合計" class="p9010-monthly__sum">4,314</td><td data-label="公開中の作品：クリエイター">3,060</td><td data-label="公開中の作品：ギャラリー">1,254</td><td data-label="LIAISON+ の申込：合計" class="p9010-monthly__sum">103</td><td data-label="LIAISON+ の申込：クリエイター">72</td><td data-label="LIAISON+ の申込：ギャラリー">31</td><td data-label="LIAISON+ で出品：合計" class="p9010-monthly__sum">68</td><td data-label="LIAISON+ で出品：クリエイター">47</td><td data-label="LIAISON+ で出品：ギャラリー">21</td><td data-label="購入の申込">52</td><td data-label="取引完了">41</td><td data-label="購入金額">¥3,120,000</td><td data-label="2回目以降の利用">5</td></tr>
+                <tr><td data-label="月">2026.07</td><td data-label="公開中の作品：合計" class="p9010-monthly__sum">4,120</td><td data-label="公開中の作品：クリエイター">2,940</td><td data-label="公開中の作品：ギャラリー">1,180</td><td data-label="LIAISON+ の申込：合計" class="p9010-monthly__sum">86</td><td data-label="LIAISON+ の申込：クリエイター">61</td><td data-label="LIAISON+ の申込：ギャラリー">25</td><td data-label="LIAISON+ で出品：合計" class="p9010-monthly__sum">55</td><td data-label="LIAISON+ で出品：クリエイター">38</td><td data-label="LIAISON+ で出品：ギャラリー">17</td><td data-label="購入の申込">40</td><td data-label="取引完了">30</td><td data-label="購入金額">¥2,310,000</td><td data-label="2回目以降の利用">4</td></tr>
+                <tr><td data-label="月">2026.06</td><td data-label="公開中の作品：合計" class="p9010-monthly__sum">3,888</td><td data-label="公開中の作品：クリエイター">2,790</td><td data-label="公開中の作品：ギャラリー">1,098</td><td data-label="LIAISON+ の申込：合計" class="p9010-monthly__sum">68</td><td data-label="LIAISON+ の申込：クリエイター">49</td><td data-label="LIAISON+ の申込：ギャラリー">19</td><td data-label="LIAISON+ で出品：合計" class="p9010-monthly__sum">42</td><td data-label="LIAISON+ で出品：クリエイター">29</td><td data-label="LIAISON+ で出品：ギャラリー">13</td><td data-label="購入の申込">31</td><td data-label="取引完了">22</td><td data-label="購入金額">¥1,684,000</td><td data-label="2回目以降の利用">2</td></tr>
+                <tr><td data-label="月">2026.05</td><td data-label="公開中の作品：合計" class="p9010-monthly__sum">3,630</td><td data-label="公開中の作品：クリエイター">2,610</td><td data-label="公開中の作品：ギャラリー">1,020</td><td data-label="LIAISON+ の申込：合計" class="p9010-monthly__sum">52</td><td data-label="LIAISON+ の申込：クリエイター">38</td><td data-label="LIAISON+ の申込：ギャラリー">14</td><td data-label="LIAISON+ で出品：合計" class="p9010-monthly__sum">30</td><td data-label="LIAISON+ で出品：クリエイター">21</td><td data-label="LIAISON+ で出品：ギャラリー">9</td><td data-label="購入の申込">22</td><td data-label="取引完了">15</td><td data-label="購入金額">¥1,105,000</td><td data-label="2回目以降の利用">1</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
         <!-- キャンペーン（実施中・開始待ち）。中身は pages.js KTN.CAMPAIGN が描く＝P90-20 の一覧と同じ行（2026-10-11） -->
         <section class="ktn-section">
           <div class="ktn-section__head">
             <h3 class="ktn-section__title">キャンペーン<span class="ktn-sec-en">Campaigns</span></h3>
           </div>
-          <p class="p211-help" style="margin:0 0 12px">実施中と開始待ちのキャンペーンです。人数と個展なびの負担は、上限に対する割合で出しています（80% を超えると赤くなります）。行を押すと、設定の画面へ移ります。</p>
+          <p class="p211-help" style="margin:0 0 12px">実施中と開始待ちのキャンペーンです。人数と個展なびの負担は、上限に対する割合で出しています（80% を超えると赤くなります）。キャンペーンの名前を押すと、設定の画面へ移ります。</p>
           <div data-camp-summary></div>
           <div class="p315-related-link">
             <p class="p315-related-link__desc">サービス利用料の料率と、キャンペーン（特典・クーポン）の設定を変える。</p>

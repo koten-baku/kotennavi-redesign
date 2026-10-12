@@ -121,6 +121,9 @@
         </button>
       </div>
 
+      <!-- 会場の QR から来た人への案内（来場者の表示のときだけ・印刷しない）。中身は pages.js KTN.CAMPAIGN が描く（2026-10-12） -->
+      <div class="ktn-camp-banner" data-qr-banner hidden></div>
+
       <!-- 印刷される本体シート -->
       <article class="p26-sheet">
 
@@ -210,6 +213,9 @@
   function p26SetViewer(kind, btn) {
     var tb = document.querySelector('.p26-toolbar');
     if (tb) tb.style.display = (kind === 'owner') ? '' : 'none';
+    /* キャンペーンの案内は来場者にだけ出す（対象のキャンペーンが無いときは、中身が空なので出さない） */
+    var bn = document.querySelector('[data-qr-banner]');
+    if (bn) bn.hidden = kind === 'owner' || !bn.innerHTML;
     if (btn) {
       btn.parentNode.querySelectorAll('[onclick^="p26SetViewer"]').forEach(function (b) { b.classList.remove('on'); });
       btn.classList.add('on');

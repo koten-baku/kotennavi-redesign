@@ -51,6 +51,9 @@
   <span class="dbar-sep" style="margin-left:12px">通信：</span>
   <button class="dbtn on" data-offline-demo-btn="on" onclick="ktnDemoOffline(false)">オンライン</button>
   <button class="dbtn" data-offline-demo-btn="off" onclick="ktnDemoOffline(true)">オフライン</button>
+  <span class="dbar-sep" style="margin-left:12px">クーポン：</span>
+  <button class="dbtn on" data-terms-demo="buyer" onclick="ktnTermsDemo('buyer','has',this)">あり</button>
+  <button class="dbtn" data-terms-demo="buyer" onclick="ktnTermsDemo('buyer','none',this)">なし</button>
 </div>
 
 
@@ -613,17 +616,19 @@
           会場で売約済の場合はキャンセルとなります。
         </div>
         <div class="am-field">
-          <label class="am-lbl">お名前 <em>（出品者への通知のみに使用します）</em></label>
-          <input class="am-input" type="text" placeholder="例：山田 太郎">
+          <label class="am-lbl" for="amName">お名前<span class="ktn-req">必須</span> <em>（出品者への通知のみに使用します）</em></label>
+          <input class="am-input" id="amName" type="text" placeholder="例：山田 太郎" autocomplete="name">
         </div>
         <div class="am-field">
-          <label class="am-lbl">受取地の郵便番号 <em>（送料計算に使用します）</em></label>
-          <input class="am-input" type="text" placeholder="例：150-0001" maxlength="8">
+          <label class="am-lbl" for="amZip">受取地の郵便番号<span class="ktn-req">必須</span> <em>（送料計算に使用します）</em></label>
+          <input class="am-input" id="amZip" type="text" inputmode="numeric" placeholder="例：150-0001" maxlength="8" autocomplete="postal-code">
         </div>
         <div class="am-field">
           <label class="am-lbl">申込理由・コメント <em>（任意）</em></label>
           <textarea class="am-textarea" placeholder="この作品に興味を持った理由など（任意）"></textarea>
         </div>
+        <!-- 使えるクーポンと値引きのあとの作品代金（持っていて、金額の条件に合うときだけ出る・2026-10-12）。中身は pages.js KTN.CAMPAIGN が描く -->
+        <div class="ktn-apply-coupon" data-apply-coupon data-price="580000" data-price-from="#p62PriceNum" hidden></div>
         <label class="am-agree">
           <input type="checkbox" id="amAgreeCheck">
           <div class="am-agree-txt">
@@ -634,6 +639,14 @@
             ・申込順に購入可否が案内されること
           </div>
         </label>
+        <!-- 入力のもれ（お名前・郵便番号・同意）。そろうまで申込を確定できない。ほかの作成・編集ページと同じ保存エラーパネル（2026-10-12） -->
+        <div class="ktn-form-error" id="amErr" role="alert" hidden>
+          <div class="ktn-form-error__head">
+            <svg class="ktn-form-error__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <span class="ktn-form-error__title">申込を確定できませんでした</span>
+          </div>
+          <ul class="ktn-form-error__list" id="amErrList"></ul>
+        </div>
         <button class="am-submit" data-txn-op onclick="submitApply()">申込を確定する</button>
         <button class="am-cancel" onclick="closeModal('applyModal')">キャンセル</button>
       </div>

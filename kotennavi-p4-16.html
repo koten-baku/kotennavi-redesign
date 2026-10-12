@@ -88,7 +88,7 @@
 
 <!-- 取引明細モーダル（取引完了／完了(アーカイブ)共通） -->
 <div class="p515-modal-overlay" id="p416DetailModal" hidden>
-  <div class="p515-modal">
+  <div class="p515-modal p515-modal--detail">
     <div class="p515-modal__head">
       <span class="p515-modal__title">取引明細</span>
       <button class="p515-modal__close" id="p416DetailModalClose">✕</button>
@@ -106,6 +106,8 @@
         <div>梱包費：<span>¥500</span></div>
         <div class="p515-modal__detail-total">合計（税込）：<span>¥49,700</span></div>
       </div>
+      <!-- 取引明細にも、利用料と特典の割引・受取金額を出す（2026-10-12）。中身は pages.js KTN.CAMPAIGN -->
+      <div class="ktn-txn-net ktn-txn-net--modal" data-txn-net data-price="48000" data-ship="1200" data-pack="500"></div>
       <div class="p515-log__title" style="margin-top:16px">取引の流れ<span class="p515-log__title-en">Timeline</span></div>
       <div class="p316-detail-timeline">
         <div class="p316-detail-timeline__row"><span class="p316-detail-timeline__label">購入申込受付</span><span class="p316-detail-timeline__date">2026.03.08 10:15</span></div>
@@ -246,6 +248,9 @@
   <span class="dbar-sep" style="margin-left:12px">通信：</span>
   <button class="dbtn on" data-offline-demo-btn="on" onclick="ktnDemoOffline(false)">オンライン</button>
   <button class="dbtn" data-offline-demo-btn="off" onclick="ktnDemoOffline(true)">オフライン</button>
+  <span class="dbar-sep" style="margin-left:12px">特典：</span>
+  <button class="dbtn on" data-terms-demo="seller" onclick="ktnTermsDemo('seller','active',this)">適用中</button>
+  <button class="dbtn" data-terms-demo="seller" onclick="ktnTermsDemo('seller','none',this)">なし</button>
 </div>
 
 <div class="shell">
@@ -863,6 +868,12 @@
               <button class="ktn-guide-link" id="p416ConsultLink" type="button">取引について事務局に相談する →</button>
             </span>
           </div>
+        </div>
+
+        <!-- 受取金額の見込み（利用料と特典の割引を別の行で出す・2026-10-12）。中身は pages.js KTN.CAMPAIGN が描く。どの状態でも出す -->
+        <div class="ktn-txn-net">
+          <h3 class="ktn-txn-net__title">受取金額の見込み</h3>
+          <div data-txn-net data-price="48000" data-ship="1200" data-pack="500"></div>
         </div>
 
         <!-- C-5. 取引ログ: 購入確定待ち -->

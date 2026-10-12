@@ -104,17 +104,18 @@
   <main class="ktn-main" id="ktnMain">
     <div class="ktn-content">
 
-      <!-- 料率・キャンペーン管理（2026-10-11・データは KTN.CAMPAIGN＝出品者・購入者の「現在の利用条件」と共有） -->
+      <!-- 料率・キャンペーン管理（2026-10-11・データは KTN.CAMPAIGN＝出品者・購入者の「サービス利用料と特典」「クーポンと特典」と共有） -->
       <div class="p9020-wrap ktn-mgmt-wrap ktn-mgmt-stack">
         <div class="ktn-mgmt-head">
           <h2 class="ktn-mgmt-head__title">料率・キャンペーン管理</h2>
           <p class="ktn-mgmt-head__en">FEES &amp; CAMPAIGNS</p>
-          <p class="ktn-mgmt-head__desc">LIAISON+ のサービス利用料の料率と、クリエイター・ギャラリー・ユーザーへの特典（キャンペーン）を設定します。ここで決めた数字が、クリエイター・ギャラリーの「現在の利用条件」、ユーザーの「持っているクーポン」、取引の計算に使われます。進行中の取引は、購入の申込があった時点の料率と特典のまま変わりません。</p>
+          <p class="ktn-mgmt-head__desc">LIAISON+ のサービス利用料の料率と、クリエイター・ギャラリー・ユーザーへの特典（キャンペーン）を設定します。ここで決めた数字が、クリエイター・ギャラリーの「サービス利用料と特典」、ユーザーの「クーポンと特典」、取引の計算に使われます。進行中の取引は、購入の申込があった時点の料率と特典のまま変わりません。</p>
         </div>
 
         <div class="p909-tab-nav" id="p9020Tabs" role="tablist">
           <button type="button" class="p909-tab-btn is-active" role="tab" data-panel="fee" aria-selected="true">サービス利用料</button>
           <button type="button" class="p909-tab-btn" role="tab" data-panel="campaign" aria-selected="false">キャンペーン <span class="ktn-count ktn-count--pill is-idle" id="p9020Count"></span></button>
+          <button type="button" class="p909-tab-btn" role="tab" data-panel="notify" aria-selected="false">お知らせの時期</button>
         </div>
 
         <!-- サービス利用料 -->
@@ -148,6 +149,12 @@
           <p class="p909-auto-intro">1つのキャンペーンは「対象・条件・特典・期間・上限」の組み合わせです。対象は、ユーザー（購入者）、クリエイター・ギャラリー、クリエイター、ギャラリーの4種類から選びます。一覧の行には、いまの人数と個展なびの負担を、上限に対する割合で出しています（80% を超えると赤くなります）。条件は一覧から選び、数字と期間を入れます。期間を空にすると、いつ満たしてもよい条件になります。条件を2つ以上入れたときは「すべて満たす」か「どれか1つを満たす」を選びます。</p>
           <div id="p9020List"></div>
           <div class="p909-toolbar-row"><button type="button" class="ktn-op-btn ktn-op-btn--sm" id="p9020Add">＋ キャンペーンを追加</button></div>
+        </div>
+
+        <!-- お知らせの時期 -->
+        <div class="p9020-panel" id="p9020Panel-notify" role="tabpanel" hidden>
+          <p class="p909-auto-intro">特典・クーポンを使ってもらうための、後押しのお知らせを送る時期です。文言は <a class="ktn-guide-link" href="./kotennavi-p90-18.html">お知らせ・やることの文言管理</a>、メールの文面は <a class="ktn-guide-link" href="./kotennavi-p90-9.html">メールテンプレート管理</a> で管理します。</p>
+          <div id="p9020Notify"></div>
         </div>
 
         <!-- 保存エラーパネル（共通） -->

@@ -165,7 +165,7 @@
           <span class="p317-stripe-status__date">最終確認：2026年6月2日</span>
         </div>
 
-        <!-- 現在の利用条件（.ktn-terms・2026-10-11）。中身は pages.js KTN.CAMPAIGN が描く＝料率・特典の数字は管理者の設定 P90-20 から -->
+        <!-- サービス利用料と特典（.ktn-terms・2026-10-11）。中身は pages.js KTN.CAMPAIGN が描く＝料率・特典の数字は管理者の設定 P90-20 から -->
         <div class="p211-block ktn-terms" data-terms="seller"></div>
 
         <!-- C-2. 次回振込予定（未精算残高より「次にいくら・いつ振り込まれるか」を主役に統合） -->
@@ -301,10 +301,10 @@
                 <tbody>
                   <tr>
                     <td data-label="締め日">2026.06.30</td>
-                    <td data-label="当月精算金額">¥152,820</td>
+                    <td data-label="当月精算金額">¥153,720</td>
                     <td data-label="振込日">2026.07.20</td>
                     <td data-label="振込手数料">¥250</td>
-                    <td data-label="振込金額">¥152,570</td>
+                    <td data-label="振込金額">¥153,470</td>
                     <td data-label="状態"><span class="p315-archive-table__status--done">振込完了</span></td>
                     <td><button type="button" class="p315-archive-table__detail-btn" data-payout="2026-07-20">明細を見る</button></td>
                   </tr>
@@ -481,10 +481,11 @@ document.querySelectorAll('.p317-setup-checklist__toggle').forEach(function (tog
         ['作品代金合計', '¥165,000'],
         ['送料合計', '¥3,600'],
         ['梱包費合計', '¥1,200'],
-        ['サービス利用料', '−¥16,980'],
+        ['サービス利用料（10%）', '−¥16,980'],
+        ['特典の割引（先行特典・18,000円分に 50%）', '＋¥900'],
         ['振込手数料', '−¥250']
       ],
-      total: '¥152,570'
+      total: '¥153,470'
     },
     '2026-06-20': {
       date: '2026.06.20', cutoff: '2026.05.31', count: '2件',

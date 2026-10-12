@@ -121,7 +121,7 @@
         <p class="p515-invoice-sheet__date">ご購入日：<span id="p515InvoicePurchaseDate">2026.02.21</span></p>
         <div class="p515-invoice-sheet__amount">
           <span class="p515-invoice-sheet__amount-lbl">金額</span>
-          <span class="p515-invoice-sheet__amount-val">¥87,000</span>
+          <span class="p515-invoice-sheet__amount-val" data-pay-total="87000" data-price="85000">¥87,000</span>
           <span class="p515-invoice-sheet__amount-tax">（税込）</span>
         </div>
         <dl class="p515-invoice-sheet__meta">
@@ -131,7 +131,7 @@
         </dl>
         <div class="p515-invoice-sheet__detail">
           <p class="p515-invoice-sheet__detail-ttl">ご購入明細</p>
-          <table class="p515-invoice-sheet__table">
+          <table class="p515-invoice-sheet__table" data-pay-breakdown data-price="85000" data-total="87000">
             <thead>
               <tr><th>内訳</th><th>数量</th><th>単価</th><th>金額</th></tr>
             </thead>
@@ -245,6 +245,9 @@
   <span class="dbar-sep" style="margin-left:12px">通信：</span>
   <button class="dbtn on" data-offline-demo-btn="on" onclick="ktnDemoOffline(false)">オンライン</button>
   <button class="dbtn" data-offline-demo-btn="off" onclick="ktnDemoOffline(true)">オフライン</button>
+  <span class="dbar-sep" style="margin-left:12px">クーポン：</span>
+  <button class="dbtn on" data-terms-demo="buyer" onclick="ktnTermsDemo('buyer','has',this)">この取引に使用</button>
+  <button class="dbtn" data-terms-demo="buyer" onclick="ktnTermsDemo('buyer','none',this)">なし</button>
 </div>
 
 <div class="shell">
@@ -610,7 +613,7 @@
             </div>
 
             <!-- お支払い内訳 -->
-            <div class="p515-ship-confirm">
+            <div class="p515-ship-confirm" data-pay-breakdown data-price="85000" data-total="87000">
               <div class="p515-ship-confirm__title">お支払い内訳</div>
               <div class="p515-ship-confirm__row"><span class="p515-ship-confirm__label">作品代金</span><span>¥85,000</span></div>
               <div class="p515-ship-confirm__row"><span class="p515-ship-confirm__label">送料</span><span>¥1,500（ヤマト宅急便）</span></div>
@@ -658,7 +661,7 @@
               <div class="p515-ship-confirm__row"><span class="p515-ship-confirm__label">受取方法</span><span>宅配便（対面受取）</span></div>
               <div class="p515-ship-confirm__row" style="border-bottom:none"><span class="p515-ship-confirm__label">受取希望日時</span><span>2026年3月3日（火）14〜16時</span></div>
             </div>
-            <div class="p515-ship-confirm">
+            <div class="p515-ship-confirm" data-pay-breakdown data-price="85000" data-total="87000">
               <div class="p515-ship-confirm__title">お支払い内訳</div>
               <div class="p515-ship-confirm__row"><span class="p515-ship-confirm__label">作品代金</span><span>¥85,000</span></div>
               <div class="p515-ship-confirm__row"><span class="p515-ship-confirm__label">送料</span><span>¥1,500（ヤマト宅急便）</span></div>
@@ -881,7 +884,7 @@
             <div class="p515-log-item__dot-col"><div class="p515-log-item__dot p515-log-item__dot--user"></div></div>
             <div class="p515-log-item__body">
               <div class="p515-log-item__text">支払い完了</div>
-              <div class="p515-log-item__note">¥87,000（クレジットカード）</div>
+              <div class="p515-log-item__note"><span data-pay-total="87000" data-price="85000">¥87,000</span>（クレジットカード）</div>
               <div class="p515-log-item__date">2026.02.26 11:08</div>
             </div>
           </div>
@@ -924,7 +927,7 @@
             <div class="p515-log-item__dot-col"><div class="p515-log-item__dot p515-log-item__dot--user"></div></div>
             <div class="p515-log-item__body">
               <div class="p515-log-item__text">支払い完了</div>
-              <div class="p515-log-item__note">¥87,000（クレジットカード）</div>
+              <div class="p515-log-item__note"><span data-pay-total="87000" data-price="85000">¥87,000</span>（クレジットカード）</div>
               <div class="p515-log-item__date">2026.02.26 11:08</div>
             </div>
           </div>
@@ -975,7 +978,7 @@
             <div class="p515-log-item__dot-col"><div class="p515-log-item__dot p515-log-item__dot--user"></div></div>
             <div class="p515-log-item__body">
               <div class="p515-log-item__text">支払い完了</div>
-              <div class="p515-log-item__note">¥87,000（クレジットカード）</div>
+              <div class="p515-log-item__note"><span data-pay-total="87000" data-price="85000">¥87,000</span>（クレジットカード）</div>
               <div class="p515-log-item__date">2026.02.26 11:08</div>
             </div>
           </div>
@@ -1034,7 +1037,7 @@
             <div class="p515-log-item__dot-col"><div class="p515-log-item__dot p515-log-item__dot--user"></div></div>
             <div class="p515-log-item__body">
               <div class="p515-log-item__text">支払い完了</div>
-              <div class="p515-log-item__note">¥87,000（クレジットカード）</div>
+              <div class="p515-log-item__note"><span data-pay-total="87000" data-price="85000">¥87,000</span>（クレジットカード）</div>
               <div class="p515-log-item__date">2026.02.26 11:08</div>
             </div>
           </div>
