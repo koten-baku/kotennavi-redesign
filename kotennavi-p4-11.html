@@ -32,6 +32,10 @@
   <button class="dbtn" id="dbarLpNone" onclick="setLpMode('none')">未申請</button>
   <button class="dbtn" id="dbarLpPending" onclick="setLpMode('pending')">審査中</button>
   <button class="dbtn on" id="dbarLpApproved" onclick="setLpMode('approved')">承認済</button>
+  <span class="dbar-sep">はじめて割（管理者の枠）：</span>
+  <button class="dbtn on" data-camp-acct onclick="ktnCampAcctDemo('gallery','on',this)">適用中</button>
+  <button class="dbtn" data-camp-acct onclick="ktnCampAcctDemo('gallery','progress',this)">申込の審査中</button>
+  <button class="dbtn" data-camp-acct onclick="ktnCampAcctDemo('gallery','missed',this)">承認済・未適用</button>
 </div>
 
 <div class="shell">

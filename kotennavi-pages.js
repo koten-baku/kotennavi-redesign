@@ -11651,7 +11651,7 @@ KTN.pages['p90-9'] = function () {
     { id: 'A-05', category: 'activity', event: "作品にコメントが届きました", aud: "作品の出品者（クリエイター・ギャラリー・P5-13 の④で停止可）", source: "作品（P6・P6-1・P6-2）へのコメントの投稿", timing: "随時（短時間に続いたら1通にまとめる）", subject: "【個展なび】作品「{{artworkName}}」にコメントが届きました", body: "{{userName}} 様\n\n作品「{{artworkName}}」に、コメントが届きました。\n\n──────────────────────────────\n 作品：{{artworkName}}\n 　{{pageUrl}}\n コメントした方：{{senderNickname}}\n──────────────────────────────\n\n■ コメント\n{{commentBody}}\n\nコメントは作品ページに公開されています。\n\n※このメールは、myページの「通知設定」の\n　「ウォッチ・チェックイン・コメントのお知らせ」で止められます。\n\n{{commonFooter}}", note: "docs/email-templates.md A-05 と同内容。サイト内ではお知らせ（あなた宛 NT-06）にも出る。", updatedAt: '2026.9.28' },
     { id: 'I-01', category: 'activity', event: "⑤ インサイトの月次レポート", aud: "クリエイター・ギャラリー機能の利用者（P5-13 で停止可）", source: "月次集計", timing: "月1回", subject: "【個展なび】{{reportMonth}}のレポート：{{pageName}}", body: "{{userName}} 様\n\n{{pageName}}の{{reportMonth}}のレポートです。\n\n──────────────────────────────\n ページの閲覧数：{{pageViews}}\n ウォッチャー：{{watchers}}人（前の月から {{watchersDelta}}）\n──────────────────────────────\n\n■ 展覧会の閲覧数\n{{exhibitionLines}}\n\nくわしい数字や推移は、インサイトでご覧いただけます。\n　{{insightUrl}}\n\n※このメールは、通知設定で「インサイトの月次レポート」を受け取る設定にしている方にお送りしています。\n　受け取らない設定は、myページの通知設定から変えられます。\n　{{settingsUrl}}\n\n{{commonFooter}}", note: "ページ・展覧会の閲覧数、ウォッチャー数（P3-12／P4-12 へのリンク）", updatedAt: '2026.10.5' },
     { id: 'A-04', category: 'activity', event: "個展なびからのお知らせ（ニュース）", aud: "対象の登録ユーザー（停止できない）", source: "P61-11 でカテゴリ「ニュース」・「メールでも送る」をチェックして公開", timing: "お知らせの公開時（1回だけ・編集しても再送しない）", subject: '', body: '', note: "文面は手動送信タブ「お知らせ-新規/編集」のテンプレート「ニュース」（P61-11 で読み込み、お知らせごとに編集）", updatedAt: '2026.9.27' },
-    { id: "CP-01", category: 'campaign', event: "特典が適用されました（出品者あて）", aud: "クリエイター・ギャラリー（先行特典の条件を満たした人・P5-13 の①リマインダーで停止可）", source: "先行特典の条件（期間内の LIAISON+ の申込・公開中の作品の点数）を満たしたとき", timing: "適用の直後（自動）", subject: "【個展なび】特典「{{campaignName}}」が適用されました", body: "{{userName}} 様\n\nリエゾンプラスの特典「{{campaignName}}」が適用されました。\n\n──────────────────────────────\n 特典の内容：{{benefitText}}\n 使用期限：{{benefitUntil}}\n──────────────────────────────\n\n■ 特典の使われ方\nお手続きは要りません。購入の申込があった取引に、自動で適用されます。\n取引ごとの金額（通常のサービス利用料と、特典の割引）は、\n取引デスクと、振込の明細でご確認いただけます。\n\n■ キャンペーンのページ\n　{{campaignUrl}}\n\n■ 特典の内容と残りを確認する\n　{{termsUrl}}\n\n※このメールは、通知設定で「リマインダー」を受け取る設定にしている方にお送りしています。\n　受け取らない設定は、myページの通知設定から変えられます。\n　{{settingsUrl}}\n\n{{commonFooter}}", note: "{{benefitText}}＝KTN.CAMPAIGN.benefitText の文（例：作品代金の最初の 50,000円分まで、サービス利用料を 50% 割引）。{{termsUrl}}＝P3-21／P4-21。メールは①リマインダーの設定に従う（止められる）。サイト内のお知らせ NT-12 は設定にかかわらず出す", updatedAt: '2026.10.12' },
+    { id: "CP-01", category: 'campaign', event: "特典が適用されました（出品者あて）", aud: "クリエイター・ギャラリー（はじめて割の対象になった人・P5-13 の①リマインダーで停止可）", source: "実施期間に申し込んだ LIAISON+ の申込が承認され、はじめて割が適用されたとき（先着の枠の中）", timing: "承認の直後（自動）", subject: "【個展なび】特典「{{campaignName}}」が適用されました", body: "{{userName}} 様\n\nリエゾンプラスの特典「{{campaignName}}」が適用されました。\n\n──────────────────────────────\n 特典の内容：{{benefitText}}\n 有効期間：{{benefitUntil}} まで\n──────────────────────────────\n\n■ 特典の使われ方\nお手続きは要りません。有効期間の中で、LIAISON+ を使って最初に会期が始まる展覧会が対象になり、\nその展覧会の購入の申込があった取引に、自動で適用されます（販売期間の終わりまで・上限なし）。\n取引ごとの金額（通常のサービス利用料と、特典の割引）は、\n取引デスクと、振込の明細でご確認いただけます。\n\n■ キャンペーンのページ\n　{{campaignUrl}}\n\n■ 特典の内容と対象の展覧会を確認する\n　{{termsUrl}}\n\n※このメールは、通知設定で「リマインダー」を受け取る設定にしている方にお送りしています。\n　受け取らない設定は、myページの通知設定から変えられます。\n　{{settingsUrl}}\n\n{{commonFooter}}", note: "{{benefitText}}＝KTN.CAMPAIGN.benefitText の文（例：作品代金の最初の 50,000円分まで、サービス利用料を 50% 割引）。{{termsUrl}}＝P3-21／P4-21。メールは①リマインダーの設定に従う（止められる）。サイト内のお知らせ NT-12 は設定にかかわらず出す", updatedAt: '2026.10.12' },
     { id: "CP-02", category: 'campaign', event: "会場のクーポンのご案内（会期が終わった日・購入者あて）", aud: "ユーザー（その展覧会の会場のクーポンを持っていて、まだ使っていない人・P5-13 の①リマインダーで停止可）", source: "クーポンを受け取った展覧会の会期が終わった日", timing: "会期が終わった日の夕方に1通（販売期間が会期と同じ日に終わる展覧会には送らない）", subject: "【個展なび】「{{exhibitionName}}」の作品は、{{saleEndDate}} までオンラインでご購入いただけます", body: "{{userName}} 様\n\n「{{exhibitionName}}」にお越しいただき、ありがとうございました。\n会期は終わりましたが、作品は {{saleEndDate}} まで、\nリエゾンプラスでオンラインからご購入いただけます。\n\n会場でチェックインしたときに受け取ったクーポンを、\nこの展覧会の作品にお使いいただけます。\n\n──────────────────────────────\n クーポン：{{campaignName}}\n 値引き：{{benefitText}}\n 使える作品：「{{exhibitionName}}」の作品\n 使用期限：{{saleEndDate}}（販売期間の終わり）まで\n──────────────────────────────\n\n■ 作品を見る\n　{{worksUrl}}\n\n■ 持っているクーポンを確認する\n　{{couponUrl}}\n\n※売約済みになった作品は、ご購入いただけません。\n※このメールは、通知設定で「リマインダー」を受け取る設定にしている方にお送りしています。\n　受け取らない設定は、myページの通知設定から変えられます。\n　{{settingsUrl}}\n\n{{commonFooter}}", note: "受け取ったときの知らせは、その場の表示（チェックインの完了の画面）とサイト内のお知らせ NT-13。メールは会期が終わった日に送る＝会場にいるあいだは画面で伝わり、会期のあとに「まだ買えます」と伝える方が購入につながる。興味あり！のクーポンは、このメールではなく翌朝のリマインダー R-01 の項目で知らせる。{{worksUrl}}＝その展覧会の LIAISON+ の作品（P2-5-1）、{{couponUrl}}＝P5-17", updatedAt: '2026.10.12' },
     { id: "CP-04A", category: 'campaign', event: "キャンペーンの上限のお知らせ（事務局あて）", aud: "事務局", source: "対象になった人数・個展なびの負担のどちらかが、上限の 80% を超えたとき／上限に達して自動で止まったとき", timing: "超えた直後（自動・それぞれ1回）", subject: "【個展なび・事務局】キャンペーン「{{campaignName}}」が{{limitState}}", body: "キャンペーン「{{campaignName}}」（{{campaignId}}）が{{limitState}}。\n\n──────────────────────────────\n 対象になった人：{{peopleNow}} / {{peopleLimit}}\n 使われた取引：{{usedCount}}\n 個展なびの負担：{{costNow}} / {{costLimit}}\n 実施期間：{{campaignTerm}}\n──────────────────────────────\n\n上限に達すると、新しく特典を渡すのを自動で止めます。すでに渡した特典は有効です。\n続けるときは、上限を上げてください。\n\n■ 料率・キャンペーン管理\n　{{adminUrl}}", note: "{{limitState}}＝「上限の 80% を超えました」／「上限に達したため、自動で止まりました」。{{adminUrl}}＝P90-20", updatedAt: '2026.10.12' },
     { id: 'E-01', category: 'exhibition', event: '管理者確認済のオーナーへ通知', aud: '展覧会オーナー（クリエイター/ギャラリー）', source: 'p2-11 admin confirm', timing: '確認完了時（自動）',
@@ -24344,7 +24344,7 @@ KTN.NOTICES = {
      until＝表示期限（P61-11 で必須）＝この日を過ぎると一覧から外れる（あなた宛に入るものも同じ）。top＝トップ（P1）の「News」帯にも出す（対象が全員のときだけ・期限は until と同じ）（2026-09-30） */
   news: [
     /* 公開予定（公開日が今日より後）＝管理者にだけ一覧に「公開予定」の印で出る（2026-10-03） */
-    { id: 'n15', target: 'cg',      tag: 'おすすめ',     cls: 'at-b', title: '【先行特典】リエゾンプラスの先行申込で、サービス利用料が半額になります', date: '2026.10.11', until: '2027.01.07', href: 'kotennavi-p61-1.html' },
+    { id: 'n15', target: 'cg',      tag: 'おすすめ',     cls: 'at-b', title: '【はじめて割】リエゾンプラスのはじめての展覧会は、サービス利用料が半額になります', date: '2026.10.11', until: '2027.01.07', href: 'kotennavi-p61-1.html' },
     { id: 'n14', target: 'creator', tag: 'おすすめ',     cls: 'at-b', title: 'リエゾンプラスの出品の始め方を、オンライン説明会でご案内します', date: '2026.10.10', until: '2026.11.10', href: 'kotennavi-p61-1.html' },
     { id: 'n13', target: 'all',     tag: 'ニュース',     cls: 'at-a', title: '年末年始のお問合わせ対応について', date: '2026.10.05', until: '2027.01.10', href: 'kotennavi-p61-1.html' },
     { id: 'n12', target: 'all',     tag: 'ニュース',     cls: 'at-a', title: 'システムメンテナンスのお知らせ（10月14日 深夜）', date: '2026.09.26', until: '2026.10.14', top: true, href: 'kotennavi-p61-1.html' },
@@ -24921,18 +24921,20 @@ KTN.pages['p90-18'] = function () {
    料率・キャンペーン（2026-10-11 新設／2026-10-12 に「固定の3つ」へ作り直し・handoff 追174-319〜322）
    KTN.CAMPAIGN＝サービス利用料の料率と、キャンペーンの単一ソース。管理画面は P90-20。
    キャンペーンは固定の3つだけ（条件を自由に組む仕組みは持たない＝お金が絡むので、決まりを増やさない）：
-     C-01 先行特典（kind: early）    クリエイター・ギャラリー。期間内に LIAISON+ を新しく申し込み、公開中の作品が N 点以上 → 作品代金の上限まで利用料を割引
+     C-01 はじめて割（kind: early）  クリエイター・ギャラリー。期間内に LIAISON+ を新しく申し込んだ（申込の順に先着・承認されなければ枠を戻す）
+                                     → 有効期間（日付）の中で最初に会期が始まった LIAISON+ の展覧会の取引は、サービス利用料を割引（送料・梱包費の分も含む・上限なし）
+                                     2026-10-14 に「先行特典」（作品の点数の条件・作品代金の上限まで）から作り直した（handoff 追174-323）
      C-02 興味あり！のクーポン（interest）ユーザー。LIAISON+ の作品を興味あり！に入れた → LIAISON+ のどの作品にも使えるクーポン（1人1枚）
      C-03 会場のクーポン（venue）    ユーザー。LIAISON+ の展覧会の会場でチェックインした → その展覧会の作品にだけ使えるクーポン（展覧会ごとに1枚・期限はその展覧会の販売期間の終わり）
-   管理者が変えるのは数字だけ（期間・割引率・上限・値引きの段・予算）。先行特典は対象（クリエイター・ギャラリー／クリエイター／ギャラリー）と作品の点数も選べる。
+   管理者が変えるのは数字だけ（期間・割引率・上限・値引きの段・予算）。はじめて割は対象（クリエイター・ギャラリー／クリエイター／ギャラリー）も選べる。
    1つの取引に効くのは、出品者の特典が最大1つ、購入者のクーポンが最大1つ（2枚持っているときは購入の申込で選ぶ）。
    利用者に見せる場所：内容を確かめる＝専用のページ（P3-21／P4-21「キャンペーン・特典」、P5-17「キャンペーン・クーポン」）、
      使われたことが分かる＝取引の内訳、気づく＝同じ1行（P3-15／P4-15・P3-17／P4-17・P2-12-1）と作品のページの価格のそば（P6-2）。
    数字はページに直書きしない（HTML には入れ物だけ。mount() が data 属性のある場所に描く）。
-   デモの保存は sessionStorage 'ktnDemoCampaign7'。本番は Drupal の設定値で、取引ごとに申込の時点の料率と特典を記録する。
+   デモの保存は sessionStorage 'ktnDemoCampaign8'。本番は Drupal の設定値で、取引ごとに申込の時点の料率と特典を記録する。
 ════════════════════════════════════════════════════ */
 KTN.CAMPAIGN = (function () {
-  var KEY = 'ktnDemoCampaign7';
+  var KEY = 'ktnDemoCampaign8';   /* 2026-10-14 はじめて割に作り直したので、前の保存を読まない */
   var WHO = { seller: 'クリエイター・ギャラリー', creator: 'クリエイター', gallery: 'ギャラリー', buyer: 'ユーザー（購入者）' };
   var STATUS = { draft: '下書き', ready: '開始待ち', on: '実施中', end: '終了' };
   var DEF = {
@@ -24941,9 +24943,10 @@ KTN.CAMPAIGN = (function () {
     /* お知らせを送る時期。saleEnd＝興味あり！に入れた作品・クーポンが使える展覧会の作品の、販売期間が終わる何日前 */
     notify: { saleEnd: { on: true, days: 3 } },
     campaigns: [
-      { id: 'C-01', kind: 'early', name: '先行特典', page: 'n15', who: 'seller', status: 'on', start: '2026-11-01', end: '2027-01-07', works: 10,
-        benefit: { type: 'fee', off: 50, cap: 50000, until: '2028-01-07' },
-        limit: { people: 200, budget: 500000 }, stat: { got: 38, used: 12, cost: 21500 } },
+      /* はじめて割：until＝有効期間の終わり（この日までに会期が始まる、最初の LIAISON+ の展覧会が対象）。上限は先着の人数だけ（1人あたりの上限が無いので、負担の見込みは出せない） */
+      { id: 'C-01', kind: 'early', name: 'はじめて割', page: 'n15', who: 'seller', status: 'on', start: '2026-11-01', end: '2027-01-07',
+        benefit: { type: 'fee', off: 50, until: '2028-01-07' },
+        limit: { people: 50, budget: '' }, stat: { got: 38, used: 12, cost: 21500, manual: 1 } },
       { id: 'C-02', kind: 'interest', name: '興味あり！のクーポン', page: 'n7', who: 'buyer', status: 'ready', start: '2027-01-08', end: '2027-03-31',
         benefit: { type: 'coupon', tiers: [{ min: 10000, off: 1000 }, { min: 30000, off: 3000 }], until: '2027-04-30' },
         limit: { people: 500, budget: '' }, stat: { got: 0, used: 0, cost: 0 } },
@@ -24954,20 +24957,23 @@ KTN.CAMPAIGN = (function () {
   };
   /* デモの「あなたの状態」（本番はログイン中の人のデータ） */
   var DEMO = {
-    /* 出品者：state＝active（特典を適用中）／progress（条件の達成前）／none。used＝特典を使った作品代金 */
+    /* 出品者：state＝active（はじめて割を持っていて、対象の展覧会が決まった）／waiting（持っているが、対象の展覧会の会期はまだ）／
+       progress（LIAISON+ の申込を審査中・枠を確保）／none。first＝対象の展覧会（最初に会期が始まった LIAISON+ の展覧会） */
     /* full＝デモ：すべてのキャンペーンが上限に達した状態を見る（デモバー「受付」） */
     full: false,
-    seller: { state: 'active', works: 7, applied: true, used: 18000, since: '2026-12-03' },
+    seller: { state: 'active', first: 'あなたが知らないオノマトペ', since: '2026-12-03' },
     /* 購入者：state＝has／none。held＝持っているクーポン。会場のクーポンは、チェックインした展覧会（ex）にだけ使える */
     buyer: { state: 'has', held: [{ id: 'C-03', ex: 'あなたが知らないオノマトペ — 田中透 個展' }, { id: 'C-02' }] },
     /* 管理者が P3-11／P4-11／P5-11 で見る、そのアカウントの適用状況 */
     account: {
-      creator: { 'C-01': { st: 'on', note: '残り 32,000円分（50,000円のうち 18,000円分を使用）' } },
-      gallery: { 'C-01': { st: 'progress', note: '公開中の作品 4 / 10 点・LIAISON+ の申込 済み' } },
+      creator: { 'C-01': { st: 'on', note: '対象の展覧会：「あなたが知らないオノマトペ」（最初に会期が始まった LIAISON+ の展覧会）' } },
+      gallery: { 'C-01': { st: 'on', note: '対象の展覧会はまだ決まっていません（有効期間の中で、最初に会期が始まる LIAISON+ の展覧会が対象）' } },
       buyer:   { 'C-02': { st: 'has', note: '2027.01.12 に受け取り・未使用' }, 'C-03': { st: 'has', note: '「あなたが知らないオノマトペ」の会場でチェックイン・未使用' } }
     },
     /* 対象から外したキャンペーン（管理者）。out[対象][キャンペーンの番号]＝true */
-    out: { creator: {}, gallery: {}, buyer: {} }
+    out: { creator: {}, gallery: {}, buyer: {} },
+    /* 個別に適用したはじめて割（管理者・トラブルの対応）。grant[対象][キャンペーンの番号]＝{ reason: 理由 } */
+    grant: { creator: {}, gallery: {}, buyer: {} }
   };
   function copy(o) { return JSON.parse(JSON.stringify(o)); }
   function load() {
@@ -24985,13 +24991,15 @@ KTN.CAMPAIGN = (function () {
   /* 上限の判定（2026-10-12）。
      perMax＝1人に渡した特典がすべて使われたときの、個展なびの負担。projected＝渡した人数 × perMax（負担の見込み）。
      人数の上限は渡した人数で、負担の上限は「見込み」で判定する＝特典は渡したあとに使われるので、使われた実績で止めると、止めたあとに上限を超える。
-     上限に達したら、新しく渡すのを止める（渡した分は有効）。受け取れない人には、その場で分かるように出す（約束して渡さない、を起こさない） */
-  function perMax(c, rate) { var b = c.benefit; return b.type === 'fee' ? Math.round(b.cap * rate / 100 * b.off / 100) : Math.max.apply(null, [0].concat((b.tiers || []).map(function (t) { return +t.off || 0; }))); }
-  function projected(c, rate) { return c.stat.got * perMax(c, rate); }
+     上限に達したら、新しく渡すのを止める（渡した分は有効）。受け取れない人には、その場で分かるように出す（約束して渡さない、を起こさない）
+     はじめて割（fee）は1人あたりの上限が無い＝見込みが出せないので、人数だけで判定する（projected は null）。 */
+  function perMax(c, rate) { var b = c.benefit; return b.type === 'fee' ? null : Math.max.apply(null, [0].concat((b.tiers || []).map(function (t) { return +t.off || 0; }))); }
+  function projected(c, rate) { var m = perMax(c, rate); return m == null ? null : c.stat.got * m; }
   function isFull(c, rate) {
     if (DEMO.full) return true;
     var l = c.limit;
-    return (l.people !== '' && +l.people > 0 && c.stat.got >= +l.people) || (l.budget !== '' && +l.budget > 0 && projected(c, rate) >= +l.budget);
+    var pj = projected(c, rate);
+    return (l.people !== '' && +l.people > 0 && c.stat.got >= +l.people) || (pj != null && l.budget !== '' && +l.budget > 0 && pj >= +l.budget);
   }
   /* 新しく受け取れるか（実施中・開始待ちで、上限に達していない） */
   function isOpen(c, rate) { return isLive(c) && !isFull(c, rate); }
@@ -25005,14 +25013,14 @@ KTN.CAMPAIGN = (function () {
   function tiersText(b) { return (b.tiers || []).map(function (t) { return yen(t.min) + '以上の購入で ' + yen(t.off) + '引き'; }).join('、'); }
   /* 条件は固定の文（キャンペーンの種類で決まる）。数字だけが設定から入る */
   function condText(c) {
-    if (c.kind === 'early') return '実施期間に LIAISON+ の機能を新しく申し込み、公開中の作品が ' + (c.works || '？') + ' 点以上になった ' + WHO[c.who] + '（条件を満たした順）';
+    if (c.kind === 'early') return '実施期間に LIAISON+ の機能を新しく申し込んだ ' + WHO[c.who] + '（申込の順に先着。審査で承認されなかったときは枠を戻します）';
     if (c.kind === 'interest') return '実施期間に、LIAISON+ の作品を興味あり！に入れた ユーザー（1人1枚）';
     return '実施期間に、LIAISON+ の展覧会の会場でチェックインした ユーザー（展覧会ごとに1枚）';
   }
   /* 特典を文にする。rate＝今の料率（%） */
   function benefitText(c, rate) {
     var b = c.benefit;
-    if (b.type === 'fee') return '作品代金の最初の ' + yen(b.cap) + '分まで、サービス利用料を ' + b.off + '% 割引（' + rate + '% → ' + (Math.round(rate * (100 - b.off)) / 100) + '%）。' + (b.until ? '使用期限 ' + day(b.until) : '期限なし');
+    if (b.type === 'fee') return (b.until ? day(b.until) + ' までに' : '') + '最初に会期が始まる LIAISON+ の展覧会の取引は、サービス利用料を ' + b.off + '% 割引（' + rate + '% → ' + (Math.round(rate * (100 - b.off)) / 100) + '%・送料と梱包費の分も含む・上限なし）';
     return tiersText(b) + '。' + (c.kind === 'venue' ? 'チェックインした展覧会の作品に使えます。使用期限は、その展覧会の販売期間の終わりまで' : 'LIAISON+ のどの作品にも使えます。' + (b.until ? '使用期限 ' + day(b.until) : '期限なし'));
   }
   /* キャンペーンを1つの文にする（P90-20 の「この設定の読み方」） */
@@ -25045,7 +25053,7 @@ KTN.CAMPAIGN = (function () {
       '<div class="ktn-terms-group__desc">' + desc + '</div><div class="ktn-terms-group__body">' + inner + '</div></section>';
   }
   var LP_BADGE = '<span class="lb-dot li-plus">LIAISON+</span>';
-  /* 出品者の先行特典（その立場に当てはまり、実施中・開始待ちのもの）。無ければ null */
+  /* 出品者のはじめて割（その立場に当てはまり、実施中・開始待ちのもの）。無ければ null */
   function perkOf(d, role) { var c = byKind(d, 'early'); return c && isLive(c) && campFor(c, role) ? c : null; }
   /* 受付の状況（受付中／受付終了）と、数の限り。利用者が「まだ受け取れるか」を確かめられるように、誘う場所には必ず出す */
   function capState(c, rate) {
@@ -25059,36 +25067,42 @@ KTN.CAMPAIGN = (function () {
     var d = load(), s = DEMO.seller, c = perkOf(d, role), b = c && c.benefit, rate = d.fee.rate;
     var fee = block('サービス利用料', 'SERVICE FEE', row('料率', '<strong>' + rate + '%</strong><div class="ktn-terms__note">作品が売れたとき（取引成立時）にだけかかります。作品代金・送料・梱包費の合計に対して計算します。決済にかかる費用はこの中に含みます。</div>'),
       'くわしくは <a class="ktn-guide-link" href="kotennavi-p70-2.html#fees" target="_blank" rel="noopener">サービス利用料について →</a>');
-    var owned = '', camp = '';
-    if (c && s.state === 'active') {
-      var left = Math.max(0, b.cap - s.used);
+    var owned = '', camp = '', lower = c ? Math.round(rate * (100 - b.off)) / 100 : 0;
+    var untilTx = c && b.until ? day(b.until) + ' まで' : '期限なし';
+    if (c && (s.state === 'active' || s.state === 'waiting')) {
       owned = row(esc(c.name), '<span class="ktn-review-status ktn-review-status--granted">適用中</span><span class="ktn-terms__issuer">発行：個展なび</span>' +
-        '<div class="ktn-terms__line">作品代金の最初の ' + yen(b.cap) + '分まで、サービス利用料が ' + b.off + '% 割引（' + rate + '% → <strong>' + (Math.round(rate * (100 - b.off)) / 100) + '%</strong>）になります。</div>' +
-        '<div class="ktn-terms__line">残り <strong>' + yen(left) + '分</strong>（' + yen(b.cap) + 'のうち ' + yen(s.used) + '分を使用）' + bar(s.used, b.cap) + '</div>' +
-        '<div class="ktn-terms__note">使用期限：' + (b.until ? day(b.until) + ' まで' : 'なし') + '　｜　適用された日：' + day(s.since) + '</div>' + pageLink(c));
+        (s.state === 'active'
+          ? '<div class="ktn-terms__line">対象の展覧会：<strong>「' + esc(s.first) + '」</strong></div>' +
+            '<div class="ktn-terms__line">この展覧会の取引は、サービス利用料が ' + b.off + '% 割引（' + rate + '% → <strong>' + lower + '%</strong>）になります。販売期間の終わりまで、すべての取引に適用します（上限はありません）。</div>'
+          : '<div class="ktn-terms__line">まだ対象の展覧会はありません。' + (b.until ? day(b.until) + ' までに' : '') + '、LIAISON+ を使って<strong>最初に会期が始まる展覧会</strong>が対象になります。</div>' +
+            '<div class="ktn-terms__line">その展覧会の取引は、サービス利用料が ' + b.off + '% 割引（' + rate + '% → <strong>' + lower + '%</strong>）になります。販売期間の終わりまで、すべての取引に適用します（上限はありません）。</div>') +
+        '<div class="ktn-terms__note">有効期間：' + untilTx + '　｜　適用された日：' + day(s.since) + '</div>' + pageLink(c));
+    } else if (c && s.state === 'progress') {
+      owned = row(esc(c.name), '<span class="ktn-review-status ktn-review-status--pending">申込の審査中</span><span class="ktn-terms__issuer">発行：個展なび</span>' +
+        '<div class="ktn-terms__line">LIAISON+ の申込を審査しています。はじめて割の枠は確保してあります。承認されると、はじめて割を適用します（承認されなかったときは、枠をほかの方に戻します）。</div>' +
+        '<div class="ktn-terms__note">有効期間：' + untilTx + '</div>' + pageLink(c));
     } else if (c) {
-      var full = isFull(c, rate), prog = s.state === 'progress';
+      var full = isFull(c, rate);
       camp = row(esc(c.name), capState(c, rate) +
-        '<div class="ktn-terms__line">作品代金の最初の ' + yen(b.cap) + '分まで、サービス利用料が ' + b.off + '% 割引になります。' + (b.until ? '使用期限は ' + day(b.until) + ' まで。' : '') + '</div>' +
-        (full ? '<div class="ktn-terms__line">' + CLOSED + 'これから条件を満たしても、この特典は受け取れません。</div>' :
-          '<div class="ktn-terms__sub">条件（両方を満たした順に適用します）</div>' +
-          '<div class="ktn-terms__cond' + (prog && s.applied ? ' is-done' : '') + '">LIAISON+ の申込' + (prog ? '　<strong>' + (s.applied ? '済み' : 'まだ') + '</strong>' : '') + (prog && s.applied ? '' : '　<a class="ktn-guide-link" href="./kotennavi-p11-4.html">申し込む →</a>') + '</div>' +
-          '<div class="ktn-terms__cond' + (prog && s.works >= c.works ? ' is-done' : '') + '">公開中の作品が ' + c.works + ' 点以上' + (prog ? '　<strong>いま ' + s.works + ' / ' + c.works + ' 点</strong>' + bar(s.works, c.works) : '') + '</div>') +
-        '<div class="ktn-terms__note">対象：' + esc(WHO[c.who]) + '　｜　実施期間：' + esc(termText(c)) + '</div>' + pageLink(c));
+        '<div class="ktn-terms__line">LIAISON+ を使って最初に会期が始まる展覧会の取引は、サービス利用料が ' + b.off + '% 割引になります（上限なし）。' + (b.until ? '有効期間は ' + day(b.until) + ' まで。' : '') + '</div>' +
+        (full ? '<div class="ktn-terms__line">' + CLOSED + 'これから申し込んでも、この特典は受け取れません。</div>' :
+          '<div class="ktn-terms__cond">実施期間に LIAISON+ を新しく申し込む（作品の点数は問いません）　<a class="ktn-guide-link" href="./kotennavi-p11-4.html">申し込む →</a></div>') +
+        '<div class="ktn-terms__note">対象：' + esc(WHO[c.who]) + '　｜　実施期間：' + esc(termText(c)) + '　｜　申込の順に先着。審査で承認されなかったときは、枠をほかの方に戻します</div>' + pageLink(c));
     }
     return group(LP_BADGE, 'LIAISON+ のサービス利用料と特典', '個展なびが実施しているものです。LIAISON+ で作品が売れたときの利用料と、利用料が割引になる特典です。',
       fee +
       block('持っている特典', 'YOUR BENEFITS', owned || row('特典', '持っている特典はありません。'),
-        owned ? '特典は、購入の申込があった時点で、その取引に自動で適用されます（お手続きは要りません）。割引の対象は作品代金で、送料・梱包費には適用しません。取引ごとの金額は、取引デスクと振込の明細で確認できます。' : '') +
+        owned ? '特典は、購入の申込があった時点で、その取引に自動で適用されます（お手続きは要りません）。送料・梱包費の分も含めて、サービス利用料を割り引きます。対象の展覧会は、会期が始まった時点で決まり、あとから変わりません（その展覧会で売れなかったときも、次の展覧会へは持ち越しません）。取引ごとの金額は、取引デスクと振込の明細で確認できます。' : '') +
       block('実施中のキャンペーン', 'CAMPAIGNS', camp || row('キャンペーン', owned ? 'ほかに実施中のキャンペーンはありません。' : 'いま実施中のキャンペーンはありません。'),
-        camp ? '条件を満たすと、自動で適用されます。適用されると、お知らせとメールでお伝えします。' : ''));
+        camp ? '申込が承認されると、自動で適用されます。適用されると、お知らせとメールでお伝えします。' : ''));
   }
   /* 気づくための1行（P3-15／P4-15・P3-17／P4-17・P2-12-1）。どのページでも同じ内容。数字の詳しい説明は専用のページだけに置く */
   function sellerLine(role) {
     var d = load(), s = DEMO.seller, c = perkOf(d, role), href = role === 'gallery' ? './kotennavi-p4-21.html' : './kotennavi-p3-21.html';
     var st = '';
-    if (c && s.state === 'active') st = '<span class="ktn-terms-line__tag">特典を適用中</span><span class="ktn-terms-line__name">' + esc(c.name) + '</span>';
-    else if (c && s.state === 'progress' && !isFull(c, d.fee.rate)) st = '<span class="ktn-terms-line__tag is-outline">特典の条件を達成前</span><span class="ktn-terms-line__name">' + esc(c.name) + '</span><span class="ktn-terms-line__note">公開中の作品 ' + s.works + ' / ' + c.works + ' 点</span>';
+    if (c && s.state === 'active') st = '<span class="ktn-terms-line__tag">特典を適用中</span><span class="ktn-terms-line__name">' + esc(c.name) + '</span><span class="ktn-terms-line__note">対象：「' + esc(s.first) + '」</span>';
+    else if (c && s.state === 'waiting') st = '<span class="ktn-terms-line__tag">特典を適用中</span><span class="ktn-terms-line__name">' + esc(c.name) + '</span><span class="ktn-terms-line__note">最初に会期が始まる LIAISON+ の展覧会が対象</span>';
+    else if (c && s.state === 'progress') st = '<span class="ktn-terms-line__tag is-outline">申込の審査中</span><span class="ktn-terms-line__name">' + esc(c.name) + '</span>';
     return '<span class="ktn-terms-line__label">サービス利用料</span><strong class="ktn-terms-line__rate">' + d.fee.rate + '%</strong>' + st +
       '<a class="ktn-guide-link" href="' + href + '">キャンペーン・特典 →</a>';
   }
@@ -25171,21 +25185,21 @@ KTN.CAMPAIGN = (function () {
     var pay = el.querySelector('[data-apply-coupon-pay]');
     el.addEventListener('change', function (e) { if (e.target.name !== 'amCoupon') return; var x = list[+e.target.value]; pay.textContent = ymark(price - (x ? x.off : 0)); });
   }
-  /* 出品者の受取金額（取引デスク P3-16／P4-16）。data-txn-net data-price data-ship data-pack
-     特典の割引＝min(作品代金, 特典の残り) × 料率 × 割引率。送料・梱包費には適用しない */
+  /* 出品者の受取金額（取引デスク P3-16／P4-16）。data-txn-net data-price data-ship data-pack（data-ex＝取引の展覧会。省くとデモの対象の展覧会）
+     はじめて割の割引＝サービス利用料（作品代金＋送料＋梱包費 × 料率）× 割引率。対象の展覧会の取引だけ・上限なし */
   function txnNet(el, role) {
     var d = load(), s = DEMO.seller, c = perkOf(d, role), price = +el.dataset.price || 0;
     var total = price + (+el.dataset.ship || 0) + (+el.dataset.pack || 0);
     var fee = Math.round(total * d.fee.rate / 100), part = 0, disc = 0;
-    if (c && s.state === 'active') { part = Math.min(price, Math.max(0, c.benefit.cap - s.used)); disc = Math.round(part * d.fee.rate / 100 * c.benefit.off / 100); }
+    if (c && s.state === 'active' && (el.dataset.ex || s.first) === s.first) disc = Math.round(fee * c.benefit.off / 100);
     function r(label, val, cls) { return '<div class="p316-ship-total-row' + (cls || '') + '"><span class="p316-ship-total-label">' + label + '</span><span class="p316-ship-total-amount">' + val + '</span></div>'; }
     return '<div class="p316-ship-total-box">' +
       r('取引金額（作品代金＋送料＋梱包費）', ymark(total)) +
       r('サービス利用料（' + d.fee.rate + '%）', '−' + ymark(fee)) +
-      (disc ? r('特典の割引（' + esc(c.name) + '・作品代金 ' + ymark(part) + '分に ' + c.benefit.off + '%）', '＋' + ymark(disc), ' ktn-txn-net__perk') : '') +
+      (disc ? r('特典の割引（' + esc(c.name) + '・サービス利用料の ' + c.benefit.off + '%）', '＋' + ymark(disc), ' ktn-txn-net__perk') : '') +
       r('受取金額（見込み）', ymark(total - fee + disc), ' p316-ship-total-row--total') +
       '</div>' +
-      '<div class="p211-help">送料・梱包費は、購入確定のときに入れた金額で計算します。' + (disc ? '特典の割引は、作品代金のうち、特典の残りの分に適用しています（送料・梱包費には適用しません）。' : '') + '購入者がクーポンを使った取引でも、受取金額は変わりません。振込のときに、ここから振込手数料を引きます。</div>';
+      '<div class="p211-help">送料・梱包費は、購入確定のときに入れた金額で計算します。' + (disc ? '特典の割引は、' + esc(c.name) + 'の対象の展覧会「' + esc(s.first) + '」の取引なので、サービス利用料（送料・梱包費の分も含む）に適用しています。' : '') + '購入者がクーポンを使った取引でも、受取金額は変わりません。振込のときに、ここから振込手数料を引きます。</div>';
   }
   /* 購入者の支払いの内訳にクーポンの行を足す（取引ワークスペース P5-15）。
      data-pay-breakdown data-price data-total data-venue＝内訳の箱、[data-pay-total]＝合計を出している場所。この取引で選んだクーポン＝デモは先頭のもの */
@@ -25255,7 +25269,8 @@ KTN.CAMPAIGN = (function () {
   }
   function monitor(c) {
     /* 負担は2つ出す：見込み（渡した分がすべて使われたとき。上限の判定に使う）と、実績（使われた分） */
-    return '<span class="p9020-mon">' + meter('対象になった人', c.stat.got, c.limit.people, '人') + meter('負担の見込み', projected(c, load().fee.rate), c.limit.budget, '円') +
+    var pj = projected(c, load().fee.rate);
+    return '<span class="p9020-mon">' + meter('対象になった人', c.stat.got, c.limit.people, '人') + (c.stat.manual ? '<span class="p9020-mon__item"><span class="p9020-mon__label">個別に適用</span><b>' + c.stat.manual + '人</b>（先着の数の外）</span>' : '') + (pj == null ? '' : meter('負担の見込み', pj, c.limit.budget, '円')) +
       '<span class="p9020-mon__item"><span class="p9020-mon__label">使われた取引</span><b>' + c.stat.used + '件</b></span><span class="p9020-mon__item"><span class="p9020-mon__label">負担の実績</span><b>' + yen(c.stat.cost) + '</b></span></span>';
   }
   function sumRow(c) {
@@ -25274,24 +25289,30 @@ KTN.CAMPAIGN = (function () {
     return '<div class="p315-archive-table-wrap"><table class="p315-archive-table p9010-camp"><thead><tr><th>番号</th><th>キャンペーン</th><th>対象</th><th>実施期間</th><th>状態</th><th>対象になった人</th><th>負担の見込み</th><th>使われた取引</th><th>負担の実績</th></tr></thead><tbody>' +
       list.map(function (c) {
         return '<tr><td data-label="番号">' + esc(c.id) + '</td><td data-label="キャンペーン"><a class="ktn-guide-link" href="./kotennavi-p90-20.html#campaign">' + esc(c.name) + '</a></td><td data-label="対象">' + esc(WHO[c.who]) + '</td><td data-label="実施期間">' + esc(termText(c)) + '</td><td data-label="状態">' + statusChip(c) + '</td>' +
-          '<td data-label="対象になった人">' + cell(c.stat.got, c.limit.people, '人') + '</td><td data-label="負担の見込み">' + cell(projected(c, d.fee.rate), c.limit.budget, '円') + '</td><td data-label="使われた取引"><b>' + c.stat.used + '件</b></td><td data-label="負担の実績"><b>' + yen(c.stat.cost) + '</b></td></tr>';
+          '<td data-label="対象になった人">' + cell(c.stat.got, c.limit.people, '人') + '</td><td data-label="負担の見込み">' + (projected(c, d.fee.rate) == null ? '<span class="p9010-camp__num">—（人数で管理）</span>' : cell(projected(c, d.fee.rate), c.limit.budget, '円')) + '</td><td data-label="使われた取引"><b>' + c.stat.used + '件</b></td><td data-label="負担の実績"><b>' + yen(c.stat.cost) + '</b></td></tr>';
       }).join('') + '</tbody></table></div>';
   }
   /* 管理者が見る「キャンペーンの適用状況」（P3-11／P4-11／P5-11 の .ktn-admin-note・role＝creator／gallery／buyer）。
-     見るだけ（内容と、このアカウントの状況）＋「対象から外す」だけ。1人ずつ条件を変える仕組みは持たない（計算の確認ができなくなるため・2026-10-12 ユーザー判断） */
-  var ST = { on: ['適用中', 'granted'], has: ['クーポンあり（未使用）', 'granted'], progress: ['条件の達成前', 'pending'], no: ['条件を満たしていません', 'new'], out: ['対象から外した', 'cancelled'] };
+     見るだけ（内容と、このアカウントの状況）＋「対象から外す」だけ。1人ずつ条件を変える仕組みは持たない（計算の確認ができなくなるため・2026-10-12 ユーザー判断）。
+     例外：はじめて割だけ「個別に適用する」を選べる（2026-10-14 ユーザー指示・トラブルの対応）。条件（申込の日付）にかかわらず適用するだけで、特典の中身（割引率・対象の展覧会の決め方）は変えない。
+     理由は必須（記録に残す）。先着の人数には数えない（公開している「先着○人」の枠を減らさないため・P90-20 に「個別に適用」の人数を別に出す） */
+  var ST = { grant: ['個別に適用', 'granted'], missed: ['適用なし（申込が実施期間の外）', 'new'], on: ['適用中', 'granted'], has: ['クーポンあり（未使用）', 'granted'], progress: ['申込の審査中（枠を確保）', 'pending'], no: ['条件を満たしていません', 'new'], out: ['対象から外した', 'cancelled'] };
   function adminBlock(role) {
     var d = load(), acc = DEMO.account[role] || {}, out = DEMO.out[role];
     var list = d.campaigns.filter(function (c) { return campFor(c, role) && c.status !== 'draft'; });
     function ro(k, v) { return '<div class="ktn-admin-camp__ro"><span class="ktn-admin-camp__ro-k">' + k + '</span><span class="ktn-admin-camp__ro-v">' + v + '</span></div>'; }
     var rows = list.map(function (c) {
-      var a = acc[c.id] || { st: 'no', note: '条件を満たしていません' }, ex = !!out[c.id], st = ex ? 'out' : a.st;
+      var a = acc[c.id] || { st: 'no', note: '条件を満たしていません' }, ex = !!out[c.id], gr = c.kind === 'early' && DEMO.grant[role][c.id], st = ex ? 'out' : gr ? 'grant' : a.st;
       return '<div class="ktn-admin-camp__item">' +
         '<div class="ktn-admin-camp__head"><span class="ktn-admin-camp__id">' + esc(c.id) + '</span><span class="ktn-admin-camp__name">' + esc(c.name) + '</span>' +
           '<span class="ktn-review-status ktn-review-status--' + ST[st][1] + '">' + ST[st][0] + '</span></div>' +
         '<div class="ktn-admin-camp__common">' + ro('実施期間', esc(termText(c))) + ro('特典', esc(benefitText(c, d.fee.rate)) + '。') + ro('このアカウントの状況', esc(a.note)) + '</div>' +
-        '<div class="ktn-admin-camp__set"><label class="ktn-admin-camp__field">このアカウントの扱い<select class="p211-select" data-ac="' + esc(c.id) + '"><option value="in"' + (ex ? '' : ' selected') + '>対象にする（条件で自動に決める）</option><option value="out"' + (ex ? ' selected' : '') + '>対象から外す</option></select></label></div>' +
+        '<div class="ktn-admin-camp__set"><label class="ktn-admin-camp__field">このアカウントの扱い<select class="p211-select" data-ac="' + esc(c.id) + '"><option value="in"' + (ex || gr ? '' : ' selected') + '>対象にする（条件で自動に決める）</option>' +
+          (c.kind === 'early' ? '<option value="grant"' + (gr ? ' selected' : '') + '>個別に適用する（条件にかかわらず）</option>' : '') +
+          '<option value="out"' + (ex ? ' selected' : '') + '>対象から外す</option></select></label>' +
+          (gr ? '<label class="ktn-admin-camp__field ktn-admin-camp__field--wide">理由<span class="ktn-req">必須</span><textarea class="p211-textarea" rows="2" data-ac-reason="' + esc(c.id) + '" placeholder="例：申込の日付が、システムの不具合で実施期間のあとに記録された（お問合わせ #1234）">' + esc(gr.reason || '') + '</textarea></label>' : '') + '</div>' +
         (ex ? '<div class="p211-help">このアカウントには、このキャンペーンの特典を適用しません（条件を満たしていても）。すでに始まっている取引には影響しません。</div>' : '') +
+        (gr ? '<div class="p211-help">トラブルの対応のための操作です（申込の日付の記録の誤り・システムの不具合など）。条件（実施期間の申込）にかかわらず、このアカウントに' + esc(c.name) + 'を適用します。特典の中身は変わりません（割引率と、有効期間の中で最初に会期が始まった展覧会が対象になる決め方は、ほかの人と同じ）。先着の人数には数えません。適用は保存した時点からで、それより前に申込があった取引の差額は、この操作では戻りません（必要なときは振込の調整で個別に対応）。保存すると、本人にお知らせ（NT-12）とメール（CP-01）が届きます。理由と、操作した管理者・日時は記録に残ります。</div>' : '') +
       '</div>';
     }).join('') || '<div class="ktn-admin-note__desc">このアカウントに当てはまるキャンペーンはありません。</div>';
     return '<div class="ktn-admin-note__head"><span class="ktn-admin-note__badge">Admin</span><span class="ktn-admin-note__title">キャンペーンの適用状況</span></div>' +
@@ -25332,8 +25353,20 @@ KTN.CAMPAIGN = (function () {
       var r = el.dataset.adminCamp;
       el.innerHTML = adminBlock(r);
       if (el.dataset.bound) return; el.dataset.bound = '1';
-      el.addEventListener('change', function (e) { var id = e.target.dataset.ac; if (!id) return; DEMO.out[r][id] = e.target.value === 'out'; el.innerHTML = adminBlock(r); });
-      el.addEventListener('click', function (e) { if (e.target.closest('[data-ac-save]')) KTN.toast('保存しました（デモ）'); });
+      el.addEventListener('change', function (e) {
+        var id = e.target.dataset.ac; if (!id) return;
+        DEMO.out[r][id] = e.target.value === 'out';
+        if (e.target.value === 'grant') DEMO.grant[r][id] = DEMO.grant[r][id] || { reason: '' }; else delete DEMO.grant[r][id];
+        el.innerHTML = adminBlock(r);
+      });
+      /* 理由は入力のたびに覚える（描き直すと消えないように） */
+      el.addEventListener('input', function (e) { var id = e.target.dataset.acReason; if (id && DEMO.grant[r][id]) DEMO.grant[r][id].reason = e.target.value; });
+      el.addEventListener('click', function (e) {
+        if (!e.target.closest('[data-ac-save]')) return;
+        var miss = Object.keys(DEMO.grant[r]).filter(function (id) { return !String(DEMO.grant[r][id].reason || '').trim(); });
+        if (miss.length) { var t = el.querySelector('[data-ac-reason="' + miss[0] + '"]'); if (t) { t.closest('label').classList.add('is-error'); t.focus(); } KTN.toast('個別に適用する理由を入れてください'); return; }
+        KTN.toast(Object.keys(DEMO.grant[r]).length ? '保存しました。本人にお知らせとメールが届きます（デモ）' : '保存しました（デモ）');
+      });
     });
   }
   return { WHO: WHO, STATUS: STATUS, DEMO: DEMO, load: load, save: save, reset: reset, describe: describe, condText: condText, cautions: cautions, benefitText: benefitText,
@@ -25344,6 +25377,23 @@ function ktnTermsDemo(who, state, btn) {
   KTN.CAMPAIGN.DEMO[who].state = state;
   if (btn) { var p = btn.parentNode.querySelectorAll('[data-terms-demo="' + who + '"]'); p.forEach(function (b) { b.classList.toggle('on', b === btn); }); }
   KTN.CAMPAIGN.mount();
+}
+/* デモバー（P3-11／P4-11）：管理者の枠で見る、このアカウントのはじめて割の状態を切り替える（2026-10-14）。
+   missed＝LIAISON+ は承認済みだが、申込の日付が実施期間の外で、はじめて割が適用されていない例（管理者が「個別に適用する」を試す）。
+   あわせて、ページの LIAISON+ の状態（setLpMode）もそろえる（審査中＝pending／それ以外＝approved） */
+var KTN_CAMP_ACCT_DEMO = {
+  on: { creator: { st: 'on', note: '対象の展覧会：「あなたが知らないオノマトペ」（最初に会期が始まった LIAISON+ の展覧会）' },
+        gallery: { st: 'on', note: '対象の展覧会はまだ決まっていません（有効期間の中で、最初に会期が始まる LIAISON+ の展覧会が対象）' } },
+  progress: { st: 'progress', note: 'LIAISON+ の申込を審査中（はじめて割の枠を確保済み）' },
+  missed: { st: 'missed', note: 'LIAISON+ は承認済み（2027.01.12）。記録されている申込の日付が 2027.01.08 で、実施期間（2026.11.01〜2027.01.07）のあとのため、はじめて割は適用されていません。トラブルの対応が要るときは「個別に適用する」を選んでください。' }
+};
+function ktnCampAcctDemo(role, st, btn) {
+  var C = KTN.CAMPAIGN, v = KTN_CAMP_ACCT_DEMO[st];
+  C.DEMO.account[role]['C-01'] = v[role] || v;
+  delete C.DEMO.grant[role]['C-01']; C.DEMO.out[role]['C-01'] = false;
+  if (typeof window.setLpMode === 'function') window.setLpMode(st === 'progress' ? 'pending' : 'approved');
+  if (btn) btn.parentNode.querySelectorAll('[data-camp-acct]').forEach(function (b) { b.classList.toggle('on', b === btn); });
+  C.mount();
 }
 /* デモバー：すべてのキャンペーンが上限に達した状態を見る（受け取れないときの表示の確認用） */
 function ktnCampFullDemo(on, btn) {
@@ -25363,8 +25413,8 @@ function ktnCampFullDemo(on, btn) {
 /* ════════════════════════════════════════════════════
    P90-20 料率・キャンペーン管理（2026-10-11／2026-10-12 に固定の3つへ作り直し）
    タブ：サービス利用料／キャンペーン／お知らせの時期。データは KTN.CAMPAIGN（上）。
-   キャンペーンは固定の3つ（先行特典・興味あり！のクーポン・会場のクーポン）。足す・消す・条件を組む操作は無い。
-   変えられるのは数字（期間・割引率・上限・値引きの段・予算）と、先行特典の対象・作品の点数。
+   キャンペーンは固定の3つ（はじめて割・興味あり！のクーポン・会場のクーポン）。足す・消す・条件を組む操作は無い。
+   変えられるのは数字（期間・割引率・上限・値引きの段・予算）と、はじめて割の対象。
    「この設定の読み方」に、設定を1つの文にして出す。
 ════════════════════════════════════════════════════ */
 KTN.pages['p90-20'] = function () {
@@ -25417,7 +25467,7 @@ KTN.pages['p90-20'] = function () {
   function field(label, inner, help) { return '<div class="p211-field"><label class="p211-label">' + label + '</label>' + inner + (help ? '<p class="p211-help">' + help + '</p>' : '') + '</div>'; }
   function unit(pre, at, k, v, post, attr) { return '<span class="p9020-unit">' + pre + '<input class="p211-input" type="number"' + (attr || ' min="0"') + at + ' data-k="' + k + '" value="' + esc(v) + '">' + post + '</span>'; }
   var NOTE = {
-    early: '導入のときだけでなく、LIAISON+ を使う人が少ないときに、期間と上限を入れ直してもう一度実施できます。条件が「期間内に新しく申し込んだ人」なので、1人が受けられるのは自然に1回です。条件（申込と作品の点数）を両方満たした時点で、満たした順に適用します。',
+    early: 'LIAISON+ をはじめて使う人の、最初の展覧会の売上を後押しします。条件は「実施期間に新しく申し込んだ人」だけで、作品の点数は問いません（クリエイターとギャラリーで条件をそろえるため）。対象の展覧会は、有効期間の中で最初に会期が始まった LIAISON+ の展覧会で、その取引すべてのサービス利用料を割り引きます（上限なし・送料と梱包費の分も含む）。先着は申込の順に数え、審査で承認されなかったら枠を戻します。導入のときだけでなく、使う人が少ないときに期間を入れ直してもう一度実施できます（1人が受けられるのは自然に1回）。',
     interest: '興味を持った人に、購入のきっかけを届けるクーポンです。1人1枚で、LIAISON+ のどの作品にも使えます。',
     venue: '会場に来た人が、会期のあとも販売期間の終わりまで、ゆっくり検討できるようにするクーポンです。チェックインした展覧会の作品にだけ使え、展覧会ごとに1枚です。使用期限は、その展覧会の販売期間の終わり（日付の設定は要りません）。'
   };
@@ -25427,10 +25477,9 @@ KTN.pages['p90-20'] = function () {
     h += '<div class="p9020-grid">' +
       field('名前<span class="ktn-req">必須</span>', '<input class="p211-input" type="text"' + at + ' data-k="name" value="' + esc(c.name) + '">', 'この名前が、お知らせとメールの {{campaignName}} にそのまま入ります。利用者にも見えます。') +
       field('状態', '<select class="p211-select"' + at + ' data-k="status">' + Object.keys(C.STATUS).map(function (k) { return '<option value="' + k + '"' + (k === c.status ? ' selected' : '') + '>' + C.STATUS[k] + '</option>'; }).join('') + '</select>') +
-      field('実施期間', '<span class="p9020-range"><input class="p211-input" type="date"' + at + ' data-k="start" value="' + esc(c.start) + '">〜<input class="p211-input" type="date"' + at + ' data-k="end" value="' + esc(c.end) + '"></span>', c.kind === 'early' ? 'この期間に新しく LIAISON+ を申し込み、作品の点数の条件も満たした人が対象です。' : '終わりを空にすると、止めるまで続きます。') +
+      field('実施期間', '<span class="p9020-range"><input class="p211-input" type="date"' + at + ' data-k="start" value="' + esc(c.start) + '">〜<input class="p211-input" type="date"' + at + ' data-k="end" value="' + esc(c.end) + '"></span>', c.kind === 'early' ? 'この期間に新しく LIAISON+ を申し込んだ人が対象です（申込の順に先着）。' : '終わりを空にすると、止めるまで続きます。') +
       (c.kind === 'early' ?
-        field('対象', '<select class="p211-select"' + at + ' data-k="who">' + ['seller', 'creator', 'gallery'].map(function (k) { return '<option value="' + k + '"' + (k === c.who ? ' selected' : '') + '>' + C.WHO[k] + '</option>'; }).join('') + '</select>') +
-        field('公開中の作品の点数', unit('', at, 'works', c.works, '点以上', ' min="1"'), '実施期間のうちに、公開中の作品がこの点数になった時点で条件を満たします。')
+        field('対象', '<select class="p211-select"' + at + ' data-k="who">' + ['seller', 'creator', 'gallery'].map(function (k) { return '<option value="' + k + '"' + (k === c.who ? ' selected' : '') + '>' + C.WHO[k] + '</option>'; }).join('') + '</select>')
         : field('対象', '<input class="p211-input" type="text" value="' + C.WHO.buyer + '" readonly>')) +
     '</div>';
     /* 案内のページ（ニュース）。連携の確認は保留中 */
@@ -25442,9 +25491,8 @@ KTN.pages['p90-20'] = function () {
     h += '<h4 class="p9020-sub">特典<span class="ktn-sec-en">Benefit</span></h4>';
     if (b.type === 'fee') {
       h += '<div class="p9020-grid">' +
-        field('割引率', unit('', at, 'b.off', b.off, '%', ' min="1" max="100"')) +
-        field('対象になる作品代金の上限', unit('', at, 'b.cap', b.cap, '円分まで', ' min="0" step="1000"'), '作品の販売価格（税込）で数えます。送料・梱包費は数えません。') +
-        field('使用期限', '<input class="p211-input" type="date"' + at + ' data-k="b.until" value="' + esc(b.until) + '">', 'この日まで使えます。空にすると期限なし。') +
+        field('サービス利用料の割引率', unit('', at, 'b.off', b.off, '%', ' min="1" max="100"'), '対象の展覧会の取引のサービス利用料（送料・梱包費の分も含む）を割り引きます。上限はありません。') +
+        field('有効期間の終わり<span class="ktn-req">必須</span>', '<input class="p211-input" type="date"' + at + ' data-k="b.until" value="' + esc(b.until) + '">', 'この日までに会期が始まる、最初の LIAISON+ の展覧会が対象です。その展覧会の取引は、販売期間がこの日をまたいでも、すべて割り引きます。人ごとではなく日付で持ちます（例：実施期間の終わりから1年後）。') +
       '</div>';
     } else {
       h += '<div class="p315-archive-table-wrap"><table class="p315-archive-table p909-table"><thead><tr><th>購入金額</th><th>値引き額</th><th>操作</th></tr></thead><tbody>' +
@@ -25454,14 +25502,15 @@ KTN.pages['p90-20'] = function () {
             '<td data-label="操作"><button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline" data-del-tier="' + i + ':' + j + '">外す</button></td></tr>';
         }).join('') + '</tbody></table></div>' +
         '<div class="p909-toolbar-row"><button type="button" class="ktn-op-btn ktn-op-btn--sm" data-add-tier="' + i + '">＋ 段を追加</button></div>' +
-        '<p class="p211-help">購入金額に合う段の値引きが使われます（いちばん高い段）。購入金額は作品の販売価格（税込）で見ます。出品者の受け取る金額と利用料は、値引きの前の金額で計算します（値引き分は個展なびの負担）。出品者に先行特典が適用されている取引でも、クーポンは使えます。</p>' +
+        '<p class="p211-help">購入金額に合う段の値引きが使われます（いちばん高い段）。購入金額は作品の販売価格（税込）で見ます。出品者の受け取る金額と利用料は、値引きの前の金額で計算します（値引き分は個展なびの負担）。出品者にはじめて割が適用されている取引でも、クーポンは使えます。</p>' +
         (c.kind === 'interest' ? field('使用期限', '<input class="p211-input" type="date"' + at + ' data-k="b.until" value="' + esc(b.until) + '">', 'この日まで使えます。空にすると期限なし。') : '');
     }
     /* 上限 */
     h += '<h4 class="p9020-sub">上限<span class="ktn-sec-en">Limit</span></h4><div class="p9020-grid">' +
+      (c.kind === 'early' ? field('先着の人数<span class="ktn-req">必須</span>', unit('', at, 'l.people', c.limit.people, '人'), 'LIAISON+ の申込の順に数えます。審査で承認されなかったときは枠を戻します。管理者が個別に適用した人（トラブルの対応・P3-11／P4-11）は数えません。1人あたりの割引に上限が無いので、負担の金額では止められません（負担は、実際に使われた額を見ながら、次に実施するときの割引率と人数で調整します）。') + '</div>' :
       field('対象になる人数の上限', unit('', at, 'l.people', c.limit.people, '人'), '空にすると上限なし。') +
       field('個展なびの負担の上限', unit('', at, 'l.budget', c.limit.budget, '円', ' min="0" step="10000"'), '空にすると上限なし。<strong>負担の見込み</strong>（渡した分がすべて使われたときの金額）で判定します。特典は渡したあとに使われるので、使われた実績で止めると、止めたあとに上限を超えてしまうためです。人数と負担のどちらかの上限に達したら、新しく渡すのを自動で止めます（状態は「上限に達して停止」と出ます。上限を上げると再開します）。すでに渡した特典は有効です。受付が終わったことは、利用者の画面にも出ます。') +
-    '</div>';
+    '</div>');
     /* 読み方・注意 */
     h += '<div class="p9020-read">' + readHtml(c) + '</div>';
     return '<details class="p9020-camp"' + (c.id === openId ? ' open' : '') + ' data-id="' + esc(c.id) + '"><summary class="p9020-camp__sum">' + C.sumRow(c) + '</summary><div class="p9020-camp__body">' + h + '</div></details>';
@@ -25513,14 +25562,15 @@ KTN.pages['p90-20'] = function () {
       var n = c.id + '「' + (c.name || '名前が未入力') + '」：', live = c.status === 'on' || c.status === 'ready';
       if (!String(c.name).trim()) errs.push(n + '名前が未入力です。');
       if (live && !c.start) errs.push(n + '実施期間の始まりが未入力です。');
-      if (c.kind === 'early' && live && !c.end) errs.push(n + '実施期間の終わり（作品の点数を数える締切）が未入力です。');
+      if (c.kind === 'early' && live && !c.end) errs.push(n + '実施期間の終わり（申込の締切）が未入力です。');
       if (c.start && c.end && c.start > c.end) errs.push(n + '実施期間の始まりが終わりよりあとです。');
-      if (c.kind === 'early' && !(c.works >= 1)) errs.push(n + '公開中の作品の点数を 1 以上で入れてください。');
+      if (c.kind === 'early' && !c.benefit.until) errs.push(n + '有効期間の終わりが未入力です。');
+      if (c.kind === 'early' && c.end && c.benefit.until && c.benefit.until < c.end) errs.push(n + '有効期間の終わりが、実施期間の終わりより前です。');
+      if (c.kind === 'early' && live && !(+c.limit.people > 0)) errs.push(n + '先着の人数を入れてください（はじめて割は人数で上限を管理します）。');
       if (c.benefit.type === 'fee' && !(c.benefit.off > 0 && c.benefit.off <= 100)) errs.push(n + '割引率を 1〜100 で入れてください。');
-      if (c.benefit.type === 'fee' && !(c.benefit.cap > 0)) errs.push(n + '対象になる作品代金の上限を入れてください。');
       if (c.benefit.type === 'coupon' && !(c.benefit.tiers || []).length) errs.push(n + '値引きの段を1つ以上入れてください。');
-      if (c.benefit.until && c.start && c.benefit.until < c.start) errs.push(n + '使用期限が、実施期間の始まりより前です。');
-      if (live && c.limit.people === '' && c.limit.budget === '') errs.push(n + '人数か負担の上限を、どちらか1つは入れてください（上限なしのままでは実施できません）。');
+      if (c.kind !== 'early' && c.benefit.until && c.start && c.benefit.until < c.start) errs.push(n + '使用期限が、実施期間の始まりより前です。');
+      if (live && c.kind !== 'early' && c.limit.people === '' && c.limit.budget === '') errs.push(n + '人数か負担の上限を、どちらか1つは入れてください（上限なしのままでは実施できません）。');
     });
     var box = document.getElementById('p9020Error'), list = document.getElementById('p9020ErrorList');
     if (errs.length) { list.innerHTML = errs.map(function (m) { return '<li class="ktn-form-error__item">' + esc(m) + '</li>'; }).join(''); box.hidden = false; return; }

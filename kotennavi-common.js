@@ -2656,7 +2656,7 @@ KTN.NOTICE_DEFS = {
     { id: 'NT-08',  role: 'creator・gallery', when: '1日のまとめ（前日のウォッチ・チェックイン・興味あり！）', text: '昨日のまとめ：ウォッチ {{watch}}人・チェックイン {{checkin}}人・興味あり！ {{interest}}件', dest: 'インサイト（P3-12／P4-12）', mail: 'A-03（ウォッチ・チェックイン）' },
     { id: 'NT-09',  role: 'user',             when: '興味あり！した作品が展覧会に出品された',       text: '興味あり！した作品《{{artworkName}}》が、展覧会に出品されました', dest: 'その作品のページ',    mail: 'R-01' },
     { id: 'NT-11',  role: 'user',             when: '興味あり！した作品の販売期間がもうすぐ終わる（P90-20 で決めた日数の前）', text: '興味あり！した作品《{{artworkName}}》の販売期間が、あと{{days}}日で終わります', dest: 'その作品のページ', mail: 'R-01（リマインダーの一部）' },
-    { id: 'NT-12',  role: 'creator・gallery', when: '先行特典が適用された（条件を満たした操作の直後。その場の表示とあわせて、すぐに出す）',       text: '特典「{{campaignName}}」が適用されました',                       dest: 'P3-21／P4-21',        mail: 'CP-01' },
+    { id: 'NT-12',  role: 'creator・gallery', when: 'はじめて割が適用された（LIAISON+ の申込が承認された直後。すぐに出す）',       text: '特典「{{campaignName}}」が適用されました',                       dest: 'P3-21／P4-21',        mail: 'CP-01' },
     { id: 'NT-13',  role: 'user',             when: 'クーポンを受け取った（興味あり！に入れた直後・会場でチェックインした直後。その場の表示とあわせて、すぐに出す）',                                           text: 'クーポン「{{campaignName}}」を受け取りました',                   dest: 'P5-17',               mail: 'R-01（興味あり！のクーポン・翌朝のリマインダーの項目）／CP-02（会場のクーポン・会期が終わった日）' }
   ]
 };

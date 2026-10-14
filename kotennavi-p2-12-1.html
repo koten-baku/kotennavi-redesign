@@ -55,8 +55,9 @@
   <button class="dbtn on" data-offline-demo-btn="on" onclick="ktnDemoOffline(false)">オンライン</button>
   <button class="dbtn" data-offline-demo-btn="off" onclick="ktnDemoOffline(true)">オフライン</button>
   <span class="dbar-sep" style="margin-left:12px">特典：</span>
-  <button class="dbtn on" data-terms-demo="seller" onclick="ktnTermsDemo('seller','active',this)">適用中</button>
-  <button class="dbtn" data-terms-demo="seller" onclick="ktnTermsDemo('seller','progress',this)">条件の達成前</button>
+  <button class="dbtn on" data-terms-demo="seller" onclick="ktnTermsDemo('seller','active',this)">適用中（展覧会が決定）</button>
+  <button class="dbtn" data-terms-demo="seller" onclick="ktnTermsDemo('seller','waiting',this)">適用中（展覧会の前）</button>
+  <button class="dbtn" data-terms-demo="seller" onclick="ktnTermsDemo('seller','progress',this)">申込の審査中</button>
   <button class="dbtn" data-terms-demo="seller" onclick="ktnTermsDemo('seller','none',this)">なし</button>
 </div>
 <div class="shell">

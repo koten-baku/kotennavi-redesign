@@ -13808,6 +13808,10 @@ a.p10-preset{text-decoration:none}
 .ktn-admin-camp__set{display:flex;gap:10px 16px;flex-wrap:wrap;margin-top:10px}
 .ktn-admin-camp__field{display:flex;flex-direction:column;gap:4px;flex:0 1 320px;min-width:0;font-family:var(--fn);font-size:.72rem;color:var(--muted)}
 .ktn-admin-camp__field .p211-select{width:100%;box-sizing:border-box}
+.ktn-admin-camp__field--wide{flex:1 1 100%}
+.ktn-admin-camp__field.is-error{color:#b43c14}
+.ktn-admin-camp__field.is-error .p211-textarea{border-color:#b43c14}
+.ktn-admin-camp__field .p211-textarea{width:100%;box-sizing:border-box;font-size:.8rem}
 .ktn-admin-camp__item > .p211-help{margin:8px 0 0}
 .ktn-admin-camp__actions{display:flex;justify-content:flex-end}
 @media (max-width:540px){.ktn-admin-camp__ro{flex-direction:column;gap:0}.ktn-admin-camp__ro-k{flex:none}}

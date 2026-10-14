@@ -37,8 +37,9 @@
   <button class="dbtn on" id="dbarStripeOn" onclick="setStripeConn('connected')">連携済み</button>
   <button class="dbtn" id="dbarStripeOff" onclick="setStripeConn('unconnected')">未連携</button>
   <span class="dbar-sep">特典：</span>
-  <button class="dbtn on" data-terms-demo="seller" onclick="ktnTermsDemo('seller','active',this)">適用中</button>
-  <button class="dbtn" data-terms-demo="seller" onclick="ktnTermsDemo('seller','progress',this)">条件の達成前</button>
+  <button class="dbtn on" data-terms-demo="seller" onclick="ktnTermsDemo('seller','active',this)">適用中（展覧会が決定）</button>
+  <button class="dbtn" data-terms-demo="seller" onclick="ktnTermsDemo('seller','waiting',this)">適用中（展覧会の前）</button>
+  <button class="dbtn" data-terms-demo="seller" onclick="ktnTermsDemo('seller','progress',this)">申込の審査中</button>
   <button class="dbtn" data-terms-demo="seller" onclick="ktnTermsDemo('seller','none',this)">なし</button>
 </div>
 
@@ -482,10 +483,10 @@ document.querySelectorAll('.p317-setup-checklist__toggle').forEach(function (tog
         ['送料合計', '¥4,500'],
         ['梱包費合計', '¥1,500'],
         ['サービス利用料（10%）', '−¥26,600'],
-        ['特典の割引（先行特典・18,000円分に 50%）', '＋¥900'],
+        ['特典の割引（はじめて割・「あなたが知らないオノマトペ」の取引1件・サービス利用料の 50%）', '＋¥4,480'],
         ['振込手数料', '−¥250']
       ],
-      total: '¥240,050'
+      total: '¥243,630'
     },
     '2026-06-20': {
       date: '2026.06.20', cutoff: '2026.05.31', count: '3件',
