@@ -432,6 +432,13 @@ button{font-family:inherit;cursor:pointer}
 .ktn-tagbar__arr--l { border-right: 1px solid var(--border); }
 .ktn-tagbar__arr--r { border-left: 1px solid var(--border); }
 .ktn-tagbar__arr.is-hidden { visibility: hidden; pointer-events: none; }
+/* 一行に収まらないとき（2026-10-14）：矢印は、はみ出しているときだけ（.is-over）。端まで送った側は .is-hidden（幅は残して、タグが動かないように）。
+   はみ出している側の端をぼかして、続きがあることを見せる。指で送れる端末（hover が無い）では矢印を出さず、ぼかしだけ */
+.ktn-tagbar:not(.is-over) .ktn-tagbar__arr { display: none; }
+.ktn-tagbar.is-more-r .ktn-tagbar__inner { -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 36px), transparent); mask-image: linear-gradient(to right, #000 calc(100% - 36px), transparent); }
+.ktn-tagbar.is-more-l .ktn-tagbar__inner { -webkit-mask-image: linear-gradient(to right, transparent, #000 36px); mask-image: linear-gradient(to right, transparent, #000 36px); }
+.ktn-tagbar.is-more-l.is-more-r .ktn-tagbar__inner { -webkit-mask-image: linear-gradient(to right, transparent, #000 36px, #000 calc(100% - 36px), transparent); mask-image: linear-gradient(to right, transparent, #000 36px, #000 calc(100% - 36px), transparent); }
+@media (hover: none) { .ktn-tagbar__arr { display: none !important; } }
 .ktn-tagbar__inner {
   flex: 1;
   min-width: 0;
@@ -448,71 +455,58 @@ button{font-family:inherit;cursor:pointer}
 }
 .ktn-tagbar__inner::-webkit-scrollbar { display: none; }
 
-/* ラベル */
+/* 見出し・矢印・タグの列を入れる枠（2026-10-14）。ページの幅にそろえ、左右 20px＝本文の左端と同じ位置から始める（JS が作る） */
+.ktn-tagbar__frame {
+  flex: 1;
+  min-width: 0;
+  max-width: var(--w-page);
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: stretch;
+}
+.ktn-tagbar__frame .ktn-tagbar__inner { max-width: none; margin: 0; padding: 0 6px; }
+/* 見出し「Tags」：タグだと分かるように。横に送っても動かない */
 .ktn-tagbar__label {
-  font-size: .55rem;
-  letter-spacing: .1em;
-  color: var(--muted);
+  align-self: center;
+  font-family: var(--font-en-label);
+  font-size: .6rem;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--ink);
   white-space: nowrap;
-  margin-right: 10px;
+  margin-right: 6px;
   flex-shrink: 0;
-  padding: 2px 0;
 }
 
-/* タグ */
+/* タグ（2026-10-13：丸いタグの形にそろえた＝旧 .p2-tpill の形。リンク＝押すと検索へ） */
 .ktn-tagbar__tag {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-size: .75rem;
-  letter-spacing: .03em;
-  color: var(--muted);
+  font-size: .62rem;
+  letter-spacing: .06em;
+  padding: 3px 10px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
   background: none;
-  border: none;
-  padding: 4px 9px;
-  border-radius: 2px;
+  color: var(--ink);
   cursor: pointer;
   white-space: nowrap;
   flex-shrink: 0;
-  transition: color .15s, background .15s;
+  transition: color .15s, border-color .15s, background .15s;
   text-decoration: none;
 }
+.ktn-tagbar__tag + .ktn-tagbar__tag { margin-left: 6px; }
 .ktn-tagbar__tag:hover {
+  border-color: var(--accent);
   color: var(--accent);
-  background: var(--paper);
-}
-.ktn-tagbar__tag.is-active {
-  color: var(--accent);
-  font-weight: 500;
 }
 .ktn-tagbar__tag svg {
-  width: 11px; height: 11px;
+  width: 10px; height: 10px;
   stroke: currentColor; fill: none; stroke-width: 1.8;
   flex-shrink: 0;
-}
-
-/* セパレーター */
-.ktn-tagbar__sep {
-  width: 1px; height: 14px;
-  background: var(--border);
-  flex-shrink: 0;
-  margin: 0 4px;
-}
-
-/* 特集タグ（アクセントカラー） */
-.ktn-tagbar__tag--feature {
-  color: var(--accent);
-}
-.ktn-tagbar__tag--feature:hover {
-  background: #edf3f9;
-}
-
-/* LIAISON タグ */
-.ktn-tagbar__tag--liaison {
-  color: var(--lr);
-}
-.ktn-tagbar__tag--liaison:hover {
-  background: rgba(192,57,43,.07);
 }
 
 /* ══════════════════════════════════
@@ -530,7 +524,6 @@ button{font-family:inherit;cursor:pointer}
   .ktn-bc__current{max-width:150px}
   .ktn-bc__link{max-width:130px}
   .ktn-tagbar__inner{padding:0 10px}
-  .ktn-tagbar__label{display:none}
 }
 @media(max-width:540px){
   .ktn-hib__lbl{display:none}
@@ -3099,24 +3092,6 @@ line-clamp:2;}
    prefix: .p2-
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
-/* ─────────────────────────────────────────
-   tagbar pill（v6スタイル）
-───────────────────────────────────────── */
-.p2-tsep{color:var(--border);flex-shrink:0;font-size:.9rem;padding:0 2px}
-.p2-tpill{
-  display:inline-flex;align-items:center;
-  font-size:.62rem;letter-spacing:.06em;padding:3px 10px;
-  border-radius:20px;border:1px solid var(--border);
-  background:none;color:var(--ink);cursor:pointer;
-  white-space:nowrap;transition:all .15s;flex-shrink:0;
-}
-.p2-tpill:hover{border-color:var(--accent);color:var(--accent)}
-.p2-tpill.is-active{background:var(--accent);color:#fff;border-color:var(--accent)}
-.p2-tpill--liaison{border-color:var(--lr);color:var(--lr);background:#fff5f5;gap:5px}
-.p2-tpill--liaison::before{
-  content:'';width:5px;height:5px;border-radius:50%;
-  background:var(--lr);animation:p2LDot 2s ease-in-out infinite;flex-shrink:0;
-}
 
 /* ─────────────────────────────────────────
    コンテンツ幅ラッパー
@@ -4976,6 +4951,10 @@ margin: 0 auto;
   background: #fff; text-decoration: none; transition: all .15s;
   letter-spacing: .03em;
 }
+/* 検索の条件に無いタグ（リンクにしない・下の欄にだけ出る） */
+.ktn-tag-pill--plain{cursor:default;border-style:dashed;color:var(--muted)}
+.ktn-tag-pill--plain:hover{color:var(--muted);border-color:var(--border);background:none}
+.ktn-sub-tags[hidden]{display:none}
 .ktn-tag-pill:hover {
   border-color: var(--accent); color: var(--accent); background: rgba(0,93,167,.04);
 }
@@ -5892,8 +5871,6 @@ margin: 0 auto;
 .wd-body p+p{margin-top:12px}
 #descRightCol{display:flex;flex-direction:column;gap:12px}
 
-.wd-tags{display:flex;flex-wrap:wrap;gap:5px}
-.wd-tag{font-size:.57rem;padding:2px 9px;border:1px solid var(--border);border-radius:10px;color:var(--muted)}
 
 /* ─── CREATOR SECTION ─── */
 
@@ -6059,7 +6036,6 @@ body.p6-dark.p6-plus{
 
 .p6-dark .wd-body{color:var(--ltext)}
 
-.p6-dark .wd-tag{border-color:var(--lborder);color:var(--lmuted)}
 
 .p6-dark .btn-creator-page{border-color:var(--lborder2);background:rgba(201,169,110,.05);color:var(--lgold)}
 .p6-dark .btn-creator-page:hover{background:rgba(201,169,110,.12)}
@@ -12088,6 +12064,7 @@ body.mgmt-page:not(.p3-page):not(.p4-page):not(.p5-page){
 .p251-dark .ktn-tag-pill,
 .p6-dark .ktn-tag-pill{color:rgba(255,255,255,.85);border-color:rgba(255,255,255,.22);background:transparent}
 .p251-dark .ktn-tag-pill:hover,
+.p6-dark .ktn-tag-pill--plain,.p6-dark .ktn-tag-pill--plain:hover{color:rgba(255,255,255,.55);border-color:rgba(255,255,255,.18);background:transparent}
 .p6-dark .ktn-tag-pill:hover{color:#fff;border-color:rgba(255,255,255,.45);background:rgba(255,255,255,.05)}
 .p251-dark .ktn-section__title,
 .p6-dark .ktn-section__title{color:rgba(255,255,255,.92)}

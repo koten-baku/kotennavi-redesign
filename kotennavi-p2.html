@@ -918,16 +918,7 @@
       <!-- 展覧会タグ -->
       <div class="ktn-sub-tags">
         <div class="ktn-sub-tags__label">タグ · Tags</div>
-        <ul class="ktn-tag-pills" aria-label="タグ">
-          <li><a class="ktn-tag-pill" href="/p10?tag=絵画">絵画</a></li>
-          <li><a class="ktn-tag-pill" href="/p10?tag=現代美術">現代美術</a></li>
-          <li><a class="ktn-tag-pill" href="/p10?tag=油彩">油彩</a></li>
-          <li><a class="ktn-tag-pill" href="/p10?tag=オノマトペ">オノマトペ</a></li>
-          <li><a class="ktn-tag-pill" href="/p10?tag=言語">言語</a></li>
-          <li><a class="ktn-tag-pill" href="/p10?area=tokyo">東京</a></li>
-          <li><a class="ktn-tag-pill" href="/p10?area=shibuya">渋谷</a></li>
-          <li><a class="ktn-tag-pill" href="/p10?tag=個展">個展</a></li>
-        </ul>
+        <ul class="ktn-tag-pills" aria-label="タグ" data-page-tags></ul>
       </div>
 
       <!-- 回遊：おすすめ展覧会 -->
@@ -1092,8 +1083,27 @@
     /* ロール切替（デモバー）でも期間外プレビュー可否を再計算する（pages.js の ktnRender ラッパーが呼ぶ） */
     window.p2ApplyPeriodToTab = _applyPeriodToTab;
 
+    /* タグ（上のタグバーと下の「タグ」の欄）を、会期の状態と LIAISON の種類に合わせて入れ替える（2026-10-13）。
+       期間の言葉は、この展覧会がその条件に当たるときだけ載せる。「今日」は当日の日付（プロトタイプは検索のデモの今日 07.08） */
+    var _p2TagLiaison = 'plus';
+    function p2SyncTags() {
+      if (!window.KTN || !KTN.setPageTags) return;
+      /* 期間の言葉は、展覧会の検索と同じ境目（SOON_DAYS＝3日）で当たるときだけ（本番は会期の日付から決める）。
+         会期中＝開催中・今日・今週末（初日なら「今日から開催」、終わりまで3日以内なら「もうすぐ終了」も）。デモの展覧会は残り12日なので「もうすぐ終了」は出ない。
+         会期の前＝開幕まで3日以内なら「もうすぐ開催」（デモは3日以内の想定）。それより前は期間の言葉を出さない。終わったあと＝出さない */
+      var time = _p2Period === 'during' ? [{ k: 'st', v: 'live', label: '開催中' }, { k: 'day', v: '07.08', label: '今日' }, { k: 'weekend', v: '1', label: '今週末' }]
+               : _p2Period === 'before' ? [{ k: 'when', v: 'opensoon', label: 'もうすぐ開催' }] : [];
+      KTN.setPageTags(time.concat([
+        { k: 'area', v: '東京' }, { k: 'tarea', v: '東京西部' }, { k: 'genre', v: 'アート' }, { k: 'tag', v: '絵画' }, { k: 'tag', v: '現代美術' }, { k: 'tag', v: '油彩' }, { k: 'tag', v: 'オノマトペ' }, { k: 'tag', v: '言語' }, { k: 'type', v: 'solo', label: '個展' },
+        { k: 'attend', v: '1', label: '在廊あり' }, { k: 'free', v: '1', label: '入場無料' }, { k: 'barrierfree', v: '1', label: 'バリアフリー' }, { k: 'bonus', v: '1', label: '来場者特典あり' },
+        { k: 'pop', v: '1', label: '人気の展覧会' },
+        _p2TagLiaison === 'plus' ? { k: 'liaison', v: 'lp', label: 'LIAISON+' } : { k: 'liaison', v: 'li', label: 'LIAISON' }
+      ]).concat(KTN.peopleTags({ name: 'Gallery SOIL 渋谷', to: './kotennavi-p4.html' }, [{ name: '田中透', to: './kotennavi-p3.html' }], 1)), 'p10');
+    }
+
     function setPeriod(state, btn) {
       _p2Period = state;
+      p2SyncTags();
       document.querySelectorAll('.dbtn-period').forEach(function(b){ b.classList.remove('on'); });
       if (btn) btn.classList.add('on');
       _applyPeriodToTab();
@@ -1104,6 +1114,7 @@
 
     /* ── LIAISON 切替（デモバー用） ── */
     function setLiaison(type, btn) {
+      _p2TagLiaison = type === 'plus' ? 'plus' : 'liaison'; p2SyncTags();
       document.querySelectorAll('.dbtn-liaison').forEach(function(b){ b.classList.remove('on'); });
       if (btn) btn.classList.add('on');
 

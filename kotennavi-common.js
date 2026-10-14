@@ -1341,127 +1341,248 @@ function renderFooter() {
 
 
 /* ══════════════════════════════════
-   タグバー定義（ページ → タグ一覧）
-   mod: 'feature' | 'liaison' | undefined
+   ページのタグ（2026-10-13 作り直し・handoff 追174-322）
+   上のタグバー（.ktn-tagbar）と、ページの下の「タグ」の欄（.ktn-sub-tags）の単一ソース。
+   載せるのは、表示しているページに付いているタグ。
+     ・タグ（k と v を持つ）＝押すと、その種別の検索（P10 系）へ、その条件で着地する。上のタグバーと下の欄の両方に出す
+     ・登録する人が自由に入れたタグ（tag）も、すべてリンクにする（2026-10-14・ユーザー確認）。タグは技法・素材も含めてすべて自由入力で、
+       決まった一覧は無い（追174-76 追記4）。検索の選択肢に無い言葉でも、検索の受け口（KTN.urlTags）が選択肢を足して着地させる。
+       旧＝検索の選択肢の例（21個）にある言葉だけをリンクにしていた（例の並びを決まった一覧と取り違えていた）
+     ・記事だけのタグ（制作日記など）は、記事の検索が無いので、投稿者の記事一覧（P3-2・P4-2）をそのタグで絞って開く（to）
+   search＝行き先の検索：展覧会 P10／作品 P10-1／クリエイター P10-2／ギャラリー P10-3。
+     記事（P7）・レビュー（P8）は専用の検索が無いので、結びついた展覧会・投稿者のタグを出して、展覧会の検索へ飛ばす（ゲストも使える）。
+     作品・クリエイター・ギャラリーの検索はログインが要るので、リンクに data-guest="login" を付ける（ゲストにはログインを促す）。
+   k＝検索の条件のキー（検索のページの data-f と同じ）：st（live＝開催中）／day（その日に開催＝「今日」）／weekend（今週末）／when（opensoon＝もうすぐ開催・endsoon＝もうすぐ終了）／
+     area（都道府県）／tarea（東京6エリア）／tag（技法・素材）／genre（6区分）／type（solo＝個展・group）／liaison（li・lp）／
+     行きやすさ（展覧会＝kids お子さまと行ける・attend 在廊あり・free 入場無料・barrierfree バリアフリー・parking 駐車場あり・card クレジットカードOK・bonus 来場者特典あり・onsite 会場での作品販売あり。
+     ギャラリー＝barrierfree・parking・card・rental レンタルギャラリー）。当てはまるものだけを載せる。
+     ほかに（2026-10-14）：pop（人気）・new（新着＝公開から14日以内・KTN.NEW_DAYS）は、そのコンテンツ自身が当てはまるときだけ。
+     「もうすぐ開催」「今日から開催」「もうすぐ終了」（when:opensoon・opentoday・endsoon）は、展覧会の検索と同じ境目（pages.js SOON_DAYS＝3日）で当たるときだけ。
+     会場のギャラリー・出展クリエイター（to＝行き先のページ）は ktnPeopleTags で作る。LIAISON のあと（文字だけのタグの前）に並べる。
+     作品＝st（販売中 sale・商談中 negot・SOLD sold ほか）と price（〜5万円 ~5・5〜10万円 5-10・10〜30万円 10-30・30万円〜 30-）。クリエイター・ギャラリー＝st:upcoming（開催予定の展覧会がある）・liaison:lp。
+   並びは、開催の状態・期間 → エリア → ジャンル・タグ → 形式 → 行きやすさ → 人気・新着 → LIAISON（作品は 販売の状態・価格帯 を形式の位置に）。期間の言葉は、表示している展覧会がその条件に当たるときだけ載せる
+     （開催中なら「開催中・今日・今週末」、会期の前なら「もうすぐ開催」、終わったら載せない。展覧会のページ P2 は、会期の状態で入れ替える）。
+     「今日」の値（day:月.日）は当日の日付。プロトタイプは検索のデモの今日（07.08）に合わせてある。
+     クリエイターは活動のエリアを持たないので、area を付けない。街の名前（渋谷など）はデータに無いので使わない。
+   下位ページ（P2-1・P3-1・P6-2 など）は、親のタグをそのまま使う（親が下位ページの分まで受け持つ）。P10 系・P1・P5 系・ガイド・管理のページには出さない。
+   ページの中で内容が切り替わるとき（P7 の記事の種類・P6 の作品）は、KTN.setPageTags() で入れ替える。
+   本番：タグは、それぞれのコンテンツのデータから出す（ここの値はデモ）。
 ══════════════════════════════════ */
-const TAGBAR_DEFS = {
-  /* 'p1'（トップ）は定義を持たない＝タグバーを出さない（2026-09-22 ユーザー指示）。
-     トップは本文そのものが入口の集合で、上部にもう一列入口を並べると同じ行き先が二重になる。
-     定義が無ければ renderTagbar が非表示にするので、再び出したくなったらここに足すだけでよい
-     （p1 には -N の下位ページが無いため、この削除で継承が壊れるページも無い）。 */
-  'p2': [
-    { label: 'すべて', href: '/p2', active: true },
-    { label: '今日・明日開催', href: '/p2?filter=today', icon: 'calendar' },
-    { label: '今週末', href: '/p2?filter=weekend' },
-    { label: '近くで開催', href: '/p2?filter=near', icon: 'pin' },
-    { sep: true },
-    { label: '写真', href: '/p2?genre=photo' },
-    { label: '日本画', href: '/p2?genre=nihonga' },
-    { label: '油彩', href: '/p2?genre=oil' },
-    { label: '版画', href: '/p2?genre=print' },
-    { label: '立体・彫刻', href: '/p2?genre=sculpture' },
-    { sep: true },
-    { label: 'LIAISON+あり', href: '/p2?liaison=1', mod: 'liaison' },
-  ],
-  'p2-3': [
-    { label: '記事・案内', href: '#', active: true },
-    { label: '作品一覧', href: '#artworks' },
-    { label: 'クリエイター', href: '#creator' },
-    { label: 'ギャラリー情報', href: '#gallery' },
-    { sep: true },
-    { label: 'LIAISON作品', href: '/p2-5', mod: 'liaison' },
-  ],
-  'p2-5': [
-    { label: '記事・案内', href: '/p2-3' },
-    { label: 'LIAISON作品一覧', href: '#', mod: 'liaison', active: true },
-  ],
-  'p3': [
-    { label: 'プロフィール', href: '#', active: true },
-    { label: '展覧会', href: '#archive' },
-    { label: '作品', href: '#works' },
-    { label: '記事', href: '#articles' },
-  ],
-  'p4': [
-    { label: 'プロフィール', href: '#', active: true },
-    { label: '開催中の展覧会', href: '#current' },
-    { label: '展覧会アーカイブ', href: '#archive' },
-    { label: '記事', href: '#articles' },
-  ],
-  'p6': [
-    { label: '作品詳細', href: '#', active: true },
-    { label: '同シリーズ', href: '#series' },
-    { label: 'このクリエイターの他の作品', href: '#creator-works' },
-  ],
-  /* p10-5・p10-6（作品/クリエイターの分類索引）は追174-130でクロスリンク網から除外した
-     （P10-1/P10-2自身の絞り込みチップと内容が重複するnoindexページで、送客するとかえって
-     利用者を混乱させるという判断）。'p10-4'はp10-4-2〜5が継承する単一ソースなので、
-     ここから2件外すだけでp10-4系6ページ分が一括で直る。 */
-  'p10-4': [
-    { label: '展覧会特集', href: '/p10-4', mod: 'feature', active: true },
-    { label: 'ギャラリー特集', href: '/p10-7', mod: 'feature' },
-  ],
-  'p10-7': [
-    { label: '展覧会特集', href: '/p10-4', mod: 'feature' },
-    { label: 'ギャラリー特集', href: '/p10-7', mod: 'feature', active: true },
-  ],
-  /* p10-5-1・p10-6-1（作品/クリエイターの年間ランキング＝index,follow）は専用定義を持たせる。
-     親'p10-5'/'p10-6'は削除済みなので継承に頼ると空になってしまうため（追174-130）。
-     p10-7-1はp10-7を継承するので専用定義は不要。 */
-  'p10-5-1': [
-    { label: '展覧会特集', href: '/p10-4', mod: 'feature' },
-    { label: 'ギャラリー特集', href: '/p10-7', mod: 'feature' },
-  ],
-  'p10-6-1': [
-    { label: '展覧会特集', href: '/p10-4', mod: 'feature' },
-    { label: 'ギャラリー特集', href: '/p10-7', mod: 'feature' },
-  ],
-  'p70': [
-    { label: 'LIAISONとは', href: '/p70', mod: 'liaison', active: true },
-    { label: '作品出品ガイド', href: '/p70-1', mod: 'liaison' },
-    { label: '販売ガイド(+)', href: '/p70-2', mod: 'liaison' },
-    { label: '購入の流れ', href: '/p70-3', mod: 'liaison' },
-  ],
+/* 会場のギャラリー・出展クリエイター（展覧会のタグ・2026-10-14 ユーザー確認）。押すとそのページへ移る（to＝行き先。検索ではない）。
+   会場のギャラリーは1つなので、いつも名前を出す。出展クリエイターは、KTN_PEOPLE_MAX 人までなら全員の名前を出し、
+   それより多いときは名前を出さずに「出展クリエイター（N人）」を1つだけ出して、出展者のページ（P2-4）へ飛ばす。
+   出展者が3桁になる展覧会があり、誰を載せるかをシステムが決められないため（一部の人だけを載せる不公平も起こさない）。
+   個人のページはゲストも見られるので、ログインの案内（data-guest）を付けない */
+var KTN_PEOPLE_MAX = 3;
+function ktnPeopleTags(gallery, creators, total) {
+  var out = gallery ? [{ to: gallery.to, label: gallery.name }] : [];
+  var n = total || (creators || []).length;
+  if (n && n <= KTN_PEOPLE_MAX) (creators || []).forEach(function (p) { out.push({ to: p.to, label: p.name }); });
+  else if (n) out.push({ to: './kotennavi-p2-4.html', label: '出展クリエイター（' + n + '人）' });
+  return out;
+}
+KTN.peopleTags = ktnPeopleTags;
+var PAGE_TAGS = {
+  'p2': { search: 'p10', items: [
+    { k: 'st', v: 'live', label: '開催中' }, { k: 'day', v: '07.08', label: '今日' }, { k: 'weekend', v: '1', label: '今週末' },
+    { k: 'area', v: '東京' }, { k: 'tarea', v: '東京西部' }, { k: 'genre', v: 'アート' },
+    { k: 'tag', v: '絵画' }, { k: 'tag', v: '現代美術' }, { k: 'tag', v: '油彩' }, { k: 'tag', v: 'オノマトペ' }, { k: 'tag', v: '言語' },
+    { k: 'type', v: 'solo', label: '個展' },
+    { k: 'attend', v: '1', label: '在廊あり' }, { k: 'free', v: '1', label: '入場無料' }, { k: 'barrierfree', v: '1', label: 'バリアフリー' }, { k: 'bonus', v: '1', label: '来場者特典あり' },
+    { k: 'pop', v: '1', label: '人気の展覧会' }, { k: 'liaison', v: 'lp', label: 'LIAISON+' }
+  ].concat(ktnPeopleTags({ name: 'Gallery SOIL 渋谷', to: './kotennavi-p4.html' }, [{ name: '田中透', to: './kotennavi-p3.html' }], 1)) },
+  'p3': { search: 'p10-2', items: [
+    { k: 'st', v: 'live', label: '開催中' }, { k: 'st', v: 'upcoming', label: '開催予定' }, { k: 'genre', v: 'アート' },
+    { k: 'tag', v: '絵画' }, { k: 'tag', v: '現代美術' }, { k: 'tag', v: 'オノマトペ' },
+    { k: 'liaison', v: 'lp', label: 'LIAISON+' }
+  ] },
+  'p4': { search: 'p10-3', items: [
+    { k: 'st', v: 'live', label: '開催中' }, { k: 'st', v: 'upcoming', label: '開催予定' }, { k: 'area', v: '東京' }, { k: 'tarea', v: '東京西部' }, { k: 'genre', v: 'アート' }, { k: 'tag', v: '現代美術' }, { k: 'tag', v: '絵画' },
+    { k: 'barrierfree', v: '1', label: 'バリアフリー' }, { k: 'card', v: '1', label: 'クレジットカードOK' }, { k: 'rental', v: '1', label: 'レンタルギャラリー' },
+    { k: 'liaison', v: 'lp', label: 'LIAISON+' }
+  ] },
+  /* 作品は、表示している作品のタグを pages.js が入れる（KTN.setPageTags）。ここは入る前の値 */
+  'p6': { search: 'p10-1', items: [ { k: 'genre', v: 'アート' }, { k: 'tag', v: '絵画' }, { k: 'tag', v: '現代美術' }, { k: 'tag', v: '油彩' }, { k: 'tag', v: '抽象' }, { k: 'tag', v: 'オノマトペ' }, { to: './kotennavi-p3.html', label: '田中 透' } ] },
+  /* 記事（P7）は、掲載先（展覧会・作品など）と投稿者（クリエイター・ギャラリー）のページのタグを合わせたもの（下の ktnComposeTags・pages.js switchP7Context が入れる） */
+  /* レビューは、対象の展覧会のタグ */
+  'p8': { search: 'p10', items: [
+    { k: 'st', v: 'live', label: '開催中' }, { k: 'area', v: '東京' }, { k: 'tarea', v: '東京西部' }, { k: 'genre', v: 'アート' },
+    { k: 'tag', v: '絵画' }, { k: 'tag', v: '現代美術' }, { k: 'tag', v: 'オノマトペ' }, { k: 'type', v: 'solo', label: '個展' },
+    { k: 'attend', v: '1', label: '在廊あり' }, { k: 'free', v: '1', label: '入場無料' }, { k: 'barrierfree', v: '1', label: 'バリアフリー' }, { k: 'bonus', v: '1', label: '来場者特典あり' }, { k: 'pop', v: '1', label: '人気の展覧会' }
+  ].concat(ktnPeopleTags({ name: 'Gallery SOIL 渋谷', to: './kotennavi-p4.html' }, [{ name: '田中透', to: './kotennavi-p3.html' }], 1)) }
 };
+/* いくつかのページのタグを合わせる（2026-10-14・記事 P7＝掲載先のページ＋投稿者のページ。ユーザー指示「オーナーページと投稿先と同じに」）。
+   それぞれのタグに行き先の検索（s）を持たせる（作品のタグは作品の検索へ、クリエイターのタグはクリエイターの検索へ）。
+   同じ言葉は最初のもの（掲載先）を残す。own＝その記事だけのタグ（投稿者の記事一覧へ飛ぶ to の形）。最後に並べる */
+function ktnComposeTags(pages, own) {
+  var seen = {}, linked = [], plain = [];
+  function key(t) { return String(t.label || t.v).replace(/\s/g, ''); }
+  pages.forEach(function (pg) {
+    var def = PAGE_TAGS[pg]; if (!def) return;
+    def.items.forEach(function (t) {
+      var k = key(t); if (seen[k]) return; seen[k] = 1;
+      var it = {}; for (var p in t) it[p] = t[p];
+      if (it.k) it.s = def.search;
+      (it.k || it.to ? linked : plain).push(it);
+    });
+  });
+  (own || []).forEach(function (t) { var k = key(t); if (!seen[k]) { seen[k] = 1; plain.push(t); } });
+  return linked.concat(plain);
+}
+KTN.composeTags = ktnComposeTags;
+PAGE_TAGS['p7'] = { search: 'p10', items: ktnComposeTags(['p6', 'p3'], [{ to: './kotennavi-p3-2.html?tag=' + encodeURIComponent('制作日記'), label: '制作日記', tag: 1 }]) };
+/* 検索の受け口：URL の ?f=tag:… に、タグの選択肢に無い言葉があれば、選択肢の一覧に足して返す（2026-10-14）。
+   タグは自由入力なので、ページのタグから来た言葉が選択肢の例に無いことがある。選択肢を作る前に呼ぶ（作ったあとに足すと、押したときの処理が付かない）。
+   本番は選択肢が「実際に使われているタグ」すべてなので、ふつうは足すものが無い */
+KTN.urlTags = function (list) {
+  var out = (list || []).slice();
+  try { new URLSearchParams(location.search).getAll('f').forEach(function (f) {
+    if (f.indexOf('tag:') === 0) { var t = f.slice(4); if (t && out.indexOf(t) === -1) out.push(t); }
+  }); } catch (e) {}
+  return out;
+};
+/* そのページのタグ（下位ページは、末尾の -N を1段ずつ削って親のものを使う） */
+/* 並び：自由入力のタグ（# の付くもの）は、ほかのタグのあと（2026-10-14・ユーザー指示）。
+   サイトが決めた条件（開催の状態・エリア・行きやすさ・人 など）を先に、自由入力のタグをまとめて最後に。それぞれの中の順は元のまま */
+function ktnTagOrder(items) {
+  var free = function (t) { return t.k === 'tag' || t.tag; };
+  return items.filter(function (t) { return !free(t); }).concat(items.filter(free));
+}
+function ktnPageTags(page) {
+  var p = page || '';
+  while (p) { if (PAGE_TAGS[p]) return PAGE_TAGS[p]; if (p.indexOf('-') === -1) break; p = p.replace(/-[^-]+$/, ''); }
+  return null;
+}
+/* 特集のページ（検索エンジンに載る一覧）がある言葉は、そちらへ飛ばす（2026-10-14・ユーザー確認）。
+   利用者は整理された一覧を見られ、特集のページへの内部リンクも増える（露出）。特集のページが無い言葉だけ、検索へ飛ばす。
+   展覧会：都道府県・東京6エリア → P10-4-2（?ax=）、ジャンル → P10-4-4（?gn=・「その他」は特集が無い）、お子さまと行ける・在廊あり → P10-4-5（?ac=）。
+   ギャラリー：都道府県・東京6エリア → P10-7-2（?ax=）。特集のページはゲストも見られるので、ログインの案内（data-guest）を付けない。
+   スラッグは特集のページと同じもの（都道府県＝KTN.P10_PREF_SLUGS、東京6エリア・ジャンル・行きやすさ＝下の表。pages.js の KTN.axis と一字一句そろえる） */
+var KTN_TAREA_SLUG = { '東京都心部': 'tokyo-central', '東京東部': 'tokyo-east', '東京西部': 'tokyo-west', '東京南部': 'tokyo-south', '東京北部': 'tokyo-north', '東京23区以外': 'tokyo-outer' };
+var KTN_GENRE_SLUG = { 'アート': 'art', '写真': 'photo', 'クラフト': 'craft', '建築': 'arch', 'ファッション': 'fashion' };
+var KTN_ACCESS_SLUG = { kids: 'with-children', attend: 'artist-present' };
+function ktnTagAxis(search, it) {
+  search = it.s || search;
+  var ax = it.k === 'area' ? (KTN.P10_PREF_SLUGS || {})[it.v] : it.k === 'tarea' ? KTN_TAREA_SLUG[it.v] : '';
+  if (search === 'p10') {
+    if (ax) return './kotennavi-p10-4-2.html?ax=' + ax;
+    if (it.k === 'genre' && KTN_GENRE_SLUG[it.v]) return './kotennavi-p10-4-4.html?gn=' + KTN_GENRE_SLUG[it.v];
+    if (KTN_ACCESS_SLUG[it.k]) return './kotennavi-p10-4-5.html?ac=' + KTN_ACCESS_SLUG[it.k];
+  }
+  if (search === 'p10-3' && ax) return './kotennavi-p10-7-2.html?ax=' + ax;
+  return '';
+}
+/* also＝一緒に付ける条件（例：作品の価格帯は LIAISON+ の条件と一緒のときだけ効く＝作品の検索の決まり・追174-159） */
+function ktnTagHref(search, it) {
+  search = it.s || search;
+  return ktnTagAxis(search, it) || './kotennavi-' + search + '.html?f=' + encodeURIComponent(it.k + ':' + it.v) +
+    (it.also || []).map(function (a) { return '&f=' + encodeURIComponent(a); }).join('');
+}
+/* ログインの案内：作品・クリエイター・ギャラリーの検索へ飛ぶリンクだけ（特集のページへ飛ぶものには付けない） */
+function ktnTagGate(search, it) { search = it.s || search; return search !== 'p10' && !ktnTagAxis(search, it) ? ' data-guest="login"' : ''; }
+/* 表示する文字：自由入力のタグ（tag）には先頭に「# 」を付ける（2026-10-14・ユーザー確認）。
+   サイトが決めた条件（開催中・エリア・行きやすさ など）と見分けるため。形と色は同じ。検索の選択肢「# 絵画」・絞り込みの表示「# オノマトペ ×」とそろえる */
+function ktnTagText(t) { return ((t.k === 'tag' || t.tag) ? '# ' : '') + ktnTagEsc(t.label || t.v); }
+function ktnTagEsc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 
 /* タグバー用SVGアイコン */
 const TB_ICONS = {
-  calendar: `<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`,
   pin: `<svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>`,
-  liaison: `<svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>`,
 };
 
+/* 一行に収まらないとき（2026-10-14）：左右の矢印（‹ ›）と、はみ出している側の端のぼかしを付ける。
+   矢印は、はみ出しているときだけ出し、端まで送るとその側を消す（1回で 160px）。ぼかしは「続きがある」の目印。
+   矢印のボタンはここで足すので、各ページの HTML は入れ物（#ktnTagbar > #ktnTagbarInner）だけでよい。
+   指で送れる端末（hover が無い）では矢印を出さない（CSS）。ぼかしは残す */
+function ktnTagbarSync() {
+  var bar = document.getElementById('ktnTagbar'), inner = document.getElementById('ktnTagbarInner');
+  if (!bar || !inner) return;
+  var max = inner.scrollWidth - inner.clientWidth, x = inner.scrollLeft;
+  var over = max > 2, more_l = over && x > 2, more_r = over && x < max - 2;
+  bar.classList.toggle('is-over', over);
+  bar.classList.toggle('is-more-l', more_l);
+  bar.classList.toggle('is-more-r', more_r);
+  var l = document.getElementById('ktnTagbarL'), r = document.getElementById('ktnTagbarR');
+  if (l) l.classList.toggle('is-hidden', !more_l);
+  if (r) r.classList.toggle('is-hidden', !more_r);
+}
+function ktnTagbarSetup() {
+  var bar = document.getElementById('ktnTagbar'), inner = document.getElementById('ktnTagbarInner');
+  if (!bar || !inner || bar.dataset.arrows) return;
+  bar.dataset.arrows = '1';
+  /* 見出し「Tags」（2026-10-14・ユーザー指示＝タグだと分かるように）。タグと一緒に流れないよう、横に送る列の外に置く。
+     見出し・矢印・タグの列を、ページの幅（--w-page）の枠に入れて、本文の左端（20px）にそろえる */
+  var frame = document.createElement('div');
+  frame.className = 'ktn-tagbar__frame';
+  var lbl = document.createElement('span');
+  lbl.className = 'ktn-tagbar__label';
+  lbl.textContent = 'Tags';
+  bar.insertBefore(frame, inner);
+  frame.appendChild(lbl);
+  [].slice.call(bar.querySelectorAll('.ktn-tagbar__arr, .ktn-tagbar__label')).forEach(function (n) { if (n !== lbl && n.parentNode === bar) bar.removeChild(n); });
+  frame.appendChild(inner);
+  bar = frame;
+  function arrow(id, side, label, mark, dir) {
+    var b = document.getElementById(id);
+    if (!b) {
+      b = document.createElement('button');
+      b.type = 'button'; b.id = id; b.className = 'ktn-tagbar__arr ktn-tagbar__arr--' + side;
+      b.setAttribute('aria-label', label); b.textContent = mark;
+      if (side === 'l') bar.insertBefore(b, inner); else bar.appendChild(b);
+    }
+    b.addEventListener('click', function () { inner.scrollBy({ left: dir * 160, behavior: 'smooth' }); });
+  }
+  arrow('ktnTagbarL', 'l', '前のタグ', '‹', -1);
+  arrow('ktnTagbarR', 'r', '次のタグ', '›', 1);
+  inner.addEventListener('scroll', ktnTagbarSync, { passive: true });
+  window.addEventListener('resize', ktnTagbarSync);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(ktnTagbarSync);
+}
+/* 上のタグバー：検索の条件にあるタグだけを出す。無ければタグバーごと出さない */
 function renderTagbar(page) {
   var el = document.getElementById('ktnTagbarInner');
   if (!el) return;
   var tagbar = document.getElementById('ktnTagbar');
-  // 管理・編集ページ（mgmt-page）にタグバーは出さない（親ページからの継承も含め常に非表示）
-  if (document.body.classList.contains('mgmt-page')) {
-    if (tagbar) tagbar.style.display = 'none';
-    return;
-  }
-  var defs = TAGBAR_DEFS[page];
-  // 下位ページ（p2-1・p6-1 等）に専用定義が無ければ、末尾の -N を1段ずつ削って
-  // 親ページ（p2-1→p2 / p2-5-1→p2-5 / p6-1→p6）のタグバーを継承する
-  if ((!defs || !defs.length) && page) {
-    var parent = page;
-    while (parent.indexOf('-') !== -1) {
-      parent = parent.replace(/-[^-]+$/, '');
-      if (TAGBAR_DEFS[parent]) { defs = TAGBAR_DEFS[parent]; break; }
-    }
-  }
-  if (!defs || !defs.length) {
-    if (tagbar) tagbar.style.display = 'none';
-    return;
-  }
+  // 管理・編集ページ（mgmt-page）にタグバーは出さない
+  var def = document.body.classList.contains('mgmt-page') ? null : ktnPageTags(page);
+  var list = def ? ktnTagOrder(def.items).filter(function (t) { return t.to || t.k && !(t.k === 'genre' && (t.s || def.search) === 'p10' && !ktnTagAxis(def.search, t)); }) : [];
+  if (!list.length) { if (tagbar) tagbar.style.display = 'none'; el.innerHTML = ''; return; }
   if (tagbar) tagbar.style.display = '';
-  el.innerHTML = defs.map(function (t) {
-    if (t.sep) return '<span class="ktn-tagbar__sep"></span>';
-    var mod = t.mod ? ' ktn-tagbar__tag--' + t.mod : '';
-    var actv = t.active ? ' is-active' : '';
-    var ico = t.icon && TB_ICONS[t.icon] ? TB_ICONS[t.icon] : '';
-    return '<a href="' + t.href + '" class="ktn-tagbar__tag' + mod + actv + '">' + ico + t.label + '</a>';
+  el.innerHTML = list.map(function (t) {
+    if (t.to) return '<a href="' + t.to + '" class="ktn-tagbar__tag">' + ktnTagText(t) + '</a>';
+    var gate = ktnTagGate(def.search, t);
+    var ico = (t.k === 'area' || t.k === 'tarea') ? TB_ICONS.pin : '';
+    return '<a href="' + ktnTagHref(def.search, t) + '" class="ktn-tagbar__tag"' + gate + '>' + ico + ktnTagText(t) + '</a>';
   }).join('');
+  ktnTagbarSetup();
+  el.scrollLeft = 0;
+  ktnTagbarSync();
+  if (window.requestAnimationFrame) requestAnimationFrame(ktnTagbarSync);
 }
+/* ページの下の「タグ」の欄（[data-page-tags]）：付いているタグを全部出す。検索の条件にあるものはリンク、無いものは文字だけ */
+function renderPageTags(page) {
+  var def = ktnPageTags(page);
+  document.querySelectorAll('[data-page-tags]').forEach(function (ul) {
+    var box = ul.closest('.ktn-sub-tags');
+    if (!def || !def.items.length) { ul.innerHTML = ''; if (box) box.hidden = true; return; }
+    if (box) box.hidden = false;
+    ul.innerHTML = ktnTagOrder(def.items).map(function (t) {
+      if (t.to) return '<li><a class="ktn-tag-pill" href="' + t.to + '">' + ktnTagText(t) + '</a></li>';
+      return t.k ? '<li><a class="ktn-tag-pill" href="' + ktnTagHref(def.search, t) + '"' + ktnTagGate(def.search, t) + '>' + ktnTagText(t) + '</a></li>'
+                 : '<li><span class="ktn-tag-pill ktn-tag-pill--plain">' + ktnTagEsc(t.v) + '</span></li>';
+    }).join('');
+  });
+}
+/* ページの中で内容が切り替わるときに、タグを入れ替える（P7 の記事の種類・P6 の作品）。
+   items は { k, v, label } の並び、または文字の並び（文字はタグ＝tag として扱う）。search を省くと、いまの行き先のまま */
+KTN.setPageTags = function (items, search) {
+  var page = window.ktnState && window.ktnState.page, cur = ktnPageTags(page);
+  var root = page; while (root && !PAGE_TAGS[root] && root.indexOf('-') !== -1) root = root.replace(/-[^-]+$/, '');
+  PAGE_TAGS[root] = { search: search || (cur && cur.search) || 'p10', items: (items || []).map(function (t) {
+    return typeof t === 'string' ? { k: 'tag', v: t } : t;
+  }) };
+  renderTagbar(page); renderPageTags(page);
+};
 
 /* ══════════════════════════════════
    Q&A（FAQ）共通データ ＝ Drupal「Q&A」コンテンツタイプの静的ミラー（単一ソース）
@@ -1812,6 +1933,7 @@ function renderAll() {
   renderBottomNav();
   renderFooter();
   renderTagbar(window.ktnState.page);
+  renderPageTags(window.ktnState.page);
   updateActiveState(window.ktnState.page);
   syncAdminNote();
   syncRoleOwnerOnly();
@@ -2411,6 +2533,27 @@ document.addEventListener('click', function (e) {
 window.addEventListener('offline', function () { KTN.setOffline(true); });
 window.addEventListener('online', function () { KTN.setOffline(false); });
 document.addEventListener('DOMContentLoaded', function () { if (navigator.onLine === false) KTN.setOffline(true); });
+
+/* ══ タグ入力の候補（2026-10-14・handoff 追174-322）══
+   編集画面のタグ（.p211-tag-input＝P2-11・P6-11・P7-11）に、すでに使われているタグを候補として出す（ブラウザの datalist）。
+   タグは自由入力のまま（候補に無い言葉もそのまま追加できる）。同じ意味の言葉が別の書き方で増える（油彩／油絵）のを減らし、
+   ページのタグ・検索で同じタグの展覧会・作品・記事につながりやすくする。
+   本番：候補は「実際に使われているタグ」を、使われている数の多い順に（ここはデモの一覧） */
+KTN.TAG_SUGGEST = null;   /* 下の一覧は読み込みの最後で決まる P10_MORE_TAGS を使うので、画面ができたときに組み立てる */
+function ktnTagSuggest() { return KTN.TAG_SUGGEST || (KTN.TAG_SUGGEST = ['絵画', '現代美術', '写真', '書道', '版画', '陶芸', 'クラフト'].concat(typeof P10_MORE_TAGS !== 'undefined' ? P10_MORE_TAGS : [],
+  ['油彩', 'セラミック', '抽象', 'オノマトペ', '言語', '制作日記', '展評', 'インタビュー', '展示替え', 'ワークショップ'])); }
+document.addEventListener('DOMContentLoaded', function () {
+  document.querySelectorAll('.p211-tag-input').forEach(function (inp, i) {
+    if (inp.getAttribute('list')) return;
+    var dl = document.createElement('datalist');
+    dl.id = 'ktnTagSuggest' + i;
+    dl.innerHTML = ktnTagSuggest().filter(function (t, j, a) { return a.indexOf(t) === j; })
+      .map(function (t) { return '<option value="' + String(t).replace(/"/g, '&quot;') + '">'; }).join('');
+    inp.parentNode.appendChild(dl);
+    inp.setAttribute('list', dl.id);
+    inp.setAttribute('autocomplete', 'off');
+  });
+});
 document.addEventListener('click', function (e) {
   var b = e.target.closest && e.target.closest('[data-pwa-close]');
   if (!b) return;
@@ -3513,6 +3656,7 @@ KTN.init = function (opts) {
     renderBottomNav();
     renderFooter();
     renderTagbar(window.ktnState.page);
+    renderPageTags(window.ktnState.page);
     updateActiveState(window.ktnState.page);
     requestAnimationFrame(_scrollActiveSubnav);
     /* フォント読込で幅が変わった後にも再調整（未スクロール時のみ実質作用） */

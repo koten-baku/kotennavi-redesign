@@ -577,28 +577,6 @@ KTN.cl = (function () {
 ──────────────────────────────────────────────────── */
 KTN.pages['p2'] = function () {
 
-  /* ── tagbar ── */
-  (function () {
-    var inner = document.getElementById('ktnTagbarInner');
-    if (!inner) return;
-    [{ label: 'この周辺の展覧会' }, { label: '東京都の展覧会' }, { label: '東京都で人気' }, { sep: true },
-    { label: '絵画' }, { label: '現代美術' }, { sep: true }, { label: 'LIAISON Now on View', liaison: true }
-    ].forEach(function (t) {
-      var el;
-      if (t.sep) { el = document.createElement('span'); el.className = 'p2-tsep'; el.textContent = '|'; }
-      else {
-        el = document.createElement('button');
-        el.className = 'p2-tpill' + (t.liaison ? ' p2-tpill--liaison' : '');
-        el.textContent = t.label;
-        el.addEventListener('click', function () {
-          inner.querySelectorAll('.p2-tpill').forEach(function (b) { b.classList.remove('is-active'); });
-          this.classList.add('is-active');
-        });
-      }
-      inner.appendChild(el);
-    });
-  })();
-
   /* ── ヒーロースライダー（0〜10枚・背景色スライドと同期） ── */
   (function () {
     var SLIDES = window.P2_SLIDES;
@@ -1031,12 +1009,8 @@ var P7_CONTEXTS = {
       </a>`,
     ctaName: '『オノマトペの庭』制作について',
     relatedCtxHtml: `<span class="cb cb-content cb-artwork">artwork</span><a href="kotennavi-p6.html" class="ktn-related-band__link">オノマトペの庭</a>`,
-    tagsHtml: `
-      <li><a class="ktn-tag-pill" href="/p10?tag=絵画">絵画</a></li>
-      <li><a class="ktn-tag-pill" href="/p10?tag=現代美術">現代美術</a></li>
-      <li><a class="ktn-tag-pill" href="/p10?tag=オノマトペ">オノマトペ</a></li>
-      <li><a class="ktn-tag-pill" href="/p10?tag=制作日記">制作日記</a></li>
-      <li><a class="ktn-tag-pill" href="/p10?area=tokyo">東京</a></li>`
+    /* タグ（作品についての記事＝投稿者（クリエイター）のタグ。クリエイターはエリアを持たない）。行き先は展覧会の検索。k のないものは検索の条件に無いタグ＝下の欄にだけ出る */
+    tags: [{ v: '制作日記' }]
   },
   exhibition: {
     leadHref: 'kotennavi-p2.html',
@@ -1136,12 +1110,8 @@ var P7_CONTEXTS = {
       </a>`,
     ctaName: '展評：オノマトペの庭「田中透」',
     relatedCtxHtml: `<span class="cb cb-content cb-exhibition">exhibition</span><a href="kotennavi-p2.html" class="ktn-related-band__link">あなたが知らないオノマトペ</a>`,
-    tagsHtml: `
-      <li><a class="ktn-tag-pill" href="/p10?tag=絵画">絵画</a></li>
-      <li><a class="ktn-tag-pill" href="/p10?tag=現代美術">現代美術</a></li>
-      <li><a class="ktn-tag-pill" href="/p10?tag=展評">展評</a></li>
-      <li><a class="ktn-tag-pill" href="/p10?area=tokyo">東京</a></li>
-      <li><a class="ktn-tag-pill" href="/p10?area=shibuya">渋谷</a></li>`
+    /* タグ（展覧会についての記事＝その展覧会のタグ）。行き先は展覧会の検索。k のないものは検索の条件に無いタグ＝下の欄にだけ出る */
+    tags: [{ v: '展評' }]
   },
   creator: {
     leadHref: 'kotennavi-p3.html',
@@ -1227,11 +1197,8 @@ var P7_CONTEXTS = {
       </a>`,
     ctaName: '田中透インタビュー：言語と絵画のあいだで',
     relatedCtxHtml: `<span class="cb cb-person cb-creator">creator</span><a href="kotennavi-p3.html" class="ktn-related-band__link">田中 透</a>`,
-    tagsHtml: `
-      <li><a class="ktn-tag-pill" href="/p10?tag=絵画">絵画</a></li>
-      <li><a class="ktn-tag-pill" href="/p10?tag=現代美術">現代美術</a></li>
-      <li><a class="ktn-tag-pill" href="/p10?tag=インタビュー">インタビュー</a></li>
-      <li><a class="ktn-tag-pill" href="/p10?area=tokyo">東京</a></li>`
+    /* タグ（クリエイター自身の記事＝クリエイターのタグ）。行き先は展覧会の検索。k のないものは検索の条件に無いタグ＝下の欄にだけ出る */
+    tags: [{ v: 'インタビュー' }]
   },
   gallery: {
     leadHref: 'kotennavi-p4.html',
@@ -1317,12 +1284,8 @@ var P7_CONTEXTS = {
       </a>`,
     ctaName: 'Gallery SOIL 渋谷 ノート：展示替えの舞台裏',
     relatedCtxHtml: `<span class="cb cb-person cb-gallery">gallery</span><a href="kotennavi-p4.html" class="ktn-related-band__link">Gallery SOIL 渋谷</a>`,
-    tagsHtml: `
-      <li><a class="ktn-tag-pill" href="/p10?tag=ギャラリー">ギャラリー</a></li>
-      <li><a class="ktn-tag-pill" href="/p10?tag=現代美術">現代美術</a></li>
-      <li><a class="ktn-tag-pill" href="/p10?tag=展示替え">展示替え</a></li>
-      <li><a class="ktn-tag-pill" href="/p10?area=tokyo">東京</a></li>
-      <li><a class="ktn-tag-pill" href="/p10?area=shibuya">渋谷</a></li>`
+    /* タグ（ギャラリー自身の記事＝ギャラリーのタグ（エリアあり））。行き先は展覧会の検索。k のないものは検索の条件に無いタグ＝下の欄にだけ出る */
+    tags: [{ v: '展示替え' }]
   }
 };
 
@@ -1377,8 +1340,13 @@ function switchP7Context(key, btn) {
   if (cta) cta.setAttribute('data-cta-name', d.ctaName);
   var relCtx = document.getElementById('p7RelatedCtx');
   if (relCtx) relCtx.innerHTML = d.relatedCtxHtml;
-  var tags = document.getElementById('p7Tags');
-  if (tags) tags.innerHTML = d.tagsHtml;
+  /* タグ：掲載先のページ（展覧会・作品・クリエイター・ギャラリー）と投稿者のページ（クリエイター・ギャラリー）のタグを合わせたもの（ユーザー指示・2026-10-14）。
+     それぞれのタグは、元のページと同じ検索・特集のページへ飛ぶ。d.tags はその記事だけの言葉 */
+  var pid = function (href) { return (String(href).match(/kotennavi-(p[\d-]+)\.html/) || [])[1]; };
+  /* 記事だけのタグ（制作日記など）は、記事の検索が無いので、投稿者の記事一覧（P3-2・P4-2）をそのタグで絞って開く */
+  var artList = d.authorHref === 'kotennavi-p4.html' ? './kotennavi-p4-2.html' : './kotennavi-p3-2.html';
+  var own = (d.tags || []).map(function (t) { return { to: artList + '?tag=' + encodeURIComponent(t.v), label: t.v, tag: 1 }; });
+  if (KTN.setPageTags) KTN.setPageTags(KTN.composeTags([pid(d.leadHref), pid(d.authorHref)], own), 'p10');
 }
 window.switchP7Context = switchP7Context;
 
@@ -2340,8 +2308,32 @@ function _p6Init(opts) {
     if (el) el.textContent = '《' + w.title + '》について';
     el = document.getElementById('descBody');
     if (el) el.innerHTML = w.desc.map(function(p) { return '<p>' + p + '</p>'; }).join('');
-    el = document.getElementById('descTags');
-    if (el) el.innerHTML = w.tags.map(function(t) { return '<span class="wd-tag">' + t + '</span>'; }).join('');
+    /* タグ：上のタグバーと下の欄を、表示している作品のタグに入れ替える（common.js KTN.setPageTags）。
+       ジャンル（6区分）を先頭に、作品のタグはすべてリンク。制作年・号数・SOLD は作品の仕様に出ているので、タグには入れない */
+    /* LIAISON+ で販売している作品（P6-2）は、販売の状態と価格帯も載せる（同じ予算の作品を探せる）。価格帯は作品の検索の区切りと同じ */
+    /* LIAISON の作品（P6-1）は、販売の状態と LIAISON も載せる（2026-10-14・ユーザー指示。LIAISON の作品にも非売品・要問合せなどの状態があり、作品の検索で絞り込める）。
+       価格帯は LIAISON+ だけ（オンラインで買える作品の予算で探すための条件で、作品の検索でも LIAISON+ と一緒のときだけ効く）。
+       作者（クリエイター）と出品者も載せる。押すとそのページへ移る（KTN.peopleTags と同じ to の形）。作者と出品者が違えば両方、同じなら1つだけ */
+    var page6 = window.ktnState && window.ktnState.page, sale = [];
+    var ST_MAP = { available: ['sale', '販売中'], sale: ['sale', '販売中'], reserved: ['negot', '商談中'], negot: ['negot', '商談中'], sold: ['sold', 'SOLD'], inquiry: ['inquiry', '要問合せ'], nsale: ['nsale', '非売品'] };
+    if (page6 === 'p6-2' && w.price) {
+      var ST = ST_MAP[w.status || 'available'];
+      if (ST) sale.push({ k: 'st', v: ST[0], label: ST[1] });
+      var man = w.price / 10000, band = man < 5 ? ['~5', '〜5万円'] : man < 10 ? ['5-10', '5〜10万円'] : man < 30 ? ['10-30', '10〜30万円'] : ['30-', '30万円〜'];
+      sale.push({ k: 'price', v: band[0], label: band[1], also: ['liaison:lp'] }, { k: 'liaison', v: 'lp', label: 'LIAISON+' });
+    } else if (page6 === 'p6-1') {
+      /* デモの P6-1 は画面に「非売品」と出ている作品（本番は作品の販売の状態から） */
+      var ST1 = ST_MAP[w.liStatus || 'nsale'];
+      if (ST1) sale.push({ k: 'st', v: ST1[0], label: ST1[1] });
+      sale.push({ k: 'liaison', v: 'li', label: 'LIAISON' });
+    }
+    var people = [{ to: './kotennavi-p3.html', label: w.creator }];
+    var seller = window.P2_POSTED_BY, nm = function (s) { return String(s || '').replace(/\s/g, ''); };
+    /* 出品者が作者と違うとき（ギャラリーの出品・ほかのクリエイターの出品）は両方。同じ人なら1つ */
+    if (seller && seller.name && nm(seller.name) !== nm(w.creator)) people.push({ to: './' + seller.href, label: seller.name });
+    /* 作品のタグ（自由入力）はすべてリンク（作品の検索へ） */
+    var tg = w.tags.filter(function (t) { return !/号|年制作|^SOLD$/.test(t); }).map(function (t) { return { k: 'tag', v: t }; });
+    if (KTN.setPageTags) KTN.setPageTags([{ k: 'genre', v: w.genre || 'アート' }].concat(tg, sale, people), 'p10-1');
     /* 「その他」（extras）は作品仕様（#p6Specs）に全幅行として描画する（initExtra 内）。
        ※ 制作ノート（w.note）は現行レイアウトに表示枠が無く従来から未描画のためここでは扱わない（別途整備）。 */
     if (opts.initExtra) opts.initExtra(WORK);
@@ -4361,25 +4353,6 @@ KTN.pages['p3'] = function () {
   var activeBadge = document.getElementById('p3HeadActiveBadge');
   if (activeBadge && d.hasActiveExhibition) activeBadge.removeAttribute('hidden');
 
-  // 0b. tagbar（ジャンル・地域タグ）
-  (function(){
-    var inner = document.getElementById('ktnTagbarInner');
-    if (!inner) return;
-    [{label:'絵画'},{label:'現代美術'},{sep:true},{label:'東京'},{sep:true},{label:'個展なびを知る'}
-    ].forEach(function(t){
-      var el;
-      if (t.sep){ el=document.createElement('span'); el.className='p2-tsep'; el.textContent='|'; }
-      else{
-        el=document.createElement('button'); el.className='p2-tpill'; el.textContent=t.label;
-        el.addEventListener('click',function(){
-          inner.querySelectorAll('.p2-tpill').forEach(function(b){b.classList.remove('is-active');});
-          this.classList.add('is-active');
-        });
-      }
-      inner.appendChild(el);
-    });
-  })();
-
   // 0c. タブナビ NEW バッジ表示制御
   if (d.newBadges) {
     Object.keys(d.newBadges).forEach(function(key){
@@ -4901,25 +4874,6 @@ KTN.pages['p3-1'] = function () {
   var activeBadge = document.getElementById('p3HeadActiveBadge');
   if (activeBadge && d.hasActiveExhibition) activeBadge.removeAttribute('hidden');
 
-  // 0c. tagbar
-  (function(){
-    var inner = document.getElementById('ktnTagbarInner');
-    if (!inner) return;
-    [{label:'絵画'},{label:'現代美術'},{sep:true},{label:'東京'},{sep:true},{label:'個展なびを知る'}
-    ].forEach(function(t){
-      var el;
-      if (t.sep){ el=document.createElement('span'); el.className='p2-tsep'; el.textContent='|'; }
-      else{
-        el=document.createElement('button'); el.className='p2-tpill'; el.textContent=t.label;
-        el.addEventListener('click',function(){
-          inner.querySelectorAll('.p2-tpill').forEach(function(b){b.classList.remove('is-active');});
-          this.classList.add('is-active');
-        });
-      }
-      inner.appendChild(el);
-    });
-  })();
-
   // 1. タブナビ: 展覧会をアクティブ・他タブは各サブページへ
   document.querySelectorAll('.p3-tabnav__item').forEach(function(btn){
     if (btn.dataset.tab === 'exhibitions') {
@@ -5081,25 +5035,6 @@ KTN.pages['p3-2'] = function () {
   var activeBadge = document.getElementById('p3HeadActiveBadge');
   if (activeBadge && d.hasActiveExhibition) activeBadge.removeAttribute('hidden');
 
-  // 0c. tagbar
-  (function(){
-    var inner = document.getElementById('ktnTagbarInner');
-    if (!inner) return;
-    [{label:'絵画'},{label:'現代美術'},{sep:true},{label:'東京'},{sep:true},{label:'個展なびを知る'}
-    ].forEach(function(t){
-      var el;
-      if (t.sep){ el=document.createElement('span'); el.className='p2-tsep'; el.textContent='|'; }
-      else{
-        el=document.createElement('button'); el.className='p2-tpill'; el.textContent=t.label;
-        el.addEventListener('click',function(){
-          inner.querySelectorAll('.p2-tpill').forEach(function(b){b.classList.remove('is-active');});
-          this.classList.add('is-active');
-        });
-      }
-      inner.appendChild(el);
-    });
-  })();
-
   // 1. タブナビ: 記事をアクティブ・他タブは各サブページへ
   document.querySelectorAll('.p3-tabnav__item').forEach(function(btn){
     if (btn.dataset.tab === 'articles') {
@@ -5169,12 +5104,29 @@ KTN.pages['p3-2'] = function () {
     var selects = document.querySelectorAll('.p3-2-filter__select');
     var filterCountEl = document.getElementById('p3FilterCount');
     var emptyEl = document.getElementById('p3FilterEmpty');
+    /* タグ（?tag=）：記事のページのタグから来たとき、そのタグの記事だけを出す（2026-10-14）。
+       記事の検索は無いので、記事だけのタグ（制作日記など）は投稿者の記事一覧で受ける。絞り込みの行に「# タグ ×」を出し、× で外す */
+    var tag = '';
+    try { tag = new URLSearchParams(location.search).get('tag') || ''; } catch (e) {}
+    var tagRow = document.querySelector('.p3-2-filter');
+    if (tag && tagRow) {
+      var chip = document.createElement('span');
+      chip.className = 'p10-fchip';
+      chip.innerHTML = '# ' + tag.replace(/[&<>"]/g, function (ch) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]; }) +
+        '<button class="p10-fchip__x" type="button" aria-label="タグを外す">×</button>';
+      tagRow.insertBefore(chip, document.getElementById('p3FilterCount'));
+      chip.querySelector('button').addEventListener('click', function () {
+        tag = ''; chip.remove();
+        try { history.replaceState(null, '', location.pathname); } catch (e) {}
+        filterArticles();
+      });
+    }
 
     function filterArticles() {
       var dest     = document.getElementById('p3FilterDest')     ? document.getElementById('p3FilterDest').value     : '';
       var category = document.getElementById('p3FilterCategory') ? document.getElementById('p3FilterCategory').value : '';
       var year     = document.getElementById('p3FilterYear')     ? document.getElementById('p3FilterYear').value     : '';
-      var hasFilter = !!(dest || category || year);
+      var hasFilter = !!(dest || category || year || tag);
       var totalVisible = 0;
 
       document.querySelectorAll('.p3-2-year-group').forEach(function(yg){
@@ -5182,7 +5134,8 @@ KTN.pages['p3-2'] = function () {
         yg.querySelectorAll('.lc').forEach(function(card){
           var match = (!dest     || card.dataset.dest     === dest)
                    && (!category || card.dataset.category === category)
-                   && (!year     || card.dataset.year     === year);
+                   && (!year     || card.dataset.year     === year)
+                   && (!tag      || (card.dataset.tags || '').split('|').indexOf(tag) !== -1);
           if (match) {
             card.removeAttribute('hidden');
             ygVisible++;
@@ -5208,6 +5161,7 @@ KTN.pages['p3-2'] = function () {
     }
 
     selects.forEach(function(sel){ sel.addEventListener('change', filterArticles); });
+    if (tag) filterArticles();
   })();
 };
 
@@ -5226,25 +5180,6 @@ KTN.pages['p3-3'] = function () {
   // 0b. ヒーローアクティブバッジ
   var activeBadge = document.getElementById('p3HeadActiveBadge');
   if (activeBadge && d.hasActiveExhibition) activeBadge.removeAttribute('hidden');
-
-  // 0c. tagbar
-  (function(){
-    var inner = document.getElementById('ktnTagbarInner');
-    if (!inner) return;
-    [{label:'絵画'},{label:'現代美術'},{sep:true},{label:'東京'},{sep:true},{label:'個展なびを知る'}
-    ].forEach(function(t){
-      var el;
-      if (t.sep){ el=document.createElement('span'); el.className='p2-tsep'; el.textContent='|'; }
-      else{
-        el=document.createElement('button'); el.className='p2-tpill'; el.textContent=t.label;
-        el.addEventListener('click',function(){
-          inner.querySelectorAll('.p2-tpill').forEach(function(b){b.classList.remove('is-active');});
-          this.classList.add('is-active');
-        });
-      }
-      inner.appendChild(el);
-    });
-  })();
 
   // 1. タブナビ: 作品をアクティブ・他タブは各サブページへ
   document.querySelectorAll('.p3-tabnav__item').forEach(function(btn){
@@ -5403,25 +5338,6 @@ KTN.pages['p4'] = function () {
   // 0b. ヒーロー初期設定
   var activeBadge = document.getElementById('p4HeadActiveBadge');
   if (activeBadge && d.hasActiveExhibition) activeBadge.removeAttribute('hidden');
-
-  // 0c. tagbar
-  (function(){
-    var inner = document.getElementById('ktnTagbarInner');
-    if (!inner) return;
-    [{label:'現代美術'},{label:'絵画'},{sep:true},{label:'渋谷'},{label:'東京'},{sep:true},{label:'個展なびを知る'}
-    ].forEach(function(t){
-      var el;
-      if (t.sep){ el=document.createElement('span'); el.className='p2-tsep'; el.textContent='|'; }
-      else{
-        el=document.createElement('button'); el.className='p2-tpill'; el.textContent=t.label;
-        el.addEventListener('click',function(){
-          inner.querySelectorAll('.p2-tpill').forEach(function(b){b.classList.remove('is-active');});
-          this.classList.add('is-active');
-        });
-      }
-      inner.appendChild(el);
-    });
-  })();
 
   // 0d. タブナビ NEW バッジ表示制御
   if (d.newBadges) {
@@ -5791,25 +5707,6 @@ KTN.pages['p4-1'] = function () {
   var activeBadge = document.getElementById('p4HeadActiveBadge');
   if (activeBadge && d.hasActiveExhibition) activeBadge.removeAttribute('hidden');
 
-  // 0c. tagbar
-  (function(){
-    var inner = document.getElementById('ktnTagbarInner');
-    if (!inner) return;
-    [{label:'現代美術'},{label:'絵画'},{sep:true},{label:'渋谷'},{label:'東京'},{sep:true},{label:'個展なびを知る'}
-    ].forEach(function(t){
-      var el;
-      if (t.sep){ el=document.createElement('span'); el.className='p2-tsep'; el.textContent='|'; }
-      else{
-        el=document.createElement('button'); el.className='p2-tpill'; el.textContent=t.label;
-        el.addEventListener('click',function(){
-          inner.querySelectorAll('.p2-tpill').forEach(function(b){b.classList.remove('is-active');});
-          this.classList.add('is-active');
-        });
-      }
-      inner.appendChild(el);
-    });
-  })();
-
   // 1. タブナビ: 展覧会をアクティブ・他タブは各サブページへ
   document.querySelectorAll('.p3-tabnav__item').forEach(function(btn){
     if (btn.dataset.tab === 'exhibitions') {
@@ -5963,25 +5860,6 @@ KTN.pages['p4-2'] = function () {
   var activeBadge = document.getElementById('p4HeadActiveBadge');
   if (activeBadge && d.hasActiveExhibition) activeBadge.removeAttribute('hidden');
 
-  // 0c. tagbar
-  (function(){
-    var inner = document.getElementById('ktnTagbarInner');
-    if (!inner) return;
-    [{label:'現代美術'},{label:'絵画'},{sep:true},{label:'渋谷'},{label:'東京'},{sep:true},{label:'個展なびを知る'}
-    ].forEach(function(t){
-      var el;
-      if (t.sep){ el=document.createElement('span'); el.className='p2-tsep'; el.textContent='|'; }
-      else{
-        el=document.createElement('button'); el.className='p2-tpill'; el.textContent=t.label;
-        el.addEventListener('click',function(){
-          inner.querySelectorAll('.p2-tpill').forEach(function(b){b.classList.remove('is-active');});
-          this.classList.add('is-active');
-        });
-      }
-      inner.appendChild(el);
-    });
-  })();
-
   // 1. タブナビ: 記事をアクティブ・他タブは各サブページへ
   document.querySelectorAll('.p3-tabnav__item').forEach(function(btn){
     if (btn.dataset.tab === 'articles') {
@@ -6049,12 +5927,29 @@ KTN.pages['p4-2'] = function () {
     var selects = document.querySelectorAll('.p3-2-filter__select');
     var filterCountEl = document.getElementById('p4FilterCount');
     var emptyEl = document.getElementById('p4FilterEmpty');
+    /* タグ（?tag=）：記事のページのタグから来たとき、そのタグの記事だけを出す（2026-10-14）。
+       記事の検索は無いので、記事だけのタグ（制作日記など）は投稿者の記事一覧で受ける。絞り込みの行に「# タグ ×」を出し、× で外す */
+    var tag = '';
+    try { tag = new URLSearchParams(location.search).get('tag') || ''; } catch (e) {}
+    var tagRow = document.querySelector('.p3-2-filter');
+    if (tag && tagRow) {
+      var chip = document.createElement('span');
+      chip.className = 'p10-fchip';
+      chip.innerHTML = '# ' + tag.replace(/[&<>"]/g, function (ch) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]; }) +
+        '<button class="p10-fchip__x" type="button" aria-label="タグを外す">×</button>';
+      tagRow.insertBefore(chip, document.getElementById('p4FilterCount'));
+      chip.querySelector('button').addEventListener('click', function () {
+        tag = ''; chip.remove();
+        try { history.replaceState(null, '', location.pathname); } catch (e) {}
+        filterArticles();
+      });
+    }
 
     function filterArticles() {
       var dest     = document.getElementById('p4FilterDest')     ? document.getElementById('p4FilterDest').value     : '';
       var category = document.getElementById('p4FilterCategory') ? document.getElementById('p4FilterCategory').value : '';
       var year     = document.getElementById('p4FilterYear')     ? document.getElementById('p4FilterYear').value     : '';
-      var hasFilter = !!(dest || category || year);
+      var hasFilter = !!(dest || category || year || tag);
       var totalVisible = 0;
 
       document.querySelectorAll('.p3-2-year-group').forEach(function(yg){
@@ -6062,7 +5957,8 @@ KTN.pages['p4-2'] = function () {
         yg.querySelectorAll('.lc').forEach(function(card){
           var match = (!dest     || card.dataset.dest     === dest)
                    && (!category || card.dataset.category === category)
-                   && (!year     || card.dataset.year     === year);
+                   && (!year     || card.dataset.year     === year)
+                   && (!tag      || (card.dataset.tags || '').split('|').indexOf(tag) !== -1);
           if (match) {
             card.removeAttribute('hidden');
             ygVisible++;
@@ -6088,6 +5984,7 @@ KTN.pages['p4-2'] = function () {
     }
 
     selects.forEach(function(sel){ sel.addEventListener('change', filterArticles); });
+    if (tag) filterArticles();
   })();
 };
 
@@ -18882,7 +18779,7 @@ KTN.pages['p10'] = function () {
      1行ずつ増やす。行の高さは文字数・画面幅で変わるため固定件数でなく実測（getBoundingClientRect）
      で行の境界を切る。ドロワーは開くまで display:none で高さゼロのため、初回の実測は
      ドロワーを開いたとき（advToggle）に行う。 */
-  var ALL_TAGS = ['絵画', '現代美術', '写真', '書道', '版画', '陶芸', 'クラフト'].concat(window.P10_MORE_TAGS || []);
+  var ALL_TAGS = KTN.urlTags(['絵画', '現代美術', '写真', '書道', '版画', '陶芸', 'クラフト'].concat(window.P10_MORE_TAGS || []));   /* URL で来たタグも選択肢に（KTN.urlTags） */
   var tagRowH = null, tagVisibleRows = 1;
   function renderTagChips() {
     var box = document.getElementById('p10TagOpts');
@@ -19106,6 +19003,30 @@ KTN.pages['p10'] = function () {
     }
     else if (view === 'zero') { elKeyword.value = '深夜の青騎士'; runFilter(); }
   };
+
+  /* ── URLから条件を受ける（?f=key:value を複数可・?p=プリセット）（2026-10-13・追174-322）──
+     ページのタグ（上のタグバー・下の「タグ」の欄）と、特集のページの「〜の展覧会を検索する」がここへ着地する。
+     P10-1〜P10-3 には前からあった受け口で、展覧会の検索にだけ無かった（リンクを押しても条件が点かなかった）。 */
+  (function () {
+    var q = new URLSearchParams(location.search);
+    var p = q.get('p'), fs = q.getAll('f'), hitAny = false;
+    if (p && PRESETS[p]) { applyPreset(p); return; }
+    if (!fs.length) return;
+    /* 日付のチップ（.p10-day＝「今日」などの1日の指定）も受ける */
+    document.querySelectorAll('.p10-chip[data-f],.p10-day[data-f]').forEach(function (c) {
+      if (fs.indexOf(c.dataset.f) === -1) return;
+      c.classList.add('is-on'); hitAny = true;
+      /* 47都道府県・追加タグのチップは畳まれたパネルの中にある。URLで点いた条件がドロワーを
+         開いても見えないままだと「どこで指定された条件か」が分からないので、当たったチップを
+         含むパネルだけ開いておく（外すのは適用中チップの×でもできる）。 */
+      var panel = c.closest('.p10-adv__panel');
+      if (!panel) return;
+      panel.classList.add('is-open');
+      var btn = panel.previousElementSibling;
+      if (btn && btn.dataset.toggle) { btn.classList.add('is-open'); btn.setAttribute('aria-expanded', 'true'); }
+    });
+    if (hitAny) runFilter();
+  }());
 
   /* ロール別の出し分けは持たない（2026-09-20・追174-97）＝「あなたへのおすすめ」棚を外したことで、
      P10 の本文はゲストとログインで同じになった。ヘッダーの管理者メニューは common.js の getActions が担当。 */
@@ -19660,7 +19581,7 @@ KTN.pages['p10-1'] = function () {
   /* ── タグ行（追174-142・追174-143で1行ずつ展開に変更）── タグ付け数（このページの母集団=WORKSでの
      出現数）が多い順に並べ替えて描画する。.p10-chip の結線より前に描画すること（下記と同じ順序制約）。
      本番は数百件を想定（追174-143）＝「もっと見る」は1行ずつ増やす（詳細はP10側のコメント参照）。 */
-  var ALL_TAGS = ['絵画', '現代美術', '写真', '書道', '版画', '陶芸', 'クラフト'].concat(window.P10_MORE_TAGS || []);
+  var ALL_TAGS = KTN.urlTags(['絵画', '現代美術', '写真', '書道', '版画', '陶芸', 'クラフト'].concat(window.P10_MORE_TAGS || []));   /* URL で来たタグも選択肢に（KTN.urlTags） */
   var tagRowH = null, tagVisibleRows = 1;
   function renderTagChips() {
     var box = document.getElementById('p101TagOpts');
@@ -20269,7 +20190,7 @@ KTN.pages['p10-2'] = function () {
      CREATORS.genreTagsでの出現数）が多い順に並べ替えて描画する。.p10-chip の結線より前に
      描画すること（下記と同じ順序制約）。本番は数百件を想定（追174-143）＝「もっと見る」は
      1行ずつ増やす（詳細はP10側のコメント参照）。 */
-  var ALL_TAGS = ['絵画', '現代美術', '写真', '書道', '版画', '陶芸', 'クラフト'].concat(window.P10_MORE_TAGS || []);
+  var ALL_TAGS = KTN.urlTags(['絵画', '現代美術', '写真', '書道', '版画', '陶芸', 'クラフト'].concat(window.P10_MORE_TAGS || []));   /* URL で来たタグも選択肢に（KTN.urlTags） */
   var tagRowH = null, tagVisibleRows = 1;
   function renderTagChips() {
     var box = document.getElementById('p102TagOpts');
@@ -20992,7 +20913,7 @@ KTN.pages['p10-3'] = function () {
      GALLERIES.genreTagsでの出現数）が多い順に並べ替えて描画する。.p10-chip の結線より前に
      描画すること（下記と同じ順序制約）。本番は数百件を想定（追174-143）＝「もっと見る」は
      1行ずつ増やす（詳細はP10側のコメント参照）。 */
-  var ALL_TAGS = ['絵画', '現代美術', '写真', '書道', '版画', '陶芸', 'クラフト'].concat(window.P10_MORE_TAGS || []);
+  var ALL_TAGS = KTN.urlTags(['絵画', '現代美術', '写真', '書道', '版画', '陶芸', 'クラフト'].concat(window.P10_MORE_TAGS || []));   /* URL で来たタグも選択肢に（KTN.urlTags） */
   var tagRowH = null, tagVisibleRows = 1;
   function renderTagChips() {
     var box = document.getElementById('p103TagOpts');
