@@ -7166,6 +7166,10 @@ KTN.pages['p3-12'] = function () {
     if (funnel) funnel.hidden = !applied;
     if (note) note.hidden = !applied;
     if (notice) notice.hidden = applied;
+    /* LIAISON+ の販売（追174-324）も同じく、未申請なら案内だけ */
+    var sb = document.getElementById('p312SalesBody'), sn = document.getElementById('p312SalesNotice');
+    if (sb) sb.hidden = !applied;
+    if (sn) sn.hidden = applied;
   }
   syncFunnel();
   var _prevRenderP312 = window.ktnRender;
@@ -7174,8 +7178,8 @@ KTN.pages['p3-12'] = function () {
   // 5. 展覧会・記事・作品への関心：タブ切替＋年別グループ・ページング・列ソート
   var P312_INS = {
     exh: [
-      { href: 'kotennavi-p2.html', name: '声と線 — 新作展', year: 2026, period: '2026.3.20–3.31', periodSort: 20260320, stats: ['654', '34<span class="unit">人</span>', '58<span class="unit">件</span>'] },
-      { href: 'kotennavi-p2.html', name: 'あなたが知らないオノマトペ — 田中透 個展', year: 2026, period: '2026.2.18–3.5', periodSort: 20260218, stats: ['892', '48<span class="unit">人</span>', '76<span class="unit">件</span>'] },
+      { href: 'kotennavi-p2.html', name: '声と線 — 新作展', year: 2026, period: '2026.3.20–3.31', periodSort: 20260320, sales: { total: 168000, after: 48000 }, stats: ['654', '34<span class="unit">人</span>', '58<span class="unit">件</span>'] },
+      { href: 'kotennavi-p2.html', name: 'あなたが知らないオノマトペ — 田中透 個展', year: 2026, period: '2026.2.18–3.5', periodSort: 20260218, sales: { total: 244000, after: 120000 }, stats: ['892', '48<span class="unit">人</span>', '76<span class="unit">件</span>'] },
       { href: 'kotennavi-p2.html', name: '色と音のあいだ 個展', year: 2025, period: '2025.11.10–11.20', periodSort: 20251110, stats: ['512', '28<span class="unit">人</span>', '44<span class="unit">件</span>'] },
       { href: 'kotennavi-p2.html', name: '線と余白', year: 2025, period: '2025.6.1–6.10', periodSort: 20250601, stats: ['276', '14<span class="unit">人</span>', '18<span class="unit">件</span>'] },
       { href: 'kotennavi-p2.html', name: 'ざわざわ — 田中透 新作展', year: 2024, period: '2024.10.12–10.27', periodSort: 20241012, stats: ['398', '22<span class="unit">人</span>', '32<span class="unit">件</span>'] },
@@ -7280,6 +7284,10 @@ KTN.pages['p4-12'] = function () {
     if (funnel) funnel.hidden = !applied;
     if (note) note.hidden = !applied;
     if (notice) notice.hidden = applied;
+    /* LIAISON+ の販売（追174-324）も同じく、未申請なら案内だけ */
+    var sb = document.getElementById('p412SalesBody'), sn = document.getElementById('p412SalesNotice');
+    if (sb) sb.hidden = !applied;
+    if (sn) sn.hidden = applied;
   }
   syncFunnel();
   var _prevRenderP412 = window.ktnRender;
@@ -7288,8 +7296,8 @@ KTN.pages['p4-12'] = function () {
   // 5. 展覧会・記事・作品への関心：タブ切替＋年別グループ・ページング・列ソート
   var P412_INS = {
     exh: [
-      { href: 'kotennavi-p2.html', name: '声と線 — 新作展', year: 2026, period: '2026.3.20–3.31', periodSort: 20260320, stats: ['560', '44<span class="unit">人</span>', '42<span class="unit">件</span>'] },
-      { href: 'kotennavi-p2.html', name: 'あなたが知らないオノマトペ — 田中透 個展', year: 2026, period: '2026.2.18–3.5', periodSort: 20260218, stats: ['780', '62<span class="unit">人</span>', '58<span class="unit">件</span>'] },
+      { href: 'kotennavi-p2.html', name: '声と線 — 新作展', year: 2026, period: '2026.3.20–3.31', periodSort: 20260320, sales: { total: 258000, after: 96000 }, stats: ['560', '44<span class="unit">人</span>', '42<span class="unit">件</span>'] },
+      { href: 'kotennavi-p2.html', name: 'あなたが知らないオノマトペ — 田中透 個展', year: 2026, period: '2026.2.18–3.5', periodSort: 20260218, sales: { total: 280000, after: 150000 }, stats: ['780', '62<span class="unit">人</span>', '58<span class="unit">件</span>'] },
       { href: 'kotennavi-p2.html', name: '色と音のあいだ 個展', year: 2025, period: '2025.11.10–11.20', periodSort: 20251110, stats: ['420', '36<span class="unit">人</span>', '32<span class="unit">件</span>'] },
       { href: 'kotennavi-p2.html', name: '線と余白', year: 2025, period: '2025.6.1–6.10', periodSort: 20250601, stats: ['220', '20<span class="unit">人</span>', '14<span class="unit">件</span>'] },
       { href: 'kotennavi-p2.html', name: 'ざわざわ — 田中透 新作展', year: 2024, period: '2024.10.12–10.27', periodSort: 20241012, stats: ['310', '28<span class="unit">人</span>', '24<span class="unit">件</span>'] },
@@ -25094,7 +25102,23 @@ KTN.CAMPAIGN = (function () {
       block('持っている特典', 'YOUR BENEFITS', owned || row('特典', '持っている特典はありません。'),
         owned ? '特典は、購入の申込があった時点で、その取引に自動で適用されます（お手続きは要りません）。送料・梱包費の分も含めて、サービス利用料を割り引きます。対象の展覧会は、会期が始まった時点で決まり、あとから変わりません（その展覧会で売れなかったときも、次の展覧会へは持ち越しません）。取引ごとの金額は、取引デスクと振込の明細で確認できます。' : '') +
       block('実施中のキャンペーン', 'CAMPAIGNS', camp || row('キャンペーン', owned ? 'ほかに実施中のキャンペーンはありません。' : 'いま実施中のキャンペーンはありません。'),
-        camp ? '申込が承認されると、自動で適用されます。適用されると、お知らせとメールでお伝えします。' : ''));
+        camp ? '申込が承認されると、自動で適用されます。適用されると、お知らせとメールでお伝えします。' : '') +
+      buyerCouponsForSeller(d, rate));
+  }
+  /* 出品者に、購入者が使えるクーポンを知らせる（2026-10-14・handoff 追174-324）。
+     クーポンは値引き分を個展なびが負担し、出品者の受取金額と利用料は値引きの前の金額で計算する＝出品者の損にならずに売れやすくなる。
+     これを伝えるだけで LIAISON+ を使う理由になる（新しい仕組みは足さない）。実施中・開始待ちのクーポンだけ。受付を終えたものも、終わったことが分かるように出す */
+  function buyerCouponsForSeller(d, rate) {
+    var list = d.campaigns.filter(function (c) { return c.benefit.type === 'coupon' && isLive(c); });
+    if (!list.length) return '';
+    return block('購入者が使えるクーポン', 'FOR YOUR BUYERS', list.map(function (c) {
+      return row(esc(c.name), capState(c, rate) +
+        '<div class="ktn-terms__line">' + tiersText(c.benefit) + '</div>' +
+        '<div class="ktn-terms__line">' + (c.kind === 'venue'
+          ? 'LIAISON+ の展覧会の会場で、来場者がチェックインすると受け取れます。その展覧会の作品に、販売期間の終わりまで使えます。会場で見た人が、アフターセールでもゆっくり検討できます。'
+          : '来場者やほかの人が、LIAISON+ の作品を「興味あり！」に入れると受け取れます（1人1枚）。LIAISON+ のどの作品にも使えます。') + '</div>' +
+        '<div class="ktn-terms__note">実施期間：' + esc(termText(c)) + '</div>');
+    }).join(''), 'あなたの作品の購入者が使えるクーポンです。<strong>値引き分は個展なびが負担します。</strong>あなたの受取金額とサービス利用料は、値引きの前の金額で計算するので変わりません。会場に作品リスト（QR）を置くと、来場者にチェックインとクーポンの案内が表示されます。');
   }
   /* 気づくための1行（P3-15／P4-15・P3-17／P4-17・P2-12-1）。どのページでも同じ内容。数字の詳しい説明は専用のページだけに置く */
   function sellerLine(role) {
@@ -25469,7 +25493,7 @@ KTN.pages['p90-20'] = function () {
   var NOTE = {
     early: 'LIAISON+ をはじめて使う人の、最初の展覧会の売上を後押しします。条件は「実施期間に新しく申し込んだ人」だけで、作品の点数は問いません（クリエイターとギャラリーで条件をそろえるため）。対象の展覧会は、有効期間の中で最初に会期が始まった LIAISON+ の展覧会で、その取引すべてのサービス利用料を割り引きます（上限なし・送料と梱包費の分も含む）。先着は申込の順に数え、審査で承認されなかったら枠を戻します。導入のときだけでなく、使う人が少ないときに期間を入れ直してもう一度実施できます（1人が受けられるのは自然に1回）。',
     interest: '興味を持った人に、購入のきっかけを届けるクーポンです。1人1枚で、LIAISON+ のどの作品にも使えます。',
-    venue: '会場に来た人が、会期のあとも販売期間の終わりまで、ゆっくり検討できるようにするクーポンです。チェックインした展覧会の作品にだけ使え、展覧会ごとに1枚です。使用期限は、その展覧会の販売期間の終わり（日付の設定は要りません）。'
+    venue: '会場に来た人が、アフターセール（会期のあと、販売期間の終わりまで）でもゆっくり検討できるようにするクーポンです。チェックインした展覧会の作品にだけ使え、展覧会ごとに1枚です。使用期限は、その展覧会の販売期間の終わり（日付の設定は要りません）。'
   };
   function campHtml(c, i) {
     var b = c.benefit, at = ' data-c="' + i + '"', h = '';

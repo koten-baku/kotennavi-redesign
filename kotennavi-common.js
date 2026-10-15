@@ -121,8 +121,8 @@ const KTN_LISTQR_KINDS = {
   list: { label: '作品リスト', title: '作品リストのQRコード', url: 'https://koten-navi.com/p2-6', sub: 'スマホで読み取ると、会場配布用のリストが開きます。<br>画像を保存して会場ポスターやSNSにも掲示できます。' },
   /* url に ?src=venue-qr を付与し、この会場設置QR経由のアクセスを判別できるようにする（インサイトA-2） */
   venue: { label: '会場チェックイン', title: '会場チェックインのQRコード', url: 'https://koten-navi.com/p2?src=venue-qr', sub: 'スマホで読み取ると、この展覧会のページが開きます。<br>来場者はそのままチェックインやレビュー投稿ができます。あわせてウォッチしてもらえると、次回展の案内メールが届くようになります。画像を保存して受付・壁面に掲示できます。' },
-  creator: { label: '田中 透', title: '田中 透 を共有', url: 'https://koten-navi.com/p3', sub: 'リンクをコピーしてSNS・DMで送ったり、QRコードを名刺・チラシ等に掲載すると、ウォッチしてくれる人が増えやすくなります。' },
-  gallery: { label: 'Gallery SOIL 渋谷', title: 'Gallery SOIL 渋谷 を共有', url: 'https://koten-navi.com/p4', sub: 'リンクをコピーしてSNS・DMで送ったり、QRコードを名刺・チラシ等に掲載すると、ウォッチしてくれる人が増えやすくなります。' }
+  creator: { label: '田中 透', title: '田中 透 を共有', url: 'https://koten-navi.com/p3', sub: 'リンクをコピーしてSNS・DMで送ったり、QRコードを名刺・チラシ等に掲載すると、読み取った人がそのままページを開いてウォッチできます。' },
+  gallery: { label: 'Gallery SOIL 渋谷', title: 'Gallery SOIL 渋谷 を共有', url: 'https://koten-navi.com/p4', sub: 'リンクをコピーしてSNS・DMで送ったり、QRコードを名刺・チラシ等に掲載すると、読み取った人がそのままページを開いてウォッチできます。' }
 };
 /* 汎用テキストコピー（URLコピー等・textareaを介さない値のコピーに使う） */
 function ktnCopyText(text, msg) {
@@ -3750,6 +3750,7 @@ KTN.pagination = (function () {
    年別グループ表示＋ページング＋列ソート共通描画
    items は呼び出し側で日付降順ソート・年グループ済みの配列
    （各要素 { href, name, year, stats:['値<span class="unit">単位</span>', …],
+     sales（任意・展覧会のオンラインの売上 { total, after }＝LIAISON+ で取引が完了した作品代金と、そのうちアフターセール〔会期のあと、販売期間の中で申込があった分〕。会期の下に積む）,
      period（任意・展覧会の会期テキスト。名前の下段に積む＝独立列にしない。
        列にすると狭幅で展覧会名の表示幅が足りなくなるため・2026-09-02）,
      linkTarget（任意・記事の**投稿先**'exhibition'|'artwork'|'creator'|'gallery'。
@@ -3787,6 +3788,11 @@ KTN.insightList = (function () {
       /* 会期は独立列にせず名前の下段に積む（スマホで展覧会名の表示幅を確保するため・2026-09-02 差し戻し） */
       if (it.period) {
         main += '<span class="ins-item-list__period">' + it.period + '</span>';
+      }
+      /* 展覧会のオンラインの売上（LIAISON+ で取引が完了した作品代金・2026-10-15）。会期と同じく列にせず下段に積む（狭幅で展覧会名を読めるように） */
+      if (it.sales) {
+        main += '<span class="ins-item-list__sales">LIAISON+ で売れた額 <b>¥' + it.sales.total.toLocaleString('ja-JP') + '</b>' +
+          (it.sales.after ? '（うちアフターセール ¥' + it.sales.after.toLocaleString('ja-JP') + '）' : '') + '</span>';
       }
       var html = targetCell + '<div class="ins-item-list__main">' + main + '</div>';
       it.stats.forEach(function (s) { html += '<span class="ins-item-list__stat">' + s + '</span>'; });

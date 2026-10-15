@@ -240,7 +240,7 @@
               <span class="p211-sub-link__state">✓ 入力あり</span>
               <span class="p211-sub-link__opt">＋ 追加項目</span>
               <span class="p211-sub-link__arr"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" width="13" height="13"><path d="M3.5 5.25 7 8.75l3.5-3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-              <span class="p211-sub-link__benefit">タグ検索・タグ一覧から見つけてもらいやすくなり、英語タイトルは海外の方にも展覧会を伝えます。</span>
+              <span class="p211-sub-link__benefit">タグは展覧会のページに表示され、同じタグの展覧会の一覧につながります。英語タイトルは海外の方にも展覧会を伝えます。</span>
             </a>
             <div class="p211-acc-panel" id="p211AccBasicOpt" hidden>
               <div class="p211-field">
@@ -580,7 +580,7 @@
               <span class="p211-sub-link__state">✓ 入力あり</span>
               <span class="p211-sub-link__opt">＋ 追加項目</span>
               <span class="p211-sub-link__arr"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" width="13" height="13"><path d="M3.5 5.25 7 8.75l3.5-3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-              <span class="p211-sub-link__benefit">在廊日がカレンダーに表示されます。クリエイターに会えることは強い来場動機になります。</span>
+              <span class="p211-sub-link__benefit">在廊日がカレンダーに表示されます。「在廊あり」で展覧会を探している来場者の検索結果にも載ります。</span>
             </a>
             <div class="p211-acc-panel" id="p211AccAttend" hidden>
               <p class="p211-help" style="margin:0">在廊予定は確定している分だけ登録してください（任意・保存後もいつでも編集できます）。登録した日は展覧会ページのカレンダーに在廊表示が付きます。展覧会ページには「在廊日程は変更になる場合があります」の注意書きが表示されます。</p>
@@ -2275,7 +2275,7 @@ syncOptUI();
    「入力する →」でアコーディオンを開いて該当行までスクロールする。任意項目なので保存は止めない。 */
 var REMIND_ITEMS = [
   { sel: 'p211FacChild',  label: 'お子さま連れ',     hint: '「お子さまと行ける」で絞り込む来場者に届きます。同じ条件の特集ページにも掲載されます。' },
-  { sel: 'p211FacAttend', label: 'クリエイター在廊', hint: 'クリエイターに会えることは強い来場動機です。「在廊あり」で探している来場者に届きます。' }
+  { sel: 'p211FacAttend', label: 'クリエイター在廊', hint: '「在廊あり」で展覧会を探している来場者の検索結果と、同じ条件の特集ページに載ります。' }
 ];
 function remindJump(selId) {
   var panel = document.getElementById('p211AccFacility');
