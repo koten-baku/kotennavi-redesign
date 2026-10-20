@@ -268,7 +268,7 @@
 
           <div class="p211-field">
             <label class="p211-label">テンプレート名<span class="ktn-req">必須</span></label>
-            <input class="p211-input" type="text" id="p909FormName" placeholder="例：入力不足・入力誤り">
+            <input maxlength="40" data-count class="p211-input" type="text" id="p909FormName" placeholder="例：入力不足・入力誤り">
           </div>
 
           <div class="p211-field">
@@ -279,7 +279,7 @@
 
           <div class="p211-field">
             <label class="p211-label">件名<span class="ktn-req">必須</span></label>
-            <input class="p211-input" type="text" id="p909FormSubject" placeholder="例：【個展なび】{{roleName}}機能のご利用を開始いただけます">
+            <input maxlength="60" data-count class="p211-input" type="text" id="p909FormSubject" placeholder="例：【個展なび】{{roleName}}機能のご利用を開始いただけます">
           </div>
 
           <div class="p211-field">
@@ -297,7 +297,7 @@
 
           <div class="p211-field">
             <label class="p211-label">補足メモ</label>
-            <textarea class="p211-textarea" id="p909FormNote" rows="3" placeholder="いつ使うか、管理者向けの補足（送信画面には表示されません）"></textarea>
+            <textarea maxlength="500" data-count class="p211-textarea" id="p909FormNote" rows="3" placeholder="いつ使うか、管理者向けの補足（送信画面には表示されません）"></textarea>
           </div>
 
           <div class="p319-del-modal__actions">
@@ -316,7 +316,7 @@
 
           <div class="p211-field">
             <label class="p211-label">件名<span class="ktn-req">必須</span></label>
-            <input class="p211-input" type="text" id="p909AutoFormSubject" placeholder="例：【個展なび】クリエイター機能のお申込みを受け付けました">
+            <input maxlength="60" data-count class="p211-input" type="text" id="p909AutoFormSubject" placeholder="例：【個展なび】クリエイター機能のお申込みを受け付けました">
           </div>
 
           <div class="p211-field">
@@ -334,7 +334,7 @@
 
           <div class="p211-field">
             <label class="p211-label">補足メモ</label>
-            <textarea class="p211-textarea" id="p909AutoFormNote" rows="3" placeholder="起草時の注意点など管理者向けの補足"></textarea>
+            <textarea maxlength="500" data-count class="p211-textarea" id="p909AutoFormNote" rows="3" placeholder="起草時の注意点など管理者向けの補足"></textarea>
           </div>
 
           <div class="p319-del-modal__actions">
@@ -391,7 +391,7 @@
 
           <div class="p211-field">
             <label class="p211-label">件名</label>
-            <input class="p211-input" type="text" id="p909AutoNewSubject" placeholder="未定なら空欄のまま追加し、後から「編集」で起草できます">
+            <input maxlength="60" data-count class="p211-input" type="text" id="p909AutoNewSubject" placeholder="未定なら空欄のまま追加し、後から「編集」で起草できます">
           </div>
 
           <div class="p211-field">
@@ -408,7 +408,7 @@
 
           <div class="p211-field">
             <label class="p211-label">補足メモ</label>
-            <textarea class="p211-textarea" id="p909AutoNewNote" rows="3" placeholder="いつ使うか、管理者向けの補足"></textarea>
+            <textarea maxlength="500" data-count class="p211-textarea" id="p909AutoNewNote" rows="3" placeholder="いつ使うか、管理者向けの補足"></textarea>
           </div>
 
           <div class="p319-del-modal__actions">

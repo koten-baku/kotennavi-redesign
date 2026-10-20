@@ -32,10 +32,14 @@
   <button class="dbtn on" onclick="p26SetVariant('plus',this)">LIAISON+（作品リスト・価格あり）</button>
   <span class="dbar-sep">閲覧者：</span>
   <button class="dbtn on" onclick="p26SetViewer('owner',this)">出品者（オーナー）</button>
-  <button class="dbtn" onclick="p26SetViewer('visitor',this)">来場者（QR）</button>
+  <button class="dbtn" onclick="p26SetViewer('guest',this)">来場者（ゲスト）</button>
+  <button class="dbtn" onclick="p26SetViewer('login',this)">来場者（ログイン）</button>
   <span class="dbar-sep" style="margin-left:12px">受付：</span>
   <button class="dbtn on" data-camp-full onclick="ktnCampFullDemo(false,this)">受付中</button>
   <button class="dbtn" data-camp-full onclick="ktnCampFullDemo(true,this)">上限に達した</button>
+  <span class="dbar-sep" style="margin-left:12px">来場者のクーポン：</span>
+  <button class="dbtn on" data-qr-got onclick="ktnQrGotDemo(false,this)">まだ</button>
+  <button class="dbtn" data-qr-got onclick="ktnQrGotDemo(true,this)">受け取り済み</button>
 </div>
 
 <div class="shell">
@@ -124,8 +128,8 @@
         </button>
       </div>
 
-      <!-- 会場のクーポンの案内（来場者の表示のときだけ・印刷しない）。チェックインするとこの展覧会の作品に使えるクーポン。中身は pages.js KTN.CAMPAIGN（2026-10-12） -->
-      <div class="ktn-camp-banner" data-qr-banner hidden></div>
+      <!-- チェックインクーポンのバナー（来場者の表示のときだけ・印刷しない）。チェックインするとこの展覧会の作品購入で使えるクーポン。中身は pages.js KTN.CAMPAIGN（2026-10-12／10-19 キャンペーンのバナーに）。data-sale-end＝販売期間の終わり（本番は展覧会のデータ） -->
+      <div class="ktn-camp-hero ktn-camp-hero--on-warm p26-banner" data-qr-banner data-sale-end="2026.03.19" hidden></div>
 
       <!-- 印刷される本体シート -->
       <article class="p26-sheet">
@@ -174,6 +178,8 @@
               <rect x="29" y="38" width="4" height="4" fill="#231815"/>
             </svg>
             <span class="p26-sheet__qr-cap">スマホで一覧を見る</span>
+            <!-- チェックインクーポンの実施中だけ（LIAISON+ の作品リスト）：会場で気づけるよう印刷にも出す。中身は pages.js KTN.CAMPAIGN（2026-10-19） -->
+            <span class="p26-sheet__qr-camp" data-qr-print-camp hidden></span>
           </div>
           <div class="p26-sheet__contact">
             <div class="p26-sheet__contact-line"><span class="p26-sheet__contact-label">お問合せ</span>Gallery SOIL 渋谷 ／ <a href="mailto:info@gallery-soil.jp">info@gallery-soil.jp</a></div>
@@ -213,12 +219,16 @@
 
   /* デモ：閲覧者切替（2026-07-19 仕様）。上部の印刷案内ツールバーは出品者（展覧会オーナー）にのみ表示し、
      QRコードからアクセスした来場者には出さない。本番＝ログイン中ユーザーが展覧会オーナー（または管理者）の場合のみ表示 */
+  /* 閲覧者：owner＝出品者／guest＝ゲストの来場者（QR）／login＝ログインしている来場者（QR）（2026-10-19 にゲストとログインを分けた）。
+     ヘッダーの表示もそろえる（共通の curRole・renderAll） */
   function p26SetViewer(kind, btn) {
     var tb = document.querySelector('.p26-toolbar');
     if (tb) tb.style.display = (kind === 'owner') ? '' : 'none';
+    if (typeof curRole !== 'undefined' && typeof renderAll === 'function') { curRole = kind === 'owner' ? 'user+creator' : kind === 'login' ? 'login' : 'guest'; renderAll(); }
+    if (window.KTN && KTN.CAMPAIGN) { KTN.CAMPAIGN.DEMO.qrGuest = kind === 'guest'; }
     /* キャンペーンの案内は来場者にだけ出す（対象のキャンペーンが無いときは、中身が空なので出さない） */
     var bn = document.querySelector('[data-qr-banner]');
-    if (bn) { bn.dataset.viewer = kind; bn.hidden = kind === 'owner' || !bn.innerHTML; }
+    if (bn) { bn.dataset.viewer = kind === 'owner' ? 'owner' : 'visitor'; if (window.KTN && KTN.CAMPAIGN) KTN.CAMPAIGN.mount(); bn.hidden = kind === 'owner' || !bn.innerHTML; }
     if (btn) {
       btn.parentNode.querySelectorAll('[onclick^="p26SetViewer"]').forEach(function (b) { b.classList.remove('on'); });
       btn.classList.add('on');

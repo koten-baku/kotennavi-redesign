@@ -38,6 +38,9 @@
   <button class="dbtn" data-terms-demo="seller" onclick="ktnTermsDemo('seller','waiting',this)">適用中（展覧会の前）</button>
   <button class="dbtn" data-terms-demo="seller" onclick="ktnTermsDemo('seller','progress',this)">申込の審査中</button>
   <button class="dbtn" data-terms-demo="seller" onclick="ktnTermsDemo('seller','none',this)">なし</button>
+  <span class="dbar-sep">記念の割引：</span>
+  <button class="dbtn on" data-anniv-demo onclick="ktnAnnivDemo(false,this)">なし</button>
+  <button class="dbtn" data-anniv-demo onclick="ktnAnnivDemo(true,this)">実施中</button>
   <span class="dbar-sep" style="margin-left:12px">受付：</span>
   <button class="dbtn on" data-camp-full onclick="ktnCampFullDemo(false,this)">受付中</button>
   <button class="dbtn" data-camp-full onclick="ktnCampFullDemo(true,this)">上限に達した</button>
@@ -139,7 +142,7 @@
         <div class="ktn-mgmt-head">
           <h2 class="ktn-mgmt-head__title">キャンペーン・特典</h2>
           <p class="ktn-mgmt-head__en">CAMPAIGN &amp; BENEFITS</p>
-          <p class="ktn-mgmt-head__desc">あなたに適用される特典と、その条件を確認できます。特典は、条件を満たすと自動で適用され、取引ごとの金額は取引デスクと振込の明細に出ます。</p>
+          <p class="ktn-mgmt-head__desc">あなたに関係するキャンペーンを確認できます。サービス利用料が安くなるものと、購入者が使えるクーポンの2つに分けています。どちらも条件を満たすと自動で適用され、取引ごとの金額は取引デスクと振込の明細で確認できます。</p>
         </div>
 
         <div class="ktn-terms" data-terms="seller"></div>

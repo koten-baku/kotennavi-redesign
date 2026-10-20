@@ -76,7 +76,7 @@
     <button class="dbtn dbtn-p2own" onclick="setP2Own('none',this)">未投稿</button>
     <button class="dbtn dbtn-p2own" onclick="setP2Own('checkin',this)">チェックインのみ</button>
     <button class="dbtn dbtn-p2own on" onclick="setP2Own('review',this)">レビュー済</button>
-    <span class="dbar-sep" style="margin-left:8px">会場のクーポン：</span>
+    <span class="dbar-sep" style="margin-left:8px">チェックインクーポン：</span>
     <button class="dbtn" data-terms-demo="buyer" onclick="ktnTermsDemo('buyer','has',this)">受け取り済み</button>
     <button class="dbtn on" data-terms-demo="buyer" onclick="ktnTermsDemo('buyer','none',this)">まだ</button>
     <span class="dbar-sep" style="margin-left:8px">受付：</span>
@@ -654,7 +654,7 @@
               </div>
 
               <!-- チェックイン&レビュー（日本語先・review-item形式） -->
-              <div class="p2-visitor" id="p2VisitorSection">
+              <div class="p2-visitor ktn-index-target" id="p2VisitorSection">
                 <div class="p2-visitor__head">
                   <div>
                     <span class="p2-visitor__title-ja">チェックイン&amp;レビュー</span>
@@ -663,6 +663,8 @@
                   <span class="p2-visitor__count" id="p2RvCount">4件</span>
                 </div>
                 <div id="p2ReviewList"></div>
+                <!-- チェックインクーポンの案内（実施中・LIAISON+ の展覧会だけ。中身は pages.js KTN.CAMPAIGN・2026-10-19） -->
+                <p class="p2-visitor__camp" data-checkin-camp hidden></p>
                 <div class="p2-visitor__action">
                   <button class="ktn-btn ktn-btn--primary ktn-btn--lg p2-visitor__checkin-btn" id="p2RvBtn"
                     onclick="openCheckinModal()">
@@ -948,7 +950,7 @@
   <script src="./kotennavi-common.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="./kotennavi-pages.js"></script>
-  <script>/* デモ：このページでは、会場のクーポンを「まだ受け取っていない」状態から始める（チェックインで受け取る流れを確かめるため） */ if (window.KTN && KTN.CAMPAIGN) KTN.CAMPAIGN.DEMO.buyer.state = 'none';</script>
+  <script>/* デモ：このページでは、チェックインクーポンを「まだ受け取っていない」状態から始める（チェックインで受け取る流れを確かめるため） */ if (window.KTN && KTN.CAMPAIGN) KTN.CAMPAIGN.DEMO.buyer.state = 'none';</script>
   <script>
     /* データ定義 → KTN.init() の順 */
     window.P2_SLIDES = [

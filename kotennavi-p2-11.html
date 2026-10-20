@@ -199,13 +199,13 @@
           <!-- タイトル -->
           <div class="p211-field">
             <label class="p211-label">展覧会タイトル<span class="ktn-req">必須</span></label>
-            <input class="p211-input" type="text" id="p211Title" value="松田啓佑展［仮称］" placeholder="例：田中透 個展">
+            <input maxlength="240" data-count class="p211-input" type="text" id="p211Title" value="松田啓佑展［仮称］" placeholder="例：田中透 個展">
           </div>
 
           <!-- タイトル読み -->
           <div class="p211-field">
             <label class="p211-label">展覧会タイトル読み（カナ）<span class="ktn-req">必須</span></label>
-            <input class="p211-input" type="text" id="p211Kana" value="マツダケイスケテン（カショウ）" placeholder="全角カタカナ">
+            <input maxlength="400" data-count class="p211-input" type="text" id="p211Kana" value="マツダケイスケテン（カショウ）" placeholder="全角カタカナ">
           </div>
 
           <!-- 展覧会タイプ -->
@@ -249,14 +249,14 @@
                   <span class="p211-tag">絵画<button class="p211-tag__del" onclick="this.closest('.p211-tag').remove()" type="button">✕</button></span>
                   <span class="p211-tag">油彩<button class="p211-tag__del" onclick="this.closest('.p211-tag').remove()" type="button">✕</button></span>
                   <span class="p211-tag">セラミック<button class="p211-tag__del" onclick="this.closest('.p211-tag').remove()" type="button">✕</button></span>
-                  <input class="p211-tag-input" id="p211TagInput" type="text" placeholder="タグを入力してEnter">
+                  <input maxlength="20" data-count class="p211-tag-input" id="p211TagInput" type="text" placeholder="タグを入力してEnter">
                   <span class="p211-tag-hint">半角スペース区切り</span>
                 </div>
                 <p class="p211-help">展示作品カテゴリーを表すハッシュタグの単語を入力してください。入力すると、すでに使われているタグが候補に出ます（候補に無い言葉もそのまま追加できます）。タグは展覧会のページに表示され、押すと同じタグの展覧会の一覧につながります。</p>
               </div>
               <div class="p211-field">
                 <label class="p211-label">展覧会タイトル（英語）</label>
-                <input class="p211-input" type="text" id="p211TitleEn" value="solo exhibition Keisuke Matsuda" placeholder="English title (optional)">
+                <input maxlength="400" data-count class="p211-input" type="text" id="p211TitleEn" value="solo exhibition Keisuke Matsuda" placeholder="English title (optional)">
               </div>
             </div>
           </div>
@@ -273,7 +273,7 @@
 
           <div class="p211-field">
             <label class="p211-label">展覧会説明</label>
-            <textarea class="p211-textarea p211-textarea--tall">約20年の軌跡を辿るミッドキャリア・レトロスペクティヴ。ペインティングからセラミックへと広がる表現の変遷。
+            <textarea maxlength="3000" data-count class="p211-textarea p211-textarea--tall">約20年の軌跡を辿るミッドキャリア・レトロスペクティヴ。ペインティングからセラミックへと広がる表現の変遷。
 
 松田は1984年群馬県に生まれ、京都市立芸術大学大学院美術研究科絵画専攻（油画）を修了したのち、現在は京都を拠点に活動しています。
 
@@ -283,7 +283,7 @@
 
           <div class="p211-field">
             <label class="p211-label">お問合せ先<span class="ktn-req">必須</span></label>
-            <textarea class="p211-textarea" style="min-height:60px" placeholder="メールアドレス、電話番号、担当者名など">art@yugen-gallery.com（担当：山本）
+            <textarea maxlength="500" data-count class="p211-textarea" style="min-height:60px" placeholder="メールアドレス、電話番号、担当者名など">art@yugen-gallery.com（担当：山本）
 03-XXXX-XXXX（12:00〜19:00／会期中のみ）</textarea>
             <p class="p211-help">サイト利用者からお問合せいただく場合の連絡先をご記入ください。</p>
           </div>
@@ -301,15 +301,15 @@
             <div class="p211-acc-panel" id="p211AccDescOpt" hidden>
               <div class="p211-field">
                 <label class="p211-label">関連イベント</label>
-                <textarea class="p211-textarea" placeholder="レセプション、トークイベント、ワークショップなどの予定・参加方法などをご記入ください。"></textarea>
+                <textarea maxlength="500" data-count class="p211-textarea" placeholder="レセプション、トークイベント、ワークショップなどの予定・参加方法などをご記入ください。"></textarea>
               </div>
               <div class="p211-field">
                 <label class="p211-label">主催・協賛・協力など</label>
-                <textarea class="p211-textarea" style="min-height:60px" placeholder="主催、協賛、協力など"></textarea>
+                <textarea maxlength="500" data-count class="p211-textarea" style="min-height:60px" placeholder="主催、協賛、協力など"></textarea>
               </div>
               <div class="p211-field">
                 <label class="p211-label">関連情報</label>
-                <textarea class="p211-textarea" style="min-height:60px" placeholder="その他展覧会に関連する情報があればご記入ください。"></textarea>
+                <textarea maxlength="500" data-count class="p211-textarea" style="min-height:60px" placeholder="その他展覧会に関連する情報があればご記入ください。"></textarea>
               </div>
               <div class="p211-field">
                 <label class="p211-label">ウェブリンク</label>
@@ -341,7 +341,7 @@
                     <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" width="12" height="12"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg>
                   </button>
                 </div>
-                <input type="text" class="p211-img-caption" maxlength="60" placeholder="キャプション（任意）例：会場エントランス" value="松田啓佑展「Slippage」メインビジュアル">
+                <input type="text" class="p211-img-caption" maxlength="60" data-count placeholder="キャプション（任意）例：会場エントランス" value="松田啓佑展「Slippage」メインビジュアル">
               </div>
             </div>
             <div class="p211-img-drop" id="p211MainDrop" onclick="document.getElementById('p211MainFile').click()">
@@ -378,7 +378,7 @@
                           <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" width="12" height="12"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg>
                         </button>
                       </div>
-                      <input type="text" class="p211-img-caption" maxlength="60" placeholder="キャプション（任意）" value="展示風景（YUGEN Gallery 1F）">
+                      <input type="text" class="p211-img-caption" maxlength="60" data-count placeholder="キャプション（任意）" value="展示風景（YUGEN Gallery 1F）">
                     </div>
                   </div>
                   <div class="p211-img-uploaded">
@@ -393,7 +393,7 @@
                           <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" width="12" height="12"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg>
                         </button>
                       </div>
-                      <input type="text" class="p211-img-caption" maxlength="60" placeholder="キャプション（任意）" value="オープニングの様子">
+                      <input type="text" class="p211-img-caption" maxlength="60" data-count placeholder="キャプション（任意）" value="オープニングの様子">
                     </div>
                   </div>
                 </div>
@@ -453,7 +453,7 @@
 
           <div class="p211-field">
             <label class="p211-label">スケジュール補足</label>
-            <textarea class="p211-textarea" style="min-height:60px" placeholder="例：入場は閉場30分前まで／祝日はオープン・祝翌日はクローズ">入場は閉場の30分前まで</textarea>
+            <textarea maxlength="500" data-count class="p211-textarea" style="min-height:60px" placeholder="例：入場は閉場30分前まで／祝日はオープン・祝翌日はクローズ">入場は閉場の30分前まで</textarea>
             <p class="p211-help">カレンダーには反映されない補足情報があれば入力してください（展覧会ページに文章として表示されます）。</p>
           </div>
 
@@ -514,16 +514,16 @@
                   </div>
                   <div class="p211-event-item__field">
                     <label class="p211-label">タイトル</label>
-                    <input class="p211-input" type="text" value="作家によるギャラリートーク">
+                    <input maxlength="60" data-count class="p211-input" type="text" value="作家によるギャラリートーク">
                   </div>
                   <div style="display:flex;gap:10px;flex-wrap:wrap">
                     <div class="p211-event-item__field" style="flex:1;min-width:200px">
                       <label class="p211-label">時間</label>
-                      <input class="p211-input" type="text" value="15:00〜16:30" placeholder="例：①11:00〜 ②14:00〜（各回60分）">
+                      <input maxlength="60" data-count class="p211-input" type="text" value="15:00〜16:30" placeholder="例：①11:00〜 ②14:00〜（各回60分）">
                     </div>
                     <div class="p211-event-item__field" style="flex:1;min-width:200px">
                       <label class="p211-label">場所</label>
-                      <input class="p211-input" type="text" placeholder="未入力の場合は展覧会の会場">
+                      <input maxlength="60" data-count class="p211-input" type="text" placeholder="未入力の場合は展覧会の会場">
                     </div>
                   </div>
                   <div class="p211-event-item__field">
@@ -532,7 +532,7 @@
                   </div>
                   <div class="p211-event-item__field">
                     <label class="p211-label">説明</label>
-                    <textarea class="p211-textarea" style="min-height:48px" placeholder="参加方法・定員・料金など">参加無料・要予約（定員15名）。ギャラリーへお電話でご予約ください。</textarea>
+                    <textarea maxlength="500" data-count class="p211-textarea" style="min-height:48px" placeholder="参加方法・定員・料金など">参加無料・要予約（定員15名）。ギャラリーへお電話でご予約ください。</textarea>
                   </div>
                 </div>
                 <div class="p211-event-item">
@@ -548,16 +548,16 @@
                   </div>
                   <div class="p211-event-item__field">
                     <label class="p211-label">タイトル</label>
-                    <input class="p211-input" type="text" value="ドローイング・ワークショップ">
+                    <input maxlength="60" data-count class="p211-input" type="text" value="ドローイング・ワークショップ">
                   </div>
                   <div style="display:flex;gap:10px;flex-wrap:wrap">
                     <div class="p211-event-item__field" style="flex:1;min-width:200px">
                       <label class="p211-label">時間</label>
-                      <input class="p211-input" type="text" value="①11:00〜 ②14:00〜 ③16:00〜（各回60分）" placeholder="例：①11:00〜 ②14:00〜（各回60分）">
+                      <input maxlength="60" data-count class="p211-input" type="text" value="①11:00〜 ②14:00〜 ③16:00〜（各回60分）" placeholder="例：①11:00〜 ②14:00〜（各回60分）">
                     </div>
                     <div class="p211-event-item__field" style="flex:1;min-width:200px">
                       <label class="p211-label">場所</label>
-                      <input class="p211-input" type="text" placeholder="未入力の場合は展覧会の会場">
+                      <input maxlength="60" data-count class="p211-input" type="text" placeholder="未入力の場合は展覧会の会場">
                     </div>
                   </div>
                   <div class="p211-event-item__field">
@@ -566,7 +566,7 @@
                   </div>
                   <div class="p211-event-item__field">
                     <label class="p211-label">説明</label>
-                    <textarea class="p211-textarea" style="min-height:48px" placeholder="参加方法・定員・料金など">各回定員8名・参加費500円・当日受付。</textarea>
+                    <textarea maxlength="500" data-count class="p211-textarea" style="min-height:48px" placeholder="参加方法・定員・料金など">各回定員8名・参加費500円・当日受付。</textarea>
                   </div>
                 </div>
               </div>
@@ -587,7 +587,7 @@
               <div class="p211-field" style="margin:0">
                 <div id="p211AttList">
                   <div class="p211-exc-row">
-                    <input type="text" value="松田 啓佑" placeholder="クリエイター名" style="width:140px">
+                    <input maxlength="40" data-count type="text" value="松田 啓佑" placeholder="クリエイター名" style="width:140px">
                     <input type="date" value="2026-06-20">
                     <span class="p211-exc-row__sep">〜</span>
                     <input type="date" value="2026-07-20">
@@ -604,7 +604,7 @@
                       <option value="sat">土曜</option>
                       <option value="sun">日曜</option>
                     </select>
-                    <input type="text" value="午後在廊予定" placeholder="メモ（例：午後のみ）" style="width:160px">
+                    <input maxlength="40" data-count type="text" value="午後在廊予定" placeholder="メモ（例：午後のみ）" style="width:160px">
                     <button class="p211-exc-row__del" type="button" title="削除" onclick="delExcRow(this)">✕</button>
                   </div>
                 </div>
@@ -627,7 +627,7 @@
           <div class="p211-field">
             <label class="p211-label">開催場所<span class="ktn-req">必須</span></label>
             <div class="p211-combo" id="p211VenueCombo">
-              <input class="p211-input" type="text" id="p211Venue" value="YUGEN Gallery" placeholder="会場名を入力（登録済みの会場は候補から選択）" autocomplete="off">
+              <input maxlength="60" data-count class="p211-input" type="text" id="p211Venue" value="YUGEN Gallery" placeholder="会場名を入力（登録済みの会場は候補から選択）" autocomplete="off">
               <div class="p211-combo__list" id="p211VenueComboList" hidden></div>
             </div>
             <p class="p211-help" id="p211VenueHelp">ギャラリーユーザーの方はご自身のギャラリーが設定されています。別会場の場合は、登録済みの会場を候補から選択するか、新しい会場名を直接入力してください。同名の会場は候補の「確認 ↗」で会場ページを開き、確かめてから選択できます。</p>
@@ -666,7 +666,7 @@
               <p class="p211-help" style="margin:0">候補から選択した会場は登録済みの情報が使用されるため、入力は不要です。新しい会場の場合、または登録済みの会場でも住所などに変更がある場合にご記入ください。</p>
               <div class="p211-field" id="p211VenueKanaField">
                 <label class="p211-label">場所名読み（カナ）<span class="ktn-req" id="p211VenueKanaReq" hidden>必須</span></label>
-                <input class="p211-input" type="text" value="ユウゲンギャラリー" placeholder="全角カタカナ">
+                <input maxlength="120" data-count class="p211-input" type="text" value="ユウゲンギャラリー" placeholder="全角カタカナ">
               </div>
               <div class="p211-field" id="p211VenueAddrField">
                 <label class="p211-label">住所<span class="ktn-req" id="p211VenueAddrReq" hidden>必須</span></label>
@@ -688,7 +688,7 @@
               </div>
               <div class="p211-field">
                 <label class="p211-label">最寄り駅・アクセス</label>
-                <textarea class="p211-textarea" style="min-height:60px" placeholder="最寄り駅からの経路・所要時間などをご記入ください。">JR「原宿」駅 竹下口より徒歩8分／東京メトロ「明治神宮前」駅 5番出口より徒歩5分</textarea>
+                <textarea maxlength="500" data-count class="p211-textarea" style="min-height:60px" placeholder="最寄り駅からの経路・所要時間などをご記入ください。">JR「原宿」駅 竹下口より徒歩8分／東京メトロ「明治神宮前」駅 5番出口より徒歩5分</textarea>
               </div>
               <div class="p211-field">
                 <label class="p211-label">電話番号</label>
@@ -708,7 +708,7 @@
               </div>
               <div class="p211-field">
                 <label class="p211-label">利用案内・その他情報</label>
-                <textarea class="p211-textarea" style="min-height:60px" placeholder="営業時間・定休日、入館方法、バリアフリー対応、駐車場の有無など"></textarea>
+                <textarea maxlength="500" data-count class="p211-textarea" style="min-height:60px" placeholder="営業時間・定休日、入館方法、バリアフリー対応、駐車場の有無など"></textarea>
               </div>
               <p class="p211-help" style="margin:0">入力した情報をもとに、管理者が展覧会の確認時に開催場所ページを作成または編集（すでに登録済みのページがある場合）し、この展覧会情報に反映します。</p>
             </div>
@@ -748,7 +748,7 @@
               </div>
             </div>
             <div class="p211-facility-detail" id="p211FacBonusDetail" hidden>
-              <textarea class="p211-textarea" style="min-height:60px" placeholder="特典の内容・受け取り方法などをご記入ください。"></textarea>
+              <textarea maxlength="500" data-count class="p211-textarea" style="min-height:60px" placeholder="特典の内容・受け取り方法などをご記入ください。"></textarea>
             </div>
           </div>
 
@@ -766,7 +766,7 @@
               </div>
             </div>
             <div class="p211-facility-detail" id="p211FacPhotoDetail">
-              <textarea class="p211-textarea" style="min-height:60px" placeholder="例：撮影した画像はSNS等でぜひ拡散してください。その際は #展覧会名 のハッシュタグをつけてご投稿ください。">撮影した画像のSNS拡散歓迎です。#松田啓佑展 #YUGENGallery のタグをつけてご投稿ください。</textarea>
+              <textarea maxlength="500" data-count class="p211-textarea" style="min-height:60px" placeholder="例：撮影した画像はSNS等でぜひ拡散してください。その際は #展覧会名 のハッシュタグをつけてご投稿ください。">撮影した画像のSNS拡散歓迎です。#松田啓佑展 #YUGENGallery のタグをつけてご投稿ください。</textarea>
             </div>
           </div>
 
@@ -783,7 +783,7 @@
               </div>
             </div>
             <div class="p211-facility-detail" id="p211FacAttendDetail">
-              <textarea class="p211-textarea" style="min-height:60px" placeholder="在廊日・時間をご記入ください。">松田啓佑：6/20（土）・6/21（日）・最終日7/20（月祝）終日在廊予定</textarea>
+              <textarea maxlength="500" data-count class="p211-textarea" style="min-height:60px" placeholder="在廊日・時間をご記入ください。">松田啓佑：6/20（土）・6/21（日）・最終日7/20（月祝）終日在廊予定</textarea>
             </div>
           </div>
 
@@ -800,7 +800,7 @@
               </div>
             </div>
             <div class="p211-facility-detail" id="p211FacEntryDetail" hidden>
-              <textarea class="p211-textarea" id="p211FacEntryNote" style="min-height:60px" placeholder="入場料に関して来場者にお伝えすることがあればご記入ください。"></textarea>
+              <textarea maxlength="500" data-count class="p211-textarea" id="p211FacEntryNote" style="min-height:60px" placeholder="入場料に関して来場者にお伝えすることがあればご記入ください。"></textarea>
             </div>
           </div>
 
@@ -817,7 +817,7 @@
               </div>
             </div>
             <div class="p211-facility-detail" id="p211FacSaleDetail">
-              <textarea class="p211-textarea" style="min-height:60px" placeholder="作品販売に関して来場者にお伝えすることがあればご記入ください。"></textarea>
+              <textarea maxlength="500" data-count class="p211-textarea" style="min-height:60px" placeholder="作品販売に関して来場者にお伝えすることがあればご記入ください。"></textarea>
               <div class="p211-facility-price">
                 <span>最低価格（税込）：</span>
                 <input type="number" placeholder="例：30000" value="30000">
@@ -840,7 +840,7 @@
               </div>
             </div>
             <div class="p211-facility-detail" id="p211FacChildDetail" hidden>
-              <textarea class="p211-textarea" style="min-height:60px" placeholder="お子さま連れのご来場者にお伝えすることをご記入ください。"></textarea>
+              <textarea maxlength="500" data-count class="p211-textarea" style="min-height:60px" placeholder="お子さま連れのご来場者にお伝えすることをご記入ください。"></textarea>
             </div>
           </div>
 
@@ -1090,7 +1090,7 @@
             <!-- 管理者コメント -->
             <div class="p211-field">
               <label class="p211-label">管理者コメント</label>
-              <textarea class="p211-textarea" style="min-height:70px" placeholder="管理用のコメント（サイトには表示されません）"></textarea>
+              <textarea maxlength="500" data-count class="p211-textarea" style="min-height:70px" placeholder="管理用のコメント（サイトには表示されません）"></textarea>
             </div>
           </div>
 
@@ -1124,7 +1124,7 @@
           <span class="ktn-admin-note__title">管理者コメント</span>
         </div>
         <p class="ktn-admin-note__desc">管理上の対応履歴・申し送りを記録します。管理者のみが閲覧できます。</p>
-        <textarea class="ktn-admin-note__textarea" id="p211AdminComment" placeholder="例：2026-07-20 会期の表記に誤りがあるため確認依頼。"></textarea>
+        <textarea maxlength="500" data-count class="ktn-admin-note__textarea" id="p211AdminComment" placeholder="例：2026-07-20 会期の表記に誤りがあるため確認依頼。"></textarea>
       </div>
 
       <!-- 送信バー（sticky） -->
@@ -1505,8 +1505,8 @@ function renderArtists() {
                 return '<div class="p211-artist-detail__field">' +
                   '<label class="p211-label">' + f.label + '</label>' +
                   (f.type === 'textarea'
-                    ? '<textarea class="p211-textarea" style="min-height:60px" placeholder="' + f.ph + '" oninput="updArtistField(' + i + ',\'' + f.key + '\',this.value)">' + v + '</textarea>'
-                    : '<input class="p211-input" type="text" placeholder="' + f.ph + '" value="' + v + '" oninput="updArtistField(' + i + ',\'' + f.key + '\',this.value)">') +
+                    ? '<textarea maxlength="500" data-count class="p211-textarea" style="min-height:60px" placeholder="' + f.ph + '" oninput="updArtistField(' + i + ',\'' + f.key + '\',this.value)">' + v + '</textarea>'
+                    : '<input maxlength="60" data-count class="p211-input" type="text" placeholder="' + f.ph + '" value="' + v + '" oninput="updArtistField(' + i + ',\'' + f.key + '\',this.value)">') +
                   '</div>';
               }).join('') +
               '</div>';
@@ -1638,12 +1638,12 @@ function addEventRow() {
     '<input type="date">' +
     '<select class="p211-select" style="width:auto"><option>トーク</option><option>ワークショップ</option><option>レセプション</option><option>その他</option></select>' +
     '<button class="p211-exc-row__del" type="button" title="削除" onclick="delEventRow(this)" style="margin-left:auto">✕</button></div>' +
-    '<div class="p211-event-item__field"><label class="p211-label">タイトル</label><input class="p211-input" type="text" placeholder="例：クリエイターによるギャラリートーク"></div>' +
+    '<div class="p211-event-item__field"><label class="p211-label">タイトル</label><input maxlength="60" data-count class="p211-input" type="text" placeholder="例：クリエイターによるギャラリートーク"></div>' +
     '<div style="display:flex;gap:10px;flex-wrap:wrap">' +
-      '<div class="p211-event-item__field" style="flex:1;min-width:200px"><label class="p211-label">時間</label><input class="p211-input" type="text" placeholder="例：①11:00〜 ②14:00〜（各回60分）"></div>' +
-      '<div class="p211-event-item__field" style="flex:1;min-width:200px"><label class="p211-label">場所</label><input class="p211-input" type="text" placeholder="未入力の場合は展覧会の会場"></div></div>' +
+      '<div class="p211-event-item__field" style="flex:1;min-width:200px"><label class="p211-label">時間</label><input maxlength="60" data-count class="p211-input" type="text" placeholder="例：①11:00〜 ②14:00〜（各回60分）"></div>' +
+      '<div class="p211-event-item__field" style="flex:1;min-width:200px"><label class="p211-label">場所</label><input maxlength="60" data-count class="p211-input" type="text" placeholder="未入力の場合は展覧会の会場"></div></div>' +
     '<div class="p211-event-item__field"><label class="p211-label">詳細・申込URL</label><input class="p211-input" type="url" placeholder="https://"></div>' +
-    '<div class="p211-event-item__field"><label class="p211-label">説明</label><textarea class="p211-textarea" style="min-height:48px" placeholder="参加方法・定員・料金など"></textarea></div>';
+    '<div class="p211-event-item__field"><label class="p211-label">説明</label><textarea maxlength="500" data-count class="p211-textarea" style="min-height:48px" placeholder="参加方法・定員・料金など"></textarea></div>';
   list.appendChild(item);
 }
 function delEventRow(btn) {
@@ -1657,10 +1657,10 @@ function addAttRow() {
   if (!list) return;
   var row = document.createElement('div');
   row.className = 'p211-exc-row is-added';
-  row.innerHTML = '<input type="text" placeholder="クリエイター名" style="width:140px">' +
+  row.innerHTML = '<input maxlength="40" data-count type="text" placeholder="クリエイター名" style="width:140px">' +
     '<input type="date"><span class="p211-exc-row__sep">〜</span><input type="date">' +
     '<select class="p211-select">' + EXC_DAY_OPTS + '</select>' +
-    '<input type="text" placeholder="メモ（例：午後のみ）" style="width:160px">' +
+    '<input maxlength="40" data-count type="text" placeholder="メモ（例：午後のみ）" style="width:160px">' +
     '<button class="p211-exc-row__del" type="button" title="削除" onclick="delExcRow(this)">✕</button>';
   list.appendChild(row);
 }
@@ -2035,7 +2035,7 @@ var restoreMainImage, syncSubImgCount;
                 '<span class="p211-img-uploaded__name">' + escHtml(f.name) + '</span>' +
                 '<button class="p211-img-uploaded__del" type="button" title="削除"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" width="12" height="12"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg></button>' +
               '</div>' +
-              '<input type="text" class="p211-img-caption" maxlength="60" placeholder="キャプション（任意）">' +
+              '<input type="text" class="p211-img-caption" maxlength="60" data-count placeholder="キャプション（任意）">' +
             '</div>';
           subList.appendChild(row);
           bindSubDelete(row);

@@ -203,7 +203,7 @@
             <!-- ニックネーム -->
             <div class="p211-field" id="p511NicknameField">
               <label class="p211-label" for="p511Nickname">ニックネーム<span class="ktn-req">必須</span></label>
-              <input class="p211-input" id="p511Nickname" type="text" value="山田 花子" maxlength="30" autocomplete="nickname">
+              <input data-count class="p211-input" id="p511Nickname" type="text" value="山田 花子" maxlength="30" autocomplete="nickname">
               <p class="p211-help">サイト内のユーザーカードやユーザーページに表示されます。最大30文字。ユーザー新規登録時はメールアドレスの@より前が入っています。</p>
             </div>
 
@@ -227,7 +227,7 @@
             <!-- 自己紹介 -->
             <div class="p211-field">
               <label class="p211-label" for="p511Bio">自己紹介</label>
-              <textarea class="p211-textarea" id="p511Bio">展覧会めぐりが趣味で、特に現代アートと写真展が好きです。いつか作家さんを支援できるようになりたいと思っています。</textarea>
+              <textarea maxlength="1000" data-count class="p211-textarea" id="p511Bio">展覧会めぐりが趣味で、特に現代アートと写真展が好きです。いつか作家さんを支援できるようになりたいと思っています。</textarea>
               <p class="p211-help">最大400文字。ユーザーページに表示されます。</p>
             </div>
 
@@ -278,7 +278,7 @@
             <span class="ktn-admin-note__title">管理者コメント</span>
           </div>
           <p class="ktn-admin-note__desc">管理上の対応履歴・申し送りを記録します。管理者のみが閲覧できます。</p>
-          <textarea class="ktn-admin-note__textarea" id="p511AdminComment" placeholder="例：2026-07-20 不適切な自己紹介文について注意喚起。"></textarea>
+          <textarea maxlength="500" data-count class="ktn-admin-note__textarea" id="p511AdminComment" placeholder="例：2026-07-20 不適切な自己紹介文について注意喚起。"></textarea>
         </div>
 
         <!-- 送信バー -->

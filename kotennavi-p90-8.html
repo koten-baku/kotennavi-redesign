@@ -147,14 +147,14 @@
             <!-- ギャラリー名 -->
             <div class="p211-field">
               <label class="p211-label" for="p908Name">ギャラリー名<span class="ktn-req">必須</span></label>
-              <input class="p211-input" id="p908Name" type="text" placeholder="例：Gallery MIZUNE">
+              <input maxlength="40" data-count class="p211-input" id="p908Name" type="text" placeholder="例：Gallery MIZUNE">
               <p class="p211-help">ギャラリーページの見出しに表示される名前です。</p>
             </div>
 
             <!-- フリガナ -->
             <div class="p211-field">
               <label class="p211-label" for="p908NameKana">フリガナ</label>
-              <input class="p211-input" id="p908NameKana" type="text" placeholder="例：ギャラリー ミズネ">
+              <input maxlength="60" data-count class="p211-input" id="p908NameKana" type="text" placeholder="例：ギャラリー ミズネ">
             </div>
 
             <!-- 所在地・アクセス -->
@@ -167,13 +167,13 @@
             <!-- 営業時間 -->
             <div class="p211-field">
               <label class="p211-label" for="p908Hours">営業時間</label>
-              <input class="p211-input" id="p908Hours" type="text" placeholder="例：11:00〜19:00（月曜休廊）">
+              <input maxlength="60" data-count class="p211-input" id="p908Hours" type="text" placeholder="例：11:00〜19:00（月曜休廊）">
             </div>
 
             <!-- 紹介文 -->
             <div class="p211-field">
               <label class="p211-label" for="p908Bio">紹介文</label>
-              <textarea class="p211-textarea" id="p908Bio" placeholder="ギャラリーの活動概要・特徴など"></textarea>
+              <textarea maxlength="3000" data-count class="p211-textarea" id="p908Bio" placeholder="ギャラリーの活動概要・特徴など"></textarea>
               <p class="p211-help">ギャラリー情報セクションに表示されます。未入力でも作成できます。</p>
             </div>
 

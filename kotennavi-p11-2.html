@@ -235,19 +235,19 @@
 
             <div class="p211-field">
               <label class="p211-label">クリエイター名（表示名・活動名）<span class="ktn-req">必須</span></label>
-              <input class="p211-input" id="p112Name" type="text" placeholder="例：田中 透">
+              <input maxlength="40" data-count class="p211-input" id="p112Name" type="text" placeholder="例：田中 透">
               <p class="p211-help">クリエイターページや展覧会情報に表示される名前です。本名・活動名のいずれでも構いませんが、<strong>個人名でご登録ください（企業・団体・グループ・展覧会名では登録できません）</strong>。</p>
             </div>
 
             <div class="p211-field">
               <label class="p211-label">クリエイター名（全角カナ）<span class="ktn-req">必須</span></label>
-              <input class="p211-input" id="p112Kana" type="text" placeholder="例：タナカ トオル">
+              <input maxlength="60" data-count class="p211-input" id="p112Kana" type="text" placeholder="例：タナカ トオル">
               <p class="p211-help">表示名の読み仮名です。並び替え・検索に使用します。</p>
             </div>
 
             <div class="p211-field">
               <label class="p211-label">クリエイター名（英語表記）</label>
-              <input class="p211-input" id="p112Romaji" type="text" placeholder="例：Toru Tanaka">
+              <input maxlength="80" data-count class="p211-input" id="p112Romaji" type="text" placeholder="例：Toru Tanaka">
               <p class="p211-help">英語ページ・海外向け表示に使用します（任意）。</p>
             </div>
 
@@ -426,7 +426,7 @@
           <div class="p211-block__body">
             <div class="p211-field">
               <label class="p211-label">事務局への連絡事項（任意）</label>
-              <textarea class="p211-textarea" id="p112Notes" rows="3" placeholder="例：過去の主な展覧会歴、制作している作品の説明、今後の展覧会の予定、活動を確認できる情報、その他伝えておきたいこと など"></textarea>
+              <textarea maxlength="1000" data-count class="p211-textarea" id="p112Notes" rows="3" placeholder="例：過去の主な展覧会歴、制作している作品の説明、今後の展覧会の予定、活動を確認できる情報、その他伝えておきたいこと など"></textarea>
             </div>
           </div>
         </div>

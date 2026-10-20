@@ -151,7 +151,7 @@
             <span class="ktn-admin-note__title">管理者コメント</span>
           </div>
           <p class="ktn-admin-note__desc">申込者には表示されません（内部の引き継ぎメモ）。</p>
-          <textarea class="ktn-admin-note__textarea" id="p9011AdminNote" placeholder="確認事項・引き継ぎメモなど"></textarea>
+          <textarea maxlength="500" data-count class="ktn-admin-note__textarea" id="p9011AdminNote" placeholder="確認事項・引き継ぎメモなど"></textarea>
         </div>
 
         <!-- 処理結果（本人確認OK＝Stripeオンボーディング状況／差し戻し＝差し戻し内容。P90-2の#p902ReviewResultと同じ位置
@@ -167,7 +167,7 @@
             <select class="p902-flow-panel__input" id="p9011InquiryReasonSel"></select>
           </div>
           <div class="p902-flow-panel__row p902-flow-panel__new-row" id="p9011InquiryNewNameRow" hidden>
-            <input type="text" class="p902-flow-panel__input" id="p9011InquiryNewName" placeholder="新しいテンプレート名" autocomplete="off">
+            <input maxlength="40" data-count type="text" class="p902-flow-panel__input" id="p9011InquiryNewName" placeholder="新しいテンプレート名" autocomplete="off">
             <button type="button" class="ktn-op-btn ktn-op-btn--sm" id="p9011InquiryNewSaveBtn">テンプレートとして保存</button>
           </div>
           <label class="p902-flow-panel__label" for="p9011InquiryFrom">送信元</label>
@@ -176,7 +176,7 @@
           </div>
           <label class="p902-flow-panel__label" for="p9011InquirySubject">件名</label>
           <div class="p902-flow-panel__row">
-            <input type="text" class="p902-flow-panel__input" id="p9011InquirySubject">
+            <input maxlength="60" data-count type="text" class="p902-flow-panel__input" id="p9011InquirySubject">
           </div>
           <textarea class="p902-flow-panel__textarea" id="p9011InquiryBody" rows="10"></textarea>
           <p class="p902-flow-panel__hint">本文を確認・編集のうえ送信してください。送信後は一覧に「確認中（返信待ち）」の注記が表示されます。</p>
@@ -206,7 +206,7 @@
           <p class="p902-flow-panel__hint">本文はチェックの有無に関わらず確認・編集できます。実際に送信する場合のみ上のチェックを入れてください。</p>
           <div id="p9011CancelMailFields" hidden>
             <div class="p902-flow-panel__row p902-flow-panel__new-row" id="p9011CancelNewNameRow" hidden>
-              <input type="text" class="p902-flow-panel__input" id="p9011CancelNewName" placeholder="新しいテンプレート名" autocomplete="off">
+              <input maxlength="40" data-count type="text" class="p902-flow-panel__input" id="p9011CancelNewName" placeholder="新しいテンプレート名" autocomplete="off">
               <button type="button" class="ktn-op-btn ktn-op-btn--sm" id="p9011CancelNewSaveBtn">テンプレートとして保存</button>
             </div>
             <label class="p902-flow-panel__label" for="p9011CancelFrom">送信元</label>
@@ -215,7 +215,7 @@
             </div>
             <label class="p902-flow-panel__label" for="p9011CancelSubject">件名</label>
             <div class="p902-flow-panel__row">
-              <input type="text" class="p902-flow-panel__input" id="p9011CancelSubject">
+              <input maxlength="60" data-count type="text" class="p902-flow-panel__input" id="p9011CancelSubject">
             </div>
             <textarea class="p902-flow-panel__textarea" id="p9011CancelBody" rows="10"></textarea>
           </div>
@@ -237,7 +237,7 @@
           </div>
           <label class="p902-flow-panel__label" for="p9011InviteMailSubject">件名</label>
           <div class="p902-flow-panel__row">
-            <input type="text" class="p902-flow-panel__input" id="p9011InviteMailSubject">
+            <input maxlength="60" data-count type="text" class="p902-flow-panel__input" id="p9011InviteMailSubject">
           </div>
           <textarea class="p902-flow-panel__textarea" id="p9011InviteMailBody" rows="10"></textarea>
           <p class="p902-flow-panel__hint">本文を確認・編集のうえ送信してください。</p>

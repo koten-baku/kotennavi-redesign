@@ -166,14 +166,14 @@
             <!-- ギャラリー名（表示名） -->
             <div class="p211-field">
               <label class="p211-label" for="p411Name">ギャラリー名（表示名）<span class="ktn-req">必須</span></label>
-              <input class="p211-input" id="p411Name" type="text" value="Gallery SOIL 渋谷">
+              <input maxlength="40" data-count class="p211-input" id="p411Name" type="text" value="Gallery SOIL 渋谷">
               <p class="p211-help">ギャラリーページの見出しに表示される名称です。</p>
             </div>
 
             <!-- 英語表記名 -->
             <div class="p211-field">
               <label class="p211-label" for="p411NameEn">英語表記名</label>
-              <input class="p211-input" id="p411NameEn" type="text" value="Gallery SOIL Shibuya">
+              <input maxlength="80" data-count class="p211-input" id="p411NameEn" type="text" value="Gallery SOIL Shibuya">
               <p class="p211-help">名前の下に欧文サブとして表示されます。</p>
             </div>
 
@@ -214,7 +214,7 @@
             <!-- 紹介文 -->
             <div class="p211-field">
               <label class="p211-label" for="p411Bio">ギャラリー紹介文</label>
-              <textarea class="p211-textarea p211-textarea--tall" id="p411Bio">渋谷・松濤エリアに拠点を構えるコンテンポラリーアートギャラリー。現代美術・写真を中心に、国内外の若手作家の個展を年間を通じて開催。作家と鑑賞者の距離が近い、対話を大切にした展示空間を目指しています。</textarea>
+              <textarea maxlength="3000" data-count class="p211-textarea p211-textarea--tall" id="p411Bio">渋谷・松濤エリアに拠点を構えるコンテンポラリーアートギャラリー。現代美術・写真を中心に、国内外の若手作家の個展を年間を通じて開催。作家と鑑賞者の距離が近い、対話を大切にした展示空間を目指しています。</textarea>
               <p class="p211-help">ギャラリー情報セクションに表示される紹介文です。</p>
             </div>
 
@@ -248,7 +248,7 @@
 
             <div class="p211-field">
               <label class="p211-label" for="p411Hours">営業時間</label>
-              <input class="p211-input" id="p411Hours" type="text" value="火〜土 11:00〜19:00（日月定休）">
+              <input maxlength="60" data-count class="p211-input" id="p411Hours" type="text" value="火〜土 11:00〜19:00（日月定休）">
             </div>
 
             <!-- 最寄り駅 -->
@@ -256,11 +256,11 @@
               <label class="p211-label">最寄り駅</label>
               <div class="p211-repeat" id="p411StationList">
                 <div class="p211-repeat__row">
-                  <input class="p211-input" type="text" value="渋谷駅（徒歩12分）">
+                  <input maxlength="40" data-count class="p211-input" type="text" value="渋谷駅（徒歩12分）">
                   <button class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline p211-repeat__del" type="button" aria-label="削除">✕</button>
                 </div>
                 <div class="p211-repeat__row">
-                  <input class="p211-input" type="text" value="神泉駅（徒歩7分）">
+                  <input maxlength="40" data-count class="p211-input" type="text" value="神泉駅（徒歩7分）">
                   <button class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline p211-repeat__del" type="button" aria-label="削除">✕</button>
                 </div>
               </div>
@@ -291,7 +291,7 @@
                 </div>
               </div>
               <div class="p211-facility-detail" id="p411FacEntryDetail">
-                <textarea class="p211-textarea" style="min-height:60px" placeholder="入場料に関して来場者にお伝えすることがあればご記入ください。">入場無料。一部企画展は有料となる場合あり。</textarea>
+                <textarea maxlength="500" data-count class="p211-textarea" style="min-height:60px" placeholder="入場料に関して来場者にお伝えすることがあればご記入ください。">入場無料。一部企画展は有料となる場合あり。</textarea>
               </div>
             </div>
 
@@ -308,7 +308,7 @@
                 </div>
               </div>
               <div class="p211-facility-detail" id="p411FacParkingDetail">
-                <textarea class="p211-textarea" style="min-height:60px" placeholder="駐車場の有無・近隣コインパーキングなどをご記入ください。">専用駐車場なし。近隣にコインパーキングあり。</textarea>
+                <textarea maxlength="500" data-count class="p211-textarea" style="min-height:60px" placeholder="駐車場の有無・近隣コインパーキングなどをご記入ください。">専用駐車場なし。近隣にコインパーキングあり。</textarea>
               </div>
             </div>
 
@@ -335,7 +335,7 @@
               <!-- 上の選択肢は事実の「ある」だけを並べる（チェックなし＝未申告であって「非対応」ではない）。
                    段差がある等の伝えるべきことは、この補足欄が受ける。だから常に開いておく。 -->
               <div class="p211-facility-detail" id="p411FacAccessibleDetail">
-                <textarea class="p211-textarea" style="min-height:60px" placeholder="上で選べない設備や、ご注意いただきたいことをご記入ください（例：展示室は2階で階段のみです／入口の幅は75cmです）。">入口の幅は80cmです。お手伝いが必要なときは、遠慮なくお声がけください。</textarea>
+                <textarea maxlength="500" data-count class="p211-textarea" style="min-height:60px" placeholder="上で選べない設備や、ご注意いただきたいことをご記入ください（例：展示室は2階で階段のみです／入口の幅は75cmです）。">入口の幅は80cmです。お手伝いが必要なときは、遠慮なくお声がけください。</textarea>
               </div>
             </div>
 
@@ -352,7 +352,7 @@
                 </div>
               </div>
               <div class="p211-facility-detail" id="p411FacPaymentDetail">
-                <textarea class="p211-textarea" style="min-height:60px" placeholder="対応する決済手段をご記入ください。">各種クレジットカード・PayPay・交通系IC対応。</textarea>
+                <textarea maxlength="500" data-count class="p211-textarea" style="min-height:60px" placeholder="対応する決済手段をご記入ください。">各種クレジットカード・PayPay・交通系IC対応。</textarea>
               </div>
             </div>
 
@@ -369,7 +369,7 @@
                 </div>
               </div>
               <div class="p211-facility-detail" id="p411FacWifiDetail" hidden>
-                <textarea class="p211-textarea" style="min-height:60px" placeholder="フリーWi-Fiの有無・接続方法などをご記入ください。"></textarea>
+                <textarea maxlength="500" data-count class="p211-textarea" style="min-height:60px" placeholder="フリーWi-Fiの有無・接続方法などをご記入ください。"></textarea>
               </div>
             </div>
 
@@ -386,7 +386,7 @@
                 </div>
               </div>
               <div class="p211-facility-detail" id="p411FacRentalDetail">
-                <textarea class="p211-textarea" style="min-height:60px" placeholder="レンタル利用に関して来場者・利用希望者にお伝えすることをご記入ください。">個展・グループ展でのレンタル利用を承っています。内覧のうえお気軽にお問合わせください。</textarea>
+                <textarea maxlength="500" data-count class="p211-textarea" style="min-height:60px" placeholder="レンタル利用に関して来場者・利用希望者にお伝えすることをご記入ください。">個展・グループ展でのレンタル利用を承っています。内覧のうえお気軽にお問合わせください。</textarea>
                 <div class="p211-facility-price">
                   <span>面積：</span>
                   <input type="text" inputmode="numeric" placeholder="60" value="60" style="max-width:70px">
@@ -567,7 +567,7 @@
             <span class="ktn-admin-note__title">管理者コメント</span>
           </div>
           <p class="ktn-admin-note__desc">管理上の対応履歴・申し送りを記録します。管理者のみが閲覧できます。</p>
-          <textarea class="ktn-admin-note__textarea" id="p411AdminComment" placeholder="例：2026-07-20 ご担当者へ掲載内容の確認を実施。"></textarea>
+          <textarea maxlength="500" data-count class="ktn-admin-note__textarea" id="p411AdminComment" placeholder="例：2026-07-20 ご担当者へ掲載内容の確認を実施。"></textarea>
         </div>
 
         <!-- 送信バー -->

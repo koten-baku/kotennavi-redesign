@@ -75,7 +75,7 @@
         </dl>
         <div class="ktn-txn-help__field">
           <span class="ktn-txn-help__field-label">ご相談内容<span class="ktn-req">必須</span></span>
-          <textarea id="p515ContactNote" placeholder="例：作品が届かない / 出品者と連絡が取れない など"></textarea>
+          <textarea maxlength="1000" data-count id="p515ContactNote" placeholder="例：作品が届かない / 出品者と連絡が取れない など"></textarea>
         </div>
         <p class="ktn-txn-help__ctx-note">取引番号と現在のフェーズは自動で添付されます。</p>
       </div>
@@ -111,12 +111,12 @@
           <p class="p515-invoice-sheet__no">領収書番号：<span class="is-id">RCP-20260221-0043</span></p>
         </div>
         <div class="p515-invoice-sheet__to">
-          <input type="text" class="p515-invoice-sheet__to-input" id="p515InvoiceToName" placeholder="宛名をご入力ください">
+          <input maxlength="60" data-count type="text" class="p515-invoice-sheet__to-input" id="p515InvoiceToName" placeholder="宛名をご入力ください">
           <span class="p515-invoice-sheet__to-suffix">様</span>
         </div>
         <div class="p515-invoice-sheet__note">
           <span class="p515-invoice-sheet__note-lbl">但し書き</span>
-          <input type="text" class="p515-invoice-sheet__note-input" id="p515InvoiceNote" value="作品代金として">
+          <input maxlength="60" data-count type="text" class="p515-invoice-sheet__note-input" id="p515InvoiceNote" value="作品代金として">
         </div>
         <p class="p515-invoice-sheet__date">ご購入日：<span id="p515InvoicePurchaseDate">2026.02.21</span></p>
         <div class="p515-invoice-sheet__amount">
@@ -728,7 +728,7 @@
                 <button class="p515-review__star" type="button" data-val="4" aria-label="4">★</button>
                 <button class="p515-review__star" type="button" data-val="5" aria-label="5">★</button>
               </div>
-              <textarea class="p515-review__text" placeholder="コメント（任意）" rows="3"></textarea>
+              <textarea maxlength="1000" data-count class="p515-review__text" placeholder="コメント（任意）" rows="3"></textarea>
             </div>
 
             <button class="p515-receipt-btn ktn-op-btn ktn-op-btn--primary ktn-op-btn--lg" id="p515ReceiptBtn" data-txn-op>
@@ -1134,7 +1134,7 @@
               <button class="p515-comments__preview-del" type="button" aria-label="添付を削除">✕</button>
             </div>
             <div class="p515-comments__form-row">
-              <textarea class="p515-comments__input" placeholder="メッセージを入力..." rows="2"></textarea>
+              <textarea maxlength="1000" data-count class="p515-comments__input" placeholder="メッセージを入力..." rows="2"></textarea>
               <label class="p515-comments__attach" title="画像を添付（1枚）">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="16" height="16"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
                 <span>画像を添付</span>

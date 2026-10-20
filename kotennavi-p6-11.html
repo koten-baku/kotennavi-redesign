@@ -170,13 +170,13 @@
           <!-- タイトル -->
           <div class="p211-field">
             <label class="p211-label">作品タイトル<span class="ktn-req">必須</span></label>
-            <input class="p211-input" type="text" id="p611Title" value="オノマトペの庭" placeholder="例：春の記憶 #3">
+            <input maxlength="60" data-count class="p211-input" type="text" id="p611Title" value="オノマトペの庭" placeholder="例：春の記憶 #3">
           </div>
 
           <!-- タイトル読み -->
           <div class="p211-field">
             <label class="p211-label">作品タイトル読み（カナ）<span class="ktn-req">必須</span></label>
-            <input class="p211-input" type="text" value="オノマトペノニワ" placeholder="全角カタカナ">
+            <input maxlength="80" data-count class="p211-input" type="text" value="オノマトペノニワ" placeholder="全角カタカナ">
           </div>
 
           <!-- ジャンル -->
@@ -206,7 +206,7 @@
             <div class="p211-acc-panel" id="p611AccBasicOpt" hidden>
               <div class="p211-field">
                 <label class="p211-label">作品タイトル（英語）</label>
-                <input class="p211-input" type="text" value="Onomatopoeia Garden" placeholder="English title (optional)">
+                <input maxlength="120" data-count class="p211-input" type="text" value="Onomatopoeia Garden" placeholder="English title (optional)">
               </div>
               <div class="p211-field">
                 <label class="p211-label">タグ</label>
@@ -215,7 +215,7 @@
                   <span class="p211-tag">油彩<button class="p211-tag__del" onclick="this.closest('.p211-tag').remove()" type="button">✕</button></span>
                   <span class="p211-tag">現代美術<button class="p211-tag__del" onclick="this.closest('.p211-tag').remove()" type="button">✕</button></span>
                   <span class="p211-tag">オノマトペ<button class="p211-tag__del" onclick="this.closest('.p211-tag').remove()" type="button">✕</button></span>
-                  <input class="p211-tag-input" id="p611TagInput" type="text" placeholder="タグを入力してEnter">
+                  <input maxlength="20" data-count class="p211-tag-input" id="p611TagInput" type="text" placeholder="タグを入力してEnter">
                   <span class="p211-tag-hint">半角スペース区切り</span>
                 </div>
                 <p class="p211-help">作品カテゴリーを表すハッシュタグの単語を入力してください。入力すると、すでに使われているタグが候補に出ます（候補に無い言葉もそのまま追加できます）。タグは作品のページに表示され、押すと同じタグの作品の一覧につながります。</p>
@@ -245,7 +245,7 @@
                     <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" width="12" height="12"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg>
                   </button>
                 </div>
-                <input type="text" class="p211-img-caption" maxlength="60" placeholder="キャプション（任意）例：作品全体" value="全体 — キャンバスに油彩 116.7×91.0cm">
+                <input data-count type="text" class="p211-img-caption" maxlength="60" placeholder="キャプション（任意）例：作品全体" value="全体 — キャンバスに油彩 116.7×91.0cm">
               </div>
             </div>
             <div class="p211-img-drop" id="p611MainDrop" onclick="document.getElementById('p611MainFile').click()">
@@ -282,7 +282,7 @@
                           <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" width="12" height="12"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg>
                         </button>
                       </div>
-                      <input type="text" class="p211-img-caption" maxlength="60" placeholder="キャプション（任意）" value="詳細① — 中央部分のテクスチャー">
+                      <input data-count type="text" class="p211-img-caption" maxlength="60" placeholder="キャプション（任意）" value="詳細① — 中央部分のテクスチャー">
                     </div>
                   </div>
                   <div class="p211-img-uploaded">
@@ -297,7 +297,7 @@
                           <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" width="12" height="12"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg>
                         </button>
                       </div>
-                      <input type="text" class="p211-img-caption" maxlength="60" placeholder="キャプション（任意）" value="詳細② — 左上の筆致">
+                      <input data-count type="text" class="p211-img-caption" maxlength="60" placeholder="キャプション（任意）" value="詳細② — 左上の筆致">
                     </div>
                   </div>
                   <div class="p211-img-uploaded">
@@ -312,7 +312,7 @@
                           <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" width="12" height="12"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg>
                         </button>
                       </div>
-                      <input type="text" class="p211-img-caption" maxlength="60" placeholder="キャプション（任意）" value="展示 — Gallery SOIL 渋谷 展示風景">
+                      <input data-count type="text" class="p211-img-caption" maxlength="60" placeholder="キャプション（任意）" value="展示 — Gallery SOIL 渋谷 展示風景">
                     </div>
                   </div>
                 </div>
@@ -338,7 +338,7 @@
 
           <div class="p211-field">
             <label class="p211-label">作品説明</label>
-            <textarea class="p211-textarea p211-textarea--tall">日本語特有の音象徴語（オノマトペ）が持つ音の質感を、色彩と筆跡によって視覚化した連作のうちの一点。
+            <textarea maxlength="3000" data-count class="p211-textarea p211-textarea--tall">日本語特有の音象徴語（オノマトペ）が持つ音の質感を、色彩と筆跡によって視覚化した連作のうちの一点。
 
 緑のグラデーションと白の余白が織りなす画面には、「さわさわ」「ぽつぽつ」といった言葉にならない庭の気配が静かに満ちている。
 
@@ -373,13 +373,13 @@
           <!-- 素材・技法 -->
           <div class="p211-field">
             <label class="p211-label">素材・技法<span class="ktn-req">必須</span></label>
-            <textarea class="p211-textarea" placeholder="例：キャンバスに油彩、アクリル／和紙に岩絵具、金箔">キャンバスに油彩</textarea>
+            <textarea maxlength="500" data-count class="p211-textarea" placeholder="例：キャンバスに油彩、アクリル／和紙に岩絵具、金箔">キャンバスに油彩</textarea>
           </div>
 
           <!-- サイズ -->
           <div class="p211-field">
             <label class="p211-label">サイズ<span class="p211-label__unit">cm</span><span class="ktn-req">必須</span></label>
-            <input class="p211-input" type="text" value="H116.7 × W91.0 × D4.0" placeholder="H × W × D">
+            <input maxlength="60" data-count class="p211-input" type="text" value="H116.7 × W91.0 × D4.0" placeholder="H × W × D">
             <p class="p211-help">縦・横・（立体は）奥行の順に、単位はセンチで入力してください。平面作品は「H30 × W40」のように奥行を省略できます。額装込みの外寸を基本とし、立体作品は最大寸法でかまいません。</p>
           </div>
 
@@ -417,19 +417,19 @@
               <!-- 作品状態 -->
               <div class="p211-field">
                 <label class="p211-label">作品状態</label>
-                <input class="p211-input" type="text" value="新品・未展示" placeholder="例：新品・未展示／良好" style="max-width:360px">
+                <input maxlength="60" data-count class="p211-input" type="text" value="新品・未展示" placeholder="例：新品・未展示／良好" style="max-width:360px">
               </div>
 
               <!-- 付属品 -->
               <div class="p211-field">
                 <label class="p211-label">付属品</label>
-                <input class="p211-input" type="text" value="真作証明書・作家サイン入り" placeholder="例：真作証明書、額縁、保管箱">
+                <input maxlength="60" data-count class="p211-input" type="text" value="真作証明書・作家サイン入り" placeholder="例：真作証明書、額縁、保管箱">
               </div>
 
               <!-- エディション -->
               <div class="p211-field">
                 <label class="p211-label">エディション</label>
-                <input class="p211-input" type="text" placeholder="例：ed. 3/10、一点もの" style="max-width:360px">
+                <input maxlength="60" data-count class="p211-input" type="text" placeholder="例：ed. 3/10、一点もの" style="max-width:360px">
                 <p class="p211-help">版画・写真などエディションがある場合に入力してください。一点ものは空欄で構いません。</p>
               </div>
             </div>
@@ -438,7 +438,7 @@
           <!-- その他（取扱・展示メモなど・任意）＝仕様の補足として作品仕様に含める -->
           <div class="p211-field" style="margin-top:16px">
             <label class="p211-label">その他</label>
-            <textarea class="p211-textarea" placeholder="例：直射日光・高温多湿を避けて保管してください。壁掛けの際は付属のワイヤーとフックをご使用ください。明るい自然光の入る湿気の少ない場所での展示がおすすめです。額装ガラスは紫外線カットタイプを推奨します。">油彩作品のため、直射日光・高温多湿の環境を避けて保管してください。額装ガラスは紫外線カットタイプを推奨します。フローティングフレーム仕様のため壁から数センチ浮かせて設置され、取付金具・ワイヤーが付属します。壁の耐荷重をご確認のうえ設置してください。</textarea>
+            <textarea maxlength="500" data-count class="p211-textarea" placeholder="例：直射日光・高温多湿を避けて保管してください。壁掛けの際は付属のワイヤーとフックをご使用ください。明るい自然光の入る湿気の少ない場所での展示がおすすめです。額装ガラスは紫外線カットタイプを推奨します。">油彩作品のため、直射日光・高温多湿の環境を避けて保管してください。額装ガラスは紫外線カットタイプを推奨します。フローティングフレーム仕様のため壁から数センチ浮かせて設置され、取付金具・ワイヤーが付属します。壁の耐荷重をご確認のうえ設置してください。</textarea>
             <p class="p211-help">取扱方法・飾り方の提案など、仕様の補足として購入者・鑑賞者に伝えたいことを自由にご記入ください。</p>
           </div>
 
@@ -452,7 +452,7 @@
           <span class="ktn-admin-note__title">管理者コメント</span>
         </div>
         <p class="ktn-admin-note__desc">管理上の対応履歴・申し送りを記録します。管理者のみが閲覧できます。</p>
-        <textarea class="ktn-admin-note__textarea" id="p611AdminComment" placeholder="例：2026-07-20 メイン画像の解像度が低いため差し替えを依頼。"></textarea>
+        <textarea maxlength="500" data-count class="ktn-admin-note__textarea" id="p611AdminComment" placeholder="例：2026-07-20 メイン画像の解像度が低いため差し替えを依頼。"></textarea>
       </div>
 
       <!-- 送信バー（sticky） -->

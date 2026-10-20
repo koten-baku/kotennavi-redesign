@@ -146,8 +146,44 @@
 
         <!-- キャンペーン -->
         <div class="p9020-panel" id="p9020Panel-campaign" role="tabpanel" hidden>
-          <p class="p909-auto-intro">キャンペーンは次の3つです。条件の形は決まっていて、変えられるのは数字（実施期間・割引率・値引きの金額・上限）だけです。1つの取引に効くのは、出品者の特典が最大1つ、購入者のクーポンが最大1つです。行には、いまの人数と個展なびの負担を、上限に対する割合で出しています（80% を超えると赤くなります）。</p>
-          <div id="p9020List"></div>
+          <!-- キャンペーンの種類の早見表（2026-10-19 ユーザー指示「わかりやすく」）。3つの分類＝出品者の特典（利用料の割引）／購入者のクーポン（どの作品にも）／購入者のクーポン（その展覧会の作品に） -->
+          <p class="p909-auto-intro">キャンペーンは次の5種類です。条件の形は決まっていて、変えられるのは名前と数字（実施期間・割引率・値引きの金額・上限）だけです。<strong>値引き・割引の分は、どれも個展なびの負担</strong>です（出品者の受取金額は、クーポンで減りません）。</p>
+          <div class="p315-archive-table-wrap">
+            <table class="p315-archive-table p9020-kinds">
+              <thead><tr><th>分類</th><th>キャンペーン</th><th>受け取る人</th><th>内容</th></tr></thead>
+              <tbody>
+                <tr><td data-label="分類"><b>出品者の特典</b><br>サービス利用料の割引</td><td data-label="キャンペーン"><span class="p9020-kinds__id">C-01</span>はじめて割</td><td data-label="受け取る人">LIAISON+ をはじめて使うクリエイター・ギャラリー（実施期間に申し込んだ人・先着）</td><td data-label="内容">最初に会期が始まった LIAISON+ の展覧会の取引の、利用料を割引</td></tr>
+                <tr><td data-label="分類"><b>出品者の特典</b><br>サービス利用料の割引</td><td data-label="キャンペーン"><span class="p9020-kinds__id">C-02</span>記念の割引</td><td data-label="受け取る人">LIAISON+ を使うクリエイター・ギャラリー全員</td><td data-label="内容">実施期間に申込があった取引の、利用料を割引（記念のイベント）</td></tr>
+                <tr><td data-label="分類"><b>購入者のクーポン</b><br>どの作品にも</td><td data-label="キャンペーン"><span class="p9020-kinds__id">C-03</span>興味あり！のクーポン</td><td data-label="受け取る人">LIAISON+ の作品を「興味あり！」に入れたユーザー（1人1枚）</td><td data-label="内容">LIAISON+ のどの作品の購入にも使える</td></tr>
+                <tr><td data-label="分類"><b>購入者のクーポン</b><br>その展覧会の作品に</td><td data-label="キャンペーン"><span class="p9020-kinds__id">C-04</span>チェックインクーポン</td><td data-label="受け取る人">会期の初日と販売期間の終わりが、どちらも実施期間の中にある LIAISON+ の展覧会すべての会場で、会期中にチェックインした来場者（チェックインで自動で受け取る・会場の QR に案内が出る）</td><td data-label="内容">その展覧会の作品の購入に、販売期間の終わりまで使える</td></tr>
+                <tr><td data-label="分類"><b>購入者のクーポン</b><br>その展覧会の作品に</td><td data-label="キャンペーン"><span class="p9020-kinds__id">C-05</span>イベントのクーポン</td><td data-label="受け取る人">クリエイター・ギャラリーが送った、自分のウォッチャー（開催者が LIAISON+ の作品管理から送る）</td><td data-label="内容">その展覧会の作品の購入に使える（季節のイベント）</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="p909-auto-intro">1つの取引に効くのは、出品者の特典が1つ（2つ当てはまるときは割引の大きい方）と、購入者のクーポンが1枚です。一覧の各行の下の段に、いまの人数と個展なびの負担を、上限に対する割合で出しています（80% を超えると赤くなります）。</p>
+          <!-- キャンペーンを作る（種別を選ぶ）と、作ったキャンペーンの一覧（実施期間の新しい順）・2026-10-19 -->
+          <div class="p9020-new"><span class="p9020-new__label">キャンペーンを作る</span><select class="p211-select" id="p9020NewKind" aria-label="種別"></select><button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--primary" id="p9020NewBtn">＋ 作る</button></div>
+          <h4 class="p9020-sub">集計<span class="ktn-sec-en">Overview</span></h4>
+          <p class="p211-help">実施中と終了したキャンペーンの合計です（使われた取引と、個展なびの負担の実績）。保存した設定で数えます。</p>
+          <div class="p9020-totals" id="p9020Totals"></div>
+          <h4 class="p9020-sub">キャンペーンの一覧<span class="ktn-sec-en">History</span></h4>
+          <p class="p211-help">作ったキャンペーンを、実施期間の始まりの新しい順に並べています（始まりを決めていない下書きは先頭）。行を押すと、その回の設定が開きます。左の「C-0○」は種別です。同じ種別を、期間を重ねずに何回でも作れます。実施期間が過ぎたものは「終了」のタブにあります。<strong>変更は、キャンペーンごとに、その中の「保存する」で保存します</strong>（保存していないものには「未保存の変更」の印が付きます）。</p>
+          <div class="p909-tab-nav" id="p9020ListTabs" role="tablist">
+            <button type="button" class="p909-tab-btn is-active" role="tab" data-list="now" aria-selected="true">実施中・予定<span class="ktn-count ktn-count--pill is-idle">0</span></button>
+            <button type="button" class="p909-tab-btn" role="tab" data-list="over" aria-selected="false">終了<span class="ktn-count ktn-count--pill is-idle">0</span></button>
+          </div>
+          <div class="p9020-table" id="p9020List"></div>
+          <!-- 次のバージョンの案（2026-10-15 ユーザー判断：今回は作らない・handoff 追174-326） -->
+          <div class="p9020-future">
+            <div class="p9020-future__title"><span class="ktn-review-status ktn-review-status--new">次のバージョン</span>出品者が負担するクーポン</div>
+            <ul class="p9020-future__list">
+              <li>クリエイター・ギャラリーが、自分の負担で、ウォッチャーに送る・チェックインした来場者に渡すクーポン。イベントの期間でなくても、販売期間のある展覧会ならいつでも始められる。</li>
+              <li>値引きの額は決まった選択肢から選ぶ（自由な金額・% 値引きにしない）。使えるのは、その出品者の作品だけ。件数の上限は出品者が決める。</li>
+              <li><strong>出品者が負担した値引きは、出品者の受取金額から引き、サービス利用料は値引きのあとの金額で計算する</strong>（受け取っていないお金に利用料をかけない）。個展なびが負担するクーポンは、今までどおり値引きの前の金額で計算する。</li>
+              <li>取引デスク・振込の明細・購入者の支払いの内訳に「クーポン（出品者の負担）」「クーポン（個展なびの負担）」を分けて出す。購入者への領収・インボイスの金額は、出品者が負担した値引きのあとの金額になる。</li>
+              <li>1回の購入に使えるクーポンは1枚のまま（両方あるときは購入者が選ぶ）。クーポンのメールの同意・景品表示法は、専門家の確認に加える。</li>
+            </ul>
+          </div>
         </div>
 
         <!-- お知らせの時期 -->

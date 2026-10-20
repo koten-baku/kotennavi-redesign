@@ -367,7 +367,7 @@ function ktnPshareBadgeHtml(patternId, def, imgs) {
    ・.ktn-auth-overlay / .ktn-auth-modal のシェル＋QRダミーSVGは ktnListQr と同型を再利用
    ・独自ブロック：.ktn-vflyer__sheet（A4プレビュー・印刷時は @media print で全画面化）
 ══════════════════════════════════ */
-function ktnVenueFlyer() {
+function ktnVenueFlyer(name) {
   var el = document.getElementById('ktnVenueFlyerModal');
   if (!el) {
     /* デモ用の静的プレースホルダーQR（実URLを持たない）。本番実装では情報QRに ?src=venue-flyer、
@@ -416,6 +416,7 @@ function ktnVenueFlyer() {
       + '<div class="ktn-vflyer__checkin-body">'
       + '<p class="ktn-vflyer__checkin-ttl">チェックインのお願い</p>'
       + '<p class="ktn-vflyer__checkin-desc">ご来場の記念に、QRからチェックインをお願いいたします。あわせてクリエイター・ギャラリーをウォッチしていただくと、次回展の情報をメールでいち早くお届けします。感想やレビューもぜひお聞かせください。</p>'
+      + '<p class="ktn-vflyer__checkin-camp" data-flyer-camp hidden></p>'
       + '<p class="ktn-vflyer__checkin-note">※チェックインには個展なびのアカウントが必要です（その場で無料登録できます）</p>'
       + '</div>'
       + '</div>'
@@ -429,6 +430,15 @@ function ktnVenueFlyer() {
       + '</div>';
     document.body.appendChild(el);
   }
+  /* 開くたびに：展覧会の名前・作家・会期（P3-15／P4-15 から開いたとき）と、チェックインクーポンの一文（対象のときだけ・pages.js KTN.CAMPAIGN.flyerCamp・2026-10-20） */
+  var C = KTN.CAMPAIGN, ex = C && C.exhOf && name ? C.exhOf(name) : null;
+  if (ex) {
+    el.querySelector('.ktn-vflyer__title').textContent = String(name).split(' — ')[0];
+    if (ex.artist) el.querySelector('.ktn-vflyer__artist').textContent = ex.artist;
+    if (ex.term) el.querySelectorAll('.ktn-vflyer__facts dd')[1].textContent = ex.term + '　11:00–19:00';
+  }
+  var camp = el.querySelector('[data-flyer-camp]'), tx = C && C.flyerCamp ? C.flyerCamp(name) : '';
+  camp.hidden = !tx; camp.innerHTML = tx ? '<b>チェックインクーポン</b>' + tx : '';
   requestAnimationFrame(function () { el.classList.add('open'); });
 }
 function ktnVenueFlyerClose(e) {
@@ -698,6 +708,23 @@ document.addEventListener('click', function (e) {
   btn.setAttribute('aria-pressed', visible ? 'true' : 'false');
   btn.setAttribute('aria-label', visible ? 'パスワードを隠す' : 'パスワードを表示');
 });
+
+/* ── 字数の表示（.ktn-charcount・全ページ共通・2026-10-20）
+   maxlength と data-count を付けた input／textarea の直後に「いまの字数 / 上限」を出す。上限に達したら赤くする。
+   字数を制限する欄は maxlength で止め（打てない・貼り付けても切れる）、この表示で残りが分かるようにする。
+   郵便番号など、字数を気にしなくてよい欄には data-count を付けない。値を JS で入れたときは KTN.charCount(el) を呼ぶ ── */
+function ktnCharCount(el) {
+  var max = +el.getAttribute('maxlength'); if (!max) return;
+  var box = el.nextElementSibling && el.nextElementSibling.classList.contains('ktn-charcount') ? el.nextElementSibling : null;
+  if (!box) { box = document.createElement('span'); box.className = 'ktn-charcount'; box.setAttribute('aria-live', 'polite'); el.insertAdjacentElement('afterend', box); }
+  var n = el.value.length;
+  box.textContent = n + ' / ' + max;
+  box.classList.toggle('is-full', n >= max);
+}
+KTN.charCount = ktnCharCount;
+document.addEventListener('input', function (e) { if (e.target && e.target.matches && e.target.matches('[data-count][maxlength]')) ktnCharCount(e.target); });
+document.addEventListener('focusin', function (e) { if (e.target && e.target.matches && e.target.matches('[data-count][maxlength]')) ktnCharCount(e.target); });   /* JS で後から作った欄 */
+document.addEventListener('DOMContentLoaded', function () { document.querySelectorAll('[data-count][maxlength]').forEach(ktnCharCount); });
 
 /* ══════════════════════════════════
    インサイト：推移ラインチャート（SVG）
@@ -1831,6 +1858,8 @@ KTN.QA = [
   { id: 'SET-07', cat: 'liaison-settlement', side: 'seller', aud: 'common', grp: '精算・振込', q: 'Stripeから直接メールが届きました。対応が必要ですか？', a: '精算・振込の処理には決済パートナーであるStripe社のサービスを利用しており、運用状況によりStripeから直接、本人確認情報の再確認などのご案内メールが届くことがあります。これは正規のご案内です。期限内にご対応いただけないと、精算（振込）が一時停止する場合がありますので、内容をご確認のうえご対応ください。メールの送信元やご不明点がある場合は、個展なび事務局までご連絡いただければ確認いたします。' },
   { id: 'SET-08', cat: 'liaison-settlement', side: 'seller', aud: 'common', grp: '精算・振込', q: 'Stripeのアカウントを自分で管理する必要がありますか？', a: 'いいえ。精算設定や口座情報の変更など、通常のご利用はすべてこのページ（個展なび）で完結し、Stripe側の画面を操作いただく必要はありません。初回のご登録時にのみ、Stripeの利用規約へのご同意など簡単な連携手続きをお願いする場合があります。' },
   { id: 'SET-09', cat: 'liaison-settlement', side: 'seller', aud: 'common', grp: '精算・振込', q: '振込日（20日）が土日祝日などの金融機関休業日にあたる場合はどうなりますか？', a: 'その場合は翌営業日に振り込まれます（決済パートナーであるStripe社の入金スケジュールに準じます）。年末年始などで休業日が続く場合も同様に、直後の営業日にまとめて処理されます。' },
+  { id: 'SET-10', cat: 'liaison-settlement', side: 'seller', aud: 'common', grp: '精算・振込', q: '購入者がクーポンを使うと、受取金額は減りますか？', a: 'いいえ。値引き分は個展なびが負担します。受取金額とサービス利用料は、値引きの前の金額で計算するので変わりません。' },
+  { id: 'SET-11', cat: 'liaison-settlement', side: 'seller', aud: 'common', grp: '精算・振込', q: '特典が2つ当てはまる取引はどうなりますか？', a: '1つの取引に効く特典は1つまでです。2つ当てはまるときは、割引の大きい方が自動で使われます。取引ごとの金額は、取引デスクと振込の明細で確認できます。' },
 
   /* ─── cat:'liaison-txn' / side:'buyer'（購入者の取引＝user）───
      取引ワークスペース（p5-15）・購入管理（p5-14）・購入者ハブ（p70-11）が共通で描画する統合セット。
@@ -1845,7 +1874,8 @@ KTN.QA = [
   { id: 'TXN-B07', cat: 'liaison-txn', side: 'buyer', aud: 'common', phase: ['receipt'], grp: '購入者の取引', q: '「受取確認」とは何をすればいいですか？', a: '作品が届いたら評価を入力し、取引ワークスペースで「受け取りを確認しました」ボタンを押してください。その後、出品者の取引完了確認が行われると代金が確定されます。受け取り後は速やかにご確認ください。' },
   { id: 'TXN-B08', cat: 'liaison-txn', side: 'buyer', aud: 'common', grp: '購入者の取引', q: '受け取った作品に問題があった場合は？', a: 'まず取引ワークスペースのメッセージ機能で出品者に連絡してください。解決しない場合は{{contact}}より事務局へご連絡ください。受取確認後のキャンセルは原則受け付けられません。受け取り時に必ず状態をご確認ください。' },
   { id: 'TXN-B09', cat: 'liaison-txn', side: 'buyer', aud: 'common', grp: '購入者の取引', q: '取引完了後、領収書の発行や購入管理はいつまでできますか？', a: '取引完了後も、購入管理ではいつでも取引をご確認いただけます。領収書は取引ワークスペースの「領収書を発行」ボタンからPDF形式で発行できます。この領収書は出品者がご登録の氏名・登録番号をもとに個展なびのシステムが生成するもので、出品者本人の名義で発行されます（個展なびの名称・登録番号ではありません）。出品者が適格請求書発行事業者として登録番号を登録していない場合、その領収書は税務上の適格請求書（インボイス）には該当しませんのでご注意ください。' },
-  { id: 'TXN-B10', cat: 'liaison-txn', side: 'buyer', aud: 'common', grp: '購入者の取引', q: '購入した作品はコレクションルームでどう扱われますか？公開されますか？', a: '取引完了後、作品はあなたのコレクションルーム（myページ）に収蔵されます。収蔵作品は既定では非公開です。あなたがコレクションルームを公開し、その作品も公開に設定した場合のみ、作品ページに「現在の所蔵」としてあなたのコレクションルームへの案内が表示されます。公開するかどうかはいつでも変更できます。' }
+  { id: 'TXN-B10', cat: 'liaison-txn', side: 'buyer', aud: 'common', grp: '購入者の取引', q: '購入した作品はコレクションルームでどう扱われますか？公開されますか？', a: '取引完了後、作品はあなたのコレクションルーム（myページ）に収蔵されます。収蔵作品は既定では非公開です。あなたがコレクションルームを公開し、その作品も公開に設定した場合のみ、作品ページに「現在の所蔵」としてあなたのコレクションルームへの案内が表示されます。公開するかどうかはいつでも変更できます。' },
+  { id: 'TXN-B11', cat: 'liaison-txn', side: 'buyer', aud: 'common', grp: '購入者の取引', q: 'クーポンはどう使いますか？', a: '購入の申込のときに選びます。1回の購入に使えるクーポンは1枚です（2枚以上あるときは、どれを使うか選べます）。使用期限までに申し込んだ購入には、そのあとで期限が来ても値引きが使われます。取引が成立しなかったとき（会場で先に売約済みになったときなど）は、クーポンは戻ります。持っているクーポンは「キャンペーン・クーポン」で確認できます。' }
 ];
 
 /* cat×aud×side でフィルタし、target に描画する。
@@ -2657,7 +2687,8 @@ KTN.NOTICE_DEFS = {
     { id: 'NT-09',  role: 'user',             when: '興味あり！した作品が展覧会に出品された',       text: '興味あり！した作品《{{artworkName}}》が、展覧会に出品されました', dest: 'その作品のページ',    mail: 'R-01' },
     { id: 'NT-11',  role: 'user',             when: '興味あり！した作品の販売期間がもうすぐ終わる（P90-20 で決めた日数の前）', text: '興味あり！した作品《{{artworkName}}》の販売期間が、あと{{days}}日で終わります', dest: 'その作品のページ', mail: 'R-01（リマインダーの一部）' },
     { id: 'NT-12',  role: 'creator・gallery', when: 'はじめて割が適用された（LIAISON+ の申込が承認された直後。すぐに出す）',       text: '特典「{{campaignName}}」が適用されました',                       dest: 'P3-21／P4-21',        mail: 'CP-01' },
-    { id: 'NT-13',  role: 'user',             when: 'クーポンを受け取った（興味あり！に入れた直後・会場でチェックインした直後。その場の表示とあわせて、すぐに出す）',                                           text: 'クーポン「{{campaignName}}」を受け取りました',                   dest: 'P5-17',               mail: 'R-01（興味あり！のクーポン・翌朝のリマインダーの項目）／CP-02（会場のクーポン・会期が終わった日）' }
+    { id: 'NT-13',  role: 'user',             when: 'クーポンを受け取った（興味あり！に入れた直後・会場でチェックインした直後。その場の表示とあわせて、すぐに出す）',                                           text: 'クーポン「{{campaignName}}」を受け取りました',                   dest: 'P5-17',               mail: 'R-01（興味あり！のクーポン・翌朝のリマインダーの項目）／CP-02（チェックインクーポン・会期が終わった日）' },
+    { id: 'NT-14',  role: 'user',             when: 'ウォッチしているクリエイター・ギャラリーから、イベントのクーポンが届いた（出品者が送った直後）', text: '{{senderName}}から、クーポン「{{campaignName}}」が届きました', dest: 'その展覧会の作品（P2-5-1）', mail: 'CP-05（すぐに送る・P5-13 の①で停止可）' }
   ]
 };
 /* 文言を ID で引き、{{…}} を差し込む */
@@ -4074,7 +4105,7 @@ function ktnCheckinShowWatchStep() {
       '</div>';
   }
 
-  /* キャンペーンの会場のクーポン（2026-10-12）：チェックインの完了の画面で、渡せたときだけ知らせる。判定は pages.js KTN.CAMPAIGN.grant */
+  /* キャンペーンのチェックインクーポン（2026-10-12）：チェックインの完了の画面で、渡せたときだけ知らせる。判定は pages.js KTN.CAMPAIGN.grant */
   var ciCoupon = KTN.CAMPAIGN && KTN.CAMPAIGN.grant ? KTN.CAMPAIGN.grant('checkin') : '';
   modal.innerHTML =
     '<div class="ktn-auth-top ktn-auth-top--compact">' +

@@ -182,7 +182,7 @@
           <!-- タイトル -->
           <div class="p211-field">
             <label class="p211-label">タイトル<span class="ktn-req">必須</span></label>
-            <input class="p211-input" type="text" id="p711Title" value="オノマトペの庭 制作について" placeholder="例：展覧会レポート：初日の様子">
+            <input maxlength="60" data-count class="p211-input" type="text" id="p711Title" value="オノマトペの庭 制作について" placeholder="例：展覧会レポート：初日の様子">
           </div>
 
           <!-- 記事種別 -->
@@ -202,7 +202,7 @@
           <!-- 記事種別「その他」の自由入力（選択時のみ表示） -->
           <div class="p211-field" id="p711CustomTypeField" hidden>
             <label class="p211-label">記事種別（自由入力）<span class="ktn-req">必須</span></label>
-            <input class="p211-input" type="text" id="p711CustomTypeInput" placeholder="例：座談会">
+            <input maxlength="20" data-count class="p211-input" type="text" id="p711CustomTypeInput" placeholder="例：座談会">
             <p class="p211-help">既存の種別に当てはまらない場合に入力してください。記事一覧・検索では「その他」として分類され、入力したラベルは記事ページに補足表示されます。</p>
           </div>
 
@@ -219,14 +219,14 @@
             <div class="p211-acc-panel" id="p711AccBasicOpt" hidden>
               <div class="p211-field">
                 <label class="p211-label">英語サブタイトル</label>
-                <input class="p211-input" type="text" value="Behind the Creation of Onomatopoeia Garden" placeholder="English subtitle (optional)">
+                <input maxlength="120" data-count class="p211-input" type="text" value="Behind the Creation of Onomatopoeia Garden" placeholder="English subtitle (optional)">
               </div>
               <div class="p211-field">
                 <label class="p211-label">タグ</label>
                 <div class="p211-tag-area" id="p711TagArea">
                   <span class="p211-tag">制作過程<button class="p211-tag__del" onclick="this.closest('.p211-tag').remove()" type="button">✕</button></span>
                   <span class="p211-tag">アトリエ<button class="p211-tag__del" onclick="this.closest('.p211-tag').remove()" type="button">✕</button></span>
-                  <input class="p211-tag-input" id="p711TagInput" type="text" placeholder="タグを入力してEnter">
+                  <input maxlength="20" data-count class="p211-tag-input" id="p711TagInput" type="text" placeholder="タグを入力してEnter">
                   <span class="p211-tag-hint">半角スペース区切り</span>
                 </div>
                 <p class="p211-help">記事カテゴリーを表すハッシュタグの単語を入力してください。入力すると、すでに使われているタグが候補に出ます（候補に無い言葉もそのまま追加できます）。タグは記事のページに表示され、押すとあなたの記事のうち同じタグのものの一覧につながります。</p>
@@ -255,8 +255,8 @@
                 <button class="p711-block__del" type="button" title="このブロックを削除" onclick="p711RemoveBlock(this)">✕</button>
               </div>
               <div class="p711-block__body">
-                <input type="text" class="p211-input p711-block__subtitle" placeholder="サブタイトル（任意）">
-                <textarea class="p211-textarea p211-textarea--tall">「ふわふわ」「ざわざわ」「きらきら」――日本語のオノマトペは、音でも、手触りでも、光の揺らぎでもある不思議な言葉たちだ。今回の新作《オノマトペの庭》は、そうした感覚の断片を一枚の画面に集め、ひとつの「庭」として編み直す試みだった。制作期間はおよそ4ヶ月。ここでは、そのプロセスの一部を振り返ってみたい。</textarea>
+                <input maxlength="80" data-count type="text" class="p211-input p711-block__subtitle" placeholder="サブタイトル（任意）">
+                <textarea maxlength="5000" data-count class="p211-textarea p211-textarea--tall">「ふわふわ」「ざわざわ」「きらきら」――日本語のオノマトペは、音でも、手触りでも、光の揺らぎでもある不思議な言葉たちだ。今回の新作《オノマトペの庭》は、そうした感覚の断片を一枚の画面に集め、ひとつの「庭」として編み直す試みだった。制作期間はおよそ4ヶ月。ここでは、そのプロセスの一部を振り返ってみたい。</textarea>
               </div>
             </div>
 
@@ -277,7 +277,7 @@
                         <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" width="12" height="12"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg>
                       </button>
                     </div>
-                    <input type="text" class="p211-img-caption" maxlength="80" placeholder="キャプション（任意）" value="制作初期のドローイング。「ふわふわ」という言葉から浮かんだ最初の形。">
+                    <input data-count type="text" class="p211-img-caption" maxlength="80" placeholder="キャプション（任意）" value="制作初期のドローイング。「ふわふわ」という言葉から浮かんだ最初の形。">
                   </div>
                 </div>
               </div>
@@ -291,8 +291,8 @@
                 <button class="p711-block__del" type="button" title="このブロックを削除" onclick="p711RemoveBlock(this)">✕</button>
               </div>
               <div class="p711-block__body">
-                <input type="text" class="p211-input p711-block__subtitle" placeholder="サブタイトル（任意）" value="言葉を「感じ」に変える">
-                <textarea class="p211-textarea p211-textarea--tall">最初に手を動かしたのは、言葉そのものを絵にしようとするのではなく、言葉を口にしたときの「感じ」を線にすることだった。「ふわふわ」なら弾むような曲線、「ざわざわ」なら細かく震える短い線。ドローイングを何十枚も重ねるうちに、画面全体を「庭」として構成するアイデアが生まれた。</textarea>
+                <input maxlength="80" data-count type="text" class="p211-input p711-block__subtitle" placeholder="サブタイトル（任意）" value="言葉を「感じ」に変える">
+                <textarea maxlength="5000" data-count class="p211-textarea p211-textarea--tall">最初に手を動かしたのは、言葉そのものを絵にしようとするのではなく、言葉を口にしたときの「感じ」を線にすることだった。「ふわふわ」なら弾むような曲線、「ざわざわ」なら細かく震える短い線。ドローイングを何十枚も重ねるうちに、画面全体を「庭」として構成するアイデアが生まれた。</textarea>
               </div>
             </div>
 
@@ -309,7 +309,7 @@
                   <input class="p211-input" type="url" value="https://www.youtube.com/watch?v=dQw4w9WgXcQ" placeholder="https://www.youtube.com/watch?v=…">
                   <p class="p211-help">YouTube・Vimeo等の動画ページURLを入力してください（動画ファイルのアップロードは不要です）。</p>
                 </div>
-                <input type="text" class="p211-img-caption" maxlength="80" placeholder="キャプション（任意）" value="アトリエでの制作風景。緑がかった色面を少しずつ重ねていく。">
+                <input data-count type="text" class="p211-img-caption" maxlength="80" placeholder="キャプション（任意）" value="アトリエでの制作風景。緑がかった色面を少しずつ重ねていく。">
                 <div class="p711-video-meta">
                   <label class="p211-label">再生時間（表示用）</label>
                   <input class="p211-input" type="text" value="0:52" placeholder="0:45" style="width:100px">
@@ -325,8 +325,8 @@
                 <button class="p711-block__del" type="button" title="このブロックを削除" onclick="p711RemoveBlock(this)">✕</button>
               </div>
               <div class="p711-block__body">
-                <input type="text" class="p211-input p711-block__subtitle" placeholder="サブタイトル（任意）">
-                <textarea class="p211-textarea p211-textarea--tall">画面中央の緑がかった空間は、複数の「やわらかい音」が重なり合う場所として描いた。色を置いては拭き取り、また置く――その反復のなかで、ようやく「静かな庭」の気配が画面に宿り始めた。F30号という大きさは、鑑賞者が作品の前に立ったとき、その場の空気ごと体験できるようにという意図から選んでいる。</textarea>
+                <input maxlength="80" data-count type="text" class="p211-input p711-block__subtitle" placeholder="サブタイトル（任意）">
+                <textarea maxlength="5000" data-count class="p211-textarea p211-textarea--tall">画面中央の緑がかった空間は、複数の「やわらかい音」が重なり合う場所として描いた。色を置いては拭き取り、また置く――その反復のなかで、ようやく「静かな庭」の気配が画面に宿り始めた。F30号という大きさは、鑑賞者が作品の前に立ったとき、その場の空気ごと体験できるようにという意図から選んでいる。</textarea>
               </div>
             </div>
 
@@ -362,7 +362,7 @@
                     </div>
                   </div>
                 </div>
-                <input type="text" class="p211-img-caption" maxlength="80" placeholder="キャプション（任意・2枚共通）" value="左：制作中盤のラフ。右：完成に近づいた状態。">
+                <input data-count type="text" class="p211-img-caption" maxlength="80" placeholder="キャプション（任意・2枚共通）" value="左：制作中盤のラフ。右：完成に近づいた状態。">
               </div>
             </div>
 
@@ -374,8 +374,8 @@
                 <button class="p711-block__del" type="button" title="このブロックを削除" onclick="p711RemoveBlock(this)">✕</button>
               </div>
               <div class="p711-block__body">
-                <input type="text" class="p211-input p711-block__subtitle" placeholder="サブタイトル（任意）">
-                <textarea class="p211-textarea p211-textarea--tall">「庭」という言葉を頭に浮かべたとき、まず耳に届いたのは「しんと静まり返った空気感」と「葉が揺れる微かな音」だった。その二つの感覚が混ざり合う瞬間を、画面の上に留めておきたい――そう思いながら筆を置いた。完成した《オノマトペの庭》は、会場でじっくり向き合っていただけたら嬉しい。</textarea>
+                <input maxlength="80" data-count type="text" class="p211-input p711-block__subtitle" placeholder="サブタイトル（任意）">
+                <textarea maxlength="5000" data-count class="p211-textarea p211-textarea--tall">「庭」という言葉を頭に浮かべたとき、まず耳に届いたのは「しんと静まり返った空気感」と「葉が揺れる微かな音」だった。その二つの感覚が混ざり合う瞬間を、画面の上に留めておきたい――そう思いながら筆を置いた。完成した《オノマトペの庭》は、会場でじっくり向き合っていただけたら嬉しい。</textarea>
               </div>
             </div>
 
@@ -399,7 +399,7 @@
           <span class="ktn-admin-note__title">管理者コメント</span>
         </div>
         <p class="ktn-admin-note__desc">管理上の対応履歴・申し送りを記録します。管理者のみが閲覧できます。</p>
-        <textarea class="ktn-admin-note__textarea" id="p711AdminComment" placeholder="例：2026-07-20 画像の著作権確認のため一時非公開。"></textarea>
+        <textarea maxlength="500" data-count class="ktn-admin-note__textarea" id="p711AdminComment" placeholder="例：2026-07-20 画像の著作権確認のため一時非公開。"></textarea>
       </div>
 
       <!-- 送信バー（sticky） -->
@@ -869,8 +869,8 @@ function p711MakeBlock(type) {
   var body = '';
   if (type === 'text') {
     body =
-      '<input type="text" class="p211-input p711-block__subtitle" placeholder="サブタイトル（任意）">' +
-      '<textarea class="p211-textarea p211-textarea--tall" placeholder="本文を入力してください"></textarea>';
+      '<input maxlength="80" data-count type="text" class="p211-input p711-block__subtitle" placeholder="サブタイトル（任意）">' +
+      '<textarea maxlength="5000" data-count class="p211-textarea p211-textarea--tall" placeholder="本文を入力してください"></textarea>';
   } else if (type === 'image') {
     body =
       '<div class="p211-img-drop">' +
@@ -878,7 +878,7 @@ function p711MakeBlock(type) {
         '<div>または、画像をドラッグ＆ドロップ</div>' +
         '<input type="file" class="p711-img-file" accept="image/jpeg" hidden>' +
       '</div>' +
-      '<input type="text" class="p211-img-caption" maxlength="80" placeholder="キャプション（任意）" style="margin-top:8px">';
+      '<input data-count type="text" class="p211-img-caption" maxlength="80" placeholder="キャプション（任意）" style="margin-top:8px">';
   } else if (type === 'pair') {
     body =
       '<div class="p711-pair-imgs">' +
@@ -891,7 +891,7 @@ function p711MakeBlock(type) {
           '<input type="file" class="p711-img-file" accept="image/jpeg" hidden>' +
         '</div>' +
       '</div>' +
-      '<input type="text" class="p211-img-caption" maxlength="80" placeholder="キャプション（任意・2枚共通）">';
+      '<input data-count type="text" class="p211-img-caption" maxlength="80" placeholder="キャプション（任意・2枚共通）">';
   } else if (type === 'video') {
     body =
       '<div class="p211-field">' +
@@ -899,7 +899,7 @@ function p711MakeBlock(type) {
         '<input class="p211-input" type="url" placeholder="https://www.youtube.com/watch?v=…">' +
         '<p class="p211-help">YouTube・Vimeo等の動画ページURLを入力してください（動画ファイルのアップロードは不要です）。</p>' +
       '</div>' +
-      '<input type="text" class="p211-img-caption" maxlength="80" placeholder="キャプション（任意）">' +
+      '<input data-count type="text" class="p211-img-caption" maxlength="80" placeholder="キャプション（任意）">' +
       '<div class="p711-video-meta">' +
         '<label class="p211-label">再生時間（表示用）</label>' +
         '<input class="p211-input" type="text" placeholder="0:45" style="width:100px">' +

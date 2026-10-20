@@ -632,13 +632,13 @@
 
           <div class="p211-field">
             <label class="p211-label" for="p9017CondLabel">棚に出す見出し</label>
-            <input type="text" class="p211-input" id="p9017CondLabel" maxlength="30">
+            <input data-count type="text" class="p211-input" id="p9017CondLabel" maxlength="30">
             <p class="p211-help">条件の羅列（東京・現代美術）でも文（福岡で行くべき展覧会）でもよいですが、<strong>マスタ全体で語り口を揃えてください</strong>。条件の羅列だけだと軸ページと見分けがつきません。時制の語は使いません。</p>
           </div>
 
           <div class="p211-field">
             <label class="p211-label" for="p9017CondDesc">着地したときの説明文</label>
-            <textarea class="p211-textarea" id="p9017CondDesc" rows="2" maxlength="90"></textarea>
+            <textarea data-count class="p211-textarea" id="p9017CondDesc" rows="2" maxlength="90"></textarea>
             <p class="p211-help">ピックアップを押した先の見出しの下に出る文です。<strong>条件から機械で書ける文ではないので運営が書きます</strong>（見出しと同じ扱い）。「自動生成」「条件」「タグ」のような<strong>運営側の言葉は使わず</strong>、〈何が集まっているか〉と〈そこで何ができるか・実物で何が分かるか〉の2文で書きます。空のままにすると説明行は出ません。</p>
           </div>
 
@@ -669,7 +669,7 @@
           </div>
           <div class="p211-field">
             <label class="p211-label" for="p9017LeadText">導入文</label>
-            <textarea class="p211-textarea p211-textarea--tall" id="p9017LeadText" placeholder="未記入のままにすると、下の自動生成の文が表示されます"></textarea>
+            <textarea maxlength="500" data-count class="p211-textarea p211-textarea--tall" id="p9017LeadText" placeholder="未記入のままにすると、下の自動生成の文が表示されます"></textarea>
             <p class="p211-help">1行が1段落になります。件数・日付・「最新」など時間で古びる語は書かないでください（URLは恒久なので、文だけが先に古びます）。空にすると自動生成の文に戻ります。</p>
           </div>
           <div class="p9017-lead-auto">

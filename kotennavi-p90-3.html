@@ -124,13 +124,13 @@
             <!-- 展覧会タイトル -->
             <div class="p211-field">
               <label class="p211-label">展覧会タイトル<span class="ktn-req">必須</span></label>
-              <input class="p211-input" type="text" id="p903Title" placeholder="例：田中透 個展">
+              <input maxlength="240" data-count class="p211-input" type="text" id="p903Title" placeholder="例：田中透 個展">
             </div>
 
             <!-- 展覧会タイトル読み -->
             <div class="p211-field">
               <label class="p211-label">展覧会タイトル読み（カナ）</label>
-              <input class="p211-input" type="text" id="p903Kana" placeholder="全角カタカナ">
+              <input maxlength="400" data-count class="p211-input" type="text" id="p903Kana" placeholder="全角カタカナ">
             </div>
 
             <!-- ジャンル -->
@@ -149,7 +149,7 @@
             <!-- 紹介文 -->
             <div class="p211-field">
               <label class="p211-label">紹介文</label>
-              <textarea class="p211-textarea p211-textarea--tall" id="p903Desc" placeholder="展覧会の内容、展示作品の説明、アピールポイントなどをご記入ください。"></textarea>
+              <textarea maxlength="3000" data-count class="p211-textarea p211-textarea--tall" id="p903Desc" placeholder="展覧会の内容、展示作品の説明、アピールポイントなどをご記入ください。"></textarea>
               <p class="p211-help">掲載依頼のメール文面や取材内容をもとに、わかる範囲で入力してください。あとからオーナー割り当て後に本人が編集できます。</p>
             </div>
 
@@ -207,7 +207,7 @@
             <!-- 会場名 -->
             <div class="p211-field">
               <label class="p211-label">会場名<span class="ktn-req">必須</span></label>
-              <input class="p211-input" type="text" id="p903Venue" placeholder="例：YUGEN Gallery">
+              <input maxlength="60" data-count class="p211-input" type="text" id="p903Venue" placeholder="例：YUGEN Gallery">
               <p class="p211-help">オーナーにギャラリーを選択した場合、登録済みの会場情報を後から自動でリンクできます（デモでは未実装）。</p>
             </div>
 

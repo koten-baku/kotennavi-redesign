@@ -143,8 +143,8 @@
             <!-- タイトル -->
             <div class="p211-field">
               <label class="p211-label" for="p6111Title">タイトル<span class="ktn-req">必須</span></label>
-              <input class="p211-input" id="p6111Title" type="text" placeholder="例：システムメンテナンスのお知らせ（◯月◯日 深夜）">
-              <p class="p211-help">特に大切なお知らせは、タイトルの先頭に「【重要】」を付けてください（メールの件名にもそのまま入ります）。</p>
+              <input class="p211-input" id="p6111Title" type="text" maxlength="60" data-count placeholder="例：システムメンテナンスのお知らせ（◯月◯日 深夜）">
+              <p class="p211-help">60字まで（お知らせ一覧・トップの帯・メールの件名に入るため）。特に大切なお知らせは、タイトルの先頭に「【重要】」を付けてください（メールの件名にもそのまま入ります）。</p>
             </div>
 
             <!-- カテゴリ -->
@@ -187,7 +187,7 @@
             <!-- 本文 -->
             <div class="p211-field">
               <label class="p211-label" for="p6111Body">本文<span class="ktn-req">必須</span></label>
-              <textarea class="p211-textarea" id="p6111Body" placeholder="お知らせの本文を入力してください"></textarea>
+              <textarea maxlength="5000" data-count class="p211-textarea" id="p6111Body" placeholder="お知らせの本文を入力してください"></textarea>
             </div>
 
 
@@ -204,6 +204,28 @@
               <p class="p211-help">トップページのすぐ上の帯に、公開日から表示期限の日まで出ます。帯は3件までで、【重要】のニュース、ほかのニュース、おすすめの順に入ります（おすすめは、ニュースが3件未満のときに空いた枠に出ます）。</p>
             </div>
 
+            <!-- あなた宛にも出す（対象が全員のときだけ。対象を指定したニュースは、もとから対象の人の「あなた宛」に入る・2026-10-19） -->
+            <div class="p211-field" id="p6111MineField">
+              <label class="p211-check"><input type="checkbox" id="p6111Mine"> 「あなた宛」にもお知らせを出す</label>
+              <p class="p211-help">ニュースは、見に来た人のお知らせ一覧の「ニュース」のタブに出ます。特に知らせたい人には、「あなた宛」のタブにも短い文で出し、サイドバーのお知らせに点を付けられます（押すとこのニュースが開きます）。</p>
+              <div class="p6111-mine" id="p6111MinePanel" hidden>
+                <div class="p211-field">
+                  <label class="p211-label" for="p6111MineWho">届ける人<span class="ktn-req">必須</span></label>
+                  <select class="p211-select" id="p6111MineWho">
+                    <option value="user">ユーザー全員</option>
+                    <option value="cg">クリエイター・ギャラリー</option>
+                    <option value="creator">クリエイター</option>
+                    <option value="gallery">ギャラリー</option>
+                  </select>
+                </div>
+                <div class="p211-field">
+                  <label class="p211-label" for="p6111MineText">あなた宛に出す文<span class="ktn-req">必須</span></label>
+                  <input class="p211-input" id="p6111MineText" type="text" maxlength="80" data-count placeholder="例：12月1日〜25日に LIAISON+ の展覧会を開く方は、ウォッチャーへクーポンを送れます">
+                  <p class="p211-help">届ける人に関係があることが一目で分かる文にします（ニュースのタイトルと同じでなくてかまいません）。</p>
+                </div>
+              </div>
+            </div>
+
             <!-- メール配信（ニュース＝A-04 停止できない／おすすめ＝N-01 受け取る設定の人だけ・docs/email-templates.md） -->
             <div class="p211-field">
               <label class="p211-check"><input type="checkbox" id="p6111SendMail"> 登録ユーザーにメールでも送る</label>
@@ -218,7 +240,7 @@
                 </div>
                 <label class="p902-flow-panel__label" for="p6111MailSubject">件名</label>
                 <div class="p902-flow-panel__row">
-                  <input type="text" class="p902-flow-panel__input" id="p6111MailSubject">
+                  <input maxlength="60" data-count type="text" class="p902-flow-panel__input" id="p6111MailSubject">
                 </div>
                 <label class="p902-flow-panel__label" for="p6111MailBody">本文</label>
                 <textarea class="p902-flow-panel__textarea" id="p6111MailBody" rows="14"></textarea>
@@ -385,6 +407,21 @@
   document.getElementById('p6111Target').addEventListener('change', p6111SyncTop);
   p6111SyncTop();
 
+  /* ── あなた宛にも出す：対象が全員のときだけ選べる（対象を指定したニュースは、もとから対象の人の「あなた宛」に入る）・2026-10-19 ── */
+  function p6111SyncMine() {
+    var all = document.getElementById('p6111Target').value === 'all';
+    document.getElementById('p6111MineField').hidden = !all;
+    document.getElementById('p6111MinePanel').hidden = !(all && document.getElementById('p6111Mine').checked);
+  }
+  document.getElementById('p6111Target').addEventListener('change', p6111SyncMine);
+  document.getElementById('p6111Mine').addEventListener('change', p6111SyncMine);
+  /* キャンペーンにつなぐと、届ける人の最初の値をキャンペーンに合わせる（出品者の特典・イベントのクーポン＝クリエイター・ギャラリー／ほか＝ユーザー） */
+  document.getElementById('p6111Campaign').addEventListener('change', function () {
+    var id = this.value, c = id && KTN.CAMPAIGN.load().campaigns.filter(function (x) { return x.id === id; })[0];
+    if (c) document.getElementById('p6111MineWho').value = c.who === 'buyer' ? 'user' : (c.who === 'creator' || c.who === 'gallery' ? c.who : 'cg');
+  });
+  p6111SyncMine();
+
   /* ── 作成/更新ボタン ── */
   var p6111SubmitBtn = document.getElementById('p6111SubmitBtn');
   if (p6111SubmitBtn) {
@@ -395,7 +432,7 @@
       document.querySelectorAll('#p6111Wrap .p211-field').forEach(function (f) {
         var req = f.querySelector('.p211-label .ktn-req');
         var inp = f.querySelector('input,select,textarea');
-        var ng = !!(req && !f.hidden && inp && !inp.value.trim());
+        var ng = !!(req && !f.closest('[hidden]') && inp && !inp.value.trim());   /* 閉じた欄の中（あなた宛の文など）は見ない */
         f.classList.toggle('is-error', ng);
         if (ng) {
           var lbl = f.querySelector('.p211-label').cloneNode(true);

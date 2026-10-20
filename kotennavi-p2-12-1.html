@@ -59,6 +59,9 @@
   <button class="dbtn" data-terms-demo="seller" onclick="ktnTermsDemo('seller','waiting',this)">適用中（展覧会の前）</button>
   <button class="dbtn" data-terms-demo="seller" onclick="ktnTermsDemo('seller','progress',this)">申込の審査中</button>
   <button class="dbtn" data-terms-demo="seller" onclick="ktnTermsDemo('seller','none',this)">なし</button>
+  <span class="dbar-sep">記念の割引：</span>
+  <button class="dbtn on" data-anniv-demo onclick="ktnAnnivDemo(false,this)">なし</button>
+  <button class="dbtn" data-anniv-demo onclick="ktnAnnivDemo(true,this)">実施中</button>
 </div>
 <div class="shell">
 
@@ -169,6 +172,9 @@
 
       <!-- 利用料と特典の要約。利用料の帯の中に、特典の帯（期間つき）を入れ子で出す。詳しいカードは P3-17／P4-17。中身は pages.js KTN.CAMPAIGN が描く（2026-10-11） -->
       <div class="ktn-terms-line" data-terms-line="seller"></div>
+
+      <!-- イベントのクーポンを、この展覧会のウォッチャーへ送る：キャンペーンのバナー（イベントの実施中だけ出す・中身は pages.js KTN.CAMPAIGN が描く・2026-10-15／10-19 バナーに） -->
+      <div class="ktn-camp-hero" data-watch-coupon hidden></div>
 
       <!-- モード切替バー -->
       <div class="p2-12-mode-bar">
@@ -331,10 +337,7 @@
         <div class="p2-12-desc-block">
           <label class="p2-12-desc-block__label" for="p212ExhibitDesc">展示の説明文</label>
           <p class="p2-12-desc-block__hint">展覧会ページの LIAISON タブに表示されます。作品全体のテーマや見どころを入力してください。</p>
-          <textarea class="p2-12-desc-block__textarea" id="p212ExhibitDesc" rows="4" placeholder="例：今回の展示では、日常の中に潜むオノマトペをテーマに、田中透が新作 3 点を含む全 8 点を展示します。"></textarea>
-          <div class="p2-12-desc-block__footer">
-            <span class="p2-12-desc-block__count" id="p212DescCount">0 / 200</span>
-          </div>
+          <textarea maxlength="1000" data-count class="p2-12-desc-block__textarea" id="p212ExhibitDesc" rows="4" placeholder="例：今回の展示では、日常の中に潜むオノマトペをテーマに、田中透が新作 3 点を含む全 8 点を展示します。"></textarea>
         </div>
 
         <!-- 展示作品リスト -->

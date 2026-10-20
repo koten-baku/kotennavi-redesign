@@ -168,7 +168,7 @@
         </dl>
         <div class="ktn-txn-help__field">
           <span class="ktn-txn-help__field-label">ご相談内容<span class="ktn-req">必須</span></span>
-          <textarea id="p316ContactNote" placeholder="例：会場で破損が見つかった / 購入者と連絡が取れない など"></textarea>
+          <textarea maxlength="1000" data-count id="p316ContactNote" placeholder="例：会場で破損が見つかった / 購入者と連絡が取れない など"></textarea>
         </div>
         <p class="ktn-txn-help__ctx-note">取引番号と現在のフェーズは自動で添付されます。</p>
       </div>
@@ -252,6 +252,9 @@
   <span class="dbar-sep" style="margin-left:12px">特典：</span>
   <button class="dbtn on" data-terms-demo="seller" onclick="ktnTermsDemo('seller','active',this)">適用中</button>
   <button class="dbtn" data-terms-demo="seller" onclick="ktnTermsDemo('seller','none',this)">なし</button>
+  <span class="dbar-sep">記念の割引：</span>
+  <button class="dbtn on" data-anniv-demo onclick="ktnAnnivDemo(false,this)">なし</button>
+  <button class="dbtn" data-anniv-demo onclick="ktnAnnivDemo(true,this)">実施中</button>
 </div>
 
 <div class="shell">
@@ -533,7 +536,7 @@
                 <div class="p316-carrier-other-wrap" id="p316CarrierOtherWrap" hidden>
                   <div class="p316-ship-form__field">
                     <label class="p316-ship-form__label">発送方法名を入力<span class="ktn-req">必須</span></label>
-                    <input class="p316-ship-form__input" id="p316CarrierOther" type="text" placeholder="発送方法名">
+                    <input maxlength="30" data-count class="p316-ship-form__input" id="p316CarrierOther" type="text" placeholder="発送方法名">
                   </div>
                 </div>
                 <div class="p316-ship-form__row">
@@ -679,7 +682,7 @@
               </div>
               <div class="p316-tracking-form__field" id="p316TrackingCarrierOtherWrap" hidden>
                 <label class="p316-tracking-form__label">発送方法名を入力<span class="ktn-req">必須</span></label>
-                <input class="p316-tracking-form__input" id="p316TrackingCarrierOther" type="text" placeholder="発送方法名">
+                <input maxlength="30" data-count class="p316-tracking-form__input" id="p316TrackingCarrierOther" type="text" placeholder="発送方法名">
               </div>
               <div class="p316-tracking-form__field">
                 <label class="p316-tracking-form__label">追跡番号<span class="ktn-req">必須</span></label>
@@ -789,7 +792,7 @@
                 <button class="p515-review__star" type="button" data-val="4" aria-label="4">★</button>
                 <button class="p515-review__star" type="button" data-val="5" aria-label="5">★</button>
               </div>
-              <textarea class="p515-review__text" id="p316CompleteMsg" placeholder="コメント（任意）" rows="3">この度はご購入いただきありがとうございました。作品を大切にしていただけると幸いです。</textarea>
+              <textarea maxlength="1000" data-count class="p515-review__text" id="p316CompleteMsg" placeholder="コメント（任意）" rows="3">この度はご購入いただきありがとうございました。作品を大切にしていただけると幸いです。</textarea>
             </div>
 
             <button class="ktn-op-btn ktn-op-btn--primary ktn-op-btn--lg ktn-op-btn--full" id="p316DoneBtn" data-txn-op>
@@ -1185,7 +1188,7 @@
               <button class="p515-comments__preview-del" type="button" aria-label="添付を削除">✕</button>
             </div>
             <div class="p515-comments__form-row">
-              <textarea class="p515-comments__input" placeholder="メッセージを入力..." rows="2"></textarea>
+              <textarea maxlength="1000" data-count class="p515-comments__input" placeholder="メッセージを入力..." rows="2"></textarea>
               <label class="p515-comments__attach" title="画像を添付（1枚）">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="16" height="16"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
                 <span>画像を添付</span>

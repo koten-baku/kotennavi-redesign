@@ -166,14 +166,14 @@
             <!-- 表示名 -->
             <div class="p211-field">
               <label class="p211-label" for="p311Name">表示名<span class="ktn-req">必須</span></label>
-              <input class="p211-input" id="p311Name" type="text" value="田中 透">
+              <input maxlength="40" data-count class="p211-input" id="p311Name" type="text" value="田中 透">
               <p class="p211-help">クリエイターページの見出しに表示される名前です。</p>
             </div>
 
             <!-- 英語表記名 -->
             <div class="p211-field">
               <label class="p211-label" for="p311NameEn">英語表記名</label>
-              <input class="p211-input" id="p311NameEn" type="text" value="TANAKA Toru">
+              <input maxlength="80" data-count class="p211-input" id="p311NameEn" type="text" value="TANAKA Toru">
               <p class="p211-help">名 → 姓 の順（例：TANAKA Toru）。名前の下に欧文サブとして表示されます。</p>
             </div>
 
@@ -214,21 +214,21 @@
             <!-- 作品ブランド -->
             <div class="p211-field">
               <label class="p211-label" for="p311Brand">作品ブランド</label>
-              <input class="p211-input" id="p311Brand" type="text" value="おとかたち">
+              <input maxlength="40" data-count class="p211-input" id="p311Brand" type="text" value="おとかたち">
               <p class="p211-help">シリーズ名・作品ブランドがあれば入力してください（任意）。</p>
             </div>
 
             <!-- 自己紹介（短文） -->
             <div class="p211-field">
               <label class="p211-label" for="p311Lead">自己紹介（短文）</label>
-              <textarea class="p211-textarea" id="p311Lead">言葉と感覚の境界を絵画で探求する画家。オノマトペをテーマにした連作で知られる。音が見えて、絵が聞こえる──そんな体験を届けたい。</textarea>
+              <textarea maxlength="1000" data-count class="p211-textarea" id="p311Lead">言葉と感覚の境界を絵画で探求する画家。オノマトペをテーマにした連作で知られる。音が見えて、絵が聞こえる──そんな体験を届けたい。</textarea>
               <p class="p211-help">最大120文字。ヒーロー（ページ上部）に表示される短い紹介文です。</p>
             </div>
 
             <!-- 詳細プロフィール -->
             <div class="p211-field">
               <label class="p211-label" for="p311Bio">詳細プロフィール（略歴）</label>
-              <textarea class="p211-textarea p211-textarea--tall" id="p311Bio">1986年東京都生まれ。2010年東京藝術大学美術学部油画科卒業、2012年同大学院美術研究科修了。言葉と感覚の境界を絵画で探求する画家。オノマトペをテーマにした連作が代表作。音が見えて、絵が聞こえる——そんな体験を届けたいという思いで制作を続けている。2022年東京アートアワード奨励賞受賞。国内外のギャラリーで精力的に活動中。</textarea>
+              <textarea maxlength="3000" data-count class="p211-textarea p211-textarea--tall" id="p311Bio">1986年東京都生まれ。2010年東京藝術大学美術学部油画科卒業、2012年同大学院美術研究科修了。言葉と感覚の境界を絵画で探求する画家。オノマトペをテーマにした連作が代表作。音が見えて、絵が聞こえる——そんな体験を届けたいという思いで制作を続けている。2022年東京アートアワード奨励賞受賞。国内外のギャラリーで精力的に活動中。</textarea>
               <p class="p211-help">学歴・受賞歴・活動歴など。クリエイター情報セクションに表示されます。</p>
             </div>
 
@@ -247,11 +247,11 @@
               <label class="p211-label">取扱ギャラリー・店舗</label>
               <div class="p211-repeat" id="p311VenueList">
                 <div class="p211-repeat__row">
-                  <input class="p211-input" type="text" value="Gallery SOIL 渋谷（東京）">
+                  <input maxlength="60" data-count class="p211-input" type="text" value="Gallery SOIL 渋谷（東京）">
                   <button class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline p211-repeat__del" type="button" aria-label="削除">✕</button>
                 </div>
                 <div class="p211-repeat__row">
-                  <input class="p211-input" type="text" value="Art Space KITO（大阪）">
+                  <input maxlength="60" data-count class="p211-input" type="text" value="Art Space KITO（大阪）">
                   <button class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline p211-repeat__del" type="button" aria-label="削除">✕</button>
                 </div>
               </div>
@@ -261,11 +261,11 @@
             <!-- アトリエ -->
             <div class="p211-field">
               <label class="p211-label" for="p311AtelierName">アトリエ名</label>
-              <input class="p211-input" id="p311AtelierName" type="text" value="アトリエ 音ノ間">
+              <input maxlength="40" data-count class="p211-input" id="p311AtelierName" type="text" value="アトリエ 音ノ間">
             </div>
             <div class="p211-field">
               <label class="p211-label" for="p311AtelierDesc">アトリエ説明</label>
-              <input class="p211-input" id="p311AtelierDesc" type="text" value="制作・展示・ワークショップを行う複合アトリエ">
+              <input maxlength="80" data-count class="p211-input" id="p311AtelierDesc" type="text" value="制作・展示・ワークショップを行う複合アトリエ">
             </div>
             <div class="p211-row">
               <div class="p211-field">
@@ -456,7 +456,7 @@
             <span class="ktn-admin-note__title">管理者コメント</span>
           </div>
           <p class="ktn-admin-note__desc">管理上の対応履歴・申し送りを記録します。管理者のみが閲覧できます。</p>
-          <textarea class="ktn-admin-note__textarea" id="p311AdminComment" placeholder="例：2026-07-20 本人確認書類を確認・承認。"></textarea>
+          <textarea maxlength="500" data-count class="ktn-admin-note__textarea" id="p311AdminComment" placeholder="例：2026-07-20 本人確認書類を確認・承認。"></textarea>
         </div>
 
         <!-- 送信バー -->
