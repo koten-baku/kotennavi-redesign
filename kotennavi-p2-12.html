@@ -29,7 +29,7 @@
   <button class="dbtn" onclick="setR('admin',this)">管理者</button>
   <span class="dbar-sep">|</span>
   <span class="dbar-sep" style="opacity:.5">LIAISON+：</span>
-  <button class="dbtn on" onclick="p212liaisonPlusApplied=false;[...this.parentNode.querySelectorAll('.dbtn-lp')].forEach(b=>b.classList.remove('on'));this.classList.add('on')">未申請</button>
+  <button class="dbtn dbtn-lp on" onclick="p212liaisonPlusApplied=false;[...this.parentNode.querySelectorAll('.dbtn-lp')].forEach(b=>b.classList.remove('on'));this.classList.add('on')">未申請</button>
   <button class="dbtn dbtn-lp" onclick="p212liaisonPlusApplied=true;[...this.parentNode.querySelectorAll('.dbtn-lp')].forEach(b=>b.classList.remove('on'));this.classList.add('on')">申請済み</button>
   <span class="dbar-sep">候補：</span>
   <button class="dbtn on" onclick="p212DemoCands(false,this)">多い（絞込あり）</button>
@@ -39,15 +39,6 @@
   <button class="dbtn dbtn-exh" data-exh-key="phase" onclick="ktnSetExh('phase','before',this);p212DemoTerm(false)">会期前（変更可）</button>
   <button class="dbtn dbtn-exh on" data-exh-key="phase" onclick="ktnSetExh('phase','during',this);p212DemoTerm(true)">会期中</button>
   <button class="dbtn dbtn-exh" data-exh-key="phase" onclick="ktnSetExh('phase','after',this);p212DemoTerm(true)">終了後</button>
-  <span class="dbar-sep" style="margin-left:8px">確認：</span>
-  <button class="dbtn dbtn-exh on" data-exh-key="confirmed" onclick="ktnSetExh('confirmed','true',this)">確認済</button>
-  <button class="dbtn dbtn-exh" data-exh-key="confirmed" onclick="ktnSetExh('confirmed','false',this)">確認前</button>
-  <span class="dbar-sep" style="margin-left:8px">公開日：</span>
-  <button class="dbtn dbtn-exh on" data-exh-key="publishArrived" onclick="ktnSetExh('publishArrived','true',this)">到達済</button>
-  <button class="dbtn dbtn-exh" data-exh-key="publishArrived" onclick="ktnSetExh('publishArrived','false',this)">未到達</button>
-  <span class="dbar-sep" style="margin-left:8px">販売期間：</span>
-  <button class="dbtn dbtn-exh on" data-exh-key="salesOver" onclick="ktnSetExh('salesOver','false',this)">終了前</button>
-  <button class="dbtn dbtn-exh" data-exh-key="salesOver" onclick="ktnSetExh('salesOver','true',this)">終了済</button>
 </div>
 <div class="shell">
 

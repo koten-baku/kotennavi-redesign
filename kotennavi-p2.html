@@ -60,12 +60,12 @@
     <span class="dbar-sep" style="margin-left:8px">確認：</span>
     <button class="dbtn dbtn-exh on" data-exh-key="confirmed" onclick="ktnSetExh('confirmed','true',this)">確認済</button>
     <button class="dbtn dbtn-exh" data-exh-key="confirmed" onclick="ktnSetExh('confirmed','false',this)">確認前</button>
-    <span class="dbar-sep" style="margin-left:8px">下書き：</span>
-    <button class="dbtn dbtn-exh" data-exh-key="draft" onclick="ktnSetExh('draft','true',this)">下書き中</button>
-    <button class="dbtn dbtn-exh on" data-exh-key="draft" onclick="ktnSetExh('draft','false',this)">下書きでない</button>
     <span class="dbar-sep" style="margin-left:8px">公開日：</span>
     <button class="dbtn dbtn-exh on" data-exh-key="publishArrived" onclick="ktnSetExh('publishArrived','true',this)">到達済</button>
     <button class="dbtn dbtn-exh" data-exh-key="publishArrived" onclick="ktnSetExh('publishArrived','false',this)">未到達</button>
+    <span class="dbar-sep" style="margin-left:8px">下書き：</span>
+    <button class="dbtn dbtn-exh" data-exh-key="draft" onclick="ktnSetExh('draft','true',this)">下書き中</button>
+    <button class="dbtn dbtn-exh on" data-exh-key="draft" onclick="ktnSetExh('draft','false',this)">下書きでない</button>
     <span class="dbar-sep" style="margin-left:8px">販売期間：</span>
     <button class="dbtn dbtn-exh on" data-exh-key="salesOver" onclick="ktnSetExh('salesOver','false',this)">終了前</button>
     <button class="dbtn dbtn-exh" data-exh-key="salesOver" onclick="ktnSetExh('salesOver','true',this)">終了済</button>
@@ -672,7 +672,7 @@
                       <circle cx="10" cy="5"  r="4"   fill="currentColor" opacity=".7"/>
                       <circle cx="5"  cy="11" r="2.4" fill="currentColor" opacity=".7"/>
                     </svg>
-                    チェックインしてレビューを書く
+                    チェックインする
                   </button>
                 </div>
               </div>
@@ -950,7 +950,7 @@
   <script src="./kotennavi-common.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="./kotennavi-pages.js"></script>
-  <script>/* デモ：このページでは、チェックインクーポンを「まだ受け取っていない」状態から始める（チェックインで受け取る流れを確かめるため） */ if (window.KTN && KTN.CAMPAIGN) KTN.CAMPAIGN.DEMO.buyer.state = 'none';</script>
+  <script>/* デモ：このページでは、チェックインクーポンを「まだ受け取っていない」状態から始める（チェックインで受け取る流れを確かめるため） */ if (window.KTN && KTN.CAMPAIGN) { KTN.CAMPAIGN.DEMO.buyer.state = 'none'; KTN.CAMPAIGN.mount(); }</script>
   <script>
     /* データ定義 → KTN.init() の順 */
     window.P2_SLIDES = [
@@ -1190,31 +1190,7 @@
        案内は p2-11 の保存完了モーダル（KTN.submitDone）側に集約したため、ここは下書き/確認
        依頼中の公開状態通知のみを扱う。クエリは初回表示後に消去する。
     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-    function p2IsOwnerRole() {
-      var role = (window.ktnState && window.ktnState.role) || 'guest';
-      if (role === 'user+creator') role = 'creator';
-      else if (role === 'user+gallery') role = 'gallery';
-      return role === 'creator' || role === 'gallery' || role === 'admin';
-    }
-    window.p2SyncOwnerNotice = function () {
-      var pubWrap  = document.getElementById('p2OwnerPubWrap');
-      var pubBox   = document.getElementById('p2OwnerPubNotice');
-      var pubText  = document.getElementById('p2OwnerPubNoticeText');
-      if (!pubWrap || !pubBox) return;
-      var isOwner = p2IsOwnerRole();
-      var st = (typeof ktnExhState === 'function') ? ktnExhState() : {};
-      var pubOn = false;
-      var editLink = '<a class="ktn-guide-link" href="./kotennavi-p2-11.html">展覧会情報を編集する →</a>';
-      if (isOwner && st.draft) {
-        pubText.innerHTML = '<strong>下書き</strong>　この展覧会はまだ下書きです。内容を入力し「保存して確認依頼」すると、個展なび事務局の確認後にサイトへ掲載されます。<br>' + editLink;
-        pubOn = true;
-      } else if (isOwner && !st.confirmed) {
-        pubText.innerHTML = '<strong>確認依頼中</strong>　この展覧会は現在、個展なび事務局が内容を確認しています。確認が完了すると、公開日の指定に従ってこのページが公開されます（確認完了はメールでお知らせします）。<br>' + editLink;
-        pubOn = true;
-      }
-      pubBox.hidden = !pubOn;
-      pubWrap.hidden = !pubOn;
-    };
+    /* 帯の処理（p2SyncOwnerNotice）は P2 系の全ページで使うので common.js へ移した（2026-10-24） */
     (function () {
       var qs  = new URLSearchParams(location.search);
       var pub = qs.get('pub');
@@ -1459,6 +1435,7 @@
       var RV_LIMIT = 3;
       function renderReviews() {
         var role = (window.ktnState && window.ktnState.role) || 'guest';
+        /* ページのオーナー（creator・gallery 本人）と管理者は、自分の展覧会にチェックインしない（チェックインは来場者の記録・インサイトの数に混じるため・2026-10-24 ユーザー） */
         var showOwn = role !== 'guest' && own.has;
         var items = (showOwn ? [ownItem(own)] : []).concat(OTHER_ITEMS);
         var extra = items.slice(RV_LIMIT);
@@ -1486,7 +1463,7 @@
             btn.innerHTML = CTA_ICON + (own.hasReview ? 'レビューを編集' : 'レビューを書く');
             btn.onclick = function () { p2OwnEdit(true); };
           } else {
-            btn.innerHTML = CTA_ICON + 'チェックインしてレビューを書く';
+            btn.innerHTML = CTA_ICON + 'チェックインする';
             btn.onclick = function () { openCheckinModal(); };
           }
         }

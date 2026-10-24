@@ -47,12 +47,15 @@
   <span class="dbar-sep" style="margin-left:8px">確認：</span>
   <button class="dbtn dbtn-exh on" data-exh-key="confirmed" onclick="ktnSetExh('confirmed','true',this)">確認済</button>
   <button class="dbtn dbtn-exh" data-exh-key="confirmed" onclick="ktnSetExh('confirmed','false',this)">確認前</button>
-  <span class="dbar-sep" style="margin-left:8px">公開日：</span>
-  <button class="dbtn dbtn-exh on" data-exh-key="publishArrived" onclick="ktnSetExh('publishArrived','true',this)">到達済</button>
-  <button class="dbtn dbtn-exh" data-exh-key="publishArrived" onclick="ktnSetExh('publishArrived','false',this)">未到達</button>
   <span class="dbar-sep" style="margin-left:8px">LIAISON：</span>
   <button class="dbtn dbtn-exh" data-exh-key="liaison" onclick="ktnSetExh('liaison','liaison',this)">LIAISON</button>
   <button class="dbtn dbtn-exh on" data-exh-key="liaison" onclick="ktnSetExh('liaison','plus',this)">LIAISON+</button>
+  <span class="dbar-sep" style="margin-left:8px">公開日：</span>
+  <button class="dbtn dbtn-exh on" data-exh-key="publishArrived" onclick="ktnSetExh('publishArrived','true',this)">到達済</button>
+  <button class="dbtn dbtn-exh" data-exh-key="publishArrived" onclick="ktnSetExh('publishArrived','false',this)">未到達</button>
+  <span class="dbar-sep" style="margin-left:8px">下書き：</span>
+  <button class="dbtn dbtn-exh" data-exh-key="draft" onclick="ktnSetExh('draft','true',this)">下書き中</button>
+  <button class="dbtn dbtn-exh on" data-exh-key="draft" onclick="ktnSetExh('draft','false',this)">下書きでない</button>
   <span class="dbar-sep" style="margin-left:8px">販売期間：</span>
   <button class="dbtn dbtn-exh on" data-exh-key="salesOver" onclick="ktnSetExh('salesOver','false',this)">終了前</button>
   <button class="dbtn dbtn-exh" data-exh-key="salesOver" onclick="ktnSetExh('salesOver','true',this)">終了済</button>
@@ -133,6 +136,14 @@
   </div>
 
   <main class="ktn-main" id="ktnMain">
+
+    <!-- ⓪ オーナー限定：下書き／確認依頼中／公開前の帯（common.js p2SyncOwnerNotice・P2 と同じ・2026-10-24） -->
+    <div class="ktn-content p2-owner-pub-wrap" id="p2OwnerPubWrap" hidden>
+      <div class="p211-mode-banner" id="p2OwnerPubNotice" hidden>
+        <span class="p211-mode-banner__icon">●</span>
+        <span class="p211-mode-banner__text" id="p2OwnerPubNoticeText"></span>
+      </div>
+    </div>
 
     <!-- タイトルバンド -->
     <div class="p2-title-band p2-sub">

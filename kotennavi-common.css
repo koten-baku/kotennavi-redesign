@@ -13778,11 +13778,13 @@ a.p10-preset{text-decoration:none}
 .ktn-terms-line{display:flex;align-items:center;gap:4px 10px;flex-wrap:wrap;margin:0;padding:8px 12px;background:#faf7f1;border-left:3px solid var(--page-accent,var(--accent));font-size:.78rem;line-height:1.7;color:var(--ink)}
 .ktn-terms-line__label{font-weight:700}
 .ktn-terms-line__rate{font-family:var(--fm);font-size:.95rem;font-weight:600}
+.ktn-terms-line__rate-old{margin-right:6px;font-weight:400;color:var(--muted)}   /* 特典の適用前の料率（取り消し線・2026-10-24） */
 .ktn-terms-line__tag{margin-left:6px;padding:2px 8px;border-radius:2px;background:var(--page-accent,var(--accent));color:#fff;font-size:.66rem;font-weight:600;line-height:1.5;white-space:nowrap}
 .ktn-terms-line__tag.is-outline{background:none;color:var(--page-accent,var(--accent));box-shadow:inset 0 0 0 1px var(--page-accent,var(--accent))}
 .ktn-terms-line__name{font-weight:700}
 .ktn-terms-line__note{color:var(--muted);font-size:.72rem}
 .ktn-terms-line .ktn-guide-link{margin-left:auto}
+.ktn-terms-line__detail{flex-basis:100%;display:flex;align-items:baseline;flex-wrap:wrap;gap:2px 10px}   /* 特典の名前と説明は2行目に（P2-12-1・2026-10-24） */
 .p315-wrap > .ktn-terms-line{margin-top:16px}
 /* 作品の価格のそばの1行（P6-2＝ダークのページ。色は自分で持つ。段落 p は使わない） */
 .ktn-coupon-hint{margin-top:8px;font-size:.78rem;line-height:1.6;color:var(--lgold,#c9a96e)}
@@ -13814,7 +13816,10 @@ a.p10-preset{text-decoration:none}
 /* 会場のクーポンの案内（P2-6 の来場者の表示・印刷しない） */
 /* チェックインの完了の画面に出す、クーポンを受け取った知らせ */
 .ktn-ci-coupon{margin:0 0 14px;padding:10px 12px;background:#faf7f1;border-left:3px solid var(--accent);font-family:var(--fn);font-size:.8rem;line-height:1.7;color:var(--ink)}
-.ktn-ci-coupon__tag{margin-right:8px;padding:1px 7px;border-radius:2px;background:var(--accent);color:#fff;font-size:.64rem;font-weight:600;white-space:nowrap}
+/* チェックインの完了の画面のクーポン：小さな券 → 文 → クーポンを見る（2026-10-24・券のデザインにそろえる） */
+.ktn-ci-coupon > .ktn-coupon{margin-bottom:6px}
+.ktn-ci-coupon__text{display:block}
+.ktn-ci-coupon .ktn-guide-link{display:inline-block;margin-top:2px}
 /* ニュース（P61-1）に出す「キャンペーンの内容」（設定から自動で出す。連携の確認は保留中） */
 .ktn-camp-box{margin:0 0 24px;padding:16px 18px;background:#faf7f1;border:1px solid var(--border);border-top:3px solid var(--accent);border-radius:4px}
 .ktn-camp-box[hidden]{display:none}
@@ -13971,10 +13976,15 @@ a.p10-preset{text-decoration:none}
 .p9020-ops .p211-field{flex:1 1 260px;margin:0}
 .p9020-ops .p211-help{margin:0}
 /* P2 のチェックインの欄のチェックインクーポン（.ktn-coupon の M・2026-10-21） */
-.p2-visitor__camp{margin:12px 0 0;display:flex;align-items:center;flex-wrap:wrap;gap:6px 10px;font-family:var(--fn);font-size:.8rem;line-height:1.7;color:var(--ink)}
-.p2-visitor__camp-text{flex:1 1 240px;min-width:0}
+/* 縦に積む：券 → 説明 → くわしく（横並びだと欄の幅が足りず崩れた・2026-10-24）。左右の余白は下のボタンの欄（.p2-visitor__action）とそろえる */
+.p2-visitor__camp{margin:0;padding:13px 18px;border-top:1px solid var(--border);font-family:var(--fn);font-size:.8rem;line-height:1.7;color:var(--ink)}
+.p2-visitor__camp > .ktn-coupon{margin-bottom:6px}
+.p2-visitor__camp-text{display:block}
+.p2-visitor__camp .ktn-guide-link{display:inline-block;margin-top:2px;white-space:nowrap}
 .p2-visitor__camp-text strong{font-weight:700}
 .p2-visitor__camp[hidden]{display:none}
+/* hidden を付けたボタンは確実に消す（.ktn-btn などの display の指定が hidden より強く効くため・2026-10-24） */
+.p2-sticky-cta__btn[hidden],.p2-visitor__checkin-btn[hidden]{display:none!important}
 /* P90-20 告知のニュース（P61-11 でつないだもの）・2026-10-19 */
 .p9020-news{list-style:none;margin:0 0 8px;padding:0;display:flex;flex-direction:column;gap:8px}
 .p9020-news__item{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;padding:8px 10px;border:1px solid var(--border);border-radius:4px;background:#fff}
@@ -14036,6 +14046,7 @@ body.p2-7-page .p26-toolbar{flex-wrap:wrap}
 .ktn-coupon-opt__label{font-family:var(--fn);font-size:.82rem;font-weight:600;color:var(--ink)}
 .ktn-coupon-opt__sub{margin-left:8px;font-family:var(--fn);font-size:.74rem;font-weight:400;color:var(--muted)}
 .ktn-coupon-opt__state{font-family:var(--fn);font-size:.76rem;color:var(--muted)}
+.ktn-coupon-opt__row > .ktn-op-btn,.ktn-coupon-opt__row > .ktn-switch,.ktn-coupon-opt__row > .ktn-coupon-opt__state{margin-left:auto}   /* 操作は行の右に（折り返しても右寄せ・2026-10-24） */
 .ktn-coupon-opt__desc{margin:6px 0 0;font-family:var(--fn);font-size:.76rem;line-height:1.7;color:var(--muted)}
 .ktn-coupon-opt__note{margin:6px 0 0;font-family:var(--fn);font-size:.74rem;color:var(--muted)}
 .ktn-coupon-opt__note.is-lock{color:#7a1800}
@@ -14101,6 +14112,7 @@ button.ktn-coupon__btn{border:none;font-family:inherit;cursor:pointer}
 .ktn-coupon-hint__text{vertical-align:middle}
 .ktn-coupon-opt__label .ktn-coupon{margin-right:2px}
 .p2-12-watch-coupon[hidden]{display:none}
+.p2-121-coupon-block .p2-12-watch-coupon{margin-top:14px}
 /* L：画面の主役（金額の欄を大きく・ボタン付き） */
 /* L は金額の欄（ボタン付き）を右に置く＝サイトの操作ボタンは右か下（2026-10-22 ユーザー）。切り取り線と切り込みは欄の左の縁。ロゴの点は券の右下の角に来る */
 .ktn-coupon--l{flex-direction:row-reverse}
@@ -14130,6 +14142,13 @@ button.ktn-coupon__btn{border:none;font-family:inherit;cursor:pointer}
 .ktn-coupon--s .ktn-coupon__main{flex-direction:row;align-items:center;gap:6px;padding:2px 8px 2px 10px}
 .ktn-coupon--s .ktn-coupon__name{font-size:.74rem;font-weight:600}
 .ktn-coupon--s .lb-dot{font-size:.44rem;padding:2px 6px 2px 5px}
+/* スマホ：LIAISON+ のロゴとクーポン名を縦に並べる（L・M・S とも・2026-10-24 ユーザー） */
+@media(max-width:540px){
+  .ktn-coupon__svc{flex-direction:column;align-items:flex-start;gap:2px}
+  .ktn-coupon--s .ktn-coupon__main{flex-direction:column;align-items:flex-start;gap:1px}
+  /* 欄の見出しの添え書き（アフターセールのためのクーポン／ウォッチャーに送るクーポン）は券の下の行に */
+  .ktn-coupon-opt__sub{display:block;margin:4px 0 0}
+}
 /* 印刷：黒の線だけ（形で分かる） */
 .ktn-coupon--print{--coupon-bg:#fff;border-color:#231815}
 .ktn-coupon--print{--coupon-c:var(--accent,#005da7)}

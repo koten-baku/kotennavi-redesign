@@ -417,6 +417,39 @@ function ktnFillFeeRate() {
   var r = KTN.feeRate();
   document.querySelectorAll('[data-fee-rate]').forEach(function (el) { el.textContent = r; });
 }
+/* ══ P2 系（展覧会のページと、その下のページ）のオーナー向けの帯：下書き／確認依頼中／公開前（2026-10-24 P2 から共通へ）。
+   入れ物は各ページの <div class="ktn-content p2-owner-pub-wrap" id="p2OwnerPubWrap" hidden>（P2・P2-1〜5・P2-5-1）。
+   出す相手はページのオーナー（creator・gallery）と管理者。状態はデモバー（確認・下書き・公開日）＝KTN.exh ══ */
+function p2IsOwnerRole() {
+  var role = (window.ktnState && window.ktnState.role) || 'guest';
+  if (role === 'user+creator') role = 'creator';
+  else if (role === 'user+gallery') role = 'gallery';
+  return role === 'creator' || role === 'gallery' || role === 'admin';
+}
+window.p2SyncOwnerNotice = function () {
+  var pubWrap  = document.getElementById('p2OwnerPubWrap');
+  var pubBox   = document.getElementById('p2OwnerPubNotice');
+  var pubText  = document.getElementById('p2OwnerPubNoticeText');
+  if (!pubWrap || !pubBox) return;
+  var isOwner = p2IsOwnerRole();
+  var st = (typeof ktnExhState === 'function') ? ktnExhState() : {};
+  var pubOn = false;
+  var editLink = '<a class="ktn-guide-link" href="./kotennavi-p2-11.html">展覧会情報を編集する →</a>';
+  if (isOwner && st.draft) {
+    pubText.innerHTML = '<strong>下書き</strong>　この展覧会はまだ下書きです。内容を入力し「保存して確認依頼」すると、個展なび事務局の確認後にサイトへ掲載されます。<br>' + editLink;
+    pubOn = true;
+  } else if (isOwner && !st.confirmed) {
+    pubText.innerHTML = '<strong>確認依頼中</strong>　この展覧会は現在、個展なび事務局が内容を確認しています。確認が完了すると、公開日の指定に従ってこのページが公開されます（確認完了はメールでお知らせします）。<br>' + editLink;
+    pubOn = true;
+  } else if (isOwner && st.publishArrived === false) {
+    /* 確認は済んだが、指定した公開日がまだ来ていない（デモバー「公開日：未到達」・2026-10-24 ユーザー「公開前の表示は必要」で戻した） */
+    pubText.innerHTML = '<strong>公開前</strong>　確認が完了しました。指定した公開日になると、このページが公開されます。それまでは、あなたと管理者だけが見られます。<br>' + editLink;
+    pubOn = true;
+  }
+  pubBox.hidden = !pubOn;
+  pubWrap.hidden = !pubOn;
+};
+
 function ktnSubmitDone(opts) {
   opts = opts || {};
   var title = opts.title || '送信が完了しました';
@@ -3543,8 +3576,8 @@ KTN.init = function (opts) {
     if (acEl) acEl.innerHTML = getActions(page, role);
   }
 
-  // common.jsのrenderAllから呼ばれるフック
-  window.ktnRender = _renderHeader;
+  // common.jsのrenderAllから呼ばれるフック。P2 系のオーナー向けの帯（下書き・確認依頼中・公開前）もあわせて描き直す
+  window.ktnRender = function () { _renderHeader(); if (typeof window.p2SyncOwnerNotice === 'function') window.p2SyncOwnerNotice(); };
 
   /* innerWidth が変わった時だけ再計測する。
      iOS オーバースクロール・URLバー表示切替は innerHeight しか変わらないため無視できる。 */
@@ -4080,7 +4113,7 @@ function ktnCheckinShowWatchStep() {
     '<div class="ktn-auth-ttl">\u30c1\u30a7\u30c3\u30af\u30a4\u30f3\u304c\u5b8c\u4e86\u3057\u307e\u3057\u305f</div>' +
     '</div>' +
     '<div class="ktn-auth-body">' +
-    (ciCoupon ? '<div class="ktn-ci-coupon"><span class="ktn-ci-coupon__tag">クーポン</span>' + ciCoupon + '　<a class="ktn-guide-link" href="./kotennavi-p5-17.html">クーポンを見る →</a></div>' : '') +
+    (ciCoupon ? '<div class="ktn-ci-coupon">' + ciCoupon + '<a class="ktn-guide-link" href="./kotennavi-p5-17.html">クーポンを見る →</a></div>' : '') +
     '<p class="ktn-ci-watch__lead">\u3053\u306e\u5c55\u89a7\u4f1a\u306e\u30af\u30ea\u30a8\u30a4\u30bf\u30fc\u3084\u30ae\u30e3\u30e9\u30ea\u30fc\u3092\u30a6\u30a9\u30c3\u30c1\u3059\u308b\u3068\u3001\u65b0\u4f5c\u3084\u6b21\u56de\u5c55\u306e\u60c5\u5831\u304c\u5c4a\u304d\u307e\u3059\u3002</p>' +
     buildCiWatchGroup('\u30af\u30ea\u30a8\u30a4\u30bf\u30fc', creators) +
     buildCiWatchGroup('\u30ae\u30e3\u30e9\u30ea\u30fc', venues) +
@@ -4546,7 +4579,7 @@ KTN.action = (function () {
   /* モーダル見出し・説明文（action 別）。未定義の action は DEFAULT_AUTH を使う */
   var DEFAULT_AUTH = {
     ttl: 'ログインが必要です',
-    sub: 'ウォッチ・興味あり！・チェックインなどの<br>My機能がすべて使えるようになります',
+    sub: 'ログインすると、ウォッチ・興味あり！・<br>チェックインが使えます。',
   };
   var ACTION_AUTH = {
     apply: {
@@ -4641,7 +4674,7 @@ KTN.action = (function () {
       + '</button>'
       + '<div class="ktn-auth-icon" id="ktnAuthIcon"></div>'
       + '<div class="ktn-auth-ttl" id="ktnAuthTtl">ログインが必要です</div>'
-      + '<div class="ktn-auth-sub" id="ktnAuthSub">ウォッチ・興味あり！・チェックインなどの<br>My機能がすべて使えるようになります</div>'
+      + '<div class="ktn-auth-sub" id="ktnAuthSub">ログインすると、ウォッチ・興味あり！・<br>チェックインが使えます。</div>'
       + '</div>'
       + '<div class="ktn-auth-body">'
       + '<div class="ktn-auth-btns">'
