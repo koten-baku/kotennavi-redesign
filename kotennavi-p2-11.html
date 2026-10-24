@@ -26,7 +26,6 @@
 <!-- デモバー -->
 <div class="dbar" id="dbar">
   <span class="dbar-sep">ロール：</span>
-  <button class="dbtn" onclick="setR('guest',this)">ゲスト</button>
   <button class="dbtn" onclick="setR('creator',this)">creator</button>
   <button class="dbtn on" onclick="setR('gallery',this)">gallery</button>
   <button class="dbtn" onclick="setR('admin',this)">管理者</button>
@@ -175,8 +174,7 @@
       <div class="ktn-mgmt-head">
         <h2 class="ktn-mgmt-head__title" id="p211PageTitle">展覧会を編集</h2>
         <p class="ktn-mgmt-head__en">EXHIBITION EDITOR</p>
-        <p class="ktn-mgmt-head__desc">展覧会情報を入力・更新してください。</p>
-        <p class="ktn-mgmt-head__desc"><strong style="color:var(--ink)">必須項目だけで公開できます</strong>（入力の目安：約5分）。<span style="color:var(--page-accent)">＋ 追加項目</span> と付いた欄を開いて入力すると展覧会ページの情報が充実し、来場のきっかけが増えます。保存後もいつでも追記・編集できます。入力を中断するときは「下書き保存」で途中の内容を保存できます。</p>
+        <p class="ktn-mgmt-head__desc">必須項目だけで公開できます。＋ 追加項目 を開くと、展覧会ページの情報が増えます。途中で「下書き保存」もできます。</p>
         <p class="ktn-mgmt-head__guides">登録・編集の手順や、管理者確認・公開までの流れは <a class="ktn-guide-link" id="p211FaqLink" href="/p60-7">よくある質問（展覧会の登録・編集）→</a></p>
       </div>
 
@@ -252,7 +250,7 @@
                   <input maxlength="20" data-count class="p211-tag-input" id="p211TagInput" type="text" placeholder="タグを入力してEnter">
                   <span class="p211-tag-hint">半角スペース区切り</span>
                 </div>
-                <p class="p211-help">展示作品カテゴリーを表すハッシュタグの単語を入力してください。入力すると、すでに使われているタグが候補に出ます（候補に無い言葉もそのまま追加できます）。タグは展覧会のページに表示され、押すと同じタグの展覧会の一覧につながります。</p>
+                <p class="p211-help">使われているタグが候補に出ます（候補に無い言葉も追加できます）。タグは展覧会のページに表示され、同じタグの展覧会の一覧につながります。</p>
               </div>
               <div class="p211-field">
                 <label class="p211-label">展覧会タイトル（英語）</label>
@@ -278,14 +276,13 @@
 松田は1984年群馬県に生まれ、京都市立芸術大学大学院美術研究科絵画専攻（油画）を修了したのち、現在は京都を拠点に活動しています。
 
 鮮やかな色彩による流れるようなストロークと、大胆な余白が印象的な松田のペインティングですが、モティーフ・点・線・面に対する眼差しは、年を経るごとに大きく変化してきました。</textarea>
-            <p class="p211-help">展覧会の内容、展示作品の説明、アピールポイントなどをできるだけ詳細にご記入ください。</p>
           </div>
 
           <div class="p211-field">
             <label class="p211-label">お問合せ先<span class="ktn-req">必須</span></label>
             <textarea maxlength="500" data-count class="p211-textarea" style="min-height:60px" placeholder="メールアドレス、電話番号、担当者名など">art@yugen-gallery.com（担当：山本）
 03-XXXX-XXXX（12:00〜19:00／会期中のみ）</textarea>
-            <p class="p211-help">サイト利用者からお問合せいただく場合の連絡先をご記入ください。</p>
+            <p class="p211-help">展覧会のページに表示されます。</p>
           </div>
 
           <!-- 追加項目：関連イベント・主催・関連情報・ウェブリンク -->
@@ -314,7 +311,6 @@
               <div class="p211-field">
                 <label class="p211-label">ウェブリンク</label>
                 <input class="p211-input" type="url" value="https://yugen-gallery.com/blogs/exhibitions/keisukematsuda" placeholder="https://">
-                <p class="p211-help">展覧会の公式サイトや SNS などの URL を入力してください。</p>
               </div>
             </div>
           </div>
@@ -364,7 +360,7 @@
             <div class="p211-acc-panel" id="p211AccSubImg" hidden>
               <div class="p211-field">
                 <label class="p211-label">サブ画像（最大9枚）</label>
-                <p class="p211-help" style="margin-bottom:8px">左のハンドル（⠿）をドラッグして表示順を入れ替えられます。各画像にキャプションを付けられます。</p>
+                <p class="p211-help" style="margin-bottom:8px">⠿ をドラッグすると順番を入れ替えられます。</p>
                 <div class="p211-img-list" id="p211SubList">
                   <div class="p211-img-uploaded">
                     <span class="p211-img-uploaded__handle" draggable="true" title="ドラッグして並べ替え" aria-label="ドラッグして並べ替え">
@@ -438,7 +434,7 @@
               <label class="p211-pill"><input type="checkbox" name="p211closedDow" value="sun">日曜</label>
               <label class="p211-pill"><input type="checkbox" name="p211closedDow" value="hol">祝日</label>
             </div>
-            <p class="p211-help">毎週の定休日・祝日の休みをすべて選択してください（無休の場合は選択不要）。夏季休業などの臨時休業や、特定の日だけ開催・休業が変わる場合は下の「開催スケジュール詳細」で登録します。</p>
+            <p class="p211-help">毎週の定休日と祝日の休みを選んでください（無休なら選ばない）。臨時休業など特定の日の変更は、下の「開催スケジュール詳細」で登録します。</p>
           </div>
 
           <div class="p211-field">
@@ -448,13 +444,13 @@
               <span class="p211-datetime-pair__sep">〜</span>
               <input type="time" id="p211TimeTo" value="19:00">
             </div>
-            <p class="p211-help">基本の開催時間です。曜日や日によって異なる時間がある場合は、下の「開催スケジュール詳細」の時間変更で登録します。</p>
+            <p class="p211-help">日によって時間が違う場合は、下の「開催スケジュール詳細」で登録します。</p>
           </div>
 
           <div class="p211-field">
             <label class="p211-label">スケジュール補足</label>
             <textarea maxlength="500" data-count class="p211-textarea" style="min-height:60px" placeholder="例：入場は閉場30分前まで／祝日はオープン・祝翌日はクローズ">入場は閉場の30分前まで</textarea>
-            <p class="p211-help">カレンダーには反映されない補足情報があれば入力してください（展覧会ページに文章として表示されます）。</p>
+            <p class="p211-help">カレンダーに出ない補足があれば入力してください（展覧会のページに文章で表示されます）。</p>
           </div>
 
           <div class="p211-sub-links">
@@ -467,7 +463,7 @@
               <span class="p211-sub-link__benefit">臨時休業・時間変更が日別カレンダーに反映され、来場者が安心して予定を立てられます。</span>
             </a>
             <div class="p211-acc-panel" id="p211AccSched" hidden>
-              <p class="p211-help" style="margin:0">上の「会期・休み・開催時間」で入力した内容がそのままカレンダーに反映されます。基本と異なる日（臨時休業・臨時開館・時間変更）は、その日をクリックして直接変更してください。変更した日は色分けして表示され、展覧会ページの日別カレンダーにも反映されます。</p>
+              <p class="p211-help" style="margin:0">上で入力した会期・休み・開催時間がカレンダーに反映されます。臨時休業・臨時開館・時間変更は、その日を押して変えてください。</p>
               <div class="p211-sched-cal" id="p211SchedCal">
                 <div class="p211-sched-cal__bar">
                   <button class="p211-sched-cal__nav" type="button" id="p211SchedPrev" onclick="schedNav(-1)" aria-label="前の月">‹</button>
@@ -486,7 +482,7 @@
                 </div>
                 <div class="p211-sched-cal__grid" id="p211SchedGrid"></div>
                 <div class="p211-sched-cal__editor" id="p211SchedEditor" hidden></div>
-                <p class="p211-help" style="margin-top:10px">祝日をまとめて休みにする場合は上の「休み」欄の「祝日」で設定します。会期が数か月にわたる場合は月送り（‹ ›）で表示を切り替えられます。</p>
+                <p class="p211-help" style="margin-top:10px">祝日をまとめて休みにするときは、上の「休み」の「祝日」で設定します。</p>
               </div>
             </div>
 
@@ -499,7 +495,7 @@
               <span class="p211-sub-link__benefit">イベント予定が展覧会ページとカレンダーに表示され、来場のきっかけになります。</span>
             </a>
             <div class="p211-acc-panel" id="p211AccEvents" hidden>
-              <p class="p211-help" style="margin:0">ギャラリートーク・ワークショップなどのイベントを登録できます（任意）。日付が会期内のイベントは展覧会ページの日別カレンダーにも表示されます。会期外・日付未定のイベントはイベント一覧にのみ表示されます。</p>
+              <p class="p211-help" style="margin:0">日付が会期内のイベントは、展覧会ページの日別カレンダーにも表示されます（会期外・日付未定はイベント一覧だけ）。</p>
               <div id="p211EventList">
                 <div class="p211-event-item">
                   <div class="p211-event-item__head">
@@ -583,7 +579,7 @@
               <span class="p211-sub-link__benefit">在廊日がカレンダーに表示されます。「在廊あり」で展覧会を探している来場者の検索結果にも載ります。</span>
             </a>
             <div class="p211-acc-panel" id="p211AccAttend" hidden>
-              <p class="p211-help" style="margin:0">在廊予定は確定している分だけ登録してください（任意・保存後もいつでも編集できます）。登録した日は展覧会ページのカレンダーに在廊表示が付きます。展覧会ページには「在廊日程は変更になる場合があります」の注意書きが表示されます。</p>
+              <p class="p211-help" style="margin:0">確定している分だけ登録してください。登録した日は、展覧会ページのカレンダーに在廊の印が付きます（「変更になる場合があります」の注意書きも出ます）。</p>
               <div class="p211-field" style="margin:0">
                 <div id="p211AttList">
                   <div class="p211-exc-row">
@@ -609,7 +605,7 @@
                   </div>
                 </div>
                 <button class="p211-acc-add" type="button" onclick="addAttRow()">＋ 在廊予定を追加</button>
-                <p class="p211-help" style="margin-top:8px">1日だけの場合は開始日のみ入力してください。複数のクリエイターが出展する場合は、クリエイターごとに行を分けて登録できます。</p>
+                <p class="p211-help" style="margin-top:8px">1日だけなら開始日だけ入力してください。複数のクリエイターは、行を分けて登録できます。</p>
               </div>
             </div>
           </div>
@@ -630,7 +626,7 @@
               <input maxlength="60" data-count class="p211-input" type="text" id="p211Venue" value="YUGEN Gallery" placeholder="会場名を入力（登録済みの会場は候補から選択）" autocomplete="off">
               <div class="p211-combo__list" id="p211VenueComboList" hidden></div>
             </div>
-            <p class="p211-help" id="p211VenueHelp">ギャラリーユーザーの方はご自身のギャラリーが設定されています。別会場の場合は、登録済みの会場を候補から選択するか、新しい会場名を直接入力してください。同名の会場は候補の「確認 ↗」で会場ページを開き、確かめてから選択できます。</p>
+            <p class="p211-help" id="p211VenueHelp">別の会場は、候補から選ぶか、新しい会場名を入力してください。同じ名前の会場は、候補の「確認 ↗」で確かめてから選べます。</p>
             <p class="p211-venue-new-note" id="p211VenueNewNote" hidden>
               <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15" style="flex-shrink:0;margin-top:1px"><path d="M8 1.5 15 14H1z" stroke-linejoin="round"/><line x1="8" y1="6" x2="8" y2="9.5"/><line x1="8" y1="11.5" x2="8" y2="11.51"/></svg>
               <span><strong>登録されていない新しい会場です。</strong>下の「開催場所の詳細情報」から<strong>場所名読み（カナ）・住所は必須</strong>です。アクセス・地図などもあわせてご記入ください（会場ページ作成のため必要です）。</span>
@@ -653,7 +649,7 @@
                    該当ページが無い場合は「新規作成」で p4-11（ギャラリー編集）を別ページで開く -->
               <div class="p211-admin-link-panel" id="p211VenueAdminPanel" hidden>
                 <div class="p211-admin-link-panel__head">開催場所ページの設定（管理者）</div>
-                <p class="p211-help" style="margin:0">サイト内のギャラリーページを検索し、開催場所として設定します。設定できるギャラリーページは<strong>1つのみ</strong>です（選択すると置き換わります）。該当するページがない場合は「新規作成」からギャラリーページを作成してください。</p>
+                <p class="p211-help" style="margin:0">設定できるのは1つです。該当するページがないときは「新規作成」から作ってください。</p>
                 <div class="p211-artist-add">
                   <div class="p211-combo" id="p211VenuePageCombo">
                     <input class="p211-input" type="text" id="p211VenuePageInput" placeholder="ギャラリーページを検索（名称を入力）" autocomplete="off">
@@ -663,7 +659,7 @@
                 </div>
                 <p class="p211-admin-link-panel__cur" id="p211VenuePageCur">設定中：<strong id="p211VenuePageCurName">YUGEN Gallery</strong> <a class="ktn-guide-link" id="p211VenuePageCurLink" href="kotennavi-p4.html?g=yugen" target="_blank" rel="noopener">ギャラリーページを確認 ↗</a></p>
               </div>
-              <p class="p211-help" style="margin:0">候補から選択した会場は登録済みの情報が使用されるため、入力は不要です。新しい会場の場合、または登録済みの会場でも住所などに変更がある場合にご記入ください。</p>
+              <p class="p211-help" style="margin:0">候補から選んだ会場は入力不要です。新しい会場や、住所などが変わったときだけご記入ください。</p>
               <div class="p211-field" id="p211VenueKanaField">
                 <label class="p211-label">場所名読み（カナ）<span class="ktn-req" id="p211VenueKanaReq" hidden>必須</span></label>
                 <input maxlength="120" data-count class="p211-input" type="text" value="ユウゲンギャラリー" placeholder="全角カタカナ">
@@ -710,7 +706,7 @@
                 <label class="p211-label">利用案内・その他情報</label>
                 <textarea maxlength="500" data-count class="p211-textarea" style="min-height:60px" placeholder="営業時間・定休日、入館方法、バリアフリー対応、駐車場の有無など"></textarea>
               </div>
-              <p class="p211-help" style="margin:0">入力した情報をもとに、管理者が展覧会の確認時に開催場所ページを作成または編集（すでに登録済みのページがある場合）し、この展覧会情報に反映します。</p>
+              <p class="p211-help" style="margin:0">入力した内容は、管理者が確認のときに開催場所のページに反映します。</p>
             </div>
           </div>
 
@@ -877,7 +873,7 @@
                    該当ページが無い場合は「新規作成」で p3-11（クリエイター編集）を別ページで開く -->
               <div class="p211-admin-link-panel" id="p211ArtistAdminPanel" hidden>
                 <div class="p211-admin-link-panel__head">出展クリエイターページの設定（管理者）</div>
-                <p class="p211-help" style="margin:0">サイト内のクリエイターページを検索し、出展クリエイターとして設定します（複数登録できます。追加したクリエイターは下のリストに入ります）。該当するページがない場合は「新規作成」からクリエイターページを作成してください。</p>
+                <p class="p211-help" style="margin:0">複数登録できます。該当するページがないときは「新規作成」から作ってください。</p>
                 <div class="p211-artist-add">
                   <div class="p211-combo" id="p211ArtistPageCombo">
                     <input class="p211-input" type="text" id="p211ArtistPageInput" placeholder="クリエイターページを検索（名前を入力）" autocomplete="off">
@@ -888,7 +884,7 @@
               </div>
               <div class="p211-field">
                 <label class="p211-label">出展クリエイター <span class="ktn-count p211-artist-count"></span></label>
-                <p class="p211-help" style="margin:2px 0 6px">掲載順の指定はありません。展覧会ページの出展クリエイターは、システムが自動的に五十音順（アイウエオ順）で表示します。</p>
+                <p class="p211-help" style="margin:2px 0 6px">展覧会ページでは五十音順に並びます。</p>
                 <div class="p211-artist-list" id="p211ArtistList"></div>
               </div>
               <div class="p211-field">
@@ -900,7 +896,7 @@
                   </div>
                   <button class="ktn-op-btn ktn-op-btn--sm" type="button" onclick="addArtist()">追加</button>
                 </div>
-                <p class="p211-help">グループ展の場合は複数登録できます。過去の展覧会で入力したクリエイターは候補から選択できます。新しいクリエイター名を追加した場合は、リストの「詳細」からプロフィールなどの詳細情報をご記入ください。登録済みのクリエイターでも、内容の修正・追記がある場合は「詳細」からご記入いただけます。入力内容をもとに、管理者が展覧会の確認時にクリエイターページを作成または編集し、リンクを設定します。</p>
+                <p class="p211-help">過去の展覧会のクリエイターは候補から選べます。新しいクリエイターは、リストの「詳細」からプロフィールをご記入ください（管理者が確認のときにクリエイターページを作ります）。</p>
               </div>
             </div>
           </div>
@@ -980,14 +976,14 @@
             <!-- UID -->
             <div class="p211-field">
               <label class="p211-label">UID（ユーザーID）</label>
-              <p class="p211-help" style="margin-bottom:6px">ユーザーID。変更する場合は ID を指定してください。</p>
+              <p class="p211-help" style="margin-bottom:6px">変更するときは ID を指定してください。</p>
               <input class="p211-input" type="text" id="p211Uid" value="6616" style="max-width:200px">
             </div>
 
             <!-- UID検索 -->
             <div class="p211-field">
               <label class="p211-label">UID検索</label>
-              <p class="p211-help" style="margin-bottom:6px">検索する条件を入力し、名前のタイプを選択して検索ボタンをクリックしてください。入力された文字を含むクリエイター・ギャラリーを検索します。</p>
+              <p class="p211-help" style="margin-bottom:6px">入力した文字を含むクリエイター・ギャラリーを検索します。</p>
               <div class="p211-search-row">
                 <input class="p211-input" type="text" placeholder="クリエイター・ギャラリー名">
                 <select class="p211-select">
@@ -1008,7 +1004,7 @@
             <!-- 情報提供者検索 -->
             <div class="p211-field">
               <label class="p211-label">情報提供者検索</label>
-              <p class="p211-help" style="margin-bottom:6px">検索する条件を入力し、名前のタイプを選択して検索ボタンをクリックしてください。入力された文字を含むクリエイター・ギャラリーを検索します。</p>
+              <p class="p211-help" style="margin-bottom:6px">入力した文字を含むクリエイター・ギャラリーを検索します。</p>
               <div class="p211-search-row">
                 <input class="p211-input" type="text" placeholder="クリエイター・ギャラリー名">
                 <select class="p211-select">
@@ -1075,14 +1071,13 @@
             <!-- 確認済み -->
             <div class="p211-field">
               <label class="p211-label">確認済み</label>
-              <p class="p211-help" style="margin-bottom:6px">投稿に関する審査が済んでいる場合にチェックしてください。確認済みでない投稿は、ステータス「公開」をチェックしても公開されません（下書き状態）。</p>
+              <p class="p211-help" style="margin-bottom:6px">審査が済んだらチェックしてください。確認済みでない投稿は、「公開」にしても公開されません。</p>
               <label class="p211-check"><input type="checkbox"> Admin確認済み</label>
             </div>
 
             <!-- 公開 -->
             <div class="p211-field">
               <label class="p211-label">公開</label>
-              <p class="p211-help" style="margin-bottom:6px">Admin確認が取れていない場合、「公開」をチェックしても公開されません。Admin確認済みの場合のみ、公開・非公開を選択できます。</p>
               <label class="p211-check"><input type="checkbox"> 公開</label>
               <p class="p211-admin-pubdate" id="p211AdminPubDate">投稿者が公開日を設定しています：<strong>2026-06-10</strong>（この日付で自動公開されます）</p>
             </div>
@@ -1133,7 +1128,7 @@
           <input type="checkbox" id="p211DraftChk" onchange="syncDraftMode()">
           <span class="p211-draft-check__text">
             <span class="p211-draft-check__label">下書きとして保存する（確認依頼しない）</span>
-            <span class="p211-draft-check__desc">入力途中でも保存できます。下書きはサイトに公開されず、管理者への確認依頼も送られません。あとから続きを入力して確認依頼できます。</span>
+            <span class="p211-draft-check__desc">下書きはサイトに公開されず、管理者への確認依頼も送られません。</span>
           </span>
         </label>
         <div class="p211-submit-bar__row">
@@ -2106,7 +2101,7 @@ function confirmSave() {
   if (demoMode === 'new' || demoMode === 'clone') {
     msg += '<br><br>この展覧会ではLIAISON（オンライン作品展示・無料）をご利用いただけます。確認完了後、オーナーメニューに「LIAISON作品管理」が表示され、作品の掲載を始められます。販売機能付きの「LIAISON+」への切り替えをご希望の場合も、確認完了後に同メニューからお申込みいただけます。';
   }
-  msg += '<br><br>会場に掲示するQRコード・フライヤーは、オーナーメニューからいつでも発行できます。<a class="ktn-guide-link" href="javascript:void(0)" onclick="ktnVenueFlyer()">会場フライヤーを作成する →</a>';
+  msg += '<br><br>会場に掲示するQRコード・フライヤーは、オーナーメニューからいつでも発行できます。<a class="ktn-guide-link" href="kotennavi-p2-7.html">会場フライヤーを作成する →</a>';
   KTN.submitDone({
     title: '保存して確認依頼しました',
     message: msg,

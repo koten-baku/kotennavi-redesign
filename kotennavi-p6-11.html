@@ -146,7 +146,7 @@
       <div class="ktn-mgmt-head">
         <h2 class="ktn-mgmt-head__title" id="p611PageTitle">作品を編集</h2>
         <p class="ktn-mgmt-head__en">ARTWORK EDITOR</p>
-        <p class="ktn-mgmt-head__desc"><strong style="color:var(--ink)">必須項目だけで登録できます</strong>（入力の目安：約3分）。<span style="color:var(--page-accent)">＋ 追加項目</span> と付いた欄を開いて入力すると、作品ページに表示する情報が増えます。保存後もいつでも追記・編集できます。入力を中断するときは下の「一時保存（下書き）」で途中まで保存できます。</p>
+        <p class="ktn-mgmt-head__desc">必須項目だけで登録できます。＋ 追加項目 を開くと、作品ページの情報が増えます。途中で「一時保存（下書き）」もできます。</p>
       </div>
 
       <!-- ─── 1. 基本情報 ─── -->
@@ -218,7 +218,7 @@
                   <input maxlength="20" data-count class="p211-tag-input" id="p611TagInput" type="text" placeholder="タグを入力してEnter">
                   <span class="p211-tag-hint">半角スペース区切り</span>
                 </div>
-                <p class="p211-help">作品カテゴリーを表すハッシュタグの単語を入力してください。入力すると、すでに使われているタグが候補に出ます（候補に無い言葉もそのまま追加できます）。タグは作品のページに表示され、押すと同じタグの作品の一覧につながります。</p>
+                <p class="p211-help">使われているタグが候補に出ます（候補に無い言葉も追加できます）。タグは作品のページに表示され、同じタグの作品の一覧につながります。</p>
               </div>
             </div>
           </div>
@@ -235,7 +235,7 @@
 
           <div class="p211-field">
             <label class="p211-label">メイン画像<span class="ktn-req">必須</span></label>
-            <p class="p211-help" style="margin-bottom:8px">作品一覧・作品ページで最初に表示されます。作品全体が写った画像を推奨します。</p>
+            <p class="p211-help" style="margin-bottom:8px">作品一覧・作品ページで最初に表示されます。</p>
             <div class="p211-img-uploaded">
               <div class="p211-img-uploaded__thumb" style="background:linear-gradient(155deg,#b8d8cc,#6a9e8a)"></div>
               <div class="p211-img-uploaded__body">
@@ -268,7 +268,7 @@
             <div class="p211-acc-panel" id="p611AccSubImg" hidden>
               <div class="p211-field">
                 <label class="p211-label">サブ画像（最大9枚）</label>
-                <p class="p211-help" style="margin-bottom:8px">部分・側面・額装・展示風景など。左のハンドル（⠿）をドラッグして表示順を入れ替えられます。各画像にキャプションを付けられます。</p>
+                <p class="p211-help" style="margin-bottom:8px">部分・側面・額装・展示風景など。⠿ をドラッグすると順番を入れ替えられます。</p>
                 <div class="p211-img-list" id="p611SubList">
                   <div class="p211-img-uploaded">
                     <span class="p211-img-uploaded__handle" draggable="true" title="ドラッグして並べ替え" aria-label="ドラッグして並べ替え">
@@ -343,7 +343,6 @@
 緑のグラデーションと白の余白が織りなす画面には、「さわさわ」「ぽつぽつ」といった言葉にならない庭の気配が静かに満ちている。
 
 近くで見ると油彩の厚みとストロークの方向が音のリズムを生み、離れて見ると一つの風景として立ち上がる。観る距離によって表情を変える作品。</textarea>
-            <p class="p211-help">作品の背景・制作意図・見どころなどをできるだけ詳細にご記入ください。</p>
           </div>
 
         </div>
@@ -367,7 +366,7 @@
               <input class="p211-input" type="number" value="2026" placeholder="例：2026" style="width:120px" aria-label="制作年">
               <span style="font-size:.82rem;color:var(--muted)">年</span>
             </div>
-            <p class="p211-help">制作年は作品ページに表示され、一覧の並べ替え（制作年順）に使われます。「不明」を選ぶと「制作年不明」と表示され、並べ替えでは末尾にまとまります。</p>
+            <p class="p211-help">「不明」を選ぶと「制作年不明」と表示され、制作年順では最後に並びます。</p>
           </div>
 
           <!-- 素材・技法 -->
@@ -380,7 +379,7 @@
           <div class="p211-field">
             <label class="p211-label">サイズ<span class="p211-label__unit">cm</span><span class="ktn-req">必須</span></label>
             <input maxlength="60" data-count class="p211-input" type="text" value="H116.7 × W91.0 × D4.0" placeholder="H × W × D">
-            <p class="p211-help">縦・横・（立体は）奥行の順に、単位はセンチで入力してください。平面作品は「H30 × W40」のように奥行を省略できます。額装込みの外寸を基本とし、立体作品は最大寸法でかまいません。</p>
+            <p class="p211-help">縦・横・（立体は）奥行の順に、センチで入力してください。額装込みの外寸が基本で、立体は最大寸法でかまいません。</p>
           </div>
 
           <!-- 追加項目：重さ・額装・状態・付属品・エディション -->
@@ -430,7 +429,7 @@
               <div class="p211-field">
                 <label class="p211-label">エディション</label>
                 <input maxlength="60" data-count class="p211-input" type="text" placeholder="例：ed. 3/10、一点もの" style="max-width:360px">
-                <p class="p211-help">版画・写真などエディションがある場合に入力してください。一点ものは空欄で構いません。</p>
+                <p class="p211-help">版画・写真などエディションがあるときだけ入力してください。</p>
               </div>
             </div>
           </div>
@@ -439,7 +438,7 @@
           <div class="p211-field" style="margin-top:16px">
             <label class="p211-label">その他</label>
             <textarea maxlength="500" data-count class="p211-textarea" placeholder="例：直射日光・高温多湿を避けて保管してください。壁掛けの際は付属のワイヤーとフックをご使用ください。明るい自然光の入る湿気の少ない場所での展示がおすすめです。額装ガラスは紫外線カットタイプを推奨します。">油彩作品のため、直射日光・高温多湿の環境を避けて保管してください。額装ガラスは紫外線カットタイプを推奨します。フローティングフレーム仕様のため壁から数センチ浮かせて設置され、取付金具・ワイヤーが付属します。壁の耐荷重をご確認のうえ設置してください。</textarea>
-            <p class="p211-help">取扱方法・飾り方の提案など、仕様の補足として購入者・鑑賞者に伝えたいことを自由にご記入ください。</p>
+            <p class="p211-help">取扱方法・飾り方など、購入者・鑑賞者に伝えたいことをご記入ください。</p>
           </div>
 
         </div>
@@ -461,7 +460,7 @@
           <input type="checkbox" id="p611DraftChk" onchange="syncDraftMode()">
           <span class="p211-draft-check__text">
             <span class="p211-draft-check__label">一時保存（下書き）として保存する</span>
-            <span class="p211-draft-check__desc">未完成でも保存できます。下書きは在庫（作品管理）にのみ残り、公開ページ・検索・出品候補には出ません。あとから在庫で仕上げると出品できます。</span>
+            <span class="p211-draft-check__desc">下書きは作品管理にだけ残り、公開ページ・検索・出品候補には出ません。</span>
           </span>
         </label>
         <div class="p211-submit-bar__row">

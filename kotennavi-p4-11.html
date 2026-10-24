@@ -136,7 +136,7 @@
         <div class="ktn-mgmt-head">
           <h2 class="ktn-mgmt-head__title">ギャラリー情報編集</h2>
           <p class="ktn-mgmt-head__en">GALLERY INFORMATION</p>
-          <p class="ktn-mgmt-head__desc">ギャラリーページに表示される名称・紹介文・所在地・利用案内・リンクなどを編集します。変更は保存するとすぐに公開ページへ反映されます。</p>
+          <p class="ktn-mgmt-head__desc">保存するとすぐに公開ページに反映されます。</p>
         </div>
 
         <!-- ブロック1: 基本情報 -->
@@ -167,7 +167,6 @@
             <div class="p211-field">
               <label class="p211-label" for="p411Name">ギャラリー名（表示名）<span class="ktn-req">必須</span></label>
               <input maxlength="40" data-count class="p211-input" id="p411Name" type="text" value="Gallery SOIL 渋谷">
-              <p class="p211-help">ギャラリーページの見出しに表示される名称です。</p>
             </div>
 
             <!-- 英語表記名 -->
@@ -200,7 +199,7 @@
             <!-- 取扱ジャンル -->
             <div class="p211-field">
               <label class="p211-label">主な取扱いジャンル</label>
-              <p class="p211-help" style="margin-bottom:6px">取り扱うことの多いジャンルを選んでください（複数可）。</p>
+              <p class="p211-help" style="margin-bottom:6px">複数選べます。</p>
               <div class="p211-pill-group" id="p411GenreGroup">
                 <label class="p211-pill is-active"><input type="checkbox" name="p411genre" value="art" checked>アート</label>
                 <label class="p211-pill"><input type="checkbox" name="p411genre" value="craft">クラフト</label>
@@ -215,7 +214,6 @@
             <div class="p211-field">
               <label class="p211-label" for="p411Bio">ギャラリー紹介文</label>
               <textarea maxlength="3000" data-count class="p211-textarea p211-textarea--tall" id="p411Bio">渋谷・松濤エリアに拠点を構えるコンテンポラリーアートギャラリー。現代美術・写真を中心に、国内外の若手作家の個展を年間を通じて開催。作家と鑑賞者の距離が近い、対話を大切にした展示空間を目指しています。</textarea>
-              <p class="p211-help">ギャラリー情報セクションに表示される紹介文です。</p>
             </div>
 
           </div>
@@ -276,7 +274,7 @@
             <h3 class="p211-block__title">利用案内 <span class="p211-block__title-en">FACILITY INFO</span></h3>
           </div>
           <div class="p211-block__body">
-            <p class="p211-help" style="margin-bottom:12px">ギャラリーページに常時表示される来場案内です（展覧会ごとの案内は各展覧会の編集画面で設定します）。</p>
+            <p class="p211-help" style="margin-bottom:12px">ギャラリーページに常に表示されます（展覧会ごとの案内は、展覧会の編集で設定します）。</p>
 
             <!-- 入場料 -->
             <div class="p211-facility-item">
@@ -321,7 +319,7 @@
               <div class="p211-facility-row">
                 <span class="p211-facility-row__label">バリアフリー</span>
                 <div class="p211-facility-row__ctrl">
-                  <p class="p211-facility-row__note">当てはまるものを選んでください。選んだ内容がそのままギャラリーページに表示されます。</p>
+                  <p class="p211-facility-row__note">選んだ内容がギャラリーページに表示されます。</p>
                 </div>
               </div>
               <div class="p211-facility-checks">
@@ -457,7 +455,7 @@
             <div class="p211-field">
               <label class="p211-label" for="p411RepName">ご担当者お名前（フルネーム）<span class="ktn-req">必須</span></label>
               <input class="p211-input" id="p411RepName" type="text" value="鈴木 一郎">
-              <p class="p211-help">ギャラリーページ・展覧会情報に関するご連絡の際にお伺いする氏名です。</p>
+              <p class="p211-help">ギャラリーページ・展覧会の情報についてご連絡するときの氏名です。</p>
             </div>
 
             <div class="p211-field">
@@ -473,19 +471,18 @@
                 <option>スタッフ</option>
                 <option>広報委託先（代理店など）</option>
               </select>
-              <p class="p211-help">ご担当者は、ギャラリー・美術館・スペースの運営者・スタッフ、またはギャラリー・美術館・スペースから正式に広報活動を依頼された代理の方に限らせていただいております。最も近いものを選択してください。</p>
+              <p class="p211-help">ご担当者は、運営者・スタッフ、または正式に広報を依頼された代理の方に限ります。最も近いものを選んでください。</p>
             </div>
 
             <div class="p211-field">
               <label class="p211-label" for="p411RepAffil">ご担当者の所属</label>
               <input class="p211-input" id="p411RepAffil" type="text" placeholder="例：Gallery SOIL 渋谷 広報部">
-              <p class="p211-help">任意です。所属会社名・部署名など。</p>
+              <p class="p211-help">所属会社名・部署名など。</p>
             </div>
 
             <div class="p211-field">
               <label class="p211-label" for="p411RepTitle">ご担当者のタイトル</label>
               <input class="p211-input" id="p411RepTitle" type="text" value="ディレクター">
-              <p class="p211-help">任意です。</p>
             </div>
 
           </div>
@@ -528,7 +525,7 @@
                 <div class="p114-identity-readout__row"><dt>法人番号</dt><dd>1234567890123</dd></div>
                 <div class="p114-identity-readout__row"><dt>最終承認日</dt><dd>2026-05-12</dd></div>
               </dl>
-              <p class="p211-help">責任者が変更になった場合は、直接ここを編集せず、リエゾンプラス機能申込から再申請・再承認を行ってください。再承認のたびにこの表示が更新され、変更の記録が残ります。</p>
+              <p class="p211-help">責任者が変わったときは、ここではなく、リエゾンプラス機能申込から再申請してください（再承認のたびに記録が残ります）。</p>
               <a class="ktn-guide-link" href="./kotennavi-p11-4.html">責任者情報を変更する（リエゾンプラス機能申込より再申請） →</a>
 
               <div class="p211-field" style="margin-top:16px">
@@ -545,13 +542,13 @@
                   <option>徳島県</option><option>香川県</option><option>愛媛県</option><option>高知県</option>
                   <option>福岡県</option><option>佐賀県</option><option>長崎県</option><option>熊本県</option><option>大分県</option><option>宮崎県</option><option>鹿児島県</option><option>沖縄県</option>
                 </select>
-                <p class="p211-help">LIAISON+ で作品を出品する際（LIAISON+ 出品設定）の発送地の初期値です。リエゾンプラス機能申込でご登録いただいた内容を表示しています。展示ごとの発送地は出品設定側で個別に変更でき、この既定値はここで直接更新できます。</p>
+                <p class="p211-help">LIAISON+ で出品するときの発送地の初期値です。出品ごとに変えられます。</p>
               </div>
 
               <div class="p211-field" style="margin-top:16px">
                 <label class="p211-label" for="p411InvoiceNumber">事業者番号（インボイス制度・任意）</label>
                 <input class="p211-input" id="p411InvoiceNumber" type="text" value="T1234567890123" placeholder="例：T1234567890123" maxlength="14" style="max-width:260px">
-                <p class="p211-help">適格請求書発行事業者登録番号です。リエゾンプラス機能申込でご登録いただいた内容を表示しています。未登録・免税事業者の場合は空欄のままで構いません。登録された場合はここで直接更新できます。</p>
+                <p class="p211-help">免税事業者などで番号が無いときは、空欄のままで構いません。</p>
               </div>
             </div>
 

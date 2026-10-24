@@ -152,7 +152,7 @@
       <div class="ktn-mgmt-head">
         <h2 class="ktn-mgmt-head__title" id="p711PageTitle">記事を編集</h2>
         <p class="ktn-mgmt-head__en">ARTICLE EDITOR</p>
-        <p class="ktn-mgmt-head__desc"><strong style="color:var(--ink)">タイトルと本文だけで投稿できます</strong>（入力の目安：約5分）。テキスト・画像・動画のブロックを自由に組み合わせて記事を作成できます。保存後もいつでも追記・編集できます。入力を中断するときは下の「一時保存（下書き）」で途中まで保存できます。</p>
+        <p class="ktn-mgmt-head__desc">タイトルと本文だけで投稿できます。テキスト・画像・動画のブロックを組み合わせられます。途中で「一時保存（下書き）」もできます。</p>
       </div>
 
       <!-- ─── 0. 掲載先（基本情報より上に固定表示。編集不可のコンテキスト情報。投稿者はヘッド帯のOwner行と重複するため本文には置かない） ─── -->
@@ -166,7 +166,7 @@
               <span class="cb cb-content cb-artwork" id="p711LinkageBadge">作品</span>
               <span class="p711-linkage__target" id="p711LinkageTarget"><a href="kotennavi-p6.html">《オノマトペの庭》</a></span>
             </div>
-            <p class="p211-help" id="p711LinkageNote">掲載先は、この記事を作成したページによって自動的に決まります。ここでは変更できません。</p>
+            <p class="p211-help" id="p711LinkageNote">記事を作ったページで決まり、ここでは変えられません。</p>
           </div>
 
         </div>
@@ -203,7 +203,7 @@
           <div class="p211-field" id="p711CustomTypeField" hidden>
             <label class="p211-label">記事種別（自由入力）<span class="ktn-req">必須</span></label>
             <input maxlength="20" data-count class="p211-input" type="text" id="p711CustomTypeInput" placeholder="例：座談会">
-            <p class="p211-help">既存の種別に当てはまらない場合に入力してください。記事一覧・検索では「その他」として分類され、入力したラベルは記事ページに補足表示されます。</p>
+            <p class="p211-help">一覧・検索では「その他」に分類され、入力した言葉は記事ページに表示されます。</p>
           </div>
 
           <!-- 追加項目：英語サブタイトル・タグ -->
@@ -229,7 +229,7 @@
                   <input maxlength="20" data-count class="p211-tag-input" id="p711TagInput" type="text" placeholder="タグを入力してEnter">
                   <span class="p211-tag-hint">半角スペース区切り</span>
                 </div>
-                <p class="p211-help">記事カテゴリーを表すハッシュタグの単語を入力してください。入力すると、すでに使われているタグが候補に出ます（候補に無い言葉もそのまま追加できます）。タグは記事のページに表示され、押すとあなたの記事のうち同じタグのものの一覧につながります。</p>
+                <p class="p211-help">使われているタグが候補に出ます（候補に無い言葉も追加できます）。タグは記事のページに表示され、あなたの記事のうち同じタグのものの一覧につながります。</p>
               </div>
             </div>
           </div>
@@ -243,7 +243,7 @@
           <div class="p211-block__title">本文 <span class="p211-block__title-en">Content Blocks</span></div>
         </div>
         <div class="p211-block__body">
-          <p class="p211-help" style="margin-bottom:12px">テキスト・画像・動画のブロックを自由に組み合わせて記事を作成できます。左のハンドル（⠿）をドラッグして順序を入れ替えられます。</p>
+          <p class="p211-help" style="margin-bottom:12px">⠿ をドラッグすると順番を入れ替えられます。</p>
 
           <div class="p711-blocks" id="p711Blocks">
 
@@ -307,7 +307,7 @@
                 <div class="p211-field">
                   <label class="p211-label">動画URL<span class="ktn-req">必須</span></label>
                   <input class="p211-input" type="url" value="https://www.youtube.com/watch?v=dQw4w9WgXcQ" placeholder="https://www.youtube.com/watch?v=…">
-                  <p class="p211-help">YouTube・Vimeo等の動画ページURLを入力してください（動画ファイルのアップロードは不要です）。</p>
+                  <p class="p211-help">YouTube・Vimeo などの動画のページの URL を入力してください。</p>
                 </div>
                 <input data-count type="text" class="p211-img-caption" maxlength="80" placeholder="キャプション（任意）" value="アトリエでの制作風景。緑がかった色面を少しずつ重ねていく。">
                 <div class="p711-video-meta">
@@ -408,7 +408,7 @@
           <input type="checkbox" id="p711DraftChk" onchange="syncDraftMode()">
           <span class="p211-draft-check__text">
             <span class="p211-draft-check__label">一時保存（下書き）として保存する</span>
-            <span class="p211-draft-check__desc">未完成でも保存できます。下書きは記事管理にのみ残り、公開ページ・記事一覧・検索には出ません。あとから記事管理で仕上げると公開できます。</span>
+            <span class="p211-draft-check__desc">下書きは記事管理にだけ残り、公開ページ・記事一覧・検索には出ません。</span>
           </span>
         </label>
         <div class="p211-submit-bar__row">
@@ -897,7 +897,7 @@ function p711MakeBlock(type) {
       '<div class="p211-field">' +
         '<label class="p211-label">動画URL<span class="ktn-req">必須</span></label>' +
         '<input class="p211-input" type="url" placeholder="https://www.youtube.com/watch?v=…">' +
-        '<p class="p211-help">YouTube・Vimeo等の動画ページURLを入力してください（動画ファイルのアップロードは不要です）。</p>' +
+        '<p class="p211-help">YouTube・Vimeo などの動画のページの URL を入力してください。</p>' +
       '</div>' +
       '<input data-count type="text" class="p211-img-caption" maxlength="80" placeholder="キャプション（任意）">' +
       '<div class="p711-video-meta">' +

@@ -136,7 +136,7 @@
         <div class="ktn-mgmt-head">
           <h2 class="ktn-mgmt-head__title">プロフィール編集</h2>
           <p class="ktn-mgmt-head__en">CREATOR PROFILE</p>
-          <p class="ktn-mgmt-head__desc">クリエイターページに表示される名前・自己紹介・ジャンル・リンクなどを編集します。変更は保存するとすぐに公開ページへ反映されます。</p>
+          <p class="ktn-mgmt-head__desc">保存するとすぐに公開ページに反映されます。</p>
         </div>
 
         <!-- ブロック1: 基本情報 -->
@@ -167,14 +167,13 @@
             <div class="p211-field">
               <label class="p211-label" for="p311Name">表示名<span class="ktn-req">必須</span></label>
               <input maxlength="40" data-count class="p211-input" id="p311Name" type="text" value="田中 透">
-              <p class="p211-help">クリエイターページの見出しに表示される名前です。</p>
             </div>
 
             <!-- 英語表記名 -->
             <div class="p211-field">
               <label class="p211-label" for="p311NameEn">英語表記名</label>
               <input maxlength="80" data-count class="p211-input" id="p311NameEn" type="text" value="TANAKA Toru">
-              <p class="p211-help">名 → 姓 の順（例：TANAKA Toru）。名前の下に欧文サブとして表示されます。</p>
+              <p class="p211-help">名前の下に表示されます（例：TANAKA Toru）。</p>
             </div>
 
             <!-- クリエイターID -->
@@ -200,7 +199,7 @@
             <!-- ジャンル -->
             <div class="p211-field">
               <label class="p211-label">ジャンル</label>
-              <p class="p211-help" style="margin-bottom:6px">活動にもっとも近いジャンルを選んでください（複数可）。</p>
+              <p class="p211-help" style="margin-bottom:6px">複数選べます。</p>
               <div class="p211-pill-group" id="p311GenreGroup">
                 <label class="p211-pill is-active"><input type="checkbox" name="p311genre" value="art" checked>アート</label>
                 <label class="p211-pill"><input type="checkbox" name="p311genre" value="craft">クラフト</label>
@@ -215,14 +214,13 @@
             <div class="p211-field">
               <label class="p211-label" for="p311Brand">作品ブランド</label>
               <input maxlength="40" data-count class="p211-input" id="p311Brand" type="text" value="おとかたち">
-              <p class="p211-help">シリーズ名・作品ブランドがあれば入力してください（任意）。</p>
             </div>
 
             <!-- 自己紹介（短文） -->
             <div class="p211-field">
               <label class="p211-label" for="p311Lead">自己紹介（短文）</label>
               <textarea maxlength="1000" data-count class="p211-textarea" id="p311Lead">言葉と感覚の境界を絵画で探求する画家。オノマトペをテーマにした連作で知られる。音が見えて、絵が聞こえる──そんな体験を届けたい。</textarea>
-              <p class="p211-help">最大120文字。ヒーロー（ページ上部）に表示される短い紹介文です。</p>
+              <p class="p211-help">ページの上部に表示される短い紹介文です。</p>
             </div>
 
             <!-- 詳細プロフィール -->
@@ -347,7 +345,7 @@
             <div class="p211-field">
               <label class="p211-label" for="p311RealName">本名（フルネーム）<span class="ktn-req">必須</span></label>
               <input class="p211-input" id="p311RealName" type="text" value="田中 透">
-              <p class="p211-help">戸籍・本人確認書類と一致する氏名を入力してください。</p>
+              <p class="p211-help">戸籍・本人確認書類と一致する氏名を入力してください。ユニットの場合は、代表者の方の氏名です。</p>
             </div>
 
             <div class="p211-field">
@@ -434,13 +432,13 @@
                   <option>徳島県</option><option>香川県</option><option>愛媛県</option><option>高知県</option>
                   <option>福岡県</option><option>佐賀県</option><option>長崎県</option><option>熊本県</option><option>大分県</option><option>宮崎県</option><option>鹿児島県</option><option>沖縄県</option>
                 </select>
-                <p class="p211-help">LIAISON+ で作品を出品する際（LIAISON+ 出品設定）の発送地の初期値です。リエゾンプラス機能申込でご登録いただいた内容を表示しています。展示ごとの発送地は出品設定側で個別に変更でき、この既定値はここで直接更新できます。</p>
+                <p class="p211-help">LIAISON+ で出品するときの発送地の初期値です。出品ごとに変えられます。</p>
               </div>
 
               <div class="p211-field" style="margin-top:16px">
                 <label class="p211-label" for="p311InvoiceNumber">事業者番号（インボイス制度・任意）</label>
                 <input class="p211-input" id="p311InvoiceNumber" type="text" placeholder="例：T1234567890123" maxlength="14" style="max-width:260px">
-                <p class="p211-help">適格請求書発行事業者登録番号です。リエゾンプラス機能申込でご登録いただいた内容を表示しています。未登録・免税事業者の場合は空欄のままで構いません。登録された場合はここで直接更新できます。</p>
+                <p class="p211-help">免税事業者などで番号が無いときは、空欄のままで構いません。</p>
               </div>
             </div>
 

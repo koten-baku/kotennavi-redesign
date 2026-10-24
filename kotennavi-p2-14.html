@@ -145,7 +145,6 @@
         <div class="ktn-mgmt-head">
           <h2 class="ktn-mgmt-head__title">インサイト</h2>
           <p class="ktn-mgmt-head__en">INSIGHTS</p>
-          <p class="ktn-mgmt-head__desc">この展覧会がどれだけ見られ、どんな関心を集めているかを確認できます。</p>
         </div>
 
         <!-- ツールバー（集計対象） -->
@@ -183,13 +182,20 @@
             <div class="ins-kpi">
               <p class="ins-kpi__label">
                 <svg class="ins-kpi__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="6" r="3"/><path d="M8 9c-3 0-5 2-5 4.5h10C13 11 11 9 8 9z"/></svg>
-                会場チェックイン
+                チェックイン
               </p>
               <p class="ins-kpi__val" id="p214SummaryCheckin">34<span class="unit">人</span></p>
             </div>
           </div>
-          <p class="ins-note">「興味あり！」は来場を検討している人の数、「会場チェックイン」は実際に会場へ足を運んだ人の数です。会期前〜終了後を通じた累計で、期間を絞った内訳は下の「閲覧数の推移」、経由元の内訳は「会場チェックインの傾向」で確認できます。</p>
-          <p class="ins-note" id="p214GrowNote">さらに活用したい場合は<a class="ktn-guide-link" href="javascript:void(0)" onclick="ktnListQr('venue')">QRコードを表示</a>・<a class="ktn-guide-link" href="javascript:void(0)" onclick="ktnVenueFlyer()">フライヤーを作成</a>できます。</p>
+          <!-- チェックイン数の注記と、ヒントのカード（興味あり！のリマインダー・会場の QR とフライヤー＝上の数字の順・会期が終わったら隠す #p214GrowNote・2026-10-24） -->
+          <p class="ins-note">展覧会のページを公開してからの累計です。チェックインは任意なので、来場者の全員ではありません。</p>
+          <div class="ins-grow__card" id="p214GrowNote" style="margin-top:14px">
+            <svg class="ins-grow__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="10" cy="5" r="3.2"/><circle cx="5" cy="11" r="2"/></svg>
+            <div class="ins-grow__body">
+              <p class="ins-grow__msg"><strong>ヒント：</strong>「興味あり！」を付けた人には、開催が近づくとリマインダーのメールでお知らせが届きます。</p>
+              <p class="ins-grow__msg">会場に<a class="ktn-guide-link" href="javascript:void(0)" onclick="ktnListQr('venue')">チェックインの QR コード</a>や<a class="ktn-guide-link" href="kotennavi-p2-7.html">会場フライヤー</a>を置くと、来場者はスマホで読み取ってチェックインできます。</p>
+            </div>
+          </div>
         </section>
 
         <!-- 2. 閲覧数の推移（PERIODで表示期間を切り替えるのはこのセクションのみ） -->
@@ -216,25 +222,18 @@
             </div>
           </div>
           <div class="ins-kpi-grid" id="p214DuringBreakdown" style="margin-top:14px" hidden></div>
-          <div class="ins-grow__card" style="margin-top:14px">
-            <svg class="ins-grow__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 13.5C7.6 13.2 1.5 9.3 1.5 5.6A3.1 3.1 0 0 1 8 5a3.1 3.1 0 0 1 6.5.6C14.5 9.3 8.4 13.2 8 13.5z"/></svg>
-            <div class="ins-grow__body">
-              <p class="ins-grow__msg"><strong>ヒント：</strong>「興味あり！」を早めに集めておくと、会期直前の閲覧数アップにつながることがあります。</p>
-              <p class="ins-grow__cta" id="p214GrowCta"><a class="ktn-guide-link" href="javascript:void(0)" onclick="ktnVenueFlyer()">フライヤーを作成する →</a></p>
-            </div>
-          </div>
         </section>
 
-        <!-- STEP1：会場チェックイン・来場者の内訳・ウォッチという「開催による成果」をまとめる -->
+        <!-- STEP1：チェックイン・チェックインした人の内訳・ウォッチという「開催による成果」をまとめる -->
         <div class="ins-phase-divider">
           <p class="ins-phase-divider__title">開催による成果<span class="ktn-sec-en">Results of the Exhibition</span></p>
-          <p class="ins-phase-divider__lead">会場でのチェックインや来場者の傾向、この展覧会をきっかけに広がった関心を見ていきます。</p>
+          <p class="ins-phase-divider__lead">会場でのチェックインや、チェックインした人の傾向、この展覧会をきっかけに広がった関心を見ていきます。</p>
         </div>
 
-        <!-- 3. 会場チェックインの傾向 -->
+        <!-- 3. チェックインの傾向 -->
         <section class="ktn-section">
           <div class="ktn-section__head">
-            <h3 class="ktn-section__title">会場チェックインの傾向<span class="ktn-sec-en">Check-in by Day</span></h3>
+            <h3 class="ktn-section__title">チェックインの傾向<span class="ktn-sec-en">Check-in by Day</span></h3>
           </div>
           <div class="ins-trend ins-trend--compact">
             <div class="ins-trend--split">
@@ -263,8 +262,8 @@
               <div class="ins-trend__main">
                 <p class="ins-trend__side-label">経由元 Check-in Source</p>
                 <div class="ins-hbar">
-                  <div class="ins-hbar__row"><span class="ins-hbar__label ins-hbar__label--wide">QRコード</span><span class="ins-hbar__track"><span class="ins-hbar__fill" style="width:32%"></span></span><span class="ins-hbar__val">7</span></div>
-                  <div class="ins-hbar__row"><span class="ins-hbar__label ins-hbar__label--wide">フライヤー</span><span class="ins-hbar__track"><span class="ins-hbar__fill" style="width:23%"></span></span><span class="ins-hbar__val">5</span></div>
+                  <!-- 会場の QR（会場フライヤーの QR と、オーナーメニュー「会場チェックイン用QRコードを表示」は同じリンク＝区別しない・2026-10-24）／その他（展覧会のページから押したチェックイン） -->
+                  <div class="ins-hbar__row"><span class="ins-hbar__label ins-hbar__label--wide">会場の QR</span><span class="ins-hbar__track"><span class="ins-hbar__fill" style="width:55%"></span></span><span class="ins-hbar__val">12</span></div>
                   <div class="ins-hbar__row"><span class="ins-hbar__label ins-hbar__label--wide">その他</span><span class="ins-hbar__track"><span class="ins-hbar__fill" style="width:100%"></span></span><span class="ins-hbar__val">22</span></div>
                 </div>
               </div>
@@ -275,39 +274,40 @@
                 </p>
                 <p class="ins-kpi__val">4.3<span class="unit">/5</span></p>
                 <p class="ins-kpi__sub">34件中21件でレビュー投稿</p>
+                <!-- レビュー本文への行き先は、評価の数字のそばに（2026-10-24 ユーザー「注記に唐突にレビューが出てくる」） -->
+                <p class="ins-kpi__sub"><a class="ktn-guide-link" href="kotennavi-p2.html#p2VisitorSection">レビューを読む →</a></p>
               </div>
             </div>
             <div class="ins-trend__foot">
-              <span class="ins-trend__legend">会場チェックインの経由元内訳（その他＝直接サイトアクセス等）</span>
+              <span class="ins-trend__legend">チェックインの経由元内訳（会場の QR＝会場フライヤー・QR コードの表示／その他＝展覧会のページから）</span>
             </div>
           </div>
-          <p class="ins-note">チェックインの経由元と、チェックイン時に投稿されたレビュー・評価をまとめています。レビュー本文は<a class="ktn-guide-link" href="kotennavi-p2.html">展覧会ページ</a>の「チェックイン＆レビュー」から確認できます。</p>
         </section>
 
-        <!-- 4. 来場者の内訳 -->
+        <!-- 4. チェックインした人の内訳 -->
         <section class="ktn-section">
           <div class="ktn-section__head">
-            <h3 class="ktn-section__title">来場者の内訳<span class="ktn-sec-en">Visitor Profile</span></h3>
+            <h3 class="ktn-section__title">チェックインした人の内訳<span class="ktn-sec-en">Visitor Profile</span></h3>
           </div>
           <div class="ins-kpi-grid">
             <div class="ins-kpi">
               <p class="ins-kpi__label">
                 <svg class="ins-kpi__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="6" cy="6" r="3"/><path d="M1 14c0-2.8 2.2-5 5-5s5 2.2 5 5"/><path d="M12 5h3M13.5 3.5v3" stroke-linecap="round"/></svg>
-                初めて来場した人
+                初めてチェックインした人
               </p>
               <p class="ins-kpi__val">62<span class="unit">%</span></p>
-              <p class="ins-kpi__sub">来場者34人中 <strong>21人</strong>が今回はじめて来場</p>
+              <p class="ins-kpi__sub">チェックインした34人中 <strong>21人</strong>が今回はじめてチェックイン</p>
             </div>
             <div class="ins-kpi">
               <p class="ins-kpi__label">
                 <svg class="ins-kpi__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="7" opacity=".3"/><circle cx="8" cy="8" r="2.6"/></svg>
-                ウォッチ→来場率
+                ウォッチ→チェックイン率
               </p>
               <p class="ins-kpi__val">26<span class="unit">%</span></p>
-              <p class="ins-kpi__sub">ウォッチャー34人中 <strong>9人</strong>が来場</p>
+              <p class="ins-kpi__sub">ウォッチャー34人中 <strong>9人</strong>がチェックイン</p>
             </div>
           </div>
-          <p class="ins-note">「初めて来場した人」は、個展なびのチェックイン記録上で今回が田中透さんの展覧会への最初のチェックインとなった人の割合です（サイト外での実際の来場歴までは把握できません）。数字が高いほど新しい来場者への広がりを、低いほどリピーターの多さを示します。「ウォッチ→来場率」は、ウォッチによるオンラインでの発見が実際の来場につながっているかの目安です。経由元の内訳は上の「会場チェックインの傾向」で確認できます。</p>
+          <p class="ins-note">「初めてチェックインした人」は、個展なびの記録で、今回が田中透さんの展覧会への最初のチェックインだった人の割合です。</p>
         </section>
 
         <!-- 5. 出展者・会場へのウォッチ -->
@@ -333,7 +333,7 @@
               <p class="ins-kpi__sub">Gallery SOIL 渋谷を新たにウォッチ</p>
             </div>
           </div>
-          <p class="ins-note">この展覧会ページ・出展者プレビュー・<a href="kotennavi-p2-2.html">開催場所</a>・来場登録後のおすすめ表示など、この展覧会をきっかけに行われたウォッチ登録の件数です。展覧会をきっかけに、出展クリエイターや会場ギャラリーの次回展にも関心を持ってもらえた人数の目安になります。</p>
+          <p class="ins-note">この展覧会のページなど、この展覧会をきっかけにウォッチした人の数です。</p>
         </section>
 
         <!-- STEP2：来場者の行動ではなく、記事・作品というコンテンツ単位の関心に軸を変える -->
@@ -370,7 +370,7 @@
               <span class="ktn-count"><strong>341</strong>回</span>
             </div>
           </div>
-          <p class="ins-note">記事は、この展覧会が管理者確認された後に投稿できます。開催前の告知やイベント参加者の募集、展示風景、作品解説、閉幕後の報告・お礼など、会期の前後を通じて幅広い用途に使えます。投稿した記事は、この展覧会のページにも表示されます。</p>
+          <p class="ins-note">記事は、展覧会の確認が済んだあとに投稿でき、この展覧会のページにも表示されます。</p>
           <div class="ins-funnel-notice" id="p214ArticleNotice" hidden>
             <svg class="ins-funnel-notice__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="6.5"/><path d="M8 5v3.5l2.2 2.2"/></svg>
             <p class="ins-funnel-notice__text">この展覧会に関する記事がまだありません。記事を投稿すると、この展覧会のページにも表示されます。<a class="ktn-guide-link" href="kotennavi-p2-13.html">記事を管理する →</a></p>
@@ -421,7 +421,7 @@
               <span class="ins-top-list__metric"><span class="ktn-count"><strong>19</strong>件</span></span>
             </div>
           </div>
-          <p class="ins-note">作品はLIAISON（オンライン展示）またはLIAISON+（オンライン展示＋販売）で掲載できます。出品した作品は、この展覧会のページの作品一覧と、作品の検索にも載ります。</p>
+          <p class="ins-note">出品した作品は、この展覧会のページの作品一覧と、作品の検索にも載ります。</p>
 
           <div class="ins-funnel" id="p214Funnel">
             <div class="ins-funnel__row">
@@ -445,7 +445,7 @@
               <span class="ins-funnel__rate">0.3%</span>
             </div>
           </div>
-          <p class="ins-note" id="p214FunnelNote">「作品を見た人」から「購入につながった人」までの流れです。この展覧会でLIAISON+販売中の作品が対象です。販売実績の詳細は<a href="kotennavi-p3-16.html">取引デスク</a>から確認できます。</p>
+          <p class="ins-note" id="p214FunnelNote">LIAISON+ で販売中の作品が対象です。</p>
           <div class="ins-funnel" id="p214FunnelLite" hidden>
             <div class="ins-funnel__row">
               <div class="ins-funnel__label"><span class="ins-funnel__stage">作品を見た</span><span class="ins-funnel__sub">作品ページ閲覧（合計）</span></div>
@@ -458,7 +458,7 @@
               <span class="ins-funnel__rate">9.0%</span>
             </div>
           </div>
-          <p class="ins-note" id="p214FunnelLiteNote" hidden>「作品を見た人」から「興味あり！」までの流れです。この展覧会はLIAISON（購入機能なし）でオンライン展示中のため、購入・成約に関する指標はありません。関心の高い作品から販売を始めたい場合は<a href="kotennavi-p11-4.html">LIAISON+への切り替え</a>をご検討ください。</p>
+          <p class="ins-note" id="p214FunnelLiteNote" hidden>LIAISON（オンライン展示のみ）のため、購入の指標はありません。</p>
           <div class="ins-funnel-notice" id="p214FunnelNotice" hidden>
             <svg class="ins-funnel-notice__ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="6.5"/><path d="M8 5v3.5l2.2 2.2"/></svg>
             <p class="ins-funnel-notice__text">この展覧会にはまだ登録された作品がありません。LIAISONは自動的に利用開始されているので、作品を登録すると、興味あり！や販売につなげられます。<a class="ktn-guide-link" id="p214FunnelNoticeLink" href="kotennavi-p2-12.html">作品を登録する →</a></p>

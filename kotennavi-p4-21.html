@@ -26,13 +26,14 @@
 <!-- デモバー -->
 <div class="dbar" id="dbar">
   <span class="dbar-sep">ロール：</span>
-  <button class="dbtn" onclick="setR('guest',this)">ゲスト</button>
-  <button class="dbtn" onclick="setR('login',this)">ログイン</button>
   <button class="dbtn on" onclick="setR('user+gallery',this)">gallery本人</button>
   <button class="dbtn" onclick="setR('admin',this)">管理者</button>
   <span class="dbar-sep">LIAISON+：</span>
   <button class="dbtn dbtn-lp on" onclick="ktnSetLP('true',this)">申請済</button>
   <button class="dbtn dbtn-lp" onclick="ktnSetLP('false',this)">未申請</button>
+  <span class="dbar-sep" style="margin-left:12px">キャンペーン：</span>
+  <button class="dbtn on" data-nocamp-demo onclick="ktnNoCampDemo(false,this)">あり</button>
+  <button class="dbtn" data-nocamp-demo onclick="ktnNoCampDemo(true,this)">1つもない</button>
   <span class="dbar-sep" style="margin-left:12px">特典：</span>
   <button class="dbtn on" data-terms-demo="seller" onclick="ktnTermsDemo('seller','active',this)">適用中（展覧会が決定）</button>
   <button class="dbtn" data-terms-demo="seller" onclick="ktnTermsDemo('seller','waiting',this)">適用中（展覧会の前）</button>
@@ -142,7 +143,6 @@
         <div class="ktn-mgmt-head">
           <h2 class="ktn-mgmt-head__title">キャンペーン・特典</h2>
           <p class="ktn-mgmt-head__en">CAMPAIGN &amp; BENEFITS</p>
-          <p class="ktn-mgmt-head__desc">あなたに関係するキャンペーンを確認できます。サービス利用料が安くなるものと、購入者が使えるクーポンの2つに分けています。どちらも条件を満たすと自動で適用され、取引ごとの金額は取引デスクと振込の明細で確認できます。</p>
         </div>
 
         <div class="ktn-terms" data-terms="seller"></div>

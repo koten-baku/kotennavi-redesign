@@ -50,6 +50,7 @@
 | P2-4 | 展覧会-リエゾン作品一覧 | L | R | R | R | R | R | R | --w-entity | kotennavi-p2-5.html | Fix済 |
 | P2-5-1 | 展覧会-リエゾンプラス作品一覧 | L+ | R | R | R | R | R | R | --w-entity | kotennavi-p2-5-1.html | Fix済 |
 | P2-6 | 展覧会-作品リスト(会場配布/QRビュー・印刷兼用) | L/L+ | R | R | R | R | R | R | --w-detail | kotennavi-p2-6.html | Fix済 |
+| P2-7 | 展覧会-会場フライヤー(会場に置く印刷物・印刷兼用・P2-6 と同じ形・2026-10-21 新設) |  |  |  |  | R | R | R | --w-detail | kotennavi-p2-7.html | 調整中 |
 | P2-11 | 展覧会-新規/編集/クローン |  |  |  |  | W | W | W | --w-detail | kotennavi-p2-11.html | Fix済 |
 | P2-12 | 展覧会-リエゾン作品管理 |  |  |  |  | W | W | W | --w-detail | kotennavi-p2-12.html | Fix済 |
 | P2-12-1 | 展覧会-リエゾン+作品管理 |  |  |  |  | W | W | W | --w-detail | kotennavi-p2-12-1.html | Fix済 |

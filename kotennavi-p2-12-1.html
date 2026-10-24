@@ -24,24 +24,20 @@
 <div class="ktn-toast" id="ktnToast"></div>
 <div class="dbar" id="dbar">
   <span class="dbar-sep">ロール：</span>
-  <button class="dbtn" onclick="setR('guest',this)">ゲスト</button>
-  <button class="dbtn" onclick="setR('login',this)">ログイン</button>
   <button class="dbtn on" onclick="setR('user+creator',this)">creator本人</button>
   <button class="dbtn" onclick="setR('user+gallery',this)">gallery本人</button>
   <button class="dbtn" onclick="setR('admin',this)">管理者</button>
   <span class="dbar-sep">申込：</span>
   <button class="dbtn on" onclick="p2121DemoApply(true,this)">あり（切替不可）</button>
   <button class="dbtn" onclick="p2121DemoApply(false,this)">なし（切替可）</button>
-  <span class="dbar-sep">会期：</span>
-  <button class="dbtn" onclick="p2121DemoTerm(false,this)">開始前（変更可）</button>
-  <button class="dbtn on" onclick="p2121DemoTerm(true,this)">開始後（変更不可）</button>
   <span class="dbar-sep">候補：</span>
   <button class="dbtn on" onclick="p2121DemoCands(false,this)">多い（絞込あり）</button>
   <button class="dbtn" onclick="p2121DemoCands(true,this)">少ない（絞込なし）</button>
-  <span class="dbar-sep" style="margin-left:8px">オーナーメニュー会期：</span>
-  <button class="dbtn dbtn-exh" data-exh-key="phase" onclick="ktnSetExh('phase','before',this)">会期前</button>
-  <button class="dbtn dbtn-exh on" data-exh-key="phase" onclick="ktnSetExh('phase','during',this)">会期中</button>
-  <button class="dbtn dbtn-exh" data-exh-key="phase" onclick="ktnSetExh('phase','after',this)">終了後</button>
+  <!-- 会期（1つ）：ページのロック（会期が始まるとモード・販売期間などが変えられない）とオーナーメニューの項目の両方を切り替える（2026-10-21） -->
+  <span class="dbar-sep" style="margin-left:8px">会期：</span>
+  <button class="dbtn dbtn-exh" data-exh-key="phase" onclick="ktnSetExh('phase','before',this);p2121DemoTerm(false)">会期前（変更可）</button>
+  <button class="dbtn dbtn-exh on" data-exh-key="phase" onclick="ktnSetExh('phase','during',this);p2121DemoTerm(true)">会期中</button>
+  <button class="dbtn dbtn-exh" data-exh-key="phase" onclick="ktnSetExh('phase','after',this);p2121DemoTerm(true)">終了後</button>
   <span class="dbar-sep" style="margin-left:8px">確認：</span>
   <button class="dbtn dbtn-exh on" data-exh-key="confirmed" onclick="ktnSetExh('confirmed','true',this)">確認済</button>
   <button class="dbtn dbtn-exh" data-exh-key="confirmed" onclick="ktnSetExh('confirmed','false',this)">確認前</button>
@@ -166,7 +162,7 @@
       <div class="ktn-mgmt-head">
         <h2 class="ktn-mgmt-head__title">LIAISON+ 展示・販売設定</h2>
         <p class="ktn-mgmt-head__en">LIAISON+ SETTINGS</p>
-        <p class="ktn-mgmt-head__desc">展示作品のオンライン販売設定を行います。作品と販売情報は展覧会ページの LIAISON タブで公開されます。</p>
+        <p class="ktn-mgmt-head__desc">作品と販売情報は、展覧会ページの LIAISON タブに載ります。</p>
         <p class="ktn-mgmt-head__guides">公開期間（会期開始日〜販売終了日または会期終了日の遅い方）の外でも、出品者と管理者は展覧会ページの作品タブから実際の表示を確認できます（公開前プレビュー）。詳しくは <a class="ktn-guide-link" href="kotennavi-p70-2.html" target="_blank" rel="noopener">リエゾン+ 作品販売ガイド →</a></p>
       </div>
 
@@ -174,7 +170,7 @@
       <div class="ktn-terms-line" data-terms-line="seller"></div>
 
       <!-- イベントのクーポンを、この展覧会のウォッチャーへ送る：キャンペーンのバナー（イベントの実施中だけ出す・中身は pages.js KTN.CAMPAIGN が描く・2026-10-15／10-19 バナーに） -->
-      <div class="ktn-camp-hero" data-watch-coupon hidden></div>
+      <div class="p2-12-watch-coupon" data-watch-coupon hidden></div>
 
       <!-- モード切替バー -->
       <div class="p2-12-mode-bar">
@@ -331,6 +327,16 @@
             </div>
           </div>
 
+        </div>
+
+        <!-- 購入者のためのクーポン（設定の最後・2026-10-21 ユーザー指示）。中にクーポンごとの欄＝いまはチェックインクーポン（アフターセールのためのクーポン）。
+             操作はこのページの1か所だけ。変えられるのは会期の前まで（外すときは確認のモーダル）。会期のあとに販売期間がないと対象にならない。中身は pages.js KTN.CAMPAIGN -->
+        <div class="p2-121-ship-block p2-121-coupon-block">
+          <div class="p2-12-section-head">
+            <h3 class="p2-12-section-head__title">購入者のためのクーポン</h3>
+          </div>
+          <p class="p2-121-period-hint">この展覧会の作品を LIAISON+ で買う人（購入者）が使えるクーポンです。展覧会ごとに、対象にするかを選べます。</p>
+          <div class="p2-12-coupon-opt" data-venue-optout="あなたが知らないオノマトペ" hidden></div>
         </div>
 
         <!-- 作品全体の説明文 -->

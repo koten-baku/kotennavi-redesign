@@ -7907,64 +7907,72 @@ body.p3-3-page .aw--plus .aw__foot>.p33-console-wrap{order:3}
 .ktn-pshare-badge__code{width:100%;resize:none;font-family:var(--fm);font-size:.7rem;color:var(--muted);background:var(--paper);border:1px solid var(--border);border-radius:4px;padding:7px 9px;line-height:1.5}
 .ktn-pshare-badge__card-actions{display:flex;gap:8px;flex-wrap:wrap}
 
-/* ── 会場フライヤー（A4）モーダル（ktnVenueFlyer・.ktn-auth-modal シェル再利用・2026-08-14 新設） ──
-   展覧会情報QR＋チェックインQRを1枚に配置したA4プレビュー。印刷は @media print で .ktn-vflyer__sheet のみを
-   可視化する（PDF生成ライブラリ不使用・ブラウザの「印刷→PDF保存」に委ねる） */
-.ktn-auth-modal.ktn-vflyer{width:min(480px,92vw)}
+/* ── 会場フライヤー（A4）＝P2-7「会場に置く印刷物」のページの見本（2026-08-14 新設・2026-10-21 にモーダルからページへ） ──
+   チェックインの QR を1つだけ置いた A4（2026-10-22 作り直し・「詳しくはこちら」の QR は外した）。印刷は common.js ktnFlyerPrint が見本を #ktnFlyerPrintRoot に写して、
+   それだけを出す（PDF生成ライブラリ不使用・ブラウザの「印刷→PDF保存」に委ねる） */
 .ktn-vflyer__sheet{width:320px;aspect-ratio:210/297;margin:4px auto 0;box-sizing:border-box;padding:22px 20px;display:flex;flex-direction:column;background:#fff;border:1px solid var(--border);box-shadow:0 2px 10px rgba(0,0,0,.08)}
-.ktn-vflyer__logo{display:flex;align-items:center;gap:6px;opacity:.55}
-.ktn-vflyer__logo img{width:16px;height:16px;display:block}
-.ktn-vflyer__logo span{font-family:var(--fm);font-size:.6rem;letter-spacing:.04em;color:var(--muted)}
-.ktn-vflyer__main{margin-top:18px}
-.ktn-vflyer__head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
-.ktn-vflyer__headtext{flex:1;min-width:0}
-.ktn-vflyer__en{margin:0 0 6px;font-family:var(--font-en-label);font-size:.6rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
-.ktn-vflyer__title{margin:0 0 6px;font-family:var(--fs);font-size:1.15rem;font-weight:700;line-height:1.35;color:var(--ink)}
-.ktn-vflyer__artist{margin:0 0 10px;font-family:var(--fs);font-size:.85rem;color:var(--ink)}
-.ktn-vflyer__greet{margin:0;font-family:var(--fn);font-size:.62rem;line-height:1.6;color:var(--muted)}
-.ktn-vflyer__infoqr{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:4px}
-.ktn-vflyer__infoqr .ktn-vflyer__qr-code svg{width:44px;height:44px}
-.ktn-vflyer__infoqr .ktn-vflyer__qr-lbl{max-width:64px;font-size:.5rem}
-.ktn-vflyer__facts{margin:16px 0 0;font-family:var(--fn);font-size:.68rem;line-height:1.6;color:var(--ink)}
-.ktn-vflyer__facts dt{margin-top:8px;font-weight:600;color:var(--muted)}
-.ktn-vflyer__facts dt:first-child{margin-top:0}
-.ktn-vflyer__facts dd{margin:0}
-.ktn-vflyer__qr-code svg{width:64px;height:64px}
-.ktn-vflyer__qr-lbl{margin:0;font-family:var(--fn);font-size:.58rem;letter-spacing:.02em;color:var(--muted);text-align:center}
-.ktn-vflyer__checkin{display:flex;align-items:center;gap:14px;margin-top:auto;padding:14px;background:rgba(0,93,167,.05);border:1px solid rgba(0,93,167,.14);border-radius:6px}
-.ktn-vflyer__checkin-body{flex:1;min-width:0}
-.ktn-vflyer__checkin-ttl{margin:0 0 4px;font-family:var(--fs);font-size:.72rem;font-weight:700;color:var(--ink)}
-.ktn-vflyer__checkin-desc{margin:0;font-family:var(--fn);font-size:.58rem;line-height:1.5;color:var(--ink)}
-.ktn-vflyer__checkin-note{margin:6px 0 0;font-family:var(--fn);font-size:.5rem;line-height:1.5;color:var(--muted)}
-/* チェックインクーポンの一文（対象の展覧会のときだけ・印刷にも出る・2026-10-20） */
-.ktn-vflyer__checkin-camp{margin:6px 0 0;padding:4px 6px;border:1px solid var(--ink);border-radius:3px;font-family:var(--fn);font-size:.56rem;line-height:1.5;color:var(--ink)}
-.ktn-vflyer__checkin-camp[hidden]{display:none}
-.ktn-vflyer__checkin-camp b{margin-right:6px;font-weight:700}
-.ktn-vflyer__foot{margin:14px 0 0;font-family:var(--fm);font-size:.56rem;letter-spacing:.04em;color:var(--muted);text-align:center}
+/* フライヤーの先頭＝作成者（展覧会の投稿者）のアバターと名前（2026-10-22・旧 個展なびのロゴ .ktn-vflyer__logo）。個展なびは下端の koten-navi.com だけ */
+.ktn-vflyer__poster{display:flex;align-items:center;gap:8px}
+.ktn-vflyer__poster-av{flex:0 0 auto;display:flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:6px;color:#fff;font-family:var(--fm);font-size:.6rem;font-weight:700;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.ktn-vflyer__poster-av--gallery{border-radius:3px}
+.ktn-vflyer__poster-av--user{border-radius:50%}
+.ktn-vflyer__poster-name{font-family:var(--fs);font-size:.68rem;font-weight:600;color:var(--ink)}
+/* どの展覧会か（題・会場・会期をひとまとまり） */
+.ktn-vflyer__exh{margin-top:14px;padding-bottom:10px;border-bottom:1px solid var(--ink)}
+.ktn-vflyer__title{margin:0 0 4px;font-family:var(--fs);font-size:1.05rem;font-weight:700;line-height:1.35;color:var(--ink)}
+.ktn-vflyer__exh-meta{margin:0;display:flex;flex-wrap:wrap;gap:0 10px;font-family:var(--fn);font-size:.56rem;line-height:1.6;color:var(--ink)}
+/* お願い（主役）：チェックインの QR を1つだけ大きく */
+.ktn-vflyer__ask{margin-top:14px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:4px}
+.ktn-vflyer__greet{margin:0;font-family:var(--fn);font-size:.58rem;line-height:1.6;color:var(--muted)}
+.ktn-vflyer__ask-pre{margin:4px 0 0;font-family:var(--fs);font-size:.66rem;font-weight:600;color:var(--ink)}
+.ktn-vflyer__ask-ttl{margin:0 0 4px;font-family:var(--fs);font-size:1rem;font-weight:700;color:var(--ink)}
+.ktn-vflyer__qr-code svg{width:64px;height:64px;display:block}
+.ktn-vflyer__ask-qr svg{width:96px;height:96px}
+.ktn-vflyer__qr-lbl{margin:0;font-family:var(--fn);font-size:.52rem;letter-spacing:.02em;color:var(--muted);text-align:center}
+/* チェックインするとできること／オンラインでも */
+.ktn-vflyer__gets{margin-top:12px;padding:10px 12px;background:rgba(0,93,167,.05);border:1px solid rgba(0,93,167,.14);border-radius:6px}
+.ktn-vflyer__sub{margin:0 0 4px;font-family:var(--fn);font-size:.58rem;font-weight:700;color:var(--ink)}
+.ktn-vflyer__list{margin:0;padding-left:1.2em;font-family:var(--fn);font-size:.54rem;line-height:1.6;color:var(--ink)}
+/* チェックインクーポンの1行（箇条書きの1つ目・小さな印つき・2026-10-22） */
+.ktn-vflyer__camp-item{margin:6px 0 0;font-family:var(--fn);font-size:.56rem;line-height:1.6;color:var(--ink)}
+.ktn-vflyer__camp-item[hidden]{display:none}
+.ktn-vflyer__camp-sub{display:block;margin-top:2px;font-size:.5rem;line-height:1.6;color:var(--ink)}
+.ktn-vflyer__camp-sub strong{font-weight:700}
+.ktn-vflyer__camp-warn{display:block}   /* 改行（2026-10-22） */
+.ktn-vflyer__camp-item .ktn-coupon{zoom:.7;margin-right:4px}   /* 画面のフライヤーは縮小表示なので、印も同じ割合で小さく（印刷では原寸） */
+.ktn-vflyer__online{margin-top:10px}
+.ktn-vflyer__online[hidden]{display:none}
+.ktn-vflyer__online-term{display:block;font-family:var(--fm);letter-spacing:.02em}
+.ktn-vflyer__online-text{margin:0;font-family:var(--fn);font-size:.56rem;line-height:1.6;color:var(--ink)}
+.ktn-vflyer__note{margin:6px 0 0;font-family:var(--fn);font-size:.5rem;line-height:1.5;color:var(--muted)}
+.ktn-vflyer__foot{margin:auto 0 0;padding-top:14px;font-family:var(--fm);font-size:.56rem;letter-spacing:.04em;color:var(--muted);text-align:center;display:flex;align-items:center;justify-content:center;gap:6px}
+.ktn-vflyer__foot-logo{width:14px;height:14px;display:block}   /* 個展なびのロゴは下端に（先頭は作成者・2026-10-22） */
 @media print{
   /* body直下の他要素（ヘッダー・サイドバー・本文・トースト・他モーダル等）を全て非表示にし、
      フライヤーモーダルだけを通常フロー化して印刷する（visibility:hidden方式は非表示要素が
      レイアウト高さを持ち続け、position:fixedの祖先と絡んで印刷ページが分割される不具合が
      あったため display:none 方式に変更・2026-08-14） */
-  body.ktn-printing-flyer > *{display:none!important}
-  body.ktn-printing-flyer #ktnVenueFlyerModal{display:block!important;position:static!important;inset:auto!important;background:none!important;backdrop-filter:none!important;opacity:1!important;pointer-events:auto!important;z-index:auto!important}
-  body.ktn-printing-flyer #ktnVenueFlyerModal .ktn-auth-modal{position:static!important;width:auto!important;transform:none!important;box-shadow:none!important;border-radius:0!important;background:none!important;overflow:visible!important}
-  body.ktn-printing-flyer #ktnVenueFlyerModal .ktn-auth-top,
-  body.ktn-printing-flyer #ktnVenueFlyerModal .ktn-auth-btns{display:none!important}
-  body.ktn-printing-flyer #ktnVenueFlyerModal .ktn-auth-body{padding:0!important}
+  body.ktn-printing-flyer > *:not(#ktnFlyerPrintRoot){display:none!important}
+  body.ktn-printing-flyer #ktnFlyerPrintRoot{display:block!important}
   body.ktn-printing-flyer .ktn-vflyer__sheet{position:static;width:210mm;height:297mm;aspect-ratio:auto;margin:0;box-shadow:none;border:none;padding:24mm 20mm}
+  body.ktn-printing-flyer .ktn-vflyer__poster-av{width:34px;height:34px;font-size:.9rem}
+  body.ktn-printing-flyer .ktn-vflyer__poster-name{font-size:1rem}
+  body.ktn-printing-flyer .ktn-vflyer__foot{font-size:.78rem}
+  body.ktn-printing-flyer .ktn-vflyer__foot-logo{width:22px;height:22px}
   body.ktn-printing-flyer .ktn-vflyer__title{font-size:1.9rem}
-  body.ktn-printing-flyer .ktn-vflyer__artist{font-size:1.2rem}
-  body.ktn-printing-flyer .ktn-vflyer__greet{font-size:.85rem}
-  body.ktn-printing-flyer .ktn-vflyer__facts{font-size:.95rem}
-  body.ktn-printing-flyer .ktn-vflyer__infoqr .ktn-vflyer__qr-code svg{width:78px;height:78px}
-  body.ktn-printing-flyer .ktn-vflyer__infoqr .ktn-vflyer__qr-lbl{max-width:96px;font-size:.66rem}
-  body.ktn-printing-flyer .ktn-vflyer__checkin{padding:20px}
-  body.ktn-printing-flyer .ktn-vflyer__checkin .ktn-vflyer__qr-code svg{width:150px;height:150px}
-  body.ktn-printing-flyer .ktn-vflyer__checkin-ttl{font-size:1.05rem}
-  body.ktn-printing-flyer .ktn-vflyer__checkin-desc{font-size:.8rem}
-  body.ktn-printing-flyer .ktn-vflyer__checkin-note{font-size:.7rem}
-  body.ktn-printing-flyer .ktn-vflyer__checkin-camp{font-size:.82rem;padding:8px 10px}
+  body.ktn-printing-flyer .ktn-vflyer__exh-meta{font-size:.95rem}
+  body.ktn-printing-flyer .ktn-vflyer__greet{font-size:.9rem}
+  body.ktn-printing-flyer .ktn-vflyer__ask-pre{font-size:1.05rem}
+  body.ktn-printing-flyer .ktn-vflyer__ask-ttl{font-size:1.7rem}
+  body.ktn-printing-flyer .ktn-vflyer__ask-qr svg{width:60mm;height:60mm}
+  body.ktn-printing-flyer .ktn-vflyer__qr-lbl{font-size:.8rem}
+  body.ktn-printing-flyer .ktn-vflyer__gets{padding:16px 20px}
+  body.ktn-printing-flyer .ktn-vflyer__sub{font-size:.95rem}
+  body.ktn-printing-flyer .ktn-vflyer__list,body.ktn-printing-flyer .ktn-vflyer__online-text{font-size:.88rem}
+  body.ktn-printing-flyer .ktn-vflyer__note{font-size:.75rem}
+  body.ktn-printing-flyer .ktn-vflyer__camp-item .ktn-coupon{zoom:1}
+  body.ktn-printing-flyer .ktn-vflyer__camp-item{font-size:.88rem}
+  body.ktn-printing-flyer .ktn-vflyer__camp-sub{font-size:.8rem}
   @page{size:A4;margin:0}
 }
 
@@ -8010,23 +8018,16 @@ body.p3-3-page .aw--plus .aw__foot>.p33-console-wrap{order:3}
 /* リマインド → 保存エラー の順に積む（inset は error と同じ左右20px） */
 .ktn-mgmt-wrap > .ktn-form-remind{margin:20px 20px 0}
 
-/* ── スマホで受け取る案内カード（.ktn-pwa-card）＝ホーム画面への追加・プッシュ通知をすすめる（2026-10-09 新設）──
-   置く場所は取引の画面だけ：出品者＝LIAISON+ コンソール（P3-15/P4-15）、購入者＝購入管理（P5-14）。ページの中に置き、作業の邪魔をする帯・ポップアップにはしない。
-   出さない人（本番）：この端末でプッシュがオン・PC・非対応の端末。右肩の × で閉じると30日出さない（端末ごと・common.js ktnPwaCard）。
+/* ── スマホで受け取る案内（.ktn-pwa-line・小さな1行）＝ホーム画面への追加・プッシュ通知をすすめる（2026-10-09 新設・2026-10-21 カードから1行に）──
+   置く場所は取引の画面だけ：出品者＝LIAISON+ コンソール（P3-15/P4-15・タブの上）と LIAISON+ の作品管理（P2-12-1）、購入者＝購入管理（P5-14・タブの上）。くわしい手順は P60-17 へリンクする。ページの中に置き、作業の邪魔をする帯・ポップアップにはしない。
+   出さない人（本番）：この端末でプッシュがオン・PC・非対応の端末。閉じるボタンは置かない（控えめな1行なので・プッシュをオンにすれば出なくなる・2026-10-21）。
    iPhone の Safari のまま開いているときは、先に「ホーム画面に追加」をすすめる文言に替える（data-pwa-ios）。
    見た目は未入力リマインド（.ktn-form-remind）と同じ「気づき」の系統＝warm cream＋左4px のロール色。 */
-.ktn-pwa-card{position:relative;display:flex;align-items:flex-start;gap:14px;background:#faf7f1;border:1px solid var(--border);border-left:4px solid var(--page-accent,#2a5f7a);border-radius:4px;padding:14px 40px 14px 16px}
-.ktn-pwa-card[hidden]{display:none}
-.ktn-pwa-card__icon{flex-shrink:0;width:40px;height:40px;border-radius:9px;box-shadow:0 1px 4px rgba(0,0,0,.12)}
-.ktn-pwa-card__body{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
-.ktn-pwa-card__title{font-family:var(--fn);font-weight:700;font-size:.86rem;color:var(--ink);letter-spacing:.01em}
-.ktn-pwa-card__desc{margin:0;font-family:var(--fn);font-size:.76rem;line-height:1.75;color:var(--muted)}
-.ktn-pwa-card__actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;margin-top:4px}
-.ktn-pwa-card__close{position:absolute;top:6px;right:6px;display:flex;align-items:center;justify-content:center;width:32px;height:32px;background:none;border:0;border-radius:50%;padding:0;color:var(--muted);cursor:pointer}
-.ktn-pwa-card__close svg{width:16px;height:16px}
-.ktn-pwa-card__close:hover{color:var(--ink);background:rgba(0,0,0,.05)}
-.ktn-pwa-card:not(.is-ios) [data-pwa-ios],.ktn-pwa-card.is-ios [data-pwa-std]{display:none}
-@media(max-width:540px){.ktn-pwa-card__icon{width:34px;height:34px;border-radius:8px}}
+.ktn-pwa-line{display:flex;align-items:center;flex-wrap:wrap;gap:4px 10px;padding:6px 4px 6px 0;font-family:var(--fn);font-size:.8rem;line-height:1.6;color:var(--muted)}
+.ktn-pwa-line[hidden]{display:none}
+.ktn-pwa-line__ico{flex-shrink:0;width:16px;height:16px;color:var(--page-accent,var(--accent))}
+.ktn-pwa-line:not(.is-ios) [data-pwa-ios],.ktn-pwa-line.is-ios [data-pwa-std]{display:none}
+
 
 /* ── オフラインのとき（body.is-offline・2026-10-11）＝取引の状態を変える操作 [data-txn-op] を薄くし、上に帯を出す（common.js KTN.setOffline）── */
 body.is-offline [data-txn-op]{opacity:.4;cursor:not-allowed;filter:grayscale(.6)}
@@ -11636,12 +11637,23 @@ body.p60-page,body.p11-page{--page-accent:#005da7;--page-accent-bg:rgba(0,93,167
 .p26-content{padding:28px 20px 56px}
 
 /* 操作ツールバー（印刷非表示） */
+/* ページの題（P2-6 作品リスト・P2-7 会場フライヤー・印刷では出さない・2026-10-21） */
+.p26-pagehead{max-width:var(--w-detail);margin:0 auto 14px}
+.p26-pagehead__title{margin:0;display:flex;align-items:baseline;gap:10px;font-family:var(--fs);font-size:1.3rem;font-weight:700;color:var(--ink)}
+.p26-pagehead__lead{margin:4px 0 0;font-family:var(--fn);font-size:.8rem;line-height:1.7;color:var(--muted)}
 .p26-toolbar{max-width:var(--w-detail);margin:0 auto 18px;display:flex;align-items:center;justify-content:space-between;gap:16px;background:var(--paper);border:1px solid var(--border);border-radius:6px;padding:14px 18px}
 .p26-toolbar__info{font-size:.8rem;color:var(--ink);line-height:1.65}
 .p26-toolbar__print{flex:0 0 auto;display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
 
 /* シート本体 */
-.p26-banner{max-width:var(--w-detail);margin:0 auto 18px}   /* キャンペーンのバナーを作品リストと同じ幅に（2026-10-19） */
+.p26-banner{max-width:var(--w-detail);margin:0 auto 18px}
+.p26-banner--end{margin:20px auto 0}   /* 券は作品リストのあと（2026-10-22） */
+/* 上の小さな1行（チェックインクーポンがあることだけ伝える・2026-10-22） */
+.p26-coupon-line{max-width:var(--w-detail);margin:0 auto 14px;display:flex;align-items:center;flex-wrap:wrap;gap:6px 12px;padding:8px 12px;background:#fff;border:1px solid var(--border);border-radius:4px;font-family:var(--fn);font-size:.8rem;line-height:1.6;color:var(--ink)}
+.p26-coupon-line[hidden]{display:none}
+.p26-coupon-line__text{flex:1 1 220px;min-width:0}
+.p26-coupon-line .ktn-coupon{--coupon-notch:#fff}
+@media print{.p26-coupon-line,.p26-banner{display:none!important}}   /* キャンペーンのバナーを作品リストと同じ幅に（2026-10-19） */
 .p26-sheet{max-width:var(--w-detail);margin:0 auto;background:#fff;border:1px solid var(--border);border-radius:4px;padding:40px 44px 36px;box-shadow:0 2px 14px rgba(0,0,0,.05)}
 .p26-sheet__head{border-bottom:2px solid var(--ink);padding-bottom:20px}
 .p26-sheet__brandrow{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
@@ -11685,12 +11697,15 @@ body.p60-page,body.p11-page{--page-accent:#005da7;--page-accent-bg:rgba(0,93,167
 .p26-sheet__foot{margin-top:28px;padding-top:22px;border-top:1px solid var(--border);display:flex;gap:22px;align-items:flex-start}
 .p26-sheet__qr{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:6px}
 .p26-sheet__qr-cap{font-size:.62rem;color:var(--muted);letter-spacing:.04em}
-.p26-sheet__qr-camp{max-width:150px;padding:4px 8px;border:1px solid var(--ink);border-radius:3px;font-size:.62rem;line-height:1.5;text-align:center;color:var(--ink)}
-.p26-sheet__qr-camp[hidden]{display:none}
-.p26-sheet__qr-camp b{font-weight:700}
 .p26-sheet__contact{flex:1 1 auto;font-size:.8rem;line-height:1.7}
 .p26-sheet__contact-label{font-family:var(--fm);font-size:.6rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-right:8px}
 .p26-sheet__liaison{margin-top:8px;font-size:.76rem;color:var(--muted);line-height:1.7}
+/* 先頭に作成者（投稿者）・下端に個展なびのロゴ（会場フライヤー P2-7 とそろえる・2026-10-22） */
+.p26-sheet__poster{margin-bottom:14px}
+.p26-sheet__poster .ktn-vflyer__poster-av{width:30px;height:30px;font-size:.8rem}
+.p26-sheet__poster .ktn-vflyer__poster-av--gallery{border-radius:4px}
+.p26-sheet__poster .ktn-vflyer__poster-name{font-size:.92rem}
+.p26-sheet__logo{display:inline-block;width:16px;height:16px;margin-right:6px;vertical-align:-3px}
 
 /* モバイル：テーブルを行ブロックへ再構成 */
 @media (max-width:600px){
@@ -11713,7 +11728,8 @@ body.p60-page,body.p11-page{--page-accent:#005da7;--page-accent-bg:rgba(0,93,167
 
 /* 印刷：クロームを落としシートのみ出力 */
 @media print{
-  .dbar,.ktn-header,.ktn-tagbar,.ktn-bottom-nav,.ktn-toast,.p26-toolbar{display:none!important}
+  .dbar,.ktn-header,.ktn-tagbar,.ktn-bottom-nav,.ktn-toast,.p26-toolbar,.p26-pagehead{display:none!important}
+  body.p2-6-page .ktn-footer,body.p2-6-page .ktn-sidebar{display:none!important}   /* 作品リストの印刷にサイトのフッター・サイドバーを出さない（2026-10-21） */
   body{background:#fff}
   .ktn-content.p26-content{padding:0}
   .p26-sheet{max-width:none;border:none;border-radius:0;box-shadow:none;padding:0;margin:0}
@@ -13774,7 +13790,6 @@ a.p10-preset{text-decoration:none}
 .ktn-coupon-hint strong{font-family:var(--fm);font-size:.92rem;font-weight:600}
 .ktn-coupon-hint.is-off{color:var(--lmuted,rgba(255,255,255,.62))}
 .ktn-coupon-hint__link{margin-left:10px;color:inherit;text-decoration:underline;text-underline-offset:2px;white-space:nowrap}
-.ktn-coupon-hint__tag{margin-right:8px;padding:1px 7px;border:1px solid currentColor;border-radius:2px;font-size:.64rem;font-weight:600;white-space:nowrap}
 /* 購入の申込のクーポン（P6-2 のモーダル）：使うクーポンを選ぶ。段落 p は使わない */
 .ktn-apply-coupon{display:flex;flex-direction:column;gap:4px;padding:8px 12px;background:#faf7f1;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:4px}
 .ktn-apply-coupon[hidden]{display:none}
@@ -13782,6 +13797,7 @@ a.p10-preset{text-decoration:none}
 .ktn-apply-coupon__check{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:.82rem;line-height:1.5;color:var(--ink)}
 .ktn-apply-coupon__check input{flex-shrink:0;margin:0}
 .ktn-apply-coupon__name{flex:1;min-width:0}
+.ktn-apply-coupon__name .ktn-coupon{max-width:100%}
 .ktn-apply-coupon__off{font-family:var(--fm);font-weight:600;color:var(--accent);white-space:nowrap}
 .ktn-apply-coupon__sum{margin-top:4px;padding-top:6px;border-top:1px solid var(--border);font-size:.76rem;line-height:1.5;color:var(--ink)}
 .ktn-apply-coupon__sum strong{font-family:var(--fm);font-size:.88rem;font-weight:600}
@@ -13923,55 +13939,6 @@ a.p10-preset{text-decoration:none}
 }
 @media (max-width:540px){.p9010-stages .ins-funnel__label{flex-basis:110px}.p9010-stages .ins-funnel__rate{flex-basis:64px}}
 
-/* ══ キャンペーンのバナー（.ktn-camp-hero・P2-12-1 のイベントのクーポン・2026-10-19・handoff 追174-326）══
-   注意書き・説明書きの帯（薄い地＋左の線）と見分けられるよう、ロールの色（--page-accent）の地に白い文字。
-   文言は直感的な一言と最大の値引きだけ。条件・使い方は「くわしく →」のお知らせとメールに書く */
-.ktn-camp-hero{position:relative;display:flex;align-items:stretch;border-radius:6px;overflow:hidden;color:#fff;
-  background:var(--page-accent,#2a5f7a);
-  background-image:radial-gradient(120% 140% at 0% 0%,rgba(255,255,255,.18) 0%,rgba(255,255,255,0) 55%),linear-gradient(160deg,rgba(0,0,0,0) 40%,rgba(0,0,0,.18) 100%);
-  box-shadow:0 6px 20px rgba(0,0,0,.08)}
-.ktn-camp-hero::after{content:"";position:absolute;inset:6px;border:1px solid rgba(255,255,255,.28);border-radius:3px;pointer-events:none}
-.ktn-camp-hero[hidden]{display:none}
-.ktn-camp-hero__body{flex:1 1 auto;min-width:0;padding:22px 24px 20px}
-.ktn-camp-hero__label{display:flex;align-items:center;gap:10px;font-family:var(--font-en-label);font-size:.6rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.9)}
-.ktn-camp-hero__rule{flex:0 0 28px;height:1px;background:rgba(255,255,255,.6)}
-.ktn-camp-hero__term{font-family:var(--fm);font-weight:500;letter-spacing:.08em;color:rgba(255,255,255,.8)}
-.ktn-camp-hero__title{margin-top:8px;font-family:var(--fs);font-size:1.38rem;font-weight:700;line-height:1.35;letter-spacing:.01em;color:#fff}
-.ktn-camp-hero__catch{margin-top:6px;font-family:var(--fn);font-size:.82rem;line-height:1.7;color:rgba(255,255,255,.92)}
-.ktn-camp-hero__actions{display:flex;align-items:center;flex-wrap:wrap;gap:10px 18px;margin-top:12px}
-.ktn-camp-hero__btn{display:inline-block;padding:10px 18px;border:1px solid #fff;border-radius:4px;background:#fff;color:var(--page-accent,#2a5f7a);font-family:var(--fn);font-size:.82rem;font-weight:700;text-decoration:none;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.12);transition:background .15s,color .15s}
-.ktn-camp-hero__btn:hover{background:rgba(255,255,255,.88)}
-.ktn-camp-hero__ticket .ktn-camp-hero__btn{margin-top:10px;padding:8px 16px;text-align:center}
-.ktn-camp-hero__ticket-link{margin-top:8px;font-family:var(--fn);font-size:.74rem;color:#fff;text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(255,255,255,.6)}
-.ktn-camp-hero__ticket-link:hover{text-decoration-color:#fff}
-.ktn-camp-hero__more{font-family:var(--fn);font-size:.78rem;color:#fff;text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(255,255,255,.6)}
-.ktn-camp-hero__more:hover{text-decoration-color:#fff}
-/* 右の「券」：切り取り線（点線）と上下の切り欠き。切り欠きの色＝バナーを置く地（白い管理ボックス） */
-.ktn-camp-hero__ticket{position:relative;flex:0 0 184px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:18px 16px;border-left:2px dashed rgba(255,255,255,.55);background:rgba(0,0,0,.08);text-align:center}
-.ktn-camp-hero__ticket::before,.ktn-camp-hero__ticket::after{content:"";position:absolute;left:-10px;width:18px;height:18px;border-radius:50%;background:var(--camp-hero-notch,#fff)}
-.ktn-camp-hero__ticket::before{top:-9px}
-.ktn-camp-hero__ticket::after{bottom:-9px}
-.ktn-camp-hero__ticket-label,.ktn-camp-hero__off{font-family:var(--font-en-label);font-size:.62rem;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:rgba(255,255,255,.85)}
-.ktn-camp-hero__amount{font-family:var(--fb);font-size:2.2rem;font-weight:600;line-height:1.05;letter-spacing:-.01em;color:#fff}
-.ktn-camp-hero--on-warm{--camp-hero-notch:var(--warm)}   /* 地が --warm のページ（P2-6）に置くとき */
-.ktn-camp-hero.is-off{background:#7d848c;box-shadow:none}
-.ktn-camp-hero__amount--sm{font-family:var(--fn);font-size:1.1rem;font-weight:700}
-@media print{.ktn-camp-hero{display:none!important}}
-.ktn-camp-hero__catch-sub{display:block;margin-top:2px;font-size:.74rem;color:rgba(255,255,255,.82)}
-.ktn-camp-hero__ticket-note--got{margin-top:10px;padding:4px 12px;border:1px solid rgba(255,255,255,.7);border-radius:12px;font-size:.76rem;font-weight:600;color:#fff}
-.ktn-camp-hero__ticket-note{margin-top:6px;font-family:var(--fn);font-size:.66rem;color:rgba(255,255,255,.82)}
-@media(max-width:540px){
-  .ktn-camp-hero{flex-direction:column}
-  .ktn-camp-hero__body{padding:18px 18px 16px}
-  .ktn-camp-hero__title{font-size:1.2rem}
-  .ktn-camp-hero__ticket{flex-basis:auto;flex-direction:row;flex-wrap:wrap;gap:4px 10px;padding:12px 16px;border-left:none;border-top:2px dashed rgba(255,255,255,.55)}
-  .ktn-camp-hero__ticket::before,.ktn-camp-hero__ticket::after{top:-10px;left:auto;bottom:auto}
-  .ktn-camp-hero__ticket::before{left:-9px}
-  .ktn-camp-hero__ticket::after{right:-9px}
-  .ktn-camp-hero__amount{font-size:1.7rem}
-  .ktn-camp-hero__ticket-note{flex-basis:100%;margin-top:0}
-  .ktn-camp-hero__ticket .ktn-camp-hero__btn,.ktn-camp-hero__ticket-link{flex-basis:100%;margin-top:6px}
-}
 /* P90-20：次のバージョンの案（出品者が負担するクーポン） */
 .p9020-future{margin-top:20px;padding:14px 16px;border:1px dashed #b9b3aa;border-radius:4px;background:#fff}
 .p9020-future__title{display:flex;align-items:center;gap:8px;font-family:var(--fn);font-size:.86rem;font-weight:700;color:var(--ink)}
@@ -13987,8 +13954,6 @@ a.p10-preset{text-decoration:none}
 /* LIAISON+ コンソール（P3-15／P4-15）の展覧会ごとのクーポンの状況（[data-exh-coupon]・2026-10-19） */
 .ktn-exh-coupon{display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px;margin-top:6px;font-family:var(--fn);font-size:.76rem;color:var(--ink)}
 .ktn-exh-coupon[hidden]{display:none}
-.ktn-exh-coupon__tag{padding:1px 8px;border:1px solid var(--page-accent,#2a5f7a);border-radius:10px;color:var(--page-accent,#2a5f7a);font-size:.68rem;font-weight:600}
-.ktn-exh-coupon__name{font-weight:700}
 .ktn-exh-coupon__note b{font-family:var(--fm)}
 /* 開催者へのお願い（チェックインクーポン・P3-15／P4-15） */
 .ktn-exh-coupon__ask{flex-basis:100%;display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;color:var(--muted);font-size:.72rem}
@@ -14005,11 +13970,11 @@ a.p10-preset{text-decoration:none}
 .p9020-ops{display:flex;align-items:flex-end;flex-wrap:wrap;gap:8px 12px;margin-top:12px}
 .p9020-ops .p211-field{flex:1 1 260px;margin:0}
 .p9020-ops .p211-help{margin:0}
-/* P2 のチェックインの欄のアフターセールクーポンの案内（2026-10-19） */
-.p2-visitor__camp{margin:12px 0 0;padding:10px 12px;border:1px dashed var(--page-accent,#005da7);border-radius:4px;font-family:var(--fn);font-size:.8rem;line-height:1.7;color:var(--ink)}
+/* P2 のチェックインの欄のチェックインクーポン（.ktn-coupon の M・2026-10-21） */
+.p2-visitor__camp{margin:12px 0 0;display:flex;align-items:center;flex-wrap:wrap;gap:6px 10px;font-family:var(--fn);font-size:.8rem;line-height:1.7;color:var(--ink)}
+.p2-visitor__camp-text{flex:1 1 240px;min-width:0}
+.p2-visitor__camp-text strong{font-weight:700}
 .p2-visitor__camp[hidden]{display:none}
-.p2-visitor__camp-tag{display:inline-block;margin-right:8px;padding:0 8px;border-radius:10px;background:var(--page-accent,#005da7);color:#fff;font-size:.7rem;font-weight:700}
-.p2-visitor__camp .ktn-guide-link{margin-left:6px}
 /* P90-20 告知のニュース（P61-11 でつないだもの）・2026-10-19 */
 .p9020-news{list-style:none;margin:0 0 8px;padding:0;display:flex;flex-direction:column;gap:8px}
 .p9020-news__item{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;padding:8px 10px;border:1px solid var(--border);border-radius:4px;background:#fff}
@@ -14047,3 +14012,128 @@ a.p10-preset{text-decoration:none}
 .ktn-terms__todo{margin-top:8px;padding:8px 12px;border-left:3px solid var(--page-accent,var(--accent));background:var(--page-accent-bg,rgba(0,93,167,.08));border-radius:0 4px 4px 0;font-size:.82rem;line-height:1.7;color:var(--ink)}
 .ktn-terms__todo-label{display:block;margin-bottom:2px;font-size:.72rem;font-weight:700;color:var(--page-accent,var(--accent))}
 .ktn-terms__auto{display:inline-block;margin-top:8px;padding:1px 10px;border:1px solid var(--border);border-radius:10px;font-size:.72rem;color:var(--muted)}
+/* P3-15／P4-15 は「要対応の取引」の帯のすぐ下（帯の下の余白を詰める・2026-10-21） */
+.p315-urgent-filter + .ktn-pwa-line{margin:-10px 0 14px}
+/* P3-21／P4-21 キャンペーンが1つもないとき（2026-10-21） */
+.ktn-terms-empty{padding:28px 20px;text-align:center;border:1px dashed var(--border);border-radius:4px;background:#fff}
+.ktn-terms-empty__title{margin:0 0 6px;font-family:var(--fn);font-size:.9rem;font-weight:600;color:var(--ink)}
+.ktn-terms-empty__text{margin:0;font-family:var(--fn);font-size:.8rem;line-height:1.7;color:var(--muted)}
+/* キャンペーンの期間の行（実施期間・有効期間・使用期限）＝読みやすく（P3-21／P4-21・P5-17・2026-10-21） */
+.ktn-terms__term{display:flex;align-items:baseline;flex-wrap:wrap;gap:2px 10px;margin-top:6px}
+.ktn-terms__term-label{flex-shrink:0;padding:0 7px;border-radius:3px;background:var(--tag-bg,#f0ede8);font-family:var(--fn);font-size:.72rem;font-weight:600;color:var(--ink)}
+.ktn-terms__term-val{font-family:var(--fm);font-size:.86rem;font-weight:600;letter-spacing:.02em;color:var(--ink)}
+/* P2-7 会場に置く印刷物（2026-10-21）。画面では A4 の見本を大きめに、印刷は #ktnFlyerPrintRoot だけ */
+#ktnFlyerPrintRoot{display:none}
+.p27-sheet-wrap{max-width:var(--w-detail);margin:0 auto;display:flex;justify-content:center;padding:28px 0;background:#fff;border:1px solid var(--border);border-radius:4px;box-shadow:0 2px 14px rgba(0,0,0,.05)}
+.p27-sheet-wrap .ktn-vflyer__sheet{width:min(440px,100%);margin:0;box-shadow:none}
+/* 展覧会の色（ブランド青）＝トグルのオンの色（2026-10-21・ロールの色を持たないページなので） */
+body.p2-7-page{--page-accent:#005da7;--page-accent-bg:rgba(0,93,167,.08)}
+/* 印刷の帯の中のオプション（帯の下段いっぱい・2026-10-21） */
+body.p2-7-page .p26-toolbar{flex-wrap:wrap}
+.p27-optout{flex:0 0 100%;margin-top:4px;padding-top:12px;border-top:1px solid var(--border)}
+.p27-optout[hidden]{display:none}
+.ktn-coupon-opt__row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.ktn-coupon-opt__label{font-family:var(--fn);font-size:.82rem;font-weight:600;color:var(--ink)}
+.ktn-coupon-opt__sub{margin-left:8px;font-family:var(--fn);font-size:.74rem;font-weight:400;color:var(--muted)}
+.ktn-coupon-opt__state{font-family:var(--fn);font-size:.76rem;color:var(--muted)}
+.ktn-coupon-opt__desc{margin:6px 0 0;font-family:var(--fn);font-size:.76rem;line-height:1.7;color:var(--muted)}
+.ktn-coupon-opt__note{margin:6px 0 0;font-family:var(--fn);font-size:.74rem;color:var(--muted)}
+.ktn-coupon-opt__note.is-lock{color:#7a1800}
+.ktn-coupon-opt .ktn-guide-link,.p27-optout .ktn-guide-link{font-size:.76rem}
+/* P2-12-1 チェックインクーポンの対象（操作はここだけ・2026-10-21） */
+.p2-12-coupon-opt{padding:14px 16px;border:1px solid var(--border);border-radius:4px;background:#fff}
+.p2-12-coupon-opt[hidden]{display:none}
+.p2-12-coupon-opt .ktn-coupon-opt__row{padding-bottom:8px;margin-bottom:4px;border-bottom:1px solid var(--border)}
+/* どのキャンペーンのクーポンかを示す小さな帯（P2-12-1 の購入者のためのクーポン・2026-10-21）＝クーポンの中身より一段上の階層 */
+.ktn-coupon-opt__camp{display:flex;align-items:center;flex-wrap:wrap;gap:4px 10px;margin:-14px -16px 12px;padding:7px 16px;background:var(--page-accent-bg,rgba(0,93,167,.08));border-bottom:1px solid var(--border);border-radius:4px 4px 0 0;font-family:var(--fn);font-size:.74rem;color:var(--ink)}
+.ktn-coupon-opt__camp-tag{font-family:var(--font-en-label);font-size:.6rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--page-accent,#005da7)}
+.ktn-coupon-opt__camp .ktn-guide-link{margin-left:auto;font-size:.74rem}
+/* P2-6 のオーナーの帯の一言（チェックインクーポンの案内は会場フライヤーに・2026-10-21） */
+.p26-toolbar__camp{display:block;margin-top:4px;font-size:.78rem;color:var(--ink)}
+.p26-toolbar__camp[hidden]{display:none}
+
+/* ══ 個展なびのクーポン（.ktn-coupon・2026-10-21 デザイン案）══
+   形＝券（金額の欄〔stub〕と本体のあいだに点線の切り取り線、上下に半円の切り込み）。白黒の印刷でも形で分かる。
+   色＝外枠はいつも個展なびのブランドの青（--coupon-c）。LIAISON+ のクーポンは、その中に LIAISON+ のまとまり（.ktn-coupon__svc＝ロゴ .lb-dot.li-plus と金色の線）を置く（2026-10-21 ユーザー「個展なびが外枠共通で、その中に LIAISON+ のクーポンがあるイメージ」）。
+   大きさ＝L（画面の主役・ボタン付き）／M（ページの中の案内）／S（行の中の印）／印刷（--print・黒の線だけ）。
+   切り込みの色＝置く場所の地の色（--coupon-notch・既定は白） */
+.ktn-coupon{--coupon-c:var(--accent,#005da7);--coupon-bg:rgba(0,93,167,.06);--coupon-notch:#fff;position:relative;display:flex;align-items:stretch;overflow:hidden;background:#fff;border:1.5px solid var(--coupon-c);border-radius:6px;color:var(--ink);font-family:var(--fn)}
+/* LIAISON+ のまとまり（外枠の中・ロゴと金色の線）。S では線を付けずロゴだけ */
+.ktn-coupon__svc{display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px;margin:2px 0;padding:4px 0 4px 10px;border-left:3px solid #b87c10;background:linear-gradient(90deg,rgba(184,124,16,.10),rgba(184,124,16,0))}
+.ktn-coupon__svc .ktn-coupon__name{color:var(--ink)}
+.ktn-coupon__brand{display:inline-flex;align-items:center;gap:5px}
+.ktn-coupon__brand img{width:14px;height:14px;display:block}
+/* 金額の欄＝個展なびのロゴ（青の地＋右下に白の点・kotennavi-logo3.svg の形・2026-10-21 ユーザー指示＝文字が白なので点も白）。印刷でも地と点を出す（print-color-adjust） */
+.ktn-coupon__stub{position:relative;flex:0 0 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:12px 18px 14px 16px;background:var(--coupon-c) url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 102.05 102.05'><path fill='%23ffffff' d='M80.09,102.05c-1.22-.8-2.57-2.87-3.34-4.33-2.48-5.91-4.85-14.23-13.31-20.15-1.9-1.23-2.03-2-1.94-2.48.11-.83.82-1.52,2.3-1.3,11.09,1.95,15.22,3.96,21.07,7.61,7.85,5.36,9.57,10.76,9.65,14.09.15,2.3-.18,5.11-2.61,6.56Z'/></svg>") no-repeat right bottom / auto 55%;color:#fff;border-right:2px dashed rgba(255,255,255,.75);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.ktn-coupon__stub::before,.ktn-coupon__stub::after{content:"";position:absolute;right:-3.5px;width:7px;height:7px;transform:rotate(45deg);background:var(--coupon-notch);border:1.5px solid var(--coupon-c)}
+.ktn-coupon__stub::before{top:-3.5px}
+.ktn-coupon__stub::after{bottom:-3.5px}
+.ktn-coupon__amount{font-family:var(--fm);font-size:1.25rem;font-weight:700;line-height:1;letter-spacing:.01em;white-space:nowrap}
+.ktn-coupon__off{font-family:var(--fm);font-size:.62rem;font-weight:700;letter-spacing:.16em}
+.ktn-coupon__main{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px;padding:10px 14px 10px 18px;background:var(--coupon-bg)}
+.ktn-coupon__head{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.ktn-coupon__kind{font-family:var(--font-en-label);font-size:.58rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--coupon-c)}
+.ktn-coupon__name{font-size:.88rem;font-weight:700;color:var(--ink)}
+.ktn-coupon__desc{font-size:.78rem;line-height:1.6;color:var(--ink)}
+.ktn-coupon__cond{font-size:.76rem;color:var(--muted)}
+.ktn-coupon__when{display:flex;align-items:baseline;flex-wrap:wrap;gap:2px 8px;margin-top:2px}
+.ktn-coupon__when-label{padding:0 6px;border:1px solid var(--coupon-c);border-radius:3px;font-size:.66rem;font-weight:600;color:var(--coupon-c)}
+.ktn-coupon__when-date{font-family:var(--fm);font-size:.86rem;font-weight:600;letter-spacing:.02em;color:var(--ink)}
+.ktn-coupon__when-note{font-size:.72rem;color:var(--muted)}
+/* ボタンは金額の欄の中・金額の下（2026-10-22 ユーザー「値引額とボタンを一緒に」＝本体の説明が途中で折り返さないように） */
+.ktn-coupon__action{margin-top:12px}
+.ktn-coupon__stub .ktn-coupon__btn{background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.8)}   /* 白の塗りはコントラストが強すぎる（2026-10-22 ユーザー）＝白の線と白い文字・地はわずかに明るく */
+.ktn-coupon__stub .ktn-coupon__btn:hover{filter:none;background:rgba(255,255,255,.26)}
+.ktn-coupon__btn{display:inline-flex;align-items:center;padding:8px 14px;border-radius:4px;background:var(--coupon-c);color:#fff;font-size:.78rem;font-weight:600;text-decoration:none;white-space:nowrap}
+.ktn-coupon__btn:hover{filter:brightness(.92)}
+button.ktn-coupon__btn{border:none;font-family:inherit;cursor:pointer}
+.ktn-coupon__links{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:4px;font-size:.76rem}
+/* 受付が終わった券（消さずに淡く・確かめられるように） */
+.ktn-coupon.is-off{--coupon-c:#7d848c;--coupon-bg:rgba(125,132,140,.06)}
+.ktn-coupon.is-off .ktn-coupon__svc{filter:grayscale(1);opacity:.7}
+/* 券を縦に並べる（P5-17・P3-21／P4-21） */
+.ktn-coupon-list{display:flex;flex-direction:column;gap:14px;padding:12px 0}
+.ktn-coupon-item{display:flex;flex-direction:column;gap:6px}
+/* 置き場所の地の色に切り込みを合わせる */
+.p26-banner .ktn-coupon{--coupon-notch:var(--warm)}
+.p6-dark .ktn-coupon{--coupon-notch:var(--lbg)}
+.ktn-coupon-hint .ktn-coupon{margin-right:8px}
+.ktn-coupon-hint__text{vertical-align:middle}
+.ktn-coupon-opt__label .ktn-coupon{margin-right:2px}
+.p2-12-watch-coupon[hidden]{display:none}
+/* L：画面の主役（金額の欄を大きく・ボタン付き） */
+/* L は金額の欄（ボタン付き）を右に置く＝サイトの操作ボタンは右か下（2026-10-22 ユーザー）。切り取り線と切り込みは欄の左の縁。ロゴの点は券の右下の角に来る */
+.ktn-coupon--l{flex-direction:row-reverse}
+.ktn-coupon--l .ktn-coupon__stub{padding:18px 24px 20px 22px;background-size:auto 44px;border-right:none;border-left:2px dashed rgba(255,255,255,.75)}
+.ktn-coupon--l .ktn-coupon__stub::before,.ktn-coupon--l .ktn-coupon__stub::after{right:auto;left:-3.5px}
+.ktn-coupon--l .ktn-coupon__amount{font-size:1.9rem}
+.ktn-coupon--l .ktn-coupon__name{font-size:1.02rem}
+.ktn-coupon--l .ktn-coupon__main{padding:14px 22px 14px 18px;gap:5px}
+@media(max-width:540px){
+  /* スマホ：L は金額の欄を下の段に（金額とボタンを横に並べる・切り取り線は上の縁） */
+  .ktn-coupon--l{flex-direction:column-reverse}
+  .ktn-coupon--l .ktn-coupon__stub{flex-direction:row;justify-content:space-between;gap:10px;padding:14px 30px 12px 16px;border-left:none;border-top:2px dashed rgba(255,255,255,.75)}
+  .ktn-coupon--l .ktn-coupon__stub::before{top:-3.5px;bottom:auto;left:-3.5px;right:auto}
+  .ktn-coupon--l .ktn-coupon__stub::after{top:-3.5px;bottom:auto;left:auto;right:-3.5px}
+  .ktn-coupon--l .ktn-coupon__main{padding:14px 16px 16px}
+  .ktn-coupon--l .ktn-coupon__action{margin-top:0}
+  .ktn-coupon--l .ktn-coupon__amount{font-size:1.45rem}
+}
+/* S：行の中の印（1行・小さい券） */
+.ktn-coupon--s{display:inline-flex;vertical-align:middle;border-width:1px;border-radius:4px}
+.ktn-coupon--s .ktn-coupon__stub{flex-direction:row;gap:3px;padding:2px 10px 2px 8px;border-right-width:1px}
+.ktn-coupon--s .ktn-coupon__stub::before,.ktn-coupon--s .ktn-coupon__stub::after{right:-2px;width:4px;height:4px;border-width:1px}
+.ktn-coupon--s .ktn-coupon__stub::before{top:-2px}
+.ktn-coupon--s .ktn-coupon__stub::after{bottom:-2px}
+.ktn-coupon--s .ktn-coupon__amount{font-size:.74rem}
+.ktn-coupon--s .ktn-coupon__off{font-size:.5rem;letter-spacing:.1em}
+.ktn-coupon--s .ktn-coupon__main{flex-direction:row;align-items:center;gap:6px;padding:2px 8px 2px 10px}
+.ktn-coupon--s .ktn-coupon__name{font-size:.74rem;font-weight:600}
+.ktn-coupon--s .lb-dot{font-size:.44rem;padding:2px 6px 2px 5px}
+/* 印刷：黒の線だけ（形で分かる） */
+.ktn-coupon--print{--coupon-bg:#fff;border-color:#231815}
+.ktn-coupon--print{--coupon-c:var(--accent,#005da7)}
+.ktn-coupon--print .ktn-coupon__stub{border-right-color:rgba(255,255,255,.75)}
+.ktn-coupon--print .ktn-coupon__when-label{border-color:#231815;color:#231815}
+.ktn-coupon--print .ktn-coupon__svc{border-left-color:#231815;background:none}
+.ktn-coupon--print .ktn-coupon__svc-label{font-family:var(--fm);font-size:.6rem;font-weight:700;letter-spacing:.1em}

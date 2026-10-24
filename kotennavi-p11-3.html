@@ -126,21 +126,21 @@
       <div class="p114-status-notice p114-status-notice--pending" id="p113PendingBanner" hidden>
         <div class="p114-status-notice__icon">⏳</div>
         <div class="p114-status-notice__title">現在確認中です</div>
-        <p class="p114-status-notice__desc">申込を受け付けました。個展なび事務局による確認・設定作業のため少々お時間をいただきます。完了しましたらメールでご連絡します。</p>
+        <p class="p114-status-notice__desc">申込を受け付けました。事務局の確認・設定が終わったら、メールでお知らせします。</p>
       </div>
 
       <!-- 利用開始バナー -->
       <div class="p114-status-notice" id="p113ApprovedBanner" hidden style="border-color:rgba(42,120,60,.3);background:rgba(42,120,60,.04)">
         <div class="p114-status-notice__icon">✅</div>
         <div class="p114-status-notice__title">ギャラリー機能が有効です</div>
-        <p class="p114-status-notice__desc">ギャラリーページの作成・展覧会情報の掲載ができるようになりました。ギャラリーページから情報を入力して公開を始めましょう。</p>
+        <p class="p114-status-notice__desc">ギャラリーページの作成と、展覧会の掲載ができるようになりました。</p>
       </div>
 
       <!-- 取消バナー -->
       <div class="p114-status-notice p114-status-notice--cancelled" id="p113CancelledBanner" hidden>
         <div class="p114-status-notice__icon">✕</div>
         <div class="p114-status-notice__title">お申込みは取消となりました</div>
-        <p class="p114-status-notice__desc">今回のお申込みは取消とさせていただきました。取消の理由につきましては、お送りしたメールをご確認ください。</p>
+        <p class="p114-status-notice__desc">今回のお申込みは取消になりました。理由は、お送りしたメールをご確認ください。</p>
       </div>
 
       <!-- 管理ボックス -->
@@ -232,19 +232,17 @@
             <div class="p211-field">
               <label class="p211-label">ギャラリー名（表示名）<span class="ktn-req">必須</span></label>
               <input maxlength="40" data-count class="p211-input" id="p113Name" type="text" placeholder="例：Gallery SOIL 渋谷">
-              <p class="p211-help">ギャラリーページや展覧会情報に表示される名称です。</p>
             </div>
 
             <div class="p211-field">
               <label class="p211-label">ギャラリー名（全角カナ）<span class="ktn-req">必須</span></label>
               <input maxlength="60" data-count class="p211-input" id="p113Kana" type="text" placeholder="例：ギャラリー ソイル シブヤ">
-              <p class="p211-help">表示名の読み仮名です。並び替え・検索に使用します。</p>
+              <p class="p211-help">並び替え・検索に使います。</p>
             </div>
 
             <div class="p211-field">
               <label class="p211-label">ギャラリー名（英語表記）</label>
               <input maxlength="80" data-count class="p211-input" id="p113NameEn" type="text" placeholder="例：Gallery SOIL Shibuya">
-              <p class="p211-help">英語ページ・海外向け表示に使用します（任意）。</p>
             </div>
 
             <div class="p211-field">
@@ -258,7 +256,7 @@
                 <option>建築</option>
                 <option>その他</option>
               </select>
-              <p class="p211-help">主に取扱う作品のジャンルを選択してください。より詳しいジャンル・タグはご利用開始後に設定できます。</p>
+              <p class="p211-help">詳しいジャンル・タグは、ご利用開始後に設定できます。</p>
             </div>
 
           </div>
@@ -315,7 +313,7 @@
                 </div>
               </div>
               <button class="ktn-op-btn ktn-op-btn--sm p211-repeat__add" type="button" data-target="p113LinkList" data-link="1">＋ リンクを追加</button>
-              <p class="p211-help">活動を確認できるリンクがあればご記入ください（任意・確認の参考にします）。</p>
+              <p class="p211-help">確認の参考にします。</p>
             </div>
 
           </div>
@@ -340,7 +338,7 @@
             <div class="p211-field">
               <label class="p211-label">ご担当者お名前（フルネーム）<span class="ktn-req">必須</span></label>
               <input class="p211-input" id="p113ContactName" type="text" placeholder="例：鈴木 一郎">
-              <p class="p211-help">ギャラリーページ・展覧会情報に関するご連絡の際にお伺いする氏名です。</p>
+              <p class="p211-help">ギャラリーページ・展覧会の情報についてご連絡するときの氏名です。</p>
             </div>
 
             <div class="p211-field">
@@ -356,19 +354,18 @@
                 <option>スタッフ</option>
                 <option>広報委託先（代理店など）</option>
               </select>
-              <p class="p211-help">ご担当者は、ギャラリー・美術館・スペースの運営者・スタッフ、またはギャラリー・美術館・スペースから正式に広報活動を依頼された代理の方に限らせていただいております。最も近いものを選択してください。</p>
+              <p class="p211-help">ご担当者は、運営者・スタッフ、または正式に広報を依頼された代理の方に限ります。最も近いものを選んでください。</p>
             </div>
 
             <div class="p211-field">
               <label class="p211-label">ご担当者の所属</label>
               <input maxlength="40" data-count class="p211-input" id="p113ContactDept" type="text" placeholder="例：Gallery SOIL 渋谷 広報部">
-              <p class="p211-help">任意です。所属会社名・部署名など。</p>
+              <p class="p211-help">所属会社名・部署名など。</p>
             </div>
 
             <div class="p211-field">
               <label class="p211-label">ご担当者のタイトル</label>
               <input maxlength="40" data-count class="p211-input" id="p113ContactTitle" type="text" placeholder="例：ディレクター">
-              <p class="p211-help">任意です。</p>
             </div>
 
           </div>
@@ -389,7 +386,7 @@
             <div class="p211-field">
               <label class="p211-label">すでに個展なびに掲載されているページ（任意）</label>
               <input class="p211-input" id="p113ExistingPage" type="text" placeholder="ページのURL、またはギャラリー名">
-              <p class="p211-help">クリエイターなどが投稿した展覧会情報から、ページがすでに作成されている場合があります。心当たりのあるページ（URLまたは名称）があればご記入ください。事務局で確認のうえ、そのページのオーナーを切り替え、これまでの展覧会情報を引き継ぎます。心当たりがなくても、事務局が名寄せして引き継げる場合があります（結果は機能付与完了メールでお知らせします）。</p>
+              <p class="p211-help">投稿された展覧会から、あなたのページがすでに作られている場合があります。心当たりのあるページ（URL か名称）をご記入ください。確認のうえ、オーナーを切り替えて、これまでの展覧会を引き継ぎます（心当たりが無くても、事務局で見つけて引き継げる場合があります）。</p>
             </div>
           </div>
         </div>

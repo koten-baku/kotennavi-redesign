@@ -24,8 +24,6 @@
 <div class="ktn-toast" id="ktnToast"></div>
 <div class="dbar" id="dbar">
   <span class="dbar-sep">ロール：</span>
-  <button class="dbtn" onclick="setR('guest',this)">ゲスト</button>
-  <button class="dbtn" onclick="setR('login',this)">ログイン</button>
   <button class="dbtn on" onclick="setR('user+creator',this)">creator本人</button>
   <button class="dbtn" onclick="setR('user+gallery',this)">gallery本人</button>
   <button class="dbtn" onclick="setR('admin',this)">管理者</button>
@@ -36,13 +34,11 @@
   <span class="dbar-sep">候補：</span>
   <button class="dbtn on" onclick="p212DemoCands(false,this)">多い（絞込あり）</button>
   <button class="dbtn" onclick="p212DemoCands(true,this)">少ない（絞込なし）</button>
-  <span class="dbar-sep">会期：</span>
-  <button class="dbtn" onclick="p212DemoTerm(false,this)">開始前（変更可）</button>
-  <button class="dbtn on" onclick="p212DemoTerm(true,this)">開始後（変更不可）</button>
-  <span class="dbar-sep" style="margin-left:8px">オーナーメニュー会期：</span>
-  <button class="dbtn dbtn-exh" data-exh-key="phase" onclick="ktnSetExh('phase','before',this)">会期前</button>
-  <button class="dbtn dbtn-exh on" data-exh-key="phase" onclick="ktnSetExh('phase','during',this)">会期中</button>
-  <button class="dbtn dbtn-exh" data-exh-key="phase" onclick="ktnSetExh('phase','after',this)">終了後</button>
+  <!-- 会期（1つ）：ページのロック（会期が始まるとモード・販売期間などが変えられない）とオーナーメニューの項目の両方を切り替える（2026-10-21） -->
+  <span class="dbar-sep" style="margin-left:8px">会期：</span>
+  <button class="dbtn dbtn-exh" data-exh-key="phase" onclick="ktnSetExh('phase','before',this);p212DemoTerm(false)">会期前（変更可）</button>
+  <button class="dbtn dbtn-exh on" data-exh-key="phase" onclick="ktnSetExh('phase','during',this);p212DemoTerm(true)">会期中</button>
+  <button class="dbtn dbtn-exh" data-exh-key="phase" onclick="ktnSetExh('phase','after',this);p212DemoTerm(true)">終了後</button>
   <span class="dbar-sep" style="margin-left:8px">確認：</span>
   <button class="dbtn dbtn-exh on" data-exh-key="confirmed" onclick="ktnSetExh('confirmed','true',this)">確認済</button>
   <button class="dbtn dbtn-exh" data-exh-key="confirmed" onclick="ktnSetExh('confirmed','false',this)">確認前</button>
@@ -156,7 +152,7 @@
       <div class="ktn-mgmt-head">
         <h2 class="ktn-mgmt-head__title">LIAISON 展示設定</h2>
         <p class="ktn-mgmt-head__en">LIAISON SETTINGS</p>
-        <p class="ktn-mgmt-head__desc">この展覧会に連動したオンライン作品展示の設定を行います。展示した作品は展覧会ページの LIAISON タブで公開されます。</p>
+        <p class="ktn-mgmt-head__desc">展示した作品は、展覧会ページの LIAISON タブに載ります。</p>
         <p class="ktn-mgmt-head__guides">公開期間（＝会期）の外でも、出品者と管理者は展覧会ページの作品タブから実際の表示を確認できます（公開前プレビュー）。詳しくは <a class="ktn-guide-link" href="kotennavi-p70-1.html" target="_blank" rel="noopener">リエゾン 作品出品ガイド →</a></p>
       </div>
 

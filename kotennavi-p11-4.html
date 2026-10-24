@@ -26,7 +26,6 @@
 <!-- デモバー -->
 <div class="dbar" id="dbar">
   <span class="dbar-sep">ロール：</span>
-  <button class="dbtn" onclick="setR('guest',this)">ゲスト</button>
   <button class="dbtn on" onclick="setR('creator',this)">creator</button>
   <button class="dbtn" onclick="setR('gallery',this)">gallery</button>
   <span class="dbar-sep">状態：</span>
@@ -158,35 +157,35 @@
       <div class="p114-status-notice p114-status-notice--pending" id="p114PendingBanner" hidden>
         <div class="p114-status-notice__icon">⏳</div>
         <div class="p114-status-notice__title">現在、本人確認の審査中です</div>
-        <p class="p114-status-notice__desc">申込を受け付けました。審査には通常3〜5営業日かかります。審査を通過すると、続きのお手続き（振込先口座のご登録）に進むためのご案内をメールでお送りします。</p>
+        <p class="p114-status-notice__desc">申込を受け付けました。審査には通常3〜5営業日かかります。通過したら、振込先口座の登録のご案内をメールでお送りします。</p>
       </div>
 
       <!-- Step2バナー（Step1審査通過・口座登録待ちデモ・メール内URLからの到達を想定） -->
       <div class="p114-status-notice" id="p114Step2Banner" hidden style="border-color:rgba(0,93,167,.3);background:rgba(0,93,167,.05)">
         <div class="p114-status-notice__icon">📩</div>
         <div class="p114-status-notice__title">本人確認の審査が完了しました</div>
-        <p class="p114-status-notice__desc">続いて、決済パートナーであるStripe社の画面で振込先口座情報をご登録ください。Stripe社の審査を通過すると、LIAISON+ のご利用が可能になります。</p>
+        <p class="p114-status-notice__desc">続いて、決済パートナーの Stripe 社の画面で振込先口座を登録してください。Stripe 社の審査を通過すると、LIAISON+ を使えるようになります。</p>
       </div>
 
       <!-- Stripe審査中バナー（Step2送信後デモ） -->
       <div class="p114-status-notice p114-status-notice--pending" id="p114StripePendingBanner" hidden>
         <div class="p114-status-notice__icon">⏳</div>
         <div class="p114-status-notice__title">Stripeの審査結果をお待ちください</div>
-        <p class="p114-status-notice__desc">Stripe社の画面で振込先口座情報を登録し、審査に進みました。Stripe側の審査が完了すると、LIAISON+ 機能が有効になります。結果はメールでご連絡します。</p>
+        <p class="p114-status-notice__desc">Stripe 社の審査が終わると、LIAISON+ が使えるようになります。結果はメールでお知らせします。</p>
       </div>
 
       <!-- 承認済バナー（承認済デモ） -->
       <div class="p114-status-notice" id="p114ApprovedBanner" hidden style="border-color:rgba(42,120,60,.3);background:rgba(42,120,60,.04)">
         <div class="p114-status-notice__icon">✅</div>
         <div class="p114-status-notice__title">LIAISON+ 機能が有効です</div>
-        <p class="p114-status-notice__desc">LIAISON+ 機能が承認されています。展覧会の編集でリエゾンプラスを選び、展覧会のオーナーメニューの「リエゾンプラス出品管理」から出品設定を行えます。</p>
+        <p class="p114-status-notice__desc">LIAISON+ が承認されました。展覧会の編集でリエゾンプラスを選び、展覧会のオーナーメニュー「リエゾン+ 展示設定・作品管理」から出品できます。</p>
       </div>
 
       <!-- 取消バナー（Step1本人確認 NG デモ） -->
       <div class="p114-status-notice p114-status-notice--cancelled" id="p114CancelledBanner" hidden>
         <div class="p114-status-notice__icon">✕</div>
         <div class="p114-status-notice__title">お申込みは取消となりました</div>
-        <p class="p114-status-notice__desc">今回のお申込みは取消とさせていただきました。取消の理由につきましては、お送りしたメールをご確認ください。</p>
+        <p class="p114-status-notice__desc">今回のお申込みは取消になりました。理由は、お送りしたメールをご確認ください。</p>
       </div>
 
       <!-- 管理ボックス -->
@@ -360,7 +359,7 @@
                   <option>¥500,000 〜</option>
                   <option>未定 / 作品によって異なる</option>
                 </select>
-                <p class="p211-help">参考情報として使用します。実際の価格は作品ごとに設定できます。</p>
+                <p class="p211-help">参考にします。実際の価格は作品ごとに決められます。</p>
               </div>
 
               <div class="p211-field">
@@ -411,7 +410,7 @@
                   <option>¥500,000 〜</option>
                   <option>未定 / 作品によって異なる</option>
                 </select>
-                <p class="p211-help">参考情報として使用します。実際の価格は作品ごとに設定できます。</p>
+                <p class="p211-help">参考にします。実際の価格は作品ごとに決められます。</p>
               </div>
 
               <div class="p211-field">
@@ -460,7 +459,7 @@
                 <option>徳島県</option><option>香川県</option><option>愛媛県</option><option>高知県</option>
                 <option>福岡県</option><option>佐賀県</option><option>長崎県</option><option>熊本県</option><option>大分県</option><option>宮崎県</option><option>鹿児島県</option><option>沖縄県</option>
               </select>
-              <p class="p211-help">作品を発送する際の出荷元の都道府県です。LIAISON+ で作品を出品する際（LIAISON+ 出品設定）の発送地の初期値として使用します。展示ごとに変更でき、また承認後もクリエイター基本情報／ギャラリー基本情報から変更できます。</p>
+              <p class="p211-help">LIAISON+ で出品するときの発送地の初期値です。出品ごとに、また承認後は基本情報からも変えられます。</p>
             </div>
           </div>
         </div>
@@ -482,7 +481,7 @@
               <div class="p211-block__title">登録済みの本人情報 <span class="ktn-sec-en">Your Identity</span></div>
             </div>
             <div class="p211-block__body">
-              <p class="p211-help" id="p114IdIntro" style="margin-bottom:14px">クリエイター基本情報に登録されている本人情報を表示しています。この内容で本人確認を行いますので、最新の内容かご確認ください。変更はクリエイター基本情報の編集から行えます（本人情報はクリエイター基本情報で一元管理されます）。</p>
+              <p class="p211-help" id="p114IdIntro" style="margin-bottom:14px">この内容で本人確認をします（ユニットの場合は代表者の方の情報です）。変更はクリエイター基本情報の編集から行えます。</p>
               <dl class="p114-identity-readout">
                 <div class="p114-identity-readout__row"><dt id="p114IdLabel1">本名</dt><dd id="p114IdVal1">—</dd></div>
                 <div class="p114-identity-readout__row"><dt id="p114IdLabel2">生年月日</dt><dd id="p114IdVal2">—</dd></div>
@@ -501,7 +500,7 @@
               <div class="p211-block__title">責任者情報（本人確認） <span class="ktn-sec-en">Responsible Person</span></div>
             </div>
             <div class="p211-block__body">
-              <p class="p211-help" style="margin-bottom:14px">作品代金・送料等の受け渡し、振込先口座に関する責任を負う方（代表者・経営者・個人事業主本人など）の情報をご入力ください。ギャラリー基本情報にご登録の「ご担当者」とは<strong>別の方でもかまいません</strong>。ここでのご入力内容にもとづき、事務局が本人確認を行います。</p>
+              <p class="p211-help" style="margin-bottom:14px">作品代金・送料の受け渡しと、振込先口座に責任を負う方（代表者・個人事業主本人など）です。ギャラリー基本情報の「ご担当者」と別の方でも構いません。</p>
 
               <div class="p211-field">
                 <label class="p211-label" for="p114RespName">責任者お名前（フルネーム）<span class="ktn-req">必須</span></label>
@@ -528,7 +527,7 @@
               <div class="p211-field">
                 <label class="p211-label" for="p114CorpNumber">法人番号（法人の場合）</label>
                 <input class="p211-input" id="p114CorpNumber" type="text" inputmode="numeric" maxlength="13" placeholder="例：1234567890123" style="max-width:260px">
-                <p class="p211-help">国税庁の法人番号（13桁）をご入力ください。個人事業主として登録される場合は空欄のままで構いません。</p>
+                <p class="p211-help">国税庁の13桁の番号です。個人事業主のときは空欄のままで構いません。</p>
               </div>
 
               <div class="p211-field">
@@ -566,7 +565,7 @@
             <div class="p211-block__title">事業者番号（インボイス制度） <span class="ktn-sec-en">Invoice Registration</span></div>
           </div>
           <div class="p211-block__body">
-            <p class="p211-help" style="margin-bottom:14px">適格請求書発行事業者として登録されている場合は、登録番号をご入力ください。ご入力いただいた番号は、作品が売れた際に購入者へ発行される領収書に記載されます。未登録の方・免税事業者の方は空欄のままで構いません（領収書には「未登録」と表示されます。後からのご登録・変更も可能です）。</p>
+            <p class="p211-help" style="margin-bottom:14px">入力した番号は、作品が売れたときに購入者へ発行される領収書に載ります。未登録・免税事業者のときは空欄で構いません（領収書には「未登録」と出ます）。</p>
             <div class="p211-field">
               <label class="p211-label" for="p114InvoiceNumber">適格請求書発行事業者登録番号（任意）</label>
               <input class="p211-input" id="p114InvoiceNumber" type="text" placeholder="例：T1234567890123" maxlength="14" style="max-width:260px">
@@ -581,7 +580,7 @@
             <div class="p211-block__title">本人確認書類の添付 <span class="ktn-sec-en">ID Document</span></div>
           </div>
           <div class="p211-block__body">
-            <p class="p211-help" style="margin-bottom:14px"><strong>本名・顔写真・住所・生年月日</strong>が確認できる本人確認書類の画像をご提出ください。事務局の目視確認のため、特定の書類に限定していません。1点で4項目すべてを確認できる書類（運転免許証・マイナンバーカード〔個人番号カード〕・パスポート・在留カード／特別永住者証明書・運転経歴証明書など）は1点のご提出で構いません。顔写真や住所の記載がない書類（健康保険証など）をご利用の場合は、住所・生年月日が確認できる書類（住民票の写しなど）とあわせて<strong>複数点を組み合わせてご提出</strong>ください。上記のご登録情報（特に氏名・住所）と突合のうえ、事務局が確認します。<strong>ご提出いただいた画像は本人確認の完了後に削除し、保存しません。</strong></p>
+            <p class="p211-help" style="margin-bottom:14px">本名・顔写真・住所・生年月日が確認できる書類の画像をご提出ください。1点で4つとも確認できる書類（運転免許証・マイナンバーカード・パスポート・在留カードなど）は1点で構いません。顔写真や住所の無い書類（健康保険証など）は、住民票の写しなどと組み合わせてください。画像は本人確認が終わったら削除します。</p>
             <div class="p211-field">
               <label class="p211-label">本人確認書類の画像（複数添付可）<span class="ktn-req">必須</span></label>
               <div class="p211-img-list" id="p114IdDocList"></div>
@@ -591,7 +590,7 @@
                 <p class="p211-img-count" id="p114IdDocCount">まだ添付されていません</p>
                 <input type="file" id="p114IdDocFile" accept="image/*,application/pdf" multiple hidden>
               </div>
-              <p class="p211-help">両面の記載を要する書類（運転免許証等）は表・裏を、片面のみの書類（マイナンバーカード等）は本人確認に必要な面を撮影してください。<strong>一度にまとめて選んでも、あとから1枚ずつ追加してもかまいません。</strong>氏名・住所・生年月日が鮮明に読み取れる画像を添付してください。</p>
+              <p class="p211-help">表・裏がある書類（運転免許証など）は両面を撮影してください。氏名・住所・生年月日が読み取れる画像にしてください。</p>
             </div>
           </div>
         </div>
@@ -711,14 +710,14 @@
               <div class="p211-block__title">Stripeでのお手続き <span class="p211-block__title-en">STRIPE ONBOARDING</span></div>
             </div>
             <div class="p211-block__body">
-              <p class="p211-help" style="margin-bottom:14px">売上金の振込先口座は、決済パートナーである<strong>Stripe社</strong>の画面で直接ご登録いただきます（個展なびは口座番号等をお預かりしません）。下のボタンを押すとStripe社の画面へ移動しますので、案内に沿ってご登録ください。入力後は自動的にこの画面に戻ります。</p>
+              <p class="p211-help" style="margin-bottom:14px">振込先口座は、決済パートナーの Stripe 社の画面で登録します（個展なびは口座番号を預かりません）。登録が終わると、この画面に戻ります。</p>
 
               <p class="p211-help" style="margin-bottom:14px"><strong>Stripeの画面では以下の情報の入力を求められます。あらかじめご準備ください。</strong><br>
               ・振込先口座情報（金融機関名・支店名・口座番号・口座名義）<br>
               ・生年月日・住所・電話番号などの本人情報<br>
               ・本人確認書類の画像（運転免許証・マイナンバーカード等）<br>
               <span class="p114-gallery-section">・法人番号などの事業者情報（法人の場合）<br></span>
-              ※これは決済のためにStripe社が求める情報で、個展なびが先ほどお預かりした本人確認情報（Step1）とは別の手続きです。</p>
+              ※Stripe 社が決済のために求める情報で、Step1 の本人確認とは別の手続きです。</p>
 
               <div class="p114-checklist" style="margin:16px 0 4px">
                 <label class="p114-checklist__item">
@@ -754,7 +753,7 @@
               <div class="p211-block__title">ご登録内容 <span class="ktn-sec-en">Your Application</span></div>
             </div>
             <div class="p211-block__body">
-              <p class="p211-help" style="margin-bottom:14px">お申込み時にご登録いただいた内容です。本人確認情報（本名・生年月日・住所・電話番号・本人確認書類）は表示していません。内容の確認後、下のボタンからLIAISON+コンソールへお進みください。</p>
+              <p class="p211-help" style="margin-bottom:14px">お申込み時の内容です（本人確認の情報は表示していません）。</p>
               <dl class="p114-identity-readout" id="p114ReviewList"></dl>
             </div>
           </div>

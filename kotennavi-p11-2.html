@@ -126,21 +126,21 @@
       <div class="p114-status-notice p114-status-notice--pending" id="p112PendingBanner" hidden>
         <div class="p114-status-notice__icon">⏳</div>
         <div class="p114-status-notice__title">現在確認中です</div>
-        <p class="p114-status-notice__desc">申込を受け付けました。個展なび事務局による確認・設定作業のため少々お時間をいただきます。完了しましたらメールでご連絡します。</p>
+        <p class="p114-status-notice__desc">申込を受け付けました。事務局の確認・設定が終わったら、メールでお知らせします。</p>
       </div>
 
       <!-- 利用開始バナー -->
       <div class="p114-status-notice" id="p112ApprovedBanner" hidden style="border-color:rgba(42,120,60,.3);background:rgba(42,120,60,.04)">
         <div class="p114-status-notice__icon">✅</div>
         <div class="p114-status-notice__title">クリエイター機能が有効です</div>
-        <p class="p114-status-notice__desc">クリエイターページの作成・展覧会情報の掲載ができるようになりました。クリエイターページから情報を入力して公開を始めましょう。</p>
+        <p class="p114-status-notice__desc">クリエイターページの作成と、展覧会の掲載ができるようになりました。</p>
       </div>
 
       <!-- 取消バナー -->
       <div class="p114-status-notice p114-status-notice--cancelled" id="p112CancelledBanner" hidden>
         <div class="p114-status-notice__icon">✕</div>
         <div class="p114-status-notice__title">お申込みは取消となりました</div>
-        <p class="p114-status-notice__desc">今回のお申込みは取消とさせていただきました。取消の理由につきましては、お送りしたメールをご確認ください。</p>
+        <p class="p114-status-notice__desc">今回のお申込みは取消になりました。理由は、お送りしたメールをご確認ください。</p>
       </div>
 
       <!-- 管理ボックス -->
@@ -236,19 +236,18 @@
             <div class="p211-field">
               <label class="p211-label">クリエイター名（表示名・活動名）<span class="ktn-req">必須</span></label>
               <input maxlength="40" data-count class="p211-input" id="p112Name" type="text" placeholder="例：田中 透">
-              <p class="p211-help">クリエイターページや展覧会情報に表示される名前です。本名・活動名のいずれでも構いませんが、<strong>個人名でご登録ください（企業・団体・グループ・展覧会名では登録できません）</strong>。</p>
+              <p class="p211-help">本名・活動名のどちらでも構いません。個人名かユニット名でご登録ください（企業・団体・展覧会名では登録できません）。</p>
             </div>
 
             <div class="p211-field">
               <label class="p211-label">クリエイター名（全角カナ）<span class="ktn-req">必須</span></label>
               <input maxlength="60" data-count class="p211-input" id="p112Kana" type="text" placeholder="例：タナカ トオル">
-              <p class="p211-help">表示名の読み仮名です。並び替え・検索に使用します。</p>
+              <p class="p211-help">並び替え・検索に使います。</p>
             </div>
 
             <div class="p211-field">
               <label class="p211-label">クリエイター名（英語表記）</label>
               <input maxlength="80" data-count class="p211-input" id="p112Romaji" type="text" placeholder="例：Toru Tanaka">
-              <p class="p211-help">英語ページ・海外向け表示に使用します（任意）。</p>
             </div>
 
             <div class="p211-field">
@@ -262,7 +261,7 @@
                 <option>建築</option>
                 <option>その他</option>
               </select>
-              <p class="p211-help">主に制作している作品のジャンルを選択してください。より詳しいジャンル・タグはご利用開始後に設定できます。</p>
+              <p class="p211-help">詳しいジャンル・タグは、ご利用開始後に設定できます。</p>
             </div>
 
             <div class="p211-field">
@@ -282,7 +281,7 @@
                 </div>
               </div>
               <button class="ktn-op-btn ktn-op-btn--sm p211-repeat__add" type="button" data-target="p112LinkList" data-link="1">＋ リンクを追加</button>
-              <p class="p211-help">活動を確認できるリンクがあればご記入ください（任意・確認の参考にします）。</p>
+              <p class="p211-help">確認の参考にします。</p>
             </div>
 
           </div>
@@ -307,7 +306,7 @@
             <div class="p211-field">
               <label class="p211-label">本名（フルネーム）<span class="ktn-req">必須</span></label>
               <input class="p211-input" id="p112RealName" type="text" placeholder="例：田中 透">
-              <p class="p211-help">戸籍・本人確認書類と一致する氏名を入力してください。</p>
+              <p class="p211-help">戸籍・本人確認書類と一致する氏名を入力してください。ユニットの場合は、代表者の方の氏名です。</p>
             </div>
 
             <div class="p211-field">
@@ -319,7 +318,7 @@
               <div class="p211-field">
                 <label class="p211-label">生年月日（任意）</label>
                 <input class="p211-input" id="p112Birth" type="date">
-                <p class="p211-help">クリエイター機能のご利用には必須ではありません。将来リエゾンプラス（作品販売）をお申込みの際の本人確認で必要になります。</p>
+                <p class="p211-help">クリエイター機能には不要です。LIAISON+（作品販売）を申し込むときの本人確認で必要になります。</p>
               </div>
               <div class="p211-field">
                 <label class="p211-label">性別</label>
@@ -373,12 +372,12 @@
                 <label class="p211-pill is-active"><input type="radio" name="p112applicant" value="self" checked onchange="p112ToggleAgent()">クリエイター本人</label>
                 <label class="p211-pill"><input type="radio" name="p112applicant" value="agent" onchange="p112ToggleAgent()">代理人（ご家族など）</label>
               </div>
-              <p class="p211-help">クリエイター本人に代わってご家族などが申込む場合は「代理人」を選択してください。連絡は原則この申込アカウント宛に行います。</p>
+              <p class="p211-help">ご家族などが本人に代わって申し込むときは「代理人」を選んでください。連絡は、この申込のアカウントにします。</p>
             </div>
 
             <!-- 代理人情報（代理人選択時のみ表示） -->
             <div class="p114-agent-block" id="p112AgentBlock" hidden>
-              <p class="p114-agent-block__lead">代理人の情報を入力してください。クリエイター本人の住所・電話番号は上の「本人確認のための情報」にご記入ください。</p>
+              <p class="p114-agent-block__lead">クリエイター本人の住所・電話番号は、上の「本人確認のための情報」にご記入ください。</p>
 
               <div class="p211-field">
                 <label class="p211-label">代理人氏名（フルネーム）<span class="ktn-req">必須</span></label>
@@ -414,7 +413,7 @@
             <div class="p211-field">
               <label class="p211-label">すでに個展なびに掲載されているあなたのページ（任意）</label>
               <input class="p211-input" id="p112ExistingPage" type="text" placeholder="ページのURL、またはクリエイター名">
-              <p class="p211-help">ギャラリーなどが投稿した展覧会情報から、あなたのクリエイターページがすでに作成されている場合があります。心当たりのあるページ（URLまたは名称）があればご記入ください。事務局で確認のうえ、そのページのオーナーをご本人に切り替え、これまでの展覧会情報を引き継ぎます。心当たりがなくても、事務局が名寄せして引き継げる場合があります（結果は機能付与完了メールでお知らせします）。</p>
+              <p class="p211-help">投稿された展覧会から、あなたのページがすでに作られている場合があります。心当たりのあるページ（URL か名称）をご記入ください。確認のうえ、オーナーを切り替えて、これまでの展覧会を引き継ぎます（心当たりが無くても、事務局で見つけて引き継げる場合があります）。</p>
             </div>
           </div>
         </div>
@@ -447,7 +446,7 @@
                 お申込みの前にご確認ください
               </p>
               <ul class="p114-notice__list">
-                <li class="p114-notice__item"><strong>企業・団体名でのクリエイター申込は受付けておりません。</strong>クリエイター機能は個人の作り手のための機能です。企業・団体・グループ・展覧会名ではなく、活動されている個人名でお申込みください。</li>
+                <li class="p114-notice__item"><strong>企業・団体名でのクリエイター申込は受付けておりません。</strong>クリエイター機能は作り手（個人・ユニット）のための機能です。企業・団体・展覧会名ではなく、活動されている個人名かユニット名でお申込みください。</li>
                 <li class="p114-notice__item">ご入力内容に不完全・誤りがある場合、お申込みを受け付けられないことがあります。</li>
                 <li class="p114-notice__item">クリエイターとしての活動が確認できない場合、お申込みを受け付けられないことがあります。</li>
                 <li class="p114-notice__item">ご入力いただいた非公開の情報は公開されません。ご本人の確認・ご連絡、掲載情報（展覧会・作品・記事など）の内容確認が必要となった場合、および将来リエゾンプラス（作品販売）お申込み時の本人確認にのみ使用し、それ以外の目的では使用しません。</li>
@@ -457,7 +456,7 @@
             <div class="p114-checklist">
               <label class="p114-checklist__item">
                 <input type="checkbox" name="creator-agree" id="cca0" onchange="p112UpdateSubmit()">
-                <span>クリエイター本人（個人）として申し込みます。企業・団体・グループ・展覧会名での申込ではないことを確認しました</span>
+                <span>クリエイター本人（個人またはユニット）として申し込みます。企業・団体・展覧会名での申込ではないことを確認しました</span>
               </label>
               <label class="p114-checklist__item">
                 <input type="checkbox" name="creator-agree" id="cca1" onchange="p112UpdateSubmit()">

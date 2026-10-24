@@ -119,8 +119,9 @@ KTN.toast = showToast;
 ══════════════════════════════════ */
 const KTN_LISTQR_KINDS = {
   list: { label: '作品リスト', title: '作品リストのQRコード', url: 'https://koten-navi.com/p2-6', sub: 'スマホで読み取ると、会場配布用のリストが開きます。<br>画像を保存して会場ポスターやSNSにも掲示できます。' },
-  /* url に ?src=venue-qr を付与し、この会場設置QR経由のアクセスを判別できるようにする（インサイトA-2） */
-  venue: { label: '会場チェックイン', title: '会場チェックインのQRコード', url: 'https://koten-navi.com/p2?src=venue-qr', sub: 'スマホで読み取ると、この展覧会のページが開きます。<br>来場者はそのままチェックインやレビュー投稿ができます。あわせてウォッチしてもらえると、次回展の案内メールが届くようになります。画像を保存して受付・壁面に掲示できます。' },
+  /* url に ?src=venue-qr を付与し、この会場設置QR経由のアクセスを判別できるようにする（インサイトA-2）。
+     会場フライヤー（P2-7）の QR も同じリンク（インサイトでは「会場の QR」として1つに数える・2026-10-24）。?checkin=1 で開くとチェックインの画面が出る */
+  venue: { label: '会場チェックイン', title: '会場チェックインのQRコード', url: 'https://koten-navi.com/p2?src=venue-qr&checkin=1', sub: 'スマホで読み取ると、この展覧会のページが開きます。<br>来場者はそのままチェックインやレビュー投稿ができます。あわせてウォッチしてもらえると、次回展の案内メールが届くようになります。画像を保存して受付・壁面に掲示できます。' },
   creator: { label: '田中 透', title: '田中 透 を共有', url: 'https://koten-navi.com/p3', sub: 'リンクをコピーしてSNS・DMで送ったり、QRコードを名刺・チラシ等に掲載すると、読み取った人がそのままページを開いてウォッチできます。' },
   gallery: { label: 'Gallery SOIL 渋谷', title: 'Gallery SOIL 渋谷 を共有', url: 'https://koten-navi.com/p4', sub: 'リンクをコピーしてSNS・DMで送ったり、QRコードを名刺・チラシ等に掲載すると、読み取った人がそのままページを開いてウォッチできます。' }
 };
@@ -363,102 +364,33 @@ function ktnPshareBadgeHtml(patternId, def, imgs) {
 }
 
 /* ══════════════════════════════════
-   会場フライヤー（A4印刷プレビュー・展覧会情報QR＋チェックインQRを1枚に配置）
-   ・.ktn-auth-overlay / .ktn-auth-modal のシェル＋QRダミーSVGは ktnListQr と同型を再利用
-   ・独自ブロック：.ktn-vflyer__sheet（A4プレビュー・印刷時は @media print で全画面化）
+   会場フライヤー（P2-7「会場に置く印刷物」のページ・2026-10-21 にモーダルからページへ）
+   印刷するときは、ページの見本 [data-flyer-sheet] を body の直下（#ktnFlyerPrintRoot）に写し、ほかを display:none で隠す
+   （visibility で隠すと印刷が何ページにも分かれる不具合があったため・2026-08-14 の方式を引き継ぐ）。Ctrl+P でも同じ。
 ══════════════════════════════════ */
-function ktnVenueFlyer(name) {
-  var el = document.getElementById('ktnVenueFlyerModal');
-  if (!el) {
-    /* デモ用の静的プレースホルダーQR（実URLを持たない）。本番実装では情報QRに ?src=venue-flyer、
-       チェックインQRに ?src=venue-flyer&action=checkin を付与し、venue（掲示QR）と区別してインサイトA-2の
-       流入元判別に使う想定（kotennavi-p2-14.html の「QR/フライヤー経由」実績表示に対応）。 */
-    var qrSvg = '<svg viewBox="0 0 44 44" width="180" height="180" shape-rendering="crispEdges">'
-      + '<rect width="44" height="44" fill="#fff"/>'
-      + '<path fill="#231815" d="M4 4h7v7H4zM6 6v3h3V6zM13 4h2v2h-2zM17 4h2v4h-2zM21 4h2v2h-2zM25 4h2v2h2v2h-2v2h-2v-2h-2V6h2zM33 4h7v7h-7zM35 6v3h3V6zM15 6h2v2h-2zM13 8h2v2h-2zM4 13h7v7H4zM6 15v3h3v-3zM13 13h2v2h-2zM17 13h2v2h2v2h-2v2h-2v-2h-2v-2h2zM23 13h2v4h-2zM27 13h2v2h-2zM31 13h2v2h2v2h-2v2h-2v-2h-2v-2h2zM37 13h2v2h-2zM33 15h2v2h-2zM33 33h7v7h-7zM35 35v3h3v-3zM13 33h2v2h-2zM17 33h2v4h-2zM21 33h2v2h-2zM25 33h2v2h-2zM29 33h2v2h-2zM13 37h2v2h-2zM21 37h2v2h-2zM25 37h2v2h-2zM4 33h7v7H4zM6 35v3h3v-3zM4 22h2v2h-2zM8 22h2v2h-2zM12 22h2v2h-2zM16 22h2v2h-2zM20 22h2v2h-2zM24 22h2v2h-2zM28 22h2v2h-2zM32 22h2v2h-2zM36 22h2v2h-2zM40 22h2v2h-2zM4 26h2v2H4zM10 26h2v2h-2zM14 26h2v2h-2zM18 26h2v2h-2zM22 26h2v2h-2zM26 26h2v2h-2zM30 26h2v2h-2zM34 26h2v2h-2zM38 26h2v2h-2zM4 30h2v2H4zM8 30h2v2H8zM12 30h2v2h-2zM16 30h2v2h-2zM20 30h2v2h-2zM24 30h2v2h-2zM28 30h2v2h-2zM32 30h2v2h-2z"/>'
-      + '</svg>';
-    el = document.createElement('div');
-    el.className = 'ktn-auth-overlay';
-    el.id = 'ktnVenueFlyerModal';
-    el.setAttribute('onclick', 'ktnVenueFlyerClose(event)');
-    el.innerHTML =
-      '<div class="ktn-auth-modal ktn-vflyer">'
-      + '<div class="ktn-auth-top">'
-      + '<button class="ktn-auth-close" onclick="ktnVenueFlyerClose()">'
-      + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
-      + '</button>'
-      + '<div class="ktn-auth-ttl">会場フライヤー（A4）</div>'
-      + '<div class="ktn-auth-sub">展覧会情報QR・チェックインQRを1枚に配置したA4フライヤーです。印刷してそのまま会場受付・壁面に掲示できます。</div>'
-      + '</div>'
-      + '<div class="ktn-auth-body">'
-      + '<div class="ktn-vflyer__sheet">'
-      + '<div class="ktn-vflyer__logo"><img src="./images/kotennavi-logo5-1.svg" alt=""><span>KOTEN-NAVI</span></div>'
-      + '<div class="ktn-vflyer__main">'
-      + '<div class="ktn-vflyer__head">'
-      + '<div class="ktn-vflyer__headtext">'
-      + '<p class="ktn-vflyer__en">EXHIBITION</p>'
-      + '<h3 class="ktn-vflyer__title">あなたが知らないオノマトペ</h3>'
-      + '<p class="ktn-vflyer__artist">田中 透</p>'
-      + '<p class="ktn-vflyer__greet">本日はご来場いただき、誠にありがとうございます。</p>'
-      + '</div>'
-      + '<div class="ktn-vflyer__infoqr">'
-      + '<div class="ktn-vflyer__qr-code" aria-hidden="true">' + qrSvg + '</div>'
-      + '<p class="ktn-vflyer__qr-lbl">詳しくはこちら</p>'
-      + '</div>'
-      + '</div>'
-      + '<dl class="ktn-vflyer__facts">'
-      + '<dt>会場</dt><dd>Gallery SOIL 渋谷（東京都渋谷区神南1-12-14 2F）</dd>'
-      + '<dt>会期</dt><dd>2026年2月18日（水）— 3月5日（木）　11:00–19:00</dd>'
-      + '</dl>'
-      + '</div>'
-      + '<div class="ktn-vflyer__checkin">'
-      + '<div class="ktn-vflyer__qr-code" aria-hidden="true">' + qrSvg + '</div>'
-      + '<div class="ktn-vflyer__checkin-body">'
-      + '<p class="ktn-vflyer__checkin-ttl">チェックインのお願い</p>'
-      + '<p class="ktn-vflyer__checkin-desc">ご来場の記念に、QRからチェックインをお願いいたします。あわせてクリエイター・ギャラリーをウォッチしていただくと、次回展の情報をメールでいち早くお届けします。感想やレビューもぜひお聞かせください。</p>'
-      + '<p class="ktn-vflyer__checkin-camp" data-flyer-camp hidden></p>'
-      + '<p class="ktn-vflyer__checkin-note">※チェックインには個展なびのアカウントが必要です（その場で無料登録できます）</p>'
-      + '</div>'
-      + '</div>'
-      + '<p class="ktn-vflyer__foot">koten-navi.com</p>'
-      + '</div>'
-      + '</div>'
-      + '<div class="ktn-auth-btns">'
-      + '<button class="ktn-auth-btn-primary" onclick="ktnVenueFlyerPrint()">印刷する（A4）</button>'
-      + '<button class="ktn-auth-btn-secondary" onclick="ktnVenueFlyerClose()">閉じる</button>'
-      + '</div>'
-      + '</div>';
-    document.body.appendChild(el);
-  }
-  /* 開くたびに：展覧会の名前・作家・会期（P3-15／P4-15 から開いたとき）と、チェックインクーポンの一文（対象のときだけ・pages.js KTN.CAMPAIGN.flyerCamp・2026-10-20） */
-  var C = KTN.CAMPAIGN, ex = C && C.exhOf && name ? C.exhOf(name) : null;
-  if (ex) {
-    el.querySelector('.ktn-vflyer__title').textContent = String(name).split(' — ')[0];
-    if (ex.artist) el.querySelector('.ktn-vflyer__artist').textContent = ex.artist;
-    if (ex.term) el.querySelectorAll('.ktn-vflyer__facts dd')[1].textContent = ex.term + '　11:00–19:00';
-  }
-  var camp = el.querySelector('[data-flyer-camp]'), tx = C && C.flyerCamp ? C.flyerCamp(name) : '';
-  camp.hidden = !tx; camp.innerHTML = tx ? '<b>チェックインクーポン</b>' + tx : '';
-  requestAnimationFrame(function () { el.classList.add('open'); });
-}
-function ktnVenueFlyerClose(e) {
-  if (e && e.target !== document.getElementById('ktnVenueFlyerModal')) return;
-  var m = document.getElementById('ktnVenueFlyerModal');
-  if (m) m.classList.remove('open');
-}
-function ktnVenueFlyerPrint() {
+function ktnFlyerPrintPrep() {
+  var s = document.querySelector('[data-flyer-sheet]');
+  if (!s) return false;
+  var r = document.getElementById('ktnFlyerPrintRoot');
+  if (r) r.remove();
+  r = document.createElement('div');
+  r.id = 'ktnFlyerPrintRoot';
+  r.appendChild(s.cloneNode(true));
+  document.body.appendChild(r);
   document.body.classList.add('ktn-printing-flyer');
-  window.print();
+  return true;
 }
+function ktnFlyerPrint() { if (ktnFlyerPrintPrep()) window.print(); }
+window.addEventListener('beforeprint', function () { if (!document.body.classList.contains('ktn-printing-flyer')) ktnFlyerPrintPrep(); });
 window.addEventListener('afterprint', function () {
   document.body.classList.remove('ktn-printing-flyer');
+  var r = document.getElementById('ktnFlyerPrintRoot');
+  if (r) r.remove();
 });
-window.ktnVenueFlyer = ktnVenueFlyer;
-window.ktnVenueFlyerClose = ktnVenueFlyerClose;
-window.ktnVenueFlyerPrint = ktnVenueFlyerPrint;
+window.ktnFlyerPrint = ktnFlyerPrint;
 
 /* 校正データの表示(印刷)（P2 管理者メニュー）：サイトchrome（ヘッダー/dbar/タグバー/ボトムナビ/フッター/トースト）を
-   隠して現在ページをそのまま印刷する。会場フライヤー印刷（ktnVenueFlyerPrint）と同じbodyクラス切替方式。 */
+   隠して現在ページをそのまま印刷する。会場フライヤー印刷（ktnFlyerPrint）と同じbodyクラス切替方式。 */
 function ktnP2ProofPrint() {
   document.body.classList.add('ktn-printing-proof');
   window.print();
@@ -1616,6 +1548,7 @@ KTN.setPageTags = function (items, search) {
    ─ 本文の実体は1つ。各FAQページ／取引ページは cat×aud×side でフィルタして
      参照表示する＝ページ間で文言がずれる二重管理を避ける。
    ─ cat: 'exhibition-edit'（展覧会の登録・編集）
+          'venue-print'（会場に置く印刷物＝P2-6/P2-7。p60-6/p60-7チャプター）
           'article-edit'（記事の登録・編集＝p2-13/p3-19/p4-19/p6-15/p7-11。p60-6/p60-7チャプター）
           'liaison'（リエゾン/リエゾン+ サービス全般＝p70-1/p70-2 ハブ）
           'liaison-txn'（取引フロー＝取引6ページ＋p70-11/p70-12 ハブ）
@@ -1720,6 +1653,16 @@ KTN.QA = [
   { id: 'AUD-03', cat: 'audience-mgmt', aud: 'common', grp: 'オーディエンス管理', q: '一覧の並べ替え・絞り込みは何ができますか？', a: 'ウォッチャーは登録日時順、チェックインは展覧会別・日時順などで並べ替え・絞り込みができます。' },
   { id: 'AUD-04', cat: 'audience-mgmt', aud: 'common', grp: 'オーディエンス管理', q: '特定のユーザーのウォッチ・チェックインをこちらから解除できますか？', a: 'いいえ、ウォッチ・チェックインの解除はユーザー本人のみが行えます。' },
 
+  /* ─── cat:'venue-print'（会場に置く印刷物＝P2-6 作品リスト・P2-7 会場フライヤー。p60-6/p60-7「会場に置く印刷物」章・P2-6/P2-7 のガイドの行き先・2026-10-22）─── */
+  { id: 'VPR-01', cat: 'venue-print', aud: 'common', grp: '会場に置く印刷物', q: '会場に置く印刷物には何がありますか？', a: '2つあります。会場フライヤーは、来場者にスマホでチェックインしてもらうための A4 の1枚で、受付や壁に置きます。作品リストは、出展作品の題・価格などの一覧で、印刷して配ったり、QR コードを掲示して来場者のスマホで開いてもらったりできます。展覧会のオーナーメニュー「会場に置く印刷物」を選ぶと、会場フライヤーのページが開きます。作品リストは、そのページの上の案内の「作品リスト」から開けます。' },
+  { id: 'VPR-02', cat: 'venue-print', aud: 'common', grp: '会場に置く印刷物', q: '来場者がチェックインの QR を読み取ると、何が起きますか？', a: 'スマホで展覧会のページが開き、チェックインの画面が出ます。チェックインした来場者の myページには、この展覧会に来た記録が残ります。あわせてクリエイター・ギャラリーをウォッチしてもらうと、次の展覧会のお知らせが届くようになります。チェックインとウォッチの数は、あなたのインサイトとオーディエンス管理で確認できます。' },
+  { id: 'VPR-03', cat: 'venue-print', aud: 'common', grp: '会場に置く印刷物', q: '来場者は個展なびのアカウントが必要ですか？', a: 'チェックインには必要です。アカウントの無い来場者も、QR を読み取ったその場で無料登録できます。フライヤーにもその旨が入っています。' },
+  { id: 'VPR-04', cat: 'venue-print', aud: 'common', grp: 'チェックインクーポン', q: 'フライヤーにクーポンの案内が入るのはどんなときですか？', a: '個展なびのキャンペーンでチェックインクーポンを実施していて、あなたの展覧会が対象のときだけです。対象になるのは、会期のあとにも販売期間がある LIAISON+ の展覧会です。チェックインした来場者が受け取り、会期が終わったあと、オンラインでの作品購入に使えます（会期中のご購入には、会場でもオンラインでも使えません）。値引きは個展なびの負担で、あなたの受取金額は変わりません。くわしくは{{perksGuide}}をご覧ください。' },
+  { id: 'VPR-05', cat: 'venue-print', aud: 'common', grp: 'チェックインクーポン', q: 'クーポンの案内を入れたくありません。', a: 'LIAISON+ の作品管理の「購入者のためのクーポン」で、展覧会ごとに対象から外せます。変えられるのは会期が始まる前までです（会期が始まると、置いてある印刷物と食い違わないよう、どちらにも変えられません）。外したあとは、フライヤーを印刷し直してください。' },
+  { id: 'VPR-06', cat: 'venue-print', aud: 'common', grp: '表示の違い', q: 'LIAISON の展覧会や、オンラインの作品が無い展覧会でも使えますか？', a: 'はい。会場フライヤーは、チェックインの案内だけの形になります（オンラインでの購入やクーポンの案内は、LIAISON+ でオンラインに作品がある展覧会のときだけ入ります）。作品リストは、オンラインに作品がある展覧会で使えます。' },
+  { id: 'VPR-07', cat: 'venue-print', aud: 'common', grp: '表示の違い', q: '会期が終わったあとも印刷できますか？', a: 'いいえ。会場に置くためのものなので、会期が終わるとオーナーメニューに「会場に置く印刷物」が出なくなります。' },
+  { id: 'VPR-08', cat: 'venue-print', aud: 'common', grp: '印刷', q: 'きれいに印刷するには？', a: '各ページの「印刷する」から、A4・縦で印刷してください。ブラウザの印刷の設定で、余白を「なし」、背景のグラフィックを「オン」にすると、見本どおりに出ます。PDF に保存して、お店で印刷することもできます。' },
+
   /* ─── cat:'inquiry'（届いた作品へのお問合わせ＝出品者側：p3-20/p4-20/p6-14・p60-6/p60-7「作品へのお問合わせ」章）
          cat:'inquiry-send'（作品へのお問合わせを送る側＝ユーザー：p6-13/p5-16・p60-5「作品へのお問合わせ」章）（2026-09-28） ─── */
   { id: 'INQ-01', cat: 'inquiry', aud: 'common', grp: '作品へのお問合わせ', q: 'お問合わせはどこから届きますか？', a: '作品ページの「作品について問い合わせる」から、ログインしているユーザーが送ります（ギャラリーの場合は、リエゾン・リエゾンプラスで出品している作品のページから届きます）。届くとメールでお知らせし、オーナーメニューに未返信の件数が表示されます。' },
@@ -1766,6 +1709,7 @@ KTN.QA = [
   { id: 'ACC-N01', cat: 'account-notify', aud: 'user', grp: '通知設定', q: '通知メールをすべて停止できますか？', a: 'アカウント・セキュリティ（登録・パスワードやメールアドレスの変更・退会）、LIAISON+の取引の連絡、お問合わせへの返信、個展なびからのお知らせ（ニュース＝メンテナンス・障害・利用規約の変更など）は、安全な利用と取引に欠かせないため停止できません。リマインダー、ウォッチ新着、個展なびからのおすすめ、クリエイター・ギャラリー向けのウォッチ・チェックイン・コメントのお知らせとインサイトの月次レポートは、通知設定でオン・オフを選べます。' },
   { id: 'ACC-N02', cat: 'account-notify', aud: 'user', grp: '通知設定', q: '設定はすぐに反映されますか？', a: 'はい。トグルを切り替えると自動的に保存されます。保存ボタンの操作は不要です。' },
   { id: 'ACC-N03', cat: 'account-notify', aud: 'user', grp: '通知設定', q: '取引の連絡メールはオフにできますか？', a: 'いいえ。LIAISON+の取引の連絡（購入確定・お支払い・発送・受取確認・取引完了・キャンセルなど）は、相手のいる取引で期限を過ぎないようにするため、すべて停止できません。取引の状況はいつでも取引ワークスペースでもご確認いただけます。' },
+  { id: 'ACC-N04', cat: 'account-notify', aud: 'user', grp: '通知設定', q: 'スマホにプッシュ通知を受け取れますか？', a: 'はい。プッシュ通知で届くのは、LIAISON+ の取引で、あなたの対応が必要になったときの知らせです（そのほかのお知らせはメールとサイト内のお知らせで届きます）。設定は端末ごとで、iPhone では、先に個展なびをホーム画面に追加してください。{{pushGuide}}は「スマホで使う」のページにあります。' },
 
   /* ─── cat:'creator-apply'（クリエイター機能申込＝p11-2）／cat:'gallery-apply'（ギャラリー機能申込＝p11-3）───
      どちらも申込ページ下部にアコーディオンFAQとして描画（KTN.renderQA '#p112Faq' / '#p113Faq' guide）。
@@ -1776,8 +1720,8 @@ KTN.QA = [
      GAP-03（法人名の要否）は2026-07-26 廃止しGAP-02へ統合。GAP-02はさらに同日「スペースを持たないギャラリスト」向け質問に差し替え。 */
   { id: 'CAP-11', cat: ['creator-apply', 'gallery-apply'], aud: 'common', grp: 'よくあるご質問', q: '個展以外の展覧会も掲載できますか？', a: 'はい、掲載できます。「個展なび」という名称ですが、個展のほか、グループ展・二人展・企画展、アートフェアなど、さまざまな展覧会を掲載いただけます。' },
   { id: 'CAP-01', cat: 'creator-apply', aud: 'common', grp: 'よくあるご質問', q: 'クリエイター機能の利用は無料ですか？', a: 'はい、無料です。クリエイターページの作成、展覧会・作品・記事の掲載まで、費用は一切かかりません。' },
-  { id: 'CAP-03', cat: 'creator-apply', aud: 'common', grp: 'よくあるご質問', q: '企業・団体・グループ・展覧会名で申し込めますか？', a: 'いいえ。クリエイター機能は個人の作り手のための機能です。企業・団体・グループ・展覧会名ではお申込みいただけません。活動されている個人名でお申込みください。' },
-  { id: 'CAP-04', cat: 'creator-apply', aud: 'common', grp: 'よくあるご質問', q: 'クリエイター名は本名でないといけませんか？', a: 'いいえ。本名でも活動名でも構いません。ただし個人名でご登録ください（企業・団体・グループ・展覧会名は登録できません）。' },
+  { id: 'CAP-03', cat: 'creator-apply', aud: 'common', grp: 'よくあるご質問', q: '企業・団体・展覧会名で申し込めますか？', a: 'いいえ。クリエイター機能は作り手（個人・ユニット）のための機能です。企業・団体・展覧会名ではお申込みいただけません。活動されている個人名かユニット名でお申込みください。' },
+  { id: 'CAP-04', cat: 'creator-apply', aud: 'common', grp: 'よくあるご質問', q: 'クリエイター名は本名でないといけませんか？', a: 'いいえ。本名でも活動名でも構いません。ただし個人名かユニット名でご登録ください（企業・団体・展覧会名は登録できません）。' },
   { id: 'GAP-00', cat: 'gallery-apply', aud: 'common', grp: 'よくあるご質問', q: 'ギャラリーではなく美術館や展示スペースですが申込めますか？', a: 'はい、お申込みいただけます。個展なびでの「ギャラリー」は、貸し画廊・企画ギャラリーに限らず、美術館・展示スペースなど、展覧会を主催する会場全般を指す総称です。名称にとらわれず、ぜひお申込みください。' },
   { id: 'GAP-01', cat: 'gallery-apply', aud: 'common', grp: 'よくあるご質問', q: 'ギャラリー機能の利用は無料ですか？', a: 'はい、無料です。ギャラリーページの作成、展覧会・記事の掲載まで、費用は一切かかりません。' },
   { id: 'GAP-02', cat: 'gallery-apply', aud: 'common', grp: 'よくあるご質問', q: 'スペースを持たないギャラリストですが、申し込めますか？', a: 'はい、お申込みいただけます。ただし個展なびのギャラリーページには、ギャラリー情報として住所・地図が表示される仕様のため、スペースをお持ちでない場合も、ご登録いただく住所が公開されることをあらかじめご了承ください。なお、展覧会を掲載する際は、展覧会情報の登録画面に会場情報を別途ご入力いただけるため、ギャラリーの登録住所とは異なる会場で開催する展覧会も掲載できます。' },
@@ -1813,10 +1757,12 @@ KTN.QA = [
   { id: 'LAP-03', cat: 'liaisonplus-apply', aud: 'common', grp: 'よくあるご質問', q: 'なぜ本人確認情報や口座情報が必要なのですか？', a: 'リエゾンプラスは作品の売買が発生する販売サービスのためです。（1）なりすましの防止・出品作品の真正性の確認、また特定商取引法に基づき、購入者から請求があった場合に氏名・住所・電話番号をお伝えできるようにしておくため、個展なび独自の本人確認をお願いしています（常時公開されるわけではありません）。これは決済パートナーであるStripe社が行う確認とは別の手続きです。（2）売れた作品の売上をお振込みするため、振込先口座が必要です。口座情報そのものは個展なびではお預かりせず、決済パートナーであるStripe社の画面で直接ご登録いただきます。' },
   { id: 'LAP-12', cat: 'liaisonplus-apply', aud: 'common', grp: 'よくあるご質問', q: 'Stripeという名前が出てきました。個展なびとは別のサービスですか？', a: 'Stripe（ストライプ）は、世界中の多くのオンラインサービスで使われている決済インフラの会社で、個展なびとは別の会社です。個展なびは売上のお振込み処理をStripe社に委託しており、振込先口座の登録・変更のみStripe社の画面で行っていただきます。それ以外の通常のご利用（お申込み・精算設定・登録口座の確認など）はすべて個展なびの画面内で完結するため、Stripeのダッシュボードへ日常的にログインいただく必要はありません。' },
   { id: 'LAP-13', cat: 'liaisonplus-apply', aud: 'common', grp: 'よくあるご質問', q: 'Stripeと契約する必要はありますか？直接連絡が来ることはありますか？', a: 'はい。売上金の振込処理を委託するため、個展なびの本人確認審査を通過された後、Stripe社との間で決済代行契約を結んでいただきます。この手続きはStripe社の画面（ホスト型オンボーディング）で行い、振込先口座情報・生年月日や住所などの本人情報・本人確認書類の画像を直接ご入力いただきます（個展なびを経由して送信するのではなく、Stripe社の画面上に直接ご入力いただく方式です）。個展なびが先にお預かりした本人確認情報（お申込みフォーム）とは別に、Stripe社独自の確認としてあらためて入力が必要になりますので、あらかじめご準備ください。入力後は自動的に個展なびの画面へ戻ります。この手続きによりStripe社にアカウントが作成されますが、通常のご利用（売上確認・精算設定など）はすべて個展なびの画面内で完結するため、Stripe側のダッシュボードを日常的に操作いただく必要はありません。口座情報は個展なびでは保持せず、金融機関名・口座名義・口座番号の下数桁など一部情報のみ精算設定ページ（myページ）でご確認いただけます。変更が必要な場合もその都度Stripe社の画面へ移動してご対応いただきます。なお、Stripe社の審査状況によっては、契約成立後にStripe社から直接メール等でご連絡があり、追加の本人確認書類の提出などご対応をお願いする場合があります。その際は届いたご案内に従ってご対応ください。' },
-  { id: 'LAP-04', cat: 'liaisonplus-apply', aud: 'common', grp: 'よくあるご質問', q: '申し込んでから、いつ使えるようになりますか？', a: 'お申込み後、個展なび事務局にて審査を行います。通常3〜5営業日以内に審査結果をメールでご連絡します。承認されると、展覧会の編集でリエゾンプラスを選べるようになり、展覧会のオーナーメニューの「リエゾンプラス出品管理」から出品設定を行えます。' },
+  { id: 'LAP-04', cat: 'liaisonplus-apply', aud: 'common', grp: 'よくあるご質問', q: '申し込んでから、いつ使えるようになりますか？', a: 'お申込み後、個展なび事務局にて審査を行います。通常3〜5営業日以内に審査結果をメールでご連絡します。承認されると、展覧会の編集でリエゾンプラスを選べるようになり、展覧会のオーナーメニューの「リエゾン+ 展示設定・作品管理」から出品設定を行えます。' },
   { id: 'LAP-06', cat: 'liaisonplus-apply', aud: 'common', grp: 'よくあるご質問', q: '会場で作品が売れた場合はどうなりますか？', a: 'リエゾンプラスは会場での販売を優先する「会場優先型」です。会期中に会場で作品が売れたときは、出品者が「会場売約済」に設定します（システムが自動で判定するのではなく、会場の販売状況に合わせて出品者が操作します）。設定すると、オンラインの申込者へ自動でキャンセル通知が送られます（サービス利用料は発生しません）。なお、オンラインの販売期間は会期に合わせて柔軟に設定でき（最大で会期終了後2週間まで）、この販売期間中に購入申込を受け付けます。申し込まれた作品は、会場での販売状況に合わせて申込順に取引を進めます。' },
   { id: 'LAP-10', cat: 'liaisonplus-apply', aud: 'gallery', grp: 'よくあるご質問', q: 'ギャラリーとして、所属クリエイターの作品を出品できますか？', a: '出品できるのは、個展なびで確認・公開された展覧会の出展クリエイターの作品に限られます。作品の真正性についてはギャラリーが責任を負います。売上はギャラリーの登録口座へお振込みします。' },
   { id: 'LAP-14', cat: 'liaisonplus-apply', aud: 'common', grp: 'よくあるご質問', q: '購入者への領収書は個展なびが発行するのですか？', a: 'いいえ。作品が売れた際に購入者へ交付される領収書は、個展なびのシステムが、出品者（あなた）がご登録の氏名または屋号・登録番号（インボイス制度の適格請求書発行事業者登録番号）をもとに、出品者ご本人の名義で作成・発行します。個展なび自身の名称や登録番号が記載されることはありません。登録番号は任意項目のため未登録でも構いませんが、その場合の領収書は税務上の適格請求書（インボイス）には該当しない旨が購入者にも案内されます。登録番号をお持ちの場合は、基本情報編集ページからいつでも登録・変更できます。' },
+  { id: 'LAP-15', cat: 'liaisonplus-apply', aud: 'common', grp: 'よくあるご質問', q: '購入の申込などの知らせを、スマホで受け取れますか？', a: 'はい。LIAISON+ を使い始めると、購入の申込・支払いなど、あなたの対応が必要になったときに、スマホにプッシュ通知でお知らせできます。会期中は早めの対応が要る場面があるので、オンにしておくことをおすすめします。iPhone では、先に個展なびをホーム画面に追加してください。{{pushGuide}}は「スマホで使う」のページにあります。' },
+  { id: 'LAP-16', cat: 'liaisonplus-apply', aud: 'creator', grp: 'よくあるご質問', q: 'ユニットで活動しています。LIAISON+ を申し込めますか？', a: 'はい。本人確認と売上の振込先は、ユニットの代表者の方1人の情報で行います。クリエイター基本情報の本名・生年月日などには、代表者の方の情報をご登録ください。' },
   { id: 'LAP-11', cat: 'liaisonplus-apply', aud: 'common', grp: 'よくあるご質問', q: 'ここで解決しない場合は？', a: 'ここで解決しない場合は、{{contact}}よりご連絡ください。' },
 
   /* ─── cat:'liaisonplus-listing'（LIAISON+展示・販売設定＝p2-12-1）───
@@ -1825,6 +1771,7 @@ KTN.QA = [
      このページの方が理解を得やすいとの判断で移設（2026-07-28）。QA形式＝毎回のチェック必須にはしない。 */
   { id: 'LPL-01', cat: 'liaisonplus-listing', aud: 'common', grp: '出品にあたって', q: '販売価格や梱包費・送料は、あとから変更できますか？', a: '販売価格・梱包費・送料は出品者が設定・負担するもので、購入確定後は変更できません（申込者がいる作品は価格欄自体がロックされます）。出品前に金額をよくご確認のうえ登録してください。' },
   { id: 'LPL-02', cat: 'liaisonplus-listing', aud: 'common', grp: '出品にあたって', q: '会場で作品が売れた場合はどうすればいいですか？', a: 'このサービスは会場での販売を優先する「会場優先型」です。会期中に会場で作品が売れたときは、この画面（申込者がいる場合はLIAISON+コンソール）から「会場売約済」に変更してください。オンラインの申込者へは自動でキャンセル通知が送られます（サービス利用料は発生しません）。' },
+  { id: 'LPL-04', cat: 'liaisonplus-listing', aud: 'common', grp: '出品にあたって', q: '購入の申込などの知らせを、スマホで受け取れますか？', a: 'はい。購入の申込・支払いなど、あなたの対応が必要になったときに、スマホにプッシュ通知でお知らせできます。会期中は、会場で作品が売れたときの「会場売約済」など、早めの対応が要る場面があるので、オンにしておくことをおすすめします。iPhone では、先に個展なびをホーム画面に追加してください。{{pushGuide}}は「スマホで使う」のページにあります。' },
   { id: 'LPL-03', cat: 'liaisonplus-listing', aud: 'common', grp: '出品にあたって', q: '購入確定後、出品者からキャンセルできますか？', a: '原則としてキャンセルには応じられません。購入が確定する前であれば「会場売約済」「出品取消」で対応できますが、購入確定後は取引が完了するまでキャンセルできません。やむを得ない事情がある場合はサポートへご連絡ください。' },
 
   /* ─── cat:'liaison-txn' / side:'seller'（出品者の取引＝creator/gallery 共通）───
@@ -1845,6 +1792,7 @@ KTN.QA = [
   { id: 'TXN-S12', cat: 'liaison-txn', side: 'seller', aud: 'common', grp: '出品者の取引', q: '受け取った作品に問題があると購入者から連絡があった場合は？', a: 'まず取引メッセージで状況を確認し、誠実に対応してください。破損等の問題がある場合は事務局へご連絡ください。取引メッセージのやり取りを保存しておくことをお勧めします。' },
   { id: 'TXN-S13', cat: 'liaison-txn', side: 'seller', aud: 'common', grp: '出品者の取引', q: '購入者の住所・氏名はいつまで確認できますか？', a: '個人情報保護のため、取引完了から1週間後に購入者の氏名・配送先住所（お届け先情報）はこのページから消去されます。発送に必要な情報は期間中に確認してください。取引メッセージは取引完了から2週間後に非公開になります（削除はされず、取引の記録として保存されます）。なお、取引明細・売上情報（個人情報を除く）はアーカイブと販売代金管理ページで引き続き確認できます。' },
   { id: 'TXN-S14', cat: 'liaison-txn', side: 'seller', aud: 'common', grp: '出品者の取引', q: '取引が完了した作品は、その後どうなりますか？', a: '作品はポートフォリオ（作品管理）に残り、クリエイターページへの公開/非公開もこれまで通り設定できます。ただし作品はご購入者の所有となるため、LIAISON / LIAISON+ の出品候補からは自動的に外れ、再出品や作品情報の編集はできません（クローンで複製した作品は新規作品として出品できます）。公開ページでは「売約済」と表示されます。会場売却などで手動設定した「売約済」はこの対象外で、状態の変更や再出品が可能です。' },
+  { id: 'TXN-S15', cat: 'liaison-txn', side: 'seller', aud: 'common', grp: '出品者の取引', q: '取引の知らせを、スマホで受け取れますか？', a: 'はい。購入の申込・支払いなど、あなたの対応が必要になったときに、スマホにプッシュ通知でお知らせできます。会期中は、会場で作品が売れたときの「会場売約済」など、早めの対応が要る場面があるので、オンにしておくことをおすすめします。iPhone では、先に個展なびをホーム画面に追加してください。{{pushGuide}}は「スマホで使う」のページにあります。' },
 
   /* ─── cat:'liaison-settlement' / side:'seller'（精算・振込＝creator/gallery共通）───
      販売代金管理（p3-17/p4-17）が KTN.renderQA({category:'liaison-settlement', side:'seller', style:'desk'}) で描画する専用セット。
@@ -1875,7 +1823,8 @@ KTN.QA = [
   { id: 'TXN-B08', cat: 'liaison-txn', side: 'buyer', aud: 'common', grp: '購入者の取引', q: '受け取った作品に問題があった場合は？', a: 'まず取引ワークスペースのメッセージ機能で出品者に連絡してください。解決しない場合は{{contact}}より事務局へご連絡ください。受取確認後のキャンセルは原則受け付けられません。受け取り時に必ず状態をご確認ください。' },
   { id: 'TXN-B09', cat: 'liaison-txn', side: 'buyer', aud: 'common', grp: '購入者の取引', q: '取引完了後、領収書の発行や購入管理はいつまでできますか？', a: '取引完了後も、購入管理ではいつでも取引をご確認いただけます。領収書は取引ワークスペースの「領収書を発行」ボタンからPDF形式で発行できます。この領収書は出品者がご登録の氏名・登録番号をもとに個展なびのシステムが生成するもので、出品者本人の名義で発行されます（個展なびの名称・登録番号ではありません）。出品者が適格請求書発行事業者として登録番号を登録していない場合、その領収書は税務上の適格請求書（インボイス）には該当しませんのでご注意ください。' },
   { id: 'TXN-B10', cat: 'liaison-txn', side: 'buyer', aud: 'common', grp: '購入者の取引', q: '購入した作品はコレクションルームでどう扱われますか？公開されますか？', a: '取引完了後、作品はあなたのコレクションルーム（myページ）に収蔵されます。収蔵作品は既定では非公開です。あなたがコレクションルームを公開し、その作品も公開に設定した場合のみ、作品ページに「現在の所蔵」としてあなたのコレクションルームへの案内が表示されます。公開するかどうかはいつでも変更できます。' },
-  { id: 'TXN-B11', cat: 'liaison-txn', side: 'buyer', aud: 'common', grp: '購入者の取引', q: 'クーポンはどう使いますか？', a: '購入の申込のときに選びます。1回の購入に使えるクーポンは1枚です（2枚以上あるときは、どれを使うか選べます）。使用期限までに申し込んだ購入には、そのあとで期限が来ても値引きが使われます。取引が成立しなかったとき（会場で先に売約済みになったときなど）は、クーポンは戻ります。持っているクーポンは「キャンペーン・クーポン」で確認できます。' }
+  { id: 'TXN-B11', cat: 'liaison-txn', side: 'buyer', aud: 'common', grp: '購入者の取引', q: 'クーポンはどう使いますか？', a: '購入の申込のときに選びます。1回の購入に使えるクーポンは1枚です（2枚以上あるときは、どれを使うか選べます）。使用期限までに申し込んだ購入には、そのあとで期限が来ても値引きが使われます。取引が成立しなかったとき（会場で先に売約済みになったときなど）は、クーポンは戻ります。持っているクーポンは「キャンペーン・クーポン」で確認できます。' },
+  { id: 'TXN-B12', cat: 'liaison-txn', side: 'buyer', aud: 'common', grp: '購入者の取引', q: '取引の知らせを、スマホで受け取れますか？', a: 'はい。出品者の購入確定・発送など、お支払いや受取の確認があなたの番になったときに、スマホにプッシュ通知でお知らせできます。お支払いには期限があるので、オンにしておくと安心です。iPhone では、先に個展なびをホーム画面に追加してください。{{pushGuide}}は「スマホで使う」のページにあります。' }
 ];
 
 /* cat×aud×side でフィルタし、target に描画する。
@@ -1920,6 +1869,10 @@ KTN.renderQA = function (target, opts) {
       var href = './kotennavi-p60-11.html?from=' + encodeURIComponent(from) + '&qa=' + encodeURIComponent(x.id);
       s = s.split('{{contact}}').join('<a href="' + href + '" class="ktn-guide-link">お問合わせフォーム</a>');
     }
+    /* {{pushGuide}}＝スマホのプッシュ通知の設定方法（P60-17「スマホで使う」・2026-10-21） */
+    s = s.split('{{pushGuide}}').join('<a href="./kotennavi-p60-17.html#push" class="ktn-guide-link">設定方法</a>');
+    /* {{perksGuide}}＝作品販売ガイドの「特典とクーポン」（P70-2・2026-10-22） */
+    s = s.split('{{perksGuide}}').join('<a href="./kotennavi-p70-2.html#perks" class="ktn-guide-link">作品販売ガイドの「特典とクーポン」</a>');
     return s;
   };
   var html = '';
@@ -2051,6 +2004,7 @@ const PAGES = {
   'p2-4': { n: '展覧会-出展者', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', 'kotennavi-p2.html'], ['出展者', null]] },
   'p2-5': { n: '展覧会-リエゾン作品一覧', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', 'kotennavi-p2.html'], ['LIAISON作品一覧', null]] },
   'p2-5-1': { n: '展覧会-リエゾンプラス作品一覧', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', 'kotennavi-p2.html'], ['LIAISON+ 作品一覧', null]] },
+  'p2-7': { n: '展覧会-会場フライヤー', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', 'kotennavi-p2.html'], ['会場フライヤー', null]] },
   'p2-6': { n: '展覧会-作品リスト', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', 'kotennavi-p2.html'], ['作品リスト', null]] },
   'p2-11': { n: '展覧会-新規/編集/クローン', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['松田啓佑展［仮称］', 'kotennavi-p2.html'], ['展覧会を編集', null]] },
   'p2-12': { n: 'LIAISON 作品管理', bc: [['Top', '/'], ['展覧会', 'kotennavi-p10.html'], ['あなたが知らないオノマトペ', 'kotennavi-p2.html'], ['LIAISON 作品管理', null]] },
@@ -2464,6 +2418,7 @@ function ktnSetLP(val, btn) {
   /* 申込の有無でロールアイコンの「やること」の数字も変わるので、サイドバーを含めて描き直す */
   if (typeof renderAll === 'function') renderAll();
   else if (typeof ktnRender === 'function') ktnRender();
+  if (KTN.CAMPAIGN && KTN.CAMPAIGN.mount) KTN.CAMPAIGN.mount();   /* キャンペーンの表示も申請の有無に合わせる（P3-21／P4-21 など） */
 }
 window.ktnLPApplied = ktnLPApplied;
 window.ktnSetLP = ktnSetLP;
@@ -2507,13 +2462,12 @@ function ktnSetPurchaseHistory(val, btn) {
   if (typeof renderAll === 'function') renderAll();
 }
 window.ktnSetPurchaseHistory = ktnSetPurchaseHistory;
-/* スマホで受け取る案内カード（.ktn-pwa-card・2026-10-09）。取引の画面（P3-15/P4-15/P5-14）に置く。
+/* スマホで受け取る案内（.ktn-pwa-line・小さな1行・2026-10-21 にカードから変更）。取引の画面（P3-15/P4-15/P5-14・P2-12-1）に置く。
    デモバー「スマホの案内」で 'std'（Android など）／'ios'（iPhone の Safari のまま）／'off'（出さない＝下の「出さない」の場合をまとめて見せる）を切り替える。
    本番の出し分け（React CSR）：
    - 出さない：この端末でプッシュがオン（PushManager の購読あり）・PC・プッシュ非対応の端末
    - 'ios'：iPhone で、ホーム画面から開いていない（display-mode: standalone でない）とき
-   - 右肩の ×（閉じる）：30日間は出さない（端末ごと。localStorage の閉じた日時で判定。読めない環境では毎回出してよい）
-   プロトタイプでは閉じても記録しない（確認のたびに消えたままになるため）。 */
+   閉じるボタンは置かない（控えめな1行なので邪魔にならない・プッシュをオンにすれば出なくなる・2026-10-21）。 */
 function ktnPwaCard(state, btn) {
   document.querySelectorAll('[data-pwa-card]').forEach(function (c) {
     c.hidden = (state === 'off');
@@ -2583,13 +2537,6 @@ document.addEventListener('DOMContentLoaded', function () {
     inp.setAttribute('list', dl.id);
     inp.setAttribute('autocomplete', 'off');
   });
-});
-document.addEventListener('click', function (e) {
-  var b = e.target.closest && e.target.closest('[data-pwa-close]');
-  if (!b) return;
-  var c = b.closest('[data-pwa-card]');
-  if (c) c.hidden = true;
-  KTN.toast('案内を閉じました。通知の設定は、myページの「通知設定」からいつでも変えられます');
 });
 /* 要対応の取引プルダウンに出す実データ相当のサンプル一覧（デモ用固定データ）。
    件数バッジ（KTN.txnAlerts）は数値のみでテストボタンから自由に変更できるが、
@@ -2941,7 +2888,7 @@ function p2OwnerMenuItems(curPage) {
   var liaisonItem = ddiP(curPage, liaisonTarget, 'grid', liaisonLabel, 'p2GotoWorks()');
   var articles = ddiP(curPage, 'p2-13', 'file', '記事管理', "location.href='./kotennavi-p2-13.html'");
   var qr = ddi('qr', '会場チェックイン用QRコードを表示', false, "ktnListQr('venue')");
-  var flyer = ddi('print', '会場フライヤーを作成', false, 'ktnVenueFlyer()');
+  var flyer = ddiP(curPage, 'p2-7', 'print', '会場に置く印刷物', "location.href='./kotennavi-p2-7.html'");   /* 会場フライヤーと作品リスト（2026-10-21・P2-7 に一本化） */
   var insight = ddiP(curPage, 'p2-14', 'chart', 'インサイト', "location.href='./kotennavi-p2-14.html'");
   var del = ddi('trash', '削除', true);
 
@@ -3127,24 +3074,29 @@ function getActions(page, role) {
   /* ── P2 展覧会トップ＋公開サブページ（p2-1〜p2-6・p2-5-1） ── */
   if (['p2', 'p2-1', 'p2-2', 'p2-3', 'p2-4', 'p2-5', 'p2-5-1', 'p2-6'].includes(page)) {
     const cmn = hib('heart', '興味あり', '', 'interest') + shareBtn() + sep();
-    const editBtn = p2CanEdit() ? owbtn('edit', '編集', "location.href='./kotennavi-p2-11.html'") : '';
+    /* 編集の行き先：P2-6（作品リスト）は作品の出品の管理（LIAISON＝P2-12／LIAISON+＝P2-12-1）。ほかは展覧会の編集（P2-11）（2026-10-22 ユーザー） */
+    const editHref = page === 'p2-6' ? (document.body.classList.contains('p2-6-plus') ? './kotennavi-p2-12-1.html' : './kotennavi-p2-12.html') : './kotennavi-p2-11.html';
+    const editBtn = p2CanEdit() ? owbtn('edit', '編集', "location.href='" + editHref + "'") : '';
+    /* P2-6 は作品リスト（出品者が出品した作品の一覧）なので、オーナー以外からの修正依頼は出さない（作品は修正依頼の対象外・2026-10-22 ユーザー） */
     if (role === 'guest' || role === 'login')
-      return cmn + ddMore(fixItem(page) + reportItem(page));
+      return cmn + ddMore((page === 'p2-6' ? '' : fixItem(page)) + reportItem(page));
+    /* P2-6（作品リスト）は会場に置く印刷物なので、オーナーと管理者にガイド（P60-6／P60-7「会場に置く印刷物」）を出す（2026-10-22） */
+    const p26Guide = page === 'p2-6' ? owbtn('info', 'ガイド', "window.open('" + (role === 'gallery' ? './kotennavi-p60-7.html' : './kotennavi-p60-6.html') + "#venue-print','_blank')") : '';
     if (role === 'creator' || role === 'gallery')
-      return cmn + editBtn + dd('オーナーメニュー', p2OwnerMenuItems());
+      return cmn + p26Guide + editBtn + dd('オーナーメニュー', p2OwnerMenuItems());
     if (role === 'admin')
-      return cmn + editBtn + dd('オーナーメニュー', p2OwnerMenuItems()) + dd('管理者', p2AdminMenuItems());
+      return cmn + p26Guide + editBtn + dd('オーナーメニュー', p2OwnerMenuItems()) + dd('管理者', p2AdminMenuItems());
     return cmn;
   }
 
   /* ── P2 管理サブページ群（展覧会編集／LIAISON・LIAISON+作品管理／記事管理／インサイト） ── */
-  if (['p2-11', 'p2-12', 'p2-121', 'p2-13', 'p2-14'].includes(page)) {
+  if (['p2-11', 'p2-12', 'p2-121', 'p2-13', 'p2-14', 'p2-7'].includes(page)) {
     /* ガイドボタンのリンク先：p60-6（クリエイター編）/ p60-7（ギャラリー編）FAQの該当チャプターへ。
        p2-11=展覧会の登録・編集チャプター、p2-13=記事の登録・編集チャプター、p2-14=インサイトチャプター
        （p3-12/p4-12のガイドリンクと同じ#insightを参照）。p2-12/p2-121（LIAISON作品管理）は
        まだ該当チャプターが無いため装飾のまま。 */
     const guideFile = role === 'gallery' ? './kotennavi-p60-7.html' : './kotennavi-p60-6.html';
-    const guideAnchor = page === 'p2-11' ? '#exhibition-edit' : page === 'p2-13' ? '#article-edit' : page === 'p2-14' ? '#insight' : '';
+    const guideAnchor = page === 'p2-11' ? '#exhibition-edit' : page === 'p2-13' ? '#article-edit' : page === 'p2-14' ? '#insight' : page === 'p2-7' ? '#venue-print' : '';
     const guideBtn = owbtn('info', 'ガイド', guideAnchor ? `window.open('${guideFile}${guideAnchor}','_blank')` : '');
     if (role === 'creator' || role === 'gallery')
       return guideBtn + dd('オーナーメニュー', p2OwnerMenuItems(page));
