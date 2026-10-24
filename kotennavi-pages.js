@@ -3846,13 +3846,13 @@ KTN.pages['p2-121'] = function() {
       if (w.locked) {
         lockBadge = '<span class="p2-121-lock-badge">販売中</span>';
         lockNote  = '<span class="p2-121-lock-note"><strong class="p2-121-lock-note__num">'+w.applyCount+'</strong>件申込中</span>';
-        hintText  = '申込対応中のため、詳細はリエゾン+コンソールで確認して下さい。';
+        hintText  = '申込対応中のため、詳細はリエゾン+コンソールで確認してください。';
         ctaLabel  = 'リエゾン+コンソール';
         ctaHref   = 'kotennavi-p3-15.html';
       } else {
         lockBadge = '<span class="p2-121-lock-badge p2-121-lock-badge--sold">売約済</span>';
         lockNote  = '<span class="p2-121-lock-note">取引完了</span>';
-        hintText  = '取引が成立した作品のため、詳細はリエゾン+コンソールで確認して下さい。';
+        hintText  = '取引が成立した作品のため、詳細はリエゾン+コンソールで確認してください。';
         ctaLabel  = 'リエゾン+コンソール';
         ctaHref   = 'kotennavi-p3-15.html';
       }
@@ -17300,7 +17300,7 @@ KTN.picks = (function () {
     {
       slug: 'shodo', order: 5, from: '', to: '', shelf: 1, refeed: 1,
       label: '話題の書道展',
-      desc: 'いま多くの人が見にいっている書の展覧会です。筆と墨のしごとをまとめて見られます。',
+      desc: 'いま多くの人が関心を寄せている書の展覧会です。筆と墨のしごとをまとめて見られます。',
       sel: { tag: '書道' }
     },
     {
@@ -17765,7 +17765,7 @@ KTN.pages['p10'] = function () {
     'liaison':      { refeed: 1, label: 'オンラインで楽しめる',  html: '<span class="lb-dot li"><span class="lb-dot-inner"></span>LIAISON</span>オンラインで楽しめる', desc: '会場に行かなくても、作品をオンラインで見られる展覧会です。気になったら会期中に足を運ぶこともできます。', f: function (x) { return !!x.liaison; } },
     'liaison-plus': { refeed: 1, label: 'オンラインで購入できる', html: '<span class="lb-dot li-plus"><span class="lb-dot-inner"></span>LIAISON+</span>オンラインで購入できる', desc: 'オンラインで作品を見て、そのまま購入できる展覧会です。会場が遠くても手元に迎えられます。', f: function (x) { return x.liaison === 'li-plus'; } },
     'fukuoka':      { refeed: 1, axis: 'area',  label: '福岡で行くべき展覧会',  desc: '福岡で開かれている展覧会です。市内の美術館から小さなギャラリーまで並んでいます。', f: function (x) { return x.area === '福岡'; } },
-    'shodo':        { refeed: 1, axis: 'tag',   label: '話題の書道展',          desc: 'いま多くの人が見にいっている書の展覧会です。筆と墨のしごとをまとめて見られます。', f: function (x) { return x.tags.indexOf('書道') !== -1; } },
+    'shodo':        { refeed: 1, axis: 'tag',   label: '話題の書道展',          desc: 'いま多くの人が関心を寄せている書の展覧会です。筆と墨のしごとをまとめて見られます。', f: function (x) { return x.tags.indexOf('書道') !== -1; } },
     'weekend':      { refeed: 1, axis: 'date',  label: 'この週末に行きたい',    desc: 'この土日に開いている展覧会です。予定を決めてから出かけられます。', f: function (x) { return !!x.wk; } },
     'tokyo-gendai': { refeed: 1, axis: 'area',  label: '東京・現代美術',        desc: '東京で開かれている現代美術の展覧会です。都内をまとめて回る日の下見にも。', f: function (x) { return x.area === '東京' && x.tags.indexOf('現代美術') !== -1; } },
     'hanga':        { refeed: 1, axis: 'tag',   label: '版画の世界',            desc: '版画の展覧会です。刷りの重なりや紙の質感は、実物で見ると印象が変わります。', f: function (x) { return x.tags.indexOf('版画') !== -1; } },
@@ -22160,7 +22160,7 @@ KTN.pages['p10-4-2'] = function () {
     var arc = endedOf(axis);
     if (arc.length) blocks.push({
       ttl: fullA + 'で会期を終えた展覧会',
-      why: '会期は終わっていますが、出品したクリエイターとギャラリーはいまも活動しています。',
+      why: '会期は終わっていますが、出品したクリエイターとギャラリーのページから、いまの活動をたどれます。',
       body: grid(arc.slice().sort(function (a, b) { return b.rd - a.rd; }).slice(0, FILL_ROW_EX)),
       /* 逃がし先はこのエリアの展覧会アーカイブそのもの（P10-4-3）。検索は既定で終了展を
          対象外にするため、過去の記録を全部見せるページとして検索より正確 */
@@ -22426,7 +22426,7 @@ KTN.pages['p10-4-2'] = function () {
     }
     if (elArcTtl) elArcTtl.textContent = fullA + 'の展覧会アーカイブ';
     if (elArcCard) elArcCard.href = AX.archiveHref(axis);
-    if (elArcDesc) elArcDesc.textContent = full + 'で会期を終えた展覧会の記録です。会期は終わっていますが、出品したクリエイターとギャラリーはいまも活動しています。';
+    if (elArcDesc) elArcDesc.textContent = full + 'で会期を終えた展覧会の記録です。会期は終わっていますが、出品したクリエイターとギャラリーのページから、いまの活動をたどれます。';
     syncBc(full);
   }
 
@@ -22975,7 +22975,7 @@ KTN.pages['p10-4-4'] = function () {
     var arcAll = AX.byGenre(gn.name, true);
     if (arcAll.length) blocks.push({
       ttl: gn.name + 'で会期を終えた展覧会',
-      why: '会期は終わっていますが、出品したクリエイターとギャラリーはいまも活動しています。',
+      why: '会期は終わっていますが、出品したクリエイターとギャラリーのページから、いまの活動をたどれます。',
       body: grid(arcAll.slice().sort(SORTS.last).slice(0, FILL_ROW_EX)),
       more: arcAll.length > FILL_ROW_EX ? { label: gn.name + 'の展覧会アーカイブをすべて見る', href: AX.genreHref(gn.slug) } : null
     });
@@ -23217,7 +23217,7 @@ KTN.pages['p10-4-5'] = function () {
   var OTHER = { 'with-children': 'artist-present', 'artist-present': 'with-children' };
   var OTHER_WHY = {
     'with-children': 'お子さまとご一緒にご来場いただける展覧会です。',
-    'artist-present': '会期中にクリエイターが在廊する展覧会です。作品の前で直接話を聞けます。'
+    'artist-present': '会期中にクリエイターが在廊する展覧会です。'
   };
   function renderFill() {
     var cur = AX.byAccess(ac.slug, false);
@@ -23228,7 +23228,7 @@ KTN.pages['p10-4-5'] = function () {
     var arcAll = AX.byAccess(ac.slug, true);
     if (arcAll.length) blocks.push({
       ttl: ac.ttl + 'の記録',
-      why: '会期は終わっていますが、出品したクリエイターとギャラリーはいまも活動しています。',
+      why: '会期は終わっていますが、出品したクリエイターとギャラリーのページから、いまの活動をたどれます。',
       body: grid(arcAll.slice().sort(SORTS.last).slice(0, FILL_ROW_EX))
       /* 行きやすさ条件の記録だけを集めた専用アーカイブページが無いため、この分岐は逃がし場を
          持たない（地方ブロックと同じ理由・2026-09-22） */
