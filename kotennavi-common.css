@@ -2412,12 +2412,16 @@ line-clamp:2;}
 .p251-dark .aw__queue-inline,
 .p6-dark .aw__queue,
 .p6-dark .aw__queue-inline{color:#7fb8ff}
+/* 暗い地のアイコンボタン（作品カードと右カラムの展覧会カードで同じ外円・2026-10-25 ユーザー指摘で .panel-dark .p2-side-ec を足した） */
 .p251-dark .aw .ktn-icon-btn,
-.p6-dark .aw .ktn-icon-btn{border-color:rgba(255,255,255,.25);background:transparent}
+.p6-dark .aw .ktn-icon-btn,
+.panel-dark .p2-side-ec .ktn-icon-btn{border-color:rgba(255,255,255,.25);background:transparent}
 .p251-dark .aw .ktn-icon-btn:hover,
-.p6-dark .aw .ktn-icon-btn:hover{border-color:rgba(255,255,255,.45);background:rgba(255,255,255,.06)}
+.p6-dark .aw .ktn-icon-btn:hover,
+.panel-dark .p2-side-ec .ktn-icon-btn:hover{border-color:rgba(255,255,255,.45);background:rgba(255,255,255,.06)}
 .p251-dark .aw .ktn-icon-btn.on,
-.p6-dark .aw .ktn-icon-btn.on{border-color:#5ab0ff;background:rgba(90,176,255,.15)}
+.p6-dark .aw .ktn-icon-btn.on,
+.panel-dark .p2-side-ec .ktn-icon-btn.on{border-color:#5ab0ff;background:rgba(90,176,255,.15)}
 
 /* ══════════════════════════════════════════
    ミニカード .aw--mini（ダーク背景パネル）
@@ -3792,7 +3796,7 @@ top:calc(var(--dh,32px) + var(--hh,50px));
 .ktn-more-link[hidden]{display:none} /* display:block が UA の [hidden] を上書きするためのガード */
 .p2-side-ec{display:flex;gap:10px;align-items:flex-start;padding:9px 0 9px 0;border-bottom:1px solid var(--border);text-decoration:none;color:var(--ink);transition:opacity .15s;position:relative}
 /* 興味ありボタン（右上絶対配置） */
-.p2-side-ec .ktn-icon-btn{position:absolute;top:9px;right:0;width:26px;height:26px;border-color:var(--border);color:var(--muted)}
+.p2-side-ec .ktn-icon-btn{position:absolute;top:9px;right:0;width:26px;height:26px;color:var(--muted)}   /* 外円は共通のアイコンボタンのまま（作品カードと同じ・2026-10-25 ユーザー） */
 .p2-side-ec .ktn-icon-btn svg{width:13px;height:13px}
 .p2-side-ec .ktn-icon-btn.on{border-color:#3a90e0;color:#3a90e0;background:rgba(58,144,224,.08)}
 
@@ -5386,7 +5390,7 @@ margin: 0 auto;
 
 /* 興味ありボタン（ダーク） */
 .p251-dark .p2-side-ec .ktn-icon-btn{border-color:rgba(255,255,255,.25)!important;background:transparent!important;color:rgba(255,255,255,.5)!important}
-.p251-dark .p2-side-ec .ktn-icon-btn:hover{border-color:rgba(255,255,255,.5)!important;background:rgba(255,255,255,.06)!important}
+.p251-dark .p2-side-ec .ktn-icon-btn:hover{border-color:rgba(255,255,255,.45)!important;background:rgba(255,255,255,.06)!important}
 .p251-dark .p2-side-ec .ktn-icon-btn.on{border-color:#5ab0ff!important;color:#5ab0ff!important;background:rgba(90,176,255,.15)!important}
 
 /* 近くの展覧会 — panel-dark コンテキスト（ボタンデモ準拠） */
@@ -5398,7 +5402,7 @@ margin: 0 auto;
 .panel-dark .p2-side-ec__name{color:rgba(255,255,255,.88)}
 .panel-dark .p2-side-ec__venue{color:rgba(255,255,255,.52)}
 .panel-dark .p2-side-ec__period{color:rgba(255,255,255,.45)}
-.panel-dark .p2-side-ec .ktn-icon-btn{background:transparent;color:rgba(255,255,255,.5)}
+.panel-dark .p2-side-ec .ktn-icon-btn{color:rgba(255,255,255,.5)}   /* 外円・地は上の「暗い地のアイコンボタン」 */
 .panel-dark .lb-dot.li{background:#1a72c4;color:#fff}
 .panel-dark .lb-dot.li-plus{background:#c98a14;color:#fff}
 .panel-dark .cb-exhibition{color:#5ab0ff;background:rgba(90,176,255,.12);border-left-color:#5ab0ff}
@@ -6387,6 +6391,9 @@ body.p6-dark.p6-plus{
 .p6-liaison--lp .p6-liaison__ship-lbl{font-size:.62rem;color:var(--dk-sub);letter-spacing:.06em;white-space:nowrap;line-height:1.9}
 .p6-liaison--lp .p6-liaison__ship-val{font-size:.75rem;color:var(--dk-text);line-height:1.9}
 .p6-liaison--lp .p6-liaison__link-row{display:flex;gap:6px;flex-wrap:wrap}
+/* 梱包費の行の下：送料・梱包費の一文と、発送の説明へのリンク（P6-2・2026-10-25） */
+.p6-liaison__ship-note{margin-top:4px;font-size:.62rem;line-height:1.8;color:var(--dk-sub)}
+.p6-liaison__ship-link{margin-left:10px;color:var(--dk-text);text-decoration:underline;text-underline-offset:2px;white-space:nowrap}
 .p6-liaison--lp .p6-liaison__link-btn{display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border:1px solid rgba(255,255,255,.15);border-radius:3px;font-size:.62rem;color:var(--dk-sub);text-decoration:none;transition:color .15s;white-space:nowrap}
 .p6-liaison--lp .p6-liaison__link-btn:hover{color:var(--dk-text)}
 .p6-liaison--lp .p6-liaison__btn-apply{display:flex;align-items:center;justify-content:center;gap:8px;padding:17px 18px;border-radius:4px;font-size:.82rem;font-weight:700;background:#c8a96e;color:#1a2535;border:none;cursor:pointer;width:100%;letter-spacing:.04em;box-sizing:border-box;transition:background .15s;position:relative}
@@ -7646,7 +7653,7 @@ body.p5-page .p5-tabnav__item.is-active{color:var(--page-accent);border-bottom-c
 /* 興味ありCTA: p2 同様カード内タイトル横（.ec__mini-title-row 内・右寄せ） */
 .p5-side-ending .ec__mini-title-row{align-items:flex-start}
 .p5-side-ending .ec__mini-title{flex:1;min-width:0}
-.p5-side-ending .ec__mini-title-row .ktn-icon-btn{flex-shrink:0;width:26px;height:26px;margin-top:-2px;border-color:var(--border);color:var(--muted)}
+.p5-side-ending .ec__mini-title-row .ktn-icon-btn{flex-shrink:0;width:26px;height:26px;margin-top:-2px;color:var(--muted)}   /* 外円は共通のアイコンボタンのまま（2026-10-25） */
 .p5-side-ending .ec__mini-title-row .ktn-icon-btn svg{width:13px;height:13px}
 .p5-side-ending .ec__mini-title-row .ktn-icon-btn.on{border-color:#3a90e0;color:#3a90e0;background:rgba(58,144,224,.08)}
 .p5-side-ending__date{font-family:var(--fm);font-size:.65rem;color:var(--muted)}
@@ -13800,10 +13807,13 @@ a.p10-preset{text-decoration:none}
 .ktn-apply-coupon__check input{flex-shrink:0;margin:0}
 .ktn-apply-coupon__name{flex:1;min-width:0}
 .ktn-apply-coupon__name .ktn-coupon{max-width:100%}
+.ktn-apply-coupon__lim{display:block;margin-top:2px;font-size:.7rem;color:var(--muted)}   /* 使える範囲と期限（2026-10-24） */
 .ktn-apply-coupon__off{font-family:var(--fm);font-weight:600;color:var(--accent);white-space:nowrap}
 .ktn-apply-coupon__sum{margin-top:4px;padding-top:6px;border-top:1px solid var(--border);font-size:.76rem;line-height:1.5;color:var(--ink)}
 .ktn-apply-coupon__sum strong{font-family:var(--fm);font-size:.88rem;font-weight:600}
 .ktn-apply-coupon__note{margin-left:8px;font-size:.68rem;color:var(--muted)}
+.ktn-apply-coupon__check.is-disabled{cursor:default;color:var(--muted)}   /* 会期が終わるまで使えないチェックインクーポン（2026-10-25） */
+.ktn-apply-coupon__check.is-disabled .ktn-coupon{opacity:.6}
 .am-input.is-error{border-color:#b43c14;background:#fdf6f3}
 /* 購入申込のモーダルの中の保存エラーパネル（共通 .ktn-form-error）。モーダルは縦に gap で並べるので外側の余白は 0 */
 .am-box > .ktn-form-error{margin:0}
@@ -13845,7 +13855,7 @@ a.p10-preset{text-decoration:none}
 .ktn-admin-camp__field .p211-select{width:100%;box-sizing:border-box}
 .ktn-admin-camp__field--wide{flex:1 1 100%}
 .ktn-admin-camp__field.is-error{color:#b43c14}
-.ktn-admin-camp__field.is-error .p211-textarea{border-color:#b43c14}
+.ktn-admin-camp__field.is-error .p211-textarea,.ktn-admin-camp__field.is-error .p211-input{border-color:#b43c14}
 .ktn-admin-camp__field .p211-textarea{width:100%;box-sizing:border-box;font-size:.8rem}
 .ktn-admin-camp__item > .p211-help{margin:8px 0 0}
 .ktn-admin-camp__actions{display:flex;justify-content:flex-end}
@@ -14099,6 +14109,10 @@ body.p2-7-page .p26-toolbar{flex-wrap:wrap}
 .ktn-coupon__btn:hover{filter:brightness(.92)}
 button.ktn-coupon__btn{border:none;font-family:inherit;cursor:pointer}
 .ktn-coupon__links{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:4px;font-size:.76rem}
+/* 持っている券の「受取済み」＝券のすぐ右・券の外（2026-10-25 ユーザー）。暗い地（P6-2）では明るい緑 */
+.ktn-coupon-got{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap}
+.ktn-coupon__got{padding:1px 7px;font-size:.56rem}
+.p6-dark .ktn-coupon__got{color:#8fd8a8;background:rgba(143,216,168,.1)}
 /* 受付が終わった券（消さずに淡く・確かめられるように） */
 .ktn-coupon.is-off{--coupon-c:#7d848c;--coupon-bg:rgba(125,132,140,.06)}
 .ktn-coupon.is-off .ktn-coupon__svc{filter:grayscale(1);opacity:.7}
@@ -14108,8 +14122,16 @@ button.ktn-coupon__btn{border:none;font-family:inherit;cursor:pointer}
 /* 置き場所の地の色に切り込みを合わせる */
 .p26-banner .ktn-coupon{--coupon-notch:var(--warm)}
 .p6-dark .ktn-coupon{--coupon-notch:var(--lbg)}
-.ktn-coupon-hint .ktn-coupon{margin-right:8px}
+.ktn-coupon-hint__chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 4px}   /* 券を横に並べる（1行目）・リンクは2行目（2026-10-25 ユーザー） */
 .ktn-coupon-hint__text{vertical-align:middle}
+.ktn-coupon-hint__chips + .ktn-coupon-hint__link{margin-left:0}
+.ktn-coupon-hint__item{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap}   /* 券と、その横の印（受取済み・会期終了後から） */
+.ktn-coupon-hint__one{color:var(--lmuted,rgba(255,255,255,.62))}   /* 2枚以上のとき・リンクの前（2026-10-25） */
+.ktn-coupon-hint__chip-link{display:inline-flex;border-radius:4px;transition:opacity .18s}   /* 受け取れる券：押すとそのキャンペーンのお知らせ（2026-10-25） */
+.ktn-coupon-hint__chip-link:hover{opacity:.82}
+/* 券そのものがお知らせへのリンク（P5-17・P2・2026-10-25） */
+a.ktn-coupon--link{text-decoration:none;transition:opacity .18s}
+a.ktn-coupon--link:hover{opacity:.86}
 .ktn-coupon-opt__label .ktn-coupon{margin-right:2px}
 .p2-12-watch-coupon[hidden]{display:none}
 .p2-121-coupon-block .p2-12-watch-coupon{margin-top:14px}

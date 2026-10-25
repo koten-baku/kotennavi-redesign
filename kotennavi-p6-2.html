@@ -51,9 +51,13 @@
   <span class="dbar-sep" style="margin-left:12px">通信：</span>
   <button class="dbtn on" data-offline-demo-btn="on" onclick="ktnDemoOffline(false)">オンライン</button>
   <button class="dbtn" data-offline-demo-btn="off" onclick="ktnDemoOffline(true)">オフライン</button>
-  <span class="dbar-sep" style="margin-left:12px">クーポン：</span>
-  <button class="dbtn on" data-terms-demo="buyer" onclick="ktnTermsDemo('buyer','has',this)">あり</button>
-  <button class="dbtn" data-terms-demo="buyer" onclick="ktnTermsDemo('buyer','none',this)">なし</button>
+  <span class="dbar-sep" style="margin-left:12px">持っているクーポン（ログイン）：</span>
+  <button class="dbtn on" data-coupon-demo onclick="ktnCouponDemo('two',this)">2枚</button>
+  <button class="dbtn" data-coupon-demo onclick="ktnCouponDemo('one',this)">1枚</button>
+  <button class="dbtn" data-coupon-demo onclick="ktnCouponDemo('none',this)">なし</button>
+  <span class="dbar-sep" style="margin-left:12px">受け取れるクーポン（ゲスト・なし）：</span>
+  <button class="dbtn on" data-venue-demo onclick="ktnVenueDemo(false,this)">2枚</button>
+  <button class="dbtn" data-venue-demo onclick="ktnVenueDemo(true,this)">1枚</button>
   <span class="dbar-sep" style="margin-left:12px">受付：</span>
   <button class="dbtn on" data-camp-full onclick="ktnCampFullDemo(false,this)">受付中</button>
   <button class="dbtn" data-camp-full onclick="ktnCampFullDemo(true,this)">上限に達した</button>
@@ -250,7 +254,6 @@
             </div>
             <!-- クーポンの1行（持っている人＝使えるクーポンと値引き後の金額／持っていない人＝受け取り方）。中身は pages.js KTN.CAMPAIGN（2026-10-12） -->
             <div class="ktn-coupon-hint" data-coupon-hint data-price="580000" data-price-from="#p62PriceNum" data-venue="on" hidden></div>
-            <div class="p6-liaison__price-note">+ 送料・梱包費は購入確定時に別途ご案内します</div>
             <div class="p6-liaison__period">
               <span class="p6-liaison__period-lbl">オンライン販売期間</span>
               <span class="p6-liaison__period-val">2026.02.18 — 2026.03.19</span>
@@ -273,6 +276,8 @@
                 <span class="p6-liaison__ship-lbl">梱包費（参考）</span>
                 <span class="p6-liaison__ship-val">¥1,000 <span class="p6-liaison__price-tax">税込</span></span>
               </div>
+              <!-- 送料・梱包費の一文と、発送の説明へのリンク（価格の下から移した・2026-10-25 ユーザー） -->
+              <div class="p6-liaison__ship-note">送料・梱包費は購入確定時に別途ご案内します<a class="p6-liaison__ship-link" href="kotennavi-p70-4.html">発送・送料について →</a></div>
 
             </div>
           </div>
@@ -284,12 +289,6 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="10" height="10">
                   <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
                 </svg>購入までの流れ
-              </a>
-              <a href="kotennavi-p70-4.html" class="p6-liaison__link-btn">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="10" height="10">
-                  <rect x="1" y="3" width="15" height="13" rx="1"/>
-                  <path d="M16 8h4a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-4"/>
-                </svg>発送・送料について
               </a>
               <a href="kotennavi-p70-6.html" class="p6-liaison__link-btn">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="10" height="10">
