@@ -116,6 +116,7 @@
           <button type="button" class="p909-tab-btn is-active" role="tab" data-panel="fee" aria-selected="true">サービス利用料</button>
           <button type="button" class="p909-tab-btn" role="tab" data-panel="campaign" aria-selected="false">キャンペーン</button>
           <button type="button" class="p909-tab-btn" role="tab" data-panel="notify" aria-selected="false">お知らせの時期</button>
+          <button type="button" class="p909-tab-btn" role="tab" data-panel="grant" aria-selected="false">個別の適用<span class="ktn-count ktn-count--pill is-idle">0</span></button>
         </div>
 
         <!-- サービス利用料 -->
@@ -190,6 +191,12 @@
         <div class="p9020-panel" id="p9020Panel-notify" role="tabpanel" hidden>
           <p class="p909-auto-intro">購入の後押しのお知らせを送る時期です。文言は <a class="ktn-guide-link" href="./kotennavi-p90-18.html">お知らせ・やることの文言管理</a>、メールの文面は <a class="ktn-guide-link" href="./kotennavi-p90-9.html">メールテンプレート管理</a> で管理します。</p>
           <div id="p9020Notify"></div>
+        </div>
+
+        <!-- 個別の適用（P3-11／P4-11／P5-11 の管理者の枠で、トラブルの対応として個別に適用した・渡したもの・2026-10-26） -->
+        <div class="p9020-panel" id="p9020Panel-grant" role="tabpanel" hidden>
+          <p class="p909-auto-intro">トラブルの対応として、管理者が1人のアカウントにだけ個別に適用した特典・渡したクーポンの記録です（新しい順）。操作は、それぞれのアカウントの編集ページ（クリエイター・ギャラリー・ユーザー）の管理者の枠で行います。先着・受付の人数には数えません。</p>
+          <div id="p9020Grants"></div>
         </div>
 
         <!-- 保存エラーパネル（共通） -->

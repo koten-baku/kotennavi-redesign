@@ -13864,6 +13864,8 @@ a.p10-preset{text-decoration:none}
 .ktn-admin-camp__field .p211-textarea{width:100%;box-sizing:border-box;font-size:.8rem}
 .ktn-admin-camp__item > .p211-help{margin:8px 0 0}
 .ktn-admin-camp__actions{display:flex;justify-content:flex-end}
+.ktn-admin-camp__field .p211-input{width:100%;box-sizing:border-box}   /* 個別の適用の中身の欄（2026-10-26） */
+.p9020-grants td{font-size:.76rem;line-height:1.6;vertical-align:top}   /* P90-20 個別の適用の一覧（2026-10-26） */
 @media (max-width:540px){.ktn-admin-camp__ro{flex-direction:column;gap:0}.ktn-admin-camp__ro-k{flex:none}}
 /* ===== P90-20 料率・キャンペーン管理。タブ・表・小見出しは P90-9／P90-19 の部品を再利用 ===== */
 .p9020-grid{display:flex;flex-wrap:wrap;gap:0 20px}
