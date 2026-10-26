@@ -46,6 +46,9 @@
   <span class="dbar-sep">販売期間：</span>
   <button class="dbtn dbtn-exh on" data-exh-key="salesOver" onclick="ktnSetExh('salesOver','false',this)">終了前</button>
   <button class="dbtn dbtn-exh" data-exh-key="salesOver" onclick="ktnSetExh('salesOver','true',this)">終了済</button>
+  <span class="dbar-sep">はじめて割の予定：</span>
+  <button class="dbtn on" data-perk-shift onclick="ktnPerkShiftDemo(false,this)">そのまま</button>
+  <button class="dbtn" data-perk-shift onclick="ktnPerkShiftDemo(true,this)">保存で変わる</button>
 </div>
 
 <div class="shell">
@@ -2200,7 +2203,8 @@ function handleSubmit() {
   if (!validateRequired()) return;
   var sum = document.getElementById('p211ConfirmSummary');
   var m   = document.getElementById('p211ConfirmModal');
-  if (sum) sum.innerHTML = buildSummary();
+  /* はじめて割の対象になる予定が変わる保存（会期を早めた・LIAISON+ の展覧会を登録したなど）は、確認の中で知らせる（2026-10-26） */
+  if (sum) sum.innerHTML = buildSummary() + ((KTN.CAMPAIGN && KTN.CAMPAIGN.perkShiftNote()) || '');
   if (m) m.hidden = false;
 }
 

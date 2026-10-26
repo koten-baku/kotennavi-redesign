@@ -3178,6 +3178,7 @@ function getActions(page, role) {
       'p3-18': './kotennavi-p60-6.html#exhibition-edit',
       'p3-19': './kotennavi-p60-6.html#article-edit',
       'p3-20': './kotennavi-p60-6.html#inquiry',
+      'p3-21': './kotennavi-p70-2.html#perks',   /* 作品販売ガイドの「特典とクーポン」（2026-10-25・未登録で押しても何も起きなかった） */
     };
     const guideUrl = P3_GUIDE[page] || '';
     const guideBtn = owbtn('info', 'ガイド', guideUrl ? `window.open('${guideUrl}','_blank')` : '');
@@ -3214,6 +3215,7 @@ function getActions(page, role) {
       'p4-18': './kotennavi-p60-7.html#exhibition-edit',
       'p4-19': './kotennavi-p60-7.html#article-edit',
       'p4-20': './kotennavi-p60-7.html#inquiry',
+      'p4-21': './kotennavi-p70-2.html#perks',   /* 作品販売ガイドの「特典とクーポン」（2026-10-25） */
     };
     const guideUrl = P4_GUIDE[page] || '';
     const guideBtn = owbtn('info', 'ガイド', guideUrl ? `window.open('${guideUrl}','_blank')` : '');
@@ -3238,6 +3240,7 @@ function getActions(page, role) {
       'p5-14': './kotennavi-p70-11.html#overview',
       'p5-15': './kotennavi-p70-11.html#trouble',
       'p5-16': './kotennavi-p60-5.html#inquiry',
+      'p5-17': './kotennavi-p70-3.html#coupon',   /* 購入ガイドの「クーポンを使うとき」（2026-10-25） */
     };
     const guideUrl = P5_GUIDE[page] || '';
     const guideBtn = guideUrl ? owbtn('info', 'ガイド', `window.open('${guideUrl}','_blank')`) : '';
@@ -4201,6 +4204,18 @@ function openCheckinEditModal(opts) {
 
 /* \u2500\u2500 \u5171\u6709 \u78ba\u8a8d\u30e2\u30fc\u30c0\u30eb\uff08\u524a\u9664\u78ba\u8a8d\u30fbp5-2\uff0f\u5c06\u6765 p2\u30fbp8-11 \u304c\u518d\u5229\u7528\uff09 \u2500\u2500
    opts: { title, message(HTML\u53ef), confirmLabel, cancelLabel, danger(=true), onConfirm } */
+/* キャンペーンのお知らせ・キャンペーン・特典（P3-21／P4-21）・キャンペーン・クーポン（P5-17）へのリンクは、別のタブで開く（2026-10-26 ユーザー）。
+   クーポン・特典の部品（券・価格のそば・1行・専用のページ・クーポンの欄・チェックインの完了）の中のリンクだけが対象。ほかのナビ（サイドバー・メニュー）はそのまま。
+   部品は JS で描き直されるので、押した瞬間に target を付ける（本番は部品の Link に target を持たせる） */
+(function () {
+  var AREA = '.ktn-coupon,.ktn-coupon-hint,.ktn-coupon-got,.ktn-terms,.ktn-terms-line,.ktn-ci-coupon,.ktn-coupon-opt,.p26-coupon-line,.p2-visitor__camp,[data-checkin-camp],[data-qr-banner],[data-watch-coupon],[data-venue-optout],.ktn-exh-perk';
+  var TO = /kotennavi-p61-1\.html\?c=|kotennavi-p[34]-21\.html|kotennavi-p5-17\.html/;
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href]');
+    if (!a || !TO.test(a.getAttribute('href')) || !a.closest(AREA)) return;
+    a.target = '_blank'; a.rel = 'noopener';
+  }, true);
+})();
 function ktnConfirmModal(opts) {
   opts = opts || {};
   var existing = document.getElementById('ktnConfirmModal');

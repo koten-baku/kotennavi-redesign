@@ -39,10 +39,13 @@
   <button class="dbtn on" data-offline-demo-btn="on" onclick="ktnDemoOffline(false)">オンライン</button>
   <button class="dbtn" data-offline-demo-btn="off" onclick="ktnDemoOffline(true)">オフライン</button>
   <span class="dbar-sep" style="margin-left:12px">特典：</span>
-  <button class="dbtn on" data-terms-demo="seller" onclick="ktnTermsDemo('seller','active',this)">適用中（展覧会が決定）</button>
-  <button class="dbtn" data-terms-demo="seller" onclick="ktnTermsDemo('seller','waiting',this)">適用中（展覧会の前）</button>
-  <button class="dbtn" data-terms-demo="seller" onclick="ktnTermsDemo('seller','progress',this)">申込の審査中</button>
-  <button class="dbtn" data-terms-demo="seller" onclick="ktnTermsDemo('seller','none',this)">なし</button>
+  <!-- はじめて割をこの展覧会から見た状態（2026-10-25）。「対象になる予定」は会期の前だけ＝押すと会期も「会期前」に切り替わる（会期が始まると対象は決まっている） -->
+  <button class="dbtn on" data-terms-demo="seller" onclick="ktnTermsDemo('seller','active',this)">適用中（この展覧会が対象）</button>
+  <button class="dbtn" data-terms-demo="seller" data-perk-waiting onclick="p2121PerkWaiting(this)">会期の前（対象になる予定）</button>
+  <button class="dbtn" data-terms-demo="seller" onclick="ktnTermsDemo('seller','none',this)">なし（ほかの展覧会が対象）</button>
+  <span class="dbar-sep">はじめて割の予定：</span>
+  <button class="dbtn on" data-perk-shift onclick="ktnPerkShiftDemo(false,this)">そのまま</button>
+  <button class="dbtn" data-perk-shift onclick="ktnPerkShiftDemo(true,this)">保存で変わる</button>
   <span class="dbar-sep">記念の割引：</span>
   <button class="dbtn on" data-anniv-demo onclick="ktnAnnivDemo(false,this)">なし</button>
   <button class="dbtn" data-anniv-demo onclick="ktnAnnivDemo(true,this)">実施中</button>

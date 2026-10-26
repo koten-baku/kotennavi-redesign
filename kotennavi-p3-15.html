@@ -122,14 +122,12 @@
   <button class="dbtn" data-offline-demo-btn="off" onclick="ktnDemoOffline(true)">オフライン</button>
   <!-- 展覧会ごとの特典の行を確かめる（2026-10-21）：はじめて割の適用中／なし × 記念の割引のなし／実施中 -->
   <span class="dbar-sep" style="margin-left:12px">はじめて割：</span>
-  <button class="dbtn on" data-terms-demo="seller" onclick="ktnTermsDemo('seller','active',this)">適用中</button>
+  <button class="dbtn on" data-terms-demo="seller" onclick="ktnTermsDemo('seller','active',this)">適用中（対象の展覧会が決定）</button>
+  <button class="dbtn" data-terms-demo="seller" onclick="ktnTermsDemo('seller','waiting',this)">対象になる予定（会期の前）</button>
   <button class="dbtn" data-terms-demo="seller" onclick="ktnTermsDemo('seller','none',this)">なし</button>
   <span class="dbar-sep">記念の割引：</span>
   <button class="dbtn on" data-anniv-demo onclick="ktnAnnivDemo(false,this)">なし</button>
   <button class="dbtn" data-anniv-demo onclick="ktnAnnivDemo(true,this)">実施中</button>
-  <span class="dbar-sep">イベントのクーポン：</span>
-  <button class="dbtn on" data-watch-demo onclick="ktnWatchDemo(false,this)">開始前</button>
-  <button class="dbtn" data-watch-demo onclick="ktnWatchDemo(true,this)">実施中</button>
 </div>
 
 <div class="shell">
@@ -310,8 +308,6 @@
                 <a class="p315-exh-head__title" href="kotennavi-p2.html">あなたが知らないオノマトペ — 田中透 個展</a>
               </div>
                 <div class="ktn-exh-perk" data-exh-perk="あなたが知らないオノマトペ — 田中透 個展" hidden></div>
-                <div class="ktn-exh-coupon" data-exh-coupon="あなたが知らないオノマトペ — 田中透 個展" hidden></div>
-                <div class="ktn-exh-coupon" data-exh-checkin="あなたが知らないオノマトペ — 田中透 個展" hidden></div>
               <div class="p315-exh-head__meta">
                 <span class="p315-exh-head__venue">Gallery SOIL 渋谷</span>
                 <span class="p315-exh-head__dot">·</span>
@@ -577,8 +573,6 @@
                 <a class="p315-exh-head__title" href="#">声と線 — 新作展</a>
               </div>
                 <div class="ktn-exh-perk" data-exh-perk="声と線 — 新作展" hidden></div>
-                <div class="ktn-exh-coupon" data-exh-coupon="声と線 — 新作展" hidden></div>
-                <div class="ktn-exh-coupon" data-exh-checkin="声と線 — 新作展" hidden></div>
               <div class="p315-exh-head__meta">
                 <span class="p315-exh-head__venue">Gallery SOIL 渋谷</span>
                 <span class="p315-exh-head__dot">·</span>
@@ -658,8 +652,6 @@
                 <a class="p315-exh-head__title" href="#">余白の詩学 — 田中透 版画展</a>
               </div>
                 <div class="ktn-exh-perk" data-exh-perk="余白の詩学 — 田中透 版画展" hidden></div>
-                <div class="ktn-exh-coupon" data-exh-coupon="余白の詩学 — 田中透 版画展" hidden></div>
-                <div class="ktn-exh-coupon" data-exh-checkin="余白の詩学 — 田中透 版画展" hidden></div>
               <div class="p315-exh-head__meta">
                 <span class="p315-exh-head__venue">Gallery Nui 代官山</span>
                 <span class="p315-exh-head__dot">·</span>
@@ -694,8 +686,6 @@
                   <a class="p315-exh-head__title" href="#">言葉の地層 — 2025年末展</a>
                 </div>
                 <div class="ktn-exh-perk" data-exh-perk="言葉の地層 — 2025年末展" hidden></div>
-                <div class="ktn-exh-coupon" data-exh-coupon="言葉の地層 — 2025年末展" hidden></div>
-                <div class="ktn-exh-coupon" data-exh-checkin="言葉の地層 — 2025年末展" hidden></div>
                 <div class="p315-exh-head__meta">
                   <span class="p315-exh-head__venue">Gallery Koten</span>
                   <span class="p315-exh-head__dot">·</span>

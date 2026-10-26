@@ -122,14 +122,12 @@
   <button class="dbtn" data-offline-demo-btn="off" onclick="ktnDemoOffline(true)">オフライン</button>
   <!-- 展覧会ごとの特典の行を確かめる（2026-10-21）：はじめて割の適用中／なし × 記念の割引のなし／実施中 -->
   <span class="dbar-sep" style="margin-left:12px">はじめて割：</span>
-  <button class="dbtn on" data-terms-demo="seller" onclick="ktnTermsDemo('seller','active',this)">適用中</button>
+  <button class="dbtn on" data-terms-demo="seller" onclick="ktnTermsDemo('seller','active',this)">適用中（対象の展覧会が決定）</button>
+  <button class="dbtn" data-terms-demo="seller" onclick="ktnTermsDemo('seller','waiting',this)">対象になる予定（会期の前）</button>
   <button class="dbtn" data-terms-demo="seller" onclick="ktnTermsDemo('seller','none',this)">なし</button>
   <span class="dbar-sep">記念の割引：</span>
   <button class="dbtn on" data-anniv-demo onclick="ktnAnnivDemo(false,this)">なし</button>
   <button class="dbtn" data-anniv-demo onclick="ktnAnnivDemo(true,this)">実施中</button>
-  <span class="dbar-sep">イベントのクーポン：</span>
-  <button class="dbtn on" data-watch-demo onclick="ktnWatchDemo(false,this)">開始前</button>
-  <button class="dbtn" data-watch-demo onclick="ktnWatchDemo(true,this)">実施中</button>
 </div>
 
 <div class="shell">
@@ -310,8 +308,6 @@
                 <a class="p315-exh-head__title" href="kotennavi-p2.html">色彩の対話 — 現代絵画グループ展</a>
               </div>
                 <div class="ktn-exh-perk" data-exh-perk="色彩の対話 — 現代絵画グループ展" hidden></div>
-                <div class="ktn-exh-coupon" data-exh-coupon="色彩の対話 — 現代絵画グループ展" hidden></div>
-                <div class="ktn-exh-coupon" data-exh-checkin="色彩の対話 — 現代絵画グループ展" hidden></div>
               <div class="p315-exh-head__meta">
                 <span class="p315-exh-head__venue">Gallery SOIL 渋谷</span>
                 <span class="p315-exh-head__dot">·</span>
@@ -494,8 +490,6 @@
                 <a class="p315-exh-head__title" href="#">モノクロームの詩 — 松本りさ 個展</a>
               </div>
                 <div class="ktn-exh-perk" data-exh-perk="モノクロームの詩 — 松本りさ 個展" hidden></div>
-                <div class="ktn-exh-coupon" data-exh-coupon="モノクロームの詩 — 松本りさ 個展" hidden></div>
-                <div class="ktn-exh-coupon" data-exh-checkin="モノクロームの詩 — 松本りさ 個展" hidden></div>
               <div class="p315-exh-head__meta">
                 <span class="p315-exh-head__venue">Gallery SOIL 渋谷</span>
                 <span class="p315-exh-head__dot">·</span>
@@ -578,8 +572,6 @@
                 <a class="p315-exh-head__title" href="#">春の彩り — グループ展 2025</a>
               </div>
                 <div class="ktn-exh-perk" data-exh-perk="春の彩り — グループ展 2025" hidden></div>
-                <div class="ktn-exh-coupon" data-exh-coupon="春の彩り — グループ展 2025" hidden></div>
-                <div class="ktn-exh-coupon" data-exh-checkin="春の彩り — グループ展 2025" hidden></div>
               <div class="p315-exh-head__meta">
                 <span class="p315-exh-head__venue">Gallery SOIL 渋谷</span>
                 <span class="p315-exh-head__dot">·</span>
@@ -614,8 +606,6 @@
                   <a class="p315-exh-head__title" href="#">光の断層 — 現代版画グループ展</a>
                 </div>
                 <div class="ktn-exh-perk" data-exh-perk="光の断層 — 現代版画グループ展" hidden></div>
-                <div class="ktn-exh-coupon" data-exh-coupon="光の断層 — 現代版画グループ展" hidden></div>
-                <div class="ktn-exh-coupon" data-exh-checkin="光の断層 — 現代版画グループ展" hidden></div>
                 <div class="p315-exh-head__meta">
                   <span class="p315-exh-head__venue">Gallery SOIL 渋谷</span>
                   <span class="p315-exh-head__dot">·</span>

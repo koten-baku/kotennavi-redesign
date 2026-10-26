@@ -13786,12 +13786,16 @@ a.p10-preset{text-decoration:none}
 .ktn-terms-line__label{font-weight:700}
 .ktn-terms-line__rate{font-family:var(--fm);font-size:.95rem;font-weight:600}
 .ktn-terms-line__rate-old{margin-right:6px;font-weight:400;color:var(--muted)}   /* 特典の適用前の料率（取り消し線・2026-10-24） */
+.ktn-exh-perk__note .ktn-terms-line__rate{font-size:inherit}   /* P3-15／P4-15 の展覧会ごとの行では周りの文字と同じ大きさ（2026-10-25） */
 .ktn-terms-line__tag{margin-left:6px;padding:2px 8px;border-radius:2px;background:var(--page-accent,var(--accent));color:#fff;font-size:.66rem;font-weight:600;line-height:1.5;white-space:nowrap}
 .ktn-terms-line__tag.is-outline{background:none;color:var(--page-accent,var(--accent));box-shadow:inset 0 0 0 1px var(--page-accent,var(--accent))}
 .ktn-terms-line__name{font-weight:700}
 .ktn-terms-line__note{color:var(--muted);font-size:.72rem}
 .ktn-terms-line .ktn-guide-link{margin-left:auto}
 .ktn-terms-line__detail{flex-basis:100%;display:flex;align-items:baseline;flex-wrap:wrap;gap:2px 10px}   /* 特典の名前と説明は2行目に（P2-12-1・2026-10-24） */
+.ktn-terms-line__detail > .ktn-terms-line__tag:first-child{margin-left:0}   /* アカウント全体の1行：特典の行は印から始める（2026-10-25） */
+.ktn-terms-line__detail .ktn-terms-line__rate{font-size:.86rem}
+.ktn-terms-line__ex{color:inherit;text-decoration:underline;text-underline-offset:2px}
 .p315-wrap > .ktn-terms-line{margin-top:16px}
 /* 作品の価格のそばの1行（P6-2＝ダークのページ。色は自分で持つ。段落 p は使わない） */
 .ktn-coupon-hint{margin-top:8px;font-size:.78rem;line-height:1.6;color:var(--lgold,#c9a96e)}
@@ -13822,6 +13826,7 @@ a.p10-preset{text-decoration:none}
 .ktn-txn-net .p211-help{margin:8px 0 0}
 .ktn-txn-net--modal{margin-top:12px}
 .ktn-txn-net__perk .p316-ship-total-label,.ktn-txn-net__perk .p316-ship-total-amount{color:var(--page-accent,var(--accent))}
+.ktn-txn-net__coupon{margin-top:8px;padding:6px 10px;background:#faf7f1;border-left:3px solid var(--accent);font-size:.76rem;line-height:1.6;color:var(--ink)}   /* 購入者がクーポンを使った取引（P3-16／P4-16・2026-10-26） */
 .ktn-pay-coupon > span{color:var(--page-accent,var(--accent))}
 /* 会場のクーポンの案内（P2-6 の来場者の表示・印刷しない） */
 /* チェックインの完了の画面に出す、クーポンを受け取った知らせ */
@@ -13963,15 +13968,12 @@ a.p10-preset{text-decoration:none}
 .ktn-exh-perk{display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px;margin-top:6px;font-family:var(--fn);font-size:.76rem;color:var(--ink)}
 .ktn-exh-perk[hidden]{display:none}
 .ktn-exh-perk__tag{padding:1px 8px;border-radius:10px;background:var(--page-accent,#2a5f7a);color:#fff;font-size:.68rem;font-weight:600}
+.ktn-exh-perk__tag.is-outline{background:none;color:var(--page-accent,#2a5f7a);box-shadow:inset 0 0 0 1px var(--page-accent,#2a5f7a)}   /* 対象になる予定（会期の前・2026-10-26） */
+/* はじめて割の対象になる予定が変わる保存の知らせ（P2-11 の確認・P2-12-1 の保存の確認・2026-10-26） */
+.ktn-perk-shift{margin-top:12px;padding:10px 12px;background:#faf7f1;border-left:3px solid var(--page-accent,var(--accent));font-size:.8rem;line-height:1.7;color:var(--ink)}
+.ktn-perk-shift__tag{display:inline-block;margin-right:8px;padding:1px 8px;border-radius:2px;background:var(--page-accent,var(--accent));color:#fff;font-size:.66rem;font-weight:600}
 .ktn-exh-perk__name{font-weight:700}
 .ktn-exh-perk__note{color:var(--ink)}
-.ktn-exh-perk__sub{flex-basis:100%;color:var(--muted);font-size:.72rem}
-/* LIAISON+ コンソール（P3-15／P4-15）の展覧会ごとのクーポンの状況（[data-exh-coupon]・2026-10-19） */
-.ktn-exh-coupon{display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px;margin-top:6px;font-family:var(--fn);font-size:.76rem;color:var(--ink)}
-.ktn-exh-coupon[hidden]{display:none}
-.ktn-exh-coupon__note b{font-family:var(--fm)}
-/* 開催者へのお願い（チェックインクーポン・P3-15／P4-15） */
-.ktn-exh-coupon__ask{flex-basis:100%;display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;color:var(--muted);font-size:.72rem}
 /* P2 のチェックインの欄へ飛ぶとき（P2-6 のバナー「チェックインして受け取る」・2026-10-19）。ヘッダーに加えて固定のサブナビの分も空ける */
 .p2-visitor.ktn-index-target{scroll-margin-top:calc(var(--dh,0px) + var(--hh,50px) + 64px)}
 /* P90-20 キャンペーンの種類の早見表（2026-10-19） */
@@ -14041,7 +14043,10 @@ a.p10-preset{text-decoration:none}
 /* キャンペーンの期間の行（実施期間・有効期間・使用期限）＝読みやすく（P3-21／P4-21・P5-17・2026-10-21） */
 .ktn-terms__term{display:flex;align-items:baseline;flex-wrap:wrap;gap:2px 10px;margin-top:6px}
 .ktn-terms__term-label{flex-shrink:0;padding:0 7px;border-radius:3px;background:var(--tag-bg,#f0ede8);font-family:var(--fn);font-size:.72rem;font-weight:600;color:var(--ink)}
-.ktn-terms__term-val{font-family:var(--fm);font-size:.86rem;font-weight:600;letter-spacing:.02em;color:var(--ink)}
+.ktn-terms__term-val{font-family:var(--fn);font-size:.84rem;font-weight:400;letter-spacing:.02em;color:var(--ink)}   /* 項目の中身は太字にしない・和文が入るのでゴシック（2026-10-26 ユーザー）。料率の数字（strong）は太字のまま */
+.ktn-terms__term-val .ktn-guide-link{font-family:var(--fs)}   /* 展覧会の名前（明朝・2026-10-26） */
+.ktn-terms__term--sub{margin-top:2px;padding-left:1.4em}   /* 上の項目の中の項目（対象の展覧会の会期・2026-10-26） */
+.ktn-terms__term-note{margin-left:8px;font-family:var(--fn);font-size:.72rem;font-weight:400;letter-spacing:0;color:var(--muted)}
 /* P2-7 会場に置く印刷物（2026-10-21）。画面では A4 の見本を大きめに、印刷は #ktnFlyerPrintRoot だけ */
 #ktnFlyerPrintRoot{display:none}
 .p27-sheet-wrap{max-width:var(--w-detail);margin:0 auto;display:flex;justify-content:center;padding:28px 0;background:#fff;border:1px solid var(--border);border-radius:4px;box-shadow:0 2px 14px rgba(0,0,0,.05)}

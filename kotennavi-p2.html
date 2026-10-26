@@ -1435,8 +1435,10 @@
       var RV_LIMIT = 3;
       function renderReviews() {
         var role = (window.ktnState && window.ktnState.role) || 'guest';
-        /* ページのオーナー（creator・gallery 本人）と管理者は、自分の展覧会にチェックインしない（チェックインは来場者の記録・インサイトの数に混じるため・2026-10-24 ユーザー） */
         var showOwn = role !== 'guest' && own.has;
+        /* チェックイン済みの人には、チェックインの欄のクーポンの券を出さない（受け取り方の案内なので意味がない・2026-10-26 ユーザー） */
+        window.p2CheckedIn = showOwn;
+        if (window.KTN && KTN.CAMPAIGN) KTN.CAMPAIGN.mount();
         var items = (showOwn ? [ownItem(own)] : []).concat(OTHER_ITEMS);
         var extra = items.slice(RV_LIMIT);
         var html = items.slice(0, RV_LIMIT).join('');
