@@ -8005,31 +8005,11 @@ body.p3-3-page .aw--plus .aw__foot>.p33-console-wrap{order:3}
 /* Model A（.ktn-mgmt-wrap フラットフォーム型）＝sticky 送信バー直上に直接子として置く場合の inset（p2-11 等） */
 .ktn-mgmt-wrap > .ktn-form-error{margin:20px 20px 16px}
 
-/* ── 未入力リマインドパネル（.ktn-form-remind）＝編集・管理ページ共通（2026-09-05 新設・確定） ──
-   「任意項目だが検索・軸ページの絞り込みに使われる属性」が未入力のときだけ、送信バー直上に出す非ブロッキングの気づき。
-   .ktn-form-error（赤＝保存できない）とは役割・色を分ける：こちらは保存を止めず、入力すると誰に届くかを示す。
-   色は関連・回遊ゾーンと同じ warm cream ＋ 左4px の page-accent。実装例：p2-11（子連れ・クリエイター在廊） */
-.ktn-form-remind{display:flex;flex-direction:column;gap:9px;background:#faf7f1;border:1px solid var(--border);border-left:4px solid var(--page-accent,#2a5f7a);border-radius:4px;padding:14px 16px}
-.ktn-form-remind[hidden]{display:none}
-.ktn-form-remind__head{display:flex;align-items:center;gap:8px}
-.ktn-form-remind__icon{flex-shrink:0;width:17px;height:17px;color:var(--page-accent,#2a5f7a)}
-.ktn-form-remind__title{font-family:var(--fn);font-weight:700;font-size:.86rem;color:var(--ink);letter-spacing:.01em}
-.ktn-form-remind__desc{margin:0;font-family:var(--fn);font-size:.76rem;line-height:1.75;color:var(--muted)}
-.ktn-form-remind__list{display:flex;flex-direction:column;gap:9px;margin:0;padding:0;list-style:none}
-.ktn-form-remind__item{position:relative;padding-left:13px;font-family:var(--fn);font-size:.78rem;line-height:1.7;color:var(--ink)}
-.ktn-form-remind__item::before{content:'';position:absolute;left:0;top:.6em;width:5px;height:5px;border-radius:50%;background:var(--page-accent,#2a5f7a)}
-.ktn-form-remind__label{font-weight:600}
-.ktn-form-remind__hint{display:block;margin-top:4px;font-size:.74rem;line-height:1.65;color:var(--muted)}
-.ktn-form-remind__jump{display:inline-block;margin-top:6px;background:none;border:0;padding:0;font-family:var(--fn);font-size:.74rem;font-weight:600;color:var(--page-accent,#2a5f7a);text-decoration:underline;text-underline-offset:2px;cursor:pointer}
-.ktn-form-remind__jump:hover{opacity:.72}
-/* リマインド → 保存エラー の順に積む（inset は error と同じ左右20px） */
-.ktn-mgmt-wrap > .ktn-form-remind{margin:20px 20px 0}
-
 /* ── スマホで受け取る案内（.ktn-pwa-line・小さな1行）＝ホーム画面への追加・プッシュ通知をすすめる（2026-10-09 新設・2026-10-21 カードから1行に）──
    置く場所は取引の画面だけ：出品者＝LIAISON+ コンソール（P3-15/P4-15・タブの上）と LIAISON+ の作品管理（P2-12-1）、購入者＝購入管理（P5-14・タブの上）。くわしい手順は P60-17 へリンクする。ページの中に置き、作業の邪魔をする帯・ポップアップにはしない。
    出さない人（本番）：この端末でプッシュがオン・PC・非対応の端末。閉じるボタンは置かない（控えめな1行なので・プッシュをオンにすれば出なくなる・2026-10-21）。
    iPhone の Safari のまま開いているときは、先に「ホーム画面に追加」をすすめる文言に替える（data-pwa-ios）。
-   見た目は未入力リマインド（.ktn-form-remind）と同じ「気づき」の系統＝warm cream＋左4px のロール色。 */
+   見た目は控えめな1行（カードにしない）。 */
 .ktn-pwa-line{display:flex;align-items:center;flex-wrap:wrap;gap:4px 10px;padding:6px 4px 6px 0;font-family:var(--fn);font-size:.8rem;line-height:1.6;color:var(--muted)}
 .ktn-pwa-line[hidden]{display:none}
 .ktn-pwa-line__ico{flex-shrink:0;width:16px;height:16px;color:var(--page-accent,var(--accent))}
@@ -9704,6 +9684,10 @@ body.p4-15-page{--page-accent:#8b5e3c}
 .p211-draft-check__text{display:flex;flex-direction:column;gap:2px}
 .p211-draft-check__label{font-size:.85rem;font-weight:600;color:var(--ink)}
 .p211-draft-check__desc{font-size:.75rem;color:var(--muted);line-height:1.7}
+/* p2-11 は下書きのチェックを「保存前の確認」の中（了承のチェックの下）に置く（2026-10-26・ユーザー指示＝保存の前に決める流れ） */
+.p211-presave__draft{margin-top:14px;padding-top:14px;border-top:1px dashed var(--border)}
+.p211-presave__draft[hidden]{display:none} /* .p211-check の display:flex が [hidden] を上書きするためのガード */
+.p211-presave__draft-solo{margin-top:14px} /* P6-11＝了承のチェックが無いので区切り線なし */
 
 /* ══ 汎用トグルスイッチ（.ktn-switch）══ 2026-07-20 新設（初出＝p3-14 公開/非公開）
    ON/OFF の2状態を直接切り替える設定スイッチ。ON色は --page-accent（ロール色）。

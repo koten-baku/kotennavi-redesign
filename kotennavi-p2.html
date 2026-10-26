@@ -82,6 +82,9 @@
     <span class="dbar-sep" style="margin-left:8px">受付：</span>
     <button class="dbtn on" data-camp-full onclick="ktnCampFullDemo(false,this)">受付中</button>
     <button class="dbtn" data-camp-full onclick="ktnCampFullDemo(true,this)">上限に達した</button>
+    <span class="dbar-sep" style="margin-left:8px">出展者：</span>
+    <button class="dbtn dbtn-p2exh on" onclick="setP2Exhibitors(false,this)">1人</button>
+    <button class="dbtn dbtn-p2exh" onclick="setP2Exhibitors(true,this)">120人</button>
   </div>
 
 
@@ -1100,8 +1103,21 @@
         { k: 'attend', v: '1', label: '在廊あり' }, { k: 'free', v: '1', label: '入場無料' }, { k: 'barrierfree', v: '1', label: 'バリアフリー' }, { k: 'bonus', v: '1', label: '来場者特典あり' },
         { k: 'pop', v: '1', label: '人気の展覧会' },
         _p2TagLiaison === 'plus' ? { k: 'liaison', v: 'lp', label: 'LIAISON+' } : { k: 'liaison', v: 'li', label: 'LIAISON' }
-      ]).concat(KTN.peopleTags({ name: 'Gallery SOIL 渋谷', to: './kotennavi-p4.html' }, [{ name: '田中透', to: './kotennavi-p3.html' }], 1)), 'p10');
+      ]).concat(_p2People), 'p10');
     }
+
+    /* 出展クリエイターのタグ（デモバー「出展者」）。多いときは KTN.peopleTags がランダムに2人を選ぶ。
+       選ぶのはページを開いたとき1回だけ（デモバーで会期などを切り替えても入れ替わらない）。
+       120人のデモは名前を8人分だけ持つ（本番は全員を渡す） */
+    var _P2_GALLERY = { name: 'Gallery SOIL 渋谷', to: './kotennavi-p4.html' };
+    var _P2_GROUP = ['田中透', '佐藤美咲', '松田啓佑', '小林ゆう', '中村葵', '高橋蓮', '伊藤さくら', '山本拓海'].map(function (n) { return { name: n, to: './kotennavi-p3.html' }; });
+    var _p2People = KTN.peopleTags(_P2_GALLERY, [{ name: '田中透', to: './kotennavi-p3.html' }], 1);
+    window.setP2Exhibitors = function (many, btn) {
+      _p2People = many ? KTN.peopleTags(_P2_GALLERY, _P2_GROUP, 120) : KTN.peopleTags(_P2_GALLERY, [{ name: '田中透', to: './kotennavi-p3.html' }], 1);
+      document.querySelectorAll('.dbtn-p2exh').forEach(function (b) { b.classList.remove('on'); });
+      if (btn) btn.classList.add('on');
+      p2SyncTags();
+    };
 
     function setPeriod(state, btn) {
       _p2Period = state;

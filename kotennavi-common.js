@@ -1373,15 +1373,22 @@ function renderFooter() {
 ══════════════════════════════════ */
 /* 会場のギャラリー・出展クリエイター（展覧会のタグ・2026-10-14 ユーザー確認）。押すとそのページへ移る（to＝行き先。検索ではない）。
    会場のギャラリーは1つなので、いつも名前を出す。出展クリエイターは、KTN_PEOPLE_MAX 人までなら全員の名前を出し、
-   それより多いときは名前を出さずに「出展クリエイター（N人）」を1つだけ出して、出展者のページ（P2-4）へ飛ばす。
-   出展者が3桁になる展覧会があり、誰を載せるかをシステムが決められないため（一部の人だけを載せる不公平も起こさない）。
+   それより多いときは、開くたびにランダムに KTN_PEOPLE_PICK 人の名前を出し、続けて「出展クリエイター（N人）」で出展者のページ（P2-4）へ飛ばす。
+   出展者が3桁になる展覧会がある。だれを載せるかを決めず、開くたびに選び直すことで、どの出展者にも同じように機会がある（2026-10-26 ユーザー指示）。
+   本番：creators には出展クリエイター全員を渡す（ランダムに選ぶのはここ）。
    個人のページはゲストも見られるので、ログインの案内（data-guest）を付けない */
 var KTN_PEOPLE_MAX = 3;
+var KTN_PEOPLE_PICK = 2;
 function ktnPeopleTags(gallery, creators, total) {
   var out = gallery ? [{ to: gallery.to, label: gallery.name }] : [];
-  var n = total || (creators || []).length;
-  if (n && n <= KTN_PEOPLE_MAX) (creators || []).forEach(function (p) { out.push({ to: p.to, label: p.name }); });
-  else if (n) out.push({ to: './kotennavi-p2-4.html', label: '出展クリエイター（' + n + '人）' });
+  var list = (creators || []).slice();
+  var n = total || list.length;
+  if (n && n <= KTN_PEOPLE_MAX) list.forEach(function (p) { out.push({ to: p.to, label: p.name }); });
+  else if (n) {
+    for (var i = list.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = list[i]; list[i] = list[j]; list[j] = t; }
+    list.slice(0, KTN_PEOPLE_PICK).forEach(function (p) { out.push({ to: p.to, label: p.name }); });
+    out.push({ to: './kotennavi-p2-4.html', label: '出展クリエイター（' + n + '人）' });
+  }
   return out;
 }
 KTN.peopleTags = ktnPeopleTags;

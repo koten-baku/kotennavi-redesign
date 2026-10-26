@@ -146,7 +146,7 @@
       <div class="ktn-mgmt-head">
         <h2 class="ktn-mgmt-head__title" id="p611PageTitle">作品を編集</h2>
         <p class="ktn-mgmt-head__en">ARTWORK EDITOR</p>
-        <p class="ktn-mgmt-head__desc">必須項目だけで登録できます。＋ 追加項目 を開くと、作品ページの情報が増えます。途中で「一時保存（下書き）」もできます。</p>
+        <p class="ktn-mgmt-head__desc">実際の作品の内容を正しく入力してください。「必須」と付いた項目は必ず入力してください（未入力だと保存できません）。「＋ 追加項目」は任意ですが、入力するほど作品のページが充実し、検索でも見つけてもらいやすくなります。</p>
       </div>
 
       <!-- ─── 1. 基本情報 ─── -->
@@ -444,6 +444,26 @@
         </div>
       </div>
 
+      <!-- ─── 保存前の確認（下書き）＝P2-11 とそろえる（2026-10-26）。編集（既存の作品）では出さない＝setDemoMode ─── -->
+      <div class="p211-block" id="p611Presave" hidden>
+        <div class="p211-block__head">
+          <div class="p211-block__title">保存前の確認 <span class="p211-block__title-en">Before Saving</span></div>
+        </div>
+        <div class="p211-block__body">
+          <div class="p211-presave__box">
+            <ul class="p211-presave__list">
+              <li>入力の途中で保存しておきたいときは、下の「一時保存（下書き）として保存する」にチェックを入れてください。下書きは作品管理にだけ残り、作品のページ・検索・出品の候補には出ません。続きを入力してから、あらためて保存できます。</li>
+            </ul>
+          </div>
+          <label class="p211-check p211-draft-check p211-presave__draft-solo">
+            <input type="checkbox" id="p611DraftChk" onchange="syncDraftMode()">
+            <span class="p211-draft-check__text">
+              <span class="p211-draft-check__label">一時保存（下書き）として保存する</span>
+            </span>
+          </label>
+        </div>
+      </div>
+
       <!-- 管理者コメント欄（role=admin のときのみ表示・共通 syncAdminNote が切替） -->
       <div class="ktn-admin-note" id="p611AdminNote" hidden>
         <div class="ktn-admin-note__head">
@@ -456,13 +476,6 @@
 
       <!-- 送信バー（sticky） -->
       <div class="p211-submit-bar p211-submit-bar--stacked">
-        <label class="p211-check p211-draft-check">
-          <input type="checkbox" id="p611DraftChk" onchange="syncDraftMode()">
-          <span class="p211-draft-check__text">
-            <span class="p211-draft-check__label">一時保存（下書き）として保存する</span>
-            <span class="p211-draft-check__desc">下書きは作品管理にだけ残り、公開ページ・検索・出品候補には出ません。</span>
-          </span>
-        </label>
         <div class="p211-submit-bar__row">
           <button class="p211-submit-bar__cancel ktn-op-btn" type="button" onclick="history.back()">キャンセル</button>
           <button class="p211-submit-bar__submit ktn-op-btn ktn-op-btn--primary" type="button" id="p611SubmitBtn" onclick="handleSubmit()">保存する</button>
@@ -501,6 +514,11 @@ function setDemoMode(mode) {
 
   document.getElementById('p611PageTitle').textContent = MODE_TITLES[mode];
   document.getElementById('p611SubmitBtn').textContent = MODE_SUBMIT[mode];
+  /* 下書き＝まだ作品として保存していないもの（新規・クローン）だけ。編集（既存の作品）では「保存前の確認」ごと出さない（P2-11 とそろえる・2026-10-26） */
+  var presave = document.getElementById('p611Presave');
+  var dChk = document.getElementById('p611DraftChk');
+  if (presave) presave.hidden = (mode === 'edit');
+  if (mode === 'edit' && dChk) dChk.checked = false;
   if (typeof syncDraftMode === 'function') syncDraftMode();
 
   var cloneBanner = document.getElementById('p611CloneBanner');
@@ -786,7 +804,7 @@ function syncDraftMode() {
   var note = document.getElementById('p611SubmitNote');
   var isDraft = !!(chk && chk.checked);
   if (btn)  btn.textContent = isDraft ? '一時保存する' : '保存する';
-  // 下書き説明は .p211-draft-check__desc が常時表示するため、
+  // 下書きの説明は「保存前の確認」にあり、ボタン名も「一時保存する」に変わるため、
   // 下書き時のノートは空にし、完成保存時のみ必須ガイドを出す。
   if (note) {
     note.style.color = '';
