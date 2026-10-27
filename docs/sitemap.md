@@ -10,7 +10,7 @@
 ## 進捗ステータス凡例（2026-07-09 追加）
 - **Fix済**: デザイン方針が確定した表示系・取引管理系ページ（以降は微調整のみ）
 - **プロトタイプ**: 方向性の検証用（p10 系は 2026-09-24、p1 は 2026-10-08 に Fix 済みで、今は該当なし）
-- **調整中**: 作成済みだが未Fix。これから細かいチェック・調整に入る
+- **Fix済**: 作成済みだが未Fix。これから細かいチェック・調整に入る
 - **整合性のみ**: ガイド系（P70等）。作成済みで、最後に他ページとの整合性チェックのみ行う（内容Fixは後回し）
 - **未作成**: HTMLファイル未作成
 - **実装不要（温存）**: HTML は残しているが、**後工程で実装しない**ページ（どこからもリンクしない・役目を別のページへ移した）。消さずに残すのは経緯を追えるようにするため（2026-10-06 追加）
@@ -50,7 +50,7 @@
 | P2-4 | 展覧会-リエゾン作品一覧 | L | R | R | R | R | R | R | --w-entity | kotennavi-p2-5.html | Fix済 |
 | P2-5-1 | 展覧会-リエゾンプラス作品一覧 | L+ | R | R | R | R | R | R | --w-entity | kotennavi-p2-5-1.html | Fix済 |
 | P2-6 | 展覧会-作品リスト(会場配布/QRビュー・印刷兼用) | L/L+ | R | R | R | R | R | R | --w-detail | kotennavi-p2-6.html | Fix済 |
-| P2-7 | 展覧会-会場フライヤー(会場に置く印刷物・印刷兼用・P2-6 と同じ形・2026-10-21 新設) |  |  |  |  | R | R | R | --w-detail | kotennavi-p2-7.html | 調整中 |
+| P2-7 | 展覧会-会場フライヤー(会場に置く印刷物・印刷兼用・P2-6 と同じ形・2026-10-21 新設) |  |  |  |  | R | R | R | --w-detail | kotennavi-p2-7.html | Fix済 |
 | P2-11 | 展覧会-新規/編集/クローン |  |  |  |  | W | W | W | --w-detail | kotennavi-p2-11.html | Fix済 |
 | P2-12 | 展覧会-リエゾン作品管理 |  |  |  |  | W | W | W | --w-detail | kotennavi-p2-12.html | Fix済 |
 | P2-12-1 | 展覧会-リエゾン+作品管理 |  |  |  |  | W | W | W | --w-detail | kotennavi-p2-12-1.html | Fix済 |
@@ -79,7 +79,7 @@
 | P3-18 | クリエイター-展覧会管理 |  |  |  |  | R/W |  | R/W | --w-detail | kotennavi-p3-18.html | Fix済 |
 | P3-19 | クリエイター-記事管理 |  |  |  |  | R/W |  | R/W | --w-detail | kotennavi-p3-19.html | Fix済 |
 | P3-20 | クリエイター-作品へのお問合わせ | L |  |  |  | R/W |  | R/W | --w-detail | kotennavi-p3-20.html | Fix済 |
-| P3-21 | クリエイター-キャンペーン・特典 | L+ |  |  |  | R |  | R | --w-detail | kotennavi-p3-21.html | 調整中 |
+| P3-21 | クリエイター-キャンペーン・特典 | L+ |  |  |  | R |  | R | --w-detail | kotennavi-p3-21.html | Fix済 |
 
 ---
 
@@ -100,7 +100,7 @@
 | P4-18 | ギャラリー-展覧会管理 |  |  |  |  |  | R/W | R/W | --w-detail | kotennavi-p4-18.html | Fix済 |
 | P4-19 | ギャラリー-記事管理 |  |  |  |  |  | R/W | R/W | --w-detail | kotennavi-p4-19.html | Fix済 |
 | P4-20 | ギャラリー-作品へのお問合わせ | L |  |  |  |  | R/W | R/W | --w-detail | kotennavi-p4-20.html | Fix済 |
-| P4-21 | ギャラリー-キャンペーン・特典 | L+ |  |  |  |  | R | R | --w-detail | kotennavi-p4-21.html | 調整中 |
+| P4-21 | ギャラリー-キャンペーン・特典 | L+ |  |  |  |  | R | R | --w-detail | kotennavi-p4-21.html | Fix済 |
 
 ---
 
@@ -119,7 +119,7 @@
 | P5-14 | ユーザー-購入履歴 | L+ |  |  | R/W |  |  | R/W | --w-detail | kotennavi-p5-14.html | Fix済 |
 | P5-15 | ユーザー-取引ワークスペース | L+ |  |  | R/W |  |  | R/W | --w-detail | kotennavi-p5-15.html | Fix済 |
 | P5-16 | ユーザー-問合せ履歴 | L |  |  | R |  |  | R | --w-detail | kotennavi-p5-16.html | Fix済 |
-| P5-17 | ユーザー-キャンペーン・クーポン | L+ |  |  | R |  |  | R | --w-detail | kotennavi-p5-17.html | 調整中 |
+| P5-17 | ユーザー-キャンペーン・クーポン | L+ |  |  | R |  |  | R | --w-detail | kotennavi-p5-17.html | Fix済 |
 | P5-100 | ユーザー-退会 |  |  |  | R/W |  |  | R/W | --w-detail | kotennavi-p5-100.html | Fix済 |
 
 ---

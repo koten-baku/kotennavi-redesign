@@ -52,5 +52,6 @@
 | `archive/取引ページ整合性チェック.md` | 2026-06-12 に1回行った取引ページの確認結果 |
 | `archive/08_Stripe_Connectアカウント比較.md` | Stripe の方式を決めたときの比較資料（結論は handoff に記録済み） |
 | `archive/progress-2026-09-23以前.md` | 2026-09-23 以前の進捗の記録（progress.md から移した・中身はそのまま） |
+| `archive/progress-2026-10-11以前.md` | 2026-09-24〜10-11 の進捗の記録（2026-10-26 に progress.md から移した・中身はそのまま） |
 
 handoff-decisions.md・progress.md の古い記録に出てくる上の5ファイルのパスは、移す前の場所（`docs/` 直下）のまま。読み替えること。
