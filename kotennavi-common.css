@@ -14169,3 +14169,46 @@ a.ktn-coupon--link:hover{opacity:.86}
 .ktn-coupon--print .ktn-coupon__when-label{border-color:#231815;color:#231815}
 .ktn-coupon--print .ktn-coupon__svc{border-left-color:#231815;background:none}
 .ktn-coupon--print .ktn-coupon__svc-label{font-family:var(--fm);font-size:.6rem;font-weight:700;letter-spacing:.1em}
+
+/* ══ P90-21 対応案件・P90-21-1 対応案件の詳細・P90-22 更新の記録・P90 の「対応待ち」（2026-10-28 新設・handoff 追174-350）══
+   一覧・詳細の骨組み（タブ・表・見出し・届いた内容の箱・返信のパネル・ボタン行）は P90-2／P90-2-1 の .p902-* をそのまま使う。
+   ここには、このページだけの部分（件名の折り返し・対象の行・担当と状態・履歴・見た・対応待ちの数）だけを書く。 */
+.p9021-table td.p9021-cell--subject{white-space:normal;min-width:220px;line-height:1.6}
+.p9021-table td.p9021-cell--subject .ktn-review-status{margin-right:4px;vertical-align:1px}
+.p9021-type{font-family:var(--fn);font-size:.74rem;font-weight:600;color:var(--muted)}
+.p9021-text{margin:14px 0 16px;padding-top:12px;border-top:1px dashed var(--border);font-family:var(--fn);font-size:.84rem;line-height:1.85;color:var(--ink);white-space:pre-wrap}
+.p9021-target__name{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:0 0 10px;font-family:var(--fs);font-size:.92rem;font-weight:600;color:var(--ink)}
+.p9021-target__type{font-family:var(--fn);font-size:.7rem;font-weight:600;color:var(--muted)}
+.p9021-target__acts{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.p9021-state{display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px}
+.p9021-history{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px}
+.p9021-history__item{display:flex;flex-wrap:wrap;gap:4px 12px;font-family:var(--fn);font-size:.78rem;line-height:1.6;color:var(--ink)}
+.p9021-history__at{font-family:var(--fm);font-size:.72rem;color:var(--muted);min-width:118px}
+.p9021-history__who{color:var(--muted);min-width:120px}
+
+.p9022-table td{vertical-align:top}
+.p9022-table td:first-child{white-space:nowrap}
+.p9022-title{font-family:var(--fs);font-weight:600;color:var(--ink)}
+a.p9022-title{color:var(--accent);text-decoration:underline;text-underline-offset:2px}
+.p9022-detail{margin-top:4px;font-family:var(--fn);font-size:.74rem;line-height:1.7;color:var(--muted)}
+.p9022-detail a{color:var(--accent)}
+.p9022-table tr.is-seen td{color:var(--muted)}
+.p9022-seen.is-on{background:var(--tag-bg,#f5f3ef);color:var(--muted)}
+
+.p90-todo{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 16px}
+.p90-todo__item{display:flex;align-items:center;gap:10px;flex:1 1 200px;padding:12px 14px;background:#fff;border:1px solid var(--border);border-left:3px solid var(--page-accent,#3a4a5a);border-radius:4px;text-decoration:none;color:var(--ink);transition:border-color .18s}
+.p90-todo__item:hover{border-color:rgba(0,0,0,.18);border-left-color:var(--page-accent,#3a4a5a)}
+.p90-todo__num{font-family:var(--fm);font-size:1.5rem;font-weight:600;line-height:1;color:var(--ink);min-width:1.6em;text-align:right}
+.p90-todo__label{display:flex;flex-direction:column;gap:2px;font-family:var(--fn);font-size:.8rem;font-weight:600;line-height:1.4}
+.p90-todo__sub{font-size:.7rem;font-weight:600;color:#b43c14}
+.p90-todo__item.is-zero{border-left-color:var(--border)}
+.p90-todo__item.is-zero .p90-todo__num{color:var(--muted)}
+
+/* ══ 管理者の種類（E 編集・問合せ／L LIAISON+ 対応／A admin・2026-10-29・common.js ktnAdminGateInit）══
+   開けない種類＝管理ボックスを隠して案内／見るだけの種類＝案内の帯＋入力と操作のボタンを止める（タブ・行を開くのはそのまま） */
+.ktn-mgmt-wrap[hidden]{display:none}
+.ktn-admin-deny{max-width:var(--w-detail);margin:0 auto 16px;padding:14px 18px;display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;background:#fff;border:1px solid var(--border);border-left:4px solid #3a4a5a;border-radius:4px}
+.ktn-admin-deny__msg{margin:0;flex:1 1 280px;font-family:var(--fn);font-size:.84rem;line-height:1.7;color:var(--ink)}
+.ktn-admin-deny.is-view{border-left-color:#a06010}
+.ktn-mgmt-wrap.is-admin-view input,.ktn-mgmt-wrap.is-admin-view select,.ktn-mgmt-wrap.is-admin-view textarea,.ktn-mgmt-wrap.is-admin-view .ktn-op-btn,.ktn-mgmt-wrap.is-admin-view .ktn-switch{pointer-events:none;opacity:.55}
+.ktn-guide-nav-card[hidden],.ktn-section[hidden]{display:none} /* 管理者の種類で隠すカード・区分（P90）。display:flex が [hidden] を上書きするためのガード */

@@ -2242,6 +2242,9 @@ const PAGES = {
   'p90-19': { n: '管理者-トップページの管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['トップページの管理', null]] },
   'p90-20': { n: '管理者-料率・キャンペーン管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['料率・キャンペーン管理', null]] },
   'p90-18': { n: '管理者-お知らせ・やることの文言管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['お知らせ・やることの文言管理', null]] },
+  'p90-21': { n: '管理者-対応案件', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['対応案件', null]] },
+  'p90-21-1': { n: '管理者-対応案件の詳細', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['対応案件', 'kotennavi-p90-21.html'], ['対応案件の詳細', null]] },
+  'p90-22': { n: '管理者-更新の記録', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['更新の記録', null]] },
   'p90-17': { n: '管理者-検索・特集管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['検索・特集管理', null]] },
 };
 
@@ -3557,6 +3560,63 @@ KTN.P10_PREF_SLUGS = {
   '福岡': 'fukuoka', '佐賀': 'saga', '長崎': 'nagasaki', '熊本': 'kumamoto', '大分': 'oita', '宮崎': 'miyazaki', '鹿児島': 'kagoshima', '沖縄': 'okinawa'
 };
 
+/* ══ 管理者の種類（3種類・2026-10-29・docs/admin-roles.md）══
+   E＝編集・問合せ対応／L＝LIAISON+ 対応（E のすべて＋LIAISON+）／A＝admin（すべて）。入れ子（E ⊂ L ⊂ A）。
+   P90 系のページごとに「使える一番下の種類」を ADMIN_PAGE に持つ（単一ソース）。{ view, edit } は「view の種類は見るだけ・edit から操作できる」。
+   プロトタイプ：種類はデモバーで切り替え、sessionStorage に残す（ページを移っても同じ種類のまま）。
+   本番：Drupal のロール＋権限で持ち、API でも同じ判定で止める（画面で隠すだけにしない）。 */
+KTN.ADMIN_LEVELS = { E: { n: 1, label: '編集・問合せ' }, L: { n: 2, label: 'LIAISON+ 対応' }, A: { n: 3, label: 'admin' } };
+KTN.ADMIN_PAGE = {
+  'p90': 'E', 'p90-2': 'E', 'p90-2-1': 'E', 'p90-4': 'E', 'p90-5': 'E', 'p90-6': 'E', 'p90-7': 'E', 'p90-8': 'E', 'p90-21': 'E', 'p90-21-1': 'E',
+  'p90-10': 'L', 'p90-12': 'L', 'p90-13': 'L', 'p90-14': 'L', 'p90-15': 'L', 'p90-16': 'L', 'p90-20': { view: 'L', edit: 'A' },
+  'p90-1': 'A', 'p90-3': 'A', 'p90-9': 'A', 'p90-11': 'A', 'p90-11-1': 'A', 'p90-17': 'A', 'p90-18': 'A', 'p90-19': 'A', 'p90-22': 'A'
+};
+KTN.adminLevel = function () {
+  try { var v = sessionStorage.getItem('ktn-admin-level'); if (KTN.ADMIN_LEVELS[v]) return v; } catch (e) {}
+  return KTN._adminLevel || 'A';
+};
+KTN.setAdminLevel = function (lv) {
+  KTN._adminLevel = lv;
+  try { sessionStorage.setItem('ktn-admin-level', lv); } catch (e) {}
+  location.reload();
+};
+/* そのページを、今の種類で：'edit'＝使える／'view'＝見るだけ／false＝開けない */
+KTN.adminAccess = function (page, lv) {
+  var need = KTN.ADMIN_PAGE[page];
+  if (!need) return 'edit';
+  lv = KTN.ADMIN_LEVELS[lv || KTN.adminLevel()].n;
+  if (typeof need === 'string') return lv >= KTN.ADMIN_LEVELS[need].n ? 'edit' : false;
+  if (lv >= KTN.ADMIN_LEVELS[need.edit].n) return 'edit';
+  return lv >= KTN.ADMIN_LEVELS[need.view].n ? 'view' : false;
+};
+/* P90 系のページ：デモバーに「管理者の種類」を足し、開けない種類なら中身の代わりに案内を出す・見るだけの種類なら帯を出す */
+function ktnAdminGateInit() {
+  var page = window.ktnState.page;
+  if (!KTN.ADMIN_PAGE[page]) return;
+  var lv = KTN.adminLevel();
+  var bar = document.getElementById('dbar');
+  if (bar && !bar.querySelector('[data-admin-level]')) {
+    var html = '<span class="dbar-sep" style="margin-left:8px">管理者の種類：</span>';
+    ['A', 'L', 'E'].forEach(function (k) {
+      html += '<button class="dbtn' + (k === lv ? ' on' : '') + '" data-admin-level="' + k + '" onclick="KTN.setAdminLevel(\'' + k + '\')">' + KTN.ADMIN_LEVELS[k].label + '</button>';
+    });
+    bar.insertAdjacentHTML('beforeend', html);
+  }
+  var acc = KTN.adminAccess(page, lv);
+  var wrap = document.querySelector('.ktn-mgmt-wrap');
+  if (!wrap || acc === 'edit') return;
+  var need = KTN.ADMIN_PAGE[page];
+  var needLv = typeof need === 'string' ? need : need.edit;
+  var msg = acc === 'view'
+    ? '「' + KTN.ADMIN_LEVELS[lv].label + '」の管理者は、このページを見るだけです（変えられるのは ' + KTN.ADMIN_LEVELS[needLv].label + ' 以上）。'
+    : 'このページは「' + KTN.ADMIN_LEVELS[needLv].label + '」以上の管理者だけが使えます。';
+  var note = '<div class="ktn-admin-deny' + (acc === 'view' ? ' is-view' : '') + '" role="note"><p class="ktn-admin-deny__msg">' + msg + '</p>' +
+    (acc === 'view' ? '' : '<a class="ktn-action-btn" href="kotennavi-p90.html">管理者メニューへ →</a>') + '</div>';
+  wrap.insertAdjacentHTML('beforebegin', note);
+  if (acc === false) wrap.hidden = true;
+  else wrap.classList.add('is-admin-view');
+}
+
 KTN.init = function (opts) {
   opts = opts || {};
   if (opts.page) window.ktnState.page = opts.page;
@@ -3705,6 +3765,8 @@ KTN.init = function (opts) {
     window.addEventListener('resize', _onResize, { passive: true });
     /* P10系ドロワーの展開パネルを先に生成（pages.js のチップ結線対象に含めるため） */
     _p10AdvInit();
+    /* P90 系：管理者の種類（デモバー）と、使えない種類のときの案内 */
+    ktnAdminGateInit();
     /* ページ固有関数を実行（kotennavi-pages.js で定義） */
     var pageId = window.ktnState.page;
     if (window.KTN.pages && typeof window.KTN.pages[pageId] === 'function') {
