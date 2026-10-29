@@ -14243,3 +14243,6 @@ a.p90cm-sub{color:var(--accent)}
 .p9013-stripe__title{margin:0;font-family:var(--fn);font-size:.84rem;font-weight:700;color:var(--ink);display:flex;align-items:center;gap:8px}
 .p9013-stripe__list{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px;font-family:var(--fn);font-size:.8rem;color:var(--ink)}
 .p9013-stripe__kind{display:inline-block;margin-right:8px;font-weight:700;color:#b43c14}
+/* 管理者のアイコン（サイドバー・下のナビ）の種類の文字（A／L／E・2026-10-29・ktnRoleDef） */
+.ktn-role-lv{font-family:var(--fm);font-weight:700;font-size:1.25rem;line-height:1;color:#fff;letter-spacing:0}
+.ktn-bottom-nav__role .ktn-role-lv{font-size:1rem}

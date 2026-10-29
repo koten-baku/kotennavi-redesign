@@ -2268,7 +2268,8 @@ function _p6Init(opts) {
   function curRole()    { return KTN.role || (window.ktnState && window.ktnState.role) || 'guest'; }
   function isLoggedIn() { return curRole() !== 'guest'; }
   function isOwner()    { return curRole() === 'user+creator'; }
-  function isAdmin()    { return curRole() === 'admin'; }
+  /* 公開のページの管理者の操作（コメントの削除）は admin だけ（案2・2026-10-29） */
+  function isAdmin()    { return curRole() === 'admin' && (!KTN.isFullAdmin || KTN.isFullAdmin()); }
 
   function dbtnGroup(fn) {
     document.querySelectorAll('.dbar .dbtn').forEach(function(b) {
@@ -2631,7 +2632,7 @@ function _p6Init(opts) {
   function renderHeaderActs() {
     var el = document.getElementById('ktnActs');
     if (!el) return;
-    el.innerHTML = getActions(window.ktnState.page, KTN.role);
+    el.innerHTML = getActions(window.ktnState.page, KTN.headerRole ? KTN.headerRole(window.ktnState.page, KTN.role) : KTN.role);
   }
 
   function setR(role, btn) {
@@ -2689,10 +2690,17 @@ function _p6Init(opts) {
       : '過去のコメントを見る（' + older.querySelectorAll('.cmt-card').length + '件）';
   };
   window.deleteCmt          = function(cid) {
+    /* 管理者が消すときは、ほかのコンテンツと同じ理由のモーダル（KTN.adminDelete＋DL-01A）を通す（2026-10-29） */
+    if (isAdmin() && !isOwner() && KTN.adminDelete) {
+      KTN.adminDelete({ kind: 'コメント', name: '作品《' + (WORK.title || '') + '》のコメント', onDone: function () { _deletedCids[cid] = true; renderComments(); } });
+      return;
+    }
     if (!confirm('このコメントを削除しますか？')) return;
     _deletedCids[cid] = true;
     renderComments();
   };
+  /* デモバーで管理者の種類を切り替えたら、コメントの削除のボタンの出し分けを描き直す */
+  document.addEventListener('ktn:adminlevel', function () { renderComments(); });
   window.toggleRelFav       = toggleRelFav;
 
   function renderRecGrid() {

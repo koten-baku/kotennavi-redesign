@@ -1062,6 +1062,16 @@ const KTN_ROLES = {
   },
 };
 
+/* 管理者のアイコンは種類（A＝admin／L＝LIAISON+ 対応／E＝編集・問合せ）で見分ける（2026-10-29）：文字と色を変え、名前を「管理者-A」などに */
+const KTN_ADMIN_LV_BG = { A: '#4a4a6a', L: '#7a5a8a', E: '#4f7a68' };
+function ktnRoleDef(r) {
+  const rd = KTN_ROLES[r];
+  if (r !== 'admin' || !window.KTN || !KTN.adminLevel) return rd;
+  const lv = KTN.adminLevel();
+  const mark = '<span class="ktn-role-lv">' + lv + '</span>';
+  return Object.assign({}, rd, { label: '管理者-' + lv, bg: KTN_ADMIN_LV_BG[lv] || rd.bg, icon: mark, iconSm: mark });
+}
+
 /* ─── ページ→対応navアイテムのマップ ─── */
 const PAGE_NAV_MAP = {
   'p1': 'p1',
@@ -1130,7 +1140,7 @@ function renderSidebar() {
     else if (curRole === 'admin') roles.push('admin');
 
     if (roleNav) roleNav.innerHTML = roles.map(r => {
-      const rd = KTN_ROLES[r];
+      const rd = ktnRoleDef(r);
       /* やること（LIAISON+ の取引で自分の番）の数字。myページ＝購入者として、クリエイター・ギャラリー＝出品者として
          （docs/notifications.md）。数字があるとき押すと一覧が開く（ktnRoleNavClick）。旧ヘッダーの赤いボタンは廃止したので
          myページのアイコンにも出す（2026-09-28・旧：ヘッダーと重複するため myページには出さない） */
@@ -1210,7 +1220,7 @@ function renderBottomNav() {
     else if (curRole === 'user+gallery') extraRole = 'gallery';
     else if (curRole === 'admin') extraRole = 'admin';
     if (extraRole) {
-      const er = KTN_ROLES[extraRole];
+      const er = ktnRoleDef(extraRole);
       const erBadge = ktnTodoBadge(extraRole, 'ktn-bottom-nav__badge');
       html += `
         <a href="${er.url}" class="ktn-bottom-nav__item" data-page="${er.page}" data-todo-role="${extraRole}" onclick="ktnRoleNavClick(event,'${extraRole}','${er.page}','${er.url}')">
@@ -2008,9 +2018,12 @@ function syncAuthWall() {
 /* 管理者コメント欄（コンテンツ編集ページ共通）を role で表示切替。
    .ktn-admin-note を持つページなら自動で効くため、ページ側の結線は不要。 */
 function syncAdminNote() {
+  /* 編集画面の管理者コメントなどは管理者ならだれでも（P90 系から開く編集画面で E・L も使う）。
+     キャンペーンの枠（data-admin-camp・P3-11/P4-11/P5-11）は admin だけ（L は P90-20 で見る・2026-10-29 案2） */
   var isAdmin = window.ktnState.role === 'admin';
+  var full = isAdmin && (!KTN.adminLevel || KTN.adminLevel() === 'A');
   document.querySelectorAll('.ktn-admin-note').forEach(function (el) {
-    el.hidden = !isAdmin;
+    el.hidden = el.hasAttribute('data-admin-camp') ? !full : !isAdmin;
   });
 }
 
@@ -3583,8 +3596,17 @@ KTN.adminLevel = function () {
 KTN.setAdminLevel = function (lv) {
   KTN._adminLevel = lv;
   try { sessionStorage.setItem('ktn-admin-level', lv); } catch (e) {}
-  location.reload();
+  /* P90 系はページごと出し分けるので読み直す。公開のページはヘッダーと管理者だけの表示を描き直すだけ（デモバーのロールを保つ） */
+  if (KTN.ADMIN_PAGE[window.ktnState.page]) { location.reload(); return; }
+  document.querySelectorAll('[data-admin-level]').forEach(function (b) { b.classList.toggle('on', b.dataset.adminLevel === lv); });
+  if (window.ktnRender) window.ktnRender();
+  if (typeof syncAdminNote === 'function') syncAdminNote();
+  document.dispatchEvent(new CustomEvent('ktn:adminlevel', { detail: lv }));
 };
+/* admin（すべての権限）か。公開のページの管理者メニュー・管理者だけの表示（コメントの削除など）はこれで判定する（案2） */
+KTN.isFullAdmin = function () { return window.ktnState && window.ktnState.role === 'admin' && KTN.adminLevel() === 'A'; };
+/* ヘッダーを描くときのロール：公開のページで admin 以外の管理者は、管理者の操作を持たない役割（staff）として描く。ヘッダーを自前で描くページ（P6 系）もこれを通す */
+KTN.headerRole = function (page, role) { return (role === 'admin' && !KTN.ADMIN_PAGE[page] && KTN.adminLevel() !== 'A') ? 'staff' : role; };
 /* そのページを、今の種類で：'edit'＝使える／'view'＝見るだけ／false＝開けない */
 KTN.adminAccess = function (page, lv) {
   var need = KTN.ADMIN_PAGE[page];
@@ -3641,18 +3663,68 @@ KTN.adminDelete = function (o) {
   sel.focus();
 };
 
+/* 公開のページのヘッダーの「管理者」メニュー（admin だけ）の、削除・強制削除・強制退会・なりすましログインを、P90 系と同じ手順にする
+   （どこから押しても理由のモーダル＋DL-01A／MO-03A・案2・2026-10-29）。メニューの項目は getActions のまま、押したときだけここで受ける */
+(function () {
+  var KIND = { p2: '展覧会', p3: 'クリエイター', p4: 'ギャラリー', p5: 'ユーザー', p6: '作品', p7: '記事', p8: 'レビュー', p61: 'お知らせ' };
+  function kindOf(page) { var m = String(page || '').match(/^(p\d+)/); return m ? KIND[m[1]] : ''; }
+  function nameOf() {
+    var el = document.querySelector('.p2-title-band__title, .p3-head__name, .p4-head__name, .p5-head__name, .p6-hero__title, .p7-article__title, .p8-head__title, h1');
+    return (el ? el.textContent : document.title.split(/[|｜—]/)[0]).replace(/\s+/g, ' ').trim();
+  }
+  document.addEventListener('click', function (e) {
+    var item = e.target.closest('.ktn-ddmenu .ktn-ddi');
+    if (!item || item.hasAttribute('onclick')) return;
+    var w = item.closest('.ktn-ddw'), btn = w && w.querySelector('.ktn-ddbtn');
+    if (!btn || btn.textContent.trim().indexOf('管理者') !== 0) return;
+    var label = item.textContent.trim(), page = window.ktnState.page;
+    if (/^(削除|強制削除)$/.test(label)) {
+      if (typeof closeAllPanels === 'function') closeAllPanels();
+      KTN.adminDelete({ kind: kindOf(page), name: nameOf() });
+    } else if (label === '強制退会') {
+      if (typeof closeAllPanels === 'function') closeAllPanels();
+      KTN.adminDelete({ kind: 'ユーザー', name: nameOf(), verb: '強制退会',
+        reasons: ['規約に反する利用（迷惑行為・なりすましなど）', '本人からの依頼（自分で退会できない事情）', '重複したアカウント', 'その他'],
+        note: '強制退会すると元に戻せません。理由は退会の通知として管理者あてのメールで届きます。', done: '強制退会しました。理由を管理者あてのメールで送りました（デモ）' });
+    } else if (label === 'なりすましログイン') {
+      if (typeof closeAllPanels === 'function') closeAllPanels();
+      KTN.toast(nameOf() + ' としてログインしました（デモ・操作の記録に残ります）');
+    }
+  });
+})();
+
 /* P90 系のページ：デモバーに「管理者の種類」を足し、開けない種類なら中身の代わりに案内を出す・見るだけの種類なら帯を出す */
 function ktnAdminGateInit() {
   var page = window.ktnState.page;
-  if (!KTN.ADMIN_PAGE[page]) return;
+  var bar = document.getElementById('dbar') || document.querySelector('.dbar');
+  /* 公開のページでも、デモバーに「管理者」のロールがあれば種類の切り替えを出す（案2：admin 以外にはヘッダーの管理者メニューが出ないことを確かめるため） */
+  var hasAdminRole = bar && bar.querySelector('[onclick*="setR(\'admin\'"]');
+  if (!KTN.ADMIN_PAGE[page] && !hasAdminRole) return;
   var lv = KTN.adminLevel();
-  var bar = document.getElementById('dbar');
-  if (bar && !bar.querySelector('[data-admin-level]')) {
-    var html = '<span class="dbar-sep" style="margin-left:8px">管理者の種類：</span>';
-    ['A', 'L', 'E'].forEach(function (k) {
-      html += '<button class="dbtn' + (k === lv ? ' on' : '') + '" data-admin-level="' + k + '" onclick="KTN.setAdminLevel(\'' + k + '\')">' + KTN.ADMIN_LEVELS[k].label + '</button>';
+  /* デモバーのロールの「管理者」ボタンを「管理者-A」「管理者-L」「管理者-E」の3つに分ける（2026-10-29 ユーザー指示）。
+     押すと種類を決めてから、元の「管理者」ボタンと同じ処理（setR('admin') など）を呼ぶ。P90 系は種類でページの中身が変わるので読み直す */
+  if (bar && hasAdminRole && !bar.querySelector('[data-admin-level]')) {
+    var orig = hasAdminRole.getAttribute('onclick');
+    var isAdminNow = window.ktnState.role === 'admin';
+    var html = ['A', 'L', 'E'].map(function (k) {
+      return '<button class="dbtn' + (isAdminNow && k === lv ? ' on' : '') + '" data-admin-level="' + k + '" title="' + KTN.ADMIN_LEVELS[k].label + '">管理者-' + k + '</button>';
+    }).join('');
+    hasAdminRole.insertAdjacentHTML('afterend', html);
+    hasAdminRole.remove();
+    bar.querySelectorAll('[data-admin-level]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        KTN._adminLevel = b.dataset.adminLevel;
+        try { sessionStorage.setItem('ktn-admin-level', b.dataset.adminLevel); } catch (e) {}
+        if (KTN.ADMIN_PAGE[window.ktnState.page]) { location.reload(); return; }
+        (new Function(orig)).call(b);   /* 元の「管理者」ボタンの処理（ロールを管理者にして描き直す）を、押したボタンを this にして呼ぶ */
+        bar.querySelectorAll('[data-admin-level]').forEach(function (x) { x.classList.toggle('on', x === b); });
+        if (typeof renderSidebar === 'function') renderSidebar();
+        if (typeof renderBottomNav === 'function') renderBottomNav();
+        if (typeof syncAdminNote === 'function') syncAdminNote();
+        if (window.ktnRender) window.ktnRender();
+        document.dispatchEvent(new CustomEvent('ktn:adminlevel', { detail: b.dataset.adminLevel }));
+      });
     });
-    bar.insertAdjacentHTML('beforeend', html);
   }
   var acc = KTN.adminAccess(page, lv);
   var wrap = document.querySelector('.ktn-mgmt-wrap');
@@ -3695,7 +3767,10 @@ KTN.init = function (opts) {
       bcOverride = window.p7BreadcrumbFor(window.P7_CONTEXTS[window.P7_CURRENT_CONTEXT || 'artwork']);
     }
     if (bcEl) bcEl.innerHTML = renderBc(page, bcOverride);
-    if (acEl) acEl.innerHTML = getActions(page, role);
+    /* 公開のページ（P90 系以外）のヘッダーの「管理者」メニューは admin だけ（案2・2026-10-29・docs/admin-roles.md）。
+       「編集・問合せ」「LIAISON+ 対応」の管理者には出さない（その人の仕事の入口は P90 系）＝管理者の操作を持たない役割（staff）として描く */
+    var hdrRole = KTN.headerRole(page, role);
+    if (acEl) acEl.innerHTML = getActions(page, hdrRole);
   }
 
   // common.jsのrenderAllから呼ばれるフック。P2 系のオーナー向けの帯（下書き・確認依頼中・公開前）もあわせて描き直す
