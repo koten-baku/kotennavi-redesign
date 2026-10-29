@@ -122,7 +122,27 @@
         <div class="ktn-mgmt-head">
           <h2 class="ktn-mgmt-head__title">クリエイター新規/クローン</h2>
           <p class="ktn-mgmt-head__en">CREATOR NEW / CLONE</p>
-          <p class="ktn-mgmt-head__desc">クリエイターページを管理者が直接作成します。既存の他者投稿（展覧会の出展者情報等）から先行作成する場合や、既存ページを複製して似た内容のページを作る場合に使用します。</p>
+          <p class="ktn-mgmt-head__desc">クリエイターページを管理者が直接作成します。登録済みのページの非公開・削除（重複の整理など）も、ここで行います。既存の他者投稿（展覧会の出展者情報等）から先行作成する場合や、既存ページを複製して似た内容のページを作る場合に使用します。</p>
+        </div>
+
+        <!-- 登録済みのページ（非公開・削除・2026-10-29。重複の整理などで消す。中身は pages.js ktnAdminContentPage が描く） -->
+        <div class="p211-block p90cm-block">
+          <div class="p211-block__head">
+            <h3 class="p211-block__title">登録済みのクリエイターページ <span class="p211-block__title-en">PAGES</span></h3>
+          </div>
+          <div class="p211-block__body">
+            <div class="p319-toolbar">
+              <div class="p319-toolbar__filters" id="p90cmFilters"></div>
+              <p class="ktn-count ktn-count--result" id="p90cmCount"></p>
+            </div>
+            <div class="p315-archive-table-wrap">
+              <table class="p315-archive-table p90cm-table" aria-label="登録済みのクリエイターページ">
+                <thead id="p90cmHead"></thead>
+                <tbody id="p90cmList"></tbody>
+              </table>
+            </div>
+            <div class="p319-empty" id="p90cmEmpty" hidden><p class="p319-empty__msg">該当するページはありません。</p></div>
+          </div>
         </div>
 
         <!-- ブロック1: 基本情報 -->

@@ -11658,6 +11658,7 @@ KTN.pages['p90-9'] = function () {
     /* 見守り系（事務局あて・2026-10-27）＝対応はしないが、抜き打ちで確かめるための知らせ。文面は docs/email-templates.md「見守り系」 */
     { id: 'MO-01A', category: 'monitor', event: "展覧会の更新の通知（事務局あて）", aud: "事務局", source: "確認済みの展覧会をオーナーが P2-11 で変更して保存", timing: "保存直後（自動）", subject: "【展覧会の更新】「{{exhibitionName}}」（{{editorName}}）", body: "展覧会の内容が更新されました（確認済みの展覧会）。\n\n──────────────────────────────\n 展覧会：「{{exhibitionName}}」\n 　{{pageUrl}}\n 投稿者：{{editorName}}（{{editorUid}}）\n 更新日時：{{updatedAt}}\n オーナー：{{ownerName}}\n──────────────────────────────\n\n■ 変わった項目（前 → 後）\n{{changedFields}}\n\n※ 通常は対応不要です。抜き打ちで内容を確かめるための知らせです。\n※ 確認済みの展覧会だけが対象です（確認前の下書き・確認待ちの変更では送りません）。", note: "docs/email-templates.md MO-01A と同内容。", updatedAt: '2026.10.27' },
     { id: 'MO-02A', category: 'monitor', event: "記事・レビューの公開・更新の通知（事務局あて）", aud: "事務局", source: "記事（P7-11）・レビュー（P8-11）の公開と、公開したあとの更新（下書きの保存では送らない）", timing: "公開・更新の直後（自動）", subject: "【{{contentType}}の{{publishKind}}】「{{contentTitle}}」（{{authorName}}）", body: "{{contentType}}が{{publishKind}}されました。\n\n──────────────────────────────\n 種類：{{contentType}}（{{publishKind}}）\n タイトル：「{{contentTitle}}」\n 　{{contentUrl}}\n 投稿者：{{authorName}}（{{authorUid}}）\n 掲載先：{{placementName}}\n 日時：{{publishedAt}}\n──────────────────────────────\n\n※ 通常は対応不要です。抜き打ちで内容を確かめるための知らせです。\n※ 内容に問題があるときは、問題報告と同じ基準（掲載内容に関する対応方針）で対応してください。", note: "docs/email-templates.md MO-02A と同内容。", updatedAt: '2026.10.27' },
+    { id: 'DL-01A', category: 'monitor', event: "削除の通知（事務局あて）", aud: "事務局", source: "管理者が展覧会・クリエイター・ギャラリー・作品・記事・レビュー・コメントを削除（削除の理由のモーダル）", timing: "削除の直後（自動）", subject: "【削除】{{deleteKind}}「{{deleteName}}」（{{editorName}}）", body: "管理者がコンテンツを削除しました。\n\n──────────────────────────────\n 種類：{{deleteKind}}\n 名前：「{{deleteName}}」\n 　{{pageUrl}}\n オーナー・投稿者：{{ownerName}}\n 削除した管理者：{{editorName}}（{{editorUid}}）\n 削除日時：{{deletedAt}}\n──────────────────────────────\n\n■ 削除の理由\n{{deleteReason}}\n\n■ 詳しい内容\n{{deleteDetail}}\n\n※ 削除は元に戻せません。このメールは記録のために送っています。", note: "docs/email-templates.md DL-01A と同内容。削除の決まり（docs/admin-roles.md）。", updatedAt: '2026.10.29' },
     { id: 'MO-03A', category: 'monitor', event: "退会の通知（事務局あて）", aud: "事務局", source: "p5-100 退会", timing: "退会の直後（自動）", subject: "【退会】{{userName}}（{{senderUid}}）", body: "ユーザーが退会しました。\n\n──────────────────────────────\n ユーザー：{{userName}}（{{senderEmail}}／{{senderUid}}）\n 退会日時：{{changedAt}}\n 利用開始：{{joinedAt}}\n 持っていた機能：{{userRoles}}\n──────────────────────────────\n\n■ 退会の理由\n{{leaveReason}}\n\n■ ご意見・ご要望（任意）\n{{leaveComment}}\n\n■ 残ったページ（クリエイター・ギャラリー機能を使っていた場合）\n{{leftPages}}\n※ ページと、機能で登録した展覧会はサイトに残り、オーナーのいないページになります。記事・作品は非公開になりました。\n\n※ 通常は対応不要です。退会を知るための知らせです。", note: "docs/email-templates.md MO-03A と同内容。「残ったページ」はクリエイター・ギャラリー機能を使っていた人のときだけ。", updatedAt: '2026.10.27' },
   ];
   var AUTO_CATEGORY_ORDER = ['account', 'form', 'apply', 'txn', 'campaign', 'activity', 'exhibition', 'monitor'];
@@ -26859,4 +26860,314 @@ KTN.pages['p90'] = function () {
       '<span class="p90-todo__num">' + it.n + '</span>' +
       '<span class="p90-todo__label">' + it.label + (it.sub ? '<span class="p90-todo__sub">' + it.sub + '</span>' : '') + '</span></a>';
   }).join('');
+};
+
+
+/* ══════════════════════════════════════════════════════════════════
+   コンテンツの管理ページ（P90-23 作品管理・P90-24 記事管理・P90-25 レビュー管理・P90-26 コメント管理・2026-10-29 新設・handoff 追174-353）
+   docs/admin-roles.md の決定：非公開・削除はそれぞれのコンテンツの管理ページで行う。削除は理由をモーダルで書き（必須）、
+   理由つきの自動メール（DL-01A）を管理者あてに送る。作品のクローン・削除は admin だけ（ページ自体は「編集・問合せ」から開ける＝非公開まで）。
+   4ページは同じ形の一覧なので、ktnAdminContentPage(cfg) 1つで作る。データはデモの値（本番は API）。
+   ══════════════════════════════════════════════════════════════════ */
+function ktnAdminContentPage(cfg) {
+  var list = document.getElementById('p90cmList'), head = document.getElementById('p90cmHead'), filters = document.getElementById('p90cmFilters');
+  if (!list) return;
+  var lvN = KTN.ADMIN_LEVELS[KTN.adminLevel()].n;
+  var rows = cfg.rows.slice();
+  var state = { status: '', kw: '', extra: '' };
+
+  /* 絞り込み：状態・キーワード（＋ページごとの1つ） */
+  var html = '<label class="p319-filter"><span class="p319-filter__label">状態</span><select class="p319-filter__sel" data-f="status">' +
+    (cfg.statusOptions || [['', 'すべて'], ['public', '公開中'], ['hidden', '非公開']]).map(function (o) { return '<option value="' + o[0] + '">' + o[1] + '</option>'; }).join('') + '</select></label>';
+  if (cfg.extraFilter) {
+    html += '<label class="p319-filter"><span class="p319-filter__label">' + cfg.extraFilter.label + '</span><select class="p319-filter__sel" data-f="extra">' +
+      cfg.extraFilter.options.map(function (o) { return '<option value="' + o[0] + '">' + o[1] + '</option>'; }).join('') + '</select></label>';
+  }
+  html += '<label class="p319-filter"><span class="p319-filter__label">さがす</span><input type="search" class="p319-filter__sel p90cm-kw" data-f="kw" placeholder="' + cfg.kwPlaceholder + '"></label>';
+  filters.innerHTML = html;
+  filters.addEventListener('input', function (e) { var f = e.target.dataset.f; if (f) { state[f] = e.target.value; render(); } });
+  filters.addEventListener('change', function (e) { var f = e.target.dataset.f; if (f) { state[f] = e.target.value; render(); } });
+
+  head.innerHTML = '<tr>' + cfg.cols.map(function (c) { return '<th>' + c + '</th>'; }).join('') + '<th>状態</th><th>操作</th></tr>';
+
+  function statusHtml(r) {
+    if (cfg.statusHtml) return cfg.statusHtml(r);
+    return r.status === 'hidden' ? '<span class="ktn-review-status ktn-review-status--cancelled">非公開</span>' : '<span class="ktn-review-status ktn-review-status--granted">公開中</span>';
+  }
+  function actions(r) {
+    /* ページごとに操作を差し替える（P90-1 のユーザー＝なりすましログイン・強制退会） */
+    if (cfg.actions) return '<div class="p90cm-acts">' + cfg.actions(r, lvN).join('') + '</div>';
+    var a = [];
+    if (cfg.editUrl) a.push('<a class="ktn-action-btn" href="' + cfg.editUrl(r) + '">編集 →</a>');
+    if (cfg.cloneUrl && lvN >= KTN.ADMIN_LEVELS[cfg.cloneLevel || 'E'].n) a.push('<a class="ktn-action-btn" href="' + cfg.cloneUrl(r) + '">クローン →</a>');
+    a.push('<button type="button" class="ktn-op-btn ktn-op-btn--sm" data-act="toggle" data-id="' + r.id + '">' + (r.status === 'hidden' ? '公開に戻す' : '非公開にする') + '</button>');
+    if (lvN >= KTN.ADMIN_LEVELS[cfg.deleteLevel || 'E'].n) a.push('<button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline" data-act="delete" data-id="' + r.id + '">削除</button>');
+    return '<div class="p90cm-acts">' + a.join('') + '</div>';
+  }
+  function render() {
+    var kw = state.kw.trim();
+    var shown = rows.filter(function (r) {
+      if (state.status && r.status !== state.status) return false;
+      if (cfg.extraFilter && state.extra && !cfg.extraFilter.match(r, state.extra)) return false;
+      if (kw && (r.title + ' ' + (r.who || '') + ' ' + (r.text || '')).indexOf(kw) < 0) return false;
+      return true;
+    });
+    list.innerHTML = shown.map(function (r) {
+      return '<tr class="' + (r.status === 'hidden' ? 'is-hidden' : '') + '">' + cfg.cells(r).map(function (c, i) { return '<td data-label="' + cfg.cols[i] + '">' + c + '</td>'; }).join('') +
+        '<td data-label="状態">' + statusHtml(r) + '</td><td data-label="操作">' + actions(r) + '</td></tr>';
+    }).join('');
+    document.getElementById('p90cmEmpty').hidden = shown.length !== 0;
+    document.getElementById('p90cmCount').innerHTML = '<strong>' + shown.length + '</strong>件該当';
+  }
+  list.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-act]');
+    if (!b) return;
+    var r = rows.filter(function (x) { return x.id === b.dataset.id; })[0];
+    if (!r) return;
+    if (cfg.onAct && cfg.onAct(b.dataset.act, r, { render: render, remove: function () { rows = rows.filter(function (x) { return x !== r; }); render(); } })) return;
+    if (b.dataset.act === 'toggle') {
+      r.status = r.status === 'hidden' ? 'public' : 'hidden';
+      render();
+      KTN.toast(r.status === 'hidden' ? '非公開にしました（デモ）' : '公開に戻しました（デモ）');
+    } else {
+      KTN.adminDelete({ kind: cfg.kind, name: r.title, onDone: function () { rows = rows.filter(function (x) { return x !== r; }); render(); } });
+    }
+  });
+  render();
+  window.ktnRender = function () {};
+}
+
+/* 作品の名前などは、ほかのページのデモと同じ人・作品（田中透・YUGEN Gallery など） */
+KTN.pages['p90-23'] = function () {
+  ktnAdminContentPage({
+    kind: '作品', kwPlaceholder: '作品名・作者', cols: ['作品', '作者・出品者', '登録日'],
+    rows: [
+      { id: 'w1', title: 'オノマトペの庭', url: 'kotennavi-p6-2.html', who: '田中透', date: '2026.06.02', status: 'public', lp: true },
+      { id: 'w2', title: 'ざわざわ No.2', url: 'kotennavi-p6-2.html', who: '田中透', date: '2026.06.02', status: 'public', lp: true },
+      { id: 'w3', title: '言葉の重力 No.3', url: 'kotennavi-p6.html', who: '田中透', date: '2026.05.18', status: 'public' },
+      { id: 'w4', title: '余白の詩学 I', url: 'kotennavi-p6-1.html', who: '松田啓佑（出品：YUGEN Gallery）', date: '2026.04.27', status: 'public' },
+      { id: 'w5', title: '色彩の対話 #7', url: 'kotennavi-p6.html', who: '小林ゆう（出品：Gallery SOIL 渋谷）', date: '2026.03.10', status: 'hidden' }
+    ],
+    cells: function (r) { return ['<a class="p90cm-title" href="' + r.url + '" target="_blank" rel="noopener">《' + r.title + '》</a>' + (r.lp ? '<span class="p90cm-mark">LIAISON+ 出品中</span>' : ''), r.who, r.date]; },
+    extraFilter: { label: '販売', options: [['', 'すべて'], ['lp', 'LIAISON+ 出品中']], match: function (r, v) { return v === 'lp' ? !!r.lp : true; } },
+    editUrl: function () { return 'kotennavi-p6-11.html'; },
+    cloneUrl: function () { return 'kotennavi-p6-11.html?mode=clone'; }, cloneLevel: 'A', deleteLevel: 'A'
+  });
+};
+KTN.pages['p90-24'] = function () {
+  ktnAdminContentPage({
+    kind: '記事', kwPlaceholder: 'タイトル・投稿者', cols: ['記事', '投稿者', '公開日'],
+    rows: [
+      { id: 'a1', title: '制作日記 vol.3', url: 'kotennavi-p7.html', who: '田中透', date: '2026.10.27', status: 'public', on: '作品《オノマトペの庭》' },
+      { id: 'a2', title: '展示レポート — 音と色が交差する空間へ', url: 'kotennavi-p7.html', who: 'YUGEN Gallery', date: '2026.10.24', status: 'public', on: 'YUGEN Gallery' },
+      { id: 'a3', title: '展示の見どころ — 5つの版表現', url: 'kotennavi-p7.html', who: '田中透', date: '2026.09.30', status: 'public', on: '展覧会「あなたが知らないオノマトペ」' },
+      { id: 'a4', title: '秋のセール情報', url: 'kotennavi-p7.html', who: 'Gallery SOIL 渋谷', date: '2026.10.17', status: 'hidden', on: 'Gallery SOIL 渋谷' }
+    ],
+    cells: function (r) { return ['<a class="p90cm-title" href="' + r.url + '" target="_blank" rel="noopener">「' + r.title + '」</a><span class="p90cm-sub">掲載先：' + r.on + '</span>', r.who, r.date]; },
+    editUrl: function () { return 'kotennavi-p7-11.html'; }
+  });
+};
+KTN.pages['p90-25'] = function () {
+  ktnAdminContentPage({
+    kind: 'レビュー', kwPlaceholder: 'タイトル・投稿者・展覧会', cols: ['レビュー', '投稿者', '投稿日'],
+    rows: [
+      { id: 'v1', title: '静かな熱量', url: 'kotennavi-p8.html', who: '伊藤さくら', date: '2026.10.26', status: 'public', on: '松田啓佑展［仮称］' },
+      { id: 'v2', title: '言葉が色になる瞬間', url: 'kotennavi-p8.html', who: '山田 花子', date: '2026.10.12', status: 'public', on: 'あなたが知らないオノマトペ' },
+      { id: 'v3', title: '余白の使い方が好き', url: 'kotennavi-p8.html', who: '中村葵', date: '2026.09.28', status: 'public', on: '色彩の対話 — 現代絵画グループ展' }
+    ],
+    cells: function (r) { return ['<a class="p90cm-title" href="' + r.url + '" target="_blank" rel="noopener">「' + r.title + '」</a><span class="p90cm-sub">展覧会：' + r.on + '</span>', r.who, r.date]; },
+    editUrl: function () { return 'kotennavi-p8-11.html'; }
+  });
+};
+/* コメント：LIAISON+ に出品中の作品のコメントは分けず、印と絞り込みで見分ける（docs/admin-roles.md「コメントの決まり」） */
+KTN.pages['p90-26'] = function () {
+  ktnAdminContentPage({
+    kind: 'コメント', kwPlaceholder: 'コメント・投稿者・ページ', cols: ['コメント', '投稿者', '投稿日'],
+    rows: [
+      { id: 'c1', title: '作品《オノマトペの庭》', text: 'もう少しお安くなりませんか？ 直接ご連絡したいです。', url: 'kotennavi-p6-2.html', who: '匿名ユーザー', date: '2026.10.28', status: 'public', on: 'work', lp: true },
+      { id: 'c2', title: '作品《ざわざわ No.2》', text: '実物の質感がすばらしかったです。', url: 'kotennavi-p6-2.html', who: '高橋蓮', date: '2026.10.25', status: 'public', on: 'work', lp: true },
+      { id: 'c3', title: '展覧会「あなたが知らないオノマトペ」', text: '在廊していただきありがとうございました。', url: 'kotennavi-p2.html', who: '伊藤さくら', date: '2026.10.20', status: 'public', on: 'exh' },
+      { id: 'c4', title: '作品《言葉の重力 No.3》', text: '色の重なりが不思議でした。', url: 'kotennavi-p6.html', who: '中村葵', date: '2026.10.02', status: 'public', on: 'work' }
+    ],
+    cells: function (r) { return ['<span class="p90cm-text">' + r.text + '</span><a class="p90cm-sub" href="' + r.url + '" target="_blank" rel="noopener">' + r.title + '</a>' + (r.lp ? '<span class="p90cm-mark">LIAISON+ 出品中</span>' : ''), r.who, r.date]; },
+    extraFilter: { label: 'ページ', options: [['', 'すべて'], ['exh', '展覧会'], ['work', '作品'], ['lp', 'LIAISON+ 出品中の作品']],
+      match: function (r, v) { return v === 'lp' ? !!r.lp : r.on === v; } }
+  });
+};
+
+
+/* ── P90-7・P90-8：登録済みのクリエイター・ギャラリーページ（非公開・削除＝重複の整理など・2026-10-29 handoff 追174-354）
+   一覧は作品管理などと同じ ktnAdminContentPage。新規・クローンのフォームは今までどおり下にある ── */
+KTN.pages['p90-7'] = function () {
+  ktnAdminContentPage({
+    kind: 'クリエイター', kwPlaceholder: '名前・ID', cols: ['クリエイター', 'オーナー', '作成日'],
+    rows: [
+      { id: 'cr1', title: '田中 透', code: 'CR-1042', url: 'kotennavi-p3.html', who: '田中 透（UID:10003）', date: '2024.05.12', status: 'public' },
+      { id: 'cr2', title: '佐藤 直子', code: 'CR-2087', url: 'kotennavi-p3.html', who: '未割当（admin 管理）', date: '2025.11.03', status: 'public' },
+      { id: 'cr3', title: '伊藤 蒼', code: 'CR-3125', url: 'kotennavi-p3.html', who: '未割当（admin 管理）', date: '2026.08.22', status: 'public' },
+      { id: 'cr4', title: '高橋 蓮', code: 'CR-3301', url: 'kotennavi-p3.html', who: '未割当（admin 管理）', date: '2026.10.20', status: 'public', note: '同じ名前のページ CR-2210 あり（重複の可能性）' }
+    ],
+    cells: function (r) { return ['<a class="p90cm-title" href="' + r.url + '" target="_blank" rel="noopener">' + r.title + '</a><span class="p90cm-sub">' + r.code + (r.note ? '・' + r.note : '') + '</span>', r.who, r.date]; },
+    editUrl: function () { return 'kotennavi-p3-11.html'; }
+  });
+};
+KTN.pages['p90-8'] = function () {
+  ktnAdminContentPage({
+    kind: 'ギャラリー', kwPlaceholder: '名前・ID', cols: ['ギャラリー', 'オーナー', '作成日'],
+    rows: [
+      { id: 'ga1', title: 'YUGEN Gallery', code: 'GA-0412', url: 'kotennavi-p4.html', who: 'YUGEN Gallery（UID:10120）', date: '2024.03.02', status: 'public' },
+      { id: 'ga2', title: 'Gallery SOIL 渋谷', code: 'GA-0533', url: 'kotennavi-p4.html', who: 'Gallery SOIL 渋谷（UID:10155）', date: '2024.06.18', status: 'public' },
+      { id: 'ga3', title: 'こだま画廊', code: 'GA-1207', url: 'kotennavi-p4.html', who: '未割当（admin 管理）', date: '2026.07.30', status: 'public' },
+      { id: 'ga4', title: 'ギャラリーソイル渋谷', code: 'GA-1291', url: 'kotennavi-p4.html', who: '未割当（admin 管理）', date: '2026.10.18', status: 'public', note: 'Gallery SOIL 渋谷（GA-0533）と重複の可能性' }
+    ],
+    cells: function (r) { return ['<a class="p90cm-title" href="' + r.url + '" target="_blank" rel="noopener">' + r.title + '</a><span class="p90cm-sub">' + r.code + (r.note ? '・' + r.note : '') + '</span>', r.who, r.date]; },
+    editUrl: function () { return 'kotennavi-p4-11.html'; }
+  });
+};
+
+/* ── P90-4・P90-5・P90-6（展覧会の一覧）：各行の操作をそろえる（2026-10-29）。
+   編集 →＝P2-11／非公開にする・公開に戻す＝公開している展覧会だけ（下書き・確認待ちは公開前なので出さない）／
+   削除＝削除の理由のモーダル（KTN.adminDelete）。行は HTML のデモのまま、操作のボタンだけをここで付け直す ── */
+function ktnExhListActions() {
+  var rows = document.querySelectorAll('.ktn-mgmt-wrap .p315-archive-table tbody tr');
+  rows.forEach(function (tr) {
+    var cell = tr.querySelector('td[data-label="操作"]');
+    var nameTd = tr.querySelector('td[data-label="展覧会名"]');
+    var stateTd = tr.querySelector('td[data-label="状態"]');
+    if (!cell || !nameTd) return;
+    var box = cell.querySelector('div') || cell;
+    box.classList.add('p90cm-acts');
+    box.removeAttribute('style');
+    /* 前からある非公開・削除のボタン（押しても何も起きなかった）を外して付け直す */
+    box.querySelectorAll('button').forEach(function (b) { if (/非公開|削除/.test(b.textContent)) b.remove(); });
+    box.querySelectorAll('a').forEach(function (a) { if (/^編集/.test(a.textContent.trim())) a.setAttribute('href', './kotennavi-p2-11.html'); });
+    var unpublished = stateTd && /下書き|確認待ち/.test(stateTd.textContent);
+    if (!unpublished) box.insertAdjacentHTML('beforeend', '<button type="button" class="ktn-op-btn ktn-op-btn--sm" data-act="toggle">非公開にする</button>');
+    box.insertAdjacentHTML('beforeend', '<button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline" data-act="delete">削除</button>');
+    box.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-act]');
+      if (!b) return;
+      if (b.dataset.act === 'toggle') {
+        var hide = b.textContent === '非公開にする';
+        b.textContent = hide ? '公開に戻す' : '非公開にする';
+        tr.classList.toggle('is-hidden', hide);
+        KTN.toast(hide ? '非公開にしました（デモ）' : '公開に戻しました（デモ）');
+      } else {
+        KTN.adminDelete({ kind: '展覧会', name: nameTd.textContent.trim(), onDone: function () { tr.remove(); } });
+      }
+    });
+  });
+}
+KTN.pages['p90-4'] = ktnExhListActions;
+KTN.pages['p90-5'] = ktnExhListActions;
+KTN.pages['p90-6'] = ktnExhListActions;
+
+/* ── P90-1：登録済みのユーザー（なりすましログイン・強制退会・2026-10-29・docs/admin-roles.md #29・#30＝admin だけ）
+   なりすましログインは確認してから入り、操作の記録に残す（本番）。強制退会は理由のモーダル（KTN.adminDelete の verb）を通し、
+   退会の通知 MO-03A の「退会の理由」に「強制退会：…」として載る。ユーザー作成・編集のフォームは今までどおり下にある ── */
+KTN.pages['p90-1'] = function () {
+  ktnAdminContentPage({
+    kind: 'ユーザー', kwPlaceholder: '名前・メール・UID', cols: ['ユーザー', '機能', '登録日'],
+    statusOptions: [['', 'すべて'], ['public', '有効'], ['hidden', '停止']],
+    statusHtml: function (r) { return r.status === 'hidden' ? '<span class="ktn-review-status ktn-review-status--cancelled">停止</span>' : '<span class="ktn-review-status ktn-review-status--granted">有効</span>'; },
+    rows: [
+      { id: 'u1', title: '山田 花子', who: 'ユーザー', mail: 'hanako.y@example.com', uid: 'U-10007', date: '2024.04.02', status: 'public' },
+      { id: 'u2', title: '田中 透', who: 'クリエイター・LIAISON+', mail: 'toru.t@example.com', uid: 'U-10003', date: '2024.05.12', status: 'public' },
+      { id: 'u3', title: 'YUGEN Gallery', who: 'ギャラリー・LIAISON+', mail: 'info@yugen.example.com', uid: 'U-10120', date: '2024.03.02', status: 'public' },
+      { id: 'u4', title: '中村 葵', who: 'ユーザー', mail: 'aoi.n@example.ne.jp', uid: 'U-10398', date: '2025.02.14', status: 'public' },
+      { id: 'u5', title: 'spam_account_77', who: 'ユーザー', mail: 'xx77@example.net', uid: 'U-10712', date: '2026.10.27', status: 'hidden' }
+    ],
+    cells: function (r) { return ['<span class="p90cm-title p90cm-title--plain">' + r.title + '</span><span class="p90cm-sub">' + r.mail + '・' + r.uid + '</span>', r.who, r.date]; },
+    actions: function (r) {
+      return ['<a class="ktn-action-btn" href="kotennavi-p5-11.html">編集 →</a>',
+        '<button type="button" class="ktn-op-btn ktn-op-btn--sm" data-act="as" data-id="' + r.id + '">なりすましログイン</button>',
+        '<button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline" data-act="leave" data-id="' + r.id + '">強制退会</button>'];
+    },
+    onAct: function (act, r, api) {
+      if (act === 'as') {
+        KTN.toast(r.title + ' としてログインしました（デモ・操作の記録に残ります）');
+        return true;
+      }
+      if (act === 'leave') {
+        KTN.adminDelete({ kind: 'ユーザー', name: r.title, verb: '強制退会',
+          reasons: ['規約に反する利用（迷惑行為・なりすましなど）', '本人からの依頼（自分で退会できない事情）', '重複したアカウント', 'その他'],
+          placeholder: '例：同じ内容の宣伝のコメントを繰り返し投稿したため（問題報告 R-2040）',
+          note: '強制退会すると元に戻せません。プロフィールと記録は退会と同じく削除され、クリエイター・ギャラリーのページはオーナーのいないページになります。理由は退会の通知として管理者あてのメールで届きます。',
+          done: '強制退会しました。理由を管理者あてのメールで送りました（デモ）',
+          onDone: function () { api.remove(); } });
+        return true;
+      }
+      return false;
+    }
+  });
+};
+
+/* ══ Stripe（決済）の仕事の入口（2026-10-29・docs/admin-roles.md #45〜#48＝LIAISON+ 対応以上）══
+   #45 Stripe の管理画面へ＝P90-10 のショートカット／#46 出品者の Stripe アカウントの連携＝P90-15 の列／
+   #47 返金のリクエスト＝P90-13 の行の「返金の手続き」（理由のモーダル）／#48 支払いの異議・決済の失敗＝P90-13 の上の一覧。
+   取引の強制キャンセルは admin だけ（#37）。Stripe のアカウント・取引の ID はデモの値（本番は Stripe の API と管理画面のリンク） */
+KTN.pages['p90-13'] = function () {
+  var lvN = KTN.ADMIN_LEVELS[KTN.adminLevel()].n;
+  var PAID = /発送待ち|受取確認待ち|完了確認待ち|取引完了/;
+  document.querySelectorAll('.ktn-mgmt-wrap .p315-archive-table tbody tr').forEach(function (tr) {
+    var cell = tr.querySelector('td[data-label="操作"]');
+    var st = tr.querySelector('td[data-label="取引状態"]');
+    var work = tr.querySelector('td[data-label="作品名"]');
+    var nid = tr.querySelector('td[data-label="申込NID"]');
+    if (!cell || !work) return;
+    cell.classList.add('p90cm-acts');
+    var name = '《' + work.textContent.trim() + '》' + (nid ? '（' + nid.textContent.trim() + '）' : '');
+    cell.querySelectorAll('button').forEach(function (b) {
+      if (!/強制キャンセル/.test(b.textContent)) return;
+      if (lvN < 3) { b.remove(); return; }
+      b.addEventListener('click', function () {
+        KTN.adminDelete({ kind: '取引', name: name, verb: '強制キャンセル',
+          reasons: ['出品者・購入者のどちらとも連絡がつかない', '規約に反する取引', '決済の不正の疑い', 'その他'],
+          placeholder: '例：発送期限を14日過ぎても出品者と連絡がつかないため（対応案件 S-0412）',
+          note: '強制キャンセルすると元に戻せません。支払い済みの取引は、購入者に全額を返金します。出品者・購入者には取引のキャンセルのメール（T-08）が届きます。',
+          done: '強制キャンセルしました（デモ）', onDone: function () { st.innerHTML = '<span class="p315-txn-row__status">キャンセル済</span>'; } });
+      });
+    });
+    if (st && PAID.test(st.textContent) && lvN >= 2) {
+      cell.insertAdjacentHTML('beforeend', '<button type="button" class="ktn-op-btn ktn-op-btn--sm" data-act="refund">返金の手続き</button>');
+      cell.querySelector('[data-act="refund"]').addEventListener('click', function () {
+        KTN.adminDelete({ kind: '取引', name: name, verb: '返金',
+          reasons: ['出品者の取り消し（会場で売約済など）', '作品の破損・説明と違う', '発送されない', '購入者の依頼（出品者が了承）', 'その他'],
+          placeholder: '例：届いた作品の額のガラスが割れていた。出品者も了承（取引メッセージ 10/27）',
+          note: 'Stripe で購入者に返金します（元に戻せません）。全額か一部かは Stripe の管理画面で確かめてください。返金の記録は取引の履歴に残ります。',
+          done: '返金の手続きを進めました（デモ）', onDone: function () {} });
+      });
+    }
+  });
+  /* #48 支払いの異議（チャージバック）・決済の失敗：上に一覧を出す（件数があるときだけ） */
+  var DISPUTES = [
+    { kind: '支払いの異議（チャージバック）', txn: 'N-76980《ざわざわ No.1》', at: '2026.10.27', note: '購入者のカード会社から異議。回答の期限 2026.11.06' },
+    { kind: '決済の失敗', txn: 'N-77034《言葉の重力 No.3》', at: '2026.10.28', note: 'カードの認証に失敗（購入者に支払いのやり直しを案内済み）' }
+  ];
+  var toolbar = document.querySelector('.ktn-mgmt-wrap .p319-toolbar');
+  if (toolbar && lvN >= 2) {
+    toolbar.insertAdjacentHTML('beforebegin', '<div class="p9013-stripe"><p class="p9013-stripe__title">Stripe：支払いの異議・決済の失敗 <span class="ktn-count ktn-count--pill">' + DISPUTES.length + '</span></p><ul class="p9013-stripe__list">' +
+      DISPUTES.map(function (d) { return '<li><span class="p9013-stripe__kind">' + d.kind + '</span>' + d.txn + '<span class="p90cm-sub">' + d.at + '・' + d.note + '</span></li>'; }).join('') +
+      '</ul><a class="ktn-action-btn" href="https://dashboard.stripe.com/disputes" target="_blank" rel="noopener">Stripe の管理画面で対応する →</a></div>');
+  }
+};
+
+/* #46 出品者の Stripe アカウントの連携（振込先口座の登録）を P90-15 の列に */
+KTN.pages['p90-15'] = function () {
+  var STRIPE = { '田中 透': 'ok', 'Gallery SOIL 渋谷': 'ok', '佐藤 みなと': 'pending' };
+  var LABEL = { ok: ['granted', '連携済み'], pending: ['pending', '手続き中'], none: ['new', '未着手'] };
+  var head = document.querySelector('.ktn-mgmt-wrap .p315-archive-table thead tr');
+  if (!head) return;
+  var ths = head.querySelectorAll('th');
+  ths[4].insertAdjacentHTML('afterend', '<th>Stripe 連携</th>');
+  document.querySelectorAll('#p9015List tr').forEach(function (tr) {
+    var nameTd = tr.querySelector('td[data-label="申込者名"]'), kyc = tr.querySelector('td[data-label="本人確認状態"]'), ops = tr.querySelector('td[data-label="操作"]');
+    if (!nameTd || !kyc) return;
+    var s = STRIPE[nameTd.textContent.trim()] || (tr.dataset.status === 'granted' ? 'ok' : 'none');
+    kyc.insertAdjacentHTML('afterend', '<td data-label="Stripe 連携"><span class="ktn-review-status ktn-review-status--' + LABEL[s][0] + '">' + LABEL[s][1] + '</span></td>');
+    if (ops && s !== 'none') {
+      ops.classList.add('p90cm-acts');
+      ops.insertAdjacentHTML('beforeend', '<a class="ktn-action-btn" href="https://dashboard.stripe.com/connect/accounts" target="_blank" rel="noopener">Stripe で見る →</a>');
+    }
+  });
 };

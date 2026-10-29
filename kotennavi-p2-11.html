@@ -2268,6 +2268,13 @@ function saveDraft() {
   var role = (typeof KTN !== 'undefined' && KTN.role) || 'gallery';
   location.href = 'kotennavi-p2.html?pub=draft&role=' + encodeURIComponent(role);
 }
+
+/* ?mode=new｜clone で新規・クローンから開く（管理者が P90-5 の「新規展覧会を作成」・行の「クローン」から開く・2026-10-29）。
+   ページの初期化がすべて終わってから切り替える（途中で呼ぶと、あとで定義される値がまだ無い） */
+(function () {
+  var m = (location.search.match(/[?&]mode=(new|clone)\b/) || [])[1];
+  if (m) setDemoMode(m);
+})();
 </script>
 </body>
 </html>

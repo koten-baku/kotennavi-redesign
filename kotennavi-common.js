@@ -2224,7 +2224,7 @@ const PAGES = {
   'p90-1': { n: '管理者-ユーザー新規/クローン', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['ユーザー新規/クローン', null]] },
   'p90-2': { n: '管理者-クリエイター/ギャラリー機能申込管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['クリエイター/ギャラリー機能申込管理', null]] },
   'p90-2-1': { n: '管理者-クリエイター/ギャラリー機能申込審査', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['クリエイター/ギャラリー機能申込管理', 'kotennavi-p90-2.html'], ['審査', null]] },
-  'p90-3': { n: '管理者-展覧会新規', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['展覧会新規', null]] },
+  'p90-3': { n: '管理者-コンテンツサマリー', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['コンテンツサマリー', null]] },
   'p90-4': { n: '管理者-本日開催・公開の展覧会一覧', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['本日開催・公開の展覧会一覧', null]] },
   'p90-5': { n: '管理者-未公開の展覧会一覧', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['未公開の展覧会一覧', null]] },
   'p90-6': { n: '管理者-最新の展覧会一覧', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['最新の展覧会一覧', null]] },
@@ -2245,6 +2245,10 @@ const PAGES = {
   'p90-21': { n: '管理者-対応案件', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['対応案件', null]] },
   'p90-21-1': { n: '管理者-対応案件の詳細', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['対応案件', 'kotennavi-p90-21.html'], ['対応案件の詳細', null]] },
   'p90-22': { n: '管理者-更新の記録', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['更新の記録', null]] },
+  'p90-23': { n: '管理者-作品管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['作品管理', null]] },
+  'p90-24': { n: '管理者-記事管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['記事管理', null]] },
+  'p90-25': { n: '管理者-レビュー管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['レビュー管理', null]] },
+  'p90-26': { n: '管理者-コメント管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['コメント管理', null]] },
   'p90-17': { n: '管理者-検索・特集管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['検索・特集管理', null]] },
 };
 
@@ -3569,6 +3573,7 @@ KTN.ADMIN_LEVELS = { E: { n: 1, label: '編集・問合せ' }, L: { n: 2, label:
 KTN.ADMIN_PAGE = {
   'p90': 'E', 'p90-2': 'E', 'p90-2-1': 'E', 'p90-4': 'E', 'p90-5': 'E', 'p90-6': 'E', 'p90-7': 'E', 'p90-8': 'E', 'p90-21': 'E', 'p90-21-1': 'E',
   'p90-10': 'L', 'p90-12': 'L', 'p90-13': 'L', 'p90-14': 'L', 'p90-15': 'L', 'p90-16': 'L', 'p90-20': { view: 'L', edit: 'A' },
+  'p90-23': 'E', 'p90-24': 'E', 'p90-25': 'E', 'p90-26': 'E',
   'p90-1': 'A', 'p90-3': 'A', 'p90-9': 'A', 'p90-11': 'A', 'p90-11-1': 'A', 'p90-17': 'A', 'p90-18': 'A', 'p90-19': 'A', 'p90-22': 'A'
 };
 KTN.adminLevel = function () {
@@ -3589,6 +3594,53 @@ KTN.adminAccess = function (page, lv) {
   if (lv >= KTN.ADMIN_LEVELS[need.edit].n) return 'edit';
   return lv >= KTN.ADMIN_LEVELS[need.view].n ? 'view' : false;
 };
+/* ══ 削除の決まり（管理者・2026-10-29・docs/admin-roles.md）══
+   展覧会・クリエイター・ギャラリー・作品・記事・レビュー・コメントの削除は、どれもこのモーダルを通す。
+   理由（選択＋詳しい内容・どちらも必須）を書かないと消せない。消すと、理由つきの自動メール DL-01A が管理者あてに届く（本番）。
+   KTN.adminDelete({ kind:'作品', name:'オノマトペの庭', onDone:function(reason){…} })。外枠は P2-11 の確認モーダル（.p211-modal）と同じ */
+KTN.DELETE_REASONS = ['重複している（同じ内容のページがほかにある）', '掲載の対象者からの削除の依頼', '問題報告への対応（掲載の方針に反する）', '投稿者からの依頼', 'その他'];
+KTN.adminDelete = function (o) {
+  /* o.verb＝操作の名前（既定「削除」。P90-1 の強制退会は「強制退会」）・o.reasons＝理由の選択肢・o.note＝下の注意書き・o.done＝終わったときのトースト */
+  var verb = o.verb || '削除';
+  var reasons = o.reasons || KTN.DELETE_REASONS;
+  var m = document.getElementById('ktnAdminDeleteModal');
+  if (!m) {
+    m = document.createElement('div');
+    m.className = 'p211-modal';
+    m.id = 'ktnAdminDeleteModal';
+    m.hidden = true;
+    m.innerHTML = '<div class="p211-modal__overlay" data-close></div>' +
+      '<div class="p211-modal__box" role="dialog" aria-modal="true" aria-labelledby="ktnAdminDeleteTtl">' +
+      '<p class="p211-modal__title" id="ktnAdminDeleteTtl"></p>' +
+      '<div class="p211-field"><label class="p211-label" for="ktnAdminDeleteReason"><span id="ktnAdminDeleteVerb"></span>の理由<span class="ktn-req">必須</span></label>' +
+      '<select class="p211-select" id="ktnAdminDeleteReason"></select></div>' +
+      '<div class="p211-field"><label class="p211-label" for="ktnAdminDeleteDetail">詳しい内容<span class="ktn-req">必須</span></label>' +
+      '<textarea class="p211-textarea" id="ktnAdminDeleteDetail" rows="4" maxlength="500"></textarea></div>' +
+      '<p class="p211-modal__note" id="ktnAdminDeleteNote"></p>' +
+      '<p class="p90cm-err" id="ktnAdminDeleteErr" hidden>理由と詳しい内容を入力してください。</p>' +
+      '<div class="p211-modal__foot"><button type="button" class="ktn-op-btn" data-close>キャンセル</button>' +
+      '<button type="button" class="ktn-op-btn ktn-op-btn--danger" id="ktnAdminDeleteOk"></button></div></div>';
+    document.body.appendChild(m);
+    m.addEventListener('click', function (e) { if (e.target.closest('[data-close]')) m.hidden = true; });
+  }
+  var sel = document.getElementById('ktnAdminDeleteReason'), det = document.getElementById('ktnAdminDeleteDetail'), err = document.getElementById('ktnAdminDeleteErr');
+  document.getElementById('ktnAdminDeleteTtl').textContent = (o.kind || '') + '「' + (o.name || '') + '」を' + verb + 'しますか？';
+  document.getElementById('ktnAdminDeleteVerb').textContent = verb;
+  sel.innerHTML = '<option value="">選んでください</option>' + reasons.map(function (r) { return '<option>' + r + '</option>'; }).join('');
+  det.placeholder = o.placeholder || '例：同じ展覧会が2件登録されていたため、新しいほうを削除（残したページ：…）';
+  document.getElementById('ktnAdminDeleteNote').textContent = o.note || '削除すると元に戻せません。理由は、削除の通知として管理者あてのメールで届き、記録に残ります。';
+  document.getElementById('ktnAdminDeleteOk').textContent = verb + 'する';
+  det.value = ''; err.hidden = true;
+  document.getElementById('ktnAdminDeleteOk').onclick = function () {
+    if (!sel.value || !det.value.trim()) { err.hidden = false; return; }
+    m.hidden = true;
+    if (o.onDone) o.onDone({ reason: sel.value, detail: det.value.trim() });
+    KTN.toast(o.done || '削除しました。理由を管理者あてのメールで送りました（デモ）');
+  };
+  m.hidden = false;
+  sel.focus();
+};
+
 /* P90 系のページ：デモバーに「管理者の種類」を足し、開けない種類なら中身の代わりに案内を出す・見るだけの種類なら帯を出す */
 function ktnAdminGateInit() {
   var page = window.ktnState.page;

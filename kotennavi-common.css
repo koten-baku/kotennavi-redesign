@@ -14212,3 +14212,34 @@ a.p9022-title{color:var(--accent);text-decoration:underline;text-underline-offse
 .ktn-admin-deny.is-view{border-left-color:#a06010}
 .ktn-mgmt-wrap.is-admin-view input,.ktn-mgmt-wrap.is-admin-view select,.ktn-mgmt-wrap.is-admin-view textarea,.ktn-mgmt-wrap.is-admin-view .ktn-op-btn,.ktn-mgmt-wrap.is-admin-view .ktn-switch{pointer-events:none;opacity:.55}
 .ktn-guide-nav-card[hidden],.ktn-section[hidden]{display:none} /* 管理者の種類で隠すカード・区分（P90）。display:flex が [hidden] を上書きするためのガード */
+
+/* ── P90-3 コンテンツサマリー（2026-10-29 作り替え）：数の表。表の骨組みは .p315-archive-table ── */
+.p903-sec{display:flex;flex-direction:column;gap:0}
+.p903-table td:last-child,.p903-table th:last-child{text-align:right;font-family:var(--fm);white-space:nowrap}
+.p903-table td{font-family:var(--fn);font-size:.84rem}
+.p903-sub{display:block;margin-top:2px;font-family:var(--fn);font-size:.7rem;color:var(--muted)}
+.p903-group{font-weight:600;vertical-align:top}
+.p905-new{display:flex;justify-content:flex-end} /* P90-5 の「新規展覧会を作成」（2026-10-29） */
+
+/* ══ コンテンツの管理ページ（P90-23 作品・P90-24 記事・P90-25 レビュー・P90-26 コメント・2026-10-29）と、削除の理由のモーダル（KTN.adminDelete）══
+   一覧の骨組みは .p315-archive-table・.p319-toolbar。ここには行の中身と操作の並びだけ */
+.p90cm-table td{vertical-align:top}
+.p90cm-table tr.is-hidden td{color:var(--muted)}
+.p90cm-title{font-family:var(--fs);font-weight:600;color:var(--accent);text-decoration:underline;text-underline-offset:2px}
+.p90cm-sub{display:block;margin-top:3px;font-family:var(--fn);font-size:.72rem;color:var(--muted)}
+a.p90cm-sub{color:var(--accent)}
+.p90cm-text{display:block;font-family:var(--fn);font-size:.84rem;line-height:1.7;color:var(--ink)}
+.p90cm-mark{display:inline-block;margin:4px 0 0 0;padding:1px 7px;font-family:var(--fn);font-size:.66rem;font-weight:600;color:#a06010;background:rgba(160,96,16,.08);border-radius:3px}
+.p90cm-title + .p90cm-mark{margin-left:6px}
+.p90cm-acts{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center}
+.p90cm-kw{min-width:160px}
+.p90cm-err{margin:0 0 12px;font-family:var(--fn);font-size:.76rem;font-weight:600;color:#b43c14}
+.p90cm-err[hidden]{display:none}
+#ktnAdminDeleteModal .p211-field{margin-bottom:12px}
+.p315-archive-table tr.is-hidden td{color:var(--muted)} /* 管理者の一覧で非公開にした行（P90-4〜6・2026-10-29） */
+.p90cm-title--plain{color:var(--ink);text-decoration:none}
+/* P90-13 の上の「Stripe：支払いの異議・決済の失敗」（2026-10-29） */
+.p9013-stripe{margin:0 0 4px;padding:14px 16px;background:#fff;border:1px solid var(--border);border-left:4px solid #b43c14;border-radius:4px;display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+.p9013-stripe__title{margin:0;font-family:var(--fn);font-size:.84rem;font-weight:700;color:var(--ink);display:flex;align-items:center;gap:8px}
+.p9013-stripe__list{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px;font-family:var(--fn);font-size:.8rem;color:var(--ink)}
+.p9013-stripe__kind{display:inline-block;margin-right:8px;font-weight:700;color:#b43c14}
