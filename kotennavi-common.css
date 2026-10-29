@@ -14170,7 +14170,7 @@ a.ktn-coupon--link:hover{opacity:.86}
 .ktn-coupon--print .ktn-coupon__svc{border-left-color:#231815;background:none}
 .ktn-coupon--print .ktn-coupon__svc-label{font-family:var(--fm);font-size:.6rem;font-weight:700;letter-spacing:.1em}
 
-/* ══ P90-21 対応案件・P90-21-1 対応案件の詳細・P90-22 更新の記録・P90 の「対応待ち」（2026-10-28 新設・handoff 追174-350）══
+/* ══ P90-21 対応案件・P90-21-1 対応案件の詳細・P90-22 更新の記録（2026-10-28 新設・handoff 追174-350）══
    一覧・詳細の骨組み（タブ・表・見出し・届いた内容の箱・返信のパネル・ボタン行）は P90-2／P90-2-1 の .p902-* をそのまま使う。
    ここには、このページだけの部分（件名の折り返し・対象の行・担当と状態・履歴・見た・対応待ちの数）だけを書く。 */
 .p9021-table td.p9021-cell--subject{white-space:normal;min-width:220px;line-height:1.6}
@@ -14195,14 +14195,6 @@ a.p9022-title{color:var(--accent);text-decoration:underline;text-underline-offse
 .p9022-table tr.is-seen td{color:var(--muted)}
 .p9022-seen.is-on{background:var(--tag-bg,#f5f3ef);color:var(--muted)}
 
-.p90-todo{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 16px}
-.p90-todo__item{display:flex;align-items:center;gap:10px;flex:1 1 200px;padding:12px 14px;background:#fff;border:1px solid var(--border);border-left:3px solid var(--page-accent,#3a4a5a);border-radius:4px;text-decoration:none;color:var(--ink);transition:border-color .18s}
-.p90-todo__item:hover{border-color:rgba(0,0,0,.18);border-left-color:var(--page-accent,#3a4a5a)}
-.p90-todo__num{font-family:var(--fm);font-size:1.5rem;font-weight:600;line-height:1;color:var(--ink);min-width:1.6em;text-align:right}
-.p90-todo__label{display:flex;flex-direction:column;gap:2px;font-family:var(--fn);font-size:.8rem;font-weight:600;line-height:1.4}
-.p90-todo__sub{font-size:.7rem;font-weight:600;color:#b43c14}
-.p90-todo__item.is-zero{border-left-color:var(--border)}
-.p90-todo__item.is-zero .p90-todo__num{color:var(--muted)}
 
 /* ══ 管理者の種類（E 編集・問合せ／L LIAISON+ 対応／A admin・2026-10-29・common.js ktnAdminGateInit）══
    開けない種類＝管理ボックスを隠して案内／見るだけの種類＝案内の帯＋入力と操作のボタンを止める（タブ・行を開くのはそのまま） */
@@ -14213,12 +14205,12 @@ a.p9022-title{color:var(--accent);text-decoration:underline;text-underline-offse
 .ktn-mgmt-wrap.is-admin-view input,.ktn-mgmt-wrap.is-admin-view select,.ktn-mgmt-wrap.is-admin-view textarea,.ktn-mgmt-wrap.is-admin-view .ktn-op-btn,.ktn-mgmt-wrap.is-admin-view .ktn-switch{pointer-events:none;opacity:.55}
 .ktn-guide-nav-card[hidden],.ktn-section[hidden]{display:none} /* 管理者の種類で隠すカード・区分（P90）。display:flex が [hidden] を上書きするためのガード */
 
-/* ── P90-3 コンテンツサマリー（2026-10-29 作り替え）：数の表。表の骨組みは .p315-archive-table ── */
-.p903-sec{display:flex;flex-direction:column;gap:0}
-.p903-table td:last-child,.p903-table th:last-child{text-align:right;font-family:var(--fm);white-space:nowrap}
-.p903-table td{font-family:var(--fn);font-size:.84rem}
-.p903-sub{display:block;margin-top:2px;font-family:var(--fn);font-size:.7rem;color:var(--muted)}
-.p903-group{font-weight:600;vertical-align:top}
+/* ── P90-6 コンテンツサマリー（2026-10-29 作り替え・旧「最新の展覧会一覧」）：数の表。表の骨組みは .p315-archive-table ── */
+.p906-sec{display:flex;flex-direction:column;gap:0}
+.p906-table td:last-child,.p906-table th:last-child{text-align:right;font-family:var(--fm);white-space:nowrap}
+.p906-table td{font-family:var(--fn);font-size:.84rem}
+.p906-sub{display:block;margin-top:2px;font-family:var(--fn);font-size:.7rem;color:var(--muted)}
+.p906-group{font-weight:600;vertical-align:top}
 .p905-new{display:flex;justify-content:flex-end} /* P90-5 の「新規展覧会を作成」（2026-10-29） */
 
 /* ══ コンテンツの管理ページ（P90-23 作品・P90-24 記事・P90-25 レビュー・P90-26 コメント・2026-10-29）と、削除の理由のモーダル（KTN.adminDelete）══
@@ -14246,3 +14238,6 @@ a.p90cm-sub{color:var(--accent)}
 /* 管理者のアイコン（サイドバー・下のナビ）の種類の文字（A／L／E・2026-10-29・ktnRoleDef） */
 .ktn-role-lv{font-family:var(--fm);font-weight:700;font-size:1.25rem;line-height:1;color:#fff;letter-spacing:0}
 .ktn-bottom-nav__role .ktn-role-lv{font-size:1rem}
+/* P90 の管理者メニューのカードの未対応の件数（2026-10-29） */
+.p90-card-count{display:inline-block;margin-left:8px;padding:1px 8px;border-radius:10px;font-family:var(--fn);font-size:.66rem;font-weight:700;line-height:1.6;vertical-align:2px;color:#fff;background:#3a4a5a}
+.p90-card-count--urgent{background:#b43c14;margin-left:4px}

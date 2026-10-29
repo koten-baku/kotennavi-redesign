@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>最新の展覧会一覧 — 管理者 | 個展なび</title>
+  <title>コンテンツサマリー — 管理者 | 個展なび</title>
   <meta name="robots" content="noindex,nofollow">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
@@ -104,136 +104,63 @@
   <main class="ktn-main" id="ktnMain">
     <div class="ktn-content">
 
-      <!-- 管理ボックス -->
+      <!-- 管理ボックス：コンテンツサマリー（2026-10-29 作り替え・旧「最新の展覧会一覧」の代わり。admin だけ）
+           今のサイトの「現在ステータス」と同じ中身。数はデモの値（本番は集計の API） -->
       <div class="p906-wrap ktn-mgmt-wrap ktn-mgmt-stack">
 
-        <!-- ページヘッド -->
         <div class="ktn-mgmt-head">
-          <h2 class="ktn-mgmt-head__title">最新の展覧会一覧</h2>
-          <p class="ktn-mgmt-head__en">RECENTLY CREATED EXHIBITIONS</p>
-          <p class="ktn-mgmt-head__desc">サイト全体で作成された展覧会を、作成日の新しい順に一覧します。公開・下書き・確認待ちを問わず横断して表示するため、最近の登録状況の把握にご利用ください。</p>
+          <h2 class="ktn-mgmt-head__title">コンテンツサマリー</h2>
+          <p class="ktn-mgmt-head__en">STATISTICS</p>
+          <p class="ktn-mgmt-head__meta">集計日時　2026.10.29 06:00</p>
         </div>
 
-        <!-- ツールバー -->
-        <div class="p319-toolbar">
-          <div class="p319-toolbar__filters">
-            <label class="p319-filter">
-              <span class="p319-filter__label">ジャンル</span>
-              <select class="p319-filter__sel" id="p906FilterGenre">
-                <option value="">すべて</option>
-                <option value="art">アート</option>
-                <option value="craft">クラフト</option>
-                <option value="photo">写真</option>
-                <option value="fashion">ファッション</option>
-              </select>
-            </label>
-            <label class="p319-filter">
-              <span class="p319-filter__label">状態</span>
-              <select class="p319-filter__sel" id="p906FilterStatus">
-                <option value="">すべて</option>
-                <option value="published">公開済み</option>
-                <option value="review">確認待ち</option>
-                <option value="draft">下書き</option>
-              </select>
-            </label>
+        <div class="p906-sec">
+          <h3 class="p902-review-section__title">コンテンツサマリー</h3>
+          <div class="p315-archive-table-wrap">
+            <table class="p315-archive-table p906-table" aria-label="コンテンツサマリー">
+              <thead><tr><th>タイプ</th><th>数</th></tr></thead>
+              <tbody>
+                <tr><td>展覧会</td><td>53,604</td></tr>
+                <tr><td>クリエイター</td><td>59,531<span class="p906-sub">うちオーナーあり 3,295</span></td></tr>
+                <tr><td>ギャラリー</td><td>5,673<span class="p906-sub">うちオーナーあり 1,024</span></td></tr>
+                <tr><td>作品</td><td>145</td></tr>
+                <tr><td>記事</td><td>23</td></tr>
+                <tr><td>レビュー</td><td>3,170</td></tr>
+              </tbody>
+            </table>
           </div>
-          <p class="ktn-count ktn-count--result">5件</p>
         </div>
 
-        <!-- 一覧テーブル -->
-        <div class="p315-archive-table-wrap">
-          <table class="p315-archive-table" aria-label="最新の展覧会一覧">
-            <thead>
-              <tr>
-                <th>作成日</th>
-                <th>展覧会名</th>
-                <th>クリエイター・ギャラリー名</th>
-                <th>会場</th>
-                <th>会期</th>
-                <th>状態</th>
-                <th>操作</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td data-label="作成日">2026.08.22</td>
-                <td data-label="展覧会名">未割当オーナーの展覧会「工房めぐり」</td>
-                <td data-label="クリエイター・ギャラリー名"><span style="color:var(--muted);font-size:.82rem">未割当</span></td>
-                <td data-label="会場">未定</td>
-                <td data-label="会期">未定</td>
-                <td data-label="状態"><span style="color:var(--muted);font-weight:600;font-size:.82rem">下書き</span></td>
-                <td data-label="操作">
-                  <div style="display:flex;gap:8px;flex-wrap:wrap">
-                    <a class="ktn-action-btn" href="#">編集 →</a>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td data-label="作成日">2026.08.20</td>
-                <td data-label="展覧会名">松田啓佑展 vol.2（クローン作成分）</td>
-                <td data-label="クリエイター・ギャラリー名"><span class="cb cb-person cb-gallery" style="font-size:.56rem">gallery</span> YUGEN Gallery</td>
-                <td data-label="会場">YUGEN Gallery</td>
-                <td data-label="会期">2026.11.01 〜 2026.11.20</td>
-                <td data-label="状態"><span style="color:#8b5e3c;font-weight:600;font-size:.82rem">確認待ち</span></td>
-                <td data-label="操作">
-                  <div style="display:flex;gap:8px;flex-wrap:wrap">
-                    <a class="ktn-action-btn" href="./kotennavi-p2-11.html">編集 →</a>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td data-label="作成日">2026.08.18</td>
-                <td data-label="展覧会名">山口はるか 陶芸展</td>
-                <td data-label="クリエイター・ギャラリー名"><span class="cb cb-person cb-creator" style="font-size:.56rem">creator</span> 山口はるか</td>
-                <td data-label="会場">ART FACTORY城南島</td>
-                <td data-label="会期">2026.08.20 〜 2026.09.10</td>
-                <td data-label="状態"><span class="sb sb-upcoming">これから開催</span></td>
-                <td data-label="操作">
-                  <div style="display:flex;gap:8px;flex-wrap:wrap">
-                    <a class="ktn-action-btn" href="#">編集 →</a>
-                    <a class="ktn-action-btn" href="#">詳細を見る →</a>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td data-label="作成日">2026.08.15</td>
-                <td data-label="展覧会名">松田啓佑展［仮称］</td>
-                <td data-label="クリエイター・ギャラリー名"><span class="cb cb-person cb-gallery" style="font-size:.56rem">gallery</span> YUGEN Gallery</td>
-                <td data-label="会場">YUGEN Gallery</td>
-                <td data-label="会期">2026.08.15 〜 2026.09.05</td>
-                <td data-label="状態"><span class="sb sb-live"><span class="pulse"></span>開催中</span></td>
-                <td data-label="操作">
-                  <div style="display:flex;gap:8px;flex-wrap:wrap">
-                    <a class="ktn-action-btn" href="./kotennavi-p2-11.html">編集 →</a>
-                    <a class="ktn-action-btn" href="./kotennavi-p2.html">詳細を見る →</a>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td data-label="作成日">2026.08.10</td>
-                <td data-label="展覧会名">田中透 個展「あなたが知らないオノマトペ」</td>
-                <td data-label="クリエイター・ギャラリー名"><span class="cb cb-person cb-creator" style="font-size:.56rem">creator</span> 田中透</td>
-                <td data-label="会場">YUGEN Gallery</td>
-                <td data-label="会期">2026.08.10 〜 2026.08.30</td>
-                <td data-label="状態"><span class="sb sb-live"><span class="pulse"></span>開催中</span></td>
-                <td data-label="操作">
-                  <div style="display:flex;gap:8px;flex-wrap:wrap">
-                    <a class="ktn-action-btn" href="#">編集 →</a>
-                    <a class="ktn-action-btn" href="./kotennavi-p2.html">詳細を見る →</a>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="p906-sec">
+          <h3 class="p902-review-section__title">ユーザーサマリー</h3>
+          <div class="p315-archive-table-wrap">
+            <table class="p315-archive-table p906-table" aria-label="ユーザーサマリー">
+              <thead><tr><th>タイプ</th><th>数</th></tr></thead>
+              <tbody>
+                <tr><td>ユーザー</td><td>7,334</td></tr>
+                <tr><td>メールの受け取り（① リマインダー）</td><td>3,672</td></tr>
+              </tbody>
+            </table>
+          </div>
         </div>
 
-        <!-- ゼロ状態 -->
-        <div class="p319-empty" id="p906Empty" hidden>
-          <p class="p319-empty__msg">該当する展覧会がありません。</p>
+        <div class="p906-sec">
+          <h3 class="p902-review-section__title">ユーザーアクションサマリー</h3>
+          <div class="p315-archive-table-wrap">
+            <table class="p315-archive-table p906-table" aria-label="ユーザーアクションサマリー">
+              <thead><tr><th colspan="2">タイプ</th><th>数</th></tr></thead>
+              <tbody>
+                <tr><td rowspan="2" class="p906-group">ウォッチ</td><td>クリエイター</td><td>4,739</td></tr>
+                <tr><td>ギャラリー</td><td>3,421</td></tr>
+                <tr><td rowspan="3" class="p906-group">興味あり！</td><td>展覧会</td><td>6,519</td></tr>
+                <tr><td>作品</td><td>0</td></tr>
+                <tr><td>記事</td><td>3</td></tr>
+                <tr><td colspan="2">コメント</td><td>1</td></tr>
+                <tr><td colspan="2">チェックイン</td><td>3,170</td></tr>
+              </tbody>
+            </table>
+          </div>
         </div>
-
-        <!-- ページング -->
-        <nav class="ktn-pagination" id="p906Pagination" aria-label="ページ送り" hidden></nav>
 
       </div><!-- /.ktn-mgmt-wrap -->
 
@@ -247,7 +174,7 @@
 
 <nav class="ktn-bottom-nav" id="ktnBottomNav"><div class="ktn-bottom-nav__inner" id="ktnBottomNavInner"></div></nav>
 
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Top","item":"https://koten-navi.com/"},{"@type":"ListItem","position":2,"name":"管理者","item":"https://koten-navi.com/p90"},{"@type":"ListItem","position":3,"name":"最新の展覧会一覧","item":"https://koten-navi.com/p90-6"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Top","item":"https://koten-navi.com/"},{"@type":"ListItem","position":2,"name":"管理者","item":"https://koten-navi.com/p90"},{"@type":"ListItem","position":3,"name":"コンテンツサマリー"}]}</script>
 
 <script src="./kotennavi-common.js"></script>
 <script src="./kotennavi-pages.js"></script>
