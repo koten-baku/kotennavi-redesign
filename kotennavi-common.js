@@ -204,8 +204,25 @@ window.ktnListQrClose = ktnListQrClose;
      P90-9側TEMPLATESとはスコープが別（ページ間の実データ連携がないため個別配列として保持＝P90-2/P90-11-1と同じ方針）
    ・.ktn-auth-overlay / .ktn-auth-modal のシェルを再利用（ktnListQrと同型）
 ══════════════════════════════════ */
+/* 公式 SNS の告知文（単一ソース・2026-10-29）。P90-4「SNS 告知文の作成」と P2 の管理者メニュー「SNS テキスト生成」が同じ形を使う（今のサイトと同じ形）。
+   kind＝'open'（今日から開催＝会期の初日）／'new'（新着＝公開した日）。sns＝省略（X・Facebook・Threads）／'ig'（Instagram）。e＝{ title, venue, pref, start:'YYYY-MM-DD', end, url, type:'個展'|'グループ展' } */
+KTN.snsText = function (e, kind, sns) {
+  /* sns＝'ig'（Instagram）：説明文の URL は押せないので、URL の代わりにプロフィールのリンクへ案内する（2026-10-29）。
+     プロフィールのリンクは、その日の一覧（KTN.SNS_PROFILE_LINKS）＝毎日替えなくて済む */
+  var link = sns === 'ig' ? '\nプロフィールのリンクから、' + (kind === 'open' ? '今日から開催' : '新着') + 'の展覧会を見られます' : ' ' + e.url;
+  var DOW = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+  function d(s, withYear) { var t = new Date(s + 'T00:00:00'); var md = (t.getMonth() + 1) + '/' + ('0' + t.getDate()).slice(-2); return (withYear ? t.getFullYear() + '/' + ('0' + (t.getMonth() + 1)).slice(-2) + '/' + ('0' + t.getDate()).slice(-2) : ('0' + (t.getMonth() + 1)).slice(-2) + '/' + ('0' + t.getDate()).slice(-2)) + '(' + DOW[t.getDay()] + ')'; }
+  var place = e.venue + '(' + e.pref + ')';
+  if (kind === 'open') return '【個展なび-今日から開催】' + e.title + '@' + place + ' ' + d(e.end) + 'まで' + link + '\n#個展なび #' + e.pref + 'の展覧会';
+  return '【個展なび新着情報】' + e.title + ' ' + d(e.start, true) + '-' + d(e.end, true) + ' @ ' + place + link + '\n#' + (e.type || '個展') + ' #個展なび #' + e.pref + 'の展覧会';
+};
+/* Instagram のプロフィールに置くリンク（展覧会の検索 P10 を条件つきで開く・2026-10-29）。本番の URL は後工程で決める */
+KTN.SNS_PROFILE_LINKS = [
+  { label: '今日から開催', url: 'https://koten-navi.com/p10?f=when:opentoday' },
+  { label: '新着', url: 'https://koten-navi.com/p10?f=new:1' }
+];
 const P2_SNS_TEXT_DATA = {
-  sns: '【個展なび新着情報】あなたが知らないオノマトペ 2026/02/18(wed)-2026/03/05(thu) @ Gallery SOIL 渋谷(東京都) https://koten-navi.com/p2 #個展 #個展なび #東京都の展覧会',
+  sns: KTN.snsText({ title: 'あなたが知らないオノマトペ', venue: 'Gallery SOIL 渋谷', pref: '東京都', start: '2026-02-18', end: '2026-03-05', url: 'https://koten-navi.com/p2', type: '個展' }, 'new'),
   mailUrl: '展覧会名：あなたが知らないオノマトペ\nhttps://koten-navi.com/p2'
 };
 const P2_SNS_MAIL_TEMPLATES = [
@@ -2237,12 +2254,12 @@ const PAGES = {
   'p90-1': { n: '管理者-ユーザー新規/クローン', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['ユーザー新規/クローン', null]] },
   'p90-2': { n: '管理者-クリエイター/ギャラリー機能申込管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['クリエイター/ギャラリー機能申込管理', null]] },
   'p90-2-1': { n: '管理者-クリエイター/ギャラリー機能申込審査', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['クリエイター/ギャラリー機能申込管理', 'kotennavi-p90-2.html'], ['審査', null]] },
-  'p90-3': { n: '管理者-展覧会新規', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['展覧会新規', null]] },
-  'p90-4': { n: '管理者-本日開催・公開の展覧会一覧', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['本日開催・公開の展覧会一覧', null]] },
-  'p90-5': { n: '管理者-未公開の展覧会一覧', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['未公開の展覧会一覧', null]] },
+  'p90-3': { n: '管理者-コンテンツ管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['コンテンツ管理', null]] },
+  'p90-4': { n: '管理者-SNS 告知文の作成', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['SNS 告知文の作成', null]] },
+  'p90-5': { n: '管理者-展覧会の確認・新規作成', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['展覧会の確認・新規作成', null]] },
   'p90-6': { n: '管理者-コンテンツサマリー', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['コンテンツサマリー', null]] },
-  'p90-7': { n: '管理者-クリエイター新規/クローン', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['クリエイター新規/クローン', null]] },
-  'p90-8': { n: '管理者-ギャラリー新規/クローン', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['ギャラリー新規/クローン', null]] },
+  'p90-7': { n: '管理者-クリエイター管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['クリエイター管理', null]] },
+  'p90-8': { n: '管理者-ギャラリー管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['ギャラリー管理', null]] },
   'p90-9': { n: '管理者-メールテンプレート管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['メールテンプレート管理', null]] },
   'p90-10': { n: '管理者-ダッシュボード', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['ダッシュボード', null]] },
   'p90-11': { n: '管理者-リエゾンプラス機能申込管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['リエゾンプラス機能申込管理', null]] },
@@ -2258,6 +2275,7 @@ const PAGES = {
   'p90-21': { n: '管理者-対応案件', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['対応案件', null]] },
   'p90-21-1': { n: '管理者-対応案件の詳細', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['対応案件', 'kotennavi-p90-21.html'], ['対応案件の詳細', null]] },
   'p90-22': { n: '管理者-更新の記録', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['更新の記録', null]] },
+  'p90-27': { n: '管理者-展覧会管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['展覧会管理', null]] },
   'p90-23': { n: '管理者-作品管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['作品管理', null]] },
   'p90-24': { n: '管理者-記事管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['記事管理', null]] },
   'p90-25': { n: '管理者-レビュー管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['レビュー管理', null]] },
@@ -3463,7 +3481,7 @@ function getActions(page, role) {
     return '';
   }
 
-  if (['p90-2', 'p90-2-1', 'p90-4', 'p90-9', 'p90-10', 'p90-11', 'p90-11-1', 'p90-13', 'p90-14', 'p90-17', 'p90-18', 'p90-20'].includes(page)) {
+  if (['p90-2', 'p90-2-1', 'p90-9', 'p90-10', 'p90-11', 'p90-11-1', 'p90-13', 'p90-14', 'p90-17', 'p90-18', 'p90-20'].includes(page)) {
     if (role === 'admin') return owbtn('info', 'ガイド');
     return '';
   }
@@ -3586,8 +3604,8 @@ KTN.ADMIN_LEVELS = { E: { n: 1, label: '編集・問合せ' }, L: { n: 2, label:
 KTN.ADMIN_PAGE = {
   'p90': 'E', 'p90-2': 'E', 'p90-2-1': 'E', 'p90-4': 'E', 'p90-5': 'E', 'p90-7': 'E', 'p90-8': 'E', 'p90-21': 'E', 'p90-21-1': 'E',
   'p90-10': 'L', 'p90-12': 'L', 'p90-13': 'L', 'p90-14': 'L', 'p90-15': 'L', 'p90-16': 'L', 'p90-20': { view: 'L', edit: 'A' },
-  'p90-23': 'E', 'p90-24': 'E', 'p90-25': 'E', 'p90-26': 'E',
-  'p90-1': 'A', 'p90-6': 'A', 'p90-9': 'A', 'p90-11': 'A', 'p90-11-1': 'A', 'p90-17': 'A', 'p90-18': 'A', 'p90-19': 'A', 'p90-22': 'A'
+  'p90-3': 'E', 'p90-27': 'E', 'p90-24': 'E', 'p90-25': 'E', 'p90-26': 'E',
+  'p90-1': 'A', 'p90-6': 'A', 'p90-23': 'A', 'p90-9': 'A', 'p90-11': 'A', 'p90-11-1': 'A', 'p90-17': 'A', 'p90-18': 'A', 'p90-19': 'A', 'p90-22': 'A'
 };
 KTN.adminLevel = function () {
   try { var v = sessionStorage.getItem('ktn-admin-level'); if (KTN.ADMIN_LEVELS[v]) return v; } catch (e) {}

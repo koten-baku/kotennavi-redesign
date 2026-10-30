@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>未公開の展覧会一覧 — 管理者 | 個展なび</title>
+  <title>展覧会の確認・新規作成 — 管理者 | 個展なび</title>
   <meta name="robots" content="noindex,nofollow">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
@@ -109,122 +109,107 @@
 
         <!-- ページヘッド -->
         <div class="ktn-mgmt-head">
-          <h2 class="ktn-mgmt-head__title">未公開の展覧会一覧</h2>
-          <p class="ktn-mgmt-head__en">UNPUBLISHED EXHIBITIONS</p>
-          <p class="ktn-mgmt-head__desc">投稿者・管理者が作成した下書き、および管理者確認待ちの展覧会を一覧します。オーナー未割当の展覧会もここに含まれます。内容を確認し、必要事項がそろっていれば「確認して公開する」から公開できます。展覧会を新しく作るときは「新規展覧会を作成」から。</p>
+          <h2 class="ktn-mgmt-head__title">展覧会の確認・新規作成</h2>
+          <p class="ktn-mgmt-head__en">EXHIBITION REVIEW / NEW</p>
+          <p class="ktn-mgmt-head__desc">「未確認」は確認依頼が届いた展覧会、「未公開」は下書きの展覧会です。オーナー未割当の展覧会も含みます。「確認する」から展覧会の編集画面の管理者の欄を開き、開催場所・出展クリエイターのリンク付けを確かめて「確認済み」にします。</p>
         </div>
 
         <!-- 新規作成（2026-10-29：旧 P90-3「展覧会新規」の代わり＝展覧会の編集画面 P2-11 を新規で開く） -->
         <div class="p905-new">
-          <a class="ktn-action-btn" href="./kotennavi-p2-11.html?mode=new">新規展覧会を作成 →</a>
+          <a class="ktn-action-btn p905-new__btn" href="./kotennavi-p2-11.html?mode=new">新規展覧会を作成 →</a>
+        </div>
+
+        <!-- タブ：未確認（確認待ち）／未公開（下書き）（2026-10-29 ユーザー指示・旧「状態」の絞り込みの代わり。行の切り替えは pages.js KTN.pages['p90-5']） -->
+        <div class="p902-tab-nav" role="tablist">
+          <button type="button" class="p902-tab-btn is-active" role="tab" data-tab="review" aria-selected="true">未確認 <span class="ktn-count ktn-count--pill is-idle"></span></button>
+          <button type="button" class="p902-tab-btn" role="tab" data-tab="draft" aria-selected="false">未公開 <span class="ktn-count ktn-count--pill is-idle"></span></button>
         </div>
 
         <!-- ツールバー -->
         <div class="p319-toolbar">
           <div class="p319-toolbar__filters">
-            <label class="p319-filter">
-              <span class="p319-filter__label">状態</span>
-              <select class="p319-filter__sel" id="p905FilterStatus">
-                <option value="">すべて</option>
-                <option value="draft">下書き</option>
-                <option value="review">確認待ち</option>
-              </select>
-            </label>
-            <label class="p319-filter">
-              <span class="p319-filter__label">ジャンル</span>
-              <select class="p319-filter__sel" id="p905FilterGenre">
-                <option value="">すべて</option>
-                <option value="art">アート</option>
-                <option value="craft">クラフト</option>
-                <option value="photo">写真</option>
-                <option value="fashion">ファッション</option>
-              </select>
-            </label>
           </div>
-          <p class="ktn-count ktn-count--result">5件</p>
+          <p class="ktn-count ktn-count--result" id="p905Count"></p>
         </div>
 
         <!-- 一覧テーブル -->
         <div class="p315-archive-table-wrap">
-          <table class="p315-archive-table" aria-label="未公開の展覧会一覧">
+          <table class="p315-archive-table" aria-label="展覧会の確認・新規作成">
             <thead>
               <tr>
                 <th>展覧会名</th>
-                <th>クリエイター・ギャラリー名</th>
-                <th>会場</th>
+                <th>投稿者</th>
+                <th>日付</th>
                 <th>会期（予定）</th>
                 <th>状態</th>
                 <th>操作</th>
               </tr>
             </thead>
             <tbody>
+              <!-- 列（2026-10-29 ユーザー指示）：展覧会名（展覧会のページへのリンク）・投稿者（名前・ロール・UID）・日付（未確認＝確認依頼の日／未公開＝最後に保存した日）。
+                   旧「クリエイター・ギャラリー名」「会場」の列はやめた。データはデモの値 -->
               <tr>
-                <td data-label="展覧会名">田中透 個展「新作連作」</td>
-                <td data-label="クリエイター・ギャラリー名"><span class="cb cb-person cb-creator" style="font-size:.56rem">creator</span> 田中透</td>
-                <td data-label="会場">YUGEN Gallery</td>
-                <td data-label="会期（予定）">2026.10.01 〜 2026.10.20</td>
-                <td data-label="状態"><span style="color:var(--muted);font-weight:600;font-size:.82rem">下書き</span></td>
-                <td data-label="操作">
-                  <div style="display:flex;gap:8px;flex-wrap:wrap">
-                    <a class="ktn-action-btn" href="./kotennavi-p2-11.html">編集 →</a>
-                    <a class="ktn-action-btn" href="./kotennavi-p2-11.html?mode=clone">クローン →</a>
-                    <button type="button" class="ktn-op-btn ktn-op-btn--danger-outline ktn-op-btn--sm">削除</button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td data-label="展覧会名">展覧会「工芸の現在」</td>
-                <td data-label="クリエイター・ギャラリー名"><span style="color:var(--muted);font-size:.82rem">未割当</span></td>
-                <td data-label="会場">こだま画廊</td>
-                <td data-label="会期（予定）">2026.09.15 〜 2026.10.05</td>
-                <td data-label="状態"><span style="color:#8b5e3c;font-weight:600;font-size:.82rem">確認待ち</span></td>
-                <td data-label="操作">
-                  <div style="display:flex;gap:8px;flex-wrap:wrap">
-                    <a class="ktn-action-btn" href="./kotennavi-p2-11.html">編集 →</a>
-                    <a class="ktn-action-btn" href="./kotennavi-p2-11.html?mode=clone">クローン →</a>
-                    <button type="button" class="ktn-op-btn ktn-op-btn--primary ktn-op-btn--sm">確認して公開する</button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td data-label="展覧会名">Gallery SOIL 次回展「β」</td>
-                <td data-label="クリエイター・ギャラリー名"><span class="cb cb-person cb-gallery" style="font-size:.56rem">gallery</span> Gallery SOIL 渋谷</td>
-                <td data-label="会場">Gallery SOIL 渋谷</td>
-                <td data-label="会期（予定）">未定</td>
-                <td data-label="状態"><span style="color:var(--muted);font-weight:600;font-size:.82rem">下書き</span></td>
-                <td data-label="操作">
-                  <div style="display:flex;gap:8px;flex-wrap:wrap">
-                    <a class="ktn-action-btn" href="./kotennavi-p2-11.html">編集 →</a>
-                    <a class="ktn-action-btn" href="./kotennavi-p2-11.html?mode=clone">クローン →</a>
-                    <button type="button" class="ktn-op-btn ktn-op-btn--danger-outline ktn-op-btn--sm">削除</button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td data-label="展覧会名">松田啓佑展 vol.2（クローン作成分）</td>
-                <td data-label="クリエイター・ギャラリー名"><span class="cb cb-person cb-gallery" style="font-size:.56rem">gallery</span> YUGEN Gallery</td>
-                <td data-label="会場">YUGEN Gallery</td>
+                <td data-label="展覧会名"><a class="p90cm-title" href="./kotennavi-p2.html" target="_blank" rel="noopener">田中透 個展「新作連作」</a></td>
+                <td data-label="投稿者"><span class="p905-who">田中透</span><span class="p905-who__meta"><span class="cb cb-person cb-creator">creator</span> U-10003</span></td>
+                <td data-label="日付"><span class="p905-date">2026.10.20</span><span class="p905-who__meta">最後に保存</span></td>
                 <td data-label="会期（予定）">2026.11.01 〜 2026.11.20</td>
-                <td data-label="状態"><span style="color:#8b5e3c;font-weight:600;font-size:.82rem">確認待ち</span></td>
+                <td data-label="状態"><span class="ktn-review-status ktn-review-status--new">下書き</span></td>
                 <td data-label="操作">
-                  <div style="display:flex;gap:8px;flex-wrap:wrap">
+                  <div>
                     <a class="ktn-action-btn" href="./kotennavi-p2-11.html">編集 →</a>
                     <a class="ktn-action-btn" href="./kotennavi-p2-11.html?mode=clone">クローン →</a>
-                    <button type="button" class="ktn-op-btn ktn-op-btn--primary ktn-op-btn--sm">確認して公開する</button>
                   </div>
                 </td>
               </tr>
               <tr>
-                <td data-label="展覧会名">未割当オーナーの展覧会「工房めぐり」</td>
-                <td data-label="クリエイター・ギャラリー名"><span style="color:var(--muted);font-size:.82rem">未割当</span></td>
-                <td data-label="会場">未定</td>
-                <td data-label="会期（予定）">未定</td>
-                <td data-label="状態"><span style="color:var(--muted);font-weight:600;font-size:.82rem">下書き</span></td>
+                <td data-label="展覧会名"><a class="p90cm-title" href="./kotennavi-p2.html" target="_blank" rel="noopener">展覧会「工芸の現在」</a></td>
+                <td data-label="投稿者"><span class="p905-who">山本（事務局）</span><span class="p905-who__meta"><span class="p905-role">admin</span> U-90001・掲載依頼から作成</span></td>
+                <td data-label="日付"><span class="p905-date">2026.10.27</span><span class="p905-who__meta">確認依頼</span></td>
+                <td data-label="会期（予定）">2026.11.15 〜 2026.12.05</td>
+                <td data-label="状態"><span class="ktn-review-status ktn-review-status--pending">確認待ち</span></td>
                 <td data-label="操作">
-                  <div style="display:flex;gap:8px;flex-wrap:wrap">
+                  <div>
+                    <a class="ktn-action-btn" href="./kotennavi-p2-11.html?mode=clone">クローン →</a>
+                    <a class="ktn-action-btn ktn-action-btn--alert" href="./kotennavi-p2-11.html#p211AdminBlock">確認する →</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td data-label="展覧会名"><a class="p90cm-title" href="./kotennavi-p2.html" target="_blank" rel="noopener">Gallery SOIL 次回展「β」</a></td>
+                <td data-label="投稿者"><span class="p905-who">Gallery SOIL 渋谷</span><span class="p905-who__meta"><span class="cb cb-person cb-gallery">gallery</span> U-10155</span></td>
+                <td data-label="日付"><span class="p905-date">2026.10.18</span><span class="p905-who__meta">最後に保存</span></td>
+                <td data-label="会期（予定）">未定</td>
+                <td data-label="状態"><span class="ktn-review-status ktn-review-status--new">下書き</span></td>
+                <td data-label="操作">
+                  <div>
                     <a class="ktn-action-btn" href="./kotennavi-p2-11.html">編集 →</a>
                     <a class="ktn-action-btn" href="./kotennavi-p2-11.html?mode=clone">クローン →</a>
-                    <button type="button" class="ktn-op-btn ktn-op-btn--danger-outline ktn-op-btn--sm">削除</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td data-label="展覧会名"><a class="p90cm-title" href="./kotennavi-p2.html" target="_blank" rel="noopener">松田啓佑展 vol.2</a></td>
+                <td data-label="投稿者"><span class="p905-who">YUGEN Gallery</span><span class="p905-who__meta"><span class="cb cb-person cb-gallery">gallery</span> U-10120</span></td>
+                <td data-label="日付"><span class="p905-date">2026.10.28</span><span class="p905-who__meta">確認依頼</span></td>
+                <td data-label="会期（予定）">2026.11.01 〜 2026.11.20</td>
+                <td data-label="状態"><span class="ktn-review-status ktn-review-status--pending">確認待ち</span></td>
+                <td data-label="操作">
+                  <div>
+                    <a class="ktn-action-btn" href="./kotennavi-p2-11.html?mode=clone">クローン →</a>
+                    <a class="ktn-action-btn ktn-action-btn--alert" href="./kotennavi-p2-11.html#p211AdminBlock">確認する →</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td data-label="展覧会名"><a class="p90cm-title" href="./kotennavi-p2.html" target="_blank" rel="noopener">工房めぐり展</a></td>
+                <td data-label="投稿者"><span class="p905-who">佐藤（事務局）</span><span class="p905-who__meta"><span class="p905-role">admin</span> U-90002・オーナー未割当</span></td>
+                <td data-label="日付"><span class="p905-date">2026.10.22</span><span class="p905-who__meta">最後に保存</span></td>
+                <td data-label="会期（予定）">未定</td>
+                <td data-label="状態"><span class="ktn-review-status ktn-review-status--new">下書き</span></td>
+                <td data-label="操作">
+                  <div>
+                    <a class="ktn-action-btn" href="./kotennavi-p2-11.html">編集 →</a>
+                    <a class="ktn-action-btn" href="./kotennavi-p2-11.html?mode=clone">クローン →</a>
                   </div>
                 </td>
               </tr>
@@ -252,7 +237,7 @@
 
 <nav class="ktn-bottom-nav" id="ktnBottomNav"><div class="ktn-bottom-nav__inner" id="ktnBottomNavInner"></div></nav>
 
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Top","item":"https://koten-navi.com/"},{"@type":"ListItem","position":2,"name":"管理者","item":"https://koten-navi.com/p90"},{"@type":"ListItem","position":3,"name":"未公開の展覧会一覧","item":"https://koten-navi.com/p90-5"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Top","item":"https://koten-navi.com/"},{"@type":"ListItem","position":2,"name":"管理者","item":"https://koten-navi.com/p90"},{"@type":"ListItem","position":3,"name":"展覧会の確認・新規作成","item":"https://koten-navi.com/p90-5"}]}</script>
 
 <script src="./kotennavi-common.js"></script>
 <script src="./kotennavi-pages.js"></script>

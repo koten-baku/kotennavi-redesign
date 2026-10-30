@@ -943,7 +943,7 @@
             <p class="p211-presave__title">保存する前にご確認をお願いします</p>
             <ul class="p211-presave__list">
               <li>入力内容をご確認のうえ保存してください。保存後も、展覧会ページのオーナーメニューからいつでも編集できます。</li>
-              <li>保存後、サイト管理者が内容を確認したうえでサイトに掲載します。確認には日数をいただく場合があります。</li>
+              <li data-review-only>保存後、サイト管理者が内容を確認したうえでサイトに掲載します。確認には日数をいただく場合があります。</li>
               <li>入力内容に不備・誤り・重複がある場合や、当サイトの趣旨に反するとサイト管理者が判断した場合は、事前のお知らせなく内容を修正・削除することがあります。あらかじめご了承ください。</li>
               <li id="p211DraftNote">入力の途中で保存しておきたいときは、下の「下書きとして保存する」にチェックを入れてください。下書きはサイトに公開されず、管理者への確認依頼も送られません。続きを入力してから、あらためて確認依頼できます。</li>
             </ul>
@@ -1080,7 +1080,20 @@
             <div class="p211-field">
               <label class="p211-label">確認済み</label>
               <p class="p211-help" style="margin-bottom:6px">審査が済んだらチェックしてください。確認済みでない投稿は、「公開」にしても公開されません。</p>
-              <label class="p211-check"><input type="checkbox"> Admin確認済み</label>
+              <label class="p211-check"><input type="checkbox" id="p211AdminConfirmChk"> Admin確認済み</label>
+              <!-- 確認した管理者（UID）と日時（2026-10-29 ユーザー指示）。確認済みにして保存した管理者を記録する。本番は保存の時点で記録 -->
+              <p class="p211-help p211-confirm-by" id="p211ConfirmBy"></p>
+              <!-- 新着の告知文（2026-10-30 ユーザー指示）：確認したあと、個展なびの公式 SNS で新着として告知する文（X・Facebook・Threads 用＝Instagram 以外）。
+                   文の形は P90-4 と同じ（common.js KTN.snsText の 'new'）。確認済みにチェックしているときだけ押せる -->
+              <div class="p211-sns">
+                <button type="button" class="ktn-op-btn ktn-op-btn--sm" id="p211SnsBtn" disabled>新着の告知文を作る</button>
+                <span class="p211-help p211-sns__hint" id="p211SnsHint">「Admin確認済み」にすると作れます。</span>
+              </div>
+              <div class="p211-sns__box" id="p211SnsBox" hidden>
+                <div class="p211-sns__head"><span class="p211-label p211-sns__label">新着の告知文（X・Facebook・Threads）</span>
+                  <button type="button" class="ktn-op-btn ktn-op-btn--sm" id="p211SnsCopy">コピー</button></div>
+                <textarea class="p211-textarea" id="p211SnsText" rows="4"></textarea>
+              </div>
             </div>
 
             <!-- 公開 -->
@@ -1137,7 +1150,7 @@
         <div class="p211-modal__box">
           <p class="p211-modal__title">この内容で保存しますか？</p>
           <dl class="p211-modal__summary" id="p211ConfirmSummary"></dl>
-          <p class="p211-modal__note">保存後、サイト管理者が内容を確認したうえでサイトに掲載します。確認には日数をいただく場合があります。</p>
+          <p class="p211-modal__note" data-review-only>保存後、サイト管理者が内容を確認したうえでサイトに掲載します。確認には日数をいただく場合があります。</p>
           <div class="p211-modal__foot">
             <button class="ktn-op-btn" type="button" onclick="closeConfirmModal()">戻って修正</button>
             <button class="ktn-op-btn ktn-op-btn--primary" type="button" onclick="confirmSave()">この内容で保存する</button>
@@ -1165,6 +1178,11 @@ KTN.init({ page: 'p2-11', role: 'gallery' });
 var MODE_TITLES = { new: '新規展覧会を投稿', edit: '展覧会を編集', clone: '展覧会をクローンで作成' };
 /* 管理者確認を経ないと公開できないため「公開する」ではなく「保存して確認依頼」 */
 var MODE_SUBMIT = { new: '保存して確認依頼', edit: '保存して確認依頼', clone: '保存して確認依頼' };
+/* 一度確認済みになった展覧会は、編集しても確認をやり直さない（2026-10-30 ユーザー指摘）＝ボタンは「保存する」、保存すると公開のページにそのまま反映。
+   確認のあとの変更は、事務局が見守りのメール MO-01A・更新の記録（P90-22）で見る。確認前（新規・クローン・確認待ち）は「保存して確認依頼」のまま */
+function isConfirmedEdit() { return demoMode === 'edit' && demoConfirmed; }
+function submitLabel() { return isConfirmedEdit() ? '保存する' : MODE_SUBMIT[demoMode]; }
+function syncReviewOnly() { document.querySelectorAll('[data-review-only]').forEach(function (el) { el.hidden = isConfirmedEdit(); }); }
 /* 確認済＝管理者が内容を確認し、開催場所・出展クリエイターのリンクを設定済の状態。編集＝確認済／新規・クローン＝確認前 を初期値にする */
 var MODE_CONFIRMED = { new: false, edit: true, clone: false };
 /* クローンのデモ内容＝過去の展覧会「松田啓佑展 vol.1」（2025年開催）を複製した直後の状態 */
@@ -1202,7 +1220,7 @@ function setDemoMode(mode) {
   });
 
   document.getElementById('p211PageTitle').textContent = MODE_TITLES[mode];
-  document.getElementById('p211SubmitBtn').textContent = MODE_SUBMIT[mode];
+  document.getElementById('p211SubmitBtn').textContent = submitLabel();
 
   var cloneBanner = document.getElementById('p211CloneBanner');
   var exhBanner   = document.getElementById('p211ExhBanner');
@@ -1243,9 +1261,44 @@ function setDemoMode(mode) {
 }
 
 /* ── 管理者確認済トグル ── */
+/* 確認した管理者（UID・日時）の表示（2026-10-29）。確認済み＝記録された管理者と日時／未確認＝チェックして保存すると、保存した管理者が記録されることを書く */
+var CONFIRMED_BY = { uid: 'U-90001', name: '山本・事務局', at: '2026.06.08 14:20' };
+function syncConfirmBy() {
+  var chk = document.getElementById('p211AdminConfirmChk'), el = document.getElementById('p211ConfirmBy');
+  if (!chk || !el) return;
+  el.textContent = chk.checked
+    ? (demoConfirmed ? '確認した管理者：' + CONFIRMED_BY.uid + '（' + CONFIRMED_BY.name + '）・' + CONFIRMED_BY.at : '保存すると、保存した管理者の UID と日時が「確認した管理者」として記録されます。')
+    : 'まだ確認していません。';
+}
+document.addEventListener('change', function (e) { if (e.target && e.target.id === 'p211AdminConfirmChk') { syncConfirmBy(); syncSnsBtn(); } });
+/* 新着の告知文（KTN.snsText の 'new'・Instagram 以外）。入力中の展覧会名・会期・会場から作る。都道府県・形式（個展／グループ展）・URL はデモの値（本番は展覧会のデータ） */
+function syncSnsBtn() {
+  var chk = document.getElementById('p211AdminConfirmChk'), btn = document.getElementById('p211SnsBtn'), hint = document.getElementById('p211SnsHint');
+  if (!btn) return;
+  btn.disabled = !(chk && chk.checked);
+  if (hint) hint.hidden = !btn.disabled;
+  if (btn.disabled) { var box = document.getElementById('p211SnsBox'); if (box) box.hidden = true; }
+}
+document.addEventListener('click', function (e) {
+  if (e.target && e.target.id === 'p211SnsBtn') {
+    var v = function (id, d) { var el = document.getElementById(id); return (el && el.value) || d; };
+    var text = KTN.snsText({ title: v('p211Title', '展覧会名'), venue: v('p211Venue', '会場'), pref: '東京都', start: v('p211DateFrom', '2026-06-20'), end: v('p211DateTo', '2026-07-20'), url: 'https://koten-navi.com/event/198650', type: '個展' }, 'new');
+    document.getElementById('p211SnsText').value = text;
+    document.getElementById('p211SnsBox').hidden = false;
+  } else if (e.target && e.target.id === 'p211SnsCopy') {
+    ktnCopyText(document.getElementById('p211SnsText').value, '告知文をコピーしました');
+  }
+});
 function setConfirmed(on) {
   demoConfirmed = !!on;
   KTN.exh.confirmed = demoConfirmed;
+  var cchk = document.getElementById('p211AdminConfirmChk');
+  if (cchk) cchk.checked = demoConfirmed;
+  syncConfirmBy();
+  syncSnsBtn();
+  syncReviewOnly();
+  var sb = document.getElementById('p211SubmitBtn'), dchk = document.getElementById('p211DraftChk');
+  if (sb && !(dchk && dchk.checked)) sb.textContent = submitLabel();
   if (window.ktnRender) ktnRender();
   var bOff = document.getElementById('dbarConfOff');
   var bOn  = document.getElementById('dbarConfOn');
@@ -1868,7 +1921,7 @@ function syncDraftMode() {
   var btn  = document.getElementById('p211SubmitBtn');
   var note = document.getElementById('p211SubmitNote');
   var isDraft = !!(chk && chk.checked);
-  if (btn) btn.textContent = isDraft ? '下書き保存' : MODE_SUBMIT[demoMode];
+  if (btn) btn.textContent = isDraft ? '下書き保存' : submitLabel();
   syncConsent();   /* 下書き＝常に活性／確認依頼＝了承チェックで gate */
   /* 下書きの説明は「保存前の確認」の一覧にあり、ボタン名も「下書き保存」に変わるため、下書き時のノートは空にする */
   if (note) { note.style.color = ''; note.textContent = isDraft ? '' : '必須項目を入力してください'; }
@@ -2091,7 +2144,8 @@ function closeConfirmModal() {
 function confirmSave() {
   closeConfirmModal();
   var role = (typeof KTN !== 'undefined' && KTN.role) || 'gallery';
-  var msg = '個展なび事務局が内容を確認後、公開日の指定に従ってこのページが公開されます（確認完了はメールでお知らせします）。';
+  var confirmedEdit = isConfirmedEdit();
+  var msg = confirmedEdit ? 'この内容で展覧会のページに反映しました。' : '個展なび事務局が内容を確認後、公開日の指定に従ってこのページが公開されます（確認完了はメールでお知らせします）。';
   /* LIAISON利用案内＝新規・クローン投稿（未確認の展覧会エンティティ作成）時のみ表示。
      編集モードは既に確認済でLIAISON状態も既知のため対象外。 */
   if (demoMode === 'new' || demoMode === 'clone') {
@@ -2099,9 +2153,9 @@ function confirmSave() {
   }
   msg += '<br><br>会場に掲示するQRコード・フライヤーは、オーナーメニューからいつでも発行できます。<a class="ktn-guide-link" href="kotennavi-p2-7.html">会場フライヤーを作成する →</a>';
   KTN.submitDone({
-    title: '保存して確認依頼しました',
+    title: confirmedEdit ? '保存しました' : '保存して確認依頼しました',
     message: msg,
-    action: { label: '展覧会ページを見る', href: 'kotennavi-p2.html?pub=pending&role=' + encodeURIComponent(role) }
+    action: { label: '展覧会ページを見る', href: 'kotennavi-p2.html?' + (confirmedEdit ? '' : 'pub=pending&') + 'role=' + encodeURIComponent(role) }
   });
 }
 

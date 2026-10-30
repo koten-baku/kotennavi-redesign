@@ -14211,7 +14211,10 @@ a.p9022-title{color:var(--accent);text-decoration:underline;text-underline-offse
 .p906-table td{font-family:var(--fn);font-size:.84rem}
 .p906-sub{display:block;margin-top:2px;font-family:var(--fn);font-size:.7rem;color:var(--muted)}
 .p906-group{font-weight:600;vertical-align:top}
-.p905-new{display:flex;justify-content:flex-end} /* P90-5 の「新規展覧会を作成」（2026-10-29） */
+/* P90-5 の「新規展覧会を作成」（2026-10-29）：大きく・真ん中に（ユーザー指示）。遷移なのでアウトライン＋→のまま（実行の塗りにしない） */
+.p905-new{display:flex;justify-content:center;padding:8px 0 4px}
+.p905-new__btn{font-size:.95rem;padding:12px 32px;border-width:2px}
+.p315-archive-table tbody tr[hidden]{display:none}
 
 /* ══ コンテンツの管理ページ（P90-23 作品・P90-24 記事・P90-25 レビュー・P90-26 コメント・2026-10-29）と、削除の理由のモーダル（KTN.adminDelete）══
    一覧の骨組みは .p315-archive-table・.p319-toolbar。ここには行の中身と操作の並びだけ */
@@ -14241,3 +14244,37 @@ a.p90cm-sub{color:var(--accent)}
 /* P90 の管理者メニューのカードの未対応の件数（2026-10-29） */
 .p90-card-count{display:inline-block;margin-left:8px;padding:1px 8px;border-radius:10px;font-family:var(--fn);font-size:.66rem;font-weight:700;line-height:1.6;vertical-align:2px;color:#fff;background:#3a4a5a}
 .p90-card-count--urgent{background:#b43c14;margin-left:4px}
+
+/* ── P90-4 SNS 告知文の作成（2026-10-29 作り直し） ── */
+.p904-bar{display:flex;flex-wrap:wrap;align-items:flex-end;gap:10px}
+.p904-lead{margin:0;font-family:var(--fn);font-size:.86rem;font-weight:600;color:var(--ink)}
+.p904-list{display:flex;flex-direction:column;gap:16px}
+.p904-item__head{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin-bottom:6px}
+.p904-item__title{font-family:var(--fs);font-weight:600;font-size:.9rem;color:var(--accent);text-decoration:underline;text-underline-offset:2px}
+.p904-item__copy{margin-left:auto}
+.p904-item__ta{width:100%;font-size:.82rem;line-height:1.7}
+.p904-ig{padding:12px 14px;background:var(--paper);border:1px solid var(--border);border-radius:4px}
+.p904-ig[hidden]{display:none}
+.p904-ig__title{margin:0 0 4px;font-family:var(--fn);font-size:.8rem;font-weight:700;color:var(--ink)}
+.p904-ig__note{margin:0 0 8px;font-family:var(--fn);font-size:.74rem;line-height:1.7;color:var(--muted)}
+.p904-ig__list{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:4px;font-size:.78rem}
+.p904-ig__label{display:inline-block;min-width:6em;font-family:var(--fn);font-weight:600;color:var(--ink)}
+.p904-ig__list code{font-family:var(--fm);font-size:.74rem;color:var(--ink);word-break:break-all}
+/* P90-5 の投稿者・日付の列（2026-10-29） */
+.p905-who{display:block;font-family:var(--fn);font-size:.84rem;font-weight:600;color:var(--ink)}
+.p905-who__meta{display:flex;flex-wrap:wrap;align-items:center;gap:4px;margin-top:3px;font-family:var(--fm);font-size:.7rem;color:var(--muted)}
+.p905-date{display:block;font-family:var(--fm);font-size:.8rem;color:var(--ink)}
+.p905-role{display:inline-block;padding:1px 6px;border-radius:2px;font-family:var(--font-en-label);font-size:.56rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#fff;background:#3a4a5a}
+/* P90-3 コンテンツ管理の「NID・ID・URL で探す」（2026-10-30） */
+.p903-find{display:flex;flex-wrap:wrap;align-items:flex-end;gap:10px;padding:14px 16px;background:var(--paper);border:1px solid var(--border);border-radius:4px}
+.p903-find__field{flex:1 1 320px}
+.p903-find__field .p319-filter__sel{width:100%}
+.p903-find__msg{flex:1 0 100%;margin:0;font-family:var(--fn);font-size:.76rem;color:var(--muted)}
+.p903-find__msg:empty{display:none}
+/* P2-11 管理者の欄：新着の告知文（2026-10-30） */
+.p211-sns{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:10px}
+.p211-sns__hint[hidden]{display:none}
+.p211-sns__box{margin-top:10px;padding:12px 14px;background:var(--paper);border:1px solid var(--border);border-radius:4px}
+.p211-sns__box[hidden]{display:none}
+.p211-sns__head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
+.p211-sns__label{margin:0}

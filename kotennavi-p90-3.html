@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>展覧会を新規作成 — 管理者 | 個展なび</title>
+  <title>コンテンツ管理 — 管理者 | 個展なび</title>
   <meta name="robots" content="noindex,nofollow">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
@@ -104,134 +104,28 @@
   <main class="ktn-main" id="ktnMain">
     <div class="ktn-content">
 
-      <!-- 管理ボックス（Model A：p211-block フラットフォーム型・stackなし） -->
-      <div class="p903-wrap ktn-mgmt-wrap">
+      <!-- 管理ボックス：コンテンツ管理（2026-10-30・旧 P90-3「展覧会新規」の番号を使い直し）。展覧会・記事・レビュー・コメントをタブで切り替える（クリエイター・ギャラリーは P90-7・P90-8）。
+           作品は P90-23 作品管理（独立）。中身は pages.js KTN.pages['p90-3'] が描く（一覧は ktnAdminContentPage・設定は KTN.CM_CFG） -->
+      <div class="p903-wrap ktn-mgmt-wrap ktn-mgmt-stack">
 
-        <!-- ページヘッド -->
         <div class="ktn-mgmt-head">
-          <h2 class="ktn-mgmt-head__title">展覧会を新規作成</h2>
-          <p class="ktn-mgmt-head__en">NEW EXHIBITION</p>
-          <p class="ktn-mgmt-head__desc">管理者が展覧会ページを先行して作成します。掲載依頼・電話やメールでの登録依頼など、投稿者本人がまだサイトを利用していない場合は、オーナー（クリエイター／ギャラリー）を<strong style="color:var(--ink)">「未割当」のまま作成</strong>できます。あとから機能申込・本人確認が完了した時点で、事務局がこの展覧会のオーナーを本人のアカウントへ割り当ててください。</p>
+          <h2 class="ktn-mgmt-head__title">コンテンツ管理</h2>
+          <p class="ktn-mgmt-head__en">CONTENTS</p>
+          <p class="ktn-mgmt-head__desc">展覧会・記事・レビュー・コメントを探して、編集・非公開・削除ができます。クリエイター・ギャラリーは「クリエイター管理」「ギャラリー管理」、作品は「作品管理」で扱います。削除するときは理由を書きます（管理者あてにメールで届きます）。</p>
         </div>
 
-        <!-- ─── 1. 基本情報 ─── -->
-        <div class="p211-block">
-          <div class="p211-block__head">
-            <div class="p211-block__title">基本情報 <span class="p211-block__title-en">Basic Info</span></div>
-          </div>
-          <div class="p211-block__body">
-
-            <!-- 展覧会タイトル -->
-            <div class="p211-field">
-              <label class="p211-label">展覧会タイトル<span class="ktn-req">必須</span></label>
-              <input maxlength="240" data-count class="p211-input" type="text" id="p903Title" placeholder="例：田中透 個展">
-            </div>
-
-            <!-- 展覧会タイトル読み -->
-            <div class="p211-field">
-              <label class="p211-label">展覧会タイトル読み（カナ）</label>
-              <input maxlength="400" data-count class="p211-input" type="text" id="p903Kana" placeholder="全角カタカナ">
-            </div>
-
-            <!-- ジャンル -->
-            <div class="p211-field">
-              <label class="p211-label">展示作品ジャンル<span class="ktn-req">必須</span></label>
-              <div class="p211-pill-group" id="p903GenreGroup">
-                <label class="p211-pill is-active"><input type="checkbox" name="p903genre" value="art" checked>アート</label>
-                <label class="p211-pill"><input type="checkbox" name="p903genre" value="craft">クラフト</label>
-                <label class="p211-pill"><input type="checkbox" name="p903genre" value="fashion">ファッション</label>
-                <label class="p211-pill"><input type="checkbox" name="p903genre" value="photo">写真</label>
-                <label class="p211-pill"><input type="checkbox" name="p903genre" value="arch">建築</label>
-                <label class="p211-pill"><input type="checkbox" name="p903genre" value="other">その他</label>
-              </div>
-            </div>
-
-            <!-- 紹介文 -->
-            <div class="p211-field">
-              <label class="p211-label">紹介文</label>
-              <textarea maxlength="3000" data-count class="p211-textarea p211-textarea--tall" id="p903Desc" placeholder="展覧会の内容、展示作品の説明、アピールポイントなどをご記入ください。"></textarea>
-              <p class="p211-help">掲載依頼のメール文面や取材内容をもとに、わかる範囲で入力してください。あとからオーナー割り当て後に本人が編集できます。</p>
-            </div>
-
-          </div>
+        <!-- NID・URL で探す（ページの URL を貼ると、種類を見分けてそのタブで1件を出す） -->
+        <div class="p903-find">
+          <label class="p319-filter p903-find__field">
+            <span class="p319-filter__label">NID・ID・URL で探す</span>
+            <input type="search" class="p319-filter__sel" id="p903Find" placeholder="例：197069・CR-1042、またはページの URL を貼る">
+          </label>
+          <button type="button" class="ktn-op-btn ktn-op-btn--sm" id="p903FindBtn">探す</button>
+          <p class="p903-find__msg" id="p903FindMsg" aria-live="polite"></p>
         </div>
 
-        <!-- ─── 2. オーナー設定 ─── -->
-        <div class="p211-block">
-          <div class="p211-block__head">
-            <div class="p211-block__title">オーナー設定 <span class="p211-block__title-en">Owner</span></div>
-          </div>
-          <div class="p211-block__body">
-
-            <!-- オーナー選択 -->
-            <div class="p211-field">
-              <label class="p211-label">オーナー（クリエイター・掲載主体）</label>
-              <select class="p211-select" id="p903OwnerSelect">
-                <option value="" selected>未割当（オーナー未設定）</option>
-                <optgroup label="クリエイター">
-                  <option value="creator:tanaka">田中透（creator）</option>
-                  <option value="creator:yamaguchi">山口はるか（creator）</option>
-                </optgroup>
-                <optgroup label="ギャラリー">
-                  <option value="gallery:yugen">YUGEN Gallery（gallery）</option>
-                  <option value="gallery:soil">Gallery SOIL 渋谷（gallery）</option>
-                </optgroup>
-              </select>
-              <p class="p211-help">投稿者がまだサイトを利用していない場合は「未割当」のまま作成してください。未割当の展覧会ページは <a class="ktn-guide-link" href="kotennavi-p90-5.html">未公開の展覧会一覧 →</a> からいつでも確認できます。</p>
-            </div>
-
-            <!-- オーナー検索 -->
-            <div class="p211-field">
-              <label class="p211-label">オーナー検索</label>
-              <p class="p211-help" style="margin-bottom:6px">検索する条件を入力し、名前のタイプを選択して検索ボタンをクリックしてください。入力された文字を含むクリエイター・ギャラリーを検索し、上のオーナー欄に反映します。</p>
-              <div class="p211-search-row">
-                <input class="p211-input" type="text" placeholder="クリエイター・ギャラリー名">
-                <select class="p211-select">
-                  <option value="creator">creator</option>
-                  <option value="gallery">gallery</option>
-                </select>
-                <button class="ktn-op-btn ktn-op-btn--sm" type="button">検索する</button>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        <!-- ─── 3. 会場・会期 ─── -->
-        <div class="p211-block">
-          <div class="p211-block__head">
-            <div class="p211-block__title">会場・会期 <span class="p211-block__title-en">Venue / Dates</span></div>
-          </div>
-          <div class="p211-block__body">
-
-            <!-- 会場名 -->
-            <div class="p211-field">
-              <label class="p211-label">会場名<span class="ktn-req">必須</span></label>
-              <input maxlength="60" data-count class="p211-input" type="text" id="p903Venue" placeholder="例：YUGEN Gallery">
-              <p class="p211-help">オーナーにギャラリーを選択した場合、登録済みの会場情報を後から自動でリンクできます（デモでは未実装）。</p>
-            </div>
-
-            <!-- 会期 -->
-            <div class="p211-field">
-              <label class="p211-label">会期<span class="ktn-req">必須</span></label>
-              <div class="p211-datetime-pair">
-                <input type="date" id="p903DateFrom">
-                <span class="p211-datetime-pair__sep">〜</span>
-                <input type="date" id="p903DateTo">
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        <!-- 送信バー -->
-        <div class="p211-submit-bar">
-          <div class="p211-submit-bar__row">
-            <button class="p211-submit-bar__cancel ktn-op-btn" type="button" onclick="history.back()">キャンセル</button>
-            <button class="p211-submit-bar__submit ktn-op-btn ktn-op-btn--primary" type="button" id="p903SubmitBtn">作成する</button>
-            <span class="p211-submit-bar__note">必須項目を入力してください</span>
-          </div>
-        </div>
+        <div class="p902-tab-nav" role="tablist" id="p903Tabs"></div>
+        <div id="p903Panels"></div>
 
       </div><!-- /.ktn-mgmt-wrap -->
 
@@ -245,7 +139,7 @@
 
 <nav class="ktn-bottom-nav" id="ktnBottomNav"><div class="ktn-bottom-nav__inner" id="ktnBottomNavInner"></div></nav>
 
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Top","item":"https://koten-navi.com/"},{"@type":"ListItem","position":2,"name":"管理者","item":"https://koten-navi.com/p90"},{"@type":"ListItem","position":3,"name":"展覧会新規","item":"https://koten-navi.com/p90-3"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Top","item":"https://koten-navi.com/"},{"@type":"ListItem","position":2,"name":"管理者","item":"https://koten-navi.com/p90"},{"@type":"ListItem","position":3,"name":"コンテンツ管理"}]}</script>
 
 <script src="./kotennavi-common.js"></script>
 <script src="./kotennavi-pages.js"></script>
