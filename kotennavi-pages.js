@@ -27073,7 +27073,7 @@ function ktnExhListActions() {
     /* 前からある非公開・削除のボタン（押しても何も起きなかった）を外して付け直す */
     box.querySelectorAll('button').forEach(function (b) { if (/非公開|削除/.test(b.textContent)) b.remove(); });
     box.querySelectorAll('a').forEach(function (a) { if (/^編集/.test(a.textContent.trim())) a.setAttribute('href', './kotennavi-p2-11.html'); });
-    var unpublished = stateTd && /下書き|確認待ち/.test(stateTd.textContent);
+    var unpublished = stateTd && /下書き|確認待ち|公開待ち/.test(stateTd.textContent);
     if (!unpublished) box.insertAdjacentHTML('beforeend', '<button type="button" class="ktn-op-btn ktn-op-btn--sm" data-act="toggle">非公開にする</button>');
     box.insertAdjacentHTML('beforeend', '<button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline" data-act="delete">削除</button>');
     box.addEventListener('click', function (e) {
@@ -27090,7 +27090,7 @@ function ktnExhListActions() {
     });
   });
 }
-/* ── P90-4 SNS 告知文の作成（2026-10-29 作り直し・旧「本日開催・公開の展覧会一覧」・今のサイトと同じ形）
+/* ── P90-4 本日開始・公開展覧会のSNS告知（2026-10-29 作り直し・旧「本日開催・公開の展覧会一覧」・今のサイトと同じ形）
    タブ＝本日開始（会期の初日がその日）／本日公開（公開日がその日）。日付は最初は今日で、選んで変えられる。
    展覧会ごとに、題（展覧会名［確認の状態］［公開の状態］）と告知文（KTN.snsText・直せる）とコピー。
    デモ：選んだ日を開始日・公開日として、見本の展覧会を並べる（本番は API でその日の展覧会を引く） ── */
@@ -27165,6 +27165,15 @@ KTN.pages['p90-4'] = function () {
    行の状態は「状態」の列の文字で見分ける（デモ。本番は展覧会の状態のデータ） */
 KTN.pages['p90-5'] = function () {
   ktnExhListActions();
+  /* 会期がもう始まっているのに公開されていない展覧会（未確認・未公開・公開待ち）は、会期の欄に「開始済み」の印（2026-10-30 ユーザー指示）。今日と会期の初日を比べる */
+  var today = new Date(); today.setHours(0, 0, 0, 0);
+  document.querySelectorAll('.ktn-mgmt-wrap .p315-archive-table tbody td[data-label="会期"]').forEach(function (td) {
+    var m = td.textContent.match(/(\d{4})\.(\d{2})\.(\d{2})/);
+    if (!m) return;
+    var start = new Date(+m[1], +m[2] - 1, +m[3]);
+    /* バッジにせず、会期の日付を赤字にして「（開始済み）」を添える（2026-10-30 ユーザー指示＝四角いバッジが多くて分かりにくい） */
+    if (start <= today) { td.classList.add('p905-started'); td.insertAdjacentHTML('beforeend', '<span class="p905-started__note">（開始済み）</span>'); td.title = '会期の初日を過ぎていますが、まだ公開されていません'; }
+  });
   var tab = 'review';
   var rows = function () { return [].slice.call(document.querySelectorAll('.ktn-mgmt-wrap .p315-archive-table tbody tr')); };
   function stateOf(tr) { var td = tr.querySelector('td[data-label="状態"]'); return td && /確認待ち/.test(td.textContent) ? 'review' : 'draft'; }
@@ -27390,7 +27399,7 @@ KTN.pages['p90-3'] = function () {
     var cg = /\/(creator|p3)\b|kotennavi-p3|^cr-/i.test(v) ? ['p90-7', 'クリエイター管理'] : /\/(gallery|p4)\b|kotennavi-p4|^ga-/i.test(v) ? ['p90-8', 'ギャラリー管理'] : null;
     if (!t && cg) { msg.innerHTML = 'クリエイター・ギャラリーは「' + cg[1] + '」で扱います。<a class="ktn-guide-link" href="kotennavi-' + cg[0] + '.html?nid=' + encodeURIComponent(v) + '">' + cg[1] + 'で探す →</a>'; return; }
     /* 作品の URL は作品管理（P90-23・独立）へ案内する */
-    if (!t && /\/(artwork|work|p6)\b|kotennavi-p6/.test(v)) { msg.innerHTML = KTN.adminAccess('p90-23') ? '作品は「作品管理」で扱います。<a class="ktn-guide-link" href="kotennavi-p90-23.html?nid=' + encodeURIComponent(v) + '">作品管理で探す →</a>' : '作品は admin の「作品管理」で扱います（問題報告への対応なら、対応案件の「一時非公開にする」から）。'; return; }
+    if (!t && /\/(artwork|work|p6)\b|kotennavi-p6/.test(v)) { msg.innerHTML = KTN.adminAccess('p90-23') ? '作品は「作品管理」で扱います。<a class="ktn-guide-link" href="kotennavi-p90-23.html?nid=' + encodeURIComponent(v) + '">作品管理で探す →</a>' : '作品は「作品管理」（LIAISON+ 対応以上）で扱います（問題報告への対応なら、対応案件の「一時非公開にする」から）。'; return; }
     if (!t) { msg.textContent = '見つかりませんでした。NID・ID・URL を確かめてください。'; return; }
     show(t.key); setNid(t.key, v);
     msg.textContent = t.label + 'のタブで探しました。';

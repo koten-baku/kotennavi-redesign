@@ -111,7 +111,7 @@
         <div class="ktn-mgmt-head">
           <h2 class="ktn-mgmt-head__title">展覧会の確認・新規作成</h2>
           <p class="ktn-mgmt-head__en">EXHIBITION REVIEW / NEW</p>
-          <p class="ktn-mgmt-head__desc">「未確認」は確認依頼が届いた展覧会、「未公開」は下書きの展覧会です。オーナー未割当の展覧会も含みます。「確認する」から展覧会の編集画面の管理者の欄を開き、開催場所・出展クリエイターのリンク付けを確かめて「確認済み」にします。</p>
+          <p class="ktn-mgmt-head__desc">「未確認」は確認依頼が届いた展覧会、「未公開」は下書きと、確認済みで公開日の前（公開待ち）の展覧会です。「確認する」から展覧会の編集画面の管理者の欄を開き、開催場所・出展クリエイターのリンク付けを確かめて「確認済み」にします。</p>
         </div>
 
         <!-- 新規作成（2026-10-29：旧 P90-3「展覧会新規」の代わり＝展覧会の編集画面 P2-11 を新規で開く） -->
@@ -138,21 +138,21 @@
             <thead>
               <tr>
                 <th>展覧会名</th>
+                <th>会期</th>
                 <th>投稿者</th>
                 <th>日付</th>
-                <th>会期（予定）</th>
                 <th>状態</th>
                 <th>操作</th>
               </tr>
             </thead>
             <tbody>
-              <!-- 列（2026-10-29 ユーザー指示）：展覧会名（展覧会のページへのリンク）・投稿者（名前・ロール・UID）・日付（未確認＝確認依頼の日／未公開＝最後に保存した日）。
+              <!-- 列（2026-10-29 ユーザー指示）：展覧会名（展覧会のページへのリンク）・投稿者（名前・ロール・UID）・日付（未確認＝確認依頼の日／未公開＝最後に保存した日。公開日の指定があれば2段目に）。投稿者がクリエイター・ギャラリーなら名前をそのページへのリンクに。
                    旧「クリエイター・ギャラリー名」「会場」の列はやめた。データはデモの値 -->
               <tr>
                 <td data-label="展覧会名"><a class="p90cm-title" href="./kotennavi-p2.html" target="_blank" rel="noopener">田中透 個展「新作連作」</a></td>
-                <td data-label="投稿者"><span class="p905-who">田中透</span><span class="p905-who__meta"><span class="cb cb-person cb-creator">creator</span> U-10003</span></td>
-                <td data-label="日付"><span class="p905-date">2026.10.20</span><span class="p905-who__meta">最後に保存</span></td>
-                <td data-label="会期（予定）">2026.11.01 〜 2026.11.20</td>
+                <td data-label="会期">2026.11.01 〜 2026.11.20</td>
+                <td data-label="投稿者"><a class="p905-who p905-who--link" href="./kotennavi-p3.html" target="_blank" rel="noopener">田中透</a><span class="p905-who__meta"><span class="cb cb-person cb-creator">creator</span> U-10003</span></td>
+                <td data-label="日付"><span class="p905-date">2026.10.20</span><span class="p905-who__meta">最後に保存</span><span class="p905-date p905-date--pub">2026.10.30</span><span class="p905-who__meta">公開日の指定</span></td>
                 <td data-label="状態"><span class="ktn-review-status ktn-review-status--new">下書き</span></td>
                 <td data-label="操作">
                   <div>
@@ -163,9 +163,9 @@
               </tr>
               <tr>
                 <td data-label="展覧会名"><a class="p90cm-title" href="./kotennavi-p2.html" target="_blank" rel="noopener">展覧会「工芸の現在」</a></td>
-                <td data-label="投稿者"><span class="p905-who">山本（事務局）</span><span class="p905-who__meta"><span class="p905-role">admin</span> U-90001・掲載依頼から作成</span></td>
+                <td data-label="会期">2026.10.20 〜 2026.11.15</td>
+                <td data-label="投稿者"><span class="p905-who">山本（事務局）</span><span class="p905-who__meta"><span class="p905-role">admin</span> U-90001</span><span class="p905-provider">情報提供者：こだま画廊（gallery）</span></td>
                 <td data-label="日付"><span class="p905-date">2026.10.27</span><span class="p905-who__meta">確認依頼</span></td>
-                <td data-label="会期（予定）">2026.11.15 〜 2026.12.05</td>
                 <td data-label="状態"><span class="ktn-review-status ktn-review-status--pending">確認待ち</span></td>
                 <td data-label="操作">
                   <div>
@@ -176,9 +176,9 @@
               </tr>
               <tr>
                 <td data-label="展覧会名"><a class="p90cm-title" href="./kotennavi-p2.html" target="_blank" rel="noopener">Gallery SOIL 次回展「β」</a></td>
-                <td data-label="投稿者"><span class="p905-who">Gallery SOIL 渋谷</span><span class="p905-who__meta"><span class="cb cb-person cb-gallery">gallery</span> U-10155</span></td>
+                <td data-label="会期">未定</td>
+                <td data-label="投稿者"><a class="p905-who p905-who--link" href="./kotennavi-p4.html" target="_blank" rel="noopener">Gallery SOIL 渋谷</a><span class="p905-who__meta"><span class="cb cb-person cb-gallery">gallery</span> U-10155</span></td>
                 <td data-label="日付"><span class="p905-date">2026.10.18</span><span class="p905-who__meta">最後に保存</span></td>
-                <td data-label="会期（予定）">未定</td>
                 <td data-label="状態"><span class="ktn-review-status ktn-review-status--new">下書き</span></td>
                 <td data-label="操作">
                   <div>
@@ -189,9 +189,9 @@
               </tr>
               <tr>
                 <td data-label="展覧会名"><a class="p90cm-title" href="./kotennavi-p2.html" target="_blank" rel="noopener">松田啓佑展 vol.2</a></td>
-                <td data-label="投稿者"><span class="p905-who">YUGEN Gallery</span><span class="p905-who__meta"><span class="cb cb-person cb-gallery">gallery</span> U-10120</span></td>
-                <td data-label="日付"><span class="p905-date">2026.10.28</span><span class="p905-who__meta">確認依頼</span></td>
-                <td data-label="会期（予定）">2026.11.01 〜 2026.11.20</td>
+                <td data-label="会期">2026.11.01 〜 2026.11.20</td>
+                <td data-label="投稿者"><a class="p905-who p905-who--link" href="./kotennavi-p4.html" target="_blank" rel="noopener">YUGEN Gallery</a><span class="p905-who__meta"><span class="cb cb-person cb-gallery">gallery</span> U-10120</span></td>
+                <td data-label="日付"><span class="p905-date">2026.10.28</span><span class="p905-who__meta">確認依頼</span><span class="p905-date p905-date--pub">2026.10.31</span><span class="p905-who__meta">公開日の指定</span></td>
                 <td data-label="状態"><span class="ktn-review-status ktn-review-status--pending">確認待ち</span></td>
                 <td data-label="操作">
                   <div>
@@ -202,10 +202,24 @@
               </tr>
               <tr>
                 <td data-label="展覧会名"><a class="p90cm-title" href="./kotennavi-p2.html" target="_blank" rel="noopener">工房めぐり展</a></td>
-                <td data-label="投稿者"><span class="p905-who">佐藤（事務局）</span><span class="p905-who__meta"><span class="p905-role">admin</span> U-90002・オーナー未割当</span></td>
+                <td data-label="会期">未定</td>
+                <td data-label="投稿者"><span class="p905-who">佐藤（事務局）</span><span class="p905-who__meta"><span class="p905-role">admin</span> U-90002</span><span class="p905-provider">情報提供者：工房めぐり実行委員会</span></td>
                 <td data-label="日付"><span class="p905-date">2026.10.22</span><span class="p905-who__meta">最後に保存</span></td>
-                <td data-label="会期（予定）">未定</td>
                 <td data-label="状態"><span class="ktn-review-status ktn-review-status--new">下書き</span></td>
+                <td data-label="操作">
+                  <div>
+                    <a class="ktn-action-btn" href="./kotennavi-p2-11.html">編集 →</a>
+                    <a class="ktn-action-btn" href="./kotennavi-p2-11.html?mode=clone">クローン →</a>
+                  </div>
+                </td>
+              </tr>
+              <!-- 確認済み・公開日の前（公開待ち）：会期は決まっていて、事務局の確認も済んでいるが、公開日の指定がまだ来ていない（2026-10-30 ユーザー指示の見本）。未公開のタブに出る -->
+              <tr>
+                <td data-label="展覧会名"><a class="p90cm-title" href="./kotennavi-p2.html" target="_blank" rel="noopener">色彩の対話 — 現代絵画グループ展</a></td>
+                <td data-label="会期">2026.11.20 〜 2026.12.10</td>
+                <td data-label="投稿者"><a class="p905-who p905-who--link" href="./kotennavi-p4.html" target="_blank" rel="noopener">Gallery SOIL 渋谷</a><span class="p905-who__meta"><span class="cb cb-person cb-gallery">gallery</span> U-10155</span></td>
+                <td data-label="日付"><span class="p905-date">2026.10.25</span><span class="p905-who__meta">確認済み（U-90001）</span><span class="p905-date p905-date--pub">2026.11.10</span><span class="p905-who__meta">公開日の指定</span></td>
+                <td data-label="状態"><span class="ktn-review-status ktn-review-status--granted">公開待ち</span></td>
                 <td data-label="操作">
                   <div>
                     <a class="ktn-action-btn" href="./kotennavi-p2-11.html">編集 →</a>

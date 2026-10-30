@@ -14278,3 +14278,18 @@ a.p90cm-sub{color:var(--accent)}
 .p211-sns__box[hidden]{display:none}
 .p211-sns__head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
 .p211-sns__label{margin:0}
+a.p905-who--link{color:var(--accent);text-decoration:underline;text-underline-offset:2px}
+.p905-date--pub{margin-top:6px;padding-top:6px;border-top:1px dashed var(--border)}
+
+/* ── P90 系の表のスマホ幅（640px 以下・2026-10-30 ユーザー指摘「項目名がそろわない・中身の並びと折り返しがバラバラ」）──
+   共通のカード化（.p315-archive-table の td＝flex で項目名と中身を左右に振る）は、中身が2段以上あると崩れる。
+   P90 系だけ、項目名を左に決まった幅（6.5em）で置き、中身はその右に左寄せで縦に積む（折り返しもそろう）。P3-15 などほかのページの表は変えない */
+@media(max-width:640px){
+  body[class^="p90"] .p315-archive-table td{display:block;position:relative;padding:8px 0 8px 6.5em;text-align:left;white-space:normal;min-height:1.7em}
+  body[class^="p90"] .p315-archive-table td::before{position:absolute;left:0;top:10px;width:6em;padding-top:0;white-space:normal;line-height:1.4}
+  body[class^="p90"] .p315-archive-table td .p90cm-acts,body[class^="p90"] .p315-archive-table td > div{justify-content:flex-start}
+  body[class^="p90"] .p315-archive-table td .p905-who__meta{justify-content:flex-start}
+}
+.p315-archive-table td.p905-started{color:#b43c14;font-weight:600} /* P90-5：会期がもう始まっているのに未公開＝会期の日付を赤字に（2026-10-30） */
+.p905-started__note{margin-left:2px;font-size:.92em}
+.p905-provider{display:block;margin-top:3px;font-family:var(--fn);font-size:.74rem;color:var(--ink)} /* P90-5：管理者が代わりに作った展覧会の情報提供者（2026-10-30） */

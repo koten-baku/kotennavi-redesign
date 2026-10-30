@@ -204,7 +204,7 @@ window.ktnListQrClose = ktnListQrClose;
      P90-9側TEMPLATESとはスコープが別（ページ間の実データ連携がないため個別配列として保持＝P90-2/P90-11-1と同じ方針）
    ・.ktn-auth-overlay / .ktn-auth-modal のシェルを再利用（ktnListQrと同型）
 ══════════════════════════════════ */
-/* 公式 SNS の告知文（単一ソース・2026-10-29）。P90-4「SNS 告知文の作成」と P2 の管理者メニュー「SNS テキスト生成」が同じ形を使う（今のサイトと同じ形）。
+/* 公式 SNS の告知文（単一ソース・2026-10-29）。P90-4「本日開始・公開展覧会のSNS告知」と P2 の管理者メニュー「SNS テキスト生成」が同じ形を使う（今のサイトと同じ形）。
    kind＝'open'（今日から開催＝会期の初日）／'new'（新着＝公開した日）。sns＝省略（X・Facebook・Threads）／'ig'（Instagram）。e＝{ title, venue, pref, start:'YYYY-MM-DD', end, url, type:'個展'|'グループ展' } */
 KTN.snsText = function (e, kind, sns) {
   /* sns＝'ig'（Instagram）：説明文の URL は押せないので、URL の代わりにプロフィールのリンクへ案内する（2026-10-29）。
@@ -2255,7 +2255,7 @@ const PAGES = {
   'p90-2': { n: '管理者-クリエイター/ギャラリー機能申込管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['クリエイター/ギャラリー機能申込管理', null]] },
   'p90-2-1': { n: '管理者-クリエイター/ギャラリー機能申込審査', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['クリエイター/ギャラリー機能申込管理', 'kotennavi-p90-2.html'], ['審査', null]] },
   'p90-3': { n: '管理者-コンテンツ管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['コンテンツ管理', null]] },
-  'p90-4': { n: '管理者-SNS 告知文の作成', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['SNS 告知文の作成', null]] },
+  'p90-4': { n: '管理者-本日開始・公開展覧会のSNS告知', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['本日開始・公開展覧会のSNS告知', null]] },
   'p90-5': { n: '管理者-展覧会の確認・新規作成', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['展覧会の確認・新規作成', null]] },
   'p90-6': { n: '管理者-コンテンツサマリー', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['コンテンツサマリー', null]] },
   'p90-7': { n: '管理者-クリエイター管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['クリエイター管理', null]] },
@@ -3603,9 +3603,9 @@ KTN.P10_PREF_SLUGS = {
 KTN.ADMIN_LEVELS = { E: { n: 1, label: '編集・問合せ' }, L: { n: 2, label: 'LIAISON+ 対応' }, A: { n: 3, label: 'admin' } };
 KTN.ADMIN_PAGE = {
   'p90': 'E', 'p90-2': 'E', 'p90-2-1': 'E', 'p90-4': 'E', 'p90-5': 'E', 'p90-7': 'E', 'p90-8': 'E', 'p90-21': 'E', 'p90-21-1': 'E',
-  'p90-10': 'L', 'p90-12': 'L', 'p90-13': 'L', 'p90-14': 'L', 'p90-15': 'L', 'p90-16': 'L', 'p90-20': { view: 'L', edit: 'A' },
+  'p90-10': 'L', 'p90-23': 'L', 'p90-12': 'L', 'p90-13': 'L', 'p90-14': 'L', 'p90-15': 'L', 'p90-16': 'L', 'p90-20': { view: 'L', edit: 'A' },
   'p90-3': 'E', 'p90-27': 'E', 'p90-24': 'E', 'p90-25': 'E', 'p90-26': 'E',
-  'p90-1': 'A', 'p90-6': 'A', 'p90-23': 'A', 'p90-9': 'A', 'p90-11': 'A', 'p90-11-1': 'A', 'p90-17': 'A', 'p90-18': 'A', 'p90-19': 'A', 'p90-22': 'A'
+  'p90-1': 'A', 'p90-6': 'A', 'p90-9': 'A', 'p90-11': 'A', 'p90-11-1': 'A', 'p90-17': 'A', 'p90-18': 'A', 'p90-19': 'A', 'p90-22': 'A'
 };
 KTN.adminLevel = function () {
   try { var v = sessionStorage.getItem('ktn-admin-level'); if (KTN.ADMIN_LEVELS[v]) return v; } catch (e) {}
