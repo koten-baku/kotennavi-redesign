@@ -27165,6 +27165,20 @@ KTN.pages['p90-4'] = function () {
    行の状態は「状態」の列の文字で見分ける（デモ。本番は展覧会の状態のデータ） */
 KTN.pages['p90-5'] = function () {
   ktnExhListActions();
+  /* 並び順（2026-10-31 ユーザー指示）：日付（確認依頼の日・最後に保存した日・確認した日）の古い順。
+     未公開のタブは、確認済み（公開待ち）を上、下書きを下に。日付は「日付」の列の1段目 */
+  (function () {
+    var tb = document.querySelector('.ktn-mgmt-wrap .p315-archive-table tbody');
+    if (!tb) return;
+    var trs = [].slice.call(tb.querySelectorAll('tr'));
+    function key(tr) {
+      var st = (tr.querySelector('td[data-label="状態"]') || {}).textContent || '';
+      var d = (tr.querySelector('td[data-label="日付"] .p905-date') || {}).textContent || '9999.99.99';
+      return (/下書き/.test(st) ? '1' : '0') + d.trim();
+    }
+    trs.sort(function (a, b) { return key(a) < key(b) ? -1 : key(a) > key(b) ? 1 : 0; });
+    trs.forEach(function (tr) { tb.appendChild(tr); });
+  })();
   /* 会期がもう始まっているのに公開されていない展覧会（未確認・未公開・公開待ち）は、会期の欄に「開始済み」の印（2026-10-30 ユーザー指示）。今日と会期の初日を比べる */
   var today = new Date(); today.setHours(0, 0, 0, 0);
   document.querySelectorAll('.ktn-mgmt-wrap .p315-archive-table tbody td[data-label="会期"]').forEach(function (td) {
