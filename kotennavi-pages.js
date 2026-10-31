@@ -3185,6 +3185,10 @@ KTN.pages['p6-2'] = function() {
   };
 };
 
+/* 作品の最低価格（P2-12-1 の価格の入力と保存の確認で使う・2026-10-31）。
+   P90-20 の料率のスケジュールの、今日に当たる期間の値（common.js KTN.feeMinPrice） */
+function p2121MinPrice() { return KTN.feeMinPrice ? KTN.feeMinPrice() : 1000; }
+
 /* ══════════════════════════════════════════════════════
    p2-12  LIAISON 作品管理
 ══════════════════════════════════════════════════════ */
@@ -3892,8 +3896,8 @@ KTN.pages['p2-121'] = function() {
         priceHtml =
           '<div class="p2-121-price-wrap">'+
             '<span class="p2-121-price-wrap__sign">¥</span>'+
-            '<input class="p2-121-price-wrap__input" type="number" min="0" step="1000"'+
-              ' placeholder="価格" aria-label="価格（税込）" value="'+(w.price||'')+'">'+
+            '<input class="p2-121-price-wrap__input" type="number" min="'+p2121MinPrice()+'" step="1000"'+
+              ' placeholder="'+p2121MinPrice().toLocaleString()+'円以上" aria-label="価格（税込）" value="'+(w.price||'')+'">'+
           '</div>';
       }
       settingsHtml =
@@ -4229,6 +4233,16 @@ KTN.pages['p2-121'] = function() {
           + '<button type="button" class="ktn-form-error__jump" data-jump="p2121PeriodBlock">販売期間の設定へ →</button></li>');
       }
     }
+    /* 作品の最低価格（P90-20 の料率のスケジュールの、今日の期間の値・2026-10-31）。非売品・価格の決まった作品は見ない */
+    var minP = p2121MinPrice(), low = [];
+    listEl.querySelectorAll('.p2-12-work-card').forEach(function (card) {
+      var inp = card.querySelector('.p2-121-price-wrap__input');
+      if (!inp || inp.disabled || inp.value === '') return;
+      if (+inp.value < minP) { low.push(card.querySelector('.p2-12-work-card__title').textContent); card.classList.add('p2-12-work-card--conflict'); }
+    });
+    if (low.length) items.push('<li class="ktn-form-error__item">価格が作品の最低価格（' + minP.toLocaleString() + '円）より低い作品が ' + low.length + '点あります。'
+      + '<div class="ktn-form-error__detail">' + low.map(function (t) { return '<span><span class="ktn-form-error__name">' + t + '</span></span>'; }).join('') + '</div>'
+      + '<span class="ktn-form-error__hint">LIAISON+ で販売できるのは ' + minP.toLocaleString() + '円（税込）以上の作品です。価格を上げるか、販売状態を「非売品」にしてください。</span></li>');
     if (items.length) {
       errList.innerHTML = items.join('');
       errBox.hidden = false;
@@ -24969,8 +24983,18 @@ KTN.CAMPAIGN = (function () {
   var STATUS = { draft: '下書き', ready: '開始待ち', on: '実施中', end: '終了', stop: '停止' };
   var PUB = { draft: '下書き', pub: '公開' };
   var DEF = {
-    /* サービス利用料。bands＝価格の区切り（min 円以上は rate %）。空ならすべての作品に rate を使う */
-    fee: { rate: 10, from: '2026-04-02', bands: [] },
+    /* サービス利用料。schedule＝適用の期間ごとの設定（2026-10-31 ユーザー指示＝料率はスケジュールで管理する）。
+       1件＝{ from 適用開始日, to 適用終了日（空＝決めていない）, rate 料率 %, minPrice 作品の最低価格（円・LIAISON+ で売れる最低の販売価格）, bands 価格の区切り }。
+       期間は重ねない。購入の申込の日に当たる期間の設定を使う（feeAt）。rate・from・bands・minPrice は「今（デモの今日）」に当たる期間の値を load() が入れる＝ほかの画面はこれを読む */
+    fee: { rate: 10, from: '2025-10-01', bands: [], minPrice: 1000,
+      schedule: [   /* デモの値（「過去の適用」のレイアウトを確かめるために、終わった期間を入れている。実際の料率の履歴ではない） */
+        { from: '2024-04-01', to: '2024-06-30', rate: 12, minPrice: 500, bands: [] },
+        { from: '2024-07-01', to: '2024-12-31', rate: 12, minPrice: 500, bands: [{ min: 30000, rate: 10 }] },
+        { from: '2025-01-01', to: '2025-03-31', rate: 11, minPrice: 500, bands: [{ min: 30000, rate: 9 }, { min: 100000, rate: 7 }] },
+        { from: '2025-04-01', to: '2025-09-30', rate: 10, minPrice: 500, bands: [{ min: 30000, rate: 8 }] },
+        { from: '2025-10-01', to: '2026-03-31', rate: 10, minPrice: 1000, bands: [] },
+        { from: '2026-04-01', to: '', rate: 10, minPrice: 3000, bands: [] }
+      ] },
     /* お知らせを送る時期。saleEnd＝興味あり！に入れた作品・クーポンが使える展覧会の作品の、販売期間が終わる何日前 */
     notify: { saleEnd: { on: true, days: 3 } },
     campaigns: [
@@ -25071,7 +25095,17 @@ KTN.CAMPAIGN = (function () {
        名前も時期に合わせる（「1周年」はサービス開始の1年後の回なので）。保存はしない（P90-20 にはこの切替が無い） */
     if (DEMO.annivOn) d.campaigns.forEach(function (c) { if (c.id === 'C-02-01') { c.start = '2026-02-20'; c.end = '2026-03-15'; c.name = '春の記念の割引'; } });
     if (DEMO.annivEnd) d.campaigns.forEach(function (c) { if (c.id === 'C-02-01') { c.start = '2026-01-10'; c.end = '2026-02-10'; c.name = '新春の記念の割引'; } });   /* 終わった回（デモの今日より前） */
+    /* 料率のスケジュール：前の形（rate・from・bands だけ）で保存されていれば1件の期間にする。そのうえで今の期間の値を fee に入れる */
+    if (!d.fee.schedule || !d.fee.schedule.length) d.fee.schedule = [{ from: d.fee.from || '2025-10-01', to: '', rate: d.fee.rate || 10, minPrice: d.fee.minPrice || 1000, bands: d.fee.bands || [] }];
+    var cur = feeAt(d, DEMO.today) || d.fee.schedule[0];
+    d.fee.rate = cur.rate; d.fee.from = cur.from; d.fee.bands = cur.bands || []; d.fee.minPrice = cur.minPrice;
     return d;
+  }
+  /* その日（YYYY-MM-DD）に当たる料率の期間。取引では購入の申込の日で引く。当たる期間が無ければ null */
+  function feeAt(d, day) {
+    var list = (d.fee && d.fee.schedule) || [];
+    for (var i = 0; i < list.length; i++) { var p = list[i]; if (p.from && p.from <= day && (!p.to || day <= p.to)) return p; }
+    return null;
   }
   function save(d) { try { window.sessionStorage.setItem(KEY, JSON.stringify(d)); } catch (e) {} }
   function reset() { try { window.sessionStorage.removeItem(KEY); window.sessionStorage.removeItem(KEY + 'Sent'); } catch (e) {} }
@@ -25963,7 +25997,7 @@ KTN.CAMPAIGN = (function () {
       });
     });
   }
-  return { WHO: WHO, STATUS: STATUS, PUB: PUB, TYPES: TYPES, stateOf: stateOf, isLive: isLive, newsOf: newsOf, newCampaign: newCampaign, byStartDesc: byStartDesc, DEMO: DEMO, load: load, save: save, reset: reset, describe: describe, condText: condText, cautions: cautions, benefitText: benefitText,
+  return { feeAt: function (day) { return feeAt(load(), day); }, WHO: WHO, STATUS: STATUS, PUB: PUB, TYPES: TYPES, stateOf: stateOf, isLive: isLive, newsOf: newsOf, newCampaign: newCampaign, byStartDesc: byStartDesc, DEMO: DEMO, load: load, save: save, reset: reset, describe: describe, condText: condText, cautions: cautions, benefitText: benefitText,
     yen: yen, day: day, termText: termText, termHtml: termHtml, statusChip: statusChip, monitor: monitor, setOptOut: setOptOut, totalsHtml: totalsHtml, flyerCamp: flyerCamp, exhOf: exhOf, pageOf: pageOf, grant: grant, mount: mount, qrCheckin: qrCheckin, perkShiftNote: perkShiftNote, grantList: grantList };
 })();
 /* デモバー：利用者の状態を切り替える（出品者＝active／progress／none、購入者＝has／none） */
@@ -26130,22 +26164,108 @@ KTN.pages['p90-20'] = function () {
     var gc = tabs.querySelector('[data-panel="grant"] .ktn-count'); if (gc) gc.textContent = gl.length;
   }
 
-  /* ── サービス利用料 ── */
-  var rateEl = document.getElementById('p9020Rate'), fromEl = document.getElementById('p9020From'), bandsEl = document.getElementById('p9020Bands');
-  function renderFee() {
-    rateEl.value = data.fee.rate; fromEl.value = data.fee.from;
-    bandsEl.innerHTML = data.fee.bands.length ? data.fee.bands.map(function (b, i) {
-      return '<tr><td data-label="作品の販売価格"><span class="p9020-unit"><input class="p211-input" type="number" min="0" step="1000" data-band="' + i + '" data-k="min" value="' + esc(b.min) + '">円以上</span></td>' +
-        '<td data-label="料率"><span class="p9020-unit"><input class="p211-input" type="number" min="0" max="100" step="0.5" data-band="' + i + '" data-k="rate" value="' + esc(b.rate) + '">%</span></td>' +
-        '<td data-label="操作"><button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline" data-del-band="' + i + '">外す</button></td></tr>';
-    }).join('') : '<tr><td colspan="3" class="p9019-empty">区切りはありません。すべての作品に上の料率を使います。</td></tr>';
-    document.getElementById('p9020FeeNow').innerHTML = '利用者に見せている料率：<strong>' + data.fee.rate + '%</strong>' + (data.fee.bands.length ? '（価格の区切りあり）' : '（すべての作品）');
+  /* ── サービス利用料：料率のスケジュール（2026-10-31）──
+     適用開始日〜適用終了日の期間ごとに、料率・作品の最低価格・価格の区切りを持つ（data.fee.schedule）。
+     ある日の値は、その日を含む期間のもの（KTN.CAMPAIGN.feeAt(日付)）。取引では購入の申込の日の期間を使う。
+     期間ごとのまとまりに、その期間の価格の区切りを入れる。終わった期間は「過去の適用」に見るだけで出す（その期間に申込があった取引に使われた値なので変えない）。
+     期間はつながっている：入れるのは適用開始日だけで、適用終了日は次の料率設定の開始日の前の日に自動で決まる（最後の設定は終わりなし）。
+     重なり・すき間が起きないので、矛盾を確かめる必要がない（2026-10-31 ユーザー指示）。予定の設定の開始日は明日以降。
+     適用中の設定は変えられない（料率などを変えるときは、次の料率設定を足す＝今の設定はその前の日で終わる）。
+     今日（デモの今日）に当たる期間の値を data.fee.rate などにも入れ直す＝ほかのページの表示・計算はそれを読む */
+  var schedEl = document.getElementById('p9020Sched'), pastEl = document.getElementById('p9020Past');
+  function stateOfP(p) { var t = C.DEMO.today; if (!p.from || p.from > t) return 'plan'; if (p.to && p.to < t) return 'past'; return 'now'; }
+  var STATE_CHIP = { now: ['granted', '適用中'], plan: ['pending', '予定'], past: ['cancelled', '終了'] };
+  function curPeriod() { var t = C.DEMO.today; return data.fee.schedule.filter(function (p) { return p.from && p.from <= t && (!p.to || t <= p.to); })[0] || null; }
+  function syncCurrent() { var p = curPeriod() || data.fee.schedule[0]; if (p) { data.fee.rate = p.rate; data.fee.from = p.from; data.fee.bands = p.bands || []; data.fee.minPrice = p.minPrice; } }
+  function isoAdd(iso, n) { var d = new Date(iso + 'T00:00:00'); d.setDate(d.getDate() + n); return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); }
+  /* 開始日の順に並べ、終了日を次の開始日の前の日にする（最後は空＝終わりなし） */
+  function chain() {
+    var list = data.fee.schedule;
+    list.sort(function (a, b) { return a.from < b.from ? -1 : a.from > b.from ? 1 : 0; });
+    list.forEach(function (p, i) { var nx = list[i + 1]; p.to = nx ? isoAdd(nx.from, -1) : ''; });
   }
-  rateEl.addEventListener('input', function () { data.fee.rate = +rateEl.value || 0; renderFee(); renderList(); });
-  fromEl.addEventListener('input', function () { data.fee.from = fromEl.value; });
-  bandsEl.addEventListener('input', function (e) { var i = e.target.dataset.band; if (i != null) data.fee.bands[i][e.target.dataset.k] = +e.target.value || 0; });
-  bandsEl.addEventListener('click', function (e) { var b = e.target.closest('[data-del-band]'); if (b) { data.fee.bands.splice(+b.dataset.delBand, 1); renderFee(); } });
-  document.getElementById('p9020AddBand').addEventListener('click', function () { data.fee.bands.push({ min: 100000, rate: data.fee.rate }); renderFee(); });
+  function yenS(n) { return Number(n || 0).toLocaleString() + '円'; }
+  function chip(st) { var c = STATE_CHIP[st]; return '<span class="ktn-review-status ktn-review-status--' + c[0] + '">' + c[1] + '</span>'; }
+  /* 編集できる期間（適用中・予定）。i は data.fee.schedule の番号 */
+  function periodEdit(p, i) {
+    var st = stateOfP(p), lock = st === 'now', dis = lock ? ' disabled' : '';
+    p.bands = p.bands || [];
+    var bands = p.bands.length ? p.bands.map(function (b, j) {
+      return '<tr><td data-label="作品の販売価格"><span class="p9020-unit"><input class="p211-input" type="number" min="0" step="1000" data-p="' + i + '" data-band="' + j + '" data-k="min" value="' + esc(b.min) + '"' + dis + '>円以上</span></td>' +
+        '<td data-label="料率"><span class="p9020-unit"><input class="p211-input" type="number" min="0" max="100" step="0.5" data-p="' + i + '" data-band="' + j + '" data-k="rate" value="' + esc(b.rate) + '"' + dis + '>%</span></td>' +
+        '<td data-label="操作">' + (lock ? '' : '<button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline" data-p="' + i + '" data-del-band="' + j + '">外す</button>') + '</td></tr>';
+    }).join('') : '<tr><td colspan="3" class="p9019-empty">区切りはありません。この期間のすべての作品に ' + esc(p.rate) + '% を使います。</td></tr>';
+    return '<section class="p9020-period p9020-period--' + st + '">' +
+      '<div class="p9020-period__head">' + chip(st) +
+        '<label class="p9020-period__f"><span>適用開始日</span><input class="p211-input" type="date" min="' + isoAdd(C.DEMO.today, 1) + '" data-p="' + i + '" data-k="from" value="' + esc(p.from) + '"' + dis + '></label>' +
+        '<span class="p9020-period__sep">〜</span>' +
+        '<span class="p9020-period__f"><span>適用終了日</span><span class="p9020-period__to">' + (p.to ? esc(p.to) + '（次の料率設定の前の日）' : '決まっていません（次の料率設定が始まるまで）') + '</span></span>' +
+        (st === 'plan' && data.fee.schedule.length > 1 ? '<button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline p9020-period__del" data-del-p="' + i + '">この料率設定を外す</button>' : '') +
+      '</div>' +
+      '<div class="p9020-period__vals">' +
+        '<label class="p9020-period__f"><span>料率</span><span class="p9020-unit"><input class="p211-input" type="number" min="0" max="100" step="0.5" data-p="' + i + '" data-k="rate" value="' + esc(p.rate) + '"' + dis + '>%</span></label>' +
+        '<label class="p9020-period__f"><span>作品の最低価格</span><span class="p9020-unit"><input class="p211-input" type="number" min="50" step="100" data-p="' + i + '" data-k="minPrice" value="' + esc(p.minPrice) + '"' + dis + '>円</span></label>' +
+      '</div>' +
+      '<p class="p9020-period__sub">価格の区切り</p>' +
+      '<div class="p315-archive-table-wrap"><table class="p315-archive-table p909-table"><thead><tr><th>作品の販売価格</th><th>料率</th><th>操作</th></tr></thead><tbody>' + bands + '</tbody></table></div>' +
+      (lock ? '' : '<div class="p909-toolbar-row"><button type="button" class="ktn-op-btn ktn-op-btn--sm" data-add-band="' + i + '">＋ 区切りを追加</button></div>') +
+      '</section>';
+  }
+  /* 終わった期間（見るだけ） */
+  function periodPast(p) {
+    var b = (p.bands || []).length ? p.bands.slice().sort(function (x, y) { return x.min - y.min; }).map(function (x) { return yenS(x.min) + '以上 ' + x.rate + '%'; }).join('・') : 'なし';
+    return '<section class="p9020-period p9020-period--past">' +
+      '<div class="p9020-period__head">' + chip('past') + '<span class="p9020-period__range">' + esc(p.from) + ' 〜 ' + esc(p.to) + '</span></div>' +
+      '<dl class="p9020-period__dl"><div><dt>料率</dt><dd>' + esc(p.rate) + '%</dd></div><div><dt>作品の最低価格</dt><dd>' + yenS(p.minPrice) + '</dd></div><div><dt>価格の区切り</dt><dd>' + esc(b) + '</dd></div></dl>' +
+      '</section>';
+  }
+  function renderFee() {
+    chain();
+    var list = data.fee.schedule, live = [], past = [];
+    list.forEach(function (p, i) { (stateOfP(p) === 'past' ? past : live).push(i); });
+    live.sort(function (a, b) { return (list[a].from || '9999') < (list[b].from || '9999') ? -1 : 1; });
+    past.sort(function (a, b) { return list[a].from < list[b].from ? 1 : -1; });   /* 過去は新しい順 */
+    schedEl.innerHTML = live.map(function (i) { return periodEdit(list[i], i); }).join('') || '<p class="p9019-empty">適用中・予定の期間はありません。</p>';
+    pastEl.innerHTML = past.map(function (i) { return periodPast(list[i]); }).join('') || '<p class="p211-help">終わった期間はまだありません。</p>';
+    syncCurrent();
+    var cp = curPeriod();
+    document.getElementById('p9020FeeNow').innerHTML = cp
+      ? '今日（' + esc(C.DEMO.today) + '）の設定：料率 <strong>' + cp.rate + '%</strong>' + ((cp.bands || []).length ? '（価格の区切りあり）' : '') + '・作品の最低価格 <strong>' + yenS(cp.minPrice) + '</strong>'
+      : '<span class="p9020-warn">今日（' + esc(C.DEMO.today) + '）に当たる期間がありません。「料率設定を追加」で期間を足してください。</span>';
+  }
+  schedEl.addEventListener('input', function (e) {
+    var t = e.target, i = t.dataset.p; if (i == null || !t.dataset.k) return;
+    var p = data.fee.schedule[i], k = t.dataset.k, v = t.value;
+    if (t.dataset.band != null) p.bands[t.dataset.band][k] = +v || 0;
+    else p[k] = (k === 'rate' || k === 'minPrice') ? (+v || 0) : v;
+    syncCurrent(); renderList();
+  });
+  /* 開始日を変えたら、並べ直して終了日を決め直す。明日より前・ほかの設定と同じ日は入れない（元に戻す） */
+  schedEl.addEventListener('change', function (e) {
+    var t = e.target; if (t.dataset.k !== 'from') return;
+    var p = data.fee.schedule[t.dataset.p], v = t.value;
+    var dup = data.fee.schedule.some(function (x) { return x !== p && x.from === v; });
+    if (!v || v <= C.DEMO.today || dup) {
+      p.from = t.defaultValue;
+      KTN.toast(!v ? '適用開始日を入れてください' : dup ? 'ほかの料率設定と同じ開始日です。別の日にしてください' : '適用開始日は明日以降にしてください');
+    }
+    chain(); renderFee(); renderList();
+  });
+  schedEl.addEventListener('click', function (e) {
+    var d = e.target.closest('[data-del-p]'); if (d) { data.fee.schedule.splice(+d.dataset.delP, 1); chain(); renderFee(); renderList(); return; }
+    var a = e.target.closest('[data-add-band]'); if (a) { var p = data.fee.schedule[+a.dataset.addBand]; p.bands = p.bands || []; p.bands.push({ min: 100000, rate: p.rate }); renderFee(); return; }
+    var b = e.target.closest('[data-del-band]'); if (b) { data.fee.schedule[+b.dataset.p].bands.splice(+b.dataset.delBand, 1); renderFee(); }
+  });
+  document.getElementById('p9020AddPeriod').addEventListener('click', function () {
+    /* 最後の料率設定の値（区切りも）を写す。開始日は、最後の設定の開始日と今日の遅い方の、次の月の1日（あとで変えられる）。
+       前の設定の終了日は、この開始日の前の日に自動で決まる */
+    chain();
+    var list = data.fee.schedule, last = list[list.length - 1] || { from: C.DEMO.today, rate: 10, minPrice: 1000, bands: [] };
+    var base = last.from > C.DEMO.today ? last.from : C.DEMO.today, y = +base.slice(0, 4), m = +base.slice(5, 7) + 1;
+    if (m > 12) { m = 1; y++; }
+    list.push({ from: y + '-' + ('0' + m).slice(-2) + '-01', to: '', rate: last.rate, minPrice: last.minPrice, bands: (last.bands || []).map(function (b) { return { min: b.min, rate: b.rate }; }) });
+    chain(); renderFee(); renderList();
+  });
 
   /* ── お知らせの時期（data.notify） ── */
   var notifyEl = document.getElementById('p9020Notify');
@@ -26403,10 +26523,17 @@ KTN.pages['p90-20'] = function () {
   /* ページの保存：料率と、お知らせの時期だけ（キャンペーンは1件ずつ保存する。保存済みのキャンペーンはそのまま残す） */
   document.getElementById('p9020Save').addEventListener('click', function () {
     var errs = [];
-    if (!(data.fee.rate > 0 && data.fee.rate <= 100)) errs.push('サービス利用料の料率を 0 より大きく 100 以下で入れてください。');
-    if (!data.fee.from) errs.push('サービス利用料の適用開始日が未入力です。');
-    var mins = data.fee.bands.map(function (b) { return b.min; });
-    if (mins.some(function (m, i) { return mins.indexOf(m) !== i; })) errs.push('価格の区切りに同じ金額が2回入っています。');
+    /* 料率のスケジュール：料率・最低価格（50円以上＝決済できる最低の金額）・区切り。
+       期間の重なり・すき間は起きない（終了日は次の開始日の前の日に自動で決まる＝chain()）ので確かめない */
+    chain();
+    data.fee.schedule.forEach(function (p) {
+      var tag = 'サービス利用料（' + p.from + ' 〜 ' + (p.to || '') + '）：';
+      if (!(p.rate > 0 && p.rate <= 100)) errs.push(tag + '料率を 0 より大きく 100 以下で入れてください。');
+      if (!(p.minPrice >= 50)) errs.push(tag + '作品の最低価格は 50円以上にしてください（カードで決済できる最低の金額が 50円のため）。');
+      var mins = (p.bands || []).map(function (b) { return b.min; });
+      if (mins.some(function (m, j) { return mins.indexOf(m) !== j; })) errs.push(tag + '価格の区切りに同じ金額が2回入っています。');
+    });
+    if (!curPeriod()) errs.push('サービス利用料：今日に当たる期間がありません。');
     var nv = data.notify.saleEnd; if (nv.on && !(nv.days >= 1)) errs.push('お知らせの時期：日数を 1 以上で入れてください。');
     var box = document.getElementById('p9020Error'), list = document.getElementById('p9020ErrorList');
     if (errs.length) { list.innerHTML = errs.map(function (m) { return '<li class="ktn-form-error__item">' + esc(m) + '</li>'; }).join(''); box.hidden = false; return; }
@@ -26909,6 +27036,8 @@ function ktnAdminContentPage(cfg, root) {
   html += '<label class="p319-filter"><span class="p319-filter__label">' + (cfg.idLabel || 'NID') + '・URL</span><input type="search" class="p319-filter__sel p90cm-nid" data-f="nid" placeholder="' + (cfg.idPlaceholder || '例：197069 または ページの URL') + '"></label>';
   html += '<label class="p319-filter"><span class="p319-filter__label">さがす</span><input type="search" class="p319-filter__sel p90cm-kw" data-f="kw" placeholder="' + cfg.kwPlaceholder + '"></label>';
   filters.innerHTML = html;
+  /* 最初の状態の絞り込み（展覧会は「公開中」＝確認待ち・下書きは P90-5 で扱う・2026-10-31） */
+  if (cfg.defaultStatus) { state.status = cfg.defaultStatus; var ss = filters.querySelector('[data-f="status"]'); if (ss) ss.value = cfg.defaultStatus; }
   filters.addEventListener('input', function (e) { var f = e.target.dataset.f; if (f) { state[f] = e.target.value; render(); } });
   filters.addEventListener('change', function (e) { var f = e.target.dataset.f; if (f) { state[f] = e.target.value; render(); } });
 
@@ -26928,22 +27057,33 @@ function ktnAdminContentPage(cfg, root) {
     if (lvN >= KTN.ADMIN_LEVELS[cfg.deleteLevel || 'E'].n) a.push('<button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline" data-act="delete" data-id="' + r.id + '">削除</button>');
     return '<div class="p90cm-acts">' + a.join('') + '</div>';
   }
-  function render() {
+  /* 並び順とページ送り（2026-10-31 ユーザー決定＝案①）：日付（r.updated＝最後に更新した日／なければ r.date）の新しい順。
+     1ページ PER 件（既定 20）＋ページ送り。探す欄（NID・URL・キーワード）と状態の絞り込みは全件が対象。本番は探す処理とページ送りを API で行う */
+  var PER = cfg.perPage || 20, page = 1;
+  function dkey(r) { return String(r.updated || r.date || ''); }
+  rows.sort(function (a, b) { return dkey(a) < dkey(b) ? 1 : dkey(a) > dkey(b) ? -1 : 0; });
+  function render(keepPage) {
+    if (!keepPage) page = 1;
     var kw = state.kw.trim();
-    var shown = rows.filter(function (r) {
-      if (state.status && r.status !== state.status) return false;
+    var all = rows.filter(function (r) {
+      if (state.status && (cfg.statusMatch ? !cfg.statusMatch(r, state.status) : r.status !== state.status)) return false;
       if (cfg.extraFilter && state.extra && !cfg.extraFilter.match(r, state.extra)) return false;
       if (kw && (r.title + ' ' + (r.who || '') + ' ' + (r.text || '')).indexOf(kw) < 0) return false;
       if (state.nid.trim() && !ktnMatchId(r, state.nid)) return false;
       return true;
     });
+    var pages = Math.max(1, Math.ceil(all.length / PER));
+    if (page > pages) page = pages;
+    var shown = all.slice((page - 1) * PER, page * PER);
+    var pager = el('pager');
+    if (pager && KTN.pagination) KTN.pagination.render(pager, { page: page, totalPages: pages, onGoto: function (p) { page = p; render(true); } });
     list.innerHTML = shown.map(function (r) {
       return '<tr class="' + (r.status === 'hidden' ? 'is-hidden' : '') + '">' + cfg.cells(r).map(function (c, i) { return '<td data-label="' + cfg.cols[i] + '">' + c + '</td>'; }).join('') +
         '<td data-label="状態">' + statusHtml(r) + '</td><td data-label="操作">' + actions(r) + '</td></tr>';
     }).join('');
-    el('empty').hidden = shown.length !== 0;
-    el('count').innerHTML = '<strong>' + shown.length + '</strong>件該当';
-    if (cfg.onRender) cfg.onRender(shown.length, rows);
+    el('empty').hidden = all.length !== 0;
+    el('count').innerHTML = '<strong>' + all.length + '</strong>件該当' + (pages > 1 ? '（' + page + '/' + pages + 'ページ）' : '');
+    if (cfg.onRender) cfg.onRender(all.length, rows);
   }
   list.addEventListener('click', function (e) {
     var b = e.target.closest('[data-act]');
@@ -27327,26 +27467,51 @@ KTN.pages['p90-15'] = function () {
    P90-5（展覧会の確認・新規作成）は「確認待ち・下書き」のやることの一覧、こちらは「探して直す」場所（報告・依頼・ほかの事案で特定の展覧会を直すとき）。
    状態＝公開中・終了・非公開・下書き・確認待ち。非公開にできるのは公開中・終了のもの。データはデモの値（本番は API・数万件なので探すことが前提） ── */
 KTN.CM_CFG.exh = function () {
-  var ST = { live: ['granted', '公開中'], ended: ['cancelled', '終了'], hidden: ['returned', '非公開'], draft: ['new', '下書き'], review: ['pending', '確認待ち'] };
+  /* 表示は P90-5（展覧会の確認・新規作成）とそろえる（2026-10-31 ユーザー指示）：展覧会名（リンク）／会期／投稿者（クリエイター・ギャラリーはページへのリンク・ロール・UID、
+     管理者が代わりに作ったものは情報提供者）／日付（最後に更新した日・公開日の指定があれば2段目）／状態／操作。並びは更新日の新しい順。
+     状態の絞り込み：公開中（開催中・これから開催・終わったものを含む）・公開待ち・非公開・下書き・確認待ち。「終了」はやめた（開催中・これから開催は会期の話で、ほかの公開の状態と意味が違うので絞り込みに入れない） */
+  var ST = { live: ['granted', '公開中'], wait: ['granted', '公開待ち'], hidden: ['cancelled', '非公開'], draft: ['new', '下書き'], review: ['pending', '確認待ち'] };
+  var today = new Date(); today.setHours(0, 0, 0, 0);
+  function dt(s) { var m = String(s || '').match(/(\d{4})\.(\d{2})\.(\d{2})/); return m ? new Date(+m[1], +m[2] - 1, +m[3]) : null; }
+  function who(r) {
+    var name = r.role === 'admin' ? '<span class="p905-who">' + r.who + '</span>' : '<a class="p905-who p905-who--link" href="./kotennavi-' + (r.role === 'creator' ? 'p3' : 'p4') + '.html" target="_blank" rel="noopener">' + r.who + '</a>';
+    var role = r.role === 'admin' ? '<span class="p905-role">admin</span>' : '<span class="cb cb-person cb-' + r.role + '">' + r.role + '</span>';
+    return name + '<span class="p905-who__meta">' + role + ' ' + r.uid + '</span>' + (r.provider ? '<span class="p905-provider">情報提供者：' + r.provider + '</span>' : '');
+  }
+  var rows = [
+    { id: 'e1', updated: '2026.10.29', nid: '197069', title: '猫濱展vol.2', who: 'ギャラリーみなと', role: 'gallery', uid: 'U-10388', start: '2026.10.29', end: '2026.11.03', status: 'live' },
+    { id: 'e2', updated: '2026.10.29', nid: '198642', title: '須藤美保展', who: 'フジギャラリー新宿', role: 'gallery', uid: 'U-10402', start: '2026.11.12', end: '2026.12.13', status: 'live' },
+    { id: 'e3', updated: '2026.03.06', nid: '185220', title: 'あなたが知らないオノマトペ', who: '田中透', role: 'creator', uid: 'U-10003', start: '2026.02.18', end: '2026.03.05', status: 'live' },
+    { id: 'e4', updated: '2026.10.28', nid: '197802', title: '金子靖 作品展 -或は光の中で-', who: '金子靖', role: 'creator', uid: 'U-10441', start: '2026.10.29', end: '2026.11.04', status: 'hidden', prev: 'live' },
+    { id: 'e5', updated: '2026.10.28', nid: '198650', title: '松田啓佑展 vol.2', who: 'YUGEN Gallery', role: 'gallery', uid: 'U-10120', start: '2026.11.01', end: '2026.11.20', status: 'review', pub: '2026.10.31' },
+    { id: 'e6', updated: '2026.10.20', nid: '198601', title: '田中透 個展「新作連作」', who: '田中透', role: 'creator', uid: 'U-10003', start: '2026.11.01', end: '2026.11.20', status: 'draft', pub: '2026.10.30' },
+    { id: 'e7', updated: '2026.10.25', nid: '198612', title: '色彩の対話 — 現代絵画グループ展', who: 'Gallery SOIL 渋谷', role: 'gallery', uid: 'U-10155', start: '2026.11.20', end: '2026.12.10', status: 'wait', pub: '2026.11.10' },
+    { id: 'e8', updated: '2026.10.27', nid: '198633', title: '展覧会「工芸の現在」', who: '山本（事務局）', role: 'admin', uid: 'U-90001', provider: 'こだま画廊（gallery）', start: '2026.10.20', end: '2026.11.15', status: 'review' }
+  ].concat((function () {
+    /* ページ送りを確かめるための見本（「公開中」を20件より多くする・2026-10-31）。本番は API */
+    var V = ['ギャラリー青', 'アトリエ灯', 'gallery 凪', 'スペース白', '画廊 楓'], out = [];
+    for (var i = 0; i < 24; i++) {
+      var d = 20 - Math.floor(i / 2), dd = (d < 10 ? '0' : '') + d;
+      out.push({ id: 'ex' + i, updated: '2026.10.' + dd, nid: String(197100 + i), title: '見本の展覧会 ' + (i + 1), who: V[i % 5], role: 'gallery', uid: 'U-' + (10500 + i), start: '2026.10.' + dd, end: '2026.11.' + dd, status: 'live' });
+    }
+    return out;
+  })());
   return ({
-    kind: '展覧会', kwPlaceholder: '展覧会名・投稿者', idPlaceholder: '例：197069 または展覧会のページの URL', cols: ['展覧会', '投稿者', '会期'],
-    statusOptions: [['', 'すべて'], ['live', '公開中'], ['ended', '終了'], ['hidden', '非公開'], ['draft', '下書き'], ['review', '確認待ち']],
+    kind: '展覧会', kwPlaceholder: '展覧会名・投稿者', idPlaceholder: '例：197069 または展覧会のページの URL', cols: ['展覧会名', '会期', '投稿者', '日付'], defaultStatus: 'live',
+    statusOptions: [['', 'すべて'], ['live', '公開中'], ['wait', '公開待ち'], ['hidden', '非公開'], ['draft', '下書き'], ['review', '確認待ち']],
     statusHtml: function (r) { var s = ST[r.status]; return '<span class="ktn-review-status ktn-review-status--' + s[0] + '">' + s[1] + '</span>'; },
-    rows: [
-      { id: 'e1', nid: '197069', title: '猫濱展vol.2', who: 'ギャラリーみなと', role: 'gallery', uid: 'U-10388', term: '2026.10.29〜11.03', status: 'live' },
-      { id: 'e2', nid: '198642', title: '須藤美保展', who: 'フジギャラリー新宿', role: 'gallery', uid: 'U-10402', term: '2026.11.12〜12.13', status: 'live' },
-      { id: 'e3', nid: '185220', title: 'あなたが知らないオノマトペ', who: '田中透', role: 'creator', uid: 'U-10003', term: '2026.02.18〜03.05', status: 'ended' },
-      { id: 'e4', nid: '197802', title: '金子靖 作品展 -或は光の中で-', who: '金子靖', role: 'creator', uid: 'U-10441', term: '2026.10.29〜11.04', status: 'hidden', prev: 'live' },
-      { id: 'e5', nid: '198650', title: '松田啓佑展 vol.2', who: 'YUGEN Gallery', role: 'gallery', uid: 'U-10120', term: '2026.11.01〜11.20', status: 'review' },
-      { id: 'e6', nid: '198601', title: '田中透 個展「新作連作」', who: '田中透', role: 'creator', uid: 'U-10003', term: '2026.11.01〜11.20', status: 'draft' }
-    ],
+    rows: rows,
     cells: function (r) {
       return ['<a class="p90cm-title" href="kotennavi-p2.html" target="_blank" rel="noopener">' + r.title + '</a><span class="p90cm-sub">NID ' + r.nid + '</span>',
-        '<span class="p905-who">' + r.who + '</span><span class="p905-who__meta"><span class="cb cb-person cb-' + r.role + '">' + r.role + '</span> ' + r.uid + '</span>', r.term];
+        r.start + ' 〜 ' + r.end,
+        who(r),
+        '<span class="p905-date">' + r.updated + '</span><span class="p905-who__meta">最後に更新</span>' + (r.pub ? '<span class="p905-date p905-date--pub">' + r.pub + '</span><span class="p905-who__meta">公開日の指定</span>' : '')];
     },
     actions: function (r) {
-      var a = ['<a class="ktn-action-btn" href="kotennavi-p2-11.html">編集 →</a>', '<a class="ktn-action-btn" href="kotennavi-p2-11.html?mode=clone">クローン →</a>'];
-      if (r.status === 'live' || r.status === 'ended' || r.status === 'hidden') a.push('<button type="button" class="ktn-op-btn ktn-op-btn--sm" data-act="vis" data-id="' + r.id + '">' + (r.status === 'hidden' ? '公開に戻す' : '非公開にする') + '</button>');
+      /* P90-5 とそろえる：確認待ちは「確認する →」（編集と同じ P2-11 を開くので編集は出さない）、ほかは「編集 →」 */
+      var a = [r.status === 'review' ? '<a class="ktn-action-btn ktn-action-btn--alert" href="kotennavi-p2-11.html#p211AdminBlock">確認する →</a>' : '<a class="ktn-action-btn" href="kotennavi-p2-11.html">編集 →</a>',
+        '<a class="ktn-action-btn" href="kotennavi-p2-11.html?mode=clone">クローン →</a>'];
+      if (r.status === 'live' || r.status === 'hidden') a.push('<button type="button" class="ktn-op-btn ktn-op-btn--sm" data-act="vis" data-id="' + r.id + '">' + (r.status === 'hidden' ? '公開に戻す' : '非公開にする') + '</button>');
       a.push('<button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline" data-act="delete" data-id="' + r.id + '">削除</button>');
       return a;
     },
@@ -27386,7 +27551,8 @@ KTN.pages['p90-3'] = function () {
     return '<div class="p902-tab-panel" role="tabpanel" data-panel="' + t.key + '"' + (i ? ' hidden' : '') + '>' +
       '<div class="p319-toolbar"><div class="p319-toolbar__filters" data-cm="filters"></div><p class="ktn-count ktn-count--result" data-cm="count"></p></div>' +
       '<div class="p315-archive-table-wrap"><table class="p315-archive-table p90cm-table" aria-label="' + t.label + '"><thead data-cm="head"></thead><tbody data-cm="list"></tbody></table></div>' +
-      '<div class="p319-empty" data-cm="empty" hidden><p class="p319-empty__msg">該当するものはありません。</p></div></div>';
+      '<div class="p319-empty" data-cm="empty" hidden><p class="p319-empty__msg">該当するものはありません。</p></div>' +
+      '<nav class="ktn-pagination" data-cm="pager" aria-label="ページ送り" hidden></nav></div>';
   }).join('');
   TABS.forEach(function (t) {
     var cfg = KTN.CM_CFG[t.key]();

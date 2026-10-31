@@ -430,9 +430,16 @@ KTN.feeRate = function () {
   try { if (KTN.CAMPAIGN && KTN.CAMPAIGN.load) { var r = KTN.CAMPAIGN.load().fee.rate; if (r !== undefined && r !== '') return +r; } } catch (e) {}
   return 10;
 };
+/* 作品の最低価格（円）。料率と同じく P90-20 の料率のスケジュールの、今日の期間の値（fee.minPrice・2026-10-31）。
+   ページでは <span data-fee-min>1,000</span>円 と書く。よくある質問の答えでは {{minPrice}}（例：1,000円） */
+KTN.feeMinPrice = function () {
+  try { if (KTN.CAMPAIGN && KTN.CAMPAIGN.load) { var m = KTN.CAMPAIGN.load().fee.minPrice; if (m) return +m; } } catch (e) {}
+  return 1000;
+};
 function ktnFillFeeRate() {
-  var r = KTN.feeRate();
+  var r = KTN.feeRate(), m = KTN.feeMinPrice().toLocaleString();
   document.querySelectorAll('[data-fee-rate]').forEach(function (el) { el.textContent = r; });
+  document.querySelectorAll('[data-fee-min]').forEach(function (el) { el.textContent = m; });
 }
 /* ══ P2 系（展覧会のページと、その下のページ）のオーナー向けの帯：下書き／確認依頼中／公開前（2026-10-24 P2 から共通へ）。
    入れ物は各ページの <div class="ktn-content p2-owner-pub-wrap" id="p2OwnerPubWrap" hidden>（P2・P2-1〜5・P2-5-1）。
@@ -1949,6 +1956,7 @@ KTN.renderQA = function (target, opts) {
     }
     /* {{pushGuide}}＝スマホのプッシュ通知の設定方法（P60-17「スマホで使う」・2026-10-21） */
     s = s.split('{{rate}}').join((KTN.feeRate ? KTN.feeRate() : 10) + '%');   /* 料率（P90-20 の設定から） */
+    s = s.split('{{minPrice}}').join((KTN.feeMinPrice ? KTN.feeMinPrice() : 1000).toLocaleString() + '円');   /* 作品の最低価格（同上） */
     s = s.split('{{pushGuide}}').join('<a href="./kotennavi-p60-17.html#push" class="ktn-guide-link">設定方法</a>');
     /* {{perksGuide}}＝作品販売ガイドの「特典とクーポン」（P70-2・2026-10-22） */
     s = s.split('{{perksGuide}}').join('<a href="./kotennavi-p70-2.html#perks" class="ktn-guide-link">作品販売ガイドの「特典とクーポン」</a>');

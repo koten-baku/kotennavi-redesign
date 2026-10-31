@@ -121,27 +121,17 @@
 
         <!-- サービス利用料 -->
         <div class="p9020-panel" id="p9020Panel-fee" role="tabpanel">
-          <p class="p909-auto-intro">料率は、作品代金・送料・梱包費の合計（税込）にかけます。決済にかかる費用はこの中に含みます。料率を変えると、適用開始日よりあとに購入の申込があった取引から使われます。</p>
+          <!-- 料率はスケジュールで管理する（2026-10-31 ユーザー指示）：適用の期間（開始日〜終了日）ごとに、料率・作品の最低価格・価格の区切りを持つ。購入の申込の日に当たる期間の設定を使う -->
+          <p class="p909-auto-intro">料率は、作品代金・送料・梱包費の合計（税込）にかけます。決済にかかる費用はこの中に含みます。料率は期間（適用開始日〜適用終了日）ごとに決め、購入の申込があった日に当たる期間の料率を、その取引に使います。</p>
           <p class="p9019-today-line" id="p9020FeeNow"></p>
-          <div class="p9020-grid">
-            <div class="p211-field">
-              <label class="p211-label" for="p9020Rate">料率<span class="ktn-req">必須</span></label>
-              <span class="p9020-unit"><input class="p211-input" type="number" id="p9020Rate" min="0" max="100" step="0.5">%</span>
-            </div>
-            <div class="p211-field">
-              <label class="p211-label" for="p9020From">適用開始日<span class="ktn-req">必須</span></label>
-              <input class="p211-input" type="date" id="p9020From">
-            </div>
-          </div>
-          <h3 class="p9019-sub">価格の区切り<span class="ktn-sec-en">Price Bands</span></h3>
-          <p class="p211-help">高額の作品だけ料率を変えるときに足します。区切りが無いあいだは、すべての作品に上の料率を使います。区切りは作品の販売価格（税込）で見ます。</p>
-          <div class="p315-archive-table-wrap">
-            <table class="p315-archive-table p909-table">
-              <thead><tr><th>作品の販売価格</th><th>料率</th><th>操作</th></tr></thead>
-              <tbody id="p9020Bands"></tbody>
-            </table>
-          </div>
-          <div class="p909-toolbar-row"><button type="button" class="ktn-op-btn ktn-op-btn--sm" id="p9020AddBand">＋ 区切りを追加</button></div>
+          <h3 class="p9019-sub">料率のスケジュール<span class="ktn-sec-en">Schedule</span></h3>
+          <p class="p211-help">入れるのは適用開始日だけです。適用終了日は、次の料率設定の開始日の前の日に自動で決まります（期間は途切れずにつながります）。作品の最低価格は、LIAISON+ で売れる作品の販売価格（税込）の下限です（決済できる最低の金額は 50円）。価格の区切りは、高額の作品だけ料率を変えるときに料率設定ごとに足します（作品の販売価格〔税込〕で見ます）。適用中の料率設定は変えられません。変えるときは、明日以降の開始日で料率設定を追加します。</p>
+          <!-- 期間ごとのまとまり（適用中・予定）。中身は pages.js が描く -->
+          <div class="p9020-periods" id="p9020Sched"></div>
+          <div class="p909-toolbar-row"><button type="button" class="ktn-op-btn ktn-op-btn--sm" id="p9020AddPeriod">＋ 料率設定を追加</button></div>
+          <!-- 終わった期間（見るだけ）。その期間に申込があった取引には、この値が使われている -->
+          <h3 class="p9019-sub">過去の適用<span class="ktn-sec-en">History</span></h3>
+          <div class="p9020-periods" id="p9020Past"></div>
           <p class="p211-help">利用者向けのページ（作品販売ガイド・LIAISON+ の申込・利用規約・特定商取引法に基づく表示・FAQ・利用開始のメール）には、今の料率だけを出します。将来の料率の予定は載せません。料率を変えたときは、これらのページの文面もあわせて確かめてください。</p>
         </div>
 

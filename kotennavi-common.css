@@ -13856,6 +13856,26 @@ a.p10-preset{text-decoration:none}
 .p9020-grid > .p211-field{flex:1 1 240px;min-width:0}
 .p9020-unit{display:inline-flex;align-items:center;gap:6px;font-size:.8rem;color:var(--ink);white-space:nowrap}
 .p9020-unit .p211-input{width:120px}
+/* P90-20 料率のスケジュール（2026-10-31）：期間ごとのまとまり（中に価格の区切り）・終わった期間は見るだけ */
+.p9020-periods{display:flex;flex-direction:column;gap:12px}
+.p9020-period{border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:4px;background:#fff;padding:14px 16px}
+.p9020-period--plan{border-left-color:#b08a2e}
+.p9020-period--past{border-left-color:var(--border);background:#faf7f1}
+.p9020-period__head,.p9020-period__vals{display:flex;flex-wrap:wrap;align-items:flex-end;gap:10px 14px}
+.p9020-period__vals{margin-top:12px}
+.p9020-period__head .ktn-review-status{align-self:center}
+.p9020-period__f{display:flex;flex-direction:column;gap:4px;font-size:.72rem;color:var(--muted)}
+.p9020-period__f input[type="date"].p211-input{width:160px}
+.p9020-period__f .p9020-unit .p211-input{width:100px}
+.p9020-period__to{display:flex;align-items:center;min-height:38px;font-size:.82rem;color:var(--ink)}
+.p9020-period__sep{align-self:center;padding-top:16px;color:var(--muted)}
+.p9020-period__del{margin-left:auto}
+.p9020-period__sub{margin:14px 0 6px;font-size:.78rem;font-weight:600;color:var(--ink)}
+.p9020-period__range{font-family:var(--fm);font-size:.82rem;color:var(--ink)}
+.p9020-period__dl{display:flex;flex-wrap:wrap;gap:6px 24px;margin:10px 0 0}
+.p9020-period__dl dt{font-size:.7rem;color:var(--muted)}
+.p9020-period__dl dd{margin:2px 0 0;font-size:.82rem;color:var(--ink)}
+.p9020-warn{color:#b43c14;font-weight:600}
 .p9020-range{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:.8rem;color:var(--muted)}
 .p9020-range .p211-input{width:auto;flex:1 1 130px;min-width:0}
 .p9020-sub{display:flex;align-items:baseline;gap:8px;margin:18px 0 10px;padding-top:14px;border-top:1px solid var(--border);font-family:var(--fn);font-size:.86rem;font-weight:700;color:var(--ink)}
