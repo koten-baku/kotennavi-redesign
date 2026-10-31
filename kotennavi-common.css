@@ -13867,6 +13867,11 @@ a.p10-preset{text-decoration:none}
 .p9020-period__f{display:flex;flex-direction:column;gap:4px;font-size:.72rem;color:var(--muted)}
 .p9020-period__f input[type="date"].p211-input{width:160px}
 .p9020-period__f .p9020-unit .p211-input{width:100px}
+/* 予定の料率設定のお知らせ（知らせる日・告知のニュース・対象の出品者への自動のお知らせ） */
+.p9020-period__notice{margin-top:16px;padding-top:12px;border-top:1px dashed var(--border);display:flex;flex-direction:column;gap:10px}
+.p9020-period__notice .p9020-period__sub{margin:0}
+.p9020-period__diff{margin:0;font-size:.8rem;color:var(--ink)}
+.p9020-period__auto{margin:0;padding:8px 12px;background:#faf7f1;border-radius:4px;font-size:.78rem;line-height:1.7;color:var(--ink)}
 .p9020-period__to{display:flex;align-items:center;min-height:38px;font-size:.82rem;color:var(--ink)}
 .p9020-period__sep{align-self:center;padding-top:16px;color:var(--muted)}
 .p9020-period__del{margin-left:auto}
@@ -14313,3 +14318,30 @@ a.p905-who--link{color:var(--accent);text-decoration:underline;text-underline-of
 .p315-archive-table td.p905-started{color:#b43c14;font-weight:600} /* P90-5：会期がもう始まっているのに未公開＝会期の日付を赤字に（2026-10-30） */
 .p905-started__note{margin-left:2px;font-size:.92em}
 .p905-provider{display:block;margin-top:3px;font-family:var(--fn);font-size:.74rem;color:var(--ink)} /* P90-5：管理者が代わりに作った展覧会の情報提供者（2026-10-30） */
+
+/* サービス利用料と作品の最低価格の箱（P2-12-1・pages.js KTN.CAMPAIGN の feeBox・2026-10-31）。
+   改定の予定があれば、その中に入れ子の箱で出し、変わる値に印（is-changed） */
+.ktn-fee-box{margin:12px 0;padding:14px 16px;background:#fff;border:1px solid var(--border);border-left:3px solid var(--page-accent,var(--accent));border-radius:4px}
+.ktn-fee-box[hidden]{display:none}
+.ktn-fee-box__head{font-size:.84rem;font-weight:700;color:var(--ink)}
+.ktn-fee-box__list{display:flex;flex-wrap:wrap;gap:6px 28px;margin:10px 0 0}
+.ktn-fee-box__row dt{font-size:.72rem;color:var(--muted)}
+.ktn-fee-box__row dd{margin:2px 0 0;font-size:.86rem;font-weight:600;color:var(--ink)}
+.ktn-fee-box__row.is-changed dd{color:#b43c14}
+.ktn-fee-box__note{margin:8px 0 0;font-size:.74rem;line-height:1.7;color:var(--muted)}
+.ktn-fee-box__next{margin-top:12px;padding:10px 14px;background:#faf7f1;border:1px dashed var(--border);border-radius:4px}
+.ktn-fee-box__next-head{font-size:.78rem;font-weight:700;color:var(--ink)}
+/* 箱の中の利用料と特典の1行（.ktn-terms-line をそのまま使い、帯の背景と線だけ外す） */
+.ktn-fee-box .ktn-fee-box__terms{margin-top:10px;padding:0;background:none;border-left:0}
+/* 折りたたみのボタン（.ktn-fold・2026-10-31）。開いているときは矢印を上向きに。
+   --sub＝行の下に置く小さな「条件」ボタン（P2-12-1 のクーポンごと） */
+.ktn-fold{display:flex;align-items:center;gap:8px;width:100%;padding:0;background:none;border:0;font:inherit;color:inherit;text-align:left;cursor:pointer}
+.ktn-fold__arr{flex-shrink:0;color:var(--muted);transition:transform .15s}
+.ktn-fold > span:first-child + .ktn-fold__arr{margin-left:auto}
+.ktn-fold[aria-expanded="true"] .ktn-fold__arr{transform:rotate(180deg)}
+.ktn-fold:hover .p2-12-section-head__title{color:var(--page-accent,var(--accent))}
+.ktn-fold--sub{width:auto;gap:4px;margin-top:6px;font-size:.74rem;color:var(--muted)}
+.ktn-fold--sub:hover{color:var(--ink)}
+.ktn-fold-more[hidden]{display:none}
+.ktn-fee-box__body[hidden]{display:none}
+.ktn-fee-box__head.ktn-fold{font-size:.84rem;font-weight:700;color:var(--ink)}

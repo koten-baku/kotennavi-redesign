@@ -165,6 +165,7 @@
                 <option value="cg">クリエイター・ギャラリー</option>
                 <option value="creator">クリエイター</option>
                 <option value="gallery">ギャラリー</option>
+                <option value="lp">LIAISON+ を利用中のクリエイター・ギャラリー</option>
               </select>
               <p class="p211-help" id="p6111TargetHelp"></p>
             </div>
@@ -178,9 +179,9 @@
 
             <!-- つなぐキャンペーン（P90-20 のキャンペーン。つなぐと、ニュースにキャンペーンの内容の箱が自動で出る・2026-10-12） -->
             <div class="p211-field">
-              <label class="p211-label" for="p6111Campaign">つなぐキャンペーン</label>
+              <label class="p211-label" for="p6111Campaign">つなぐキャンペーン・料率設定</label>
               <select class="p211-select" id="p6111Campaign" data-camp-select></select>
-              <p class="p211-help">キャンペーンの案内のニュースを作るときに選びます。つなぐと、本文の上に、キャンペーンの対象・条件・特典・実施期間が自動で出ます（数字は <a class="ktn-guide-link" href="./kotennavi-p90-20.html#campaign">料率・キャンペーン管理</a> の設定から出るので、本文に打ち直さないでください）。対象と表示期限は、キャンペーンの対象と実施期間に合わせてください。</p>
+              <p class="p211-help">料率設定（サービス利用料・作品の最低価格の変更）を知らせるニュースは、その料率設定を選びます。公開日は P90-20 の「知らせる日」にしてください。キャンペーンの案内のニュースを作るときは、そのキャンペーンを選びます。つなぐと、本文の上に、キャンペーンの対象・条件・特典・実施期間が自動で出ます（数字は <a class="ktn-guide-link" href="./kotennavi-p90-20.html#campaign">料率・キャンペーン管理</a> の設定から出るので、本文に打ち直さないでください）。対象と表示期限は、キャンペーンの対象と実施期間に合わせてください。</p>
             </div>
 
             <!-- 本文 -->
@@ -215,6 +216,7 @@
                     <option value="cg">クリエイター・ギャラリー</option>
                     <option value="creator">クリエイター</option>
                     <option value="gallery">ギャラリー</option>
+                    <option value="lp">LIAISON+ を利用中のクリエイター・ギャラリー</option>
                   </select>
                 </div>
                 <div class="p211-field">
@@ -335,7 +337,9 @@
     user:    { show: '登録ユーザー全員（クリエイター・ギャラリーを含む）の「あなた宛」のタブに、「ユーザー」の印を付けて表示されます。ゲストには表示されません。', mail: '登録ユーザー全員（クリエイター・ギャラリーを含む）' },
     cg:      { show: 'クリエイター機能・ギャラリー機能を利用中の人の「あなた宛」のタブに、見る人のロールで「クリエイター」「ギャラリー」の印を付けて表示されます。', mail: 'クリエイター・ギャラリー機能を利用中の人' },
     creator: { show: 'クリエイター機能を利用中の人の「あなた宛」のタブに、「クリエイター」の印を付けて表示されます。', mail: 'クリエイター機能を利用中の人' },
-    gallery: { show: 'ギャラリー機能を利用中の人の「あなた宛」のタブに、「ギャラリー」の印を付けて表示されます。', mail: 'ギャラリー機能を利用中の人' }
+    gallery: { show: 'ギャラリー機能を利用中の人の「あなた宛」のタブに、「ギャラリー」の印を付けて表示されます。', mail: 'ギャラリー機能を利用中の人' },
+    /* LIAISON+ の利用が承認されたクリエイター・ギャラリー全員（出品中かどうかは問わない）。料率設定の変更の告知など（2026-10-31） */
+    lp:      { show: 'LIAISON+ の利用が承認されたクリエイター・ギャラリー全員（出品中かどうかは問わない）の「あなた宛」のタブに、見る人のロールで「クリエイター」「ギャラリー」の印を付けて表示されます。', mail: 'LIAISON+ の利用が承認されたクリエイター・ギャラリー全員' }
   };
   function p6111SyncTargetHelp() {
     document.getElementById('p6111TargetHelp').textContent = P6111_TARGET[document.getElementById('p6111Target').value].show;
