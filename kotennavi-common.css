@@ -14237,8 +14237,9 @@ a.p9022-title{color:var(--accent);text-decoration:underline;text-underline-offse
 .p906-sub{display:block;margin-top:2px;font-family:var(--fn);font-size:.7rem;color:var(--muted)}
 .p906-group{font-weight:600;vertical-align:top}
 /* P90-5 の「新規展覧会を作成」（2026-10-29）：大きく・真ん中に（ユーザー指示）。遷移なのでアウトライン＋→のまま（実行の塗りにしない） */
-.p905-new{display:flex;justify-content:center;padding:8px 0 4px}
-.p905-new__btn{font-size:.95rem;padding:12px 32px;border-width:2px}
+/* 管理の一覧のページの大きな「新規作成」（P90-1・P90-5・P90-7・P90-8・2026-11-01 に P90-5 から共通に） */
+.ktn-mgmt-new{display:flex;justify-content:center;padding:8px 0 4px}
+.ktn-mgmt-new__btn{font-size:.95rem;padding:12px 32px;border-width:2px}
 .p315-archive-table tbody tr[hidden]{display:none}
 
 /* ══ コンテンツの管理ページ（P90-23 作品・P90-24 記事・P90-25 レビュー・P90-26 コメント・2026-10-29）と、削除の理由のモーダル（KTN.adminDelete）══
@@ -14395,3 +14396,22 @@ a.p905-who--link{color:var(--accent);text-decoration:underline;text-underline-of
 .p6021-var{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;background:#fff;border:1px solid var(--border);border-radius:4px;font:inherit;font-size:.74rem;color:var(--ink);cursor:pointer}
 .p6021-var:hover{border-color:var(--accent)}
 .p6021-var code{font-family:var(--fm);color:var(--accent)}
+/* P90-1 ユーザー管理のロール（1段目 ユーザー／2段目 クリエイター・ギャラリー／3段目 LIAISON+・2026-11-01） */
+.p901-role{display:block;font-size:.8rem;line-height:1.6;color:var(--ink)}
+/* 管理の一覧の「その他 ▾」（行の操作をまとめる・2026-11-01） */
+.p90cm-acts__store[hidden]{display:none}
+.p90cm-acts__more{white-space:nowrap}
+/* 管理の一覧（P90-1・P90-7・P90-8）：探す欄と表の見出しの行のあいだを空ける（2026-11-01 ユーザー指摘） */
+.p90cm-block .p319-toolbar{margin-bottom:16px}
+/* P90-1-1 ユーザー新規/編集/クローン（2026-11-01）：ロール（訂正のために変えられる）・通知設定のスイッチ・管理の項目 */
+.p9011-sws{display:flex;flex-direction:column;gap:8px}
+.p9011-sws + .p9011-sws{margin-top:14px}
+.p9011-sws__head{margin:0;font-size:.78rem;font-weight:700;color:var(--ink)}
+.p9011-sw{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:.84rem;color:var(--ink)}
+.p9011-status{max-width:220px}
+.p9011-radio__opts{display:flex;flex-wrap:wrap;gap:6px 16px}
+.p9011-radio__opts label{display:inline-flex;align-items:center;gap:4px;font-size:.84rem;color:var(--ink);cursor:pointer}
+.p9011-fixed{margin:0;font-size:.84rem;color:var(--ink)}
+.p9011-page{margin-top:10px}
+.p9011-warn{margin:6px 0 0;font-size:.78rem;font-weight:600;line-height:1.6;color:#b43c14}
+.p9011-warn[hidden]{display:none}

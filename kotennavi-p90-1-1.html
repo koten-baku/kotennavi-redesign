@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ユーザー新規/編集/クローン — 管理者 | 個展なび</title>
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <!-- PWA（docs/PWA設計ガイド.md 4 章・2026-10-09）。本番の URL に合わせて href は後工程で直す -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#231815">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="個展なび">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="icon" href="favicon.ico" sizes="48x48">
+  <link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<body data-w="detail" class="p90-1-1-page mgmt-page">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- デモバー -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ロール：</span>
+  <button class="dbtn on" onclick="setR('admin',this)">管理者</button>
+  <span class="dbar-sep">モード：</span>
+  <button class="dbtn on" id="dbarNew" onclick="setDemoMode('new')">新規</button>
+  <button class="dbtn" id="dbarClone" onclick="setDemoMode('clone')">クローン</button>
+  <button class="dbtn" id="dbarEdit" onclick="setDemoMode('edit')">編集</button>
+</div>
+
+<div class="shell">
+
+<!-- サイドバー（kotennavi-p1.html と同一マークアップ・#ktnRoleNav は renderSidebar() がJS注入） -->
+<aside class="ktn-sidebar" id="ktnSidebar">
+
+  <!-- ロゴ (logo5-1) -->
+  <a href="kotennavi-p1.html" class="ktn-sidebar__logo" data-page="p1">
+    <img src="./images/kotennavi-logo5-1.svg" alt="個展なび">
+  </a>
+
+  <!-- 検索 → P10 検索ハブ -->
+  <a href="kotennavi-p10.html" class="ktn-sidebar__item" data-page="p10">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <circle cx="11" cy="11" r="7.5"/>
+        <path d="M21 21l-4.5-4.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">検索</span>
+  </a>
+
+  <!-- お知らせ → P61（未制作） -->
+  <a href="kotennavi-p61.html" class="ktn-sidebar__item" id="ktnSidebarNotice" data-page="p61">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__dot" id="ktnNoticeDot" style="display:none"></span>
+    <span class="ktn-sidebar__label">お知らせ</span>
+  </a>
+
+  <!-- ガイド → P60（未制作） -->
+  <a href="kotennavi-p60.html" class="ktn-sidebar__item" data-page="p60">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" stroke-linecap="round"/>
+        <path d="M12 16v-4M12 8h.01" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">ガイド</span>
+  </a>
+
+  <div class="ktn-sidebar__divider"></div>
+
+  <!-- ロール別アイコン（JS注入） -->
+  <div id="ktnRoleNav" style="width:100%;display:flex;flex-direction:column;align-items:center"></div>
+
+  <div class="ktn-sidebar__footer">
+    <p class="ktn-sidebar__footer-label">Follow us</p>
+    <div class="ktn-sidebar__sns">
+      <a href="https://www.facebook.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="Facebook">
+        <svg viewBox="0 0 320 512" fill="currentColor"><path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/></svg>
+      </a>
+      <a href="https://x.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="X">
+        <svg viewBox="0 0 512 512" fill="currentColor"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg>
+      </a>
+    </div>
+  </div>
+
+</aside>
+
+<div class="content-wrap" id="contentWrap">
+
+  <header class="ktn-header" id="ktnHeader">
+    <div class="ktn-header__inner">
+      <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+      <div class="ktn-hdr-actions" id="ktnActs"></div>
+    </div>
+  </header>
+
+  <main class="ktn-main" id="ktnMain">
+    <div class="ktn-content">
+
+      <!-- モード案内バナー（新規・クローン時のみ表示。編集は非表示） -->
+      <div class="p211-mode-banner" id="p901ModeBanner">
+        <span class="p211-mode-banner__icon">ℹ️</span>
+        <div class="p211-mode-banner__text" id="p901ModeBannerText"></div>
+      </div>
+
+      <!-- 管理ボックス -->
+      <div class="p901-wrap ktn-mgmt-wrap">
+
+        <!-- ページヘッド -->
+        <div class="ktn-mgmt-head">
+          <h2 class="ktn-mgmt-head__title" id="p901PageTitle">ユーザー新規/編集/クローン</h2>
+          <p class="ktn-mgmt-head__en">USER ACCOUNT</p>
+          
+        </div>
+
+        <!-- ユーザーのデータ（今のサイトと同じ項目・2026-11-01 ユーザー指示）：メールアドレス・ニックネーム・プロフィール画像・ロール・通知設定。
+             管理の項目：アカウントステータス・管理者コメント。氏名・フリガナは持たない（LIAISON+ の本人確認の情報は P5-12 の本人情報で、この画面では扱わない） -->
+        <div class="p211-block">
+          <div class="p211-block__head"><div class="p211-block__title">基本情報 <span class="p211-block__title-en">Basic Info</span></div></div>
+          <div class="p211-block__body">
+            <div class="p211-field">
+              <label class="p211-label" for="p901Email">メールアドレス<span class="ktn-req">必須</span></label>
+              <input class="p211-input" type="email" id="p901Email" placeholder="例：hanako.yamada@example.com" autocomplete="off">
+              <p class="p211-help">ログインと通知の送り先に使います。</p>
+            </div>
+            <div class="p211-field">
+              <label class="p211-label" for="p901Nick">ニックネーム<span class="ktn-req">必須</span></label>
+              <input class="p211-input" type="text" id="p901Nick" maxlength="30" data-count placeholder="例：山田 花子">
+              <p class="p211-help">ユーザーカードやユーザーページに表示されます。</p>
+            </div>
+            <div class="p211-field">
+              <div class="p211-label">プロフィール画像</div>
+              <div class="p511-avatar-field">
+                <div class="p511-avatar-preview" id="p901Avatar">花</div>
+                <div class="p511-avatar-actions">
+                  <label class="p511-avatar-upload-btn">
+                    <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" width="12" height="12"><path d="M7 1v8M4 4l3-3 3 3M2 11h10"/></svg>
+                    画像をアップロード
+                    <input type="file" accept="image/*" hidden id="p901AvatarInput">
+                  </label>
+                  <button class="p511-avatar-remove-btn" type="button" id="p901AvatarRemove">削除</button>
+                  <p class="p511-avatar-hint">JPG / PNG / WebP<br>5MB以内・正方形推奨</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ロール（不具合・誤りの訂正のために、ここでも変えられる・2026-11-01 ユーザー指示。ふだんは本人の申込と P90-2・P90-11 の審査で付く）。
+             止めずに注意を出す：クリエイター・ギャラリーはページと結びつく／LIAISON+ は本人確認と口座が要る。変えたら保存のときに理由が必須で、操作の記録に残る -->
+        <div class="p211-block">
+          <div class="p211-block__head"><div class="p211-block__title">ロール <span class="p211-block__title-en">Role</span></div></div>
+          <div class="p211-block__body">
+            <!-- ロール（2026-11-01 ユーザー指示）：ラジオボタンで ユーザー・クリエイター・ギャラリーから1つ（クリエイター・ギャラリーはユーザーの機能を含む・同時には持てない）／LIAISON+＝トグル -->
+            <div class="p9011-sws">
+              <div class="p9011-sw p9011-radio"><span class="p9011-sw__label">ロール</span><span class="p9011-radio__opts" role="radiogroup" aria-label="ロール"><label><input type="radio" name="p901cg" value=""> ユーザー</label><label><input type="radio" name="p901cg" value="creator"> クリエイター</label><label><input type="radio" name="p901cg" value="gallery"> ギャラリー</label></span></div>
+              <div class="p9011-sw"><span class="p9011-sw__label">LIAISON+</span><button type="button" class="ktn-switch" role="switch" aria-checked="false" data-p901-role="lp" aria-label="LIAISON+"><span class="ktn-switch__track"><span class="ktn-switch__knob"></span></span><span class="ktn-switch__label">OFF</span></button></div>
+            </div>
+            <div class="p211-field p9011-page" id="p901PageField" hidden>
+              <label class="p211-label" for="p901Page">オーナーにするページの ID</label>
+              <input class="p211-input" type="text" id="p901Page" placeholder="例：CR-1042 または GA-0412">
+              <p class="p211-help">このアカウントをオーナーにするクリエイター・ギャラリーのページです。空のまま保存すると、ページとは結びつきません。</p>
+            </div>
+            <p class="p211-help" id="p901LpCheck"></p>
+            <p class="p9011-warn" id="p901RoleWarn" hidden></p>
+            <p class="p211-help">ふだんは、本人の申込のあと <a class="ktn-guide-link" href="./kotennavi-p90-2.html">機能申込管理 →</a>・<a class="ktn-guide-link" href="./kotennavi-p90-11.html">リエゾンプラス機能申込管理 →</a> の審査で付きます。ここで変えるのは、不具合や誤りを直すときです。変えたときは、保存のときに理由を書きます。</p>
+          </div>
+        </div>
+
+        <!-- 通知設定（P5-13 と同じ項目。本人からの依頼で直すとき用。プッシュ通知は端末ごとの設定なので、ここでは扱わない） -->
+        <div class="p211-block">
+          <div class="p211-block__head"><div class="p211-block__title">通知設定 <span class="p211-block__title-en">Notifications</span></div></div>
+          <div class="p211-block__body">
+            <div class="p9011-sws">
+              <p class="p9011-sws__head">ユーザーとして受け取るメール</p>
+                <div class="p9011-sw"><span class="p9011-sw__label">リマインダー（1日1回・朝）</span><button type="button" class="ktn-switch is-on" role="switch" aria-checked="true" data-p9011-key="reminder" aria-label="リマインダー（1日1回・朝）"><span class="ktn-switch__track"><span class="ktn-switch__knob"></span></span><span class="ktn-switch__label">受け取る</span></button></div>
+                <div class="p9011-sw"><span class="p9011-sw__label">ウォッチ新着</span><button type="button" class="ktn-switch is-on" role="switch" aria-checked="true" data-p9011-key="watch" aria-label="ウォッチ新着"><span class="ktn-switch__track"><span class="ktn-switch__knob"></span></span><span class="ktn-switch__label">受け取る</span></button></div>
+                <div class="p9011-sw"><span class="p9011-sw__label">個展なびからのおすすめ</span><button type="button" class="ktn-switch" role="switch" aria-checked="false" data-p9011-key="news" aria-label="個展なびからのおすすめ"><span class="ktn-switch__track"><span class="ktn-switch__knob"></span></span><span class="ktn-switch__label">受け取らない</span></button></div>
+            </div>
+            <div class="p9011-sws" id="p901SwsOwner" hidden>
+              <p class="p9011-sws__head">クリエイター／ギャラリーとして受け取るメール</p>
+                <div class="p9011-sw"><span class="p9011-sw__label">ウォッチ・チェックイン・コメントのお知らせ</span><button type="button" class="ktn-switch is-on" role="switch" aria-checked="true" data-p9011-key="audience" aria-label="ウォッチ・チェックイン・コメントのお知らせ"><span class="ktn-switch__track"><span class="ktn-switch__knob"></span></span><span class="ktn-switch__label">受け取る</span></button></div>
+                <div class="p9011-sw"><span class="p9011-sw__label">インサイトの月次レポート</span><button type="button" class="ktn-switch is-on" role="switch" aria-checked="true" data-p9011-key="insight" aria-label="インサイトの月次レポート"><span class="ktn-switch__track"><span class="ktn-switch__knob"></span></span><span class="ktn-switch__label">受け取る</span></button></div>
+            </div>
+            <p class="p211-help">本人が myページの通知設定（P5-13）で変えられる項目です。本人から依頼があったときに直します。プッシュ通知は端末ごとの設定なので、ここでは変えられません。</p>
+          </div>
+        </div>
+
+        <!-- 管理の項目（アカウントステータス・管理者コメント） -->
+        <div class="ktn-admin-note" id="p901AdminNote">
+          <div class="ktn-admin-note__head"><span class="ktn-admin-note__badge">Admin</span><span class="ktn-admin-note__title">管理の項目</span></div>
+          <div class="p211-field">
+            <label class="p211-label" for="p901Status">アカウントステータス</label>
+            <select class="p211-select p9011-status" id="p901Status">
+              <option value="active">有効</option>
+              <option value="suspended">停止</option>
+            </select>
+            <p class="p211-help">「停止」にするとログインできなくなります。</p>
+          </div>
+          <div class="p211-field">
+            <label class="p211-label" for="p901AdminComment">管理者コメント</label>
+            <textarea maxlength="500" data-count class="ktn-admin-note__textarea" id="p901AdminComment" placeholder="例：2026-11-01 本人からの依頼で、おすすめのメールを止めた。"></textarea>
+            <p class="p211-help">管理上の対応履歴・申し送りを記録します。管理者のみが閲覧できます。</p>
+          </div>
+        </div>
+
+        <!-- 送信バー -->
+        <div class="p211-submit-bar">
+          <button class="p211-submit-bar__cancel ktn-op-btn" type="button" onclick="location.href='./kotennavi-p90-1.html'">キャンセル</button>
+          <button class="p211-submit-bar__submit ktn-op-btn ktn-op-btn--primary" type="button" id="p901SubmitBtn" onclick="p901Submit()">保存する</button>
+          <span class="p211-submit-bar__note" id="p901SubmitNote"></span>
+        </div>
+
+      </div><!-- /.ktn-mgmt-wrap -->
+
+    </div><!-- /.ktn-content -->
+  </main>
+<footer class="ktn-footer" id="ktnFooter"></footer>
+
+
+</div><!-- /.content-wrap -->
+</div><!-- /.shell -->
+
+<nav class="ktn-bottom-nav" id="ktnBottomNav"><div class="ktn-bottom-nav__inner" id="ktnBottomNavInner"></div></nav>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Top","item":"https://koten-navi.com/"},{"@type":"ListItem","position":2,"name":"管理者メニュー","item":"https://koten-navi.com/p90"},{"@type":"ListItem","position":3,"name":"ユーザー管理","item":"https://koten-navi.com/p90-1"},{"@type":"ListItem","position":4,"name":"ユーザー新規/編集/クローン"}]}</script>
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+  KTN.init({ page: 'p90-1-1', role: 'admin' });
+  /* ロールボタンは common.js の setR()（[onclick^="setR"] のみ解除）をそのまま使用。
+     モードボタン（新規/クローン/編集）は setDemoMode() が独立して管理する。 */
+
+  /* ── デモのユーザー（?uid= で選ぶ・P90-1 の行と同じ人）。role＝creator／gallery、lp＝LIAISON+ を利用中 ── */
+  var DEMO_USERS = {
+    'U-10007': { email: 'hanako.y@example.com', nick: '山田 花子', role: '', lp: '', idOk: false, status: 'active', notify: { reminder: true, watch: true, news: false } },
+    'U-10003': { email: 'toru.t@example.com', nick: '田中 透', role: 'creator', page: 'CR-1042', lp: 'on', idOk: true, status: 'active', notify: { reminder: true, watch: false, news: false, audience: true, insight: true } },
+    'U-10120': { email: 'info@yugen.example.com', nick: 'YUGEN Gallery', role: 'gallery', page: 'GA-0412', lp: 'on', idOk: true, status: 'active', notify: { reminder: false, watch: false, news: true, audience: true, insight: false } },
+    'U-10712': { email: 'xx77@example.net', nick: 'spam_account_77', role: '', lp: '', idOk: false, status: 'suspended', notify: { reminder: false, watch: false, news: false } }
+  };
+  var QUID = (location.search.match(/[?&]uid=([\w-]+)/) || [])[1];
+  var DEMO_USER = DEMO_USERS[QUID] || DEMO_USERS['U-10007'];
+
+  var MODE_TITLES = { new: 'ユーザーを新規作成', clone: 'ユーザーをクローンで作成', edit: 'ユーザーを編集' };
+  var MODE_BANNER = {
+    new:   '新しいユーザーアカウントを作成します。保存するとログインの案内メールが登録したアドレスに届きます。',
+    clone: '既存のユーザー「<strong>' + DEMO_USER.nick + '</strong>」の設定（通知設定）を元に新しいアカウントを作成します。メールアドレスとニックネームは新しいものを入れてください。',
+    edit:  ''
+  };
+  /* ロール：今の値を入れ、変えたときの注意を出す（止めない・不具合や誤りの訂正のため） */
+  var P901_BASE = null;
+  function p901SwSet(key, on) {
+    var b = document.querySelector('[data-p901-role="' + key + '"]');
+    b.classList.toggle('is-on', on); b.setAttribute('aria-checked', on ? 'true' : 'false');
+    b.querySelector('.ktn-switch__label').textContent = on ? 'ON' : 'OFF';
+  }
+  function p901SwOn(key) { return document.querySelector('[data-p901-role="' + key + '"]').classList.contains('is-on'); }
+  /* 今の選び方を、前の形（role＝creator／gallery／''、lp＝'on'／''）にして比べる */
+  function p901CurRole() { var r = document.querySelector('input[name="p901cg"]:checked'); return r ? r.value : ''; }
+  function p901Roles(u) {
+    P901_BASE = { role: u ? u.role : '', page: u && u.page || '', lp: u && u.lp === 'on' ? 'on' : '', idOk: !!(u && u.idOk) };
+    document.querySelectorAll('input[name="p901cg"]').forEach(function (x) { x.checked = x.value === P901_BASE.role; });
+    p901SwSet('lp', P901_BASE.lp === 'on');
+    document.getElementById('p901Page').value = P901_BASE.page;
+    p901RoleSync();
+  }
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-p901-role]'); if (!b || b.disabled) return;
+    p901SwSet(b.dataset.p901Role, !b.classList.contains('is-on')); p901RoleSync();
+  });
+  document.addEventListener('change', function (e) { if (e.target.name === 'p901cg') p901RoleSync(); });
+  function p901RoleSync() {
+    var role = p901CurRole(), lp = p901SwOn('lp') ? 'on' : '', b = P901_BASE || {};
+    document.getElementById('p901PageField').hidden = !role;
+    document.getElementById('p901Page').placeholder = role === 'gallery' ? '例：GA-0412' : '例：CR-1042';
+    document.getElementById('p901SwsOwner').hidden = !role;
+    var w = '';
+    if (b.role && role !== b.role) w = (b.page ? 'ページ（' + b.page + '）は' : '今のページは') + 'オーナーのいないページになります。';
+    if (!role && lp === 'on') w += 'ロールがユーザーのときは、LIAISON+ は使えません（クリエイターかギャラリーで使えます）。';
+    if (lp === 'on' && !b.idOk) w += '本人確認と口座の登録が済んでいないので、作品が売れても代金を振り込めません。';
+    var rw = document.getElementById('p901RoleWarn'); rw.textContent = w; rw.hidden = !w;
+    document.getElementById('p901LpCheck').textContent = '本人確認と振込の口座の登録：' + (b.idOk ? '済み' : 'まだ');
+  }
+  function p901RoleChanged() {
+    var b = P901_BASE || {}, role = p901CurRole();
+    return role !== b.role || (p901SwOn('lp') ? 'on' : '') !== b.lp || (role && document.getElementById('p901Page').value.trim() !== b.page);
+  }
+  function p901SetSw(n) {
+    document.querySelectorAll('[data-p9011-key]').forEach(function (b) {
+      var on = n ? !!n[b.dataset.p9011Key] : (b.dataset.p9011Key !== 'news');
+      b.classList.toggle('is-on', on); b.setAttribute('aria-checked', on ? 'true' : 'false');
+      b.querySelector('.ktn-switch__label').textContent = on ? '受け取る' : '受け取らない';
+    });
+  }
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-p9011-key]'); if (!b) return;
+    var on = !b.classList.contains('is-on');
+    b.classList.toggle('is-on', on); b.setAttribute('aria-checked', on ? 'true' : 'false');
+    b.querySelector('.ktn-switch__label').textContent = on ? '受け取る' : '受け取らない';
+  });
+
+  function setDemoMode(mode) {
+    ['New', 'Clone', 'Edit'].forEach(function (key) { var btn = document.getElementById('dbar' + key); if (btn) btn.classList.toggle('on', key.toLowerCase() === mode); });
+    document.getElementById('p901PageTitle').textContent = MODE_TITLES[mode];
+    document.title = MODE_TITLES[mode] + ' — 管理者 | 個展なび';
+    var banner = document.getElementById('p901ModeBanner'), bannerText = document.getElementById('p901ModeBannerText');
+    if (MODE_BANNER[mode]) { bannerText.innerHTML = MODE_BANNER[mode]; banner.hidden = false; } else banner.hidden = true;
+    var u = mode === 'edit' ? DEMO_USER : null;
+    document.getElementById('p901Email').value = u ? u.email : '';
+    document.getElementById('p901Nick').value = u ? u.nick : '';
+    document.getElementById('p901Avatar').textContent = u ? u.nick.charAt(0) : '—';
+    document.getElementById('p901Status').value = u ? u.status : 'active';
+    /* 新規・クローンはユーザーだけ（ロールは付けない）。クローンは通知設定だけを写す */
+    p901Roles(u);
+    p901SetSw(mode === 'new' ? null : DEMO_USER.notify);
+  }
+  function p901Submit() {
+    var emailEl = document.getElementById('p901Email');
+    var note = document.getElementById('p901SubmitNote');
+    var nickEl = document.getElementById('p901Nick');
+    if (!emailEl || !emailEl.value.trim() || !nickEl.value.trim()) {
+      if (note) note.textContent = 'メールアドレスとニックネームを入力してください';
+      if (emailEl) emailEl.focus();
+      return;
+    }
+    if (note) note.textContent = '';
+    function done() {
+      KTN.submitDone({ title: '保存しました', message: 'ユーザー情報を保存しました。', action: { label: 'ユーザー管理へ', href: './kotennavi-p90-1.html' } });
+    }
+    if (!p901RoleChanged()) { done(); return; }
+    /* ロールを変えたときは理由が必須（操作の記録「ロールの変更」に残る・2026-11-01） */
+    var L = { '': 'ユーザー', creator: 'クリエイター', gallery: 'ギャラリー', on: 'ON', off: 'OFF' }, b = P901_BASE;
+    var role = p901CurRole(), lp = p901SwOn('lp') ? 'on' : '', page = document.getElementById('p901Page').value.trim();
+    var change = 'ロール ' + L[b.role] + ' → ' + L[role] + (role && page ? '（' + page + '）' : '') + '／LIAISON+ ' + L[b.lp || 'off'] + ' → ' + L[lp || 'off'];
+    KTN.adminDelete({ kind: 'ユーザー', name: nickEl.value.trim(), verb: 'ロールの変更', title: 'ロールを変えて保存しますか？', label: 'ロールの変更', okLabel: '変更して保存', danger: false,
+      reasons: ['不具合の訂正', '誤って付けた・外したものを直す', '本人からの依頼', 'その他'],
+      placeholder: '例：申込の承認のときに不具合でクリエイターが付かなかったため（P90-2 の申込 A-1032）',
+      note: change + '。理由は操作の記録に残ります。',
+      done: 'ロールを変えて保存しました（デモ）',
+      onDone: function (r) { if (KTN.auditRecord) KTN.auditRecord('ロールの変更', { t: 'user', nid: QUID || '', name: nickEl.value.trim() }, KTN.reasonText(r) + '（' + change + '）'); done(); } });
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    /* 一覧（P90-1）から ?mode=new|clone、編集は ?uid=…（2026-11-01 に一覧と分けた） */
+    var qm = (location.search.match(/[?&]mode=(\w+)/) || [])[1];
+    setDemoMode(qm || (/[?&]uid=/.test(location.search) ? 'edit' : 'new'));
+  });
+</script>
+</body>
+</html>
