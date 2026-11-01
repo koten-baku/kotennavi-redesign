@@ -14345,3 +14345,53 @@ a.p905-who--link{color:var(--accent);text-decoration:underline;text-underline-of
 .ktn-fold-more[hidden]{display:none}
 .ktn-fee-box__body[hidden]{display:none}
 .ktn-fee-box__head.ktn-fold{font-size:.84rem;font-weight:700;color:var(--ink)}
+
+/* 編集画面の「公開の状態と削除」（管理者・common.js ktnAdminOps・2026-11-01）。外枠は管理者コメントと同じ .ktn-admin-note */
+.ktn-admin-ops[hidden]{display:none}
+.ktn-admin-ops__row{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 16px}
+.ktn-admin-ops__state{display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--ink)}
+.ktn-admin-ops__acts{display:flex;flex-wrap:wrap;gap:8px}
+.ktn-admin-ops__warn{margin:0 0 8px;font-weight:600;color:#b43c14}
+/* このコンテンツの記録（編集画面の「公開の状態と削除」の下・直近5件・2026-11-01） */
+.ktn-admin-ops__log{display:flex;flex-direction:column;align-items:flex-start;gap:6px;padding-top:10px;border-top:1px dashed #d3d8de}
+.ktn-admin-ops__log-head{margin:0;font-size:.78rem;font-weight:700;color:var(--ink)}
+.ktn-admin-ops__log-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;width:100%}
+.ktn-admin-ops__log-list li{display:flex;flex-wrap:wrap;gap:2px 10px;font-size:.74rem;line-height:1.6;color:var(--ink)}
+.ktn-admin-ops__log-at{font-family:var(--fm);color:var(--muted)}
+.ktn-admin-ops__log-by{color:var(--muted)}
+.ktn-admin-ops__log-act{font-weight:700}
+.ktn-admin-ops__log-why{flex-basis:100%}
+
+/* P90-28 操作の記録（2026-11-01） */
+.p9028-range{display:flex;align-items:center;gap:6px}
+.p9028-range .p319-filter__sel{min-width:0}
+.p9028-type{display:block;font-size:.7rem;color:var(--muted)}
+.p9028-as{display:block;margin-top:3px;font-size:.7rem;font-weight:600;color:#b43c14}
+.p9028-act{font-weight:700}
+.p9028-act--danger{color:#b43c14}
+.p9028-act--warn{color:#8b5e3c}
+.p9028-why,.p9028-change{display:block;font-size:.78rem;line-height:1.6}
+.p9028-change{color:var(--muted)}
+/* P90-28 の列の幅（2026-11-01）：操作の列を狭く（長い名前は折り返す）、対象の列を広く。管理者は3段（名前／ロール／UID） */
+.p9028-table th:nth-child(1),.p9028-table td:nth-child(1){width:7.5em}
+.p9028-table th:nth-child(3),.p9028-table td:nth-child(3){width:6em}
+.p9028-table th:nth-child(4),.p9028-table td:nth-child(4){min-width:16em}
+.p9028-role{display:block;font-size:.72rem;color:var(--ink)}
+@media(max-width:640px){
+  .p9028-table th:nth-child(n),.p9028-table td:nth-child(n){width:auto;min-width:0}
+}
+
+/* P60-21 ガイドの編集（2026-11-01）：本文のブロック・足すボタン・差し込める値 */
+.p6021-blocks{display:flex;flex-direction:column;gap:12px}
+.p6021-block{display:flex;flex-direction:column;gap:8px;padding:12px 14px;background:#fff;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:4px}
+.p6021-block__head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px}
+.p6021-block__type{font-size:.76rem;font-weight:700;color:var(--ink)}
+.p6021-block__acts{display:flex;flex-wrap:wrap;gap:6px}
+.p6021-block__f{display:flex;flex-direction:column;gap:4px;font-size:.72rem;color:var(--muted)}
+.p6021-add{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.p6021-vars{margin-top:16px;padding:12px 14px;background:#faf7f1;border:1px solid var(--border);border-radius:4px}
+.p6021-vars__head{margin:0 0 4px;font-size:.78rem;font-weight:700;color:var(--ink)}
+.p6021-vars__list{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.p6021-var{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;background:#fff;border:1px solid var(--border);border-radius:4px;font:inherit;font-size:.74rem;color:var(--ink);cursor:pointer}
+.p6021-var:hover{border-color:var(--accent)}
+.p6021-var code{font-family:var(--fm);color:var(--accent)}

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ガイドの編集 — 管理者 | 個展なび</title>
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <!-- PWA（docs/PWA設計ガイド.md 4 章・2026-10-09）。本番の URL に合わせて href は後工程で直す -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#231815">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="個展なび">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="icon" href="favicon.ico" sizes="48x48">
+  <link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<body data-w="detail" class="p60-21-page mgmt-page">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- デモバー -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ロール：</span>
+  <button class="dbtn on" onclick="setR('admin',this)">管理者</button>
+</div>
+
+<div class="shell">
+
+<aside class="ktn-sidebar" id="ktnSidebar">
+  <a href="kotennavi-p1.html" class="ktn-sidebar__logo" data-page="p1">
+    <img src="./images/kotennavi-logo5-1.svg" alt="個展なび">
+  </a>
+  <a href="kotennavi-p10.html" class="ktn-sidebar__item" data-page="p10">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <circle cx="11" cy="11" r="7.5"/>
+        <path d="M21 21l-4.5-4.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">検索</span>
+  </a>
+  <a href="kotennavi-p61.html" class="ktn-sidebar__item" id="ktnSidebarNotice" data-page="p61">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__dot" id="ktnNoticeDot" style="display:none"></span>
+    <span class="ktn-sidebar__label">お知らせ</span>
+  </a>
+  <a href="kotennavi-p60.html" class="ktn-sidebar__item" data-page="p60">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" stroke-linecap="round"/>
+        <path d="M12 16v-4M12 8h.01" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">ガイド</span>
+  </a>
+  <div class="ktn-sidebar__divider"></div>
+  <div id="ktnRoleNav" style="width:100%;display:flex;flex-direction:column;align-items:center"></div>
+  <div class="ktn-sidebar__footer">
+    <p class="ktn-sidebar__footer-label">Follow us</p>
+    <div class="ktn-sidebar__sns">
+      <a href="https://www.facebook.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="Facebook">
+        <svg viewBox="0 0 320 512" fill="currentColor"><path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/></svg>
+      </a>
+      <a href="https://x.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="X">
+        <svg viewBox="0 0 512 512" fill="currentColor"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg>
+      </a>
+    </div>
+  </div>
+</aside>
+
+<div class="content-wrap" id="contentWrap">
+
+  <header class="ktn-header" id="ktnHeader">
+    <div class="ktn-header__inner">
+      <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+      <div class="ktn-hdr-actions" id="ktnActs"></div>
+    </div>
+  </header>
+
+  <main class="ktn-main" id="ktnMain">
+    <div class="ktn-content">
+
+      <!-- ガイドの編集（2026-11-01 新設・handoff 追174-378）。P60 系・P70 系のガイドを ?page=p70-2 のように選んで直す。
+           前工程ではこの画面（個展なびの見た目のブロック編集）で作り、Drupal の標準の管理画面にするかは後工程が決める。中身は pages.js KTN.pages['p60-21'] -->
+      <div class="ktn-mgmt-context" id="p6021Context">
+        <div class="ktn-mgmt-context__media ktn-mgmt-context__media--content" aria-hidden="true"></div>
+        <div class="ktn-mgmt-context__body">
+          <a class="ktn-mgmt-context__name" id="p6021CtxName" href="#"></a>
+          <p class="ktn-mgmt-context__meta" id="p6021CtxMeta"></p>
+        </div>
+        <div class="ktn-mgmt-context__actions"><a class="ktn-action-btn" id="p6021CtxView" href="#" target="_blank" rel="noopener">ガイドを見る →</a></div>
+      </div>
+
+      <div class="p6021-wrap ktn-mgmt-wrap" id="p6021Wrap">
+
+        <div class="ktn-mgmt-head">
+          <h2 class="ktn-mgmt-head__title">ガイドの編集</h2>
+          <p class="ktn-mgmt-head__en">GUIDE EDIT</p>
+        </div>
+
+        <div class="p211-block">
+          <div class="p211-block__head"><h3 class="p211-block__title">基本情報 <span class="p211-block__title-en">BASIC INFO</span></h3></div>
+          <div class="p211-block__body">
+            <div class="p211-field">
+              <label class="p211-label" for="p6021Page">編集するガイド</label>
+              <select class="p211-select" id="p6021Page"></select>
+            </div>
+            <div class="p211-field">
+              <label class="p211-label" for="p6021Title">タイトル<span class="ktn-req">必須</span></label>
+              <input class="p211-input" id="p6021Title" type="text" maxlength="60" data-count>
+            </div>
+            <div class="p211-field">
+              <label class="p211-label" for="p6021Lead">リード文</label>
+              <textarea class="p211-textarea" id="p6021Lead" rows="3" maxlength="300" data-count></textarea>
+            </div>
+            <div class="p211-field">
+              <label class="p211-label" for="p6021Desc">ページの説明（検索結果に出る文）</label>
+              <textarea class="p211-textarea" id="p6021Desc" rows="2" maxlength="120" data-count></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="p211-block">
+          <div class="p211-block__head"><h3 class="p211-block__title">本文 <span class="p211-block__title-en">BLOCKS</span></h3></div>
+          <div class="p211-block__body">
+            <p class="p211-help">上から順に並びます。ブロックの種類はガイドの部品（見出し・本文・注意の囲み・表・手順の図・よくある質問・画像）と同じです。</p>
+            <div class="p6021-blocks" id="p6021Blocks"></div>
+            <div class="p6021-add" id="p6021Add"></div>
+            <!-- 差し込める値（料率などは P90-20 の設定から入る。文章に数字を直接書かない） -->
+            <div class="p6021-vars">
+              <p class="p6021-vars__head">差し込める値</p>
+              <p class="p211-help">押すと、いま入力している欄に入ります。数字や行き先は、表示するときに今の設定で入れ替わります。</p>
+              <div class="p6021-vars__list" id="p6021Vars"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 管理者コメント・編集の記録 -->
+        <div class="ktn-admin-note" id="p6021AdminNote" hidden>
+          <div class="ktn-admin-note__head"><span class="ktn-admin-note__badge">Admin</span><span class="ktn-admin-note__title">管理者コメント</span></div>
+          <p class="ktn-admin-note__desc">変更の理由・申し送りを記録します。管理者のみが閲覧できます。</p>
+          <textarea maxlength="500" data-count class="ktn-admin-note__textarea" id="p6021AdminComment" placeholder="例：2026-11-01 料率の説明を最新の決まりに合わせて直した。"></textarea>
+        </div>
+        <div class="ktn-admin-note" id="p6021Log" data-kind="ガイド" hidden></div>
+
+        <div class="ktn-form-error" id="p6021Error" role="alert" hidden>
+          <div class="ktn-form-error__head"><span class="ktn-form-error__title">保存できませんでした</span></div>
+          <ul class="ktn-form-error__list" id="p6021ErrorList"></ul>
+        </div>
+
+        <div class="p211-submit-bar">
+          <button class="p211-submit-bar__cancel ktn-op-btn" type="button" onclick="history.back()">キャンセル</button>
+          <a class="ktn-action-btn" id="p6021Preview" href="#" target="_blank" rel="noopener">プレビュー →</a>
+          <button class="p211-submit-bar__submit ktn-op-btn ktn-op-btn--primary" type="button" id="p6021Save">保存する</button>
+        </div>
+
+      </div><!-- /.ktn-mgmt-wrap -->
+
+    </div><!-- /.ktn-content -->
+  </main>
+<footer class="ktn-footer" id="ktnFooter"></footer>
+
+</div><!-- /.content-wrap -->
+</div><!-- /.shell -->
+
+<nav class="ktn-bottom-nav" id="ktnBottomNav"><div class="ktn-bottom-nav__inner" id="ktnBottomNavInner"></div></nav>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Top","item":"https://koten-navi.com/"},{"@type":"ListItem","position":2,"name":"ご利用ガイド","item":"https://koten-navi.com/p60"},{"@type":"ListItem","position":3,"name":"ガイドの編集"}]}</script>
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+  KTN.init({ page: 'p60-21', role: 'admin' });
+  function setR(role, btn) {
+    document.querySelectorAll('.dbtn').forEach(function (b) { b.classList.remove('on'); });
+    btn.classList.add('on');
+    window.curRole = role;
+    if (window.ktnRender) ktnRender();
+  }
+</script>
+</body>
+</html>

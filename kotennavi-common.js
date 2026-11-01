@@ -2050,7 +2050,83 @@ function syncAdminNote() {
   document.querySelectorAll('.ktn-admin-note').forEach(function (el) {
     el.hidden = el.hasAttribute('data-admin-camp') ? !full : !isAdmin;
   });
+  ktnAdminOps();
 }
+
+/* ── 編集画面の「公開の状態と削除」（data-admin-ops・P2-11・P7-11・P8-11・2026-11-01 ユーザー提案）──
+   管理者（E 以上＝編集画面を開ける人）が、内容を確かめたその場で非公開・公開に戻す・削除できる（P90-3 の一覧へ戻らなくてよい）。
+   <div class="ktn-admin-note ktn-admin-ops" data-admin-ops="展覧会" data-name="…" data-status="public" data-back="…" hidden></div>
+   data-status＝public／hidden（data-status-confirm があれば、P2-11 のデモの「確認前」＝確認待ちとして非公開を出さない）。
+   出すのは編集のときだけ（新規・クローンでは出さない）。削除は理由のモーダル（KTN.adminDelete＝DL-01A）のあと、元の画面へ戻る
+   （?back=…＝P90-21 の対応案件などから来たとき／無ければ data-back＝P90-3 のそのタブ）。保存していない変更があるときは先に知らせる。 */
+var ktnEditDirty = false;
+document.addEventListener('input', function (e) {
+  if (e.target.closest && e.target.closest('.ktn-mgmt-wrap') && !e.target.closest('[data-admin-ops]')) ktnEditDirty = true;
+});
+function ktnAdminOpsBack(el) {
+  /* ?back= → 開く前の管理ページ（P90-3・P90-5 など。リファラー） → data-back（P90-3 のそのタブ） */
+  var b = (location.search.match(/[?&]back=([^&]+)/) || [])[1];
+  if (b) return decodeURIComponent(b);
+  var ref = (document.referrer || '').match(/kotennavi-p90-[\w-]+\.html[^#]*/);
+  return ref ? ref[0] : (el.dataset.back || 'kotennavi-p90-3.html');
+}
+function ktnAdminOps() {
+  document.querySelectorAll('[data-admin-ops]').forEach(function (el) {
+    var isAdmin = window.ktnState && window.ktnState.role === 'admin';
+    /* 新規・クローンでは出さない。モードは data-mode-var のグローバル変数（デモバーの切替）か、?mode= で見る */
+    var mv = el.dataset.modeVar, mode = mv && typeof window[mv] === 'string' ? window[mv] : ((location.search.match(/[?&]mode=(\w+)/) || [])[1] || 'edit');
+    if (!isAdmin || mode !== 'edit') { el.hidden = true; return; }
+    el.hidden = false;
+    var st = el.dataset.status || 'public';
+    if (el.hasAttribute('data-status-confirm') && window.demoConfirmed === false) st = 'review';
+    var chip = st === 'hidden' ? '<span class="ktn-review-status ktn-review-status--cancelled">非公開</span>'
+      : st === 'review' ? '<span class="ktn-review-status ktn-review-status--pending">確認待ち</span>'
+      : '<span class="ktn-review-status ktn-review-status--granted">公開中</span>';
+    el.innerHTML = '<div class="ktn-admin-note__head"><span class="ktn-admin-note__badge">Admin</span><span class="ktn-admin-note__title">公開の状態と削除</span></div>' +
+      '<div class="ktn-admin-ops__row"><span class="ktn-admin-ops__state">今の状態：' + chip + '</span><span class="ktn-admin-ops__acts">' +
+        (st === 'review' ? '' : '<button type="button" class="ktn-op-btn ktn-op-btn--sm" data-ops="vis">' + (st === 'hidden' ? '公開に戻す' : '非公開にする') + '</button>') +
+        '<button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline" data-ops="del">削除</button></span></div>' +
+      ktnAdminOpsLog(el);
+  });
+}
+/* このコンテンツの記録（操作の記録＝KTN.AUDIT のうち、この NID の直近5件・2026-11-01）。全部は P90-28（admin だけ）へ「この〇〇の記録をすべて見る →」（〇〇＝data-kind か data-admin-ops） */
+function ktnAdminOpsLog(el) {
+  /* 記録は admin だけが見る（一覧もリンクも・2026-11-01 ユーザー指示）。LIAISON+ 対応・編集・問合せの管理者には出さない */
+  var A = KTN.AUDIT; if (!A || !el.dataset.nid || !(KTN.isFullAdmin && KTN.isFullAdmin())) return '';
+  var rows = A.of(el.dataset.nid).slice(0, 5);
+  var more = '<a class="ktn-guide-link" href="./kotennavi-p90-28.html?nid=' + encodeURIComponent(el.dataset.nid) + '">この' + (el.dataset.kind || el.dataset.adminOps || '') + 'の記録をすべて見る →</a>';
+  return '<div class="ktn-admin-ops__log"><p class="ktn-admin-ops__log-head">このコンテンツの記録</p>' +
+    (rows.length ? '<ul class="ktn-admin-ops__log-list">' + rows.map(function (x) {
+      return '<li><span class="ktn-admin-ops__log-at">' + x.at + '</span><span class="ktn-admin-ops__log-by">' + A.adminText(x.by) + (x.as ? '・なりすまし中' : '') + '</span>' +
+        '<span class="ktn-admin-ops__log-act">' + x.act + '</span>' + (x.why || x.change ? '<span class="ktn-admin-ops__log-why">' + (x.why || '') + (x.why && x.change ? '／' : '') + (x.change || '') + '</span>' : '') + '</li>';
+    }).join('') + '</ul>' : '<p class="ktn-admin-note__desc">まだ記録はありません。</p>') + more + '</div>';
+}
+/* デモ：この画面で操作したら記録に足す（本番はサーバーが記録する） */
+function ktnAdminOpsRecord(el, act, why) { KTN.auditRecord(act, { t: el.dataset.auditType || '', nid: el.dataset.nid, name: el.dataset.name }, why); }
+document.addEventListener('click', function (e) {
+  var b = e.target.closest && e.target.closest('[data-ops]'); if (!b) return;
+  var el = b.closest('[data-admin-ops]'); if (!el) return;
+  var kind = el.dataset.adminOps, name = el.dataset.name || '';
+  var dirtyNote = ktnEditDirty ? '<p class="ktn-admin-ops__warn">保存していない変更があります。この操作では、変更は保存されません。</p>' : '';
+  if (b.dataset.ops === 'vis') {
+    if (el.dataset.status !== 'hidden') {
+      /* 非公開＝理由のモーダル（必須） */
+      KTN.adminHide({ kind: kind, name: name, pre: ktnEditDirty ? '保存していない変更があります（保存されません）。' : '',
+        onDone: function (r) { el.dataset.status = 'hidden'; ktnAdminOpsRecord(el, '非公開', KTN.reasonText(r)); ktnAdminOps(); } });
+    } else {
+      ktnConfirmModal({ title: kind + '「' + name + '」を公開に戻しますか？', danger: false, confirmLabel: '公開に戻す',
+        message: dirtyNote + '<p>公開のページに、もう一度表示されます。</p>',
+        onConfirm: function () { el.dataset.status = 'public'; ktnAdminOpsRecord(el, '公開に戻す'); ktnAdminOps(); KTN.toast('公開に戻しました（デモ）'); } });
+    }
+  } else {
+    var back = ktnAdminOpsBack(el);
+    KTN.adminDelete({ kind: kind, name: name,
+      note: (ktnEditDirty ? '保存していない変更があります（保存されません）。' : '') + '削除すると元に戻せません。理由は、削除の通知として管理者あてのメールで届き、記録に残ります。削除のあと、元の画面へ戻ります。',
+      onDone: function (r) { ktnAdminOpsRecord(el, '削除', KTN.reasonText(r)); setTimeout(function () { location.href = back; }, 700); } });
+  }
+});
+/* デモバーの切替（新規・編集・クローン・確認前／確認済）のあとに描き直す */
+document.addEventListener('click', function (e) { if (e.target.closest && e.target.closest('.dbar')) setTimeout(ktnAdminOps, 0); });
 
 /* 「本人・管理者のみ」表示する要素を role で表示切替（P3/P4/P5ヒーローの
    「プロフィールを編集」等）。本人ロールはページ種別で異なる（P3=creator/P4=gallery/P5=user+）ため
@@ -2243,6 +2319,7 @@ const PAGES = {
   // P61 お知らせ
   'p61': { n: 'お知らせ一覧', bc: [['Top', '/'], ['お知らせ一覧', null]] },
   'p61-1': { n: 'ニュース', bc: [['Top', '/'], ['お知らせ一覧', 'kotennavi-p61.html'], ['新機能「リエゾンプラス」提供開始のお知らせ', null]] },
+  'p60-21': { n: 'ガイド-編集', bc: [['Top', '/'], ['ご利用ガイド', 'kotennavi-p60.html'], ['ガイドの編集', null]] },
   'p61-11': { n: 'ニュース-新規/編集/クローン', bc: [['Top', '/'], ['お知らせ一覧', 'kotennavi-p61.html'], ['新規/編集/クローン', null]] },
   // P70 LIAISONガイド
   'p70': { n: 'リエゾンとは', bc: [['Top', '/'], ['LIAISONとは', null]] },
@@ -2283,6 +2360,7 @@ const PAGES = {
   'p90-21': { n: '管理者-対応案件', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['対応案件', null]] },
   'p90-21-1': { n: '管理者-対応案件の詳細', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['対応案件', 'kotennavi-p90-21.html'], ['対応案件の詳細', null]] },
   'p90-22': { n: '管理者-更新の記録', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['更新の記録', null]] },
+  'p90-28': { n: '管理者-操作の記録', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['操作の記録', null]] },
   'p90-27': { n: '管理者-展覧会管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['展覧会管理', null]] },
   'p90-23': { n: '管理者-作品管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['作品管理', null]] },
   'p90-24': { n: '管理者-記事管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['記事管理', null]] },
@@ -3374,13 +3452,14 @@ function getActions(page, role) {
     const cmn = shareBtn() + sep();
     if (role === 'guest' || role === 'login')
       return cmn + ddMore(reportItem(page));
-    if (role === 'admin')
-      return cmn + dd('管理者', ddi('edit', '編集') + ddSep() + ddi('trash', '削除', true));
+    if (role === 'admin')   /* 編集＝P8-11 を開く（行き先が無く動かなかった・2026-11-01） */
+      return cmn + dd('管理者', ddi('edit', '編集', false, "location.href='./kotennavi-p8-11.html'") + ddSep() + ddi('trash', '削除', true));
     return cmn;
   }
 
   if (page === 'p8-11') {
-    if (role === 'admin') return dd('管理者', ddi('edit', '編集') + ddSep() + ddi('trash', '削除', true));
+    /* 編集画面の中なので「編集」は出さない（P61-11 と同じ）。非公開・削除は管理者の欄「公開の状態と削除」にもある */
+    if (role === 'admin') return dd('管理者', ddi('trash', '削除', true));
     return '';
   }
 
@@ -3470,14 +3549,15 @@ function getActions(page, role) {
      合わせて判断する。P10-5/6/7（分類索引）は上のP10_KINDに合流済み（追174-169）。 */
 
   /* ── P60 ガイド・法的ページ ── */
-  if (['p60', 'p60-4', 'p60-8', 'p60-9', 'p60-10', 'p60-16', 'p60-17'].includes(page)) {
-    if (role === 'admin') return dd('管理者', ddi('edit', '編集'));
+  /* ガイドの「編集」＝P60-21 ガイドの編集（?page= でそのガイド・2026-11-01） */
+  if (['p60', 'p60-1', 'p60-2', 'p60-3', 'p60-4', 'p60-5', 'p60-8', 'p60-9', 'p60-10', 'p60-16', 'p60-17'].includes(page)) {
+    if (role === 'admin') return dd('管理者', ddi('edit', '編集', false, "location.href='./kotennavi-p60-21.html?page=" + page + "'"));
     return '';
   }
 
   /* ── P70 LIAISONガイド ── */
-  if (['p70-1', 'p70-2', 'p70-3', 'p70-4', 'p70-6', 'p70-8', 'p70-9', 'p70-11', 'p70-12'].includes(page)) {
-    if (role === 'admin') return dd('管理者', ddi('edit', '編集'));
+  if (['p70', 'p70-1', 'p70-2', 'p70-3', 'p70-4', 'p70-6', 'p70-8', 'p70-9', 'p70-11', 'p70-12'].includes(page)) {
+    if (role === 'admin') return dd('管理者', ddi('edit', '編集', false, "location.href='./kotennavi-p60-21.html?page=" + page + "'"));
     return '';
   }
 
@@ -3613,7 +3693,7 @@ KTN.ADMIN_PAGE = {
   'p90': 'E', 'p90-2': 'E', 'p90-2-1': 'E', 'p90-4': 'E', 'p90-5': 'E', 'p90-7': 'E', 'p90-8': 'E', 'p90-21': 'E', 'p90-21-1': 'E',
   'p90-10': 'L', 'p90-23': 'L', 'p90-12': 'L', 'p90-13': 'L', 'p90-14': 'L', 'p90-15': 'L', 'p90-16': 'L', 'p90-20': { view: 'L', edit: 'A' },
   'p90-3': 'E', 'p90-27': 'E', 'p90-24': 'E', 'p90-25': 'E', 'p90-26': 'E',
-  'p90-1': 'A', 'p90-6': 'A', 'p90-9': 'A', 'p90-11': 'A', 'p90-11-1': 'A', 'p90-17': 'A', 'p90-18': 'A', 'p90-19': 'A', 'p90-22': 'A'
+  'p90-1': 'A', 'p90-6': 'A', 'p90-9': 'A', 'p90-11': 'A', 'p90-11-1': 'A', 'p90-17': 'A', 'p90-18': 'A', 'p90-19': 'A', 'p90-22': 'A', 'p90-28': 'A', 'p60-21': 'A'
 };
 KTN.adminLevel = function () {
   try { var v = sessionStorage.getItem('ktn-admin-level'); if (KTN.ADMIN_LEVELS[v]) return v; } catch (e) {}
@@ -3648,7 +3728,8 @@ KTN.adminAccess = function (page, lv) {
    KTN.adminDelete({ kind:'作品', name:'オノマトペの庭', onDone:function(reason){…} })。外枠は P2-11 の確認モーダル（.p211-modal）と同じ */
 KTN.DELETE_REASONS = ['重複している（同じ内容のページがほかにある）', '掲載の対象者からの削除の依頼', '問題報告への対応（掲載の方針に反する）', '投稿者からの依頼', 'その他'];
 KTN.adminDelete = function (o) {
-  /* o.verb＝操作の名前（既定「削除」。P90-1 の強制退会は「強制退会」）・o.reasons＝理由の選択肢・o.note＝下の注意書き・o.done＝終わったときのトースト */
+  /* o.verb＝操作の名前（既定「削除」。P90-1 の強制退会は「強制退会」）・o.reasons＝理由の選択肢・o.note＝下の注意書き・o.done＝終わったときのトースト
+     o.title／o.label／o.okLabel＝見出し・理由の欄の名前・実行ボタンの文字を差し替える（非公開＝KTN.adminHide）。o.danger===false で実行ボタンを青に */
   var verb = o.verb || '削除';
   var reasons = o.reasons || KTN.DELETE_REASONS;
   var m = document.getElementById('ktnAdminDeleteModal');
@@ -3672,12 +3753,14 @@ KTN.adminDelete = function (o) {
     m.addEventListener('click', function (e) { if (e.target.closest('[data-close]')) m.hidden = true; });
   }
   var sel = document.getElementById('ktnAdminDeleteReason'), det = document.getElementById('ktnAdminDeleteDetail'), err = document.getElementById('ktnAdminDeleteErr');
-  document.getElementById('ktnAdminDeleteTtl').textContent = (o.kind || '') + '「' + (o.name || '') + '」を' + verb + 'しますか？';
-  document.getElementById('ktnAdminDeleteVerb').textContent = verb;
+  document.getElementById('ktnAdminDeleteTtl').textContent = o.title || ((o.kind || '') + '「' + (o.name || '') + '」を' + verb + 'しますか？');
+  document.getElementById('ktnAdminDeleteVerb').textContent = o.label || verb;
   sel.innerHTML = '<option value="">選んでください</option>' + reasons.map(function (r) { return '<option>' + r + '</option>'; }).join('');
   det.placeholder = o.placeholder || '例：同じ展覧会が2件登録されていたため、新しいほうを削除（残したページ：…）';
   document.getElementById('ktnAdminDeleteNote').textContent = o.note || '削除すると元に戻せません。理由は、削除の通知として管理者あてのメールで届き、記録に残ります。';
-  document.getElementById('ktnAdminDeleteOk').textContent = verb + 'する';
+  var okb = document.getElementById('ktnAdminDeleteOk');
+  okb.textContent = o.okLabel || (verb + 'する');
+  okb.className = 'ktn-op-btn ' + (o.danger === false ? 'ktn-op-btn--primary' : 'ktn-op-btn--danger');
   det.value = ''; err.hidden = true;
   document.getElementById('ktnAdminDeleteOk').onclick = function () {
     if (!sel.value || !det.value.trim()) { err.hidden = false; return; }
@@ -3688,6 +3771,27 @@ KTN.adminDelete = function (o) {
   m.hidden = false;
   sel.focus();
 };
+
+/* ══ 非公開の理由（2026-11-01・handoff 追174-377）══
+   非公開にするときは、削除と同じ形のモーダルで理由（選ぶ＋詳しい内容・どちらも必須）を書く。理由は操作の記録（P90-28）に残る。
+   メールは送らない（削除の DL-01A とは違う）。公開に戻すときは理由を聞かない。
+   使う場所：P90-3・P90-5・P90-7・P90-8・P90-23 の一覧と、編集画面の「公開の状態と削除」。P90-21 の一時非公開は、対応案件の受付番号と報告の理由が自動で入る */
+KTN.HIDE_REASONS = ['問題報告への対応（確かめるあいだ一時的に）', '掲載の方針に反する', '掲載の対象者からの依頼', '投稿者からの依頼', 'その他'];
+KTN.adminHide = function (o) {
+  KTN.adminDelete({ kind: o.kind, name: o.name, verb: '非公開', title: (o.kind || '') + '「' + (o.name || '') + '」を非公開にしますか？', label: '非公開', okLabel: '非公開にする', danger: false,
+    reasons: KTN.HIDE_REASONS, placeholder: '例：問題報告（R-1024）を受け、内容を確かめるあいだ一時的に非公開にする',
+    note: (o.pre || '') + '公開のページに表示されなくなります。あとで公開に戻せます。理由は操作の記録に残ります。',
+    done: '非公開にしました（デモ）', onDone: o.onDone });
+};
+/* 操作の記録に1行足す（デモ。本番はサーバーが操作の API の中で足す）。t＝対象の種類（KTN.AUDIT.T のキー） */
+KTN.auditRecord = function (act, target, why) {
+  if (!KTN.AUDIT) return;
+  var lv = KTN.adminLevel ? KTN.adminLevel() : 'A', uid = { A: 'U-90001', L: 'U-90002', E: 'U-90003' }[lv];
+  var d = new Date(), z = function (n) { return (n < 10 ? '0' : '') + n; };
+  KTN.AUDIT.add({ at: d.getFullYear() + '.' + z(d.getMonth() + 1) + '.' + z(d.getDate()) + ' ' + z(d.getHours()) + ':' + z(d.getMinutes()), by: uid, act: act,
+    t: target.t || '', nid: String(target.nid || ''), name: target.name || '', url: target.url || '', why: why || '' });
+};
+KTN.reasonText = function (r) { return r && r.reason ? r.reason + '：' + r.detail : ''; };
 
 /* 公開のページのヘッダーの「管理者」メニュー（admin だけ）の、削除・強制削除・強制退会・なりすましログインを、P90 系と同じ手順にする
    （どこから押しても理由のモーダル＋DL-01A／MO-03A・案2・2026-10-29）。メニューの項目は getActions のまま、押したときだけここで受ける */
