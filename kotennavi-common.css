@@ -14426,3 +14426,14 @@ body.p90-7-page .p90cm-table td:nth-child(1),body.p90-7-page .p90cm-table th:nth
 /* P3-11・P4-11 の新規・クローン（2026-11-02）：オーナー本人の欄とキャンペーンの枠は出さない／新規・クローンだけの欄は編集では出さない */
 body.ktn-page-new [data-owner-only],body.ktn-page-new [data-admin-camp]{display:none !important}
 body:not(.ktn-page-new) [data-new-only]{display:none !important}
+/* P90-7・P90-8 の申込の NID（押すと審査の画面・2026-11-02） */
+.p907-nid{display:block;margin-top:2px;font-family:var(--fm);font-size:.72rem;color:var(--accent);text-decoration:underline;text-underline-offset:2px}
+.p907-nid:hover{color:var(--accent-d)}
+/* P90-12 リエゾンプラスコンソール（2026-11-02）：要対応の数を赤で */
+.p9012-alert{display:block;font-size:.8rem;font-weight:700;color:#b43c14}
+/* P90-20 のキャンペーンの告知のニュース（保存の直前・2026-11-02） */
+.p9020-camp__news{margin-top:16px;padding-top:12px;border-top:1px dashed var(--border)}
+.p9020-news__wait{display:block;font-size:.78rem;color:#b43c14}
+.p9020-news__steps{margin:0 0 10px;padding:8px 12px;background:#fbeae5;border-left:3px solid #b43c14;border-radius:4px;font-size:.78rem;line-height:1.7;color:var(--ink)}
+/* はじめて割：そろうまでに足りないもの（P3-21・P4-21・2026-11-02） */
+.ktn-terms__missing{margin:4px 0 0;padding-left:1.2em;font-size:.8rem;line-height:1.7;color:var(--ink)}

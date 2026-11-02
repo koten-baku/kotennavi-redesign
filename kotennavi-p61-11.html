@@ -315,6 +315,18 @@
     }
   };
 
+  /* P90-20 の「ニュースを編集 →」から（?mode=edit&n=ニュースの id・2026-11-02）：編集で開き、そのニュースを選んでタイトルを入れる */
+  document.addEventListener('DOMContentLoaded', function () {
+    var qm = (location.search.match(/[?&]mode=(\w+)/) || [])[1], qn = (location.search.match(/[?&]n=([\w-]+)/) || [])[1];
+    if (qm !== 'edit') return;
+    setDemoMode('edit');
+    var it = qn && (KTN.NOTICES && KTN.NOTICES.news || []).filter(function (x) { return x.id === qn; })[0];
+    if (!it) return;
+    var sel = document.getElementById('p6111EditSource');
+    sel.insertAdjacentHTML('afterbegin', '<option value="' + it.id + '" selected>' + it.title + '（' + it.date + '）</option>');
+    document.getElementById('p6111Title').value = it.title;
+  });
+
   function setDemoMode(mode) {
     ['New', 'Edit', 'Clone'].forEach(function (m) {
       var btn = document.getElementById('dbar' + m);
