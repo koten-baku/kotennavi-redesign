@@ -26325,7 +26325,7 @@ KTN.pages['p90-20'] = function () {
       (late ? '<p class="p9020-warn">知らせる日が過ぎています。日数を減らすか、開始日を遅らせてください。</p>' : '') +
       /* キャンペーンの「告知のニュース」と同じ形（field・作成済みの行・まだありません・ニュースを作る →） */
       newsBlock(news[0] || null, './kotennavi-p61-11.html?fee=' + esc(p.from),
-        '変更を知らせるニュースは、お知らせの作成（P61-11）で「つなぐキャンペーン・料率設定」にこの料率設定を選んで作ります（1つの料率設定に1つだけ・作成済みなら編集）。公開日は知らせる日、対象は「LIAISON+ を利用中のクリエイター・ギャラリー」（出品中かどうかは問わない）、メールは「送る」にします。');
+        '変更を知らせるニュースは、お知らせの作成（P61-11）で「つなぐキャンペーン・料率設定」にこの料率設定を選んで作ります（1つの料率設定に1つだけ・作成済みなら編集）。公開日は知らせる日、対象は「LIAISON+ を利用中のクリエイター・ギャラリー」（出品中かどうかは問わない）、メールは「送る」にします。カテゴリは「おすすめ」に決まります（メールは、受け取る設定にしている人だけに届きます）。');
     var prev = data.fee.schedule[i - 1];
     if (prev && +p.minPrice > +prev.minPrice) h += '<p class="p9020-period__auto"><strong>対象の出品者へ（自動）：</strong>知らせる日に、' + yenS(p.minPrice) + 'より安い価格で出品中の作品がある出品者へ、あなた宛のお知らせ（NT-15）とメール（FE-01）を、作品の名前を挙げて送ります。いまの対象：<strong>3人・5点</strong>（デモの数）</p>';
     return h + '</div>';
@@ -26504,14 +26504,15 @@ KTN.pages['p90-20'] = function () {
       '<button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--primary" data-save="' + i + '">保存する</button></div>' +
       '</div></details>';
   }
-  /* 告知のニュース（キャンペーン・料率設定で共通）：1つにつなげるニュースは1つだけ（2026-11-02 ユーザー指示＝ニュースを作るとリンク付きのメールを送るので、
+  /* 作る・編集は新しいタブで開く（キャンペーンの内容を見ながら書くため）。つないだニュースのカテゴリは「おすすめ」に決まる（2026-11-02 ユーザー指示）
+     告知のニュース（キャンペーン・料率設定で共通）：1つにつなげるニュースは1つだけ（2026-11-02 ユーザー指示＝ニュースを作るとリンク付きのメールを送るので、
      同じキャンペーンに何度もメールを送らない）。作成済みなら「ニュースを編集 →」（P61-11 の編集で開く）、まだなら「ニュースを作る →」 */
   var NEWS_TG = { all: 'サイト利用者全員', user: 'ユーザー全員', cg: 'クリエイター・ギャラリー', creator: 'クリエイター', gallery: 'ギャラリー', lp: 'LIAISON+ を利用中のクリエイター・ギャラリー' };
   function newsBlock(x, makeHref, help) {
     return field('告知のニュース', (x ? '<ul class="p9020-news"><li class="p9020-news__item"><span class="ktn-review-status ktn-review-status--granted">作成済み</span><a class="p9020-news__title" href="./' + esc(x.href) + '?n=' + esc(x.id) + '">' + esc(x.title) + '</a>' +
         '<span class="p9020-news__meta">' + esc(x.date + '〜' + (x.until || '')) + '・対象：' + NEWS_TG[x.target] + (x.mine ? '・あなた宛にも：' + NEWS_TG[x.mine.target] : '') + '・メール：' + (x.mail ? '送る' : '送らない') + '</span></li></ul>' +
-        '<a class="ktn-guide-link" href="./kotennavi-p61-11.html?mode=edit&n=' + esc(x.id) + '">ニュースを編集 →</a>'
-      : '<p class="p9020-news__none">まだありません。</p><a class="ktn-guide-link" href="' + makeHref + '">ニュースを作る →</a>'), help);
+        '<a class="ktn-guide-link" href="./kotennavi-p61-11.html?mode=edit&n=' + esc(x.id) + '" target="_blank" rel="noopener">ニュースを編集 →</a>'
+      : '<p class="p9020-news__none">まだありません。</p><a class="ktn-guide-link" href="' + makeHref + '" target="_blank" rel="noopener">ニュースを作る →</a>'), help);
   }
   /* 実施期間が入っていないキャンペーンは、ニュースを作れない（ニュースの公開日・表示期限に実施期間を使うため・2026-11-02 ユーザー指示）。
      終わりが空でよいのは、はじめて割と興味あり！のクーポンだけ（そのときは始まりだけで作れる） */
@@ -26520,11 +26521,11 @@ KTN.pages['p90-20'] = function () {
     var x = C.newsOf(c)[0] || null;
     /* 手順の注意（2026-11-02 ユーザー判断＝操作するのは admin なので、仕組みで止めずに手順を書く）：
        ニュースを公開するとメールが届くので、キャンペーンが下書きのままだと、利用者が開いたページに何も出ない。続けて有効にする */
-    var steps = '<p class="p9020-news__steps"><strong>手順：</strong>①このキャンペーンの下書きを仕上げて保存 → ②ニュースを作る（公開するとメールが届きます）→ ③すぐにこのキャンペーンを「有効」にして保存。' +
+    var steps = '<p class="p9020-news__steps"><strong>手順：</strong>①このキャンペーンの下書きを仕上げて保存 → ②ニュースを作る（新しいタブで開きます・カテゴリは「おすすめ」・公開するとメールが届きます）→ ③すぐにこのキャンペーンを「有効」にして保存。' +
       '②と③のあいだは、メールを受け取った人がページを開いても、このキャンペーンが出ません。続けて行ってください。</p>';
     if (!x && !campDatesOk(c)) return '<div class="p9020-camp__news">' + steps + field('告知のニュース', '<p class="p9020-news__none">まだありません。</p><span class="p9020-news__wait">ニュースは、実施期間を入れて保存してから作れます（ニュースの日付に実施期間を使うため）。</span>') + '</div>';
     return '<div class="p9020-camp__news">' + (c.pub === 'pub' ? '' : steps) + newsBlock(x, './kotennavi-p61-11.html?campaign=' + esc(c.id),
-      'キャンペーンを告知するニュースは、お知らせの作成（P61-11）で「つなぐキャンペーン」にこのキャンペーンを選んで作ります。<strong>1つのキャンペーンにつなげるニュースは1つだけ</strong>です（作るときにリンク付きのメールを送るため、同じキャンペーンで何度も送らないように）。作成済みのときは、そのニュースを編集します。お知らせ（あなた宛）とメールも、ニュースを作るときに一緒に設定します。') + '</div>';
+      'キャンペーンを告知するニュースは、お知らせの作成（P61-11）で「つなぐキャンペーン」にこのキャンペーンを選んで作ります。<strong>1つのキャンペーンにつなげるニュースは1つだけ</strong>です（作るときにリンク付きのメールを送るため、同じキャンペーンで何度も送らないように）。作成済みのときは、そのニュースを編集します。お知らせ（あなた宛）とメールも、ニュースを作るときに一緒に設定します。カテゴリは「おすすめ」に決まります（メールが、受け取る設定にしている人だけに届くように）。') + '</div>';
   }
   /* 保存済みとの違い（キャンペーンごと）。新しく作って一度も保存していないものも未保存 */
   function savedOf(id) { return C.load().campaigns.filter(function (x) { return x.id === id; })[0] || null; }
