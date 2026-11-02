@@ -14242,7 +14242,7 @@ a.p9022-title{color:var(--accent);text-decoration:underline;text-underline-offse
 .ktn-mgmt-new__btn{font-size:.95rem;padding:12px 32px;border-width:2px}
 .p315-archive-table tbody tr[hidden]{display:none}
 
-/* ══ コンテンツの管理ページ（P90-23 作品・P90-24 記事・P90-25 レビュー・P90-26 コメント・2026-10-29）と、削除の理由のモーダル（KTN.adminDelete）══
+/* ══ コンテンツの管理ページ（P90-23 作品・P90-3 コンテンツ管理・P90-1・P90-7・P90-8・2026-10-29）と、削除の理由のモーダル（KTN.adminDelete）══
    一覧の骨組みは .p315-archive-table・.p319-toolbar。ここには行の中身と操作の並びだけ */
 .p90cm-table td{vertical-align:top}
 .p90cm-table tr.is-hidden td{color:var(--muted)}
@@ -14415,3 +14415,14 @@ a.p905-who--link{color:var(--accent);text-decoration:underline;text-underline-of
 .p9011-page{margin-top:10px}
 .p9011-warn{margin:6px 0 0;font-size:.78rem;font-weight:600;line-height:1.6;color:#b43c14}
 .p9011-warn[hidden]{display:none}
+/* LIAISON+ の申込の状況の1段（P90-1・P90-7・2026-11-02）：「LIAISON+」と状態のチップ。押すと P90-11 */
+.p901-lp{display:flex;align-items:center;gap:6px;margin-top:2px;text-decoration:none;color:inherit}
+.p901-lp .p901-role{display:inline}
+.p901-lp:hover .p901-role{text-decoration:underline}
+/* P90-7 クリエイター管理・P90-8 ギャラリー管理の列（2026-11-02）：名前の列を少し狭く、日時は小さな文字で1行ずつ（見出しが「作成／最終更新」） */
+body.p90-7-page .p90cm-table td:nth-child(1),body.p90-7-page .p90cm-table th:nth-child(1),body.p90-8-page .p90cm-table td:nth-child(1),body.p90-8-page .p90cm-table th:nth-child(1){width:11em}
+.p907-dt{display:block;font-family:var(--fm);font-size:.72rem;line-height:1.7;white-space:nowrap;color:var(--ink)}
+@media(max-width:640px){body.p90-7-page .p90cm-table td:nth-child(1),body.p90-7-page .p90cm-table th:nth-child(1),body.p90-8-page .p90cm-table td:nth-child(1),body.p90-8-page .p90cm-table th:nth-child(1){width:auto}}
+/* P3-11・P4-11 の新規・クローン（2026-11-02）：オーナー本人の欄とキャンペーンの枠は出さない／新規・クローンだけの欄は編集では出さない */
+body.ktn-page-new [data-owner-only],body.ktn-page-new [data-admin-camp]{display:none !important}
+body:not(.ktn-page-new) [data-new-only]{display:none !important}

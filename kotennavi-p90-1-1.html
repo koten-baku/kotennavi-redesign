@@ -246,8 +246,8 @@
   /* ── デモのユーザー（?uid= で選ぶ・P90-1 の行と同じ人）。role＝creator／gallery、lp＝LIAISON+ を利用中 ── */
   var DEMO_USERS = {
     'U-10007': { email: 'hanako.y@example.com', nick: '山田 花子', role: '', lp: '', idOk: false, status: 'active', notify: { reminder: true, watch: true, news: false } },
-    'U-10003': { email: 'toru.t@example.com', nick: '田中 透', role: 'creator', page: 'CR-1042', lp: 'on', idOk: true, status: 'active', notify: { reminder: true, watch: false, news: false, audience: true, insight: true } },
-    'U-10120': { email: 'info@yugen.example.com', nick: 'YUGEN Gallery', role: 'gallery', page: 'GA-0412', lp: 'on', idOk: true, status: 'active', notify: { reminder: false, watch: false, news: true, audience: true, insight: false } },
+    'U-10003': { email: 'toru.t@example.com', nick: '田中 透', role: 'creator', page: 'CR-1042', lp: 'on', lpApp: 'granted', idOk: true, status: 'active', notify: { reminder: true, watch: false, news: false, audience: true, insight: true } },
+    'U-10120': { email: 'info@yugen.example.com', nick: 'YUGEN Gallery', role: 'gallery', page: 'GA-0412', lp: 'on', lpApp: 'granted', idOk: true, status: 'active', notify: { reminder: false, watch: false, news: true, audience: true, insight: false } },
     'U-10712': { email: 'xx77@example.net', nick: 'spam_account_77', role: '', lp: '', idOk: false, status: 'suspended', notify: { reminder: false, watch: false, news: false } }
   };
   var QUID = (location.search.match(/[?&]uid=([\w-]+)/) || [])[1];
@@ -270,7 +270,7 @@
   /* 今の選び方を、前の形（role＝creator／gallery／''、lp＝'on'／''）にして比べる */
   function p901CurRole() { var r = document.querySelector('input[name="p901cg"]:checked'); return r ? r.value : ''; }
   function p901Roles(u) {
-    P901_BASE = { role: u ? u.role : '', page: u && u.page || '', lp: u && u.lp === 'on' ? 'on' : '', idOk: !!(u && u.idOk) };
+    P901_BASE = { role: u ? u.role : '', page: u && u.page || '', lp: u && u.lp === 'on' ? 'on' : '', lpApp: u && u.lpApp || '', idOk: !!(u && u.idOk) };
     document.querySelectorAll('input[name="p901cg"]').forEach(function (x) { x.checked = x.value === P901_BASE.role; });
     p901SwSet('lp', P901_BASE.lp === 'on');
     document.getElementById('p901Page').value = P901_BASE.page;
@@ -291,7 +291,9 @@
     if (!role && lp === 'on') w += 'ロールがユーザーのときは、LIAISON+ は使えません（クリエイターかギャラリーで使えます）。';
     if (lp === 'on' && !b.idOk) w += '本人確認と口座の登録が済んでいないので、作品が売れても代金を振り込めません。';
     var rw = document.getElementById('p901RoleWarn'); rw.textContent = w; rw.hidden = !w;
-    document.getElementById('p901LpCheck').textContent = '本人確認と振込の口座の登録：' + (b.idOk ? '済み' : 'まだ');
+    /* LIAISON+ の申込の状況（P90-11 と同じ状態名・2026-11-02）と、本人確認・口座 */
+    var APP = { pending: '確認中', granted: '利用開始', cancelled: '取消' };
+    document.getElementById('p901LpCheck').innerHTML = 'LIAISON+ の申込：' + (b.lpApp ? '<span class="ktn-review-status ktn-review-status--' + b.lpApp + '">' + APP[b.lpApp] + '</span> <a class="ktn-guide-link" href="./kotennavi-p90-11.html">申込を見る →</a>' : 'なし') + '　本人確認と振込の口座の登録：' + (b.idOk ? '済み' : 'まだ');
   }
   function p901RoleChanged() {
     var b = P901_BASE || {}, role = p901CurRole();

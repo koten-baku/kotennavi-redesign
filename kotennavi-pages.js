@@ -27124,7 +27124,7 @@ KTN.pages['p90'] = function () {
 
 
 /* ══════════════════════════════════════════════════════════════════
-   コンテンツの管理ページ（P90-23 作品管理・P90-24 記事管理・P90-25 レビュー管理・P90-26 コメント管理・2026-10-29 新設・handoff 追174-353）
+   コンテンツの管理の一覧（P90-23 作品管理・P90-3 コンテンツ管理のタブ・P90-1・P90-7・P90-8・2026-10-29 新設・handoff 追174-353）
    docs/admin-roles.md の決定：非公開・削除はそれぞれのコンテンツの管理ページで行う。削除は理由をモーダルで書き（必須）、
    理由つきの自動メール（DL-01A）を管理者あてに送る。作品のクローン・削除は admin だけ（ページ自体は「編集・問合せ」から開ける＝非公開まで）。
    4ページは同じ形の一覧なので、ktnAdminContentPage(cfg) 1つで作る。データはデモの値（本番は API）。
@@ -27358,34 +27358,54 @@ function ktnCmWho(r) { return '<span class="p905-who">' + r.who + '</span>' + ((
 
 /* ── P90-7・P90-8：登録済みのクリエイター・ギャラリーページ（非公開・削除＝重複の整理など・2026-10-29 handoff 追174-354）
    一覧は作品管理などと同じ ktnAdminContentPage。新規・クローンのフォームは今までどおり下にある ── */
+/* LIAISON+ の申込の状況の1段（P90-1 のロールの列・P90-7 のオーナーの列・2026-11-02 ユーザー指示「申請状況も見たい」）。
+   状態名は P90-11 と同じ（確認中・利用開始・取消）。押すと P90-11（リエゾンプラス機能申込管理）。申込が無ければ出さない */
+function ktnLpAppLine(st, noLabel) {
+  if (!st) return '';
+  var L = { pending: '確認中', granted: '利用開始', cancelled: '取消' };
+  /* noLabel＝列の見出しが「LIAISON+」のとき（P90-7）は状態だけ */
+  return '<a class="p901-lp" href="kotennavi-p90-11.html">' + (noLabel ? '' : '<span class="p901-role">LIAISON+</span>') + '<span class="ktn-review-status ktn-review-status--' + st + '">' + L[st] + '</span></a>';
+}
+/* P90-7 クリエイター管理（2026-11-01 に P90-1 と同じ形に）：全件を作成の新しい順に20件ずつ（ページ送り）。
+   列＝クリエイター（名前・ID）／オーナー（1段目 名前・2段目 UID・3段目 LIAISON+＝利用中のとき。未割当は「未割当（admin 管理）」）／作成日時／最終更新日時 */
 KTN.CM_CFG.creator = function () {
+  function owner(r) {
+    if (!r.owner) return '—';   /* 未割当は横線（2026-11-02 ユーザー指示） */
+    return '<span class="p901-role">' + r.owner + '</span><span class="p905-who__meta">' + r.whoIds[0] + '</span>';
+  }
   return ({
-    kind: 'クリエイター', auditType: 'creator', kwPlaceholder: '名前', idLabel: 'ID', idPlaceholder: '例：CR-1042 またはページの URL', cols: ['クリエイター', 'オーナー', '作成日'],
-    lookup: { latest: 10, whoLabel: 'オーナー', dateWord: '作成日' },
+    kind: 'クリエイター', auditType: 'creator', kwPlaceholder: '名前', idLabel: 'ID', idPlaceholder: '例：CR-1042 またはページの URL', cols: ['クリエイター', 'オーナー', 'LIAISON+', '作成／最終更新'],   /* 日時の見出しに「作成」「最終更新」（中は日時だけ・2026-11-02） */
+    lookup: { all: true, whoLabel: 'オーナー', dateWord: '作成日' },
     rows: [
-      { id: 'cr1', title: '田中 透', code: 'CR-1042', url: 'kotennavi-p3.html', who: '田中 透（UID:10003）', whoIds: ['U-10003'], date: '2024.05.12', status: 'public' },
-      { id: 'cr2', title: '佐藤 直子', code: 'CR-2087', url: 'kotennavi-p3.html', who: '未割当（admin 管理）', date: '2025.11.03', status: 'public' },
-      { id: 'cr3', title: '伊藤 蒼', code: 'CR-3125', url: 'kotennavi-p3.html', who: '未割当（admin 管理）', date: '2026.08.22', status: 'public' },
-      { id: 'cr4', title: '高橋 蓮', code: 'CR-3301', url: 'kotennavi-p3.html', who: '未割当（admin 管理）', date: '2026.10.20', status: 'public', note: '同じ名前のページ CR-2210 あり（重複の可能性）' }
-    ].concat(ktnCmSamples('cr', 0, 10, function (i) { return { title: '見本のクリエイター ' + (i + 1), code: 'CR-' + (4000 + i), url: 'kotennavi-p3.html' }; }).map(function (r) { r.who = r.who + '（UID:' + r.whoIds[0].slice(2) + '）'; return r; })),
-    cells: function (r) { return ['<a class="p90cm-title" href="' + r.url + '" target="_blank" rel="noopener">' + r.title + '</a><span class="p90cm-sub">' + r.code + (r.note ? '・' + r.note : '') + '</span>', r.who, r.date]; },
+      { id: 'cr1', title: '田中 透', code: 'CR-1042', url: 'kotennavi-p3.html', owner: '田中 透', whoIds: ['U-10003'], lpApp: 'granted', date: '2024.05.12 14:20', updated: '2026.10.29 18:02', status: 'public' },
+      { id: 'cr5', title: '小林 ゆう', code: 'CR-3290', url: 'kotennavi-p3.html', owner: '小林 ゆう', whoIds: ['U-10530'], lpApp: 'pending', date: '2025.08.03 16:40', updated: '2026.10.15 11:30', status: 'public' },
+      { id: 'cr2', title: '佐藤 直子', code: 'CR-2087', url: 'kotennavi-p3.html', date: '2025.11.03 10:05', updated: '2025.11.03 10:05', status: 'public' },
+      { id: 'cr3', title: '伊藤 蒼', code: 'CR-3125', url: 'kotennavi-p3.html', date: '2026.08.22 09:12', updated: '2026.09.01 15:48', status: 'public' },
+      { id: 'cr4', title: '高橋 蓮', code: 'CR-3301', url: 'kotennavi-p3.html', date: '2026.10.20 13:33', updated: '2026.10.20 13:33', status: 'public', note: '同じ名前のページ CR-2210 あり（重複の可能性）' }
+    ].concat(ktnCmSamples('cr', 0, 24, function (i) { return { title: '見本のクリエイター ' + (i + 1), code: 'CR-' + (4000 + i), url: 'kotennavi-p3.html', lpApp: i % 6 === 1 ? 'granted' : i % 9 === 4 ? 'pending' : i % 11 === 6 ? 'cancelled' : '' }; }).map(function (r, i) { if (i % 4 === 3) { r.whoIds = []; } else r.owner = r.who; r.date += ' 1' + (i % 10) + ':00'; r.updated = r.date; return r; })),
+    cells: function (r) { return ['<a class="p90cm-title" href="' + r.url + '" target="_blank" rel="noopener">' + r.title + '</a><span class="p90cm-sub">' + r.code + (r.note ? '・' + r.note : '') + '</span>', owner(r), ktnLpAppLine(r.lpApp, true) || '—',
+      '<span class="p907-dt">' + r.date + '</span><span class="p907-dt">' + (r.updated || r.date) + '</span>']; },   /* LIAISON+ の申込の状況は1つの列、日時は作成と最終更新の2段（2026-11-02 ユーザー指示） */
     editUrl: function () { return 'kotennavi-p3-11.html'; },
-    cloneUrl: function () { return 'kotennavi-p90-7-1.html?mode=clone'; }   /* クローンは P90-7-1（2026-11-01 に一覧と分けた） */
+    cloneUrl: function () { return 'kotennavi-p3-11.html?mode=clone'; }   /* クローンは P3-11 の ?mode=clone */
   });
 };
+/* P90-8 ギャラリー管理（2026-11-02 に P90-7 と同じ形に）：全件を作成の新しい順に20件ずつ（ページ送り）。
+   列＝ギャラリー（名前・ID）／オーナー（名前・UID。未割当は「—」）／LIAISON+（申込の状況）／作成／最終更新（小さな文字で1行ずつ） */
 KTN.CM_CFG.gallery = function () {
+  function owner(r) { return r.owner ? '<span class="p901-role">' + r.owner + '</span><span class="p905-who__meta">' + r.whoIds[0] + '</span>' : '—'; }
   return ({
-    kind: 'ギャラリー', auditType: 'gallery', kwPlaceholder: '名前', idLabel: 'ID', idPlaceholder: '例：GA-0412 またはページの URL', cols: ['ギャラリー', 'オーナー', '作成日'],
-    lookup: { latest: 10, whoLabel: 'オーナー', dateWord: '作成日' },
+    kind: 'ギャラリー', auditType: 'gallery', kwPlaceholder: '名前', idLabel: 'ID', idPlaceholder: '例：GA-0412 またはページの URL', cols: ['ギャラリー', 'オーナー', 'LIAISON+', '作成／最終更新'],
+    lookup: { all: true, whoLabel: 'オーナー', dateWord: '作成日' },
     rows: [
-      { id: 'ga1', title: 'YUGEN Gallery', code: 'GA-0412', url: 'kotennavi-p4.html', who: 'YUGEN Gallery（UID:10120）', whoIds: ['U-10120'], date: '2024.03.02', status: 'public' },
-      { id: 'ga2', title: 'Gallery SOIL 渋谷', code: 'GA-0533', url: 'kotennavi-p4.html', who: 'Gallery SOIL 渋谷（UID:10155）', whoIds: ['U-10155'], date: '2024.06.18', status: 'public' },
-      { id: 'ga3', title: 'こだま画廊', code: 'GA-1207', url: 'kotennavi-p4.html', who: '未割当（admin 管理）', date: '2026.07.30', status: 'public' },
-      { id: 'ga4', title: 'ギャラリーソイル渋谷', code: 'GA-1291', url: 'kotennavi-p4.html', who: '未割当（admin 管理）', date: '2026.10.18', status: 'public', note: 'Gallery SOIL 渋谷（GA-0533）と重複の可能性' }
-    ].concat(ktnCmSamples('ga', 0, 10, function (i) { return { title: '見本のギャラリー ' + (i + 1), code: 'GA-' + (2000 + i), url: 'kotennavi-p4.html' }; }).map(function (r) { r.who = r.who + '（UID:' + r.whoIds[0].slice(2) + '）'; return r; })),
-    cells: function (r) { return ['<a class="p90cm-title" href="' + r.url + '" target="_blank" rel="noopener">' + r.title + '</a><span class="p90cm-sub">' + r.code + (r.note ? '・' + r.note : '') + '</span>', r.who, r.date]; },
+      { id: 'ga1', title: 'YUGEN Gallery', code: 'GA-0412', url: 'kotennavi-p4.html', owner: 'YUGEN Gallery', whoIds: ['U-10120'], lpApp: 'granted', date: '2024.03.02 09:40', updated: '2026.10.30 18:55', status: 'public' },
+      { id: 'ga2', title: 'Gallery SOIL 渋谷', code: 'GA-0533', url: 'kotennavi-p4.html', owner: 'Gallery SOIL 渋谷', whoIds: ['U-10155'], lpApp: 'pending', date: '2024.06.18 15:02', updated: '2026.10.25 12:10', status: 'public' },
+      { id: 'ga3', title: 'こだま画廊', code: 'GA-1207', url: 'kotennavi-p4.html', date: '2026.07.30 11:20', updated: '2026.08.02 10:05', status: 'public' },
+      { id: 'ga4', title: 'ギャラリーソイル渋谷', code: 'GA-1291', url: 'kotennavi-p4.html', date: '2026.10.18 16:48', updated: '2026.10.18 16:48', status: 'public', note: 'Gallery SOIL 渋谷（GA-0533）と重複の可能性' }
+    ].concat(ktnCmSamples('ga', 0, 24, function (i) { return { title: '見本のギャラリー ' + (i + 1), code: 'GA-' + (2000 + i), url: 'kotennavi-p4.html', lpApp: i % 6 === 2 ? 'granted' : i % 9 === 5 ? 'pending' : i % 11 === 7 ? 'cancelled' : '' }; }).map(function (r, i) { if (i % 4 === 3) { r.whoIds = []; } else r.owner = r.who; r.date += ' 1' + (i % 10) + ':30'; r.updated = r.date; return r; })),
+    cells: function (r) { return ['<a class="p90cm-title" href="' + r.url + '" target="_blank" rel="noopener">' + r.title + '</a><span class="p90cm-sub">' + r.code + (r.note ? '・' + r.note : '') + '</span>', owner(r), ktnLpAppLine(r.lpApp, true) || '—',
+      '<span class="p907-dt">' + r.date + '</span><span class="p907-dt">' + (r.updated || r.date) + '</span>']; },
     editUrl: function () { return 'kotennavi-p4-11.html'; },
-    cloneUrl: function () { return 'kotennavi-p90-8-1.html?mode=clone'; }   /* クローンは P90-8-1（2026-11-01 に一覧と分けた） */
+    cloneUrl: function () { return 'kotennavi-p4-11.html?mode=clone'; }   /* クローンは P4-11 の ?mode=clone */
   });
 };
 
@@ -27560,15 +27580,15 @@ KTN.pages['p90-1'] = function () {
     rows: [
       /* role＝creator／gallery（無ければユーザーだけ）・lp＝LIAISON+ を利用中。date＝登録日時・last＝最終アクセス日時 */
       { id: 'u1', title: '山田 花子', mail: 'hanako.y@example.com', uid: 'U-10007', date: '2024.04.02 10:15', last: '2026.10.31 21:40', status: 'public' },
-      { id: 'u2', title: '田中 透', role: 'creator', lp: true, mail: 'toru.t@example.com', uid: 'U-10003', date: '2024.05.12 14:02', last: '2026.11.01 08:12', status: 'public' },
-      { id: 'u3', title: 'YUGEN Gallery', role: 'gallery', lp: true, mail: 'info@yugen.example.com', uid: 'U-10120', date: '2024.03.02 09:30', last: '2026.10.30 18:55', status: 'public' },
+      { id: 'u2', title: '田中 透', role: 'creator', lpApp: 'granted', mail: 'toru.t@example.com', uid: 'U-10003', date: '2024.05.12 14:02', last: '2026.11.01 08:12', status: 'public' },
+      { id: 'u3', title: 'YUGEN Gallery', role: 'gallery', lpApp: 'granted', mail: 'info@yugen.example.com', uid: 'U-10120', date: '2024.03.02 09:30', last: '2026.10.30 18:55', status: 'public' },
       { id: 'u4', title: '中村 葵', mail: 'aoi.n@example.ne.jp', uid: 'U-10398', date: '2025.02.14 20:48', last: '2026.10.12 12:03', status: 'public' },
-      { id: 'u6', title: '小林 ゆう', role: 'creator', mail: 'yu.k@example.com', uid: 'U-10530', date: '2025.08.03 16:21', last: '2026.10.28 10:44', status: 'public' },
+      { id: 'u6', title: '小林 ゆう', role: 'creator', lpApp: 'pending', mail: 'yu.k@example.com', uid: 'U-10530', date: '2025.08.03 16:21', last: '2026.10.28 10:44', status: 'public' },
       { id: 'u5', title: 'spam_account_77', mail: 'xx77@example.net', uid: 'U-10712', date: '2026.10.27 03:12', last: '2026.10.27 03:40', status: 'hidden' }
-    ].concat(ktnCmSamples('u', 0, 24, function (i) { return { title: '見本のユーザー ' + (i + 1), mail: 'sample' + (i + 1) + '@example.com', uid: 'U-' + (10800 + i), role: i % 5 === 1 ? 'creator' : i % 7 === 3 ? 'gallery' : '', lp: i % 10 === 1 }; }).map(function (r) { r.date = r.date + ' 1' + (r.id.length % 10) + ':00'; r.last = '2026.10.31 09:00'; return r; })),
+    ].concat(ktnCmSamples('u', 0, 24, function (i) { return { title: '見本のユーザー ' + (i + 1), mail: 'sample' + (i + 1) + '@example.com', uid: 'U-' + (10800 + i), role: i % 5 === 1 ? 'creator' : i % 7 === 3 ? 'gallery' : '', lpApp: i % 10 === 1 ? 'granted' : i % 10 === 6 ? 'cancelled' : '' }; }).map(function (r) { r.date = r.date + ' 1' + (r.id.length % 10) + ':00'; r.last = '2026.10.31 09:00'; return r; })),
     cells: function (r) {
       /* ロール：1段目 ユーザー／2段目 クリエイター・ギャラリー／3段目 LIAISON+（2026-11-01 ユーザー指示）。日時：登録日時と最終アクセス日時 */
-      var roles = '<span class="p901-role">ユーザー</span>' + (r.role ? '<span class="p901-role">' + (r.role === 'creator' ? 'クリエイター' : 'ギャラリー') + '</span>' : '') + (r.lp ? '<span class="p901-role">LIAISON+</span>' : '');
+      var roles = '<span class="p901-role">ユーザー</span>' + (r.role ? '<span class="p901-role">' + (r.role === 'creator' ? 'クリエイター' : 'ギャラリー') + '</span>' : '') + ktnLpAppLine(r.lpApp);
       return ['<span class="p90cm-title p90cm-title--plain">' + r.title + '</span><span class="p90cm-sub">' + r.mail + '・' + r.uid + '</span>', roles,
         '<span class="p905-date">' + r.date + '</span>', '<span class="p905-date">' + (r.last || '—') + '</span>'];   /* 登録日時と最終アクセスは別の列（2026-11-01） */
     },
@@ -27668,7 +27688,7 @@ KTN.pages['p90-15'] = function () {
   });
 };
 
-/* ── P90-27 展覧会管理（2026-10-30 新設・handoff 追174-363）：すべての展覧会を NID・URL・名前で探して、編集・クローン・非公開・削除。
+/* ── 展覧会の一覧の設定（P90-3 コンテンツ管理の「展覧会」タブ）：すべての展覧会を NID・URL・名前で探して、編集・クローン・非公開・削除。
    P90-5（展覧会の確認・新規作成）は「確認待ち・下書き」のやることの一覧、こちらは「探して直す」場所（報告・依頼・ほかの事案で特定の展覧会を直すとき）。
    状態＝公開中・終了・非公開・下書き・確認待ち。非公開にできるのは公開中・終了のもの。データはデモの値（本番は API・数万件なので探すことが前提） ── */
 KTN.CM_CFG.exh = function () {
@@ -27733,13 +27753,9 @@ KTN.CM_CFG.exh = function () {
 };
 
 
-/* 単独のページ（P90-24〜27 は 2026-10-30 に P90-3 コンテンツ管理へまとめて実装不要〔温存〕。P90-7・8 はクリエイター管理・ギャラリー管理＝登録済みの一覧＋新規作成） */
+/* 単独のページ（P90-7 クリエイター管理・P90-8 ギャラリー管理） */
 KTN.pages['p90-7'] = function () { ktnAdminContentPage(KTN.CM_CFG.creator()); };
 KTN.pages['p90-8'] = function () { ktnAdminContentPage(KTN.CM_CFG.gallery()); };
-KTN.pages['p90-27'] = function () { ktnAdminContentPage(KTN.CM_CFG.exh()); };
-KTN.pages['p90-24'] = function () { ktnAdminContentPage(KTN.CM_CFG.article()); };
-KTN.pages['p90-25'] = function () { ktnAdminContentPage(KTN.CM_CFG.review()); };
-KTN.pages['p90-26'] = function () { ktnAdminContentPage(KTN.CM_CFG.comment()); };
 /* ── P90-3 コンテンツ管理（2026-10-30 新設・旧 P90-3「展覧会新規」の番号を使い直し・handoff 追174-364）
    展覧会・記事・レビュー・コメント・クリエイター・ギャラリーをタブで切り替える（作品は P90-23 作品管理で独立＝クローン・削除が admin だけで扱いが違うため）。
    上の「NID・URL で探す」に URL を貼ると、URL から種類を見分けてそのタブに切り替え、その1件を出す。番号や ID だけなら、当たる行のあるタブへ ── */
@@ -27999,3 +28015,60 @@ KTN.pages['p60-21'] = function () {
   load(cur);
   window.ktnRender = function () { var log = $('p6021Log'); log.hidden = !(KTN.isFullAdmin && KTN.isFullAdmin()); };
 };
+
+/* ══════════════════════════════════════════════════════════════════
+   P3-11・P4-11 の新規・クローン（管理者・2026-11-02 ユーザー判断・handoff 追174-385）。
+   ページの編集画面で新規・クローンも作る（展覧会の P2-11・作品の P6-11・記事の P7-11 と同じ形）。
+   ?mode=new｜clone で開くと：管理者の表示にする／オーナー本人だけの欄（本人確認・LIAISON+・担当者）とキャンペーンの枠を隠す／
+   オーナー・複製元・ページの公開の欄を出す／新規は欄を空に、クローンは名前と ID だけ空に／保存は「作成する」で、キャンセルは P90-7・P90-8 へ
+   ══════════════════════════════════════════════════════════════════ */
+function ktnPageModeGo(m) { location.search = m === 'edit' ? '' : '?mode=' + m; }
+document.addEventListener('DOMContentLoaded', function () {
+  setTimeout(function () {
+    var page = window.ktnState && window.ktnState.page;
+    if (page !== 'p3-11' && page !== 'p4-11') return;
+    var cr = page === 'p3-11', P = cr ? 'p311' : 'p411', list = cr ? 'kotennavi-p90-7.html' : 'kotennavi-p90-8.html';
+    var mode = (location.search.match(/[?&]mode=(new|clone)/) || [])[1] || 'edit';
+    document.querySelectorAll('[data-page-mode]').forEach(function (b) { b.classList.toggle('on', b.dataset.pageMode === mode); });
+    if (mode === 'edit') return;
+    document.body.classList.add('ktn-page-new');   /* 描き直し（役割の切替など）でも、隠した欄が出ないように CSS でも押さえる */
+    /* 管理者の表示に（デモバーの「管理者-A」を押すのと同じ） */
+    var adm = document.querySelector('[data-admin-level="A"]'); if (adm && window.ktnState.role !== 'admin') adm.click();
+    var kind = cr ? 'クリエイター' : 'ギャラリー';
+    var title = document.querySelector('.ktn-mgmt-head__title');
+    if (title) title.textContent = kind + 'ページを' + (mode === 'new' ? '新規作成' : 'クローンで作成');
+    document.title = (title ? title.textContent : '') + ' — 管理者 | 個展なび';
+    var ctx = document.querySelector('.ktn-mgmt-context'); if (ctx) ctx.hidden = true;
+    var bn = document.getElementById('ktnPageModeBanner');
+    document.getElementById('ktnPageModeText').innerHTML = mode === 'new'
+      ? '新しい' + kind + 'ページを作ります。<strong>オーナーは「未割当」のまま作れます</strong>（あとで本人の申込のときに引き継ぎます）。'
+      : '既存の' + kind + 'ページを元に、新しいページを作ります。<strong>名前と ID は新しいものを入れてください。</strong>';
+    bn.hidden = false;
+    document.querySelectorAll('[data-owner-only],[data-admin-camp]').forEach(function (el) { el.hidden = true; });
+    document.querySelectorAll('[data-new-only]').forEach(function (el) { el.hidden = false; });
+    document.querySelectorAll('[data-clone-only]').forEach(function (el) { el.hidden = mode !== 'clone'; });
+    /* 欄を空に：新規はすべて（管理の項目は除く）、クローンは名前と ID だけ */
+    var wrap = document.querySelector('.ktn-mgmt-wrap');
+    if (mode === 'new') {
+      wrap.querySelectorAll('input[type="text"],input[type="url"],input[type="tel"],input[type="email"],textarea').forEach(function (x) { if (!x.closest('[data-new-only]') && !x.closest('.ktn-admin-note')) x.value = ''; });
+      wrap.querySelectorAll('input[type="checkbox"]').forEach(function (x) { if (!x.closest('[data-new-only]')) { x.checked = false; var l = x.closest('.p211-pill'); if (l) l.classList.remove('is-active'); } });
+    } else {
+      [P + 'Name', P + 'NameEn', cr ? 'p311CreatorId' : 'p411GalleryId'].forEach(function (id) { var x = document.getElementById(id); if (x) x.value = ''; });
+    }
+    /* 送信の帯 */
+    var bar = wrap.querySelector('.p211-submit-bar');
+    var save = document.getElementById(P + 'SaveBtn');
+    var cancel = bar && bar.querySelector('button:not(#' + P + 'SaveBtn)');
+    if (cancel) cancel.setAttribute('onclick', "location.href='./" + list + "'");
+    var nt = bar && bar.querySelector('.p211-submit-bar__note'); if (nt) nt.hidden = true;
+    if (save) {
+      var fresh = save.cloneNode(true); save.parentNode.replaceChild(fresh, save);   /* 編集の保存の処理を外して付け直す */
+      fresh.textContent = mode === 'new' ? '作成する' : 'クローンして作成する';
+      fresh.addEventListener('click', function () {
+        var name = (document.getElementById(P + 'Name') || {}).value || '', id = (document.getElementById(cr ? 'p311CreatorId' : 'p411GalleryId') || {}).value || '';
+        if (!name.trim() || !id.trim() || (mode === 'clone' && !document.getElementById(P + 'CloneSource').value)) { KTN.toast((mode === 'clone' ? '複製元・' : '') + '名前と ID を入れてください'); return; }
+        KTN.submitDone({ title: '作成しました', message: kind + 'ページ「' + name.trim() + '」を作成しました（デモ）。', action: { label: kind + '管理へ', href: './' + list } });
+      });
+    }
+  }, 0);
+});

@@ -28,6 +28,10 @@
   <span class="dbar-sep">ロール：</span>
   <button class="dbtn on" onclick="setR('gallery',this)">ギャラリー本人</button>
   <button class="dbtn" onclick="setR('admin',this)">管理者</button>
+  <span class="dbar-sep" style="margin-left:12px">モード：</span>
+  <button class="dbtn" data-page-mode="edit" onclick="ktnPageModeGo('edit')">編集</button>
+  <button class="dbtn" data-page-mode="new" onclick="ktnPageModeGo('new')">新規</button>
+  <button class="dbtn" data-page-mode="clone" onclick="ktnPageModeGo('clone')">クローン</button>
   <span class="dbar-sep">リエゾンプラス：</span>
   <button class="dbtn" id="dbarLpNone" onclick="setLpMode('none')">未申請</button>
   <button class="dbtn" id="dbarLpPending" onclick="setLpMode('pending')">審査中</button>
@@ -120,6 +124,9 @@
     <div class="ktn-content">
 
       <!-- 親エンティティ文脈ストリップ（identity strip） -->
+      <!-- 新規・クローン（管理者が P90-8 から ?mode=new｜clone で開く・2026-11-02） -->
+      <div class="p211-mode-banner" id="ktnPageModeBanner" hidden><span class="p211-mode-banner__icon">ℹ️</span><div class="p211-mode-banner__text" id="ktnPageModeText"></div></div>
+
       <div class="ktn-mgmt-context">
         <a class="ktn-mgmt-context__media ktn-mgmt-context__media--gallery" href="kotennavi-p4.html" style="background:linear-gradient(135deg,#a9855f,#8b5e3c)">S</a>
         <div class="ktn-mgmt-context__body">
@@ -444,7 +451,7 @@
         </div>
 
         <!-- ブロック6: ご担当者情報（非公開・p11-3と同一構成） -->
-        <div class="p211-block">
+        <div class="p211-block" data-owner-only>
           <div class="p211-block__head">
             <h3 class="p211-block__title">ご担当者情報 <span class="p211-block__title-en">CONTACT（PRIVATE）</span></h3>
           </div>
@@ -492,7 +499,7 @@
         </div>
 
         <!-- ブロック6.5: リエゾンプラス責任者（参考表示・非公開・読み取り専用／p11-4の承認結果を引き継ぎ。LIAISON+未申請／承認済で分岐＝id分岐はデモ用トグル、実装ではLIAISON+ステータスで自動出し分け） -->
-        <div class="p211-block">
+        <div class="p211-block" data-owner-only>
           <div class="p211-block__head">
             <h3 class="p211-block__title">リエゾンプラス 責任者（参考表示） <span class="p211-block__title-en">RESPONSIBLE PERSON（REFERENCE）</span></h3>
           </div>
@@ -559,6 +566,37 @@
         </div>
 
         <!-- キャンペーンの適用状況（管理者のみ・.ktn-admin-note なので syncAdminNote が切替。中身は pages.js KTN.CAMPAIGN が描く・2026-10-11） -->
+        <!-- 新規・クローンのときだけ（オーナー・複製元・ページの公開） -->
+        <div class="p211-block" data-new-only hidden>
+          <div class="p211-block__head"><h3 class="p211-block__title">オーナー <span class="p211-block__title-en">OWNER</span></h3></div>
+          <div class="p211-block__body">
+            <div class="p211-field" data-clone-only hidden>
+              <label class="p211-label" for="p411CloneSource">複製元のページ<span class="ktn-req">必須</span></label>
+              <select class="p211-select" id="p411CloneSource">
+                <option value="">選択してください</option>
+                <option value="GA-0412">YUGEN Gallery（GA-0412）</option><option value="GA-0533">Gallery SOIL 渋谷（GA-0533）</option><option value="GA-1207">こだま画廊（GA-1207）</option>
+              </select>
+              <p class="p211-help">プロフィール・ジャンル・リンクなどを写します。名前と ID は新しく入れてください。</p>
+            </div>
+            <div class="p211-field">
+              <label class="p211-label" for="p411Owner">オーナー</label>
+              <select class="p211-select" id="p411Owner">
+                <option value="" selected>未割当（admin 管理・あとで本人へ引き継ぐ）</option>
+                <option value="U-10007">山田 花子（U-10007）</option>
+                <option value="U-10398">中村 葵（U-10398）</option>
+                <option value="U-10530">小林 ゆう（U-10530）</option>
+              </select>
+              <p class="p211-help">ふだんは未割当のまま作ります。本人からギャラリー機能の申込があったときに、事務局が申込とこのページを照らし合わせて引き継ぎます。</p>
+            </div>
+          </div>
+        </div>
+        <div class="ktn-admin-note" data-new-only hidden>
+          <div class="ktn-admin-note__head"><span class="ktn-admin-note__badge">Admin</span><span class="ktn-admin-note__title">管理の項目</span></div>
+          <div class="p211-field">
+            <label class="p211-label" for="p411Pub">ページの公開</label>
+            <select class="p211-select p9011-status" id="p411Pub"><option value="public">公開</option><option value="hidden">非公開</option></select>
+          </div>
+        </div>
         <div class="ktn-admin-note" data-admin-camp="gallery" hidden></div>
         <!-- 管理者コメント欄（role=admin のときのみ表示・共通 syncAdminNote が切替） -->
         <div class="ktn-admin-note" id="p411AdminNote" hidden>
