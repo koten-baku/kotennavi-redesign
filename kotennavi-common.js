@@ -2051,6 +2051,22 @@ function syncAdminNote() {
     el.hidden = el.hasAttribute('data-admin-camp') ? !full : !isAdmin;
   });
   ktnAdminOps();
+  ktnAdminOwnerGate(isAdmin && !full);
+}
+/* 利用者本人の編集画面のうち、管理者は admin だけが開けるページ（2026-11-02）。
+   P5-11（ユーザーのアカウント）＝管理者の入口は P90-1 ユーザー管理（admin だけ）なので、E・L が URL や P90-20 の台帳から開いても使えないようにする。
+   本番は Drupal の権限で止める（画面で隠すだけにしない） */
+KTN.ADMIN_OWNER_ONLY_A = { 'p5-11': 'ユーザーのアカウント' };
+function ktnAdminOwnerGate(deny) {
+  var page = window.ktnState.page;
+  if (!KTN.ADMIN_OWNER_ONLY_A[page]) return;
+  var wrap = document.querySelector('.ktn-mgmt-wrap'), old = document.getElementById('ktnAdminOwnerDeny');
+  if (old) old.remove();
+  if (wrap) wrap.hidden = !!deny;
+  document.querySelectorAll('.ktn-mgmt-context').forEach(function (el) { el.hidden = !!deny; });
+  if (!deny || !wrap) return;
+  wrap.insertAdjacentHTML('beforebegin', '<div class="ktn-admin-deny" id="ktnAdminOwnerDeny" role="note"><p class="ktn-admin-deny__msg">' + KTN.ADMIN_OWNER_ONLY_A[page] +
+    'の編集は「' + KTN.ADMIN_LEVELS.A.label + '」の管理者だけが使えます。</p><a class="ktn-action-btn" href="kotennavi-p90.html">管理者メニューへ →</a></div>');
 }
 
 /* ── 編集画面の「公開の状態と削除」（data-admin-ops・P2-11・P7-11・P8-11・2026-11-01 ユーザー提案）──
