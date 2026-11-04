@@ -44,8 +44,14 @@
   <button class="dbtn dbtn-exh" data-exh-key="liaison" onclick="ktnSetExh('liaison','liaison',this)">LIAISON</button>
   <button class="dbtn dbtn-exh on" data-exh-key="liaison" onclick="ktnSetExh('liaison','plus',this)">LIAISON+</button>
   <span class="dbar-sep">販売期間：</span>
-  <button class="dbtn dbtn-exh on" data-exh-key="salesOver" onclick="ktnSetExh('salesOver','false',this)">終了前</button>
-  <button class="dbtn dbtn-exh" data-exh-key="salesOver" onclick="ktnSetExh('salesOver','true',this)">終了済</button>
+  <!-- 販売期間（LIAISON+）：開始前／販売期間中／終了済。始まると会期を変えられない（2026-11-04） -->
+  <button class="dbtn" data-sale-st onclick="p211SaleState('before',this)">開始前</button>
+  <button class="dbtn on" data-sale-st onclick="p211SaleState('during',this)">販売期間中</button>
+  <button class="dbtn" data-sale-st onclick="p211SaleState('over',this)">終了済</button>
+  <span class="dbar-sep">販売期間の選び方：</span>
+  <button class="dbtn on" data-sale-pick onclick="p211SalePick('same',this)">会期と同じ</button>
+  <button class="dbtn" data-sale-pick onclick="p211SalePick('plus2w',this)">会期終了後2週間</button>
+  <button class="dbtn" data-sale-pick onclick="p211SalePick('custom',this)">カスタム</button>
   <span class="dbar-sep">はじめて割の予定：</span>
   <button class="dbtn on" data-perk-shift onclick="ktnPerkShiftDemo(false,this)">そのまま</button>
   <button class="dbtn" data-perk-shift onclick="ktnPerkShiftDemo(true,this)">保存で変わる</button>
@@ -420,6 +426,8 @@
               <span class="p211-datetime-pair__sep">〜</span>
               <input type="date" id="p211DateTo" value="2026-07-20">
             </div>
+            <!-- LIAISON+ の販売期間との関係（pages.js p211SyncTerm・2026-11-04） -->
+            <p class="p211-help p211-term-note" id="p211TermNote" hidden></p>
           </div>
 
           <div class="p211-field">
@@ -944,6 +952,8 @@
             <ul class="p211-presave__list">
               <li>入力内容をご確認のうえ保存してください。保存後も、展覧会ページのオーナーメニューからいつでも編集できます。</li>
               <li data-review-only>保存後、サイト管理者が内容を確認したうえでサイトに掲載します。確認には日数をいただく場合があります。</li>
+              <li><span data-review-only>LIAISON・LIAISON+ の作品の登録（展覧会ページのオーナーメニューの「展示設定・作品管理」）は、サイト管理者の確認が済んでから使えるようになります。確認が済むと、メールでお知らせします。</span><span data-confirmed-only hidden>LIAISON・LIAISON+ の作品の登録と展示の設定は、展覧会ページのオーナーメニューの「展示設定・作品管理」からできます。</span><a class="ktn-guide-link" href="./kotennavi-p70-1.html" target="_blank" rel="noopener">LIAISON の出品ガイド →</a>　<a class="ktn-guide-link" href="./kotennavi-p70-2.html" target="_blank" rel="noopener">LIAISON+ の販売ガイド →</a></li>
+              <li id="p211TermWarn" hidden></li>
               <li>入力内容に不備・誤り・重複がある場合や、当サイトの趣旨に反するとサイト管理者が判断した場合は、事前のお知らせなく内容を修正・削除することがあります。あらかじめご了承ください。</li>
               <li id="p211DraftNote">入力の途中で保存しておきたいときは、下の「下書きとして保存する」にチェックを入れてください。下書きはサイトに公開されず、管理者への確認依頼も送られません。続きを入力してから、あらためて確認依頼できます。</li>
             </ul>
@@ -1147,6 +1157,26 @@
 
       </div><!-- /.ktn-mgmt-wrap -->
 
+      <!-- 展覧会の削除（オーナー・編集のときだけ・2026-11-04）。確認前＝確かめのモーダルのあとすぐ削除（DL-02A）／確認済＝理由を書いて事務局に削除を依頼（DL-03A・本人へ DL-03） -->
+      <div class="p211-delete" id="p211DeleteArea" hidden>
+        <p class="p211-delete__title">この展覧会を削除する</p>
+        <p class="p211-delete__desc" id="p211DeleteDesc"></p>
+        <button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline" id="p211DeleteBtn"></button>
+      </div>
+
+      <!-- 確認前の削除の確かめ（fixed のため wrap の外） -->
+      <div class="p211-modal" id="p211DeleteModal" hidden>
+        <div class="p211-modal__overlay" data-del-close></div>
+        <div class="p211-modal__box" role="dialog" aria-modal="true" aria-labelledby="p211DeleteTtl">
+          <p class="p211-modal__title" id="p211DeleteTtl">この展覧会を削除しますか？</p>
+          <p class="p211-modal__note">展覧会「松田啓佑展［仮称］」を削除します。削除すると元に戻せません（入力した内容・画像もすべて消えます）。</p>
+          <div class="p211-modal__foot">
+            <button class="ktn-op-btn" type="button" data-del-close>キャンセル</button>
+            <button class="ktn-op-btn ktn-op-btn--danger" type="button" id="p211DeleteOk">削除する</button>
+          </div>
+        </div>
+      </div>
+
       <!-- 保存確認モーダル（fixed のため wrap の外に置く） -->
       <div class="p211-modal" id="p211ConfirmModal" hidden>
         <div class="p211-modal__overlay" onclick="closeConfirmModal()"></div>
@@ -1185,7 +1215,7 @@ var MODE_SUBMIT = { new: '保存して確認依頼', edit: '保存して確認�
    確認のあとの変更は、事務局が見守りのメール MO-01A・更新の記録（P90-22）で見る。確認前（新規・クローン・確認待ち）は「保存して確認依頼」のまま */
 function isConfirmedEdit() { return demoMode === 'edit' && demoConfirmed; }
 function submitLabel() { return isConfirmedEdit() ? '保存する' : MODE_SUBMIT[demoMode]; }
-function syncReviewOnly() { document.querySelectorAll('[data-review-only]').forEach(function (el) { el.hidden = isConfirmedEdit(); }); }
+function syncReviewOnly() { document.querySelectorAll('[data-review-only]').forEach(function (el) { el.hidden = isConfirmedEdit(); }); document.querySelectorAll('[data-confirmed-only]').forEach(function (el) { el.hidden = !isConfirmedEdit(); }); }   /* data-confirmed-only＝確認済の編集のときだけ出す（LIAISON の説明の言い替え・2026-11-04） */
 /* 確認済＝管理者が内容を確認し、開催場所・出展クリエイターのリンクを設定済の状態。編集＝確認済／新規・クローン＝確認前 を初期値にする */
 var MODE_CONFIRMED = { new: false, edit: true, clone: false };
 /* クローンのデモ内容＝過去の展覧会「松田啓佑展 vol.1」（2025年開催）を複製した直後の状態 */

@@ -33,6 +33,13 @@
   <button class="dbtn" id="dbarNew" onclick="setDemoMode('new')">新規</button>
   <button class="dbtn on" id="dbarEdit" onclick="setDemoMode('edit')">編集</button>
   <button class="dbtn" id="dbarClone" onclick="setDemoMode('clone')">クローン</button>
+  <!-- 出品：この作品が展覧会に出ているか（2026-11-04）。出品中は削除できない／申込あり・取引完了は編集できない -->
+  <span class="dbar-sep" style="margin-left:8px">出品：</span>
+  <button class="dbtn" data-p611-list onclick="p611Listing('none',this)">なし</button>
+  <button class="dbtn on" data-p611-list onclick="p611Listing('on',this)">出品中（LIAISON+）</button>
+  <button class="dbtn" data-p611-list onclick="p611Listing('li',this)">出品中（LIAISON）</button>
+  <button class="dbtn" data-p611-list onclick="p611Listing('apply',this)">出品中（申込あり）</button>
+  <button class="dbtn" data-p611-list onclick="p611Listing('sold',this)">取引完了</button>
 </div>
 
 <div class="shell">
@@ -133,11 +140,16 @@
             <span class="cb cb-person" id="p611OwnerBadge"></span>
             <a id="p611OwnerName" href="#"></a>
           </div>
+          <!-- 出品している展覧会（Owner の下に線で区切る・出品しているときだけ・pages.js p611Listing が入れる・2026-11-04） -->
+          <div class="ktn-mgmt-context__listing" id="p611Listing" hidden></div>
         </div>
         <div class="ktn-mgmt-context__actions">
           <a class="ktn-mgmt-context__view" href="kotennavi-p6.html">作品ページを見る →</a>
         </div>
       </div>
+
+      <!-- 申込あり・取引完了のときの説明（ボックスの外・中は入力できない・pages.js p611Listing） -->
+      <div class="ktn-liaison-gate" id="p611Lock" hidden></div>
 
       <!-- 管理ボックス -->
       <div class="ktn-mgmt-wrap">
@@ -451,11 +463,13 @@
         </div>
         <div class="p211-block__body">
           <div class="p211-presave__box">
+            <p class="p211-presave__title">保存する前にご確認をお願いします</p>
             <ul class="p211-presave__list">
-              <li>入力の途中で保存しておきたいときは、下の「一時保存（下書き）として保存する」にチェックを入れてください。下書きは作品管理にだけ残り、作品のページ・検索・出品の候補には出ません。続きを入力してから、あらためて保存できます。</li>
+              <li id="p611ListedNote" hidden></li>
+              <li id="p611DraftLi">入力の途中で保存しておきたいときは、下の「一時保存（下書き）として保存する」にチェックを入れてください。下書きは作品管理にだけ残り、作品のページ・検索・出品の候補には出ません。続きを入力してから、あらためて保存できます。</li>
             </ul>
           </div>
-          <label class="p211-check p211-draft-check p211-presave__draft-solo">
+          <label class="p211-check p211-draft-check p211-presave__draft-solo" id="p611DraftWrap">
             <input type="checkbox" id="p611DraftChk" onchange="syncDraftMode()">
             <span class="p211-draft-check__text">
               <span class="p211-draft-check__label">一時保存（下書き）として保存する</span>
@@ -518,6 +532,7 @@ function setDemoMode(mode) {
   var presave = document.getElementById('p611Presave');
   var dChk = document.getElementById('p611DraftChk');
   if (presave) presave.hidden = (mode === 'edit');
+  if (typeof window.p611SyncPresave === 'function') window.p611SyncPresave(mode);   /* 編集でも、出品中のときは「保存前の確認」を出す（2026-11-04） */
   if (mode === 'edit' && dChk) dChk.checked = false;
   if (typeof syncDraftMode === 'function') syncDraftMode();
 

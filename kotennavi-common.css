@@ -14453,3 +14453,107 @@ body:not(.ktn-page-new) [data-new-only]{display:none !important}
 .p9012-st{display:block;margin-top:4px}   /* P90-12 展覧会：状態は会期／販売期間の3段目（2026-11-02） */
 .p9012-perk{display:inline-block;margin-top:4px;padding:1px 8px;border-radius:999px;font-size:.7rem;font-weight:600;color:#1a7a42;background:rgba(26,122,66,.08)}   /* P90-12 展覧会：その展覧会の取引に効く出品者の特典（2026-11-03） */
 .p9012-del{margin-left:6px;font-size:.66rem;vertical-align:middle}   /* 削除済みの作品の印（P90-12・P90-13・2026-11-03） */
+/* P90-13 取引デスク（管理者）：展覧会で絞っているときの帯・取引の内訳（行の下に開く）（2026-11-03） */
+.p9013-exfilter{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;padding:10px 14px;background:#faf7f1;border:1px solid var(--border);border-radius:4px;font-size:.82rem;color:var(--ink)}
+.p315-urgent-filter[hidden],.p9013-bd-row[hidden],.p315-archive-table tbody tr[hidden]{display:none}
+.p9013-bd-row > td{background:#faf7f1}
+.p9013-bd{display:flex;flex-wrap:wrap;gap:12px 32px}
+.p9013-bd__col{flex:1 1 260px;margin:0}
+.p9013-bd__head{margin:0 0 6px;font-size:.74rem;font-weight:700;color:var(--muted)}
+.p9013-bd__row{display:flex;justify-content:space-between;gap:12px;padding:3px 0;border-bottom:1px dotted var(--border)}
+.p9013-bd__row dt{font-size:.76rem;color:var(--muted)}
+.p9013-bd__row dd{margin:0;font-size:.8rem;color:var(--ink);text-align:right}
+.p9013-bd__row.is-sum dd{font-weight:700}
+.p9013-bd__note{margin:0 0 8px;font-size:.76rem;color:var(--muted)}
+.p9013-bd-btn{margin-top:0}
+@media (max-width:540px){.p315-archive-table .p9013-bd-row > td{display:block;text-align:left}.p315-archive-table .p9013-bd-row > td::before{display:none}}
+.p9013-exfilter[hidden]{display:none}
+/* P90-13 取引デスク（管理者）：販売期間中／終了のタブ（2026-11-03） */
+.p9013-tabs{margin-bottom:6px}
+.p9013-tab-note{margin:0 0 4px;font-size:.76rem;line-height:1.7;color:var(--muted)}
+/* P90-12「申込・取引」：申込・取引中＝ブランド青（進んでいる取引）／終了＝薄い灰（記録）。要対応は赤で一番上（2026-11-03） */
+.p9012-cnt--live{color:var(--accent)}
+.p9012-cnt--end{color:var(--muted)}
+.p902-tab-btn .ktn-count--pill.p9012-tabn--alert{background:#b43c14;color:#fff;font-weight:600}   /* P90-12 のタブ：未完了の中に要対応があるとき（2026-11-03） */
+.p902-tab-btn .ktn-count--pill + .ktn-count--pill{margin-left:4px}
+/* P90-12 のタブの「申込＋取引中」の印：選んでいるタブでも同じ見た目（選択で色が変わると別の数に見えるため）。色は行の「申込・取引中」と同じブランド青（2026-11-03） */
+.p902-tab-btn .ktn-count--pill.p9012-tabn{background:rgba(0,93,167,.1);color:var(--accent);font-weight:600}
+.p9012-tab-legend{margin:-8px 0 12px;font-size:.74rem;line-height:1.8;color:var(--muted)}
+.p9012-tab-legend .ktn-count--pill{margin:0 2px;font-size:.66rem}
+.p9012-tab-legend .p9012-tabn{background:rgba(0,93,167,.1);color:var(--accent);font-weight:600}
+.p9012-tab-legend .p9012-tabn--alert{background:#b43c14;color:#fff;font-weight:600}
+/* 管理者のページの下線タブ（.p902-tab-nav・P90-2／3／4／5／11／12／13／17／21）も、スマホの幅では折り返してすべて見せる（.p909-tab-nav と同じ・2026-11-03） */
+@media (max-width:540px){.p902-tab-nav{flex-wrap:wrap;overflow-x:visible}.p902-tab-nav .p902-tab-btn{padding-left:10px;padding-right:10px}}
+.p9012-works-note{margin:0 0 10px;font-size:.78rem;line-height:1.7;color:var(--muted)}   /* P90-12 出品作品のタブの説明（2026-11-03） */
+/* P90-12 展覧会の作品（行の下のアコーディオン）・作品で探したときの件数（2026-11-03） */
+.p9012-wrow[hidden]{display:none}
+.p9012-wrow > td{background:#faf7f1}
+.p9012-wtable{width:100%;border-collapse:collapse;font-size:.8rem}
+.p9012-wtable th{padding:6px 8px;font-size:.7rem;font-weight:600;color:var(--muted);text-align:left;border-bottom:1px solid var(--border)}
+.p9012-wtable td{padding:7px 8px;border-bottom:1px dotted var(--border);vertical-align:top}
+.p9012-wtable tr.is-hit td{background:rgba(0,93,167,.08)}
+.p9012-wnote{margin:8px 0 0;font-size:.74rem;color:var(--muted)}
+.p9012-wbtn{margin-top:0}
+.p9012-wq-hint{margin:-4px 0 12px;padding:8px 12px;background:rgba(0,93,167,.06);border-radius:4px;font-size:.78rem;color:var(--ink)}
+.p9012-wq-hint[hidden]{display:none}
+@media (max-width:540px){.p315-archive-table .p9012-wrow > td{display:block;text-align:left}.p315-archive-table .p9012-wrow > td::before{display:none}.p9012-wtable thead{display:none}.p9012-wtable tr{display:block;padding:6px 0;border-bottom:1px solid var(--border)}.p9012-wtable td{display:flex;justify-content:space-between;gap:10px;border:0;padding:3px 0}.p9012-wtable td::before{content:attr(data-label);font-size:.66rem;color:var(--muted)}}
+/* P90-12：展覧会名の下の「出品作品 N ▾」で作品の欄が開く（文字と矢印だけ・2026-11-03） */
+.p9012-table .p9012-wbtn{margin-top:6px}   /* 見た目は共通の開け閉め（.ktn-fold--sub＝灰色の字＋矢印・重ねると濃く）にそろえる＝リンク（ブランド青）と見分ける（2026-11-04） */
+/* P90-12：「出品作品 N ▾」は展覧会の行の下の別の行（2026-11-04）。展覧会の行とひとまとまりに見えるよう、間の線を消す */
+.p9012-table tbody[data-cm="list"] > tr:not(.p9012-trow):not(.p9012-wrow) > td{border-bottom:0}
+.p9012-table .p9012-trow > td{padding-top:0;padding-bottom:10px}
+.p9012-table .p9012-trow .p9012-wbtn{margin-top:0}
+.p9012-table .p9012-num{display:inline;font-size:.86rem}
+@media (max-width:640px){.p315-archive-table .p9012-trow > td{display:block;padding:4px 0 8px;text-align:left}.p315-archive-table .p9012-trow > td::before{display:none}}
+/* 下線のタブ（.p315-tab-nav・.p314-tabs・.p902-tab-nav・.p909-tab-nav）の選んだタブの下線（2026-11-04）。
+   タブの列は横に送れるよう overflow-x:auto にしていて、選んだタブの下線（margin-bottom:-2px で列の下の線に重ねていた）が列の枠で切られ、
+   パソコンの幅では見えていなかった（スマホの幅は折り返しで overflow を外したので見えていた）。列の下の線を内側の影で描き、タブの下線をその上に重ねる＝どの幅でも見える */
+.p315-tab-nav,.p314-tabs,.p902-tab-nav,.p909-tab-nav{border-bottom:0;box-shadow:inset 0 -2px 0 var(--border)}
+.p315-tab-btn,.p314-tab,.p902-tab-btn,.p909-tab-btn{margin-bottom:0}
+.p902-tab-btn.is-active{color:var(--page-accent,#3a4a5a);border-bottom-color:var(--page-accent,#3a4a5a)}
+.p9013-bd__link{margin:10px 0 0;font-size:.78rem}   /* P90-13 内訳：この作品の出品を見る（P90-12・2026-11-04） */
+/* 理由のモーダルの「選ぶ欄」（KTN.adminDelete の o.choice・2026-11-04） */
+.ktn-admin-choice{display:flex;align-items:flex-start;gap:6px;margin:6px 0 0;font-size:.82rem;line-height:1.7}
+.ktn-admin-choice input{margin-top:5px}
+#ktnAdminDeleteChoice[hidden]{display:none}
+/* P90-12 作品の欄の「申込・取引」：止めている申込は赤（2026-11-04） */
+.p9012-q{font-size:.78rem;color:var(--ink)}
+.p9012-q.is-paused{color:#b43c14;font-weight:600}
+.p9012-qn{font-size:.8rem;font-weight:600;color:var(--ink)}   /* P90-12 作品の申込の数（2026-11-04） */
+.p9012-pos{font-size:.76rem;color:var(--muted)}   /* P90-12 作品の申込の処理の順番（2026-11-04） */
+/* P90-12「出品作品 N ▾」：開いたときの作品の欄と同じクリーム色（#faf7f1）の地に濃い字＝開け閉めの部品だと分かり、開く欄とつながって見える（2026-11-04 ユーザー提案） */
+.p9012-table .p9012-trow .p9012-wbtn{padding:4px 12px;border-radius:4px;background:#faf7f1;border:1px solid #ece4d6;color:var(--ink);font-weight:600}
+.p9012-table .p9012-trow .p9012-wbtn:hover{border-color:#d9ccb4}
+.p9012-table .p9012-trow .p9012-wbtn[aria-expanded="true"]{border-bottom-left-radius:0;border-bottom-right-radius:0}
+/* 作品管理（P2-12・P2-12-1）の確認前（2026-11-04）：管理のボックスの外・上に手順、ボックスの中は入力できない（薄く） */
+.ktn-liaison-gate{max-width:var(--w-detail);margin:0 auto 14px;padding:14px 18px;background:#fff;border:1px solid var(--border);border-left:4px solid #a06010;border-radius:4px}
+.ktn-liaison-gate__head{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin:0 0 8px;font-size:.86rem;font-weight:600;color:var(--ink);line-height:1.7}
+.ktn-liaison-gate__steps{margin:0;padding-left:1.4em;font-size:.82rem;line-height:1.9;color:var(--ink)}
+.ktn-liaison-gate__steps li.is-done{color:var(--muted)}
+.ktn-liaison-gate__foot{margin:8px 0 0;font-size:.78rem;color:var(--muted)}
+.ktn-mgmt-wrap.is-gated{opacity:.5;pointer-events:none;user-select:none}
+/* P2-11 ページの下の削除（オーナー・編集のとき・2026-11-04） */
+.p211-delete{max-width:var(--w-detail);margin:24px auto 0;padding:16px 20px;background:#fff;border:1px solid var(--border);border-radius:4px}
+.p211-delete[hidden]{display:none}
+.p211-delete__title{margin:0 0 4px;font-size:.88rem;font-weight:700;color:var(--ink)}
+.p211-delete__desc{margin:0 0 10px;font-size:.8rem;line-height:1.7;color:var(--muted)}
+/* P90-5「削除の依頼」のタブ（2026-11-04） */
+.p905-delreq[hidden],.p905-delreq__more[hidden],.p319-toolbar[hidden],.p315-archive-table-wrap[hidden]{display:none}
+.p905-delreq__lead{margin:0 0 10px;font-size:.8rem;line-height:1.7;color:var(--muted)}
+.p905-delreq__more > td{background:#faf7f1}
+.p905-delreq__table .ktn-fold--sub{margin-top:4px}
+@media (max-width:640px){.p315-archive-table .p905-delreq__more > td{display:block;padding-left:0;text-align:left}.p315-archive-table .p905-delreq__more > td::before{display:none}}
+/* 作品の帯の「出品」の段（P6-11・2026-11-04）：出品中／取引完了＋展覧会（展示設定・作品管理へ）＋種類と期間 */
+.ktn-mgmt-context__listing{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;margin-top:8px;padding-top:8px;border-top:1px solid var(--border);font-size:.78rem}
+.ktn-mgmt-context__listing[hidden]{display:none}
+.ktn-mgmt-context__listing a{font-family:var(--fs);font-weight:600;color:var(--ink)}
+.ktn-mgmt-context__listing-meta{color:var(--muted);font-size:.74rem}
+#p611Lock{margin:0 auto 14px}
+
+#p611DraftWrap[hidden],#p611DraftLi[hidden],#p611ListedNote[hidden]{display:none}
+.ktn-mgmt-context__listing-svc{flex-basis:100%;font-size:.74rem;color:var(--ink)}   /* 出品の段の2行目：LIAISON／LIAISON+・販売期間（2026-11-04） */
+/* P2-11 開催期間と LIAISON+ の販売期間（2026-11-04） */
+.p211-term-note{margin-top:6px}
+.p211-term-note[hidden],#p211TermWarn[hidden]{display:none}
+.p211-term-note.is-warn{color:#b43c14;font-weight:600}
+.p2121-term-mismatch{margin:0 0 10px;font-size:.82rem;font-weight:600;line-height:1.7}

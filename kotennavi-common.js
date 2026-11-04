@@ -2006,6 +2006,8 @@ function renderAll() {
   renderPageTags(window.ktnState.page);
   updateActiveState(window.ktnState.page);
   syncAdminNote();
+  ktnLiaisonGate();
+  ktnEditDelete();
   syncRoleOwnerOnly();
   syncAuthWall();
   syncInqLinks();
@@ -2586,7 +2588,84 @@ function ktnSetExh(key, val, btn) {
     });
   }
   if (typeof ktnRender === 'function') ktnRender();
+  ktnLiaisonGate();
 }
+/* ── 作品管理（P2-12・P2-12-1）は、展覧会の確認が済んでから（2026-11-04 ユーザー指示）──
+   確認前（KTN.exh.confirmed＝false）は、管理のボックスの中を入力できないようにし、上に「確認待ち」と、確認が済むと使えるようになるまでの手順を出す。
+   下書き（確認依頼をまだしていない）ときは、手順の①が「まだ」になる。本番は API でも、確認前の展覧会への作品の登録を止める */
+function ktnLiaisonGate() {
+  var page = window.ktnState && window.ktnState.page;
+  if (page !== 'p2-12' && page !== 'p2-121') return;
+  var wrap = document.querySelector('.ktn-mgmt-wrap'); if (!wrap) return;
+  var e = KTN.exh || {}, gated = !e.confirmed, old = document.getElementById('ktnLiaisonGate');
+  if (old) old.remove();
+  wrap.classList.toggle('is-gated', gated);
+  wrap.setAttribute('aria-disabled', gated ? 'true' : 'false');
+  wrap.querySelectorAll('input,select,textarea,button').forEach(function (el) {
+    if (gated) { if (!el.hasAttribute('data-gate-off')) { el.setAttribute('data-gate-off', el.disabled ? '1' : '0'); el.disabled = true; } }
+    else if (el.hasAttribute('data-gate-off')) { el.disabled = el.getAttribute('data-gate-off') === '1'; el.removeAttribute('data-gate-off'); }
+  });
+  if (!gated) return;
+  var draft = !!e.draft, admin = window.ktnState.role === 'admin';
+  wrap.insertAdjacentHTML('beforebegin', '<div class="ktn-liaison-gate" id="ktnLiaisonGate" role="note">' +
+    '<p class="ktn-liaison-gate__head"><span class="ktn-review-status ktn-review-status--pending">' + (draft ? '下書き' : '確認待ち') + '</span>この展覧会は、まだ事務局の確認が済んでいないため、作品の登録・展示の設定はできません。</p>' +
+    '<ol class="ktn-liaison-gate__steps">' +
+      '<li class="' + (draft ? '' : 'is-done') + '">展覧会を保存して確認依頼する' + (draft ? '（まだです。展覧会の編集から「保存して確認依頼」をしてください）' : '（済）') + '</li>' +
+      '<li>事務局が内容を確認する（開催場所・出展クリエイターのページとのリンク付けなど。日数をいただく場合があります）</li>' +
+      '<li>確認が済むと、メール「展覧会の内容を確認しました」でお知らせします。この画面で作品の登録・展示の設定ができるようになります</li>' +
+    '</ol>' +
+    '<p class="ktn-liaison-gate__foot">展覧会の内容を直すときは <a class="ktn-guide-link" href="./kotennavi-p2-11.html">展覧会の編集 →</a>' + (admin ? '　管理者の確認も展覧会の編集（管理者の欄）で行います。' : '') + '</p></div>');
+}
+window.ktnLiaisonGate = ktnLiaisonGate;
+/* 作成・編集の画面（ヘッダーのメニューを出さないページ）の一覧 */
+KTN.EDIT_NO_MENU = ['p2-11', 'p6-11', 'p3-11', 'p4-11', 'p5-11', 'p5-12', 'p5-13', 'p61-11', 'p2-12', 'p2-121'];
+/* ── 画面の下の削除（P6-11 作品＝オーナー・編集のとき／P61-11 お知らせ＝管理者・編集のとき・2026-11-04）。P2-11 は pages.js（確認前・確認済で分ける）── */
+function ktnEditDelete() {
+  var page = window.ktnState && window.ktnState.page, role = window.ktnState && window.ktnState.role;
+  if (page !== 'p6-11' && page !== 'p61-11') return;
+  var area = document.getElementById('ktnEditDelete');
+  if (!area) {
+    var wrap = document.querySelector('.ktn-mgmt-wrap'); if (!wrap) return;
+    wrap.insertAdjacentHTML('afterend', '<div class="p211-delete" id="ktnEditDelete" hidden><p class="p211-delete__title"></p><p class="p211-delete__desc"></p><button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline"></button></div>');
+    area = document.getElementById('ktnEditDelete');
+    area.querySelector('button').addEventListener('click', function () {
+      if (page === 'p61-11') {
+        KTN.adminDelete({ kind: 'お知らせ', name: (document.getElementById('p6111Title') || {}).value || 'このお知らせ', note: '削除すると元に戻せません。お知らせ一覧と、トップの帯・あなた宛から消えます。送ったメールは取り消せません。理由は操作の記録に残ります。',
+          onDone: function (x) { if (KTN.auditRecord) KTN.auditRecord('削除', { t: 'notice', name: (document.getElementById('p6111Title') || {}).value || '' }, KTN.reasonText(x)); setTimeout(function () { location.href = './kotennavi-p61.html'; }, 900); } });
+        return;
+      }
+      var m = document.getElementById('ktnEditDeleteModal');
+      if (!m) {
+        document.body.insertAdjacentHTML('beforeend', '<div class="p211-modal" id="ktnEditDeleteModal" hidden><div class="p211-modal__overlay" data-ed-close></div><div class="p211-modal__box" role="dialog" aria-modal="true">' +
+          '<p class="p211-modal__title">この作品を削除しますか？</p><p class="p211-modal__note">作品「オノマトペの庭」を削除します。削除すると元に戻せません（過去に購入の申込があった作品は、取引の記録のために事務局に残ります）。</p>' +
+          '<div class="p211-modal__foot"><button class="ktn-op-btn" type="button" data-ed-close>キャンセル</button><button class="ktn-op-btn ktn-op-btn--danger" type="button" data-ed-ok>削除する</button></div></div></div>');
+        m = document.getElementById('ktnEditDeleteModal');
+        m.addEventListener('click', function (e) {
+          if (e.target.closest('[data-ed-close]')) { m.hidden = true; return; }
+          if (e.target.closest('[data-ed-ok]')) { m.hidden = true; KTN.toast('作品を削除しました（デモ）'); var r = window.ktnState.role; setTimeout(function () { location.href = r === 'gallery' ? './kotennavi-p4-14.html' : './kotennavi-p3-14.html'; }, 900); }
+        });
+      }
+      m.hidden = false;
+    });
+  }
+  var eb = document.getElementById('dbarEdit'), editing = !!(eb && eb.classList.contains('on'));
+  var who = page === 'p61-11' ? role === 'admin' : (role === 'creator' || role === 'gallery');
+  area.hidden = !(editing && who);
+  if (area.hidden) return;
+  /* 作品：出品中（申込あり・取引の途中を含む）と取引完了は削除できない（2026-11-04 ユーザー指示）。出品中は、先に展示設定・作品管理で出品を外す */
+  var st = page === 'p6-11' ? (window.p611State || {}) : {}, locked = !!(st.listed || st.locked);
+  area.querySelector('.p211-delete__title').textContent = page === 'p61-11' ? 'このお知らせを削除する' : 'この作品を削除する';
+  var dsc = area.querySelector('.p211-delete__desc');
+  if (page === 'p61-11') dsc.textContent = '削除すると元に戻せません。削除の理由は操作の記録に残ります。';
+  else if (st.listed) dsc.innerHTML = '展覧会に出品中の作品は、削除できません。先に <a class="ktn-guide-link" href="./kotennavi-p2-12-1.html">展示設定・作品管理 →</a> で出品を外してください（申込があるときは、取引が終わるまで外せません）。';
+  else if (st.locked) dsc.textContent = 'オンラインで取引が終わった作品は、削除できません（購入者のコレクションに残るため）。';
+  else dsc.textContent = '削除すると元に戻せません。';
+  var b = area.querySelector('button'); b.textContent = page === 'p61-11' ? 'このお知らせを削除する' : 'この作品を削除する'; b.disabled = locked;
+}
+window.ktnEditDelete = ktnEditDelete;
+document.addEventListener('click', function (e) { if (e.target.closest && e.target.closest('#dbarNew,#dbarEdit,#dbarClone')) setTimeout(ktnEditDelete, 0); });
+/* デモバー（P2-12・P2-12-1）：下書き／確認待ち／確認済 */
+window.ktnConfirmDemo = function (m, btn) { KTN.exh.draft = m === 'draft'; ktnSetExh('confirmed', m === 'ok'); document.querySelectorAll('[data-confirm-demo]').forEach(function (b) { b.classList.toggle('on', b === btn); }); };
 window.ktnExhState = ktnExhState;
 window.ktnSetExh = ktnSetExh;
 
@@ -3037,6 +3116,7 @@ window.p315ToggleUrgentFilter = p315ToggleUrgentFilter;
 function p315SyncUrgentCount() {
   document.querySelectorAll('.p315-urgent-filter').forEach(function (bar) {
     var panel = bar.closest('.p315-tab-panel');
+    if (!panel) return;   /* タブの外のバー（P90-13 の取引デスク）は、そのページの JS が数える（2026-11-03） */
     var cnt = panel ? panel.querySelectorAll('.p315-txn-row--active').length : 0;
     var countEl = bar.querySelector('.p315-urgent-filter__count');
     if (countEl) countEl.textContent = String(cnt);
@@ -3288,6 +3368,8 @@ function getActions(page, role) {
     const guideFile = role === 'gallery' ? './kotennavi-p60-7.html' : './kotennavi-p60-6.html';
     const guideAnchor = page === 'p2-11' ? '#exhibition-edit' : page === 'p2-13' ? '#article-edit' : page === 'p2-14' ? '#insight' : page === 'p2-7' ? '#venue-print' : '';
     const guideBtn = owbtn('info', 'ガイド', guideAnchor ? `window.open('${guideFile}${guideAnchor}','_blank')` : '');
+    /* P2-11（展覧会の編集）はオーナーメニューを出さない（2026-11-04 ユーザー指示）：編集の画面からほかの管理へ移る必要はなく、削除はページの下の「削除」で行う */
+    if (page === 'p2-11') return guideBtn + (role === 'admin' ? dd('管理者', p2AdminMenuItems(page)) : '');
     if (role === 'creator' || role === 'gallery')
       return guideBtn + dd('オーナーメニュー', p2OwnerMenuItems(page));
     if (role === 'admin')
@@ -3705,9 +3787,9 @@ KTN.P10_PREF_SLUGS = {
 KTN.ADMIN_LEVELS = { E: { n: 1, label: '編集・問合せ' }, L: { n: 2, label: 'LIAISON+ 対応' }, A: { n: 3, label: 'admin' } };
 KTN.ADMIN_PAGE = {
   'p90': 'E', 'p90-2': 'E', 'p90-2-1': 'E', 'p90-4': 'E', 'p90-5': 'E', 'p90-7': 'E', 'p90-8': 'E', 'p90-21': 'E', 'p90-21-1': 'E',
-  'p90-10': 'L', 'p90-23': 'L', 'p90-12': 'L', 'p90-13': 'L', 'p90-14': 'L', 'p90-15': 'L', 'p90-16': 'L', 'p90-20': { view: 'L', edit: 'A' },
+  'p90-10': 'L', 'p90-12': 'L', 'p90-13': 'L', 'p90-14': 'L', 'p90-15': 'L', 'p90-16': 'L', 'p90-20': { view: 'L', edit: 'A' },
   'p90-3': 'E',
-  'p90-1': 'A', 'p90-1-1': 'A', 'p90-6': 'A', 'p90-9': 'A', 'p90-11': 'A', 'p90-11-1': 'A', 'p90-17': 'A', 'p90-18': 'A', 'p90-19': 'A', 'p90-22': 'A', 'p90-28': 'A', 'p60-21': 'A'
+  'p90-1': 'A', 'p90-1-1': 'A', 'p90-23': 'A', 'p90-6': 'A', 'p90-9': 'A', 'p90-11': 'A', 'p90-11-1': 'A', 'p90-17': 'A', 'p90-18': 'A', 'p90-19': 'A', 'p90-22': 'A', 'p90-28': 'A', 'p60-21': 'A'
 };
 KTN.adminLevel = function () {
   try { var v = sessionStorage.getItem('ktn-admin-level'); if (KTN.ADMIN_LEVELS[v]) return v; } catch (e) {}
@@ -3759,6 +3841,7 @@ KTN.adminDelete = function (o) {
       '<select class="p211-select" id="ktnAdminDeleteReason"></select></div>' +
       '<div class="p211-field"><label class="p211-label" for="ktnAdminDeleteDetail">詳しい内容<span class="ktn-req">必須</span></label>' +
       '<textarea class="p211-textarea" id="ktnAdminDeleteDetail" rows="4" maxlength="500"></textarea></div>' +
+      '<div class="p211-field" id="ktnAdminDeleteChoice" hidden></div>' +
       '<p class="p211-modal__note" id="ktnAdminDeleteNote"></p>' +
       '<p class="p90cm-err" id="ktnAdminDeleteErr" hidden>理由と詳しい内容を入力してください。</p>' +
       '<div class="p211-modal__foot"><button type="button" class="ktn-op-btn" data-close>キャンセル</button>' +
@@ -3775,11 +3858,17 @@ KTN.adminDelete = function (o) {
   var okb = document.getElementById('ktnAdminDeleteOk');
   okb.textContent = o.okLabel || (verb + 'する');
   okb.className = 'ktn-op-btn ' + (o.danger === false ? 'ktn-op-btn--primary' : 'ktn-op-btn--danger');
-  det.value = ''; err.hidden = true;
+  det.value = ''; err.hidden = true; err.textContent = '理由と詳しい内容を入力してください。';
+  /* o.choice＝必ず選ぶ欄 { label, options:[[値, 文]] }（P90-12 の作品の非公開＝並んでいる申込の扱い・2026-11-04）。選んだ値は onDone の x.choice */
+  var ch = document.getElementById('ktnAdminDeleteChoice');
+  ch.hidden = !o.choice;
+  ch.innerHTML = o.choice ? '<p class="p211-label">' + o.choice.label + '<span class="ktn-req">必須</span></p>' + (o.choice.lead ? '<p class="p211-help">' + o.choice.lead + '</p>' : '') +
+    o.choice.options.map(function (op) { return '<label class="p211-check ktn-admin-choice"><input type="radio" name="ktnAdminChoice" value="' + op[0] + '"> <span>' + op[1] + '</span></label>'; }).join('') : '';
   document.getElementById('ktnAdminDeleteOk').onclick = function () {
-    if (!sel.value || !det.value.trim()) { err.hidden = false; return; }
+    var cv = o.choice ? ((ch.querySelector('input[name="ktnAdminChoice"]:checked') || {}).value || '') : '';
+    if (!sel.value || !det.value.trim() || (o.choice && !cv)) { err.textContent = o.choice ? '理由・詳しい内容と、「' + o.choice.label + '」を選んでください。' : '理由と詳しい内容を入力してください。'; err.hidden = false; return; }
     m.hidden = true;
-    if (o.onDone) o.onDone({ reason: sel.value, detail: det.value.trim() });
+    if (o.onDone) o.onDone({ reason: sel.value, detail: det.value.trim(), choice: cv });
     KTN.toast(o.done || '削除しました。理由を管理者あてのメールで送りました（デモ）');
   };
   m.hidden = false;
@@ -3795,7 +3884,7 @@ KTN.adminHide = function (o) {
   KTN.adminDelete({ kind: o.kind, name: o.name, verb: '非公開', title: (o.kind || '') + '「' + (o.name || '') + '」を非公開にしますか？', label: '非公開', okLabel: '非公開にする', danger: false,
     reasons: KTN.HIDE_REASONS, placeholder: '例：問題報告（R-1024）を受け、内容を確かめるあいだ一時的に非公開にする',
     note: (o.pre || '') + '公開のページに表示されなくなります。あとで公開に戻せます。理由は操作の記録に残ります。',
-    done: '非公開にしました（デモ）', onDone: o.onDone });
+    choice: o.choice, done: o.done || '非公開にしました（デモ）', onDone: o.onDone });
 };
 /* 操作の記録に1行足す（デモ。本番はサーバーが操作の API の中で足す）。t＝対象の種類（KTN.AUDIT.T のキー） */
 KTN.auditRecord = function (act, target, why) {
@@ -3915,6 +4004,10 @@ KTN.init = function (opts) {
        「編集・問合せ」「LIAISON+ 対応」の管理者には出さない（その人の仕事の入口は P90 系）＝管理者の操作を持たない役割（staff）として描く */
     var hdrRole = KTN.headerRole(page, role);
     if (acEl) acEl.innerHTML = getActions(page, hdrRole);
+    /* 作成・編集の画面（入力の途中）では、ヘッダーのメニュー（オーナー・my・管理者・…）を出さない＝ガイドだけ（2026-11-04 ユーザー指示：
+       編集の途中でメニューからページを移るのは好ましくない。どの設定がどのメニューかは、画面に入る前にメニューで見ている）。
+       削除は、それぞれの画面の下のボタン（P2-11・P6-11・P61-11）。管理者のクローンは一覧（P90-5・P90-23）から */
+    if (acEl && KTN.EDIT_NO_MENU.indexOf(page) >= 0) acEl.querySelectorAll('.ktn-ddw').forEach(function (x) { x.remove(); });
   }
 
   // common.jsのrenderAllから呼ばれるフック。P2 系のオーナー向けの帯（下書き・確認依頼中・公開前）もあわせて描き直す

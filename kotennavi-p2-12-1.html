@@ -35,6 +35,11 @@
   <button class="dbtn dbtn-exh" data-exh-key="phase" onclick="ktnSetExh('phase','before',this);p2121DemoTerm(false)">会期前（変更可）</button>
   <button class="dbtn dbtn-exh on" data-exh-key="phase" onclick="ktnSetExh('phase','during',this);p2121DemoTerm(true)">会期中</button>
   <button class="dbtn dbtn-exh" data-exh-key="phase" onclick="ktnSetExh('phase','after',this);p2121DemoTerm(true)">終了後</button>
+  <!-- 確認：事務局の確認の前は、作品管理を入力できない（2026-11-04） -->
+  <span class="dbar-sep" style="margin-left:8px">確認：</span>
+  <button class="dbtn" data-confirm-demo onclick="ktnConfirmDemo('draft',this)">下書き</button>
+  <button class="dbtn" data-confirm-demo onclick="ktnConfirmDemo('review',this)">確認待ち</button>
+  <button class="dbtn on" data-confirm-demo onclick="ktnConfirmDemo('ok',this)">確認済</button>
   <span class="dbar-sep" style="margin-left:12px">通信：</span>
   <button class="dbtn on" data-offline-demo-btn="on" onclick="ktnDemoOffline(false)">オンライン</button>
   <button class="dbtn" data-offline-demo-btn="off" onclick="ktnDemoOffline(true)">オフライン</button>
@@ -43,6 +48,9 @@
   <button class="dbtn on" data-terms-demo="seller" onclick="ktnTermsDemo('seller','active',this)">適用中（この展覧会が対象）</button>
   <button class="dbtn" data-terms-demo="seller" data-perk-waiting onclick="p2121PerkWaiting(this)">会期の前（対象になる予定）</button>
   <button class="dbtn" data-terms-demo="seller" onclick="ktnTermsDemo('seller','none',this)">なし（ほかの展覧会が対象）</button>
+  <span class="dbar-sep" style="margin-left:8px">会期の変更：</span>
+  <button class="dbtn on" data-term-mm onclick="p2121TermMismatch(false,this)">なし</button>
+  <button class="dbtn" data-term-mm onclick="p2121TermMismatch(true,this)">販売期間（カスタム）と合わない</button>
   <span class="dbar-sep">はじめて割の予定：</span>
   <button class="dbtn on" data-perk-shift onclick="ktnPerkShiftDemo(false,this)">そのまま</button>
   <button class="dbtn" data-perk-shift onclick="ktnPerkShiftDemo(true,this)">保存で変わる</button>
@@ -190,6 +198,8 @@
           </div>
           <p class="p2-121-period-hint">作品のオンライン販売を受け付ける期間を設定します。期間終了後は自動的に購入受付が停止されます。<br>この設定は展覧会の会期開始日以降、変更できなくなります。</p>
           <!-- 会期開始ロック（2026-07-19 仕様＝販売期間は展覧会会期開始日以降は変更不可） -->
+          <!-- 会期が変わって、カスタムの販売期間が合わなくなったとき（P2-11 で会期を変えた・2026-11-04）。設定し直すまで販売は始まらない -->
+          <p class="ktn-form-error p2121-term-mismatch" id="p2121TermMismatch" role="alert" hidden>展覧会の会期が変わったため、販売期間（カスタム）が会期と合わなくなりました。販売期間を設定し直して保存してください（設定し直すまで、販売は始まりません）。</p>
           <p class="p2-12-mode-bar__locknote" id="p2121PeriodLockNote" hidden>展覧会の会期開始日（2026.02.18）を過ぎているため、販売期間は変更できません。</p>
 
           <div class="p2-121-period-opts" role="radiogroup" aria-label="販売期間の選択">

@@ -123,6 +123,8 @@
         <div class="p902-tab-nav" role="tablist">
           <button type="button" class="p902-tab-btn is-active" role="tab" data-tab="review" aria-selected="true">未確認 <span class="ktn-count ktn-count--pill is-idle"></span></button>
           <button type="button" class="p902-tab-btn" role="tab" data-tab="draft" aria-selected="false">未公開 <span class="ktn-count ktn-count--pill is-idle"></span></button>
+          <!-- 削除の依頼（確認済の展覧会のオーナーが P2-11 から送ったもの・2026-11-04） -->
+          <button type="button" class="p902-tab-btn" role="tab" data-tab="delreq" aria-selected="false">削除の依頼 <span class="ktn-count ktn-count--pill is-idle"></span></button>
         </div>
 
         <!-- ツールバー -->
@@ -230,6 +232,9 @@
             </tbody>
           </table>
         </div>
+
+        <!-- 削除の依頼（タブ「削除の依頼」・中身は pages.js KTN.pages['p90-5']） -->
+        <div class="p905-delreq" id="p905DelReq" hidden></div>
 
         <!-- ゼロ状態 -->
         <div class="p319-empty" id="p905Empty" hidden>

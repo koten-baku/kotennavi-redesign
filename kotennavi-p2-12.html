@@ -39,6 +39,11 @@
   <button class="dbtn dbtn-exh" data-exh-key="phase" onclick="ktnSetExh('phase','before',this);p212DemoTerm(false)">会期前（変更可）</button>
   <button class="dbtn dbtn-exh on" data-exh-key="phase" onclick="ktnSetExh('phase','during',this);p212DemoTerm(true)">会期中</button>
   <button class="dbtn dbtn-exh" data-exh-key="phase" onclick="ktnSetExh('phase','after',this);p212DemoTerm(true)">終了後</button>
+  <!-- 確認：事務局の確認の前は、作品管理を入力できない（2026-11-04） -->
+  <span class="dbar-sep" style="margin-left:8px">確認：</span>
+  <button class="dbtn" data-confirm-demo onclick="ktnConfirmDemo('draft',this)">下書き</button>
+  <button class="dbtn" data-confirm-demo onclick="ktnConfirmDemo('review',this)">確認待ち</button>
+  <button class="dbtn on" data-confirm-demo onclick="ktnConfirmDemo('ok',this)">確認済</button>
 </div>
 <div class="shell">
 
