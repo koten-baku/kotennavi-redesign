@@ -9052,7 +9052,7 @@ body.p4-15-page{--page-accent:#8b5e3c}
   .p315-urgent-filter{flex-wrap:wrap;padding:12px 14px}
   .p315-urgent-filter__text{font-size:.8rem}
 }
-.p315-tab-panel.p315-filter-urgent .p315-exh-block:not(:has(.p315-witem--yours)){display:none}
+.p315-tab-panel.p315-filter-urgent .p315-exh-block:not(.p315-exh-card):not(:has(.p315-witem--yours)){display:none}   /* 一覧の展覧会のまとまり（.p315-exh-card）は data-urgent で決める（2026-11-04） */
 .p315-tab-panel.p315-filter-urgent .p315-witem:not(.p315-witem--yours){display:none}
 .p315-tab-panel.p315-filter-urgent .p315-witem--yours .p315-txn-row:not(.p315-txn-row--active){display:none}
 .p315-urgent-filter__empty{margin:24px 0 0;padding:16px;text-align:center;font-family:var(--fn);font-size:.8rem;color:var(--muted);background:var(--paper);border-radius:4px}
@@ -14557,3 +14557,82 @@ body:not(.ktn-page-new) [data-new-only]{display:none !important}
 .p211-term-note[hidden],#p211TermWarn[hidden]{display:none}
 .p211-term-note.is-warn{color:#b43c14;font-weight:600}
 .p2121-term-mismatch{margin:0 0 10px;font-size:.82rem;font-weight:600;line-height:1.7}
+/* リエゾン+コンソールの一覧（P3-15・P4-15）：展覧会を1件ずつのまとまりに（作品の欄は展覧会のコンソール P3-15-1・P4-15-1）（2026-11-04） */
+.p315-exh-card__acts{display:flex;justify-content:flex-end;padding:10px 20px 14px;border-top:1px solid var(--border)}   /* ほかの段と同じ左右 20px（2026-11-05） */
+@media(max-width:540px){.p315-exh-card__acts{padding:10px 12px 12px}}
+.p315-filter-urgent .p315-exh-card:not([data-urgent]){display:none}
+.p315-exh-block[hidden],.p315-exh-archive[hidden],.p315-ops-guide[hidden]{display:none}
+/* リエゾン+コンソールの一覧：要対応の説明（帯の代わり・2026-11-05） */
+.p315-urgent-note{margin:0 0 14px;padding:10px 14px;background:#fff;border:1px solid var(--border);border-radius:4px}
+.p315-urgent-note__text{margin:0;font-size:.8rem;line-height:1.8;color:var(--ink)}
+.p315-urgent-note__text .p315-ws-badge{margin-right:4px;vertical-align:1px}
+.p315-urgent-note .ktn-pwa-line{margin:8px 0 0;padding:8px 0 0;border-top:1px dotted var(--border)}   /* 要対応の説明の中に、スマホの通知の案内（つながりで読めるように・2026-11-05） */
+.p315-exh-card + .p315-exh-card{margin-top:20px}   /* リエゾン+コンソールの一覧：展覧会どうしの間（2026-11-05） */
+/* 出品の数と、その内訳（うち 要対応・購入者待ち…）。内訳を1つの枠にまとめ、出品の数に従う形に（2026-11-05） */
+.p315-ws-breakdown{display:inline-flex;flex-wrap:wrap;align-items:center;gap:4px 6px;padding:3px 8px 3px 10px;border-left:2px solid var(--border);background:rgba(0,0,0,.025);border-radius:0 4px 4px 0}
+.p315-ws-breakdown__lbl{font-size:.72rem;color:var(--muted);margin-right:2px}
+/* 下線のタブ（.p315-tab-nav・.p314-tabs＝P3-14・P4-14・P3-15・P4-15）も、スマホの幅では折り返してすべて見せる（.p902-tab-nav・.p909-tab-nav と同じ・2026-11-05） */
+@media (max-width:540px){.p315-tab-nav,.p314-tabs{flex-wrap:wrap;overflow-x:visible}.p315-tab-nav .p315-tab-btn,.p314-tabs .p314-tab{padding-left:10px;padding-right:10px}}
+/* ── リエゾン+コンソール（展覧会）P3-15-1・P4-15-1 のダッシュボード（2026-11-05）── */
+.kc-perk{margin-top:6px}
+.kc-tiles{display:flex;flex-wrap:wrap;gap:10px}
+.kc-tile{flex:1 1 140px;display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:12px 14px;background:#fff;border:1px solid var(--border);border-radius:6px;font:inherit;text-align:left;cursor:pointer;color:var(--ink)}
+.kc-tile:hover{border-color:var(--page-accent)}
+.kc-tile__lbl{font-size:.76rem;color:var(--muted)}
+.kc-tile__num{font-family:var(--fm);font-size:1.6rem;font-weight:700;line-height:1.2}
+.kc-tile__sub{font-size:.72rem;color:var(--muted)}
+.kc-tile.is-alert{border-color:rgba(180,60,20,.45);background:#fbeae5}
+.kc-tile.is-alert .kc-tile__num,.kc-tile.is-alert .kc-tile__lbl{color:#7a1800}
+.kc-sec[hidden]{display:none}
+.kc-sec__head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px 12px}
+.kc-sec__title{margin:0 0 10px;font-size:.98rem;font-weight:700;color:var(--ink)}
+.kc-sec__link{font-size:.78rem}
+.kc-now{display:flex;flex-direction:column;border:1px solid rgba(180,60,20,.35);border-radius:6px;overflow:hidden;background:#fff}
+.kc-now__row{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:10px 14px;border-bottom:1px solid var(--border)}
+.kc-now__row:last-child{border-bottom:0}
+.kc-now__body{flex:1 1 220px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.kc-now__t,.kc-row__t{font-family:var(--fs);font-weight:600;color:var(--ink);text-decoration:none}
+.kc-now__t:hover,.kc-row__t:hover{text-decoration:underline}
+.kc-now__do{font-size:.82rem;font-weight:600;color:#7a1800}
+.kc-thumb{flex:0 0 40px;width:40px;height:40px;border-radius:4px;background:linear-gradient(135deg,#e6e0d6,#bfb6a8)}
+.kc-empty{margin:0;padding:12px 14px;font-size:.84rem;color:var(--muted);background:#fff;border:1px solid var(--border);border-radius:6px}
+.kc-sec .ktn-pwa-line{margin:8px 0 0}
+.kc-tabs{margin-bottom:10px}
+.kc-works{display:flex;flex-direction:column;background:#fff;border:1px solid var(--border);border-radius:6px}
+.kc-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;padding:10px 14px;border-bottom:1px solid var(--border)}
+.kc-row:last-child{border-bottom:0}
+.kc-row__main{flex:1 1 180px;display:flex;flex-direction:column;min-width:0}
+.kc-row__price{font-family:var(--fm);font-size:.84rem;min-width:6em;text-align:right}
+.kc-row__apps{font-size:.78rem;color:var(--muted);min-width:4em}
+.kc-row__st{display:flex;flex-direction:column;gap:2px;min-width:9em}
+.kc-row__note{font-size:.72rem;color:var(--muted)}
+.kc-row__act{display:flex;align-items:center;gap:8px;margin-left:auto}
+.kc-more{position:relative}
+.kc-more__menu{position:absolute;right:0;top:calc(100% + 4px);z-index:20;display:flex;flex-direction:column;min-width:12em;padding:4px;background:#fff;border:1px solid var(--border);border-radius:6px;box-shadow:0 6px 18px rgba(0,0,0,.1)}
+.kc-more__menu[hidden]{display:none}
+.kc-more__menu button{padding:8px 10px;border:0;background:none;font:inherit;font-size:.82rem;text-align:left;color:var(--ink);cursor:pointer;border-radius:4px}
+.kc-more__menu button:hover{background:var(--paper)}
+.kc-more__menu .p315-takedown-btn{color:#b43c14}
+@media (max-width:540px){.kc-tile{flex:1 1 calc(50% - 5px)}.kc-row__act{margin-left:0;width:100%;justify-content:flex-end}.kc-row__price{text-align:left;min-width:0}}
+.kc-row[hidden],.kc-empty[hidden]{display:none}
+/* リエゾン+コンソール：見出しを縦に（タイトル → この展覧会 → 導入文）（2026-11-05） */
+.p315-card-head.kc-head{flex-direction:column;gap:12px}
+.kc-exh{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;width:100%;padding:12px 14px;background:var(--paper);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:4px;box-sizing:border-box}
+.kc-exh__media{flex:0 0 56px;width:56px;height:56px;border-radius:4px}
+.kc-exh__body{flex:1 1 240px;display:flex;flex-direction:column;gap:3px;min-width:0}
+.kc-exh__name{font-family:var(--fs);font-size:1.02rem;font-weight:700;color:var(--ink);text-decoration:none}
+.kc-exh__name:hover{text-decoration:underline}
+.kc-exh__meta{font-size:.78rem;color:var(--muted)}
+.kc-exh__view{font-size:.8rem;margin-left:auto}
+#ktnConWorksSec .kc-tiles{margin-bottom:14px}   /* 数字のまとめは「出品している作品」の見出しの下（2026-11-05） */
+/* 要対応の行：やることを赤字に・期限のチップ（いま対応することを一覧に一本化・2026-11-05） */
+.kc-row__note.is-do{color:#7a1800;font-weight:600}
+.kc-row__st-top{display:flex;align-items:center;gap:6px}   /* 要対応の横に期限（2026-11-05） */
+#ktnConWorksSec .ktn-pwa-line{margin:0 0 12px}
+/* リエゾン+コンソールのタブ（6つ）：パソコンの幅（ボックス 760px）で1行に収まるよう、左右の余白とすき間を詰める（2026-11-05） */
+.kc-tabs .p902-tab-btn{padding-left:9px;padding-right:9px;gap:4px;font-size:.8rem}
+.kc-tabs .ktn-count--pill{padding-left:6px;padding-right:6px}
+.kc-row__st{align-items:flex-start}   /* バッジ・やること・期限は文字の幅のまま、1行ずつ（2026-11-05） */
+.kc-row__foot{flex:1 1 100%;display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;padding-left:54px;box-sizing:border-box}   /* 下の段：左に状態、右に取引デスクへ（2026-11-05） */
+.kc-row__foot .kc-row__st{min-width:0}
+@media (max-width:540px){.kc-row__foot{padding-left:0}.kc-row__foot .kc-row__act{width:auto;margin-left:auto}}

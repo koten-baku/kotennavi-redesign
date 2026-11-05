@@ -8508,6 +8508,149 @@ KTN.pages['p4-14'] = function () {
 /* ════════════════════════════════════════════════════
    P4-15  LIAISON+コンソール（ギャラリー版）
 ════════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════════
+   リエゾン+コンソール（展覧会）P3-15-1・P4-15-1 のダッシュボード（2026-11-05 ユーザー指示：作り替え）
+   上から ①展覧会の帯（ボックスの外） ②数字のまとめ（要対応＝あなたの番・購入者の番・申込なし・取引完了／押すと下を絞る）
+   ③いま対応すること（あなたの番の取引だけ・期限の近い順・やること・取引デスクへ） ④出品している作品（タブで絞る・1作品1行・会場売約済・出品取消は「その他 ▾」）。
+   説明は最小限（会場売約済・出品取消の説明は押したときのモーダル）。データはデモの値（本番は展覧会の出品と取引の API）
+════════════════════════════════════════════════════ */
+KTN.CONSOLE = {
+  creator: {
+    a1: { name: 'あなたが知らないオノマトペ — 田中透 個展', venue: 'Gallery SOIL 渋谷', term: '〜2026.03.05（残り12日）', sale: '〜2026.03.19（残り26日）', live: true, bg: 'linear-gradient(135deg,#b8d8cc,#6a9e8a)',
+      works: [
+        { t: '流れる時間', aw: 'AW-C42-1843', price: 185000, apps: 1, st: 'mine', step: 'S5', days: 1, nid: 'N-77061' },
+        { t: '音の輪郭 No.7', aw: 'AW-C42-1851', price: 120000, apps: 2, st: 'mine', step: 'S1', days: 1, nid: 'N-77021' },
+        { t: '夜の静寂', aw: 'AW-C42-1846', price: 95000, apps: 3, st: 'mine', step: 'S3', days: 3, nid: 'N-77048' },
+        { t: '透明な午後', aw: 'AW-C42-1852', price: 54000, apps: 1, st: 'mine', step: 'S1', days: 5, nid: 'N-77052' },
+        { t: '言葉の重力 No.3', aw: 'AW-C42-1850', price: 68000, apps: 2, st: 'buyer', step: 'S2', days: 4, nid: 'N-77034' },
+        { t: 'ざわざわ No.3', aw: 'AW-C42-1855', price: 72000, apps: 1, st: 'buyer', step: 'S4', days: 6, nid: 'N-77066' },
+        { t: 'ぽつぽつ（小品）', aw: 'AW-C42-1858', price: 2500, apps: 0, st: 'none' },
+        { t: 'しんと', aw: 'AW-C42-1859', price: 88000, apps: 0, st: 'venue' },
+        { t: 'からから', aw: 'AW-C42-1860', price: 46000, apps: 0, st: 'takedown' },
+        { t: 'ことことと', aw: 'AW-C42-1847', price: 200000, apps: 1, st: 'done', nid: 'N-75102' },
+        { t: 'ふわふわ No.1', aw: 'AW-C42-1848', price: 180000, apps: 1, st: 'done', nid: 'N-75108' }
+      ] },
+    a2: { name: '声と線 — 新作展', venue: 'Gallery SOIL 渋谷', term: '〜2026.03.28', sale: '販売終了・取引継続中', live: true, bg: 'linear-gradient(135deg,#d8d0c0,#9a8a6a)',
+      works: [
+        { t: '声の輪郭', aw: 'AW-C42-1870', price: 76000, apps: 1, st: 'mine', step: 'S3', days: 2, nid: 'N-77101' },
+        { t: '線の記憶', aw: 'AW-C42-1871', price: 64000, apps: 1, st: 'buyer', step: 'S4', days: 5, nid: 'N-77104' },
+        { t: '余白の声', aw: 'AW-C42-1872', price: 52000, apps: 0, st: 'none' },
+        { t: '細い線', aw: 'AW-C42-1873', price: 38000, apps: 0, st: 'none' }
+      ] },
+    a3: { name: '余白の詩学 — 田中透 版画展', venue: 'Gallery Nui 代官山', term: '〜2026.03.22（残り29日）', sale: '〜2026.04.05（残り43日）', live: true, bg: 'linear-gradient(135deg,#e0e4ec,#8890a8)',
+      works: [
+        { t: '余白 I', aw: 'AW-C42-1880', price: 42000, apps: 0, st: 'none' }, { t: '余白 II', aw: 'AW-C42-1881', price: 42000, apps: 0, st: 'none' },
+        { t: '余白 III', aw: 'AW-C42-1882', price: 48000, apps: 0, st: 'none' }, { t: '余白 IV', aw: 'AW-C42-1883', price: 48000, apps: 0, st: 'none' }
+      ] },
+    e1: { name: '言葉の地層 — 2025年末展', venue: 'Gallery Koten', term: '2025.12.01 — 2025.12.20（会期終了）', sale: '〜2026.01.03（販売終了）', live: false, bg: 'linear-gradient(135deg,#d8ccc0,#8a7a6a)',
+      works: [
+        { t: '堆積する声', aw: 'AW-C42-1790', price: 180000, apps: 1, st: 'done', nid: 'N-74011' }, { t: '積層する沈黙', aw: 'AW-C42-1791', price: 165000, apps: 1, st: 'done', nid: 'N-74015' },
+        { t: '地層 No.1', aw: 'AW-C42-1792', price: 58000, apps: 0, st: 'unsold' }, { t: '地層 No.2', aw: 'AW-C42-1793', price: 58000, apps: 0, st: 'unsold' }
+      ] }
+  },
+  gallery: {
+    a1: { name: '色彩の対話 — 現代絵画グループ展', venue: 'Gallery SOIL 渋谷', term: '〜2026.03.15（残り10日）', sale: '〜2026.03.29（残り24日）', live: true, bg: 'linear-gradient(135deg,#e8d0c0,#b07850)',
+      works: [
+        { t: '朱の対話', aw: 'AW-G33-0410', price: 150000, apps: 2, st: 'mine', step: 'S1', days: 1, nid: 'N-77201' },
+        { t: '青の余韻', aw: 'AW-G33-0411', price: 98000, apps: 1, st: 'mine', step: 'S3', days: 2, nid: 'N-77204' },
+        { t: '黄の気配', aw: 'AW-G33-0412', price: 64000, apps: 1, st: 'mine', step: 'S5', days: 4, nid: 'N-77207' },
+        { t: '緑のあわい', aw: 'AW-G33-0413', price: 88000, apps: 1, st: 'buyer', step: 'S2', days: 3, nid: 'N-77209' },
+        { t: '灰の層', aw: 'AW-G33-0414', price: 45000, apps: 0, st: 'none' }, { t: '白の残響', aw: 'AW-G33-0415', price: 52000, apps: 0, st: 'none' },
+        { t: '紫の時間', aw: 'AW-G33-0416', price: 120000, apps: 1, st: 'done', nid: 'N-75201' }
+      ] },
+    a2: { name: 'モノクロームの詩 — 松本りさ 個展', venue: 'Gallery SOIL 渋谷', term: '〜2026.04.02', sale: '販売終了・取引継続中', live: true, bg: 'linear-gradient(135deg,#e0e0e0,#707070)',
+      works: [
+        { t: '白と黒 No.1', aw: 'AW-G33-0420', price: 72000, apps: 1, st: 'mine', step: 'S3', days: 2, nid: 'N-77301' },
+        { t: '白と黒 No.2', aw: 'AW-G33-0421', price: 72000, apps: 0, st: 'none' }, { t: '灰の詩', aw: 'AW-G33-0422', price: 56000, apps: 0, st: 'none' }, { t: '墨の夜', aw: 'AW-G33-0423', price: 64000, apps: 0, st: 'none' }
+      ] },
+    a3: { name: '春の彩り — グループ展 2025', venue: 'Gallery SOIL 渋谷', term: '〜2026.03.28（残り13日）', sale: '〜2026.04.11（残り27日）', live: true, bg: 'linear-gradient(135deg,#f0dce4,#c88aa0)',
+      works: [
+        { t: '桜の色', aw: 'AW-G33-0430', price: 38000, apps: 0, st: 'none' }, { t: '菜の花', aw: 'AW-G33-0431', price: 32000, apps: 0, st: 'none' }, { t: '若葉', aw: 'AW-G33-0432', price: 36000, apps: 0, st: 'none' },
+        { t: '春雨', aw: 'AW-G33-0433', price: 44000, apps: 0, st: 'none' }, { t: '芽吹き', aw: 'AW-G33-0434', price: 40000, apps: 0, st: 'none' }
+      ] },
+    e1: { name: '光の断層 — 現代版画グループ展', venue: 'Gallery SOIL 渋谷', term: '2025.11.10 — 2025.11.30（会期終了）', sale: '〜2026.01.03（販売終了）', live: false, bg: 'linear-gradient(135deg,#dcdce8,#7878a0)',
+      works: [
+        { t: '光の断層 I', aw: 'AW-G33-0380', price: 85000, apps: 1, st: 'done', nid: 'N-73901' }, { t: '光の断層 II', aw: 'AW-G33-0381', price: 85000, apps: 1, st: 'done', nid: 'N-73905' },
+        { t: '光の断層 III', aw: 'AW-G33-0382', price: 92000, apps: 1, st: 'done', nid: 'N-73908' }, { t: '影の版', aw: 'AW-G33-0383', price: 48000, apps: 0, st: 'unsold' }
+      ] }
+  }
+};
+var KC_ST = { mine: ['要対応', 'returned'], buyer: ['購入者の番', 'pending'], none: ['申込なし', 'new'], venue: ['会場売約済', 'cancelled'], takedown: ['出品取消', 'cancelled'], done: ['取引完了', 'granted'], unsold: ['販売終了（売れなかった）', 'new'] };
+var KC_DO = { S1: '購入を確定してください', S3: '作品を発送してください', S5: '取引完了を確認してください' };
+var KC_WAIT = { S2: '購入者の支払い待ち', S4: '購入者の受取確認待ち' };
+function ktnConsoleRender() {
+  var page = window.ktnState && window.ktnState.page, role = page === 'p4-15-1' ? 'gallery' : 'creator';
+  var key = (location.search.match(/[?&]ex=(\w+)/) || [])[1] || 'a1', D = KTN.CONSOLE[role], E = D[key] || D.a1;
+  var yen = function (n) { return '¥' + Number(n).toLocaleString('ja-JP'); };
+  var W = E.works, cnt = function (st) { return W.filter(function (w) { return w.st === st; }).length; };
+  var done = W.filter(function (w) { return w.st === 'done'; }), sales = done.reduce(function (a, w) { return a + w.price; }, 0);
+  /* ① 展覧会の帯 */
+  var ctx = document.getElementById('ktnConCtx');
+  /* この展覧会（見出しのタイトルと導入文のあいだ）：画像・展覧会名・会場・会期と販売期間・料率と特典。オーナーはボックスの上の帯（2026-11-05） */
+  if (ctx) ctx.innerHTML = '<a class="kc-exh__media" href="kotennavi-p2.html" style="background:' + E.bg + '" aria-hidden="true"></a>' +
+    '<div class="kc-exh__body"><div class="kc-exh__badges"><span class="cb cb-content cb-exhibition">exhibition</span></div>' +
+    '<a class="kc-exh__name" href="kotennavi-p2.html">' + E.name + '</a>' +
+    '<div class="kc-exh__meta">' + E.venue + ' · 会期 ' + E.term + ' · 販売期間 ' + E.sale + '</div>' +
+    '<div class="ktn-exh-perk kc-perk" data-exh-perk="' + E.name + '" hidden></div></div>' +
+    '<a class="ktn-guide-link kc-exh__view" href="kotennavi-p2.html">展覧会ページを見る →</a>';
+  var cur = document.querySelector('.ktn-bc__current'); if (cur) cur.textContent = E.name;
+  /* ② 数字のまとめ（押すと下の作品を絞る） */
+  var tiles = E.live ? [['mine', '要対応', cnt('mine'), 'あなたの番'], ['buyer', '購入者の番', cnt('buyer'), '購入者の操作待ち'], ['none', '申込なし', cnt('none'), ''], ['done', '取引完了', done.length + '件', yen(sales)]]
+    : [['done', '取引完了', done.length + '件', yen(sales)], ['unsold', '売れなかった', cnt('unsold'), '販売期間は終わりました']];
+  var tEl = document.getElementById('ktnConTiles');
+  if (tEl) tEl.innerHTML = tiles.map(function (t) { return '<button type="button" class="kc-tile' + (t[0] === 'mine' && t[2] ? ' is-alert' : '') + '" data-kc-filter="' + t[0] + '"><span class="kc-tile__lbl">' + t[1] + '</span><span class="kc-tile__num">' + t[2] + '</span>' + (t[3] ? '<span class="kc-tile__sub">' + t[3] + '</span>' : '') + '</button>'; }).join('');
+  /* ③ 出品している作品（タブで絞る）。「いま対応すること」は別に作らず、要対応があれば最初から「要対応」のタブを開く＝同じことを2か所に書かない（2026-11-05 ユーザー指示）。
+     並び＝要対応（期限の近い順）→ 購入者の番 → 申込なし → 会場売約済・出品取消 → 取引完了 → 売れなかった */
+  var ORD = { mine: 0, buyer: 1, none: 2, venue: 3, takedown: 3, done: 4, unsold: 5 };
+  W = W.slice().sort(function (x, y) { return (ORD[x.st] - ORD[y.st]) || ((x.days || 99) - (y.days || 99)); });
+  var TABS = E.live ? [['all', 'すべて'], ['mine', '要対応'], ['buyer', '購入者の番'], ['none', '申込なし'], ['closed', '会場売約済・出品取消'], ['done', '取引完了']] : [['all', 'すべて'], ['done', '取引完了'], ['unsold', '売れなかった']];
+  var tabsEl = document.getElementById('ktnConTabs'), wEl = document.getElementById('ktnConWorks'), desk = 'kotennavi-' + (role === 'gallery' ? 'p4-16' : 'p3-16') + '.html';
+  function match(w, f) { return f === 'all' || (f === 'closed' ? (w.st === 'venue' || w.st === 'takedown') : w.st === f); }
+  function rows(f) {
+    var list = W.filter(function (w) { return match(w, f); });
+    if (!list.length) return '<p class="kc-empty">この状態の作品はありません。</p>';
+    return list.map(function (w, i) {
+      var s = KC_ST[w.st], note = w.st === 'mine' ? KC_DO[w.step] : w.st === 'buyer' ? KC_WAIT[w.step] : '';
+      var canOps = E.live && (w.st === 'none' || (w.st === 'mine' && w.step === 'S1'));
+      var act = (w.st === 'mine' || w.st === 'buyer') ? '<a class="ktn-action-btn' + (w.st === 'mine' ? ' ktn-action-btn--alert' : '') + '" href="' + desk + '">取引デスクへ →</a>' : w.st === 'done' ? '<a class="ktn-action-btn" href="' + desk + '">取引詳細 →</a>' : '';
+      var more = canOps ? '<span class="kc-more"><button type="button" class="ktn-op-btn ktn-op-btn--sm kc-more__btn" aria-expanded="false">その他 ▾</button><span class="kc-more__menu" hidden>' +
+        '<button data-txn-op class="p315-venue-btn" type="button" data-work="' + w.t + '" data-count="' + w.apps + '">会場売約済にする</button>' +
+        '<button data-txn-op class="p315-takedown-btn" type="button" data-work="' + w.t + '" data-count="' + w.apps + '">出品取消</button></span></span>' : '';
+      return '<div class="p315-witem kc-row" data-st="' + w.st + '"><span class="kc-thumb" aria-hidden="true"></span>' +
+        '<span class="kc-row__main"><a class="kc-row__t" href="kotennavi-p6-2.html">《' + w.t + '》</a><span class="ktn-aw-id">' + w.aw + '</span></span>' +
+        '<span class="kc-row__price">' + yen(w.price) + '</span><span class="kc-row__apps">申込 ' + w.apps + '</span>' +
+        /* 下の段＝左に状態（1行目にバッジと期限、2行目にやること・文字の幅のまま）、右に取引デスクへ（パソコンでもスマホでも同じ・2026-11-05） */
+        '<span class="kc-row__foot"><span class="kc-row__st"><span class="kc-row__st-top"><span class="ktn-review-status ktn-review-status--' + s[1] + '">' + s[0] + '</span>' +
+        (w.days && (w.st === 'mine' || w.st === 'buyer') ? '<span class="ktn-days-chip' + (w.st === 'mine' && w.days <= 2 ? ' ktn-days-chip--urgent' : '') + '">あと' + w.days + '日</span>' : '') + '</span>' +
+        (note ? '<span class="kc-row__note' + (w.st === 'mine' ? ' is-do' : '') + '">' + note + '</span>' : '') + '</span>' +
+        '<span class="kc-row__act p315-witem__ops">' + act + more + '</span></span></div>';
+    }).join('');
+  }
+  /* 行は一度だけ作り（会場売約済・出品取消のボタンを一覧と同じ処理に一度だけ結び付けるため）、絞り込みは表示の切り替えだけ */
+  var curF = E.live && cnt('mine') ? 'mine' : 'all';   /* 要対応があれば、最初から「要対応」のタブ */
+  if (wEl) wEl.innerHTML = rows('all') + '<p class="kc-empty" id="ktnConWorksEmpty" hidden>この状態の作品はありません。</p>';
+  function draw() {
+    if (tabsEl) tabsEl.innerHTML = TABS.map(function (t) { var n = W.filter(function (w) { return match(w, t[0]); }).length; return '<button type="button" class="p902-tab-btn' + (t[0] === curF ? ' is-active' : '') + '" data-kc-tab="' + t[0] + '">' + t[1] + ' <span class="ktn-count ktn-count--pill is-idle">' + n + '</span></button>'; }).join('');
+    var shown = 0;
+    if (wEl) wEl.querySelectorAll('.kc-row').forEach(function (r) { var on = match({ st: r.dataset.st }, curF); r.hidden = !on; if (on) shown++; });
+    var em = document.getElementById('ktnConWorksEmpty'); if (em) em.hidden = shown > 0;
+  }
+  draw();
+  window.ktnConsoleFilter = function (f) { curF = f; draw(); var sec = document.getElementById('ktnConWorksSec'); if (sec && sec.scrollIntoView) sec.scrollIntoView({ behavior: 'smooth', block: 'start' }); };
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest && e.target.closest('[data-kc-filter],[data-kc-tab]');
+    if (t) { window.ktnConsoleFilter(t.dataset.kcFilter || t.dataset.kcTab); return; }
+    var mb = e.target.closest && e.target.closest('.kc-more__btn');
+    document.querySelectorAll('.kc-more__menu').forEach(function (m) { if (!mb || m !== mb.nextElementSibling) { m.hidden = true; if (m.previousElementSibling) m.previousElementSibling.setAttribute('aria-expanded', 'false'); } });
+    if (mb) { var m = mb.nextElementSibling; m.hidden = !m.hidden; mb.setAttribute('aria-expanded', m.hidden ? 'false' : 'true'); }
+  });
+  if (KTN.CAMPAIGN && KTN.CAMPAIGN.mount) KTN.CAMPAIGN.mount();
+}
+
+/* 描いてから、一覧と同じ処理（色・会場売約済と出品取消のモーダルの結び付け）を通す */
+KTN.pages['p3-15-1'] = function () { ktnConsoleRender(); KTN.pages['p3-15'](); };
+KTN.pages['p4-15-1'] = function () { ktnConsoleRender(); KTN.pages['p4-15'](); };
+
 KTN.pages['p4-15'] = function () {
 
   // 0. ページスコープ・アクセントカラー
@@ -25699,10 +25842,11 @@ KTN.CAMPAIGN = (function () {
       el.innerHTML = '<span class="ktn-exh-perk__tag is-outline">対象になる予定</span><span class="ktn-exh-perk__name">' + esc(c.name) + '</span><span class="ktn-exh-perk__note">会期が始まると、この展覧会の取引に適用されます</span>';
       return;
     }
-    if (!use) { el.hidden = true; el.innerHTML = ''; return; }
+    /* 特典が無い展覧会も、サービス利用料をこの欄に出す（冒頭の1行をやめ、料率・特典は展覧会ごとに・2026-11-04） */
+    if (!use) { el.hidden = false; el.innerHTML = '<span class="ktn-exh-perk__note">サービス利用料 ' + rate + '%</span>'; return; }
     el.hidden = false;
     el.innerHTML = '<span class="ktn-exh-perk__tag">特典適用中</span><span class="ktn-exh-perk__name">' + esc(use.name) + '</span>' +
-      '<span class="ktn-exh-perk__note">' + (use === an ? day(an.start) + '〜' + day(an.end) + ' に申込があった取引の' : 'この展覧会の取引の') + 'サービス利用料 ' + rateCut(rate, use.benefit.off) + '（' + use.benefit.off + '% 割引）</span>';
+      '<span class="ktn-exh-perk__note">' + (use === an ? day(an.start) + '〜' + day(an.end) + ' に申込があった取引の' : 'この展覧会の取引の') + 'サービス利用料 ' + rateCut(rate, use.benefit.off) + '（' + use.benefit.off + '% 割引）</span>' + pageLink(use);   /* キャンペーンのお知らせ（ニュース）へ「くわしく →」（2026-11-05） */
   }
   /* 購入者が持っているクーポン。[{ c: キャンペーン, ex: 使える展覧会（チェックインクーポン） }] */
   function heldCoupons() {

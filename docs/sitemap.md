@@ -73,7 +73,8 @@
 | P3-12 | クリエイター-インサイト |  |  |  |  | R |  | R | --w-article | kotennavi-p3-12.html | Fix済 |
 | P3-13 | クリエイター-オーディエンス管理 |  |  |  |  | R/W |  | R/W | --w-detail | kotennavi-p3-13.html | Fix済 |
 | P3-14 | クリエイター-ポートフォリオ管理 | L |  |  |  | R/W |  | R/W | --w-detail | kotennavi-p3-14.html | Fix済 |
-| P3-15 | クリエイター-リエゾン+コンソール | L+ |  |  |  | R/W |  | R/W | --w-detail | kotennavi-p3-15.html | Fix済 |
+| P3-15 | クリエイター-リエゾン+ 展覧会一覧 | L+ |  |  |  | R/W |  | R/W | --w-detail | kotennavi-p3-15.html | 調整中 |
+| P3-15-1 | クリエイター-リエゾン+コンソール（展覧会ごと） | L+ |  |  |  | R/W |  | R/W | --w-detail | kotennavi-p3-15-1.html | 調整中 |
 | P3-16 | クリエイター-取引デスク | L+ |  |  |  | R/W |  | R/W | --w-detail | kotennavi-p3-16.html | Fix済 |
 | P3-17 | クリエイター販売代金管理 | L+ |  |  |  | R/W |  | R/W | --w-detail | kotennavi-p3-17.html | Fix済 |
 | P3-18 | クリエイター-展覧会管理 |  |  |  |  | R/W |  | R/W | --w-detail | kotennavi-p3-18.html | Fix済 |
@@ -94,7 +95,8 @@
 | P4-12 | ギャラリー-インサイト |  |  |  |  |  | R | R | --w-article | kotennavi-p4-12.html | Fix済 |
 | P4-13 | ギャラリー-オーディエンス管理 |  |  |  |  |  | R/W | R/W | --w-detail | kotennavi-p4-13.html | Fix済 |
 | P4-14 | ギャラリー-インベントリー管理 | L,L+ |  |  |  |  | R/W | R/W | --w-detail | kotennavi-p4-14.html | Fix済 |
-| P4-15 | ギャラリー-リエゾン+コンソール | L+ |  |  |  |  | R/W | R/W | --w-detail | kotennavi-p4-15.html | Fix済 |
+| P4-15 | ギャラリー-リエゾン+ 展覧会一覧 | L+ |  |  |  |  | R/W | R/W | --w-detail | kotennavi-p4-15.html | 調整中 |
+| P4-15-1 | ギャラリー-リエゾン+コンソール（展覧会ごと） | L+ |  |  |  |  | R/W | R/W | --w-detail | kotennavi-p4-15-1.html | 調整中 |
 | P4-16 | ギャラリー-取引デスク | L+ |  |  |  |  | R/W | R/W | --w-detail | kotennavi-p4-16.html | Fix済 |
 | P4-17 | ギャラリー-販売代金管理 | L+ |  |  |  |  | R/W | R/W | --w-detail | kotennavi-p4-17.html | Fix済 |
 | P4-18 | ギャラリー-展覧会管理 |  |  |  |  |  | R/W | R/W | --w-detail | kotennavi-p4-18.html | Fix済 |

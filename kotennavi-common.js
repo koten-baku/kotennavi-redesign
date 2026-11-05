@@ -1887,7 +1887,7 @@ KTN.QA = [
   { id: 'SET-03', cat: 'liaison-settlement', side: 'seller', aud: 'common', grp: '精算・振込', q: '振込手数料はどちらが負担しますか？', a: '振込手数料は出品者（あなた）のご負担です。精算金額から手数料を差し引いた金額が口座に振り込まれます。' },
   { id: 'SET-04', cat: 'liaison-settlement', side: 'seller', aud: 'common', grp: '精算・振込', q: '振込先口座の名義が本人確認情報の氏名と違う場合はどうなりますか？', a: '振込先口座の名義（カナ）は、本人確認情報にご登録の氏名と一致している必要があります。一致しない場合は保存時にエラーとなり、振込先として登録できません。名義が異なる正当な事情がある場合は個展なび事務局へご連絡ください。' },
   { id: 'SET-05', cat: 'liaison-settlement', side: 'seller', aud: 'common', grp: '精算・振込', q: '振込先口座はいつでも変更できますか？', a: 'はい、いつでも変更できます。変更した口座は次回以降の精算から反映されます（すでに処理が始まっている精算には反映されません）。' },
-  { id: 'SET-06', cat: 'liaison-settlement', side: 'seller', aud: 'common', grp: '精算・振込', q: '精算履歴はいつまで確認できますか？', a: '期限なく、このページでいつでもご確認いただけます。取引ごとの内訳（作品名・送料・サービス利用料等）はLIAISON+コンソールの「終了した展覧会」アーカイブでご確認いただけます。' },
+  { id: 'SET-06', cat: 'liaison-settlement', side: 'seller', aud: 'common', grp: '精算・振込', q: '精算履歴はいつまで確認できますか？', a: '期限なく、このページでいつでもご確認いただけます。取引ごとの内訳（作品名・送料・サービス利用料等）は、その展覧会のリエゾン+コンソール（リエゾン+ 展覧会一覧の「終了した展覧会」から開きます）でご確認いただけます。' },
   { id: 'SET-07', cat: 'liaison-settlement', side: 'seller', aud: 'common', grp: '精算・振込', q: 'Stripeから直接メールが届きました。対応が必要ですか？', a: '精算・振込の処理には決済パートナーであるStripe社のサービスを利用しており、運用状況によりStripeから直接、本人確認情報の再確認などのご案内メールが届くことがあります。これは正規のご案内です。期限内にご対応いただけないと、精算（振込）が一時停止する場合がありますので、内容をご確認のうえご対応ください。メールの送信元やご不明点がある場合は、個展なび事務局までご連絡いただければ確認いたします。' },
   { id: 'SET-08', cat: 'liaison-settlement', side: 'seller', aud: 'common', grp: '精算・振込', q: 'Stripeのアカウントを自分で管理する必要がありますか？', a: 'いいえ。精算設定や口座情報の変更など、通常のご利用はすべてこのページ（個展なび）で完結し、Stripe側の画面を操作いただく必要はありません。初回のご登録時にのみ、Stripeの利用規約へのご同意など簡単な連携手続きをお願いする場合があります。' },
   { id: 'SET-09', cat: 'liaison-settlement', side: 'seller', aud: 'common', grp: '精算・振込', q: '振込日（20日）が土日祝日などの金融機関休業日にあたる場合はどうなりますか？', a: 'その場合は翌営業日に振り込まれます（決済パートナーであるStripe社の入金スケジュールに準じます）。年末年始などで休業日が続く場合も同様に、直後の営業日にまとめて処理されます。' },
@@ -2008,6 +2008,7 @@ function renderAll() {
   syncAdminNote();
   ktnLiaisonGate();
   ktnEditDelete();
+  ktnConsoleLinks();
   syncRoleOwnerOnly();
   syncAuthWall();
   syncInqLinks();
@@ -2206,7 +2207,8 @@ const PAGES = {
   'p3-12': { n: 'クリエイター-インサイト', bc: [['Top', '/'], ['クリエイター', 'kotennavi-p10-2.html'], ['田中 透', 'kotennavi-p3.html'], ['インサイト', null]] },
   'p3-13': { n: 'クリエイター-オーディエンス管理', bc: [['Top', '/'], ['クリエイター', 'kotennavi-p10-2.html'], ['田中 透', 'kotennavi-p3.html'], ['オーディエンス管理', null]] },
   'p3-14': { n: 'クリエイター-ポートフォリオ管理', bc: [['Top', '/'], ['クリエイター', 'kotennavi-p10-2.html'], ['田中 透', 'kotennavi-p3.html'], ['ポートフォリオ管理', null]] },
-  'p3-15': { n: 'クリエイター-リエゾンコンソール', bc: [['Top', '/'], ['クリエイター', 'kotennavi-p10-2.html'], ['田中 透', 'kotennavi-p3.html'], ['リエゾン+コンソール', null]] },
+  'p3-15': { n: 'クリエイター-リエゾン+ 展覧会一覧', bc: [['Top', '/'], ['クリエイター', 'kotennavi-p10-2.html'], ['田中 透', 'kotennavi-p3.html'], ['リエゾン+ 展覧会一覧', null]] },
+  'p3-15-1': { n: 'クリエイター-リエゾン+コンソール', bc: [['Top', '/'], ['クリエイター', 'kotennavi-p10-2.html'], ['田中 透', 'kotennavi-p3.html'], ['リエゾン+ 展覧会一覧', 'kotennavi-p3-15.html'], ['リエゾン+コンソール', null]] },
   'p3-16': { n: 'クリエイター-取引デスク', bc: [['Top', '/'], ['クリエイター', 'kotennavi-p10-2.html'], ['田中 透', 'kotennavi-p3.html'], ['取引デスク', null]] },
   'p3-17': { n: 'クリエイター販売代金管理', bc: [['Top', '/'], ['クリエイター', 'kotennavi-p10-2.html'], ['田中 透', 'kotennavi-p3.html'], ['販売代金管理', null]] },
   'p3-18': { n: 'クリエイター-展覧会管理', bc: [['Top', '/'], ['クリエイター', 'kotennavi-p10-2.html'], ['田中 透', 'kotennavi-p3.html'], ['展覧会管理', null]] },
@@ -2221,7 +2223,8 @@ const PAGES = {
   'p4-12': { n: 'ギャラリー-インサイト', bc: [['Top', '/'], ['ギャラリー', 'kotennavi-p10-3.html'], ['Gallery SOIL 渋谷', 'kotennavi-p4.html'], ['インサイト', null]] },
   'p4-13': { n: 'ギャラリー-オーディエンス管理', bc: [['Top', '/'], ['ギャラリー', 'kotennavi-p10-3.html'], ['Gallery SOIL 渋谷', 'kotennavi-p4.html'], ['オーディエンス管理', null]] },
   'p4-14': { n: 'ギャラリー-インベントリー管理', bc: [['Top', '/'], ['ギャラリー', 'kotennavi-p10-3.html'], ['Gallery SOIL 渋谷', 'kotennavi-p4.html'], ['インベントリー管理', null]] },
-  'p4-15': { n: 'ギャラリー-リエゾンコンソール', bc: [['Top', '/'], ['ギャラリー', 'kotennavi-p10-3.html'], ['Gallery SOIL 渋谷', 'kotennavi-p4.html'], ['リエゾン+コンソール', null]] },
+  'p4-15': { n: 'ギャラリー-リエゾン+ 展覧会一覧', bc: [['Top', '/'], ['ギャラリー', 'kotennavi-p10-3.html'], ['Gallery SOIL 渋谷', 'kotennavi-p4.html'], ['リエゾン+ 展覧会一覧', null]] },
+  'p4-15-1': { n: 'ギャラリー-リエゾン+コンソール', bc: [['Top', '/'], ['ギャラリー', 'kotennavi-p10-3.html'], ['Gallery SOIL 渋谷', 'kotennavi-p4.html'], ['リエゾン+ 展覧会一覧', 'kotennavi-p4-15.html'], ['リエゾン+コンソール', null]] },
   'p4-16': { n: 'ギャラリー-取引デスク', bc: [['Top', '/'], ['ギャラリー', 'kotennavi-p10-3.html'], ['Gallery SOIL 渋谷', 'kotennavi-p4.html'], ['取引デスク', null]] },
   'p4-17': { n: 'ギャラリー-販売代金管理', bc: [['Top', '/'], ['ギャラリー', 'kotennavi-p10-3.html'], ['Gallery SOIL 渋谷', 'kotennavi-p4.html'], ['販売代金管理', null]] },
   'p4-18': { n: 'ギャラリー-展覧会管理', bc: [['Top', '/'], ['ギャラリー', 'kotennavi-p10-3.html'], ['Gallery SOIL 渋谷', 'kotennavi-p4.html'], ['展覧会管理', null]] },
@@ -2617,6 +2620,8 @@ function ktnLiaisonGate() {
     '<p class="ktn-liaison-gate__foot">展覧会の内容を直すときは <a class="ktn-guide-link" href="./kotennavi-p2-11.html">展覧会の編集 →</a>' + (admin ? '　管理者の確認も展覧会の編集（管理者の欄）で行います。' : '') + '</p></div>');
 }
 window.ktnLiaisonGate = ktnLiaisonGate;
+/* 展覧会のリエゾン+コンソールへのリンク（data-console-link）：見ている人がギャラリーなら P4-15-1、クリエイターなら P3-15-1（P2-12-1 など・2026-11-05） */
+function ktnConsoleLinks() { var r = String(window.ktnState && window.ktnState.role || ''); document.querySelectorAll('[data-console-link]').forEach(function (a) { a.setAttribute('href', 'kotennavi-' + (r.indexOf('gallery') >= 0 ? 'p4-15-1' : 'p3-15-1') + '.html?ex=a1'); }); }
 /* 作成・編集の画面（ヘッダーのメニューを出さないページ）の一覧 */
 KTN.EDIT_NO_MENU = ['p2-11', 'p6-11', 'p3-11', 'p4-11', 'p5-11', 'p5-12', 'p5-13', 'p61-11', 'p2-12', 'p2-121'];
 /* ── 画面の下の削除（P6-11 作品＝オーナー・編集のとき／P61-11 お知らせ＝管理者・編集のとき・2026-11-04）。P2-11 は pages.js（確認前・確認済で分ける）── */
@@ -3106,7 +3111,9 @@ function p315ToggleUrgentFilter(el) {
   if (!panel) return;
   panel.classList.toggle('p315-filter-urgent', on);
   var empty = panel.querySelector('.p315-urgent-filter__empty');
-  if (empty) empty.hidden = !(on && !panel.querySelector('.p315-witem--yours'));
+  /* 対応が必要なものがあるか：作品の欄（コンソール）の自分の番の行＝隠れている展覧会のものは除く／一覧の展覧会のまとまり（data-urgent）（2026-11-04） */
+  var any = [].some.call(panel.querySelectorAll('.p315-witem--yours'), function (r) { return !r.closest('[hidden]'); }) || !!panel.querySelector('.p315-exh-card[data-urgent]');
+  if (empty) empty.hidden = !(on && !any);
 }
 window.p315ToggleUrgentFilter = p315ToggleUrgentFilter;
 
@@ -3117,7 +3124,9 @@ function p315SyncUrgentCount() {
   document.querySelectorAll('.p315-urgent-filter').forEach(function (bar) {
     var panel = bar.closest('.p315-tab-panel');
     if (!panel) return;   /* タブの外のバー（P90-13 の取引デスク）は、そのページの JS が数える（2026-11-03） */
-    var cnt = panel ? panel.querySelectorAll('.p315-txn-row--active').length : 0;
+    /* 隠れている展覧会（P3-15-1 で選んでいない展覧会）の行は数えない。一覧（P3-15）は展覧会の行の data-urgent を足す（2026-11-04） */
+    var cnt = panel ? [].filter.call(panel.querySelectorAll('.p315-txn-row--active'), function (r) { return !r.closest('[hidden]'); }).length : 0;
+    if (panel) panel.querySelectorAll('.p315-exh-card[data-urgent]').forEach(function (r) { cnt += +r.dataset.urgent || 0; });
     var countEl = bar.querySelector('.p315-urgent-filter__count');
     if (countEl) countEl.textContent = String(cnt);
     bar.hidden = cnt === 0;
@@ -3156,6 +3165,8 @@ function p2OwnerMenuItems(curPage) {
   var liaisonLabel = st.liaison === 'plus' ? 'リエゾン+ 展示設定・作品管理' : 'リエゾン 展示設定・作品管理';
   var liaisonTarget = st.liaison === 'plus' ? 'p2-121' : 'p2-12';
   var liaisonItem = ddiP(curPage, liaisonTarget, 'grid', liaisonLabel, 'p2GotoWorks()');
+  /* LIAISON+ の展覧会：この展覧会のリエゾン+コンソール（申込と取引の対応）へ直接（2026-11-05） */
+  var consoleItem = st.liaison === 'plus' ? ddi('shop', 'リエゾン+コンソール', false, "location.href='./kotennavi-" + (String(window.ktnState && window.ktnState.role || '').indexOf('gallery') >= 0 ? 'p4-15-1' : 'p3-15-1') + ".html?ex=a1'", 'ktn-ddi--lp') : '';
   var articles = ddiP(curPage, 'p2-13', 'file', '記事管理', "location.href='./kotennavi-p2-13.html'");
   var qr = ddi('qr', '会場チェックイン用QRコードを表示', false, "ktnListQr('venue')");
   var flyer = ddiP(curPage, 'p2-7', 'print', '会場に置く印刷物', "location.href='./kotennavi-p2-7.html'");   /* 会場フライヤーと作品リスト（2026-10-21・P2-7 に一本化） */
@@ -3172,7 +3183,7 @@ function p2OwnerMenuItems(curPage) {
        リエゾン+作品管理を残す（会期終了後も出品作品の在庫・申込対応が必要なため・2026-08-30確定）。
        販売期間終了後の取引対応自体はP3-15/P3-16等の作家側コンソールが担う。 */
     var afterItems = [];
-    if (st.liaison === 'plus' && !st.salesOver) afterItems.push(liaisonItem);
+    if (st.liaison === 'plus' && !st.salesOver) afterItems.push(liaisonItem); if (consoleItem) afterItems.push(consoleItem);   /* 取引は販売期間のあとも続くので、コンソールはいつも */
     afterItems.push(articles, insight);
     return afterItems.join(ddSep());
   }
@@ -3180,7 +3191,7 @@ function p2OwnerMenuItems(curPage) {
   /* 会期終了前でも、リエゾン+の販売期間が終了済みなら作品管理項目のみ非表示（LIAISON無料枠は影響なし） */
   var showLiaisonItem = !(st.liaison === 'plus' && st.salesOver);
   var mid = [edit];
-  if (showLiaisonItem) mid.push(liaisonItem);
+  if (showLiaisonItem) mid.push(liaisonItem); if (consoleItem) mid.push(consoleItem);
   mid.push(articles, qr, flyer, insight);
   return mid.join(ddSep());
 }
@@ -3229,7 +3240,7 @@ function p3OwnerMenuItems(curPage) {
      extraCls 'ktn-ddi--lp' でLIAISONブランドのゴールド識別（アイコン色・左アクセント）を付与し、
      申請済/未申請どちらの状態でも同じ見た目でひと目でLIAISON+関連とわかるようにする（2026-08-17）。 */
   var lpBlock = ktnLPApplied()
-    ? ddiP(curPage, 'p3-15', 'shop', 'LIAISON+コンソール', "location.href='./kotennavi-p3-15.html'", 'ktn-ddi--lp') +
+    ? ddiP(curPage, 'p3-15', 'shop', 'LIAISON+ 展覧会一覧', "location.href='./kotennavi-p3-15.html'", 'ktn-ddi--lp') +
       ddiP(curPage, 'p3-16', 'desk', '取引デスク', "location.href='./kotennavi-p3-16.html'", 'ktn-ddi--lp') +
       ddiP(curPage, 'p3-17', 'sales', '販売代金管理', "location.href='./kotennavi-p3-17.html'", 'ktn-ddi--lp')
     : ddi('shop', 'LIAISON+に申し込む', false, "location.href='./kotennavi-p11-4.html'", 'ktn-ddi--lp');
@@ -3251,7 +3262,7 @@ function p3OwnerMenuItems(curPage) {
 function p4OwnerMenuItems(curPage) {
   /* p3と同一の見た目ルール（extraCls 'ktn-ddi--lp'）。詳細は p3OwnerMenuItems 側のコメント参照。 */
   var lpBlock = ktnLPApplied()
-    ? ddiP(curPage, 'p4-15', 'shop', 'LIAISON+コンソール', "location.href='./kotennavi-p4-15.html'", 'ktn-ddi--lp') +
+    ? ddiP(curPage, 'p4-15', 'shop', 'LIAISON+ 展覧会一覧', "location.href='./kotennavi-p4-15.html'", 'ktn-ddi--lp') +
       ddiP(curPage, 'p4-16', 'desk', '取引デスク', "location.href='./kotennavi-p4-16.html'", 'ktn-ddi--lp') +
       ddiP(curPage, 'p4-17', 'sales', '販売代金管理', "location.href='./kotennavi-p4-17.html'", 'ktn-ddi--lp')
     : ddi('shop', 'LIAISON+に申し込む', false, "location.href='./kotennavi-p11-4.html'", 'ktn-ddi--lp');
@@ -3390,7 +3401,7 @@ function getActions(page, role) {
   }
 
   /* ── P3 管理サブページ群（プロフィール編集／各種管理ページ・共通オーナーメニュー） ── */
-  if (['p3-11', 'p3-12', 'p3-13', 'p3-14', 'p3-15', 'p3-16', 'p3-17', 'p3-18', 'p3-19', 'p3-20', 'p3-21'].includes(page)) {
+  if (['p3-11', 'p3-12', 'p3-13', 'p3-14', 'p3-15', 'p3-15-1', 'p3-16', 'p3-17', 'p3-18', 'p3-19', 'p3-20', 'p3-21'].includes(page)) {
     /* ガイドリンク：各ページの操作対象に対応するFAQ/ガイド章へ直接結線（2026-08-19 全ページ結線完了）。
        p3-11〜14はp60-6（よくある質問-クリエイター編）の新設章、p3-15〜17はp70-12（LIAISON+取引ガイド出品者編）の
        新設章、p3-18〜19は既存のp60-6章へリンク。 */
@@ -3400,6 +3411,7 @@ function getActions(page, role) {
       'p3-13': './kotennavi-p60-6.html#audience-mgmt',
       'p3-14': './kotennavi-p60-6.html#portfolio-mgmt',
       'p3-15': './kotennavi-p70-12.html#console',
+      'p3-15-1': './kotennavi-p70-12.html#console',
       'p3-16': './kotennavi-p70-12.html#trouble',
       'p3-17': './kotennavi-p70-12.html#settlement',
       'p3-18': './kotennavi-p60-6.html#exhibition-edit',
@@ -3427,7 +3439,7 @@ function getActions(page, role) {
   }
 
   /* ── P4 管理サブページ群（ギャラリー情報編集／各種管理ページ・共通オーナーメニュー） ── */
-  if (['p4-11', 'p4-12', 'p4-13', 'p4-14', 'p4-15', 'p4-16', 'p4-17', 'p4-18', 'p4-19', 'p4-20', 'p4-21'].includes(page)) {
+  if (['p4-11', 'p4-12', 'p4-13', 'p4-14', 'p4-15', 'p4-15-1', 'p4-16', 'p4-17', 'p4-18', 'p4-19', 'p4-20', 'p4-21'].includes(page)) {
     /* ガイドリンク：各ページの操作対象に対応するFAQ/ガイド章へ直接結線（2026-08-19 全ページ結線完了）。
        p4-11〜14はp60-7（よくある質問-ギャラリー編）の新設章、p4-15〜17はp70-12（LIAISON+取引ガイド出品者編）の
        新設章、p4-18〜19は既存のp60-7章へリンク。 */
@@ -3437,6 +3449,7 @@ function getActions(page, role) {
       'p4-13': './kotennavi-p60-7.html#audience-mgmt',
       'p4-14': './kotennavi-p60-7.html#inventory-mgmt',
       'p4-15': './kotennavi-p70-12.html#console',
+      'p4-15-1': './kotennavi-p70-12.html#console',
       'p4-16': './kotennavi-p70-12.html#trouble',
       'p4-17': './kotennavi-p70-12.html#settlement',
       'p4-18': './kotennavi-p60-7.html#exhibition-edit',
