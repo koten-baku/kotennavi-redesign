@@ -9048,7 +9048,7 @@ KTN.pages['p2-11'] = function () {
   p211SyncTerm();
   ['p211DateFrom', 'p211DateTo'].forEach(function (id) { var el = document.getElementById(id); if (el) el.addEventListener('change', p211SyncTerm); });
   /* デモバーのモード（新規・編集・クローン）を変えたときも */
-  document.addEventListener('click', function (e) { if (e.target.closest('#dbarNew,#dbarEdit,#dbarClone')) setTimeout(syncDelete, 0); });
+  document.addEventListener('click', function (e) { if (e.target.closest('#dbarNew,#dbarEdit,#dbarClone')) setTimeout(function () { syncDelete(); p211SyncTerm(); }, 0); });
   var _prevRender = window.ktnRender;
   window.ktnRender = function () { if (typeof _prevRender === 'function') _prevRender(); syncMgmtBar(); syncDelete(); p211SyncTerm(); };
 };
@@ -9066,7 +9066,7 @@ function p211AddDays(d, n) { var t = new Date(d + 'T00:00:00'); t.setDate(t.getD
 function p211SyncTerm() {
   var from = document.getElementById('p211DateFrom'), to = document.getElementById('p211DateTo'), note = document.getElementById('p211TermNote'), warn = document.getElementById('p211TermWarn');
   if (!from || !to || !note) return;
-  var e = KTN.exh || {}, plus = e.liaison === 'plus', started = plus && (e.saleStarted != null ? e.saleStarted : e.phase !== 'before');
+  var e = KTN.exh || {}, plus = e.liaison === 'plus' && (window.demoMode || 'edit') === 'edit',   /* 新規・クローンはまだ LIAISON+ でない（2026-11-07） */ started = plus && (e.saleStarted != null ? e.saleStarted : e.phase !== 'before');
   [from, to].forEach(function (x) { x.disabled = started; });
   if (warn) { warn.hidden = true; warn.textContent = ''; }
   if (!plus) { note.hidden = true; return; }

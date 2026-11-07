@@ -14636,3 +14636,6 @@ body:not(.ktn-page-new) [data-new-only]{display:none !important}
 .kc-row__foot{flex:1 1 100%;display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;padding-left:54px;box-sizing:border-box}   /* 下の段：左に状態、右に取引デスクへ（2026-11-05） */
 .kc-row__foot .kc-row__st{min-width:0}
 @media (max-width:540px){.kc-row__foot{padding-left:0}.kc-row__foot .kc-row__act{width:auto;margin-left:auto}}
+/* P2-11 保存前の確認：LIAISON・LIAISON+ の案内を別の箱に（2026-11-06） */
+.p211-presave__liaison{margin-top:12px}
+.p211-presave__liaison strong{font-weight:700}

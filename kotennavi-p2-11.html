@@ -952,10 +952,18 @@
             <ul class="p211-presave__list">
               <li>入力内容をご確認のうえ保存してください。保存後も、展覧会ページのオーナーメニューからいつでも編集できます。</li>
               <li data-review-only>保存後、サイト管理者が内容を確認したうえでサイトに掲載します。確認には日数をいただく場合があります。</li>
-              <li><span data-review-only>LIAISON・LIAISON+ の作品の登録（展覧会ページのオーナーメニューの「展示設定・作品管理」）は、サイト管理者の確認が済んでから使えるようになります。確認が済むと、メールでお知らせします。</span><span data-confirmed-only hidden>LIAISON・LIAISON+ の作品の登録と展示の設定は、展覧会ページのオーナーメニューの「展示設定・作品管理」からできます。</span><a class="ktn-guide-link" href="./kotennavi-p70-1.html" target="_blank" rel="noopener">LIAISON の出品ガイド →</a>　<a class="ktn-guide-link" href="./kotennavi-p70-2.html" target="_blank" rel="noopener">LIAISON+ の販売ガイド →</a></li>
-              <li id="p211TermWarn" hidden></li>
               <li>入力内容に不備・誤り・重複がある場合や、当サイトの趣旨に反するとサイト管理者が判断した場合は、事前のお知らせなく内容を修正・削除することがあります。あらかじめご了承ください。</li>
               <li id="p211DraftNote">入力の途中で保存しておきたいときは、下の「下書きとして保存する」にチェックを入れてください。下書きはサイトに公開されず、管理者への確認依頼も送られません。続きを入力してから、あらためて確認依頼できます。</li>
+            </ul>
+          </div>
+
+          <!-- LIAISON・LIAISON+ の案内（ほかの確認事項から分けた・2026-11-06） -->
+          <div class="p211-presave__box p211-presave__liaison">
+            <p class="p211-presave__title">LIAISON・LIAISON+（オンラインの作品展示）について</p>
+            <ul class="p211-presave__list">
+              <li><strong>LIAISON</strong>（作品の展示・無料）：<span data-review-only>サイト管理者の確認が済むと使えるようになります（確認が済むと、メールでお知らせします）。</span><span data-confirmed-only hidden>すぐに使えます。</span>展覧会ページのオーナーメニューの「展示設定・作品管理」から作品を登録します。<a class="ktn-guide-link" href="./kotennavi-p70-1.html" target="_blank" rel="noopener">LIAISON の出品ガイド →</a></li>
+              <li><strong>LIAISON+</strong>（作品の展示と販売）：LIAISON+ の申込が承認された方は、「展示設定・作品管理」で LIAISON から LIAISON+ に切り替えられます（会期の開始日の前まで）。展示は無料で、作品が売れたときにサービス利用料がかかります。<a class="ktn-guide-link" href="./kotennavi-p11-4.html" target="_blank" rel="noopener">LIAISON+ を申し込む →</a>　<a class="ktn-guide-link" href="./kotennavi-p70-2.html" target="_blank" rel="noopener">LIAISON+ の販売ガイド →</a></li>
+              <li id="p211TermWarn" hidden></li>
             </ul>
           </div>
 
@@ -2182,7 +2190,7 @@ function confirmSave() {
   /* LIAISON利用案内＝新規・クローン投稿（未確認の展覧会エンティティ作成）時のみ表示。
      編集モードは既に確認済でLIAISON状態も既知のため対象外。 */
   if (demoMode === 'new' || demoMode === 'clone') {
-    msg += '<br><br>この展覧会ではLIAISON（オンライン作品展示・無料）をご利用いただけます。確認完了後、オーナーメニューに「LIAISON作品管理」が表示され、作品の掲載を始められます。販売機能付きの「LIAISON+」への切り替えをご希望の場合も、確認完了後に同メニューからお申込みいただけます。';
+    msg += '<br><br>この展覧会ではLIAISON（作品の展示・無料）を使えます。確認が済むと、オーナーメニューの「展示設定・作品管理」から作品を登録できます。LIAISON+ の申込が承認された方は、同じ画面で LIAISON+（作品の展示と販売）に切り替えられます（会期の開始日の前まで）。';
   }
   msg += '<br><br>会場に掲示するQRコード・フライヤーは、オーナーメニューからいつでも発行できます。<a class="ktn-guide-link" href="kotennavi-p2-7.html">会場フライヤーを作成する →</a>';
   KTN.submitDone({
