@@ -14639,3 +14639,43 @@ body:not(.ktn-page-new) [data-new-only]{display:none !important}
 /* P2-11 保存前の確認：LIAISON・LIAISON+ の案内を別の箱に（2026-11-06） */
 .p211-presave__liaison{margin-top:12px}
 .p211-presave__liaison strong{font-weight:700}
+/* P90-24 Q&A 管理（2026-11-07）。表・タブ・モーダルは P90-9／P90-18 の部品 */
+.p9024-search{flex:1 1 200px}
+.p9024-search input{width:100%;box-sizing:border-box}
+.p9024-new-row{display:flex;justify-content:flex-end}
+.p9024-group{margin-bottom:24px}
+.p9024-pages{margin:0 0 8px;font-size:.74rem;color:var(--muted);line-height:1.7}
+.p9024-pages.is-none{color:#7a1800}
+.p9024-table{table-layout:fixed;width:100%}
+.p9024-col--id{width:84px}
+.p9024-col--who{width:120px}
+.p9024-col--act{width:150px}
+.p9024-cell--qa{display:table-cell}
+.p9024-grp{display:block;font-size:.68rem;color:var(--muted);margin-bottom:2px}
+.p9024-q{display:block;font-weight:600;color:var(--ink);font-size:.8rem;line-height:1.5}
+.p9024-a{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-top:3px;font-size:.74rem;color:var(--muted);line-height:1.6}
+.p9024-also{display:block;margin-top:4px;font-size:.68rem;color:var(--muted)}
+.p9024-chip{display:inline-block;margin:0 4px 4px 0;padding:2px 7px;border:1px solid var(--border);border-radius:10px;font-size:.68rem;color:var(--ink);background:#fff}
+.p9024-phase{display:block;font-size:.66rem;color:var(--muted);line-height:1.5}
+.p9024-move{display:inline-flex;gap:4px;margin-right:6px}
+.p9024-move .ktn-op-btn{padding-left:9px;padding-right:9px}
+.p9024-cats{display:flex;flex-wrap:wrap;gap:6px 14px}
+.p9024-check{display:inline-flex;align-items:center;gap:5px;font-size:.78rem;color:var(--ink);cursor:pointer}
+.p9024-check input{accent-color:var(--accent)}
+.p9024-preview{border:1px solid var(--border);border-radius:4px;padding:4px 12px;background:#fff}
+.p9024-edit{max-height:calc(100vh - 40px);overflow-y:auto}
+.p9024-edit__actions{align-items:center}
+.p9024-edit__spacer{flex:1 1 auto}
+.p9024-edit__actions .ktn-op-btn[hidden]{display:none}
+@media (max-width:540px){.p9024-col--id,.p9024-col--who,.p9024-col--act{width:auto}}
+/* 規約の変更への同意の画面（2026-11-07・ログインのとき） */
+.ktn-terms-modal__date{margin:0 0 10px;font-size:.8rem;color:var(--muted)}
+.ktn-terms-modal__lead{margin:0 0 4px;font-size:.8rem;font-weight:600;color:var(--ink)}
+.ktn-terms-modal__link{margin:0 0 8px;font-size:.8rem}
+.ktn-terms-modal__check{display:flex;align-items:flex-start;gap:8px;margin:10px 0 0;font-size:.84rem;font-weight:600;color:var(--ink);cursor:pointer}
+.ktn-terms-modal__check input{width:16px;height:16px;margin-top:3px;accent-color:var(--accent);flex-shrink:0}
+/* 規約の同意の画面（ログインのとき・2026-11-07）：規約ごとの枠。長いときは画面の中で送る */
+.ktn-terms-modal__box{max-height:calc(100vh - 40px);overflow-y:auto}
+.ktn-terms-modal__sec{padding:12px 0;border-top:1px solid var(--border)}
+.ktn-terms-modal__sec:first-of-type{border-top:0}
+.ktn-terms-modal__foot{flex-wrap:wrap;gap:8px}

@@ -2007,6 +2007,7 @@ function renderAll() {
   updateActiveState(window.ktnState.page);
   syncAdminNote();
   ktnLiaisonGate();
+  ktnTermsGate();   /* 規約の変更への同意（ログインのとき・ログインしたままの人は最初に開いたページで） */
   ktnEditDelete();
   ktnConsoleLinks();
   syncRoleOwnerOnly();
@@ -2326,6 +2327,7 @@ const PAGES = {
   'p60-7': { n: 'よくある質問-ギャラリー編', bc: [['Top', '/'], ['ガイド', 'kotennavi-p60.html'], ['よくある質問-ギャラリー編', null]] },
   'p60-8': { n: '個展なびとは', bc: [['Top', '/'], ['個展なびとは', null]] },
   'p60-9': { n: '利用規約', bc: [['Top', '/'], ['利用規約', null]] },
+  'p60-18': { n: 'LIAISON+ 利用規約', bc: [['Top', '/'], ['LIAISON+ 利用規約', null]] },
   'p60-10': { n: 'プライバシポリシー', bc: [['Top', '/'], ['プライバシポリシー', null]] },
   // 掲載内容に関する対応方針（公開用・docs/moderation-policy.md の要約・2026-09-27）
   'p60-16': { n: '掲載内容に関する対応方針', bc: [['Top', '/'], ['掲載内容に関する対応方針', null]] },
@@ -2379,9 +2381,11 @@ const PAGES = {
   'p90-19': { n: '管理者-トップページの管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['トップページの管理', null]] },
   'p90-20': { n: '管理者-料率・キャンペーン管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['料率・キャンペーン管理', null]] },
   'p90-18': { n: '管理者-お知らせ・やることの文言管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['お知らせ・やることの文言管理', null]] },
+  'p90-24': { n: '管理者-Q&A 管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['Q&A 管理', null]] },
   'p90-21': { n: '管理者-対応案件', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['対応案件', null]] },
   'p90-21-1': { n: '管理者-対応案件の詳細', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['対応案件', 'kotennavi-p90-21.html'], ['対応案件の詳細', null]] },
   'p90-22': { n: '管理者-更新の記録', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['更新の記録', null]] },
+  'p90-29': { n: '管理者-管理者ガイド', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['管理者ガイド', null]] },
   'p90-28': { n: '管理者-操作の記録', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['操作の記録', null]] },
   'p90-23': { n: '管理者-作品管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['作品管理', null]] },
   'p90-17': { n: '管理者-検索・特集管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['検索・特集管理', null]] },
@@ -2620,6 +2624,99 @@ function ktnLiaisonGate() {
     '<p class="ktn-liaison-gate__foot">展覧会の内容を直すときは <a class="ktn-guide-link" href="./kotennavi-p2-11.html">展覧会の編集 →</a>' + (admin ? '　管理者の確認も展覧会の編集（管理者の欄）で行います。' : '') + '</p></div>');
 }
 window.ktnLiaisonGate = ktnLiaisonGate;
+/* ── 規約の変更への同意＝ログインのとき（2026-11-07 ユーザー判断・現行の個展なびと同じ）──
+   ・効力の発生日の1か月前にメールとニュースで知らせる（P60-9 第11条＝法的な根拠。一度もサイトに来ない人にもこれで効く）。
+     何が変わったかは、そのお知らせ（ニュース）に書く＝同意の画面には変更点を別に書かない（1か所で書いて直す・ユーザー指摘）
+   ・発生日のあと、ログインのとき（ログインしたままの人は、最初にサイトを開いたとき）に同意の画面を出す。
+     全員＝利用規約（P60-9）、LIAISON+ が承認されている人＝LIAISON+ 利用規約（P60-18）も。変わった規約だけを並べる
+   ・変わった規約に全部同意したら進む。どれか1つでも同意しなければ、ログインしない（ログアウト）。退会には進めない。
+     進行中の取引は、取引の期限に従う（P60-9 第11条・P11-4 第12条）
+   デモ：デモバー「規約」（sessionStorage 'ktn-terms-demo'＝ok／site／both）。版・発生日・お知らせは、管理者が規約を改定したときのデータ */
+KTN.TERMS = {
+  site: { name: '利用規約', version: '2026.12.01', effective: '2026.12.01', url: './kotennavi-p60-9.html', news: './kotennavi-p61-1.html' },
+  liaison: { name: 'LIAISON+ 利用規約', version: '2026.12.01', effective: '2026.12.01', url: './kotennavi-p60-18.html', news: './kotennavi-p61-1.html' }
+};
+/* 同意の画面を出さないページ（ログイン〔ログインのボタンのあとに出す〕・新規登録・規約を読むページ・退会） */
+var KTN_TERMS_SKIP = ['p11', 'p11-1', 'p11-12', 'p11-23', 'p60-9', 'p60-18', 'p60-10', 'p11-4', 'p5-100', 'p61-1'];
+function ktnTermsState() { try { return sessionStorage.getItem('ktn-terms-demo') || 'ok'; } catch (e) { return 'ok'; } }
+function ktnTermsSet(v) { try { sessionStorage.setItem('ktn-terms-demo', v); } catch (e) {} }
+function ktnTermsIsSeller() { return /creator|gallery/.test(String(window.ktnState && window.ktnState.role || '')); }   /* デモ：クリエイター・ギャラリー＝LIAISON+ が承認されている人 */
+function ktnTermsLoggedIn() { var r = String(window.ktnState && window.ktnState.role || ''); return r && r !== 'guest' && r !== 'admin'; }
+/* 同意がまだの規約（デモ：site＝利用規約だけ、both＝利用規約と LIAISON+ 利用規約〔承認されている人だけ〕） */
+function ktnTermsPending(seller) { var st = ktnTermsState(); return st === 'site' ? ['site'] : st === 'both' ? (seller ? ['site', 'liaison'] : ['site']) : []; }
+function ktnTermsGate() {
+  var page = window.ktnState && window.ktnState.page;
+  ktnTermsDbar();
+  var mm = document.getElementById('ktnTermsModal');
+  if (!ktnTermsLoggedIn() || KTN_TERMS_SKIP.indexOf(page) >= 0) { if (mm && !window.ktnTermsAfter) mm.hidden = true; return; }
+  var keys = ktnTermsPending(ktnTermsIsSeller());
+  if (keys.length) ktnTermsOpen(keys); else if (mm) mm.hidden = true;
+}
+function ktnTermsOpen(keys) {
+  var m = document.getElementById('ktnTermsModal');
+  if (!m) {
+    m = document.createElement('div');
+    m.className = 'p211-modal ktn-terms-modal';
+    m.id = 'ktnTermsModal';
+    m.hidden = true;
+    document.body.appendChild(m);
+    m.addEventListener('change', function () {
+      var all = [].slice.call(m.querySelectorAll('[data-terms-check]'));
+      document.getElementById('ktnTermsAgree').disabled = !all.every(function (c) { return c.checked; });
+    });
+    m.addEventListener('click', function (e) {
+      if (e.target.id === 'ktnTermsAgree') {
+        m.hidden = true; ktnTermsSet('ok');
+        KTN.toast('変更後の規約へのご同意を承りました');
+        if (typeof window.ktnTermsAfter === 'function') { window.ktnTermsAfter('ok'); return; }
+        ktnTermsGate();
+        return;
+      }
+      if (e.target.closest('[data-terms-logout]')) {   /* どれか1つでも同意しない＝ログインしない（ログアウト）。退会には進めない */
+        m.hidden = true;
+        if (typeof window.ktnTermsAfter === 'function') { window.ktnTermsAfter('logout'); return; }   /* ログインの画面（P11）＝ログインしないでとどまる */
+        KTN.toast('ログアウトしました。変更後の規約にご同意いただくと、再度ログインいただけます');
+        setTimeout(function () { location.href = './kotennavi-p11.html'; }, 900);   /* デモ：ログインの画面へ。本番はログアウトの API のあと */
+      }
+    });
+  }
+  var T = KTN.TERMS, two = keys.length > 1;
+  var atLogin = window.ktnState && window.ktnState.page === 'p11';   /* ログインの画面＝まだログインしていないので「ログアウト」の言葉を出さない */
+  m.innerHTML = '<div class="p211-modal__overlay"></div>' +
+    '<div class="p211-modal__box ktn-terms-modal__box" role="dialog" aria-modal="true" aria-labelledby="ktnTermsTtl">' +
+    '<p class="p211-modal__title" id="ktnTermsTtl">規約が変わりました</p>' +
+    '<p class="ktn-terms-modal__date">引き続きご利用いただくには、変更後の' + (two ? '規約（' + keys.length + 'つ）' : T[keys[0]].name) + 'へのご同意が必要です。変更内容につきましては、お知らせをご確認ください。</p>' +
+    keys.map(function (k) {
+      var t = T[k];
+      return '<div class="ktn-terms-modal__sec"><p class="ktn-terms-modal__lead">' + t.name + '（' + t.version + ' 版・効力の発生日 ' + t.effective + '）</p>' +
+        '<p class="ktn-terms-modal__link"><a class="ktn-guide-link" href="' + t.news + '" target="_blank" rel="noopener">変更のお知らせを見る →</a>　<a class="ktn-guide-link" href="' + t.url + '" target="_blank" rel="noopener">全文を見る →</a></p>' +
+        '<label class="ktn-terms-modal__check"><input type="checkbox" data-terms-check="' + k + '"><span>変更後の' + t.name + 'を確認し、同意します</span></label></div>';
+    }).join('') +
+    '<p class="p211-modal__note">' + (two ? 'いずれか一方でもご同意いただけない場合は' : 'ご同意いただけない場合は') + '、ログインいただけません（' + (atLogin ? '' : 'ログアウトいたします。') + 'ログインせずにご覧いただけるページは、引き続きご覧いただけます）。</p>' +
+    '<div class="p211-modal__foot ktn-terms-modal__foot">' + (atLogin ? '<button type="button" class="ktn-op-btn" data-terms-logout>同意しない</button>' : '<button type="button" class="ktn-op-btn" data-terms-logout>同意しない（ログアウト）</button>') + '' +
+      '<button type="button" class="ktn-op-btn ktn-op-btn--primary" id="ktnTermsAgree" disabled>同意して続ける</button></div></div>';
+  m.hidden = false;
+}
+/* デモバー「規約」：同意済／利用規約が変わった／LIAISON+ の規約も（どのページにも） */
+function ktnTermsDbar() {
+  var bar = document.getElementById('dbar'); if (!bar || document.getElementById('ktnTermsDbar')) return;
+  /* ロールを切り替えられないページ（ガイド・規約など＝デモではゲストの表示）には出さない。押しても同意の画面が出ず、紛らわしいため */
+  if (!bar.querySelector('[onclick*="setR("]') && !(window.ktnState && window.ktnState.page === 'p11')) return;
+  var cur = ktnTermsState();
+  var L = [['ok', '同意済'], ['site', '利用規約が変わった'], ['both', 'LIAISON+ の規約も']];
+  bar.insertAdjacentHTML('beforeend', '<span class="dbar-sep" id="ktnTermsDbar">規約：</span>' + L.map(function (x) {
+    return '<button class="dbtn' + (x[0] === cur ? ' on' : '') + '" data-terms-demo="' + x[0] + '">' + x[1] + '</button>'; }).join(''));
+  bar.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-terms-demo]'); if (!b) return;
+    ktnTermsSet(b.dataset.termsDemo);
+    bar.querySelectorAll('[data-terms-demo]').forEach(function (x) { x.classList.toggle('on', x === b); });
+    var m = document.getElementById('ktnTermsModal'); if (m) m.hidden = true;
+    ktnTermsGate();
+  });
+}
+document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible' && typeof ktnTermsGate === 'function') ktnTermsGate(); });
+window.ktnTermsGate = ktnTermsGate;
+window.ktnTermsOpen = ktnTermsOpen;
 /* 展覧会のリエゾン+コンソールへのリンク（data-console-link）：見ている人がギャラリーなら P4-15-1、クリエイターなら P3-15-1（P2-12-1 など・2026-11-05） */
 function ktnConsoleLinks() { var r = String(window.ktnState && window.ktnState.role || ''); document.querySelectorAll('[data-console-link]').forEach(function (a) { a.setAttribute('href', 'kotennavi-' + (r.indexOf('gallery') >= 0 ? 'p4-15-1' : 'p3-15-1') + '.html?ex=a1'); }); }
 /* 作成・編集の画面（ヘッダーのメニューを出さないページ）の一覧 */
@@ -3659,7 +3756,12 @@ function getActions(page, role) {
 
   /* ── P60 ガイド・法的ページ ── */
   /* ガイドの「編集」＝P60-21 ガイドの編集（?page= でそのガイド・2026-11-01） */
-  if (['p60', 'p60-1', 'p60-2', 'p60-3', 'p60-4', 'p60-5', 'p60-8', 'p60-9', 'p60-10', 'p60-16', 'p60-17'].includes(page)) {
+  /* よくある質問のページ（P60-5〜7）は、Q&A の本文を P90-24「Q&A 管理」で直す（2026-11-07） */
+  if (['p60-5', 'p60-6', 'p60-7'].includes(page)) {
+    if (role === 'admin') return dd('管理者', (page === 'p60-5' ? ddi('edit', 'ガイドの編集', false, "location.href='./kotennavi-p60-21.html?page=" + page + "'") : '') + ddi('edit', 'Q&A 管理', false, "location.href='./kotennavi-p90-24.html'"));
+    return '';
+  }
+  if (['p60', 'p60-1', 'p60-2', 'p60-3', 'p60-4', 'p60-5', 'p60-8', 'p60-9', 'p60-18', 'p60-10', 'p60-16', 'p60-17'].includes(page)) {
     if (role === 'admin') return dd('管理者', ddi('edit', '編集', false, "location.href='./kotennavi-p60-21.html?page=" + page + "'"));
     return '';
   }
@@ -3678,8 +3780,9 @@ function getActions(page, role) {
     return '';
   }
 
-  if (['p90-2', 'p90-2-1', 'p90-9', 'p90-10', 'p90-11', 'p90-11-1', 'p90-13', 'p90-14', 'p90-17', 'p90-18', 'p90-20'].includes(page)) {
-    if (role === 'admin') return owbtn('info', 'ガイド');
+  if (['p90-2', 'p90-2-1', 'p90-9', 'p90-10', 'p90-11', 'p90-11-1', 'p90-13', 'p90-14', 'p90-17', 'p90-18', 'p90-20', 'p90-24'].includes(page)) {
+    /* 「ガイド」＝P90-29 管理者ガイド（取引デスクは支払い後のキャンセルと返金の章・2026-11-07） */
+    if (role === 'admin') return owbtn('info', 'ガイド', "location.href='./kotennavi-p90-29.html" + (page === 'p90-13' ? '#refund' : '') + "'");
     return '';
   }
 
@@ -3799,10 +3902,10 @@ KTN.P10_PREF_SLUGS = {
    本番：Drupal のロール＋権限で持ち、API でも同じ判定で止める（画面で隠すだけにしない）。 */
 KTN.ADMIN_LEVELS = { E: { n: 1, label: '編集・問合せ' }, L: { n: 2, label: 'LIAISON+ 対応' }, A: { n: 3, label: 'admin' } };
 KTN.ADMIN_PAGE = {
-  'p90': 'E', 'p90-2': 'E', 'p90-2-1': 'E', 'p90-4': 'E', 'p90-5': 'E', 'p90-7': 'E', 'p90-8': 'E', 'p90-21': 'E', 'p90-21-1': 'E',
+  'p90': 'E', 'p90-29': 'E', 'p90-2': 'E', 'p90-2-1': 'E', 'p90-4': 'E', 'p90-5': 'E', 'p90-7': 'E', 'p90-8': 'E', 'p90-21': 'E', 'p90-21-1': 'E',
   'p90-10': 'L', 'p90-12': 'L', 'p90-13': 'L', 'p90-14': 'L', 'p90-15': 'L', 'p90-16': 'L', 'p90-20': { view: 'L', edit: 'A' },
   'p90-3': 'E',
-  'p90-1': 'A', 'p90-1-1': 'A', 'p90-23': 'A', 'p90-6': 'A', 'p90-9': 'A', 'p90-11': 'A', 'p90-11-1': 'A', 'p90-17': 'A', 'p90-18': 'A', 'p90-19': 'A', 'p90-22': 'A', 'p90-28': 'A', 'p60-21': 'A'
+  'p90-1': 'A', 'p90-1-1': 'A', 'p90-23': 'A', 'p90-6': 'A', 'p90-9': 'A', 'p90-11': 'A', 'p90-11-1': 'A', 'p90-17': 'A', 'p90-18': 'A', 'p90-24': 'A', 'p90-19': 'A', 'p90-22': 'A', 'p90-28': 'A', 'p60-21': 'A'
 };
 KTN.adminLevel = function () {
   try { var v = sessionStorage.getItem('ktn-admin-level'); if (KTN.ADMIN_LEVELS[v]) return v; } catch (e) {}

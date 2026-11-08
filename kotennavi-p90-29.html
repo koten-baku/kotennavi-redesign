@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>管理者ガイド — 管理者 | 個展なび</title>
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@1,400;1,600&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
+  <!-- PWA（docs/PWA設計ガイド.md 4 章・2026-10-09）。本番の URL に合わせて href は後工程で直す -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#231815">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="個展なび">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="icon" href="favicon.ico" sizes="48x48">
+  <link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./kotennavi-common.css">
+</head>
+<body data-w="article" class="p70-page p90-29-page">
+
+<div class="ktn-toast" id="ktnToast"></div>
+
+<!-- デモバー -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ロール：</span>
+  <button class="dbtn on" onclick="setR('admin',this)">管理者</button>
+</div>
+
+<!-- ヘッダー -->
+<div class="shell">
+
+<aside class="ktn-sidebar" id="ktnSidebar">
+  <a href="kotennavi-p1.html" class="ktn-sidebar__logo" data-page="p1">
+    <img src="./images/kotennavi-logo5-1.svg" alt="個展なび">
+  </a>
+  <a href="kotennavi-p10.html" class="ktn-sidebar__item" data-page="p10">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <circle cx="11" cy="11" r="7.5"/>
+        <path d="M21 21l-4.5-4.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">検索</span>
+  </a>
+  <a href="kotennavi-p61.html" class="ktn-sidebar__item" id="ktnSidebarNotice" data-page="p61">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__dot" id="ktnNoticeDot" style="display:none"></span>
+    <span class="ktn-sidebar__label">お知らせ</span>
+  </a>
+  <a href="kotennavi-p60.html" class="ktn-sidebar__item" data-page="p60">
+    <div class="ktn-sidebar__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" stroke-linecap="round"/>
+        <path d="M12 16v-4M12 8h.01" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+      </svg>
+    </div>
+    <span class="ktn-sidebar__label">ガイド</span>
+  </a>
+  <div class="ktn-sidebar__divider"></div>
+  <div id="ktnRoleNav" style="width:100%;display:flex;flex-direction:column;align-items:center"></div>
+  <div class="ktn-sidebar__footer">
+    <p class="ktn-sidebar__footer-label">Follow us</p>
+    <div class="ktn-sidebar__sns">
+      <a href="https://www.facebook.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="Facebook">
+        <svg viewBox="0 0 320 512" fill="currentColor"><path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/></svg>
+      </a>
+      <a href="https://x.com/kotennavi" target="_blank" rel="noopener" class="ktn-sidebar__sns-link" aria-label="X">
+        <svg viewBox="0 0 512 512" fill="currentColor"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg>
+      </a>
+    </div>
+  </div>
+</aside>
+
+<div class="content-wrap" id="contentWrap">
+<header class="ktn-header" id="ktnHeader">
+  <div class="ktn-header__inner">
+    <nav class="ktn-bc" id="ktnBc" aria-label="パンくず"></nav>
+    <div class="ktn-hdr-actions" id="ktnActs"></div>
+  </div>
+</header>
+
+<!-- タイトルバンド -->
+<div class="p70-title-band">
+  <div class="p70-title-band__inner">
+    <div class="p70-head__sub">
+      <span class="p70-head__updated">2026年11月 作成</span>
+    </div>
+    <h1 class="p70-head__title">管理者ガイド</h1>
+    <p class="p70-head__en">Admin Guide</p>
+    <p class="p70-head__lead">事務局の管理者（E・L・A）が、決まった手順で対応するためのガイドです。利用者には公開しません。</p>
+  </div>
+</div>
+
+<main>
+  <div class="p70-wrap">
+
+    <!-- 目次 -->
+    <nav class="p70-toc" aria-label="目次">
+      <div class="p70-toc__title">目次 — Contents</div>
+      <ol class="p70-toc__list">
+        <li class="p70-toc__item"><span class="p70-toc__num">1</span><a class="p70-toc__link" href="#about">管理者の種類と分担</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">2</span><a class="p70-toc__link" href="#refund">支払い後のキャンセルと返金</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">3</span><a class="p70-toc__link" href="#terms">規約の改定</a></li>
+      </ol>
+    </nav>
+
+    <!-- 1. 管理者の種類と分担 -->
+    <section class="p70-section" id="about">
+      <div class="p70-section__head">
+        <span class="p70-section__num">1</span>
+        <h2 class="p70-section__title">管理者の種類と分担</h2>
+        <span class="p70-section__en">Roles</span>
+      </div>
+      <p class="p70-lead">管理者は3つの種類に分かれ、できることが重なっています（A は L と E の仕事も、L は E の仕事もできます）。各章の「だれが」は、その仕事をする一番下の種類です。</p>
+      <table class="p70-table">
+        <thead><tr><th>種類</th><th>おもな仕事</th></tr></thead>
+        <tbody>
+          <tr><td>E（編集・問合せ）</td><td>お問合わせ・問題の報告・修正依頼を受けて、事情を確かめる。コンテンツの編集・非公開</td></tr>
+          <tr><td>L（LIAISON+ 対応）</td><td>LIAISON+ の取引・返金・出品者への請求・Stripe の確認</td></tr>
+          <tr><td>A（admin）</td><td>取引の強制キャンセル・LIAISON+ の承認の取消・設定の変更など、取り消しのきかない操作</td></tr>
+        </tbody>
+      </table>
+      <span class="p70-table__note">管理者の操作はすべて操作の記録（P90-28）に残ります。理由が必須の操作は、あとから「なぜ」を説明できるように具体的に書きます。</span>
+    </section>
+
+    <!-- 2. 支払い後のキャンセルと返金 -->
+    <section class="p70-section" id="refund">
+      <div class="p70-section__head">
+        <span class="p70-section__num">2</span>
+        <h2 class="p70-section__title">支払い後のキャンセルと返金</h2>
+        <span class="p70-section__en">Cancellation &amp; refund</span>
+      </div>
+      <p class="p70-lead">購入者のお支払いのあとの取引のキャンセルは、すべて事務局が受けて判断し、返金します。出品者・購入者が自分で取り消すことはできません。決まりの正本は<a class="ktn-guide-link" href="./kotennavi-p60-9.html#liaison" target="_blank" rel="noopener">利用規約 第9条の2</a>と、<a class="ktn-guide-link" href="./kotennavi-p60-18.html" target="_blank" rel="noopener">LIAISON+ 利用規約</a> 第8条（発送）・第10条（お支払い後のキャンセル）です。</p>
+
+      <h3 class="p70-subhead">流れ</h3>
+      <ol class="p70-step-list">
+        <li class="p70-step-list__item">申出を受ける（E・P90-21 対応案件）：取引の画面の「困ったとき」からの相談が対応案件に届く。取引番号・いまの状態が付いている</li>
+        <li class="p70-step-list__item">事情を確かめる（E）：取引メッセージ・写真・追跡番号を見て、足りなければ双方に聞く。購入者の事由のときは、出品者にキャンセルを承諾するかを聞く（回答の期限は3日）</li>
+        <li class="p70-step-list__item">事由を判断する（L）：下の表の「購入者の事由／出品者の事由／配送事故」のどれか。出品者が承諾しない購入者の事由のキャンセルは受けない</li>
+        <li class="p70-step-list__item">返送を案内する（L）：作品が届いているときは、返送先（出品者の登録住所）・送料の負担・返送の期限（案内から7日）を購入者に伝える</li>
+        <li class="p70-step-list__item">出品者が確かめる：返送品の到着から3日以内に、到着と状態を事務局に知らせてもらう</li>
+        <li class="p70-step-list__item">返金する（L・P90-13 の「返金の手続き」）：確認の連絡から3営業日以内に。規約の上限は、キャンセルが決まってから30日以内</li>
+        <li class="p70-step-list__item">出品者に請求する（L）：出品者の事由のときだけ。未払いの売上金から差し引き、足りなければ請求する（下の「出品者が払わないとき」）</li>
+        <li class="p70-step-list__item">知らせて閉じる（E）：双方にキャンセルと返金を知らせ（メール T-08）、対応案件を完了にする</li>
+      </ol>
+
+      <h3 class="p70-subhead">事由ごとの扱い</h3>
+      <table class="p70-table">
+        <thead><tr><th>事由</th><th>例</th><th>返送の送料</th><th>購入者への返金</th><th>出品者の負担</th></tr></thead>
+        <tbody>
+          <tr><td>購入者の事由（出品者が承諾したときだけ）</td><td>気が変わった・置き場所がない</td><td>購入者</td><td>お支払い額 − 決済手数料（お支払い額の4%）− 送料・梱包費（発送済みのとき）− 確認などの実費</td><td>なし（差し引いた送料・梱包費は次の振込で出品者に支払う）</td></tr>
+          <tr><td>出品者の事由</td><td>発送されない・破損・説明と違う</td><td>出品者（着払い）</td><td>お支払い額の全額</td><td>決済手数料（お支払い額の4%）＋返金のために生じた費用</td></tr>
+          <tr><td>配送事故（出品者の事由と同じに扱う）</td><td>配送中の破損・紛失</td><td>出品者が配送会社と決める（配送会社が引き取るときは返送なし）</td><td>お支払い額の全額（記録で事故を確かめたあと）</td><td>出品者の事由と同じ（補償は出品者が配送会社に請求する）</td></tr>
+        </tbody>
+      </table>
+      <span class="p70-table__note">キャンセルした取引にはサービス利用料はかかりません。4% は、決済代行会社の手数料（税込で約 3.96%）に近い値として決めた固定の率です。利用者には「決済にかかった手数料（お支払い額の4%）」とだけ伝え、決済代行会社の料率は伝えません。取引が完了したあと（受取確認と完了確認のあと）のキャンセルは、原則として受けません。</span>
+
+      <h3 class="p70-subhead">配送事故</h3>
+      <p class="p70-body">個展なびは配送会社と契約していません（発送するのは出品者で、配送会社と契約しているのも出品者です）。そのため、事務局は配送会社とやり取りせず、<strong>集めた記録で事故を確かめて返金</strong>します。補償がおりるかどうかは、出品者と配送会社のあいだのことで、購入者への返金はそれを待ちません。配送事故は出品者の事由と同じに扱うので、事務局の判断（返金と出品者への請求）は、補償の結果で変わりません。出品者には、追跡ができ、作品の販売価格に見合う補償のある配送方法で送ることを求めています（LIAISON+ 利用規約 第8条）。補償の上限が足りない方法で送っていた場合も、扱いは同じです（足りない分は出品者の負担）。</p>
+      <ol class="p70-step-list">
+        <li class="p70-step-list__item">購入者から申出を受ける（E）：受取確認の前に。作品・梱包・外箱・伝票の写真をもらい、作品と梱包を捨てずに保管してもらう。紛失は、追跡の記録で「配達完了」にならないまま止まっていることを確かめる</li>
+        <li class="p70-step-list__item">出品者に知らせる（E）：配送会社へ事故を申告してもらい、受付番号などを3日以内に知らせてもらう。配送会社が現物や梱包を確かめに来るときは、購入者に協力してもらう</li>
+        <li class="p70-step-list__item">事故かどうかを確かめる（L）：写真・追跡の記録・申告の受付番号がそろえば、事故として返金する。配送会社の調査の結果は待たない</li>
+        <li class="p70-step-list__item">返金と出品者への請求（L）：購入者に全額を返金し、出品者に決済手数料（4%）と実費を請求する。作品の返送は、配送会社が引き取るときは不要。それ以外は出品者の着払いで返送する</li>
+      </ol>
+      <p class="p70-body">出品者が申告をしない、または期限までに知らせないときも、購入者の写真と追跡の記録で事故と確かめられれば、同じように返金します。出品者が「届いたあとに壊れた」と争うなど、記録だけで判断できないときは、出品者を通じて配送会社の調査の結果をもらってから判断します（購入者には、時間がかかることと、いまの状況を伝える）。</p>
+      <h3 class="p70-subhead">クーポン</h3>
+      <p class="p70-body">使われたクーポンは、自動では戻しません。クーポンの種類や実施期間を見て戻すと決めたときは、購入者の P5-11（管理者の枠）の「個別に渡す」で、同じ値引きのクーポンを渡します（理由は必須）。</p>
+
+      <h3 class="p70-subhead">出品者が払わないとき</h3>
+      <ol class="p70-step-list">
+        <li class="p70-step-list__item">未払いの売上金から差し引く（L）。足りない分だけを請求する</li>
+        <li class="p70-step-list__item">1回目の請求（L）：金額・内訳・振込先・期限（14日）をメールで送る</li>
+        <li class="p70-step-list__item">2回目の請求（L）：期限の翌日に。期限は7日</li>
+        <li class="p70-step-list__item">最後の通知（L）：払わなければ LIAISON+ の承認を取り消すことを伝える。期限は7日</li>
+        <li class="p70-step-list__item">承認の取消（A・P90-11）：理由を書いて取り消す。以後の LIAISON+ の申込は受け付けない（支払いの義務は残る）。新しい売上が入れば、そこから差し引く</li>
+      </ol>
+      <p class="p70-body">金額が大きいときは、支払督促や少額訴訟などの法的な手続きも考えます（手続きを始めるのは A。弁護士に相談）。</p>
+
+      <h3 class="p70-subhead">期限のまとめ</h3>
+      <table class="p70-table">
+        <thead><tr><th>こと</th><th>期限</th><th>だれ</th></tr></thead>
+        <tbody>
+          <tr><td>購入者の事由のキャンセルを承諾するかの回答</td><td>問合せから3日</td><td>出品者</td></tr>
+          <tr><td>作品の返送</td><td>返送の案内から7日</td><td>購入者</td></tr>
+          <tr><td>返送品の到着と状態の連絡</td><td>到着から3日</td><td>出品者</td></tr>
+          <tr><td>返金の手続き</td><td>確認の連絡から3営業日（規約の上限はキャンセルの決定から30日）</td><td>L</td></tr>
+          <tr><td>出品者への請求の支払い</td><td>1回目14日・2回目7日・最後の通知7日</td><td>出品者</td></tr>
+        </tbody>
+      </table>
+      <span class="p70-table__note">カードの明細に返金が反映されるまでの日数は、カード会社によって異なります。購入者から聞かれたら、そのことを伝えます。</span>
+    </section>
+
+    <!-- 3. 規約の改定 -->
+    <section class="p70-section" id="terms">
+      <div class="p70-section__head">
+        <span class="p70-section__num">3</span>
+        <h2 class="p70-section__title">規約の改定</h2>
+        <span class="p70-section__en">Terms update</span>
+      </div>
+      <p class="p70-lead">利用規約（P60-9）と LIAISON+ 利用規約（P60-18）を変えるときの手順です（A）。変更の内容は、改定のお知らせ（ニュース）に1か所だけ書きます。ログインのときの同意の画面は、そのお知らせと全文へのリンクだけを出します。</p>
+      <ol class="p70-step-list">
+        <li class="p70-step-list__item">変更の内容と効力の発生日を決める（不利な変更は、発生日の1か月以上前に知らせられる日にする）</li>
+        <li class="p70-step-list__item">改定のお知らせ（ニュース・P61-11）を作り、メールでも知らせる：何が変わるか・効力の発生日・全文へのリンク</li>
+        <li class="p70-step-list__item">お知らせに注意書きを入れる：発生日のあとは、ログインのときに変更後の規約へのご同意をお願いすること／ご同意いただけない場合はログインいただけないこと／進行中の取引は取引の期限に従って自動でキャンセルまたは確定となること（発送待ちの取引は、発送期限を過ぎると購入者がキャンセルを申請でき、出品者の事由によるキャンセルとして扱うこと）</li>
+        <li class="p70-step-list__item">発生日に、規約の新しい版を公開する。ログインのとき、同意がまだの人に同意の画面が出る（同意の画面の「変更のお知らせを見る」は、このお知らせにつなぐ）</li>
+      </ol>
+    </section>
+
+  </div>
+</main>
+
+<!-- フッター -->
+<footer class="ktn-footer" id="ktnFooter"></footer>
+</div><!-- /content-wrap -->
+</div><!-- /shell -->
+
+
+<nav class="ktn-bottom-nav" id="ktnBottomNav">
+  <div class="ktn-bottom-nav__inner" id="ktnBottomNavInner"></div>
+</nav>
+
+<script src="./kotennavi-common.js"></script>
+<script src="./kotennavi-pages.js"></script>
+<script>
+  KTN.init({ page: 'p90-29', role: 'admin' });
+  function setR(role, btn) {
+    document.querySelectorAll('.dbtn').forEach(function(b){ b.classList.remove('on'); });
+    btn.classList.add('on');
+    window.curRole = role;
+    if (window.ktnRender) ktnRender();
+  }
+</script>
+</body>
+</html>

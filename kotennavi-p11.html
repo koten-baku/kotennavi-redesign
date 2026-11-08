@@ -24,6 +24,13 @@
 
 <div class="ktn-toast" id="ktnToast"></div>
 
+<!-- デモバー：ログインする人と、規約が変わったかどうか（「規約」は common.js が足す）。規約が変わっていれば、ログインのボタンのあとに同意の画面（2026-11-07） -->
+<div class="dbar" id="dbar">
+  <span class="dbar-sep">ログインする人：</span>
+  <button class="dbtn on" data-p11-who="user" onclick="p11Who('user',this)">ユーザー</button>
+  <button class="dbtn" data-p11-who="creator" onclick="p11Who('creator',this)">クリエイター（LIAISON+ 承認済み）</button>
+</div>
+
 <div class="shell">
 <aside class="ktn-sidebar" id="ktnSidebar">
   <a href="kotennavi-p1.html" class="ktn-sidebar__logo" data-page="p1">
@@ -172,9 +179,24 @@ function p11ValidateRequired() {
   errBox.hidden = true;
   return true;
 }
+/* ログイン：規約が変わっていて同意がまだなら、ログインの前に同意の画面（common.js ktnTermsOpen）。
+   変わった規約に全部同意したらログインして進む。どれか1つでも同意しなければログインしない（退会には進めない） */
+var p11WhoNow = 'user';
+function p11Who(v, btn) { p11WhoNow = v; document.querySelectorAll('[data-p11-who]').forEach(function (b) { b.classList.toggle('on', b === btn); }); }
+function p11Go() { location.href = KTN.returnTo('./kotennavi-p1.html'); }   /* ポップアップ経由なら元のページへ戻る */
 function p11Login() {
   if (!p11ValidateRequired()) return;
-  location.href = KTN.returnTo('./kotennavi-p1.html');   /* ポップアップ経由なら元のページへ戻る */
+  var keys = ktnTermsPending(p11WhoNow === 'creator');
+  if (keys.length) {
+    window.ktnTermsAfter = function (r) {
+      window.ktnTermsAfter = null;
+      if (r === 'logout') { KTN.toast('規約へのご同意をいただけなかったため、ログインを中止しました'); return; }
+      setTimeout(p11Go, 700);
+    };
+    ktnTermsOpen(keys);
+    return;
+  }
+  p11Go();
 }
 KTN.init({ page: 'p11', role: 'guest' });
 </script>

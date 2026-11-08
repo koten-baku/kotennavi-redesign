@@ -25280,6 +25280,199 @@ KTN.pages['p90-18'] = function () {
 };
 
 /* ════════════════════════════════════════════════════
+   P90-24  管理者-Q&A 管理（2026-11-07）
+   KTN.QA（Drupal の Q&A コンテンツタイプの静的ミラー・common.js）を、カテゴリ・見せる相手・言葉で絞って一覧し、
+   追加・編集・並び替え・削除する。並び＝KTN.QA の配列の順（同じカテゴリの中で上下を入れ替える）。
+   どのページに出るかは QA_CAT_PAGES（各ページの KTN.renderQA の呼び出しと同じ対応・ページを足したらここも足す）。
+   保存は画面の中だけ（デモ）。本番は Q&A エンティティの保存と、操作の記録（P90-28）。
+════════════════════════════════════════════════════ */
+KTN.QA_CATS = [
+  { k: 'exhibition-edit', label: '展覧会の登録・編集', pages: [['p60-6', 'P60-6'], ['p60-7', 'P60-7']] },
+  { k: 'venue-print', label: '会場に置く印刷物', pages: [['p60-6', 'P60-6'], ['p60-7', 'P60-7']] },
+  { k: 'article-edit', label: '記事の登録・編集', pages: [['p60-6', 'P60-6'], ['p60-7', 'P60-7']] },
+  { k: 'profile-edit', label: 'プロフィールの編集', pages: [['p60-6', 'P60-6'], ['p60-7', 'P60-7']] },
+  { k: 'insight', label: 'インサイト', pages: [['p60-6', 'P60-6'], ['p60-7', 'P60-7']] },
+  { k: 'audience-mgmt', label: 'オーディエンス管理', pages: [['p60-6', 'P60-6'], ['p60-7', 'P60-7']] },
+  { k: 'portfolio-mgmt', label: '作品の管理', pages: [['p60-6', 'P60-6'], ['p60-7', 'P60-7']] },
+  { k: 'inquiry', label: '作品へのお問合わせ（受け取る）', pages: [['p60-6', 'P60-6'], ['p60-7', 'P60-7']] },
+  { k: 'inquiry-send', label: 'お問合わせ（送る）', pages: [['p60-5', 'P60-5']] },
+  { k: 'account-profile', label: 'アカウント', pages: [['p60-5', 'P60-5']] },
+  { k: 'account-notify', label: '通知', pages: [['p60-5', 'P60-5']] },
+  { k: 'account-security', label: 'ログインとセキュリティ', pages: [['p60-5', 'P60-5']] },
+  { k: 'creator-apply', label: 'クリエイター機能の申込', pages: [['p11-2', 'P11-2']] },
+  { k: 'gallery-apply', label: 'ギャラリー機能の申込', pages: [['p11-3', 'P11-3']] },
+  { k: 'liaisonplus-apply', label: 'LIAISON+ の申込', pages: [['p11-4', 'P11-4']] },
+  { k: 'liaisonplus-listing', label: 'LIAISON+ の出品', pages: [['p2-12-1', 'P2-12-1']] },
+  { k: 'liaison-txn', label: 'LIAISON+ の取引', pages: [['p3-15', 'P3-15', 'seller'], ['p3-15-1', 'P3-15-1', 'seller'], ['p3-16', 'P3-16', 'seller'], ['p4-15', 'P4-15', 'seller'], ['p4-15-1', 'P4-15-1', 'seller'], ['p4-16', 'P4-16', 'seller'], ['p70-12', 'P70-12', 'seller'], ['p5-14', 'P5-14', 'buyer'], ['p5-15', 'P5-15', 'buyer'], ['p70-11', 'P70-11', 'buyer']] },
+  { k: 'liaison-settlement', label: 'LIAISON+ の販売代金', pages: [['p3-17', 'P3-17', 'seller'], ['p4-17', 'P4-17', 'seller'], ['p70-12', 'P70-12', 'seller']] },
+  { k: 'liaison', label: 'LIAISON・LIAISON+ 全般', pages: [] },
+  { k: 'watch', label: 'ウォッチ', pages: [] }
+];
+KTN.pages['p90-24'] = function () {
+  var QA = KTN.QA, CATS = KTN.QA_CATS;
+  var listEl = document.getElementById('p9024List'); if (!listEl || !QA) return;
+  var selCat = document.getElementById('p9024Cat'), selAud = document.getElementById('p9024Aud'), inQ = document.getElementById('p9024Q');
+  var countEl = document.getElementById('p9024Count'), emptyEl = document.getElementById('p9024Empty');
+  var AUD = { common: '共通', user: 'ユーザー', creator: 'クリエイター', gallery: 'ギャラリー' };
+  var SIDE = { seller: '出品者', buyer: '購入者' };
+  var PHASE = [['applied', '申込済'], ['new', '購入確定待ち'], ['payment', '支払待ち'], ['paid', '発送待ち'], ['receipt', '受取確認待ち'], ['confirming', '完了確認待ち']];
+  function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  function cats(x) { return Array.isArray(x.cat) ? x.cat : [x.cat]; }
+  function catOf(k) { for (var i = 0; i < CATS.length; i++) if (CATS[i].k === k) return CATS[i]; return { k: k, label: k, pages: [] }; }
+  /* 選択肢：カテゴリ（件数つき） */
+  selCat.innerHTML = '<option value="">すべて</option>' + CATS.map(function (c) {
+    var n = QA.filter(function (x) { return cats(x).indexOf(c.k) >= 0; }).length;
+    return '<option value="' + c.k + '">' + esc(c.label) + '（' + n + '）</option>';
+  }).join('');
+  try { var u = new URLSearchParams(location.search).get('cat'); if (u) selCat.value = u; } catch (e) {}
+
+  function match(x) {
+    var a = selAud.value, q = inQ.value.trim().toLowerCase();
+    if (a === 'seller' || a === 'buyer') { if (x.side && x.side !== a) return false; if (!x.side && cats(x).indexOf('liaison-txn') < 0 && cats(x).indexOf('liaison-settlement') < 0) return false; }
+    else if (a && x.aud !== a) return false;
+    if (q && (x.id + ' ' + x.q + ' ' + x.a + ' ' + (x.grp || '')).toLowerCase().indexOf(q) < 0) return false;
+    return true;
+  }
+  function whoCell(x) {
+    var s = '<span class="p9024-chip">' + AUD[x.aud] + '</span>';
+    if (x.side) s += '<span class="p9024-chip">' + SIDE[x.side] + '</span>';
+    if (x.phase && x.phase.length) s += '<span class="p9024-phase">段階：' + x.phase.map(function (p) { for (var i = 0; i < PHASE.length; i++) if (PHASE[i][0] === p) return PHASE[i][1]; return p; }).join('・') + '</span>';
+    return s;
+  }
+  function pagesLine(c) {
+    if (!c.pages.length) return '<p class="p9024-pages is-none">表示しているページはありません（どのページにも出ません）。</p>';
+    return '<p class="p9024-pages">表示するページ：' + c.pages.map(function (p) {
+      return '<a class="ktn-guide-link" href="./kotennavi-' + p[0] + '.html" target="_blank" rel="noopener">' + p[1] + '</a>' + (p[2] ? '（' + SIDE[p[2]] + '）' : '');
+    }).join('、') + '</p>';
+  }
+  function render() {
+    var want = selCat.value, total = 0, seen = {}, html = '';
+    CATS.forEach(function (c) {
+      if (want && c.k !== want) return;
+      var rows = QA.filter(function (x) { return cats(x).indexOf(c.k) >= 0 && match(x); });
+      if (!rows.length) return;
+      rows.forEach(function (x) { if (!seen[x.id]) { seen[x.id] = 1; total++; } });
+      var all = QA.filter(function (x) { return cats(x).indexOf(c.k) >= 0; });
+      html += '<div class="p909-group p9024-group"><h4 class="p909-group__title">' + esc(c.label) + '<span class="ktn-count ktn-count--pill is-idle">' + rows.length + '件</span></h4>' + pagesLine(c) +
+        '<div class="p315-archive-table-wrap"><table class="p315-archive-table p909-table p9024-table" aria-label="' + esc(c.label) + '"><thead><tr><th class="p9024-col--id">ID</th><th>質問と答え</th><th class="p9024-col--who">見せる相手</th><th class="p9024-col--act">並び・操作</th></tr></thead><tbody>' +
+        rows.map(function (x) {
+          var pos = all.indexOf(x), other = cats(x).filter(function (k) { return k !== c.k; });
+          return '<tr data-id="' + esc(x.id) + '"><td data-label="ID" class="p909-cell--muted p9024-col--id">' + esc(x.id) + '</td>' +
+            '<td data-label="質問と答え" class="p9024-cell--qa">' + (x.grp ? '<span class="p9024-grp">' + esc(x.grp) + '</span>' : '') + '<span class="p9024-q">' + esc(x.q) + '</span><span class="p9024-a">' + esc(x.a) + '</span>' +
+              (other.length ? '<span class="p9024-also">ほかのカテゴリにも：' + other.map(function (k) { return esc(catOf(k).label); }).join('、') + '</span>' : '') + '</td>' +
+            '<td data-label="見せる相手" class="p9024-col--who">' + whoCell(x) + '</td>' +
+            '<td data-label="並び・操作" class="p909-cell--actions p9024-col--act"><span class="p9024-move">' +
+              '<button type="button" class="ktn-op-btn ktn-op-btn--sm" data-move="-1" data-cat="' + c.k + '" aria-label="上へ"' + (pos === 0 ? ' disabled' : '') + '>↑</button>' +
+              '<button type="button" class="ktn-op-btn ktn-op-btn--sm" data-move="1" data-cat="' + c.k + '" aria-label="下へ"' + (pos === all.length - 1 ? ' disabled' : '') + '>↓</button></span>' +
+              '<button type="button" class="ktn-op-btn ktn-op-btn--sm" data-edit="' + esc(x.id) + '">編集</button></td></tr>';
+        }).join('') + '</tbody></table></div></div>';
+    });
+    listEl.innerHTML = html;
+    emptyEl.hidden = total > 0;
+    countEl.textContent = total + '件';   /* 複数のカテゴリにある Q&A は1件と数える */
+  }
+  [selCat, selAud].forEach(function (s) { s.addEventListener('change', render); });
+  inQ.addEventListener('input', render);
+
+  /* 並び替え＝同じカテゴリの中で、1つ上（下）の Q&A と配列の位置を入れ替える */
+  listEl.addEventListener('click', function (e) {
+    var m = e.target.closest('[data-move]');
+    if (m) {
+      var id = m.closest('tr').dataset.id, k = m.dataset.cat, dir = +m.dataset.move;
+      var all = QA.filter(function (x) { return cats(x).indexOf(k) >= 0; });
+      var x = all.filter(function (y) { return y.id === id; })[0], i = all.indexOf(x), y = all[i + dir];
+      if (!x || !y) return;
+      var a = QA.indexOf(x), b = QA.indexOf(y); QA[a] = y; QA[b] = x;
+      render(); KTN.toast('並びを変えました（デモ）');
+      return;
+    }
+    var b2 = e.target.closest('[data-edit]'); if (b2) openEdit(QA.filter(function (y) { return y.id === b2.dataset.edit; })[0]);
+  });
+
+  /* 編集・追加 */
+  var modal = document.getElementById('p9024EditModal'), ctx = document.getElementById('p9024EditCtx');
+  var fCats = document.getElementById('p9024EditCats'), fAud = document.getElementById('p9024EditAud'), fSide = document.getElementById('p9024EditSide'), fPh = document.getElementById('p9024EditPhase');
+  var fGrp = document.getElementById('p9024EditGrp'), fQ = document.getElementById('p9024EditQ'), fA = document.getElementById('p9024EditA'), pv = document.getElementById('p9024Preview');
+  var editing = null;
+  fCats.innerHTML = CATS.map(function (c) { return '<label class="p9024-check"><input type="checkbox" value="' + c.k + '"><span>' + esc(c.label) + '</span></label>'; }).join('');
+  fPh.innerHTML = PHASE.map(function (p) { return '<label class="p9024-check"><input type="checkbox" value="' + p[0] + '"><span>' + p[1] + '</span></label>'; }).join('');
+  function chosen(box) { return [].slice.call(box.querySelectorAll('input:checked')).map(function (i) { return i.value; }); }
+  function syncFields() {
+    var cs = chosen(fCats), txn = cs.indexOf('liaison-txn') >= 0 || cs.indexOf('liaison-settlement') >= 0;
+    document.getElementById('p9024SideField').hidden = !txn;
+    document.getElementById('p9024PhaseField').hidden = cs.indexOf('liaison-txn') < 0;
+    /* 見出しの候補＝選んだカテゴリで使っている見出し */
+    var g = {}; QA.forEach(function (x) { if (x.grp && cats(x).some(function (k) { return cs.indexOf(k) >= 0; })) g[x.grp] = 1; });
+    document.getElementById('p9024GrpList').innerHTML = Object.keys(g).map(function (s) { return '<option value="' + esc(s) + '">'; }).join('');
+  }
+  function preview() {
+    var keep = KTN.QA;
+    KTN.QA = [{ id: 'PREVIEW', cat: 'x', aud: 'common', q: fQ.value || '（質問）', a: fA.value || '（答え）' }];
+    try { KTN.renderQA(pv, { category: 'x', style: 'desk' }); } finally { KTN.QA = keep; }
+    var d = pv.querySelector('details'); if (d) d.open = true;
+  }
+  function openEdit(x) {
+    editing = x || null;
+    document.getElementById('p9024EditTitle').textContent = x ? 'Q&A を編集' : 'Q&A を追加';
+    document.getElementById('p9024EditDel').hidden = !x;
+    var cs = x ? cats(x) : (selCat.value ? [selCat.value] : []);
+    fCats.querySelectorAll('input').forEach(function (i) { i.checked = cs.indexOf(i.value) >= 0; });
+    fPh.querySelectorAll('input').forEach(function (i) { i.checked = !!(x && x.phase && x.phase.indexOf(i.value) >= 0); });
+    fAud.value = x ? x.aud : 'common'; fSide.value = x && x.side || '';
+    fGrp.value = x && x.grp || ''; fQ.value = x ? x.q : ''; fA.value = x ? x.a : '';
+    ctx.innerHTML = x ? '<strong>' + esc(x.id) + '</strong>保存すると、表示しているすべてのページに反映します。' : '<strong>新しい Q&amp;A</strong>ID は保存したときに自動で付きます。並びは、そのカテゴリの最後です。';
+    modal.querySelectorAll('.p211-field.is-error').forEach(function (f) { f.classList.remove('is-error'); });
+    [fQ, fA].forEach(function (el) { el.dispatchEvent(new Event('input', { bubbles: true })); });
+    syncFields(); preview();
+    modal.hidden = false; fQ.focus();
+  }
+  document.getElementById('p9024New').addEventListener('click', function () { openEdit(null); });
+  fCats.addEventListener('change', syncFields);
+  fQ.addEventListener('input', preview); fA.addEventListener('input', preview);
+  function close() { modal.hidden = true; editing = null; }
+  document.getElementById('p9024EditCancel').addEventListener('click', close);
+  document.getElementById('p9024EditBg').addEventListener('click', close);
+  /* 新しい ID＝そのカテゴリ（出品者・購入者を選んだときは同じ側）の最後の Q&A の ID の頭（EXH-・TXN-S など）＋次の番号（桁はそろえる） */
+  function newId(k, side) {
+    var cand = QA.filter(function (x) { return cats(x).indexOf(k) >= 0 && (!side || !x.side || x.side === side); });
+    var m = cand.length ? /^(.*?)(\d+)$/.exec(cand[cand.length - 1].id) : null;
+    var pre = m ? m[1] : 'QA-', w = m ? m[2].length : 2, max = 0;
+    QA.forEach(function (x) { if (x.id.indexOf(pre) === 0) { var n = x.id.slice(pre.length); if (/^\d+$/.test(n)) max = Math.max(max, +n); } });
+    var s = String(max + 1); while (s.length < w) s = '0' + s;
+    return pre + s;
+  }
+  document.getElementById('p9024EditSave').addEventListener('click', function () {
+    var cs = chosen(fCats), bad = false;
+    [[fCats, !cs.length], [fQ, !fQ.value.trim()], [fA, !fA.value.trim()]].forEach(function (p) { var f = p[0].closest('.p211-field'); f.classList.toggle('is-error', p[1]); if (p[1]) bad = true; });
+    if (bad) return;
+    var x = editing || {};
+    x.cat = cs.length === 1 ? cs[0] : cs; x.aud = fAud.value; x.grp = fGrp.value.trim(); x.q = fQ.value.trim(); x.a = fA.value.trim();
+    var txn = cs.indexOf('liaison-txn') >= 0 || cs.indexOf('liaison-settlement') >= 0;
+    if (txn && fSide.value) x.side = fSide.value; else delete x.side;
+    var ph = chosen(fPh); if (cs.indexOf('liaison-txn') >= 0 && ph.length) x.phase = ph; else delete x.phase;
+    if (!editing) {
+      x.id = newId(cs[0], x.side);
+      /* そのカテゴリの最後の Q&A のすぐ後ろに入れる（配列の順＝表示の順） */
+      var last = -1; QA.forEach(function (y, i) { if (cats(y).indexOf(cs[0]) >= 0) last = i; });
+      QA.splice(last + 1, 0, x);
+    }
+    var isNew = !editing; close(); render();
+    KTN.toast(isNew ? 'Q&A を追加しました（' + x.id + '・デモ）' : 'Q&A を保存しました（デモ）');
+  });
+  document.getElementById('p9024EditDel').addEventListener('click', function () {
+    var x = editing; if (!x) return;
+    close();
+    KTN.adminDelete({ kind: 'Q&A', name: x.id, title: 'Q&A「' + x.q + '」を削除しますか？',
+      reasons: ['内容が古くなった', 'ほかの Q&A と重なっている', 'サービスの変更で不要になった', 'その他'],
+      placeholder: '例：EXH-12 と同じ内容のため',
+      note: '表示しているすべてのページから消えます。削除は操作の記録（P90-28）に残ります。',
+      done: 'Q&A を削除しました（デモ）',
+      onDone: function () { var i = QA.indexOf(x); if (i >= 0) QA.splice(i, 1); render(); } });
+  });
+  render();
+};
+
+/* ════════════════════════════════════════════════════
    料率・キャンペーン（2026-10-11 新設／2026-10-12 に「固定の3つ」へ作り直し・handoff 追174-319〜322）
    KTN.CAMPAIGN＝サービス利用料の料率と、キャンペーンの単一ソース。管理画面は P90-20。
    キャンペーンは固定の5つだけ（条件を自由に組む仕組みは持たない＝お金が絡むので、決まりを増やさない）：
@@ -28221,12 +28414,16 @@ KTN.pages['p90-15'] = function () {
   var head = document.querySelector('.ktn-mgmt-wrap .p315-archive-table thead tr');
   if (!head) return;
   var ths = head.querySelectorAll('th');
-  ths[4].insertAdjacentHTML('afterend', '<th>Stripe 連携</th>');
+  ths[4].insertAdjacentHTML('afterend', '<th>Stripe 連携</th><th>LIAISON+ 規約の同意</th>');
+  /* 同意している LIAISON+ 利用規約の版（2026-11-07）。版が古い人には、ログインのときに同意の画面が出る（common.js ktnTermsGate）。同意しなければログインできない。デモの値 */
+  var TERMS = { '田中 透': ['2026.12.01', '11.08'], 'Gallery SOIL 渋谷': ['2026.04.01', ''], '佐藤 みなと': ['2026.12.01', '11.12'] };
   document.querySelectorAll('#p9015List tr').forEach(function (tr) {
     var nameTd = tr.querySelector('td[data-label="申込者名"]'), kyc = tr.querySelector('td[data-label="本人確認状態"]'), ops = tr.querySelector('td[data-label="操作"]');
     if (!nameTd || !kyc) return;
     var s = STRIPE[nameTd.textContent.trim()] || (tr.dataset.status === 'granted' ? 'ok' : 'none');
-    kyc.insertAdjacentHTML('afterend', '<td data-label="Stripe 連携"><span class="ktn-review-status ktn-review-status--' + LABEL[s][0] + '">' + LABEL[s][1] + '</span></td>');
+    var tv = TERMS[nameTd.textContent.trim()] || (tr.dataset.status === 'granted' ? ['2026.04.01', ''] : null), cur = KTN.TERMS && KTN.TERMS.liaison.version;
+    var tcell = !tv ? '<span class="p902-cell--muted">—</span>' : tv[0] === cur ? '<span class="ktn-review-status ktn-review-status--granted">最新</span><span class="p902-cell--muted"> ' + tv[0] + ' 版（' + tv[1] + ' 同意）</span>' : '<span class="ktn-review-status ktn-review-status--pending">未同意</span><span class="p902-cell--muted"> ' + tv[0] + ' 版のまま</span>';
+    kyc.insertAdjacentHTML('afterend', '<td data-label="Stripe 連携"><span class="ktn-review-status ktn-review-status--' + LABEL[s][0] + '">' + LABEL[s][1] + '</span></td><td data-label="LIAISON+ 規約の同意">' + tcell + '</td>');
     if (ops && s !== 'none') {
       ops.classList.add('p90cm-acts');
       ops.insertAdjacentHTML('beforeend', '<a class="ktn-action-btn" href="https://dashboard.stripe.com/connect/accounts" target="_blank" rel="noopener">Stripe で見る →</a>');
