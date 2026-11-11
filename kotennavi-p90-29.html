@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>管理者ガイド — 管理者 | 個展なび</title>
+  <title>管理者マニュアル — 管理者 | 個展なび</title>
   <meta name="robots" content="noindex,nofollow">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@1,400;1,600&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
@@ -93,9 +93,9 @@
     <div class="p70-head__sub">
       <span class="p70-head__updated">2026年11月 作成</span>
     </div>
-    <h1 class="p70-head__title">管理者ガイド</h1>
-    <p class="p70-head__en">Admin Guide</p>
-    <p class="p70-head__lead">事務局の管理者（E・L・A）が、決まった手順で対応するためのガイドです。利用者には公開しません。</p>
+    <h1 class="p70-head__title">管理者マニュアル</h1>
+    <p class="p70-head__en">Admin Manual</p>
+    <p class="p70-head__lead">個展なびの管理者（E・L・A）が、業務ごとに決まった手順で対応するためのマニュアルです。業務の並びは管理者メニュー（P90）と同じです。利用者には公開しません。</p>
   </div>
 </div>
 
@@ -106,53 +106,239 @@
     <nav class="p70-toc" aria-label="目次">
       <div class="p70-toc__title">目次 — Contents</div>
       <ol class="p70-toc__list">
-        <li class="p70-toc__item"><span class="p70-toc__num">1</span><a class="p70-toc__link" href="#about">管理者の種類と分担</a></li>
-        <li class="p70-toc__item"><span class="p70-toc__num">2</span><a class="p70-toc__link" href="#refund">支払い後のキャンセルと返金</a></li>
-        <li class="p70-toc__item"><span class="p70-toc__num">3</span><a class="p70-toc__link" href="#terms">規約の改定</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">0</span><a class="p70-toc__link" href="#about">はじめに（管理者の種類と共通の決まり）</a></li>
+        <li class="p70-toc__item"><span class="p70-toc__num">E</span><a class="p70-toc__link" href="#editorial">編集・問合せの業務</a></li>
+        <li class="p70-toc__item" data-admin-lv="L"><span class="p70-toc__num">L</span><a class="p70-toc__link" href="#liaison">LIAISON+ 対応の業務</a></li>
+        <li class="p70-toc__item" data-admin-lv="A"><span class="p70-toc__num">A</span><a class="p70-toc__link" href="#admin">admin の業務</a></li>
       </ol>
     </nav>
 
-    <!-- 1. 管理者の種類と分担 -->
+    <!-- 0. はじめに -->
     <section class="p70-section" id="about">
       <div class="p70-section__head">
-        <span class="p70-section__num">1</span>
-        <h2 class="p70-section__title">管理者の種類と分担</h2>
-        <span class="p70-section__en">Roles</span>
+        <span class="p70-section__num">0</span>
+        <h2 class="p70-section__title">はじめに</h2>
+        <span class="p70-section__en">Basics</span>
       </div>
-      <p class="p70-lead">管理者は3つの種類に分かれ、できることが重なっています（A は L と E の仕事も、L は E の仕事もできます）。各章の「だれが」は、その仕事をする一番下の種類です。</p>
+      <p class="p70-lead">各業務の「担当」は、その業務をする一番下の種類です（A は L と E の業務も、L は E の業務もできます）。あなたの種類で扱う業務だけを表示しています。</p>
       <table class="p70-table">
-        <thead><tr><th>種類</th><th>おもな仕事</th></tr></thead>
+        <thead><tr><th>種類</th><th>おもな業務</th></tr></thead>
         <tbody>
-          <tr><td>E（編集・問合せ）</td><td>お問合わせ・問題の報告・修正依頼を受けて、事情を確かめる。コンテンツの編集・非公開</td></tr>
-          <tr><td>L（LIAISON+ 対応）</td><td>LIAISON+ の取引・返金・出品者への請求・Stripe の確認</td></tr>
-          <tr><td>A（admin）</td><td>取引の強制キャンセル・LIAISON+ の承認の取消・設定の変更など、取り消しのきかない操作</td></tr>
+          <tr><td>E（編集・問合せ）</td><td>お問合わせ・問題報告・修正依頼の対応、展覧会の確認、コンテンツの編集・非公開・削除、クリエイター・ギャラリー機能の申込の審査</td></tr>
+          <tr data-admin-lv="L"><td>L（LIAISON+ 対応）</td><td>LIAISON+ の問合せと取引、返金、出品者への請求、振込・精算、Stripe の確認</td></tr>
+          <tr data-admin-lv="A"><td>A（admin）</td><td>ユーザーのアカウント、LIAISON+ の審査、取引の強制キャンセル、料率・キャンペーン、規約・お知らせ・メール・文言・特集などサイトの設定</td></tr>
         </tbody>
       </table>
-      <span class="p70-table__note">管理者の操作はすべて操作の記録（P90-28）に残ります。理由が必須の操作は、あとから「なぜ」を説明できるように具体的に書きます。</span>
+      <h3 class="p70-subhead">共通の決まり</h3>
+      <ol class="p70-step-list">
+        <li class="p70-step-list__item">管理者の操作はすべて操作の記録（P90-28）に残る。削除・非公開・強制退会・なりすましログインなど理由が必須の操作は、あとから「なぜ」を説明できるように具体的に書く（対応案件の受付番号があれば添える）</li>
+        <li class="p70-step-list__item">削除は理由のモーダルを通す。削除すると、理由を書いたメールが管理者あてに届く</li>
+        <li class="p70-step-list__item">非公開は削除ではない。対応を取り消せるよう、非公開の理由を書く</li>
+        <li class="p70-step-list__item">掲載者への照会・連絡では、報告者の個人情報を伝えない</li>
+        <li class="p70-step-list__item">利用者へのメールは、P90-9 のテンプレートから始める（白紙から書かない）。送る前に、ケースに合わせて加筆・修正・削除する。テンプレートを使うのは、文の調子や対応をそろえるため。合うテンプレートが無い連絡が続くときは、A にテンプレートの追加を頼む</li>
+        <li class="p70-step-list__item">当事者の揉め事には入らない。判断は「掲載内容が事実か」「権利を侵していないか」「規約に反していないか」だけで行う（くわしくは docs/moderation-policy.md）</li>
+      </ol>
     </section>
 
-    <!-- 2. 支払い後のキャンセルと返金 -->
-    <section class="p70-section" id="refund">
+    <!-- E. 編集・問合せの業務 -->
+    <section class="p70-section" id="editorial">
       <div class="p70-section__head">
-        <span class="p70-section__num">2</span>
-        <h2 class="p70-section__title">支払い後のキャンセルと返金</h2>
-        <span class="p70-section__en">Cancellation &amp; refund</span>
+        <span class="p70-section__num">E</span>
+        <h2 class="p70-section__title">編集・問合せの業務</h2>
+        <span class="p70-section__en">Editorial</span>
       </div>
-      <p class="p70-lead">購入者のお支払いのあとの取引のキャンセルは、すべて事務局が受けて判断し、返金します。出品者・購入者が自分で取り消すことはできません。決まりの正本は<a class="ktn-guide-link" href="./kotennavi-p60-9.html#liaison" target="_blank" rel="noopener">利用規約 第9条の2</a>と、<a class="ktn-guide-link" href="./kotennavi-p60-18.html" target="_blank" rel="noopener">LIAISON+ 利用規約</a> 第8条（発送）・第10条（お支払い後のキャンセル）です。</p>
+      <!-- この群の業務の目次（2026-11-09） -->
+      <nav class="p70-toc p9029-index" aria-label="編集・問合せの業務の目次">
+        <div class="p70-toc__title">編集・問合せの業務 — Index</div>
+        <ol class="p70-toc__list">
+          <li class="p70-toc__item"><span class="p70-toc__num">E1</span><a class="p70-toc__link" href="#e-case">対応案件に対応する（一般）</a></li>
+          <li class="p70-toc__item"><span class="p70-toc__num">E2</span><a class="p70-toc__link" href="#e-report">問題報告に対応する</a></li>
+          <li class="p70-toc__item"><span class="p70-toc__num">E3</span><a class="p70-toc__link" href="#e-fix">修正依頼に対応する</a></li>
+          <li class="p70-toc__item"><span class="p70-toc__num">E4</span><a class="p70-toc__link" href="#e-takedown">掲載の対象者からの削除の依頼に対応する</a></li>
+          <li class="p70-toc__item"><span class="p70-toc__num">E5</span><a class="p70-toc__link" href="#e-exh-check">展覧会を確認する</a></li>
+          <li class="p70-toc__item"><span class="p70-toc__num">E6</span><a class="p70-toc__link" href="#e-exh-new">展覧会を作る・削除の依頼に対応する</a></li>
+          <li class="p70-toc__item"><span class="p70-toc__num">E7</span><a class="p70-toc__link" href="#e-sns">公式 SNS で展覧会を告知する</a></li>
+          <li class="p70-toc__item"><span class="p70-toc__num">E8</span><a class="p70-toc__link" href="#e-content">コンテンツを探して編集・非公開・削除する</a></li>
+          <li class="p70-toc__item"><span class="p70-toc__num">E9</span><a class="p70-toc__link" href="#e-pages">クリエイター・ギャラリーのページを管理する</a></li>
+          <li class="p70-toc__item"><span class="p70-toc__num">E10</span><a class="p70-toc__link" href="#e-apply">クリエイター・ギャラリー機能の申込を審査する</a></li>
+        </ol>
+      </nav>
 
-      <h3 class="p70-subhead">流れ</h3>
+      <h3 class="p70-subhead" id="e-case">E1 対応案件に対応する（一般）</h3>
+      <div class="p70-dl p70-dl--ja">
+        <div class="p70-dl__item"><dt class="p70-dl__dt">担当</dt><dd class="p70-dl__dd">E</dd></div>
+        <div class="p70-dl__item"><dt class="p70-dl__dt">使う画面</dt><dd class="p70-dl__dd">P90-21 対応案件の「一般」タブ → P90-21-1 対応案件の詳細</dd></div>
+        <div class="p70-dl__item"><dt class="p70-dl__dt">対象</dt><dd class="p70-dl__dd">お問合わせ（P60-11）・ご要望（P60-12）・問題報告（P60-13）・修正依頼（P60-14）</dd></div>
+      </div>
       <ol class="p70-step-list">
-        <li class="p70-step-list__item">申出を受ける（E・P90-21 対応案件）：取引の画面の「困ったとき」からの相談が対応案件に届く。取引番号・いまの状態が付いている</li>
-        <li class="p70-step-list__item">事情を確かめる（E）：取引メッセージ・写真・追跡番号を見て、足りなければ双方に聞く。購入者の事由のときは、出品者にキャンセルを承諾するかを聞く（回答の期限は3日）</li>
-        <li class="p70-step-list__item">事由を判断する（L）：下の表の「購入者の事由／出品者の事由／配送事故」のどれか。出品者が承諾しない購入者の事由のキャンセルは受けない</li>
-        <li class="p70-step-list__item">返送を案内する（L）：作品が届いているときは、返送先（出品者の登録住所）・送料の負担・返送の期限（案内から7日）を購入者に伝える</li>
-        <li class="p70-step-list__item">出品者が確かめる：返送品の到着から3日以内に、到着と状態を事務局に知らせてもらう</li>
-        <li class="p70-step-list__item">返金する（L・P90-13 の「返金の手続き」）：確認の連絡から3営業日以内に。規約の上限は、キャンセルが決まってから30日以内</li>
-        <li class="p70-step-list__item">出品者に請求する（L）：出品者の事由のときだけ。未払いの売上金から差し引き、足りなければ請求する（下の「出品者が払わないとき」）</li>
-        <li class="p70-step-list__item">知らせて閉じる（E）：双方にキャンセルと返金を知らせ（メール T-08）、対応案件を完了にする</li>
+        <li class="p70-step-list__item">至急のものが一番上に並ぶ。優先度は書き方ではなく理由で決まる（プライバシーに関わる報告は至急）</li>
+        <li class="p70-step-list__item">案件を開き、担当を自分にする</li>
+        <li class="p70-step-list__item">種類ごとに E2〜E4 の手順で対応する。お問合わせ・ご要望は内容に応じて返信する</li>
+        <li class="p70-step-list__item">返信・対応の内容を履歴に残し、状態を完了にする</li>
       </ol>
 
-      <h3 class="p70-subhead">事由ごとの扱い</h3>
+      <h3 class="p70-subhead" id="e-report">E2 問題報告に対応する</h3>
+      <div class="p70-dl p70-dl--ja">
+        <div class="p70-dl__item"><dt class="p70-dl__dt">担当</dt><dd class="p70-dl__dd">E</dd></div>
+        <div class="p70-dl__item"><dt class="p70-dl__dt">使う画面</dt><dd class="p70-dl__dd">P90-21-1（受付）・P90-3 コンテンツ管理／P90-7・P90-8（非公開・削除）・P90-9 のテンプレート（掲載者への連絡）</dd></div>
+      </div>
+      <table class="p70-table">
+        <thead><tr><th>報告の理由</th><th>優先度</th><th>既定の対応</th></tr></thead>
+        <tbody>
+          <tr><td>プライバシーに関わる</td><td>至急</td><td>確認より先に一時非公開にし、そのあと掲載者に事情を確かめる</td></tr>
+          <tr><td>無断掲載・権利侵害</td><td>高</td><td>掲載者に照会し、原則7日以内に反論がなければ非公開</td></tr>
+          <tr><td>なりすまし・虚偽</td><td>高</td><td>公式サイト・SNS などと照らし、明らかなら非公開</td></tr>
+          <tr><td>誹謗中傷・攻撃的な内容（レビュー）</td><td>高</td><td>規約の例に当たれば非公開。個人情報の掲載は確認より先に非公開</td></tr>
+          <tr><td>不適切な表現・画像</td><td>中</td><td>規約の例に明らかに当たれば非公開。判断が分かれるものは記録して様子を見る</td></tr>
+          <tr><td>スパム・宣伝目的</td><td>中</td><td>削除する</td></tr>
+          <tr><td>情報が事実と異なる（作品・記事・レビュー）</td><td>低</td><td>掲載者に確認を依頼する</td></tr>
+          <tr><td>その他・あいまいなもの</td><td>低</td><td>記録だけ。同じ対象への報告が重なったら見直す</td></tr>
+        </tbody>
+      </table>
+      <span class="p70-table__note">展覧会・クリエイター・ギャラリーの掲載情報の誤りは、問題報告ではなく修正依頼（E3）で受けます。</span>
+
+      <h3 class="p70-subhead" id="e-fix">E3 修正依頼に対応する</h3>
+      <div class="p70-dl p70-dl--ja">
+        <div class="p70-dl__item"><dt class="p70-dl__dt">担当</dt><dd class="p70-dl__dd">E</dd></div>
+        <div class="p70-dl__item"><dt class="p70-dl__dt">使う画面</dt><dd class="p70-dl__dd">P90-21-1（受付）・P90-3／P90-7／P90-8 から開く編集画面（P2-11・P3-11・P4-11）</dd></div>
+      </div>
+      <ol class="p70-step-list">
+        <li class="p70-step-list__item">「修正してほしい箇所」と内容を、公式サイトなどで確かめる</li>
+        <li class="p70-step-list__item">オーナーがいるページは、オーナーに確認を依頼する。オーナーがいないページ（事務局が作ったページ）は、事務局が編集画面で直す</li>
+        <li class="p70-step-list__item">依頼者が掲載の当事者なら、ページの管理（機能の申込）を案内できる（E4）</li>
+      </ol>
+
+      <h3 class="p70-subhead" id="e-takedown">E4 掲載の対象者からの削除の依頼に対応する</h3>
+      <div class="p70-dl p70-dl--ja">
+        <div class="p70-dl__item"><dt class="p70-dl__dt">担当</dt><dd class="p70-dl__dd">E</dd></div>
+        <div class="p70-dl__item"><dt class="p70-dl__dt">使う画面</dt><dd class="p70-dl__dd">P90-21-1・編集画面</dd></div>
+      </div>
+      <ol class="p70-step-list">
+        <li class="p70-step-list__item">何を消してほしいのかを切り分ける：公開の事実（その展覧会が開かれた記録・会期・会場）は原則消さない。本人の持ち物（ロゴ・写真・紹介文・連絡先など）は求められたら外す</li>
+        <li class="p70-step-list__item">オーナーがいないページなら、機能の申込でページを引き継げることを案内する（管理権を得ても、公開の事実は残る）</li>
+        <li class="p70-step-list__item">脅しや強い言い方でも扱いを変えない。弁護士名の書面など正式な通知が届いたときだけ、A に回す</li>
+      </ol>
+
+      <h3 class="p70-subhead" id="e-exh-check">E5 展覧会を確認する</h3>
+      <div class="p70-dl p70-dl--ja">
+        <div class="p70-dl__item"><dt class="p70-dl__dt">担当</dt><dd class="p70-dl__dd">E</dd></div>
+        <div class="p70-dl__item"><dt class="p70-dl__dt">使う画面</dt><dd class="p70-dl__dd">P90-5 展覧会の確認・新規作成 → 「確認する」で P2-11 の管理者の欄</dd></div>
+      </div>
+      <ol class="p70-step-list">
+        <li class="p70-step-list__item">「未確認」のタブから、確認依頼が届いた展覧会を開く</li>
+        <li class="p70-step-list__item">内容を確かめる（展覧会名・会期・会場・出展クリエイター・画像。重複がないか）</li>
+        <li class="p70-step-list__item">開催場所・出展クリエイターを、サイトのギャラリー・クリエイターのページとリンク付けする（無ければ E10 でページを作る）</li>
+        <li class="p70-step-list__item">確認済みにする：公開日の指定に従って公開され、オーナーにメール（E-01）が届く。確認が済むと、ウォッチの通知と公式 SNS の告知（E7）の対象になる</li>
+        <li class="p70-step-list__item">ほかの管理者への申し送りは、編集画面の管理者コメントに書く</li>
+      </ol>
+
+      <h3 class="p70-subhead" id="e-exh-new">E6 展覧会を作る・削除の依頼に対応する</h3>
+      <div class="p70-dl p70-dl--ja">
+        <div class="p70-dl__item"><dt class="p70-dl__dt">担当</dt><dd class="p70-dl__dd">E</dd></div>
+        <div class="p70-dl__item"><dt class="p70-dl__dt">使う画面</dt><dd class="p70-dl__dd">P90-5 の「新規展覧会を作成」・行の「クローン」・「削除の依頼」のタブ</dd></div>
+      </div>
+      <ol class="p70-step-list">
+        <li class="p70-step-list__item">掲載の依頼（メール・オフライン）は、「新規展覧会を作成」で P2-11 を開いて作る。情報を提供した人がいれば、管理者管理の欄に投稿者（情報提供者）の UID を設定する</li>
+        <li class="p70-step-list__item">オーナーからの削除の依頼（確認済みの展覧会はオーナーが直接消せない）は、「削除の依頼」のタブで理由を確かめ、削除するか断る</li>
+        <li class="p70-step-list__item">重複などで削除するときは、理由のモーダルで理由を書く</li>
+      </ol>
+
+      <h3 class="p70-subhead" id="e-sns">E7 公式 SNS で展覧会を告知する</h3>
+      <div class="p70-dl p70-dl--ja">
+        <div class="p70-dl__item"><dt class="p70-dl__dt">担当</dt><dd class="p70-dl__dd">E</dd></div>
+        <div class="p70-dl__item"><dt class="p70-dl__dt">使う画面</dt><dd class="p70-dl__dd">P90-4 本日開始・公開展覧会のSNS告知</dd></div>
+        <div class="p70-dl__item"><dt class="p70-dl__dt">いつ</dt><dd class="p70-dl__dd">毎日（その日に始まる・公開される展覧会）</dd></div>
+      </div>
+      <ol class="p70-step-list">
+        <li class="p70-step-list__item">その日の展覧会の告知文を開き、必要なら直す</li>
+        <li class="p70-step-list__item">コピーして公式 SNS に投稿する。Instagram は画像（展覧会のメイン画像など）と一緒に投稿する</li>
+      </ol>
+
+      <h3 class="p70-subhead" id="e-content">E8 コンテンツを探して編集・非公開・削除する</h3>
+      <div class="p70-dl p70-dl--ja">
+        <div class="p70-dl__item"><dt class="p70-dl__dt">担当</dt><dd class="p70-dl__dd">E</dd></div>
+        <div class="p70-dl__item"><dt class="p70-dl__dt">使う画面</dt><dd class="p70-dl__dd">P90-3 コンテンツ管理（展覧会・記事・レビュー・コメントのタブ。NID・ID・URL で探せる）</dd></div>
+      </div>
+      <ol class="p70-step-list">
+        <li class="p70-step-list__item">報告・依頼の対象を NID や URL で探す</li>
+        <li class="p70-step-list__item">編集・非公開・削除をする。非公開と削除は理由を書く（理由は報告の判断表に合わせる）</li>
+        <li class="p70-step-list__item">作品は P90-3 では扱わない（LIAISON+ の作品＝L の P90-12、すべての作品＝A の P90-23）</li>
+      </ol>
+
+      <h3 class="p70-subhead" id="e-pages">E9 クリエイター・ギャラリーのページを管理する</h3>
+      <div class="p70-dl p70-dl--ja">
+        <div class="p70-dl__item"><dt class="p70-dl__dt">担当</dt><dd class="p70-dl__dd">E</dd></div>
+        <div class="p70-dl__item"><dt class="p70-dl__dt">使う画面</dt><dd class="p70-dl__dd">P90-7 クリエイター管理・P90-8 ギャラリー管理</dd></div>
+      </div>
+      <ol class="p70-step-list">
+        <li class="p70-step-list__item">展覧会の確認でリンク付けするページが無いときは、先にページを作る（オーナーはまだいない状態）</li>
+        <li class="p70-step-list__item">重複したページは、残すページを決めてから、もう一方を理由を書いて削除する</li>
+        <li class="p70-step-list__item">非公開・削除は理由を書く</li>
+      </ol>
+
+      <h3 class="p70-subhead" id="e-apply">E10 クリエイター・ギャラリー機能の申込を審査する</h3>
+      <div class="p70-dl p70-dl--ja">
+        <div class="p70-dl__item"><dt class="p70-dl__dt">担当</dt><dd class="p70-dl__dd">E</dd></div>
+        <div class="p70-dl__item"><dt class="p70-dl__dt">使う画面</dt><dd class="p70-dl__dd">P90-2 クリエイター/ギャラリー機能申込管理 → P90-2-1 審査</dd></div>
+      </div>
+      <ol class="p70-step-list">
+        <li class="p70-step-list__item">申込の内容を確かめる（本人確認の書類はここでは扱わない）</li>
+        <li class="p70-step-list__item">「既存の掲載ページ」の記入があれば、そのページが申込者のものかを確かめる</li>
+        <li class="p70-step-list__item">新規作成・既存ページへのリンク付け（ページの管理権の引き継ぎ）・申込者への確認・取消のどれかを行う</li>
+        <li class="p70-step-list__item">取消のときは理由を書く。申込者にはメールで知らせる</li>
+      </ol>
+    </section>
+
+    <!-- L. LIAISON+ 対応の業務 -->
+    <section class="p70-section" id="liaison" data-admin-lv="L">
+      <div class="p70-section__head">
+        <span class="p70-section__num">L</span>
+        <h2 class="p70-section__title">LIAISON+ 対応の業務</h2>
+        <span class="p70-section__en">LIAISON+</span>
+      </div>
+      <!-- この群の業務の目次（2026-11-09） -->
+      <nav class="p70-toc p9029-index" aria-label="LIAISON+ 対応の業務の目次">
+        <div class="p70-toc__title">LIAISON+ 対応の業務 — Index</div>
+        <ol class="p70-toc__list">
+          <li class="p70-toc__item"><span class="p70-toc__num">L1</span><a class="p70-toc__link" href="#l-case">LIAISON+ の対応案件に対応する</a></li>
+          <li class="p70-toc__item"><span class="p70-toc__num">L2</span><a class="p70-toc__link" href="#refund">支払い後のキャンセルを受けて判断する</a></li>
+          <li class="p70-toc__item"><span class="p70-toc__num">L3</span><a class="p70-toc__link" href="#return">作品の返送と確認</a></li>
+          <li class="p70-toc__item"><span class="p70-toc__num">L4</span><a class="p70-toc__link" href="#pay-back">返金の手続き</a></li>
+          <li class="p70-toc__item"><span class="p70-toc__num">L5</span><a class="p70-toc__link" href="#accident">配送事故の対応</a></li>
+          <li class="p70-toc__item"><span class="p70-toc__num">L6</span><a class="p70-toc__link" href="#claim">出品者への費用の請求</a></li>
+          <li class="p70-toc__item"><span class="p70-toc__num">L7</span><a class="p70-toc__link" href="#coupon">使われたクーポンを戻すか決める</a></li>
+          <li class="p70-toc__item"><span class="p70-toc__num">L8</span><a class="p70-toc__link" href="#l-txn">取引を見守る・支払いの異議に対応する</a></li>
+          <li class="p70-toc__item"><span class="p70-toc__num">L9</span><a class="p70-toc__link" href="#l-listing">出品・申込・在庫を確かめる</a></li>
+          <li class="p70-toc__item"><span class="p70-toc__num">L10</span><a class="p70-toc__link" href="#l-payout">振込と精算</a></li>
+          <li class="p70-toc__item"><span class="p70-toc__num">L11</span><a class="p70-toc__link" href="#l-ops">止まった取引を動かす（事務局の操作）</a></li>
+        </ol>
+      </nav>
+      <p class="p70-lead">決まりの正本は、<a class="ktn-guide-link" href="./kotennavi-p60-9.html#liaison" target="_blank" rel="noopener">利用規約 第9条の2・第9条の3</a>と<a class="ktn-guide-link" href="./kotennavi-p60-18.html#cancel" target="_blank" rel="noopener">LIAISON+ 利用規約 第8条・第10条</a>です。</p>
+
+      <h3 class="p70-subhead" id="l-case">L1 LIAISON+ の対応案件に対応する</h3>
+      <div class="p70-dl p70-dl--ja">
+        <div class="p70-dl__item"><dt class="p70-dl__dt">担当</dt><dd class="p70-dl__dd">L</dd></div>
+        <div class="p70-dl__item"><dt class="p70-dl__dt">使う画面</dt><dd class="p70-dl__dd">P90-21 対応案件の「LIAISON+」タブ（取引番号といまの状態が付いている）</dd></div>
+        <div class="p70-dl__item"><dt class="p70-dl__dt">対象</dt><dd class="p70-dl__dd">LIAISON+ のお問合わせ・問題報告・取引の相談・発送期限の超過（至急）・キャンペーンの上限のお知らせ</dd></div>
+      </div>
+      <ol class="p70-step-list">
+        <li class="p70-step-list__item">発送期限の超過は至急。出品者に発送を促し、購入者がキャンセルを申請したら L2 へ</li>
+        <li class="p70-step-list__item">取引の相談は、P90-13 取引管理の行の「取引の詳細と操作」から、問合せてきた人の画面（出品者の取引デスク／購入者の取引ワークスペース）を管理者として開き、取引の状態と取引メッセージを確かめてから答える（操作はできない）</li>
+        <li class="p70-step-list__item">キャンペーンの条件・期間・先着の残りは P90-20（見るだけ）で確かめる。個別の適用が要るときは、理由を書いて A に回す</li>
+      </ol>
+
+      <h3 class="p70-subhead" id="refund">L2 支払い後のキャンセルを受けて判断する</h3>
+      <div class="p70-dl p70-dl--ja">
+        <div class="p70-dl__item"><dt class="p70-dl__dt">担当</dt><dd class="p70-dl__dd">L</dd></div>
+        <div class="p70-dl__item"><dt class="p70-dl__dt">使う画面</dt><dd class="p70-dl__dd">P90-21 対応案件・P90-13 取引管理</dd></div>
+        <div class="p70-dl__item"><dt class="p70-dl__dt">期限</dt><dd class="p70-dl__dd">出品者の承諾の回答＝問合せから3日</dd></div>
+      </div>
+      <ol class="p70-step-list">
+        <li class="p70-step-list__item">取引メッセージ・写真・追跡番号を見て、足りなければ双方に聞く</li>
+        <li class="p70-step-list__item">購入者の事由のときは、出品者にキャンセルを承諾するかを聞く（回答の期限は3日・メール TS-17）。承諾しなければ、キャンセルは受けない</li>
+        <li class="p70-step-list__item">下の表で事由を判断する。配送事故は L5 へ</li>
+        <li class="p70-step-list__item">作品が届いているときは L3、届いていないときは L4 へ進む</li>
+      </ol>
       <table class="p70-table">
         <thead><tr><th>事由</th><th>例</th><th>返送の送料</th><th>購入者への返金</th><th>出品者の負担</th></tr></thead>
         <tbody>
@@ -161,57 +347,225 @@
           <tr><td>配送事故（出品者の事由と同じに扱う）</td><td>配送中の破損・紛失</td><td>出品者が配送会社と決める（配送会社が引き取るときは返送なし）</td><td>お支払い額の全額（記録で事故を確かめたあと）</td><td>出品者の事由と同じ（補償は出品者が配送会社に請求する）</td></tr>
         </tbody>
       </table>
-      <span class="p70-table__note">キャンセルした取引にはサービス利用料はかかりません。4% は、決済代行会社の手数料（税込で約 3.96%）に近い値として決めた固定の率です。利用者には「決済にかかった手数料（お支払い額の4%）」とだけ伝え、決済代行会社の料率は伝えません。取引が完了したあと（受取確認と完了確認のあと）のキャンセルは、原則として受けません。</span>
+      <span class="p70-table__note">キャンセルした取引にはサービス利用料はかかりません。4% は決済代行会社の手数料（税込で約 3.96%）に近い値として決めた固定の率で、利用者には「決済にかかった手数料（お支払い額の4%）」とだけ伝えます。取引が完了したあと（受取確認と完了確認のあと）のキャンセルは、原則として受けません。</span>
 
-      <h3 class="p70-subhead">配送事故</h3>
-      <p class="p70-body">個展なびは配送会社と契約していません（発送するのは出品者で、配送会社と契約しているのも出品者です）。そのため、事務局は配送会社とやり取りせず、<strong>集めた記録で事故を確かめて返金</strong>します。補償がおりるかどうかは、出品者と配送会社のあいだのことで、購入者への返金はそれを待ちません。配送事故は出品者の事由と同じに扱うので、事務局の判断（返金と出品者への請求）は、補償の結果で変わりません。出品者には、追跡ができ、作品の販売価格に見合う補償のある配送方法で送ることを求めています（LIAISON+ 利用規約 第8条）。補償の上限が足りない方法で送っていた場合も、扱いは同じです（足りない分は出品者の負担）。</p>
+      <h3 class="p70-subhead" id="return">L3 作品の返送と確認</h3>
+      <div class="p70-dl p70-dl--ja">
+        <div class="p70-dl__item"><dt class="p70-dl__dt">担当</dt><dd class="p70-dl__dd">L</dd></div>
+        <div class="p70-dl__item"><dt class="p70-dl__dt">期限</dt><dd class="p70-dl__dd">返送＝案内から7日／到着と状態の連絡＝到着から3日</dd></div>
+      </div>
       <ol class="p70-step-list">
-        <li class="p70-step-list__item">購入者から申出を受ける（E）：受取確認の前に。作品・梱包・外箱・伝票の写真をもらい、作品と梱包を捨てずに保管してもらう。紛失は、追跡の記録で「配達完了」にならないまま止まっていることを確かめる</li>
-        <li class="p70-step-list__item">出品者に知らせる（E）：配送会社へ事故を申告してもらい、受付番号などを3日以内に知らせてもらう。配送会社が現物や梱包を確かめに来るときは、購入者に協力してもらう</li>
-        <li class="p70-step-list__item">事故かどうかを確かめる（L）：写真・追跡の記録・申告の受付番号がそろえば、事故として返金する。配送会社の調査の結果は待たない</li>
-        <li class="p70-step-list__item">返金と出品者への請求（L）：購入者に全額を返金し、出品者に決済手数料（4%）と実費を請求する。作品の返送は、配送会社が引き取るときは不要。それ以外は出品者の着払いで返送する</li>
+        <li class="p70-step-list__item">購入者に返送を案内する：返送先（出品者の登録住所）・送料の負担・返送の期限（案内から7日）。メール TS-18</li>
+        <li class="p70-step-list__item">出品者に、返送品の到着から3日以内に、到着と状態を知らせてもらう（メール TS-19）</li>
+        <li class="p70-step-list__item">問題がなければ L4 へ。返送中の破損など問題があれば、写真をもらって対応案件に残し、判断し直す</li>
       </ol>
-      <p class="p70-body">出品者が申告をしない、または期限までに知らせないときも、購入者の写真と追跡の記録で事故と確かめられれば、同じように返金します。出品者が「届いたあとに壊れた」と争うなど、記録だけで判断できないときは、出品者を通じて配送会社の調査の結果をもらってから判断します（購入者には、時間がかかることと、いまの状況を伝える）。</p>
-      <h3 class="p70-subhead">クーポン</h3>
-      <p class="p70-body">使われたクーポンは、自動では戻しません。クーポンの種類や実施期間を見て戻すと決めたときは、購入者の P5-11（管理者の枠）の「個別に渡す」で、同じ値引きのクーポンを渡します（理由は必須）。</p>
 
-      <h3 class="p70-subhead">出品者が払わないとき</h3>
+      <h3 class="p70-subhead" id="pay-back">L4 返金の手続き</h3>
+      <div class="p70-dl p70-dl--ja">
+        <div class="p70-dl__item"><dt class="p70-dl__dt">担当</dt><dd class="p70-dl__dd">L<span data-admin-lv="A">（取引の強制キャンセルが要るときは A＝A3）</span></dd></div>
+        <div class="p70-dl__item"><dt class="p70-dl__dt">使う画面</dt><dd class="p70-dl__dd">P90-13 取引管理の「取引の詳細と操作」→「事務局の操作」の「返金の手続き」・Stripe の管理画面</dd></div>
+        <div class="p70-dl__item"><dt class="p70-dl__dt">期限</dt><dd class="p70-dl__dd">確認の連絡から3営業日以内（規約の上限は、キャンセルの決定から30日）</dd></div>
+      </div>
       <ol class="p70-step-list">
-        <li class="p70-step-list__item">未払いの売上金から差し引く（L）。足りない分だけを請求する</li>
-        <li class="p70-step-list__item">1回目の請求（L）：金額・内訳・振込先・期限（14日）をメールで送る</li>
-        <li class="p70-step-list__item">2回目の請求（L）：期限の翌日に。期限は7日</li>
-        <li class="p70-step-list__item">最後の通知（L）：払わなければ LIAISON+ の承認を取り消すことを伝える。期限は7日</li>
-        <li class="p70-step-list__item">承認の取消（A・P90-11）：理由を書いて取り消す。以後の LIAISON+ の申込は受け付けない（支払いの義務は残る）。新しい売上が入れば、そこから差し引く</li>
+        <li class="p70-step-list__item">L2 の表で返金額を計算する</li>
+        <li class="p70-step-list__item">P90-13 の「取引の詳細と操作」を開き、内訳で金額を確かめてから「返金の手続き」を押す。理由・詳しい内容（対応案件の受付番号など）・返金額を書いて進める</li>
+        <li class="p70-step-list__item">Stripe の管理画面で、全額か一部かを確かめて返金する</li>
+        <li class="p70-step-list__item">出品者の事由・配送事故のときは L6 へ。購入者の事由で発送済みのときは、差し引いた送料・梱包費を次の振込で出品者に支払う</li>
+        <li class="p70-step-list__item">双方にキャンセルと返金を知らせ（メール T-08）、対応案件を完了にする。カードの明細に反映されるまでの日数はカード会社によって異なることを、聞かれたら伝える</li>
       </ol>
-      <p class="p70-body">金額が大きいときは、支払督促や少額訴訟などの法的な手続きも考えます（手続きを始めるのは A。弁護士に相談）。</p>
 
-      <h3 class="p70-subhead">期限のまとめ</h3>
+      <h3 class="p70-subhead" id="accident">L5 配送事故の対応</h3>
+      <div class="p70-dl p70-dl--ja">
+        <div class="p70-dl__item"><dt class="p70-dl__dt">担当</dt><dd class="p70-dl__dd">L</dd></div>
+        <div class="p70-dl__item"><dt class="p70-dl__dt">期限</dt><dd class="p70-dl__dd">出品者の申告の受付番号の連絡＝問合せから3日</dd></div>
+      </div>
+      <p class="p70-body">個展なびは配送会社と契約していません（発送するのも、配送会社と契約しているのも出品者です）。事務局は配送会社とやり取りせず、集めた記録で事故を確かめて返金します。配送事故は出品者の事由と同じに扱うので、事務局の判断は補償の結果で変わりません。</p>
+      <ol class="p70-step-list">
+        <li class="p70-step-list__item">購入者から、受取確認の前に、作品・梱包・外箱・伝票の写真をもらい、作品と梱包を保管してもらう。紛失は、追跡の記録で「配達完了」にならないまま止まっていることを確かめる</li>
+        <li class="p70-step-list__item">出品者に、配送会社へ事故を申告してもらい、受付番号などを3日以内に知らせてもらう（メール TS-20）。配送会社が現物を確かめに来るときは、購入者に協力してもらう</li>
+        <li class="p70-step-list__item">写真・追跡の記録・受付番号がそろえば、事故として扱う。配送会社の調査の結果は待たない</li>
+        <li class="p70-step-list__item">L4 で全額を返金し、L6 へ。作品の返送は、配送会社が引き取るときは不要。それ以外は出品者の着払い</li>
+      </ol>
+      <p class="p70-body">出品者が申告しないときも、購入者の写真と追跡の記録で確かめられれば同じように返金します。出品者が「届いたあとに壊れた」と争うなど、記録だけで判断できないときは、出品者を通じて配送会社の調査の結果をもらってから判断します（購入者には、時間がかかることと、いまの状況を伝える）。補償の上限が足りない方法で送っていた場合も、扱いは同じです（足りない分は出品者の負担・LIAISON+ 利用規約 第8条）。</p>
+
+      <h3 class="p70-subhead" id="claim">L6 出品者への費用の請求</h3>
+      <div class="p70-dl p70-dl--ja">
+        <div class="p70-dl__item"><dt class="p70-dl__dt">担当</dt><dd class="p70-dl__dd">L<span data-admin-lv="A">（LIAISON+ の利用の取消は A）</span></dd></div>
+        <div class="p70-dl__item"><dt class="p70-dl__dt">使う画面</dt><dd class="p70-dl__dd">P90-14 販売代金管理（売上金からの差し引き・「出品者への費用の請求」の欄）<span data-admin-lv="A">・P90-1-1 ユーザーの編集（LIAISON+ の利用の取消）</span></dd></div>
+        <div class="p70-dl__item"><dt class="p70-dl__dt">期限</dt><dd class="p70-dl__dd">1回目の請求＝14日／2回目＝7日／最後の通知＝7日</dd></div>
+      </div>
+      <ol class="p70-step-list">
+        <li class="p70-step-list__item">請求する額：決済手数料（お支払い額の4%）＋返金のために生じた費用</li>
+        <li class="p70-step-list__item">未払いの売上金から差し引く。足りない分だけを請求する</li>
+        <li class="p70-step-list__item">1回目の請求：金額・内訳・振込先・期限（14日）をメールで送る（PC-01）</li>
+        <li class="p70-step-list__item">2回目の請求：期限の翌日に。期限は7日（PC-02）</li>
+        <li class="p70-step-list__item">最後の通知：払わなければ LIAISON+ の利用を取り消すことを伝える。期限は7日（PC-03）。過ぎたら A に回す</li>
+        <li class="p70-step-list__item" data-admin-lv="A">LIAISON+ の利用の取消（A）：P90-14 の「LIAISON+ の利用を取り消す →」からユーザーの編集（P90-1-1）を開き、LIAISON+ を OFF にして保存する。理由（費用の未払い）と詳しい内容を書き、本人にメール M-12① を送る。進行中の取引は期限どおりに続き、新しい出品と購入の申込の受付が止まる。以後の LIAISON+ の申込は受け付けない（支払いの義務は残る）。新しい売上が入れば、そこから差し引く。金額が大きいときは、支払督促や少額訴訟も考える（弁護士に相談）</li>
+      </ol>
+
+      <h3 class="p70-subhead" id="coupon">L7 使われたクーポンを戻すか決める</h3>
+      <div class="p70-dl p70-dl--ja">
+        <div class="p70-dl__item"><dt class="p70-dl__dt">担当</dt><dd class="p70-dl__dd">判断＝L／渡す＝A</dd></div>
+        <div class="p70-dl__item"><dt class="p70-dl__dt">使う画面</dt><dd class="p70-dl__dd">P90-20（キャンペーンの条件・期間を見る）<span data-admin-lv="A">・購入者の P5-11（管理者の枠）の「個別に渡す」</span></dd></div>
+      </div>
+      <ol class="p70-step-list">
+        <li class="p70-step-list__item">キャンセルになった取引で使われたクーポンは、自動では戻さない（規約にも「戻りません」と書いている）</li>
+        <li class="p70-step-list__item">クーポンの種類や実施期間を見て、戻すべきと判断したら、理由を書いて対応案件で A に回す</li>
+        <li class="p70-step-list__item" data-admin-lv="A">A：購入者の P5-11 の「個別に渡す」で、同じ値引きのクーポンを渡す（理由は必須）</li>
+      </ol>
+
+      <h3 class="p70-subhead" id="l-txn">L8 取引を見守る・支払いの異議に対応する</h3>
+      <div class="p70-dl p70-dl--ja">
+        <div class="p70-dl__item"><dt class="p70-dl__dt">担当</dt><dd class="p70-dl__dd">L</dd></div>
+        <div class="p70-dl__item"><dt class="p70-dl__dt">使う画面</dt><dd class="p70-dl__dd">P90-13 取引管理（取引中・終了のタブ、上の一覧に支払いの異議・決済の失敗）・P90-10 ダッシュボード（Stripe の管理画面へ）</dd></div>
+      </div>
+      <ol class="p70-step-list">
+        <li class="p70-step-list__item">期限が近い・過ぎた取引を確かめ、必要なら当事者に連絡する</li>
+        <li class="p70-step-list__item">支払いの異議（チャージバック）・決済の失敗は、Stripe の管理画面で内容を確かめ、取引の記録（メッセージ・追跡番号・受取確認）をそろえて対応する。異議は、その取引の「取引の詳細と操作」→「異議の対応を記録する」で、そろえた材料と状況（回答を準備中／回答を出した／結果）を残す。決済の失敗は L11 の「再支払いを案内する」</li>
+      </ol>
+
+      <h3 class="p70-subhead" id="l-listing">L9 出品・申込・在庫を確かめる</h3>
+      <div class="p70-dl p70-dl--ja">
+        <div class="p70-dl__item"><dt class="p70-dl__dt">担当</dt><dd class="p70-dl__dd">L</dd></div>
+        <div class="p70-dl__item"><dt class="p70-dl__dt">使う画面</dt><dd class="p70-dl__dd">P90-12 リエゾンプラスコンソール（展覧会ごとの出品作品・すべての作品）</dd></div>
+      </div>
+      <ol class="p70-step-list">
+        <li class="p70-step-list__item">問題報告などで、LIAISON+ に出品された作品を非公開にするときは、展覧会の作品の欄から行う（理由は必須）</li>
+        <li class="p70-step-list__item">非公開にした作品に申込や取引があれば、P90-13 で状態を確かめ、必要なら当事者に連絡する</li>
+      </ol>
+
+      <h3 class="p70-subhead" id="l-payout">L10 振込と精算</h3>
+      <div class="p70-dl p70-dl--ja">
+        <div class="p70-dl__item"><dt class="p70-dl__dt">担当</dt><dd class="p70-dl__dd">L</dd></div>
+        <div class="p70-dl__item"><dt class="p70-dl__dt">使う画面</dt><dd class="p70-dl__dd">P90-14 販売代金管理・P90-15 リエゾンプラス申込者一覧（Stripe 連携）</dd></div>
+        <div class="p70-dl__item"><dt class="p70-dl__dt">いつ</dt><dd class="p70-dl__dd">月末締め・翌月20日払い（20日が金融機関の休業日なら翌営業日）</dd></div>
+      </div>
+      <ol class="p70-step-list">
+        <li class="p70-step-list__item">締めのあと、振込の一覧と明細（サービス利用料・キャンセルの差し引き・送料と梱包費の支払い）を確かめる</li>
+        <li class="p70-step-list__item">Stripe 連携が済んでいない出品者は振り込めないので、P90-15 で状態を確かめて案内する</li>
+      </ol>
+      <h3 class="p70-subhead" id="l-ops">L11 止まった取引を動かす（事務局の操作）</h3>
+      <div class="p70-dl p70-dl--ja">
+        <div class="p70-dl__item"><dt class="p70-dl__dt">担当</dt><dd class="p70-dl__dd">L<span data-admin-lv="A">（状態の訂正は A＝A3）</span></dd></div>
+        <div class="p70-dl__item"><dt class="p70-dl__dt">使う画面</dt><dd class="p70-dl__dd">P90-13 取引管理の行の「取引の詳細と操作」→「事務局の操作」（操作したことは「事務局の対応の記録」と操作の記録 P90-28 に残る）</dd></div>
+      </div>
       <table class="p70-table">
-        <thead><tr><th>こと</th><th>期限</th><th>だれ</th></tr></thead>
+        <thead><tr><th>操作</th><th>いつ使う</th><th>すること</th></tr></thead>
         <tbody>
-          <tr><td>購入者の事由のキャンセルを承諾するかの回答</td><td>問合せから3日</td><td>出品者</td></tr>
-          <tr><td>作品の返送</td><td>返送の案内から7日</td><td>購入者</td></tr>
-          <tr><td>返送品の到着と状態の連絡</td><td>到着から3日</td><td>出品者</td></tr>
-          <tr><td>返金の手続き</td><td>確認の連絡から3営業日（規約の上限はキャンセルの決定から30日）</td><td>L</td></tr>
-          <tr><td>出品者への請求の支払い</td><td>1回目14日・2回目7日・最後の通知7日</td><td>出品者</td></tr>
+          <tr><td>督促を送る</td><td>期限が近い・過ぎたのに、番が来ている側が動かない</td><td>番が来ている側（出品者か購入者）に、メールとあなた宛のお知らせで督促する。文は直してよい</td></tr>
+          <tr><td>期限を延ばす</td><td>病気・災害・配送の遅れ、当事者どうしの合意など、やむを得ない事情</td><td>新しい期限と理由を書く。双方に知らせ、自動キャンセル・自動確定もその日に合わせる</td></tr>
+          <tr><td>一時停止する／再開する</td><td>問合せや報告を調べているあいだ、自動で進ませたくない</td><td>理由を書いて止める。当事者は操作を続けられる。再開すると残りの日数から数え直す</td></tr>
+          <tr><td>再支払いを案内する</td><td>支払待ちで、カードの決済が通らなかった</td><td>購入者に支払いのやり直しの案内を送る。必要なら支払いの期限を3日・7日延ばす</td></tr>
+          <tr><td>キャンセル申請を処理する</td><td>発送待ちで発送期限を過ぎ、購入者からキャンセルの申請があった</td><td>出品者の事由のキャンセルとして進める（次は L4 返金の手続き・L6 出品者への請求）</td></tr>
+          <tr><td>事務局から連絡する</td><td>当事者に伝えることがある</td><td>宛先（出品者・購入者・両方）と方法（取引メッセージに事務局として書き込む／メール）を選んで送る。取引メッセージに書くと双方の画面に残る</td></tr>
+          <tr><td>対応案件をひも付ける</td><td>この取引について対応案件（P90-21）がある</td><td>受付番号を入れると、取引の詳細から対応案件を開ける</td></tr>
         </tbody>
       </table>
-      <span class="p70-table__note">カードの明細に返金が反映されるまでの日数は、カード会社によって異なります。購入者から聞かれたら、そのことを伝えます。</span>
+      <span class="p70-table__note">送るメールは操作に合わせて P90-9 のテンプレート（TS-03〜TS-20）が自動で選ばれます（「事務局から連絡する」では、キャンセル・返送・配送事故の連絡 TS-17〜TS-20 も選べます）。送る前に、ケースに合わせて本文を直してください。どの操作も、あとから「なぜ」を説明できるように、理由と詳しい内容（対応案件の受付番号など）を書きます。当事者の画面を確かめるときは、取引の詳細の「出品者の取引デスクを見る」「購入者の取引ワークスペースを見る」を使います（操作はできません）。</span>
     </section>
 
-    <!-- 3. 規約の改定 -->
-    <section class="p70-section" id="terms">
+    <!-- A. admin の業務 -->
+    <section class="p70-section" id="admin" data-admin-lv="A">
       <div class="p70-section__head">
-        <span class="p70-section__num">3</span>
-        <h2 class="p70-section__title">規約の改定</h2>
-        <span class="p70-section__en">Terms update</span>
+        <span class="p70-section__num">A</span>
+        <h2 class="p70-section__title">admin の業務</h2>
+        <span class="p70-section__en">Admin</span>
       </div>
-      <p class="p70-lead">利用規約（P60-9）と LIAISON+ 利用規約（P60-18）を変えるときの手順です（A）。変更の内容は、改定のお知らせ（ニュース）に1か所だけ書きます。ログインのときの同意の画面は、そのお知らせと全文へのリンクだけを出します。</p>
+      <!-- この群の業務の目次（2026-11-09） -->
+      <nav class="p70-toc p9029-index" aria-label="admin の業務の目次">
+        <div class="p70-toc__title">admin の業務 — Index</div>
+        <ol class="p70-toc__list">
+          <li class="p70-toc__item"><span class="p70-toc__num">A1</span><a class="p70-toc__link" href="#a-lp-apply">LIAISON+ 機能の申込と本人確認を審査する</a></li>
+          <li class="p70-toc__item"><span class="p70-toc__num">A2</span><a class="p70-toc__link" href="#a-user">ユーザーのアカウントを管理する</a></li>
+          <li class="p70-toc__item"><span class="p70-toc__num">A3</span><a class="p70-toc__link" href="#a-cancel">取引の強制キャンセル・作品の管理</a></li>
+          <li class="p70-toc__item"><span class="p70-toc__num">A4</span><a class="p70-toc__link" href="#a-campaign">料率・キャンペーンを設定する</a></li>
+          <li class="p70-toc__item"><span class="p70-toc__num">A5</span><a class="p70-toc__link" href="#terms">規約を改定する</a></li>
+          <li class="p70-toc__item"><span class="p70-toc__num">A6</span><a class="p70-toc__link" href="#a-texts">お知らせ・メール・文言・よくある質問を直す</a></li>
+          <li class="p70-toc__item"><span class="p70-toc__num">A7</span><a class="p70-toc__link" href="#a-site">検索・特集・トップページを直す</a></li>
+          <li class="p70-toc__item"><span class="p70-toc__num">A8</span><a class="p70-toc__link" href="#a-watch">記録と数字を見る</a></li>
+        </ol>
+      </nav>
+
+      <h3 class="p70-subhead" id="a-lp-apply">A1 LIAISON+ 機能の申込と本人確認を審査する</h3>
+      <div class="p70-dl p70-dl--ja">
+        <div class="p70-dl__item"><dt class="p70-dl__dt">使う画面</dt><dd class="p70-dl__dd">P90-11 リエゾンプラス機能申込管理 → P90-11-1 審査</dd></div>
+      </div>
       <ol class="p70-step-list">
-        <li class="p70-step-list__item">変更の内容と効力の発生日を決める（不利な変更は、発生日の1か月以上前に知らせられる日にする）</li>
+        <li class="p70-step-list__item">入力内容と本人確認書類を確かめ、本人確認 OK か差し戻しを行う</li>
+        <li class="p70-step-list__item">受理のあと、申込者は Stripe の本人確認と口座の登録に進む（そこから先は Stripe の審査で、この画面での操作はない）</li>
+        <li class="p70-step-list__item">利用開始のあとに LIAISON+ の利用を取り消す（費用の未払い・規約に反する利用など・L6）のは、この画面ではなく A2 のユーザーの編集（P90-1-1）で行う。審査の画面の「取消にする」は、審査中の申込だけの操作</li>
+      </ol>
+
+      <h3 class="p70-subhead" id="a-user">A2 ユーザーのアカウントを管理する</h3>
+      <div class="p70-dl p70-dl--ja">
+        <div class="p70-dl__item"><dt class="p70-dl__dt">使う画面</dt><dd class="p70-dl__dd">P90-1 ユーザー管理 → P90-1-1 ユーザーの新規・編集・クローン</dd></div>
+      </div>
+      <ol class="p70-step-list">
+        <li class="p70-step-list__item">ロール（クリエイター・ギャラリー・LIAISON+）を直すのは、不具合や誤りの訂正のときだけ。理由は必須</li>
+        <li class="p70-step-list__item">なりすましログインは、問合せの確認など必要なときだけ。理由（お問合わせの番号など）は必須で、なりすまし中の操作も記録に残る</li>
+        <li class="p70-step-list__item">強制退会は理由を書いて行う。本人の意思による退会は、本人が退会の画面から行う</li>
+      </ol>
+
+      <h3 class="p70-subhead" id="a-cancel">A3 取引の強制キャンセル・作品の管理</h3>
+      <div class="p70-dl p70-dl--ja">
+        <div class="p70-dl__item"><dt class="p70-dl__dt">使う画面</dt><dd class="p70-dl__dd">P90-13 取引管理の「取引の詳細と操作」→「事務局の操作」の「強制キャンセル」・P90-23 作品管理</dd></div>
+      </div>
+      <ol class="p70-step-list">
+        <li class="p70-step-list__item">強制キャンセルは、当事者と連絡がつかない・規約に反する取引・決済の不正の疑いなどのときだけ。元に戻せない。支払い済みなら購入者に全額を返金し、双方にメール（T-08）が届く</li>
+        <li class="p70-step-list__item">作品のクローン・削除・すべての作品の非公開は P90-23 で行う（理由は必須）</li>
+        <li class="p70-step-list__item">状態の訂正：当事者の誤操作（届く前に受取確認を押した など）やシステムの不具合で進んでしまった取引は、P90-13 の「取引の詳細と操作」→「状態を訂正する」で1つ前の状態に戻す（理由は必須・双方に知らせる・その状態の期限から数え直す）</li>
+      </ol>
+
+      <h3 class="p70-subhead" id="a-campaign">A4 料率・キャンペーンを設定する</h3>
+      <div class="p70-dl p70-dl--ja">
+        <div class="p70-dl__item"><dt class="p70-dl__dt">使う画面</dt><dd class="p70-dl__dd">P90-20 料率・キャンペーン管理・P3-11／P4-11／P5-11 の管理者の枠（個別の適用）・P61-11（キャンペーンのお知らせ）</dd></div>
+      </div>
+      <ol class="p70-step-list">
+        <li class="p70-step-list__item">料率と最低価格は、適用の期間ごとに設定する。展覧会の会期の初日に当たる値が、その展覧会のすべての取引に使われる。最低価格を上げるときは、会期の初日が開始日以降の展覧会で安い作品がある出品者に、自動でお知らせとメール（FE-01）が届く</li>
+        <li class="p70-step-list__item">キャンペーンは「下書き」で作り、「有効」にすると実施期間から自動で始まる。実施中に変えられるのは、実施期間の終わり（延ばすだけ）と上限（上げるだけ）だけ</li>
+        <li class="p70-step-list__item">実施するキャンペーンには、必ずお知らせ（ニュース）をつなぐ（P61-11 で「つなぐキャンペーン」を選ぶ）</li>
+        <li class="p70-step-list__item">トラブルへの対応として1人にだけ特典やクーポンを適用するときは、そのアカウントの管理者の枠で行う（理由は必須・P90-20「個別の適用」の台帳に残る）</li>
+      </ol>
+
+      <h3 class="p70-subhead" id="terms">A5 規約を改定する</h3>
+      <div class="p70-dl p70-dl--ja">
+        <div class="p70-dl__item"><dt class="p70-dl__dt">使う画面</dt><dd class="p70-dl__dd">P60-21 ガイドの編集（規約の本文）・P61-11 お知らせの作成（改定のお知らせとメール）</dd></div>
+        <div class="p70-dl__item"><dt class="p70-dl__dt">期限</dt><dd class="p70-dl__dd">不利な変更は、効力の発生日の1か月以上前に知らせる</dd></div>
+      </div>
+      <ol class="p70-step-list">
+        <li class="p70-step-list__item">変更の内容と効力の発生日を決める</li>
         <li class="p70-step-list__item">改定のお知らせ（ニュース・P61-11）を作り、メールでも知らせる：何が変わるか・効力の発生日・全文へのリンク</li>
         <li class="p70-step-list__item">お知らせに注意書きを入れる：発生日のあとは、ログインのときに変更後の規約へのご同意をお願いすること／ご同意いただけない場合はログインいただけないこと／進行中の取引は取引の期限に従って自動でキャンセルまたは確定となること（発送待ちの取引は、発送期限を過ぎると購入者がキャンセルを申請でき、出品者の事由によるキャンセルとして扱うこと）</li>
-        <li class="p70-step-list__item">発生日に、規約の新しい版を公開する。ログインのとき、同意がまだの人に同意の画面が出る（同意の画面の「変更のお知らせを見る」は、このお知らせにつなぐ）</li>
+        <li class="p70-step-list__item">発生日に、規約の新しい版を公開する。ログインのとき、同意がまだの人に同意の画面が出る（「変更のお知らせを見る」は、このお知らせにつなぐ）</li>
+      </ol>
+
+      <h3 class="p70-subhead" id="a-texts">A6 お知らせ・メール・文言・よくある質問を直す</h3>
+      <div class="p70-dl p70-dl--ja">
+        <div class="p70-dl__item"><dt class="p70-dl__dt">使う画面</dt><dd class="p70-dl__dd">P61-11 お知らせ（ニュース）・P90-9 メールテンプレート管理・P90-18 お知らせ・やることの文言管理・P90-24 Q&amp;A 管理・P60-21 ガイドの編集</dd></div>
+      </div>
+      <ol class="p70-step-list">
+        <li class="p70-step-list__item">文の中の差し込み（{{…}}）の名前は変えない。料率・最低価格は設定から入るので、数字を直接書かない</li>
+        <li class="p70-step-list__item">利用者に向けた案内・お願いの文はビジネス文にそろえる（「〜につきましては、〜をご確認ください」）。「返金」という言葉は、実際にお金を戻す説明にだけ使う</li>
+        <li class="p70-step-list__item">よくある質問の Q&amp;A は、表示しているページ（P90-24 の各カテゴリの「表示するページ」）を確かめてから直す</li>
+      </ol>
+
+      <h3 class="p70-subhead" id="a-site">A7 検索・特集・トップページを直す</h3>
+      <div class="p70-dl p70-dl--ja">
+        <div class="p70-dl__item"><dt class="p70-dl__dt">使う画面</dt><dd class="p70-dl__dd">P90-17 検索・特集管理・P90-19 トップページの管理</dd></div>
+      </div>
+      <ol class="p70-step-list">
+        <li class="p70-step-list__item">ピックアップ・季節の言葉・特集のページの導入文・注目のエリアを P90-17 で直す</li>
+        <li class="p70-step-list__item">巻頭の見出し（曜日ごと・日付指定）と PICK UP の展覧会を P90-19 で直す</li>
+      </ol>
+
+      <h3 class="p70-subhead" id="a-watch">A8 記録と数字を見る</h3>
+      <div class="p70-dl p70-dl--ja">
+        <div class="p70-dl__item"><dt class="p70-dl__dt">使う画面</dt><dd class="p70-dl__dd">P90-6 コンテンツサマリー・P90-22 更新の記録・P90-28 操作の記録</dd></div>
+      </div>
+      <ol class="p70-step-list">
+        <li class="p70-step-list__item">P90-22 で、展覧会の更新・記事とレビュー・退会を見守る（対応は不要。気になるものがあれば E8 で対応）</li>
+        <li class="p70-step-list__item">P90-28 で、管理者が行った操作を確かめる（だれも書き換え・削除できない）</li>
+        <li class="p70-step-list__item">P90-6 で、コンテンツ・ユーザー・利用の数を確かめる</li>
       </ol>
     </section>
 

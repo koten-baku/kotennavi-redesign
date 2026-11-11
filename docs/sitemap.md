@@ -73,7 +73,7 @@
 | P3-12 | クリエイター-インサイト |  |  |  |  | R |  | R | --w-article | kotennavi-p3-12.html | Fix済 |
 | P3-13 | クリエイター-オーディエンス管理 |  |  |  |  | R/W |  | R/W | --w-detail | kotennavi-p3-13.html | Fix済 |
 | P3-14 | クリエイター-ポートフォリオ管理 | L |  |  |  | R/W |  | R/W | --w-detail | kotennavi-p3-14.html | Fix済 |
-| P3-15 | クリエイター-リエゾン+ 展覧会一覧 | L+ |  |  |  | R/W |  | R/W | --w-detail | kotennavi-p3-15.html | 調整中 |
+| P3-15 | クリエイター-リエゾン+コンソール（展覧会の一覧） | L+ |  |  |  | R/W |  | R/W | --w-detail | kotennavi-p3-15.html | 調整中 |
 | P3-15-1 | クリエイター-リエゾン+コンソール（展覧会ごと） | L+ |  |  |  | R/W |  | R/W | --w-detail | kotennavi-p3-15-1.html | 調整中 |
 | P3-16 | クリエイター-取引デスク | L+ |  |  |  | R/W |  | R/W | --w-detail | kotennavi-p3-16.html | Fix済 |
 | P3-17 | クリエイター販売代金管理 | L+ |  |  |  | R/W |  | R/W | --w-detail | kotennavi-p3-17.html | Fix済 |
@@ -95,7 +95,7 @@
 | P4-12 | ギャラリー-インサイト |  |  |  |  |  | R | R | --w-article | kotennavi-p4-12.html | Fix済 |
 | P4-13 | ギャラリー-オーディエンス管理 |  |  |  |  |  | R/W | R/W | --w-detail | kotennavi-p4-13.html | Fix済 |
 | P4-14 | ギャラリー-インベントリー管理 | L,L+ |  |  |  |  | R/W | R/W | --w-detail | kotennavi-p4-14.html | Fix済 |
-| P4-15 | ギャラリー-リエゾン+ 展覧会一覧 | L+ |  |  |  |  | R/W | R/W | --w-detail | kotennavi-p4-15.html | 調整中 |
+| P4-15 | ギャラリー-リエゾン+コンソール（展覧会の一覧） | L+ |  |  |  |  | R/W | R/W | --w-detail | kotennavi-p4-15.html | 調整中 |
 | P4-15-1 | ギャラリー-リエゾン+コンソール（展覧会ごと） | L+ |  |  |  |  | R/W | R/W | --w-detail | kotennavi-p4-15-1.html | 調整中 |
 | P4-16 | ギャラリー-取引デスク | L+ |  |  |  |  | R/W | R/W | --w-detail | kotennavi-p4-16.html | Fix済 |
 | P4-17 | ギャラリー-販売代金管理 | L+ |  |  |  |  | R/W | R/W | --w-detail | kotennavi-p4-17.html | Fix済 |
@@ -304,7 +304,7 @@
 | P90-11 | 管理者-リエゾンプラス機能申込管理 | L+ |  |  |  |  |  | R/W | --w-detail | kotennavi-p90-11.html | Fix済 |
 | P90-11-1 | 管理者-リエゾンプラス機能申込審査 | L+ |  |  |  |  |  | R/W | --w-detail | kotennavi-p90-11-1.html | Fix済 |
 | P90-12 | 管理者-リエゾンプラスコンソール（LIAISON+ の展覧会を進行中・開始前・終了で＋すべての作品・2026-11-02 作り直し） | L+ |  |  |  |  |  | R/W | --w-detail | kotennavi-p90-12.html | 調整中 |
-| P90-13 | 管理者-取引デスク | L+ |  |  |  |  |  | R/W | --w-detail | kotennavi-p90-13.html | 調整中 |
+| P90-13 | 管理者-取引管理（2026-11-09 に「取引デスク」から改名＝出品者の取引デスク P3-16／P4-16 と区別） | L+ |  |  |  |  |  | R/W | --w-detail | kotennavi-p90-13.html | 調整中 |
 | P90-14 | 管理者-販売代金管理 | L+ |  |  |  |  |  | R/W | --w-detail | kotennavi-p90-14.html | 調整中 |
 | P90-15 | 管理者-リエゾンプラス申込者一覧 | L+ |  |  |  |  |  | R/W | --w-article | kotennavi-p90-15.html | 調整中 |
 | P90-16 | 管理者-作品購入ユーザー一覧 | L+ |  |  |  |  |  | R/W | --w-article | kotennavi-p90-16.html | 調整中 |
@@ -317,5 +317,5 @@
 | P90-22 | 管理者-更新の記録（見守り：展覧会の更新・記事とレビュー・退会・2026-10-28 新設） |  |  |  |  |  |  | R/W | --w-detail | kotennavi-p90-22.html | 調整中 |
 | P90-23 | 管理者-作品管理（編集・非公開・クローン・削除・2026-10-29 新設） |  |  |  |  |  |  | R/W | --w-detail | kotennavi-p90-23.html | 調整中 |
 | P90-24 | 管理者-Q&A 管理（よくある質問の Q&A＝KTN.QA をカテゴリ・見せる相手・言葉で絞って一覧し、追加・編集・並び替え・削除。どのページに出るかも見せる・admin だけ・2026-11-07 新設） |  |  |  |  |  |  | R/W | --w-detail | kotennavi-p90-24.html | 調整中 |
-| P90-29 | 管理者-管理者ガイド（E・L・A が決まった手順で対応するための手順書。いまは「管理者の種類と分担」「支払い後のキャンセルと返金」。P90 のヘッダーの「ガイド」から・E 以上・2026-11-07 新設） |  |  |  |  |  |  | R | --w-article | kotennavi-p90-29.html | 調整中 |
+| P90-29 | 管理者-管理者マニュアル（サイト全体の管理の業務を、管理者メニュー〔P90〕と同じ並び〔編集・問合せ／LIAISON+ 対応／admin〕で業務ごとに＝担当・使う画面・手順。管理者の種類より上の業務は出さない。P90 の先頭のカードと、各管理ページのヘッダーの「マニュアル」から・E 以上・2026-11-07 新設・11-09 サイト全体に） |  |  |  |  |  |  | R | --w-article | kotennavi-p90-29.html | 調整中 |
 | P90-28 | 管理者-操作の記録（管理者の操作の監査ログ：編集・確認・公開・非公開・削除・強制退会・なりすましログイン・料率とキャンペーンの変更など・admin だけ・2026-11-01 新設） |  |  |  |  |  |  | R | --w-detail | kotennavi-p90-28.html | 調整中 |

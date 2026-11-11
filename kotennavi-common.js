@@ -1887,7 +1887,7 @@ KTN.QA = [
   { id: 'SET-03', cat: 'liaison-settlement', side: 'seller', aud: 'common', grp: '精算・振込', q: '振込手数料はどちらが負担しますか？', a: '振込手数料は出品者（あなた）のご負担です。精算金額から手数料を差し引いた金額が口座に振り込まれます。' },
   { id: 'SET-04', cat: 'liaison-settlement', side: 'seller', aud: 'common', grp: '精算・振込', q: '振込先口座の名義が本人確認情報の氏名と違う場合はどうなりますか？', a: '振込先口座の名義（カナ）は、本人確認情報にご登録の氏名と一致している必要があります。一致しない場合は保存時にエラーとなり、振込先として登録できません。名義が異なる正当な事情がある場合は個展なび事務局へご連絡ください。' },
   { id: 'SET-05', cat: 'liaison-settlement', side: 'seller', aud: 'common', grp: '精算・振込', q: '振込先口座はいつでも変更できますか？', a: 'はい、いつでも変更できます。変更した口座は次回以降の精算から反映されます（すでに処理が始まっている精算には反映されません）。' },
-  { id: 'SET-06', cat: 'liaison-settlement', side: 'seller', aud: 'common', grp: '精算・振込', q: '精算履歴はいつまで確認できますか？', a: '期限なく、このページでいつでもご確認いただけます。取引ごとの内訳（作品名・送料・サービス利用料等）は、その展覧会のリエゾン+コンソール（リエゾン+ 展覧会一覧の「終了した展覧会」から開きます）でご確認いただけます。' },
+  { id: 'SET-06', cat: 'liaison-settlement', side: 'seller', aud: 'common', grp: '精算・振込', q: '精算履歴はいつまで確認できますか？', a: '期限なく、このページでいつでもご確認いただけます。取引ごとの内訳（作品名・送料・サービス利用料等）は、その展覧会のリエゾン+コンソール（「終了した展覧会」から開きます）でご確認いただけます。' },
   { id: 'SET-07', cat: 'liaison-settlement', side: 'seller', aud: 'common', grp: '精算・振込', q: 'Stripeから直接メールが届きました。対応が必要ですか？', a: '精算・振込の処理には決済パートナーであるStripe社のサービスを利用しており、運用状況によりStripeから直接、本人確認情報の再確認などのご案内メールが届くことがあります。これは正規のご案内です。期限内にご対応いただけないと、精算（振込）が一時停止する場合がありますので、内容をご確認のうえご対応ください。メールの送信元やご不明点がある場合は、個展なび事務局までご連絡いただければ確認いたします。' },
   { id: 'SET-08', cat: 'liaison-settlement', side: 'seller', aud: 'common', grp: '精算・振込', q: 'Stripeのアカウントを自分で管理する必要がありますか？', a: 'いいえ。精算設定や口座情報の変更など、通常のご利用はすべてこのページ（個展なび）で完結し、Stripe側の画面を操作いただく必要はありません。初回のご登録時にのみ、Stripeの利用規約へのご同意など簡単な連携手続きをお願いする場合があります。' },
   { id: 'SET-09', cat: 'liaison-settlement', side: 'seller', aud: 'common', grp: '精算・振込', q: '振込日（20日）が土日祝日などの金融機関休業日にあたる場合はどうなりますか？', a: 'その場合は翌営業日に振り込まれます（決済パートナーであるStripe社の入金スケジュールに準じます）。年末年始などで休業日が続く場合も同様に、直後の営業日にまとめて処理されます。' },
@@ -2007,6 +2007,8 @@ function renderAll() {
   updateActiveState(window.ktnState.page);
   syncAdminNote();
   ktnLiaisonGate();
+  ktnAdminLvFilter();
+  ktnAdminView();   /* 取引の画面を管理者として見る（?view=admin） */
   ktnTermsGate();   /* 規約の変更への同意（ログインのとき・ログインしたままの人は最初に開いたページで） */
   ktnEditDelete();
   ktnConsoleLinks();
@@ -2208,8 +2210,8 @@ const PAGES = {
   'p3-12': { n: 'クリエイター-インサイト', bc: [['Top', '/'], ['クリエイター', 'kotennavi-p10-2.html'], ['田中 透', 'kotennavi-p3.html'], ['インサイト', null]] },
   'p3-13': { n: 'クリエイター-オーディエンス管理', bc: [['Top', '/'], ['クリエイター', 'kotennavi-p10-2.html'], ['田中 透', 'kotennavi-p3.html'], ['オーディエンス管理', null]] },
   'p3-14': { n: 'クリエイター-ポートフォリオ管理', bc: [['Top', '/'], ['クリエイター', 'kotennavi-p10-2.html'], ['田中 透', 'kotennavi-p3.html'], ['ポートフォリオ管理', null]] },
-  'p3-15': { n: 'クリエイター-リエゾン+ 展覧会一覧', bc: [['Top', '/'], ['クリエイター', 'kotennavi-p10-2.html'], ['田中 透', 'kotennavi-p3.html'], ['リエゾン+ 展覧会一覧', null]] },
-  'p3-15-1': { n: 'クリエイター-リエゾン+コンソール', bc: [['Top', '/'], ['クリエイター', 'kotennavi-p10-2.html'], ['田中 透', 'kotennavi-p3.html'], ['リエゾン+ 展覧会一覧', 'kotennavi-p3-15.html'], ['リエゾン+コンソール', null]] },
+  'p3-15': { n: 'クリエイター-リエゾン+コンソール', bc: [['Top', '/'], ['クリエイター', 'kotennavi-p10-2.html'], ['田中 透', 'kotennavi-p3.html'], ['リエゾン+コンソール', null]] },
+  'p3-15-1': { n: 'クリエイター-リエゾン+コンソール（展覧会）', bc: [['Top', '/'], ['クリエイター', 'kotennavi-p10-2.html'], ['田中 透', 'kotennavi-p3.html'], ['リエゾン+コンソール', 'kotennavi-p3-15.html'], ['展覧会', null]] },   /* 最後は展覧会名に替わる（pages.js ktnConsoleRender） */
   'p3-16': { n: 'クリエイター-取引デスク', bc: [['Top', '/'], ['クリエイター', 'kotennavi-p10-2.html'], ['田中 透', 'kotennavi-p3.html'], ['取引デスク', null]] },
   'p3-17': { n: 'クリエイター販売代金管理', bc: [['Top', '/'], ['クリエイター', 'kotennavi-p10-2.html'], ['田中 透', 'kotennavi-p3.html'], ['販売代金管理', null]] },
   'p3-18': { n: 'クリエイター-展覧会管理', bc: [['Top', '/'], ['クリエイター', 'kotennavi-p10-2.html'], ['田中 透', 'kotennavi-p3.html'], ['展覧会管理', null]] },
@@ -2224,8 +2226,8 @@ const PAGES = {
   'p4-12': { n: 'ギャラリー-インサイト', bc: [['Top', '/'], ['ギャラリー', 'kotennavi-p10-3.html'], ['Gallery SOIL 渋谷', 'kotennavi-p4.html'], ['インサイト', null]] },
   'p4-13': { n: 'ギャラリー-オーディエンス管理', bc: [['Top', '/'], ['ギャラリー', 'kotennavi-p10-3.html'], ['Gallery SOIL 渋谷', 'kotennavi-p4.html'], ['オーディエンス管理', null]] },
   'p4-14': { n: 'ギャラリー-インベントリー管理', bc: [['Top', '/'], ['ギャラリー', 'kotennavi-p10-3.html'], ['Gallery SOIL 渋谷', 'kotennavi-p4.html'], ['インベントリー管理', null]] },
-  'p4-15': { n: 'ギャラリー-リエゾン+ 展覧会一覧', bc: [['Top', '/'], ['ギャラリー', 'kotennavi-p10-3.html'], ['Gallery SOIL 渋谷', 'kotennavi-p4.html'], ['リエゾン+ 展覧会一覧', null]] },
-  'p4-15-1': { n: 'ギャラリー-リエゾン+コンソール', bc: [['Top', '/'], ['ギャラリー', 'kotennavi-p10-3.html'], ['Gallery SOIL 渋谷', 'kotennavi-p4.html'], ['リエゾン+ 展覧会一覧', 'kotennavi-p4-15.html'], ['リエゾン+コンソール', null]] },
+  'p4-15': { n: 'ギャラリー-リエゾン+コンソール', bc: [['Top', '/'], ['ギャラリー', 'kotennavi-p10-3.html'], ['Gallery SOIL 渋谷', 'kotennavi-p4.html'], ['リエゾン+コンソール', null]] },
+  'p4-15-1': { n: 'ギャラリー-リエゾン+コンソール（展覧会）', bc: [['Top', '/'], ['ギャラリー', 'kotennavi-p10-3.html'], ['Gallery SOIL 渋谷', 'kotennavi-p4.html'], ['リエゾン+コンソール', 'kotennavi-p4-15.html'], ['展覧会', null]] },   /* 最後は展覧会名に替わる（pages.js ktnConsoleRender） */
   'p4-16': { n: 'ギャラリー-取引デスク', bc: [['Top', '/'], ['ギャラリー', 'kotennavi-p10-3.html'], ['Gallery SOIL 渋谷', 'kotennavi-p4.html'], ['取引デスク', null]] },
   'p4-17': { n: 'ギャラリー-販売代金管理', bc: [['Top', '/'], ['ギャラリー', 'kotennavi-p10-3.html'], ['Gallery SOIL 渋谷', 'kotennavi-p4.html'], ['販売代金管理', null]] },
   'p4-18': { n: 'ギャラリー-展覧会管理', bc: [['Top', '/'], ['ギャラリー', 'kotennavi-p10-3.html'], ['Gallery SOIL 渋谷', 'kotennavi-p4.html'], ['展覧会管理', null]] },
@@ -2374,7 +2376,7 @@ const PAGES = {
   'p90-11': { n: '管理者-リエゾンプラス機能申込管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['リエゾンプラス機能申込管理', null]] },
   'p90-11-1': { n: '管理者-リエゾンプラス機能申込審査', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['リエゾンプラス機能申込管理', 'kotennavi-p90-11.html'], ['審査', null]] },
   'p90-12': { n: '管理者-リエゾンプラスコンソール', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['リエゾンプラスコンソール', null]] },
-  'p90-13': { n: '管理者-取引デスク', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['取引デスク', null]] },
+  'p90-13': { n: '管理者-取引管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['取引管理', null]] },
   'p90-14': { n: '管理者-販売代金管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['販売代金管理', null]] },
   'p90-15': { n: '管理者-リエゾンプラス申込者一覧', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['リエゾンプラス申込者一覧', null]] },
   'p90-16': { n: '管理者-作品購入ユーザー一覧', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['作品購入ユーザー一覧', null]] },
@@ -2385,7 +2387,7 @@ const PAGES = {
   'p90-21': { n: '管理者-対応案件', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['対応案件', null]] },
   'p90-21-1': { n: '管理者-対応案件の詳細', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['対応案件', 'kotennavi-p90-21.html'], ['対応案件の詳細', null]] },
   'p90-22': { n: '管理者-更新の記録', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['更新の記録', null]] },
-  'p90-29': { n: '管理者-管理者ガイド', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['管理者ガイド', null]] },
+  'p90-29': { n: '管理者-管理者マニュアル', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['管理者マニュアル', null]] },
   'p90-28': { n: '管理者-操作の記録', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['操作の記録', null]] },
   'p90-23': { n: '管理者-作品管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['作品管理', null]] },
   'p90-17': { n: '管理者-検索・特集管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['検索・特集管理', null]] },
@@ -2876,6 +2878,32 @@ KTN.setOffline = function (off) {
   });
 };
 window.ktnDemoOffline = function (off) { KTN.setOffline(off); };
+/* 取引の画面を、管理者として見る（?view=admin・P90-13 取引管理の「取引の詳細と操作」から開く・2026-11-09）。
+   出品者の取引デスク（P3-16／P4-16）・購入者の取引ワークスペース（P5-15）を、当事者と同じ画面で見る。
+   上に帯を出し、取引の操作（data-txn-op）・取引メッセージの送信・事務局への問合せの送信は押しても動かさない（当事者の代わりに操作しない）。
+   返金・強制キャンセルは P90-13 の行から行う。本番は、管理者のログインで当事者の画面を読むだけの API（操作の API は拒む） */
+var KTN_ADMIN_VIEW_PAGES = ['p3-16', 'p4-16', 'p5-15'];
+function ktnIsAdminView() { return KTN_ADMIN_VIEW_PAGES.indexOf(window.ktnState && window.ktnState.page) >= 0 && /[?&]view=admin(&|$)/.test(location.search); }
+function ktnAdminView() {
+  if (!ktnIsAdminView() || document.getElementById('ktnAdminViewBar')) return;
+  document.body.classList.add('is-admin-view');
+  var who = window.ktnState.page === 'p5-15' ? '購入者の取引ワークスペース' : '出品者の取引デスク';
+  var txn = (location.search.match(/[?&]txn=([^&]+)/) || [])[1] || '';
+  var bar = document.createElement('div'); bar.id = 'ktnAdminViewBar'; bar.className = 'ktn-admin-view-bar'; bar.setAttribute('role', 'status');
+  bar.innerHTML = '<strong>管理者として表示しています</strong><span>' + who + 'を、当事者と同じ画面で見ています。操作はできません。返金・強制キャンセルは取引管理から行います。</span>' +
+    '<a class="ktn-guide-link" href="./kotennavi-p90-13.html' + (txn ? '?q=' + encodeURIComponent(txn) : '') + '">取引管理へ戻る →</a>';
+  var wrap = document.querySelector('.ktn-mgmt-context') || document.querySelector('.ktn-mgmt-wrap');
+  if (wrap) wrap.parentNode.insertBefore(bar, wrap); else document.body.insertBefore(bar, document.body.firstChild);
+  document.querySelectorAll('[data-txn-op], .p515-comments__send, #p316ContactOk, #p416ContactOk, #p515ContactOk').forEach(function (b) { b.setAttribute('aria-disabled', 'true'); });
+}
+document.addEventListener('click', function (e) {
+  if (!document.body.classList.contains('is-admin-view')) return;
+  var b = e.target.closest && e.target.closest('[data-txn-op], .p515-comments__send, #p316ContactOk, #p416ContactOk, #p515ContactOk');
+  if (!b) return;
+  e.preventDefault(); e.stopImmediatePropagation();
+  KTN.toast('管理者として表示しているため、操作はできません');
+}, true);
+window.ktnAdminView = ktnAdminView;
 document.addEventListener('click', function (e) {
   if (!document.body.classList.contains('is-offline')) return;
   var b = e.target.closest && e.target.closest('[data-txn-op]');
@@ -3330,15 +3358,16 @@ function inqMenuLabel(owner) {
 
 /* P3（クリエイター）オーナーメニュー（単一ソース・トップ〜全管理サブページ共通）。
    curPage＝現在開いている管理サブページID。省略時（トップ/公開サブページ）は自己参照判定が無効。
-   LIAISON+未申請時（ktnLPApplied()===false）はコンソール/取引デスク/販売代金管理をまとめて隠し、
+   LIAISON+未申請時（ktnLPApplied()===false）は リエゾン+コンソール／販売代金管理をまとめて隠し、
+   取引デスク（P3-16／P4-16）はメニューに置かない＝個別の取引は、リエゾン+コンソールの作品の行から開く（メニューからでは、どの取引を開くか分からない・2026-11-09 ユーザー指示）。
+  
    「LIAISON+に申し込む」（p11-4）1項目に差し替える（未申請なら取引・入金も存在し得ないため）。 */
 function p3OwnerMenuItems(curPage) {
-  /* リエゾン+関連の3項目（申請済）／申込1項目（未申請）は他の項目と同じ ddi/ddiP だが、
+  /* リエゾン+関連の2項目（申請済）／申込1項目（未申請）は他の項目と同じ ddi/ddiP だが、
      extraCls 'ktn-ddi--lp' でLIAISONブランドのゴールド識別（アイコン色・左アクセント）を付与し、
      申請済/未申請どちらの状態でも同じ見た目でひと目でLIAISON+関連とわかるようにする（2026-08-17）。 */
   var lpBlock = ktnLPApplied()
-    ? ddiP(curPage, 'p3-15', 'shop', 'LIAISON+ 展覧会一覧', "location.href='./kotennavi-p3-15.html'", 'ktn-ddi--lp') +
-      ddiP(curPage, 'p3-16', 'desk', '取引デスク', "location.href='./kotennavi-p3-16.html'", 'ktn-ddi--lp') +
+    ? ddiP(curPage, 'p3-15', 'shop', 'リエゾン+コンソール', "location.href='./kotennavi-p3-15.html'", 'ktn-ddi--lp') +
       ddiP(curPage, 'p3-17', 'sales', '販売代金管理', "location.href='./kotennavi-p3-17.html'", 'ktn-ddi--lp')
     : ddi('shop', 'LIAISON+に申し込む', false, "location.href='./kotennavi-p11-4.html'", 'ktn-ddi--lp');
   return ddiP(curPage, 'p3-11', 'edit', 'プロフィール編集', "location.href='./kotennavi-p3-11.html'") + ddSep() +
@@ -3359,8 +3388,7 @@ function p3OwnerMenuItems(curPage) {
 function p4OwnerMenuItems(curPage) {
   /* p3と同一の見た目ルール（extraCls 'ktn-ddi--lp'）。詳細は p3OwnerMenuItems 側のコメント参照。 */
   var lpBlock = ktnLPApplied()
-    ? ddiP(curPage, 'p4-15', 'shop', 'LIAISON+ 展覧会一覧', "location.href='./kotennavi-p4-15.html'", 'ktn-ddi--lp') +
-      ddiP(curPage, 'p4-16', 'desk', '取引デスク', "location.href='./kotennavi-p4-16.html'", 'ktn-ddi--lp') +
+    ? ddiP(curPage, 'p4-15', 'shop', 'リエゾン+コンソール', "location.href='./kotennavi-p4-15.html'", 'ktn-ddi--lp') +
       ddiP(curPage, 'p4-17', 'sales', '販売代金管理', "location.href='./kotennavi-p4-17.html'", 'ktn-ddi--lp')
     : ddi('shop', 'LIAISON+に申し込む', false, "location.href='./kotennavi-p11-4.html'", 'ktn-ddi--lp');
   return ddiP(curPage, 'p4-11', 'edit', 'ギャラリー情報編集', "location.href='./kotennavi-p4-11.html'") + ddSep() +
@@ -3781,8 +3809,9 @@ function getActions(page, role) {
   }
 
   if (['p90-2', 'p90-2-1', 'p90-9', 'p90-10', 'p90-11', 'p90-11-1', 'p90-13', 'p90-14', 'p90-17', 'p90-18', 'p90-20', 'p90-24'].includes(page)) {
-    /* 「ガイド」＝P90-29 管理者ガイド（取引デスクは支払い後のキャンセルと返金の章・2026-11-07） */
-    if (role === 'admin') return owbtn('info', 'ガイド', "location.href='./kotennavi-p90-29.html" + (page === 'p90-13' ? '#refund' : '') + "'");
+    /* 「マニュアル」＝P90-29 管理者マニュアル（サイト全体・業務ごと。開いたページの業務の箇所へ・2026-11-09） */
+    var MANUAL_AT = { 'p90-2': 'e-apply', 'p90-2-1': 'e-apply', 'p90-9': 'a-texts', 'p90-10': 'l-txn', 'p90-11': 'a-lp-apply', 'p90-11-1': 'a-lp-apply', 'p90-13': 'refund', 'p90-14': 'l-payout', 'p90-17': 'a-site', 'p90-18': 'a-texts', 'p90-20': 'a-campaign', 'p90-24': 'a-texts' };
+    if (role === 'admin') return owbtn('info', 'マニュアル', "location.href='./kotennavi-p90-29.html" + (MANUAL_AT[page] ? '#' + MANUAL_AT[page] : '') + "'");
     return '';
   }
 
@@ -3921,6 +3950,14 @@ KTN.setAdminLevel = function (lv) {
   if (typeof syncAdminNote === 'function') syncAdminNote();
   document.dispatchEvent(new CustomEvent('ktn:adminlevel', { detail: lv }));
 };
+/* data-admin-lv="L|A"：その種類より下の管理者には出さない（管理者マニュアル P90-29 の業務・手順など・2026-11-09 ユーザー指示＝権限の少ない管理者は上の管理者の文を見られない）。
+   本番はサーバーが、その管理者の種類で見せる部分だけを返す（画面で隠すだけにしない） */
+function ktnAdminLvFilter() {
+  var els = document.querySelectorAll('[data-admin-lv]'); if (!els.length) return;
+  var n = KTN.ADMIN_LEVELS[KTN.adminLevel()].n;
+  els.forEach(function (el) { var need = KTN.ADMIN_LEVELS[el.getAttribute('data-admin-lv')]; el.hidden = !!need && n < need.n; });
+}
+window.ktnAdminLvFilter = ktnAdminLvFilter;
 /* admin（すべての権限）か。公開のページの管理者メニュー・管理者だけの表示（コメントの削除など）はこれで判定する（案2） */
 KTN.isFullAdmin = function () { return window.ktnState && window.ktnState.role === 'admin' && KTN.adminLevel() === 'A'; };
 /* ヘッダーを描くときのロール：公開のページで admin 以外の管理者は、管理者の操作を持たない役割（staff）として描く。ヘッダーを自前で描くページ（P6 系）もこれを通す */

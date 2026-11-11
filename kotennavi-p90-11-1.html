@@ -196,7 +196,7 @@
               <option value="cancel-resp-info">責任者情報の不備</option>
               <option value="cancel-missing-fields">必須項目の不足</option>
               <option value="cancel-other">その他</option>
-              <option value="__new__">＋ 新しいテンプレートとして追加</option>
+              <option value="__new__" data-admin-lv="A">＋ 新しいテンプレートとして追加</option>
             </select>
           </div>
           <label class="p902-cancel-check">
@@ -253,6 +253,8 @@
           <div class="p902-review-actions__group p902-review-actions__group--caution">
             <button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline" id="p9011InquiryBtn">申込者に確認する</button>
             <button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline" id="p9011CancelFlowBtn">取消にする</button>
+            <!-- 利用開始のあとの LIAISON+ の利用の取消（費用の未払いなど）は、アカウントの操作なのでユーザーの編集（P90-1-1）で行う（2026-11-11） -->
+            <p class="p211-help" id="p9011RevokeNote" hidden>利用開始のあとに LIAISON+ の利用を取り消すときは、<a class="ktn-guide-link" id="p9011RevokeLink" href="./kotennavi-p90-1-1.html#lp">ユーザーの編集 →</a> で行います（費用の未払いなど）。</p>
           </div>
           <div class="p902-review-actions__group p902-review-actions__group--main">
             <button type="button" class="ktn-op-btn ktn-op-btn--primary" id="p9011ApproveBtn">本人確認OKにする</button>

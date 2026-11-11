@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>取引デスク — 管理者 | 個展なび</title>
+  <title>取引管理 — 管理者 | 個展なび</title>
   <meta name="robots" content="noindex,nofollow">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
@@ -112,7 +112,7 @@
           <div class="ktn-mgmt-head__badge-row">
             <span class="lb-dot li-plus">LIAISON+</span>
           </div>
-          <h2 class="ktn-mgmt-head__title">取引デスク</h2>
+          <h2 class="ktn-mgmt-head__title">取引管理</h2>
           <p class="ktn-mgmt-head__en">TRANSACTION DESK</p>
           <p class="ktn-mgmt-head__desc">取引は出品者と購入者のあいだで進むため、管理者の対応は状態の確認・連絡先の確認・問題が起きたときの強制キャンセルなどに限ります。</p>
         </div>
@@ -130,8 +130,17 @@
 
         <div class="p319-toolbar">
           <div class="p319-toolbar__filters">
-            <!-- 展覧会で絞る（NID・URL・P90-12 の「取引デスク →」からは ?ex= で入って開く・2026-11-03） -->
-            <label class="p319-filter">
+            <!-- 取引番号・申込NID で探す（利用者のお問合わせには取引番号が書かれている・?q= でも開ける・2026-11-10）。取引中・終了の両方から探し、見つかった方のタブを開く -->
+            <label class="p319-filter p9013-q">
+              <span class="p319-filter__label">取引番号</span>
+              <input type="search" class="p319-filter__sel" id="p9013Q" placeholder="例：TXN-20261105-7021">
+            </label>
+            <label class="p319-filter p9013-qn">
+              <span class="p319-filter__label">申込NID</span>
+              <input type="search" class="p319-filter__sel" id="p9013QNid" placeholder="例：N-77021">
+            </label>
+            <!-- 展覧会で絞る（NID・URL・P90-12 の「取引管理 →」からは ?ex= で入って開く・2026-11-03） -->
+            <label class="p319-filter p9013-exq">
               <span class="p319-filter__label">展覧会の NID・URL</span>
               <input type="search" class="p319-filter__sel p90cm-nid" id="p9013Ex" placeholder="例：198650 または展覧会のページの URL">
             </label>
@@ -157,13 +166,12 @@
           <table class="p315-archive-table" aria-label="取引一覧">
             <thead>
               <tr>
-                <th>申込NID</th>
+                <th>申込NID<br>取引番号</th>
                 <th>作品名</th>
                 <th>出品者</th>
                 <th>購入者</th>
                 <th>取引状態</th>
                 <th>期限</th>
-                <th>操作</th>
               </tr>
             </thead>
             <tbody>
@@ -174,10 +182,6 @@
                 <td data-label="購入者"><a class="ktn-guide-link" href="kotennavi-p5.html">yamada_hanako</a></td>
                 <td data-label="取引状態"><span class="p315-txn-row__status p315-apply-status--stock">購入確定待ち</span></td>
                 <td data-label="期限"><span class="ktn-days-chip ktn-days-chip--urgent">あと1日</span></td>
-                <td data-label="操作">
-                  <a class="ktn-action-btn ktn-action-btn--alert" href="#">詳細を見る →</a>
-                  <button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline">強制キャンセル</button>
-                </td>
               </tr>
               <tr>
                 <td data-label="申込NID" class="is-id">N-77034</td>
@@ -186,10 +190,6 @@
                 <td data-label="購入者"><a class="ktn-guide-link" href="kotennavi-p5.html">sato_misaki</a></td>
                 <td data-label="取引状態"><span class="p315-txn-row__status p315-apply-status--pay">支払待ち</span></td>
                 <td data-label="期限"><span class="ktn-days-chip">あと5日</span></td>
-                <td data-label="操作">
-                  <a class="ktn-action-btn" href="#">詳細を見る →</a>
-                  <button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline">強制キャンセル</button>
-                </td>
               </tr>
               <tr>
                 <td data-label="申込NID" class="is-id">N-77048</td>
@@ -198,10 +198,6 @@
                 <td data-label="購入者"><a class="ktn-guide-link" href="kotennavi-p5.html">kobayashi_makoto</a></td>
                 <td data-label="取引状態"><span class="p315-txn-row__status p315-apply-status--ship">発送待ち</span></td>
                 <td data-label="期限"><span class="ktn-days-chip ktn-days-chip--urgent">あと1日</span></td>
-                <td data-label="操作">
-                  <a class="ktn-action-btn ktn-action-btn--alert" href="#">詳細を見る →</a>
-                  <button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline">強制キャンセル</button>
-                </td>
               </tr>
               <tr>
                 <td data-label="申込NID" class="is-id">N-77052</td>
@@ -210,9 +206,6 @@
                 <td data-label="購入者"><a class="ktn-guide-link" href="kotennavi-p5.html">tamura_ken</a></td>
                 <td data-label="取引状態"><span class="p315-txn-row__status p315-apply-status--recv">受取確認待ち</span></td>
                 <td data-label="期限"><span class="ktn-days-chip">あと7日</span></td>
-                <td data-label="操作">
-                  <a class="ktn-action-btn" href="#">詳細を見る →</a>
-                </td>
               </tr>
               <tr>
                 <td data-label="申込NID" class="is-id">N-77061</td>
@@ -221,9 +214,6 @@
                 <td data-label="購入者"><a class="ktn-guide-link" href="kotennavi-p5.html">nakamura_aya</a></td>
                 <td data-label="取引状態"><span class="p315-txn-row__status p315-apply-status--finish">完了確認待ち</span></td>
                 <td data-label="期限"><span class="ktn-days-chip">あと3日</span></td>
-                <td data-label="操作">
-                  <a class="ktn-action-btn" href="#">詳細を見る →</a>
-                </td>
               </tr>
               <tr>
                 <td data-label="申込NID" class="is-id">N-77070</td>
@@ -232,9 +222,6 @@
                 <td data-label="購入者"><a class="ktn-guide-link" href="kotennavi-p5.html">kimura_keiko</a></td>
                 <td data-label="取引状態"><span class="p315-txn-row__status p315-apply-status--done">取引完了</span></td>
                 <td data-label="期限">—</td>
-                <td data-label="操作">
-                  <a class="ktn-action-btn" href="#">詳細を見る →</a>
-                </td>
               </tr>
               <tr>
                 <td data-label="申込NID" class="is-id">N-77080</td>
@@ -243,10 +230,6 @@
                 <td data-label="購入者"><a class="ktn-guide-link" href="kotennavi-p5.html">ito_ren</a></td>
                 <td data-label="取引状態"><span class="p315-txn-row__status p315-apply-status--ship">発送待ち</span></td>
                 <td data-label="期限"><span class="ktn-days-chip ktn-days-chip--urgent">あと1日</span></td>
-                <td data-label="操作">
-                  <a class="ktn-action-btn ktn-action-btn--alert" href="#">詳細を見る →</a>
-                  <button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline">強制キャンセル</button>
-                </td>
               </tr>
               <tr>
                 <td data-label="申込NID" class="is-id">N-77086</td>
@@ -255,10 +238,6 @@
                 <td data-label="購入者"><a class="ktn-guide-link" href="kotennavi-p5.html">mori_yu</a></td>
                 <td data-label="取引状態"><span class="p315-txn-row__status p315-apply-status--pay">支払待ち</span></td>
                 <td data-label="期限"><span class="ktn-days-chip">あと4日</span></td>
-                <td data-label="操作">
-                  <a class="ktn-action-btn" href="#">詳細を見る →</a>
-                  <button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline">強制キャンセル</button>
-                </td>
               </tr>
               <!-- 非公開にした作品の申込（取引デスクで1件ずつ決める＝止めている・要対応。期限は設けない・2026-11-04） -->
               <tr>
@@ -268,10 +247,6 @@
                 <td data-label="購入者"><a class="ktn-guide-link" href="kotennavi-p5.html">endo_hina</a></td>
                 <td data-label="取引状態"><span class="p315-txn-row__status p315-apply-status--wait">申込済</span></td>
                 <td data-label="期限"><span class="ktn-days-chip ktn-days-chip--urgent">非公開の作品の申込</span></td>
-                <td data-label="操作">
-                  <a class="ktn-action-btn ktn-action-btn--alert" href="#">詳細を見る →</a>
-                  <button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline">強制キャンセル</button>
-                </td>
               </tr>
               <!-- 終了した展覧会（あなたが知らないオノマトペ・185220＝P90-12 の「終了」のタブ）の取引。取引完了・キャンセル済（2026-11-03） -->
               <tr>
@@ -281,9 +256,6 @@
                 <td data-label="購入者"><a class="ktn-guide-link" href="kotennavi-p5.html">ueno_sora</a></td>
                 <td data-label="取引状態"><span class="p315-txn-row__status p315-apply-status--done">取引完了</span></td>
                 <td data-label="期限">—</td>
-                <td data-label="操作">
-                  <a class="ktn-action-btn" href="#">詳細を見る →</a>
-                </td>
               </tr>
               <tr>
                 <td data-label="申込NID" class="is-id">N-75108</td>
@@ -292,9 +264,6 @@
                 <td data-label="購入者"><a class="ktn-guide-link" href="kotennavi-p5.html">yamada_hanako</a></td>
                 <td data-label="取引状態"><span class="p315-txn-row__status p315-apply-status--done">取引完了</span></td>
                 <td data-label="期限">—</td>
-                <td data-label="操作">
-                  <a class="ktn-action-btn" href="#">詳細を見る →</a>
-                </td>
               </tr>
               <tr>
                 <td data-label="申込NID" class="is-id">N-75115</td>
@@ -303,9 +272,6 @@
                 <td data-label="購入者"><a class="ktn-guide-link" href="kotennavi-p5.html">kato_rin</a></td>
                 <td data-label="取引状態"><span class="p315-txn-row__status p315-apply-status--done">取引完了</span></td>
                 <td data-label="期限">—</td>
-                <td data-label="操作">
-                  <a class="ktn-action-btn" href="#">詳細を見る →</a>
-                </td>
               </tr>
               <tr>
                 <td data-label="申込NID" class="is-id">N-75121</td>
@@ -314,9 +280,6 @@
                 <td data-label="購入者"><a class="ktn-guide-link" href="kotennavi-p5.html">abe_nao</a></td>
                 <td data-label="取引状態"><span class="p315-txn-row__status">キャンセル済</span></td>
                 <td data-label="期限">—</td>
-                <td data-label="操作">
-                  <a class="ktn-action-btn" href="#">詳細を見る →</a>
-                </td>
               </tr>
               <!-- 作品が削除された取引（キャンセル済）：作品名は記録から文字で出し「削除済み」を付ける。申込が一度でもあった作品は本当には消さない（2026-11-03） -->
               <tr>
@@ -326,9 +289,6 @@
                 <td data-label="購入者"><a class="ktn-guide-link" href="kotennavi-p5.html">sato_mio</a></td>
                 <td data-label="取引状態"><span class="p315-txn-row__status">キャンセル済</span></td>
                 <td data-label="期限">—</td>
-                <td data-label="操作">
-                  <a class="ktn-action-btn" href="#">詳細を見る →</a>
-                </td>
               </tr>
             </tbody>
           </table>
@@ -352,7 +312,7 @@
 
 <nav class="ktn-bottom-nav" id="ktnBottomNav"><div class="ktn-bottom-nav__inner" id="ktnBottomNavInner"></div></nav>
 
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Top","item":"https://koten-navi.com/"},{"@type":"ListItem","position":2,"name":"管理者","item":"https://koten-navi.com/p90"},{"@type":"ListItem","position":3,"name":"取引デスク"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Top","item":"https://koten-navi.com/"},{"@type":"ListItem","position":2,"name":"管理者","item":"https://koten-navi.com/p90"},{"@type":"ListItem","position":3,"name":"取引管理"}]}</script>
 
 <script src="./kotennavi-common.js"></script>
 <script src="./kotennavi-pages.js"></script>

@@ -31,6 +31,12 @@
   <button class="dbtn on" id="dbarNew" onclick="setDemoMode('new')">新規</button>
   <button class="dbtn" id="dbarClone" onclick="setDemoMode('clone')">クローン</button>
   <button class="dbtn" id="dbarEdit" onclick="setDemoMode('edit')">編集</button>
+  <span class="dbar-sep">編集するユーザー：</span>
+  <button class="dbtn" data-demo-uid="U-10007" onclick="p901DemoUser('U-10007')">ユーザー</button>
+  <button class="dbtn" data-demo-uid="U-10003" onclick="p901DemoUser('U-10003')">クリエイター＋LIAISON+</button>
+  <button class="dbtn" data-demo-uid="U-10120" onclick="p901DemoUser('U-10120')">ギャラリー＋LIAISON+</button>
+  <button class="dbtn" data-demo-uid="U-10530" onclick="p901DemoUser('U-10530')">LIAISON+ 取消済み</button>
+  <button class="dbtn" data-demo-uid="U-10712" onclick="p901DemoUser('U-10712')">停止中</button>
 </div>
 
 <div class="shell">
@@ -166,7 +172,7 @@
             <!-- ロール（2026-11-01 ユーザー指示）：ラジオボタンで ユーザー・クリエイター・ギャラリーから1つ（クリエイター・ギャラリーはユーザーの機能を含む・同時には持てない）／LIAISON+＝トグル -->
             <div class="p9011-sws">
               <div class="p9011-sw p9011-radio"><span class="p9011-sw__label">ロール</span><span class="p9011-radio__opts" role="radiogroup" aria-label="ロール"><label><input type="radio" name="p901cg" value=""> ユーザー</label><label><input type="radio" name="p901cg" value="creator"> クリエイター</label><label><input type="radio" name="p901cg" value="gallery"> ギャラリー</label></span></div>
-              <div class="p9011-sw"><span class="p9011-sw__label">LIAISON+</span><button type="button" class="ktn-switch" role="switch" aria-checked="false" data-p901-role="lp" aria-label="LIAISON+"><span class="ktn-switch__track"><span class="ktn-switch__knob"></span></span><span class="ktn-switch__label">OFF</span></button></div>
+              <div class="p9011-sw" id="lp"><span class="p9011-sw__label">LIAISON+ <span id="p901LpState"></span></span><button type="button" class="ktn-switch" role="switch" aria-checked="false" data-p901-role="lp" aria-label="LIAISON+"><span class="ktn-switch__track"><span class="ktn-switch__knob"></span></span><span class="ktn-switch__label">OFF</span></button></div>
             </div>
             <div class="p211-field p9011-page" id="p901PageField" hidden>
               <label class="p211-label" for="p901Page">オーナーにするページの ID</label>
@@ -175,6 +181,7 @@
             </div>
             <p class="p211-help" id="p901LpCheck"></p>
             <p class="p9011-warn" id="p901RoleWarn" hidden></p>
+            <p class="p211-help">利用中の LIAISON+ を取り消す（費用の未払い・規約に反する利用など）ときも、ここで OFF にして保存します。保存のときに理由と本人へのメールを選びます。</p>
             <p class="p211-help">ふだんは、本人の申込のあと <a class="ktn-guide-link" href="./kotennavi-p90-2.html">機能申込管理 →</a>・<a class="ktn-guide-link" href="./kotennavi-p90-11.html">リエゾンプラス機能申込管理 →</a> の審査で付きます。ここで変えるのは、不具合や誤りを直すときです。変えたときは、保存のときに理由を書きます。</p>
           </div>
         </div>
@@ -249,15 +256,19 @@
     'U-10007': { email: 'hanako.y@example.com', nick: '山田 花子', role: '', lp: '', idOk: false, status: 'active', notify: { reminder: true, watch: true, news: false } },
     'U-10003': { email: 'toru.t@example.com', nick: '田中 透', role: 'creator', page: 'CR-1042', lp: 'on', lpApp: 'granted', idOk: true, status: 'active', notify: { reminder: true, watch: false, news: false, audience: true, insight: true } },
     'U-10120': { email: 'info@yugen.example.com', nick: 'YUGEN Gallery', role: 'gallery', page: 'GA-0412', lp: 'on', lpApp: 'granted', idOk: true, status: 'active', notify: { reminder: false, watch: false, news: true, audience: true, insight: false } },
+    'U-10530': { email: 'hayasaka.mio@example.com', nick: '早坂 美緒', role: 'creator', page: 'CR-2210', lp: '', lpApp: 'granted', lpRevoked: { date: '2026.11.05', reason: '費用の未払い' }, idOk: true, status: 'active', notify: { reminder: true, watch: true, news: false, audience: true, insight: true } },
     'U-10712': { email: 'xx77@example.net', nick: 'spam_account_77', role: '', lp: '', idOk: false, status: 'suspended', notify: { reminder: false, watch: false, news: false } }
   };
   var QUID = (location.search.match(/[?&]uid=([\w-]+)/) || [])[1];
   var DEMO_USER = DEMO_USERS[QUID] || DEMO_USERS['U-10007'];
+  /* デモバー：編集するユーザーを替えて、編集のモードで開き直す */
+  function p901DemoUser(uid) { QUID = uid; DEMO_USER = DEMO_USERS[uid]; setDemoMode('edit'); }
+  function p901DemoUserSync(mode) { document.querySelectorAll('[data-demo-uid]').forEach(function (b) { b.classList.toggle('on', mode === 'edit' && DEMO_USERS[b.dataset.demoUid] === DEMO_USER); }); }
 
   var MODE_TITLES = { new: 'ユーザーを新規作成', clone: 'ユーザーをクローンで作成', edit: 'ユーザーを編集' };
   var MODE_BANNER = {
     new:   '新しいユーザーアカウントを作成します。保存するとログインの案内メールが登録したアドレスに届きます。',
-    clone: '既存のユーザー「<strong>' + DEMO_USER.nick + '</strong>」の設定（通知設定）を元に新しいアカウントを作成します。メールアドレスとニックネームは新しいものを入れてください。',
+    clone: '',
     edit:  ''
   };
   /* ロール：今の値を入れ、変えたときの注意を出す（止めない・不具合や誤りの訂正のため） */
@@ -271,7 +282,7 @@
   /* 今の選び方を、前の形（role＝creator／gallery／''、lp＝'on'／''）にして比べる */
   function p901CurRole() { var r = document.querySelector('input[name="p901cg"]:checked'); return r ? r.value : ''; }
   function p901Roles(u) {
-    P901_BASE = { role: u ? u.role : '', page: u && u.page || '', lp: u && u.lp === 'on' ? 'on' : '', lpApp: u && u.lpApp || '', idOk: !!(u && u.idOk) };
+    P901_BASE = { role: u ? u.role : '', page: u && u.page || '', lp: u && u.lp === 'on' ? 'on' : '', lpApp: u && u.lpApp || '', lpRevoked: u && u.lpRevoked || null, idOk: !!(u && u.idOk) };
     document.querySelectorAll('input[name="p901cg"]').forEach(function (x) { x.checked = x.value === P901_BASE.role; });
     p901SwSet('lp', P901_BASE.lp === 'on');
     document.getElementById('p901Page').value = P901_BASE.page;
@@ -291,8 +302,13 @@
     if (b.role && role !== b.role) w = (b.page ? 'ページ（' + b.page + '）は' : '今のページは') + 'オーナーのいないページになります。';
     if (!role && lp === 'on') w += 'ロールがユーザーのときは、LIAISON+ は使えません（クリエイターかギャラリーで使えます）。';
     if (lp === 'on' && !b.idOk) w += '本人確認と口座の登録が済んでいないので、作品が売れても代金を振り込めません。';
+    if (b.lpRevoked && lp === 'on') w += 'LIAISON+ の利用を取り消したアカウントです（' + b.lpRevoked.date + '・' + b.lpRevoked.reason + '）。' + (/未払い/.test(b.lpRevoked.reason) ? '戻すのは、費用の支払いを確かめてからにしてください。' : '') + '保存のときに理由を書きます。';
+    if (b.lp === 'on' && lp !== 'on') w += 'LIAISON+ の利用を取り消します。進行中の取引は期限どおりに続き、新しい出品と購入の申込の受付が止まります。保存のときに、理由と本人へのメールを選びます。';
     var rw = document.getElementById('p901RoleWarn'); rw.textContent = w; rw.hidden = !w;
     /* LIAISON+ の申込の状況（P90-11 と同じ状態名・2026-11-02）と、本人確認・口座 */
+    var st = b.lpRevoked ? ['cancelled', '利用を取り消し済み（' + b.lpRevoked.date + '・' + b.lpRevoked.reason + '）'] : b.lp === 'on' ? ['granted', '利用中'] :
+      b.lpApp === 'pending' ? ['pending', '申込の確認中'] : b.lpApp === 'cancelled' ? ['cancelled', '申込を取消（審査で）'] : b.lpApp === 'granted' ? ['pending', '承認済み・利用の準備中'] : ['new', '申込なし'];
+    document.getElementById('p901LpState').innerHTML = '<span class="ktn-review-status ktn-review-status--' + st[0] + '">' + st[1] + '</span>';
     var APP = { pending: '確認中', granted: '利用開始', cancelled: '取消' };
     document.getElementById('p901LpCheck').innerHTML = 'LIAISON+ の申込：' + (b.lpApp ? '<span class="ktn-review-status ktn-review-status--' + b.lpApp + '">' + APP[b.lpApp] + '</span> <a class="ktn-guide-link" href="./kotennavi-p90-11.html">申込を見る →</a>' : 'なし') + '　本人確認と振込の口座の登録：' + (b.idOk ? '済み' : 'まだ');
   }
@@ -319,7 +335,9 @@
     document.getElementById('p901PageTitle').textContent = MODE_TITLES[mode];
     document.title = MODE_TITLES[mode] + ' — 管理者 | 個展なび';
     var banner = document.getElementById('p901ModeBanner'), bannerText = document.getElementById('p901ModeBannerText');
+    if (mode === 'clone') MODE_BANNER.clone = '既存のユーザー「<strong>' + DEMO_USER.nick + '</strong>」の設定（通知設定）を元に新しいアカウントを作成します。メールアドレスとニックネームは新しいものを入れてください。';
     if (MODE_BANNER[mode]) { bannerText.innerHTML = MODE_BANNER[mode]; banner.hidden = false; } else banner.hidden = true;
+    p901DemoUserSync(mode);
     var u = mode === 'edit' ? DEMO_USER : null;
     document.getElementById('p901Email').value = u ? u.email : '';
     document.getElementById('p901Nick').value = u ? u.nick : '';
@@ -343,6 +361,7 @@
       KTN.submitDone({ title: '保存しました', message: 'ユーザー情報を保存しました。', action: { label: 'ユーザー管理へ', href: './kotennavi-p90-1.html' } });
     }
     if (!p901RoleChanged()) { done(); return; }
+    if (P901_BASE.lp === 'on' && !p901SwOn('lp') && p901CurRole() === P901_BASE.role) { p901Revoke(nickEl.value.trim(), done); return; }
     /* ロールを変えたときは理由が必須（操作の記録「ロールの変更」に残る・2026-11-01） */
     var L = { '': 'ユーザー', creator: 'クリエイター', gallery: 'ギャラリー', on: 'ON', off: 'OFF' }, b = P901_BASE;
     var role = p901CurRole(), lp = p901SwOn('lp') ? 'on' : '', page = document.getElementById('p901Page').value.trim();
@@ -353,6 +372,38 @@
       note: change + '。理由は操作の記録に残ります。',
       done: 'ロールを変えて保存しました（デモ）',
       onDone: function (r) { if (KTN.auditRecord) KTN.auditRecord('ロールの変更', { t: 'user', nid: QUID || '', name: nickEl.value.trim() }, KTN.reasonText(r) + '（' + change + '）'); done(); } });
+  }
+
+  /* LIAISON+ の利用の取消（2026-11-11）：利用中の LIAISON+ を OFF にして保存するとき。費用の未払い（管理者マニュアル L6 の最後）・規約に反する利用など。
+     理由は必須で操作の記録に残る。本人へのメールは P90-9 のテンプレート（M-12①〜③）から始め、送る前に直せる */
+  function p901Revoke(name, done) {
+    var TP = (typeof ktnMailTemplates === 'function' ? ktnMailTemplates() : []).filter(function (t) { return t.screenId === 'p90-1'; });
+    var R = [['lp-revoke-unpaid', '費用の未払い'], ['lp-revoke-terms', '規約に反する利用'], ['lp-revoke-other', 'その他']];
+    function tp(k) { for (var i = 0; i < TP.length; i++) if (TP[i].variantKey === k) return TP[i]; return null; }
+    function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+    function body(k) { var t = tp(k); return t ? t.body.replace(/\{\{userName\}\}/g, name).replace(/\{\{commonFooter\}\}/g, '（共通のフッター）') : ''; }
+    var m = document.getElementById('p901RevokeModal');
+    if (!m) { m = document.createElement('div'); m.className = 'p211-modal'; m.id = 'p901RevokeModal'; document.body.appendChild(m); m.addEventListener('click', function (ev) { if (ev.target.closest('[data-close]')) m.hidden = true; }); }
+    m.innerHTML = '<div class="p211-modal__overlay" data-close></div><div class="p211-modal__box" role="dialog" aria-modal="true" style="max-height:calc(100vh - 40px);overflow-y:auto"><p class="p211-modal__title">LIAISON+ の利用を取り消しますか？</p>' +
+      '<p class="p211-modal__note">' + esc(name) + ' の LIAISON+ を取り消します。進行中の取引は期限どおりに続き、新しい出品と購入の申込の受付が止まります。費用の未払いが理由のときは、以後の LIAISON+ の申込を受け付けません（支払いの義務は残ります）。</p>' +
+      '<div class="p211-field"><label class="p211-label" for="p901RvReason">理由<span class="ktn-req">必須</span></label><select class="p211-select" id="p901RvReason">' + R.map(function (r) { return '<option value="' + r[0] + '">' + r[1] + '</option>'; }).join('') + '</select></div>' +
+      '<div class="p211-field"><label class="p211-label" for="p901RvDetail">詳しい内容<span class="ktn-req">必須</span></label><textarea class="p211-textarea" rows="2" id="p901RvDetail" placeholder="例：PC-03（最後の通知）の期限 11/05 を過ぎても未払い（取引 TXN-20261002-6380）"></textarea></div>' +
+      '<div class="p211-field p9013-tpl"><label class="p211-label"><input type="checkbox" id="p901RvMail" checked> 本人にメールを送る</label><p class="p9013-tpl__name" id="p901RvTplName"></p>' +
+      '<textarea class="p211-textarea" rows="10" id="p901RvBody"></textarea><p class="p211-help">テンプレートをもとに、このケースに合わせて加筆・修正・削除してから送ってください。（　）の中は書き換えます。</p></div>' +
+      '<div class="p211-modal__foot"><button type="button" class="ktn-op-btn" data-close>キャンセル</button><button type="button" class="ktn-op-btn ktn-op-btn--danger" id="p901RvOk">取り消して保存</button></div></div>';
+    var sel = document.getElementById('p901RvReason'), bd = document.getElementById('p901RvBody'), mail = document.getElementById('p901RvMail');
+    function load() { var t = tp(sel.value); document.getElementById('p901RvTplName').innerHTML = t ? 'M-12' + ['①', '②', '③'][+String(t.id).split('-').pop() - 1] + ' ' + esc(t.name) + ' <a class="ktn-guide-link" href="./kotennavi-p90-9.html" target="_blank" rel="noopener">P90-9 で見る →</a>' : ''; bd.value = body(sel.value); bd.defaultValue = bd.value; }
+    sel.onchange = load; mail.onchange = function () { bd.disabled = !mail.checked; }; load();
+    m.hidden = false;
+    document.getElementById('p901RvOk').onclick = function () {
+      var det = document.getElementById('p901RvDetail').value.trim(); if (!det) { document.getElementById('p901RvDetail').focus(); return; }
+      if (mail.checked && !bd.value.trim()) { bd.focus(); return; }
+      var label = sel.options[sel.selectedIndex].text;
+      if (KTN.auditRecord) KTN.auditRecord('LIAISON+ の利用の取消', { t: 'user', nid: QUID || '', name: name }, label + '：' + det + (mail.checked ? '（M-12 を送った' + (bd.value !== bd.defaultValue ? '・本文を直した' : '') + '）' : '（メールなし）'));
+      var z = function (n) { return (n < 10 ? '0' : '') + n; }, dt = new Date();
+      P901_BASE.lp = ''; P901_BASE.lpRevoked = { date: dt.getFullYear() + '.' + z(dt.getMonth() + 1) + '.' + z(dt.getDate()), reason: label }; p901RoleSync();
+      m.hidden = true; KTN.toast('LIAISON+ の利用を取り消しました（デモ）'); done();
+    };
   }
 
   document.addEventListener('DOMContentLoaded', function () {
