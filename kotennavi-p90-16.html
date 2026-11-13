@@ -239,13 +239,15 @@
       var maxRank = RANK[fp];
       var visible = 0;
       rows.forEach(function (tr) {
-        var match = maxRank === 99 || Number(tr.dataset.rank) <= maxRank;
+        var wo = document.getElementById('p9016WarnOnly');   /* 注意ありのみ（pages.js ktnWarnPage が足す・2026-11-12） */
+        var match = maxRank === 99 || Number(tr.dataset.rank) <= maxRank && (!(wo && wo.checked) || tr.dataset.warn === 'warn');
         tr.hidden = !match;
         if (match) visible++;
       });
       if (countEl) countEl.innerHTML = '<strong>' + visible + '</strong>件該当';
       if (emptyEl) emptyEl.hidden = visible !== 0;
     }
+    window.p9016Render = render;
     if (periodSel) periodSel.addEventListener('change', render);
     render();
   })();

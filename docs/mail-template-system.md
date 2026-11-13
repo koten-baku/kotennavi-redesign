@@ -6,7 +6,7 @@
 
 ## 1. 位置づけ
 
-- `docs/email-templates.md`＝**発火点（いつ・誰に送るか）の棚卸しとDrupal引き継ぎ用の文面インデックス**（M-01〜等の通し番号）。canonicalなのは「どのイベントでどの受信者に送るか」の一覧性。
+- `docs/email-templates.md`＝**発火点（いつ・誰に送るか）の棚卸しとDrupal引き継ぎ用の文面インデックス**（A-M-01〜等の通し番号）。canonicalなのは「どのイベントでどの受信者に送るか」の一覧性。
 - 本ファイル＋P90-9＝**文面の実体を編集可能なデータとして持つ仕組み**の仕様。email-templates.mdのM番号は「発火点インデックス」として残し、本ファイルの`variantKey`と対応付ける（4章）。
 - 現段階（HTML/CSS/JS納品・React CSR化前）は**ページ間の実データ連携がない**（各HTMLが独立ロード）。そのためP90-9のテンプレートCRUDと、P90-2側で使うテンプレート選択は、**同じ形のデータをそれぞれのページ内デモ配列として個別に持つ**（本番はDrupalのテンプレートAPIに統合）。
 
@@ -48,10 +48,10 @@ P90-2では、正常系（利用開始のご案内）は**ロール×処理種�
 
 | `variantKey` | `name` | 対応するM番号 |
 |---|---|---|
-| `creator-new` | クリエイター機能 – 新規ページ作成 | M-02（新規） |
-| `creator-link` | クリエイター機能 – 既存ページのリンク付け | M-02（既存リンク・引き継ぎ結果ブロック付き） |
-| `gallery-new` | ギャラリー機能 – 新規ページ作成 | M-04（新規・新規起草） |
-| `gallery-link` | ギャラリー機能 – 既存ページのリンク付け | M-04（既存リンク・新規起草） |
+| `creator-new` | クリエイター機能 – 新規ページ作成 | S-M-02（新規） |
+| `creator-link` | クリエイター機能 – 既存ページのリンク付け | S-M-02（既存リンク・引き継ぎ結果ブロック付き） |
+| `gallery-new` | ギャラリー機能 – 新規ページ作成 | S-M-04（新規・新規起草） |
+| `gallery-link` | ギャラリー機能 – 既存ページのリンク付け | S-M-04（既存リンク・新規起草） |
 
 P90-2側は、申込の`role`＋`processType`から`variantKey`（`{role}-{processType}`）を算出し、パネルを開いた時点でこれをデフォルト選択する（プルダウン自体は4件とも見えるため手動で他の文面に差し替えることも可能）。
 
@@ -59,9 +59,9 @@ P90-2側は、申込の`role`＋`processType`から`variantKey`（`{role}-{proce
 
 | `variantKey` | `name` | 対応するM番号 |
 |---|---|---|
-| `confirm-input-error` | 入力不足・入力誤り | M-06 パターン① |
-| `confirm-duplicate` | 重複申込の可能性 | M-06 パターン② |
-| `confirm-claim` | 既存の掲載ページの管理についての確認 | M-06（オーナー未設定ページの引き継ぎ・2026-09-27 追加） |
+| `confirm-input-error` | 入力不足・入力誤り | S-M-06 パターン① |
+| `confirm-duplicate` | 重複申込の可能性 | S-M-06 パターン② |
+| `confirm-claim` | 既存の掲載ページの管理についての確認 | S-M-06（オーナー未設定ページの引き継ぎ・2026-09-27 追加） |
 
 ※`role-switch`は申込者本人からの連絡が起点のため確認メールを経由しないことがある（既存のCLAUDE.md運用どおり）。確認メールの選択肢には含めない。
 
@@ -69,10 +69,10 @@ P90-2側は、申込の`role`＋`processType`から`variantKey`（`{role}-{proce
 
 | `variantKey` | `name` | 対応するM番号 |
 |---|---|---|
-| `cancel-input-error` | 入力不足・入力誤り | M-07 パターン①（①②④共通文） |
-| `cancel-duplicate` | 以前に別アカウントで申込済み | M-07 パターン②（①②④共通文） |
-| `cancel-role-switch` | 希望ロールの変更 | M-07 パターン③ |
-| `cancel-other` | その他 | M-07 パターン④（①②④共通文） |
+| `cancel-input-error` | 入力不足・入力誤り | S-M-07 パターン①（①②④共通文） |
+| `cancel-duplicate` | 以前に別アカウントで申込済み | S-M-07 パターン②（①②④共通文） |
+| `cancel-role-switch` | 希望ロールの変更 | S-M-07 パターン③ |
+| `cancel-other` | その他 | S-M-07 パターン④（①②④共通文） |
 
 `input-error`／`duplicate`／`other`は現状すべて同じ文面（今回の移行では文面の新規作成は行わず、現行コードの出力をそのままテンプレート化する）。バリアントとして分けておくことで、将来それぞれの文言を個別に調整できるようにする（分割の目的そのもの）。
 
@@ -103,13 +103,13 @@ P90-11（リエゾンプラス機能申込審査）も P90-2 と同じ「正常�
 
 | 画面（`screenId`） | テンプレート（`variantKey`＝メールの番号） | 送信元 |
 |---|---|---|
-| お問合わせ P60-11（`p60-11`） | 正常系：`answer-general`＝CT-01／`answer-faq`＝CT-02／`done-bugfix`＝CT-03 ・ 非正常系：`confirm-detail`＝CT-04／`redirect-other`＝CT-05／`decline-question`＝CT-06 | inquiry@ |
-| 要望 P60-12（`p60-12`） | 正常系：`done-adopted`＝WS-01 ・ 非正常系：`confirm-detail`＝WS-02 | inquiry@ |
-| 問題報告 P60-13（`p60-13`） | 掲載の対象者あて：`decline-subject-delete`＝RP-01（inquiry@）／掲載者あて：`notice-hidden`＝RP-02・`notice-republished`＝RP-03・`notice-kept-hidden`＝RP-04（improper@） | 左のとおり |
-| 修正依頼 P60-14（`p60-14`） | 正常系：`done-fixed`＝FX-01／`owner-request`＝FX-02 ・ 非正常系：`confirm-detail`＝FX-03／`decline-content`＝FX-04／`decline-delete`＝FX-05 | inquiry@ |
+| お問合わせ P60-11（`p60-11`） | 正常系：`answer-general`＝S-FQ-01／`answer-faq`＝S-FQ-02／`done-bugfix`＝S-FQ-03 ・ 非正常系：`confirm-detail`＝S-FQ-04／`redirect-other`＝S-FQ-05／`decline-question`＝S-FQ-06 | inquiry@ |
+| 要望 P60-12（`p60-12`） | 正常系：`done-adopted`＝S-FW-01 ・ 非正常系：`confirm-detail`＝S-FW-02 | inquiry@ |
+| 問題報告 P60-13（`p60-13`） | 掲載の対象者あて：`decline-subject-delete`＝S-FR-01（inquiry@）／掲載者あて：`notice-hidden`＝S-FR-02・`notice-republished`＝S-FR-03・`notice-kept-hidden`＝S-FR-04（improper@） | 左のとおり |
+| 修正依頼 P60-14（`p60-14`） | 正常系：`done-fixed`＝S-FX-01／`owner-request`＝S-FX-02 ・ 非正常系：`confirm-detail`＝S-FX-03／`decline-content`＝S-FX-04／`decline-delete`＝S-FX-05 | inquiry@ |
 | 取引の相談 P90-13（`p90-13`） | 正常系：`answer` ・ 非正常系：`confirm-detail` | liaison@ |
-| お知らせ P61-11（`p61-11`） | `news`／`recommend`（個展なびからのお知らせのメール＝A-04／N-01 の文面） | — |
-| 展覧会掲載のお知らせ（`p2-sns`） | `listing-notice`＝E-02（展覧会ページの「SNSテキスト生成」から移設） | info@ |
+| お知らせ P61-11（`p61-11`） | `news`／`recommend`（個展なびからのお知らせのメール＝A-N-04／A-N-02 の文面） | — |
+| 展覧会掲載のお知らせ（`p2-sns`） | `listing-notice`＝S-E-02（展覧会ページの「SNSテキスト生成」から移設） | info@ |
 
 - メールの番号（CT・WS・RP・FX・E）と文面の正本は `docs/email-templates.md`。各テンプレートの `usageNote` に番号を書いている。
 - 返信を待つ確認メールは、どの画面でも `confirm-detail`（または `confirm-{reason}`）、送信元は inquiry@。

@@ -341,7 +341,7 @@
               <span class="p70-flow__step-state">→ 支払待ち</span>
             </div>
             <p class="p70-flow__step-body">リエゾン+コンソールで会場の在庫を確認し、「購入確定」を実行します。あわせて送料（0円も可）を入力すると、購入者へ支払いのご案内が自動送信されます。</p>
-            <div class="p70-flow__step-deadline">確定期限：会期終了7日後 または 申込7日後 の遅い方</div>
+            <div class="p70-flow__step-deadline">確定期限：会期終了<span data-txn-dl="kakuteiEnd">7</span>日後 または 申込<span data-txn-dl="kakuteiApply">7</span>日後 の遅い方</div>
           </div>
         </div>
         <div class="p70-flow__connector"></div>
@@ -370,7 +370,7 @@
               <span class="p70-flow__step-state">→ 受取確認待ち</span>
             </div>
             <p class="p70-flow__step-body">作品を梱包して発送し、取引デスクに追跡番号を入力します。素材に応じた梱包・養生を行い、高額な作品には保険付き配送をお勧めします。</p>
-            <div class="p70-flow__step-deadline">発送期限：会期終了後7日 または 支払後7日 の遅い方</div>
+            <div class="p70-flow__step-deadline">発送期限：会期終了後<span data-txn-dl="shipEnd">7</span>日 または 支払後<span data-txn-dl="shipPay">7</span>日 の遅い方</div>
           </div>
         </div>
         <div class="p70-flow__connector"></div>
@@ -487,7 +487,7 @@
         <details class="p70-faq-item">
           <summary>会期中に申込が来たら、すぐに確定しなければなりませんか</summary>
           <div class="p70-faq-item__body">
-            いいえ。確定期限は「会期終了から7日後または申込から7日後の遅い方」です。会期中の申込は会期が終わってから確認・確定いただけます。会期中は作品が会場にあるため、展覧会終了後に状況をご確認のうえご対応ください。
+            いいえ。確定期限は「会期終了から<span data-txn-dl="kakuteiEnd">7</span>日後または申込から<span data-txn-dl="kakuteiApply">7</span>日後の遅い方」です。会期中の申込は会期が終わってから確認・確定いただけます。会期中は作品が会場にあるため、展覧会終了後に状況をご確認のうえご対応ください。
           </div>
         </details>
 
@@ -515,7 +515,7 @@
         <details class="p70-faq-item">
           <summary>発送が会期終了後になっても問題ありませんか</summary>
           <div class="p70-faq-item__body">
-            問題ございません。リエゾン+は展示作品の販売を前提とするため、発送期限は「会期終了後7日または支払いから7日後の遅い方」に設定されています。会期中は作品を会場に展示したままで構いません。
+            問題ございません。リエゾン+は展示作品の販売を前提とするため、発送期限は「会期終了後<span data-txn-dl="shipEnd">7</span>日または支払いから<span data-txn-dl="shipPay">7</span>日後の遅い方」に設定されています。会期中は作品を会場に展示したままで構いません。
           </div>
         </details>
 

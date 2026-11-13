@@ -1165,7 +1165,7 @@
 
       </div><!-- /.ktn-mgmt-wrap -->
 
-      <!-- 展覧会の削除（オーナー・編集のときだけ・2026-11-04）。確認前＝確かめのモーダルのあとすぐ削除（DL-02A）／確認済＝理由を書いて事務局に削除を依頼（DL-03A・本人へ DL-03） -->
+      <!-- 展覧会の削除（オーナー・編集のときだけ・2026-11-04）。確認前＝確かめのモーダルのあとすぐ削除（A-D-02J）／確認済＝理由を書いて事務局に削除を依頼（A-D-03J・本人へ A-D-03） -->
       <div class="p211-delete" id="p211DeleteArea" hidden>
         <p class="p211-delete__title">この展覧会を削除する</p>
         <p class="p211-delete__desc" id="p211DeleteDesc"></p>
@@ -1220,7 +1220,7 @@ var MODE_TITLES = { new: '新規展覧会を投稿', edit: '展覧会を編集',
 /* 管理者確認を経ないと公開できないため「公開する」ではなく「保存して確認依頼」 */
 var MODE_SUBMIT = { new: '保存して確認依頼', edit: '保存して確認依頼', clone: '保存して確認依頼' };
 /* 一度確認済みになった展覧会は、編集しても確認をやり直さない（2026-10-30 ユーザー指摘）＝ボタンは「保存する」、保存すると公開のページにそのまま反映。
-   確認のあとの変更は、事務局が見守りのメール MO-01A・更新の記録（P90-22）で見る。確認前（新規・クローン・確認待ち）は「保存して確認依頼」のまま */
+   確認のあとの変更は、事務局が見守りのメール A-O-01J・更新の記録（P90-22）で見る。確認前（新規・クローン・確認待ち）は「保存して確認依頼」のまま */
 function isConfirmedEdit() { return demoMode === 'edit' && demoConfirmed; }
 function submitLabel() { return isConfirmedEdit() ? '保存する' : MODE_SUBMIT[demoMode]; }
 function syncReviewOnly() { document.querySelectorAll('[data-review-only]').forEach(function (el) { el.hidden = isConfirmedEdit(); }); document.querySelectorAll('[data-confirmed-only]').forEach(function (el) { el.hidden = !isConfirmedEdit(); }); }   /* data-confirmed-only＝確認済の編集のときだけ出す（LIAISON の説明の言い替え・2026-11-04） */

@@ -436,8 +436,20 @@ KTN.feeMinPrice = function () {
   try { if (KTN.CAMPAIGN && KTN.CAMPAIGN.load) { var m = KTN.CAMPAIGN.load().fee.minPrice; if (m) return +m; } } catch (e) {}
   return 1000;
 };
+/* LIAISON+ の取引の期限（日数）。単一ソース＝P90-20「取引の期限」（admin が変える・L は見るだけ・2026-11-13 ユーザー指示）。
+   ページに日数を直書きしない：<span data-txn-dl="pay">5</span>日 と書けば KTN.init が今の設定で埋める（中の数字は読み込み前の仮の値）。よくある質問の答えでは {{dl.pay}}。
+   kakuteiEnd／kakuteiApply＝確定期限（会期終了の◯日後か申込の◯日後の遅い方）・pay＝支払期限（購入確定から）・shipEnd／shipPay＝発送期限（会期終了の◯日後か支払いの◯日後の遅い方）・
+   recv＝受取確認の期限（発送から）・finish＝完了確認の期限（受取確認から）。変えた日数は、保存したあとにその状態になった取引から使う（進んでいる取引の期限は変わらない） */
+KTN.TXN_DL_DEF = { kakuteiEnd: 7, kakuteiApply: 7, pay: 5, shipEnd: 7, shipPay: 7, recv: 5, finish: 5 };
+KTN.txnDl = function () {
+  var d = JSON.parse(JSON.stringify(KTN.TXN_DL_DEF));
+  try { var s = JSON.parse(sessionStorage.getItem('ktn-txn-dl') || 'null'); if (s) Object.keys(d).forEach(function (k) { if (s[k]) d[k] = +s[k]; }); } catch (e) {}
+  return d;
+};
+KTN.saveTxnDl = function (d) { try { sessionStorage.setItem('ktn-txn-dl', JSON.stringify(d)); } catch (e) {} };
 function ktnFillFeeRate() {
-  var r = KTN.feeRate(), m = KTN.feeMinPrice().toLocaleString();
+  var r = KTN.feeRate(), m = KTN.feeMinPrice().toLocaleString(), dl = KTN.txnDl();
+  document.querySelectorAll('[data-txn-dl]').forEach(function (el) { var v = dl[el.getAttribute('data-txn-dl')]; if (v) el.textContent = v; });
   document.querySelectorAll('[data-fee-rate]').forEach(function (el) { el.textContent = r; });
   document.querySelectorAll('[data-fee-min]').forEach(function (el) { el.textContent = m; });
 }
@@ -1899,7 +1911,7 @@ KTN.QA = [
      旧 ctx（desk/console）分割は廃止＝ワークスペースと購入管理で重複していたQ（流れ・キャンセル・支払・受取確認・領収書 等）を1問へ統合した（2026-07-13）。
      phase＝取引ワークスペースの現状態連動（applied/payment/paid/receipt・省略＝常時表示）。購入管理／ハブは phase を無視して全問表示する。 */
   { id: 'TXN-B01', cat: 'liaison-txn', side: 'buyer', aud: 'common', grp: '購入者の取引', q: '申込してから購入完了まで、どんな流れですか？', a: '申込 → 購入確定（出品者が会場在庫を確認して確定）→ 支払 → 発送（出品者）→ 受取確認 → 完了確認（出品者）→ 取引完了、の順に進みます。各ステップで通知が届きますので、案内に従って操作してください。' },
-  { id: 'TXN-B02', cat: 'liaison-txn', side: 'buyer', aud: 'common', phase: ['applied'], grp: '購入者の取引', q: '「申込済」と「購入確定待ち」はどう違いますか？', a: '「申込済」は、申込順であなたの番を待っている状態です（確定期限はまだ無く、取引ワークスペースにも進めません。キャンセルは購入管理ページから行えます）。番が来ると「購入確定待ち」に変わり、出品者が会場の在庫を確かめて購入を確定すると、支払いに進めます。確定期限は会期終了7日後か申込7日後の遅い方で、それまでに出品者が操作しないと出品取消になり、申込者全員にキャンセルが届きます（次の方へは繰り上がりません）。前の方がキャンセルしたときは、あなたの順番が繰り上がります。' },
+  { id: 'TXN-B02', cat: 'liaison-txn', side: 'buyer', aud: 'common', phase: ['applied'], grp: '購入者の取引', q: '「申込済」と「購入確定待ち」はどう違いますか？', a: '「申込済」は、申込順であなたの番を待っている状態です（確定期限はまだ無く、取引ワークスペースにも進めません。キャンセルは購入管理ページから行えます）。番が来ると「購入確定待ち」に変わり、出品者が会場の在庫を確かめて購入を確定すると、支払いに進めます。確定期限は会期終了{{dl.kakuteiEnd}}日後か申込{{dl.kakuteiApply}}日後の遅い方で、それまでに出品者が操作しないと出品取消になり、申込者全員にキャンセルが届きます（次の方へは繰り上がりません）。前の方がキャンセルしたときは、あなたの順番が繰り上がります。' },
   { id: 'TXN-B03', cat: 'liaison-txn', side: 'buyer', aud: 'common', grp: '購入者の取引', q: '申込・購入をキャンセルできますか？', a: 'お支払い前であればキャンセルできます。「申込済」（順番待ち）の作品は購入管理ページの「申込をキャンセルする」から、「購入確定待ち」以降（支払待ちを含む）は取引ワークスペースからキャンセルします。キャンセル後も販売期間中であれば再申込できますが、申込順は最後尾になります。支払いが完了した後は原則キャンセルできません（出品者の発送が期限を過ぎた場合を除く）。' },
   { id: 'TXN-B04', cat: 'liaison-txn', side: 'buyer', aud: 'common', phase: ['applied'], grp: '購入者の取引', q: '郵便番号を変更したい場合は？', a: '郵便番号は申込時に送料を計算するために登録した情報のため、変更はできません。変更が必要な場合は申込をキャンセルし、正しい郵便番号で再申込ください。なお、再申込の場合は申込順の最後になります。' },
   { id: 'TXN-B05', cat: 'liaison-txn', side: 'buyer', aud: 'common', phase: ['payment'], grp: '購入者の取引', q: '支払い方法と支払いタイミングは？', a: '出品者の購入確定が完了すると支払いページへ案内されます。クレジットカードでのお支払いとなります。支払期限が設けられていますので、通知を受け取ったら速やかに対応してください。' },
@@ -1957,6 +1969,7 @@ KTN.renderQA = function (target, opts) {
     /* {{pushGuide}}＝スマホのプッシュ通知の設定方法（P60-17「スマホで使う」・2026-10-21） */
     s = s.split('{{rate}}').join((KTN.feeRate ? KTN.feeRate() : 10) + '%');   /* 料率（P90-20 の設定から） */
     s = s.split('{{minPrice}}').join((KTN.feeMinPrice ? KTN.feeMinPrice() : 1000).toLocaleString() + '円');   /* 作品の最低価格（同上） */
+    var dl9 = KTN.txnDl ? KTN.txnDl() : {}; s = s.replace(/\{\{dl\.(\w+)\}\}/g, function (m, k) { return dl9[k] != null ? dl9[k] : m; });   /* 取引の期限の日数（P90-20 の「取引の期限」） */
     s = s.split('{{pushGuide}}').join('<a href="./kotennavi-p60-17.html#push" class="ktn-guide-link">設定方法</a>');
     /* {{perksGuide}}＝作品販売ガイドの「特典とクーポン」（P70-2・2026-10-22） */
     s = s.split('{{perksGuide}}').join('<a href="./kotennavi-p70-2.html#perks" class="ktn-guide-link">作品販売ガイドの「特典とクーポン」</a>');
@@ -2079,7 +2092,7 @@ function ktnAdminOwnerGate(deny) {
    管理者（E 以上＝編集画面を開ける人）が、内容を確かめたその場で非公開・公開に戻す・削除できる（P90-3 の一覧へ戻らなくてよい）。
    <div class="ktn-admin-note ktn-admin-ops" data-admin-ops="展覧会" data-name="…" data-status="public" data-back="…" hidden></div>
    data-status＝public／hidden（data-status-confirm があれば、P2-11 のデモの「確認前」＝確認待ちとして非公開を出さない）。
-   出すのは編集のときだけ（新規・クローンでは出さない）。削除は理由のモーダル（KTN.adminDelete＝DL-01A）のあと、元の画面へ戻る
+   出すのは編集のときだけ（新規・クローンでは出さない）。削除は理由のモーダル（KTN.adminDelete＝A-D-01J）のあと、元の画面へ戻る
    （?back=…＝P90-21 の対応案件などから来たとき／無ければ data-back＝P90-3 のそのタブ）。保存していない変更があるときは先に知らせる。 */
 var ktnEditDirty = false;
 document.addEventListener('input', function (e) {
@@ -2999,42 +3012,61 @@ window.ktnSetTxnAlert = ktnSetTxnAlert;
 KTN.NOTICE_DEFS = {
   /* やること：自分の番の状態文（TD-01／TD-02） */
   todoTurn: [
-    { id: 'TD-S1', who: 'seller', when: 'S1 購入確定待ち',   text: '購入を確定してください',     mail: 'T-02' },
-    { id: 'TD-S2', who: 'buyer',  when: 'S2 支払待ち',       text: 'お支払いにお進みください',   mail: 'T-03' },
-    { id: 'TD-S3', who: 'seller', when: 'S3 発送待ち',       text: '作品を発送してください',     mail: 'T-04' },
-    { id: 'TD-S4', who: 'buyer',  when: 'S4 受取確認待ち',   text: '受取を確認してください',     mail: 'T-05' },
-    { id: 'TD-S5', who: 'seller', when: 'S5 完了確認待ち',   text: '取引完了を確認してください', mail: 'T-06' }
+    { id: 'TD-S1', who: 'seller', when: 'S1 購入確定待ち',   text: '購入を確定してください',     mail: 'A-T-02' },
+    { id: 'TD-S2', who: 'buyer',  when: 'S2 支払待ち',       text: 'お支払いにお進みください',   mail: 'A-T-03' },
+    { id: 'TD-S3', who: 'seller', when: 'S3 発送待ち',       text: '作品を発送してください',     mail: 'A-T-04' },
+    { id: 'TD-S4', who: 'buyer',  when: 'S4 受取確認待ち',   text: '受取を確認してください',     mail: 'A-T-05' },
+    { id: 'TD-S5', who: 'seller', when: 'S5 完了確認待ち',   text: '取引完了を確認してください', mail: 'A-T-06' }
   ],
   /* やること：取引の結果（TD-03／TD-04） */
   todoResult: [
-    { id: 'TD-R1', who: 'both',   when: '取引完了（F1）',                         text: '取引が完了しました',                                   mail: 'T-07' },
-    { id: 'TD-R2', who: 'both',   when: 'キャンセル（F2）',                       text: '取引がキャンセルになりました',                         mail: 'T-08' },
-    { id: 'TD-R3', who: 'buyer',  when: '確定期限を過ぎて自動取消（購入者側）',   text: '確定期限を過ぎたため、お申込みが自動で取り消されました', mail: 'T-10' },
-    { id: 'TD-R4', who: 'seller', when: '確定期限を過ぎて自動取消（出品者側）',   text: '確定期限を過ぎたため、出品が自動で取り消されました',   mail: 'T-10' },
-    { id: 'TD-R5', who: 'buyer',  when: '会場で売約済になり申込が取消',           text: '会場で売約済になったため、お申込みが取り消されました', mail: 'T-11' }
+    { id: 'TD-R1', who: 'both',   when: '取引完了（F1）',                         text: '取引が完了しました',                                   mail: 'A-T-07' },
+    { id: 'TD-R2', who: 'both',   when: 'キャンセル（F2）',                       text: '取引がキャンセルになりました',                         mail: 'A-T-08' },
+    { id: 'TD-R3', who: 'buyer',  when: '確定期限を過ぎて自動取消（購入者側）',   text: '確定期限を過ぎたため、お申込みが自動で取り消されました', mail: 'A-T-10' },
+    { id: 'TD-R4', who: 'seller', when: '確定期限を過ぎて自動取消（出品者側）',   text: '確定期限を過ぎたため、出品が自動で取り消されました',   mail: 'A-T-10' },
+    { id: 'TD-R5', who: 'buyer',  when: '会場で売約済になり申込が取消',           text: '会場で売約済になったため、お申込みが取り消されました', mail: 'A-T-11' },
+    { id: 'TD-R6', who: 'buyer',  when: '出品者が出品を取り消し、申込が取消',     text: '出品者が出品を取り消したため、お申込みが取り消されました', mail: 'A-T-22' }
   ],
-  /* プッシュ通知だけで使う文（2026-10-11）：期限が近づいても操作がまだのときの送り直し。メール T-09 と同じ時点（画面の「期限間近」と同じ基準） */
+  /* プッシュ通知だけで使う文（2026-10-11）：期限が近づいても操作がまだのときの送り直し。メール A-T-09 と同じ時点（画面の「期限間近」と同じ基準） */
   push: [
-    { id: 'PU-01', who: 'both', when: '期限間近（S1〜S5・操作がまだのとき。メール T-09 と同時。夜は朝8時に）', text: '{{deadlineLabel}}が近づいています', mail: 'T-09' }
+    { id: 'PU-01', who: 'both', when: '期限間近（S1〜S5・操作がまだのとき。メール A-T-09 と同時。夜は朝8時に）', text: '{{deadlineLabel}}が近づいています', mail: 'A-T-09' }
   ],
   /* お知らせ（あなた宛）：NT-01〜NT-09。role＝どの立場のお知らせか（P61 の左上のチップ） */
   mine: [
-    { id: 'NT-01',  role: 'creator・gallery', when: '作品にお問合わせが届いた',                     text: '作品《{{artworkName}}》にお問合わせが届きました',                 dest: 'P3-20／P4-20・P6-14', mail: 'F-05' },
-    { id: 'NT-02',  role: 'user',             when: '問合せへの返信が届いた',                       text: '作品《{{artworkName}}》へのお問合わせに返信が届きました',         dest: 'P5-16',               mail: 'F-07' },
-    { id: 'NT-03①', role: 'user・creator・gallery', when: '機能申込の確認が完了した（利用開始・LIAISON+ の審査通過）', text: '{{applyName}}のお申込みの確認が完了しました', dest: '各ロールのページ', mail: 'M-02・M-04・M-08' },
-    { id: 'NT-03②', role: 'user・creator・gallery', when: '機能申込の内容について確認のお願い',   text: '{{applyName}}のお申込み内容について、確認をお願いします',          dest: 'メール（返信で回答）', mail: 'M-06・M-09' },
-    { id: 'NT-03③', role: 'user・creator・gallery', when: '機能申込を取り消した',                 text: '{{applyName}}のお申込みを取り消しました',                        dest: 'P11 系',              mail: 'M-07・M-10' },
-    { id: 'NT-04',  role: 'creator・gallery', when: '展覧会の内容を確認した（確認済み）',           text: '展覧会「{{exhibitionName}}」の内容を確認しました',                dest: 'P2',                  mail: 'E-01' },
-    { id: 'NT-05',  role: 'user',             when: 'ウォッチ中のクリエイター・ギャラリーが公開した', text: 'ウォッチ中の{{personName}}が、{{contentKind}}「{{contentName}}」を公開しました', dest: 'その展覧会・記事のページ', mail: 'A-01' },
-    { id: 'NT-06',  role: 'creator・gallery', when: '作品にコメントが付いた',                       text: '作品《{{artworkName}}》にコメントが付きました',                   dest: 'その作品のページ',    mail: 'A-05' },
+    { id: 'NT-01',  role: 'creator・gallery', when: '作品にお問合わせが届いた',                     text: '作品《{{artworkName}}》にお問合わせが届きました',                 dest: 'P3-20／P4-20・P6-14', mail: 'A-F-05' },
+    { id: 'NT-02',  role: 'user',             when: '問合せへの返信が届いた',                       text: '作品《{{artworkName}}》へのお問合わせに返信が届きました',         dest: 'P5-16',               mail: 'A-F-07' },
+    { id: 'NT-03①', role: 'user・creator・gallery', when: '機能申込の確認が完了した（利用開始・LIAISON+ の審査通過）', text: '{{applyName}}のお申込みの確認が完了しました', dest: '各ロールのページ', mail: 'S-M-02・S-M-04・S-M-08' },
+    { id: 'NT-03②', role: 'user・creator・gallery', when: '機能申込の内容について確認のお願い',   text: '{{applyName}}のお申込み内容について、確認をお願いします',          dest: 'メール（返信で回答）', mail: 'S-M-06・S-M-09' },
+    { id: 'NT-03③', role: 'user・creator・gallery', when: '機能申込を取り消した',                 text: '{{applyName}}のお申込みを取り消しました',                        dest: 'P11 系',              mail: 'S-M-07・S-M-10' },
+    { id: 'NT-04',  role: 'creator・gallery', when: '展覧会の内容を確認した（確認済み）',           text: '展覧会「{{exhibitionName}}」の内容を確認しました',                dest: 'P2',                  mail: 'A-E-01' },
+    { id: 'NT-05',  role: 'user',             when: 'ウォッチ中のクリエイター・ギャラリーが公開した', text: 'ウォッチ中の{{personName}}が、{{contentKind}}「{{contentName}}」を公開しました', dest: 'その展覧会・記事のページ', mail: 'A-N-01' },
+    { id: 'NT-06',  role: 'creator・gallery', when: '作品にコメントが付いた',                       text: '作品《{{artworkName}}》にコメントが付きました',                   dest: 'その作品のページ',    mail: 'A-N-05' },
     { id: 'NT-07',  role: 'creator・gallery', when: '展覧会にレビューが付いた',                     text: '展覧会「{{exhibitionName}}」にレビューが付きました',              dest: 'そのレビューのページ（P8）', mail: '—' },
-    { id: 'NT-08',  role: 'creator・gallery', when: '1日のまとめ（前日のウォッチ・チェックイン・興味あり！）', text: '昨日のまとめ：ウォッチ {{watch}}人・チェックイン {{checkin}}人・興味あり！ {{interest}}件', dest: 'インサイト（P3-12／P4-12）', mail: 'A-03（ウォッチ・チェックイン）' },
-    { id: 'NT-09',  role: 'user',             when: '興味あり！した作品が展覧会に出品された',       text: '興味あり！した作品《{{artworkName}}》が、展覧会に出品されました', dest: 'その作品のページ',    mail: 'R-01' },
-    { id: 'NT-11',  role: 'user',             when: '興味あり！した作品の販売期間がもうすぐ終わる（P90-20 で決めた日数の前）', text: '興味あり！した作品《{{artworkName}}》の販売期間が、あと{{days}}日で終わります', dest: 'その作品のページ', mail: 'R-01（リマインダーの一部）' },
-    { id: 'NT-12',  role: 'creator・gallery', when: 'はじめて割が適用された（実施期間の中で申込・審査の承認と口座の登録・作品の登録の3つがそろった直後。すぐに出す）',       text: '特典「{{campaignName}}」が適用されました',                       dest: 'P3-21／P4-21',        mail: 'CP-01' },
-    { id: 'NT-16',  role: 'creator・gallery', when: 'はじめて割の実施期間の終わりの7日前（期間中に申し込んだのに3つの条件がまだそろっていない人へ・1回）',       text: '特典「{{campaignName}}」は {{campaignEnd}} までに条件がそろうと対象になります（足りないもの：{{missing}}）',                       dest: 'P3-21／P4-21',        mail: 'CP-07' },
-    { id: 'NT-13',  role: 'user',             when: 'クーポンを受け取った（興味あり！に入れた直後・会場でチェックインした直後。その場の表示とあわせて、すぐに出す）',                                           text: 'クーポン「{{campaignName}}」を受け取りました',                   dest: 'P5-17',               mail: 'R-01（興味あり！のクーポン・翌朝のリマインダーの項目）／CP-02（チェックインクーポン・会期が終わった日）' },
-    { id: 'NT-14',  role: 'user',             when: 'ウォッチしているクリエイター・ギャラリーから、イベントのクーポンが届いた（出品者が送った直後）', text: '{{senderName}}から、クーポン「{{campaignName}}」が届きました', dest: 'その展覧会の作品（P2-5-1）', mail: 'CP-05（すぐに送る・P5-13 の①で停止可）' }
+    { id: 'NT-08',  role: 'creator・gallery', when: '1日のまとめ（前日のウォッチ・チェックイン・興味あり！）', text: '昨日のまとめ：ウォッチ {{watch}}人・チェックイン {{checkin}}人・興味あり！ {{interest}}件', dest: 'インサイト（P3-12／P4-12）', mail: 'A-N-03（ウォッチ・チェックイン）' },
+    { id: 'NT-09',  role: 'user',             when: '興味あり！した作品が展覧会に出品された',       text: '興味あり！した作品《{{artworkName}}》が、展覧会に出品されました', dest: 'その作品のページ',    mail: 'A-R-01' },
+    { id: 'NT-11',  role: 'user',             when: '興味あり！した作品の販売期間がもうすぐ終わる（P90-20 で決めた日数の前）', text: '興味あり！した作品《{{artworkName}}》の販売期間が、あと{{days}}日で終わります', dest: 'その作品のページ', mail: 'A-R-01（リマインダーの一部）' },
+    { id: 'NT-12',  role: 'creator・gallery', when: 'はじめて割が適用された（実施期間の中で申込・審査の承認と口座の登録・作品の登録の3つがそろった直後。すぐに出す）',       text: '特典「{{campaignName}}」が適用されました',                       dest: 'P3-21／P4-21',        mail: 'A-C-01' },
+    { id: 'NT-16',  role: 'creator・gallery', when: 'はじめて割の実施期間の終わりの7日前（期間中に申し込んだのに3つの条件がまだそろっていない人へ・1回）',       text: '特典「{{campaignName}}」は {{campaignEnd}} までに条件がそろうと対象になります（足りないもの：{{missing}}）',                       dest: 'P3-21／P4-21',        mail: 'A-C-07' },
+    { id: 'NT-13',  role: 'user',             when: 'クーポンを受け取った（興味あり！に入れた直後・会場でチェックインした直後。その場の表示とあわせて、すぐに出す）',                                           text: 'クーポン「{{campaignName}}」を受け取りました',                   dest: 'P5-17',               mail: 'A-R-01（興味あり！のクーポン・翌朝のリマインダーの項目）／A-C-02（チェックインクーポン・会期が終わった日）' },
+    { id: 'NT-17',  role: 'creator・gallery', when: '事務局が作品を非公開にした（P90-12）',                                             text: '作品《{{artworkName}}》を、事務局で非公開にしました',             dest: 'P3-15／P4-15（LIAISON+ コンソール）', mail: 'A-T-19' },
+    { id: 'NT-18',  role: 'user',             when: '申込んだ作品が非公開になり、事務局が申込を止めて確認している',                     text: 'お申込みの作品《{{artworkName}}》について、事務局で確認しています', dest: 'P5-14',               mail: 'A-T-20' },
+    { id: 'NT-19',  role: 'user',             when: '取引中の作品のページが非公開になった（取引はそのまま進む）',                       text: 'お取引中の作品《{{artworkName}}》のページが非公開になりました。お取引はこのまま進みます', dest: 'P5-15', mail: 'A-T-21' },
+    { id: 'NT-20',  role: 'creator・gallery', when: '事務局が非公開にしていた作品を公開に戻した（P90-12）',                             text: '作品《{{artworkName}}》を、再び公開しました',                       dest: 'P3-15／P4-15（LIAISON+ コンソール）', mail: 'A-T-23' },
+    { id: 'NT-21',  role: 'user',             when: '止めていた申込の確認が終わり、順番を再開した',                                     text: 'お申込みの作品《{{artworkName}}》の確認が終わり、順番を再開しました', dest: 'P5-14',               mail: 'A-T-24' },
+    { id: 'NT-22',  role: 'user',             when: '取引中の作品のページが再び公開された',                                             text: 'お取引中の作品《{{artworkName}}》のページを、再び公開しました',     dest: 'P5-15',               mail: 'A-T-25' },
+    { id: 'NT-23',  role: 'user', when: '購入の申込を受け付けた', text: 'お申込み《{{artworkName}}》を受け付けました（取引番号 {{txnId}}）', dest: 'P5-14', mail: 'A-T-01' },
+    { id: 'NT-24',  role: 'user', when: 'お支払いが完了した（控え）', text: '《{{artworkName}}》のお支払いが完了しました', dest: 'P5-15', mail: 'A-T-13' },
+    { id: 'NT-25',  role: 'user・creator・gallery', when: '取引メッセージが届いた（短い時間に続いたものは1つにまとめる）', text: '《{{artworkName}}》の取引に、メッセージが届きました', dest: 'P5-15／P3-16／P4-16', mail: 'A-T-14' },
+    { id: 'NT-26',  role: 'user', when: '発送期限を過ぎた（キャンセルを申請できる）', text: '《{{artworkName}}》の発送期限が過ぎました。キャンセルを申請できます', dest: 'P5-15', mail: 'A-T-16' },
+    { id: 'NT-27',  role: 'creator・gallery', when: '発送期限を過ぎている', text: '《{{artworkName}}》の発送期限を過ぎています', dest: 'P3-16／P4-16', mail: 'A-T-17' },
+    { id: 'NT-28',  role: 'creator・gallery', when: '販売代金を振り込んだ', text: '販売代金 {{amount}} をお振り込みしました', dest: 'P3-17／P4-17', mail: 'A-T-12' },
+    { id: 'NT-29',  role: 'user・creator・gallery', when: '事務局から取引についての連絡が届いた（督促・期限の延長・一時停止・連絡など）', text: '事務局から取引についてのご連絡が届きました（{{subject}}）', dest: 'P5-15／P3-16／P4-16', mail: 'S-T-03〜S-T-20' },
+    { id: 'NT-30',  role: 'creator・gallery', when: '事務局から費用の請求が届いた', text: '費用のご請求が届きました（{{subject}}）', dest: 'P3-17／P4-17', mail: 'S-P-01〜S-P-03' },
+    { id: 'NT-31',  role: 'creator・gallery', when: '事務局から作品についての確認のお願いが届いた', text: '作品《{{artworkName}}》についてのご確認のお願いが届きました（{{subject}}）', dest: 'P2-12-1', mail: 'S-W-01〜S-W-03' },
+    { id: 'NT-32',  role: 'user・creator・gallery', when: '事務局から取引の進め方についてのお願いが届いた（注意）', text: 'お取引の進め方についてのお願いが届きました', dest: 'P3-15／P4-15（出品者）・P5-14（購入者）', mail: 'S-K-01・S-K-02' },
+    { id: 'NT-33',  role: 'creator・gallery', when: 'LIAISON+ の利用を取り消した', text: 'LIAISON+ のご利用を取り消しました。詳しくはメールをご確認ください', dest: 'P5（myページ）', mail: 'S-M-12' },
+    { id: 'NT-34',  role: 'user', when: 'LIAISON+ での購入の申込を止めた', text: 'LIAISON+ でのご購入のお申込みを停止しました。詳しくはメールをご確認ください', dest: 'P5-14', mail: 'S-M-13' },
+    { id: 'NT-14',  role: 'user',             when: 'ウォッチしているクリエイター・ギャラリーから、イベントのクーポンが届いた（出品者が送った直後）', text: '{{senderName}}から、クーポン「{{campaignName}}」が届きました', dest: 'その展覧会の作品（P2-5-1）', mail: 'A-C-05（すぐに送る・P5-13 の①で停止可）' }
   ]
 };
 /* 文言を ID で引き、{{…}} を差し込む */
@@ -3973,7 +4005,7 @@ KTN.adminAccess = function (page, lv) {
 };
 /* ══ 削除の決まり（管理者・2026-10-29・docs/admin-roles.md）══
    展覧会・クリエイター・ギャラリー・作品・記事・レビュー・コメントの削除は、どれもこのモーダルを通す。
-   理由（選択＋詳しい内容・どちらも必須）を書かないと消せない。消すと、理由つきの自動メール DL-01A が管理者あてに届く（本番）。
+   理由（選択＋詳しい内容・どちらも必須）を書かないと消せない。消すと、理由つきの自動メール A-D-01J が管理者あてに届く（本番）。
    KTN.adminDelete({ kind:'作品', name:'オノマトペの庭', onDone:function(reason){…} })。外枠は P2-11 の確認モーダル（.p211-modal）と同じ */
 KTN.DELETE_REASONS = ['重複している（同じ内容のページがほかにある）', '掲載の対象者からの削除の依頼', '問題報告への対応（掲載の方針に反する）', '投稿者からの依頼', 'その他'];
 KTN.adminDelete = function (o) {
@@ -4030,7 +4062,7 @@ KTN.adminDelete = function (o) {
 
 /* ══ 非公開の理由（2026-11-01・handoff 追174-377）══
    非公開にするときは、削除と同じ形のモーダルで理由（選ぶ＋詳しい内容・どちらも必須）を書く。理由は操作の記録（P90-28）に残る。
-   メールは送らない（削除の DL-01A とは違う）。公開に戻すときは理由を聞かない。
+   メールは送らない（削除の A-D-01J とは違う）。公開に戻すときは理由を聞かない。
    使う場所：P90-3・P90-5・P90-7・P90-8・P90-23 の一覧と、編集画面の「公開の状態と削除」。P90-21 の一時非公開は、対応案件の受付番号と報告の理由が自動で入る */
 KTN.HIDE_REASONS = ['問題報告への対応（確かめるあいだ一時的に）', '掲載の方針に反する', '掲載の対象者からの依頼', '投稿者からの依頼', 'その他'];
 KTN.adminHide = function (o) {
@@ -4050,7 +4082,7 @@ KTN.auditRecord = function (act, target, why) {
 KTN.reasonText = function (r) { return r && r.reason ? r.reason + '：' + r.detail : ''; };
 
 /* 公開のページのヘッダーの「管理者」メニュー（admin だけ）の、削除・強制削除・強制退会・なりすましログインを、P90 系と同じ手順にする
-   （どこから押しても理由のモーダル＋DL-01A／MO-03A・案2・2026-10-29）。メニューの項目は getActions のまま、押したときだけここで受ける */
+   （どこから押しても理由のモーダル＋A-D-01J／A-O-03J・案2・2026-10-29）。メニューの項目は getActions のまま、押したときだけここで受ける */
 (function () {
   var KIND = { p2: '展覧会', p3: 'クリエイター', p4: 'ギャラリー', p5: 'ユーザー', p6: '作品', p7: '記事', p8: 'レビュー', p61: 'お知らせ' };
   function kindOf(page) { var m = String(page || '').match(/^(p\d+)/); return m ? KIND[m[1]] : ''; }
@@ -5360,3 +5392,12 @@ document.addEventListener('click', function (e) {
     document.fonts.ready.then(syncDH);
   }
 }());
+
+/* サイト内の URL は、ドメインのあと（koten-navi.com/ の後ろ）だけで入れる（2026-11-12 ユーザー指示）。
+   URL をまるごと貼ったときは、その場でドメインまでを外して「ドメインのあと」にそろえる。対象＝NID・URL の欄（.p90cm-nid）と [data-site-path] の欄。
+   取り込み（capture）で先に直すので、欄ごとの検索の処理はそろえた値で動く */
+KTN.sitePath = function (v) { return String(v || '').trim().replace(/^https?:\/\/(www\.)?koten-navi\.com\/?/i, '').replace(/^\/+/, ''); };
+document.addEventListener('input', function (e) {
+  var el = e.target; if (!el || !el.matches || !el.matches('input.p90cm-nid, input[data-site-path]')) return;
+  if (/^\s*(https?:\/\/(www\.)?koten-navi\.com|\/)/i.test(el.value)) el.value = KTN.sitePath(el.value);
+}, true);

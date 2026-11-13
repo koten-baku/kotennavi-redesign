@@ -233,19 +233,15 @@
   <button class="dbtn on" id="dbarUrgNormal" onclick="setUrgency('normal')">通常</button>
   <button class="dbtn" id="dbarUrgNear" onclick="setUrgency('near')">間近</button>
   <button class="dbtn" id="dbarUrgOver" onclick="setUrgency('overdue')">超過</button>
-  <span class="dbar-sep" style="margin-left:12px">機能申込：</span>
-  <button class="dbtn on" data-user-apps-btn="none" onclick="KTN.setUserApps('none')">未申込</button>
-  <button class="dbtn" data-user-apps-btn="cr-pending" onclick="KTN.setUserApps('cr-pending')">クリエイター確認中</button>
-  <button class="dbtn" data-user-apps-btn="cr-granted" onclick="KTN.setUserApps('cr-granted')">クリエイター利用開始</button>
-  <button class="dbtn" data-user-apps-btn="cr-lp-pending" onclick="KTN.setUserApps('cr-lp-pending')">クリエイター＋LIAISON+確認中</button>
-  <button class="dbtn" data-user-apps-btn="ga-lp-granted" onclick="KTN.setUserApps('ga-lp-granted')">ギャラリー＋LIAISON+利用開始</button>
-  <button class="dbtn" data-user-apps-btn="ga-cancelled" onclick="KTN.setUserApps('ga-cancelled')">ギャラリー取消</button>
   <span class="dbar-sep" style="margin-left:12px">通信：</span>
   <button class="dbtn on" data-offline-demo-btn="on" onclick="ktnDemoOffline(false)">オンライン</button>
   <button class="dbtn" data-offline-demo-btn="off" onclick="ktnDemoOffline(true)">オフライン</button>
   <span class="dbar-sep" style="margin-left:12px">クーポン：</span>
   <button class="dbtn on" data-terms-demo="buyer" onclick="ktnTermsDemo('buyer','has',this)">この取引に使用</button>
   <button class="dbtn" data-terms-demo="buyer" onclick="ktnTermsDemo('buyer','none',this)">なし</button>
+  <span class="dbar-sep" style="margin-left:12px">作品のページ：</span>
+  <button class="dbtn on" data-work-hidden-demo onclick="ktnWorkHiddenDemo(false,this)">公開</button>
+  <button class="dbtn" data-work-hidden-demo onclick="ktnWorkHiddenDemo(true,this)">非公開（申込のあと）</button>
 </div>
 
 <div class="shell">
@@ -334,22 +330,6 @@
           </div>
           <div class="ktn-mgmt-context__name"><a href="kotennavi-p5.html">山田 花子</a></div>
           <div class="ktn-mgmt-context__meta">利用開始 2022.04 · hanako.yamada@example.com</div>
-          <!-- このアカウントに紐づくページ（クリエイター／ギャラリー機能が「利用開始」の人だけ・KTN.setUserApps が表示を切替）。
-               主役はユーザー＝表示とリンクだけで編集はさせない（ページの設定はそれぞれの管理ページ）。card全体はリンクにせず名前と「ページへ →」だけ -->
-          <div class="ktn-mgmt-context__linked" data-user-linked hidden>
-            <span class="ktn-mgmt-context__apps-label">Your Page</span>
-            <span class="ktn-mgmt-context__linked-media" data-linked-media></span>
-            <span class="ktn-mgmt-context__linked-body">
-              <span class="ktn-mgmt-context__linked-name"><span class="cb cb-person" data-linked-badge></span><a data-linked-name href="#"></a></span>
-              <span class="ktn-mgmt-context__linked-meta" data-linked-meta></span>
-            </span>
-            <a class="ktn-mgmt-context__linked-view" data-linked-view href="#">クリエイターページへ →</a>
-          </div>
-          <div class="ktn-mgmt-context__apps" data-user-apps hidden>
-            <span class="ktn-mgmt-context__apps-label">Applications</span>
-            <span class="ktn-mgmt-context__app" data-user-app="role" hidden><span class="ktn-mgmt-context__app-name">クリエイター機能</span><span class="ktn-review-status"></span></span>
-            <span class="ktn-mgmt-context__app" data-user-app="lp" hidden><span class="ktn-mgmt-context__app-name">LIAISON+</span><span class="ktn-review-status"></span></span>
-          </div>
         </div>
         <div class="ktn-mgmt-context__actions">
           <a class="ktn-mgmt-context__view" href="kotennavi-p5.html">myページへ →</a>
@@ -377,11 +357,13 @@
         </div>
 
         <!-- C-2. 購入作品 + 出品者 -->
+        <!-- 申込のあとに作品が非公開になったとき（2026-11-12）。取引はそのまま進む。作品名と画像はリンクにしない（非公開のページへ飛ばさない） -->
+        <div class="ktn-work-hidden-note" data-work-hidden-note role="note" hidden>この作品のページは現在公開されていません。取引はこのまま進みます。</div>
         <div class="p515-purchase-box">
           <div class="p515-purchase-art">
             <div class="p515-purchase-box__head">購入作品<span class="p515-purchase-box__head-en">Purchase Item</span></div>
             <div class="p515-purchase-art__body">
-              <a class="p515-purchase-art__img-wrap" href="kotennavi-p6-2.html">
+              <a class="p515-purchase-art__img-wrap" href="kotennavi-p6-2.html" data-work-link>
                 <div class="p515-purchase-art__img" style="background:linear-gradient(135deg,#b0c8d8,#6a92a8)"></div>
               </a>
               <div class="p515-purchase-art__info">
@@ -390,7 +372,7 @@
                   <span class="ktn-aw-id">AW-C42-1847</span>
                   <span class="aws aws-sale" id="p515ArtBadge">販売中</span>
                 </div>
-                <a class="p515-purchase-art__title" href="kotennavi-p6-2.html">音の輪郭 No.7</a>
+                <a class="p515-purchase-art__title" href="kotennavi-p6-2.html" data-work-link>音の輪郭 No.7</a>
                 <div class="p515-purchase-art__exh">
                   <a href="kotennavi-p2.html">あなたが知らないオノマトペ — 田中透 個展</a>
                 </div>
@@ -474,7 +456,7 @@
                 <span class="p515-confirm-deadline__label">確定期限</span>
                 <span class="p515-confirm-deadline__date">2026年3月2日（月）まで</span>
               </div>
-              <p class="p515-confirm-deadline__note">会期終了7日後または申込7日後の遅い方が期限です。期限までに出品者が確定しない場合、この作品の出品は自動的に取消され、申込者全員にキャンセルが通知されます（次の申込者へ繰り上げは行いません）。</p>
+              <p class="p515-confirm-deadline__note">会期終了<span data-txn-dl="kakuteiEnd">7</span>日後または申込<span data-txn-dl="kakuteiApply">7</span>日後の遅い方が期限です。期限までに出品者が確定しない場合、この作品の出品は自動的に取消され、申込者全員にキャンセルが通知されます（次の申込者へ繰り上げは行いません）。</p>
             </div>
             <div class="p515-ship-confirm">
               <div class="p515-ship-confirm__title">申込内容</div>
@@ -803,9 +785,9 @@
           </div>
           <div class="p515-status__body">
             <div class="p515-cancelled">
-              <p class="p515-cancelled__msg">購入をキャンセルしました。</p>
-              <p class="p515-cancelled__msg">販売期間中であれば再申込できます（申込順の最後になります）。</p>
-              <a class="p515-cancelled__back ktn-op-btn ktn-op-btn--primary" href="kotennavi-p6-2.html">
+              <p class="p515-cancelled__msg" data-cancel-msg>購入をキャンセルしました。</p>
+              <p class="p515-cancelled__msg" data-cancel-msg2>販売期間中であれば再申込できます（申込順の最後になります）。</p>
+              <a class="p515-cancelled__back ktn-op-btn ktn-op-btn--primary" href="kotennavi-p6-2.html" data-cancel-back>
                 <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" width="8" height="8"><line x1="8" y1="5" x2="2" y2="5"/><polyline points="5 2 2 5 5 8"/></svg>
                 作品ページへ戻る
               </a>
@@ -1390,6 +1372,20 @@ KTN.renderQA('#p515QaTxn', { category: 'liaison-txn', side: 'buyer', style: 'des
   });
 
   setDemoState('applied');
+  /* キャンセル済の取引を、購入管理（P5-14）の購入履歴の「取引詳細 →」から開いたとき（?cancel=事由・2026-11-13）。事由ごとに何があったかを出す。
+     office＝事務局による取引の取消（支払いのあと・全額を返金）／withdraw＝出品者による出品取消／venue＝会場で売約／self＝自分でキャンセル。本番は取引の記録から */
+  (function () {
+    var k = (location.search.match(/[?&]cancel=(\w+)/) || [])[1]; if (!k) return;
+    var M = {
+      self: ['購入をキャンセルしました。', '販売期間中であれば再申込できます（申込順の最後になります）。', true],
+      office: ['この取引は、事務局が取り消しました。お支払いいただいた代金は、全額を返金いたします。', 'カードの明細に反映される時期は、カード会社によって異なります。詳しくは、事務局からのメールをご確認ください。', false],
+      withdraw: ['出品者が出品を取り消したため、この取引はキャンセルとなりました。', '', false],
+      venue: ['作品が会場で売約となったため、この取引はキャンセルとなりました。', '', false]
+    }[k]; if (!M) return;
+    setDemoState('cancelled');
+    var a = document.querySelector('[data-cancel-msg]'), b = document.querySelector('[data-cancel-msg2]'), back = document.querySelector('[data-cancel-back]');
+    if (a) a.textContent = M[0]; if (b) { b.textContent = M[1]; b.hidden = !M[1]; } if (back) back.hidden = !M[2];   /* 作品のページへ戻るのは、自分でキャンセルしたときだけ（ほかは作品が非公開・販売が終わっている） */
+  })();
 
   /* ── 管理ドロワー ── */
   var drawer  = document.getElementById('p515Drawer');

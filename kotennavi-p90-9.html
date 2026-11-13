@@ -112,6 +112,8 @@
           <h2 class="ktn-mgmt-head__title">メールテンプレート管理</h2>
           <p class="ktn-mgmt-head__en">MAIL TEMPLATES</p>
           <p class="ktn-mgmt-head__desc">管理者が送信する通知・確認メールの文面を、使用する管理画面ごとに一元管理します。各画面の送信パネルはここで登録したテンプレートを選択して使用します（<a class="ktn-guide-link" href="docs/mail-template-system.md" target="_blank" rel="noopener">仕様</a>）。</p>
+          <!-- メールの番号の見方（2026-11-13・正本は docs/email-templates.md「メールの番号の付け方」） -->
+          <details class="p909-idlegend"><summary>メールの番号の見方</summary><div class="p909-idlegend__body"><p>番号は「送り方-系統-番号」です（例：A-T-08）。<strong>A-＝自動</strong>（システムが状態の変化で送る）、<strong>S-＝事務局が手で送る</strong>（このページのテンプレートから始め、送る前に直せる）。末尾の J は事務局あて、丸数字（①〜）は理由ごとに書き分けた文面です。</p><table class="p70-table"><thead><tr><th>送り方</th><th>系統</th><th>名前</th><th>主な中身</th></tr></thead><tbody><tr><td>A（自動）</td><td>U</td><td>アカウント</td><td>登録・パスワード・メールアドレスの変更・退会</td></tr><tr><td>A（自動）</td><td>F</td><td>フォームの受付</td><td>お問い合わせ・ご要望・問題の報告・修正依頼・作品へのお問合わせ・取引の相談の受付</td></tr><tr><td>A（自動）</td><td>M</td><td>機能の申込</td><td>クリエイター・ギャラリー・LIAISON+ の申込の受付・利用開始</td></tr><tr><td>A（自動）</td><td>E</td><td>展覧会</td><td>展覧会の確認</td></tr><tr><td>A（自動）</td><td>T</td><td>取引</td><td>LIAISON+ の取引の進みぐあい・期限・キャンセル・振込など</td></tr><tr><td>A（自動）</td><td>C</td><td>キャンペーン</td><td>特典・クーポン</td></tr><tr><td>A（自動）</td><td>R</td><td>リマインダー</td><td>毎朝のリマインダー</td></tr><tr><td>A（自動）</td><td>N</td><td>お知らせ・ニュース</td><td>ウォッチ新着・コメント・ニュース・おすすめ</td></tr><tr><td>A（自動）</td><td>I</td><td>インサイト</td><td>月次レポート</td></tr><tr><td>A（自動）</td><td>O</td><td>見守り</td><td>展覧会の更新・退会などを事務局に知らせる</td></tr><tr><td>A（自動）</td><td>D</td><td>削除</td><td>削除・削除の依頼</td></tr><tr><td>S（手動）</td><td>T</td><td>取引</td><td>取引管理（P90-13）の督促・期限の延長・一時停止・連絡など</td></tr><tr><td>S（手動）</td><td>M</td><td>機能の申込</td><td>審査の結果・確認依頼・取消・LIAISON+ の利用の取消・購入の停止</td></tr><tr><td>S（手動）</td><td>E</td><td>展覧会</td><td>展覧会情報の掲載のお知らせ</td></tr><tr><td>S（手動）</td><td>FQ</td><td>お問い合わせへの回答</td><td>お問い合わせ（F の下）への回答</td></tr><tr><td>S（手動）</td><td>FW</td><td>ご要望への回答</td><td>ご要望（F の下）への回答</td></tr><tr><td>S（手動）</td><td>FR</td><td>問題の報告への対応</td><td>問題の報告（F の下）への対応・一時非公開・再公開のご連絡</td></tr><tr><td>S（手動）</td><td>FX</td><td>修正依頼への回答</td><td>修正依頼（F の下）への回答</td></tr><tr><td>S（手動）</td><td>P</td><td>費用の請求</td><td>出品者への費用の請求（P90-14）</td></tr><tr><td>S（手動）</td><td>W</td><td>作品</td><td>作品のことで出品者に送る確認（P90-12）</td></tr><tr><td>S（手動）</td><td>K</td><td>注意</td><td>キャンセルなどが重なる人への連絡（P90-15・P90-16）</td></tr></tbody></table></div></details>
         </div>
 
         <!-- タブ：手動送信／自動送信（可視化） -->
@@ -352,7 +354,7 @@
 
           <div class="p211-field">
             <label class="p211-label">ID<span class="ktn-req">必須</span></label>
-            <input class="p211-input" type="text" id="p909AutoNewId" placeholder="例：T-11">
+            <input class="p211-input" type="text" id="p909AutoNewId" placeholder="例：A-T-11">
             <p class="p211-help">docs/email-templates.md の発火点インベントリと対応させるIDです。他と重複しない値にしてください。</p>
           </div>
 

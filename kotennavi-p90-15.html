@@ -252,13 +252,15 @@
       var fs = statusSel ? statusSel.value : '';
       var visible = 0;
       rows.forEach(function (tr) {
-        var match = (!fr || tr.dataset.role === fr) && (!fs || tr.dataset.status === fs);
+        var wo = document.getElementById('p9015WarnOnly');   /* 注意ありのみ（pages.js ktnWarnPage が足す・2026-11-12） */
+        var match = (!fr || tr.dataset.role === fr) && (!fs || tr.dataset.status === fs) && (!(wo && wo.checked) || tr.dataset.warn === 'warn');
         tr.hidden = !match;
         if (match) visible++;
       });
       if (countEl) countEl.innerHTML = '<strong>' + visible + '</strong>件該当';
       if (emptyEl) emptyEl.hidden = visible !== 0;
     }
+    window.p9015Render = render;
     if (roleSel) roleSel.addEventListener('change', render);
     if (statusSel) statusSel.addEventListener('change', render);
     render();

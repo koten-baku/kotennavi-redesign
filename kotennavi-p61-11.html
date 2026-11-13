@@ -228,11 +228,11 @@
               </div>
             </div>
 
-            <!-- メール配信（ニュース＝A-04 停止できない／おすすめ＝N-01 受け取る設定の人だけ・docs/email-templates.md） -->
+            <!-- メール配信（ニュース＝A-N-04 停止できない／おすすめ＝A-N-02 受け取る設定の人だけ・docs/email-templates.md） -->
             <div class="p211-field">
               <label class="p211-check"><input type="checkbox" id="p6111SendMail"> 登録ユーザーにメールでも送る</label>
               <p class="p211-help" id="p6111MailHelp"></p>
-              <!-- 送るメール：チェックするとカテゴリのテンプレート（A-04／N-01＝KTN.NOTICE_MAIL）を読み込み、件名・本文を編集できる。
+              <!-- 送るメール：チェックするとカテゴリのテンプレート（A-N-04／A-N-02＝KTN.NOTICE_MAIL）を読み込み、件名・本文を編集できる。
                    送信ボタンは置かない＝このお知らせを保存すると一緒に保存され、公開日に送られる（P90-2 の送信パネルと同じ部品） -->
               <div class="p902-flow-panel" id="p6111MailPanel" hidden>
                 <p class="p902-flow-panel__title" id="p6111MailTplName"></p>
@@ -359,7 +359,7 @@
   }
   /* ── メール配信の説明：カテゴリ（重要／それ以外）と対象の組み合わせで、誰に届くかを示す（メールはゲストに送れない） ── */
   function p6111SyncMailHelp() {
-    var imp = document.getElementById('p6111Cat').value === 'news';   /* ニュースは止められないメール（A-04）・おすすめは設定で選べる（N-01） */
+    var imp = document.getElementById('p6111Cat').value === 'news';   /* ニュースは止められないメール（A-N-04）・おすすめは設定で選べる（A-N-02） */
     var who = P6111_TARGET[document.getElementById('p6111Target').value].mail;
     p6111SyncTargetHelp();
     document.getElementById('p6111MailHelp').textContent = imp

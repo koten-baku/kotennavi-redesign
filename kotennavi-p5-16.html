@@ -30,13 +30,6 @@
   <span class="dbar-sep" style="margin-left:12px">購入歴：</span>
   <button class="dbtn on" data-purchase-history-btn onclick="ktnSetPurchaseHistory(true,this)">あり</button>
   <button class="dbtn" data-purchase-history-btn onclick="ktnSetPurchaseHistory(false,this)">なし</button>
-  <span class="dbar-sep" style="margin-left:12px">機能申込：</span>
-  <button class="dbtn on" data-user-apps-btn="none" onclick="KTN.setUserApps('none')">未申込</button>
-  <button class="dbtn" data-user-apps-btn="cr-pending" onclick="KTN.setUserApps('cr-pending')">クリエイター確認中</button>
-  <button class="dbtn" data-user-apps-btn="cr-granted" onclick="KTN.setUserApps('cr-granted')">クリエイター利用開始</button>
-  <button class="dbtn" data-user-apps-btn="cr-lp-pending" onclick="KTN.setUserApps('cr-lp-pending')">クリエイター＋LIAISON+確認中</button>
-  <button class="dbtn" data-user-apps-btn="ga-lp-granted" onclick="KTN.setUserApps('ga-lp-granted')">ギャラリー＋LIAISON+利用開始</button>
-  <button class="dbtn" data-user-apps-btn="ga-cancelled" onclick="KTN.setUserApps('ga-cancelled')">ギャラリー取消</button>
 </div>
 
 <div class="shell">
@@ -125,22 +118,6 @@
           </div>
           <div class="ktn-mgmt-context__name"><a href="kotennavi-p5.html">山田 花子</a></div>
           <div class="ktn-mgmt-context__meta">利用開始 2022.04 · hanako.yamada@example.com</div>
-          <!-- このアカウントに紐づくページ（クリエイター／ギャラリー機能が「利用開始」の人だけ・KTN.setUserApps が表示を切替）。
-               主役はユーザー＝表示とリンクだけで編集はさせない（ページの設定はそれぞれの管理ページ）。card全体はリンクにせず名前と「ページへ →」だけ -->
-          <div class="ktn-mgmt-context__linked" data-user-linked hidden>
-            <span class="ktn-mgmt-context__apps-label">Your Page</span>
-            <span class="ktn-mgmt-context__linked-media" data-linked-media></span>
-            <span class="ktn-mgmt-context__linked-body">
-              <span class="ktn-mgmt-context__linked-name"><span class="cb cb-person" data-linked-badge></span><a data-linked-name href="#"></a></span>
-              <span class="ktn-mgmt-context__linked-meta" data-linked-meta></span>
-            </span>
-            <a class="ktn-mgmt-context__linked-view" data-linked-view href="#">クリエイターページへ →</a>
-          </div>
-          <div class="ktn-mgmt-context__apps" data-user-apps hidden>
-            <span class="ktn-mgmt-context__apps-label">Applications</span>
-            <span class="ktn-mgmt-context__app" data-user-app="role" hidden><span class="ktn-mgmt-context__app-name">クリエイター機能</span><span class="ktn-review-status"></span></span>
-            <span class="ktn-mgmt-context__app" data-user-app="lp" hidden><span class="ktn-mgmt-context__app-name">LIAISON+</span><span class="ktn-review-status"></span></span>
-          </div>
         </div>
         <div class="ktn-mgmt-context__actions">
           <a class="ktn-mgmt-context__view" href="kotennavi-p5.html">myページへ →</a>

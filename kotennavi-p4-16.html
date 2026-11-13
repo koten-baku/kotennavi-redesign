@@ -256,6 +256,9 @@
   <span class="dbar-sep">購入者のクーポン：</span>
   <button class="dbtn on" data-terms-demo="buyer" onclick="ktnTermsDemo('buyer','has',this)">使った</button>
   <button class="dbtn" data-terms-demo="buyer" onclick="ktnTermsDemo('buyer','none',this)">使っていない</button>
+  <span class="dbar-sep" style="margin-left:12px">作品のページ：</span>
+  <button class="dbtn on" data-work-hidden-demo onclick="ktnWorkHiddenDemo(false,this)">公開</button>
+  <button class="dbtn" data-work-hidden-demo onclick="ktnWorkHiddenDemo(true,this)">非公開（申込のあと）</button>
 </div>
 
 <div class="shell">
@@ -367,11 +370,13 @@
         </div>
 
         <!-- C-2. 購入作品 + 購入者 -->
+        <!-- 申込のあとに作品が非公開になったとき（2026-11-12）。取引はそのまま進む。作品名と画像はリンクにしない（非公開のページへ飛ばさない） -->
+        <div class="ktn-work-hidden-note" data-work-hidden-note role="note" hidden>この作品のページは、事務局が非公開にしています。取引はこのまま進みます（理由は事務局からのメールをご確認ください）。</div>
         <div class="p515-purchase-box">
           <div class="p515-purchase-art">
             <div class="p515-purchase-box__head">販売作品<span class="p515-purchase-box__head-en">Artwork</span></div>
             <div class="p515-purchase-art__body">
-              <a class="p515-purchase-art__img-wrap" href="kotennavi-p6-2.html">
+              <a class="p515-purchase-art__img-wrap" href="kotennavi-p6-2.html" data-work-link>
                 <div class="p515-purchase-art__img" style="background:linear-gradient(135deg,#e8d8c8,#c8a888)"></div>
               </a>
               <div class="p515-purchase-art__info">
@@ -380,7 +385,7 @@
                   <span class="ktn-aw-id">AW-G18-2204</span>
                   <span class="aws aws-sale" id="p416ArtBadge">販売中</span>
                 </div>
-                <a class="p515-purchase-art__title" href="kotennavi-p6-2.html">朝の余白 No.3</a>
+                <a class="p515-purchase-art__title" href="kotennavi-p6-2.html" data-work-link>朝の余白 No.3</a>
                 <div class="p515-purchase-art__exh">
                   <a href="kotennavi-p2.html">モノクロームの詩 — 松本りさ 個展</a>
                 </div>
@@ -462,7 +467,7 @@
               <div class="p316-action-deadline__row">
                 <span class="p316-action-deadline__label">確定期限</span>
                 <span class="p316-action-deadline__date">2026年3月22日（日）</span>
-                <span class="p316-action-deadline__until">まで（会期終了7日後または申込7日後の遅い方）</span>
+                <span class="p316-action-deadline__until">まで（会期終了<span data-txn-dl="kakuteiEnd">7</span>日後または申込<span data-txn-dl="kakuteiApply">7</span>日後の遅い方）</span>
                 <span class="ktn-days-chip">あと14日</span>
               </div>
               <p class="p316-action-deadline__note">期限を過ぎるとこの作品は自動で出品取消となり、申込者全員にキャンセル通知が送られます（次の申込者へは繰り上がりません）。会場での販売状況を確認の上、早めにご対応ください。</p>
@@ -645,7 +650,7 @@
               <div class="p316-action-deadline__row">
                 <span class="p316-action-deadline__label">発送期限</span>
                 <span class="p316-action-deadline__date">2026年3月28日（土）</span>
-                <span class="p316-action-deadline__until">まで（会期終了後7日または支払後7日の遅い方）</span>
+                <span class="p316-action-deadline__until">まで（会期終了後<span data-txn-dl="shipEnd">7</span>日または支払後<span data-txn-dl="shipPay">7</span>日の遅い方）</span>
                 <span class="ktn-days-chip">あと14日</span>
               </div>
               <p class="p316-action-deadline__note">期限を過ぎると管理者に通知され、購入者によるキャンセル申請が可能になります。</p>
@@ -1362,7 +1367,7 @@ KTN.renderQA('#p416QaTxn', { category: 'liaison-txn', side: 'seller', style: 'de
   /* new(S1購入確定)は期限到達で取引が自動キャンセル＝このページが消える。
      購入者 payment(S2) と同型で、超過状態は画面に現れ得ないため2段階とも「期限前」。
      最終段階の chip は「期限超過」ではなく「本日中」とする。
-     confirming(S5完了確認)は期限超過しても7日経過で自動確定＝取引継続・影響小。
+     confirming(S5完了確認)は確認期限（P90-20「取引の期限」・初めは5日）で自動確定＝取引継続・影響小。
      購入者 receipt(S4) と同位置付けで、超過バナーは持たず期限前1段階（間近）のみ。
      overdue レベルが来ても near に畳む */
   var OVERDUE_CHIP = { new: '本日中' };

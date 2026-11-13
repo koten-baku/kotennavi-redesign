@@ -115,6 +115,7 @@
         <div class="p909-tab-nav" id="p9020Tabs" role="tablist">
           <button type="button" class="p909-tab-btn is-active" role="tab" data-panel="fee" aria-selected="true">サービス利用料</button>
           <button type="button" class="p909-tab-btn" role="tab" data-panel="campaign" aria-selected="false">キャンペーン</button>
+          <button type="button" class="p909-tab-btn" role="tab" data-panel="deadline" aria-selected="false">取引の期限</button>
           <button type="button" class="p909-tab-btn" role="tab" data-panel="notify" aria-selected="false">お知らせの時期</button>
           <button type="button" class="p909-tab-btn" role="tab" data-panel="grant" aria-selected="false">個別の適用<span class="ktn-count ktn-count--pill is-idle">0</span></button>
         </div>
@@ -175,6 +176,12 @@
               <li>1回の購入に使えるクーポンは1枚のまま（両方あるときは購入者が選ぶ）。クーポンのメールの同意・景品表示法は、専門家の確認に加える。</li>
             </ul>
           </div>
+        </div>
+
+        <!-- 取引の期限（2026-11-13 ユーザー指示＝確定・支払・発送・受取確認・完了確認の期限の日数を、ここでまとめて確かめて変える）。中身は pages.js ktnTxnDeadlines -->
+        <div class="p9020-panel" id="p9020Panel-deadline" role="tabpanel" hidden>
+          <p class="p909-auto-intro">LIAISON+ の取引の、状態ごとの期限の日数です。確定期限と支払期限を過ぎると自動でキャンセル、受取確認と完了確認の期限を過ぎると自動で確定します。発送期限は過ぎても自動では進みません（取引管理の要対応）。変えた日数は、保存したあとにその状態になった取引から使います（進んでいる取引の期限は変わりません）。ガイドやよくある質問の日数も、この設定から出ます。</p>
+          <div id="p9020Deadline"></div>
         </div>
 
         <!-- お知らせの時期 -->

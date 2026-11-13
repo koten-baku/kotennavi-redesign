@@ -120,7 +120,7 @@
         <div class="p315-urgent-filter">
           <div class="p315-urgent-filter__info">
             <span class="p315-urgent-filter__icon" aria-hidden="true">●</span>
-            <span class="p315-urgent-filter__text">要対応（期限間近・超過）の取引が<strong class="p315-urgent-filter__count" id="p9013UrgentCount">3</strong>件あります</span>
+            <span class="p315-urgent-filter__text">要対応（事務局の操作が要る取引）が<strong class="p315-urgent-filter__count" id="p9013UrgentCount">3</strong>件あります</span>
           </div>
           <label class="p315-urgent-filter__check">
             <input type="checkbox" id="p9013UrgentOnly" title="要対応の取引のみ表示">
@@ -129,35 +129,57 @@
         </div>
 
         <div class="p319-toolbar">
-          <div class="p319-toolbar__filters">
-            <!-- 取引番号・申込NID で探す（利用者のお問合わせには取引番号が書かれている・?q= でも開ける・2026-11-10）。取引中・終了の両方から探し、見つかった方のタブを開く -->
-            <label class="p319-filter p9013-q">
-              <span class="p319-filter__label">取引番号</span>
-              <input type="search" class="p319-filter__sel" id="p9013Q" placeholder="例：TXN-20261105-7021">
-            </label>
-            <label class="p319-filter p9013-qn">
-              <span class="p319-filter__label">申込NID</span>
-              <input type="search" class="p319-filter__sel" id="p9013QNid" placeholder="例：N-77021">
-            </label>
-            <!-- 展覧会で絞る（NID・URL・P90-12 の「取引管理 →」からは ?ex= で入って開く・2026-11-03） -->
-            <label class="p319-filter p9013-exq">
-              <span class="p319-filter__label">展覧会の NID・URL</span>
-              <input type="search" class="p319-filter__sel p90cm-nid" id="p9013Ex" placeholder="例：198650 または展覧会のページの URL">
-            </label>
-            <label class="p319-filter">
-              <span class="p319-filter__label">取引状態</span>
-              <select class="p319-filter__sel" id="p9013FilterStatus">
-                <option value="">すべて</option>
-                <option value="wait">申込済</option>
-                <option value="stock">購入確定待ち</option>
-                <option value="pay">支払待ち</option>
-                <option value="ship">発送待ち</option>
-                <option value="recv">受取確認待ち</option>
-                <option value="finish">完了確認待ち</option>
-                <option value="done">取引完了</option>
-                <option value="cancelled">キャンセル済</option>
-              </select>
-            </label>
+          <div class="p319-toolbar__filters p9013-filters">
+            <!-- 検索の欄の並び（2026-11-12 ユーザー指示）：1段目＝取引番号・申込NID・取引状態／2段目＝作品の NID・URL・展覧会の NID・URL／3段目＝出品者の NID・購入者の UID・名前。
+               取引番号・申込NID・ID・URL・名前は、取引中・終了の両方から探し、見つかった方のタブを開く。展覧会は P90-12 の「取引管理 →」から ?ex=、作品は ?work= でも開ける -->
+            <div class="p9013-row p9013-row--1">
+              <label class="p319-filter p9013-q">
+                <span class="p319-filter__label">取引番号</span>
+                <input type="search" class="p319-filter__sel" id="p9013Q" placeholder="例：TXN-20261105-7034">
+              </label>
+              <label class="p319-filter p9013-qn">
+                <span class="p319-filter__label">申込NID</span>
+                <input type="search" class="p319-filter__sel" id="p9013QNid" placeholder="例：N-77021">
+              </label>
+              <label class="p319-filter p9013-stq">
+                <span class="p319-filter__label">取引状態</span>
+                <select class="p319-filter__sel" id="p9013FilterStatus">
+                  <option value="">すべて</option>
+                  <option value="wait">申込済</option>
+                  <option value="stock">購入確定待ち</option>
+                  <option value="pay">支払待ち</option>
+                  <option value="ship">発送待ち</option>
+                  <option value="recv">受取確認待ち</option>
+                  <option value="finish">完了確認待ち</option>
+                  <option value="done">取引完了</option>
+                  <option value="cancelled">キャンセル済</option>
+                </select>
+              </label>
+            </div>
+            <div class="p9013-row p9013-row--2">
+              <label class="p319-filter p9013-wq">
+                <span class="p319-filter__label">作品の NID・URL</span>
+                <input type="search" class="p319-filter__sel p90cm-nid" id="p9013Wk" placeholder="例：31201・artwork/31201">
+              </label>
+              <label class="p319-filter p9013-exq">
+                <span class="p319-filter__label">展覧会の NID・URL</span>
+                <input type="search" class="p319-filter__sel p90cm-nid" id="p9013Ex" placeholder="例：198650・exhibition/198650">
+              </label>
+            </div>
+            <div class="p9013-row p9013-row--3">
+              <label class="p319-filter p9013-sq">
+                <span class="p319-filter__label">出品者の NID</span>
+                <input type="search" class="p319-filter__sel" id="p9013Seller" placeholder="例：CR-1042・GA-0412">
+              </label>
+              <label class="p319-filter p9013-bq">
+                <span class="p319-filter__label">購入者の UID</span>
+                <input type="search" class="p319-filter__sel" id="p9013Buyer" placeholder="例：U-20107">
+              </label>
+              <label class="p319-filter p9013-nq">
+                <span class="p319-filter__label">名前（展覧会・作品・出品者・購入者）</span>
+                <input type="search" class="p319-filter__sel" id="p9013Name" placeholder="例：音の輪郭・YUGEN・ito_ren">
+              </label>
+            </div>
           </div>
           <p class="ktn-count ktn-count--result" id="p9013Count"></p>
         </div>
@@ -229,7 +251,7 @@
                 <td data-label="出品者"><span class="cb cb-person cb-gallery">gallery</span> <a class="ktn-guide-link" href="kotennavi-p4.html">YUGEN Gallery</a></td>
                 <td data-label="購入者"><a class="ktn-guide-link" href="kotennavi-p5.html">ito_ren</a></td>
                 <td data-label="取引状態"><span class="p315-txn-row__status p315-apply-status--ship">発送待ち</span></td>
-                <td data-label="期限"><span class="ktn-days-chip ktn-days-chip--urgent">あと1日</span></td>
+                <td data-label="期限"><span class="ktn-days-chip ktn-days-chip--urgent">2日超過</span></td>
               </tr>
               <tr>
                 <td data-label="申込NID" class="is-id">N-77086</td>

@@ -72,13 +72,6 @@
   <span class="dbar-sep">ロール：</span>
   <button class="dbtn on" onclick="setR('user+',this)">user+</button>
   <button class="dbtn" onclick="setR('admin',this)">管理者</button>
-  <span class="dbar-sep" style="margin-left:12px">機能申込：</span>
-  <button class="dbtn on" data-user-apps-btn="none" onclick="KTN.setUserApps('none')">未申込</button>
-  <button class="dbtn" data-user-apps-btn="cr-pending" onclick="KTN.setUserApps('cr-pending')">クリエイター確認中</button>
-  <button class="dbtn" data-user-apps-btn="cr-granted" onclick="KTN.setUserApps('cr-granted')">クリエイター利用開始</button>
-  <button class="dbtn" data-user-apps-btn="cr-lp-pending" onclick="KTN.setUserApps('cr-lp-pending')">クリエイター＋LIAISON+確認中</button>
-  <button class="dbtn" data-user-apps-btn="ga-lp-granted" onclick="KTN.setUserApps('ga-lp-granted')">ギャラリー＋LIAISON+利用開始</button>
-  <button class="dbtn" data-user-apps-btn="ga-cancelled" onclick="KTN.setUserApps('ga-cancelled')">ギャラリー取消</button>
   <span class="dbar-sep" style="margin-left:12px">スマホの案内：</span>
   <button class="dbtn on" data-pwa-demo-btn onclick="ktnPwaCard('std',this)">Android など</button>
   <button class="dbtn" data-pwa-demo-btn onclick="ktnPwaCard('ios',this)">iPhone（Safari）</button>
@@ -174,22 +167,6 @@
           </div>
           <div class="ktn-mgmt-context__name"><a href="kotennavi-p5.html">山田 花子</a></div>
           <div class="ktn-mgmt-context__meta">利用開始 2022.04 · hanako.yamada@example.com</div>
-          <!-- このアカウントに紐づくページ（クリエイター／ギャラリー機能が「利用開始」の人だけ・KTN.setUserApps が表示を切替）。
-               主役はユーザー＝表示とリンクだけで編集はさせない（ページの設定はそれぞれの管理ページ）。card全体はリンクにせず名前と「ページへ →」だけ -->
-          <div class="ktn-mgmt-context__linked" data-user-linked hidden>
-            <span class="ktn-mgmt-context__apps-label">Your Page</span>
-            <span class="ktn-mgmt-context__linked-media" data-linked-media></span>
-            <span class="ktn-mgmt-context__linked-body">
-              <span class="ktn-mgmt-context__linked-name"><span class="cb cb-person" data-linked-badge></span><a data-linked-name href="#"></a></span>
-              <span class="ktn-mgmt-context__linked-meta" data-linked-meta></span>
-            </span>
-            <a class="ktn-mgmt-context__linked-view" data-linked-view href="#">クリエイターページへ →</a>
-          </div>
-          <div class="ktn-mgmt-context__apps" data-user-apps hidden>
-            <span class="ktn-mgmt-context__apps-label">Applications</span>
-            <span class="ktn-mgmt-context__app" data-user-app="role" hidden><span class="ktn-mgmt-context__app-name">クリエイター機能</span><span class="ktn-review-status"></span></span>
-            <span class="ktn-mgmt-context__app" data-user-app="lp" hidden><span class="ktn-mgmt-context__app-name">LIAISON+</span><span class="ktn-review-status"></span></span>
-          </div>
         </div>
         <div class="ktn-mgmt-context__actions">
           <a class="ktn-mgmt-context__view" href="kotennavi-p5.html">myページへ →</a>
@@ -220,10 +197,10 @@
 
         <div class="p514-tabs" id="p514Tabs">
           <button class="p514-tab is-active" data-tab="p514PaneActive">
-            購入手続き中<span class="ktn-count ktn-count--pill is-idle p514-tab__count">5</span>
+            購入手続き中<span class="ktn-count ktn-count--pill is-idle p514-tab__count">7</span>
           </button>
           <button class="p514-tab" data-tab="p514PaneHistory">
-            購入履歴<span class="ktn-count ktn-count--pill is-idle p514-tab__count">5</span>
+            購入履歴<span class="ktn-count ktn-count--pill is-idle p514-tab__count">7</span>
           </button>
         </div>
 
@@ -377,6 +354,8 @@
                   <span class="p514-aw__exh-label">展覧会</span>
                   <a class="p514-aw__exh-name" href="kotennavi-p2.html">季節の彩り展</a>
                 </div>
+                <!-- 取引番号は申込と同時に付く（申込済にも・2026-11-12 追174-432）。問合せのときに使えるように出す -->
+                <div class="p514-aw__txn">取引番号 <span class="is-id">TXN-20260228-2210</span></div>
               </div>
             </div>
             <div class="p514-aw__strip p514-aw__strip--pending">
@@ -387,6 +366,66 @@
             </div>
           </div>
 
+          <!-- 申込済・作品が非公開になり、事務局が申込を止めている例（P90-12「取引デスクで1件ずつ決める」・2026-11-12）。作品のページは非公開なので、画像と名前はリンクにしない。購入者は自分で申込を取りやめられる -->
+          <div class="p514-aw">
+            <div class="p514-aw__row">
+              <div class="p514-aw__thumb-wrap">
+                <div class="p514-aw__thumb" style="background:linear-gradient(135deg,#c8c0d0,#8a80a0)"></div>
+              </div>
+              <div class="p514-aw__main">
+                <div class="p514-aw__badges">
+                  <span class="cb cb-content cb-artwork">artwork</span>
+                  <span class="ktn-aw-id">AW-C70-2301</span>
+                </div>
+                <span class="p514-aw__title-link">雨音の器</span>
+                <div class="p514-aw__creator">佐伯 遥</div>
+                <div class="p514-aw__price">¥46,000</div>
+                <div class="p514-aw__exh">
+                  <span class="p514-aw__exh-label">展覧会</span>
+                  <a class="p514-aw__exh-name" href="kotennavi-p2.html">器と光展</a>
+                </div>
+                <div class="p514-aw__txn">取引番号 <span class="is-id">TXN-20260305-2318</span></div>
+              </div>
+            </div>
+            <div class="ktn-work-hidden-note ktn-work-hidden-note--row" role="note">この作品のお申込みは、現在確認中です。扱いが決まりましたら、事務局からご連絡いたします。</div>
+            <div class="p514-aw__strip p514-aw__strip--pending">
+              <span class="p514-aw__strip-label">申込済　申込ID#1（全1件） 2026.03.05</span>
+              <div class="p514-aw__strip-actions">
+                <button data-txn-op class="p514-cancel-apply-btn ktn-op-btn ktn-op-btn--danger-outline ktn-op-btn--sm" type="button" data-name="雨音の器" data-apply="#1">申込をキャンセルする</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 取引中（発送待ち）・申込のあとに作品が非公開になった例（2026-11-12）。取引はそのまま進む。画像と名前はリンクにしない -->
+          <div class="p514-aw">
+            <div class="p514-aw__row">
+              <div class="p514-aw__thumb-wrap">
+                <div class="p514-aw__thumb" style="background:linear-gradient(135deg,#c8c8c0,#8a8a7a)"></div>
+              </div>
+              <div class="p514-aw__main">
+                <div class="p514-aw__badges">
+                  <span class="cb cb-content cb-artwork">artwork</span>
+                  <span class="ktn-aw-id">AW-C69-2277</span>
+                </div>
+                <span class="p514-aw__title-link">灰の庭</span>
+                <div class="p514-aw__creator">戸田 誠</div>
+                <div class="p514-aw__price">¥98,000</div>
+                <div class="p514-aw__exh">
+                  <span class="p514-aw__exh-label">展覧会</span>
+                  <a class="p514-aw__exh-name" href="kotennavi-p2.html">庭の記憶 — 戸田誠 個展</a>
+                </div>
+              </div>
+            </div>
+            <div class="ktn-work-hidden-note ktn-work-hidden-note--row" role="note">この作品のページは現在公開されていません。取引はこのまま進みます。</div>
+            <div class="p514-aw__strip p514-aw__strip--applied">
+              <span class="p514-aw__strip-label">発送待ち　申込ID#1</span>
+              <div class="p514-aw__strip-actions">
+                <a class="p514-aw__strip-link ktn-action-btn" href="kotennavi-p5-15.html">
+                  取引ワークスペースへ →
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- C-5. タブペイン: 取引完了 -->
@@ -481,6 +520,59 @@
             </div>
           </div>
 
+          <!-- キャンセル済: 事務局による取引の取消（支払いのあと・作品が非公開になり事務局が取引を止めた例・全額を返金・2026-11-13）。取引ワークスペースに入っていたので「取引詳細 →」 -->
+          <div class="p514-aw">
+            <div class="p514-aw__row">
+              <div class="p514-aw__thumb-wrap">
+                <div class="p514-aw__thumb" style="background:linear-gradient(135deg,#c0b8b0,#7a7068)"></div>
+              </div>
+              <div class="p514-aw__main">
+                <div class="p514-aw__badges">
+                  <span class="cb cb-content cb-artwork">artwork</span>
+                  <span class="ktn-aw-id">AW-C68-2251</span>
+                </div>
+                <span class="p514-aw__title-link">砂の階段</span>
+                <div class="p514-aw__creator">戸田 誠</div>
+                <div class="p514-aw__price">¥86,000</div>
+                <div class="p514-aw__exh">
+                  <span class="p514-aw__exh-label">展覧会</span>
+                  <a class="p514-aw__exh-name" href="kotennavi-p2.html">庭の記憶 — 戸田誠 個展</a>
+                </div>
+              </div>
+            </div>
+            <div class="p514-aw__strip p514-aw__strip--cancelled">
+              <span class="p514-aw__strip-label">キャンセル済 - 事務局による取引の取消</span>
+              <div class="p514-aw__strip-actions">
+                <a class="p514-aw__strip-link ktn-action-btn" href="kotennavi-p5-15.html?cancel=office">取引詳細 →</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- キャンセル済: 販売の取りやめ（作品が非公開になり、事務局が申込をすべてキャンセルした・A-T-18。理由は書かない・2026-11-12） -->
+          <div class="p514-aw">
+            <div class="p514-aw__row">
+              <div class="p514-aw__thumb-wrap">
+                <div class="p514-aw__thumb" style="background:linear-gradient(135deg,#c8d0c8,#88a090)"></div>
+              </div>
+              <div class="p514-aw__main">
+                <div class="p514-aw__badges">
+                  <span class="cb cb-content cb-artwork">artwork</span>
+                  <span class="ktn-aw-id">AW-C71-2044</span>
+                </div>
+                <span class="p514-aw__title-link">霧の庭</span>
+                <div class="p514-aw__creator">森 千尋</div>
+                <div class="p514-aw__price">¥52,000</div>
+                <div class="p514-aw__exh">
+                  <span class="p514-aw__exh-label">展覧会</span>
+                  <a class="p514-aw__exh-name" href="kotennavi-p2.html">庭のかたち — 森千尋 個展</a>
+                </div>
+              </div>
+            </div>
+            <div class="p514-aw__strip p514-aw__strip--cancelled">
+              <span class="p514-aw__strip-label">キャンセル済 - 販売の取りやめ</span>
+            </div>
+          </div>
+
           <!-- キャンセル済: 出品取消 -->
           <div class="p514-aw">
             <div class="p514-aw__row">
@@ -503,6 +595,9 @@
             </div>
             <div class="p514-aw__strip p514-aw__strip--cancelled">
               <span class="p514-aw__strip-label">キャンセル済 - 出品者による出品取消</span>
+              <div class="p514-aw__strip-actions">
+                <a class="p514-aw__strip-link ktn-action-btn" href="kotennavi-p5-15.html?cancel=withdraw">取引詳細 →</a>
+              </div>
             </div>
           </div>
 
@@ -528,6 +623,9 @@
             </div>
             <div class="p514-aw__strip p514-aw__strip--cancelled">
               <span class="p514-aw__strip-label">キャンセル済 - 出品者による会場売約済</span>
+              <div class="p514-aw__strip-actions">
+                <a class="p514-aw__strip-link ktn-action-btn" href="kotennavi-p5-15.html?cancel=venue">取引詳細 →</a>
+              </div>
             </div>
           </div>
 

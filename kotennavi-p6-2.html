@@ -61,6 +61,9 @@
   <span class="dbar-sep" style="margin-left:12px">受付：</span>
   <button class="dbtn on" data-camp-full onclick="ktnCampFullDemo(false,this)">受付中</button>
   <button class="dbtn" data-camp-full onclick="ktnCampFullDemo(true,this)">上限に達した</button>
+  <span class="dbar-sep" style="margin-left:12px">購入（ログイン）：</span>
+  <button class="dbtn on" data-buystop-demo onclick="ktnBuyStopDemo(false,this)">申し込める</button>
+  <button class="dbtn" data-buystop-demo onclick="ktnBuyStopDemo(true,this)">止められている</button>
 </div>
 
 
@@ -299,6 +302,8 @@
               </a>
             </div>
             <div class="p6-liaison__apply-queue" id="p62ApplyQueue">3人が申込中</div>
+            <!-- LIAISON+ での購入を止めているアカウント（P90-1-1・2026-11-12）。ログインしている本人にだけ出し、申込のボタンを押せなくする。本番はアカウントの印から -->
+            <div class="p62-buy-stop" id="p62BuyStop" role="note" hidden>このアカウントでは、現在 LIAISON+ での購入のお申込みをお受けしておりません。詳しくは、事務局からのメールをご確認ください。</div>
             <button class="p6-liaison__btn-apply" id="p62ApplyBtn" data-txn-op onclick="openApplyModal()">
               <span class="p6-liaison__btn-apply-inner">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">

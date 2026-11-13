@@ -114,11 +114,11 @@
           <p class="ktn-mgmt-head__desc">展覧会・記事・レビュー・コメントを探して、編集・非公開・削除ができます。削除するときは理由を書きます（管理者あてにメールで届きます）。</p>
         </div>
 
-        <!-- NID・URL で探す（ページの URL を貼ると、種類を見分けてそのタブで1件を出す） -->
+        <!-- NID・URL で探す（URL はドメインのあと＝koten-navi.com/ の後ろ。種類を見分けてそのタブで1件を出す・URL をまるごと貼るとドメインまでを外す） -->
         <div class="p903-find">
           <label class="p319-filter p903-find__field">
             <span class="p319-filter__label">NID・URL で探す</span>
-            <input type="search" class="p319-filter__sel" id="p903Find" placeholder="例：197069、またはページの URL を貼る">
+            <input type="search" class="p319-filter__sel" id="p903Find" data-site-path placeholder="例：197069・exhibition/197069">
           </label>
           <button type="button" class="ktn-op-btn ktn-op-btn--sm" id="p903FindBtn">探す</button>
           <p class="p903-find__msg" id="p903FindMsg" aria-live="polite"></p>
