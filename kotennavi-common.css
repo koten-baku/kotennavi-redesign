@@ -10033,13 +10033,19 @@ a.p319-item__dest-name:hover{color:var(--page-accent)}
 /* 自動送信タブ：カテゴリごとに独立した<table>のため、既定(auto)のままだと内容の違いで列幅・列位置が表ごとにずれる。
    table-layout:fixedで共通幅を明示し、3表とも同じx位置に列を揃える（件名列のみ幅指定を持たせず残り幅を吸収） */
 .p909-auto-table{table-layout:fixed}
-.p909-auto-table th:nth-child(1),.p909-auto-table td:nth-child(1){width:8%}
-.p909-auto-table th:nth-child(2),.p909-auto-table td:nth-child(2){width:20%}
-.p909-auto-table th:nth-child(3),.p909-auto-table td:nth-child(3){width:26%;white-space:normal}
-.p909-auto-table th:nth-child(5),.p909-auto-table td:nth-child(5){width:10%}
-.p909-auto-table th:nth-child(6),.p909-auto-table td:nth-child(6){width:12%}
-/* 自動送信タブ：対象/トリガー元/タイミングの3行メタ */
-.p909-auto-meta__line{font-size:.72rem;color:var(--muted);line-height:1.7}
+.p909-auto-table th:nth-child(1),.p909-auto-table td:nth-child(1){width:12%}
+.p909-auto-table th:nth-child(2),.p909-auto-table td:nth-child(2){width:32%}
+.p909-auto-table th:nth-child(4),.p909-auto-table td:nth-child(4){width:11%}
+.p909-auto-table th:nth-child(5),.p909-auto-table td:nth-child(5){width:12%}
+.p909-auto-table tr.p909-detail td{width:auto}
+/* 自動送信・全メール一覧：同じ契機のメール（隣どうしに並ぶ）を左の縦線でつなぐ（2026-11-14 ユーザー案＝文字より分かりやすい）。
+   線は1列目の左端。開いた「詳細」の行も線を通し、まとまりの最初と最後だけ端を少し内側で止める（隣のまとまりと線がくっつかないように） */
+.p909-table tr.is-same > td:first-child{position:relative}
+.p909-table tr.is-same > td:first-child::before{content:'';position:absolute;left:0;top:-1px;bottom:0;width:3px;background:var(--accent)}
+.p909-table tr.is-same-first:not(.p909-detail) > td:first-child::before{top:10px}
+.p909-table tr.is-same-last:not(.p909-detail):not(:has(+ tr.p909-detail:not([hidden]))) > td:first-child::before,
+.p909-table tr.is-same-last.p909-detail > td:first-child::before{bottom:10px}
+.p909-table td.p909-cell--title{font-size:inherit}   /* 行の名前（発火イベント・テンプレート名・メール）は表のほかの文字と同じ大きさ（.82rem・スマホ .75rem）にそろえる（3つの表とも・2026-11-14 ユーザー指示） */
 
 /* P90-9 タブ（手動送信／自動送信・.p315-tab-nav と同値のページ専用ネームスペース・is-active方式） */
 .p909-tab-nav{display:flex;border-bottom:2px solid var(--border);margin:4px 0 16px;overflow-x:auto;scrollbar-width:none}
@@ -10063,8 +10069,6 @@ a.p319-item__dest-name:hover{color:var(--page-accent)}
 .p909-all-how--manual{background:rgba(139,94,60,.1);color:#8b5e3c}
 .p909-all-how--publish{background:rgba(42,95,122,.1);color:#2a5f7a}
 .p909-all-stop{color:#2a7a4a;font-weight:600;white-space:nowrap}
-.p909-all-page{margin-top:2px;color:var(--muted);font-size:.68rem}
-.p909-all-setting{display:block;margin-top:2px;color:var(--muted);font-size:.68rem;line-height:1.5}
 .p909-all-body{font-family:var(--fn);font-size:.72rem;color:var(--ink);white-space:nowrap}
 .p909-all-body--none{color:#b43c14;font-weight:600}
 tr.is-flash td{background:rgba(0,93,167,.1);transition:background .3s}
@@ -14256,6 +14260,15 @@ a.p90cm-sub{color:var(--accent)}
 .p90cm-kw{min-width:160px}
 .p90cm-err{margin:0 0 12px;font-family:var(--fn);font-size:.76rem;font-weight:600;color:#b43c14}
 .p90cm-err[hidden]{display:none}
+/* 事務局が手で送るメールの送信の欄（KTN.mailSend・P90-5 など・2026-11-14）。本文を直しやすいように広め */
+.ktn-mailsend{max-width:640px;max-height:88vh}
+.ktn-mailsend .p211-field{margin-bottom:14px}
+.ktn-mailsend__from{margin:0;font-family:var(--fm);font-size:.8rem;color:var(--ink)}
+#ktnMailSendPick[hidden],#ktnMailSendLead[hidden]{display:none}
+/* 展覧会の内容の問い合わせの状態（P90-5 の「状態」の欄・P2-11 の管理者の枠・KTN.exhAsk・2026-11-14） */
+.ktn-ask-state{margin:6px 0 0;font-family:var(--fn);font-size:.72rem;font-weight:600;line-height:1.5;color:#8b5e3c}
+.ktn-ask-state.is-re{color:var(--accent)}
+.ktn-ask-state__sub{display:block;font-weight:400;color:var(--muted)}
 #ktnAdminDeleteModal .p211-field{margin-bottom:12px}
 .p315-archive-table tr.is-hidden td{color:var(--muted)} /* 管理者の一覧で非公開にした行（P90-4〜6・2026-10-29） */
 .p90cm-title--plain{color:var(--ink);text-decoration:none}
@@ -14841,3 +14854,26 @@ body.is-admin-view [aria-disabled="true"]{opacity:.45;cursor:not-allowed}
 .p909-idlegend__body th:nth-child(1){width:7.5em}.p909-idlegend__body th:nth-child(2){width:4em}.p909-idlegend__body th:nth-child(3){width:11em}   /* 送り方・系統・名前は折り返さない幅（2026-11-13 ユーザー指示）。中身の列は残りの幅で折り返す */
 .p909-idlegend__body .p70-table tbody td{white-space:normal;overflow-wrap:anywhere;font-family:var(--fn);font-weight:400;padding:6px 10px}   /* 表の中はすべて折り返す（p70-table の最後の列の nowrap・英字の書体を打ち消す・2026-11-13 ユーザー指示） */
 @media (max-width:540px){.p909-idlegend__body th:nth-child(1){width:4.5em}.p909-idlegend__body th:nth-child(2){width:3.5em}.p909-idlegend__body th:nth-child(3){width:6.5em}}
+
+/* P90-9：同じ契機で送るメール・送信元と送信先（2026-11-13） */
+.p909-same{display:block;margin-top:3px;font-size:.66rem;color:var(--accent);font-weight:600;white-space:normal}
+/* P90-9：長い文（送信元・送信先・トリガー元・タイミング・契機など）は行の下の「詳細」に畳む（3つの表で共通・2026-11-14）。
+   開閉は「詳細を見る」（.p315-archive-table__detail-btn）。スマホでは表がカードになるので、詳細はカードの続きとしてつなげる */
+.p909-detail-toggle{margin-top:4px;font-family:var(--fn);font-weight:400}
+.p909-table tr.p909-detail[hidden]{display:none}
+.p909-table tr.p909-detail td{padding:0 16px 14px;background:#faf7f1}
+.p909-table tr:has(+ tr.p909-detail:not([hidden])) td{border-bottom:none;background:#faf7f1}
+.p909-detail__dl{display:flex;flex-wrap:wrap;margin:0;padding-top:10px;border-top:1px dashed var(--border);font-family:var(--fn);font-size:.74rem;line-height:1.7;color:var(--ink)}
+.p909-detail__dl dt{flex:0 0 7em;color:var(--muted);font-weight:600}
+.p909-detail__dl dd{flex:1 1 calc(100% - 7em);min-width:0;margin:0;overflow-wrap:anywhere}
+@media (max-width:640px){
+  .p909-table tr:has(+ tr.p909-detail:not([hidden])){border-bottom:none;border-radius:4px 4px 0 0;margin-bottom:0}
+  .p909-table tr.p909-detail{margin-top:-1px;border-top:none;border-radius:0 0 4px 4px;padding:0 14px 10px}
+  .p909-table tr.p909-detail td{display:block;padding:0;border-bottom:none;text-align:left}
+  .p909-table tr.p909-detail td::before{content:none}
+  .p909-table tr.is-same{border-left:3px solid var(--accent)}   /* カードの左の枠を線にする */
+  .p909-table tr.is-same > td:first-child::before{content:none}
+  .p909-table tr.is-same:not(.is-same-last):not(:has(+ tr.p909-detail:not([hidden]))){margin-bottom:4px}
+  .p909-detail__dl dt{flex-basis:100%}
+  .p909-detail__dl dd{flex-basis:100%;margin-bottom:6px}
+}

@@ -225,6 +225,17 @@
           </div>
         </div>
 
+        <!-- パスワードの設定の案内（S-U-01）：管理者がアカウントを作るのはふつうではないので、送るかはケースごとに決める（2026-11-14 ユーザー指示・旧 A-U-09 の自動送信をやめた）。新規・クローンのときだけ出す -->
+        <div class="p211-block" id="p901MailBlock" hidden>
+          <div class="p211-block__head"><div class="p211-block__title">メール <span class="p211-block__title-en">Mail</span></div></div>
+          <div class="p211-block__body">
+          <div class="p211-field">
+            <label class="p211-check"><input type="checkbox" id="p901SendSetup"> パスワードの設定の案内を送る（S-U-01）</label>
+            <p class="p211-help">保存したときに、登録したアドレスへパスワードを設定するリンクを送ります。文面は <a class="ktn-guide-link" href="./kotennavi-p90-9.html" target="_blank" rel="noopener">メールテンプレート管理 →</a> の S-U-01 です。本人に先に連絡してから作る場合などは、送らずに保存できます（あとで送るときは、本人にパスワードの再設定を使ってもらいます）。</p>
+          </div>
+          </div>
+        </div>
+
         <!-- 送信バー -->
         <div class="p211-submit-bar">
           <button class="p211-submit-bar__cancel ktn-op-btn" type="button" onclick="location.href='./kotennavi-p90-1.html'">キャンセル</button>
@@ -270,7 +281,7 @@
 
   var MODE_TITLES = { new: 'ユーザーを新規作成', clone: 'ユーザーをクローンで作成', edit: 'ユーザーを編集' };
   var MODE_BANNER = {
-    new:   '新しいユーザーアカウントを作成します。保存するとログインの案内メールが登録したアドレスに届きます。',
+    new:   '新しいユーザーアカウントを作成します。パスワードの設定の案内メールは、下の「パスワードの設定の案内を送る」を選んだときだけ送ります。',
     clone: '',
     edit:  ''
   };
@@ -346,6 +357,8 @@
     var banner = document.getElementById('p901ModeBanner'), bannerText = document.getElementById('p901ModeBannerText');
     if (mode === 'clone') MODE_BANNER.clone = '既存のユーザー「<strong>' + DEMO_USER.nick + '</strong>」の設定（通知設定）を元に新しいアカウントを作成します。メールアドレスとニックネームは新しいものを入れてください。';
     if (MODE_BANNER[mode]) { bannerText.innerHTML = MODE_BANNER[mode]; banner.hidden = false; } else banner.hidden = true;
+    document.getElementById('p901MailBlock').hidden = mode === 'edit';
+    document.getElementById('p901SendSetup').checked = false;
     p901DemoUserSync(mode);
     var u = mode === 'edit' ? DEMO_USER : null;
     document.getElementById('p901Email').value = u ? u.email : '';
@@ -367,7 +380,8 @@
     }
     if (note) note.textContent = '';
     function done() {
-      KTN.submitDone({ title: '保存しました', message: 'ユーザー情報を保存しました。', action: { label: 'ユーザー管理へ', href: './kotennavi-p90-1.html' } });
+      var sent = !document.getElementById('p901MailBlock').hidden && document.getElementById('p901SendSetup').checked;
+      KTN.submitDone({ title: '保存しました', message: 'ユーザー情報を保存しました。' + (sent ? '<br>パスワードの設定の案内（S-U-01）を送りました。' : ''), action: { label: 'ユーザー管理へ', href: './kotennavi-p90-1.html' } });
     }
     if (!p901RoleChanged()) { done(); return; }
     if (P901_BASE.lp === 'on' && !p901SwOn('lp') && p901CurRole() === P901_BASE.role) { p901Revoke(nickEl.value.trim(), done, 'lp'); return; }

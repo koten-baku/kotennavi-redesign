@@ -2120,7 +2120,10 @@ function ktnAdminOps() {
     el.innerHTML = '<div class="ktn-admin-note__head"><span class="ktn-admin-note__badge">Admin</span><span class="ktn-admin-note__title">公開の状態と削除</span></div>' +
       '<div class="ktn-admin-ops__row"><span class="ktn-admin-ops__state">今の状態：' + chip + '</span><span class="ktn-admin-ops__acts">' +
         (st === 'review' ? '' : '<button type="button" class="ktn-op-btn ktn-op-btn--sm" data-ops="vis">' + (st === 'hidden' ? '公開に戻す' : '非公開にする') + '</button>') +
+        /* 確認待ちの展覧会：オーナーに内容を問い合わせる（S-E-03・P90-5 と同じ・2026-11-14 ユーザー指示） */
+        (st === 'review' && el.dataset.adminOps === '展覧会' && KTN.mailSend ? '<button type="button" class="ktn-op-btn ktn-op-btn--sm" data-ops="ask">内容を問い合わせる</button>' : '') +
         '<button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline" data-ops="del">削除</button></span></div>' +
+        (st === 'review' && KTN.exhAsk ? KTN.exhAsk.html(el.dataset.nid) : '') +
       ktnAdminOpsLog(el);
   });
 }
@@ -2143,6 +2146,14 @@ document.addEventListener('click', function (e) {
   var el = b.closest('[data-admin-ops]'); if (!el) return;
   var kind = el.dataset.adminOps, name = el.dataset.name || '';
   var dirtyNote = ktnEditDirty ? '<p class="ktn-admin-ops__warn">保存していない変更があります。この操作では、変更は保存されません。</p>' : '';
+  if (b.dataset.ops === 'ask') {
+    var ow = document.querySelector('.ktn-mgmt-context__owner a');
+    KTN.mailSend({ title: kind + '「' + name + '」の内容を問い合わせる', screen: 'p90-5', keys: ['confirm-incomplete', 'confirm-improper', 'confirm-duplicate'],
+      lead: '確認待ちの展覧会のオーナー' + (ow ? '（' + ow.textContent.trim() + '）' : '') + 'に、内容の確認をお願いします。返信は add-event@ に届きます。',
+      tokens: { userName: ow ? ow.textContent.trim() : '', exhibitionName: name, pageUrl: 'https://koten-navi.com/p2', policyUrl: 'https://koten-navi.com/content-policy', commonFooter: '──\n個展なび事務局' },
+      done: '問い合わせを送りました（デモ）', onSent: function (x) { KTN.exhAsk.ask(el.dataset.nid, x.no, x.tpl.name); ktnAdminOpsRecord(el, '内容の問い合わせ', x.no + '「' + x.subject + '」'); ktnAdminOps(); } });
+    return;
+  }
   if (b.dataset.ops === 'vis') {
     if (el.dataset.status !== 'hidden') {
       /* 非公開＝理由のモーダル（必須） */
@@ -2155,9 +2166,12 @@ document.addEventListener('click', function (e) {
     }
   } else {
     var back = ktnAdminOpsBack(el);
-    KTN.adminDelete({ kind: kind, name: name,
-      note: (ktnEditDirty ? '保存していない変更があります（保存されません）。' : '') + '削除すると元に戻せません。理由は、削除の通知として管理者あてのメールで届き、記録に残ります。削除のあと、元の画面へ戻ります。',
-      onDone: function (r) { ktnAdminOpsRecord(el, '削除', KTN.reasonText(r)); setTimeout(function () { location.href = back; }, 700); } });
+    /* 確認待ちの展覧会＝確認の結果としての削除。理由を選ぶと、オーナーに A-D-06 が自動で届く（2026-11-14） */
+    var review = kind === '展覧会' && el.hasAttribute('data-status-confirm') && window.demoConfirmed === false;
+    KTN.adminDelete({ kind: kind, name: name, reasons: review ? KTN.REVIEW_DELETE_REASONS : null,
+      note: (ktnEditDirty ? '保存していない変更があります（保存されません）。' : '') + (review ? KTN.REVIEW_DELETE_NOTE : '削除すると元に戻せません。理由は、削除の通知として管理者あてのメールで届き、記録に残ります。') + '削除のあと、元の画面へ戻ります。',
+      done: review ? '削除しました。オーナーに理由をお知らせしました（デモ）' : null,
+      onDone: function (r) { if (review && KTN.exhAsk) KTN.exhAsk.clear(el.dataset.nid); ktnAdminOpsRecord(el, '削除', KTN.reasonText(r)); setTimeout(function () { location.href = back; }, 700); } });
   }
 });
 /* デモバーの切替（新規・編集・クローン・確認前／確認済）のあとに描き直す */
@@ -4007,6 +4021,9 @@ KTN.adminAccess = function (page, lv) {
    展覧会・クリエイター・ギャラリー・作品・記事・レビュー・コメントの削除は、どれもこのモーダルを通す。
    理由（選択＋詳しい内容・どちらも必須）を書かないと消せない。消すと、理由つきの自動メール A-D-01J が管理者あてに届く（本番）。
    KTN.adminDelete({ kind:'作品', name:'オノマトペの庭', onDone:function(reason){…} })。外枠は P2-11 の確認モーダル（.p211-modal）と同じ */
+/* 確認を依頼された展覧会（確認待ち）を管理者が削除するときの理由（2026-11-14 ユーザー指示）。選んだ理由は、オーナーへの自動のメール A-D-06 に載る（詳しい内容は管理者あての A-D-01J と記録にだけ残る） */
+KTN.REVIEW_DELETE_REASONS = ['内容に不備がある（確認のお願いにお返事がない など）', '掲載の基準に合わない', 'すでに掲載されている展覧会と重複している', 'その他'];
+KTN.REVIEW_DELETE_NOTE = '削除すると元に戻せません。オーナーに、選んだ理由を書いたメール（A-D-06）が自動で届きます。詳しい内容は、管理者あての削除の通知（A-D-01J）と記録にだけ残ります。';
 KTN.DELETE_REASONS = ['重複している（同じ内容のページがほかにある）', '掲載の対象者からの削除の依頼', '問題報告への対応（掲載の方針に反する）', '投稿者からの依頼', 'その他'];
 KTN.adminDelete = function (o) {
   /* o.verb＝操作の名前（既定「削除」。P90-1 の強制退会は「強制退会」）・o.reasons＝理由の選択肢・o.note＝下の注意書き・o.done＝終わったときのトースト
@@ -4079,6 +4096,27 @@ KTN.auditRecord = function (act, target, why) {
   KTN.AUDIT.add({ at: d.getFullYear() + '.' + z(d.getMonth() + 1) + '.' + z(d.getDate()) + ' ' + z(d.getHours()) + ':' + z(d.getMinutes()), by: uid, act: act,
     t: target.t || '', nid: String(target.nid || ''), name: target.name || '', url: target.url || '', why: why || '' });
 };
+/* 展覧会の内容の問い合わせの状態（確認待ちの展覧会・P90-5／P2-11 に出す・2026-11-14 ユーザー指示）。
+   問い合わせる＝ask（日時・メールの番号・テンプレート名）／オーナーが直して確認を依頼し直す＝reRequest／確認済みにする・削除する＝clear。
+   デモは sessionStorage（画面をまたいで残す）。本番は展覧会のデータに持ち、確認の依頼（A-E-03J）が来たら reRequest、確認・削除で消す */
+KTN.exhAsk = (function () {
+  var KEY = 'ktnExhAsk';
+  function all() { try { return JSON.parse(window.sessionStorage.getItem(KEY) || '{}') || {}; } catch (e) { return {}; } }
+  function put(o) { try { window.sessionStorage.setItem(KEY, JSON.stringify(o)); } catch (e) {} }
+  function now() { var d = new Date(), z = function (n) { return (n < 10 ? '0' : '') + n; }; return d.getFullYear() + '.' + z(d.getMonth() + 1) + '.' + z(d.getDate()) + ' ' + z(d.getHours()) + ':' + z(d.getMinutes()); }
+  function get(nid) { return nid ? all()[nid] || null : null; }
+  return {
+    get: get,
+    ask: function (nid, no, name) { if (!nid) return; var o = all(); o[nid] = { at: now(), no: no || '', name: name || '', re: '' }; put(o); },
+    reRequest: function (nid) { var o = all(); if (o[nid]) { o[nid].re = now(); put(o); } },
+    clear: function (nid) { var o = all(); if (o[nid]) { delete o[nid]; put(o); } },
+    html: function (nid) {
+      var x = get(nid); if (!x) return '';
+      return x.re ? '<p class="ktn-ask-state is-re">問い合わせのあと、オーナーが確認を依頼し直しました（' + x.re + '）<span class="ktn-ask-state__sub">問い合わせ：' + x.at + '・' + x.no + ' ' + x.name + '</span></p>'
+        : '<p class="ktn-ask-state">問い合わせ中：' + x.at + '・' + x.no + ' ' + x.name + '</p>';
+    }
+  };
+})();
 KTN.reasonText = function (r) { return r && r.reason ? r.reason + '：' + r.detail : ''; };
 
 /* 公開のページのヘッダーの「管理者」メニュー（admin だけ）の、削除・強制削除・強制退会・なりすましログインを、P90 系と同じ手順にする

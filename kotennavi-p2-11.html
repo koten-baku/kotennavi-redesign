@@ -1222,8 +1222,10 @@ var MODE_SUBMIT = { new: '保存して確認依頼', edit: '保存して確認�
 /* 一度確認済みになった展覧会は、編集しても確認をやり直さない（2026-10-30 ユーザー指摘）＝ボタンは「保存する」、保存すると公開のページにそのまま反映。
    確認のあとの変更は、事務局が見守りのメール A-O-01J・更新の記録（P90-22）で見る。確認前（新規・クローン・確認待ち）は「保存して確認依頼」のまま */
 function isConfirmedEdit() { return demoMode === 'edit' && demoConfirmed; }
-function submitLabel() { return isConfirmedEdit() ? '保存する' : MODE_SUBMIT[demoMode]; }
-function syncReviewOnly() { document.querySelectorAll('[data-review-only]').forEach(function (el) { el.hidden = isConfirmedEdit(); }); document.querySelectorAll('[data-confirmed-only]').forEach(function (el) { el.hidden = !isConfirmedEdit(); }); }   /* data-confirmed-only＝確認済の編集のときだけ出す（LIAISON の説明の言い替え・2026-11-04） */
+/* 管理者が保存するときは、確認を依頼しない＝ボタンは「保存する」（2026-11-14 ユーザー指示）。確認するかは「Admin確認済み」のチェックで決める */
+function isAdminSave() { return !!(window.ktnState && window.ktnState.role === 'admin'); }
+function submitLabel() { return isConfirmedEdit() || isAdminSave() ? '保存する' : MODE_SUBMIT[demoMode]; }
+function syncReviewOnly() { document.querySelectorAll('[data-review-only]').forEach(function (el) { el.hidden = isConfirmedEdit() || isAdminSave(); }); document.querySelectorAll('[data-confirmed-only]').forEach(function (el) { el.hidden = !isConfirmedEdit(); }); }   /* data-confirmed-only＝確認済の編集のときだけ出す（LIAISON の説明の言い替え・2026-11-04） */
 /* 確認済＝管理者が内容を確認し、開催場所・出展クリエイターのリンクを設定済の状態。編集＝確認済／新規・クローン＝確認前 を初期値にする */
 var MODE_CONFIRMED = { new: false, edit: true, clone: false };
 /* クローンのデモ内容＝過去の展覧会「松田啓佑展 vol.1」（2025年開催）を複製した直後の状態 */
@@ -1957,6 +1959,7 @@ function syncConsent() {
    チェック時＝下書き保存（確認依頼フラグ OFF・必須/了承 gate なし・サイト非公開）。
    未チェック時＝保存して確認依頼（必須 gate あり・関係者了承チェック必須）。
    ボタン名・活性・ノートを状態で書き換える（p6-11 と同型の送信バー2段レイアウト）。 */
+document.addEventListener('click', function (e) { if (e.target.closest && e.target.closest('.dbar')) setTimeout(function () { var d = document.getElementById('p211DraftChk'), b = document.getElementById('p211SubmitBtn'); if (b && !(d && d.checked)) b.textContent = submitLabel(); syncReviewOnly(); }, 0); });
 function syncDraftMode() {
   var chk  = document.getElementById('p211DraftChk');
   var btn  = document.getElementById('p211SubmitBtn');
@@ -2182,10 +2185,29 @@ function closeConfirmModal() {
 /* 保存後は展覧会ページ（p2）へ遷移する（本番仕様）。QR/フライヤー誘導・LIAISON利用案内は
    p2-11 上には留まれない（遷移してしまう）ため、遷移前に完了モーダル（KTN.submitDone）で
    その場で案内し、確認ボタンを押した時点でp2へ遷移する。 */
+/* 管理者が保存したとき、送られるメールを完了の画面に書く（デモでは送らない・文面は P90-9 で確かめる・2026-11-14 ユーザーの問い「このページのメール送信はどうやって確認するの？」） */
+function adminSaveMailNote() {
+  var chk = document.getElementById('p211AdminConfirmChk');
+  var nowConfirmed = !!(chk && chk.checked), first = nowConfirmed && !demoConfirmed;
+  var sched = document.querySelector('input[name="p211publish"]:checked'), dt = document.querySelector('#p211PublishDatetime input');
+  var lines;
+  if (!first) lines = ['メールは送りません（管理者の保存では、オーナーにも事務局にもメールは出ません）。'];
+  else if (sched && sched.value === 'scheduled') lines = ['オーナーに「内容を確認しました」（A-E-01・公開日に公開すると書く）を送ります。', '公開日（' + ((dt && dt.value) || '指定した日').replace(/-/g, '.') + '）に公開し、そのとき、ウォッチャーに新しい展覧会のお知らせ（A-N-01）を、オーナーに「公開しました」（A-E-04・mod-event@ にコピー）を送ります。'];
+  else lines = ['展覧会を公開し、オーナーに「内容を確認しました」（A-E-01・公開とウォッチャーに知らせた人数を書く）を、ウォッチャーに新しい展覧会のお知らせ（A-N-01）を送ります。'];
+  return '<br><br><strong>送られるメール</strong><br>' + lines.join('<br>') + '<br>デモでは実際には送りません。文面は <a class="ktn-guide-link" href="kotennavi-p90-9.html" target="_blank" rel="noopener">メールテンプレート管理（P90-9） →</a> で確かめられます。';
+}
 function confirmSave() {
   closeConfirmModal();
+  if (isAdminSave()) {
+    var chk = document.getElementById('p211AdminConfirmChk'), note = adminSaveMailNote();
+    if (chk && chk.checked && !demoConfirmed) { setConfirmed(true); if (KTN.exhAsk) KTN.exhAsk.clear('198650'); }   /* 確認済みにしたら、問い合わせの状態は消える */
+    KTN.submitDone({ title: '保存しました', message: '展覧会を保存しました。' + note, action: { label: '展覧会ページを見る', href: 'kotennavi-p2.html?role=admin' } });
+    return;
+  }
   var role = (typeof KTN !== 'undefined' && KTN.role) || 'gallery';
   var confirmedEdit = isConfirmedEdit();
+  /* 問い合わせを受けたあとに、オーナーが直して確認を依頼し直した（P90-5・管理者の枠に「再依頼」と出る・2026-11-14） */
+  if (!confirmedEdit && demoMode === 'edit' && KTN.exhAsk) KTN.exhAsk.reRequest('198650');
   var msg = confirmedEdit ? 'この内容で展覧会のページに反映しました。' : '個展なび事務局が内容を確認後、公開日の指定に従ってこのページが公開されます（確認完了はメールでお知らせします）。';
   /* LIAISON利用案内＝新規・クローン投稿（未確認の展覧会エンティティ作成）時のみ表示。
      編集モードは既に確認済でLIAISON状態も既知のため対象外。 */

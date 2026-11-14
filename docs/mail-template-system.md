@@ -22,7 +22,7 @@
 | `pattern` | `normal`（正常系）／`abnormal`（非正常系） | 画面ごとに2区分固定。正常系＝主目的が達成された時の通知、非正常系＝確認・取消など主目的が達成されなかった/保留された時の通知 |
 | `variantKey` | 画面側だけが解釈する任意の識別子文字列 | P90-9はこの値を**不透明な文字列として保存するだけ**（意味を解釈しない）。命名規則は画面側の自由（4章に実例） |
 | `name` | テンプレート名（一覧の主表示・プルダウンの選択肢テキスト） | 例：「入力不足・入力誤り」「クリエイター機能 – 新規ページ作成」 |
-| `from` | 送信元アドレス（9つの固定アドレスから選ぶ・`KTN` の共有定数） | 2026-08-11 追加（追補190）。既定＝確認メール（`confirm-`）は `inquiry@`、P90-2 の案内・取消は `register@`、P90-11 は `liaison@`、問題報告の掲載者あて連絡は `improper@`、展覧会掲載のお知らせは `info@`。P90-9 の編集で変えられる |
+| `from` | 送信元アドレス（9つの固定アドレスから選ぶ・`KTN` の共有定数） | 2026-08-11 追加（追補190）。既定＝**受けた窓口と同じアドレスから返す**（2026-11-14 ユーザー確認）：P90-2 は `register@`（確認メール `confirm-` も）、P90-11 は `liaison@`（確認メールも）、お問い合わせ・ご要望・修正依頼は `inquiry@`、問題報告は `improper@`（掲載の対象者あても）、展覧会の確認（P90-5）は `add-event@`、展覧会掲載のお知らせは `info@`、ニュース・おすすめは `noreply@`。表は docs/email-templates.md「送信元と送信先のアドレス」。P90-9 の編集で変えられる |
 | `subject` | 件名 | 本文と分離した独立フィールド（旧：本文内に「件名：」の1行として埋め込み→廃止） |
 | `body` | 本文（`{{token}}`プレースホルダー使用可） | トークン規約は`docs/email-templates.md`のものをそのまま使う |
 | `status` | `active`／`archived` | 削除は原則archived止まり（5章） |
@@ -105,14 +105,16 @@ P90-11（リエゾンプラス機能申込審査）も P90-2 と同じ「正常�
 |---|---|---|
 | お問合わせ P60-11（`p60-11`） | 正常系：`answer-general`＝S-FQ-01／`answer-faq`＝S-FQ-02／`done-bugfix`＝S-FQ-03 ・ 非正常系：`confirm-detail`＝S-FQ-04／`redirect-other`＝S-FQ-05／`decline-question`＝S-FQ-06 | inquiry@ |
 | 要望 P60-12（`p60-12`） | 正常系：`done-adopted`＝S-FW-01 ・ 非正常系：`confirm-detail`＝S-FW-02 | inquiry@ |
-| 問題報告 P60-13（`p60-13`） | 掲載の対象者あて：`decline-subject-delete`＝S-FR-01（inquiry@）／掲載者あて：`notice-hidden`＝S-FR-02・`notice-republished`＝S-FR-03・`notice-kept-hidden`＝S-FR-04（improper@） | 左のとおり |
+| 問題報告 P60-13（`p60-13`） | 掲載の対象者あて：`decline-subject-delete`＝S-FR-01／掲載者あて：`notice-hidden`＝S-FR-02・`notice-republished`＝S-FR-03・`notice-kept-hidden`＝S-FR-04・`notice-fixed`＝S-FR-05（事務局が該当箇所を修正したことのご連絡・2026-11-14） | improper@ |
 | 修正依頼 P60-14（`p60-14`） | 正常系：`done-fixed`＝S-FX-01／`owner-request`＝S-FX-02 ・ 非正常系：`confirm-detail`＝S-FX-03／`decline-content`＝S-FX-04／`decline-delete`＝S-FX-05 | inquiry@ |
 | 取引の相談 P90-13（`p90-13`） | 正常系：`answer` ・ 非正常系：`confirm-detail` | liaison@ |
-| お知らせ P61-11（`p61-11`） | `news`／`recommend`（個展なびからのお知らせのメール＝A-N-04／A-N-02 の文面） | — |
+| お知らせ P61-11（`p61-11`） | `news`／`recommend`（個展なびからのお知らせのメール＝A-N-04／A-N-02 の文面） | noreply@ |
+| ユーザー管理 P90-1（`p90-1`） | 正常系：`account-created`＝S-U-01（管理者が作ったアカウントへのパスワードの設定の案内・P90-1-1 で送るかを選ぶ・旧 A-U-09） | register@ |
+| 展覧会の確認 P90-5（`p90-5`） | 非正常系：`confirm-incomplete`＝S-E-03①（不備）／`confirm-improper`＝S-E-03②（不適切）／`confirm-duplicate`＝S-E-03③（重複）＝確認待ちの行の「内容を問い合わせる」から（add-event@）。削除の依頼への対応：`delreq-done`＝S-D-01（削除しました）・`delreq-decline`＝S-D-02（断りました）＝削除・断るのあとに開く送信の欄から（info@）。送信の欄は共通の `KTN.mailSend`（P90-9 のテンプレートを読み込み、送る前に直せる・（ここに〜）が残っていると送れない） | 左のとおり |
 | 展覧会掲載のお知らせ（`p2-sns`） | `listing-notice`＝S-E-02（展覧会ページの「SNSテキスト生成」から移設） | info@ |
 
 - メールの番号（CT・WS・RP・FX・E）と文面の正本は `docs/email-templates.md`。各テンプレートの `usageNote` に番号を書いている。
-- 返信を待つ確認メールは、どの画面でも `confirm-detail`（または `confirm-{reason}`）、送信元は inquiry@。
+- 返信を待つ確認メールは、どの画面でも `confirm-detail`（または `confirm-{reason}`）。送信元は、その画面が受けた窓口のアドレス（2026-11-14 に「いつも inquiry@」から変更）。
 
 ## 5. P90-9（メールテンプレート管理）画面仕様
 

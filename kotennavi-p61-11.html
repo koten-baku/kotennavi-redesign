@@ -240,13 +240,22 @@
                 <div class="p902-flow-panel__row">
                   <input type="text" class="p902-flow-panel__input" id="p6111MailFrom" readonly>
                 </div>
+                <!-- お問い合わせ先（差出人の noreply@ は返信を受けないので、本文の {{contactGuide}} に入れる・2026-11-14） -->
+                <label class="p902-flow-panel__label" for="p6111MailContact">お問い合わせ先</label>
+                <div class="p902-flow-panel__row">
+                  <select class="p211-select" id="p6111MailContact">
+                    <option value="site">お問い合わせページ（ふつうのお知らせ）</option>
+                    <option value="liaison">liaison@koten-navi.com（LIAISON+ のお知らせ）</option>
+                  </select>
+                </div>
+                <p class="p902-flow-panel__hint">LIAISON+ のクーポン・特典・新機能・サービスの説明などのお知らせは「liaison@」にします。キャンペーン・料率設定につなぐと、自動で「liaison@」になります。</p>
                 <label class="p902-flow-panel__label" for="p6111MailSubject">件名</label>
                 <div class="p902-flow-panel__row">
                   <input maxlength="60" data-count type="text" class="p902-flow-panel__input" id="p6111MailSubject">
                 </div>
                 <label class="p902-flow-panel__label" for="p6111MailBody">本文</label>
                 <textarea class="p902-flow-panel__textarea" id="p6111MailBody" rows="14"></textarea>
-                <p class="p902-flow-panel__hint">{{userName}}（宛先の人の名前）・{{noticeTitle}}（タイトル）・{{noticeBody}}（本文）・{{noticeUrl}}（このお知らせのページ）は、送るときに置き換わります。{{commonFooter}} は全メール共通のフッターです。編集した内容はこのお知らせを保存すると一緒に保存され、テンプレートそのもの（メールテンプレート管理）は変わりません。</p>
+                <p class="p902-flow-panel__hint">{{userName}}（宛先の人の名前）・{{noticeTitle}}（タイトル）・{{noticeBody}}（本文）・{{noticeUrl}}（このお知らせのページ）・{{contactGuide}}（上で選んだお問い合わせ先）は、送るときに置き換わります。{{commonFooter}} は全メール共通のフッターです。編集した内容はこのお知らせを保存すると一緒に保存され、テンプレートそのもの（メールテンプレート管理）は変わりません。</p>
 
                 <!-- 送られるメールのプレビュー（{{トークン}} を例の値に置き換えて表示・KTN.mailPreview） -->
                 <div class="ktn-mail-preview" id="p6111MailPreview">
@@ -375,9 +384,15 @@
   /* プレビュー：タイトル・本文はいま入力している内容を入れる（未入力なら記号の説明） */
   var p6111MailPreview = KTN.mailPreview.bind(document.getElementById('p6111MailSubject'), document.getElementById('p6111MailBody'), document.getElementById('p6111MailPreview'), function () {
     var t = document.getElementById('p6111Title').value.trim(), b = document.getElementById('p6111Body').value.trim();
-    return { noticeTitle: t || '（タイトル未入力）', noticeBody: b || '（本文未入力）' };
+    return { noticeTitle: t || '（タイトル未入力）', noticeBody: b || '（本文未入力）', contactGuide: KTN.NOTICE_CONTACT[document.getElementById('p6111MailContact').value] };
   });
   ['p6111Title', 'p6111Body'].forEach(function (id) { document.getElementById(id).addEventListener('input', function () { p6111MailPreview(); }); });
+  /* お問い合わせ先：キャンペーン・料率設定につないだら liaison@ に（あとから手で変えられる） */
+  document.getElementById('p6111MailContact').addEventListener('change', function () { p6111MailPreview(); });
+  document.getElementById('p6111Campaign').addEventListener('change', function () {
+    if (this.value) { document.getElementById('p6111MailContact').value = 'liaison'; p6111MailPreview(); }
+  });
+  if (document.getElementById('p6111Campaign').value) document.getElementById('p6111MailContact').value = 'liaison';
   function p6111LoadMailTpl() {
     var t = KTN.NOTICE_MAIL[document.getElementById('p6111Cat').value === 'news' ? 'news' : 'recommend'];
     document.getElementById('p6111MailTplName').textContent = '送るメール（' + t.id + '　' + t.name + '）';
