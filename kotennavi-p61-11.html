@@ -31,6 +31,10 @@
   <button class="dbtn on" id="dbarNew" onclick="setDemoMode('new')">新規</button>
   <button class="dbtn" id="dbarEdit" onclick="setDemoMode('edit')">編集</button>
   <button class="dbtn" id="dbarClone" onclick="setDemoMode('clone')">クローンして作成</button>
+  <span class="dbar-sep">メールを送る時刻：</span>
+  <button class="dbtn on" data-clock="" onclick="p6111DemoClock('',this)">今の時刻</button>
+  <button class="dbtn" data-clock="day" onclick="p6111DemoClock('day',this)">昼</button>
+  <button class="dbtn" data-clock="night" onclick="p6111DemoClock('night',this)">夜間</button>
 </div>
 
 <div class="shell">
@@ -230,11 +234,12 @@
 
             <!-- メール配信（ニュース＝A-N-04 停止できない／おすすめ＝A-N-02 受け取る設定の人だけ・docs/email-templates.md） -->
             <div class="p211-field">
-              <label class="p211-check"><input type="checkbox" id="p6111SendMail"> 登録ユーザーにメールでも送る</label>
+              <span class="p211-label">登録ユーザーへのメール（任意）</span>
               <p class="p211-help" id="p6111MailHelp"></p>
-              <!-- 送るメール：チェックするとカテゴリのテンプレート（A-N-04／A-N-02＝KTN.NOTICE_MAIL）を読み込み、件名・本文を編集できる。
-                   送信ボタンは置かない＝このお知らせを保存すると一緒に保存され、公開日に送られる（P90-2 の送信パネルと同じ部品） -->
-              <div class="p902-flow-panel" id="p6111MailPanel" hidden>
+              <p class="p6111-mail-status" id="p6111MailStatus"></p>
+              <!-- 送るメール（2026-11-15 ユーザー指示で作り直し）：保存（作成・更新）とメールの送信は別。メールは公開したあとに「メールを送信する」で送る（いつでも・あとからでも）。
+                   夜間（21:00〜翌 8:00）は送れない。文面（件名・本文）はこのお知らせを保存すると一緒に保存される。テンプレート＝A-N-04／A-N-02（KTN.NOTICE_MAIL） -->
+              <div class="p902-flow-panel" id="p6111MailPanel">
                 <p class="p902-flow-panel__title" id="p6111MailTplName"></p>
                 <label class="p902-flow-panel__label" for="p6111MailFrom">送信元</label>
                 <div class="p902-flow-panel__row">
@@ -267,7 +272,10 @@
                 <p class="p902-flow-panel__hint" id="p6111MailCatNote" hidden>カテゴリを変えました。編集中の文面はそのままです。新しいカテゴリのテンプレートにするには「テンプレートに戻す」を押してください。</p>
                 <div class="p902-flow-panel__actions">
                   <button type="button" class="ktn-op-btn ktn-op-btn--sm" id="p6111MailResetBtn">テンプレートに戻す</button>
+                  <span class="p901-rv-mail__sent" id="p6111MailSent"></span>
+                  <button type="button" class="ktn-op-btn ktn-op-btn--primary" id="p6111MailSendBtn">メールを送信する</button>
                 </div>
+                <p class="p902-flow-panel__hint" id="p6111MailSendNote"></p>
               </div>
             </div>
 
@@ -351,6 +359,7 @@
     if (cloneField) cloneField.hidden = (mode !== 'clone');
     var submitBtn = document.getElementById('p6111SubmitBtn');
     if (submitBtn) submitBtn.textContent = mode === 'edit' ? '更新する' : (mode === 'clone' ? 'クローンして作成する' : '作成する');
+    P6111_MODE = mode; P6111_SENT = ''; if (typeof p6111SyncMailSend === 'function') p6111SyncMailSend();
   }
 
   /* ── 対象の説明：誰のお知らせ一覧（ニュース）に表示されるか（docs/notifications.md・2026-09-29 に5種類へ） ── */
@@ -372,9 +381,9 @@
     var who = P6111_TARGET[document.getElementById('p6111Target').value].mail;
     p6111SyncTargetHelp();
     document.getElementById('p6111MailHelp').textContent = imp
-      ? '公開日に、' + who + 'へメールでお送りします。ニュースは、受け取る人が停止できないメールです。'
-      : '公開日に、' + who + 'のうち、通知設定で「個展なびからのおすすめ」を受け取る設定にしている人へお送りします。';
-    document.getElementById('p6111MailHelp').textContent += 'メールは公開時に1回だけ送られ、公開後に編集しても再送されません。すべてのお知らせをメールで送る必要はありません。';
+      ? '送ると、' + who + 'へ届きます。ニュースは、受け取る人が停止できないメールです。'
+      : '送ると、' + who + 'のうち、通知設定で「個展なびからのおすすめ」を受け取る設定にしている人へ届きます。';
+    document.getElementById('p6111MailHelp').textContent += '保存してもメールは送られません。公開したあと、下の「メールを送信する」で1回だけ送ります（夜間は送れないので、あとから送れます）。すべてのお知らせをメールで送る必要はありません。';
   }
   ['p6111Cat', 'p6111Target'].forEach(function (id) { document.getElementById(id).addEventListener('change', p6111SyncMailHelp); });
   p6111SyncMailHelp();
@@ -403,12 +412,27 @@
     p6111MailPreview();
     document.getElementById('p6111MailCatNote').hidden = true;
   }
-  function p6111SyncMailPanel() {
-    var on = document.getElementById('p6111SendMail').checked;
-    document.getElementById('p6111MailPanel').hidden = !on;
-    if (on && !document.getElementById('p6111MailBody').value) p6111LoadMailTpl();
+  function p6111SyncMailPanel() { if (!document.getElementById('p6111MailBody').value) p6111LoadMailTpl(); p6111SyncMailSend(); }
+  /* メールの送信（保存とは別・公開したあとにいつでも）。夜間（21:00〜翌 8:00）は送れない（デモ：今の時刻で判定）。
+     送ったら送信の日時を残す（一度だけ送る・送ったあとは送れない）。本番は送信の予約（夜間に押したら翌朝 8:00 に送る、など）も考える */
+  var P6111_MODE = 'new', P6111_SENT = '';
+  var P6111_CLOCK = '';   /* デモ：送る時刻（''＝今の時刻・day・night） */
+  function p6111Night() { if (P6111_CLOCK) return P6111_CLOCK === 'night'; var h = new Date().getHours(); return h >= 21 || h < 8; }
+  function p6111DemoClock(v, btn) { P6111_CLOCK = v; document.querySelectorAll('.dbar [data-clock]').forEach(function (b) { b.classList.toggle('on', b === btn); }); p6111SyncMailSend(); }
+  function p6111SyncMailSend() {
+    var b = document.getElementById('p6111MailSendBtn'), note = document.getElementById('p6111MailSendNote'), st = document.getElementById('p6111MailStatus');
+    var why = P6111_SENT ? '' : P6111_MODE !== 'edit' ? 'お知らせを作成（公開）したあと、編集で開き直して送ります。' : p6111Night() ? '夜間（21:00〜翌 8:00）は送れません。朝 8:00 を過ぎてから送ってください。' : '';
+    b.disabled = !!P6111_SENT || !!why;
+    note.textContent = why;
+    st.innerHTML = P6111_SENT ? '<span class="ktn-review-status ktn-review-status--granted">送信済み</span> ' + P6111_SENT : '<span class="ktn-review-status ktn-review-status--new">未送信</span>';
   }
-  document.getElementById('p6111SendMail').addEventListener('change', p6111SyncMailPanel);
+  document.getElementById('p6111MailSendBtn').addEventListener('click', function () {
+    if (!document.getElementById('p6111MailSubject').value.trim() || !document.getElementById('p6111MailBody').value.trim()) { KTN.toast('件名と本文を入力してください'); return; }
+    var d = new Date(), z = function (n) { return (n < 10 ? '0' : '') + n; };
+    P6111_SENT = d.getFullYear() + '.' + z(d.getMonth() + 1) + '.' + z(d.getDate()) + ' ' + z(d.getHours()) + ':' + z(d.getMinutes());
+    p6111SyncMailSend();
+    KTN.toast('メールを送信しました（デモ）');
+  });
   ['p6111MailSubject', 'p6111MailBody'].forEach(function (id) { document.getElementById(id).addEventListener('input', function () { p6111MailDirty = true; }); });
   document.getElementById('p6111MailResetBtn').addEventListener('click', p6111LoadMailTpl);
   document.getElementById('p6111Cat').addEventListener('change', function () {
@@ -485,13 +509,6 @@
           errs.push({ field: f, msg: '「' + nm + '」' + (isSel ? 'が選択されていません。' : 'が未入力です。') });
         }
       });
-      /* メールを送るときは件名・本文が必須 */
-      if (document.getElementById('p6111SendMail').checked) {
-        var mp = document.getElementById('p6111MailPanel');
-        if (!document.getElementById('p6111MailSubject').value.trim() || !document.getElementById('p6111MailBody').value.trim()) {
-          errs.push({ field: mp, msg: '「送るメール」の件名または本文が未入力です。' });
-        }
-      }
       /* 表示期限は公開日より前にできない */
       var tf = document.getElementById('p6111TopUntilField'), tu = document.getElementById('p6111TopUntil').value, pd = document.getElementById('p6111Date').value;
       if (!tf.hidden && tu && pd && tu < pd) {

@@ -125,8 +125,8 @@
         <thead><tr><th>種類</th><th>おもな業務</th></tr></thead>
         <tbody>
           <tr><td>E（編集・問合せ）</td><td>お問合わせ・問題報告・修正依頼の対応、展覧会の確認、コンテンツの編集・非公開・削除、クリエイター・ギャラリー機能の申込の審査</td></tr>
-          <tr data-admin-lv="L"><td>L（LIAISON+ 対応）</td><td>LIAISON+ の問合せと取引、返金、出品者への請求、振込・精算、Stripe の確認</td></tr>
-          <tr data-admin-lv="A"><td>A（admin）</td><td>ユーザーのアカウント、LIAISON+ の審査、取引の強制キャンセル、料率・キャンペーン、規約・お知らせ・メール・文言・特集などサイトの設定</td></tr>
+          <tr data-admin-lv="L"><td>L（LIAISON+ 対応）</td><td>LIAISON+ の問合せと取引、返金、出品者への請求、振込・精算、出品者の Stripe 連携の状態の確認（Stripe の管理画面にはログインしない）</td></tr>
+          <tr data-admin-lv="A"><td>A（admin）</td><td>ユーザーのアカウント、LIAISON+ の審査、取引の強制キャンセル、Stripe の管理画面（支払いの異議への回答）、料率・キャンペーン、規約・お知らせ・メール・文言・特集などサイトの設定</td></tr>
         </tbody>
       </table>
       <h3 class="p70-subhead">共通の決まり</h3>
@@ -311,7 +311,8 @@
           <li class="p70-toc__item"><span class="p70-toc__num">L9</span><a class="p70-toc__link" href="#l-listing">出品・申込・在庫を確かめる</a></li>
           <li class="p70-toc__item"><span class="p70-toc__num">L10</span><a class="p70-toc__link" href="#l-payout">振込と精算</a></li>
           <li class="p70-toc__item"><span class="p70-toc__num">L11</span><a class="p70-toc__link" href="#l-ops">止まった取引を動かす（事務局の操作）</a></li>
-          <li class="p70-toc__item"><span class="p70-toc__num">L12</span><a class="p70-toc__link" href="#l-warn">注意（キャンセルや期限切れが重なる人）を確かめる</a></li>
+          <li class="p70-toc__item"><span class="p70-toc__num">L12</span><a class="p70-toc__link" href="#l-warn">注意行為（キャンセルや期限切れが重なる人）を確かめる</a></li>
+          <li class="p70-toc__item"><span class="p70-toc__num">L13</span><a class="p70-toc__link" href="#l-sellers">LIAISON+ の出品者の一覧を見る</a></li>
         </ol>
       </nav>
       <p class="p70-lead">決まりの正本は、<a class="ktn-guide-link" href="./kotennavi-p60-9.html#liaison" target="_blank" rel="noopener">利用規約 第9条の2・第9条の3</a>と<a class="ktn-guide-link" href="./kotennavi-p60-18.html#cancel" target="_blank" rel="noopener">LIAISON+ 利用規約 第8条・第10条</a>です。</p>
@@ -364,14 +365,14 @@
       <h3 class="p70-subhead" id="pay-back">L4 返金の手続き</h3>
       <div class="p70-dl p70-dl--ja">
         <div class="p70-dl__item"><dt class="p70-dl__dt">担当</dt><dd class="p70-dl__dd">L<span data-admin-lv="A">（取引の強制キャンセルが要るときは A＝A3）</span></dd></div>
-        <div class="p70-dl__item"><dt class="p70-dl__dt">使う画面</dt><dd class="p70-dl__dd">P90-13 取引管理の「取引の詳細と操作」→「事務局の操作」の「返金の手続き」・Stripe の管理画面</dd></div>
+        <div class="p70-dl__item"><dt class="p70-dl__dt">使う画面</dt><dd class="p70-dl__dd">P90-13 取引管理の「取引の詳細と操作」→「事務局の操作」の「返金の手続き」（Stripe の管理画面は使わない）</dd></div>
         <div class="p70-dl__item"><dt class="p70-dl__dt">期限</dt><dd class="p70-dl__dd">確認の連絡から3営業日以内（規約の上限は、キャンセルの決定から30日）</dd></div>
       </div>
       <ol class="p70-step-list">
         <li class="p70-step-list__item">L2 の表で返金額を計算する</li>
-        <li class="p70-step-list__item">P90-13 の「取引の詳細と操作」を開き、内訳で金額を確かめてから「返金の手続き」を押す。理由・詳しい内容（対応案件の受付番号など）・返金額を書いて進める</li>
-        <li class="p70-step-list__item">Stripe の管理画面で、全額か一部かを確かめて返金する</li>
-        <li class="p70-step-list__item">出品者の事由・配送事故のときは L6 へ。購入者の事由で発送済みのときは、差し引いた送料・梱包費を次の振込で出品者に支払う</li>
+        <li class="p70-step-list__item">P90-13 の「取引の詳細と操作」を開き、内訳で金額を確かめてから「返金の手続き」を押す。理由・詳しい内容（対応案件の受付番号など）・返金額を書いて「返金する」を押す。Stripe を通じて購入者に返金され、操作の記録（P90-28）に残る（Stripe の管理画面での操作は要らない）</li>
+        <li class="p70-step-list__item">理由を選ぶと、返金額と、出品者の振込の調整（購入者の事由で発送済み＝送料・梱包費を足す／出品者の事由・配送事故＝決済手数料4%＋返金のために生じた費用を引く）が L2 の表で計算される。「返金する」で振込の調整が1行でき、次の振込に入る（P90-14 の「振込の調整」）。理由が「その他」のときは返金額を手で入れ、振込の調整は作らない（要るときは A に頼む）</li>
+        <li class="p70-step-list__item">出品者の事由・配送事故のときは L6 へ</li>
         <li class="p70-step-list__item">双方にキャンセルと返金を知らせ（メール A-T-08）、対応案件を完了にする。カードの明細に反映されるまでの日数はカード会社によって異なることを、聞かれたら伝える</li>
       </ol>
 
@@ -392,16 +393,16 @@
       <h3 class="p70-subhead" id="claim">L6 出品者への費用の請求</h3>
       <div class="p70-dl p70-dl--ja">
         <div class="p70-dl__item"><dt class="p70-dl__dt">担当</dt><dd class="p70-dl__dd">L<span data-admin-lv="A">（LIAISON+ の利用の取消は A）</span></dd></div>
-        <div class="p70-dl__item"><dt class="p70-dl__dt">使う画面</dt><dd class="p70-dl__dd">P90-14 販売代金管理（売上金からの差し引き・「出品者への費用の請求」の欄）<span data-admin-lv="A">・P90-1-1 ユーザーの編集（LIAISON+ の利用の取消）</span></dd></div>
+        <div class="p70-dl__item"><dt class="p70-dl__dt">使う画面</dt><dd class="p70-dl__dd">P90-14 販売代金管理（「振込の調整」と「出品者への費用の請求」の欄）<span data-admin-lv="A">・P90-1-1 ユーザーの編集（LIAISON+ の利用の取消）</span></dd></div>
         <div class="p70-dl__item"><dt class="p70-dl__dt">期限</dt><dd class="p70-dl__dd">1回目の請求＝14日／2回目＝7日／最後の通知＝7日</dd></div>
       </div>
       <ol class="p70-step-list">
         <li class="p70-step-list__item">請求する額：決済手数料（お支払い額の4%）＋返金のために生じた費用</li>
-        <li class="p70-step-list__item">未払いの売上金から差し引く。足りない分だけを請求する</li>
+        <li class="p70-step-list__item">L4 の返金でできた振込の調整で、次の振込から差し引く。次の振込で引ききれなかった分だけを請求する。金額を直す・取り消すときは A が P90-14 の「振込の調整」で行う（理由は必須）</li>
         <li class="p70-step-list__item">1回目の請求：金額・内訳・振込先・期限（14日）をメールで送る（S-P-01）</li>
         <li class="p70-step-list__item">2回目の請求：期限の翌日に。期限は7日（S-P-02）</li>
         <li class="p70-step-list__item">最後の通知：払わなければ LIAISON+ の利用を取り消すことを伝える。期限は7日（S-P-03）。過ぎたら A に回す</li>
-        <li class="p70-step-list__item" data-admin-lv="A">LIAISON+ の利用の取消（A）：P90-14 の「LIAISON+ の利用を取り消す →」からユーザーの編集（P90-1-1）を開き、LIAISON+ を OFF にして保存する。理由（費用の未払い）と詳しい内容を書き、本人にメール S-M-12① を送る。進行中の取引は期限どおりに続き、新しい出品と購入の申込の受付が止まる。以後の LIAISON+ の申込は受け付けない（支払いの義務は残る）。新しい売上が入れば、そこから差し引く。金額が大きいときは、支払督促や少額訴訟も考える（弁護士に相談）</li>
+        <li class="p70-step-list__item" data-admin-lv="A">LIAISON+ の利用の取消（A）：P90-14 の「LIAISON+ の利用を取り消す →」からユーザーの編集（P90-1-1）を開き、LIAISON+ の「利用停止」を押す。モーダルで理由（費用の未払い）と詳しい内容を書いて「利用を停止する」を押すと、その場で止まる（「保存する」は要らない）。本人へのメール S-M-12① は、同じモーダルの「メールを送信する」で送る（直してから。止める前でもあとでも送れる）。進行中の取引は期限どおりに続き、新しい出品と購入の申込の受付が止まる。以後の LIAISON+ の申込は受け付けない（支払いの義務は残る）。新しい売上が入れば、そこから差し引く。金額が大きいときは、支払督促や少額訴訟も考える（弁護士に相談）</li>
       </ol>
 
       <h3 class="p70-subhead" id="coupon">L7 使われたクーポンを戻すか決める</h3>
@@ -418,7 +419,7 @@
       <h3 class="p70-subhead" id="l-txn">L8 取引管理の対応待ちを片付ける（毎日）</h3>
       <div class="p70-dl p70-dl--ja">
         <div class="p70-dl__item"><dt class="p70-dl__dt">担当</dt><dd class="p70-dl__dd">L<span data-admin-lv="A">（LIAISON+ を止めるのは A）</span></dd></div>
-        <div class="p70-dl__item"><dt class="p70-dl__dt">使う画面</dt><dd class="p70-dl__dd">P90-13 取引管理の「今日の対応」と、区分ごとに分かれた取引の表・Stripe の管理画面・P90-21 対応案件・P90-15／P90-16（注意）</dd></div>
+        <div class="p70-dl__item"><dt class="p70-dl__dt">使う画面</dt><dd class="p70-dl__dd">P90-13 取引管理の「今日の対応」と、区分ごとに分かれた取引の表・P90-21 対応案件・P90-15／P90-16（注意行為）<span data-admin-lv="A">・Stripe の管理画面（A だけ）</span></dd></div>
         <div class="p70-dl__item"><dt class="p70-dl__dt">いつ</dt><dd class="p70-dl__dd">毎日（「今日の対応」がすべて「なし」になるまで）</dd></div>
       </div>
       <p class="p70-body">対応する場所が違う件を、表の中で区分ごとにまとめて出しています（①→②→③→そのほかの取引）。区分ごとに対応する場所と、外れる（終わる）決まりが違います。各取引の「取引の詳細と操作」のいちばん上に「対応待ち」の段があり、対応する場所・操作・対応した管理者が出ます。期限が近いだけの取引はリマインダーが自動で届くので、対応待ちに入りません。どの件も、操作すると「対応した管理者」に自分の UID が入ります。手を付ける前に「対応に加わる」を押すと、ほかの管理者にも分かります（何人でも加われます）。「未着手」の件から片付けます。</p>
@@ -426,13 +427,13 @@
         <thead><tr><th>区分</th><th>入る件</th><th>対応する場所</th><th>外れるとき</th></tr></thead>
         <tbody>
           <tr><td>① 事務局の操作が要る</td><td>発送期限超過・止めている申込・一時停止中（期限が来ても自動で進まない）</td><td>このページの「取引の詳細と操作」（L11）</td><td>取引の状態が変わったとき</td></tr>
-          <tr><td>② Stripe で対応</td><td>支払いの異議（チャージバック・回答の期限あり）・決済の失敗</td><td>Stripe の管理画面（「Stripe で開く ↗」）</td><td>異議＝回答したらここで「Stripe で回答済みにする」、結果が届いたとき／決済の失敗＝購入者のやり直しか、支払期限の自動キャンセル（操作は要らない）</td></tr>
+          <tr><td>② Stripe で対応</td><td>支払いの異議（チャージバック・回答の期限あり）・決済の失敗</td><td>異議＝L が材料をそろえて「異議の対応を記録する」、A が Stripe の管理画面（「Stripe で開く ↗」）で回答（A9）</td><td>異議＝A が回答したらここで「Stripe で回答済みにする」、結果が届いたとき／決済の失敗＝購入者のやり直しか、支払期限の自動キャンセル（操作は要らない）</td></tr>
           <tr><td>③ 相談</td><td>取引の「事務局に相談する」から届き、未対応のもの</td><td>P90-21 対応案件（「対応案件を開く →」・L1）</td><td>対応案件を完了にしたとき</td></tr>
-          <tr><td>④ 注意</td><td>キャンセルや期限切れが重なっている出品者・購入者（人数だけ）</td><td>P90-15（出品者）・P90-16（購入者）（L12）</td><td>確認済みにしたとき（回数がさらに増えたら、また出る）</td></tr>
+          <tr><td>④ 注意行為</td><td>キャンセルや期限切れが重なっている出品者・購入者（人数だけ）</td><td>P90-15（出品者）・P90-16（購入者）（L12）</td><td>対応済みにしたとき（目安に達した種類の取引がさらに増えたら、また出る）</td></tr>
         </tbody>
       </table>
       <ol class="p70-step-list">
-        <li class="p70-step-list__item">支払いの異議は、Stripe の管理画面で取引の記録（メッセージ・追跡番号・受取確認）をそろえて回答する。回答の期限を過ぎると、自動で購入者の言い分が通る。回答したら、ここで「Stripe で回答済みにする」と、出した材料を記録する</li>
+        <li class="p70-step-list__item">支払いの異議は、取引の記録（メッセージ・追跡番号・受取確認）をそろえ、「取引の詳細と操作」の「異議の対応を記録する」で、そろえた材料を残す（状況＝材料がそろった）。回答は A が Stripe の管理画面で行う（A9）。回答の期限を過ぎると、自動で購入者の言い分が通るので、期限が近いときは対応案件で A に知らせる</li>
         <li class="p70-step-list__item">決済の失敗は、購入者から問合せがあったときに状況を確かめる場所。必要なら L11 の「再支払いを案内する」</li>
       </ol>
 
@@ -451,12 +452,14 @@
       <h3 class="p70-subhead" id="l-payout">L10 振込と精算</h3>
       <div class="p70-dl p70-dl--ja">
         <div class="p70-dl__item"><dt class="p70-dl__dt">担当</dt><dd class="p70-dl__dd">L</dd></div>
-        <div class="p70-dl__item"><dt class="p70-dl__dt">使う画面</dt><dd class="p70-dl__dd">P90-14 販売代金管理・P90-15 リエゾンプラス申込者一覧（Stripe 連携）</dd></div>
+        <div class="p70-dl__item"><dt class="p70-dl__dt">使う画面</dt><dd class="p70-dl__dd">P90-14 販売代金管理・P90-15 リエゾンプラス申込者一覧（「本人確認・Stripe」と「販売実績」の列）</dd></div>
         <div class="p70-dl__item"><dt class="p70-dl__dt">いつ</dt><dd class="p70-dl__dd">月末締め・翌月20日払い（20日が金融機関の休業日なら翌営業日）</dd></div>
       </div>
       <ol class="p70-step-list">
         <li class="p70-step-list__item">締めのあと、振込の一覧と明細（サービス利用料・キャンセルの差し引き・送料と梱包費の支払い）を確かめる</li>
-        <li class="p70-step-list__item">Stripe 連携が済んでいない出品者は振り込めないので、P90-15 で状態を確かめて案内する</li>
+        <li class="p70-step-list__item">Stripe 連携が済んでいない出品者は振り込めないので、P90-15 の「本人確認・Stripe」の列の2段目（連携済み・手続き中・未着手）で状態を確かめて案内する</li>
+        <li class="p70-step-list__item">出品者ごとの販売の様子は、P90-15 の「販売実績」の列（販売した作品の数・売上・最終振込日・未精算の金額）で確かめる</li>
+        <li class="p70-step-list__item">1人の出品者の振込・振込の調整・費用の請求をまとめて見るときは、P90-15 の「販売代金を見る →」（P90-14 をその出品者で絞った状態）か、P90-14 の「出品者」の欄で絞る。出品は「展覧会を見る →」（P90-12 をその出品者で絞った状態）から展覧会ごとに確かめる</li>
       </ol>
       <h3 class="p70-subhead" id="l-ops">L11 止まった取引を動かす（事務局の操作）</h3>
       <div class="p70-dl p70-dl--ja">
@@ -477,17 +480,39 @@
       </table>
       <span class="p70-table__note">送るメールは操作に合わせて P90-9 のテンプレート（S-T-03〜S-T-20）が自動で選ばれます（「事務局から連絡する」では、キャンセル・返送・配送事故の連絡 S-T-17〜S-T-20 も選べます）。送る前に、ケースに合わせて本文を直してください。どの操作も、あとから「なぜ」を説明できるように、理由と詳しい内容（対応案件の受付番号など）を書きます。当事者の画面を確かめるときは、取引の詳細の「出品者の取引デスクを見る」「購入者の取引ワークスペースを見る」を使います（操作はできません）。</span>
 
-      <h3 class="p70-subhead" id="l-warn">L12 注意（キャンセルや期限切れが重なる人）を確かめる</h3>
+      <h3 class="p70-subhead" id="l-warn">L12 注意行為（キャンセルや期限切れが重なる人）を確かめる</h3>
       <div class="p70-dl p70-dl--ja">
-        <div class="p70-dl__item"><dt class="p70-dl__dt">担当</dt><dd class="p70-dl__dd">L<span data-admin-lv="A">（目安の回数の変更・LIAISON+ を止めるのは A）</span></dd></div>
-        <div class="p70-dl__item"><dt class="p70-dl__dt">使う画面</dt><dd class="p70-dl__dd">P90-15 リエゾンプラス申込者一覧（出品者）・P90-16 作品購入ユーザー一覧（購入者）。P90-13 の「今日の対応」の④から「注意ありのみ」で開く</dd></div>
+        <div class="p70-dl__item"><dt class="p70-dl__dt">担当</dt><dd class="p70-dl__dd">L<span data-admin-lv="A">（目安の回数の変更〔P90-20「注意行為の目安」〕・LIAISON+ を止めるのは A）</span></dd></div>
+        <div class="p70-dl__item"><dt class="p70-dl__dt">使う画面</dt><dd class="p70-dl__dd">P90-15 リエゾンプラス申込者一覧（出品者）・P90-16 作品購入ユーザー一覧（購入者）。P90-13 の「今日の対応」の④から「注意行為ありのみ」で開く</dd></div>
       </div>
-      <p class="p70-body">人ごと・種類ごとに回数を数え、期間（初めは直近90日）の中で目安の回数に達したら「注意」を出します。出品者＝確定期限切れ・発送期限超過・会場で売約済・出品の取り下げ（どれも申込のキャンセルを伴う）、購入者＝支払前のキャンセル・支払期限切れ。取引完了の期限切れ（自動確定）は回数だけを出し、注意にしません。</p>
+      <p class="p70-body">人ごと・種類ごとに回数を数え、期間（初めは直近90日）の中で目安の回数に達したら「注意行為」を出します。出品者＝確定期限切れ・発送期限超過・会場で売約済・出品の取り下げ（どれも申込のキャンセルを伴う）、購入者＝支払前のキャンセル・支払期限切れ。取引完了の期限切れ（自動確定）は記録と回数を出しますが、注意行為にしません。目安の回数と期間は、P90-15・P90-16 の一覧の上の「注意行為の目安」に出ます（見るだけ。変えるのは A が P90-20「注意行為の目安」で）。</p>
       <ol class="p70-step-list">
-        <li class="p70-step-list__item">「記録を見る」で、いつ・どの取引で起きたかを確かめる（取引は P90-13 で開ける）</li>
-        <li class="p70-step-list__item">事情が分かれば「確認済みにする」（理由は必須）。確認済みのあとに、目安に達した種類の回数がさらに増えたら、もう一度「注意」になる</li>
-        <li class="p70-step-list__item">続くようなら「連絡する」（出品者＝S-K-01・購入者＝S-K-02）</li>
-        <li class="p70-step-list__item" data-admin-lv="A">連絡のあとも続くときは、A がユーザーの編集（P90-1-1）で止める。出品者＝LIAISON+ の利用の取消（S-M-12）、購入者＝LIAISON+ での購入を OFF（S-M-13）。どちらも理由は必須で、本人にメールを送る。進んでいる取引は期限どおりに続く</li>
+        <li class="p70-step-list__item">行の下の「注意行為の記録と操作」（注意行為の対象になる種類の回数と注意行為の印）を押して開き、注意行為の状態と、いつ・どの取引で起きたかを確かめる。記録の種類の名前には、期間の中で何回目か（例：出品の取り下げ(2)）が付き、まだ確認していない注意行為の対象は赤い文字になる。管理者の「確認した」「確認・連絡した」「止めた」も同じ時系列に並ぶ（取引は P90-13 で開ける）</li>
+        <li class="p70-step-list__item">開いた中の「確認・連絡」で、注意行為の内容を確かめて記録する。確認する注意行為の種類を選び、確認の結果（様子を見る・連絡した・事情を確かめた・その他）と詳しい内容を書いて「確認済みにする」。どうするかは確認した管理者が決める（必ず何かをする、ではない）。回数はリセットされない。選んだ種類の取引がこのあと増えたら、その種類はもう一度「注意行為」になる。選ばなかった種類・新しく目安に達した種類は、確認が必要なまま残る</li>
+        <li class="p70-step-list__item">本人に知らせるときは、同じ「確認・連絡」のモーダルの中で、メールの種類を選んで直し「メールを送信する」で送る（確認済みにしたあとに送れる・確認のない連絡はしない・送らないときは「閉じる」。テンプレート＝出品者＝S-K-01 確定期限切れ・S-K-02 発送期限超過・S-K-03 会場で売約済・S-K-04 出品の取り下げ／購入者＝S-K-05 支払前のキャンセル・S-K-06 支払期限切れ）。送ると注意行為の記録に並ぶ</li>
+        <li class="p70-step-list__item" data-admin-lv="A">連絡のあとも続くときは、A が行の「その他 ▾」の「LIAISON+ の利用を止める →」（購入者は「LIAISON+ での購入を止める →」）からユーザーの編集（P90-1-1）を開き、「利用停止」（購入者は「購入停止」）を押す。モーダルで理由と詳しい内容を書いて止め、本人へのメール（S-M-12／S-M-13）は同じモーダルの「メールを送信する」で別に送る。進んでいる取引は期限どおりに続く</li>
+      </ol>
+
+      <h3 class="p70-subhead" id="l-sellers">L13 LIAISON+ の出品者の一覧を見る</h3>
+      <div class="p70-dl p70-dl--ja">
+        <div class="p70-dl__item"><dt class="p70-dl__dt">担当</dt><dd class="p70-dl__dd">L<span data-admin-lv="A">（Stripe の管理画面を開く・LIAISON+ を止めるのは A）</span></dd></div>
+        <div class="p70-dl__item"><dt class="p70-dl__dt">使う画面</dt><dd class="p70-dl__dd">P90-15 リエゾンプラス申込者一覧</dd></div>
+      </div>
+      <p class="p70-body">LIAISON+ を申し込んだクリエイター・ギャラリーの一覧です。申込日の新しい順に、20件ずつ並びます。ロール・本人確認状態・注意行為ありのみで絞り込めます。</p>
+      <table class="p70-table">
+        <thead><tr><th>列</th><th>見るもの</th></tr></thead>
+        <tbody>
+          <tr><td>申込者名</td><td>上にロール（クリエイター・ギャラリー）、名前、下に LIAISON+ 機能申込の NID（押すと審査の画面 P90-11-1）</td></tr>
+          <tr><td>申込日・利用開始日</td><td>申込日と、利用を始めた日（まだのときは「—」）</td></tr>
+          <tr><td>本人確認・Stripe</td><td>本人確認（確認済み・確認中）と、Stripe の連携（連携済み・手続き中・未着手）</td></tr>
+          <tr><td>販売実績</td><td>販売した作品の数・売上・最終振込日・未精算の金額（L10）</td></tr>
+          <tr><td>操作</td><td>「展覧会を見る →」（P90-12 をその出品者で絞った状態）。「その他 ▾」に「販売代金を見る →」（P90-14 をその出品者で絞った状態）<span data-admin-lv="A">・「Stripe で見る →」・「LIAISON+ の利用を止める →」（A だけ）</span></td></tr>
+        </tbody>
+      </table>
+      <ol class="p70-step-list">
+        <li class="p70-step-list__item">出品の中身は、「展覧会を見る →」から展覧会ごとに確かめる（同じ作品を複数の展覧会に出品できるので、出品の数ではなく展覧会ごとに見る）</li>
+        <li class="p70-step-list__item">各行の下の「注意行為の記録と操作」で、キャンセルや期限切れの記録と、確認・連絡ができる（L12）</li>
+        <li class="p70-step-list__item">規約に同意した日は、ユーザー管理（P90-1・P90-1-1）で見る（規約が変わったあと同意しない人はログインできないので、この一覧では扱わない）</li>
       </ol>
 
     </section>
@@ -511,6 +536,7 @@
           <li class="p70-toc__item"><span class="p70-toc__num">A6</span><a class="p70-toc__link" href="#a-texts">お知らせ・メール・文言・よくある質問を直す</a></li>
           <li class="p70-toc__item"><span class="p70-toc__num">A7</span><a class="p70-toc__link" href="#a-site">検索・特集・トップページを直す</a></li>
           <li class="p70-toc__item"><span class="p70-toc__num">A8</span><a class="p70-toc__link" href="#a-watch">記録と数字を見る</a></li>
+          <li class="p70-toc__item"><span class="p70-toc__num">A9</span><a class="p70-toc__link" href="#a-stripe">Stripe の管理画面で対応する</a></li>
         </ol>
       </nav>
 
@@ -532,7 +558,7 @@
         <li class="p70-step-list__item">ロール（クリエイター・ギャラリー・LIAISON+）を直すのは、不具合や誤りの訂正のときだけ。理由は必須</li>
         <li class="p70-step-list__item">なりすましログインは、問合せの確認など必要なときだけ。理由（お問合わせの番号など）は必須で、なりすまし中の操作も記録に残る</li>
         <li class="p70-step-list__item">強制退会は理由を書いて行う。本人の意思による退会は、本人が退会の画面から行う</li>
-        <li class="p70-step-list__item">LIAISON+ の利用の取消（出品者）と、LIAISON+ での購入の停止（購入者）は、ここで OFF にして保存する（理由は必須・本人へのメール S-M-12／S-M-13）。ON／OFF の横に、いまの状態（利用中・止めている〔日付・理由〕など）が出る</li>
+        <li class="p70-step-list__item">LIAISON+ の利用の取消（出品者）と、LIAISON+ での購入の停止（購入者）は、「利用停止」「購入停止」のボタンで行う。モーダルで理由（必須）を書いて押したときに止まる（「保存する」は要らない）。本人へのメール（S-M-12／S-M-13・ブロックは S-U-02）は、モーダルの中の「メールを送信する」で別に送る（送らないこともできる）。アカウントのブロック（「アカウント」の行）も同じ形。戻すときは「利用再開」「購入再開」（理由は必須）。ボタンの横に、いまの状態（利用中・利用停止中〔日付・理由〕など）が出る</li>
       </ol>
 
       <h3 class="p70-subhead" id="a-cancel">A3 取引の強制キャンセル・作品の管理</h3>
@@ -575,6 +601,7 @@
       <ol class="p70-step-list">
         <li class="p70-step-list__item">文の中の差し込み（{{…}}）の名前は変えない。料率・最低価格は設定から入るので、数字を直接書かない</li>
         <li class="p70-step-list__item">利用者に向けた案内・お願いの文はビジネス文にそろえる（「〜につきましては、〜をご確認ください」）。「返金」という言葉は、実際にお金を戻す説明にだけ使う</li>
+        <li class="p70-step-list__item">お知らせ（ニュース）は管理者メニューの「お知らせ（ニュース）の作成」（P61-11）で作る。保存（作成・更新）してもメールは送られない。メールで知らせるときは、公開したあとに P61-11 を編集で開き、「メールを送信する」で1回だけ送る（夜間 21:00〜翌 8:00 は送れないので、朝に送る）</li>
         <li class="p70-step-list__item">よくある質問の Q&amp;A は、表示しているページ（P90-24 の各カテゴリの「表示するページ」）を確かめてから直す</li>
       </ol>
 
@@ -595,6 +622,16 @@
         <li class="p70-step-list__item">P90-22 で、展覧会の更新・記事とレビュー・退会を見守る（対応は不要。気になるものがあれば E8 で対応）</li>
         <li class="p70-step-list__item">P90-28 で、管理者が行った操作を確かめる（だれも書き換え・削除できない）</li>
         <li class="p70-step-list__item">P90-6 で、コンテンツ・ユーザー・利用の数を確かめる</li>
+      </ol>
+
+      <h3 class="p70-subhead" id="a-stripe">A9 Stripe の管理画面で対応する</h3>
+      <div class="p70-dl p70-dl--ja">
+        <div class="p70-dl__item"><dt class="p70-dl__dt">使う画面</dt><dd class="p70-dl__dd">Stripe の管理画面（P90-10 の「Stripe の管理画面へ →」・P90-13 の「Stripe で開く ↗」・P90-15 の「Stripe で見る →」）</dd></div>
+      </div>
+      <ol class="p70-step-list">
+        <li class="p70-step-list__item">Stripe の管理画面にログインするのは A だけ。返金・出品者の連携の状態・決済の失敗は、L が個展なびの画面で扱える（Stripe の管理画面を開かない）</li>
+        <li class="p70-step-list__item">支払いの異議：L が P90-13 に残した材料を確かめ、Stripe の管理画面で回答（証拠の提出）する。回答したら、P90-13 で「Stripe で回答済みにする」を押す。結果が届くと対応待ちから外れる</li>
+        <li class="p70-step-list__item">返金・振込などを Stripe の管理画面で直接行わない（個展なびの記録と食い違い、だれが行ったかが操作の記録に残らないため）。個展なびの画面でできないことが起きたときは、Stripe の管理画面で行い、何をしたかを対応案件と P90-13 の取引メッセージの記録に残す</li>
       </ol>
     </section>
 

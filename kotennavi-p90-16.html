@@ -239,8 +239,8 @@
       var maxRank = RANK[fp];
       var visible = 0;
       rows.forEach(function (tr) {
-        var wo = document.getElementById('p9016WarnOnly');   /* 注意ありのみ（pages.js ktnWarnPage が足す・2026-11-12） */
-        var match = maxRank === 99 || Number(tr.dataset.rank) <= maxRank && (!(wo && wo.checked) || tr.dataset.warn === 'warn');
+        var wo = document.getElementById('p9016WarnOnly');   /* 注意行為ありのみ（pages.js ktnWarnPage が足す・2026-11-12） */
+        var match = (maxRank === 99 || Number(tr.dataset.rank) <= maxRank) && (!(wo && wo.checked) || tr.dataset.warn === 'warn');   /* 2026-11-15：期間が「すべて」のとき注意行為ありのみが効いていなかったのを直した */
         tr.hidden = !match;
         if (match) visible++;
       });

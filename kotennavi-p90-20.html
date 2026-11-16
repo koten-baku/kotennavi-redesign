@@ -116,6 +116,7 @@
           <button type="button" class="p909-tab-btn is-active" role="tab" data-panel="fee" aria-selected="true">サービス利用料</button>
           <button type="button" class="p909-tab-btn" role="tab" data-panel="campaign" aria-selected="false">キャンペーン</button>
           <button type="button" class="p909-tab-btn" role="tab" data-panel="deadline" aria-selected="false">取引の期限</button>
+          <button type="button" class="p909-tab-btn" role="tab" data-panel="warn" aria-selected="false">注意行為の目安</button>
           <button type="button" class="p909-tab-btn" role="tab" data-panel="notify" aria-selected="false">お知らせの時期</button>
           <button type="button" class="p909-tab-btn" role="tab" data-panel="grant" aria-selected="false">個別の適用<span class="ktn-count ktn-count--pill is-idle">0</span></button>
         </div>
@@ -182,6 +183,12 @@
         <div class="p9020-panel" id="p9020Panel-deadline" role="tabpanel" hidden>
           <p class="p909-auto-intro">LIAISON+ の取引の、状態ごとの期限の日数です。確定期限と支払期限を過ぎると自動でキャンセル、受取確認と完了確認の期限を過ぎると自動で確定します。発送期限は過ぎても自動では進みません（取引管理の要対応）。変えた日数は、保存したあとにその状態になった取引から使います（進んでいる取引の期限は変わりません）。ガイドやよくある質問の日数も、この設定から出ます。</p>
           <div id="p9020Deadline"></div>
+        </div>
+
+        <!-- 注意行為の目安（2026-11-15 ユーザー指示＝P90-15・P90-16 から移した。変えられるのは admin だけ）。中身は pages.js ktnWarnSettings -->
+        <div class="p9020-panel" id="p9020Panel-warn" role="tabpanel" hidden>
+          <p class="p909-auto-intro">出品者・購入者のキャンセルや期限切れを、種類ごとに数える目安です。数える期間の中で、種類ごとにこの回数に達した人に「注意行為」の印が付きます（出品者＝<a class="ktn-guide-link" href="./kotennavi-p90-15.html?warn=1">P90-15</a>・購入者＝<a class="ktn-guide-link" href="./kotennavi-p90-16.html?warn=1">P90-16</a>）。取引完了の期限切れ（自動確定）は数えるだけで、注意の対象にしません。</p>
+          <div id="p9020Warn"></div>
         </div>
 
         <!-- お知らせの時期 -->

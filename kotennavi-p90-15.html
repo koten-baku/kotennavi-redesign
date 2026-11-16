@@ -111,7 +111,7 @@
         <div class="ktn-mgmt-head">
           <h2 class="ktn-mgmt-head__title">リエゾンプラス申込者一覧</h2>
           <p class="ktn-mgmt-head__en">LIAISON+ APPLICANTS</p>
-          <p class="ktn-mgmt-head__desc">個別の対応は「詳細を見る」からリエゾンプラスコンソールへ進んでください。</p>
+          <p class="ktn-mgmt-head__desc">出品と販売代金は、「展覧会を見る」「販売代金を見る」から、この出品者で絞った状態で確かめます。</p>
         </div>
 
         <!-- ツールバー：ロール・本人確認状態 -->
@@ -146,10 +146,11 @@
                 <th>申込日</th>
                 <th>利用開始日</th>
                 <th>本人確認状態</th>
-                <th>出品数</th>
                 <th>操作</th>
               </tr>
             </thead>
+            <!-- 出品数の列は 2026-11-15 にやめた（同じ作品を複数の展覧会に出品できるので、数から読み取れることが少ない）。出品は「展覧会を見る →」＝P90-12 をこの出品者で絞った状態、
+                 販売代金は「販売代金を見る →」＝P90-14 をこの出品者で絞った状態で確かめる（ユーザー指示） -->
             <tbody id="p9015List">
               <tr data-role="creator" data-status="granted">
                 <td data-label="申込者名">田中 透</td>
@@ -157,8 +158,7 @@
                 <td data-label="申込日" class="p902-cell--muted">2026.04.20</td>
                 <td data-label="利用開始日" class="p902-cell--muted">2026.04.28</td>
                 <td data-label="本人確認状態"><span class="ktn-review-status ktn-review-status--granted">確認済み</span></td>
-                <td data-label="出品数">20点</td>
-                <td data-label="操作"><a class="ktn-action-btn" href="./kotennavi-p90-12.html">詳細を見る →</a></td>
+                <td data-label="操作"><a class="ktn-action-btn" href="./kotennavi-p90-12.html?who=CR-1042">展覧会を見る →</a><a class="ktn-action-btn" href="./kotennavi-p90-14.html?seller=%E7%94%B0%E4%B8%AD%20%E9%80%8F">販売代金を見る →</a></td>
               </tr>
               <tr data-role="gallery" data-status="granted">
                 <td data-label="申込者名">Gallery SOIL 渋谷</td>
@@ -166,8 +166,7 @@
                 <td data-label="申込日" class="p902-cell--muted">2026.05.18</td>
                 <td data-label="利用開始日" class="p902-cell--muted">2026.05.25</td>
                 <td data-label="本人確認状態"><span class="ktn-review-status ktn-review-status--granted">確認済み</span></td>
-                <td data-label="出品数">8点</td>
-                <td data-label="操作"><a class="ktn-action-btn" href="./kotennavi-p90-12.html">詳細を見る →</a></td>
+                <td data-label="操作"><a class="ktn-action-btn" href="./kotennavi-p90-12.html?who=GA-0533">展覧会を見る →</a><a class="ktn-action-btn" href="./kotennavi-p90-14.html?seller=Gallery%20SOIL%20%E6%B8%8B%E8%B0%B7">販売代金を見る →</a></td>
               </tr>
               <tr data-role="creator" data-status="granted">
                 <td data-label="申込者名">佐藤 みなと</td>
@@ -175,8 +174,7 @@
                 <td data-label="申込日" class="p902-cell--muted">2026.07.01</td>
                 <td data-label="利用開始日" class="p902-cell--muted">2026.07.05</td>
                 <td data-label="本人確認状態"><span class="ktn-review-status ktn-review-status--granted">確認済み</span></td>
-                <td data-label="出品数">3点</td>
-                <td data-label="操作"><a class="ktn-action-btn" href="./kotennavi-p90-12.html">詳細を見る →</a></td>
+                <td data-label="操作"><a class="ktn-action-btn" href="./kotennavi-p90-12.html?who=CR-1388">展覧会を見る →</a><a class="ktn-action-btn" href="./kotennavi-p90-14.html?seller=%E4%BD%90%E8%97%A4%20%E3%81%BF%E3%81%AA%E3%81%A8">販売代金を見る →</a></td>
               </tr>
               <tr data-role="gallery" data-status="pending">
                 <td data-label="申込者名">YUGEN Gallery</td>
@@ -184,8 +182,7 @@
                 <td data-label="申込日" class="p902-cell--muted">2026.08.10</td>
                 <td data-label="利用開始日" class="p902-cell--muted">—</td>
                 <td data-label="本人確認状態"><span class="ktn-review-status ktn-review-status--pending">確認中</span></td>
-                <td data-label="出品数">0点</td>
-                <td data-label="操作"><a class="ktn-action-btn" href="./kotennavi-p90-12.html">詳細を見る →</a></td>
+                <td data-label="操作"><a class="ktn-action-btn" href="./kotennavi-p90-12.html?who=GA-0412">展覧会を見る →</a><a class="ktn-action-btn" href="./kotennavi-p90-14.html?seller=YUGEN%20Gallery">販売代金を見る →</a></td>
               </tr>
               <tr data-role="creator" data-status="pending">
                 <td data-label="申込者名">高橋 信</td>
@@ -193,8 +190,7 @@
                 <td data-label="申込日" class="p902-cell--muted">2026.08.15</td>
                 <td data-label="利用開始日" class="p902-cell--muted">—</td>
                 <td data-label="本人確認状態"><span class="ktn-review-status ktn-review-status--pending">確認中</span></td>
-                <td data-label="出品数">0点</td>
-                <td data-label="操作"><a class="ktn-action-btn" href="./kotennavi-p90-12.html">詳細を見る →</a></td>
+                <td data-label="操作"><a class="ktn-action-btn" href="./kotennavi-p90-12.html?who=CR-1415">展覧会を見る →</a><a class="ktn-action-btn" href="./kotennavi-p90-14.html?seller=%E9%AB%98%E6%A9%8B%20%E4%BF%A1">販売代金を見る →</a></td>
               </tr>
               <tr data-role="creator" data-status="granted">
                 <td data-label="申込者名">大野 藍</td>
@@ -202,12 +198,13 @@
                 <td data-label="申込日" class="p902-cell--muted">2026.03.02</td>
                 <td data-label="利用開始日" class="p902-cell--muted">2026.03.10</td>
                 <td data-label="本人確認状態"><span class="ktn-review-status ktn-review-status--granted">確認済み</span></td>
-                <td data-label="出品数">12点</td>
-                <td data-label="操作"><a class="ktn-action-btn" href="./kotennavi-p90-12.html">詳細を見る →</a></td>
+                <td data-label="操作"><a class="ktn-action-btn" href="./kotennavi-p90-12.html?who=CR-1203">展覧会を見る →</a><a class="ktn-action-btn" href="./kotennavi-p90-14.html?seller=%E5%A4%A7%E9%87%8E%20%E8%97%8D">販売代金を見る →</a></td>
               </tr>
             </tbody>
           </table>
         </div>
+
+        <nav class="ktn-pagination" id="p9015Pagination" aria-label="ページ送り" hidden></nav>
 
         <!-- ゼロ状態 -->
         <div class="p319-empty" id="p9015Empty" hidden>
@@ -239,32 +236,7 @@
     if (window.ktnRender) ktnRender();
   }
 
-  /* 一覧フィルタ（ロール・本人確認状態）：静的ダミー行を絞り込むだけの簡易実装 */
-  (function () {
-    var rows      = Array.prototype.slice.call(document.querySelectorAll('#p9015List tr'));
-    var roleSel   = document.getElementById('p9015FilterRole');
-    var statusSel = document.getElementById('p9015FilterStatus');
-    var countEl   = document.getElementById('p9015Count');
-    var emptyEl   = document.getElementById('p9015Empty');
-
-    function render() {
-      var fr = roleSel ? roleSel.value : '';
-      var fs = statusSel ? statusSel.value : '';
-      var visible = 0;
-      rows.forEach(function (tr) {
-        var wo = document.getElementById('p9015WarnOnly');   /* 注意ありのみ（pages.js ktnWarnPage が足す・2026-11-12） */
-        var match = (!fr || tr.dataset.role === fr) && (!fs || tr.dataset.status === fs) && (!(wo && wo.checked) || tr.dataset.warn === 'warn');
-        tr.hidden = !match;
-        if (match) visible++;
-      });
-      if (countEl) countEl.innerHTML = '<strong>' + visible + '</strong>件該当';
-      if (emptyEl) emptyEl.hidden = visible !== 0;
-    }
-    window.p9015Render = render;
-    if (roleSel) roleSel.addEventListener('change', render);
-    if (statusSel) statusSel.addEventListener('change', render);
-    render();
-  })();
+  /* 一覧の絞り込み・並び（申込日の新しい順）・ページ送りは pages.js KTN.pages['p90-15']（2026-11-16） */
 </script>
 </body>
 </html>

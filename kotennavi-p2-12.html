@@ -29,8 +29,10 @@
   <button class="dbtn" onclick="setR('admin',this)">管理者</button>
   <span class="dbar-sep">|</span>
   <span class="dbar-sep" style="opacity:.5">LIAISON+：</span>
-  <button class="dbtn dbtn-lp on" onclick="p212liaisonPlusApplied=false;[...this.parentNode.querySelectorAll('.dbtn-lp')].forEach(b=>b.classList.remove('on'));this.classList.add('on')">未申請</button>
-  <button class="dbtn dbtn-lp" onclick="p212liaisonPlusApplied=true;[...this.parentNode.querySelectorAll('.dbtn-lp')].forEach(b=>b.classList.remove('on'));this.classList.add('on')">申請済み</button>
+  <button class="dbtn dbtn-lp on" onclick="p212DemoPlus('none',this)">未申込</button>
+  <button class="dbtn dbtn-lp" onclick="p212DemoPlus('pending',this)">確認中</button>
+  <button class="dbtn dbtn-lp" onclick="p212DemoPlus('returned',this)">要確認（差し戻し）</button>
+  <button class="dbtn dbtn-lp" onclick="p212DemoPlus('granted',this)">利用開始</button>
   <span class="dbar-sep">候補：</span>
   <button class="dbtn on" onclick="p212DemoCands(false,this)">多い（絞込あり）</button>
   <button class="dbtn" onclick="p212DemoCands(true,this)">少ない（絞込なし）</button>
@@ -154,16 +156,29 @@
 
       <!-- モード切替バー -->
       <div class="p2-12-mode-bar">
-        <h3 class="p2-12-mode-bar__title">モード切替</h3>
+        <h3 class="p2-12-mode-bar__title">モード</h3>
         <div class="p2-12-mode-bar__row">
           <div class="p2-12-mode-bar__current">
             <span class="p2-12-mode-bar__label">現在のモード：</span>
             <span class="lb-dot li">LIAISON</span>
           </div>
-          <div class="p2-12-mode-bar__actions">
+          <!-- LIAISON+ の利用開始のときだけ切り替えボタンを出す（未申込・確認中・要確認は下の案内） -->
+          <div class="p2-12-mode-bar__actions" data-plus-app="granted">
             <button class="p2-12-mode-switch" onclick="p212OpenModal('switch')">LIAISON+ に切り替える</button>
           </div>
         </div>
+        <p class="p2-12-mode-bar__plus" data-plus-app="none">
+          <span class="p2-12-mode-bar__plus-text">LIAISON+ に切り替えると、作品を販売できます。切り替えには、LIAISON+ の利用の申込と承認が必要です（切り替えられるのは会期の初日の前まで）。</span>
+          <span class="p2-12-mode-bar__plus-links"><a class="ktn-action-btn" href="kotennavi-p11-4.html">LIAISON+ を申し込む →</a><a class="ktn-guide-link" href="kotennavi-p70.html" target="_blank" rel="noopener">LIAISON+ とは →</a></span>
+        </p>
+        <p class="p2-12-mode-bar__plus" data-plus-app="pending" hidden>
+          <span class="p2-12-mode-bar__plus-text"><span class="p2-12-mode-bar__plus-state">LIAISON+ の申込：<strong>確認中</strong></span>LIAISON+ の利用の申込を確認しています。承認されると、ここから LIAISON+ に切り替えられます。</span>
+          <a class="ktn-guide-link" href="kotennavi-p11-4.html">申込の内容を確認する →</a>
+        </p>
+        <p class="p2-12-mode-bar__plus" data-plus-app="returned" hidden>
+          <span class="p2-12-mode-bar__plus-text"><span class="p2-12-mode-bar__plus-state p2-12-mode-bar__plus-state--returned">LIAISON+ の申込：<strong>要確認</strong></span>LIAISON+ の利用の申込について、事務局からご連絡しています。詳しくは、申込のページをご確認ください。</span>
+          <a class="ktn-action-btn" href="kotennavi-p11-4.html">申込の状況を確認する →</a>
+        </p>
         <p class="p2-12-mode-bar__locknote" id="p212ModeLockNote" hidden>展覧会の会期開始日（2026.02.18）を過ぎているため、モード（LIAISON／LIAISON+）は変更できません。</p>
       </div>
 
@@ -253,22 +268,6 @@
         </div>
       </div>
 
-      <!-- LIAISON+ 切替案内モーダル（未申請ユーザー向け） -->
-      <div id="p212-modal-switch-ng" class="p2-12-modal" hidden>
-        <div class="p2-12-modal__bg" onclick="p212CloseModal('switch-ng')"></div>
-        <div class="p2-12-modal__box">
-          <h3 class="p2-12-modal__title">LIAISON+ のご利用には申込が必要です</h3>
-          <ul class="p2-12-modal__notes">
-            <li>LIAISON+ は申込・承認済みのクリエイター/ギャラリーのみご利用いただけます。</li>
-            <li>申込ページから申請してください。審査後にご利用いただけます。</li>
-          </ul>
-          <div class="p2-12-modal__foot">
-            <button class="p2-12-modal__cancel ktn-op-btn" onclick="p212CloseModal('switch-ng')">キャンセル</button>
-            <button class="p2-12-modal__ok ktn-op-btn ktn-op-btn--primary" onclick="location.href='kotennavi-p11-4.html'">LIAISON+ を申し込む</button>
-          </div>
-        </div>
-      </div>
-
     </div><!-- /.ktn-content -->
   </main>
 <footer class="ktn-footer" id="ktnFooter"></footer>
@@ -286,13 +285,24 @@
 <script>
 KTN.exh.liaison = 'liaison'; // このページ自体がリエゾン（無印）の作品管理画面のため、オーナーメニューの表示と一致させる
 KTN.init({ page: 'p2-12', role: 'user+creator' });
-// デモ用: true=LIAISON+申請済み / false=未申請
-var p212liaisonPlusApplied = false;
+/* LIAISON+ の利用の申込の状態（none＝未申込／pending＝確認中／returned＝差し戻し〔画面では「要確認」＝再申込とは限らない〕／granted＝利用開始）。
+   利用開始のときだけ切り替えボタンを出し、それ以外は押す前に状態と次にすることを見せる（押してから申込の案内を出さない）。
+   会期が始まったあとは、どの状態でも切り替えボタン・申込の案内を出さない（ロックの注記だけ）。
+   本番＝ログイン中のロール（creator／gallery）の LIAISON+ 申込の状態と、会期の初日で決める。デモは dbar で切替 */
+var p212PlusApp = 'none', p212TermStarted = true;
+function p212SyncPlus() {
+  document.querySelectorAll('[data-plus-app]').forEach(function (el) {
+    el.hidden = p212TermStarted || el.getAttribute('data-plus-app') !== p212PlusApp;
+  });
+}
+function p212DemoPlus(st, btn) {
+  p212PlusApp = st;
+  document.querySelectorAll('.dbar .dbtn-lp').forEach(function (b) { b.classList.remove('on'); });
+  if (btn) btn.classList.add('on');
+  p212SyncPlus();
+}
 function p212OpenModal(type) {
-  var id = type === 'switch'
-    ? 'p212-modal-switch-' + (p212liaisonPlusApplied ? 'ok' : 'ng')
-    : 'p212-modal-' + type;
-  document.getElementById(id).hidden = false;
+  document.getElementById(type === 'switch' ? 'p212-modal-switch-ok' : 'p212-modal-' + type).hidden = false;
 }
 function p212CloseModal(type) {
   document.getElementById('p212-modal-' + type).hidden = true;
@@ -300,6 +310,8 @@ function p212CloseModal(type) {
 /* 2026-07-19 仕様：リエゾンモード切替は展覧会会期開始日以降は変更不可。
    本番＝会期開始日と当日をサーバー側でも比較して拒否。デモは dbar トグルで再現 */
 function p212DemoTerm(started, btn) {
+  p212TermStarted = !!started;
+  p212SyncPlus();
   document.querySelectorAll('.p2-12-mode-switch').forEach(function (b) { b.disabled = !!started; });
   var note = document.getElementById('p212ModeLockNote');
   if (note) note.hidden = !started;

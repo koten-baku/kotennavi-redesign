@@ -253,8 +253,9 @@
               <p class="p315-related-link__desc">最近のリエゾンプラス機能申込を確認・審査する。</p>
               <a class="ktn-action-btn" href="kotennavi-p90-11.html">リエゾンプラス機能申込管理へ →</a>
             </div>
-            <!-- Stripe の管理画面（2026-10-29・docs/admin-roles.md #45・LIAISON+ 対応以上）。本番は管理者ごとの Stripe のアカウントでログインする -->
-            <div class="p315-related-link">
+            <!-- Stripe の管理画面（2026-10-29・docs/admin-roles.md #45）。2026-11-15 に A だけにした（ユーザー指示＝Stripe にログインできる人を A に限る。
+                 L の仕事は Stripe にログインしなくてもできる形にした＝返金は P90-13 から Stripe の API で・連携の状態は P90-15 の列で） -->
+            <div class="p315-related-link" data-admin-lv="A">
               <p class="p315-related-link__desc">決済・返金・振込・支払いの異議を、Stripe の管理画面で確認する（管理者ごとの Stripe のアカウントでログイン）。</p>
               <a class="ktn-action-btn" href="https://dashboard.stripe.com/" target="_blank" rel="noopener">Stripe の管理画面へ →</a>
             </div>

@@ -3077,7 +3077,7 @@ KTN.NOTICE_DEFS = {
     { id: 'NT-29',  role: 'user・creator・gallery', when: '事務局から取引についての連絡が届いた（督促・期限の延長・一時停止・連絡など）', text: '事務局から取引についてのご連絡が届きました（{{subject}}）', dest: 'P5-15／P3-16／P4-16', mail: 'S-T-03〜S-T-20' },
     { id: 'NT-30',  role: 'creator・gallery', when: '事務局から費用の請求が届いた', text: '費用のご請求が届きました（{{subject}}）', dest: 'P3-17／P4-17', mail: 'S-P-01〜S-P-03' },
     { id: 'NT-31',  role: 'creator・gallery', when: '事務局から作品についての確認のお願いが届いた', text: '作品《{{artworkName}}》についてのご確認のお願いが届きました（{{subject}}）', dest: 'P2-12-1', mail: 'S-W-01〜S-W-03' },
-    { id: 'NT-32',  role: 'user・creator・gallery', when: '事務局から取引の進め方についてのお願いが届いた（注意）', text: 'お取引の進め方についてのお願いが届きました', dest: 'P3-15／P4-15（出品者）・P5-14（購入者）', mail: 'S-K-01・S-K-02' },
+    { id: 'NT-32',  role: 'user・creator・gallery', when: '事務局から取引の進め方についてのお願いが届いた（注意行為）', text: 'お取引の進め方についてのお願いが届きました', dest: 'P3-15／P4-15（出品者）・P5-14（購入者）', mail: 'S-K-01〜S-K-06' },
     { id: 'NT-33',  role: 'creator・gallery', when: 'LIAISON+ の利用を取り消した', text: 'LIAISON+ のご利用を取り消しました。詳しくはメールをご確認ください', dest: 'P5（myページ）', mail: 'S-M-12' },
     { id: 'NT-34',  role: 'user', when: 'LIAISON+ での購入の申込を止めた', text: 'LIAISON+ でのご購入のお申込みを停止しました。詳しくはメールをご確認ください', dest: 'P5-14', mail: 'S-M-13' },
     { id: 'NT-14',  role: 'user',             when: 'ウォッチしているクリエイター・ギャラリーから、イベントのクーポンが届いた（出品者が送った直後）', text: '{{senderName}}から、クーポン「{{campaignName}}」が届きました', dest: 'その展覧会の作品（P2-5-1）', mail: 'A-C-05（すぐに送る・P5-13 の①で停止可）' }
@@ -3980,7 +3980,7 @@ KTN.ADMIN_PAGE = {
   'p90': 'E', 'p90-29': 'E', 'p90-2': 'E', 'p90-2-1': 'E', 'p90-4': 'E', 'p90-5': 'E', 'p90-7': 'E', 'p90-8': 'E', 'p90-21': 'E', 'p90-21-1': 'E',
   'p90-10': 'L', 'p90-12': 'L', 'p90-13': 'L', 'p90-14': 'L', 'p90-15': 'L', 'p90-16': 'L', 'p90-20': { view: 'L', edit: 'A' },
   'p90-3': 'E',
-  'p90-1': 'A', 'p90-1-1': 'A', 'p90-23': 'A', 'p90-6': 'A', 'p90-9': 'A', 'p90-11': 'A', 'p90-11-1': 'A', 'p90-17': 'A', 'p90-18': 'A', 'p90-24': 'A', 'p90-19': 'A', 'p90-22': 'A', 'p90-28': 'A', 'p60-21': 'A'
+  'p90-1': 'A', 'p90-1-1': 'A', 'p90-23': 'A', 'p90-6': 'A', 'p90-9': 'A', 'p90-11': 'A', 'p90-11-1': 'A', 'p90-17': 'A', 'p90-18': 'A', 'p90-24': 'A', 'p90-19': 'A', 'p90-22': 'A', 'p90-28': 'A', 'p60-21': 'A', 'p61-11': 'A'
 };
 KTN.adminLevel = function () {
   try { var v = sessionStorage.getItem('ktn-admin-level'); if (KTN.ADMIN_LEVELS[v]) return v; } catch (e) {}

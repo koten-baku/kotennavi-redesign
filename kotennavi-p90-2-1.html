@@ -231,11 +231,7 @@
               <option value="__new__" data-admin-lv="A">＋ 新しいテンプレートとして追加</option>
             </select>
           </div>
-          <label class="p902-cancel-check">
-            <input type="checkbox" id="p902CancelSendMail">
-            取消のご連絡メールを送信する
-          </label>
-          <p class="p902-flow-panel__hint">本文はチェックの有無に関わらず確認・編集できます。実際に送信する場合のみ上のチェックを入れてください。</p>
+          <p class="p902-flow-panel__hint">「取消を確定する」は取消だけを行います。取消のご連絡メールは、下の「取消のご連絡メールを送信する」で別に送ります（送らないこともできます。取消の前でも後でも送れます）。</p>
           <div id="p902CancelMailFields" hidden>
             <div class="p902-flow-panel__row p902-flow-panel__new-row" id="p902CancelNewNameRow" hidden>
               <input maxlength="40" data-count type="text" class="p902-flow-panel__input" id="p902CancelNewName" placeholder="新しいテンプレート名" autocomplete="off">
@@ -250,6 +246,7 @@
               <input maxlength="60" data-count type="text" class="p902-flow-panel__input" id="p902CancelSubject">
             </div>
             <textarea class="p902-flow-panel__textarea" id="p902CancelBody" rows="10"></textarea>
+            <div class="p902-flow-panel__actions"><span class="p901-rv-mail__sent" id="p902CancelMailSent"></span><button type="button" class="ktn-op-btn ktn-op-btn--sm" id="p902CancelMailSendBtn">取消のご連絡メールを送信する</button></div>
           </div>
           <div class="p902-flow-panel__actions">
             <button type="button" class="ktn-op-btn ktn-op-btn--sm" id="p902CancelBackBtn">戻る</button>
