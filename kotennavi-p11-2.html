@@ -331,19 +331,17 @@
               </div>
             </div>
 
-            <div class="p211-field" style="margin-top:12px">
-              <label class="p211-label">郵便番号<span class="ktn-req">必須</span></label>
+            <!-- 住所は郵便番号だけ（2026-11-16 ユーザー指示）。都道府県・市区町村・町名は郵便番号から自動で入る（読み取り専用）。番地・建物名は LIAISON+ の申込（P11-4）でお願いする。
+                 3つの欄を1つの必須の項目にまとめる＝郵便番号から住所が見つからないと送れない -->
+            <div class="p211-field ktn-zip" style="margin-top:12px">
+              <label class="p211-label" for="p112Zip">郵便番号<span class="ktn-req">必須</span></label>
               <input class="p211-input" id="p112Zip" type="text" placeholder="150-0001" inputmode="numeric" maxlength="8" style="max-width:180px">
-            </div>
-
-            <div class="p211-field" style="margin-top:12px">
-              <label class="p211-label">都道府県<span class="ktn-req">必須</span></label>
-              <input class="p211-input" id="p112Pref" type="text" placeholder="東京都" style="max-width:220px">
-            </div>
-
-            <div class="p211-field" style="margin-top:12px">
-              <label class="p211-label">市区町村・番地以降<span class="ktn-req">必須</span></label>
-              <input class="p211-input" id="p112Addr" type="text" placeholder="渋谷区神宮前1-2-3 ○○ビル 4F">
+              <div class="ktn-zip__out">
+                <label class="ktn-zip__item"><span class="ktn-zip__lb">都道府県</span><input class="p211-input" id="p112Pref" type="text" readonly tabindex="-1" placeholder="自動で入ります"></label>
+                <label class="ktn-zip__item"><span class="ktn-zip__lb">市区町村・町名</span><input class="p211-input" id="p112Addr" type="text" readonly tabindex="-1" placeholder="自動で入ります"></label>
+              </div>
+              <p class="p90cm-err" id="p112ZipNote"></p>
+              <p class="p211-help">郵便番号から、都道府県と市区町村・町名が自動で入ります。番地・建物名のご入力は不要です（LIAISON+（作品の販売）をお申し込みいただくときに、ご入力をお願いします）。</p>
             </div>
 
             <div class="p211-field" style="margin-top:12px">
@@ -536,7 +534,7 @@ var P112_DEMO_VALUES = {
   p112Name: '田中 透', p112Kana: 'タナカ トオル', p112Romaji: 'Toru Tanaka', p112Genre: 'アート',
   p112SnsUrl0: 'https://instagram.com/toru_tanaka_art',
   p112RealName: '田中 透', p112RealKana: 'タナカ トオル', p112Birth: '1985-04-12', p112Gender: '男性',
-  p112Zip: '150-0001', p112Pref: '東京都', p112Addr: '渋谷区神宮前1-2-3 ○○ビル 4F', p112Tel: '090-1234-5678',
+  p112Zip: '150-0001', p112Pref: '東京都', p112Addr: '渋谷区神宮前', p112Tel: '090-1234-5678',
   p112ExistingPage: '', p112Notes: ''
 };
 
@@ -666,6 +664,8 @@ function p112ValidateRequired() {
   errBox.hidden = true;
   return true;
 }
+
+KTN.bindZip(document.getElementById('p112Zip'), document.getElementById('p112Pref'), document.getElementById('p112Addr'), document.getElementById('p112ZipNote'));
 
 function p112Submit() {
   if (!p112ValidateRequired()) return;

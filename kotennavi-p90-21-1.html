@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>対応案件の詳細 — 管理者 | 個展なび</title>
+  <title>お問合わせ・報告の詳細 — 管理者 | 個展なび</title>
   <meta name="robots" content="noindex,nofollow">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
@@ -109,7 +109,7 @@
 
         <!-- ページタイトル -->
         <div class="ktn-mgmt-head">
-          <h2 class="ktn-mgmt-head__title">対応案件の詳細</h2>
+          <h2 class="ktn-mgmt-head__title">お問合わせ・報告の詳細</h2>
           <p class="ktn-mgmt-head__en">CASE</p>
         </div>
 
@@ -128,20 +128,17 @@
           <div id="p9021Body"></div>
         </div>
 
-        <!-- 対象と近道（対象のページを開く・編集画面で直す・一時非公開にする・取引デスクを開く など。種類で変わる） -->
+        <!-- 送信元のページと近道（送信元のページを開く・編集画面で直す・一時非公開にする・取引デスクを開く など。種類で変わる） -->
         <div class="p902-review-section">
-          <h4 class="p902-review-section__title">対象</h4>
+          <h4 class="p902-review-section__title">送信元のページ</h4>
           <div class="p9021-target" id="p9021Target"></div>
         </div>
 
-        <!-- 担当・状態 -->
+        <!-- 状態（担当は選ばない＝操作した管理者を自動で記録し、ここと一覧に出す・2026-11-16 ユーザー指示） -->
         <div class="p902-review-section">
-          <h4 class="p902-review-section__title">担当・状態</h4>
+          <h4 class="p902-review-section__title">状態</h4>
+          <p class="p902-review-section__note">対応した管理者：<span id="p9021Handlers"></span>（操作した管理者を自動で記録します）</p>
           <div class="p9021-state">
-            <label class="p319-filter">
-              <span class="p319-filter__label">担当</span>
-              <select class="p319-filter__sel" id="p9021Who"><option value="">未割当</option></select>
-            </label>
             <label class="p319-filter">
               <span class="p319-filter__label">状態</span>
               <select class="p319-filter__sel" id="p9021Status"></select>
@@ -205,7 +202,7 @@
 
 <nav class="ktn-bottom-nav" id="ktnBottomNav"><div class="ktn-bottom-nav__inner" id="ktnBottomNavInner"></div></nav>
 
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Top","item":"https://koten-navi.com/"},{"@type":"ListItem","position":2,"name":"管理者","item":"https://koten-navi.com/p90"},{"@type":"ListItem","position":3,"name":"対応案件","item":"https://koten-navi.com/p90-21"},{"@type":"ListItem","position":4,"name":"対応案件の詳細"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Top","item":"https://koten-navi.com/"},{"@type":"ListItem","position":2,"name":"管理者","item":"https://koten-navi.com/p90"},{"@type":"ListItem","position":3,"name":"お問合わせ・報告","item":"https://koten-navi.com/p90-21"},{"@type":"ListItem","position":4,"name":"お問合わせ・報告の詳細"}]}</script>
 
 <script src="./kotennavi-common.js"></script>
 <script src="./kotennavi-pages.js"></script>

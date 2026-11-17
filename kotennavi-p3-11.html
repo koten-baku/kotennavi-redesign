@@ -369,19 +369,21 @@
               <p class="p211-help">リエゾンプラス（作品販売）の本人確認に使用します。</p>
             </div>
 
-            <div class="p211-field">
+            <!-- 住所（2026-11-16 ユーザー指示）：郵便番号から都道府県・市区町村・町名が自動で入る。番地・建物名は任意（LIAISON+ を使うときは必須＝P11-4 でお願いする） -->
+            <div class="p211-field ktn-zip">
               <label class="p211-label" for="p311Zip">郵便番号<span class="ktn-req">必須</span></label>
               <input class="p211-input" id="p311Zip" type="text" value="150-0001" inputmode="numeric" maxlength="8" style="max-width:180px">
+              <div class="ktn-zip__out">
+                <label class="ktn-zip__item"><span class="ktn-zip__lb">都道府県</span><input class="p211-input" id="p311Pref" type="text" readonly tabindex="-1" placeholder="自動で入ります"></label>
+                <label class="ktn-zip__item"><span class="ktn-zip__lb">市区町村・町名</span><input class="p211-input" id="p311City" type="text" readonly tabindex="-1" placeholder="自動で入ります"></label>
+              </div>
+              <p class="p90cm-err" id="p311ZipNote"></p>
             </div>
 
             <div class="p211-field">
-              <label class="p211-label" for="p311Pref">都道府県<span class="ktn-req">必須</span></label>
-              <input class="p211-input" id="p311Pref" type="text" value="東京都" style="max-width:220px">
-            </div>
-
-            <div class="p211-field">
-              <label class="p211-label" for="p311Addr">市区町村・番地以降<span class="ktn-req">必須</span></label>
-              <input class="p211-input" id="p311Addr" type="text" value="渋谷区神宮前 1-2-3 ○○ビル 4F" placeholder="市区町村から建物名・階数までご記入ください。">
+              <label class="p211-label" for="p311Addr">番地・建物名（任意）</label>
+              <input class="p211-input" id="p311Addr" type="text" value="1-2-3 ○○ビル 4F" placeholder="例：1-2-3 ○○ビル 4F">
+              <p class="p211-help">LIAISON+（作品の販売）をお使いになる場合は必要です（お申し込みのときにご入力いただけます）。</p>
             </div>
 
             <div class="p211-field">
@@ -519,7 +521,8 @@
 
 <script src="kotennavi-common.js"></script>
 <script src="kotennavi-pages.js"></script>
-<script>KTN.init({ page: 'p3-11', role: 'creator' });</script>
+<script>KTN.init({ page: 'p3-11', role: 'creator' });
+KTN.bindZip(document.getElementById('p311Zip'), document.getElementById('p311Pref'), document.getElementById('p311City'), document.getElementById('p311ZipNote'));   /* 郵便番号から都道府県・市区町村・町名（2026-11-16） */</script>
 <script>
 /* ── リエゾンプラス本人確認状況ブロック：未申請／審査中／承認済デモ切替 ── */
 function setLpMode(mode) {

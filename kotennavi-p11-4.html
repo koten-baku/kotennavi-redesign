@@ -488,6 +488,13 @@
                 <div class="p114-identity-readout__row"><dt id="p114IdLabel3">住所</dt><dd id="p114IdVal3">—</dd></div>
                 <div class="p114-identity-readout__row"><dt id="p114IdLabel4">電話番号</dt><dd id="p114IdVal4">—</dd></div>
               </dl>
+              <!-- 番地・建物名（2026-11-16 ユーザー指示）：クリエイター機能の申込では郵便番号だけを入れてもらっている（住所は都道府県〜町名まで）。
+                   作品の販売では特定商取引法の表示と本人確認のために番地・建物名までの住所が要るので、ここでお願いする。入れた内容はクリエイター基本情報にも保存する -->
+              <div class="p211-field" style="margin-top:14px">
+                <label class="p211-label" for="p114IdAddrRest">番地・建物名<span class="ktn-req">必須</span></label>
+                <input class="p211-input" id="p114IdAddrRest" type="text" placeholder="例：1-2-3 ○○ビル 4F">
+                <p class="p211-help">作品の販売では、特定商取引法に基づく表示と本人確認のため、番地・建物名までのご住所が必要です。上の住所（郵便番号〜町名）に続けてご入力ください。ご入力いただいた内容は、クリエイター基本情報にも保存されます。</p>
+              </div>
               <a class="ktn-guide-link" id="p114IdEditLink" href="./kotennavi-p3-11.html">本人情報を変更する（クリエイター基本情報の編集） →</a>
             </div>
           </div>
@@ -777,7 +784,7 @@ var p114CurrentMode = 'form';
 /* 申込者ストリップ（ktn-mgmt-context・p3-11型）のロール別表示データ */
 var P114_CTX = {
   creator: { media: 'ktn-mgmt-context__media--creator', bg: 'linear-gradient(135deg,#7ab4cc,#4a8099)', char: 'T', badgeCls: 'cb-creator', badgeLabel: 'CREATOR', name: '田中 透',          meta: '絵画・現代美術 · 東京', href: 'kotennavi-p3.html', view: 'クリエイターページへ →',
-    id: [['本名','田中 透（タナカ トオル）'],['生年月日','1988年5月14日'],['住所','〒150-0001 東京都渋谷区神宮前1-2-3 ○○ビル 4F'],['電話番号','090-1234-5678']],
+    id: [['本名','田中 透（タナカ トオル）'],['生年月日','1988年5月14日'],['住所','〒150-0001 東京都渋谷区神宮前'],['電話番号','090-1234-5678']],
     editHref: 'kotennavi-p3-11.html', term: 'クリエイター基本情報' },
   gallery: { media: 'ktn-mgmt-context__media--gallery', bg: 'linear-gradient(135deg,#d8bfa4,#a8794f)', char: 'G', badgeCls: 'cb-gallery', badgeLabel: 'GALLERY', name: 'Gallery SOIL 渋谷', meta: '現代美術 · 渋谷',      href: 'kotennavi-p4.html', view: 'ギャラリーページへ →' }
   /* gallery は責任者情報を読み取り専用で引き継がず、申込のたびに .p114-gallery-section 内のフォームへ都度入力する（ご担当者と責任者が別人の場合があるため。2026-07-26確定） */

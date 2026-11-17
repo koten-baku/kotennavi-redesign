@@ -14210,11 +14210,17 @@ a.ktn-coupon--link:hover{opacity:.86}
 .ktn-coupon--print .ktn-coupon__svc{border-left-color:#231815;background:none}
 .ktn-coupon--print .ktn-coupon__svc-label{font-family:var(--fm);font-size:.6rem;font-weight:700;letter-spacing:.1em}
 
-/* ══ P90-21 対応案件・P90-21-1 対応案件の詳細・P90-22 更新の記録（2026-10-28 新設・handoff 追174-350）══
+/* ══ P90-21 お問合わせ・報告・P90-21-1 お問合わせ・報告の詳細・P90-22 更新の記録（2026-10-28 新設・handoff 追174-350）══
    一覧・詳細の骨組み（タブ・表・見出し・届いた内容の箱・返信のパネル・ボタン行）は P90-2／P90-2-1 の .p902-* をそのまま使う。
    ここには、このページだけの部分（件名の折り返し・対象の行・担当と状態・履歴・見た・対応待ちの数）だけを書く。 */
-.p9021-table td.p9021-cell--subject{white-space:normal;min-width:220px;line-height:1.6}
+.p9021-table td.p9021-cell--subject{white-space:normal;min-width:180px;line-height:1.6}
+.p9021-table td.p9021-cell--type{white-space:normal;min-width:4.5em;max-width:7em}
 .p9021-table td.p9021-cell--subject .ktn-review-status{margin-right:4px;vertical-align:1px}
+/* 送信元ページ（P90-21 の件名の下段・P90-21-1・2026-11-16） */
+.p9021-th-sub{display:block;font-size:.68rem;font-weight:400;color:var(--muted)}
+.p9021-src__type{margin-right:6px;font-weight:700}
+.p9021-src__path{display:block;font-family:var(--fm);font-size:.66rem;word-break:break-all}
+.p9021-target__ids{display:flex;flex-wrap:wrap;gap:4px 16px;margin:4px 0 0;font-family:var(--fm);font-size:.76rem;color:var(--muted);word-break:break-all}
 .p9021-type{font-family:var(--fn);font-size:.74rem;font-weight:600;color:var(--muted)}
 .p9021-text{margin:14px 0 16px;padding-top:12px;border-top:1px dashed var(--border);font-family:var(--fn);font-size:.84rem;line-height:1.85;color:var(--ink);white-space:pre-wrap}
 .p9021-target__name{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:0 0 10px;font-family:var(--fs);font-size:.92rem;font-weight:600;color:var(--ink)}
@@ -14222,6 +14228,7 @@ a.ktn-coupon--link:hover{opacity:.86}
 .p9021-target__acts{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
 .p9021-state{display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px}
 .p9021-history{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px}
+.p9021-handlers{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;margin:0 0 8px;font-size:.8rem;color:var(--ink)}
 .p9021-history__item{display:flex;flex-wrap:wrap;gap:4px 12px;font-family:var(--fn);font-size:.78rem;line-height:1.6;color:var(--ink)}
 .p9021-history__at{font-family:var(--fm);font-size:.72rem;color:var(--muted);min-width:118px}
 .p9021-history__who{color:var(--muted);min-width:120px}
@@ -14290,6 +14297,8 @@ a.p90cm-sub{color:var(--accent)}
 /* P90 の管理者メニューのカードの未対応の件数（2026-10-29） */
 .p90-card-count{display:inline-block;margin-left:8px;padding:1px 8px;border-radius:10px;font-family:var(--fn);font-size:.66rem;font-weight:700;line-height:1.6;vertical-align:2px;color:#fff;background:#3a4a5a}
 .p90-card-count--urgent{background:#b43c14;margin-left:4px}
+/* 見るだけのページの印（P90 のカード・2026-11-16） */
+.p90-card-ro{display:inline-block;margin-left:8px;padding:0 7px;border:1px solid var(--border);border-radius:10px;font-family:var(--fn);font-size:.66rem;font-weight:600;line-height:1.6;vertical-align:2px;color:var(--muted)}
 
 /* ── P90-4 SNS 告知文の作成（2026-10-29 作り直し） ── */
 .p904-bar{display:flex;flex-wrap:wrap;align-items:flex-end;gap:10px}
@@ -14430,6 +14439,12 @@ a.p905-who--link{color:var(--accent);text-decoration:underline;text-underline-of
 .p9011-sws__head{margin:0;font-size:.78rem;font-weight:700;color:var(--ink)}
 .p9011-sw{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:.84rem;color:var(--ink)}
 .p9011-sw__ops{display:flex;gap:8px;flex-shrink:0}
+/* 郵便番号から入る住所の一部（P11-2・P3-11・2026-11-16）：読み取り専用の2つの欄を横に */
+.ktn-zip__out{display:flex;flex-wrap:wrap;gap:8px 12px;margin-top:8px}
+.ktn-zip__item{display:flex;flex-direction:column;gap:3px;flex:1 1 180px}
+.ktn-zip__lb{font-size:.72rem;color:var(--muted)}
+.ktn-zip__item .p211-input[readonly]{background:var(--paper);color:var(--ink)}
+.ktn-zip .p90cm-err:empty{display:none}
 /* P90-1-1：LIAISON+ での購入（ユーザーの機能）と LIAISON+（出品・販売）の区切り・停止のモーダルのメールの送信（2026-11-15） */
 .p9011-sep{margin:14px 0;border:0;border-top:1px solid var(--border)}
 .p901-rv-mail__foot{display:flex;align-items:center;justify-content:flex-end;gap:10px;margin:8px 0 0}
@@ -14736,13 +14751,13 @@ body:not(.ktn-page-new) [data-new-only]{display:none !important}
 }
 /* P90-13：内訳の開け閉めは行の下の段（P90-12 の「出品作品」と同じ形・2026-11-09）。上の行との線を消して1つの取引に見せる */
 /* 行の下のボタン（P90-13「取引の詳細と操作」・P90-15／P90-16「取引の記録」〔2026-11-15〕） */
-.p90-13-page .p315-archive-table tr.p9013-has-trow > td,.p90-15-page .p315-archive-table tr.p9013-has-trow > td,.p90-16-page .p315-archive-table tr.p9013-has-trow > td{border-bottom:0}
-.p90-13-page .p315-archive-table .p9013-trow[hidden],.p90-15-page .p315-archive-table .p9013-trow[hidden],.p90-16-page .p315-archive-table .p9013-trow[hidden]{display:none}
-.p90-13-page .p315-archive-table .p9013-trow > td,.p90-15-page .p315-archive-table .p9013-trow > td,.p90-16-page .p315-archive-table .p9013-trow > td{padding-top:0;padding-bottom:10px}
-.p90-15-page .p315-archive-table .p9013-trow .p9013-bd-btn,.p90-16-page .p315-archive-table .p9013-trow .p9013-bd-btn,.p90-13-page .p315-archive-table .p9013-trow .p9013-bd-btn{margin-top:0;padding:4px 12px;border-radius:4px;background:#faf7f1;border:1px solid #ece4d6;color:var(--ink);font-weight:600}
-.p90-13-page .p315-archive-table .p9013-trow .p9013-bd-btn:hover,.p90-15-page .p315-archive-table .p9013-trow .p9013-bd-btn:hover,.p90-16-page .p315-archive-table .p9013-trow .p9013-bd-btn:hover{border-color:#d9ccb4}
-.p90-13-page .p315-archive-table .p9013-trow .p9013-bd-btn[aria-expanded="true"],.p90-15-page .p315-archive-table .p9013-trow .p9013-bd-btn[aria-expanded="true"],.p90-16-page .p315-archive-table .p9013-trow .p9013-bd-btn[aria-expanded="true"]{border-bottom-left-radius:0;border-bottom-right-radius:0}
-@media (max-width:540px){.p90-13-page .p315-archive-table .p9013-trow > td,.p90-15-page .p315-archive-table .p9013-trow > td,.p90-16-page .p315-archive-table .p9013-trow > td{display:block;padding:4px 0 8px;text-align:left}.p90-13-page .p315-archive-table .p9013-trow > td::before,.p90-15-page .p315-archive-table .p9013-trow > td::before,.p90-16-page .p315-archive-table .p9013-trow > td::before{display:none}}
+.p90-13-page .p315-archive-table tr.p9013-has-trow > td,.p90-15-page .p315-archive-table tr.p9013-has-trow > td,.p90-16-page .p315-archive-table tr.p9013-has-trow > td,.p90-21-page .p315-archive-table tr.p9013-has-trow > td{border-bottom:0}
+.p90-13-page .p315-archive-table .p9013-trow[hidden],.p90-15-page .p315-archive-table .p9013-trow[hidden],.p90-16-page .p315-archive-table .p9013-trow[hidden],.p90-21-page .p315-archive-table .p9013-trow[hidden]{display:none}
+.p90-13-page .p315-archive-table .p9013-trow > td,.p90-15-page .p315-archive-table .p9013-trow > td,.p90-16-page .p315-archive-table .p9013-trow > td,.p90-21-page .p315-archive-table .p9013-trow > td{padding-top:0;padding-bottom:10px}
+.p90-21-page .p315-archive-table .p9013-trow .p9013-bd-btn,.p90-15-page .p315-archive-table .p9013-trow .p9013-bd-btn,.p90-16-page .p315-archive-table .p9013-trow .p9013-bd-btn,.p90-13-page .p315-archive-table .p9013-trow .p9013-bd-btn{margin-top:0;padding:4px 12px;border-radius:4px;background:#faf7f1;border:1px solid #ece4d6;color:var(--ink);font-weight:600}
+.p90-13-page .p315-archive-table .p9013-trow .p9013-bd-btn:hover,.p90-15-page .p315-archive-table .p9013-trow .p9013-bd-btn:hover,.p90-16-page .p315-archive-table .p9013-trow .p9013-bd-btn:hover,.p90-21-page .p315-archive-table .p9013-trow .p9013-bd-btn:hover{border-color:#d9ccb4}
+.p90-13-page .p315-archive-table .p9013-trow .p9013-bd-btn[aria-expanded="true"],.p90-15-page .p315-archive-table .p9013-trow .p9013-bd-btn[aria-expanded="true"],.p90-16-page .p315-archive-table .p9013-trow .p9013-bd-btn[aria-expanded="true"],.p90-21-page .p315-archive-table .p9013-trow .p9013-bd-btn[aria-expanded="true"]{border-bottom-left-radius:0;border-bottom-right-radius:0}
+@media (max-width:540px){.p90-13-page .p315-archive-table .p9013-trow > td,.p90-15-page .p315-archive-table .p9013-trow > td,.p90-16-page .p315-archive-table .p9013-trow > td,.p90-21-page .p315-archive-table .p9013-trow > td{display:block;padding:4px 0 8px;text-align:left}.p90-13-page .p315-archive-table .p9013-trow > td::before,.p90-15-page .p315-archive-table .p9013-trow > td::before,.p90-16-page .p315-archive-table .p9013-trow > td::before,.p90-21-page .p315-archive-table .p9013-trow > td::before{display:none}}
 /* 取引の記録（P90-15・P90-16・2026-11-15）：ボタンに回数と注意の印、開くと注意の状態・種類ごとの回数・記録（注意の対象に印） */
 .p90warn-btn__n{margin-left:6px;font-family:var(--fm);font-weight:600}
 .p9013-bd-btn .ktn-review-status{margin-left:8px}
@@ -14782,7 +14797,7 @@ body.is-admin-view [aria-disabled="true"]{opacity:.45;cursor:not-allowed}
 .p9013-sq,.p9013-bq{flex:1 1 120px}   /* 出品者の NID・購入者の UID */
 .p9013-nq{flex:2 1 260px}   /* 名前（展覧会・作品・出品者・購入者） */
 .p9013-q .p319-filter__sel,.p9013-qn .p319-filter__sel,.p9013-exq .p319-filter__sel,.p9013-wq .p319-filter__sel,.p9013-sq .p319-filter__sel,.p9013-bq .p319-filter__sel,.p9013-nq .p319-filter__sel{width:100%;min-width:0;box-sizing:border-box}   /* 取引番号・申込NID・展覧会の NID・URL を1行に（2026-11-10） */
-/* P90-13 取引の詳細の中の「事務局の操作」・対応案件・事務局の対応の記録（2026-11-10） */
+/* P90-13 取引の詳細の中の「事務局の操作」・お問合わせ・報告・事務局の対応の記録（2026-11-10） */
 .p9013-acts{margin-top:14px;padding-top:12px;border-top:1px dashed var(--border)}
 .p9013-acts__btns{display:flex;flex-wrap:wrap;gap:6px 8px;margin:0 0 12px}
 .p9013-cases{margin:0 0 12px;font-size:.8rem}

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>対応案件 — 管理者 | 個展なび</title>
+  <title>お問合わせ・報告 — 管理者 | 個展なび</title>
   <meta name="robots" content="noindex,nofollow">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Montserrat:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600;700&family=Bodoni+Moda:wght@400;600&display=swap" rel="stylesheet">
@@ -109,7 +109,7 @@
 
         <!-- ページタイトル -->
         <div class="ktn-mgmt-head">
-          <h2 class="ktn-mgmt-head__title">対応案件</h2>
+          <h2 class="ktn-mgmt-head__title">お問合わせ・報告</h2>
           <p class="ktn-mgmt-head__en">CASES</p>
           <p class="ktn-mgmt-head__desc">お問合わせ・ご要望・問題報告・修正依頼・取引の相談と、発送期限の超過・キャンペーンの上限のお知らせです。LIAISON+ のページから届いたものは「LIAISON+」のタブに分けています。至急のものが一番上に並びます。</p>
         </div>
@@ -134,27 +134,28 @@
               <label class="p319-filter">
                 <span class="p319-filter__label">状態</span>
                 <select class="p319-filter__sel" id="p9021FilterStatus">
-                  <option value="open">対応中（完了を除く）</option>
+                  <option value="">すべて</option>
                   <option value="new">未対応</option>
                   <option value="doing">対応中</option>
                   <option value="waiting">返信待ち</option>
-                  <option value="done">完了</option>
-                  <option value="">すべて</option>
                 </select>
               </label>
+              <!-- 完了したものは、ふだんは出さない。このチェックで一覧に足す（2026-11-16 ユーザー指示＝旧「対応中（完了を除く）」の選択肢をやめた） -->
+              <label class="p319-filter p90warn-only"><span class="p319-filter__label">完了</span><span class="p90warn-only__box"><input type="checkbox" id="p9021InclDone"> 完了したものも表示</span></label>
               <label class="p319-filter">
-                <span class="p319-filter__label">担当</span>
-                <select class="p319-filter__sel" id="p9021FilterWho"><option value="">すべて</option><option value="__none">未割当</option></select>
+                <span class="p319-filter__label">対応した管理者</span>
+                <select class="p319-filter__sel" id="p9021FilterWho"><option value="">すべて</option><option value="__none">まだいない</option></select>
               </label>
             </div>
             <p class="ktn-count ktn-count--result" id="p9021Count"></p>
           </div>
           <div class="p315-archive-table-wrap">
-            <table class="p315-archive-table p902-table p9021-table" aria-label="対応案件">
-              <thead><tr><th>受付日時</th><th>種類</th><th>件名</th><th>送信者</th><th>担当</th><th>状態</th></tr></thead>
+            <table class="p315-archive-table p902-table p9021-table" aria-label="お問合わせ・報告">
+              <thead><tr><th>受付日時</th><th>種類</th><th>件名<span class="p9021-th-sub">送信元ページ</span></th><th>送信者</th><th>状態</th><th>操作</th></tr></thead>
               <tbody id="p9021List"></tbody>
             </table>
           </div>
+          <nav class="ktn-pagination" id="p9021Pagination" aria-label="ページ送り" hidden></nav>
           <div class="p319-empty" id="p9021Empty" hidden><p class="p319-empty__msg">該当する案件はありません。</p></div>
         </div>
 
@@ -170,7 +171,7 @@
 
 <nav class="ktn-bottom-nav" id="ktnBottomNav"><div class="ktn-bottom-nav__inner" id="ktnBottomNavInner"></div></nav>
 
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Top","item":"https://koten-navi.com/"},{"@type":"ListItem","position":2,"name":"管理者","item":"https://koten-navi.com/p90"},{"@type":"ListItem","position":3,"name":"対応案件"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Top","item":"https://koten-navi.com/"},{"@type":"ListItem","position":2,"name":"管理者","item":"https://koten-navi.com/p90"},{"@type":"ListItem","position":3,"name":"お問合わせ・報告"}]}</script>
 
 <script src="./kotennavi-common.js"></script>
 <script src="./kotennavi-pages.js"></script>

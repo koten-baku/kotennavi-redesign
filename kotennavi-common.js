@@ -1070,6 +1070,7 @@ const ICONS = {
   /* ホーム: 個展なびロゴの「額縁+縦ライン」をモチーフにしたオリジナルアイコン */
   home: `<?xml version="1.0" encoding="UTF-8"?><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 102.05 102.05" width="28" height="28"><defs><style>.cls-1{fill:currentColor;}</style></defs><path class="cls-1" d="M0,0v102.05h80.09c-1.22-.8-2.57-2.87-3.34-4.33-2.48-5.91-4.85-14.23-13.31-20.15-1.9-1.23-2.03-2-1.94-2.48.11-.83.82-1.52,2.3-1.3,11.09,1.95,15.22,3.96,21.07,7.61,7.85,5.36,9.57,10.76,9.65,14.09.15,2.3-.18,5.11-2.61,6.56h10.14V0H0Z"/></svg>`,
   login: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>`,
+  logout: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>`,
   register: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>`,
 };
 
@@ -1149,6 +1150,13 @@ function handleNav(e, page, url) {
   renderAll();
 }
 
+function ktnLogout(e) {
+  if (e) e.preventDefault();
+  if (window.KTN && KTN.toast) KTN.toast('ログアウトしました');
+  setTimeout(function () { location.href = './kotennavi-p1.html'; }, 600);   /* デモ：トップへ。本番はログアウトの API のあと */
+}
+window.ktnLogout = ktnLogout;
+
 function renderSidebar() {
   const roleNav = document.getElementById('ktnRoleNav');
   const noticeDot = document.getElementById('ktnNoticeDot');
@@ -1170,12 +1178,17 @@ function renderSidebar() {
   } else {
     /* お知らせの青い点：ログイン中で、あなた宛またはニュースに未読があるときだけ（KTN.notice・docs/notifications.md） */
     if (noticeDot) noticeDot.style.display = (window.KTN && KTN.notice && KTN.notice.hasUnread(curRole)) ? 'block' : 'none';
-    const roles = ['user'];
+    /* 管理者はユーザーのロールを持たない（ウォッチ・興味あり！・チェックイン・購入などのユーザーの機能は使わない・2026-11-16 ユーザー指示）。
+       myページのアイコンの代わりにログアウトを置く */
+    const roles = curRole === 'admin' ? ['admin'] : ['user'];
     if (curRole === 'user+creator') roles.push('creator');
     else if (curRole === 'user+gallery') roles.push('gallery');
-    else if (curRole === 'admin') roles.push('admin');
 
-    if (roleNav) roleNav.innerHTML = roles.map(r => {
+    if (roleNav) roleNav.innerHTML = (curRole === 'admin' ? `
+      <a href="kotennavi-p1.html" class="ktn-sidebar__item" onclick="ktnLogout(event)">
+        <div class="ktn-sidebar__icon">${ICONS.logout}</div>
+        <span class="ktn-sidebar__label">ログアウト</span>
+      </a>` : '') + roles.map(r => {
       const rd = ktnRoleDef(r);
       /* やること（LIAISON+ の取引で自分の番）の数字。myページ＝購入者として、クリエイター・ギャラリー＝出品者として
          （docs/notifications.md）。数字があるとき押すと一覧が開く（ktnRoleNavClick）。旧ヘッダーの赤いボタンは廃止したので
@@ -1244,7 +1257,14 @@ function renderBottomNav() {
     const ur = KTN_ROLES['user'];
     /* やること（購入者として）の数字。サイドバーと同じ（docs/notifications.md） */
     const urBadge = ktnTodoBadge('user', 'ktn-bottom-nav__badge');
-    html += `
+    /* 管理者はユーザーのロールを持たない＝myページの代わりにログアウト（2026-11-16） */
+    if (curRole === 'admin') html += `
+      <a href="kotennavi-p1.html" class="ktn-bottom-nav__item" onclick="ktnLogout(event)">
+        <div class="ktn-bottom-nav__icon">${ICONS.logout}</div>
+        <span class="ktn-bottom-nav__label">ログアウト</span>
+      </a>
+    `;
+    else html += `
       <a href="${ur.url}" class="ktn-bottom-nav__item" data-page="${ur.page}" data-todo-role="user" onclick="ktnRoleNavClick(event,'user','${ur.page}','${ur.url}')">
         <div class="ktn-bottom-nav__role" style="background:${ur.bg};border-radius:9px">${ur.iconSm}</div>
         ${urBadge}
@@ -2093,7 +2113,7 @@ function ktnAdminOwnerGate(deny) {
    <div class="ktn-admin-note ktn-admin-ops" data-admin-ops="展覧会" data-name="…" data-status="public" data-back="…" hidden></div>
    data-status＝public／hidden（data-status-confirm があれば、P2-11 のデモの「確認前」＝確認待ちとして非公開を出さない）。
    出すのは編集のときだけ（新規・クローンでは出さない）。削除は理由のモーダル（KTN.adminDelete＝A-D-01J）のあと、元の画面へ戻る
-   （?back=…＝P90-21 の対応案件などから来たとき／無ければ data-back＝P90-3 のそのタブ）。保存していない変更があるときは先に知らせる。 */
+   （?back=…＝P90-21 のお問合わせ・報告などから来たとき／無ければ data-back＝P90-3 のそのタブ）。保存していない変更があるときは先に知らせる。 */
 var ktnEditDirty = false;
 document.addEventListener('input', function (e) {
   if (e.target.closest && e.target.closest('.ktn-mgmt-wrap') && !e.target.closest('[data-admin-ops]')) ktnEditDirty = true;
@@ -2411,8 +2431,8 @@ const PAGES = {
   'p90-20': { n: '管理者-料率・キャンペーン管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['料率・キャンペーン管理', null]] },
   'p90-18': { n: '管理者-お知らせ・やることの文言管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['お知らせ・やることの文言管理', null]] },
   'p90-24': { n: '管理者-Q&A 管理', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['Q&A 管理', null]] },
-  'p90-21': { n: '管理者-対応案件', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['対応案件', null]] },
-  'p90-21-1': { n: '管理者-対応案件の詳細', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['対応案件', 'kotennavi-p90-21.html'], ['対応案件の詳細', null]] },
+  'p90-21': { n: '管理者-お問合わせ・報告', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['お問合わせ・報告', null]] },
+  'p90-21-1': { n: '管理者-お問合わせ・報告の詳細', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['お問合わせ・報告', 'kotennavi-p90-21.html'], ['お問合わせ・報告の詳細', null]] },
   'p90-22': { n: '管理者-更新の記録', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['更新の記録', null]] },
   'p90-29': { n: '管理者-管理者マニュアル', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['管理者マニュアル', null]] },
   'p90-28': { n: '管理者-操作の記録', bc: [['Top', '/'], ['管理者', 'kotennavi-p90.html'], ['操作の記録', null]] },
@@ -3978,9 +3998,9 @@ KTN.P10_PREF_SLUGS = {
 KTN.ADMIN_LEVELS = { E: { n: 1, label: '編集・問合せ' }, L: { n: 2, label: 'LIAISON+ 対応' }, A: { n: 3, label: 'admin' } };
 KTN.ADMIN_PAGE = {
   'p90': 'E', 'p90-29': 'E', 'p90-2': 'E', 'p90-2-1': 'E', 'p90-4': 'E', 'p90-5': 'E', 'p90-7': 'E', 'p90-8': 'E', 'p90-21': 'E', 'p90-21-1': 'E',
-  'p90-10': 'L', 'p90-12': 'L', 'p90-13': 'L', 'p90-14': 'L', 'p90-15': 'L', 'p90-16': 'L', 'p90-20': { view: 'L', edit: 'A' },
+  'p90-12': 'L', 'p90-13': 'L', 'p90-14': 'L', 'p90-15': 'L', 'p90-16': 'L', 'p90-20': { view: 'L', edit: 'A' },
   'p90-3': 'E',
-  'p90-1': 'A', 'p90-1-1': 'A', 'p90-23': 'A', 'p90-6': 'A', 'p90-9': 'A', 'p90-11': 'A', 'p90-11-1': 'A', 'p90-17': 'A', 'p90-18': 'A', 'p90-24': 'A', 'p90-19': 'A', 'p90-22': 'A', 'p90-28': 'A', 'p60-21': 'A', 'p61-11': 'A'
+  'p90-1': 'A', 'p90-10': 'A', 'p90-1-1': 'A', 'p90-23': 'A', 'p90-6': 'A', 'p90-9': 'A', 'p90-11': 'A', 'p90-11-1': 'A', 'p90-17': 'A', 'p90-18': 'A', 'p90-24': 'A', 'p90-19': 'A', 'p90-22': 'A', 'p90-28': 'A', 'p60-21': 'A', 'p61-11': 'A'
 };
 KTN.adminLevel = function () {
   try { var v = sessionStorage.getItem('ktn-admin-level'); if (KTN.ADMIN_LEVELS[v]) return v; } catch (e) {}
@@ -4080,7 +4100,7 @@ KTN.adminDelete = function (o) {
 /* ══ 非公開の理由（2026-11-01・handoff 追174-377）══
    非公開にするときは、削除と同じ形のモーダルで理由（選ぶ＋詳しい内容・どちらも必須）を書く。理由は操作の記録（P90-28）に残る。
    メールは送らない（削除の A-D-01J とは違う）。公開に戻すときは理由を聞かない。
-   使う場所：P90-3・P90-5・P90-7・P90-8・P90-23 の一覧と、編集画面の「公開の状態と削除」。P90-21 の一時非公開は、対応案件の受付番号と報告の理由が自動で入る */
+   使う場所：P90-3・P90-5・P90-7・P90-8・P90-23 の一覧と、編集画面の「公開の状態と削除」。P90-21 の一時非公開は、受付番号と報告の理由が自動で入る */
 KTN.HIDE_REASONS = ['問題報告への対応（確かめるあいだ一時的に）', '掲載の方針に反する', '掲載の対象者からの依頼', '投稿者からの依頼', 'その他'];
 KTN.adminHide = function (o) {
   KTN.adminDelete({ kind: o.kind, name: o.name, verb: '非公開', title: (o.kind || '') + '「' + (o.name || '') + '」を非公開にしますか？', label: '非公開', okLabel: '非公開にする', danger: false,
@@ -4634,6 +4654,7 @@ function ktnCheckinReasonLabel(id) {
 /* ── openCheckinModal（旧実装を上書き） ── */
 function openCheckinModal() {
   var role = (window.ktnState && window.ktnState.role) || 'guest';
+  if (KTN.adminBlocked && KTN.adminBlocked()) return;
   var isLoggedIn = (role !== 'guest');
 
   /* ゲストは共通ログインモーダル（#ktnAuthModal）に一本化 */
@@ -5231,6 +5252,32 @@ window.closeWatcherModal = KTN.cta.closeWatcherModal;
 /* ══════════════════════════════════════════════════════
    KTN.action — Watch / Interest / Check-in 共通アクション
 ══════════════════════════════════════════════════════ */
+/* 管理者はユーザーのロールを持たない（2026-11-16）：ウォッチ・興味あり！・チェックイン・購入の申込を押したら「管理者は使えません」と出して止める。
+   true を返したら呼び出し側は何もしない */
+/* 郵便番号から住所の一部（都道府県・市区町村・町名）を入れる（2026-11-16 ユーザー指示＝クリエイターは住所の入力に抵抗を感じる人が多いので、
+   クリエイター機能の申込〔P11-2〕と基本情報〔P3-11〕では郵便番号だけを入れてもらい、番地・建物名は LIAISON+ の申込〔P11-4〕のときにお願いする）。
+   KTN.bindZip(zip, pref, city, note)：郵便番号が7桁になったら引いて入れる（見つからなければ空にして note に一言）。
+   デモの表（本番は郵便番号のデータ〔日本郵便の郵便番号データなど〕から引く） */
+KTN.ZIP_DEMO = { '1500001': ['東京都', '渋谷区神宮前'], '1500002': ['東京都', '渋谷区渋谷'], '1000001': ['東京都', '千代田区千代田'], '1600022': ['東京都', '新宿区新宿'],
+  '2310023': ['神奈川県', '横浜市中区山下町'], '4600008': ['愛知県', '名古屋市中区栄'], '5300001': ['大阪府', '大阪市北区梅田'], '6008216': ['京都府', '京都市下京区東塩小路町'],
+  '8100001': ['福岡県', '福岡市中央区天神'], '0600001': ['北海道', '札幌市中央区北一条西'] };
+KTN.zipLookup = function (zip) { var d = String(zip || '').replace(/\D/g, ''); return d.length === 7 ? (KTN.ZIP_DEMO[d] || null) : null; };
+KTN.bindZip = function (zip, pref, city, note) {
+  if (!zip) return;
+  function run() {
+    var d = zip.value.replace(/\D/g, ''), hit = KTN.zipLookup(d);
+    if (pref) pref.value = hit ? hit[0] : ''; if (city) city.value = hit ? hit[1] : '';
+    if (note) note.textContent = d.length < 7 ? '' : hit ? '' : 'この郵便番号の住所が見つかりませんでした。番号をお確かめください（デモでは 150-0001・100-0001・530-0001 などで試せます）。';
+  }
+  zip.addEventListener('input', run); run();
+};
+
+KTN.adminBlocked = function () {
+  if (((window.ktnState || {}).role) !== 'admin') return false;
+  if (KTN.toast) KTN.toast('管理者は使えません');
+  return true;
+};
+
 KTN.action = (function () {
 
   var ACTION_LABELS = {
@@ -5282,6 +5329,7 @@ KTN.action = (function () {
 
   function handle(btn, action) {
     if (window.ktnState.role === 'guest') { show(action); return; }
+    if (KTN.adminBlocked()) return;
     var isOn = btn.classList.toggle('on');
     var tn = Array.from(btn.childNodes).find(function (n) {
       return n.nodeType === 3 && n.textContent.trim();

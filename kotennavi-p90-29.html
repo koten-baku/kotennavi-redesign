@@ -131,7 +131,7 @@
       </table>
       <h3 class="p70-subhead">共通の決まり</h3>
       <ol class="p70-step-list">
-        <li class="p70-step-list__item">管理者の操作はすべて操作の記録（P90-28）に残る。削除・非公開・強制退会・なりすましログインなど理由が必須の操作は、あとから「なぜ」を説明できるように具体的に書く（対応案件の受付番号があれば添える）</li>
+        <li class="p70-step-list__item">管理者の操作はすべて操作の記録（P90-28）に残る。削除・非公開・強制退会・なりすましログインなど理由が必須の操作は、あとから「なぜ」を説明できるように具体的に書く（受付番号があれば添える）</li>
         <li class="p70-step-list__item">削除は理由のモーダルを通す。削除すると、理由を書いたメールが管理者あてに届く</li>
         <li class="p70-step-list__item">非公開は削除ではない。対応を取り消せるよう、非公開の理由を書く</li>
         <li class="p70-step-list__item">掲載者への照会・連絡では、報告者の個人情報を伝えない</li>
@@ -151,7 +151,7 @@
       <nav class="p70-toc p9029-index" aria-label="編集・問合せの業務の目次">
         <div class="p70-toc__title">編集・問合せの業務 — Index</div>
         <ol class="p70-toc__list">
-          <li class="p70-toc__item"><span class="p70-toc__num">E1</span><a class="p70-toc__link" href="#e-case">対応案件に対応する（一般）</a></li>
+          <li class="p70-toc__item"><span class="p70-toc__num">E1</span><a class="p70-toc__link" href="#e-case">お問合わせ・報告に対応する（一般）</a></li>
           <li class="p70-toc__item"><span class="p70-toc__num">E2</span><a class="p70-toc__link" href="#e-report">問題報告に対応する</a></li>
           <li class="p70-toc__item"><span class="p70-toc__num">E3</span><a class="p70-toc__link" href="#e-fix">修正依頼に対応する</a></li>
           <li class="p70-toc__item"><span class="p70-toc__num">E4</span><a class="p70-toc__link" href="#e-takedown">掲載の対象者からの削除の依頼に対応する</a></li>
@@ -164,17 +164,20 @@
         </ol>
       </nav>
 
-      <h3 class="p70-subhead" id="e-case">E1 対応案件に対応する（一般）</h3>
+      <h3 class="p70-subhead" id="e-case">E1 お問合わせ・報告に対応する（一般）</h3>
       <div class="p70-dl p70-dl--ja">
         <div class="p70-dl__item"><dt class="p70-dl__dt">担当</dt><dd class="p70-dl__dd">E</dd></div>
-        <div class="p70-dl__item"><dt class="p70-dl__dt">使う画面</dt><dd class="p70-dl__dd">P90-21 対応案件の「一般」タブ → P90-21-1 対応案件の詳細</dd></div>
+        <div class="p70-dl__item"><dt class="p70-dl__dt">使う画面</dt><dd class="p70-dl__dd">P90-21 お問合わせ・報告の「一般」タブ → P90-21-1 お問合わせ・報告の詳細</dd></div>
         <div class="p70-dl__item"><dt class="p70-dl__dt">対象</dt><dd class="p70-dl__dd">お問合わせ（P60-11）・ご要望（P60-12）・問題報告（P60-13）・修正依頼（P60-14）</dd></div>
       </div>
       <ol class="p70-step-list">
-        <li class="p70-step-list__item">至急のものが一番上に並ぶ。優先度は書き方ではなく理由で決まる（プライバシーに関わる報告は至急）</li>
-        <li class="p70-step-list__item">案件を開き、担当を自分にする</li>
-        <li class="p70-step-list__item">種類ごとに E2〜E4 の手順で対応する。お問合わせ・ご要望は内容に応じて返信する</li>
-        <li class="p70-step-list__item">返信・対応の内容を履歴に残し、状態を完了にする</li>
+        <li class="p70-step-list__item">一覧の見方：至急のものが一番上、そのあと受付の新しい順に、20件ずつ並ぶ。優先度は書き方ではなく理由で決まる（プライバシーに関わる報告は至急）。件名の下に送信元ページ（種類・名前・URL）が出る。ページを指定せずに送られたもの（フッターのお問合わせなど）は「（ページの指定なし）」</li>
+        <li class="p70-step-list__item">絞り込み：種類・状態（すべて・未対応・対応中・返信待ち）・対応した管理者。完了したものは、ふだんは出ない。「完了したものも表示」にチェックを入れると一覧に加わる</li>
+        <li class="p70-step-list__item">だれがいつ何をしたかは、各行の下の「対応履歴」（管理者の操作の件数。まだ無ければ「なし」）を押して確かめる。開くと、上に「対応した管理者」（初めて操作した順）、その下に履歴（日時・管理者・したこと・受付の自動の行を含む）が新しい順に出る。対応は何回でも、何人の管理者でも続けられる</li>
+        <li class="p70-step-list__item">まだ終わっていない案件は「対応する →」、完了した案件は「詳細を見る →」で P90-21-1 を開く（担当は選ばない。操作すると、操作した管理者の名前が自動で記録に残る）</li>
+        <li class="p70-step-list__item">P90-21-1 の「送信元のページ」で、送られた元のページ（種類・名前・NID・URL）を確かめる。「送信元のページを開く →」で開ける。修正依頼は「編集画面で直す →」、問題報告は「編集画面で確かめる →」「一時非公開にする」もここから</li>
+        <li class="p70-step-list__item">種類ごとに E2〜E4 の手順で対応する。お問合わせ・ご要望は内容に応じて、テンプレートから返信を書いて送る</li>
+        <li class="p70-step-list__item">状態を変える（対応中・返信待ち・完了）。ご要望は返信せずに「確認済にする」こともできる。返信・状態の変更・メモは、すべて対応履歴に残る</li>
       </ol>
 
       <h3 class="p70-subhead" id="e-report">E2 問題報告に対応する</h3>
@@ -300,7 +303,7 @@
       <nav class="p70-toc p9029-index" aria-label="LIAISON+ 対応の業務の目次">
         <div class="p70-toc__title">LIAISON+ 対応の業務 — Index</div>
         <ol class="p70-toc__list">
-          <li class="p70-toc__item"><span class="p70-toc__num">L1</span><a class="p70-toc__link" href="#l-case">LIAISON+ の対応案件に対応する</a></li>
+          <li class="p70-toc__item"><span class="p70-toc__num">L1</span><a class="p70-toc__link" href="#l-case">取引の相談・お問合わせに対応する（LIAISON+）</a></li>
           <li class="p70-toc__item"><span class="p70-toc__num">L2</span><a class="p70-toc__link" href="#refund">支払い後のキャンセルを受けて判断する</a></li>
           <li class="p70-toc__item"><span class="p70-toc__num">L3</span><a class="p70-toc__link" href="#return">作品の返送と確認</a></li>
           <li class="p70-toc__item"><span class="p70-toc__num">L4</span><a class="p70-toc__link" href="#pay-back">返金の手続き</a></li>
@@ -317,13 +320,14 @@
       </nav>
       <p class="p70-lead">決まりの正本は、<a class="ktn-guide-link" href="./kotennavi-p60-9.html#liaison" target="_blank" rel="noopener">利用規約 第9条の2・第9条の3</a>と<a class="ktn-guide-link" href="./kotennavi-p60-18.html#cancel" target="_blank" rel="noopener">LIAISON+ 利用規約 第8条・第10条</a>です。</p>
 
-      <h3 class="p70-subhead" id="l-case">L1 LIAISON+ の対応案件に対応する</h3>
+      <h3 class="p70-subhead" id="l-case">L1 取引の相談・お問合わせに対応する（LIAISON+）</h3>
       <div class="p70-dl p70-dl--ja">
         <div class="p70-dl__item"><dt class="p70-dl__dt">担当</dt><dd class="p70-dl__dd">L</dd></div>
-        <div class="p70-dl__item"><dt class="p70-dl__dt">使う画面</dt><dd class="p70-dl__dd">P90-21 対応案件の「LIAISON+」タブ（取引番号といまの状態が付いている）</dd></div>
+        <div class="p70-dl__item"><dt class="p70-dl__dt">使う画面</dt><dd class="p70-dl__dd">P90-21 お問合わせ・報告の「LIAISON+」タブ → P90-21-1 お問合わせ・報告の詳細（一覧の見方・絞り込み・対応履歴・送信元のページは E1 と同じ）</dd></div>
         <div class="p70-dl__item"><dt class="p70-dl__dt">対象</dt><dd class="p70-dl__dd">LIAISON+ のお問合わせ・問題報告・取引の相談・発送期限の超過（至急）・キャンペーンの上限のお知らせ</dd></div>
       </div>
       <ol class="p70-step-list">
+        <li class="p70-step-list__item">案件の「対応する →」で開く。だれがいつ何をしたかは、各行の下の「対応履歴」で確かめる（別の管理者が前に対応していても、続きから対応できる）</li>
         <li class="p70-step-list__item">発送期限の超過は至急。出品者に発送を促し、購入者がキャンセルを申請したら L2 へ</li>
         <li class="p70-step-list__item">取引の相談は、P90-13 取引管理の行の「取引の詳細と操作」から、問合せてきた人の画面（出品者の取引デスク／購入者の取引ワークスペース）を管理者として開き、取引の状態と取引メッセージを確かめてから答える（操作はできない）</li>
         <li class="p70-step-list__item">キャンペーンの条件・期間・先着の残りは P90-20（見るだけ）で確かめる。個別の適用が要るときは、理由を書いて A に回す</li>
@@ -332,7 +336,7 @@
       <h3 class="p70-subhead" id="refund">L2 支払い後のキャンセルを受けて判断する</h3>
       <div class="p70-dl p70-dl--ja">
         <div class="p70-dl__item"><dt class="p70-dl__dt">担当</dt><dd class="p70-dl__dd">L</dd></div>
-        <div class="p70-dl__item"><dt class="p70-dl__dt">使う画面</dt><dd class="p70-dl__dd">P90-21 対応案件・P90-13 取引管理</dd></div>
+        <div class="p70-dl__item"><dt class="p70-dl__dt">使う画面</dt><dd class="p70-dl__dd">P90-21 お問合わせ・報告・P90-13 取引管理</dd></div>
         <div class="p70-dl__item"><dt class="p70-dl__dt">期限</dt><dd class="p70-dl__dd">出品者の承諾の回答＝問合せから3日</dd></div>
       </div>
       <ol class="p70-step-list">
@@ -359,7 +363,7 @@
       <ol class="p70-step-list">
         <li class="p70-step-list__item">購入者に返送を案内する：返送先（出品者の登録住所）・送料の負担・返送の期限（案内から7日）。メール S-T-18</li>
         <li class="p70-step-list__item">出品者に、返送品の到着から3日以内に、到着と状態を知らせてもらう（メール S-T-19）</li>
-        <li class="p70-step-list__item">問題がなければ L4 へ。返送中の破損など問題があれば、写真をもらって対応案件に残し、判断し直す</li>
+        <li class="p70-step-list__item">問題がなければ L4 へ。返送中の破損など問題があれば、写真をもらってお問合わせ・報告に残し、判断し直す</li>
       </ol>
 
       <h3 class="p70-subhead" id="pay-back">L4 返金の手続き</h3>
@@ -370,10 +374,10 @@
       </div>
       <ol class="p70-step-list">
         <li class="p70-step-list__item">L2 の表で返金額を計算する</li>
-        <li class="p70-step-list__item">P90-13 の「取引の詳細と操作」を開き、内訳で金額を確かめてから「返金の手続き」を押す。理由・詳しい内容（対応案件の受付番号など）・返金額を書いて「返金する」を押す。Stripe を通じて購入者に返金され、操作の記録（P90-28）に残る（Stripe の管理画面での操作は要らない）</li>
+        <li class="p70-step-list__item">P90-13 の「取引の詳細と操作」を開き、内訳で金額を確かめてから「返金の手続き」を押す。理由・詳しい内容（受付番号など）・返金額を書いて「返金する」を押す。Stripe を通じて購入者に返金され、操作の記録（P90-28）に残る（Stripe の管理画面での操作は要らない）</li>
         <li class="p70-step-list__item">理由を選ぶと、返金額と、出品者の振込の調整（購入者の事由で発送済み＝送料・梱包費を足す／出品者の事由・配送事故＝決済手数料4%＋返金のために生じた費用を引く）が L2 の表で計算される。「返金する」で振込の調整が1行でき、次の振込に入る（P90-14 の「振込の調整」）。理由が「その他」のときは返金額を手で入れ、振込の調整は作らない（要るときは A に頼む）</li>
         <li class="p70-step-list__item">出品者の事由・配送事故のときは L6 へ</li>
-        <li class="p70-step-list__item">双方にキャンセルと返金を知らせ（メール A-T-08）、対応案件を完了にする。カードの明細に反映されるまでの日数はカード会社によって異なることを、聞かれたら伝える</li>
+        <li class="p70-step-list__item">双方にキャンセルと返金を知らせ（メール A-T-08）、お問合わせ・報告を完了にする。カードの明細に反映されるまでの日数はカード会社によって異なることを、聞かれたら伝える</li>
       </ol>
 
       <h3 class="p70-subhead" id="accident">L5 配送事故の対応</h3>
@@ -412,14 +416,14 @@
       </div>
       <ol class="p70-step-list">
         <li class="p70-step-list__item">キャンセルになった取引で使われたクーポンは、自動では戻さない（規約にも「戻りません」と書いている）</li>
-        <li class="p70-step-list__item">クーポンの種類や実施期間を見て、戻すべきと判断したら、理由を書いて対応案件で A に回す</li>
+        <li class="p70-step-list__item">クーポンの種類や実施期間を見て、戻すべきと判断したら、理由を書いてお問合わせ・報告で A に回す</li>
         <li class="p70-step-list__item" data-admin-lv="A">A：購入者の P5-11 の「個別に渡す」で、同じ値引きのクーポンを渡す（理由は必須）</li>
       </ol>
 
       <h3 class="p70-subhead" id="l-txn">L8 取引管理の対応待ちを片付ける（毎日）</h3>
       <div class="p70-dl p70-dl--ja">
         <div class="p70-dl__item"><dt class="p70-dl__dt">担当</dt><dd class="p70-dl__dd">L<span data-admin-lv="A">（LIAISON+ を止めるのは A）</span></dd></div>
-        <div class="p70-dl__item"><dt class="p70-dl__dt">使う画面</dt><dd class="p70-dl__dd">P90-13 取引管理の「今日の対応」と、区分ごとに分かれた取引の表・P90-21 対応案件・P90-15／P90-16（注意行為）<span data-admin-lv="A">・Stripe の管理画面（A だけ）</span></dd></div>
+        <div class="p70-dl__item"><dt class="p70-dl__dt">使う画面</dt><dd class="p70-dl__dd">P90-13 取引管理の「今日の対応」と、区分ごとに分かれた取引の表・P90-21 お問合わせ・報告・P90-15／P90-16（注意行為）<span data-admin-lv="A">・Stripe の管理画面（A だけ）</span></dd></div>
         <div class="p70-dl__item"><dt class="p70-dl__dt">いつ</dt><dd class="p70-dl__dd">毎日（「今日の対応」がすべて「なし」になるまで）</dd></div>
       </div>
       <p class="p70-body">対応する場所が違う件を、表の中で区分ごとにまとめて出しています（①→②→③→そのほかの取引）。区分ごとに対応する場所と、外れる（終わる）決まりが違います。各取引の「取引の詳細と操作」のいちばん上に「対応待ち」の段があり、対応する場所・操作・対応した管理者が出ます。期限が近いだけの取引はリマインダーが自動で届くので、対応待ちに入りません。どの件も、操作すると「対応した管理者」に自分の UID が入ります。手を付ける前に「対応に加わる」を押すと、ほかの管理者にも分かります（何人でも加われます）。「未着手」の件から片付けます。</p>
@@ -428,12 +432,12 @@
         <tbody>
           <tr><td>① 事務局の操作が要る</td><td>発送期限超過・止めている申込・一時停止中（期限が来ても自動で進まない）</td><td>このページの「取引の詳細と操作」（L11）</td><td>取引の状態が変わったとき</td></tr>
           <tr><td>② Stripe で対応</td><td>支払いの異議（チャージバック・回答の期限あり）・決済の失敗</td><td>異議＝L が材料をそろえて「異議の対応を記録する」、A が Stripe の管理画面（「Stripe で開く ↗」）で回答（A9）</td><td>異議＝A が回答したらここで「Stripe で回答済みにする」、結果が届いたとき／決済の失敗＝購入者のやり直しか、支払期限の自動キャンセル（操作は要らない）</td></tr>
-          <tr><td>③ 相談</td><td>取引の「事務局に相談する」から届き、未対応のもの</td><td>P90-21 対応案件（「対応案件を開く →」・L1）</td><td>対応案件を完了にしたとき</td></tr>
+          <tr><td>③ 相談</td><td>取引の「事務局に相談する」から届き、未対応のもの</td><td>P90-21 お問合わせ・報告（「お問合わせ・報告を開く →」・L1）</td><td>お問合わせ・報告を完了にしたとき</td></tr>
           <tr><td>④ 注意行為</td><td>キャンセルや期限切れが重なっている出品者・購入者（人数だけ）</td><td>P90-15（出品者）・P90-16（購入者）（L12）</td><td>対応済みにしたとき（目安に達した種類の取引がさらに増えたら、また出る）</td></tr>
         </tbody>
       </table>
       <ol class="p70-step-list">
-        <li class="p70-step-list__item">支払いの異議は、取引の記録（メッセージ・追跡番号・受取確認）をそろえ、「取引の詳細と操作」の「異議の対応を記録する」で、そろえた材料を残す（状況＝材料がそろった）。回答は A が Stripe の管理画面で行う（A9）。回答の期限を過ぎると、自動で購入者の言い分が通るので、期限が近いときは対応案件で A に知らせる</li>
+        <li class="p70-step-list__item">支払いの異議は、取引の記録（メッセージ・追跡番号・受取確認）をそろえ、「取引の詳細と操作」の「異議の対応を記録する」で、そろえた材料を残す（状況＝材料がそろった）。回答は A が Stripe の管理画面で行う（A9）。回答の期限を過ぎると、自動で購入者の言い分が通るので、期限が近いときはお問合わせ・報告で A に知らせる</li>
         <li class="p70-step-list__item">決済の失敗は、購入者から問合せがあったときに状況を確かめる場所。必要なら L11 の「再支払いを案内する」</li>
       </ol>
 
@@ -475,10 +479,10 @@
           <tr><td>再支払いを案内する</td><td>支払待ちで、カードの決済が通らなかった</td><td>購入者に支払いのやり直しの案内を送る。必要なら支払いの期限を3日・7日延ばす</td></tr>
           <tr><td>キャンセル申請を処理する</td><td>発送待ちで発送期限を過ぎ、購入者からキャンセルの申請があった</td><td>出品者の事由のキャンセルとして進める（次は L4 返金の手続き・L6 出品者への請求）</td></tr>
           <tr><td>事務局から連絡する</td><td>当事者に伝えることがある</td><td>宛先（出品者・購入者・両方）と方法（取引メッセージに事務局として書き込む／メール）を選んで送る。取引メッセージに書くと双方の画面に残る</td></tr>
-          <tr><td>対応案件をひも付ける</td><td>この取引について対応案件（P90-21）がある</td><td>受付番号を入れると、取引の詳細から対応案件を開ける</td></tr>
+          <tr><td>お問合わせ・報告をひも付ける</td><td>この取引についてお問合わせ・報告（P90-21）がある</td><td>受付番号を入れると、取引の詳細からお問合わせ・報告を開ける</td></tr>
         </tbody>
       </table>
-      <span class="p70-table__note">送るメールは操作に合わせて P90-9 のテンプレート（S-T-03〜S-T-20）が自動で選ばれます（「事務局から連絡する」では、キャンセル・返送・配送事故の連絡 S-T-17〜S-T-20 も選べます）。送る前に、ケースに合わせて本文を直してください。どの操作も、あとから「なぜ」を説明できるように、理由と詳しい内容（対応案件の受付番号など）を書きます。当事者の画面を確かめるときは、取引の詳細の「出品者の取引デスクを見る」「購入者の取引ワークスペースを見る」を使います（操作はできません）。</span>
+      <span class="p70-table__note">送るメールは操作に合わせて P90-9 のテンプレート（S-T-03〜S-T-20）が自動で選ばれます（「事務局から連絡する」では、キャンセル・返送・配送事故の連絡 S-T-17〜S-T-20 も選べます）。送る前に、ケースに合わせて本文を直してください。どの操作も、あとから「なぜ」を説明できるように、理由と詳しい内容（受付番号など）を書きます。当事者の画面を確かめるときは、取引の詳細の「出品者の取引デスクを見る」「購入者の取引ワークスペースを見る」を使います（操作はできません）。</span>
 
       <h3 class="p70-subhead" id="l-warn">L12 注意行為（キャンセルや期限切れが重なる人）を確かめる</h3>
       <div class="p70-dl p70-dl--ja">
@@ -631,7 +635,7 @@
       <ol class="p70-step-list">
         <li class="p70-step-list__item">Stripe の管理画面にログインするのは A だけ。返金・出品者の連携の状態・決済の失敗は、L が個展なびの画面で扱える（Stripe の管理画面を開かない）</li>
         <li class="p70-step-list__item">支払いの異議：L が P90-13 に残した材料を確かめ、Stripe の管理画面で回答（証拠の提出）する。回答したら、P90-13 で「Stripe で回答済みにする」を押す。結果が届くと対応待ちから外れる</li>
-        <li class="p70-step-list__item">返金・振込などを Stripe の管理画面で直接行わない（個展なびの記録と食い違い、だれが行ったかが操作の記録に残らないため）。個展なびの画面でできないことが起きたときは、Stripe の管理画面で行い、何をしたかを対応案件と P90-13 の取引メッセージの記録に残す</li>
+        <li class="p70-step-list__item">返金・振込などを Stripe の管理画面で直接行わない（個展なびの記録と食い違い、だれが行ったかが操作の記録に残らないため）。個展なびの画面でできないことが起きたときは、Stripe の管理画面で行い、何をしたかをお問合わせ・報告と P90-13 の取引メッセージの記録に残す</li>
       </ol>
     </section>
 
