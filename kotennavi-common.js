@@ -2142,10 +2142,20 @@ function ktnAdminOps() {
         (st === 'review' ? '' : '<button type="button" class="ktn-op-btn ktn-op-btn--sm" data-ops="vis">' + (st === 'hidden' ? '公開に戻す' : '非公開にする') + '</button>') +
         /* 確認待ちの展覧会：オーナーに内容を問い合わせる（S-E-03・P90-5 と同じ・2026-11-14 ユーザー指示） */
         (st === 'review' && el.dataset.adminOps === '展覧会' && KTN.mailSend ? '<button type="button" class="ktn-op-btn ktn-op-btn--sm" data-ops="ask">内容を問い合わせる</button>' : '') +
-        '<button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline" data-ops="del">削除</button></span></div>' +
+        '<button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline" data-ops="del"' + (ktnOpsApply(el) ? ' disabled' : '') + '>削除</button></span></div>' +
+        ktnOpsApplyNote(el) +
         (st === 'review' && KTN.exhAsk ? KTN.exhAsk.html(el.dataset.nid) : '') +
       ktnAdminOpsLog(el);
   });
+}
+/* LIAISON+ の作品に申込がある展覧会は、管理者も削除できない（申込をキャンセルしてから・2026-11-17 ユーザー指示＝P90-5 の削除の依頼と同じ）。
+   申込の数は data-lp-apply（デモ。本番は申込・取引中の件数を API で確かめる）。L・A には取引管理（P90-13）へのリンク、E には L に頼む案内 */
+function ktnOpsApply(el) { return el.dataset.adminOps === '展覧会' ? (+el.dataset.lpApply || 0) : 0; }
+function ktnOpsApplyNote(el) {
+  var n = ktnOpsApply(el); if (!n) return '';
+  var lv = KTN.adminLevel ? KTN.adminLevel() : 'A';
+  return '<p class="p905-delreq__block">LIAISON+ の作品に申込が ' + n + ' 件あります。申込をキャンセルしてから削除してください。' +
+    (lv === 'L' || lv === 'A' ? '<a class="ktn-guide-link" href="./kotennavi-p90-13.html?ex=' + encodeURIComponent(el.dataset.nid || '') + '" target="_blank" rel="noopener">取引管理で申込を見る →</a>' : 'キャンセルは LIAISON+ 対応の管理者に依頼してください。') + '</p>';
 }
 /* このコンテンツの記録（操作の記録＝KTN.AUDIT のうち、この NID の直近5件・2026-11-01）。全部は P90-28（admin だけ）へ「この〇〇の記録をすべて見る →」（〇〇＝data-kind か data-admin-ops） */
 function ktnAdminOpsLog(el) {
@@ -2185,6 +2195,7 @@ document.addEventListener('click', function (e) {
         onConfirm: function () { el.dataset.status = 'public'; ktnAdminOpsRecord(el, '公開に戻す'); ktnAdminOps(); KTN.toast('公開に戻しました（デモ）'); } });
     }
   } else {
+    if (ktnOpsApply(el)) return;   /* 申込があるあいだは削除しない */
     var back = ktnAdminOpsBack(el);
     /* 確認待ちの展覧会＝確認の結果としての削除。理由を選ぶと、オーナーに A-D-06 が自動で届く（2026-11-14） */
     var review = kind === '展覧会' && el.hasAttribute('data-status-confirm') && window.demoConfirmed === false;
@@ -2751,6 +2762,8 @@ function ktnTermsDbar() {
   var bar = document.getElementById('dbar'); if (!bar || document.getElementById('ktnTermsDbar')) return;
   /* ロールを切り替えられないページ（ガイド・規約など＝デモではゲストの表示）には出さない。押しても同意の画面が出ず、紛らわしいため */
   if (!bar.querySelector('[onclick*="setR("]') && !(window.ktnState && window.ktnState.page === 'p11')) return;
+  /* 管理者だけのページ（P90 系・P61-11 など＝KTN.ADMIN_PAGE にあるページ）には出さない。管理者は規約の同意の対象ではない（ユーザーのロールを持たない）ので、押しても何も変わらないため（2026-11-17） */
+  var pg = window.ktnState && window.ktnState.page; if (pg && KTN.ADMIN_PAGE && KTN.ADMIN_PAGE[pg]) return;
   var cur = ktnTermsState();
   var L = [['ok', '同意済'], ['site', '利用規約が変わった'], ['both', 'LIAISON+ の規約も']];
   bar.insertAdjacentHTML('beforeend', '<span class="dbar-sep" id="ktnTermsDbar">規約：</span>' + L.map(function (x) {
@@ -3069,9 +3082,7 @@ KTN.NOTICE_DEFS = {
   mine: [
     { id: 'NT-01',  role: 'creator・gallery', when: '作品にお問合わせが届いた',                     text: '作品《{{artworkName}}》にお問合わせが届きました',                 dest: 'P3-20／P4-20・P6-14', mail: 'A-F-05' },
     { id: 'NT-02',  role: 'user',             when: '問合せへの返信が届いた',                       text: '作品《{{artworkName}}》へのお問合わせに返信が届きました',         dest: 'P5-16',               mail: 'A-F-07' },
-    { id: 'NT-03①', role: 'user・creator・gallery', when: '機能申込の確認が完了した（利用開始・LIAISON+ の審査通過）', text: '{{applyName}}のお申込みの確認が完了しました', dest: '各ロールのページ', mail: 'S-M-02・S-M-04・S-M-08' },
     { id: 'NT-03②', role: 'user・creator・gallery', when: '機能申込の内容について確認のお願い',   text: '{{applyName}}のお申込み内容について、確認をお願いします',          dest: 'メール（返信で回答）', mail: 'S-M-06・S-M-09' },
-    { id: 'NT-03③', role: 'user・creator・gallery', when: '機能申込を取り消した',                 text: '{{applyName}}のお申込みを取り消しました',                        dest: 'P11 系',              mail: 'S-M-07・S-M-10' },
     { id: 'NT-04',  role: 'creator・gallery', when: '展覧会の内容を確認した（確認済み）',           text: '展覧会「{{exhibitionName}}」の内容を確認しました',                dest: 'P2',                  mail: 'A-E-01' },
     { id: 'NT-05',  role: 'user',             when: 'ウォッチ中のクリエイター・ギャラリーが公開した', text: 'ウォッチ中の{{personName}}が、{{contentKind}}「{{contentName}}」を公開しました', dest: 'その展覧会・記事のページ', mail: 'A-N-01' },
     { id: 'NT-06',  role: 'creator・gallery', when: '作品にコメントが付いた',                       text: '作品《{{artworkName}}》にコメントが付きました',                   dest: 'その作品のページ',    mail: 'A-N-05' },
@@ -3082,10 +3093,8 @@ KTN.NOTICE_DEFS = {
     { id: 'NT-12',  role: 'creator・gallery', when: 'はじめて割が適用された（実施期間の中で申込・審査の承認と口座の登録・作品の登録の3つがそろった直後。すぐに出す）',       text: '特典「{{campaignName}}」が適用されました',                       dest: 'P3-21／P4-21',        mail: 'A-C-01' },
     { id: 'NT-16',  role: 'creator・gallery', when: 'はじめて割の実施期間の終わりの7日前（期間中に申し込んだのに3つの条件がまだそろっていない人へ・1回）',       text: '特典「{{campaignName}}」は {{campaignEnd}} までに条件がそろうと対象になります（足りないもの：{{missing}}）',                       dest: 'P3-21／P4-21',        mail: 'A-C-07' },
     { id: 'NT-13',  role: 'user',             when: 'クーポンを受け取った（興味あり！に入れた直後・会場でチェックインした直後。その場の表示とあわせて、すぐに出す）',                                           text: 'クーポン「{{campaignName}}」を受け取りました',                   dest: 'P5-17',               mail: 'A-R-01（興味あり！のクーポン・翌朝のリマインダーの項目）／A-C-02（チェックインクーポン・会期が終わった日）' },
-    { id: 'NT-17',  role: 'creator・gallery', when: '事務局が作品を非公開にした（P90-12）',                                             text: '作品《{{artworkName}}》を、事務局で非公開にしました',             dest: 'P3-15／P4-15（LIAISON+ コンソール）', mail: 'A-T-19' },
     { id: 'NT-18',  role: 'user',             when: '申込んだ作品が非公開になり、事務局が申込を止めて確認している',                     text: 'お申込みの作品《{{artworkName}}》について、事務局で確認しています', dest: 'P5-14',               mail: 'A-T-20' },
     { id: 'NT-19',  role: 'user',             when: '取引中の作品のページが非公開になった（取引はそのまま進む）',                       text: 'お取引中の作品《{{artworkName}}》のページが非公開になりました。お取引はこのまま進みます', dest: 'P5-15', mail: 'A-T-21' },
-    { id: 'NT-20',  role: 'creator・gallery', when: '事務局が非公開にしていた作品を公開に戻した（P90-12）',                             text: '作品《{{artworkName}}》を、再び公開しました',                       dest: 'P3-15／P4-15（LIAISON+ コンソール）', mail: 'A-T-23' },
     { id: 'NT-21',  role: 'user',             when: '止めていた申込の確認が終わり、順番を再開した',                                     text: 'お申込みの作品《{{artworkName}}》の確認が終わり、順番を再開しました', dest: 'P5-14',               mail: 'A-T-24' },
     { id: 'NT-22',  role: 'user',             when: '取引中の作品のページが再び公開された',                                             text: 'お取引中の作品《{{artworkName}}》のページを、再び公開しました',     dest: 'P5-15',               mail: 'A-T-25' },
     { id: 'NT-23',  role: 'user', when: '購入の申込を受け付けた', text: 'お申込み《{{artworkName}}》を受け付けました（取引番号 {{txnId}}）', dest: 'P5-14', mail: 'A-T-01' },
@@ -3098,8 +3107,8 @@ KTN.NOTICE_DEFS = {
     { id: 'NT-30',  role: 'creator・gallery', when: '事務局から費用の請求が届いた', text: '費用のご請求が届きました（{{subject}}）', dest: 'P3-17／P4-17', mail: 'S-P-01〜S-P-03' },
     { id: 'NT-31',  role: 'creator・gallery', when: '事務局から作品についての確認のお願いが届いた', text: '作品《{{artworkName}}》についてのご確認のお願いが届きました（{{subject}}）', dest: 'P2-12-1', mail: 'S-W-01〜S-W-03' },
     { id: 'NT-32',  role: 'user・creator・gallery', when: '事務局から取引の進め方についてのお願いが届いた（注意行為）', text: 'お取引の進め方についてのお願いが届きました', dest: 'P3-15／P4-15（出品者）・P5-14（購入者）', mail: 'S-K-01〜S-K-06' },
-    { id: 'NT-33',  role: 'creator・gallery', when: 'LIAISON+ の利用を取り消した', text: 'LIAISON+ のご利用を取り消しました。詳しくはメールをご確認ください', dest: 'P5（myページ）', mail: 'S-M-12' },
-    { id: 'NT-34',  role: 'user', when: 'LIAISON+ での購入の申込を止めた', text: 'LIAISON+ でのご購入のお申込みを停止しました。詳しくはメールをご確認ください', dest: 'P5-14', mail: 'S-M-13' },
+    { id: 'NT-37',  role: 'creator・gallery', when: '確認を依頼した展覧会を、事務局が削除した（P2-11・P90-5・自動のメール A-D-06 と対・2026-11-17）', text: '確認を依頼された展覧会「{{exhibitionName}}」を削除しました。詳しくはメールをご確認ください', dest: 'P3-18／P4-18', mail: 'A-D-06' },
+    { id: 'NT-36',  role: 'creator・gallery', when: '公開日を指定した展覧会が、その日に公開された（2026-11-17）', text: '展覧会「{{exhibitionName}}」を、指定の公開日に公開しました。展覧会のページからシェアできます', dest: 'P2', mail: 'A-E-04' },
     { id: 'NT-14',  role: 'user',             when: 'ウォッチしているクリエイター・ギャラリーから、イベントのクーポンが届いた（出品者が送った直後）', text: '{{senderName}}から、クーポン「{{campaignName}}」が届きました', dest: 'その展覧会の作品（P2-5-1）', mail: 'A-C-05（すぐに送る・P5-13 の①で停止可）' }
   ]
 };
@@ -4109,12 +4118,95 @@ KTN.adminHide = function (o) {
     choice: o.choice, done: o.done || '非公開にしました（デモ）', onDone: o.onDone });
 };
 /* 操作の記録に1行足す（デモ。本番はサーバーが操作の API の中で足す）。t＝対象の種類（KTN.AUDIT.T のキー） */
-KTN.auditRecord = function (act, target, why) {
+/* 確認済の展覧会の削除の依頼（P2-11 → P90-5・2026-11-17）。状態＝requested（依頼中）／declined（断られた）。
+   P2-11 は状態を見て表示を変える（断られたら理由を出し、もう一度依頼できる）。P90-5 は依頼中のものを一覧に出し、処理したものを「処理した依頼」に残す。
+   デモは sessionStorage（本番は展覧会のデータと削除の依頼の記録） */
+KTN.exhDelReq = (function () {
+  var KEY = 'ktnExhDelReq', HKEY = 'ktnDelReqDone';
+  function rd(k, d) { try { return JSON.parse(window.sessionStorage.getItem(k) || d); } catch (e) { return JSON.parse(d); } }
+  function wr(k, v) { try { window.sessionStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+  function now() { var d = new Date(), z = function (n) { return (n < 10 ? '0' : '') + n; }; return d.getFullYear() + '.' + z(d.getMonth() + 1) + '.' + z(d.getDate()) + ' ' + z(d.getHours()) + ':' + z(d.getMinutes()); }
+  function ago(d, hm) { var t = new Date(); t.setDate(t.getDate() - d); var z = function (n) { return (n < 10 ? '0' : '') + n; }; return t.getFullYear() + '.' + z(t.getMonth() + 1) + '.' + z(t.getDate()) + ' ' + hm; }
+  /* 処理した依頼の見本（日付は今日からの日数） */
+  var DONE_DEMO = [
+    { nid: '197655', title: '秋山千尋 個展「夜の温室」', who: '秋山千尋', role: 'creator', uid: 'U-10366', term: '2026.11.20 〜 2026.11.30', reqAt: ago(5, '20:10'), reqReason: '開催が中止になった', result: 'deleted', why: 'オーナーの依頼による削除：会場の都合で中止。つながり（記事なし・LIAISON の作品 3）を確かめた', by: '佐藤（編集・問合せ）', at: ago(4, '10:30') },
+    { nid: '197480', title: 'グループ展「紙の仕事」', who: 'ギャラリー白', role: 'gallery', uid: 'U-10471', term: '2026.11.08 〜 2026.11.22', reqAt: ago(10, '13:00'), reqReason: '内容に大きな誤りがあり、登録し直す', result: 'declined', why: '申込・取引が進んでいる：LIAISON+ の作品に申込が2件あるため。取引が終わってから、あらためてご依頼ください', by: '山本（admin）', at: ago(9, '15:45') }
+  ];
+  return {
+    get: function (nid) { return rd(KEY, '{}')[nid] || null; },
+    all: function () { return rd(KEY, '{}'); },
+    request: function (nid, x) { var o = rd(KEY, '{}'); x.status = 'requested'; x.at = now(); o[nid] = x; wr(KEY, o); },
+    decline: function (nid, why) { var o = rd(KEY, '{}'); if (o[nid]) { o[nid].status = 'declined'; o[nid].declinedAt = now(); o[nid].why = why; wr(KEY, o); } },
+    remove: function (nid) { var o = rd(KEY, '{}'); delete o[nid]; wr(KEY, o); },
+    /* 処理した依頼（削除した／断った）を足す・直近 days 日を新しい順に */
+    done: function (x) { var a = rd(HKEY, '[]'); x.at = now(); a.unshift(x); wr(HKEY, a.slice(0, 50)); },
+    history: function (days) {
+      var lim = new Date(); lim.setDate(lim.getDate() - (days || 30)); lim.setHours(0, 0, 0, 0);
+      return rd(HKEY, '[]').concat(DONE_DEMO).filter(function (x) { var m = x.at.match(/(\d{4})\.(\d{2})\.(\d{2})/); return m && new Date(+m[1], +m[2] - 1, +m[3]) >= lim; })
+        .sort(function (a, b) { return a.at < b.at ? 1 : -1; });
+    }
+  };
+})();
+/* 展覧会のつながり（削除の依頼の「詳細」・2026-11-17 ユーザー指示）：記事・チェックイン（レビュー）・LIAISON の作品・LIAISON+ の作品。
+   0 のものは出さない。LIAISON は申込が無いので数だけ。LIAISON+ は数（申込があるときだけ「申込 N」を添える＝断る理由「申込・取引が進んでいる」の判断のため） */
+KTN.exhLinksText = function (L) {
+  if (!L || typeof L === 'string') return L || '—';
+  var a = [];
+  if (L.art) a.push('記事 ' + L.art);
+  if (L.ci) a.push('チェックイン ' + L.ci + (L.rv ? '（うちレビュー ' + L.rv + '）' : ''));
+  if (L.li) a.push('LIAISON の作品 ' + L.li);
+  if (L.lp) a.push('LIAISON+ の作品 ' + L.lp + (L.lpApply ? '（申込 ' + L.lpApply + '）' : ''));
+  return a.length ? a.join('・') : 'なし';
+};
+/* 展覧会を削除すると一緒に消えるもの（P2-11 のオーナーの削除・削除の依頼、P90-5 の削除で同じ文・2026-11-17 ユーザー指示） */
+KTN.EXH_DELETE_CASCADE = 'この展覧会に掲載された記事と、この展覧会へのチェックイン（レビューを含む）も、あわせて削除されます。LIAISON・LIAISON+ に出品した作品は、作品ストックに残ります（この展覧会への出品は外れます）。';
+/* 件数つきの言い方（P90-5 の削除のモーダル）：あわせて削除されるもの＝記事・チェックイン（レビュー）／作品ストックに残るもの＝出品した作品 */
+KTN.exhDeleteCascadeFor = function (L) {
+  if (!L || typeof L !== 'object') return KTN.EXH_DELETE_CASCADE;
+  var del = [], keep = [];
+  if (L.art) del.push('記事 ' + L.art);
+  if (L.ci) del.push('チェックイン ' + L.ci + (L.rv ? '（うちレビュー ' + L.rv + '）' : ''));
+  if (L.li) keep.push('LIAISON の作品 ' + L.li);
+  if (L.lp) keep.push('LIAISON+ の作品 ' + L.lp);
+  return (del.length ? 'あわせて削除されるもの：' + del.join('・') + '。' : '') + (keep.length ? keep.join('・') + 'は、作品ストックに残ります（この展覧会への出品は外れます）。' : '');
+};
+/* オーナーが確認前（確認待ち・下書き）に削除した展覧会（P90-5 の確認待ちのタブの下に直近30日を出す・2026-11-17 ユーザー指示）。
+   P2-11 でオーナーが削除すると1行足す（デモは sessionStorage。本番は削除の記録を API で返す）。事務局あてには A-D-02J（add-event@） */
+KTN.ownerDel = (function () {
+  var KEY = 'ktnOwnerDel';
+  /* 見本（日付は今日からの日数で作る＝いつ開いても直近30日に入る。最後の1件は30日より前で出ない・2026-11-17） */
+  function ago(d, hm) { var t = new Date(); t.setDate(t.getDate() - d); var z = function (n) { return (n < 10 ? '0' : '') + n; }; return t.getFullYear() + '.' + z(t.getMonth() + 1) + '.' + z(t.getDate()) + ' ' + hm; }
+  var DEMO = [
+    { nid: '198668', term: '2026.12.05 〜 2026.12.20', name: '佐藤 葵 個展「余白の庭」', owner: '佐藤 葵', role: 'creator', uid: 'U-10455', before: '確認待ち', at: ago(0, '09:20'), asked: false },
+    { nid: '198655', term: '2026.11.28 〜 2026.12.08', name: '小林 遥 個展「水のかたち」', owner: '小林 遥', role: 'creator', uid: 'U-10377', before: '確認待ち', at: ago(2, '21:40'), asked: true },
+    { nid: '198652', term: '2026.12.10 〜 2026.12.24', name: 'グループ展「線と面」', owner: 'Gallery SOIL 渋谷', role: 'gallery', uid: 'U-10402', before: '確認待ち', at: ago(6, '14:05'), asked: false },
+    { nid: '198647', term: '2027.01.08 〜 2027.01.19', name: '木村 直人 写真展', owner: '木村 直人', role: 'creator', uid: 'U-10311', before: '下書き', at: ago(11, '18:30'), asked: false },
+    { nid: '198640', term: '2026.11.20 〜 2026.11.30', name: '秋の工芸市（仮）', owner: 'ギャラリーみなと', role: 'gallery', uid: 'U-10388', before: '下書き', at: ago(15, '10:12'), asked: false },
+    { nid: '198636', term: '2026.11.14 〜 2026.11.24', name: '山口 恵 陶展「器のある暮らし」', owner: '山口 恵', role: 'creator', uid: 'U-10296', before: '確認待ち', at: ago(24, '11:48'), asked: true },
+    { nid: '198601', term: '2026.10.01 〜 2026.10.12', name: '春の小品展', owner: '森 一郎', role: 'creator', uid: 'U-10290', before: '確認待ち', at: ago(58, '16:05'), asked: false }
+  ];
+  function saved() { try { return JSON.parse(window.sessionStorage.getItem(KEY) || '[]'); } catch (e) { return []; } }
+  return {
+    add: function (x) { var a = saved(); a.unshift(x); try { window.sessionStorage.setItem(KEY, JSON.stringify(a.slice(0, 50))); } catch (e) {} },
+    /* 直近 days 日（新しい順） */
+    recent: function (days) {
+      var lim = new Date(); lim.setDate(lim.getDate() - (days || 30)); lim.setHours(0, 0, 0, 0);
+      return saved().concat(DEMO).filter(function (x) { var m = x.at.match(/(\d{4})\.(\d{2})\.(\d{2})/); return m && new Date(+m[1], +m[2] - 1, +m[3]) >= lim; })
+        .sort(function (a, b) { return a.at < b.at ? 1 : -1; });
+    }
+  };
+})();
+KTN.auditRecord = function (act, target, why, change) {   /* change＝変えた内容（任意・P90-28 の「理由・内容」に出る） */
   if (!KTN.AUDIT) return;
   var lv = KTN.adminLevel ? KTN.adminLevel() : 'A', uid = { A: 'U-90001', L: 'U-90002', E: 'U-90003' }[lv];
   var d = new Date(), z = function (n) { return (n < 10 ? '0' : '') + n; };
   KTN.AUDIT.add({ at: d.getFullYear() + '.' + z(d.getMonth() + 1) + '.' + z(d.getDate()) + ' ' + z(d.getHours()) + ':' + z(d.getMinutes()), by: uid, act: act,
-    t: target.t || '', nid: String(target.nid || ''), name: target.name || '', url: target.url || '', why: why || '' });
+    t: target.t || '', nid: String(target.nid || ''), name: target.name || '', url: target.url || '', why: why || '', change: change || '' });
+};
+/* いま操作している管理者の表示名（例「山本（A）」・操作の記録と同じ。申込の結果の「処理した管理者」などに使う） */
+KTN.adminMeText = function () {
+  var lv = KTN.adminLevel ? KTN.adminLevel() : 'A', uid = { A: 'U-90001', L: 'U-90002', E: 'U-90003' }[lv];
+  return KTN.AUDIT && KTN.AUDIT.adminText ? KTN.AUDIT.adminText(uid) : uid;
 };
 /* 展覧会の内容の問い合わせの状態（確認待ちの展覧会・P90-5／P2-11 に出す・2026-11-14 ユーザー指示）。
    問い合わせる＝ask（日時・メールの番号・テンプレート名）／オーナーが直して確認を依頼し直す＝reRequest／確認済みにする・削除する＝clear。

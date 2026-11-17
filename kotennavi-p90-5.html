@@ -111,7 +111,7 @@
         <div class="ktn-mgmt-head">
           <h2 class="ktn-mgmt-head__title">展覧会の確認・新規作成</h2>
           <p class="ktn-mgmt-head__en">EXHIBITION REVIEW / NEW</p>
-          <p class="ktn-mgmt-head__desc">「未確認」は確認依頼が届いた展覧会、「未公開」は下書きと、確認済みで公開日の前（公開待ち）の展覧会です。「確認する」から展覧会の編集画面の管理者の欄を開き、開催場所・出展クリエイターのリンク付けを確かめて「確認済み」にします。</p>
+          <p class="ktn-mgmt-head__desc">「確認待ち」は確認依頼が届いた展覧会、「削除の依頼」はオーナーから届いた削除の依頼と、オーナーが確認の前に削除した展覧会（直近30日）、「未公開」は確認済みで公開日の前（公開待ち）の展覧会、「下書き」はオーナーがまだ確認を依頼していない展覧会です。「確認する」から展覧会の編集画面の管理者の欄を開き、開催場所・出展クリエイターのリンク付けを確かめて「確認済み」にします。</p>
         </div>
 
         <!-- 新規作成（2026-10-29：旧 P90-3「展覧会新規」の代わり＝展覧会の編集画面 P2-11 を新規で開く） -->
@@ -119,12 +119,14 @@
           <a class="ktn-action-btn ktn-mgmt-new__btn" href="./kotennavi-p2-11.html?mode=new">新規展覧会を作成 →</a>
         </div>
 
-        <!-- タブ：未確認（確認待ち）／未公開（下書き）（2026-10-29 ユーザー指示・旧「状態」の絞り込みの代わり。行の切り替えは pages.js KTN.pages['p90-5']） -->
+        <!-- タブ：確認待ち（旧「未確認」）／削除の依頼／未公開（確認済み・公開待ち）／下書き（2026-10-29 ユーザー指示・旧「状態」の絞り込みの代わり。2026-11-17 に旧「未公開」を下書きと未公開に分けた。行の切り替えは pages.js KTN.pages['p90-5']） -->
         <div class="p902-tab-nav" role="tablist">
-          <button type="button" class="p902-tab-btn is-active" role="tab" data-tab="review" aria-selected="true">未確認 <span class="ktn-count ktn-count--pill is-idle"></span></button>
-          <button type="button" class="p902-tab-btn" role="tab" data-tab="draft" aria-selected="false">未公開 <span class="ktn-count ktn-count--pill is-idle"></span></button>
+          <!-- 並び（2026-11-17 ユーザー指示）：確認待ち（旧「未確認」）→ 削除の依頼 → 未公開 → 下書き -->
+          <button type="button" class="p902-tab-btn is-active" role="tab" data-tab="review" aria-selected="true">確認待ち <span class="ktn-count ktn-count--pill is-idle"></span></button>
           <!-- 削除の依頼（確認済の展覧会のオーナーが P2-11 から送ったもの・2026-11-04） -->
           <button type="button" class="p902-tab-btn" role="tab" data-tab="delreq" aria-selected="false">削除の依頼 <span class="ktn-count ktn-count--pill is-idle"></span></button>
+          <button type="button" class="p902-tab-btn" role="tab" data-tab="unpub" aria-selected="false">未公開 <span class="ktn-count ktn-count--pill is-idle"></span></button>
+          <button type="button" class="p902-tab-btn" role="tab" data-tab="draft" aria-selected="false">下書き <span class="ktn-count ktn-count--pill is-idle"></span></button>
         </div>
 
         <!-- ツールバー -->
@@ -236,9 +238,15 @@
         <!-- 削除の依頼（タブ「削除の依頼」・中身は pages.js KTN.pages['p90-5']） -->
         <div class="p905-delreq" id="p905DelReq" hidden></div>
 
+        <!-- 処理した依頼（削除の依頼のタブの下・直近30日・2026-11-17・中身は pages.js KTN.pages['p90-5']） -->
+        <div class="p905-ownerdel" id="p905DelDone" hidden></div>
+
+        <!-- オーナーが確認前に削除した展覧会（削除の依頼のタブの下〔同じ日に確認待ちのタブから移した〕・直近30日・2026-11-17・中身は pages.js KTN.pages['p90-5']） -->
+        <div class="p905-ownerdel" id="p905OwnerDel" hidden></div>
+
         <!-- ゼロ状態 -->
         <div class="p319-empty" id="p905Empty" hidden>
-          <p class="p319-empty__msg">未公開の展覧会はありません。</p>
+          <p class="p319-empty__msg" id="p905EmptyMsg">該当する展覧会はありません。</p>
         </div>
 
         <!-- ページング -->

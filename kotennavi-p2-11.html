@@ -55,6 +55,15 @@
   <span class="dbar-sep">はじめて割の予定：</span>
   <button class="dbtn on" data-perk-shift onclick="ktnPerkShiftDemo(false,this)">そのまま</button>
   <button class="dbtn" data-perk-shift onclick="ktnPerkShiftDemo(true,this)">保存で変わる</button>
+  <span class="dbar-sep">LIAISON+ の申込：</span>
+  <!-- 管理者の「公開の状態と削除」：申込があると削除できない（2026-11-17） -->
+  <button class="dbtn on" data-lpapply onclick="p211LpApplyDemo(0,this)">なし</button>
+  <button class="dbtn" data-lpapply onclick="p211LpApplyDemo(1,this)">あり</button>
+  <span class="dbar-sep">削除の依頼：</span>
+  <!-- 確認済の展覧会の削除の依頼の状態（オーナー・編集のとき・ページのいちばん下の「展覧会の削除」で見る・2026-11-17） -->
+  <button class="dbtn on" data-delreq-st="none" onclick="p211DelReqDemo('none',this)">なし</button>
+  <button class="dbtn" data-delreq-st="requested" onclick="p211DelReqDemo('requested',this)">依頼中</button>
+  <button class="dbtn" data-delreq-st="declined" onclick="p211DelReqDemo('declined',this)">断られた</button>
 </div>
 
 <div class="shell">
@@ -1177,7 +1186,7 @@
         <div class="p211-modal__overlay" data-del-close></div>
         <div class="p211-modal__box" role="dialog" aria-modal="true" aria-labelledby="p211DeleteTtl">
           <p class="p211-modal__title" id="p211DeleteTtl">この展覧会を削除しますか？</p>
-          <p class="p211-modal__note">展覧会「松田啓佑展［仮称］」を削除します。削除すると元に戻せません（入力した内容・画像もすべて消えます）。</p>
+          <p class="p211-modal__note">展覧会「松田啓佑展［仮称］」を削除します。削除すると元に戻せません（入力した内容・画像もすべて消えます）。この展覧会に掲載された記事と、この展覧会へのチェックイン（レビューを含む）も、あわせて削除されます。LIAISON・LIAISON+ に出品した作品は、作品ストックに残ります（この展覧会への出品は外れます）。</p>
           <div class="p211-modal__foot">
             <button class="ktn-op-btn" type="button" data-del-close>キャンセル</button>
             <button class="ktn-op-btn ktn-op-btn--danger" type="button" id="p211DeleteOk">削除する</button>
@@ -2392,6 +2401,14 @@ function saveDraft() {
   var m = (location.search.match(/[?&]mode=(new|clone)\b/) || [])[1];
   if (m) setDemoMode(m);
 })();
+</script>
+<script>
+/* デモバー「LIAISON+ の申込」：管理者の「公開の状態と削除」の data-lp-apply を切り替える */
+function p211LpApplyDemo(n, btn) {
+  var el = document.querySelector('[data-admin-ops="展覧会"]'); if (el) el.dataset.lpApply = n;
+  document.querySelectorAll('[data-lpapply]').forEach(function (b) { b.classList.toggle('on', b === btn); });
+  if (typeof ktnAdminOps === 'function') ktnAdminOps();
+}
 </script>
 </body>
 </html>
