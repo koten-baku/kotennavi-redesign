@@ -114,7 +114,7 @@
           <p class="ktn-mgmt-head__desc">お問合わせ・ご要望・問題報告・修正依頼・取引の相談と、発送期限の超過・キャンペーンの上限のお知らせです。LIAISON+ のページから届いたものは「LIAISON+」のタブに分けています。至急のものが一番上に並びます。</p>
         </div>
 
-        <!-- タブ：一般／LIAISON+（2026-10-29・分けて管理する。「編集・問合せ」の管理者には LIAISON+ を出さない） -->
+        <!-- タブ：一般／LIAISON+／A への依頼（2026-10-29・分けて管理する。LIAISON+ は L と A、A への依頼は A だけ） -->
         <div class="p902-tab-nav" role="tablist">
           <button type="button" class="p902-tab-btn is-active" role="tab" data-area="general" aria-selected="true">
             一般 <span class="ktn-count ktn-count--pill is-idle"></span>
@@ -122,9 +122,13 @@
           <button type="button" class="p902-tab-btn" role="tab" data-area="liaison" aria-selected="false">
             LIAISON+ <span class="ktn-count ktn-count--pill is-idle"></span>
           </button>
+          <!-- A への依頼（admin だけ・2026-11-18）：L・E から A に頼まれた操作 -->
+          <button type="button" class="p902-tab-btn" role="tab" data-area="areq" aria-selected="false" hidden>
+            A への依頼 <span class="ktn-count ktn-count--pill is-idle"></span>
+          </button>
         </div>
 
-        <div class="p902-tab-panel" role="tabpanel">
+        <div class="p902-tab-panel" role="tabpanel" id="p9021CasePanel">
           <div class="p319-toolbar">
             <div class="p319-toolbar__filters">
               <label class="p319-filter">
@@ -157,6 +161,20 @@
           </div>
           <nav class="ktn-pagination" id="p9021Pagination" aria-label="ページ送り" hidden></nav>
           <div class="p319-empty" id="p9021Empty" hidden><p class="p319-empty__msg">該当する案件はありません。</p></div>
+        </div>
+
+        <!-- A への依頼の一覧（A だけ）。依頼を受けたら、それぞれの画面で操作してから「対応済み」か「見送り」にする -->
+        <div class="p902-tab-panel" role="tabpanel" id="p9021AreqPanel" hidden>
+          <p class="p211-help p9021-areq-help">L・E から頼まれた操作です。依頼が来ると admin@ にメール（A-O-07J）が届きます。操作（強制キャンセル・返金・作品の削除・ロールの取消など）は対象の画面で行い、終わったらここで「対応済み」か「見送り」にしてください。結果は依頼した管理者の画面にも出ます。</p>
+          <div class="p319-toolbar"><div class="p319-toolbar__filters"><label class="p319-filter p90warn-only"><span class="p319-filter__label">完了</span><span class="p90warn-only__box"><input type="checkbox" id="p9021AreqIncl"> 対応済み・見送りも表示</span></label></div>
+            <p class="ktn-count ktn-count--result" id="p9021AreqCount"></p></div>
+          <div class="p315-archive-table-wrap">
+            <table class="p315-archive-table p902-table p9021-table" aria-label="A への依頼">
+              <thead><tr><th>依頼日時</th><th>依頼の種類</th><th>対象</th><th>依頼した管理者</th><th>状態</th><th>操作</th></tr></thead>
+              <tbody id="p9021AreqList"></tbody>
+            </table>
+          </div>
+          <div class="p319-empty" id="p9021AreqEmpty" hidden><p class="p319-empty__msg">依頼はありません。</p></div>
         </div>
 
       </div><!-- /.ktn-mgmt-wrap -->

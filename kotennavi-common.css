@@ -8029,6 +8029,27 @@ body.p3-3-page .aw--plus .aw__foot>.p33-console-wrap{order:3}
 /* ── オフラインのとき（body.is-offline・2026-10-11）＝取引の状態を変える操作 [data-txn-op] を薄くし、上に帯を出す（common.js KTN.setOffline）── */
 body.is-offline [data-txn-op]{opacity:.4;cursor:not-allowed;filter:grayscale(.6)}
 body.is-offline [data-txn-op]:hover{transform:none;box-shadow:none}
+/* 取引の一時停止（作品の非公開など・body.is-txn-paused・2026-11-17）：取引の操作を薄くし、期限の表示と期限のアラートを隠す（止めているあいだ期限は進まない） */
+body.is-txn-paused [data-txn-op]{opacity:.4;cursor:not-allowed;filter:grayscale(.6)}
+body.is-txn-paused [data-txn-op]:hover{transform:none;box-shadow:none}
+.ktn-admin-hidden-tag{margin-left:6px;vertical-align:middle;white-space:nowrap}
+/* 作品の出品停止・購入停止（2026-11-18） */
+.ktn-stop-note{margin:12px 20px 0}
+.ktn-stop-empty{margin:12px 0;font-size:.88rem;color:var(--muted)}
+.ktn-stop-page{max-width:var(--w-article);margin:40px auto;padding:0 20px;text-align:center}
+.ktn-stop-page__t{font-family:var(--fs);font-size:1.1rem;font-weight:600;color:var(--ink)}
+.ktn-stop-inline{margin:8px 0 0;font-size:.78rem;line-height:1.6;color:#b43c14}
+.is-stop-disabled{opacity:.45;cursor:not-allowed;filter:grayscale(.6)}
+.ktn-stop-tag{margin-left:6px;font-size:.66rem;color:#b43c14;font-weight:600}
+/* 作品管理（P2-12・P2-12-1）は見るだけ：作品の追加の欄を出さず、並べ替え（ドラッグ）・取り外しも動かさない（2026-11-18） */
+body.is-seller-stopped .p2-12-work-list{pointer-events:none}
+body.is-seller-stopped .p2-12-work-card__handle,body.is-seller-stopped .p2-12-remove-btn{display:none}
+/* 出品停止のあいだ、展覧会のページ（P2 系）に作品のタブ・LIAISON の帯・右の「作品を見る」・作品の欄を出さない（2026-11-18）。P2-5／P2-5-1 を直接開いたときは「作品はありません」 */
+body.is-seller-stopped .p2-12-add-area,body.is-seller-stopped .p2-5-grid,body.is-seller-stopped .p2-subnav__item--liaison,body.is-seller-stopped .p2-liaison-banner,body.is-seller-stopped #p2SideLinkWorks,body.is-seller-stopped #p2-sec-works{display:none !important}
+.p901-adminrole{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:.84rem}
+.p901-adminrole[hidden],.p9011-fixed[hidden]{display:none}   /* P90-1-1 管理者の種類（2026-11-18） */
+.p901-adminrole label{display:inline-flex;align-items:center;gap:6px;cursor:pointer}   /* 事務局が非公開（出品者の管理の画面・2026-11-18） */
+body.is-txn-paused .p316-action-deadline,body.is-txn-paused .p515-status__deadline,body.is-txn-paused .ktn-txn-alert,body.is-txn-paused .p515-status__waiting-nudge{display:none}
 .ktn-offline-bar{position:fixed;top:calc(var(--dh,0px) + var(--hh,50px) + 10px);left:50%;transform:translateX(-50%);z-index:300;display:flex;align-items:center;gap:8px;max-width:calc(100vw - 32px);padding:9px 16px;background:var(--ink);color:#fff;border-radius:20px;box-shadow:0 4px 18px rgba(0,0,0,.18);font-family:var(--fn);font-size:.78rem;line-height:1.5}
 .ktn-offline-bar[hidden]{display:none}
 .ktn-offline-bar svg{width:16px;height:16px;flex-shrink:0}
@@ -9995,9 +10016,10 @@ a.p319-item__dest-name:hover{color:var(--page-accent)}
 .p902-tab-panel[hidden]{display:none}
 
 /* 一覧テーブル（.p315-archive-table を流用・行クリックで審査モーダルを開く） */
-.p902-table tbody tr{cursor:pointer;transition:background-color .15s}
-.p902-table tbody tr:hover{background:var(--paper)}
-.p902-table tbody tr:hover .p902-cell--name{color:var(--page-accent);text-decoration:underline;text-underline-offset:2px}
+/* 2026-11-17：行のどこを押しても移る形をやめ、「操作」の列のボタンで移る（行の下に対応履歴を開くため） */
+.p902-who-uid,.p902-who-mail{display:block}
+.p902-who-mail{font-size:.72rem;color:var(--muted);overflow-wrap:anywhere;white-space:normal}
+.p902-table td.p902-cell--who{white-space:normal;min-width:0}
 /* UIDは識別コードで名前ではないため強調(bold)は不要。ホバー時のアクセント色・下線（クリック可能を示すサイン）のみ維持（2026-08-10） */
 .p902-cell--muted{color:var(--muted)}
 /* 「確認中」バッジの下に何を確認しているかを別行で添える（バッジ自体の文言は固定のまま・2026-08-08） */
@@ -10015,10 +10037,9 @@ a.p319-item__dest-name:hover{color:var(--page-accent)}
 .p902-table td{white-space:nowrap}
 /* P90-11処理完了タブの「処理内容」列（Stripeステータス／差し戻し理由）は文言が長くなりうるため、この列のみ折返しを許可し
    他列はnowrapのまま760px枠に収まるようにする（2026-08-10） */
-#p9011ListDone td:nth-child(6){white-space:normal}
 /* ログインメールアドレス列（両タブ・P90-2/P90-11共通で5列目）も長いアドレスで表がはみ出すため折返しを許可。
    他列の間隔・nowrapはそのまま維持（現状の詰め方はちょうど良いとのユーザー確認済み・2026-08-10） */
-.p902-table td:nth-child(5){white-space:normal}
+.p902-table td:nth-child(5){white-space:normal}   /* ステータス（下に処理内容・確認の内訳） */
 @media(max-width:640px){
   .p902-table td{white-space:normal}
 }
@@ -14833,6 +14854,14 @@ body.is-admin-view [aria-disabled="true"]{opacity:.45;cursor:not-allowed}
 .p9013-log__at{margin-right:8px;font-family:var(--fm);font-size:.7rem;color:var(--muted)}
 .p9013-mark{display:block;margin-top:4px;font-size:.7rem;font-weight:600;color:#7a1800}
 .p9013-mark.is-ext{color:var(--accent)}
+.p9013-mark.is-areq{color:#a06010}
+/* A への依頼（2026-11-18）：対象に付ける「A に依頼中」の印と、依頼の状況の1行 */
+.ktn-areq-mark{margin-left:6px;vertical-align:middle}
+.p90cm-acts .ktn-areq-mark{margin-left:0}
+.ktn-areq-line{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 8px;font-size:.78rem;line-height:1.6}
+.p9021-areq-help{margin:0 0 12px}
+/* A への依頼の表：横に送らないように、対象は折り返し、操作は縦に積む（2026-11-18 ユーザー指示＝ほかの表と同じ） */
+.p9021-table td.p9021-areq-acts{flex-direction:column;align-items:flex-start;white-space:normal}
 .p9013-checks{display:flex;flex-wrap:wrap;gap:6px 14px}
 .p9013-check{display:inline-flex;align-items:center;gap:5px;font-size:.82rem;cursor:pointer}
 .p9013-txn{white-space:normal;word-break:break-all}   /* 申込NID の下の取引番号は列の中で折り返す（作品名の列に重ならない・2026-11-10） */
