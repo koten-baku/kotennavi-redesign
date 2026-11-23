@@ -25829,6 +25829,64 @@ KTN.notice = (function () {
    ?preview=form … P61-11 の「プレビュー」から（入力中の内容を sessionStorage 'ktnNoticePreview' で受け取る）
    ?preview=<id> … 管理者が P61 の一覧で「公開予定」のお知らせを押したとき（デモはタイトル・カテゴリ・日付だけ差し替え）
    上部に「プレビュー（まだ公開されていません）」の帯を出す。本番は管理者だけが開ける・noindex */
+/* ── P90-30 ニュース管理（2026-11-23 ユーザー指示）：これまでに作ったお知らせ（KTN.NOTICES.news）の一覧・編集・新規作成。
+   作成と編集は P61-11（新規＝そのまま／編集＝?mode=edit&n=id／クローン＝?mode=clone&n=id）。状態は公開日・表示期限と今日から決める。
+   並びは公開日の新しい順・20件ずつ。本番は API の一覧（絞り込み・ページ送りはサーバーで） ── */
+KTN.pages['p90-30'] = function () {
+  var N = (KTN.NOTICES && KTN.NOTICES.news) || [], today = KTN.NOTICES ? KTN.NOTICES.today : '';
+  var list = document.getElementById('p9030List'); if (!list) return;
+  /* デモの見本：ページ送りを確かめるため、公開中14件・終了20件を足す（このページだけ・お知らせ一覧には出さない。本番は API の一覧） */
+  (function () { var z = function (n) { return (n < 10 ? '0' : '') + n; }, T = ['展覧会の探し方のヒント', 'ウォッチ機能のご案内', 'アプリのようにホーム画面へ追加できます', '作品の写真の撮り方', 'チェックインのご案内', '記事の書き方のヒント', '通知の設定のご案内'];
+    N = N.slice();
+    for (var i = 0; i < 14; i++) N.push({ id: 'ns' + i, target: i % 3 ? 'all' : 'user', tag: i % 2 ? 'おすすめ' : 'ニュース', cls: i % 2 ? 'at-b' : 'at-a', title: '（見本）' + T[i % T.length], date: '2026.0' + (6 + i % 3) + '.' + z(2 + i), until: '2027.03.' + z(1 + i) });
+    for (var k = 0; k < 20; k++) N.push({ id: 'ne' + k, target: k % 4 ? 'all' : 'cg', tag: k % 3 ? 'ニュース' : 'おすすめ', cls: k % 3 ? 'at-a' : 'at-b', title: '（見本）システムメンテナンスのお知らせ（' + (k + 1) + '月の回）', date: '2025.' + z(1 + k % 12) + '.' + z(3 + k), until: '2025.' + z(1 + k % 12) + '.' + z(10 + k % 15), mail: k % 2 === 0, top: k % 5 === 0 });
+  })();
+  var TG = { all: '全員', user: 'ユーザー', cg: 'クリエイター・ギャラリー', creator: 'クリエイター', gallery: 'ギャラリー' };
+  var PAGE = 1, PER = 20, TAB = 'open';   /* タブ：open＝公開中・公開予定／ended＝終了（表示期限を過ぎたもの）（2026-11-23） */
+  function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function state(it) { return it.date > today ? 'sched' : (it.until && it.until < today ? 'ended' : 'live'); }
+  var ST = { live: ['granted', '公開中'], sched: ['pending', '公開予定'], ended: ['cancelled', '終了'] };
+  function row(it) {
+    var st = state(it), s2 = ST[st];
+    var sub = [TG[it.target] || it.target]; if (it.mine) sub.push('あなた宛：' + (TG[it.mine.target] || it.mine.target)); if (it.top) sub.push('トップに出す'); if (it.campaign) sub.push('キャンペーン ' + it.campaign);
+    return '<tr><td data-label="公開日" class="p902-cell--muted"><span class="p907-dt">' + esc(it.date) + '</span><span class="p907-dt">〜' + esc(it.until || '') + '</span></td>' +
+      '<td data-label="カテゴリ"><span class="at ' + esc(it.cls || '') + '">' + esc(it.tag) + '</span></td>' +
+      '<td data-label="タイトル" class="p902-cell--name p9021-cell--subject"><a class="p90cm-title" href="./kotennavi-p61-1.html?preview=' + esc(it.id) + '" target="_blank" rel="noopener">' + esc(it.title) + '</a><span class="p90cm-sub">' + esc(it.id) + '・' + esc(sub.join('・')) + '</span></td>' +
+      '<td data-label="状態"><span class="ktn-review-status ktn-review-status--' + s2[0] + '">' + s2[1] + '</span></td>' +
+      '<td data-label="メール" class="p902-cell--muted">' + (it.mail === true ? '送信済み' : st === 'sched' ? '—' : '未送信') + '</td>' +
+      '<td data-label="操作"><div class="p90cm-acts"><a class="ktn-action-btn" href="./kotennavi-p61-11.html?mode=edit&amp;n=' + esc(it.id) + '">編集 →</a>' +
+        '<a class="ktn-op-btn ktn-op-btn--sm" href="./kotennavi-p61-11.html?mode=clone&amp;n=' + esc(it.id) + '">クローン</a></div></td></tr>';   /* 表示はタイトルのリンクで見る（「表示を見る」はやめた・2026-11-23） */
+  }
+  var $ = function (id) { return document.getElementById(id); };
+  function render() {
+    var fs = TAB === 'open' ? $('p9030St').value : '', fc = $('p9030Cat').value, ft = $('p9030Tg').value, fp = $('p9030Top').value, q = $('p9030Q').value.trim();
+    var rows = N.filter(function (it) {
+      if ((state(it) === 'ended') !== (TAB === 'ended')) return false;
+      if (fs && state(it) !== fs) return false;
+      if (fp && !!it.top !== (fp === '1')) return false;   /* トップページ（P1 の News 帯）に出すか */
+      if (fc && it.tag !== fc) return false;
+      if (ft && it.target !== ft && !(it.mine && it.mine.target === ft)) return false;
+      if (q && (it.title + ' ' + it.id).indexOf(q) < 0) return false;
+      return true;
+    }).sort(function (a, b) { return a.date < b.date ? 1 : a.date > b.date ? -1 : 0; });
+    var pages = Math.max(1, Math.ceil(rows.length / PER)); if (PAGE > pages) PAGE = pages;
+    list.innerHTML = rows.slice((PAGE - 1) * PER, PAGE * PER).map(row).join('');
+    /* 操作は「編集 →」と「クローン」の2つだけなので、「その他 ▾」にまとめずに並べる（2026-11-23 ユーザー指示） */
+    $('p9030Empty').hidden = rows.length !== 0;
+    $('p9030Count').innerHTML = '<strong>' + rows.length + '</strong>件該当';
+    document.querySelectorAll('#p9030Tabs .p902-tab-btn').forEach(function (b) { var n = N.filter(function (it) { return (state(it) === 'ended') === (b.dataset.tab === 'ended'); }).length; b.querySelector('.ktn-count').textContent = n; });
+    if (KTN.pagination) KTN.pagination.render($('p9030Pager'), { page: PAGE, totalPages: pages, onGoto: function (p) { PAGE = p; render(); } });
+  }
+  ['p9030St', 'p9030Cat', 'p9030Tg', 'p9030Top'].forEach(function (id) { $(id).addEventListener('change', function () { PAGE = 1; render(); }); });
+  document.querySelectorAll('#p9030Tabs .p902-tab-btn').forEach(function (b) { b.addEventListener('click', function () {
+    TAB = b.dataset.tab; PAGE = 1;
+    document.querySelectorAll('#p9030Tabs .p902-tab-btn').forEach(function (x) { var on = x === b; x.classList.toggle('is-active', on); x.setAttribute('aria-selected', on ? 'true' : 'false'); });
+    $('p9030StField').hidden = TAB === 'ended';   /* 終了のタブでは状態で絞らない */
+    render(); }); });
+  if (typeof ktnSearchOn === 'function') ktnSearchOn($('p9030Q'), function () { PAGE = 1; render(); }); else $('p9030Q').addEventListener('change', function () { PAGE = 1; render(); });
+  render();
+  window.ktnRender = function () {};
+};
 KTN.pages['p61-1'] = function () {
   var key = new URLSearchParams(location.search).get('preview');
   if (!key) return;
@@ -30854,7 +30912,7 @@ KTN.AUDIT = (function () {
   var ADM = { 'U-90001': ['山本', 'A'], 'U-90002': ['鈴木', 'L'], 'U-90003': ['佐藤', 'E'] };
   /* 操作の種類（docs/admin-audit-log.md「記録する操作」と同じ並び） */
   var ACTS = ['編集', '確認', '公開', '非公開', '公開に戻す', '内容の問い合わせ', '出品者への連絡', '削除', '削除の依頼を断る', 'クローン', '強制退会', 'アカウントのブロック', '料率・キャンペーンの変更', '個別の適用', '機能申込の審査', 'ロールの変更', '管理者の追加', 'LIAISON+ での購入の停止', '注意行為の確認', '注意行為の連絡', '取引の期限の変更', '注意行為の目安の変更', '作品の出品停止', 'お問合わせ・報告の更新', '取引の事務局の操作', '返金の手続き', '強制キャンセル', 'Stripe で回答済み', '出品者への費用の請求', '費用の支払いの記録', '振込の調整', '取引の状態の訂正', 'A への依頼', 'A への依頼の処理', '文面・ガイド・お知らせ・特集の変更', 'Q&A の削除'];   /* docs/admin-audit-log.md「記録する操作」と同じ並び（2026-11-14 に31種類へそろえた・2026-11-15 に「振込の調整」「アカウントのブロック」を足して33種類・2026-11-17 に「削除の依頼を断る」を足して34種類） */
-  var T = { exh: '展覧会', article: '記事', review: 'レビュー', comment: 'コメント', work: '作品', creator: 'クリエイター', gallery: 'ギャラリー', user: 'ユーザー', setting: '設定', guide: 'ガイド', txn: '取引' };
+  var T = { exh: '展覧会', article: '記事', review: 'レビュー', comment: 'コメント', work: '作品', creator: 'クリエイター', gallery: 'ギャラリー', user: 'ユーザー', setting: '設定', guide: 'ガイド', txn: '取引', news: 'お知らせ' };
   var L = [
     { at: '2026.10.31 14:20', by: 'U-90003', act: '非公開', t: 'review', nid: '52310', name: '静かな熱量', url: 'kotennavi-p8.html', why: '問題報告への対応：個人の名前が書かれている（本人の確認を待つあいだ）' },
     { at: '2026.10.31 16:30', by: 'U-90001', act: '文面・ガイド・お知らせ・特集の変更', t: 'guide', nid: 'p70-2', name: 'リエゾンプラス-作品販売ガイド', url: 'kotennavi-p70-2.html', why: '最低価格の言い方を直した', change: '「販売できるのは」→「作品の最低価格以上で」' },

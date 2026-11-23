@@ -293,13 +293,20 @@
 
         <!-- 送信バー -->
         <div class="p211-submit-bar">
-          <button class="p211-submit-bar__cancel ktn-op-btn" type="button" onclick="history.back()">キャンセル</button>
+          <a class="p211-submit-bar__cancel ktn-op-btn" href="./kotennavi-p90-30.html">キャンセル</a>
           <!-- 入力中の内容で記事（P61-1）を別タブに開く＝公開前の確認（保存はしない） -->
           <button class="ktn-op-btn" type="button" id="p6111PreviewBtn">プレビュー</button>
           <button class="p211-submit-bar__submit ktn-op-btn ktn-op-btn--primary" type="button" id="p6111SubmitBtn">作成する</button>
         </div>
 
       </div><!-- /.ktn-mgmt-wrap -->
+
+      <!-- お知らせの削除（編集のときだけ・admin・2026-11-23 ユーザー指示）。理由を書いて削除する（KTN.adminDelete・操作の記録に残る）。削除したらニュース管理（P90-30）へ -->
+      <div class="p211-delete" id="p6111DeleteArea" hidden>
+        <p class="p211-delete__title">このお知らせを削除する</p>
+        <p class="p211-delete__desc">お知らせ一覧・トップページ・あなた宛から消えます。元に戻せません。送ったメールは取り消せません。表示を止めるだけなら、表示期限を今日にして保存してください。</p>
+        <button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline" id="p6111DeleteBtn">削除する</button>
+      </div>
 
     </div><!-- /.ktn-content -->
   </main>
@@ -336,12 +343,13 @@
   /* P90-20 の「ニュースを編集 →」から（?mode=edit&n=ニュースの id・2026-11-02）：編集で開き、そのニュースを選んでタイトルを入れる */
   document.addEventListener('DOMContentLoaded', function () {
     var qm = (location.search.match(/[?&]mode=(\w+)/) || [])[1], qn = (location.search.match(/[?&]n=([\w-]+)/) || [])[1];
-    if (qm !== 'edit') return;
-    setDemoMode('edit');
+    if (qm !== 'edit' && qm !== 'clone') return;   /* P90-30 の「クローン」からも（?mode=clone&n=・2026-11-23） */
+    setDemoMode(qm);
     var it = qn && (KTN.NOTICES && KTN.NOTICES.news || []).filter(function (x) { return x.id === qn; })[0];
     if (!it) return;
-    var sel = document.getElementById('p6111EditSource');
+    var sel = document.getElementById(qm === 'edit' ? 'p6111EditSource' : 'p6111CloneSource');
     sel.insertAdjacentHTML('afterbegin', '<option value="' + it.id + '" selected>' + it.title + '（' + it.date + '）</option>');
+    sel.value = it.id;
     document.getElementById('p6111Title').value = it.title;
   });
 
@@ -355,6 +363,7 @@
     document.getElementById('p6111ModeBannerText').innerHTML = t.html;
     var editField = document.getElementById('p6111EditField');
     if (editField) editField.hidden = (mode !== 'edit');
+    var delArea = document.getElementById('p6111DeleteArea'); if (delArea) delArea.hidden = (mode !== 'edit');   /* 削除は編集のときだけ */
     var cloneField = document.getElementById('p6111CloneField');
     if (cloneField) cloneField.hidden = (mode !== 'clone');
     var submitBtn = document.getElementById('p6111SubmitBtn');
@@ -489,6 +498,19 @@
   setTimeout(p6111SyncCampCat, 0);
 
   /* ── 作成/更新ボタン ── */
+  /* お知らせの削除（編集のとき・2026-11-23） */
+  var p6111DeleteBtn = document.getElementById('p6111DeleteBtn');
+  if (p6111DeleteBtn) p6111DeleteBtn.addEventListener('click', function () {
+    var sel = document.getElementById('p6111EditSource'), id = sel ? sel.value : '', title = document.getElementById('p6111Title').value.trim() || (sel && sel.options[sel.selectedIndex] ? sel.options[sel.selectedIndex].text : '');
+    KTN.adminDelete({ kind: 'お知らせ', name: title, reasons: ['内容に誤りがあり、作り直す', '不要になった', '誤って作成した', 'その他'],
+      placeholder: '例：同じ内容のお知らせを2つ作ってしまったため、古い方を削除（残したお知らせ：n13）',
+      note: '削除すると元に戻せません。お知らせ一覧・トップページ・あなた宛から消えます。送ったメールは取り消せません。キャンペーンにつないでいるときは、つながりも外れます（P90-20 で「告知のニュース：未作成」に戻る）。理由は操作の記録に残ります。',
+      done: 'お知らせを削除しました（デモ）',
+      onDone: function (x) {
+        if (KTN.auditRecord) KTN.auditRecord('削除', { t: 'news', nid: id, name: title, url: 'kotennavi-p61-1.html' }, KTN.reasonText(x));
+        setTimeout(function () { location.href = './kotennavi-p90-30.html'; }, 800);
+      } });
+  });
   var p6111SubmitBtn = document.getElementById('p6111SubmitBtn');
   if (p6111SubmitBtn) {
     /* 必須チェック：必須マーク（.ktn-req）の付いた欄のうち、いま表示されている欄だけを見る
@@ -536,7 +558,7 @@
         return;
       }
       box.hidden = true;
-      KTN.toast('お知らせを保存しました');
+      KTN.submitDone({ title: 'お知らせを保存しました', message: 'メールで知らせるときは、公開したあとに編集の画面の「メールを送信する」で送ります。', action: { label: 'ニュース管理へ', href: './kotennavi-p90-30.html' } });   /* 保存したらニュース管理（P90-30）へ戻る（2026-11-23） */
     });
   }
 </script>

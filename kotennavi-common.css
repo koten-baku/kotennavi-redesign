@@ -14240,6 +14240,10 @@ a.ktn-coupon--link:hover{opacity:.86}
    一覧・詳細の骨組み（タブ・表・見出し・届いた内容の箱・返信のパネル・ボタン行）は P90-2／P90-2-1 の .p902-* をそのまま使う。
    ここには、このページだけの部分（件名の折り返し・対象の行・担当と状態・履歴・見た・対応待ちの数）だけを書く。 */
 .p9021-table td.p9021-cell--subject{white-space:normal;min-width:180px;line-height:1.6}
+/* P90-30 ニュース管理：タイトルは折り返す（横に送らない・2026-11-23） */
+.p9030-table td.p9021-cell--subject{white-space:normal;min-width:180px;line-height:1.6}
+.p9030-table td.p9021-cell--subject .p90cm-sub{white-space:normal}
+#p9030StField[hidden]{display:none}
 .p9021-table td.p9021-cell--type{white-space:normal;min-width:4.5em;max-width:7em}
 .p9021-table td.p9021-cell--subject .ktn-review-status{margin-right:4px;vertical-align:1px}
 /* 送信元ページ（P90-21 の件名の下段・P90-21-1・2026-11-16） */
