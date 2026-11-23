@@ -268,7 +268,6 @@
           </div>
         </div>
 
-        <!-- パスワードの設定の案内（S-U-01）は、新規・クローンで保存したあとに送信の欄（KTN.mailSend）を開いて、送るか「送らない」を選ぶ（2026-11-15 ユーザー指示＝保存と同じボタンで送らない。旧＝この場所のチェック） -->
 
         <!-- 送信バー -->
         <div class="p211-submit-bar">
@@ -461,13 +460,8 @@
     }
     if (note) note.textContent = '';
     function done() {
-      function fin(sent) { KTN.submitDone({ title: '保存しました', message: 'ユーザー情報を保存しました。' + (sent ? '<br>パスワードの設定の案内（S-U-01）を送りました。' : ''), action: { label: 'ユーザー管理へ', href: './kotennavi-p90-1.html' } }); }
-      if (P901_MODE === 'edit') { fin(false); return; }
-      /* 新規・クローン：保存のあとに、パスワードの設定の案内（S-U-01）を送るかを決める（送る前に直せる・「送らない」も選べる） */
-      KTN.mailSend({ title: 'パスワードの設定の案内を送る', screen: 'p90-1', keys: ['account-created'], skipLabel: '送らない',
-        lead: 'アカウントを作成しました。本人にパスワードの設定の案内（S-U-01）を送るかを選んでください。送らなかったときは、本人にパスワードの再設定を使ってもらいます。',
-        tokens: { userName: nickEl.value.trim(), loginId: emailEl.value.trim(), commonFooter: '（共通のフッター）' },
-        done: 'パスワードの設定の案内（S-U-01）を送りました（デモ）', onSent: function () { fin(true); }, onSkip: function () { fin(false); } });
+      /* ユーザーの編集の保存（新規作成は管理者だけ＝上の分岐。管理者が作ったユーザーへのパスワードの設定の案内 S-U-01 は、使われなくなったので消した・2026-11-23） */
+      KTN.submitDone({ title: '保存しました', message: 'ユーザー情報を保存しました。', action: { label: 'ユーザー管理へ', href: './kotennavi-p90-1.html' } });
     }
     if (!p901RoleChanged()) { done(); return; }
     /* ロールを変えたときは理由が必須（操作の記録「ロールの変更」に残る・2026-11-01） */

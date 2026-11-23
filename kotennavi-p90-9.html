@@ -262,10 +262,17 @@
             </select>
           </div>
 
+          <!-- 出す場面（2026-11-22）：送信の画面のどの選択肢に並べるか。選ぶと E・L もその選択肢から選べる。場面の一覧は pages.js KTN.TPL_SCENES -->
+          <div class="p211-field" id="p909FormSceneField">
+            <label class="p211-label" for="p909FormScene">出す場面</label>
+            <select class="p211-select" id="p909FormScene"></select>
+            <p class="p211-help" id="p909FormSceneHelp">送信の画面で、この選択肢に並びます（E・L も選べます）。選ばないときは、A が「ほかのテンプレートを番号で選ぶ」で使います。</p>
+          </div>
+
           <div class="p211-field">
-            <label class="p211-label">識別キー（variantKey）<span class="ktn-req">必須</span></label>
-            <input class="p211-input" type="text" id="p909FormKey" placeholder="例：creator-new / confirm-input-error">
-            <p class="p211-help">送信画面側がこの値を読み取って選択肢と紐付けます。新規追加時は他と重複しない値にしてください。</p>
+            <label class="p211-label">識別キー（variantKey）</label>
+            <input class="p211-input" type="text" id="p909FormKey" readonly>
+            <p class="p211-help">送信の画面がテンプレートを見分けるための名前です。新しく作るときは自動で付き、あとから変えられません（変えると候補から外れるため・2026-11-22）。</p>
           </div>
 
           <div class="p211-field">

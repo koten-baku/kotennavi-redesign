@@ -8038,6 +8038,7 @@ body.is-txn-paused [data-txn-op]:hover{transform:none;box-shadow:none}
 .ktn-stop-empty{margin:12px 0;font-size:.88rem;color:var(--muted)}
 .ktn-stop-page{max-width:var(--w-article);margin:40px auto;padding:0 20px;text-align:center}
 .ktn-stop-page__t{font-family:var(--fs);font-size:1.1rem;font-weight:600;color:var(--ink)}
+.ktn-demo-note{margin:10px 0 16px;font-size:.76rem;line-height:1.7;color:var(--muted)}   /* デモだけの注記（本番では出さない） */
 .ktn-stop-inline{margin:8px 0 0;font-size:.78rem;line-height:1.6;color:#b43c14}
 .is-stop-disabled{opacity:.45;cursor:not-allowed;filter:grayscale(.6)}
 .ktn-stop-tag{margin-left:6px;font-size:.66rem;color:#b43c14;font-weight:600}
@@ -8046,6 +8047,9 @@ body.is-seller-stopped .p2-12-work-list{pointer-events:none}
 body.is-seller-stopped .p2-12-work-card__handle,body.is-seller-stopped .p2-12-remove-btn{display:none}
 /* 出品停止のあいだ、展覧会のページ（P2 系）に作品のタブ・LIAISON の帯・右の「作品を見る」・作品の欄を出さない（2026-11-18）。P2-5／P2-5-1 を直接開いたときは「作品はありません」 */
 body.is-seller-stopped .p2-12-add-area,body.is-seller-stopped .p2-5-grid,body.is-seller-stopped .p2-subnav__item--liaison,body.is-seller-stopped .p2-liaison-banner,body.is-seller-stopped #p2SideLinkWorks,body.is-seller-stopped #p2-sec-works{display:none !important}
+/* 展覧会の公開のページで、公開中の作品が0点（か出品停止）のとき：LIAISON の印と作品への入口を出さない（2026-11-22・ktnNoWorksApply） */
+body.is-no-works #p2LiaisonBadge,body.is-no-works .p2-subnav__item--liaison,body.is-no-works .p2-liaison-banner,body.is-no-works #p2-sec-works,body.is-no-works #p2SideLinkWorks{display:none !important}
+body.is-no-works .ktn-tagbar a[href*="f=liaison%3A"],body.is-no-works .ktn-tag-pills li:has(> a[href*="f=liaison%3A"]),body.is-no-works .ktn-tag-pills a[href*="f=liaison%3A"]{display:none !important}
 .p901-adminrole{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:.84rem}
 .p901-adminrole[hidden],.p9011-fixed[hidden]{display:none}   /* P90-1-1 管理者の種類（2026-11-18） */
 .p901-adminrole label{display:inline-flex;align-items:center;gap:6px;cursor:pointer}   /* 事務局が非公開（出品者の管理の画面・2026-11-18） */
@@ -14862,6 +14866,37 @@ body.is-admin-view [aria-disabled="true"]{opacity:.45;cursor:not-allowed}
 .p9021-areq-help{margin:0 0 12px}
 /* A への依頼の表：横に送らないように、対象は折り返し、操作は縦に積む（2026-11-18 ユーザー指示＝ほかの表と同じ） */
 .p9021-table td.p9021-areq-acts{flex-direction:column;align-items:flex-start;white-space:normal}
+/* ほかのテンプレートを番号で選ぶ（手で送るメールの画面の共通・KTN.tplAlt・2026-11-20） */
+/* 操作のあとに送るメール（KTN.mailBox・2026-11-23）：操作のボタンの下の開閉のボタン。操作の前は押せない（「〇〇したあとに開けます」）、操作したら押せて、押すと下に欄が開く */
+.ktn-mailbox{margin:14px 0 0;padding:12px 0 0;border-top:1px dashed var(--border)}
+.ktn-mailbox__toggle{display:flex;align-items:center;flex-wrap:wrap;gap:4px 10px;width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:4px;background:#fff;font:inherit;text-align:left;color:var(--ink);cursor:pointer}
+.ktn-mailbox__toggle:hover:not(:disabled){border-color:var(--accent)}
+.ktn-mailbox__toggle:disabled{cursor:default;background:#f6f5f3;color:var(--muted)}
+.ktn-mailbox__head{font-size:.82rem;font-weight:700}
+.ktn-mailbox__state{font-size:.72rem;font-weight:500;color:#a06010;background:rgba(160,96,16,.08);padding:2px 8px;border-radius:999px}
+.ktn-mailbox__state[hidden]{display:none}
+.ktn-mailbox__arr{margin-left:auto;transition:transform .15s}
+.ktn-mailbox__toggle[aria-expanded="true"] .ktn-mailbox__arr{transform:rotate(180deg)}
+.ktn-mailbox__panel{margin:12px 0 0}
+.ktn-mailbox__panel[hidden]{display:none}
+.ktn-mailbox__foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:8px;margin:6px 0 0}
+.ktn-mailbox__sent{font-size:.76rem;color:#1a7a42}
+.ktn-tplalt{margin:6px 0 8px}
+.ktn-tplalt__open{padding:0;border:0;background:none;font:inherit;font-size:.76rem;color:var(--accent);text-decoration:underline;text-underline-offset:2px;cursor:pointer}
+.ktn-tplalt__open:hover{color:var(--accent-d)}
+.ktn-tplalt__links{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;margin:0}
+.ktn-tplalt__sep{color:var(--muted);font-size:.76rem}
+.ktn-tplalt__box{margin:8px 0 0;padding:10px 12px;border:1px solid var(--border);border-radius:4px;background:#faf7f1}
+.ktn-tplalt__box[hidden],.ktn-tplalt__info[hidden]{display:none}
+.ktn-tplalt__row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.ktn-tplalt__row .p211-input{flex:1 1 220px;min-width:0}
+.ktn-tplalt__info{margin:8px 0 0;padding:10px 12px;border-left:3px solid #a06010;background:rgba(160,96,16,.06);font-size:.78rem;line-height:1.6}
+.ktn-tplalt__warn{margin:0 0 6px;font-weight:600;color:#7a4a08}
+.ktn-tplalt__dl{margin:0}
+.ktn-tplalt__dl div{display:flex;gap:8px}
+.ktn-tplalt__dl dt{flex:0 0 6.5em;color:var(--muted)}
+.ktn-tplalt__dl dd{margin:0;min-width:0;word-break:break-all}
+.ktn-tplalt__new{margin:8px 0 0;font-size:.76rem;color:var(--muted);line-height:1.6}
 .p9013-checks{display:flex;flex-wrap:wrap;gap:6px 14px}
 .p9013-check{display:inline-flex;align-items:center;gap:5px;font-size:.82rem;cursor:pointer}
 .p9013-txn{white-space:normal;word-break:break-all}   /* 申込NID の下の取引番号は列の中で折り返す（作品名の列に重ならない・2026-11-10） */

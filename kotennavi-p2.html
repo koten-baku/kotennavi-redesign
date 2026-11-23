@@ -51,8 +51,8 @@
     <button class="dbtn" onclick="setR('user+gallery',this)">gallery本人</button>
     <button class="dbtn" onclick="setR('admin',this)">管理者</button>
     <span class="dbar-sep" style="margin-left:8px">LIAISON：</span>
-    <button class="dbtn dbtn-liaison on" onclick="setLiaison('plus',this)">LIAISON+</button>
     <button class="dbtn dbtn-liaison" onclick="setLiaison('liaison',this)">LIAISON</button>
+    <button class="dbtn dbtn-liaison on" onclick="setLiaison('plus',this)">LIAISON+</button>
     <span class="dbar-sep" style="margin-left:8px">会期：</span>
     <button class="dbtn dbtn-period" onclick="setPeriod('before',this)">会期前</button>
     <button class="dbtn dbtn-period on" onclick="setPeriod('during',this)">会期中</button>
@@ -1196,7 +1196,7 @@
       exh: 3, watch: 11, watchId: 'p2FollowBtn', watchOn: false, status: 'live', panel: true
     };
 
-    setLiaison('plus', null); /* dbar デフォルト（LIAISON+）に合わせて初期化 */
+    setLiaison('plus', document.querySelector('.dbtn-liaison[onclick*="plus"]')); /* dbar デフォルト（LIAISON+）に合わせて初期化（ボタンの選択の印も付ける・2026-11-22） */
     KTN.init({ page: 'p2', role: 'guest' });
     _p2ApplyStatus(); /* ヒーローの状態バッジ・本日休み・距離を初期反映 */
 

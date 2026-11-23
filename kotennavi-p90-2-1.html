@@ -207,6 +207,8 @@
           <div class="p902-flow-panel__row">
             <input type="text" class="p902-flow-panel__input" id="p902InquiryFrom" readonly>
           </div>
+          <!-- ほかのテンプレートを番号で（2026-11-20・KTN.tplAlt） -->
+          <div data-tplalt-slot data-screen="p90-2" data-sel="p902InquiryReasonSel" data-subject="p902InquirySubject" data-body="p902InquiryBody" data-send="p902InquirySendBtn"></div>
           <label class="p902-flow-panel__label" for="p902InquirySubject">件名</label>
           <div class="p902-flow-panel__row">
             <input maxlength="60" data-count type="text" class="p902-flow-panel__input" id="p902InquirySubject">
@@ -231,7 +233,12 @@
               <option value="__new__" data-admin-lv="A">＋ 新しいテンプレートとして追加</option>
             </select>
           </div>
-          <p class="p902-flow-panel__hint">「取消を確定する」は取消だけを行います。取消のご連絡メールは、下の「取消のご連絡メールを送信する」で別に送ります（送らないこともできます。取消の前でも後でも送れます）。</p>
+          <p class="p902-flow-panel__hint">「取消を確定する」は取消だけを行います。取消のご連絡メールは下の欄から、取消を確定したあとに送れます（送らないこともできます）。</p>
+          <div class="p902-flow-panel__actions">
+            <button type="button" class="ktn-op-btn ktn-op-btn--sm" id="p902CancelBackBtn">戻る</button>
+            <button type="button" class="ktn-op-btn ktn-op-btn--danger" id="p902CancelConfirmBtn">取消を確定する</button>
+          </div>
+          <!-- 取消のご連絡メール：取消を確定したあとに出す（操作 → メールの順・2026-11-23） -->
           <div id="p902CancelMailFields" hidden>
             <div class="p902-flow-panel__row p902-flow-panel__new-row" id="p902CancelNewNameRow" hidden>
               <input maxlength="40" data-count type="text" class="p902-flow-panel__input" id="p902CancelNewName" placeholder="新しいテンプレート名" autocomplete="off">
@@ -241,16 +248,14 @@
             <div class="p902-flow-panel__row">
               <input type="text" class="p902-flow-panel__input" id="p902CancelFrom" readonly>
             </div>
+            <!-- ほかのテンプレートを番号で（2026-11-20・KTN.tplAlt） -->
+            <div data-tplalt-slot data-screen="p90-2" data-sel="p902CancelReasonSel" data-subject="p902CancelSubject" data-body="p902CancelBody" data-send="p902CancelMailSendBtn"></div>
             <label class="p902-flow-panel__label" for="p902CancelSubject">件名</label>
             <div class="p902-flow-panel__row">
               <input maxlength="60" data-count type="text" class="p902-flow-panel__input" id="p902CancelSubject">
             </div>
             <textarea class="p902-flow-panel__textarea" id="p902CancelBody" rows="10"></textarea>
             <div class="p902-flow-panel__actions"><span class="p901-rv-mail__sent" id="p902CancelMailSent"></span><button type="button" class="ktn-op-btn ktn-op-btn--sm" id="p902CancelMailSendBtn">取消のご連絡メールを送信する</button></div>
-          </div>
-          <div class="p902-flow-panel__actions">
-            <button type="button" class="ktn-op-btn ktn-op-btn--sm" id="p902CancelBackBtn">戻る</button>
-            <button type="button" class="ktn-op-btn ktn-op-btn--danger" id="p902CancelConfirmBtn">取消を確定する</button>
           </div>
         </div>
 
@@ -264,6 +269,8 @@
           <div class="p902-flow-panel__row">
             <input type="text" class="p902-flow-panel__input" id="p902GrantFrom" readonly>
           </div>
+          <!-- ほかのテンプレートを番号で（2026-11-20・KTN.tplAlt） -->
+          <div data-tplalt-slot data-screen="p90-2" data-sel="p902GrantTemplateSel" data-subject="p902GrantMailSubject" data-body="p902GrantMailBody" data-send="p902GrantMailSendBtn"></div>
           <label class="p902-flow-panel__label" for="p902GrantMailSubject">件名</label>
           <div class="p902-flow-panel__row">
             <input maxlength="60" data-count type="text" class="p902-flow-panel__input" id="p902GrantMailSubject">

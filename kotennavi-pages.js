@@ -1897,6 +1897,7 @@ KTN.pages['p2-5'] = function () {
       if (show) { tab.dataset.liaisonTag = 'preview'; if (tag) tag.textContent = 'プレビュー'; }
       else { delete tab.dataset.liaisonTag; if (tag) tag.textContent = ''; }
     }
+    if (typeof ktnNoWorksView === 'function') ktnNoWorksView();   /* 作品0点なら、役割で 404／プレビューの帯を描き直す（2026-11-22） */
   }
   window.setP25Period = function (p, btn) {
     window.p25Period = p;
@@ -2068,6 +2069,7 @@ KTN.pages['p2-5-1'] = function () {
       if (show) { tab.dataset.liaisonTag = 'preview'; if (tag) tag.textContent = 'プレビュー'; }
       else { delete tab.dataset.liaisonTag; if (tag) tag.textContent = ''; }
     }
+    if (typeof ktnNoWorksView === 'function') ktnNoWorksView();   /* 作品0点なら、役割で 404／プレビューの帯を描き直す（2026-11-22） */
   }
   window.setP25Period = function (p, btn) {
     window.p25Period = p;
@@ -10491,6 +10493,17 @@ KTN.pages['p90-2-1'] = function () {
   var cancelFromEl        = document.getElementById('p902CancelFrom');
   var cancelSubjectEl     = document.getElementById('p902CancelSubject');
   var cancelBodyEl        = document.getElementById('p902CancelBody');
+  function lockCancelMail(on) {   /* 取消のご連絡メール：「取消を確定する」の下の開閉のボタン。確定したら押せて、押すと下に欄が開く（操作のモーダルと同じ形・2026-11-23） */
+    if (!cancelMailFieldsEl) return;
+    var tg = cancelMailFieldsEl.previousElementSibling;
+    if (!tg || !tg.hasAttribute('data-cancel-mail-toggle')) {
+      cancelMailFieldsEl.insertAdjacentHTML('beforebegin', '<div class="ktn-mailbox" data-cancel-mail-toggle><button type="button" class="ktn-mailbox__toggle" aria-expanded="false"><span class="ktn-mailbox__head">取消のご連絡メール（任意）</span><span class="ktn-mailbox__state">取消を確定したあとに開けます</span><svg class=\"ktn-mailbox__arr\" viewBox=\"0 0 14 14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" width=\"12\" height=\"12\" aria-hidden=\"true\"><path d=\"M3.5 5.25 7 8.75l3.5-3.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg></button></div>');
+      tg = cancelMailFieldsEl.previousElementSibling;
+      tg.querySelector('button').onclick = function () { var op = cancelMailFieldsEl.hidden; cancelMailFieldsEl.hidden = !op; this.setAttribute('aria-expanded', op ? 'true' : 'false'); };
+    }
+    var b = tg.querySelector('button'); b.disabled = on; tg.classList.toggle('is-locked', on); tg.querySelector('.ktn-mailbox__state').hidden = !on;
+    if (on) { cancelMailFieldsEl.hidden = true; b.setAttribute('aria-expanded', 'false'); }
+  }
   var cancelNewRow        = document.getElementById('p902CancelNewNameRow');
   var cancelNewName       = document.getElementById('p902CancelNewName');
   var cancelNewSaveBtn    = document.getElementById('p902CancelNewSaveBtn');
@@ -10849,7 +10862,7 @@ KTN.pages['p90-2-1'] = function () {
     if (cancelReasonSel) cancelReasonSel.value = 'cancel-' + defaultReason;
     cancelMailSent = false; if (cancelMailSendBtn) cancelMailSendBtn.disabled = false; if (cancelMailSentEl) cancelMailSentEl.textContent = '';
     if (cancelConfirmBtn) { cancelConfirmBtn.disabled = false; cancelConfirmBtn.textContent = '取消を確定する'; } if (cancelBackBtn) cancelBackBtn.textContent = '戻る'; if (cancelReasonSel) cancelReasonSel.disabled = false;
-    if (cancelMailFieldsEl) cancelMailFieldsEl.hidden = false;
+    lockCancelMail(true);
     if (cancelNewRow) cancelNewRow.hidden = true;
     loadCancelTemplate(cancelReasonSel ? cancelReasonSel.value : 'cancel-input-error');
     if (cancelPanel) cancelPanel.hidden = false;
@@ -10885,6 +10898,7 @@ KTN.pages['p90-2-1'] = function () {
     var reason = cancelReasonSel ? (D.bareReasonKey(cancelReasonSel.value) || 'other') : 'other';
     var emailSent = cancelMailSent;
     finishCancelled(reason, emailSent);
+    lockCancelMail(false);
     if (KTN.toast) KTN.toast('お申込みを取消しました（デモ）');
     /* 取消のあともパネルを開いたままにし、メールをあとから送れるようにする（確定のボタンは止め、戻るは「閉じる」に） */
     if (cancelPanel) cancelPanel.hidden = false; if (reviewActionsEl) reviewActionsEl.hidden = true;
@@ -11561,6 +11575,17 @@ KTN.pages['p90-11-1'] = function () {
   var cancelFromEl        = document.getElementById('p9011CancelFrom');
   var cancelSubjectEl     = document.getElementById('p9011CancelSubject');
   var cancelBodyEl        = document.getElementById('p9011CancelBody');
+  function lockCancelMail(on) {   /* 取消のご連絡メール：「取消を確定する」の下の開閉のボタン。確定したら押せて、押すと下に欄が開く（操作のモーダルと同じ形・2026-11-23） */
+    if (!cancelMailFieldsEl) return;
+    var tg = cancelMailFieldsEl.previousElementSibling;
+    if (!tg || !tg.hasAttribute('data-cancel-mail-toggle')) {
+      cancelMailFieldsEl.insertAdjacentHTML('beforebegin', '<div class="ktn-mailbox" data-cancel-mail-toggle><button type="button" class="ktn-mailbox__toggle" aria-expanded="false"><span class="ktn-mailbox__head">取消のご連絡メール（任意）</span><span class="ktn-mailbox__state">取消を確定したあとに開けます</span><svg class=\"ktn-mailbox__arr\" viewBox=\"0 0 14 14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" width=\"12\" height=\"12\" aria-hidden=\"true\"><path d=\"M3.5 5.25 7 8.75l3.5-3.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg></button></div>');
+      tg = cancelMailFieldsEl.previousElementSibling;
+      tg.querySelector('button').onclick = function () { var op = cancelMailFieldsEl.hidden; cancelMailFieldsEl.hidden = !op; this.setAttribute('aria-expanded', op ? 'true' : 'false'); };
+    }
+    var b = tg.querySelector('button'); b.disabled = on; tg.classList.toggle('is-locked', on); tg.querySelector('.ktn-mailbox__state').hidden = !on;
+    if (on) { cancelMailFieldsEl.hidden = true; b.setAttribute('aria-expanded', 'false'); }
+  }
   var cancelNewRow        = document.getElementById('p9011CancelNewNameRow');
   var cancelNewName       = document.getElementById('p9011CancelNewName');
   var cancelNewSaveBtn    = document.getElementById('p9011CancelNewSaveBtn');
@@ -11741,7 +11766,7 @@ KTN.pages['p90-11-1'] = function () {
     if (cancelReasonSel) cancelReasonSel.value = 'cancel-' + defaultReason;
     cancelMailSent = false; if (cancelMailSendBtn) cancelMailSendBtn.disabled = false; if (cancelMailSentEl) cancelMailSentEl.textContent = '';
     if (cancelConfirmBtn) { cancelConfirmBtn.disabled = false; cancelConfirmBtn.textContent = '取消を確定する'; } if (cancelBackBtn) cancelBackBtn.textContent = '戻る'; if (cancelReasonSel) cancelReasonSel.disabled = false;
-    if (cancelMailFieldsEl) cancelMailFieldsEl.hidden = false;
+    lockCancelMail(true);
     if (cancelNewRow) cancelNewRow.hidden = true;
     loadCancelTemplate(cancelReasonSel ? cancelReasonSel.value : 'cancel-document-unclear');
     if (cancelPanel) cancelPanel.hidden = false;
@@ -11785,6 +11810,7 @@ KTN.pages['p90-11-1'] = function () {
     D.saveOverride(current);
     rec('取消', D.CANCEL_REASON_LABEL[reason] || '');
     renderReview();
+    lockCancelMail(false);
     if (KTN.toast) KTN.toast('お申込みを取消しました（デモ）');
     /* 取消のあともパネルを開いたままにし、メールをあとから送れるようにする（確定のボタンは止め、戻るは「閉じる」に） */
     if (cancelPanel) cancelPanel.hidden = false; if (reviewActionsEl) reviewActionsEl.hidden = true;
@@ -12226,10 +12252,6 @@ function ktnMailTemplates() {
     { id: 'mt-p905-d2', screenId: 'p90-5', pattern: 'abnormal', variantKey: 'delreq-decline', from: 'info@koten-navi.com',
       name: "展覧会の削除の依頼を断りました", subject: "【個展なび】展覧会「{{exhibitionName}}」の削除のご依頼について", body: "{{userName}} 様\n\n展覧会「{{exhibitionName}}」の削除のご依頼について、\n事務局で確かめた結果、いまは削除しないことになりました。\n\n──────────────────────────────\n 展覧会：「{{exhibitionName}}」\n 依頼日時：{{requestedAt}}\n──────────────────────────────\n\n■ 理由\n{{declineReason}}\n\n{{declineDetail}}\n\n展覧会のページは、そのまま公開しています。\nご不明な点は、お問合わせください。\n　{{contactUrl}}\n\n{{commonFooter}}",
       status: 'active', usageNote: "P90-5 の「削除の依頼」のタブで依頼を断ったとき（S-D-02）。断った理由（詳しい内容）を書く。", updatedAt: '2026.11.14' },
-    /* 管理者がユーザーを新規作成したときのパスワードの設定の案内（S-U-01・旧 A-U-09 の自動送信をやめた＝2026-11-14 ユーザー指示）。P90-1-1 の「パスワードの設定の案内を送る」を選んだときだけ送る */
-    { id: 'mt-p901-u1', screenId: 'p90-1', pattern: 'normal', variantKey: 'account-created', from: 'register@koten-navi.com',
-      name: "アカウント作成のご案内（パスワードの設定）", subject: "【個展なび】アカウントを作成しました（パスワードの設定をお願いします）", body: "{{userName}} 様\n\n個展なび事務局にて、あなたのアカウントを作成しました。\n下記のリンクを開いて、パスワードを設定してください。\n設定が終わると、ログインしてご利用いただけます。\n\n──────────────────────────────\n ログインID：{{loginId}}\n──────────────────────────────\n\n　{{setupUrl}}\n\n※このリンクの有効期限は {{linkExpiry}} です。期限が過ぎた場合は、\n　パスワードの再設定からお手続きください。\n　{{resetUrl}}\n\n■ このメールに心当たりがない場合\n下記よりお問い合わせください。\n　{{supportUrl}}\n\n※本メールは送信専用です。\n\n{{commonFooter}}",
-      status: 'active', usageNote: "管理者が P90-1-1 でユーザーを新規作成・クローンしたとき、本人にパスワードの設定を案内する（S-U-01）。保存のときに「パスワードの設定の案内を送る」を選んだ場合だけ送る。", updatedAt: '2026.11.14' },
     /* アカウントのブロック（S-U-02・2026-11-15）。P90-1-1 の「ブロック」のモーダルから送る（送らない選択もできる＝迷惑行為だけのアカウントなど） */
     { id: 'mt-p901-u2', screenId: 'p90-1', pattern: 'abnormal', variantKey: 'account-block', from: 'improper@koten-navi.com',
       name: "アカウントの利用停止のお知らせ", subject: "【個展なび】アカウントのご利用を停止しました", body: "{{userName}} 様\n\n個展なびをご利用いただき、ありがとうございます。\n\nあなたのアカウントにつきまして、下記の理由により、ご利用を停止いたしました。\nログインいただけない状態となっております。\n\n■ 理由\n　（理由）\n\n進行中の LIAISON+ のお取引につきましては、事務局よりあらためてご連絡いたします。\n\nこの内容についてのお問い合わせは、本メールにご返信ください。\n\n{{commonFooter}}",
@@ -12249,13 +12271,121 @@ function ktnMailTemplates() {
       name: "重複の可能性", subject: "【個展なび】展覧会「{{exhibitionName}}」の掲載内容についての確認のお願い", body: "{{userName}} 様\n\nいつも個展なびをご利用いただき、ありがとうございます。\n\n確認のご依頼をいただいた展覧会「{{exhibitionName}}」について、\nすでに掲載されている展覧会と重なっている可能性がございます。\n\n──────────────────────────────\n 確認のご依頼をいただいた展覧会：{{exhibitionName}}\n 　{{pageUrl}}\n すでに掲載されている展覧会：（ここに展覧会名と URL を記載してください）\n──────────────────────────────\n\n同じ展覧会であれば、すでに掲載されている展覧会をご利用ください。\n別の展覧会であれば、その旨をこのメールにご返信ください。確認のうえ、公開いたします。\n\n{{commonFooter}}",
       status: 'active', usageNote: "同じ展覧会が、同じ人・別の人によってすでに掲載されているとき（S-E-03③）。", updatedAt: '2026.11.14' },
   ];
+  /* 複数の画面で使うテンプレート（2026-11-20 ユーザー指示）：screens＝使う画面すべて（先頭が主な画面＝screenId）。
+     各画面は自分のページの id で引く（KTN.tplOn）。P90-9 の「使用画面」にはすべての画面を出す。本番もテンプレートに使う画面の一覧を持つ */
+  var ALSO = {
+    'mt-p901-1': ['p90-15'], 'mt-p901-2': ['p90-15'], 'mt-p901-3': ['p90-15'],      /* 出品停止（S-M-12）：P90-15 の「出品停止」でも */
+    'mt-p901b-1': ['p90-16'], 'mt-p901b-2': ['p90-16'], 'mt-p901b-3': ['p90-16'],   /* 購入停止（S-M-13）：P90-16 の「購入停止」でも */
+    'mt-p905-1': ['p2-11'], 'mt-p905-2': ['p2-11'], 'mt-p905-3': ['p2-11'],         /* 展覧会の内容の問い合わせ：P2-11 の管理者の欄でも */
+    'mt-p9013-1': ['p90-21-1'], 'mt-p9013-2': ['p90-21-1']                          /* 取引の相談への回答・確認のお願い：P90-21-1 でも */
+  };
+  /* P90-9 で新しく作ったテンプレート（2026-11-22・デモは sessionStorage。本番はテンプレートのデータに足すだけ） */
+  try { JSON.parse(sessionStorage.getItem('ktnTplNew') || '[]').forEach(function (t) { if (!TEMPLATES.some(function (x) { return x.id === t.id; })) TEMPLATES.push(t); }); } catch (e) {}
+  TEMPLATES.forEach(function (t) { if (!t.screens) t.screens = [t.screenId].concat(ALSO[t.id] || []); });
   return TEMPLATES;
 }
+/* テンプレートがその画面で使えるか（screens に入っているか） */
+/* 出す場面（2026-11-22 ユーザー確認）：送信の画面の中で、テンプレートを選ぶ選択肢がある場所。P90-9 で新しいテンプレートを作るときに選ぶと、その選択肢に並ぶ（E・L も選べる）。
+   [場面の id, 名前, ほかに使う画面]。文面が1つに決まっている操作（督促・期限の延長・停止の理由ごとの連絡など）は場面にしない（A が番号で選んで使う） */
+/* [場面の id, 名前, ほかに使う画面, まとめる識別キー（正規表現）] */
+var KTN_TPL_GROUPS = {
+  'p90-13': [['contact', '事務局から連絡する（メールで送る）の選択肢', [], /^contact-/]],
+  'p90-12': [['contact', '出品者に連絡する の選択肢', [], /^work-(status|content|other)$/]],
+  'p90-5': [['ask', '展覧会の内容を問い合わせる の選択肢（P90-5・P2-11）', ['p2-11'], /^confirm-/]],
+  'p60-11': [['reply', 'お問い合わせへの返信の選択肢（P90-21-1）', [], /./]],
+  'p60-12': [['reply', 'ご要望への返信の選択肢（P90-21-1）', [], /./]],
+  'p60-13': [['reply', '問題報告への対応の選択肢（P90-21-1）', [], /./]],
+  'p60-14': [['reply', '修正依頼への回答の選択肢（P90-21-1）', [], /./]],
+  'p90-21-1': [['reply', '取引の相談への回答の選択肢（P90-21-1）', [], /./]]
+};
+var KTN_TPL_SKIP = { 'p90-13': /^(answer|confirm-detail)$/ };   /* 取引の相談への回答は P90-21-1 の場面 */
+var KTN_TPL_EXTRA = { 'p90-1': { 'lp-revoke-': ['p90-15'], 'lp-buy-': ['p90-16'] } };   /* 出品停止は P90-15、購入停止は P90-16 でも */
+var KTN_TPL_OWN = { 'p90-2': 1, 'p90-11': 1, 'p61-11': 1 };   /* 自分の中で足す画面（P90-2-1・P90-11-1 の「＋ 新しいテンプレートとして追加」）と、公開で送るニュース */
+KTN.tplScenes = function (screen) {
+  var grp = KTN_TPL_GROUPS[screen] || [], out = grp.map(function (g) { return [g[0], g[1], g[2]]; });
+  if (KTN_TPL_OWN[screen] || /^p60-1[1-4]$|^p90-21-1$/.test(screen)) return out;
+  var skip = KTN_TPL_SKIP[screen], ex = KTN_TPL_EXTRA[screen] || {};
+  ktnMailTemplates().forEach(function (t) {
+    if (t.custom || t.screenId !== screen || t.status === 'archived') return;
+    if (skip && skip.test(t.variantKey)) return;
+    if (grp.some(function (g) { return g[3] && g[3].test(t.variantKey); })) return;
+    var more = []; Object.keys(ex).forEach(function (p) { if (t.variantKey.indexOf(p) === 0) more = ex[p]; });
+    out.push([t.variantKey, ((KTN.MAIL_NO && KTN.MAIL_NO[t.id]) ? KTN.MAIL_NO[t.id] + ' ' : '') + t.name, more]);
+  });
+  return out;
+};
+function ktnTplScene(screen, scene) { var a = KTN.tplScenes(screen); for (var i = 0; i < a.length; i++) if (a[i][0] === scene) return a[i]; return null; }
+/* 文面が1つに決まっている操作で、同じ場面に A が足したテンプレートがあれば、選択肢を出す（1つの間は出さない） */
+KTN.tplVariants = function (screen, base) {
+  var all = ktnMailTemplates(), b = null, out = [];
+  all.forEach(function (t) { if (t.variantKey === base && ktnTplOn(t, screen)) b = t; });
+  if (b) out.push(b);
+  all.forEach(function (t) { if (t.custom && t.scene === base && t.status !== 'archived' && ktnTplOn(t, screen)) out.push(t); });
+  return out;
+};
+KTN.tplVariantSel = function (screen, base, cur) {
+  var v = KTN.tplVariants(screen, base); if (v.length < 2) return '';
+  var esc = function (s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); };
+  return '<select class="p211-select ktn-tpl-variant" data-tpl-variant aria-label="テンプレート">' + v.map(function (t) {
+    return '<option value="' + esc(t.variantKey) + '"' + (t.variantKey === cur ? ' selected' : '') + '>' + (t.custom ? '（新規）' : ((KTN.MAIL_NO && KTN.MAIL_NO[t.id]) || '') + ' ') + esc(t.name) + '</option>'; }).join('') + '</select>';
+};
+function ktnTplOn(t, id) { return (t.screens || [t.screenId]).indexOf(id) >= 0; }
+KTN.tplOn = ktnTplOn;
 KTN.mailTemplates = ktnMailTemplates;
 /* KTN.mailSend({ title, screen, keys:[variantKey…], tokens:{…}, lead, onSent(x), onSkip })＝事務局が手で送るメールの送信の欄（モーダル）。
    P90-9 の手動のテンプレート（screen・keys で絞る）を読み込み、{{…}} を tokens で埋める。宛先・件名・本文は送る前に直せる（2026-11-14・P90-5） */
+/* 操作のモーダルの中に置くメールの欄（2026-11-23 ユーザー指示）：操作の前から「操作のあとに送るメール」が見え（押せない）、
+   操作を実行するとモーダルは閉じずに使えるようになる＝操作の画面を見ながら書ける。操作 → メールの順はそのまま。
+   KTN.mailBox(入れ物, { screen, keys, scene, tokens（値か、unlock に渡したものを受ける関数）, tokensFor, heading, lead, lockText, done, onSent })。戻り値の unlock(x) で使えるようにする */
+KTN.mailBox = function (el, o) {
+  if (!el) return { unlock: function () {}, sent: function () { return false; } };
+  if (!o.scene && o.keys && o.keys.length === 1) o.scene = o.keys[0];
+  var T = ktnMailTemplates().filter(function (x) { return ktnTplOn(x, o.screen) && x.status !== 'archived' && (!o.keys || o.keys.indexOf(x.variantKey) >= 0 || (x.custom && o.keys.indexOf(x.scene) >= 0) || (o.scene && x.scene === o.scene)); });
+  if (o.keys) { var oi = function (x) { var i = o.keys.indexOf(x.variantKey); return i >= 0 ? i : o.keys.indexOf(x.scene) + 0.5; }; T.sort(function (p, q) { return oi(p) - oi(q); }); }
+  if (!T.length) { el.innerHTML = ''; return { unlock: function () {}, sent: function () { return false; } }; }
+  var esc = function (s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); };
+  var label = function (x) { return x.custom ? '（新規）' + x.name : ((KTN.MAIL_NO && KTN.MAIL_NO[x.id]) ? KTN.MAIL_NO[x.id] + '　' : '') + x.name; };
+  /* モーダルの中なら、操作のボタンの列（.p211-modal__foot）の下へ動かす＝ボタンの並びで「操作 → お知らせ」の順が分かる */
+  var mbx = el.closest && el.closest('.p211-modal__box'), foot = mbx && mbx.querySelector('.p211-modal__foot');
+  if (foot && (foot.compareDocumentPosition(el) & 2)) foot.parentNode.insertBefore(el, foot.nextSibling);
+  el.innerHTML = '<div class="ktn-mailbox is-locked">' +
+    '<button type="button" class="ktn-mailbox__toggle" data-mb-toggle aria-expanded="false" disabled><span class="ktn-mailbox__head">' + esc(o.heading || 'メール（任意）') + '</span><span class="ktn-mailbox__state" data-mb-state>' + esc((o.lockText || '操作のあとに送れます').replace(/送れます$/, '開けます')) + '</span><svg class="ktn-mailbox__arr" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" width="12" height="12" aria-hidden="true"><path d="M3.5 5.25 7 8.75l3.5-3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>' +
+    '<div class="ktn-mailbox__panel" data-mb-panel hidden>' +
+    (o.lead ? '<p class="p211-help">' + o.lead + '</p>' : '') +
+    '<div class="p211-field" data-mb-pick' + (T.length < 2 ? ' hidden' : '') + '><span class="p211-label">テンプレート</span><select class="p211-select" data-mb-tpl aria-label="テンプレート">' + T.map(function (x) { return '<option>' + esc(label(x)) + '</option>'; }).join('') + '</select></div>' +
+    '<div data-mb-alt>' + KTN.tplAlt.html(o.screen, o.scene) + '</div>' +
+    '<div class="p211-field"><span class="p211-label">送信元</span><p class="ktn-mailsend__from" data-mb-from></p></div>' +
+    '<div class="p211-field"><span class="p211-label">件名</span><input class="p211-input" data-mb-sub aria-label="件名"></div>' +
+    '<div class="p211-field"><span class="p211-label">本文</span><textarea class="p211-textarea" rows="9" data-mb-body aria-label="本文"></textarea>' +
+    '<p class="p211-help">テンプレートをもとに、このケースに合わせて直してから送ってください。（ここに〜）の部分は書き換えてください。送らないときは、送らずに閉じてください。</p></div>' +
+    '<p class="p90cm-err" data-mb-err hidden></p>' +
+    '<p class="ktn-mailbox__foot"><span class="ktn-mailbox__sent" data-mb-sent></span><button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--primary" data-mb-send>メールを送信する</button></p></div></div>';
+  var box = el.firstChild, q = function (s) { return box.querySelector(s); };
+  var sel = q('[data-mb-tpl]'), sub = q('[data-mb-sub]'), body = q('[data-mb-body]'), err = q('[data-mb-err]'), send = q('[data-mb-send]'), alt = q('[data-mb-alt]'), sent = false;
+  var tk = typeof o.tokens === 'function' ? o.tokens(null) : (o.tokens || {});
+  function fill(v, x) { var t0 = o.tokensFor && x ? o.tokensFor(x) : tk; return String(v || '').replace(/\{\{(\w+)\}\}/g, function (a, k) { return t0[k] != null && t0[k] !== '' ? t0[k] : a; }); }
+  function pick() { var x = T[sel.selectedIndex] || T[0]; q('[data-mb-from]').textContent = x.from || ''; sub.value = fill(x.subject, x); body.value = fill(x.body, x); body.defaultValue = body.value;
+    KTN.tplAlt.bind(alt, { subject: sub, body: body, from: q('[data-mb-from]'), tokens: tk, onPick: function () { q('[data-mb-pick]').hidden = true; } }); }
+  var tg = q('[data-mb-toggle]'), panel = q('[data-mb-panel]');
+  function lock(on) { box.classList.toggle('is-locked', on); tg.disabled = on; q('[data-mb-state]').hidden = !on; if (on) { panel.hidden = true; tg.setAttribute('aria-expanded', 'false'); } }   /* 操作の前は開けない */
+  tg.onclick = function () { var open = panel.hidden; panel.hidden = !open; tg.setAttribute('aria-expanded', open ? 'true' : 'false'); if (open) (T.length > 1 ? sel : body).focus(); };
+  sel.onchange = pick; pick(); lock(true);
+  send.onclick = function () {
+    if (!sub.value.trim() || !body.value.trim()) { err.textContent = '件名と本文を入力してください。'; err.hidden = false; return; }
+    if (/（ここに[^）]*）/.test(body.value)) { err.textContent = '本文の（ここに〜）の部分を書き換えてください。'; err.hidden = false; return; }
+    if (KTN.tplAlt.check(alt, [sub.value, body.value])) return;
+    err.hidden = true;
+    var x = KTN.tplAlt.tpl(alt) || T[sel.selectedIndex] || T[0], no = KTN.tplAlt.no(alt, x.custom ? '（新規）' + x.name : (KTN.MAIL_NO && KTN.MAIL_NO[x.id]) || '');
+    sent = true; [sel, sub, body, send].forEach(function (y) { y.disabled = true; }); q('[data-mb-sent]').textContent = (no || 'メール') + ' を送信しました';
+    if (o.onSent) o.onSent({ tpl: x, no: no, subject: sub.value, edited: body.value !== body.defaultValue });
+    KTN.toast(o.done || 'メールを送信しました（デモ）');
+  };
+  return { unlock: function (arg) { if (typeof o.tokens === 'function') { tk = o.tokens(arg); pick(); } lock(false); }, sent: function () { return sent; } };
+};
 KTN.mailSend = function (o) {
-  var T = ktnMailTemplates().filter(function (x) { return x.screenId === o.screen && x.status !== 'archived' && (!o.keys || o.keys.indexOf(x.variantKey) >= 0); });
+  if (!o.scene && o.keys && o.keys.length === 1) o.scene = o.keys[0];   /* 文面が1つの操作は、そのキーが場面（2026-11-23） */
+  var T = ktnMailTemplates().filter(function (x) { return ktnTplOn(x, o.screen) && x.status !== 'archived' && (!o.keys || o.keys.indexOf(x.variantKey) >= 0 || (x.custom && o.keys.indexOf(x.scene) >= 0) || (o.scene && x.scene === o.scene)); });
+  if (o.keys) { var oi = function (x) { var i = o.keys.indexOf(x.variantKey); return i >= 0 ? i : o.keys.indexOf(x.scene) + 0.5; }; T.sort(function (p, q) { return oi(p) - oi(q); }); }   /* キーの順（A が足したものは元のすぐあと） */   /* o.scene＝その場面に足したテンプレートも並べる（2026-11-22） */
   if (!T.length) return;
   var m = document.getElementById('ktnMailSendModal');
   if (!m) {
@@ -12263,6 +12393,7 @@ KTN.mailSend = function (o) {
     m.innerHTML = '<div class="p211-modal__overlay"></div><div class="p211-modal__box ktn-mailsend" role="dialog" aria-modal="true" aria-labelledby="ktnMailSendTtl">' +
       '<p class="p211-modal__title" id="ktnMailSendTtl"></p><p class="p211-modal__note" id="ktnMailSendLead"></p>' +
       '<div class="p211-field" id="ktnMailSendPick"><label class="p211-label" for="ktnMailSendTpl">テンプレート</label><select class="p211-select" id="ktnMailSendTpl"></select></div>' +
+      '<div class="p211-field" id="ktnMailSendAlt"></div>' +
       '<div class="p211-field"><span class="p211-label">送信元</span><p class="ktn-mailsend__from" id="ktnMailSendFrom"></p></div>' +
       '<div class="p211-field"><label class="p211-label" for="ktnMailSendSubject">件名<span class="ktn-req">必須</span></label><input class="p211-input" id="ktnMailSendSubject"></div>' +
       '<div class="p211-field"><label class="p211-label" for="ktnMailSendBody">本文<span class="ktn-req">必須</span></label><textarea class="p211-textarea" id="ktnMailSendBody" rows="12"></textarea>' +
@@ -12272,14 +12403,16 @@ KTN.mailSend = function (o) {
     document.body.appendChild(m);
   }
   var tk = o.tokens || {};
-  function fill(v) { return String(v || '').replace(/\{\{(\w+)\}\}/g, function (a, k) { return tk[k] != null && tk[k] !== '' ? tk[k] : a; }); }
+  function fill(v, x) { var t0 = o.tokensFor && x ? o.tokensFor(x) : tk; return String(v || '').replace(/\{\{(\w+)\}\}/g, function (a, k) { return t0[k] != null && t0[k] !== '' ? t0[k] : a; }); }   /* o.tokensFor(テンプレート)＝テンプレートごとの差し込み（注意行為の種類ごと・2026-11-23） */
   var sel = document.getElementById('ktnMailSendTpl'), sub = document.getElementById('ktnMailSendSubject'), body = document.getElementById('ktnMailSendBody'), err = document.getElementById('ktnMailSendErr');
-  function pick() { var x = T[sel.selectedIndex] || T[0]; document.getElementById('ktnMailSendFrom').textContent = x.from || ''; sub.value = fill(x.subject); body.value = fill(x.body); }
+  function pick() { var x = T[sel.selectedIndex] || T[0]; document.getElementById('ktnMailSendFrom').textContent = x.from || ''; sub.value = fill(x.subject, x); body.value = fill(x.body, x); }
   document.getElementById('ktnMailSendTtl').textContent = o.title || 'メールを送る';
   document.getElementById('ktnMailSendLead').textContent = o.lead || '';
   document.getElementById('ktnMailSendLead').hidden = !o.lead;
   sel.innerHTML = T.map(function (x) { var no = (KTN.MAIL_NO && KTN.MAIL_NO[x.id]) || ''; return '<option>' + (no ? no + '　' : '') + x.name + '</option>'; }).join('');
   document.getElementById('ktnMailSendPick').hidden = T.length < 2;
+  var alt = document.getElementById('ktnMailSendAlt'); alt.innerHTML = KTN.tplAlt.html(o.screen, o.scene);
+  KTN.tplAlt.bind(alt, { subject: sub, body: body, from: document.getElementById('ktnMailSendFrom'), tokens: tk, onPick: function () { document.getElementById('ktnMailSendPick').hidden = true; } });   /* ほかのテンプレートを番号で（2026-11-20） */
   sel.onchange = pick; pick(); err.hidden = true;
   var cancel = document.getElementById('ktnMailSendCancel');
   cancel.textContent = o.skipLabel || 'キャンセル';
@@ -12287,13 +12420,133 @@ KTN.mailSend = function (o) {
   document.getElementById('ktnMailSendOk').onclick = function () {
     if (!sub.value.trim() || !body.value.trim()) { err.textContent = '件名と本文を入力してください。'; err.hidden = false; return; }
     if (/（ここに[^）]*）/.test(body.value)) { err.textContent = '本文の（ここに〜）の部分を書き換えてください。'; err.hidden = false; return; }
-    var x = T[sel.selectedIndex] || T[0];
+    if (KTN.tplAlt.check(alt, [sub.value, body.value])) return;
+    var x = KTN.tplAlt.tpl(alt) || T[sel.selectedIndex] || T[0];
     m.hidden = true;
-    if (o.onSent) o.onSent({ tpl: x, no: (KTN.MAIL_NO && KTN.MAIL_NO[x.id]) || '', subject: sub.value });
+    if (o.onSent) o.onSent({ tpl: x, no: KTN.tplAlt.no(alt, (KTN.MAIL_NO && KTN.MAIL_NO[x.id]) || ''), subject: sub.value, alt: KTN.tplAlt.used(alt) });
     KTN.toast(o.done || 'メールを送りました（デモ）');
   };
   m.hidden = false; (T.length > 1 ? sel : sub).focus();
 };
+
+/* ── ほかのテンプレートを番号で選ぶ（2026-11-20 ユーザー提案）。手で送るメールの画面で、候補（screens で絞ったもの）のほかに、
+   P90-9 にある手で送るメール（S-）のテンプレートを、番号か名前で呼び出せる。すべての管理者が使える。
+   ・送信元はテンプレートのもの（変えられない・ユーザー指示）
+   ・使えるのは A（admin）だけ（2026-11-22 仕様変更＝E・L は候補からだけ選ぶ）。合うものが無ければ、P90-9 で新しいテンプレートを作る（同じ画面を選んだ状態で開く）
+   ・選んだら「候補にないテンプレート」と、送信先・使う画面・送信元を出す（宛先の取り違えを防ぐ）
+   ・本文・件名に埋まらない差し込み（{{…}}）が残っていたら送らせない（KTN.tplAlt.check）
+   ・記録・トーストの番号には「（候補にないテンプレート）」を付ける（KTN.tplAlt.no）
+   使い方：HTML＝KTN.tplAlt.html()（入れ物）を、件名・本文の欄の近くに置く。JS＝KTN.tplAlt.bind(入れ物, { subject, body, name, from, tokens, onPick })。
+   送るときに KTN.tplAlt.check(入れ物) が文を返したら止め、番号は KTN.tplAlt.no(入れ物, いつもの番号) を使う。 ── */
+function ktnMailAud(no) {   /* 手で送るメールの送信先（P90-9 の全メール一覧と同じ） */
+  if (no === 'S-U-02') return 'ブロックしたアカウントの本人';
+  if (/^S-D-/.test(no)) return '削除を依頼した展覧会のオーナー';
+  if (no === 'S-M-12') return 'LIAISON+ を利用中の出品者';
+  if (no === 'S-M-13') return '購入者';
+  if (/^S-M-/.test(no)) return '申込者';
+  if (no === 'S-E-02') return '掲載依頼の送信者';
+  if (no === 'S-E-03') return '確認を依頼した展覧会のオーナー';
+  if (/^S-FQ-/.test(no)) return 'お問い合わせの送信者';
+  if (/^S-FW-/.test(no)) return 'ご要望の送信者';
+  if (no === 'S-FR-01') return '掲載の対象者（削除を依頼した人）';
+  if (/^S-FR-0[2-5]$/.test(no)) return '掲載者（ページのオーナー）';
+  if (/^S-T-/.test(no)) return '取引の当事者（購入者・出品者）';
+  if (/^S-[PW]-/.test(no)) return '出品者';
+  if (/^S-K-0[1-4]$/.test(no)) return '出品者'; if (/^S-K-0[56]$/.test(no)) return '購入者';
+  if (no === 'S-FX-02') return '掲載者（ページのオーナー）';
+  if (/^S-FX-/.test(no)) return '修正依頼の送信者';
+  if (no === 'A-N-04' || no === 'A-N-02') return '';
+  return '—';
+}
+KTN.tplAlt = (function () {
+  var n = 0;
+  function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  function noOf(t) { return (KTN.MAIL_NO && KTN.MAIL_NO[t.id]) || (t.custom ? '新規' : ''); }
+  function isA() { return KTN.ADMIN_LEVELS && KTN.adminLevel ? KTN.ADMIN_LEVELS[KTN.adminLevel()].n >= KTN.ADMIN_LEVELS.A.n : true; }
+  /* 選べるのは手で送るメール（S-）の有効なテンプレートだけ。自動のメール（A-）は選べない */
+  function pool() { return (typeof ktnMailTemplates === 'function' ? ktnMailTemplates() : []).filter(function (t) { return t.status !== 'archived' && (/^S-/.test(noOf(t)) || t.custom); }); }
+  function label(t) { return (t.custom ? '（新規）' : noOf(t) + '　') + t.name; }
+  function find(v) {
+    v = String(v || '').trim(); if (!v) return null;
+    var P = pool(), V = v.toUpperCase();
+    return P.filter(function (t) { return label(t) === v; })[0] || P.filter(function (t) { return noOf(t).toUpperCase() === V; })[0] ||
+      P.filter(function (t) { return noOf(t).toUpperCase().indexOf(V) === 0; })[0] || P.filter(function (t) { return t.name.indexOf(v) >= 0; })[0] || null;
+  }
+  function html(screen, scene) {
+    if (!isA()) return '';   /* E・L には出さない（候補からだけ選ぶ） */
+    var id = 'ktnTplAlt' + (++n);
+    return '<div class="ktn-tplalt" data-tplalt>' +
+      /* 2つの入口を並べて、開く前から見えるように（2026-11-22 ユーザー指摘＝新規作成が欄の中に隠れて見えなかった） */
+      '<p class="ktn-tplalt__links"><button type="button" class="ktn-tplalt__open" data-tplalt-open aria-expanded="false">ほかのテンプレートを番号で選ぶ</button><span class="ktn-tplalt__sep" aria-hidden="true">／</span>' +
+      '<a class="ktn-tplalt__open" href="./kotennavi-p90-9.html?new=1' + (screen ? '&amp;screen=' + encodeURIComponent(screen) : '') + (scene ? '&amp;scene=' + encodeURIComponent(scene) : '') + '" target="_blank" rel="noopener">新しいテンプレートを作る（P90-9）→</a></p>' +
+      '<div class="ktn-tplalt__box" hidden><label class="p211-label" for="' + id + '">番号か名前（P90-9 の手で送るメール）</label>' +
+      '<div class="ktn-tplalt__row"><input class="p211-input" id="' + id + '" list="' + id + 'L" placeholder="例：S-M-12・督促"><datalist id="' + id + 'L"></datalist>' +
+      '<button type="button" class="ktn-op-btn ktn-op-btn--sm" data-tplalt-pick>このテンプレートにする</button></div>' +
+      '<p class="p90cm-err" data-tplalt-err hidden></p>' +
+      '<p class="ktn-tplalt__new">P90-9 で新しく作ったテンプレートは「（新規）名前」で選べます。</p></div>' +
+      '<div class="ktn-tplalt__info" data-tplalt-info hidden></div><p class="p90cm-err" data-tplalt-senderr role="alert" hidden></p></div>';
+  }
+  function bind(root, o) {
+    if (!root) return;
+    var inner = root.matches && root.matches('[data-tplalt]') ? root : root.querySelector && root.querySelector('[data-tplalt]'); if (!inner) return;   /* E・L は部品が無い */
+    root = inner;
+    var box = root.querySelector('.ktn-tplalt__box'), inp = box.querySelector('input'), dl = box.querySelector('datalist'), err = root.querySelector('[data-tplalt-err]');
+    var openB = root.querySelector('[data-tplalt-open]'), info = root.querySelector('[data-tplalt-info]');
+    delete root.dataset.altId; delete root.dataset.altNo; info.hidden = true; box.hidden = true; inp.value = ''; err.hidden = true; openB.setAttribute('aria-expanded', 'false');
+    dl.innerHTML = pool().map(function (t) { return '<option value="' + esc(label(t)) + '"></option>'; }).join('');
+    var tk = o.tokens || {};
+    function fill(v) { if (o.fill) return o.fill(v); return String(v || '').replace(/\{\{(\w+)\}\}/g, function (a, k) { return tk[k] != null && tk[k] !== '' ? tk[k] : a; }); }
+    openB.onclick = function () { box.hidden = !box.hidden; openB.setAttribute('aria-expanded', box.hidden ? 'false' : 'true'); if (!box.hidden) inp.focus(); };
+    function pick() {
+      var t = find(inp.value);
+      if (!t) { err.textContent = '該当するテンプレートがありません（手で送るメール〔S-〕の番号か名前を入れてください）。'; err.hidden = false; return; }
+      err.hidden = true;
+      var no = t.custom ? '新規「' + t.name + '」' : noOf(t), scr = (t.screens || [t.screenId]).join('・').toUpperCase();
+      root.dataset.altId = t.id; root.dataset.altNo = no;
+      if (o.subject) o.subject.value = fill(t.subject);
+      if (o.body) { o.body.value = fill(t.body); o.body.disabled = false; }
+      if (o.name) o.name.textContent = t.custom ? no : no + ' ' + t.name;
+      if (o.from) o.from.textContent = t.from || '';
+      info.innerHTML = '<p class="ktn-tplalt__warn">候補にないテンプレートです。送信先と内容が、この宛先に合っているか確かめてから送ってください。</p>' +
+        '<dl class="ktn-tplalt__dl"><div><dt>テンプレート</dt><dd>' + esc(t.custom ? no : no + ' ' + t.name) + '</dd></div><div><dt>送信先</dt><dd>' + esc(t.custom ? '（新しいテンプレート：' + (t.usageNote || '用途のメモなし') + '）' : ktnMailAud(no.replace(/[①-⑩]$/, ''))) + '</dd></div>' +
+        '<div><dt>使う画面</dt><dd>' + esc(scr) + '</dd></div><div><dt>送信元</dt><dd>' + esc(t.from || '—') + '（変えられません）</dd></div></dl>';
+      info.hidden = false; box.hidden = true; openB.setAttribute('aria-expanded', 'false');
+      if (o.onPick) o.onPick(t, fill);
+    }
+    root.querySelector('[data-tplalt-pick]').onclick = pick;
+    inp.onkeydown = function (e) { if (e.key === 'Enter') { e.preventDefault(); pick(); } };
+  }
+  function host(root) { if (!root) return null; return root.matches && root.matches('[data-tplalt]') ? root : root.querySelector && root.querySelector('[data-tplalt]'); }
+  function used(root) { var r = host(root); return !!(r && r.dataset.altId); }
+  /* 送るまえの確かめ：候補にないテンプレートで、埋まらない差し込みが残っていたら文を返す */
+  function check(root, texts) {
+    var r = host(root), se = r && r.querySelector('[data-tplalt-senderr]'); if (se) se.hidden = true;
+    if (!used(root)) return '';
+    var left = (texts || []).join('\n').match(/\{\{\w+\}\}/g);
+    var msg = left ? '差し込みの値が入っていない箇所があります（' + left.filter(function (x, i, a) { return a.indexOf(x) === i; }).join('・') + '）。書き換えてから送ってください。' : '';
+    if (msg && se) { se.textContent = msg; se.hidden = false; }   /* 文は欄の下に出す（呼んだ側は送らずに止めるだけ） */
+    return msg;
+  }
+  function no(root, def) { var r = host(root); return r && r.dataset.altId ? r.dataset.altNo + '（候補にないテンプレート）' : def; }
+  function tpl(root) { var r = host(root); if (!r || !r.dataset.altId) return null; return pool().filter(function (t) { return t.id === r.dataset.altId; })[0] || null; }
+  /* 自前のテンプレートの欄を持つ画面（P90-2-1・P90-11-1）：HTML に <div data-tplalt-slot data-sel data-subject data-body data-send> を置くと、ここで付ける。
+     候補を選び直したら外す。送るボタンは、埋まらない差し込みが残っていたら止め、使ったときは操作の記録に番号を残す */
+  function slots() {
+    document.querySelectorAll('[data-tplalt-slot]').forEach(function (sl) {
+      if (sl.dataset.ready) return; sl.dataset.ready = '1';
+      var g = function (k) { return document.getElementById(sl.dataset[k]); }, sel = g('sel'), btn = g('send');
+      sl.innerHTML = html(sl.dataset.screen);
+      var b = function () { bind(sl, { subject: g('subject'), body: g('body') }); };
+      b(); if (sel) sel.addEventListener('change', b);
+      if (btn) btn.addEventListener('click', function (e) {
+        if (check(sl, [(g('subject') || {}).value || '', (g('body') || {}).value || ''])) { e.stopImmediatePropagation(); e.preventDefault(); return; }
+        if (used(sl) && KTN.auditRecord) KTN.auditRecord('機能申込の審査', { t: 'user', nid: '', name: document.title.split('｜')[0] }, no(sl, '') + ' を送った');
+      }, true);
+    });
+  }
+  document.addEventListener('DOMContentLoaded', function () { setTimeout(slots, 0); });
+  return { html: html, bind: bind, check: check, no: no, used: used, tpl: tpl, find: find, slots: slots };
+})();
 
 /* 手動のテンプレートの番号（id → S-…）。P90-9 の一覧・全メール一覧と、KTN.mailSend の選択肢で使う */
 KTN.MAIL_NO = {
@@ -12303,7 +12556,7 @@ KTN.MAIL_NO = {
   'mt-p9011-1': 'S-M-08',
   'mt-p9011-2': 'S-M-09①', 'mt-p9011-3': 'S-M-09②', 'mt-p9011-4': 'S-M-09③', 'mt-p9011-5': 'S-M-09④', 'mt-p9011-6': 'S-M-09⑤',
   'mt-p9011-7': 'S-M-10①', 'mt-p9011-8': 'S-M-10②', 'mt-p9011-9': 'S-M-10③', 'mt-p9011-10': 'S-M-10④', 'mt-p9011-11': 'S-M-10⑤',
-  'mt-p2sns-1': 'S-E-02', 'mt-p901-u1': 'S-U-01', 'mt-p901-u2': 'S-U-02', 'mt-p905-d1': 'S-D-01', 'mt-p905-d2': 'S-D-02', 'mt-p905-1': 'S-E-03①', 'mt-p905-2': 'S-E-03②', 'mt-p905-3': 'S-E-03③',
+  'mt-p2sns-1': 'S-E-02', 'mt-p901-u2': 'S-U-02', 'mt-p905-d1': 'S-D-01', 'mt-p905-d2': 'S-D-02', 'mt-p905-1': 'S-E-03①', 'mt-p905-2': 'S-E-03②', 'mt-p905-3': 'S-E-03③',
   'mt-p6011-1': 'S-FQ-01', 'mt-p6011-2': 'S-FQ-02', 'mt-p6011-3': 'S-FQ-03', 'mt-p6011-4': 'S-FQ-04', 'mt-p6011-5': 'S-FQ-05', 'mt-p6011-6': 'S-FQ-06',
   'mt-p6012-1': 'S-FW-01', 'mt-p6012-2': 'S-FW-02',
   'mt-p6013-1': 'S-FR-01', 'mt-p6013-2': 'S-FR-02', 'mt-p6013-3': 'S-FR-03', 'mt-p6013-4': 'S-FR-04', 'mt-p6013-5': 'S-FR-05',
@@ -12314,7 +12567,7 @@ KTN.MAIL_NO = {
 
 KTN.pages['p90-9'] = function () {
 
-  var SCREEN_LABEL = { 'p90-2': 'クリエイター/ギャラリー機能申込管理', 'p90-11': 'リエゾンプラス機能申込管理', 'p2-sns': '展覧会掲載依頼', 'p60-11': 'お問い合わせ', 'p60-12': 'ご要望', 'p60-13': '問題報告', 'p60-14': '修正依頼', 'p61-11': 'お知らせ-新規/編集', 'p90-13': '取引管理（事務局）', 'p90-14': '販売代金管理（事務局）', 'p90-1': 'ユーザー管理', 'p90-12': 'リエゾンプラスコンソール', 'p90-15': 'リエゾンプラス申込者一覧', 'p90-16': '作品購入ユーザー一覧', 'p90-5': '展覧会の確認' };
+  var SCREEN_LABEL = { 'p2-11': '展覧会の編集（管理者の欄）', 'p90-21-1': 'お問合わせ・報告の詳細', 'p90-2': 'クリエイター/ギャラリー機能申込管理', 'p90-11': 'リエゾンプラス機能申込管理', 'p2-sns': '展覧会掲載依頼', 'p60-11': 'お問い合わせ', 'p60-12': 'ご要望', 'p60-13': '問題報告', 'p60-14': '修正依頼', 'p61-11': 'お知らせ-新規/編集', 'p90-13': '取引管理（事務局）', 'p90-14': '販売代金管理（事務局）', 'p90-1': 'ユーザー管理', 'p90-12': 'リエゾンプラスコンソール', 'p90-15': 'リエゾンプラス申込者一覧', 'p90-16': '作品購入ユーザー一覧', 'p90-5': '展覧会の確認' };
   var PATTERN_LABEL = { normal: '正常系', abnormal: '非正常系' };
   var PATTERN_CLS   = { normal: 'cb-normal', abnormal: 'cb-abnormal' };
 
@@ -12807,7 +13060,7 @@ KTN.pages['p90-9'] = function () {
   /* 使用画面フィルタの選択肢はデータから動的に構築（新規追加のscreenIdが増えても手動更新不要） */
   (function buildScreenOptions() {
     var seen = {}, ids = [];
-    TEMPLATES.forEach(function (t) { if (!seen[t.screenId]) { seen[t.screenId] = 1; ids.push(t.screenId); } });
+    TEMPLATES.forEach(function (t) { (t.screens || [t.screenId]).forEach(function (id) { if (!seen[id]) { seen[id] = 1; ids.push(id); } }); });
     ids.forEach(function (id) {
       var opt = document.createElement('option');
       opt.value = id;
@@ -12843,27 +13096,7 @@ KTN.pages['p90-9'] = function () {
     'S-E-03': '展覧会の掲載内容についての確認のお願い'
   };
   /* 手動の宛先（番号の頭で決まる） */
-  function allManualAud(no) {
-    if (no === 'S-U-01') return '管理者が作成したアカウントの本人';
-    if (no === 'S-U-02') return 'ブロックしたアカウントの本人';
-    if (/^S-D-/.test(no)) return '削除を依頼した展覧会のオーナー';
-    if (no === 'S-M-12') return 'LIAISON+ を利用中の出品者';
-    if (no === 'S-M-13') return '購入者';
-    if (/^S-M-/.test(no)) return '申込者';
-    if (no === 'S-E-02') return '掲載依頼の送信者';
-    if (no === 'S-E-03') return '確認を依頼した展覧会のオーナー';
-    if (/^S-FQ-/.test(no)) return 'お問い合わせの送信者';
-    if (/^S-FW-/.test(no)) return 'ご要望の送信者';
-    if (no === 'S-FR-01') return '掲載の対象者（削除を依頼した人）';
-    if (/^S-FR-0[2-5]$/.test(no)) return '掲載者（ページのオーナー）';
-    if (/^S-T-/.test(no)) return '取引の当事者（購入者・出品者）';
-    if (/^S-[PW]-/.test(no)) return '出品者';
-    if (/^S-K-0[1-4]$/.test(no)) return '出品者'; if (/^S-K-0[56]$/.test(no)) return '購入者';
-    if (no === 'S-FX-02') return '掲載者（ページのオーナー）';
-    if (/^S-FX-/.test(no)) return '修正依頼の送信者';
-    if (no === 'A-N-04' || no === 'A-N-02') return '';
-    return '—';
-  }
+  function allManualAud(no) { return ktnMailAud(no); }   /* 共通の ktnMailAud（2026-11-20） */
   function allManualCat(no) {
     if (/^S-U-/.test(no)) return 'account';
     if (/^S-D-/.test(no)) return 'monitor';
@@ -12886,7 +13119,7 @@ KTN.pages['p90-9'] = function () {
       if (t.status !== 'active') return;
       var full = TEMPLATE_MAIL_ID[t.id], no = full ? full.replace(/[①-⑩]$/, '') : '';
       if (!no) {
-        add({ no: '（番号なし）' + t.id, name: t.name, how: 'manual', cat: 'other', aud: '—', from: t.from || '—', page: ALL_SCREEN_PAGE[t.screenId] || SCREEN_LABEL[t.screenId] || '—', when: '事務局が選んで送る', hasBody: true, tab: 'manual', target: t.id, n: 1 });
+        add({ no: '（番号なし）' + t.id, name: t.name, how: 'manual', cat: 'other', aud: '—', from: t.from || '—', page: allPages(t), when: '事務局が選んで送る', hasBody: true, tab: 'manual', target: t.id, n: 1 });
         return;
       }
       var r = rows[no];
@@ -12896,7 +13129,8 @@ KTN.pages['p90-9'] = function () {
         return;
       }
       if (!r) r = add({ no: no, name: '', how: 'manual', cat: allManualCat(no), aud: allManualAud(no), from: t.from || '—',
-                        page: ALL_SCREEN_PAGE[t.screenId] || SCREEN_LABEL[t.screenId] || '—', when: '事務局が選んで送る', hasBody: true, tab: 'manual', target: t.id, n: 0, first: t.name });
+                        page: allPages(t), when: '事務局が選んで送る', hasBody: true, tab: 'manual', target: t.id, n: 0, first: t.name });
+      if (r.page && r.page !== '—') allPages(t).split('・').forEach(function (pg) { if (r.page.split('・').indexOf(pg) < 0) r.page += '・' + pg; });   /* 同じ番号のテンプレートの画面をまとめる */
       r.n++;
     });
     return order.map(function (k) {
@@ -13191,7 +13425,9 @@ KTN.pages['p90-9'] = function () {
       ]
   };
   /* 手動の送信ページ＝テンプレートを使う管理画面 */
-  var ALL_SCREEN_PAGE = { 'p90-5': '展覧会の確認（管理）', 'p90-2': 'クリエイター/ギャラリー機能申込管理', 'p90-11': 'リエゾンプラス機能申込管理', 'p2-sns': '展覧会掲載依頼（管理）',
+  /* テンプレートを使う画面（複数のときは「・」でつなぐ・2026-11-20） */
+  function allPages(t) { return (t.screens || [t.screenId]).map(function (id) { return ALL_SCREEN_PAGE[id] || SCREEN_LABEL[id] || id; }).join('・') || '—'; }
+  var ALL_SCREEN_PAGE = { 'p2-11': '展覧会の編集（管理者の欄）', 'p90-21-1': 'お問合わせ・報告の詳細', 'p90-5': '展覧会の確認（管理）', 'p90-2': 'クリエイター/ギャラリー機能申込管理', 'p90-11': 'リエゾンプラス機能申込管理', 'p2-sns': '展覧会掲載依頼（管理）',
     'p60-11': 'お問い合わせの管理', 'p60-12': 'ご要望の管理', 'p60-13': '問題報告の管理', 'p60-14': '修正依頼の管理', 'p61-11': 'お知らせの新規・編集（管理）', 'p90-13': '取引管理（事務局）', 'p90-14': '販売代金管理（事務局）', 'p90-1': 'ユーザーの編集（管理）', 'p90-12': 'リエゾンプラスコンソール', 'p90-15': 'リエゾンプラス申込者一覧', 'p90-16': '作品購入ユーザー一覧' };
   function allNoKey(no) { /* 番号順：頭の文字→数字→A（事務局あて）が後 */
     var m = /^([AS])-([A-Z]+)-(\d+)(J?)/.exec(no); return m ? m[2] + m[1] + ('000' + m[3]).slice(-3) + m[4] : 'ZZZ' + no;   /* 送り方-系統-番号（2026-11-13）：系統→送り方→番号→J（事務局あて）の順 */
@@ -13285,7 +13521,7 @@ KTN.pages['p90-9'] = function () {
   function render() {
     var fscr = screenSel.value, fpat = patSel.value, fstat = statSel.value;
     var rows = TEMPLATES.filter(function (t) {
-      if (fscr && t.screenId !== fscr) return false;
+      if (fscr && !ktnTplOn(t, fscr)) return false;   /* ほかの画面でも使うテンプレートは、その画面でも出す */
       if (fpat && t.pattern !== fpat) return false;
       if (fstat && t.status !== fstat) return false;
       return true;
@@ -13296,7 +13532,7 @@ KTN.pages['p90-9'] = function () {
     var ids = Object.keys(SCREEN_LABEL);
     rows.forEach(function (t) { if (ids.indexOf(t.screenId) < 0) ids.push(t.screenId); });
     listEl.innerHTML = ids.map(function (id) {
-      var g = rows.filter(function (t) { return t.screenId === id; });
+      var g = rows.filter(function (t) { return t.screenId === id; });   /* 並べるのは主な画面の下（1つのテンプレートを1か所に）。ほかの画面は行の詳細の「使用画面」に */
       if (!g.length) return '';
       var label = (SCREEN_LABEL[id] || id) + '（' + id.toUpperCase() + '）';
       return '<div class="p909-group">' +
@@ -13304,11 +13540,12 @@ KTN.pages['p90-9'] = function () {
         '<div class="p315-archive-table-wrap"><table class="p315-archive-table p909-table" aria-label="' + label + 'のテンプレート一覧">' + MANUAL_THEAD +
         '<tbody>' + g.map(function (t) {
           return makeItem(t).outerHTML +
-            detailRow(7, [['送信元', t.from || '—'], ['送信先', allManualAud(String(TEMPLATE_MAIL_ID[t.id] || '').replace(/[①-⑩]$/, ''))], ['メモ', t.note]]);
+            detailRow(7, [['使用画面', scrText(t)], ['送信元', t.from || '—'], ['送信先', allManualAud(String(TEMPLATE_MAIL_ID[t.id] || '').replace(/[①-⑩]$/, ''))], ['メモ', t.note]]);
         }).join('') + '</tbody></table></div></div>';
     }).join('');
   }
 
+  function scrText(t) { return (t.screens || [t.screenId]).map(function (id) { return (SCREEN_LABEL[id] || id) + '（' + id.toUpperCase() + '）'; }).join('・'); }
   function renderReset() { render(); }
   screenSel.addEventListener('change', renderReset);
   patSel.addEventListener('change', renderReset);
@@ -13334,6 +13571,25 @@ KTN.pages['p90-9'] = function () {
 
   if (formFrom) formFrom.innerHTML = KTN.mailFromOptionsHtml();
 
+  /* 使用画面の選択肢：テンプレートで使っているすべての画面（2026-11-22・HTML の7つだけだと、ほかの画面のテンプレートが作れなかった） */
+  var formScene = document.getElementById('p909FormScene'), sceneHelp = document.getElementById('p909FormSceneHelp');
+  (function () {
+    if (!formScreen) return; var have = {}; [].forEach.call(formScreen.options, function (o) { have[o.value] = 1; });
+    Object.keys(SCREEN_LABEL).concat(Object.keys(KTN_TPL_GROUPS)).forEach(function (id) { if (have[id]) return; have[id] = 1; formScreen.insertAdjacentHTML('beforeend', '<option value="' + id + '">' + (SCREEN_LABEL[id] || id) + '</option>'); });
+  })();
+  /* 出す場面：使用画面ごとに選べる場面を並べる。場面の無い画面は「（場面なし）」だけ */
+  function fillScenes(sel, cur, locked) {
+    if (!formScene) return;
+    var a = KTN.tplScenes(formScreen.value);
+    formScene.innerHTML = '<option value="">（場面なし＝A が番号で選んで使う）</option>' + a.map(function (x) { return '<option value="' + x[0] + '">' + x[1] + '</option>'; }).join('');
+    formScene.value = cur || sel || '';
+    formScene.disabled = !!locked;
+    if (sceneHelp) sceneHelp.textContent = locked ? '作ったあとは変えられません（変えるときは、新しく作り直してください）。' : a.length ? '送信の画面の、この場面の選択肢に並びます（E・L も選べます）。1つだった場面は、足すと選択肢が出ます。選ばないときは、A が「ほかのテンプレートを番号で選ぶ」で使います。' : (KTN_TPL_OWN[formScreen.value] ? 'この画面のテンプレートは、送信の画面（P90-2-1・P90-11-1）の「＋ 新しいテンプレートとして追加」で足します。' : 'この画面には、足せる場面がありません。A が「ほかのテンプレートを番号で選ぶ」で使います。');
+  }
+  /* 識別キーの自動：custom-{画面}-{場面}-{日時}（2026-11-22 ユーザー確認＝A に入れさせない） */
+  function autoKey() { var d = new Date(), z = function (n) { return (n < 10 ? '0' : '') + n; }; return 'custom-' + formScreen.value + '-' + ((formScene && formScene.value) || 'any') + '-' + d.getFullYear() + z(d.getMonth() + 1) + z(d.getDate()) + z(d.getHours()) + z(d.getMinutes()) + z(d.getSeconds()); }
+  if (formScreen) formScreen.addEventListener('change', function () { if (!editingId) { fillScenes(''); formKey.value = autoKey(); } });
+  if (formScene) formScene.addEventListener('change', function () { if (!editingId) formKey.value = autoKey(); });
   function openEditModal(t) {
     if (!editModal) return;
     editingId = t ? t.id : null;
@@ -13341,6 +13597,8 @@ KTN.pages['p90-9'] = function () {
     if (formScreen)  formScreen.value  = t ? t.screenId : (screenSel.value || 'p90-2');
     if (formPattern) formPattern.value = t ? t.pattern  : (patSel.value || 'normal');
     if (formKey)     formKey.value     = t ? t.variantKey : '';
+    fillScenes('', t ? (t.scene || '') : '', !!t);
+    if (!t && formKey) formKey.value = autoKey();
     if (formName)    formName.value    = t ? t.name : '';
     if (formFrom)    formFrom.value    = t ? t.from : KTN.MAIL_FROM_ADDRESSES[0];
     if (formSubject) formSubject.value = t ? t.subject : '';
@@ -13355,11 +13613,20 @@ KTN.pages['p90-9'] = function () {
     editingId = null;
   }
   if (newBtn)     newBtn.addEventListener('click', function () { openEditModal(null); });
+  /* 送信の画面の「P90-9 で新しいテンプレートを作る →」から来たとき（?new=1&screen=…）：新規の欄を、その画面を選んだ状態で開く（2026-11-22） */
+  (function () {
+    var q = new URLSearchParams(location.search); if (q.get('new') !== '1') return;
+    var sc = q.get('screen');
+    openEditModal(null);
+    if (sc && formScreen) { if (!formScreen.querySelector('option[value="' + sc + '"]')) formScreen.insertAdjacentHTML('beforeend', '<option value="' + sc + '">' + (SCREEN_LABEL[sc] || sc) + '（' + sc.toUpperCase() + '）</option>'); formScreen.value = sc; }
+    fillScenes(q.get('scene') || ''); if (formKey) formKey.value = autoKey();
+    if (formPattern) formPattern.value = 'abnormal';
+  })();
   if (editCancel) editCancel.addEventListener('click', closeEditModal);
   if (editBg)     editBg.addEventListener('click', closeEditModal);
 
   if (editSave) editSave.addEventListener('click', function () {
-    var key = (formKey.value || '').trim();
+    var key = (formKey.value || '').trim() || autoKey();
     var name = (formName.value || '').trim();
     var subject = (formSubject.value || '').trim();
     var body = formBody.value || '';
@@ -13375,7 +13642,7 @@ KTN.pages['p90-9'] = function () {
     if (editingId) {
       var t = findTpl(editingId);
       if (t) {
-        t.screenId = formScreen.value; t.pattern = formPattern.value; t.variantKey = key;
+        t.screenId = formScreen.value; if (t.screens) t.screens[0] = t.screenId; t.pattern = formPattern.value; t.variantKey = key;
         t.name = name; t.from = formFrom ? formFrom.value : t.from; t.subject = subject; t.body = body; t.usageNote = formNote.value || '';
         t.updatedAt = todayLabel();
       }
@@ -13384,6 +13651,11 @@ KTN.pages['p90-9'] = function () {
         id: 'mt-' + Date.now(), screenId: formScreen.value, pattern: formPattern.value, variantKey: key,
         name: name, from: formFrom ? formFrom.value : KTN.MAIL_FROM_ADDRESSES[0], subject: subject, body: body, status: 'active', usageNote: formNote.value || '', updatedAt: todayLabel(),
       });
+      /* 送信の画面で「新規」として選べるように残す（2026-11-22・デモは sessionStorage） */
+      var nt = TEMPLATES[TEMPLATES.length - 1]; nt.custom = true;
+      var sc = formScene && formScene.value ? ktnTplScene(nt.screenId, formScene.value) : null;
+      nt.scene = sc ? sc[0] : ''; nt.screens = [nt.screenId].concat(sc ? sc[2] : []);   /* 場面がほかの画面でも使われるとき（問い合わせ＝P2-11）は、その画面も足す */
+      try { var sv = JSON.parse(sessionStorage.getItem('ktnTplNew') || '[]'); sv.push(nt); sessionStorage.setItem('ktnTplNew', JSON.stringify(sv)); } catch (er) {}
     }
     closeEditModal();
     render();
@@ -28229,7 +28501,7 @@ KTN.pages['p90-21-1'] = function () {
   });
 
   /* ── 返信（P90-9 のテンプレートから選ぶ・送る前に直せる） ── */
-  var TPL = (KTN.mailTemplates ? KTN.mailTemplates() : []).filter(function (x) { return t.screen && x.screenId === t.screen && x.status !== 'archived'; });
+  var TPL = (KTN.mailTemplates ? KTN.mailTemplates() : []).filter(function (x) { return t.screen && (t.screen === 'p90-13' ? ktnTplOn(x, 'p90-21-1') : x.screenId === t.screen) && x.status !== 'archived'; });   /* 取引の相談は P90-21-1 の印のあるものだけ（督促などは出さない・2026-11-20） */
   var tplSel = $('p9021TplSel');
   function tokens() {
     return { userName: c.sender.name, requestId: c.id, requestDate: c.received, targetName: c.target ? c.target.name : '', targetType: c.target ? (D.TARGET_LABEL[c.target.type] || '') : '',
@@ -28242,6 +28514,8 @@ KTN.pages['p90-21-1'] = function () {
     $('p9021From').value = x.from || 'inquiry@koten-navi.com';
     $('p9021Subject').value = fill(x.subject);
     $('p9021MailBody').value = fill(x.body);
+    /* ほかのテンプレートを番号で（2026-11-20）。候補を選び直したら、番号で選んだものは外す */
+    var ab = $('p9021TplAlt'); if (ab) { if (!ab.firstChild) ab.innerHTML = KTN.tplAlt.html(t.screen === 'p90-13' ? 'p90-21-1' : t.screen, 'reply'); KTN.tplAlt.bind(ab, { subject: $('p9021Subject'), body: $('p9021MailBody'), from: { set textContent(v) { $('p9021From').value = v; } }, tokens: tokens() }); }
   }
   if (TPL.length) {
     tplSel.innerHTML = TPL.map(function (x) { return '<option>' + x.name + '</option>'; }).join('');
@@ -28251,8 +28525,10 @@ KTN.pages['p90-21-1'] = function () {
   $('p9021ReplyOpenBtn').addEventListener('click', function () { $('p9021ReplyPanel').hidden = false; this.hidden = true; loadTpl(); });
   $('p9021ReplyCancelBtn').addEventListener('click', function () { $('p9021ReplyPanel').hidden = true; $('p9021ReplyOpenBtn').hidden = false; });
   $('p9021ReplySendBtn').addEventListener('click', function () {
-    var x = TPL[tplSel.selectedIndex];
-    log('返信を送りました：' + (x ? x.name : '') + '（件名「' + $('p9021Subject').value + '」）');
+    var ab = $('p9021TplAlt'), ae = KTN.tplAlt.check(ab, [$('p9021Subject').value, $('p9021MailBody').value]);
+    if (ae) return;
+    var x = KTN.tplAlt.tpl(ab) || TPL[tplSel.selectedIndex];
+    log('返信を送りました：' + (x ? (KTN.tplAlt.used(ab) ? KTN.tplAlt.no(ab, '') + ' ' : '') + x.name : '') + '（件名「' + $('p9021Subject').value + '」）');
     /* 確認のお願い（相手の返事を待つもの）は「返信待ち」、ほかは「完了」にする（あとで変えられる） */
     c.status = x && /confirm/.test(x.variantKey || '') ? 'waiting' : 'done';
     D.save(c);
@@ -28871,7 +29147,7 @@ KTN.pages['p90-5'] = function () {
   document.addEventListener('click', function (e) {
     var b = e.target.closest && e.target.closest('[data-ask]'); if (!b) return;
     var tr = b.closest('tr'), nm = tr.querySelector('td[data-label="展覧会名"]').textContent.trim(), who = (tr.querySelector('td[data-label="投稿者"] .p905-who') || {}).textContent || '', nid = tr.dataset.nid;
-    KTN.mailSend({ title: '展覧会「' + nm + '」の内容を問い合わせる', screen: 'p90-5', keys: ['confirm-incomplete', 'confirm-improper', 'confirm-duplicate'],
+    KTN.mailSend({ title: '展覧会「' + nm + '」の内容を問い合わせる', screen: 'p90-5', scene: 'ask', keys: ['confirm-incomplete', 'confirm-improper', 'confirm-duplicate'],
       lead: '確認待ちの展覧会のオーナーに、内容の確認をお願いします。返信は add-event@ に届きます。',
       tokens: { userName: who.trim(), exhibitionName: nm, pageUrl: 'https://koten-navi.com/p2', policyUrl: 'https://koten-navi.com/content-policy', commonFooter: '──\n個展なび事務局' },
       done: '問い合わせを送りました（デモ）',
@@ -28987,23 +29263,23 @@ KTN.pages['p90-5'] = function () {
     /* 処理した依頼に残す（2026-11-17）。result＝deleted／declined */
     function keep(result, x) { if (KTN.exhDelReq) KTN.exhDelReq.done({ nid: r.nid, title: r.title, who: r.who, role: r.role, uid: r.uid, term: r.start + ' 〜 ' + r.end, reqAt: r.at, reqReason: r.reason, result: result, why: KTN.reasonText(x), by: KTN.adminMeText ? KTN.adminMeText() : '' }); doneRender(); }
     /* 削除した・断ったあと、オーナーへのメール（S-D-01・S-D-02）の送信の欄を開く。テンプレートを読み込み、送る前に直せる（旧 A-D-04・A-D-05 の自動送信をやめた・2026-11-14 ユーザー指示） */
-    function mail(key, detail) {
-      KTN.mailSend({ title: 'オーナーにお知らせを送る', screen: 'p90-5', keys: [key], skipLabel: '送らない',
-        lead: key === 'delreq-done' ? '展覧会を削除しました。オーナー（' + r.who + '）にお知らせを送ります。' : '依頼を断りました。オーナー（' + r.who + '）に、断った理由を送ります。',
-        tokens: { userName: r.who, exhibitionName: r.title, requestedAt: r.at, deletedAt: (function (d) { return d.getFullYear() + '年' + (d.getMonth() + 1) + '月' + d.getDate() + '日 ' + d.getHours() + ':' + ('0' + d.getMinutes()).slice(-2); })(new Date()), declineReason: detail ? detail.reason : '', declineDetail: detail ? detail.detail : '', contactUrl: 'https://koten-navi.com/contact', supportUrl: 'https://koten-navi.com/contact', commonFooter: '──\n個展なび事務局' },
-        done: 'オーナーにお知らせを送りました（デモ）', onSkip: function () { KTN.toast('オーナーへのお知らせは送りませんでした'); } });   /* 展覧会はもう消えているので「あとで」は無い＝送るか送らないか（2026-11-14 ユーザー指摘） */
+    function mail(key) {   /* オーナーへのお知らせの欄（KTN.adminDelete の mail＝操作の前から見える・操作したら使える・2026-11-23） */
+      return { screen: 'p90-5', keys: [key], heading: 'オーナーへのお知らせ（任意）',
+        lead: key === 'delreq-done' ? 'オーナー（' + r.who + '）に、展覧会を削除したことを知らせます。' : 'オーナー（' + r.who + '）に、断った理由を送ります。',
+        tokens: function (detail) { return { userName: r.who, exhibitionName: r.title, requestedAt: r.at, deletedAt: (function (d) { return d.getFullYear() + '年' + (d.getMonth() + 1) + '月' + d.getDate() + '日 ' + d.getHours() + ':' + ('0' + d.getMinutes()).slice(-2); })(new Date()), declineReason: detail ? detail.reason : '', declineDetail: detail ? detail.detail : '', contactUrl: 'https://koten-navi.com/contact', supportUrl: 'https://koten-navi.com/contact', commonFooter: '──\n個展なび事務局' }; },
+        done: 'オーナーにお知らせを送りました（デモ）' };   /* 展覧会はもう消えているので「あとで」は無い＝送るか送らないか（2026-11-14 ユーザー指摘） */
     }
     if (b.dataset.dr === 'del' && applyOf(r)) return;   /* 申込があるあいだは削除しない */
     if (b.dataset.dr === 'del') KTN.adminDelete({ kind: '展覧会', name: r.title, reasons: ['オーナーの依頼による削除'], placeholder: '例：オーナーの依頼（' + r.reason + '）。つながりを確かめた',
-      note: '削除すると元に戻せません。' + KTN.exhDeleteCascadeFor(r.links) + '操作の記録に残ります。削除のあと、オーナーへのお知らせ（S-D-01）を送る欄が開きます。', done: '削除しました（デモ）',
-      onDone: function (x) { if (KTN.auditRecord) KTN.auditRecord('削除', { t: 'exh', nid: r.nid, name: r.title, url: 'kotennavi-p2.html' }, KTN.reasonText(x)); if (KTN.exhDelReq) KTN.exhDelReq.remove(r.nid); keep('deleted', x); drop(); setTimeout(function () { mail('delreq-done'); }, 50); } });
+      note: '削除すると元に戻せません。' + KTN.exhDeleteCascadeFor(r.links) + '操作の記録に残ります。削除のあと、オーナーへのお知らせ（S-D-01）は、削除したあとに下の欄から送れます。', done: '削除しました（デモ）',
+      onDone: function (x) { if (KTN.auditRecord) KTN.auditRecord('削除', { t: 'exh', nid: r.nid, name: r.title, url: 'kotennavi-p2.html' }, KTN.reasonText(x)); if (KTN.exhDelReq) KTN.exhDelReq.remove(r.nid); keep('deleted', x); drop(); }, mail: mail('delreq-done') });
     else KTN.adminDelete({ kind: '展覧会', name: r.title, verb: '依頼を断る', title: '展覧会「' + r.title + '」の削除の依頼を断りますか？', label: '断る', reasons: ['申込・取引が進んでいる', '記事・作品とのつながりがあり、残す必要がある', '依頼の内容が確かめられない', 'その他'],
-      placeholder: '例：LIAISON+ の作品に申込が1件あるため。取引が終わってから、あらためてご依頼ください', note: '展覧会はそのまま残ります。断ったあと、オーナーへのお知らせ（S-D-02）を送る欄が開きます（選んだ理由と詳しい内容が入ります）。',
-      okLabel: '断る', danger: false, done: '依頼を断りました（デモ）', onDone: function (x) {
+      placeholder: '例：LIAISON+ の作品に申込が1件あるため。取引が終わってから、あらためてご依頼ください', note: '展覧会はそのまま残ります。断ったあと、オーナーへのお知らせ（S-D-02）は、断ったあとに下の欄から送れます（選んだ理由と詳しい内容が入ります）。',
+      okLabel: '断る', doneLabel: '断りました', danger: false, done: '依頼を断りました（デモ）', onDone: function (x) {
         /* 操作の記録に残す・P2-11 に断った理由を出す・処理した依頼に残す（2026-11-17） */
         if (KTN.auditRecord) KTN.auditRecord('削除の依頼を断る', { t: 'exh', nid: r.nid, name: r.title, url: 'kotennavi-p2.html' }, KTN.reasonText(x), '依頼の理由：' + r.reason);
         if (KTN.exhDelReq) KTN.exhDelReq.decline(r.nid, KTN.reasonText(x));
-        keep('declined', x); drop(); setTimeout(function () { mail('delreq-decline', x); }, 50); } });
+        keep('declined', x); drop(); }, mail: Object.assign(mail('delreq-decline'), { lockText: '断ったあとに開けます' }) });
   });
   function render() {
     var n = 0, del = tab === 'delreq';
@@ -29381,6 +29657,7 @@ KTN.pages['p90-13'] = function () {
   }
   /* モーダル（理由のモーダルと同じ形）。fields＝中身の HTML、onOk(m)＝false を返すと閉じない */
   function opModal(title, fields, okLabel, onOk, danger, doneLabel) {
+    var am = afterMail; afterMail = null;   /* この操作のあとに送るメール（mailBlock の sep） */
     var m = document.getElementById('p9013OpModal');
     if (!m) { m = document.createElement('div'); m.className = 'p211-modal'; m.id = 'p9013OpModal'; m.hidden = true; document.body.appendChild(m);
       m.addEventListener('click', function (e) { if (e.target.closest('[data-close]')) m.hidden = true; }); }
@@ -29390,23 +29667,49 @@ KTN.pages['p90-13'] = function () {
       '<p class="p90cm-err" id="p9013OpErr" hidden>必須の項目を入力してください。</p>' +
       '<div class="p211-modal__foot"><button type="button" class="ktn-op-btn" data-close>キャンセル</button><button type="button" class="ktn-op-btn ' + (danger ? 'ktn-op-btn--danger' : 'ktn-op-btn--primary') + '" id="p9013OpOk">' + okLabel + '</button></div></div>';
     m.hidden = false;
+    bindTpl(m);
+    var mb = am ? KTN.mailBox(m.querySelector('[data-mailbox]'), { screen: 'p90-13', keys: [am.key], heading: '当事者へのメール（任意）', lead: '宛先：' + esc9(am.to), lockText: KTN.afterText(okLabel, doneLabel),
+      tokens: toks(am.r, am.x), onSent: function (x) { log(am.r, 'メールを送った（' + (x.no || '') + (x.edited ? '・本文を直した' : '') + '）'); } }) : null;
     document.getElementById('p9013OpOk').onclick = function () {
       var miss = [].filter.call(m.querySelectorAll('[data-req]'), function (el) { return !String(el.value || '').trim(); });
       document.getElementById('p9013OpErr').hidden = !miss.length;
       if (miss.length) return;
+      var tb = m.querySelector('.p9013-tpl:not([data-sep])'); if (tb && KTN.tplAlt.check(tb, [tb.querySelector('[data-k="body"]').value])) return;
       if (onOk(m) === false) return;
+      if (am) {   /* 操作しても閉じない：操作の欄はそのまま見られる。下の当事者へのメールが使えるようになる（送らないこともできる・2026-11-23） */
+        var okA = document.getElementById('p9013OpOk'); okA.disabled = true; okA.textContent = doneLabel || '済みました';
+        m.querySelectorAll('input,select,textarea').forEach(function (el) { if (!el.closest('[data-mailbox]')) el.disabled = true; });
+        var cxA = m.querySelector('.p211-modal__foot [data-close]'); if (cxA) cxA.textContent = '閉じる';
+        mb.unlock(); return;
+      }
       if (!m.querySelector('[data-mail-send]')) { m.hidden = true; return; }
       var ok = document.getElementById('p9013OpOk'); ok.disabled = true; ok.textContent = doneLabel || '済みました';
       m.querySelectorAll('input,select,textarea').forEach(function (el) { if (!el.closest('[data-tpl]')) el.disabled = true; });
       var cx = m.querySelector('.p211-modal__foot [data-close]'); if (cx) cx.textContent = '閉じる';
     };
   }
+  /* ほかのテンプレートを番号で（2026-11-20）。メールの欄を描いたあとに必ず呼ぶ（モーダルを開いたとき・欄を描き直したとき＝事務局から連絡する の「メールで送る」など） */
+  function bindTpl(m) {
+    m.querySelectorAll('.p9013-tpl').forEach(function (b) {
+      var vs = b.querySelector('[data-tpl-variant]'), f0 = curFill;
+      if (vs) vs.onchange = function () {   /* 選び直したら、名前・件名・本文を差し替える */
+        var y = tpl(vs.value); if (!y) return; b.setAttribute('data-tpl', y.variantKey);
+        var nm = b.querySelector('.p9013-tpl__name'), mt = b.querySelector('.p9013-tpl__meta'), bd = b.querySelector('[data-k="body"]');
+        if (nm) nm.innerHTML = tplNo(y) + ' ' + esc9(y.name) + '<a class="ktn-guide-link" href="./kotennavi-p90-9.html" target="_blank" rel="noopener">P90-9 で見る →</a>';
+        if (mt) mt.textContent = mt.textContent.replace(/件名：.*$/, '件名：' + f0(y.subject));
+        if (bd) { bd.value = f0(y.body); bd.defaultValue = bd.value; }
+      };
+      var meta = b.querySelector('.p9013-tpl__meta'), f = curFill;
+      KTN.tplAlt.bind(b, { body: b.querySelector('[data-k="body"]'), name: b.querySelector('.p9013-tpl__name'), fill: f, onPick: function (t, fl) { if (meta) meta.textContent = '件名：' + fl(t.subject); } });
+    });
+  }
   /* 別送りのメールの「メールを送信する」（取引の記録と操作の記録に、操作とは別の行で残す） */
   function bindMailSend(r) {
     var m = document.getElementById('p9013OpModal'), b = m && m.querySelector('[data-mail-send]'); if (!b) return;
     b.onclick = function () {
       var bd = m.querySelector('[data-k="body"]'); if (!bd.value.trim()) { bd.focus(); return; }
-      var t = tpl(b.dataset.mailSend), no = t ? tplNo(t) : '';
+      var blk = b.closest('.p9013-tpl'); if (KTN.tplAlt.check(blk, [bd.value])) return;
+      var t = tpl((blk && blk.getAttribute('data-tpl')) || b.dataset.mailSend), no = KTN.tplAlt.no(blk, t ? tplNo(t) + (t.custom ? t.name : '') : '');
       log(r, 'メールを送った（' + no + (bd.value !== bd.defaultValue ? '・本文を直した' : '') + '）');
       b.disabled = true; bd.disabled = true; m.querySelector('[data-mail-sent]').textContent = no + ' を送信しました';
       KTN.toast(no + ' を送信しました（デモ）');
@@ -29425,30 +29728,37 @@ KTN.pages['p90-13'] = function () {
 
   /* メールはすべて P90-9 のテンプレート（S-T-03〜S-T-16）から始める。送る前に、ケースに合わせて加筆・修正・削除してよい（E・L も）。
      テンプレートを使わせるのは、個別に書くと文の調子や対応がばらつくため（2026-11-11 ユーザー指示。前日の「A だけ直せる」を訂正） */
-  var TPLS = (typeof ktnMailTemplates === 'function' ? ktnMailTemplates() : []).filter(function (x) { return x.screenId === 'p90-13'; });
+  var TPLS = (typeof ktnMailTemplates === 'function' ? ktnMailTemplates() : []).filter(function (x) { return ktnTplOn(x, 'p90-13'); });
   function tpl(key) { for (var i = 0; i < TPLS.length; i++) if (TPLS[i].variantKey === key) return TPLS[i]; return null; }
-  function tplNo(t) { var n = +String(t.id).split('-').pop(); return 'S-T-' + (n < 10 ? '0' : '') + n; }
+  function tplNo(t) { if (t.custom) return '（新規）'; var n = +String(t.id).split('-').pop(); return 'S-T-' + (n < 10 ? '0' : '') + n; }
   function who(r, side) { var c = r.tr.querySelector('td[data-label="' + side + '"] a'); return c ? c.textContent.trim() : side; }
-  function fill(s, r, x) {
+  function toks(r, x) {
     x = x || {};
-    var V = { userName: x.to || '（宛先の名前）', artworkName: (r.tr.querySelector('td[data-label="作品名"] a') || r.tr.querySelector('td[data-label="作品名"]')).textContent.trim().split('\n')[0],
+    return { userName: x.to || '（宛先の名前）', artworkName: (r.tr.querySelector('td[data-label="作品名"] a') || r.tr.querySelector('td[data-label="作品名"]')).textContent.trim().split('\n')[0],
       txnId: r.txn || r.nid, deadline: x.deadline || ((dueCell(r) || {}).textContent || '').trim().split(/\s+/)[0] || '—', newDeadline: x.newDeadline || '—',
       stepName: (TURN[r.st] || ['', ''])[1], txnState: ST_NAME[x.state || r.st], fromState: x.from || '', txnUrl: 'https://koten-navi.com/（取引の画面）', commonFooter: '（共通のフッター）' };
+  }
+  function fill(s, r, x) { var V = toks(r, x);
     return String(s).replace(/\{\{(\w+)\}\}/g, function (m, k) { return V[k] != null ? V[k] : m; });
   }
   /* 送るメールの欄：テンプレート名（P90-9 へのリンク）・宛先・件名・本文（A だけ直せる） */
   /* sep＝操作と別に送るメール（2026-11-15 ユーザー指示＝手で送るメールは、送るかを管理者が決める）。本文は任意で、欄の中の「メールを送信する」で送る（操作の前でも後でも） */
+  var curFill = null;   /* いま開いている欄の差し込み（ほかのテンプレートを番号で選んだときにも使う） */
+  var afterMail = null;   /* 操作のあとに送るメール（sep）：操作のモーダルには置かず、操作のあとに送信の画面を開く（2026-11-23） */
   function mailBlock(key, r, x, toLabel, sep) {
     var t = tpl(key); if (!t) return '';
+    if (sep) { afterMail = { key: key, r: r, x: x, to: toLabel }; return '<div class="p211-field" data-mailbox></div>'; }   /* メールの欄は opModal が置く（操作の前から見える・2026-11-23） */
+    curFill = function (v) { return fill(v, r, x); };
+    var vsel = /^contact-/.test(key) ? '' : KTN.tplVariantSel('p90-13', key, key);   /* 同じ操作に A が足したテンプレート（2026-11-23） */
     var body = fill(t.body, r, x);
-    return '<div class="p211-field p9013-tpl" data-tpl="' + key + '"' + (sep ? ' data-sep' : '') + '><span class="p211-label">' + (sep ? '当事者へのメール（任意）' : '送るメール') + '</span>' +
-      '<p class="p9013-tpl__name">' + tplNo(t) + ' ' + esc9(t.name) + '<a class="ktn-guide-link" href="./kotennavi-p90-9.html" target="_blank" rel="noopener">P90-9 で見る →</a></p>' +
+    return '<div class="p211-field p9013-tpl" data-tpl="' + key + '"' + (sep ? ' data-sep' : '') + '><span class="p211-label">' + (sep ? '当事者へのメール（任意）' : '送るメール') + '</span>' + vsel +
+      '<p class="p9013-tpl__name">' + tplNo(t) + ' ' + esc9(t.name) + '<a class="ktn-guide-link" href="./kotennavi-p90-9.html" target="_blank" rel="noopener">P90-9 で見る →</a></p>' + KTN.tplAlt.html('p90-13', /^contact-|^custom-p90-13-contact/.test(key) ? 'contact' : key) +
       '<p class="p9013-tpl__meta">宛先：' + esc9(toLabel) + '／件名：' + esc9(fill(t.subject, r, x)) + '</p>' +
       '<textarea class="p211-textarea p9013-tpl__body" rows="9" data-k="body"' + (sep ? '' : ' data-req') + '>' + esc9(body) + '</textarea>' +
       '<p class="p211-help">テンプレートをもとに、このケースに合わせて加筆・修正・削除してから送ってください。宛先の名前・作品名・取引番号・期限は入っています。' + (sep ? '送らないときは、このボタンを押しません。' : '') + '</p>' +
       (sep ? '<p class="p901-rv-mail__foot"><span class="p901-rv-mail__sent" data-mail-sent></span><button type="button" class="ktn-op-btn ktn-op-btn--sm" data-mail-send="' + key + '">メールを送信する</button></p>' : '') + '</div>';
   }
-  function sentNote(m, key) { var t = tpl(key), b = m.querySelector('[data-k="body"]'); return t ? tplNo(t) + (b && b.value !== b.defaultValue ? '・本文を直して送った' : '') : ''; }
+  function sentNote(m, key) { var blk = m.querySelector('.p9013-tpl'), t = tpl((blk && blk.getAttribute('data-tpl')) || key), b = m.querySelector('[data-k="body"]'); return t ? KTN.tplAlt.no(blk, tplNo(t)) + (b && b.value !== b.defaultValue && !KTN.tplAlt.used(blk) ? '・本文を直して送った' : '') : ''; }
   function both(r) { return who(r, '出品者') + '・' + who(r, '購入者'); }
   function turnTo(r) { return (TURN[r.st] || [''])[0] === '購入者' ? who(r, '購入者') : who(r, '出品者'); }
 
@@ -29496,7 +29806,8 @@ KTN.pages['p90-13'] = function () {
         '出品者の事由のキャンセルとして進める', function (m) { mark(r, 'is-cancelflow', 'キャンセル手続き中'); log(r, 'キャンセル申請を受け、出品者の事由のキャンセルとして進めた（次は返金の手続き）'); KTN.toast('キャンセルの手続きに入りました（デモ）'); }, true);
     },
     contact: function (r) {
-      var keys = ['contact-message', 'contact-evidence', 'contact-status', 'contact-consent', 'contact-return', 'contact-return-check', 'contact-accident'];
+      var keys = ['contact-message', 'contact-evidence', 'contact-status', 'contact-consent', 'contact-return', 'contact-return-check', 'contact-accident']
+        .concat(TPLS.filter(function (x) { return x.scene === 'contact' && x.status !== 'archived'; }).map(function (x) { return x.variantKey; }));   /* P90-9 で「事務局から連絡する」の場面に足したもの（2026-11-22） */
       var toOpt = function (x, i) { return '<label class="p9013-check"><input type="radio" name="p9013To" value="' + x + '"' + (i === 2 ? ' checked' : '') + '><span>' + x + '</span></label>'; };
       opModal('事務局から連絡する', '<div class="p211-field"><span class="p211-label">宛先<span class="ktn-req">必須</span></span><div class="p9013-checks">' + ['出品者', '購入者', '両方'].map(toOpt).join('') + '</div></div>' +
         '<div class="p211-field"><span class="p211-label">方法</span><div class="p9013-checks">' +
@@ -29519,6 +29830,7 @@ KTN.pages['p90-13'] = function () {
         var ta = m.querySelector('[data-k="msg"]'); if (how === 'mail') ta.removeAttribute('data-req'); else ta.setAttribute('data-req', '');
         var toName = to === '出品者' ? who(r, '出品者') : to === '購入者' ? who(r, '購入者') : both(r);
         if (how === 'mail') m.querySelector('[data-mailbox]').innerHTML = mailBlock(val(m, '[data-k="tpl"]'), r, { to: to === '両方' ? '（それぞれの名前）' : toName }, to + '（' + toName + '）');
+        if (how === 'mail') bindTpl(m);   /* 描き直した欄にもつなぐ（2026-11-21 ユーザー指摘＝押しても動かなかった） */
       }
       m.onchange = function (e) { if (e.target.name === 'p9013How' || e.target.name === 'p9013To' || e.target.getAttribute('data-k') === 'tpl') sync(); };   /* 開くたびに付け替える（前の取引の処理が残らないように） */
     },
@@ -29841,7 +30153,7 @@ function ktnClaims() {
   var STEP = ['まだ請求していません', '1回目の請求済み', '2回目の請求済み', '最後の通知済み', '支払い済み'];
   var NEXT = ['claim-1', 'claim-2', 'claim-final'];
   var lvN = KTN.ADMIN_LEVELS[KTN.adminLevel()].n;
-  var TP = (typeof ktnMailTemplates === 'function' ? ktnMailTemplates() : []).filter(function (t) { return t.screenId === 'p90-14'; });
+  var TP = (typeof ktnMailTemplates === 'function' ? ktnMailTemplates() : []).filter(function (t) { return ktnTplOn(t, 'p90-14'); });
   function tp(k) { for (var i = 0; i < TP.length; i++) if (TP[i].variantKey === k) return TP[i]; return null; }
   function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
   function yen(n) { return Number(n).toLocaleString('ja-JP') + '円'; }
@@ -29864,24 +30176,29 @@ function ktnClaims() {
     var b = e.target.closest('[data-claim]'), pd = e.target.closest('[data-paid]');
     if (pd) { var c0 = CL[+pd.dataset.paid]; c0.step = 4; c0.due = ''; draw(); if (KTN.auditRecord) KTN.auditRecord('費用の支払いの記録', { t: 'user', nid: c0.uid || '', name: c0.seller }, c0.txn); KTN.toast('支払いを記録しました（デモ）'); return; }
     if (!b) return;
-    var c = CL[+b.dataset.claim], key = NEXT[c.step], t = tp(key); if (!t) return;
+    var c = CL[+b.dataset.claim], key = NEXT[c.step];
+    (function open(selKey) { var t = tp(selKey); if (!t) return;   /* 同じ回に A が足したテンプレートを選べる（2026-11-23） */
     var dd = due(c.step === 0 ? 14 : 7), total = c.fee + c.cost, rest = total - c.offset;
     var V = { userName: c.seller, artworkName: c.work, txnId: c.txn, amount: yen(rest), offset: yen(c.offset), deadline: dd, firstDate: '（1回目の請求の日）', bankInfo: '（個展なびの振込先）', settlementUrl: 'https://koten-navi.com/（販売代金管理）', commonFooter: '（共通のフッター）',
       breakdown: '決済にかかった手数料（お支払い額の4%）：' + yen(c.fee) + '\n返金のために生じた費用：' + yen(c.cost) + '\n合計：' + yen(total) };
     var fill = function (s) { return String(s).replace(/\{\{(\w+)\}\}/g, function (m, k) { return V[k] != null ? V[k] : m; }); };
     var m = document.getElementById('p9014ClaimModal');
     if (!m) { m = document.createElement('div'); m.className = 'p211-modal'; m.id = 'p9014ClaimModal'; document.body.appendChild(m); m.addEventListener('click', function (ev) { if (ev.target.closest('[data-close]')) m.hidden = true; }); }
-    var no = 'S-P-0' + String(t.id).split('-').pop();
+    var no = t.custom ? '（新規）' + t.name : 'S-P-0' + String(t.id).split('-').pop();
     m.innerHTML = '<div class="p211-modal__overlay" data-close></div><div class="p211-modal__box" role="dialog" aria-modal="true" style="max-height:calc(100vh - 40px);overflow-y:auto"><p class="p211-modal__title">' + esc(t.name) + '</p>' +
-      '<div class="p211-field p9013-tpl"><span class="p211-label">送るメール</span><p class="p9013-tpl__name">' + no + ' ' + esc(t.name) + '<a class="ktn-guide-link" href="./kotennavi-p90-9.html" target="_blank" rel="noopener">P90-9 で見る →</a></p>' +
+      '<div class="p211-field p9013-tpl"><span class="p211-label">送るメール</span>' + KTN.tplVariantSel('p90-14', key, selKey) + '<p class="p9013-tpl__name">' + (t.custom ? no : no + ' ' + esc(t.name)) + '<a class="ktn-guide-link" href="./kotennavi-p90-9.html" target="_blank" rel="noopener">P90-9 で見る →</a></p>' + KTN.tplAlt.html('p90-14', key) +
       '<p class="p9013-tpl__meta">宛先：' + esc(c.seller) + '／件名：' + esc(fill(t.subject)) + '／お支払いの期限：' + dd + '</p>' +
       '<textarea class="p211-textarea" rows="12" id="p9014ClaimBody">' + esc(fill(t.body)) + '</textarea><p class="p211-help">テンプレートをもとに、このケースに合わせて加筆・修正・削除してから送ってください。（　）の中は書き換えます。</p></div>' +
       '<div class="p211-modal__foot"><button type="button" class="ktn-op-btn" data-close>キャンセル</button><button type="button" class="ktn-op-btn ktn-op-btn--primary" id="p9014ClaimOk">送る</button></div></div>';
     m.hidden = false;
     (function (b) { if (b) b.defaultValue = b.value; })(document.getElementById('p9014ClaimBody'));
-    document.getElementById('p9014ClaimOk').onclick = function () { var bd = document.getElementById('p9014ClaimBody'); if (!bd.value.trim()) return; c.step++; c.due = dd; m.hidden = true; draw();
+    var blk14 = m.querySelector('.p9013-tpl'), meta14 = blk14.querySelector('.p9013-tpl__meta');
+    KTN.tplAlt.bind(blk14, { body: document.getElementById('p9014ClaimBody'), name: blk14.querySelector('.p9013-tpl__name'), fill: fill, onPick: function (x, fl) { meta14.textContent = '宛先：' + c.seller + '／件名：' + fl(x.subject); } });   /* ほかのテンプレートを番号で（2026-11-20） */
+    document.getElementById('p9014ClaimOk').onclick = function () { var bd = document.getElementById('p9014ClaimBody'); if (!bd.value.trim()) return; if (KTN.tplAlt.check(blk14, [bd.value])) return; no = KTN.tplAlt.no(blk14, no); c.step++; c.due = dd; m.hidden = true; draw();
       if (KTN.auditRecord) KTN.auditRecord('出品者への費用の請求', { t: 'user', nid: c.uid || '', name: c.seller }, no + '（' + c.txn + '・' + yen(rest) + '・期限 ' + dd + (bd.value !== bd.defaultValue ? '・本文を直して送った' : '') + '）');   /* 操作の記録（P90-28・2026-11-13） */
       KTN.toast(no + ' を送りました（デモ）'); };
+    var vs14 = m.querySelector('[data-tpl-variant]'); if (vs14) vs14.onchange = function () { open(this.value); };
+    })(key);
   });
   draw();
 }
@@ -30096,46 +30413,36 @@ KTN.aReq = (function () {
 KTN.userStop = function (o) {
   var name = o.name, kind = o.kind, QUID = o.uid || '', done = function () {};
     var KD = {"lp":{"title":"作品の出品を停止しますか？","note":" の作品の出品を停止します。この出品者の作品（LIAISON・LIAISON+）は、公開のページに出なくなります（出品のデータは残り、再開すると戻ります）。順番待ちの購入の申込はキャンセルし、申込者に知らせます。進行中の取引は期限どおりに続きます。展覧会の掲載は続けられます。クリエイター・ギャラリーのページの作品（作品集）はそのまま表示されます（作品そのものを見せないようにするときは、作品の非公開を使ってください）。費用の未払いが理由のときは、以後の LIAISON+ の申込を受け付けません（支払いの義務は残ります）。","ph":"例：S-P-03（最後の通知）の期限 11/05 を過ぎても未払い（取引 TXN-20261002-6380）","no":"S-M-12","ok":"出品を停止する","done":"出品を停止しました","act":"作品の出品停止","toast":"作品の出品を停止しました（デモ）"},"buy":{"title":"LIAISON+ での購入を停止しますか？","note":" の LIAISON+ での購入の申込を止めます。作品のページの申込のボタンは押せなくなります。順番待ちの申込はキャンセルします（出品者側は次の申込者に順番が移ります）。進んでいる取引は期限どおりに続きます。","ph":"例：直近90日で支払期限切れ 3回（P90-16 の注意・S-K-02 を送ったあとも続いた）","no":"S-M-13","ok":"購入を停止する","done":"購入を停止しました","act":"LIAISON+ での購入の停止","toast":"LIAISON+ での購入を停止しました（デモ）"},"acct":{"title":"アカウントをブロックしますか？","note":" のアカウントをブロックします。ログインできなくなります（ゲストとして見られるページは見られます）。進行中の LIAISON+ の取引は期限どおりに続くので、必要なら取引管理（P90-13）で事務局が対応します。","ph":"例：同じ内容の宣伝のコメントを繰り返し投稿したため（問題報告 R-2040）","no":"S-U-02","ok":"ブロックする","done":"ブロックしました","act":"アカウントのブロック","toast":"アカウントをブロックしました（デモ）"}}[kind];
-    var TP = (typeof ktnMailTemplates === 'function' ? ktnMailTemplates() : []).filter(function (t) { return t.screenId === 'p90-1'; });
+    var SCR = o.screen || 'p90-1';   /* 呼んだ画面のテンプレートで送る（2026-11-20） */
     var R = kind === 'acct' ? [['account-block', '規約に反する利用（迷惑行為・なりすましなど）'], ['account-block', '不正なログインの疑い（本人の保護）'], ['account-block', 'その他']] : kind === 'buy' ? [['lp-buy-cancel', '支払前のキャンセルが重なる'], ['lp-buy-payexp', '支払期限切れが重なる'], ['lp-buy-other', 'その他']] : [['lp-revoke-unpaid', '費用の未払い'], ['lp-revoke-terms', '規約に反する利用'], ['lp-revoke-other', 'その他']];
-    function tp(k) { for (var i = 0; i < TP.length; i++) if (TP[i].variantKey === k) return TP[i]; return null; }
     function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
-    function body(k) { var t = tp(k); return t ? t.body.replace(/\{\{userName\}\}/g, name).replace(/\{\{commonFooter\}\}/g, '（共通のフッター）') : ''; }
     var m = document.getElementById('p901RevokeModal');
     if (!m) { m = document.createElement('div'); m.className = 'p211-modal'; m.id = 'p901RevokeModal'; document.body.appendChild(m); m.addEventListener('click', function (ev) { if (ev.target.closest('[data-close]')) m.hidden = true; }); }
+    /* 本人へのメールは、止めたあとに共通の送信の画面で（送らないこともできる）。モーダルの中には置かない＝操作 → メールの順にそろえる（2026-11-23） */
     m.innerHTML = '<div class="p211-modal__overlay" data-close></div><div class="p211-modal__box" role="dialog" aria-modal="true" style="max-height:calc(100vh - 40px);overflow-y:auto"><p class="p211-modal__title">' + KD.title + '</p>' +
       '<p class="p211-modal__note">' + esc(name) + KD.note + '</p>' +
       '<div class="p211-field"><label class="p211-label" for="p901RvReason">理由<span class="ktn-req">必須</span></label><select class="p211-select" id="p901RvReason">' + R.map(function (r) { return '<option value="' + r[0] + '">' + r[1] + '</option>'; }).join('') + '</select></div>' +
       '<div class="p211-field"><label class="p211-label" for="p901RvDetail">詳しい内容<span class="ktn-req">必須</span></label><textarea class="p211-textarea" rows="2" id="p901RvDetail" placeholder="' + KD.ph + '"></textarea></div>' +
-      '<div class="p211-field p9013-tpl p901-rv-mail"><span class="p211-label">本人へのメール（任意）</span><p class="p9013-tpl__name" id="p901RvTplName"></p>' +
-      '<textarea class="p211-textarea" rows="10" id="p901RvBody"></textarea><p class="p211-help">テンプレートをもとに、このケースに合わせて加筆・修正・削除してから送ってください。（　）の中は書き換えます。送らないときは、このボタンを押しません。</p>' +
-      '<p class="p901-rv-mail__foot"><span class="p901-rv-mail__sent" id="p901RvSent"></span><button type="button" class="ktn-op-btn ktn-op-btn--sm" id="p901RvSend">メールを送信する</button></p></div>' +
+      '<div class="p211-field" data-mailbox></div>' +
       '<div class="p211-modal__foot"><button type="button" class="ktn-op-btn" data-close>キャンセル</button><button type="button" class="ktn-op-btn ktn-op-btn--danger" id="p901RvOk">' + KD.ok + '</button></div></div>';
-    var sel = document.getElementById('p901RvReason'), bd = document.getElementById('p901RvBody'), sent = '';
-    function load() { var t = tp(sel.value); document.getElementById('p901RvTplName').innerHTML = t ? ((KTN.MAIL_NO && KTN.MAIL_NO[t.id]) || KD.no) + ' ' + esc(t.name) + ' <a class="ktn-guide-link" href="./kotennavi-p90-9.html" target="_blank" rel="noopener">P90-9 で見る →</a>' : ''; bd.value = body(sel.value); bd.defaultValue = bd.value; }
-    /* メールは実行と別のボタン（2026-11-15 ユーザー指示＝送らないケースもある）。実行の前でもあとでも送れる（実行してもモーダルは閉じない） */
-    sel.onchange = function () { if (!sent) load(); }; load();
-    document.getElementById('p901RvSend').onclick = function () {
-      if (!bd.value.trim()) { bd.focus(); return; }
-      var t = (KTN.MAIL_NO && KTN.MAIL_NO[(tp(sel.value) || {}).id]) || KD.no;
-      sent = t; bd.disabled = true; this.disabled = true;
-      document.getElementById('p901RvSent').textContent = t + ' を送信しました';
-      if (KTN.auditRecord) KTN.auditRecord(KD.act, { t: 'user', nid: QUID || '', name: name }, t + ' を送った' + (bd.value !== bd.defaultValue ? '（本文を直した）' : ''));
-      KTN.toast(t + ' を送信しました（デモ）');
-    };
+    var sel = document.getElementById('p901RvReason'), mb;
+    /* 本人へのメールの欄（止める前から見える・止めたら使える・2026-11-23） */
+    function mkMb() { mb = KTN.mailBox(m.querySelector('[data-mailbox]'), { screen: SCR, keys: [sel.value], heading: '本人へのメール（任意）', lockText: KTN.afterText(KD.ok, KD.done),
+      tokens: { userName: name, commonFooter: '（共通のフッター）' }, onSent: function (x) { if (KTN.auditRecord) KTN.auditRecord(KD.act, { t: 'user', nid: QUID || '', name: name }, (x.no || KD.no) + ' を送った' + (x.edited ? '（本文を直した）' : '')); } }); }
+    mkMb(); sel.onchange = mkMb;
     m.hidden = false;
     document.getElementById('p901RvOk').onclick = function () {
       var det = document.getElementById('p901RvDetail').value.trim(); if (!det) { document.getElementById('p901RvDetail').focus(); return; }
       var label = sel.options[sel.selectedIndex].text;
-      if (KTN.auditRecord) KTN.auditRecord(KD.act, { t: 'user', nid: QUID || '', name: name }, label + '：' + det + (sent ? '（' + sent + ' は送信済み）' : ''));
+      if (KTN.auditRecord) KTN.auditRecord(KD.act, { t: 'user', nid: QUID || '', name: name }, label + '：' + det);
       var z = function (n) { return (n < 10 ? '0' : '') + n; }, dt = new Date();
       var stamp = { date: dt.getFullYear() + '.' + z(dt.getMonth() + 1) + '.' + z(dt.getDate()), reason: label };
       if (o.onStopped) o.onStopped(stamp);
-      /* 実行したらモーダルは閉じず、実行のボタンを止め、キャンセルを「閉じる」に。メールはこのあとでも送れる */
+      /* 止めてもモーダルは閉じない：実行のボタンは「…しました」で止め、キャンセルを「閉じる」に。下の本人へのメールが使えるようになる */
       var ok = document.getElementById('p901RvOk'); ok.disabled = true; ok.textContent = KD.done;
       sel.disabled = true; document.getElementById('p901RvDetail').disabled = true;
       var cx = m.querySelector('.p211-modal__foot [data-close]'); if (cx) cx.textContent = '閉じる';
-      KTN.toast(KD.toast); done();
+      mb.unlock(); KTN.toast(KD.toast); done();
     };
 };
 
@@ -30267,13 +30574,13 @@ function ktnWarnPage(who, nameLabel) {
     return m;
   }
   /* 種類ごとのテンプレート（S-K-01〜S-K-06・P90-9）。variantKey＝warn-種類 */
-  var TP = (typeof ktnMailTemplates === 'function' ? ktnMailTemplates() : []).filter(function (t) { return t.screenId === (who === 'seller' ? 'p90-15' : 'p90-16'); });
+  var TP = (typeof ktnMailTemplates === 'function' ? ktnMailTemplates() : []).filter(function (t) { return ktnTplOn(t, who === 'seller' ? 'p90-15' : 'p90-16'); });
   function tpOf(k) { for (var i = 0; i < TP.length; i++) if (TP[i].variantKey === 'warn-' + k) return TP[i]; return null; }
   document.querySelector('#' + page + 'List').addEventListener('click', function (e) {
     var sb = e.target.closest('[data-warn-stop],[data-warn-resume]');
     if (sb) {
       var tr0 = sb.closest('tr'), n0 = nameOf(tr0), p0 = W.PEOPLE[n0] || (W.PEOPLE[n0] = { who: who, uid: '', ev: [] }), kind = who === 'seller' ? 'lp' : 'buy';
-      if (sb.hasAttribute('data-warn-stop')) KTN.userStop({ kind: kind, name: n0, uid: p0.uid, onStopped: function (stamp) { p0.stop = { d: stamp.date, by: uid, why: stamp.reason }; draw(); } });
+      if (sb.hasAttribute('data-warn-stop')) KTN.userStop({ screen: who === 'seller' ? 'p90-15' : 'p90-16', kind: kind, name: n0, uid: p0.uid, onStopped: function (stamp) { p0.stop = { d: stamp.date, by: uid, why: stamp.reason }; draw(); } });
       else KTN.userResume({ kind: kind, name: n0, uid: p0.uid, state: p0.stop ? { date: p0.stop.d, reason: p0.stop.why || '' } : null, onResumed: function () { delete p0.stop; draw(); } });
       return;
     }
@@ -30295,41 +30602,28 @@ function ktnWarnPage(who, nameLabel) {
         s.over.map(function (k) { return '<label class="p9013-check"><input type="checkbox" value="' + k + '"' + (needK.indexOf(k) >= 0 ? ' checked' : '') + '><span>' + label(k) + ' ' + s.counts[k] + '回' + (needK.indexOf(k) >= 0 ? '' : '（確認済み）') + '</span></label>'; }).join('') + '</div></div>' +
         '<div class="p211-field"><label class="p211-label">確認の結果<span class="ktn-req">必須</span></label><select class="p211-select" data-req data-k="how"><option value="">選んでください</option><option>様子を見る</option><option>連絡した（返事を待つ）</option><option>事情を確かめた（問題なし）</option><option>その他</option></select></div>' +
         '<div class="p211-field"><label class="p211-label">詳しい内容<span class="ktn-req">必須</span></label><textarea class="p211-textarea" rows="3" maxlength="500" data-req data-k="why" placeholder="例：配送会社の集荷の遅れと確認。今後の発送の予定を S-K-02 の返信で確かめた"></textarea></div>' +
-        '<div class="p211-field p9013-tpl"><span class="p211-label">本人へのメール（任意）</span>' +
-          '<select class="p211-select" data-k="type">' + s.over.map(function (k) { return '<option value="' + k + '">' + label(k) + '（' + s.counts[k] + '回）のテンプレート</option>'; }).join('') + '</select>' +
-          '<p class="p9013-tpl__name" data-tpl-name></p><p class="p9013-tpl__meta" data-tpl-meta></p>' +
-          '<textarea class="p211-textarea" rows="10" data-k="body"></textarea><p class="p211-help">テンプレートをもとに、このケースに合わせて加筆・修正・削除してから送ってください。送らないときは、このボタンを押しません。</p>' +
-          '<p class="p901-rv-mail__foot"><span class="p901-rv-mail__sent" data-mail-sent>確認済みにしたあと送れます</span><button type="button" class="ktn-op-btn ktn-op-btn--sm" data-mail-send disabled>メールを送信する</button></p></div>',
+        '<div class="p211-field" data-mailbox></div>',
         '確認済みにする', function (m) {
           var ty = {}; m.querySelectorAll('[data-types] input:checked').forEach(function (c) { ty[c.value] = s.counts[c.value]; });
           var why = m.querySelector('[data-k="how"]').value + '：' + m.querySelector('[data-k="why"]').value.trim();
           (pp.acks = pp.acks || []).push({ d: today(), by: uid, why: why, types: ty });
           if (KTN.auditRecord) KTN.auditRecord('注意行為の確認', { t: 'user', nid: pp.uid, name: n }, '確認した注意行為：' + Object.keys(ty).map(function (k) { return label(k) + ' ' + ty[k] + '回'; }).join('・') + '・' + why);
           draw(); KTN.toast('確認済みにしました（デモ）');
-          /* 確認のない連絡はしない（2026-11-16 ユーザー確認）：確認済みにしたあと、モーダルは閉じずにメールを送れるようにする（送らないなら「閉じる」） */
+          /* 確認のない連絡はしない（2026-11-16 ユーザー確認）：確認済みにしたあとに、本人へのメールの画面を開く（送らないこともできる）。
+             操作 → メールの順にそろえる（2026-11-23 ユーザー指示・停止のモーダル・P90-13 と同じ共通の送信の画面） */
           var ok = document.getElementById('p90WarnOk'); ok.disabled = true; ok.textContent = '確認済みにしました';
           m.querySelectorAll('[data-types] input,[data-k="how"],[data-k="why"]').forEach(function (el) { el.disabled = true; });
           var cx = m.querySelector('.p211-modal__foot [data-close]'); if (cx) cx.textContent = '閉じる';
-          m.querySelector('[data-mail-send]').disabled = false; m.querySelector('[data-mail-sent]').textContent = '';
+          if (mbW) mbW.unlock();
           return false;
         });
-      /* メールのテンプレート：初めは、確認が必要な種類の最初のもの。種類を替えるとテンプレートも替わる */
-      var tsel = m.querySelector('[data-k="type"]'); tsel.value = needK[0] || s.over[0];
-      var load = function () {
-        var k = tsel.value, t = tpOf(k), v = V(k), bd = m.querySelector('[data-k="body"]');
-        m.querySelector('[data-tpl-name]').innerHTML = t ? esc((KTN.MAIL_NO[t.id] || '') + ' ' + t.name) + '<a class="ktn-guide-link" href="./kotennavi-p90-9.html" target="_blank" rel="noopener">P90-9 で見る →</a>' : 'テンプレートがありません';
-        m.querySelector('[data-tpl-meta]').textContent = t ? '宛先：' + n + '／件名：' + fill(t.subject, v) : '';
-        bd.value = t ? fill(t.body, v) : ''; bd.defaultValue = bd.value;
-      };
-      tsel.addEventListener('change', load); load();
-      m.querySelector('[data-mail-send]').onclick = function () {
-        var k = tsel.value, t = tpOf(k), bd = m.querySelector('[data-k="body"]'); if (!bd.value.trim()) { bd.focus(); return; }
-        var no = t ? KTN.MAIL_NO[t.id] || '' : '';
-        if (KTN.auditRecord) KTN.auditRecord('注意行為の連絡', { t: 'user', nid: pp.uid, name: n }, no + '（' + label(k) + '）' + (bd.value !== bd.defaultValue ? '・本文を直して送った' : ''));
-        var last = (pp.acks || [])[pp.acks.length - 1]; if (last) last.mail = { no: no, t: k };   /* 確認の行にまとめる */
-        this.disabled = true; bd.disabled = true; tsel.disabled = true; m.querySelector('[data-mail-sent]').textContent = no + ' を送信しました';
-        draw(); KTN.toast(no + ' を送信しました（デモ）');
-      };
+      /* 本人へのメールの欄（確認済みにする前から見える・確認済みにしたら使える）。テンプレートは種類ごと、確認が必要な種類を先に（2026-11-23） */
+      var SCRW = who === 'seller' ? 'p90-15' : 'p90-16', order = needK.concat(s.over.filter(function (k) { return needK.indexOf(k) < 0; }));
+      var typeOf = function (x) { return String(x.scene || x.variantKey || '').replace(/^warn-/, ''); };
+      var mbW = KTN.mailBox(m.querySelector('[data-mailbox]'), { screen: SCRW, keys: order.map(function (k) { return 'warn-' + k; }), heading: '本人へのメール（任意）', lockText: '確認済みにしたあとに開けます',
+        tokensFor: function (x) { return V(typeOf(x)); }, onSent: function (x) { var k = typeOf(x.tpl || {});
+          if (KTN.auditRecord) KTN.auditRecord('注意行為の連絡', { t: 'user', nid: pp.uid, name: n }, (x.no || '') + '（' + label(k) + '）' + (x.edited ? '・本文を直して送った' : ''));
+          var last = (pp.acks || [])[pp.acks.length - 1]; if (last) last.mail = { no: x.no || '', t: k }; draw(); } });
       return;
     }
   });
@@ -31011,7 +31305,7 @@ KTN.pages['p90-12'] = function () {
   host.addEventListener('click', function (e) {
     var b = e.target.closest('[data-wact="contact"]'); if (!b) return;
     var w = WORKS.filter(function (x) { return x.id === b.dataset.wid; })[0]; if (!w) return;
-    var TP = (typeof ktnMailTemplates === 'function' ? ktnMailTemplates() : []).filter(function (t) { return t.screenId === 'p90-12' && ['work-hidden', 'work-reshown'].indexOf(t.variantKey) < 0; });
+    var TP = (typeof ktnMailTemplates === 'function' ? ktnMailTemplates() : []).filter(function (t) { return ktnTplOn(t, 'p90-12') && ['work-hidden', 'work-reshown'].indexOf(t.variantKey) < 0; });
     var esc = function (s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); };
     var dl = (function () { var d = new Date(); d.setDate(d.getDate() + 3); var z = function (n) { return (n < 10 ? '0' : '') + n; }; return d.getFullYear() + '.' + z(d.getMonth() + 1) + '.' + z(d.getDate()); })();
     var V = { userName: w.who, artworkName: w.title, exhibitionName: w.exh.title, deadline: dl, manageUrl: 'https://koten-navi.com/（作品の管理）', commonFooter: '（共通のフッター）' };
@@ -31020,16 +31314,19 @@ KTN.pages['p90-12'] = function () {
     if (!m) { m = document.createElement('div'); m.className = 'p211-modal'; m.id = 'p9012ContactModal'; document.body.appendChild(m); m.addEventListener('click', function (ev) { if (ev.target.closest('[data-close]')) m.hidden = true; }); }
     m.innerHTML = '<div class="p211-modal__overlay" data-close></div><div class="p211-modal__box" role="dialog" aria-modal="true" style="max-height:calc(100vh - 40px);overflow-y:auto"><p class="p211-modal__title">出品者に連絡する</p>' +
       '<p class="p211-modal__note">作品《' + esc(w.title) + '》・出品者 ' + esc(w.who) + '。非公開にするほどではないことを、出品者に確かめてもらうときに使います。</p>' +
-      '<div class="p211-field"><label class="p211-label" for="p9012CtTpl">送るメール</label><select class="p211-select" id="p9012CtTpl">' + TP.map(function (t) { return '<option value="' + t.variantKey + '">S-W-0' + String(t.id).split('-').pop() + ' ' + esc(t.name) + '</option>'; }).join('') + '</select>' +
-      '<p class="p9013-tpl__meta" id="p9012CtMeta"></p><textarea class="p211-textarea" rows="12" id="p9012CtBody"></textarea>' +
+      '<div class="p211-field"><label class="p211-label" for="p9012CtTpl">送るメール</label><select class="p211-select" id="p9012CtTpl">' + TP.map(function (t) { return '<option value="' + t.variantKey + '">' + (t.custom ? '（新規）' : 'S-W-0' + String(t.id).split('-').pop()) + ' ' + esc(t.name) + '</option>'; }).join('') + '</select>' +
+      KTN.tplAlt.html('p90-12', 'contact') + '<p class="p9013-tpl__meta" id="p9012CtMeta"></p><textarea class="p211-textarea" rows="12" id="p9012CtBody"></textarea>' +
       '<p class="p211-help">テンプレートをもとに、このケースに合わせて加筆・修正・削除してから送ってください。（　）の中は書き換えます。返信の期限は3日です。</p></div>' +
       '<div class="p211-modal__foot"><button type="button" class="ktn-op-btn" data-close>キャンセル</button><button type="button" class="ktn-op-btn ktn-op-btn--primary" id="p9012CtOk">送る</button></div></div>';
     var sel = document.getElementById('p9012CtTpl'), bd = document.getElementById('p9012CtBody');
     function load() { var t = TP.filter(function (x) { return x.variantKey === sel.value; })[0]; if (!t) return; document.getElementById('p9012CtMeta').innerHTML = '宛先：' + esc(w.who) + '／件名：' + esc(fill(t.subject)) + ' <a class="ktn-guide-link" href="./kotennavi-p90-9.html" target="_blank" rel="noopener">P90-9 で見る →</a>'; bd.value = fill(t.body); bd.defaultValue = bd.value; }
-    sel.onchange = load; load(); m.hidden = false;
+    var blk = m.querySelector('[data-tplalt]');   /* ほかのテンプレートを番号で（2026-11-20）。候補を選び直したら外す */
+    function bindAlt() { KTN.tplAlt.bind(blk, { body: bd, fill: fill, onPick: function (x, fl) { document.getElementById('p9012CtMeta').textContent = '宛先：' + w.who + '／件名：' + fl(x.subject); } }); }
+    sel.onchange = function () { load(); bindAlt(); }; load(); bindAlt(); m.hidden = false;
     document.getElementById('p9012CtOk').onclick = function () {
       if (!bd.value.trim()) { bd.focus(); return; }
-      var no = sel.options[sel.selectedIndex].text.split(' ')[0];
+      if (KTN.tplAlt.check(blk, [bd.value])) return;
+      var no = KTN.tplAlt.no(blk, sel.options[sel.selectedIndex].text.split(' ')[0]);
       KTN.auditRecord('出品者への連絡', { t: 'work', nid: w.nid, name: w.title, url: w.url }, no + (bd.value !== bd.defaultValue ? '・本文を直して送った' : ''));
       m.hidden = true; KTN.toast(no + ' を送りました（デモ）');
     };
@@ -31039,16 +31336,19 @@ KTN.pages['p90-12'] = function () {
     var w = WORKS.filter(function (x) { return x.id === b.dataset.wid; })[0]; if (!w) return;
     var tg = { t: 'work', nid: w.nid, name: w.title, url: w.url };
     function redraw() { host.querySelectorAll('.p9012-wrow[data-ex="' + w.exh.nid + '"] > td').forEach(function (td) { td.innerHTML = worksInner(w.exh); }); }
-    /* 出品者へのご連絡（S-W-04 非公開・S-W-05 再公開）は手で送る＝送るかどうかを管理者が決める（2026-11-17・旧 A-T-19・A-T-23 は自動だった） */
-    function sellerMail(key) { if (!KTN.mailSend) return; setTimeout(function () { KTN.mailSend({ title: '出品者（' + w.who + '）にお知らせを送る', screen: 'p90-12', keys: [key], skipLabel: '送らない',
-      lead: key === 'work-hidden' ? '作品《' + w.title + '》を非公開にしました。出品者に知らせるときは送ってください。問題報告への対応で S-FR-02 を送ったときなどは送らなくて構いません。' : '作品《' + w.title + '》を公開に戻しました。出品者に知らせるときは送ってください。',
-      tokens: { userName: w.who, artworkName: w.title, exhibitionName: w.exh.title, commonFooter: '（共通のフッター）' }, done: '出品者にお知らせを送りました（デモ）', onSkip: function () { KTN.toast('出品者へのお知らせは送りませんでした'); } }); }, 400); }
-    if (w.hidden) { var wasPaused = w.paused, wasTx = w.txPaused; w.hidden = false; w.paused = false; w.txPaused = false; redraw();   /* 非公開で止めていた取引も再開（2026-11-17） */ KTN.auditRecord('公開に戻す', tg); KTN.toast('公開に戻しました' + (wasPaused && w.q ? '。止めていた申込者（A-T-24・元の順で再開）' : '') + (wasTx ? '。止めていた取引（' + w.tx[1] + '）を再開し、購入者（A-T-25）に知らせました' : '') + 'にメールを送りました（デモ）');  sellerMail('work-reshown'); }
+    /* 出品者へのご連絡（S-W-04 非公開・S-W-05 再公開）は手で送る＝送るかどうかを管理者が決める（2026-11-17）。操作のモーダルの、操作のボタンの下から（2026-11-23） */
+    if (w.hidden) { KTN.opConfirm({ title: '作品《' + w.title + '》を公開に戻しますか？', okLabel: '公開に戻す', doneLabel: '公開に戻しました',
+      note: '作品のページと展覧会の作品の一覧に、また出るようになります。' + (w.paused && w.q ? '止めていた申込は元の順で再開し、申込者に A-T-24 が届きます。' : '') + (w.txPaused ? '一時停止していた取引（' + w.tx[1] + '）を再開し、購入者に A-T-25 が届きます。' : '') + '出品者へのご連絡（S-W-05）は、戻したあとに下から送れます（送らないこともできます）。',
+      done: '公開に戻しました（デモ）',
+      onDone: function () { var wasPaused = w.paused, wasTx = w.txPaused; w.hidden = false; w.paused = false; w.txPaused = false; redraw();   /* 非公開で止めていた取引も再開（2026-11-17） */
+        KTN.auditRecord('公開に戻す', tg); if ((wasPaused && w.q) || wasTx) KTN.toast((wasPaused && w.q ? '止めていた申込者（A-T-24・元の順で再開）' : '') + (wasTx ? (wasPaused && w.q ? '・' : '') + '止めていた取引（' + w.tx[1] + '）の購入者（A-T-25）' : '') + 'にメールを送りました（デモ）'); },
+      mail: { screen: 'p90-12', keys: ['work-reshown'], heading: '出品者へのご連絡（任意）', tokens: { userName: w.who, artworkName: w.title, exhibitionName: w.exh.title, commonFooter: '（共通のフッター）' },
+        done: '出品者にお知らせを送りました（デモ）', onSent: function (x) { KTN.auditRecord('出品者への連絡', tg, (x.no || 'S-W-05') + ' を送った'); } } }); }
     /* 非公開にするのは、確認が済むまで売買を止めたいとき＝進んでいる取引も一時停止する（2026-11-17 ユーザー判断。取引を続けてよい程度の問題なら、非公開にせず出品者に連絡する） */
     else KTN.adminHide({ kind: '作品', name: w.title, reasons: KTN.WORK_HIDE_REASONS, placeholder: '例：問題報告（R-1024）で他人の作品ではないかと報告があり、出品者に照会するあいだ止める',
       pre: '作品のページと展覧会の作品の一覧に出なくなり、新しい購入の申込を受け付けなくなります。' +
         (txActive(w) ? '進行中の取引：取引番号 ' + w.tx[1] + '（' + w.tx[0] + '・購入者 ' + (TXBUYER[w.tx[1]] || '—') + '）。この取引も一時停止します（確認が済むまで期限は進みません。購入者には自動で知らせます〔A-T-21〕）。確認が済んだら、問題がなければ「公開に戻す」で再開、問題があれば取引管理で強制キャンセルします。' : '') +
-        '購入者のコレクションの表示はそのままです。' + '出品者へのご連絡（S-W-04）は、このあと開く欄から送れます（送らないこともできます）。',
+        '購入者のコレクションの表示はそのままです。' + '出品者へのご連絡（S-W-04）は、非公開にしたあとに下の欄から送れます（送らないこともできます）。',
       /* 並んでいる申込（申込済）があるときは、扱いを必ず選ぶ（2026-11-04 ユーザー判断）。A＝すべてキャンセル（申込者全員へ A-T-18・出品者へ T-18S）／B＝取引デスクで1件ずつ（止めて要対応に。期限・自動のキャンセルは設けない＝手動を選んだ理由があるため） */
       choice: w.q ? { label: '並んでいる申込（申込済 ' + w.q + '件）の扱い', options: [
         ['all', '申込をすべてキャンセルする（申込者全員と出品者にメールで知らせる）'],
@@ -31060,8 +31360,9 @@ KTN.pages['p90-12'] = function () {
         else if (x.choice === 'each') { w.paused = true; KTN.toast('申込者（A-T-20）にメールを送りました（デモ）'); }
         if (txActive(w)) { w.txPaused = true; KTN.toast('取引（' + w.tx[1] + '）を一時停止し、購入者（A-T-21）に知らせました（デモ）'); }
         redraw(); KTN.auditRecord('非公開', tg, KTN.reasonText(x) + (x.choice === 'all' ? '（申込はすべてキャンセル）' : x.choice === 'each' ? '（申込は取引デスクで1件ずつ）' : '') + (w.txPaused ? '（取引 ' + w.tx[1] + ' を一時停止）' : ''));
-        sellerMail('work-hidden');
-      } });
+      }, mail: { screen: 'p90-12', keys: ['work-hidden'], heading: '出品者へのご連絡（任意）', lead: '問題報告への対応で S-FR-02 を送ったときなどは、送らなくて構いません。',
+        tokens: { userName: w.who, artworkName: w.title, exhibitionName: w.exh.title, commonFooter: '（共通のフッター）' }, done: '出品者にお知らせを送りました（デモ）',
+        onSent: function (x) { KTN.auditRecord('出品者への連絡', tg, (x.no || 'S-W-04') + ' を送った'); } } });
   });
   function show(key) {
     nav.querySelectorAll('.p902-tab-btn').forEach(function (b) { var on = b.dataset.tab === key; b.classList.toggle('is-active', on); b.setAttribute('aria-selected', on ? 'true' : 'false'); });
