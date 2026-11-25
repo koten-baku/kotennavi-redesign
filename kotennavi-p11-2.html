@@ -581,6 +581,7 @@ function setDemoMode(mode) {
     document.getElementById(id).classList.remove('on');
   });
   document.getElementById('dbar' + mode.charAt(0).toUpperCase() + mode.slice(1)).classList.add('on');
+  if (window.p112Flow) p112Flow.render();   /* 取消の中身（本人の取り下げ・再申込）（2026-11-23） */
 }
 
 function p112ToggleAgent() {
@@ -701,6 +702,8 @@ document.addEventListener('click', function(e) {
 /* ?claim（修正依頼・問題報告から引き継いだページ）を既存の掲載ページ欄に入れる。送信時は申込の内容として事務局あて通知（A-M-01J／A-M-03J）に載る */
 KTN.applyClaim('p112ClaimLead', 'p112ExistingPage', 'creator');
 KTN.init({ page: 'p11-2', role: 'creator' });
+/* 審査中の取り下げと、取消のあとの再申込（KTN.applyFlow・2026-11-23） */
+window.p112Flow = KTN.applyFlow({ key: 'p11-2', pending: ["p112PendingBanner"], cancelled: 'p112CancelledBanner', mail: 'A-M-12J', mailTo: 'register@', setMode: setDemoMode, agree: "input[name=\"creator-agree\"], #p112TermsCheck" });
 
 // 申込FAQ（アコーディオン・閉じた状態で描画＝縦に伸びない）
 if (typeof KTN.renderQA === 'function') KTN.renderQA('#p112Faq', { category: 'creator-apply', style: 'guide', hideGroup: true });

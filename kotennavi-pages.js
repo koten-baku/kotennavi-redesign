@@ -9875,6 +9875,9 @@ function P902Data() {
     { id: 'mt-10', screenId: 'p90-2', screenLabel: 'クリエイター/ギャラリー機能申込管理', pattern: 'abnormal', variantKey: 'cancel-other', from: 'register@koten-navi.com',
       name: 'その他', subject: '【個展なび】{{roleName}}機能のお申込みの取消について', body: MAIL_CANCEL_BODY_STD,
       status: 'active', usageNote: '上記に当てはまらない理由で取消を確定した時に送る（S-M-07パターン④・送信は任意）。', updatedAt: '2026.8.8' },
+    { id: 'mt-10w', screenId: 'p90-2', screenLabel: 'クリエイター/ギャラリー機能申込管理', pattern: 'abnormal', variantKey: 'cancel-withdraw', from: 'register@koten-navi.com',
+      name: '申込者からの取り下げの依頼', subject: '【個展なび】{{roleName}}機能のお申込みの取り下げについて', body: '{{userName}} 様\n\n{{roleName}}機能のお申込みについて、取り下げのご連絡をいただき、ありがとうございます。\nご依頼のとおり、お申込みを取り下げました。\n\n改めてお申込みをご希望の場合は、お手数ですが再度お申込みフォームよりお手続きください。\n\n{{commonFooter}}',
+      status: 'active', usageNote: '申込者から取り下げの依頼を受けて、取消（本人の取り下げ）にしたとき（S-M-07⑧・送信は任意・再申込はできる・2026-11-23）。', updatedAt: '2026.11.23' },
   ];
 
   /* ── トークン展開・テンプレート検索ヘルパー（P90-9共通仕様・docs/mail-template-system.md 7章）── */
@@ -10072,7 +10075,7 @@ function P902Data() {
     p902SaveOverride(a.id, {
       status: a.status, procStatus: a.procStatus, grantedDate: a.grantedDate,
       processType: a.processType, procSS: a.procSS, linkedPage: a.linkedPage,
-      cancelReason: a.cancelReason, cancelEmailSent: a.cancelEmailSent,
+      cancelReason: a.cancelReason, cancelEmailSent: a.cancelEmailSent, noReapply: a.noReapply, withdrawn: a.withdrawn, revoked: a.revoked,
       inquiry: a.inquiry, adminNote: a.adminNote,
       grantMailSent: a.grantMailSent, grantMailDate: a.grantMailDate,
       handledBy: a.handledBy, log: a.log,   /* 処理した管理者・対応履歴（2026-11-17） */
@@ -10493,6 +10496,8 @@ KTN.pages['p90-2-1'] = function () {
   var cancelFromEl        = document.getElementById('p902CancelFrom');
   var cancelSubjectEl     = document.getElementById('p902CancelSubject');
   var cancelBodyEl        = document.getElementById('p902CancelBody');
+  var PFX = 'p902'; (function () { var rs = document.getElementById('p902CancelReasonSel'), cb0 = document.getElementById('p902CancelNoReapply'); if (rs && cb0) rs.addEventListener('change', function () { var w = rs.value === 'cancel-withdraw'; if (w) cb0.checked = false; cb0.disabled = w; }); })();   /* 取り下げは再申込できる（2026-11-23） */
+  var PFX = 'p902'; (function () { var cb = document.getElementById('p902CancelNoReapply'); if (cb) cb.addEventListener('change', function () { var bd = document.getElementById('p902CancelBody'); if (bd) bd.value = noReapplyText(bd.value); }); })();
   function lockCancelMail(on) {   /* 取消のご連絡メール：「取消を確定する」の下の開閉のボタン。確定したら押せて、押すと下に欄が開く（操作のモーダルと同じ形・2026-11-23） */
     if (!cancelMailFieldsEl) return;
     var tg = cancelMailFieldsEl.previousElementSibling;
@@ -10597,6 +10602,7 @@ KTN.pages['p90-2-1'] = function () {
     if (resultEl) {
       if (a.status === 'pending') { resultEl.hidden = true; resultEl.innerHTML = ''; }
       else { resultEl.hidden = false; resultEl.innerHTML = D.buildResult(a); }
+      ktnAppRevoke({ app: a, el: resultEl, screen: 'p90-2', kind: 'cg', roleName: a.role === 'gallery' ? 'ギャラリー' : 'クリエイター', save: D.saveOverride, rec: function (w, n) { rec(w, n); }, rerender: function () { resultEl.innerHTML = D.buildResult(a); var st = D.STATUS[a.status]; if (statusChip && st) { statusChip.className = 'ktn-review-status ktn-review-status--' + st.cls; statusChip.textContent = st.label; } var o2 = resultEl.parentNode.querySelector('.p902-revoke'); if (o2) o2.remove(); } });   /* 承認の取消（A・2026-11-23） */
     }
 
     resetFlowPanels();
@@ -10653,8 +10659,10 @@ KTN.pages['p90-2-1'] = function () {
     current.cancelEmailSent = !!emailSent;
     current.inquiry = null;
     current.handledBy = KTN.adminMeText ? KTN.adminMeText() : '';
+    current.noReapply = !!(document.getElementById('p902CancelNoReapply') || {}).checked;   /* 再申込を受け付けない（2026-11-23） */
+    current.withdrawn = current.cancelReason === 'withdraw';   /* 申込者からの取り下げの依頼＝取消（本人の取り下げ） */
     D.saveOverride(current);
-    rec('取消', D.CANCEL_REASON_LABEL[current.cancelReason] || '');
+    rec('取消', (D.CANCEL_REASON_LABEL[current.cancelReason] || '') + (current.noReapply ? '（再申込を受け付けない）' : ''));
     var st = D.STATUS['cancelled'];
     if (statusChip) { statusChip.className = 'ktn-review-status ktn-review-status--' + st.cls; statusChip.textContent = st.label; }
     if (inquiryNoteEl) { inquiryNoteEl.hidden = true; inquiryNoteEl.innerHTML = ''; }
@@ -10851,8 +10859,10 @@ KTN.pages['p90-2-1'] = function () {
     if (cancelFromEl) cancelFromEl.value = t.from;
     var tokens = D.tplTokens(current);
     if (cancelSubjectEl) cancelSubjectEl.value = D.applyTokens(t.subject, tokens);
-    if (cancelBodyEl) cancelBodyEl.value = D.applyTokens(t.body, tokens);
+    if (cancelBodyEl) cancelBodyEl.value = noReapplyText(D.applyTokens(t.body, tokens));
   }
+  /* 再申込を受け付けないとき、取消のご連絡の「改めてお申込み…」の文を差し替える（2026-11-23） */
+  function noReapplyText(body) { var cb = document.getElementById(PFX + 'CancelNoReapply'); return cb && cb.checked ? String(body).split('改めてお申込みをご希望の場合は、お手数ですが再度お申込みフォームよりお手続きください。').join('改めてのお申込みは、お受けしておりません。ご不明な点につきましては、お問い合わせください。') : String(body).split('改めてのお申込みは、お受けしておりません。ご不明な点につきましては、お問い合わせください。').join('改めてお申込みをご希望の場合は、お手数ですが再度お申込みフォームよりお手続きください。'); }
   if (cancelFlowBtn) cancelFlowBtn.addEventListener('click', function () {
     if (!current) return;
     closeActionPanels();
@@ -11067,6 +11077,9 @@ function P9011Data() {
     { id: 'mt-p9011-11', screenId: 'p90-11', screenLabel: 'リエゾンプラス機能申込管理', pattern: 'abnormal', variantKey: 'cancel-other', from: 'liaison@koten-navi.com',
       name: 'その他', subject: '【個展なび】LIAISON+機能のお申込みの取消について', body: MAIL_CANCEL_BODY_STD,
       status: 'active', usageNote: '上記に当てはまらない理由で取消を確定した時に送る（送信は任意）。', updatedAt: '2026.8.11' },
+    { id: 'mt-p9011-12', screenId: 'p90-11', screenLabel: 'リエゾンプラス機能申込管理', pattern: 'abnormal', variantKey: 'cancel-withdraw', from: 'liaison@koten-navi.com',
+      name: '申込者からの取り下げの依頼', subject: '【個展なび】LIAISON+機能のお申込みの取り下げについて', body: '{{userName}} 様\n\nLIAISON+ 機能のお申込みについて、取り下げのご連絡をいただき、ありがとうございます。\nご依頼のとおり、お申込みを取り下げました。\n\n改めてお申込みをご希望の場合は、お手数ですが再度お申込みフォームよりお手続きください。\n\n{{commonFooter}}',
+      status: 'active', usageNote: '申込者から取り下げの依頼を受けて、取消（本人の取り下げ）にしたとき（S-M-10⑥・送信は任意・再申込はできる・2026-11-23）。', updatedAt: '2026.11.23' },
   ];
 
   function tplTokens(a) {
@@ -11123,7 +11136,7 @@ function P9011Data() {
      creator の kyc は P3-11（クリエイター基本情報）からの読み込み＝申込時点では編集不可。
      gallery の resp（責任者情報）はギャラリー基本情報のご担当者と別人の場合があるため申込ごとに収集。 */
   var APPS = [
-    { id: 'a1', role: 'creator', status: 'granted', nid: 'N-61200', uid: 'U-10003', email: 'tanaka.toru@example.com',
+    { id: 'a1', activeTx: 2, role: 'creator', status: 'granted', nid: 'N-61200', uid: 'U-10003', email: 'tanaka.toru@example.com',
       name: '田中 透', kana: 'たなか とおる', genre: '絵画・現代美術', existingUrl: 'kotennavi-p3.html', existingNid: 'N-30044',
       priceRange: '¥100,000 〜 ¥300,000', exhibitionScale: '3〜5回', purpose: 'オンラインで購入希望者を把握したい。',
       shipPref: '東京都', invoiceNumber: 'T1234567890123',
@@ -11209,7 +11222,7 @@ function P9011Data() {
   }
   function saveOverride(app) {
     var all = loadOverrides();
-    all[app.id] = { status: app.status, adminNote: app.adminNote, grantedDate: app.grantedDate, stripeStatus: app.stripeStatus, reviewReason: app.reviewReason, inquiry: app.inquiry, inviteMailSent: app.inviteMailSent, inviteMailDate: app.inviteMailDate, handledBy: app.handledBy, log: app.log, stripeDoneDate: app.stripeDoneDate, cancelReason: app.cancelReason, cancelEmailSent: app.cancelEmailSent };
+    all[app.id] = { status: app.status, noReapply: app.noReapply, withdrawn: app.withdrawn, revoked: app.revoked, cancelReason: app.cancelReason, adminNote: app.adminNote, grantedDate: app.grantedDate, stripeStatus: app.stripeStatus, reviewReason: app.reviewReason, inquiry: app.inquiry, inviteMailSent: app.inviteMailSent, inviteMailDate: app.inviteMailDate, handledBy: app.handledBy, log: app.log, stripeDoneDate: app.stripeDoneDate, cancelReason: app.cancelReason, cancelEmailSent: app.cancelEmailSent };
     try { sessionStorage.setItem(OKEY, JSON.stringify(all)); } catch (e) {}
   }
   /* 対応履歴のデモの経緯（2026-11-17） */
@@ -11575,6 +11588,8 @@ KTN.pages['p90-11-1'] = function () {
   var cancelFromEl        = document.getElementById('p9011CancelFrom');
   var cancelSubjectEl     = document.getElementById('p9011CancelSubject');
   var cancelBodyEl        = document.getElementById('p9011CancelBody');
+  var PFX = 'p9011'; (function () { var rs = document.getElementById('p9011CancelReasonSel'), cb0 = document.getElementById('p9011CancelNoReapply'); if (rs && cb0) rs.addEventListener('change', function () { var w = rs.value === 'cancel-withdraw'; if (w) cb0.checked = false; cb0.disabled = w; }); })();   /* 取り下げは再申込できる（2026-11-23） */
+  var PFX = 'p9011'; (function () { var cb = document.getElementById('p9011CancelNoReapply'); if (cb) cb.addEventListener('change', function () { var bd = document.getElementById('p9011CancelBody'); if (bd) bd.value = noReapplyText(bd.value); }); })();
   function lockCancelMail(on) {   /* 取消のご連絡メール：「取消を確定する」の下の開閉のボタン。確定したら押せて、押すと下に欄が開く（操作のモーダルと同じ形・2026-11-23） */
     if (!cancelMailFieldsEl) return;
     var tg = cancelMailFieldsEl.previousElementSibling;
@@ -11649,8 +11664,10 @@ KTN.pages['p90-11-1'] = function () {
     if (cancelFromEl) cancelFromEl.value = t.from;
     var tokens = D.tplTokens(current);
     if (cancelSubjectEl) cancelSubjectEl.value = D.applyTokens(t.subject, tokens);
-    if (cancelBodyEl) cancelBodyEl.value = D.applyTokens(t.body, tokens);
+    if (cancelBodyEl) cancelBodyEl.value = noReapplyText(D.applyTokens(t.body, tokens));
   }
+  /* 再申込を受け付けないとき、取消のご連絡の「改めてお申込み…」の文を差し替える（2026-11-23） */
+  function noReapplyText(body) { var cb = document.getElementById(PFX + 'CancelNoReapply'); return cb && cb.checked ? String(body).split('改めてお申込みをご希望の場合は、お手数ですが再度お申込みフォームよりお手続きください。').join('改めてのお申込みは、お受けしておりません。ご不明な点につきましては、お問い合わせください。') : String(body).split('改めてのお申込みは、お受けしておりません。ご不明な点につきましては、お問い合わせください。').join('改めてお申込みをご希望の場合は、お手数ですが再度お申込みフォームよりお手続きください。'); }
 
   /* ── 案内メールパネル（本人確認OK後・処理結果エリアのボタンから任意タイミングで送信。P902Grantパネルと同パターン） ── */
   function loadInviteTemplate(variantKey) {
@@ -11700,6 +11717,7 @@ KTN.pages['p90-11-1'] = function () {
     if (resultEl) {
       if (a.status === 'pending') { resultEl.hidden = true; resultEl.innerHTML = ''; }
       else { resultEl.hidden = false; resultEl.innerHTML = D.buildStatusBody(a); }
+      ktnAppRevoke({ app: a, el: resultEl, screen: 'p90-11', kind: 'lp', roleName: 'LIAISON+', save: D.saveOverride, rec: function (w, n) { rec(w, n); }, rerender: function () { resultEl.innerHTML = D.buildStatusBody(a); var st = D.STATUS[a.status]; if (statusChip && st) { statusChip.className = 'ktn-review-status ktn-review-status--' + st.cls; statusChip.textContent = st.label; } var o2 = resultEl.parentNode.querySelector('.p902-revoke'); if (o2) o2.remove(); } });   /* 承認の取消（A・2026-11-23） */
     }
 
     closeActionPanels();
@@ -11807,8 +11825,10 @@ KTN.pages['p90-11-1'] = function () {
     current.grantedDate = D.todayLabel();
     current.inquiry = null;
     current.handledBy = KTN.adminMeText ? KTN.adminMeText() : '';
+    current.noReapply = !!(document.getElementById('p9011CancelNoReapply') || {}).checked;   /* 再申込を受け付けない（2026-11-23） */
+    current.withdrawn = reason === 'withdraw';
     D.saveOverride(current);
-    rec('取消', D.CANCEL_REASON_LABEL[reason] || '');
+    rec('取消', (D.CANCEL_REASON_LABEL[reason] || '') + (current.noReapply ? '（再申込を受け付けない）' : ''));
     renderReview();
     lockCancelMail(false);
     if (KTN.toast) KTN.toast('お申込みを取消しました（デモ）');
@@ -12016,6 +12036,12 @@ function ktnMailTemplates() {
     { id: 'mt-10', screenId: 'p90-2', pattern: 'abnormal', variantKey: 'cancel-other', from: 'register@koten-navi.com',
       name: 'その他', subject: '【個展なび】{{roleName}}機能のお申込みの取消について', body: CANCEL_BODY_STD,
       status: 'active', usageNote: '上記に当てはまらない理由で取消を確定した時に送る（S-M-07パターン④・送信は任意）。', updatedAt: '2026.8.8' },
+    { id: 'mt-10w', screenId: 'p90-2', pattern: 'abnormal', variantKey: 'cancel-withdraw', from: 'register@koten-navi.com',
+      name: '申込者からの取り下げの依頼', subject: '【個展なび】{{roleName}}機能のお申込みの取り下げについて', body: '{{userName}} 様\n\n{{roleName}}機能のお申込みについて、取り下げのご連絡をいただき、ありがとうございます。\nご依頼のとおり、お申込みを取り下げました。\n\n改めてお申込みをご希望の場合は、お手数ですが再度お申込みフォームよりお手続きください。\n\n{{commonFooter}}',
+      status: 'active', usageNote: '申込者から取り下げの依頼を受けて、取消（本人の取り下げ）にしたとき（S-M-07⑧・送信は任意・2026-11-23）。', updatedAt: '2026.11.23' },
+    { id: 'mt-p902-r1', screenId: 'p90-2', pattern: 'abnormal', variantKey: 'revoke', from: 'register@koten-navi.com',
+      name: '承認の取消のご連絡', subject: '【個展なび】{{roleName}}機能のご利用の取消について', body: '{{userName}} 様\n\n{{roleName}}機能のご利用を、取り消しました。\n\n（ここに取消の理由を書きます）\n\n{{roleName}}ページは、オーナーのいないページになりました。\nご不明な点につきましては、お問い合わせください。\n\n{{commonFooter}}',
+      status: 'active', usageNote: '承認したあとに、A が「承認を取り消す」で機能を外したとき（S-M-14・送信は任意・理由はケースに合わせて書く・2026-11-23）。', updatedAt: '2026.11.23' },
     { id: 'mt-p9011-1', screenId: 'p90-11', pattern: 'normal', variantKey: 'invite', from: 'liaison@koten-navi.com',
       name: 'LIAISON+ 審査通過・続きのお手続きのご案内', subject: '【個展なび】LIAISON+のご利用にあたり、本人確認の続きをお願いします',
       body: '{{userName}} 様\n\n個展なび事務局です。\n{{roleName}}機能のお申込み（申込NID：{{applyId}}）について、\n' +
@@ -12069,6 +12095,12 @@ function ktnMailTemplates() {
     { id: 'mt-p9011-11', screenId: 'p90-11', pattern: 'abnormal', variantKey: 'cancel-other', from: 'liaison@koten-navi.com',
       name: 'その他', subject: '【個展なび】LIAISON+機能のお申込みの取消について', body: CANCEL_BODY_STD,
       status: 'active', usageNote: '上記に当てはまらない理由で取消を確定した時に送る（申込審査の画面・送信は任意）。', updatedAt: '2026.8.11' },
+    { id: 'mt-p9011-12', screenId: 'p90-11', pattern: 'abnormal', variantKey: 'cancel-withdraw', from: 'liaison@koten-navi.com',
+      name: '申込者からの取り下げの依頼', subject: '【個展なび】LIAISON+機能のお申込みの取り下げについて', body: '{{userName}} 様\n\nLIAISON+ 機能のお申込みについて、取り下げのご連絡をいただき、ありがとうございます。\nご依頼のとおり、お申込みを取り下げました。\n\n改めてお申込みをご希望の場合は、お手数ですが再度お申込みフォームよりお手続きください。\n\n{{commonFooter}}',
+      status: 'active', usageNote: '申込者から取り下げの依頼を受けて、取消（本人の取り下げ）にしたとき（S-M-10⑥・送信は任意・2026-11-23）。', updatedAt: '2026.11.23' },
+    { id: 'mt-p9011-r1', screenId: 'p90-11', pattern: 'abnormal', variantKey: 'revoke', from: 'liaison@koten-navi.com',
+      name: '承認の取消のご連絡', subject: '【個展なび】LIAISON+機能のご利用の取消について', body: '{{userName}} 様\n\nLIAISON+ 機能のご利用を、取り消しました。\n\n（ここに取消の理由を書きます）\n\n作品の出品と販売はできなくなり、お申込みを受け付けていた作品のお申込みはキャンセルしました。\nご不明な点につきましては、お問い合わせください。\n\n{{commonFooter}}',
+      status: 'active', usageNote: '承認したあとに、A が「承認を取り消す」で LIAISON+ を外したとき（S-M-15・送信は任意・理由はケースに合わせて書く・2026-11-23）。', updatedAt: '2026.11.23' },
     { id: 'mt-p6011-1', screenId: 'p60-11', pattern: 'normal', variantKey: 'answer-general', from: 'inquiry@koten-navi.com',
       name: "お問い合わせへのご回答", subject: "【個展なび】お問い合わせへのご回答（受付番号：{{requestId}}）", body: "{{userName}} 様\n\nこのたびは個展なびにお問い合わせいただき、ありがとうございます。\nお問い合わせの件について、下記のとおりご回答いたします。\n\n──────────────────────────────\n 受付番号：{{requestId}}\n 件名：{{contactSubject}}\n──────────────────────────────\n\n（ここに回答を記載してください）\n\nほかにご不明な点がございましたら、お手数ですが、\n受付番号を添えてお問い合わせフォームからお送りください。\n　{{contactUrl}}\n\n今後とも個展なびをよろしくお願いいたします。\n\n{{commonFooter}}",
       status: 'active', usageNote: "届いたお問い合わせへの基本の回答（S-FQ-01）。回答の本文は事務局が書く。返信の時期には触れない。", updatedAt: '2026.9.28' },
@@ -12382,6 +12414,35 @@ KTN.mailBox = function (el, o) {
   };
   return { unlock: function (arg) { if (typeof o.tokens === 'function') { tk = o.tokens(arg); pick(); } lock(false); }, sent: function () { return sent; } };
 };
+/* 機能申込の「承認を取り消す」（P90-2-1・P90-11-1・A だけ・2026-11-23 ユーザー確認＝今は作りこまない）。
+   理由は選択と自由記入、「再申込」は受け付ける／受け付けないをその場で選ぶ（理由で初めの値を変えるなどはしない）。本人へのメール（S-M-14／S-M-15）は操作のボタンの下から。
+   LIAISON+ は、進んでいる取引があるあいだは取り消せない（app.activeTx・デモの値。本番は取引の件数）。
+   o＝{ app, el:結果の欄, screen, kind:'cg'|'lp', roleName, save(app), rec(what, note), rerender() } */
+function ktnAppRevoke(o) {
+  var a = o.app, box = o.el; if (!box) return;
+  var old = box.parentNode.querySelector('.p902-revoke'); if (old) old.remove();
+  if (a.status !== 'granted' || KTN.ADMIN_LEVELS[KTN.adminLevel()].n < KTN.ADMIN_LEVELS.A.n) return;
+  var tx = o.kind === 'lp' ? (a.activeTx || 0) : 0;
+  box.insertAdjacentHTML('afterend', '<div class="p902-review-section p902-revoke"><h4 class="p902-review-section__title">承認の取消（admin）</h4>' +
+    '<p class="p902-review-section__note">承認したあとに、' + (o.kind === 'lp' ? 'LIAISON+' : o.roleName + '機能') + 'を外します（元に戻せません。使うには、新しく申し込んで審査を受け直します）。' + (o.kind === 'lp' ? '順番待ちの申込はキャンセルし、作品は公開のページに出なくなります。' : 'ページはオーナーのいないページになります。') + '</p>' +
+    (tx ? '<p class="p905-delreq__block">進んでいる取引が ' + tx + ' 件あります。取引が終わるか、強制キャンセルしてから取り消せます。<a class="ktn-guide-link" href="kotennavi-p90-13.html" target="_blank" rel="noopener">取引管理で見る →</a></p>' : '') +
+    '<button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline" data-revoke' + (tx ? ' disabled' : '') + '>承認を取り消す</button></div>');
+  box.parentNode.querySelector('[data-revoke]').onclick = function () {
+    KTN.adminDelete({ kind: '', name: '', title: (o.kind === 'lp' ? 'LIAISON+' : o.roleName + '機能') + 'の承認を取り消しますか？', verb: '承認の取消', label: '取消', okLabel: '承認を取り消す', doneLabel: '承認を取り消しました',
+      reasons: ['本人確認の内容に誤りがある', '本人確認の内容が偽り・なりすまし', '取引での不適切な行為が続く', '違法な行為', 'その他'],
+      placeholder: '例：登録された氏名と本人確認書類の氏名が違い、期限までに確認がとれなかった',
+      note: '元に戻せません。理由は操作の記録に残ります。本人へのメール（' + (o.kind === 'lp' ? 'S-M-15' : 'S-M-14') + '）は、取り消したあとに下から送れます。',
+      choice: { label: '再申込', options: [['ok', '受け付ける（正しい内容で申し込み直せる）'], ['no', '受け付けない（申込者の画面に「改めて申し込む」を出さない）']] },
+      done: '承認を取り消しました（デモ）',
+      onDone: function (x) {
+        a.status = 'cancelled'; a.revoked = true; a.withdrawn = false; a.noReapply = x.choice === 'no'; a.cancelReason = 'revoke'; a.handledBy = KTN.adminMeText ? KTN.adminMeText() : '';
+        o.save(a); if (o.rec) o.rec('承認の取消', x.reason + '：' + x.detail + (a.noReapply ? '（再申込を受け付けない）' : ''));
+        if (KTN.auditRecord) KTN.auditRecord('機能申込の審査', { t: 'user', nid: a.uid || '', name: a.name || '' }, '承認を取り消した（' + (o.kind === 'lp' ? 'LIAISON+' : o.roleName + '機能') + '）・' + KTN.reasonText(x) + (a.noReapply ? '・再申込を受け付けない' : ''));
+        if (o.rerender) setTimeout(o.rerender, 0);
+      },
+      mail: { screen: o.screen, keys: ['revoke'], heading: '本人へのご連絡（任意）', tokens: { userName: a.name || '', roleName: o.roleName, commonFooter: '（共通のフッター）' } } });
+  };
+}
 KTN.mailSend = function (o) {
   if (!o.scene && o.keys && o.keys.length === 1) o.scene = o.keys[0];   /* 文面が1つの操作は、そのキーが場面（2026-11-23） */
   var T = ktnMailTemplates().filter(function (x) { return ktnTplOn(x, o.screen) && x.status !== 'archived' && (!o.keys || o.keys.indexOf(x.variantKey) >= 0 || (x.custom && o.keys.indexOf(x.scene) >= 0) || (o.scene && x.scene === o.scene)); });
@@ -12555,7 +12616,7 @@ KTN.MAIL_NO = {
   'mt-7': 'S-M-07①', 'mt-8': 'S-M-07②', 'mt-9': 'S-M-07③', 'mt-10': 'S-M-07④',
   'mt-p9011-1': 'S-M-08',
   'mt-p9011-2': 'S-M-09①', 'mt-p9011-3': 'S-M-09②', 'mt-p9011-4': 'S-M-09③', 'mt-p9011-5': 'S-M-09④', 'mt-p9011-6': 'S-M-09⑤',
-  'mt-p9011-7': 'S-M-10①', 'mt-p9011-8': 'S-M-10②', 'mt-p9011-9': 'S-M-10③', 'mt-p9011-10': 'S-M-10④', 'mt-p9011-11': 'S-M-10⑤',
+  'mt-p9011-7': 'S-M-10①', 'mt-p9011-8': 'S-M-10②', 'mt-p9011-9': 'S-M-10③', 'mt-p9011-10': 'S-M-10④', 'mt-p9011-11': 'S-M-10⑤', 'mt-p9011-12': 'S-M-10⑥', 'mt-10w': 'S-M-07⑧', 'mt-p902-r1': 'S-M-14', 'mt-p9011-r1': 'S-M-15',
   'mt-p2sns-1': 'S-E-02', 'mt-p901-u2': 'S-U-02', 'mt-p905-d1': 'S-D-01', 'mt-p905-d2': 'S-D-02', 'mt-p905-1': 'S-E-03①', 'mt-p905-2': 'S-E-03②', 'mt-p905-3': 'S-E-03③',
   'mt-p6011-1': 'S-FQ-01', 'mt-p6011-2': 'S-FQ-02', 'mt-p6011-3': 'S-FQ-03', 'mt-p6011-4': 'S-FQ-04', 'mt-p6011-5': 'S-FQ-05', 'mt-p6011-6': 'S-FQ-06',
   'mt-p6012-1': 'S-FW-01', 'mt-p6012-2': 'S-FW-02',
@@ -12703,6 +12764,8 @@ KTN.pages['p90-9'] = function () {
       subject: "【個展なび】ギャラリー機能のお申込みを受け付けました", body: "{{userName}} 様\n\nこのたびは個展なびのギャラリー機能にお申し込みいただき、\nありがとうございます。\n以下の内容でお申込みを受け付けました。\n\n──────────────────────────────\n お申込み日：{{applyDate}}\n ギャラリー名：{{galleryName}}\n──────────────────────────────\n\n内容は個展なび事務局にて確認いたします。\n確認・設定が完了しましたら、あらためて\n「設定完了（ご利用開始）」のメールでお知らせします。\n（通常、数営業日以内にご連絡します）\n\n※本メールは送信専用です。ご不明な点は下記よりお問い合わせください。\n　{{supportUrl}}\n\n{{commonFooter}}", note: 'A-M-01と同文面を{{roleName}}差替で共有予定。', updatedAt: '2026.10.5' },
     { id: 'A-M-05', category: 'apply', event: 'LIAISON+ 申込受付', aud: '申込者', source: 'p11-4 submit', timing: '送信直後（自動）', subject: "【個展なび】リエゾンプラス機能のお申込みを受け付けました", body: "{{userName}} 様\n\nこのたびは個展なびのリエゾンプラス（LIAISON+）機能に\nお申し込みいただき、ありがとうございます。\n以下の内容でお申込みを受け付けました。\n\n──────────────────────────────\n お申込み日：{{applyDate}}\n 申込ID：{{applyId}}\n お申込みのページ：{{pageName}}（{{roleName}}）\n──────────────────────────────\n\n個展なび事務局にて本人確認の審査を行います。\n審査のうえ、通常3〜5営業日以内に、続きのお手続き\n（振込先口座の登録・Stripe との連携）のご案内をメールでお送りします。\n\n※本メールは送信専用です。ご不明な点は下記よりお問い合わせください。\n　{{supportUrl}}\n\n{{commonFooter}}", note: '', updatedAt: '2026.10.5' },
     { id: 'A-M-05J', category: 'apply', event: "LIAISON+ 機能 申込の受付通知（事務局あて）", aud: "事務局", source: "p11-4 submit", timing: "送信直後（自動）", subject: "【LIAISON+ 申込】{{roleName}}：{{pageName}}（{{applyId}}）", body: "LIAISON+ 機能の申込が届きました。\n\n──────────────────────────────\n 申込番号：{{applyId}}\n 申込日時：{{applyDate}}\n 申込者：{{userName}}（{{senderEmail}}／{{senderUid}}）\n ロール：{{roleName}}\n {{roleName}}名：{{pageName}}\n 　{{pageUrl}}\n──────────────────────────────\n\n■ 審査はこちら\n {{adminUrl}}\n\n■ 対応の目安\n・申込の内容と本人確認を確かめる（P90-11）\n・問題がなければ、続きのお手続き（振込先口座の登録）を案内する（S-M-08）\n・内容に不足・誤りがあれば確認を依頼する（S-M-09）。取り消すときは S-M-10", note: "docs/email-templates.md A-M-05J と同内容。", updatedAt: '2026.10.27' },
+    { id: 'A-M-12J', category: 'apply', event: "クリエイター・ギャラリー機能の申込の取り下げ（事務局あて）", aud: "事務局", source: "申込者が P11-2／P11-3 の「申込を取り下げる」を押したとき", timing: "取り下げた直後（自動）", subject: "【申込の取り下げ】{{roleName}}機能：{{userName}}（{{applicationId}}）", body: "申込者が、機能の申込を取り下げました。\n\n──────────────────────────────\n 申込：{{applicationId}}（{{roleName}}機能）\n 申込者：{{userName}}（{{senderUid}}）\n 申込日時：{{appliedAt}}\n 取り下げた日時：{{withdrawnAt}}\n──────────────────────────────\n\n申込は「取消（本人の取り下げ）」になりました。審査を止めてください。\n※ 申込者にはメールを送っていません（画面に表示しています）。", note: "2026-11-23 ユーザー確認（register@）。", updatedAt: '2026.11.23' },
+    { id: 'A-M-13J', category: 'apply', event: "LIAISON+ 機能の申込の取り下げ（事務局あて）", aud: "事務局", source: "申込者が P11-4 の「申込を取り下げる」を押したとき（Step1 審査中・口座登録・Stripe の審査中）", timing: "取り下げた直後（自動）", subject: "【申込の取り下げ】LIAISON+：{{userName}}（{{applicationId}}）", body: "申込者が、LIAISON+ 機能の申込を取り下げました。\n\n──────────────────────────────\n 申込：{{applicationId}}\n 申込者：{{userName}}（{{senderUid}}）\n 取り下げたときの段階：{{applyStep}}\n 取り下げた日時：{{withdrawnAt}}\n──────────────────────────────\n\n申込は「取消（本人の取り下げ）」になりました。審査を止めてください（Stripe の口座の登録が始まっていたときは、Stripe 側の扱いも確かめてください）。\n※ 申込者にはメールを送っていません（画面に表示しています）。", note: "2026-11-23 ユーザー確認（liaison@）。", updatedAt: '2026.11.23' },
     { id: 'A-M-11', category: 'apply', event: "LIAISON+ ご利用開始（手続き完了）", aud: "申込者（クリエイター・ギャラリー）", source: "振込先口座の登録・Stripe との連携が完了したとき", timing: "完了直後（自動）", subject: "【個展なび】リエゾンプラスのご利用を開始いただけます", body: "{{userName}} 様\n\n振込先口座の登録と Stripe との連携が完了し、\nリエゾンプラス（LIAISON+）をご利用いただけるようになりました。\n\n■ はじめにすること\nLIAISON+ の展覧会で、販売する作品を出品してください。\n出品・販売の状況は、リエゾンプラスのコンソールで確認できます。\n　{{consoleUrl}}\n\n■ 料金について\n掲載・出品は無料です。作品が売れたとき（取引成立時）に、\n作品代金・送料・梱包費の合計に対してサービス利用料がかかります\n（料率は10%）。\n販売代金は、月末締め・翌月20日にお振込みします。\n\nくわしくは、販売ガイドをご覧ください。\n　{{guideUrl}}\n\n■ 取引の通知を受け取るには\n購入の確定・作品の発送など、あなたの対応が必要になったときは、\nメールでお知らせします（取引の連絡のメールは止められません）。\n会期中は、会場で作品が売れたときの「会場売約済」の操作など、\n早めの対応が必要な場面があります。スマホの画面ですぐに気づけるよう、\nプッシュ通知をオンにしておくことをおすすめします。\n　1. iPhone の場合は、個展なびをホーム画面に追加し、そこから開きます\n　2. myページの「通知設定」で「プッシュ通知（この端末）」をオンにします\n　通知設定：{{settingsUrl}}\n　くわしい手順：{{mobileGuideUrl}}\n\n※本メールは送信専用です。ご不明な点は下記よりお問い合わせください。\n　{{supportUrl}}\n\n{{commonFooter}}", note: '2026-10-05 追加', updatedAt: '2026.10.9' },
     { id: 'A-T-01', category: 'txn', event: '購入申込を受け付けた', aud: '購入者', source: 'S0 申込済', timing: '申込直後', subject: "【個展なび】作品《{{artworkName}}》の購入申込を受け付けました", body: "{{userName}} 様\n\nリエゾンプラスでの購入申込を受け付けました。\n\n──────────────────────────────\n 作品：《{{artworkName}}》\n 展覧会：{{exhibitionName}}\n 申込ID{{applyId}}\n 作品の価格：{{price}}（税込・送料・梱包費は別）\n──────────────────────────────\n\n■ この先の流れ\nこの時点では、まだ購入は確定しておらず、お支払いも発生しません。\n会期中は会場でのご購入が優先され、申込ID の順にご案内します。\n順番が来て出品者が購入を確定すると、お支払いのご案内をお送りします。\n\n申込の状況やキャンセルは、購入管理から確認できます。\n　{{purchasesUrl}}\n\n※取引の連絡は、取引を確実に進めるため、通知設定にかかわらずお送りしています。\n\n{{commonFooter}}", note: '', updatedAt: '2026.10.5' },
     { id: 'A-T-02', category: 'txn', event: '申込ID順が到来・購入確定をお願い', aud: '出品者', source: 'S1 購入確定待ち', timing: '繰り上げ時', subject: "【個展なび】作品《{{artworkName}}》の購入を確定してください（確定期限 {{deadline}}）", body: "{{userName}} 様\n\nリエゾンプラスで出品中の作品に、購入のお申込みが届いています。\n会場の在庫を確認のうえ、取引デスクで購入を確定してください。\n\n──────────────────────────────\n 作品：《{{artworkName}}》\n 展覧会：{{exhibitionName}}\n 申込ID{{applyId}}\n 確定期限：{{deadline}}\n──────────────────────────────\n\n購入を確定するときに、送料・梱包費を入力してください。\n確定すると、購入者にお支払いのご案内が届きます。\n\n　取引デスク：{{deskUrl}}\n\n■ 確定期限を過ぎた場合\n作品は自動で出品取消しとなり、この作品の申込者全員のお申込みが\nキャンセルになります（次の申込者へは繰り上がりません）。\n会場ですでに売れた場合は、コンソールの「会場売約済」をお使いください。\n\n※取引の連絡は、取引を確実に進めるため、通知設定にかかわらずお送りしています。\n\n{{commonFooter}}", note: '', updatedAt: '2026.10.5' },
@@ -12834,7 +12897,7 @@ KTN.pages['p90-9'] = function () {
     'A-U-01': 'p11-1', 'A-U-02': 'p11-23', 'A-U-02J': 'p11-23', 'A-U-03': 'p11-11', 'A-U-04': 'p11-12', 'A-U-05': 'p5-12', 'A-U-06': 'p5-11', 'A-U-07': 'p5-11', 'A-U-08': 'p5-100',
     'A-F-01': 'p60-11', 'A-F-01J': 'p60-11', 'A-F-02': 'p60-12', 'A-F-02J': 'p60-12', 'A-F-03': 'p60-13', 'A-F-03J': 'p60-13', 'A-F-04': 'p60-14', 'A-F-04J': 'p60-14',
     'A-F-05': 'p6-13', 'A-F-06': 'p6-13', 'A-F-07': 'p6-14',
-    'A-M-01': 'p11-2', 'A-M-01J': 'p11-2', 'A-M-03': 'p11-3', 'A-M-03J': 'p11-3', 'A-M-05': 'p11-4', 'A-M-05J': 'p11-4', 'A-C-01': 'campaign', 'A-C-02': 'campaign', 'A-C-04J': 'campaign', 'A-C-05': 'campaign', 'A-C-06': 'campaign', 'A-C-07': 'campaign',
+    'A-M-01': 'p11-2', 'A-M-01J': 'p11-2', 'A-M-03': 'p11-3', 'A-M-03J': 'p11-3', 'A-M-05': 'p11-4', 'A-M-05J': 'p11-4', 'A-M-12J': 'p11-2', 'A-M-13J': 'p11-4', 'A-C-01': 'campaign', 'A-C-02': 'campaign', 'A-C-04J': 'campaign', 'A-C-05': 'campaign', 'A-C-06': 'campaign', 'A-C-07': 'campaign',
     'A-E-03J': 'p2-11', 'A-O-01J': 'p2-11', 'A-O-02J': 'p7-11', 'A-O-03J': 'p5-100', 'A-O-07J': 'p90', 'A-D-01J': 'p90', 'A-D-02J': 'p2-11', 'A-D-03': 'p2-11', 'A-D-06': 'p2-11', 'A-D-03J': 'p2-11', 
     'A-T-01': 'txn', 'A-T-02': 'txn', 'A-T-03': 'txn', 'A-T-04': 'txn', 'A-T-05': 'txn', 'A-T-06': 'txn', 'A-T-07': 'txn', 'A-T-08': 'txn', 'A-T-09': 'txn', 'A-T-10': 'txn',
     'A-T-11': 'p3-15-1', 'A-T-11J': 'p3-15-1', 'A-T-22J': 'p3-15-1', 'A-T-26J': 'p3-17', 'A-T-18': 'p90-12', 'A-T-20': 'p90-12', 'A-T-21': 'p90-12', 'A-T-22': 'p3-15-1', 'A-T-24': 'p90-12', 'A-T-25': 'p90-12', 'A-T-12': 'p90-14', 'A-T-13': 'txn', 'A-T-14': 'txn', 'A-T-15J': 'txn', 'A-T-16': 'txn', 'A-T-17': 'txn', 'A-F-08': 'txn', 'A-F-08J': 'txn', 'A-M-11': 'p90-11-1',
@@ -12846,7 +12909,7 @@ KTN.pages['p90-9'] = function () {
   var MAIL_DOMAIN = '@koten-navi.com';
   var AUTO_FROM_DEFAULT = 'noreply' + MAIL_DOMAIN;
   var ADMIN_TO = { 'A-E-03J': 'add-event', 'A-O-01J': 'mod-event', 'A-O-02J': 'mod-event', 'A-F-01J': 'inquiry', 'A-F-02J': 'inquiry', 'A-F-03J': 'improper', 'A-F-04J': 'inquiry', 'A-F-08J': 'liaison',
-    'A-M-01J': 'register', 'A-M-03J': 'register', 'A-M-05J': 'liaison', 'A-T-15J': 'liaison', 'A-C-04J': 'liaison', 'A-D-01J': 'info', 'A-D-02J': 'add-event', 'A-D-03J': 'info', 'A-O-03J': 'register',
+    'A-M-01J': 'register', 'A-M-03J': 'register', 'A-M-05J': 'liaison', 'A-M-12J': 'register', 'A-M-13J': 'liaison', 'A-T-15J': 'liaison', 'A-C-04J': 'liaison', 'A-D-01J': 'info', 'A-D-02J': 'add-event', 'A-D-03J': 'info', 'A-O-03J': 'register',
     'A-U-02J': 'register', 'A-O-05J': 'liaison-info', 'A-O-06J': 'liaison-info', 'A-O-07J': 'admin', 'A-T-11J': 'liaison-info', 'A-T-22J': 'liaison-info', 'A-T-26J': 'liaison-info',
     'A-N-01J': 'watchnotice', 'A-R-01J': 'watchnotice', 'A-N-05J': 'watchnotice', 'A-I-01J': 'watchnotice', 'A-N-02J': 'watchnotice', 'A-N-04J': 'watchnotice' };
   /* liaison-info＝LIAISON・LIAISON+ の、対応の要らない知らせだけを受けるアカウント（2026-11-14 ユーザー指示）。取引の申込・確定・支払い・発送・完了・キャンセル・振込は利用者あてのメールのコピーで受ける */

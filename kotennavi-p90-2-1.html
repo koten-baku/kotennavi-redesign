@@ -233,6 +233,8 @@
               <option value="__new__" data-admin-lv="A">＋ 新しいテンプレートとして追加</option>
             </select>
           </div>
+          <!-- 再申込を受け付けない（なりすましの疑いなど・2026-11-23）。選ぶと、取消のご連絡の「改めてお申込み…」の文が「お問い合わせください」に替わり、申込者の画面に「改めて申し込む」を出さない -->
+          <label class="p211-check p902-noreapply"><input type="checkbox" id="p902CancelNoReapply"> 再申込を受け付けない（なりすましの疑いなど。申込者の画面に「改めて申し込む」を出さず、お問い合わせを案内します）</label>
           <p class="p902-flow-panel__hint">「取消を確定する」は取消だけを行います。取消のご連絡メールは下の欄から、取消を確定したあとに送れます（送らないこともできます）。</p>
           <div class="p902-flow-panel__actions">
             <button type="button" class="ktn-op-btn ktn-op-btn--sm" id="p902CancelBackBtn">戻る</button>

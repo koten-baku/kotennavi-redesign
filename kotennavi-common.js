@@ -4197,6 +4197,73 @@ function ktnAfterText(label, doneLabel) {
 KTN.afterText = ktnAfterText;
 /* 理由を聞かない操作の確認（2026-11-23・P90-12 の「公開に戻す」）。o＝{ title, note, okLabel, doneLabel, danger, done, onDone, mail（KTN.mailBox の設定） }。
    mail があるときは、操作しても閉じず、操作のボタンの下の開閉のボタンが押せるようになる（P90-5 の削除と同じ形） */
+/* 機能申込（P11-2・P11-3・P11-4）の取り下げと再申込（2026-11-23 ユーザー確認）。
+   ・審査中（確認中・口座登録・Stripe の審査中）は、本人が「申込を取り下げる」→ 取消（本人の取り下げ）。事務局へ自動のメール（P11-2／P11-3＝A-M-12J・register@／P11-4＝A-M-13J・liaison@）。本人へはメールを送らない（画面に出る）
+   ・取消のあとは「改めて申し込む」＝前の内容が入った申込フォーム（新しい申込として審査）。事務局が取消のときに「再申込を受け付けない」を選んだとき・費用の未払いで出品停止のとき（P11-4）は出さず「お問い合わせください」
+   o＝{ key, pending:[バナーの id], cancelled:バナーの id, mail:'A-M-12J', mailTo:'register@', setMode(mode), agree:同意のチェックの選択子, blocked()：再申込を止める別の理由 }。
+   デモは sessionStorage ktnApplyCancel:{key}＝{ by:'office'|'self', no:true|false }。デモバーに「取消：事務局／本人の取り下げ」「再申込：受け付ける／受け付けない」 */
+KTN.applyFlow = function (o) {
+  var KEY = 'ktnApplyCancel:' + o.key;
+  function rd() { try { return JSON.parse(window.sessionStorage.getItem(KEY) || '{}'); } catch (e) { return {}; } }
+  function wr(v) { try { window.sessionStorage.setItem(KEY, JSON.stringify(v)); } catch (e) {} }
+  function el(id) { return document.getElementById(id); }
+  /* 審査中のバナーに「申込を取り下げる」 */
+  (o.pending || []).forEach(function (id) {
+    var b = el(id); if (!b || b.querySelector('[data-apply-withdraw]')) return;
+    b.insertAdjacentHTML('beforeend', '<p class="p114-status-notice__acts"><button type="button" class="ktn-op-btn ktn-op-btn--sm ktn-op-btn--danger-outline" data-apply-withdraw>申込を取り下げる</button></p>');
+    b.querySelector('[data-apply-withdraw]').onclick = function () {
+      KTN.opConfirm({ title: 'お申込みを取り下げますか？', okLabel: '取り下げる', danger: true,
+        note: '取り下げると、審査は止まります。改めてお申し込みいただく場合は、最初からお手続きください。',
+        done: false,
+        onDone: function () { wr({ by: 'self', no: false }); o.setMode('cancelled');
+          /* 取り下げたら、トーストではなく完了のモーダルで知らせ、閉じるとこのページを離れる（2026-11-24 ユーザー指示）。事務局へのメール（A-M-12J／A-M-13J）は自動 */
+          setTimeout(function () { KTN.submitDone({ title: 'お申込みを取り下げました', message: 'お申込みの取り下げを受け付けました。<br>改めてお申し込みいただく場合は、最初からお手続きください。', action: { label: 'トップページへ', href: './kotennavi-p1.html' } }); }, 50); } });
+    };
+  });
+  /* デモバー */
+  var bar = el('dbar') || document.querySelector('.dbar');
+  if (bar && !bar.querySelector('[data-apply-demo]')) {
+    var s = rd();
+    bar.insertAdjacentHTML('beforeend', '<span class="dbar-sep" data-apply-demo>取消：</span><button class="dbtn' + (s.by !== 'self' ? ' on' : '') + '" data-apply-by="office">事務局</button><button class="dbtn' + (s.by === 'self' ? ' on' : '') + '" data-apply-by="self">本人の取り下げ</button>' +
+      '<span class="dbar-sep">再申込：</span><button class="dbtn' + (!s.no ? ' on' : '') + '" data-apply-no="0">受け付ける</button><button class="dbtn' + (s.no ? ' on' : '') + '" data-apply-no="1">受け付けない</button>');
+    bar.addEventListener('click', function (e) {
+      var by = e.target.closest('[data-apply-by]'), no = e.target.closest('[data-apply-no]'); if (!by && !no) return;
+      var v = rd(); if (by) v.by = by.dataset.applyBy; if (no) v.no = no.dataset.applyNo === '1'; wr(v);
+      bar.querySelectorAll('[data-apply-by]').forEach(function (x) { x.classList.toggle('on', x.dataset.applyBy === (v.by || 'office')); });
+      bar.querySelectorAll('[data-apply-no]').forEach(function (x) { x.classList.toggle('on', (x.dataset.applyNo === '1') === !!v.no); });
+      o.setMode('cancelled');
+    });
+  }
+  /* 取消のバナーの中身（setMode のたびに呼ぶ） */
+  function render() {
+    var b = el(o.cancelled); if (!b || b.hidden) return;
+    var v = rd(), self = v.by === 'self', blocked = v.no || (o.blocked && o.blocked());
+    var tt = b.querySelector('.p114-status-notice__title'), ds = b.querySelector('.p114-status-notice__desc');
+    if (tt) tt.textContent = self ? 'お申込みを取り下げました' : 'お申込みは取消となりました';
+    if (ds) ds.textContent = self ? 'このお申込みは、取り下げられています。' : '今回のお申込みは取消になりました。理由につきましては、お送りしたメールをご確認ください。';
+    /* 本人が取り下げたときは、前の内容を使わず、最初からやり直す（2026-11-23 ユーザー指示）。事務局の取消のときは、前の内容が入ったフォームで申し込み直す */
+    var acts = b.querySelector('[data-apply-again]'); if (acts) acts.remove();
+    b.insertAdjacentHTML('beforeend', blocked
+      ? '<p class="p114-status-notice__acts" data-apply-again>改めてのお申込みは、お受けしておりません。ご不明な点につきましては、<a class="ktn-guide-link" href="./kotennavi-p60-11.html">お問い合わせ</a>ください。</p>'
+      : self ? '<p class="p114-status-notice__acts" data-apply-again>改めてお申し込みいただく場合は、最初からお手続きください。<button type="button" class="ktn-op-btn ktn-op-btn--sm" data-apply-reapply data-fresh>最初から申し込む</button></p>'
+      : '<p class="p114-status-notice__acts" data-apply-again>改めてお申し込みいただけます。前回の内容が入っていますので、ご確認のうえお申し込みください。<button type="button" class="ktn-op-btn ktn-op-btn--sm" data-apply-reapply>改めて申し込む</button></p>');
+    var rb = b.querySelector('[data-apply-reapply]');
+    if (rb) rb.onclick = function () {
+      var fresh = rb.hasAttribute('data-fresh');
+      wr({}); o.setMode('form');
+      if (fresh) document.querySelectorAll('.ktn-mgmt-wrap input, .ktn-mgmt-wrap textarea, .ktn-mgmt-wrap select').forEach(function (x) {   /* 最初から＝ページを開いたときの状態に戻す */
+        if (x.type === 'checkbox' || x.type === 'radio') { x.checked = x.defaultChecked; x.dispatchEvent(new Event('change', { bubbles: true })); }
+        else if (x.tagName === 'SELECT') { [].forEach.call(x.options, function (op) { op.selected = op.defaultSelected; }); }
+        else if (x.type === 'file') { x.value = ''; }
+        else { x.value = x.defaultValue; }   /* 郵便番号から入る住所（読み取りだけの欄）も、ページを開いたときの値に戻す */
+      });
+      if (o.agree) document.querySelectorAll(o.agree).forEach(function (c) { c.checked = false; c.disabled = false; c.dispatchEvent(new Event('change', { bubbles: true })); });   /* 同意は改めて */
+      KTN.toast(fresh ? '新しいお申込みのフォームです。最初からご入力ください' : '前回の内容を入れました。ご確認のうえお申し込みください（新しいお申込みとして確認します）');
+      var f = document.querySelector('.ktn-mgmt-wrap'); if (f && f.scrollIntoView) f.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+  }
+  return { render: render };
+};
 KTN.opConfirm = function (o) {
   var m = document.getElementById('ktnOpConfirmModal');
   if (!m) { m = document.createElement('div'); m.className = 'p211-modal'; m.id = 'ktnOpConfirmModal'; m.hidden = true; document.body.appendChild(m); m.addEventListener('click', function (e) { if (e.target.closest('[data-close]')) m.hidden = true; }); }
@@ -4209,7 +4276,7 @@ KTN.opConfirm = function (o) {
   var ok = m.querySelector('[data-ok]'), cx = m.querySelector('.p211-modal__foot [data-close]');
   ok.onclick = function () {
     if (o.onDone) o.onDone();
-    KTN.toast(o.done || '実行しました（デモ）');
+    if (o.done !== false) KTN.toast(o.done || '実行しました（デモ）');
     if (!mb) { m.hidden = true; return; }
     ok.disabled = true; ok.textContent = o.doneLabel || '済みました'; cx.textContent = '閉じる'; mb.unlock();
   };

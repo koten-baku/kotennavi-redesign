@@ -14885,6 +14885,9 @@ body.is-admin-view [aria-disabled="true"]{opacity:.45;cursor:not-allowed}
 .ktn-mailbox__panel[hidden]{display:none}
 .ktn-mailbox__foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:8px;margin:6px 0 0}
 .ktn-mailbox__sent{font-size:.76rem;color:#1a7a42}
+/* 機能申込の取り下げ・再申込（KTN.applyFlow・2026-11-23） */
+.p114-status-notice__acts{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin:10px 0 0;font-size:.82rem;line-height:1.7}
+.p902-noreapply{display:flex;gap:6px;align-items:flex-start;margin:8px 0;font-size:.8rem;line-height:1.6}
 .ktn-tplalt{margin:6px 0 8px}
 .ktn-tplalt__open{padding:0;border:0;background:none;font:inherit;font-size:.76rem;color:var(--accent);text-decoration:underline;text-underline-offset:2px;cursor:pointer}
 .ktn-tplalt__open:hover{color:var(--accent-d)}

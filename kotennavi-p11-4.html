@@ -943,6 +943,7 @@ function setDemoMode(mode) {
     document.getElementById(id).classList.remove('on');
   });
   document.getElementById('dbar' + mode.charAt(0).toUpperCase() + mode.slice(1)).classList.add('on');
+  if (window.p114Flow) p114Flow.render();   /* 取消の中身（本人の取り下げ・再申込）（2026-11-23） */
 }
 
 function p114UpdateSubmit() {
@@ -974,6 +975,8 @@ function p114Step2Submit() {
 }
 
 KTN.init({ page: 'p11-4', role: 'creator' });
+/* 審査中の取り下げと、取消のあとの再申込（KTN.applyFlow・2026-11-23） */
+window.p114Flow = KTN.applyFlow({ key: 'p11-4', pending: ["p114PendingBanner","p114Step2Banner","p114StripePendingBanner"], cancelled: 'p114CancelledBanner', mail: 'A-M-13J', mailTo: 'liaison@', setMode: setDemoMode, agree: "input[name=\"creator-agree\"], input[name=\"gallery-agree\"], #p114TermsCheck", blocked: function () { return KTN.stopState && KTN.stopState().seller; }   /* 費用の未払いで出品停止のあいだは再申込を受けない */ });
 p114SyncContext('creator');
 p114SyncApprovedReview('creator');
 
